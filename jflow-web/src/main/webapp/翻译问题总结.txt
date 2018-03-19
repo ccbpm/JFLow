@@ -1,0 +1,43 @@
+JFlow 与 CCFlow 协同开发规则.
+-----------------------------------------------
+各位:
+
+    为了更有效的协同工作，避免代码重复修改，代码覆盖成造成的浪费，特制定如下规则.
+
+    1, 遇到jflow任何问题都都要在ccflow做验证, 如果ccflow有问题先修复ccflow的bug.
+
+    2, 我们将不定期执行jflow 与ccflow的代码同步，确保ccflow代码的前台是最新的.
+
+    3, 如果在jflow调试程序过程中出现的前后台出现的bug, 需要同步修改ccflow代码.
+
+
+    请各位谨记
+
+        17:30 2017-11-17
+
+
+
+
+
+
+
+
+
+
+1. 遇到Request对象的翻译. add by zhoupeng.
+================================================
+	
+			Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				// 判断是否有内容，hasNext()
+				String key = (String) enu.nextElement();
+				r.put(key, BP.Sys.Glo.getRequest().getParameter(key));
+			}
+
+
+2. 把string 转化成 decimal.
+================================================
+
+BigDecimal bd = new BigDecimal(this.GetValStrByKey(key));
+		return bd.setScale(4, BigDecimal.ROUND_HALF_UP);

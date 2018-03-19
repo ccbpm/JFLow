@@ -1,0 +1,40 @@
+
+1, 对于datatable 的处理.
+===================================
+
+C#
+ foreach (DataRow row in dt_ND.Rows)
+                        {
+                            DataRow dr = dt.NewRow();
+                            dr[0] = row[0].ToString();
+                            dt.Rows.Add(dr);
+                        }
+
+翻译工具原始代码: Java
+-----------------------------
+ for (DataRow row : dt_ND.Rows)
+{
+	DataRow dr = dt.NewRow();
+	dr[0] = row[0].toString();
+	dt.Rows.Add(dr);
+}
+
+
+正确翻译代码:
+--------------------------------------
+for (DataRow row : dt_ND.Rows)
+					{
+						DataRow dr = dt.NewRow();
+						dr.setValue(0, row.getValue(0).toString());
+						dt.Rows.Add(dr);
+					}
+
+
+错误的代码:
+-------------------------------
+for (DataRow row : dt_ND.Rows)
+					{
+						DataRow dr = dt.NewRow();
+						dr.setValue(0, row.get(0).toString());
+						dt.Rows.Add(dr);
+}

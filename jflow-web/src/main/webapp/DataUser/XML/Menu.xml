@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <!-- 经典模式的左边菜单 -->
+  <ClassicMenu No="Start" CH="发起"  Url="../../App/Classic/Start.jsp" Img="Img/Menu/Start.png" ACEUrl="start.htm" Enable="1" Title="发起我能够发起的流程" />
+  <ClassicMenu No="EmpWorks" CH="待办" Url="../../App/Classic/Todolist.jsp" Img="Img/Menu/EmpWorks.png" ACEUrl="todolist.htm" Enable="1" Title="等待我处理的工作。" />
+  <ClassicMenu No="Runing" CH="在途"   Url="../../App/Classic/Runing.jsp" Img="Img/Menu/Ruing.png" ACEUrl="runing.htm" Enable="1" Title="我参与的工作，没有完成。" />
+  <ClassicMenu No="Search" CH="查询"  Url="../../App/Classic/Search.jsp"  Img="Img/Menu/Search.png"  ACEUrl="FlowRpt.htm" Enable="1" Title="流程查询。" />
+  <ClassicMenu No="Tools" CH="设置"   Url="../../Tools.jsp" Img="Img/Menu/Setting.png" ACEUrl="setting.htm" Enable="1" Title="工具栏" />
+  <ClassicMenu No="Login" CH="切换"   Url="../../login.htm" Img="Img/Menu/Switch.png" Enable="1" Title="切换用户。" />
+  <ClassicMenu No="AdvFunc" CH="高级功能"   Url="advfunc.jsp" Img="Img/Menu/Sharing.png" Enable="1" Title="高级功能。" />
+
+  <!-- 高级功能 -->
+  <AdvFunc No="Draft" CH="我的草稿"    Url="WF/App/Classic/draft.jsp" Img="Img/Menu/Ruing.png" Enable="1"  ACEUrl="Draft.htm" Title="等待我处理的工作。" />
+  <AdvFunc No="CC" CH="抄送"  Url="WF/CC.jsp" Img="Img/Menu/CC.png" Enable="1"   ACEUrl="cc.htm" Title="抄送给我的工作。" />
+  <AdvFunc No="Focus" CH="我的关注"   Url="WF/App/Classic/focus.jsp" Img="Img/Menu/Ruing.png"  ACEUrl="Focus.htm" Enable="1" Title="我关注的流程" />
+  <AdvFunc No="AuthTodolist" CH="授权待办" Url="WF/App/Classic/autotodolist.jsp" Img="Img/Menu/EmpWorks.png"  ACEUrl="AutoTodolist.htm" Enable="1" Title="别人授权给我的工作待办" />
+  <AdvFunc No="Batch" CH="批处理" Url="WF/Batch.jsp" Img="Img/Menu/Batch.png"  ACEUrl="Batch.htm" Enable="1" Title="等待我处理的工作。" />
+  <AdvFunc No="Sharing" CH="任务池" Url="WF/TaskPoolSharing.jsp" Img="Img/Menu/Sharing.png" ACEUrl="TaskPoolSharing.htm"  Enable="1" Title="等待我处理的工作。" />
+  <AdvFunc No="Emps"  CH="通讯录"   Url="WF/Emps.jsp" Img="Img/Menu/Emps.png" Enable="0" ACEUrl="Emps.htm"  Title="员工通讯录。" />
+  <AdvFunc No="GetTask" CH="取回审批"  Url="WF/GetTask.jsp" Img="Img/Menu/GetTask.png"  ACEUrl="GetTask.htm"  Enable="1" Title="抄送给我的工作。" />
+  <AdvFunc No="Calendar" CH="日历"  Url="WF/Calendar.jsp" Img="Img/Menu/Rili.jpg" Enable="0"  ACEUrl="Calendar.htm" Title="查看自己每天都做了什么" />
+  <AdvFunc No="HungUpList" CH="挂起工作"    Url="WF/HungUpList.jsp" Img="Img/Menu/HungUp.png"  ACEUrl="HungUpList.htm"  Enable="1" Title="等待我处理的工作。" />
+  <AdvFunc No="CH" CH="时效考核" Url="WF/CH/FlowCH.jsp" Img="Img/Menu/EmpWorks.png" Enable="1"  ACEUrl="FlowCH.htm" Title="等待我处理的工作。" />
+
+</NewDataSet>

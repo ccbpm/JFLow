@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <!-- 经典模式的左边菜单 -->
+  <ClassicMenu No="Start" CH="发起"  Url="WF/App/Classic/Start.jsp" Img="Img/Menu/Start.png" Enable="1" Title="发起我能够发起的流程" />
+  <ClassicMenu No="EmpWorks" CH="待办" Url="WF/App/Classic/Todolist.jsp" Img="Img/Menu/EmpWorks.png" Enable="1" Title="等待我处理的工作。" />
+  <ClassicMenu No="Runing" CH="在途"   Url="WF/App/Classic/Runing.jsp" Img="Img/Menu/Ruing.png" Enable="1" Title="我参与的工作，没有完成。" />
+  <ClassicMenu No="Search" CH="查询"  Url="WF/App/Classic/Search.jsp"  Img="Img/Menu/Search.png" Enable="1" Title="流程查询。" />
+  <ClassicMenu No="Tools" CH="设置"   Url="WF/Tools.jsp" Img="Img/Menu/Setting.png" Enable="1" Title="工具栏" />
+  <ClassicMenu No="Login" CH="切换"   Url="WF/login.htm" Img="Img/Menu/Switch.png" Enable="1" Title="切换用户。" />
+  <ClassicMenu No="AdvFunc" CH="高级功能"   Url="WF/App/Classic/advfunc.jsp" Img="Img/Menu/Sharing.png" Enable="1" Title="高级功能" />
+  
+  <!-- 高级功能 -->
+  <AdvFunc No="CC" CH="抄送"  Url="WF/CC.jsp" Img="Img/Menu/CC.png" Enable="1" Title="抄送给我的工作。" />
+  <AdvFunc No="Focus" CH="我的关注"   Url="WF/App/Classic/focus.jsp" Img="Img/Menu/Ruing.png" Enable="1" Title="我关注的流程" />
+  <AdvFunc No="AuthTodolist" CH="授权待办" Url="WF/App/Classic/autotodolist.jsp" Img="Img/Menu/EmpWorks.png" Enable="1" Title="别人授权给我的工作待办" />
+  <AdvFunc No="Batch" CH="批处理" Url="WF/Batch.jsp" Img="Img/Menu/Batch.png" Enable="1" Title="等待我处理的工作。" />
+  <AdvFunc No="Sharing" CH="任务池" Url="WF/TaskPoolSharing.jsp" Img="Img/Menu/Sharing.png" Enable="1" Title="任务池。" />
+  <AdvFunc No="Emps"  CH="通讯录"   Url="WF/Emps.jsp" Img="Img/Menu/Emps.png" Enable="1" Title="员工通讯录。" />
+  <AdvFunc No="GetTask" CH="取回审批"  Url="WF/GetTask.jsp" Img="Img/Menu/GetTask.png" Enable="1" Title="取回审批。" />
+  <AdvFunc No="Calendar" CH="日历"  Url="../../Calendar.jsp" Img="Img/Menu/Rili.jpg" Enable="0" Title="查看自己每天都做了什么" />
+  <AdvFunc No="Draft" CH="我的草稿"    Url="WF/App/Classic/draft.jsp" Img="Img/Menu/Ruing.png" Enable="1" Title="我的草稿。" />
+  <AdvFunc No="HungUpList" CH="挂起工作"    Url="WF/HungUpList.jsp" Img="Img/Menu/HungUp.png" Enable="1" Title="挂起的工作。" />
+  <AdvFunc No="CH" CH="时效考核" Url="WF/CH/FlowCH.jsp" Img="Img/Menu/EmpWorks.png" Enable="1" Title="时效考核。" />
+
+</NewDataSet>

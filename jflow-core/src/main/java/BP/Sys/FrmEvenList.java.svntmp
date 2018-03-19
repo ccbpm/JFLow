@@ -1,0 +1,13 @@
+package BP.Sys;
+
+public class FrmEvenList
+{
+    /// <summary>
+    /// 从表保存前
+    /// </summary>
+    public static final String RowSaveBefore = "DtlRowSaveBefore";
+    /// <summary>
+    /// 从表保存后
+    /// </summary>
+    public static final String RowSaveAfter = "DtlRowSaveAfter";
+}

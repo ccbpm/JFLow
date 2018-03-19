@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+	 <script type="text/javascript" src="../../../Scripts/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../../../Scripts/QueryString2016.js"></script>
+    <script language="JavaScript" src="../../../Comm/JScript.js" type="text/javascript" ></script>
+    <link href="../../../../DataUser/Style/table0.css" rel="stylesheet" />
+    <script src="../../../Scripts/config.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        //页面启动函数.
+        var initData = {};
+        var pageData = {};
+        $(function () {
+            pageData = {
+                FK_Flow: GetQueryString("FK_Flow"),
+            };
+           
+            
+            InitTable();
+        });
+
+        function InitTable(){
+        $.ajax({
+                type: 'post',
+                async: true,
+                url:basePath+"/WF/Admin/FoolFormDesigner/Rpt.do?DoType=S0_RptList_Init&FK_Flow=" + pageData.FK_Flow+ "&m=" + Math.random(),
+                dataType: 'html',
+                success: function (data) {
+                    if (data != undefined && data.indexOf('err@') == 0) {
+                        console.error(data);
+                        return;
+                    }
+                    initData = JSON.parse(data);
+
+                    BindRptList(initData);
+                },
+                error: function (xml, textSta, errorThrown) {
+                    alert(xml);
+                    alert(textSta);
+                    alert(errorThrown);
+                }
+            })
+        }
+
+        function OpenRpt(no,name,note){
+            var flowRptNo='';
+            var tmpFK_Flow=pageData.FK_Flow;
+            while (tmpFK_Flow.indexOf('0')==0){
+            tmpFK_Flow=tmpFK_Flow.substring(1,tmpFK_Flow.length);
+            }
+            flowRptNo="ND"+tmpFK_Flow+"Rpt";
+                WinOpen("../../../RPT/OneFlow.jsp?FK_Flow="+pageData.FK_Flow+"&FK_MapData="+flowRptNo+"&RptNo="+no);
+            }
+        function BindRptList(data){
+        	
+            var tbodyHtml="";
+            $.each(data,function(i,obj){
+            tbodyHtml+="<tr>";
+            tbodyHtml+="<td>"+obj.no+"</td>";
+            //tbodyHtml+="<td>"+"<a href='#"+obj.Name+"</a>" +"</td>";
+            tbodyHtml+="<td>"+"<a href='#' onclick=OpenRpt('"  +obj.no+ "')>"+obj.name+"</a>" +"</td>";
+            tbodyHtml+="<td>"+obj.note+"</td>";
+            tbodyHtml+="<td>"+obj.ptable+"</td>";
+            tbodyHtml+="<td>"+obj.fk_flow+"</td>";
+             tbodyHtml+="<td>"+"<a href='#' style='margin-right:8px;'  onclick=NewOrEditRpt('"+obj.no+"','"+obj.name+"','"+obj.note+"'"+ ")>编辑</a>" +"<a href='#'  onclick=DelRpt('"+obj.no+ "')>删除</a>" +"</td>";
+            tbodyHtml+="</tr>"
+            })
+            //为TR赋上  data- 数据
+            $('#Fields tbody') .html(tbodyHtml);
+            $.each(data,function(i,obj){
+                $($('#Fields tbody tr')[i]).data(obj);
+            })
+        }
+        
+        function DelRpt(rptNo){
+            $.ajax({
+                    type: 'post',
+                    async: true,
+                    url: basePath+"/WF/Admin/FoolFormDesigner/Rpt.do?DoType=S0_RptList_Delete&No=" + rptNo+"&FK_Flow="+pageData.FK_Flow+ "&m=" + Math.random(),
+                    dataType: 'html',
+                    success: function (data) {
+                        alert(data)
+                        InitTable();
+                    },
+                    error: function (xml, textSta, errorThrown) {
+                        alert(xml);
+                        alert(textSta);
+                        alert(errorThrown);
+                    }
+                })
+        }
+
+        function NewOrEditRpt(no,name,note){
+        	WinOpen('S1_Edit.htm?FK_Flow='+pageData.FK_Flow+'&No='+escape(no));
+        }
+
+        function SaveAndClose() {
+            Save();
+            window.close();
+        }
+
+        function Close() {
+            window.close();
+        }
+    </script>
+</head>
+<body>
+     <div id="Fields">
+        <table style="width:100%;">
+            <thead>
+                <tr>
+                    <th>报表编号</th>
+                    <th>报表名称</th>
+                    <th>备注</th>
+                    <th>PTable</th>
+                    <th>流程编号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div><input  value="新建报表" type="button" onclick="NewOrEditRpt('','','')"/></div>
+    </div>
+</body>
+</html>

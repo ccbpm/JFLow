@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>jflow</groupId>
+		<artifactId>jflow-parent</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+        <relativePath>../jflow-parent/pom.xml</relativePath>
+	</parent>
+	<groupId>jflow-web</groupId>
+	<artifactId>jflow-web</artifactId> 
+	<packaging>war</packaging>
+	
+	<properties>
+	    
+		<webserver.port>8080</webserver.port>
+		
+	</properties>
+	
+	<dependencies>
+	
+		<dependency>
+			<groupId>jflow-core</groupId>
+			<artifactId>jflow-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<!-- connection pool -->
+		<dependency>
+		     <groupId>com.alibaba</groupId>
+		     <artifactId>druid</artifactId>
+		     <version>1.0.15</version>
+		     <exclusions>
+		     	<exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>jconsole</artifactId>
+		     	</exclusion>
+		     	<exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>tools</artifactId>
+		     	</exclusion>
+		     </exclusions>
+		</dependency>
+		
+		<!-- jdbc driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.30</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2.0.4.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/ojdbc14-10.2.0.4.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.jtds</groupId>
+			<artifactId>jtds</artifactId>
+			<version>1.2.8</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+	</dependencies>
+	
+	<!-- 设定中央仓库 -->
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>http://repo1.maven.org/maven2/</url>
+		</repository>
+
+		<repository>
+			<id>Apache</id>
+			<name>Apache Maven Repository</name>
+			<url>http://repo.maven.apache.org/maven2/</url>
+		</repository>
+
+		<repository>
+			<id>jboss</id>
+			<name>jboss Maven Repository</name>
+			<url>http://repository.jboss.org/maven2/</url>
+		</repository>
+		<repository>
+			<id>ecode-repos</id>
+			<name>Ecode Repository</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>  
+		<pluginRepository>
+			<id>ecode-repos</id>
+			<name>Ecode Repository</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	
+	<!-- 可以访问本工程下的class -->
+	<build>  
+		<outputDirectory>${project.basedir}/src/main/webapp/WEB-INF/classes/</outputDirectory>
+        <plugins>  
+            <!-- war 打包插件, 设定war包名称不带版本号 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory> 
+					<warName>${project.artifactId}</warName>
+				</configuration>
+			</plugin> 
+            <!-- Eclipse 插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<wtpversion>2.0</wtpversion>
+					<jeeversion>5.0</jeeversion>
+				</configuration>
+			</plugin>
+			<!-- tomcat7插件 -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<configuration>
+					<port>${webserver.port}</port>
+					<path>/${project.artifactId}</path>
+					<uriEncoding>${project.build.sourceEncoding}</uriEncoding>
+				</configuration>
+			</plugin>
+        </plugins>  
+    </build> 
+	<description>驰骋工作流程引擎</description>
+	<url>http://jflow.cn</url>
+	<organization>
+		<name>济南驰骋信息技术有限公司</name>
+		<url>http://jflow.cn</url>
+	</organization>
+	<scm>
+		<developerConnection>济南驰骋团队&amp;山东易科德</developerConnection>
+	</scm>
+</project>

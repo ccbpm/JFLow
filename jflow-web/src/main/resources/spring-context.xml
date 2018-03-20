@@ -47,8 +47,11 @@
 		<property name="removeAbandonedTimeout" value="1800" />-->
 		
 <!-- 		<property name="validationQuery" value="${jdbc.testSql}" /> -->
+  		<!-- 该选项用来验证数据库连接池的有效性 -->
+		<property name="validationQuery" value="SELECT 1"/>
 		<property name="testWhileIdle" value="false" />
-		<property name="testOnBorrow" value="false" />
+		<!-- testOnBorrow true 指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个. -->
+		<property name="testOnBorrow" value="true" />
 		<property name="testOnReturn" value="false" />
 		
 		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用）

@@ -14,11 +14,12 @@
         $(function () {
 
             var node = new Entity("BP.WF.Node");
-            node.NodeID = GetQueryString("FK_Node");
+            node.NodeID = GetQueryString("FK_Node") ;
             node.Retrieve();
 
             var url = '';
-            switch (node.FormType) {
+
+            switch (parseInt(node.FormType)) {
                 case FormType.FoolForm:
                     url = "0.FoolForm.htm";
                     break;

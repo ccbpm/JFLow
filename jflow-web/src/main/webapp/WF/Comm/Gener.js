@@ -1,5 +1,4 @@
-﻿ 
-//
+﻿//
 if (plant == "CCFlow") {
     // CCFlow
     dynamicHandler = "/WF/Comm/Handler.ashx";
@@ -667,7 +666,6 @@ var Entity = (function () {
             this.CopyJSON(pkval);
         } else {
             this.pkval = pkval || "";
-            this.SetPKVal(pkval);
             this.loadData();
         }
     };
@@ -703,7 +701,7 @@ var Entity = (function () {
         return params.join("&");
     }
 
-
+ 
 
     if (plant == "CCFlow") {
         // CCFlow
@@ -730,15 +728,8 @@ var Entity = (function () {
                         return;
                     }
                     try {
-
-                        self = JSON.parse(data);
-
+                        jsonString = JSON.parse(data);
                         setData(self);
-
-                        //jsonString = JSON.parse(data);
-                        //setData(self);
-                        //result = jsonString.Retrieve;
-
                     } catch (e) {
                         alert("解析错误: " + data);
                     }
@@ -1268,9 +1259,7 @@ var Entities = (function () {
     }
 
     Entities.prototype = {
-
         constructor: Entities,
-
         loadData: function () {
             var self = this;
 
@@ -1642,7 +1631,7 @@ var HttpHandler = (function () {
 
     var parameters = {};
 
-    var formData;
+    var formData;   
 
     function HttpHandler(handlerName) {
         this.handlerName = handlerName;
@@ -1713,11 +1702,12 @@ var HttpHandler = (function () {
             var jsonString;
 
            // alert(self.getParams());
+           // alert(self.getParams());
 
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&" + self.getParams() + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&" + self.getParams() + "&t=" + Math.random(),
                 data: formData,
                 dataType: 'html',
                 success: function (data) {

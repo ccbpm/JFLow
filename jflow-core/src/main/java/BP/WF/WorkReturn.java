@@ -346,20 +346,26 @@ public class WorkReturn
         //设置子流程信息.
         GenerWorkFlow gwfP = new GenerWorkFlow(gwf.getPWorkID());
         gwfP.setWFState( WFState.ReturnSta);
-        gwfP.Update();
+        gwfP.setFK_Node(this.ReturnToNode.getNodeID());
+        gwfP.setNodeName(this.ReturnToNode.getName());
 
         //启用待办.
         GenerWorkerList gwl = new GenerWorkerList();
         GenerWorkerLists gwls = new GenerWorkerLists();
         gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwfP.getFK_Node(),
         		GenerWorkerListAttr.WorkID, gwfP.getWorkID());
+        String toEmps = "";
         for (GenerWorkerList item : gwls.ToJavaList())
         {
             item.setIsPassInt( 0);
             item.Update();
             gwl = item;
+            
+            toEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ",";
         }
-
+        gwfP.setTodoEmps(toEmps);
+        gwfP.Update();
+        
        // #region 写入退回提示.
         // 记录退回轨迹。
         ReturnWork rw = new ReturnWork();

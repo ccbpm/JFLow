@@ -2677,22 +2677,29 @@ public class Dev2Interface
             if (gwf.getPWorkID() == 0)
                 throw new RuntimeException("@当前节点是开始节点，您不能执行退回。");
 
-            GenerWorkerList gwl = new GenerWorkerList();
-            int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, gwf.getPWorkID(), GenerWorkerListAttr.IsPass, 80);
-            if (i > 0)
-            {
+            GenerWorkerList gwls = new GenerWorkerList();
+            int i = gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getPWorkID());
+           
+            String nodes = "";
+            for(GenerWorkerList gwl: gwls){
                 DataRow dr = dt.NewRow();
-                dr.setValue("No", gwl.getFK_Node());
-                dr.setValue("Name", gwl.getFK_NodeText());
-                dr.setValue("Rec", gwl.getFK_Emp());
-                dr.setValue("RecName", gwl.getFK_EmpText());
-                dr.setValue("IsBackTracking", 0);   
-                
-                dt.Rows.add(dr);
-                return dt;
-            }
+                dr.columns.Add("No",String.valueOf(gwl.getFK_Node()));
+                if (nodes.contains(String.valueOf(gwl.getFK_Node()) + ",") == true)
+                    continue;
 
-            throw new RuntimeException("@没有找到退回到父流程节点。");
+                nodes += String.valueOf(gwl.getFK_Node()) + ",";
+
+//                dr["Name"] = gwl.FK_NodeText;
+//                dr["Rec"] = gwl.FK_Emp;
+//                dr["RecName"] = gwl.FK_EmpText;
+//                dr["IsBackTracking"] = "0";
+                dr.columns.Add("Name",gwl.getFK_NodeText());
+                dr.columns.Add("Rec",gwl.getFK_Emp());
+                dr.columns.Add("RecName",gwl.getFK_EmpText());
+                dr.columns.Add("IsBackTracking",0);
+                dt.Rows.Add(dr);
+            }
+            return dt;
         }
 
 		

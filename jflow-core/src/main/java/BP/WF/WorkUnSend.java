@@ -374,6 +374,22 @@ public class WorkUnSend
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 		
+		//如果是越轨流程状态@du.
+        String sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerlist WHERE WorkID="+this.WorkID+" AND IsPass=80";
+
+        if (DBAccess.RunSQLReturnValInt(sql, 0) != 0) {
+			//求出来越轨子流程workid并把它删除掉.
+        	GenerWorkFlow gwfSubFlow = new GenerWorkFlow();
+        	int i = gwfSubFlow.Retrieve(GenerWorkFlowAttr.PWorkID,this.WorkID);
+        	if (i == 1) {
+				Dev2Interface.Flow_DoDeleteFlowByReal(gwfSubFlow.getFK_Flow(), gwfSubFlow.getPWorkID(), true);	
+			}
+        	//执行恢复当前节点待办
+        	sql = "UPDATE WF_GenerWorkerlist SET IsPass=0 WHERE IsPass=80 AND FK_Node="+gwf.getFK_Node()+" AND WorkID="+this.WorkID;
+			DBAccess.RunSQL(sql);
+			
+			return "撤销延续流程执行成功，撤销到["+gwf.getNodeName()+"],撤销给["+gwf.getTodoEmps()+"]";
+		}
 		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 判断是否是会签状态,是否是会签人做的撤销. 主持人是不能撤销的. @于庆海
 		if (gwf.getHuiQianTaskSta() != HuiQianTaskSta.None)
@@ -494,8 +510,8 @@ public class WorkUnSend
 			}
 
 			// 查询出来. 
-			String sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE FK_Emp='" + WebUser.getNo() + "' AND IsPass=1 AND IsEnable=1 AND WorkID=" + wn.getHisWork().getOID() + " ORDER BY RDT DESC ";
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
+			String sql1 = "SELECT FK_Node FROM WF_GenerWorkerList WHERE FK_Emp='" + WebUser.getNo() + "' AND IsPass=1 AND IsEnable=1 AND WorkID=" + wn.getHisWork().getOID() + " ORDER BY RDT DESC ";
+			DataTable dt = DBAccess.RunSQLReturnTable(sql1);
 			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("@撤销流程错误,您没有权限执行撤销发送.");

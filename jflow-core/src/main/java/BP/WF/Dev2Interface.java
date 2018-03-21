@@ -2677,11 +2677,11 @@ public class Dev2Interface
             if (gwf.getPWorkID() == 0)
                 throw new RuntimeException("@当前节点是开始节点，您不能执行退回。");
 
-            GenerWorkerList gwls = new GenerWorkerList();
+            GenerWorkerLists gwls = new GenerWorkerLists();
             int i = gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getPWorkID());
            
             String nodes = "";
-            for(GenerWorkerList gwl: gwls){
+            for(GenerWorkerList gwl: gwls.ToJavaList()){
                 DataRow dr = dt.NewRow();
                 dr.columns.Add("No",String.valueOf(gwl.getFK_Node()));
                 if (nodes.contains(String.valueOf(gwl.getFK_Node()) + ",") == true)

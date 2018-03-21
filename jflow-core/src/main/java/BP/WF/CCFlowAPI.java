@@ -440,7 +440,7 @@ public class CCFlowAPI
 						DataRow drMsg = dtAlert.NewRow();
 						drMsg.put("Title",worker + "," + workerName + "回复信息:");
 						drMsg.put("Msg",DataType.ParseText2Html(msgAskFor) + "<br>" + rdt);
-						dtAlert.Rows.Add(drMsg);
+						dtAlert.Rows.add(drMsg);
 					}
 					break;
 				case Askfor: //加签.
@@ -457,7 +457,7 @@ public class CCFlowAPI
 						DataRow drMsg = dtAlert.NewRow();
 						drMsg.put("Title",worker + "," + workerName + "请求加签:");
 						drMsg.put("Msg",DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "<a href='./WorkOpt/AskForRe.htm?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workID + "&FID=" + fid + "' >回复加签意见</a> --");
-						dtAlert.Rows.Add(drMsg);
+						dtAlert.Rows.add(drMsg);
 
 						//提示信息.
 						// this.FlowMsg.AlertMsg_Info(worker + "," + workerName + "请求加签:",
@@ -500,7 +500,7 @@ public class CCFlowAPI
 							DataRow drMsg = dtAlert.NewRow();
 							drMsg.put("Title","退回信息");
 							drMsg.put("Msg",str);
-							dtAlert.Rows.Add(drMsg);
+							dtAlert.Rows.add(drMsg);
 						}
 						/*else
 						{
@@ -513,7 +513,7 @@ public class CCFlowAPI
 						//gwf.DirectUpdate();
 					}
 					break;
-				case Shift:
+				case Shift: 
 					// 判断移交过来的。 
 					ShiftWorks fws = new ShiftWorks();
 					BP.En.QueryObject qo = new QueryObject(fws);

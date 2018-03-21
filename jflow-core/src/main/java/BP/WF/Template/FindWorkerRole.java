@@ -591,7 +591,7 @@ public class FindWorkerRole extends EntityOIDName
 		dt.Columns.Add(new DataColumn("No", String.class));
 		DataRow dr = dt.NewRow();
 		dr.setValue(0,leader);
-		dt.Rows.Add(dr);
+		dt.Rows.add(dr);
 		return dt;
 	}
 	public String ErrMsg = null;
@@ -690,7 +690,7 @@ public class FindWorkerRole extends EntityOIDName
 		dt.Columns.Add(new DataColumn("No", String.class));
 		DataRow dr = dt.NewRow();
 		dr.setValue(0,leader);
-		dt.Rows.Add(dr);
+		dt.Rows.add(dr);
 		return dt;
 	}
 

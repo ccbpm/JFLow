@@ -234,7 +234,7 @@ public class WFCCFormController extends BaseController {
             DataTable dtCount = new DataTable("DTCout");
             dtCount.TableName = "DTCout";
             dtCount.Columns.Add("Count");
-            dtCount.Rows.Add(count);
+            dtCount.Rows.AddRow(count);
             ds.Tables.add(dtCount);
 
 

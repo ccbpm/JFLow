@@ -36,7 +36,7 @@ public class DataRowCollection extends ArrayList<DataRow>
 		return this.Table;
 	}
 	
-	public DataRow Add(Object... vals){
+	public DataRow AddRow(Object... vals){
 		DataRow row = new DataRow(Table);
 		if (vals != null){
 			int i = 0;

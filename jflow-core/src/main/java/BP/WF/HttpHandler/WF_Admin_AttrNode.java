@@ -452,7 +452,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							{
 								if (IsExistInDataRowArray(dtGroups.Rows, GroupFieldAttr.OID, dr.get(MapAttrAttr.GroupID)) == false)
 								{
-									dtNoGroupAttrs.Rows.Add(dr.ItemArray);
+									dtNoGroupAttrs.Rows.AddRow(dr.ItemArray);
 								}
 							}
 			//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1910,7 +1910,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
             BP.WF.Template.Conds conds = new BP.WF.Template.Conds(BP.WF.Template.CondType.Flow, node.getNodeID());
             dr.setValue("HisFinishCondsCount",conds.size());
 
-            dt.Rows.Add(dr);
+            dt.Rows.add(dr);
         }
         return BP.Tools.Json.ToJson(dt);
     }

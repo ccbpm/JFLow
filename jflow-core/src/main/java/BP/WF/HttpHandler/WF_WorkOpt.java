@@ -1224,12 +1224,13 @@ public class WF_WorkOpt extends WebContralBase {
 	}
 
 	public String Return_Init() {
+		
 		DataTable dt = BP.WF.Dev2Interface.DB_GenerWillReturnNodes(this.getFK_Node(), this.getWorkID(), this.getFID());
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-			return BP.Tools.Json.DataTableToJson(dt, false);
-		}else{
-			return BP.Tools.Json.ToJson(dt);
-		}
+
+     	String str= BP.Tools.Json.ToJson(dt);
+     //	String str2= BP.Tools.Json.ToJson(dt);		
+			return str;
+		
 	}
 
 	public String DoReturnWork() {

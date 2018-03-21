@@ -681,7 +681,7 @@ public class WorkFlowBuessRole
 			DataRow dr = mydt.NewRow();
 			dr.setValue("No", "Guest");
 			dr.setValue("Name", "外部用户");
-			mydt.Rows.Add(dr);
+			mydt.Rows.add(dr);
 			return mydt;
 		}
 
@@ -699,7 +699,7 @@ public class WorkFlowBuessRole
 		{
 			DataRow dr = dt.NewRow();
 			dr.setValue(0,BP.Web.WebUser.getNo());
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 			return dt;
 		}
 
@@ -837,7 +837,7 @@ public class WorkFlowBuessRole
 				{
 					DataRow dr = dt.NewRow();
 					dr.setValue(0,item.getFK_Emp());
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				return dt;
 			}
@@ -866,7 +866,7 @@ public class WorkFlowBuessRole
 					// 有可能当前节点就是第一个节点，那个时间还没有初始化数据，就返回当前人. 
 					DataRow dr = dt.NewRow();
 					dr.setValue(0,BP.Web.WebUser.getNo());
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 					return dt;
 				}
 			}
@@ -906,7 +906,7 @@ public class WorkFlowBuessRole
 					{
 						DataRow dr = dt.NewRow();
 						dr.setValue(0,row.getValue(0).toString());
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
 					continue;
@@ -930,7 +930,7 @@ public class WorkFlowBuessRole
 					{
 						DataRow dr = dt.NewRow();
 						dr.setValue(0,row.getValue(0).toString());
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 				}
 			}
@@ -971,7 +971,7 @@ public class WorkFlowBuessRole
 						{
 							DataRow dr = dt.NewRow();
 							dr.setValue(0,row.getValue(0).toString());
-							dt.Rows.Add(dr);
+							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
 						continue;
@@ -1004,7 +1004,7 @@ public class WorkFlowBuessRole
 						{
 							DataRow dr = dt.NewRow();
 							dr.setValue(0,row.getValue(0).toString());
-							dt.Rows.Add(dr);
+							dt.Rows.add(dr);
 						}
 					}
 				}
@@ -1049,7 +1049,7 @@ public class WorkFlowBuessRole
 					String[] ss = str.split("[,]", -1);
 					DataRow dr = dt.NewRow();
 					dr.setValue(0,ss[0]);
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				if (dt.Rows.size() == 0)
 				{
@@ -1086,7 +1086,7 @@ public class WorkFlowBuessRole
 
 				DataRow dr = dt.NewRow();
 				dr.setValue(0,s);
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			return dt;
 		}
@@ -1375,7 +1375,7 @@ public class WorkFlowBuessRole
 			// 说明，就把当前人员做为下一个节点处理人。
 			DataRow dr = dt.NewRow();
 			dr.setValue(0,WebUser.getNo());
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 			return dt;
 		}
 

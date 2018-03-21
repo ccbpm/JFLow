@@ -271,7 +271,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 			BP.WF.Template.Conds conds = new BP.WF.Template.Conds(BP.WF.Template.CondType.Flow, node.getNodeID());
 			dr.setValue("HisFinishCondsCount", conds.size());
 
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -630,7 +630,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 			DataRow dr = dtIcon.NewRow();
 			dr.setValue(0,fileName);
 			dr.setValue(1,fileName);
-			dtIcon.Rows.Add(dr);
+			dtIcon.Rows.add(dr);
 		}
 
 		dtIcon.TableName = "ICONs";

@@ -1246,7 +1246,7 @@ public class Dev2Interface
 			newRow.setValue("Name",row.getValue("Name"));
 			newRow.setValue("ParentNo",row.getValue("ParentNo"));
 			newRow.setValue("ICON","icon-tree_folder");
-			table.Rows.Add(newRow);
+			table.Rows.add(newRow);
 		}
 
 		for (DataRow row : table.Rows)
@@ -2325,7 +2325,7 @@ public class Dev2Interface
 
 			}
 			newRow.setValue("Type","CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		/*dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();*/
@@ -2424,7 +2424,7 @@ public class Dev2Interface
 
 			}
 			newRow.setValue("Type","CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		/*dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();*/
@@ -2679,25 +2679,28 @@ public class Dev2Interface
 
             GenerWorkerLists gwls = new GenerWorkerLists();
             int i = gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getPWorkID());
+             
            
             String nodes = "";
-            for(GenerWorkerList gwl: gwls.ToJavaList()){
-                DataRow dr = dt.NewRow();
-                dr.columns.Add("No",String.valueOf(gwl.getFK_Node()));
+            
+            for(GenerWorkerList gwl: gwls.ToJavaList())
+            {
+                 
                 if (nodes.contains(String.valueOf(gwl.getFK_Node()) + ",") == true)
                     continue;
-
+                
                 nodes += String.valueOf(gwl.getFK_Node()) + ",";
-
-//                dr["Name"] = gwl.FK_NodeText;
-//                dr["Rec"] = gwl.FK_Emp;
-//                dr["RecName"] = gwl.FK_EmpText;
-//                dr["IsBackTracking"] = "0";
-                dr.columns.Add("Name",gwl.getFK_NodeText());
-                dr.columns.Add("Rec",gwl.getFK_Emp());
-                dr.columns.Add("RecName",gwl.getFK_EmpText());
-                dr.columns.Add("IsBackTracking",0);
-                dt.Rows.Add(dr);
+                
+                DataRow dr = dt.NewRow();
+                dr.setValue("No",String.valueOf(gwl.getFK_Node())); 
+                dr.setValue("Name",gwl.getFK_NodeText());
+                dr.setValue("Rec",gwl.getFK_Emp());
+                dr.setValue("RecName",gwl.getFK_EmpText());
+                dr.setValue("IsBackTracking",0);
+                
+                dt.Rows.add(dr);
+                
+              //  dt.Rows.Add(vals)
             }
             return dt;
         }
@@ -2755,7 +2758,7 @@ public class Dev2Interface
 					dr.setValue("IsBackTracking","0");
 				}
 
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			if (dt.Rows.size() == 0)
 			{
@@ -2777,18 +2780,15 @@ public class Dev2Interface
 				{
 					//如果当前点是分流，或者是分合流，就不按退回规则计算了。
 					sql = "SELECT a.FK_Node AS No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking FROM WF_GenerWorkerlist a, WF_Node b WHERE a.FK_Node=b.NodeID AND a.FID=" + fid + " AND a.WorkID=" + workid + " AND a.FK_Node!=" + fk_node + " AND a.IsPass=1 ORDER BY RDT  ";
-					return DBAccess.RunSQLReturnTable(sql);
-				}
-
-				if (nd.getTodolistModel() == TodolistModel.Order)
-				{
+					 
+				}else {
+					 
+				if (nd.getTodolistModel() == TodolistModel.Order)				
 					sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking FROM WF_GenerWorkerlist a, WF_Node b WHERE a.FK_Node=b.NodeID AND (a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 AND a.FK_Node!=" + fk_node + ") OR (a.FK_Node=" + fk_node + " AND a.IsPass <0)  ORDER BY a.RDT";
-				}
 				else
-				{
-					sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 AND a.FK_Node!=" + fk_node + " ORDER BY a.RDT";
+ 					sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 AND a.FK_Node!=" + fk_node + " ORDER BY a.RDT";
 				}
-
+ 
 				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 					DataTable dtt = DBAccess.RunSQLReturnTable(sql);
 					dtt.Columns.clear();
@@ -3302,7 +3302,7 @@ public class Dev2Interface
 
 			}
 			newRow.setValue("Type","CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		/*dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();*/
@@ -3362,7 +3362,7 @@ public class Dev2Interface
 
 			}
 			newRow.setValue("Type","CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		/*dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();*/

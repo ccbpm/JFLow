@@ -546,7 +546,7 @@ public class Json
 					v = "";
 				}
 				dr.setValue("Name", v);
-				dt.Rows.Add(dr);
+				dt.Rows.AddRow(dr);
 			}
 			return ToJson(dt);
 		}

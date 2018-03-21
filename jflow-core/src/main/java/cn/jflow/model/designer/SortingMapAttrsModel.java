@@ -363,7 +363,7 @@ public class SortingMapAttrsModel extends BaseModel {
 			for (DataRow dr : dt_Attr.Rows) {
 				if (IsExistInDataRowArray(dtGroups.Rows, GroupFieldAttr.OID,
 						dr.getValue(MapAttrAttr.GroupID)) == false) {
-					dtNoGroupAttrs.Rows.Add(dr.getValue("ItemArray"));
+					dtNoGroupAttrs.Rows.AddRow(dr.getValue("ItemArray"));
 				}
 			}
 			// 未分组明细表,自动创建一个

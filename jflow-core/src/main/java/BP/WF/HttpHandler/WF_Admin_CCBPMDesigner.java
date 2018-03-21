@@ -171,7 +171,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				Object tempVar2 = emps.GetEntityByKey(es.getFK_Emp());
 				emp = (BP.Port.Emp)((tempVar2 instanceof BP.Port.Emp) ? tempVar2 : null);
 
-				dt.Rows.Add(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
 			}
 		}
 		else
@@ -188,7 +188,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				Object tempVar3 = emps.GetEntityByKey(des.getFK_Emp());
 				emp = (BP.GPM.Emp)((tempVar3 instanceof BP.GPM.Emp) ? tempVar3 : null);
 
-				dt.Rows.Add(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
 			}
 		}
 
@@ -243,7 +243,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				}
 			}
 
-			dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+			dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 		}
 		else
 		{
@@ -268,7 +268,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				}
 			}
 
-			dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+			dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -306,7 +306,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			//增加部门
 			for (BP.Port.Dept dept : depts.ToJavaList())
 			{
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 			}
 
 			//增加岗位
@@ -323,7 +323,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					}
 
 					insts.add(es.getFK_Station());
-					dt.Rows.Add(es.getFK_Station(), rootid, es.getFK_StationT(), "STATION");
+					dt.Rows.AddRow(es.getFK_Station(), rootid, es.getFK_StationT(), "STATION");
 				}
 
 				if (ess.size() == 0)
@@ -335,7 +335,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			//增加没有岗位的人员
 			for (BP.Port.Emp emp : inemps)
 			{
-				dt.Rows.Add(emp.getNo(), rootid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), rootid, emp.getName(), "EMP");
 			}
 		}
 		else
@@ -357,7 +357,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (BP.GPM.Dept dept : depts.ToJavaList())
 			{
 				//增加部门
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 			}
 
 			//增加部门岗位
@@ -371,7 +371,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					continue;
 				}
 
-				dt.Rows.Add(ds.getFK_Station(), rootid, stt.getName(), "STATION");
+				dt.Rows.AddRow(ds.getFK_Station(), rootid, stt.getName(), "STATION");
 			}
 
 			//增加没有岗位的人员
@@ -391,7 +391,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (String inemp : inemps)
 			{
 				emp = new BP.GPM.Emp(inemp);
-				dt.Rows.Add(emp.getNo(), rootid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), rootid, emp.getName(), "EMP");
 			}
 		}
 
@@ -967,7 +967,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			fs.setName("流程树");
 			fs.Insert();
 
-			dt.Rows.Add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+			dt.Rows.AddRow("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
 		}
 		else
 		{
@@ -998,7 +998,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 			newRootRow.setValue("PARENTNO", "F0");
 			DataTable newDt = dt.clone();
-			newDt.Rows.Add(newRootRow.ItemArray);
+			newDt.Rows.AddRow(newRootRow.ItemArray);
 			if(newRootRow.size()!=0 && !aemp.getRootOfFlow().equals("99"))
 				newDt.Rows.remove(dt.select("NAME='流程树'").get(0));
 
@@ -1014,7 +1014,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		 List<DataRow> rows = dt.select("PARENTNO='" + parentRow.getValue("NO") + "'");
 		for(DataRow r : rows)
 		{
-			newDt.Rows.Add(r.ItemArray);
+			newDt.Rows.AddRow(r.ItemArray);
 
 			GenerChildRows(dt, newDt, r);
 		}
@@ -1025,7 +1025,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		 List<DataRow> rows = dt.select("ParentNo='" + parentRow.getValue("No") + "'");
 		for(DataRow r : rows)
 		{
-			newDt.Rows.Add(r.ItemArray);
+			newDt.Rows.AddRow(r.ItemArray);
 
 			GenerChildRowsX(dt, newDt, r);
 		}
@@ -1095,28 +1095,28 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (DataRow dr : dtSort.Rows)
 			{
 				if(SystemConfig.getAppCenterDBType() == DBType.Oracle)
-					dtForm.Rows.Add(dr.getValue("NO"), dr.getValue("PARENTNO"), dr.getValue("NAME"), dr.getValue("IDX"), dr.getValue("ISPARENT"), dr.getValue("TTYPE"));
+					dtForm.Rows.AddRow(dr.getValue("NO"), dr.getValue("PARENTNO"), dr.getValue("NAME"), dr.getValue("IDX"), dr.getValue("ISPARENT"), dr.getValue("TTYPE"));
 				else
-					dtForm.Rows.Add(dr.getValue("No"), dr.getValue("ParentNo"), dr.getValue("Name"), dr.getValue("Idx"), dr.getValue("IsParent"), dr.getValue("TType"));
+					dtForm.Rows.AddRow(dr.getValue("No"), dr.getValue("ParentNo"), dr.getValue("Name"), dr.getValue("Idx"), dr.getValue("IsParent"), dr.getValue("TType"));
 			}
 			
 			//过滤
 			DataRow[] rowsOfSort = dtSort.Select("ParentNo='0'");
 			if (rowsOfSort.length == 0)
 			{
-				dtForm.Rows.Add("1", "0", "表单库", 0, 1, "FORMTYPE");
+				dtForm.Rows.AddRow("1", "0", "表单库", 0, 1, "FORMTYPE");
 			}
 			else
 			{
 				if(SystemConfig.getAppCenterDBType() == DBType.Oracle)
-					dtForm.Rows.Add(rowsOfSort[0].getValue("NO"), "0", rowsOfSort[0].getValue("NAME"), rowsOfSort[0].getValue("IDX"), rowsOfSort[0].getValue("ISPARENT"), rowsOfSort[0].getValue("TTYPE"));
+					dtForm.Rows.AddRow(rowsOfSort[0].getValue("NO"), "0", rowsOfSort[0].getValue("NAME"), rowsOfSort[0].getValue("IDX"), rowsOfSort[0].getValue("ISPARENT"), rowsOfSort[0].getValue("TTYPE"));
 				else
-					dtForm.Rows.Add(rowsOfSort[0].getValue("No"), "0", rowsOfSort[0].getValue("Name"), rowsOfSort[0].getValue("IDX"), rowsOfSort[0].getValue("ISPARENT"), rowsOfSort[0].getValue("TTYPE"));
+					dtForm.Rows.AddRow(rowsOfSort[0].getValue("No"), "0", rowsOfSort[0].getValue("Name"), rowsOfSort[0].getValue("IDX"), rowsOfSort[0].getValue("ISPARENT"), rowsOfSort[0].getValue("TTYPE"));
 			}
 
 			for (DataRow row : ds.Tables.get(1).Rows)
 			{
-				dtForm.Rows.Add(row.getItemArray());
+				dtForm.Rows.AddRow(row.getItemArray());
 			}
 
 			if ( ! WebUser.getNo().equals("admin"))
@@ -1139,7 +1139,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				newRootRow.setValue("ParentNo", "0");
 				DataTable newDt = dtForm.clone();
 				
-				newDt.Rows.Add(newRootRow.ItemArray);
+				newDt.Rows.AddRow(newRootRow.ItemArray);
 				GenerChildRowsX(dtForm, newDt, newRootRow);
 				dtForm = newDt;
 				
@@ -1182,12 +1182,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		for (DataRow row : ds.Tables.get(0).Rows)
 		{
-			dt.Rows.Add(row.ItemArray);
+			dt.Rows.AddRow(row.ItemArray);
 		}
 
 		for (DataRow row : ds.Tables.get(1).Rows)
 		{
-			dt.Rows.Add(row.ItemArray);
+			dt.Rows.AddRow(row.ItemArray);
 		}
 
 		return BP.Tools.Json.DataTableToJson(dt, false);
@@ -1226,7 +1226,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (BP.WF.Port.Dept dept : depts.ToJavaList())
 			{
 				//增加部门
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 				des.put(dept.getNo(), new java.util.ArrayList<String>());
 				dss.put(dept.getNo(), new java.util.ArrayList<String>());
 
@@ -1263,7 +1263,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 							}
 
 							dss.get(dept.getNo()).add(es.getFK_Station());
-							dt.Rows.Add(dept.getNo() + "|" + es.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
+							dt.Rows.AddRow(dept.getNo() + "|" + es.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
 						}
 					}
 				}
@@ -1283,7 +1283,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 							continue;
 						}
 
-						dt.Rows.Add(ds.getKey() + "|" + st + "|" + emp, ds.getKey() + "|" + st, empt.getName(), "EMP");
+						dt.Rows.AddRow(ds.getKey() + "|" + st + "|" + emp, ds.getKey() + "|" + st, empt.getName(), "EMP");
 					}
 				}
 			}
@@ -1306,7 +1306,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (BP.GPM.Dept dept : depts.ToJavaList())
 			{
 				//增加部门
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 
 				//增加部门岗位
 				dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, dept.getNo());
@@ -1320,7 +1320,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 						continue;
 					}
 
-					dt.Rows.Add(dept.getNo() + "|" + ds.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
+					dt.Rows.AddRow(dept.getNo() + "|" + ds.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
 
 					//增加部门岗位人员
 					dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, dept.getNo(), BP.GPM.DeptEmpStationAttr.FK_Station, ds.getFK_Station());
@@ -1335,7 +1335,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 							continue;
 						}
 
-						dt.Rows.Add(dept.getNo() + "|" + ds.getFK_Station() + "|" + des.getFK_Emp(), dept.getNo() + "|" + ds.getFK_Station(), empt.getName(), "EMP");
+						dt.Rows.AddRow(dept.getNo() + "|" + ds.getFK_Station() + "|" + des.getFK_Emp(), dept.getNo() + "|" + ds.getFK_Station(), empt.getName(), "EMP");
 					}
 				}
 			}

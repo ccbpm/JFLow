@@ -229,7 +229,7 @@ public class CCBPMDesignerBase extends BaseController {
 				}
 				Object tempVar2 = emps.GetEntityByKey(es.getFK_Emp());
 				emp = (BP.Port.Emp)((tempVar2 instanceof BP.Port.Emp) ? tempVar2 : null);
-				dt.Rows.Add(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
 			}
 		}	
 		else 	
@@ -247,7 +247,7 @@ public class CCBPMDesignerBase extends BaseController {
 				BP.GPM.DeptEmpStation des = (DeptEmpStation) dess.get(j);
 				Object tempVar3 = emps.GetEntityByKey(des.getFK_Emp());
 				emp = (BP.GPM.Emp)((tempVar3 instanceof BP.GPM.Emp) ? tempVar3 : null);
-				dt.Rows.Add(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
 			}
 		}
 		JSONArray jsonArray = JSONArray.fromObject(dt.Rows);
@@ -271,7 +271,7 @@ public class CCBPMDesignerBase extends BaseController {
                 dept.setName("无部门");	
                 dept.setParentNo("");
             }
-            dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT"); 	
+            dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT"); 	
         }	
         else	
         { 	
@@ -282,7 +282,7 @@ public class CCBPMDesignerBase extends BaseController {
         		dept.setName("无部门");	
         		dept.setParentNo("");
         	}
-        	dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(),"DEPT");
+        	dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(),"DEPT");
         }
         return BP.Tools.Json.ToJson(dt);
 	}
@@ -316,7 +316,7 @@ public class CCBPMDesignerBase extends BaseController {
 
 			// 增加部门
 			for (BP.Port.Dept dept : depts.ToJavaList()) {
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(),
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(),
 						"DEPT");
 			}
 
@@ -330,7 +330,7 @@ public class CCBPMDesignerBase extends BaseController {
 						continue;
 
 					insts.add(es.getFK_Station());
-					dt.Rows.Add(es.getFK_Station(), rootid,
+					dt.Rows.AddRow(es.getFK_Station(), rootid,
 							es.getFK_StationT(), "STATION");
 				}
 
@@ -339,7 +339,7 @@ public class CCBPMDesignerBase extends BaseController {
 			}
 			// 增加没有岗位的人员
 			for (BP.Port.Emp emp : inemps) {
-				dt.Rows.Add(emp.getNo(), rootid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), rootid, emp.getName(), "EMP");
 			}
 		} else {
 			BP.GPM.Depts depts = new BP.GPM.Depts();
@@ -358,7 +358,7 @@ public class CCBPMDesignerBase extends BaseController {
 
 			for (BP.GPM.Dept dept : depts.ToJavaList()) {
 				// 增加部门
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(),
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(),
 						"DEPT");
 			}
 
@@ -369,7 +369,7 @@ public class CCBPMDesignerBase extends BaseController {
 				if (stt == null)
 					continue;
 
-				dt.Rows.Add(ds.getFK_Station(), rootid, stt.getName(),
+				dt.Rows.AddRow(ds.getFK_Station(), rootid, stt.getName(),
 						"STATION");
 			}
 
@@ -385,7 +385,7 @@ public class CCBPMDesignerBase extends BaseController {
 			}
 			for (String inemp : inemps) {
 				emp = new BP.GPM.Emp(inemp);
-				dt.Rows.Add(emp.getNo(), rootid, emp.getName(), "EMP");
+				dt.Rows.AddRow(emp.getNo(), rootid, emp.getName(), "EMP");
 			}
 		}
 		JSONArray jsonArray = JSONArray.fromObject(dt.Rows);
@@ -463,10 +463,10 @@ public class CCBPMDesignerBase extends BaseController {
 
 		// 3.流程云数据；4.共有云；5.私有云
 
-		dt_Clone.Rows.Add("FlowCloud", "-1", "流程云", 0, 1, "FLOWCLOUD", "-1");
-		dt_Clone.Rows.Add("ShareFlow", "FlowCloud", "共有流程云", 0, 0, "SHAREFLOW",
+		dt_Clone.Rows.AddRow("FlowCloud", "-1", "流程云", 0, 1, "FLOWCLOUD", "-1");
+		dt_Clone.Rows.AddRow("ShareFlow", "FlowCloud", "共有流程云", 0, 0, "SHAREFLOW",
 				"-1");
-		dt_Clone.Rows.Add("PriFlow", "FlowCloud", "私有流程云", 0, 0, "PRIFLOW",
+		dt_Clone.Rows.AddRow("PriFlow", "FlowCloud", "私有流程云", 0, 0, "PRIFLOW",
 				"-1");
 
 		sbJson.delete(0, sbJson.length());
@@ -511,7 +511,7 @@ public class CCBPMDesignerBase extends BaseController {
 			fs.setName("流程树");
 			fs.Insert();
 
-			dt.Rows.Add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+			dt.Rows.AddRow("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
 		} else {
 			Map<String, Object> filer = new HashMap<String, Object>();
 			filer.put("Name", "流程树");
@@ -645,9 +645,9 @@ public class CCBPMDesignerBase extends BaseController {
 		DataRow rootRow = null;
 		
 		if (rows.size() == 0) {
-			rootRow = dt.Rows.Add("0", null, "表单库", 0, 1, "FORMTYPE");
+			rootRow = dt.Rows.AddRow("0", null, "表单库", 0, 1, "FORMTYPE");
 		} else {
-			rootRow = dt.Rows.Add(rows.get(0).get("no"), null,
+			rootRow = dt.Rows.AddRow(rows.get(0).get("no"), null,
 					rows.get(0).get("name"), rows.get(0).get("idx"), rows
 							.get(0).get("isparent"), rows.get(0).get("ttype"));
 		}
@@ -671,7 +671,7 @@ public class CCBPMDesignerBase extends BaseController {
 					dr.setValue("parentno", no);
 				}
 
-				dt.Rows.Add(dr.get("no"), dr.get("parentno"), dr.get("name"),
+				dt.Rows.AddRow(dr.get("no"), dr.get("parentno"), dr.get("name"),
 						dr.get("idx"), dr.get("isparent"), dr.get("ttype"));
 			}
 		}
@@ -709,7 +709,7 @@ public class CCBPMDesignerBase extends BaseController {
 		}
 
 		// 3.数据源字典表
-		dt.Rows.Add("SrcRoot", "-1", "数据源字典表", 0, 1, "SRCROOT");
+		dt.Rows.AddRow("SrcRoot", "-1", "数据源字典表", 0, 1, "SRCROOT");
 
 		// 4.数据源
 		for (DataRow row : ds.Tables.get(1).Rows) {
@@ -723,21 +723,21 @@ public class CCBPMDesignerBase extends BaseController {
 
 		// 5.数据接口表
 		for (DataRow row : ds.Tables.get(2).Rows) {
-			dt.Rows.Add(
+			dt.Rows.AddRow(
 					row.get("no"),
 					"".equals(row.get("parentno"))|| StringHelper.isNullOrEmpty(String.valueOf(row.get("parentno")))? "local" : row.get("ParentNo"),
 							row.get("name"), row.get("idx"), row.get("isparent"), row.get("ttype"));
 		}
 
 		// 6.表单相关；7.枚举列表；8.JS验证库；9.Internet云数据；10.私有表单库；11.共享表单库
-		dt.Rows.Add("FormRef", "-1", "表单相关", 0, 1, "FORMREF");
-		dt.Rows.Add("Enums", "FormRef", "枚举列表", 0, 0, "ENUMS");
-		dt.Rows.Add("JSLib", "FormRef", "JS验证库", 0, 0, "JSLIB");
-		dt.Rows.Add("FUNCM", "FormRef", "功能执行", 0, 0, "FUNCM");
+		dt.Rows.AddRow("FormRef", "-1", "表单相关", 0, 1, "FORMREF");
+		dt.Rows.AddRow("Enums", "FormRef", "枚举列表", 0, 0, "ENUMS");
+		dt.Rows.AddRow("JSLib", "FormRef", "JS验证库", 0, 0, "JSLIB");
+		dt.Rows.AddRow("FUNCM", "FormRef", "功能执行", 0, 0, "FUNCM");
 
-		dt.Rows.Add("CloundData", "-1", "ccbpm云服务-表单云", 0, 1, "CLOUNDDATA");
-		dt.Rows.Add("PriForm", "CloundData", "私有表单云", 0, 0, "PRIFORM");
-		dt.Rows.Add("ShareForm", "CloundData", "共有表单云", 0, 0, "SHAREFORM");
+		dt.Rows.AddRow("CloundData", "-1", "ccbpm云服务-表单云", 0, 1, "CLOUNDDATA");
+		dt.Rows.AddRow("PriForm", "CloundData", "私有表单云", 0, 0, "PRIFORM");
+		dt.Rows.AddRow("ShareForm", "CloundData", "共有表单云", 0, 0, "SHAREFORM");
 		sbJson.delete(0, sbJson.length());
 
 		String sTmp = "";
@@ -812,7 +812,7 @@ public class CCBPMDesignerBase extends BaseController {
 			for (int i = 0; i < depts.size(); i++) {
 				Dept dept = (Dept) depts.get(i);
 				// 增加部门
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(),"DEPT");
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(),"DEPT");
 				des.put(dept.getNo(), new ArrayList<String>());
 				dss.put(dept.getNo(), new ArrayList<String>());
 
@@ -849,7 +849,7 @@ public class CCBPMDesignerBase extends BaseController {
 							}
 
 							dss.get(dept.getNo()).add(es.getFK_Station());
-							dt.Rows.Add(
+							dt.Rows.AddRow(
 									dept.getNo() + "|" + es.getFK_Station(),
 									dept.getNo(), stt.getName(), "STATION");
 						}
@@ -877,7 +877,7 @@ public class CCBPMDesignerBase extends BaseController {
 							continue;
 						}
 
-						dt.Rows.Add(ds.getKey() + "|" + st + "|" + emp,
+						dt.Rows.AddRow(ds.getKey() + "|" + st + "|" + emp,
 								ds.getKey() + "|" + st, empt.getName(), "EMP");
 					}
 				}
@@ -899,7 +899,7 @@ public class CCBPMDesignerBase extends BaseController {
 			for (int n = 0; n < depts.size(); n++) {
 				BP.GPM.Dept dept = (BP.GPM.Dept) depts.get(n);
 				// 增加部门
-				dt.Rows.Add(dept.getNo(), dept.getParentNo(), dept.getName(),"DEPT");
+				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(),"DEPT");
 
 				// 增加部门岗位
 				dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, dept.getNo());
@@ -913,7 +913,7 @@ public class CCBPMDesignerBase extends BaseController {
 						continue;
 					}
 
-					dt.Rows.Add(dept.getNo() + "|" + ds.getFK_Station(),
+					dt.Rows.AddRow(dept.getNo() + "|" + ds.getFK_Station(),
 							dept.getNo(), stt.getName(), "STATION");
 
 					// 增加部门岗位人员
@@ -932,7 +932,7 @@ public class CCBPMDesignerBase extends BaseController {
 							continue;
 						}
 
-						dt.Rows.Add(dept.getNo() + "|" + ds.getFK_Station()
+						dt.Rows.AddRow(dept.getNo() + "|" + ds.getFK_Station()
 								+ "|" + des.getFK_Emp(), dept.getNo() + "|"
 								+ ds.getFK_Station(), empt.getName(), "EMP");
 					}

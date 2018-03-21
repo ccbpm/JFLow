@@ -161,7 +161,7 @@ public class CC extends Entity
                          DataRow dr = dt.NewRow();
                          dr.setValue("No", mydr.getValue("No"));
                          dr.setValue("Name", mydr.getValue("Name"));
-                         dt.Rows.Add(dr);
+                         dt.Rows.AddRow(dr);
                      }
 
                      if ("0".equals(dept.getParentNo()))

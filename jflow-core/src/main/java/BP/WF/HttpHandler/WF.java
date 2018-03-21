@@ -999,7 +999,7 @@ public class WF extends WebContralBase
 					DataRow drDll = dt_FK_Dll.NewRow();
 					drDll.setValue2017("No",dllRow.getValue_2017("No"));
 					drDll.setValue2017("Name", dllRow.getValue_2017("Name"));
-					dt_FK_Dll.Rows.Add(drDll);
+					dt_FK_Dll.Rows.AddRow(drDll);
 				}
 				myds.Tables.add(dt_FK_Dll);
 				continue;

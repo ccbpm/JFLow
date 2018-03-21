@@ -32,6 +32,11 @@ public class NodeYGFlowAttr extends BP.En.EntityOIDNameAttr
 	public static final String ExpType = "ExpType";
 	//条件表达式
 	public static final String CondExp = "CondExp";
+	public static final String YBFlowReturnRole = "YBFlowReturnRole";
+	
+	public static final String ReturnToNode = "ReturnToNode";	  
+	
+	
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

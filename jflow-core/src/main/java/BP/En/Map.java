@@ -2293,7 +2293,7 @@ public class Map
         attr.setUIDDLShowType(DDLShowType.BindTable);
         attr.setUIBindKey(sql);
         attr.setHisFKEns(null);
-        attr.setUIIsReadonly(uiIsEnable);
+        attr.setUIIsReadonly(!uiIsEnable);
         this.getAttrs().Add(attr);
         //他的名称列.
         attr = new Attr();

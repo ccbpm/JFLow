@@ -3025,6 +3025,17 @@ public class Glo
 
 		//增加对新规则的支持. @MyField; 格式.
 		Row row=en.getRow();
+		
+		   for (String key : row.keySet())
+           {
+               if (exp.contains("@" + key + ";"))
+                   exp = exp.replace("@" + key + ";", row.get(key).toString());
+           }
+		   
+		   if (exp.contains("@") == false)
+	            return exp;
+		  
+		   
 		//特殊判断.
         if (row.containsKey("OID")==true)
             exp = exp.replaceAll("@WorkID", row.GetValByKey("OID").toString());

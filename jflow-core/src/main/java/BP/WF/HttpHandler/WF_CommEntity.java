@@ -490,6 +490,32 @@ public class WF_CommEntity extends WebContralBase {
 
 			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 		}
+		
+		   //加入sql模式的外键.
+        for (Attr attr : en.getEnMap().getAttrs())
+        {
+            if (attr.getIsRefAttr() == true)
+                continue;
+
+            if (DataType.IsNullOrEmpty(attr.getUIBindKey()) || attr.getUIBindKey().length() <= 10)
+                continue;
+
+            if (attr.getUIIsReadonly() == true)
+                continue;
+
+            if (attr.getUIBindKey().contains("SELECT") == true || attr.getUIBindKey().contains("select") == true)
+            {
+                /*是一个sql*/
+                String sqlBindKey = attr.getUIBindKey();
+                
+                sqlBindKey = BP.WF.Glo.DealExp(sqlBindKey, en, null);
+
+                DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
+                dt.TableName = attr.getKey();
+                ds.Tables.add(dt);
+            }
+        }
+		
 
 		String enumKeys = "";
 		for (Attr attr : map.getAttrs()) {

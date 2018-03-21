@@ -8,7 +8,7 @@ import BP.DA.AtPara;
 import BP.DA.DataType;
 
 /**
- * 属性集合
+ * 灞炴�ч泦鍚�
  */
 public class Attrs extends ArrayList<Attr>
 {
@@ -26,7 +26,7 @@ public class Attrs extends ArrayList<Attr>
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	// 关于属性的增加 String
+	// 鍏充簬灞炴�х殑澧炲姞 String
 	protected final void AddTBString(String key, String field,
 			Object defaultVal, FieldType _FieldType, TBType tbType,
 			String desc, boolean uiVisable, boolean isReadonly, int minLength,
@@ -102,7 +102,7 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 增加附件
+	 * 澧炲姞闄勪欢
 	 * 
 	 * @param fileDesc
 	 */
@@ -123,25 +123,25 @@ public class Attrs extends ArrayList<Attr>
 		// this.IsHaveFJ = true;
 	}
 	
-	// 关于属性的增加 String
+	// 鍏充簬灞炴�х殑澧炲姞 String
 	
-	// 关于属性的增加 Int
+	// 鍏充簬灞炴�х殑澧炲姞 Int
 	
 	/**
-	 * 增加一个普通的类型。
+	 * 澧炲姞涓�涓櫘閫氱殑绫诲瀷銆�
 	 * 
 	 * @param key
-	 *            键
+	 *            閿�
 	 * @param _Field
-	 *            字段
+	 *            瀛楁
 	 * @param defaultVal
-	 *            默认值
+	 *            榛樿鍊�
 	 * @param desc
-	 *            描述
+	 *            鎻忚堪
 	 * @param uiVisable
-	 *            是不是可见
+	 *            鏄笉鏄彲瑙�
 	 * @param isReadonly
-	 *            是不是只读
+	 *            鏄笉鏄彧璇�
 	 */
 	public final void AddTBInt(String key, String _Field, int defaultVal,
 			String desc, boolean uiVisable, boolean isReadonly)
@@ -160,18 +160,18 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 增加一个普通的类型。字段值与属性相同。
+	 * 澧炲姞涓�涓櫘閫氱殑绫诲瀷銆傚瓧娈靛�间笌灞炴�х浉鍚屻��
 	 * 
 	 * @param key
-	 *            键
+	 *            閿�
 	 * @param defaultVal
-	 *            默认值
+	 *            榛樿鍊�
 	 * @param desc
-	 *            描述
+	 *            鎻忚堪
 	 * @param uiVisable
-	 *            是不是可见
+	 *            鏄笉鏄彲瑙�
 	 * @param isReadonly
-	 *            是不是只读
+	 *            鏄笉鏄彧璇�
 	 */
 	public final void AddTBInt(String key, int defaultVal, String desc,
 			boolean uiVisable, boolean isReadonly)
@@ -201,9 +201,9 @@ public class Attrs extends ArrayList<Attr>
 		this.Add(attr);
 	}
 	
-	// 关于属性的增加 Int
+	// 鍏充簬灞炴�х殑澧炲姞 Int
 	
-	// 关于属性的增加 Float类型
+	// 鍏充簬灞炴�х殑澧炲姞 Float绫诲瀷
 	public final void AddTBFloat(String key, String _Field, float defaultVal,
 			String desc, boolean uiVisable, boolean isReadonly)
 	{
@@ -225,9 +225,9 @@ public class Attrs extends ArrayList<Attr>
 		this.AddTBFloat(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 	
-	// 关于属性的增加 Float
+	// 鍏充簬灞炴�х殑澧炲姞 Float
 	
-	// Decimal类型
+	// Decimal绫诲瀷
 	public final void AddTBDecimal(String key, String _Field,
 			java.math.BigDecimal defaultVal, String desc, boolean uiVisable,
 			boolean isReadonly)
@@ -250,7 +250,7 @@ public class Attrs extends ArrayList<Attr>
 		this.AddTBDecimal(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 	
-	// 日期
+	// 鏃ユ湡
 	public final void AddTBDate(String key, String field, String defaultVal,
 			String desc, boolean uiVisable, boolean isReadonly)
 	{
@@ -274,7 +274,7 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 增加日期类型的控健(默认日期是当前日期)
+	 * 澧炲姞鏃ユ湡绫诲瀷鐨勬帶鍋�(榛樿鏃ユ湡鏄綋鍓嶆棩鏈�)
 	 * 
 	 * @param key
 	 *            key
@@ -299,20 +299,20 @@ public class Attrs extends ArrayList<Attr>
 		 */
 	}
 	
-	// 日期时间类型。
+	// 鏃ユ湡鏃堕棿绫诲瀷銆�
 	/**
-	 * 增加日期类型的控健
+	 * 澧炲姞鏃ユ湡绫诲瀷鐨勬帶鍋�
 	 * 
 	 * @param key
-	 *            健值
+	 *            鍋ュ��
 	 * @param defaultVal
-	 *            默认值
+	 *            榛樿鍊�
 	 * @param desc
-	 *            描述
+	 *            鎻忚堪
 	 * @param uiVisable
-	 *            是不是可见
+	 *            鏄笉鏄彲瑙�
 	 * @param isReadonly
-	 *            是不是只读
+	 *            鏄笉鏄彧璇�
 	 */
 	public final void AddTBDateTime(String key, String field,
 			String defaultVal, String desc, boolean uiVisable,
@@ -354,7 +354,7 @@ public class Attrs extends ArrayList<Attr>
 		 */
 	}
 	
-	// 于帮定自定义,枚举类型有关系的操作。
+	// 浜庡府瀹氳嚜瀹氫箟,鏋氫妇绫诲瀷鏈夊叧绯荤殑鎿嶄綔銆�
 	public final void AddDDLSysEnum(String key, int defaultVal, String desc,
 			boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
 	{
@@ -382,16 +382,16 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 自定义枚举类型
+	 * 鑷畾涔夋灇涓剧被鍨�
 	 * 
 	 * @param key
-	 *            键
+	 *            閿�
 	 * @param field
-	 *            字段
+	 *            瀛楁
 	 * @param defaultVal
-	 *            默认
+	 *            榛樿
 	 * @param desc
-	 *            描述
+	 *            鎻忚堪
 	 * @param sysEnumKey
 	 *            Key
 	 */
@@ -416,14 +416,14 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 自定义枚举类型
+	 * 鑷畾涔夋灇涓剧被鍨�
 	 * 
 	 * @param key
-	 *            键
+	 *            閿�
 	 * @param defaultVal
-	 *            默认
+	 *            榛樿
 	 * @param desc
-	 *            描述
+	 *            鎻忚堪
 	 * @param sysEnumKey
 	 *            Key
 	 */
@@ -443,24 +443,24 @@ public class Attrs extends ArrayList<Attr>
 	
 	// entities
 	/**
-	 * 于实体有关系的操作。
+	 * 浜庡疄浣撴湁鍏崇郴鐨勬搷浣溿��
 	 * 
 	 * @param key
-	 *            健值
+	 *            鍋ュ��
 	 * @param field
-	 *            字段
+	 *            瀛楁
 	 * @param defaultVal
-	 *            默认值
+	 *            榛樿鍊�
 	 * @param dataType
-	 *            DataType类型
+	 *            DataType绫诲瀷
 	 * @param desc
-	 *            描述
+	 *            鎻忚堪
 	 * @param ens
-	 *            实体集合
+	 *            瀹炰綋闆嗗悎
 	 * @param refKey
-	 *            关联的建
+	 *            鍏宠仈鐨勫缓
 	 * @param refText
-	 *            关联的Text
+	 *            鍏宠仈鐨凾ext
 	 */
 	public final void AddDDLEntities(String key, String field,
 			Object defaultVal, int dataType, FieldType _fildType, String desc,
@@ -496,24 +496,24 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 于实体有关系的操作。字段与属性名称相同。
+	 * 浜庡疄浣撴湁鍏崇郴鐨勬搷浣溿�傚瓧娈典笌灞炴�у悕绉扮浉鍚屻��
 	 * 
 	 * @param key
-	 *            健值
+	 *            鍋ュ��
 	 * @param field
-	 *            字段
+	 *            瀛楁
 	 * @param defaultVal
-	 *            默认值
+	 *            榛樿鍊�
 	 * @param dataType
-	 *            DataType类型
+	 *            DataType绫诲瀷
 	 * @param desc
-	 *            描述
+	 *            鎻忚堪
 	 * @param ens
-	 *            实体集合
+	 *            瀹炰綋闆嗗悎
 	 * @param refKey
-	 *            关联的建
+	 *            鍏宠仈鐨勫缓
 	 * @param refText
-	 *            关联的Text
+	 *            鍏宠仈鐨凾ext
 	 */
 	public final void AddDDLEntities(String key, Object defaultVal,
 			int dataType, String desc, Entities ens, String refKey,
@@ -581,7 +581,7 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 下一个Attr 是否是 Doc 类型.
+	 * 涓嬩竴涓狝ttr 鏄惁鏄� Doc 绫诲瀷.
 	 * 
 	 * @param key
 	 * @return
@@ -613,7 +613,7 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 是否包含属性key。
+	 * 鏄惁鍖呭惈灞炴�ey銆�
 	 * 
 	 * @param key
 	 * @return
@@ -643,7 +643,7 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 物理字段Num
+	 * 鐗╃悊瀛楁Num
 	 */
 	public final int getConutOfPhysicsFields()
 	{
@@ -664,7 +664,7 @@ public class Attrs extends ArrayList<Attr>
 	 */
 	
 	/**
-	 * 通过Key ， 取出他的Index.
+	 * 閫氳繃Key 锛� 鍙栧嚭浠栫殑Index.
 	 * 
 	 * @param key
 	 *            Key
@@ -693,22 +693,22 @@ public class Attrs extends ArrayList<Attr>
 		}
 		return null;
 	}
-	/** 属性集合
+	/** 灞炴�ч泦鍚�
 	 
-	 @param cfgKeys 约定的字段格式
+	 @param cfgKeys 绾﹀畾鐨勫瓧娈垫牸寮�
 */
 //ORIGINAL LINE: public Attrs(string cfgKeys)
 	public Attrs(String cfgKeys)
 	{
 
 //       *
-//        *  根据约定的格式的字符串生成集合.
+//        *  鏍规嵁绾﹀畾鐨勬牸寮忕殑瀛楃涓茬敓鎴愰泦鍚�.
 //        *  
-//@Key=MyStringField;Name=我的中文字段;Type=String;DefVal=默认值;AppType=Normal;IsLine=1             
-//@Key=MyIntField;Name=我的数字字段;Type=Int;DefVal=12;AppType=Normal;IsLine=false
-//@Key=MyFloatField;Name=我的浮点字段;Type=Float;DefVal=12.0;AppType=Normal;IsLine=false
-//@Key=MyEnumField;Name=我的枚举字段;Type=Int;DefVal=0;AppType=Enum;IsLine=false;BindKey=[0=Yes,1=No,2=Unhnow]
-//@Key=MyFKField;Name=我的外键字段;Type=String;DefVal=01;AppType=FK;IsLine=false;BindKey=BP.Port.Depts
+//@Key=MyStringField;Name=鎴戠殑涓枃瀛楁;Type=String;DefVal=榛樿鍊�;AppType=Normal;IsLine=1             
+//@Key=MyIntField;Name=鎴戠殑鏁板瓧瀛楁;Type=Int;DefVal=12;AppType=Normal;IsLine=false
+//@Key=MyFloatField;Name=鎴戠殑娴偣瀛楁;Type=Float;DefVal=12.0;AppType=Normal;IsLine=false
+//@Key=MyEnumField;Name=鎴戠殑鏋氫妇瀛楁;Type=Int;DefVal=0;AppType=Enum;IsLine=false;BindKey=[0=Yes,1=No,2=Unhnow]
+//@Key=MyFKField;Name=鎴戠殑澶栭敭瀛楁;Type=String;DefVal=01;AppType=FK;IsLine=false;BindKey=BP.Port.Depts
 //        * 
 
 		String[] strs = cfgKeys.split("[@]", -1);
@@ -750,7 +750,7 @@ public class Attrs extends ArrayList<Attr>
 		}
 	}
 	/**
-	 * 属性集合
+	 * 灞炴�ч泦鍚�
 	 */
 	public Attrs()
 	{
@@ -760,8 +760,8 @@ public class Attrs extends ArrayList<Attr>
 	{
 		if (attr.getField() == null || attr.getField().equals(""))
 		{
-			throw new RuntimeException("属性设置错误：您不能设置 key='" + attr.getKey()
-					+ "',得字段值为空");
+			throw new RuntimeException("灞炴�ц缃敊璇細鎮ㄤ笉鑳借缃� key='" + attr.getKey()
+					+ "',寰楀瓧娈靛�间负绌�");
 		}
 		
 		boolean k = attr.getIsKeyEqualField();
@@ -769,7 +769,7 @@ public class Attrs extends ArrayList<Attr>
 	}
 	
 	/**
-	 * 加入一个属性。
+	 * 鍔犲叆涓�涓睘鎬с��
 	 * 
 	 * @param attr
 	 *            attr
@@ -824,19 +824,19 @@ public class Attrs extends ArrayList<Attr>
 			// myattr.UIBindKeyOfEn = attr.UIBindKeyOfEn;
 			myattr.setHisFKEns(attr.getHisFKEns());
 			
-			// myattr.Desc=attr.Desc+"名称";
+			// myattr.Desc=attr.Desc+"鍚嶇О";
 			
-			String desc = "名称";
+			String desc = "鍚嶇О";
 			myattr.setDesc(desc);
 			/*
-			 * warning string desc=myattr.Desc="名称";
+			 * warning string desc=myattr.Desc="鍚嶇О";
 			 */
-			if (desc.indexOf("编号") >= 0)
+			if (desc.indexOf("缂栧彿") >= 0)
 			{
-				myattr.setDesc(attr.getDesc().replace("编号", "名称"));
+				myattr.setDesc(attr.getDesc().replace("缂栧彿", "鍚嶇О"));
 			} else
 			{
-				myattr.setDesc(attr.getDesc() + "名称");
+				myattr.setDesc(attr.getDesc() + "鍚嶇О");
 			}
 			
 			if (attr.getUIContralType() == UIContralType.DDL)
@@ -885,38 +885,83 @@ public class Attrs extends ArrayList<Attr>
 		}
 	}
 	
+
 	/**
-	 * 根据索引访问集合内的元素Attr。
+	 * 鏍规嵁绱㈠紩璁块棶闆嗗悎鍐呯殑鍏冪礌Attr銆�
 	 */
 	public final Attr getItem(int index)
 	{
-		return (Attr) this.get(index);
-		/*
-		 * warning return (Attr)this.get(index);
-		 */
+		return (Attr) this.get(index);		
 	}
+	public final BP.Sys.MapAttrs ToMapAttrs() 
+	{		
 
-	public BP.Sys.MapAttrs ToMapAttrs() {
 		BP.Sys.MapAttrs mapAttrs = new BP.Sys.MapAttrs();
-		for (Attr item : this) {
-			if (item.getMyFieldType() == FieldType.RefText)
-				continue;
-			BP.Sys.MapAttr mattr = new BP.Sys.MapAttr();
-			mattr.setKeyOfEn(item.getKey());
-			mattr.setName(item.getDesc());
-			mattr.setMyDataType(item.getMyDataType());
-			mattr.setUIContralType(item.getUIContralType());
-			mattr.setUIBindKey(item.getUIBindKey());
-			mattr.setMaxLen(item.getMaxLength());
-			mattr.setMinLen(item.getMinLength());
-			mattr.setDefValReal(item.getDefaultValOfReal());
-			if (item.getMyFieldType() == FieldType.Enum)
-				mattr.setLGType(FieldTypeS.Enum);
-			if (item.getMyFieldType() == FieldType.FK)
-				mattr.setLGType(FieldTypeS.FK);
-			mapAttrs.AddEntity(mattr);
-		}
-		return mapAttrs;
-	}
+        for (Attr item : this)
+        {
+            if (item.getMyFieldType() == FieldType.RefText)
+                continue;
 
-}
+         //   if (item.IsPK == true && item.UIVisible == false)
+           //     continue;
+
+            BP.Sys.MapAttr mattr = new BP.Sys.MapAttr();
+            mattr.setKeyOfEn(  item.getKey());
+            mattr.setName( item.getDesc());
+            mattr.setMyDataType(item.getMyDataType()); 
+            mattr.setUIContralType(item.getUIContralType());
+            mattr.setUIBindKey(item.getUIBindKey());
+
+            //@于庆海，这里需要翻译.
+            mattr.setUIWidth(item.getUIWidthInt());
+            mattr.setUIHeightInt(item.getUIHeight());
+
+            mattr.setMaxLen(item.getMaxLength());
+            mattr.setMinLen(item.getMinLength());
+            mattr.setUIVisible(item.getUIVisible());
+            mattr.setDefValReal(item.getDefaultValOfReal());
+
+            mattr.setUIIsEnable(item.getUIIsReadonly());
+            if (item.getMyFieldType() == FieldType.Normal)
+            {
+                if (item.getMyDataType() == DataType.AppInt ||
+                    item.getMyDataType() == DataType.AppFloat ||
+                    item.getMyDataType() == DataType.AppDouble ||
+                    item.getMyDataType() == DataType.AppMoney ||
+                    item.getMyDataType() == DataType.AppString)
+                {
+                    mattr.setUIIsEnable(!item.getUIIsReadonly()) ; 
+                }
+            }
+
+            if (item.UIIsLine == true)
+                mattr.setColSpan(3);
+
+            //帮助url.
+            mattr.setUIRefKeyText(item.HelperUrl);
+
+            //if (item.UIIsReadonly == true && item.MyFieldType== FieldType.Normal)
+            //    mattr.UIIsEnable = !item.UIIsReadonly;
+            //else
+            //    mattr.UIIsEnable = item.UIIsReadonly;
+           // else
+             //   mattr.UIIsEnable = !item.UIIsReadonly;
+
+
+
+            if (item.getMyFieldType() == FieldType.Enum)
+                mattr.setLGType(FieldTypeS.Enum)  ;
+
+            if (item.getMyFieldType() == FieldType.FK)
+                mattr.setLGType( FieldTypeS.FK) ;
+
+            mapAttrs.AddEntity(mattr);
+        }
+	
+        return mapAttrs;
+     }
+ }
+	
+	
+
+ 

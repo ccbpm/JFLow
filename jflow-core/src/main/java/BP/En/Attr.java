@@ -6,6 +6,7 @@ import BP.Sys.MapAttr;
 
 /**
  * 属性
+ * 
  */
 public class Attr
 {

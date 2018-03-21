@@ -10,6 +10,7 @@ import BP.Sys.MapAttr;
  */
 public class Attr
 {
+	
 	public final MapAttr getToMapAttr()
 	{
 		

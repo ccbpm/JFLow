@@ -7701,7 +7701,7 @@ public class Dev2Interface
 		BP.WF.Dev2Interface.Port_SendMsg(toEmpNo, WebUser.getName() + "把工作:" + gwf.getTitle(), "抄送:" + msgTitle, "CC" + nd.getNodeID() + "_" + workID + "_", BP.WF.SMSMsgType.CC, gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
 
 		return "已经成功的把工作抄送给:" + toEmpNo + "," + toEmpName;
-
+ 
 	}
 	/** 
 	 删除草稿
@@ -7738,21 +7738,7 @@ public class Dev2Interface
 		Paras ps = new Paras();
 		ps.SQL = "DELETE FROM " + fl.getPTable() + " WHERE OID=" + dbstr + "OID ";
 		ps.Add(GERptAttr.OID, workID);
-		DBAccess.RunSQL(ps);
-
-
-		//删除开始节点数据.
-		try
-		{
-			ps = new Paras();
-			ps.SQL = "DELETE FROM ND" + Integer.parseInt(fk_flow + "01") + " WHERE OID=" + dbstr + "OID ";
-			ps.Add(GERptAttr.OID, workID);
-			DBAccess.RunSQL(ps);
-		}
-		catch (java.lang.Exception e)
-		{
-		}
-
+		DBAccess.RunSQL(ps); 
 	}
 	/** 
 	 把草稿设置待办

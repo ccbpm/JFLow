@@ -54,15 +54,12 @@
                 url: Handler + "?DoType=Return_Init&FK_Node=" + pageData.FK_Node + "&WorkID=" + pageData.WorkID + "&FID=" + pageData.FID + "&m=" + Math.random(),
                 dataType: 'html',
                 success: function (data) {
-                	
-                	//alert(data);
-                	
+
                     if (data.indexOf('err@') == 0) {
                         console.error("退回窗口错误信息" + data);
                         alert(data);
                         return;
                     }
-                    
                     var returnNodeArr = JSON.parse(data);
                     var nodeListHtml = '';
 
@@ -71,8 +68,6 @@
                         if (returnNode.AtPara && returnNode.AtPara.indexOf('IsHuiQian=1') >=0 ) {
                             return true;
                         }
-                      //  alert(returnNode.Name);
-                        
                         nodeListHtml += '<option data-IsBackTracking=' + returnNode.IsBackTracking + ' value="' + returnNode.No + '@' + returnNode.Rec + '">' + returnNode.RecName + '=&gt;' + returnNode.Name + '</option>';
                     });
 

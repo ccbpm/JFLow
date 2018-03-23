@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title> 
-    <link href="../../../Comm/Style/CommStyle.css" rel="stylesheet" type="text/css" />
     <link href="../../../../DataUser/Style/ccbpm.css" rel="stylesheet"  type="text/css" />
     <link href="../../../Scripts/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="../../../Scripts/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
@@ -26,27 +25,53 @@
             var ens = new Entities("BP.WF.Template.NodeStations");
             ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
 
-            var html = "合计:(<font color=red>" + ens.length + "</font>)条";
-
+            var html = "<table style='width:100%;' >";
+            html += "<caption >已经设置的岗位,合计:(<font color=red>" + ens.length + "</font>)条</caption>";
+            var idx = 0;
             for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
-                console.log(en);
-                html += "&nbsp;&nbsp;&nbsp;" + en.FK_StationText;
+                if (idx == 0)
+                    html += "<tr>";
+
+                html += "<td>" + en.FK_StationText + "</td>";
+
+                idx++;
+                if (idx == 3) {
+                    idx = 0;
+                    html += "</tr>";
+                }
             }
+
+            html += "</table>";
             document.getElementById("stas").innerHTML = html;
+
+             
 
             //获取节点部门
             ens = new Entities("BP.WF.Template.NodeDepts");
             ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
 
-            var html = "合计:(<font color=red>" + ens.length + "</font>)条";
 
+            var html = "<table style='width:100%;' >";
+            html += "<caption >已经设置的部门,合计:(<font color=red>" + ens.length + "</font>)条</caption>";
+            var idx = 0;
             for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
-                console.log(en);
-                html += "&nbsp;&nbsp;&nbsp;" + en.FK_DeptText;
+                if (idx == 0)
+                    html += "<tr>";
+
+                html += "<td>" + en.FK_DeptText + "</td>";
+
+                idx++;
+                if (idx == 3) {
+                    idx = 0;
+                    html += "</tr>";
+                }
             }
+
+            html += "</table>";
             document.getElementById("dept").innerHTML = html;
+             
         });
 
 
@@ -83,13 +108,29 @@
 
 <div id="bar"> </div>
 
+<table style="width:100%; border:0px;">
+<tr>
+
+<td style="width:50%;"> 
+
 <fieldset>
-    <legend>设置</legend>
+    <legend>设置岗位</legend>
 
     <ul>
         <li>
              <a href="javascript:OpenStation()"> 设置与更改岗位</a> 
         </li>
+    </ul>
+</fieldset>
+ </td>
+
+
+ 
+<td style="width:50%;"> 
+<fieldset>
+    <legend>设置部门</legend>
+
+    <ul>
         <li> 
             <a href="javascript:OpenNew()"> 设置/更改部门</a>
         </li>
@@ -99,14 +140,31 @@
 
     </ul>
 </fieldset>
-<fieldset>
-    <legend>已经设置的岗位</legend>
+ </td>
+
+</tr>
+<tr>
+
+
+<td  valign=top>
     <div id="stas"> </div>
-</fieldset>
-<fieldset>
-    <legend>已经设置的部门</legend>
+  </td>
+
+<td valign=top>   
     <div id="dept"> </div>
-</fieldset>
+ </td>
+
+</tr>
+
+
+
+
+</table>
+
+
+
+
+
 
 <fieldset>
     <legend>说明</legend>

@@ -2672,7 +2672,7 @@ public class Dev2Interface
 		   //增加退回到父流程节点的设计.
         if (nd.getIsStartNode() == true)
         {
-            /*如果是开始的节点有可能退回到子流程上去.*/
+            //*如果是开始的节点有可能退回到子流程上去.*/@du
             GenerWorkFlow gwf = new GenerWorkFlow(workid);
             if (gwf.getPWorkID() == 0)
                 throw new RuntimeException("@当前节点是开始节点，您不能执行退回。");

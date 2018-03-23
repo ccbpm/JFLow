@@ -40,6 +40,8 @@ public abstract class HttpHandlerBase extends BaseController
 
 			//返回执行的结果.
 			//ctrl.context.Response.Write(data);
+			this.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
+			this.getResponse().setCharacterEncoding("UTF-8");
 			out = this.getResponse().getWriter();
 			out.write(data);
 		}

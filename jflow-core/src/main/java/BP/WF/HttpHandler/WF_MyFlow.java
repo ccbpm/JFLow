@@ -15,6 +15,7 @@ import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.Attrs;
@@ -68,6 +69,7 @@ import BP.WF.Template.TurnTos;
 import BP.WF.Template.WebOfficeWorkModel;
 import BP.WF.Template.WhoIsPK;
 import BP.Web.WebUser;
+import cn.jflow.controller.wf.KeySearchController;
 
 public class WF_MyFlow extends WebContralBase {
 	@SuppressWarnings("unchecked")
@@ -1923,6 +1925,18 @@ public class WF_MyFlow extends WebContralBase {
 			url += "?" + urlExt;
 		}
 
+		@SuppressWarnings("rawtypes")
+		Enumeration allKeys = this.getRequest().getParameterNames();
+		String _str;
+		while (allKeys.hasMoreElements()) {
+			_str = allKeys.nextElement().toString();
+			if(DataType.IsNullOrEmpty(_str) == true)
+				continue;			
+			if (url.contains(_str + "=") == true)
+				continue;
+			url += "&" + _str + "=" +this.GetRequestVal(_str);
+		}
+        
 		url = url.replace("?&", "?");
 		url = url.replace("&&", "&");
 		return url;

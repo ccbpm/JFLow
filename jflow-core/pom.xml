@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>jflow</groupId>
-		<artifactId>jflow-parent</artifactId>
+		<artifactId>jflow</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
-        <relativePath>../jflow-parent/pom.xml</relativePath>
+        <relativePath>../jflow/pom.xml</relativePath>
 	</parent>
 	<groupId>jflow-core</groupId>
 	<artifactId>jflow-core</artifactId>

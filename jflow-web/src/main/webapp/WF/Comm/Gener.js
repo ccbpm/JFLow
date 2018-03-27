@@ -190,9 +190,11 @@ function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal) {
 
 /*绑定枚举值.*/
 function GenerBindEnumKey(ctrlDDLId, enumKey, selectVal) {
+
     $.ajax({
+
         type: 'post',
-        async: true,
+        async: false,
         url: dynamicHandler + "?DoType=EnumList&EnumKey=" + enumKey + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -363,6 +365,7 @@ function GenerFullAllCtrlsVal(data) {
                 }
                 var kv = o.split("=");
                 if (kv.length == 2) {
+
                     json[kv[0]] = kv[1];
                     var suffix = kv[0];
                     var val = kv[1];
@@ -379,9 +382,22 @@ function GenerFullAllCtrlsVal(data) {
                     //下拉框.
                     ddl = document.getElementById('DDLPara_' + suffix);
                     if (ddl != null) {
+
                         if (ddl.options.length == 0)
                             return true;
-                        $("#DDL_" + suffix).val(val); // 操作权限.
+
+                        console.log(suffix + "_before_" + val);
+
+                        //$("#DDLPara_" + suffix).val(""); // 操作权限.
+
+                        $("#DDLPara_" + suffix).val(val); // 操作权限.
+
+                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200); 
+                        //  json[kv[0]] = kv[1];
+                        //   $("#DDLPara_" + suffix).val("2"); // 操作权限.
+
+                        console.log(suffix + "_" + val);
+
                         return true;
                     }
 
@@ -1005,21 +1021,21 @@ var Entity = (function () {
         },
 
         DoMethodReturnString: function (methodName) {
-            var params = [];
-            $.each(arguments, function (i, o) {
-                if (i > 0)
-                    params.push(o);
-            });
 
-
+//            var params = [];
+//            $.each(arguments, function (i, o) {
+//                if (i > 0)
+//                    params.push(o);
+            //            });
 
             var self = this;
             var string;
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + self.pkval + "&MethodName=" + methodName + "&paras=" + params.join(",") + "&t=" + new Date().getTime(),
-                dataType: 'html',
+                data: arguments,
+                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + self.pkval + "&MethodName=" + methodName  + "&t=" + new Date().getTime(),
+                dataType: 'html',                 
                 success: function (data) {
                     string = data;
                 },
@@ -1034,6 +1050,7 @@ var Entity = (function () {
         },
 
         DoMethodReturnJSON: function (methodName, params) {
+
             var jsonString = this.DoMethodReturnString(methodName, params);
 
             if (jsonString.indexOf("err@") != -1) {
@@ -1349,18 +1366,19 @@ var Entities = (function () {
             this.deleteIt();
         },
         DoMethodReturnString: function (methodName) {
-            var params = [];
-            $.each(arguments, function (i, o) {
-                if (i > 0)
-                    params.push(o);
-            });
+//            var params = [];
+//            $.each(arguments, function (i, o) {
+//                if (i > 0)
+//                    params.push(o);
+//            });
 
             var self = this;
             var string;
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&paras=" + params.join(",") + "&t=" + new Date().getTime(),
+                data:arguments,
+                url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
                     string = data;
@@ -1631,7 +1649,7 @@ var HttpHandler = (function () {
 
     var parameters = {};
 
-    var formData;   
+    var formData;
 
     function HttpHandler(handlerName) {
         this.handlerName = handlerName;
@@ -1661,7 +1679,10 @@ var HttpHandler = (function () {
         constructor: HttpHandler,
 
         AddUrlData: function () {
+
             var queryString = document.location.search.substr(1);
+
+
             if (queryString.length > 0) {
                 var self = this;
                 $.each(queryString.split("&"), function (i, o) {
@@ -1673,6 +1694,7 @@ var HttpHandler = (function () {
                     }
                 });
             }
+
         },
 
         AddFormData: function () {
@@ -1681,6 +1703,13 @@ var HttpHandler = (function () {
 
         AddPara: function (key, value) {
             parameters[key] = value;
+        },
+
+        AddJson: function (json) {
+
+            for (var key in json) {
+                parameters[key] = json[key];
+            }
         },
 
         Clear: function () {
@@ -1701,14 +1730,15 @@ var HttpHandler = (function () {
             var self = this;
             var jsonString;
 
-           // alert(self.getParams());
-           // alert(self.getParams());
+            console.log(parameters);
+
+            //alert(json.stringtfy(parameters));
 
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&" + self.getParams() + "&t=" + Math.random(),
-                data: formData,
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
+                data: parameters,
                 dataType: 'html',
                 success: function (data) {
                     jsonString = data;

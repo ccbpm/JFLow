@@ -282,41 +282,35 @@
 			$("#" + window.frameElement.getAttribute("id"), parent.document).height($("body").height());
 		}
 
-        function SaveWorkCheck() {
+		function SaveWorkCheck() {
 
-            var doc = $("#WorkCheck_Doc").val();
+		    var doc = $("#WorkCheck_Doc").val();
+		 
+		    if (isReadonly == true)
+		        return;
 
-            if (isReadonly==true)
-                return;
+		    var param = {
+		        FK_Flow: fk_flow,
+		        FK_Node: nodeid,
+		        WorkID: workid,
+		        FID: fid,
+		        Doc: doc,
+		        IsCC: GetQueryString("IsCC")
+		    };
 
-//            if (doc.length == 0) {
-//                if (wcDesc.FWCDefInfo && wcDesc.FWCDefInfo.length > 0) {
-//                    doc = wcDesc.FWCDefInfo;
-//                    $("#WorkCheck_Doc").val(doc);
-//                }
-//            }
+		    var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
+		    handler.AddJson(param);
+		    var data = handler.DoMethodReturnString("WorkCheck_Save");
 
-            var param = {
-                DoType: "WorkCheck_Save",
-                FK_Flow: fk_flow,
-                FK_Node: nodeid,
-                WorkID: workid,
-                FID: fid,
-                Doc: doc,
-                IsCC: GetQueryString("IsCC")
-            };
+		    if (data.indexOf('err@') != -1) {
+		        alert(data);
+		        return;
+		    }
 
-            Handler_AjaxQueryData(param, function (data) {
-                if (data.indexOf('err@') != -1) {
-                    alert(data);
-                    return;
-                }
-
-                if (data.length > 0) {
-                    $("#rdt").text(data);
-                }
-            }, this);
-        }
+		    if (data.length > 0) {
+		        $("#rdt").text(data);
+		    }
+		}
 
         function DelWorkCheckAth(athPK) {
             isChange = false;

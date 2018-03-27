@@ -1,8 +1,0 @@
-.mymetadata
-.checkstyle
-.classpath
-.project
-.class
-/target/*
-/target
-/bin

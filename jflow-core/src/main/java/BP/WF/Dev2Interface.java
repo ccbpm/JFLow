@@ -2471,7 +2471,44 @@ public class Dev2Interface
 			default:
 				throw new RuntimeException("no such way...");
 		}
-		return BP.DA.DBAccess.RunSQLReturnTable(ps);
+		//@杜.翻译
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+            dt.Columns.get("ISREAD").ColumnName = "IsRead";
+            dt.Columns.get("STARTER").ColumnName = "Starter";
+            dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+            dt.Columns.get("WFSTATE").ColumnName = "WFState";
+            dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+            dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+            dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+            dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+            dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+
+            dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+            dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+            dt.Columns.get("WORKERDEPT").ColumnName = "WorkerDept";
+            dt.Columns.get("FK_EMP").ColumnName = "FK_Emp";
+            dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+
+            dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+            dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+            dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+            dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+            dt.Columns.get("BILLNO").ColumnName = "BillNo";
+
+            dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+            dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+            dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+            dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+            dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+
+            dt.Columns.get("LISTTYPE").ColumnName = "ListType";
+            dt.Columns.get("SENDER").ColumnName = "Sender";
+            dt.Columns.get("ATPARA").ColumnName = "AtPara";
+            dt.Columns.get("MYNUM").ColumnName = "MyNum";
+		}
+		return dt;
 	}
 	/** 
 	 获得我从任务池里申请下来的工作列表
@@ -2520,7 +2557,45 @@ public class Dev2Interface
 			default:
 				throw new RuntimeException("no such way...");
 		}
-		return BP.DA.DBAccess.RunSQLReturnTable(ps);
+		//@杜.翻译
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+        if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+        {
+		dt.Columns.get("WORKID").ColumnName = "WorkID";
+        dt.Columns.get("ISREAD").ColumnName = "IsRead";
+        dt.Columns.get("STARTER").ColumnName = "Starter";
+        dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+        dt.Columns.get("WFSTATE").ColumnName = "WFState";
+        dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+        dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+        dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+        dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+        dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+
+        dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+        dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+        dt.Columns.get("WORKERDEPT").ColumnName = "WorkerDept";
+        dt.Columns.get("FK_EMP").ColumnName = "FK_Emp";
+        dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+
+        dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+        dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+        dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+        dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+        dt.Columns.get("BILLNO").ColumnName = "BillNo";
+
+        dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+        dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+        dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+        dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+        dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+
+        dt.Columns.get("LISTTYPE").ColumnName = "ListType";
+        dt.Columns.get("SENDER").ColumnName = "Sender";
+        dt.Columns.get("ATPARA").ColumnName = "AtPara";
+        dt.Columns.get("MYNUM").ColumnName = "MyNum";
+        }
+		return dt;
 	}
 	/** 
 	 获得所有的流程挂起工作列表

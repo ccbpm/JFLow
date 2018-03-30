@@ -49,19 +49,17 @@
 <%@page import="cn.jflow.common.model.*"%>
 <%@page import="cn.jflow.model.designer.*"%>
 <%@page import="cn.jflow.controller.wf.workopt.AllotTaskController" %>
-
+<% request.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html;charset=utf-8");
+%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()	+ path + "/";
 %>
-<%
-	String name=SystemConfig.getSysName();
-	name= new String(name.getBytes("ISO-8859-1"),"utf-8");
- %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title><%=name%></title>
+<title><%=SystemConfig.getSysName()%></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">

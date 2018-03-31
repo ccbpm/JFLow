@@ -483,7 +483,7 @@ public class WF_CommEntity extends WebContralBase {
                 dr.setValue("RefMethodType", item.refMethodType.getValue()) ;
                 
                 dr.setValue("RefAttrKey", item.RefAttrKey) ;
-                dr.setValue("URL", myurl) ;
+                dr.setValue("Url", myurl) ;
                 
                 
                 dr.setValue("W", item.Width) ;
@@ -625,7 +625,7 @@ public class WF_CommEntity extends WebContralBase {
                 dr.setValue("RefMethodType", item.refMethodType.getValue()) ;
                 
                 dr.setValue("RefAttrKey", item.RefAttrKey) ;
-                dr.setValue("URL", myurl) ;
+                dr.setValue("Url", myurl) ;
                 
                 
                 dr.setValue("W", item.Width) ;

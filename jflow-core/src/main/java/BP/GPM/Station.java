@@ -63,8 +63,8 @@ public class Station extends EntityNoName
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, true, 1, 20, 100);
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 100, 200);
 		map.AddDDLEntities(StationAttr.FK_StationType, null, "类型", new StationTypes(), true);
-		map.AddTBStringDoc(StationAttr.DutyReq, null, "职责要求", true, false, true);
-		map.AddTBStringDoc(StationAttr.Makings, null, "素质要求", true, false, true);
+		 
+		map.AddTBStringDoc(StationAttr.OrgNo, null, "素质要求", true, false, true);
 		map.AddSearchAttr(StationAttr.FK_StationType);
 		this.set_enMap(map);
 		return this.get_enMap();

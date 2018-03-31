@@ -56,17 +56,7 @@ public class Station extends EntityNoName
 	{
 		return this.getNo().length() / 2;
 	}
-	
-	public final int getStaGrade()
-	{
-		return this.GetValIntByKey(StationAttr.StaGrade);
-	}
-	
-	public final void setStaGrade(int value)
-	{
-		this.SetValByKey(StationAttr.StaGrade, value);
-	}
-	
+	 
 	// 构造方法
 	/**
 	 * 岗位
@@ -103,8 +93,10 @@ public class Station extends EntityNoName
 		map.setDepositaryOfEntity(Depositary.Application);
 		map.setCodeStruct("2222222"); // 最大级别是 7.
 		
-		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 1, 20, 100);
-		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 100, 100);
+		map.AddTBStringPK(StationAttr.No, null, "编号", true, false, 1, 20, 100);
+		map.AddTBString(StationAttr.Name, null, "名称", true, false, 0, 100, 100);
+		map.AddTBString(StationAttr.OrgNo, "0", "组织", true, false, 0, 100, 100);
+		 
 		/*map.AddDDLSysEnum(StationAttr.StaGrade, 0, "类型", true, true,
 				StationAttr.StaGrade, "@1=高层岗@2=中层岗@3=执行岗");*/
 		

@@ -10,13 +10,9 @@ public class StationAttr extends EntityNoNameAttr
 	/** 
 	 岗位类型
 	*/
-	public static final String FK_StationType = "FK_StationType";
-	/** 
-	 素质要求
-	*/
-	public static final String Makings = "Makings";
+	public static final String FK_StationType = "FK_StationType";	 
 	/** 
 	 职责要求
 	*/
-	public static final String DutyReq = "DutyReq";
+	public static final String OrgNo = "OrgNo";
 }

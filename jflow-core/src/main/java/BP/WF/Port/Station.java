@@ -53,6 +53,8 @@ public class Station extends EntityNoName
 		map.AddTBStringPK(StationAttr.No, null, "编号", true, true, 2, 2, 2);
 		map.AddTBString(StationAttr.Name, null, "名称", true, false, 2, 50, 250);
 		map.AddDDLEntities(StationAttr.FK_StationType, null, "岗位类型", new StationTypes(), true);
+		
+		map.AddTBString(StationAttr.OrgNo, "0", "组织", true, false, 0, 100, 100);
 
 			//查询条件.
 		map.AddSearchAttr(StationAttr.FK_StationType);

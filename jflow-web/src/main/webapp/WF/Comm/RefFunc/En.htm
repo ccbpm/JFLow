@@ -412,7 +412,7 @@
             }
             var html = "";
             if (parseInt(rm.RefMethodType) == RefMethodType.LinkeWinOpen) {
-                html = "<a href='javascript:OpenEasyUiDialogExt(\"" + rm.Url + "\",\"" + rm.Title + "\",\"" + rm.W + "\",\"" + rm.H + "\",false)'><img src='" + icon + "' border=0 style='width:16px;height:16px;' />" + rm.Title + "</a>";
+                html = "<a href='javascript:OpenIt(\"" + rm.Url + "\",\"" + rm.Title + "\",\"" + rm.W + "\",\"" + rm.H + "\",false)'><img src='" + icon + "' border=0 style='width:16px;height:16px;' />" + rm.Title + "</a>";
             }
 
             if (parseInt(rm.RefMethodType) == RefMethodType.Func) {
@@ -436,6 +436,10 @@
             if (confirm("\"" + warning + "\"")) {
                 OpenEasyUiDialogExt(url, title, 400, 300, false);
             }
+        }
+        function OpenIt(url, title, w, h) {
+            window.open(url);
+
         }
         //在右侧框架中显示指定url的页面
         function OpenUrlInRightFrame(ele, url) {

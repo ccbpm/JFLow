@@ -626,8 +626,10 @@ function newFlow() {
             $.messager.alert('错误', '信息填写不完整', 'error');
             return false;
         }
-
-        $("#mymask").show();
+        var html = $("#ShowMsg").html();
+        $("#ShowMsg").html(html + "正在创建流程请稍后....");
+        $("#ShowMsg").css({ "width": "320px" });
+        $(".mymask").show();
         //传入参数
         var params = {
             action: "NewFlow",
@@ -636,11 +638,15 @@ function newFlow() {
 
         //访问服务
         ajaxService(params, function (data) {
-            $("#mymask").hide();
+            $(".mymask").hide();
+            $("#ShowMsg").html(html);
+            $("#ShowMsg").css({ "width": "32px" });
             if (data.indexOf('err@') == 0) {
                 alert(data);
                 return;
             }
+
+
 
             var flowNo = data;
             var flowName = newFlowInfo.flowName;
@@ -961,7 +967,7 @@ function FlowProperty() {
     var userNo = GetQueryString("UserNo");
 
     var fk_flow = currFlow.id;
-    url = "../XAP/DoPort.htm?DoType=En&EnName=BP.WF.Template.FlowExt&PK=" + fk_flow + "&Lang=CH&UserNo=" + WebUser.No;
+    url = "../XAP/DoPort.htm?DoType=En&EnName=BP.WF.Template.FlowExt&PKVal=" + fk_flow + "&Lang=CH&UserNo=" + WebUser.No;
     addTab(currFlow + "PO", "流程属性" + fk_flow, url);
     //WinOpen(url);
 }
@@ -1211,7 +1217,7 @@ function CCForm_Attr() {
         alert('请选择表单.');
         return;
     }
-    var url = '../../Comm/En.htm?EnsName=BP.WF.Template.MapFrmFrees&PK=' + node.id;
+    var url = '../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=' + node.id;
     OpenEasyUiDialog(url, "CCForm_Attr", '表单属性', 900, 560, "icon-window");
 }
 
@@ -1317,7 +1323,6 @@ function CopyFrm() {
 
 //新建数据源，added by liuxc,2015-10-7
 function newSrc() {
-    //  var url = "../../Comm/En.htm?EnsName=BP.Sys.SFDBSrcs";
     var url = "../../Comm/Sys/SFDBSrcNewGuide.htm?DoType=New";
     //OpenEasyUiDialog(url, "euiframeid", '新建数据源', 800, 495, 'icon-new');
     //todo:增加数据源后，在树上增加新结节的逻辑
@@ -1432,7 +1437,7 @@ function newDept() {
     if (!node) return;
 
     var pnode = $("#" + ORG_TREE).tree("getParent", node.target);
-    addTab("NewDept", "新建同级部门", "../../Comm/En.htm?EnsName=BP.GPM.Depts&ParentNo=" + node.id, "icon-new");
+    addTab("NewDept", "新建同级部门", "../../Comm/En.htm?EnName=BP.GPM.Dept&ParentNo=" + node.id, "icon-new");
 }
 
 function newSubDept() {
@@ -1693,10 +1698,10 @@ function TabCloseByTitle(TabTitle) {
     </script>
 </head>
 <body class="easyui-layout" data-options="fit: true">
-    <div class="panel window mymask mymaskContainer" style="display: block; width: 32px;height: 32px; z-index: 21008; text-align: center; font-size: 14px; font-weight: bold;">
-        <img alt="" src="assets/images/loading_small.gif" align='middle' style="width: 32px;height: 32px;" />
+    <div  id="ShowMsg" class="panel window mymask mymaskContainer" style="display: block; width: 32px;height: 32px; z-index: 21008; text-align: center; font-size: 14px; font-weight: bold;">
+        <img alt="" src="assets/images/loading_small.gif" align='middle' style="width: 32px;height: 32px;" /> 
     </div>
-    <div class="window-mask mymask" style="width: 100%; height: 100%; display: block;z-index: 21006;">
+    <div  class="window-mask mymask" style="width: 100%; height: 100%; display: block;z-index: 21006;">
     </div>
     <div data-options="region:'west',border:true,split:true" title="<img src='../../../DataUser/ICON/CCBPMDesigner.png' style='width:100%;vertical-align:middle' />" style="width: 250px;">
         <div id="menuTab" class="easyui-tabs" data-options="fit:true,border:false">

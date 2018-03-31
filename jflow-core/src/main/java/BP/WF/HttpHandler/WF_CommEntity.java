@@ -454,9 +454,17 @@ public class WF_CommEntity extends WebContralBase {
                 String myurl = "";
                 if (item.refMethodType != RefMethodType.Func)
                 {
-                    myurl = item.Do(null).toString();
-                    if (myurl == null)
-                        continue;
+                	Object tempVar = null;
+    				try {
+    					tempVar = item.Do(null);
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    				myurl = (String) ((tempVar instanceof String) ? tempVar : null);
+    				if (myurl == null) {
+    					continue;
+    				}
+                    
                 }
                 else
                 {
@@ -591,9 +599,16 @@ public class WF_CommEntity extends WebContralBase {
                 String myurl = "";
                 if (item.refMethodType != RefMethodType.Func)
                 {
-                    myurl = item.Do(null).toString();
-                    if (myurl == null)
-                        continue;
+                	Object tempVar = null;
+    				try {
+    					tempVar = item.Do(null);
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    				myurl = (String) ((tempVar instanceof String) ? tempVar : null);
+    				if (myurl == null) {
+    					continue;
+    				}
                 }
                 else
                 {

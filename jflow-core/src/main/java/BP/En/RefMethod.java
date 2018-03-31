@@ -9,6 +9,9 @@ import BP.Tools.StringHelper;
  */
 public class RefMethod
 {
+	
+	 
+	
 	// 与窗口有关的方法.
 	/**
 	 * 高度
@@ -22,7 +25,7 @@ public class RefMethod
 	/**
 	 * 功能
 	 */
-	public RefMethodType refMethodType = BP.En.RefMethodType.Func;
+	public RefMethodType refMethodType= BP.En.RefMethodType.Func;
 	/*
 	 * warning public RefMethodType RefMethodType = RefMethodType.Func;
 	 */

@@ -73,6 +73,7 @@ public class EnDtl
 	 * 描述
 	 */
 	private String _Desc = null;
+	public String GroupName = null;	
 	
 	/**
 	 * 描述

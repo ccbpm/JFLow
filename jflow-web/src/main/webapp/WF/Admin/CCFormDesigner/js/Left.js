@@ -61,15 +61,17 @@ function OpenFlowToCanvas(node, id, text) {
 
 /// <summary>新建流程</summary>
 function newFlow() {
+
     var currSort = $('#flowTree').tree('getSelected');
     var currSortId = "99";
-    if (currSort && currSort.attributes["ISPARENT"] != 0) {//edit by qin 2016/2/16
+    if (currSort && currSort.attributes["ISPARENT"] != 0) { //edit by qin 2016/2/16
         currSortId = $('#flowTree').tree('getSelected').id; //liuxc,20150323
     }
     var dgId = "iframDg";
     var url = "DialogCtr/NewFlow.htm?sort=" + currSortId + "&s=" + Math.random();
 
     OpenEasyUiDialog(url, dgId, '新建流程', 650, 500, 'icon-new', true, function () {
+
         var win = document.getElementById(dgId).contentWindow;
         var newFlowInfo = win.getNewFlowInfo();
 
@@ -125,10 +127,11 @@ function newFlow() {
                 $('#flowTree').tree('select', $('#flowTree').tree('find', jdata.data.no).target);
                 //在右侧流程设计区域打开新建的流程
                 OpenFlowToCanvas(nodeData, jdata.data.no, jdata.data.name);
+                return;
             }
-            else {
-                $.messager.alert('错误', '新建流程失败：' + jdata.msg, 'error');
-            }
+
+            $.messager.alert('错误', '新建流程失败：' + jdata.msg, 'error');
+
         }, this);
     }, null);
 }
@@ -426,7 +429,7 @@ function designFrm() {
 
 //新建数据源，added by liuxc,2015-10-7
 function newSrc() {
-    //  var url = "../../Comm/En.htm?EnsName=BP.Sys.SFDBSrcs";
+    //  var url = "../../Comm/En.htm?EnName=BP.Sys.SFDBSrc";
     var url = "../../Comm/Sys/SFDBSrcNewGuide.htm?DoType=New";
     //OpenEasyUiDialog(url, "euiframeid", '新建数据源', 800, 495, 'icon-new');
     //todo:增加数据源后，在树上增加新结节的逻辑
@@ -542,7 +545,7 @@ function newDept() {
     if (!node) return;
 
     var pnode = $("#" + ORG_TREE).tree("getParent", node.target);
-    addTab("NewDept", "新建同级部门", "../../Comm/En.htm?EnsName=BP.GPM.Depts&ParentNo=" + node.id, "icon-new");
+    addTab("NewDept", "新建同级部门", "../../Comm/En.htm?EnName=BP.GPM.Dept&ParentNo=" + node.id, "icon-new");
 }
 
 function newSubDept() {

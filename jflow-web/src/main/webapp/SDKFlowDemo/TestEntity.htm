@@ -11,6 +11,19 @@
         window.onload =
 
 		function Test() {
+
+		    //var node = new Entity("BP.WF.Node", "1301");
+		    //alert(node.Name);
+		    //return;
+
+		    //创建一个实体,获取实体的属性.
+		    var emp = new Entity("BP.Port.Emp", "liyan");
+		    var name = emp.Name;
+		    var deptNo = emp.FK_Dept;  //部门编号
+		    var deptName = emp.FK_DeptText; //部门名称.
+		    alert("用户编号:" + emp.No + ",名称:" + emp.Name + "部门编号:" + emp.FK_Dept + ",部门名称:" + emp.FK_DeptText);
+		    return;
+
 		    //获得当前用户信息.
 		    var currUser = new WebUser();
 		    var no = currUser.No;
@@ -55,7 +68,7 @@
 		    //var msg2 = emp.DoMethodReturnString("ChangePass", "@oldpass=123@pass1=456@pass2=456"); //重置密码:不带参数的方法.
 		    var msg2 = emp.DoMethodReturnString("ChangePass", "123", "321", "321"); //重置密码:不带参数的方法.
 		    alert(msg2);
- 
+
 		    return;
 		}
 		function Test_FrmEntity() {
@@ -178,7 +191,8 @@
 
             //查询全部.
             students.RetrieveAll();
-            alert("Students 全部数据,查询到:" + students.length);BP.Demo.BPFramework.Student
+            alert("Students 全部数据,查询到:" + students.length);
+        }
 
         //执行方法.
         function TestEns_Method() {

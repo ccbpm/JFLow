@@ -41,9 +41,9 @@
     <script type="text/javascript">
 
         var frmData;
-        var mapData;
-        var mainData;
+
         var dtM; //方法集合.
+        var url;
         $(function () {
 
             var httpHandler = new HttpHandler("BP.WF.HttpHandler.WF_CommEntity");
@@ -51,12 +51,12 @@
             var type = GetQueryString("type");
             var pkVal = GetPKVal();
             httpHandler.AddPara("EnName", enName);
-
+            url = "../RefFunc/EnOnly.htm?EnName=" + enName + "&type=" + type + "&PKVal=" + pkVal + "&FromName=En";
             if (pkVal != null) {
                 httpHandler.AddPara("PKVal", pkVal);
             }
 
-            var data = httpHandler.DoMethodReturnString("EntityOnly_Init");
+            var data = httpHandler.DoMethodReturnString("Entity_Init");
             if (data.indexOf('err@') == 0) {
                 $("#CCFormTabs").html(data);
                 return;
@@ -64,23 +64,24 @@
 
             //解析json.
             frmData = JSON.parse(data);
-            mapData = frmData["Sys_MapData"][0];
-            mapData = new Entity("BP.Sys.MapData", mapData); //把他转化成entity.
-            mainData = frmData["MainData"];
+            //mapData = frmData["Sys_MapData"][0];
+            //mapData = new Entity("BP.Sys.MapData", mapData); //把他转化成entity.
+            //mainData = frmData["MainData"];
             dtM = frmData["dtM"];
 
-            document.title = mapData.Name;
+            //document.title = mapData.Name;
 
-            InitToolbar(); //初始工具栏.
-            // RefMethod(); //初始化菜单.
+            //InitToolbar(); //初始工具栏.
+            RefMethod(); //初始化菜单.
 
             //生成傻瓜表单.
-            GenerFoolFrm(mapData, mainData, frmData);
+            OpenUrlInRightFrame(this, url);
+            //GenerFoolFrm(mapData, mainData, frmData);
 
 
         })
 
-        function RefMethod(mapData, mainData, frmData) {
+        function RefMethod() {
 
             if (dtM.length == 0)
                 return;
@@ -110,8 +111,8 @@
                 //填入菜单内容.
                 html += "<ul class='navlist' >";
                 if (gName == "基本信息") {
-
-                    html += "<li><a href='" + url + "'><img src='../../Img/Home.gif' border=0 style='width:16px;height:16px;' />主页</a></li>";
+                    html += "<li><a href='javascript:OpenUrlInRightFrame(this,\"" + url + "\")'><img src='../../Img/Home.gif' border=0 style='width:16px;height:16px;' />主页</a></li>";
+                    //html += "<li><a href='" + url + "'><img src='../../Img/Home.gif' border=0 style='width:16px;height:16px;' />主页</a></li>";
 
                 }
                 for (var idx = 0; idx < dtM.length; idx++) {
@@ -144,25 +145,20 @@
             $("#Btn_New").hide();
             $("#Btn_Save").hide();
             $("#Btn_Delete").hide();
-            var i = 0;
+
             //权限控制.
             if (mapData.GetPara("IsInsert") == 1) {
                 $("#Btn_New").show();
-              
 
             }
             if (mapData.GetPara("IsUpdate") == 1) {
                 $("#Btn_Save").show();
-              
             }
             if (mapData.GetPara("IsDelete") == 1) {
                 var pkVal = GetPKVal();
                 if (pkVal != null)
                     $("#Btn_Delete").show();
-               
             }
-
-            
 
 
         }
@@ -174,10 +170,7 @@
             var mapAtrrs = frmData.Sys_MapAttr;
 
             var tableWidth = 800; //  w - 40;
-            var html = "";
-            if (Sys_GroupFields.length > 1)
-                html = "<div class='easyui-tabs' >";
-
+            var html = "<div class='easyui-tabs' >";
             for (var i = 0; i < Sys_GroupFields.length; i++) {
                 var gf = Sys_GroupFields[i];
                 var lab = gf.Lab;
@@ -192,8 +185,7 @@
                 html += InitMapAttr(frmData.Sys_MapAttr, mainData, gf.OID);
                 html += "</div>";
             }
-            if (Sys_GroupFields.length > 1)
-                html += "</div>";
+            html += "</div>";
 
 
             //加入隐藏控件.
@@ -705,14 +697,7 @@
         //新建.
         function New() {
             var enName = GetQueryString("EnName");
-            var fromName = GetQueryString("FromName");
-            var url = window.location.href;
-            url = url.substring(0, url.indexOf("?") + 1);
-
-            if (fromName == "")
-                url += "EnName=" + GetQueryString("EnName") + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal") + "&t=" + Math.random();
-            else url += "EnName=" + GetQueryString("EnName") + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal") + "&t=" + Math.random();
-            
+            var url = "?EnName=" + GetQueryString("EnName") + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal") + "&t=" + Math.random();
             window.location.href = url; //刷新.
         }
 
@@ -722,8 +707,7 @@
 
         //更新.
         function Update() {
-            var url = window.location.href;
-            url = url.substring(0, url.indexOf("?"));
+
             var enName = GetQueryString("EnName");
             var en = new Entity(enName);
             var pkval = GetPKVal();
@@ -738,7 +722,7 @@
                 var pkval = en.GetPKVal();
 
 
-                url += "?EnName=" + GetQueryString("EnName") + "&PKVal=" + pkval + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal");
+                var url = "?EnName=" + GetQueryString("EnName") + "&PKVal=" + pkval + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal");
                 window.location.href = url; //刷新.
                 return;
             }
@@ -754,8 +738,8 @@
                 alert('更新错误:' + info);
             }
 
-             url += "?EnName=" + GetQueryString("EnName") + "&PKVal=" + en.pkval + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal");
-            window.location.href = window.location.href; //刷新.
+            var url = "?EnName=" + GetQueryString("EnName") + "&PKVal=" + en.pkval + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal");
+            window.location.href = url; //刷新.
         }
 
         function Delete() {
@@ -818,25 +802,27 @@
 <body class="easyui-layout">
 	
 	<div class="easyui-layout" data-options="region:'center'" border="false">
-        
-		
+
+		<div id="Left" data-options="region:'west',title:'功能列表',split:true" style="width:195px; padding: 5px" ></div>
+       
+    	<div id="rightFrame" data-options="region:'center',noheader:true">
             <div class="easyui-layout" data-options="fit:true">
                 <div id="Btns" data-options="region:'north',noheader:true,split:false,border:false" style="height: 30px;padding: 2px; background-color: #E0ECFF">
                     <a id="Btn_New" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-new'" onclick="New()">新建</a>
                     <a id="Btn_Save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" onclick="Update()">保存</a>
                     <a id="Btn_Delete" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-delete'" onclick="Delete()">删除</a>
-                   
+                    <a id="Btn_Close" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-no'" onclick="CloseIt()">关闭</a>
                 </div>
                 <div data-options="region:'center',noheader:true,border:false" style="margin:0px">
-                   <div id="CCFormTabs" data-options="region:'center',noheader:true,border:false" style="margin:0px;padding:0px;overflow:auto">
+                    <div id="CCFormTabs" data-options="region:'center',noheader:true,border:false" style="margin:0px;padding:0px;overflow:auto">
              
 			            <br />
 			            <img src='./../../Img/loading.gif' />正在初始化表单模板及数据，请耐心等待。。。
 			            <br />
-                    </div> 
+                    </div>
                 </div>
             </div>
-	    
+	    </div>
 	</div>
 </body>
 </html>

@@ -770,6 +770,7 @@ public class PubClass {
 	 * @return
 	 */
 	public static DataTable GetDataTableByUIBineKey(String uiBindKey) {
+		
 		DataTable dt = new DataTable();
 		if (uiBindKey.contains(".")) {
 			Entities ens = BP.En.ClassFactory.GetEns(uiBindKey);
@@ -787,13 +788,14 @@ public class PubClass {
 			ens.RetrieveAllFromDBSource();
 			dt = ens.ToDataTableField(uiBindKey);
 			return dt;
-		} else {
+			
+		}  
 
 			String sql = "SELECT No,Name FROM " + uiBindKey;
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = uiBindKey;
 			return dt;
-		}
+		
 	}
 
 	/**

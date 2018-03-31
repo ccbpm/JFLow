@@ -357,10 +357,13 @@ public class WF_CommEntity extends WebContralBase {
                 String fk_mapData = dr.getValue("FK_MapData").toString();
 
                 // 判断是否存在.
-                if (ds.Tables.contains(uiBindKey) == true)
-                    continue;
+              //  if (ds.Tables.contains(uiBindKey) == true)
+                 //   continue;
+                
+                DataTable dt=BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+                dt.TableName=keyOfEn;
 
-                ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+                ds.Tables.add(dt);
             }
 
             //加入sql模式的外键.

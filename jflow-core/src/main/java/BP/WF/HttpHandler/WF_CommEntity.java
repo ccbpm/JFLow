@@ -338,7 +338,7 @@ public class WF_CommEntity extends WebContralBase {
             {
                 String uiBindKey = dr.getValue("UIBindKey").toString();
                 String lgType = dr.getValue("LGType").toString();
-                if (lgType != "2")
+                if (lgType.equals("2") ==false )
                     continue;
 
                 String UIIsEnable = dr.getValue("UIVisible").toString();
@@ -391,8 +391,7 @@ public class WF_CommEntity extends WebContralBase {
                     if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
                     {
                         dt.Columns.get("NO").ColumnName = "No";
-                        dt.Columns.get("NAME").ColumnName = "Name";
-                         
+                        dt.Columns.get("NAME").ColumnName = "Name"; 
                     }
 
                     ds.Tables.add(dt);
@@ -639,6 +638,7 @@ public class WF_CommEntity extends WebContralBase {
 
                 dtM.Rows.add(dr); //增加到rows.
             }
+            
             //#endregion 增加 上方法.
 
             //#region 加入一对多的实体编辑
@@ -768,6 +768,11 @@ public class WF_CommEntity extends WebContralBase {
                 dr.setValue("Title", enDtl.getDesc() + "(" + i + ")");
                 dr.setValue("Url", url);
                 dr.setValue("GroupName", enDtl.GroupName);
+                
+                dr.setValue("RefMethodType", RefMethodType.RightFrameOpen.getValue());
+              //  dr["RefMethodType"] = (int);
+
+                //alInt("SELECT COUNT(*) FROM
                 
                  
                 dtM.Rows.add(dr);

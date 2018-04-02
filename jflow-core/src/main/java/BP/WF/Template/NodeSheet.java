@@ -30,6 +30,8 @@ import BP.WF.RunModel;
 import BP.WF.SubFlowStartWay;
 import BP.WF.ThreadKillRole;
 import BP.WF.TodolistModel;
+import BP.WF.Port.StationAttr;
+import BP.WF.Port.StationTypes;
 import cn.jflow.common.util.ContextHolderUtils;
 import BP.En.Dot2DotModel;
 
@@ -796,55 +798,21 @@ public class NodeSheet extends Entity
 
 			///#region 对应关系
 			// 相关功能。
-		if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
-		{
-			map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeStations(), new BP.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, 
-					"节点绑定岗位", Dot2DotModel.Default,null,null);
+		map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeStations(), new BP.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, 
+				"节点绑定岗位", Dot2DotModel.Default,null,null);
+		
+	   map.getAttrsOfOneVSM().AddGroupListModel(new BP.WF.Template.NodeStations(), new BP.WF.Port.Stations(),BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station,
+			   "节点绑定岗位AddGroupListModel",DeptAttr.Name,DeptAttr.No, StationAttr.FK_StationType);
+		
+	   map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeDepts(), new BP.Port.Depts(), NodeDeptAttr.FK_Node, NodeDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, 
+			   "节点绑定部门", Dot2DotModel.TreeDept,null,null); 
+	   map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeEmps(),new BP.Port.Emps(), NodeEmpAttr.FK_Node, NodeEmpAttr.FK_Emp,DeptAttr.Name, DeptAttr.No, 
+			   "节点绑定接受人",Dot2DotModel.TreeDeptEmp, new Depts(), EmpAttr.FK_Dept);
+	   
+	  
+		
 
-				//判断是否为集团使用，集团时打开新页面以树形展示
-			if (BP.WF.Glo.getIsUnit() == true)
-			{
-				RefMethod rmDept = new RefMethod();
-				rmDept.Title = "节点绑定部门";
-				rmDept.ClassMethodName = this.toString() + ".DoDepts";
-				rmDept.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-				map.AddRefMethod(rmDept);
-			}
-			else
-			{
-				map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeDepts(), new BP.Port.Depts(), NodeDeptAttr.FK_Node, NodeDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "节点绑定部门", Dot2DotModel.TreeDept,null,null);
-			}
-		}
-		else
-		{
-				//节点岗位.
-			map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeStations(), new BP.GPM.Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "节点绑定岗位",Dot2DotModel.Default,null,null);
-				//判断是否为集团使用，集团时打开新页面以树形展示
-			if (BP.WF.Glo.getIsUnit() == true)
-			{
-				RefMethod rmDept = new RefMethod();
-				rmDept.Title = "节点绑定部门";
-				rmDept.ClassMethodName = this.toString() + ".DoDepts";
-				rmDept.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-				map.AddRefMethod(rmDept);
-			}
-			else
-			{
-					//节点部门.
-				map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeDepts(), new BP.GPM.Depts(), NodeDeptAttr.FK_Node, NodeDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "节点绑定部门", Dot2DotModel.TreeDept,null,null);
-			}
-		}
-
-
-		map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeEmps(),
-				new BP.Port.Emps(), NodeEmpAttr.FK_Node, NodeEmpAttr.FK_Emp,
-				DeptAttr.Name, DeptAttr.No, "节点绑定接受人",
-				Dot2DotModel.TreeDeptEmp, new Depts(), EmpAttr.FK_Dept);
-
-			// 傻瓜表单可以调用的子流程. 2014.10.19 去掉.
-			//map.getAttrsOfOneVSM().Add(new BP.WF.NodeFlows(), new Flows(), NodeFlowAttr.FK_Node, NodeFlowAttr.FK_Flow, DeptAttr.Name, DeptAttr.No,
-			//    "傻瓜表单可调用的子流程");
-
+			
 			///#endregion
 
 		RefMethod rm = new RefMethod();

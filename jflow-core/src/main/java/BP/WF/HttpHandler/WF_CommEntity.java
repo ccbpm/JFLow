@@ -238,18 +238,15 @@ public class WF_CommEntity extends WebContralBase {
             //把权限加入参数里面.
             if (en.getHisUAC().IsInsert)
                 md.SetPara("IsInsert", "1");
-
+            if (en.getHisUAC().IsUpdate)
+                md.SetPara("IsUpdate", "1");
             if (isBlank == true)
-            {
-                if (en.getHisUAC().IsUpdate)
-                    md.SetPara("IsUpdate", "0");
+            {                
                 if (en.getHisUAC().IsDelete)
                     md.SetPara("IsDelete", "0");
             }
             else
             {
-                if (en.getHisUAC().IsUpdate)
-                    md.SetPara("IsUpdate", "1");
                 if (en.getHisUAC().IsDelete)
                     md.SetPara("IsDelete", "1");
             }

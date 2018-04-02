@@ -384,6 +384,9 @@ public class Dev2Interface
 	*/
 	public static String DTS_DealDeferredWork()
 	{
+		return "";
+		
+		/*
 		//string sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <='" + DataType.CurrentData + "' ORDER BY FK_Emp";
 		//改成小于号SDT <'" + DataType.CurrentData
 		String sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <'" + DataType.getCurrentData() + "' ORDER BY FK_Emp";
@@ -412,24 +415,25 @@ public class Dev2Interface
 				BP.Web.WebUser.SignInOfGener(emp);
 			}
 
-			BP.WF.Template.NodeSheet nd = new BP.WF.Template.NodeSheet();
+			BP.WF.Node nd = new BP.WF.Node();
 			nd.setNodeID(fk_node);
 			nd.Retrieve();
 
 			// 首先判断是否有启动的表达式, 它是是否自动执行的总阀门。
-			if (StringHelper.isNullOrEmpty(nd.getDoOutTimeCond()) == false)
+			
+			if (StringHelper.isNullOrEmpty(nd.getDoOutTimeCond()) == false)		 
 			{
 				Node nodeN = new Node(nd.getNodeID());
 				Work wk = nodeN.getHisWork();
 				wk.setOID(workid);
 				wk.Retrieve();
-				Object tempVar = nd.getDoOutTimeCond();
+				//Object tempVar = nd.getDoOutTimeCond();				
 				String exp = (String)((tempVar instanceof String) ? tempVar : null);
 				if (Glo.ExeExp(exp, wk) == false)
 				{
 					continue; // 不能通过条件的设置.
 				}
-			}
+			}  
 
 			switch (nd.getHisOutTimeDeal())
 			{
@@ -477,6 +481,7 @@ public class Dev2Interface
 		Emp emp1 = new Emp("admin");
 		BP.Web.WebUser.SignInOfGener(emp1);
 		return msg;
+		*/
 	}
 	/** 
 	 自动执行开始节点数据

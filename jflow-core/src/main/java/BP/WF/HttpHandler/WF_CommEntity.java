@@ -699,13 +699,14 @@ public class WF_CommEntity extends WebContralBase {
                             //url += "&RefAttrKey=" + vsM.AttrOfOneInMM + "&RefAttrEnsName=" + vsM.EnsOfM.ToString();
                         }
 
-                        dr.setValue("URL",  url + "&" + en.getPK() + "=" + en.getPKVal() + "&PKVal=" + en.getPKVal());
+                        dr.setValue("Url",  url + "&" + en.getPK() + "=" + en.getPKVal() + "&PKVal=" + en.getPKVal());
                         dr.setValue("Icon", "../Img/M2M.png");
 
                     }
 
                     dr.setValue("W","900");
                     dr.setValue("H","500");
+                    
                     dr.setValue("RefMethodType", RefMethodType.RightFrameOpen.values());
                      
                     // 获得选择的数量.

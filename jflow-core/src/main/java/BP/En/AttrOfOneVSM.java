@@ -175,6 +175,14 @@ public class AttrOfOneVSM
 			String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText,
 			String AttrOfMValue, String desc)
 	{
+		
+		if (AttrOfMText==null)
+			AttrOfMText="Name";
+		
+		if (AttrOfMValue==null)
+			AttrOfMValue="No";
+		 
+		
 		this.setEnsOfM(_ensOfM);
 		this.setEnsOfMM(_ensOfMM);
 		this.setAttrOfOneInMM(AttrOfOneInMM);

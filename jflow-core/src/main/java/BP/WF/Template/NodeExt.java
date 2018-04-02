@@ -212,7 +212,7 @@ public class NodeExt extends Entity
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		Flow fl = new Flow(this.getFK_Flow());
+		//Flow fl = new Flow(this.getFK_Flow());
 		
 		//UAC uac = new UAC();
 		uac.IsUpdate=true;

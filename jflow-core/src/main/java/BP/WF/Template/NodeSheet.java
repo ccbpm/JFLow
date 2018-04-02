@@ -220,8 +220,7 @@ public class NodeSheet extends Entity
 		
 	   map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeDepts(), new BP.Port.Depts(), NodeDeptAttr.FK_Node, NodeDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, 
 			   "节点绑定部门", Dot2DotModel.TreeDept,null,null); 
-	   
-	   
+	    
 
        //节点绑定人员. 使用树杆与叶子的模式绑定.
        map.getAttrsOfOneVSM().AddBranchesAndLeaf(new BP.WF.Template.NodeEmps(), new BP.Port.Emps(),

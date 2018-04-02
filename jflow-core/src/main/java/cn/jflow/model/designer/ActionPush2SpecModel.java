@@ -447,7 +447,7 @@ public class ActionPush2SpecModel extends BaseModel{
 
                     for (Station st: sts.ToJavaList())
                     {
-                        st.setStaGrade(0);
+                        //st.setStaGrade(0);
                         st.Save();
                     }
                 }
@@ -469,9 +469,7 @@ public class ActionPush2SpecModel extends BaseModel{
 
                     for (Station st: sts.ToJavaList())
                     {
-                        if (st.getStaGrade()!= se.getIntKey())
-                            continue;
-
+                        
                         i++;
 
                         if (i == 4)

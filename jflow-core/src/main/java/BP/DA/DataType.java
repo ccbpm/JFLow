@@ -44,7 +44,13 @@ public class DataType
 {
 	  public static boolean IsNullOrEmpty(String s)
 			{
-				return DotNetToJavaStringHelper.isNullOrEmpty(s);
+		  
+		  if (s==null || s.equals("")==true)
+			  return true;
+		  
+		  return false;
+		  
+			//DotNetToJavaStringHelper.isNullOrEmpty(s);
 			}
 	public static String ParseStringForNo()
 	{

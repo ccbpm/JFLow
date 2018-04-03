@@ -1096,10 +1096,11 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
 	
-	public String Accepter_Init1()
+	public String Accepter_Init()
 	{
 		 /*如果是协作模式, 就要检查当前是否主持人, 当前是否是会签模式. */
-        GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
+        GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+        
         if (gwf.getFK_Node() != this.getFK_Node())
             return "err@当前流程已经运动到[" + gwf.getNodeName() + "]上,当前处理人员为[" + gwf.getTodoEmps() + "]";
 
@@ -1116,7 +1117,7 @@ public class WF_WorkOpt extends WebContralBase {
             else
             {
                 /* 不是主持人就执行发送，返回发送结果. */
-                SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.WorkID);
+                SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID());
                 return "info@" + objs.ToMsgOfHtml();
             }
         }
@@ -1206,80 +1207,7 @@ public class WF_WorkOpt extends WebContralBase {
         //返回json.
         return BP.Tools.Json.DataSetToJson(ds, false);
 	}
-
-	public String Accepter_Init_Del() {
-
-		// 当前节点ID.
-		Node nd = new Node(this.getFK_Node());
-		int toNodeID = this.GetRequestValInt("ToNode");
-		if (toNodeID == 0) {
-			Nodes nds = nd.getHisToNodes();
-			if (nds.size() == 1) {
-				toNodeID = nds.get(0).GetValIntByKey("NodeID");
-			} else {
-				return "err@参数错误,必须传递来到达的节点ID ToNode .";
-			}
-		}
-
-		Work wk = nd.getHisWork();
-		wk.setOID(this.getWorkID());
-		wk.Retrieve();
-
-		Selector select = new Selector(toNodeID);
-		if (select.getSelectorModel() == SelectorModel.GenerUserSelecter) {
-			return "url@AccepterOfGener.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow="
-					+ nd.getFK_Flow() + "&ToNode=" + toNodeID;
-		}
-
-		// 获得 部门与人员.
-		DataSet ds = select.GenerDataSet(toNodeID, wk);
-
-		/// #region 计算上一次选择的结果, 并把结果返回过去.
-		String sql = "";
-		DataTable dt = new DataTable();
-		dt.Columns.Add("No", String.class);
-		dt.TableName = "Selected";
-		if (select.getIsAutoLoadEmps()) {
-			if (SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
-				sql = "SELECT  top 1 Tag FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom="
-						+ this.getFK_Node() + " AND A.NDTo=" + toNodeID + " AND ActionType=1 ORDER BY WorkID DESC";
-			} else if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-				sql = "SELECT  Tag FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom="
-						+ this.getFK_Node() + " AND A.NDTo=" + toNodeID
-						+ " AND ActionType=1 AND ROWNUM =1  ORDER BY WorkID DESC ";
-			} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
-				sql = "SELECT  Tag FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom="
-						+ this.getFK_Node() + " AND A.NDTo=" + toNodeID
-						+ " AND ActionType=1 AND  limit 1,1  ORDER BY WorkID  DESC";
-			}
-
-			String tag = DBAccess.RunSQLReturnStringIsNull(sql, "");
-
-			String[] strs = tag.split("[;]", -1);
-			for (String str : strs) {
-				if (DotNetToJavaStringHelper.isNullOrEmpty(str) == true) {
-					continue;
-				}
-
-				String[] emp = str.split("[,]", -1);
-				if (emp.length != 2) {
-					continue;
-				}
-
-				DataRow dr = dt.NewRow();
-				dr.setValue(0, emp[0]);
-				dt.Rows.add(dr);
-			}
-		}
-
-		// 增加一个table.
-		ds.Tables.add(dt);
-		/// #endregion 计算上一次选择的结果, 并把结果返回过去.
-
-		// 返回json.
-		return BP.Tools.Json.DataSetToJson(ds, false);
-	}
-
+ 
 	public String AccepterSave12() throws Exception {
 		try {
 			// 求到达的节点.
@@ -1410,7 +1338,7 @@ public class WF_WorkOpt extends WebContralBase {
 	 */
 	@Override
 	public String DoDefaultMethod() {
-		return "err@没有此方法";
+		return "err@没有此方法getDoType:"+this.getDoType()+" this.toString"+this.toString();
 	}
 
 	/**
@@ -1714,7 +1642,7 @@ public class WF_WorkOpt extends WebContralBase {
 		DBAccess.RunSQL(sql);
 
 		  //删除以前执行的会签点,比如:该人多次执行会签，仅保留最后一个会签时间点.  @于庆海.
-		sql = "DELETE FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + this.WorkID + " AND ActionType=" + ActionType.HuiQian.getValue() + " AND NDFrom=" + this.getFK_Node();
+		sql = "DELETE FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.HuiQian.getValue() + " AND NDFrom=" + this.getFK_Node();
 		DBAccess.RunSQL(sql);
 
 		//执行会签,写入日志.
@@ -2002,7 +1930,7 @@ public class WF_WorkOpt extends WebContralBase {
 			int nodeID = this.getFK_Node();
 			if (this.getFK_Node() == 0)
 			{
-				GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
+				GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 				nodeID = gwf.getFK_Node();
 			}
 

@@ -305,6 +305,7 @@ public class Selector extends Entity
 			}
 		}
 
+        ds.Tables.add(this.ToDataTableField("Selector"));
 
 		return ds;
 	}

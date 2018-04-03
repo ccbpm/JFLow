@@ -59,7 +59,7 @@ public class CCMobile_MyFlow extends WebContralBase
 
 	public final String Focus()
     {
-        BP.WF.Dev2Interface.Flow_Focus( this.WorkID);
+        BP.WF.Dev2Interface.Flow_Focus( this.getWorkID());
         return "设置成功.";
     }
 	

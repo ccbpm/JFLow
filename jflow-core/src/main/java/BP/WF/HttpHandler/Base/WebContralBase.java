@@ -604,7 +604,7 @@ public abstract class WebContralBase extends BaseController {
 
 		return str;
 	}
-	 public long WorkID;
+	 private long WorkID;
 	 public long getPWorkID()
 	 {
 		 

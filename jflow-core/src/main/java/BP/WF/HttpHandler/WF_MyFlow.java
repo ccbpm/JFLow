@@ -72,6 +72,7 @@ import BP.Web.WebUser;
 import cn.jflow.controller.wf.KeySearchController;
 
 public class WF_MyFlow extends WebContralBase {
+	public long WorkID=0;
 	@SuppressWarnings("unchecked")
 	public static ArrayList<EntityMultiTree> convertEntityMultiTree(Object obj)
 	{
@@ -1786,7 +1787,7 @@ public class WF_MyFlow extends WebContralBase {
 	 * 默认执行的方法
 	 */
 	public final String DoDefaultMethod() {
-		return "err@没有此方法"+this.getDoType();
+		return "err@没有此方法:getDoType="+this.getDoType();
 	}
 
 	/**

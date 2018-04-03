@@ -831,7 +831,7 @@ public class WF extends WebContralBase
 		///#region 把主从表数据放入里面.
 		//.工作数据放里面去, 放进去前执行一次装载前填充事件.
 		BP.WF.Work wk = nd.getHisWork();
-		wk.setOID(this.WorkID);
+		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
 
 		//重设默认值.
@@ -901,7 +901,7 @@ public class WF extends WebContralBase
 			BP.Sys.FrmAttachmentDBs dbs = new BP.Sys.FrmAttachmentDBs();
 			if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
 			{
-				String pWorkID = DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + this.WorkID, 0) + "";
+				String pWorkID = DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getWorkID(), 0) + "";
 				if (pWorkID == null || pWorkID.equals("0"))
 				{
 					pWorkID = this.getWorkID() + "";
@@ -913,7 +913,7 @@ public class WF extends WebContralBase
 					BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 					qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pWorkID);
 					qo.addOr();
-					qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.WorkID);
+					qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.getWorkID());
 					qo.addOrderBy("RDT");
 					qo.DoQuery();
 				}
@@ -930,7 +930,7 @@ public class WF extends WebContralBase
 				BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 				qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
 				qo.addAnd();
-				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.WorkID);
+				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.getWorkID());
 				qo.addOrderBy("RDT");
 				qo.DoQuery();
 			}
@@ -1020,7 +1020,7 @@ public class WF extends WebContralBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 图片附件
-		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), this.WorkID + "");
+		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), this.getWorkID() + "");
 		if (imgAthDBs != null && imgAthDBs.size() > 0)
 		{
 			DataTable dt_ImgAth = imgAthDBs.ToDataTableField("Sys_FrmImgAthDB");
@@ -1173,7 +1173,7 @@ public class WF extends WebContralBase
 					{
 						throw new RuntimeException("@参数 FK_Flow 或者 WorkID 为 Null 。");
 					}
-					return "url@WFRpt.htm?FK_Flow=" + this.getFK_Flow() + "&WorkID=" + this.WorkID + "&o2=1" + paras;
+					return "url@WFRpt.htm?FK_Flow=" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&o2=1" + paras;
 				}
 
 				//发起页面.
@@ -1192,12 +1192,12 @@ public class WF extends WebContralBase
 				//处理工作.
 				if (this.getDoWhat().equals(DoWhatList.DealWork) == true)
 				{
-					if (DataType.IsNullOrEmpty(this.getFK_Flow()) || this.WorkID == 0)
+					if (DataType.IsNullOrEmpty(this.getFK_Flow()) || this.getWorkID() == 0)
 					{
 						return "err@参数 FK_Flow 或者 WorkID 为Null 。";
 					}
 
-					return "url@MyFlow.htm?FK_Flow=" + this.getFK_Flow() + "&WorkID=" + this.WorkID + "&o2=1" + paras;
+					return "url@MyFlow.htm?FK_Flow=" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&o2=1" + paras;
 				}
 
 				//请求在途.

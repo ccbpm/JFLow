@@ -146,8 +146,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	public String CheckFlow_Init() {
 		BP.WF.Flow fl = new BP.WF.Flow(this.getFK_Flow());
 		String str = fl.DoCheck();
-		str = str.replace("@", "<BR>@");
-
+		 str = str.replace("@", "<BR>@");
+         str = str.replace("@警告:", "<label style='color:yellow ;'>@警告:</label>");
+         str = str.replace("@错误:", "<label style='color:red ;'>@错误:</label>");
 		if ("".equals(str))
 			str = "检查成功.";
 		return str;

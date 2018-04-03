@@ -14,8 +14,9 @@
     <script type="text/javascript">
 
         var selectedEles = null;
-        var mapExt = null;
 
+        var mapExt = null; 
+        
         $(function () {
 
             $("#Msg").html("正在加载,请稍后......");
@@ -35,9 +36,6 @@
             selectedEles.ensName = dot2DotEnsName;
             selectedEles.Retrieve(AttrOfOneInMM, GetPKVal());
 
-             //alert(selectedEles.length);
-             //selectedEles.ensName = EnsOfMM;
-
             if (defaultGroupAttrKey == "" || defaultGroupAttrKey == "null") {
                 BindListModel();
             } else {
@@ -50,7 +48,7 @@
             var enName = GetQueryString("EnName"); // 主表实体. A实体.
             var EnsOfMM = GetQueryString("EnsOfMM"); //存储实体.
             var AttrOfOneInMM = GetQueryString("AttrOfOneInMM"); //存储实体对应主表的外键.
-
+            var AttrOfMInMM = GetQueryString("AttrOfMInMM"); //存储实体对应主表的外键.
             //获得列表实体, 查询全部.
             var ensOfM = GetQueryString("EnsOfM"); // 主表实体. A实体.
             var entities = new Entities(ensOfM);
@@ -86,7 +84,7 @@
                     if (ele == null || ele == undefined)
                         continue;
 
-                    if (ele.RefPKVal == en.No) {
+                    if (ele[AttrOfMInMM] == en.No) {
                         isHave = true;
                         break;
                     }
@@ -99,8 +97,10 @@
                 myNum++;
                 if (myNum == 0)
                     html += "<TR>";
-
-                html += "<td><input type='checkbox' name='CB' id='CB_" + en.No + "'  value='" + en.No + "'/><label for='CB_" + en.No + "'>" + lab + "</label></td>";
+                if (isHave==true)
+                	html += "<td><input type='checkbox' class='dot2_checkbox' checked=true name='CB' id='CB_" + en.No + "'  value='" + en.No + "'/><label for='CB_" + en.No + "'>" + lab + "</label></td>";
+                else
+                	html += "<td><input type='checkbox' class='dot2_checkbox'  name='CB' id='CB_" + en.No + "'  value='" + en.No + "'/><label for='CB_" + en.No + "'>" + lab + "</label></td>";
 
                 if (myNum == 2) {
                     html += "</tr>";
@@ -272,7 +272,7 @@
             cbs.each(function () {
                 if (this.id.indexOf('CB_') == -1)
                     return true;
-                strs += "," + this.value;
+                strs += "," + this.defaultValue;
             });
 
             //处理

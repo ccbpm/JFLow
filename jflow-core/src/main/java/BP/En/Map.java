@@ -2643,21 +2643,21 @@ public class Map
 	public final void AddTBStringDoc()
 	{
 		AddTBStringDoc("Doc", "Doc", null, "内容", true, false, 0, 4000, 300,
-				300, true);
+				15, true);
 	}
 	
 	public final void AddTBStringDoc(String key, String defaultVal,
 			String desc, boolean uiVisable, boolean isReadonly, boolean isUILine)
 	{
 		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0,
-				4000, 300, 300, isUILine);
+				4000, 300, 15, isUILine);
 	}
 	
 	public final void AddTBStringDoc(String key, String defaultVal,
 			String desc, boolean uiVisable, boolean isReadonly)
 	{
 		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0,
-				4000, 300, 300, false);
+				4000, 300, 15, false);
 	}
 	
 	public final void AddTBStringDoc(String key, String defaultVal,

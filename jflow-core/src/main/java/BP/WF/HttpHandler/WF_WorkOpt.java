@@ -46,6 +46,7 @@ import BP.WF.NodeFormType;
 import BP.WF.Nodes;
 import BP.WF.RunModel;
 import BP.WF.SendReturnObjs;
+import BP.WF.TodolistModel;
 import BP.WF.Track;
 import BP.WF.Tracks;
 import BP.WF.Work;
@@ -1094,8 +1095,119 @@ public class WF_WorkOpt extends WebContralBase {
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
+	
+	public String Accepter_Init1()
+	{
+		 /*如果是协作模式, 就要检查当前是否主持人, 当前是否是会签模式. */
+        GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
+        if (gwf.getFK_Node() != this.getFK_Node())
+            return "err@当前流程已经运动到[" + gwf.getNodeName() + "]上,当前处理人员为[" + gwf.getTodoEmps() + "]";
 
-	public String Accepter_Init() {
+        //当前节点ID.
+        Node nd = new Node(this.getFK_Node());
+
+        //判断当前是否是协作模式.
+        if (nd.getTodolistModel() == TodolistModel.Teamup && nd.getIsStartNode() == false)
+        {
+            if (gwf.getTodoEmps().contains(WebUser.getNo() + ","))
+            {
+                /*说明我是主持人之一, 我就可以选择接受人,发送到下一个节点上去.*/
+            }
+            else
+            {
+                /* 不是主持人就执行发送，返回发送结果. */
+                SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.WorkID);
+                return "info@" + objs.ToMsgOfHtml();
+            }
+        }
+
+        int toNodeID = this.GetRequestValInt("ToNode");
+        if (toNodeID == 0)
+        {
+            Nodes nds = nd.getHisToNodes();
+            if (nds.size() == 1)
+                toNodeID = nds.get(0).GetValIntByKey("NodeID");
+            else
+                return "err@参数错误,必须传递来到达的节点ID ToNode .";
+        }
+
+        Work wk = nd.getHisWork();
+        wk.setOID(this.getWorkID());
+        wk.Retrieve();
+
+        Selector select = new Selector(toNodeID);
+        if (select.getSelectorModel() == SelectorModel.GenerUserSelecter)
+            return "url@AccepterOfGener.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + nd.getFK_Flow() + "&ToNode=" + toNodeID;
+
+        //获得 部门与人员.
+        DataSet ds = select.GenerDataSet(toNodeID, wk);
+
+        if ( SystemConfig.getCustomerNo().equals("TianYe")==true) //天业集团，去掉00000001董事长
+        {
+        	/*
+            DataTable TYEmp = ds.Tables["Emps"];
+            if (TYEmp.Rows.Count != 0)
+                foreach (DataRow row in TYEmp.Rows)
+                    if (row["No"].ToString() == "00000001")
+                    {
+                        row.Delete();
+                        break;
+                    }
+            TYEmp.AcceptChanges();*/
+        }
+
+       // #region 计算上一次选择的结果, 并把结果返回过去.
+        String sql = "";
+        DataTable dt = new DataTable();
+        dt.Columns.Add("No");
+        dt.TableName = "Selected";
+        if (select.getIsAutoLoadEmps() == true)
+        {
+            if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+                sql = "SELECT  top 1 Tag,EmpTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID + " AND ActionType=1 ORDER BY WorkID DESC";
+            else if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+                sql = "SELECT * FROM (SELECT  Tag,EmpTo,WorkID FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
+            else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+                sql = "SELECT  Tag,EmpTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1 ";
+
+            DataTable mydt = DBAccess.RunSQLReturnTable(sql);
+            String emps = "";
+            if (mydt.Rows.size() != 0)
+            {
+                emps = mydt.Rows.get(0).getValue("Tag").toString();
+                if (emps == "" || emps == null)
+                {
+                    emps = mydt.Rows.get(0).getValue("EmpTo").toString();
+                    emps = emps + "," + emps;
+                }
+            }
+
+            String[] strs = emps.split(";");
+            for (String str : strs)
+            {
+                if (DataType.IsNullOrEmpty(str) == true)
+                    continue;
+
+                String[] emp = str.split(",");
+                if (emp.length != 2)
+                    continue;
+
+                DataRow dr = dt.NewRow();
+                dr.setValue(0,  emp[0]); 
+                dt.Rows.add(dr);
+            }
+        }
+
+        //增加一个table.
+        ds.Tables.add(dt);
+        
+      //  #endregion 计算上一次选择的结果, 并把结果返回过去.
+
+        //返回json.
+        return BP.Tools.Json.DataSetToJson(ds, false);
+	}
+
+	public String Accepter_Init_Del() {
 
 		// 当前节点ID.
 		Node nd = new Node(this.getFK_Node());

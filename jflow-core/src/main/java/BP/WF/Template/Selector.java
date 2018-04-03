@@ -1,6 +1,6 @@
 package BP.WF.Template;
 
-import cn.jflow.model.designer.Dot2DotModel;
+
 import BP.DA.DBType;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -8,6 +8,8 @@ import BP.DA.Depositary;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.UAC;
+import BP.GPM.EmpAttr;
+import BP.GPM.StationAttr;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
@@ -180,40 +182,61 @@ public class Selector extends Entity
 			return this.get_enMap();
 		}
 
-		Map map = new Map("WF_Node", "选择器");
-
-		map.Java_SetDepositaryOfEntity(Depositary.Application);
-
-		map.AddTBIntPK(SelectorAttr.NodeID, 0, "NodeID", true, true);
-		map.AddTBString(SelectorAttr.Name, null, "节点名称", true, true, 0, 100, 100);
-
-		map.AddDDLSysEnum(SelectorAttr.SelectorModel, 5, "显示方式", true, true, SelectorAttr.SelectorModel, "@0=按岗位@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与岗位的交集@7=自定义Url");
-
-		map.AddDDLSQL(SelectorAttr.FK_SQLTemplate, null, "SQL模版", "SELECT No,Name FROM WF_SQLTemplate WHERE SQLType=5", true);
-
-		map.AddBoolean(SelectorAttr.IsAutoLoadEmps, true, "是否自动加载上一次选择的人员？", true, true, true);
-		map.AddBoolean(SelectorAttr.IsSimpleSelector, false, "是否单项选择(只能选择一个人)？", true, true);
-
-		  //  map.AddDDLSysEnum(SelectorAttr.AccepterDBSort, 0, "选择的数据类别", true, true,
-		  //SelectorAttr.AccepterDBSort, "@0=人员@1=部门@2=岗位@3=权限组");
 
 
-		map.AddTBStringDoc(SelectorAttr.SelectorP1, null, "分组参数:可以为空,比如:SELECT No,Name,ParentNo FROM  Port_Dept", true, false, true);
-		map.AddTBStringDoc(SelectorAttr.SelectorP2, null, "操作员数据源:比如:SELECT No,Name,FK_Dept FROM  Port_Emp", true, false, true);
+        Map map = new Map("WF_Node", "选择器");
 
-		map.AddTBStringDoc(SelectorAttr.SelectorP3, null, "默认选择的数据源:比如:SELECT FK_Emp FROM  WF_GenerWorkerList WHERE FK_Node=102 AND WorkID=@WorkID", true, false, true);
-		map.AddTBStringDoc(SelectorAttr.SelectorP4, null, "强制选择的数据源:比如:SELECT FK_Emp FROM  WF_GenerWorkerList WHERE FK_Node=102 AND WorkID=@WorkID", true, false, true);
+        map.Java_SetDepositaryOfEntity(Depositary.Application);
 
-			//map.AddTBStringDoc(SelectorAttr.SelectorP1, null, "分组参数,可以为空", true, false, true);
-			//map.AddTBStringDoc(SelectorAttr.SelectorP2, null, "操作员数据源", true, false, true);
+        map.AddTBIntPK(SelectorAttr.NodeID, 0, "NodeID", true, true);
+        map.AddTBString(SelectorAttr.Name, null, "节点名称", true, true, 0, 100, 100);
 
-			// 相关功能。
-		map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeStations(), new BP.WF.Port.Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "节点岗位");
+        map.AddDDLSysEnum(SelectorAttr.SelectorModel, 5, "显示方式", true, true, SelectorAttr.SelectorModel,
+            "@0=按岗位@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与岗位的交集@7=自定义Url");
 
-		map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeDepts(), new BP.WF.Port.Depts(), NodeDeptAttr.FK_Node, NodeDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "节点部门");
+        map.AddDDLSQL(SelectorAttr.FK_SQLTemplate, null, "SQL模版","SELECT No,Name FROM WF_SQLTemplate WHERE SQLType=5", true);
 
-		map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeEmps(), new BP.WF.Port.Emps(), NodeEmpAttr.FK_Node, NodeEmpAttr.FK_Emp, DeptAttr.Name, DeptAttr.No, "接受人员");
+        map.AddBoolean(SelectorAttr.IsAutoLoadEmps, true, "是否自动加载上一次选择的人员？", true, true);
+        map.AddBoolean(SelectorAttr.IsSimpleSelector, false, "是否单项选择(只能选择一个人)？", true, true);
 
+
+   //     map.AddDDLSysEnum(SelectorAttr.IsMinuesAutoLoadEmps, 5, "接收人选择方式", true, true, SelectorAttr.SelectorModel,
+     //   "@0=按岗位@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与岗位的交集@7=自定义Url");
+
+
+        map.AddTBStringDoc(SelectorAttr.SelectorP1, null, "分组参数:可以为空,比如:SELECT No,Name,ParentNo FROM  Port_Dept", true, false, true);
+        map.AddTBStringDoc(SelectorAttr.SelectorP2, null, "操作员数据源:比如:SELECT No,Name,FK_Dept FROM  Port_Emp", true, false, true);
+
+        map.AddTBStringDoc(SelectorAttr.SelectorP3, null, "默认选择的数据源:比如:SELECT FK_Emp FROM  WF_GenerWorkerList WHERE FK_Node=102 AND WorkID=@WorkID", true, false, true);
+        map.AddTBStringDoc(SelectorAttr.SelectorP4, null, "强制选择的数据源:比如:SELECT FK_Emp FROM  WF_GenerWorkerList WHERE FK_Node=102 AND WorkID=@WorkID", true, false, true);
+
+        //map.AddTBStringDoc(SelectorAttr.SelectorP1, null, "分组参数,可以为空", true, false, true);
+        //map.AddTBStringDoc(SelectorAttr.SelectorP2, null, "操作员数据源", true, false, true);
+
+
+        
+       // #region 对应关系
+        //平铺模式.
+        map.getAttrsOfOneVSM().AddGroupPanelModel(new BP.WF.Template.NodeStations(), new BP.WF.Port.Stations(),
+            BP.WF.Template.NodeStationAttr.FK_Node,
+            BP.WF.Template.NodeStationAttr.FK_Station, "绑定岗位(平铺)", StationAttr.FK_StationType,"Name","No");
+
+        map.getAttrsOfOneVSM().AddGroupListModel(new BP.WF.Template.NodeStations(), new BP.WF.Port.Stations(),
+          BP.WF.Template.NodeStationAttr.FK_Node,
+          BP.WF.Template.NodeStationAttr.FK_Station, "绑定岗位(树)", StationAttr.FK_StationType,"Name","No");
+
+
+        //节点绑定部门. 节点绑定部门.
+        map.getAttrsOfOneVSM().AddBranches(new BP.WF.Template.NodeDepts(), new BP.Port.Depts(),
+           BP.WF.Template.NodeDeptAttr.FK_Node,
+           BP.WF.Template.NodeDeptAttr.FK_Dept, "绑定部门", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+
+        //节点绑定人员. 使用树杆与叶子的模式绑定.
+        map.getAttrsOfOneVSM().AddBranchesAndLeaf(new BP.WF.Template.NodeEmps(), new BP.Port.Emps(),
+           BP.WF.Template.NodeEmpAttr.FK_Node,
+           BP.WF.Template.NodeEmpAttr.FK_Emp, "绑定接受人", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+        //#endregion
+        
 
 		this.set_enMap(map);
 		return this.get_enMap();

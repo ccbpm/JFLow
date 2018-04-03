@@ -707,8 +707,10 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			  String FK_Flow = this.GetRequestVal("FK_Flow");
 			  String x = this.GetRequestVal("x");
 			  String y = this.GetRequestVal("y");
-              int iX = 0;
-              int iY = 0;
+			  
+			  
+              int iX = 30;
+              int iY = 30;
             
   			if (!DotNetToJavaStringHelper.isNullOrEmpty(x))
   			{

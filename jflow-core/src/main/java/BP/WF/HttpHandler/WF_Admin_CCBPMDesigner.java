@@ -708,8 +708,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			String figureName = this.GetValFromFrmByKey("FigureName");
 			String x = this.GetValFromFrmByKey("x");
 			String y = this.GetValFromFrmByKey("y");
-			int iX = 0;
-			int iY = 0;
+			
+			int iX = 30;
+			int iY = 30;
 			if (!DotNetToJavaStringHelper.isNullOrEmpty(x))
 			{
 				iX = (int)Double.parseDouble(x);

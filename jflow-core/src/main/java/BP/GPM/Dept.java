@@ -129,6 +129,8 @@ public class Dept extends EntityTree
 			//部门领导.
 		map.AddTBString(DeptAttr.Leader, null, "领导", false, false, 0, 100, 30);
 		map.AddTBString(DeptAttr.Tel, null, "联系电话", false, false, 0, 100, 30);
+		
+		map.AddTBString("OrgNo", null, "联系电话", false, false, 0, 100, 30);
 
 			//顺序号.
 		map.AddTBInt(DeptAttr.Idx, 0, "Idx", false, false);

@@ -283,7 +283,7 @@ public class TextBox extends BaseWebControl{
 		 switch (showType) {
 			 case Ens: //如果是要制定的Ens.
 							//this.Width=Unit.Pixel(this.DefaultWith);
-				 url = appPath + "Comm/RefFunc/DataHelp.htm?" + appPath + "Comm/UIEns.jsp?EnsName=" + this.dataHelpKey + "&IsDataHelp=1";
+				 url = appPath + "Comm/RefFunc/DataHelp.htm?" + appPath + "Comm/UIEns.htm?EnsName=" + this.dataHelpKey + "&IsDataHelp=1";
 				 script = " if ( event.button != 2)  return; str=" + getId() + ".value;str= window.showModalDialog('" + url + "&Key=\'+str, '','dialogHeight: 500px; dialogWidth:800px; dialogTop: 150px; dialogLeft: 170px; center: no; help: no'); if ( str==undefined) return ; " + getId() + ".value=str ; ";
 				 this.addAttr("onmousedown", script);
 							//this.ToolTip="右健高级查找并选择。";

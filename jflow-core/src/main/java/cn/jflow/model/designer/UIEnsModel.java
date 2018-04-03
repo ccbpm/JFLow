@@ -729,6 +729,6 @@ public class UIEnsModel extends BaseModel{
 
 	public void EnList() throws IOException
 	{
-		sendRedirect(this.get_request().getRealPath("/") + "/Comm/UIEns.jsp?EnsName=" + this.getEnsName());
+		sendRedirect(this.get_request().getRealPath("/") + "/Comm/UIEns.htm?EnsName=" + this.getEnsName());
 	}
 }

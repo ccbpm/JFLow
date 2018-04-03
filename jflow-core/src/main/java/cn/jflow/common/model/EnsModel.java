@@ -235,7 +235,7 @@ public class EnsModel extends BaseModel{
 		try
 		{
 			ucsys2 = new StringBuilder();
-			BindPageIdx(ucsys2, qo.GetCount(), SystemConfig.getPageSize(), getPageIdx(), "Ens.jsp?EnsName=" + this.getEnsName());
+			BindPageIdx(ucsys2, qo.GetCount(), SystemConfig.getPageSize(), getPageIdx(), "Ens.htm?EnsName=" + this.getEnsName());
 			qo.DoQuery(en.getPK(), SystemConfig.getPageSize(), getPageIdx(), false);
 		}
 		catch (RuntimeException ex)

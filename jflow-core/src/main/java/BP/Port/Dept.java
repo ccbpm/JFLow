@@ -118,6 +118,8 @@ public class Dept extends EntityNoName
 		map.AddTBStringPK(DeptAttr.No, null, "部门编号", true, true, 1, 50, 20);
 		map.AddTBString(DeptAttr.Name, null, "部门名称", true, false, 0, 100, 30);
 		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, false, 0,100,30);
+		
+		map.AddTBString("OrgNo", null, "联系电话", false, false, 0, 100, 30);
 		//map.AddDDLEntities(DeptAttr.ParentNo, "0", "父节点", new Depts(), true);
 		//map.AddDDLEntities(DeptAttr.FK_DeptType, "0", "部门类型", new DeptTypes(),true);
 		// map.AddTBString(DeptAttr.ParentName, null, "父节点名称", true, false, 0,100,30);

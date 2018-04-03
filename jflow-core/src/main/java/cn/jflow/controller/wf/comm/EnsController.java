@@ -66,7 +66,7 @@ public class EnsController {
 		
 		try {
 			response.sendRedirect(Glo.getCCFlowAppPath()
-					+ "WF/Comm/Ens.jsp?EnsName=" + this.getEnsName()
+					+ "WF/Comm/Ens.htm?EnsName=" + this.getEnsName()
 					+ "&PageIdx=" + BaseModel.getPageIdx());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -130,11 +130,11 @@ public class EnsController {
 			if (msg != null) {
 				request.getSession().setAttribute("info1", msg);
 				response.sendRedirect(Glo.getCCFlowAppPath()
-						+ "WF/Comm/Ens.jsp?EnsName=" + this.getEnsName()
+						+ "WF/Comm/Ens.htm?EnsName=" + this.getEnsName()
 						+ "&PageIdx=" + BaseModel.getPageIdx());
 			} else {
 				response.sendRedirect(Glo.getCCFlowAppPath()
-						+ "WF/Comm/Ens.jsp?EnsName=" + this.getEnsName()
+						+ "WF/Comm/Ens.htm?EnsName=" + this.getEnsName()
 						+ "&PageIdx=" + BaseModel.getPageIdx());
 			}
 		} catch (IOException e) {

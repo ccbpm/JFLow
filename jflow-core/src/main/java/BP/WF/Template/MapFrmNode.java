@@ -215,7 +215,7 @@ public class MapFrmNode extends EntityNoName
 		rm.Visable = true;
 		rm.Target = "_blank";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
@@ -225,7 +225,7 @@ public class MapFrmNode extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
@@ -268,7 +268,7 @@ public class MapFrmNode extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "导出XML表单模版"; // "设计表单";
@@ -277,7 +277,7 @@ public class MapFrmNode extends EntityNoName
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "表单检查"; //"设计表单";
@@ -318,7 +318,7 @@ public class MapFrmNode extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoChangeFieldName";
 		rm.Icon = "../../WF/Img/ReName.png";
 		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "重命表单ID";
@@ -328,7 +328,7 @@ public class MapFrmNode extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoChangeFrmID";
 		rm.Icon = "../../WF/Img/ReName.png";
 		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
@@ -341,14 +341,14 @@ public class MapFrmNode extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoCopyFrm";
 		rm.Icon = "../../WF/Img/Btn/Copy.GIF";
 		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
 		rm.Title = "重置表单";
 		rm.ClassMethodName = this.toString() + ".DoResetFrm";
 		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
@@ -381,7 +381,7 @@ public class MapFrmNode extends EntityNoName
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 方法 - 开发接口.
 

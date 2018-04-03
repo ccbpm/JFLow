@@ -236,7 +236,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Visable = true;
 		rm.Target = "_blank";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-	    map.AddRefMethod(rm); //不要了.
+	    //map.AddRefMethod(rm); //不要了.
 
 		rm = new RefMethod();
 		rm.Title = "批量修改字段"; // "设计表单";
@@ -245,7 +245,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
@@ -270,7 +270,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpressionBatch";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "JS编程"; // "设计表单";
@@ -360,7 +360,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.getHisAttrs().AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoChangeFieldName";
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/ReName.png";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "重命表单ID";
@@ -370,7 +370,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.ClassMethodName = this.toString() + ".DoChangeFrmID";
 		rm.Icon = "../../WF/Img/ReName.png";
 		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "复制表单";
@@ -382,7 +382,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.ClassMethodName = this.toString() + ".DoCopyFrm";
 		rm.Icon = "../../WF/Img/Btn/Copy.GIF";
 		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "重置表单";
@@ -396,7 +396,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/telephone.png";
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		/// #endregion 高级设置.
 
@@ -409,7 +409,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "调用分析API"; // "设计表单";

@@ -188,7 +188,7 @@ public class MapFoolForm extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "表单事件"; // "设计表单";
@@ -204,7 +204,7 @@ public class MapFoolForm extends EntityNoName
 		rm.Icon = SystemConfig.getCCFlowWebPath() + "WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpressionBatch";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批量修改字段"; // "设计表单";
@@ -221,7 +221,7 @@ public class MapFoolForm extends EntityNoName
 		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/telephone.png";
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "内置JavaScript脚本"; // "设计表单";
@@ -239,7 +239,7 @@ public class MapFoolForm extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "导出XML表单模版"; // "设计表单";
@@ -248,7 +248,7 @@ public class MapFoolForm extends EntityNoName
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 			//带有参数的方法.
@@ -260,7 +260,7 @@ public class MapFoolForm extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoChangeFieldName";
 		rm.Icon = SystemConfig.getCCFlowWebPath() + "WF/Img/ReName.png";
 
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 
@@ -272,7 +272,7 @@ public class MapFoolForm extends EntityNoName
 		rm.RefAttrLinkLabel = "表单检查";
 		rm.Icon = SystemConfig.getCCFlowWebPath() + "WF/Img/check.png";
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		//#region 方法 - 开发接口.
 		rm = new RefMethod();
@@ -283,7 +283,7 @@ public class MapFoolForm extends EntityNoName
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "调用分析API"; // "设计表单";
@@ -293,7 +293,7 @@ public class MapFoolForm extends EntityNoName
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 		//#endregion 方法 - 开发接口.
 
 		this.set_enMap(map);

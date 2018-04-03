@@ -388,6 +388,7 @@ public class MapFrmNode extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
@@ -531,7 +532,8 @@ public class MapFrmNode extends EntityNoName
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			GroupField gf = new GroupField();
-			if (gf.IsExit(GroupFieldAttr.CtrlID, dtl.getNo()) == true && !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
+			if (gf.IsExit(GroupFieldAttr.CtrlID, dtl.getNo()) == true 
+					&& !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
 			{
 				continue;
 			}

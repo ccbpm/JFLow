@@ -1833,7 +1833,9 @@ public class WF_Comm extends WebContralBase {
 		ht.put("Name", WebUser.getName()==null?"":WebUser.getName());
 		ht.put("FK_Dept", WebUser.getFK_Dept()==null?"":WebUser.getFK_Dept());
 		ht.put("FK_DeptName", WebUser.getFK_DeptName()==null?"":WebUser.getFK_DeptName());
-		ht.put("FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull()==null?"":WebUser.getFK_DeptNameOfFull());
+		ht.put("FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull()==null?"":WebUser.getFK_DeptNameOfFull());		
+		ht.put("GroupNo", "0");
+		ht.put("orgNo",   WebUser.getFK_Dept()==null?"":WebUser.getFK_Dept());
 		
 		
 		ht.put("GroupNo", "0");

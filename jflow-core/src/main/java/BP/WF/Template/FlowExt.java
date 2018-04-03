@@ -969,7 +969,7 @@ public class FlowExt extends EntityNoName
 		/**WF/Comm/RefFunc/UIEn.jsp?EnsName=BP.WF.Rpt.MapRptExts&PK=ND185MyRpt;
 		*/
 		//return Glo.getCCFlowAppPath() + "WF/Comm/RefFunc/UIEn.jsp?EnsName=BP.WF.Rpt.MapRptExts&PK=ND" + Integer.parseInt(this.getNo()) + "MyRpt";
-		return Glo.getCCFlowAppPath() +"WF/Comm/En.htm?EnsName=BP.WF.Rpt.MapRptExts&PK=ND" + Integer.parseInt(this.getNo()) + "MyRpt";
+		return Glo.getCCFlowAppPath() +"WF/Comm/En.htm?EnName=BP.WF.Rpt.MapRptExt&PKVal=ND" + Integer.parseInt(this.getNo()) + "MyRpt";
 		//  UIEn.jsp?EnsName=BP.WF.Rpt.MapRptExts&PK=ND185MyRpt
 		//return Glo.getCCFlowAppPath() + "WF/Rpt/OneFlow.jsp?FK_Flow=" + this.getNo() + "&FK_MapData=ND" + int.Parse(this.getNo()) + "MyRpt";
 	}
@@ -1518,7 +1518,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoDataManger()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/Search.jsp?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
 	}
 	/** 
 	 绑定独立表单

@@ -770,7 +770,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoSearch() {
-		return Glo.getCCFlowAppPath() + "WF/Comm/Search.jsp?s=34&FK_MapData=" + this.getNo() + "&EnsName="
+		return Glo.getCCFlowAppPath() + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName="
 				+ this.getNo();
 	}
 
@@ -780,7 +780,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoGroup() {
-		return Glo.getCCFlowAppPath() + "WF/Comm/Group.jsp?s=34&FK_MapData=" + this.getNo() + "&EnsName="
+		return Glo.getCCFlowAppPath() + "WF/Comm/Group.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName="
 				+ this.getNo();
 	}
 

@@ -517,7 +517,7 @@ public class PubClass {
 					+ ((SysFileManager) file).getMyFileExt() + "</a>&nbsp;";
 			if (WebUser.getNo().equals(((SysFileManager) file).getRec())) {
 				strs += "<a title='打开它' href=\"javascript:DoAction('" + path + "Comm/Do.jsp?ActionType=1&OID=" + ((SysFileManager) file).getOID()
-						+ "&EnsName=" + enName + "&PK=" + pk + "','删除文件《" + ((SysFileManager) file).getMyFileName()
+						+ "&EnName=" + enName + "&PK=" + pk + "','删除文件《" + ((SysFileManager) file).getMyFileName()
 						+ ((SysFileManager) file).getMyFileExt() + "》')\" ><img src='" + path
 						+ "../Img/Btn/delete.gif' border=0 alt='删除此附件' /></a>&nbsp;";
 			}

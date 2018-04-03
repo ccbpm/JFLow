@@ -1091,7 +1091,7 @@ public class FlowSheet extends EntityNoName
 	{
 		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.jsp?FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=", 700, 500);
 		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() +  "WF/Comm/Search.jsp?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=", 700, 500);
+			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() +  "WF/Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=", 700, 500);
 		} catch (IOException e) {
 			Log.DebugWriteError("FlowSheet DoDataManger()" + e);
 		}

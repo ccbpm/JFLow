@@ -569,7 +569,7 @@ public class MapFoolForm extends EntityNoName
 	*/
 	public final String DoSearch()
 	{
-		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Search.jsp?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
 	}
 	/** 
 	 调用分析API
@@ -578,7 +578,7 @@ public class MapFoolForm extends EntityNoName
 	*/
 	public final String DoGroup()
 	{
-		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Group.jsp?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Group.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
 	}
 	/** 
 	 数据源管理
@@ -587,7 +587,7 @@ public class MapFoolForm extends EntityNoName
 	*/
 	public final String DoDBSrc()
 	{
-		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Search.jsp?s=34&FK_MapData=" + this.getNo() + "&EnsName=BP.Sys.SFDBSrcs";
+		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=BP.Sys.SFDBSrcs";
 	}
 	public final String DoWordFrm()
 	{

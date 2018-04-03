@@ -1,6 +1,8 @@
 package BP.WF.HttpHandler.Base;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 
 import org.apache.http.protocol.HttpContext;
 
@@ -194,19 +196,28 @@ public abstract class WebContralBase extends BaseController {
 	public final String GetRequestVal(String param) {
 		
 		String val = getRequest().getParameter(param);
+		
 		if (StringHelper.isNullOrEmpty(val)) {
 			val = getRequest().getParameter(param);
 		}
 		
-		// if(StringHelper.isNullOrEmpty(val)){
+		
 		return val;
-		// }
-		// try {
-		// return URLEncoder.encode(val, "UTF-8");
-		// } catch (UnsupportedEncodingException e) {
-		// e.printStackTrace();
-		// }
-		// return null;
+		
+		
+	 /*
+		try {
+			
+		 return URLEncoder.encode(val, "UTF-8");
+		 
+		 } catch (UnsupportedEncodingException e) {
+			 
+		    e.printStackTrace();
+		     return val;
+		 
+		 }
+		 */
+	 
 	}
 	public Boolean GetRequestValBoolen(String key)
 	{

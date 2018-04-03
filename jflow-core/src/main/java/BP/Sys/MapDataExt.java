@@ -1138,7 +1138,7 @@ public class MapDataExt extends EntityNoName
 	 */
 	public final String DoSearch()
 	{
-		return basePath + "WF/Comm/Search.jsp?s=34&FK_MapData=" + this.getNo()
+		return basePath + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo()
 				+ "&EnsName=" + this.getNo();
 	}
 	
@@ -1149,7 +1149,7 @@ public class MapDataExt extends EntityNoName
 	 */
 	public final String DoGroup()
 	{
-		return basePath + "WF/Comm/Group.jsp?s=34&FK_MapData=" + this.getNo()
+		return basePath + "WF/Comm/Group.htm?s=34&FK_MapData=" + this.getNo()
 				+ "&EnsName=" + this.getNo();
 	}
 	

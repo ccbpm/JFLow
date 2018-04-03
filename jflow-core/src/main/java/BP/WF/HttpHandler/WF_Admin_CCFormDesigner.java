@@ -287,7 +287,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		
 		if (md.getHisFrmType() == BP.Sys.FrmType.WordFrm || md.getHisFrmType() == BP.Sys.FrmType.ExcelFrm) {
 			/* 把表单模版存储到数据库里 */
-			return "url@../../Comm/En.htm?EnsName=BP.WF.Template.MapFrmExcels&PK=" + md.getNo();
+			return "url@../../Comm/En.htm?EnName=BP.WF.Template.MapFrmExcel&PK=" + md.getNo();
 		}
 
 		if (md.getHisFrmType() == BP.Sys.FrmType.FreeFrm) {
@@ -579,10 +579,10 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		ht.put("SumAttrEnum", DBAccess
 				.RunSQLReturnValInt("SELECT COUNT(*) FROM Sys_MapAttr WHERE FK_MapData='" + no + "' AND LGType=1 ")); // 外键.
 
-		ht.put("MapFrmFrees", "../../Comm/En.htm?EnsName=BP.WF.Template.MapFrmFrees&PK=" + no); // 自由表单属性.
-		ht.put("MapFrmFools", "../../Comm/En.htm?EnsName=BP.WF.Template.MapFrmFools&PK=" + no); // 傻瓜表单属性.
-		ht.put("MapFrmExcels", "../../Comm/En.htm?EnsName=BP.WF.Template.MapFrmExcels&PK=" + no); // Excel表单属性.
-		ht.put("MapDataURLs", "../../Comm/En.htm?EnsName=BP.WF.Template.MapDataURLs&PK=" + no); // 嵌入式表单属性.
+		ht.put("MapFrmFrees", "../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=" + no); // 自由表单属性.
+		ht.put("MapFrmFools", "../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFool&PKVal=" + no); // 傻瓜表单属性.
+		ht.put("MapFrmExcels", "../../Comm/En.htm?EnName=BP.WF.Template.MapFrmExcel&PKVal=" + no); // Excel表单属性.
+		ht.put("MapDataURLs", "../../Comm/En.htm?EnName=BP.WF.Template.MapDataURL&PKVal=" + no); // 嵌入式表单属性.
 
 		return BP.DA.DataType.ToJsonEntityModel(ht);
 	}

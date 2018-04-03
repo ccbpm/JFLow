@@ -785,9 +785,9 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
           if (sf.getSrcType() == SrcType.TableOrView || sf.getSrcType() == SrcType.BPClass 
         		  || sf.getSrcType() == SrcType.CreateTable)
-              return "../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrSFTables&PK=" + attr.getMyPK();
+              return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFTable&PKVal=" + attr.getMyPK();
           else
-              return "../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrStrings&PK=" + attr.getMyPK();
+              return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=" + attr.getMyPK();
 	}
 	
 	
@@ -1265,14 +1265,12 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	*/
 	public final String FieldTypeSelect_Create()
 	{
+		
 		String no = this.GetRequestVal("KeyOfEn");
-		String name = this.GetRequestVal("Name");
+		String name = this.GetRequestVal("name");
 		String newNo = DataType.ParseStringForNo(no, 20);
 		String newName = DataType.ParseStringForName(name, 20);
-		int fType = Integer.parseInt(this.getRequest().getParameter("FType"));
-		
-		
-
+		int fType = Integer.parseInt(this.getRequest().getParameter("FType")); 
 		MapAttrs attrs = new MapAttrs();
 		int i = attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.KeyOfEn, newNo);
 		if (i != 0)
@@ -1321,7 +1319,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppString);
 			attr.setUIContralType(UIContralType.TB);
 			attr.Insert();
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrStrings&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
 		if (attr.getMyDataType() == DataType.AppInt)
@@ -1338,7 +1336,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setDefVal("0");
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrNums&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 
 			// return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
@@ -1356,7 +1354,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setUIContralType(UIContralType.TB);
 			attr.setDefVal("0.00");
 			attr.Insert();
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrNums&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
@@ -1375,7 +1373,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setDefVal("0");
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrNums&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
@@ -1393,7 +1391,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setDefVal("0");
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrNums&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
@@ -1410,7 +1408,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppDate);
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrDTs&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + DataType.AppDate + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
@@ -1427,7 +1425,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppDateTime);
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrDTs&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + DataType.AppDateTime + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
@@ -1445,7 +1443,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setDefVal("0");
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnsName=BP.Sys.FrmUI.MapAttrBoolens&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrBoolen&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			// return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + DataType.AppBoolean + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 

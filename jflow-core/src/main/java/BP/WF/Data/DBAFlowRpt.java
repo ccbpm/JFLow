@@ -38,12 +38,12 @@ public class DBAFlowRpt extends Rpt2Base
 		if (WebUser.getNo().equals("admin"))
 		{
 			attr.DBSrc = "SELECT B.Name as '流程名称', A.FK_Flow as _FK_FLOW, Count(A.WorkID) AS '发起数量' FROM WF_GenerWorkFlow A, WF_Flow B WHERE A.FK_Flow=B.No AND A.WFState!=0 GROUP BY B.Name, A.FK_Flow";
-			attr.DESC = "全部运行的流程分析,<a href=\"javascript:WinOpen('/WF/Comm/Group.jsp?EnsName=BP.WF.Data.GenerWorkFlowViews')\">高级查询/分析</a>."; // 报表底部说明,可以为空.
+			attr.DESC = "全部运行的流程分析,<a href=\"javascript:WinOpen('/WF/Comm/Group.htm?EnsName=BP.WF.Data.GenerWorkFlowViews')\">高级查询/分析</a>."; // 报表底部说明,可以为空.
 			attr.DBSrcOfDtl = "SELECT WorkID as '工作ID', FlowName as '流程名称', Title as '标题',  WFSta as '状态', StarterName as '发起人', TodoEmps as '当前处理人' FROM WF_GenerWorkFlow WHERE FK_FLOW='@_FK_FLOW'";
 		} else
 		{
 			attr.DBSrc = "SELECT B.Name as '流程名称', A.FK_Flow as _FK_FLOW, Count(A.WorkID) AS '发起数量' FROM WF_GenerWorkFlow A, WF_Flow B WHERE A.FK_Flow=B.No AND A.WFState!=0 AND A.FK_Dept='@BP.Web.WebUser.getFK_Dept()' GROUP BY B.Name, A.FK_Flow";
-			attr.DESC = "本部门的流程分析, <a href=\"javascript:WinOpen('/WF/Comm/Group.jsp?EnsName=BP.WF.Data.GenerWorkFlowViews')\">高级查询/分析</a>."; // 报表底部说明,可以为空.
+			attr.DESC = "本部门的流程分析, <a href=\"javascript:WinOpen('/WF/Comm/Group.htm?EnsName=BP.WF.Data.GenerWorkFlowViews')\">高级查询/分析</a>."; // 报表底部说明,可以为空.
 			attr.DBSrcOfDtl = "SELECT WorkID as '工作ID', FlowName as '流程名称', Title as '标题',  WFSta as '状态', StarterName as '发起人', TodoEmps as '当前处理人' FROM WF_GenerWorkFlow WHERE FK_FLOW='@_FK_FLOW' AND A.FK_Dept='@BP.Web.WebUser.getFK_Dept()'";
 		}
 		attrs.Add(attr);

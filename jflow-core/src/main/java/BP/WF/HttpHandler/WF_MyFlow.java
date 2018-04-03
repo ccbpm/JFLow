@@ -1002,13 +1002,13 @@ public class WF_MyFlow extends WebContralBase {
 		{
 			if (this.getIsCC())
 			{
-				toolbar += "<input type=button  value='流程运行轨迹' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+				toolbar += "<input type=button  value='流程运行轨迹' enable=true onclick=\"WinOpen('./WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
 				// 判断审核组件在当前的表单中是否启用，如果启用了.
 				FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
 				if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Enable)
 				{
 					//如果不等于启用, 
-					toolbar += "<input type=button  value='填写审核意见' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/CCCheckNote.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+					toolbar += "<input type=button  value='填写审核意见' enable=true onclick=\"WinOpen('。/WorkOpt/CCCheckNote.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
 				}
 				return toolbar;
 			}
@@ -1127,12 +1127,12 @@ public class WF_MyFlow extends WebContralBase {
 			if ((btnLab.getCCRole() == CCRole.HandCC || btnLab.getCCRole() == CCRole.HandAndAuto))
 			{
 				// 抄送 
-				toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey + "','ds'); \" />";
+				toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"WinOpen('" + "./WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey + "','ds'); \" />";
 			}
 
 			if (btnLab.getDeleteEnable() != 0 && isAskFor == false)
 			{
-				String urlrDel = appPath + "WF/MyFlowInfo.htm?DoType=DeleteFlow&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlrDel = "MyFlowInfo.htm?DoType=DeleteFlow&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 						toolbar += "<input name='Delete' type=button  value='" + btnLab.getDeleteLab() + "' enable=true onclick=\"To('" + urlrDel + "'); \" />";
 
 			}
@@ -1147,13 +1147,13 @@ public class WF_MyFlow extends WebContralBase {
 				//如果不是加签 
 				if (currND.getHisPrintDocEnable() == PrintDocEnable.PrintRTF)
 				{
-					String urlr = appPath + "WF/WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+					String urlr ="./WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 					toolbar += "<input type=button name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
 				}
 
 				if (currND.getHisPrintDocEnable() == PrintDocEnable.PrintWord)
 				{
-					String urlr = appPath + "WF/Rpt/RptDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsPrint=1&s=" + tKey;
+					String urlr =  "./Rpt/RptDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsPrint=1&s=" + tKey;
 					toolbar += "<input type=button name='PrintDoc'  value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
 				}
 
@@ -1165,33 +1165,33 @@ public class WF_MyFlow extends WebContralBase {
 
 			if (btnLab.getTrackEnable() && isAskFor == false)
 			{
-				toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+				toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" +  "./WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
 			}
 
 
 			if (btnLab.getSearchEnable() && isAskFor == false)
 			{
-				toolbar += "<input type=button name='Search'  value='" + btnLab.getSearchLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/RptDfine/Default.htm?EnsName=ND" + Integer.parseInt(this.getFK_Flow()) + "MyRpt&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey + "','dsd0'); \" />";
+				toolbar += "<input type=button name='Search'  value='" + btnLab.getSearchLab() + "' enable=true onclick=\"WinOpen('" + "./RptDfine/Default.htm?EnsName=ND" + Integer.parseInt(this.getFK_Flow()) + "MyRpt&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey + "','dsd0'); \" />";
 			}
 
 			if (btnLab.getBatchEnable() && isAskFor == false)
 			{
 				//批量处理
-				String urlr = appPath + "WF/Batch.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlr ="Batch.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='Batch' value='" + btnLab.getBatchLab() + "' enable=true onclick=\"To('" + urlr + "'); \" />";
 			}
 
 			if (btnLab.getAskforEnable() && HisGenerWorkFlow != null && HisGenerWorkFlow.getWFState() != WFState.Askfor)
 			{
 				//加签 
-				String urlr3 = appPath + "WF/WorkOpt/Askfor.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlr3 = "./WorkOpt/Askfor.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='Askfor'  value='" + btnLab.getAskforLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
 			} 
 
 			if (btnLab.getHuiQianRole() != BP.WF.HuiQianRole.None )
 			{
 				//会签 
-				String urlr3 = appPath + "WF/WorkOpt/HuiQian.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlr3 ="./WorkOpt/HuiQian.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='HuiQian'  value='" + btnLab.getHuiQianLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
 			}
 
@@ -1199,7 +1199,7 @@ public class WF_MyFlow extends WebContralBase {
 			if (btnLab.getWebOfficeWorkModel() == WebOfficeWorkModel.Button)
 			{
 				//公文正文 
-				String urlr = appPath + "WF/WorkOpt/WebOffice.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlr ="./WorkOpt/WebOffice.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='WebOffice'  value='" + btnLab.getWebOfficeLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','公文正文'); \" />";
 			}
 			
@@ -1207,28 +1207,28 @@ public class WF_MyFlow extends WebContralBase {
 			if (currFlow.getIsResetData() == true && currND.getIsStartNode())
 			{
 				// 启用了数据重置功能 
-				String urlr3 = appPath + "WF/MyFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsDeleteDraft=1&s=" + tKey;
+				String urlr3 = "MyFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsDeleteDraft=1&s=" + tKey;
 				toolbar += "<input type=button  value='数据重置' enable=true onclick=\"To('" + urlr3 + "','ds'); \" />";
 			}
 
 			if (btnLab.getSubFlowEnable() == true)
 			{
 				// 子流程 
-				String urlr3 = appPath + "WF/WorkOpt/SubFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlr3 = "./WorkOpt/SubFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='SubFlow'  value='" + btnLab.getSubFlowLab() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
 			}
 
 			if (btnLab.getCHEnable() == true)
 			{
 				// 节点时限设置 
-				String urlr3 = appPath + "WF/WorkOpt/CH.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlr3 = "./WorkOpt/CH.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='CH'  value='" + btnLab.getCHLab() + "' enable=true onclick=\"WinShowModalDialog('" + urlr3 + "'); \" />";
 			}
 
 			if (btnLab.getPRIEnable() == true)
 			{
 				// 优先级设置 
-				String urlr3 = appPath + "WF/WorkOpt/PRI.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+				String urlr3 =  "./WorkOpt/PRI.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='PR'  value='" + btnLab.getPRILab() + "' enable=true onclick=\"WinShowModalDialog('" + urlr3 + "'); \" />";
 			}
 
@@ -1729,84 +1729,6 @@ public class WF_MyFlow extends WebContralBase {
 			}
 	}
 	
-	public String GenerWorkNode_OLD(){
-		// 产生一个工作节点
-		String json = "";
-		try {
-			
-			DataSet ds = new DataSet();
-			
-			if (!this.getDoType1().toUpperCase().equals("VIEW")) {
-				ds = BP.WF.CCFlowAPI.GenerWorkNode_2017(this.getFK_Flow(),this.getFK_Node(), this.getWorkID(),this.getFID(), BP.Web.WebUser.getNo());
-
-				// 获取WF_GenerWorkFlow
-				String sql = "";
-
-				if (SystemConfig.getAppCenterDBType()== DBType.Oracle)
-				{
-					sql = String.format("select work1.WFState,work2.WFState PWFState,work1.PFID,work1.PWorkID,work1.PNodeID,work1.PFlowNo,NVL(work2.PWorkID,0) PWorkID2,work2.PNodeID PNodeID2,work2.PFlowNo PFlowNo2,work1.FK_Flow,work1.FK_Node,work1.WorkID from WF_GenerWorkFlow work1 left join  WF_GenerWorkFlow work2 on  work1.FID=work2.WorkID where work1.WorkID='%1$s'", this.getWorkID());
-				} else if(SystemConfig.getAppCenterDBType()== DBType.MySQL){
-					sql = String.format("select work1.WFState,work2.WFState PWFState,work1.PFID,work1.PWorkID,work1.PNodeID,work1.PFlowNo,IFNULL(work2.PWorkID,0) PWorkID2,work2.PNodeID PNodeID2,work2.PFlowNo PFlowNo2,work1.FK_Flow,work1.FK_Node,work1.WorkID from WF_GenerWorkFlow work1 left join  WF_GenerWorkFlow work2 on  work1.FID=work2.WorkID where work1.WorkID='%1$s'", this.getWorkID());
-				} else
-				{
-					sql = String.format("select work1.WFState,work2.WFState PWFState,work1.PFID,work1.PWorkID,work1.PNodeID,work1.PFlowNo,ISNULL(work2.PWorkID,0) PWorkID2,work2.PNodeID PNodeID2,work2.PFlowNo PFlowNo2,work1.FK_Flow,work1.FK_Node,work1.WorkID from WF_GenerWorkFlow work1 left join  WF_GenerWorkFlow work2 on  work1.FID=work2.WorkID where work1.WorkID='%1$s'", this.getWorkID());
-				}
-
-				DataTable wf_generWorkFlowDt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-				wf_generWorkFlowDt.TableName = "WF_GenerWorkFlow";
-
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-				{
-					wf_generWorkFlowDt.Columns.get("WFSTATE").ColumnName = "WFState";
-					wf_generWorkFlowDt.Columns.get("PWFSTATE").ColumnName = "PWFState";
-					wf_generWorkFlowDt.Columns.get("PFID").ColumnName = "PFID";
-					wf_generWorkFlowDt.Columns.get("PWORKID").ColumnName = "PWorkID";
-					wf_generWorkFlowDt.Columns.get("PNODEID").ColumnName = "PNodeID";
-					wf_generWorkFlowDt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
-
-					wf_generWorkFlowDt.Columns.get("PWORKID2").ColumnName = "PWorkID2";
-					wf_generWorkFlowDt.Columns.get("PNODEID2").ColumnName = "PNodeID2";
-					wf_generWorkFlowDt.Columns.get("PFLOWNO2").ColumnName = "PFlowNo2";
-
-					wf_generWorkFlowDt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
-					wf_generWorkFlowDt.Columns.get("FK_NODE").ColumnName = "FK_Node";
-					wf_generWorkFlowDt.Columns.get("WORKID").ColumnName = "WorkID";
-				}
-
-				// 把他转化小写,适应多个数据库.
-				wf_generWorkFlowDt = DBAccess
-						.ToLower(wf_generWorkFlowDt);
-				ds.Tables.add(wf_generWorkFlowDt);
-				/*
-				 * ds.Tables.add(wf_generWorkFlowDt);
-				 * 
-				 * sql = "select * from WF_Node where NodeID=" +
-				 * this.getFK_Node(); DataTable wf_node =
-				 * BP.DA.DBAccess.RunSQLReturnTable(sql);
-				 * wf_node.TableName = "WF_Node"; if
-				 * (ds.Tables.contains(wf_node.TableName)) {
-				 * ds.Tables.remove("WF_Node"); }
-				 * ds.Tables.add(wf_node);
-				 */
-			}
-
-			DataTable trackDt = BP.WF.Dev2Interface
-					.DB_GenerTrack_2017(this.getFK_Flow(), this.getWorkID(),
-							this.getFID()).getHashTables().get("Track");// Tables["Track"];
-			ds.Tables.add(trackDt);
-
-			// ds.WriteXml(xml);
-
-			json = BP.Tools.Json.ToJson(ds);
-			// BP.DA.DataType.WriteFile("c:\\WorkNode.json", json);
-		} catch (RuntimeException ex) {
-			BP.DA.Log.DebugWriteError(ex.toString());
-			json = "err@" + ex.getMessage();
-		}
-		//System.out.println(json);
-		return json;
-	}
-	
 	public String Confirm(){
 		// 确认
 		BP.WF.Dev2Interface.Flow_Confirm(this.getWorkID());
@@ -2099,11 +2021,7 @@ public class WF_MyFlow extends WebContralBase {
 		}
 		return _HisGenerWorkFlow;
 	}
-
-	/**
-	 * 定义跟路径
-	 */
-	public String appPath = BP.WF.Glo.getHostURL();// "/";
+ 
 	public boolean isAskFor = false;
 
 	// 杨玉慧

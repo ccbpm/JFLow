@@ -220,7 +220,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpressionBatch";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批量修改字段"; // "设计表单";
@@ -264,7 +264,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 			//带有参数的方法.
@@ -299,7 +299,7 @@ public class MapFrmFool extends EntityNoName
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "调用分析API"; // "设计表单";
@@ -309,7 +309,7 @@ public class MapFrmFool extends EntityNoName
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 			///#endregion 方法 - 开发接口.
 

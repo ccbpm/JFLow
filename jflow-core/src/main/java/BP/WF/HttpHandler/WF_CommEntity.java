@@ -107,9 +107,7 @@ public class WF_CommEntity extends WebContralBase {
 
         //找到映射.
         AttrsOfOneVSM oneVsM = en.getEnMap().getAttrsOfOneVSM();
-        AttrOfOneVSM vsM = null;
-        
-        	
+        AttrOfOneVSM vsM = null; 
         for (AttrOfOneVSM item : oneVsM)
         {
             if (item.dot2DotModel  == Dot2DotModel.TreeDeptEmp

@@ -56,8 +56,6 @@
 		<script type="text/javascript">
 		    var selectedRows = null;
 		    var hander;
-		    var AttrOfOneInMM;
-	        var AttrOfMInMM;
 		    $(function () {
 
 		        $("#Msg").html("正在加载,请稍后......");
@@ -65,8 +63,8 @@
 		        var enName = GetQueryString("EnName"); // 主表实体. A实体.
 		        var dot2DotEnsName = GetQueryString("Dot2DotEnsName"); //存储实体.
 		        var EnsOfMM = GetQueryString("EnsOfMM"); //B实体.
-		        AttrOfOneInMM = GetQueryString("AttrOfOneInMM"); //存储实体对应主表的外键.
-		        AttrOfMInMM = GetQueryString("AttrOfMInMM"); //存储实体对应B实体外键.
+		        var AttrOfOneInMM = GetQueryString("AttrOfOneInMM"); //存储实体对应主表的外键.
+		        var AttrOfMInMM = GetQueryString("AttrOfMInMM"); //存储实体对应B实体外键.
 		        var defaultGroupAttrKey = GetQueryString("DefaultGroupAttrKey");
 
 		        //获得数据.
@@ -76,7 +74,7 @@
 
 		        var dbTrees = data["DBTrees"]; //左边的树.
 		        selectedRows = data["DBMMs"]; //选择的数据.
-		        console.log(selectedRows);
+
 		        var webUser = new WebUser();
 		        // AtPara
 		        var title = "请选择"; // mapExt.GetPara("Title");
@@ -166,8 +164,6 @@
 		        });
 
 		        // grid2
-		        var No=AttrOfMInMM;
-		        var Name = AttrOfMInMM + "Text";
 		        $('#viewGrid').bootstrapTable({
 		            striped: true,
 		            cache: false,
@@ -179,16 +175,16 @@
 		            cardView: false,
 		            detailView: false,
 		            height: $(document).height() / 3,
-		            uniqueId: No,
+		            uniqueId: "No",
 		            columns: [{
-		                field: No,
+		                field: 'No',
 		                title: '编号'
 		            }, {
-		                field: Name,
+		                field: 'Name',
 		                title: '名称'
 		            }, {
 		                title: '操作', formatter: function (value, row, index) {
-		                    return '<a class="newBtn btn-danger" href="#" onclick="removeRecord(\'' + row[No] + '\')">X</a>';
+		                    return '<a class="newBtn btn-danger" href="#" onclick="removeRecord(\'' + row.No + '\')">X</a>';
 		                }
 		            }]
 		        });
@@ -207,7 +203,6 @@
 
 		    function loadViewGrid(json) {
 		        if ($.isArray(json)) {
-		        	
 		            $('#viewGrid').bootstrapTable("load", json);
 		        }
 		    }
@@ -217,15 +212,12 @@
 		        }
 		        $.each(selectedRows, function (i, o) {
 		            var sel = $.grep(globalSelectedRows, function (obj) {
-		                return obj[AttrOfMInMM] == o.No;
+		                return obj.No == o.No;
 		            });
 		            if (sel.length == 0) {
 
 		                SaveVal(o.No);
-		               var newObject=[];
-		               newObject[AttrOfMInMM] = o.No;
-		               newObject[AttrOfMInMM+"Text"]=o.Name;
-		                globalSelectedRows.push(newObject);
+		                globalSelectedRows.push(o);
 		            }
 		        });
 		    }
@@ -235,7 +227,7 @@
 		        }
 		        $.each(selectedRows, function (i, o) {
 		            for (var index = 0; index < globalSelectedRows.length; index++) {
-		                if (o.No == globalSelectedRows[index][AttrOfMInMM]) {
+		                if (o.No == globalSelectedRows[index].No) {
 		                    Delete(o.No);
 		                    globalSelectedRows.splice(index, 1);
 		                    break;
@@ -388,7 +380,7 @@
 		        //
 		        Delete(No);
 		        $('#viewGrid').bootstrapTable("remove", {
-		            field: AttrOfMInMM,
+		            field: "No",
 		            values: [No]
 		        });
 		    }

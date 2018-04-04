@@ -551,7 +551,6 @@ public class Track extends BP.En.Entity
 		{
 			this.SetValByKey(TrackAttr.MyPK, DBAccess.GenerOIDByGUID());
 			//this.SetValByKey(TrackAttr.MyPK, DBAccess.GenerGUID());
-
 		}
 		else
 		{
@@ -594,7 +593,7 @@ public class Track extends BP.En.Entity
 		}
 
 		//把frm日志写入到数据里.
-		if (this.FrmDB != null)
+		if (this.FrmDB != null) 
 		{
 			BP.DA.DBAccess.SaveBigTextToDB(this.FrmDB, ptable, "MyPK", this.getMyPK(), "FrmDB");
 		}

@@ -27,6 +27,7 @@ import BP.En.QueryObject;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.RefMethods;
+import BP.En.UIContralType;
 import BP.Sys.EnCfg;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
@@ -35,8 +36,6 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
-import BP.Tools.Json;
-import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
@@ -877,5 +876,227 @@ public class WF_CommEntity extends WebContralBase {
 
         return "err@设置的默认分组[" + key + "]不能是普通字段.";
     }
+    
+    
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    /// <returns></returns>
+    public String Dtl_Save()
+    {
+        try
+        {
+             
+            Entities dtls = ClassFactory.GetEns(this.getEnsName());
+            Entity dtl = dtls.getGetNewEntity();
+            dtls.Retrieve(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
+            Map map = dtl.getEnMap();
+            for (Entity item : dtls)
+            {
+                String pkval = item.GetValStringByKey(dtl.getPK());
+                for (Attr attr : map.getAttrs())
+                {
+                    if (attr.getIsRefAttr() == true)
+                        continue;
+
+                    if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+                    {
+                        if (attr.getUIIsReadonly() == false)
+                            continue;
+
+                        String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+                        item.SetValByKey(attr.getKey(), val);
+                        continue;
+                    }
+
+
+                    if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
+                    {
+                        String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+                        item.SetValByKey(attr.getKey(), val);
+                        continue;
+                    }
+
+                    if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
+                        item.SetValByKey(attr.getKey(), val);
+                        continue;
+                    }
+
+                    if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
+                        if (val == "-1")
+                            item.SetValByKey(attr.getKey(), 0);
+                        else
+                            item.SetValByKey(attr.getKey(), 1);
+                        continue;
+                    }
+                }
+
+                item.Update(); //执行更新.
+            }
+         
+            for (int i = 0; i < 50; i++)
+            {
+                String pkval = "TB_"+i+"_"+dtl.getPK();
+                String val=this.GetValFromFrmByKey(pkval, "");
+                if (val.equals(""))
+                    continue;
+
+                for (Attr attr : map.getAttrs())
+                {
+
+                    if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+                    {
+                        if (attr.getUIIsReadonly() == false)
+                            continue;
+
+                        val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.getKey(), null);
+                        dtl.SetValByKey(attr.getKey(), val);
+                        continue;
+                    }
+
+                    if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
+                    {
+                        val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.getKey());
+                        dtl.SetValByKey(attr.getKey(), val);
+                        continue;
+                    }
+
+                    if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
+                    {
+                        val = this.GetValFromFrmByKey("DDL_" + i + "_" + attr.getKey());
+                        dtl.SetValByKey(attr.getKey(), val);
+                        continue;
+                    }
+
+                    if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+                    {
+                        val = this.GetValFromFrmByKey("CB_" + i + "_" + attr.getKey(), "-1");
+                        if (val == "-1")
+                            dtl.SetValByKey(attr.getKey(), 0);
+                        else
+                            dtl.SetValByKey(attr.getKey(), 1);
+                        continue;
+                    }
+                }
+                dtl.SetValByKey(pkval, 0);
+                dtl.SetValByKey(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
+                dtl.setPKVal( "0");
+                dtl.Insert();
+            }
+            
+
+            return "保存成功.";
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
+    /// <summary>
+    /// 保存
+    /// </summary>
+    /// <returns></returns>
+    public String Dtl_Init()
+    {
+        //定义容器.
+        DataSet ds = new DataSet();
+
+        //查询出来从表数据.
+        Entities dtls = ClassFactory.GetEns(this.getEnsName());
+        dtls.Retrieve(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
+        ds.Tables.add(dtls.ToDataTableField("Dtls"));
+
+        //实体.
+        Entity dtl = dtls.getGetNewEntity();
+        //定义Sys_MapData.
+        MapData md = new MapData();
+        md.setNo(  this.getEnName() );
+        md.setName(dtl.getEnDesc());
+
+       // #region 加入权限信息.
+        //把权限加入参数里面.
+        if (dtl.getHisUAC().IsInsert)
+            md.SetPara("IsInsert", "1");
+        if (dtl.getHisUAC().IsUpdate)
+            md.SetPara("IsUpdate", "1");
+        if (dtl.getHisUAC().IsDelete)
+            md.SetPara("IsDelete", "1");
+        //#endregion 加入权限信息.
+
+        ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+
+       // #region 字段属性.
+        MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs();
+        DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
+        ds.Tables.add(sys_MapAttrs);
+        //#endregion 字段属性.
+
+       // #region 把外键与枚举放入里面去.
+        for (DataRow dr : sys_MapAttrs.Rows)
+        {
+            String uiBindKey = dr.getValue("UIBindKey").toString();
+            String lgType = dr.getValue("LGType").toString();
+            if (lgType.equals("2")==false)
+                continue;
+
+            String UIIsEnable = dr.getValue("UIVisible").toString();
+            if (UIIsEnable == "0")
+                continue;
+
+            if ( DataType.IsNullOrEmpty(uiBindKey) == true)
+            {
+            	String myPK = dr.getValue("MyPK").toString();
+                /*如果是空的*/
+                //   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
+            }
+
+            // 检查是否有下拉框自动填充。
+            String keyOfEn = dr.getValue("KeyOfEn").toString();
+            String fk_mapData = dr.getValue("FK_MapData").toString();
+
+
+            // 判断是否存在.
+            if (ds.Tables.contains(uiBindKey) == true)
+                continue;
+
+            ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+        }
+
+        String enumKeys = "";
+        for (Attr attr : dtl.getEnMap().getAttrs())
+        {
+            if (attr.getMyFieldType() == FieldType.Enum)
+            {
+                enumKeys += "'" + attr.getUIBindKey() + "',";
+            }
+        }
+
+        if (enumKeys.length() > 2)
+        {
+            enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
+            // Sys_Enum
+            String sqlEnum = "SELECT * FROM Sys_Enum WHERE EnumKey IN (" + enumKeys + ")";
+            DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
+            dtEnum.TableName = "Sys_Enum";
+
+            if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+            {
+                dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
+                dtEnum.Columns.get("LAB").ColumnName = "Lab";
+                dtEnum.Columns.get("ENUMKEY").ColumnName = "EnumKey";
+                dtEnum.Columns.get("INTKEY").ColumnName = "IntKey";
+                dtEnum.Columns.get("LANG").ColumnName = "Lang";
+            }
+            ds.Tables.add(dtEnum);
+        }
+       // #endregion 把外键与枚举放入里面去.
+
+        return BP.Tools.Json.ToJson(ds);
+    }
+     
    // #endregion 分组数据.
 }

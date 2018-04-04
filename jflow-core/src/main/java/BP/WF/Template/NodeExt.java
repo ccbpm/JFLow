@@ -1229,7 +1229,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoCanCancelNodes()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CanCancelNodes.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/CanCancelNodes.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
 	 DXReport

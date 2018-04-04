@@ -7,7 +7,6 @@
   <Item No="FS" CH="公文查询"  B5="查询"  EN="Rpt"  JP="查询" RU="Заявления" Url="FlowSearch.aspx" Img="./Img/Search.gif" Enable="0" Title="流程查询。" />
   <Item No="Reg" CH="收文登记"  B5="查询"  EN="Rpt"  JP="查询" RU="Заявления" Url="FlowSearch.aspx" Img="./Img/Search.gif" Enable="0" Title="流程查询。" />
 
-
   <Item1 No="Tools" CH="工具栏"  B5="工具栏"  EN="Rpt"  JP="工具栏" RU="Заявления" Url="Tools.aspx" Img="./Img/Tools.gif" Enable="0" Title="工具栏" />
   <Item1 No="Login" CH="切换"  B5="切换"  EN="Rpt"  JP="切换" RU="Заявления" Url="Login.aspx" Img="./Img/Login.gif" Enable="0" Title="流程查询。" />
   <Item1 No="WF" CH="报表" EN="Rpt" RU="Заявления" Url="SelfWFRpt.aspx" Img="./Img/Runing.gif" Enable="0" Title="自定义报表。" />

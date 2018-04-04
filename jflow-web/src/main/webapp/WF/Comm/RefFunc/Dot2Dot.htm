@@ -15,8 +15,8 @@
 
         var selectedEles = null;
 
-        var mapExt = null; 
-        
+        var mapExt = null;
+
         $(function () {
 
             $("#Msg").html("正在加载,请稍后......");
@@ -97,10 +97,10 @@
                 myNum++;
                 if (myNum == 0)
                     html += "<TR>";
-                if (isHave==true)
-                	html += "<td><input type='checkbox' class='dot2_checkbox' checked=true name='CB' id='CB_" + en.No + "'  value='" + en.No + "'/><label for='CB_" + en.No + "'>" + lab + "</label></td>";
+                if (isHave == true)
+                    html += "<td><input type='checkbox' class='dot2_checkbox' checked=true name='CB' id='CB_" + en.No + "'  value='" + en.No + "'/><label for='CB_" + en.No + "'>" + lab + "</label></td>";
                 else
-                	html += "<td><input type='checkbox' class='dot2_checkbox'  name='CB' id='CB_" + en.No + "'  value='" + en.No + "'/><label for='CB_" + en.No + "'>" + lab + "</label></td>";
+                    html += "<td><input type='checkbox' class='dot2_checkbox'  name='CB' id='CB_" + en.No + "'  value='" + en.No + "'/><label for='CB_" + en.No + "'>" + lab + "</label></td>";
 
                 if (myNum == 2) {
                     html += "</tr>";
@@ -221,10 +221,10 @@
                     if (myNum == 0)
                         html += "<TR>";
 
-                  if (isHave==true)
-                      html += "<td><input type='checkbox' class='dot2_checkbox' checked=true name='CB_" + group.No + "' id='CB_" + en.No + "' value='" + en.No + "' /><label for='CB_" + en.No + "'>" + lab + "</label></td>";
-                  else
-                      html += "<td><input type='checkbox' class='dot2_checkbox'  name='CB_" + group.No + "' id='CB_" + en.No + "' value='" + en.No + "' /><label for='CB_" + en.No + "'>" + lab + "</label></td>";
+                    if (isHave == true)
+                        html += "<td><input type='checkbox' class='dot2_checkbox' checked=true name='CB_" + group.No + "' id='CB_" + en.No + "' value='" + en.No + "' /><label for='CB_" + en.No + "'>" + lab + "</label></td>";
+                    else
+                        html += "<td><input type='checkbox' class='dot2_checkbox'  name='CB_" + group.No + "' id='CB_" + en.No + "' value='" + en.No + "' /><label for='CB_" + en.No + "'>" + lab + "</label></td>";
 
 
                     if (myNum == 2) {
@@ -254,10 +254,10 @@
         function CheckAll(checked, no) {
 
             //获取name=box的复选框 遍历输出复选框
-            var checkeds = document.getElementsByName("CB_"+no);
-           	for(var i=0;i<checkeds.length;i++){
-           		checkeds[i].checked = checked;
-           	}
+            var checkeds = document.getElementsByName("CB_" + no);
+            for (var i = 0; i < checkeds.length; i++) {
+                checkeds[i].checked = checked;
+            }
 
         }
 
@@ -332,14 +332,14 @@
  <input type=button id="Btn_Save" onclick="Save();" style="display: none;" value="Save"/>
  <div id="Msg"> </div>
  <script type="text/javascript">
-    $(function(){
+     $(function () {
          //给全选的复选框添加事件
-        $("#SelectAll").click(function () {
+         $("#SelectAll").click(function () {
              // this 全选的复选框
-             var userids=this.checked;
+             var userids = this.checked;
              //获取name=box的复选框 遍历输出复选框
              $("input[class='dot2_checkbox']").each(function () {
-                 this.checked=userids;
+                 this.checked = userids;
              });
          });
      });

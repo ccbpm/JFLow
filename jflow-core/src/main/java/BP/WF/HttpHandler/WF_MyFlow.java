@@ -1781,7 +1781,7 @@ public class WF_MyFlow extends WebContralBase {
 		//获得他的描述,与数据.
 		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(mdtl.getFK_MapData(), mdtl, Integer.parseInt(this.getRefPKVal()), strs);
 
-		return BP.Tools.Json.DataSetToJson(ds,false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	/**
 	 * 默认执行的方法

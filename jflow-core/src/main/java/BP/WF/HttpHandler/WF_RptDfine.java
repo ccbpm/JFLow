@@ -68,7 +68,7 @@ public class WF_RptDfine extends WebContralBase{
 		}
 		ds.Tables.add(dt);
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	
 	/** 功能列表
@@ -457,7 +457,7 @@ public class WF_RptDfine extends WebContralBase{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	
 	private DataTable GetNoNameDataTable(String tableName)
@@ -880,7 +880,7 @@ public class WF_RptDfine extends WebContralBase{
 		ds.Tables.add(ges.ToDataTableField("MainData"));
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 }
 

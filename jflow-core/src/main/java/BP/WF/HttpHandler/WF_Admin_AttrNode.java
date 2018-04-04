@@ -1734,7 +1734,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         dtNode.TableName = "Node";
         ds.Tables.add(dtNode);
 
-        return BP.Tools.Json.DataSetToJson(ds, false); 
+        return BP.Tools.Json.ToJson(ds); 
     }
     public String CHOvertimeRole_Save()
     {
@@ -2272,7 +2272,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 		msg.RetrieveFromDBSources();
 		ds.Tables.add(msg.ToDataTableField("PushMsgEntity"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
     
     

@@ -560,7 +560,7 @@ public class WF extends WebContralBase
 		ds.Tables.add(dtStart); //增加到里面去.
 
 		//返回组合
-		json= BP.Tools.Json.DataSetToJson(ds, false);
+		json= BP.Tools.Json.ToJson(ds);
 
 		//把json存入数据表，避免下一次再取.
         if (json.length() > 40)
@@ -594,7 +594,7 @@ public class WF extends WebContralBase
 		ds.Tables.add(dtStart);
 
 		//返回组合
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	
 	/** 初始化共享任务
@@ -641,7 +641,7 @@ public class WF extends WebContralBase
 		ds.Tables.add(dtStart);
 
 		//返回组合
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	
 	/// <summary>

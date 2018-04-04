@@ -132,7 +132,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 		ds.Tables.add(mattrsOfSystem.ToDataTableField("Sys_MapAttrOfSystem"));
 
 		//返回.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	/** 
 	 选择列的保存.
@@ -397,7 +397,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 			///#endregion
 
 		//返回数据.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	public final String getRptNo()
 	{

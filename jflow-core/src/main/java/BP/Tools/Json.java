@@ -600,29 +600,7 @@ public class Json
 		return null;
 	}
 
-	/** 把dataset转成json 不区分大小写.
 	 
-	 @param dataSet
-	 @return 
-*/
-//ORIGINAL LINE: public static string DataSetToJson(DataSet dataSet, bool isUpperColumn = true)
-	public static String DataSetToJson(DataSet dataSet, boolean isUpperColumn)
-	{
-		String jsonString = "{";
-		for (DataTable table : dataSet.Tables)
-		{
-			if (isUpperColumn == true)
-			{
-				jsonString += "\"" + table.TableName.toUpperCase() + "\":" + DataTableToJson(table, true) + ",";
-			}
-			else
-			{
-				jsonString += "\"" + table.TableName + "\":" + DataTableToJson(table, false) + ",";
-			}
-		}
-		jsonString = DotNetToJavaStringHelper.trimEnd(jsonString, ',');
-		return jsonString + "}";
-	}
 	/**  
 	 Datatable转换为Json 
 	  
@@ -642,8 +620,7 @@ public class Json
 		boolean isOracel=false;
 		if (SystemConfig.getAppCenterDBType() ==  DBType.Oracle)
 			isOracel=true;
-			
-				
+			 
 
 		jsonString.append("[");
 		DataRowCollection drc = dt.Rows;
@@ -682,8 +659,10 @@ public class Json
 				 
 				
 				Object type = dt.Columns.get(j).getDataType();
+				
 				jsonString.append("\"" + strKey + "\":");
 				strValue = StringFormat(strValue, type);
+				
 				if (j < dt.Columns.size() - 1)
 				{
 					jsonString.append( strValue + ",");
@@ -709,32 +688,43 @@ public class Json
 */
 	private static String StringFormat(String str, Object type)
 	{
+		
 		if (type == String.class)
 		{
 			str = String2Json(str);
-			str = "\"" + str + "\"";
+		   return "\"" + str + "\"";
 		}
-		else if (type == java.util.Date.class)
+
+
+		if (type == java.util.Date.class)
 		{
-			str = "\"" + str + "\"";//Convert.ToDateTime(str).ToShortDateString()
+			return  "\"" + str + "\"";  
 		}
-		else if (type == Boolean.class)
+
+       if (type == Boolean.class)
 		{
-			str = str.toLowerCase();
+			return str.toLowerCase();
 		}
-		else if (type == byte[].class)
+
+
+        if (type == byte[].class)
 		{
 			//数字字段需转string后进行拼接 @于庆海 需要翻译
-			str = "\"" + str + "\"";
+			return  "\"" + str + "\"";
 		}
 		
 		
 		if (str.length() == 0)
 		{
-			str = "\"\"";
+			return  "\"\"";
 		}
-
+		
 		return str;
+		
+		
+		// return "\"" + str + "\"";
+ 
+	 
 	}
 	
 	/**  
@@ -802,49 +792,7 @@ public class Json
 
 			return dtt;
 		}
-		/**
-		 * 适用于oracle
-		 * @param dataSet
-		 * @param isUpperColumn
-		 * @param isRowUper
-		 * @return
-		 */
-		public static String DataSetToJson(DataSet dataSet, boolean isUpperColumn,boolean isRowUper)
-		{
-			String jsonString = "{";
-			for (DataTable table : dataSet.Tables)
-			{
-				if (isUpperColumn == true)
-				{
-					jsonString += "\"" + table.TableName.toUpperCase() + "\":" + DataTableToJson(table, true,isRowUper) + ",";
-				}
-				else
-				{
-					jsonString += "\"" + table.TableName + "\":" + DataTableToJson(table, false,isRowUper) + ",";
-				}
-			}
-			jsonString = DotNetToJavaStringHelper.trimEnd(jsonString, ',');
-			return jsonString + "}";
-		}
-		
-		//cols是大小写区分  row是大小写区分/或者大写    返回类型为大小写区分
-		public static String DataSetToJson(DataSet dataSet, boolean isUpperColumn,boolean isRowUper,Boolean appace)
-		{
-			String jsonString = "{";
-			for (DataTable table : dataSet.Tables)
-			{
-				if (isUpperColumn == true)
-				{
-					jsonString += "\"" + table.TableName.toUpperCase() + "\":" + DataTableToJson(table, true, isRowUper, appace) + ",";
-				}
-				else
-				{
-					jsonString += "\"" + table.TableName + "\":" + DataTableToJson(table, false, isRowUper, appace) + ",";
-				}
-			}
-			jsonString = DotNetToJavaStringHelper.trimEnd(jsonString, ',');
-			return jsonString + "}";
-		}
+	  
 		/**  
 		 Datatable转换为Json 
 		  

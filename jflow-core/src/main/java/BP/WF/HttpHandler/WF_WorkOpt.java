@@ -123,7 +123,7 @@ public class WF_WorkOpt extends WebContralBase {
 		}
 
 		// 转化为 json
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/**
@@ -1093,7 +1093,7 @@ public class WF_WorkOpt extends WebContralBase {
 			dtDept.Columns.get(2).ColumnName = "ParentNo";
 		}
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	
 	public String Accepter_Init()
@@ -1205,7 +1205,7 @@ public class WF_WorkOpt extends WebContralBase {
       //  #endregion 计算上一次选择的结果, 并把结果返回过去.
 
         //返回json.
-        return BP.Tools.Json.DataSetToJson(ds, false);
+        return BP.Tools.Json.ToJson(ds);
 	}
  
 	public String AccepterSave12() throws Exception {

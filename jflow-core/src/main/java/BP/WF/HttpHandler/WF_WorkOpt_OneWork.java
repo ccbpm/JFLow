@@ -411,7 +411,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				}
 			}*/
 
-			json = BP.Tools.Json.DataSetToJson(ds,true,false);
+			json = BP.Tools.Json.ToJson(ds);
 		}
 		catch (RuntimeException ex)
 		{
@@ -613,7 +613,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		}
 
 		//返回结果.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
  
 	public final String TimeBase_OpenFrm()

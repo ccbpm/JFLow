@@ -301,7 +301,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		DataTable dtFlow = fl.ToDataTableField(this.getFK_Flow());
 		ds.Tables.add(dtFlow);
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/**
@@ -407,7 +407,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		ds.Tables.add(dtAttrs);
 
 		// 转化成json,返回.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	public String DTSBTableExt_Save() {

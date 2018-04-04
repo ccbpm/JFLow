@@ -605,7 +605,7 @@ public class WF_CCForm extends WebContralBase {
 
 		// #endregion 加入组件的状态信息, 在解析表单的时候使用.
 
-		json = BP.Tools.Json.DataSetToJson(ds, false);
+		json = BP.Tools.Json.ToJson(ds);
 
 		return json;
 
@@ -690,7 +690,7 @@ public class WF_CCForm extends WebContralBase {
 
 			/// #endregion 把主表数据放入.
 
-			return BP.Tools.Json.DataSetToJson(ds, false);
+			return BP.Tools.Json.ToJson(ds);
 		} catch (RuntimeException ex) {
 			GEEntity myen = new GEEntity(this.getEnsName());
 			myen.CheckPhysicsTable();
@@ -763,7 +763,7 @@ public class WF_CCForm extends WebContralBase {
 		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(mdtl.getFK_MapData(), mdtl,
 				Integer.parseInt(this.getRefPKVal()), strs);
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/**

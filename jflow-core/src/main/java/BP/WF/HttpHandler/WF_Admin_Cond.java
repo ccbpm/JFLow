@@ -241,7 +241,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		dt.Rows.add(dr);
 		ds.Tables.add(dt);
 
-		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
+		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
 	}
 
 	// /#region 方向条件岗位
@@ -273,7 +273,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	public final String CondByFrm_InitField() {
@@ -357,7 +357,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		}
 		// /#endregion 增加操作符 number.
 
-		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
+		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
 	}
 
 	/**
@@ -387,7 +387,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/**
@@ -913,7 +913,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 
 	}
 
@@ -1132,7 +1132,7 @@ public class WF_Admin_Cond extends WebContralBase {
 				toNodeID);
 		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
+		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
 	}
 
 	// / <summary>
@@ -1360,7 +1360,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		}
 		// /#endregion 增加操作符 number.
 
-		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
+		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
 	}
 	// #endregion
 

@@ -701,7 +701,7 @@ public class PushMsg extends EntityMyPK
 						//发送短信.
 						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, msgType, "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);
 					}
-					generAlertMessage += "@已向:{" + toEmpIDs + "}发送提醒手机短信，由 " + this.getFK_Event() + " 发出.";
+					generAlertMessage += "@已向:{" + toEmpIDs + "}发送短消息提醒，由 " + this.getFK_Event() + " 发出.";
 				}
 
 				if (this.getMailPushWay() == 2)
@@ -711,7 +711,7 @@ public class PushMsg extends EntityMyPK
 					//发送短信.
 
 					BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, msgType, "WKAlt" + currNode.getNodeID() + "_" + workid,null,null,null,null);
-					generAlertMessage += "@已向:{" + tel + "}发送提醒手机短信，由 " + this.getFK_Event() + " 发出.";
+					generAlertMessage += "@已向:{" + tel + "}发送短消息提醒，由 " + this.getFK_Event() + " 发出.";
 				}
 			}
 			///#endregion WorkArrive - 工作到达事件

@@ -67,9 +67,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
         BP.Sys.SFDBSrcs ens = new BP.Sys.SFDBSrcs();
         ens.RetrieveAll();
         ds.Tables.add(ens.ToDataTableField("SFDBSrcs"));
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-        	return BP.Tools.Json.DataSetToJson(ds,false,false,true);
-        else
+        
         	return BP.Tools.Json.ToJson(ds);
     }
    

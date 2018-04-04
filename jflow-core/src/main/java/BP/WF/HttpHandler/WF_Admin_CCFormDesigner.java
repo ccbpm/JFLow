@@ -483,8 +483,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 			}
 			/// #endregion 解决oracle大小写问题.
 
-			return // BP.Tools.Json.ToJson(ds);
-			BP.Tools.Json.DataSetToJson(ds, false);
+			 
+			return BP.Tools.Json.ToJson(ds);
+			
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}

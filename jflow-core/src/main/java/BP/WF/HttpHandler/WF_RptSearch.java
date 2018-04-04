@@ -57,7 +57,7 @@ public class WF_RptSearch extends WebContralBase{
 		ds.Tables.add(dtOK);
 
 		//返回结果.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	
 	public final String Default_Init()

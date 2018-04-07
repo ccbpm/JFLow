@@ -564,22 +564,11 @@ function RefreshFlowJson() {
     //首先关闭tab
     closeTab(node.text);
 
-    $.post(Handler, {
-        DoType: 'Flow_ResetFlowVersion',
-        FK_Flow: node.id
-    }, function (jsonData) {
+    $(".mymask").show();
 
-        if (jsonData.indexOf('err@') == 0) {
-            alert(jsonData);
-            return;
-        }
-
-        $(".mymask").show();
-
-        addTab(node.id, node.text, "Designer.htm?FK_Flow=" + node.id + "&UserNo=" + WebUser.No + "&SID=" + WebUser.SID + "&Flow_V=0", node.iconCls);
-        //延时3秒, 为什么要延迟？
-        setTimeout(DesignerLoaded, 1000);
-    });
+    addTab(node.id, node.text, "Designer.htm?FK_Flow=" + node.id + "&UserNo=" + WebUser.No + "&SID=" + WebUser.SID + "&Flow_V=0", node.iconCls);
+    //延时3秒, 为什么要延迟？
+    setTimeout(DesignerLoaded, 1000);
 }
 
 //打开流程到流程图

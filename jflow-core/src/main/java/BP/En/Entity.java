@@ -1075,64 +1075,7 @@ public abstract class Entity extends EnObj
 	 */
 	public int Retrieve()
 	{
-		// 从缓存里获取.
-		if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
-		{
-			Entities ens;
-			try
-			{
-				ens = CashEntity.GetEns(this.toString());
-			} catch (RuntimeException ex)
-			{
-				throw new RuntimeException("@在内存查询期间出现错误@" + ex.getMessage());
-			}
-			
-			// 为空就把它放入里面去。
-			if (ens == null)
-			{
-				ens = this.getGetNewEntities();
-				ens.FlodInCash(); // 把整个entities 放入缓存里面去.
-			}
-			
-			String pk = this.getPK();
-			String pkval = this.GetValStrByKey(pk);
-			int count = ens.size();
-			for (int i = 0; i < count; i++)
-			{
-				Entity en = (Entity) ens.get(i);
-				if (en.GetValStrByKey(pk).equals(pkval))
-				{
-					//this.getRow().clear();
-					this.setRow(en.getRow()); // 如果有，就返回它。
-					return 1;
-				}
-			}
-			
-			if (this.RetrieveFromDBSources() != 0)
-			{
-				// 从数据表中查询
-				ens.FlodInCash();
-				return 1;
-			}
-			
-			Attr attr = this.getEnMap().GetAttrByKey(pk);
-			if (SystemConfig.getIsDebug())
-			{
-				throw new RuntimeException("@在[" + this.getEnDesc()
-						+ this.getEnMap().getPhysicsTable() + "]中没有找到["
-						+ attr.getField() + attr.getDesc() + "]=["
-						+ this.getPKVal() + "]的记录。");
-			} else
-			{
-				throw new RuntimeException("@在[" + this.getEnDesc() + "]中没有找到["
-						+ attr.getDesc() + "]=[" + this.getPKVal() + "]的记录。");
-			}
-		}
-		// 从缓存里获取.
-		
-		// 任何东西都不放.
-		if (this.getEnMap().getDepositaryOfEntity() == Depositary.None)
-		{
+		 
 			// 如果是没有放入缓存的实体.
 			try
 			{
@@ -1173,22 +1116,7 @@ public abstract class Entity extends EnObj
 									+ ", 类[" + this.toString() + "], 物理表["
 									+ this.getEnMap().getPhysicsTable()
 									+ "] 实例。PK = "
-									+ this.GetValByKey(this.getPK()));
-					// if (SystemConfig.getIsDebug())
-					// {
-					// throw new RuntimeException("@没有[" +
-					// this.getEnMap().getEnDesc() + "  " +
-					// this.getEnMap().getPhysicsTable() + ", 类[" +
-					// this.toString() + "], 物理表[" +
-					// this.getEnMap().getPhysicsTable() + "] 实例。" + msg);
-					// }
-					// else
-					// {
-					// throw new RuntimeException("@没有找到记录[" +
-					// this.getEnMap().getEnDesc() + "  " +
-					// this.getEnMap().getPhysicsTable() + ", " + msg +
-					// "记录不存在,请与管理员联系, 或者确认输入错误.");
-					// }
+									+ this.GetValByKey(this.getPK()));				 
 				}
 				return 1;
 			} catch (RuntimeException ex)
@@ -1196,7 +1124,12 @@ public abstract class Entity extends EnObj
 				String msg = ex.getMessage() == null ? "" : ex.getMessage();
 				if (msg.contains("无效")){
 					try{
+						
 						this.CheckPhysicsTable();
+						
+						if ( BP.DA.DBAccess.IsExits(this.getEnMap().getPhysicsTable())==false )						
+							 return this.Retrieve();
+						
 					} catch (Exception e){
 						e.printStackTrace();
 					}
@@ -1204,10 +1137,7 @@ public abstract class Entity extends EnObj
 				throw new RuntimeException(msg + "@在Entity(" + this.toString()
 						+ ")查询期间出现错误@" + ex.getStackTrace());
 			}
-		}
-		// 任何东西都不放.
-		
-		throw new RuntimeException("@没有判断的缓存设置类型.");
+		 
 	}
 	
 	/**

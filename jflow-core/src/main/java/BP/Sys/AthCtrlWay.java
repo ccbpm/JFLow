@@ -20,16 +20,16 @@ public enum AthCtrlWay
 	 
 	*/
 	PWorkID,
-	 /** 
-	 工作ID,对流程有效.
-	 
-*/
-	WorkID,
 	/** 
 	 仅仅查看自己的
 	 
 	*/
-	MySelfOnly;
+	MySelfOnly,
+	 /** 
+	 工作ID,对流程有效.
+	 
+	*/
+	WorkID;
 
 	public int getValue()
 	{

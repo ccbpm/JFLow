@@ -1,12 +1,17 @@
 package BP.Sys;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributeView;
 
 import org.apache.commons.lang.StringUtils;
 
 import BP.DA.*;
 import BP.En.*;
 import BP.Tools.StringHelper;
+import sun.net.ftp.FtpClient;
 
 /** 
  附件数据存储
@@ -120,6 +125,9 @@ public class FrmAttachmentDB extends EntityMyPK
 	public final void setFK_FrmAttachment(String value)
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FK_FrmAttachment, value);
+		//给标记赋值.
+        String[] val = value.split("_");
+        this.SetValByKey(FrmAttachmentDBAttr.NoOfObj, val[1]);
 	}
 	/** 
 	 主键值
@@ -306,6 +314,8 @@ public class FrmAttachmentDB extends EntityMyPK
 		map.AddMyPK();
 		map.AddTBString(FrmAttachmentDBAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
 		map.AddTBString(FrmAttachmentDBAttr.FK_FrmAttachment, null, "附件编号", true, false, 1, 500, 20);
+		map.AddTBString(FrmAttachmentDBAttr.NoOfObj, null, "附件标识", true, false, 0, 50, 20);
+		
 		map.AddTBString(FrmAttachmentDBAttr.RefPKVal, null, "实体主键", true, false, 0, 50, 20);
 		map.AddTBInt(FrmAttachmentDBAttr.FID, 0, "FID", true, false);
 
@@ -326,9 +336,40 @@ public class FrmAttachmentDB extends EntityMyPK
 		map.AddTBInt(FrmAttachmentDBAttr.Idx, 0, "排序", true, false);
 			//这个值在上传时候产生.
 		map.AddTBString(FrmAttachmentDBAttr.UploadGUID, null, "上传GUID", true, false, 0, 500, 20);
+		
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	
+	 /// <summary>
+    /// 生成文件.
+    /// </summary>
+    /// <returns></returns>
+    private String MakeFullFileFromFtp()
+    {
+        // string tempFile =  SystemConfig.PathOfTemp +System.Guid.NewGuid()+"."+this.FileExts;
+        String tempFile = SystemConfig.getPathOfTemp() + this.getFileName();
+        try
+        {
+        	File file = new File(tempFile);
+            if (file.exists() == true)
+                file.delete();
+        }
+        catch(Exception e)
+        {
+            //  tempFile = SystemConfig.PathOfTemp + System.Guid.NewGuid() + this.FileName;
+        }
+       //Path path=Paths.get("D:/address.txt");  
+        //BasicFileAttributeView basicview=Files.getFileAttributeView(path, BasicFileAttributeView.class);  
+       
+        /*FtpClient.connectServer conn = new FtpClient..(SystemConfig.getFTPServerIP(),
+        //    SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+
+        conn.GetFile(this.getFileFullName(), tempFile, false, basicview.f);*/
+
+        return tempFile;
+    }
+    
 	/** 
 	 重写
 	 
@@ -344,64 +385,82 @@ public class FrmAttachmentDB extends EntityMyPK
 	
 	@Override
 	protected void afterDelete()
+	{
+		//判断删除excel数据提取的数据
+		if (StringHelper.isNullOrWhiteSpace(this.getFK_FrmAttachment()))
+		{
+			return;
+		}
+
+		FrmAttachment ath = new FrmAttachment(this.getFK_FrmAttachment());
+
+		try
+		{
+			// @于庆海需要翻译.
+			if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.IISServer)
 			{
-				//判断删除excel数据提取的数据
-				if (StringHelper.isNullOrWhiteSpace(this.getFK_FrmAttachment()))
-				{
-					return;
-				}
+				new File(this.getFileFullName()).delete();
+			}
 
-				FrmAttachment ath = new FrmAttachment(this.getFK_FrmAttachment());
+			if (ath.getAthSaveWay() == BP.Sys.AthSaveWay.FTPServer)
+			{
+				//FtpSupport.FtpConnection ftpconn = new FtpSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
 
-				try
+				String fullName = this.getFileFullName();
+				//ny + "//" + athDesc.FK_MapData + "//" + guid + "." + dbUpload.FileExts;
+
+			}
+		}
+		catch(RuntimeException ex)
+		{
+			Log.DebugWriteError(ex.getMessage());
+		}
+
+
+		String fkefs = ath.GetParaString("FK_ExcelFile", null);
+		if (StringHelper.isNullOrWhiteSpace(fkefs) == false)
+		{
+			String[] efarr = StringUtils.split(fkefs, ",");
+					//split((new String(",")).toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+			ExcelFile ef = null;
+			ExcelTables ets = null;
+			for (String fk_ef : efarr)
+			{
+				ef = new ExcelFile();
+				ef.setNo(fk_ef);
+
+				if (ef.RetrieveFromDBSources() > 0)
 				{
-					// @于庆海需要翻译.
-					if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.IISServer)
+					ets = new ExcelTables(fk_ef);
+					for (ExcelTable et : ets.Tojavalist())
 					{
-						new File(this.getFileFullName()).delete();
-					}
-
-					if (ath.getAthSaveWay() == BP.Sys.AthSaveWay.FTPServer)
-					{
-						//FtpSupport.FtpConnection ftpconn = new FtpSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
-
-						String fullName = this.getFileFullName();
-						//ny + "//" + athDesc.FK_MapData + "//" + guid + "." + dbUpload.FileExts;
-
-					}
-				}
-				catch(RuntimeException ex)
-				{
-					Log.DebugWriteError(ex.getMessage());
-				}
-
-
-				String fkefs = ath.GetParaString("FK_ExcelFile", null);
-				if (StringHelper.isNullOrWhiteSpace(fkefs) == false)
-				{
-					String[] efarr = StringUtils.split(fkefs, ",");
-							//split((new String(",")).toCharArray(), StringSplitOptions.RemoveEmptyEntries);
-					ExcelFile ef = null;
-					ExcelTables ets = null;
-					for (String fk_ef : efarr)
-					{
-						ef = new ExcelFile();
-						ef.setNo(fk_ef);
-
-						if (ef.RetrieveFromDBSources() > 0)
+						if (DBAccess.IsExitsObject(et.getNo()))
 						{
-							ets = new ExcelTables(fk_ef);
-							for (ExcelTable et : ets.Tojavalist())
-							{
-								if (DBAccess.IsExitsObject(et.getNo()))
-								{
-									DBAccess.RunSQL(String.format("DELETE FROM %1$s WHERE FK_FrmAttachmentDB = '%2$s'", et.getNo(), this.getMyPK()));
-								}
-							}
+							DBAccess.RunSQL(String.format("DELETE FROM %1$s WHERE FK_FrmAttachmentDB = '%2$s'", et.getNo(), this.getMyPK()));
 						}
 					}
 				}
-
-				super.afterDelete();
 			}
+		}
+
+		super.afterDelete();
+	}
+	public String GenerTempFile(AthSaveWay saveWay)
+    {
+        if (saveWay == BP.Sys.AthSaveWay.IISServer)
+            return this.getFileFullName();
+
+        if (saveWay == BP.Sys.AthSaveWay.FTPServer)
+            return this.MakeFullFileFromFtp();
+
+        if (saveWay == BP.Sys.AthSaveWay.DB)
+			try {
+				throw new Exception("@尚未处理存储到db里面的文件.");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+        return this.getFileFullName();
+    }
 }

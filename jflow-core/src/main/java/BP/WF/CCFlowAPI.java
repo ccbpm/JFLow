@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBAccess;
+import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -13,8 +14,16 @@ import BP.DA.Paras;
 import BP.En.Entity;
 import BP.En.QueryObject;
 import BP.Port.Emp;
+import BP.Sys.AthCtrlWay;
+import BP.Sys.AthUploadWay;
 import BP.Sys.DtlOpenType;
+import BP.Sys.EventListOfNode;
+import BP.Sys.FrmAttachment;
+import BP.Sys.FrmAttachmentAttr;
+import BP.Sys.FrmAttachmentDBAttr;
+import BP.Sys.FrmAttachments;
 import BP.Sys.FrmEventList;
+import BP.Sys.FrmImgAthDBs;
 import BP.Sys.FrmSubFlowAttr;
 import BP.Sys.FrmWorkCheckAttr;
 import BP.Sys.GEDtlAttr;
@@ -87,12 +96,28 @@ public class CCFlowAPI
 			{
 				throw new RuntimeException("装载错误，该表单ID=" + md.getNo() + "丢失，请修复一次流程重新加载一次.");
 			}
-
+			
+			Work wk = nd.getHisWork();
+            wk.setOID(workID);
+            wk.RetrieveFromDBSources();
+            
+            // 第1.2: 调用,处理用户定义的业务逻辑.
+            String sendWhen = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.FrmLoadBefore, nd,
+                    wk, null);
+            
 			//获得表单模版.
 			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet_2017(md.getNo());
-
 			
-           //加入组件的状态信息, 在解析表单的时候使用.
+			 //把流程信息表发送过去.
+            GenerWorkFlow gwf = new GenerWorkFlow();
+            gwf.setWorkID(workID);
+            gwf.RetrieveFromDBSources();
+
+            //加入WF_Node.
+            DataTable WF_Node = nd.ToDataTableField("WF_Node");
+            myds.Tables.add(WF_Node);
+			
+           //  #region 加入组件的状态信息, 在解析表单的时候使用.
 			FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 			
 			 if (nd.getNodeFrmID() != "ND" + nd.getNodeID()  && nd.getHisFormType() != NodeFormType.RefOneFrmTree)
@@ -106,7 +131,19 @@ public class CCFlowAPI
                  fnc.SetValByKey(FrmWorkCheckAttr.FWC_W, refFnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_W));
                  fnc.SetValByKey(FrmWorkCheckAttr.FWC_X, refFnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_X));
                  fnc.SetValByKey(FrmWorkCheckAttr.FWC_Y, refFnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_Y));
+                 
+                 if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_H) <= 10)
+                     fnc.SetValByKey(FrmWorkCheckAttr.FWC_H, 500);
 
+                 if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_W) <= 10)
+                     fnc.SetValByKey(FrmWorkCheckAttr.FWC_W, 600);
+
+                 if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_X) <= 10)
+                     fnc.SetValByKey(FrmWorkCheckAttr.FWC_X, 200);
+
+                 if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_Y) <= 10)
+                     fnc.SetValByKey(FrmWorkCheckAttr.FWC_Y, 200);
+                 
 
                  fnc.SetValByKey(FrmSubFlowAttr.SF_H, refFnc.GetValFloatByKey(FrmSubFlowAttr.SF_H));
                  fnc.SetValByKey(FrmSubFlowAttr.SF_W, refFnc.GetValFloatByKey(FrmSubFlowAttr.SF_W));
@@ -130,19 +167,14 @@ public class CCFlowAPI
              }
 			  
 		
-	         myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
-				
-			
-	     	//加入WF_Node.
-	         DataTable WF_Node = nd.ToDataTableField("WF_Node");	          
-	         myds.Tables.add(WF_Node);
-			 
+	         myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));				
+	         //#endregion 加入组件的状态信息, 在解析表单的时候使用.
+
+			// #region 流程设置信息.
 			if (nd.getIsStartNode() == false)
 			{
 				BP.WF.Dev2Interface.Node_SetWorkRead(fk_node, workID);
 			}
-
-
 
 			//增加转向下拉框数据.
 			if (nd.getCondModel() == CondModel.SendButtonSileSelect)
@@ -186,7 +218,7 @@ public class CCFlowAPI
                     
                     dr.put("No",  item.getFK_Flow() + "01");
                     
-                    dr.put("Name",  item.getFlowName() );
+                    dr.put("Name",  "启动:" +item.getFlowName() );
                     
                    // dr.setValue("Name",  "dddddddd" );
 
@@ -204,6 +236,65 @@ public class CCFlowAPI
                     dr.put("IsSelected", "0");
                     dtToNDs.Rows.add(dr);
                 }
+                //#endregion 增加到达延续子流程节点。
+                
+               // #region 到达其他节点.
+
+                //上一次选择的节点.
+                int defalutSelectedNodeID = 0;
+                if (nds.size() > 1)
+                {
+                    String mysql = "";
+                    // 找出来上次发送选择的节点.
+                    if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+                        mysql = "SELECT  top 1 NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + fk_node + " AND ActionType=1 ORDER BY WorkID DESC";
+                    else if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+                        mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + fk_node + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
+                    else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+                        mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + fk_node + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1";
+
+                    //获得上一次发送到的节点.
+                    defalutSelectedNodeID = DBAccess.RunSQLReturnValInt(mysql, 0);
+                }
+
+                //#region 为天业集团做一个特殊的判断.
+                if (SystemConfig.getCustomerNo() == "TianYe" && nd.getName().contains("董事长") == true)
+                {
+                    /*如果是董事长节点, 如果是下一个节点默认的是备案. */
+                	for (Node item : nds.ToJavaList())
+                    {
+                        if (item.getName().contains("备案") == true && item.getName().contains("待") == false)
+                        {
+                            defalutSelectedNodeID = item.getNodeID();
+                            break;
+                        }
+                    }
+                }
+                //#endregion 为天业集团做一个特殊的判断.
+
+
+
+                for (Node item : nds.ToJavaList())
+                {
+                    DataRow dr = dtToNDs.NewRow();
+                    dr.put("No", item.getNodeID());
+                    dr.put("Name", item.getName());
+                    //if (item.hissel
+
+                    if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
+                    	dr.put("IsSelectEmps", "1");
+                    else
+                    	dr.put("IsSelectEmps", "0");  //是不是，可以选择接受人.
+
+                    //设置默认选择的节点.
+                    if (defalutSelectedNodeID == item.getNodeID())
+                    	dr.put("IsSelected", "1");
+                    else
+                    	dr.put("IsSelected", "0");
+
+                    dtToNDs.Rows.add(dr);
+                }
+                //#endregion 到达其他节点。
 
 
 				//增加一个下拉框, 对方判断是否有这个数据.
@@ -224,11 +315,10 @@ public class CCFlowAPI
 				///#endregion 流程设置信息.
 
 
-				///#region 把主从表数据放入里面.
+			///#region 把主从表数据放入里面.
 			//.工作数据放里面去, 放进去前执行一次装载前填充事件.
-			BP.WF.Work wk = nd.getHisWork();
-			wk.setOID(workID);
-			wk.RetrieveFromDBSources();
+			//重设默认值.
+            wk.ResetDefaultVal();
 
 			// 处理传递过来的参数。
 //			for (String k : System.Web.HttpContext.Current.Request.QueryString.AllKeys)
@@ -249,8 +339,11 @@ public class CCFlowAPI
 				throw new RuntimeException("err@错误:" + msg);
 			}
 
-			//重设默认值.
-			wk.ResetDefaultVal();
+			 // 执行FEE事件.
+            String msgOfLoad = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.FrmLoadBefore, nd,
+                wk, null);
+            if (msgOfLoad != null)
+                wk.RetrieveFromDBSources();
 
 			//执行装载填充.
 			MapExt me = new MapExt();
@@ -271,22 +364,62 @@ public class CCFlowAPI
 			String sql = "";
 			DataTable dt = null;
 
-			////把附件的数据放入.
-			//if (md.FrmAttachments.Count > 0)
-			//{
-			//    sql = "SELECT * FROM Sys_FrmAttachmentDB where RefPKVal=" + workID + " AND FK_MapData='ND" + fk_node + "'";
-			//    dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			//    dt.TableName = "Sys_FrmAttachmentDB";
-			//    myds.Tables.Add(dt);
-			//}
-			//// 图片附件数据放入
-			//if (md.FrmImgAths.Count > 0)
-			//{
-			//    sql = "SELECT * FROM Sys_FrmImgAthDB where RefPKVal=" + workID + " AND FK_MapData='ND" + fk_node + "'";
-			//    dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			//    dt.TableName = "Sys_FrmImgAthDB";
-			//    myds.Tables.Add(dt);
-			//}
+			// #region 图片附件
+			FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), String.valueOf(workID));
+            if (imgAthDBs != null && imgAthDBs.size() > 0)
+            {
+                DataTable dt_ImgAth = imgAthDBs.ToDataTableField("Sys_FrmImgAthDB");
+                myds.Tables.add(dt_ImgAth);
+            }
+            //#endregion
+            //#region 增加附件信息.
+            FrmAttachments athDescs = new FrmAttachments();
+            athDescs.Retrieve(FrmAttachmentAttr.FK_MapData, nd.getNodeFrmID());
+            if (athDescs.size() != 0)
+            {
+                FrmAttachment athDesc = (FrmAttachment) athDescs.get(0);
+
+                //查询出来数据实体.
+                BP.Sys.FrmAttachmentDBs dbs = new BP.Sys.FrmAttachmentDBs();
+                if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+                {
+                    String pWorkID = String.valueOf(BP.DA.DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + workID, 0));
+                    if (pWorkID == null || pWorkID.equals("0") ==true)
+                        pWorkID = String.valueOf(workID);
+
+                    if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
+                    {
+                        /* 继承模式 */
+                        BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+                        qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pWorkID);
+                        qo.addOr();
+                        qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, workID);
+                        qo.addOrderBy("RDT");
+                        qo.DoQuery();
+                    }
+
+                    if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
+                    {
+                        /*共享模式*/
+                        dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, pWorkID);
+                    }
+                }
+                else if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID)
+                {
+                    /* 继承模式 */
+                    BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+                    qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
+                    qo.addAnd();
+                    qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, workID);
+                    qo.addOrderBy("RDT");
+                    qo.DoQuery();
+                }
+
+                //增加一个数据源.
+                myds.Tables.add(dbs.ToDataTableField("Sys_FrmAttachmentDB"));
+            }
+           
+			
 
 			////把从表的数据放入.
 			//if (md.MapDtls.Count > 0)
@@ -339,8 +472,8 @@ public class CCFlowAPI
 				///#endregion
 
 
-				///#region 把外键表加入DataSet
-			//DataTable dtMapAttr = myds.Tables.get();
+            ///#region 把外键表加入DataSet
+			//DataTable dtMapAttr = myds.Tables.;
 			DataTable dtMapAttr = null;;
 			for (DataTable dtb : myds.Tables)
 			{
@@ -355,13 +488,13 @@ public class CCFlowAPI
 			for (DataRow dr : dtMapAttr.Rows)
 			{
 				String lgType = dr.getValue("LGType").toString();
-				if (!lgType.equals("2"))
+				if (lgType.equals("2")==false)
 				{
 					continue;
 				}
 
 				String UIIsEnable = dr.getValue("UIIsEnable").toString();
-				if (UIIsEnable.equals("0"))
+				if (UIIsEnable.equals("0")==true)
 				{
 					continue;
 				}
@@ -379,7 +512,7 @@ public class CCFlowAPI
 				String fk_mapData = dr.getValue("FK_MapData").toString();
 
 
-					///#region 处理下拉框数据范围. for 小杨.
+				///#region 处理下拉框数据范围. for 小杨.
 				Object tempVar2 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 				me = (MapExt)((tempVar2 instanceof MapExt) ? tempVar2 : null);
 				if (me != null)
@@ -405,26 +538,16 @@ public class CCFlowAPI
 				myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 			}
 
-				///#endregion End把外键表加入DataSet
+			///#endregion End把外键表加入DataSet
 
-
-				///#region 把流程信息放入里面.
-			//把流程信息表发送过去.
-			GenerWorkFlow gwf = new GenerWorkFlow();
-			gwf.setWorkID(workID);
-			gwf.RetrieveFromDBSources();
-
-			  
-
-
-				///#region 处理流程-消息提示.
+			///#region 处理流程-消息提示.
 			DataTable dtAlert = new DataTable();
 			dtAlert.TableName = "AlertMsg";
 			dtAlert.Columns.Add("Title", String.class);
 			dtAlert.Columns.Add("Msg", String.class);
 			dtAlert.Columns.Add("URL", String.class);
 
-		  //  string msg = "";
+			//  string msg = "";
 			switch (gwf.getWFState())
 			{
 				case AskForReplay: // 返回加签的信息.

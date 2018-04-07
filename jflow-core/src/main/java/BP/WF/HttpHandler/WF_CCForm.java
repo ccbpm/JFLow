@@ -1970,13 +1970,25 @@ public class WF_CCForm extends WebContralBase {
 		FrmAttachment dbAtt = new FrmAttachment();
 		dbAtt.setMyPK(downDB.getFK_FrmAttachment());
 		dbAtt.Retrieve();
+		String docs = DataType.ReadTextFile(downDB.getFileFullName());
 
+         DataTable dt = new DataTable();
+         dt.Columns.Add("FileName");
+         dt.Columns.Add("FileType");
+         dt.Columns.Add("FlieContent");
+         DataRow dr = dt.NewRow();
+         
+         
 		if (dbAtt.getAthSaveWay() == AthSaveWay.IISServer) {
-			// PubClass.DownloadFile(downDB.FileFullName, downDB.FileName);
-			return "url@" + downDB.getFileFullName();
+			dr.put("FileName",downDB.getFileName());;
+	         dr.put("FileType",downDB.getFileExts());
+	         dr.put("FlieContent",docs);
 		}
 
 		if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
+			if(this.GetRequestVal("Model").equals("2") == true){
+				 String fileName = downDB.GenerTempFile(dbAtt.getAthSaveWay());
+			}
 			String fileName = "";//// downDB.MakeFullFileFromFtp(); 暂时未翻译FTP
 			// PubClass.DownloadFile(downDB.MakeFullFileFromFtp(),
 			// downDB.FileName);
@@ -1987,8 +1999,9 @@ public class WF_CCForm extends WebContralBase {
 			//// PubClass.DownloadHttpFile(downDB.getFileFullName(),
 			//// downDB.getFileName());暂时未翻译
 		}
-
-		return "正在下载.";
+		dt.Rows.add(dr);
+        return BP.Tools.Json.ToJson(dt);
+		
 	}
 
 	/** 初始化

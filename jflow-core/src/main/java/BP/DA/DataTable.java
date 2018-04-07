@@ -255,6 +255,8 @@ public class DataTable implements Cloneable
 				   }else if (a.contains("=")){
 					   kv = a.split("=");
 				   }
+				   
+				   
 				   if (kv != null && kv.length == 2){
 					   String key = kv[0].trim(), value = kv[1].trim();
 					   if (key != null && value != null){
@@ -277,12 +279,12 @@ public class DataTable implements Cloneable
 						   else if (value.startsWith("'") && value.endsWith("'")){
 							   String v = value.replaceAll("'", "");
 							   if (a.contains("!=")){
-								   if (!(!val.toString().equals(v))){
+								   if (!(!val.toString().equalsIgnoreCase(v))){
 									   andResult = false;
 									   break;
 								   }
 							   }else if (a.contains("=")){
-								   if (!(val.toString().equals(v))){
+								   if (!(val.toString().equalsIgnoreCase(v))){
 									   andResult = false;
 									   break;
 								   }
@@ -367,7 +369,7 @@ public class DataTable implements Cloneable
 	public DataRow[] Select(String string) {
 		DataRow[] dataRowsx = null;
 		List<DataRow> dataRowList = new ArrayList<DataRow>();
-        if (!StringHelper.isNullOrEmpty(string)) {
+        if (StringHelper.isNullOrEmpty(string)==false) {
         	 boolean bl;
              for (Object row : Rows) {
                  DataRow currentRow = (DataRow) row;

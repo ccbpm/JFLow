@@ -167,6 +167,15 @@ public class WF_CommEntity extends WebContralBase {
         dtSelected.Columns.get(attrOfMInMM).ColumnName = "No";
         dtSelected.Columns.get(attrOfMInMM + "Text").ColumnName = "Name";
         dtSelected.Columns.remove(AttrOfOneInMM);
+        
+        //DataTable mydt=new DataTable();
+        
+        String json=BP.Tools.Json.ToJson(dtSelected);
+        
+        
+        
+        
+        
         ds.Tables.add(dtSelected); //已经选择的数据.
         //#endregion 生成选择的数据.
 

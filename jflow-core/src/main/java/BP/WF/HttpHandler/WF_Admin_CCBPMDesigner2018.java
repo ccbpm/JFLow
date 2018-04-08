@@ -30,6 +30,7 @@ import BP.WF.Port.AdminEmp;
 import BP.WF.Template.DataStoreModel;
 import BP.WF.Template.Direction;
 import BP.WF.Template.DirectionAttr;
+import BP.WF.Template.Directions;
 import BP.WF.Template.FlowSort;
 import BP.WF.Template.FlowSortAttr;
 import BP.WF.Template.FlowSorts;
@@ -1794,6 +1795,29 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
             ht.put("SysName", SystemConfig.getSysName()==null?"":SystemConfig.getSysName());
 
             return BP.Tools.Json.ToJson(ht);
+        }
+		
+		/// <summary>
+        /// 删除连接线
+        /// </summary>
+        /// <returns></returns>
+        public String Direction_Delete()
+        {
+            try
+            {
+                Directions di = new Directions();
+                di.Retrieve(DirectionAttr.FK_Flow, this.getFK_Flow(), DirectionAttr.Node, this.getFK_Node(), DirectionAttr.ToNode, this.GetValFromFrmByKey("ToNode"));
+                for (int i=0;i<di.size();i++ )
+                {
+                	Direction  direct = (Direction) di.get(i);
+                    direct.Delete();
+                }
+                return "@删除成功！";
+            }
+            catch (Exception ex)
+            {
+                return "@err:"+ex.getMessage();
+            }
         }
 }
   

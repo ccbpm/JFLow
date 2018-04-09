@@ -111,8 +111,11 @@ public class Dept extends EntityNoName
 		map.AddTBString(DeptAttr.Name, null, "部门名称", true, false, 0, 100, 30);
 		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, false, 0,100,30);
 		
-		/* 保持该类的字段 精简，以方便集成.  */
+		map.AddTBString(DeptAttr.OrgNo, null, "组织编号", false, false, 0, 100, 30);
+		map.AddTBInt(DeptAttr.Idx, 0, "顺序号", false, false);
+		
 		 
+		
 	 
 
 		// 增加点对多属性

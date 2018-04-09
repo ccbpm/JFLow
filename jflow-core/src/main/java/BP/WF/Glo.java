@@ -163,14 +163,7 @@ public class Glo
 	{
 		return ShortMessageWriteTo.forValue(BP.Sys.SystemConfig.GetValByKeyInt("ShortMessageWriteTo", 0));
 	}
-	/** 
-	 当前选择的流程.
-	*/
-	public static String getCurrFlow_del()
-	{
-		return ((ContextHolderUtils.getRequest().getParameter("CurrFlow") instanceof String) ? ContextHolderUtils
-				.getRequest().getParameter("CurrFlow") : null);		
-	}
+	 
 	public static void setCurrFlow(String value)
 	{
 		ContextHolderUtils.getRequest().setAttribute("CurrFlow", value);

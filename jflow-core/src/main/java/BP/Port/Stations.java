@@ -11,10 +11,7 @@ import BP.En.Entity;
  */
 public class Stations extends EntitiesNoName
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	 
 	
 	public static ArrayList<Station> convertStations(Object obj)
 	{

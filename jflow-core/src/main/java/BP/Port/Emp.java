@@ -216,8 +216,10 @@ public class Emp extends EntityNoName
 		map.AddTBString(EmpAttr.Name, null, "员工姓名", true, false, 0, 200, 30);
 		map.AddTBString(EmpAttr.Pass, "pub", "密码", false, false, 0, 20, 10);
 		map.AddDDLEntities(EmpAttr.FK_Dept, null, "部门", new Depts(), true);
-		map.AddTBString(EmpAttr.Tel, null, "电话", false, false, 0, 20, 130);
-		map.AddTBString(EmpAttr.Email, null, "邮箱", false, false, 0, 100, 132);
+		
+		//map.AddTBString(EmpAttr.Tel, null, "电话", false, false, 0, 20, 130);
+		//map.AddTBString(EmpAttr.Email, null, "邮箱", false, false, 0, 100, 132);
+		
 		// map.AddTBString("Tel", null, "Tel", false, false, 0, 20, 10);
 		// map.AddTBString(EmpAttr.PID, null, this.ToE("PID", "UKEY的PID"), true,
 		// false, 0, 100, 30);

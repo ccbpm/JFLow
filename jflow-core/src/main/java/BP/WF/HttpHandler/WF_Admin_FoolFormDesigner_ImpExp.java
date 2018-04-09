@@ -8,9 +8,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import BP.DA.DBType;
+import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.Sys.FrmLab;
+import BP.Sys.MapAttr;
+import BP.Sys.MapAttrAttr;
+import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
+import BP.Sys.SFDBSrc;
+import BP.Sys.SFTable;
+import BP.Sys.SysEnumAttr;
+import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Node;
@@ -168,7 +177,24 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
         }
         return "执行成功.";
     }
-    
+  /// <summary>
+    /// 从流程上copy表单
+    /// @徐彪来调用.
+    /// </summary>
+    /// <returns></returns>
+    public String Imp_CopyFromFlow()
+    {
+        String ndfrm = "ND"+Integer.parseInt(this.getFK_Flow()) + "01";
+        return Imp_CopyFrm(ndfrm);
+    }
+  /// 从表单库导入
+    /// 从节点导入
+    /// </summary>
+    /// <returns></returns>
+    public String Imp_FromsCopyFrm()
+    {
+        return Imp_CopyFrm(null);
+    }
     /**
      * 从节点上Copy
      *  <param name="fromMapData">从表单ID</param>
@@ -177,30 +203,202 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
      *  <param name="isSetReadonly">是否设置为只读？</param>
      *  <returns>执行结果</returns>
      */
-    public String Imp_CopyFrm()
+    public String Imp_CopyFrm(String frmID)
+     
     {
-    	String fromMapData = this.getFromMapData();
-        boolean isClear = this.getIsClear();
-        boolean isSetReadonly = this.getIsSetReadonly();
-
-        MapData md = new MapData(fromMapData);
-
-        MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),isSetReadonly),true);
-        //设置为只读模式.
-		if (this.getIsSetReadonly() == true)
-		{
-			MapData.SetFrmIsReadonly(this.getFK_MapData());
-		}
-        // 如果是节点表单，就要执行一次修复，以免漏掉应该有的系统字段。
-        if (this.getFK_MapData().contains("ND") == true)
-        {
-            String fk_node = this.getFK_MapData().replace("ND", "");
-            Node nd = new Node(Integer.parseInt(fk_node));
-            nd.RepareMap();
-        }
-        return "执行成功.";
+    	 try
+         {
+	    	String fromMapData = frmID;
+	    	if(fromMapData == null)
+	    		fromMapData = this.getFromMapData();
+	        boolean isClear = this.getIsClear();
+	        boolean isSetReadonly = this.getIsSetReadonly();
+	
+	        MapData md = new MapData(fromMapData);
+	
+	        MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),isSetReadonly),true);
+	        //设置为只读模式.
+			if (this.getIsSetReadonly() == true)
+			{
+				MapData.SetFrmIsReadonly(this.getFK_MapData());
+			}
+	        // 如果是节点表单，就要执行一次修复，以免漏掉应该有的系统字段。
+	        if (this.getFK_MapData().contains("ND") == true)
+	        {
+	            String fk_node = this.getFK_MapData().replace("ND", "");
+	            Node nd = new Node(Integer.parseInt(fk_node));
+	            nd.RepareMap();
+	        }
+	        
+	        return "执行成功.";
+         } catch(Exception ex){
+             return "err@" + ex.getMessage();
+         }
+       
     }
     
+    ///#region 04.从外部数据源导入
+    /// <summary>
+    /// 选择一个数据源，进入步骤2
+    /// </summary>
+    /// <returns></returns>
+    public String Imp_Src_Step2_Init()
+    {
+        SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
+
+        //获取所有的表/视图
+        DataTable dtTables = src.GetTables();
+
+        return BP.Tools.FormatToJson.ToJson(dtTables);
+    }
+
+    /// <summary>
+    /// 获取表字段
+    /// </summary>
+    /// <returns></returns>
+    public String Imp_Src_Step2_GetColumns()
+    {
+        DataSet ds = new DataSet();
+
+        //01.当前节点表单已经存在的列
+        MapAttrs attrs = new MapAttrs(this.getFK_MapData());
+        ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
+
+        //02.数据源表中的列
+        SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
+        DataTable tableColumns = src.GetColumns(this.GetRequestVal("STable"));
+        tableColumns.TableName = "TableColumns";
+        ds.Tables.add(tableColumns);
+
+        return BP.Tools.Json.ToJson(ds);
+    }
+
+    public String Imp_Src_Step3_Init()
+    {
+        DataSet ds = new DataSet();
+
+        String SColumns = this.GetRequestVal("SColumns");
+        SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
+        DataTable tableColumns = src.GetColumns(this.GetRequestVal("STable"));
+
+        //01.添加列
+        DataTable dt = tableColumns.clone();
+        for (DataRow dr :tableColumns.Rows){
+            if (SColumns.contains(dr.columns.get("no").toString()))
+                dt.ImportRow(dr);
+        }
+        dt.TableName = "Columns";
+        ds.Tables.add(dt);
+
+        //02.添加枚举
+        SysEnums ens = new SysEnums(MapAttrAttr.MyDataType);
+        ds.Tables.add(ens.ToDataTableField("EnumsDataType"));
+        ens = new SysEnums(MapAttrAttr.LGType);
+        ds.Tables.add(ens.ToDataTableField("EnumsLGType"));
+
+        return BP.Tools.FormatToJson.ToJson(ds);
+
+    }
+
+    public String Imp_Src_Step3_Save()
+    {
+
+        String hidImpFields = this.GetRequestVal("hidImpFields");
+        String[] fields = hidImpFields.substring(0, hidImpFields.lastIndexOf(",")).split(",");
+
+        MapData md = new MapData();
+        md.setNo(this.getFK_MapData());
+        md.RetrieveFromDBSources();
+
+
+        String msg = "导入字段信息:"; 
+        boolean isLeft = true;
+        float maxEnd = md.getMaxEnd(); //底部.
+        for (int i = 0; i < fields.length; i++)
+        {
+            String colname = fields[i];
+
+            MapAttr ma = new MapAttr();
+            ma.setKeyOfEn(colname);
+            ma.setName(this.GetRequestVal("TB_Desc_" + colname));
+            ma.setFK_MapData(this.getFK_MapData());
+            ma.setMyDataType(Integer.parseInt(this.GetRequestVal("DDL_DBType_" + colname)));
+            ma.setMaxLen(Integer.parseInt(this.GetRequestVal("TB_Len_" + colname)));
+            ma.setUIBindKey(this.GetRequestVal("TB_BindKey_" + colname));
+            ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
+            ma.setLGType(BP.En.FieldTypeS.Normal);
+
+            if (ma.getUIBindKey() != "")
+            {
+                SysEnums se = new SysEnums();
+                se.Retrieve(SysEnumAttr.EnumKey, ma.getUIBindKey());
+                if (se.size() > 0)
+                {
+                    ma.setMyDataType(BP.DA.DataType.AppInt);
+                    ma.setLGType(BP.En.FieldTypeS.Enum);
+                    ma.setUIContralType(BP.En.UIContralType.DDL);
+                }
+
+                SFTable tb = new SFTable();
+                tb.setNo(ma.getUIBindKey());
+                if (tb.getIsExits() == true)
+                {
+                    ma.setMyDataType(BP.DA.DataType.AppString);
+                    ma.setLGType(BP.En.FieldTypeS.FK);
+                    ma.setUIContralType(BP.En.UIContralType.DDL);
+                }
+            }
+
+            if (ma.getMyDataType() == BP.DA.DataType.AppBoolean)
+                ma.setUIContralType(BP.En.UIContralType.CheckBok);
+            if (ma.getIsExits())
+                continue;
+            ma.Insert();
+
+            msg += "\t\n字段:" + ma.getKeyOfEn() + "" + ma.getName() + "加入成功.";
+            FrmLab lab = null;
+            if (isLeft == true)
+            {
+                maxEnd = maxEnd + 40;
+                /* 是否是左边 */
+                lab = new FrmLab();
+                lab.setMyPK(BP.DA.DBAccess.GenerGUID());
+                lab.setFK_MapData(this.getFK_MapData());
+                lab.setText(ma.getName());
+                lab.setX(40);
+                lab.setY(maxEnd);
+                lab.Insert();
+
+                ma.setX(lab.getX() + 80);
+                ma.setY(maxEnd);
+                ma.Update();
+            }
+            else
+            {
+                lab = new FrmLab();
+                lab.setMyPK(BP.DA.DBAccess.GenerGUID());
+                lab.setFK_MapData(this.getFK_MapData());
+                lab.setText(ma.getName());
+                lab.setX(350);
+                lab.setY(maxEnd);
+                lab.Insert();
+
+                ma.setX(lab.getX() + 80);
+                ma.setY(maxEnd);
+                ma.Update();
+            }
+            isLeft = !isLeft;
+        }
+        
+        //重新设置.
+        md.ResetMaxMinXY();
+
+        return msg;
+
+    } 
+    ///#endregion
+
+
     private String getFromMapData() {
     	String str = this.GetRequestVal("FromMapData");
 		if (str == null || str.equals("") || str.equals("null"))
@@ -231,12 +429,5 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
             return isSetReadonly;
     }
     
-  /// 从表单库导入
-    /// 从节点导入
-    /// </summary>
-    /// <returns></returns>
-    public String Imp_FromsCopyFrm()
-    {
-        return Imp_CopyFrm();
-    }
+  
 }

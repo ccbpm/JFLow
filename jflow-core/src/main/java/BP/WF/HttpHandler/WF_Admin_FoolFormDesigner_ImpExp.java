@@ -39,19 +39,19 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
             }
             ds.Tables.add(dt);
         }
-        //加入表单库目录.
+        // #region 加入表单库目录.
         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
             sql = "SELECT NO as No ,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
         else
             sql = "SELECT No,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
         dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        dt.TableName = "Sys_FormTree";
         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
         {
             dt.Columns.get("NO").ColumnName = "No";
             dt.Columns.get("NAME").ColumnName = "Name";
             dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
         }
-        dt.TableName = "Sys_FormTree";
         ds.Tables.add(dt);
         //加入表单
         sql = "SELECT A.No, A.Name, A.FK_FormTree  FROM Sys_MapData A, Sys_FormTree B WHERE A.FK_FormTree=B.No";
@@ -64,11 +64,40 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
             dt.Columns.get("NAME").ColumnName = "Name";
             dt.Columns.get("FK_FORMTREE").ColumnName = "FK_FormTree";
         }
+        //#endregion 加入表单库目录.
+        
+        //#region 加入流程树目录.
+        sql = "SELECT No,Name,ParentNo FROM WF_FlowSort ORDER BY  PARENTNO, IDX ";
+
+        dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        dt.TableName = "WF_FlowSort";
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+        {
+            dt.Columns.get("NO").ColumnName = "No";
+            dt.Columns.get("NAME").ColumnName = "Name";
+            dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+        }
+        ds.Tables.add(dt);
+
+        //加入表单
+        sql = "SELECT No, Name, FK_FlowSort  FROM WF_Flow ";
+        dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        dt.TableName = "WF_Flow";
+        ds.Tables.add(dt);
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+        {
+            dt.Columns.get("NO").ColumnName = "No";
+            dt.Columns.get("NAME").ColumnName = "Name";
+            dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+        }
+        //#endregion 加入流程树目录.
+        
+        //#region 数据源
         BP.Sys.SFDBSrcs ens = new BP.Sys.SFDBSrcs();
         ens.RetrieveAll();
         ds.Tables.add(ens.ToDataTableField("SFDBSrcs"));
-        
-        	return BP.Tools.Json.ToJson(ds);
+        // #endregion       
+        return BP.Tools.Json.ToJson(ds);
     }
    
 	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {

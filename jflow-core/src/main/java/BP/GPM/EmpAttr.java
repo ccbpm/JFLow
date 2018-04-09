@@ -29,15 +29,7 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	/**
 	 * sid
 	 */
-	public static final String SID = "SID";
-	/**
-	 * 电话
-	 */
-	public static final String Tel = "Tel";
-	/**
-	 * 邮箱
-	 */
-	public static final String Email = "Email";
+	public static final String SID = "SID";	 
 	/**
 	 * 部门数量
 	 */
@@ -46,4 +38,12 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	 * 序号
 	 */
 	public static final String Idx = "Idx";
+	/*
+	 * 邮件
+	 * */
+	public static final String Email = "Email";
+	/*
+	 * 电话
+	 * */
+	public static final String Tel = "Tel";
 }

@@ -231,8 +231,7 @@ public class Emp extends EntityNoName
 		// "是否使用usbkey"), true, false, 0, 100, 30);
 		// map.AddDDLSysEnum("Sex", 0, "性别", "@0=女@1=男");
 		
-		// 字段
-		
+		// 字段		
 		map.AddSearchAttr(EmpAttr.FK_Dept);
 		
 		 

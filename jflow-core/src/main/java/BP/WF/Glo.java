@@ -166,10 +166,11 @@ public class Glo
 	/** 
 	 当前选择的流程.
 	*/
-	public static String getCurrFlow()
+	public static String getCurrFlow_del()
 	{
 		return ((ContextHolderUtils.getRequest().getParameter("CurrFlow") instanceof String) ? ContextHolderUtils
-				.getRequest().getParameter("CurrFlow") : null);		}
+				.getRequest().getParameter("CurrFlow") : null);		
+	}
 	public static void setCurrFlow(String value)
 	{
 		ContextHolderUtils.getRequest().setAttribute("CurrFlow", value);
@@ -193,24 +194,20 @@ public class Glo
 	*/
 	public static String UpdataCCFlowVer() throws Exception {
 		 
-
-	
+ 
 		String sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey='Ver'";
 		int currVer = DBAccess.RunSQLReturnValInt(sql, 0);
 		
 		//执行sql文件升级.
 		UpdataCCFlowVerSQLScript();
 		
-		if (Ver <= currVer)
-		{
+		if (Ver <= currVer)		
 			return null; //不需要升级.
-		}
-		// /#endregion 检查是否需要升级，并更新升级的业务逻辑.
+		  
 
 		String msg = "";
 		try {
-			
-			
+			 
 			/*
 			 * 升级版本记录: 20150330: 优化发起列表的效率, by:zhoupeng. 2, 升级表单树,支持动态表单树. 1,
 			 * 执行一次Sender发送人的升级，原来由GenerWorkerList 转入WF_GenerWorkFlow. 0,

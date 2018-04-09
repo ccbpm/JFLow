@@ -13,4 +13,7 @@ public class DeptAttr extends EntityNoNameAttr
 	public static final String ParentNo = "ParentNo";
 	public static final String ParentName = "ParentName";
 	public static final String FK_DeptType = "FK_DeptType";
+	public static final String OrgNo = "OrgNo";
+	public static final String Idx = "Idx";
+	
 }

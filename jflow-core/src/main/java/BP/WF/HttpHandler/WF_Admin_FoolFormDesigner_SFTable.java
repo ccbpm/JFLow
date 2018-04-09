@@ -1,4 +1,6 @@
-﻿package BP.WF.HttpHandler;
+package BP.WF.HttpHandler;
+
+import BP.WF.HttpHandler.Base.WebContralBase;
 import java.util.ArrayList;
 
 import org.springframework.util.StringUtils;
@@ -16,15 +18,8 @@ import BP.Sys.SFTables;
 import BP.Sys.SrcType;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
-import BP.WF.HttpHandler.Base.WebContralBase;
-
-/// <summary>
-/// 页面功能实体
-/// </summary>
 public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
-
-
-    ///#region 执行父类的重写方法.
+	///#region 执行父类的重写方法.
     /// <summary>
     /// 默认执行的方法
     /// </summary>
@@ -187,6 +182,4 @@ public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
     }
 
     //#endregion xxx 界面方法.
-   
 }
-

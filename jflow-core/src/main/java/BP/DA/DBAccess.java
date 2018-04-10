@@ -540,37 +540,7 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static long GenerOID(String cfgKey) {
-		if(SystemConfig.getAppCenterDBType() == BP.DA.DBType.Oracle){
-			try {
-				String sql = "select seq_work_id.nextval from dual";
-				int num = DBAccess.RunSQLReturnValInt(sql);
-				return num;
-			} catch (Exception e) {
-				while (lock_HT_CfgKey) {}
-				lock_HT_CfgKey = true;
-
-				Paras ps = new Paras();
-				ps.Add("CfgKey", cfgKey);
-				String sql = "UPDATE Sys_Serial SET IntVal=IntVal+1 WHERE CfgKey=" + SystemConfig.getAppCenterDBVarStr() + "CfgKey";
-				int num = DBAccess.RunSQL(sql, ps);
-				if (num == 0) {
-					sql = "INSERT INTO Sys_Serial (CFGKEY,INTVAL) VALUES ('" + cfgKey + "',100)";
-					DBAccess.RunSQL(sql);
-					lock_HT_CfgKey = false;
-
-					lock_HT.put(cfgKey, 200);
-					return 100;
-				}
-				sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey=" + SystemConfig.getAppCenterDBVarStr() + "CfgKey";
-				num = DBAccess.RunSQLReturnValInt(sql, ps);
-				lock_HT_CfgKey = false;
-				return num;
-			}
-			
-		}else{
-			while (lock_HT_CfgKey) {}
-			lock_HT_CfgKey = true;
-
+		  
 			Paras ps = new Paras();
 			ps.Add("CfgKey", cfgKey);
 			String sql = "UPDATE Sys_Serial SET IntVal=IntVal+1 WHERE CfgKey=" + SystemConfig.getAppCenterDBVarStr() + "CfgKey";
@@ -584,10 +554,9 @@ public class DBAccess {
 				return 100;
 			}
 			sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey=" + SystemConfig.getAppCenterDBVarStr() + "CfgKey";
-			num = DBAccess.RunSQLReturnValInt(sql, ps);
-			lock_HT_CfgKey = false;
+			num = DBAccess.RunSQLReturnValInt(sql, ps);		 
 			return num;
-		}
+		
 	}
 
 	// 第二版本的生成 OID。

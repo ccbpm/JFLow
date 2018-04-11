@@ -295,7 +295,7 @@ function setToobarDisiable() {
 
 function setToobarEnable() {
     //隐藏下方的功能按钮
-    $('.Bar input').css('background', '#009999');
+    $('.Bar input').css('background', '');
     $('.Bar input').removeAttr('disabled');
 }
 //设置表单元素不可用
@@ -1317,10 +1317,12 @@ function GenerWorkNode() {
 }
 
 function SetFrmReadonly() {
+ 
 
     $('#CCForm').find('input,textarea,select').attr('disabled', false);
     $('#CCForm').find('input,textarea,select').attr('readonly', true);
     $('#CCForm').find('input,textarea,select').attr('disabled', true);
+
     $('#Btn_Save').attr('disabled', true);
 }
 
@@ -1572,7 +1574,7 @@ function InitToolBar() {
 //初始化退回、移交、加签窗口
 function initModal(modalType, toNode) {
 
-    //初始化退回窗口的SRC
+    //初始化退回窗口的SRC.
     var returnWorkModalHtml = '<div class="modal fade" id="returnWorkModal" data-backdrop="static">' +
        '<div class="modal-dialog">'
            + '<div class="modal-content" style="border-radius:0px;width:700px;text-align:left;">'

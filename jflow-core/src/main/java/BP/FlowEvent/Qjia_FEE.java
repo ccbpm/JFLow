@@ -1,4 +1,4 @@
-package BP.EVENT;
+package BP.FlowEvent;
 
 import java.io.File;
 import java.io.FileOutputStream;

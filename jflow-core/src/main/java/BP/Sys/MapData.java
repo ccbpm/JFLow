@@ -1255,7 +1255,7 @@ public class MapData extends EntityNoName
 
 
 			// enumFrmType  @自由表单，@傻瓜表单，@嵌入式表单.  
-		map.AddDDLSysEnum(MapDataAttr.FrmType, BP.Sys.FrmType.FreeFrm.getValue(), "表单类型", true, false, MapDataAttr.FrmType);
+		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, false, MapDataAttr.FrmType);
 
 			// 应用类型.  0独立表单.1节点表单
 		map.AddTBInt(MapDataAttr.AppType, 0, "应用类型", true, false);

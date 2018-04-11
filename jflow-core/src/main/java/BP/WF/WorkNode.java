@@ -4314,6 +4314,10 @@ public class WorkNode {
 	 * 
 	 */
 	public final void DealEval() {
+		
+		if (1==1)
+	   	return ;
+		
 		if (this.getHisNode().getIsEval() == false) {
 			return;
 		}

@@ -900,12 +900,9 @@ public class CCFormAPI extends Dev2Interface
                 if (myds.Tables.contains(uiBindKey) == true)
                     continue;
 
-                String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
+                String mysql = "SELECT IntKey AS \"No\", Lab as \"Name\" FROM Sys_Enum WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
                 DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
-                dtEnum.TableName = uiBindKey;
-
-                dtEnum.Columns.get(0).ColumnName = "No";
-                dtEnum.Columns.get(1).ColumnName = "Name";
+                dtEnum.TableName = uiBindKey; 
 
                 myds.Tables.add(dtEnum);
                 continue;

@@ -1033,7 +1033,7 @@ public class NodeExt extends Entity
 	public final String DoSubFlow()
 	{
 		//return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/SubFlows.jsp?FK_Node=" + this.getNodeID();
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/En.htm?EnName=BP.WF.Template.FrmSubFlow&PKVal=" + this.getNodeID();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FrmSubFlow&PKVal=" + this.getNodeID();
 	}
 	/** 
 	 接受人规则
@@ -1076,7 +1076,7 @@ public class NodeExt extends Entity
 	public final String DoFrmNodeComponent()
 	{
 		//return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/RefFunc/UIEn.jsp?EnName=BP.WF.Template.FrmNodeComponent&PK="+this.getNodeID()+"&t=" + DataType.getCurrentDataTime();
-		return BP.WF.Glo.getCCFlowAppPath() +"WF/Comm/En.htm?EnName=BP.WF.Template.FrmNodeComponent&PKVal="+this.getNodeID()+"&t=" + DataType.getCurrentDataTime();
+		return BP.WF.Glo.getCCFlowAppPath() +"WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PKVal="+this.getNodeID()+"&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 特别用户特殊字段权限.

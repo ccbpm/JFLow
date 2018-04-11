@@ -52,7 +52,7 @@ public class WorkSysFieldAttr
 	*/
 	public static final String SysIsReadReceipts = "SysIsReadReceipts";
 
-
+ 
 		///#region 与质量考核相关的字段
 	/** 
 	 编号
@@ -74,6 +74,6 @@ public class WorkSysFieldAttr
 	 
 	*/
 	public static final String EvalNote = "EvalNote";
-
+ 
 		///#endregion 与质量考核相关的字段
 }

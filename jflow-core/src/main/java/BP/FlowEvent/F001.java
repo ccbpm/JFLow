@@ -11,6 +11,7 @@ import BP.WF.EventBase.FlowEventBase;
 */
 public class F001 extends FlowEventBase
 {
+	
 private String getOID;
 
 
@@ -21,7 +22,7 @@ private String getOID;
 	@Override
 	public String getFlowMark()
 	{
-		return "HuiZong";
+		return "001";
 	}
 
 	/** 
@@ -47,6 +48,9 @@ private String getOID;
 //		int nodeID = this.HisNode.NodeID; 
 		int nodeID = this.HisNode.getNodeID(); // int类型的ID.
 		String nodeName = this.HisNode.getName(); // 当前节点名称.
+		
+	 
+		
 
 		switch (nodeID)
 		{

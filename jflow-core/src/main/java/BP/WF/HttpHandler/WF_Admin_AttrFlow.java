@@ -121,10 +121,12 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #region 发起限制.
 	public final String Limit_Init() {
+		
 		BP.WF.Flow fl = new BP.WF.Flow();
 		fl.setNo(this.getFK_Flow());
 		fl.RetrieveFromDBSources();
 		return fl.ToJson();
+		
 	}
 
 	public final String Limit_Save() {

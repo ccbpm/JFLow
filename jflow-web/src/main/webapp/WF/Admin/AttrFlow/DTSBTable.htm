@@ -72,7 +72,6 @@
             var checkBoxIDs = GenerCheckIDs(); //获得所有的 checkBox ID传入到后台去,用于解决checkbox控件，在没有被选择的时候，没有值的问题。
 
             var frmData = $("#cc").serialize();
-            alert("cc:"+frmData);
             $.ajax({
                 data: frmData,
                 type: 'post',
@@ -86,7 +85,6 @@
                         return;
                     }
 
-                    alert(data);
                     window.location.href = window.location.href;
                     //$("#Msg").html("<font color=green>" + data + "</font>");
                     return;

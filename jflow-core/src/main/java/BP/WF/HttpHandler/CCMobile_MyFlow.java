@@ -80,6 +80,12 @@ public class CCMobile_MyFlow extends WebContralBase
 		return ccfrm.FrmGener_Save();
 	}
 
+	public String MyFlowGener_Delete()
+    {
+        BP.WF.Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), WebUser.getName()+"用户删除", true);
+        return "删除成功...";
+    }
+	
 	public final String AttachmentUpload_Down()
 	{
 		WF_CCForm ccform = new WF_CCForm(this.context);

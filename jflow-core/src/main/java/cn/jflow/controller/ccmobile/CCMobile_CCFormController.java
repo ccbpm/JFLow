@@ -24,6 +24,8 @@ public class CCMobile_CCFormController extends HttpHandlerBase {
 		CCMobile_CCForm  AttrHandler = new CCMobile_CCForm();
 		super.ProcessRequest(AttrHandler);
 	}
+	
+	
 	@Override
 	public Class <CCMobile_CCForm>getCtrlType() {
 		return CCMobile_CCForm.class;

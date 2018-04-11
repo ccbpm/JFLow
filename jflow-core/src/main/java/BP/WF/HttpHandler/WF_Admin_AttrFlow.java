@@ -56,12 +56,8 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 			return String.format("未找到事件编写模板文件“{0}”，请联系管理员！", tmpPath);
 
 		String Title = flow.getName() + "[" + flow.getNo() + "]";
-		String code = BP.DA.DataType.ReadTextFile(tmpPath); // ,
-															// System.Text.Encoding.UTF8).Replace("F001Templepte",
-															// string.Format("FEE{0}",
-															// flow.No)).Replace("@FlowName",
-															// flow.Name).Replace("@FlowNo",
-															// flow.No);
+		String code = BP.DA.DataType.ReadTextFile(tmpPath); 
+															
 		code = code.replace("F001Templepte", String.format("FEE{0}", flow.getNo())).replace("@FlowName", flow.getName())
 				.replace("@FlowNo", flow.getNo());
 

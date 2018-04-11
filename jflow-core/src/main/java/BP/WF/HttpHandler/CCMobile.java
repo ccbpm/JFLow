@@ -27,10 +27,7 @@ public class CCMobile extends WebContralBase
 	@Override
 	protected String DoDefaultMethod()
 	{
-//C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a string member and was converted to Java 'if-else' logic:
-//		switch (this.getDoType())
 
-//ORIGINAL LINE: case "DtlFieldUp":
 		if (this.getDoType().equals("DtlFieldUp")) //字段上移
 		{
 				return "执行成功.";
@@ -201,6 +198,18 @@ public class CCMobile extends WebContralBase
 		return wf.FrmView_Init();
 	}
 
+	 public String AttachmentUpload_Down()
+     {
+         WF_CCForm ccform = new WF_CCForm(this.context);
+         return ccform.AttachmentUpload_Down();
+     }
+
+     public String AttachmentUpload_DownByStream()
+     {
+         WF_CCForm ccform = new WF_CCForm(this.context);
+         return ccform.AttachmentUpload_Down();
+     }
+     
 	public final String StartGuide_MulitSend()
 	{
 		WF_MyFlow en = new WF_MyFlow(this.context);
@@ -305,9 +314,14 @@ public class CCMobile extends WebContralBase
 
 				GenerWorkFlows gwfs = new GenerWorkFlows();
 				BP.En.QueryObject qo = new QueryObject(gwfs);
+				
+				qo.addLeftBracket();
 				qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", "%" + BP.Web.WebUser.getNo() + "%");
-
-				if (tSpan != null)
+				qo.addOr();
+		        qo.AddWhere(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
+		        qo.addRightBracket();
+		        
+				if (tSpan != "-1")
 				{
 					qo.addAnd();
 					qo.AddWhere(GenerWorkFlowAttr.TSpan, tSpan);
@@ -318,8 +332,10 @@ public class CCMobile extends WebContralBase
 					qo.addAnd();
 					qo.AddWhere(GenerWorkFlowAttr.FK_Flow, this.getFK_Flow());
 				}
-				qo.addOrderBy("WFSta");
-				qo.addOrderByDesc("RDT");
+				qo.addAnd();
+	            qo.AddWhere(GenerWorkFlowAttr.WFState, " > ", 1);
+
+	            qo.addOrderByDesc("RDT");
 				qo.setTop(50);
 
 

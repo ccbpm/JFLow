@@ -6211,6 +6211,7 @@ public class WorkNode {
 
 			String mymsgHtml = "@查看<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
 					+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
+					+ "&NodeID=" + this.getHisNode().getNodeID()
 					+ "&FK_Flow=" + this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>";
 			this.addMsg(SendReturnMsgFlag.MsgOfText, mymsgHtml);
 

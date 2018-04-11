@@ -17,6 +17,7 @@ import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.Sys.MapData;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
@@ -104,6 +105,26 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return "err@没有判断的标记:" + this.getDoType();
 	}
 	
+	/// <summary>
+    /// 下载流程模版
+    /// </summary>
+    /// <returns></returns>
+    public String ExpFlowTemplete()
+    {
+        Flow flow = new Flow(this.getFK_Flow());
+        String fileXml = flow.GenerFlowXmlTemplete();
+        String docs = DataType.ReadTextFile(fileXml);
+        return docs;
+    }
+    
+    public String DownFormTemplete()
+    {
+        DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(this.getFK_MapData(),false);
+        String file = BP.Sys.SystemConfig.getPathOfTemp() + this.getFK_MapData() + ".xml";
+        ds.WriteXml(file);
+        String docs = DataType.ReadTextFile(file);
+        return docs;
+    }
 	/** 
 	 * 使管理员登录
 	 * @return 

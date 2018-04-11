@@ -49,7 +49,7 @@ public class AttachmentUploadController extends BaseController {
 		return ContextHolderUtils.getRequest().getParameter("PKVal");
 	}
 	
-	@RequestMapping(value = "/AttachmentUploadS", method = RequestMethod.POST)
+	@RequestMapping(value = "/AttachmentUploadS.do", method = RequestMethod.POST)
 	public void execute(HttpServletRequest request, HttpServletResponse response, BindException errors)
 			throws Exception {
 		String error = "";

@@ -941,6 +941,58 @@ public class DataType
 		return val;
 	}
 	
+	public static String PraseStringToUrlFileName(String fileName)
+    {
+
+        if (fileName.lastIndexOf('\\') == -1)
+        {
+            fileName = PraseStringToUrlFileNameExt(fileName, "%", "%25");
+            fileName = PraseStringToUrlFileNameExt(fileName, "+", "%2B");
+            fileName = PraseStringToUrlFileNameExt(fileName, " ", "%20");
+            fileName = PraseStringToUrlFileNameExt(fileName, "/", "%2F");
+            fileName = PraseStringToUrlFileNameExt(fileName, "?", "%3F");
+            fileName = PraseStringToUrlFileNameExt(fileName, "#", "%23");
+            fileName = PraseStringToUrlFileNameExt(fileName, "&", "%26");
+            fileName = PraseStringToUrlFileNameExt(fileName, "=", "%3D");
+            fileName = PraseStringToUrlFileNameExt(fileName, " ", "%20");
+            return fileName;
+        }
+
+        //HttpUtility.HtmlEncode(fileName);
+
+        String filePath = fileName.substring(0, fileName.lastIndexOf('\\'));
+        String fName = fileName.substring(fileName.lastIndexOf('\\'));
+        // fName = HttpUtility.HtmlEncode(fName);
+        //if (1 == 2)
+        //{
+        fName = PraseStringToUrlFileNameExt(fName, "%", "%25");
+        fName = PraseStringToUrlFileNameExt(fName, "+", "%2B");
+        fName = PraseStringToUrlFileNameExt(fName, " ", "%20");
+        fName = PraseStringToUrlFileNameExt(fName, "/", "%2F");
+        fName = PraseStringToUrlFileNameExt(fName, "?", "%3F");
+        fName = PraseStringToUrlFileNameExt(fName, "#", "%23");
+        fName = PraseStringToUrlFileNameExt(fName, "&", "%26");
+        fName = PraseStringToUrlFileNameExt(fName, "=", "%3D");
+        fName = PraseStringToUrlFileNameExt(fName, " ", "%20");
+
+        // }
+        return filePath + fName;
+    }
+	
+	private static String PraseStringToUrlFileNameExt(String fileName, String val, String replVal)
+    {
+        fileName = fileName.replace(val, replVal);
+        fileName = fileName.replace(val, replVal);
+        fileName = fileName.replace(val, replVal);
+        fileName = fileName.replace(val, replVal);
+        fileName = fileName.replace(val, replVal);
+        fileName = fileName.replace(val, replVal);
+        fileName = fileName.replace(val, replVal);
+        fileName = fileName.replace(val, replVal);
+        return fileName;
+    }
+
+	
 	/**
 	 * 将中文转化成拼音
 	 * 

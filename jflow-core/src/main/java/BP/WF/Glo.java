@@ -45,9 +45,12 @@ import BP.En.Attrs;
 import BP.En.Entity;
 import BP.En.Row;
 import BP.Port.Emp;
+import BP.Sys.AthCtrlWay;
+import BP.Sys.AthUploadWay;
 import BP.Sys.DefVal;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
+import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachments;
 import BP.Sys.FrmImg;
 import BP.Sys.FrmRB;
@@ -4837,6 +4840,82 @@ public class Glo
 		return Integer.parseInt(Glo.getPMTo().replace(":", ""));
 	}
 		 //与考核相关.
+	
+	 public static BP.Sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment)
+     {
+
+         BP.Sys.FrmAttachmentDBs dbs = new BP.Sys.FrmAttachmentDBs();
+         if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+         {
+             String pWorkID = Integer.toString(BP.DA.DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + pkval, 0));
+             if (pWorkID == null || pWorkID == "0")
+                 pWorkID = pkval;
+
+             if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
+             {
+                 /* 继承模式 */
+                 BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+                 qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pWorkID);
+                 qo.addOr();
+                 qo.AddWhere(FrmAttachmentDBAttr.RefPKVal,Integer.parseInt(pkval));
+                 qo.addOrderBy("RDT");
+                 qo.DoQuery();
+             }
+
+             if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
+             {
+                 /*共享模式*/
+                 dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, pWorkID);
+             }
+             return dbs;
+         }
+
+         if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID || athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+         {
+             /* 继承模式 */
+             BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+             qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
+             qo.addAnd();
+             qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, Integer.parseInt(pkval));
+
+             //qo.addAnd();
+             //qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment);
+
+             qo.addOrderBy("RDT");
+             qo.DoQuery();
+             return dbs;
+         }
+        
+
+         if (athDesc.getHisCtrlWay() == AthCtrlWay.MySelfOnly || athDesc.getHisCtrlWay() == AthCtrlWay.PK)
+         {
+             int num = 0;
+             if (FK_FrmAttachment.contains("AthMDtl"))
+             {
+                 /*如果是一个明细表的多附件，就直接按照传递过来的PK来查询.*/
+                 BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+                 qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
+                 qo.addAnd();
+                 qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, " LIKE ", "%AthMDtl");
+                 num = qo.DoQuery();
+             }
+             else
+             {
+                 num = dbs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment,
+                    FrmAttachmentDBAttr.RefPKVal, pkval, "RDT");
+             }
+             return dbs;
+         }
+
+         try {
+			throw new Exception("@没有判断的权限控制模式:" + athDesc.getHisCtrlWay());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+         return dbs;
+     }
 	/** 
 	 获得一个表单的动态附件字段
 	 

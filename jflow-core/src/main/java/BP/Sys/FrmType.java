@@ -27,22 +27,27 @@ public enum FrmType
 	 
 	*/
 	Url(3),
-	/** 
-	 Excel类型表单
-	*/
-	ExcelFrm(5),
+	
 	/** 
 	 Word类型表单
 	*/
 	WordFrm(4),
 	/** 
+	 Excel类型表单
+	*/
+	ExcelFrm(5),
+	/** 
 	 VSTOExccel模式.
 	*/
 	VSTOForExcel(6),
+	/**
+	 * 实体类组件
+	 */
+	Entity(7),
 	/** 
 	 公文表单
 	*/
-	WebOffice(7);
+	WebOffice(8);
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FrmType> mappings;

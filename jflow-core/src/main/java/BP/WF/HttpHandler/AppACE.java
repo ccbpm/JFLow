@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.Hashtable;
 
 import org.apache.http.protocol.HttpContext;
 
@@ -50,7 +51,7 @@ public class AppACE extends WebContralBase{
     public String Start_Init()
     {
 	    DataTable dt = BP.WF.Dev2Interface.DB_GenerCanStartFlowsOfDataTable(WebUser.getNo());
-		return BP.Tools.Json.DataTableToJson(dt,false,false,true);
+		return BP.Tools.Json.ToJson(dt);
     }
     
     /**
@@ -67,9 +68,37 @@ public class AppACE extends WebContralBase{
 			Log.DebugWriteError("AppACEHandler Todolist_Init()"+e.getMessage());
 			e.printStackTrace();
 		}
-		return BP.Tools.Json.DataTableToJson(dt,false,false,true);
+		return BP.Tools.Json.ToJson(dt);
     }
     
+    /** 获取退回消息
+	 
+	 @return 
+	 */
+	public final String DB_GenerReturnWorks()
+	{
+		// 如果工作节点退回了
+		BP.WF.ReturnWorks rws = new BP.WF.ReturnWorks();
+		rws.Retrieve(BP.WF.ReturnWorkAttr.ReturnToNode, this.getFK_Node(), BP.WF.ReturnWorkAttr.WorkID, this.getWorkID(), BP.WF.ReturnWorkAttr.RDT);
+		StringBuilder append = new StringBuilder();
+		append.append("[");
+		if (rws.size() != 0)
+		{
+			for (BP.WF.ReturnWork rw : rws.ToJavaList())
+			{
+				append.append("{");
+				append.append("ReturnNodeName:'" + rw.getReturnNodeName() + "',");
+				append.append("ReturnerName:'" + rw.getReturnerName() + "',");
+				append.append("RDT:'" + rw.getRDT() + "',");
+				append.append("NoteHtml:'" + rw.getBeiZhuHtml() + "'");
+				append.append("},");
+			}
+			append.deleteCharAt(append.length() - 1);
+		}
+		append.append("]");
+		return append.toString();
+	}
+	
     /**
      * 运行
      *  @return 
@@ -78,12 +107,39 @@ public class AppACE extends WebContralBase{
     {
     	DataTable dt = null;
 		dt = BP.WF.Dev2Interface.DB_GenerRuning();
-		/*if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			dt.Columns.get("WorkID").ColumnName = "WorkID";
-		}*/
-		return BP.Tools.Json.DataTableToJson(dt,false,false,true);
+		return BP.Tools.Json.ToJson(dt);
     }
+    
+    /** 
+	 获取用户信息
+	 
+	 @return 
+	 */
+	public final String GetUserInfo()
+	{
+		if (WebUser.getNo() == null)
+		{
+			return "{err:'nologin'}";
+		}
+
+		StringBuilder append = new StringBuilder();
+		append.append("{");
+		String userPath = SystemConfig.getCCFlowAppPath() + "/DataUser/UserIcon/";
+		String userIcon = userPath + BP.Web.WebUser.getNo() + "Biger.png";
+		File file = new File(userIcon);
+		if (file.exists())
+		{
+			append.append("UserIcon:'" + BP.Web.WebUser.getNo() + "Biger.png'");
+		}
+		else
+		{
+			append.append("UserIcon:'DefaultBiger.png'");
+		}
+		append.append(",UserName:'" + BP.Web.WebUser.getName() + "'");
+		append.append(",UserDeptName:'" + BP.Web.WebUser.getFK_DeptName() + "'");
+		append.append("}");
+		return append.toString();
+	}
     
     /**
      * 初始化赋值
@@ -91,7 +147,7 @@ public class AppACE extends WebContralBase{
      */
     public String Home_Init()
     {
-    	java.util.Hashtable ht = new java.util.Hashtable();
+    	Hashtable ht = new Hashtable();
 		ht.put("UserNo", BP.Web.WebUser.getNo());
 		ht.put("UserName", BP.Web.WebUser.getName());
 
@@ -156,6 +212,26 @@ public class AppACE extends WebContralBase{
 	   return BP.Tools.Json.ToJson(ds);
     }
     
+    ///#region 执行父类的重写方法.
+    /// <summary>
+    /// 默认执行的方法
+    /// </summary>
+    /// <returns></returns>
+    protected String DoDefaultMethod()
+    {
+    	if (this.getDoType().equals("DtlFieldUp")) //字段上移
+		{
+				return "执行成功.";
+
+
+		}
+		else
+		{
+		}
+
+        //找不不到标记就抛出异常.
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + this.getRequest().getRequestURL());
+    }
     /**
      * 控制台信息
      *  @return 
@@ -257,9 +333,27 @@ public class AppACE extends WebContralBase{
     public String Draft_Init()
     {
     	DataTable dt = BP.WF.Dev2Interface.DB_GenerDraftDataTable(this.getFK_Flow());
-		return BP.Tools.Json.DataTableToJson(dt,false,false,true);
+		return BP.Tools.Json.ToJson(dt);
     }
     
+    ///#region 草稿删除.
+    /// <summary>
+    /// 草稿.
+    /// </summary>
+    /// <returns></returns>
+    public String Draft_Delete()
+    {
+        try
+        {
+            BP.WF.Dev2Interface.Node_DeleteDraft(this.getFK_Flow(), this.getWorkID());
+            return "删除成功";
+        }
+        catch (Exception e)
+        {
+            return "err@" + e.getMessage();
+        }
+    }
+    ///#endregion 草稿删除.
     /**
      * 授权登录
      *  @return 
@@ -397,7 +491,7 @@ public class AppACE extends WebContralBase{
 			dr.setValue("FlowNote",wfstaT);
 			dr.setValue("AtPara",(wfsta == BP.WF.WFSta.Complete.getValue() ? DotNetToJavaStringHelper.trimEnd(DotNetToJavaStringHelper.trimStart(dr.getValue("Sender").toString(), '('), ')').split("[,]", -1)[1] : ""));
 		}
-		return BP.Tools.Json.DataTableToJson(dt,false,false,true);
+		return BP.Tools.Json.ToJson(dt);
     }
 
     /**
@@ -572,62 +666,7 @@ public class AppACE extends WebContralBase{
 		return "</Table>";
 	}
 
-	/** 
-	 获取用户信息
-	 
-	 @return 
-	 */
-	public final String GetUserInfo()
-	{
-		if (WebUser.getNo() == null)
-		{
-			return "{err:'nologin'}";
-		}
-
-		StringBuilder append = new StringBuilder();
-		append.append("{");
-		String userPath = SystemConfig.getCCFlowAppPath() + "/DataUser/UserIcon/";
-		String userIcon = userPath + BP.Web.WebUser.getNo() + "Biger.png";
-		File file = new File(userIcon);
-		if (file.exists())
-		{
-			append.append("UserIcon:'" + BP.Web.WebUser.getNo() + "Biger.png'");
-		}
-		else
-		{
-			append.append("UserIcon:'DefaultBiger.png'");
-		}
-		append.append(",UserName:'" + BP.Web.WebUser.getName() + "'");
-		append.append(",UserDeptName:'" + BP.Web.WebUser.getFK_DeptName() + "'");
-		append.append("}");
-		return append.toString();
-	}
 	
-	/** 获取退回消息
-	 
-	 @return 
-	 */
-	public final String DB_GenerReturnWorks()
-	{
-		// 如果工作节点退回了
-		BP.WF.ReturnWorks rws = new BP.WF.ReturnWorks();
-		rws.Retrieve(BP.WF.ReturnWorkAttr.ReturnToNode, this.getFK_Node(), BP.WF.ReturnWorkAttr.WorkID, this.getWorkID(), BP.WF.ReturnWorkAttr.RDT);
-		StringBuilder append = new StringBuilder();
-		append.append("[");
-		if (rws.size() != 0)
-		{
-			for (BP.WF.ReturnWork rw : rws.ToJavaList())
-			{
-				append.append("{");
-				append.append("ReturnNodeName:'" + rw.getReturnNodeName() + "',");
-				append.append("ReturnerName:'" + rw.getReturnerName() + "',");
-				append.append("RDT:'" + rw.getRDT() + "',");
-				append.append("NoteHtml:'" + rw.getBeiZhuHtml() + "'");
-				append.append("},");
-			}
-			append.deleteCharAt(append.length() - 1);
-		}
-		append.append("]");
-		return append.toString();
-	}
+	
+	
 }

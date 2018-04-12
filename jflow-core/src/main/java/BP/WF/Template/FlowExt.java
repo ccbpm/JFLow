@@ -1720,9 +1720,14 @@ public class FlowExt extends EntityNoName
                 }
 			}
 		}
+		
 		try
 		{
-			this.setFlowEventEntity(BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.getFlowMark(), this.getNo()));
+			
+			String fee=BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.getFlowMark(), this.getNo());
+			
+			this.setFlowEventEntity(fee);
+			
 		}
 		catch (java.lang.Exception e)
 		{

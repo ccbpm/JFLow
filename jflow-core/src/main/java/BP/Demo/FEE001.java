@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import BP.WF.EventBase.FlowEventBase;
-
-public class FEE001 extends FlowEventBase
+ 
+public class FEE001 extends BP.WF.FlowEventBase
 {
 	public FEE001()
 	{

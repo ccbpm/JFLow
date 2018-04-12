@@ -1,4 +1,6 @@
-package BP.WF.EventBase;
+package BP.FlowEvent;
+
+import BP.WF.FlowEventBase;
 
 /**
  * xxxxxx 流程事件实体

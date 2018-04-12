@@ -3,7 +3,7 @@ package BP.FlowEvent;
 // 
 import java.math.BigDecimal;
 
-import BP.WF.EventBase.FlowEventBase;
+import BP.WF.FlowEventBase;
 
 /** 
 省汇总流程001
@@ -38,18 +38,22 @@ private String getOID;
 	 重写发送前事件
 	 
 	 @return 
+	 * @throws com.sun.star.uno.Exception 
 	*/
 	@Override
-	public String SendWhen()
+	public String SendWhen() 
 	{
-		//相关的变量,
+		
+		//if (1==1)
+		//return "sssssssssssssss";
+		
+		 
 
 		// 当前的节点, 其他的变量请从 this.HisNode .
 //		int nodeID = this.HisNode.NodeID; 
 		int nodeID = this.HisNode.getNodeID(); // int类型的ID.
 		String nodeName = this.HisNode.getName(); // 当前节点名称.
-		
-	 
+		 
 		
 
 		switch (nodeID)

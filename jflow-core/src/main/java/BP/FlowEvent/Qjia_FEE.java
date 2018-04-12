@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import BP.WF.EventBase.FlowEventBase;
+import BP.WF.FlowEventBase;
 
 public class Qjia_FEE extends FlowEventBase
 {

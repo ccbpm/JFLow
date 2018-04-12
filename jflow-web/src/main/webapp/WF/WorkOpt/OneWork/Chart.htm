@@ -443,6 +443,7 @@
         }
 
         function getSubFlows(nodeId) {
+
             var subflows = {};
             var flows = "";
             var subflow;
@@ -518,11 +519,9 @@
             if (!time || time.length < 10) {
                 return '';
             }
-            
-            time=time.replace(/-/g,':').replace(' ',':');
-            time=time.split(':');
-            
-            return time[0] + "年" + (time[1]-1) + "月" + time[2] + "日 " + time[3];
+
+            var d = new Date(time.replace(/-/g, "/"));
+            return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日 " + d.getHours() + "时" + d.getMinutes() + "分";
         }
 
         function iconDrag() {

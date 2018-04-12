@@ -441,13 +441,10 @@ public class WF extends WebContralBase
 	public final String Start_Init()
 	{
 		//通用的处理器.
-		if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe"))
-		{
-			
-		}else{
+		if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe")==false)
 			return Start_Init2016();
-		}
-
+		
+		 
 		//如果请求了刷新.
 		if (this.GetRequestVal("IsRef") != null)
 		{
@@ -584,17 +581,25 @@ public class WF extends WebContralBase
 		//流程类别.
 		FlowSorts fss = new FlowSorts();
 		fss.RetrieveAll();
+		
 		DataTable dtSort = fss.ToDataTableField("Sort");
 		dtSort.TableName = "Sort";
 		ds.Tables.add(dtSort);
 
 		//获得能否发起的流程.
+		//DataTable dtStart = Dev2Interface.DB_GenerCanStartFlowsOfDataTable("zhoupeng");
 		DataTable dtStart = Dev2Interface.DB_GenerCanStartFlowsOfDataTable(BP.Web.WebUser.getNo());
 		dtStart.TableName = "Start";
+		
+		String str=BP.Tools.Json.ToJson(dtStart);
+		
+		
 		ds.Tables.add(dtStart);
 
 		//返回组合
-		return BP.Tools.Json.ToJson(ds);
+		String st1= BP.Tools.Json.ToJson(ds);
+		
+		return st1;
 	}
 	
 	/** 初始化共享任务

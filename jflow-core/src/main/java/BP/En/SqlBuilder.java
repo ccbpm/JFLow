@@ -1602,10 +1602,10 @@ public class SqlBuilder
 					{
 						if (attr.getIsKeyEqualField())
 						{
-							val = val + ", " + mainTable + attr.getField();
+							val = val + "," + mainTable + attr.getField();
 						} else
 						{
-							val = val + "," + mainTable + attr.getField() + " "
+							val = val + "," + mainTable + attr.getField() + ""
 									+ attr.getKey();
 						}
 					} else

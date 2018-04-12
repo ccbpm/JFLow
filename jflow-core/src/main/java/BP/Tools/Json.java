@@ -119,7 +119,10 @@ public class Json
 			}
 
 		}).create();
-		return gson.toJson(array);
+		
+		String str= gson.toJson(array);
+		
+		return str;
 	}
 	
 	/**
@@ -305,8 +308,9 @@ public class Json
 			jsonString += "{";
 			for (DataColumn column : table.Columns)
 			{
-				jsonString += "\"" + ToJson(column.ColumnName) + "\":";
-				Object obj = drc.get(i).getValue(column.ColumnName);
+				jsonString += "\"" + column.ColumnName + "\":";
+				Object obj = drc.get(i).getValue(column.oldColumnName);
+				
 				if (column.DataType == java.util.Date.class || column.DataType == String.class)
 				{
 					if (null != obj)
@@ -329,6 +333,8 @@ public class Json
 			}
 			jsonString = DeleteLast(jsonString) + "},";
 		}
+		
+		
 		return DeleteLast(jsonString) + "]";
 	}
 	
@@ -428,8 +434,18 @@ public class Json
 			if(null==table)
 				continue;
 			jsonString += "\"" + ToJson(table.TableName) + "\":"
-					+ ToJson(table.Rows) + ",";
+					+ ToJson(table) + ",";
+			
+			//+ ToJson(table.Rows) + ",";		
+			
+		//	BP.Tools.Json.ToJson(table);
 		}
+		
+		
+		
+		//String str=ToJson(table);
+		
+		
 		return jsonString = DeleteLast(jsonString) + "}";
 	}
 	

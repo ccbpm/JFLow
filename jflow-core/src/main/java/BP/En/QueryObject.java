@@ -1642,6 +1642,7 @@ public class QueryObject
 					"");
 			
 			return DBAccess.RunSQLReturnTable(sql, this.getMyParas());
+			
 		} catch (RuntimeException ex)
 		{
 			if (this._en == null)

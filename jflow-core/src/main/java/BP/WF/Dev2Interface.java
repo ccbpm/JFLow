@@ -1186,15 +1186,19 @@ public class Dev2Interface
 				WFEmp wfEmp = new WFEmp(userNo);
 				qo.AddWhereIn("No", wfEmp.getAuthorFlows());
 			}
+			
 			qo.addOrderBy("FK_FlowSort", FlowAttr.Idx);
-			DataTable dt= qo.DoQueryToTable();
+			qo.DoQuery();
+			
+			DataTable dt= fls.ToDataTableField();
+			
 			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 			{
-				dt.Columns.get("NO").ColumnName = "No";
-				dt.Columns.get("NAME").ColumnName = "Name";
-				dt.Columns.get("ISBATCHSTART").ColumnName = "IsBatchStart";
-				dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
-				dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
+				//dt.Columns.get("NO").ColumnName = "No";
+				//dt.Columns.get("NAME").ColumnName = "Name";
+				//dt.Columns.get("ISBATCHSTART").ColumnName = "IsBatchStart";
+				//dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+				//dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
 			}
 
 			return dt;
@@ -1347,7 +1351,10 @@ public class Dev2Interface
 			ps.Add(GenerWorkFlowAttr.FK_Flow, flowNo);
 			ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
 		}
+		
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+		
+		
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
@@ -1357,6 +1364,7 @@ public class Dev2Interface
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 		}
+		
 		return dt;
 	}
 	/** 

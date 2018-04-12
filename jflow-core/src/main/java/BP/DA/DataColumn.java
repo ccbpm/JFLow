@@ -14,6 +14,7 @@ public class DataColumn
 	 * DataColumn的欄位名稱
 	 */
 	public String ColumnName; // 欄名，當做DataRow的key
+	public String oldColumnName; // 欄名，當做DataRow的key
 	
 	public Object DataType;
 	
@@ -36,15 +37,18 @@ public class DataColumn
 	public DataColumn(String columnName)
 	{
 		this.ColumnName = columnName;
+		this.oldColumnName = columnName;
 	}
 	
 	public DataColumn()
 	{
+		
 	}
 	
 	public DataColumn(String columnName, Object DataType)
 	{
 		this.ColumnName = columnName;
+		this.oldColumnName = columnName;
 		this.DataType = DataType;
 	}
 	
@@ -52,12 +56,14 @@ public class DataColumn
 	public DataColumn(String columnName, Object DataType, boolean cases)
 	{
 		this.ColumnName = columnName;
+		this.oldColumnName = columnName;
 		this.DataType = DataType;
 	}
 	
 	public DataColumn(String columnName, Object DataType, String str)
 	{
 		this.ColumnName = columnName;
+		this.oldColumnName = columnName;
 		this.DataType = DataType;
 	}
 	

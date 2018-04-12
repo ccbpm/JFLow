@@ -67,6 +67,7 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 	{
 		DataColumn column = new DataColumn(columnName, DataType);
 		column.setTable(this.Table);
+		
 		this.add(column);
 		return column;
 	}

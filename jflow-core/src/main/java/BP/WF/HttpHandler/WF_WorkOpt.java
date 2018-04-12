@@ -864,8 +864,7 @@ public class WF_WorkOpt extends WebContralBase {
 		if (rws.size() != 0) {
 			for (BP.WF.ReturnWork rw : rws.ToJavaList()) {
 				msgInfo += "<fieldset width='100%' ><legend>&nbsp; 来自节点:" + rw.getReturnNodeName() + " 退回人:"
-						+ rw.getReturnerName() + "  " + rw.getRDT() + "&nbsp;<a href='./../../DataUser/ReturnLog/"
-						+ this.getFK_Flow() + "/" + rw.getMyPK() + ".htm' target=_blank>工作日志</a></legend>";
+						+ rw.getReturnerName() + "  " + rw.getRDT() + "</legend>";
 				msgInfo += rw.getBeiZhuHtml();
 				msgInfo += "</fieldset>";
 			}

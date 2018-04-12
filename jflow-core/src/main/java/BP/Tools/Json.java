@@ -434,7 +434,7 @@ public class Json
 			if(null==table)
 				continue;
 			jsonString += "\"" + ToJson(table.TableName) + "\":"
-					+ ToJson(table) + ",";
+					+ ToJson(table.Rows) + ",";
 			
 			//+ ToJson(table.Rows) + ",";		
 			

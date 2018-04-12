@@ -49,7 +49,12 @@
             saveRowCurrent: { count: 0, overCount: 0, saveAll: false, rowIndex: 0 },
             currentRowIndex: -1//如果该值有改变，就表明需要存盘，入库  -1 表示还未做操作  光标所在行
         };
-       
+        /* ESC Key Down */
+        function Esc() {
+            if (event.keyCode == 27)
+                window.close();
+            return true;
+        }
 
         //页面启动函数.
         $(function () {
@@ -1756,43 +1761,35 @@
         })
         return result;
     }
-    
-    //
-    function DealNoName( dictObj )
-    {
-    	  
-    }
 
     //初始化下拉列表框的OPERATION
     function InitDDLOperation(workNodeData, mapAttr, defVal) {
-    	
-    	 
-    	
         var operations = '';
-     
+        //外键类型
+        if (mapAttr.LGType == 2 || mapAttr.LGType==1) {
             if (workNodeData[mapAttr.KeyOfEn] != undefined) {
                 $.each(workNodeData[mapAttr.KeyOfEn], function (i, obj) {
-                	  
-                	
                     operations += "<option " + (obj.No == defVal ? " selected='selected' " : "") + " value='" + obj.No + "'>" + obj.Name + "</option>";
                 });
-                
-                
-                return operations;
             }
-
-
-             if (workNodeData[mapAttr.UIBindKey] != undefined) {
+            else if (workNodeData[mapAttr.UIBindKey] != undefined) {
                 $.each(workNodeData[mapAttr.UIBindKey], function (i, obj) {
-                	
-                	alert(obj.NO);
-                	
                     operations += "<option " + (obj.No == defVal ? " selected='selected' " : "") + " value='" + obj.No + "'>" + obj.Name + "</option>";
                 });
-                return operations;
             }
-        
-             alert('errr:mapAttr'+mapAttr.KeyOfEn);  
+        } else {
+            var enums = workNodeData.Sys_Enum;
+            enums = $.grep(enums, function (value) {
+                return value.EnumKey == mapAttr.UIBindKey;
+            });
+
+
+            $.each(enums, function (i, obj) {
+                operations += "<option " + (obj.IntKey == defVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
+            });
+
+        }
+        return operations;
     }
 
     //填充默认数据

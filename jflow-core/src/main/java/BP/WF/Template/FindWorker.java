@@ -733,7 +733,7 @@ public class FindWorker
 		{
 			// 按指定的节点的人员岗位 
 			String para = town.getHisNode().getDeliveryParas();
-			para = para.replace("@", "");
+			para = para.replace("@", "").substring(0,para.length()-1);
 
 			if (DotNetToJavaStringHelper.isNullOrEmpty(para) ==false)
 			{
@@ -744,7 +744,7 @@ public class FindWorker
 					ps = new Paras();
 					ps.SQL = "SELECT FK_Emp,FK_Dept FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node ";
 					ps.Add("OID", this.WorkID);
-					ps.Add("FK_Node", Integer.parseInt(para));
+					ps.Add("FK_Node", Integer.parseInt(str));
 
 					dt = DBAccess.RunSQLReturnTable(ps);
 					if (dt.Rows.size() != 1)

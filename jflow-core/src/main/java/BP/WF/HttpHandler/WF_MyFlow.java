@@ -651,7 +651,7 @@ public class WF_MyFlow extends WebContralBase {
 					this.getFK_Flow(), this.getFK_Node(),
 					this.getWorkID(), BP.Web.WebUser.getNo());
 			if (isCanDo == false) {
-				return "err@您不能执行当年前工作.";
+				return "err@您不能执行当前工作.";
 			}
 		}
 

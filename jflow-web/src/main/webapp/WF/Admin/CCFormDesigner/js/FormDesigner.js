@@ -307,8 +307,6 @@ function showFigurePropertyWin(figure) {
     }
 
     if (shap == 'HyperLink') {
-
-        var en=  new Entity("")
         var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.FrmLink&PKVal=' + figure.CCForm_MyPK;
         CCForm_ShowDialog(url, '超链接属性');
         return;

@@ -19,7 +19,7 @@ import BP.WF.Node;
 @Scope("request")
 public class CCController extends BaseController{
 	
-	@RequestMapping(value = "/CC", method = RequestMethod.POST)
+	@RequestMapping(value = "/CC", method = RequestMethod.GET)
 	public ModelAndView execute(HttpServletRequest request,
 			HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView();

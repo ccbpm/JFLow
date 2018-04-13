@@ -133,14 +133,15 @@ public class WF extends WebContralBase
     /// <returns></returns>
     public String Runing_OpenFrm()
     {
-    	//return "err@于庆海翻译 Runing_OpenFrm";
-    	
-    	
-        //String appPath = BP.WF.Glo.CCFlowAppPath;
+    	int nodeID = this.getFK_Node();
+    	if (nodeID == 0)
+        {
+            GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+            nodeID = gwf.getFK_Node();
+        }
         Node nd = null;
         Track tk = new Track();
         tk.setFK_Flow( this.getFK_Flow());
-        tk.setNDFrom( this.getFK_Node());
 
         tk.setWorkID( this.getWorkID());
         if (this.getMyPK() != null)
@@ -150,7 +151,7 @@ public class WF extends WebContralBase
         }
         else
         {
-            nd = new Node(this.getFK_Node());
+            nd = new Node(nodeID);
         }
 
         Flow fl = new Flow(this.getFK_Flow());

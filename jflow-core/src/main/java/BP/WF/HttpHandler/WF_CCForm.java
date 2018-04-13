@@ -63,6 +63,7 @@ import BP.Sys.MapExtAttr;
 import BP.Sys.MapExtXmlList;
 import BP.Sys.MapExts;
 import BP.Sys.PopValWorkModel;
+import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.Tools.FileAccess;
 import BP.Tools.StringHelper;
@@ -402,6 +403,7 @@ public class WF_CCForm extends WebContralBase {
  		FrmAttachment dbAtt = new FrmAttachment();
  		dbAtt.setMyPK(downDB.getFK_FrmAttachment());
  		dbAtt.Retrieve();
+ 		
  		String docs = DataType.ReadTextFile(downDB.getFileFullName());
 
           //DataTable dt = new DataTable();
@@ -415,16 +417,18 @@ public class WF_CCForm extends WebContralBase {
  			//dr.put("FileName",downDB.getFileName());;
  	         //dr.put("FileType",downDB.getFileExts());
  	         //dr.put("FlieContent",docs);
- 			return docs;
+ 			return "url@" + DataType.PraseStringToUrlFileName( downDB.getFileFullName());
+ 			//return docs;
  		}
 
  		if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
- 			if(this.GetRequestVal("Model").equals("2") == true){
- 				 String fileName = downDB.GenerTempFile(dbAtt.getAthSaveWay());
+ 			String fileName ="";
+ 			try{
+ 			  fileName= downDB.MakeFullFileFromFtp(); 
+ 			PubClass.DownloadFile(downDB.MakeFullFileFromFtp(),downDB.getFileName());
+ 			}catch(Exception e){
+ 				return "err@"+e.getMessage();
  			}
- 			String fileName = "";//// downDB.MakeFullFileFromFtp(); 暂时未翻译FTP
- 			// PubClass.DownloadFile(downDB.MakeFullFileFromFtp(),
- 			// downDB.FileName);
  			return "url@" + fileName;
  		}
 

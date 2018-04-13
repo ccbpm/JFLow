@@ -302,24 +302,40 @@ public class Json
 	public static String ToJson(DataTable table)
 	{
 		String jsonString = "[";
+		
+		
+		for (DataColumn column : table.Columns)
+		{ 
+			if (column.oldColumnName==null  )
+				column.oldColumnName=column.ColumnName;
+			
+		}
+		
+		
 		DataRowCollection drc = table.Rows;
 		for (int i = 0; i < drc.size(); i++)
 		{
 			jsonString += "{";
 			for (DataColumn column : table.Columns)
 			{
-				jsonString += "\"" + column.ColumnName + "\":";
+				jsonString += "\"" + ToJson(column.ColumnName) + "\":"; 
+				
 				Object obj = drc.get(i).getValue(column.oldColumnName);
 				
+				if (null == obj )
+				{
+					jsonString += "\"\","; 
+					
+				} else
+				{
+					
+					jsonString += "\"" + ToJson(obj.toString()) + "\",";
+				}
+				
+				/*
 				if (column.DataType == java.util.Date.class || column.DataType == String.class)
 				{
-					if (null != obj)
-					{
-						jsonString += "\"" + ToJson(obj.toString()) + "\",";
-					} else
-					{
-						jsonString += "\"\",";
-					}
+				
 				} else
 				{
 					if (null != obj && !"".equals(obj))
@@ -327,9 +343,9 @@ public class Json
 						jsonString += ToJson(obj.toString()) + ",";
 					} else
 					{
-						jsonString += "0,";	// 老周改为0
+						jsonString += ""0\"",";	// 老周改为0
 					}
-				}
+				}*/
 			}
 			jsonString = DeleteLast(jsonString) + "},";
 		}
@@ -436,16 +452,10 @@ public class Json
 			jsonString += "\"" + ToJson(table.TableName) + "\":"
 					+ ToJson(table) + ",";
 			
-			//+ ToJson(table.Rows) + ",";		
-			
+			//+ ToJson(table.Rows) + ",";					
 		//	BP.Tools.Json.ToJson(table);
 		}
-		
-		
-		
-		//String str=ToJson(table);
-		
-		
+		  
 		return jsonString = DeleteLast(jsonString) + "}";
 	}
 	

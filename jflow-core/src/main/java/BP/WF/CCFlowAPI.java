@@ -193,8 +193,7 @@ public class CCFlowAPI
 					DataRow dr = dtToNDs.NewRow();
 					dr.put("No",item.getNodeID());
 					dr.put("Name",item.getName());
-					//if (item.hissel
-
+					
 					if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
 					{
 						dr.put("IsSelectEmps","1");
@@ -219,10 +218,7 @@ public class CCFlowAPI
                     dr.put("No",  item.getFK_Flow() + "01");
                     
                     dr.put("Name",  "启动:" +item.getFlowName() );
-                    
-                   // dr.setValue("Name",  "dddddddd" );
-
-                    //if (item.HisDeliveryWay == DeliveryWay.BySelected)
+                   
                     dr.put("IsSelectEmps", "1");
                     //else
                     //  dr["IsSelectEmps"] = "0";  //是不是，可以选择接受人.
@@ -270,31 +266,8 @@ public class CCFlowAPI
                         }
                     }
                 }
-                //#endregion 为天业集团做一个特殊的判断.
-
-
-
-                for (Node item : nds.ToJavaList())
-                {
-                    DataRow dr = dtToNDs.NewRow();
-                    dr.put("No", item.getNodeID());
-                    dr.put("Name", item.getName());
-                    //if (item.hissel
-
-                    if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
-                    	dr.put("IsSelectEmps", "1");
-                    else
-                    	dr.put("IsSelectEmps", "0");  //是不是，可以选择接受人.
-
-                    //设置默认选择的节点.
-                    if (defalutSelectedNodeID == item.getNodeID())
-                    	dr.put("IsSelected", "1");
-                    else
-                    	dr.put("IsSelected", "0");
-
-                    dtToNDs.Rows.add(dr);
-                }
-                //#endregion 到达其他节点。
+           
+ 
 
 
 				//增加一个下拉框, 对方判断是否有这个数据.

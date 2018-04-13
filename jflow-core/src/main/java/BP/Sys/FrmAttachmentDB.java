@@ -340,7 +340,7 @@ public class FrmAttachmentDB extends EntityMyPK
     /// 生成文件.
     /// </summary>
     /// <returns></returns>
-    private String MakeFullFileFromFtp()
+    public String MakeFullFileFromFtp()
     {
         // string tempFile =  SystemConfig.PathOfTemp +System.Guid.NewGuid()+"."+this.FileExts;
         String tempFile = SystemConfig.getPathOfTemp() + this.getFileName();
@@ -354,13 +354,7 @@ public class FrmAttachmentDB extends EntityMyPK
         {
             //  tempFile = SystemConfig.PathOfTemp + System.Guid.NewGuid() + this.FileName;
         }
-       //Path path=Paths.get("D:/address.txt");  
-        //BasicFileAttributeView basicview=Files.getFileAttributeView(path, BasicFileAttributeView.class);  
        
-        /*FtpClient.connectServer conn = new FtpClient..(SystemConfig.getFTPServerIP(),
-        //    SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
-
-        conn.GetFile(this.getFileFullName(), tempFile, false, basicview.f);*/
 
         return tempFile;
     }

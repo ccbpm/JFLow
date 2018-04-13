@@ -92,10 +92,14 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 		DataColumn column = null;
 		for (DataColumn dataColumn : this)
 		{
+			 
 			if (dataColumn.ColumnName.toLowerCase().equals(
 					columnName.toLowerCase()))
 			{
-				// if (dataColumn.ColumnName.equals(columnName)) {
+				
+				if (dataColumn.oldColumnName==null   )
+					dataColumn.oldColumnName= dataColumn.ColumnName;
+				 
 				return dataColumn;
 			}
 		}

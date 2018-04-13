@@ -591,8 +591,7 @@ public class WF extends WebContralBase
 		DataTable dtStart = Dev2Interface.DB_GenerCanStartFlowsOfDataTable(BP.Web.WebUser.getNo());
 		dtStart.TableName = "Start";
 		
-		String str=BP.Tools.Json.ToJson(dtStart);
-		
+		//String str=BP.Tools.Json.ToJson(dtStart);
 		
 		ds.Tables.add(dtStart);
 

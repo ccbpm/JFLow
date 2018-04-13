@@ -16,6 +16,14 @@ public class DataColumn
 	public String ColumnName; // 欄名，當做DataRow的key
 	public String oldColumnName; // 欄名，當做DataRow的key
 	
+	public void setColumnName(String val)
+	{
+	  if (oldColumnName==null)
+		  oldColumnName= ColumnName;
+	  
+	   ColumnName=val;	  
+	}
+	
 	public Object DataType;
 	
 	public Object getDataType()

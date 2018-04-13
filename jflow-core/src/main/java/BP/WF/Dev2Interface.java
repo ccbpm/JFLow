@@ -1188,18 +1188,20 @@ public class Dev2Interface
 			}
 			
 			qo.addOrderBy("FK_FlowSort", FlowAttr.Idx);
-			qo.DoQuery();
+			DataTable dt =qo.DoQueryToTable();
+			 
 			
-			DataTable dt= fls.ToDataTableField();
-			
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle  )
 			{
-				//dt.Columns.get("NO").ColumnName = "No";
-				//dt.Columns.get("NAME").ColumnName = "Name";
-				//dt.Columns.get("ISBATCHSTART").ColumnName = "IsBatchStart";
-				//dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
-				//dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
+				dt.Columns.get("NO").ColumnName="No"; 		 
+				dt.Columns.get("NAME").ColumnName="Name";
+				dt.Columns.get("ISBATCHSTART").ColumnName= "IsBatchStart";
+				dt.Columns.get("FK_FLOWSORT").ColumnName= "FK_FlowSort";
+				dt.Columns.get("FK_FLOWSORTTEXT").ColumnName= "FK_FlowSortText";
 			}
+			
+			//String json=BP.Tools.Json.ToJson(dt);			
+		  //	system.prt	
 
 			return dt;
 		}

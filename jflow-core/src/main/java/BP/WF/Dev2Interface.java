@@ -5088,17 +5088,19 @@ public class Dev2Interface
 			{
 				return true;
 			}
-			String mysql = "SELECT FK_Emp, IsPass FROM WF_GenerWorkerList WHERE WorkID="+workID+" AND FK_Node="+nodeID;
+			String mysql = "SELECT FK_Emp,  IsPass FROM WF_GenerWorkerList WHERE WorkID="+workID+" AND FK_Node="+nodeID;
 			DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
 			if (mydt.Rows.size() == 0)
 			{
 				return true;
 			}
+			
+			 
 
 			for (DataRow dr : mydt.Rows)
 			{
-				String fk_emp = dr.get("FK_Emp")!=null?dr.get("FK_Emp").toString():dr.get("fk_emp").toString();
-				String isPass = dr.get("IsPass")!=null?dr.get("IsPass").toString():dr.get("ispass").toString();
+				String fk_emp = dr.get(0).toString();
+				String isPass = dr.get(1).toString();
 				if (userNo.equals(fk_emp) 
 						&& (isPass.equals("0") || isPass.equals("80") ||isPass.equals("90")) )
 				{

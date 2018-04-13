@@ -32,7 +32,13 @@ public abstract class HttpHandlerBase extends BaseController
 		Object tempVar = mycontext;
 		
 		WebContralBase ctrl = (WebContralBase)((tempVar instanceof WebContralBase) ? tempVar : null);
-		Log.DebugWriteInfo("执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]");
+		
+		String paras="";
+		paras+= ctrl.GetRequestVal("DoMethod");
+		
+		//paras+=",HttpHandlerName:"+ctrl.GetRequestVal("HttpHandlerName");
+		
+		Log.DebugWriteInfo("执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]DoMethod["+paras+"]");
 		try
 		{
 			//执行方法返回json.
@@ -49,13 +55,9 @@ public abstract class HttpHandlerBase extends BaseController
 		{
 			String err=ex.getMessage();
 			
-			String paras="";
-			paras+="DoMethod:"+ctrl.GetRequestVal("DoMethod");
-			paras+=",HttpHandlerName:"+ctrl.GetRequestVal("HttpHandlerName");
+			
 			//for(string str : ctrl.getRequest().getQueryString())
-			
-			
-			
+			 
 			//返回执行错误的结果.
 			if (ex.getCause() != null)
 			{

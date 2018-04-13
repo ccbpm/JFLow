@@ -363,7 +363,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * @return json data
 	 */
 	public final String CCForm_AllElements_ResponseJson() {
+		
 		try {
+			
 			MapData mapData = new MapData(this.getFK_MapData());
 
 			// 获取表单元素

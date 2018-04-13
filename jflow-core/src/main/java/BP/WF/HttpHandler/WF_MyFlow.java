@@ -1721,7 +1721,12 @@ public class WF_MyFlow extends WebContralBase {
 				}
 				///#endregion 如果是移动应用就考虑多表单的问题.
 
-				return BP.Tools.Json.ToJson(ds);
+				String str= BP.Tools.Json.ToJson(ds);
+				
+				DataType.WriteFile("c:\\aaa.Txt", str);
+				
+				return str;
+				 
 			}
 			catch (RuntimeException ex)
 			{

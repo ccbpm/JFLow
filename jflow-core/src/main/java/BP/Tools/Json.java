@@ -348,8 +348,7 @@ public class Json
 				}*/
 			}
 			jsonString = DeleteLast(jsonString) + "},";
-		}
-		
+		}		 
 		
 		return DeleteLast(jsonString) + "]";
 	}
@@ -428,18 +427,12 @@ public class Json
 	 */
 	public static String ToJsonStr(String value)
 	{
-		 
-		
-		
+		   
 		if (StringHelper.isNullOrEmpty(value))
 		{
 			return "";
 		}
-		
-	//	return value;
-		
 		 
-		
 		String temstr;
 		temstr = value;
 		temstr = temstr.replace("{", "｛").replace("}", "｝").replace(":", "：")
@@ -447,6 +440,13 @@ public class Json
 				.replace(";", "；").replace("\n", "<br/>").replace("\r", "");
 		
 		temstr = temstr.replace("\t", "   ");
+		
+		//不解决好 fontstyle 的问题，就不能把他删除掉.
+		temstr = temstr.replace("\"", "\'");
+		temstr = temstr.replace("\"", "\'");
+		
+		temstr = temstr.replace("''", "\'");
+		 
 		temstr = temstr.replace("'", "\'");
 		temstr = temstr.replace("\\", "\\\\");
 		temstr = temstr.replace("\"", "\"\"");		

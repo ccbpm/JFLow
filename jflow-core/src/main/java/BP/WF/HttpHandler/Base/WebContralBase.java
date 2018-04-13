@@ -114,6 +114,7 @@ public abstract class WebContralBase extends BaseController {
 
 		java.lang.Class tp = myEn.getClass();
 		java.lang.reflect.Method mp = null;
+		
 		try {
 			mp = tp.getMethod(methodName);
 		} catch (NoSuchMethodException e) {

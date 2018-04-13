@@ -123,7 +123,7 @@ public class MapAttrEnum extends EntityMyPK
 		//sunxd
 		//问题:ORACLE数据库会自动将字段名称转换为大写，导致页面接收不到
 		//解决:“SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE EnName='@FK_MapData'” 修改为 “SELECT OID \"No\", Lab \"Name\" FROM Sys_GroupField WHERE EnName='@FK_MapData'”
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID \"No\", Lab \"Name\" FROM Sys_GroupField WHERE EnName='@FK_MapData'", true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID No, Lab Name FROM Sys_GroupField WHERE EnName='@FK_MapData'", true);
 
 		RefMethod rm = new RefMethod();
 

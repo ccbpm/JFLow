@@ -269,12 +269,13 @@ public class Json
         String strs = "{";
         for(Object key : ht.keySet())
         {
-            strs += "\"" + key + "\":\"" + ht.get(key) + "\",";
+            strs += "\"" + key + "\":\"" + ToJsonStr ( ht.get(key).toString() ) + "\",";
         }
         strs += "\"OutEnd\":\"无效参数请忽略\"";
         strs += "}";
-        strs = TranJsonStr(strs);
+        
         return strs;
+         
     }
     public static String ToJsonEntitiesNoNameModel(Hashtable ht)
     {
@@ -307,8 +308,7 @@ public class Json
 		for (DataColumn column : table.Columns)
 		{ 
 			if (column.oldColumnName==null  )
-				column.oldColumnName=column.ColumnName;
-			
+				column.oldColumnName=column.ColumnName; 
 		}
 		
 		
@@ -318,7 +318,7 @@ public class Json
 			jsonString += "{";
 			for (DataColumn column : table.Columns)
 			{
-				jsonString += "\"" + ToJson(column.ColumnName) + "\":"; 
+				jsonString += "\"" +  column.ColumnName + "\":"; 
 				
 				Object obj = drc.get(i).getValue(column.oldColumnName);
 				
@@ -329,7 +329,7 @@ public class Json
 				} else
 				{
 					
-					jsonString += "\"" + ToJson(obj.toString()) + "\",";
+					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
 				}
 				
 				/*
@@ -354,47 +354,7 @@ public class Json
 		return DeleteLast(jsonString) + "]";
 	}
 	
-	/** 区分大小写
-	 * Datatable转换为Json
-	 * 
-	 * @param Datatable对象
-	 *//*
-	public static String ToJson_2017(DataTable table)
-	{
-		String jsonString = "[";
-		DataRowCollection drc = table.Rows;
-		for (int i = 0; i < drc.size(); i++)
-		{
-			jsonString += "{";
-			for (DataColumn column : table.Columns)
-			{
-				jsonString += "\"" + ToJson(column.ColumnName) + "\":";
-				Object obj = drc.get(i).getValue_2017(column.ColumnName);
-				if (column.DataType == java.util.Date.class
-						|| column.DataType == String.class)
-				{
-					if (null != obj)
-					{
-						jsonString += "\"" + ToJson(obj.toString()) + "\",";
-					} else
-					{
-						jsonString += "\"\",";
-					}
-				} else
-				{
-					if (null != obj && !"".equals(obj))
-					{
-						jsonString += ToJson(obj.toString()) + ",";
-					} else
-					{
-						jsonString += "\"\",";
-					}
-				}
-			}
-			jsonString = DeleteLast(jsonString) + "},";
-		}
-		return DeleteLast(jsonString) + "]";
-	}*/
+	 
 	/**
 	 * Datatable转换为Json  upper
 	 * 
@@ -449,7 +409,7 @@ public class Json
 		{
 			if(null==table)
 				continue;
-			jsonString += "\"" + ToJson(table.TableName) + "\":"
+			jsonString += "\"" + table.TableName + "\":"
 					+ ToJson(table) + ",";
 			
 			//+ ToJson(table.Rows) + ",";					
@@ -458,25 +418,7 @@ public class Json
 		  
 		return jsonString = DeleteLast(jsonString) + "}";
 	}
-	
-	/**
-	 * DataSet转换为Json   区分大小写
-	 * 
-	 * @param DataSet对象
-	 *//*
-	public static String ToJson_2017(DataSet dataSet)
-	{
-		String jsonString = "{";
-		for (DataTable table : dataSet.Tables)
-		{
-			if(null==table)
-				continue;
-			jsonString += "\"" + ToJson(table.TableName) + "\":"
-					+ ToJson_2017(table) + ",";
-		}
-		return jsonString = DeleteLast(jsonString) + "}";
-	}*/
-	
+	 
 	/**
 	 * String转换为Json
 	 * 
@@ -484,12 +426,19 @@ public class Json
 	 *            String对象
 	 * @return Json字符串
 	 */
-	public static String ToJson(String value)
+	public static String ToJsonStr(String value)
 	{
+		 
+		
+		
 		if (StringHelper.isNullOrEmpty(value))
 		{
 			return "";
 		}
+		
+	//	return value;
+		
+		 
 		
 		String temstr;
 		temstr = value;
@@ -500,8 +449,16 @@ public class Json
 		temstr = temstr.replace("\t", "   ");
 		temstr = temstr.replace("'", "\'");
 		temstr = temstr.replace("\\", "\\\\");
-		temstr = temstr.replace("\"", "\"\"");
-		return temstr;
+		temstr = temstr.replace("\"", "\"\"");		
+		  
+		temstr = temstr.replace("\n", "\\n");
+		temstr = temstr.replace("\b", "\\b");
+		temstr = temstr.replace("\t", "\\t");
+		temstr = temstr.replace("\f", "\\f");
+		temstr = temstr.replace("/", "\\/");
+		
+		return temstr; 
+		
 	}
 	
 	 /** 
@@ -580,31 +537,15 @@ public class Json
 		String strs = "{";
 		for (Object key : ht.keySet())
 		{
-			strs += "\"" + key.toString() + "\":\"" + ht.get(key.toString()) + "\",";
+			strs += "\"" + key.toString() + "\":\"" +  ht.get(key.toString()) + "\",";
 		}
 		strs += "\"OutEnd\":\"1\"";
 		strs += "}";
-		strs = TranJsonStr(strs);
+		 
+		 
 		return strs;
 	}
-	
-	/** 
-	 * JSON字符串的转义
-	 * @param jsonStr
-	 * @return 
-	 */
-	private static String TranJsonStr(String jsonStr)
-	{
-		String strs = jsonStr;
-		strs = strs.replace("\\", "\\\\");
-		strs = strs.replace("\n", "\\n");
-		strs = strs.replace("\b", "\\b");
-		strs = strs.replace("\t", "\\t");
-		strs = strs.replace("\f", "\\f");
-		strs = strs.replace("/", "\\/");
-		return strs;
-	}
-	
+	 
 	/**add by dgq**/
 	public final static JSONObject GetObjectFromArrary_ByKeyValue(JSONArray jsOb,String Key, String value)
 	{

@@ -48,11 +48,13 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
             }
             ds.Tables.add(dt);
         }
+        
         // #region 加入表单库目录.
         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
             sql = "SELECT NO as No ,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
         else
             sql = "SELECT No,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
+                
         dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
         dt.TableName = "Sys_FormTree";
         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
@@ -209,6 +211,11 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
     	 try
          {
 	    	String fromMapData = frmID;
+	    	
+	    	  if (fromMapData==null)
+                  fromMapData = this.getFromMapData();
+	    	  
+	    	
 	    	if(fromMapData == null)
 	    		fromMapData = this.getFromMapData();
 	        boolean isClear = this.getIsClear();

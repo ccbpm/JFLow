@@ -49,14 +49,21 @@ public abstract class HttpHandlerBase extends BaseController
 		{
 			String err=ex.getMessage();
 			
+			String paras="";
+			paras+="DoMethod:"+ctrl.GetRequestVal("DoMethod");
+			paras+=",HttpHandlerName:"+ctrl.GetRequestVal("HttpHandlerName");
+			//for(string str : ctrl.getRequest().getQueryString())
+			
+			
+			
 			//返回执行错误的结果.
 			if (ex.getCause() != null)
 			{
-				err+="err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]错误 \t\n @" + ex.getCause().getMessage() + " \t\n @技术信息:" + ex.getStackTrace();
+				err+="err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]["+paras+"]错误 \t\n @" + ex.getCause().getMessage() + " \t\n @技术信息:" + ex.getStackTrace();
 			}
 			else
 			{
-				err+="err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]错误 \t\n @" + ex.getMessage() + " \t\n @技术信息:" + ex.getStackTrace();
+				err+="err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]["+paras+"]错误 \t\n @" + ex.getMessage() + " \t\n @技术信息:" + ex.getStackTrace();
 			}
 			
 			BP.DA.Log.DebugWriteError(err);

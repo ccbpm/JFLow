@@ -95,7 +95,7 @@ public class MapAttrString extends EntityMyPK
 		//默认值.
 		//sunxd 解决ORACLE数据为自动转大写问题 
 		// SELECT No,Name FROM Sys_GloVar WHERE GroupKey='DefVal' 修改为  "SELECT No \"No\",Name \"Name\" FROM Sys_GloVar WHERE GroupKey='DefVal'"
-		String sql = "SELECT No \"No\",Name \"Name\" FROM Sys_GloVar WHERE GroupKey='DefVal'";
+		String sql = "SELECT No ,Name FROM Sys_GloVar WHERE GroupKey='DefVal'";
 		//显示的分组.
 		map.AddDDLSQL("ExtDefVal", "0", "系统默认值", sql, true);
 
@@ -121,7 +121,7 @@ public class MapAttrString extends EntityMyPK
 		//显示的分组.
 		//sunxd 解决ORACLE数据为自动转大写问题 
 		//SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE EnName='@FK_MapData' 修改为  SELECT OID \"No\", Lab \"Name\" FROM Sys_GroupField WHERE EnName='@FK_MapData'
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID \"No\", Lab \"Name\" FROM Sys_GroupField WHERE EnName='@FK_MapData'", true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID No, Lab Name FROM Sys_GroupField WHERE EnName='@FK_MapData'", true);
 
 		map.AddDDLSysEnum(MapAttrAttr.IsSigan, 0, "签名模式", true, true, MapAttrAttr.IsSigan, "@0=无@1=图片签名@2=山东CA@3=广东CA");
 

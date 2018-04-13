@@ -36,6 +36,7 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
+import BP.Tools.Json;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
@@ -266,7 +267,11 @@ public class WF_CommEntity extends WebContralBase {
             ds.Tables.add(dtMain);
 
            // #region 增加上分组信息.
-            EnCfg ec = new EnCfg(this.getEnName());
+            EnCfg ec = new EnCfg();
+            ec.setNo(this.getEnName());
+            ec.RetrieveFromDBSources();
+            
+            
             String groupTitle = ec.getGroupTitle();
             if (DataType.IsNullOrEmpty(groupTitle) == true)
                 groupTitle = "@" + en.getPK() + ",基本信息," + map.getEnDesc() + "";
@@ -332,6 +337,7 @@ public class WF_CommEntity extends WebContralBase {
                 drAttr.setValue(MapAttrAttr.GroupID, currGroupID);
             }
             ds.Tables.add(sys_MapAttrs);
+            
             //#endregion 字段属性.
 
             //#region 把外键与枚举放入里面去.
@@ -477,9 +483,7 @@ public class WF_CommEntity extends WebContralBase {
                 }
 
                 DataRow dr = dtM.NewRow();
-                
-                
-                
+                 
                 dr.setValue("No", item.Index) ;
                 dr.setValue("Title", item.Title) ;
                 dr.setValue("Tip", item.ToolTip) ;
@@ -497,16 +501,26 @@ public class WF_CommEntity extends WebContralBase {
                 dr.setValue("IsCanBatch", item.IsCanBatch) ;
                 dr.setValue("GroupName", item.GroupName) ;
               //  dr.setValue("IsCanBatch", item.Index) ;
- 
-
+  
                 dtM.Rows.add(dr); //增加到rows.
             }
             //#endregion 增加 上方法.
+            
+            if (1==2)
+            {
+            	
+            }
+             
 
             //增加方法。
             ds.Tables.add(dtM);
 
-            return BP.Tools.Json.ToJson(ds);
+           String str= BP.Tools.Json.ToJson(ds);
+            
+            BP.DA.DataType.WriteFile("C:\\AA.TXT", str);
+            
+            return str;
+            
         }
         catch (Exception ex)
         {

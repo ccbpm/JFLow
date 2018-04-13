@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.XmlWriteMode;
+import BP.Sys.CCFormAPI;
 import BP.Sys.MapData;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
@@ -94,7 +95,7 @@ public class DoPortModel extends BaseModel {
 			FK_MapData = this.get_request().getParameter("PK");
 		}
 		if (doType.equals("DownFormTemplete")) {
-			DataSet ds = MapData.GenerHisDataSet(FK_MapData);
+			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(FK_MapData);
 
 			MapData md = new MapData(FK_MapData);
 			//DataSet ds = md.GenerHisDataSet();
@@ -350,7 +351,7 @@ public class DoPortModel extends BaseModel {
 //    				}
 //    				else
 //    				{
-    					DataSet ds = MapData.GenerHisDataSet(FK_MapData);
+    					DataSet ds = CCFormAPI.GenerHisDataSet(FK_MapData);
     					if (!StringHelper.isNullOrEmpty(file) && null != ds)
     					{
     						ds.WriteXml(file);

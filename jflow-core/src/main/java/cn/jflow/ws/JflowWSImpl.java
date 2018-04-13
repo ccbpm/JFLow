@@ -18,6 +18,7 @@ import BP.DA.Log;
 import BP.DA.Paras;
 import BP.En.QueryObject;
 import BP.Port.Emp;
+import BP.Sys.CCFormAPI;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.FrmEventList;
 import BP.Sys.GEDtlAttr;
@@ -1206,7 +1207,7 @@ public class JflowWSImpl implements JflowWS {
 						+ "丢失，请修复一次流程重新加载一次.");
 			}
 
-			DataSet myds = md.GenerHisDataSet();
+			DataSet myds =CCFormAPI.GenerHisDataSet(md.getNo());
 
 			// /#region 流程设置信息.
 			Node nd = new Node(fk_node);
@@ -1627,9 +1628,13 @@ public class JflowWSImpl implements JflowWS {
 
 			// DataTable dtMapAttr = DBAccess.RunSQLReturnTable("");
 			// md.GenerHisDataSet().Tables["Sys_MapAttr"];
+			
+			DataSet ds=CCFormAPI.GenerHisDataSet(md.getNo());	
+			
+			int idx= ds.Tables.indexOf("Sys_MapAttr");
 
-			DataTable dtMapAttr = md.GenerHisDataSet().Tables.get(md
-					.GenerHisDataSet().Tables.indexOf("Sys_MapAttr"));
+			DataTable dtMapAttr = ds.Tables.get(idx);
+			
 
 			for (DataRow dr : dtMapAttr.Rows) {
 				String lgType = dr.getValue("LGType").toString();
@@ -2657,7 +2662,7 @@ public class JflowWSImpl implements JflowWS {
 
 	public String CCForm_FrmTemplete(String fk_mapdata) {
 		MapData md = new MapData(fk_mapdata);
-		DataSet ds = md.GenerHisDataSet();
+		DataSet ds =CCFormAPI.GenerHisDataSet(md.getNo());
 		return BP.Tools.FormatToJson.ToJson(ds);
 	}
 

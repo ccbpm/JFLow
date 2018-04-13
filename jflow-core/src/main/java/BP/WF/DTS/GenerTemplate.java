@@ -101,7 +101,7 @@ public class GenerTemplate extends Method
 				for (Node nd : nds.ToJavaList())
 				{
 					MapData md = new MapData("ND" + nd.getNodeID());
-					DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), IsVisable);
+					DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
 					ds.WriteXml(pathFlowDir + "/" + nd.getNodeID() + "." + nd.getName() + ".Frm.xml");
 				}
 			}
@@ -120,7 +120,7 @@ public class GenerTemplate extends Method
 			mds.Retrieve(MapDataAttr.FK_FrmSort, sort.getNo());
 			for (MapData md : mds.ToJavaList())
 			{
-				DataSet ds =BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), IsVisable);
+				DataSet ds =BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
 				ds.WriteXml(pathDir + "/" + md.getNo() + "." + md.getName() + ".Frm.xml");
 			}
 		}

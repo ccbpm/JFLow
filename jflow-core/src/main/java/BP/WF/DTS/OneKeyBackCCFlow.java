@@ -206,7 +206,7 @@ public class OneKeyBackCCFlow extends Method
 			{
 				file.mkdirs();
 			}
-			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), IsVisable);
+			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
 			ds.WriteXml(pathDir + "\\" + md.getName() + ".xml");
 		}
 

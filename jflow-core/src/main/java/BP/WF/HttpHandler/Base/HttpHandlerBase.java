@@ -33,12 +33,18 @@ public abstract class HttpHandlerBase extends BaseController
 		
 		WebContralBase ctrl = (WebContralBase)((tempVar instanceof WebContralBase) ? tempVar : null);
 		
-		String paras="";
-		paras+= ctrl.GetRequestVal("DoMethod");
 		
-		//paras+=",HttpHandlerName:"+ctrl.GetRequestVal("HttpHandlerName");
+		String mName=ctrl.GetRequestVal("DoMethod");			
+		String msg="";			
+		if (mName==null || mName=="null")		
+			msg ="方法[" + ctrl.getDoType() + "]类[" + this.getCtrlType().toString() + "]";
+		else
+			msg ="方法[" + mName+ "]类[" + this.getCtrlType().toString() + "]，";	 
 		
-		Log.DebugWriteInfo("执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]DoMethod["+paras+"]");
+		BP.DA.Log.DebugWriteInfo(msg);
+	//	out.write(msg);
+		
+		   
 		try
 		{
 			//执行方法返回json.
@@ -50,13 +56,18 @@ public abstract class HttpHandlerBase extends BaseController
 			this.getResponse().setCharacterEncoding("UTF-8");
 			out = this.getResponse().getWriter();
 			out.write(data);
+			
+		
+		      
 		}
 		catch (Exception ex)
 		{
-			String err=ex.getMessage();
 			
+			String err=ex.getMessage();	
 			
-			//for(string str : ctrl.getRequest().getQueryString())
+			String paras="";	
+			 
+			paras+= ctrl.GetRequestVal("DoMethod");
 			 
 			//返回执行错误的结果.
 			if (ex.getCause() != null)

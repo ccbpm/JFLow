@@ -1028,7 +1028,7 @@ public class WF_WorkOpt extends WebContralBase {
 		}
 
 		// 表单模版.
-		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(nd.getNodeFrmID(), false);
+		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(nd.getNodeFrmID());
 		String json = BP.WF.Dev2Interface.CCFrom_GetFrmDBJson(this.getFK_Flow(), this.getMyPK());
 		DataTable mainTable = BP.Tools.Json.ToDataTableOneRow(json);
 		mainTable.TableName = "MainTable";
@@ -1781,7 +1781,7 @@ public class WF_WorkOpt extends WebContralBase {
 						+ ",%') and rownum<=12";
 			}
 			if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
-				sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%"
+				sql = "SELECT a.No, CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%"
 						+ emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase()
 						+ ",%') LIMIT 12";
 			}
@@ -1791,7 +1791,7 @@ public class WF_WorkOpt extends WebContralBase {
 						+ emp + "%' OR a.NAME  LIKE '%" + emp + "%')";
 			}
 			if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-				sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%"
+				sql = "SELECT a.No, a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%"
 						+ emp + "%' OR a.NAME  LIKE '%" + emp + "%') and rownum<=12";
 			}
 			if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
@@ -1800,6 +1800,12 @@ public class WF_WorkOpt extends WebContralBase {
 			}
 		}
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		
+		if (SystemConfig.getAppCenterDBType()== DBType.Oracle)
+		{
+			dt.Columns.get("NO").ColumnName="No";
+			dt.Columns.get("NAME").ColumnName="Name";
+		}
 
 		return BP.Tools.Json.ToJson(dt);
 	}

@@ -94,7 +94,7 @@ public class Do1Model extends BaseModel {
 			
 			if (doType.equals("DownTempFrm")) {
 				MapData md = new MapData(getFK_MapData());
-				DataSet ds = md.GenerHisDataSet();
+				DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
 				String name = "ccflow表单模板." + md.getName() + "." + md.getNo()
 						+ ".xml";
 				/*

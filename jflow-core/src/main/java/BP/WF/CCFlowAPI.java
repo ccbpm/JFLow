@@ -727,7 +727,7 @@ public class CCFlowAPI
 			}
 
 			//表单模版.
-			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),false);
+			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
 			return myds;
 
 			/*

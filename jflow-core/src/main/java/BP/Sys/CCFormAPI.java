@@ -1202,13 +1202,7 @@ public class CCFormAPI
 	{
 		MapData.ImpMapData(toFrmID, fromds, isSetReadonly);
 	}
-	
-	
-	
-	
-	
-	
-	
+	 
 	/** 
 	 获得表单模版dataSet格式.
 	 
@@ -1216,166 +1210,84 @@ public class CCFormAPI
 	 @param isCheckFrmType 是否检查表单类型
 	 @return DataSet
 	*/
-	public static DataSet GenerHisDataSet(String fk_mapdata, boolean isCheckFrmType)
+
+
+	public static DataSet GenerHisDataSet(String fk_mapdata)
 	{
-		MapData md = new MapData(fk_mapdata);
+		 
+		 DataSet ds = new DataSet();
 
-		// 20150513 小周鹏修改，原因：手机端无法显示 dtl Start
-		// string sql = "SELECT FK_MapData,No,X,Y,W,H  FROM Sys_MapDtl WHERE FK_MapData ='{0}'";
-		String sql = "SELECT *  FROM Sys_MapDtl WHERE FK_MapData ='"+fk_mapdata+"'";
-		// 20150513 小周鹏修改 End
+         //创建实体对象.
+         MapData md = new MapData(fk_mapdata);
 
-		//sql = String.format(sql, fk_mapdata);
-		DataTable dtMapDtl = DBAccess.RunSQLReturnTable(sql);
-		dtMapDtl.TableName = "Sys_MapDtl";
+         //加入主表信息.
+         DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
+         ds.Tables.add(Sys_MapData);
+ 
+         //加入分组表.
+         DataTable Sys_GroupField = md.getGroupFields().ToDataTableField("Sys_GroupField");
+         ds.Tables.add(Sys_GroupField);
 
-		String ids = String.format("'%1$s'", fk_mapdata);
-		for (DataRow dr : dtMapDtl.Rows)
-		{
-			ids += ",'" + dr.get("No") + "'";
-		}
-		String sqls = "";
-		java.util.ArrayList<String> listNames = new java.util.ArrayList<String>();
-		// Sys_GroupField.
-		listNames.add("Sys_GroupField");
-		sql = "SELECT * FROM Sys_GroupField WHERE  EnName IN (" + ids + ")";
-		sqls += sql;
 
-		// Sys_Enum
-		listNames.add("Sys_Enum");
-		sql = "@SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + ids + ") ) order By EnumKey,IntKey";
-		sqls += sql;
+         //加入明细表.
+         DataTable Sys_MapDtl = md.getMapDtls().ToDataTableField("Sys_MapDtl");
+         ds.Tables.add(Sys_MapDtl);
+ 
+         //加入枚举表.
+         DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
+         ds.Tables.add(Sys_Menu);
+      
+         //加入外键属性.
+         DataTable Sys_MapAttr = md.getMapAttrs().ToDataTableField("Sys_MapAttr");
+         ds.Tables.add(Sys_MapAttr);
 
-		// 审核组件
-		String nodeIDstr = fk_mapdata.replace("ND", "");
-		if (DataType.IsNumStr(nodeIDstr))
-		{
-			// 审核组件状态:0 禁用;1 启用;2 只读;
-			listNames.add("WF_Node");
-			sql = "@SELECT NodeID,FWC_X,FWC_Y,FWC_W,FWC_H,FWCSTA,FWCTYPE,SFSTA,SF_X,SF_Y,SF_H,SF_W FROM WF_Node WHERE NodeID=" + nodeIDstr + " AND  ( FWCSta >0  OR SFSta >0 )";
-			sqls += sql;
-		}
+         //加入扩展属性.
+         DataTable Sys_MapExt = md.getMapExts().ToDataTableField("Sys_MapExt");
+         ds.Tables.add(Sys_MapExt);
 
-		String where = " FK_MapData IN (" + ids + ")";
+         //线.
+         DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
+         ds.Tables.add(Sys_FrmLine);
 
-		// Sys_MapData.
-		listNames.add("Sys_MapData");
-		//杨玉慧  加上TableWidth,TableHeight,TableCol 获取傻瓜表单的宽度
-		//sql = "@SELECT No,Name,FrmW,FrmH FROM Sys_MapData WHERE No='" + fk_mapdata + "'";
-		sql = "@SELECT No,Name,FrmW,FrmH,TableWidth,TableHeight,TableCol FROM Sys_MapData WHERE No='" + fk_mapdata + "'";
-		sqls += sql;
+         //link.
+         DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
+         ds.Tables.add(Sys_FrmLink);
 
-		// Sys_MapAttr.
-		listNames.add("Sys_MapAttr");
+         //btn.
+         DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
+         ds.Tables.add(Sys_FrmBtn);
 
-		sql = "@SELECT * FROM Sys_MapAttr WHERE " + where + " AND KeyOfEn NOT IN('WFState') ORDER BY FK_MapData, IDX  ";
-		sqls += sql;
+         //Sys_FrmLab.
+         DataTable Sys_FrmLab = md.getFrmLabs().ToDataTableField("Sys_FrmLab");
+         ds.Tables.add(Sys_FrmLab);
 
-		//// Sys_MapM2M.
-		//listNames.Add("Sys_MapM2M");
-		//sql = "@SELECT MyPK,FK_MapData,NoOfObj,M2MTYPE,X,Y,W,H FROM Sys_MapM2M WHERE " + where;
-		//sqls += sql;
+         //img.
+         DataTable Sys_FrmImg = md.getFrmImgs().ToDataTableField("Sys_FrmImg");
+         ds.Tables.add(Sys_FrmImg);
 
-		// Sys_MapExt.
-		listNames.add("Sys_MapExt");
-		sql = "@SELECT * FROM Sys_MapExt WHERE " + where;
-		sqls += sql;
+         //Sys_FrmRB.
+         DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
+         ds.Tables.add(Sys_FrmRB);
 
-		//if (isCheckFrmType == true && md.HisFrmType == FrmType.FreeFrm)
-		//{
-		// line.
-		listNames.add("Sys_FrmLine");
-		sql = "@SELECT MyPK,FK_MapData, X1,X2, Y1,Y2,BorderColor,BorderWidth from Sys_FrmLine WHERE " + where;
-		sqls += sql;
+         //Sys_FrmEle.
+         DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
+         ds.Tables.add(Sys_FrmEle);
 
-		// link.
-		listNames.add("Sys_FrmLink");
-		sql = "@SELECT FK_MapData,MyPK,Text,URL,Target,FontSize,FontColor,X,Y from Sys_FrmLink WHERE " + where;
-		sqls += sql;
+         //Sys_MapFrame.
+         DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
+         ds.Tables.add(Sys_MapFrame);
 
-		// btn.
-		listNames.add("Sys_FrmBtn");
-		sql = "@SELECT FK_MapData,MyPK,Text,EventType,EventContext,MsgErr,MsgOK,X,Y FROM Sys_FrmBtn WHERE " + where;
-		sqls += sql;
+         //Sys_FrmAttachment.
+         DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
+         ds.Tables.add(Sys_FrmAttachment);
 
-		// Sys_FrmImg.
-		listNames.add("Sys_FrmImg");
-		sql = "@SELECT * FROM Sys_FrmImg WHERE " + where;
-		sqls += sql;
+         //FrmImgAths. 上传图片附件.
+         DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
+         ds.Tables.add(Sys_FrmImgAth);
 
-		// Sys_FrmLab.
-		listNames.add("Sys_FrmLab");
-		sql = "@SELECT MyPK,FK_MapData,Text,X,Y,FontColor,FontName,FontSize,FontStyle,FontWeight,IsBold,IsItalic FROM Sys_FrmLab WHERE " + where;
-		sqls += sql;
-		//}
-
-		// Sys_FrmRB.
-		listNames.add("Sys_FrmRB");
-		sql = "@SELECT * FROM Sys_FrmRB WHERE " + where;
-		sqls += sql;
-
-		// ele.
-		listNames.add("Sys_FrmEle");
-		sql = "@SELECT FK_MapData,MyPK,EleType,EleID,EleName,X,Y,W,H FROM Sys_FrmEle WHERE " + where;
-		sqls += sql;
-
-		//Sys_MapFrame.
-		listNames.add("Sys_MapFrame");
-		sql = "@SELECT MyPK,FK_MapData,Name,URL,W,H FROM Sys_MapFrame WHERE " + where;
-		sqls += sql;
-
-		// Sys_FrmAttachment. 
-		listNames.add("Sys_FrmAttachment");
-		// 20150730 小周鹏修改 添加AtPara 参数 START 
-		//sql = "@SELECT  MyPK,FK_MapData,UploadType,X,Y,W,H,NoOfObj,Name,Exts,SaveTo,IsUpload,IsDelete,IsDownload "
-		// + " FROM Sys_FrmAttachment WHERE " + where + " AND FK_Node=0";
-		sql = "@SELECT MyPK,FK_MapData,UploadType,X,Y,W,H,NoOfObj,Name,Exts,SaveTo,IsUpload,DeleteWay,IsDownload ,AtPara" + " FROM Sys_FrmAttachment WHERE " + where + " AND FK_Node=0";
-
-		// 20150730 小周鹏修改 添加AtPara 参数 END 
-		sqls += sql;
-
-		// Sys_FrmImgAth.
-		listNames.add("Sys_FrmImgAth");
-		sql = "@SELECT * FROM Sys_FrmImgAth WHERE " + where;
-		sqls += sql;
-
-		//// sqls.replace(";", ";" + Environment.NewLine);
-		// DataSet ds = DA.DBAccess.RunSQLReturnDataSet(sqls);
-		// if (ds != null && ds.Tables.Count == listNames.Count)
-		//     for (int i = 0; i < listNames.Count; i++)
-		//     {
-		//         ds.Tables[i].TableName = listNames[i];
-		//     }
-
-		String[] strs = sqls.split("[@]", -1);
-		DataSet ds = new DataSet();
-
-		if (strs != null && strs.length == listNames.size())
-		{
-			for (int i = 0; i < listNames.size(); i++)
-			{
-				String s = strs[i];
-				if (StringHelper.isNullOrEmpty(s))
-				{
-					continue;
-				}
-				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(s);
-				dt.TableName = listNames.get(i);
-				ds.Tables.add(dt);
-			}
-		}
-
-		for (DataTable item : ds.Tables)
-		{
-			if (item.TableName.equals("Sys_MapAttr") && item.Rows.size() == 0)
-			{
-				md.RepairMap();
-			}
-		}
-
-		ds.Tables.add(dtMapDtl);
-		return ds;
+         return ds;
 	}
+	
 	//#endregion 模版操作.
 
 	//#region 其他功能.
@@ -1459,7 +1371,7 @@ public class CCFormAPI
 			}
 
 			//获得源文件信息.
-			DataSet ds = GenerHisDataSet(srcFrmID,false);
+			DataSet ds =  GenerHisDataSet(srcFrmID);
 
 			//导入表单文件.
 			ImpFrmTemplate(copyFrmID, ds, false);

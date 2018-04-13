@@ -55,7 +55,7 @@ public class DoModel extends BaseModel{
         {
 			if(DoType.equals("DownTempFrm")){
 				MapData md = new MapData(this.FK_MapData);
-                DataSet ds = md.GenerHisDataSet();
+                DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
                 String name = "ccflow表单模板." + md.getName() + "." + md.getNo() + ".xml";
                 String file = ContextHolderUtils.getRequest().getRealPath("/") + "Temp/" + this.FK_MapData + ".xml";
                 ds.WriteXml(file);

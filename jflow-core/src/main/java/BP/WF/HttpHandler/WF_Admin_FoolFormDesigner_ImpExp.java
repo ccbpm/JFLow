@@ -195,6 +195,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
     /// <returns></returns>
     public String Imp_FromsCopyFrm()
     {
+    	
         return Imp_CopyFrm(null);
     }
     /**
@@ -222,13 +223,20 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 	        boolean isSetReadonly = this.getIsSetReadonly();
 	
 	        MapData md = new MapData(fromMapData);
+	        
+	        //生成当前的ds
+	        DataSet ds=BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+	        ds.WriteXml("c:\\aaaaa.xml");
+	        
 	
-	        MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),isSetReadonly),true);
+	        MapData.ImpMapData(this.getFK_MapData(), ds,true);
+	        
 	        //设置为只读模式.
 			if (this.getIsSetReadonly() == true)
 			{
 				MapData.SetFrmIsReadonly(this.getFK_MapData());
 			}
+			
 	        // 如果是节点表单，就要执行一次修复，以免漏掉应该有的系统字段。
 	        if (this.getFK_MapData().contains("ND") == true)
 	        {

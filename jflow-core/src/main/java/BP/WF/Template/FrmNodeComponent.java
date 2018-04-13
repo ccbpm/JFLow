@@ -55,7 +55,8 @@ public class FrmNodeComponent extends Entity
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		uac.OpenForSysAdmin();
+		uac.IsUpdate=true;
+		//uac.OpenForSysAdmin();
 		uac.IsDelete = false;
 		uac.IsInsert = false;
 		return uac;

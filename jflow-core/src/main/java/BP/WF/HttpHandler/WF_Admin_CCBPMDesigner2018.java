@@ -36,6 +36,7 @@ import BP.WF.Template.FlowSortAttr;
 import BP.WF.Template.FlowSorts;
 import BP.WF.Template.LabNote;
 import BP.WF.Template.LabNoteAttr;
+import BP.WF.Template.LabNotes;
 import BP.WF.Template.NodeAttr;
 import BP.WF.Template.SysFormTree;
 import BP.WF.Template.WorkflowDefintionManager;
@@ -734,6 +735,37 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		}
 		catch (RuntimeException ex)
 		{
+			return "err@" + ex.getMessage();
+		}
+	}
+	public final String CreatLabNote()
+	{
+		try {
+			LabNote lb=new LabNote();
+			
+			//获取当前流程已经存在的数量
+            LabNotes labNotes = new LabNotes();
+            int num = labNotes.Retrieve(LabNoteAttr.FK_Flow, this.GetRequestVal("FK_Flow"));
+			
+			String Name = this.GetRequestVal("LabName");
+			int x = Integer.parseInt(this.GetRequestVal("X")) ;
+			int y = Integer.parseInt(this.GetRequestVal("Y"));
+			
+			lb.setMyPK(this.GetRequestVal("FK_Flow") + "_" + x + "_" + y + "_" + (num + 1));
+            lb.setName(Name);
+            lb.setFK_Flow(this.GetRequestVal("FK_Flow"));
+            lb.setX(x);
+            lb.setY(y);
+
+            lb.DirectInsert();
+            
+            java.util.Hashtable ht = new java.util.Hashtable();
+  			ht.put("MyPK", this.GetRequestVal("FK_Flow") + "_" + x + "_" + y + "_" + (num + 1));
+  			ht.put("FK_Flow", this.GetRequestVal("FK_Flow"));
+  			
+  			return BP.Tools.Json.ToJsonEntityModel(ht);
+			
+		} catch (Exception ex) {
 			return "err@" + ex.getMessage();
 		}
 	}

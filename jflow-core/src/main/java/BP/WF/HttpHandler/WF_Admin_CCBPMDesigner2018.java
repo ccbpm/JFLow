@@ -706,8 +706,8 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		try
 		{
 			  String FK_Flow = this.GetRequestVal("FK_Flow");
-			  String x = this.GetRequestVal("x");
-			  String y = this.GetRequestVal("y");
+			  String x = this.GetRequestVal("X");
+			  String y = this.GetRequestVal("Y");
 			  
 			  
               int iX = 30;

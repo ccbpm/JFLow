@@ -635,6 +635,9 @@ public class Track extends BP.En.Entity
 		
 		this.SetValByKey("FK_Flow", flowNo);
 		
+		this.FK_Flow=flowNo;
+		
+		
 	}
 
 

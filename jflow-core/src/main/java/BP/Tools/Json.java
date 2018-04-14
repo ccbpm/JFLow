@@ -430,10 +430,10 @@ public class Json
 		   
 		if (StringHelper.isNullOrEmpty(value))
 			return "";
-		 
-		
+		  
 		String temstr;
 		temstr = value;
+		
 		temstr = temstr.replace("{", "｛").replace("}", "｝").replace("[", "【").replace("]", "】").replace("\n", "<br/>").replace("\r", "");
 		
 		temstr = temstr.replace("\t", "   ");

@@ -133,6 +133,10 @@ public class WF_WorkOpt extends WebContralBase {
 	 */
 	public final String WorkCheck_Init() {
 		
+		if (WebUser.getNo()==null)
+			return "err@登录信息丢失";
+		
+		
 		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node());
 		FrmWorkCheck frmWorkCheck = null;
 		FrmAttachmentDBs athDBs = null;
@@ -194,6 +198,7 @@ public class WF_WorkOpt extends WebContralBase {
 
 		isCanDo = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(),
 				BP.Web.WebUser.getNo());
+		
 		// 历史审核信息显示
 		if (wcDesc.getFWCListEnable()) {
 			tks = wc.getHisWorkChecks();
@@ -410,6 +415,7 @@ public class WF_WorkOpt extends WebContralBase {
 			if (tkDoc != null) {
 				// 判断可编辑审核信息是否处于最后一条，不处于最后一条，则将其移到最后一条
 				DataRow rdoc = tkDt.Select("IsDoc=True")[0];
+				
 				if (tkDt.Rows.indexOf(rdoc) != tkDt.Rows.size() - 1) {
 					//// tkDt.Rows.add(rdoc.getItemArray())["RDT"] = "";
 					rdoc.setValue("RDT", "");
@@ -572,6 +578,8 @@ public class WF_WorkOpt extends WebContralBase {
 
 		String str= BP.Tools.Json.ToJson(ds);
 		
+		BP.DA.DataType.WriteFile("C:\\jFLOW.txt", str);
+		
 		return str;
 	}
 
@@ -668,6 +676,7 @@ public class WF_WorkOpt extends WebContralBase {
 	 * @return
 	 */
 	public final String WorkCheck_Save() {
+		
 		// 审核信息.
 		String msg = "";
 		String dotype = this.GetRequestVal("ShowType");
@@ -684,7 +693,7 @@ public class WF_WorkOpt extends WebContralBase {
 
 		String val = "";
 		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node());
-		if (DotNetToJavaStringHelper.isNullOrEmpty(wcDesc.getFWCFields()) == false) {
+		if (DataType.IsNullOrEmpty(wcDesc.getFWCFields()) == false) {
 			// 循环属性获取值
 			Attrs fwcAttrs = new Attrs(wcDesc.getFWCFields());
 			for (Attr attr : fwcAttrs) {
@@ -719,7 +728,9 @@ public class WF_WorkOpt extends WebContralBase {
 
 			// 设置抄送状态 - 已经审核完毕.
 			Dev2Interface.Node_CC_SetSta(this.getFK_Node(), this.getWorkID(), WebUser.getNo(), CCSta.CheckOver);
-		} else {
+			return "";
+		} 
+		
 
 			/// #region 根据类型写入数据 qin
 			if (wcDesc.getHisFrmWorkCheckType() == FWCType.Check) // 审核组件
@@ -736,24 +747,27 @@ public class WF_WorkOpt extends WebContralBase {
 				Dev2Interface.WriteTrackWorkCheck(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 						msg, wcDesc.getFWCOpLabel());
 			}
+			
 			if (wcDesc.getHisFrmWorkCheckType() == FWCType.DailyLog) // 日志组件
 			{
 				Dev2Interface.WriteTrackDailyLog(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 						msg, wcDesc.getFWCOpLabel());
 			}
+			
 			if (wcDesc.getHisFrmWorkCheckType() == FWCType.WeekLog) // 周报
 			{
 				Dev2Interface.WriteTrackWeekLog(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 						msg, wcDesc.getFWCOpLabel());
 			}
+			
+			
 			if (wcDesc.getHisFrmWorkCheckType() == FWCType.MonthLog) // 月报
 			{
 				Dev2Interface.WriteTrackMonthLog(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 						msg, wcDesc.getFWCOpLabel());
 			}
 
-			/// #endregion
-		}
+		 
 
 		sql = "SELECT MyPK,RDT FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE NDFrom = "
 				+ this.getFK_Node() + " AND ActionType = " + ActionType.WorkCheck.getValue() + " AND EmpFrom = '"

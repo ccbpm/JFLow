@@ -11,6 +11,8 @@ import javax.xml.crypto.Data;
 import org.apache.commons.lang.ObjectUtils.Null;
 import org.apache.commons.lang.StringUtils;
 
+import com.sun.star.util.DateTime;
+
 import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.*;
 import BP.Port.*;
@@ -4010,7 +4012,8 @@ public class Dev2Interface
 		///#endregion 特殊判断.
 	}
 	
-	public static void WriteTrack(String flowNo, int nodeFrom, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo)
+	public static void WriteTrack(String flowNo, int nodeFrom, long workid, long fid, String msg,
+			ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo)
 	{
 		if (at == ActionType.CallChildenFlow)
 		{
@@ -4117,45 +4120,176 @@ public class Dev2Interface
 	*/
 	public static void WriteTrackWorkCheck(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName)
 	{
+		
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-		GenerWorkFlow gwf = new GenerWorkFlow();
-		gwf.setWorkID(workid);
-		gwf.RetrieveFromDBSources();
 
-		//主键.
-		String tag = gwf.getParas_LastSendTruckID() + "_" + currNodeID + "_" + workid + "_" + fid + "_" + BP.Web.WebUser.getNo();
+        GenerWorkFlow gwf = new GenerWorkFlow();
+        gwf.setWorkID( workid);
+        gwf.RetrieveFromDBSources();
 
-		Node nd = new Node(currNodeID);
-		//待办抢办模式，一个节点只能有一条记录.
-		Paras ps = new Paras();
-		if (nd.getTodolistModel() == TodolistModel.QiangBan || nd.getTodolistModel() == TodolistModel.Sharing)
-		{
-			//先删除其他人员写入的数据. 此脚本是2016.11.30号的,为了解决柳州的问题，需要扩展.
-			ps.SQL = "DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  WorkID=" + dbStr + "WorkID  AND NDFrom=" + dbStr + "NDFrom AND ActionType=" + ActionType.WorkCheck.getValue() + " AND Tag LIKE '" + gwf.getParas_LastSendTruckID() + "%'";
-			ps.Add(TrackAttr.WorkID, workid);
-			ps.Add(TrackAttr.NDFrom, currNodeID);
-			DBAccess.RunSQL(ps);
+        //求主键 2017.10.6以前的逻辑.
+        String tag = currNodeID + "_" + workid + "_" + fid + "_" + BP.Web.WebUser.getNo();
 
-			////先删除其他人员写入的数据.
-			////string sql = "DELETE FROM ND" + int.Parse(flowNo) + "Track WHERE  Tag LIKE '" + gwf.Paras_LastSendTruckID + "%' AND EmpFrom='"+BP.Web.WebUser.getNo()+"' ";
-			//string sql = "DELETE FROM ND" + int.Parse(flowNo) + "Track WHERE  Tag LIKE '" + gwf.Paras_LastSendTruckID + "%'";
-			//DBAccess.RunSQL(ps);
-			//写入日志
-			WriteTrack(flowNo, currNodeID, workid, fid, msg, ActionType.WorkCheck, tag, null, optionName);
-		}
-		else
-		{
-			ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET Msg=" + dbStr + "Msg WHERE  Tag=" + dbStr + "Tag";
-			ps.Add(TrackAttr.Msg, msg);
-			ps.Add(TrackAttr.Tag, tag);
-			if (DBAccess.RunSQL(ps) == 0)
-			{
-				//如果没有更新到，就写入.
-				WriteTrack(flowNo, currNodeID, workid, fid, msg, ActionType.WorkCheck, tag, null, optionName, null, null);
-			}
-		}
+        //求当前是否是会签.  zhangsan,张三;李四;王五;
+        String nodeName = gwf.getNodeName();
+        Node nd = new Node(currNodeID);
+        if (nd.getIsStartNode() == false)
+        {
+            if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
+                nodeName = nd.getName() + "(会签)";
+        }
+
+        //待办抢办模式，一个节点只能有一条记录.
+        Paras ps = new Paras();
+        if (nd.getTodolistModel() == TodolistModel.QiangBan || nd.getTodolistModel() == TodolistModel.Sharing)
+        {
+            //先删除其他人员写入的数据. 此脚本是2016.11.30号的,为了解决柳州的问题，需要扩展.
+            ps.SQL = "DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  WorkID=" + dbStr + "WorkID  AND NDFrom=" + dbStr + "NDFrom AND ActionType=" + ActionType.WorkCheck.getValue();
+            ps.Add(TrackAttr.WorkID, workid);
+            ps.Add(TrackAttr.NDFrom, currNodeID);
+            DBAccess.RunSQL(ps);
+
+            BP.WF.Dev2Interface.WriteTrack(flowNo, currNodeID, nodeName, workid, fid, msg, ActionType.WorkCheck, tag, null, optionName,
+        			null, null, null, null, null);
+            //写入日志. 
+           // WriteTrackAdv(flowNo, currNodeID, nodeName, workid, fid, msg, ActionType.WorkCheck, tag, null, optionName); 
+            return;
+        }
+        
+            ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET NDFromT=" + dbStr + "NDFromT, Msg=" + dbStr + "Msg, RDT=" + dbStr +
+                     "RDT WHERE  Tag=" + dbStr + "Tag ";
+            ps.Add(TrackAttr.NDFromT, nodeName);
+            ps.Add(TrackAttr.Msg, msg);
+            ps.Add(TrackAttr.Tag, tag);
+            ps.Add(TrackAttr.RDT, DataType.getCurrentDataTimess());
+            int num = DBAccess.RunSQL(ps);
+
+            if (num > 1)
+            {
+                ps.clear();
+                ps.SQL = "DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  Tag=" + dbStr + "Tag ";
+                ps.Add(TrackAttr.Tag, tag);
+                DBAccess.RunSQL(ps);
+                num = 0;
+            }
+
+            if (num == 0)
+            {
+                //如果没有更新到，就写入.
+            	//WriteTrack(flowNo, currNodeID, nodeName, workid, fid, msg, ActionType.WorkCheck, tag, null, optionName);
+            	BP.WF.Dev2Interface.WriteTrack(flowNo, currNodeID, nodeName, workid, fid, msg, ActionType.WorkCheck, tag, null, optionName,
+            			null, null, null, null, null);
+            }
+        
+         
 	}
-	/** 
+
+	 public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag,
+			 String cFlowInfo, String optionMsg , String empNoTo , String empNameTo , String empNoFrom,
+			 String empNameFrom, String rdt)
+	        {
+	           
+
+	            if (DataType.IsNullOrEmpty(optionMsg))
+	                optionMsg = Track.GetActionTypeT(at);
+	            
+	       
+	            if (DataType.IsNullOrEmpty(optionMsg))
+	                optionMsg = Track.GetActionTypeT(at);
+
+	            Track t = new Track();
+	            t.setWorkID( workid);
+	            t.setFID( fid);
+
+	            //记录日期.
+	            DateTime d;
+	            if (DataType.IsNullOrEmpty(rdt))
+	                t.setRDT(DataType.getCurrentDataTimess());
+	            else
+	                t.setRDT(rdt);
+
+	            t.setHisActionType(at);
+	            t.setActionTypeText(optionMsg);
+
+	            // Node nd = new Node(nodeFrom);
+	            t.setNDFrom ( nodeFromID);
+	            t.setNDFromT( nodeFromName);
+
+	            if (empNoFrom == null)
+	                t.setEmpFrom( WebUser.getNo());
+	            else
+	                t.setEmpFrom ( empNoFrom);
+
+	            if (empNameFrom == null)
+	                t.setEmpFromT ( WebUser.getName());
+	            else
+	                t.setEmpFromT (empNameFrom);
+
+
+	            t.setFK_Flow ( flowNo);
+
+	            t.setNDTo ( nodeFromID);
+	            t.setNDToT ( nodeFromName);
+
+	            if (empNoTo == null)
+	            {
+	                t.setEmpTo( WebUser.getNo());
+	                t.setEmpToT( WebUser.getName());
+	            }
+	            else
+	            {
+	                t.setEmpTo ( empNoTo);
+	                t.setEmpToT ( empNameTo);
+	            }
+
+
+	            t.setMsg ( msg);
+
+	            if (tag != null)
+	                t.setTag( tag);
+
+	            try
+	            {
+	                t.Insert();
+	            }
+	            catch(Exception ex)
+	            {
+	                t.CheckPhysicsTable();
+	                t.Insert();
+	                //t.DirectInsert();
+	            }
+
+	            //#region 特殊判断.
+	            if (at == ActionType.CallChildenFlow)
+	            {
+	                /* 如果是吊起子流程，就要向它父流程信息里写数据，让父流程可以看到能够发起那些流程数据。*/
+	                AtPara ap = new AtPara(tag);
+	                BP.WF.GenerWorkFlow gwf = new GenerWorkFlow(ap.GetValInt64ByKey(GenerWorkFlowAttr.PWorkID));
+	                t.setWorkID( gwf.getWorkID());
+
+	                t.setNDFrom ( gwf.getFK_Node());
+	                t.setNDFromT( gwf.getNodeName());
+
+	                t.setNDTo(t.getNDFrom());
+	                t.setNDToT( t.getNDFromT());
+
+	                t.setFK_Flow ( gwf.getFK_Flow());
+
+	                t.setHisActionType(ActionType.StartChildenFlow);
+	                t.setTag("@CWorkID=" + workid + "@CFlowNo=" + flowNo);
+	                t.setMsg ( cFlowInfo);
+	                t.Insert();
+	            }
+	            //#endregion 特殊判断.
+	            
+	            
+
+	           
+	        }
+	
+	
+	 
+	 /** 
 	 写入日志组件
 	 
 	 @param flowNo 流程编号

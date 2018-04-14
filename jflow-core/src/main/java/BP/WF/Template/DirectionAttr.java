@@ -22,11 +22,7 @@ public class DirectionAttr
 	 
 	*/
 	public static final String FK_Flow = "FK_Flow";
-	/** 
-	 方向类型
 	 
-	*/
-	public static final String DirType = "DirType";
 	/** 
 	 是否可以原路返回
 	 

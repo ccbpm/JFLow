@@ -34,12 +34,11 @@ public class Directions extends Entities
 	 @param NodeID 节点ID
 	 @param dirType 类型
 	*/
-	public Directions(int NodeID, int dirType)
+	public Directions(int NodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DirectionAttr.Node,NodeID);
-		qo.addAnd();
-		qo.AddWhere(DirectionAttr.DirType, dirType);
+		 
 		qo.DoQuery();
 	}
 	/** 

@@ -7573,6 +7573,7 @@ public class WorkNode {
 		this.addMsg(SendReturnMsgFlag.OverCurr, String.format("当前工作[%1$s]已经完成", this.getHisNode().getName()));
 		/// #region 判断流程条件.
 		try {
+			
 			if (this.getHisNode().getHisToNodes().size() == 0 && this.getHisNode().getIsStartNode()) {
 
 				// 如果流程完成

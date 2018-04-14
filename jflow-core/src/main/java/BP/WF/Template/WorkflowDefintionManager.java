@@ -49,7 +49,7 @@ public class WorkflowDefintionManager
 				enDir.setNode(ap.GetValIntByKey(DirectionAttr.Node));
 				enDir.setToNode(ap.GetValIntByKey(DirectionAttr.ToNode));
 				enDir.setIsCanBack(ap.GetValBoolenByKey(DirectionAttr.IsCanBack));
-				enDir.setDirType(ap.GetValIntByKey(DirectionAttr.DirType));
+				//enDir.setDirType(ap.GetValIntByKey(DirectionAttr.DirType));
 				enDir.setFK_Flow(fk_flow);
 				enDir.setDots(dots);
 				try

@@ -392,6 +392,8 @@ public abstract class Entities extends ArrayList<Entity>
 			}
 			this.AddEntity(en);
 		}
+		
+		 
 	}
 	
 	/*

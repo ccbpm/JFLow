@@ -132,6 +132,7 @@ public class WF_WorkOpt extends WebContralBase {
 	 * @return
 	 */
 	public final String WorkCheck_Init() {
+		
 		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node());
 		FrmWorkCheck frmWorkCheck = null;
 		FrmAttachmentDBs athDBs = null;
@@ -569,7 +570,9 @@ public class WF_WorkOpt extends WebContralBase {
 		//// ds.Tables.remove("Tracks");
 		//// ds.Tables.add(sortedTKs);
 
-		return BP.Tools.Json.ToJson(ds);
+		String str= BP.Tools.Json.ToJson(ds);
+		
+		return str;
 	}
 
 	/**

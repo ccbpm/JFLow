@@ -509,7 +509,7 @@ public class Node extends Entity
 
 			// 节点方向.
 			strs = "";
-			Directions dirs = new Directions(nd.getNodeID(), 0);
+			Directions dirs = new Directions( nd.getNodeID() );
 			for (Direction dir : dirs.ToJavaList())
 			{
 				strs += "@" + dir.getToNode();

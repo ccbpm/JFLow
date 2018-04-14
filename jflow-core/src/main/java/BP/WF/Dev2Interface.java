@@ -2965,7 +2965,7 @@ public class Dev2Interface
 				break;
 			case ByReturnLine: //按照流程图画的退回线执行退回.
 				Directions dirs = new Directions();
-				dirs.Retrieve(DirectionAttr.Node, fk_node, DirectionAttr.DirType, 1);
+				dirs.Retrieve(DirectionAttr.Node, fk_node);
 				if (dirs.size() == 0) {
 					throw new RuntimeException("@流程设计错误:当前节点没有画向后退回的退回线,更多的信息请参考退回规则.");
 				}

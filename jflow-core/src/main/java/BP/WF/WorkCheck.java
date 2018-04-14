@@ -1,8 +1,10 @@
 package BP.WF;
 
+import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.En.QueryObject;
+import BP.Sys.SystemConfig;
 
 /** 
  审核工作节点
@@ -108,15 +110,22 @@ public class WorkCheck
 			sql = sql.replace("WF_Track", "ND" + Integer.parseInt(this.FlowNo) + "Track");
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
 
-			//dt.DefaultView.Sort = "RDT desc";
-
+			//dt.DefaultView.Sort = "RDT desc";			
 			BP.En.Attrs attrs = _HisWorkChecks.getGetNewEntity().getEnMap().getAttrs();
+			
+			Boolean isOracle=false;				
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)			
+				isOracle=true;	 
+			
 			for (DataRow dr : dt.Rows)
 			{
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
-				{
-					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+				{					
+					 if (isOracle==true)
+					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
+					else
+						en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 				}
 
 				_HisWorkChecks.AddEntity(en);

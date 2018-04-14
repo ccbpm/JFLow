@@ -28,14 +28,7 @@ public class Direction extends EntityMyPK
 	{
 		this.SetValByKey(DirectionAttr.Node, value);
 	}
-	public final int getDirType()
-	{
-		return this.GetValIntByKey(DirectionAttr.DirType);
-	}
-	public final void setDirType(int value)
-	{
-		this.SetValByKey(DirectionAttr.DirType, value);
-	}
+	 
 	public final String getFK_Flow()
 	{
 		return this.GetValStringByKey(DirectionAttr.FK_Flow);
@@ -105,7 +98,7 @@ public class Direction extends EntityMyPK
 		map.AddTBString(DirectionAttr.FK_Flow, null, "流程", true, true, 0, 10, 0, false);
 		map.AddTBInt(DirectionAttr.Node, 0, "从节点", false, true);
 		map.AddTBInt(DirectionAttr.ToNode,0,"到节点",false,true);
-		map.AddTBInt(DirectionAttr.DirType, 0, "类型0前进1返回", false, true);
+		
 		map.AddTBInt(DirectionAttr.IsCanBack, 0, "是否可以原路返回(对后退线有效)", false, true);
 //                
 //                 * Dots 存储格式为: @x1,y1@x2,y2
@@ -126,13 +119,13 @@ public class Direction extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.setMyPK(this.getFK_Flow()+"_" +this.getNode() + "_" + this.getToNode() + "_" + this.getDirType());
+		this.setMyPK(this.getFK_Flow()+"_" +this.getNode() + "_" + this.getToNode());
 		return super.beforeInsert();
 	}
 	@Override
 	protected boolean beforeDelete()
 	{
-		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode() + "_" + this.getDirType());
+		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode());
 		return super.beforeDelete();
 	}
 }

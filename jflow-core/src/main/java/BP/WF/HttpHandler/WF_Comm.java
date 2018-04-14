@@ -1003,7 +1003,7 @@ public class WF_Comm extends WebContralBase {
 							ur.Update();
 						}
 
-						qo.DoQuery(en.getPK(),12,this.getPageIdx());
+						qo.DoQuery(en.getPK(),this.getPageSize(),this.getPageIdx());
 						///#endregion 获得查询数据.
 
 						DataTable mydt = ens.ToDataTableField();

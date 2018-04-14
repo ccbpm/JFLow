@@ -211,6 +211,14 @@ public class WF_Admin extends WebContralBase {
 
 				dtEmps.Rows.add(drNew);
 			}
+			
+
+            //检查物理表,避免错误.
+            Nodes nds = new Nodes(this.getFK_Flow());
+            for (Node mynd : nds.ToJavaList())
+            {
+                mynd.getHisWork().CheckPhysicsTable();
+            }
 
 			// 返回数据源.
 			return BP.Tools.Json.DataTableToJson(dtEmps, false);

@@ -5100,8 +5100,8 @@ public class Dev2Interface
 
 			for (DataRow dr : mydt.Rows)
 			{
-				String fk_emp = dr.get(0).toString();
-				String isPass = dr.get(1).toString();
+				String fk_emp = dr.getValue(0).toString();
+				String isPass = dr.getValue(1).toString();
 				if (userNo.equals(fk_emp) 
 						&& (isPass.equals("0") || isPass.equals("80") ||isPass.equals("90")) )
 				{

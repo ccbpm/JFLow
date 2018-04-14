@@ -644,12 +644,17 @@ public class WF_MyFlow extends WebContralBase {
 	}
 
 	public String MyFlow_Init(){
+		
+		String userNo=BP.Web.WebUser.getNo();
+		if (DataType.IsNullOrEmpty(userNo)==true)
+			return "err@当前登录信息丢失,请重新登录.";
+		
 
 		if (this.getWorkID() != 0) {
 			// 判断是否有执行该工作的权限.
 			boolean isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(
 					this.getFK_Flow(), this.getFK_Node(),
-					this.getWorkID(), BP.Web.WebUser.getNo());
+					this.getWorkID(),userNo );
 			if (isCanDo == false) {
 				return "err@您不能执行当前工作.";
 			}
@@ -1642,7 +1647,21 @@ public class WF_MyFlow extends WebContralBase {
 		BP.WF.Dev2Interface.Flow_Focus(this.getWorkID());
 		return "设置成功.";
 	}
-	
+	/// <summary>
+    /// 删除流程
+    /// </summary>
+    /// <returns></returns>
+    public String DeleteFlow()
+    {
+        try
+        {
+            return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(this.getFK_Flow(), this.WorkID,true);
+        }
+        catch (Exception ex)
+        {
+            return "err@"+ex.getMessage();
+        }
+    }
 	public String GenerWorkNode()
 	{
 		 String json = "";

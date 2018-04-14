@@ -2247,14 +2247,14 @@ public class Dev2Interface
 			// 如果不是删除流程注册表. 
 			Paras ps = new Paras();
 			String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-			ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
+			ps.SQL = "SELECT T.FK_Flow as \"FK_Flow\", T.FlowName as \"FlowName\", COUNT(T.WorkID) as \"Num\" FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
 			return BP.DA.DBAccess.RunSQLReturnTable(ps);
 		}
 		else
 		{
 			Paras ps = new Paras();
 			String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-			ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM V_FlowData T WHERE T.FlowEmps LIKE '%@" + WebUser.getNo() + "@%'  AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + "   GROUP BY T.FK_Flow,T.FlowName";
+			ps.SQL = "SELECT T.FK_Flow as \"FK_Flow\", T.FlowName as \"FlowName\", COUNT(T.WorkID) as \"Num\" FROM V_FlowData T WHERE T.FlowEmps LIKE '%@" + WebUser.getNo() + "@%'  AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + "   GROUP BY T.FK_Flow,T.FlowName";
 			return BP.DA.DBAccess.RunSQLReturnTable(ps);
 		}
 	}
@@ -3175,12 +3175,12 @@ public class Dev2Interface
 		if (WebUser.getIsAuthorize())
 		{
 			WFEmp emp = new WFEmp(BP.Web.WebUser.getNo());
-			ps.SQL = "SELECT a.FK_Flow,a.FlowName, Count(a.WorkID) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN " + emp.getAuthorFlows() + " GROUP BY A.FK_Flow, A.FlowName";
+			ps.SQL = "SELECT a.FK_Flow as \"FK_Flow\" ,a.FlowName as \"FlowName\", Count(a.WorkID) as \"Num\" FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN " + emp.getAuthorFlows() + " GROUP BY A.FK_Flow, A.FlowName";
 			ps.Add("FK_Emp", WebUser.getNo());
 		}
 		else
 		{
-			ps.SQL = "SELECT a.FK_Flow,a.FlowName, Count(a.WorkID) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0)  GROUP BY A.FK_Flow, A.FlowName";
+			ps.SQL = "SELECT a.FK_Flow  as \"FK_Flow\" ,a.FlowName as \"FlowName\", Count(a.WorkID) as \"Num\" FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0)  GROUP BY A.FK_Flow, A.FlowName";
 			ps.Add("FK_Emp", WebUser.getNo());
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);

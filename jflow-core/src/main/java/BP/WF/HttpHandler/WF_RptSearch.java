@@ -21,28 +21,15 @@ public class WF_RptSearch extends WebContralBase{
 
 		//我发起的流程.
 		String sql = "";
-		sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + BP.Web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
+		sql = "select FK_Flow \"FK_Flow\", FlowName \"FlowName\",Count(WorkID) as \"Num\" FROM WF_GenerWorkFlow  WHERE Starter='" + BP.Web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Start";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
-			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
-			dt.Columns.get("NUM").ColumnName = "Num";
-		}
 		ds.Tables.add(dt);
 
 		//待办.
-		sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + BP.Web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
+		sql = "select FK_Flow \"FK_Flow\", FlowName \"FlowName\",Count(WorkID) as \"Num\" FROM wf_empworks  WHERE FK_Emp='" + BP.Web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dtTodolist = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtTodolist.TableName = "Todolist";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			dtTodolist.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
-			dtTodolist.Columns.get("FLOWNAME").ColumnName = "FlowName";
-			dtTodolist.Columns.get("NUM").ColumnName = "Num";
-		}
-
 		ds.Tables.add(dtTodolist);
 
 		//正在运行的流程.
@@ -54,6 +41,7 @@ public class WF_RptSearch extends WebContralBase{
 		//归档的流程.
 		DataTable dtOK = BP.WF.Dev2Interface.DB_TongJi_FlowComplete();
 		dtOK.TableName = "OK";
+	
 		ds.Tables.add(dtOK);
 
 		//返回结果.

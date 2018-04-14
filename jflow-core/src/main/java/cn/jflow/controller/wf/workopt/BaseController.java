@@ -74,7 +74,17 @@ public class BaseController {
 		// ViewState["PageIdx",value;
 		// }
 	}
-
+	
+	public int getPageSize() {
+		String str = ContextHolderUtils.getRequest().getParameter("PageSize");
+		if (str == null || str.equals("") || str.equals("null"))
+			return 10;
+		return Integer.parseInt(str);
+		// set
+		// {
+		// ViewState["PageIdx",value;
+		// }
+	}
 	public String getFK_MapExt() {
 		return ContextHolderUtils.getRequest().getParameter("FK_MapExt");
 	}

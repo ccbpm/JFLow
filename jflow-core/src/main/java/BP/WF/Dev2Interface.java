@@ -3112,6 +3112,7 @@ public class Dev2Interface
 				}
 			}
 		}
+		
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
@@ -3155,8 +3156,8 @@ public class Dev2Interface
 			dt.Columns.get("TSPAN").ColumnName = "TSpan";
 			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
 			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
-			dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
-			dt.Columns.get("CWORKID").ColumnName = "CWorkID";
+			//dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
+			//dt.Columns.get("CWORKID").ColumnName = "CWorkID";
 
 		}
 		return dt;

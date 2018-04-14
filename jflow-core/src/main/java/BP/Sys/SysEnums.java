@@ -37,7 +37,9 @@ public class SysEnums extends Entities
 	}
 	public final String GenerCaseWhenForOracle(String enName, String mTable, String key, String field, String enumKey, int def)
 	{
+		
 		String sql = (String)Cash.GetObjFormApplication("ESQL" + enName +mTable+ key + "_" + enumKey, null);
+		
 		// string sql = "";
 		if (sql != null)
 		{
@@ -46,7 +48,10 @@ public class SysEnums extends Entities
 
 		if (this.size() == 0)
 		{
-			throw new RuntimeException("@枚举值" + enumKey + "已被删除。");
+			//this.Retrieve(SysEnumAttr.EnumKey, key);
+			
+			//this.size() == 0
+			throw new RuntimeException("@枚举值[" + enumKey + "]已被删除,无法生成期望的SQL.");
 		}
 
 		sql = " CASE NVL(" + mTable + field+","+def+")";
@@ -140,6 +145,15 @@ public class SysEnums extends Entities
 
 			try
 			{
+				SysEnumMain en =new SysEnumMain();
+				en.setNo(enumKey);
+				
+				if (en.RetrieveFromDBSources()==1)
+				{
+					this.RegIt(enumKey, en.getCfgVal());
+					return;
+				}
+				
 				BP.Sys.XML.EnumInfoXml xml = new BP.Sys.XML.EnumInfoXml(enumKey);
 				this.RegIt(enumKey, xml.getVals());
 			}
@@ -220,8 +234,9 @@ public class SysEnums extends Entities
 
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SysEnumAttr.EnumKey, enumKey);
-		qo.addAnd();
-		qo.AddWhere(SysEnumAttr.Lang, BP.Web.WebUser.getSysLang());
+	//	qo.addAnd();
+	//	qo.AddWhere(SysEnumAttr.Lang, BP.Web.WebUser.getSysLang());
+		
 		qo.addOrderBy(SysEnumAttr.IntKey);
 		if (qo.DoQuery() == 0)
 		{

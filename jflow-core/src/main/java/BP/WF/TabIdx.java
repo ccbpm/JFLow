@@ -49,11 +49,11 @@ public class TabIdx extends BaseModel {
             idx++;
             Pub1.append(AddTR(is1));
             this.Pub1.append(AddTDIdx(idx));
-            this.Pub1.append(AddTD(dr.get("keyofen").toString()));
-            this.Pub1.append(AddTD(dr.get("name").toString()));
-            this.Pub1.append(AddTD(dr.get("idx").toString()));
-            this.Pub1.append(AddTD("<a href='TabIdx.jsp?DoType=Up&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + dr.get("keyofen").toString() + "' ><img src='"+getBasePath()+"WF/Img/Btn/Up.GIF' border=0></a>"));           																																			
-            this.Pub1.append(AddTD("<a href='TabIdx.jsp?DoType=Down&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + dr.get("keyofen").toString() + "' ><img src='"+getBasePath()+"WF/Img/Btn/Down.gif' border=0></a>"));
+            this.Pub1.append(AddTD(dr.getValue("keyofen").toString()));
+            this.Pub1.append(AddTD(dr.getValue("name").toString()));
+            this.Pub1.append(AddTD(dr.getValue("idx").toString()));
+            this.Pub1.append(AddTD("<a href='TabIdx.jsp?DoType=Up&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + dr.getValue("keyofen").toString() + "' ><img src='"+getBasePath()+"WF/Img/Btn/Up.GIF' border=0></a>"));           																																			
+            this.Pub1.append(AddTD("<a href='TabIdx.jsp?DoType=Down&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + dr.getValue("keyofen").toString() + "' ><img src='"+getBasePath()+"WF/Img/Btn/Down.gif' border=0></a>"));
             this.Pub1.append(AddTREnd());
         }
         this.Pub1.append(AddTableEnd());

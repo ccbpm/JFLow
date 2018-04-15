@@ -23,7 +23,7 @@ public class RepBill extends BP.DTS.DataIOEn
 		for (DataRow dr : dt.Rows)
 		{
 			String file = SystemConfig.getPathOfCyclostyleFile()
-					+ dr.get("URL").toString() + ".rtf";
+					+ dr.getValue("URL").toString() + ".rtf";
 			msg += RepBill.RepairBill(file);
 		}
 		try

@@ -1362,7 +1362,7 @@ public class MapData extends EntityNoName
 		//排除已经存在的列. 把所有的列都输出给前台，让前台根据类型分拣.
 		for (DataRow dr : dt.Rows)
 		{
-			String key = (String) dr.get("FName");
+			String key = (String) dr.getValue("FName");
 			if (attrs.Contains(MapAttrAttr.KeyOfEn, key) == true)
 			{
 				continue;
@@ -1374,10 +1374,10 @@ public class MapData extends EntityNoName
 			}
 
 			DataRow mydr = mydt.NewRow();
-			mydr.setValue("FName", dr.get("FName")); 
-			mydr.setValue("FType", dr.get("FType"));
-			mydr.setValue("FLen", dr.get("FLen"));
-			mydr.setValue("FDesc", dr.get("FDesc"));
+			mydr.setValue("FName", dr.getValue("FName")); 
+			mydr.setValue("FType", dr.getValue("FType"));
+			mydr.setValue("FLen", dr.getValue("FLen"));
+			mydr.setValue("FDesc", dr.getValue("FDesc"));
 			mydt.Rows.add(mydr);
 		}
 		return mydt;
@@ -2611,9 +2611,9 @@ public class MapData extends EntityNoName
 		for (DataRow dr : Sys_MapDtl.Rows)
 		{
 			//ids += ",'" + dr.get("No") + "'";
-			whereFK_MapData += " OR FK_MapData='" + dr.get("No") + "' ";
-			whereEnsName += " OR EnName='" + dr.get("No") + "' ";
-			whereNo += " OR No='" + dr.get("No") + "' ";
+			whereFK_MapData += " OR FK_MapData='" + dr.getValue("No") + "' ";
+			whereEnsName += " OR EnName='" + dr.getValue("No") + "' ";
+			whereNo += " OR No='" + dr.getValue("No") + "' ";
 		}
 
 		//String where = " FK_MapData IN (" + ids + ")";

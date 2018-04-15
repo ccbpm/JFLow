@@ -169,23 +169,7 @@ public class DataRow extends LinkedHashMap<String, Object>
 	 */
 	public Object getValue(String columnName)
 	{
-		Object obj = this.get(columnName);
-		if (obj == null)
-		{
-			obj = "";
-		}
-		return obj;
-	}
-	
-	/**区分大小写
-	 * 取得該列該行的值
-	 * 
-	 * @param columnName
-	 *            行名稱
-	 * @return Object
-	 */
-	public Object getValue_2017(String columnName)
-	{
+		 
 		Object obj = this.get(columnName);
 		if (obj == null)
 		{

@@ -959,29 +959,29 @@ public class WF extends WebContralBase
 		DataTable dt = new DataTable();
 		for (DataRow dr : dtMapAttr.Rows)
 		{
-			String lgType = dr.get("LGType").toString();
+			String lgType = dr.getValue("LGType").toString();
 			if (!lgType.equals("2"))
 			{
 				continue;
 			}
 
-			String UIIsEnable = dr.get("UIVisible").toString();
+			String UIIsEnable = dr.getValue("UIVisible").toString();
 			if (UIIsEnable.equals("0"))
 			{
 				continue;
 			}
 
-			String uiBindKey = dr.get("UIBindKey").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
 			if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true)
 			{
-				String myPK = dr.get("MyPK").toString();
+				String myPK = dr.getValue("MyPK").toString();
 				//如果是空的
 				//   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.get("KeyOfEn").toString();
-			String fk_mapData = dr.get("FK_MapData").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理下拉框数据范围. for 小杨.
@@ -1002,8 +1002,8 @@ public class WF extends WebContralBase
 				for (DataRow dllRow : dt.Rows)
 				{
 					DataRow drDll = dt_FK_Dll.NewRow();
-					drDll.setValue2017("No",dllRow.getValue_2017("No"));
-					drDll.setValue2017("Name", dllRow.getValue_2017("Name"));
+					drDll.setValue2017("No",dllRow.getValue("No"));
+					drDll.setValue2017("Name", dllRow.getValue("Name"));
 					dt_FK_Dll.Rows.AddRow(drDll);
 				}
 				myds.Tables.add(dt_FK_Dll);

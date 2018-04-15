@@ -385,7 +385,7 @@ public class Json
 			for (DataColumn column : table.Columns)
 			{
 				jsonString += "\"" + ToJson(column.ColumnName.toUpperCase()) + "\":";
-				Object obj = drc.get(i).getValue_2017(column.ColumnName);
+				Object obj = drc.get(i).getValue(column.ColumnName);
 				if (column.DataType == java.util.Date.class
 						|| column.DataType == String.class)
 				{

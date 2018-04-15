@@ -885,13 +885,13 @@ public class CCFormAPI extends Dev2Interface
 
         for (DataRow dr : Sys_MapAttr.Rows)
         {
-            String lgType = dr.get("LGType").toString();
+            String lgType = dr.getValue("LGType").toString();
             //不是枚举/外键字段
             if (lgType.equals("0"))
                 continue;
 
-            String uiBindKey = dr.get("UIBindKey").toString();
-            String mypk = dr.get("MyPK").toString();
+            String uiBindKey = dr.getValue("UIBindKey").toString();
+            String mypk = dr.getValue("MyPK").toString();
 
            // #region 枚举字段
             if (lgType.equals("1"))
@@ -910,12 +910,12 @@ public class CCFormAPI extends Dev2Interface
             //#endregion
 
             //#region 外键字段
-            String UIIsEnable = dr.get("UIIsEnable").toString();
+            String UIIsEnable = dr.getValue("UIIsEnable").toString();
             if (UIIsEnable.equals("0")) //字段未启用
                 continue;
 
             // 检查是否有下拉框自动填充。
-            String keyOfEn = dr.get("KeyOfEn").toString();
+            String keyOfEn = dr.getValue("KeyOfEn").toString();
 
            // #region 处理下拉框数据范围. for 小杨.
         	Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
@@ -1177,15 +1177,15 @@ public class CCFormAPI extends Dev2Interface
 
 		for (DataRow dr : Sys_MapAttr.Rows)
 		{
-			String lgType = dr.getValue_2017("LGType").toString();
+			String lgType = dr.getValue("LGType").toString();
 			//不是枚举/外键字段
 			if (lgType.equals("0"))
 			{
 				continue;
 			}
 
-			String uiBindKey = dr.getValue_2017("UIBindKey").toString();
-			String mypk = dr.getValue_2017("MyPK").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
+			String mypk = dr.getValue("MyPK").toString();
 
 			///#region 枚举字段
 			if (lgType.equals("1"))
@@ -1213,14 +1213,14 @@ public class CCFormAPI extends Dev2Interface
 			///#endregion
 
 			///#region 外键字段
-			String UIIsEnable = dr.getValue_2017("UIIsEnable").toString();
+			String UIIsEnable = dr.getValue("UIIsEnable").toString();
 			if (UIIsEnable.equals("0")) //字段未启用
 			{
 				continue;
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.getValue_2017("KeyOfEn").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
 
 			///#region 处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);

@@ -5724,7 +5724,7 @@ public class WorkNode {
                 //组装到达的人员.
                 for (DataRow dr : dt.Rows)
                 {
-                    toEmpIDs += dr.get("No").toString();
+                    toEmpIDs += dr.getValue("No").toString();
                 }
             
 

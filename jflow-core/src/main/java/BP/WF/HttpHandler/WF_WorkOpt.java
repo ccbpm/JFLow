@@ -346,8 +346,10 @@ public class WF_WorkOpt extends WebContralBase {
                    
                    row.setValue("RDT",  tk.getRDT());
                    
-                   //row["T_NodeIndex"] = tk.Row["T_NodeIndex"];
-                   //row["T_CheckIndex"] = tk.Row["T_CheckIndex"];
+                   row.setValue("T_NodeIndex",  0);
+                   row.setValue("T_CheckIndex",  0);
+                   
+                    
 
                    if (isReadonly == false 
                 		   && tk.getEmpFrom() == WebUser.getNo() 
@@ -1315,11 +1317,21 @@ public class WF_WorkOpt extends WebContralBase {
 
 	public String Return_Init() {
 		
+		try
+		{
+			
 		DataTable dt = BP.WF.Dev2Interface.DB_GenerWillReturnNodes(this.getFK_Node(), this.getWorkID(), this.getFID());
+		
+		if (dt.Rows.size()==0)
+			return "err@没有获取到应该退回到的节点.";
 
      	String str= BP.Tools.Json.ToJson(dt);
-     //	String str2= BP.Tools.Json.ToJson(dt);		
+    	
 			return str;
+		}catch(Exception ex)
+		{
+		  return "err@"+ex.getMessage();
+		}
 		
 	}
 

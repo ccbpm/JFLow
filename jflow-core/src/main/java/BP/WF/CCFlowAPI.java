@@ -836,22 +836,22 @@ public class CCFlowAPI
 			}
 			for (DataRow dr : dtMapAttr.Rows)
 			{
-				String lgType = dr.get("LGType").toString();
+				String lgType = dr.getValue("LGType").toString();
 				if (!lgType.equals("2"))
 				{
 					continue;
 				}
 
-				String UIIsEnable = dr.get("UIIsEnable").toString();
+				String UIIsEnable = dr.getValue("UIIsEnable").toString();
 				if (UIIsEnable.equals("0"))
 				{
 					continue;
 				}
 
-				String uiBindKey = dr.get("UIBindKey").toString();
+				String uiBindKey = dr.getValue("UIBindKey").toString();
 				if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true)
 				{
-					String myPK = dr.get("MyPK").toString();
+					String myPK = dr.getValue("MyPK").toString();
 					//如果是空的
 					throw new RuntimeException("@属性字段数据不完整，流程:" + fl.getNo() + fl.getName() + ",节点:" + nd.getNodeID() + nd.getName() + ",属性:" + myPK + ",的UIBindKey IsNull ");
 				}

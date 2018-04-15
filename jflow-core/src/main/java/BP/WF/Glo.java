@@ -5554,7 +5554,7 @@ public class Glo
 						}
 						else
 						{
-								ht.put(row.getTable().Columns.get(i).ColumnName, row.getValue_2017(row.getTable().Columns.get(i).ColumnName));
+								ht.put(row.getTable().Columns.get(i).ColumnName, row.getValue(row.getTable().Columns.get(i).ColumnName));
 						}
 
 					}

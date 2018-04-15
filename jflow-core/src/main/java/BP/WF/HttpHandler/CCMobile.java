@@ -275,12 +275,12 @@ public class CCMobile extends WebContralBase
 				DataTable dtTSpanNum = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				for (DataRow drEnum : dtTSpan.Rows)
 				{
-					String no = drEnum.getValue_2017("IntKey").toString();
+					String no = drEnum.getValue("IntKey").toString();
 					for (DataRow dr : dtTSpanNum.Rows)
 					{
-						if (dr.getValue_2017("No").toString().equals(no))
+						if (dr.getValue("No").toString().equals(no))
 						{
-							drEnum.setValue2017("Lab", drEnum.getValue_2017("Lab").toString() + "(" + dr.getValue_2017("Num") + ")");
+							drEnum.setValue2017("Lab", drEnum.getValue("Lab").toString() + "(" + dr.getValue("Num") + ")");
 							break;
 						}
 					}

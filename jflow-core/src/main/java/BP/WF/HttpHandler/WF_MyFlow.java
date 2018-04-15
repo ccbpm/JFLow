@@ -2653,7 +2653,7 @@ public class WF_MyFlow extends WebContralBase {
 		String keys[] = SKey.split(",");
 		for(DataRow rw : dt.Rows){
 			for(String st : keys){
-				if(st.replaceAll("'", "").equals(rw.getValue_2017("No")))
+				if(st.replaceAll("'", "").equals(rw.getValue("No")))
 					dataRowList.add(rw);
 			}
 		}
@@ -2666,7 +2666,7 @@ public class WF_MyFlow extends WebContralBase {
 		for (int i = 0; i < drArr.length; i++)
 		{
 			DataRow row = drArr[i];
-			Nos += row.getValue_2017("No")+",";
+			Nos += row.getValue("No")+",";
 		}
 		return DotNetToJavaStringHelper.trimEnd(Nos, ',');
 	}

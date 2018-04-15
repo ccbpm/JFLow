@@ -564,7 +564,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		java.util.Hashtable ht = new java.util.Hashtable();
 		for (DataRow dr : dt.Rows)
 		{
-			ActionType at =  ActionType.forValue( Integer.parseInt( dr.getValue_2017(TrackAttr.ActionType ).toString() ));
+			ActionType at =  ActionType.forValue( Integer.parseInt( dr.getValue(TrackAttr.ActionType ).toString() ));
 
 			String tag = dr.getValue(TrackAttr.Tag).toString(); //标识.
 			String mypk = dr.getValue(TrackAttr.MyPK).toString(); //主键.

@@ -1089,7 +1089,7 @@ public class SFDBSrc extends EntityNoName
 
 			for (DataRow dr : allTables.Rows)
 			{
-				String no = dr.get("No").toString();
+				String no = dr.getValue("No").toString();
 
 				if (no.contains("WF_") || no.contains("Track") || no.contains("Sys_") || no.contains("Demo_"))
 				{
@@ -1103,8 +1103,8 @@ public class SFDBSrc extends EntityNoName
 					
 
 //				DataRow mydr = dt.NewRow();
-//				mydr.setValue("No", dr.get("No"));
-//				mydr.setValue("Name", dr.get("Name"));
+//				mydr.setValue("No", dr.getValue("No"));
+//				mydr.setValue("Name", dr.getValue("Name"));
 //				dt.Rows.add(mydr);
 			}
 

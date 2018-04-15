@@ -123,6 +123,7 @@ public abstract class Entity extends EnObj
 	 */
 	public final DataTable ToDataTableField(String tableName)
 	{
+		/*
 		String json=this.ToJson();
 		
 		DataTable dt = this.getGetNewEntities().ToEmptyTableField();
@@ -164,7 +165,67 @@ public abstract class Entity extends EnObj
 		dt.Rows.add(dr);
 		
 		json=this.ToJson();
+		return dt; */
+		 
+		DataTable dt = this.getGetNewEntities().ToEmptyTableField();
+		dt.TableName = tableName;
+
+		//增加参数列.
+		if (this.getRow().containsKey("AtPara") == true)
+		{
+			/*如果包含这个字段,就说明他有参数,把参数也要弄成一个列.*/
+			AtPara ap = this.getatPara();
+            for (String key : ap.getHisHT().keySet())
+            {
+                if (dt.Columns.contains(key) == true)
+                    continue;
+
+                dt.Columns.Add(key, System.class);
+            }
+		}
+
+		DataRow dr = dt.NewRow();
+		for (Attr attr : this.getEnMap().getAttrs())
+		{
+			if (attr.getMyDataType() == DataType.AppBoolean)
+			{
+				if (this.GetValIntByKey(attr.getKey()) == 1)
+					dr.setValue(attr.getKey(), "1");
+				else
+					dr.setValue(attr.getKey(),"0") ;					 
+				continue;
+			}
+
+			/*如果是外键 就要去掉左右空格。
+			 *  */
+			if (attr.getMyFieldType() == FieldType.FK
+				|| attr.getMyFieldType() == FieldType.PKFK)
+			{
+				dr.setValue(attr.getKey(), this.GetValByKey(attr.getKey()).toString().trim());
+			}
+			else
+			{
+
+				String obj = this.GetValStrByKey(attr.getKey());
+				if (obj == null && attr.getIsNum())
+					obj = "0";
+
+				dr.setValue(attr.getKey(),obj);
+			}
+		}
+
+		/*如果包含这个字段*/
+		if (this.getRow().containsKey("AtPara") == true)
+		{
+			
+			AtPara ap = this.getatPara();
+			for (String key : ap.getHisHT().keySet())
+				dr.setValue(key, ap.getHisHT().get(key) );
+		}
+
+		dt.Rows.add(dr);
 		return dt;
+		
 	}
 	
 	// 关于database 操作

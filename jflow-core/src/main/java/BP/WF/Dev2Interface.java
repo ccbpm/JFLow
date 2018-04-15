@@ -4507,6 +4507,13 @@ public class Dev2Interface
 		String checkinfo = dt.Rows.get(0).getValue(0).toString();
 		return checkinfo;
 	}
+	public static String GetCheckInfo(String flowNo, long workId, int nodeFrom, String isNullAsVal)
+	{
+		String s= GetCheckInfo(  flowNo,   workId,   nodeFrom);
+		if (DataType.IsNullOrEmpty(s)==true)
+			return isNullAsVal;
+		return s;		
+	}
 	/** 
 	 获取队列节点Track 表中的审核的信息(队列节点中处理人 共享同一处理意见)
 	 

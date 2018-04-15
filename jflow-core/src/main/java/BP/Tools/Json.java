@@ -1,5 +1,6 @@
 package BP.Tools;
 
+import java.awt.geom.Arc2D.Float;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -14,6 +15,7 @@ import BP.DA.DataRow;
 import BP.DA.DataRowCollection;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.Sys.SystemConfig;
 //import BP.Tools.JsonTest.NullStringAdapter;
 import BP.WF.DotNetToJavaStringHelper;
@@ -304,7 +306,7 @@ public class Json
 	{
 		String jsonString = "[";
 		
-		
+		//先给 oldName 给值.
 		for (DataColumn column : table.Columns)
 		{ 
 			if (column.oldColumnName==null  )
@@ -325,18 +327,32 @@ public class Json
 				if (null == obj )
 				{
 					jsonString += "\"\","; 
+					continue;					
 					
-				} else
-				{
-					
-					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
-				}
+				} 
 				
-				/*
 				if (column.DataType == java.util.Date.class || column.DataType == String.class)
 				{
+					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
+					continue;
+				} 
 				
-				} else
+				
+				String str=obj.toString();
+				if (str.equals("true") || str.equals("false"))
+				{
+					jsonString +=    str + ",";	
+					continue;
+				}
+				
+			 
+				
+				
+				jsonString +=   "\""+ str + "\",";
+				 	 
+				
+				/*
+				
 				{
 					if (null != obj && !"".equals(obj))
 					{
@@ -430,7 +446,9 @@ public class Json
 		   
 		if (StringHelper.isNullOrEmpty(value))
 			return "";
-		  
+
+ 
+			
 		String temstr;
 		temstr = value;
 		
@@ -512,10 +530,12 @@ public class Json
 			dt.Columns.Add(new DataColumn("Name", String.class));
 			for (Object key : ht.keySet())
 			{
-				if (key == null || "".equals(key.toString()))
-				{
+				if (key==null)
 					continue;
-				}
+				
+				if (DataType.IsNullOrEmpty(key.toString()) ==true)				
+					continue;
+				
 
 				DataRow dr = dt.NewRow();
 				dr.setValue("No", key);

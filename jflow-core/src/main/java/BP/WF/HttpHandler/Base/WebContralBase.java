@@ -130,8 +130,7 @@ public abstract class WebContralBase extends BaseController {
 			if (str==null || "".equals(str))
 				return "err@方法:"+methodName+"没有翻译..";
 			
-			return str;			
-			
+			return str;	 
 		}
 
 		// 执行该方法.

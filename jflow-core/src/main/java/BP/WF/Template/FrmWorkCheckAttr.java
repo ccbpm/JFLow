@@ -106,5 +106,7 @@ public class FrmWorkCheckAttr extends EntityNoAttr
 	*/
 	public static final String FWCOrderModel = "FWCOrderModel";
 	public static final String FWC_H = "FWC_H";
+	public static final String FWCIsShowReturnMsg = "FWCIsShowReturnMsg";
+	
 	
 }

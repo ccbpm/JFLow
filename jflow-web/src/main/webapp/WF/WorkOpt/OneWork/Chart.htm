@@ -94,14 +94,10 @@
                 alert(re);
                 return;
             }
-            
-            alert(data);
-            
+
+
 
             jdata = $.parseJSON(data);
-            
-            
-            
 
             drawStart(jdata);
 
@@ -526,10 +522,10 @@
                 return '';
             }
 
-            time=time.replace(/-/g,':').replace(' ',':');
-            time=time.split(':');
-            
-            return time[0] + "年" + (time[1]-1) + "月" + time[2] + "日 " + time[3];
+            time = time.replace(/-/g, ':').replace(' ', ':');
+            time = time.split(':');
+
+            return time[0] + "年" + (time[1] - 1) + "月" + time[2] + "日 " + time[3];
         }
 
         function iconDrag() {

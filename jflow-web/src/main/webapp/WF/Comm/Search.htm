@@ -34,7 +34,6 @@
         var ur = new Entity("BP.Sys.UserRegedit");
         ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
         ur.RetrieveFromDBSources();
-        var count =  ur.GetPara("RecCount");
 
         var mapBase;
 
@@ -248,12 +247,11 @@
             }
 
             data = JSON.parse(data);
-
             //当前用户页面信息.
             var ur = new Entity("BP.Sys.UserRegedit");
             ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
             ur.RetrieveFromDBSources();
-
+           
             count = ur.GetPara("RecCount");
             return data;
         }

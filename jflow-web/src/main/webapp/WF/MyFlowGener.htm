@@ -243,7 +243,6 @@
             handler.AddPara("FK_Flow", GetQueryString("FK_Flow"));
             handler.AddPara("FK_Node", GetQueryString("FK_Node"));
             handler.AddPara("WorkID", GetQueryString("WorkID"));
-            
             var str = handler.DoMethodReturnString("DeleteFlow");
 
             alert(str);

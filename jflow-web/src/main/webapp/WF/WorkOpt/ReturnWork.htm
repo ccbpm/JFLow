@@ -109,7 +109,7 @@
             var selectedNodeID = $('#DDL_Nodes').val();
 
 
-            var val = $('#TB_Doc').val();
+            var val = escape($('#TB_Doc').val());
             if (val == null || val == "" || val == undefined) {
                 alert("请输入退回原因.");
                 return;
@@ -127,7 +127,7 @@
                 type: 'post',
                 async: true,
                 data: {},
-                url: Handler + "?DoType=DoReturnWork&FK_Flow=" + pageData.FK_Flow + "&WorkID=" + pageData.WorkID + "&FID=" + pageData.FID + "&FK_Node=" + pageData.FK_Node + "&ReturnToNode=" + selectedNodeID + '&ReturnInfo=' + $('#TB_Doc').val() + "&IsBack=" + isBack + "&m=" + Math.random(),
+                url: Handler + "?DoType=DoReturnWork&FK_Flow=" + pageData.FK_Flow + "&WorkID=" + pageData.WorkID + "&FID=" + pageData.FID + "&FK_Node=" + pageData.FK_Node + "&ReturnToNode=" + selectedNodeID + '&ReturnInfo=' + escape($('#TB_Doc').val()) + "&IsBack=" + isBack + "&m=" + Math.random(),
                 dataType: 'html',
                 success: function (data) {
 

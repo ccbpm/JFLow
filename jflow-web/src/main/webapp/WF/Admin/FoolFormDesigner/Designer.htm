@@ -601,7 +601,6 @@
                 if (mypk == null || mypk == "undefined")
                     mypk = GetQueryString("FK_Node");
 
-
                 var url = 'CopyFieldFromNode.htm?DoType=AddF&FK_Node=' + mypk;
 
                 OpenEasyUiDialog(url, "eudlgframe", '复制', 800, 500, "icon-edit", true, null, null, null, function () {
@@ -613,17 +612,19 @@
             /* 审核组件模式 */
             function GroupFieldFWCNew() {
 
-                var val = prompt('请输入分组名称,比如:部门主管审核', '我的字段分组');
+                var val = prompt('请输入分组名称,比如:部门主管审核', '部门主管审核');
                 if (val == null || val == undefined)
                     return;
 
-                var prix = prompt('请输入分组前缀,比如:BM', '我的字段分组');
-                if (prix == null || prix == undefined)
+                var prix = prompt('请输入分组前缀,比如:输入BM,系统就会创建 BM_Checker,BM_RDT,BM_Note三个字段', '');
+                if (prix == null || prix == undefined) 
                     return;
+                
 
                 var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
                 handler.AddPara("TB_Check_Name", val);
                 handler.AddPara("TB_Check_No", prix);
+                handler.AddPara("FK_MapData", GetQueryString("FK_MapData"));
 
                 var data = handler.DoMethodReturnString("GroupField_SaveCheck");
                 alert(data);
@@ -1126,8 +1127,18 @@
                                                                                             class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-new'">新建字段</a>
                             <a href="javascript:HidAttr();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-hidden'">
                                 隐藏字段
-                            </a> <a href="javascript:GroupFieldNew();" class="easyui-linkbutton"
-                                    data-options="plain:true,iconCls:'icon-groupbar'">新建字段分组</a> <a href="javascript:NewMapDtl();"
+                            </a>
+                            
+                             <a href="javascript:GroupFieldNew();" class="easyui-linkbutton"
+                                    data-options="plain:true,iconCls:'icon-groupbar'">新建字段分组</a>
+
+                                    
+                             <a href="javascript:GroupFieldFWCNew();" class="easyui-linkbutton"
+                                    data-options="plain:true,iconCls:'icon-groupbar'">新建审核分组</a>
+
+
+                                    
+                                     <a href="javascript:NewMapDtl();"
                                                                                                     class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-dtl'">新建从表</a>
                             <a href="javascript:NewAth();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-attachment'">
                                 新建附件组件

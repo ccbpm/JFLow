@@ -506,18 +506,13 @@ public class WF_CommEntity extends WebContralBase {
             }
             //#endregion 增加 上方法.
             
-            if (1==2)
-            {
-            	
-            }
-             
-
+           
             //增加方法。
             ds.Tables.add(dtM);
 
            String str= BP.Tools.Json.ToJson(ds);
             
-         //   BP.DA.DataType.WriteFile("C:\\AA.TXT", str);
+            BP.DA.DataType.WriteFile("C:\\EntityOnly_Init.TXT", str);
             
             return str;
             

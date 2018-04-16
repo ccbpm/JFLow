@@ -273,6 +273,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentAttr.Exts, value);
 	}
+	/*
 	public final String getSaveTo()
 	{
 		String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
@@ -285,7 +286,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	public final void setSaveTo(String value)
 	{
 		this.SetValByKey(FrmAttachmentAttr.SaveTo, value);
-	}
+	}*/
 	/** 
 	 附件编号
 	 
@@ -697,7 +698,8 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddTBString(FrmAttachmentAttr.Name, null, "附件名称", true, false, 0, 50, 20);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "文件格式(*.*,*.doc)", true, false, 0, 50, 20, true, null);
 
-		map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20, true, null);
+	//	map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20, true, null);
+		
 		map.AddTBString(FrmAttachmentAttr.Sort, null, "类别(可为空)", true, false, 0, 500, 20, true, null);
 		map.AddBoolean(FrmAttachmentAttr.IsTurn2Hmtl, false, "是否转换成html(方便手机浏览)", true, true, true);
 

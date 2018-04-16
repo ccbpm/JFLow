@@ -934,6 +934,19 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         gf.Insert();
         return "创建成功..";
     }
+    
+    /// <summary>
+    /// 保存分组
+    /// </summary>
+    /// <returns></returns>
+    public final String GroupField_SaveCheck()
+    {
+    	String lab = this.GetRequestVal("TB_Check_Name");
+    	String prx = this.GetRequestVal("TB_Check_No");
+        BP.Sys.CCFormAPI.CreateCheckGroup(this.getFK_MapData(), lab, prx);
+        return "创建成功...";
+    }
+    
 
 	/** 
 	 保存空白的分组.
@@ -992,18 +1005,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		return "保存成功";
 	}
-	/** 
-	 保存分组
 	 
-	 @return 
-	*/
-	public final String GroupField_SaveCheck()
-	{
-		String lab = this.GetValFromFrmByKey("TB_Check_Name");
-		String prx = this.GetValFromFrmByKey("TB_Check_No");
-		BP.Sys.CCFormAPI.CreateCheckGroup(this.getFK_MapData(), lab, prx);
-		return "创建成功...";
-	}
 	/** 
 	 
 	 删除分组

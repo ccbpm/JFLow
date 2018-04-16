@@ -530,6 +530,7 @@ public class CCFormAPI
 		GroupField gf = new GroupField();
 		gf.setLab(groupName);
 		gf.setEnName(frmID);
+		gf.setFrmID(frmID);
 		gf.Insert();
 
 		MapAttr attr = new MapAttr();

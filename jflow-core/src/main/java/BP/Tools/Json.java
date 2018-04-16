@@ -345,8 +345,7 @@ public class Json
 					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
 					continue;
 				} 
-				
-				
+				 
 				
 				String str=obj.toString();
 				if (str.equals("true") || str.equals("false"))
@@ -394,7 +393,7 @@ public class Json
 			jsonString += "{";
 			for (DataColumn column : table.Columns)
 			{
-				jsonString += "\"" + ToJson(column.ColumnName.toUpperCase()) + "\":";
+				jsonString +=  ToJson(column.ColumnName.toUpperCase()) + ":";
 				Object obj = drc.get(i).getValue(column.ColumnName);
 				if (column.DataType == java.util.Date.class
 						|| column.DataType == String.class)
@@ -456,9 +455,7 @@ public class Json
 		   
 		if (StringHelper.isNullOrEmpty(value))
 			return "";
-
-		  
-		
+ 
 		StringBuffer sb = new StringBuffer();         
         for (int i=0; i< value.length(); i++) {   
             char c = value.charAt(i); 
@@ -491,7 +488,7 @@ public class Json
                  sb.append(c);      
              }   
          }       
-        return sb.toString();    
+        return sb.toString().trim();    
         
  
 			/*

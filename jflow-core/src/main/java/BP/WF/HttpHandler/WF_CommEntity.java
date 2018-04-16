@@ -297,15 +297,17 @@ public class WF_CommEntity extends WebContralBase {
                 if (vals.length == 0)
                     continue;
 
-                DataRow dr = dtGroups.NewRow();
-                dr.setValue( "OID",vals[0]);
-                dr.setValue( "Lab",vals[1]);
+                DataRow dr = dtGroups.NewRow();                
+                
+                dr.setValue( "OID",vals[0].trim());
+                dr.setValue( "Lab",vals[1].trim());
                  
                 if (vals.length == 3)
-                	dr.setValue( "Tip",vals[2]);
+                	dr.setValue( "Tip",vals[2].trim());
                  
                 dtGroups.Rows.add(dr);
             }
+            
             ds.Tables.add(dtGroups);
 
             //#endregion 增加上分组信息.

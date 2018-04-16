@@ -62,8 +62,12 @@
                 return;
             }
 
+            alert(data);
+            console.log(data);
+            
             //解析json.
             frmData = JSON.parse(data);
+            
             mapData = frmData["Sys_MapData"][0];
             mapData = new Entity("BP.Sys.MapData", mapData); //把他转化成entity.
             mainData = frmData["MainData"];

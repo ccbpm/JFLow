@@ -18,6 +18,7 @@ import BP.Tools.StringHelper;
 import BP.WF.Template.*;
 import BP.WF.Template.Bill;
 import BP.WF.Template.BillFileType;
+import BP.WF.Glo;
 import BP.WF.Data.*;
 
 /**
@@ -5637,21 +5638,7 @@ public class WorkNode {
 
                 DataTable dt = null;
 
-               //按照人员选择
-                if (node.getHisDeliveryWay() == DeliveryWay.BySelected){
-                    sql = "SELECT FK_Emp No, EmpName Name FROM WF_SelectAccper WHERE FK_Node=" + node.getNodeID() + " AND WorkID=" + this.getWorkID() + " AND AccType=0";
-                    dt = DBAccess.RunSQLReturnTable(sql);
-                    if (dt.Rows.size() == 0){
-                        try {
-							throw new Exception("@没有为延续子流程设置接受人.");
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                    }
-                    
-                }
-
+            
                 //按照岗位与部门的交集.
                 if (node.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
                 {
@@ -5721,6 +5708,47 @@ public class WorkNode {
 							e.printStackTrace();
 						}
                 }
+                
+                
+                //仅按照部门计算.
+                if (node.getHisDeliveryWay() == DeliveryWay.ByDept)
+        		{
+        			ps = new Paras();
+        			ps.Add("FK_Node", node.getNodeID());
+        			ps.Add("WorkID", this._WorkID);
+        			ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
+        			dt = DBAccess.RunSQLReturnTable(ps);
+        			if (dt.Rows.size() == 0)
+        			{
+        				  
+        				ps = new Paras();
+        				ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node=" + dbStr + "FK_Node";
+        				ps.Add("FK_Node", node.getNodeID());
+        				dt = DBAccess.RunSQLReturnTable(ps);
+        			}        				 
+        		}
+                
+                
+                //按照人员选择
+                if (node.getHisDeliveryWay() == DeliveryWay.BySelected || dt==null ){
+                    sql = "SELECT FK_Emp No, EmpName Name FROM WF_SelectAccper WHERE FK_Node=" + node.getNodeID() + " AND WorkID=" + this.getWorkID() + " AND AccType=0";
+                    dt = DBAccess.RunSQLReturnTable(sql);
+                    if (dt.Rows.size() == 0){
+                        try {
+							throw new Exception("@没有为延续子流程设置接受人.");
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                    }
+                    
+                }
+
+                
+                //if (dt ==null)                 
+                	//return "err@流程设计错误,延续流程仅仅可以设置按照.";
+                
+                
                 //组装到达的人员.
                 for (DataRow dr : dt.Rows)
                 {

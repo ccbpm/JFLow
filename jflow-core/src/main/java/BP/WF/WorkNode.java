@@ -5716,7 +5716,7 @@ public class WorkNode {
         			ps = new Paras();
         			ps.Add("FK_Node", node.getNodeID());
         			ps.Add("WorkID", this._WorkID);
-        			ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
+        			ps.SQL = "SELECT FK_Emp as No FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
         			dt = DBAccess.RunSQLReturnTable(ps);
         			if (dt.Rows.size() == 0)
         			{

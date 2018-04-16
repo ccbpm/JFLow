@@ -3,6 +3,7 @@ package BP.WF;
 import java.security.MessageDigest;
 
 public class Cryptography{
+	
 //	public static int HostToNetworkOrder(int inval)
 //	{
 //		int outval = 0;

@@ -920,6 +920,20 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		return gf.ToJson();
 	}
+	
+	  /// <summary>
+    /// 创建审核分组
+    /// </summary>
+    /// <returns></returns>
+    public final String GroupField_Create()
+    {
+        BP.Sys.GroupField gf = new GroupField();
+        gf.setFrmID( this.getFK_MapData());
+        gf.setLab(  this.GetRequestVal("Lab"));
+        gf.setEnName( this.getFK_MapData());
+        gf.Insert();
+        return "创建成功..";
+    }
 
 	/** 
 	 保存空白的分组.

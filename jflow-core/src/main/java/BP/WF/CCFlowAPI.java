@@ -25,9 +25,11 @@ import BP.Sys.FrmAttachments;
 import BP.Sys.FrmEventList;
 import BP.Sys.FrmImgAthDBs;
 import BP.Sys.FrmSubFlowAttr;
+import BP.Sys.FrmType;
 import BP.Sys.FrmWorkCheckAttr;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
+import BP.Sys.GroupFieldAttr;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
@@ -165,6 +167,47 @@ public class CCFlowAPI
                  fnc.SetValByKey(FTCAttr.FTC_W, refFnc.GetValFloatByKey(FTCAttr.FTC_W));
                  fnc.SetValByKey(FTCAttr.FTC_X, refFnc.GetValFloatByKey(FTCAttr.FTC_X));
                  fnc.SetValByKey(FTCAttr.FTC_Y, refFnc.GetValFloatByKey(FTCAttr.FTC_Y));
+                 
+                 // #region 没有审核组件分组就增加上审核组件分组. @杜需要翻译&测试.
+                 if (md.getHisFrmType() == FrmType.FoolForm)
+                 {
+                	 //判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
+         			DataTable gf= null;
+        			for (DataTable dtb : myds.Tables)
+        			{
+        				if("Sys_GroupField".equals(dtb.getTableName()))
+        				{
+        					gf = dtb ; 
+        				}
+        			}
+                     boolean isHave = false;
+                     for (DataRow dr : gf.Rows)
+                     {
+                         String cType = (String) dr.get("CtrlType");
+                         if (cType == null)
+                             continue;
+
+                         if (cType.equals("FWC") == true)
+                             isHave = true;
+                     }
+                     if (isHave == false)
+                     {
+                         DataRow dr = gf.NewRow();
+                         
+                         dr.put(GroupFieldAttr.OID, 100);
+                         dr.put(GroupFieldAttr.EnName,nd.getNodeFrmID());
+                         dr.put(GroupFieldAttr.CtrlType,"FWC");
+                         dr.put(GroupFieldAttr.CtrlID,"FWCND"+nd.getNodeID());
+                         dr.put(GroupFieldAttr.Idx,100);
+                         dr.put(GroupFieldAttr.Lab, "审核信息");
+
+                         gf.Rows.add(dr);
+
+                         myds.Tables.remove("Sys_GroupField");
+                         myds.Tables.add(gf);
+                     }
+                 }
+                 //#endregion 没有审核组件分组就增加上审核组件分组.
              }
 			  
 		

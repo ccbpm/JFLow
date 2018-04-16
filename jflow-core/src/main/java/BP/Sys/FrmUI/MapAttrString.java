@@ -1,6 +1,7 @@
 package BP.Sys.FrmUI;
 
 import BP.DA.DBAccess;
+import BP.DA.DBType;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -10,6 +11,8 @@ import BP.En.RefMethodType;
 import BP.En.UAC;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
+import BP.Sys.MapData;
+import BP.Sys.SystemConfig;
 import BP.WF.Glo;
 
 
@@ -304,6 +307,42 @@ public class MapAttrString extends EntityMyPK
 		attr.setIsRichText(this.GetValBooleanByKey("IsSupperText")); //是否是富文本？
 		attr.setIsSupperText(this.GetValBooleanByKey("IsRichText")); //是否是大块文本？
 		
+		 if (attr.getIsRichText() || attr.getIsSupperText())
+         {
+             attr.setMaxLen(4000);
+             this.SetValByKey(MapAttrAttr.MaxLen, 4000);
+         }
+
+
+         //#region 自动扩展字段长度.  @杜. 需要翻译.
+         if (attr.getMaxLen() < 4000)
+         {
+             String sql = "";
+             MapData md = new MapData();
+             md.setNo(this.getFK_MapData());
+             if (md.RetrieveFromDBSources() == 1)
+             {
+                 try {
+					if (DBAccess.IsExitsTableCol(md.getPTable(), this.getKeyOfEn()) == true)
+					 {
+					     if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+					         sql = "ALTER TABLE " + md.getPTable() + " ALTER column " + this.getKeyOfEn() + " NVARCHAR(" + attr.getMaxLen() + ")";
+
+					     if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+					         sql = "alter table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR(" + attr.getMaxLen() + ")";
+
+					     if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+					         sql = "alter table " + md.getPTable() + " modify " + attr.getField() + " varchar2(" + attr.getMaxLen() + ")";
+
+					     DBAccess.RunSQL(sql);
+					 }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+             }
+         }
+         //#endregion 自动扩展字段长度.
+
 		//默认值.
 		String defval = this.GetValStrByKey("ExtDefVal");
 		if (defval.equals("") || defval.equals("0"))

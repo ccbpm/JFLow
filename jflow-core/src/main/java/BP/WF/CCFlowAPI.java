@@ -89,7 +89,8 @@ public class CCFlowAPI
 			
 			  MapData md = new MapData();
               md.setNo(  nd.getNodeFrmID());
-              
+              md.setName(nd.getName());
+               
 		 
 			//md.setNo(nd.getNodeFrmID());
 			if (md.RetrieveFromDBSources() == 0)
@@ -106,7 +107,7 @@ public class CCFlowAPI
                     wk, null);
             
 			//获得表单模版.
-			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet_2017(md.getNo());
+			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),nd.getName());
 			
 			 //把流程信息表发送过去.
             GenerWorkFlow gwf = new GenerWorkFlow();
@@ -393,56 +394,7 @@ public class CCFlowAPI
             }
            
 			
-
-			////把从表的数据放入.
-			//if (md.MapDtls.Count > 0)
-			//{
-			//    foreach (MapDtl dtl in md.MapDtls)
-			//    {
-			//        GEDtls dtls = new GEDtls(dtl.No);
-			//        QueryObject qo = null;
-			//        try
-			//        {
-			//            qo = new QueryObject(dtls);
-			//            switch (dtl.DtlOpenType)
-			//            {
-			//                case DtlOpenType.ForEmp:  // 按人员来控制.
-			//                    qo.AddWhere(GEDtlAttr.RefPK, workID);
-			//                    qo.addAnd();
-			//                    qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
-			//                    break;
-			//                case DtlOpenType.ForWorkID: // 按工作ID来控制
-			//                    qo.AddWhere(GEDtlAttr.RefPK, workID);
-			//                    break;
-			//                case DtlOpenType.ForFID: // 按流程ID来控制.
-			//                    qo.AddWhere(GEDtlAttr.FID, workID);
-			//                    break;
-			//            }
-			//        }
-			//        catch
-			//        {
-			//            dtls.GetNewEntity.CheckPhysicsTable();
-			//        }
-			//        DataTable dtDtl = qo.DoQueryToTable();
-
-			//        // 为明细表设置默认值.
-			//        MapAttrs dtlAttrs = new MapAttrs(dtl.No);
-			//        foreach (MapAttr attr in dtlAttrs)
-			//        {
-			//            //处理它的默认值.
-			//            if (attr.DefValReal.Contains("@") == false)
-			//                continue;
-
-			//            foreach (DataRow dr in dtDtl.Rows)
-			//                dr[attr.KeyOfEn] = attr.DefVal;
-			//        }
-
-			//        dtDtl.TableName = dtl.No; //修改明细表的名称.
-			//        myds.Tables.Add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
-			//    }
-			//}
-
-				///#endregion
+ 
 
 
             ///#region 把外键表加入DataSet
@@ -700,7 +652,7 @@ public class CCFlowAPI
 			}
 
 			//表单模版.
-			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
 			return myds;
 
 			/*

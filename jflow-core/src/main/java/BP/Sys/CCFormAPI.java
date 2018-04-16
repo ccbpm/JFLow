@@ -1211,83 +1211,7 @@ public class CCFormAPI
 	 @return DataSet
 	*/
 
-
-	public static DataSet GenerHisDataSet(String fk_mapdata)
-	{
-		 
-		 DataSet ds = new DataSet();
-
-         //创建实体对象.
-         MapData md = new MapData(fk_mapdata);
-
-         //加入主表信息.
-         DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
-         ds.Tables.add(Sys_MapData);
  
-         //加入分组表.
-         DataTable Sys_GroupField = md.getGroupFields().ToDataTableField("Sys_GroupField");
-         ds.Tables.add(Sys_GroupField);
-
-
-         //加入明细表.
-         DataTable Sys_MapDtl = md.getMapDtls().ToDataTableField("Sys_MapDtl");
-         ds.Tables.add(Sys_MapDtl);
- 
-         //加入枚举表.
-         DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
-         ds.Tables.add(Sys_Menu);
-      
-         //加入外键属性.
-         DataTable Sys_MapAttr = md.getMapAttrs().ToDataTableField("Sys_MapAttr");
-         ds.Tables.add(Sys_MapAttr);
-
-         //加入扩展属性.
-         DataTable Sys_MapExt = md.getMapExts().ToDataTableField("Sys_MapExt");
-         ds.Tables.add(Sys_MapExt);
-
-         //线.
-         DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
-         ds.Tables.add(Sys_FrmLine);
-
-         //link.
-         DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
-         ds.Tables.add(Sys_FrmLink);
-
-         //btn.
-         DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
-         ds.Tables.add(Sys_FrmBtn);
-
-         //Sys_FrmLab.
-         DataTable Sys_FrmLab = md.getFrmLabs().ToDataTableField("Sys_FrmLab");
-         ds.Tables.add(Sys_FrmLab);
-
-         //img.
-         DataTable Sys_FrmImg = md.getFrmImgs().ToDataTableField("Sys_FrmImg");
-         ds.Tables.add(Sys_FrmImg);
-
-         //Sys_FrmRB.
-         DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
-         ds.Tables.add(Sys_FrmRB);
-
-         //Sys_FrmEle.
-         DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
-         ds.Tables.add(Sys_FrmEle);
-
-         //Sys_MapFrame.
-         DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
-         ds.Tables.add(Sys_MapFrame);
-
-         //Sys_FrmAttachment.
-         DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
-         ds.Tables.add(Sys_FrmAttachment);
-
-         //FrmImgAths. 上传图片附件.
-         DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
-         ds.Tables.add(Sys_FrmImgAth);
-
-         return ds;
-	}
-	
 	//#endregion 模版操作.
 
 	//#region 其他功能.
@@ -1371,7 +1295,7 @@ public class CCFormAPI
 			}
 
 			//获得源文件信息.
-			DataSet ds =  GenerHisDataSet(srcFrmID);
+			DataSet ds =  GenerHisDataSet(srcFrmID,null);
 
 			//导入表单文件.
 			ImpFrmTemplate(copyFrmID, ds, false);
@@ -1637,13 +1561,24 @@ public class CCFormAPI
 
 		return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(mapAttrs);
 	}
+	
+	public static DataSet GenerHisDataSet(String fk_mapdata)
+	{
+	   return	GenerHisDataSet( fk_mapdata, null);
+		
+	}
+	 
 
-
-	public static DataSet GenerHisDataSet_2017(String fk_mapdata) {
+	public static DataSet GenerHisDataSet(String fk_mapdata, String frmName) {
+		
 		DataSet ds = new DataSet();
 
 		//创建实体对象.
 		MapData md = new MapData(fk_mapdata);
+		
+		if (frmName!=null)
+			md.setName(frmName);
+		
 
 		//加入主表信息.
 		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
@@ -1715,9 +1650,7 @@ public class CCFormAPI
 
 		return ds;
 	}
-
-		///#endregion 其他功能.
-	
+ 
 	/** 修复表单.
 	 
 	 @param frmID

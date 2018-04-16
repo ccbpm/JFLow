@@ -996,7 +996,7 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		MapData md = new MapData(this.getEnsName());
-		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet_2017(md.getNo());
+		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
 
 		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		// /#region 把主表数据放入.
@@ -1239,7 +1239,7 @@ public class WF_CCForm extends WebContralBase {
 	public final String FrmFreeReadonly_Init() {
 		try {
 			MapData md = new MapData(this.getEnsName());
-			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet_2017(md.getNo());
+			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
 
 			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region 把主表数据放入.

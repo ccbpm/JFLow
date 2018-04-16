@@ -672,6 +672,7 @@ public class WF_WorkOpt extends WebContralBase {
 	 * @return
 	 */
 	private String GetFileAction(FrmAttachmentDB athDB) {
+		
 		if (athDB == null || athDB.getFileExts().equals("")) {
 			return "#";
 		}
@@ -1081,7 +1082,7 @@ public class WF_WorkOpt extends WebContralBase {
 		}
 
 		// 表单模版.
-		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(nd.getNodeFrmID());
+		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(nd.getNodeFrmID(),null);
 		String json = BP.WF.Dev2Interface.CCFrom_GetFrmDBJson(this.getFK_Flow(), this.getMyPK());
 		DataTable mainTable = BP.Tools.Json.ToDataTableOneRow(json);
 		mainTable.TableName = "MainTable";

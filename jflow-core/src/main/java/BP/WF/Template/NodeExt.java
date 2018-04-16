@@ -1419,6 +1419,7 @@ public class NodeExt extends Entity
 					this.SetValByKey(NodeAttr.CondModel, CondModel.SendButtonSileSelect.getValue()); //禁用他.
 				}
 			}
+			
  
 		if (nd.getIsStartNode() == true)
 		{

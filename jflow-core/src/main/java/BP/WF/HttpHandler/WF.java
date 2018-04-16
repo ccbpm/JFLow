@@ -829,7 +829,7 @@ public class WF extends WebContralBase
 
 
 		//获得表单模版.
-		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet_2017(md.getNo());
+		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
 
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

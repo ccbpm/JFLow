@@ -1811,13 +1811,13 @@ public class WorkNode {
 				dcs.AddEntity(dc);
 			}
 
-			if (dcs.size() == 0) {
-				throw new RuntimeException(
-						"@流程设计错误：从节点(" + currNode.getName() + ")到节点(" + nd.getName() + ")，没有设置方向条件，有分支的节点必须有方向条件。");
-				// throw new Exception(string.Format(this.ToE("WN10",
-				// "@定义节点的方向条件错误:没有给从{0}节点到{1},定义转向条件."), this.HisNode.NodeID +
-				// this.HisNode.Name, nd.NodeID + nd.Name));
-			}
+//			if (dcs.size() == 0) {
+//				throw new RuntimeException(
+//						"@流程设计错误：从节点(" + currNode.getName() + ")到节点(" + nd.getName() + ")，没有设置方向条件，有分支的节点必须有方向条件。");
+//				// throw new Exception(string.Format(this.ToE("WN10",
+//				// "@定义节点的方向条件错误:没有给从{0}节点到{1},定义转向条件."), this.HisNode.NodeID +
+//				// this.HisNode.Name, nd.NodeID + nd.Name));
+//			}
 
 			if (dcs.getIsPass()) // 如果通过了.
 			{
@@ -1847,7 +1847,7 @@ public class WorkNode {
 				}
 			}
 		}
-		throw new RuntimeException("@不应该出现的异常,不应该运行到这里.");
+		throw new RuntimeException("@有两条以上的分支(含两条)未设置方向条件,程序停止.");
 	}
 
 	/**

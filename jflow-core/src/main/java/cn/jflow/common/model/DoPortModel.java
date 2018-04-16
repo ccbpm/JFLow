@@ -95,7 +95,7 @@ public class DoPortModel extends BaseModel {
 			FK_MapData = this.get_request().getParameter("PK");
 		}
 		if (doType.equals("DownFormTemplete")) {
-			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(FK_MapData);
+			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(FK_MapData,null);
 
 			MapData md = new MapData(FK_MapData);
 			//DataSet ds = md.GenerHisDataSet();

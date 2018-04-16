@@ -55,14 +55,16 @@ public class DoModel extends BaseModel{
         {
 			if(DoType.equals("DownTempFrm")){
 				MapData md = new MapData(this.FK_MapData);
-                DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+                DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
                 String name = "ccflow表单模板." + md.getName() + "." + md.getNo() + ".xml";
                 String file = ContextHolderUtils.getRequest().getRealPath("/") + "Temp/" + this.FK_MapData + ".xml";
                 ds.WriteXml(file);
                 response.sendRedirect("../../Temp/" + this.FK_MapData + ".xml");
 //                this.WinClose();
 			}
-			if(DoType.equals("CCForm")){
+			
+			if(DoType.equals("CCForm")) {
+				
 //				this.Application.Clear();
 //                if (WebUser.getNoOfRel() != "admin")
 //                {

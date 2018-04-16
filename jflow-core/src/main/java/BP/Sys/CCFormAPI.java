@@ -1564,8 +1564,7 @@ public class CCFormAPI
 	
 	public static DataSet GenerHisDataSet(String fk_mapdata)
 	{
-	   return	GenerHisDataSet( fk_mapdata, null);
-		
+	   return	GenerHisDataSet( fk_mapdata, null);		
 	}
 	 
 

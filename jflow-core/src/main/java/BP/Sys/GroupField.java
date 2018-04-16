@@ -49,6 +49,16 @@ public class GroupField extends EntityOID
 	{
 		this.SetValByKey(GroupFieldAttr.Lab, value);
 	}
+	
+	public final String getFrmID()
+	{
+		return this.GetValStrByKey(GroupFieldAttr.FrmID);
+	}
+	public final void setFrmID(String value)
+	{
+		this.SetValByKey(GroupFieldAttr.FrmID, value);
+	}
+	
 	/** 
 	 顺序号
 	 
@@ -112,6 +122,7 @@ public class GroupField extends EntityOID
 		{
 			return this.get_enMap();
 		}
+		
 		Map map = new Map("Sys_GroupField", "傻瓜表单分组");
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
@@ -120,6 +131,8 @@ public class GroupField extends EntityOID
 		map.AddTBIntPKOID();
 		map.AddTBString(GroupFieldAttr.Lab, null, "标签", true, false, 0, 500, 20, true);
 		map.AddTBString(GroupFieldAttr.EnName, null, "类", false, false, 0, 200, 20);
+        map.AddTBString(GroupFieldAttr.FrmID, null, "表单ID", false, false, 0, 200, 20);
+
 		map.AddTBInt(GroupFieldAttr.Idx, 99, "顺序号", false, false);
 
 
@@ -179,6 +192,13 @@ public class GroupField extends EntityOID
 		BP.DA.DBAccess.RunSQL(sql);
 		return super.beforeUpdate(); //edited by liuxc,2017-2-9,修复GroupField不能更新的问题
 	}
+	
+	@Override
+    protected  boolean beforeUpdateInsertAction()
+    {
+        DBAccess.RunSQL("UPDATE Sys_GroupField SET EnName=FrmID WHERE FrmID IS NOT NULL ");
+        return super.beforeUpdateInsertAction();
+    }
 
 
 
@@ -195,6 +215,9 @@ public class GroupField extends EntityOID
 	@Override
 	protected boolean beforeInsert()
 	{
+		  if (DataType.IsNullOrEmpty( this.getFrmID())==true)
+              this.SetValByKey(GroupFieldAttr.EnName,this.getFrmID());		   
+		 
 		//if (this.IsExit(GroupFieldAttr.EnName, this.EnName, GroupFieldAttr.Lab, this.Lab) == true)
 		//    throw new Exception("@已经在("+this.EnName+")里存在("+this.Lab+")的分组了。");
 		try

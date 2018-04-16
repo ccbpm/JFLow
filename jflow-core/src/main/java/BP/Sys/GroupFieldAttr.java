@@ -14,6 +14,8 @@ public class GroupFieldAttr extends EntityOIDAttr
 	 
 	*/
 	public static final String EnName = "EnName";
+	public static final String FrmID = "FrmID";
+	 
 	/** 
 	 Lab
 	 

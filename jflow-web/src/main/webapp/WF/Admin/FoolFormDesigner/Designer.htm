@@ -608,21 +608,45 @@
                     window.location.href = window.location.href;
                 });
             }
-            function GroupFieldNew() {
 
+
+            /* 审核组件模式 */
+            function GroupFieldFWCNew() {
+
+                var val = prompt('请输入分组名称,比如:部门主管审核', '我的字段分组');
+                if (val == null || val == undefined)
+                    return;
+
+                var prix = prompt('请输入分组前缀,比如:BM', '我的字段分组');
+                if (prix == null || prix == undefined)
+                    return;
+
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
+                handler.AddPara("TB_Check_Name", val);
+                handler.AddPara("TB_Check_No", prix);
+
+                var data = handler.DoMethodReturnString("GroupField_SaveCheck");
+                alert(data);
+                window.location.href = window.location.href;
+            }
+
+            function GroupFieldNew() {
+            
                 var val = prompt('请输入分组名称:', '我的字段分组');
                 if (val == null || val == undefined)
                     return;
 
-                var en = new Entity("BP.Sys.GroupField");
-                en.Lab = val;
-                en.FrmID = GetQueryString("FK_MapData");
-                en.Insert();
-                var oid = en.OID;
-                //alert(oid);
-                //DBAccess.RunSQL("update SYS_GROUPFIELD set enName='" + GetQueryString("FK_MapData") + "' where oid=" + oid);
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
+
+                handler.AddPara("FK_MapData", GetQueryString("FK_MapData"));
+                handler.AddPara("EnName", GetQueryString("FK_MapData"));
+                handler.AddPara("Lab", val);
+
+                var data = handler.DoMethodReturnString("GroupField_Create");
+                alert(data);
+
                 window.location.href = window.location.href;
-                return;
+                return; 
 
 
                 var url = 'GroupField.htm?FK_MapData=' + GetQueryString("FK_MapData") + "&RefOID=0&DoType=FunList";

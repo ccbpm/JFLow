@@ -338,6 +338,16 @@ public class Json
 				} 
 				
 				
+				if (column.DataType == Integer.class  
+						|| column.DataType == Long.class
+						|| column.DataType == float.class)
+				{
+					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
+					continue;
+				} 
+				
+				
+				
 				String str=obj.toString();
 				if (str.equals("true") || str.equals("false"))
 				{

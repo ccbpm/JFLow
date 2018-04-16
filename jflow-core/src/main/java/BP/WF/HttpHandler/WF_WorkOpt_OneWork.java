@@ -438,13 +438,17 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				ds.Tables.add(dt);
 			}
 
-			json = BP.Tools.Json.ToJson(ds);
+			json = BP.Tools.Json.ToJson(ds);			
 		}
 		catch (RuntimeException ex)
 		{
 			json = "err@" + ex.getMessage();
 		}
 
+		  
+		//json=DataType.ReadTextFile("c:\\GetFlowTrackJsonData_CCflow.txt");		
+		//DataType.WriteFile("c:\\GetFlowTrackJsonData_jflow.txt", json);
+		 
 		return json;
 	}
 	/** 

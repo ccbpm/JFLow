@@ -1014,6 +1014,251 @@ public class WF_Comm extends WebContralBase {
 						return BP.Tools.Json.ToJson(ds);
 					}
 					
+					private DataTable Search_Data(Entities ens, Entity en){
+						Map map = en.getEnMapInTime();
+
+						MapAttrs attrs = map.getAttrs().ToMapAttrs();
+						//取出来查询条件.
+						BP.Sys.UserRegedit ur = new UserRegedit();
+						ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
+						ur.RetrieveFromDBSources();
+
+						//获得关键字.
+						AtPara ap = new AtPara(ur.getVals());
+
+						//关键字.
+						String keyWord = ur.getSearchKey();
+						QueryObject qo = new QueryObject(ens);
+
+						///#region 关键字字段.
+						if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() > 1)
+						{
+							Attr attrPK = new Attr();
+							for (Attr attr : map.getAttrs())
+							{
+								if (attr.getIsPK())
+								{
+									attrPK = attr;
+									break;
+								}
+							}
+							int i = 0;
+							for (Attr attr : map.getAttrs())
+							{
+								switch (attr.getMyFieldType())
+								{
+									case Enum:
+									case FK:
+									case PKFK:
+										continue;
+									default:
+										break;
+								}
+
+								if (attr.getMyDataType() != DataType.AppString)
+								{
+									continue;
+								}
+
+								if (attr.getMyFieldType() == FieldType.RefText)
+								{
+									continue;
+								}
+
+								if (attr.getKey().equals("FK_Dept"))
+								{
+									continue;
+								}
+
+								i++;
+								if (i == 1)
+								{
+									// 第一次进来。 
+									qo.addLeftBracket();
+									if (SystemConfig.getAppCenterDBVarStr().equals("@"))
+									{
+										qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+									}
+									else
+									{
+										qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+									}
+									continue;
+								}
+								qo.addOr();
+
+								if (SystemConfig.getAppCenterDBVarStr().equals("@"))
+								{
+									qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+								}
+								else
+								{
+									qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+								}
+
+							}
+							qo.getMyParas().Add("SKey", keyWord);
+							qo.addRightBracket();
+
+						}
+						else
+						{
+							qo.AddHD();
+						}
+			//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+						///#endregion
+
+
+						if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) ==false)
+						{
+							String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
+							String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
+
+							if (map.DTSearchWay == DTSearchWay.ByDate)
+							{
+								qo.addAnd();
+								qo.addLeftBracket();
+								qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
+								qo.addAnd();
+								qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
+								qo.addRightBracket();
+							}
+
+							if (map.DTSearchWay == DTSearchWay.ByDateTime)
+							{
+								//取前一天的24：00
+								if (dtFrom.trim().length() == 10) //2017-09-30
+								{
+									dtFrom += " 00:00:00";
+								}
+								if (dtFrom.trim().length() == 16) //2017-09-30 00:00
+								{
+									dtFrom += ":00";
+								}
+
+								Date dBefore = new Date();
+								Calendar calendar = Calendar.getInstance();
+								calendar.setTime(new Date());
+								calendar.add(Calendar.DAY_OF_MONTH, -1);
+								dBefore = calendar.getTime(); //得到前一天的时间
+								
+								SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+								String defaultStartDate = sdf.format(dBefore);
+								dtFrom = dBefore + " 24:00";
+								
+
+								if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
+								{
+									dtTo += " 24:00";
+								}
+
+								qo.addAnd();
+								qo.addLeftBracket();
+								qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
+								qo.addAnd();
+								qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
+								qo.addRightBracket();
+							}
+						}
+
+
+						///#region 普通属性
+						String opkey = ""; // 操作符号。
+						for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch())
+						{
+							if (attr.getIsHidden())
+							{
+								qo.addAnd();
+								qo.addLeftBracket();
+								qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
+								qo.addRightBracket();
+								continue;
+							}
+
+							if (attr.getSymbolEnable() == true)
+							{
+								opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
+								if (opkey.equals("all"))
+								{
+									continue;
+								}
+							}
+							else
+							{
+								opkey = attr.getDefaultSymbol();
+							}
+
+							qo.addAnd();
+							qo.addLeftBracket();
+
+							if (attr.getDefaultVal().length() >= 8)
+							{
+								String date = "2005-09-01";
+								try
+								{
+									// 就可能是年月日。 
+									String y =ap.GetValStrByKey("DDL_" + attr.getKey() + "_Year");
+									String m = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Month");
+									String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
+									date = y + "-" + m + "-" + d;
+
+									if (opkey.equals("<="))
+									{
+										Date dBefore = new Date();
+										Calendar calendar = Calendar.getInstance();
+										calendar.setTime(new Date());
+										calendar.add(Calendar.DAY_OF_MONTH, 1);
+										dBefore = calendar.getTime(); //得到后一天的时间
+										
+										SimpleDateFormat sdf=new SimpleDateFormat(DataType.getSysDataFormat());
+										date = sdf.format(dBefore);
+									}
+								}
+								catch (java.lang.Exception e)
+								{
+								}
+
+								qo.AddWhere(attr.getRefAttrKey(), opkey, date);
+							}
+							else
+							{
+								qo.AddWhere(attr.getRefAttrKey(), opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
+							}
+							qo.addRightBracket();
+						}
+						///#endregion
+
+						///#region 获得查询数据.
+						for (String str : ap.getHisHT().keySet())
+						{
+							Object val = ap.GetValStrByKey(str);
+							if (val.equals("all"))
+							{
+								continue;
+							}
+							qo.addAnd();
+							qo.addLeftBracket();
+							qo.AddWhere(str, ap.GetValStrByKey(str));
+							qo.addRightBracket();
+						}
+						 return qo.DoQueryToTable();
+					}
+					/// <summary>
+			        /// 执行导出
+			        /// </summary>
+			        /// <returns></returns>
+			        public String Search_Exp()
+			        {
+			            Entities ens = ClassFactory.GetEns(this.getEnsName());;
+			            Entity en = ens.getGetNewEntity();
+			           String  name = "数据导出";
+			           String filename = name + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getName() + ".xls";
+			           String filePath = ExportDGToExcel(Search_Data(ens, en),en,name);
+			           //DataTableToExcel(Search_Data(ens, en),en, filename, name,
+			           //                                                   BP.Web.WebUser.Name, true, true, true);
+
+			           return filePath;
+			        }
 					public final String Search_GenerPageIdx()
 					{
 						BP.Sys.UserRegedit ur = new UserRegedit();

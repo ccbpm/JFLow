@@ -79,7 +79,7 @@ public class AttachmentUploadController extends BaseController {
 				if (!athDesc.getExts().toLowerCase().contains(exts)) {
 				
 					error = "您上传的文件，不符合系统的格式要求，要求的文件格式:" + athDesc.getExts() + "，您现在上传的文件格式为:" + exts;
-					printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+					printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 					return ;
 				}
 			}
@@ -159,7 +159,7 @@ public class AttachmentUploadController extends BaseController {
 				fos.close();
 			} catch (RuntimeException ex) {
 				error = "@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage();
-				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 				return ;
 			}
 
@@ -211,14 +211,14 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.Insert();
 		} else {
 			error = "没有选择上传文件！";
-			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 			return;
 		}
 		try {
-			BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+			BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 		} catch (Exception e) {
 			e.printStackTrace();
-			printAlertReload(response, e.getMessage(), Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+			printAlertReload(response, e.getMessage(), Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 			return;
 		}
 	}
@@ -250,7 +250,7 @@ public class AttachmentUploadController extends BaseController {
 				if (!athDesc.getExts().toLowerCase().contains(exts)) {
 				
 					error = "您上传的文件，不符合系统的格式要求，要求的文件格式:" + athDesc.getExts() + "，您现在上传的文件格式为:" + exts;
-					printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+					printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 					return ;
 				}
 			}
@@ -330,7 +330,7 @@ public class AttachmentUploadController extends BaseController {
 				fos.close();
 			} catch (RuntimeException ex) {
 				error = "@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage();
-				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 				return ;
 			}
 
@@ -382,14 +382,14 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.Insert();
 		} else {
 			error = "没有选择上传文件！";
-			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 			return;
 		}
 		try {
-			BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+			BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 		} catch (Exception e) {
 			e.printStackTrace();
-			printAlertReload(response, e.getMessage(), Glo.getCCFlowAppPath()+"WF/CCForm/AttachmentUpload.jsp?"+request.getQueryString());
+			printAlertReload(response, e.getMessage(), Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 			return;
 		}
 

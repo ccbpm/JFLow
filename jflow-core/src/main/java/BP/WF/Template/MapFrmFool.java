@@ -15,8 +15,7 @@ import BP.Sys.*;
 */
 public class MapFrmFool extends EntityNoName
 {
-
-		
+ 
 	/** 
 	 是否是节点表单?
 	 
@@ -329,7 +328,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoDesignerFool()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&MyPK=" + this.getNo() + "&IsEditMapData=True";
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&MyPK=" + this.getNo() + "&IsEditMapData=True&IsFirst=1";
 	}
 
 	/** 
@@ -442,17 +441,16 @@ public class MapFrmFool extends EntityNoName
 			str += "@为框架 " + fram.getName() + " 增加了分组.";
 
 		}
-
-
+ 
 		// 附件.
 		FrmAttachments aths = new FrmAttachments(this.getNo());
 		for (FrmAttachment ath : aths.ToJavaList())
 		{
-			GroupField gf = new GroupField();
-			if (gf.IsExit(GroupFieldAttr.CtrlID, ath.getMyPK()) == true && !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
-			{
-				continue;
-			}
+			   GroupField gf = new GroupField();
+               int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.getMyPK(), GroupFieldAttr.FrmID, this.getNo());
+               if (i == 1)
+                   continue;
+               
 
 			gf.setLab(ath.getName());
 			gf.setCtrlID(ath.getMyPK());
@@ -633,7 +631,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoDFromCol4()
 	{
-		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		try {
 			PubClass.WinOpen(ContextHolderUtils.getResponse(), url, 800, 650);
 		} catch (IOException e) {

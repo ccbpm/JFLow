@@ -278,15 +278,7 @@ public class MapFrmNode extends EntityNoName
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
 		//map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "表单检查"; //"设计表单";
-		rm.ClassMethodName = this.toString() + ".DoCheckFixFrmForUpdateVer";
-		rm.Visable = true;
-		rm.RefAttrLinkLabel = "表单检查";
-		rm.Icon = "../../WF/Img/Check.png";
-		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+ 
 
 		rm = new RefMethod();
 		rm.Title = "重置表单"; //"设计表单";
@@ -485,127 +477,7 @@ public class MapFrmNode extends EntityNoName
 	{
 		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.getNo();
 	}
-	/** 
-	 执行旧版本的兼容性检查.
 	 
-	*/
-	public final String DoCheckFixFrmForUpdateVer()
-	{
-		// 更新状态.
-		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlType='' WHERE CtrlType IS NULL");
-		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlID='' WHERE CtrlID IS NULL");
-
-		String str = "";
-
-		 // 处理失去分组的字段. 
-		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.getNo() + "' AND CtrlType='' ) ";
-		MapAttrs attrs = new MapAttrs();
-		attrs.RetrieveInSQL(sql);
-		if (attrs.size() != 0)
-		{
-			GroupField gf = null;
-			GroupFields gfs = new GroupFields(this.getNo());
-			for (GroupField mygf : gfs.ToJavaList())
-			{
-				if (mygf.getCtrlID().equals(""))
-				{
-					gf = mygf;
-				}
-			}
-			if (gf == null)
-			{
-				gf = new GroupField();
-				gf.setLab("基本信息");
-				gf.setEnName(this.getNo());
-				gf.Insert();
-			}
-
-			//设置GID.
-			for (MapAttr attr : attrs.ToJavaList())
-			{
-				attr.Update(MapAttrAttr.GroupID, gf.getOID());
-			}
-		}
-
-		//从表.
-		MapDtls dtls = new MapDtls(this.getNo());
-		for (MapDtl dtl : dtls.ToJavaList())
-		{
-			GroupField gf = new GroupField();
-			if (gf.IsExit(GroupFieldAttr.CtrlID, dtl.getNo()) == true 
-					&& !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
-			{
-				continue;
-			}
-
-			gf.setLab(dtl.getName());
-			gf.setCtrlID(dtl.getNo());
-			gf.setCtrlType("Dtl");
-			gf.setEnName(dtl.getFK_MapData());
-			try {
-				gf.DirectSave();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			str += "@为从表" + dtl.getName() + " 增加了分组.";
-		}
-
-		// 框架.
-		MapFrames frams = new MapFrames(this.getNo());
-		for (MapFrame fram : frams.ToJavaList())
-		{
-			GroupField gf = new GroupField();
-			if (gf.IsExit(GroupFieldAttr.CtrlID, fram.getMyPK()) == true && !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
-			{
-				continue;
-			}
-
-			gf.setLab(fram.getName());
-			gf.setCtrlID(fram.getMyPK());
-			gf.setCtrlType("Frame");
-			gf.setEnName(fram.getFK_MapData());
-			gf.Insert();
-
-			str += "@为框架 " + fram.getName() + " 增加了分组.";
-
-		}
-
-
-		// 附件.
-		FrmAttachments aths = new FrmAttachments(this.getNo());
-		for (FrmAttachment ath : aths.ToJavaList())
-		{
-			GroupField gf = new GroupField();
-			if (gf.IsExit(GroupFieldAttr.CtrlID, ath.getMyPK()) == true && !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
-			{
-				continue;
-			}
-
-			gf.setLab(ath.getName());
-			gf.setCtrlID(ath.getMyPK());
-			gf.setCtrlType("Ath");
-			gf.setEnName(ath.getFK_MapData());
-			gf.Insert();
-
-			str += "@为附件 " + ath.getName() + " 增加了分组.";
-		}
-
-		if (this.getIsNodeFrm() == true)
-		{
-			FrmNodeComponent conn = new FrmNodeComponent(this.getNodeID());
-			conn.Update();
-		}
-
-		if (str.equals(""))
-		{
-			return "检查成功.";
-		}
-
-		return str + ", @@@ 检查成功。";
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 通用方法.
@@ -771,7 +643,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoDFromCol4()
 	{
-		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		try {
 			PubClass.WinOpen(ContextHolderUtils.getResponse(),url, 800, 650);
 		} catch (IOException e) {

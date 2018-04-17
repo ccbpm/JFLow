@@ -584,15 +584,14 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		//通用局部变量定义
 		String resultString = "";
-
-
+ 
 		return msg;
 	}
 
 	//ORIGINAL LINE: case "ParseStringToPinyin":
 	public final String ParseStringToPinyin() //转拼音方法.
 	{
-		String name = GetRequestVal("name");	
+		String name = GetRequestVal("name");
 		String flag = GetRequestVal("flag"); 
 	     //此处为字段中文转拼音，设置为最大20个字符，edited by liuxc,2017-9-25			
 	     return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, flag.equals("true"), true, 20);

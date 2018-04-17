@@ -125,9 +125,7 @@ public class GroupField extends EntityOID
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
-
-
-
+ 
 	    map.AddTBIntPKOID();
         map.AddTBString(GroupFieldAttr.Lab, null, "标签", true, false, 0, 500, 20,true);
         map.AddTBString(GroupFieldAttr.FrmID, null, "表单ID", true, true, 0, 200, 20);
@@ -186,7 +184,7 @@ public class GroupField extends EntityOID
 	@Override
     protected  boolean beforeUpdateInsertAction()
     {
-        DBAccess.RunSQL("UPDATE Sys_GroupField SET EnName=FrmID WHERE FrmID IS NOT NULL ");
+        
         return super.beforeUpdateInsertAction();
     }
  

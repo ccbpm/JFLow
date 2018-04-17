@@ -187,6 +187,19 @@ public class MapFrame extends EntityMyPK
 
 		super.afterInsert();
 	}
+	
+	 @Override
+	 protected   boolean beforeUpdate()
+     {
+         GroupField gf = new GroupField();
+         
+         gf.Retrieve(GroupFieldAttr.CtrlID, this.getMyPK());
+          gf.setLab(this.getName());
+         gf.Update();
+
+         return super.beforeUpdate();
+     }
+	 
 	/** 
 	 删除之后的操作
 	 

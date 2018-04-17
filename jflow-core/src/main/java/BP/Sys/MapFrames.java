@@ -26,7 +26,7 @@ public class MapFrames extends EntitiesMyPK
 	*/
 	public MapFrames(String fk_mapdata)
 	{
-		this.Retrieve(MapFrameAttr.FK_MapData, fk_mapdata, FrmEleAttr.EleType, "iFrame");
+		this.Retrieve(MapFrameAttr.FK_MapData, fk_mapdata);
 	}
 	/** 
 	 得到它的 Entity

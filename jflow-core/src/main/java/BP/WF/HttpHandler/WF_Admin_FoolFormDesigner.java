@@ -1085,7 +1085,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 				FrmAttachment ath = new FrmAttachment(en.getAthRefObj());
 				ath.setIsVisable(false);
 				ath.Update();
-				BP.DA.DBAccess.RunSQL("DELETE FROM Sys_GroupField WHERE EnName='" + this.getFK_MapData() + "' AND CtrlID='" + en.getAthRefObj() + "'");
+				BP.DA.DBAccess.RunSQL("DELETE FROM Sys_GroupField WHERE FrmID='" + this.getFK_MapData() + "' AND CtrlID='" + en.getAthRefObj() + "'");
 
 				FrmAttachments aths = new FrmAttachments(this.getFK_MapData());
 				for (FrmAttachment item : aths.ToJavaList())

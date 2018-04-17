@@ -129,19 +129,8 @@ public class MapAttrString extends EntityMyPK
 		map.AddDDLSysEnum(MapAttrAttr.IsSigan, 0, "签名模式", true, true, MapAttrAttr.IsSigan, "@0=无@1=图片签名@2=山东CA@3=广东CA");
 
 		RefMethod rm = new RefMethod();
-
-	    //  设置开窗返回值-正则表达式-文本框自动完成-脚本验证-扩展控件
-		rm = new RefMethod();
-		rm.Title = "设置开窗返回值";
-		rm.ClassMethodName = this.toString() + ".DoPopVal()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "正则表达式";
-		rm.ClassMethodName = this.toString() + ".DoRegularExpression()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+ 
+	 
 
 		rm = new RefMethod();
 		rm.Title = "文本框自动完成";
@@ -266,12 +255,7 @@ public class MapAttrString extends EntityMyPK
 
 
 		//  设置开窗返回值-正则表达式-文本框自动完成-脚本验证-扩展控件
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "设置开窗返回值(旧版本)";
-		rm.ClassMethodName = this.toString() + ".DoPopVal()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+ 
 		///#endregion
 		
 		rm = new RefMethod();
@@ -282,13 +266,7 @@ public class MapAttrString extends EntityMyPK
 		map.AddRefMethod(rm);
 
 
-
-		rm = new RefMethod();
-		rm.Title = "批处理";
-		rm.ClassMethodName = this.toString() + ".DoEleBatch()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+ 
 
 		this.set_enMap(map);
 		return this.get_enMap();

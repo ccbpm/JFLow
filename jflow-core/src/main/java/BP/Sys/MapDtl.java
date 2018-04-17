@@ -1376,7 +1376,7 @@ public class MapDtl extends EntityNoName
 		sql += "@DELETE FROM Sys_MapExt WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_MapData WHERE No='" + this.getNo() + "'";
-		sql += "@DELETE FROM Sys_GroupField WHERE EnName='" + this.getNo() + "'";
+		sql += "@DELETE FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_MapM2M WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_GroupField WHERE CtrlID='" + this.getNo() + "'";
 		DBAccess.RunSQLs(sql);

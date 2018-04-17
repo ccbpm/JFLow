@@ -2605,14 +2605,14 @@ public class MapData extends EntityNoName
 		DataTable Sys_MapDtl = DBAccess.RunSQLReturnTable(sql);
 		//String ids = "'" + this.getNo() + "'";
 		String whereFK_MapData = "FK_MapData= '" + this.getNo() + "' ";
-		String whereEnsName = "EnName= '" + this.getNo() + "' ";
+		String whereEnsName = "FrmID= '" + this.getNo() + "' ";
 		String whereNo = "No='" + this.getNo() + "' ";
 		
 		for (DataRow dr : Sys_MapDtl.Rows)
 		{
 			//ids += ",'" + dr.get("No") + "'";
 			whereFK_MapData += " OR FK_MapData='" + dr.getValue("No") + "' ";
-			whereEnsName += " OR EnName='" + dr.getValue("No") + "' ";
+			whereEnsName += " OR FrmID='" + dr.getValue("No") + "' ";
 			whereNo += " OR No='" + dr.getValue("No") + "' ";
 		}
 

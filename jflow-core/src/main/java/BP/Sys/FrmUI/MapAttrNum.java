@@ -216,25 +216,7 @@ public class MapAttrNum extends EntityMyPK
 		//return "/WF/Admin/FoolFormDesigner/MapExt/AutoFull.aspx?FK_MapData=" + this.FK_MapData + "&KeyOfEn=" + KeyOfEnthis.KeyOfEn + "&MyPK=" + this.getMyPK();
 	}
 
-	/** 
-	 设置开窗返回值
-	 
-	 @return 
-	*/
-	public final String DoPopVal()
-	{
-		return Glo.getCCFlowAppPath() +"WF/Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
-	}
-
-	/** 
-	 正则表达式
-	 
-	 @return 
-	*/
-	public final String DoRegularExpression()
-	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
-	}
+  
 	/** 
 	 文本框自动完成
 	 

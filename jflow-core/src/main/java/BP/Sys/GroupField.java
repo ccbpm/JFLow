@@ -25,9 +25,7 @@ public class GroupField extends EntityOID
 		uac.IsView = false;
 		return uac;
 	}
-
-
-		
+ 
 	public boolean IsUse = false;
 	public final String getEnName()
 	{
@@ -97,8 +95,7 @@ public class GroupField extends EntityOID
 		this.SetValByKey(GroupFieldAttr.CtrlID, value);
 	}
 
-		///#endregion
-
+		 
 
 		
 	/** 
@@ -129,26 +126,21 @@ public class GroupField extends EntityOID
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 
-		map.AddTBIntPKOID();
-		map.AddTBString(GroupFieldAttr.Lab, null, "标签", true, false, 0, 500, 20, true);
-		map.AddTBString(GroupFieldAttr.EnName, null, "类", false, false, 0, 200, 20);
-        map.AddTBString(GroupFieldAttr.FrmID, null, "表单ID", false, false, 0, 200, 20);
-
-		map.AddTBInt(GroupFieldAttr.Idx, 99, "顺序号", false, false);
 
 
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", false, false, 0, 128, 20);
-		map.AddTBString(GroupFieldAttr.CtrlType, null, "控件类型", false, false, 0, 50, 20);
-		map.AddTBString(GroupFieldAttr.CtrlID, null, "控件ID", false, false, 0, 500, 20);
-		map.AddTBAtParas(3000);
+	    map.AddTBIntPKOID();
+        map.AddTBString(GroupFieldAttr.Lab, null, "标签", true, false, 0, 500, 20,true);
+        map.AddTBString(GroupFieldAttr.FrmID, null, "表单ID", true, true, 0, 200, 20);
+
+        map.AddTBString(GroupFieldAttr.CtrlType, null, "控件类型", true, true, 0, 50, 20);
+        map.AddTBString(GroupFieldAttr.CtrlID, null, "控件ID", true, true, 0, 500, 20);
+        map.AddTBInt(GroupFieldAttr.Idx, 99, "顺序号", true, false);
+        map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, true, 0, 128, 20,true);
+        map.AddTBAtParas(3000);
+        
 
 		RefMethod rm = new RefMethod();
-			//rm.Title = "增加字段";
-			//rm.Icon = "../WF/Img/Btn/New.gif";
-			//rm.ClassMethodName = this.ToString() + ".DoAddField";
-			//rm.RefMethodType = RefMethodType.LinkeWinOpen;
-			//map.AddRefMethod(rm);
-
+			  
 		rm = new RefMethod();
 		rm.Title = "删除隶属分组的字段";
 		rm.Icon = "../WF/Img/Btn/Delete.gif";
@@ -156,14 +148,11 @@ public class GroupField extends EntityOID
 		rm.ClassMethodName = this.toString() + ".DoDelAllField";
 		rm.refMethodType = RefMethodType.Func;
 		map.AddRefMethod(rm);
-
-
+ 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
-		///#endregion
-
+ 
 	/** 
 	 删除所有隶属该分组的字段.
 	 
@@ -188,7 +177,7 @@ public class GroupField extends EntityOID
 	@Override
 	protected boolean beforeUpdate()
 	{
-	  //  this.Update("Lab", this.Lab);
+ 
 		String sql = "UPDATE Sys_GroupField SET LAB='"+this.getLab()+"' WHERE OID="+this.getOID();
 		BP.DA.DBAccess.RunSQL(sql);
 		return super.beforeUpdate(); //edited by liuxc,2017-2-9,修复GroupField不能更新的问题
@@ -200,9 +189,7 @@ public class GroupField extends EntityOID
         DBAccess.RunSQL("UPDATE Sys_GroupField SET EnName=FrmID WHERE FrmID IS NOT NULL ");
         return super.beforeUpdateInsertAction();
     }
-
-
-
+ 
 	public final void DoDown()
 	{
 		this.DoOrderDown(GroupFieldAttr.EnName, this.getEnName(), GroupFieldAttr.Idx);
@@ -216,9 +203,7 @@ public class GroupField extends EntityOID
 	@Override
 	protected boolean beforeInsert()
 	{
-		  if (DataType.IsNullOrEmpty( this.getFrmID())==true)
-              this.SetValByKey(GroupFieldAttr.EnName,this.getFrmID());		   
-		 
+		  
 		//if (this.IsExit(GroupFieldAttr.EnName, this.EnName, GroupFieldAttr.Lab, this.Lab) == true)
 		//    throw new Exception("@已经在("+this.EnName+")里存在("+this.Lab+")的分组了。");
 		try

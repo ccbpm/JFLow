@@ -10,10 +10,9 @@ import BP.En.*;
 public class GroupFieldAttr extends EntityOIDAttr
 {
 	/** 
-	 主表
-	 
+	 主表	 
 	*/
-	public static final String EnName = "EnName";
+	public static final String EnName = "FrmID";
 	public static final String FrmID = "FrmID";
 	 
 	/** 

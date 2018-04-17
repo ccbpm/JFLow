@@ -593,11 +593,10 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	public final String ParseStringToPinyin() //转拼音方法.
 	{
 		String name = GetRequestVal("name");	
-		String flag = GetRequestVal("flag");
-			
+		String flag = GetRequestVal("flag"); 
 	     //此处为字段中文转拼音，设置为最大20个字符，edited by liuxc,2017-9-25			
 	     return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, flag.equals("true"), true, 20);
-			
+	 
 	}
 	//ORIGINAL LINE: case "DtlFieldUp":
 	public final String DtlFieldUp() //字段上移
@@ -2162,7 +2161,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			//初始化默认值.
 			ath.setNoOfObj("Ath1");
 			ath.setName("我的附件");
-			ath.setSaveTo(SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\");
+		//	ath.setSaveTo(SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\");
 			ath.setW(150);
 			ath.setH(40);
 			ath.setExts("*.*");

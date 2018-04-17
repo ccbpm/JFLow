@@ -108,7 +108,7 @@ public class CCFormAPI extends Dev2Interface
        int i= ath.RetrieveFromDBSources();
         if (i==0)
         {
-            ath.setSaveTo(SystemConfig.getPathOfDataUser() + "/UploadFile/" + fk_mapdata + "/");
+         //   ath.setSaveTo(SystemConfig.getPathOfDataUser() + "/UploadFile/" + fk_mapdata + "/");
         }
 
         ath.setUploadType(AttachmentUploadType.Multi);
@@ -281,10 +281,7 @@ public class CCFormAPI extends Dev2Interface
         ath.setNoOfObj(no);
         ath.setMyPK(ath.getFK_MapData() + "_" + ath.getNoOfObj());
        int i= ath.RetrieveFromDBSources();
-        if (i==0)
-        {
-            ath.setSaveTo(SystemConfig.getPathOfDataUser() + "UploadFile/" + fk_mapdata + "/");
-        }
+        
 
         ath.setUploadType(AttachmentUploadType.Multi);
         ath.setName(name);

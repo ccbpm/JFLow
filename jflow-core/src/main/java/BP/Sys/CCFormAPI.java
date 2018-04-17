@@ -188,7 +188,7 @@ public class CCFormAPI
 		int i = ath.RetrieveFromDBSources();
 		if (i == 0)
 		{
-			ath.setSaveTo(SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + fk_mapdata + "\\");
+			//ath.setSaveTo(SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + fk_mapdata + "\\");
 		}
 
 		ath.setUploadType(AttachmentUploadType.Multi);

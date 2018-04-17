@@ -36,6 +36,7 @@ public class GroupField extends EntityOID
 	public final void setEnName(String value)
 	{
 		this.SetValByKey(GroupFieldAttr.EnName, value);
+		this.SetValByKey(GroupFieldAttr.FrmID, value);
 	}
 	/** 
 	 标签
@@ -52,7 +53,7 @@ public class GroupField extends EntityOID
 	
 	public final String getFrmID()
 	{
-		return this.GetValStrByKey(GroupFieldAttr.FrmID);
+		return this.GetValStrByKey(GroupFieldAttr.FrmID);		 
 	}
 	public final void setFrmID(String value)
 	{

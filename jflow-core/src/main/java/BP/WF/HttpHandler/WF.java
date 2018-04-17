@@ -798,18 +798,19 @@ public class WF extends WebContralBase
 			dr.setValue("AtPara", (wfsta == BP.WF.WFSta.Complete.getValue() ? DotNetToJavaStringHelper.trimEnd(DotNetToJavaStringHelper.trimStart(dr.getValue("Sender").toString(), '('), ')').split("[,]", -1)[1] : ""));
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			dt.Columns.get("NO").ColumnName = "";
-			dt.Columns.get("NAME").ColumnName = "";
-			dt.Columns.get("").ColumnName = "";
-			dt.Columns.get("").ColumnName = "";
-			dt.Columns.get("").ColumnName = "";
-		}
+	 
 
 		return BP.Tools.Json.DataTableToJson(dt, false);
 	}
-	
+	 /// <summary>
+    /// 取消关注
+    /// </summary>
+    /// <returns></returns>
+    public final String Focus_Delete()
+    {
+        BP.WF.Dev2Interface.Flow_Focus(this.getWorkID());
+        return "执行成功";
+    }
 	/** 流程单表单查看
 	 
 	 @return 

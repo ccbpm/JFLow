@@ -674,7 +674,8 @@ public class Node extends Entity
 			workCheckAth.setExts("*.*");
 
 			//存储路径.
-			workCheckAth.setSaveTo("/DataUser/UploadFile/");
+			//workCheckAth.setSaveTo("/DataUser/UploadFile/");
+			
 			workCheckAth.setIsNote(false); //不显示note字段.
 			workCheckAth.setIsVisable(false); // 让其在form 上不可见.
 

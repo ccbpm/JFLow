@@ -290,17 +290,14 @@ public class FrmAttachment extends EntityMyPK
 	}
 	public final String getSaveTo()
 	{
-		String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
-		if (s.equals("") || s == null)
-		{
-			s = SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\";
-		}
-		return s;
+	//	String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
+		//if (s.equals("") || s == null)
+	//	{
+			return SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\";
+		//}
+		//return s;
 	}
-	public final void setSaveTo(String value)
-	{
-		this.SetValByKey(FrmAttachmentAttr.SaveTo, value);
-	}
+	 
 	
 	  /** 
 	 数据关联组件ID
@@ -740,7 +737,9 @@ public class FrmAttachment extends EntityMyPK
 
 		map.AddTBString(FrmAttachmentAttr.Name, null, "名称", true, false, 0, 50, 20);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "要求上传的格式", true, false, 0, 50, 20);
-		map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20);
+		
+		//map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20);
+		
 		map.AddTBString(FrmAttachmentAttr.Sort, null, "类别(可为空)", true, false, 0, 500, 20);
 
 		map.AddTBFloat(FrmAttachmentAttr.X, 5, "X", true, false);

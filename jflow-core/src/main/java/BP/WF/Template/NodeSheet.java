@@ -301,8 +301,7 @@ public class NodeSheet extends Entity
 		}
 
 			///#endregion 处理节点数据.
-
-
+ 
 			///#region 处理消息参数字段.
 		//this.SetPara(NodeAttr.MsgCtrl, this.GetValIntByKey(NodeAttr.MsgCtrl));
 		//this.SetPara(NodeAttr.MsgIsSend, this.GetValIntByKey(NodeAttr.MsgIsSend));
@@ -333,7 +332,7 @@ public class NodeSheet extends Entity
 			workCheckAth.setExts("*.*");
 
 			//存储路径.
-			workCheckAth.setSaveTo("/DataUser/UploadFile/");
+		//	workCheckAth.setSaveTo("/DataUser/UploadFile/");
 			workCheckAth.setIsNote(false); //不显示note字段.
 			workCheckAth.setIsVisable(false); // 让其在form 上不可见.
 

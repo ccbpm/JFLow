@@ -300,7 +300,7 @@ public class WF_CCForm extends WebContralBase {
                  athDesc.setExts("*.*");
 
                  //存储路径.
-                 athDesc.setSaveTo("/DataUser/UploadFile/");
+               //  athDesc.setSaveTo("/DataUser/UploadFile/");
                  athDesc.setIsNote(false); //不显示note字段.
                  athDesc.setIsVisable(false); // 让其在form 上不可见.
 
@@ -1844,7 +1844,7 @@ public class WF_CCForm extends WebContralBase {
 
 		String athDBPK = attachPk + "_" + workid;
 
-		BP.WF.Node currND = new BP.WF.Node(fk_node);
+		Node currND = new Node(fk_node);
 		BP.WF.Work currWK = currND.getHisWork();
 		currWK.setOID(Long.parseLong(workid));
 		currWK.Retrieve();
@@ -1865,6 +1865,7 @@ public class WF_CCForm extends WebContralBase {
 				saveTo = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(saveTo);
 			}
 		} catch (java.lang.Exception e) {
+			
 			return "false";
 			// saveTo = saveTo;
 		}

@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -1397,7 +1398,29 @@ public class NodeExt extends Entity
 			{
 				DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + this.GetValIntByKey(BtnAttr.HuiQianRole) + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID());
 			}
+            // @杜. 翻译&测试.
+            if (nd.getCondModel() == CondModel.ByLineCond)
+            {
+                /* 如果当前节点方向条件控制规则是按照连接线决定的, 
+                 * 那就判断到达的节点的接受人规则，是否是按照上一步来选择，如果是就抛出异常.*/
 
+                //获得到达的节点.
+                List<Node> nds = nd.getHisToNodes().ToJavaList();
+                for(Node mynd : nds)
+                {
+                    if (mynd.getHisDeliveryWay() == DeliveryWay.BySelected)
+                    {
+                        String errInfo = "设置矛盾:";
+                        errInfo += "@当前节点您设置的访问规则是按照方向条件控制的";
+                        errInfo += "但是到达的节点["+mynd.getName()+"]的接收人规则是按照上一步选择的,设置矛盾.";                        
+                        try {
+							throw new Exception(errInfo);
+						} catch (Exception e) {
+							e.getMessage();
+						}
+                    }
+                }
+            }
 			//如果启用了在发送前打开, 当前节点的方向条件控制模式，是否是在下拉框边选择.?
 			if (nd.getCondModel() != CondModel.SendButtonSileSelect)
 			{

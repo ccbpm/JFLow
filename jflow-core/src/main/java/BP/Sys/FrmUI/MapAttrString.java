@@ -104,8 +104,8 @@ public class MapAttrString extends EntityMyPK
 
 		map.AddTBString(MapAttrAttr.DefVal, null, "默认值表达式", true, false, 0, 2000, 20);
 
-		map.AddTBFloat(MapAttrAttr.MinLen, 0, "最小长度", true, false);
-		map.AddTBFloat(MapAttrAttr.MaxLen, 50, "最大长度", true, false);
+		map.AddTBInt(MapAttrAttr.MinLen, 0, "最小长度", true, false);
+		map.AddTBInt(MapAttrAttr.MaxLen, 50, "最大长度", true, false);
 
 		map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
 			//map.AddTBFloat(MapAttrAttr.UIHeight, 23, "高度", false, false);
@@ -123,8 +123,8 @@ public class MapAttrString extends EntityMyPK
 
 		//显示的分组.
 		//sunxd 解决ORACLE数据为自动转大写问题 
-		//SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE EnName='@FK_MapData' 修改为  SELECT OID \"No\", Lab \"Name\" FROM Sys_GroupField WHERE EnName='@FK_MapData'
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID No, Lab Name FROM Sys_GroupField WHERE EnName='@FK_MapData'", true);
+		//
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID No, Lab Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'", true);
 
 		map.AddDDLSysEnum(MapAttrAttr.IsSigan, 0, "签名模式", true, true, MapAttrAttr.IsSigan, "@0=无@1=图片签名@2=山东CA@3=广东CA");
 

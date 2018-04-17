@@ -206,7 +206,7 @@ public class GroupField extends EntityOID
 		//    throw new Exception("@已经在("+this.EnName+")里存在("+this.Lab+")的分组了。");
 		try
 		{
-			String sql = "SELECT MAX(IDX) FROM Sys_GroupField WHERE EnName='" + this.getEnName() + "'";
+			String sql = "SELECT MAX(IDX) FROM Sys_GroupField WHERE FrmID='" + this.getEnName() + "'";
 			this.setIdx(DBAccess.RunSQLReturnValInt(sql, 0) + 1);
 		}
 		catch (java.lang.Exception e)

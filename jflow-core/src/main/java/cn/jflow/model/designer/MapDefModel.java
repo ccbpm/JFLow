@@ -1005,7 +1005,7 @@ public class MapDefModel {
          //#endregion 处理iFrom 的自适应的问题。
 
          //#region 处理隐藏字段。
-         DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_MapAttr WHERE FK_MapData='" + this.FK_MapData + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.FK_MapData + "')");
+         DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_MapAttr WHERE FK_MapData='" + this.FK_MapData + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.FK_MapData + "')");
          if (dt.Rows.size() != 0)
          {
              int gfid = ((GroupField)this.get_gfs().get(0)).GetValIntByKey("OID");

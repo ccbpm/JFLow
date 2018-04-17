@@ -1164,7 +1164,7 @@ public class MapAttr extends EntityMyPK {
 
 	public final void DoDtlDown() {
 		try {
-			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE EnName='"
+			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE FrmID='"
 					+ this.getFK_MapData() + "') WHERE FK_MapData='" + this.getFK_MapData() + "'";
 			DBAccess.RunSQL(sql);
 		} catch (java.lang.Exception e) {
@@ -1175,7 +1175,7 @@ public class MapAttr extends EntityMyPK {
 
 	public final void DoDtlUp() {
 		try {
-			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE EnName='"
+			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE FrmID='"
 					+ this.getFK_MapData() + "') WHERE FK_MapData='" + this.getFK_MapData() + "'";
 			DBAccess.RunSQL(sql);
 		} catch (java.lang.Exception e) {

@@ -2202,11 +2202,9 @@ public class MapData extends EntityNoName
              {
 				GroupField gfFirst = (GroupField)((gfs.get(0) instanceof GroupField) ? gfs.get(0) : null);
 				String sqls = "";
-				//sqls += "@UPDATE Sys_MapDtl SET GroupID=" + gfFirst.OID + "        WHERE  No   IN (SELECT X.No FROM (SELECT No FROM Sys_MapDtl WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.No + "')) AS X ) AND FK_MapData='" + this.No + "'";
-				sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gfFirst.getOID() + "       WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapAttr       WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.getNo() + "') or GroupID is null) X) AND FK_MapData='" + this.getNo() + "' ";
-				//sqls += "@UPDATE Sys_MapFrame SET GroupID=" + gfFirst.getOID() + "      WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapFrame      WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.getNo() + "')) X) AND FK_MapData='" + this.getNo() + "' ";
-				//   sqls += "@UPDATE Sys_MapM2M SET GroupID=" + gfFirst.OID + "        WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapM2M        WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.No + "')) AS X) AND FK_MapData='" + this.No + "' ";
-				sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gfFirst.getOID() + " WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_FrmAttachment WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.getNo() + "')) X) AND FK_MapData='" + this.getNo() + "' ";
+				 
+				sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gfFirst.getOID() + "       WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapAttr       WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "') or GroupID is null) X) AND FK_MapData='" + this.getNo() + "' ";
+				sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gfFirst.getOID() + " WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_FrmAttachment WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "')) X) AND FK_MapData='" + this.getNo() + "' ";
              
 				///#warning 这些sql 对于Oracle 有问题，但是不影响使用.
 				try

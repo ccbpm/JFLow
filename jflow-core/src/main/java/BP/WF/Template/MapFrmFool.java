@@ -359,9 +359,7 @@ public class MapFrmFool extends EntityNoName
 		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlID='' WHERE CtrlID IS NULL");
 
 		String str = "";
-
-		 // 处理失去分组的字段. 
-//		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE EnName='" + this.getNo() + "' AND CtrlType='' ) ";
+ 
 		// in效率低下, 改为exists
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -371,7 +369,7 @@ public class MapFrmFool extends EntityNoName
 		sql.append(" WHERE ");
 		sql.append("	FK_MapData='").append(this.getNo()).append("' ");
 		sql.append("	AND NOT EXISTS ( ");
-		sql.append("		SELECT OID FROM Sys_GroupField WHERE EnName='").append(this.getNo()).append("' AND CtrlType='' AND GroupID=OID ");
+		sql.append("		SELECT OID FROM Sys_GroupField WHERE FrmID='").append(this.getNo()).append("' AND CtrlType='' AND GroupID=OID ");
 		sql.append("	) ");
 
 		MapAttrs attrs = new MapAttrs();
@@ -471,11 +469,11 @@ public class MapFrmFool extends EntityNoName
 		String sqls = "";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			sqls = "SELECT * FROM (SELECT EnName,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY EnName,CtrlID,CtrlType ) WHERE Num > 1";
+			sqls = "SELECT * FROM (SELECT FrmID,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY FrmID,CtrlID,CtrlType ) WHERE Num > 1";
 		}
 		else
 		{
-			sqls = "SELECT * FROM (SELECT EnName,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY EnName,CtrlID,CtrlType ) AS A WHERE A.Num > 1";
+			sqls = "SELECT * FROM (SELECT FrmID,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY FrmID,CtrlID,CtrlType ) AS A WHERE A.Num > 1";
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sqls);

@@ -170,9 +170,8 @@ public class MapFrame extends EntityMyPK
 		return this.get_enMap();
 	}
 
-	/** 
-	 插入之后增加一个分组.
-	 
+	/**
+	 插入之后增加一个分组.	 
 	*/
 	@Override
 	protected void afterInsert()

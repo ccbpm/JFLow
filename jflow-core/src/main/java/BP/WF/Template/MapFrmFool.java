@@ -357,50 +357,41 @@ public class MapFrmFool extends EntityNoName
 		// 更新状态.
 		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlType='' WHERE CtrlType IS NULL");
 		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlID='' WHERE CtrlID IS NULL");
+		 
 
 		String str = "";
+  
+        //一直遇到遇到自动变长的问题, 强制其修复过来.
+        DBAccess.RunSQL("UPDATE Sys_Mapattr SET colspan=3 WHERE UIHeight<=38 AND colspan=4");
  
-		// in效率低下, 改为exists
-		StringBuilder sql = new StringBuilder();
-		sql.append(" SELECT ");
-		sql.append("	MyPK ");
-		sql.append(" FROM ");
-		sql.append("	Sys_MapAttr ");
-		sql.append(" WHERE ");
-		sql.append("	FK_MapData='").append(this.getNo()).append("' ");
-		sql.append("	AND NOT EXISTS ( ");
-		sql.append("		SELECT OID FROM Sys_GroupField WHERE FrmID='").append(this.getNo()).append("' AND CtrlType='' AND GroupID=OID ");
-		sql.append("	) ");
+         // 处理失去分组的字段. 
+        String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
+        MapAttrs attrs = new MapAttrs();
+        attrs.RetrieveInSQL(sql);
+        if (attrs.size() != 0)
+        {
+            GroupField gf = null;
+            GroupFields gfs = new GroupFields(this.getNo());
+            for (GroupField mygf : gfs.ToJavaList())
+            {
+                if ( DataType.IsNullOrEmpty( mygf.getCtrlID()) )
+                    gf = mygf;
+            }
 
-		MapAttrs attrs = new MapAttrs();
-		//attrs.RetrieveInSQL(sql.toString());	// 20171113 xxy
-		attrs.RetrieveExistsSQL(sql.toString());
-		if (attrs.size() != 0)
-		{
-			GroupField gf = null;
-			GroupFields gfs = new GroupFields(this.getNo());
-			for (GroupField mygf : gfs.ToJavaList())
-			{
-				if (mygf.getCtrlID().equals(""))
-				{
-					gf = mygf;
-				}
-			}
-			if (gf == null)
-			{
-				gf = new GroupField();
-				gf.setLab("基本信息");
-				gf.setEnName(this.getNo());
-				gf.Insert();
-			}
+            if (gf == null)
+            {
+                gf = new GroupField();
+                gf.setLab(  "基本信息");
+                gf.setFrmID( this.getNo());
+                gf.Insert();
+            }
 
-			//设置GID.
-			for (MapAttr attr : attrs.ToJavaList())
-			{
-				attr.Update(MapAttrAttr.GroupID, gf.getOID());
-			}
-		}
-
+            //设置GID.
+            for (MapAttr attr : attrs.ToJavaList())
+            {
+                attr.Update(MapAttrAttr.GroupID, gf.getOID());
+            }
+        }
 		//从表.
 		MapDtls dtls = new MapDtls(this.getNo());
 		for (MapDtl dtl : dtls.ToJavaList())

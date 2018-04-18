@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.util.StringUtils;
 
@@ -331,9 +333,10 @@ public class Json
 					
 				} 
 				
-				if (column.DataType == java.util.Date.class || column.DataType == String.class)
+				/*if (column.DataType == java.util.Date.class || column.DataType == String.class)
 				{
 					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
+					
 					continue;
 				} 
 				
@@ -344,7 +347,7 @@ public class Json
 				{
 					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
 					continue;
-				} 
+				} */
 				 
 				
 				String str=obj.toString();
@@ -352,25 +355,13 @@ public class Json
 				{
 					jsonString +=    str + ",";	
 					continue;
+				}else{
+					jsonString += "\"" + ToJsonStr(str) + "\",";
 				}
 				
-			 
-				
-				
-				jsonString +=   "\""+ str + "\",";
+				//jsonString +=   "\""+ str + "\",";
 				 	 
-				
-				/*
-				
-				{
-					if (null != obj && !"".equals(obj))
-					{
-						jsonString += ToJson(obj.toString()) + ",";
-					} else
-					{
-						jsonString += ""0\"",";	// 老周改为0
-					}
-				}*/
+		
 			}
 			jsonString = DeleteLast(jsonString) + "},";
 		}		 
@@ -452,10 +443,7 @@ public class Json
 	 */
 	public static String ToJsonStr(String value)
 	{
-		   
-		if (StringHelper.isNullOrEmpty(value))
-			return "";
- 
+		value = value.trim();
 		StringBuffer sb = new StringBuffer();         
         for (int i=0; i< value.length(); i++) {   
             char c = value.charAt(i); 
@@ -488,7 +476,7 @@ public class Json
                  sb.append(c);      
              }   
          }       
-        return sb.toString().trim();    
+        return sb.toString(); 
         
  
 			/*

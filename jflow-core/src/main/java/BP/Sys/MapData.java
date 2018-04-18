@@ -38,6 +38,57 @@ public class MapData extends EntityNoName
 	public static final String RptSearchKeys = "RptSearchKeys";
 	
 	public static final String FlowCtrls = "FlowCtrls";
+	public static final String FormEventEntity="FormEventEntity";
+	 /// <summary>
+    /// 事件实体
+    /// </summary>
+    public String getFormEventEntity(){
+       
+            return this.GetValStringByKey(MapDataAttr.FormEventEntity);
+   }
+    
+    public void setFormEventEntity(String value){
+        
+       this.SetValByKey(MapDataAttr.FormEventEntity, value);
+        
+    }
+	 ///#region 常用方法.
+     private FormEventBase _HisFEB = null;
+     public FormEventBase getHisFEB(){
+         
+         if (this.getFormEventEntity() == "")
+             return null;
+
+         if (_HisFEB == null)
+             _HisFEB = BP.Sys.Glo.GetFormEventBaseByEnName(this.getNo());
+
+         return _HisFEB;
+         
+     }
+	
+	 /// <summary>
+    /// 执行事件.
+    /// </summary>
+    /// <param name="eventType"></param>
+    /// <param name="en"></param>
+    /// <param name="atParas"></param>
+    /// <returns></returns>
+    public String DoEvent(String eventType, Entity en, String atParas)
+    {
+        String str = this.getFrmEvents().DoEventNode(eventType, en);
+
+        String mystrs = null;
+        if (this.getHisFEB() != null)
+            mystrs = this.getHisFEB().DoIt(eventType, en, atParas);
+
+        if (str == null)
+            return mystrs;
+
+        if (mystrs == null)
+            return str;
+
+        return str + "@" + mystrs;
+    }
 	/** 
 	 升级逻辑.
 	 

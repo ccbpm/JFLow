@@ -710,7 +710,7 @@ public abstract class WebContralBase extends BaseController {
     	for(DataRow dr:dt.Rows){
     		
     	}
- 		String fileName = title + "_" + BP.DA.DataType.getCurrentDataTimeCNOfLong() + "_" +WebUser.getNo() + ".xls";
+ 		String fileName = title + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" +WebUser.getNo() + ".xls";
  		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
  		String filePth = BP.Sys.SystemConfig.getPathOfTemp();
  		// 参数及变量设置

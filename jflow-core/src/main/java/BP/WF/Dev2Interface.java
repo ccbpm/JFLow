@@ -8345,7 +8345,31 @@ public class Dev2Interface
 
 				///#endregion 为开始工作创建待办
 
-			return "保存成功.";
+			
+			///#region 处理保存后事件
+            boolean isHaveSaveAfter = false;
+            try
+            {
+                //处理表单保存后.
+                String s = nd.getMapData().DoEvent(FrmEventList.SaveAfter, wk,null);
+
+
+                //执行保存前事件.
+                s += nd.getHisFlow().DoFlowEventEntity(EventListOfNode.SaveAfter, nd, wk, null);
+
+                if (s != null)
+                {
+                    /*如果不等于null,说明已经执行过数据保存，就让其从数据库里查询一次。*/
+                    wk.RetrieveFromDBSources();
+                    isHaveSaveAfter = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "err@在执行保存后的事件期间出现错误:" + ex.getMessage();
+            }
+            ///#endregion
+            return "保存成功.";
 		}
 		catch (RuntimeException ex)
 		{

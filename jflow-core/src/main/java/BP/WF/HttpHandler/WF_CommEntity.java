@@ -815,7 +815,7 @@ public class WF_CommEntity extends WebContralBase {
 
         try
         {
-        	String eles = this.GetRequestVal("Eles");
+        	String eles = this.GetRequestVal("ElesAAA");
 
             //实体集合.
         	String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");

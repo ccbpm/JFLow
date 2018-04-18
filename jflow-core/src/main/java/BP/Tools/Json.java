@@ -357,6 +357,7 @@ public class Json
 					continue;
 				}else{
 					jsonString += "\"" + ToJsonStr(str) + "\",";
+					continue;
 				}
 				
 				//jsonString +=   "\""+ str + "\",";

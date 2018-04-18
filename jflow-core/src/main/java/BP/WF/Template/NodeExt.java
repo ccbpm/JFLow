@@ -272,13 +272,6 @@ public class NodeExt extends Entity
 		map.AddDDLSysEnum(NodeAttr.WhoExeIt, 0, "谁执行它",true, true, NodeAttr.WhoExeIt, "@0=操作员执行@1=机器执行@2=混合执行");
 		map.SetHelperUrl(NodeAttr.WhoExeIt, "http://ccbpm.mydoc.io/?v=5404&t=17913");
 
-			//map.AddDDLSysEnum(NodeAttr.TurnToDeal, 0, "发送后转向",
-			// true, true, NodeAttr.TurnToDeal, "@0=提示ccflow默认信息@1=提示指定信息@2=转向指定的url@3=按照条件转向");
-			//map.SetHelperUrl(NodeAttr.TurnToDeal, "http://ccbpm.mydoc.io/?v=5404&t=17914");
-			//map.AddTBString(NodeAttr.TurnToDealDoc, null, "转向处理内容", true, false, 0, 100, 10, true, "http://ccbpm.mydoc.io/?v=5404&t=17914");
-			//map.AddDDLSysEnum(NodeAttr.ReadReceipts, 0, "已读回执", true, true, NodeAttr.ReadReceipts,
-			//    "@0=不回执@1=自动回执@2=由上一节点表单字段决定@3=由SDK开发者参数决定");
-			//map.SetHelperUrl(NodeAttr.ReadReceipts, "http://ccbpm.mydoc.io/?v=5404&t=17915");
 
 
 
@@ -289,14 +282,7 @@ public class NodeExt extends Entity
 		map.AddDDLSysEnum(NodeAttr.CancelRole,CancelRole.OnlyNextStep.getValue(), "撤销规则", true, true, NodeAttr.CancelRole,"@0=上一步可以撤销@1=不能撤销@2=上一步与开始节点可以撤销@3=指定的节点可以撤销");
 		map.SetHelperUrl(NodeAttr.CancelRole, "http://ccbpm.mydoc.io/?v=5404&t=17919");
 
-			// 节点工作批处理. edit by peng, 2014-01-24.    by huangzhimin 采用功能专题方式，移至左侧列表
-			//map.AddDDLSysEnum(NodeAttr.BatchRole, (int)BatchRole.None, "工作批处理", true, true, NodeAttr.BatchRole, "@0=不可以批处理@1=批量审核@2=分组批量审核");
-			//map.AddTBInt(NodeAttr.BatchListCount, 12, "批处理数量", true, false);
-			////map.SetHelperUrl(NodeAttr.BatchRole, this[SYS_CCFLOW, "节点工作批处理"]); //增加帮助
-			//map.SetHelperUrl(NodeAttr.BatchRole, "http://ccbpm.mydoc.io/?v=5404&t=17920");
-			//map.SetHelperUrl(NodeAttr.BatchListCount, "http://ccbpm.mydoc.io/?v=5404&t=17920");
-			//map.AddTBString(NodeAttr.BatchParas, null, "批处理参数", true, false, 0, 300, 10, true);
-			//map.SetHelperUrl(NodeAttr.BatchParas, "http://ccbpm.mydoc.io/?v=5404&t=17920");
+		
 
 
 		map.AddBoolean(NodeAttr.IsTask, true, "允许分配工作否?", true, true, false, "http://ccbpm.mydoc.io/?v=5404&t=17904");

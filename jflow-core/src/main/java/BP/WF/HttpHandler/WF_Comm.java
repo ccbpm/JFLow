@@ -1270,6 +1270,8 @@ public class WF_Comm extends WebContralBase {
 
 			           return filePath;
 			        }
+			        
+			        
 					public final String Search_GenerPageIdx() throws Exception
 					{
 						BP.Sys.UserRegedit ur = new UserRegedit();

@@ -331,9 +331,10 @@ public class Json
 					
 				} 
 				
-				if (column.DataType == java.util.Date.class || column.DataType == String.class)
+				/*if (column.DataType == java.util.Date.class || column.DataType == String.class)
 				{
 					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
+					
 					continue;
 				} 
 				
@@ -344,7 +345,7 @@ public class Json
 				{
 					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
 					continue;
-				} 
+				} */
 				 
 				
 				String str=obj.toString();
@@ -352,25 +353,12 @@ public class Json
 				{
 					jsonString +=    str + ",";	
 					continue;
+				}else{
+					jsonString += "\"" + ToJsonStr(str) + "\",";
+					continue;
 				}
 				
-			 
-				
-				
-				jsonString +=   "\""+ str + "\",";
-				 	 
-				
-				/*
-				
-				{
-					if (null != obj && !"".equals(obj))
-					{
-						jsonString += ToJson(obj.toString()) + ",";
-					} else
-					{
-						jsonString += ""0\"",";	// 老周改为0
-					}
-				}*/
+				//jsonString +=   "\""+ str + "\",";
 			}
 			jsonString = DeleteLast(jsonString) + "},";
 		}		 

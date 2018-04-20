@@ -1348,7 +1348,7 @@ public class WF_WorkOpt extends WebContralBase {
 			// int toNodeID =
 			// Integer.parseInt(this.GetRequestVal("ReturnToNode").split('@')[0]);
 			String reMesage = this.GetRequestVal("ReturnInfo");
-
+			
 			boolean isBackBoolen = false;
 			String isBack = this.GetRequestVal("IsBack");
 			if (isBack.equals("1")) {

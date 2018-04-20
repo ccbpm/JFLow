@@ -463,10 +463,10 @@ public class CCFlowAPI
 				}
 
 				String UIIsEnable = dr.getValue("UIIsEnable").toString();
-				if (UIIsEnable.equals("0")==true)
-				{
-					continue;
-				}
+				//if (UIIsEnable.equals("0")==true)
+				//{
+				//	continue;
+				//}
 
 				String uiBindKey = dr.getValue("UIBindKey").toString();
 				if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true)

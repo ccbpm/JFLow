@@ -1,23 +1,23 @@
 package BP.WF.Data;
 
-import java.io.IOException;
-
-import BP.DA.Log;
+import BP.DA.DBAccess;
+import BP.DA.DataTable;
+import BP.DA.Paras;
 import BP.En.AttrOfSearch;
 import BP.En.EnType;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.QueryObject;
 import BP.En.RefMethod;
+import BP.En.RefMethodType;
 import BP.En.UAC;
-import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
+import BP.WF.ActionType;
 import BP.WF.Flows;
 import BP.WF.Glo;
+import BP.WF.Node;
 import BP.WF.TaskSta;
 import BP.WF.WFSta;
 import BP.WF.WFState;
-import cn.jflow.common.util.ContextHolderUtils;
 
 /** 
  我发起的流程
@@ -461,10 +461,10 @@ public class MyStartFlow extends Entity
 	}
 	/** 
 	 重写基类方法
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
-	{
+	public Map getEnMap(){
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -473,57 +473,95 @@ public class MyStartFlow extends Entity
 		Map map = new Map("WF_GenerWorkFlow", "我发起的流程");
 
 		map.Java_SetEnType(EnType.View);
-
-		map.AddTBInt(MyStartFlowAttr.FID, 0, "FID", false, false);
-
+		
+		map.AddTBIntPK(MyStartFlowAttr.WorkID, 0, "WorkID", true, false);
+		map.AddTBString(MyStartFlowAttr.Title, null, "标题", true, false, 0, 100, 10, true);
 		map.AddDDLEntities(MyStartFlowAttr.FK_Flow, null, "流程", new Flows(), false);
 		map.AddTBString(MyStartFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 10);
+		 map.AddTBInt(MyStartFlowAttr.FK_Node, 0, "节点编号", false, false);
 
-		map.AddTBString(MyStartFlowAttr.Title, null, "标题", true, false, 0, 100, 10, true);
+         map.AddDDLSysEnum(MyStartFlowAttr.WFSta, 0, "状态", true, true, MyStartFlowAttr.WFSta, "@0=运行中@1=已完成@2=其他");
+         map.AddTBString(MyStartFlowAttr.Starter, null, "发起人", false, false, 0, 100, 100);
+         map.AddTBDateTime(MyStartFlowAttr.RDT, "发起日期", true, true);
 
-		map.AddDDLSysEnum(MyStartFlowAttr.WFSta, 0, "状态", true, false, MyStartFlowAttr.WFSta, "@0=运行中@1=已完成@2=其他");
-		map.AddDDLSysEnum(MyStartFlowAttr.WFState, 0, "流程状态", true, false, MyStartFlowAttr.WFState);
-		map.AddTBString(MyStartFlowAttr.NodeName, null, "停留节点", true, false, 0, 100, 10, true);
-		map.AddTBString(MyStartFlowAttr.TodoEmps, null, "当前处理人", true, false, 0, 100, 10, true);
-		map.AddTBString(MyFlowAttr.Emps, null, "参与人", true, false, 0, 4000, 10, true);
-		map.AddTBStringDoc(MyFlowAttr.FlowNote, null, "备注", true, false, true);
-
-		map.AddTBDateTime(MyStartFlowAttr.RDT, "发起日期", true, true);
-		map.AddDDLSysEnum(MyFlowAttr.TSpan, 0, "时间段", true, false, MyFlowAttr.TSpan, "@0=本周@1=上周@2=两周以前@3=三周以前@4=更早");
+         map.AddTBString(MyStartFlowAttr.NodeName, null, "停留节点", true, true, 0, 100, 100, false);
+         map.AddTBString(MyStartFlowAttr.TodoEmps, null, "当前处理人", true, false, 0, 100, 100, false);
+         map.AddTBStringDoc(MyFlowAttr.FlowNote, null, "备注", true, false, true);
 
 
-		map.AddTBIntPK(MyStartFlowAttr.WorkID, 0, "WorkID", true, false);
-		map.AddTBString(MyStartFlowAttr.Starter, null, "发起人", false, false, 0, 100, 10);
-		map.AddTBMyNum();
+         map.AddTBString(MyFlowAttr.Emps, null, "参与人", false, false, 0, 4000, 100, true);
+         map.AddDDLSysEnum(MyFlowAttr.TSpan, 0, "时间段", true, false, MyFlowAttr.TSpan, "@0=本周@1=上周@2=两周以前@3=三周以前@4=更早");
+
+         map.AddTBMyNum();
+
+         //隐藏字段.
+         map.AddTBInt(MyStartFlowAttr.WFState, 0, "状态", false, false);
+         map.AddTBInt(MyStartFlowAttr.FID, 0, "FID", false, false);
+         map.AddTBInt(MyFlowAttr.PWorkID, 0, "PWorkID", false, false);
+		
+		map.AddTBInt(MyStartFlowAttr.FID, 0, "FID", false, false);
+
 
 		map.AddSearchAttr(MyStartFlowAttr.FK_Flow);
 		map.AddSearchAttr(MyStartFlowAttr.WFSta);
 		map.AddSearchAttr(MyStartFlowAttr.TSpan);
 
 
-		AttrOfSearch search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", "@WebUser.No", 0, true);
-		map.getAttrsOfSearch().Add(search);
+		
+		try {
+			AttrOfSearch  search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", BP.Web.WebUser.getNo(), 0, true);
+			map.getAttrsOfSearch().Add(search);
 
-		search = new AttrOfSearch(MyStartFlowAttr.WFState, "流程状态", MyStartFlowAttr.WFState, "not in", "('0')", 0, true);
-		map.getAttrsOfSearch().Add(search);
+			search = new AttrOfSearch(MyStartFlowAttr.WFState, "流程状态", MyStartFlowAttr.WFState, "not in", "('0')", 0, true);
+			map.getAttrsOfSearch().Add(search);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "流程轨迹";
 		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+		rm.refMethodType= RefMethodType.LinkeWinOpen;
+		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Track.png";
 		map.AddRefMethod(rm);
+		
+		 rm = new RefMethod();
+         rm.Title = "表单";
+         rm.ClassMethodName = this.toString() + ".DoOpenLastForm";
+         rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Form.png";
+         rm.refMethodType = RefMethodType.LinkeWinOpen;
+         rm.IsForEns = true;
+         map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 		///#region 执行诊断
 	public final String DoTrack()
-	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() + "WF/WFRpt.jsp?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow(), 900, 800);
-		} catch (IOException e) {
-			Log.DebugWriteError("MyStartFlow DoTrack()" + e);
-		}
-		return null;
+	{ 
+		return Glo.getCCFlowAppPath() + "/WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow()+"&FK_Node="+this.getFK_Node();
 	}
+	
+	 /// <summary>
+    /// 打开最后一个节点表单
+    /// </summary>
+    /// <returns></returns>
+    public String DoOpenLastForm() throws Exception{
+        Paras pss = new Paras();
+        pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
+        pss.Add("ActionType",ActionType.Forward.getValue());
+        pss.Add("WorkID", this.getWorkID());
+        DataTable dt = DBAccess.RunSQLReturnTable(pss);
+        if (dt != null && dt.Rows.size() > 0)
+        {
+            String myPk = dt.Rows.get(0).getValue(0).toString();
+            return Glo.getCCFlowAppPath() + "WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
+        }
+
+        Node nd = new Node(this.getFK_Node());
+        return Glo.getCCFlowAppPath() + "WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
+    }
+    ///#endregion
 }

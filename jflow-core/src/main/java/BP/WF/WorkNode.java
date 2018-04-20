@@ -2302,10 +2302,10 @@ public class WorkNode {
 		if (this.getHisNode().getHisFormType() == NodeFormType.SDKForm
 				|| this.getHisNode().getHisFormType() == NodeFormType.SelfForm) {
 		} else {
-			this.addMsg(SendReturnMsgFlag.WorkRpt, null,
-					"@<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
-							+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
-							+ "&FK_Flow=" + toND.getFK_Flow() + "' target='_self' >工作轨迹</a>。");
+			//this.addMsg(SendReturnMsgFlag.WorkRpt, null,
+			//		"@<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
+			//				+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
+			//				+ "&FK_Flow=" + toND.getFK_Flow() + "' target='_self' >工作轨迹</a>。");
 		}
 		this.addMsg(SendReturnMsgFlag.WorkStartNode, "@下一步[" + toND.getName() + "]工作成功启动.",
 				"@下一步<font color=blue>[" + toND.getName() + "]</font>工作成功启动.");
@@ -6179,11 +6179,11 @@ public class WorkNode {
 				this.addMsg(SendReturnMsgFlag.IsStopFlow, "0", "流程未结束", SendReturnMsgType.SystemMsg);
 			}
 
-			String mymsgHtml = "@查看<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
-					+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
-					+ "&NodeID=" + this.getHisNode().getNodeID()
-					+ "&FK_Flow=" + this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>";
-			this.addMsg(SendReturnMsgFlag.MsgOfText, mymsgHtml);
+			//String mymsgHtml = "@查看<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
+			//		+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
+			//		+ "&NodeID=" + this.getHisNode().getNodeID()
+			//		+ "&FK_Flow=" + this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>";
+			//this.addMsg(SendReturnMsgFlag.MsgOfText, mymsgHtml);
 
 			if (this.getIsStopFlow() == true) {
 				// 在检查完后，反馈来的标志流程已经停止了。

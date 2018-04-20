@@ -719,41 +719,27 @@ public abstract class EnObj implements Serializable
 	 */
 	public final String GetValStringByKey(String attrKey)
 	{
-		if (attrKey.equals("Doc"))
-		{
+		if (attrKey.equals("Doc")){
 			String s = this.getRow().GetValByKey(attrKey).toString();
 			if (s.equals(""))
 			{
 				s = this.GetValDocText();
 			}
 			return s;
-		} else
+		} 
+		try
 		{
-			try
+			
+			if (this.getRow() == null)
 			{
-//				if (this.getRow() == null)
-//				{
-//					throw new RuntimeException("@没有初始化Row.");
-//				}
-//				Object value = this.getRow().GetValByKey(attrKey);
-//				if (null == value)
-//				{
-//					return "";
-//				}
-//				
-//				return value.toString();
-				
-				if (this.getRow() == null)
-				{
-					throw new RuntimeException("@没有初始化Row.");
-				}
-				return this.getRow().GetValByKey(attrKey).toString();
-			} catch (RuntimeException ex)
-			{
-				throw new RuntimeException("@获取值期间出现如下异常：" + ex.getMessage()
-						+ "  " + attrKey + " 您没有在类增加这个属性，EnsName="
-						+ this.toString());
+				throw new RuntimeException("@没有初始化Row.");
 			}
+			return this.getRow().GetValByKey(attrKey).toString();
+		} catch (RuntimeException ex)
+		{
+			throw new RuntimeException("@获取值期间出现如下异常：" + ex.getMessage()
+					+ "  " + attrKey + " 您没有在类增加这个属性，EnsName="
+					+ this.toString());
 		}
 	}
 	

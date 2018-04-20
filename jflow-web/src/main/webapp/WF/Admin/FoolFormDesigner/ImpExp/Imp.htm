@@ -258,7 +258,7 @@
             if (confirm('您确定要从[' + nodeIdSelected + ']执行导入吗？导入后会清空当前的设计的元素。') == false)
                 return;
 
-            var data = handler.DoMethodReturnString("Imp_FromCopyFrm");
+            var data = handler.DoMethodReturnString("Imp_FromsCopyFrm");
 
             if (data.indexOf('err@') == 0) {
                 alert(data);

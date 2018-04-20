@@ -172,7 +172,7 @@
     </div>
     <!--end div-->
 
-    <div class="container mini-layout" id="flowdesign_canvas" style="width:1500px;height:1800px; overflow:auto">
+    <div class="container mini-layout" id="flowdesign_canvas">
         <!--div class="process-step btn" style="left: 189px; top: 340px;"><span class="process-num badge badge-inverse"><i class="icon-star icon-white"></i>3</span> 步骤3</div-->
     </div>
 
@@ -389,7 +389,6 @@
             console.log(processData);
             /*创建流程设计器*/
             var _canvas = $("#flowdesign_canvas").Flowdesign({
-            	
                 "processData": processData,
                 "labNoteData": labNoteData
                               , mtAfterDrop: function (params) {

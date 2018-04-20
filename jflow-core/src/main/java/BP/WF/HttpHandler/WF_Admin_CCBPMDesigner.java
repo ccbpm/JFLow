@@ -515,7 +515,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
              return "err@数据库连接配置错误 AppCenterDSN, AppCenterDBType 参数配置. ccflow请检查 web.config文件, jflow请检查 jflow.properties.";
 
          if (DBAccess.IsExitsObject("Port_Emp") == false 
-        		 && BP.DA.DBAccess.IsExitsObject("WF_Flow"))
+        		 && BP.DA.DBAccess.IsExitsObject("WF_Flow") == false)
              return "url@../DBInstall.htm"; 
          
 

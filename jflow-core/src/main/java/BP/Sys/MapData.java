@@ -1490,7 +1490,7 @@ public class MapData extends EntityNoName
 
 			if (attr.getUIIsEnable() == true)
 		    {
-				attr.setUIIsEnable(true);
+				attr.setUIIsEnable(false);
 				attr.Update();
 				continue;
 			}
@@ -1516,9 +1516,9 @@ public class MapData extends EntityNoName
 					attr.Update();
 				}
 
-				if (attr.getUIIsEnable() == false)
+				if (attr.getUIIsEnable() == true)
 				{
-					attr.setUIIsEnable(true);
+					attr.setUIIsEnable(false);
 					attr.Update();
 					continue;
 				}

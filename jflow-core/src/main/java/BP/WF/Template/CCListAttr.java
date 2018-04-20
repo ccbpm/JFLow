@@ -49,6 +49,8 @@ public class CCListAttr extends EntityMyPKAttr
 	 抄送给到部门
 	*/
 	public static final String CCToDept = "CCToDept";
+	public static final String CCToDeptName = "CCToDeptName";
+	
 	/** 
 	 审核意见
 	 

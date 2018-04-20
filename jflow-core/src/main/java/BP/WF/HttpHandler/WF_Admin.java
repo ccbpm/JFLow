@@ -61,8 +61,9 @@ public class WF_Admin extends WebContralBase {
 	 * 初始化界面.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String TestFlow_Init() {
+	public final String TestFlow_Init() throws Exception {
 		BP.Sys.SystemConfig.DoClearCash();
 
 		// 让admin 登录.
@@ -234,8 +235,9 @@ public class WF_Admin extends WebContralBase {
 	 * 转到指定的url.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String TestFlow_ReturnToUser() {
+	public final String TestFlow_ReturnToUser() throws Exception {
 		String userNo = this.GetRequestVal("UserNo");
 		String sid = BP.WF.Dev2Interface.Port_Login(userNo);
 		String url = "../../WF/Port.htm?UserNo=" + userNo + "&SID=" + sid
@@ -291,8 +293,9 @@ public class WF_Admin extends WebContralBase {
 	 * 表单方案
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindFrms_Init() {
+	public final String BindFrms_Init() throws Exception {
 		// 注册这个枚举，防止第一次运行出错.
 		BP.Sys.SysEnums ses = new SysEnums("FrmEnableRole");
 
@@ -348,14 +351,15 @@ public class WF_Admin extends WebContralBase {
 	 * 删除
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindFrms_Delete() {
+	public final String BindFrms_Delete() throws Exception {
 		FrmNodeExt myen = new FrmNodeExt(this.getMyPK());
 		myen.Delete();
 		return "删除成功.";
 	}
 
-	public final String BindFrms_DoOrder() {
+	public final String BindFrms_DoOrder() throws Exception {
 		FrmNode myen = new FrmNode(this.getMyPK());
 
 		if (this.GetRequestVal("OrderType").equals("Up")) {
@@ -367,7 +371,7 @@ public class WF_Admin extends WebContralBase {
 		return "执行成功...";
 	}
 
-	public final String ReLoginSubmit() {
+	public final String ReLoginSubmit() throws Exception {
 		String userNo = this.GetValFromFrmByKey("TB_UserNo");
 		String password = this.GetValFromFrmByKey("TB_Pass");
 

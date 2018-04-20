@@ -19,8 +19,9 @@ public class Duty extends EntityNoName
 	/** 
 	 职务
 	 @param _No
+	 * @throws Exception 
 	*/
-	public Duty(String _No)
+	public Duty(String _No) throws Exception
 	{
 		super(_No);
 	}

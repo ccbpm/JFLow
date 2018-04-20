@@ -190,7 +190,7 @@ public class ReturnWork extends EntityMyPK
 	}
 	
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setReturner(WebUser.getNo());
 		this.setReturnerName(WebUser.getName());

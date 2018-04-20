@@ -171,7 +171,7 @@ public class WFEmp extends EntityNoName
 	{
 		SetValByKey(WFEmpAttr.FtpUrl, value);
 	}
-	public final String getStas()
+	public final String getStas() throws Exception
 	{
 		String s= this.GetValStringByKey(WFEmpAttr.Stas);
 		if (s.equals(""))
@@ -263,8 +263,9 @@ public class WFEmp extends EntityNoName
 	/** 
 	 操作员
 	 @param no
+	 * @throws Exception 
 	*/
-	public WFEmp(String no)
+	public WFEmp(String no) throws Exception
 	{
 		this.setNo(no);
 		try
@@ -325,7 +326,7 @@ public class WFEmp extends EntityNoName
 		return this.get_enMap();
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		String msg = "";
 		//if (this.Email.Length == 0)
@@ -357,12 +358,12 @@ public class WFEmp extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setUseSta(1);
 		return super.beforeInsert();
 	}
-	public static void DTSData()
+	public static void DTSData() throws Exception
 	{
 		String sql = "select No from Port_Emp where No not in (select No from WF_Emp)";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);

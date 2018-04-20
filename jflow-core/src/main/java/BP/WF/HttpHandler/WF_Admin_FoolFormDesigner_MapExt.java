@@ -28,7 +28,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
     /// </summary>
     /// <returns></returns>
 	
-	 public final String ActiveDDL_Save()
+	 public final String ActiveDDL_Save() throws Exception
 		{
 			MapExt me = new MapExt();
 			me.Delete(MapExtAttr.ExtType, MapExtXmlList.ActiveDDL, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
@@ -63,8 +63,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		 * ActiveDDL 初始化
 		 * 
 		 * @return
+		 * @throws Exception 
 		 */
-	public String ActiveDDL_Init() {
+	public String ActiveDDL_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 加载外键字段.
@@ -109,8 +110,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	 * DDLFullCtrl 保存
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String DDLFullCtrl_Save() {
+	public String DDLFullCtrl_Save() throws Exception {
 		MapExt me = new MapExt();
 		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.DDLFullCtrl, MapExtAttr.FK_MapData, this.getFK_MapData(),
 				MapExtAttr.AttrOfOper, this.getKeyOfEn());
@@ -147,8 +149,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	 * DDLFullCtrl 初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String DDLFullCtrl_Init() {
+	public String DDLFullCtrl_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 加载数据源.
@@ -188,8 +191,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	 * 自动计算 保存(自动计算: @单价*@数量 模式.)
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */	
-	public String AutoFull_Save() {
+	public String AutoFull_Save() throws Exception {
 		MapExt me = new MapExt();
 		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.AutoFull, MapExtAttr.FK_MapData, this.getFK_MapData(),
 				MapExtAttr.AttrOfOper, this.getKeyOfEn());
@@ -225,8 +229,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	 * 自动计算 初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String AutoFull_Init() {
+	public String AutoFull_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 加载mapext 数据.
@@ -336,8 +341,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String PopFullCtrl_Save()
+	public final String PopFullCtrl_Save() throws Exception
 	{
 		try
 		{
@@ -373,7 +379,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
 		return "删除成功.";
 	}
-	public final String PopFullCtrl_Init()
+	public final String PopFullCtrl_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -415,8 +421,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	 填充从表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String PopFullCtrlDtl_Init()
+	public final String PopFullCtrlDtl_Init() throws Exception
 	{
 		MapExt me = new MapExt(this.getMyPK());
 
@@ -465,7 +472,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		return dtls.ToJson();
 	}
 
-	public final String PopFullCtrlDtl_Save()
+	public final String PopFullCtrlDtl_Save() throws Exception
 	{
 		MapDtls dtls = new MapDtls(this.getFK_MapData());
 		MapExt me = new MapExt(this.getMyPK());
@@ -493,7 +500,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		return "保存成功.";
 	}
 
-	public final String PopFullCtrlDDL_Init()
+	public final String PopFullCtrlDDL_Init() throws Exception
 	{
 		MapExt myme = new MapExt(this.getMyPK());
 		MapAttrs attrs = new MapAttrs(myme.getFK_MapData());
@@ -520,7 +527,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
 		return attrs.ToJson();
 	}
-	public final String PopFullCtrlDDL_Save()
+	public final String PopFullCtrlDDL_Save() throws Exception
 	{
 		MapExt myme = new MapExt(this.getMyPK());
 
@@ -587,8 +594,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	 * 执行 保存.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String RegularExpression_Save() {
+	public String RegularExpression_Save() throws Exception {
 		// 删除该字段的全部扩展设置.
 		MapExt me = new MapExt();
 		me.Delete(MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.ExtType, MapExtXmlList.RegularExpression,
@@ -605,7 +613,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		return "保存成功...";
 	}
 
-	private void RegularExpression_Save_Tag(String tagID) {
+	private void RegularExpression_Save_Tag(String tagID) throws Exception {
 		String val = this.GetValFromFrmByKey("TB_Doc_" + tagID);
 		if (StringHelper.isNullOrEmpty(val))
 			return;
@@ -623,8 +631,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
 	/**
 	 * 返回
+	 * @throws Exception 
 	 */
-	public final String PopVal_Init() {
+	public final String PopVal_Init() throws Exception {
 		MapExt ext = new MapExt();
 		ext.setMyPK(this.getFK_MapExt());
 		if (ext.RetrieveFromDBSources() == 0) {
@@ -635,7 +644,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		return ext.PopValToJson();
 	}
 
-	public final String AutoFullDLL_Init() {
+	public final String AutoFullDLL_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 加载数据源.
@@ -682,7 +691,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	}
 
 	// 初始化。
-	public final String TBFullCtrl_Init() {
+	public final String TBFullCtrl_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 加载数据源.
@@ -744,7 +753,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	}
 
 	// 开始
-	public final String TBFullCtrlDDL_Init() {
+	public final String TBFullCtrlDDL_Init() throws Exception {
 		MapExt myme = new MapExt(this.getMyPK());
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, myme.getFK_MapData(), MapAttrAttr.UIIsEnable, 1,
@@ -768,7 +777,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		return attrs.ToJson();
 	}
 
-	public String TBFullCtrlDDL_Save() {
+	public String TBFullCtrlDDL_Save() throws Exception {
 		MapExt myme = new MapExt(this.getMyPK());
 
 		MapAttrs attrs = new MapAttrs();
@@ -796,7 +805,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		return "保存成功.";
 	}
 
-	public final String TBFullCtrlDtl_Init() {
+	public final String TBFullCtrlDtl_Init() throws Exception {
 		MapExt me = new MapExt(this.getMyPK());
 
 		String[] strs = me.getTag1().split("[$]", -1);
@@ -936,7 +945,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
 	}
 
-	public final String TBFullCtrlDtl_Save() {
+	public final String TBFullCtrlDtl_Save() throws Exception {
 		MapDtls dtls = new MapDtls(this.getFK_MapData());
 		MapExt me = new MapExt(this.getMyPK());
 
@@ -964,8 +973,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 			 保存
 			 *region 超链接保存. @于庆海需要翻译.
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String Link_Save()
+			public final String Link_Save() throws Exception
 			{
 				try
 				{
@@ -1001,7 +1011,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 			}
 			
 			
-			 public final String AutoFullDtlField_Init()
+			 public final String AutoFullDtlField_Init() throws Exception
 				{
 					DataSet ds = new DataSet();
 					// 加载mapext 数据.
@@ -1048,8 +1058,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 			 保存(自动计算: @单价*@数量 模式.)
 			 
 			 @return 
+			 * @throws Exception 
 	  */
-			public final String AutoFullDtlField_Save()
+			public final String AutoFullDtlField_Save() throws Exception
 			{
 				MapExt me = new MapExt();
 				int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.AutoFullDtlField, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
@@ -1082,7 +1093,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	// 保存
 	// </summary>
 	// <returns></returns>
-	public String AutoFullDLL_Save() {
+	public String AutoFullDLL_Save() throws Exception {
 		MapExt me = new MapExt();
 		me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 		me.setFK_MapData(this.getFK_MapData());

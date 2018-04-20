@@ -20,7 +20,7 @@ public class MyDeptEmps extends BP.En.EntitiesNoName
 		return new MyDeptEmp();
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptEmpAttr.FK_Dept, BP.Web.WebUser.getFK_Dept());

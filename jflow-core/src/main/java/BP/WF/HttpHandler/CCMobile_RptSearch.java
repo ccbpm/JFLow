@@ -24,8 +24,9 @@ public class CCMobile_RptSearch extends WebContralBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Default_Init()
+	public final String Default_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 		String sql = "";
@@ -144,8 +145,9 @@ public class CCMobile_RptSearch extends WebContralBase
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Default_Search()
+	public final String Default_Search() throws Exception
 	{
 		String TSpan = this.GetRequestVal("TSpan");
 		String FK_Flow = this.GetRequestVal("FK_Flow");
@@ -182,8 +184,9 @@ public class CCMobile_RptSearch extends WebContralBase
 	 获取退回
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DB_GenerReturnWorks()
+	public final String DB_GenerReturnWorks() throws Exception
 	{
 		CCMobile cc = new CCMobile();
 		return cc.DB_GenerReturnWorks();

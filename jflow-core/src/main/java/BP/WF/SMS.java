@@ -20,8 +20,9 @@ public class SMS extends EntityMyPK
 	 @param msgFlag 标记
 	 @param msgType 类型
 	 @param paras 扩展参数
+	 * @throws Exception 
 	*/
-	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras)
+	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras) throws Exception
 	{
 
 		SMS sms = new SMS();
@@ -53,8 +54,9 @@ public class SMS extends EntityMyPK
 	 @param infoBody 邮件内容
 	 @param msgFlag 消息标记，可以为空。
 	 @param guestNo 用户编号
+	 * @throws Exception 
 	*/
-	public static void SendMsg(String mobileNum, String mobileInfo, String email, String title, String infoBody, String msgFlag, String msgType, String guestNo)
+	public static void SendMsg(String mobileNum, String mobileInfo, String email, String title, String infoBody, String msgFlag, String msgType, String guestNo) throws Exception
 	{
 		SMS sms = new SMS();
 		sms.setSender(WebUser.getNo());
@@ -408,10 +410,11 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 插入之后执行的方法.
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	protected void afterInsert()
+	protected void afterInsert() throws Exception
 	{
 		/* 发送消息开关 */
 		if (BP.WF.Glo.getIsEnableSysMessage() == false)

@@ -65,7 +65,7 @@ public class ExcelFile extends EntityNoName
 	{
 	}
 
-	public ExcelFile(String no)
+	public ExcelFile(String no) throws Exception
 	{
 		this.Retrieve(ExcelFileAttr.No, no);
 	}
@@ -132,17 +132,18 @@ public class ExcelFile extends EntityNoName
 	///#region 重写事件
 	/** 
 	 记录添加前事件
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setNo(UUID.randomUUID().toString());
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (StringHelper.isNullOrWhiteSpace(this.getMark()))
 		{

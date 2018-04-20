@@ -38,8 +38,9 @@ import BP.WF.Flow;
 		 延续子流程集合.
 		 
 		 @param fk_node
+		 * @throws Exception 
 		*/
-		public NodeYGFlows(String fk_node)
+		public NodeYGFlows(String fk_node) throws Exception
 		{
 			this.Retrieve(NodeYGFlowAttr.FK_Node, fk_node);
 		}

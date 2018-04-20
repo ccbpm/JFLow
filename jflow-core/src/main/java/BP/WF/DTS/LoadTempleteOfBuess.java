@@ -41,10 +41,11 @@ public class LoadTempleteOfBuess extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (BP.Web.WebUser.getNo().equals("admin"))
 		{
@@ -56,7 +57,7 @@ public class LoadTempleteOfBuess extends Method
 		}
 	}
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String msg = "";
 

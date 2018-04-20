@@ -153,7 +153,7 @@ public class MapAttrDT extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		return super.beforeUpdateInsertAction();
 	}

@@ -625,10 +625,11 @@ public class PushMsg extends EntityMyPK
 	 @param jumpToNode 跳转到的节点
 	 @param jumpToEmps 跳转到的人员
 	 @return 执行成功的消息
+	 * @throws Exception 
 	*/
 
 //ORIGINAL LINE: public string DoSendMessage(Node currNode, Entity en, string atPara, SendReturnObjs objs, Node jumpToNode = null, string jumpToEmps = null)
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps)
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
 	{
 		if (en == null)
 		{
@@ -712,8 +713,9 @@ public class PushMsg extends EntityMyPK
 	 @param objs
 	 @param r 处理好的变量集合
 	 @return 
+	 * @throws Exception 
 	*/
-	private String SendEmail(String title, String openWorkURl, Entity en, String jumpToEmps, Node currNode, long workid, SendReturnObjs objs, Row r)
+	private String SendEmail(String title, String openWorkURl, Entity en, String jumpToEmps, Node currNode, long workid, SendReturnObjs objs, Row r) throws Exception
 	{
 		if (this.getMailPushWay() == 0)
 		{
@@ -965,8 +967,9 @@ public class PushMsg extends EntityMyPK
 	 @param objs
 	 @param r 处理好的变量集合
 	 @return 
+	 * @throws Exception 
 	*/
-	private String SendShortMessageToSpecNodes(String title, String openWorkURl, Entity en, String jumpToEmps, Node currNode, long workid, SendReturnObjs objs, Row r)
+	private String SendShortMessageToSpecNodes(String title, String openWorkURl, Entity en, String jumpToEmps, Node currNode, long workid, SendReturnObjs objs, Row r) throws Exception
 	{
 		if (this.getSMSPushWay() == 0)
 		{
@@ -1215,7 +1218,7 @@ public class PushMsg extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 	   //  this.MyPK = this.FK_Event + "_" + this.FK_Node + "_" + this.PushWay;
 

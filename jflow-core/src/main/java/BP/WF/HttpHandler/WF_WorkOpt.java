@@ -130,7 +130,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String WorkCheck_Init()
+	public final String WorkCheck_Init() throws Exception
 	{
 		   if (WebUser.getNo() == null)
                return "err@登录信息丢失,请重新登录.";
@@ -623,8 +623,9 @@ public class WF_WorkOpt extends WebContralBase {
 	 * 获取审核组件中刚上传的附件列表信息
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String WorkCheck_GetNewUploadedAths() {
+	public final String WorkCheck_GetNewUploadedAths() throws Exception {
 		DataRow row = null;
 		String athNames = GetRequestVal("Names");
 		String attachPK = GetRequestVal("AttachPK");
@@ -670,8 +671,9 @@ public class WF_WorkOpt extends WebContralBase {
 	 * 
 	 * @param athDB
 	 * @return
+	 * @throws Exception 
 	 */
-	private String GetFileAction(FrmAttachmentDB athDB) {
+	private String GetFileAction(FrmAttachmentDB athDB) throws Exception {
 		
 		if (athDB == null || athDB.getFileExts().equals("")) {
 			return "#";
@@ -711,8 +713,9 @@ public class WF_WorkOpt extends WebContralBase {
 	 * 审核信息保存.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String WorkCheck_Save() {
+	public final String WorkCheck_Save() throws Exception {
 		
 		// 审核信息.
 		String msg = "";
@@ -820,7 +823,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public String CC_Init() {
+	public String CC_Init() throws Exception {
 		// 抄送初始化.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		java.util.Hashtable ht = new java.util.Hashtable();
@@ -849,7 +852,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
 
-	public String CC_SelectDepts() {
+	public String CC_SelectDepts() throws Exception {
 		// 选择部门呈现信息.
 		BP.Port.Depts depts = new BP.Port.Depts();
 		depts.RetrieveAll();
@@ -873,7 +876,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public String CC_Send() {
+	public String CC_Send() throws Exception {
 
 		// 人员信息. 格式 zhangsan,张三;lisi,李四;
 		String emps = this.GetRequestVal("Emps");
@@ -907,7 +910,7 @@ public class WF_WorkOpt extends WebContralBase {
 		}
 	}
 
-	public String DealSubThreadReturnToHL_Init() {
+	public String DealSubThreadReturnToHL_Init() throws Exception {
 
 		// 如果工作节点退回了
 		BP.WF.ReturnWorks rws = new BP.WF.ReturnWorks();
@@ -963,7 +966,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
 
-	public String DealSubThreadReturnToHL_Done() {
+	public String DealSubThreadReturnToHL_Done() throws Exception {
 		String msg = "";
 		// 操作类型.
 		String actionType = this.GetRequestVal("ActionType");
@@ -1024,7 +1027,7 @@ public class WF_WorkOpt extends WebContralBase {
 			return "";
 		}
 
-	public String DeleteFlowInstance_DoDelete() {
+	public String DeleteFlowInstance_DoDelete() throws Exception {
 
 		try {
 			if (BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(),
@@ -1064,7 +1067,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return "流程删除成功.";
 	}
 
-	public String ViewWorkNodeFrm() {
+	public String ViewWorkNodeFrm() throws Exception {
 		// 获得节点表单数据.
 		Node nd = new Node(this.getFK_Node());
 
@@ -1096,13 +1099,13 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(myds);
 	}
 
-	public String AskForRe() {
+	public String AskForRe() throws Exception {
 		/// 签信息.
 		String note = this.GetRequestVal("Note"); // 原因.
 		return BP.WF.Dev2Interface.Node_AskforReply(this.getWorkID(), note);
 	}
 
-	public String Askfor() {
+	public String Askfor() throws Exception {
 		// 执行加签
 		long workID = Integer.parseInt(this.GetRequestVal("WorkID")); // 工作ID
 		String toEmp = this.GetRequestVal("ToEmp"); // 让谁加签?
@@ -1149,7 +1152,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 	
-	public String Accepter_Init()
+	public String Accepter_Init() throws Exception
 	{
 		 /*如果是协作模式, 就要检查当前是否主持人, 当前是否是会签模式. */
         GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -1288,7 +1291,7 @@ public class WF_WorkOpt extends WebContralBase {
 		}
 	}
 
-	public String Accepter_Send() {
+	public String Accepter_Send() throws Exception {
 		try {
 			// 求到达的节点.
 			int toNodeID = 0;
@@ -1359,26 +1362,26 @@ public class WF_WorkOpt extends WebContralBase {
 		}
 	}
 
-	public String Shift() {
+	public String Shift() throws Exception {
 		String msg = this.GetRequestVal("Message");
 		String toEmp = this.GetRequestVal("ToEmp");
 		return BP.WF.Dev2Interface.Node_Shift(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 				toEmp, msg);
 	}
 
-	public String Allot() {
+	public String Allot() throws Exception {
 		String msg = this.GetRequestVal("Message");
 		String toEmp = this.GetRequestVal("ToEmp");
 		return BP.WF.Dev2Interface.Node_Allot(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 				toEmp, msg);
 	}
 
-	public String UnShift() {
+	public String UnShift() throws Exception {
 
 		return BP.WF.Dev2Interface.Node_ShiftUn(this.getFK_Flow(), this.getWorkID());
 	}
 
-	public String Press() {
+	public String Press() throws Exception {
 
 		String msg = this.GetRequestVal("Msg");
 
@@ -1430,8 +1433,9 @@ public class WF_WorkOpt extends WebContralBase {
 	 * 会签
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String HuiQian_Init() {
+	public final String HuiQian_Init() throws Exception {
 		// 要找到主持人.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 
@@ -1469,8 +1473,9 @@ public class WF_WorkOpt extends WebContralBase {
 	 * 移除
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String HuiQian_Delete() {
+	public final String HuiQian_Delete() throws Exception {
 		String emp = this.GetRequestVal("FK_Emp");
 		if (this.getFK_Emp() == WebUser.getNo()) {
 			return "err@您不能移除您自己";
@@ -1670,8 +1675,9 @@ public class WF_WorkOpt extends WebContralBase {
 	 保存并关闭
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String HuiQian_SaveAndClose()
+	public final String HuiQian_SaveAndClose() throws Exception
 	{
 		//生成变量.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -1786,7 +1792,7 @@ public class WF_WorkOpt extends WebContralBase {
 	/// 删除.
 	/// </summary>
 	/// <returns></returns>
-	public String AccepterOfGener_Delete() {
+	public String AccepterOfGener_Delete() throws Exception {
 		// 删除指定的人员.
 		BP.DA.DBAccess.RunSQL("DELETE FROM WF_SelectAccper WHERE WorkID=" + this.getWorkID() + " AND FK_Emp='"
 				+ this.getFK_Emp() + "'");
@@ -1874,7 +1880,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String DBTemplate_DeleteDBTemplate() {
+	public final String DBTemplate_DeleteDBTemplate() throws Exception {
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 	 
  		gwf.setParas_DBTemplate(false);
@@ -1885,7 +1891,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return "设置成功";
 	}
 
-	public final String DBTemplate_Init() {
+	public final String DBTemplate_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 获取模版.
@@ -1942,7 +1948,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public String DBTemplate_SaveAsDBTemplate() {
+	public String DBTemplate_SaveAsDBTemplate() throws Exception {
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		gwf.setParas_DBTemplate(true);
 		try {
@@ -1991,8 +1997,9 @@ public class WF_WorkOpt extends WebContralBase {
 	/** 打包下载
 	 
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String Packup_Init()
+	public final String Packup_Init() throws Exception
 	{
 		try
 		{

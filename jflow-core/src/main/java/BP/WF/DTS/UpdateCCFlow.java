@@ -39,9 +39,10 @@ public class UpdateCCFlow extends Method
 	/** 
 	 执行
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		if ( ! BP.Web.WebUser.getNo().equals("admin"))
 		{

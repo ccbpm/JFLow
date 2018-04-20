@@ -33,8 +33,9 @@ public class MapFrameExt extends EntityMyPK
 	 框架
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public MapFrameExt(String mypk)
+	public MapFrameExt(String mypk) throws Exception
 	{
 		this.setMyPK( mypk);
 		this.Retrieve();

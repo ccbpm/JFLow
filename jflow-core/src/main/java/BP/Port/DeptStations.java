@@ -26,8 +26,9 @@ public class DeptStations extends Entities
 	
 	/**
 	 * 工作人员与岗位集合
+	 * @throws Exception 
 	 */
-	public DeptStations(String stationNo)
+	public DeptStations(String stationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DeptStationAttr.FK_Station, stationNo);
@@ -51,8 +52,9 @@ public class DeptStations extends Entities
 	 * @param stationNo
 	 *            岗位编号
 	 * @return 节点s
+	 * @throws Exception 
 	 */
-	public final Emps GetHisEmps(String stationNo)
+	public final Emps GetHisEmps(String stationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DeptStationAttr.FK_Station, stationNo);
@@ -74,8 +76,9 @@ public class DeptStations extends Entities
 	 * @param empId
 	 *            empId
 	 * @return 工作部门岗位对应s
+	 * @throws Exception 
 	 */
-	public final Stations GetHisStations(String empId)
+	public final Stations GetHisStations(String empId) throws Exception
 	{
 		Stations ens = new Stations();
 		if (Cash.IsExits("DeptStationsOf" + empId, Depositary.Application))

@@ -14,7 +14,7 @@ public class AnQuanItem extends EntityNoName
 {
 		//#region 构造函数
 		@Override
-		public UAC getHisUAC()
+		public UAC getHisUAC() throws Exception
 		{
 			UAC uac = new UAC();
 			uac.OpenForSysAdmin();
@@ -30,8 +30,9 @@ public class AnQuanItem extends EntityNoName
 		 安全项目
 		 
 		 @param no
+		 * @throws Exception 
 		*/
-		public AnQuanItem(String no)
+		public AnQuanItem(String no) throws Exception
 		{
 			super(no);
 

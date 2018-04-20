@@ -24,8 +24,9 @@ public class FrmLinks extends EntitiesMyPK
 	 超连接s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmLinks(String fk_mapdata)
+	public FrmLinks(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

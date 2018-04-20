@@ -19,8 +19,9 @@ public class WorkflowDefintionManager
 	 @param nodes 节点信息，格式为:@NodeID=xxxx@X=xxx@Y=xxx@Name=xxxx@RunModel=1
 	 @param dirs 方向信息，格式为: @Node=xxxx@ToNode=xxx@X=xxx@Y=xxx@Name=xxxx   
 	 @param labes 标签信息，格式为:@MyPK=xxxxx@Label=xxx@X=xxx@Y=xxxx
+	 * @throws Exception 
 	*/
-	public static String SaveFlow(String fk_flow, String nodes, String dirs, String labes)
+	public static String SaveFlow(String fk_flow, String nodes, String dirs, String labes) throws Exception
 	{
 		try
 		{
@@ -146,8 +147,9 @@ public class WorkflowDefintionManager
 	 删除一个流程模版
 	 
 	 @param flowNo 流程编号
+	 * @throws Exception 
 	*/
-	public static String DeleteFlowTemplete(String flowNo)
+	public static String DeleteFlowTemplete(String flowNo) throws Exception
 	{
 		BP.WF.Flow fl1 = new BP.WF.Flow(flowNo);
 		try
@@ -161,7 +163,7 @@ public class WorkflowDefintionManager
 			return ex.getMessage();
 		}
 	}
-	public static String DeleteFrmTemplate(String v1){
+	public static String DeleteFrmTemplate(String v1) throws Exception{
 		
 		MapData md4 = new MapData();
 		try{

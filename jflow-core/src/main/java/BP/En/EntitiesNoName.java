@@ -92,8 +92,9 @@ public abstract class EntitiesNoName extends EntitiesNo
 	 * @param likeName
 	 *            likeName
 	 * @return 返回查询的Num
+	 * @throws Exception 
 	 */
-	public final int RetrieveByLikeName(String likeName)
+	public final int RetrieveByLikeName(String likeName) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere("Name", "like", " %" + likeName + "% ");
@@ -101,7 +102,7 @@ public abstract class EntitiesNoName extends EntitiesNo
 	}
 	
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return super.RetrieveAll("No");
 	}

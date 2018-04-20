@@ -89,8 +89,9 @@ public abstract class EntitySimpleTree extends Entity
 	 * 
 	 * @param no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public EntitySimpleTree(String no)
+	public EntitySimpleTree(String no) throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(no))
 		{

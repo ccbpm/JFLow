@@ -22,8 +22,9 @@ public class FrmEles extends EntitiesMyPK
 	 表单元素扩展s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmEles(String fk_mapdata)
+	public FrmEles(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

@@ -152,7 +152,7 @@ public class ShiftWork extends EntityMyPK
 		return this.get_enMap();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setMyPK(String.valueOf(BP.DA.DBAccess.GenerOIDByGUID()));
 		this.setRDT(DataType.getCurrentDataTime());

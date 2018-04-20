@@ -105,7 +105,7 @@ public class Cash
 		getSQL_Cash().put(clName, csh);
 	}
 	
-	public static void InitSQL()
+	public static void InitSQL() throws Exception
 	{
 		ArrayList<Entity> al = ClassFactory.GetObjects("Entity");
 		for (Entity en : al)

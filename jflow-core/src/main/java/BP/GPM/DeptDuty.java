@@ -12,9 +12,10 @@ public class DeptDuty extends Entity
 {
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -58,8 +59,9 @@ public class DeptDuty extends Entity
 	 工作人员职务对应
 	 @param _empoid 部门
 	 @param wsNo 职务编号 	
+	 * @throws Exception 
 	*/
-	public DeptDuty(String _empoid, String wsNo)
+	public DeptDuty(String _empoid, String wsNo) throws Exception
 	{
 		this.setFK_Dept(_empoid);
 		this.setFK_Duty(wsNo);

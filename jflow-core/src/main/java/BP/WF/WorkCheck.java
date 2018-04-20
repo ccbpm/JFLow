@@ -86,7 +86,7 @@ public class WorkCheck
 			return 0;
 		}
 	}
-	public final Tracks getHisWorkChecks()
+	public final Tracks getHisWorkChecks() throws Exception
 	{
 		if (_HisWorkChecks == null)
 		{

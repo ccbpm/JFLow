@@ -123,7 +123,7 @@ public class WF_RptDfine extends WebContralBase{
 		return BP.Tools.Json.ToJsonEntitiesNoNameModel(ht);
 	}
 	
-	public final String FlowSearch_Init()
+	public final String FlowSearch_Init() throws Exception
 	{
 		if (StringUtils.isEmpty(this.getFK_Flow()))
 		{
@@ -816,7 +816,7 @@ public class WF_RptDfine extends WebContralBase{
 		
 	}
 	
-	public final String FlowSearch_Done()
+	public final String FlowSearch_Done() throws Exception
 	{
 		String vals = this.GetRequestVal("vals");
 		String searchKey = GetRequestVal("key");

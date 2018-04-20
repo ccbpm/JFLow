@@ -96,7 +96,7 @@ public class WorkCheck
 	
 	private Tracks _HisWorkChecks = null;
 	
-	public final Tracks getHisWorkChecks()
+	public final Tracks getHisWorkChecks() throws Exception
 	{
 		if (_HisWorkChecks == null)
 		{

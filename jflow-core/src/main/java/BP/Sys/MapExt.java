@@ -462,8 +462,9 @@ public class MapExt extends EntityMyPK
 	
 	@param ht
 	@return 
+ * @throws Exception 
    */
-	public final String AutoFullDLL_SQL_ForDtl(java.util.Hashtable htMainEn, java.util.Hashtable htDtlEn)
+	public final String AutoFullDLL_SQL_ForDtl(java.util.Hashtable htMainEn, java.util.Hashtable htDtlEn) throws Exception
 	{
 		String fullSQL = this.getDoc().replace("WebUser.No", WebUser.getNo());
 		fullSQL = fullSQL.replace("@WebUser.Name", WebUser.getName());
@@ -513,7 +514,7 @@ public class MapExt extends EntityMyPK
 		return fullSQL;
 	}
 
-	public final String getTagOfSQL_autoFullTB()
+	public final String getTagOfSQL_autoFullTB() throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(this.getTag()))
 		{
@@ -529,7 +530,7 @@ public class MapExt extends EntityMyPK
 		return sql;
 	}
 
-	public final String getDocOfSQLDeal()
+	public final String getDocOfSQLDeal() throws Exception
 	{
 		String sql = this.getDoc();
 		sql = sql.replace("WebUser.No", BP.Web.WebUser.getNo());
@@ -625,8 +626,9 @@ public class MapExt extends EntityMyPK
 	 扩展
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public MapExt(String mypk)
+	public MapExt(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -752,9 +754,10 @@ public class MapExt extends EntityMyPK
 
 	/** 
 	 删除垃圾数据.
+	 * @throws Exception 
 	 
 	*/
-	public static void DeleteDB()
+	public static void DeleteDB() throws Exception
 	{
 		MapExts exts = new MapExts();
 		exts.RetrieveAll();

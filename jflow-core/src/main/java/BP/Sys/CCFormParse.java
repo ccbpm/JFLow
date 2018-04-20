@@ -27,8 +27,9 @@ public class CCFormParse
 	 @param y 位置
 	 @param h 高度
 	 @param w 宽度
+	 * @throws Exception 
 	*/
-	public static void SaveFrmEle(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w)
+	public static void SaveFrmEle(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		FrmEle en = new FrmEle();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
@@ -51,8 +52,9 @@ public class CCFormParse
 	 @param ctrlID 控件ID
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static String SaveFrmRadioButton(String fk_mapdata, String ctrlID, float x, float y)
+	public static String SaveFrmRadioButton(String fk_mapdata, String ctrlID, float x, float y) throws Exception
 	{
 
 		FrmRB en = new FrmRB();
@@ -78,8 +80,9 @@ public class CCFormParse
 	 @param y 位置y
 	 @param h 高度h
 	 @param w 宽度w
+	 * @throws Exception 
 	*/
-	public static void SaveAthImg(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	public static void SaveAthImg(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		FrmImgAth en = new FrmImgAth();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
@@ -102,8 +105,9 @@ public class CCFormParse
 	 @param y 位置y
 	 @param h 高度
 	 @param w 宽度
+	 * @throws Exception 
 	*/
-	public static void SaveAthMulti(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	public static void SaveAthMulti(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		FrmAttachment en = new FrmAttachment();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
@@ -117,7 +121,7 @@ public class CCFormParse
 		en.setH(h);
 		en.Update();
 	}
-	public static void SaveDtl(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	public static void SaveDtl(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(ctrlID);
@@ -131,7 +135,7 @@ public class CCFormParse
 		dtl.Update();
 	}
 	
-	 public static void SaveiFrame(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	 public static void SaveiFrame(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 		{
 			FrmEle en = new FrmEle();
 			en.setFK_MapData(fk_mapdata);
@@ -150,7 +154,7 @@ public class CCFormParse
 		}
 	
 	
-	public static void SaveMapAttr(String fk_mapdata, String fieldID, String shape, JSONObject control, JSONArray properties, String pks)
+	public static void SaveMapAttr(String fk_mapdata, String fieldID, String shape, JSONObject control, JSONArray properties, String pks) throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		attr.setFK_MapData(fk_mapdata);
@@ -304,8 +308,9 @@ public class CCFormParse
 	 
 	 @param fk_mapdata
 	 @param form_Lines
+	 * @throws Exception 
 	*/
-	public static void SaveLine(String fk_mapdata, JSONArray form_Lines)
+	public static void SaveLine(String fk_mapdata, JSONArray form_Lines) throws Exception
 	{
 		//标签.
 		String linePKs = "@";
@@ -381,7 +386,7 @@ public class CCFormParse
 			BP.DA.DBAccess.RunSQLs(sqls);
 		}
 	}
-	public static void SaveLabel(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID)
+	public static void SaveLabel(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		// New lab 对象.
 		FrmLab lab = new FrmLab();
@@ -469,7 +474,7 @@ public class CCFormParse
 			lab.DirectInsert();
 		}
 	}
-	public static void SaveButton(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID)
+	public static void SaveButton(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		FrmBtn btn = new FrmBtn();
 		btn.setMyPK(ctrlID);
@@ -522,7 +527,7 @@ public class CCFormParse
 		}
 	}
 
-	public static void SaveHyperLink(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID)
+	public static void SaveHyperLink(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		FrmLink link = new FrmLink();
 		link.setMyPK(ctrlID);
@@ -623,7 +628,7 @@ public class CCFormParse
 			link.DirectInsert();
 		}
 	}
-	public static void SaveImage(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID)
+	public static void SaveImage(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		FrmImg img = new FrmImg();
 		img.setMyPK(ctrlID);

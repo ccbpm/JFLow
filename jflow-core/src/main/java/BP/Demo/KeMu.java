@@ -20,7 +20,7 @@ public class KeMu extends EntityNoName
 	private static final long serialVersionUID = 13464374747L;
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -34,7 +34,7 @@ public class KeMu extends EntityNoName
 	{
 	}
 	
-	public KeMu(String no)
+	public KeMu(String no) throws Exception
 	{
 		super(no);
 	}

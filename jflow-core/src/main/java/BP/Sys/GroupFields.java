@@ -24,8 +24,9 @@ public class GroupFields extends EntitiesOID
 	 GroupFields
 	 
 	 @param enName 名称
+	 * @throws Exception 
 	*/
-	public GroupFields(String enName)
+	public GroupFields(String enName) throws Exception
 	{
 		int i = this.Retrieve(GroupFieldAttr.EnName, enName, GroupFieldAttr.Idx);
 		if (i == 0)
@@ -61,8 +62,9 @@ public class GroupFields extends EntitiesOID
 	 
 	 @param enName
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int RetrieveFieldGroup(String enName)
+	public final int RetrieveFieldGroup(String enName) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GroupFieldAttr.EnName, enName);

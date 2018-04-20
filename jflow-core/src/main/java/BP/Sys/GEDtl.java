@@ -164,6 +164,7 @@ public class GEDtl extends EntityOID
 	// Map
 	/**
 	 * 重写基类方法
+	 * @throws Exception 
 	 */
 	@Override
 	public Map getEnMap()
@@ -178,8 +179,16 @@ public class GEDtl extends EntityOID
 			throw new RuntimeException("没有给" + this.FK_MapDtl + "值，您不能获取它的Map。");
 		}
 		
-		BP.Sys.MapDtl md = new BP.Sys.MapDtl(this.FK_MapDtl);
-		this.set_enMap(md.GenerMap());
+		BP.Sys.MapDtl md;
+		try {
+			md = new BP.Sys.MapDtl(this.FK_MapDtl);
+			this.set_enMap(md.GenerMap());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 		return this.get_enMap();
 	}
 	
@@ -197,7 +206,7 @@ public class GEDtl extends EntityOID
 		return new GEDtls(this.FK_MapDtl);
 	}
 	
-	public final boolean IsChange(GEDtl dtl)
+	public final boolean IsChange(GEDtl dtl) throws Exception
 	{
 		Attrs attrs = dtl.getEnMap().getAttrs();
 		for (Attr attr : attrs)
@@ -215,7 +224,7 @@ public class GEDtl extends EntityOID
 	}
 	
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		try
 		{
@@ -231,9 +240,10 @@ public class GEDtl extends EntityOID
 	 * 记录人
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		// 判断是否有变化的项目，决定是否执行储存。
 		MapAttrs mattrs = new MapAttrs(this.FK_MapDtl);

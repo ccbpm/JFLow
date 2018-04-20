@@ -43,7 +43,7 @@ public class WorkNodes extends ArrayList<WorkNode>
 	{
 	}
 
-	public final int GenerByFID(Flow flow, long fid)
+	public final int GenerByFID(Flow flow, long fid) throws Exception
 	{
 		this.clear();
 
@@ -72,8 +72,9 @@ public class WorkNodes extends ArrayList<WorkNode>
 	 @param flow
 	 @param oid
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int GenerByWorkID2014_01_06(Flow flow, long oid)
+	public final int GenerByWorkID2014_01_06(Flow flow, long oid) throws Exception
 	{
 		Nodes nds = flow.getHisNodes();
 		for (Node nd : nds.ToJavaList())
@@ -98,7 +99,7 @@ public class WorkNodes extends ArrayList<WorkNode>
 		}
 		return this.size();
 	}
-	public final int GenerByWorkID(Flow flow, long oid)
+	public final int GenerByWorkID(Flow flow, long oid) throws NumberFormatException, Exception
 	{
 		String table = "ND" + Integer.parseInt(flow.getNo()) + "Track";
 		String actionSQL = "SELECT EmpFrom,EmpFromT,RDT,NDFrom FROM " + table + " WHERE WorkID=" + oid + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.ForwardHL.getValue() + " OR ActionType=" + ActionType.SubFlowForward.getValue() + " ) ORDER BY RDT";
@@ -130,9 +131,10 @@ public class WorkNodes extends ArrayList<WorkNode>
 	}
 	/** 
 	 删除工作流程
+	 * @throws Exception 
 	 
 	*/
-	public final void DeleteWorks()
+	public final void DeleteWorks() throws Exception
 	{
 		for (WorkNode wn : this)
 		{

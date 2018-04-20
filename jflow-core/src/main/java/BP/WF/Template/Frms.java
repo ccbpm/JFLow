@@ -21,12 +21,13 @@ public class Frms extends EntitiesNoName
 	 Frm
 	 
 	 @param fk_flow
+	 * @throws Exception 
 	*/
-	public Frms(String fk_flow)
+	public Frms(String fk_flow) throws Exception
 	{
 		this.Retrieve(FrmAttr.FK_Flow, fk_flow);
 	}
-	public Frms(int fk_node)
+	public Frms(int fk_node) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(FrmAttr.No, "SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + fk_node);

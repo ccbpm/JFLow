@@ -154,7 +154,7 @@ public class NodeSheet extends Entity
 	}
  
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();		 
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -175,7 +175,7 @@ public class NodeSheet extends Entity
 	public NodeSheet()
 	{
 	}
-	public NodeSheet(int nodeid)
+	public NodeSheet(int nodeid) throws Exception
 	{
 		this.setNodeID(nodeid);
 		this.Retrieve();
@@ -236,7 +236,7 @@ public class NodeSheet extends Entity
 		return this.get_enMap();
 	} 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		//更新流程版本
 		Flow.UpdateVer(this.getFK_Flow());

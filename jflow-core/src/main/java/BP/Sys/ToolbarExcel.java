@@ -13,10 +13,11 @@ public class ToolbarExcel extends EntityNoName
 {
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
@@ -379,8 +380,9 @@ public class ToolbarExcel extends EntityNoName
 	/** 
 	 ToolbarExcel功能控制
 	 @param no 表单ID
+	 * @throws Exception 
 	*/
-	public ToolbarExcel(String no)
+	public ToolbarExcel(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();

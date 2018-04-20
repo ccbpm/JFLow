@@ -71,8 +71,9 @@ public class WorkReturn
 	 @param reutrnToEmp 退回到人
 	 @param isBackTrack 是否需要原路返回？
 	 @param returnInfo 退回原因
+	 * @throws Exception 
 	*/
-	public WorkReturn(String fk_flow, long workID, long fid, int currNodeID, int ReturnToNodeID, String reutrnToEmp, boolean isBackTrack, String returnInfo)
+	public WorkReturn(String fk_flow, long workID, long fid, int currNodeID, int ReturnToNodeID, String reutrnToEmp, boolean isBackTrack, String returnInfo) throws Exception
 	{
 		this.HisNode = new Node(currNodeID);
 		this.ReturnToNode = new Node(ReturnToNodeID);
@@ -197,8 +198,9 @@ public class WorkReturn
 	 队列节点上一个人退回另外一个人.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoOrderReturn()
+	public final String DoOrderReturn() throws Exception
 	{
 		//退回前事件
 		String atPara = "@ToNode=" + this.ReturnToNode.getNodeID();
@@ -338,7 +340,7 @@ public class WorkReturn
     /// 要退回到父流程上去@du.
     /// </summary>
     /// <returns></returns>
-    private String ReturnToParentFlow()
+    private String ReturnToParentFlow() throws Exception
     {
         //当前 gwf.
         GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
@@ -401,8 +403,9 @@ public class WorkReturn
 	 执行退回.
 	 
 	 @return 返回退回信息
+	 * @throws Exception 
 	*/
-	public final String DoIt()
+	public final String DoIt() throws Exception
 	{
 		
 		   // 增加要退回到父流程上去. by zhoupeng.
@@ -566,8 +569,9 @@ public class WorkReturn
 	 分流点退回给子线程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private String ExeReturn2_4()
+	private String ExeReturn2_4() throws Exception
 	{
 		//更新运动到节点,但是仍然是退回状态.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
@@ -608,8 +612,9 @@ public class WorkReturn
 	 子线程退回给分流点
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private String ExeReturn5_2()
+	private String ExeReturn5_2() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 		gwf.setFK_Node(this.ReturnToNode.getNodeID());
@@ -725,9 +730,10 @@ public class WorkReturn
 	}
 	/** 
 	 合流点向子线程退回
+	 * @throws Exception 
 	 
 	*/
-	private String ExeReturn3_4()
+	private String ExeReturn3_4() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 		gwf.setFK_Node(this.ReturnToNode.getNodeID());
@@ -786,9 +792,10 @@ public class WorkReturn
 	}
 	/** 
 	 合流点向分流点退回
+	 * @throws Exception 
 	 
 	*/
-	private String ExeReturn3_2()
+	private String ExeReturn3_2() throws Exception
 	{
 		//删除分流点与合流点之间的子线程数据。
 		//if (this.ReturnToNode.IsStartNode == false)
@@ -820,8 +827,9 @@ public class WorkReturn
 	 普通节点到普通节点的退回
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private String ExeReturn1_1()
+	private String ExeReturn1_1() throws Exception
 	{
 		//为软通小杨处理rpt变量不能替换的问题.
 		GERpt rpt = this.HisNode.getHisFlow().getHisGERpt();
@@ -1007,8 +1015,9 @@ public class WorkReturn
 	 @param toNDid 到节点
 	 @param toNDName 到节点名称
 	 @param msg 消息
+	 * @throws Exception 
 	*/
-	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName, String msg)
+	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName, String msg) throws Exception
 	{
 		Track t = new Track();
 		t.setWorkID(this.WorkID);
@@ -1040,7 +1049,7 @@ public class WorkReturn
 		t.Insert();
 	}
 	private String infoLog = "";
-	private void ReorderLog(Node fromND, Node toND, ReturnWork rw)
+	private void ReorderLog(Node fromND, Node toND, ReturnWork rw) throws Exception
 	{
 		String filePath = BP.Sys.SystemConfig.getPathOfDataUser() + "ReturnLog/" + this.HisNode.getFK_Flow() + "/";
 		if ((new java.io.File(filePath)).isDirectory() == false)
@@ -1059,7 +1068,7 @@ public class WorkReturn
 
 		// this.HisWork.Delete();
 	}
-	private void ReorderLog(Node fromND, Node toND)
+	private void ReorderLog(Node fromND, Node toND) throws Exception
 	{
 		//开始遍历到达的节点集合
 		for (Node nd : fromND.getHisToNodes().ToJavaList())
@@ -1160,8 +1169,9 @@ public class WorkReturn
 	 递归删除两个节点之间的数据
 	 
 	 @param nds 到达的节点集合
+	 * @throws Exception 
 	*/
-	public final void DeleteToNodesData(Nodes nds)
+	public final void DeleteToNodesData(Nodes nds) throws Exception
 	{
 		//开始遍历到达的节点集合
 		for (Node nd : nds.ToJavaList())
@@ -1246,7 +1256,7 @@ public class WorkReturn
 			DeleteToNodesData(nd.getHisToNodes());
 		}
 	}
-	private WorkNode DoReturnSubFlow(int backtoNodeID, String msg, boolean isHiden)
+	private WorkNode DoReturnSubFlow(int backtoNodeID, String msg, boolean isHiden) throws Exception
 	{
 		Node nd = new Node(backtoNodeID);
 		ps = new Paras();

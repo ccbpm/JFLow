@@ -17,10 +17,11 @@ public static final String getCondExp = null;
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();

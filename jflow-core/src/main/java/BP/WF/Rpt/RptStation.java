@@ -13,7 +13,7 @@ import BP.Port.Stations;
 public class RptStation extends Entity
 {
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -80,8 +80,9 @@ public class RptStation extends Entity
 	 
 	 @param _empoid 报表ID
 	 @param wsNo 岗位编号 	
+	 * @throws Exception 
 	*/
-	public RptStation(String _empoid, String wsNo)
+	public RptStation(String _empoid, String wsNo) throws Exception
 	{
 		this.setFK_Rpt(_empoid);
 		this.setFK_Station(wsNo);

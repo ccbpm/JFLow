@@ -24,8 +24,9 @@ public class Rpt2Attr
 	
 	/**
 	 * 标题
+	 * @throws Exception 
 	 */
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(_Title))
 		{
@@ -216,7 +217,7 @@ public class Rpt2Attr
 	 */
 	public DataTable _DBDataTable = null;
 	
-	public final DataTable getDBDataTable()
+	public final DataTable getDBDataTable() throws Exception
 	{
 		if (_DBDataTable == null)
 		{

@@ -65,7 +65,7 @@ public class Supplier extends EntityNoName
 		
 
 		@Override
-		public UAC getHisUAC()
+		public UAC getHisUAC() throws Exception
 		{
 			UAC uac = new UAC();
 			uac.OpenForSysAdmin();
@@ -81,8 +81,9 @@ public class Supplier extends EntityNoName
 		 供应商
 		 
 		 @param no
+		 * @throws Exception 
 		*/
-		public Supplier(String no)
+		public Supplier(String no) throws Exception
 		{
 			super(no);
 

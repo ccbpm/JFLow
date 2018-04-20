@@ -11,7 +11,7 @@ public abstract class StartWork extends Work{
 		///#region 与_SQLCash 操作有关
 	private SQLCash _SQLCash = null;
 	@Override
-	public SQLCash getSQLCash()
+	public SQLCash getSQLCash() throws Exception
 	{
 		if (_SQLCash == null)
 		{
@@ -86,16 +86,17 @@ public abstract class StartWork extends Work{
 	protected StartWork()
 	{
 	}
-	protected StartWork(long oid)
+	protected StartWork(long oid) throws Exception
 	{
 		super(oid);
 	}
 	/** 
 	 删除之前的操作。
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (super.beforeDelete()==false)
 		{
@@ -110,9 +111,10 @@ public abstract class StartWork extends Work{
 	/** 
 	 插入之前的操作。
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getOID() > 0)
 		{
@@ -123,7 +125,7 @@ public abstract class StartWork extends Work{
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setEmps(BP.Web.WebUser.getNo());
 		return super.beforeUpdateInsertAction();
@@ -131,9 +133,10 @@ public abstract class StartWork extends Work{
 	/** 
 	 更新操作
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (super.beforeUpdate()==false)
 		{

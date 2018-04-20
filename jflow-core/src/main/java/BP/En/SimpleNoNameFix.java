@@ -11,7 +11,7 @@ public abstract class SimpleNoNameFix extends EntityNoName
 	
 	// 构造
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -22,7 +22,7 @@ public abstract class SimpleNoNameFix extends EntityNoName
 	{
 	}
 	
-	public SimpleNoNameFix(String _No)
+	public SimpleNoNameFix(String _No) throws Exception
 	{
 		super(_No);
 	}

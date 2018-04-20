@@ -120,7 +120,7 @@ public class FrmRB extends EntityMyPK
 	public FrmRB()
 	{
 	}
-	public FrmRB(String mypk)
+	public FrmRB(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -169,14 +169,14 @@ public class FrmRB extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeUpdateInsertAction();

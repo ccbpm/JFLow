@@ -50,9 +50,10 @@ public class Cond extends EntityMyPK
 	}
 	/** 
 	 求指定的人员.
+	 * @throws Exception 
 	 
 	*/
-	public final String getSpecOper()
+	public final String getSpecOper() throws Exception
 	{
 		SpecOperWay way = this.getSpecOperWay();
 		if (way == SpecOperWay.CurrOper)
@@ -143,9 +144,10 @@ public class Cond extends EntityMyPK
 	}
 	/** 
 	 要运算的节点
+	 * @throws Exception 
 	 
 	*/
-	public final Node getHisNode()
+	public final Node getHisNode() throws Exception
 	{
 		return new Node(this.getNodeID());
 	}
@@ -215,9 +217,10 @@ public class Cond extends EntityMyPK
 	}
 	/** 
 	 节点名称
+	 * @throws Exception 
 	 
 	*/
-	public final String getFK_NodeT()
+	public final String getFK_NodeT() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		return nd.getName();
@@ -253,9 +256,10 @@ public class Cond extends EntityMyPK
 	 在更新与插入之前要做得操作。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.RunSQL("UPDATE WF_Node SET IsCCFlow=0");
 		// this.RunSQL("UPDATE WF_Node SET IsCCNode=1 WHERE NodeID IN (SELECT NodeID FROM WF_Cond WHERE CondType=" + (int)CondType.Node + ")");
@@ -275,7 +279,7 @@ public class Cond extends EntityMyPK
 	{
 		return this.GetValStringByKey(CondAttr.FK_Attr);
 	}
-	public final void setFK_Attr(String value)
+	public final void setFK_Attr(String value) throws Exception
 	{
 		if (value == null)
 		{
@@ -437,8 +441,9 @@ public class Cond extends EntityMyPK
 	 条件
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public Cond(String mypk)
+	public Cond(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -450,9 +455,10 @@ public class Cond extends EntityMyPK
 		///#region 公共方法
 	/** 
 	 这个条件能不能通过
+	 * @throws Exception 
 	 
 	*/
-	public boolean getIsPassed()
+	public boolean getIsPassed() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		if (this.en == null)
@@ -906,7 +912,7 @@ public class Cond extends EntityMyPK
         return false;		
 	}
 	
-	public boolean CheckIsPass(Entity en)
+	public boolean CheckIsPass(Entity en) throws Exception
 	{
 
 		try

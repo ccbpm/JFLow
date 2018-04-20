@@ -4,8 +4,7 @@ import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
-import BP.Sys.SysFileManager;
-import BP.Sys.SysFileManagers;
+ 
 
 /** 
   关于对Entity扩展，的方法。
@@ -45,22 +44,7 @@ public class GloEntity
 	}
 		///#endregion
 
-	public static String GetEnFilesUrl(Entity en)
-	{
-		String str = null;
-		SysFileManagers ens = en.getHisSysFileManagers();
-
-		String path = BP.Sys.Glo.getRequest().getRemoteHost();
-		for (Object file : ens)
-		{
-			str += "[<a href='" + path + ((SysFileManager)file).getMyFilePath() + "' target='f" + ((SysFileManager)file).getOID() + "' >" + ((SysFileManager)file).getMyFileName() + "</a>]";
-		}
-		return str;
-	}
-
-		///#region 关于对entity 的处理
-
-		///#region 转换dataset
+	  
 	/** 
 	 把指定的ens 转换为 dataset
 	 

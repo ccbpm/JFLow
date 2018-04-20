@@ -30,13 +30,13 @@ public abstract class Entities extends ArrayList<Entity>
 	// 获取配置信息.
 	
 	// 查询方法.
-	public int RetrieveAllFromDBSource()
+	public int RetrieveAllFromDBSource() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		return qo.DoQuery();
 	}
 	
-	public int RetrieveAllFromDBSource(String orderByAttr)
+	public int RetrieveAllFromDBSource(String orderByAttr) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.addOrderBy(orderByAttr);
@@ -102,15 +102,16 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param val
 	 *            值
 	 * @return 是否查询到
+	 * @throws Exception 
 	 */
-	public final int RetrieveByAttr(String attr, Object val)
+	public final int RetrieveByAttr(String attr, Object val) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(attr, val);
 		return qo.DoQuery();
 	}
 	
-	public final int RetrieveLikeAttr(String attr, String val)
+	public final int RetrieveLikeAttr(String attr, String val) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(attr, " like ", val);
@@ -178,8 +179,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 *            Table
 	 * @param fieldName
 	 *            字段名称，这个字段时包含在table 中的主键
+	 * @throws Exception 
 	 */
-	public final void InitCollectionByTable(DataTable dt, String fieldName)
+	public final void InitCollectionByTable(DataTable dt, String fieldName) throws Exception
 	{
 		Entity en = this.getGetNewEntity();
 		String pk = en.getPK();
@@ -367,8 +369,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param pks
 	 *            主键的值，中间用@符号隔开
+	 * @throws Exception 
 	 */
-	public void AddEntities(String pks)
+	public void AddEntities(String pks) throws Exception
 	{
 		this.clear();
 		if (pks == null || pks.equals(""))
@@ -784,8 +787,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 装载到内存
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int FlodInCash()
+	public final int FlodInCash() throws Exception
 	{
 		// this.Clear();
 		QueryObject qo = new QueryObject(this);
@@ -1088,8 +1092,9 @@ public abstract class Entities extends ArrayList<Entity>
 	
 	/**
 	 * 更新集合内的对象
+	 * @throws Exception 
 	 */
-	public final void Update()
+	public final void Update() throws Exception
 	{
 		// string msg="";
 		for (Entity en : convertEntities(this))
@@ -1101,8 +1106,9 @@ public abstract class Entities extends ArrayList<Entity>
 	
 	/**
 	 * 保存
+	 * @throws Exception 
 	 */
-	public final void Save()
+	public final void Save() throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -1193,8 +1199,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param key
 	 * @param vals
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveByLike(String key, String vals)
+	public final int RetrieveByLike(String key, String vals) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, " LIKE ", vals);
@@ -1205,22 +1212,23 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 查询出来，包涵pks 的字串。 比例："001,002,003"
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public int Retrieve(String pks)
+	public int Retrieve(String pks) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(this.getGetNewEntity().getPK(), " in ", pks);
 		return qo.DoQuery();
 	}
 	
-	public final int RetrieveInSQL(String attr, String sql)
+	public final int RetrieveInSQL(String attr, String sql) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(attr, sql);
 		return qo.DoQuery();
 	}
 	
-	public final int RetrieveInSQL(String attr, String sql, String orderBy)
+	public final int RetrieveInSQL(String attr, String sql, String orderBy) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(attr, sql);
@@ -1228,21 +1236,21 @@ public abstract class Entities extends ArrayList<Entity>
 		return qo.DoQuery();
 	}
 	
-	public final int RetrieveInSQL(String sql)
+	public final int RetrieveInSQL(String sql) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(this.getGetNewEntity().getPK(), sql);
 		return qo.DoQuery();
 	}
 	
-	public final int RetrieveExistsSQL(String sql)
+	public final int RetrieveExistsSQL(String sql) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereExistsSQL(this.getGetNewEntity().getPK(), sql);
 		return qo.DoQuery();
 	}
 	
-	public final int RetrieveInSQL_Order(String sql, String orderby)
+	public final int RetrieveInSQL_Order(String sql, String orderby) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(this.getGetNewEntity().getPK(), sql);
@@ -1250,7 +1258,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return qo.DoQuery();
 	}
 	
-	public final int Retrieve(String key, boolean val)
+	public final int Retrieve(String key, boolean val) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		if (val)
@@ -1263,14 +1271,14 @@ public abstract class Entities extends ArrayList<Entity>
 		return qo.DoQuery();
 	}
 	
-	public final int Retrieve(String key, Object val)
+	public final int Retrieve(String key, Object val) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
 		return qo.DoQuery();
 	}
 	
-	public final int Retrieve(String key, Object val, String orderby)
+	public final int Retrieve(String key, Object val, String orderby) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
@@ -1279,7 +1287,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return qo.DoQuery();
 	}
 	
-	public final int Retrieve(String key, Object val, String key2, Object val2)
+	public final int Retrieve(String key, Object val, String key2, Object val2) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
@@ -1289,7 +1297,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final int Retrieve(String key, Object val, String key2, Object val2,
-			String ordery)
+			String ordery) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
@@ -1300,7 +1308,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final int Retrieve(String key, Object val, String key2, Object val2,
-			String key3, Object val3)
+			String key3, Object val3) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
@@ -1312,7 +1320,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final int Retrieve(String key, Object val, String key2, Object val2,
-			String key3, Object val3, String key4, Object val4)
+			String key3, Object val3, String key4, Object val4) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
@@ -1326,7 +1334,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final int Retrieve(String key, Object val, String key2, Object val2,
-			String key3, Object val3, String key4, Object val4, String orderBy)
+			String key3, Object val3, String key4, Object val4, String orderBy) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
@@ -1344,20 +1352,21 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 查询全部
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return this.RetrieveAll(null);
 	}
 	
-	public int RetrieveAllOrderByRandom()
+	public int RetrieveAllOrderByRandom() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.addOrderByRandom();
 		return qo.DoQuery();
 	}
 	
-	public int RetrieveAllOrderByRandom(int topNum)
+	public int RetrieveAllOrderByRandom(int topNum) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.setTop(topNum);
@@ -1365,7 +1374,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return qo.DoQuery();
 	}
 	
-	public int RetrieveAll(int topNum, String orderby)
+	public int RetrieveAll(int topNum, String orderby) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.setTop(topNum);
@@ -1373,7 +1382,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return qo.DoQuery();
 	}
 	
-	public int RetrieveAll(int topNum, String orderby, boolean isDesc)
+	public int RetrieveAll(int topNum, String orderby, boolean isDesc) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.setTop(topNum);
@@ -1391,8 +1400,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 查询全部
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public int RetrieveAll(String orderBy)
+	public int RetrieveAll(String orderBy) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		if (orderBy != null)
@@ -1406,8 +1416,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 查询全部。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public int RetrieveAll(String orderBy1, String orderBy2)
+	public int RetrieveAll(String orderBy1, String orderBy2) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		if (orderBy1 != null)
@@ -1423,8 +1434,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param MaxNum
 	 *            最大NUM
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveAll(int MaxNum)
+	public final int RetrieveAll(int MaxNum) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.setTop(MaxNum);
@@ -1435,8 +1447,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 查询全部的结果放到DataTable。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final DataTable RetrieveAllToTable()
+	public final DataTable RetrieveAllToTable() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		return qo.DoQueryToTable();
@@ -2127,8 +2140,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param inSQL
 	 *            sql 语句
 	 * @return 返回放在缓存里面的结果集合
+	 * @throws Exception 
 	 */
-	public final int RetrieveFromCashInSQL(String cashKey, String inSQL)
+	public final int RetrieveFromCashInSQL(String cashKey, String inSQL) throws Exception
 	{
 		this.clear();
 		BP.En.Entities tempVar = Cash.GetEnsDataExt(cashKey);
@@ -2160,9 +2174,10 @@ public abstract class Entities extends ArrayList<Entity>
 	 *            排序字段
 	 * @param isDesc
 	 * @return 返回放在缓存里面的结果集合
+	 * @throws Exception 
 	 */
 	public final int RetrieveFromCash(String attrKey, Object val, int top,
-			String orderBy, boolean isDesc)
+			String orderBy, boolean isDesc) throws Exception
 	{
 		String cashKey = this.toString() + attrKey + val + top + orderBy
 				+ isDesc;
@@ -2206,8 +2221,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param attrKey
 	 * @param val
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveFromCash(String attrKey, Object val)
+	public final int RetrieveFromCash(String attrKey, Object val) throws Exception
 	{
 		return RetrieveFromCash(attrKey, val, 99999, null, true);
 	}
@@ -2219,8 +2235,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param val
 	 * @param orderby
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveFromCash(String attrKey, Object val, String orderby)
+	public final int RetrieveFromCash(String attrKey, Object val, String orderby) throws Exception
 	{
 		return RetrieveFromCash(attrKey, val, 99999, orderby, true);
 	}
@@ -2232,8 +2249,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param orderBy
 	 * @param isDesc
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveFromCash(String orderBy, boolean isDesc, int top)
+	public final int RetrieveFromCash(String orderBy, boolean isDesc, int top) throws Exception
 	{
 		return RetrieveFromCash(null, null, top, orderBy, isDesc);
 	}

@@ -231,10 +231,11 @@ public class FlowSheet extends EntityNoName
 		
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin") || this.getDesignerNo().equals(WebUser.getNo()))
@@ -254,8 +255,9 @@ public class FlowSheet extends EntityNoName
 	 流程
 	 
 	 @param _No 编号
+	 * @throws Exception 
 	*/
-	public FlowSheet(String _No)
+	public FlowSheet(String _No) throws Exception
 	{
 		this.setNo(_No); 
 		if (SystemConfig.getIsDebug())
@@ -743,360 +745,7 @@ public class FlowSheet extends EntityNoName
 		}
 		return null;
 	}
-	/** 
-	 执行流程数据表与业务表数据手工同步
-	 
-	 @return 
-	*/
-	public final String DoBTableDTS()
-	{
-		Flow fl = new Flow(this.getNo());
-		return fl.DoBTableDTS();
-
-	}
-	/** 
-	 恢复已完成的流程数据到指定的节点，如果节点为0就恢复到最后一个完成的节点上去.
-	 
-	 @param workid 要恢复的workid
-	 @param backToNodeID 恢复到的节点编号，如果是0，标示回复到流程最后一个节点上去.
-	 @param note
-	 @return 
-	*/
-	public final String DoRebackFlowData(long workid, int backToNodeID, String note)
-	{
-		if (note.length() <= 2)
-		{
-			return "请填写恢复已完成的流程原因.";
-		}
-
-		Flow fl = new Flow(this.getNo());
-		GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getNo()) + "Rpt");
-		rpt.setOID(workid);
-		int i = rpt.RetrieveFromDBSources();
-		if (i == 0)
-		{
-			throw new RuntimeException("@错误，流程数据丢失。");
-		}
-
-		if (backToNodeID == 0)
-		{
-			backToNodeID = rpt.getFlowEndNode();
-		}
-
-		Emp empStarter = new Emp(rpt.getFlowStarter());
-
-		// 最后一个节点.
-		Node endN = new Node(backToNodeID);
-		GenerWorkFlow gwf = null;
-		boolean isHaveGener = false;
-		try
-		{
-
-				///#region 创建流程引擎主表数据.
-			gwf = new GenerWorkFlow();
-			gwf.setWorkID(workid);
-			if (gwf.RetrieveFromDBSources() == 1)
-			{
-				isHaveGener = true;
-				//判断状态
-				if (gwf.getWFState() != WFState.Complete)
-				{
-					throw new RuntimeException("@当前工作ID为:" + workid + "的流程没有结束,不能采用此方法恢复。");
-				}
-			}
-
-			gwf.setFK_Flow(this.getNo());
-			gwf.setFlowName(this.getName());
-			gwf.setWorkID(workid);
-			gwf.setPWorkID(rpt.getPWorkID());
-			gwf.setPFlowNo(rpt.getPFlowNo());
-			gwf.setPNodeID(rpt.getPNodeID());
-			gwf.setPEmp(rpt.getPEmp());
-
-
-			gwf.setFK_Node(backToNodeID);
-			gwf.setNodeName(endN.getName());
-
-			gwf.setStarter(rpt.getFlowStarter());
-			gwf.setStarterName(empStarter.getName());
-			gwf.setFK_FlowSort(fl.getFK_FlowSort());
-			gwf.setSysType(fl.getSysType());
-			gwf.setTitle(rpt.getTitle());
-			gwf.setWFState(WFState.ReturnSta); //设置为退回的状态
-			gwf.setFK_Dept(rpt.getFK_Dept());
-
-			Dept dept = new Dept(empStarter.getFK_Dept());
-
-			gwf.setDeptName(dept.getName());
-			gwf.setPRI(1);
-
-			Date  date= DateUtils.addDay(new Date(), 3);
-			String dttime = DateUtils.format(date, "yyyy-MM-dd HH:mm:ss");
-			gwf.setSDTOfNode(dttime);
-			gwf.setSDTOfFlow(dttime);
-			if (isHaveGener)
-			{
-				gwf.Update();
-			}
-			else
-			{
-				gwf.Insert(); //插入流程引擎数据.
-			}
-
-
-				///#endregion 创建流程引擎主表数据
-
-			String ndTrack = "ND" + Integer.parseInt(this.getNo()) + "Track";
-			String actionType = ActionType.Forward.getValue() + "," + ActionType.FlowOver.getValue() + "," + ActionType.ForwardFL.getValue() + "," + ActionType.ForwardHL.getValue();
-			String sql = "SELECT  * FROM " + ndTrack + " WHERE   ActionType IN (" + actionType + ")  and WorkID=" + workid + " ORDER BY RDT DESC, NDFrom ";
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size() == 0)
-			{
-				throw new RuntimeException("@工作ID为:" + workid + "的数据不存在.");
-			}
-
-			String starter = "";
-			boolean isMeetSpecNode = false;
-			GenerWorkerList currWl = new GenerWorkerList();
-			for (DataRow dr : dt.Rows)
-			{
-				int ndFrom = Integer.parseInt(dr.getValue("NDFrom").toString());
-				Node nd = new Node(ndFrom);
-
-				String ndFromT = dr.getValue("NDFromT").toString();
-				String EmpFrom = dr.getValue(TrackAttr.EmpFrom).toString();
-				String EmpFromT = dr.getValue(TrackAttr.EmpFromT).toString();
-
-				// 增加上 工作人员的信息.
-				GenerWorkerList gwl = new GenerWorkerList();
-				gwl.setWorkID(workid);
-				gwl.setFK_Flow(this.getNo());
-
-				gwl.setFK_Node(ndFrom);
-				gwl.setFK_NodeText(ndFromT);
-				gwl.setIsPass(true);
-				if (gwl.getFK_Node() == backToNodeID)
-				{
-					gwl.setIsPass(false);
-					currWl = gwl;
-				}
-
-				gwl.setFK_Emp(EmpFrom);
-				gwl.setFK_EmpText(EmpFromT);
-				if (gwl.getIsExits())
-				{
-					continue; //有可能是反复退回的情况.
-				}
-
-				Emp emp = new Emp(gwl.getFK_Emp());
-				gwl.setFK_Dept(emp.getFK_Dept());
-
-				gwl.setRDT(dr.getValue("RDT").toString());
-				gwl.setSDT(dr.getValue("RDT").toString());
-				gwl.setDTOfWarning(gwf.getSDTOfNode());
-				//gwl.setWarningHour(nd.getWarningHour());
-				gwl.setIsEnable(true);
-				gwl.setWhoExeIt(nd.getWhoExeIt());
-				gwl.Insert();
-			}
-
-
-				///#region 加入退回信息, 让接受人能够看到退回原因.
-			ReturnWork rw = new ReturnWork();
-			rw.setWorkID(workid);
-			rw.setReturnNode(backToNodeID);
-			rw.setReturnNodeName(endN.getName());
-			rw.setReturner(WebUser.getNo());
-			rw.setReturnerName(WebUser.getName());
-
-			rw.setReturnToNode(currWl.getFK_Node());
-			rw.setReturnToEmp(currWl.getFK_Emp());
-			rw.setBeiZhu(note);
-			rw.setRDT(DataType.getCurrentDataTime());
-			rw.setIsBackTracking(false);
-			rw.setMyPK(BP.DA.DBAccess.GenerGUID()); 
-
-				///#endregion   加入退回信息, 让接受人能够看到退回原因.
-
-			//更新流程表的状态.
-			rpt.setFlowEnder(currWl.getFK_Emp());
-			rpt.setWFState(WFState.ReturnSta); //设置为退回的状态
-			rpt.setFlowEndNode(currWl.getFK_Node());
-			rpt.Update();
-
-			// 向接受人发送一条消息.
-			BP.WF.Dev2Interface.Port_SendMsg(currWl.getFK_Emp(), "工作恢复:" + gwf.getTitle(), "工作被:" + WebUser.getNo() + " 恢复." + note, "ReBack" + workid, BP.WF.SMSMsgType.SendSuccess, this.getNo(), Integer.parseInt(this.getNo() + "01"), workid, 0);
-
-			//写入该日志.
-			WorkNode wn = new WorkNode(workid, currWl.getFK_Node());
-			wn.AddToTrack(ActionType.RebackOverFlow, currWl.getFK_Emp(), currWl.getFK_EmpText(), currWl.getFK_Node(), currWl.getFK_NodeText(), note);
-
-			return "@已经还原成功,现在的流程已经复原到(" + currWl.getFK_NodeText() + "). @当前工作处理人为(" + currWl.getFK_Emp() + " , " + currWl.getFK_EmpText() + ")  @请通知他处理工作.";
-		}
-		catch (RuntimeException ex)
-		{
-			//此表的记录删除已取消
-			//gwf.Delete();
-			GenerWorkerList wl = new GenerWorkerList();
-			wl.Delete(GenerWorkerListAttr.WorkID, workid);
-
-			String sqls = "";
-			sqls += "@UPDATE " + fl.getPTable() + " SET WFState=" + WFState.Complete.getValue() + " WHERE OID=" + workid;
-			DBAccess.RunSQLs(sqls);
-			return "<font color=red>会滚期间出现错误</font><hr>" + ex.getMessage();
-		}
-	}
-	 /** 
-	 重新产生标题，根据新的规则.
-	 
-	 */
-	public final String DoGenerFlowEmps()
-	{
-		if ( ! WebUser.getNo().equals("admin"))
-		{
-			return "非admin用户不能执行。";
-		}
-
-		Flow fl = new Flow(this.getNo());
-
-		GenerWorkFlows gwfs = new GenerWorkFlows();
-		gwfs.Retrieve(GenerWorkFlowAttr.FK_Flow, this.getNo());
-
-		for (GenerWorkFlow gwf : gwfs.ToJavaList())
-		{
-			String emps = "";
-			String sql = "SELECT EmpFrom FROM ND" + Integer.parseInt(this.getNo()) + "Track  WHERE WorkID=" + gwf.getWorkID();
-
-			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			for (DataRow dr : dt.Rows)
-			{
-				if (emps.contains("," + dr.getValue(0).toString()+","))
-				{
-					continue;
-				}
-			}
-
-			sql = "UPDATE " + fl.getPTable() + " SET FlowEmps='" + emps + "' WHERE OID=" + gwf.getWorkID();
-			DBAccess.RunSQL(sql);
-
-			sql = "UPDATE WF_GenerWorkFlow SET Emps='" + emps + "' WHERE WorkID=" + gwf.getWorkID();
-			DBAccess.RunSQL(sql);
-		}
-
-		Node nd = fl.getHisStartNode();
-		Works wks = nd.getHisWorks();
-		wks.RetrieveAllFromDBSource(WorkAttr.Rec);
-		String table = nd.getHisWork().getEnMap().getPhysicsTable();
-		String tableRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
-		MapData md = new MapData(tableRpt);
-		for (Work wk : wks.ToJavaList())
-		{
-			if (!wk.getRec().equals(WebUser.getNo()))
-			{
-				BP.Web.WebUser.Exit();
-				try
-				{
-					Emp emp = new Emp(wk.getRec());
-					BP.Web.WebUser.SignInOfGener(emp);
-				}
-				catch (java.lang.Exception e)
-				{
-					continue;
-				}
-			}
-			String sql = "";
-			String title = BP.WF.WorkFlowBuessRole.GenerTitle(fl, wk);
-			Paras ps = new Paras();
-			ps.Add("Title", title);
-			ps.Add("OID", wk.getOID());
-			ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQL(ps);
-
-			ps.SQL = "UPDATE " + md.getPTable() + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQL(ps);
-
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQL(ps);
-
-			ps.SQL = "UPDATE WF_GenerFH SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE FID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQLs(sql);
-		}
-		Emp emp1 = new Emp("admin");
-		BP.Web.WebUser.SignInOfGener(emp1);
-
-		return "全部生成成功,影响数据(" + wks.size() + ")条";
-	}
-
-	/** 
-	 重新产生标题，根据新的规则.
-	 
-	*/
-	public final String DoGenerTitle()
-	{
-		if ( ! WebUser.getNo().equals("admin"))
-		{
-			return "非admin用户不能执行。";
-		}
-		Flow fl = new Flow(this.getNo());
-		Node nd = fl.getHisStartNode();
-		Works wks = nd.getHisWorks();
-		wks.RetrieveAllFromDBSource(WorkAttr.Rec);
-		String table = nd.getHisWork().getEnMap().getPhysicsTable();
-		String tableRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
-		MapData md = new MapData(tableRpt);
-		for (Work wk : wks.ToJavaList())
-		{
-
-			if (!wk.getRec().equals(WebUser.getNo()))
-			{
-				BP.Web.WebUser.Exit();
-				try
-				{
-					Emp emp = new Emp(wk.getRec());
-					BP.Web.WebUser.SignInOfGener(emp);
-				}
-				catch (java.lang.Exception e)
-				{
-					continue;
-				}
-			}
-			String sql = "";
-			String title = BP.WF.WorkFlowBuessRole.GenerTitle(fl, wk);
-			Paras ps = new Paras();
-			ps.Add("Title", title);
-			ps.Add("OID", wk.getOID());
-			ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQL(ps);
-
-			ps.SQL = "UPDATE " + md.getPTable() + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQL(ps);
-
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQL(ps);
-
-			ps.SQL = "UPDATE WF_GenerFH SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE FID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQLs(sql);
-		}
-		Emp emp1 = new Emp("admin");
-		BP.Web.WebUser.SignInOfGener(emp1);
-
-		return "全部生成成功,影响数据(" + wks.size() + ")条";
-	}
-	/** 
-	 流程监控
-	 
-	 @return 
-	*/
-	public final String DoDataManger()
-	{
-		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.jsp?FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=", 700, 500);
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() +  "WF/Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=", 700, 500);
-		} catch (IOException e) {
-			Log.DebugWriteError("FlowSheet DoDataManger()" + e);
-		}
-		return null;
-	}
+     
 	/** 
 	 绑定独立表单
 	 
@@ -1111,26 +760,16 @@ public class FlowSheet extends EntityNoName
 		}
 		return null;
 	}
-	/** 
-	 定义报表
-	 
-	 @return 
-	*/
-	public final String DoAutoStartIt()
-	{
-		Flow fl = new Flow();
-		fl.setNo(this.getNo()); 
-		fl.RetrieveFromDBSources();
-		return fl.DoAutoStartIt();
-	}
+ 
 	/** 
 	 删除流程
 	 
 	 @param workid
 	 @param sd
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDelDataOne(int workid, String note)
+	public final String DoDelDataOne(int workid, String note) throws Exception
 	{
 		try
 		{
@@ -1142,98 +781,7 @@ public class FlowSheet extends EntityNoName
 			return "删除失败:"+ex.getMessage();
 		}
 	}
-	/** 
-	 设置发起数据源
-	 
-	 @return 
-	*/
-	public final String DoSetStartFlowDataSources()
-	{
-		String flowID = Integer.parseInt(this.getNo()) + "01";
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt.jsp?s=d34&FK_MapData=ND" + flowID + "&ExtType=StartFlow&RefNo=";
-	}
-	public final String DoCCNode()
-	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() + "WF/Admin/CCNode.jsp?FK_Flow=" + this.getNo(), 400, 500);
-		} catch (IOException e) {
-			Log.DebugWriteError("FlowSheet DoCCNode()" + e );
-		}
-		return null;
-	}
-	/** 
-	 执行运行
-	 
-	 @return 
-	*/
-	public final String DoRunIt()
-	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/TestFlow.jsp?FK_Flow=" + this.getNo() + "&Lang=CH";
-	}
-	/** 
-	 执行检查
-	 
-	 @return 
-	*/
-	public final String DoCheck()
-	{
-		//Flow fl = new Flow();
-		//fl.No(this.getNo());
-		//fl.RetrieveFromDBSources();
-
-		return "/WF/Admin/AttrFlow/CheckFlow.jsp?FK_Flow=" + this.getNo();
-
-		//return fl.DoCheck();
-	}
-	/** 
-	 执行重新装载数据
-	 
-	 @return 
-	*/
-	public final String DoReloadRptData()
-	{
-		Flow fl = new Flow();
-		fl.setNo(this.getNo());
-		fl.RetrieveFromDBSources();
-		return fl.DoReloadRptData();
-	}
-	/** 
-	 删除数据.
-	 
-	 @return 
-	*/
-	public final String DoDelData()
-	{
-		Flow fl = new Flow();
-		fl.setNo(this.getNo()); 
-		fl.RetrieveFromDBSources();
-		return fl.DoDelData();
-	}
-	/** 
-	 设计数据转出
-	 
-	 @return 
-	*/
-	public final String DoExp()
-	{
-		Flow fl = new Flow();
-		fl.setNo(this.getNo());
-		fl.RetrieveFromDBSources();
-		return fl.DoExp();
-	}
-	/** 
-	 定义报表
-	 
-	 @return 
-	 * @throws IOException 
-	*/
-	public final String DoDRpt() throws IOException
-	{
-		Flow fl = new Flow();
-		fl.setNo(this.getNo());
-		fl.RetrieveFromDBSources();
-		return fl.DoDRpt();
-	}
+       
 	/** 
 	 运行报表
 	 
@@ -1261,7 +809,7 @@ public class FlowSheet extends EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		//更新流程版本
 		Flow.UpdateVer(this.getNo());
@@ -1361,7 +909,7 @@ public class FlowSheet extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		//同步流程数据表.
 		String ndxxRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";

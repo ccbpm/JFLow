@@ -293,10 +293,11 @@ public class FrmSubFlow extends Entity
 		
 	/** 
 	 控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -324,8 +325,9 @@ public class FrmSubFlow extends Entity
 	 父子流程
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmSubFlow(String mapData)
+	public FrmSubFlow(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -354,8 +356,9 @@ public class FrmSubFlow extends Entity
 	 父子流程
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmSubFlow(int nodeID)
+	public FrmSubFlow(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -430,7 +433,7 @@ public class FrmSubFlow extends Entity
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//FrmAttachment workCheckAth = new FrmAttachment();
 		//bool isHave = workCheckAth.RetrieveByAttr(FrmAttachmentAttr.MyPK, this.NodeID + "_FrmSubFlow");

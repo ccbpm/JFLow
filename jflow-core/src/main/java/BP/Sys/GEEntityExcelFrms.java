@@ -20,8 +20,9 @@ public class GEEntityExcelFrms extends EntitiesNoName
 	 * @param EnsName
 	 * @param key
 	 * @param FK_Emp
+	 * @throws Exception 
 	 */
-	public final void Retrieve(String EnsName, String key, int FK_Emp)
+	public final void Retrieve(String EnsName, String key, int FK_Emp) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DefValAttr.AttrKey, key);
@@ -37,8 +38,9 @@ public class GEEntityExcelFrms extends EntitiesNoName
 	 * 
 	 * @param EnsName
 	 * @param key
+	 * @throws Exception 
 	 */
-	public final void Retrieve(String EnsName, String key)
+	public final void Retrieve(String EnsName, String key) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DefValAttr.AttrKey, key);

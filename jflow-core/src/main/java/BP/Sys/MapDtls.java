@@ -24,8 +24,9 @@ public class MapDtls extends EntitiesNoName
 	 明细s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public MapDtls(String fk_mapdata)
+	public MapDtls(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.No);
 	}

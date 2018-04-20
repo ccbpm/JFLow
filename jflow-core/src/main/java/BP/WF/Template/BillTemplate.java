@@ -34,9 +34,10 @@ public class BillTemplate extends EntityNoName
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -86,8 +87,9 @@ public class BillTemplate extends EntityNoName
 	}
 	/** 
 	 节点名称
+	 * @throws Exception 
 	*/
-	public final String getNodeName()
+	public final String getNodeName() throws Exception
 	{
 		Node nd = new Node(this.getNodeID());
 		return nd.getName();
@@ -116,7 +118,7 @@ public class BillTemplate extends EntityNoName
 	public BillTemplate()
 	{
 	}
-	public BillTemplate(String no)
+	public BillTemplate(String no) throws Exception
 	{
 		super(no.replace("\n","").trim());
 	}

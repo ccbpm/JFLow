@@ -46,9 +46,10 @@ public class ResetSortMapAttr extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		try
 		{

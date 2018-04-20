@@ -21,8 +21,9 @@ public class Emp extends EntityNoName
 		
 	/** 
 	 主要的部门。
+	 * @throws Exception 
 	*/
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 
 		try
@@ -36,8 +37,9 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 工作岗位集合。
+	 * @throws Exception 
 	*/
-	public final Stations getHisStations()
+	public final Stations getHisStations() throws Exception
 	{
 		EmpStations sts = new EmpStations();
 		Stations mysts = sts.GetHisStations(this.getNo());
@@ -88,8 +90,9 @@ public class Emp extends EntityNoName
 	/** 
 	 工作人员编号
 	 @param _No No
+	 * @throws Exception 
 	*/
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
 		this.setNo(no.trim());
 		if (this.getNo().length() == 0)
@@ -111,9 +114,10 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -173,8 +177,9 @@ public class Emp extends EntityNoName
 	 
 	 @param userNo 当前用户编号
 	 @return 返回重置信息
+	 * @throws Exception 
 	*/
-	public final String DoChangeUserNo(String userNo)
+	public final String DoChangeUserNo(String userNo) throws Exception
 	{
 		if ( ! BP.Web.WebUser.getNo().equals("admin"))
 		{
@@ -281,8 +286,9 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 执行禁用
+	 * @throws Exception 
 	*/
-	public final String DoDisableIt()
+	public final String DoDisableIt() throws Exception
 	{
 		WFEmp emp = new WFEmp(this.getNo());
 		emp.setUseSta(0);
@@ -291,8 +297,9 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 执行启用
+	 * @throws Exception 
 	*/
-	public final String DoEnableIt()
+	public final String DoEnableIt() throws Exception
 	{
 		WFEmp emp = new WFEmp(this.getNo());
 		emp.setUseSta(1);
@@ -301,7 +308,7 @@ public class Emp extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		WFEmp emp = new WFEmp(this.getNo());
 		emp.Update();

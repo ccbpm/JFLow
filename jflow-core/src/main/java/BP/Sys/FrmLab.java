@@ -179,8 +179,9 @@ public class FrmLab extends EntityMyPK
 	 标签
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmLab(String mypk)
+	public FrmLab(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();

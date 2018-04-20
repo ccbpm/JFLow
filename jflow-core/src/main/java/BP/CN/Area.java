@@ -32,7 +32,7 @@ public class Area extends EntityNoName
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -46,7 +46,7 @@ public class Area extends EntityNoName
 	{
 	}
 	
-	public Area(String no)
+	public Area(String no) throws Exception
 	{
 		super(no);
 	}

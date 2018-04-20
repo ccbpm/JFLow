@@ -16,9 +16,10 @@ public class NodeEmps extends EntitiesMM
 {
 	/** 
 	 他的到人员
+	 * @throws Exception 
 	 
 	*/
-	public final Emps getHisEmps()
+	public final Emps getHisEmps() throws Exception
 	{
 		Emps ens = new Emps();
 		for (NodeEmp ns : this.ToJavaList())
@@ -29,9 +30,10 @@ public class NodeEmps extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (NodeEmp ns : this.ToJavaList())
@@ -52,8 +54,9 @@ public class NodeEmps extends EntitiesMM
 	 节点人员
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public NodeEmps(int NodeID)
+	public NodeEmps(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeEmpAttr.FK_Node, NodeID);
@@ -63,8 +66,9 @@ public class NodeEmps extends EntitiesMM
 	 节点人员
 	 
 	 @param EmpNo EmpNo 
+	 * @throws Exception 
 	*/
-	public NodeEmps(String EmpNo)
+	public NodeEmps(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeEmpAttr.FK_Emp, EmpNo);
@@ -84,8 +88,9 @@ public class NodeEmps extends EntitiesMM
 	 
 	 @param sts 到人员集合
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Emps sts)
+	public final Nodes GetHisNodes(Emps sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
@@ -108,8 +113,9 @@ public class NodeEmps extends EntitiesMM
 	 
 	 @param EmpNo 到人员编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String EmpNo)
+	public final Nodes GetHisNodes(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeEmpAttr.FK_Emp, EmpNo);
@@ -127,8 +133,9 @@ public class NodeEmps extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Emps GetHisEmps(int nodeID)
+	public final Emps GetHisEmps(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeEmpAttr.FK_Node, nodeID);

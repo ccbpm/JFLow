@@ -164,7 +164,7 @@ public class MapAttrEnum extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());

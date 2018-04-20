@@ -31,27 +31,31 @@ public class RelFlowTemplateToSubInc extends Method
 	 
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		 
+			if (BP.Web.WebUser.getNo().equals("admin"))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+	 
 	}
 	/** 
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 
 		 //找到根目录.

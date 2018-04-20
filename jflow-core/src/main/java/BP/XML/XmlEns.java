@@ -699,8 +699,9 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 	 * 
 	 * @param ens
 	 *            实体集合
+	 * @throws Exception 
 	 */
-	public final void FillXmlDataIntoEntities(Entities ens)
+	public final void FillXmlDataIntoEntities(Entities ens) throws Exception
 	{
 		this.RetrieveAll(); // 查询出来全部的数据。
 		Entity en1 = ens.getGetNewEntity();
@@ -756,7 +757,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		}
 	}
 	
-	public final void FillXmlDataIntoEntities()
+	public final void FillXmlDataIntoEntities() throws Exception
 	{
 		if (this.getRefEns() == null)
 		{

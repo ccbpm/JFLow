@@ -66,8 +66,9 @@ public class WF_Admin_RptDfine extends WebContralBase
 	 初始化方法
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String S2ColsChose_Init()
+	public final String S2ColsChose_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 		String rptNo = this.GetRequestVal("RptNo");
@@ -138,8 +139,9 @@ public class WF_Admin_RptDfine extends WebContralBase
 	 选择列的保存.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String S2ColsChose_Save()
+	public final String S2ColsChose_Save() throws Exception
 	{
 		//报表列表.
 		String rptNo = this.GetRequestVal("RptNo");
@@ -204,8 +206,10 @@ public class WF_Admin_RptDfine extends WebContralBase
 	 初始化方法
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String S3ColsLabel_Init()
+	public final String S3ColsLabel_Init() throws NumberFormatException, Exception
 	{
 		String rptNo = this.GetRequestVal("RptNo");
 
@@ -257,8 +261,9 @@ public class WF_Admin_RptDfine extends WebContralBase
 	 保存列的顺序名称.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String S3ColsLabel_Save()
+	public final String S3ColsLabel_Save() throws Exception
 	{
 		String orders = this.GetRequestVal("Orders");
 		//格式为  @KeyOfEn,Lable,idx  比如： @DianHua,电话,1@Addr,地址,2
@@ -308,7 +313,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 
 		///#region 报表设计器 - 第4步骤.
-	public final String S5SearchCond_Init()
+	public final String S5SearchCond_Init() throws Exception
 	{
 		//报表编号.
 		String rptNo = this.GetRequestVal("RptNo");
@@ -318,7 +323,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 		//判断rptNo是否存在于mapdata中
 		MapData md = new MapData(rptNo);
-		if (md.RetrieveFromDBSources2017() == 0)
+		if (md.RetrieveFromDBSources() == 0)
 		{
 			RptDfine rd = new RptDfine(this.getFK_Flow());
 
@@ -349,7 +354,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 					throw new RuntimeException("@未涉及的rptMark类型");
 			}
 
-			md.RetrieveFromDBSources2017();
+			md.RetrieveFromDBSources();
 		}
 
 		ds.Tables.add(md.ToDataTableField("Main"));
@@ -407,8 +412,9 @@ public class WF_Admin_RptDfine extends WebContralBase
 	 查询条件保存.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String S5SearchCond_Save()
+	public final String S5SearchCond_Save() throws Exception
 	{
 		MapData md = new MapData();
 		md.setNo(this.getRptNo());

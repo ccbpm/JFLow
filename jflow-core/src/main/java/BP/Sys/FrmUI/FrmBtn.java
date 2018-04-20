@@ -22,8 +22,9 @@ public class FrmBtn extends EntityMyPK
 	 按钮
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmBtn(String mypk)
+	public FrmBtn(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();

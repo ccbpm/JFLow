@@ -57,8 +57,9 @@ public class QueryObject
 	
 	/**
 	 * 要得到的查询sql 。
+	 * @throws Exception 
 	 */
-	public final String getSQL()
+	public final String getSQL() throws Exception
 	{
 		String sql = "";
 		String selecSQL = SqlBuilder.SelectSQL(this.getEn(), this.getTop());
@@ -101,7 +102,7 @@ public class QueryObject
 		this._sql = this._sql + " " + value;
 	}
 	
-	public final String getSQLWithOutPara()
+	public final String getSQLWithOutPara() throws Exception
 	{
 		String sql = this.getSQL();
 		for (Para en : this.getMyParas())
@@ -796,7 +797,7 @@ public class QueryObject
 	}
 	
 	public final DataTable DoGroupReturnTable(Entity en, Attrs attrsOfGroupKey,
-			Attr attrGroup, GroupWay gw, OrderWay ow)
+			Attr attrGroup, GroupWay gw, OrderWay ow) throws Exception
 	{
 		switch (en.getEnMap().getEnDBUrl().getDBType())
 		{
@@ -810,7 +811,7 @@ public class QueryObject
 	}
 	
 	public final DataTable DoGroupReturnTableOracle(Entity en,
-			Attrs attrsOfGroupKey, Attr attrGroup, GroupWay gw, OrderWay ow)
+			Attrs attrsOfGroupKey, Attr attrGroup, GroupWay gw, OrderWay ow) throws Exception
 	{
 		// 生成要查询的语句
 		String fields = "";
@@ -1095,8 +1096,9 @@ public class QueryObject
 	 * 执行查询
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int DoQuery()
+	public final int DoQuery() throws Exception
 	{
 		try
 		{
@@ -1132,7 +1134,7 @@ public class QueryObject
 		}
 	}
 	
-	public final int DoQueryBak20111203()
+	public final int DoQueryBak20111203() throws Exception
 	{
 		try
 		{
@@ -1264,8 +1266,9 @@ public class QueryObject
 	 * @param pageSize
 	 * @param pageIdx
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int DoQuery(String pk, int pageSize, int pageIdx)
+	public final int DoQuery(String pk, int pageSize, int pageIdx) throws Exception
 	{
 		if (pk.equals("OID") || pk.equals("WorkID"))
 		{
@@ -1290,9 +1293,10 @@ public class QueryObject
 	 * @param orderway
 	 *            排序方式: 两种情况 Down UP
 	 * @return 查询结果
+	 * @throws Exception 
 	 */
 	public final int DoQuery(String pk, int pageSize, int pageIdx,
-			String orderBy, String orderWay)
+			String orderBy, String orderWay) throws Exception
 	{
 		if (orderWay.toLowerCase().trim().equals("up"))
 		{
@@ -1315,9 +1319,10 @@ public class QueryObject
 	 * @param orderby
 	 *            排序
 	 * @return 查询结果
+	 * @throws Exception 
 	 */
 	public final int DoQuery(String pk, int pageSize, int pageIdx,
-			boolean isDesc)
+			boolean isDesc) throws Exception
 	{
 		return DoQuery(pk, pageSize, pageIdx, pk, isDesc);
 	}
@@ -1336,9 +1341,10 @@ public class QueryObject
 	 * @param orderway
 	 *            排序方式: 两种情况 desc 或者 为 null.
 	 * @return 查询结果
+	 * @throws Exception 
 	 */
 	public final int DoQuery(String pk, int pageSize, int pageIdx,
-			String orderBy, boolean isDesc)
+			String orderBy, boolean isDesc) throws Exception
 	{
 		int pageNum = 0;
 		
@@ -1631,8 +1637,9 @@ public class QueryObject
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	public final DataTable DoQueryToTable()
+	public final DataTable DoQueryToTable() throws Exception
 	{
 		try
 		{
@@ -1672,8 +1679,9 @@ public class QueryObject
 	 * 得到返回的数量
 	 * 
 	 * @return 得到返回的数量
+	 * @throws Exception 
 	 */
-	public final int GetCount()
+	public final int GetCount() throws Exception
 	{
 		String sql = this.getSQL();
 		// sql="SELECT COUNT(*) "+sql.substing(sql.IndexOf("FROM") ) ;
@@ -1755,20 +1763,21 @@ public class QueryObject
 	 * @param topNum
 	 *            最大的数量
 	 * @return 要查询的信息
+	 * @throws Exception 
 	 */
-	public final DataTable DoQueryToTable(int topNum)
+	public final DataTable DoQueryToTable(int topNum) throws Exception
 	{
 		return DBAccess.RunSQLReturnTable(this.getSQL(), this.getMyParas());
 		
 	}
 	
-	private int doEntityQuery()
+	private int doEntityQuery() throws Exception
 	{
 		return EntityDBAccess.Retrieve(this.getEn(), this.getSQL(),
 				this.getMyParas());
 	}
 	
-	private int doEntitiesQuery()
+	private int doEntitiesQuery() throws Exception
 	{
 		switch (this._ens.getGetNewEntity().getEnMap().getEnDBUrl().getDBType())
 		{

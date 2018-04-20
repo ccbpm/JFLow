@@ -85,8 +85,9 @@ public class LabNote extends EntityMyPK
 	 标签
 	 
 	 @param _oid 标签ID	
+	 * @throws Exception 
 	*/
-	public LabNote(String mypk)
+	public LabNote(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -120,7 +121,7 @@ public class LabNote extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setMyPK(BP.DA.DBAccess.GenerOID()+"");
 		return super.beforeInsert();

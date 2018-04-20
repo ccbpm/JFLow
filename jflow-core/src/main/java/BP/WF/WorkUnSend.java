@@ -72,7 +72,7 @@ public class WorkUnSend
 	}
 	public String FlowNo = null;
 	private Flow _HisFlow = null;
-	public final Flow getHisFlow()
+	public final Flow getHisFlow() throws Exception
 	{
 		if (_HisFlow == null)
 		{
@@ -121,8 +121,9 @@ public class WorkUnSend
 	/** 
 	 得到当前的进行中的工作。
 	 @return 		 
+	 * @throws Exception 
 	*/
-	public final WorkNode GetCurrentWorkNode()
+	public final WorkNode GetCurrentWorkNode() throws Exception
 	{
 		int currNodeID = 0;
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
@@ -158,8 +159,9 @@ public class WorkUnSend
 	/** 
 	 执行子线程的撤销.
 	 @return 
+	 * @throws Exception 
 	*/
-	private String DoThreadUnSend()
+	private String DoThreadUnSend() throws Exception
 	{
 		//定义当前的节点.
 		WorkNode wn = this.GetCurrentWorkNode();
@@ -368,9 +370,10 @@ public class WorkUnSend
 
 	/** 
 	 执行撤消
+	 * @throws Exception 
 	 
 	*/
-	public final String DoUnSend()
+	public final String DoUnSend() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 		
@@ -741,8 +744,9 @@ public class WorkUnSend
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	private String DoUnSendFeiLiu(GenerWorkFlow gwf)
+	private String DoUnSendFeiLiu(GenerWorkFlow gwf) throws Exception
 	{
 		//首先要检查，当前的处理人是否是分流节点的处理人？如果是，就要把，未走完的所有子线程都删除掉。
 		GenerWorkerList gwl = new GenerWorkerList();
@@ -852,8 +856,9 @@ public class WorkUnSend
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	private String DoUnSendInFeiLiuHeiliu(GenerWorkFlow gwf)
+	private String DoUnSendInFeiLiuHeiliu(GenerWorkFlow gwf) throws Exception
 	{
 		//首先要检查，当前的处理人是否是分流节点的处理人？如果是，就要把，未走完的所有子线程都删除掉。
 		GenerWorkerList gwl = new GenerWorkerList();
@@ -955,8 +960,9 @@ public class WorkUnSend
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	private String DoUnSendFeiLiu_bak(GenerWorkFlow gwf)
+	private String DoUnSendFeiLiu_bak(GenerWorkFlow gwf) throws Exception
 	{
 		//首先要检查，当前的处理人是否是分流节点的处理人？如果是，就要把，未走完的所有子线程都删除掉。
 		GenerWorkerList gwl = new GenerWorkerList();
@@ -1062,8 +1068,9 @@ public class WorkUnSend
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoUnSendHeiLiu_Main(GenerWorkFlow gwf)
+	public final String DoUnSendHeiLiu_Main(GenerWorkFlow gwf) throws Exception
 	{
 		Node currNode = new Node(gwf.getFK_Node());
 		Node priFLNode = currNode.getHisPriFLNode();
@@ -1176,7 +1183,7 @@ public class WorkUnSend
 			}
 		}
 	}
-	public final String DoUnSendSubFlow(GenerWorkFlow gwf)
+	public final String DoUnSendSubFlow(GenerWorkFlow gwf) throws Exception
 	{
 		WorkNode wn = this.GetCurrentWorkNode();
 		WorkNode wnPri = wn.GetPreviousWorkNode();

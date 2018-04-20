@@ -167,8 +167,9 @@ public class TransferCustom extends EntityMyPK
 	 @param workid 当前工作ID
 	 @param currNodeID 当前节点ID
 	 @return 获取下一个要到达的定义路径,如果没有就返回空.
+	 * @throws Exception 
 	*/
-	public static TransferCustom GetNextTransferCustom(long workid, int currNodeID)
+	public static TransferCustom GetNextTransferCustom(long workid, int currNodeID) throws Exception
 	{
 		TransferCustoms ens = new TransferCustoms();
 		ens.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.Idx);

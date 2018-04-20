@@ -401,8 +401,9 @@ public class FindWorkerRole extends EntityOIDName
 	 生成数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable GenerWorkerOfDataTable()
+	public final DataTable GenerWorkerOfDataTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		// 首先判断第一类别
@@ -524,8 +525,9 @@ public class FindWorkerRole extends EntityOIDName
 	 当前提交人的直线领导
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private DataTable GenerHisSpecEmps(String empNo, String empDept)
+	private DataTable GenerHisSpecEmps(String empNo, String empDept) throws Exception
 	{
 		DeptEmp de = new DeptEmp();
 
@@ -604,8 +606,9 @@ public class FindWorkerRole extends EntityOIDName
 	 当前提交人的直线领导
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private DataTable GenerHisLeader(String empNo, String empDept)
+	private DataTable GenerHisLeader(String empNo, String empDept) throws Exception
 	{
 		DeptEmp de = new DeptEmp();
 

@@ -14,7 +14,7 @@ public abstract class EntityMID extends Entity
 	private static final long serialVersionUID = 1L;
 	
 	@Override
-	public int Save()
+	public int Save() throws Exception
 	{
 		
 		if (this.Update() == 0)
@@ -92,8 +92,9 @@ public abstract class EntityMID extends Entity
 	 * 
 	 * @param MID
 	 *            MID
+	 * @throws Exception 
 	 */
-	protected EntityMID(int mid)
+	protected EntityMID(int mid) throws Exception
 	{
 		this.SetValByKey(EntityMIDAttr.MID, getMID());
 		QueryObject qo = new QueryObject(this);
@@ -108,7 +109,7 @@ public abstract class EntityMID extends Entity
 	// override 方法
 	
 	@Override
-	public int Retrieve()
+	public int Retrieve() throws Exception
 	{
 		if (this.getMID() == 0)
 		{
@@ -131,9 +132,10 @@ public abstract class EntityMID extends Entity
 	 * 删除之前的操作。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (!super.beforeDelete())
 		{

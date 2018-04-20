@@ -88,7 +88,7 @@ public class GroupEnsTemplate extends EntityOID
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
@@ -142,8 +142,9 @@ public class GroupEnsTemplate extends EntityOID
 	 * @param attrs
 	 *            attrs
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int Search(String fk_emp, String className, String attrs)
+	public final int Search(String fk_emp, String className, String attrs) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GroupEnsTemplateAttr.Rec, fk_emp);

@@ -115,15 +115,16 @@ public class Direction extends EntityMyPK
 	 处理pk 
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setMyPK(this.getFK_Flow()+"_" +this.getNode() + "_" + this.getToNode());
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode());
 		return super.beforeDelete();

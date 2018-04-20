@@ -16,7 +16,7 @@ public class ButtonState
 	public int CurrNodeIDOfUI = 0;
 	public int CurrNodeIDOfFlow = 0;
 	public String FK_Flow = null;
-	public final void InitNodeIsCurr()
+	public final void InitNodeIsCurr() throws Exception
 	{
 		// 获取.
 		Node nd = new Node(this.CurrNodeIDOfFlow);
@@ -54,7 +54,7 @@ public class ButtonState
 			this.Btn_UnSend = true;
 		}
 	}
-	public ButtonState(String fk_flow, int currNodeID, long workid)
+	public ButtonState(String fk_flow, int currNodeID, long workid) throws Exception
 	{
 		this.FK_Flow = fk_flow;
 		this.CurrNodeIDOfUI = currNodeID;

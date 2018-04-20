@@ -50,8 +50,9 @@ public class WorkFlow
 	 是不是能够作当前的工作。
 	 @param empId 工作人员ID
 	 @return 是不是能够作当前的工作
+	 * @throws Exception 
 	*/
-	public final boolean IsCanDoCurrentWork(String empId)
+	public final boolean IsCanDoCurrentWork(String empId) throws Exception
 	{
 		WorkNode wn = this.GetCurrentWorkNode();
 		return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(wn.getHisNode().getFK_Flow(), wn.getHisNode().getNodeID(), wn.getWorkID(), empId);
@@ -63,8 +64,9 @@ public class WorkFlow
 	 @param fk_node 被驳回的节点
 	 @param msg
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReject(long fid, int fk_node, String msg)
+	public final String DoReject(long fid, int fk_node, String msg) throws Exception
 	{
 		GenerWorkerList wl = new GenerWorkerList();
 		int i = wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fk_node);
@@ -96,8 +98,9 @@ public class WorkFlow
 	/** 
 	 逻辑删除流程
 	 @param msg 逻辑删除流程原因，可以为空。
+	 * @throws Exception 
 	*/
-	public final void DoDeleteWorkFlowByFlag(String msg)
+	public final void DoDeleteWorkFlowByFlag(String msg) throws Exception
 	{
 		try
 		{
@@ -140,8 +143,9 @@ public class WorkFlow
 	/** 
 	 恢复逻辑删除流程
 	 @param msg 回复原因,可以为空.
+	 * @throws Exception 
 	*/
-	public final void DoUnDeleteWorkFlowByFlag(String msg)
+	public final void DoUnDeleteWorkFlowByFlag(String msg) throws Exception
 	{
 		try
 		{
@@ -168,8 +172,9 @@ public class WorkFlow
 	 @param isDelSubFlow 是否要删除子流程
 	 @param note 删除原因
 	 @return 删除信息
+	 * @throws Exception 
 	*/
-	public static String DoDeleteWorkFlowAlreadyComplete(String flowNo, long workID, boolean isDelSubFlow, String note)
+	public static String DoDeleteWorkFlowAlreadyComplete(String flowNo, long workID, boolean isDelSubFlow, String note) throws Exception
 	{
 		Log.DebugWriteInfo("开始删除流程:流程编号:" + flowNo + "-WorkID:" + workID + "-" + ". 是否要删除子流程:" + isDelSubFlow + ";删除原因:" + note);
 
@@ -267,8 +272,9 @@ public class WorkFlow
 	/** 
 	 删除子线程
 	 @return 返回删除结果.
+	 * @throws Exception 
 	*/
-	private String DoDeleteSubThread()
+	private String DoDeleteSubThread() throws Exception
 	{
 		WorkNode wn = this.GetCurrentWorkNode();
 		Emp empOfWorker = wn.getHisWork().getRecOfEmp();
@@ -402,8 +408,9 @@ public class WorkFlow
 	 @param workid 工作ID
 	 @param isDelSubFlow 是否删除子流程
 	 @return 删除错误会抛出异常
+	 * @throws Exception 
 	*/
-	public static void DeleteFlowByReal(String flowNo, long workid, boolean isDelSubFlow)
+	public static void DeleteFlowByReal(String flowNo, long workid, boolean isDelSubFlow) throws Exception
 	{
 		BP.WF.Flow fl = new Flow(flowNo);
 		//检查流程是否完成，如果没有完成就调用workflow流程删除.
@@ -485,8 +492,9 @@ public class WorkFlow
 	 删除子线程
 	 
 	 @return 删除的消息
+	 * @throws Exception 
 	*/
-	public final String DoDeleteSubThread2015()
+	public final String DoDeleteSubThread2015() throws Exception
 	{
 		if (this.getFID() == 0)
 		{
@@ -619,8 +627,9 @@ public class WorkFlow
 	 
 	 @param isDelSubFlow 是否要删除子流程
 	 @return 删除的消息
+	 * @throws Exception 
 	*/
-	public final String DoDeleteWorkFlowByReal(boolean isDelSubFlow)
+	public final String DoDeleteWorkFlowByReal(boolean isDelSubFlow) throws Exception
 	{
 		if (this.getFID() != 0)
 		{
@@ -826,8 +835,9 @@ public class WorkFlow
 	 删除工作流程记录日志，并保留运动轨迹.
 	 @param isDelSubFlow 是否要删除子流程
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDeleteWorkFlowByWriteLog(String info, boolean isDelSubFlow)
+	public final String DoDeleteWorkFlowByWriteLog(String info, boolean isDelSubFlow) throws Exception
 	{
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
 		WorkFlowDeleteLog log = new WorkFlowDeleteLog();
@@ -855,8 +865,9 @@ public class WorkFlow
 	/** 
 	 恢复流程.
 	 @param msg 回复流程的原因
+	 * @throws Exception 
 	*/
-	public final void DoComeBackWorkFlow(String msg)
+	public final void DoComeBackWorkFlow(String msg) throws Exception
 	{
 		try
 		{
@@ -884,8 +895,9 @@ public class WorkFlow
 	/** 
 	 得到当前的进行中的工作。
 	 @return 		 
+	 * @throws Exception 
 	*/
-	public final WorkNode GetCurrentWorkNode()
+	public final WorkNode GetCurrentWorkNode() throws Exception
 	{
 		int currNodeID = 0;
 		GenerWorkFlow gwf = new GenerWorkFlow();
@@ -923,8 +935,9 @@ public class WorkFlow
 	 结束分流的节点
 	 @param fid
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoFlowOverFeiLiu(GenerWorkFlow gwf)
+	public final String DoFlowOverFeiLiu(GenerWorkFlow gwf) throws Exception
 	{
 		// 查询出来有少没有完成的流程。
 		int i = BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkFlow WHERE FID=" + gwf.getFID() + " AND WFState!=1");
@@ -952,8 +965,9 @@ public class WorkFlow
 	/** 
 	 处理子流程完成.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoFlowSubOver()
+	public final String DoFlowSubOver() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		Node nd = new Node(gwf.getFK_Node());
@@ -977,8 +991,9 @@ public class WorkFlow
 	}
 	/** 
 	 让父亲流程自动发送到下一步骤上去.
+	 * @throws Exception 
 	*/
-	public final String LetParentFlowAutoSendNextSetp()
+	public final String LetParentFlowAutoSendNextSetp() throws Exception
 	{
 		if (this.getHisGenerWorkFlow().getPWorkID() == 0)
 		{
@@ -1075,8 +1090,9 @@ public class WorkFlow
 	 @param at
 	 @param stopMsg
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, GERpt rpt)
+	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, GERpt rpt) throws Exception
 	{
 		if (null == currNode)
 		{
@@ -1243,7 +1259,7 @@ public class WorkFlow
 		//    msg = "流程成功结束.";
 		return msg;
 	}
-	public final String GenerFHStartWorkInfo()
+	public final String GenerFHStartWorkInfo() throws Exception
 	{
 		String msg = "";
 		DataTable dt = DBAccess.RunSQLReturnTable("SELECT Title,RDT,Rec,OID FROM ND" + this.getStartNodeID() + " WHERE FID=" + this.getFID());
@@ -1273,8 +1289,9 @@ public class WorkFlow
 	  抄送到
 	 
 	 @param dt
+	 * @throws Exception 
 	*/
-	public final String CCTo(DataTable dt)
+	public final String CCTo(DataTable dt) throws Exception
 	{
 		if (dt.Rows.size() == 0)
 		{
@@ -1326,8 +1343,9 @@ public class WorkFlow
 	 执行冻结
 	 
 	 @param msg 冻结原因
+	 * @throws Exception 
 	*/
-	public final String DoFix(String fixMsg)
+	public final String DoFix(String fixMsg) throws Exception
 	{
 		if (this.getHisGenerWorkFlow().getWFState() == WFState.Fix)
 		{
@@ -1385,8 +1403,9 @@ public class WorkFlow
 	 执行解除冻结
 	 
 	 @param msg 冻结原因
+	 * @throws Exception 
 	*/
-	public final String DoUnFix(String unFixMsg)
+	public final String DoUnFix(String unFixMsg) throws Exception
 	{
 		if (this.getHisGenerWorkFlow().getWFState() != WFState.Fix)
 		{
@@ -1450,9 +1469,10 @@ public class WorkFlow
 	private Nodes _HisNodes = null;
 	/** 
 	 节点s
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		if (this._HisNodes == null)
 		{
@@ -1467,9 +1487,11 @@ public class WorkFlow
 	private WorkNodes _HisWorkNodesOfWorkID = null;
 	/** 
 	 工作节点s
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	 
 	*/
-	public final WorkNodes getHisWorkNodesOfWorkID()
+	public final WorkNodes getHisWorkNodesOfWorkID() throws NumberFormatException, Exception
 	{
 		if (this._HisWorkNodesOfWorkID == null)
 		{
@@ -1485,9 +1507,10 @@ public class WorkFlow
 	private WorkNodes _HisWorkNodesOfFID = null;
 	/** 
 	 工作节点s
+	 * @throws Exception 
 	 
 	*/
-	public final WorkNodes getHisWorkNodesOfFID()
+	public final WorkNodes getHisWorkNodesOfFID() throws Exception
 	{
 		if (this._HisWorkNodesOfFID == null)
 		{
@@ -1510,7 +1533,7 @@ public class WorkFlow
 		return this._HisFlow;
 	}
 	private GenerWorkFlow _HisGenerWorkFlow = null;
-	public final GenerWorkFlow getHisGenerWorkFlow()
+	public final GenerWorkFlow getHisGenerWorkFlow() throws Exception
 	{
 		if (_HisGenerWorkFlow == null)
 		{
@@ -1572,7 +1595,7 @@ public class WorkFlow
 
 
 		
-	public WorkFlow(String fk_flow, long wkid)
+	public WorkFlow(String fk_flow, long wkid) throws Exception
 	{
 		this.setHisGenerWorkFlow(new GenerWorkFlow());
 		this.getHisGenerWorkFlow().RetrieveByAttr(GenerWorkerListAttr.WorkID, wkid);
@@ -1587,7 +1610,7 @@ public class WorkFlow
 
 	}
 
-	public WorkFlow(Flow flow, long wkid)
+	public WorkFlow(Flow flow, long wkid) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(wkid);
@@ -1619,7 +1642,7 @@ public class WorkFlow
 		this._HisFlow = flow;
 		this._WorkID = wkid;
 	}
-	public WorkFlow(String FK_flow, long wkid, long fid)
+	public WorkFlow(String FK_flow, long wkid, long fid) throws Exception
 	{
 		this._FID = fid;
 
@@ -1645,9 +1668,10 @@ public class WorkFlow
 	private StartWork _HisStartWork = null;
 	/** 
 	 他开始的工作.
+	 * @throws Exception 
 	 
 	*/
-	public final StartWork getHisStartWork()
+	public final StartWork getHisStartWork() throws Exception
 	{
 		if (_HisStartWork == null)
 		{
@@ -1669,9 +1693,10 @@ public class WorkFlow
 	private WorkNode _HisStartWorkNode = null;
 	/** 
 	 他开始的工作.
+	 * @throws Exception 
 	 
 	*/
-	public final WorkNode getHisStartWorkNode()
+	public final WorkNode getHisStartWorkNode() throws Exception
 	{
 		if (_HisStartWorkNode == null)
 		{
@@ -1694,9 +1719,10 @@ public class WorkFlow
 	public int _IsComplete = -1;
 	/** 
 	 是不是完成
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsComplete()
+	public final boolean getIsComplete() throws Exception
 	{
 
 			//  bool s = !DBAccess.IsExits("select workid from WF_GenerWorkFlow WHERE WorkID=" + this.WorkID + " AND FK_Flow='" + this.HisFlow.No + "'");
@@ -1714,9 +1740,10 @@ public class WorkFlow
 	}
 	/** 
 	 是不是完成
+	 * @throws Exception 
 	 
 	*/
-	public final String getIsCompleteStr()
+	public final String getIsCompleteStr() throws Exception
 	{
 		if (this.getIsComplete())
 		{
@@ -1789,8 +1816,9 @@ public class WorkFlow
 	 
 	 @param dt
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Emps GetEmpsBy(DataTable dt)
+	public final Emps GetEmpsBy(DataTable dt) throws Exception
 	{
 		// 形成能够处理这件事情的用户几何。
 		Emps emps = new Emps();
@@ -1860,8 +1888,9 @@ public class WorkFlow
 	 @param relData 释放日期
 	 @param hungNote 挂起原因
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoHungUp(HungUpWay way, String relData, String hungNote)
+	public final String DoHungUp(HungUpWay way, String relData, String hungNote) throws Exception
 	{
 		if (this.getHisGenerWorkFlow().getWFState() == WFState.HungUp)
 		{
@@ -1951,8 +1980,9 @@ public class WorkFlow
 	 取消挂起
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoUnHungUp()
+	public final String DoUnHungUp() throws Exception
 	{
 		if (this.getHisGenerWorkFlow().getWFState() != WFState.HungUp)
 		{
@@ -2036,8 +2066,9 @@ public class WorkFlow
 	 撤消移交
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoUnShift()
+	public final String DoUnShift() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		GenerWorkerLists wls = new GenerWorkerLists();

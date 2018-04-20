@@ -120,8 +120,9 @@ public class WF extends WebContralBase
      * <param name="UserNo">人员编号</param>
      * <param name="fk_flow">流程编号</param>
      * <returns>运行中的流程</returns>
+     * @throws Exception 
      */
-    public String Runing_Init()
+    public String Runing_Init() throws Exception
     {
     	AppACE page = new AppACE(context);
         return page.Runing_Init();
@@ -131,7 +132,7 @@ public class WF extends WebContralBase
     /// 打开表单
     /// </summary>
     /// <returns></returns>
-    public String Runing_OpenFrm()
+    public String Runing_OpenFrm() throws Exception
     {
     	int nodeID = this.getFK_Node();
     	if (nodeID == 0)
@@ -229,8 +230,9 @@ public class WF extends WebContralBase
      * <param name="userNo">用户编号</param>
      * <param name="fk_flow">流程编号</param>
      * <returns>挂起列表</returns>
+     * @throws Exception 
      */
-    public String HungUpList_Init()
+    public String HungUpList_Init() throws Exception
     {
         DataTable dt = null;
         dt = BP.WF.Dev2Interface.DB_GenerHungUpList();
@@ -240,8 +242,9 @@ public class WF extends WebContralBase
     /**
      * 草稿
      * @return
+     * @throws Exception 
      */
-    public String Draft_Init()
+    public String Draft_Init() throws Exception
     {
         DataTable dt = null;
         dt = BP.WF.Dev2Interface.DB_GenerDraftDataTable();
@@ -255,8 +258,9 @@ public class WF extends WebContralBase
 	 获得会签列表
 	 
 	 @return 
+     * @throws Exception 
 */
-	public final String HuiQianList_Init()
+	public final String HuiQianList_Init() throws Exception
 	{
 		String sql = "SELECT A.WorkID, A.Title,A.FK_Flow, A.FlowName, A.Starter, A.StarterName, A.Sender, A.Sender,A.FK_Node,A.NodeName,A.SDTOfNode,A.TodoEmps";
 		sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID and a.FK_Node=b.FK_Node AND B.IsPass=90 AND B.FK_Emp='"+BP.Web.WebUser.getNo()+"'";
@@ -328,8 +332,9 @@ public class WF extends WebContralBase
     /**
      * 返回当前会话信息.
      * @return
+     * @throws Exception 
      */
-    public String LoginInit()
+    public String LoginInit() throws Exception
     {
         Hashtable ht = new Hashtable();
 
@@ -348,8 +353,9 @@ public class WF extends WebContralBase
     /**
      * 执行登录.
      * @return
+     * @throws Exception 
      */
-    public String LoginSubmit()
+    public String LoginSubmit() throws Exception
     {
         BP.Port.Emp emp = new BP.Port.Emp();
         emp.setNo(this.GetValFromFrmByKey("TB_UserNo"));
@@ -368,8 +374,9 @@ public class WF extends WebContralBase
     /**
      * 执行授权登录
      * @return
+     * @throws Exception 
      */
-    public String LoginAs()
+    public String LoginAs() throws Exception
     {
         BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(this.getNo());
         if (wfemp.getAuthorIsOK() == false)
@@ -412,8 +419,9 @@ public class WF extends WebContralBase
     /**
      * 获取授权人列表
      * @return
+     * @throws Exception 
      */
-    public String Load_Author()
+    public String Load_Author() throws Exception
     {
         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + BP.Web.WebUser.getNo() + "'");
         return BP.Tools.FormatToJson.ToJson(dt);
@@ -422,8 +430,9 @@ public class WF extends WebContralBase
     /**
      * 当前登陆人是否有授权
      * @return
+     * @throws Exception 
      */
-    public String IsHaveAuthor()
+    public String IsHaveAuthor() throws Exception
     {
         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + BP.Web.WebUser.getNo() + "'");
         WFEmp em = new WFEmp();
@@ -438,8 +447,9 @@ public class WF extends WebContralBase
     /** 获得发起列表
      * yqh add
 	 @return 
+     * @throws Exception 
      */
-	public final String Start_Init()
+	public final String Start_Init() throws Exception
 	{
 		//通用的处理器.
 		if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe")==false)
@@ -574,8 +584,9 @@ public class WF extends WebContralBase
 	 获得发起列表
 	 yqh add
 	 @return 
+     * @throws Exception 
      */
-	public final String Start_Init2016()
+	public final String Start_Init2016() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -605,8 +616,9 @@ public class WF extends WebContralBase
 	/** 初始化共享任务
 	 yqh add
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String TaskPoolSharing_Init()
+	public final String TaskPoolSharing_Init() throws Exception
 	{
 	   DataTable dt = BP.WF.Dev2Interface.DB_TaskPool();
 
@@ -616,8 +628,9 @@ public class WF extends WebContralBase
 	/** 我申请下来的任务
 	 yqh add
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String TaskPoolApply_Init()
+	public final String TaskPoolApply_Init() throws Exception
 	{
 		DataTable dt = BP.WF.Dev2Interface.DB_TaskPoolOfMyApply();
 
@@ -627,8 +640,9 @@ public class WF extends WebContralBase
 	/** 获得发起列表
 	 
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String FlowSearch_Init()
+	public final String FlowSearch_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -670,8 +684,9 @@ public class WF extends WebContralBase
     /** 执行撤销
 	 
 	 @return 
+     * @throws Exception 
 */
-	public final String Runing_UnSend()
+	public final String Runing_UnSend() throws Exception
 	{
 		try
 		{
@@ -686,8 +701,9 @@ public class WF extends WebContralBase
 	 执行催办
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Runing_Press()
+	public final String Runing_Press() throws Exception
 	{
 		try
 		{
@@ -702,8 +718,9 @@ public class WF extends WebContralBase
 	/** 获得抄送列表
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String CC_Init()
+	public final String CC_Init() throws Exception
 	{
 		String sta = this.GetRequestVal("Sta");
 		if (sta == null || sta.equals(""))
@@ -751,8 +768,9 @@ public class WF extends WebContralBase
 	/** 删除草稿.
 	 
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String Draft_Delete()
+	public final String Draft_Delete() throws Exception
 	{
 		return BP.WF.Dev2Interface.Flow_DoDeleteDraft(this.getFK_Flow(), this.getWorkID(), false);
 	}
@@ -760,8 +778,9 @@ public class WF extends WebContralBase
 	/** 我的关注流程
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String Focus_Init()
+	public final String Focus_Init() throws Exception
 	{
 		String flowNo = this.GetRequestVal("FK_Flow");
 
@@ -806,7 +825,7 @@ public class WF extends WebContralBase
     /// 取消关注
     /// </summary>
     /// <returns></returns>
-    public final String Focus_Delete()
+    public final String Focus_Delete() throws Exception
     {
         BP.WF.Dev2Interface.Flow_Focus(this.getWorkID());
         return "执行成功";
@@ -814,8 +833,9 @@ public class WF extends WebContralBase
 	/** 流程单表单查看
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String FrmView_Init()
+	public final String FrmView_Init() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 
@@ -1101,7 +1121,7 @@ public class WF extends WebContralBase
 				return this.GetRequestVal("SID");
 			}
 
-			public final String Port_Init()
+			public final String Port_Init() throws Exception
 			{
 	
 				///#region 安全性校验.

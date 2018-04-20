@@ -74,7 +74,7 @@ public class SysEnums extends Entities
 		return sql;
 	}
 
-	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def)
+	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def) throws Exception
 	{
 		
 		if (this.size() == 0)
@@ -114,7 +114,7 @@ public class SysEnums extends Entities
 		// Cash.AddObj("ESQL" + enName + key + "_" + enumKey, Depositary.Application, sql);
 		return sql;
 	}
-	public final void LoadIt(String enumKey)
+	public final void LoadIt(String enumKey) throws Exception
 	{
 		if (this.Full(enumKey) == false)
 		{
@@ -166,12 +166,13 @@ public class SysEnums extends Entities
 	/** 
 	 SysEnums
 	 @param EnumKey
+	 * @throws Exception 
 	*/
-	public SysEnums(String enumKey)
+	public SysEnums(String enumKey) throws Exception
 	{
 		this.LoadIt(enumKey);
 	}
-	public SysEnums(String enumKey, String vals)
+	public SysEnums(String enumKey, String vals) throws Exception
 	{
 		if (vals == null || vals.equals(""))
 		{
@@ -184,7 +185,7 @@ public class SysEnums extends Entities
 			this.RegIt(enumKey, vals);
 		}
 	}
-	public final void RegIt(String EnumKey, String vals)
+	public final void RegIt(String EnumKey, String vals) throws Exception
 	{
 		try
 		{
@@ -223,7 +224,7 @@ public class SysEnums extends Entities
 		}
 		//  this.Full(EnumKey);
 	}
-	public final boolean Full(String enumKey)
+	public final boolean Full(String enumKey) throws Exception
 	{
 		Entities ens = (Entities)Cash.GetObjFormApplication("EnumOf" + enumKey + BP.Web.WebUser.getSysLang(), null);
 		if (ens != null)
@@ -279,7 +280,13 @@ public class SysEnums extends Entities
 		catch (java.lang.Exception e)
 		{
 			Entity en = this.getGetNewEntity();
-			en.CheckPhysicsTable();
+			
+			try {
+				en.CheckPhysicsTable();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 			Paras ps = new Paras();
 			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";

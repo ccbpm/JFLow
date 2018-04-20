@@ -597,8 +597,9 @@ public class FrmEle extends EntityMyPK
 	 表单元素扩展
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmEle(String mypk)
+	public FrmEle(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -665,7 +666,7 @@ public class FrmEle extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (!this.getEleID().equals(""))
 		{

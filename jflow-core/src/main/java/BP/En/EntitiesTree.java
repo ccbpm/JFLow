@@ -27,8 +27,9 @@ public abstract class EntitiesTree extends Entities
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveHisChinren(EntityTree en)
+	public final int RetrieveHisChinren(EntityTree en) throws Exception
 	{
 		int i = this.Retrieve(EntityTreeAttr.ParentNo, en.getNo());
 		this.AddEntity(en);
@@ -75,9 +76,10 @@ public abstract class EntitiesTree extends Entities
 	 * 查询全部
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return super.RetrieveAll("TreeNo");
 	}

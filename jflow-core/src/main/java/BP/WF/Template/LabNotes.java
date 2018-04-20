@@ -36,8 +36,9 @@ public class LabNotes extends Entities
 	 标签集合.
 	 
 	 @param FlowNo
+	 * @throws Exception 
 	*/
-	public LabNotes(String fk_flow)
+	public LabNotes(String fk_flow) throws Exception
 	{
 		this.Retrieve(NodeAttr.FK_Flow, fk_flow);
 	}

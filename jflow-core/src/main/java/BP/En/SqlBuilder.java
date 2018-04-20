@@ -443,8 +443,9 @@ public class SqlBuilder
 	 * @param en
 	 *            实体
 	 * @return sql
+	 * @throws Exception 
 	 */
-	public static String RetrieveAll(Entity en)
+	public static String RetrieveAll(Entity en) throws Exception
 	{
 		return SqlBuilder.SelectSQL(en, SystemConfig.getTopNum());
 	}
@@ -472,8 +473,9 @@ public class SqlBuilder
 	 * @param en
 	 *            实体
 	 * @return string
+	 * @throws Exception 
 	 */
-	public static String Retrieve(Entity en)
+	public static String Retrieve(Entity en) throws Exception
 	{
 		String sql = "";
 		switch (en.getEnMap().getEnDBUrl().getDBType())
@@ -505,7 +507,7 @@ public class SqlBuilder
 		return sql;
 	}
 	
-	public static String RetrieveForPara(Entity en)
+	public static String RetrieveForPara(Entity en) throws Exception
 	{
 		String sql = null;
 		switch (en.getEnMap().getEnDBUrl().getDBType())
@@ -539,7 +541,7 @@ public class SqlBuilder
 		return sql;
 	}
 	
-	public static String RetrieveForPara_bak(Entity en)
+	public static String RetrieveForPara_bak(Entity en) throws Exception
 	{
 		switch (en.getEnMap().getEnDBUrl().getDBType())
 		{
@@ -1577,7 +1579,7 @@ public class SqlBuilder
 		return fromTop + from + "  WHERE (1=1) ";
 	}
 	
-	protected static String SelectSQLOfOra(Entity en, int topNum)
+	protected static String SelectSQLOfOra(Entity en, int topNum) throws Exception
 	{
 		String val = ""; // key = null;
 		String mainTable = "";
@@ -1717,8 +1719,9 @@ public class SqlBuilder
 	 * @param en
 	 * @param topNum
 	 * @return
+	 * @throws Exception 
 	 */
-	protected static String SelectSQLOfInformix(Entity en, int topNum)
+	protected static String SelectSQLOfInformix(Entity en, int topNum) throws Exception
 	{
 		String val = "";
 		String mainTable = "";
@@ -1853,7 +1856,7 @@ public class SqlBuilder
 				+ SqlBuilder.GenerFormWhereOfInformix(en);
 	}
 	
-	public static String SelectSQL(Entity en, int topNum)
+	public static String SelectSQL(Entity en, int topNum) throws Exception
 	{
 		switch (en.getEnMap().getEnDBUrl().getDBType())
 		{
@@ -1880,8 +1883,9 @@ public class SqlBuilder
 	 * @param top
 	 *            top
 	 * @return sql
+	 * @throws Exception 
 	 */
-	public static String SelectCountSQL(Entity en)
+	public static String SelectCountSQL(Entity en) throws Exception
 	{
 		switch (en.getEnMap().getEnDBUrl().getDBType())
 		{
@@ -2041,7 +2045,7 @@ public class SqlBuilder
 				+ val.substring(1) + SqlBuilder.GenerFormWhereOfMSOLE(en);
 	}
 	
-	public static String SelectSQLOfMS(Entity en, int topNum)
+	public static String SelectSQLOfMS(Entity en, int topNum) throws Exception
 	{
 		String val = ""; // key = null;
 		String mainTable = "";
@@ -2212,7 +2216,7 @@ public class SqlBuilder
 				+ val.substring(1) + SqlBuilder.GenerFormWhereOfMS(en);
 	}
 	
-	public static String SelectSQLOfMySQL(Entity en, int topNum)
+	public static String SelectSQLOfMySQL(Entity en, int topNum) throws Exception
 	{
 		String val = ""; // key = null;
 		String mainTable = "";
@@ -2425,7 +2429,7 @@ public class SqlBuilder
 		return sql + SqlBuilder.GenerFormWhereOfMS(en, en.getEnMap());
 	}
 	
-	public static String SelectSQLOfOra(String enName, Map map)
+	public static String SelectSQLOfOra(String enName, Map map) throws Exception
 	{
 		String val = ""; // key = null;
 		String mainTable = map.getPhysicsTable() + ".";

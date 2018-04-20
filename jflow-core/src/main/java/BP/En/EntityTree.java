@@ -149,8 +149,9 @@ public abstract class EntityTree extends Entity
 	 * 
 	 * @param no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public EntityTree(String no)
+	public EntityTree(String no) throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(no))
 		{
@@ -179,9 +180,10 @@ public abstract class EntityTree extends Entity
 	 * 检查名称的问题.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (!this.getEnMap().getIsAllowRepeatName())
 		{
@@ -219,7 +221,7 @@ public abstract class EntityTree extends Entity
 	}
 	
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (!this.getEnMap().getIsAllowRepeatName())
 		{
@@ -250,8 +252,9 @@ public abstract class EntityTree extends Entity
 	 * 新建同级节点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public EntityTree DoCreateSameLevelNode()
+	public EntityTree DoCreateSameLevelNode() throws Exception
 	{
 		Entity tempVar = this.CreateInstance();
 		EntityTree en = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar
@@ -287,8 +290,9 @@ public abstract class EntityTree extends Entity
 	 * 新建子节点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public EntityTree DoCreateSubNode()
+	public EntityTree DoCreateSubNode() throws Exception
 	{
 		Entity tempVar = this.CreateInstance();
 		EntityTree en = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar

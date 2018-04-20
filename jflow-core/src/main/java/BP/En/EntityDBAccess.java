@@ -23,8 +23,9 @@ public class EntityDBAccess
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static int Delete(Entity en)
+	public static int Delete(Entity en) throws Exception
 	{
 		if (en.getEnMap().getEnType() == EnType.View)
 		{
@@ -41,7 +42,7 @@ public class EntityDBAccess
 		}
 	}
 	
-	public static int Update(Entity en)
+	public static int Update(Entity en) throws Exception
 	{
 		try
 		{
@@ -93,8 +94,9 @@ public class EntityDBAccess
 	 * @param keys
 	 *            要更新的属性(null,认为更新全部)
 	 * @return sql
+	 * @throws Exception 
 	 */
-	public static int Update(Entity en, String[] keys)
+	public static int Update(Entity en, String[] keys) throws Exception
 	{
 		if (en.getEnMap().getEnType() == EnType.View)
 		{

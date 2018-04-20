@@ -217,7 +217,7 @@ public class TruckViewPower extends EntityNoName
 	{
 	}
 
-	public TruckViewPower(String no)
+	public TruckViewPower(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -285,8 +285,9 @@ public class TruckViewPower extends EntityNoName
 	 @param workid 流程ID
 	 @param userNo 操作员
 	 @return 
+	 * @throws Exception 
 	*/
-	public final boolean CheckICanView(long workid, String userNo)
+	public final boolean CheckICanView(long workid, String userNo) throws Exception
 	{
 		if (userNo == null)
 		{

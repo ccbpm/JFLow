@@ -55,12 +55,20 @@ public class ClearDB extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
-		if ( ! BP.Web.WebUser.getNo().equals("admin"))
-		{
+		try {
+			if ( ! BP.Web.WebUser.getNo().equals("admin"))
+			{
+				return "非法的用户执行。";
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			
 			return "非法的用户执行。";
 		}
 

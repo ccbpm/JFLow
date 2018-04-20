@@ -112,8 +112,9 @@ public class GloVar extends EntityNoName
 	 * 全局变量
 	 * 
 	 * @param mypk
+	 * @throws Exception 
 	 */
-	public GloVar(String no)
+	public GloVar(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -125,8 +126,9 @@ public class GloVar extends EntityNoName
 	 * @param key
 	 *            key
 	 * @param isNullAsVal
+	 * @throws Exception 
 	 */
-	public GloVar(String key, Object isNullAsVal)
+	public GloVar(String key, Object isNullAsVal) throws Exception
 	{
 		try
 		{
@@ -172,8 +174,9 @@ public class GloVar extends EntityNoName
 	private static String _Holidays = null;
 	/** 
 	 一个月份的假期.
+	 * @throws Exception 
 	*/
-	public static String getHolidays()
+	public static String getHolidays() throws Exception
 	{
 		if (_Holidays != null)
 		{

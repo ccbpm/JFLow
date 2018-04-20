@@ -81,7 +81,7 @@ public abstract class Entity extends EnObj
 	// 与sql操作有关
 	protected SQLCash _SQLCash = null;
 	
-	public SQLCash getSQLCash()
+	public SQLCash getSQLCash() throws Exception
 	{
 		if (_SQLCash == null)
 		{
@@ -298,7 +298,7 @@ public abstract class Entity extends EnObj
 	}
 	
 	// 关于明细的操作
-	public final Entities GetEnsDaOfOneVSM(AttrOfOneVSM attr)
+	public final Entities GetEnsDaOfOneVSM(AttrOfOneVSM attr) throws Exception
 	{
 		Entities ensOfMM = attr.getEnsOfMM();
 		Entities ensOfM = attr.getEnsOfM();
@@ -324,15 +324,16 @@ public abstract class Entity extends EnObj
 	 * @param ensOfMMclassName
 	 *            实体集合的类名称
 	 * @return 数据实体
+	 * @throws Exception 
 	 */
-	public final Entities GetEnsDaOfOneVSM(String ensOfMMclassName)
+	public final Entities GetEnsDaOfOneVSM(String ensOfMMclassName) throws Exception
 	{
 		AttrOfOneVSM attr = this.getEnMap().GetAttrOfOneVSM(ensOfMMclassName);
 		
 		return GetEnsDaOfOneVSM(attr);
 	}
 	
-	public final Entities GetEnsDaOfOneVSMFirst()
+	public final Entities GetEnsDaOfOneVSMFirst() throws Exception
 	{
 		AttrOfOneVSM attr = this.getEnMap().getAttrsOfOneVSM().getItem(0);
 		// throw new Exception("err "+attr.Desc);
@@ -346,8 +347,9 @@ public abstract class Entity extends EnObj
 	 * @param EnsName
 	 *            类名称
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Entities GetDtlEnsDa(String EnsName)
+	public final Entities GetDtlEnsDa(String EnsName) throws Exception
 	{
 		Entities ens = ClassFactory.GetEns(EnsName);
 		return GetDtlEnsDa(ens);
@@ -374,8 +376,9 @@ public abstract class Entity extends EnObj
 	 * @param ens
 	 *            集合
 	 * @return 执行后的实体信息
+	 * @throws Exception 
 	 */
-	public final Entities GetDtlEnsDa(Entities ens)
+	public final Entities GetDtlEnsDa(Entities ens) throws Exception
 	{
 		for (EnDtl dtl : this.getEnMap().getDtls())
 		{
@@ -391,7 +394,7 @@ public abstract class Entity extends EnObj
 				+ ens.getGetNewEntity().getEnDesc() + "],不在他的集合内。");
 	}
 	
-	public final Entities GetDtlEnsDa(EnDtl dtl)
+	public final Entities GetDtlEnsDa(EnDtl dtl) throws Exception
 	{
 		
 		try
@@ -434,8 +437,9 @@ public abstract class Entity extends EnObj
 	 * 取出他的明细集合。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final java.util.ArrayList GetDtlsDatasOfArrayList()
+	public final java.util.ArrayList GetDtlsDatasOfArrayList() throws Exception
 	{
 		java.util.ArrayList al = new java.util.ArrayList();
 		for (EnDtl dtl : this.getEnMap().getDtls())
@@ -445,7 +449,7 @@ public abstract class Entity extends EnObj
 		return al;
 	}
 	
-	public final java.util.ArrayList<Entities> GetDtlsDatasOfList()
+	public final java.util.ArrayList<Entities> GetDtlsDatasOfList() throws Exception
 	{
 		java.util.ArrayList<Entities> al = new java.util.ArrayList<Entities>();
 		for (EnDtl dtl : this.getEnMap().getDtls())
@@ -902,8 +906,9 @@ public abstract class Entity extends EnObj
 	// 直接操作
 	/**
 	 * 直接更新
+	 * @throws Exception 
 	 */
-	public final int DirectUpdate()
+	public final int DirectUpdate() throws Exception
 	{
 		return EntityDBAccess.Update(this, null);
 	}
@@ -913,7 +918,7 @@ public abstract class Entity extends EnObj
 	 * 
 	 * @throws Exception
 	 */
-	public int DirectInsert()
+	public int DirectInsert() throws Exception
 	{
 		try
 		{
@@ -954,8 +959,9 @@ public abstract class Entity extends EnObj
 	
 	/**
 	 * 直接的Delete
+	 * @throws Exception 
 	 */
-	public final void DirectDelete()
+	public final void DirectDelete() throws Exception
 	{
 		EntityDBAccess.Delete(this);
 	}
@@ -980,9 +986,10 @@ public abstract class Entity extends EnObj
 	 * @param val
 	 *            值
 	 * @return 是否查询到
+	 * @throws Exception 
 	 */
 	public final boolean RetrieveByAttrAnd(String attr1, Object val1,
-			String attr2, Object val2)
+			String attr2, Object val2) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(attr1, val1);
@@ -1006,9 +1013,10 @@ public abstract class Entity extends EnObj
 	 * @param val
 	 *            值
 	 * @return 是否查询到
+	 * @throws Exception 
 	 */
 	public final boolean RetrieveByAttrOr(String attr1, Object val1,
-			String attr2, Object val2)
+			String attr2, Object val2) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(attr1, val1);
@@ -1032,8 +1040,9 @@ public abstract class Entity extends EnObj
 	 * @param val
 	 *            值
 	 * @return 是否查询到
+	 * @throws Exception 
 	 */
-	public final boolean RetrieveByAttr(String attr, Object val)
+	public final boolean RetrieveByAttr(String attr, Object val) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(attr, val);
@@ -1050,8 +1059,9 @@ public abstract class Entity extends EnObj
 	 * 从DBSources直接查询
 	 * 
 	 * @return 查询的个数
+	 * @throws Exception 
 	 */
-	public int RetrieveFromDBSources()
+	public int RetrieveFromDBSources() throws Exception
 	{
 		try
 		{
@@ -1070,45 +1080,23 @@ public abstract class Entity extends EnObj
 					SqlBuilder.GenerParasPK(this));
 		}
 	}
-	/**
-	 * 从DBSources直接查询
-	 * 
-	 * @return 查询的个数
-	 */
-	public int RetrieveFromDBSources2017()
-	{
-		try
-		{
-			return EntityDBAccess.Retrieve2017(this, this.getSQLCash().Select,
-					SqlBuilder.GenerParasPK(this));
-		} catch (java.lang.Exception e)
-		{
-			try
-			{
-				this.CheckPhysicsTable();
-			} catch (Exception e1)
-			{
-				e1.printStackTrace();
-			}
-			return EntityDBAccess.Retrieve(this, this.getSQLCash().Select,
-					SqlBuilder.GenerParasPK(this));
-		}
-	}
+	 
 	/**
 	 * 查询
 	 * 
 	 * @param key
 	 * @param val
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int Retrieve(String key, Object val)
+	public final int Retrieve(String key, Object val) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key, val);
 		return qo.DoQuery();
 	}
 	
-	public final int Retrieve(String key1, Object val1, String key2, Object val2)
+	public final int Retrieve(String key1, Object val1, String key2, Object val2) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key1, val1);
@@ -1118,7 +1106,7 @@ public abstract class Entity extends EnObj
 	}
 	
 	public final int Retrieve(String key1, Object val1, String key2,
-			Object val2, String key3, Object val3)
+			Object val2, String key3, Object val3) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(key1, val1);
@@ -1133,8 +1121,9 @@ public abstract class Entity extends EnObj
 	 * 按主键查询，返回查询出来的个数。 如果查询出来的是多个实体，那把第一个实体给值。
 	 * 
 	 * @return 查询出来的个数
+	 * @throws Exception 
 	 */
-	public int Retrieve()
+	public int Retrieve() throws Exception
 	{
 		 
 			// 如果是没有放入缓存的实体.
@@ -1207,7 +1196,7 @@ public abstract class Entity extends EnObj
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean getIsExits()
+	public boolean getIsExits() throws Exception
 	{
 		try
 		{
@@ -1334,7 +1323,7 @@ public abstract class Entity extends EnObj
 	 * @return 查询出来的个数
 	 * @throws Exception
 	 */
-	public final DataTable RetrieveNotSetValues()
+	public final DataTable RetrieveNotSetValues() throws Exception
 	{
 		return this.RunSQLReturnTable(SqlBuilder.Retrieve(this));
 	}
@@ -1345,8 +1334,9 @@ public abstract class Entity extends EnObj
 	 * @param pk
 	 * @param val
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean IsExit(String pk, Object val)
+	public final boolean IsExit(String pk, Object val) throws Exception
 	{
 		if (pk.equals("OID"))
 		{
@@ -1376,7 +1366,7 @@ public abstract class Entity extends EnObj
 		}
 	}
 	
-	public final boolean IsExit(String pk1, Object val1, String pk2, Object val2)
+	public final boolean IsExit(String pk1, Object val1, String pk2, Object val2) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(pk1, val1);
@@ -1393,7 +1383,7 @@ public abstract class Entity extends EnObj
 	}
 	
 	public final boolean IsExit(String pk1, Object val1, String pk2,
-			Object val2, String pk3, Object val3)
+			Object val2, String pk3, Object val3) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(pk1, val1);
@@ -1455,7 +1445,7 @@ public abstract class Entity extends EnObj
 	 * @return
 	 * @throws Exception
 	 */
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (this.getEnMap().getAttrs().Contains("MyFileName"))
 		{
@@ -1526,8 +1516,9 @@ public abstract class Entity extends EnObj
 	
 	/**
 	 * 把缓存删除
+	 * @throws Exception 
 	 */
-	public final void DeleteDataAndCash()
+	public final void DeleteDataAndCash() throws Exception
 	{
 		this.Delete();
 		this.DeleteFromCash();
@@ -1541,7 +1532,7 @@ public abstract class Entity extends EnObj
 		this.getRow().clear();
 	}
 	
-	public final int Delete()
+	public final int Delete() throws Exception
 	{
 		if (!this.beforeDelete())
 		{
@@ -1710,7 +1701,7 @@ public abstract class Entity extends EnObj
 		}
 	}
 	
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		if (this.getEnMap().getDepositaryOfEntity() != Depositary.Application)
 		{
@@ -1930,8 +1921,9 @@ public abstract class Entity extends EnObj
 	 * 在插入之前要做的工作。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		return true;
 	}
@@ -1948,8 +1940,9 @@ public abstract class Entity extends EnObj
 	
 	/**
 	 * Insert .
+	 * @throws Exception 
 	 */
-	public int Insert()
+	public int Insert() throws Exception
 	{
 		if (!this.beforeInsert())
 		{
@@ -1987,49 +1980,8 @@ public abstract class Entity extends EnObj
 		
 		return i;
 	}
-	
-	/**
-	 * Insert .
-	 */
-	public int Insert2017()
-	{
-		if (!this.beforeInsert())
-		{
-			return 0;
-		}
-		
-		if (!this.beforeUpdateInsertAction())
-		{
-			return 0;
-		}
-		
-		int i = 0;
-		try
-		{
-			i = this.DirectInsert();
-		} catch (RuntimeException ex)
-		{
-			this.CheckPhysicsTable();
-			throw ex;
-		}
-		
-		// 开始更新内存数据。
-		switch (this.getEnMap().getDepositaryOfEntity())
-		{
-			case Application:
-				CashEntity.Insert(this.toString(), this.getPKVal().toString(),
-						this);
-				break;
-			case None:
-				break;
-		}
-		
-		this.afterInsert();
-		this.afterInsertUpdateAction2017();
-		
-		return i;
-	}
-	protected void afterInsert()
+	 
+	protected void afterInsert() throws Exception
 	{
 		//added by liuxc,2016-02-19,新建时，新增一个版本记录
 		if (this.getEnMap().IsEnableVer)
@@ -2086,8 +2038,9 @@ public abstract class Entity extends EnObj
 	
 	/**
 	 * 在更新与插入之后要做的工作.
+	 * @throws Exception 
 	 */
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		if (this.getEnMap().getHisFKEnumAttrs().size() > 0)
 		{
@@ -2101,24 +2054,7 @@ public abstract class Entity extends EnObj
 		}
 		return;
 	}
-	
-	/**
-	 * 在更新与插入之后要做的工作.
-	 */
-	protected void afterInsertUpdateAction2017()
-	{
-		if (this.getEnMap().getHisFKEnumAttrs().size() > 0)
-		{
-			this.RetrieveFromDBSources2017();
-		}
-		
-		if (this.getEnMap().IsAddRefName)
-		{
-			this.ReSetNameAttrVal();
-			this.DirectUpdate();
-		}
-		return;
-	}
+	 
 	
 	/**
 	 * 从一个副本上copy. 用于两个数性基本相近的 实体 copy.
@@ -2282,7 +2218,7 @@ public abstract class Entity extends EnObj
 	}
 	
 	// 更新，插入之前的工作。
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		switch (this.getEnMap().getEnType())
 		{
@@ -2305,8 +2241,9 @@ public abstract class Entity extends EnObj
 	 * 更新
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public int Update()
+	public int Update() throws Exception
 	{
 		return this.Update(null);
 	}
@@ -2319,14 +2256,15 @@ public abstract class Entity extends EnObj
 	 * @param val1
 	 *            val1
 	 * @return 更新的个数
+	 * @throws Exception 
 	 */
-	public final int Update(String key1, Object val1)
+	public final int Update(String key1, Object val1) throws Exception
 	{
 		this.SetValByKey(key1, val1);
 		return this.Update(key1.split("[,]", -1));
 	}
 	
-	public final int Update(String key1, Object val1, String key2, Object val2)
+	public final int Update(String key1, Object val1, String key2, Object val2) throws Exception
 	{
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
@@ -2336,7 +2274,7 @@ public abstract class Entity extends EnObj
 	}
 	
 	public final int Update(String key1, Object val1, String key2, Object val2,
-			String key3, Object val3)
+			String key3, Object val3) throws Exception
 	{
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
@@ -2347,7 +2285,7 @@ public abstract class Entity extends EnObj
 	}
 	
 	public final int Update(String key1, Object val1, String key2, Object val2,
-			String key3, Object val3, String key4, Object val4)
+			String key3, Object val3, String key4, Object val4) throws Exception
 	{
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
@@ -2359,7 +2297,7 @@ public abstract class Entity extends EnObj
 	
 	public final int Update(String key1, Object val1, String key2, Object val2,
 			String key3, Object val3, String key4, Object val4, String key5,
-			Object val5)
+			Object val5) throws Exception
 	{
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
@@ -2373,7 +2311,7 @@ public abstract class Entity extends EnObj
 	
 	public final int Update(String key1, Object val1, String key2, Object val2,
 			String key3, Object val3, String key4, Object val4, String key5,
-			Object val5, String key6, Object val6)
+			Object val5, String key6, Object val6) throws Exception
 	{
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
@@ -2386,15 +2324,16 @@ public abstract class Entity extends EnObj
 		return this.Update(key1.split("[,]", -1));
 	}
 	
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		return true;
 	}
 	
 	/**
 	 * 更新实体
+	 * @throws Exception 
 	 */
-	public final int Update(String[] keys)
+	public final int Update(String[] keys) throws Exception
 	{
 		String str = "";
 		try
@@ -2485,7 +2424,7 @@ public abstract class Entity extends EnObj
 		}
 	}
 	
-	private int UpdateOfDebug(String[] keys)
+	private int UpdateOfDebug(String[] keys) throws Exception
 	{
 		String str = "";
 		try
@@ -2685,7 +2624,7 @@ public abstract class Entity extends EnObj
 	
 	// 对文件的处理. add by qin 15/10/31
 	
-	public int Save(){
+	public int Save() throws Exception{
 		if (this.getPK().equals("OID")){
 			if (this.GetValIntByKey("OID") == 0){
 				// this.SetValByKey("OID",EnDA.GenerOID());
@@ -2866,7 +2805,7 @@ public abstract class Entity extends EnObj
 		}
 	}
 	
-	private void CheckPhysicsTable_SQL()
+	private void CheckPhysicsTable_SQL() throws Exception
 	{
 		String table = this.get_enMap().getPhysicsTable();
 		DBType dbtype = this.get_enMap().getEnDBUrl().getDBType();
@@ -3388,7 +3327,7 @@ public abstract class Entity extends EnObj
 	 * 
 	 * @throws Exception
 	 */
-	public final void CheckPhysicsTable()
+	public final void CheckPhysicsTable() throws Exception
 	{
 		
 		this.set_enMap(this.getEnMap());
@@ -3442,7 +3381,7 @@ public abstract class Entity extends EnObj
 		
 	}
 	
-	private void CheckPhysicsTable_Informix()
+	private void CheckPhysicsTable_Informix() throws Exception
 	{
 		// 检查字段是否存在
 		String sql = "SELECT *  FROM " + this.getEnMap().getPhysicsTable()
@@ -3678,7 +3617,7 @@ public abstract class Entity extends EnObj
 		this.CreateIndexAndPK();
 	}
 	
-	private void CheckPhysicsTable_MySQL()
+	private void CheckPhysicsTable_MySQL() throws Exception
 	{
 		// 检查字段是否存在
 		String sql = "SELECT *  FROM " + this.get_enMap().getPhysicsTable()
@@ -3903,7 +3842,7 @@ public abstract class Entity extends EnObj
 		this.CreateIndexAndPK();
 	}
 	
-	private void CheckPhysicsTable_Ora()
+	private void CheckPhysicsTable_Ora() throws Exception
 	{
 		// 检查字段是否存在
 		String sql = "SELECT *  FROM " + this.getEnMap().getPhysicsTable()
@@ -4116,7 +4055,7 @@ public abstract class Entity extends EnObj
 		this.CreateIndexAndPK();
 	}
 	
-	public final void AutoFull()
+	public final void AutoFull() throws Exception
 	{
 		if (null==this.getPKVal() || this.getPKVal().equals("0") || this.getPKVal().equals(""))
 		{

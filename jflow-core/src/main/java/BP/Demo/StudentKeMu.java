@@ -64,8 +64,9 @@ public class StudentKeMu extends EntityMM
 	 *            学生
 	 * @param fk_km
 	 *            科目编号
+	 * @throws Exception 
 	 */
-	public StudentKeMu(String fk_student, String fk_km)
+	public StudentKeMu(String fk_student, String fk_km) throws Exception
 	{
 		this.setFK_Student(fk_student);
 		this.setFK_KeMu(fk_km);
@@ -97,7 +98,7 @@ public class StudentKeMu extends EntityMM
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -108,9 +109,10 @@ public class StudentKeMu extends EntityMM
 	 * 插入前所做的工作
 	 * 
 	 * @return true/false
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		return super.beforeInsert();
 	}
@@ -119,9 +121,10 @@ public class StudentKeMu extends EntityMM
 	 * 更新前所做的工作
 	 * 
 	 * @return true/false
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		return super.beforeUpdate();
 	}
@@ -130,9 +133,10 @@ public class StudentKeMu extends EntityMM
 	 * 
 	 * 
 	 * 删除前所做的工作
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		return super.beforeDelete();
 	}

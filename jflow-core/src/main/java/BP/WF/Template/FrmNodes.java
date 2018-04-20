@@ -15,9 +15,10 @@ public class FrmNodes extends EntitiesMyPK
 
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (FrmNode ns : this.ToJavaList())
@@ -41,8 +42,9 @@ public class FrmNodes extends EntitiesMyPK
 	 节点表单
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public FrmNodes(String fk_flow, int nodeID)
+	public FrmNodes(String fk_flow, int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Flow, fk_flow);
@@ -56,8 +58,9 @@ public class FrmNodes extends EntitiesMyPK
 	 节点表单
 	 
 	 @param NodeNo NodeNo 
+	 * @throws Exception 
 	*/
-	public FrmNodes(int nodeID)
+	public FrmNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Node, nodeID);
@@ -83,8 +86,9 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @param sts 节点表单
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts)
+	public final Nodes GetHisNodes(Nodes sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
@@ -107,8 +111,9 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @param NodeNo 工作节点编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo)
+	public final Nodes GetHisNodes(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Node, NodeNo);
@@ -126,8 +131,9 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID)
+	public final Nodes GetHisNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Frm, nodeID);

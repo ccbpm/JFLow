@@ -753,7 +753,7 @@ public class Map
 	// 他的实体配置信息
 	private Attrs _HisCfgAttrs = null;
 	
-	public final Attrs getHisCfgAttrs()
+	public final Attrs getHisCfgAttrs() throws Exception
 	{
 		if (this._HisCfgAttrs == null)
 		{
@@ -2384,8 +2384,9 @@ public class Map
 	// 公共的。
 	/**
 	 * 同步两个实体属性.
+	 * @throws Exception 
 	 */
-	public final void AddAttrsFromMapData()
+	public final void AddAttrsFromMapData() throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(this.getFK_MapData()))
 		{

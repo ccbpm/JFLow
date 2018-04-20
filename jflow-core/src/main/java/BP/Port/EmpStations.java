@@ -40,8 +40,9 @@ public class EmpStations extends Entities
 	
 	/**
 	 * 工作人员与工作岗位集合
+	 * @throws Exception 
 	 */
-	public EmpStations(String empNo)
+	public EmpStations(String empNo) throws Exception
 	{
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database){
 			this.Retrieve(EmpStationAttr.FK_Emp, empNo);
@@ -66,8 +67,9 @@ public class EmpStations extends Entities
 	 * @param stationNo
 	 *            工作岗位编号
 	 * @return 节点s
+	 * @throws Exception 
 	 */
-	public final Emps GetHisEmps(String stationNo)
+	public final Emps GetHisEmps(String stationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(EmpStationAttr.FK_Station, stationNo);
@@ -89,8 +91,9 @@ public class EmpStations extends Entities
 	 * @param empId
 	 *            empId
 	 * @return 工作人员岗位s
+	 * @throws Exception 
 	 */
-	public final Stations GetHisStations(String empId)
+	public final Stations GetHisStations(String empId) throws Exception
 	{
 		Stations ens = new Stations();
 		if (Cash.IsExits("EmpStationsOf" + empId, Depositary.Application))

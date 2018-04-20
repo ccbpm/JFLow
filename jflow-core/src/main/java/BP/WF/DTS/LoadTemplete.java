@@ -46,17 +46,23 @@ public class LoadTemplete extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
-		{
-			return true;
+		try {
+			if (BP.Web.WebUser.getNo().equals("admin"))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String msg = "";
 

@@ -30,8 +30,9 @@ public class CCLists extends EntitiesMyPK
 	 @param flowNo
 	 @param workid
 	 @param fid
+	 * @throws Exception 
 	*/
-	public CCLists(String flowNo, long workid, long fid)
+	public CCLists(String flowNo, long workid, long fid) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCListAttr.FK_Flow, flowNo);

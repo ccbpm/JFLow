@@ -101,9 +101,10 @@ public class NodeStation extends EntityMM
 	 节点岗位发生变化，删除该节点记忆的接收人员。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		RememberMe remeberMe = new RememberMe();
 		remeberMe.Delete(RememberMeAttr.FK_Node, this.getFK_Node());

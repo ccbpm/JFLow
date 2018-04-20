@@ -123,14 +123,14 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		///#endregion 属性.
 
 	//删除评论.
-	public String FlowBBS_Delete(){
+	public String FlowBBS_Delete() throws Exception{
 		return BP.WF.Dev2Interface.Flow_BBSDelete(this.getFK_Flow(), this.getMyPK(), WebUser.getNo());
 	}
 	
 	public String OP_Takeback(){
 		return "";
 	}
-	public String OP_UnSend(){
+	public String OP_UnSend() throws Exception{
 		// 转化成编号.
 		return BP.WF.Dev2Interface.Flow_DoUnSend(this.getFK_Flow(), this.getWorkID());
 	}
@@ -140,28 +140,28 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		return "err@没有判断的执行类型：" + this.getDoType();
 	}
 
-	public String OP_ComeBack()
+	public String OP_ComeBack() throws Exception
 	{
 		WorkFlow wf3 = new WorkFlow(this.getFK_Flow(), this.getWorkID());
 		wf3.DoComeBackWorkFlow("无");
 		return "流程已经被重新启用.";
 	}
 
-	public String OP_UnHungUp()
+	public String OP_UnHungUp() throws Exception
 	{
 		WorkFlow wf2 = new WorkFlow(this.getFK_Flow(), this.getWorkID());
 		//  wf2.DoUnHungUp();
 		return "流程已经被解除挂起.";
 	}
 
-	public String OP_HungUp()
+	public String OP_HungUp() throws Exception
 	{
 		WorkFlow wf1 = new WorkFlow(this.getFK_Flow(), this.getWorkID());
 		//wf1.DoHungUp()
 		return "流程已经被挂起.";
 	}
 
-	public String OP_DelFlow()
+	public String OP_DelFlow() throws Exception
 	{
 		WorkFlow wf = new WorkFlow(this.getFK_Flow(), this.getWorkID());
 		wf.DoDeleteWorkFlowByReal(true);
@@ -245,8 +245,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	 获取附件列表及单据列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public String GetAthsAndBills()
+	public String GetAthsAndBills() throws Exception
 	{
 		String sql = "";
 		String json = "{\"Aths\":";
@@ -467,7 +468,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		return BP.Tools.Json.ToJson(BP.DA.DBAccess.RunSQLReturnTable(ps));
 	}
 
-	public final String FlowBBSUser()
+	public final String FlowBBSUser() throws Exception
 	{
 		String name = "";
 		name = BP.Web.WebUser.getNo();
@@ -503,8 +504,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	 提交评论.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowBBS_Save()
+	public final String FlowBBS_Save() throws Exception
 	{
 		String msg = this.GetValFromFrmByKey("TB_Msg");
 		String mypk = BP.WF.Dev2Interface.Flow_BBSAdd(this.getFK_Flow(), this.getWorkID(), this.getFID(), msg, WebUser.getNo(), WebUser.getName());
@@ -518,8 +520,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	 回复评论.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowBBS_Replay()
+	public final String FlowBBS_Replay() throws Exception
 	{
 		SMS sms = new SMS();
 		sms.RetrieveByAttr(SMSAttr.MyPK, this.getMyPK());
@@ -553,8 +556,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	 时间轴
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String TimeBase_Init()
+	public final String TimeBase_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -647,13 +651,13 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
  
-	public final String TimeBase_OpenFrm()
+	public final String TimeBase_OpenFrm() throws Exception
 	{
 		WF en = new WF();
 		return en.Runing_OpenFrm();
 	}
 	
-	public final String Runing_OpenFrm()
+	public final String Runing_OpenFrm() throws Exception
     {
         BP.WF.HttpHandler.WF wf = new WF();
         return wf.Runing_OpenFrm();

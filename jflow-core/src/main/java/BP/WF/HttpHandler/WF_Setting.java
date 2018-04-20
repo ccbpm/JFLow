@@ -29,7 +29,7 @@ public class WF_Setting extends WebContralBase
 		return "";
 	}
 
-	public final String Default_Init()
+	public final String Default_Init() throws Exception
 	{
 		java.util.Hashtable ht = new java.util.Hashtable();
 		ht.put("UserNo", WebUser.getNo());
@@ -155,8 +155,9 @@ public class WF_Setting extends WebContralBase
 	 修改密码 @于庆海.
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String ChangePassword_Submit()
+	public final String ChangePassword_Submit() throws Exception
 	{
 		String oldPass = this.GetRequestVal("OldPass");
 		String pass = this.GetRequestVal("Pass");
@@ -180,8 +181,9 @@ public class WF_Setting extends WebContralBase
 	/** 初始化切换部门.
 	 
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String ChangeDept_Init()
+	public final String ChangeDept_Init() throws Exception
 	{
 		String sql = "SELECT a.No,a.Name, NameOfPath, '0' AS  CurrentDept FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp='" + BP.Web.WebUser.getNo() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);

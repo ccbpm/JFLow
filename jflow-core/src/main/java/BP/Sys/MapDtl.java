@@ -298,9 +298,10 @@ public class MapDtl extends EntityNoName
 		///#region 外键属性
 	/** 
 	 框架
+	 * @throws Exception 
 	 
 	*/
-	public final MapFrames getMapFrames()
+	public final MapFrames getMapFrames() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
 		MapFrames obj = (MapFrames)((tempVar instanceof MapFrames) ? tempVar : null);
@@ -311,26 +312,13 @@ public class MapDtl extends EntityNoName
 		}
 		return obj;
 	}
-	/** 
-	 分组字段
 	 
-	*/
-	public final GroupFields getGroupFields_del()
-	{
-		Object tempVar = this.GetRefObject("GroupFields");
-		GroupFields obj = (GroupFields)((tempVar instanceof GroupFields) ? tempVar : null);
-		if (obj == null)
-		{
-			obj = new GroupFields(this.getNo());
-			this.SetRefObject("GroupFields", obj);
-		}
-		return obj;
-	}
 	/** 
 	 逻辑扩展
+	 * @throws Exception 
 	 
 	*/
-	public final MapExts getMapExts()
+	public final MapExts getMapExts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapExts");
 		MapExts obj = (MapExts)((tempVar instanceof MapExts) ? tempVar : null);
@@ -343,9 +331,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 事件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmEvents getFrmEvents()
+	public final FrmEvents getFrmEvents() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
 		FrmEvents obj = (FrmEvents)((tempVar instanceof FrmEvents) ? tempVar : null);
@@ -356,26 +345,14 @@ public class MapDtl extends EntityNoName
 		}
 		return obj;
 	}
-	/** 
-	 一对多
-	 
-	*/
-	public final MapM2Ms getMapM2Ms()
-	{
-		Object tempVar = this.GetRefObject("MapM2Ms");
-		MapM2Ms obj = (MapM2Ms)((tempVar instanceof MapM2Ms) ? tempVar : null);
-		if (obj == null)
-		{
-			obj = new MapM2Ms(this.getNo());
-			this.SetRefObject("MapM2Ms", obj);
-		}
-		return obj;
-	}
+
+
 	/** 
 	 从表
+	 * @throws Exception 
 	 
 	*/
-	public final MapDtls getMapDtls()
+	public final MapDtls getMapDtls() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
 		MapDtls obj = (MapDtls)((tempVar instanceof MapDtls) ? tempVar : null);
@@ -388,9 +365,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 超连接
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLinks getFrmLinks()
+	public final FrmLinks getFrmLinks() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmLinks obj = (FrmLinks)((tempVar instanceof FrmLinks) ? tempVar : null);
@@ -403,9 +381,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 按钮
+	 * @throws Exception 
 	 
 	*/
-	public final FrmBtns getFrmBtns()
+	public final FrmBtns getFrmBtns() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmBtns obj = (FrmBtns)((tempVar instanceof FrmBtns) ? tempVar : null);
@@ -418,9 +397,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 元素
+	 * @throws Exception 
 	 
 	*/
-	public final FrmEles getFrmEles()
+	public final FrmEles getFrmEles() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
 		FrmEles obj = (FrmEles)((tempVar instanceof FrmEles) ? tempVar : null);
@@ -433,9 +413,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 线
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLines getFrmLines()
+	public final FrmLines getFrmLines() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
 		FrmLines obj = (FrmLines)((tempVar instanceof FrmLines) ? tempVar : null);
@@ -448,9 +429,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLabs getFrmLabs()
+	public final FrmLabs getFrmLabs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmLabs obj = (FrmLabs)((tempVar instanceof FrmLabs) ? tempVar : null);
@@ -463,9 +445,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 图片
+	 * @throws Exception 
 	 
 	*/
-	public final FrmImgs getFrmImgs()
+	public final FrmImgs getFrmImgs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmImgs obj = (FrmImgs)((tempVar instanceof FrmImgs) ? tempVar : null);
@@ -478,9 +461,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 附件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmAttachments getFrmAttachments()
+	public final FrmAttachments getFrmAttachments() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
 		FrmAttachments obj = (FrmAttachments)((tempVar instanceof FrmAttachments) ? tempVar : null);
@@ -493,9 +477,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 图片附件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmImgAths getFrmImgAths()
+	public final FrmImgAths getFrmImgAths() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
 		FrmImgAths obj = (FrmImgAths)((tempVar instanceof FrmImgAths) ? tempVar : null);
@@ -508,9 +493,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 单选按钮
+	 * @throws Exception 
 	 
 	*/
-	public final FrmRBs getFrmRBs()
+	public final FrmRBs getFrmRBs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
 		FrmRBs obj = (FrmRBs)((tempVar instanceof FrmRBs) ? tempVar : null);
@@ -523,9 +509,10 @@ public class MapDtl extends EntityNoName
 	}
 	/** 
 	 属性
+	 * @throws Exception 
 	 
 	*/
-	public final MapAttrs getMapAttrs()
+	public final MapAttrs getMapAttrs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapAttrs");
 		MapAttrs obj = (MapAttrs)((tempVar instanceof MapAttrs) ? tempVar : null);
@@ -900,7 +887,7 @@ public class MapDtl extends EntityNoName
 
 
 		
-	public final Map GenerMap()
+	public final Map GenerMap() throws Exception
 	{
 		boolean isdebug = SystemConfig.getIsDebug();
 
@@ -933,7 +920,7 @@ public class MapDtl extends EntityNoName
 		GEDtl dtl = new GEDtl(this.getNo());
 		return dtl;
 	}
-	public final GEEntity GenerGEMainEntity(String mainPK)
+	public final GEEntity GenerGEMainEntity(String mainPK) throws Exception
 	{
 		GEEntity en = new GEEntity(this.getFK_MapData(), mainPK);
 		return en;
@@ -945,7 +932,7 @@ public class MapDtl extends EntityNoName
 	public MapDtl()
 	{
 	}
-	public MapDtl(String mypk)
+	public MapDtl(String mypk) throws Exception
 	{
 		this.setNo(mypk);
 		this._IsReadonly = 2;
@@ -1139,7 +1126,7 @@ public class MapDtl extends EntityNoName
 
 		///#endregion
 
-	public final void IntMapAttrs()
+	public final void IntMapAttrs() throws Exception
 	{
 		BP.Sys.MapData md = new BP.Sys.MapData();
 		md.setNo(this.getNo());
@@ -1239,7 +1226,7 @@ public class MapDtl extends EntityNoName
 			attr.Insert();
 		}
 	}
-	private void InitExtMembers()
+	private void InitExtMembers() throws Exception
 	{
 		// 如果启用了多附件
 		if (this.getIsEnableAthM())
@@ -1255,38 +1242,10 @@ public class MapDtl extends EntityNoName
 			}
 		}
 
-		if (this.getIsEnableM2M())
-		{
-			MapM2M m2m = new MapM2M();
-			m2m.setMyPK(this.getNo() + "_M2M");
-			m2m.setName("M2M");
-			m2m.setNoOfObj("M2M");
-			m2m.setFK_MapData(this.getNo());
-			if (m2m.RetrieveFromDBSources() == 0)
-			{
-				m2m.setFK_MapData(this.getNo());
-				m2m.setNoOfObj("M2M");
-				m2m.Insert();
-			}
-		}
-
-		if (this.getIsEnableM2MM())
-		{
-			MapM2M m2m = new MapM2M();
-			m2m.setMyPK(this.getNo() + "_M2MM");
-			m2m.setName("M2MM");
-			m2m.setNoOfObj("M2MM");
-			m2m.setFK_MapData(this.getNo());
-			if (m2m.RetrieveFromDBSources() == 0)
-			{
-				m2m.setFK_MapData(this.getNo());
-				m2m.setNoOfObj("M2MM");
-				m2m.Insert();
-			}
-		}
+		 
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.InitExtMembers();
 
@@ -1304,7 +1263,7 @@ public class MapDtl extends EntityNoName
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		BP.Sys.MapData md = new BP.Sys.MapData();
 		md.setNo(this.getNo());
@@ -1336,7 +1295,7 @@ public class MapDtl extends EntityNoName
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		MapAttrs attrs = new MapAttrs(this.getNo());
 		boolean isHaveEnable = false;
@@ -1362,7 +1321,7 @@ public class MapDtl extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		String sql = "";
 		sql += "@DELETE FROM Sys_FrmLine WHERE FK_MapData='" + this.getNo() + "'";

@@ -19,8 +19,9 @@ public abstract class StartWorks extends Works
 	/** 
 	 查询到我的任务.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable RetrieveMyTask_del(String flow)
+	public final DataTable RetrieveMyTask_del(String flow) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		//qo.Top=50;
@@ -30,8 +31,9 @@ public abstract class StartWorks extends Works
 	/** 
 	 查询到我的任务.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable RetrieveMyTask(String flow)
+	public final DataTable RetrieveMyTask(String flow) throws Exception
 	{
 		//string sql="SELECT OID AS WORKID, TITLE, ";
 		QueryObject qo = new QueryObject(this);
@@ -49,8 +51,9 @@ public abstract class StartWorks extends Works
 	/** 
 	 查询到我的任务.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable RetrieveMyTaskV2(String flow)
+	public final DataTable RetrieveMyTaskV2(String flow) throws Exception
 	{
 		String sql = "SELECT OID, TITLE, RDT, Rec FROM  " + this.getGetNewEntity().getEnMap().getPhysicsTable() + " WHERE OID IN (   SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + BP.Web.WebUser.getNo() + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID )  )";
 		return DBAccess.RunSQLReturnTable(sql);
@@ -64,8 +67,9 @@ public abstract class StartWorks extends Works
 	/** 
 	 查询到我的任务.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable RetrieveMyTask(String flow, String flowSort)
+	public final DataTable RetrieveMyTask(String flow, String flowSort) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		//qo.Top=50;

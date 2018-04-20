@@ -20,8 +20,9 @@ public class DeptFlowSearchs extends EntitiesMyPK
 	/** 
 	 流程部门数据查询权限
 	 @param FK_Emp FK_Emp
+	 * @throws Exception 
 	*/
-	public DeptFlowSearchs(String FK_Emp)
+	public DeptFlowSearchs(String FK_Emp) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DeptFlowSearchAttr.FK_Emp, FK_Emp);

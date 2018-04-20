@@ -99,16 +99,14 @@ public class EnCfg extends EntityNo
 	 * 系统实体
 	 * 
 	 * @param no
+	 * @throws Exception 
 	 */
-	public EnCfg(String enName)
+	public EnCfg(String enName) throws Exception
 	{
 		this.setNo(enName);
-		try
-		{
-			this.Retrieve();
-		} catch (RuntimeException ex)
-		{
-		}
+		 
+			this.RetrieveFromDBSources();
+		 
 	}
 	
 	/**

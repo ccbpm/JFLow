@@ -11,7 +11,7 @@ import BP.DA.DataType;
 import BP.DA.Depositary;
 import BP.DA.Paras;
 import BP.Sys.SysDocFile;
-import BP.Sys.SysFileManagers;
+ 
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
@@ -48,8 +48,9 @@ public abstract class EnObj implements Serializable
 	 * 得到 uac 控制.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		if (_HisUAC == null)
 		{
@@ -124,8 +125,9 @@ public abstract class EnObj implements Serializable
 	// 方法
 	/**
 	 * 重新设置默信息.
+	 * @throws Exception 
 	 */
-	public final void ResetDefaultVal()
+	public final void ResetDefaultVal() throws Exception
 	{
 		Attrs attrs = this.getEnMap().getAttrs();
 		for (Attr attr : attrs)
@@ -262,8 +264,9 @@ public abstract class EnObj implements Serializable
 	
 	/**
 	 * 把所有的值都设置成默认值，但是主键除外。
+	 * @throws Exception 
 	 */
-	public final void ResetDefaultValAllAttr()
+	public final void ResetDefaultValAllAttr() throws Exception
 	{
 		Attrs attrs = this.getEnMap().getAttrs();
 		for (Attr attr : attrs)
@@ -1194,16 +1197,7 @@ public abstract class EnObj implements Serializable
 		// return "2003-08-01";
 	}
 	
-	 
-	
-	// 属性
-	/**
-	 * 文件管理者
-	 */
-	public final SysFileManagers getHisSysFileManagers()
-	{
-		return new SysFileManagers(this.toString(), this.getPKVal().toString());
-	}
+	  
 	
 	public final boolean getIsBlank()
 	{

@@ -19,8 +19,9 @@ public class CCMobile_WorkOpt extends WebContralBase
 	 打包下载
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Packup_Init()
+	public final String Packup_Init() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.Packup_Init();
@@ -39,17 +40,17 @@ public class CCMobile_WorkOpt extends WebContralBase
 
 
 		///#region 审核组件.
-	public final String WorkCheck_GetNewUploadedAths()
+	public final String WorkCheck_GetNewUploadedAths() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.WorkCheck_GetNewUploadedAths();
 	}
-	public final String WorkCheck_Init()
+	public final String WorkCheck_Init() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.WorkCheck_Init();
 	}
-	public final String WorkCheck_Save()
+	public final String WorkCheck_Save() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.WorkCheck_Save();
@@ -64,17 +65,17 @@ public class CCMobile_WorkOpt extends WebContralBase
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.HuiQian_AddEmps();
 	}
-	public final String HuiQian_Delete()
+	public final String HuiQian_Delete() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.HuiQian_Delete();
 	}
-	public final String HuiQian_Init()
+	public final String HuiQian_Init() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.HuiQian_Init();
 	}
-	public final String HuiQian_SaveAndClose()
+	public final String HuiQian_SaveAndClose() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.HuiQian_SaveAndClose();
@@ -84,7 +85,7 @@ public class CCMobile_WorkOpt extends WebContralBase
 
 
 		///#region 接收人选择器(限定接受人范围的).
-	public final String Accepter_Init()
+	public final String Accepter_Init() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.Accepter_Init();
@@ -94,7 +95,7 @@ public class CCMobile_WorkOpt extends WebContralBase
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.Accepter_Save();
 	}
-	public final String Accepter_Send()
+	public final String Accepter_Send() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.Accepter_Send();
@@ -114,7 +115,7 @@ public class CCMobile_WorkOpt extends WebContralBase
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.AccepterOfGener_AddEmps();
 	}
-	public final String AccepterOfGener_Delete()
+	public final String AccepterOfGener_Delete() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.AccepterOfGener_Delete();

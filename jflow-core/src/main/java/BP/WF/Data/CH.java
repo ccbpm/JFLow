@@ -383,8 +383,9 @@ public class CH extends EntityMyPK
 	 
 	 
 	 @param pk
+	 * @throws Exception 
 	*/
-	public CH(String pk)
+	public CH(String pk) throws Exception
 	{
 		super(pk);
 	}

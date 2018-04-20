@@ -53,7 +53,6 @@ import BP.Sys.GEDtl;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
-import BP.Sys.M2M;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapDtl;
@@ -264,7 +263,7 @@ public class WF_CCForm extends WebContralBase {
      /// 生成描述
      /// </summary>
      /// <returns></returns>
-     public BP.Sys.FrmAttachment GenerAthDesc()
+     public BP.Sys.FrmAttachment GenerAthDesc() throws Exception
      {
          BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
          athDesc.setMyPK (this.getFK_FrmAttachment());
@@ -375,7 +374,7 @@ public class WF_CCForm extends WebContralBase {
      /// 执行删除
      /// </summary>
      /// <returns></returns>
-     public String AttachmentUpload_Del()
+     public String AttachmentUpload_Del() throws Exception
      {
          //执行删除.
          String delPK = this.GetRequestVal("DelPKVal");
@@ -385,7 +384,7 @@ public class WF_CCForm extends WebContralBase {
          delDB.Delete(); //删除上传的文件.
          return "删除成功.";
      }
-     public String AttachmentUpload_DownByStream()
+     public String AttachmentUpload_DownByStream() throws Exception
      {
         // return AttachmentUpload_Down(true);
          return AttachmentUpload_Down();
@@ -394,8 +393,9 @@ public class WF_CCForm extends WebContralBase {
  	 * 下载
  	 * 
  	 * @return
+     * @throws Exception 
  	 */
- 	public final String AttachmentUpload_Down() {
+ 	public final String AttachmentUpload_Down() throws Exception {
  		FrmAttachmentDB downDB = new FrmAttachmentDB();
  		downDB.setMyPK(this.getMyPK());
  		downDB.Retrieve();
@@ -442,13 +442,13 @@ public class WF_CCForm extends WebContralBase {
  	}
 
 
-     public void AttachmentDownFromByte()
+     public void AttachmentDownFromByte() throws Exception
      {
          FrmAttachmentDB downDB = new FrmAttachmentDB();
          downDB.setMyPK(this.getMyPK());
          downDB.Retrieve();
          downDB.setFileName(downDB.getFileName());
-         try {
+      
 	         byte[] byteList = downDB.GetFileFromDB("FileDB", null);
 	         if (byteList != null)
 	         {
@@ -468,20 +468,14 @@ public class WF_CCForm extends WebContralBase {
 	             outputStream.flush();    
 	             outputStream.close(); 
 	         }
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}    
+		 
      }
      
    /// <summary>
      /// 打包下载.
      /// </summary>
      /// <returns></returns>
-     public String AttachmentUpload_DownZip()
+     public String AttachmentUpload_DownZip() throws Exception
      {
          String zipName = this.getWorkID() + "_" + this.getFK_FrmAttachment();
 
@@ -592,7 +586,7 @@ public class WF_CCForm extends WebContralBase {
          return "url@" + url;
 
      }
-	public String HandlerMapExt() throws UnsupportedEncodingException {
+	public String HandlerMapExt() throws Exception {
 
 		String fk_mapExt = getRequest().getParameter("FK_MapExt");
 		if (DotNetToJavaStringHelper.isNullOrEmpty(getRequest().getParameter("Key"))) {
@@ -642,47 +636,7 @@ public class WF_CCForm extends WebContralBase {
 				}
 				// ORIGINAL LINE: case "ReqM2MFullList":
 	
-				if (getRequest().getParameter("DoTypeExt").equals("ReqM2MFullList")) {
-					// 获取填充的M2m集合.
-					DataTable dtM2M = new DataTable("Head");
-					dtM2M.Columns.Add("Dtl", String.class);
-					String[] strsM2M = me.getTag2().split("[$]", -1);
-					for (String str : strsM2M) {
-						if (str.equals("") || str == null) {
-							continue;
-						}
-	
-						String[] ss = str.split("[:]", -1);
-						String noOfObj = ss[0];
-						String mysql = ss[1];
-						mysql = DealSQL(mysql, key);
-	
-						DataTable dtFull = DBAccess.RunSQLReturnTable(mysql);
-						M2M m2mData = new M2M();
-						m2mData.setFK_MapData(me.getFK_MapData());
-						m2mData.setEnOID(Integer.parseInt(oid));
-						m2mData.setM2MNo(noOfObj);
-						String mystr = ",";
-						String mystrT = "";
-						for (DataRow dr : dtFull.Rows) {
-							String myno = dr.getValue("No").toString();
-							String myname = dr.getValue("Name").toString();
-							mystr += myno + ",";
-							mystrT += "@" + myno + "," + myname;
-						}
-						m2mData.setVals(mystr);
-						m2mData.setValsName(mystrT);
-						m2mData.InitMyPK();
-						m2mData.setNumSelected(dtFull.Rows.size());
-						m2mData.Save();
-	
-						DataRow mydr = dtM2M.NewRow();
-						mydr.setValue(0, ss[0]);
-						dtM2M.Rows.add(mydr);
-					}
-					return JSONTODT(dtM2M);
-	
-				}
+				 
 				// ORIGINAL LINE: case "ReqDtlFullList":
 	
 				if (getRequest().getParameter("DoTypeExt").equals("ReqDtlFullList")) {
@@ -786,7 +740,7 @@ public class WF_CCForm extends WebContralBase {
 
 	}
 
-	public String Frm_Init() {
+	public String Frm_Init() throws Exception {
 		
 		if (this.GetRequestVal("IsTest") != null)
         {
@@ -920,7 +874,7 @@ public class WF_CCForm extends WebContralBase {
     /// 附件图片
     /// </summary>
     /// <returns></returns>
-    public String FrmImgAthDB_Init()
+    public String FrmImgAthDB_Init() throws Exception
     {
         String ImgAthPK = this.GetRequestVal("ImgAth");
 
@@ -936,7 +890,7 @@ public class WF_CCForm extends WebContralBase {
     }
 
 
-	public final String DtlFrm_Init() {
+	public final String DtlFrm_Init() throws Exception {
 		long pk = this.getRefOID();
 		if (pk == 0) {
 			pk = Integer.parseInt(this.getOID());
@@ -967,8 +921,9 @@ public class WF_CCForm extends WebContralBase {
 				+ en.getOID();
 	}
 
-	public final String DtlFrm_Delete() {
+	public final String DtlFrm_Delete() throws Exception {
 		try {
+			
 			GEEntity en = new GEEntity(this.getEnsName());
 			en.setOID(Long.parseLong(this.getOID()));
 			en.Delete();
@@ -979,7 +934,7 @@ public class WF_CCForm extends WebContralBase {
 		}
 	}
 
-	public String FrmGener_Init() {
+	public String FrmGener_Init() throws Exception {
 
 		long pk = this.getRefOID();
 		if (pk == 0) {
@@ -1215,7 +1170,7 @@ public class WF_CCForm extends WebContralBase {
 
 	}
 
-	public String FrmGener_Save() {
+	public String FrmGener_Save() throws Exception {
 		// 保存主表数据.
 		GEEntity en = new GEEntity(this.getEnsName());
 		en.setOID(this.getRefOID());
@@ -1236,7 +1191,7 @@ public class WF_CCForm extends WebContralBase {
 		return "保存成功.";
 	}
 
-	public final String FrmFreeReadonly_Init() {
+	public final String FrmFreeReadonly_Init() throws Exception {
 		try {
 			MapData md = new MapData(this.getEnsName());
 			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
@@ -1308,8 +1263,9 @@ public class WF_CCForm extends WebContralBase {
 	 * 初始化从表数据
 	 * 
 	 * @return 返回结果数据
+	 * @throws Exception 
 	 */
-	public final String Dtl_Init() {
+	public final String Dtl_Init() throws Exception {
 
 		/// #region 检查是否是测试.
 		if (this.GetRequestVal("IsTest") != null) {
@@ -1374,8 +1330,9 @@ public class WF_CCForm extends WebContralBase {
 	 * 执行从表的保存.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String Dtl_Save() {
+	public final String Dtl_Save() throws Exception {
 		MapDtl mdtl = new MapDtl(this.getEnsName());
 		GEDtls dtls = new GEDtls(this.getEnsName());
 		FrmEvents fes = new FrmEvents(this.getEnsName()); // 获得事件.
@@ -1493,8 +1450,9 @@ public class WF_CCForm extends WebContralBase {
 	 * 删除
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String Dtl_DeleteRow() {
+	public final String Dtl_DeleteRow() throws Exception {
 		GEDtl dtl = new GEDtl(this.getFK_MapDtl());
 		dtl.setOID(this.getRefOID());
 		dtl.Delete();
@@ -1513,7 +1471,7 @@ public class WF_CCForm extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public String InitPopValTree() {
+	public String InitPopValTree() throws Exception {
 
 		String mypk = getRequest().getParameter("FK_MapExt");
 
@@ -1560,7 +1518,7 @@ public class WF_CCForm extends WebContralBase {
 		return BP.Tools.Json.ToJson(resultDs);
 	}
 
-	public String InitPopVal() {
+	public String InitPopVal() throws Exception {
 
 		MapExt me = new MapExt();
 		me.setMyPK(this.getFK_MapExt());
@@ -1830,7 +1788,7 @@ public class WF_CCForm extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public String SingleAttach() {
+	public String SingleAttach() throws Exception {
 
 		String attachPk = this.getRequest().getParameter("attachPk");
 		String workid = this.getRequest().getParameter("workid");
@@ -1942,7 +1900,7 @@ public class WF_CCForm extends WebContralBase {
 	// / </summary>
 	// / <param name="context"></param>
 	// / <returns></returns>
-	public String PopVal_InitTree() {
+	public String PopVal_InitTree() throws Exception {
 		String mypk = this.GetRequestVal("FK_MapExt");
 
 		MapExt me = new MapExt();
@@ -2187,7 +2145,7 @@ public class WF_CCForm extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public String MoreAttach() {
+	public String MoreAttach() throws Exception {
 
 		String attachPk = this.getRequest().getParameter("attachPk");
 		String workid = this.getRequest().getParameter("workid");
@@ -2316,7 +2274,7 @@ public class WF_CCForm extends WebContralBase {
 		return "true";
 	}
 
-	public String DelWorkCheckAttach() {
+	public String DelWorkCheckAttach() throws Exception {
 
 		String MyPK = this.getRequest().getParameter("MyPK");
 		FrmAttachmentDB athDB = new FrmAttachmentDB();
@@ -2352,7 +2310,7 @@ public class WF_CCForm extends WebContralBase {
 
 	// /////////////////////////////////////////////////
 	// /#region HanderMapExt
-	private String DealSQL(String sql, String key) {
+	private String DealSQL(String sql, String key) throws Exception {
 
 		sql = sql.replace("@Key", key);
 		sql = sql.replace("@key", key);
@@ -2495,8 +2453,9 @@ public class WF_CCForm extends WebContralBase {
 	 * 初始化数据
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DtlOpt_Init() {
+	public final String DtlOpt_Init() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 		if (StringUtils.isEmpty(dtl.getImpSQLInit())) {
 			return "err@从表加载语句为空，请设置从表加载的sql语句。";
@@ -2511,8 +2470,9 @@ public class WF_CCForm extends WebContralBase {
 	 * 增加
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DtlOpt_Add() {
+	public final String DtlOpt_Add() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 		String pks = this.GetRequestVal("PKs");
 
@@ -2546,8 +2506,9 @@ public class WF_CCForm extends WebContralBase {
 	 * 执行查询.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DtlOpt_Search() {
+	public final String DtlOpt_Search() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 
 		String sql = dtl.getImpSQLSearch();
@@ -2567,8 +2528,9 @@ public class WF_CCForm extends WebContralBase {
 	/** 初始化
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String DtlCard_Init()
+	public final String DtlCard_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -2605,8 +2567,9 @@ public class WF_CCForm extends WebContralBase {
 	 获得从表的从表数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DtlCard_Init_Dtl()
+	public final String DtlCard_Init_Dtl() throws Exception
 	{
 		DataSet ds = new DataSet();
 

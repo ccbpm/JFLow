@@ -21,8 +21,9 @@ public class FrmSubFlows extends Entities
 	 父子流程s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmSubFlows(String fk_mapdata)
+	public FrmSubFlows(String fk_mapdata) throws Exception
 	{
 		if ( SystemConfig.getIsDebug())
 		{

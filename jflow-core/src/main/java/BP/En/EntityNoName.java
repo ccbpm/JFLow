@@ -49,8 +49,9 @@ public abstract class EntityNoName extends EntityNo
 	
 	/**
 	 * @param _No
+	 * @throws Exception 
 	 */
-	protected EntityNoName(String _No)
+	protected EntityNoName(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -62,9 +63,10 @@ public abstract class EntityNoName extends EntityNo
 	 * 检查名称的问题.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getNo().trim().length() == 0)
 		{
@@ -106,7 +108,7 @@ public abstract class EntityNoName extends EntityNo
 	}
 	
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (!this.getEnMap().getIsAllowRepeatName())
 		{

@@ -36,7 +36,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	// / 初始化表单
 	// / </summary>
 	// / <returns></returns>
-	public String FormDesigner_InitMapData() {
+	public String FormDesigner_InitMapData() throws Exception {
 		MapData md = new MapData(this.getFK_MapData());
 		return md.ToJson();
 	}
@@ -57,8 +57,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 创建枚举类型字段
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String FrmEnumeration_NewEnumField() {
+	public final String FrmEnumeration_NewEnumField() throws Exception {
 		UIContralType ctrl = UIContralType.RadioBtn;
 		String ctrlDoType = GetRequestVal("CtrlDoType");
 		if ("DDL".equals(ctrlDoType))
@@ -81,7 +82,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	/// 加载表单
 	/// </summary>
 	/// <returns></returns>
-	public final String Loadform() throws IOException {
+	public final String Loadform() throws Exception {
 		MapData mapData = new MapData(this.getFK_MapData());
 		return mapData.getFormJson(); // 要返回的值.
 	}
@@ -116,8 +117,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 加载表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String FormDesigner_Loadform() {
+	public final String FormDesigner_Loadform() throws Exception {
 		MapData mapData = new MapData(this.getFK_MapData());
 		try {
 			return mapData.getFormJson(); // 要返回的值.
@@ -147,8 +149,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 获取隐藏字段
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String Hiddenfielddata() {
+	public final String Hiddenfielddata() throws Exception {
 		return BP.Sys.CCFormAPI.DB_Hiddenfielddata(this.getFK_MapData());
 	}
 
@@ -160,7 +163,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return String.valueOf(result);
 	}
 
-	public final String CcformElements() {
+	public final String CcformElements() throws Exception {
 		return CCForm_AllElements_ResponseJson();
 	}
 
@@ -168,8 +171,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 创建隐藏字段.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String NewHidF() {
+	public final String NewHidF() throws Exception {
 //		String fk_mapdataHid = this.GetRequestVal("v1");
 //		String key = this.GetRequestVal("v2");
 //		String myname = this.GetRequestVal("v3");
@@ -206,7 +210,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return "err@没有判断的执行标记:" + this.getDoType();
 	}
 
-	public final String NewFrmGuide_GenerPinYin() {
+	public final String NewFrmGuide_GenerPinYin() throws Exception {
 		String isQuanPin = this.GetRequestVal("IsQuanPin");
 		String name = this.GetRequestVal("TB_Name");
 
@@ -230,8 +234,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 获得系统的表
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String NewFrmGuide_Init()
+	public final String NewFrmGuide_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -246,7 +251,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 
 	}
 	
-	public final String NewFrmGuide_Create() {
+	public final String NewFrmGuide_Create() throws Exception {
 		MapData md = new MapData();
 		md.setName(this.GetRequestVal("TB_Name"));
 		md.setNo(this.GetRequestVal("TB_No"));
@@ -297,7 +302,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + md.getNo();
 	}
 
-	public String LetLogin() {
+	public String LetLogin() throws Exception {
 		BP.Port.Emp emp = new BP.Port.Emp("admin");
 		WebUser.SignInOfGener(emp);
 		return "";
@@ -307,7 +312,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return BP.WF.Glo.getSilverlightDownloadUrl();
 	}
 
-	public final String GoToFrmDesigner_Init() {
+	public final String GoToFrmDesigner_Init() throws Exception {
 		// 根据不同的表单类型转入不同的表单设计器上去.
 		BP.Sys.MapData md = new BP.Sys.MapData(this.getFK_MapData());
 		if (md.getHisFrmType() == BP.Sys.FrmType.FoolForm) {
@@ -334,7 +339,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return "err@没有判断的表单转入类型" + md.getHisFrmType().toString();
 	}
 
-	public final String PublicNoNameCtrlCreate() {
+	public final String PublicNoNameCtrlCreate() throws Exception {
 		try {
 			float x = Float.parseFloat(this.GetRequestVal("x"));
 			float y = Float.parseFloat(this.GetRequestVal("y"));
@@ -346,7 +351,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		}
 	}
 
-	public String NewField() {
+	public String NewField() throws Exception {
 		try {
 			BP.Sys.CCFormAPI.NewField(this.GetRequestVal("FrmID"), this.GetRequestVal("KeyOfEn"),
 					this.GetRequestVal("Name"), Integer.parseInt(this.GetRequestVal("FieldType")),
@@ -361,8 +366,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 获取自由表单所有元素
 	 * 
 	 * @return json data
+	 * @throws Exception 
 	 */
-	public final String CCForm_AllElements_ResponseJson() {
+	public final String CCForm_AllElements_ResponseJson() throws Exception {
 		
 		try {
 			
@@ -471,8 +477,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 保存表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String SaveForm() {
+	public final String SaveForm() throws Exception {
 		BP.Sys.CCFormAPI.SaveFrm(this.getFK_MapData(), this.GetRequestVal("diagram"));
 
 		// 一直没有找到设置3列，自动回到四列的情况.
@@ -484,8 +491,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 表单重置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ResetFrm_Init()
+	public final String ResetFrm_Init() throws Exception
 	{
 		MapData md = new MapData(this.getFK_MapData());
 		md.ResetMaxMinXY();
@@ -495,7 +503,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return "重置成功.";
 	}
 	
-	public final String Tables_Init() {
+	public final String Tables_Init() throws Exception {
 		BP.Sys.SFTables tabs = new BP.Sys.SFTables();
 		tabs.RetrieveAll();
 		DataTable dt = tabs.ToDataTableField();
@@ -510,7 +518,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String Tables_Delete() {
+	public final String Tables_Delete() throws Exception {
 		try {
 			BP.Sys.SFTable tab = new BP.Sys.SFTable();
 			tab.setNo(this.getNo());
@@ -521,7 +529,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		}
 	}
 
-	public final String TableRef_Init() {
+	public final String TableRef_Init() throws Exception {
 		BP.Sys.MapAttrs mapAttrs = new BP.Sys.MapAttrs();
 		mapAttrs.RetrieveByAttr(BP.Sys.MapAttrAttr.UIBindKey, this.getFK_SFTable());
 
@@ -529,7 +537,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String Home_Init() {
+	public final String Home_Init() throws Exception {
 		String no = this.GetRequestVal("No");
 
 		MapData md = new MapData(no);
@@ -568,8 +576,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 初始化字段列表.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String FiledsList_Init() {
+	public final String FiledsList_Init() throws Exception {
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData());
 		for (MapAttr item : attrs.ToJavaList()) {
@@ -593,8 +602,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 删除字段
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String FiledsList_Delete() {
+	public final String FiledsList_Delete() throws Exception {
 		MapAttr attr = new MapAttr(this.getMyPK());
 		if (attr.Delete() == 1) {
 			return "删除成功！";
@@ -607,8 +617,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 增加
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DtlOpt_Add() {
+	public final String DtlOpt_Add() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 		String pks = this.GetRequestVal("PKs");
 
@@ -642,8 +653,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * 初始化数据
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DtlOpt_Init() {
+	public final String DtlOpt_Init() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 		
 		DataSet ds = new DataSet();
@@ -656,9 +668,10 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 执行查询.
 	 
 	 @return
+	 * @throws Exception 
 	 */
 
-	public final String DtlOpt_Search() {
+	public final String DtlOpt_Search() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 
 		String sql = dtl.getImpSQLSearch();

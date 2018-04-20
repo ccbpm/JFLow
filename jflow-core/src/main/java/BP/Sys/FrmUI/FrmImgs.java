@@ -22,8 +22,9 @@ public class FrmImgs extends EntitiesMyPK
 	/** 
 	 装饰图片s
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmImgs(String fk_mapdata)
+	public FrmImgs(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

@@ -198,8 +198,9 @@ public class Eval extends EntityMyPK
 	 工作质量评价
 	 @param workid
 	 @param FK_Node
+	 * @throws Exception 
 	*/
-	public Eval(int workid, int FK_Node)
+	public Eval(int workid, int FK_Node) throws Exception
 	{
 		this.setWorkID(workid);
 		this.setFK_Node(FK_Node);

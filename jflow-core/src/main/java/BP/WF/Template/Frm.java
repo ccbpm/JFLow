@@ -62,8 +62,9 @@ public class Frm extends EntityNoName
 	 Frm
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public Frm(String no)
+	public Frm(String no) throws Exception
 	{
 		super(no);
 

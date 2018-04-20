@@ -14,7 +14,7 @@ public class Flows extends EntitiesNoName
 {
 
 		///#region 查询
-	public static void GenerHtmlRpts()
+	public static void GenerHtmlRpts() throws Exception
 	{
 		Flows fls = new Flows();
 		fls.RetrieveAll();
@@ -65,8 +65,9 @@ public class Flows extends EntitiesNoName
 	}
 	/** 
 	 查出来全部的自动流程
+	 * @throws Exception 
 	*/
-	public final void RetrieveIsAutoWorkFlow()
+	public final void RetrieveIsAutoWorkFlow() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowAttr.FlowType, 1);
@@ -78,8 +79,9 @@ public class Flows extends EntitiesNoName
 	 
 	 @param flowSort 流程类别
 	 @param IsCountInLifeCycle 是不是计算在生存期间内 true 查询出来全部的 
+	 * @throws Exception 
 	*/
-	public final int Retrieve(String flowSort)
+	public final int Retrieve(String flowSort) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowAttr.FK_FlowSort, flowSort);
@@ -95,8 +97,9 @@ public class Flows extends EntitiesNoName
 	/** 
 	 工作流程
 	 @param fk_sort
+	 * @throws Exception 
 	*/
-	public Flows(String fk_sort)
+	public Flows(String fk_sort) throws Exception
 	{
 		this.Retrieve(FlowAttr.FK_FlowSort, fk_sort);
 	}

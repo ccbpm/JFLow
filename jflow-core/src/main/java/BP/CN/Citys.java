@@ -30,8 +30,9 @@ public class Citys extends EntitiesNoName
 	 * 
 	 * @param sf
 	 *            省份
+	 * @throws Exception 
 	 */
-	public Citys(String sf)
+	public Citys(String sf) throws Exception
 	{
 		this.Retrieve(CityAttr.FK_SF, sf);
 	}

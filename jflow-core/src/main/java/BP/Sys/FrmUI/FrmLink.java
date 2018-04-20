@@ -148,7 +148,7 @@ public class FrmLink extends EntityMyPK
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.Readonly();
@@ -168,8 +168,9 @@ public class FrmLink extends EntityMyPK
 	 超连接
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmLink(String mypk)
+	public FrmLink(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();

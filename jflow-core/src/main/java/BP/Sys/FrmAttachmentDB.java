@@ -284,8 +284,9 @@ public class FrmAttachmentDB extends EntityMyPK
 	 附件数据存储
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmAttachmentDB(String mypk)
+	public FrmAttachmentDB(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -363,9 +364,10 @@ public class FrmAttachmentDB extends EntityMyPK
 	 重写
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		return super.beforeInsert();
 	}
@@ -373,7 +375,7 @@ public class FrmAttachmentDB extends EntityMyPK
 		///#endregion
 	
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//判断删除excel数据提取的数据
 		if (StringHelper.isNullOrWhiteSpace(this.getFK_FrmAttachment()))

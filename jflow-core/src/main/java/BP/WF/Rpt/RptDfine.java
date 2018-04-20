@@ -43,7 +43,7 @@ public class RptDfine extends EntityNoName {
 
 	/// #region 构造方法
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC() throws Exception {
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getIsAdmin()) {
 			uac.IsUpdate = true;
@@ -68,8 +68,9 @@ public class RptDfine extends EntityNoName {
 	 * 
 	 * @param no
 	 *            映射编号
+	 * @throws Exception 
 	 */
-	public RptDfine(String no) {
+	public RptDfine(String no) throws Exception {
 		this.setNo(no);
 		this.Retrieve();
 	}
@@ -380,9 +381,10 @@ public class RptDfine extends EntityNoName {
 
 	/** 
 	 重置设置.
+	 * @throws Exception 
 	 
 	*/
-	public final String DoReset(String rptMark, String rptName)
+	public final String DoReset(String rptMark, String rptName) throws Exception
 	{
 		MapData md = new MapData();
 		md.setNo("ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark);
@@ -523,8 +525,9 @@ public class RptDfine extends EntityNoName {
 	 * 重置
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoReset_MyStartFlow() {
+	public final String DoReset_MyStartFlow() throws Exception {
 		return DoReset("My", "我发起的流程");
 	}
 
@@ -580,8 +583,9 @@ public class RptDfine extends EntityNoName {
 	 * 重置
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoReset_MyJoinFlow() {
+	public final String DoReset_MyJoinFlow() throws Exception {
 		return DoReset("MyJoin", "我参与的流程");
 	}
 
@@ -637,8 +641,9 @@ public class RptDfine extends EntityNoName {
 	 * 重置
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoReset_MyDeptFlow() {
+	public final String DoReset_MyDeptFlow() throws Exception {
 		return DoReset("MyDept", "本部门发起的流程");
 	}
 
@@ -694,8 +699,9 @@ public class RptDfine extends EntityNoName {
 	 * 重置
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoReset_AdminerFlow() {
+	public final String DoReset_AdminerFlow() throws Exception {
 		return DoReset("Adminer", "本部门发起的流程");
 	}
 

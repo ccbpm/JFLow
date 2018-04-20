@@ -24,8 +24,9 @@ public class CCFormAPI extends Dev2Interface
 	 @param templeteFilePath 模版路径
 	 @param ds 数据源
 	 @return 生成单据的路径
+	 * @throws Exception 
 	*/
-	public static void Frm_GenerBill(String templeteFullFile, String saveToDir, String saveFileName, BillFileType fileType, DataSet ds, String fk_mapData)
+	public static void Frm_GenerBill(String templeteFullFile, String saveToDir, String saveFileName, BillFileType fileType, DataSet ds, String fk_mapData) throws Exception
 	{
 
 		MapData md = new MapData(fk_mapData);
@@ -52,9 +53,10 @@ public class CCFormAPI extends Dev2Interface
 	 * @param cfg
 	 * @param lang
 	 * @return
+	 * @throws Exception 
 	 */
 	
-    public static String SaveEnum(String enumKey, String enumLab, String cfg)
+    public static String SaveEnum(String enumKey, String enumLab, String cfg) throws Exception
     {
     	String lang ="CH";
         SysEnumMain sem = new SysEnumMain();
@@ -98,8 +100,9 @@ public class CCFormAPI extends Dev2Interface
 	 * @param name
 	 * @param x
 	 * @param y
+	 * @throws Exception 
 	 */
-    public static void getCreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y)
+    public static void getCreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y) throws Exception
     {
         FrmAttachment ath = new FrmAttachment();
         ath.setFK_MapData(fk_mapdata);
@@ -122,8 +125,9 @@ public class CCFormAPI extends Dev2Interface
      * @param pageNumber 第几页
      * @param pageSize 每页大小
      * @return json
+     * @throws Exception 
      */
-    public static String DB_SFTableList(int pageNumber, int pageSize)
+    public static String DB_SFTableList(int pageNumber, int pageSize) throws Exception
     {
         //获得查询.
         SFTables sftables = new SFTables();
@@ -188,8 +192,9 @@ public class CCFormAPI extends Dev2Interface
      * @param pageNumber 第几页
      * @param pageSize 每页大小
      * @return json
+     * @throws Exception 
      */
-    public static String DB_EnumerationList(int pageNumber, int pageSize)
+    public static String DB_EnumerationList(int pageNumber, int pageSize) throws Exception
     {
         SysEnumMains enumMains = new SysEnumMains();
         QueryObject obj = new QueryObject(enumMains);
@@ -207,8 +212,9 @@ public class CCFormAPI extends Dev2Interface
      * @param name 名称
      * @param x 位置x
      * @param y 位置y
+     * @throws Exception 
      */
-    public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y)
+    public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y) throws Exception
     {
     	if("Dtl".equals(ctrlType))
     	{
@@ -249,8 +255,9 @@ public class CCFormAPI extends Dev2Interface
      * @param dtlName 名称
      * @param x 位置x
      * @param y 位置y
+     * @throws Exception 
      */
-    public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y)
+    public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y) throws Exception
     {
         MapDtl dtl = new MapDtl();
         dtl.setNo(dtlNo);
@@ -273,8 +280,9 @@ public class CCFormAPI extends Dev2Interface
      * @param name 名称
      * @param x 位置x
      * @param y 位置y
+     * @throws Exception 
      */
-    public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y)
+    public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y) throws Exception
     {
         FrmAttachment ath = new FrmAttachment();
         ath.setFK_MapData(fk_mapdata);
@@ -297,8 +305,9 @@ public class CCFormAPI extends Dev2Interface
      * @param name 名称
      * @param x 位置x
      * @param y 位置y
+     * @throws Exception 
      */
-    public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y)
+    public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y) throws Exception
     {
         FrmAttachment ath = new FrmAttachment();
         ath.setFK_MapData(fk_mapdata);
@@ -320,8 +329,9 @@ public class CCFormAPI extends Dev2Interface
      * @param name 名称
      * @param x 位置x
      * @param y 位置y
+     * @throws Exception 
      */
-    public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y)
+    public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y) throws Exception
     {
         FrmImgAth ath = new FrmImgAth();
         ath.setFK_MapData(fk_mapdata);
@@ -341,8 +351,9 @@ public class CCFormAPI extends Dev2Interface
      * @param fk_SFTable 外键表
      * @param x 位置
      * @param y 位置
+     * @throws Exception 
      */
-    public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y)
+    public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y) throws Exception
     {
         //外键字段表.
         SFTable sf = new SFTable(fk_SFTable);
@@ -393,7 +404,7 @@ public class CCFormAPI extends Dev2Interface
         }
     }
     
-    public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y)
+    public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y) throws Exception
     {
 
         MapAttr ma = new MapAttr();
@@ -444,8 +455,9 @@ public class CCFormAPI extends Dev2Interface
      * @param mydataType  
      * @param x 位置
      * @param y 位置
+     * @throws Exception 
      */
-    public static void NewField(String frmID, String field, String fieldDesc,int mydataType, float x, float y)
+    public static void NewField(String frmID, String field, String fieldDesc,int mydataType, float x, float y) throws Exception
     {
         MapAttr ma = new MapAttr();
         ma.setFK_MapData(frmID);
@@ -463,7 +475,7 @@ public class CCFormAPI extends Dev2Interface
     /// <param name="gKey"></param>
     /// <param name="gName"></param>
     /// <returns></returns>
-    public static String NewCheckGroup(String frmID, String gKey, String gName)
+    public static String NewCheckGroup(String frmID, String gKey, String gName) throws Exception
     {
         MapAttr attrN = new MapAttr();
         int i = attrN.Retrieve(MapAttrAttr.FK_MapData, frmID, MapAttrAttr.KeyOfEn, gKey + "_Note");
@@ -545,8 +557,9 @@ public class CCFormAPI extends Dev2Interface
 	 @param frmID 表单ID
 	 @param pkval 主键
 	 @return 数据
+     * @throws Exception 
 	*/
-	public static DataSet GenerDBForVSTOExcelFrmModel(String frmID, int pkval)
+	public static DataSet GenerDBForVSTOExcelFrmModel(String frmID, int pkval) throws Exception
 	{
 		//数据容器,就是要返回的对象.
 		DataSet myds = new DataSet();
@@ -820,7 +833,7 @@ public class CCFormAPI extends Dev2Interface
 		return myds;
 	}
 	
-	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas)
+	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas) throws Exception
 	{
 		//数据容器,就是要返回的对象.
 		DataSet myds = new DataSet();
@@ -1121,8 +1134,9 @@ public class CCFormAPI extends Dev2Interface
 	 @param atParas 参数
 	 @param specDtlFrmID 指定明细表的参数，如果为空就标识主表数据，否则就是从表数据.
 	 @return 数据
+	 * @throws Exception 
 */
-	public static DataSet GenerDBForCCFormDtl_old(String frmID, MapDtl dtl, int pkval, String atParas)
+	public static DataSet GenerDBForCCFormDtl_old(String frmID, MapDtl dtl, int pkval, String atParas) throws Exception
 	{
 		//数据容器,就是要返回的对象.
 		DataSet myds = new DataSet();

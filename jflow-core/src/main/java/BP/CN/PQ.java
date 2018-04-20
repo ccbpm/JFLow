@@ -19,7 +19,7 @@ public class PQ extends EntityNoName
 	
 	// 构造函数
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -33,7 +33,7 @@ public class PQ extends EntityNoName
 	{
 	}
 	
-	public PQ(String no)
+	public PQ(String no) throws Exception
 	{
 		super(no);
 	}

@@ -29,7 +29,7 @@ public class City extends EntityNoName
 	
 	// 构造函数
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -43,7 +43,7 @@ public class City extends EntityNoName
 	{
 	}
 	
-	public City(String no)
+	public City(String no) throws Exception
 	{
 		super(no);
 	}

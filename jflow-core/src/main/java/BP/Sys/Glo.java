@@ -164,9 +164,10 @@ public class Glo
 	 *            信息
 	 * @param ip
 	 *            IP
+	 * @throws Exception 
 	 */
 	public static void WriteUserLog(String logType, String empNo, String msg,
-			String ip)
+			String ip) throws Exception
 	{
 		UserLog ul = new UserLog();
 		ul.setMyPK(DBAccess.GenerGUID());
@@ -187,8 +188,9 @@ public class Glo
 	 *            操作员编号
 	 * @param msg
 	 *            消息
+	 * @throws Exception 
 	 */
-	public static void WriteUserLog(String logType, String empNo, String msg)
+	public static void WriteUserLog(String logType, String empNo, String msg) throws Exception
 	{
 		UserLog ul = new UserLog();
 		ul.setMyPK(DBAccess.GenerGUID());

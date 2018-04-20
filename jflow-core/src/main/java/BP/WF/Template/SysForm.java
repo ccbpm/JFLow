@@ -61,8 +61,9 @@ public class SysForm extends EntityNoName
 	 Frm
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public SysForm(String no)
+	public SysForm(String no) throws Exception
 	{
 		super(no);
 

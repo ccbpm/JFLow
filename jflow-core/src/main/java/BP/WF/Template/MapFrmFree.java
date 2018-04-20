@@ -116,7 +116,7 @@ public class MapFrmFree extends EntityNoName {
 
 	/// #region 权限控制.
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC() throws Exception {
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin")) {
 			uac.IsDelete = false;
@@ -141,8 +141,9 @@ public class MapFrmFree extends EntityNoName {
 	 * 
 	 * @param no
 	 *            表单ID
+	 * @throws Exception 
 	 */
-	public MapFrmFree(String no) {
+	public MapFrmFree(String no) throws Exception {
 		super(no);
 	}
 
@@ -421,7 +422,7 @@ public class MapFrmFree extends EntityNoName {
 	/// #endregion
 
 	@Override
-	protected boolean beforeUpdate() {
+	protected boolean beforeUpdate() throws Exception {
 		// 注册事件表单实体.
 		BP.Sys.FormEventBase feb = BP.Sys.Glo.GetFormEventBaseByEnName(this.getNo());
 		if (feb == null) {
@@ -449,8 +450,9 @@ public class MapFrmFree extends EntityNoName {
 	 * 复制表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoCopyFrm(String frmID, String frmName, String fk_frmTree) {
+	public final String DoCopyFrm(String frmID, String frmName, String fk_frmTree) throws Exception {
 		return BP.Sys.CCFormAPI.CopyFrm(this.getNo(), frmID, frmName, fk_frmTree);
 	}
 
@@ -461,27 +463,7 @@ public class MapFrmFree extends EntityNoName {
 		return "重置成功,您需要关闭当前H5的表单设计器然后重新打开.";
 	}
 
-	/// #region 节点表单方法.
-	/**
-	 * 启动自由表单设计器(SL)
-	 * 
-	 * @return
-	 */
-	public final String DoDesignerSL() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/CCFormDesignerSL.jsp?FK_MapData=" + this.getNo()
-				+ "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID();
-	}
-
-	/**
-	 * 启动自由表单设计器(h5)
-	 * 
-	 * @return
-	 */
-	public final String DoDesignerH5() {
-		// WF/Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=ND102&UserNo=admin&SID=44a42h5gcbxnwjof2hv2pw5e
-		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getNo()
-				+ "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID();
-	}
+	 
 
 	/**
 	 * 傻瓜表单设计器
@@ -525,8 +507,9 @@ public class MapFrmFree extends EntityNoName {
 	 * @param newFieldName
 	 *            新字段名称(可以为空)
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) {
+	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) throws Exception {
 		MapAttr attrOld = new MapAttr();
 		attrOld.setKeyOfEn(fieldOld);
 		attrOld.setFK_MapData(this.getNo());
@@ -618,8 +601,9 @@ public class MapFrmFree extends EntityNoName {
 	 * 设计表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoDFrom() {
+	public final String DoDFrom() throws Exception {
 		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/CCForm/Frm.jsp?FK_MapData=" + this.getNo()
 				+ "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType="
 				+ BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
@@ -635,8 +619,9 @@ public class MapFrmFree extends EntityNoName {
 	 * 设计傻瓜表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoDFromCol4() {
+	public final String DoDFromCol4() throws Exception {
 		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()
 				+ "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&IsFirst=1&AppCenterDBType="
 				+ BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();

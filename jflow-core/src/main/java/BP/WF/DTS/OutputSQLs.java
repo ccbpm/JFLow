@@ -32,7 +32,7 @@ public class OutputSQLs extends DataIOEn
 		String sql = this.GenerSqls();
 		PubClass.ResponseWriteBlueMsg(sql.replace("\n", "<BR>"));
 	}
-	public final String GenerSqls()
+	public final String GenerSqls() throws Exception
 	{
 		Log.DefaultLogWriteLine(LogType.Info, BP.Web.WebUser.getName() + "开始调度考核信息:" + new java.util.Date());//.ToString("yyyy-MM-dd HH:mm:ss"));
 		String infoMsg = "", errMsg = "";

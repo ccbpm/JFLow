@@ -10,7 +10,7 @@ import org.apache.http.protocol.HttpContext;
 
 import BP.DA.Log;
 import cn.jflow.common.util.ContextHolderUtils;
-import cn.jflow.controller.wf.workopt.BaseController;
+import cn.jflow.common.BaseController;
 
 public abstract class HttpHandlerBase extends BaseController
 {

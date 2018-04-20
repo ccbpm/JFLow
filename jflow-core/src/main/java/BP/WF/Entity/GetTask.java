@@ -26,8 +26,9 @@ public class GetTask extends BP.En.Entity
 	 * 我可以处理当前的工作吗？
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean Can_I_Do_It()
+	public final boolean Can_I_Do_It() throws Exception
 	{
 		// 判断我是否可以处理当前点数据？
 		switch (this.getHisDeliveryWay())
@@ -182,7 +183,7 @@ public class GetTask extends BP.En.Entity
 	{
 	}
 	
-	public GetTask(int nodeId)
+	public GetTask(int nodeId) throws Exception
 	{
 		this.setNodeID(nodeId);
 		this.Retrieve();

@@ -41,13 +41,13 @@ import cn.jflow.common.util.ContextHolderUtils;
 */
 public class CCMobile_CCForm extends WebContralBase
 {
-	public final String HandlerMapExt() throws UnsupportedEncodingException
+	public final String HandlerMapExt() throws Exception
 	{
 		WF_CCForm en = new WF_CCForm();
 		return en.HandlerMapExt();
 	}
 
-	public String AttachmentUpload_Down()
+	public String AttachmentUpload_Down() throws Exception
     {
         WF_CCForm ccform = new WF_CCForm(this.context);
         return ccform.AttachmentUpload_Down();
@@ -57,13 +57,13 @@ public class CCMobile_CCForm extends WebContralBase
     /// 表单初始化.
     /// </summary>
     /// <returns></returns>
-    public String Frm_Init()
+    public String Frm_Init() throws Exception
     {
         WF_CCForm ccform = new WF_CCForm(this.context);
         return ccform.Frm_Init();
     }
 
-    public String Dtl_Init()
+    public String Dtl_Init() throws Exception
     {
         WF_CCForm ccform = new WF_CCForm(this.context);
         return ccform.Dtl_Init();
@@ -83,7 +83,7 @@ public class CCMobile_CCForm extends WebContralBase
   
     //多附件上传
     @RequestMapping(value = { "upload" })
-    public String MoreAttach() {
+    public String MoreAttach() throws Exception {
 
 		String attachPk = this.getRequest().getParameter("attachPk");
 		String workid = this.getRequest().getParameter("workid");

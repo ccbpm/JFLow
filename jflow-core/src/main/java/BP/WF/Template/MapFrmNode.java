@@ -107,7 +107,7 @@ public class MapFrmNode extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -135,8 +135,9 @@ public class MapFrmNode extends EntityNoName
 	 自由表单属性
 	 
 	 @param no 表单ID
+	 * @throws Exception 
 	*/
-	public MapFrmNode(String no)
+	public MapFrmNode(String no) throws Exception
 	{
 		super(no);
 	}
@@ -385,7 +386,7 @@ public class MapFrmNode extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		//注册事件表单实体.
 		BP.Sys.FormEventBase feb = BP.Sys.Glo.GetFormEventBaseByEnName(this.getNo());
@@ -417,8 +418,9 @@ public class MapFrmNode extends EntityNoName
 	 复制表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoCopyFrm(String frmID, String frmName, String fk_frmTree)
+	public final String DoCopyFrm(String frmID, String frmName, String fk_frmTree) throws Exception
 	{
 		return BP.Sys.CCFormAPI.CopyFrm(this.getNo(), frmID, frmName, fk_frmTree);
 	}
@@ -435,8 +437,9 @@ public class MapFrmNode extends EntityNoName
 	 启动自由表单设计器(SL)
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDesignerSL()
+	public final String DoDesignerSL() throws Exception
 	{
 		return "../../Admin/CCFormDesigner/CCFormDesignerSL.htm?FK_MapData="+this.getNo()+"&UserNo="+BP.Web.WebUser.getNo()+"&SID="+BP.Web.WebUser.getSID();
 	}
@@ -444,8 +447,9 @@ public class MapFrmNode extends EntityNoName
 	 启动自由表单设计器(h5)
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDesignerH5()
+	public final String DoDesignerH5() throws Exception
 	{
 		// WF/Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=ND102&UserNo=admin&SID=44a42h5gcbxnwjof2hv2pw5e
 		return "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID();
@@ -487,8 +491,9 @@ public class MapFrmNode extends EntityNoName
 	 @param frmID1
 	 @param frmID2
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoChangeFrmID(String frmID1, String frmID2)
+	public final String DoChangeFrmID(String frmID1, String frmID2) throws Exception
 	{
 		MapData md = new MapData();
 		md.setNo(frmID1);
@@ -530,8 +535,9 @@ public class MapFrmNode extends EntityNoName
 	 @param newField 新字段
 	 @param newFieldName 新字段名称(可以为空)
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName)
+	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) throws Exception
 	{
 		MapAttr attrOld = new MapAttr();
 		attrOld.setKeyOfEn(fieldOld);
@@ -625,8 +631,9 @@ public class MapFrmNode extends EntityNoName
 	 设计表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDFrom()
+	public final String DoDFrom() throws Exception
 	{
 		String url = "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		try {
@@ -640,8 +647,9 @@ public class MapFrmNode extends EntityNoName
 	 设计傻瓜表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDFromCol4()
+	public final String DoDFromCol4() throws Exception
 	{
 		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		try {

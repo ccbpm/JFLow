@@ -202,7 +202,7 @@ public class SelectAccper extends EntityMyPK
 	{
 
 	}
-	public SelectAccper(String mypk)
+	public SelectAccper(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -258,7 +258,7 @@ public class SelectAccper extends EntityMyPK
 
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.ResetPK();
 
@@ -270,7 +270,7 @@ public class SelectAccper extends EntityMyPK
 		this.setMyPK(this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp()+"_"+this.getIdx());
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getDeptName().length() == 0)
 		{

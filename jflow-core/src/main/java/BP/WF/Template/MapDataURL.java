@@ -28,7 +28,6 @@ import BP.Sys.MapDataAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExts;
 import BP.Sys.MapFrames;
-import BP.Sys.MapM2Ms;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Glo;
@@ -42,7 +41,7 @@ public class MapDataURL extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -381,9 +380,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 框架
+	 * @throws Exception 
 	 
 	*/
-	public final MapFrames getMapFrames()
+	public final MapFrames getMapFrames() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
 		MapFrames obj = (MapFrames)((tempVar instanceof MapFrames) ? tempVar : null);
@@ -396,9 +396,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 分组字段
+	 * @throws Exception 
 	 
 	*/
-	public final GroupFields getGroupFields()
+	public final GroupFields getGroupFields() throws Exception
 	{
 		Object tempVar = this.GetRefObject("GroupFields");
 		GroupFields obj = (GroupFields)((tempVar instanceof GroupFields) ? tempVar : null);
@@ -411,9 +412,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 逻辑扩展
+	 * @throws Exception 
 	 
 	*/
-	public final MapExts getMapExts()
+	public final MapExts getMapExts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapExts");
 		MapExts obj = (MapExts)((tempVar instanceof MapExts) ? tempVar : null);
@@ -426,9 +428,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 事件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmEvents getFrmEvents()
+	public final FrmEvents getFrmEvents() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
 		FrmEvents obj = (FrmEvents)((tempVar instanceof FrmEvents) ? tempVar : null);
@@ -439,26 +442,13 @@ public class MapDataURL extends EntityNoName
 		}
 		return obj;
 	}
-	/** 
-	 一对多
 	 
-	*/
-	public final MapM2Ms getMapM2Ms()
-	{
-		Object tempVar = this.GetRefObject("MapM2Ms");
-		MapM2Ms obj = (MapM2Ms)((tempVar instanceof MapM2Ms) ? tempVar : null);
-		if (obj == null)
-		{
-			obj = new MapM2Ms(this.getNo());
-			this.SetRefObject("MapM2Ms", obj);
-		}
-		return obj;
-	}
 	/** 
 	 从表
+	 * @throws Exception 
 	 
 	*/
-	public final MapDtls getMapDtls()
+	public final MapDtls getMapDtls() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
 		MapDtls obj = (MapDtls)((tempVar instanceof MapDtls) ? tempVar : null);
@@ -471,9 +461,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 报表
+	 * @throws Exception 
 	 
 	*/
-	public final FrmRpts getFrmRpts()
+	public final FrmRpts getFrmRpts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRpts");
 		FrmRpts obj = (FrmRpts)((tempVar instanceof FrmRpts) ? tempVar : null);
@@ -486,9 +477,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 超连接
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLinks getFrmLinks()
+	public final FrmLinks getFrmLinks() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmLinks obj = (FrmLinks)((tempVar instanceof FrmLinks) ? tempVar : null);
@@ -501,9 +493,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 按钮
+	 * @throws Exception 
 	 
 	*/
-	public final FrmBtns getFrmBtns()
+	public final FrmBtns getFrmBtns() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmBtns");
 		FrmBtns obj = (FrmBtns)((tempVar instanceof FrmBtns) ? tempVar : null);
@@ -516,9 +509,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 元素
+	 * @throws Exception 
 	 
 	*/
-	public final FrmEles getFrmEles()
+	public final FrmEles getFrmEles() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
 		FrmEles obj = (FrmEles)((tempVar instanceof FrmEles) ? tempVar : null);
@@ -531,9 +525,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 线
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLines getFrmLines()
+	public final FrmLines getFrmLines() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
 		FrmLines obj = (FrmLines)((tempVar instanceof FrmLines) ? tempVar : null);
@@ -546,9 +541,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLabs getFrmLabs()
+	public final FrmLabs getFrmLabs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmLabs obj = (FrmLabs)((tempVar instanceof FrmLabs) ? tempVar : null);
@@ -561,9 +557,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 图片
+	 * @throws Exception 
 	 
 	*/
-	public final FrmImgs getFrmImgs()
+	public final FrmImgs getFrmImgs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgs");
 		FrmImgs obj = (FrmImgs)((tempVar instanceof FrmImgs) ? tempVar : null);
@@ -576,9 +573,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 附件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmAttachments getFrmAttachments()
+	public final FrmAttachments getFrmAttachments() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
 		FrmAttachments obj = (FrmAttachments)((tempVar instanceof FrmAttachments) ? tempVar : null);
@@ -591,9 +589,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 图片附件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmImgAths getFrmImgAths()
+	public final FrmImgAths getFrmImgAths() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
 		FrmImgAths obj = (FrmImgAths)((tempVar instanceof FrmImgAths) ? tempVar : null);
@@ -606,9 +605,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 单选按钮
+	 * @throws Exception 
 	 
 	*/
-	public final FrmRBs getFrmRBs()
+	public final FrmRBs getFrmRBs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
 		FrmRBs obj = (FrmRBs)((tempVar instanceof FrmRBs) ? tempVar : null);
@@ -621,9 +621,10 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 属性
+	 * @throws Exception 
 	 
 	*/
-	public final MapAttrs getMapAttrs()
+	public final MapAttrs getMapAttrs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapAttrs");
 		MapAttrs obj = (MapAttrs)((tempVar instanceof MapAttrs) ? tempVar : null);
@@ -884,8 +885,9 @@ public class MapDataURL extends EntityNoName
 	 表单属性
 	 
 	 @param no 映射编号
+	 * @throws Exception 
 	*/
-	public MapDataURL(String no)
+	public MapDataURL(String no) throws Exception
 	{
 		super(no);
 	}

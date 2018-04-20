@@ -15,9 +15,10 @@ public class GetTasks extends BP.En.Entities
 	}
 	/** 
 	 取回任务集合
+	 * @throws Exception 
 	 
 	*/
-	public GetTasks(String fk_flow)
+	public GetTasks(String fk_flow) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GetTaskAttr.FK_Flow, fk_flow);

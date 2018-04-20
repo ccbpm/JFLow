@@ -33,8 +33,9 @@ public class Day extends SimpleNoNameFix
 	 * _No
 	 * 
 	 * @param _No
+	 * @throws Exception 
 	 */
-	public Day(String _No)
+	public Day(String _No) throws Exception
 	{
 		super(_No);
 	}

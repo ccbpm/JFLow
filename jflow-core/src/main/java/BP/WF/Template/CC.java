@@ -27,8 +27,9 @@ public class CC extends Entity
 	 抄送
 	 @param rpt
 	 @return 
+	 * @throws Exception 
 	*/
-	 public DataTable GenerCCers(Entity rpt, long workid)
+	 public DataTable GenerCCers(Entity rpt, long workid) throws Exception
      {
          DataTable dt = new DataTable();
          dt.Columns.add(new DataColumn("No"));
@@ -213,9 +214,10 @@ public class CC extends Entity
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if ( ! BP.Web.WebUser.getNo().equals("admin"))
@@ -357,7 +359,7 @@ public class CC extends Entity
 	{
 	}
 	
-	 public CC(int nodeid)
+	 public CC(int nodeid) throws Exception
      {
          this.setNodeID(nodeid);
          this.Retrieve();

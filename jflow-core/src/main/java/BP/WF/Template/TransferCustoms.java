@@ -28,15 +28,17 @@ public class TransferCustoms extends EntitiesMyPK
 	}
 	/** 
 	 自定义运行路径
+	 * @throws Exception 
 	*/
-	 public TransferCustoms(Long workid)
+	 public TransferCustoms(Long workid) throws Exception
      {
          this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.Idx);
      }
 	 /** 
 	 自定义运行路径
+	 * @throws Exception 
 	*/
-     public TransferCustoms(int nodeID, Long workid)
+     public TransferCustoms(int nodeID, Long workid) throws Exception
      {
          this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.FK_Node, nodeID, TransferCustomAttr.Idx);
      }

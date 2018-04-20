@@ -28,10 +28,11 @@ public class InitBillDir extends DataIOEn
 	}
 	/** 
 	 创建单据目录
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public void Do()
+	public void Do() throws Exception
 	{
 		if (true) //此方法暂时排除，不需要创建目录。
 		{

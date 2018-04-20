@@ -30,8 +30,9 @@ public class Areas extends EntitiesNoName
 	 * 
 	 * @param sf
 	 *            省份
+	 * @throws Exception 
 	 */
-	public Areas(String sf)
+	public Areas(String sf) throws Exception
 	{
 		this.Retrieve(AreaAttr.FK_SF, sf);
 	}

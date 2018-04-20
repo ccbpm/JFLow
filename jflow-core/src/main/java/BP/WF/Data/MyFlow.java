@@ -472,7 +472,7 @@ public class MyFlow extends Entity
 	public MyFlow()
 	{
 	}
-	public MyFlow(long workId)
+	public MyFlow(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyFlowAttr.WorkID, workId);
@@ -532,7 +532,8 @@ public class MyFlow extends Entity
 
 
 			//增加隐藏的查询条件.
-		AttrOfSearch search = new AttrOfSearch(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%" + BP.Web.WebUser.getNo() + "%", 0, true);
+		AttrOfSearch search = new AttrOfSearch(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%@WebUser.No%", 0, true);
+		
 		map.getAttrsOfSearch().Add(search);
 
 		RefMethod rm = new RefMethod();

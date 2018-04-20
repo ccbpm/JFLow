@@ -29,8 +29,9 @@ public class BillTemplates extends EntitiesNoName
 	/** 
 	 按节点查询
 	 @param nd
+	 * @throws Exception 
 	*/
-	public BillTemplates(Node nd)
+	public BillTemplates(Node nd) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(BillTemplateAttr.NodeID, nd.getNodeID());
@@ -44,8 +45,9 @@ public class BillTemplates extends EntitiesNoName
 	/** 
 	 按流程查询
 	 @param fk_flow 流程编号
+	 * @throws Exception 
 	*/
-	public BillTemplates(String fk_flow)
+	public BillTemplates(String fk_flow) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(BillTemplateAttr.NodeID, "SELECT NodeID FROM WF_Node WHERE fk_flow='" + fk_flow + "'");
@@ -54,8 +56,9 @@ public class BillTemplates extends EntitiesNoName
 	/** 
 	 按节点查询
 	 @param fk_node 节点ID
+	 * @throws Exception 
 	*/
-	public BillTemplates(int fk_node)
+	public BillTemplates(int fk_node) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(BillTemplateAttr.NodeID, fk_node);

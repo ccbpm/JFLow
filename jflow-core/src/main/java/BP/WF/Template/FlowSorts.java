@@ -40,7 +40,7 @@ public class FlowSorts extends EntitiesTree
 		this.AddEntity(en);
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int i = super.RetrieveAll(FlowSortAttr.Idx);
 		if (i == 0)

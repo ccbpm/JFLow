@@ -23,8 +23,9 @@ public class GloVars extends EntitiesNoName
 	 *            key
 	 * @param val
 	 *            val
+	 * @throws Exception 
 	 */
-	public static int SetValByKey(String key, Object val)
+	public static int SetValByKey(String key, Object val) throws Exception
 	{
 		GloVar en = new GloVar(key, val);
 		en.setValOfObject(val);
@@ -36,13 +37,14 @@ public class GloVars extends EntitiesNoName
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GetValByKeyHtml(String key)
+	public static String GetValByKeyHtml(String key) throws Exception
 	{
 		return DataType.ParseText2Html(GloVars.GetValByKey(key));
 	}
 	
-	public static String GetValByKey(String key)
+	public static String GetValByKey(String key) throws Exception
 	{
 		for (Object cfg : GloVars.getMyGloVars())
 		{
@@ -60,8 +62,9 @@ public class GloVars extends EntitiesNoName
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GetValByKey(String key, String isNullAs)
+	public static String GetValByKey(String key, String isNullAs) throws Exception
 	{
 		for (Object cfg : GloVars.getMyGloVars())
 		{
@@ -76,7 +79,7 @@ public class GloVars extends EntitiesNoName
 		return en.getVal();
 	}
 	
-	public static int GetValByKeyInt(String key, int isNullAs)
+	public static int GetValByKeyInt(String key, int isNullAs) throws Exception
 	{
 		for (Object cfg : GloVars.getMyGloVars())
 		{
@@ -91,7 +94,7 @@ public class GloVars extends EntitiesNoName
 		return en.getValOfInt();
 	}
 	
-	public static int GetValByKeyDecimal(String key, int isNullAs)
+	public static int GetValByKeyDecimal(String key, int isNullAs) throws Exception
 	{
 		for (Object cfg : GloVars.getMyGloVars())
 		{
@@ -106,7 +109,7 @@ public class GloVars extends EntitiesNoName
 		return en.getValOfInt();
 	}
 	
-	public static boolean GetValByKeyBoolen(String key, boolean isNullAs)
+	public static boolean GetValByKeyBoolen(String key, boolean isNullAs) throws Exception
 	{
 		
 		for (Object cfg : GloVars.getMyGloVars())
@@ -128,7 +131,7 @@ public class GloVars extends EntitiesNoName
 		return en.getValOfBoolen();
 	}
 	
-	public static float GetValByKeyFloat(String key, float isNullAs)
+	public static float GetValByKeyFloat(String key, float isNullAs) throws Exception
 	{
 		for (Object cfg : GloVars.getMyGloVars())
 		{
@@ -144,7 +147,7 @@ public class GloVars extends EntitiesNoName
 	
 	private static GloVars _MyGloVars = null;
 	
-	public static GloVars getMyGloVars()
+	public static GloVars getMyGloVars() throws Exception
 	{
 		if (_MyGloVars == null)
 		{
@@ -172,8 +175,9 @@ public class GloVars extends EntitiesNoName
 	 * 
 	 * @param fk_mapdata
 	 *            s
+	 * @throws Exception 
 	 */
-	public GloVars(String fk_mapdata)
+	public GloVars(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

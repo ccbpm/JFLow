@@ -18,8 +18,9 @@ public class DeptDutys extends Entities
 	}
 	/** 
 	 工作人员与职务集合
+	 * @throws Exception 
 	*/
-	public DeptDutys(String DutyNo)
+	public DeptDutys(String DutyNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DeptDutyAttr.FK_Duty, DutyNo);

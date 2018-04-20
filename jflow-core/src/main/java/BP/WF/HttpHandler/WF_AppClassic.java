@@ -70,32 +70,30 @@ public class WF_AppClassic extends WebContralBase {
 	 * 初始化Home
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String Home_Init() {
+	public final String Home_Init() throws Exception {
 		AppACE page = new AppACE(context);
 		return page.Home_Init();
 	}
 
-	public final String Index_Init() {
+	public final String Index_Init() throws Exception {
 		AppACE page = new AppACE(context);
 		return page.Index_Init();
 	}
 
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	// /#region 登录界面.
-	public final String Login_Init() {
+	public final String Login_Init() throws Exception {
 		AppACE page = new AppACE(context);
 		return page.Login_Init();
 	}
 
-	public final String Login_Submit() {
+	public final String Login_Submit() throws Exception {
 		AppACE page = new AppACE(context);
-		try {
+		 
 			return page.Login_Submit();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return null;
+		 
 	}
 	
 	

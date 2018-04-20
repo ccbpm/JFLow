@@ -30,7 +30,7 @@ public class YFs extends SimpleNoNameFixs
 	}
 	
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int num = super.RetrieveAll();
 		

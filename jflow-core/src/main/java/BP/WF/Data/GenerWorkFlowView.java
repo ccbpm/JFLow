@@ -466,8 +466,9 @@ public class GenerWorkFlowView extends Entity
 	 产生的工作流程
 	 
 	 @param workId
+	 * @throws Exception 
 	*/
-	public GenerWorkFlowView(long workId)
+	public GenerWorkFlowView(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkFlowViewAttr.WorkID, workId);
@@ -572,8 +573,9 @@ public class GenerWorkFlowView extends Entity
 	 @param ToEmp
 	 @param Note
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoShift(String ToEmp, String Note)
+	public final String DoShift(String ToEmp, String Note) throws Exception
 	{
 		try {
 			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), this.getFID()) == false)
@@ -597,8 +599,9 @@ public class GenerWorkFlowView extends Entity
 	 执行删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDelete()
+	public final String DoDelete() throws Exception
 	{
 		try {
 			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), this.getFID()) == false)

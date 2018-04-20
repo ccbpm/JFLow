@@ -60,9 +60,10 @@ public class SF extends EntityNoName
 	// 构造函数
 	/**
 	 * 访问权限.
+	 * @throws Exception 
 	 */
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -80,8 +81,9 @@ public class SF extends EntityNoName
 	 * 省份
 	 * 
 	 * @param no
+	 * @throws Exception 
 	 */
-	public SF(String no)
+	public SF(String no) throws Exception
 	{
 		super(no);
 	}

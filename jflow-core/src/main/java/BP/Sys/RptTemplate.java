@@ -183,7 +183,7 @@ public class RptTemplate extends Entity
 	// 构造方法
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
@@ -203,8 +203,9 @@ public class RptTemplate extends Entity
 	 * 类
 	 * 
 	 * @param EnsName
+	 * @throws Exception 
 	 */
-	public RptTemplate(String ensName)
+	public RptTemplate(String ensName) throws Exception
 	{
 		this.setEnsName(ensName);
 		this.setFK_Emp(BP.Web.WebUser.getNo());

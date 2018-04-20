@@ -87,8 +87,9 @@ public class AttrOfSearch
 	
 	/**
 	 * 默认值
+	 * @throws Exception 
 	 */
-	public final String getDefaultValRun()
+	public final String getDefaultValRun() throws Exception
 	{
 		if (_DefaultVal == null)
 		{

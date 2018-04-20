@@ -24,7 +24,7 @@ public class GENoName extends EntityNoName
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -41,8 +41,9 @@ public class GENoName extends EntityNoName
 	 * 
 	 * @param no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public GENoName(String no)
+	public GENoName(String no) throws Exception
 	{
 		super(no);
 		
@@ -58,9 +59,9 @@ public class GENoName extends EntityNoName
 	public Map getEnMap()
 	{
 		if (this.get_enMap() != null)
-		{
 			return this.get_enMap();
-		}
+		
+		
 		Map map = new Map(this.PhysicsTable);
 		map.setEnDesc(this.Desc);
 		map.setIsAutoGenerNo(true);

@@ -48,8 +48,9 @@ public class Depts extends EntitiesSimpleTree
 	 * 
 	 * @param parentNo
 	 *            父部门No
+	 * @throws Exception 
 	 */
-	public Depts(String parentNo)
+	public Depts(String parentNo) throws Exception
 	{
 		this.Retrieve(DeptAttr.ParentNo, parentNo);
 	}

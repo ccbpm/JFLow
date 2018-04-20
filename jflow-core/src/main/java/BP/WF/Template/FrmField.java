@@ -178,8 +178,9 @@ public class FrmField extends EntityMyPK
 	 表单字段方案
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmField(String mypk)
+	public FrmField(String mypk) throws Exception
 	{
 		super(mypk);
 	}
@@ -232,7 +233,7 @@ public class FrmField extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(this.getEleType()))
 		{

@@ -1,4 +1,4 @@
-package cn.jflow.controller.wf.workopt;
+package cn.jflow.common;
 
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -14,8 +14,7 @@ import BP.DA.Depositary;
 */
 public class EnVer extends EntityMyPK{
 	
-	
-
+	 
 
 		/** 
 		 实体类
@@ -111,7 +110,7 @@ public class EnVer extends EntityMyPK{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写方法
 		@Override
-		public UAC getHisUAC()
+		public UAC getHisUAC() throws Exception
 		{
 			UAC uac = new UAC();
 			uac.OpenForSysAdmin();
@@ -152,7 +151,7 @@ public class EnVer extends EntityMyPK{
 		///#endregion
 
 		@Override
-		protected boolean beforeInsert()
+		protected boolean beforeInsert() throws Exception
 		{
 			this.SetValByKey("MyPK", this.getNo() + "_" + this.getPKValue());
 			return super.beforeInsert();

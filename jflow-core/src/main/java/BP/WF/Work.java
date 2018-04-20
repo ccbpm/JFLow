@@ -54,12 +54,19 @@ public abstract class Work extends Entity
 	@Override
 	public String getClassID()
 	{
-		return "ND"+this.getHisNode().getNodeID();
+		try {
+			return "ND"+this.getHisNode().getNodeID();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	/** 
 	 流程ID
+	 * @throws Exception 
 	*/
-	public long getFID()
+	public long getFID() throws Exception
 	{
 		if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
 		{
@@ -67,7 +74,7 @@ public abstract class Work extends Entity
 		}
 		return this.GetValInt64ByKey(WorkAttr.FID);
 	}
-	public void setFID(long value)
+	public void setFID(long value) throws Exception
 	{
 		if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
 		{
@@ -111,7 +118,7 @@ public abstract class Work extends Entity
 		this.SetValByKey(WorkAttr.Emps, value);
 	}
 	@Override
-	public int RetrieveFromDBSources()
+	public int RetrieveFromDBSources() throws Exception
 	{
 		try
 		{
@@ -123,7 +130,7 @@ public abstract class Work extends Entity
 			throw ex;
 		}
 	}
-	public final int RetrieveFID()
+	public final int RetrieveFID() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereIn(WorkAttr.OID, "(" + this.getFID() + "," + this.getOID() + ")");
@@ -139,7 +146,7 @@ public abstract class Work extends Entity
 		return i;
 	}
 	@Override
-	public int Retrieve()
+	public int Retrieve() throws Exception
 	{
 		try
 		{
@@ -186,8 +193,9 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 记录人
+	 * @throws Exception 
 	*/
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		String str = this.GetValStringByKey(WorkAttr.Rec);
 		if (str.equals(""))
@@ -203,15 +211,17 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 工作人员
+	 * @throws Exception 
 	*/
-	public final Emp getRecOfEmp()
+	public final Emp getRecOfEmp() throws Exception
 	{
 		return new Emp(this.getRec());
 	}
 	/** 
 	 记录人名称
+	 * @throws Exception 
 	*/
-	public final String getRecText()
+	public final String getRecText() throws Exception
 	{
 		try
 		{
@@ -230,8 +240,9 @@ public abstract class Work extends Entity
 	private Node _HisNode = null;
 	/** 
 	 工作的节点.
+	 * @throws Exception 
 	*/
-	public final Node getHisNode()
+	public final Node getHisNode() throws Exception
 	{
 		if (this._HisNode == null)
 		{
@@ -245,16 +256,18 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 从表.
+	 * @throws Exception 
 	*/
-	public final MapDtls getHisMapDtls()
+	public final MapDtls getHisMapDtls() throws Exception
 	{
 		return this.getHisNode().getMapData().getMapDtls();
 	}
 	/** 
 	 从表.
+	 * @throws Exception 
 	 
 	*/
-	public final FrmAttachments getHisFrmAttachments()
+	public final FrmAttachments getHisFrmAttachments() throws Exception
 	{
 		return this.getHisNode().getMapData().getFrmAttachments();
 	}
@@ -283,9 +296,10 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 他的记录人
+	 * @throws Exception 
 	 
 	*/
-	public final Emp getHisRec()
+	public final Emp getHisRec() throws Exception
 	{
 		  //  return new Emp(this.Rec);
 		Object tempVar = this.GetValByKey("HisRec"+this.getRec());
@@ -306,8 +320,9 @@ public abstract class Work extends Entity
 	/** 
 	 工作
 	 @param oid WFOID		 
+	 * @throws Exception 
 	*/
-	protected Work(long oid)
+	protected Work(long oid) throws Exception
 	{
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
@@ -316,8 +331,9 @@ public abstract class Work extends Entity
 	 产生本工作中所有的外键参数
 	 附加一些必要的属性.
 	 @return 
+	 * @throws Exception 
 	*/
-	private String GenerParas_del()
+	private String GenerParas_del() throws Exception
 	{
 		String paras = "*WorkID" + this.getOID() + "*UserNo=" + this.getRec();
 		for (Attr attr : this.getEnMap().getAttrs())
@@ -373,9 +389,10 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 产生要执行的url.
+	 * @throws Exception 
 	 
 	*/
-	public final String GenerNextUrl()
+	public final String GenerNextUrl() throws Exception
 	{
 		String appName = BP.Sys.Glo.getRequest().getRemoteAddr();
 		String ip = (String) SystemConfig.getAppSettings().get("CIP");
@@ -522,8 +539,9 @@ public abstract class Work extends Entity
 	 按照指定的OID 保存
 	 
 	 @param oid
+	 * @throws Exception 
 	*/
-	public final void SaveAsOID(long oid)
+	public final void SaveAsOID(long oid) throws Exception
 	{
 		this.SetValByKey("OID", oid);
 		if (this.RetrieveNotSetValues().Rows.size() == 0)
@@ -534,9 +552,10 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 保存实体信息
+	 * @throws Exception 
 	 
 	*/
-	public final int Save()
+	public final int Save() throws Exception
 	{
 		if (this.getOID() <= 10)
 		{
@@ -551,9 +570,10 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 保存实体信息 区分大小写
+	 * @throws Exception 
 	 
 	*/
-	public final int Save_2017()
+	public final int Save_2017() throws Exception
 	{
 		if (this.getOID() <= 10)
 		{
@@ -604,10 +624,11 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 删除主表数据也要删除它的明细数据
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 
 			///#warning 删除了明细，有可能造成其他的影响.
@@ -626,9 +647,10 @@ public abstract class Work extends Entity
 	 更新之前
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 
 			///#region 特殊处理
@@ -649,9 +671,10 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 直接的保存前要做的工作
+	 * @throws Exception 
 	 
 	*/
-	public void BeforeSave()
+	public void BeforeSave() throws Exception
 	{
 		//执行自动计算.
 		this.AutoFull();
@@ -661,9 +684,10 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 直接的保存
+	 * @throws Exception 
 	 
 	*/
-	public final void DirectSave()
+	public final void DirectSave() throws Exception
 	{
 		this.beforeUpdateInsertAction();
 		if (this.DirectUpdate() == 0)

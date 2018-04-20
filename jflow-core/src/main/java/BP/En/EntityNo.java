@@ -35,9 +35,10 @@ public abstract class EntityNo extends Entity
 	 * Insert 之前的操作。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		
 		Attr attr = this.getEnMap().GetAttrByKey("No");
@@ -90,8 +91,9 @@ public abstract class EntityNo extends Entity
 	 * 
 	 * @param _no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public EntityNo(String _no)
+	public EntityNo(String _no) throws Exception
 	{
 	
 		if (_no == null || _no.equals(""))
@@ -158,8 +160,9 @@ public abstract class EntityNo extends Entity
 	 * 按 No 查询。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveByNo()
+	public final int RetrieveByNo() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(EntityNoAttr.No, this.getNo());
@@ -172,8 +175,9 @@ public abstract class EntityNo extends Entity
 	 * @param _No
 	 *            No
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveByNo(String _No)
+	public final int RetrieveByNo(String _No) throws Exception
 	{
 		this.setNo(_No);
 		QueryObject qo = new QueryObject(this);

@@ -22,7 +22,7 @@ public class Days extends SimpleNoNameFixs
 	}
 	
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int num = super.RetrieveAll();
 		
@@ -42,7 +42,14 @@ public class Days extends SimpleNoNameFixs
 				String str = String.format("%02d", i);
 				
 				yf.setNo(str);
-				yf.setName(str);
+				
+				try {
+					yf.setName(str);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				yf.Insert();
 			}
 			

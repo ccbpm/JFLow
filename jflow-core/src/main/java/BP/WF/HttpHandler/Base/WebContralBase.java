@@ -42,7 +42,7 @@ import BP.Sys.SystemConfig;
 import BP.Sys.UIConfig;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
-import cn.jflow.controller.wf.workopt.BaseController;
+import cn.jflow.common.BaseController;
 
 public abstract class WebContralBase extends BaseController {
 	/**
@@ -141,8 +141,9 @@ public abstract class WebContralBase extends BaseController {
 	 * @param methodName
 	 *            方法
 	 * @return 返回执行的结果，执行错误抛出异常
+	 * @throws Exception 
 	 */
-	public final String DoMethod(WebContralBase myEn, String methodName) {
+	public final String DoMethod(WebContralBase myEn, String methodName) throws Exception {
 
 		java.lang.Class tp = myEn.getClass();
 		java.lang.reflect.Method mp = null;
@@ -213,8 +214,9 @@ public abstract class WebContralBase extends BaseController {
 	 * 执行默认的方法名称
 	 * 
 	 * @return 返回执行的结果
+	 * @throws Exception 
 	 */
-	protected String DoDefaultMethod() {
+	protected String DoDefaultMethod() throws Exception {
 		return "@子类没有重写该[" + this.getDoType() + "]方法.";
 	}
 	 
@@ -704,7 +706,7 @@ public abstract class WebContralBase extends BaseController {
      }
      
      
-     protected String ExportDGToExcel(DataTable dt, Entity en, String title)
+     protected String ExportDGToExcel(DataTable dt, Entity en, String title) throws Exception
      {
     	 
     	for(DataRow dr:dt.Rows){

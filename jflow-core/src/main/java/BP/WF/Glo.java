@@ -796,12 +796,7 @@ public class Glo
 		String basePath="";
 		if(request==null||request.getServerName()==null){
 			basePath = BP.WF.Glo.getHostURL();
-		}
-		else if(request.getServerPort() == 80) {
-			basePath = request.getScheme() + "://" + request.getServerName() 
-			 + request.getContextPath() + "/";
-		}
-		else{
+		}else{
 			basePath = request.getScheme() + "://" + request.getServerName() 
 					+ ":" + request.getServerPort() + request.getContextPath() + "/";
 		}
@@ -1505,8 +1500,9 @@ public class Glo
 	/** 
 	 检查树结构是否符合需求
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean CheckTreeRoot()
+	public static boolean CheckTreeRoot() throws Exception
 	{
 		// 流程树根节点校验
 		String tmp = "SELECT Name FROM WF_FlowSort WHERE ParentNo='0'";
@@ -2256,9 +2252,10 @@ public class Glo
 	 执行发送工作后处理的业务逻辑
 	 用于流程发送后事件调用.
 	 如果处理失败，就会抛出异常.
+	 * @throws Exception 
 	*/
 	public static void DealBuinessAfterSendWork(String fk_flow, long workid, String doFunc, String WorkIDs,String cFlowNo, int cNodeID,
-			String cEmp)
+			String cEmp) throws Exception
 	{
 
 		if (doFunc.equals("SetParentFlow"))
@@ -2353,8 +2350,9 @@ public class Glo
 
 	/** 
 	 是否admin
+	 * @throws Exception 
 	*/
-	public static boolean getIsAdmin()
+	public static boolean getIsAdmin() throws Exception
 	{
 		String s = SystemConfig.getAppSettings().get("adminers").toString();
 		if (StringHelper.isNullOrEmpty(s))
@@ -2461,8 +2459,9 @@ public class Glo
 	 @param flowNo 流程编号
 	 @param empNo 要执行的人员.
 	 @return 执行信息.
+	 * @throws Exception 
 	*/
-	public static String Simulation_RunOne(String flowNo, String empNo, String paras)
+	public static String Simulation_RunOne(String flowNo, String empNo, String paras) throws Exception
 	{
 		backHtml = ""; //需要重新赋空值
 		java.util.Hashtable ht = null;
@@ -2500,7 +2499,7 @@ public class Glo
 		return backHtml;
 	}
 	private static boolean isAdd = true;
-	private static void Simulation_Run_S1(String flowNo, long workid, String empNo, java.util.Hashtable ht, String beginEmp)
+	private static void Simulation_Run_S1(String flowNo, long workid, String empNo, java.util.Hashtable ht, String beginEmp) throws Exception
 	{
 		//htmlArr.Add(html);
 		Emp emp = new Emp(empNo);
@@ -2548,9 +2547,10 @@ public class Glo
 	 * @param billFormat
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
 	public static String GenerBillNo(String billNo, long workid, Entity en,
-			String flowPTable) {
+			String flowPTable) throws Exception {
 		
 		return BP.WF.WorkFlowBuessRole.GenerBillNo(billNo, workid, en, flowPTable); 
 	}
@@ -2594,8 +2594,9 @@ public class Glo
 	 @param toEmpName 到人员名称
 	 @param note 消息
 	 @param tag 参数用@分开
+	 * @throws Exception 
 	*/
-	public static String AddToTrack(ActionType at, String flowNo, long workID, long fid, int fromNodeID, String fromNodeName, String fromEmpID, String fromEmpName, int toNodeID, String toNodeName, String toEmpID, String toEmpName, String note, String tag)
+	public static String AddToTrack(ActionType at, String flowNo, long workID, long fid, int fromNodeID, String fromNodeName, String fromEmpID, String fromEmpName, int toNodeID, String toNodeName, String toEmpID, String toEmpName, String note, String tag) throws Exception
 	{
 		if (toNodeID == 0)
 		{
@@ -2646,8 +2647,9 @@ public class Glo
 	 @param exp 表达式
 	 @param en 实体
 	 @return true/false
+	 * @throws Exception 
 	*/
-	public static boolean ExeExp(String exp, Entity en)
+	public static boolean ExeExp(String exp, Entity en) throws Exception
 	{
 		exp = exp.replace("WebUser.No", WebUser.getNo());
 		exp = exp.replace("@WebUser.Name", WebUser.getName());
@@ -2739,8 +2741,9 @@ public class Glo
 	 @param mattrs
 	 @param dtls
 	 @return 
+	 * @throws Exception 
 	*/
-	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls)
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls) throws Exception
 	{
 		if (item == null)
 		{
@@ -2857,7 +2860,7 @@ public class Glo
     /// <param name="sqlExp"></param>
     /// <param name="ht"></param>
     /// <returns></returns>
-    public static boolean CondExpSQL(String sqlExp, Hashtable ht)
+    public static boolean CondExpSQL(String sqlExp, Hashtable ht) throws Exception
     {
         String sql = sqlExp;
         sql = sql.replace("~", "'");
@@ -2890,7 +2893,7 @@ public class Glo
     /// <param name="exp">表达式</param>
     /// <param name="en">变量</param>
     /// <returns>是否成立</returns>
-    public static boolean CondExpPara(String exp, Hashtable ht)
+    public static boolean CondExpPara(String exp, Hashtable ht) throws Exception
     {
         String[] strs = exp.trim().split(" ");
 
@@ -2993,8 +2996,9 @@ public class Glo
 	 @param en 数据源
 	 @param errInfo 错误
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String DealExp(String exp, Entity en, String errInfo)
+	public static String DealExp(String exp, Entity en, String errInfo) throws Exception
 	{
 		if (exp.contains("@") == false)
 		{
@@ -3163,8 +3167,9 @@ public class Glo
 	/** 
 	 装载流程数据 
 	 @param xlsFile
+	 * @throws Exception 
 	*/
-	public static String LoadFlowDataWithToSpecNode(String xlsFile)
+	public static String LoadFlowDataWithToSpecNode(String xlsFile) throws Exception
 	{
 		DataTable dt = BP.DA.DBLoad.GetTableByExt(xlsFile);
 		String err = "";
@@ -3317,7 +3322,7 @@ public class Glo
 		}
 		return info + err;
 	}
-	public static String LoadFlowDataWithToSpecEndNode(String xlsFile)
+	public static String LoadFlowDataWithToSpecEndNode(String xlsFile) throws Exception
 	{
 		DataTable dt = BP.DA.DBLoad.GetTableByExt(xlsFile);
 		DataSet ds = new DataSet();
@@ -3448,8 +3453,9 @@ public class Glo
 	/** 
 	 判断是否登陆当前UserNo
 	 @param userNo
+	 * @throws Exception 
 	*/
-	public static void IsSingleUser(String userNo)
+	public static void IsSingleUser(String userNo) throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(WebUser.getNo()) || !userNo.equals(WebUser.getNo()))
 		{
@@ -3516,15 +3522,16 @@ public class Glo
 		// 属性
 	/** 
 	 消息
+	 * @throws Exception 
 	*/
-	public static String getSessionMsg()
+	public static String getSessionMsg() throws Exception
 	{
 		Paras p = new Paras();
 		p.SQL = "SELECT Msg FROM WF_Emp where No=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		p.AddFK_Emp();
 		return DBAccess.RunSQLReturnString(p);
 	}
-	public static void setSessionMsg(String value)
+	public static void setSessionMsg(String value) throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(value) == true)
 		{
@@ -3587,8 +3594,9 @@ public class Glo
 	private static java.util.Hashtable _SendHTOfTemp = null;
 	/** 
 	 临时的发送传输变量.
+	 * @throws Exception 
 	*/
-	public static java.util.Hashtable getSendHTOfTemp()
+	public static java.util.Hashtable getSendHTOfTemp() throws Exception
 	{
 		if (_SendHTOfTemp == null)
 		{
@@ -3596,7 +3604,7 @@ public class Glo
 		}
 		return (java.util.Hashtable)((_SendHTOfTemp.get(BP.Web.WebUser.getNo()) instanceof java.util.Hashtable) ? _SendHTOfTemp.get(BP.Web.WebUser.getNo()) : null);
 	}
-	public static void setSendHTOfTemp(java.util.Hashtable value)
+	public static void setSendHTOfTemp(java.util.Hashtable value) throws Exception
 	{
 		if (_SendHTOfTemp == null)
 		{
@@ -4090,8 +4098,9 @@ public class Glo
 	 设置成工作时间
 	 @param DateTime
 	 @return 
+	 * @throws Exception 
 	*/
-	public static java.util.Date SetToWorkTime(java.util.Date dt)
+	public static java.util.Date SetToWorkTime(java.util.Date dt) throws Exception
 	{
 		if (BP.Sys.GloVar.getHolidays().contains(DateUtils.format(dt, "MM-dd")))
 		{
@@ -4135,8 +4144,9 @@ public class Glo
 	 @param dt
 	 @param hours
 	 @return 
+	 * @throws Exception 
 	*/
-	private static java.util.Date AddMinutes(java.util.Date dt, int minutes)
+	private static java.util.Date AddMinutes(java.util.Date dt, int minutes) throws Exception
 	{
 		//如果没有设置,就返回.
 		if (minutes == 0)
@@ -4271,8 +4281,9 @@ public class Glo
 	 @param sysdt
 	 @param minutes
 	 @return 
+	 * @throws Exception 
 	*/
-	public static java.util.Date AddMinutes(String sysdt, int minutes)
+	public static java.util.Date AddMinutes(String sysdt, int minutes) throws Exception
 	{
 		java.util.Date dt = DataType.ParseSysDate2DateTime(sysdt);
 		return AddMinutes(dt, minutes);
@@ -4295,7 +4306,7 @@ public class Glo
 		//return Glo.AddMinutes(mydt, minutes);
 	}
 	
-	public static java.util.Date AddDayHoursSpan(String specDT, int day,int minutes, TWay tWay) {
+	public static java.util.Date AddDayHoursSpan(String specDT, int day,int minutes, TWay tWay) throws Exception {
 		if (specDT == null) {
 			return null;
 		}
@@ -4324,8 +4335,9 @@ public class Glo
 	 @param workid
 	 @param fid
 	 @param title
+	 * @throws Exception 
 	*/
-	public static void InitCH(Flow fl, Node nd, long workid, long fid, String title,GenerWorkerList gwl)
+	public static void InitCH(Flow fl, Node nd, long workid, long fid, String title,GenerWorkerList gwl) throws Exception
 	{
 		InitCH2017(fl, nd, workid, fid, title, null, null, new java.util.Date(),gwl);
 	}
@@ -4339,8 +4351,9 @@ public class Glo
 	 @param prvRDT 上一个时间点
 	 @param sdt 应完成日期
 	 @param dtNow 当前日期
+	 * @throws Exception 
 	*/
-	private static void InitCH2017(Flow fl, Node nd, long workid, long fid, String title, String prvRDT, String sdt, java.util.Date dtNow, GenerWorkerList gwl)
+	private static void InitCH2017(Flow fl, Node nd, long workid, long fid, String title, String prvRDT, String sdt, java.util.Date dtNow, GenerWorkerList gwl) throws Exception
 	{
 	   // 开始节点不考核.
 		if (nd.getIsStartNode() || nd.getHisCHWay() == CHWay.None)
@@ -4544,7 +4557,7 @@ public class Glo
 		}
 
 	}
-	public static void InitCH2016(Flow fl, Node nd, long workid, long fid, String title, String prvRDT, String sdt, java.util.Date dtNow)
+	public static void InitCH2016(Flow fl, Node nd, long workid, long fid, String title, String prvRDT, String sdt, java.util.Date dtNow) throws Exception
 	{
 		//开始节点不考核.
 		if (nd.getIsStartNode())
@@ -4846,7 +4859,7 @@ public class Glo
 	}
 		 //与考核相关.
 	
-	 public static BP.Sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment)
+	 public static BP.Sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment) throws Exception
      {
 
          BP.Sys.FrmAttachmentDBs dbs = new BP.Sys.FrmAttachmentDBs();
@@ -5076,8 +5089,9 @@ public class Glo
 	 @param flow 流程
 	 @param wk 开始节点工作
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean CheckIsCanStartFlow_InitStartFlow(Flow flow)
+	public static boolean CheckIsCanStartFlow_InitStartFlow(Flow flow) throws Exception
 	{
 		StartLimitRole role = flow.getStartLimitRole();
 		if (role == StartLimitRole.None)
@@ -5280,8 +5294,9 @@ public class Glo
 	 @param flow 流程
 	 @param wk 开始节点工作
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean CheckIsCanStartFlow_SendStartFlow(Flow flow, Work wk)
+	public static boolean CheckIsCanStartFlow_SendStartFlow(Flow flow, Work wk) throws Exception
 	{
 		StartLimitRole role = flow.getStartLimitRole();
 		if (role == StartLimitRole.None)
@@ -5365,8 +5380,9 @@ public class Glo
 	 @param frmID 表单ID
 	 @param currNodeID 当前节点
 	 @param fromNodeID 从节点
+	 * @throws Exception 
 	*/
-	public static void CopyFrmSlnFromNodeToNode(String fk_flow, String frmID, int currNodeID, int fromNodeID)
+	public static void CopyFrmSlnFromNodeToNode(String fk_flow, String frmID, int currNodeID, int fromNodeID) throws Exception
 	{
 
 			// 处理字段.
@@ -5513,8 +5529,9 @@ public class Glo
 		 @param FK_Flow
 		 @param FK_Node
 		 @param sKey 选中的No
+		 * @throws Exception 
 */
-		public static void StartGuidEnties(long WorkID, String FK_Flow, int FK_Node, String sKey)
+		public static void StartGuidEnties(long WorkID, String FK_Flow, int FK_Node, String sKey) throws Exception
 		{
 			Flow fl = new Flow(FK_Flow);
 			switch (fl.getStartGuideWay())

@@ -13,7 +13,7 @@ public class MapFrame extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -124,8 +124,9 @@ public class MapFrame extends EntityMyPK
 	 框架
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public MapFrame(String mypk)
+	public MapFrame(String mypk) throws Exception
 	{
 		this.setMyPK( mypk);
 		this.Retrieve();
@@ -172,9 +173,10 @@ public class MapFrame extends EntityMyPK
 
 	/**
 	 插入之后增加一个分组.	 
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterInsert()
+	protected void afterInsert() throws Exception
 	{
 		GroupField gf = new GroupField();
 		gf.setEnName(  this.getFK_MapData());
@@ -188,7 +190,7 @@ public class MapFrame extends EntityMyPK
 	}
 	
 	 @Override
-	 protected   boolean beforeUpdate()
+	 protected   boolean beforeUpdate() throws Exception
      {
          GroupField gf = new GroupField();
          
@@ -201,10 +203,11 @@ public class MapFrame extends EntityMyPK
 	 
 	/** 
 	 删除之后的操作
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		GroupField gf = new GroupField();
 		gf.Delete(GroupFieldAttr.CtrlID, this.getMyPK());

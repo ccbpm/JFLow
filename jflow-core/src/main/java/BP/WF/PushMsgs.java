@@ -22,8 +22,9 @@ public class PushMsgs extends EntitiesMyPK
 	 * 消息推送
 	 * 
 	 * @param fk_flow
+	 * @throws Exception 
 	 */
-	public PushMsgs(String fk_flow)
+	public PushMsgs(String fk_flow) throws Exception
 	{
 		
 		QueryObject qo = new QueryObject(this);
@@ -31,7 +32,7 @@ public class PushMsgs extends EntitiesMyPK
 				"SELECT NodeID FROM WF_Node WHERE FK_Flow='" + fk_flow + "'");
 		qo.DoQuery();
 	}
-	public PushMsgs(int nodeid)
+	public PushMsgs(int nodeid) throws Exception
     {
         QueryObject qo = new QueryObject(this);
         qo.AddWhere(PushMsgAttr.FK_Node, nodeid);

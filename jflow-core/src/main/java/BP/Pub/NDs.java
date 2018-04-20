@@ -35,7 +35,7 @@ public class NDs extends SimpleNoNameFixs
 	}
 	
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return super.RetrieveAll();
 	}

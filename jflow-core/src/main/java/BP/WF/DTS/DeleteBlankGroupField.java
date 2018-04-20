@@ -32,7 +32,7 @@ public class DeleteBlankGroupField extends Method
 		return true;
 	}
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		GroupFields gfs = new GroupFields();
 		gfs.RetrieveAll();

@@ -291,7 +291,7 @@ public class FrmWorkCheck extends Entity
 	//
 	// 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -317,8 +317,9 @@ public class FrmWorkCheck extends Entity
 	 * 审核组件
 	 * 
 	 * @param no
+	 * @throws Exception 
 	 */
-	public FrmWorkCheck(String mapData)
+	public FrmWorkCheck(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -346,8 +347,9 @@ public class FrmWorkCheck extends Entity
 	 * 审核组件
 	 * 
 	 * @param no
+	 * @throws Exception 
 	 */
-	public FrmWorkCheck(int nodeID)
+	public FrmWorkCheck(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();

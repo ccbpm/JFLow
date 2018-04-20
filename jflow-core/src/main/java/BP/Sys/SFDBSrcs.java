@@ -28,7 +28,7 @@ public class SFDBSrcs extends EntitiesNoName
 	}
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int i = this.RetrieveAllFromDBSource();
 		if (i == 0)
@@ -46,8 +46,9 @@ public class SFDBSrcs extends EntitiesNoName
 	 查询数据源
 	 
 	 @return 返回查询的个数
+	 * @throws Exception 
 	*/
-	public final int RetrieveDBSrc()
+	public final int RetrieveDBSrc() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SFDBSrcAttr.DBSrcType, " < ", 100);
@@ -62,8 +63,9 @@ public class SFDBSrcs extends EntitiesNoName
 	 查询数据源
 	 
 	 @return 返回查询的个数
+	 * @throws Exception 
 	*/
-	public final int RetrieveWCSrc()
+	public final int RetrieveWCSrc() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SFDBSrcAttr.DBSrcType, "= ", DBSrcType.WebServices.getValue());

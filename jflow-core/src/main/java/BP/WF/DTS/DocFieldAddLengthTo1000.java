@@ -37,9 +37,14 @@ public class DocFieldAddLengthTo1000 extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
-		{
-			return true;
+		try {
+			if (BP.Web.WebUser.getNo().equals("admin"))
+			{
+				return true;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -47,9 +52,10 @@ public class DocFieldAddLengthTo1000 extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String strs = "开始执行....";
 		MapAttrs attrs = new MapAttrs();

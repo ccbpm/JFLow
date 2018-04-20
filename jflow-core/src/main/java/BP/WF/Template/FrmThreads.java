@@ -23,8 +23,9 @@ public class FrmThreads extends Entities
 	 子线程组件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmThreads(String fk_mapdata)
+	public FrmThreads(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

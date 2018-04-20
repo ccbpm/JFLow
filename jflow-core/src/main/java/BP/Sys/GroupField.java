@@ -10,7 +10,7 @@ import BP.En.*;
 public class GroupField extends EntityOID
 {
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -105,7 +105,7 @@ public class GroupField extends EntityOID
 	public GroupField()
 	{
 	}
-	public GroupField(int oid)
+	public GroupField(int oid) throws Exception
 	{
 		super(oid);
 	}
@@ -173,7 +173,7 @@ public class GroupField extends EntityOID
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
  
 		String sql = "UPDATE Sys_GroupField SET LAB='"+this.getLab()+"' WHERE OID="+this.getOID();
@@ -182,7 +182,7 @@ public class GroupField extends EntityOID
 	}
 	
 	@Override
-    protected  boolean beforeUpdateInsertAction()
+    protected  boolean beforeUpdateInsertAction() throws Exception
     {
         
         return super.beforeUpdateInsertAction();
@@ -199,7 +199,7 @@ public class GroupField extends EntityOID
 		return;
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		  
 		//if (this.IsExit(GroupFieldAttr.EnName, this.EnName, GroupFieldAttr.Lab, this.Lab) == true)

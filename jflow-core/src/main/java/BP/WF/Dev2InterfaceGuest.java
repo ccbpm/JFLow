@@ -40,8 +40,9 @@ public class Dev2InterfaceGuest
 	 @param nextWorker 操作员，如果为null就是当前人员。
 	 @param title 创建工作时的标题，如果为null，就按设置的规则生成。
 	 @return 为开始节点创建工作后产生的WorkID.
+	 * @throws Exception 
 	*/
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String guestNo, String title)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String guestNo, String title) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, guestNo, title, 0, null, 0, null);
 	}
@@ -56,8 +57,9 @@ public class Dev2InterfaceGuest
 	 @param parentWorkID 父流程的WorkID,如果没有父流程就传入为0.
 	 @param parentFlowNo 父流程的流程编号,如果没有父流程就传入为null.
 	 @return 为开始节点创建工作后产生的WorkID.
+	 * @throws Exception 
 	*/
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String guestNo, String title, long parentWorkID, String parentFlowNo, int parentNodeID, String parentEmp)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String guestNo, String title, long parentWorkID, String parentFlowNo, int parentNodeID, String parentEmp) throws Exception
 	{
 		//if (BP.Web.WebUser.getNo() != "Guest")
 		//    throw new Exception("@必须是Guest登陆才能发起.");
@@ -345,10 +347,11 @@ public class Dev2InterfaceGuest
 	 
 	 @param fk_flow 流程编号
 	 @return 返回从数据视图WF_GenerWorkflow查询出来的数据.
+	 * @throws Exception 
 	*/
 
 //ORIGINAL LINE: public static DataTable DB_GenerRuning(string fk_flow=null, string guestNo=null)
-	public static DataTable DB_GenerRuning(String fk_flow, String guestNo)
+	public static DataTable DB_GenerRuning(String fk_flow, String guestNo) throws Exception
 	{
 		// 转化成编号.
 		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
@@ -387,8 +390,9 @@ public class Dev2InterfaceGuest
 	 @param workID 工作ID
 	 @param guestNo 客户编号
 	 @param guestName 客户名称
+	 * @throws Exception 
 	*/
-	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName)
+	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName) throws Exception
 	{
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();

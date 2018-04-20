@@ -91,9 +91,10 @@ public class ZhiDuDtl extends EntityNoName
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (!BP.Web.WebUser.getNo().equals("admin"))

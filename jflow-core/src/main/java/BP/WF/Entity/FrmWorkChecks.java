@@ -22,8 +22,9 @@ public class FrmWorkChecks extends Entities
 	 * 
 	 * @param fk_mapdata
 	 *            s
+	 * @throws Exception 
 	 */
-	public FrmWorkChecks(String fk_mapdata)
+	public FrmWorkChecks(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

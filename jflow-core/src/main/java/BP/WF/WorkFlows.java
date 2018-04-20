@@ -12,8 +12,9 @@ public class WorkFlows extends ArrayList<WorkFlow>
 	/** 
 	 工作流程
 	 @param flow 流程编号
+	 * @throws Exception 
 	*/
-	public WorkFlows(Flow flow)
+	public WorkFlows(Flow flow) throws Exception
 	{
 		StartWorks ens = (StartWorks)flow.getHisStartNode().getHisWorks();
 		ens.RetrieveAll(10000);

@@ -23,8 +23,9 @@ public abstract class EntitiesSimpleTree extends Entities
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int RetrieveHisChinren(EntitySimpleTree en)
+	public final int RetrieveHisChinren(EntitySimpleTree en) throws Exception
 	{
 		int i = this.Retrieve(EntitySimpleTreeAttr.ParentNo, en.getNo());
 		this.AddEntity(en);
@@ -71,9 +72,10 @@ public abstract class EntitiesSimpleTree extends Entities
 	 * 查询全部
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return super.RetrieveAll("No");
 	}

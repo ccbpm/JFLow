@@ -134,10 +134,11 @@ public class FrmThread extends Entity
 		
 	/** 
 	 控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -165,8 +166,9 @@ public class FrmThread extends Entity
 	 子线程组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmThread(String mapData)
+	public FrmThread(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -195,8 +197,9 @@ public class FrmThread extends Entity
 	 子线程组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmThread(int nodeID)
+	public FrmThread(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -238,12 +241,7 @@ public class FrmThread extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
-	@Override
-	protected boolean beforeUpdateInsertAction()
-	{
-		return super.beforeUpdateInsertAction();
-	}
+ 
 
 		///#endregion
 }

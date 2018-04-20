@@ -23,8 +23,9 @@ public class Directions extends Entities
 	 方向
 	 
 	 @param flowNo
+	 * @throws Exception 
 	*/
-	public Directions(String flowNo)
+	public Directions(String flowNo) throws Exception
 	{
 		this.Retrieve(DirectionAttr.FK_Flow, flowNo);
 	}
@@ -33,8 +34,9 @@ public class Directions extends Entities
 	 
 	 @param NodeID 节点ID
 	 @param dirType 类型
+	 * @throws Exception 
 	*/
-	public Directions(int NodeID)
+	public Directions(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DirectionAttr.Node,NodeID);
@@ -56,8 +58,9 @@ public class Directions extends Entities
 	 @param nodeID 此节点的ID
 	 @param isLifecyle 是不是判断在节点的生存期内		 
 	 @return 转向方向集合(ToNodes) 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisToNodes(int nodeID, boolean isLifecyle)
+	public final Nodes GetHisToNodes(int nodeID, boolean isLifecyle) throws Exception
 	{
 		Nodes nds = new Nodes();
 		QueryObject qo = new QueryObject(nds);
@@ -70,8 +73,9 @@ public class Directions extends Entities
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisFromNodes(int nodeID)
+	public final Nodes GetHisFromNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DirectionAttr.ToNode,nodeID);

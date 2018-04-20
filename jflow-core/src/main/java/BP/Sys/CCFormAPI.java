@@ -52,8 +52,9 @@ public class CCFormAPI
 	 @param name 名称
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y)
+	public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y) throws Exception
 	{
 
 //		switch (ctrlType)
@@ -127,8 +128,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y)
+	public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y) throws Exception
 	{
 		FrmImgAth ath = new FrmImgAth();
 		ath.setFK_MapData(fk_mapdata);
@@ -155,8 +157,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y)
+	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y) throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
@@ -178,8 +181,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x
 	 @param y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y)
+	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y) throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
@@ -205,8 +209,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x
 	 @param y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y)
+	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y) throws Exception
 	{
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(dtlNo);
@@ -314,9 +319,10 @@ public class CCFormAPI
 	 @param x 位置x
 	 @param y 位置y
 	 @param colSpan 横跨的行数
+	 * @throws Exception 
 	*/
 
-	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan)
+	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan) throws Exception
 	{
 		MapAttr ma = new MapAttr();
 		ma.setFK_MapData(fk_mapdata);
@@ -373,9 +379,10 @@ public class CCFormAPI
 	 @param x
 	 @param y
 	 @param colSpan
+	 * @throws Exception 
 	*/
 
-	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y, int colSpan)
+	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y, int colSpan) throws Exception
 	{
 		MapAttr ma = new MapAttr();
 		ma.setFK_MapData(frmID);
@@ -388,7 +395,7 @@ public class CCFormAPI
 
 	}
 
-	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan)
+	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan) throws Exception
 	{
 
 		MapAttr ma = new MapAttr();
@@ -438,8 +445,9 @@ public class CCFormAPI
 	 @param gKey
 	 @param gName
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String NewCheckGroup(String frmID, String gKey, String gName)
+	public static String NewCheckGroup(String frmID, String gKey, String gName) throws Exception
 	{
 		//string gKey = v1;
 		//string gName = v2;
@@ -524,8 +532,9 @@ public class CCFormAPI
 	 @param frmID 表单ID
 	 @param groupName 分组名称
 	 @param prx 前缀
+	 * @throws Exception 
 	*/
-	public static void CreateCheckGroup(String frmID, String groupName, String prx)
+	public static void CreateCheckGroup(String frmID, String groupName, String prx) throws Exception
 	{
 		GroupField gf = new GroupField();
 		gf.setLab(groupName);
@@ -590,8 +599,9 @@ public class CCFormAPI
 	 @param frmName 表单名称
 	 @param frmTreeID 表单类别编号（表单树ID）
 	 @param frmType 表单类型
+	 * @throws Exception 
 	*/
-	public static void CreateFrm(String frmID, String frmName, String frmTreeID, FrmType frmType)
+	public static void CreateFrm(String frmID, String frmName, String frmTreeID, FrmType frmType) throws Exception
 	{
 		MapData md = new MapData();
 		md.setNo(frmID);
@@ -608,8 +618,9 @@ public class CCFormAPI
 	 执行保存
 	 @param fk_mapdata
 	 @param jsonStrOfH5Frm
+	 * @throws Exception 
 	*/
-	public static void SaveFrm(String fk_mapdata, String jsonStrOfH5Frm)
+	public static void SaveFrm(String fk_mapdata, String jsonStrOfH5Frm) throws Exception
 	{
 		JSONObject  jd = JSONObject.fromObject(jsonStrOfH5Frm);
 		if (jd.isNullObject())
@@ -640,8 +651,9 @@ public class CCFormAPI
 	 
 	 @param formData
 	 @return 
+	 * @throws Exception 
 	*/
-	private static void SaveFrm(String fk_mapdata, JSONObject formData)
+	private static void SaveFrm(String fk_mapdata, JSONObject formData) throws Exception
 	{
 		//#region 求 PKs.
 		//标签.
@@ -1198,8 +1210,9 @@ public class CCFormAPI
 	 @param toFrmID 要导入的表单ID
 	 @param fromds 数据源
 	 @param isSetReadonly 是否把空间设置只读？
+	 * @throws Exception 
 	*/
-	public static void ImpFrmTemplate(String toFrmID, DataSet fromds, boolean isSetReadonly)
+	public static void ImpFrmTemplate(String toFrmID, DataSet fromds, boolean isSetReadonly) throws Exception
 	{
 		MapData.ImpMapData(toFrmID, fromds, isSetReadonly);
 	}
@@ -1224,10 +1237,11 @@ public class CCFormAPI
 	 @param cfg 配置 @0=xxx@1=yyyy@n=xxxxxc
 	 @param lang 语言
 	 @return 
+	 * @throws Exception 
 	*/
 
 //ORIGINAL LINE: public static string SaveEnum(string enumKey, string enumLab, string cfg, bool isNew,string lang = "CH")
-	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew, String lang)
+	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew, String lang) throws Exception
 	{
 		SysEnumMain sem = new SysEnumMain();
 		sem.setNo(enumKey);
@@ -1285,8 +1299,9 @@ public class CCFormAPI
 		 @param srcFrmID 源表单ID
 		 @param copyFrmID copy到表单ID
 		 @param copyFrmName 表单名称
+	 * @throws Exception 
 	  */
-		public static String CopyFrm(String srcFrmID, String copyFrmID, String copyFrmName, String fk_frmTree)
+		public static String CopyFrm(String srcFrmID, String copyFrmID, String copyFrmName, String fk_frmTree) throws Exception
 		{
 			MapData mymd = new MapData();
 			mymd.setNo(copyFrmID);
@@ -1510,8 +1525,9 @@ public class CCFormAPI
 	 @param pageNumber 第几页
 	 @param pageSize 每页大小
 	 @return json
+	 * @throws Exception 
 	*/
-	public static String DB_SFTableList(int pageNumber, int pageSize)
+	public static String DB_SFTableList(int pageNumber, int pageSize) throws Exception
 	{
 		//获得查询.
 		SFTables sftables = new SFTables();
@@ -1529,8 +1545,9 @@ public class CCFormAPI
 	 @param pageNumber 第几页
 	 @param pageSize 每页大小
 	 @return json
+	 * @throws Exception 
 	*/
-	public static String DB_EnumerationList(int pageNumber, int pageSize)
+	public static String DB_EnumerationList(int pageNumber, int pageSize) throws Exception
 	{
 		SysEnumMains enumMains = new SysEnumMains();
 		QueryObject obj = new QueryObject(enumMains);
@@ -1545,8 +1562,9 @@ public class CCFormAPI
 	 
 	 @param fk_mapdata
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String DB_Hiddenfielddata(String fk_mapdata)
+	public static String DB_Hiddenfielddata(String fk_mapdata) throws Exception
 	{
 		int RowCount = 0;
 		MapAttrs mapAttrs = new MapAttrs();
@@ -1563,13 +1581,13 @@ public class CCFormAPI
 		return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(mapAttrs);
 	}
 	
-	public static DataSet GenerHisDataSet(String fk_mapdata)
+	public static DataSet GenerHisDataSet(String fk_mapdata) throws Exception
 	{
 	   return	GenerHisDataSet( fk_mapdata, null);		
 	}
 	 
 
-	public static DataSet GenerHisDataSet(String fk_mapdata, String frmName) {
+	public static DataSet GenerHisDataSet(String fk_mapdata, String frmName) throws Exception {
 		
 		DataSet ds = new DataSet();
 
@@ -1654,8 +1672,9 @@ public class CCFormAPI
 	/** 修复表单.
 	 
 	 @param frmID
+	 * @throws Exception 
 */
-	public static void RepareCCForm(String frmID)
+	public static void RepareCCForm(String frmID) throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, frmID) == false)

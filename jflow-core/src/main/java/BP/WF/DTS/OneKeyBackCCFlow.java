@@ -57,9 +57,10 @@ public class OneKeyBackCCFlow extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String path = "C:\\CCFlowTemplete" + new java.util.Date();//.ToString("yy年MM月dd日HH时mm分ss秒");
 		File file = new File(path);

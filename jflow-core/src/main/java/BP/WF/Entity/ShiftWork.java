@@ -185,7 +185,7 @@ public class ShiftWork extends EntityMyPK
 	}
 	
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setMyPK(String.valueOf(DBAccess.GenerOIDByGUID()));
 		this.setRDT(DataType.getCurrentDataTime());

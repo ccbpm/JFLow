@@ -116,7 +116,7 @@ public class MapFrmExcel extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -144,8 +144,9 @@ public class MapFrmExcel extends EntityNoName
 	 Excel表单属性
 	 
 	 @param no 表单ID
+	 * @throws Exception 
 	*/
-	public MapFrmExcel(String no)
+	public MapFrmExcel(String no) throws Exception
 	{
 		super(no);
 	}
@@ -412,8 +413,9 @@ public class MapFrmExcel extends EntityNoName
 	 @param newField 新字段
 	 @param newFieldName 新字段名称(可以为空)
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName)
+	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) throws Exception
 	{
 		MapAttr attrOld = new MapAttr();
 		attrOld.setKeyOfEn(fieldOld);
@@ -507,8 +509,9 @@ public class MapFrmExcel extends EntityNoName
 	 设计表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDFrom()
+	public final String DoDFrom() throws Exception
 	{
 		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/CCForm/Frm.jsp?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		try {
@@ -522,8 +525,9 @@ public class MapFrmExcel extends EntityNoName
 	 设计傻瓜表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDFromCol4()
+	public final String DoDFromCol4() throws Exception
 	{
 		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		try {

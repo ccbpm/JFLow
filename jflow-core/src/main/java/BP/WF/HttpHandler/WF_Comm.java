@@ -200,7 +200,7 @@ public class WF_Comm extends WebContralBase {
 	// 实体初始化
 	// </summary>
 	// <returns></returns>
-	public String Entity_Init() {
+	public String Entity_Init() throws Exception {
 		try
 		{
 			String pkval = this.getPKVal();
@@ -229,7 +229,7 @@ public class WF_Comm extends WebContralBase {
 		}
 	}
 
-	public String Entity_Delete() {
+	public String Entity_Delete() throws Exception {
 		try
 		{
 		 
@@ -262,8 +262,9 @@ public class WF_Comm extends WebContralBase {
 	/** 更新
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String Entity_Update()
+	public final String Entity_Update() throws Exception
 	{
 		try
 		{
@@ -290,8 +291,9 @@ public class WF_Comm extends WebContralBase {
 	/** 从数据源查询.
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String Entity_RetrieveFromDBSources()
+	public final String Entity_RetrieveFromDBSources() throws Exception
 	{
 		try
 		{
@@ -325,8 +327,9 @@ public class WF_Comm extends WebContralBase {
 	/** 从数据源查询.
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String Entity_Retrieve()
+	public final String Entity_Retrieve() throws Exception
 	{
 		try
 		{
@@ -358,8 +361,9 @@ public class WF_Comm extends WebContralBase {
 	/** 是否存在
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String Entity_IsExits()
+	public final String Entity_IsExits() throws Exception
 	{
 		try
 		{
@@ -380,8 +384,9 @@ public class WF_Comm extends WebContralBase {
 	 执行保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_Save()
+	public final String Entity_Save() throws Exception
 	{
 		try
 		{
@@ -418,8 +423,9 @@ public class WF_Comm extends WebContralBase {
 	 执行插入.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_Insert()
+	public final String Entity_Insert() throws Exception
 	{
 		try
 		{
@@ -448,7 +454,7 @@ public class WF_Comm extends WebContralBase {
 		}
 	}
 
-	public final String Entity_DoMethodReturnString()
+	public final String Entity_DoMethodReturnString() throws Exception
 	{
 		//创建类实体.
 		BP.En.Entity en = ClassFactory.GetEn(this.getEnName()); // Activator.CreateInstance(System.Type.GetType("BP.En.Entity")) as BP.En.Entity;
@@ -512,8 +518,9 @@ public class WF_Comm extends WebContralBase {
 			 查询全部
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String Entities_RetrieveAll()
+			public final String Entities_RetrieveAll() throws Exception
 			{
 				Entities ens = ClassFactory.GetEns(this.getEnsName());
 				ens.RetrieveAll();
@@ -523,8 +530,9 @@ public class WF_Comm extends WebContralBase {
 			 获得实体集合s
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String Entities_Init()
+			public final String Entities_Init() throws Exception
 			{
 				try
 				{
@@ -612,7 +620,7 @@ public class WF_Comm extends WebContralBase {
 
 				return "";
 			}
-			public final String MethodLink_Init()
+			public final String MethodLink_Init() throws Exception
 			{
 				java.util.ArrayList al = BP.En.ClassFactory.GetObjects("BP.En.Method");
 				int i = 1;
@@ -650,8 +658,9 @@ public class WF_Comm extends WebContralBase {
 					 获得查询的基本信息.
 					 
 					 @return 
+					 * @throws Exception 
 					*/
-					public String Search_MapBaseInfo()
+					public String Search_MapBaseInfo() throws Exception
 					{
 						//获得
 						Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -700,8 +709,9 @@ public class WF_Comm extends WebContralBase {
 					 外键或者枚举的查询.
 					 
 					 @return 
+					 * @throws Exception 
 					*/
-					public final String Search_SearchAttrs()
+					public final String Search_SearchAttrs() throws Exception
 					{
 						//获得
 						Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -755,8 +765,9 @@ public class WF_Comm extends WebContralBase {
 					 /** 执行查询.
 					 
 					 @return 
+					 * @throws Exception 
 					  */
-					public final String Search_SearchIt()
+					public final String Search_SearchIt() throws Exception
 					{
 						//获得.
 						Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -1014,7 +1025,7 @@ public class WF_Comm extends WebContralBase {
 						return BP.Tools.Json.ToJson(ds);
 					}
 					
-					private DataTable Search_Data(Entities ens, Entity en){
+					private DataTable Search_Data(Entities ens, Entity en) throws Exception{
 						Map map = en.getEnMapInTime();
 
 						MapAttrs attrs = map.getAttrs().ToMapAttrs();
@@ -1247,7 +1258,7 @@ public class WF_Comm extends WebContralBase {
 			        /// 执行导出
 			        /// </summary>
 			        /// <returns></returns>
-			        public String Search_Exp()
+			        public String Search_Exp() throws Exception
 			        {
 			            Entities ens = ClassFactory.GetEns(this.getEnsName());;
 			            Entity en = ens.getGetNewEntity();
@@ -1259,7 +1270,7 @@ public class WF_Comm extends WebContralBase {
 
 			           return filePath;
 			        }
-					public final String Search_GenerPageIdx()
+					public final String Search_GenerPageIdx() throws Exception
 					{
 						BP.Sys.UserRegedit ur = new UserRegedit();
 						ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
@@ -1356,7 +1367,7 @@ public class WF_Comm extends WebContralBase {
 
 						return str;
 					}
-					public final String Refmethod_Init()
+					public final String Refmethod_Init() throws Exception
 					{
 						String ensName = this.getEnsName();
 						int index = this.getIndex();
@@ -1524,7 +1535,7 @@ public class WF_Comm extends WebContralBase {
 
 						return BP.Tools.Json.ToJson(ds);
 					}
-					public final String Refmethod_Done()
+					public final String Refmethod_Done() throws Exception
 					{
 						Entities ens = BP.En.ClassFactory.GetEns(this.getEnsName());
 						Entity en = ens.getGetNewEntity();
@@ -1702,7 +1713,7 @@ public class WF_Comm extends WebContralBase {
 
 			
 					///#region  公共方法。
-					public final String SFTable()
+					public final String SFTable() throws Exception
 					{
 						BP.Sys.SFTable sftable = new BP.Sys.SFTable(this.GetRequestVal("SFTable"));
 						DataTable dt = sftable.GenerData();
@@ -1720,10 +1731,11 @@ public class WF_Comm extends WebContralBase {
 					 @param monthodName 方法名称
 					 @param paras 参数，可以为空.
 					 @return 执行结果
+					 * @throws Exception 
 					*/
 			//C# TO JAVA CONVERTER TODO TASK: C# optional parameters are not converted to Java:
 			//ORIGINAL LINE: public string Exec(string clsName, string methodName, string paras=null)
-					public final String Exec(String clsName, String methodName, String paras)
+					public final String Exec(String clsName, String methodName, String paras) throws Exception
 					{
 			
 						///#region 处理 HttpHandler 类.
@@ -1933,7 +1945,7 @@ public class WF_Comm extends WebContralBase {
 			
 	// #endregion 界面方法.
 
-	public String EnsData() {
+	public String EnsData() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		String filter = this.GetRequestVal("Filter");
 		if (filter == null || filter == "" || filter.contains("=") == false) {
@@ -1970,7 +1982,7 @@ public class WF_Comm extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public String EnumList() {
+	public String EnumList() throws Exception {
 		SysEnums ses = new SysEnums(this.getEnumKey());
 		return ses.ToJson();
 	}
@@ -1979,8 +1991,9 @@ public class WF_Comm extends WebContralBase {
 	/** 当前登录人员信息
 	 
 	 @return 
+	 * @throws Exception 
 	 */
-	public String WebUser_Init()
+	public String WebUser_Init() throws Exception
 	{
 		Hashtable ht = new Hashtable();
 		ht.put("No", WebUser.getNo()==null?"":WebUser.getNo());

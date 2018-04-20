@@ -155,7 +155,7 @@ public class ReturnWork extends EntityMyPK
 		return this.get_enMap();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setReturner(BP.Web.WebUser.getNo());
 		this.setReturnerName(BP.Web.WebUser.getName());

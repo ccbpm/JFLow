@@ -42,13 +42,13 @@ public class CCMobile extends WebContralBase
 
 		///#endregion 执行父类的重写方法.
 
-	public final String Login_Init()
+	public final String Login_Init() throws Exception
 	{
 		AppACE ace = new AppACE();
 		return ace.Login_Init();
 	}
 
-	public final String Login_Submit() throws UnsupportedEncodingException
+	public final String Login_Submit() throws Exception
 	{
 		AppACE ace = new AppACE();
 		return ace.Login_Submit();
@@ -57,14 +57,15 @@ public class CCMobile extends WebContralBase
 	 会签列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String HuiQianList_Init()
+	public final String HuiQianList_Init() throws Exception
 	{
 		WF wf = new WF();
 		return wf.HuiQianList_Init();
 	}
 
-	public final String GetUserInfo()
+	public final String GetUserInfo() throws Exception
 	{
 		AppACE ace = new AppACE();
 		return ace.GetUserInfo();
@@ -96,8 +97,9 @@ public class CCMobile extends WebContralBase
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Home_Init_WorkCount()
+	public final String Home_Init_WorkCount() throws Exception
 	{
 		String sql = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + WebUser.getNo() + "%' GROUP BY TSpan";
 		DataSet ds = new DataSet();
@@ -122,7 +124,7 @@ public class CCMobile extends WebContralBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String Runing_Init()
+	public final String Runing_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF wfPage = new WF();
 	  return wfPage.Runing_Init();
@@ -141,26 +143,27 @@ public class CCMobile extends WebContralBase
 	 新版本.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Todolist_Init()
+	public final String Todolist_Init() throws Exception
 	{
 		String fk_node = this.GetRequestVal("FK_Node");
 		DataTable dt = BP.WF.Dev2Interface.DB_Todolist(WebUser.getNo(), this.getFK_Node());
 		return BP.Tools.Json.DataTableToJson(dt, false);
 	}
-	public final String DB_GenerReturnWorks()
+	public final String DB_GenerReturnWorks() throws Exception
 	{
 		AppACE ace = new AppACE();
 		return ace.DB_GenerReturnWorks();
 	}
 
-	public final String Start_Init()
+	public final String Start_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF wfPage = new WF();
 		return wfPage.Start_Init();
 	}
 
-	public final String HandlerMapExt() throws UnsupportedEncodingException
+	public final String HandlerMapExt() throws Exception
 	{
 		WF_CCForm en = new WF_CCForm();
 		return en.HandlerMapExt();
@@ -170,8 +173,9 @@ public class CCMobile extends WebContralBase
 	 打开手机端
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Do_OpenFlow()
+	public final String Do_OpenFlow() throws Exception
 	{
 		String sid = this.GetRequestVal("SID");
 		String[] strs = sid.split("[_]", -1);
@@ -191,26 +195,27 @@ public class CCMobile extends WebContralBase
 	 流程单表单查看.
 	 
 	 @return json
+	 * @throws Exception 
 	*/
-	public final String FrmView_Init()
+	public final String FrmView_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF wf = new WF();
 		return wf.FrmView_Init();
 	}
 
-	 public String AttachmentUpload_Down()
+	 public String AttachmentUpload_Down() throws Exception
      {
          WF_CCForm ccform = new WF_CCForm(this.context);
          return ccform.AttachmentUpload_Down();
      }
 
-     public String AttachmentUpload_DownByStream()
+     public String AttachmentUpload_DownByStream() throws Exception
      {
          WF_CCForm ccform = new WF_CCForm(this.context);
          return ccform.AttachmentUpload_Down();
      }
      
-	public final String StartGuide_MulitSend()
+	public final String StartGuide_MulitSend() throws Exception
 	{
 		WF_MyFlow en = new WF_MyFlow(this.context);
 		return en.StartGuide_MulitSend();
@@ -222,8 +227,9 @@ public class CCMobile extends WebContralBase
 			 打开表单
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String SearchKey_OpenFrm()
+			public final String SearchKey_OpenFrm() throws Exception
 			{
 				BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 				return search.KeySearch_OpenFrm();
@@ -232,8 +238,9 @@ public class CCMobile extends WebContralBase
 			 执行查询
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String SearchKey_Query()
+			public final String SearchKey_Query() throws Exception
 			{
 				BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 				return search.KeySearch_Query();
@@ -245,8 +252,9 @@ public class CCMobile extends WebContralBase
 			 初始化
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String Search_Init()
+			public final String Search_Init() throws Exception
 			{
 				DataSet ds = new DataSet();
 				String sql = "";
@@ -360,8 +368,9 @@ public class CCMobile extends WebContralBase
 			 查询
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String Search_Search()
+			public final String Search_Search() throws Exception
 			{
 				String TSpan = this.GetRequestVal("TSpan");
 				String FK_Flow = this.GetRequestVal("FK_Flow");
@@ -397,7 +406,7 @@ public class CCMobile extends WebContralBase
 			/// 撤销发送
 	        /// </summary>
 	        /// <returns></returns>
-	        public String FrmView_UnSend()
+	        public String FrmView_UnSend() throws Exception
 	        {
 	            BP.WF.HttpHandler.WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork(this.context);
 	            return en.OP_UnSend();

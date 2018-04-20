@@ -137,8 +137,9 @@ public class QingJia extends EntityOID
 	 * 
 	 * @param oid
 	 *            实体类
+	 * @throws Exception 
 	 */
-	public QingJia(int oid)
+	public QingJia(int oid) throws Exception
 	{
 		super(oid);
 	}

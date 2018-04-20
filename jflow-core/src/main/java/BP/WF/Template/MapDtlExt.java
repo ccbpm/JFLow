@@ -17,10 +17,11 @@ public class MapDtlExt extends EntityNoName
 		///#region 导入导出属性.
 	/** 
 	 用户访问.
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -258,9 +259,10 @@ public class MapDtlExt extends EntityNoName
 		///#region 外键属性
 	/** 
 	 框架
+	 * @throws Exception 
 	 
 	*/
-	public final MapFrames getMapFrames()
+	public final MapFrames getMapFrames() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
 		MapFrames obj = (MapFrames)((tempVar instanceof MapFrames) ? tempVar : null);
@@ -273,9 +275,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 分组字段
+	 * @throws Exception 
 	 
 	*/
-	public final GroupFields getGroupFields_del()
+	public final GroupFields getGroupFields_del() throws Exception
 	{
 		Object tempVar = this.GetRefObject("GroupFields");
 		GroupFields obj = (GroupFields)((tempVar instanceof GroupFields) ? tempVar : null);
@@ -288,9 +291,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 逻辑扩展
+	 * @throws Exception 
 	 
 	*/
-	public final MapExts getMapExts()
+	public final MapExts getMapExts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapExts");
 		MapExts obj = (MapExts)((tempVar instanceof MapExts) ? tempVar : null);
@@ -303,9 +307,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 事件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmEvents getFrmEvents()
+	public final FrmEvents getFrmEvents() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
 		FrmEvents obj = (FrmEvents)((tempVar instanceof FrmEvents) ? tempVar : null);
@@ -316,26 +321,13 @@ public class MapDtlExt extends EntityNoName
 		}
 		return obj;
 	}
-	/** 
-	 一对多
 	 
-	*/
-	public final MapM2Ms getMapM2Ms()
-	{
-		Object tempVar = this.GetRefObject("MapM2Ms");
-		MapM2Ms obj = (MapM2Ms)((tempVar instanceof MapM2Ms) ? tempVar : null);
-		if (obj == null)
-		{
-			obj = new MapM2Ms(this.getNo());
-			this.SetRefObject("MapM2Ms", obj);
-		}
-		return obj;
-	}
 	/** 
 	 从表
+	 * @throws Exception 
 	 
 	*/
-	public final MapDtls getMapDtls()
+	public final MapDtls getMapDtls() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
 		MapDtls obj = (MapDtls)((tempVar instanceof MapDtls) ? tempVar : null);
@@ -348,9 +340,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 超连接
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLinks getFrmLinks()
+	public final FrmLinks getFrmLinks() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmLinks obj = (FrmLinks)((tempVar instanceof FrmLinks) ? tempVar : null);
@@ -363,9 +356,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 按钮
+	 * @throws Exception 
 	 
 	*/
-	public final FrmBtns getFrmBtns()
+	public final FrmBtns getFrmBtns() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmBtns obj = (FrmBtns)((tempVar instanceof FrmBtns) ? tempVar : null);
@@ -378,9 +372,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 元素
+	 * @throws Exception 
 	 
 	*/
-	public final FrmEles getFrmEles()
+	public final FrmEles getFrmEles() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
 		FrmEles obj = (FrmEles)((tempVar instanceof FrmEles) ? tempVar : null);
@@ -393,9 +388,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 线
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLines getFrmLines()
+	public final FrmLines getFrmLines() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
 		FrmLines obj = (FrmLines)((tempVar instanceof FrmLines) ? tempVar : null);
@@ -408,9 +404,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	 
 	*/
-	public final FrmLabs getFrmLabs()
+	public final FrmLabs getFrmLabs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmLabs obj = (FrmLabs)((tempVar instanceof FrmLabs) ? tempVar : null);
@@ -423,9 +420,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 图片
+	 * @throws Exception 
 	 
 	*/
-	public final FrmImgs getFrmImgs()
+	public final FrmImgs getFrmImgs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmImgs obj = (FrmImgs)((tempVar instanceof FrmImgs) ? tempVar : null);
@@ -438,9 +436,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 附件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmAttachments getFrmAttachments()
+	public final FrmAttachments getFrmAttachments() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
 		FrmAttachments obj = (FrmAttachments)((tempVar instanceof FrmAttachments) ? tempVar : null);
@@ -453,9 +452,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 图片附件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmImgAths getFrmImgAths()
+	public final FrmImgAths getFrmImgAths() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
 		FrmImgAths obj = (FrmImgAths)((tempVar instanceof FrmImgAths) ? tempVar : null);
@@ -468,9 +468,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 单选按钮
+	 * @throws Exception 
 	 
 	*/
-	public final FrmRBs getFrmRBs()
+	public final FrmRBs getFrmRBs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
 		FrmRBs obj = (FrmRBs)((tempVar instanceof FrmRBs) ? tempVar : null);
@@ -483,9 +484,10 @@ public class MapDtlExt extends EntityNoName
 	}
 	/** 
 	 属性
+	 * @throws Exception 
 	 
 	*/
-	public final MapAttrs getMapAttrs()
+	public final MapAttrs getMapAttrs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapAttrs");
 		MapAttrs obj = (MapAttrs)((tempVar instanceof MapAttrs) ? tempVar : null);
@@ -849,7 +851,7 @@ public class MapDtlExt extends EntityNoName
 	public MapDtlExt()
 	{
 	}
-	public MapDtlExt(String mypk)
+	public MapDtlExt(String mypk) throws Exception
 	{
 		this.setNo(mypk);
 		this._IsReadonly = 2;
@@ -1097,14 +1099,15 @@ public class MapDtlExt extends EntityNoName
 	/** 列自动计算
 	 
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String DtlImp()
+	public final String DtlImp() throws Exception
 	{
 		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" + this.getNo() + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	 
-    public String ColAutoExp()
+    public String ColAutoExp() throws Exception
     {
     	String url = "../../Admin/FoolFormDesigner/DtlSetting/ColAutoExp.htm?FK_MapData=" + this.getNo() + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
         return url;
@@ -1114,8 +1117,9 @@ public class MapDtlExt extends EntityNoName
 	 导入其他表字段
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String ImpFields()
+	public final String ImpFields() throws Exception
 	{
 		String url = "../../Admin/FoolFormDesigner/ImpTableField.htm?FK_MapData=" + this.getNo() + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
@@ -1125,8 +1129,9 @@ public class MapDtlExt extends EntityNoName
 	 设计傻瓜表单
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String DFoolFrm()
+	public final String DFoolFrm() throws Exception
 	{
 		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
@@ -1136,7 +1141,7 @@ public class MapDtlExt extends EntityNoName
     /// 设计自由表单
     /// </summary>
     /// <returns></returns>
-    public final String DFreeFrm()
+    public final String DFreeFrm() throws Exception
     {
         FrmLabs labs = new FrmLabs(this.getNo());
         if (labs.size() == 0)
@@ -1222,7 +1227,7 @@ public class MapDtlExt extends EntityNoName
     }
     
 	//生成英文字段
-	  public final String GenerAttrs()
+	  public final String GenerAttrs() throws Exception
 			{
 				String strs = "";
 				MapAttrs attrs = new MapAttrs(this.getNo());
@@ -1287,7 +1292,7 @@ public class MapDtlExt extends EntityNoName
 		///#endregion 基本属性.
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		MapDtl dtl = new MapDtl(this.getNo());
 		dtl.setIsEnablePass(this.getIsEnableAthM());
@@ -1314,7 +1319,7 @@ public class MapDtlExt extends EntityNoName
 	}
 	
 	   @Override
-	   protected void afterDelete()
+	   protected void afterDelete() throws Exception
 			{
 				MapDtl dtl = new MapDtl();
 				dtl.setNo(this.getNo());

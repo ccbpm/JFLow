@@ -37,8 +37,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 代码生成器.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String APICodeFEE_Init() {
+	public String APICodeFEE_Init() throws Exception {
 
 		if (StringHelper.isNullOrEmpty(getFK_Flow()))
 			return "err@FK_Flow参数不能为空！";
@@ -116,7 +117,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #region 发起限制.
-	public final String Limit_Init() {
+	public final String Limit_Init() throws Exception {
 		
 		BP.WF.Flow fl = new BP.WF.Flow();
 		fl.setNo(this.getFK_Flow());
@@ -125,7 +126,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		
 	}
 
-	public final String Limit_Save() {
+	public final String Limit_Save() throws Exception {
 		BP.WF.Flow fl = new BP.WF.Flow(this.getFK_Flow());
 		fl.SetValByKey("StartLimitRole", this.GetRequestValInt("StartLimitRole"));
 		fl.setStartLimitPara(this.GetRequestVal("StartLimitPara"));
@@ -140,8 +141,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 执行流程检查.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String CheckFlow_Init() {
+	public String CheckFlow_Init() throws Exception {
 		BP.WF.Flow fl = new BP.WF.Flow(this.getFK_Flow());
 		String str = fl.DoCheck();
 		 str = str.replace("@", "<BR>@");
@@ -154,8 +156,10 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 
 	/**
 	 * 流程字段列表
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	 */
-	public String FlowFields_Init() {
+	public String FlowFields_Init() throws NumberFormatException, Exception {
 		BP.Sys.MapAttrs attrs = new BP.Sys.MapAttrs("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt");
 		return attrs.ToJson();
 	}
@@ -164,8 +168,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 执行初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String AutoStart_Init() {
+	public String AutoStart_Init() throws Exception {
 		BP.WF.Flow en = new BP.WF.Flow();
 		en.setNo(this.getFK_Flow());
 		en.RetrieveFromDBSources();
@@ -176,8 +181,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 执行保存
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String AutoStart_Save() {
+	public String AutoStart_Save() throws Exception {
 		// 执行保存.
 		BP.WF.Flow en = new BP.WF.Flow(this.getFK_Flow());
 
@@ -197,8 +203,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 初始化节点属性列表.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String NodeAttrs_Init() {
+	public String NodeAttrs_Init() throws Exception {
 		String strFlowId = GetRequestVal("FK_Flow");
 		if (StringHelper.isNullOrEmpty(strFlowId)) {
 			return "err@参数错误！";
@@ -279,8 +286,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 与业务表数据同步
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String DTSBTable_Init() {
+	public String DTSBTable_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 获得数据源的表.
@@ -304,8 +312,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 
 	/**
 	 * 与业务表数据同步
+	 * @throws Exception 
 	 */
-	public String DTSBTable_Save() {
+	public String DTSBTable_Save() throws Exception {
 		Flow flow = new Flow(this.getFK_Flow());
 
 		BP.WF.Template.FlowDTSWay dtsWay = (FlowDTSWay.forValue(this.GetRequestValInt("RB_DTSWay")));
@@ -382,8 +391,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 
 	/**
 	 * 数据调度 - 字段映射.
+	 * @throws Exception 
 	 */
-	public String DTSBTableExt_Init() {
+	public String DTSBTableExt_Init() throws Exception {
 		// 定义数据容器.
 		DataSet ds = new DataSet();
 
@@ -408,7 +418,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public String DTSBTableExt_Save() {
+	public String DTSBTableExt_Save() throws Exception {
 		String rpt = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
 		Flow fl = new Flow(this.getFK_Flow());
 		MapAttrs attrs = new MapAttrs(rpt);
@@ -479,8 +489,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 前置导航
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String StartGuide_Init() {
+	public String StartGuide_Init() throws Exception {
 		BP.WF.Flow en = new BP.WF.Flow();
 		en.setNo(this.getFK_Flow());
 		en.RetrieveFromDBSources();
@@ -565,8 +576,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 流程轨迹查看权限
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String TruckViewPower_Init() {
+	public String TruckViewPower_Init() throws Exception {
 		if (StringHelper.isNullOrEmpty(getFK_Flow())) {
 			Log.DebugWriteError("流程编号为空");
 			return "err@流程编号为空";
@@ -600,8 +612,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	 * 修改节点ICON
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String NodesIcon_Init() {
+	public final String NodesIcon_Init() throws Exception {
 		DataSet ds = new DataSet();
 		Nodes nds = new Nodes(this.getFK_Flow());
 		DataTable dt = nds.ToDataTableField("Nodes");
@@ -638,7 +651,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String NodesIconSelect_Save() {
+	public final String NodesIconSelect_Save() throws Exception {
 		String icon = this.GetRequestVal("ICON");
 
 		Node nd = new Node(this.getFK_Node());
@@ -658,7 +671,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 	// / 流程模版导入.
 	// / </summary>
 	// / <returns></returns>
-	public String Imp_Done() {
+	public String Imp_Done() throws Exception {
 		File xmlFile = null;
 		String fileName = UUID.randomUUID().toString();
 		try {

@@ -31,8 +31,9 @@ public class TransferCustoms extends EntitiesMyPK
 	 自定义运行路径
 	 
 	 @param workid 工作ID
+	 * @throws Exception 
 	*/
-	public TransferCustoms(long workid)
+	public TransferCustoms(long workid) throws Exception
 	{
 		this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.Idx);
 	}
@@ -41,8 +42,9 @@ public class TransferCustoms extends EntitiesMyPK
 	 
 	 @param nodeID 节点ID
 	 @param workid 工作ID
+	 * @throws Exception 
 	*/
-	public TransferCustoms(int nodeID, long workid)
+	public TransferCustoms(int nodeID, long workid) throws Exception
 	{
 		this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.FK_Node, nodeID, TransferCustomAttr.Idx);
 	}

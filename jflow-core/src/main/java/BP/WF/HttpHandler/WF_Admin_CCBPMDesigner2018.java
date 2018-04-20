@@ -58,8 +58,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 流程信息.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Flows_Init()
+	public final String Flows_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -109,8 +110,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 * 使管理员登录
 	 * @return 
+	 * @throws Exception 
 	*/
-	public final String LetLogin()
+	public final String LetLogin() throws Exception
 	{
 		 //System.out.println(StringHelper.isNullOrEmpty(WebUser.getNo()));
 		return  LetAdminLogin( this.GetRequestVal("userNo"), true) ;	
@@ -131,8 +133,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 根据部门、岗位获取人员列表
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetEmpsByStationTable()
+	public final String GetEmpsByStationTable() throws Exception
 	{
 		String deptid = this.GetRequestVal("DeptNo");
 		String stid = this.GetRequestVal("StationNo");
@@ -200,7 +203,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		 
 	}
 	//组织结构
-	public final String GetStructureTreeRootTable()
+	public final String GetStructureTreeRootTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("NO", String.class);
@@ -279,8 +282,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 获取指定部门下一级子部门及岗位列表
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetSubDeptsTable()
+	public final String GetSubDeptsTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("NO", String.class);
@@ -404,8 +408,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 初始化登录界面.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Default_Init()
+	public final String Default_Init() throws Exception
 	{
 		//让admin登录
 		if (DotNetToJavaStringHelper.isNullOrEmpty(BP.Web.WebUser.getNoOfRel())==true)
@@ -518,7 +523,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
          }
 	}
 
-	public String Login_Submit()
+	public String Login_Submit() throws Exception
 	{
 		
 		 BP.Port.Emp emp = new BP.Port.Emp();
@@ -552,8 +557,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 加载流程数据
 	 @return 流程图数据的JSON
+	 * @throws Exception 
 	*/
-	public final String Designer_LoadOneFlow()
+	public final String Designer_LoadOneFlow() throws Exception
 	{
 		String flowNo = this.GetValFromFrmByKey("FK_Flow");
 		BP.WF.Flow fl = new BP.WF.Flow(flowNo);
@@ -563,8 +569,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 保存流程图信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SaveOneFlow()
+	public final String SaveOneFlow() throws Exception
 	{
 		//流程图格式.
 		String diagram = GetValFromFrmByKey("diagram");
@@ -680,8 +687,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 获取流程所有元素
 	 @return json data
+	 * @throws Exception 
 	*/
-	public final String Flow_AllElements_ResponseJson()
+	public final String Flow_AllElements_ResponseJson() throws Exception
 	{
 		BP.WF.Flow flow = new BP.WF.Flow();
 		flow.setNo(this.getFK_Flow());
@@ -701,8 +709,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 创建流程节点并返回编号
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CreateNode()
+	public final String CreateNode() throws Exception
 	{
 		try
 		{
@@ -806,8 +815,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 根据节点编号删除流程节点
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public final String DeleteNode()
+	public final String DeleteNode() throws Exception
 	{
 		try
 		{
@@ -834,8 +844,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 修改节点名称
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Node_EditNodeName()
+	public final String Node_EditNodeName() throws Exception
 	{
 		String FK_Node = this.GetValFromFrmByKey("NodeID");
 		String NodeName = this.GetValFromFrmByKey("NodeName");
@@ -856,8 +867,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 修改节点运行模式
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Node_ChangeRunModel()
+	public final String Node_ChangeRunModel() throws Exception
 	{
 		String runModel = GetValFromFrmByKey("RunModel");
 		BP.WF.Node node = new BP.WF.Node(this.getFK_Node());
@@ -887,63 +899,15 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		return "设置成功.";
 	}
 
-	/** 
-	 获取用户信息
-	 @return 
-	*/
-	public final String GetWebUserInfo()
-	{
-		if(StringHelper.isNullOrEmpty(WebUser.getNo()))
-		{
-			return "err@当前用户没有登录，请登录后再试。";
-		}
-
-		java.util.Hashtable ht = new java.util.Hashtable();
-
-		BP.Port.Emp emp = new BP.Port.Emp(WebUser.getNo());
-
-		ht.put("No", emp.getNo());
-		ht.put("Name", emp.getName());
-		ht.put("FK_Dept", emp.getFK_Dept());
-		ht.put("SID", emp.getSID());
-
-
-		if ("admin".equals(WebUser.getNo()))
-		{
-			ht.put("IsAdmin", "1");
-			ht.put("RootOfDept", "0");
-			ht.put("RootOfFlow", "F0");
-			ht.put("RootOfForm", "");
-		}
-		else
-		{
-			BP.WF.Port.AdminEmp aemp = new AdminEmp();
-			aemp.setNo(WebUser.getNo());
-
-			if (aemp.RetrieveFromDBSources() == 0)
-			{
-				ht.put("RootOfDept", "-9999");
-				ht.put("RootOfFlow", "-9999");
-				ht.put("RootOfForm", "-9999");
-			}
-			else
-			{
-				ht.put("RootOfDept", aemp.getRootOfDept());
-				ht.put("RootOfFlow", "F" + aemp.getRootOfFlow());
-				ht.put("RootOfForm", aemp.getRootOfForm());
-			}
-		}
-
-		return BP.Tools.Json.ToJsonEntityModel(ht);
-
-	}
+	 
 	
 		/**
 		 * 获取设计器 - 系统维护菜单数据
          * 系统维护管理员菜单 @于庆海 需要翻译
 		 * @return
+		 * @throws Exception 
 		 */
-	   public String GetTreeJson_AdminMenu()
+	   public String GetTreeJson_AdminMenu() throws Exception
        {
 		   AdminMenus menus = new AdminMenus();
 			menus.RetrieveAll();
@@ -975,8 +939,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 获取流程树数据
 	 
 	 @return 返回结果Json,流程树
+	 * @throws Exception 
 	*/
-	public final String GetFlowTreeTable()
+	public final String GetFlowTreeTable() throws Exception
 	{
 		String sql = "SELECT * FROM (SELECT 'F'+No NO,'F'+ParentNo PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" + "                           union " + "\r\n" + "                           SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) NAME,IDX,0 ISPARENT,'FLOW' TTYPE,DTYPE FROM WF_Flow) A  ORDER BY IDX";
 
@@ -1093,7 +1058,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		return BP.Tools.Json.DataTableToJson(dt, false);
 	}
 
-	public final String GetFormTreeTable()
+	public final String GetFormTreeTable() throws Exception
 	{
 			String rootNo = DBAccess.RunSQLReturnStringIsNull("SELECT No FROM Sys_FormTree WHERE ParentNo='' OR ParentNo IS NULL", null);
 
@@ -1226,7 +1191,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		return BP.Tools.Json.DataTableToJson(dt, false);
 	}
 
-	public final String GetStructureTreeTable()
+	public final String GetStructureTreeTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("NO", String.class);
@@ -1480,8 +1445,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 删除流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DelFlow()
+	public final String DelFlow() throws Exception
 	{
 		return WorkflowDefintionManager.DeleteFlowTemplete(this.getFK_Flow());
 	}
@@ -1521,7 +1487,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		}
 	}
 
-	public final String DelNode()
+	public final String DelNode() throws Exception
 	{
 		try
 		{
@@ -1536,7 +1502,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		}
 	}
 
-	public final String GetFlowSorts()
+	public final String GetFlowSorts() throws Exception
 	{
 		FlowSorts flowSorts = new FlowSorts();
 		flowSorts.RetrieveAll(FlowSortAttr.Idx);
@@ -1549,8 +1515,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 删除流程类别.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DelFlowSort()
+	public final String DelFlowSort() throws Exception
 	{
 		String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
 
@@ -1579,8 +1546,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 新建同级流程类别
 	 @于庆海对照需要翻译
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NewSameLevelFlowSort()
+	public final String NewSameLevelFlowSort() throws Exception
 	{
 		FlowSort fs = null;
 		fs = new FlowSort(this.getNo().replace("F", "")); //传入的编号多出F符号，需要替换掉
@@ -1597,8 +1565,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 
 	 新建下级类别.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NewSubFlowSort()
+	public final String NewSubFlowSort() throws Exception
 	{
 		FlowSort fsSub = new FlowSort(this.getNo().replace("F", "")); //传入的编号多出F符号，需要替换掉
 		String orgNo = fsSub.getOrgNo(); //记录原来的组织结构编号. @于庆海对照需要翻译
@@ -1610,7 +1579,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		return "F" + subFlowSort.getNo();
 	}
 
-	public final String EditFlowSort()
+	public final String EditFlowSort() throws Exception
 	{
 		FlowSort fs = new FlowSort(this.getNo()); //传入的编号多出F符号，需要替换掉
 		fs.setNo(this.getNo().replace("F", ""));
@@ -1625,8 +1594,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 
 	 @param lang 当前的语言
 	 @return 成功则为空，有异常时返回异常信息
+	 * @throws Exception 
 	*/
-	public final String LetAdminLogin(String empNo, boolean islogin)
+	public final String LetAdminLogin(String empNo, boolean islogin) throws Exception
 	{
 		try
 		{
@@ -1646,8 +1616,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/** 流程检查.
 	 
 	 @return 
+	 * @throws Exception 
 	 */
-	public final String FlowCheck_Init()
+	public final String FlowCheck_Init() throws Exception
 	{
 		BP.WF.Flow fl = new BP.WF.Flow(this.getFK_Flow());
 		String info = fl.DoCheck().replace("@", "<BR>@");
@@ -1659,7 +1630,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/*
 	 * 流程上移
 	 */
-	public final String MoveUpFlow()
+	public final String MoveUpFlow() throws Exception
 	{
 		Flow flow = new Flow(getFK_Flow());
 		flow.DoUp();
@@ -1668,7 +1639,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/*
 	 * 流程下移
 	 */
-	public final String MoveDownFlow()
+	public final String MoveDownFlow() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
 		flow.DoDown();
@@ -1677,7 +1648,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	/*
 	 * 上移流程类别
 	 */
-	  public final String MoveUpFlowSort()
+	  public final String MoveUpFlowSort() throws Exception
 			{
 				String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
 				FlowSort fsSub = new FlowSort(fk_flowSort); //传入的编号多出F符号，需要替换掉
@@ -1687,7 +1658,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	  /*
 	   * 下移流程类别
 	   */
-	  public final String MoveDownFlowSort()
+	  public final String MoveDownFlowSort() throws Exception
 			{
 				String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
 				FlowSort fsSub = new FlowSort(fk_flowSort); //传入的编号多出F符号，需要替换掉
@@ -1699,8 +1670,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			 表单树 - 创建表单同级类别
 			 
 			 @return 
+	 * @throws Exception 
 	   */
-			public final String CCForm_NewSameLevelSort()
+			public final String CCForm_NewSameLevelSort() throws Exception
 			{
 				SysFormTree formTree = new SysFormTree(this.getNo());
 				String sameLevelNo = formTree.DoCreateSameLevelNode().getNo();
@@ -1714,8 +1686,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			 表单树 - 创建表单子类别
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String CCForm_NewSubSort()
+			public final String CCForm_NewSubSort() throws Exception
 			{
 				SysFormTree formTree = new SysFormTree(this.getNo());
 				String subNo = formTree.DoCreateSubNode().getNo();
@@ -1728,8 +1701,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			 表单树 - 编辑表单类别
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String CCForm_EditCCFormSort()
+			public final String CCForm_EditCCFormSort() throws Exception
 			{
 				SysFormTree formTree = new SysFormTree(this.getNo());
 				formTree.setName(this.getName());
@@ -1740,8 +1714,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			 表单树 - 删除表单类别
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String CCForm_DelFormSort()
+			public final String CCForm_DelFormSort() throws Exception
 			{
 				SysFormTree formTree = new SysFormTree(this.getNo());
 
@@ -1766,8 +1741,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			 表单树-上移表单类别
 			 
 			 @return 
+			 * @throws Exception 
 	*/
-			public final String CCForm_MoveUpCCFormSort()
+			public final String CCForm_MoveUpCCFormSort() throws Exception
 			{
 				SysFormTree formTree = new SysFormTree(this.getNo());
 				formTree.DoUp();
@@ -1777,8 +1753,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			 表单树-下移表单类别
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String CCForm_MoveDownCCFormSort()
+			public final String CCForm_MoveDownCCFormSort() throws Exception
 			{
 				SysFormTree formTree = new SysFormTree(this.getNo());
 				formTree.DoDown();
@@ -1789,8 +1766,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		 表单树-上移表单
 		 
 		 @return 
+	 * @throws Exception 
 */
-		public final String CCForm_MoveUpCCFormTree()
+		public final String CCForm_MoveUpCCFormTree() throws Exception
 		{
 			MapData mapData = new MapData(this.getFK_MapData());
 			mapData.DoUp();
@@ -1800,8 +1778,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		 表单树-下移表单
 		 
 		 @return 
+		 * @throws Exception 
 		*/
-		public final String CCForm_MoveDownCCFormTree()
+		public final String CCForm_MoveDownCCFormTree() throws Exception
 		{
 			MapData mapData = new MapData(this.getFK_MapData());
 			mapData.DoOrderDown();
@@ -1812,8 +1791,9 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		 表单树 - 删除表单
 		 
 		 @return 
+		 * @throws Exception 
 		*/
-		public final String CCForm_DeleteCCFormMapData()
+		public final String CCForm_DeleteCCFormMapData() throws Exception
 		{
 			MapData mapData = new MapData(this.getFK_MapData());
 			mapData.Delete();

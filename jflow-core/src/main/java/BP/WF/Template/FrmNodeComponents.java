@@ -23,8 +23,9 @@ public class FrmNodeComponents extends Entities
 	 节点表单组件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmNodeComponents(String fk_mapdata)
+	public FrmNodeComponents(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

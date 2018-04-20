@@ -35,8 +35,9 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	 获取隐藏字段
 	 
 	 @return 
+	 * @throws Exception 
 */
-	public final String Hiddenfielddata()
+	public final String Hiddenfielddata() throws Exception
 	{
 		return BP.Sys.CCFormAPI.DB_Hiddenfielddata(this.getFK_MapData());
 	}
@@ -108,7 +109,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
 		///#region 枚举界面.
-	public final String FrmTable_GetSFTableList()
+	public final String FrmTable_GetSFTableList() throws Exception
 	{
 		int pageNumber = this.GetRequestValInt("pageNumber");
 		if (pageNumber == 0)
@@ -124,7 +125,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 
 		return BP.Sys.CCFormAPI.DB_SFTableList(pageNumber, pageSize);
 	}
-	public final String FrmEnumeration_Init()
+	public final String FrmEnumeration_Init() throws Exception
 	{
 		  WF_Admin_FoolFormDesigner wf = new  WF_Admin_FoolFormDesigner();
           return wf.SysEnumList_Init(); 
@@ -135,7 +136,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	 * @throws Exception 
 	*/
 	@Override
-	public String DoDefaultMethod()
+	public String DoDefaultMethod() throws Exception
 	{
 		String sql = "";
 		if("NewSFTableField".equals(getDoType()))//创建一个SFTable字段.
@@ -161,7 +162,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	
 	 ///#endregion 执行父类的重写方法.
 
-			public final String EnumerationNew_GetEnum()
+			public final String EnumerationNew_GetEnum() throws Exception
 			{
 				String enumKey = this.GetRequestVal("EnumKey");
 
@@ -175,7 +176,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 			}
 	
 	
-	public String FrmEnumeration_NewEnumField() 
+	public String FrmEnumeration_NewEnumField() throws Exception 
 	{
 		//创建一个字段. 对应 FigureCreateCommand.js  里的方法.
 		UIContralType ctrl = UIContralType.RadioBtn;
@@ -199,7 +200,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 		BP.Sys.CCFormAPI.NewEnumField(fk_mapdata, keyOfEn, fieldDesc, enumKeyOfBind, ctrl, x, y,0);
 		return "绑定成功.";
 	}
-	public String FrmEnumeration_SaveEnum()
+	public String FrmEnumeration_SaveEnum() throws Exception
 	{
 		String enumName = this.GetRequestVal("EnumName");
 		String enumKey1 = this.GetRequestVal("EnumKey");
@@ -208,7 +209,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 		//调用接口执行保存.
 		return BP.Sys.CCFormAPI.SaveEnum(enumKey1, enumName, cfgVal, false,null);
 	}
-	public String FrmEnumeration_NewEnum()
+	public String FrmEnumeration_NewEnum() throws Exception
 	{
 		String newnEumName = this.GetRequestVal("EnumName");
 		String newEnumKey1 = this.GetRequestVal("EnumKey");
@@ -262,7 +263,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	// / 获得表单对应的物理表特定的数据类型字段
 	// / </summary>
 	// / <returns></returns>
-	public String FrmTextBoxChoseOneField_Init() {
+	public String FrmTextBoxChoseOneField_Init() throws Exception {
 		DataTable mydt = MapData.GetFieldsOfPTableMode2(this.getFK_MapData());
 		mydt.TableName = "dt";
 		return BP.Tools.Json.ToJson(mydt);

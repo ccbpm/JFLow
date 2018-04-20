@@ -37,7 +37,7 @@ public class NY extends SimpleNoNameFix
 	{
 	}
 	
-	public NY(String _No)
+	public NY(String _No) throws Exception
 	{
 		super(_No);
 	}

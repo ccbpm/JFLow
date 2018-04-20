@@ -52,7 +52,7 @@ public class FindWorker
 	public FindWorker()
 	{
 	}
-	public final DataTable FindByWorkFlowModel()
+	public final DataTable FindByWorkFlowModel() throws Exception
 	{
 		this.town = town;
 
@@ -1023,8 +1023,9 @@ public class FindWorker
 	 @param subDepts
 	 @param empNo
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable Func_GenerWorkerList_DiGui_ByDepts(BP.Port.Depts subDepts, String empNo)
+	public final DataTable Func_GenerWorkerList_DiGui_ByDepts(BP.Port.Depts subDepts, String empNo) throws Exception
 	{
 		for (BP.Port.Dept item : subDepts.ToJavaList())
 		{
@@ -1048,8 +1049,9 @@ public class FindWorker
 	 @param deptNo
 	 @param emp1
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable Func_GenerWorkerList_DiGui(String deptNo, String empNo)
+	public final DataTable Func_GenerWorkerList_DiGui(String deptNo, String empNo) throws Exception
 	{
 		String sql;
 
@@ -1127,8 +1129,9 @@ public class FindWorker
 	 执行找人
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable DoIt(Flow fl, WorkNode currWn, WorkNode toWn)
+	public final DataTable DoIt(Flow fl, WorkNode currWn, WorkNode toWn) throws Exception
 	{
 		// 给变量赋值.
 		this.fl = fl;

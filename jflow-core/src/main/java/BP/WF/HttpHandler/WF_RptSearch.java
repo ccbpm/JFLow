@@ -14,8 +14,9 @@ public class WF_RptSearch extends WebContralBase{
 	/**
 	 * 流程分布
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DistributedOfMy_Init()
+	public final String DistributedOfMy_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -64,7 +65,7 @@ public class WF_RptSearch extends WebContralBase{
 	}
 
 	 //打开表单.
-    public String KeySearch_OpenFrm()
+    public String KeySearch_OpenFrm() throws Exception
     {
        BP.WF.HttpHandler.WF wf=new WF(this.context);
         return wf.Runing_OpenFrm();
@@ -73,8 +74,9 @@ public class WF_RptSearch extends WebContralBase{
     /** 功能列表
 	 
 	 @return 
+     * @throws Exception 
 */
-	public final String KeySearch_Query()
+	public final String KeySearch_Query() throws Exception
 	{
 		String type = this.GetRequestVal("type");
 		if (DataType.IsNullOrEmpty(type))

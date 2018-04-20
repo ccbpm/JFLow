@@ -1,13 +1,13 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMultiTree;
+import BP.En.EntitiesTree;
 import BP.En.Entity;
 
 /** 
  独立表单树
  
 */
-public class FlowFormTrees extends EntitiesMultiTree
+public class FlowFormTrees extends EntitiesTree
 {
 	/** 
 	 独立表单树s
@@ -18,9 +18,10 @@ public class FlowFormTrees extends EntitiesMultiTree
 	}
 	/** 
 	 独立表单树
+	 * @throws Exception 
 	 
 	*/
-	public FlowFormTrees(String flowNo)
+	public FlowFormTrees(String flowNo) throws Exception
 	{
 	   int i= this.Retrieve(FlowFormTreeAttr.FK_Flow, flowNo);
 	   if (i == 0)

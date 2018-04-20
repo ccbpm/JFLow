@@ -33,7 +33,7 @@ public class BanJi extends EntityNoName
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -47,7 +47,7 @@ public class BanJi extends EntityNoName
 	{
 	}
 	
-	public BanJi(String no)
+	public BanJi(String no) throws Exception
 	{
 		super(no);
 	}

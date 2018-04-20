@@ -24,8 +24,9 @@ public class FullSA
 	 @param CurrWorkNode 当前的节点
 	 @param nd
 	 @param toND
+	 * @throws Exception 
 	*/
-	public FullSA(WorkNode currWorkNode)
+	public FullSA(WorkNode currWorkNode) throws Exception
 	{
 		//如果当前不需要计算未来处理人.
 		if (currWorkNode.getHisFlow().getIsFullSA() == false && currWorkNode.IsSkip==false)
@@ -278,8 +279,9 @@ public class FullSA
 	 计算两个时间点.
 	 @param sa
 	 @param nd
+	 * @throws Exception 
 	*/
-	private void InitDT(SelectAccper sa, Node nd)
+	private void InitDT(SelectAccper sa, Node nd) throws Exception
 	{
 		//计算上一个时间的发送点.
 		if (this.LastTimeDot == null)

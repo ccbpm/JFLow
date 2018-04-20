@@ -31,7 +31,7 @@ public class ExcelTables extends EntitiesNoName
 	{
 	}
 
-	public ExcelTables(String fk_excelfile)
+	public ExcelTables(String fk_excelfile) throws Exception
 	{
 		this.Retrieve(ExcelTableAttr.FK_ExcelFile, fk_excelfile, ExcelTableAttr.Name);
 	}

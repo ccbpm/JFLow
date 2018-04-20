@@ -50,12 +50,18 @@ public class GEStartWork extends StartWork
 		///#region Map
 	/** 
 	 重写基类方法
+	 * @throws Exception 
 	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		this.set_enMap(BP.Sys.MapData.GenerHisMap(this.NodeFrmID));
+		try {
+			this.set_enMap(BP.Sys.MapData.GenerHisMap(this.NodeFrmID));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return this.get_enMap();
 	}
 	@Override

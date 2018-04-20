@@ -22,9 +22,10 @@ public class TurnTos extends Entities
 	}
 	/** 
 	 条件.
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsAllPassed()
+	public final boolean getIsAllPassed() throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -42,9 +43,10 @@ public class TurnTos extends Entities
 	}
 	/** 
 	 是否通过
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsPass()
+	public final boolean getIsPass() throws Exception
 	{
 		if (this.size() == 1)
 		{
@@ -70,9 +72,10 @@ public class TurnTos extends Entities
 	}
 	/** 
 	 是不是其中的一个passed. 
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsOneOfTurnToPassed()
+	public final boolean getIsOneOfTurnToPassed() throws Exception
 	{
 		for (TurnTo en : this.ToJavaList())
 		{
@@ -85,9 +88,10 @@ public class TurnTos extends Entities
 	}
 	/** 
 	 取出其中一个的完成条件。. 
+	 * @throws Exception 
 	 
 	*/
-	public final TurnTo getGetOneOfTurnToPassed()
+	public final TurnTo getGetOneOfTurnToPassed() throws Exception
 	{
 		for (TurnTo en : this.ToJavaList())
 		{
@@ -117,9 +121,10 @@ public class TurnTos extends Entities
 	}
 	/** 
 	 条件
+	 * @throws Exception 
 	 
 	*/
-	public TurnTos(String fk_flow)
+	public TurnTos(String fk_flow) throws Exception
 	{
 		this.Retrieve(TurnToAttr.FK_Flow, fk_flow);
 	}
@@ -128,8 +133,9 @@ public class TurnTos extends Entities
 	 
 	 @param ct 类型
 	 @param nodeID 节点
+	 * @throws Exception 
 	*/
-	public TurnTos(TurnToType ct, int nodeID, long workid)
+	public TurnTos(TurnToType ct, int nodeID, long workid) throws Exception
 	{
 		this.NodeID = nodeID;
 		this.Retrieve(TurnToAttr.FK_Node, nodeID, TurnToAttr.TurnToType, ct.getValue());

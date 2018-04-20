@@ -433,8 +433,9 @@ public class Track extends BP.En.Entity
 	 * 
 	 * @param fk_flow
 	 *            流程编号
+	 * @throws Exception 
 	 */
-	public static void CreateOrRepairTrackTable(String fk_flow)
+	public static void CreateOrRepairTrackTable(String fk_flow) throws Exception
 	{
 		String ptable = "ND" + Integer.parseInt(fk_flow) + "Track";
 		if (DBAccess.IsExitsObject(ptable))
@@ -472,8 +473,9 @@ public class Track extends BP.En.Entity
 	 * 插入
 	 * 
 	 * @param mypk
+	 * @throws Exception 
 	 */
-	public final void DoInsert(long mypk)
+	public final void DoInsert(long mypk) throws Exception
 	{
 		String ptable = "ND" + Integer.parseInt(this.FK_Flow) + "Track";
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
@@ -580,9 +582,10 @@ public class Track extends BP.En.Entity
 	 * 增加授权人
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (WebUser.getNo().equals("Guest"))
 		{

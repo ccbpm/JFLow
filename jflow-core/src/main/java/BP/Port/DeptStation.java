@@ -18,9 +18,10 @@ public class DeptStation extends Entity
 	// 基本属性
 	/**
 	 * UI界面上的访问控制
+	 * @throws Exception 
 	 */
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -75,8 +76,9 @@ public class DeptStation extends Entity
 	 *            部门
 	 * @param FK_Station
 	 *            岗位编号
+	 * @throws Exception 
 	 */
-	public DeptStation(String FK_Dept, String FK_Station)
+	public DeptStation(String FK_Dept, String FK_Station) throws Exception
 	{
 		this.setFK_Dept(FK_Dept);
 		this.setFK_Station(FK_Station);

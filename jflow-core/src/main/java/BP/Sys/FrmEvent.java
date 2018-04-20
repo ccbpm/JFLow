@@ -448,12 +448,12 @@ public class FrmEvent extends EntityMyPK
 	public FrmEvent()
 	{
 	}
-	public FrmEvent(String mypk)
+	public FrmEvent(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.RetrieveFromDBSources();
 	}
-	public FrmEvent(String fk_mapdata, String fk_Event)
+	public FrmEvent(String fk_mapdata, String fk_Event) throws Exception
 	{
 		this.setFK_Event(fk_Event);
 		this.setFK_MapData(fk_mapdata);
@@ -510,7 +510,7 @@ public class FrmEvent extends EntityMyPK
 	//#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_MapData() + "_" + this.getFK_Event());
 		return super.beforeUpdateInsertAction();

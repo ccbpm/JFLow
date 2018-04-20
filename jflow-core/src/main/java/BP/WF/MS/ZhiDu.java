@@ -77,8 +77,9 @@ public class ZhiDu extends EntityNoName
 	}
 	/** 
 	 判断子表是否包含记录
+	 * @throws Exception 
 	*/
-	public final boolean getHisHaveDtl()
+	public final boolean getHisHaveDtl() throws Exception
 	{
 		ZhiDuDtl dtl = new ZhiDuDtl();
 		return dtl.RetrieveByAttr("FK_Main", this.getNo());
@@ -115,9 +116,10 @@ public class ZhiDu extends EntityNoName
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws s 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (!BP.Web.WebUser.getNo().equals("admin"))

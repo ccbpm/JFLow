@@ -165,7 +165,7 @@ public class PubClass {
 		}
 	}
 
-	public static void InitFrm(String fk_mapdata) {
+	public static void InitFrm(String fk_mapdata) throws Exception {
 		// 删除数据.
 		BP.Sys.FrmLabs labs = new BP.Sys.FrmLabs();
 		try {
@@ -505,25 +505,7 @@ public class PubClass {
 		}
 	}
 
-	public static String FilesViewStr(String enName, Object pk) {
-		String url = "/WF/Comm/FileManager.jsp?EnsName=" + enName + "&PK=" + pk.toString();
-		String strs = "";
-		SysFileManagers ens = new SysFileManagers(enName, pk.toString());
-		String path = BP.Sys.Glo.getRequest().getRemoteHost();
-
-		for (Object file : ens) {
-			strs += "<img src='/WF/Img/FileType/" + ((SysFileManager) file).getMyFileExt().replace(".", "") + ".gif' border=0 /><a href='" + path
-					+ ((SysFileManager) file).getMyFilePath() + "' target='_blank' >" + ((SysFileManager) file).getMyFileName()
-					+ ((SysFileManager) file).getMyFileExt() + "</a>&nbsp;";
-			if (WebUser.getNo().equals(((SysFileManager) file).getRec())) {
-				strs += "<a title='打开它' href=\"javascript:DoAction('" + path + "Comm/Do.jsp?ActionType=1&OID=" + ((SysFileManager) file).getOID()
-						+ "&EnName=" + enName + "&PK=" + pk + "','删除文件《" + ((SysFileManager) file).getMyFileName()
-						+ ((SysFileManager) file).getMyFileExt() + "》')\" ><img src='" + path
-						+ "../Img/Btn/delete.gif' border=0 alt='删除此附件' /></a>&nbsp;";
-			}
-		}
-		return strs;
-	}
+	 
 
 	public static String GenerLabelStr(String title) {
 		String path = BP.Sys.Glo.getRequest().getRemoteHost();
@@ -592,8 +574,9 @@ public class PubClass {
 	 * 
 	 * @param hz
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GenerTempFileName(String hz) {
+	public static String GenerTempFileName(String hz) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("MMddhhmmss");
 		return BP.Web.WebUser.getNo() + formatter.format(new Date()) + "." + hz;
 	}
@@ -768,8 +751,9 @@ public class PubClass {
 	 * 
 	 * @param uiBindKey
 	 * @return
+	 * @throws Exception 
 	 */
-	public static DataTable GetDataTableByUIBineKey(String uiBindKey) {
+	public static DataTable GetDataTableByUIBineKey(String uiBindKey) throws Exception {
 		
 		DataTable dt = new DataTable();
 		if (uiBindKey.contains(".")) {
@@ -804,8 +788,9 @@ public class PubClass {
 	 * @param uiBindKey
 	 *            绑定的外键或者枚举
 	 * @return
+	 * @throws Exception 
 	 */
-	public static DataTable GetDataTableByUIBineKeyForCCFormDesigner(String uiBindKey) {
+	public static DataTable GetDataTableByUIBineKeyForCCFormDesigner(String uiBindKey) throws Exception {
 		int topNum = 40;
 
 		DataTable dt = new DataTable();
@@ -859,7 +844,7 @@ public class PubClass {
 		return sql;
 	}
 
-	public static String DBRpt(DBCheckLevel level) {
+	public static String DBRpt(DBCheckLevel level) throws Exception {
 		// 取出全部的实体
 		java.util.ArrayList als = ClassFactory.GetObjects("BP.En.Entities");
 		String msg = "";
@@ -1096,7 +1081,7 @@ public class PubClass {
 		}
 	}
 
-	public static void AddCommentForTable_MySql(Entity en)
+	public static void AddCommentForTable_MySql(Entity en) throws Exception
 	{
 		//MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(BP.Sys.SystemConfig.AppCenterDSN);
 		String database = BP.Sys.SystemConfig.getAppCenterDBDatabase();
@@ -1169,8 +1154,9 @@ public class PubClass {
 	 * 为表增加解释
 	 * 
 	 * @param en
+	 * @throws Exception 
 	 */
-	public static void AddCommentForTable_MS(Entity en) {
+	public static void AddCommentForTable_MS(Entity en) throws Exception {
 		
 		if(1==1)
 		return;
@@ -1967,7 +1953,7 @@ public class PubClass {
 		}
 	}
 
-	public static Entity CopyDtlFromRequests(Entity en, String pk, Map map) {
+	public static Entity CopyDtlFromRequests(Entity en, String pk, Map map) throws Exception {
 		String allKeys = ";";
 		if (pk == null || pk.equals("")) {
 			pk = "";

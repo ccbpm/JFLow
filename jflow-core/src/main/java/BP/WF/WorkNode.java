@@ -33,8 +33,9 @@ public class WorkNode {
 	 * 
 	 * @param empId
 	 * @return
+	 * @throws Exception 
 	 */
-	private boolean IsCanOpenCurrentWorkNode(String empId) {
+	private boolean IsCanOpenCurrentWorkNode(String empId) throws Exception {
 		WFState stat = this.getHisGenerWorkFlow().getWFState();
 		if (stat == WFState.Runing) {
 			if (this.getHisNode().getIsStartNode()) {
@@ -68,9 +69,10 @@ public class WorkNode {
 
 	/**
 	 * 实际执行人，执行工作发送时，有时候当前 WebUser.getNo() 并非实际的执行人。
+	 * @throws Exception 
 	 * 
 	 */
-	public final String getExecer() {
+	public final String getExecer() throws Exception {
 		if (_execer == null || _execer.equals("")) {
 			_execer = WebUser.getNo();
 		}
@@ -179,7 +181,7 @@ public class WorkNode {
 	public WorkNode town = null;
 	private boolean IsFindWorker = false;
 
-	public final boolean getIsSubFlowWorkNode() {
+	public final boolean getIsSubFlowWorkNode() throws Exception {
 		if (this.getHisWork().getFID() == 0) {
 			return false;
 		} else {
@@ -203,8 +205,9 @@ public class WorkNode {
 	 * @param town
 	 *            WorkNode
 	 * @return 产生的工作人员
+	 * @throws Exception 
 	 */
-	public final GenerWorkerLists Func_GenerWorkerLists(WorkNode town) {
+	public final GenerWorkerLists Func_GenerWorkerLists(WorkNode town) throws Exception {
 		this.town = town;
 		DataTable dt = new DataTable();
 		dt.Columns.Add("No", String.class);
@@ -263,8 +266,9 @@ public class WorkNode {
 
 	/**
 	 * 生成一个 word
+	 * @throws Exception 
 	 */
-	public final void DoPrint() {
+	public final void DoPrint() throws Exception {
 		try {
 			String tempFile = SystemConfig.getPathOfTemp() + "/" + this.getWorkID() + ".doc";
 			Work wk = this.getHisNode().getHisWork();
@@ -285,8 +289,9 @@ public class WorkNode {
 	 * 
 	 * @param nds
 	 *            到达的节点集合
+	 * @throws Exception 
 	 */
-	public final void DeleteToNodesData(Nodes nds) {
+	public final void DeleteToNodesData(Nodes nds) throws Exception {
 		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable) {
 			return;
 		}
@@ -401,8 +406,9 @@ public class WorkNode {
 	 * @param fid
 	 *            FID
 	 * @return GenerWorkerLists
+	 * @throws Exception 
 	 */
-	private GenerWorkerLists InitWorkerLists(WorkNode town, DataTable dt, long fid) {
+	private GenerWorkerLists InitWorkerLists(WorkNode town, DataTable dt, long fid) throws Exception {
 		if (dt.Rows.size() == 0) {
 			throw new RuntimeException("接受人员列表为空"); // 接受人员列表为空
 		}
@@ -905,10 +911,11 @@ public class WorkNode {
 	 * @param fid
 	 *            FID
 	 * @return GenerWorkerLists
+	 * @throws Exception 
 	 * @throws ParseException
 	 */
 
-	private GenerWorkerLists InitWorkerLists(WorkNode town, DataTable dt) throws RuntimeException {
+	private GenerWorkerLists InitWorkerLists(WorkNode town, DataTable dt) throws Exception {
 		return InitWorkerLists(town, dt, 0);
 	}
 
@@ -930,9 +937,10 @@ public class WorkNode {
 
 	/**
 	 * 节点完成任务的条件 条件与条件之间是or 的关系, 就是说,如果任何一个条件满足,这个工作人员在这个节点上的任务就完成了.
+	 * @throws Exception 
 	 * 
 	 */
-	public final Conds getHisNodeCompleteConditions() {
+	public final Conds getHisNodeCompleteConditions() throws Exception {
 		if (this._HisNodeCompleteConditions == null) {
 			_HisNodeCompleteConditions = new Conds(CondType.Node, this.getHisNode().getNodeID(), this.getWorkID(),
 					this.rptGe);
@@ -946,9 +954,10 @@ public class WorkNode {
 
 	/**
 	 * 他的完成任务的条件,此节点是完成任务的条件集合 条件与条件之间是or 的关系, 就是说,如果任何一个条件满足,这个任务就完成了.
+	 * @throws Exception 
 	 * 
 	 */
-	public final Conds getHisFlowCompleteConditions() {
+	public final Conds getHisFlowCompleteConditions() throws Exception {
 		if (this._HisFlowCompleteConditions == null) {
 			_HisFlowCompleteConditions = new Conds(CondType.Flow, this.getHisNode().getNodeID(), this.getWorkID(),
 					this.rptGe);
@@ -980,7 +989,7 @@ public class WorkNode {
 	/// #region 流程公共方法
 	private Flow _HisFlow = null;
 
-	public final Flow getHisFlow() {
+	public final Flow getHisFlow() throws Exception {
 		if (_HisFlow == null) {
 			_HisFlow = this.getHisNode().getHisFlow();
 		}
@@ -995,8 +1004,9 @@ public class WorkNode {
 	 * 获得下一个节点.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Node NodeSend_GenerNextStepNode() {
+	public final Node NodeSend_GenerNextStepNode() throws Exception {
 		// 如果要是跳转到的节点，自动跳转规则规则就会失效。
 		if (this.JumpToNode != null) {
 			return this.JumpToNode;
@@ -1067,8 +1077,9 @@ public class WorkNode {
 	 * 获取下一步骤的工作节点.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Node NodeSend_GenerNextStepNode_Ext1() {
+	public final Node NodeSend_GenerNextStepNode_Ext1() throws Exception {
 		// 如果要是跳转到的节点，自动跳转规则规则就会失效。
 		if (this.JumpToNode != null) {
 			return this.JumpToNode;
@@ -1225,25 +1236,7 @@ public class WorkNode {
 
 						/// #endregion 复制Ele
 
-						/// #region 复制多选数据
-						if (this.getHisNode().getMapData().getMapM2Ms().size() > 0) {
-							M2Ms m2ms = new M2Ms("ND" + this.getHisNode().getNodeID(), this.getWorkID());
-							if (m2ms.size() >= 1) {
-								for (M2M item : m2ms.ToJavaList()) {
-									M2M m2 = new M2M();
-									m2.Copy(item);
-									m2.setEnOID(this.getWorkID());
-									m2.setFK_MapData(m2.getFK_MapData().replace("ND" + this.getHisNode().getNodeID(),
-											"ND" + nd.getNodeID()));
-									m2.InitMyPK();
-									try {
-										m2.DirectInsert();
-									} catch (java.lang.Exception e) {
-										m2.DirectUpdate();
-									}
-								}
-							}
-						}
+						 
 						/// #region 复制明细数据
 						// int deBugDtlCount=
 						MapDtls dtls = this.getHisNode().getMapData().getMapDtls();
@@ -1385,26 +1378,7 @@ public class WorkNode {
 											}
 										}
 									}
-									if (toDtl.getIsEnableM2M() || toDtl.getIsEnableM2MM()) {
-										// 如果启用了m2m
-										M2Ms m2ms = new M2Ms(dtl.getNo(), gedtl.getOID());
-										if (m2ms.size() > 0) {
-											i = 0;
-											for (M2M m2m : m2ms.ToJavaList()) {
-												i++;
-												M2M m2m_N = new M2M();
-												m2m_N.Copy(m2m);
-												m2m_N.setFK_MapData(toDtl.getNo());
-												m2m_N.setMyPK(toDtl.getNo() + "_" + m2m.getM2MNo() + "_"
-														+ gedtl.toString() + "_" + m2m.getDtlObj());
-												m2m_N.setEnOID(gedtl.getOID());
-												m2m.InitMyPK();
-												m2m_N.DirectInsert();
-											}
-										}
-									}
-
-									/// #endregion 复制明细表单条 - 附件信息
+									  
 
 								}
 
@@ -1722,9 +1696,10 @@ public class WorkNode {
 
 	/**
 	 * 处理OrderTeamup退回模式
+	 * @throws Exception 
 	 * 
 	 */
-	public final void DealReturnOrderTeamup() {
+	public final void DealReturnOrderTeamup() throws Exception {
 		// 如果协作，顺序方式.
 		GenerWorkerList gwl = new GenerWorkerList();
 		gwl.setFK_Emp(WebUser.getNo());
@@ -1769,8 +1744,9 @@ public class WorkNode {
 	 * 获取下一步骤的工作节点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private Node NodeSend_GenerNextStepNode_Ext(Node currNode) {
+	private Node NodeSend_GenerNextStepNode_Ext(Node currNode) throws Exception {
 		// 检查当前的状态是是否是退回，.
 		if (this.SendNodeWFState == WFState.ReturnSta) {
 		}
@@ -1854,8 +1830,10 @@ public class WorkNode {
 	 * 获取下一步骤的节点集合
 	 * 
 	 * @return
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	 */
-	public final Nodes Func_GenerNextStepNodes() {
+	public final Nodes Func_GenerNextStepNodes() throws NumberFormatException, Exception {
 		// 如果跳转节点已经有了变量.
 		if (this.JumpToNode != null) {
 			Nodes myNodesTo = new Nodes();
@@ -1935,8 +1913,9 @@ public class WorkNode {
 	 * 检查一下流程完成条件.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private void Func_CheckCompleteCondition() {
+	private void Func_CheckCompleteCondition() throws Exception {
 		if (this.getHisNode().getHisRunModel() == RunModel.SubThread) {
 			throw new RuntimeException("@流程设计错误：不允许在子线程上设置流程完成条件。");
 		}
@@ -1986,8 +1965,9 @@ public class WorkNode {
 	 * 设置当前工作已经完成.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private String Func_DoSetThisWorkOver() {
+	private String Func_DoSetThisWorkOver() throws Exception {
 		// 设置结束人.
 		this.rptGe.SetValByKey(GERptAttr.FK_Dept, this.getHisGenerWorkFlow().getFK_Dept()); // 此值不能变化.
 		this.rptGe.SetValByKey(GERptAttr.FlowEnder, this.getExecer());
@@ -2099,8 +2079,9 @@ public class WorkNode {
 	 * @param toND
 	 *            要到达的下一个节点
 	 * @return 执行消息
+	 * @throws Exception 
 	 */
-	private void NodeSend_11(Node toND) {
+	private void NodeSend_11(Node toND) throws Exception {
 		String sql = "";
 		String errMsg = "";
 		Work toWK = toND.getHisWork();
@@ -2321,10 +2302,10 @@ public class WorkNode {
 		if (this.getHisNode().getHisFormType() == NodeFormType.SDKForm
 				|| this.getHisNode().getHisFormType() == NodeFormType.SelfForm) {
 		} else {
-//			this.addMsg(SendReturnMsgFlag.WorkRpt, null,
-//					"@<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
-//							+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
-//							+ "&FK_Flow=" + toND.getFK_Flow() + "' target='_self' >工作轨迹</a>。");
+			this.addMsg(SendReturnMsgFlag.WorkRpt, null,
+					"@<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
+							+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
+							+ "&FK_Flow=" + toND.getFK_Flow() + "' target='_self' >工作轨迹</a>。");
 		}
 		this.addMsg(SendReturnMsgFlag.WorkStartNode, "@下一步[" + toND.getName() + "]工作成功启动.",
 				"@下一步<font color=blue>[" + toND.getName() + "]</font>工作成功启动.");
@@ -2355,7 +2336,7 @@ public class WorkNode {
 
 	}
 
-	private void NodeSend_2X_GenerFH() {
+	private void NodeSend_2X_GenerFH() throws Exception {
 
 		/// #region GenerFH
 		GenerFH fh = new GenerFH();
@@ -2407,8 +2388,9 @@ public class WorkNode {
 	 * 处理分流点向下发送 to 异表单.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private void NodeSend_24_UnSameSheet(Nodes toNDs) {
+	private void NodeSend_24_UnSameSheet(Nodes toNDs) throws Exception {
 		NodeSend_2X_GenerFH();
 
 		// 分别启动每个节点的信息.
@@ -2574,8 +2556,9 @@ public class WorkNode {
 	 * 
 	 * @param toNode
 	 *            到达的分流节点
+	 * @throws Exception 
 	 */
-	private void NodeSend_24_SameSheet(Node toNode) {
+	private void NodeSend_24_SameSheet(Node toNode) throws Exception {
 		if (this.getHisGenerWorkFlow().getTitle().equals("未生成")) {
 			this.getHisGenerWorkFlow()
 					.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this.getHisFlow(), this.getHisWork()));
@@ -3072,24 +3055,7 @@ public class WorkNode {
 										}
 									}
 								}
-								if (toDtl.getIsEnableM2M() || toDtl.getIsEnableM2MM()) {
-									/* 如果启用了m2m */
-									M2Ms m2ms = new M2Ms(dtl.getNo(), gedtl.getOID());
-									if (m2ms.size() > 0) {
-										i = 0;
-										for (M2M m2m : m2ms.ToJavaList()) {
-											i++;
-											M2M m2m_N = new M2M();
-											m2m_N.Copy(m2m);
-											m2m_N.setFK_MapData(toDtl.getNo());
-											m2m_N.setMyPK(toDtl.getNo() + "_" + m2m.getM2MNo() + "_" + gedtl.toString()
-													+ "_" + m2m.getDtlObj());
-											m2m_N.setEnOID(gedtl.getOID());
-											m2m_N.InitMyPK();
-											m2m_N.DirectInsert();
-										}
-									}
-								}
+								 
 								/// #endregion 复制从表单条 - 附件信息
 							}
 						}
@@ -3235,8 +3201,9 @@ public class WorkNode {
 	 * 合流点到普通点发送 1. 首先要检查完成率. 2, 按普通节点向普通节点发送.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private void NodeSend_31(Node nd) {
+	private void NodeSend_31(Node nd) throws Exception {
 		// 检查完成率.
 
 		// 与1-1一样的逻辑处理.
@@ -3256,8 +3223,9 @@ public class WorkNode {
 	 * 子线程向合流点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private void NodeSend_53_SameSheet_To_HeLiu(Node toNode) {
+	private void NodeSend_53_SameSheet_To_HeLiu(Node toNode) throws Exception {
 		Work toNodeWK = toNode.getHisWork();
 		toNodeWK.Copy(this.getHisWork());
 		toNodeWK.setOID(this.getHisWork().getFID());
@@ -3529,9 +3497,10 @@ public class WorkNode {
 
 	/**
 	 * 节点向下运动
+	 * @throws Exception 
 	 * 
 	 */
-	private void NodeSend_Send_5_5() {
+	private void NodeSend_Send_5_5() throws Exception {
 		// 执行设置当前人员的完成时间. for: anhua 2013-12-18.
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
@@ -3812,7 +3781,7 @@ public class WorkNode {
 	}
 
 	/// #region 执行数据copy.
-	public final void CopyData(Work toWK, Node toND, boolean isSamePTable) {
+	public final void CopyData(Work toWK, Node toND, boolean isSamePTable) throws Exception {
 		String errMsg = "如果两个数据源不想等，就执行 copy - 期间出现错误.";
 		if (isSamePTable == true) {
 			return;
@@ -3976,25 +3945,7 @@ public class WorkNode {
 
 		/// #endregion 复制Ele
 
-		/// #region 复制多选数据
-		if (this.getHisNode().getMapData().getMapM2Ms().size() > 0) {
-			M2Ms m2ms = new M2Ms("ND" + this.getHisNode().getNodeID(), this.getWorkID());
-			if (m2ms.size() >= 1) {
-				for (M2M item : m2ms.ToJavaList()) {
-					M2M m2 = new M2M();
-					m2.Copy(item);
-					m2.setEnOID(this.getWorkID());
-					m2.setFK_MapData(
-							m2.getFK_MapData().replace("ND" + this.getHisNode().getNodeID(), "ND" + toND.getNodeID()));
-					m2.InitMyPK();
-					try {
-						m2.DirectInsert();
-					} catch (java.lang.Exception e3) {
-						m2.DirectUpdate();
-					}
-				}
-			}
-		}
+		 
 
 		/// #endregion
 
@@ -4163,29 +4114,7 @@ public class WorkNode {
 							}
 						}
 					}
-					if (toDtl.getIsEnableM2M() || toDtl.getIsEnableM2MM()) {
-						// 如果启用了m2m
-						M2Ms m2ms = new M2Ms(dtl.getNo(), gedtl.getOID());
-						if (m2ms.size() > 0) {
-							i = 0;
-							for (M2M m2m : m2ms.ToJavaList()) {
-								i++;
-								M2M m2m_N = new M2M();
-								m2m_N.Copy(m2m);
-								m2m_N.setFK_MapData(toDtl.getNo());
-								m2m_N.setMyPK(m2m.getMyPK() + "_" + m2m.getM2MNo() + "_" + gedtl.toString() + "_"
-										+ m2m.getDtlObj());
-								m2m_N.setEnOID(gedtl.getOID());
-								m2m.InitMyPK();
-								try {
-									m2m_N.DirectInsert();
-								} catch (java.lang.Exception e6) {
-									m2m_N.DirectUpdate();
-								}
-							}
-						}
-					}
-
+				 
 					/// #endregion 复制明细表单条 - 附件信息
 
 				}
@@ -4268,9 +4197,10 @@ public class WorkNode {
 	/// #region 方法
 	/**
 	 * 发送失败是撤消数据。
+	 * @throws Exception 
 	 * 
 	 */
-	public final void DealEvalUn() {
+	public final void DealEvalUn() throws Exception {
 		// 数据发送。
 		BP.WF.Data.Eval eval = new Eval();
 		if (this.getHisNode().getIsFLHL() == false) {
@@ -4312,9 +4242,10 @@ public class WorkNode {
 
 	/**
 	 * 处理质量考核
+	 * @throws Exception 
 	 * 
 	 */
-	public final void DealEval() {
+	public final void DealEval() throws Exception {
 		
 		if (1==1)
 	   	return ;
@@ -4413,7 +4344,7 @@ public class WorkNode {
 		}
 	}
 
-	private void CallSubFlow() {
+	private void CallSubFlow() throws Exception {
 		// 获取配置信息.
 		String[] paras = this.getHisNode().getSubFlowStartParas().split("[@]", -1);
 		for (String item : paras) {
@@ -4494,9 +4425,10 @@ public class WorkNode {
 
 	/**
 	 * 工作流发送业务处理
+	 * @throws Exception 
 	 * 
 	 */
-	public final SendReturnObjs NodeSend() {
+	public final SendReturnObjs NodeSend() throws Exception {
 		return NodeSend(null, null);
 	}
 
@@ -4504,8 +4436,9 @@ public class WorkNode {
 	 * 1变N,用于分流节点，向子线程copy数据。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final void CheckFrm1ToN() {
+	public final void CheckFrm1ToN() throws Exception {
 		// 只有分流，合流才能执行1ToN.
 		if (this.getHisNode().getHisRunModel() == RunModel.Ordinary || this.getHisNode().getHisRunModel() == RunModel.HL
 				|| this.getHisNode().getHisRunModel() == RunModel.SubThread) {
@@ -4610,8 +4543,9 @@ public class WorkNode {
 	 * 汇总子线程的表单到合流节点上去
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final void CheckFrmHuiZongToDtl() {
+	public final void CheckFrmHuiZongToDtl() throws Exception {
 		// 只有分流，合流才能执行1ToN.
 		if (this.getHisNode().getHisRunModel() != RunModel.SubThread) {
 			return;
@@ -4685,8 +4619,9 @@ public class WorkNode {
 	 * 检查独立表单上必须填写的项目.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean CheckFrmIsNotNull() {
+	public final boolean CheckFrmIsNotNull() throws Exception {
 		// if (this.HisNode.HisFormType != NodeFormType.SheetTree)
 		// return true;
 
@@ -4899,8 +4834,9 @@ public class WorkNode {
 	 * copy表单树的数据
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Work CopySheetTree() {
+	public final Work CopySheetTree() throws Exception {
 		if (this.getHisNode().getHisFormType() != NodeFormType.SheetTree) {
 			return null;
 		}
@@ -4995,8 +4931,9 @@ public class WorkNode {
 	 * 如果是协作.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean DealTeamUpNode() {
+	public final boolean DealTeamUpNode() throws Exception {
 		GenerWorkerLists gwls = new GenerWorkerLists();
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
 				this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass);
@@ -5068,8 +5005,9 @@ public class WorkNode {
 	 * 通知主持人
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DealAlertZhuChiRen() {
+	public final String DealAlertZhuChiRen() throws Exception {
 		// 有两个待办，就说明当前人员是最后一个会签人，就要把主持人的状态设置为0
 		// 获得主持人信息.
 		String sql = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE IsPass=90 AND WorkID=" + this.getWorkID();
@@ -5100,9 +5038,10 @@ public class WorkNode {
 
 	/**
 	 * 如果是协作
+	 * @throws Exception 
 	 * 
 	 */
-	public final boolean TeamupGroupLeader() {
+	public final boolean TeamupGroupLeader() throws Exception {
 		GenerWorkerLists gwls = new GenerWorkerLists();
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
 				this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass);
@@ -5175,8 +5114,9 @@ public class WorkNode {
 	 * 处理队列节点
 	 * 
 	 * @return 是否可以向下发送?
+	 * @throws Exception 
 	 */
-	public final boolean DealOradeNode() {
+	public final boolean DealOradeNode() throws Exception {
 		GenerWorkerLists gwls = new GenerWorkerLists();
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
 				this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass);
@@ -5243,7 +5183,7 @@ public class WorkNode {
 	// / <summary>
 	// / 如果是协作
 	// / </summary>
-	public boolean DealTeamupGroupLeader() {
+	public boolean DealTeamupGroupLeader() throws Exception {
 		GenerWorkerLists gwls = new GenerWorkerLists();
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
 				this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass);
@@ -5364,8 +5304,9 @@ public class WorkNode {
 	 * 检查阻塞模式
 	 * 
 	 * @return 返回是否可以向下发送.
+	 * @throws Exception 
 	 */
-	private boolean CheckBlockModel() {
+	private boolean CheckBlockModel() throws Exception {
 		if (this.getHisNode().getBlockModel() == BlockModel.None) {
 			return true;
 		}
@@ -5631,7 +5572,7 @@ public class WorkNode {
 	/// <param name="node"></param>
 	/// <param name="toEmps"></param>
 	/// <returns></returns>
-	private SendReturnObjs NodeSendToYGFlow(Node node, String toEmpIDs){		
+	private SendReturnObjs NodeSendToYGFlow(Node node, String toEmpIDs) throws Exception{		
             String sql = "";
             if (StringUtils.isBlank(toEmpIDs)) {
                 toEmpIDs = "";
@@ -5805,8 +5746,9 @@ public class WorkNode {
 	 * @param jumpToEmp
 	 *            要跳转的人,可以为空.
 	 * @return 返回执行结果
+	 * @throws Exception 
 	 */
-	public final SendReturnObjs NodeSend(Node jumpToNode, String jumpToEmp) {
+	public final SendReturnObjs NodeSend(Node jumpToNode, String jumpToEmp) throws Exception {
 		DBAccess.DoTransactionCommit();
 		if (this.getHisNode().getIsGuestNode()) {
 			if (!this.getExecer().equals("Guest")) {
@@ -6237,11 +6179,11 @@ public class WorkNode {
 				this.addMsg(SendReturnMsgFlag.IsStopFlow, "0", "流程未结束", SendReturnMsgType.SystemMsg);
 			}
 
-//			String mymsgHtml = "@查看<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
-//					+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
-//					+ "&NodeID=" + this.getHisNode().getNodeID()
-//					+ "&FK_Flow=" + this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>";
-//			this.addMsg(SendReturnMsgFlag.MsgOfText, mymsgHtml);
+			String mymsgHtml = "@查看<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
+					+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
+					+ "&NodeID=" + this.getHisNode().getNodeID()
+					+ "&FK_Flow=" + this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>";
+			this.addMsg(SendReturnMsgFlag.MsgOfText, mymsgHtml);
 
 			if (this.getIsStopFlow() == true) {
 				// 在检查完后，反馈来的标志流程已经停止了。
@@ -6768,8 +6710,9 @@ public class WorkNode {
 	 * 手工的回滚提交失败信息，补偿没有事务的缺陷。
 	 * 
 	 * @param ex
+	 * @throws Exception 
 	 */
-	private void WhenTranscactionRollbackError(RuntimeException ex) {
+	private void WhenTranscactionRollbackError(RuntimeException ex) throws Exception {
 		// 在提交错误的情况下，回滚数据。
 		/// #region 如果是分流点下同表单发送失败再次发送就出现错误
 		if (this.town != null && this.town.getHisNode().getHisNodeWorkType() == NodeWorkType.SubThreadWork
@@ -6888,7 +6831,7 @@ public class WorkNode {
 	public GenerWorkerLists HisWorkerLists = null;
 	private GenerWorkFlow _HisGenerWorkFlow;
 
-	public final GenerWorkFlow getHisGenerWorkFlow() {
+	public final GenerWorkFlow getHisGenerWorkFlow() throws Exception {
 		if (_HisGenerWorkFlow == null) {
 			_HisGenerWorkFlow = new GenerWorkFlow(this.getWorkID());
 			SendNodeWFState = _HisGenerWorkFlow.getWFState(); // 设置发送前的节点状态。
@@ -6920,7 +6863,7 @@ public class WorkNode {
 
 	public GERpt rptGe = null;
 
-	private void InitStartWorkDataV2() {
+	private void InitStartWorkDataV2() throws Exception {
 		// 如果是开始流程判断是不是被吊起的流程，如果是就要向父流程写日志。
 		if (SystemConfig.getIsBSsystem()) {
 			String fk_nodeFrom = BP.Sys.Glo.getRequest().getParameter("FromNode");
@@ -7103,8 +7046,9 @@ public class WorkNode {
 
 	/**
 	 * 执行将当前工作节点的数据copy到Rpt里面去.
+	 * @throws Exception 
 	 */
-	public final void DoCopyCurrentWorkDataToRpt() {
+	public final void DoCopyCurrentWorkDataToRpt() throws Exception {
 		// 如果两个表一致就返回..
 		// 把当前的工作人员增加里面去.
 		String str = rptGe.GetValStrByKey(GERptAttr.FlowEmps);
@@ -7189,9 +7133,10 @@ public class WorkNode {
 	 *            到节点名称
 	 * @param msg
 	 *            消息
+	 * @throws Exception 
 	 */
 	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName,
-			String msg) {
+			String msg) throws Exception {
 		AddToTrack(at, toEmp, toEmpName, toNDid, toNDName, msg, this.getHisNode());
 	}
 
@@ -7210,9 +7155,10 @@ public class WorkNode {
 	 *            到节点名称
 	 * @param msg
 	 *            消息
+	 * @throws Exception 
 	 */
 	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName, String msg,
-			Node ndFrom, String frmDBJson, String tag) {
+			Node ndFrom, String frmDBJson, String tag) throws Exception {
 		Track t = new Track();
 		t.setWorkID(this.getHisWork().getOID());
 		t.setFID(this.getHisWork().getFID());
@@ -7298,8 +7244,9 @@ public class WorkNode {
 	 * 
 	 * @param gwls
 	 *            接受人
+	 * @throws Exception 
 	 */
-	public final void SendMsgToThem(GenerWorkerLists gwls) {
+	public final void SendMsgToThem(GenerWorkerLists gwls) throws Exception {
 		if (BP.WF.Glo.getIsEnableSysMessage() == false) {
 			return;
 		}
@@ -7398,9 +7345,10 @@ public class WorkNode {
 	 *            到节点名称
 	 * @param msg
 	 *            消息
+	 * @throws Exception 
 	 */
 	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName, String msg,
-			Node ndFrom) {
+			Node ndFrom) throws Exception {
 		Track t = new Track();
 		t.setWorkID(this.getHisWork().getOID());
 		t.setFID(this.getHisWork().getFID());
@@ -7483,7 +7431,7 @@ public class WorkNode {
 		return _IsStopFlow;
 	}
 
-	private void setIsStopFlow(boolean value) {
+	private void setIsStopFlow(boolean value) throws Exception {
 		_IsStopFlow = value;
 		if (_IsStopFlow == true) {
 			this.rptGe.setWFState(WFState.Complete);
@@ -7493,8 +7441,9 @@ public class WorkNode {
 
 	/**
 	 * 检查
+	 * @throws Exception 
 	 */
-	private void CheckCompleteCondition_IntCompleteEmps() {
+	private void CheckCompleteCondition_IntCompleteEmps() throws Exception {
 		String sql = "SELECT FK_Emp,FK_EmpText FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID()
 				+ " AND IsPass=1";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -7521,8 +7470,9 @@ public class WorkNode {
 
 	/**
 	 * 处理自动运行 - 预先设置未来的运行节点.
+	 * @throws Exception 
 	 */
-	private void DealAutoRunEnable() {
+	private void DealAutoRunEnable() throws Exception {
 		// 检查当前节点是否是自动运行的.
 		if (this.getHisNode().getAutoRunEnable() == false) {
 			return;
@@ -7571,8 +7521,9 @@ public class WorkNode {
 	 * 检查流程、节点的完成条件
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private void CheckCompleteCondition() {
+	private void CheckCompleteCondition() throws Exception {
 		// 执行初始化人员.
 		this.CheckCompleteCondition_IntCompleteEmps();
 
@@ -7672,8 +7623,9 @@ public class WorkNode {
 	 * 异表单子线程向合流点运动
 	 * 
 	 * @param nd
+	 * @throws Exception 
 	 */
-	private void NodeSend_53_UnSameSheet_To_HeLiu(Node nd) {
+	private void NodeSend_53_UnSameSheet_To_HeLiu(Node nd) throws Exception {
 
 		Work heLiuWK = nd.getHisWork();
 		heLiuWK.setOID(this.getHisWork().getFID());
@@ -7947,8 +7899,9 @@ public class WorkNode {
 	 * 产生合流汇总数据 把子线程的子表主表数据放到合流点的从表上去
 	 * 
 	 * @param nd
+	 * @throws Exception 
 	 */
-	private void GenerHieLiuHuiZhongDtlData_2013(Node ndOfHeLiu) {
+	private void GenerHieLiuHuiZhongDtlData_2013(Node ndOfHeLiu) throws Exception {
 
 		/// #region 汇总明细表.
 		MapDtls mydtls = ndOfHeLiu.getHisWork().getHisMapDtls();
@@ -8154,8 +8107,9 @@ public class WorkNode {
 	 * 
 	 * @param toNode
 	 * @return
+	 * @throws Exception 
 	 */
-	private String SpanSubTheadNodes(Node toHLNode) {
+	private String SpanSubTheadNodes(Node toHLNode) throws Exception {
 		_SpanSubTheadNodes = "";
 		SpanSubTheadNodes_DiGui(toHLNode.getFromNodes());
 		if (_SpanSubTheadNodes.equals("")) {
@@ -8166,7 +8120,7 @@ public class WorkNode {
 
 	}
 
-	private void SpanSubTheadNodes_DiGui(Nodes subNDs) {
+	private void SpanSubTheadNodes_DiGui(Nodes subNDs) throws Exception {
 		for (Node nd : subNDs.ToJavaList()) {
 			if (nd.getHisNodeWorkType() == NodeWorkType.SubThreadWork) {
 				// 判断是否已经包含，不然可能死循环
@@ -8212,7 +8166,7 @@ public class WorkNode {
 
 	private RememberMe HisRememberMe = null;
 
-	public final RememberMe GetHisRememberMe(Node nd) {
+	public final RememberMe GetHisRememberMe(Node nd) throws Exception {
 		if (HisRememberMe == null || HisRememberMe.getFK_Node() != nd.getNodeID()) {
 			HisRememberMe = new RememberMe();
 			HisRememberMe.setFK_Emp(this.getExecer());
@@ -8226,9 +8180,10 @@ public class WorkNode {
 
 	/**
 	 * 工作流程
+	 * @throws Exception 
 	 * 
 	 */
-	public final WorkFlow getHisWorkFlow() {
+	public final WorkFlow getHisWorkFlow() throws Exception {
 		if (_HisWorkFlow == null) {
 			_HisWorkFlow = new WorkFlow(this.getHisNode().getHisFlow(), this.getHisWork().getOID(),
 					this.getHisWork().getFID());
@@ -8238,9 +8193,10 @@ public class WorkNode {
 
 	/**
 	 * 当前节点的工作是不是完成。
+	 * @throws Exception 
 	 * 
 	 */
-	public final boolean getIsComplete() {
+	public final boolean getIsComplete() throws Exception {
 		if (this.getHisGenerWorkFlow().getWFState() == WFState.Complete) {
 			return true;
 		} else {
@@ -8250,7 +8206,7 @@ public class WorkNode {
 
 	public TransferCustom _transferCustom = null;
 
-	public final TodolistModel getTodolistModel() {
+	public final TodolistModel getTodolistModel() throws Exception {
 		// 如果当前的节点是按照ccbpm定义的方式运行的，就返回当前节点的多人待办模式，否则就返回自定义的模式。
 		if (this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByCCBPMDefine) {
 			return this.getHisNode().getTodolistModel();
@@ -8267,8 +8223,9 @@ public class WorkNode {
 	 *            工作ID
 	 * @param nodeId
 	 *            节点ID
+	 * @throws Exception 
 	 */
-	public WorkNode(long workId, int nodeId) {
+	public WorkNode(long workId, int nodeId) throws Exception {
 		this.setWorkID(workId);
 		Node nd = new Node(nodeId);
 		Work wk = nd.getHisWork();
@@ -8312,7 +8269,7 @@ public class WorkNode {
 	private void Repair() {
 	}
 
-	public final WorkNode GetPreviousWorkNode_FHL(long workid) {
+	public final WorkNode GetPreviousWorkNode_FHL(long workid) throws Exception {
 		Nodes nds = this.getHisNode().getFromNodes();
 		for (Node nd : nds.ToJavaList()) {
 			if (nd.getHisRunModel() == RunModel.SubThread) {
@@ -8327,7 +8284,7 @@ public class WorkNode {
 		return null;
 	}
 
-	public final WorkNodes GetPreviousWorkNodes_FHL() {
+	public final WorkNodes GetPreviousWorkNodes_FHL() throws Exception {
 		// 如果没有找到转向他的节点,就返回,当前的工作.
 		if (this.getHisNode().getIsStartNode()) {
 			throw new RuntimeException("@此节点是开始节点,没有上一步工作"); // 此节点是开始节点,没有上一步工作.
@@ -8361,8 +8318,9 @@ public class WorkNode {
 	 * 得当他的上一步工作 1, 从当前的找到他的上一步工作的节点集合. 如果没有找到转向他的节点,就返回,当前的工作.
 	 * 
 	 * @return 得当他的上一步工作
+	 * @throws Exception 
 	 */
-	public final WorkNode GetPreviousWorkNode() {
+	public final WorkNode GetPreviousWorkNode() throws Exception {
 		// 如果没有找到转向他的节点,就返回,当前的工作.
 		if (this.getHisNode().getIsStartNode()) {
 			throw new RuntimeException("@" + String.format("此节点是开始节点,没有上一步工作")); // 此节点是开始节点,没有上一步工作.

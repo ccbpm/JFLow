@@ -23,9 +23,10 @@ public class Conds extends Entities
 	}
 	/** 
 	 在这里面的所有条件是不是都符合.
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsAllPassed()
+	public final boolean getIsAllPassed() throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -52,9 +53,10 @@ public class Conds extends Entities
 	}
 	/** 
 	 是否通过
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsPass()
+	public final boolean getIsPass() throws Exception
 	{
 		if (this.getCondOrAnd() == CondOrAnd.ByAnd)
 		{
@@ -67,9 +69,10 @@ public class Conds extends Entities
 	}
 	/** 
 	 是否通过  
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsPassAnd()
+	public final boolean getIsPassAnd() throws Exception
 	{
 			// 判断  and. 的关系。
 		for (Cond en : this.ToJavaList())
@@ -81,7 +84,7 @@ public class Conds extends Entities
 		}
 		return true;
 	}
-	public final boolean getIsPassOr()
+	public final boolean getIsPassOr() throws Exception
 	{
 			// 判断  and. 的关系。
 		for (Cond en : this.ToJavaList())
@@ -108,9 +111,10 @@ public class Conds extends Entities
 	}
 	/** 
 	 是不是其中的一个passed. 
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsOneOfCondPassed()
+	public final boolean getIsOneOfCondPassed() throws Exception
 	{
 		for (Cond en : this.ToJavaList())
 		{
@@ -123,9 +127,10 @@ public class Conds extends Entities
 	}
 	/** 
 	 取出其中一个的完成条件。. 
+	 * @throws Exception 
 	 
 	*/
-	public final Cond getGetOneOfCondPassed()
+	public final Cond getGetOneOfCondPassed() throws Exception
 	{
 		for (Cond en : this.ToJavaList())
 		{
@@ -153,8 +158,9 @@ public class Conds extends Entities
 	 条件
 	 
 	 @param fk_flow 流程编号
+	 * @throws Exception 
 	*/
-	public Conds(String fk_flow)
+	public Conds(String fk_flow) throws Exception
 	{
 		this.Retrieve(CondAttr.FK_Flow, fk_flow);
 	}
@@ -163,8 +169,9 @@ public class Conds extends Entities
 	 
 	 @param ct 类型
 	 @param nodeID 节点
+	 * @throws Exception 
 	*/
-	public Conds(CondType ct, int nodeID, long workid, GERpt enData)
+	public Conds(CondType ct, int nodeID, long workid, GERpt enData) throws Exception
 	{
 		this.NodeID = nodeID;
 		this.Retrieve(CondAttr.NodeID, nodeID, CondAttr.CondType, ct.getValue(), CondAttr.PRI);
@@ -179,8 +186,9 @@ public class Conds extends Entities
 	 
 	 @param ct
 	 @param nodeID
+	 * @throws Exception 
 	*/
-	public Conds(CondType ct, int nodeID)
+	public Conds(CondType ct, int nodeID) throws Exception
 	{
 		this.Retrieve(CondAttr.NodeID, nodeID, CondAttr.CondType, ct.getValue(), CondAttr.PRI);
 	}

@@ -239,14 +239,15 @@ public abstract class Method
 	 * @return
 	 * @throws Exception 
 	 */
-	public abstract Object Do();
+	public abstract Object Do() throws Exception;
 	
 	public abstract void Init();
 	
 	/**
 	 * 权限管理
+	 * @throws Exception 
 	 */
-	public abstract boolean getIsCanDo();
+	public abstract boolean getIsCanDo() throws Exception;
 	
 	/**
 	 * 是否显示在功能列表里

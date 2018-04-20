@@ -144,7 +144,7 @@ public class DataApply extends Entity
 	{
 	}
 	
-	public DataApply(int workid, int nodeid)
+	public DataApply(int workid, int nodeid) throws Exception
 	{
 		this.setWorkID(workid);
 		this.setNodeId(nodeid);
@@ -221,7 +221,7 @@ public class DataApply extends Entity
 	}
 	
 	public final String DoApply(int days, String checker, String note1,
-			String note2)
+			String note2) throws Exception
 	{
 		this.setApplyDays(days);
 		
@@ -238,7 +238,7 @@ public class DataApply extends Entity
 	}
 	
 	public final String DoCheck(int days, String checker, String note1,
-			String note2)
+			String note2) throws Exception
 	{
 		this.setApplyDays(days);
 		

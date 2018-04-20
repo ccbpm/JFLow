@@ -39,8 +39,9 @@ public class WebUser {
 	 * 登录
 	 * 
 	 * @param em
+	 * @throws Exception 
 	 */
-	public static void SignInOfGener(Emp em) {
+	public static void SignInOfGener(Emp em) throws Exception {
 		SignInOfGener(em, "CH", null, true, false);
 	}
 
@@ -49,8 +50,9 @@ public class WebUser {
 	 * 
 	 * @param em
 	 * @param isRememberMe
+	 * @throws Exception 
 	 */
-	public static void SignInOfGener(Emp em, boolean isRememberMe) {
+	public static void SignInOfGener(Emp em, boolean isRememberMe) throws Exception {
 		SignInOfGener(em, "CH", null, isRememberMe, false);
 	}
 
@@ -59,8 +61,9 @@ public class WebUser {
 	 * 
 	 * @param em
 	 * @param auth
+	 * @throws Exception 
 	 */
-	public static void SignInOfGenerAuth(Emp em, String auth) {
+	public static void SignInOfGenerAuth(Emp em, String auth) throws Exception {
 		SignInOfGener(em, "CH", auth, true, false);
 	}
 
@@ -69,8 +72,9 @@ public class WebUser {
 	 * 
 	 * @param em
 	 * @param lang
+	 * @throws Exception 
 	 */
-	public static void SignInOfGenerLang(Emp em, String lang, boolean isRememberMe) {
+	public static void SignInOfGenerLang(Emp em, String lang, boolean isRememberMe) throws Exception {
 		SignInOfGener(em, lang, null, isRememberMe, false);
 	}
 
@@ -79,12 +83,13 @@ public class WebUser {
 	 * 
 	 * @param em
 	 * @param lang
+	 * @throws Exception 
 	 */
-	public static void SignInOfGenerLang(Emp em, String lang) {
+	public static void SignInOfGenerLang(Emp em, String lang) throws Exception {
 		SignInOfGener(em, lang, null, true, false);
 	}
 
-	public static void SignInOfGener(Emp em, String lang) {
+	public static void SignInOfGener(Emp em, String lang) throws Exception {
 		SignInOfGener(em, lang, em.getNo(), true, false);
 	}
 
@@ -95,8 +100,9 @@ public class WebUser {
 	 * @param lang 语言
 	 * @param auth 被授权登录人
 	 * @param isRememberMe 是否记忆我
+	 * @throws Exception 
 	 */
-	public static void SignInOfGener(Emp em, String lang, String auth, boolean isRememberMe) {
+	public static void SignInOfGener(Emp em, String lang, String auth, boolean isRememberMe) throws Exception {
 		SignInOfGener(em, lang, auth, isRememberMe, false);
 	}
 
@@ -108,8 +114,9 @@ public class WebUser {
 	 * @param auth 授权人
 	 * @param isRememberMe 是否记录cookies
 	 * @param IsRecSID 是否记录SID
+	 * @throws Exception 
 	 */
-	public static String SignInOfGener(Emp em, String lang, String auth, boolean isRememberMe, boolean IsRecSID) {
+	public static String SignInOfGener(Emp em, String lang, String auth, boolean isRememberMe, boolean IsRecSID) throws Exception {
 		if (SystemConfig.getIsBSsystem()) {
 			BP.Sys.Glo.WriteUserLog("SignIn", em.getNo(), "登录");
 		}
@@ -185,9 +192,9 @@ public class WebUser {
 	 @param auth 授权人
 	 @param isRememberMe 是否记录cookies
 	 @param IsRecSID 是否记录SID
-	 * @throws UnsupportedEncodingException 
+	 * @throws Exception 
 	*/
-	public static void SignInOfGener(Emp em, String lang, boolean isRememberMe, boolean IsRecSID, String authNo, String authName) throws UnsupportedEncodingException
+	public static void SignInOfGener(Emp em, String lang, boolean isRememberMe, boolean IsRecSID, String authNo, String authName) throws Exception
 	{
 		if (SystemConfig.getIsBSsystem())
 		{
@@ -602,8 +609,9 @@ public class WebUser {
 	
 	/**
 	 *  是否是操作员？
+	 * @throws Exception 
 	 */
-    public static boolean getIsAdmin()
+    public static boolean getIsAdmin() throws Exception
     {
             if ("admin".equals(BP.Web.WebUser.getNo()))
                 return true;
@@ -627,8 +635,9 @@ public class WebUser {
 
 	/**
 	 * 编号
+	 * @throws Exception 
 	 */
-	public static String getNo() {
+	public static String getNo() throws Exception {
 		// 如果设置了第三方的SessionKey名称，则进行根据第三方系统用户Key进行登录。
 		String userNoSessionKey = ContextHolderUtils.getInstance().getUserNoSessionKey();
 		if (StringUtils.isNotBlank(userNoSessionKey)){
@@ -796,8 +805,9 @@ public class WebUser {
 
 	/**
 	 * 当前工作人员实体
+	 * @throws Exception 
 	 */
-	public static Emp getHisEmp() {
+	public static Emp getHisEmp() throws Exception {
 		return new Emp(WebUser.getNo());
 	}
 
@@ -819,8 +829,9 @@ public class WebUser {
 	 设置SID
 	 
 	 @param sid
+	 * @throws Exception 
 */
-	public static void SetSID(String sid)
+	public static void SetSID(String sid) throws Exception
 	{
 		//判断是否视图，如果为视图则不进行修改 @于庆海 需要翻译
 		if (BP.DA.DBAccess.IsView("Port_Emp") == false)
@@ -911,7 +922,7 @@ public class WebUser {
 	// EmpStations sts = new EmpStations();
 	// return sts.GetHisStations(WebUser.getNo());
 	// }
-	public static Stations getHisStations() {
+	public static Stations getHisStations() throws Exception {
 		Object obj = null;
 		obj = GetSessionByKey("HisSts", obj);
 		if (obj == null) {
@@ -927,8 +938,9 @@ public class WebUser {
 
 	/**
 	 * 岗位s
+	 * @throws Exception 
 	 */
-	public static String getHisStationsStr() {
+	public static String getHisStationsStr() throws Exception {
 		String val = GetValFromCookie("HisStationsStr", null, true);
 		if (val == null) {
 			Object tempVar = BP.DA.DBAccess.RunSQLReturnVal("SELECT Stas FROM WF_Emp WHERE No='" + WebUser.getNo() + "'");
@@ -949,8 +961,9 @@ public class WebUser {
 
 	/**
 	 * 部门s
+	 * @throws Exception 
 	 */
-	public static String getHisDeptsStr() {
+	public static String getHisDeptsStr() throws Exception {
 		String val = GetValFromCookie("HisDeptsStr", "", true);
 		if (val == null) {
 			Object tempVar = BP.DA.DBAccess.RunSQLReturnVal("SELECT Depts FROM WF_Emp WHERE No='" + WebUser.getNo() + "'");

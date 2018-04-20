@@ -157,7 +157,7 @@ public class GERpt extends BP.En.EntityOID
 	{
 		this.SetValByKey(GERptAttr.FlowEnderRDT, value);
 	}
-	public final String getFlowEndNodeText()
+	public final String getFlowEndNodeText() throws Exception
 	{
 		Node nd = new Node(this.getFlowEndNode());
 		return nd.getName();
@@ -376,19 +376,25 @@ public class GERpt extends BP.En.EntityOID
 	}
 	/** 
 	 Map
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() 
 	{
 		if (this.getRptName() == null)
 		{
 			BP.Port.Emp emp = new BP.Port.Emp();
-			return emp.getEnMap();
+			return emp.getEnMap();			
 		}
 
 		if (this.get_enMap() == null)
 		{
-			this.set_enMap(MapData.GenerHisMap(this.getRptName()));
+			try {
+				this.set_enMap(MapData.GenerHisMap(this.getRptName()));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return this.get_enMap();
@@ -408,8 +414,9 @@ public class GERpt extends BP.En.EntityOID
 	 报表
 	 @param rptName
 	 @param oid
+	 * @throws Exception 
 	*/
-	public GERpt(String rptName, long oid)
+	public GERpt(String rptName, long oid) throws Exception
 	{
 		this.setRptName(rptName);
 		this.setOID((int)oid);

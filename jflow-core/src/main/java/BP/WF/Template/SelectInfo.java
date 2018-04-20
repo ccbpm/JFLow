@@ -102,7 +102,7 @@ public class SelectInfo extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getAcceptNodeID() + "_" + this.getWorkID() + "_" + this.getAccType());
 		;

@@ -91,9 +91,10 @@ public class MapAttr extends EntityMyPK {
 
 	/**
 	 * 实体类
+	 * @throws Exception 
 	 * 
 	 */
-	public final EntitiesNoName getHisEntitiesNoName() {
+	public final EntitiesNoName getHisEntitiesNoName() throws Exception {
 		if (this.getUIBindKey().contains(".")) {
 			EntitiesNoName ens = (EntitiesNoName) BP.En.ClassFactory.GetEns(this.getUIBindKey());
 			if (ens == null) {
@@ -126,9 +127,10 @@ public class MapAttr extends EntityMyPK {
 
 	/**
 	 * 外部数据表
+	 * @throws Exception 
 	 * 
 	 */
-	public final DataTable getHisDT() {
+	public final DataTable getHisDT() throws Exception {
 		if (_dt == null) {
 			if (StringHelper.isNullOrEmpty(this.getUIBindKey())) {
 				throw new RuntimeException("@属性：" + this.getMyPK() + " 丢失属性 UIBindKey 字段。");
@@ -324,7 +326,7 @@ public class MapAttr extends EntityMyPK {
 		}
 	}
 
-	public final java.math.BigDecimal getDefValDecimal() {
+	public final java.math.BigDecimal getDefValDecimal() throws Exception {
 		// return java.math.BigDecimal.Parse(this.getDefVal());
 		return new java.math.BigDecimal(this.getDefVal());
 	}
@@ -358,8 +360,9 @@ public class MapAttr extends EntityMyPK {
 
 	/**
 	 * 默认值
+	 * @throws Exception 
 	 */
-	public final String getDefVal() {
+	public final String getDefVal() throws Exception {
 		String s = this.GetValStrByKey(MapAttrAttr.DefVal);
 		if (this.getIsNum()) {
 			if (s.equals("")) {
@@ -970,12 +973,12 @@ public class MapAttr extends EntityMyPK {
 	public MapAttr() {
 	}
 
-	public MapAttr(String mypk) {
+	public MapAttr(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 
-	public MapAttr(String fk_mapdata, String key) {
+	public MapAttr(String fk_mapdata, String key) throws Exception {
 		this.setFK_MapData(fk_mapdata);
 		this.setKeyOfEn(key);
 		this.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.KeyOfEn, this.getKeyOfEn());
@@ -1063,7 +1066,7 @@ public class MapAttr extends EntityMyPK {
 	/// #endregion
 
 	@Override
-	protected void afterInsert() {
+	protected void afterInsert() throws Exception {
 		// switch (map.EnDBUrl.DBUrlType)
 		// {
 		// case DBUrlType.AppCenterDSN:
@@ -1097,7 +1100,7 @@ public class MapAttr extends EntityMyPK {
 		this.DoOrderUp(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.Idx);
 	}
 
-	public final void DoUp() {
+	public final void DoUp() throws Exception {
 		this.DoOrderUp(MapAttrAttr.GroupID, (new Integer(this.getGroupID())).toString(), MapAttrAttr.UIVisible, "1",
 				MapAttrAttr.Idx);
 
@@ -1111,8 +1114,9 @@ public class MapAttr extends EntityMyPK {
 
 	/**
 	 * 下移
+	 * @throws Exception 
 	 */
-	public final void DoDown() {
+	public final void DoDown() throws Exception {
 		this.DoOrderDown(MapAttrAttr.GroupID, (new Integer(this.getGroupID())).toString(), MapAttrAttr.UIVisible, "1",
 				MapAttrAttr.Idx);
 
@@ -1125,8 +1129,9 @@ public class MapAttr extends EntityMyPK {
 
 	/**
 	 * 上移for 明细表.
+	 * @throws Exception 
 	 */
-	public final void DoUpForMapDtl() {
+	public final void DoUpForMapDtl() throws Exception {
 		// 规整groupID.
 		GroupField gf = new GroupField();
 		gf.Retrieve(GroupFieldAttr.EnName, this.getFK_MapData());
@@ -1145,8 +1150,9 @@ public class MapAttr extends EntityMyPK {
 
 	/**
 	 * 下移 for 明细表.
+	 * @throws Exception 
 	 */
-	public final void DoDownForMapDtl() {
+	public final void DoDownForMapDtl() throws Exception {
 		// 规整groupID.
 		GroupField gf = new GroupField();
 		gf.Retrieve(GroupFieldAttr.EnName, this.getFK_MapData());
@@ -1162,7 +1168,7 @@ public class MapAttr extends EntityMyPK {
 		}
 	}
 
-	public final void DoDtlDown() {
+	public final void DoDtlDown() throws Exception {
 		try {
 			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE FrmID='"
 					+ this.getFK_MapData() + "') WHERE FK_MapData='" + this.getFK_MapData() + "'";
@@ -1173,7 +1179,7 @@ public class MapAttr extends EntityMyPK {
 		this.DoDown();
 	}
 
-	public final void DoDtlUp() {
+	public final void DoDtlUp() throws Exception {
 		try {
 			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE FrmID='"
 					+ this.getFK_MapData() + "') WHERE FK_MapData='" + this.getFK_MapData() + "'";
@@ -1183,7 +1189,7 @@ public class MapAttr extends EntityMyPK {
 		this.DoUp();
 	}
 
-	public final void DoJump(MapAttr attrTo) {
+	public final void DoJump(MapAttr attrTo) throws Exception {
 		if (attrTo.getIdx() <= this.getIdx()) {
 			this.DoJumpUp(attrTo);
 		} else {
@@ -1191,7 +1197,7 @@ public class MapAttr extends EntityMyPK {
 		}
 	}
 
-	private String DoJumpUp(MapAttr attrTo) {
+	private String DoJumpUp(MapAttr attrTo) throws Exception {
 		String sql = "UPDATE Sys_MapAttr SET Idx=Idx+1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='"
 				+ this.getFK_MapData() + "' AND GroupID=" + this.getGroupID();
 		DBAccess.RunSQL(sql);
@@ -1201,7 +1207,7 @@ public class MapAttr extends EntityMyPK {
 		return null;
 	}
 
-	private String DoJumpDown(MapAttr attrTo) {
+	private String DoJumpDown(MapAttr attrTo) throws Exception {
 		String sql = "UPDATE Sys_MapAttr SET Idx=Idx-1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='"
 				+ this.getFK_MapData() + "' AND GroupID=" + this.getGroupID();
 		DBAccess.RunSQL(sql);
@@ -1212,7 +1218,8 @@ public class MapAttr extends EntityMyPK {
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() {
+	protected boolean beforeUpdateInsertAction() throws Exception {
+		
 		// if (this.LGType == FieldTypeS.Normal)
 		// if (this.UIIsEnable == true &&this.DefVal !=null &&
 		// this.DefVal.Contains("@") == true)
@@ -1228,7 +1235,9 @@ public class MapAttr extends EntityMyPK {
 			// 查找分组，查找到的第一个分组，关联当前属性
 			GroupField group = new GroupField();
 			if (group.Retrieve(GroupFieldAttr.EnName, this.getFK_MapData()) > 0) {
+				
 				this.setGroupID(this.getGroupID());
+				
 			} else {
 				group.setEnName(this.getFK_MapData());
 				group.setLab(new MapData(this.getFK_MapData()).getName());
@@ -1249,7 +1258,7 @@ public class MapAttr extends EntityMyPK {
 	}
 
 	@Override
-	protected boolean beforeUpdate() {
+	protected boolean beforeUpdate() throws Exception {
 		switch (this.getMyDataType()) {
 		case DataType.AppDateTime:
 			this.setMaxLen(20);
@@ -1274,9 +1283,10 @@ public class MapAttr extends EntityMyPK {
 	 * 插入之间需要做的事情.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert() {
+	protected boolean beforeInsert() throws Exception {
 		if (StringHelper.isNullOrEmpty(this.getName())) {
 			throw new RuntimeException("@请输入字段名称。");
 		}
@@ -1325,9 +1335,10 @@ public class MapAttr extends EntityMyPK {
 	 * 删除之前
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeDelete() {
+	protected boolean beforeDelete() throws Exception {
 		String sqls = "DELETE FROM Sys_MapExt WHERE (AttrOfOper='" + this.getKeyOfEn() + "' OR AttrsOfActive='"
 				+ this.getKeyOfEn() + "' ) AND (FK_MapData='')";
 		// 删除权限管理字段.

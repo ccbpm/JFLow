@@ -329,7 +329,7 @@ public class SysDocFile extends EntityMyPK
 	{
 	}
 	
-	public SysDocFile(String pk)
+	public SysDocFile(String pk) throws Exception
 	{
 		super(pk);
 	}
@@ -459,7 +459,7 @@ public class SysDocFile extends EntityMyPK
 	}
 	
 	// 共用方法
-	public static String GetValHtmlV1(String enName, String pkVal)
+	public static String GetValHtmlV1(String enName, String pkVal) throws Exception
 	{
 		SysDocFile sdf = new SysDocFile();
 		sdf.setMyPK(enName + "@Doc@" + pkVal);
@@ -467,7 +467,7 @@ public class SysDocFile extends EntityMyPK
 		return sdf.getDocHtml();
 	}
 	
-	public static String GetValTextV1(String enName, String pkVal)
+	public static String GetValTextV1(String enName, String pkVal) throws Exception
 	{
 		SysDocFile sdf = new SysDocFile();
 		sdf.setMyPK(enName + "@Doc@" + pkVal);
@@ -475,7 +475,7 @@ public class SysDocFile extends EntityMyPK
 		return sdf.getDocText();
 	}
 	
-	public static void SetValV1(String enName, String pkVal, String val)
+	public static void SetValV1(String enName, String pkVal, String val) throws Exception
 	{
 		SysDocFile sdf = new SysDocFile();
 		sdf.setMyPK(enName + "@Doc@" + pkVal);

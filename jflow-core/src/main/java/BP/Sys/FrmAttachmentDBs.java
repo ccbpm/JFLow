@@ -22,8 +22,9 @@ public class FrmAttachmentDBs extends EntitiesMyPK
 	 附件数据存储s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmAttachmentDBs(String fk_mapdata, String pkval)
+	public FrmAttachmentDBs(String fk_mapdata, String pkval) throws Exception
 	{
 		this.Retrieve(FrmAttachmentDBAttr.FK_MapData, fk_mapdata, FrmAttachmentDBAttr.RefPKVal, pkval);
 	}

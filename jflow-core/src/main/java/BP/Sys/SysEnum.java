@@ -14,8 +14,9 @@ public class SysEnum extends EntityMyPK
 	 @param EnumKey
 	 @param intKey
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String GetLabByPK(String EnumKey, int intKey)
+	public static String GetLabByPK(String EnumKey, int intKey) throws Exception
 	{
 		SysEnum en = new SysEnum(EnumKey, intKey);
 		return en.getLab();
@@ -87,8 +88,9 @@ public class SysEnum extends EntityMyPK
 	/** 
 	 税务编号
 	 @param _No 编号
+	 * @throws Exception 
 	*/
-	public SysEnum(String enumKey, int val)
+	public SysEnum(String enumKey, int val) throws Exception
 	{
 		this.setEnumKey(enumKey);
 		this.setLang(BP.Web.WebUser.getSysLang());
@@ -109,7 +111,7 @@ public class SysEnum extends EntityMyPK
 			}
 		}
 	}
-	public SysEnum(String enumKey, String Lang, int val)
+	public SysEnum(String enumKey, String Lang, int val) throws Exception
 	{
 		this.setEnumKey(enumKey);
 		this.setLang(Lang);
@@ -152,7 +154,7 @@ public class SysEnum extends EntityMyPK
 		return this.get_enMap();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getLang() == null && this.getLang().equals(""))
 		{

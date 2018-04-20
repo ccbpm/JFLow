@@ -145,10 +145,11 @@ public class FrmTransferCustom extends Entity
 		
 	/** 
 	 控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -176,8 +177,9 @@ public class FrmTransferCustom extends Entity
 	 流转自定义组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTransferCustom(String mapData)
+	public FrmTransferCustom(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -206,8 +208,9 @@ public class FrmTransferCustom extends Entity
 	 流转自定义组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTransferCustom(int nodeID)
+	public FrmTransferCustom(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();

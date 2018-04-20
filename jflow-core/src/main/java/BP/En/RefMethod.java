@@ -106,8 +106,6 @@ public class RefMethod
 	 */
 	public String Icon = null;
 	
-	
-	
 	public final String GetIcon(String path)
 	{
 		if (this.Icon == null)
@@ -122,7 +120,7 @@ public class RefMethod
 			if (!Icon.contains("http://"))
 			{
 				Icon = path + Icon;
-				
+				// url = url.replace("//", "/");
 			}
 			
 			return "<img src='" + url + "'  border=0 />";

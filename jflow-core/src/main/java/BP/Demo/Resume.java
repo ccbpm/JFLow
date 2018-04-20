@@ -85,7 +85,7 @@ public class Resume extends EntityOID
 	{
 	}
 	
-	public Resume(int oid)
+	public Resume(int oid) throws Exception
 	{
 		super(oid);
 	}

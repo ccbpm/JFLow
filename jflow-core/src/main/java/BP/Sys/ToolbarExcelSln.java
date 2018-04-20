@@ -13,10 +13,11 @@ public class ToolbarExcelSln extends EntityMyPK
 {
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
@@ -386,13 +387,14 @@ public class ToolbarExcelSln extends EntityMyPK
 	 ToolbarExcel功能控制
 	 
 	 @param no 表单ID
+	 * @throws Exception 
 	*/
-	public ToolbarExcelSln(String mypk)
+	public ToolbarExcelSln(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
-	public ToolbarExcelSln(String fk_flow, int fk_node, String fk_frm)
+	public ToolbarExcelSln(String fk_flow, int fk_node, String fk_frm) throws Exception
 	{
 		int i = this.Retrieve(ToolbarExcelSlnAttr.FK_Flow, fk_flow, ToolbarExcelSlnAttr.FK_Node, fk_node, ToolbarExcelSlnAttr.FK_Frm, fk_frm);
 		if (i == 0)

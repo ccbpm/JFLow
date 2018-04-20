@@ -482,7 +482,7 @@ public class MyJoinFlow extends Entity
 	public MyJoinFlow()
 	{
 	}
-	public MyJoinFlow(long workId)
+	public MyJoinFlow(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyJoinFlowAttr.WorkID, workId);
@@ -547,7 +547,7 @@ public class MyJoinFlow extends Entity
 
 
 			//增加隐藏的查询条件.
-		AttrOfSearch search = new AttrOfSearch(MyJoinFlowAttr.Emps, "人员", MyJoinFlowAttr.Emps, " LIKE ", "%" + BP.Web.WebUser.getNo() + "%", 0, true);
+		AttrOfSearch search = new AttrOfSearch(MyJoinFlowAttr.Emps, "人员", MyJoinFlowAttr.Emps, " LIKE ", "%@WebUser.No%", 0, true);
 		map.getAttrsOfSearch().Add(search);
 
 		RefMethod rm = new RefMethod();
@@ -581,8 +581,9 @@ public class MyJoinFlow extends Entity
 	 打开最后一个节点表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoOpenLastForm()
+	public final String DoOpenLastForm() throws Exception
 	{
 		Paras pss = new Paras();
 		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";

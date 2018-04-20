@@ -172,7 +172,7 @@ public class MapAttrNum extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getDefVal()=="")
 			this.setDefVal("0");

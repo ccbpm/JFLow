@@ -498,9 +498,10 @@ public class GenerWorkFlow extends Entity
 		
 	/** 
 	 它的子流程
+	 * @throws Exception 
 	 
 	*/
-	public final GenerWorkFlows getHisSubFlowGenerWorkFlows()
+	public final GenerWorkFlows getHisSubFlowGenerWorkFlows() throws Exception
 	{
 		GenerWorkFlows ens = new GenerWorkFlows();
 		ens.Retrieve(GenerWorkFlowAttr.PWorkID, this.getWorkID());
@@ -538,13 +539,14 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 关注&取消关注
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getParas_Focus()
+	public final boolean getParas_Focus() throws Exception
 	{
 		return this.GetParaBoolen("F_"+BP.Web.WebUser.getNo(),false);
 	}
-	public final void setParas_Focus(boolean value)
+	public final void setParas_Focus(boolean value) throws Exception
 	{
 		this.SetPara("F_" + BP.Web.WebUser.getNo(), value);
 	}
@@ -670,7 +672,7 @@ public class GenerWorkFlow extends Entity
 	public GenerWorkFlow()
 	{
 	}
-	public GenerWorkFlow(long workId)
+	public GenerWorkFlow(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkFlowAttr.WorkID, workId);
@@ -784,9 +786,10 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 删除后,需要把工作者列表也要删除.
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		// . clear bad worker .  
 		DBAccess.RunSQLReturnTable("DELETE FROM WF_GenerWorkerlist WHERE WorkID in  ( select WorkID from WF_GenerWorkerlist WHERE WorkID not in (select WorkID from WF_GenerWorkFlow) )");
@@ -796,7 +799,7 @@ public class GenerWorkFlow extends Entity
 		super.afterDelete();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getStarter().equals("Guest"))
 		{
@@ -815,8 +818,9 @@ public class GenerWorkFlow extends Entity
 	/** 
 	 执行修复
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoRepare()
+	public final String DoRepare() throws Exception
 	{
 		if (this.DoSelfTestInfo().equals("没有发现异常。"))
 		{
@@ -858,7 +862,7 @@ public class GenerWorkFlow extends Entity
 
 		return "此流程是因为[" + nd.getName() + "]工作发送失败被回滚到当前位置，请转告[" + str + "]流程修复成功。";
 	}
-	public final String DoSelfTestInfo()
+	public final String DoSelfTestInfo() throws Exception
 	{
 		GenerWorkerLists wls = new GenerWorkerLists(this.getWorkID(), this.getFK_Flow());
 
@@ -896,13 +900,14 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 确认与取消确认
+	 * @throws Exception 
 	 
 	 */
-	public final boolean getParas_Confirm()
+	public final boolean getParas_Confirm() throws Exception
 	{
 		return this.GetParaBoolen("C_"+BP.Web.WebUser.getNo(),false);
 	}
-	public final void setParas_Confirm(boolean value)
+	public final void setParas_Confirm(boolean value) throws Exception
 	{
 		this.SetPara("C_" + BP.Web.WebUser.getNo(), value);
 	}

@@ -15,7 +15,7 @@ public abstract class SimpleNoName extends EntityNoName
 		// this.No = this.GenerNewNo ;
 	}
 	
-	protected SimpleNoName(String _No)
+	protected SimpleNoName(String _No) throws Exception
 	{
 		super(_No);
 	}

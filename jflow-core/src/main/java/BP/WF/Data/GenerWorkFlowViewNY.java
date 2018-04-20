@@ -19,8 +19,9 @@ public class GenerWorkFlowViewNY extends EntityNoName
 	/** 
 	 月份
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public GenerWorkFlowViewNY(String no)
+	public GenerWorkFlowViewNY(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();

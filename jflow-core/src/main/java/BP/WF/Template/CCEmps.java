@@ -16,8 +16,9 @@ public class CCEmps extends EntitiesMM
 {
 	/** 
 	 他的到人员
+	 * @throws Exception 
 	*/
-	public final Emps getHisEmps()
+	public final Emps getHisEmps() throws Exception
 	{
 		Emps ens = new Emps();
 		for (CCEmp ns : this.ToJavaList())
@@ -28,9 +29,10 @@ public class CCEmps extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (CCEmp ns : this.ToJavaList())
@@ -49,18 +51,22 @@ public class CCEmps extends EntitiesMM
 	/** 
 	 节点到人员
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public CCEmps(int NodeID)
+	public CCEmps(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
+		
 		qo.AddWhere(CCEmpAttr.FK_Node, NodeID);
+		
 		qo.DoQuery();
 	}
 	/** 
 	 节点到人员
 	 @param EmpNo EmpNo 
+	 * @throws Exception 
 	*/
-	public CCEmps(String EmpNo)
+	public CCEmps(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCEmpAttr.FK_Emp, EmpNo);
@@ -79,8 +85,9 @@ public class CCEmps extends EntitiesMM
 	 
 	 @param sts 到人员集合
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Emps sts)
+	public final Nodes GetHisNodes(Emps sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
@@ -102,8 +109,9 @@ public class CCEmps extends EntitiesMM
 	 到人员对应的节点
 	 @param EmpNo 到人员编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String EmpNo)
+	public final Nodes GetHisNodes(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCEmpAttr.FK_Emp, EmpNo);
@@ -120,8 +128,9 @@ public class CCEmps extends EntitiesMM
 	 转向此节点的集合的 Nodes
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Emps GetHisEmps(int nodeID)
+	public final Emps GetHisEmps(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCEmpAttr.FK_Node, nodeID);

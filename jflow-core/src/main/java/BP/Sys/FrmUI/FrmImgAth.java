@@ -144,8 +144,9 @@ public class FrmImgAth extends EntityMyPK
 	 图片附件
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmImgAth(String mypk)
+	public FrmImgAth(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -187,7 +188,7 @@ public class FrmImgAth extends EntityMyPK
 	//#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		 
 			this.setMyPK(this.getFK_MapData() +"_"+ this.getCtrlID());

@@ -20,8 +20,9 @@ public class SMS extends EntityMyPK
 	 *            手机号
 	 * @param doc
 	 *            手机内容
+	 * @throws Exception 
 	 */
-	public static void SendSMS_del(String Mobile, String doc)
+	public static void SendSMS_del(String Mobile, String doc) throws Exception
 	{
 		// 如果不启用消息机制.
 		if (BP.WF.Glo.getIsEnableSysMessage() == false)
@@ -59,9 +60,10 @@ public class SMS extends EntityMyPK
 	 *            标记
 	 * @param msgType
 	 *            类型
+	 * @throws Exception 
 	 */
 	public static void SendMsg(String userNo, String msgTitle, String msgDoc,
-			String msgFlag, String msgType, String paras)
+			String msgFlag, String msgType, String paras) throws Exception
 	{
 		
 		SMS sms = new SMS();
@@ -102,10 +104,11 @@ public class SMS extends EntityMyPK
 	 *            消息标记，可以为空。
 	 * @param guestNo
 	 *            用户编号
+	 * @throws Exception 
 	 */
 	public static void SendMsg(String mobileNum, String mobileInfo,
 			String email, String title, String infoBody, String msgFlag,
-			String msgType, String guestNo)
+			String msgType, String guestNo) throws Exception
 	{
 		
 		SMS sms = new SMS();

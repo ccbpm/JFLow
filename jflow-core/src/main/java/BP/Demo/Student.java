@@ -216,8 +216,9 @@ public class Student extends EntityNoName
 	
 	/**
 	 * 构造函数
+	 * @throws Exception 
 	 */
-	public Student(String no)
+	public Student(String no) throws Exception
 	{
 		super(no);
 	}
@@ -306,55 +307,7 @@ public class Student extends EntityNoName
 		return this.get_enMap();
 	}
 	
-	/**
-	 * 重写基类的方法.
-	 * 
-	 * @return
-	 */
-	@Override
-	protected boolean beforeInsert()
-	{
-		// 在插入之前设置注册时间.
-		this.setRegDate(DataType.getCurrentDataTime());
-		return super.beforeInsert();
-	}
-	
-	@Override
-	protected boolean beforeDelete()
-	{
-		return super.beforeDelete();
-	}
-	
-	@Override
-	protected boolean beforeUpdate()
-	{
-		return super.beforeUpdate();
-	}
-	
-	@Override
-	protected void afterInsertUpdateAction()
-	{
-		super.afterInsertUpdateAction();
-	}
-	
-	@Override
-	protected void afterDelete()
-	{
-		super.afterDelete();
-	}
-	
-	@Override
-	protected void afterInsert()
-	{
-		super.afterInsert();
-	}
-	
-	@Override
-	protected void afterUpdate()
-	{
-		super.afterUpdate();
-	}
-	
+ 
 	/**
 	 * 带有参数的方法:缴纳班费 说明：都要返回string类型.
 	 * 

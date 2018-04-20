@@ -26,10 +26,11 @@ public class GenerTitle extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (BP.Web.WebUser.getNo().equals("admin"))
 		{
@@ -41,12 +42,13 @@ public class GenerTitle extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
-		BP.WF.Template.FlowSheets ens = new BP.WF.Template.FlowSheets();
-		for (BP.WF.Template.FlowSheet en : ens.ToJavaList())
+		BP.WF.Template.FlowExts ens = new BP.WF.Template.FlowExts();
+		for (BP.WF.Template.FlowExt en : ens.ToJavaList())
 		{
 			en.DoGenerTitle();
 		}

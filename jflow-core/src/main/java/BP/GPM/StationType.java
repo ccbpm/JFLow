@@ -32,8 +32,9 @@ public class StationType extends EntityNoName
 	/** 
 	 岗位类型
 	 @param _No
+	 * @throws Exception 
 	*/
-	public StationType(String _No)
+	public StationType(String _No) throws Exception
 	{
 		super(_No);
 	}

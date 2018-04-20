@@ -36,8 +36,9 @@ public class UAC
 	 * 为一个岗位设置全部的权限
 	 * 
 	 * @param fk_station
+	 * @throws Exception 
 	 */
-	public final void OpenAllForStation(String fk_station)
+	public final void OpenAllForStation(String fk_station) throws Exception
 	{
 		Paras ps = new Paras();
 		ps.Add("user", WebUser.getNo());
@@ -56,8 +57,9 @@ public class UAC
 	
 	/**
 	 * 仅仅对管理员
+	 * @throws Exception 
 	 */
-	public final UAC OpenForSysAdmin()
+	public final UAC OpenForSysAdmin() throws Exception
 	{
 		/*if (SystemConfig.getSysNo().equals("WebSite"))
 		{
@@ -72,7 +74,7 @@ public class UAC
 		return this;
 	}
 	
-	public final UAC OpenForAppAdmin()
+	public final UAC OpenForAppAdmin() throws Exception
 	{
 		if (WebUser.getNo() != null && WebUser.getNo().contains("admin"))
 		{

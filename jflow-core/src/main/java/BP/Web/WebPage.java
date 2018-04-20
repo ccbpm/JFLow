@@ -24,8 +24,9 @@ public class WebPage
 	 * 
 	 * @param ens
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String ExportDGToExcel(Entities ens)
+	public static String ExportDGToExcel(Entities ens) throws Exception
 	{
 		
 		Map map = ens.getGetNewEntity().getEnMap();

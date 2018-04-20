@@ -19,7 +19,7 @@ import BP.Sys.SystemConfig;
 public class SFTableClass extends EntityNoName
 {
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -93,16 +93,17 @@ public class SFTableClass extends EntityNoName
 	 执行删除.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		SFTable sf = new SFTable(this.getNo());
 		sf.Delete();
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		//利用这个时间串进行排序.
 		this.SetValByKey("RDT", DataType.getCurrentDataTime());

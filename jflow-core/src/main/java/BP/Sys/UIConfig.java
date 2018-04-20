@@ -20,8 +20,9 @@ public class UIConfig
 	 * UI的设置.Search. Card, Group信息.
 	 * 
 	 * @param enName
+	 * @throws Exception 
 	 */
-	public UIConfig(Entity en)
+	public UIConfig(Entity en) throws Exception
 	{
 		this.HisEn = en;
 		EnCfg cfg = new EnCfg(en.toString());
@@ -149,8 +150,9 @@ public class UIConfig
 	 * 保存
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int Save()
+	public final int Save() throws Exception
 	{
 		EnCfg cfg = new EnCfg(this.HisEn.toString());
 		cfg.setUI(this.HisAP.GenerAtParaStrs());

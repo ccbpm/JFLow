@@ -81,8 +81,9 @@ public class FrmNodeComponent extends Entity
 	 节点表单组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmNodeComponent(String mapData)
+	public FrmNodeComponent(String mapData) throws Exception
 	{
 		String mapdata = mapData.replace("ND", "");
 		if (DataType.IsNumStr(mapdata) == false)
@@ -105,8 +106,9 @@ public class FrmNodeComponent extends Entity
 	 节点表单组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmNodeComponent(int nodeID)
+	public FrmNodeComponent(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -151,7 +153,7 @@ public class FrmNodeComponent extends Entity
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		GroupField gf = new GroupField();
 

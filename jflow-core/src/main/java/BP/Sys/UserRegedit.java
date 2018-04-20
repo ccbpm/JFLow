@@ -301,8 +301,9 @@ public class UserRegedit extends EntityMyPK
 	 *            人员
 	 * @param cfgkey
 	 *            配置
+	 * @throws Exception 
 	 */
-	public UserRegedit(String fk_emp, String cfgkey)
+	public UserRegedit(String fk_emp, String cfgkey) throws Exception
 	{
 		this();
 		this.setMyPK(fk_emp + cfgkey);
@@ -380,7 +381,7 @@ public class UserRegedit extends EntityMyPK
 	}
 	
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		return super.beforeUpdateInsertAction();
 	}

@@ -40,8 +40,9 @@ public class Nodes extends EntitiesOID
 	 节点集合.
 	 
 	 @param FlowNo
+	 * @throws Exception 
 	*/
-	public Nodes(String fk_flow)
+	public Nodes(String fk_flow) throws Exception
 	{
 		//   Nodes nds = new Nodes();
 		this.Retrieve(NodeAttr.FK_Flow, fk_flow, NodeAttr.Step);
@@ -57,9 +58,10 @@ public class Nodes extends EntitiesOID
 	 RetrieveAll
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		Object tempVar = Cash.GetObj(this.toString(), Depositary.Application);
 		Nodes nds = (Nodes)((tempVar instanceof Nodes) ? tempVar : null);
@@ -82,8 +84,9 @@ public class Nodes extends EntitiesOID
 	}
 	/** 
 	 开始节点
+	 * @throws Exception 
 	*/
-	public final void RetrieveStartNode()
+	public final void RetrieveStartNode() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeAttr.NodePosType, NodePosType.Start.getValue());

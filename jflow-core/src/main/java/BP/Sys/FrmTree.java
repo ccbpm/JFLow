@@ -65,8 +65,9 @@ public class FrmTree extends EntitySimpleTree
 	 独立表单树
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public FrmTree(String _No)
+	public FrmTree(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -109,7 +110,7 @@ public class FrmTree extends EntitySimpleTree
 	///#endregion 系统方法.
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (!DotNetToJavaStringHelper.isNullOrEmpty(this.getNo()))
 		{
@@ -121,8 +122,9 @@ public class FrmTree extends EntitySimpleTree
 	 删除子项
 	 
 	 @param parentNo
+	 * @throws Exception 
 	*/
-	private void DeleteChild(String parentNo)
+	private void DeleteChild(String parentNo) throws Exception
 	{
 		FrmTrees formTrees = new FrmTrees();
 		formTrees.RetrieveByAttr(FrmTreeAttr.ParentNo, parentNo);
@@ -134,7 +136,7 @@ public class FrmTree extends EntitySimpleTree
 			DeleteChild(item.getNo());
 		}
 	}
-	public final FrmTree DoCreateSameLevelNode()
+	public final FrmTree DoCreateSameLevelNode() throws Exception
 	{
 		FrmTree en = new FrmTree();
 		en.Copy(this);
@@ -143,7 +145,7 @@ public class FrmTree extends EntitySimpleTree
 		en.Insert();
 		return en;
 	}
-	public final FrmTree DoCreateSubNode()
+	public final FrmTree DoCreateSubNode() throws Exception
 	{
 		FrmTree en = new FrmTree();
 		en.Copy(this);

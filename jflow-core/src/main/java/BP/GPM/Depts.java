@@ -26,8 +26,9 @@ public class Depts extends EntitiesTree
 	/** 
 	 部门集合
 	 @param parentNo 父部门No
+	 * @throws Exception 
 	*/
-	public Depts(String parentNo)
+	public Depts(String parentNo) throws Exception
 	{
 		this.Retrieve(DeptAttr.ParentNo, parentNo);
 	}

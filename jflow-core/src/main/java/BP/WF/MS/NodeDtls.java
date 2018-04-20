@@ -19,8 +19,9 @@ public class NodeDtls extends EntitiesMM
 	 制度章节
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public NodeDtls(int NodeID)
+	public NodeDtls(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeDtlAttr.FK_Node, NodeID);

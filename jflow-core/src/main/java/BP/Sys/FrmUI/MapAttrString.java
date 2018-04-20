@@ -273,7 +273,7 @@ public class MapAttrString extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());
@@ -343,7 +343,7 @@ public class MapAttrString extends EntityMyPK
 	}
 	
 	@Override
-    protected void afterDelete()
+    protected void afterDelete() throws Exception
     {
         //删除可能存在的关联属性.
         String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "' AND KeyOfEn='" + this.getKeyOfEn() + "T'";

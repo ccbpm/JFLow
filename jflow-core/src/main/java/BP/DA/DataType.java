@@ -1488,12 +1488,6 @@ public class DataType
 		return matter.format(new Date());
 	}
 	
-	public static String getCurrentDataTimeCNOfLong()
-	{
-		SimpleDateFormat matter = new SimpleDateFormat("yy年MM月dd日 HH时mm分ss秒");
-		return matter.format(new Date());
-	}
-	
 	public static String getCurrentDataCNOfShort()
 	{
 		SimpleDateFormat matter = new SimpleDateFormat("yy年MM月dd日");

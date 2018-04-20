@@ -11,9 +11,10 @@ public class DeptEmp extends EntityMyPK
 {
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -91,8 +92,9 @@ public class DeptEmp extends EntityMyPK
 	 查询
 	 @param deptNo 部门编号
 	 @param empNo 人员编号
+	 * @throws Exception 
 	*/
-	public DeptEmp(String deptNo, String empNo)
+	public DeptEmp(String deptNo, String empNo) throws Exception
 	{
 		this.setFK_Dept(deptNo);
 		this.setFK_Emp(empNo);
@@ -125,11 +127,14 @@ public class DeptEmp extends EntityMyPK
 	/** 
 	 更新前做的事情
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
-		return super.beforeUpdateInsertAction();
+	 
+			return super.beforeUpdateInsertAction();
+		 
 	}
 }

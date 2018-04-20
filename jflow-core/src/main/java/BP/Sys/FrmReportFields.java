@@ -22,8 +22,9 @@ public class FrmReportFields extends EntitiesMyPK
 	 表单报表s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmReportFields(String fk_mapdata)
+	public FrmReportFields(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

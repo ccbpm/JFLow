@@ -14,9 +14,10 @@ public class FrmFields extends EntitiesMyPK
 	}
 	/** 
 	 查询
+	 * @throws Exception 
 	 
 	*/
-	public FrmFields(String fk_mapdata, int nodeID)
+	public FrmFields(String fk_mapdata, int nodeID) throws Exception
 	{
 		this.Retrieve(FrmFieldAttr.FK_MapData, fk_mapdata, FrmFieldAttr.FK_Node, nodeID,FrmFieldAttr.EleType, FrmEleType.Field);
 	}

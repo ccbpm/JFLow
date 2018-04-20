@@ -23,8 +23,9 @@ public class MapExts extends Entities
 	 扩展s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public MapExts(String fk_mapdata)
+	public MapExts(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(MapExtAttr.FK_MapData, fk_mapdata, MapExtAttr.PRI);
 	}

@@ -68,7 +68,7 @@ public class TurnTo extends EntityMyPK
 	{
 		return this.GetValStringByKey(TurnToAttr.FK_Attr);
 	}
-	public final void setFK_Attr(String value)
+	public final void setFK_Attr(String value) throws Exception
 	{
 		if (value == null)
 		{
@@ -237,8 +237,9 @@ public class TurnTo extends EntityMyPK
 	 条件
 	 
 	 @param mypk PK
+	 * @throws Exception 
 	*/
-	public TurnTo(String mypk)
+	public TurnTo(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -255,9 +256,10 @@ public class TurnTo extends EntityMyPK
 	public Work HisWork = null;
 	/** 
 	 这个条件能不能通过
+	 * @throws Exception 
 	 
 	*/
-	public boolean getIsPassed()
+	public boolean getIsPassed() throws Exception
 	{
 
 		BP.Sys.MapAttr attr = new BP.Sys.MapAttr();

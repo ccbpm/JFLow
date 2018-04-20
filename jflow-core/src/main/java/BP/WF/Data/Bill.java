@@ -228,8 +228,9 @@ public class Bill extends EntityMyPK
 	
 	/**
 	 * 节点名称
+	 * @throws Exception 
 	 */
-	public final String getFK_NodeT()
+	public final String getFK_NodeT() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		return nd.getName();
@@ -307,8 +308,9 @@ public class Bill extends EntityMyPK
 	
 	/**
 	 * @param pk
+	 * @throws Exception 
 	 */
-	public Bill(String pk)
+	public Bill(String pk) throws Exception
 	{
 		super(pk);
 	}

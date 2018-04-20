@@ -70,8 +70,9 @@ public class TemplateGlo
 	 @param x
 	 @param y
 	 @return 
+	 * @throws Exception 
 	*/
-	public static int NewNode(String flowNo, int x, int y)
+	public static int NewNode(String flowNo, int x, int y) throws Exception
 	{
 		BP.WF.Flow fl = new Flow(flowNo);
 		BP.WF.Node nd = fl.DoNewNode(x, y);
@@ -81,8 +82,9 @@ public class TemplateGlo
 	 删除节点.
 	 
 	 @param nodeid
+	 * @throws Exception 
 	*/
-	public static void DeleteNode(int nodeid)
+	public static void DeleteNode(int nodeid) throws Exception
 	{
 		BP.WF.Node nd = new Node(nodeid);
 		nd.Delete();
@@ -92,13 +94,14 @@ public class TemplateGlo
 	 
 	 @param flowNo 流程编号
 	 @return json格式的数据
+	 * @throws Exception 
 	*/
-	public static String GenerFlowJsonFromDB(String flowNo)
+	public static String GenerFlowJsonFromDB(String flowNo) throws Exception
 	{
 		Flow fl = new Flow(flowNo);
 		return fl.getFlowJson();
 	}
-	public static String GenerFlowJsonFromFile(String flowNo)
+	public static String GenerFlowJsonFromFile(String flowNo) throws Exception
 	{
 		String tempFile = BP.Sys.SystemConfig.getPathOfDataUser() + "FlowDesc\\" + flowNo + ".json";
 		File file = new File(tempFile);

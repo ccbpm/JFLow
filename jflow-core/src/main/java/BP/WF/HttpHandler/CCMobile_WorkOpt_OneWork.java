@@ -16,8 +16,8 @@ import BP.WF.Template.*;
 public class CCMobile_WorkOpt_OneWork extends WebContralBase
 {
 
-		///#region xxx 界面 .
-	public final String TimeBase_Init()
+    ///#region xxx 界面 .
+	public final String TimeBase_Init() throws Exception
 	{
 		WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork(this.context);
 		return en.TimeBase_Init();
@@ -26,13 +26,14 @@ public class CCMobile_WorkOpt_OneWork extends WebContralBase
 	 执行撤销操作.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String TimeBase_UnSend()
+	public final String TimeBase_UnSend() throws Exception
 	{
 		WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork(this.context);
 		return en.OP_UnSend();
 	}
-	public final String TimeBase_OpenFrm()
+	public final String TimeBase_OpenFrm() throws Exception
 	{
 		WF en = new WF(this.context);
 		return en.Runing_OpenFrm();

@@ -54,9 +54,10 @@ public class GenerTemplate extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String path = this.GetValStrByKey("Path") + "_" + new java.util.Date().toString();//.toString("yy年MM月dd日HH时mm分");
 		File file = new File(path);

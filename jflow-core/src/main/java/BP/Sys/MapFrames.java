@@ -23,8 +23,9 @@ public class MapFrames extends EntitiesMyPK
 	 框架s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public MapFrames(String fk_mapdata)
+	public MapFrames(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(MapFrameAttr.FK_MapData, fk_mapdata);
 	}

@@ -14,8 +14,9 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 
 	/** 
 	 获得外部数据表
+	 * @throws Exception 
 	*/
-	public final DataTable getGenerHisDataTable()
+	public final DataTable getGenerHisDataTable() throws Exception
 	{
 			//创建数据源.
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
@@ -521,7 +522,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 	{
 		this.SetValByKey(SFTableAttr.DefVal, value);
 	}
-	public final EntitiesNoName getHisEns()
+	public final EntitiesNoName getHisEns() throws Exception
 	{
 		if (this.getIsClass())
 		{
@@ -536,7 +537,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 	}
 
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -549,7 +550,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 	public SFTable()
 	{
 	}
-	public SFTable(String mypk)
+	public SFTable(String mypk) throws Exception
 	{
 		this.setNo(mypk);
 		try
@@ -691,7 +692,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
@@ -707,7 +708,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		//利用这个时间串进行排序.
 		this.setRDT(DataType.getCurrentDataTime());
@@ -745,7 +746,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 	}
 
 	@Override
-	protected void afterInsert()
+	protected void afterInsert() throws Exception
 	{
 		if (this.getSrcType() == BP.Sys.SrcType.TableOrView)
 		{

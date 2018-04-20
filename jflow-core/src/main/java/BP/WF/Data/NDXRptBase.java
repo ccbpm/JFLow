@@ -141,8 +141,9 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 	}
 	/** 
 	 结束节点名称
+	 * @throws Exception 
 	*/
-	public final String getFlowEndNodeText()
+	public final String getFlowEndNodeText() throws Exception
 	{
 		Node nd = new Node(this.getFlowEndNode());
 		return nd.getName();
@@ -248,8 +249,9 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 	/** 
 	 根据OID构造实体
 	 @param 工作ID workid
+	 * @throws Exception 
 	*/
-	protected NDXRptBase(int workid)
+	protected NDXRptBase(int workid) throws Exception
 	{
 		super(workid);
 	}

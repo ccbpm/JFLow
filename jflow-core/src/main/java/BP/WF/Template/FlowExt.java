@@ -286,8 +286,9 @@ public class FlowExt extends EntityNoName
 	 流程
 	 
 	 @param _No 编号
+	 * @throws Exception 
 	*/
-	public FlowExt(String _No)
+	public FlowExt(String _No) throws Exception
 	{
 		this.setNo(_No);
 		if (SystemConfig.getIsDebug())
@@ -1005,8 +1006,9 @@ public class FlowExt extends EntityNoName
 	 @param dtTo 日期到
 	 @param isOk 仅仅删除当前流程？1=删除当前流程, 0=删除全部流程.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDelFlows(String dtFrom, String dtTo, String isDelCurrFlow)
+	public final String DoDelFlows(String dtFrom, String dtTo, String isDelCurrFlow) throws Exception
 	{
 		if ( ! BP.Web.WebUser.getNo().equals("admin"))
 		{
@@ -1042,8 +1044,9 @@ public class FlowExt extends EntityNoName
 	 @param FieldNew
 	 @param FieldNewName
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoChangeFieldName(String fieldOld, String fieldNew, String FieldNewName, String thisFlowOnly)
+	public final String DoChangeFieldName(String fieldOld, String fieldNew, String FieldNewName, String thisFlowOnly) throws Exception
 	{
 
 		if (thisFlowOnly.equals("1"))
@@ -1062,7 +1065,7 @@ public class FlowExt extends EntityNoName
 		}
 		return resu;
 	}
-	public final String DoChangeFieldNameOne(FlowExt flow, String fieldOld, String fieldNew, String FieldNewName)
+	public final String DoChangeFieldNameOne(FlowExt flow, String fieldOld, String fieldNew, String FieldNewName) throws Exception
 	{
 		String result = "开始执行对字段:" + fieldOld + " ，进行重命名。";
 		result += "<br> ===============================================================   ";
@@ -1176,8 +1179,9 @@ public class FlowExt extends EntityNoName
 	 执行流程数据表与业务表数据手工同步
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoBTableDTS()
+	public final String DoBTableDTS() throws Exception
 	{
 		Flow fl = new Flow(this.getNo());
 		return fl.DoBTableDTS();
@@ -1190,8 +1194,9 @@ public class FlowExt extends EntityNoName
 	 @param backToNodeID 恢复到的节点编号，如果是0，标示回复到流程最后一个节点上去.
 	 @param note
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoRebackFlowData(long workid, int backToNodeID, String note)
+	public final String DoRebackFlowData(long workid, int backToNodeID, String note) throws Exception
 	{
 		if (note.length() <= 2)
 		{
@@ -1377,9 +1382,10 @@ public class FlowExt extends EntityNoName
 	}
 	/** 
 	 重新产生标题，根据新的规则.
+	 * @throws Exception 
 	 
 	*/
-	public final String DoGenerFlowEmps()
+	public final String DoGenerFlowEmps() throws Exception
 	{
 		if ( ! WebUser.getNo().equals("admin"))
 		{
@@ -1458,9 +1464,10 @@ public class FlowExt extends EntityNoName
 
 	/** 
 	 重新产生标题，根据新的规则.
+	 * @throws Exception 
 	 
 	*/
-	public final String DoGenerTitle()
+	public final String DoGenerTitle() throws Exception
 	{
 		if ( ! WebUser.getNo().equals("admin"))
 		{
@@ -1538,8 +1545,9 @@ public class FlowExt extends EntityNoName
 	 定义报表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAutoStartIt()
+	public final String DoAutoStartIt() throws Exception
 	{
 		Flow fl = new Flow();
 		fl.setNo(this.getNo());
@@ -1552,8 +1560,9 @@ public class FlowExt extends EntityNoName
 	 @param workid
 	 @param sd
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDelDataOne(int workid, String note)
+	public final String DoDelDataOne(int workid, String note) throws Exception
 	{
 		try
 		{
@@ -1645,8 +1654,9 @@ public class FlowExt extends EntityNoName
 	/** 
 	 执行重新装载数据
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReloadRptData()
+	public final String DoReloadRptData() throws Exception
 	{
 		Flow fl = new Flow();
 		fl.setNo(this.getNo());
@@ -1656,8 +1666,9 @@ public class FlowExt extends EntityNoName
 	/** 
 	 删除数据.
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDelData()
+	public final String DoDelData() throws Exception
 	{
 		Flow fl = new Flow();
 		fl.setNo(this.getNo());
@@ -1689,7 +1700,7 @@ public class FlowExt extends EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		//更新流程版本
 		Flow.UpdateVer(this.getNo());
@@ -1826,7 +1837,7 @@ public class FlowExt extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		//同步流程数据表.
 		String ndxxRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
@@ -1885,8 +1896,9 @@ public class FlowExt extends EntityNoName
 	 一件设置审核模式.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSetFWCModel()
+	public final String DoSetFWCModel() throws Exception
 	{
 		Nodes nds = new Nodes(this.getNo());
 

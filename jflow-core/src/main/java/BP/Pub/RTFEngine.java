@@ -878,8 +878,9 @@ public class RTFEngine
 	 * 
 	 * @param cfile
 	 *            模板文件
+	 * @throws Exception 
 	 */
-	public final void MakeDoc(String cfile, String replaceVal)
+	public final void MakeDoc(String cfile, String replaceVal) throws Exception
 	{
 		String file = PubClass.GenerTempFileName("doc");
 		this.MakeDoc(cfile, SystemConfig.getPathOfTemp(), file, replaceVal,

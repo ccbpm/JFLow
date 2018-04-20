@@ -41,7 +41,6 @@ import BP.WF.TeamLeaderConfirmRole;
 import BP.WF.TodolistModel;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Template.BtnLab;
-import BP.WF.Template.BtnLabExtWebOffice;
 import BP.WF.Template.NodeAttr;
 import BP.WF.Template.NodeCancel;
 import BP.WF.Template.NodeCancelAttr;
@@ -68,8 +67,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
 	/**
 	 * 事件
+	 * @throws Exception 
 	 */
-	public String Action_Init() {
+	public String Action_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 事件实体.
@@ -92,7 +92,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 	// / 获得该节点下已经绑定该类型的实体.
 	// / </summary>
 	// / <returns></returns>
-	public String ActionDtl_Init() {
+	public String ActionDtl_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 事件实体.
@@ -123,14 +123,14 @@ public class WF_Admin_AttrNode extends WebContralBase{
     /// 执行删除
     /// </summary>
     /// <returns></returns>
-	public String ActionDtl_Delete() {
+	public String ActionDtl_Delete() throws Exception {
 		// 事件实体.
 		FrmEvent en = new FrmEvent(this.getMyPK());
 		en.Delete();
 		return "删除成功.";
 	}
 
-	public String ActionDtl_Save() {
+	public String ActionDtl_Save() throws Exception {
 		// 事件实体.
 		FrmEvent en = new FrmEvent();
 		en.setFK_Node(this.getFK_Node());
@@ -159,8 +159,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 			 表单模式
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String NodeFromWorkModel_Init()
+			public final String NodeFromWorkModel_Init() throws Exception
 			{
 				//数据容器.
 				DataSet ds = new DataSet();
@@ -174,7 +175,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 				DataTable mydt = nd.ToDataTableField("WF_Node");
 				ds.Tables.add(mydt);
 
-				BtnLabExtWebOffice mybtn = new BtnLabExtWebOffice(this.getFK_Node());
+				//BtnLabExtWebOffice mybtn = new BtnLabExtWebOffice(this.getFK_Node());
+				
+				BtnLab mybtn = new BtnLab(this.getFK_Node());
 				DataTable mydt2 = mybtn.ToDataTableField("WF_BtnLabExtWebOffice");
 				ds.Tables.add(mydt2);
 
@@ -194,8 +197,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 			 表单模式
 			 
 			 @return 
+			 * @throws Exception 
 			*/
-			public final String NodeFromWorkModel_Save()
+			public final String NodeFromWorkModel_Save() throws Exception
 			{
 				Node nd = new Node(this.getFK_Node());
 				
@@ -304,8 +308,11 @@ public class WF_Admin_AttrNode extends WebContralBase{
 					nd.setFormType( NodeFormType.WebOffice);
 					nd.Update();
 
+					 
 					//按钮标签.
-					BtnLabExtWebOffice btn = new BtnLabExtWebOffice(this.getFK_Node());
+					//BtnLabExtWebOffice btn = new BtnLabExtWebOffice(this.getFK_Node());
+					
+					BtnLab btn = new BtnLab(this.getFK_Node());
 
 					// tab 页工作风格.
 					String WebOfficeStyle = this.GetValFromFrmByKey("WebOfficeStyle");
@@ -323,14 +330,14 @@ public class WF_Admin_AttrNode extends WebContralBase{
 					//表单工作模式.
 					if (WebOfficeFrmType.equals("0"))
 					{
-						btn.setWebOfficeFrmModel( BP.Sys.FrmType.FreeFrm);
+						//btn.setWebOfficeFrmModel( BP.Sys.FrmType.FreeFrm);
 
 						md.setHisFrmType( BP.Sys.FrmType.FreeFrm); //同时更新表单表住表.
 						md.Update();
 					}
 					else
 					{
-						btn.setWebOfficeFrmModel(BP.Sys.FrmType.FoolForm);
+						///btn.setWebOfficeFrmModel(BP.Sys.FrmType.FoolForm);
 
 						md.setHisFrmType( BP.Sys.FrmType.FoolForm); //同时更新表单表住表.
 						md.Update();
@@ -352,7 +359,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 			//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#region SortingMapAttrs_Init
 
-					public final String SortingMapAttrs_Init()
+					public final String SortingMapAttrs_Init() throws Exception
 					{
 						MapDatas mapdatas;
 						MapAttrs attrs;
@@ -407,7 +414,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 						return BP.Tools.Json.ToJson(ds);
 					}
 
-					private void _BindData4SortingMapAttrs_Init(MapDatas mapdatas, MapAttrs attrs, GroupFields groups, MapDtls dtls, FrmAttachments athMents, FrmBtns btns, Nodes nodes, DataSet ds)
+					private void _BindData4SortingMapAttrs_Init(MapDatas mapdatas, MapAttrs attrs, GroupFields groups, MapDtls dtls, FrmAttachments athMents, FrmBtns btns, Nodes nodes, DataSet ds) throws Exception
 					{
 						Object tempVar = mapdatas.GetEntityByKey(getFK_MapData());
 						MapData mapdata = (MapData)((tempVar instanceof MapData) ? tempVar : null);
@@ -661,8 +668,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							 重置字段顺序
 							 
 							 @return 
+							 * @throws Exception 
 							*/
-							public final String SortingMapAttrs_ReSet()
+							public final String SortingMapAttrs_ReSet() throws Exception
 							{
 								try
 								{
@@ -698,8 +706,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							 保存需要在手机端表单显示的字段
 							 
 							 @return 
+							 * @throws Exception 
 							*/
-							public final String SortingMapAttrs_From_Save()
+							public final String SortingMapAttrs_From_Save() throws Exception
 							{
 								//获取需要显示的字段集合
 					
@@ -736,8 +745,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							 字段分组
 							 
 							 @return 
+							 * @throws Exception 
 							*/
-							public final String SortingMapAttr_GroupChange()
+							public final String SortingMapAttr_GroupChange() throws Exception
 							{
 								//获取分组ID
 								int gpID = Integer.parseInt(this.GetRequestVal("GroupID"));
@@ -773,8 +783,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							 分组、字段排序：上移
 							 
 							 @return 
+							 * @throws Exception 
 							*/
-							public final String SortingMapAttrs_Up()
+							public final String SortingMapAttrs_Up() throws Exception
 							{
 					
 								String  Type = this.GetRequestVal("Type");
@@ -935,8 +946,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							 分组、字段排序：下移
 							 
 							 @return 
+							 * @throws Exception 
 							*/
-							public final String SortingMapAttrs_Down()
+							public final String SortingMapAttrs_Down() throws Exception
 							{
 					
 								String groupID = this.GetRequestVal("GroupID");
@@ -1098,8 +1110,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							 将分组、字段排序复制到其他节点
 							 
 							 @return 
+							 * @throws Exception 
 							*/
-							public final String SortingMapAttrs_Copy()
+							public final String SortingMapAttrs_Copy() throws Exception
 							{
 								try
 								{
@@ -1564,7 +1577,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 								//}
 							}
 					
-					 public final String SortingMapAttrs_Save()
+					 public final String SortingMapAttrs_Save() throws Exception
 						{
 							Node nd = new Node(this.getFK_Node());
 
@@ -1674,7 +1687,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 								nd.Update();
 
 								//按钮标签.
-								BtnLabExtWebOffice btn = new BtnLabExtWebOffice(this.getFK_Node());
+								BtnLab btn = new BtnLab(this.getFK_Node());
+								
+								//BtnLabExtWebOffice btn = new BtnLabExtWebOffice(this.getFK_Node());
 
 								// tab 页工作风格.
 								String WebOfficeStyle = this.GetValFromFrmByKey("WebOfficeStyle");
@@ -1692,14 +1707,14 @@ public class WF_Admin_AttrNode extends WebContralBase{
 								//表单工作模式.
 								if (WebOfficeFrmType.equals("0"))
 								{
-									btn.setWebOfficeFrmModel(BP.Sys.FrmType.FreeFrm);
+									//btn.setWebOfficeFrmModel(BP.Sys.FrmType.FreeFrm);
 
 									md.setHisFrmType(BP.Sys.FrmType.FreeFrm); //同时更新表单表住表.
 									md.Update();
 								}
 								else
 								{
-									btn.setWebOfficeFrmModel(BP.Sys.FrmType.FoolForm);
+									//btn.setWebOfficeFrmModel(BP.Sys.FrmType.FoolForm);
 
 									md.setHisFrmType(BP.Sys.FrmType.FoolForm); //同时更新表单表住表.
 									md.Update();
@@ -1714,8 +1729,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
 	 /**
 	  * 初始化考核规则.
 	  * @return
+	 * @throws Exception 
 	  */
-    public String CHOvertimeRole_Init()
+    public String CHOvertimeRole_Init() throws Exception
     {
 
         BP.WF.Node nd = new Node(this.getFK_Node());
@@ -1736,7 +1752,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
         return BP.Tools.Json.ToJson(ds); 
     }
-    public String CHOvertimeRole_Save()
+    public String CHOvertimeRole_Save() throws Exception
     {
         BP.WF.Node nd = new Node(this.getFK_Node());
         int val = this.GetRequestValInt("RB_OutTimeDeal");
@@ -1770,8 +1786,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
     }
     /**
      * 初始化
+     * @throws Exception 
      */
-    public String TodolistModel_Init()
+    public String TodolistModel_Init() throws Exception
     {
         BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
         return nd.ToJson();
@@ -1779,8 +1796,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
     /**
      * 保存
      * @return
+     * @throws Exception 
      */
-    public String TodolistModel_Save()
+    public String TodolistModel_Save() throws Exception
     {
         BP.WF.Node nd = new BP.WF.Node();
         nd.setNodeID(this.getFK_Node());
@@ -1795,14 +1813,15 @@ public class WF_Admin_AttrNode extends WebContralBase{
     /**
      * 考核规则.
      * @return
+     * @throws Exception 
      */
-    public String CHRole_Init()
+    public String CHRole_Init() throws Exception
     {
         BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
         return nd.ToJson();
     }
 
-    public String CHRole_Save()
+    public String CHRole_Save() throws Exception
     {
         BP.WF.Node nd = new BP.WF.Node();
         nd.setNodeID(this.getFK_Node());
@@ -1829,8 +1848,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
     /**
      * 初始化节点属性列表.
      * @return
+     * @throws Exception 
      */
-    public String NodeAttrs_Init()
+    public String NodeAttrs_Init() throws Exception
     {
         String strFlowId = GetRequestVal("FK_Flow");
         if (StringHelper.isNullOrEmpty(strFlowId))
@@ -1917,8 +1937,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
     /**
      * 发送后转向处理规则 
      * @return
+     * @throws Exception 
      */
-    public String TurnToDeal_Init()
+    public String TurnToDeal_Init() throws Exception
     {
 
         BP.WF.Node nd = new BP.WF.Node();
@@ -2007,8 +2028,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
     /**
      * 批量发起规则设置
      * @return
+     * @throws Exception 
      */
-    public String BatchStartFields_Init()
+    public String BatchStartFields_Init() throws Exception
     {
 
         int nodeID = Integer.parseInt(String.valueOf(this.getFK_Node()));
@@ -2022,8 +2044,9 @@ public class WF_Admin_AttrNode extends WebContralBase{
     /**
      * 批量发起规则设置save
      * @return
+     * @throws Exception 
      */
-    public String BatchStartFields_Save()
+    public String BatchStartFields_Save() throws Exception
     {
 
         int nodeID = Integer.parseInt(String.valueOf(this.getFK_Node()));
@@ -2059,7 +2082,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         return "保存成功.";
     }
     //发送阻塞模式
-    public String BlockModel_Init()
+    public String BlockModel_Init() throws Exception
     {
 
         BP.WF.Node nd = new BP.WF.Node();
@@ -2068,7 +2091,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
         return nd.ToJson();
     }
-    public String BlockModel_Save()
+    public String BlockModel_Save() throws Exception
     {
         BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
         nd.setBlockAlert(this.GetRequestVal("TB_Alert")); //提示信息.
@@ -2099,7 +2122,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         nd.Update();
         return "保存成功.";
     }
-    public String CanCancelNodes_Init()
+    public String CanCancelNodes_Init() throws Exception
     {
 
         BP.WF.Node mynd = new BP.WF.Node();
@@ -2115,7 +2138,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         return "{\"mynd\":" + mynd.ToJson() + ",\"rnds\":" + rnds.ToJson() + ",\"nds\":" + nds.ToJson() + "}";
     }
     //可以撤销的节点
-    public String CanCancelNodes_Save()
+    public String CanCancelNodes_Save() throws Exception
     {
         BP.WF.Template.NodeCancels rnds = new BP.WF.Template.NodeCancels();
         rnds.Delete(BP.WF.Template.NodeCancelAttr.FK_Node, this.getFK_Node());
@@ -2143,7 +2166,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         return "设置成功.";
     }
     //可以退回的节点
-    public String CanReturnNodes_Init()
+    public String CanReturnNodes_Init() throws Exception
     {
 
         BP.WF.Node mynd = new BP.WF.Node();
@@ -2158,7 +2181,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
         return "{\"mynd\":" + mynd.ToJson() + ",\"rnds\":" + rnds.ToJson() + ",\"nds\":" + nds.ToJson() + "}";
     }
-    public String CanReturnNodes_Save()
+    public String CanReturnNodes_Save() throws Exception
     {
         BP.WF.Template.NodeReturns rnds = new BP.WF.Template.NodeReturns();
         rnds.Delete(BP.WF.Template.NodeReturnAttr.FK_Node, this.getFK_Node());
@@ -2186,7 +2209,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         return "设置成功.";
     }
     // 消息事件
-    public String PushMessage_Init()
+    public String PushMessage_Init() throws Exception
     {
         BP.WF.Template.PushMsg enDel = new BP.WF.Template.PushMsg();
         enDel.setFK_Node(this.getFK_Node());
@@ -2194,7 +2217,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         return enDel.ToJson();
     }
 
-    public String PushMessage_Delete()
+    public String PushMessage_Delete() throws Exception
     {
         BP.WF.Template.PushMsg enDel = new BP.WF.Template.PushMsg();
         enDel.setMyPK(this.getMyPK());
@@ -2217,7 +2240,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
     }
 
-    public String PushMessageEntity_Init()
+    public String PushMessageEntity_Init() throws Exception
     {
         String fk_node = GetRequestVal("FK_Node");
         BP.WF.Template.PushMsg en = new BP.WF.Template.PushMsg();
@@ -2226,7 +2249,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         en.RetrieveFromDBSources();
         return en.ToJson();
     }
-    public String PushMessageEntity_Save()
+    public String PushMessageEntity_Save() throws Exception
     {
         BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
         msg.setMyPK(this.getMyPK());
@@ -2241,7 +2264,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
     
 
    // #region  节点消息
-    public String PushMsg_Init()
+    public String PushMsg_Init() throws Exception
     {
         //增加上单据模版集合.
         int nodeID = this.GetRequestValInt("FK_Node");
@@ -2249,7 +2272,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         return ens.ToJson();
     }
     
-    public final String PushMsgEntity_Init()
+    public final String PushMsgEntity_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -2276,7 +2299,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 	}
     
     
-    public final String PushMsg_Save()
+    public final String PushMsg_Save() throws Exception
 	{
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
 		msg.setMyPK(this.GetRequestVal("MyPK"));

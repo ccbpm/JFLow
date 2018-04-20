@@ -63,8 +63,9 @@ public abstract class EntityOID extends Entity
 	 * 
 	 * @param oid
 	 *            oid
+	 * @throws Exception 
 	 */
-	protected EntityOID(int oid)
+	protected EntityOID(int oid) throws Exception
 	{
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
@@ -91,7 +92,7 @@ public abstract class EntityOID extends Entity
 		}
 	}
 	
-	public final void InsertAsNew()
+	public final void InsertAsNew() throws Exception
 	{
 		this.setOID(0);
 		this.Insert();
@@ -181,11 +182,12 @@ public abstract class EntityOID extends Entity
 	 * 删除之前的操作。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
-		if (!super.beforeDelete())
+		if (super.beforeDelete()==false)
 		{
 			return false;
 		}
@@ -203,20 +205,15 @@ public abstract class EntityOID extends Entity
 					+ "].beforeDelete err:" + ex.getMessage());
 		}
 	}
-	
-	@Override
-	protected boolean beforeUpdateInsertAction()
-	{
-		return super.beforeUpdateInsertAction();
-	}
-	
+	 
 	/**
 	 * beforeInsert 之前的操作。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getOID() > 0)
 		{
@@ -246,9 +243,10 @@ public abstract class EntityOID extends Entity
 	 * beforeUpdate
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (!super.beforeUpdate())
 		{
@@ -333,8 +331,9 @@ public abstract class EntityOID extends Entity
 	 * 按照指定的OID 保存
 	 * 
 	 * @param oid
+	 * @throws Exception 
 	 */
-	public final void SaveAsOID(int oid)
+	public final void SaveAsOID(int oid) throws Exception
 	{
 		this.SetValByKey("OID", oid);
 		if (!this.getIsExits())

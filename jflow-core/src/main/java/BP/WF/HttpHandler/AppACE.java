@@ -47,8 +47,9 @@ public class AppACE extends WebContralBase{
     /**
      * 获得发起流程
      * @return
+     * @throws Exception 
      */
-    public String Start_Init()
+    public String Start_Init() throws Exception
     {
 	    DataTable dt = BP.WF.Dev2Interface.DB_GenerCanStartFlowsOfDataTable(WebUser.getNo());
 		return BP.Tools.Json.ToJson(dt);
@@ -74,8 +75,9 @@ public class AppACE extends WebContralBase{
     /** 获取退回消息
 	 
 	 @return 
+     * @throws Exception 
 	 */
-	public final String DB_GenerReturnWorks()
+	public final String DB_GenerReturnWorks() throws Exception
 	{
 		// 如果工作节点退回了
 		BP.WF.ReturnWorks rws = new BP.WF.ReturnWorks();
@@ -102,8 +104,9 @@ public class AppACE extends WebContralBase{
     /**
      * 运行
      *  @return 
+     * @throws Exception 
      */
-    public String Runing_Init()
+    public String Runing_Init() throws Exception
     {
     	DataTable dt = null;
 		dt = BP.WF.Dev2Interface.DB_GenerRuning();
@@ -114,8 +117,9 @@ public class AppACE extends WebContralBase{
 	 获取用户信息
 	 
 	 @return 
+     * @throws Exception 
 	 */
-	public final String GetUserInfo()
+	public final String GetUserInfo() throws Exception
 	{
 		if (WebUser.getNo() == null)
 		{
@@ -144,8 +148,9 @@ public class AppACE extends WebContralBase{
     /**
      * 初始化赋值
      * @return
+     * @throws Exception 
      */
-    public String Home_Init()
+    public String Home_Init() throws Exception
     {
     	Hashtable ht = new Hashtable();
 		ht.put("UserNo", BP.Web.WebUser.getNo());
@@ -186,10 +191,12 @@ public class AppACE extends WebContralBase{
 		return BP.Tools.Json.ToJsonEntityModel(ht);
     }
     
+  
+    
     /**
      * 转换成菜单
      *  @return 
-     */
+     
     public String Home_Menu()
     {
     	DataSet ds = new DataSet();
@@ -211,6 +218,7 @@ public class AppACE extends WebContralBase{
 
 	   return BP.Tools.Json.ToJson(ds);
     }
+    */
     
     ///#region 执行父类的重写方法.
     /// <summary>
@@ -235,8 +243,9 @@ public class AppACE extends WebContralBase{
     /**
      * 控制台信息
      *  @return 
+     * @throws Exception 
      */
-    public String Index_Init()
+    public String Index_Init() throws Exception
     {
     	java.util.Hashtable ht = new java.util.Hashtable();
 		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing()); //运行中.
@@ -261,9 +270,9 @@ public class AppACE extends WebContralBase{
     /**
      * 登录
      *  @return 
-     * @throws UnsupportedEncodingException 
+     * @throws Exception 
      */
-    public String Login_Submit() throws UnsupportedEncodingException
+    public String Login_Submit() throws Exception
     {
     	String userNo = this.GetRequestVal("TB_UserNo");
 		String pass = this.GetRequestVal("TB_Pass");
@@ -294,8 +303,9 @@ public class AppACE extends WebContralBase{
     /**
      * 登录初始化
      *  @return 
+     * @throws Exception 
      */
-    public String Login_Init()
+    public String Login_Init() throws Exception
     {
     	java.util.Hashtable ht = new java.util.Hashtable();
 		ht.put("SysName", SystemConfig.getSysName());
@@ -329,8 +339,9 @@ public class AppACE extends WebContralBase{
     /**
      * 草稿
      *  @return 
+     * @throws Exception 
      */
-    public String Draft_Init()
+    public String Draft_Init() throws Exception
     {
     	DataTable dt = BP.WF.Dev2Interface.DB_GenerDraftDataTable(this.getFK_Flow());
 		return BP.Tools.Json.ToJson(dt);
@@ -357,8 +368,9 @@ public class AppACE extends WebContralBase{
     /**
      * 授权登录
      *  @return 
+     * @throws Exception 
      */
-    public String LoginAs()
+    public String LoginAs() throws Exception
     {
     	BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(this.getNo());
 		if (wfemp.getAuthorIsOK() == false)
@@ -396,8 +408,9 @@ public class AppACE extends WebContralBase{
     /**
      * 加载当前授权处理人
      *  @return 
+     * @throws Exception 
      */
-    public String Load_Author()
+    public String Load_Author() throws Exception
     {
     	DataTable dt = BP.DA.DBAccess.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + BP.Web.WebUser.getNo() + "'");
 		return BP.Tools.Json.ToJson(dt);
@@ -406,8 +419,9 @@ public class AppACE extends WebContralBase{
     /**
      * 抄送列表操作
      *  @return 
+     * @throws Exception 
      */
-    public String cc_Init()
+    public String cc_Init() throws Exception
     {
     	String sta = this.GetRequestVal("Sta");
 		if (sta == null || sta.equals(""))
@@ -455,8 +469,9 @@ public class AppACE extends WebContralBase{
     /**
      * 加载关注
      *  @return 
+     * @throws Exception 
      */
-    public String Focus_Init()
+    public String Focus_Init() throws Exception
     {
     	String flowNo = this.GetRequestVal("FK_Flow");
 
@@ -497,8 +512,10 @@ public class AppACE extends WebContralBase{
     /**
      * 取消关注
      *  @return 
+     * @throws Exception 
+     * @throws NumberFormatException 
      */
-    public String Focus_Delete()
+    public String Focus_Delete() throws NumberFormatException, Exception
     {
     	BP.WF.Dev2Interface.Flow_Focus(Long.parseLong(this.GetRequestVal("WorkID")));
 		return "您已取消关注！";
@@ -507,8 +524,9 @@ public class AppACE extends WebContralBase{
     /**
      * 
      *  @return 
+     * @throws Exception 
      */
-    public String FlowRpt_Init()
+    public String FlowRpt_Init() throws Exception
     {
     	StringBuilder Pub1 = new StringBuilder();
 		BP.WF.Flows fls = new BP.WF.Flows();

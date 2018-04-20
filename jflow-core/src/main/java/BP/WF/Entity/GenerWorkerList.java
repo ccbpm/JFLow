@@ -252,8 +252,9 @@ public class GenerWorkerList extends Entity
 	
 	/**
 	 * 工作人员
+	 * @throws Exception 
 	 */
-	public final Emp getHisEmp()
+	public final Emp getHisEmp() throws Exception
 	{
 		return new Emp(this.getFK_Emp());
 	}
@@ -428,7 +429,7 @@ public class GenerWorkerList extends Entity
 	{
 	}
 	
-	public GenerWorkerList(long workid, int FK_Node, String FK_Emp)
+	public GenerWorkerList(long workid, int FK_Node, String FK_Emp) throws Exception
 	{
 		if (this.getWorkID() == 0)
 		{
@@ -519,7 +520,7 @@ public class GenerWorkerList extends Entity
 	}
 	
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getFID() != 0)
 		{

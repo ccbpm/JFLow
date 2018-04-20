@@ -23,8 +23,9 @@ public class FrmTracks extends Entities
 	 轨迹图标组件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmTracks(String fk_mapdata)
+	public FrmTracks(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

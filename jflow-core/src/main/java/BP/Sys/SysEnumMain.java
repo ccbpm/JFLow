@@ -34,34 +34,40 @@ public class SysEnumMain extends EntityNoName
 	/** 
 	 SysEnumMain
 	 @param no
+	 * @throws Exception 
 	*/
-	public SysEnumMain(String no)
+	public SysEnumMain(String no) throws Exception
 	{
-		try
-		{
-			this.setNo(no);
-			this.Retrieve();
-		}
-		catch (RuntimeException ex)
-		{
-			SysEnums ses = new SysEnums(no);
-			if (ses.size() == 0)
+		try {
+			try
 			{
-				throw ex;
+				this.setNo(no);
+				this.Retrieve();
 			}
-			this.setNo(no);
-			this.setName("未命名");
-			String cfgVal = "";
-			for (SysEnum item : ses.ToJavaList())
+			catch (RuntimeException ex)
 			{
-				cfgVal += "@" + item.getIntKey() + "=" + item.getLab();
+				SysEnums ses = new SysEnums(no);
+				if (ses.size() == 0)
+				{
+					throw ex;
+				}
+				this.setNo(no);
+				this.setName("未命名");
+				String cfgVal = "";
+				for (SysEnum item : ses.ToJavaList())
+				{
+					cfgVal += "@" + item.getIntKey() + "=" + item.getLab();
+				}
+				this.setCfgVal(cfgVal);
+				this.Insert();
 			}
-			this.setCfgVal(cfgVal);
-			this.Insert();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		// 检查这个类型是否被使用？
 		MapAttrs attrs = new MapAttrs();

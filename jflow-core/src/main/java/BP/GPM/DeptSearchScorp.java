@@ -12,7 +12,7 @@ public class DeptSearchScorp extends Entity
 {
 
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -62,8 +62,9 @@ public class DeptSearchScorp extends Entity
 	 工作人员部门对应
 	 @param _empoid 工作人员ID
 	 @param wsNo 部门编号 	
+	 * @throws Exception 
 	*/
-	public DeptSearchScorp(String _empoid, String wsNo)
+	public DeptSearchScorp(String _empoid, String wsNo) throws Exception
 	{
 		this.setFK_Emp(_empoid);
 		this.setFK_Dept(wsNo);
@@ -93,31 +94,6 @@ public class DeptSearchScorp extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	/** 
-	 插入前所做的工作
-	 @return true/false
-	*/
-	@Override
-	protected boolean beforeInsert()
-	{
-		return super.beforeInsert();
-	}
-	/** 
-	 更新前所做的工作
-	 @return true/false
-	*/
-	@Override
-	protected boolean beforeUpdate()
-	{
-		return super.beforeUpdate();
-	}
-	/** 
-	 删除前所做的工作
-	 @return true/false
-	*/
-	@Override
-	protected boolean beforeDelete()
-	{
-		return super.beforeDelete();
-	}
+	
+
 }

@@ -33,9 +33,10 @@ public class BtnLab extends Entity
     }
 	/** 
 	 访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -776,8 +777,9 @@ public class BtnLab extends Entity
 	 节点按钮权限
 	 
 	 @param nodeid 节点ID
+	 * @throws Exception 
 	*/
-	public BtnLab(int nodeid)
+	public BtnLab(int nodeid) throws Exception
 	{
 		this.setNodeID(nodeid);
 		this.RetrieveFromDBSources();

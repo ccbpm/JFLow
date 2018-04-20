@@ -84,8 +84,9 @@ public class GEEntity extends Entity
 	 *            节点ID
 	 * @param _oid
 	 *            OID
+	 * @throws Exception 
 	 */
-	public GEEntity(String fk_mapdata, Object pk)
+	public GEEntity(String fk_mapdata, Object pk) throws Exception
 	{
 		 
 		this.FK_MapData = fk_mapdata;
@@ -114,7 +115,13 @@ public class GEEntity extends Entity
 		}
 		 
 		
-		this.set_enMap(BP.Sys.MapData.GenerHisMap(this.FK_MapData));
+		try {
+			this.set_enMap(BP.Sys.MapData.GenerHisMap(this.FK_MapData));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return this.get_enMap();
 	}
 	
@@ -145,8 +152,9 @@ public class GEEntity extends Entity
 	/** 
 	 * 把当前实体的数据copy到指定的主键数据表里.
 	 * @param oid 指定的主键
+	 * @throws Exception 
 	 */
-	public final void CopyToOID(long oid)
+	public final void CopyToOID(long oid) throws Exception
 	{
 		//实例化历史数据表单entity.
 		long oidOID = this.getOID();

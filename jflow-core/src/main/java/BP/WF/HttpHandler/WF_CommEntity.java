@@ -43,7 +43,7 @@ import BP.Web.WebUser;
 public class WF_CommEntity extends WebContralBase {
 
 	
-	  public String BranchesAndLeaf_SearchByNodeID()
+	  public String BranchesAndLeaf_SearchByNodeID() throws Exception
       {
 		  String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 		  String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
@@ -58,7 +58,7 @@ public class WF_CommEntity extends WebContralBase {
 
           return ensMen.ToJson();
       }
-      public String BranchesAndLeaf_SearchByKey()
+      public String BranchesAndLeaf_SearchByKey() throws Exception
       {
     	  String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
     	  String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
@@ -96,7 +96,7 @@ public class WF_CommEntity extends WebContralBase {
     /// 初始化
     /// </summary>
     /// <returns></returns>
-    public String BranchesAndLeaf_Init()
+    public String BranchesAndLeaf_Init() throws Exception
     {
         String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
         String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
@@ -815,7 +815,7 @@ public class WF_CommEntity extends WebContralBase {
 
         try
         {
-        	String eles = this.GetRequestVal("ElesAAA");
+        	String eles = this.GetRequestVal("Eles");
 
             //实体集合.
         	String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
@@ -847,7 +847,7 @@ public class WF_CommEntity extends WebContralBase {
     /// 获得分组的数据源
     /// </summary>
     /// <returns></returns>
-    public String Dot2Dot_GenerGroupEntitis()
+    public String Dot2Dot_GenerGroupEntitis() throws Exception
     {
         String key = this.GetRequestVal("DefaultGroupAttrKey");
 
@@ -1018,7 +1018,7 @@ public class WF_CommEntity extends WebContralBase {
     /// 保存
     /// </summary>
     /// <returns></returns>
-    public String Dtl_Init()
+    public String Dtl_Init() throws Exception
     {
         //定义容器.
         DataSet ds = new DataSet();

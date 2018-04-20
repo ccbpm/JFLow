@@ -17,12 +17,12 @@ public class ExtContral  extends Entity {
       {
     	  
       }
-	  public ExtContral(String fk_mapdata, String keyofEn)
+	  public ExtContral(String fk_mapdata, String keyofEn) throws Exception
       {
           this.setMyPK(fk_mapdata + "_" + keyofEn);
           this.Retrieve();
       }
-      public ExtContral(String mypk)
+      public ExtContral(String mypk) throws Exception
       {
           this.setMyPK(mypk);
           this.Retrieve();

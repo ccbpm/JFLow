@@ -133,10 +133,11 @@ public class FrmTrack extends Entity
 		
 	/** 
 	 控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -164,8 +165,9 @@ public class FrmTrack extends Entity
 	 轨迹图标组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTrack(String mapData)
+	public FrmTrack(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -194,8 +196,9 @@ public class FrmTrack extends Entity
 	 轨迹图标组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTrack(int nodeID)
+	public FrmTrack(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -236,11 +239,7 @@ public class FrmTrack extends Entity
 		return this.get_enMap();
 	}
 
-	@Override
-	protected boolean beforeUpdateInsertAction()
-	{
-		return super.beforeUpdateInsertAction();
-	}
+	 
 
 		///#endregion
 }

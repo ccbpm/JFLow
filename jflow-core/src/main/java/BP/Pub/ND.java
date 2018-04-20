@@ -36,7 +36,7 @@ public class ND extends SimpleNoNameFix
 	{
 	}
 	
-	public ND(String _No)
+	public ND(String _No) throws Exception
 	{
 		super(_No);
 	}

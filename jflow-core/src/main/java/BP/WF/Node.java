@@ -18,9 +18,10 @@ public class Node extends Entity
 
 	/** 
 	 事件
+	 * @throws Exception 
 	 
 	*/
-	public final FrmEvents getFrmEvents()
+	public final FrmEvents getFrmEvents() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
 		FrmEvents obj = (FrmEvents)((tempVar instanceof FrmEvents) ? tempVar : null);
@@ -34,7 +35,7 @@ public class Node extends Entity
     
 		///#region 消息机制.
 	private FrmEvent _SendSuccess_FrmEvent = null;
-	public final FrmEvent getSendSuccess_FrmEvent()
+	public final FrmEvent getSendSuccess_FrmEvent() throws Exception
 	{
 		if (_SendSuccess_FrmEvent == null)
 		{
@@ -121,7 +122,7 @@ public class Node extends Entity
 	{
 		this.SetValByKey(NodeAttr.SubThreadType, value.getValue());
 	}
-	public final CC getHisCC()
+	public final CC getHisCC() throws Exception
 	{
 		Object tempVar = this.GetRefObject("HisCC");
 		CC obj = (CC)((tempVar instanceof CC) ? tempVar : null);
@@ -138,8 +139,9 @@ public class Node extends Entity
 	 他的将要转向的方向集合
 	 如果他没有到转向方向,他就是结束节点.
 	 没有生命周期的概念,全部的节点.
+	 * @throws Exception 
 	*/
-	public final Nodes getHisToNodes()
+	public final Nodes getHisToNodes() throws Exception
 	{
 		Object tempVar = this.GetRefObject("HisToNodes");
 		Nodes obj = (Nodes)((tempVar instanceof Nodes) ? tempVar : null);
@@ -214,8 +216,9 @@ public class Node extends Entity
 	}
 	/** 
 	 流程
+	 * @throws Exception 
 	*/
-	public final Flow getHisFlow()
+	public final Flow getHisFlow() throws Exception
 	{
 		Object tempVar = this.GetRefObject("Flow");
 		Flow obj = (Flow)((tempVar instanceof Flow) ? tempVar : null);
@@ -228,8 +231,9 @@ public class Node extends Entity
 	}
 	/** 
 	 消息推送.
+	 * @throws Exception 
 	*/
-	public final PushMsgs getHisPushMsgs()
+	public final PushMsgs getHisPushMsgs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("PushMsg");
 		PushMsgs obj = (PushMsgs)((tempVar instanceof PushMsgs) ? tempVar : null);
@@ -277,9 +281,10 @@ public class Node extends Entity
 	}
 	/** 
 	 HisFrms
+	 * @throws Exception 
 	 
 	*/
-	public final Frms getHisFrms()
+	public final Frms getHisFrms() throws Exception
 	{
 		Frms frms = new Frms();
 		FrmNodes fns = new FrmNodes(this.getFK_Flow(), this.getNodeID());
@@ -304,8 +309,9 @@ public class Node extends Entity
 	/** 
 	 他的将要来自的方向集合
 	 如果他没有到来的方向,他就是开始节点.
+	 * @throws Exception 
 	*/
-	public final Nodes getFromNodes()
+	public final Nodes getFromNodes() throws Exception
 	{
 		Object tempVar = this.GetRefObject("HisFromNodes");
 		Nodes obj = (Nodes)((tempVar instanceof Nodes) ? tempVar : null);
@@ -325,7 +331,7 @@ public class Node extends Entity
 		}
 		return obj;
 	}
-	public final BillTemplates getBillTemplates()
+	public final BillTemplates getBillTemplates() throws Exception
 	{
 		Object tempVar = this.GetRefObject("BillTemplates");
 		BillTemplates obj = (BillTemplates)((tempVar instanceof BillTemplates) ? tempVar : null);
@@ -336,7 +342,7 @@ public class Node extends Entity
 		}
 		return obj;
 	}
-	public final NodeStations getNodeStations()
+	public final NodeStations getNodeStations() throws Exception
 	{
 		Object tempVar = this.GetRefObject("NodeStations");
 		NodeStations obj = (NodeStations)((tempVar instanceof NodeStations) ? tempVar : null);
@@ -347,7 +353,7 @@ public class Node extends Entity
 		}
 		return obj;
 	}
-	public final NodeDepts getNodeDepts()
+	public final NodeDepts getNodeDepts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("NodeDepts");
 		NodeDepts obj = (NodeDepts)((tempVar instanceof NodeDepts) ? tempVar : null);
@@ -358,7 +364,7 @@ public class Node extends Entity
 		}
 		return obj;
 	}
-	public final NodeEmps getNodeEmps()
+	public final NodeEmps getNodeEmps() throws Exception
 	{
 		Object tempVar = this.GetRefObject("NodeEmps");
 		NodeEmps obj = (NodeEmps)((tempVar instanceof NodeEmps) ? tempVar : null);
@@ -369,7 +375,7 @@ public class Node extends Entity
 		}
 		return obj;
 	}
-	public final FrmNodes getFrmNodes()
+	public final FrmNodes getFrmNodes() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmNodes");
 		FrmNodes obj = (FrmNodes)((tempVar instanceof FrmNodes) ? tempVar : null);
@@ -380,7 +386,7 @@ public class Node extends Entity
 		}
 		return obj;
 	}
-	public final MapData getMapData()
+	public final MapData getMapData() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapData");
 		MapData obj = (MapData)((tempVar instanceof MapData) ? tempVar : null);
@@ -403,10 +409,11 @@ public class Node extends Entity
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -419,8 +426,9 @@ public class Node extends Entity
 	 初试化全局的
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final NodePosType GetHisNodePosType()
+	public final NodePosType GetHisNodePosType() throws Exception
 	{
 		String nodeid = (new Integer(this.getNodeID())).toString();
 		if (nodeid.substring(nodeid.length() - 2).equals("01"))
@@ -444,8 +452,9 @@ public class Node extends Entity
 	 
 	 @param fl 流程
 	 @return 返回检查信息
+	 * @throws Exception 
 	*/
-	public static String CheckFlow(Flow fl)
+	public static String CheckFlow(Flow fl) throws Exception
 	{
 		String sqls = "UPDATE WF_Node SET IsCCFlow=0";
 		sqls += "@UPDATE WF_Node  SET IsCCFlow=1 WHERE NodeID IN (SELECT NodeID FROM WF_Cond a WHERE a.NodeID= NodeID AND CondType=1 )";
@@ -565,7 +574,7 @@ public class Node extends Entity
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (this.getIsStartNode())
 		{
@@ -804,7 +813,7 @@ public class Node extends Entity
 	{
 		this.SetValByKey(NodeAttr.FormType, value.getValue());
 	}
-	public final String getHisFormTypeText()
+	public final String getHisFormTypeText() throws Exception
 	{
 			//switch (this.HisFormType)
 			//{
@@ -1212,8 +1221,9 @@ public class Node extends Entity
 	}
 	/** 
 	 获取它的上一步的分流点
+	 * @throws Exception 
 	*/
-	private Node _GetHisPriFLNode(Nodes nds)
+	private Node _GetHisPriFLNode(Nodes nds) throws Exception
 	{
 		for (Node mynd : nds.ToJavaList())
 		{
@@ -1230,8 +1240,9 @@ public class Node extends Entity
 	}
 	/** 
 	 它的上一步分流节点
+	 * @throws Exception 
 	*/
-	public final Node getHisPriFLNode()
+	public final Node getHisPriFLNode() throws Exception
 	{
 		return _GetHisPriFLNode(this.getFromNodes());
 	}
@@ -1481,9 +1492,10 @@ public class Node extends Entity
 		
 	/** 
 	 是不是多岗位工作节点.
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsMultiStations()
+	public final boolean getIsMultiStations() throws Exception
 	{
 		if (this.getNodeStations().size() > 1)
 		{
@@ -1491,7 +1503,7 @@ public class Node extends Entity
 		}
 		return false;
 	}
-	public final String getHisStationsStr()
+	public final String getHisStationsStr() throws Exception
 	{
 		String s = "";
 		for (NodeStation ns : this.getNodeStations().ToJavaList())
@@ -1510,8 +1522,9 @@ public class Node extends Entity
 	 
 	 @param workId 工作ID
 	 @return 如果没有就返回null
+	 * @throws Exception 
 	*/
-	public final Work GetWork(long workId)
+	public final Work GetWork(long workId) throws Exception
 	{
 		Work wk = this.getHisWork();
 		wk.SetValByKey("OID", workId);
@@ -1550,8 +1563,9 @@ public class Node extends Entity
 	}
 	/** 
 	 访问规则Text
+	 * @throws Exception 
 	*/
-	public final String getHisDeliveryWayText()
+	public final String getHisDeliveryWayText() throws Exception
 	{
 		SysEnum se = new SysEnum("DeliveryWay", this.getHisDeliveryWay().getValue());
 		return se.getLab();
@@ -1578,7 +1592,7 @@ public class Node extends Entity
 	{
 		this.SetValByKey(BtnAttr.CCRole, value.getValue());
 	}
-	public final String getHisCCRoleText()
+	public final String getHisCCRoleText() throws Exception
 	{
 		SysEnum se = new SysEnum(NodeAttr.CCRole, this.getHisCCRole().getValue());
 		return se.getLab();
@@ -1665,7 +1679,7 @@ public class Node extends Entity
 	{
 		this.SetValByKey(NodeAttr.NodeWorkType, value.getValue());
 	}
-	public final String getHisRunModelT()
+	public final String getHisRunModelT() throws Exception
 	{
 		SysEnum se = new SysEnum(NodeAttr.RunModel, this.getHisRunModel().getValue());
 		return se.getLab();
@@ -1674,8 +1688,9 @@ public class Node extends Entity
 
 	/** 
 	 类型
+	 * @throws Exception 
 	*/
-	public final NodePosType getHisNodePosType()
+	public final NodePosType getHisNodePosType() throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{
@@ -1698,8 +1713,9 @@ public class Node extends Entity
 	}
 	/** 
 	 是不是结束节点
+	 * @throws Exception 
 	*/
-	public final boolean getIsEndNode()
+	public final boolean getIsEndNode() throws Exception
 	{
 		if (this.getHisNodePosType() == NodePosType.End)
 		{
@@ -1956,9 +1972,10 @@ public class Node extends Entity
 	}
 	/** 
 	 是不是中间节点
+	 * @throws Exception 
 	 
 	*/
-	public final boolean getIsMiddleNode()
+	public final boolean getIsMiddleNode() throws Exception
 	{
 		if (this.getHisNodePosType() == NodePosType.Mid)
 		{
@@ -2127,8 +2144,9 @@ public class Node extends Entity
 	 节点
 	 
 	 @param _oid 节点ID	
+	 * @throws Exception 
 	*/
-	public Node(int _oid)
+	public Node(int _oid) throws Exception
 	{
 		this.setNodeID(_oid);
 		if (SystemConfig.getIsDebug())
@@ -2146,7 +2164,7 @@ public class Node extends Entity
 			//    throw new Exception("Node Retrieve 错误没有ID=" + _oid);
 		}
 	}
-	public Node(String ndName)
+	public Node(String ndName) throws Exception
 	{
 		ndName = ndName.replace("ND", "");
 		this.setNodeID(Integer.parseInt(ndName));
@@ -2430,9 +2448,10 @@ public class Node extends Entity
 	 删除前的逻辑处理.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		//判断是否可以被删除. 
 		int num = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE FK_Node=" + this.getNodeID());
@@ -2467,14 +2486,7 @@ public class Node extends Entity
 			Log.DebugWriteError("Node beforeDelete() 删除框架"+ e);		
 		}
 
-		// 删除多选
-		try {
-			BP.Sys.MapM2Ms m2ms = new BP.Sys.MapM2Ms(md.getNo());
-			m2ms.Delete();
-		} catch (Exception e) {
-			Log.DebugWriteError("Node beforeDelete() 删除多选"+ e);		
-		}
-
+		 
 		// 删除扩展
 		try {
 			BP.Sys.MapExts exts = new BP.Sys.MapExts(md.getNo());
@@ -2499,8 +2511,9 @@ public class Node extends Entity
 	/** 
 	 文书流程
 	 @param md
+	 * @throws Exception 
 	*/
-	private void AddDocAttr(BP.Sys.MapData md)
+	private void AddDocAttr(BP.Sys.MapData md) throws Exception
 	{
 		//如果是单据流程？ 
 		BP.Sys.MapAttr attr = new BP.Sys.MapAttr();		 
@@ -2672,9 +2685,10 @@ public class Node extends Entity
 	}
 	/** 
 	 修复map
+	 * @throws Exception 
 	 
 	*/
-	public final String RepareMap()
+	public final String RepareMap() throws Exception
 	{
 		BP.Sys.MapData md = new BP.Sys.MapData();
 		md.setNo("ND" + this.getNodeID());
@@ -2963,8 +2977,9 @@ public class Node extends Entity
 	}
 	/** 
 	 建立map
+	 * @throws Exception 
 	*/
-	public final void CreateMap()
+	public final void CreateMap() throws Exception
 	{
 		//创建节点表单.
 		BP.Sys.MapData md = new BP.Sys.MapData();

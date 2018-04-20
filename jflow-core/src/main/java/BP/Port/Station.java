@@ -16,7 +16,7 @@ public class Station extends EntityNoName
 	
 	// 实现基本的方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -41,8 +41,9 @@ public class Station extends EntityNoName
 	 * 岗位
 	 * 
 	 * @param _No
+	 * @throws Exception 
 	 */
-	public Station(String _No)
+	public Station(String _No) throws Exception
 	{
 		super(_No);
 	}

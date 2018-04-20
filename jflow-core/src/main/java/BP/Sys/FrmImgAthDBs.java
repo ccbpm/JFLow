@@ -22,8 +22,9 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	 剪切图片附件数据存储s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmImgAthDBs(String fk_mapdata, String pkval)
+	public FrmImgAthDBs(String fk_mapdata, String pkval) throws Exception
 	{
 		this.Retrieve(FrmImgAthDBAttr.FK_MapData, fk_mapdata, FrmImgAthDBAttr.RefPKVal, pkval);
 	}

@@ -43,8 +43,9 @@ public class WF_Admin_Sln extends WebContralBase {
 	 * 获取流程所有节点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindForm_GenderFlowNode() {
+	public final String BindForm_GenderFlowNode() throws Exception {
 		Node nd = new Node(this.getFK_Node());
 
 		// 规范做法.
@@ -57,8 +58,9 @@ public class WF_Admin_Sln extends WebContralBase {
 	 * 获取所有节点，复制表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindForm_GetFlowNodeDropList() {
+	public final String BindForm_GetFlowNodeDropList() throws Exception {
 		Nodes nodes = new Nodes();
 		nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, this.getFK_Flow(),
 				BP.WF.Template.NodeAttr.Step);
@@ -87,8 +89,9 @@ public class WF_Admin_Sln extends WebContralBase {
 	 * 复制表单到节点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindFrmsDtl_DoCopyFrmToNodes() {
+	public final String BindFrmsDtl_DoCopyFrmToNodes() throws Exception {
 		String nodeStr = this.GetRequestVal("NodeStr"); // 节点string,
 		String frmStr = this.GetRequestVal("frmStr"); // 表单string,
 
@@ -128,8 +131,9 @@ public class WF_Admin_Sln extends WebContralBase {
 	 * 保存流程表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindFrmsDtl_Save() {
+	public final String BindFrmsDtl_Save() throws Exception {
 		try {
 			String formNos = this.GetRequestVal("formNos");
 
@@ -171,8 +175,9 @@ public class WF_Admin_Sln extends WebContralBase {
 	 * 获取表单库所有表单
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindForm_GenerForms() {
+	public final String BindForm_GenerForms() throws Exception {
 		// 形成树
 		FlowFormTrees appendFormTrees = new FlowFormTrees();
 		// 节点绑定表单
@@ -342,8 +347,9 @@ public class WF_Admin_Sln extends WebContralBase {
 	 * 表单方案
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindFrms_Init() {
+	public final String BindFrms_Init() throws Exception {
 
 		FrmNodes fns = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
 
@@ -397,14 +403,15 @@ public class WF_Admin_Sln extends WebContralBase {
 	 * 删除
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String BindFrms_Delete() {
+	public final String BindFrms_Delete() throws Exception {
 		FrmNodeExt myen = new FrmNodeExt(this.getMyPK());
 		myen.Delete();
 		return "删除成功.";
 	}
 
-	public final String BindFrms_DoOrder() {
+	public final String BindFrms_DoOrder() throws Exception {
 		FrmNode myen = new FrmNode(this.getMyPK());
 
 		if (this.GetRequestVal("OrderType").equals("Up")) {
@@ -439,7 +446,7 @@ public class WF_Admin_Sln extends WebContralBase {
 
 	
 	// /#region 字段权限.
-	public final String Fields_Init()
+	public final String Fields_Init() throws Exception
 	{
 		// 查询出来解决方案.
 		FrmFields fss = new FrmFields(this.getFK_MapData(), this.getFK_Node());
@@ -518,7 +525,7 @@ public class WF_Admin_Sln extends WebContralBase {
 		return Json.ToJson(fieldsAttrsList);
 	}
 
-	public final String Fields_Save() {
+	public final String Fields_Save() throws Exception {
 		Node currND = new Node(this.getFK_Node());
 
 		String FieldsAttrsObj = this.GetRequestVal("FieldsAttrsObj");
@@ -630,7 +637,7 @@ public class WF_Admin_Sln extends WebContralBase {
 				public String EditTag;
 				public String DelTag;
 			}
-			public final String Aths_Init()
+			public final String Aths_Init() throws Exception
 			{
 				BP.Sys.FrmAttachments fas = new BP.Sys.FrmAttachments();
 				fas.Retrieve(FrmAttachmentAttr.FK_MapData, this.getFK_MapData());
@@ -693,7 +700,7 @@ public class WF_Admin_Sln extends WebContralBase {
 			}
 	
 	// /#region 从表权限.
-	public final String Dtls_Init() {
+	public final String Dtls_Init() throws Exception {
 		 BP.Sys.MapDtls dtls = new BP.Sys.MapDtls();
 			dtls.Retrieve(MapDtlAttr.FK_MapData, this.getFK_MapData());
 			java.util.ArrayList<DtlsAttrs> dtlsAttrsList = new java.util.ArrayList<DtlsAttrs>();

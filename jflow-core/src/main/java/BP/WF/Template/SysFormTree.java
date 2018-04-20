@@ -109,8 +109,9 @@ public class SysFormTree extends EntitySimpleTree
 	 独立表单树
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public SysFormTree(String _No)
+	public SysFormTree(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -152,7 +153,7 @@ public class SysFormTree extends EntitySimpleTree
 		///#endregion 系统方法.
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (!StringHelper.isNullOrEmpty(this.getNo()))
 		{
@@ -164,8 +165,9 @@ public class SysFormTree extends EntitySimpleTree
 	 删除子项
 	 
 	 @param parentNo
+	 * @throws Exception 
 	*/
-	private void DeleteChild(String parentNo)
+	private void DeleteChild(String parentNo) throws Exception
 	{
 		SysFormTrees formTrees = new SysFormTrees();
 		formTrees.RetrieveByAttr(SysFormTreeAttr.ParentNo, parentNo);
@@ -177,7 +179,7 @@ public class SysFormTree extends EntitySimpleTree
 			DeleteChild(item.getNo());
 		}
 	}
-	public final SysFormTree DoCreateSameLevelNode()
+	public final SysFormTree DoCreateSameLevelNode() throws Exception
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
@@ -186,7 +188,7 @@ public class SysFormTree extends EntitySimpleTree
 		en.Insert();
 		return en;
 	}
-	public final SysFormTree DoCreateSubNode()
+	public final SysFormTree DoCreateSubNode() throws Exception
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);

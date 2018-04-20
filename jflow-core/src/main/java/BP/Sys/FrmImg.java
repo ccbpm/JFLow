@@ -10,8 +10,7 @@ import BP.Tools.StringHelper;
 */
 public class FrmImg extends EntityMyPK
 {
-
-		
+ 
 	/** 
 	 中文名称
 	 
@@ -205,8 +204,9 @@ public class FrmImg extends EntityMyPK
 	 图片
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmImg(String mypk)
+	public FrmImg(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -273,9 +273,5 @@ public class FrmImg extends EntityMyPK
 		}
 		return true;
 	}
-	@Override
-	protected void afterInsertUpdateAction()
-	{
-		super.afterInsertUpdateAction();
-	}
+	 
 }

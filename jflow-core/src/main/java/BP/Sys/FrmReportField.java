@@ -99,8 +99,9 @@ public class FrmReportField extends EntityMyPK
 	 表单报表
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmReportField(String mypk)
+	public FrmReportField(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -135,7 +136,7 @@ public class FrmReportField extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 		return super.beforeUpdateInsertAction();

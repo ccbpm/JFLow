@@ -236,7 +236,7 @@ public class Paras extends ArrayList<Para>
 		this.Add("FK_Emp", userNo);
 	}
 	
-	public void AddFK_Emp()
+	public void AddFK_Emp() throws Exception
 	{
 		this.Add("FK_Emp", WebUser.getNo());
 	}

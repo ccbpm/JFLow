@@ -706,8 +706,9 @@ public class FrmAttachment extends EntityMyPK
 	 附件
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmAttachment(String mypk)
+	public FrmAttachment(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -800,7 +801,7 @@ public class FrmAttachment extends EntityMyPK
 
 	public boolean IsUse = false;
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getFK_Node() == 0)
 		{
@@ -822,7 +823,7 @@ public class FrmAttachment extends EntityMyPK
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setIsWoEnableWF(true);
 
@@ -848,10 +849,11 @@ public class FrmAttachment extends EntityMyPK
 	}
 	/** 
 	 插入之后
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	protected void afterInsert()
+	protected void afterInsert() throws Exception
 	{
 		GroupField gf = new GroupField();
 		if (gf.IsExit(GroupFieldAttr.CtrlID, this.getMyPK()) == false)
@@ -868,10 +870,11 @@ public class FrmAttachment extends EntityMyPK
 
 	/** 
 	 删除之后.
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		GroupField gf = new GroupField();
 		gf.Delete(GroupFieldAttr.CtrlID, this.getMyPK());

@@ -36,7 +36,7 @@ public class FrmNode extends EntityMyPK
 		}
 	}
 	private Frm _hisFrm = null;
-	public final Frm getHisFrm()
+	public final Frm getHisFrm() throws Exception
 	{
 		if (this._hisFrm == null)
 		{
@@ -47,10 +47,11 @@ public class FrmNode extends EntityMyPK
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -70,9 +71,10 @@ public class FrmNode extends EntityMyPK
 	}
 	  /** 
 	 表单类型
+	 * @throws Exception 
 	 
 	  */
-	public final String getHisFrmTypeText()
+	public final String getHisFrmTypeText() throws Exception
 	{
 		SysEnum se = new SysEnum(FrmNodeAttr.FrmType, this.getHisFrmType().getValue());
 		return se.getLab();
@@ -230,9 +232,10 @@ public class FrmNode extends EntityMyPK
 	}
 	/** 
 	 启用规则.
+	 * @throws Exception 
 	 
 	*/
-	public final String getFrmEnableRoleText()
+	public final String getFrmEnableRoleText() throws Exception
 	{
 		if (this.getFrmEnableRole() == FrmEnableRole.WhenHaveFrmPara && this.getFK_Frm().equals("ND" + this.getFK_Node()))
 		{
@@ -342,8 +345,9 @@ public class FrmNode extends EntityMyPK
 	 节点表单
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmNode(String mypk)
+	public FrmNode(String mypk) throws Exception
 	{
 		super(mypk);
 	}
@@ -352,8 +356,9 @@ public class FrmNode extends EntityMyPK
 	 
 	 @param fk_node 节点
 	 @param fk_frm 表单
+	 * @throws Exception 
 	*/
-	public FrmNode(String fk_flow, int fk_node, String fk_frm)
+	public FrmNode(String fk_flow, int fk_node, String fk_frm) throws Exception
 	{
 		int i = this.Retrieve(FrmNodeAttr.FK_Flow, fk_flow, FrmNodeAttr.FK_Node, fk_node, FrmNodeAttr.FK_Frm, fk_frm);
 		if (i == 0)
@@ -432,7 +437,7 @@ public class FrmNode extends EntityMyPK
 		this.DoOrderDown(FrmNodeAttr.FK_Node, (new Integer(this.getFK_Node())).toString(), FrmNodeAttr.Idx);
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_Frm() + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
 		return super.beforeUpdateInsertAction();

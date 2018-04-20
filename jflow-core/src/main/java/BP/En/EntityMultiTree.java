@@ -144,8 +144,9 @@ public abstract class EntityMultiTree extends Entity
 	 * 
 	 * @param no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public EntityMultiTree(String no)
+	public EntityMultiTree(String no) throws Exception
 	{
 		if (StringHelper.isNullOrEmpty(no))
 		{
@@ -178,9 +179,10 @@ public abstract class EntityMultiTree extends Entity
 	 * 检查名称的问题.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (!this.getEnMap().getIsAllowRepeatName())
 		{
@@ -207,7 +209,7 @@ public abstract class EntityMultiTree extends Entity
 	}
 	
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (!this.getEnMap().getIsAllowRepeatName())
 		{
@@ -238,8 +240,9 @@ public abstract class EntityMultiTree extends Entity
 	 * 新建同级节点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final EntityMultiTree DoCreateSameLevelNode()
+	public final EntityMultiTree DoCreateSameLevelNode() throws Exception
 	{
 		Entity tempVar = this.CreateInstance();
 		EntityMultiTree en = (EntityMultiTree) ((tempVar instanceof EntityMultiTree) ? tempVar
@@ -279,8 +282,9 @@ public abstract class EntityMultiTree extends Entity
 	 * 新建子节点
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final EntityMultiTree DoCreateSubNode()
+	public final EntityMultiTree DoCreateSubNode() throws Exception
 	{
 		Entity tempVar = this.CreateInstance();
 		EntityMultiTree en = (EntityMultiTree) ((tempVar instanceof EntityMultiTree) ? tempVar

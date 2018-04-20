@@ -42,8 +42,9 @@ import BP.En.UAC;
 		 独立组织
 		 
 		 @param no 编号
+		 * @throws Exception 
 		*/
-		public Inc(String no)
+		public Inc(String no) throws Exception
 		{
 			super(no);
 		}
@@ -54,10 +55,11 @@ import BP.En.UAC;
 		///#region 重写方法
 		/** 
 		 UI界面上的访问控制
+		 * @throws Exception 
 		 
 		*/
 		@Override
-		public UAC getHisUAC()
+		public UAC getHisUAC() throws Exception
 		{
 			UAC uac = new UAC();
 			uac.OpenForSysAdmin();

@@ -94,8 +94,9 @@ public abstract class EntityMyPKMyFile extends EntityMyPK
 	 * 
 	 * @param _MyPK
 	 *            _MyPK
+	 * @throws Exception 
 	 */
-	protected EntityMyPKMyFile(String _MyPK)
+	protected EntityMyPKMyFile(String _MyPK) throws Exception
 	{
 		this.setMyPK(_MyPK);
 		this.Retrieve();

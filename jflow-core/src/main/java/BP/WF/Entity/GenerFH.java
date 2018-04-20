@@ -23,8 +23,9 @@ public class GenerFH extends EntityOID
 	
 	/**
 	 * HisFlow
+	 * @throws Exception 
 	 */
-	public final Flow getHisFlow()
+	public final Flow getHisFlow() throws Exception
 	{
 		return new Flow(this.getFK_Flow());
 	}
@@ -98,7 +99,7 @@ public class GenerFH extends EntityOID
 		this.SetValByKey(GenerFHAttr.GroupKey, value);
 	}
 	
-	public final String getFK_NodeText()
+	public final String getFK_NodeText() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		return nd.getName();
@@ -142,8 +143,9 @@ public class GenerFH extends EntityOID
 	 * 产生分合流程控制流程
 	 * 
 	 * @param FID
+	 * @throws Exception 
 	 */
-	public GenerFH(long FID)
+	public GenerFH(long FID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerFHAttr.FID, FID);
@@ -160,8 +162,9 @@ public class GenerFH extends EntityOID
 	 *            工作流程ID
 	 * @param flowNo
 	 *            流程编号
+	 * @throws Exception 
 	 */
-	public GenerFH(long FID, String flowNo)
+	public GenerFH(long FID, String flowNo) throws Exception
 	{
 		try
 		{
@@ -244,7 +247,7 @@ public class GenerFH extends EntityOID
 	
 	// 重载基类方法
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		super.afterDelete();
 	}

@@ -29,8 +29,9 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 	/**
 	 * 初始化 导入的界面 .
 	 * @return
+	 * @throws Exception 
 	 */
-    public String Imp_Init()
+    public String Imp_Init() throws Exception
     {
         DataSet ds = new DataSet();
         String sql = "";
@@ -123,8 +124,9 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
      * <param name="fk_mapData">表单模版ID</param>
      * <param name="isClear">是否清空？</param>
      * @return
+     * @throws Exception 
      */
-    public String Imp_LoadFrmTempleteFromLocalFile()
+    public String Imp_LoadFrmTempleteFromLocalFile() throws Exception
     {
 		File xmlFile = null;
 		String fileName = UUID.randomUUID().toString();
@@ -257,7 +259,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
     /// 选择一个数据源，进入步骤2
     /// </summary>
     /// <returns></returns>
-    public String Imp_Src_Step2_Init()
+    public String Imp_Src_Step2_Init() throws Exception
     {
         SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
 
@@ -271,7 +273,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
     /// 获取表字段
     /// </summary>
     /// <returns></returns>
-    public String Imp_Src_Step2_GetColumns()
+    public String Imp_Src_Step2_GetColumns() throws Exception
     {
         DataSet ds = new DataSet();
 
@@ -288,7 +290,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
         return BP.Tools.Json.ToJson(ds);
     }
 
-    public String Imp_Src_Step3_Init()
+    public String Imp_Src_Step3_Init() throws Exception
     {
         DataSet ds = new DataSet();
 
@@ -315,7 +317,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
     }
 
-    public String Imp_Src_Step3_Save()
+    public String Imp_Src_Step3_Save() throws Exception
     {
 
         String hidImpFields = this.GetRequestVal("hidImpFields");

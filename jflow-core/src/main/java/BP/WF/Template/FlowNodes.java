@@ -14,9 +14,10 @@ public class FlowNodes extends EntitiesMM
 {
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (FlowNode ns : this.ToJavaList())
@@ -36,8 +37,9 @@ public class FlowNodes extends EntitiesMM
 	 流程抄送节点
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public FlowNodes(int NodeID)
+	public FlowNodes(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowNodeAttr.FK_Flow, NodeID);
@@ -47,8 +49,9 @@ public class FlowNodes extends EntitiesMM
 	 流程抄送节点
 	 
 	 @param NodeNo NodeNo 
+	 * @throws Exception 
 	*/
-	public FlowNodes(String NodeNo)
+	public FlowNodes(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowNodeAttr.FK_Node, NodeNo);
@@ -68,8 +71,9 @@ public class FlowNodes extends EntitiesMM
 	 
 	 @param sts 流程抄送节点
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts)
+	public final Nodes GetHisNodes(Nodes sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
@@ -92,8 +96,9 @@ public class FlowNodes extends EntitiesMM
 	 
 	 @param NodeNo 工作节点编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo)
+	public final Nodes GetHisNodes(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowNodeAttr.FK_Node, NodeNo);
@@ -111,8 +116,9 @@ public class FlowNodes extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID)
+	public final Nodes GetHisNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowNodeAttr.FK_Flow, nodeID);

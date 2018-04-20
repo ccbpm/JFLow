@@ -24,8 +24,9 @@ public class Emp extends EntityNoName
 	// 扩展属性
 	/**
 	 * 主要的部门。
+	 * @throws Exception 
 	 */
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 		try
 		{
@@ -40,8 +41,9 @@ public class Emp extends EntityNoName
 	
 	/**
 	 * 工作岗位集合。
+	 * @throws Exception 
 	 */
-	public final Stations getHisStations()
+	public final Stations getHisStations() throws Exception
 	{
 		EmpStations sts = new EmpStations();
 		Stations mysts = sts.GetHisStations(this.getNo());
@@ -132,7 +134,7 @@ public class Emp extends EntityNoName
 	}
 	
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		try
 		{
@@ -152,8 +154,9 @@ public class Emp extends EntityNoName
 	 * 
 	 * @param no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
 		this.setNo(no.trim());
 		if (this.getNo().length() == 0)
@@ -182,7 +185,7 @@ public class Emp extends EntityNoName
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -267,8 +270,9 @@ public class Emp extends EntityNoName
 	 * 无参数的方法:注销岗位 说明：都要返回string类型.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final void DoZhuXiao()
+	public final void DoZhuXiao() throws Exception
 	{
 		this.Delete();
 	}

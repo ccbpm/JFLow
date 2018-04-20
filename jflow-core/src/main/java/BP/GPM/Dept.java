@@ -62,8 +62,9 @@ public class Dept extends EntityTree
 	}
 	/** 
 	 它的子节点
+	 * @throws Exception 
 	*/
-	public final Depts getHisSubDepts()
+	public final Depts getHisSubDepts() throws Exception
 	{
 		if (_HisSubDepts == null)
 		{
@@ -81,14 +82,15 @@ public class Dept extends EntityTree
 	/** 
 	 部门
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Dept(String no)
+	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
 
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -146,8 +148,9 @@ public class Dept extends EntityTree
 	
 	/** 
 	 生成部门全名称.
+	 * @throws Exception 
 	*/
-	public final void GenerNameOfPath()
+	public final void GenerNameOfPath() throws Exception
 	{
 		String name = this.getName();
 		//根目录不再处理
@@ -186,8 +189,9 @@ public class Dept extends EntityTree
 	/** 
 	 处理子部门全名称
 	 @param FK_Dept
+	 * @throws Exception 
 	*/
-	public final void GenerChildNameOfPath(String FK_Dept)
+	public final void GenerChildNameOfPath(String FK_Dept) throws Exception
 	{
 		Depts depts = new Depts(FK_Dept);
 		if (depts != null && depts.size() > 0)

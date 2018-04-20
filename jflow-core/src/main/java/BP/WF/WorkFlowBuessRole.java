@@ -32,8 +32,9 @@ public class WorkFlowBuessRole
 	 @param emp 人员
 	 @param rdt 日期
 	 @return 生成string.
+	 * @throws Exception 
 	*/
-	public static String GenerTitle(Flow fl, Work wk, Emp emp, String rdt)
+	public static String GenerTitle(Flow fl, Work wk, Emp emp, String rdt) throws Exception
 	{
 		Object tempVar = fl.getTitleRole();
 		String titleRole = (String)((tempVar instanceof String) ? tempVar : null);
@@ -117,8 +118,9 @@ public class WorkFlowBuessRole
 	 生成标题
 	 @param wk
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String GenerTitle(Flow fl, Work wk)
+	public static String GenerTitle(Flow fl, Work wk) throws Exception
 	{
 		Object tempVar = fl.getTitleRole();
 		String titleRole = (String)((tempVar instanceof String) ? tempVar : null);
@@ -216,8 +218,10 @@ public class WorkFlowBuessRole
 	 @param fl
 	 @param wk
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public static String GenerTitle(Flow fl, GERpt wk)
+	public static String GenerTitle(Flow fl, GERpt wk) throws NumberFormatException, Exception
 	{
 		Object tempVar = fl.getTitleRole();
 		String titleRole = (String)((tempVar instanceof String) ? tempVar : null);
@@ -304,8 +308,9 @@ public class WorkFlowBuessRole
 	 @param fl 流程
 	 @param workid 工作ID
 	 @return 返回生成的标题
+	 * @throws Exception 
 	*/
-	private static String GenerTitleExt(Flow fl, int nodeId, long workid, String titleRole)
+	private static String GenerTitleExt(Flow fl, int nodeId, long workid, String titleRole) throws Exception
 	{
 		FrmNodes nds = new FrmNodes(fl.getNo(), nodeId);
 		for (FrmNode item : nds.ToJavaList())
@@ -359,8 +364,9 @@ public class WorkFlowBuessRole
 	 @param billFormat
 	 @param en
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String GenerBillNo(String billNo, long workid, Entity en, String flowPTable)
+	public static String GenerBillNo(String billNo, long workid, Entity en, String flowPTable) throws Exception
 	{
 		if (DotNetToJavaStringHelper.isNullOrEmpty(billNo))
 		{
@@ -541,9 +547,11 @@ public class WorkFlowBuessRole
 	 @param currWorkFlow 当前的工作主表信息
 	 @param enPara 参数
 	 @return 返回找到的节点
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
 
-	public static Node RequestNextNode(Node currNode, long workid, GenerWorkFlow currWorkFlow, GERpt enPara)
+	public static Node RequestNextNode(Node currNode, long workid, GenerWorkFlow currWorkFlow, GERpt enPara) throws NumberFormatException, Exception
 	{
 		// 判断是否有用户选择的节点。
 		if (currNode.getCondModel() == CondModel.ByUserSelected)
@@ -668,8 +676,9 @@ public class WorkFlowBuessRole
 	 @param currNode 当前节点
 	 @param toNode 到达节点
 	 @return 下一步工作人员No,Name格式的返回.
+	 * @throws Exception 
 	*/
-	public static DataTable RequetNextNodeWorkers(Flow fl, Node currNode, Node toNode, Entity enParas, long workid)
+	public static DataTable RequetNextNodeWorkers(Flow fl, Node currNode, Node toNode, Entity enParas, long workid) throws Exception
 	{
 		if (toNode.getIsGuestNode())
 		{
@@ -1529,8 +1538,9 @@ public class WorkFlowBuessRole
 	 @param subDepts
 	 @param empNo
 	 @return 
+	 * @throws Exception 
 	*/
-	private static DataTable RequetNextNodeWorkers_DiGui_ByDepts(BP.Port.Depts subDepts, String empNo, Node toNode)
+	private static DataTable RequetNextNodeWorkers_DiGui_ByDepts(BP.Port.Depts subDepts, String empNo, Node toNode) throws Exception
 	{
 		for (BP.Port.Dept item : subDepts.ToJavaList())
 		{
@@ -1553,8 +1563,9 @@ public class WorkFlowBuessRole
 	 @param deptNo
 	 @param emp1
 	 @return 
+	 * @throws Exception 
 	*/
-	private static DataTable RequetNextNodeWorkers_DiGui(String deptNo, String empNo, Node toNode)
+	private static DataTable RequetNextNodeWorkers_DiGui(String deptNo, String empNo, Node toNode) throws Exception
 	{
 		String sql;
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -1622,8 +1633,9 @@ public class WorkFlowBuessRole
 	 * @param workid
 	 * @param fid
 	 * @return
+	 * @throws Exception 
 	 */
-    public static String DoCCAuto(Node node, GERpt rpt, long workid, long fid)
+    public static String DoCCAuto(Node node, GERpt rpt, long workid, long fid) throws Exception
     {
 
         if (node.getHisCCRole() == CCRole.AutoCC
@@ -1729,8 +1741,9 @@ public class WorkFlowBuessRole
      * @param workid
      * @param fid
      * @return
+     * @throws Exception 
      */
-    public static String DoCCByEmps(Node nd, GERpt rptGE, long workid, long fid)
+    public static String DoCCByEmps(Node nd, GERpt rptGE, long workid, long fid) throws Exception
     {
         if (nd.getHisCCRole() != CCRole.BySysCCEmps)
             return "";

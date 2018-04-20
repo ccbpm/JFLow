@@ -119,10 +119,11 @@ public class Selector extends Entity
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
@@ -163,8 +164,9 @@ public class Selector extends Entity
 	 接受人选择器
 	 
 	 @param nodeid
+	 * @throws Exception 
 	*/
-	public Selector(int nodeid)
+	public Selector(int nodeid) throws Exception
 	{
 		this.setNodeID(nodeid);
 		this.Retrieve();
@@ -248,8 +250,9 @@ public class Selector extends Entity
 	 产生数据.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataSet GenerDataSet(int nodeid, Entity en)
+	public final DataSet GenerDataSet(int nodeid, Entity en) throws Exception
 	{
 		DataSet ds = null;
 		switch (this.getSelectorModel())
@@ -314,8 +317,9 @@ public class Selector extends Entity
 	 
 	 @param nodeID 节点ID
 	 @return 返回值
+	 * @throws Exception 
 	*/
-	private DataSet BySQL(int nodeID, Entity en)
+	private DataSet BySQL(int nodeID, Entity en) throws Exception
 	{
 		// 定义数据容器.
 		DataSet ds = new DataSet();

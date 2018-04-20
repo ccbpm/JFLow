@@ -26,9 +26,8 @@ import BP.Tools.FileAccess;
 import BP.WF.Flow;
 import BP.WF.Glo;
 import BP.Web.WebUser;
-import cn.jflow.common.model.BaseModel;
 import cn.jflow.common.util.ContextHolderUtils;
-import cn.jflow.controller.wf.workopt.BaseController;
+import cn.jflow.common.BaseController;
 
 @Controller
 @RequestMapping("/WF/CCForm")
@@ -214,8 +213,11 @@ public class AttachmentUploadController extends BaseController {
 			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 			return;
 		}
+		
 		try {
-			BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+			
+			//BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			printAlertReload(response, e.getMessage(), Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
@@ -385,13 +387,7 @@ public class AttachmentUploadController extends BaseController {
 			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 			return;
 		}
-		try {
-			BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			printAlertReload(response, e.getMessage(), Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
-			return;
-		}
+		 
 
 	}
 	

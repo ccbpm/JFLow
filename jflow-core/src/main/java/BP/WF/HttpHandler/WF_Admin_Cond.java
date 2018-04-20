@@ -172,8 +172,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化Init.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String Condition_Init() {
+	public final String Condition_Init() throws Exception {
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		Cond cond = new Cond();
 		cond.Retrieve(CondAttr.NodeID, this.getFK_Node(), CondAttr.ToNodeID,
@@ -190,8 +191,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondByFrm_Init() {
+	public final String CondByFrm_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
@@ -249,8 +251,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondByStation_Init() {
+	public final String CondByStation_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 岗位类型.
@@ -276,7 +279,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String CondByFrm_InitField() {
+	public final String CondByFrm_InitField() throws Exception {
 		// 定义数据容器.
 		DataSet ds = new DataSet();
 
@@ -364,8 +367,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 按照部门条件计算.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondByDept_Init() {
+	public final String CondByDept_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 部门
@@ -394,8 +398,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondBySQL_Init() {
+	public final String CondBySQL_Init() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
@@ -416,8 +421,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondBySQLTemplate_Init() {
+	public final String CondBySQLTemplate_Init() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
@@ -439,8 +445,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondByPara_Init() {
+	public final String CondByPara_Init() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
@@ -457,7 +464,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return cond.ToJson();
 	}
 
-	public final String CondStation_Save() {
+	public final String CondStation_Save() throws Exception {
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		CondType HisCondType = CondType.Dir;
@@ -520,8 +527,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 保存
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondByUrl_Save() {
+	public final String CondByUrl_Save() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		CondType condTypeEnum = CondType.forValue(this
@@ -557,8 +565,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 保存
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String CondByFrm_Save() {
+	public final String CondByFrm_Save() throws Exception {
 		// 定义变量.
 		String field = this.GetRequestVal("DDL_Fields");
 		field = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + field;
@@ -674,7 +683,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "保存成功!!";
 	}
 
-	public final String CondBySQLTemplate_Save() {
+	public final String CondBySQLTemplate_Save() throws Exception {
 
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -707,7 +716,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "保存成功..";
 	}
 
-	public final String CondBySQL_Save() {
+	public final String CondBySQL_Save() throws Exception {
 
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -740,7 +749,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "保存成功..";
 	}
 
-	public final String CondByStation_Save() {
+	public final String CondByStation_Save() throws Exception {
 
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
@@ -783,7 +792,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "保存成功..";
 	}
 
-	public final String CondByDept_Save() {
+	public final String CondByDept_Save() throws Exception {
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		CondType condType = CondType
@@ -845,7 +854,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "保存成功!!";
 	}
 
-	public final String CondByPara_Save() {
+	public final String CondByPara_Save() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		CondType condTypeEnum = CondType.forValue(this
@@ -877,7 +886,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "保存成功..";
 	}
 
-	public final String CondPRI_Init() {
+	public final String CondPRI_Init() throws Exception {
 		Conds cds = new Conds();
 		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2,
 				CondAttr.PRI);
@@ -890,7 +899,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return cds.ToJson();
 	}
 
-	public final String CondStation_Init() {
+	public final String CondStation_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 岗位类型.
@@ -917,7 +926,7 @@ public class WF_Admin_Cond extends WebContralBase {
 
 	}
 
-	public final String CondByUrl_Init() {
+	public final String CondByUrl_Init() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
@@ -955,7 +964,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "无可删除的数据.";
 	}
 
-	public final String CondByFrm_Delete() {
+	public final String CondByFrm_Delete() throws Exception {
 		Cond deleteCond = new Cond();
 		deleteCond.setMyPK(this.getMyPK());
 		int i = deleteCond.Delete();
@@ -1075,7 +1084,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "无可删除的数据.";
 	}
 
-	public final String CondPRI_Move() {
+	public final String CondPRI_Move() throws Exception {
 		// C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a
 		// string member and was converted to Java 'if-else' logic:
 		// switch (this.GetRequestVal("MoveType"))
@@ -1108,7 +1117,7 @@ public class WF_Admin_Cond extends WebContralBase {
 	// / 初始化
 	// / </summary>
 	// / <returns></returns>
-	public String StandAloneFrm_Init() {
+	public String StandAloneFrm_Init() throws Exception {
 		String sql = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node="
 				+ this.getFK_Node();
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -1139,13 +1148,13 @@ public class WF_Admin_Cond extends WebContralBase {
 	// / 获得一个表单的字段.
 	// / </summary>
 	// / <returns></returns>
-	public String StandAloneFrm_InitFrmAttr() {
+	public String StandAloneFrm_InitFrmAttr() throws Exception {
 		String frmID = this.GetRequestVal("FrmID");
 		MapAttrs attrs = new MapAttrs(frmID);
 		return attrs.ToJson();
 	}
 
-	public String StandAloneFrm_Save() {
+	public String StandAloneFrm_Save() throws Exception {
 		String frmID = this.GetRequestVal("FrmID");
 
 		// 定义变量.
@@ -1266,7 +1275,7 @@ public class WF_Admin_Cond extends WebContralBase {
 	// / 删除
 	// / </summary>
 	// / <returns></returns>
-	public String StandAloneFrm_Delete() {
+	public String StandAloneFrm_Delete() throws Exception {
 		Cond deleteCond = new Cond();
 		deleteCond.setMyPK(this.getMyPK());
 		int i = deleteCond.Delete();
@@ -1276,7 +1285,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return "err@无可删除的数据.";
 	}
 
-	public String StandAloneFrm_InitField() {
+	public String StandAloneFrm_InitField() throws Exception {
 		// 字段属性.
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getFrmID() + "_" + this.getKeyOfEn());
@@ -1284,7 +1293,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		return AttrCond(attr);
 	}
 
-	private String AttrCond(MapAttr attr) {
+	private String AttrCond(MapAttr attr) throws Exception {
 
 		// 定义数据容器.
 		DataSet ds = new DataSet();

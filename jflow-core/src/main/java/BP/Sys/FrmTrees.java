@@ -27,7 +27,7 @@ public class FrmTrees extends EntitiesSimpleTree
 	}
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int i = super.RetrieveAll();
 		if (i == 0)

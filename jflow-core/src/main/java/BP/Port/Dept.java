@@ -47,8 +47,9 @@ public class Dept extends EntityNoName
 	
 	/**
 	 * 它的子节点
+	 * @throws Exception 
 	 */
-	public final Depts getHisSubDepts()
+	public final Depts getHisSubDepts() throws Exception
 	{
 		if (_HisSubDepts == null)
 		{
@@ -70,15 +71,16 @@ public class Dept extends EntityNoName
 	 * 
 	 * @param no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public Dept(String no)
+	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
 	
 	// 重写方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -127,7 +129,7 @@ public class Dept extends EntityNoName
 	 
 	
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		Depts depts = new Depts();
 		depts.Retrieve(DeptAttr.ParentNo, this.getNo());

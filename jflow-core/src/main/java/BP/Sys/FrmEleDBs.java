@@ -23,8 +23,9 @@ public class FrmEleDBs extends EntitiesMyPK
 	 
 	 @param fk_mapdata
 	 @param pkval
+	 * @throws Exception 
 	*/
-	public FrmEleDBs(String fk_mapdata, String pkval)
+	public FrmEleDBs(String fk_mapdata, String pkval) throws Exception
 	{
 		this.Retrieve(FrmEleDBAttr.FK_MapData, fk_mapdata, FrmEleDBAttr.EleID, pkval);
 	}
@@ -32,8 +33,9 @@ public class FrmEleDBs extends EntitiesMyPK
 	 表单元素扩展DBs
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmEleDBs(String fk_mapdata)
+	public FrmEleDBs(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

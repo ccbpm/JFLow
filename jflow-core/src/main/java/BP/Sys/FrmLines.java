@@ -17,8 +17,9 @@ public class FrmLines extends EntitiesMyPK
 	/** 
 	 线s
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmLines(String fk_mapdata)
+	public FrmLines(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

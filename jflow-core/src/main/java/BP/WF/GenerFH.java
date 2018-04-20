@@ -19,9 +19,10 @@ public class GenerFH extends Entity
 	}
 	/** 
 	 HisFlow
+	 * @throws Exception 
 	 
 	*/
-	public final Flow getHisFlow()
+	public final Flow getHisFlow() throws Exception
 	{
 		return new Flow(this.getFK_Flow());
 	}
@@ -82,7 +83,7 @@ public class GenerFH extends Entity
 	{
 		this.SetValByKey(GenerFHAttr.GroupKey, value);
 	}
-	public final String getFK_NodeText()
+	public final String getFK_NodeText() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		return nd.getName();
@@ -127,8 +128,9 @@ public class GenerFH extends Entity
 	 产生分合流程控制流程
 	 
 	 @param FID
+	 * @throws Exception 
 	*/
-	public GenerFH(long FID)
+	public GenerFH(long FID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerFHAttr.FID, FID);
@@ -142,32 +144,15 @@ public class GenerFH extends Entity
 	 
 	 @param FID 工作流程ID
 	 @param flowNo 流程编号
+	 * @throws Exception 
 	*/
-	public GenerFH(long FID, String flowNo)
+	public GenerFH(long FID, String flowNo) throws Exception
 	{
-		try
-		{
+		 
 			this.setFID(FID);
 			this.setFK_Flow(flowNo);
 			this.Retrieve();
-		}
-		catch (RuntimeException ex)
-		{
-			//WorkFlow wf = new WorkFlow(new Flow(flowNo), FID, FID);
-			//StartWork wk = wf.HisStartWork;
-			//if (wf.WFState == BP.WF.WFState.Complete)
-			//{
-			//    throw new Exception("@已经完成流程，不存在于当前工作集合里，如果要得到此流程的详细信请查看历史工作。技术信息:" + ex.Message);
-			//}
-			//else
-			//{
-			//    this.Copy(wk);
-			//    //string msg = "@流程内部错误，给您带来的不便，深表示抱歉，请把此情况通知给系统管理员。error code:0001更多的信息:" + ex.Message;
-			//    string msg = "@流程内部错误，给您带来的不便，深表示抱歉，请把此情况通知给系统管理员。error code:0001更多的信息:" + ex.Message;
-			//    Log.DefaultLogWriteLine(LogType.Error, "@工作完成后在使用它抛出的异常：" + msg);
-			//    //throw new Exception(msg);
-			//}
-		}
+		 
 	}
 	/** 
 	 重写基类方法
@@ -218,7 +203,7 @@ public class GenerFH extends Entity
 
 		///#region 重载基类方法
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		super.afterDelete();
 	}

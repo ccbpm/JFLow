@@ -19,8 +19,9 @@ public class DeptType extends EntityNoName
 	/** 
 	 部门类型
 	 @param _No
+	 * @throws Exception 
 	*/
-	public DeptType(String _No)
+	public DeptType(String _No) throws Exception
 	{
 		super(_No);
 	}

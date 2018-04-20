@@ -16,7 +16,7 @@ public class SQLCash
 		
 	}
 	
-	public SQLCash(Entity en)
+	public SQLCash(Entity en) throws Exception
 	{
 		this.EnName = en.toString();
 		this.Insert = SqlBuilder.InsertForPara(en);

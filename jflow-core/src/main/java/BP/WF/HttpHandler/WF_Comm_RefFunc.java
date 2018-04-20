@@ -31,7 +31,7 @@ public class WF_Comm_RefFunc extends WebContralBase {
 	 * @return
 	 * @throws Exception 
 	 */
-    public String Dot2DotTreeDeptEmpModel_SaveNodeEmps()
+    public String Dot2DotTreeDeptEmpModel_SaveNodeEmps() throws Exception
     {
     	//JsonResultInnerData jr = new JsonResultInnerData();
         String nodeid = this.GetRequestVal("NodeId");
@@ -117,7 +117,7 @@ public class WF_Comm_RefFunc extends WebContralBase {
      * 获取部门树根结点
      * @throws Exception 
      */
-    public String Dot2DotTreeDeptEmpModel_GetStructureTreeRoot()
+    public String Dot2DotTreeDeptEmpModel_GetStructureTreeRoot() throws Exception
     {
     	//JsonResultInnerData jr = new JsonResultInnerData();
 
@@ -191,9 +191,10 @@ public class WF_Comm_RefFunc extends WebContralBase {
 
     /**
      * 获取指定部门下一级子部门及人员列表
+     * @throws NumberFormatException 
      * @throws Exception 
      */
-    public String Dot2DotTreeDeptEmpModel_GetSubDepts()
+    public String Dot2DotTreeDeptEmpModel_GetSubDepts() throws NumberFormatException, Exception
     {
     	//JsonResultInnerData jr = new JsonResultInnerData();
 
@@ -512,8 +513,9 @@ public class WF_Comm_RefFunc extends WebContralBase {
     
     /**
      * 保存节点绑定部门信息
+     * @throws Exception 
      */
-    public String Dot2DotTreeDeptModel_SaveNodeDepts()
+    public String Dot2DotTreeDeptModel_SaveNodeDepts() throws Exception
     {
     	JsonResultInnerData jr = new JsonResultInnerData();
         String nodeid = this.GetRequestVal("NodeId");
@@ -597,8 +599,9 @@ public class WF_Comm_RefFunc extends WebContralBase {
 
     /**
      * 获取指定部门下一级子部门列表
+     * @throws Exception 
      */
-    public String Dot2DotTreeDeptModel_GetSubDepts()
+    public String Dot2DotTreeDeptModel_GetSubDepts() throws Exception
     {
     	JsonResultInnerData jr = new JsonResultInnerData();
 
@@ -857,8 +860,9 @@ public class WF_Comm_RefFunc extends WebContralBase {
 	
     /**
      * 保存节点绑定岗位信息
+     * @throws Exception 
      */
-    public String Dot2DotStationModel_SaveNodeStations()
+    public String Dot2DotStationModel_SaveNodeStations() throws Exception
     {
         JsonResultInnerData jr = new JsonResultInnerData();
         String nodeid = this.GetRequestVal("nodeid");
@@ -1255,8 +1259,10 @@ public class WF_Comm_RefFunc extends WebContralBase {
 	/** 获取部门树根结点
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 */
-	public final String Dot2DotTreeDeptModel_GetStructureTreeRoot()
+	public final String Dot2DotTreeDeptModel_GetStructureTreeRoot() throws NumberFormatException, Exception
 	{
 		JsonResultInnerData jr = new JsonResultInnerData();
 

@@ -14,10 +14,11 @@ public class NodeToolbar extends EntityOID
 		
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -92,8 +93,9 @@ public class NodeToolbar extends EntityOID
 	 工具栏
 	 
 	 @param _oid 工具栏ID	
+	 * @throws Exception 
 	*/
-	public NodeToolbar(int oid)
+	public NodeToolbar(int oid) throws Exception
 	{
 		this.setOID(oid);;
 		this.Retrieve();

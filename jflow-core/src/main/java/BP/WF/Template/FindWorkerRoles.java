@@ -38,8 +38,9 @@ public class FindWorkerRoles extends EntitiesOID
 	 找人规则集合
 	 
 	 @param nodeID
+	 * @throws Exception 
 	*/
-	public FindWorkerRoles(int nodeID)
+	public FindWorkerRoles(int nodeID) throws Exception
 	{
 		this.Retrieve(FindWorkerRoleAttr.FK_Node, nodeID, FindWorkerRoleAttr.Idx);
 	}

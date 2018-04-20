@@ -459,21 +459,22 @@ public class PushMsg extends EntityMyPK
 	 @param jumpToNode 跳转到的节点
 	 @param jumpToEmps 跳转到的人员
 	 @return 执行成功的消息
+	 * @throws Exception 
 	*/
 
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode)
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode) throws Exception
 	{
 		return DoSendMessage(currNode, en, atPara, objs, jumpToNode, null);
 	}
 
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs)
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs) throws Exception
 	{
 		return DoSendMessage(currNode, en, atPara, objs, null, null);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public string DoSendMessage(Node currNode, Entity en, string atPara, SendReturnObjs objs, Node jumpToNode = null, string jumpToEmps = null)
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps)
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
 	{
 		if(!StringHelper.isNullOrEmpty(generAlertMessage))
 		{
@@ -766,7 +767,7 @@ public class PushMsg extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 	   //  this.MyPK = this.FK_Event + "_" + this.FK_Node + "_" + this.PushWay;
 		return super.beforeUpdateInsertAction();

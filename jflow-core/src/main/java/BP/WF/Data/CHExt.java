@@ -251,8 +251,9 @@ public class CHExt extends EntityMyPK
 	 
 	 
 	 @param pk
+	 * @throws Exception 
 	*/
-	public CHExt(String pk)
+	public CHExt(String pk) throws Exception
 	{
 		super(pk);
 	}

@@ -14,7 +14,7 @@ public class RptEmp extends Entity
 {
 
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -81,8 +81,9 @@ public class RptEmp extends Entity
 	 
 	 @param _empoid 报表ID
 	 @param wsNo 人员编号 	
+	 * @throws Exception 
 	*/
-	public RptEmp(String _empoid, String wsNo)
+	public RptEmp(String _empoid, String wsNo) throws Exception
 	{
 		this.setFK_Rpt(_empoid);
 		this.setFK_Emp(wsNo);

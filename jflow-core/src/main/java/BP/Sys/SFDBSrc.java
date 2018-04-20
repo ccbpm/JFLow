@@ -643,7 +643,7 @@ public class SFDBSrc extends EntityNoName
 	public SFDBSrc()
 	{
 	}
-	public SFDBSrc(String mypk)
+	public SFDBSrc(String mypk) throws Exception
 	{
 		this.setNo(mypk);
 		this.Retrieve();
@@ -1634,7 +1634,7 @@ public class SFDBSrc extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (this.getNo().equals("local"))
 		{
@@ -1672,7 +1672,7 @@ public class SFDBSrc extends EntityNoName
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (this.getNo().equals("local"))
 		{
@@ -1681,7 +1681,7 @@ public class SFDBSrc extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (!this.getNo().equals("local") && this.getDBSrcType() == BP.Sys.DBSrcType.Localhost)
 		{

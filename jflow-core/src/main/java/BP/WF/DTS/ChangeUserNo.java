@@ -40,22 +40,31 @@ public class ChangeUserNo extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
+		try {
+			if (BP.Web.WebUser.getNo().equals("admin"))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		return false;
+				
 		}
 	}
 	/** 
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String oldNo = this.GetValStrByKey("P1");
 		String newNo = this.GetValStrByKey("P2");

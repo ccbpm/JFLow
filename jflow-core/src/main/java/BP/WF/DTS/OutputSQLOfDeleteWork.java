@@ -28,7 +28,7 @@ public class OutputSQLOfDeleteWork extends DataIOEn
 		String sql = this.GenerSqls();
 		PubClass.ResponseWriteBlueMsg(sql.replace("\n", "<BR>"));
 	}
-	public final String GenerSqls()
+	public final String GenerSqls() throws Exception
 	{
 		Nodes nds = new Nodes();
 		nds.RetrieveAll();

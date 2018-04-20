@@ -77,8 +77,9 @@ public class CField extends EntityMyPK
 	 *            属性
 	 * @param Attrs
 	 *            值
+	 * @throws Exception 
 	 */
-	public CField(String FK_Emp, String className)
+	public CField(String FK_Emp, String className) throws Exception
 	{
 		int i = this.Retrieve(CFieldAttr.FK_Emp, FK_Emp, CFieldAttr.EnsName,
 				className);
@@ -114,7 +115,7 @@ public class CField extends EntityMyPK
 	}
 	
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getEnsName() + "_" + this.getFK_Emp());
 		return super.beforeUpdateInsertAction();

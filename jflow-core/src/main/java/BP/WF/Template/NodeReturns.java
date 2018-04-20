@@ -14,9 +14,10 @@ public class NodeReturns extends EntitiesMM
 {
 	/** 
 	 他的退回到
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (NodeReturn ns : this.ToJavaList())
@@ -36,8 +37,9 @@ public class NodeReturns extends EntitiesMM
 	 可退回的节点
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public NodeReturns(int NodeID)
+	public NodeReturns(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.FK_Node, NodeID);
@@ -47,8 +49,9 @@ public class NodeReturns extends EntitiesMM
 	 可退回的节点
 	 
 	 @param NodeNo NodeNo 
+	 * @throws Exception 
 	*/
-	public NodeReturns(String NodeNo)
+	public NodeReturns(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.ReturnTo, NodeNo);
@@ -68,8 +71,9 @@ public class NodeReturns extends EntitiesMM
 	 
 	 @param sts 可退回的节点
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts)
+	public final Nodes GetHisNodes(Nodes sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
@@ -92,8 +96,9 @@ public class NodeReturns extends EntitiesMM
 	 
 	 @param NodeNo 退回到编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo)
+	public final Nodes GetHisNodes(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.ReturnTo, NodeNo);
@@ -111,8 +116,9 @@ public class NodeReturns extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID)
+	public final Nodes GetHisNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.FK_Node, nodeID);

@@ -46,7 +46,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
     ///  初始化sf0. @于庆海，新方法.
     /// </summary>
     /// <returns></returns>
-    public String SF0_Init()
+    public String SF0_Init() throws Exception
     {
         String cl = "BP.En.Entities";
         ArrayList al = ClassFactory.GetObjects(cl);
@@ -103,14 +103,14 @@ public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
     ///  初始化sf2.
     /// </summary>
     /// <returns></returns>
-    public String SF2_Init()
+    public String SF2_Init() throws Exception
     {
         SFDBSrcs srcs = new SFDBSrcs();
         srcs.RetrieveAll();
         return srcs.ToJson();
     }
 
-    public String SF2_GetTVs()
+    public String SF2_GetTVs() throws Exception
     {
         String src = this.GetRequestVal("src");
 
@@ -120,7 +120,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
         return BP.Tools.Json.ToJson(dt);
     }
 
-    public String SF2_GetCols()
+    public String SF2_GetCols() throws Exception
     {
         String src = this.GetRequestVal("src");
         String table = this.GetRequestVal("table");
@@ -155,7 +155,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
         return BP.Tools.Json.ToJson(dt);
     }
 
-    public String SF2_Save()
+    public String SF2_Save() throws Exception
     {
         SFTable sf = new SFTable();
         sf.setNo(this.GetValFromFrmByKey("No"));

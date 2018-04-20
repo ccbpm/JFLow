@@ -443,7 +443,7 @@ public class MyDeptFlow extends Entity
 	public MyDeptFlow()
 	{
 	}
-	public MyDeptFlow(long workId)
+	public MyDeptFlow(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptFlowAttr.WorkID, workId);

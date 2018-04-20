@@ -18,7 +18,7 @@ public class RememberMe extends EntityMyPK
 	{
 		return this.GetValStringByKey(RememberMeAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.FK_Emp, value);
 		this.setMyPK(this.getFK_Node() + "_" + BP.Web.WebUser.getNo());
@@ -31,7 +31,7 @@ public class RememberMe extends EntityMyPK
 	{
 		return this.GetValIntByKey(RememberMeAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.FK_Node, value);
 		this.setMyPK(this.getFK_Node() + "_" + BP.Web.WebUser.getNo());
@@ -150,7 +150,7 @@ public class RememberMe extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setFK_Emp(BP.Web.WebUser.getNo());
 		this.setMyPK(this.getFK_Node() + "_" + this.getFK_Emp());

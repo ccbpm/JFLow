@@ -38,7 +38,7 @@ public class GETrees extends EntitiesNoName
 	}
 	
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return this.RetrieveAllFromDBSource();
 	}

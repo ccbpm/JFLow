@@ -8,7 +8,7 @@ import BP.WF.HttpHandler.Base.WebContralBase;
 */
 public class CCMobile_Setting extends WebContralBase
 {
-	public final String ChangeDept_Init()
+	public final String ChangeDept_Init() throws Exception
 	{
 		WF_Setting ccform = new WF_Setting();
 		return ccform.ChangeDept_Init();

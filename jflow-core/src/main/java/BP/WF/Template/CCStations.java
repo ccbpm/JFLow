@@ -16,9 +16,10 @@ public class CCStations extends EntitiesMM
 {
 	/** 
 	 他的工作岗位
+	 * @throws Exception 
 	 
 	*/
-	public final Stations getHisStations()
+	public final Stations getHisStations() throws Exception
 	{
 		Stations ens = new Stations();
 		for (CCStation ns : this.ToJavaList())
@@ -29,9 +30,10 @@ public class CCStations extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (CCStation ns : this.ToJavaList())
@@ -52,8 +54,9 @@ public class CCStations extends EntitiesMM
 	 抄送到岗位
 	 
 	 @param nodeID 节点ID
+	 * @throws Exception 
 	*/
-	public CCStations(int nodeID)
+	public CCStations(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Node, nodeID);
@@ -63,8 +66,9 @@ public class CCStations extends EntitiesMM
 	 抄送到岗位
 	 
 	 @param StationNo StationNo 
+	 * @throws Exception 
 	*/
-	public CCStations(String StationNo)
+	public CCStations(String StationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Station, StationNo);
@@ -84,8 +88,9 @@ public class CCStations extends EntitiesMM
 	 
 	 @param stationNo 工作岗位编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String stationNo)
+	public final Nodes GetHisNodes(String stationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Station, stationNo);
@@ -103,8 +108,9 @@ public class CCStations extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Stations GetHisStations(int nodeID)
+	public final Stations GetHisStations(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Node, nodeID);

@@ -39,8 +39,9 @@ public class AccepterRole extends EntityOID
 	/** 
 	 接受人规则
 	 @param oid 接受人规则ID	
+	 * @throws Exception 
 	*/
-	public AccepterRole(int oid)
+	public AccepterRole(int oid) throws Exception
 	{
 		this.setOID(oid);
 		this.Retrieve();

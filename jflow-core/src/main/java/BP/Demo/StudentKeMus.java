@@ -26,8 +26,9 @@ public class StudentKeMus extends EntitiesMM
 	 * 
 	 * @param FK_Student
 	 *            FK_Student
+	 * @throws Exception 
 	 */
-	public StudentKeMus(String FK_Student)
+	public StudentKeMus(String FK_Student) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(StudentKeMuAttr.FK_Student, FK_Student);

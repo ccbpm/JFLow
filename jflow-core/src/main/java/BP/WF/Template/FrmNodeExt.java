@@ -38,8 +38,9 @@ public class FrmNodeExt extends EntityMyPK{
     /**
      * 节点表单
      * @param mypk
+     * @throws Exception 
      */
-    public FrmNodeExt(String mypk)
+    public FrmNodeExt(String mypk) throws Exception
     {
     	this.setMyPK(mypk);
 		this.Retrieve();
@@ -128,7 +129,7 @@ public class FrmNodeExt extends EntityMyPK{
             return this.get_enMap();
         }
     }
-    public final String DoDtls()
+    public final String DoDtls() throws Exception
 	{
     	if(!StringUtils.isEmpty(this.getMyPK())){
     		this.setMyPK(this.getMyPK());
@@ -136,7 +137,7 @@ public class FrmNodeExt extends EntityMyPK{
     	}
 		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
 	}
-	public final String DoFields()
+	public final String DoFields() throws Exception
 	{
 		if(!StringUtils.isEmpty(this.getMyPK())){
     		this.setMyPK(this.getMyPK());
@@ -144,7 +145,7 @@ public class FrmNodeExt extends EntityMyPK{
     	}
 		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
 	}
-	public final String DoAths()
+	public final String DoAths() throws Exception
 	{
 		if(!StringUtils.isEmpty(this.getMyPK())){
     		this.setMyPK(this.getMyPK());
@@ -153,7 +154,7 @@ public class FrmNodeExt extends EntityMyPK{
 		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
 	}
 
-	public final String DoCopyFromNode()
+	public final String DoCopyFromNode() throws Exception
 	{
 		if(!StringUtils.isEmpty(this.getMyPK())){
     		this.setMyPK(this.getMyPK());
@@ -161,7 +162,7 @@ public class FrmNodeExt extends EntityMyPK{
     	}
 		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
 	}
-	public final String DoSelfSln()
+	public final String DoSelfSln() throws Exception
 	{
 		if(!StringUtils.isEmpty(this.getMyPK())){
     		this.setMyPK(this.getMyPK());
@@ -169,7 +170,7 @@ public class FrmNodeExt extends EntityMyPK{
     	}
 		return "../../Admin/Sln/Sln.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
 	}
-	public final String DoEnableRole()
+	public final String DoEnableRole() throws Exception
 	{
 		if(!StringUtils.isEmpty(this.getMyPK())){
     		this.setMyPK(this.getMyPK());

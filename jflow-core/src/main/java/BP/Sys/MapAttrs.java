@@ -22,9 +22,10 @@ public class MapAttrs extends EntitiesMyPK
 	}
 	/** 
 	 实体属性s
+	 * @throws Exception 
 	 
 	*/
-	public MapAttrs(String fk_map)
+	public MapAttrs(String fk_map) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MapAttrAttr.FK_MapData, fk_map);
@@ -36,7 +37,7 @@ public class MapAttrs extends EntitiesMyPK
 	{
 		return (ArrayList<MapAttr>) obj;
 	}
-	public final int SearchMapAttrsYesVisable(String fk_map)
+	public final int SearchMapAttrsYesVisable(String fk_map) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MapAttrAttr.FK_MapData, fk_map);

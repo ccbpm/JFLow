@@ -41,8 +41,9 @@ public class YF extends SimpleNoNameFix
 	 * _No
 	 * 
 	 * @param _No
+	 * @throws Exception 
 	 */
-	public YF(String _No)
+	public YF(String _No) throws Exception
 	{
 		super(_No);
 	}

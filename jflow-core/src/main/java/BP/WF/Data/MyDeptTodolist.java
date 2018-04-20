@@ -17,6 +17,7 @@ import BP.WF.Glo;
 import BP.WF.TaskSta;
 import BP.WF.WFSta;
 import BP.WF.WFState;
+import BP.WF.Template.FlowExt;
 import BP.WF.Template.FlowSheet;
 import cn.jflow.common.util.ContextHolderUtils;
 
@@ -421,7 +422,7 @@ public class MyDeptTodolist extends Entity
 	public MyDeptTodolist()
 	{
 	}
-	public MyDeptTodolist(long workId)
+	public MyDeptTodolist(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptTodolistAttr.WorkID, workId);
@@ -517,8 +518,9 @@ public class MyDeptTodolist extends Entity
 	 @param ToEmp
 	 @param Note
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoShift(String ToEmp, String Note)
+	public final String DoShift(String ToEmp, String Note) throws Exception
 	{
 		try {
 			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), this.getFID()) == false)
@@ -543,8 +545,9 @@ public class MyDeptTodolist extends Entity
 	 执行删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDelete()
+	public final String DoDelete() throws Exception
 	{
 		try {
 			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), this.getFID()) == false)
@@ -580,10 +583,11 @@ public class MyDeptTodolist extends Entity
 	 @param nodeid 节点ID
 	 @param note 回滚原因
 	 @return 回滚的结果
+	 * @throws Exception 
 	*/
-	public final String DoComeBack(int nodeid, String note)
+	public final String DoComeBack(int nodeid, String note) throws Exception
 	{
-		BP.WF.Template.FlowSheet fl = new FlowSheet(this.getFK_Flow());
+		BP.WF.Template.FlowExt fl = new FlowExt(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), nodeid, note);
 	}
 

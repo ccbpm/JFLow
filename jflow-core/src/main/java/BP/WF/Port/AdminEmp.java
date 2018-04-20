@@ -108,7 +108,7 @@ public class AdminEmp extends EntityNoName {
     /*
      * 管理员
      */
-    public AdminEmp(String no)
+    public AdminEmp(String no) throws Exception
     {
         this.setNo(no);
         try
@@ -180,7 +180,7 @@ public class AdminEmp extends EntityNoName {
      * 更新，插入之前的工作。
      */
     @Override
-    protected  boolean beforeUpdateInsertAction()
+    protected  boolean beforeUpdateInsertAction() throws Exception
     {
     	if ("admin".equals(this.getNo()))
         {
@@ -229,8 +229,9 @@ public class AdminEmp extends EntityNoName {
 	 
 	 @param empID
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAddAdminer(String empID)
+	public final String DoAddAdminer(String empID) throws Exception
 	{
 		BP.Port.Emp emp = new BP.Port.Emp();
 		emp.setNo(empID);

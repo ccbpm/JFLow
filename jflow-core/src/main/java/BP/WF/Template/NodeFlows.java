@@ -17,8 +17,9 @@ public class NodeFlows extends EntitiesMM
 {
 	/**
 	 * 他的调用子流程
+	 * @throws Exception 
 	 */
-	public final Emps getHisEmps()
+	public final Emps getHisEmps() throws Exception
 	{
 		Emps ens = new Emps();
 		for (NodeFlow ns : convertNodeFlows(this))
@@ -30,8 +31,9 @@ public class NodeFlows extends EntitiesMM
 	
 	/**
 	 * 他的工作节点
+	 * @throws Exception 
 	 */
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (NodeFlow ns : convertNodeFlows(this))
@@ -54,8 +56,9 @@ public class NodeFlows extends EntitiesMM
 	 * 
 	 * @param NodeID
 	 *            节点ID
+	 * @throws Exception 
 	 */
-	public NodeFlows(int NodeID)
+	public NodeFlows(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeFlowAttr.FK_Node, NodeID);
@@ -67,8 +70,9 @@ public class NodeFlows extends EntitiesMM
 	 * 
 	 * @param EmpNo
 	 *            EmpNo
+	 * @throws Exception 
 	 */
-	public NodeFlows(String EmpNo)
+	public NodeFlows(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeFlowAttr.FK_Flow, EmpNo);
@@ -90,8 +94,9 @@ public class NodeFlows extends EntitiesMM
 	 * @param sts
 	 *            调用子流程集合
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Nodes GetHisNodes(Emps sts)
+	public final Nodes GetHisNodes(Emps sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
@@ -116,8 +121,9 @@ public class NodeFlows extends EntitiesMM
 	 * @param EmpNo
 	 *            调用子流程编号
 	 * @return 节点s
+	 * @throws Exception 
 	 */
-	public final Nodes GetHisNodes(String EmpNo)
+	public final Nodes GetHisNodes(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeFlowAttr.FK_Flow, EmpNo);
@@ -137,8 +143,9 @@ public class NodeFlows extends EntitiesMM
 	 * @param nodeID
 	 *            此节点的ID
 	 * @return 转向此节点的集合的Nodes (FromNodes)
+	 * @throws Exception 
 	 */
-	public final Emps GetHisEmps(int nodeID)
+	public final Emps GetHisEmps(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeFlowAttr.FK_Node, nodeID);

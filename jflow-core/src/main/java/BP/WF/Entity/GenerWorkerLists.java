@@ -36,7 +36,7 @@ public class GenerWorkerLists extends Entities
 	{
 	}
 	
-	public GenerWorkerLists(long workId)
+	public GenerWorkerLists(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
@@ -48,8 +48,9 @@ public class GenerWorkerLists extends Entities
 	/**
 	 * @param workId
 	 * @param nodeId
+	 * @throws Exception 
 	 */
-	public GenerWorkerLists(long workId, int nodeId)
+	public GenerWorkerLists(long workId, int nodeId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
@@ -59,7 +60,7 @@ public class GenerWorkerLists extends Entities
 		return;
 	}
 	
-	public GenerWorkerLists(long workId, int nodeId, String FK_Emp)
+	public GenerWorkerLists(long workId, int nodeId, String FK_Emp) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
@@ -85,8 +86,9 @@ public class GenerWorkerLists extends Entities
 	 *            节点ID
 	 * @param isWithEmpExts
 	 *            是否包含为分配的人员
+	 * @throws Exception 
 	 */
-	public GenerWorkerLists(long workId, int nodeId, boolean isWithEmpExts)
+	public GenerWorkerLists(long workId, int nodeId, boolean isWithEmpExts) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.addLeftBracket();
@@ -157,8 +159,9 @@ public class GenerWorkerLists extends Entities
 	 *            工作者ID
 	 * @param flowNo
 	 *            流程编号
+	 * @throws Exception 
 	 */
-	public GenerWorkerLists(long workId, String flowNo)
+	public GenerWorkerLists(long workId, String flowNo) throws Exception
 	{
 		if (workId == 0)
 		{

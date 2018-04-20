@@ -112,7 +112,7 @@ public class WF_Comm_Sys extends WebContralBase
 
 
 		///#region 系统实体属性.
-	public final String SystemClass_EnsCheck()
+	public final String SystemClass_EnsCheck() throws Exception
 	{
 		try
 		{
@@ -207,7 +207,7 @@ public class WF_Comm_Sys extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	public final String SystemClass_Fields()
+	public final String SystemClass_Fields() throws Exception
 	{
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
@@ -385,7 +385,7 @@ public class WF_Comm_Sys extends WebContralBase
 
 
 		///#region 数据源管理
-	public final String SFDBSrcNewGuide_GetList()
+	public final String SFDBSrcNewGuide_GetList() throws Exception
 	{
 		//SysEnums enums = new SysEnums(SFDBSrcAttr.DBSrcType);
 		SFDBSrcs srcs = new SFDBSrcs();
@@ -394,7 +394,7 @@ public class WF_Comm_Sys extends WebContralBase
 		return srcs.ToJson();
 	}
 
-	public final String SFDBSrcNewGuide_LoadSrc()
+	public final String SFDBSrcNewGuide_LoadSrc() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -412,7 +412,7 @@ public class WF_Comm_Sys extends WebContralBase
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String SFDBSrcNewGuide_SaveSrc()
+	public final String SFDBSrcNewGuide_SaveSrc() throws Exception
 	{
 		SFDBSrc src = new SFDBSrc();
 		src.setNo(this.GetRequestVal("TB_No"));
@@ -462,7 +462,7 @@ public class WF_Comm_Sys extends WebContralBase
 		return "保存成功..";
 	}
 
-	public final String SFDBSrcNewGuide_DelSrc()
+	public final String SFDBSrcNewGuide_DelSrc() throws Exception
 	{
 		String no = this.GetRequestVal("No");
 

@@ -31,8 +31,9 @@ public class FrmEvents extends EntitiesOID
 	 @param dotype 执行类型
 	 @param en 数据实体
 	 @return null 没有事件，其他为执行了事件。
+	 * @throws Exception 
 	*/
-	public final String DoEventNode(String dotype, Entity en)
+	public final String DoEventNode(String dotype, Entity en) throws Exception
 	{
 		return DoEventNode(dotype, en, null);
 	}
@@ -43,8 +44,9 @@ public class FrmEvents extends EntitiesOID
 	 @param en 数据实体
 	 @param atPara 参数
 	 @return null 没有事件，其他为执行了事件。
+	 * @throws Exception 
 	*/
-	public final String DoEventNode(String dotype, Entity en, String atPara)
+	public final String DoEventNode(String dotype, Entity en, String atPara) throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -73,8 +75,9 @@ public class FrmEvents extends EntitiesOID
 	 @param en 数据实体
 	 @param atPara 特殊的参数格式@key=value 方式.
 	 @return 
+	 * @throws Exception 
 	*/
-	private String _DoEventNode(String dotype, Entity en, String atPara)
+	private String _DoEventNode(String dotype, Entity en, String atPara) throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -695,8 +698,9 @@ public class FrmEvents extends EntitiesOID
 	 事件
 	 
 	 @param FK_MapData FK_MapData
+	 * @throws Exception 
 	*/
-	public FrmEvents(String fk_MapData)
+	public FrmEvents(String fk_MapData) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmEventAttr.FK_MapData, fk_MapData);
@@ -706,8 +710,9 @@ public class FrmEvents extends EntitiesOID
 	 事件
 	 
 	 @param nodeID nodeID
+	 * @throws Exception 
 	*/
-	public FrmEvents(int nodeID)
+	public FrmEvents(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmEventAttr.FK_Node, nodeID);

@@ -82,8 +82,9 @@ public class MsgsManager
 	 
 	 @param empId
 	 @return 
+	 * @throws Exception 
 	*/
-	public static int GetMsgsCountByEmpID(int empId)
+	public static int GetMsgsCountByEmpID(int empId) throws Exception
 	{
 		String sql = "select COUNT(*) from v_wf_msg WHERE FK_Emp='"
 				+ WebUser.getNo() + "'";

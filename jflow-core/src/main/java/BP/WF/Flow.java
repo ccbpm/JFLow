@@ -57,7 +57,6 @@ import BP.Sys.MapDtlAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtXmlList;
-import BP.Sys.MapM2M;
 import BP.Sys.OSModel;
 import BP.Sys.PubClass;
 import BP.Sys.SysEnum;
@@ -619,8 +618,9 @@ public class Flow extends BP.En.EntityNoName
 	/** 
 	 创建新工作web方式调用的
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Work NewWork()
+	public final Work NewWork() throws Exception
 	{
 		return NewWork(WebUser.getNo());
 	}
@@ -628,8 +628,9 @@ public class Flow extends BP.En.EntityNoName
 	 创建新工作.web方式调用的
 	 @param empNo 人员编号
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Work NewWork(String empNo)
+	public final Work NewWork(String empNo) throws Exception
 	{
 		Emp emp = new Emp(empNo);
 		return NewWork(emp, null);
@@ -639,8 +640,9 @@ public class Flow extends BP.En.EntityNoName
 	 @param emp 发起人
 	 @param paras 参数集合,如果是CS调用，要发起子流程，要从其他table里copy数据,就不能从request里面取,可以传递为null.
 	 @return 返回的Work.
+	 * @throws Exception 
 	*/
-	public final Work NewWork(Emp emp, java.util.Hashtable paras)
+	public final Work NewWork(Emp emp, java.util.Hashtable paras) throws Exception
 	{
 		// 检查是否可以发起该流程？
 		if (Glo.CheckIsCanStartFlow_InitStartFlow(this) == false)
@@ -1340,8 +1342,9 @@ public class Flow extends BP.En.EntityNoName
 	 @param workid
 	 @param fk_node
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Work GenerWork(long workid, Node nd, boolean isPostBack)
+	public final Work GenerWork(long workid, Node nd, boolean isPostBack) throws Exception
 	{
 		Work wk = nd.getHisWork();
 		wk.setOID(workid);
@@ -1495,7 +1498,7 @@ public class Flow extends BP.En.EntityNoName
 		return wk;
 	}
 		///#region 其他通用方法.
-	public final String DoBTableDTS()
+	public final String DoBTableDTS() throws Exception
 	{
 		if (this.getDTSWay() == FlowDTSWay.None)
 		{
@@ -1530,8 +1533,9 @@ public class Flow extends BP.En.EntityNoName
 	 @param currNode 当前节点ID
 	 @param isStopFlow 流程是否结束
 	 @return 返回同步结果.
+	 * @throws Exception 
 	*/
-	public final String DoBTableDTS(GERpt rpt, Node currNode, boolean isStopFlow)
+	public final String DoBTableDTS(GERpt rpt, Node currNode, boolean isStopFlow) throws Exception
 	{
 		boolean isActiveSave = false;
 		// 判断是否符合流程数据同步条件.
@@ -1676,8 +1680,9 @@ public class Flow extends BP.En.EntityNoName
 	 自动发起
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAutoStartIt()
+	public final String DoAutoStartIt() throws Exception
 	{
 		switch (this.getHisFlowRunWay())
 		{
@@ -1869,10 +1874,11 @@ public class Flow extends BP.En.EntityNoName
 
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (BP.Web.WebUser.getNo().equals("admin"))
@@ -1974,8 +1980,9 @@ public class Flow extends BP.En.EntityNoName
 	 校验流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoCheck()
+	public final String DoCheck() throws Exception
 	{
 
 			///#region 检查独立表单
@@ -2373,8 +2380,9 @@ public class Flow extends BP.En.EntityNoName
 	 节点表单字段数据类型检查，名字相同的字段出现类型不同的处理方法：依照不同于NDxxRpt表中同名字段类型为基准
 	 
 	 @return 检查结果
+	 * @throws Exception 
 	*/
-	private String CheckFormFields()
+	private String CheckFormFields() throws Exception
 	{
 		StringBuilder errorAppend = new StringBuilder();
 		errorAppend.append("@信息: -------- 流程节点表单的字段类型检查: ------ ");
@@ -2395,9 +2403,11 @@ public class Flow extends BP.En.EntityNoName
 				String keyOfEn = row.getValue("KEYOFEN").toString();
 				String myNum = row.getValue("MYNUM").toString();
 				int iMyNum = 0;
-				cn.jflow.common.tangible.RefObject<Integer> tempRef_iMyNum = new cn.jflow.common.tangible.RefObject<Integer>(iMyNum);
-				cn.jflow.common.tangible.TryParseHelper.tryParseInt(myNum, tempRef_iMyNum);
-				iMyNum = tempRef_iMyNum.argValue;
+				
+				//cn.jflow.common.tangible.RefObject<Integer> tempRef_iMyNum = new cn.jflow.common.tangible.RefObject<Integer>(iMyNum);
+				//cn.jflow.common.tangible.TryParseHelper.tryParseInt(myNum, tempRef_iMyNum);
+				
+				iMyNum =0;// tempRef_iMyNum.argValue;
 
 				//存在2种以上数据类型，有手动进行调整
 				if (iMyNum > 2)
@@ -2497,8 +2507,9 @@ public class Flow extends BP.En.EntityNoName
 	 生成流程模板
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerFlowXmlTemplete()
+	public final String GenerFlowXmlTemplete() throws Exception
 	{
 		String name = this.getName();
 		name = BP.Tools.StringExpressionCalculate.ReplaceBadCharOfFileName(name);
@@ -2516,8 +2527,9 @@ public class Flow extends BP.En.EntityNoName
 	 生成流程模板
 	 @param path
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataSet DoExpFlowXmlTemplete(String path)
+	public final DataSet DoExpFlowXmlTemplete(String path) throws Exception
 	{
 		File file = new File(path);
 		if (!file.exists())
@@ -2609,7 +2621,7 @@ public class Flow extends BP.En.EntityNoName
 	}
 	 
 
-	public final DataSet GetFlow(String path)
+	public final DataSet GetFlow(String path) throws Exception
 	{
 		// 把所有的数据都存储在这里。
 		DataSet ds = new DataSet();
@@ -2911,9 +2923,10 @@ public class Flow extends BP.En.EntityNoName
 		///#region 其他公用方法1
 	/** 
 	 重新设置Rpt表
+	 * @throws Exception 
 	 
 	*/
-	public final void CheckRptOfReset()
+	public final void CheckRptOfReset() throws Exception
 	{
 		String fk_mapData = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
 		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "'";
@@ -2927,8 +2940,9 @@ public class Flow extends BP.En.EntityNoName
 	 重新装载
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReloadRptData()
+	public final String DoReloadRptData() throws Exception
 	{
 		this.DoCheck_CheckRpt(this.getHisNodes());
 
@@ -2952,8 +2966,9 @@ public class Flow extends BP.En.EntityNoName
 	 
 	 @param nds
 	 @param dt
+	 * @throws Exception 
 	*/
-	private String CheckRptData(Nodes nds, DataTable dt)
+	private String CheckRptData(Nodes nds, DataTable dt) throws Exception
 	{
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 		String err = "";
@@ -3051,8 +3066,9 @@ public class Flow extends BP.En.EntityNoName
 	 生成明细报表信息
 	 
 	 @param nds
+	 * @throws Exception 
 	*/
-	private void CheckRptDtl(Nodes nds)
+	private void CheckRptDtl(Nodes nds) throws Exception
 	{
 		MapDtls dtlsDtl = new MapDtls();
 		dtlsDtl.Retrieve(MapDtlAttr.FK_MapData, "ND" + Integer.parseInt(this.getNo()) + "Rpt");
@@ -3128,78 +3144,13 @@ public class Flow extends BP.En.EntityNoName
 			}
 		}
 	}
-	/** 
-	 产生所有节点视图
-	 @param nds
-	*/
-	private void CheckRptViewDel(Nodes nds)
-	{
-		if (this.getHisDataStoreModel() == DataStoreModel.SpecTable)
-		{
-			return;
-		}
-
-		String viewName = "V" + this.getNo();
-		String sql = "CREATE VIEW " + viewName + " ";
-		sql += "/* CCFlow Auto Create :" + this.getName() + " Date:" + DateUtils.getCurrentDate("yyyy-MM-dd") + " */ ";
-		sql += "\r\n (MyPK,FK_Node,OID,FID,RDT,FK_NY,CDT,Rec,Emps,FK_Dept,MyNum) AS ";
-		boolean is1 = false;
-		for (Node nd : nds.ToJavaList())
-		{
-			//  nd.HisWork.CheckPhysicsTable();
-			if (is1 == false)
-			{
-				is1 = true;
-			}
-			else
-			{
-				sql += "\r\n UNION ";
-			}
-
-			switch (SystemConfig.getAppCenterDBType())
-			{
-				case Oracle:
-				caseInformix:
-					sql += "\r\n SELECT '" + nd.getNodeID() + "' || '_'|| OID||'_'|| FID  AS MyPK, '" + nd.getNodeID() + "' AS FK_Node,OID,FID,RDT,SUBSTR(RDT,1,7) AS FK_NY,CDT,Rec,Emps,FK_Dept, 1 AS MyNum FROM ND" + nd.getNodeID() + " ";
-					break;
-				case MySQL:
-					sql += "\r\n SELECT '" + nd.getNodeID() + "'+'_'+CHAR(OID)  +'_'+CHAR(FID)  AS MyPK, '" + nd.getNodeID() + "' AS FK_Node,OID,FID,RDT," + BP.Sys.SystemConfig.getAppCenterDBSubstringStr() + "(RDT,1,7) AS FK_NY,CDT,Rec,Emps,FK_Dept, 1 AS MyNum FROM ND" + nd.getNodeID() + " ";
-					break;
-				default:
-					sql += "\r\n SELECT '" + nd.getNodeID() + "'+'_'+CAST(OID AS varchar(10)) +'_'+CAST(FID AS VARCHAR(10)) AS MyPK, '" + nd.getNodeID() + "' AS FK_Node,OID,FID,RDT," + BP.Sys.SystemConfig.getAppCenterDBSubstringStr() + "(RDT,1,7) AS FK_NY,CDT,Rec,Emps,FK_Dept, 1 AS MyNum FROM ND" + nd.getNodeID() + " ";
-					break;
-			}
-		}
-		if (SystemConfig.getAppCenterDBType() != DBType.Informix)
-		{
-			sql += "\r\n GO ";
-		}
-
-		try
-		{
-			if (DBAccess.IsExitsObject(viewName) == true)
-			{
-				DBAccess.RunSQL("DROP VIEW " + viewName);
-			}
-		}
-		catch (java.lang.Exception e)
-		{
-		}
-
-		try
-		{
-			DBAccess.RunSQL(sql);
-		}
-		catch (RuntimeException ex)
-		{
-			BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
-		}
-	}
+	 
 	/** 
 	 检查数据报表.
 	 @param nds
+	 * @throws Exception 
 	*/
-	private void DoCheck_CheckRpt(Nodes nds)
+	private void DoCheck_CheckRpt(Nodes nds) throws Exception
 	{
 		String fk_mapData = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
 		String flowId = String.valueOf(Integer.parseInt(this.getNo()));
@@ -4302,16 +4253,17 @@ public class Flow extends BP.En.EntityNoName
 	 @param atPara 参数
 	 @param objs 发送对象，可选
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara)
+	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara) throws Exception
 	{
 		return DoFlowEventEntity(doType, currNode, en, atPara, null,"");
 	}
-	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, SendReturnObjs objs)
+	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, SendReturnObjs objs) throws Exception
 	{
 		return DoFlowEventEntity(doType, currNode, en, atPara, objs, null, null);
 	}
-	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps)
+	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
 	{
 		if (currNode == null)
 		{
@@ -4362,7 +4314,7 @@ public class Flow extends BP.En.EntityNoName
 		}
 		return str + msgAlert;
 	}
-	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, Node jumpToNode, String jumpToEmp)
+	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, Node jumpToNode, String jumpToEmp) throws Exception
 	{
 		String str = this.DoFlowEventEntity(doType, currNode, en, atPara, null, jumpToNode, jumpToEmp);
 		return str;
@@ -4581,9 +4533,10 @@ public class Flow extends BP.En.EntityNoName
 	}
 	/** 
 	 流程类别名称
+	 * @throws Exception 
 	 
 	*/
-	public final String getFK_FlowSortText()
+	public final String getFK_FlowSortText() throws Exception
 	{
 		FlowSort fs = new FlowSort(this.getFK_FlowSort());
 		return fs.getName();
@@ -4692,9 +4645,10 @@ public class Flow extends BP.En.EntityNoName
 	public Nodes _HisNodes = null;
 	/** 
 	 他的节点集合.
+	 * @throws Exception 
 	 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		if (this._HisNodes == null)
 		{
@@ -4708,9 +4662,10 @@ public class Flow extends BP.En.EntityNoName
 	}
 	/** 
 	 他的 Start 节点
+	 * @throws Exception 
 	 
 	*/
-	public final Node getHisStartNode()
+	public final Node getHisStartNode() throws Exception
 	{
 
 		for (Node nd : this.getHisNodes().ToJavaList())
@@ -4724,17 +4679,19 @@ public class Flow extends BP.En.EntityNoName
 	}
 	/** 
 	 他的事务类别
+	 * @throws Exception 
 	 
 	*/
-	public final FlowSort getHisFlowSort()
+	public final FlowSort getHisFlowSort() throws Exception
 	{
 		return new FlowSort(this.getFK_FlowSort());
 	}
 	/** 
 	 flow data 数据
+	 * @throws Exception 
 	 
 	*/
-	public final BP.WF.Data.GERpt getHisGERpt()
+	public final BP.WF.Data.GERpt getHisGERpt() throws Exception
 	{
 		try
 		{
@@ -4780,7 +4737,7 @@ public class Flow extends BP.En.EntityNoName
 	{
 		this.DoOrderDown(FlowAttr.FK_FlowSort, this.getFK_FlowSort(), FlowAttr.Idx);
 	}
-	public Flow(String _No)
+	public Flow(String _No) throws Exception
 	{
 		this.setNo(_No);
 		if (SystemConfig.getIsDebug())
@@ -4797,7 +4754,7 @@ public class Flow extends BP.En.EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//获得事件实体.
 		this.setFlowEventEntity(BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.getFlowMark(), this.getNo()));
@@ -4940,8 +4897,11 @@ public class Flow extends BP.En.EntityNoName
 
 		map.AddTBInt(FlowAttr.DTSTime, FlowDTSTime.AllNodeSend.getValue(), "执行同步时间点", true, true);
 		map.AddTBString(FlowAttr.DTSSpecNodes, null, "指定的节点ID", true, false, 0, 200, 100, false);
-		map.AddTBInt(FlowAttr.DTSField, getDTSField().SameNames.getValue(), "要同步的字段计算方式", true, true);
-		map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false, false, 0, 2000, 100, false);
+		
+		//map.AddTBInt(FlowAttr.DTSField, getDTSField().SameNames.getValue(), "要同步的字段计算方式", true, true);
+		map.AddTBInt(FlowAttr.DTSField, 0, "要同步的字段计算方式", true, true);
+		
+	//	map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false, false, 0, 2000, 100, false);
 
 			///#endregion 数据同步方案
 
@@ -4998,8 +4958,9 @@ public class Flow extends BP.En.EntityNoName
 	 设计数据转出
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoExp()
+	public final String DoExp() throws Exception
 	{
 		this.DoCheck();
 		return Glo.getCCFlowAppPath() + "WF/Admin/Exp.jsp?CondType=0&FK_Flow=" + this.getNo();
@@ -5009,9 +4970,9 @@ public class Flow extends BP.En.EntityNoName
 	/** 
 	 定义报表
 	 @return 
-	 * @throws IOException 
+	 * @throws Exception 
 	*/
-	public final String DoDRpt() throws IOException
+	public final String DoDRpt() throws Exception
 	{
 		this.DoCheck();
 		PubClass.WinOpen(ContextHolderUtils.getResponse(),Glo.getCCFlowAppPath() + "WF/Admin/WFRpt.jsp?CondType=0&FK_Flow=" + this.getNo(), "单据", "cdsn", 800, 500, 210, 300);
@@ -5026,7 +4987,7 @@ public class Flow extends BP.En.EntityNoName
 	{
 		return null;
 	}
-	public final String DoDelData()
+	public final String DoDelData() throws Exception
 	{
 
 			///#region 删除独立表单的数据.
@@ -6552,27 +6513,7 @@ public class Flow extends BP.En.EntityNoName
 						}
 					}
 			}
-			else if (dt.TableName.equals("Sys_MapM2M")) //Sys_MapM2M.
-			{
-					idx = 0;
-					for (DataRow dr : dt.Rows)
-					{
-						idx++;
-						MapM2M en = new MapM2M();
-						for (DataColumn dc : dt.Columns)
-						{
-							String val = (String)((dr.getValue(dc.ColumnName) instanceof String) ? dr.getValue(dc.ColumnName) : null);
-							if (val == null)
-							{
-								continue;
-							}
-
-							val = val.replace("ND" + oldFlowID, "ND" + flowID);
-							en.SetValByKey(dc.ColumnName, val);
-						}
-						en.Insert();
-					}
-			}
+			 
 			else if (dt.TableName.equals("Sys_FrmRB")) //Sys_FrmRB.
 			{
 					idx = 0;
@@ -6774,7 +6715,7 @@ public class Flow extends BP.En.EntityNoName
 		}
 
 	}
-	public final Node DoNewNode(int x, int y)
+	public final Node DoNewNode(int x, int y) throws Exception
 	{
 		Node nd = new Node();
 		int idx = this.getHisNodes().size();
@@ -6838,7 +6779,7 @@ public class Flow extends BP.En.EntityNoName
 		CreatePushMsg(nd);
 		return nd;
 	}
-	 public final void CreatePushMsg(Node nd)
+	 public final void CreatePushMsg(Node nd) throws Exception
 		{
 			// 周朋@于庆海需要翻译.
 			if (SystemConfig.getIsEnableCCIM() == false)
@@ -7279,9 +7220,10 @@ public class Flow extends BP.En.EntityNoName
 	}
 	/** 
 	 检查报表
+	 * @throws Exception 
 	 
 	*/
-	public final void CheckRpt()
+	public final void CheckRpt() throws Exception
 	{
 		this.DoCheck_CheckRpt(this.getHisNodes());
 	}
@@ -7289,9 +7231,10 @@ public class Flow extends BP.En.EntityNoName
 	 更新之前做检查
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		this.setVer(BP.DA.DataType.getCurrentDataTimess());
 		Node.CheckFlow(this);
@@ -7307,7 +7250,7 @@ public class Flow extends BP.En.EntityNoName
 		String sql = "UPDATE WF_Flow SET VER='" + BP.DA.DataType.getCurrentDataTimess() + "' WHERE No='" + flowNo + "'";
 		DBAccess.RunSQL(sql);
 	}
-	public final void DoDelete()
+	public final void DoDelete() throws Exception
 	{
 		//删除流程数据.
 		this.DoDelData();

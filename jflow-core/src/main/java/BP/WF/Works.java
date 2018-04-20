@@ -37,8 +37,9 @@ public abstract class Works extends EntitiesOID
 	 @param fromdate 记录日期从
 	 @param todate 记录日期到
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int Retrieve(String key, String empId, String fromdate, String todate)
+	public final int Retrieve(String key, String empId, String fromdate, String todate) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 			qo.AddWhere(WorkAttr.Rec, empId);
@@ -79,7 +80,7 @@ public abstract class Works extends EntitiesOID
 			return qo.DoQuery();
 		}
 	}
-	public final int Retrieve(String fromDataTime, String toDataTime)
+	public final int Retrieve(String fromDataTime, String toDataTime) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.setTop(90000);

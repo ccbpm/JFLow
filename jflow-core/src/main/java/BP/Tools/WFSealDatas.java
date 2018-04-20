@@ -16,8 +16,9 @@ public class WFSealDatas extends EntitiesMyPK
 	
 	/**
 	 * @param emp
+	 * @throws Exception 
 	 */
-	public WFSealDatas(String workID, String node)
+	public WFSealDatas(String workID, String node) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(WFSealDataAttr.OID, workID);

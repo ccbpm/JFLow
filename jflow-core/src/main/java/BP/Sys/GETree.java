@@ -24,7 +24,7 @@ public class GETree extends EntityNoName
 	}
 	
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -41,8 +41,9 @@ public class GETree extends EntityNoName
 	 * 
 	 * @param no
 	 *            编号
+	 * @throws Exception 
 	 */
-	public GETree(String no)
+	public GETree(String no) throws Exception
 	{
 		super(no);
 		

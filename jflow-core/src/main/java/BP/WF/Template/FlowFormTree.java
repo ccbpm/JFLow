@@ -79,8 +79,9 @@ public class FlowFormTree extends EntityMultiTree
 	 独立表单树
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public FlowFormTree(String _No)
+	public FlowFormTree(String _No) throws Exception
 	{
 		super(_No);
 	}

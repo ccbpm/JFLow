@@ -16,14 +16,13 @@ import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.Sys.GEDtl;
-import BP.Sys.GEDtls;
-import BP.Sys.M2M;
+import BP.Sys.GEDtls; 
 import BP.Sys.MapDtl;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtXmlList;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
-import cn.jflow.controller.wf.workopt.BaseController;
+import cn.jflow.common.BaseController;
 
 @Controller
 @RequestMapping("/WF/CCForm")
@@ -36,7 +35,7 @@ public class HanderMapExtController extends BaseController{
 	private String kvs;
 	private String dealSQL;
 	
-	public final String DealSQL(String sql, String key)
+	public final String DealSQL(String sql, String key) throws Exception
 	{
 		sql = sql.replace("@Key", key);
 		sql = sql.replace("@key", key);
@@ -79,11 +78,11 @@ public class HanderMapExtController extends BaseController{
 		return sql;
 	}
 	@RequestMapping(value = "/HanderMapExt", method = RequestMethod.GET)
-	public final void HanderMapExt(HttpServletRequest request, HttpServletResponse response)
+	public final void HanderMapExt(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 		ProcessRequest(request, response);
 	}
-	public final void ProcessRequest(HttpServletRequest request, HttpServletResponse response)
+	public final void ProcessRequest(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 		String fk_mapExt = request.getParameter("FK_MapExt");
 		if (StringHelper.isNullOrEmpty(request.getParameter("Key")))
@@ -134,54 +133,7 @@ public class HanderMapExtController extends BaseController{
 					e.printStackTrace();
 				}
 				
-			} else if (doType.equals("ReqM2MFullList")) {
-				
-				// 获取填充的M2m集合. 
-				DataTable dtM2M = new DataTable("Head");
-				dtM2M.Columns.Add("Dtl", String.class);
-				String[] strsM2M = me.getTag2().split("[$]", -1);
-				for (String str : strsM2M) {
-					
-					if (str.equals("") || str == null)
-					{
-						continue;
-					}
-
-					String[] ss = str.split("[:]", -1);
-					String noOfObj = ss[0];
-					String mysql = ss[1];
-					mysql = DealSQL(mysql, key);
-
-					DataTable dtFull = DBAccess.RunSQLReturnTable(mysql);
-					M2M m2mData = new M2M();
-					m2mData.setFK_MapData(me.getFK_MapData());
-					m2mData.setEnOID(Integer.parseInt(oid));
-					m2mData.setM2MNo(noOfObj);
-					String mystr = ",";
-					String mystrT = "";
-					for (DataRow dr : dtFull.Rows)
-					{
-						String myno = dr.get("No").toString();
-						String myname = dr.get("Name").toString();
-						mystr += myno + ",";
-						mystrT += "@" + myno + "," + myname;
-					}
-					m2mData.setVals(mystr);
-					m2mData.setValsName(mystrT);
-					m2mData.InitMyPK();
-					m2mData.setNumSelected(dtFull.Rows.size());
-					m2mData.Save();
-
-					DataRow mydr = dtM2M.NewRow();
-					mydr.setValue(0, ss[0]);
-					dtM2M.Rows.add(mydr);
-				}
-				try {
-					wirteMsg(response, JSONTODT(dtM2M));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
+			 
 		}else if (doType.equals("ReqDtlFullList")) {
 			// 获取填充的从表集合. 
 			DataTable dtDtl = new DataTable("Head");

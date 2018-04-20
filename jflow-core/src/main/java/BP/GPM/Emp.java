@@ -74,9 +74,10 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 主要的部门。
+	 * @throws Exception 
 	 
 	*/
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 		try
 		{
@@ -113,9 +114,10 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 职务
+	 * @throws Exception 
 	 
 	*/
-	public final String getFK_DutyText()
+	public final String getFK_DutyText() throws Exception
 	{
 		String fk_Duty = this.GetValStrByKey(EmpAttr.FK_Duty);
 		if (StringHelper.isNullOrEmpty(fk_Duty))
@@ -204,8 +206,9 @@ public class Emp extends EntityNoName
 	/** 
 	 操作员
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
 		this.setNo(no.trim());
 		if (getNo().length() == 0)
@@ -226,7 +229,7 @@ public class Emp extends EntityNoName
 		}
 	}
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -311,7 +314,7 @@ public class Emp extends EntityNoName
 		this.DoOrderDown(EmpAttr.FK_Dept, this.getFK_Dept(), EmpAttr.Idx);
 	}
 
-	public final String DoResetpassword(String pass1, String pass2)
+	public final String DoResetpassword(String pass1, String pass2) throws Exception
 	{
 		if (pass1.equals(pass2) == false)
 		{

@@ -21,8 +21,9 @@ public class UserLogs extends EntitiesMyPK
 	
 	/**
 	 * @param emp
+	 * @throws Exception 
 	 */
-	public UserLogs(String emp)
+	public UserLogs(String emp) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(UserLogAttr.FK_Emp, emp);

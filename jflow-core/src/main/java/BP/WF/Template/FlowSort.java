@@ -27,8 +27,9 @@ public class FlowSort extends EntityTree
 	 流程类别
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public FlowSort(String _No)
+	public FlowSort(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -143,14 +144,14 @@ public class FlowSort extends EntityTree
 	}
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.WritToGPM();
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		try
 		{
@@ -167,7 +168,7 @@ public class FlowSort extends EntityTree
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		//修改权限管理
 		if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
@@ -220,8 +221,9 @@ public class FlowSort extends EntityTree
 	 强制删除该流程类别下子项，递归
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final boolean DeleteFlowSortSubNode_Force()
+	public final boolean DeleteFlowSortSubNode_Force() throws Exception
 	{
 		try
 		{
@@ -249,8 +251,9 @@ public class FlowSort extends EntityTree
 	 
 	 @param FK_FlowSort 流程类别编号
 	 @return true false
+	 * @throws Exception 
 	*/
-	private boolean Delete_FlowSort_SubNodes(FlowSort sub_FlowSort)
+	private boolean Delete_FlowSort_SubNodes(FlowSort sub_FlowSort) throws Exception
 	{
 		try
 		{

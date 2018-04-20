@@ -64,8 +64,9 @@ public class CCFlowAPI
 	 @param fid FID
 	 @param userNo 用户编号
 	 @return 返回dataset
+	 * @throws Exception 
 	*/
-	public static DataSet GenerWorkNode_2017(String fk_flow, int fk_node, long workID, long fid, String userNo)
+	public static DataSet GenerWorkNode_2017(String fk_flow, int fk_node, long workID, long fid, String userNo) throws Exception
 	{
 
 		//让其登录. ??? 为什么需要登录？
@@ -462,10 +463,10 @@ public class CCFlowAPI
 				}
 
 				String UIIsEnable = dr.getValue("UIIsEnable").toString();
-				//if (UIIsEnable.equals("0")==true)
-				//{
-				//	continue;
-				//}
+				if (UIIsEnable.equals("0")==true)
+				{
+					continue;
+				}
 
 				String uiBindKey = dr.getValue("UIBindKey").toString();
 				if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true)
@@ -669,8 +670,9 @@ public class CCFlowAPI
 	 @param fid FID
 	 @param userNo 用户编号
 	 @return 返回dataset
+	 * @throws Exception 
 	*/
-	public static DataSet GenerWorkNodeForAndroid(String fk_flow, int fk_node, long workID, long fid, String userNo)
+	public static DataSet GenerWorkNodeForAndroid(String fk_flow, int fk_node, long workID, long fid, String userNo) throws Exception
 	{
 		if (fk_node == 0)
 		{

@@ -121,7 +121,7 @@ public class LoadTemplete extends Method
 
 				try
 				{
-					MapData md = MapData.ImpMapData(ds, false);
+					MapData md = MapData.ImpMapData(ds);
 					md.setFK_FrmSort( fs.getNo());
 					md.setFK_FormTree(fs.getNo());
 					md.setAppType ("0");

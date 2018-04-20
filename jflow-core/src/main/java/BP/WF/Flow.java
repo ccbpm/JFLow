@@ -6964,7 +6964,7 @@ public class Flow extends BP.En.EntityNoName
 				ds.readXml(file);
 
 				String nodeID = "ND" + Integer.parseInt(this.getNo() + "01");
-				BP.Sys.MapData.ImpMapData(nodeID, ds, false);
+				BP.Sys.MapData.ImpMapData(nodeID, ds);
 			}
 			else
 			{

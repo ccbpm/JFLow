@@ -275,7 +275,7 @@ public class OneKeyLoadTemplete extends Method
 						// ds.ReadXml(f);
 						ds.readXml(f.getName());
 						
-						MapData md = MapData.ImpMapData(ds, false);
+						MapData md = MapData.ImpMapData(ds);
 						md.setFK_FrmSort( fs.getNo());
 						md.Update();
 					}

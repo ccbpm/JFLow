@@ -1212,9 +1212,9 @@ public class CCFormAPI
 	 @param isSetReadonly 是否把空间设置只读？
 	 * @throws Exception 
 	*/
-	public static void ImpFrmTemplate(String toFrmID, DataSet fromds, boolean isSetReadonly) throws Exception
+	public static void ImpFrmTemplate(String toFrmID, DataSet fromds) throws Exception
 	{
-		MapData.ImpMapData(toFrmID, fromds, isSetReadonly);
+		MapData.ImpMapData(toFrmID, fromds);
 	}
 	 
 	/** 
@@ -1314,7 +1314,7 @@ public class CCFormAPI
 			DataSet ds =  GenerHisDataSet(srcFrmID,null);
 
 			//导入表单文件.
-			ImpFrmTemplate(copyFrmID, ds, false);
+			ImpFrmTemplate(copyFrmID, ds);
 
 			//复制模版文件.
 			MapData md = new MapData(copyFrmID);

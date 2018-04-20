@@ -1664,13 +1664,18 @@ public class WF_WorkOpt extends WebContralBase {
 						+ emp + "%' OR a.NAME  LIKE '%" + emp + "%') LIMIT 12";
 			}
 		}
+		
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		{
+		   dt.Columns.get("No").ColumnName="No";
+		   dt.Columns.get("NAME").ColumnName="Name";		    
+		}
 
 		return BP.Tools.Json.ToJson(dt);
 	}
-
-	
-	
+ 
 	  /** 
 	 保存并关闭
 	 
@@ -1869,6 +1874,7 @@ public class WF_WorkOpt extends WebContralBase {
 						+ emp + "%' OR a.NAME  LIKE '%" + emp + "%') LIMIT 12";
 			}
 		}
+		
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		
 		if (SystemConfig.getAppCenterDBType()== DBType.Oracle)

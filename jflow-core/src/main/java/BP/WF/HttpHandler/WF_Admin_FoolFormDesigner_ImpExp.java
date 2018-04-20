@@ -195,7 +195,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
     /// 从节点导入
     /// </summary>
     /// <returns></returns>
-    public String Imp_FromCopyFrm() throws Exception
+    public String Imp_FromsCopyFrm() throws Exception
     {
     	
         return Imp_CopyFrm(null);

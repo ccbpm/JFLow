@@ -796,7 +796,12 @@ public class Glo
 		String basePath="";
 		if(request==null||request.getServerName()==null){
 			basePath = BP.WF.Glo.getHostURL();
-		}else{
+		}
+		else if(request.getServerPort() == 80) {
+			basePath = request.getScheme() + "://" + request.getServerName() 
+			 + request.getContextPath() + "/";
+		}
+		else{
 			basePath = request.getScheme() + "://" + request.getServerName() 
 					+ ":" + request.getServerPort() + request.getContextPath() + "/";
 		}

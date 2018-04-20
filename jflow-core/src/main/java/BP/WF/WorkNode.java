@@ -2256,7 +2256,7 @@ public class WorkNode {
 		// VirPath + "WF/Img/SMS.gif' border=0 />发手机短信提醒他(们)</a>",
 		// SendReturnMsgType.Info);
 
-		if (this.getHisNode().getHisFormType() != NodeFormType.SDKForm || 1 == 1) {
+		if ( 1==2 &&this.getHisNode().getHisFormType() != NodeFormType.SDKForm ) {
 			if (this.getHisNode().getIsStartNode()) {
 				if (WebUser.getIsWap()) {
 					this.addMsg(SendReturnMsgFlag.ToEmpExt, null,
@@ -3157,7 +3157,7 @@ public class WorkNode {
 		this.addMsg(SendReturnMsgFlag.VarTreadWorkIDs, workIDs, workIDs, SendReturnMsgType.SystemMsg);
 
 		// 如果是开始节点，就可以允许选择接受人。
-		if (this.getHisNode().getIsStartNode()) {
+		if (1==2 && this.getHisNode().getIsStartNode()) {
 			if (current_gwls.size() >= 2 && this.getHisNode().getIsTask()) {
 				this.addMsg("AllotTask",
 						"@<img src='" + getVirPath() + "WF/Img/AllotTask.gif' border=0 /><a href=\"" + getVirPath()
@@ -3166,7 +3166,7 @@ public class WorkNode {
 			}
 		}
 
-		if (this.getHisNode().getIsStartNode()) {
+		if ( 1==2 && this.getHisNode().getIsStartNode()) {
 			if (WebUser.getIsWap()) {
 				this.addMsg("UnDoNew",
 						"@<a href='" + getVirPath() + "WF/Wap/MyFlowInfo.jsp?DoType=UnSend&WorkID=" + this.getWorkID()

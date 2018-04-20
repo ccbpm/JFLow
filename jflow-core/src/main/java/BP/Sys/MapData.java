@@ -1469,11 +1469,10 @@ public class MapData extends EntityNoName
 	}
 	
 	 /** 
-	 设置表单为只读属性
-	 
+	 设置表单为只读属性	 
 	 @param fk_mapdata 表单ID
 	 * @throws Exception 
-*/
+     */
 	public static void SetFrmIsReadonly(String fk_mapdata) throws Exception
 	{
 		//把主表字段设置为只读.

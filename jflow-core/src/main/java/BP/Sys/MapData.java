@@ -1443,23 +1443,7 @@ public class MapData extends EntityNoName
 		return mydt;
 	}
 
-	/** 
-	 导入
 	 
-	 @param ds
-	 @return 
-	*/
-	public static MapData ImpMapData(DataSet ds)
-	{
-		try
-		{
-			return ImpMapData(ds, true);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
 	/** 
 	 导入数据
 	 
@@ -1467,7 +1451,7 @@ public class MapData extends EntityNoName
 	 @param isSetReadony
 	 @return 
 	*/
-	public static MapData ImpMapData(DataSet ds, boolean isSetReadony)
+	public static MapData ImpMapData(DataSet ds)
 			throws Exception
 	{
 		String errMsg = "";
@@ -1481,7 +1465,7 @@ public class MapData extends EntityNoName
 			throw new RuntimeException("已经存在(" + fk_mapData + ")的数据。");
 		}
 		
-		return ImpMapData(fk_mapData, ds, isSetReadony);
+		return ImpMapData(fk_mapData, ds);
 	}
 	
 	 /** 
@@ -1504,22 +1488,22 @@ public class MapData extends EntityNoName
 				attr.Update();
 				continue;
 			}
-//
-//			if (attr.getUIIsEnable() == false)
-//			{
-//				attr.setUIIsEnable(true);
-//				attr.Update();
-//				continue;
-//			}
+
+			if (attr.getUIIsEnable() == true)
+		    {
+				attr.setUIIsEnable(true);
+				attr.Update();
+				continue;
+			}
 		}
 
 		//把从表字段设置为只读.
 		MapDtls dtls = new MapDtls(fk_mapdata);
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
-			dtl.setIsInsert(true);
-			dtl.setIsUpdate(true);
-			dtl.setIsDelete(true);
+			dtl.setIsInsert(false);
+			dtl.setIsUpdate(false);
+			dtl.setIsDelete(false);
 			dtl.Update();
 
 			attrs = new MapAttrs(dtl.getNo());
@@ -1533,12 +1517,12 @@ public class MapData extends EntityNoName
 					attr.Update();
 				}
 
-//				if (attr.getUIIsEnable() == false)
-//				{
-//					attr.setUIIsEnable(true);
-//					attr.Update();
-//					continue;
-//				}
+				if (attr.getUIIsEnable() == false)
+				{
+					attr.setUIIsEnable(true);
+					attr.Update();
+					continue;
+				}
 			}
 		}
 
@@ -1600,7 +1584,7 @@ public class MapData extends EntityNoName
 	 @return 
 	 * @throws Exception 
 	*/
-	public static MapData ImpMapData(String fk_mapdata, DataSet ds, boolean isSetReadonly) throws Exception
+	public static MapData ImpMapData(String fk_mapdata, DataSet ds) throws Exception
 	{
 
 	    ///#region 检查导入的数据是否完整.

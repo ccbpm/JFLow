@@ -161,7 +161,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 		ds.readXml(xmlFile.getAbsolutePath());
         //ds.ReadXml(this.context.Request.Files[0].InputStream);
         //执行装载.
-        MapData.ImpMapData(fk_mapData, ds, true);
+        MapData.ImpMapData(fk_mapData, ds);
 
         if (fk_mapData.contains("ND"))
         {
@@ -186,7 +186,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
     /// @徐彪来调用.
     /// </summary>
     /// <returns></returns>
-    public String Imp_CopyFromFlow()
+    public String Imp_CopyFromFlow() throws Exception
     {
         String ndfrm = "ND"+Integer.parseInt(this.getFK_Flow()) + "01";
         return Imp_CopyFrm(ndfrm);
@@ -195,7 +195,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
     /// 从节点导入
     /// </summary>
     /// <returns></returns>
-    public String Imp_FromsCopyFrm()
+    public String Imp_FromsCopyFrm() throws Exception
     {
     	
         return Imp_CopyFrm(null);
@@ -207,50 +207,36 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
      *  <param name="isClear">是否清楚现有的元素？@param
      *  <param name="isSetReadonly">是否设置为只读？</param>
      *  <returns>执行结果</returns>
+     * @throws Exception 
      */
-    public String Imp_CopyFrm(String frmID)
+    public String Imp_CopyFrm(String frmID) throws Exception
      
     {
-    	 try
-         {
-	    	String fromMapData = frmID;
-	    	
-	    	  if (fromMapData==null)
-                  fromMapData = this.getFromMapData();
-	    	  
-	    	
-	    	if(fromMapData == null)
-	    		fromMapData = this.getFromMapData();
-	        boolean isClear = this.getIsClear();
-	        boolean isSetReadonly = this.getIsSetReadonly();
-	
-	        MapData md = new MapData(fromMapData);
-	        
-	        //生成当前的ds
-	        DataSet ds=BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
-	        ds.WriteXml("c:\\aaaaa.xml");
-	        
-	
-	        MapData.ImpMapData(this.getFK_MapData(), ds,true);
-	        
-	        //设置为只读模式.
-			if (this.getIsSetReadonly() == true)
-			{
-				MapData.SetFrmIsReadonly(this.getFK_MapData());
-			}
-			
-	        // 如果是节点表单，就要执行一次修复，以免漏掉应该有的系统字段。
-	        if (this.getFK_MapData().contains("ND") == true)
-	        {
-	            String fk_node = this.getFK_MapData().replace("ND", "");
-	            Node nd = new Node(Integer.parseInt(fk_node));
-	            nd.RepareMap();
-	        }
-	        
-	        return "执行成功.";
-         } catch(Exception ex){
-             return "err@" + ex.getMessage();
-         }
+    	 
+    		   String fromMapData =frmID;
+               if (fromMapData==null)
+                 fromMapData = this.GetRequestVal("FromFrmID");
+
+               Boolean isClear = this.GetRequestValBoolen("IsClear");
+               Boolean isSetReadonly = this.GetRequestValBoolen("IsSetReadonly");
+
+               MapData md = new MapData(fromMapData);
+
+               MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo()));
+
+               //设置为只读模式.
+               if (isSetReadonly == true)
+                   MapData.SetFrmIsReadonly(this.getFK_MapData());
+
+               // 如果是节点表单，就要执行一次修复，以免漏掉应该有的系统字段。
+               if (this.getFK_MapData().contains("ND") == true)
+               {
+                   String fk_node = this.getFK_MapData().replace("ND", "");
+                   Node nd = new Node(Integer.parseInt(fk_node));
+                   nd.RepareMap();
+               }
+               return "执行成功.";
+	         
        
     }
     

@@ -9097,7 +9097,7 @@ public class Dev2Interface
 			//移交后事件
 			info += "@" + nd.getHisFlow().DoFlowEventEntity(EventListOfNode.ShitAfter, nd, nd.getHisWork(), null);
 
-			info += "@<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlowInfo.jsp?DoType=UnShift&FK_Flow=" + nd.getFK_Flow() + "&WorkID=" + workID + "&FK_Node=" + nodeID + "&FID=" + fid + "' ><img src='Img/Action/UnSend.png' border=0 />撤消工作移交</a>.";
+			//info += "@<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlowInfo.jsp?DoType=UnShift&FK_Flow=" + nd.getFK_Flow() + "&WorkID=" + workID + "&FK_Node=" + nodeID + "&FID=" + fid + "' ><img src='Img/Action/UnSend.png' border=0 />撤消工作移交</a>.";
 			return info;
 
 		}
@@ -9248,7 +9248,7 @@ public class Dev2Interface
 		//移交后事件
 		inf1o += "@" + nd.getHisFlow().DoFlowEventEntity(EventListOfNode.ShitAfter, nd, nd.getHisWork(), null);
 
-		inf1o += "@<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlowInfo.jsp?DoType=UnShift&FK_Flow=" + nd.getFK_Flow() + "&WorkID=" + workID + "&FK_Node=" + nodeID + "&FID=" + fid + "' ><img src='Img/Action/UnSend.png' border=0 />撤消工作移交</a>.";
+		//inf1o += "@<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlowInfo.jsp?DoType=UnShift&FK_Flow=" + nd.getFK_Flow() + "&WorkID=" + workID + "&FK_Node=" + nodeID + "&FID=" + fid + "' ><img src='Img/Action/UnSend.png' border=0 />撤消工作移交</a>.";
 		return inf1o;
 	}
 	/** 

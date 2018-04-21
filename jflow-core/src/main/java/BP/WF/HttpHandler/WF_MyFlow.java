@@ -1187,6 +1187,10 @@ public class WF_MyFlow extends WebContralBase {
 
 		if ((btnLab.getCCRole() == CCRole.HandCC || btnLab.getCCRole() == CCRole.HandAndAuto))
 		{
+			if (this.getIsMobile()){
+				String urlrDel = "./WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey ;
+                toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"To('" + urlrDel + "'); \" />";
+			}else
 			// 抄送 
 			toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"WinOpen('" + "./WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey + "','ds'); \" />";
 		}

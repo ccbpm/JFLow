@@ -1200,7 +1200,7 @@ public class WF_MyFlow extends WebContralBase {
 
 		if (btnLab.getEndFlowEnable() && currND.getIsStartNode() == false && isAskFor == false)
 		{
-			toolbar += "<input type=button name='EndFlow'  value='" + btnLab.getEndFlowLab() + "' enable=true onclick=\"To('./WorkOpt/StopFlow.htm?&DoType=StopFlow&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey + "'); \" />";
+			  toolbar += "<input type=button name='EndFlow'  value='" + btnLab.getEndFlowLab() + "' enable=true onclick=\"DoStop('" + btnLab.getEndFlowLab() + "','"+this.getFK_Flow()+"','"+this.getWorkID()+"');\" />";
 		}
 
 		if (btnLab.getPrintDocEnable() && isAskFor == false)
@@ -2182,7 +2182,7 @@ public class WF_MyFlow extends WebContralBase {
 	{
 		try
 		{
-			String str = BP.WF.Dev2Interface.Flow_DoFlowOver(this.getFK_Flow(), this.WorkID, "流程成功结束");
+			String str = BP.WF.Dev2Interface.Flow_DoFlowOver(this.getFK_Flow(), this.getWorkID(), "流程成功结束");
 			if (str.equals("") || str == null)
 			{
 				return "流程成功结束";

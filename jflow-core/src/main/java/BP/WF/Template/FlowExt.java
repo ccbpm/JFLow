@@ -425,88 +425,59 @@ public class FlowExt extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "调试运行"; // "设计检查报告";
 			//rm.ToolTip = "检查流程设计的问题。";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/EntityFunc/Flow/Run.png";
+		rm.Icon = "../../WF/Img/EntityFunc/Flow/Run.png";
 		rm.ClassMethodName = this.toString() + ".DoRunIt";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "检查报告"; // "设计检查报告";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/EntityFunc/Flow/CheckRpt.png";
+		rm.Icon = "../../WF/Img/EntityFunc/Flow/CheckRpt.png";
 		rm.ClassMethodName = this.toString() + ".DoCheck";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "设计报表"; // "报表运行";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/Rpt.gif";
+		rm.Icon = "../../WF/Img/Btn/Rpt.gif";
 		rm.ClassMethodName = this.toString() + ".DoOpenRpt()";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "自动发起";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/AutoStart.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/AutoStart.png";
 		rm.ClassMethodName = this.toString() + ".DoSetStartFlowDataSources()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "发起限制规则";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/limit.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/limit.png";
 		rm.ClassMethodName = this.toString() + ".DoLimit()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "发起前置导航";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/StartGuide.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/StartGuide.png";
 		rm.ClassMethodName = this.toString() + ".DoStartGuide()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = "批量修改节点属性";
-			//rm.Icon = Glo.CCFlowAppPath + "WF/Img/Btn/DTS.gif";
-			//rm.ClassMethodName = this.ToString() + ".DoFeatureSetUI()";
-			//rm.RefMethodType = RefMethodType.RightFrameOpen;
-			//map.AddRefMethod(rm);
+ 
 
 		rm = new RefMethod();
 		rm.Title = "流程事件&消息"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoAction";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Event.png";
+		rm.Icon =   "../../WF/Img/Event.png";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "与业务表数据同步"; // "抄送规则";
-			//rm.ClassMethodName = this.ToString() + ".DoBTable";
-			//rm.Icon = Glo.CCFlowAppPath + "WF/Admin/CCBPMDesigner/Img/DTS.png";
-			//rm.RefAttrLinkLabel = "业务表字段同步配置";
-			//rm.RefMethodType = RefMethodType.LinkeWinOpen;
-			//rm.Target = "_blank";
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = "独立表单树";
-			//rm.Icon = Glo.CCFlowAppPath + "WF/Img/Btn/DTS.gif";
-			//rm.ClassMethodName = this.ToString() + ".DoFlowFormTree()";
-			//map.AddRefMethod(rm);
-
-
-
-
-
-
-			///#endregion 流程设置.
-
-
-			///#region 实验中的功能
+			 
 
 		rm = new RefMethod();
 		rm.Title = "流程轨迹表单";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
+		rm.Icon =  "../../WF/Img/Btn/DTS.gif";
 		rm.ClassMethodName = this.toString() + ".DoBindFlowExt()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
@@ -514,7 +485,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "批量设置节点";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Node.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
 		rm.ClassMethodName = this.toString() + ".DoNodeAttrs()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
@@ -522,7 +493,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "轨迹查看权限";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Setting.png";
+		rm.Icon = "../../WF/Img/Setting.png";
 		rm.ClassMethodName = this.toString() + ".DoTruckRight()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
@@ -531,7 +502,7 @@ public class FlowExt extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "数据源管理(如果新增数据源后需要关闭重新打开)";
 		rm.ClassMethodName = this.toString() + ".DoDBSrc";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
+		rm.Icon =  "../../WF/Img/Btn/DTS.gif";
 			//设置相关字段.
 		rm.RefAttrKey = FlowAttr.DTSDBSrc;
 		rm.RefAttrLinkLabel = "数据源管理";
@@ -570,7 +541,7 @@ public class FlowExt extends EntityNoName
 			///#region 流程模版管理.
 		rm = new RefMethod();
 		rm.Title = "模版导入";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/redo.png";
+		rm.Icon = "../../WF/Img/redo.png";
 		rm.ClassMethodName = this.toString() + ".DoImp()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程模版";
@@ -578,7 +549,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "模版导出";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/undo.png";
+		rm.Icon = "../../WF/Img/undo.png";
 		rm.ClassMethodName = this.toString() + ".DoExps()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程模版";
@@ -592,7 +563,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "与业务表数据同步";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/DTS.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/DTS.png";
 
 		rm.ClassMethodName = this.toString() + ".DoDTSBTable()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -601,7 +572,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "URL调用接口";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/URL.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/URL.png";
 		rm.ClassMethodName = this.toString() + ".DoAPI()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "开发接口";
@@ -609,7 +580,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "SDK开发接口";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/API.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/API.png";
 		rm.ClassMethodName = this.toString() + ".DoAPICode()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "开发接口";
@@ -617,7 +588,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "代码事件开发接口";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/API.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/API.png";
 		rm.ClassMethodName = this.toString() + ".DoAPICodeFEE()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "开发接口";
@@ -629,7 +600,7 @@ public class FlowExt extends EntityNoName
 			///#region 报表设计.
 //		rm = new RefMethod();
 //		rm.Title = "报表设计";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/DesignRpt.png";
+//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/DesignRpt.png";
 //		rm.ClassMethodName = this.toString() + ".DoDRpt()";
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "报表设计";
@@ -637,7 +608,7 @@ public class FlowExt extends EntityNoName
 //
 //		rm = new RefMethod();
 //		rm.Title = "流程查询";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Search.png";
+//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 //		rm.ClassMethodName = this.toString() + ".DoDRptSearch()";
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "报表设计";
@@ -645,7 +616,7 @@ public class FlowExt extends EntityNoName
 //
 //		rm = new RefMethod();
 //		rm.Title = "自定义查询";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/SQL.png";
+//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/SQL.png";
 //		rm.ClassMethodName = this.toString() + ".DoDRptSearchAdv()";
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "报表设计";
@@ -653,7 +624,7 @@ public class FlowExt extends EntityNoName
 //
 //		rm = new RefMethod();
 //		rm.Title = "分组分析";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Group.png";
+//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 //		rm.ClassMethodName = this.toString() + ".DoDRptGroup()";
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "报表设计";
@@ -661,7 +632,7 @@ public class FlowExt extends EntityNoName
 //
 //		rm = new RefMethod();
 //		rm.Title = "交叉报表";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/D3.png";
+//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/D3.png";
 //		rm.ClassMethodName = this.toString() + ".DoDRptD3()";
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "报表设计";
@@ -669,7 +640,7 @@ public class FlowExt extends EntityNoName
 //
 //		rm = new RefMethod();
 //		rm.Title = "对比分析";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Contrast.png";
+//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Contrast.png";
 //		rm.ClassMethodName = this.toString() + ".DoDRptContrast()";
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "报表设计";
@@ -680,7 +651,7 @@ public class FlowExt extends EntityNoName
 
 			///#region 流程运行维护.
 		rm = new RefMethod();
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
+		rm.Icon = "../../WF/Img/Btn/DTS.gif";
 		rm.Title = "重生成报表数据"; // "删除数据";
 		rm.Warning = "您确定要执行吗? 注意:此方法耗费资源。"; // "您确定要执行删除流程数据吗？";
 		rm.ClassMethodName = this.toString() + ".DoReloadRptData";
@@ -689,7 +660,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "重生成流程标题";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
+		rm.Icon = "../../WF/Img/Btn/DTS.gif";
 		rm.ClassMethodName = this.toString() + ".DoGenerTitle()";
 			//设置相关字段.
 			//rm.RefAttrKey = FlowAttr.TitleRole;
@@ -702,7 +673,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "重生成FlowEmps字段";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
+		rm.Icon = "../../WF/Img/Btn/DTS.gif";
 		rm.ClassMethodName = this.toString() + ".DoGenerFlowEmps()";
 		rm.RefAttrLinkLabel = "补充修复emps字段，包括wf_generworkflow,NDxxxRpt字段.";
 		rm.refMethodType = RefMethodType.Func;
@@ -726,7 +697,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "节点表单字段视图";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/field.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/field.png";
 		rm.ClassMethodName = this.toString() + ".DoFlowFields()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程维护";
@@ -734,7 +705,7 @@ public class FlowExt extends EntityNoName
 
 
 		rm = new RefMethod();
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/Delete.gif";
+		rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Title = "删除全部流程数据"; // this.ToE("DelFlowData", "删除数据"); // "删除数据";
 		rm.Warning = "您确定要执行删除流程数据吗? \t\n该流程的数据删除后，就不能恢复，请注意删除的内容。"; // "您确定要执行删除流程数据吗？";
 		rm.ClassMethodName = this.toString() + ".DoDelData";
@@ -742,7 +713,7 @@ public class FlowExt extends EntityNoName
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/Delete.gif";
+		rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Title = "按工作ID删除"; // this.ToE("DelFlowData", "删除数据"); // "删除数据";
 		rm.GroupName = "流程维护";
 		rm.ClassMethodName = this.toString() + ".DoDelDataOne";
@@ -755,7 +726,7 @@ public class FlowExt extends EntityNoName
 		rm.GroupName = "流程维护";
 		rm.Title = "删除指定日期范围内的流程";
 		rm.Warning = "您确定要删除吗？";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/Delete.gif";
+		rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.getHisAttrs().AddTBDateTime("DTFrom", null, "时间从", true, false);
 		rm.getHisAttrs().AddTBDateTime("DTTo", null, "时间到", true, false);
 		rm.getHisAttrs().AddBoolen("thisFlowOnly", true, "仅仅当前流程");
@@ -765,7 +736,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "回滚流程";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/Back.png";
+		rm.Icon = "../../WF/Img/Btn/Back.png";
 		rm.ClassMethodName = this.toString() + ".DoRebackFlowData()";
 			// rm.Warning = "您确定要回滚它吗？";
 		rm.getHisAttrs().AddTBInt("workid", 0, "请输入要会滚WorkID", true, false);
@@ -781,7 +752,7 @@ public class FlowExt extends EntityNoName
 
 		/*rm = new RefMethod();
 		rm.Title = "监控面板";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Monitor.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Monitor.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_Welcome()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -789,7 +760,7 @@ public class FlowExt extends EntityNoName
 
 //		rm = new RefMethod();
 //		rm.Title = "流程查询";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Search.png";
+//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 //		rm.ClassMethodName = this.toString() + ".DoDataManger()";
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "流程监控";
@@ -797,7 +768,7 @@ public class FlowExt extends EntityNoName
 
 		/*rm = new RefMethod();
 		rm.Title = "节点列表";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/flows.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/flows.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_Nodes()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -805,7 +776,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "综合查询";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Search.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_Search()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -813,7 +784,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "综合分析";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Group.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_Group()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -830,7 +801,7 @@ public class FlowExt extends EntityNoName
 
 		/*rm = new RefMethod();
 		rm.Title = "实例增长分析";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Grow.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Grow.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_InstanceGrowOneFlow()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -838,7 +809,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "逾期未完成实例";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/warning.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/warning.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_InstanceWarning()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -846,7 +817,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "逾期已完成实例";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/overtime.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/overtime.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_InstanceOverTimeOneFlow()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -854,7 +825,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "删除日志";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/log.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/log.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_DeleteLog()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -862,7 +833,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "数据订阅-实验中";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/RptOrder.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/RptOrder.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_RptOrder()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程监控";
@@ -1099,7 +1070,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoFlowFields()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/FlowFields.htm?FK_Flow=" + this.getNo();
+		return "../../WF/Admin/AttrFlow/FlowFields.htm?FK_Flow=" + this.getNo();
 	}
 	/** 
 	 与业务表数据同步
@@ -1108,19 +1079,19 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoDTSBTable()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/DTSBTable.htm?FK_Flow=" + this.getNo();
+		return "../../WF/Admin/AttrFlow/DTSBTable.htm?FK_Flow=" + this.getNo();
 	}
 	public final String DoAPI()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/API.htm?FK_Flow=" + this.getNo();
+		return "../../WF/Admin/AttrFlow/API.htm?FK_Flow=" + this.getNo();
 	}
 	public final String DoAPICode()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/APICode.htm?FK_Flow=" + this.getNo();
+		return "../../WF/Admin/AttrFlow/APICode.htm?FK_Flow=" + this.getNo();
 	}
 	public final String DoAPICodeFEE()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/APICodeFEE.htm?FK_Flow=" + this.getNo();
+		return "../../WF/Admin/AttrFlow/APICodeFEE.htm?FK_Flow=" + this.getNo();
 	}
 
 		///#endregion 开发接口
@@ -1525,7 +1496,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoDataManger()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
+		return "../../WF/Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
 	}
 	/** 
 	 绑定独立表单
@@ -1582,7 +1553,7 @@ public class FlowExt extends EntityNoName
 	public final String DoSetStartFlowDataSources()
 	{
 		String flowID = Integer.parseInt(this.getNo()) + "01";
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
+		return "../../WF/Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
 		//return Glo.CCFlowAppPath + "WF/Admin/FoolFormDesigner/MapExt.jsp?s=d34&FK_MapData=ND" + flowID + "&ExtType=StartFlow&RefNo=";
 	}
 	public final String DoCCNode()
@@ -1681,7 +1652,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoOpenRpt()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/RptDfine/Default.htm?FK_Flow=" + this.getNo() + "&DoType=Edit&FK_MapData=ND" + Integer.parseInt(this.getNo()) + "Rpt";
+		return "../../WF/Admin/RptDfine/Default.htm?FK_Flow=" + this.getNo() + "&DoType=Edit&FK_MapData=ND" + Integer.parseInt(this.getNo()) + "Rpt";
 	}
 	/** 
 	 更新之后的事情，也要更新缓存。

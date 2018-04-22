@@ -124,7 +124,7 @@ public class MapAttrString extends EntityMyPK
 		//显示的分组.
 		//sunxd 解决ORACLE数据为自动转大写问题 
 		//
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID No, Lab Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'", true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", "SELECT OID No, Lab Name FROM Sys_GroupField WHERE FrmID='@FK_MapData' AND (CTRLTYPE='' OR CTRLTYPE IS NULL ) ", true);
 
 		map.AddDDLSysEnum(MapAttrAttr.IsSigan, 0, "签名模式", true, true, MapAttrAttr.IsSigan, "@0=无@1=图片签名@2=山东CA@3=广东CA");
 

@@ -1590,156 +1590,89 @@ public class CCFormAPI
     /// <returns>DataSet</returns>
     public static DataSet GenerHisDataSet_AllEleInfo(String fk_mapdata) throws Exception
     {
-    	
-        MapData md = new MapData(fk_mapdata);
+    	  
+    	MapData md = new MapData(fk_mapdata);
 
-        //从表.
-        String sql = "SELECT * FROM Sys_MapDtl WHERE FK_MapData ='{0}'";
-        sql = String.format(sql, fk_mapdata);
-        DataTable dtMapDtl = DBAccess.RunSQLReturnTable(sql);
-        dtMapDtl.TableName = "Sys_MapDtl";
-
-        String ids = String.format("'{0}'", fk_mapdata);
-        for (DataRow dr : dtMapDtl.Rows)
-        {
-            ids += ",'" + dr.getValue("No") + "'";
-        }
-        String sqls = "";
+        //求出 frmIDs 
+        String frmIDs = "'" + fk_mapdata + "'";
+        MapDtls mdtls = new MapDtls(md.getNo());
+        for (MapDtl item : mdtls.ToJavaList())
+            frmIDs += ",'" + item.getNo() + "'";
         
-        
-        
-        ArrayList<String> listNames = new ArrayList<String>();
-
-        // Sys_GroupField.
-        listNames.add("Sys_GroupField");
-        sql = "SELECT * FROM Sys_GroupField WHERE  FrmID IN (" + ids + ")";
-        sqls += sql;
-
-        // Sys_Enum
-        listNames.add("Sys_Enum");
-        sql = "@SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + ids + ") ) order By EnumKey,IntKey";
-        sqls += sql;
-
-        // 审核组件
-        String nodeIDstr = fk_mapdata.replace("ND", "");
-        if (DataType.IsNumStr(nodeIDstr))
-        {
-            // 审核组件状态:0 禁用;1 启用;2 只读;
-            listNames.add("WF_Node");
-            sql = "@SELECT * FROM WF_Node WHERE NodeID=" + nodeIDstr + " AND  ( FWCSta >0  OR SFSta >0 )";
-            sqls += sql;
-        }
-
-        String where = " FK_MapData IN (" + ids + ")";
-
-        // Sys_MapData.
-        listNames.add("Sys_MapData");
-        sql = "@SELECT * FROM Sys_MapData WHERE No='" + fk_mapdata + "'";
-        sqls += sql;
-
-        // Sys_MapAttr.
-        listNames.add("Sys_MapAttr");
-
-        sql = "@SELECT * FROM Sys_MapAttr WHERE " + where + " AND KeyOfEn NOT IN('WFState') ORDER BY FK_MapData, IDX  ";
-        sqls += sql;
-
-
-        // Sys_MapExt.
-        listNames.add("Sys_MapExt");
-        sql = "@SELECT * FROM Sys_MapExt WHERE " + where;
-        sqls += sql;
-
-        //if (isCheckFrmType == true && md.HisFrmType == FrmType.FreeFrm)
-        //{
-        // line.
-        listNames.add("Sys_FrmLine");
-        sql = "@SELECT * FROM Sys_FrmLine WHERE " + where;
-        sqls += sql;
-
-        // link.
-        listNames.add("Sys_FrmLink");
-        sql = "@SELECT * FROM Sys_FrmLink WHERE " + where;
-        sqls += sql;
-
-        // btn.
-        listNames.add("Sys_FrmBtn");
-        sql = "@SELECT * FROM Sys_FrmBtn WHERE " + where;
-        sqls += sql;
-
-        // Sys_FrmImg.
-        listNames.add("Sys_FrmImg");
-        sql = "@SELECT * FROM Sys_FrmImg WHERE " + where;
-        sqls += sql;
-
-        // Sys_FrmLab.
-        listNames.add("Sys_FrmLab");
-        sql = "@SELECT * FROM Sys_FrmLab WHERE " + where;
-        sqls += sql;
-        //}
-
-        // Sys_FrmRB.
-        listNames.add("Sys_FrmRB");
-        sql = "@SELECT * FROM Sys_FrmRB WHERE " + where;
-        sqls += sql;
-
-        // ele.
-        listNames.add("Sys_FrmEle");
-        sql = "@SELECT * FROM Sys_FrmEle WHERE " + where;
-        sqls += sql;
-
-        //Sys_MapFrame.
-        listNames.add("Sys_MapFrame");
-        sql = "@SELECT * FROM Sys_MapFrame WHERE " + where;
-        sqls += sql;
-
-        // Sys_FrmAttachment. 
-        listNames.add("Sys_FrmAttachment");
-        /* 20150730 小周鹏修改 添加AtPara 参数 START */
-        //sql = "@SELECT  MyPK,FK_MapData,UploadType,X,Y,W,H,NoOfObj,Name,Exts,SaveTo,IsUpload,IsDelete,IsDownload "
-        // + " FROM Sys_FrmAttachment WHERE " + where + " AND FK_Node=0";
-        sql = "@SELECT * "
-            + " FROM Sys_FrmAttachment WHERE " + where + "";
-
-        /* 20150730 小周鹏修改 添加AtPara 参数 END */
-        sqls += sql;
-
-        // Sys_FrmImgAth.
-        listNames.add("Sys_FrmImgAth");
-
-        sql = "@SELECT * FROM Sys_FrmImgAth WHERE " + where;
-        sqls += sql;
-
-        //// sqls.Replace(";", ";" + Environment.NewLine);
-        // DataSet ds = DA.DBAccess.RunSQLReturnDataSet(sqls);
-        // if (ds != null && ds.Tables.Count == listNames.Count)
-        //     for (int i = 0; i < listNames.Count; i++)
-        //     {
-        //         ds.Tables[i].TableName = listNames[i];
-        //     }
-
-        String[] strs = sqls.split("@");
         DataSet ds = new DataSet();
 
-        if (strs != null && strs.length == listNames.size())
-        {
-            for (int i = 0; i < listNames.size(); i++)
-            {
-                String s = strs[i];
-                if (DataType.IsNullOrEmpty(s))
-                    continue;
-                DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(s);
-                dt.TableName = listNames.get(i);
-                ds.Tables.add(dt);
-            }
-        }
+        //加入主表信息.
+        DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
+        ds.Tables.add(Sys_MapData);
 
-        for (DataTable item : ds.Tables)
-        {
-            if (item.TableName == "Sys_MapAttr" && item.Rows.size() == 0)
-                md.RepairMap();
-        }
+        //加入分组表.
+        GroupFields gfs = new GroupFields();
+        gfs.RetrieveIn(GroupFieldAttr.FrmID, frmIDs);
+        DataTable Sys_GroupField = gfs.ToDataTableField("Sys_GroupField");
+        ds.Tables.add(Sys_GroupField);
 
-        ds.Tables.add(dtMapDtl);
+        //加入明细表.
+        DataTable Sys_MapDtl = md.getMapDtls().ToDataTableField("Sys_MapDtl");
+        ds.Tables.add(Sys_MapDtl);
+
+        //加入枚举表.
+        SysEnums ses = new SysEnums();
+        ses.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + frmIDs + ") ");
+        DataTable Sys_Menu = ses.ToDataTableField("Sys_Enum");
+        ds.Tables.add(Sys_Menu);
+
+        //加入字段属性.
+        MapAttrs attrs = new MapAttrs();       
+        attrs.RetrieveIn(MapAttrAttr.FK_MapData,   frmIDs);
+        DataTable Sys_MapAttr = attrs.ToDataTableField("Sys_MapAttr");
+        ds.Tables.add(Sys_MapAttr);
+
+        //加入扩展属性.
+        MapExts exts = new MapExts();
+        exts.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
+        DataTable Sys_MapExt = exts.ToDataTableField("Sys_MapExt");
+        ds.Tables.add(Sys_MapExt);
+
+        //线.
+        DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
+        ds.Tables.add(Sys_FrmLine);
+
+        //link.
+        DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
+        ds.Tables.add(Sys_FrmLink);
+
+        //btn.
+        DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
+        ds.Tables.add(Sys_FrmBtn);
+
+        //Sys_FrmLab.
+        DataTable Sys_FrmLab = md.getFrmLabs().ToDataTableField("Sys_FrmLab");
+        ds.Tables.add(Sys_FrmLab);
+
+        //img.
+        DataTable Sys_FrmImg = md.getFrmImgs().ToDataTableField("Sys_FrmImg");
+        ds.Tables.add(Sys_FrmImg);
+
+        //Sys_FrmRB.
+        DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
+        ds.Tables.add(Sys_FrmRB);
+
+        //Sys_FrmEle.
+        DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
+        ds.Tables.add(Sys_FrmEle);
+
+        //Sys_MapFrame.
+        DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
+        ds.Tables.add(Sys_MapFrame);
+
+        //Sys_FrmAttachment.
+        DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
+        ds.Tables.add(Sys_FrmAttachment);
+
+        //FrmImgAths. 上传图片附件.
+        DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
+        ds.Tables.add(Sys_FrmImgAth);
+
         return ds;
     }
 	
@@ -1758,8 +1691,7 @@ public class CCFormAPI
 		
 		if (frmName!=null)
 			md.setName(frmName);
-		
-
+		 
 		//加入主表信息.
 		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
 		ds.Tables.add(Sys_MapData);

@@ -367,9 +367,18 @@ public class WF_CommEntity extends WebContralBase {
                 String keyOfEn = dr.getValue("KeyOfEn").toString();
                 String fk_mapData = dr.getValue("FK_MapData").toString();
 
-                // 判断是否存在.
-              //  if (ds.Tables.contains(uiBindKey) == true)
+                 // 判断是否存在.
+                 // if (ds.Tables.contains(uiBindKey) == true)
                  //   continue;
+                
+                if (uiBindKey.contains("@"))
+                {
+                    for (Attr attr : en.getEnMap().getAttrs() )
+                    	uiBindKey = uiBindKey.replace("@"+attr.getKey(),en.GetValStrByKey(attr.getKey())); 
+ 
+                    uiBindKey=uiBindKey.replace("@WebUser.No", WebUser.getNo());
+                    uiBindKey=uiBindKey.replace("@WebUser.FK_Dept", WebUser.getFK_Dept()); 
+                }
                 
                 DataTable dt=BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
                 dt.TableName=keyOfEn;
@@ -394,6 +403,17 @@ public class WF_CommEntity extends WebContralBase {
                     /*是一个sql*/
                     String sqlBindKey = attr.getUIBindKey();
                     sqlBindKey = BP.WF.Glo.DealExp(sqlBindKey, en, null);
+                    
+                    /*
+                    if (uiBindKey.contains("@"))
+                    {
+                        for (Attr attr : en.getEnMap().getAttrs() )
+                        	uiBindKey = uiBindKey.replace("@"+attr.getKey(),en.GetValStrByKey(attr.getKey())); 
+     
+                        uiBindKey=uiBindKey.replace("@WebUser.No", WebUser.getNo());
+                        uiBindKey=uiBindKey.replace("@WebUser.FK_Dept", WebUser.getFK_Dept()); 
+                    }*/
+                    
 
                     DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
                     dt.TableName = attr.getKey();
@@ -514,7 +534,7 @@ public class WF_CommEntity extends WebContralBase {
 
            String str= BP.Tools.Json.ToJson(ds);
             
-            BP.DA.DataType.WriteFile("C:\\EntityOnly_Init.TXT", str);
+            //BP.DA.DataType.WriteFile("C:\\EntityOnly_Init.TXT", str);
             
             return str;
             

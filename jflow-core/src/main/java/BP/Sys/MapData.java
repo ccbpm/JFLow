@@ -1590,11 +1590,13 @@ public class MapData extends EntityNoName
 		String errMsg = "";
 		//if (ds.Tables[0].TableName != "Sys_MapData")
 		//    errMsg += "@非表单模板。";
+		
 		List<DataTable> listD = ds.getTables();
 		ArrayList<String> arr = new ArrayList<String>();
 		for(DataTable dt:listD){
 			arr.add(dt.TableName);
 		}
+		
 		if (arr.contains("WF_Flow") == true)
 		{
 			errMsg += "@此模板文件为流程模板。";
@@ -1695,12 +1697,7 @@ public class MapData extends EntityNoName
 
 							dtl.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-//						if (isSetReadonly)
-//						{
-//							dtl.setIsInsert(false);
-//							dtl.setIsUpdate(false);
-//							dtl.setIsDelete(false);
-//						}
+ 
 
 						dtl.Insert();
 					}

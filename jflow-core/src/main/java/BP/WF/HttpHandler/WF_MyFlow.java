@@ -2042,6 +2042,7 @@ public class WF_MyFlow extends WebContralBase {
 	 * 当前的 NodeID ,在开始时间,nodeID,是地一个,流程的开始节点ID.
 	 */
 	public final int getFK_Node() {
+		
 		String fk_nodeReq = this.GetRequestVal("FK_Node"); // this.Request.Form["FK_Node"];
 		if (DotNetToJavaStringHelper.isNullOrEmpty(fk_nodeReq)) {
 			fk_nodeReq = this.GetRequestVal("NodeID"); // this.Request.Form["NodeID"];
@@ -2052,12 +2053,17 @@ public class WF_MyFlow extends WebContralBase {
 		}
 
 		if (_FK_Node == 0) {
-			if (this.GetRequestVal("WorkID") != null) {
+			
+			if (this.getWorkID() !=0) {
 				String sql = "SELECT FK_Node from  WF_GenerWorkFlow where WorkID="
 						+ this.getWorkID();
 				_FK_Node = DBAccess.RunSQLReturnValInt(sql);
+				
 			} else {
-				_FK_Node = Integer.parseInt(this.getFK_Flow() + "01");
+				if (this.getFK_Flow()!=null)
+				   _FK_Node = Integer.parseInt(this.getFK_Flow() + "01");
+				else
+					return 0;
 			}
 		}
 		return _FK_Node;

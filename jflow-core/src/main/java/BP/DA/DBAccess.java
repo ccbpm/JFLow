@@ -1971,6 +1971,7 @@ public class DBAccess {
 	}
 
 	public static int RunSQLReturnValInt(String sql) {
+		
 		Object obj = DBAccess.RunSQLReturnVal(sql);
 		/*
 		 * warning if (obj == null || obj == DBNull.getValue()) { throw new

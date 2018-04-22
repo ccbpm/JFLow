@@ -235,8 +235,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
                    Node nd = new Node(Integer.parseInt(fk_node));
                    nd.RepareMap();
                }
-               return "执行成功.";
-	          
+               return "执行成功."; 
     }
     
     ///#region 04.从外部数据源导入

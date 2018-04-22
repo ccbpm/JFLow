@@ -1220,6 +1220,24 @@ public abstract class Entities extends ArrayList<Entity>
 		qo.AddWhere(this.getGetNewEntity().getPK(), " in ", pks);
 		return qo.DoQuery();
 	}
+	 /// <summary>
+    /// 按照IDs查询
+    /// 比如: FrmID  IN  '001','002' 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="vals"></param>
+    /// <returns></returns>
+    public int RetrieveIn(String key, String vals) throws Exception
+    {
+        QueryObject qo = new QueryObject(this);
+
+        if (vals.contains("(") == false)
+            qo.AddWhere(key, " IN ", "(" + vals + ")");
+        else
+            qo.AddWhere(key, " IN ", vals);
+
+        return qo.DoQuery();
+    }
 	
 	public final int RetrieveInSQL(String attr, String sql) throws Exception
 	{

@@ -28,6 +28,7 @@ import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachments;
 import BP.Sys.FrmImgAthDBs;
 import BP.Sys.FrmSubFlowAttr;
+import BP.Sys.FrmType;
 import BP.Sys.FrmWorkCheckAttr;
 import BP.Sys.MapData;
 import BP.Sys.MapExt;
@@ -216,11 +217,32 @@ public class WF extends WebContralBase
             return "err@" + err;
         }
 
-        Frms frms = nd.getHisFrms();
-        if (frms.size() == 0)
-            return "url@./CCForm/Frm.htm?FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
+        
+        if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.SheetAutoTree)
+            return "url@../../../MyFlowTreeReadonly.htm?3=4&FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
 
-        return "url@./MyFlowTreeReadonly.htm?3=3" + this.getRequestParas();
+        if (nd.getHisFormType() == NodeFormType.FreeForm)
+        {
+            MapData md = new MapData(nd.getNodeFrmID());
+            if (md.getHisFrmType() != FrmType.FreeFrm)
+            {
+                md.setHisFrmType( FrmType.FreeFrm);
+                md.Update();
+            }
+        }
+        else
+        {
+            MapData md = new MapData(nd.getNodeFrmID());
+            if (md.getHisFrmType() != FrmType.FoolForm)
+            {
+                md.setHisFrmType(FrmType.FoolForm);
+                md.Update();
+            }
+        }
+
+        return "url@./CCForm/Frm.htm?FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
+ 
+        //return "url@./MyFlowTreeReadonly.htm?3=3" + this.getRequestParas();
         
         
     }

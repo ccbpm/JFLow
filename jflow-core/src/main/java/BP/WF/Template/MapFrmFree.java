@@ -659,7 +659,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoDBSrc() {
-		return Glo.getCCFlowAppPath() + "WF/Comm/Search.jsp?s=34&FK_MapData=" + this.getNo()
+		return Glo.getCCFlowAppPath() + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo()
 				+ "&EnsName=BP.Sys.SFDBSrcs";
 	}
 

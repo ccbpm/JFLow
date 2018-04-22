@@ -1616,7 +1616,8 @@ public class MapData extends EntityNoName
 		boolean isHave = false;
 		for (DataRow dr : dtCheck.Rows)
 		{
-			if (dr.getValue("KeyOfEn").toString().toUpperCase().equals("OID") || dr.getValue("KEYOFEN").toString().toUpperCase().equals("OID"))
+			if (dr.getValue("KeyOfEn").toString().toUpperCase().equals("OID") 
+					|| dr.getValue("KEYOFEN").toString().toUpperCase().equals("OID"))
 			{
 				isHave = true;
 				break;
@@ -1625,10 +1626,10 @@ public class MapData extends EntityNoName
 
 		if (isHave == false)
 		{
-			errMsg += "@表单模版缺少列:OID";
+			errMsg += "@表单模版["+fk_mapdata+"]缺少列:OID";
 		}
 
-		if (!errMsg.equals(""))
+		if (errMsg.equals("")==false)
 		{
 			throw new RuntimeException("@以下错误不可导入，可能的原因是非表单模板文件:" + errMsg);
 		}
@@ -2206,7 +2207,7 @@ public class MapData extends EntityNoName
 			sqls += "@UPDATE Sys_MapDtl SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
 			sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
 			//sqls += "@UPDATE Sys_MapFrame SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
-			sqls += "@UPDATE Sys_MapM2M SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
+		
 			sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
 			DBAccess.RunSQLs(sqls);
 		}
@@ -2644,13 +2645,13 @@ public class MapData extends EntityNoName
 			sql += "@DELETE FROM Sys_FrmImgAth WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM Sys_FrmRB WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM Sys_FrmAttachment WHERE " + whereFK_MapData;
-			sql += "@DELETE FROM Sys_MapM2M WHERE " + whereFK_MapData;
+			//sql += "@DELETE FROM Sys_MapM2M WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM Sys_MapFrame WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM Sys_MapExt WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM Sys_MapAttr WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM Sys_GroupField WHERE " + whereEnsName;
 			sql += "@DELETE FROM Sys_MapData WHERE " + whereNo;
-			sql += "@DELETE FROM Sys_MapM2M WHERE " + whereFK_MapData;
+			//sql += "@DELETE FROM Sys_MapM2M WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM Sys_M2M WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM WF_FrmNode WHERE FK_Frm='" + this.getNo() + "'";
 			sql += "@DELETE FROM Sys_FrmSln WHERE " + whereFK_MapData;

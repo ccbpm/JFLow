@@ -1165,7 +1165,7 @@ public class MapDataExt extends EntityNoName
 	 */
 	public final String DoDBSrc()
 	{
-		return basePath + "WF/Comm/Search.jsp?s=34&FK_MapData=" + this.getNo()
+		return basePath + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo()
 				+ "&EnsName=BP.Sys.SFDBSrcs";
 	}
 	

@@ -222,7 +222,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
                MapData md = new MapData(fromMapData);
 
-               MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo()));
+               MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(md.getNo()));
 
                //设置为只读模式.
                if (isSetReadonly == true)
@@ -236,8 +236,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
                    nd.RepareMap();
                }
                return "执行成功.";
-	         
-       
+	          
     }
     
     ///#region 04.从外部数据源导入

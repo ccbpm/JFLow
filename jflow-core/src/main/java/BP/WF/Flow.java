@@ -2843,7 +2843,7 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(dt);
 
 		// Sys_GroupField
-		sql = "SELECT * FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.getNo(), "EnName"); // +" " + Glo.MapDataLikeKey(this.getNo(), "EnName");
+		sql = "SELECT * FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.getNo(), "EnName");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_GroupField";
 		ds.Tables.add(dt);
@@ -2855,10 +2855,10 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(dt);
 
 		// Sys_MapM2M
-		sql = "SELECT * FROM Sys_MapM2M WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
-		dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Sys_MapM2M";
-		ds.Tables.add(dt);
+		//sql = "SELECT * FROM Sys_MapM2M WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		//dt = DBAccess.RunSQLReturnTable(sql);
+		//dt.TableName = "Sys_MapM2M";
+		//ds.Tables.add(dt);
 
 		// Sys_FrmLine.
 		sql = "SELECT * FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
@@ -5217,7 +5217,7 @@ public class Flow extends BP.En.EntityNoName
 		DataTable myDTAth = ds.getHashTables().get("Sys_FrmAttachment");
 		DataTable myDTDtl = ds.getHashTables().get("Sys_MapDtl");
 		DataTable myDFrm = ds.getHashTables().get("Sys_MapFrame");
-		DataTable myDM2M = ds.getHashTables().get("Sys_MapM2M");
+		//DataTable myDM2M = ds.getHashTables().get("Sys_MapM2M");
 		if (mydtGF != null)
 		{
 			for (DataRow dr : mydtGF.Rows)
@@ -5299,22 +5299,7 @@ public class Flow extends BP.En.EntityNoName
 					}
 				}
 
-				if (myDM2M != null && myDM2M.Columns.contains("GroupID"))
-				{
-					// m2m.
-					for (DataRow dr1 : myDM2M.Rows)
-					{
-						if (dr1.getValue("GroupID") == null)
-						{
-							dr1.setValue("GroupID", 0);
-						}
-
-						if (dr1.getValue("GroupID").toString().equals(String.valueOf(oldID)))
-						{
-							dr1.setValue("GroupID", gf.getOID());
-						}
-					}
-				}
+				 
 			}
 		}
 
@@ -7311,7 +7296,7 @@ public class Flow extends BP.En.EntityNoName
 		for (Node nd : nds.ToJavaList())
 		{
 			// 删除节点所有相关的东西.
-			sql += "@ DELETE  FROM Sys_MapM2M WHERE FK_MapData='ND" + nd.getNodeID() + "'";
+			//sql += "@ DELETE  FROM Sys_MapM2M WHERE FK_MapData='ND" + nd.getNodeID() + "'";
 			nd.Delete();
 		}
 

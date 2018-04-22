@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
@@ -1580,6 +1581,167 @@ public class CCFormAPI
 
 		return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(mapAttrs);
 	}
+	
+	  /// <summary>
+    /// 获得表单模版dataSet格式.
+    /// </summary>
+    /// <param name="fk_mapdata">表单ID</param>
+    /// <param name="isCheckFrmType">是否检查表单类型</param>
+    /// <returns>DataSet</returns>
+    public static DataSet GenerHisDataSet_AllEleInfo(String fk_mapdata) throws Exception
+    {
+    	
+        MapData md = new MapData(fk_mapdata);
+
+        //从表.
+        String sql = "SELECT * FROM Sys_MapDtl WHERE FK_MapData ='{0}'";
+        sql = String.format(sql, fk_mapdata);
+        DataTable dtMapDtl = DBAccess.RunSQLReturnTable(sql);
+        dtMapDtl.TableName = "Sys_MapDtl";
+
+        String ids = String.format("'{0}'", fk_mapdata);
+        for (DataRow dr : dtMapDtl.Rows)
+        {
+            ids += ",'" + dr.getValue("No") + "'";
+        }
+        String sqls = "";
+        
+        
+        
+        ArrayList<String> listNames = new ArrayList<String>();
+
+        // Sys_GroupField.
+        listNames.add("Sys_GroupField");
+        sql = "SELECT * FROM Sys_GroupField WHERE  FrmID IN (" + ids + ")";
+        sqls += sql;
+
+        // Sys_Enum
+        listNames.add("Sys_Enum");
+        sql = "@SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + ids + ") ) order By EnumKey,IntKey";
+        sqls += sql;
+
+        // 审核组件
+        String nodeIDstr = fk_mapdata.replace("ND", "");
+        if (DataType.IsNumStr(nodeIDstr))
+        {
+            // 审核组件状态:0 禁用;1 启用;2 只读;
+            listNames.add("WF_Node");
+            sql = "@SELECT * FROM WF_Node WHERE NodeID=" + nodeIDstr + " AND  ( FWCSta >0  OR SFSta >0 )";
+            sqls += sql;
+        }
+
+        String where = " FK_MapData IN (" + ids + ")";
+
+        // Sys_MapData.
+        listNames.add("Sys_MapData");
+        sql = "@SELECT * FROM Sys_MapData WHERE No='" + fk_mapdata + "'";
+        sqls += sql;
+
+        // Sys_MapAttr.
+        listNames.add("Sys_MapAttr");
+
+        sql = "@SELECT * FROM Sys_MapAttr WHERE " + where + " AND KeyOfEn NOT IN('WFState') ORDER BY FK_MapData, IDX  ";
+        sqls += sql;
+
+
+        // Sys_MapExt.
+        listNames.add("Sys_MapExt");
+        sql = "@SELECT * FROM Sys_MapExt WHERE " + where;
+        sqls += sql;
+
+        //if (isCheckFrmType == true && md.HisFrmType == FrmType.FreeFrm)
+        //{
+        // line.
+        listNames.add("Sys_FrmLine");
+        sql = "@SELECT * FROM Sys_FrmLine WHERE " + where;
+        sqls += sql;
+
+        // link.
+        listNames.add("Sys_FrmLink");
+        sql = "@SELECT * FROM Sys_FrmLink WHERE " + where;
+        sqls += sql;
+
+        // btn.
+        listNames.add("Sys_FrmBtn");
+        sql = "@SELECT * FROM Sys_FrmBtn WHERE " + where;
+        sqls += sql;
+
+        // Sys_FrmImg.
+        listNames.add("Sys_FrmImg");
+        sql = "@SELECT * FROM Sys_FrmImg WHERE " + where;
+        sqls += sql;
+
+        // Sys_FrmLab.
+        listNames.add("Sys_FrmLab");
+        sql = "@SELECT * FROM Sys_FrmLab WHERE " + where;
+        sqls += sql;
+        //}
+
+        // Sys_FrmRB.
+        listNames.add("Sys_FrmRB");
+        sql = "@SELECT * FROM Sys_FrmRB WHERE " + where;
+        sqls += sql;
+
+        // ele.
+        listNames.add("Sys_FrmEle");
+        sql = "@SELECT * FROM Sys_FrmEle WHERE " + where;
+        sqls += sql;
+
+        //Sys_MapFrame.
+        listNames.add("Sys_MapFrame");
+        sql = "@SELECT * FROM Sys_MapFrame WHERE " + where;
+        sqls += sql;
+
+        // Sys_FrmAttachment. 
+        listNames.add("Sys_FrmAttachment");
+        /* 20150730 小周鹏修改 添加AtPara 参数 START */
+        //sql = "@SELECT  MyPK,FK_MapData,UploadType,X,Y,W,H,NoOfObj,Name,Exts,SaveTo,IsUpload,IsDelete,IsDownload "
+        // + " FROM Sys_FrmAttachment WHERE " + where + " AND FK_Node=0";
+        sql = "@SELECT * "
+            + " FROM Sys_FrmAttachment WHERE " + where + "";
+
+        /* 20150730 小周鹏修改 添加AtPara 参数 END */
+        sqls += sql;
+
+        // Sys_FrmImgAth.
+        listNames.add("Sys_FrmImgAth");
+
+        sql = "@SELECT * FROM Sys_FrmImgAth WHERE " + where;
+        sqls += sql;
+
+        //// sqls.Replace(";", ";" + Environment.NewLine);
+        // DataSet ds = DA.DBAccess.RunSQLReturnDataSet(sqls);
+        // if (ds != null && ds.Tables.Count == listNames.Count)
+        //     for (int i = 0; i < listNames.Count; i++)
+        //     {
+        //         ds.Tables[i].TableName = listNames[i];
+        //     }
+
+        String[] strs = sqls.split("@");
+        DataSet ds = new DataSet();
+
+        if (strs != null && strs.length == listNames.size())
+        {
+            for (int i = 0; i < listNames.size(); i++)
+            {
+                String s = strs[i];
+                if (DataType.IsNullOrEmpty(s))
+                    continue;
+                DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(s);
+                dt.TableName = listNames.get(i);
+                ds.Tables.add(dt);
+            }
+        }
+
+        for (DataTable item : ds.Tables)
+        {
+            if (item.TableName == "Sys_MapAttr" && item.Rows.size() == 0)
+                md.RepairMap();
+        }
+
+        ds.Tables.add(dtMapDtl);
+        return ds;
+    }
 	
 	public static DataSet GenerHisDataSet(String fk_mapdata) throws Exception
 	{

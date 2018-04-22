@@ -75,23 +75,20 @@
         function ReturnWork() {
             //WorkID, this.FID, this.FK_Node
             var empNos = frames["iframeSelectEmpsForm"].window.returnVal.No;
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
-    		handler.AddPara("FK_Flow",param.FK_Flow);
-    		handler.AddPara("WorkID",param.WorkID);
-    		handler.AddPara("FID",param.FID);
-    		handler.AddPara("FK_Node",param.FK_Node);
-    		handler.AddPara("ToEmp",selectNo);
-    		handler.AddPara("Note",$("#Message").val());
-    		handler.AddPara("Model",$('[name=RB_Model]:checked').val())
-    		var data = handler.DoMethodReturnString("Askfor");            
-            if (window.parent != null && window.parent.returnWorkWindowClose != null) {
-                window.parent.returnWorkWindowClose(data);
-            } else {
-                $('#myPopup').html(data.replace('@','').replace(/@/g,'<br/>'));
-        		$('#myPopup').popup();
-        		$('#myPopup').popup('open');
-            }
-           
+            $.ajax({
+                type: 'post',
+                async: true,
+                data: { FK_Flow: param.FK_Flow, WorkID: param.WorkID, FID: param.FID, FK_Node: param.FK_Node },
+                url: Handler + "?DoType=Askfor&FK_Flow=" + param.FK_Flow + "&WorkID=" + param.WorkID + "&FID=" + param.FID + "&FK_Node=" + param.FK_Node + "&m=" + Math.random() + "&ToEmp=" + empNos + '&Note=' + $('#Message').val() + "&Model=" + $('[name=RB_Model]:checked').val(),
+                dataType: 'html',
+                success: function (data) {
+                    if (window.parent != null && window.parent.returnWorkWindowClose != null) {
+                        window.parent.returnWorkWindowClose(data);
+                    } else {
+                        $('body').append($('<div>' + data + '</div>'));
+                    }
+                }
+            });
             $(".foot").hide();
         }
 

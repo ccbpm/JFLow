@@ -857,9 +857,14 @@
             }
 
             strs += "] }";
-            return eval("(" + strs + ")");
 
+            try {
+                return eval("(" + strs + ")");
+            } catch (e) {
+                return "";
+            }
         }
+
         //刷新页面
         function page_reload() {
             location.reload();

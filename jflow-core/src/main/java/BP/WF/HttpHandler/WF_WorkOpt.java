@@ -33,11 +33,13 @@ import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachmentDBs;
+import BP.Sys.FrmRB;
 import BP.Sys.FrmRBAttr;
 import BP.Sys.FrmRBs;
 import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
+import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
@@ -90,7 +92,7 @@ public class WF_WorkOpt extends WebContralBase {
 	public WF_WorkOpt() {
 	}
 
-	public final String SelectEmps_Init() {
+	public final String SelectEmps_Init() throws Exception {
 		String fk_dept = this.getFK_Dept();
 		
 		if (DataType.IsNullOrEmpty(fk_dept) == true 
@@ -2037,7 +2039,7 @@ public class WF_WorkOpt extends WebContralBase {
     /// 返回信息。
     /// </summary>
     /// <returns></returns>
-    public string RadioBtns_Init()
+    public String RadioBtns_Init() throws Exception
     {
         DataSet ds = new DataSet();
 
@@ -2056,8 +2058,8 @@ public class WF_WorkOpt extends WebContralBase {
 
         //字段值.
         FrmRBs rbs = new FrmRBs();
-        rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
-        if (rbs.Count == 0)
+        int num = rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+        if (num == 0)
         {
             /*初始枚举值变化.
              */
@@ -2065,40 +2067,41 @@ public class WF_WorkOpt extends WebContralBase {
             for (SysEnum se : ses.ToJavaList())
             {
                 FrmRB rb = new FrmRB();
-                rb.FK_MapData = this.FK_MapData;
-                rb.KeyOfEn = this.KeyOfEn;
-                rb.IntKey = se.IntKey;
-                rb.Lab = se.Lab;
-                rb.EnumKey = attr.UIBindKey;
+              //  rb.getFK_MapData() = 
+                rb.setFK_MapData(this.getFK_MapData());
+                rb.setKeyOfEn(this.getKeyOfEn());
+                rb.setIntKey(se.getIntKey());
+                rb.setLab(se.getLab());
+                rb.setEnumKey(attr.getUIBindKey());
                 rb.Insert(); //插入数据.
             }
 
-            rbs.Retrieve(FrmRBAttr.FK_MapData, this.FK_MapData, FrmRBAttr.KeyOfEn, this.KeyOfEn);
+            rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
         }
 
         //加入单选按钮.
-        ds.Tables.Add(rbs.ToDataTableField("Sys_FrmRB"));
+        ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
         return BP.Tools.Json.ToJson(ds);
     }
     /// <summary>
     /// 执行保存
     /// </summary>
     /// <returns></returns>
-    public String RadioBtns_Save()
+    public String RadioBtns_Save() throws Exception 
     {
         String json = this.GetRequestVal("data");
         
         DataTable dt = BP.Tools.Json.ToDataTable(json);
 
-        foreach (DataRow dr in dt.Rows)
+        for (DataRow dr : dt.Rows)
         {
             FrmRB rb = new FrmRB();
-            rb.MyPK = dr["MyPK"].ToString();
+            rb.setMyPK(dr.getValue("MyPK").toString());
             rb.Retrieve();
 
-            rb.Script = dr["Script"].ToString();
-            rb.FieldsCfg = dr["FieldsCfg"].ToString(); //格式为 @字段名1=1@字段名2=0
-            rb.Tip = dr["Tip"].ToString(); //提示信息
+            rb.setScript(dr.getValue("Script").toString());
+            rb.setFieldsCfg(dr.getValue("FieldsCfg").toString()); //格式为 @字段名1=1@字段名2=0
+            rb.setTip(dr.getValue("Tip").toString()); //提示信息
             rb.Update();
         }
 

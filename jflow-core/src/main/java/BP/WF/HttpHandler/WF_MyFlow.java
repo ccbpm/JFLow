@@ -1025,382 +1025,372 @@ public class WF_MyFlow extends WebContralBase {
               }
           }
           //#endregion 处理是否是加签，或者是否是会签模式，.
-        
-        
-        String tKey = DateUtils.format(new Date(), "yyyy-MM-dd - hh:mm:ss");
-        BtnLab btnLab = new BtnLab(this.getFK_Node());
-        String toolbar = "";
-        ///#region 是否是会签？.
-        if (isAskForOrHuiQian == true && SystemConfig.getCustomerNo().equals("LIMS") == true)
-            return "";
 
-        if (isAskForOrHuiQian == true){
-            toolbar += "<input name='Send' type=button value='执行会签' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(); \" />";
-           // toolbar += "<input name='Send' type=button  value='" + btnLab.SendLab + "' enable=true onclick=\"" + btnLab.SendJS + " if ( SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
-            if (btnLab.getPrintZipEnable() == true)
-            {
-                String packUrl = "./WorkOpt/Packup.htm?FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
-                toolbar += "<input type=button name='PackUp'  value='" + btnLab.getPrintZipLab() + "' enable=true/>";
-            }
 
-            if (btnLab.getTrackEnable())
-                toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.WorkID + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
 
-            return toolbar;
+          String tKey =""; // DateTime.Now.ToString("yyyy-MM-dd - hh:mm:ss");
+          BtnLab btnLab = new BtnLab(this.getFK_Node());
+          String toolbar = "";
+          try
+          {
+              //#region 是否是会签？.
+              if (isAskForOrHuiQian == true && SystemConfig.getCustomerNo() == "LIMS")
+                  return "";
+
+              if (isAskForOrHuiQian == true)
+              {
+                  toolbar += "<input name='Send' type=button value='执行会签' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(); \" />";
+                 // toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\"" + btnLab.getSendJS() + " if ( SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
+                  if (btnLab.getPrintZipEnable() == true)
+                  {
+                      String packUrl = "./WorkOpt/Packup.htm?FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
+                      toolbar += "<input type=button name='PackUp'  value='" + btnLab.getPrintZipLab() + "' enable=true/>";
+                  }
+
+                  if (btnLab.getTrackEnable())
+                      toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+
+                  return toolbar;
+              }
+              //#endregion 是否是会签.
+
+              //#region 是否是抄送.
+              if (this.getIsCC())
+              {
+                  toolbar += "<input type=button  value='流程运行轨迹' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+                  // 判断审核组件在当前的表单中是否启用，如果启用了.
+                  FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
+                  if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Enable)
+                  {
+                      /*如果不等于启用, */
+                      toolbar += "<input type=button  value='填写审核意见' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/CCCheckNote.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+                  }
+                  return toolbar;
+              }
+              //#endregion 是否是抄送.
+
+              //#region 如果当前节点启用了协作会签.
+              if (btnLab.getHuiQianRole() == HuiQianRole.Teamup)
+              {
+                  if (this.getIsMobile() == true)
+                      toolbar += "<input name='SendHuiQian' type=button value='会签发送' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();SendIt(true); \" />";
+                  else
+                      toolbar += "<input name='SendHuiQian' type=button value='会签发送' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(true); \" />";
+              }
+              //#endregion 如果当前节点启用了协作会签
+
+              //#region 加载流程控制器 - 按钮
+              if (this.getcurrND().getHisFormType() == NodeFormType.SelfForm)
+              {
+                  /*如果是嵌入式表单.*/
+                  if (this.getcurrND().getIsEndNode() )
+                  {
+                      /*如果当前节点是结束节点.*/
+                      if (btnLab.getSendEnable() && this.getcurrND().getHisBatchRole() != BatchRole.Group)
+                      {
+                          /*如果启用了发送按钮.*/
+                          toolbar += "<input name='Send' type=button value='" + btnLab.getSendLab() + "' enable=true onclick=\"" + btnLab.getSendJS() + " if (SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
+                      }
+                  }
+                  else
+                  {
+                      if (btnLab.getSendEnable() && this.getcurrND().getHisBatchRole() != BatchRole.Group )
+                      {
+                          toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\"" + btnLab.getSendJS() + " if ( SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
+                      }
+                  }
+
+                  /*处理保存按钮.*/
+                  if (btnLab.getSaveEnable() )
+                  {
+                      toolbar += "<input name='Save' type=button value='" + btnLab.getSaveLab() + "' enable=true onclick=\"SaveSelfFrom();\" />";
+                  }
+              }
+
+              if (this.getcurrND().getHisFormType() != NodeFormType.SelfForm)
+              {
+                  /*启用了其他的表单.*/
+                  if (this.getcurrND().getIsEndNode())
+                  {
+                      /*如果当前节点是结束节点.*/
+                      if (btnLab.getSendEnable() && this.getcurrND().getHisBatchRole() != BatchRole.Group)
+                      {
+                          /*如果启用了选择人窗口的模式是【选择既发送】.*/
+                          if (this.getIsMobile())
+                          toolbar += "<input name='Send' type=button value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();SendIt(); \" />";
+                          else
+                          toolbar += "<input name='Send' type=button value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(); \" />";
+
+                      }
+                  }
+                  else
+                  {
+                      if (btnLab.getSendEnable() && this.getcurrND().getHisBatchRole() != BatchRole.Group)
+                      {
+                          /*如果启用了发送按钮.
+                           * 1. 如果是加签的状态，就不让其显示发送按钮，因为在加签的提示。
+                           */
+                          if (this.getIsMobile())
+                              toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SendIt();\" />";
+                          else
+                              toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;Send();\" />";
+                      }
+                  }
+
+                  /* 处理保存按钮.*/
+                  if (btnLab.getSaveEnable())
+                  {
+                      if (this.getIsMobile())
+                          toolbar += "<input name='Save' type=button  value='" + btnLab.getSaveLab() + "' enable=true onclick=\"   if(SysCheckFrm()==false) return false; SaveIt();\" />";
+                      else
+                          toolbar += "<input name='Save' type=button  value='" + btnLab.getSaveLab() + "' enable=true onclick=\"   if(SysCheckFrm()==false) return false;Save();\" />";
+                  }
+              }
+
+              if (btnLab.getWorkCheckEnable())
+              {
+                  /*审核*/
+                  //     String urlr1 = "./WorkOpt/WorkCheck.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  //   toolbar += "<input  name='Btn_WorkCheck' type=button  value='" + btnLab.getWorkCheckLab() + "' enable=true onclick=\"WinOpen('" + urlr1 + "','dsdd'); \" />";
+                  toolbar += "<input  name='workcheckBtn' type=button  value='" + btnLab.getWorkCheckLab() + "' enable=true />";
+              }
+
+              if (btnLab.getThreadEnable())
+              {
+                  /*如果要查看子线程.*/
+                  String ur2 = "./WorkOpt/ThreadDtl.aspx?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button  value='" + btnLab.getThreadLab() + "' enable=true onclick=\"WinOpen('" + ur2 + "'); \" />";
+              }
+
+              if (btnLab.getTCEnable() == true)
+              {
+                  /*流转自定义..*/
+                  String ur3 = "./WorkOpt/TransferCustom.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button  value='" + btnLab.getTCLab() + "' enable=true onclick=\"To('" + ur3 + "'); \" />";
+              }
+
+              if (btnLab.getJumpWayEnable() && 1==2 )
+              {
+                  /*跳转*/
+                  String urlr = "./WorkOpt/JumpWay.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button  value='" + btnLab.getJumpWayLab() + "' enable=true onclick=\"To('" + urlr + "'); \" />";
+              }
+
+              if (btnLab.getReturnEnable() )
+              {
+                  /*退回*/
+                  String urlr = "./WorkOpt/ReturnWork.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input name='Return' type=button  value='" + btnLab.getReturnLab() + "' enable=true onclick=\"ReturnWork('" + urlr + "','" + btnLab.getReturnField() + "'); \" />";
+              }
+
+              //  if (btnLab.getHungEnable() && this.currND.IsStartNode == false)
+              if (btnLab.getHungEnable())
+              {
+                  /*挂起*/
+                  String urlr = "./WorkOpt/HungUp.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button  value='" + btnLab.getHungLab() + "' enable=true onclick=\"WinOpen('" + urlr + "'); \" />";
+              }
+
+              if (btnLab.getShiftEnable() )
+              {
+                  /*移交*/
+                  String url12 = "./WorkOpt/Forward.htm?FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&Info=" + "移交原因.";
+                  toolbar += "<input name='Shift' type=button  value='" + btnLab.getShiftLab() + "' enable=true onclick=\"To('" + url12 + "'); \" />";
+              }
+
+              if ((btnLab.getCCRole() == CCRole.HandCC || btnLab.getCCRole() == CCRole.HandAndAuto))
+              {
+                  if (this.getIsMobile())
+                  {
+                      String urlrDel = "./WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey;
+                      toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"To('" + urlrDel + "'); \" />";
+                  }
+                  else
+                      // 抄送 
+                      toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"WinOpen('" + "./WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey + "','ds'); \" />";
+              }
+
+              if (btnLab.getDeleteEnable() != 0 )
+              {
+                  String urlrDel = appPath + "WF/MyFlowInfo.htm?DoType=DeleteFlow&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input name='Delete' type=button  value='" + btnLab.getDeleteLab() + "' enable=true onclick=\"To('" + urlrDel + "'); \" />";
+              }
+
+              if (btnLab.getEndFlowEnable() && this.getcurrND().getIsStartNode() == false )
+              {
+                  toolbar += "<input type=button name='EndFlow'  value='" + btnLab.getEndFlowLab() + "' enable=true onclick=\"DoStop('" + btnLab.getEndFlowLab() + "','"+this.getFK_Flow()+"','"+this.getWorkID()+"');\" />";
+              }
+
+              if (btnLab.getPrintDocEnable() )
+              {
+                  /*如果不是加签 */
+                  if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintRTF)
+                  {
+                      String urlr = appPath + "WF/WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                      toolbar += "<input type=button name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
+                  }
+
+                  if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintWord)
+                  {
+                      String urlr = appPath + "WF/Rpt/RptDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsPrint=1&s=" + tKey;
+                      toolbar += "<input type=button name='PrintDoc'  value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
+                  }
+
+                  if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintHtml)
+                  {
+                      String urlr = appPath + "PrintSample.aspx?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="+BP.Web.WebUser.getNo()+"&IsPrint=1";
+                      toolbar += "<input type=button  name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"printFrom('" + urlr + "'); \" />";
+                  }
+              }
+
+              if (btnLab.getTrackEnable() )
+                  toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+
+
+              if (btnLab.getSearchEnable())
+                  toolbar += "<input type=button name='Search'  value='" + btnLab.getSearchLab() + "' enable=true onclick=\"WinOpen('./RptDfine/Default.htm?RptNo=ND" + Integer.parseInt(this.getFK_Flow()) + "MyRpt&FK_Flow="+this.getFK_Flow()+"&SearchType=My&s=" + tKey + "','dsd0'); \" />";
+
+              if (btnLab.getBatchEnable())
+              {
+                  /*批量处理*/
+                  String urlr = appPath + "WF/Batch.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button name='Batch' value='" + btnLab.getBatchLab() + "' enable=true onclick=\"To('" + urlr + "'); \" />";
+              }
+
+              if (btnLab.getAskforEnable() )
+              {
+                  /*加签 */
+                  String urlr3 = appPath + "WF/WorkOpt/Askfor.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button name='Askfor'  value='" + btnLab.getAskforLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
+              }
+
+              if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader)
+              {
+                  /*会签 */
+                  String urlr3 = appPath + "WF/WorkOpt/HuiQian.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button name='HuiQian'  value='" + btnLab.getHuiQianLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
+              }
+
+ 
+
+              // 需要翻译.
+              if (this.getcurrFlow().getIsResetData() == true && this.getcurrND().getIsStartNode())
+              {
+                  /* 启用了数据重置功能 */
+                  String urlr3 = appPath + "WF/MyFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsDeleteDraft=1&s=" + tKey;
+                  toolbar += "<input type=button  value='数据重置' enable=true onclick=\"To('" + urlr3 + "','ds'); \" />";
+              }
+
+              //if (btnLab.SubFlowEnable == true )
+              //{
+              //    /* 子流程 */
+              //    String urlr3 = appPath + "WF/WorkOpt/SubFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+              //    toolbar += "<input type=button name='SubFlow'  value='" + btnLab.SubFlowLab + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
+              //}
+
+              if (btnLab.getCHEnable() == true )
+              {
+                  /* 节点时限设置 */
+                  String urlr3 = appPath + "WF/WorkOpt/CH.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button name='CH'  value='" + btnLab.getCHLab() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
+              }
+
+              if (btnLab.getPRIEnable() == true )
+              {
+                  /* 优先级设置 */
+                  String urlr3 = appPath + "WF/WorkOpt/PRI.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  toolbar += "<input type=button name='PR'  value='" + btnLab.getPRILab() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
+              }
+
+              /* 关注 */
+              if (btnLab.getFocusEnable() == true )
+              {
+                  if (this.getHisGenerWorkFlow().getParas_Focus() == true)
+                      toolbar += "<input type=button  value='取消关注' enable=true onclick=\"FocusBtn(this,'" + this.getWorkID() + "'); \" />";
+                  else
+                      toolbar += "<input type=button name='Focus' value='" + btnLab.getFocusLab() + "' enable=true onclick=\"FocusBtn(this,'" + this.getWorkID() + "'); \" />";
+              }
+
+              /* 分配工作 */
+              if (btnLab.getAllotEnable() == true )
+              {
+                  /*分配工作*/
+                  String urlAllot = "./WorkOpt/AllotTask.htm?FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&Info=" + "移交原因.";
+                  toolbar += "<input name='Allot' type=button  value='" + btnLab.getAllotLab() + "' enable=true onclick=\"To('" + urlAllot + "'); \" />";
+              }
+
+              /* 确认 */
+              if (btnLab.getConfirmEnable() == true )
+              {
+                  if ( this.getHisGenerWorkFlow().getParas_Confirm() == true)
+                      toolbar += "<input type=button  value='取消确认' enable=true onclick=\"ConfirmBtn(this,'" + this.getWorkID() + "'); \" />";
+                  else
+                      toolbar += "<input type=button name='Confirm' value='" + btnLab.getConfirmLab() + "' enable=true onclick=\"ConfirmBtn(this,'" + this.getWorkID() + "'); \" />";
+              }
+
+              // 需要翻译.
+
+              /* 打包下载zip */
+              if (btnLab.getPrintZipEnable() == true)
+              {
+                  String packUrl = "./WorkOpt/Packup.htm?FileType=zip&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() ;
+                  toolbar += "<input type=button name='PackUp_zip'  value='" + btnLab.getPrintZipLab() + "' enable=true/>";
+              }
+
+              /* 打包下载html */
+              if (btnLab.getPrintHtmlEnable() == true)
+              {
+                  String packUrl = "./WorkOpt/Packup.htm?FileType=html&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
+                  toolbar += "<input type=button name='PackUp_html'  value='" + btnLab.getPrintHtmlLab() + "' enable=true/>";
+              }
+
+              /* 打包下载pdf */
+              if (btnLab.getPrintPDFEnable() == true)
+              {
+                  String packUrl = "./WorkOpt/Packup.htm?FileType=pdf&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
+                  toolbar += "<input type=button name='PackUp_pdf'  value='" + btnLab.getPrintPDFLab() + "' enable=true/>";
+              }
+
+              if (this.getcurrND().getIsStartNode() == true)
+              {
+                  if (this.getcurrFlow().getIsDBTemplate() == true)
+                  {
+                      String packUrl = "./WorkOpt/DBTemplate.htm?FileType=pdf&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
+                      toolbar += "<input type=button name='DBTemplate'  value='模版' enable=true/>";
+
+                  }
+              }
+         
+              //#endregion
+
+              //#region  //加载自定义的button.
+              BP.WF.Template.NodeToolbars bars = new NodeToolbars();
+              bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node());
+              for (NodeToolbar bar : bars.ToJavaList())
+              {
+                  if (bar.getShowWhere() == ShowWhere.Toolbar)
+                  {
+                      if (!DataType.IsNullOrEmpty(bar.getTarget() ) && bar.getTarget().toLowerCase() == "javascript")
+                      {
+                          toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\"" + bar.getUrl() + "\" />";
+                      }
+                      else
+                      {
+                          String urlr3 = bar.getUrl() + "&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                          toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
+                      }
+                  }
+              }
+              //#endregion  //加载自定义的button.
+
           }
-         ////#endregion 是否是会签.
-        
-		Node currND=new Node(this.getFK_Node());		
-		Flow currFlow=new Flow(this.getFK_Flow());
-		//GenerWorkFlow HisGenerWorkFlow=new GenerWorkFlow(this.getWorkID());
-		///#region 是否是抄送.
-
-		if (this.getIsCC())
-		{
-			toolbar += "<input type=button  value='流程运行轨迹' enable=true onclick=\"WinOpen('./WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
-			// 判断审核组件在当前的表单中是否启用，如果启用了.
-			FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
-			if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Enable)
-			{
-				//如果不等于启用, 
-				toolbar += "<input type=button  value='填写审核意见' enable=true onclick=\"WinOpen('。/WorkOpt/CCCheckNote.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
-			}
-			return toolbar;
-		}
-		/// #endregion 是否是抄送.
-		
-		///#region 如果当前节点启用了协作会签.
-        if (btnLab.getHuiQianRole() == HuiQianRole.Teamup)
-        {
-            if (this.getIsMobile() == true)
-                toolbar += "<input name='SendHuiQian' type=button value='会签发送' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();SendIt(true); \" />";
-            else
-                toolbar += "<input name='SendHuiQian' type=button value='会签发送' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(true); \" />";
-        }
-        ///#endregion 如果当前节点启用了协作会签
-        
-		///#region 加载流程控制器 - 按钮
-
-		if (currND.getHisFormType() == NodeFormType.SelfForm)
-		{
-			//如果是嵌入式表单.
-			if (currND.getIsEndNode() && isAskFor == false)
-			{
-				//如果当前节点是结束节点.
-				if (btnLab.getSendEnable() && currND.getHisBatchRole() != BatchRole.Group)
-				{
-					//如果启用了发送按钮.
-					toolbar += "<input name='Send' type=button value='" + btnLab.getSendLab() + "' enable=true onclick=\"" + btnLab.getSendJS() + " if (SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
-				}
-			}else{
-				if (btnLab.getSendEnable() && currND.getHisBatchRole() != BatchRole.Group && isAskFor == false)
-				{
-					toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\"" + btnLab.getSendJS() + " if ( SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
-				}
-			}
-
-			//处理保存按钮.
-			if (btnLab.getSaveEnable() && isAskFor == false)
-			{
-				toolbar += "<input name='Save' type=button value='" + btnLab.getSaveLab() + "' enable=true onclick=\"SaveSelfFrom();\" />";
-			}
-		}
-		 if (currND.getHisFormType() != NodeFormType.SelfForm){
-			//启用了其他的表单.
-			if (currND.getIsEndNode() && isAskFor == false)
-			{
-				//如果当前节点是结束节点.
-				if (btnLab.getSendEnable() && currND.getHisBatchRole() != BatchRole.Group)
-				{
-					/*如果启用了选择人窗口的模式是【选择既发送】.*/
-                    if (this.getIsMobile())
-                    toolbar += "<input name='Send' type=button value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();SendIt(); \" />";
-                    else
-                    toolbar += "<input name='Send' type=button value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(); \" />";
-				}
-			}
-			else
-			{
-				if (btnLab.getSendEnable() && currND.getHisBatchRole() != BatchRole.Group && isAskFor == false)
-				{
-						/*如果启用了发送按钮.
-                    	* 1. 如果是加签的状态，就不让其显示发送按钮，因为在加签的提示。
-                    	*/
-                   if (this.getIsMobile())
-                       toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SendIt();\" />";
-                   else
-                       toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab() + "' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;Send();\" />";
-
-				}
-			}
-
-			// 处理保存按钮.
-			if (btnLab.getSaveEnable() && isAskFor == false)
-			{
-				if (this.getIsMobile())
-                    toolbar += "<input name='Save' type=button  value='" + btnLab.getSaveLab() + "' enable=true onclick=\"   if(SysCheckFrm()==false) return false; SaveIt();\" />";
-                else
-                    toolbar += "<input name='Save' type=button  value='" + btnLab.getSaveLab() + "' enable=true onclick=\"   if(SysCheckFrm()==false) return false;Save();\" />";
-			}
-		}
-
-		if (btnLab.getWorkCheckEnable() && isAskFor == false)
-		{
-			//审核
-			//String urlr1 = "./WorkOpt/WorkCheck.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			
-			toolbar += "<input  name='workcheckBtn' type=button  value='" + btnLab.getWorkCheckLab() + "' enable=true />";
-		}
-
-		if (btnLab.getThreadEnable())
-		{
-			//如果要查看子线程.
-			String ur2 = "./WorkOpt/ThreadDtl.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button  value='" + btnLab.getThreadLab() + "' enable=true onclick=\"WinOpen('" + ur2 + "'); \" />";
-		}
-
-		if (btnLab.getTCEnable() == true && isAskFor == false)
-		{
-			//流转自定义..
-			String ur3 = "./WorkOpt/TransferCustom.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button  value='" + btnLab.getTCLab() + "' enable=true onclick=\"To('" + ur3 + "'); \" />";
-		}
-
-		if (btnLab.getJumpWayEnable() && isAskFor == false)
-		{
-			//如果没有焦点字段
-			String urlr = "./WorkOpt/JumpWay.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button  value='" + btnLab.getJumpWayLab() + "' enable=true onclick=\"To('" + urlr + "'); \" />";
-		}
-
-		if (btnLab.getReturnEnable() )
-		{
-			//退回
-			String urlr = "./WorkOpt/ReturnWork.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input name='Return' type=button  value='" + btnLab.getReturnLab() + "' enable=true onclick=\"ReturnWork('" + urlr + "','" + btnLab.getReturnField() + "'); \" />";
-		}
-
-		//  if (btnLab.HungEnable && this.currND.IsStartNode == false)
-		if (btnLab.getHungEnable())
-		{
-			//挂起
-			String urlr = "./WorkOpt/HungUp.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button  value='" + btnLab.getHungLab() + "' enable=true onclick=\"WinOpen('" + urlr + "'); \" />";
-		}
-
-		if (btnLab.getShiftEnable() && isAskFor == false)
-		{
-			//移交
-			String url12 = "./WorkOpt/Forward.htm?FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&Info=" + "移交原因.";
-			toolbar += "<input name='Shift' type=button  value='" + btnLab.getShiftLab() + "' enable=true onclick=\"To('" + url12 + "'); \" />";
-		}
-
-		if ((btnLab.getCCRole() == CCRole.HandCC || btnLab.getCCRole() == CCRole.HandAndAuto))
-		{
-			if (this.getIsMobile()){
-				String urlrDel = "./WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey ;
-                toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"To('" + urlrDel + "'); \" />";
-			}else
-			// 抄送 
-			toolbar += "<input name='CC' type=button  value='" + btnLab.getCCLab() + "' enable=true onclick=\"WinOpen('" + "./WorkOpt/CC.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&s=" + tKey + "','ds'); \" />";
-		}
-
-		if (btnLab.getDeleteEnable() != 0 && isAskFor == false)
-		{
-			String urlrDel = "MyFlowInfo.htm?DoType=DeleteFlow&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-					toolbar += "<input name='Delete' type=button  value='" + btnLab.getDeleteLab() + "' enable=true onclick=\"To('" + urlrDel + "'); \" />";
-
-		}
-
-		if (btnLab.getEndFlowEnable() && currND.getIsStartNode() == false && isAskFor == false)
-		{
-			  toolbar += "<input type=button name='EndFlow'  value='" + btnLab.getEndFlowLab() + "' enable=true onclick=\"DoStop('" + btnLab.getEndFlowLab() + "','"+this.getFK_Flow()+"','"+this.getWorkID()+"');\" />";
-		}
-
-		if (btnLab.getPrintDocEnable() && isAskFor == false)
-		{
-			//如果不是加签 
-			if (currND.getHisPrintDocEnable() == PrintDocEnable.PrintRTF)
-			{
-				String urlr ="./WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-				toolbar += "<input type=button name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
-			}
-
-			if (currND.getHisPrintDocEnable() == PrintDocEnable.PrintWord)
-			{
-				String urlr =  "./Rpt/RptDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsPrint=1&s=" + tKey;
-				toolbar += "<input type=button name='PrintDoc'  value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
-			}
-
-			if (currND.getHisPrintDocEnable() == PrintDocEnable.PrintHtml)
-			{
-				toolbar += "<input type=button  name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"printFrom(); \" />";
-			}
-		}
-
-		if (btnLab.getTrackEnable() && isAskFor == false)
-		{
-			toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" +  "./WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
-		}
-
-
-		if (btnLab.getSearchEnable() && isAskFor == false)
-		{
-			toolbar += "<input type=button name='Search'  value='" + btnLab.getSearchLab() + "' enable=true onclick=\"WinOpen('" + "./RptDfine/Default.htm?EnsName=ND" + Integer.parseInt(this.getFK_Flow()) + "MyRpt&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey + "','dsd0'); \" />";
-		}
-
-		if (btnLab.getBatchEnable() && isAskFor == false)
-		{
-			//批量处理
-			String urlr ="Batch.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button name='Batch' value='" + btnLab.getBatchLab() + "' enable=true onclick=\"To('" + urlr + "'); \" />";
-		}
-
-		if (btnLab.getAskforEnable())
-		{
-			//加签 
-			String urlr3 = "./WorkOpt/Askfor.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button name='Askfor'  value='" + btnLab.getAskforLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
-		} 
-
-		if (btnLab.getHuiQianRole() == BP.WF.HuiQianRole.TeamupGroupLeader )
-		{
-			//会签 
-			String urlr3 ="./WorkOpt/HuiQian.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button name='HuiQian'  value='" + btnLab.getHuiQianLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
-		}
-
-
-		if (btnLab.getWebOfficeWorkModel() == WebOfficeWorkModel.Button)
-		{
-			//公文正文 
-			String urlr ="./WorkOpt/WebOffice.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button name='WebOffice'  value='" + btnLab.getWebOfficeLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','公文正文'); \" />";
-		}
-		
-		// @于庆海需要翻译.
-		if (currFlow.getIsResetData() == true && currND.getIsStartNode())
-		{
-			// 启用了数据重置功能 
-			String urlr3 = "MyFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsDeleteDraft=1&s=" + tKey;
-			toolbar += "<input type=button  value='数据重置' enable=true onclick=\"To('" + urlr3 + "','ds'); \" />";
-		}
-
-		if (btnLab.getSubFlowEnable() == true)
-		{
-			// 子流程 
-			String urlr3 = "./WorkOpt/SubFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button name='SubFlow'  value='" + btnLab.getSubFlowLab() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
-		}
-
-		if (btnLab.getCHEnable() == true)
-		{
-			// 节点时限设置 
-			String urlr3 = "./WorkOpt/CH.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button name='CH'  value='" + btnLab.getCHLab() + "' enable=true onclick=\"WinShowModalDialog('" + urlr3 + "'); \" />";
-		}
-
-		if (btnLab.getPRIEnable() == true)
-		{
-			// 优先级设置 
-			String urlr3 =  "./WorkOpt/PRI.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-			toolbar += "<input type=button name='PR'  value='" + btnLab.getPRILab() + "' enable=true onclick=\"WinShowModalDialog('" + urlr3 + "'); \" />";
-		}
-
-		// 关注 
-		if (btnLab.getFocusEnable() == true)
-		{
-			if (getHisGenerWorkFlow().getParas_Focus() == true)
-			{
-				toolbar += "<input type=button  value='取消关注' enable=true onclick=\"FocusBtn(this,'" + this.getWorkID() + "'); \" />";
-			}
-			else
-			{
-				toolbar += "<input type=button name='Focus' value='" + btnLab.getFocusLab() + "' enable=true onclick=\"FocusBtn(this,'" + this.getWorkID() + "'); \" />";
-			}
-		}
-
-		// 分配工作 
-		if (btnLab.getAllotEnable() == true)
-		{
-			//分配工作
-			String urlAllot = "./WorkOpt/Allot.htm?FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&Info=" + "移交原因.";
-			toolbar += "<input name='Allot' type=button  value='" + btnLab.getAllotLab() + "' enable=true onclick=\"To('" + urlAllot + "'); \" />";
-		}
-
-		//    toolbar += "<input type=button name='Allot' value='" + btnLab.AllotLab + "' enable=true onclick=\"AllotBtn(this,'" + this.getWorkID() + "'); \" />";
-		//}
-
-		// 确认 
-		if (btnLab.getConfirmEnable() == true)
-		{
-			if (getHisGenerWorkFlow().getParas_Confirm() == true)
-			{
-				toolbar += "<input type=button  value='取消确认' enable=true onclick=\"ConfirmBtn(this,'" + this.getWorkID() + "'); \" />";
-			}
-			else
-			{
-				toolbar += "<input type=button name='Confirm' value='" + btnLab.getConfirmLab() + "' enable=true onclick=\"ConfirmBtn(this,'" + this.getWorkID() + "'); \" />";
-			}
-		}
-		
-		// @于庆海需要翻译.
-
-		// 打包下载zip 
-		if (btnLab.getPrintZipEnable() == true)
-		{
-			String packUrl = "./WorkOpt/Packup.htm?FileType=zip&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
-			toolbar += "<input type=button name='PackUp_zip'  value='" + btnLab.getPrintZipLab() + "' enable=true/>";
-		}
-
-		// 打包下载html 
-		if (btnLab.getPrintHtmlEnable() == true)
-		{
-			String packUrl = "./WorkOpt/Packup.htm?FileType=html&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
-			toolbar += "<input type=button name='PackUp_html'  value='" + btnLab.getPrintHtmlLab() + "' enable=true/>";
-		}
-
-		// 打包下载pdf 
-		if (btnLab.getPrintPDFEnable() == true)
-		{
-			String packUrl = "./WorkOpt/Packup.htm?FileType=pdf&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
-			toolbar += "<input type=button name='PackUp_pdf'  value='" + btnLab.getPrintPDFLab() + "' enable=true/>";
-		}
-
-		if (this.getcurrND().getIsStartNode() == true)
-		{
-			if (this.getcurrFlow().getIsDBTemplate() == true)
-			{
-				String packUrl = "./WorkOpt/DBTemplate.htm?FileType=pdf&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
-				toolbar += "<input type=button name='DBTemplate'  value='模版' enable=true/>";
-
-			}
-		}  
-        
-		
-
-		///#endregion
-
-		//加载自定义的button.
-		BP.WF.Template.NodeToolbars bars = new NodeToolbars();
-		bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node());
-		for (NodeToolbar bar : bars.ToJavaList())
-		{
-			if (bar.getShowWhere() == ShowWhere.Toolbar)
-			{
-				if (!DotNetToJavaStringHelper.isNullOrEmpty(bar.getTarget()) && bar.getTarget().toLowerCase().equals("javascript"))
-				{
-					toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\"" + bar.getUrl() + "\" />";
-				}
-				else
-				{
-					String urlr3 = bar.getUrl() + "&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-					toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
-				}
-			}
-		}
-		
-	 return toolbar;
+          catch (Exception ex)
+          {
+             // BP.DA.Log.DefaultLogWriteLineError(ex);
+              toolbar = "err@" + ex.getMessage();
+          }
+          return toolbar;
+          
 
 	}
 	

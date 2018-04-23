@@ -5009,12 +5009,13 @@ public class WorkNode {
 	 * @throws Exception 
 	 */
 	public final String DealAlertZhuChiRen() throws Exception {
+		
 		// 有两个待办，就说明当前人员是最后一个会签人，就要把主持人的状态设置为0
 		// 获得主持人信息.
 		String sql = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE IsPass=90 AND WorkID=" + this.getWorkID();
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() != 1)
-			return "@您已经会签完毕，还有(" + this.getHisGenerWorkFlow().getTodoEmps() + ")没有处理.";
+			return "@您已经会签完毕.";
 
 		// 从会签列表里移动到待办.
 		BP.DA.DBAccess

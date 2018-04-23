@@ -207,7 +207,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 		String cfgVal = this.GetRequestVal("Vals");
 
 		//调用接口执行保存.
-		return BP.Sys.CCFormAPI.SaveEnum(enumKey1, enumName, cfgVal, false,null);
+		return BP.Sys.CCFormAPI.SaveEnum(enumKey1, enumName, cfgVal, false,"CH");
 	}
 	public String FrmEnumeration_NewEnum() throws Exception
 	{

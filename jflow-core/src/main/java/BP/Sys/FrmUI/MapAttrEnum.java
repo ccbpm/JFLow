@@ -223,7 +223,7 @@ public class MapAttrEnum extends EntityMyPK
 	*/
 	public final String DoRadioBtns()
 	{
-		return Glo.getCCFlowAppPath() + "WF/MapDef/MapExt/RadioBtns.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/RadioBtns.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 	/** 
 	 设置级联

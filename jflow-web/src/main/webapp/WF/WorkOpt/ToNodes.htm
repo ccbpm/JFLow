@@ -8,10 +8,13 @@
         function Load() {
 
             var url = window.location.href;
+
             if (plant == "CCFlow") {
+
                 url = url.replace('.htm', '.aspx');
                 window.location.href = url;
                 return;
+
             } else {
 
                 var msg = "";

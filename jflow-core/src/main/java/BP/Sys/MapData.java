@@ -2649,7 +2649,7 @@ public class MapData extends EntityNoName
 			sql += "@DELETE FROM Sys_GroupField WHERE " + whereEnsName;
 			sql += "@DELETE FROM Sys_MapData WHERE " + whereNo;
 			//sql += "@DELETE FROM Sys_MapM2M WHERE " + whereFK_MapData;
-			sql += "@DELETE FROM Sys_M2M WHERE " + whereFK_MapData;
+			//sql += "@DELETE FROM Sys_M2M WHERE " + whereFK_MapData;
 			sql += "@DELETE FROM WF_FrmNode WHERE FK_Frm='" + this.getNo() + "'";
 			sql += "@DELETE FROM Sys_FrmSln WHERE " + whereFK_MapData;
 		DBAccess.RunSQLs(sql);

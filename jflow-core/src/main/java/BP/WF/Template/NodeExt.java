@@ -22,6 +22,7 @@ import BP.WF.CancelRole;
 import BP.WF.DeliveryWay;
 import BP.WF.Flow;
 import BP.WF.Glo;
+import BP.WF.HuiQianRole;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
 import BP.WF.Nodes;
@@ -1396,11 +1397,22 @@ public class NodeExt extends Entity
 				this.SetValByKey(BtnAttr.ThreadEnable, false); //子线程.
 			}
 
+		    
 			//如果启动了会签,并且是抢办模式,强制设置为队列模式.
-			if (this.GetValIntByKey(BtnAttr.HuiQianRole) != 0)
+		    int roleInt= this.GetValIntByKey(BtnAttr.HuiQianRole);
+			if ( roleInt!= 0)
 			{
-				DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + this.GetValIntByKey(BtnAttr.HuiQianRole) + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID());
+			
+				if (roleInt == HuiQianRole.Teamup.getValue())
+                    DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + TodolistModel.Teamup.getValue() + "  WHERE NodeID=" + this.getNodeID());
+
+                if (roleInt== HuiQianRole.TeamupGroupLeader.getValue())
+                    DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + TodolistModel.TeamupGroupLeader.getValue() + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID());
+ 
+				//DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + this.GetValIntByKey(BtnAttr.HuiQianRole) + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID());
 			}
+			
+			
             // @杜. 翻译&测试.
             if (nd.getCondModel() == CondModel.ByLineCond)
             {

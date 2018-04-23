@@ -360,30 +360,7 @@ public class RTFEngine
 		pict.append("\n");
 		return pict.toString();
 	}
-	
-	/**
-	 * 获取M2M数据并输出
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public final String GetValueM2MStrs(String key)
-	{
-		String[] strs = key.split("[.]", -1);
-		String sql = "SELECT ValsName FROM SYS_M2M WHERE FK_MapData='"
-				+ strs[0] + "' AND M2MNo='" + strs[2] + "' AND EnOID='"
-				+ this.HisGEEntity.getPKVal() + "'";
-		String vals = DBAccess.RunSQLReturnStringIsNull(sql, null);
-		if (vals == null)
-		{
-			return "无数据";
-		}
-		
-		vals = vals.replace("@", "  ");
-		vals = vals.replace("<font color=green>", "");
-		vals = vals.replace("</font>", "");
-		return vals;
-	}
+ 
 	
 	/**
 	 * 获取写字版的数据
@@ -968,11 +945,7 @@ public class RTFEngine
 						str = new StringBuilder(str.toString().replace(
 								"<" + para + ">",
 								this.GetValueBPPaintStrs(para)));
-					} else if (para.contains(".M2M"))
-					{
-						str = new StringBuilder(str.toString().replace(
-								"<" + para + ">", this.GetValueM2MStrs(para)));
-					} else if (para.contains(".RMB"))
+					}  else if (para.contains(".RMB"))
 					{
 						str = new StringBuilder(str.toString().replace(
 								"<" + para + ">", this.GetValueByKey(para)));

@@ -469,7 +469,7 @@ public class WF_RptDfine extends WebContralBase{
 		return dt;
 	}
 	
-	public final QueryObject InitQueryObject(QueryObject qo, MapData md, Attrs attrs, MapAttrs rptAttrs, UserRegedit ur)
+	public final QueryObject InitQueryObject(QueryObject qo, MapData md, Attrs attrs, MapAttrs rptAttrs, UserRegedit ur) throws Exception
 	{
 		java.util.HashMap<String, String> kvs = null;
 		java.util.ArrayList<String> keys = new java.util.ArrayList<String>();

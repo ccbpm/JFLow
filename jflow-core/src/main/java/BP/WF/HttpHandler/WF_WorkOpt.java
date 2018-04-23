@@ -33,6 +33,12 @@ import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachmentDBs;
+import BP.Sys.FrmRBAttr;
+import BP.Sys.FrmRBs;
+import BP.Sys.GroupFields;
+import BP.Sys.MapAttr;
+import BP.Sys.MapAttrs;
+import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.ActionType;
@@ -1120,7 +1126,7 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.WF.Dev2Interface.Node_Askfor(workID, sta, toEmp, note);
 	}
 
-	public String SelectEmps() {
+	public String SelectEmps() throws Exception {
 		// 人员选择器
 		String fk_dept = this.GetRequestVal("FK_Dept");
 		if (fk_dept == null || StringUtils.isEmpty(fk_dept)) {
@@ -2025,4 +2031,78 @@ public class WF_WorkOpt extends WebContralBase {
 			return "err@" + ex.getMessage();
 		}
 	}
+	
+	//#region 单选按钮事件
+    /// <summary>
+    /// 返回信息。
+    /// </summary>
+    /// <returns></returns>
+    public string RadioBtns_Init()
+    {
+        DataSet ds = new DataSet();
+
+        //放入表单字段.
+        MapAttrs attrs = new MapAttrs(this.getFK_MapData());
+        ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
+
+        //属性.
+        MapAttr attr = new MapAttr();
+        attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+        attr.Retrieve();
+
+        //把分组加入里面.
+        GroupFields gfs = new GroupFields(this.getFK_MapData());
+        ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
+
+        //字段值.
+        FrmRBs rbs = new FrmRBs();
+        rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+        if (rbs.Count == 0)
+        {
+            /*初始枚举值变化.
+             */
+            SysEnums ses = new SysEnums(attr.getUIBindKey());
+            for (SysEnum se : ses.ToJavaList())
+            {
+                FrmRB rb = new FrmRB();
+                rb.FK_MapData = this.FK_MapData;
+                rb.KeyOfEn = this.KeyOfEn;
+                rb.IntKey = se.IntKey;
+                rb.Lab = se.Lab;
+                rb.EnumKey = attr.UIBindKey;
+                rb.Insert(); //插入数据.
+            }
+
+            rbs.Retrieve(FrmRBAttr.FK_MapData, this.FK_MapData, FrmRBAttr.KeyOfEn, this.KeyOfEn);
+        }
+
+        //加入单选按钮.
+        ds.Tables.Add(rbs.ToDataTableField("Sys_FrmRB"));
+        return BP.Tools.Json.ToJson(ds);
+    }
+    /// <summary>
+    /// 执行保存
+    /// </summary>
+    /// <returns></returns>
+    public String RadioBtns_Save()
+    {
+        String json = this.GetRequestVal("data");
+        
+        DataTable dt = BP.Tools.Json.ToDataTable(json);
+
+        foreach (DataRow dr in dt.Rows)
+        {
+            FrmRB rb = new FrmRB();
+            rb.MyPK = dr["MyPK"].ToString();
+            rb.Retrieve();
+
+            rb.Script = dr["Script"].ToString();
+            rb.FieldsCfg = dr["FieldsCfg"].ToString(); //格式为 @字段名1=1@字段名2=0
+            rb.Tip = dr["Tip"].ToString(); //提示信息
+            rb.Update();
+        }
+
+        return "保存成功.";
+    }
+   // #endregion
 }

@@ -570,7 +570,7 @@ public class CCFormAPI
 		attr.setMinLen(0);
 		attr.setUIIsEnable(true);
 		attr.setUIIsLine(false);
-		attr.setDefVal("WebUser.No");
+		attr.setDefVal("@WebUser.No");
 		attr.setUIIsEnable(false);
 		attr.setGroupID((int)gf.getOID());
 		attr.setIsSigan(true);

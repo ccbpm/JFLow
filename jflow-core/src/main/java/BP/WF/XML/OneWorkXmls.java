@@ -35,7 +35,6 @@ public class OneWorkXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		System.out.println("Xml"+File.separator+"WFAdmin.xml");
 		return SystemConfig.getPathOfData() + "Xml"+File.separator+"WFAdmin.xml";
 	}
 	/** 

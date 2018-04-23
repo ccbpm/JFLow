@@ -21,8 +21,8 @@ import cn.jflow.common.util.ContextHolderUtils;
 */
 public class GenerWorkFlow extends Entity
 {
-	
-	 /** 
+	 
+	/** 
 	 是否是流程模版?
 	 
 */
@@ -648,10 +648,7 @@ public class GenerWorkFlow extends Entity
 	{
 		return this.GetParaString("HuiQianSendToNodeID");
 	}
-	public final void setHuiQianSendToNodeIDStr(String value)
-	{
-		this.SetPara("HuiQianSendToNodeID", value);
-	}
+	
 	/** 
 	 会签主持人
 	 
@@ -665,6 +662,18 @@ public class GenerWorkFlow extends Entity
 		this.SetPara("HuiQianZhuChiRen", value);
 	}
 	
+	public void setHuiQianZhuChiRenName(String name) {
+		
+		this.SetPara("HuiQianZhuChiRenName", name);
+		
+	}
+	
+    public void setHuiQianSendToNodeIDStr(String name) {
+		
+		this.SetPara("HuiQianSendToNodeID", name);
+		
+	}
+	   
 	
 	/** 
 	 产生的工作流程
@@ -919,4 +928,5 @@ public class GenerWorkFlow extends Entity
 	{
 		this.SetPara(GenerWorkFlowAttr.HuiQianTaskSta, value.getValue());
 	}
+	
 }

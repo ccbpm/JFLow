@@ -41,6 +41,7 @@ import BP.WF.Flow;
 import BP.WF.GenerWorkFlow;
 import BP.WF.Glo;
 import BP.WF.HuiQianRole;
+import BP.WF.HuiQianTaskSta;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
 import BP.WF.PrintDocEnable;
@@ -1001,23 +1002,31 @@ public class WF_MyFlow extends WebContralBase {
 	}
 	
 	public String InitToolBar() throws Exception{	
-		///#region 处理是否是加签，或者是否是会签模式，.
-        boolean isAskForOrHuiQian = false;
-        if (String.valueOf(this.getFK_Node()).endsWith("01") == false){
-            GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-            if (gwf.getWFState() == WFState.Askfor){
-                isAskForOrHuiQian = true;
-            }else{
-                /*判断是否是加签状态，如果是，就判断是否是主持人，如果不是主持人，就让其 isAskFor=true ,屏蔽退回等按钮. */
-                if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false){
-                    if (gwf.getTodoEmps().contains(WebUser.getName() + ";") == false)
-                        isAskForOrHuiQian = false; //处理垃圾数据.
-                    else
-                        isAskForOrHuiQian = true;
-                }
-            }
-        }
-        ///#endregion 处理是否是加签，或者是否是会签模式，
+		
+		
+		//  #region 处理是否是加签，或者是否是会签模式，.
+          Boolean isAskForOrHuiQian = false;
+          String nodeIDStr=this.GetRequestVal("FK_Node");
+            
+          
+          if (nodeIDStr!=null && nodeIDStr.endsWith("01") == false)
+          {
+              GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+              if (gwf.getWFState() == WFState.Askfor)
+              {
+                  isAskForOrHuiQian = true;
+              }
+
+              /*判断是否是加签状态，如果是，就判断是否是主持人，如果不是主持人，就让其 isAskFor=true ,屏蔽退回等按钮. */
+              if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)
+              {
+                  if (gwf.getHuiQianZhuChiRen().equals(  WebUser.getNo())==false)
+                      isAskForOrHuiQian = true;
+              }
+          }
+          //#endregion 处理是否是加签，或者是否是会签模式，.
+        
+        
         String tKey = DateUtils.format(new Date(), "yyyy-MM-dd - hh:mm:ss");
         BtnLab btnLab = new BtnLab(this.getFK_Node());
         String toolbar = "";
@@ -1040,6 +1049,7 @@ public class WF_MyFlow extends WebContralBase {
             return toolbar;
           }
          ////#endregion 是否是会签.
+        
 		Node currND=new Node(this.getFK_Node());		
 		Flow currFlow=new Flow(this.getFK_Flow());
 		//GenerWorkFlow HisGenerWorkFlow=new GenerWorkFlow(this.getWorkID());

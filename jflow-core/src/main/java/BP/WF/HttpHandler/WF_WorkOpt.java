@@ -45,6 +45,7 @@ import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.ActionType;
 import BP.WF.CancelRole;
+import BP.WF.DeliveryWay;
 import BP.WF.Dev2Interface;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.GenerWorkFlow;
@@ -1692,47 +1693,86 @@ public class WF_WorkOpt extends WebContralBase {
 */
 	public final String HuiQian_SaveAndClose() throws Exception
 	{
-		//生成变量.
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+		 //生成变量.
+        GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 
-		//求会签人.
-		GenerWorkerLists gwfs = new GenerWorkerLists();
-		gwfs.Retrieve(GenerWorkerListAttr.WorkID, gwf.getWorkID(), GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.IsPass, 0);
+        if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianOver)
+        {
+            /*只有一个人的情况下, 并且是会签完毕状态，就执行 */
+            return "info@当前工作已经到您的待办理了,会签工作已经完成.";
+        }
 
-		if (gwfs.size() == 1 && gwf.getHuiQianTaskSta()== HuiQianTaskSta.HuiQianOver)
-		{
-			//只有一个人的情况下, 并且是会签完毕状态，就执行 
-			return "当前工作已经到您的待办理了,会签工作已经完成.";
-		}
-		
-		//说明没有会签人,就直接关闭.
-        if (gwfs.size() == 1)
-            return "您没有设置会签人，当前是待办状态。";
-        
+        if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.None)
+        {
+            String mysql = "SELECT COUNT(WorkID) FROM WF_GenerWorkerList WHERE FK_Node=" + this.getFK_Node() + " AND WorkID=" + this.getWorkID() + " AND (IsPass=0 OR IsPass=-1) AND FK_Emp!='" + BP.Web.WebUser.getNo() + "'";
+            if (DBAccess.RunSQLReturnValInt(mysql, 0) == 0)
+                return "info@您没有设置会签人，请在文本框输入会签人，或者选择会签人。";
+        }
 
-		gwf.setHuiQianTaskSta(HuiQianTaskSta.HuiQianing); //设置为会签状态.
-		gwf.Update();
+        //判断当前节点的会签类型.
+        Node nd = new Node(gwf.getFK_Node());
 
-		String empsOfHuiQian = "会签人:";
-		for (GenerWorkerList item : gwfs.ToJavaList())
-		{
-			empsOfHuiQian += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
-		}
+        //设置当前接单是会签的状态.
+        gwf.setHuiQianTaskSta( HuiQianTaskSta.HuiQianing); //设置为会签状态.
+        gwf.setHuiQianZhuChiRen( WebUser.getNo());
+        gwf.setHuiQianZhuChiRenName(  WebUser.getName());
 
-		//设置当前操作人员的状态.
-		String sql = "UPDATE WF_GenerWorkerList SET IsPass=90 WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND FK_Emp='" + WebUser.getNo() + "'";
-		DBAccess.RunSQL(sql);
+        //改变了节点就把会签状态去掉.
+        gwf.setHuiQianSendToNodeIDStr("");
+        gwf.Update();
 
-		  //删除以前执行的会签点,比如:该人多次执行会签，仅保留最后一个会签时间点.  @于庆海.
-		sql = "DELETE FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.HuiQian.getValue() + " AND NDFrom=" + this.getFK_Node();
-		DBAccess.RunSQL(sql);
+        //求会签人.
+        GenerWorkerLists gwfs = new GenerWorkerLists();
+        gwfs.Retrieve(GenerWorkerListAttr.WorkID, gwf.getWorkID(),
+            GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.IsPass, 0);
 
-		//执行会签,写入日志.
-		BP.WF.Dev2Interface.WriteTrackInfo(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), gwf.getWorkID(), gwf.getFID(), empsOfHuiQian, "执行会签");
+        String empsOfHuiQian = "会签人:";
+        for (GenerWorkerList item : gwfs.ToJavaList())
+            empsOfHuiQian += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
 
-		String str = "保存成功.\t\n该工作已经移动到会签列表中了,等到所有的人会签完毕后,就可以出现在待办列表里.";
-		str += "\t\n如果您要增加或者移除会签人请到会签列表找到该记录,执行操作.";
-		return str;
+        //设置当前操作人员的状态.
+        String sql = "UPDATE WF_GenerWorkerList SET IsPass=90 WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND FK_Emp='" + WebUser.getNo() + "'";
+        DBAccess.RunSQL(sql);
+
+        //恢复他的状态.
+        sql = "UPDATE WF_GenerWorkerList SET IsPass=0 WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND IsPass=-1";
+        DBAccess.RunSQL(sql);
+
+        //删除以前执行的会签点,比如:该人多次执行会签，仅保留最后一个会签时间点.  
+        sql = "DELETE FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.HuiQian.getValue() + " AND NDFrom=" + this.getFK_Node();
+        DBAccess.RunSQL(sql);
+
+        //执行会签,写入日志.
+        BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(),gwf.getWorkID(), gwf.getFID(), 
+        		"执行会签", ActionType.HuiQian, "", "", "", empsOfHuiQian, empsOfHuiQian);
+         
+        String str = "";
+        if (nd.getTodolistModel() == TodolistModel.TeamupGroupLeader)
+        {
+            /*如果是组长模式.*/
+            str = "close@保存成功.\t\n该工作已经移动到会签列表中了,等到所有的人会签完毕后,就可以出现在待办列表里.";
+            str += "\t\n如果您要增加或者移除会签人请到会签列表找到该记录,执行操作.";
+
+            //删除自己的意见，以防止其他人员看到.
+            BP.WF.Dev2Interface.DeleteCheckInfo(gwf.getFK_Flow(), this.getWorkID(), gwf.getFK_Node());
+            return str;
+        }
+
+        if (nd.getTodolistModel() == TodolistModel.Teamup)
+        {
+            int toNodeID = this.GetRequestValInt("ToNode");
+            if (toNodeID == 0)
+                return "Send@["+nd.getName()+"]会签成功执行.";
+
+            Node toND = new Node(toNodeID);
+            //如果到达的节点是按照接受人来选择,就转向接受人选择器.
+            if (toND.getHisDeliveryWay() == DeliveryWay.BySelected)
+                return "url@Accepter.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&ToNode=" + toNodeID;
+            else
+                return "Send@执行发送操作";
+        }
+
+        return str;
 	}
 	/// 通用人员选择器Init
 	public String AccepterOfGener_Init() throws Exception {

@@ -88,7 +88,6 @@
         //页面启动函数.
         $(function () {
             InitPage();
-            
             //改变左侧导航栏合计不匹配的问题
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_AppClassic");
             var data = handler.DoMethodReturnString("Home_Init");

@@ -40,7 +40,7 @@
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("OneWork_GetTabs");
-            if (data.indexOf('err@') != -1) {
+            if (data.indexOf('err@') == 0) {
                 alert(data);
                 return;
             }

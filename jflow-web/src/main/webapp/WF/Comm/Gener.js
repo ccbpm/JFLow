@@ -296,6 +296,27 @@ function GenerBindSQL(ctrlDDLId, sqlKey, paras, colNo, colName, selectVal) {
 }
 
 /*为页面的所有字段属性赋值. */
+function GenerChangeParentValue(data) {
+
+    //判断data是否是一个数组，如果是一个数组，就取第1个对象.
+    var json = data;
+    if (data.length == 1)
+        json = data[0];
+
+    var unSetCtrl = "";
+    for (var attr in json) {
+
+        var val = json[attr]; //值
+
+        var div = window.parent.document.getElementById(attr);
+        if (div != null) {
+            div.innerHTML = val;
+            continue;
+        }
+    }    
+}
+
+/*为页面的所有字段属性赋值. */
 function GenerFullAllCtrlsVal(data) {
 
     //判断data是否是一个数组，如果是一个数组，就取第1个对象.

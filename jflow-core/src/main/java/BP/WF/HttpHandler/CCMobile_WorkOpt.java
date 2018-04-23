@@ -134,13 +134,14 @@ public class CCMobile_WorkOpt extends WebContralBase
 	 将要去掉.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SelectEmps()
+	public final String SelectEmps() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.SelectEmps_Init();
 	}
-	public final String SelectEmps_Init()
+	public final String SelectEmps_Init() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.SelectEmps_Init();

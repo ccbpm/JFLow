@@ -1,6 +1,7 @@
 package BP.Sys;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -287,7 +288,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPathOfData() {
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/";
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data" + File.separator;
 	}
 
 	public static String getPathOfDataUser() {

@@ -1,5 +1,6 @@
 package BP.WF.XML;
 
+import java.io.File;
 import java.util.List;
 
 import BP.En.Entities;
@@ -34,7 +35,8 @@ public class OneWorkXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfData() + "Xml/WFAdmin.xml";
+		System.out.println("Xml"+File.separator+"WFAdmin.xml");
+		return SystemConfig.getPathOfData() + "Xml"+File.separator+"WFAdmin.xml";
 	}
 	/** 
 	 物理表名

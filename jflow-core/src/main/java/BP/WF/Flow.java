@@ -7277,10 +7277,7 @@ public class Flow extends BP.En.EntityNoName
 		//  sql += "@GO DELETE WF_M2M WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
 		//// 删除配置.
 		//sql += "@ DELETE FROM WF_FAppSet WHERE NodeID IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
-
-		// 删除配置.
-		sql += "@ DELETE FROM WF_FlowEmp WHERE FK_Flow='" + this.getNo() + "' ";
-
+ 
 		//// 外部程序设置
 		//sql += "@ DELETE FROM WF_FAppSet WHERE  NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
 

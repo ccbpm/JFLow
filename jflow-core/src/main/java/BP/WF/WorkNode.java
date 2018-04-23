@@ -121,9 +121,10 @@ public class WorkNode {
 
 	/**
 	 * 实际执行人名称(请参考实际执行人)
+	 * @throws Exception 
 	 * 
 	 */
-	public final String getExecerDeptNo() {
+	public final String getExecerDeptNo() throws Exception {
 		if (_execerDeptNo == null) {
 			_execerDeptNo = WebUser.getFK_Dept();
 		}

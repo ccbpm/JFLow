@@ -546,11 +546,12 @@ public class WebUser {
 	 * FK_Dept
 	 * @throws Exception 
 	 */
-	public static String getFK_Dept() throws Exception {
+	public static String getFK_Dept() 
+	{
 		
 		String val = GetValFromCookie("FK_Dept", null, false);
 		if (val == null) {
-			throw new RuntimeException("@err-003 FK_Dept 登录信息丢失，请确认当前操作员["+WebUser.getNo()+"]的部门信息是否完整，检查表:Port_Emp 字段 FK_Dept。");
+			throw new RuntimeException("@err-003 FK_Dept 登录信息丢失，请确认当前操作员的部门信息是否完整，检查表:Port_Emp 字段 FK_Dept。");
 		}
 		return val;
 	}

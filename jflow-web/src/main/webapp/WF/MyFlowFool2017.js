@@ -154,8 +154,8 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             lab += " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
         }
 
-//        if (item.UIContralType == 2)
-//            lab = "<label for='CB_" + item.KeyOfEn + "' >" + item.Name + "</label>";
+        if (attr.UIContralType == 3)
+        	lab = "<label for='RB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'>" + attr.Name + "</label>";
 
         //线性展示并且colspan=3
         if (attr.ColSpan == 3 || (attr.ColSpan == 4 && attr.UIHeight < 40)) {
@@ -313,7 +313,16 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
     //枚举类型.
     if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) { //AppInt Enum
-        return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
+    	if(mapAttr.UIContralType == 1)
+    		return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
+    	if(mapAttr.UIContralType == 3){
+    		//横向排列
+    		var RBShowModel = 3;
+    		if(mapAttr.AtPara.indexOf("@RBShowModel=3") == -1)
+    			RBShowModel = 0;
+    		return InitRBShowContent(flowData,mapAttr,defValue,RBShowModel);
+    		
+    	}
     }
 
     // AppDouble  AppFloat
@@ -497,6 +506,23 @@ function Ele_Dtl(frmDtl) {
     }
     return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
 }
+
+function InitRBShowContent(flowData,mapAttr,defValue,RBShowModel){
+	var rbHtml="";
+	var enums = flowData.Sys_Enum;
+    enums = $.grep(enums, function (value) {
+        return value.EnumKey == mapAttr.UIBindKey;
+    });
+    $.each(enums, function (i, obj) {
+    	if(RBShowModel == 3)
+    		//<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
+        rbHtml += "<label><input "+(obj.IntKey == defValue ? "checked='checked' " : "")+" type='radio' name='RB_"+mapAttr.KeyOfEn+"' id='RB_"+mapAttr.KeyOfEn+"_"+obj.IntKey+"' value='"+obj.IntKey+"' />&nbsp;"+obj.Lab+"</label>";
+    	else
+    		rbHtml += "<label><input "+(obj.IntKey == defValue ? "checked='checked' " : "")+" type='radio' name='RB_"+mapAttr.KeyOfEn+"' id='RB_"+mapAttr.KeyOfEn+"_"+obj.IntKey+"' value='"+obj.IntKey+"'  />&nbsp;"+obj.Lab+"</label><br/>";	
+    });
+	return rbHtml;
+}
+
 
    
  

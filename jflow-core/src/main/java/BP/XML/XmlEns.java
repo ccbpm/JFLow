@@ -411,6 +411,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 	 */
 	public int RetrieveAll()
 	{
+		BP.DA.Log.DebugWriteInfo("开始读取");
 		this.clear(); // 清所有的信息。
 		Object tempVar = BP.DA.Cash.GetObj(this.toString(),
 				Depositary.Application);
@@ -435,6 +436,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		}
 		
 		BP.DA.Cash.AddObj(this.toString(), Depositary.Application, this);
+		BP.DA.Log.DebugWriteInfo("读取结束");
 		return dt.Rows.size();
 	}
 	

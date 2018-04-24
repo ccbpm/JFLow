@@ -1048,7 +1048,7 @@ public class WF_MyFlow extends WebContralBase {
                   }
 
                   if (btnLab.getTrackEnable())
-                      toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+                      toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('./WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
 
                   return toolbar;
               }
@@ -1057,13 +1057,13 @@ public class WF_MyFlow extends WebContralBase {
               //#region 是否是抄送.
               if (this.getIsCC())
               {
-                  toolbar += "<input type=button  value='流程运行轨迹' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+                  toolbar += "<input type=button  value='流程运行轨迹' enable=true onclick=\"WinOpen('./WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
                   // 判断审核组件在当前的表单中是否启用，如果启用了.
                   FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
                   if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Enable)
                   {
                       /*如果不等于启用, */
-                      toolbar += "<input type=button  value='填写审核意见' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/CCCheckNote.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+                      toolbar += "<input type=button  value='填写审核意见' enable=true onclick=\"WinOpen('./WorkOpt/CCCheckNote.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
                   }
                   return toolbar;
               }

@@ -288,6 +288,8 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPathOfData() {
+		
+		BP.DA.Log.DebugWriteInfo(getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data" + File.separator);
 		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data" + File.separator;
 	}
 

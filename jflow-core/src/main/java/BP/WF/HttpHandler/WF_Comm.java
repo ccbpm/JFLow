@@ -1008,11 +1008,14 @@ public class WF_Comm extends WebContralBase {
 						}
 
 						//获得行数.
-						if (this.getPageIdx() == 1)
-						{
+						//if (this.getPageIdx() == 1)
+						//{
 							ur.SetPara("RecCount", qo.GetCount());
-							ur.Update();
-						}
+							ur.Save();
+						//}else{
+						//	ur.SetPara("RecCount", qo.GetCount());
+						//	ur.Update();
+						//}
 
 						qo.DoQuery(en.getPK(),this.getPageSize(),this.getPageIdx());
 						///#endregion 获得查询数据.

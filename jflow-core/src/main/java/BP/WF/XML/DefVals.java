@@ -31,7 +31,7 @@ public class DefVals extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfData() + "Xml/DefVal.xml";
+		return SystemConfig.getPathOfData() + "XML/DefVal.xml";
 	}
 	/** 
 	 物理表名

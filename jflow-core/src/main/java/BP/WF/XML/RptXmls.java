@@ -30,7 +30,7 @@ public class RptXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfData() + "Xml/WFAdmin.xml";
+		return SystemConfig.getPathOfData() + "XML/WFAdmin.xml";
 	}
 	/** 
 	 物理表名

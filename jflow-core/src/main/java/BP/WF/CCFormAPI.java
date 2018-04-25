@@ -515,7 +515,7 @@ public class CCFormAPI extends Dev2Interface
         attrN.setMinLen(0);
         attrN.setUIIsEnable(true);
         attrN.setUIIsLine(false);
-        attrN.setDefVal("@WebUser.No");
+        attrN.setDefVal("@WebUser.Name");
         attrN.setUIIsEnable(false);
         attrN.setGroupID((int)gf.getOID());
         attrN.setIsSigan(true);

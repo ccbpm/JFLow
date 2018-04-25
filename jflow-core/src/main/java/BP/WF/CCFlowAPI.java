@@ -222,8 +222,13 @@ public class CCFlowAPI
 			}
 
 			//增加转向下拉框数据.
-			if (nd.getCondModel() == CondModel.SendButtonSileSelect)
+			if (nd.getCondModel() == CondModel.SendButtonSileSelect  )
 			{
+				
+				 if (nd.getIsStartNode() == true || gwf.getTodoEmps().contains(WebUser.getNo() + ",") == true)
+                 {
+					 
+                  
 				//如果当前节点，是可以显示下拉框的.
 				Nodes nds = nd.getHisToNodes();
 
@@ -312,11 +317,10 @@ public class CCFlowAPI
                     }
                 }
            
- 
-
-
+  
 				//增加一个下拉框, 对方判断是否有这个数据.
 				myds.Tables.add(dtToNDs);
+                 }
 			}
 
 

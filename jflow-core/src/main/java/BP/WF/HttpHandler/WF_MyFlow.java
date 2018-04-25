@@ -77,7 +77,7 @@ import BP.Web.WebUser;
 
 public class WF_MyFlow extends WebContralBase {
 	
-	public long WorkID=0;
+	public long _WorkID=0;
 	@SuppressWarnings("unchecked")
 	public static ArrayList<EntityMultiTree> convertEntityMultiTree(Object obj)
 	{
@@ -938,10 +938,10 @@ public class WF_MyFlow extends WebContralBase {
         if (frmtype == NodeFormType.FoolTruck)
         {
             /*如果是傻瓜表单，就转到傻瓜表单的解析执行器上，为软通动力改造。*/
-            if (this.WorkID == 0)
+            if (this.getWorkID() == 0)
             {
                 currWK = this.getcurrFlow().NewWork();
-                this.WorkID = currWK.getOID();
+                this._WorkID = currWK.getOID();
             }
 
             String url = "MyFlowFoolTruck.htm";
@@ -954,10 +954,10 @@ public class WF_MyFlow extends WebContralBase {
         if (frmtype == NodeFormType.FoolForm && this.getIsMobile() == false)
         {
             /*如果是傻瓜表单，就转到傻瓜表单的解析执行器上。*/
-            if (this.WorkID == 0)
+            if (this.getWorkID() == 0)
             {
                 currWK = this.getcurrFlow().NewWork();
-                this.WorkID = currWK.getOID();
+                this._WorkID = currWK.getOID();
             }
 
             String url = "MyFlowGener.htm";
@@ -975,10 +975,10 @@ public class WF_MyFlow extends WebContralBase {
         //自定义表单
         if (frmtype == NodeFormType.SelfForm && this.getIsMobile() == false)
         {
-            if (this.WorkID == 0)
+            if (this.getWorkID() == 0)
             {
                 currWK = this.getcurrFlow().NewWork();
-                this.WorkID = currWK.getOID();
+                this._WorkID = currWK.getOID();
             }
 
             String url = "MyFlowSelfForm.htm";
@@ -1709,7 +1709,7 @@ public class WF_MyFlow extends WebContralBase {
     {
         try
         {
-            return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(this.getFK_Flow(), this.WorkID,true);
+            return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(this.getFK_Flow(), this.getWorkID(),true);
         }
         catch (Exception ex)
         {

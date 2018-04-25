@@ -344,8 +344,9 @@ public class NodeExt extends Entity
 
 
 			//待办处理模式.
-		map.AddDDLSysEnum(NodeAttr.TodolistModel, TodolistModel.QiangBan.getValue(), "多人待办处理模式", true, true, NodeAttr.TodolistModel, "@0=抢办模式@1=协作模式@2=队列模式@3=共享模式@4=协作组长模式");
-		map.SetHelperUrl(NodeAttr.TodolistModel, "http://ccbpm.mydoc.io/?v=5404&t=17947"); //增加帮助.
+		//map.AddDDLSysEnum(NodeAttr.TodolistModel, TodolistModel.QiangBan.getValue(), "多人待办处理模式", true, true, NodeAttr.TodolistModel, "@0=抢办模式@1=协作模式@2=队列模式@3=共享模式@4=协作组长模式");
+		
+		//map.SetHelperUrl(NodeAttr.TodolistModel, "http://ccbpm.mydoc.io/?v=5404&t=17947"); //增加帮助.
 
 
 			//发送阻塞模式.
@@ -1369,12 +1370,14 @@ public class NodeExt extends Entity
 		//把工具栏的配置放入 sys_mapdata里.
 		ToolbarExcel te = new ToolbarExcel("ND" + this.getNodeID());
 		te.Copy(this);
+		
 		try
 		{
 			te.Update();
 		}
 		catch (java.lang.Exception e)
 		{
+			
 		}
 		
 		 Node nd = new Node(this.getNodeID());
@@ -1390,7 +1393,7 @@ public class NodeExt extends Entity
          
 		    if (nd.getHisRunModel() == RunModel.HL || nd.getHisRunModel() == RunModel.FHL)
 			{
-				//如果是合流点
+				//如果是合流点.
 			}
 			else
 			{
@@ -1400,18 +1403,19 @@ public class NodeExt extends Entity
 		    
 			//如果启动了会签,并且是抢办模式,强制设置为队列模式.
 		    int roleInt= this.GetValIntByKey(BtnAttr.HuiQianRole);
-			if ( roleInt!= 0)
-			{
-			
+		  	
+		    String sql="";
 				if (roleInt == HuiQianRole.Teamup.getValue())
-                    DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + TodolistModel.Teamup.getValue() + "  WHERE NodeID=" + this.getNodeID());
+					sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.Teamup.getValue() + "  WHERE NodeID=" + this.getNodeID();
+				
 
                 if (roleInt== HuiQianRole.TeamupGroupLeader.getValue())
-                    DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + TodolistModel.TeamupGroupLeader.getValue() + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID());
- 
-				//DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + this.GetValIntByKey(BtnAttr.HuiQianRole) + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID());
-			}
-			
+                    sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.TeamupGroupLeader.getValue() + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID();
+                
+
+
+                DBAccess.RunSQL(sql);
+                
 			
             // @杜. 翻译&测试.
             if (nd.getCondModel() == CondModel.ByLineCond)

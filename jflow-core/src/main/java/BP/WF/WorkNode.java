@@ -2234,7 +2234,7 @@ public class WorkNode {
 		// string textInfo = string.Format("@任务自动发送给{0}如下处理人{1}.",
 		// this.nextStationName,this._RememberMe.ObjsExt);
 
-		if (this.HisWorkerLists.size() >= 2 && this.getHisNode().getIsTask()) {
+		if (1==2 && this.HisWorkerLists.size() >= 2 && this.getHisNode().getIsTask()) {
 			if (WebUser.getIsWap()) {
 				this.addMsg(SendReturnMsgFlag.AllotTask, null,
 						"<a href=\"" + this.getVirPath() + "WF/WorkOpt/AllotTask.jsp?WorkID=" + this.getWorkID()
@@ -3171,8 +3171,7 @@ public class WorkNode {
 			if (WebUser.getIsWap()) {
 				this.addMsg("UnDoNew",
 						"@<a href='" + getVirPath() + "WF/Wap/MyFlowInfo.jsp?DoType=UnSend&WorkID=" + this.getWorkID()
-								+ "&FK_Flow=" + toNode.getFK_Flow() + "'><img src='" + getVirPath()
-								+ "WF/Img/Action/UnSend.png' border=0/>撤销本次发送</a>， <a href='" + getVirPath()
+								+ "&FK_Flow=" + toNode.getFK_Flow() + "'><img src='./Img/Action/UnSend.png' border=0/>撤销本次发送</a>， <a href='" + getVirPath()
 								+ "WF/Wap/MyFlow.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node="
 								+ Integer.parseInt(toNode.getFK_Flow()) + "01' ><img src='" + getVirPath()
 								+ "WF/Img/New.gif' border=0/>新建流程</a>。");

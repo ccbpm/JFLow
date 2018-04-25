@@ -1165,7 +1165,6 @@ public class WF_WorkOpt extends WebContralBase {
 	{
 		 /*如果是协作模式, 就要检查当前是否主持人, 当前是否是会签模式. */
         GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-        
         if (gwf.getFK_Node() != this.getFK_Node())
             return "err@当前流程已经运动到[" + gwf.getNodeName() + "]上,当前处理人员为[" + gwf.getTodoEmps() + "]";
 
@@ -1198,7 +1197,7 @@ public class WF_WorkOpt extends WebContralBase {
         }
 
         Work wk = nd.getHisWork();
-        wk.setOID(this.getWorkID());
+        wk.setOID( this.getWorkID());
         wk.Retrieve();
 
         Selector select = new Selector(toNodeID);
@@ -1208,24 +1207,11 @@ public class WF_WorkOpt extends WebContralBase {
         //获得 部门与人员.
         DataSet ds = select.GenerDataSet(toNodeID, wk);
 
-        if ( SystemConfig.getCustomerNo().equals("TianYe")==true) //天业集团，去掉00000001董事长
-        {
-        	/*
-            DataTable TYEmp = ds.Tables["Emps"];
-            if (TYEmp.Rows.Count != 0)
-                foreach (DataRow row in TYEmp.Rows)
-                    if (row["No"].ToString() == "00000001")
-                    {
-                        row.Delete();
-                        break;
-                    }
-            TYEmp.AcceptChanges();*/
-        }
-
+    
        // #region 计算上一次选择的结果, 并把结果返回过去.
         String sql = "";
         DataTable dt = new DataTable();
-        dt.Columns.Add("No");
+        dt.Columns.Add("No", String.class);
         dt.TableName = "Selected";
         if (select.getIsAutoLoadEmps() == true)
         {
@@ -1241,7 +1227,7 @@ public class WF_WorkOpt extends WebContralBase {
             if (mydt.Rows.size() != 0)
             {
                 emps = mydt.Rows.get(0).getValue("Tag").toString();
-                if (emps == "" || emps == null)
+                if ( DataType.IsNullOrEmpty(emps) )
                 {
                     emps = mydt.Rows.get(0).getValue("EmpTo").toString();
                     emps = emps + "," + emps;
@@ -1259,15 +1245,14 @@ public class WF_WorkOpt extends WebContralBase {
                     continue;
 
                 DataRow dr = dt.NewRow();
-                dr.setValue(0,  emp[0]); 
+                dr.setValue(0, emp[0]);
                 dt.Rows.add(dr);
             }
         }
 
         //增加一个table.
         ds.Tables.add(dt);
-        
-      //  #endregion 计算上一次选择的结果, 并把结果返回过去.
+       // #endregion 计算上一次选择的结果, 并把结果返回过去.
 
         //返回json.
         return BP.Tools.Json.ToJson(ds);

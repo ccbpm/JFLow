@@ -34,7 +34,7 @@
         var ur = new Entity("BP.Sys.UserRegedit");
         ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
         ur.RetrieveFromDBSources();
-
+		var count = ur.GetPara("RecCount");
         var mapBase;
 
         //页面启动函数.
@@ -184,12 +184,7 @@
                 str += "@" + id + "=" + $(this).val();
             });
 
-            ur.FK_Emp = webUser.No;
-            ur.CfgKey = "SearchAttrs";
-            ur.Vals = str;
-            ur.FK_MapData = ensName;
-            ur.SetPara("RecCount",count);
-            var i = ur.Save();
+            
             var pager = $("#dg").datagrid('getPager').data("pagination" ).options;
             var pageIndex = pager.pageNumber;
             var pageSize = pager.pageSize;

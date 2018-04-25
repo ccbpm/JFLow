@@ -1970,7 +1970,7 @@ public class WF_MyFlow extends WebContralBase {
 	 /// <summary>
     /// 定义跟路径
     /// </summary>
-    public static String appPath = "../";
+    public static String appPath = "/";
 
 	@Override
 	public final long getWorkID() {

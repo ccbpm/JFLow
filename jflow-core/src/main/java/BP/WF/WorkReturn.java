@@ -1,5 +1,6 @@
 package BP.WF;
 
+import java.io.File;
 import java.util.Date;
 
 import BP.En.*;
@@ -1057,7 +1058,7 @@ public class WorkReturn
 			(new java.io.File(filePath)).mkdirs();
 		}
 
-		String file = filePath + "\\" + rw.getMyPK();
+		String file = filePath + File.separator + rw.getMyPK();
 		infoLog = "\r\n退回人:" + WebUser.getNo() + "," + WebUser.getName() + " \r\n退回节点:" + fromND.getName() + " \r\n退回到:" + toND.getName();
 		infoLog += "\r\n退回时间:" + DataType.getCurrentDataTime();
 		infoLog += "\r\n原因:" + rw.getBeiZhu();

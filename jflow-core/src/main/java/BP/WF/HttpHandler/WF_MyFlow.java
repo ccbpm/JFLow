@@ -1212,7 +1212,7 @@ public class WF_MyFlow extends WebContralBase {
 
               if (btnLab.getDeleteEnable() != 0 )
               {
-                  String urlrDel = appPath + "WF/MyFlowInfo.htm?DoType=DeleteFlow&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  String urlrDel ="MyFlowInfo.htm?DoType=DeleteFlow&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
                   toolbar += "<input name='Delete' type=button  value='" + btnLab.getDeleteLab() + "' enable=true onclick=\"To('" + urlrDel + "'); \" />";
               }
 
@@ -1226,25 +1226,25 @@ public class WF_MyFlow extends WebContralBase {
                   /*如果不是加签 */
                   if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintRTF)
                   {
-                      String urlr = appPath + "WF/WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                      String urlr = "./WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
                       toolbar += "<input type=button name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
                   }
 
                   if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintWord)
                   {
-                      String urlr = appPath + "WF/Rpt/RptDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsPrint=1&s=" + tKey;
+                      String urlr = "./Rpt/RptDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsPrint=1&s=" + tKey;
                       toolbar += "<input type=button name='PrintDoc'  value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
                   }
 
                   if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintHtml)
                   {
-                      String urlr = appPath + "PrintSample.aspx?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="+BP.Web.WebUser.getNo()+"&IsPrint=1";
+                      String urlr =  "PrintSample.jsp?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="+BP.Web.WebUser.getNo()+"&IsPrint=1";
                       toolbar += "<input type=button  name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"printFrom('" + urlr + "'); \" />";
                   }
               }
 
               if (btnLab.getTrackEnable() )
-                  toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('" + appPath + "WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
+                  toolbar += "<input type=button name='Track'  value='" + btnLab.getTrackLab() + "' enable=true onclick=\"WinOpen('./WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey + "','ds'); \" />";
 
 
               if (btnLab.getSearchEnable())
@@ -1253,21 +1253,21 @@ public class WF_MyFlow extends WebContralBase {
               if (btnLab.getBatchEnable())
               {
                   /*批量处理*/
-                  String urlr = appPath + "WF/Batch.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  String urlr = "Batch.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
                   toolbar += "<input type=button name='Batch' value='" + btnLab.getBatchLab() + "' enable=true onclick=\"To('" + urlr + "'); \" />";
               }
 
               if (btnLab.getAskforEnable() )
               {
                   /*加签 */
-                  String urlr3 = appPath + "WF/WorkOpt/Askfor.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  String urlr3 = "./WorkOpt/Askfor.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
                   toolbar += "<input type=button name='Askfor'  value='" + btnLab.getAskforLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
               }
 
               if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader)
               {
                   /*会签 */
-                  String urlr3 = appPath + "WF/WorkOpt/HuiQian.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  String urlr3 = "./WorkOpt/HuiQian.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
                   toolbar += "<input type=button name='HuiQian'  value='" + btnLab.getHuiQianLab() + "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
               }
 
@@ -1277,7 +1277,7 @@ public class WF_MyFlow extends WebContralBase {
               if (this.getcurrFlow().getIsResetData() == true && this.getcurrND().getIsStartNode())
               {
                   /* 启用了数据重置功能 */
-                  String urlr3 = appPath + "WF/MyFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsDeleteDraft=1&s=" + tKey;
+                  String urlr3 =  "MyFlow.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsDeleteDraft=1&s=" + tKey;
                   toolbar += "<input type=button  value='数据重置' enable=true onclick=\"To('" + urlr3 + "','ds'); \" />";
               }
 
@@ -1291,14 +1291,14 @@ public class WF_MyFlow extends WebContralBase {
               if (btnLab.getCHEnable() == true )
               {
                   /* 节点时限设置 */
-                  String urlr3 = appPath + "WF/WorkOpt/CH.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  String urlr3 =  "./WorkOpt/CH.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
                   toolbar += "<input type=button name='CH'  value='" + btnLab.getCHLab() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
               }
 
               if (btnLab.getPRIEnable() == true )
               {
                   /* 优先级设置 */
-                  String urlr3 = appPath + "WF/WorkOpt/PRI.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+                  String urlr3 = "./WorkOpt/PRI.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
                   toolbar += "<input type=button name='PR'  value='" + btnLab.getPRILab() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
               }
 

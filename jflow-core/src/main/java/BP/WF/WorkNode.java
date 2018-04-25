@@ -4927,13 +4927,94 @@ public class WorkNode {
 	public final void DoCC() {
 	}
 
+	/*
+	 * zhoupeng 2018.4.25重构.
+	 * */
+	public final boolean DealTeamUpNode() throws Exception {
+		
+		  
+		GenerWorkerLists gwls = new GenerWorkerLists();
+        gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),
+            GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
+
+        if (gwls.size() == 1)
+            return false; /*让其向下执行,因为只有一个人,就没有顺序的问题.*/
+
+        //查看是否我是最后一个？
+        int num = 0;
+        String todoEmps = ""; //记录没有处理的人.
+        for (GenerWorkerList item : gwls.ToJavaList())
+        {
+            if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90)
+            {
+                if (item.getFK_Emp().equals(  WebUser.getNo()) ==false)
+                    todoEmps += BP.WF.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
+                num++;
+            }
+        }
+
+        if (num == 1)
+        {
+            if (this.getHisGenerWorkFlow().getHuiQianTaskSta() == HuiQianTaskSta.None)
+            {
+                this.getHisGenerWorkFlow().setSender( BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.getNo(), BP.Web.WebUser.getName()));
+                this.getHisGenerWorkFlow().setTodoEmpsNum(  1);
+                this.getHisGenerWorkFlow().setTodoEmps( WebUser.getName() + ";");
+            }
+            else
+            {
+                String huiqianNo = this.getHisGenerWorkFlow().getHuiQianZhuChiRen();
+                String huiqianName = this.getHisGenerWorkFlow().getHuiQianZhuChiRenName();
+
+                this.getHisGenerWorkFlow().setSender(BP.WF.Glo.DealUserInfoShowModel(huiqianNo, huiqianName));
+                this.getHisGenerWorkFlow().setTodoEmpsNum(  1);
+                this.getHisGenerWorkFlow().setTodoEmps( WebUser.getName() + ";");
+
+
+            }
+            return false; /*只有一个待办,说明自己就是最后的一个人.*/
+        }
+
+        //把当前的待办设置已办，并且提示未处理的人。
+        for (GenerWorkerList gwl : gwls.ToJavaList())
+        {
+            if (gwl.getFK_Emp().equals(WebUser.getNo())==false)
+                continue;
+
+            //设置当前不可以用.
+            gwl.setIsPassInt(1);
+            gwl.Update();
+
+            // 检查完成条件。
+            if (this.getHisNode().getIsEndNode() == false)
+                this.CheckCompleteCondition();
+
+            //写入日志.
+            if (this.getHisGenerWorkFlow().getHuiQianTaskSta() != HuiQianTaskSta.None)
+                this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(), this.getHisNode().getName(), "会签");
+            else
+                this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(), this.getHisNode().getName(), "协作发送");
+
+            //替换人员信息.
+            String emps = this.getHisGenerWorkFlow().getTodoEmps();
+            emps = emps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
+            this.getHisGenerWorkFlow().setTodoEmps( emps);
+
+            //处理会签问题
+            this.addMsg(SendReturnMsgFlag.OverCurr, "@会签工作已完成@当前工作未处理的会签人有: " + todoEmps + " .", null, SendReturnMsgType.Info);
+            return true;
+        }
+
+        throw new Exception("@不应该运行到这里，DealTeamUpNode。");
+	}
 	/**
 	 * 如果是协作.
 	 * 
 	 * @return
 	 * @throws Exception 
 	 */
-	public final boolean DealTeamUpNode() throws Exception {
+	public final boolean DealTeamUpNode_bak() throws Exception {
+		
 		GenerWorkerLists gwls = new GenerWorkerLists();
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
 				this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass);
@@ -6213,6 +6294,9 @@ public class WorkNode {
 				/* 判断是否是延续子流程. */
 				return NodeSendToYGFlow(jumpToNode, jumpToEmp);
 			}
+			
+			//设置会签模式为空.
+			this.getHisGenerWorkFlow().setHuiQianTaskSta( HuiQianTaskSta.None);
 
 			/// #region 第二步: 进入核心的流程运转计算区域. 5*5 的方式处理不同的发送情况.
 			// 执行节点向下发送的25种情况的判断.

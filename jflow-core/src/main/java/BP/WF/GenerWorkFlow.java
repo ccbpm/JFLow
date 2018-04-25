@@ -667,6 +667,11 @@ public class GenerWorkFlow extends Entity
 		this.SetPara("HuiQianZhuChiRenName", name);
 		
 	}
+	public final String getHuiQianZhuChiRenName()
+	{
+		return this.GetParaString("HuiQianZhuChiRenName");
+	}
+	 
 	
     public void setHuiQianSendToNodeIDStr(String name) {
 		

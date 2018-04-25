@@ -42,8 +42,10 @@ import BP.Sys.MapAttrs;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
+import BP.Tools.DateUtils;
 import BP.Tools.StringHelper;
 import BP.WF.ActionType;
+import BP.WF.CHWay;
 import BP.WF.CancelRole;
 import BP.WF.DeliveryWay;
 import BP.WF.Dev2Interface;
@@ -52,6 +54,7 @@ import BP.WF.GenerWorkFlow;
 import BP.WF.GenerWorkerList;
 import BP.WF.GenerWorkerListAttr;
 import BP.WF.GenerWorkerLists;
+import BP.WF.Glo;
 import BP.WF.HuiQianTaskSta;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
@@ -77,6 +80,7 @@ import BP.WF.Template.SelectAccperAttr;
 import BP.WF.Template.SelectAccpers;
 import BP.WF.Template.Selector;
 import BP.WF.Template.SelectorModel;
+import BP.WF.Template.TimelineRole;
 import BP.Web.WebUser;
 
 public class WF_WorkOpt extends WebContralBase {
@@ -1436,7 +1440,9 @@ public class WF_WorkOpt extends WebContralBase {
 		// 查询出来集合.
 		GenerWorkerLists ens = new GenerWorkerLists(this.getWorkID(), this.getFK_Node());
 		for (GenerWorkerList item : ens.ToJavaList()) {
+			
 			if (gwf.getTodoEmps().contains(item.getFK_Emp() + ",") == true) {
+				
 				item.setFK_EmpText("<img src='../Img/zhuichiren.png' border=0 />" + item.getFK_EmpText());
 				item.setFK_EmpText(item.getFK_EmpText());
 				item.setIsPassInt(100);
@@ -1514,114 +1520,66 @@ public class WF_WorkOpt extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String HuiQian_AddEmps() throws Exception {
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-		if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false) {
-			return "err@您不是会签主持人，您不能执行该操作。";
-		}
+		
+		
+		   GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+           if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
+               return "err@您不是会签主持人，您不能执行该操作。";
 
-		GenerWorkerList gwlOfMe = new GenerWorkerList();
-		int num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID,
-				this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
+           GenerWorkerList gwlOfMe = new GenerWorkerList();
+           int num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(),
+                GenerWorkerListAttr.WorkID, this.getWorkID(),
+                GenerWorkerListAttr.FK_Node, this.getFK_Node());
 
-		if (num == 0) {
-			return "err@没有查询到当前人员的工作列表数据.";
-		}
+           Node nd = new Node(this.getFK_Node());
+           if (num == 0)
+               return "err@您没有权限执行会签.";
+           
 
-		// 是否有拼音字段？
-		boolean isPinYin = DBAccess.IsExitsTableCol("Port_Emp", "PinYin");
-		String sql = "";
+           String fk_emp = this.GetRequestVal("AddEmps");
+           Emp emp = new Emp(fk_emp);
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 求人员集合.
-		Emps emps = new Emps();
-		String toEmpStrs = this.GetRequestVal("AddEmps");
-		toEmpStrs = toEmpStrs.replace(",", ";");
-		String[] toEmps = toEmpStrs.split("[;]", -1);
-		String infos = "";
-		for (String empStr : toEmps) {
-			if (DotNetToJavaStringHelper.isNullOrEmpty(empStr) == true) {
-				continue;
-			}
+           //查查是否存在队列里？
+           num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, emp.getNo(),
+                   GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
+           if (num == 1)
+           {
+               return "err@人员[" + emp.getNo() + "," + emp.getName() + "]已经在队列里.";
+           }
 
-			if (isPinYin == true) {
-				sql = "SELECT No,Name FROM Port_Emp WHERE No='" + empStr + "' OR NAME ='" + empStr
-						+ "'  OR PinYin LIKE '%," + empStr + ",%'";
-			} else {
-				sql = "SELECT No,Name FROM Port_Emp WHERE No='" + empStr + "' OR NAME ='" + empStr + "'";
-			}
+          
+           //查询出来其他列的数据.
+           gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(),
+               GenerWorkerListAttr.WorkID, this.getWorkID(),
+               GenerWorkerListAttr.FK_Node, this.getFK_Node());
 
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size() > 12 || dt.Rows.size() == 0) {
-				continue;
-			}
+           gwlOfMe.setFK_Emp(emp.getNo());
+           gwlOfMe.setFK_EmpText( emp.getName());
+           gwlOfMe.setIsPassInt(-1); //设置不可以用.
+           gwlOfMe.setFK_Dept(emp.getFK_Dept());
+           gwlOfMe.setFK_DeptT( emp.getFK_DeptText()); //部门名称.
+           gwlOfMe.setIsRead( false);           
+ 
+           gwlOfMe.setSender(WebUser.getName()); //发送人为当前人.
+           gwlOfMe.setIsHuiQian(true);
+           gwlOfMe.Insert(); //插入作为待办.
 
-			for (DataRow dr : dt.Rows) {
-				String empNo = dr.getValue(0).toString();
-				String empName = dr.getValue(1).toString();
+           //发送消息.
+           BP.WF.Dev2Interface.Port_SendMsg(emp.getNo(),
+               "bpm会签邀请", "HuiQian" + gwf.getWorkID() + "_" + gwf.getFK_Node() + "_" + emp.getNo(), WebUser.getName() + "邀请您对工作｛" + gwf.getTitle() + "｝进行会签,请您在{" + gwlOfMe.getSDT() + "}前完成.", "HuiQian", gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
 
-				// 查查是否存在队列里？
-				num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, empNo, GenerWorkerListAttr.WorkID, this.getWorkID(),
-						GenerWorkerListAttr.FK_Node, this.getFK_Node());
+           if (gwf.getTodoEmps().contains(emp.getName() + ";") == false)
+           {
+        	   gwf.setTodoEmps(   gwf.getTodoEmps()+ emp.getName() +";");
+           }
 
-				if (num == 1) {
-					infos += "\t\n@人员[" + empStr + "]已经在队列里.";
-					continue;
-				}
-
-				// 增加到队列里面.
-				emps.AddEntity(new Emp(empNo));
-			}
-		}
-
-		if (!infos.equals("") && emps.size() != 0) {
-			return "info@" + infos;
-		}
-
-		if (emps.size() == 0) {
-			return "info@您没有选择人员, 执行信息:" + infos;
-		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 求人员集合.
-
-		GenerWorkerLists gwls = new GenerWorkerLists();
-
-		// 查询出来其他列的数据.
-		gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(),
-				GenerWorkerListAttr.FK_Node, this.getFK_Node());
-
-		// 遍历人员集合.
-		for (Emp item : emps.ToJavaList()) {
-			
-			gwlOfMe.setFK_Emp(item.getNo());
-			gwlOfMe.setFK_EmpText(item.getName());
-			gwlOfMe.setIsPassInt(0);
-			gwlOfMe.setFK_Dept(item.getFK_Dept());
-			gwlOfMe.setFK_DeptT(item.getFK_DeptText()); // 部门名称.
-			gwlOfMe.setIsRead(false);
-
-			// gwlOfMe.FK_DeptT = item.FK_DeptText;
-
-			gwlOfMe.Insert(); // 插入作为待办.
-			infos += "\t\n@" + item.getNo() + "  " + item.getName();
-
-			gwlOfMe.Retrieve();
-
-			gwls.AddEntity(gwlOfMe);
-		}
-
-		// 赋值部门名称。
-		DataTable mydt = gwls.ToDataTableField();
-		mydt.Columns.Add("FK_DeptT", String.class);
-		for (DataRow dr : mydt.Rows) {
-			String fk_emp = dr.getValue("FK_Emp").toString();
-			for (GenerWorkerList item : gwls.ToJavaList()) {
-				if (fk_emp.equals(item.getFK_Emp())) {
-					dr.setValue("FK_DeptT", item.getFK_DeptT());
-				}
-			}
-		}
-
-		return BP.Tools.Json.ToJson(mydt);
+           gwf.Update();
+           
+           
+           return "增加成功.";
+  
+           //把会签init的数据返回.
+           //return HuiQian_Init(); 
 	}
 
 	// 查询select集合
@@ -1670,15 +1628,15 @@ public class WF_WorkOpt extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
  
-	  /** 
-	 保存并关闭
 	 
-	 @return 
-	 * @throws Exception 
-*/
+	/*
+	 * 保存并关闭 
+	 * 
+	 * zhoupeng 2018.4.25重构.
+	 * */
 	public final String HuiQian_SaveAndClose() throws Exception
 	{
-		 //生成变量.
+		//生成变量.
         GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 
         if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianOver)
@@ -1700,7 +1658,7 @@ public class WF_WorkOpt extends WebContralBase {
         //设置当前接单是会签的状态.
         gwf.setHuiQianTaskSta( HuiQianTaskSta.HuiQianing); //设置为会签状态.
         gwf.setHuiQianZhuChiRen( WebUser.getNo());
-        gwf.setHuiQianZhuChiRenName(  WebUser.getName());
+        gwf.setHuiQianZhuChiRenName( WebUser.getName());
 
         //改变了节点就把会签状态去掉.
         gwf.setHuiQianSendToNodeIDStr("");
@@ -1728,9 +1686,17 @@ public class WF_WorkOpt extends WebContralBase {
         DBAccess.RunSQL(sql);
 
         //执行会签,写入日志.
-        BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(),gwf.getWorkID(), gwf.getFID(), 
-        		"执行会签", ActionType.HuiQian, "", "", "", empsOfHuiQian, empsOfHuiQian);
-         
+        //BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(), workid, fid, msg, at, tag, cFlowInfo, optionMsg, empNoTo, empNameTo);
+       // BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(),
+        //		gwf.getFK_Node(), gwf.getNodeName(), gwf.getWorkID(),
+        	//	gwf.getFID(), empsOfHuiQian, ActionType.HuiQian, "执行会签", null);
+        
+        
+        BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(),  gwf.getWorkID(),  gwf.getFID(), "执行会签", ActionType.HuiQian,
+        		"执行会签", "执行会签", "执行会签", WebUser.getNo(),  WebUser.getName());
+        
+        
+        
         String str = "";
         if (nd.getTodolistModel() == TodolistModel.TeamupGroupLeader)
         {

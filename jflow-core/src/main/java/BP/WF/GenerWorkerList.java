@@ -355,6 +355,21 @@ public class GenerWorkerList extends Entity
 	{
 		this.SetValByKey(GenerWorkerListAttr.DTOfHungUp, value);
 	}
+	
+	/** 
+	是否是会签
+	 
+	*/
+	public final Boolean getIsHuiQian()
+	{
+		return this.GetParaBoolen("IsHuiQian");
+	}
+	public final void setIsHuiQian(Boolean value)
+	{
+		this.SetPara("IsHuiQian", value);
+		 
+	}
+	
 	/** 
 	 解除挂起时间
 	 

@@ -30,7 +30,7 @@ public class FrmPopVals extends XmlMenus
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfDataUser() + "Xml/FrmPopVal.xml";
+		return SystemConfig.getPathOfDataUser() + "XML/FrmPopVal.xml";
 	}
 	
 	/**

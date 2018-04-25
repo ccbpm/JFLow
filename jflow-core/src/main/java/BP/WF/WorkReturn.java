@@ -1053,20 +1053,20 @@ public class WorkReturn
 	private void ReorderLog(Node fromND, Node toND, ReturnWork rw) throws Exception
 	{
 		String filePath = BP.Sys.SystemConfig.getPathOfDataUser() + "ReturnLog/" + this.HisNode.getFK_Flow() + "/";
+		Log.DebugWriteInfo("退回信息文件路径1:"+filePath);
 		if ((new java.io.File(filePath)).isDirectory() == false)
 		{
 			(new java.io.File(filePath)).mkdirs();
 		}
 
 		String file = filePath + File.separator + rw.getMyPK();
+		Log.DebugWriteInfo("退回信息文件路径2:"+file);
 		infoLog = "\r\n退回人:" + WebUser.getNo() + "," + WebUser.getName() + " \r\n退回节点:" + fromND.getName() + " \r\n退回到:" + toND.getName();
 		infoLog += "\r\n退回时间:" + DataType.getCurrentDataTime();
 		infoLog += "\r\n原因:" + rw.getBeiZhu();
-
 		ReorderLog(fromND, toND);
-		DataType.WriteFile(file + ".txt", infoLog);
+		DataType.WriteFile(file + ".txt", infoLog);		
 		DataType.WriteFile(file + ".htm", infoLog.replace("\r\n", "<br>"));
-
 		// this.HisWork.Delete();
 	}
 	private void ReorderLog(Node fromND, Node toND) throws Exception

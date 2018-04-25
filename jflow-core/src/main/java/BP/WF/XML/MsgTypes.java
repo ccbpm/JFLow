@@ -34,7 +34,7 @@ public class MsgTypes extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getCCFlowAppPath() + "WF/Data/Xml/SysDataType.xml";
+		return SystemConfig.getCCFlowAppPath() + "WF/Data/XML/SysDataType.xml";
 	}
 	/** 
 	 物理表名

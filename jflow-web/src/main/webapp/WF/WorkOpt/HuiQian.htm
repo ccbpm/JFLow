@@ -226,11 +226,10 @@
                 $(".Msg").html(data);
                 return;
             }
-
-            var gwls = JSON.parse(data);
-            BindTable(gwls);
+            
+            window.location.href =  window.location.href;
             return;
-            $(".foot").hide();
+ 
         }
 
         //确定后，就弹出选择到达节点，选择接受人，填写审核意见窗口.

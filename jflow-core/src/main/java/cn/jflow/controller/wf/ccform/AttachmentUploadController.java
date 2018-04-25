@@ -64,7 +64,7 @@ public class AttachmentUploadController extends BaseController {
 			String fileName = item.getOriginalFilename(); // 获取文件名
 			if (upFileSize > maxSize) {
 				error = "您上传的文件太大，请选择不超过50M的文件";
-				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+				
 				return ;
 			}
 			FrmAttachment athDesc = new FrmAttachment( this.getFK_FrmAttachment());
@@ -78,7 +78,7 @@ public class AttachmentUploadController extends BaseController {
 				if (!athDesc.getExts().toLowerCase().contains(exts)) {
 				
 					error = "您上传的文件，不符合系统的格式要求，要求的文件格式:" + athDesc.getExts() + "，您现在上传的文件格式为:" + exts;
-					printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+					
 					return ;
 				}
 			}
@@ -136,7 +136,7 @@ public class AttachmentUploadController extends BaseController {
 					.getExtensionName(item.getOriginalFilename());
 
 
-			String realSaveTo = savePath + "/" + guid + "." + fileName + "." + ext;
+			String realSaveTo = savePath + File.separator + guid + "." + fileName + "." + ext;
 
 			String saveTo = realSaveTo;
 
@@ -158,7 +158,7 @@ public class AttachmentUploadController extends BaseController {
 				fos.close();
 			} catch (RuntimeException ex) {
 				error = "@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage();
-				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+				
 				return ;
 			}
 
@@ -210,7 +210,7 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.Insert();
 		} else {
 			error = "没有选择上传文件！";
-			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+			
 			return;
 		}
 		
@@ -220,7 +220,7 @@ public class AttachmentUploadController extends BaseController {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			printAlertReload(response, e.getMessage(), Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+			
 			return;
 		}
 	}
@@ -237,8 +237,7 @@ public class AttachmentUploadController extends BaseController {
 			long upFileSize = item.getSize(); // 上传文件的大小
 			String fileName = item.getOriginalFilename(); // 获取文件名
 			if (upFileSize > maxSize) {
-				error = "您上传的文件太大，请选择不超过50M的文件";
-				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+				error = "您上传的文件太大，请选择不超过50M的文件";				
 				return ;
 			}
 			FrmAttachment athDesc = new FrmAttachment( this.getFK_FrmAttachment());
@@ -252,7 +251,6 @@ public class AttachmentUploadController extends BaseController {
 				if (!athDesc.getExts().toLowerCase().contains(exts)) {
 				
 					error = "您上传的文件，不符合系统的格式要求，要求的文件格式:" + athDesc.getExts() + "，您现在上传的文件格式为:" + exts;
-					printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
 					return ;
 				}
 			}
@@ -310,7 +308,7 @@ public class AttachmentUploadController extends BaseController {
 					.getExtensionName(item.getOriginalFilename());
 
 
-			String realSaveTo = savePath + "/" + guid + "." + fileName + "." + ext;
+			String realSaveTo = savePath + File.separator + guid + "." + fileName + "." + ext;
 
 			String saveTo = realSaveTo;
 
@@ -332,7 +330,7 @@ public class AttachmentUploadController extends BaseController {
 				fos.close();
 			} catch (RuntimeException ex) {
 				error = "@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage();
-				printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+				
 				return ;
 			}
 
@@ -384,7 +382,7 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.Insert();
 		} else {
 			error = "没有选择上传文件！";
-			printAlertReload(response, error, Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+request.getQueryString());
+			
 			return;
 		}
 		 

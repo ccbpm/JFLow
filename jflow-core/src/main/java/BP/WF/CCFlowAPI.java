@@ -567,7 +567,9 @@ public class CCFlowAPI
 						for (BP.WF.ReturnWork rw : rws.ToJavaList())
 						{
 							DataRow drMsg = dtAlert.NewRow();
-							drMsg.put("Title","来自节点:" + rw.getReturnNodeName() + " 退回人:" + rw.getReturnerName() + "  " + rw.getRDT() + "&nbsp;<a href='../DataUser/ReturnLog/" + fk_flow + "/" + rw.getMyPK() + ".htm' target=_blank>工作日志</a>");
+							//drMsg.put("Title","来自节点:" + rw.getReturnNodeName() + " 退回人:" + rw.getReturnerName() + "  " + rw.getRDT() + "&nbsp;<a href='../DataUser/ReturnLog/" + fk_flow + "/" + rw.getMyPK() + ".htm' target=_blank>工作日志</a>");
+							
+							drMsg.put("Title","来自节点:" + rw.getReturnNodeName() + " 退回人:" + rw.getReturnerName() + "  " + rw.getRDT() + "");
 							drMsg.put("Msg",rw.getBeiZhuHtml());
 							dtAlert.Rows.add(drMsg);
 						}

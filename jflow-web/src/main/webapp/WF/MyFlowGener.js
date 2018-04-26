@@ -776,6 +776,23 @@ function execSend(toNode) {
             }
 
             if (data.indexOf('url@') == 0) { //发送成功时转到指定的URL 
+            	if (data.indexOf('Accepter') != 0) {
+            		 var toNodeID = 101;
+            		var params = data.split("&");
+            		for(var i=0;i<params.length;i++){
+            			if(params[i].indexOf("ToNode")==-1)
+            				continue;
+            			else{
+            				toNodeID = params[i].split("=")[1];
+            				break;
+            			}
+            		}
+                   
+                    initModal("ToNode", toNodeID);
+                    $('#returnWorkModal').modal().show();
+                    return;
+                }
+            	
                 var url = data;
                 url = url.replace('url@', '');
                 window.location.href = url;

@@ -235,7 +235,7 @@ public class FindWorker
                         if (select.getSelectorModel() == SelectorModel.GenerUserSelecter)
                             throw new Exception("url@./WorkOpt/AccepterOfGener.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + toNode.getNodeID() + "&WorkID=" + this.WorkID);
                         else
-                            throw new Exception("url@./WorkOpt/AccepterGener.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + toNode.getNodeID() + "&WorkID=" + this.WorkID);
+                            throw new Exception("url@./WorkOpt/Accepter.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + toNode.getNodeID() + "&WorkID=" + this.WorkID);
                     }
                     else
                     {

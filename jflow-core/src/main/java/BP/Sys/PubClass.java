@@ -755,31 +755,51 @@ public class PubClass {
 	 */
 	public static DataTable GetDataTableByUIBineKey(String uiBindKey) throws Exception {
 		
-		DataTable dt = new DataTable();
-		if (uiBindKey.contains(".")) {
-			Entities ens = BP.En.ClassFactory.GetEns(uiBindKey);
-			if (ens == null) {
-				ens = BP.En.ClassFactory.GetEns(uiBindKey);
-			}
+		  DataTable dt = new DataTable();
+          if (uiBindKey.contains("."))
+          {
+              Entities ens = BP.En.ClassFactory.GetEns(uiBindKey);
+              if (ens == null)
+                  ens = BP.En.ClassFactory.GetEns(uiBindKey);
 
-			if (ens == null) {
-				ens = BP.En.ClassFactory.GetEns(uiBindKey);
-			}
-			if (ens == null) {
-				throw new RuntimeException("类名错误:" + uiBindKey + ",不能转化成ens.");
-			}
+              if (ens == null)
+                  ens = BP.En.ClassFactory.GetEns(uiBindKey);
+              if (ens == null)
+                  throw new Exception("类名错误:" + uiBindKey + ",不能转化成ens.");
 
-			ens.RetrieveAllFromDBSource();
-			dt = ens.ToDataTableField(uiBindKey);
-			return dt;
-			
-		}  
+              ens.RetrieveAllFromDBSource();
+              dt = ens.ToDataTableField(uiBindKey);
+              return dt;
+          }
 
-			String sql = "SELECT No,Name FROM " + uiBindKey;
-			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = uiBindKey;
-			return dt;
-		
+          //added by liuxc,2017-09-11,增加动态SQL查询类型的处理，此种类型没有固定的数据表或视图
+          SFTable sf = new SFTable();
+          sf.setNo(  uiBindKey);
+          if (sf.RetrieveFromDBSources() != 0)
+              dt = sf.getGenerHisDataTable();
+
+          if (dt == null)
+              dt = new DataTable();
+
+         // #region 把列名做成标准的.
+          for (DataColumn col : dt.Columns)
+          {
+        	  String colName = col.ColumnName.toLowerCase();
+        	  
+        	  if (colName.equals("no")==true)
+        		  col.ColumnName = "No";
+        	  
+        	  if (colName.equals("name")==true)
+        		  col.ColumnName = "Name";
+        	  
+        	  if (colName.equals("parentno")==true)
+        		  col.ColumnName = "ParentNo";
+        	   
+          }
+         // #endregion 把列名做成标准的.
+
+          dt.TableName = uiBindKey;
+          return dt; 
 	}
 
 	/**

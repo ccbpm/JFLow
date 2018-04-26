@@ -460,29 +460,26 @@ public class CCFlowAPI
 
 			for (DataRow dr : dtMapAttr.Rows)
 			{
-				String lgType = dr.getValue("LGType").toString();
-				if (lgType.equals("2")==false)
-				{
-					continue;
-				}
+ 
+				 String lgType = dr.getValue("LGType").toString();
+				 String uiBindKey = dr.getValue("UIBindKey").toString();
 
-				String UIIsEnable = dr.getValue("UIIsEnable").toString();
-				//if (UIIsEnable.equals("0")==true)
-				//{
-				//	continue;
-				//}
+                 if (DataType.IsNullOrEmpty(uiBindKey) == true)
+                     continue; //为空就continue.
 
-				String uiBindKey = dr.getValue("UIBindKey").toString();
-				if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true)
-				{
-					String myPK = dr.getValue("MyPK").toString();
-					//如果是空的
-				 //   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
-				}
+                 if (lgType.equals("1")==true)
+                     continue; //枚举值就continue;
 
-				// 检查是否有下拉框自动填充。
-				String keyOfEn = dr.getValue("KeyOfEn").toString();
-				String fk_mapData = dr.getValue("FK_MapData").toString();
+                 String uiIsEnable = dr.getValue("UIIsEnable").toString();
+                 if (uiIsEnable.equals("0") == true && lgType.equals("1") == true)
+                     continue; //如果是外键，并且是不可以编辑的状态.
+
+                 if (uiIsEnable.equals("0") == true && lgType.equals("0") == true)
+                     continue; //如果是外部数据源，并且是不可以编辑的状态.
+
+                 // 检查是否有下拉框自动填充。
+                 String keyOfEn = dr.getValue("KeyOfEn").toString();
+                 String fk_mapData = dr.getValue("FK_MapData").toString();
 
 
 				///#region 处理下拉框数据范围. for 小杨.

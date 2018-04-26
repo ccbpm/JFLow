@@ -144,7 +144,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
         var defval = ConvertDefVal(flowData, attr.DefVal, attr.KeyOfEn);
 
         var lab = "";
-        if (attr.UIContralType == 0) 
+        if (attr.UIContralType == 0)
             lab = "<label for='TB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'>" + attr.Name + "</label>";
 
         if (attr.UIContralType == 1)
@@ -155,7 +155,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
         }
 
         if (attr.UIContralType == 3)
-        	lab = "<label for='RB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'>" + attr.Name + "</label>";
+            lab = "<label for='RB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'>" + attr.Name + "</label>";
 
         //线性展示并且colspan=3
         if (attr.ColSpan == 3 || (attr.ColSpan == 4 && attr.UIHeight < 40)) {
@@ -163,7 +163,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             html += "<tr>";
             html += "<td  class='FDesc' style='width:120px;'>" + lab + "</td>";
             html += "<td ColSpan=3>";
-            html += InitMapAttrOfCtrlFool(flowData,attr, enable, defval);
+            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
             html += "</td>";
             html += "</tr>";
             continue;
@@ -174,7 +174,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             isDropTR = true;
             html += "<tr>";
             html += "<td ColSpan='4'>" + lab + "</br>";
-            html += InitMapAttrOfCtrlFool(flowData,attr, enable, defval);
+            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
             html += "</td>";
             html += "</tr>";
             continue;
@@ -184,7 +184,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             html += "<tr>";
             html += "<td class='FDesc' style='width:120px;'>" + lab + "</td>";
             html += "<td class='FContext'  >";
-            html += InitMapAttrOfCtrlFool(flowData,attr, enable, defval);
+            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
             html += "</td>";
             isDropTR = !isDropTR;
             continue;
@@ -193,7 +193,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
         if (isDropTR == false) {
             html += "<td class='FDesc' style='width:120px;'>" + lab + "</td>";
             html += "<td class='FContext'>";
-            html += InitMapAttrOfCtrlFool(flowData,attr, enable, defval);
+            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
             html += "</td>";
             html += "</tr>";
             isDropTR = !isDropTR;
@@ -214,6 +214,21 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
     //外部数据源类型.
     if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1) {
+
+        if (mapAttr.UIIsEnable == 0) {
+            var ctrl = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' type=hidden  class='form-control' type='text'/>";
+
+
+           //console.log(flowData);
+           // defValue = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn + "Text");
+            defValue = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn + "T");
+
+            if (defValue == '' || defValue == null)
+                defValue = '无';
+
+            ctrl += "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "Text'  value='" + defValue + "' disabled='disabled'   class='form-control' type='text'/>";
+            return ctrl;
+        }
 
         return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
     }
@@ -313,20 +328,20 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
     //枚举类型.
     if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) { //AppInt Enum
-    	 if (mapAttr.UIIsEnable == 1)
-             enableAttr = "";
-         else
-             enableAttr = "disabled='disabled'";
-    	if(mapAttr.UIContralType == 1)
-    		return "<select "+enableAttr+"  id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
-    	if(mapAttr.UIContralType == 3){
-    		//横向排列
-    		var RBShowModel = 3;
-    		if(mapAttr.AtPara.indexOf("@RBShowModel=3") == -1)
-    			RBShowModel = 0;
-    		return InitRBShowContent(flowData,mapAttr,defValue,RBShowModel,enableAttr);
-    		
-    	}
+        if (mapAttr.UIIsEnable == 1)
+            enableAttr = "";
+        else
+            enableAttr = "disabled='disabled'";
+        if (mapAttr.UIContralType == 1)
+            return "<select " + enableAttr + "  id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
+        if (mapAttr.UIContralType == 3) {
+            //横向排列
+            var RBShowModel = 3;
+            if (mapAttr.AtPara.indexOf("@RBShowModel=3") == -1)
+                RBShowModel = 0;
+            return InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr);
+
+        }
     }
 
     // AppDouble  AppFloat
@@ -354,7 +369,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     return;
 }
 
-var flowData = {}; 
+var flowData = {};
 
 //初始化 IMAGE附件
 function Ele_ImgAth(frmImageAth) {
@@ -446,7 +461,7 @@ function Ele_Frame(flowData, gf) {
     if (src.indexOf('?') == -1)
         src += "?1=2";
 
-    src += "&PKVal=" + pageData.WorkID + "&FK_MapFrame=" + frame.MyPK   + url;
+    src += "&PKVal=" + pageData.WorkID + "&FK_MapFrame=" + frame.MyPK + url;
 
     eleHtml += "<iframe style='width:100%;height:" + frame.H + "px;' ID='" + frame.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     return eleHtml;
@@ -511,20 +526,20 @@ function Ele_Dtl(frmDtl) {
     return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
 }
 
-function InitRBShowContent(flowData,mapAttr,defValue,RBShowModel,enableAttr){
-	var rbHtml="";
-	var enums = flowData.Sys_Enum;
+function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr) {
+    var rbHtml = "";
+    var enums = flowData.Sys_Enum;
     enums = $.grep(enums, function (value) {
         return value.EnumKey == mapAttr.UIBindKey;
     });
     $.each(enums, function (i, obj) {
-    	if(RBShowModel == 3)
-    		//<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
-        rbHtml += "<label><input "+enableAttr+" "+(obj.IntKey == defValue ? "checked='checked' " : "")+" type='radio' name='RB_"+mapAttr.KeyOfEn+"' id='RB_"+mapAttr.KeyOfEn+"_"+obj.IntKey+"' value='"+obj.IntKey+"' />&nbsp;"+obj.Lab+"</label>";
-    	else
-    		rbHtml += "<label><input "+enableAttr+" "+(obj.IntKey == defValue ? "checked='checked' " : "")+" type='radio' name='RB_"+mapAttr.KeyOfEn+"' id='RB_"+mapAttr.KeyOfEn+"_"+obj.IntKey+"' value='"+obj.IntKey+"'  />&nbsp;"+obj.Lab+"</label><br/>";	
+        if (RBShowModel == 3)
+        //<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
+            rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' />&nbsp;" + obj.Lab + "</label>";
+        else
+            rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "'  />&nbsp;" + obj.Lab + "</label><br/>";
     });
-	return rbHtml;
+    return rbHtml;
 }
 
 

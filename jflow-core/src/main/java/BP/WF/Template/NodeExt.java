@@ -1436,7 +1436,7 @@ public class NodeExt extends Entity
             }
             
 			//如果启用了在发送前打开, 当前节点的方向条件控制模式，是否是在下拉框边选择.?
-			if (nd.getCondModel() != CondModel.SendButtonSileSelect)
+			if (1==2 && nd.getCondModel() != CondModel.SendButtonSileSelect)
 			{
 				//如果是启用了按钮，就检查当前节点到达的节点是否有【按照选择接受人】的方式确定接收人的范围. 
 				Nodes nds = nd.getHisToNodes();

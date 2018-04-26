@@ -1403,22 +1403,18 @@ public class NodeExt extends Entity
 		    
 			//如果启动了会签,并且是抢办模式,强制设置为队列模式.
 		    int roleInt= this.GetValIntByKey(BtnAttr.HuiQianRole);
-		  	
 		    String sql="";
 				if (roleInt == HuiQianRole.Teamup.getValue())
 					sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.Teamup.getValue() + "  WHERE NodeID=" + this.getNodeID();
 				
-
-                if (roleInt== HuiQianRole.TeamupGroupLeader.getValue())
+				if (roleInt== HuiQianRole.TeamupGroupLeader.getValue())
                     sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.TeamupGroupLeader.getValue() + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID();
                 
-
-
                 DBAccess.RunSQL(sql);
                 
 			
             // @杜. 翻译&测试.
-            if (nd.getCondModel() == CondModel.ByLineCond)
+            if (1==2 && nd.getCondModel() == CondModel.ByLineCond)
             {
                 /* 如果当前节点方向条件控制规则是按照连接线决定的, 
                  * 那就判断到达的节点的接受人规则，是否是按照上一步来选择，如果是就抛出异常.*/
@@ -1438,6 +1434,7 @@ public class NodeExt extends Entity
                     }
                 }
             }
+            
 			//如果启用了在发送前打开, 当前节点的方向条件控制模式，是否是在下拉框边选择.?
 			if (nd.getCondModel() != CondModel.SendButtonSileSelect)
 			{

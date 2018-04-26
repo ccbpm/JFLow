@@ -34,33 +34,49 @@ import BP.Sys.EventListOfNode;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.FrmAttachmentDBs;
+import BP.Sys.FrmAttachments;
 import BP.Sys.FrmEle;
+import BP.Sys.FrmEles;
 import BP.Sys.FrmEvent;
 import BP.Sys.FrmEvents;
 import BP.Sys.FrmImg;
+import BP.Sys.FrmImgAths;
+import BP.Sys.FrmImgs;
 import BP.Sys.FrmLab;
+import BP.Sys.FrmLabs;
 import BP.Sys.FrmLine;
+import BP.Sys.FrmLines;
 import BP.Sys.FrmLink;
+import BP.Sys.FrmLinks;
 import BP.Sys.FrmRB;
+import BP.Sys.FrmRBs;
 import BP.Sys.GEDtl;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
 import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
+import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
+import BP.Sys.MapDataAttr;
+import BP.Sys.MapDatas;
 import BP.Sys.MapDtl;
 import BP.Sys.MapDtlAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtXmlList;
+import BP.Sys.MapExts;
+import BP.Sys.MapFrames;
 import BP.Sys.OSModel;
 import BP.Sys.PubClass;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnumMain;
+import BP.Sys.SysEnumMainAttr;
+import BP.Sys.SysEnumMains;
+import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.DateUtils;
 import BP.Tools.FileAccess;
@@ -72,7 +88,11 @@ import BP.WF.Template.BillTemplate;
 import BP.WF.Template.BillTemplates;
 import BP.WF.Template.CC;
 import BP.WF.Template.CCDept;
+import BP.WF.Template.CCDeptAttr;
+import BP.WF.Template.CCDepts;
 import BP.WF.Template.CCEmp;
+import BP.WF.Template.CCEmpAttr;
+import BP.WF.Template.CCEmps;
 import BP.WF.Template.CCStation;
 import BP.WF.Template.Cond;
 import BP.WF.Template.CondModel;
@@ -82,6 +102,8 @@ import BP.WF.Template.ConnDataFrom;
 import BP.WF.Template.DTSField;
 import BP.WF.Template.DataStoreModel;
 import BP.WF.Template.Direction;
+import BP.WF.Template.DirectionAttr;
+import BP.WF.Template.Directions;
 import BP.WF.Template.DraftRole;
 import BP.WF.Template.FindWorkerRole;
 import BP.WF.Template.FlowAttr;
@@ -91,6 +113,8 @@ import BP.WF.Template.FlowDeptDataRightCtrlType;
 import BP.WF.Template.FlowSort;
 import BP.WF.Template.FlowSorts;
 import BP.WF.Template.FrmField;
+import BP.WF.Template.FrmFieldAttr;
+import BP.WF.Template.FrmFields;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodes;
@@ -99,13 +123,24 @@ import BP.WF.Template.LabNote;
 import BP.WF.Template.LabNotes;
 import BP.WF.Template.NodeAttr;
 import BP.WF.Template.NodeDept;
+import BP.WF.Template.NodeDeptAttr;
+import BP.WF.Template.NodeDepts;
 import BP.WF.Template.NodeEmp;
+import BP.WF.Template.NodeEmpAttr;
+import BP.WF.Template.NodeEmps;
 import BP.WF.Template.NodeExt;
 import BP.WF.Template.NodeExts;
 import BP.WF.Template.NodeReturn;
+import BP.WF.Template.NodeReturnAttr;
+import BP.WF.Template.NodeReturns;
 import BP.WF.Template.NodeStation;
+import BP.WF.Template.NodeStationAttr;
+import BP.WF.Template.NodeStations;
 import BP.WF.Template.NodeToolbar;
+import BP.WF.Template.NodeToolbarAttr;
+import BP.WF.Template.NodeToolbars;
 import BP.WF.Template.NodeYGFlow;
+import BP.WF.Template.NodeYGFlows;
 import BP.WF.Template.Selector;
 import BP.WF.Template.SelectorModel;
 import BP.WF.Template.StartGuideWay;
@@ -2620,8 +2655,245 @@ public class Flow extends BP.En.EntityNoName
 		}
 	}
 	 
+	 public DataSet GetFlow(String path) throws Exception
+     {
+         // 把所有的数据都存储在这里。
+         DataSet ds = new DataSet();
 
-	public final DataSet GetFlow(String path) throws Exception
+         // 流程信息。
+         String sql = "SELECT * FROM WF_Flow WHERE No='" + this.getNo() + "'";
+
+         Flow fl = new Flow(this.getNo());
+         DataTable dtFlow = fl.ToDataTableField("WF_Flow");
+         dtFlow.TableName = "WF_Flow";
+         ds.Tables.add(dtFlow);
+
+         // 节点信息
+         Nodes nds = new Nodes(this.getNo());
+         DataTable dtNodes = nds.ToDataTableField("WF_Node");
+         ds.Tables.add(dtNodes);
+
+         // 单据模版. 
+         BillTemplates tmps = new BillTemplates(this.getNo());
+         String pks = "";
+         for (BillTemplate tmp : tmps.ToJavaList())
+         {
+             try
+             {
+                 if (path != null)
+                	 FileAccess.Copy(SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + tmp.getNo() + ".rtf", path + "/" + tmp.getNo() + ".rtf");
+             }catch(java.lang.Exception e )
+             {
+                 pks += "@" + tmp.getPKVal();
+                 tmp.Delete();
+             }
+         }
+         tmps.remove(pks);
+         ds.Tables.add(tmps.ToDataTableField("WF_BillTemplate"));
+
+
+
+         String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow='" + this.getNo() + "'";
+
+         // 条件信息
+         Conds cds = new Conds(this.getNo());
+         ds.Tables.add(cds.ToDataTableField("WF_Cond") );
+
+
+         //// 转向规则.
+         //sql = "SELECT * FROM WF_TurnTo WHERE FK_Flow='" + this.No + "'";
+         //dt = DBAccess.RunSQLReturnTable(sql);
+         //dt.TableName = "WF_TurnTo";
+         //ds.Tables.Add(dt);
+
+         // 节点与表单绑定.
+         FrmNodes fns = new FrmNodes();
+         fns.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
+         ds.Tables.add(fns.ToDataTableField("WF_FrmNode"));
+
+
+         // 表单方案.
+         FrmFields ffs = new FrmFields();
+         ffs.Retrieve(FrmFieldAttr.FK_Flow, this.getNo());
+         ds.Tables.add(ffs.ToDataTableField("Sys_FrmSln"));
+
+         // 方向
+         Directions dirs = new Directions();
+         dirs.Retrieve(DirectionAttr.FK_Flow, this.getNo());
+         ds.Tables.add(dirs.ToDataTableField("WF_Direction"));
+
+         // 流程标签.
+         LabNotes labs = new LabNotes(this.getNo());
+         ds.Tables.add(labs.ToDataTableField("WF_LabNote"));
+
+         // 可退回的节点。
+         NodeReturns nrs = new NodeReturns();
+         nrs.RetrieveInSQL(NodeReturnAttr.FK_Node, sqlin);
+         ds.Tables.add(nrs.ToDataTableField("WF_NodeReturn"));
+
+          
+
+         // 工具栏。
+         NodeToolbars tools = new NodeToolbars();
+         tools.RetrieveInSQL(NodeToolbarAttr.FK_Node, sqlin);
+         ds.Tables.add(tools.ToDataTableField("WF_NodeToolbar"));
+
+          
+         // 节点与部门。
+         NodeDepts ndepts = new NodeDepts();
+         ndepts.RetrieveInSQL(NodeDeptAttr.FK_Node, sqlin);
+         ds.Tables.add(ndepts.ToDataTableField("WF_NodeDept"));
+          
+
+         // 节点与岗位权限。
+         NodeStations nss = new NodeStations();
+         nss.RetrieveInSQL(NodeStationAttr.FK_Node, sqlin);
+         ds.Tables.add(nss.ToDataTableField("WF_NodeStation"));
+          
+         // 节点与人员。
+         NodeEmps nes = new NodeEmps();
+         nes.RetrieveInSQL(NodeEmpAttr.FK_Node, sqlin);
+         ds.Tables.add(nes.ToDataTableField("WF_NodeEmp"));
+           
+
+         // 抄送人员。
+         CCEmps ces = new CCEmps();
+         ces.RetrieveInSQL(CCEmpAttr.FK_Node, sqlin);
+         ds.Tables.add(ces.ToDataTableField("WF_CCEmp"));
+          
+
+         // 抄送部门。
+         CCDepts cdds = new CCDepts();
+         cdds.RetrieveInSQL(CCDeptAttr.FK_Node, sqlin);
+         ds.Tables.add(cdds.ToDataTableField("WF_CCDept"));
+       
+
+         // 延续子流程。
+         NodeYGFlows fls = new NodeYGFlows();
+         fls.RetrieveInSQL(CCDeptAttr.FK_Node, sqlin);
+         ds.Tables.add(fls.ToDataTableField("WF_NodeSubFlow"));
+
+         //表单信息，包含从表.
+         sql = "SELECT No FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.getNo(), "No");
+         MapDatas mds = new MapDatas();
+         mds.RetrieveInSQL(MapDataAttr.No, sql);
+         ds.Tables.add(mds.ToDataTableField("Sys_MapData"));
+          
+
+         // Sys_MapAttr.
+         sql = "SELECT MyPK FROM Sys_MapAttr WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         MapAttrs attrs = new MapAttrs();
+         attrs.RetrieveInSQL(MapAttrAttr.MyPK, sql);
+         ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
+          
+
+         // Sys_EnumMain
+         sql = "SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + ")";
+         SysEnumMains ses = new SysEnumMains();
+         ses.RetrieveInSQL(SysEnumMainAttr.No, sql);
+         ds.Tables.add(ses.ToDataTableField("Sys_EnumMain"));
+          
+
+         // Sys_Enum
+         sql = "SELECT MyPK FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) )";
+         SysEnums sesDtl = new SysEnums();
+         sesDtl.RetrieveInSQL("MyPK", sql);
+         ds.Tables.add(sesDtl.ToDataTableField("Sys_Enum"));
+           
+
+         // Sys_MapDtl
+         sql = "SELECT No FROM Sys_MapDtl WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         MapDtls mdtls = new MapDtls();
+         mdtls.RetrieveInSQL(sql);
+         ds.Tables.add(mdtls.ToDataTableField("Sys_MapDtl"));
+
+
+         // Sys_MapExt
+         sql = "SELECT MyPK FROM Sys_MapExt WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         MapExts mexts = new MapExts();
+         mexts.RetrieveInSQL(sql);
+         ds.Tables.add(mexts.ToDataTableField("Sys_MapExt"));
+
+          
+
+         // Sys_GroupField
+         sql = "SELECT OID FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.No, "EnName");
+         GroupFields gfs = new GroupFields();
+         gfs.RetrieveInSQL(sql);
+         ds.Tables.add(gfs.ToDataTableField("Sys_GroupField"));
+          
+
+         // Sys_MapFrame
+         sql = "SELECT MyPK FROM Sys_MapFrame WHERE" + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         MapFrames mfs = new MapFrames();
+         mfs.RetrieveInSQL("MyPK",sql);
+         ds.Tables.add(mfs.ToDataTableField("Sys_MapFrame"));
+
+        
+
+         // Sys_FrmLine.
+         sql = "SELECT MyPK FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmLines frmls = new FrmLines();
+         frmls.RetrieveInSQL(sql);
+         ds.Tables.add(frmls.ToDataTableField("Sys_FrmLine"));
+        
+
+         // Sys_FrmLab.
+         sql = "SELECT MyPK FROM Sys_FrmLab WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmLabs frmlabs = new FrmLabs();
+         frmlabs.RetrieveInSQL(sql);
+         ds.Tables.add(frmlabs.ToDataTableField("Sys_FrmLab"));
+
+         
+
+         // Sys_FrmEle.
+         sql = "SELECT MyPK FROM Sys_FrmEle WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+
+         FrmEles frmEles = new FrmEles();
+         frmEles.RetrieveInSQL(sql);
+         ds.Tables.add(frmEles.ToDataTableField("Sys_FrmEle"));
+
+         // Sys_FrmLink.
+         sql = "SELECT MyPK FROM Sys_FrmLink WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmLinks frmLinks = new FrmLinks();
+         frmLinks.RetrieveInSQL(sql);
+         ds.Tables.add(frmLinks.ToDataTableField("Sys_FrmLink"));
+
+         // Sys_FrmRB.
+         sql = "SELECT MyPK FROM Sys_FrmRB WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmRBs frmRBs = new FrmRBs();
+         frmRBs.RetrieveInSQL(sql);
+         ds.Tables.add(frmRBs.ToDataTableField("Sys_FrmRB"));
+
+
+         // Sys_FrmImgAth.
+         sql = "SELECT MyPK FROM Sys_FrmImgAth WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmImgAths frmIs = new FrmImgAths();
+         frmIs.RetrieveInSQL(sql);
+         ds.Tables.add(frmIs.ToDataTableField("Sys_FrmImgAth"));
+
+         // Sys_FrmImg.
+         sql = "SELECT MyPK FROM Sys_FrmImg WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmImgs frmImgs = new FrmImgs();
+         frmImgs.RetrieveInSQL(sql);
+         ds.Tables.add(frmImgs.ToDataTableField("Sys_FrmImg"));
+
+
+         // Sys_FrmAttachment.
+         sql = "SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmAttachments frmaths = new FrmAttachments();
+         frmaths.RetrieveInSQL(sql);
+         ds.Tables.add(frmaths.ToDataTableField("Sys_FrmAttachment"));
+
+         // Sys_FrmEvent.
+         sql = "SELECT MyPK FROM Sys_FrmEvent WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         FrmEvents frmevens = new FrmEvents();
+         frmevens.RetrieveInSQL(sql);
+         ds.Tables.add(frmevens.ToDataTableField("Sys_FrmEvent"));
+         return ds;
+     }
+
+	public final DataSet GetFlow2017(String path) throws Exception
 	{
 		// 把所有的数据都存储在这里。
 		DataSet ds = new DataSet();
@@ -5125,7 +5397,11 @@ public class Flow extends BP.En.EntityNoName
 		Flow fl = new Flow();
 		String oldFlowNo = dtFlow.Rows.get(0).getValue("No").toString();
 		String oldFlowName = dtFlow.Rows.get(0).getValue("Name").toString();
-
+		if(oldFlowNo==null || oldFlowNo.equals(""))
+			oldFlowNo = dtFlow.Rows.get(0).getValue("NO").toString();
+		if(oldFlowName==null || oldFlowName.equals(""))
+			oldFlowName = dtFlow.Rows.get(0).getValue("NAME").toString();
+		
 		int oldFlowID = Integer.parseInt("".equals(oldFlowNo) ? "0" : oldFlowNo);
 		//String timeKey = new java.util.Date().toString("yyMMddhhmmss");
 		SimpleDateFormat format = new SimpleDateFormat("yyMMddhhmmss");

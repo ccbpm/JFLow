@@ -183,6 +183,12 @@ public abstract class WebContralBase extends BaseController {
 			}
 			
 			
+			//如果有url返回.
+			if (msg!=null && ( msg.indexOf("url@")==0 || msg.indexOf("info@")==0)   )
+				return msg;
+			
+			
+			
 			String str = "";
 			if(e.getCause().getMessage().indexOf("wait")>-1){
 				str += "@错误原因可能是数据库连接异常";

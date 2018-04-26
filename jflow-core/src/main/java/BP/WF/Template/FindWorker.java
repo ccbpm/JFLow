@@ -229,13 +229,28 @@ public class FindWorker
 				if (i == 0)
 				{
 					if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected)
+                    {
+                        Node toNode = this.town.getHisNode();
+                        Selector select = new Selector(toNode.getNodeID());
+                        if (select.getSelectorModel() == SelectorModel.GenerUserSelecter)
+                            throw new Exception("url@./WorkOpt/AccepterOfGener.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + toNode.getNodeID() + "&WorkID=" + this.WorkID);
+                        else
+                            throw new Exception("url@./WorkOpt/AccepterGener.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + toNode.getNodeID() + "&WorkID=" + this.WorkID);
+                    }
+                    else
+                    {
+                        throw new Exception("@流程设计错误，请重写FEE，然后为节点(" + town.getHisNode().getName() + ")设置接受人员，详细请参考cc流程设计手册。");
+                    }
+					
+					/*
+					if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected)
 					{
 						throw new RuntimeException("@请选择下一步骤工作(" + town.getHisNode().getName() + ")接受人员。");
 					}
 					else
 					{
 						throw new RuntimeException("@流程设计错误，请重写FEE，然后为节点(" + town.getHisNode().getName() + ")设置接受人员，详细请参考cc流程设计手册。");
-					}
+					}*/
 				}
 
 				//插入里面.

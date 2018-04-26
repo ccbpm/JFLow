@@ -1676,7 +1676,7 @@ public class WF_MyFlow extends WebContralBase {
 				return "err@" + ex.getMessage().replaceAll("@@", "@").replaceAll("@", "<BR>@");
 			}
 
-			return "err@发送工作出现错误:" + ex.getMessage();
+			return ex.getMessage();
 		}
 	}
 	

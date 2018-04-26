@@ -5397,10 +5397,6 @@ public class Flow extends BP.En.EntityNoName
 		Flow fl = new Flow();
 		String oldFlowNo = dtFlow.Rows.get(0).getValue("No").toString();
 		String oldFlowName = dtFlow.Rows.get(0).getValue("Name").toString();
-		if(oldFlowNo==null || oldFlowNo.equals(""))
-			oldFlowNo = dtFlow.Rows.get(0).getValue("NO").toString();
-		if(oldFlowName==null || oldFlowName.equals(""))
-			oldFlowName = dtFlow.Rows.get(0).getValue("NAME").toString();
 		
 		int oldFlowID = Integer.parseInt("".equals(oldFlowNo) ? "0" : oldFlowNo);
 		//String timeKey = new java.util.Date().toString("yyMMddhhmmss");

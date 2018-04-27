@@ -7,14 +7,16 @@ import BP.En.Map;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
+import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 
 
 /** 
  外键字段
 */
-public class MapAttrSFTable extends EntityMyPK
+public class MapAttrSFSQL extends EntityMyPK
 {
+	 
 	/** 
 	 表单ID
 	*/
@@ -63,7 +65,7 @@ public class MapAttrSFTable extends EntityMyPK
 	/** 
 	 外键字段
 	*/
-	public MapAttrSFTable()
+	public MapAttrSFSQL()
 	{
 	}
 	/** 
@@ -151,11 +153,24 @@ public class MapAttrSFTable extends EntityMyPK
       
        //  #endregion 执行的方法.
          
+         
+         
+         
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
+
+	@Override
+	protected void afterDelete() throws Exception
+    {
+        MapAttr attr = new MapAttr();
+        attr.setMyPK( attr.getFK_MapData() + "_" + this.getKeyOfEn() + "T");
+        attr.Delete();
+         
+         super.afterDelete();
+    }
 	/** 
 	 旧版本设置
 	 

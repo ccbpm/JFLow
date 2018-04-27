@@ -767,7 +767,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         		  || sf.getSrcType() == SrcType.CreateTable)
               return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFTable&PKVal=" + attr.getMyPK();
           else
-              return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=" + attr.getMyPK();
+              return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFSQL&PKVal=" + attr.getMyPK();
 	}
 	
 	

@@ -1682,9 +1682,11 @@ public class WF_MyFlow extends WebContralBase {
 	
 	public String Save() throws Exception{
 		try {
+			
 			return BP.WF.Dev2Interface.Node_SaveWork(this.getFK_Flow(),
 					this.getFK_Node(), this.getWorkID(),
 					this.GetMainTableHT(), null);
+			
 		} catch (RuntimeException ex) {
 			return "err@保存失败:" + ex.getMessage();
 		}

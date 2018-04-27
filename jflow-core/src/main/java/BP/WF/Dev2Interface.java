@@ -8249,7 +8249,15 @@ public class Dev2Interface
 				for (Object str : htWork.keySet())
 				{
 
-					if (StartWorkAttr.OID.equals(str) || StartWorkAttr.CDT.equals(str) || StartWorkAttr.MD5.equals(str) || StartWorkAttr.Emps.equals(str) || StartWorkAttr.FID.equals(str) || StartWorkAttr.FK_Dept.equals(str) || StartWorkAttr.PRI.equals(str) || StartWorkAttr.Rec.equals(str) || StartWorkAttr.Title.equals(str))
+					if (StartWorkAttr.OID.equals(str) || 
+							StartWorkAttr.CDT.equals(str) 
+							|| StartWorkAttr.MD5.equals(str) ||
+							StartWorkAttr.Emps.equals(str) || 
+							StartWorkAttr.FID.equals(str) ||
+							StartWorkAttr.FK_Dept.equals(str) ||
+							StartWorkAttr.PRI.equals(str) || 
+							StartWorkAttr.Rec.equals(str) ||
+							StartWorkAttr.Title.equals(str))
 					{
 							continue;
 					}

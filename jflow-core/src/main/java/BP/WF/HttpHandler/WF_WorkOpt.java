@@ -1756,8 +1756,10 @@ public class WF_WorkOpt extends WebContralBase {
 				String emps = dt.Rows.get(0).getValue("Tag").toString();
 				if (emps == null || "".equals(emps))
 					emps = dt.Rows.get(0).getValue("EmpTo").toString();
-
-				BP.WF.Dev2Interface.Node_AddNextStepAccepters(this.getWorkID(), toNodeID, emps, false);
+				
+				if (emps.contains(",")==false)			 
+				    BP.WF.Dev2Interface.Node_AddNextStepAccepters(this.getWorkID(), toNodeID, emps, false);
+				
 			}
 			if (dt.Rows.size() != 0)
 				sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID());

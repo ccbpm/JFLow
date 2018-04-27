@@ -843,9 +843,7 @@ function execSend(toNode) {
                 if (data.indexOf('Accepter') != 0) {
 
                     //求出来 url里面的FK_Node=xxxx 
-                    var toNodeID = 101;
-                    if (data.indexOf('Accepter') != 0) {
-            		 var toNodeID = 101;
+                    var toNodeID = 101
             		var params = data.split("&");
             		for(var i=0;i<params.length;i++){
             			if(params[i].indexOf("ToNode")==-1)
@@ -860,7 +858,7 @@ function execSend(toNode) {
                     $('#returnWorkModal').modal().show();
                     return;
                 }
-
+                
                 var url = data;
                 url = url.replace('url@', '');
                 window.location.href = url;

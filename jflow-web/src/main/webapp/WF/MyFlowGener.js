@@ -613,7 +613,6 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
             //var mystr = ctrlID + 'T=' + item;
 
-
             formArrResult.push(mystr);
         }
 

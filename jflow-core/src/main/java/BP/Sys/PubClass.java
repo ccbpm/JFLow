@@ -3,6 +3,7 @@ package BP.Sys;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,6 +27,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpRequest;
@@ -1549,18 +1551,7 @@ public class PubClass {
 
 		tempName = toUtf8String(request, tempName);
 
-		// String agent = request.getHeader("User-Agent");
 
-		// if (request.getHeader("User-Agent").toLowerCase().indexOf("firefox")
-		// > 0)
-		// tempName = new String(tempName.getBytes("UTF-8"), "ISO8859-1");//
-		// firefox浏览器
-		// else if
-		// (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
-		// // tempName = URLEncoder.encode(tempName, "UTF-8");// IE浏览器
-		// tempName = new String(tempName.getBytes("UTF-8"), "ISO8859-1");//
-		// firefox浏览器
-		// }
 		response.reset();
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment;filename=" + tempName);
@@ -1577,24 +1568,43 @@ public class PubClass {
 		in.close();
 		out.close();
 	}
+	
+	/// <summary>
+    /// 从别的网站服务器上下载文件
+    /// </summary>
+    /// <param name="filepath"></param>
+    /// <param name="tempName"></param>
+    public static void DownloadHttpFile(String filepath, String tempName,HttpServletResponse response) throws Exception
+    {
+        ArrayList<Byte> byteList = new ArrayList<Byte>();
+        response.setHeader("Content-Type", "application/octet-stream; charset=UTF-8");
+		response.setHeader("Content-Disposition", "attachment; filename=" + tempName);
+        //打开网络连接
+        String filePth = filepath.replace("\\", "/").trim();
+        if (filepath.indexOf("/") == 0) {
+            filepath = filepath.substring(filepath.length() - 1);
+        }
+        if (!SystemConfig.getAttachWebSite().trim().endsWith("/"))
+        {
+            filepath = SystemConfig.getAttachWebSite().trim() + "/" + filepath;
+        }
+        else
+        {
+            filepath = SystemConfig.getAttachWebSite().trim() + filepath;
+        }
+        FileInputStream fis = new FileInputStream(filepath);
+		byte[] data = new byte[8192];
+		ServletOutputStream os = response.getOutputStream();
+		int i;
+		while ((i = fis.read(data, 0, 8192)) != -1) {
+			os.write(data, 0, i);
+		}
+		os.flush();
+		fis.close();
+		os.close();
 
-	//
-	// public static void OpenWordDoc(String filepath, String tempName)
-	// {
-	// tempName = HttpUtility.UrlEncode(tempName);
-	//
-	// HttpContext.Current.Response.Charset = "GB2312";
-	// HttpContext.Current.Response.AppendHeader("Content-Disposition",
-	// "attachment;filename=" + tempName);
-	// HttpContext.Current.Response.ContentEncoding =
-	// System.Text.Encoding.GetEncoding("GB2312");
-	// HttpContext.Current.Response.ContentType = "application/ms-msword";
-	// //image/JPEG;text/HTML;image/GIF;application/ms-excel
-	// //HttpContext.Current.EnableViewState =false;
-	// HttpContext.Current.Response.WriteFile(filepath);
-	// HttpContext.Current.Response.End();
-	// HttpContext.Current.Response.Close();
-	// }
+    }
+
 	public static void OpenWordDocV2(String filepath, String tempName) throws IOException {
 		// 设置文件MIME类型
 		HttpServletResponse response = ContextHolderUtils.getResponse();

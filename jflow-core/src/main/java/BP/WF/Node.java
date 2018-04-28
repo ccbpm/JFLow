@@ -1295,7 +1295,8 @@ public class Node extends Entity
               (this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.FreeForm))
           {
               if (this.WorkID == 0)
-                  throw new Exception("err@获得当前节点的上一个节点表单出现错误,没有给参数WorkID赋值.");
+            	  return "ND" + this.getNodeID();
+                 // throw new Exception("err@获得当前节点的上一个节点表单出现错误,没有给参数WorkID赋值.");
 
               /* 要引擎上一个节点表单 */
               String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A, WF_Node B ";

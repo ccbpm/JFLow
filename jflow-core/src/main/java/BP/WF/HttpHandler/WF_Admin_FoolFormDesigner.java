@@ -757,7 +757,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         		  null, this.GetRequestVal("SFTable"), 100, 100, 1);
 
           attr.Retrieve();
-          String sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.getFK_MapData() + "' AND CtrlType='' OR CtrlType= NULL";
+          String sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.getFK_MapData() + "' AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
           attr.setGroupID( DBAccess.RunSQLReturnValInt(sql, 0));
           attr.Update();
 
@@ -815,7 +815,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setName("枚举"+attr.getUIBindKey());
 		
 		  //String sql = "SELECT OID FROM Sys_GroupField A WHERE A.EnName='" + this.getFK_MapData() + "' AND CtrlType='' OR CtrlType= NULL";
-		  String sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.getFK_MapData() + "' AND CtrlType='' OR CtrlType= NULL";
+		  String sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.getFK_MapData() + "' AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
           attr.setGroupID(  DBAccess.RunSQLReturnValInt(sql, 0));
 		attr.Insert();
 
@@ -1294,7 +1294,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		int iGroupID = this.getGroupField();
 		try
 		{
-			DataTable dt = DBAccess.RunSQLReturnTable("SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getFK_MapData() + "' and (CtrlID is null or ctrlid ='')");
+			DataTable dt = DBAccess.RunSQLReturnTable("SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getFK_MapData() + "' and (CtrlID is null or ctrlid ='')  ORDER BY OID DESC  ");
 			if (dt != null && dt.Rows.size() > 0)
 			{
 				iGroupID = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());

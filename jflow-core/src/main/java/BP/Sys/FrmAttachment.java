@@ -293,7 +293,7 @@ public class FrmAttachment extends EntityMyPK
 	//	String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
 		//if (s.equals("") || s == null)
 	//	{
-			return SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\";
+			return SystemConfig.getPathOfDataUser() + "UploadFile/" + this.getFK_MapData() + "/";
 		//}
 		//return s;
 	}

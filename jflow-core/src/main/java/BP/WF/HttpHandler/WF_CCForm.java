@@ -95,7 +95,7 @@ public class WF_CCForm extends WebContralBase {
 	public WF_CCForm() {
 
 	}
-	
+
 	 ///#region 多附件.
      public String Ath_Init()
      {
@@ -478,7 +478,6 @@ public class WF_CCForm extends WebContralBase {
      public String AttachmentUpload_DownZip() throws Exception
      {
          String zipName = this.getWorkID() + "_" + this.getFK_FrmAttachment();
-
          ///#region 处理权限控制.
          BP.Sys.FrmAttachment athDesc = this.GenerAthDesc();
 
@@ -490,10 +489,10 @@ public class WF_CCForm extends WebContralBase {
              return "err@文件不存在，不需打包下载。";
 
          String basePath = SystemConfig.getPathOfDataUser() + "Temp";
-         String tempUserPath = basePath + "\\" + WebUser.getNo();
-         String tempFilePath = basePath + "\\" + WebUser.getNo()+"\\"+this.getOID();
-         String zipPath = basePath + "\\" + WebUser.getNo();
-         String zipFile = zipPath + "\\" + zipName + ".zip";
+         String tempUserPath = basePath + "/" + WebUser.getNo();
+         String tempFilePath = basePath + "/" + WebUser.getNo()+"/"+this.getOID();
+         String zipPath = basePath + "/" + WebUser.getNo();
+         String zipFile = zipPath + "/" + zipName + ".zip";
          String info = "";
          
          File tempFile = new File(tempFilePath);

@@ -597,6 +597,7 @@ public class MyJoinFlow extends Entity
 		}
 
 		BP.WF.Node nd = new Node(this.getFK_Node());
+		nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 
 		return "../../CCForm/FrmFreeReadonly.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}

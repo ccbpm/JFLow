@@ -1104,6 +1104,8 @@ public class WorkNode {
 
 			// 获取它的下一步节点.
 			Node nd = this.NodeSend_GenerNextStepNode_Ext(mynd);
+			nd.WorkID=this.getWorkID(); // 未获得表单ID。
+		
 			mynd = nd;
 			Work skipWork = null;
 			if (!nd.getNodeFrmID().equals(mywork.NodeFrmID)) {

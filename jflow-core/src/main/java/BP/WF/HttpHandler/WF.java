@@ -155,6 +155,8 @@ public class WF extends WebContralBase
         {
             nd = new Node(nodeID);
         }
+        
+        nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 
         Flow fl = new Flow(this.getFK_Flow());
         
@@ -860,6 +862,7 @@ public class WF extends WebContralBase
 	public final String FrmView_Init() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
+		nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 
 
 		MapData md = new MapData();
@@ -1068,6 +1071,7 @@ public class WF extends WebContralBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 图片附件
+		nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), this.getWorkID() + "");
 		if (imgAthDBs != null && imgAthDBs.size() > 0)
 		{

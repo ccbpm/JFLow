@@ -86,6 +86,7 @@ public class CCFlowAPI
 		
 
 		Node nd = new Node(fk_node);
+		nd.WorkID = workID; //为获得表单id，设置的参数.
 		try
 		{
   

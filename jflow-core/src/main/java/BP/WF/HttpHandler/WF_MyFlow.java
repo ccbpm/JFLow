@@ -915,6 +915,8 @@ public class WF_MyFlow extends WebContralBase {
         {
         	String nodeID= this.getcurrND().GetValStrByKey("NodeID");
         	
+        	this.getcurrND().WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
+        	
             if (this.getcurrND().getNodeFrmID().contains(nodeID ) == false)
             {
                 /*如果当前节点引用的其他节点的表单.*/

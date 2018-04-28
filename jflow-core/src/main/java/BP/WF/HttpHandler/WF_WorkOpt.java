@@ -1083,7 +1083,8 @@ public class WF_WorkOpt extends WebContralBase {
 	public String ViewWorkNodeFrm() throws Exception {
 		// 获得节点表单数据.
 		Node nd = new Node(this.getFK_Node());
-
+		nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
+		
 		java.util.Hashtable ht = new java.util.Hashtable();
 		ht.put("FormType", nd.getFormType().toString());
 		ht.put("Url", nd.getFormUrl() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node="

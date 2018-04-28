@@ -772,6 +772,7 @@ public class WorkFlowBuessRole
 				throw new RuntimeException("@您设置的节点接收人方式为：以分流点表单的明细表数据源确定子线程的接收人，但是当前节点非子线程节点。");
 			}
 
+			currNode.WorkID = workid; //为获得表单id，设置的参数.
 			BP.Sys.MapDtls dtls = new BP.Sys.MapDtls(currNode.getNodeFrmID());
 			String msg = null;
 			for (BP.Sys.MapDtl dtl : dtls.ToJavaList())

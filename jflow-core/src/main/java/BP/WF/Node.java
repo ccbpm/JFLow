@@ -155,8 +155,9 @@ public class Node extends Entity
 	}
 	/** 
 	 他的工作
+	 * @throws Exception 
 	*/
-	public final Work getHisWork()
+	public final Work getHisWork() throws Exception
 	{
 		Work obj = null;
 		if (this.getIsStartNode())
@@ -202,8 +203,9 @@ public class Node extends Entity
 	}
 	/** 
 	 他的工作s
+	 * @throws Exception 
 	*/
-	public final Works getHisWorks()
+	public final Works getHisWorks() throws Exception
 	{
 		Works obj = (Works)((this.getHisWork().getGetNewEntities() instanceof Works) ? this.getHisWork().getGetNewEntities() : null);
 		return obj;
@@ -1277,17 +1279,41 @@ public class Node extends Entity
 	{
 		SetValByKey(NodeAttr.JumpToNodes, value);
 	}
+	public long WorkID=0;
 	/** 
 	 节点表单ID
+	 * @throws Exception 
 	*/
-	public final String getNodeFrmID()
+	public final String getNodeFrmID() throws Exception
 	{
-		String str = this.GetValStrByKey(NodeAttr.NodeFrmID);
-		if (StringHelper.isNullOrEmpty(str))
-		{
-			return "ND" + this.getNodeID();
-		}
-		return str;
+
+		  String str = this.GetValStrByKey(NodeAttr.NodeFrmID);
+          if (DataType.IsNullOrEmpty(str))
+              return "ND" + this.getNodeID();
+
+          if (str.equals("Pri") == true &&
+              (this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.FreeForm))
+          {
+              if (this.WorkID == 0)
+                  throw new Exception("err@获得当前节点的上一个节点表单出现错误,没有给参数WorkID赋值.");
+
+              /* 要引擎上一个节点表单 */
+              String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A, WF_Node B ";
+              sql += " WHERE A.NDFrom=B.NodeID AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue() + ")  ";
+              sql += "  AND (FormType=0 OR FormType=1) ";
+              sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+NodeID ) ";
+              sql += "  AND (A.WokrID="+this.WorkID+") ";
+
+              sql += " ORDER BY A.RDT ";
+
+              int nodeID = DBAccess.RunSQLReturnValInt(sql,0);
+              if (nodeID == 0)
+                  throw new Exception("err@没有找到指定的节点.");
+
+              return "ND" + nodeID;
+          }
+          return str;
+          
 	}
 	public final void setNodeFrmID(String value)
 	{

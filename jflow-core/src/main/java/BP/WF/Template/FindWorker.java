@@ -165,6 +165,7 @@ public class FindWorker
 				throw new RuntimeException("@您设置的节点接收人方式为：以分流点表单的明细表数据源确定子线程的接收人，但是当前节点非子线程节点。");
 			}
 
+			this.currWn.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 			BP.Sys.MapDtls dtls = new BP.Sys.MapDtls(this.currWn.getHisNode().getNodeFrmID());
 			String msg = null;
 			for (BP.Sys.MapDtl dtl : dtls.ToJavaList())

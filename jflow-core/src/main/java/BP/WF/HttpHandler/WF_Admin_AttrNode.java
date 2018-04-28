@@ -168,6 +168,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
 				// 当前节点信息.
 				Node nd = new Node(this.getFK_Node());
+				nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 
 				nd.setNodeFrmID(nd.getNodeFrmID());
 				// nd.FormUrl = nd.FormUrl;

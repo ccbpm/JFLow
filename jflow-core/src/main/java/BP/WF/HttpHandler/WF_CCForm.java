@@ -1120,6 +1120,7 @@ public class WF_CCForm extends WebContralBase {
 		// #region 加入组件的状态信息, 在解析表单的时候使用.
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
 			Node nd = new Node(this.getFK_Node());
+			nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 			BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false
 					&& nd.getHisFormType() != NodeFormType.RefOneFrmTree ) {

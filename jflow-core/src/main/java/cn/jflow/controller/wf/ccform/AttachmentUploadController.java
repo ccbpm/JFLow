@@ -320,7 +320,7 @@ public class AttachmentUploadController extends BaseController {
 					.getExtensionName(item.getOriginalFilename());
 
 
-			String realSaveTo = savePath + File.separator + guid + "." + fileName + "." + ext;
+			String realSaveTo = savePath + guid + "." + fileName + "." + ext;
 
 			String saveTo = realSaveTo;
 
@@ -375,6 +375,7 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
 
 			dbUpload.setFileExts(ext);
+			System.out.println("setname:"+saveTo);
 			dbUpload.setFileFullName(saveTo);
 			dbUpload.setFileName(item.getOriginalFilename());
 			dbUpload.setFileSize(item.getSize());
@@ -449,9 +450,9 @@ public class AttachmentUploadController extends BaseController {
 
              if (dbAtt.getAthSaveWay() == AthSaveWay.DB)
              {*/
-                 String downpath = GetRealPath(downDB.getFileFullName());
-                 BP.Sys.PubClass.DownloadFile(downpath, downDB.getFileName());
-                 PubClass.DownloadHttpFile(downDB.getFileFullName(), downDB.getFileName(),response);
+                 String downpath = downDB.getFileFullName();
+                 BP.Sys.PubClass.DownloadFileByBuffer(downpath, downDB.getFileName());
+//                 PubClass.DownloadHttpFile(downDB.getFileFullName(), downDB.getFileName(),response);
              //}
             
              return;

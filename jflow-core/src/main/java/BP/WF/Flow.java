@@ -6338,6 +6338,9 @@ public class Flow extends BP.En.EntityNoName
 						}
 						catch (RuntimeException ex)
 						{
+							cc.CheckPhysicsTable();
+							fwc.CheckPhysicsTable();
+
 							throw new RuntimeException("@导入节点:FlowName:" + nd.getFlowName() + " nodeID: " + nd.getNodeID() + " , " + nd.getName() + " 错误:" + ex.getMessage());
 						}
 

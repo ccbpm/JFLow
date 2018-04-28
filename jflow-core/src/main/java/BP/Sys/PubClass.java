@@ -1,5 +1,6 @@
 package BP.Sys;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -1569,6 +1570,37 @@ public class PubClass {
 		out.close();
 	}
 	
+	
+	public static void DownloadFileByBuffer(String filepath, String tempName) throws IOException {
+
+		// 设置文件MIME类型
+		HttpServletResponse response = ContextHolderUtils.getResponse();
+		HttpServletRequest request = ContextHolderUtils.getRequest();
+
+		tempName = toUtf8String(request, tempName);
+
+
+		response.reset();
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment;filename=" + tempName);
+		response.setHeader("Connection", "close");
+		// 读取目标文件，通过response将目标文件写到客户端
+		// 读取文件
+		InputStream in = new FileInputStream(new File(filepath));
+		BufferedInputStream bis = new BufferedInputStream(in);		
+		OutputStream out = response.getOutputStream();
+		BufferedOutputStream bos = new BufferedOutputStream(out);
+		// 写文件
+		int b;
+		while ((b = bis.read()) != -1) {
+			bos.write(b);
+			bos.flush();
+		}
+		in.close();
+		bis.close();
+		out.close();
+		bos.close();
+	}
 	/// <summary>
     /// 从别的网站服务器上下载文件
     /// </summary>

@@ -103,8 +103,9 @@ public class CCFlowAPI
 			}
 			
 			Work wk = nd.getHisWork();
-            wk.setOID(workID);
+            wk.setOID(workID);            
             wk.RetrieveFromDBSources();
+            wk.ResetDefaultVal();
             
             // 第1.2: 调用,处理用户定义的业务逻辑.
             String sendWhen = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.FrmLoadBefore, nd,
@@ -325,29 +326,7 @@ public class CCFlowAPI
 			}
 
 
-			// 节点数据.
-			//string sql = "SELECT * FROM WF_Node WHERE NodeID=" + fk_node;
-			//DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			//dt.TableName = "WF_NodeBar";
-			//myds.Tables.Add(dt);
-
-			//// 流程数据.
-			//Flow fl = new Flow(fk_flow);
-			//myds.Tables.Add(fl.ToDataTableField("WF_Flow"));
-
-				///#endregion 流程设置信息.
-
-
-			///#region 把主从表数据放入里面.
-			//.工作数据放里面去, 放进去前执行一次装载前填充事件.
-			//重设默认值.
-            wk.ResetDefaultVal();
-
-			// 处理传递过来的参数。
-//			for (String k : System.Web.HttpContext.Current.Request.QueryString.AllKeys)
-//			{
-//				wk.SetValByKey(k, System.Web.HttpContext.Current.Request.QueryString[k]);
-//			}
+		 
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
 			while(enu.hasMoreElements())
 			{
@@ -380,6 +359,7 @@ public class CCFlowAPI
 				wk = (Work)((tempVar instanceof Work) ? tempVar : null);
 			}
 
+		    wk.ResetDefaultVal();
 			DataTable mainTable = wk.ToDataTableField(md.getNo());
 			mainTable.TableName = "MainTable";
 			myds.Tables.add(mainTable);

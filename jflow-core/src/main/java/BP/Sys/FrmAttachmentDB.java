@@ -56,7 +56,7 @@ public class FrmAttachmentDB extends EntityMyPK
 		str = str.replace("~", "-");
 		str = str.replace("'", "-");
 		str = str.replace("*", "-");
-		str = str.replace("/","\\");
+//		str = str.replace("/","\\");
 		this.SetValByKey(FrmAttachmentDBAttr.FileFullName, str);
 	}
 	/** 

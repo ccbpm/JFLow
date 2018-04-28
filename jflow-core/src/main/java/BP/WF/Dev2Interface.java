@@ -7216,6 +7216,7 @@ public class Dev2Interface
 
 		// 变量.
 		Node nd = new Node(currNodeId);
+		nd.WorkID =workID;
 		Work sw = nd.getHisWork();
 		sw.setOID(workID);
 		sw.RetrieveFromDBSources();

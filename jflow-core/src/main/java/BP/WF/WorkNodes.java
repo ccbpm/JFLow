@@ -17,9 +17,10 @@ public class WorkNodes extends ArrayList<WorkNode>
 		
 	/** 
 	 他的工作s
+	 * @throws Exception 
 	  
 	*/
-	public final Works getGetWorks()
+	public final Works getGetWorks() throws Exception
 	{
 		if (this.size() == 0)
 		{

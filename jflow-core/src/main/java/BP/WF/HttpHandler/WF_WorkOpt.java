@@ -1818,6 +1818,7 @@ public class WF_WorkOpt extends WebContralBase {
 	/// <returns></returns>
 	public String AccepterOfGener_Send() {
 		try {
+			
 			int toNodeID = this.GetRequestValInt("ToNode");
 
 			/* 仅仅设置一个,检查压入的人员个数. */

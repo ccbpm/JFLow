@@ -1224,6 +1224,8 @@ function GenerWorkNode() {
         dataType: 'html',
         success: function (data) {
 
+        	
+        	 
             if (data.indexOf('err@') == 0) {
                 alert(data);
                 console.log(data);
@@ -1239,6 +1241,10 @@ function GenerWorkNode() {
                 alert(" GenerWorkNode转换JSON失败,请查看控制台日志,或者联系管理员.");
                 return;
             }
+            
+            var mainTable=flowData["MainTable"];          
+            
+            console.log(mainTable);
 
             var node = flowData.WF_Node[0];
 

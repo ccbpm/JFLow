@@ -30,6 +30,7 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.DA.Log;
 import BP.DA.Paras;
 import BP.En.QueryObject;
 import BP.Sys.AthDeleteWay;
@@ -504,12 +505,17 @@ public class WF_CCForm extends WebContralBase {
              if (file.exists() == false)
             	 file.mkdirs();
 
-             //如果有这个临时的目录就把他删除掉.
-             
-             if (tempFile.exists() == true)
-            	 tempFile.delete();
-             tempFile.mkdirs();
-             
+             //如果有这个临时的目录就把他删除掉.            
+             if (tempFile.exists() == true){
+            	// tempFile.delete();
+            	 boolean success = FileAccess.deletesFile(tempFile);
+            	 if(!success){
+            		 Log.DebugWriteInfo("删除临时目录失败");
+            	 }           	 
+             }
+            if(!tempFile.exists()){
+            	 tempFile.mkdirs();
+            }    
          }
          catch (Exception ex)
          {

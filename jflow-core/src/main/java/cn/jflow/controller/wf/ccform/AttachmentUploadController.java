@@ -122,13 +122,13 @@ public class AttachmentUploadController extends BaseController {
 
 			// 替换关键的字串.
 			savePath = savePath.replace("\\\\", "\\");
-			try {
-				if(savePath.indexOf(":")==-1){
-					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
-				}
-			} catch (RuntimeException e) {
+//			try {
+//				if(savePath.indexOf(":")==-1){
+//					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
+//				}
+//			} catch (RuntimeException e) {
 
-			}
+//			}
 			try {
 				File fileInfo = new File(savePath);
 
@@ -294,13 +294,13 @@ public class AttachmentUploadController extends BaseController {
 
 			// 替换关键的字串.
 			savePath = savePath.replace("\\\\", "\\");
-			try {
-				if(savePath.indexOf(":")==-1){
-					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
-				}
-			} catch (RuntimeException e) {
-
-			}
+//			try {
+//				if(savePath.indexOf(":")==-1){
+//					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
+//				}
+//			} catch (RuntimeException e) {
+//
+//			}
 			try {
 				File fileInfo = new File(savePath);
 

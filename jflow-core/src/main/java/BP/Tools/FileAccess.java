@@ -236,4 +236,23 @@ public class FileAccess {
 	        } 
 	        return filename; 
 	    }
+	    /**
+	     * 递归删除目录下的所有文件及子目录下所有文件
+	     * @param file 将要删除的文件目录
+	     * @return boolean Returns "true" if all deletions were successful.
+	     *                 If a deletion fails, the method stops attempting to
+	     *                 delete and returns "false".
+	     */
+		public static boolean deletesFile(File file) {
+			String[] files = file.list();
+			if (files != null && files.length > 0) {
+				for (String f : files) {
+					boolean success = deletesFile(new File(file, f));
+					if (!success) {
+						return false;
+					}
+				}
+			}
+			return file.delete();
+		}
 }

@@ -1343,10 +1343,10 @@ public class Node extends Entity
                   sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
 
               if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
-                  sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+cast(B.NodeID as varchar(10)) ) ";
+                  sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID=CONCAT( 'ND',cast(B.NodeID as varchar(10)) ) ) ";
 
               if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-                  sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
+                  sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'||to_char(B.NodeID) ) ";
               
               
               sql += "  AND (A.WorkID="+this.WorkID+") ";

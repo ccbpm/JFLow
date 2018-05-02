@@ -213,12 +213,15 @@ public class CCFlowAPI
              }
 			  
 		
-	         myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));				
+	         myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));	
+	         
 	         //#endregion 加入组件的状态信息, 在解析表单的时候使用.
 	          
 	         /*
 	         //#region 增加 groupfields
-             if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false)
+             if (nd.getFormType() == NodeFormType.FoolTruck 
+             && nd.getIsStartNode() == false
+             && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs)==false )
              {
                  //计算累加的字段分组.
                  GroupFields gfs = new GroupFields();

@@ -1016,7 +1016,7 @@ public class WorkNode {
 		// 判断是否有延续流程.
 		NodeYGFlows ygflows = new NodeYGFlows();
 		ygflows.Retrieve(NodeYGFlowAttr.FK_Node, this._HisNode.getNodeID());
-		if (ygflows.size() > 0) {
+		if (ygflows.size() > 0 && 1==2) {
 			for (NodeYGFlow item : ygflows.ToJavaList()) {
 				boolean isPass = false;
 

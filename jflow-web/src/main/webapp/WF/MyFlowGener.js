@@ -835,6 +835,7 @@ function execSend(toNodeID) {
         dataType: 'html',
         success: function (data) {
 
+
             if (data.indexOf('err@') == 0) { //发送时发生错误
                 $('#Message').html(data.substring(4, data.length));
                 $('#MessageDiv').modal().show();
@@ -846,17 +847,16 @@ function execSend(toNodeID) {
 
                 if (data.indexOf('Accepter') != 0 && data.indexOf('AccepterGener') == -1) {
 
-                    //                    //求出来 url里面的FK_Node=xxxx 
-                    //                    var toNodeID = 101
-                    //                    var params = data.split("&");
-                    //                    for (var i = 0; i < params.length; i++) {
-                    //                        if (params[i].indexOf("ToNode") == -1)
-                    //                            continue;
-                    //                        else {
-                    //                            toNodeID = params[i].split("=")[1];
-                    //                            break;
-                    //                        }
-                    //                    }
+                    //求出来 url里面的FK_Node=xxxx 
+                    var params = data.split("&");
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].indexOf("ToNode") == -1)
+                            continue;
+                        else {
+                            toNodeID = params[i].split("=")[1];
+                            break;
+                        }
+                    }
                     //   var toNode = new Entity("BP.WF.Node",toNodeID)
                     initModal("sendAccepter", toNodeID);
                     $('#returnWorkModal').modal().show();
@@ -1241,6 +1241,8 @@ function GenerWorkNode() {
             }
 
             var node = flowData.WF_Node[0];
+            var gfs = flowData.Sys_MapAttr;
+            console.log(gfs);
 
             //设置标题.
             document.title = node.FlowName + ',' + node.Name; // "业务流程管理（BPM）平台";
@@ -1272,7 +1274,7 @@ function GenerWorkNode() {
                 return;
             }
 
-            if (node.FormType == 0) {
+            if (node.FormType == 0 || node.FormType == 10) {
                 GenerFoolFrm(flowData); //傻瓜表单.
             }
 

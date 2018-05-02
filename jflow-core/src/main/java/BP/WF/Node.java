@@ -1,5 +1,7 @@
 package BP.WF;
 
+import javax.swing.Spring;
+
 import BP.DA.*;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
@@ -152,7 +154,7 @@ public class Node extends Entity
 			this.SetRefObject("HisToNodes", obj);
 		}
 		return obj;
-	}
+	}	 
 	/** 
 	 他的工作
 	 * @throws Exception 
@@ -165,41 +167,75 @@ public class Node extends Entity
 			obj = new BP.WF.GEStartWork(this.getNodeID(), this.getNodeFrmID());
 			obj.setHisNode(this);
 			obj.setNodeID(this.getNodeID());
-			return obj;
-
-				//this.SetRefObject("HisWork", obj);
+			return obj; 
 		}
-		else
-		{
+		
+		 if (this.getFormType() != NodeFormType.FoolTruck || this.WorkID == 0 || this.getIsStartNode() == true)
+         {
 			obj = new BP.WF.GEWork(this.getNodeID(), this.getNodeFrmID());
 			obj.setHisNode(this);
 			obj.setNodeID(this.getNodeID());
-			return obj;
-				//this.SetRefObject("HisWork", obj);
+			return obj;				 
 		}
-			// return obj;
-			// 放入缓存就没有办法执行数据的clone. 
-			// Work obj = this.GetRefObject("HisWork") as Work;
-			// if (obj == null)
-			// {
-			//     if (this.IsStartNode)
-			//     {
-			//         obj = new BP.WF.GEStartWork(this.NodeID);
-			//         obj.HisNode = this;
-			//         obj.NodeID = this.NodeID;
-			//         this.SetRefObject("HisWork", obj);
-			//     }
-			//     else
-			//     {
-			//         obj = new BP.WF.GEWork(this.NodeID);
-			//         obj.HisNode = this;
-			//         obj.NodeID = this.NodeID;
-			//         this.SetRefObject("HisWork", obj);
-			//     }
-			// }
-			//// obj.GetNewEntities.GetNewEntity;
-			//// obj.Row = null;
-			// return obj;
+		 
+		 //如果是累加表单.
+         obj = new BP.WF.GEWork(this.getNodeID(), this.getNodeFrmID());
+
+         Map ma = obj.getEnMap();
+
+         /* 求出来走过的表单集合 */
+         String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A, WF_Node B ";
+         sql += " WHERE A.NDFrom=B.NodeID  ";
+         sql += "  AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue() + ")  ";
+         sql += "  AND B.FormType=" + NodeFormType.FoolTruck.getValue() + " "; // 仅仅找累加表单.
+         sql += "  AND NDFrom!=" + this.getNodeID() + " "; //排除当前的表单.
+
+         if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+             sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
+
+         if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+             sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+cast(B.NodeID as varchar(10)) ) ";
+
+         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+             sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
+
+         sql += "  AND (A.WorkID=" + this.WorkID + ") ";
+         sql += " ORDER BY A.RDT ";
+
+         // 获得已经走过的节点IDs.
+         DataTable dtNodeIDs = DBAccess.RunSQLReturnTable(sql);
+         String frmIDs = "";
+         if (dtNodeIDs.Rows.size() > 0)
+         {
+             //把所有的节点字段.
+             for (DataRow dr : dtNodeIDs.Rows)
+             {
+                 frmIDs += "'ND" + dr.getValue(0).toString() + "',";
+             }
+
+             frmIDs = frmIDs.substring(0, frmIDs.length() - 1);
+             obj.HisPassedFrmIDs = frmIDs;  //求出所有的fromID.
+
+             MapAttrs attrs = new MapAttrs();
+             QueryObject qo = new QueryObject(attrs);
+             qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + frmIDs + ")");
+             qo.DoQuery();
+
+             //设置成不可以用.
+             for (MapAttr item : attrs.ToJavaList())
+             {
+                 item.setUIIsEnable( false); //设置为只读的.
+                 item.setDefValReal("");    //设置默认值为空.
+                 ma.getAttrs().add(item.getHisAttr());
+             }
+
+             //设置为空.
+             obj.setSQLCash(null) ;
+         }
+ 
+         obj.setHisNode(this);
+         obj.setNodeID(this.getNodeID());
+         return obj;
 	}
 	/** 
 	 他的工作s
@@ -1302,8 +1338,18 @@ public class Node extends Entity
               String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A, WF_Node B ";
               sql += " WHERE A.NDFrom=B.NodeID AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue() + ")  ";
               sql += "  AND (FormType=0 OR FormType=1) ";
-              sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+NodeID ) ";
-              sql += "  AND (A.WokrID="+this.WorkID+") ";
+              
+              if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+                  sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
+
+              if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+                  sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+cast(B.NodeID as varchar(10)) ) ";
+
+              if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+                  sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
+              
+              
+              sql += "  AND (A.WorkID="+this.WorkID+") ";
 
               sql += " ORDER BY A.RDT ";
 

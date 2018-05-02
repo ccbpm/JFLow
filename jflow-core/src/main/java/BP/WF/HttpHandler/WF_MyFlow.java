@@ -1734,7 +1734,7 @@ public class WF_MyFlow extends WebContralBase {
 					return BP.Tools.Json.ToJson(ds);
 				}
 
-				ds = BP.WF.CCFlowAPI.GenerWorkNode_2017(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), BP.Web.WebUser.getNo());
+				ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), BP.Web.WebUser.getNo());
 
 
 				///#region 增加上流程的信息.

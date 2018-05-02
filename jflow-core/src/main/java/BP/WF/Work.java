@@ -698,6 +698,7 @@ public abstract class Work extends Entity
 	}
 	public String NodeFrmID = "";
 	protected int _nodeID = 0;
+	public String HisPassedFrmIDs;
 	public final int getNodeID()
 	{
 		if (_nodeID == 0)

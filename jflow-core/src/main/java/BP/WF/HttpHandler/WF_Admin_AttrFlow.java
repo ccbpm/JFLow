@@ -49,9 +49,9 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		String tmpPath = "";
 
 		if (BP.WF.Glo.getPlatform() == Platform.CCFlow)
-			tmpPath = SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\AttrFlow\\APICodeFEE.txt.CCFlow";
+			tmpPath = SystemConfig.getPathOfWebApp() + "/WF/Admin/AttrFlow/APICodeFEE.txt.CCFlow";
 		else
-			tmpPath = SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\AttrFlow\\APICodeFEE.txt.JFlow";
+			tmpPath = SystemConfig.getPathOfWebApp() + "/WF/Admin/AttrFlow/APICodeFEE.txt.JFlow";
 		File file = new File(tmpPath);
 		if (!file.exists())
 			return String.format("未找到事件编写模板文件“{0}”，请联系管理员！", tmpPath);
@@ -621,7 +621,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		ds.Tables.add(dt);
 
 		// 把文件放入ds.
-        String path = SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\ClientBin\\NodeIcon\\";
+        String path = SystemConfig.getPathOfWebApp() + "/WF/Admin/ClientBin/NodeIcon/";
 
 		
 	//	string path= BP.sys..SystemConfig

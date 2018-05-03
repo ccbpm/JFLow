@@ -1772,7 +1772,7 @@ public class WorkFlowBuessRole
         String ccMsg = "@消息自动抄送给";
         String basePath = BP.WF.Glo.getHostURL();
 
-        String mailTemp = BP.DA.DataType.ReadTextFile2Html(BP.Sys.SystemConfig.getPathOfDataUser() + "\\EmailTemplete\\CC_" + WebUser.getSysLang() + ".txt");
+        String mailTemp = BP.DA.DataType.ReadTextFile2Html(BP.Sys.SystemConfig.getPathOfDataUser() + "/EmailTemplete/CC_" + WebUser.getSysLang() + ".txt");
         for (Object item : ht.keySet())
 		{
 			ccDoc = ccDoc.replace("@Accepter", ht.get(item).toString());

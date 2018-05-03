@@ -126,7 +126,7 @@ public class WF_CCForm extends WebContralBase {
              if (dbs.size() == 0 && athDesc.getIsWoEnableTemplete() == true)
              {
                  /*如果数量为0,就检查一下是否有模版如果有就加载模版文件.*/
-                 String templetePath = BP.Sys.SystemConfig.getPathOfDataUser() + "AthTemplete\\" + athDesc.getNoOfObj().trim();
+                 String templetePath = BP.Sys.SystemConfig.getPathOfDataUser() + "AthTemplete/" + athDesc.getNoOfObj().trim();
                 File file = new File(templetePath);
                  if (file.exists() == false)
                 	 file.mkdirs();

@@ -535,7 +535,6 @@ public class WF_CommEntity extends WebContralBase {
            String str= BP.Tools.Json.ToJson(ds);
             
             //BP.DA.DataType.WriteFile("C:\\EntityOnly_Init.TXT", str);
-            
             return str;
             
         }

@@ -42,7 +42,7 @@ public class WF_Comm_Sys extends WebContralBase
 		String expFileName = "all-wcprops,dir-prop-base,entries";
 		String expDirName = ".svn";
 
-		String pathDir = BP.Sys.SystemConfig.getPathOfData() + "\\JSLib\\";
+		String pathDir = BP.Sys.SystemConfig.getPathOfData() + "/JSLib/";
 
 		String html = "";
 		html += "<fieldset>";
@@ -78,7 +78,7 @@ public class WF_Comm_Sys extends WebContralBase
 		}
 		html += "</fieldset>";
 
-		pathDir = BP.Sys.SystemConfig.getPathOfDataUser() + "\\JSLib\\";
+		pathDir = BP.Sys.SystemConfig.getPathOfDataUser() + "/JSLib/";
 		html += "<fieldset>";
 		html += "<legend>" + "用户自定义函数. 位置:" + pathDir + "</legend>";
 

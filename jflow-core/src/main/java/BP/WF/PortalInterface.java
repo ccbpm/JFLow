@@ -216,6 +216,8 @@ public class PortalInterface
 		//登陆.
 		BP.Web.GuestUser.Exit();
 	}
+	
+	
 
 		///#endregion 门户。
 
@@ -439,6 +441,7 @@ public class PortalInterface
 		}
 		return true;
 	}
+	
 	
 	/** 
 	 * 发送邮件接口

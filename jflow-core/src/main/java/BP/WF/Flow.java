@@ -4541,6 +4541,11 @@ public class Flow extends BP.En.EntityNoName
 		{
 			return null;
 		}
+		
+		//调用通用方法.
+		BP.WF.OverrideClass.FEE(doType, currNode, en, atPara, objs, jumpToNode, jumpToEmps);
+		
+		
 
 		String str = null;
 		if (this.getFEventEntity() != null)
@@ -4548,6 +4553,11 @@ public class Flow extends BP.En.EntityNoName
 			this.getFEventEntity().SendReturnObjs = objs;
 			str = this.getFEventEntity().DoIt(doType, currNode, en, atPara, jumpToNode, jumpToEmps);
 		}
+		
+	   
+//	    BP.WF.PortalInterface.SendToEmail(mypk, sender, sendToEmpNo, email, title, maildoc)
+		
+		
 
 		//FrmEvents fes = currNode.getMapData().getFrmEvents();
         FrmEvents fes = currNode.getFrmEvents();

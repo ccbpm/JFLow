@@ -29,11 +29,15 @@ import BP.Sys.FrmType;
 import BP.Sys.FrmWorkCheckAttr;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
+import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
+import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
+import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapDtl;
+import BP.Sys.MapDtlAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtAttr;
@@ -217,57 +221,63 @@ public class CCFlowAPI
 	         
 	         //#endregion 加入组件的状态信息, 在解析表单的时候使用.
 	          
-	         /*
+	         
 	         //#region 增加 groupfields
-             if (nd.getFormType() == NodeFormType.FoolTruck 
-             && nd.getIsStartNode() == false
-             && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs)==false )
+             if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs)==false )
              {
+            	 
                  //计算累加的字段分组.
                  GroupFields gfs = new GroupFields();
                  gfs.RetrieveIn(GroupFieldAttr.FrmID, "("+wk.HisPassedFrmIDs+")" );
-
-                 DataTable gf = myds.Tables["Sys_GroupField"];
-
+                 DataTable gf= null;
+     			for (DataTable dtb : myds.Tables)
+     			{
+     				if("Sys_GroupField".equals(dtb.getTableName()))
+     				{
+     					gf = dtb ; 
+     				}
+     			}
                  //让其按照顺序排列.
-                 String[] frmIDs = wk.HisPassedFrmIDs.Split(',');
-
-                 for (int i = 0; i < frmIDs.Length; i++)
+                 String[] frmIDs = wk.HisPassedFrmIDs.split(",");
+                 
+                 for (int i = 0; i < frmIDs.length; i++)
                  {
-                     int idx = frmIDs.Length - i-1;
+                     int idx = frmIDs.length - i-1;
 
                      String frmID = frmIDs[idx];
-                     frmID = frmID.Replace("'", "");
-                     frmID = frmID.Replace("'", "");
+                     frmID = frmID.replace("'", "");
+                     frmID = frmID.replace("'", "");
 
                      //数量.
                      int numOfBar = gfs.GetCountByKey(GroupFieldAttr.FrmID, frmID);
 
                      int insertNum = 0; //已经插入的数量.
 
-                     for (int ii = 0; ii < gfs.Count; ii++)
+                     for (int ii = 0; ii < gfs.size(); ii++)
                      {
-                         idx = gfs.Count - ii - 1;
+                         idx = gfs.size() - ii - 1;
 
-                         GroupField item = (GroupField)gfs[idx];
-                         if (item.FrmID != frmID)
+                         GroupField item = (GroupField)gfs.get(idx);
+                         if (item.getFrmID() != frmID)
                              continue;
 
                          DataRow dr = gf.NewRow();
-                         dr[GroupFieldAttr.CtrlID] = item.CtrlID;
-                         dr[GroupFieldAttr.CtrlType] = item.CtrlType;
-                         dr[GroupFieldAttr.Idx] = item.Idx;
-                         dr[GroupFieldAttr.Lab] = item.Lab;
-                         dr[GroupFieldAttr.OID] = item.OID;
-                         dr[GroupFieldAttr.FrmID] = item.FrmID;
+
+                         dr.put(GroupFieldAttr.CtrlID, item.getCtrlID());
+                         dr.put(GroupFieldAttr.CtrlType ,item.getCtrlType());
+                         dr.put(GroupFieldAttr.Idx , item.getIdx());
+                         dr.put(GroupFieldAttr.Lab , item.getLab());
+                         dr.put(GroupFieldAttr.OID ,item.getOID());
+                         dr.put(GroupFieldAttr.FrmID,item.getFrmID());
 
                          if (insertNum == 0 && numOfBar == 1)
                          {
-                             gf.Rows.InsertAt(dr, 0); //增加一行.
+                             gf.Rows.add(0,dr); //增加一行.
                              break;
                          }
-                         gf.Rows.InsertAt(dr, 0); //增加一行.
-                     }
+                         gf.Rows.add(0,dr); //增加一行.
+                     }                     
+                     
                  }
                  //计算累加的字段集合.
                  MapAttrs attrs = new MapAttrs();
@@ -275,11 +285,19 @@ public class CCFlowAPI
                  qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")" );
                  DataTable dtAttrs = qo.DoQueryToTable();
 
-                 DataTable mapAttr = myds.Tables["Sys_MapAttr"]; //增加行.
-                 foreach (DataRow dr in dtAttrs.Rows)
+//                 DataTable mapAttr = myds.Tables["Sys_MapAttr"]; //增加行.
+                 DataTable mapAttr= null;
+     			for (DataTable dtb : myds.Tables)
+     			{
+     				if("Sys_MapAttr".equals(dtb.getTableName()))
+     				{
+     					mapAttr = dtb ; 
+     				}
+     			}
+                 for (DataRow dr : dtAttrs.Rows)
                  {
-                     dr[MapAttrAttr.UIIsEnable] = 0; //把字段设置为只读的.
-                     mapAttr.Rows.Add(dr.ItemArray);
+                     dr.put(MapAttrAttr.UIIsEnable, 0); //把字段设置为只读的.
+                     mapAttr.Rows.AddRow(dr.ItemArray);
                  }
 
                  //计算累加的 从表字段集合.
@@ -288,13 +306,21 @@ public class CCFlowAPI
                  qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
                  DataTable dtDtls = qo.DoQueryToTable();
 
-                 DataTable mdtls = myds.Tables["Sys_MapDtl"]; //增加行.
-                 foreach (DataRow dr in mdtls.Rows)
+//                 DataTable mdtls = myds.Tables["Sys_MapDtl"]; //增加行.
+                 DataTable mdtls= null;
+     			for (DataTable dtb : myds.Tables)
+     			{
+     				if("Sys_MapAttr".equals(dtb.getTableName()))
+     				{
+     					mdtls = dtb ; 
+     				}
+     			}
+                 for (DataRow dr : mdtls.Rows)
                  {
-                     dr[MapDtlAttr.IsDelete] = 0;  //把字段设置为只读的.
-                     dr[MapDtlAttr.IsInsert] = 0; 
-                     dr[MapDtlAttr.IsUpdate] = 0;
-                     mdtls.Rows.Add(dr.ItemArray);
+                     dr.put(MapDtlAttr.IsDelete , 0);  //把字段设置为只读的.
+                     dr.put(MapDtlAttr.IsInsert , 0); 
+                     dr.put(MapDtlAttr.IsUpdate , 0);
+                     mdtls.Rows.AddRow(dr.ItemArray);
                  }
 
                  //计算累加的 附件集合.
@@ -304,19 +330,25 @@ public class CCFlowAPI
 
                  DataTable dtAths = qo.DoQueryToTable();
 
-                 DataTable mAths = myds.Tables["Sys_FrmAttachment"]; //增加行.
-                 foreach (DataRow dr in dtAths.Rows)
+ //                DataTable mAths = myds.Tables["Sys_FrmAttachment"]; //增加行.
+                 DataTable mAths = null;
+     			for (DataTable dtb : myds.Tables)
+     			{
+     				if("Sys_MapAttr".equals(dtb.getTableName()))
+     				{
+     					mAths = dtb ; 
+     				}
+     			}
+                 for (DataRow dr : dtAths.Rows)
                  {
-                     dr[FrmAttachmentAttr.IsUpload] = 0; //把字段设置为只读的.
-                     dr[FrmAttachmentAttr.IsDownload] = 0;
-                     mAths.Rows.Add(dr.ItemArray);
+                     dr.put(FrmAttachmentAttr.IsUpload , 0); //把字段设置为只读的.
+                     dr.put(FrmAttachmentAttr.IsDownload , 0);
+                     mAths.Rows.AddRow(dr.ItemArray);
                  }
 
              }
             // #endregion 增加 groupfields
-             * 
-             * 
-             */
+
 
 			// #region 流程设置信息.
 			if (nd.getIsStartNode() == false)

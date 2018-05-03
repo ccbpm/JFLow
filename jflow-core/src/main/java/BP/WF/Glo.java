@@ -1040,7 +1040,7 @@ public class Glo
 			// 5, 初始化数据.
 		if (isInstallFlowDemo)
 		{
-			sqlscript = SystemConfig.getPathOfData() + "\\Install\\SQLScript\\InitPublicData.sql";
+			sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitPublicData.sql";
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
 		}
 		else

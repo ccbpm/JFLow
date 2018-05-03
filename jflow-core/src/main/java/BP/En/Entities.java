@@ -1637,71 +1637,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return dt;
 	}
 	
-	/**
-	 * 把当前实体集合的数据库转换成Table。
-	 * 
-	 * @return DataTable
-	 */
-	public final DataTable ToDataTableField_old(String tableName)
-	{
-		DataTable dt = this.ToEmptyTableField();
-		
-		Entity en = this.getGetNewEntity();
-		Attrs attrs = en.getEnMap().getAttrs();
-		
-		dt.TableName = tableName;
-		for (Entity myen : convertEntities(this))
-		{
-			DataRow dr = dt.NewRow();
-			for (Attr attr : attrs)
-			{
-				if (attr.getMyDataType() == DataType.AppBoolean)
-				{
-					if (myen.GetValIntByKey(attr.getKey()) == 1)
-					{
-						dr.setValue(attr.getKey(), "1");
-						/*
-						 * warning dr[attr.getKey()] = "1";
-						 */
-					} else
-					{
-						dr.setValue(attr.getKey(), "0");
-						/*
-						 * warning dr[attr.getKey()] = "0";
-						 */
-					}
-					continue;
-				}
-				
-				// 如果是外键 就要去掉左右空格。
-				// *
-				if (attr.getMyFieldType() == FieldType.FK
-						|| attr.getMyFieldType() == FieldType.PKFK)
-				{
-					//System.out.println( attr.getKey());
-					//System.out.println( "myen.GetValByKey(attr.getKey():"+myen.GetValByKey(attr.getKey()) );
-					dr.setValue(attr.getKey(), myen.GetValByKey(attr.getKey()) );
-					/*
-					 * warning dr[attr.getKey()] =
-					 * myen.GetValByKey(attr.getKey()).toString().trim();
-					 */
-				} else
-				{
-					dr.setValue(attr.getKey(), myen.GetValByKey(attr.getKey()));
-					/*
-					 * warning dr[attr.getKey()] =
-					 * myen.GetValByKey(attr.getKey());
-					 */
-				}
-			}
-			dt.Rows.add(dr);
-			/*
-			 * warning dt.Rows.Add(dr);
-			 */
-		}
-		return dt;
-	}
-	
+	 
 	/**
 	 * 把当前实体集合的数据库转换成Table。 区分大小写
 	 * 

@@ -34,7 +34,7 @@ import BP.WF.ThreadKillRole;
 import BP.WF.TodolistModel;
 import cn.jflow.common.util.ContextHolderUtils;
 
-import com.microsoft.schemas.office.x2006.encryption.CTKeyEncryptor.Uri;
+//import com.microsoft.schemas.office.x2006.encryption.CTKeyEncryptor.Uri;
 
 /** 
  节点属性.

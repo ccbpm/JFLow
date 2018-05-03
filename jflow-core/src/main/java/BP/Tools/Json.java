@@ -327,9 +327,20 @@ public class Json
 				if (null == obj )
 				{
 					jsonString += "\"\","; 
-					continue;					
-					
+					continue;
 				} 
+				
+
+				if (column.DataType == Integer.class  
+						|| column.DataType == Long.class
+					    || column.DataType == Float.class
+					    || column.DataType == Double.class
+						|| column.DataType == float.class)
+				{
+					jsonString += "" + obj.toString() + ",";
+					continue;
+				} 
+				
 				
 				/*if (column.DataType == java.util.Date.class || column.DataType == String.class)
 				{
@@ -354,6 +365,7 @@ public class Json
 					jsonString +=    str + ",";	
 					continue;
 				}else{
+					
 					jsonString += "\"" + ToJsonStr(str) + "\",";
 					continue;
 				}

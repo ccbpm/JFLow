@@ -38,10 +38,10 @@ public class TemplateGlo
 		}
 
 		//确定模板
-		String tempFile = BP.Sys.SystemConfig.getPathOfWebApp() + "\\WF\\Data\\Templete\\NewFlow.json";
+		String tempFile = BP.Sys.SystemConfig.getPathOfWebApp() + "/WF/Data/Templete/NewFlow.json";
 		if (flowVer.equals("1")) //CCBPM_DType.CCBPM
 		{
-			tempFile = BP.Sys.SystemConfig.getPathOfWebApp() + "\\WF\\Data\\Templete\\ccbpm.json";
+			tempFile = BP.Sys.SystemConfig.getPathOfWebApp() + "/WF/Data/Templete/ccbpm.json";
 		}
 		//将流程模版保存到数据库里.
 		fl.SaveFileToDB("FlowJson", tempFile);
@@ -103,7 +103,7 @@ public class TemplateGlo
 	}
 	public static String GenerFlowJsonFromFile(String flowNo) throws Exception
 	{
-		String tempFile = BP.Sys.SystemConfig.getPathOfDataUser() + "FlowDesc\\" + flowNo + ".json";
+		String tempFile = BP.Sys.SystemConfig.getPathOfDataUser() + "FlowDesc/" + flowNo + ".json";
 		File file = new File(tempFile);
 		if (file.exists() == false)
 		{
@@ -124,7 +124,7 @@ public class TemplateGlo
 	public static String SaveGraphData(String flowNo, String json) throws Exception
 	{
 		// 保存到临时文件.
-		String tempFile = BP.Sys.SystemConfig.getPathOfTemp() + "\\" + flowNo + ".json";
+		String tempFile = BP.Sys.SystemConfig.getPathOfTemp() + "/" + flowNo + ".json";
 		BP.DA.DataType.WriteFile(tempFile, json);
 
 

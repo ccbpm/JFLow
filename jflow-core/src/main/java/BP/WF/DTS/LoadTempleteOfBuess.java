@@ -139,7 +139,7 @@ public class LoadTempleteOfBuess extends Method
 			Log.DebugWriteError("2 LoadTempleteOfBuess Do fss.ClearTable "+e.getMessage());
 			e.printStackTrace();
 		}
-		dirInfo = new File(SystemConfig.getPathOfWebApp() + "\\SDKFlowDemo\\FlowDemo\\FlowBuess\\");
+		dirInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/FlowBuess/");
 		dirs = dirInfo.listFiles();
 
 		FlowSort fsRoot = new FlowSort();
@@ -198,7 +198,7 @@ public class LoadTempleteOfBuess extends Method
 			}
 
 			//调度它的下一级目录.
-			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "\\SDKFlowDemo\\\\FlowDemo\\FlowBuess\\" + dir.getName());
+			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/FlowBuess/" + dir.getName());
 			File[] myDirs = dirSubInfo.listFiles();
 			for (File mydir : myDirs)
 			{

@@ -52,10 +52,10 @@ public class Flows extends EntitiesNoName
 
 		try
 		{
-			String pathDef = SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\" + SystemConfig.getCustomerNo() + "_index.htm";
+			String pathDef = SystemConfig.getPathOfWorkDir() + "/VisualFlow/DataUser/FlowDesc/" + SystemConfig.getCustomerNo() + "_index.htm";
 			DataType.WriteFile(pathDef, msg);
 
-			pathDef = SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\index.htm";
+			pathDef = SystemConfig.getPathOfWorkDir() + "/VisualFlow/DataUser/FlowDesc/index.htm";
 			DataType.WriteFile(pathDef, msg);
 		//	System.Diagnostics.Process.Start(SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\");
 		}

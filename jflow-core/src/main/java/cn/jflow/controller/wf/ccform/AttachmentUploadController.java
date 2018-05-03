@@ -7,15 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.BindException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,13 +26,10 @@ import BP.Sys.AthUploadWay;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.GEEntity;
-import BP.Sys.MapData;
 import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
-import BP.Sys.FrmEventList;
 import BP.Tools.FileAccess;
 import BP.WF.Flow;
-import BP.Sys.Glo;
+import BP.WF.Glo;
 import BP.Web.WebUser;
 import cn.jflow.common.util.ContextHolderUtils;
 import cn.jflow.common.BaseController;
@@ -130,13 +122,13 @@ public class AttachmentUploadController extends BaseController {
 
 			// 替换关键的字串.
 			savePath = savePath.replace("\\\\", "\\");
-			try {
-				if(savePath.indexOf(":")==-1){
-					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
-				}
-			} catch (RuntimeException e) {
+//			try {
+//				if(savePath.indexOf(":")==-1){
+//					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
+//				}
+//			} catch (RuntimeException e) {
 
-			}
+//			}
 			try {
 				File fileInfo = new File(savePath);
 
@@ -302,13 +294,13 @@ public class AttachmentUploadController extends BaseController {
 
 			// 替换关键的字串.
 			savePath = savePath.replace("\\\\", "\\");
-			try {
-				if(savePath.indexOf(":")==-1){
-					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
-				}
-			} catch (RuntimeException e) {
-
-			}
+//			try {
+//				if(savePath.indexOf(":")==-1){
+//					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
+//				}
+//			} catch (RuntimeException e) {
+//
+//			}
 			try {
 				File fileInfo = new File(savePath);
 
@@ -328,7 +320,7 @@ public class AttachmentUploadController extends BaseController {
 					.getExtensionName(item.getOriginalFilename());
 
 
-			String realSaveTo = savePath + File.separator + guid + "." + fileName + "." + ext;
+			String realSaveTo = savePath + guid + "." + fileName + "." + ext;
 
 			String saveTo = realSaveTo;
 
@@ -383,6 +375,7 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
 
 			dbUpload.setFileExts(ext);
+			System.out.println("setname:"+saveTo);
 			dbUpload.setFileFullName(saveTo);
 			dbUpload.setFileName(item.getOriginalFilename());
 			dbUpload.setFileSize(item.getSize());
@@ -420,7 +413,6 @@ public class AttachmentUploadController extends BaseController {
              dbAtt.setMyPK(downDB.getFK_FrmAttachment());
              dbAtt.Retrieve();
           /*   if (dbAtt.getAthSaveWay() == AthSaveWay.IISServer)
-            if (dbAtt.getAthSaveWay()   == AthSaveWay.IISServer)
              {
                  //#region 解密下载
                  //1、先解密到本地
@@ -458,15 +450,10 @@ public class AttachmentUploadController extends BaseController {
 
              if (dbAtt.getAthSaveWay() == AthSaveWay.DB)
              {*/
-                 String downpath = GetRealPath(downDB.getFileFullName());
-                 BP.Sys.PubClass.DownloadFile(downpath, downDB.getFileName());
-                 PubClass.DownloadHttpFile(downDB.getFileFullName(), downDB.getFileName(),response);
+                 String downpath = downDB.getFileFullName();
+                 BP.Sys.PubClass.DownloadFileByBuffer(downpath, downDB.getFileName());
+//                 PubClass.DownloadHttpFile(downDB.getFileFullName(), downDB.getFileName(),response);
              //}
-             {
-
-                 PubClass.DownloadFile(downDB.getFileFullName(), downDB.getFileName());
-             }
-
             
              return;
              
@@ -738,264 +725,5 @@ public class AttachmentUploadController extends BaseController {
 //         ///#endregion 保存到数据库.
 //		 return "";
 //	 }
-	 private void uploadFile(File file,FrmAttachment athDesc,GEEntity en,String msg,MapData mapData,String attachPk) throws Exception{
-		 ///#region 文件上传的tomact服务器上 or db数据库里.
-         if (athDesc.getAthSaveWay() == AthSaveWay.IISServer){
-
-             String savePath = athDesc.getSaveTo();
-            if (savePath.contains("@") == true || savePath.contains("*") == true){
-                 /*如果有变量*/
-                 savePath = savePath.replace("*", "@");
-                 savePath = BP.WF.Glo.DealExp(savePath, en, null);
-
-                 if (savePath.contains("@") && this.getFK_Node() != 0){
-                     /*如果包含 @ */
-                     BP.WF.Flow flow = new BP.WF.Flow(this.getFK_Flow());
-                     BP.WF.Data.GERpt myen = flow.getHisGERpt();
-                     myen.setOID(this.getWorkID());
-                     myen.RetrieveFromDBSources();
-                     savePath = BP.WF.Glo.DealExp(savePath, myen, null);
-                 }
-                 if (savePath.contains("@") == true)
-                     throw new Exception("@路径配置错误,变量没有被正确的替换下来." + savePath);
-                 return;
-           }else{
-              savePath = athDesc.getSaveTo() + "\\" + getPKVal();
-           }
-
-          //替换关键的字串.
-          savePath = savePath.replace("\\\\", "\\");
-           try{
-            	 if(savePath.indexOf(":")==-1)
- 					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
-            	  File fileInfo = new File(savePath);
-
-	 			 if (!fileInfo.exists()) 
-	 				fileInfo.mkdirs();
- 				
-             }catch (Exception ex){
-            	 throw new RuntimeException("@创建路径出现错误，可能是没有权限或者路径配置有问题:"
- 						+ ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("~/" + savePath) + "==="
- 						+ savePath + "@技术问题:" + ex.getMessage());
-            	
-             }
-
-             String exts = file.getName().substring(file.getName().lastIndexOf(".") + 1);
-             String guid = BP.DA.DBAccess.GenerGUID();
-             String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-             String ext = file.getName().substring(file.getName().lastIndexOf("."));
-             String realSaveTo = savePath + "\\" + guid + "." + fileName + ext;
-
-             realSaveTo = realSaveTo.replace("~", "-");
-             realSaveTo = realSaveTo.replace("'", "-");
-             realSaveTo = realSaveTo.replace("*", "-");
-             // file.saveAs(realSaveTo);
-             //保存上传的文件信息
-             File savefile = new File(realSaveTo); // 获取根目录对应的真实物理路径
-             try {
- 				// 构造临时对象
- 				
- 				InputStream is =new  FileInputStream(file) ;
- 				int buffer = 1024; // 定义缓冲区的大小
- 				int length = 0;
- 				byte[] b = new byte[buffer];
- 				double percent = 0;
- 				FileOutputStream fos = new FileOutputStream(savefile);
- 				while ((length = is.read(b)) != -1) {
- 					fos.write(b, 0, length); // 向文件输出流写读取的数据
- 				}
- 				fos.close();
- 			} catch (RuntimeException ex) {
- 				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
- 				
- 			}
-            
-             //执行附件上传前事件，added by liuxc,2017-7-15
-             msg = mapData.DoEvent(FrmEventList.AthUploadeBefore, en, "@FK_FrmAttachment=" + athDesc.getMyPK() + "@FileFullName=" + realSaveTo);
-             if (!DataType.IsNullOrEmpty(msg))
-             {
-                 BP.Sys.Glo.WriteLineError("@AthUploadeBefore事件返回信息，文件：" + file.getName() + "，" + msg);
-                 savefile.delete();
-                 return;
-            }
-
-             File info = new File(realSaveTo);
-
-             FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-             dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();
-             dbUpload.setNodeID(String.valueOf(this.getFK_Node()));
-             dbUpload.setFK_FrmAttachment(attachPk);
-             dbUpload.setFK_MapData(athDesc.getFK_MapData());
-             dbUpload.setFK_FrmAttachment(attachPk);
-             dbUpload.setFileExts(exts);
-
-             ///#region 处理文件路径，如果是保存到数据库，就存储pk.
-             if (athDesc.getAthSaveWay() == AthSaveWay.IISServer)
-             {
-                 //文件方式保存
-                 dbUpload.setFileFullName(realSaveTo);
-             }
-
-            if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
-             {
-                //保存到数据库
-                 dbUpload.setFileFullName(dbUpload.getMyPK());
-             }
-             ///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
-
-             dbUpload.setFileName(file.getName());
-             dbUpload.setFileSize ((float)info.length());
-             dbUpload.setRDT(DataType.getCurrentDataTimess());
-             dbUpload.setRec(BP.Web.WebUser.getNo());
-             dbUpload.setRecName(BP.Web.WebUser.getName());
-             dbUpload.setRefPKVal(getPKVal());
-             dbUpload.setFID(this.getFID());
-             dbUpload.setUploadGUID(guid);
-             dbUpload.Insert();
-
-             if (athDesc.getAthSaveWay() == AthSaveWay.DB)
-             {
-                 //执行文件保存.
-                 BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.getEnMap().getPhysicsTable(), "MyPK", dbUpload.getMyPK(), "FDB");
-             }
-
-             //执行附件上传后事件，added by liuxc,2017-7-15
-             msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFK_FrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK() + "@FileFullName=" + dbUpload.getFileFullName());
-             if (!DataType.IsNullOrEmpty(msg))
-                 BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
-         }
-         ///#endregion 文件上传的iis服务器上 or db数据库里.
-
-         ///#region 保存到数据库 / FTP服务器上.
-         if (athDesc.getAthSaveWay() == AthSaveWay.DB || athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
-         {
-             String guid = BP.DA.DBAccess.GenerGUID();
-
-             //把文件临时保存到一个位置.
-             String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
-             File tempFile = new File(temp);
-             InputStream is = null;
-             try {
-  				// 构造临时对象
-  				
-  				is =new  FileInputStream(file) ;
-  				int buffer = 1024; // 定义缓冲区的大小
-  				int length = 0;
-  				byte[] b = new byte[buffer];
-  				double percent = 0;
-  				FileOutputStream fos = new FileOutputStream(tempFile);
-  				while ((length = is.read(b)) != -1) {
-  					fos.write(b, 0, length); // 向文件输出流写读取的数据
-  				}
-  				fos.close();
-  			} catch (Exception ex) {
-  				tempFile.delete();
-  				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
-  				
-  			}
-             
-
-             //执行附件上传前事件，added by liuxc,2017-7-15
-             msg = mapData.DoEvent(FrmEventList.AthUploadeBefore, en, "@FK_FrmAttachment=" + athDesc.getMyPK() + "@FileFullName=" + temp);
-             if (DataType.IsNullOrEmpty(msg) == false)
-             {
-                 BP.Sys.Glo.WriteLineError("@AthUploadeBefore事件返回信息，文件：" + file.getName() + "，" + msg);
-
-                 tempFile.delete();
-                
-
-                 throw new Exception("err@上传附件错误：" + msg);
-              }
-
-             File info = new File(temp);
-             FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-             dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
-             dbUpload.setNodeID(String.valueOf(getFK_Node()));
-             dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
-             dbUpload.setFID(this.getFID()); //流程id.
-             if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
-             {
-                 /*如果是继承，就让他保持本地的PK. */
-                 dbUpload.setRefPKVal(String.valueOf(getPKVal()));
-             }
-
-             if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
-             {
-                /*如果是协同，就让他是PWorkID. */
-                 String pWorkID = String.valueOf(BP.DA.DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + getPKVal(), 0));
-                 if (pWorkID == null || pWorkID == "0")
-                     pWorkID = getPKVal();
-                 dbUpload.setRefPKVal(pWorkID);
-             }
-
-             dbUpload.setFK_MapData(athDesc.getFK_MapData());
-             dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
-             dbUpload.setFileName(file.getName());
-             dbUpload.setFileSize((float)info.length());
-             dbUpload.setRDT(DataType.getCurrentDataTimess());
-             dbUpload.setRec(BP.Web.WebUser.getNo());
-             dbUpload.setRecName(BP.Web.WebUser.getName());
-
-
-             dbUpload.setUploadGUID(guid);
-
-             if (athDesc.getAthSaveWay() == AthSaveWay.DB)
-             {
-                 dbUpload.Insert();
-                 //把文件保存到指定的字段里.
-                 dbUpload.SaveFileToDB("FileDB", temp);
-             }
-
-             if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
-             {
-            	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
-         		 String ny = sdf.format(new Date());
-            	 FTPClient ftpClient= new FTPClient();
-                 ftpClient.setControlEncoding("utf-8");
-                 ftpClient.connect(SystemConfig.getFTPServerIP()); //连接ftp服务器
-                 ftpClient.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword()); //登录ftp服务器
-                 int replyCode = ftpClient.getReplyCode(); //是否成功登录服务器
-                 if(FTPReply.isPositiveCompletion(replyCode)){
-                	//判断目录年月是否存在.
-                	 FTPFile[] ftpFileArr = ftpClient.listFiles(ny);
-                     if (ftpFileArr.length<= 0) {
-                    	 ftpClient.makeDirectory(ny);
-                     }
-
-                    
-                     ftpClient.changeWorkingDirectory(ny);
-
-                     //判断目录是否存在.
-                     ftpFileArr = ftpClient.listFiles(athDesc.getFK_MapData());
-                     if (ftpFileArr.length<= 0) {
-                    	 ftpClient.makeDirectory(athDesc.getFK_MapData());
-                     }
-                    
-
-                     //设置当前目录，为操作的目录。
-                     ftpClient.changeWorkingDirectory(athDesc.getFK_MapData());
-
-                     //把文件放上去.
-                     ftpClient.storeFile(temp, is);
-                     is.close();
-                     //文件加密
-                     Glo.File_JiaMi(temp,ny + "//" + athDesc.getFK_MapData() + "//" + guid + "." + dbUpload.getFileExts());
-                    // ftpClient.PutFile(temp, guid + "." + dbUpload.getFileExts());
-                     ftpClient.logout();
-                 }
-                
-                 //设置路径.
-                 dbUpload.setFileFullName(ny + "//" + athDesc.getFK_MapData() + "//" + guid + "." + dbUpload.getFileExts());
-                 dbUpload.Insert();
-             }
-
-             //执行附件上传后事件，added by liuxc,2017-7-15
-             msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFK_FrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK() + "@FileFullName=" + temp);
-             if (!DataType.IsNullOrEmpty(msg))
-                 BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
-         }
-         ///#endregion 保存到数据库.
-		 return ;
-	 }
 
 }

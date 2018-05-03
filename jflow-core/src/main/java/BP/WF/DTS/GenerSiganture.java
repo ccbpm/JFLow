@@ -31,7 +31,7 @@ public class GenerSiganture extends Method
 	public GenerSiganture()
 	{
 		this.Title = "为没有设置数字签名的用户设置默认的数字签名";
-		this.Help = "此功能需要用户对 "+ BP.Sys.SystemConfig.getPathOfDataUser() + "\\Siganture\\ 有读写权限，否则会执行失败。";
+		this.Help = "此功能需要用户对 "+ BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/ 有读写权限，否则会执行失败。";
 	}
 	/** 
 	 设置执行变量
@@ -68,26 +68,26 @@ public class GenerSiganture extends Method
 		{
 			BP.Port.Emps emps = new Emps();
 			emps.RetrieveAllFromDBSource();
-			String path = BP.Sys.SystemConfig.getPathOfDataUser() + "\\Siganture\\T.JPG";
+			String path = BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/T.JPG";
 			String fontName = "宋体";
 			String empOKs = "";
 			String empErrs = "";
 			for (Emp emp : emps.ToJavaList())
 			{
-				String pathMe = BP.Sys.SystemConfig.getPathOfDataUser() + "\\Siganture\\" + emp.getNo() + ".JPG";
+				String pathMe = BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getNo() + ".JPG";
 				File file = new File(pathMe);
 				if (file.exists())
 				{
 					continue;
 				}
 				fileChannelCopy(new File(SystemConfig.getPathOfDataUser()
-						+ "\\Siganture\\Templete.JPG"), new File(path));
+						+ "/Siganture/Templete.JPG"), new File(path));
 				writeImageLocal(
 						pathMe,
 						modifyImage(loadImageLocal(path), emp.getName(), 90, 90));
 				fileChannelCopy(new File(pathMe),
 						new File(SystemConfig.getPathOfDataUser()
-								+ "\\Siganture\\" + emp.getName() + ".JPG"));
+								+ "/Siganture/" + emp.getName() + ".JPG"));
 				/*File.Copy(BP.Sys.SystemConfig.getPathOfDataUser() + "\\Siganture\\Templete.JPG", path, true);
 
 				System.Drawing.Image img = System.Drawing.Image.FromFile(path);
@@ -106,7 +106,7 @@ public class GenerSiganture extends Method
 		}
 		catch(RuntimeException ex)
 		{
-			return "执行失败，请确认对 " + BP.Sys.SystemConfig.getPathOfDataUser() + "\\Siganture\\ 目录有访问权限？异常信息:"+ex.getMessage();
+			return "执行失败，请确认对 " + BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/ 目录有访问权限？异常信息:"+ex.getMessage();
 		}
 	}
 	public static BufferedImage modifyImage(BufferedImage img, Object content,

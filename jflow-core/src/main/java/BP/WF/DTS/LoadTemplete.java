@@ -84,7 +84,7 @@ public class LoadTemplete extends Method
 		root.setParentNo("");
 		root.Insert();
 
-		String frmPath = SystemConfig.getPathOfWebApp() + "\\SDKFlowDemo\\FlowDemo\\Form\\";
+		String frmPath = SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Form/";
 		File dirInfo = new File(frmPath);
 		File [] dirs = dirInfo.listFiles();
 		int i = 0;
@@ -148,7 +148,7 @@ public class LoadTemplete extends Method
 			Log.DebugWriteError("LoadTemplete Do sorts.ClearTable "+e.getMessage());
 			e.printStackTrace();
 		}
-		dirInfo = new File(SystemConfig.getPathOfWebApp() + "\\SDKFlowDemo\\FlowDemo\\Flow\\");
+		dirInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/");
 		dirs = dirInfo.listFiles();
 
 		FlowSort fsRoot = new FlowSort();
@@ -204,7 +204,7 @@ public class LoadTemplete extends Method
 
 
 			//调度它的下一级目录.
-			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "\\SDKFlowDemo\\FlowDemo\\Flow\\"+dir.getName());
+			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/"+dir.getName());
 			File[] myDirs = dirSubInfo.listFiles();
 			for (File mydir : myDirs)
 			{

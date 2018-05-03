@@ -30,7 +30,7 @@ public class EventSources extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "\\EventList.xml";
+		return SystemConfig.getPathOfXML() + "/EventList.xml";
 	}
 	/** 
 	 物理表名

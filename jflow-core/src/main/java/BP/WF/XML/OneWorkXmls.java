@@ -35,7 +35,7 @@ public class OneWorkXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-//		BP.DA.Log.DebugWriteInfo(SystemConfig.getPathOfData() + "XML"+File.separator+"WFAdmin.xml");
+		BP.DA.Log.DebugWriteInfo(SystemConfig.getPathOfData() + "XML"+File.separator+"WFAdmin.xml");
 		return SystemConfig.getPathOfData() + "XML"+File.separator+"WFAdmin.xml";
 	}
 	/** 

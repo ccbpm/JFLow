@@ -2536,7 +2536,7 @@ public class Flow extends BP.En.EntityNoName
 	private static String PathFlowDesc;
 	static
 	{
-		PathFlowDesc = SystemConfig.getPathOfDataUser() + "FlowDesc\\";
+		PathFlowDesc = SystemConfig.getPathOfDataUser() + "FlowDesc/";
 	}
 	/** 
 	 生成流程模板

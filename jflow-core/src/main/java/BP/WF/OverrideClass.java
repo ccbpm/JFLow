@@ -15,8 +15,6 @@ public class OverrideClass {
 		
 		 //事件标志
 		String sendWhen= EventListOfNode.SendWhen; //发送 前.
-		
-		
 		if (doType.equals( EventListOfNode.SendWhen)==true )
 		{
 			  String flowNo= currNode.getFK_Flow();     
@@ -35,6 +33,9 @@ public class OverrideClass {
           int nodeID= currNode.getNodeID();
           String no=BP.Web.WebUser.getNo();
           String name=BP.Web.WebUser.getName();
+          
+          //获得workid.
+          int workid= Integer.parseInt(en.getPKVal().toString());
           
           
           

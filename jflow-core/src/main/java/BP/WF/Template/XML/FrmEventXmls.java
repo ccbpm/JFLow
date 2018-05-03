@@ -39,7 +39,7 @@ public class FrmEventXmls extends XmlEns
 	{
 		   // return SystemConfig.getPathOfWebApp() + "\\WF\\MapDef\\Style\\XmlDB.xml";
 
-		return SystemConfig.getPathOfData() + "\\XML\\XmlDB.xml";
+		return SystemConfig.getPathOfData() + "/XML/XmlDB.xml";
 
 	}
 	/** 

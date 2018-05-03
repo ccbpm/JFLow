@@ -41,7 +41,7 @@ public class ModeXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\AccepterRole\\AccepterRole.xml";
+		return SystemConfig.getPathOfWebApp() + "/WF/Admin/AccepterRole/AccepterRole.xml";
 	}
 	/** 
 	 物理表名

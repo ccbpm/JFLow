@@ -41,7 +41,7 @@ public class ModeSortXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\AccepterRole\\AccepterRole.xml";
+		return SystemConfig.getPathOfWebApp() + "/WF/Admin/AccepterRole/AccepterRole.xml";
 
 	}
 	/** 

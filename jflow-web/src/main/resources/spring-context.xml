@@ -18,6 +18,15 @@
 	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring  
 	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
 	
+	<bean id="propertyConfigurer"  
+        class="cn.jflow.common.util.GvtvPropertyPlaceholderConfigurer">  
+        <property name="locations">  
+            <list>  
+                <value>classpath:jflow.properties</value>  
+            </list>  
+        </property>  
+    </bean>  
+	
 	<!-- 默认数据源配置, 使用 Druid 数据库连接池 -->
 	<bean id="dataSourceJflow" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
 	    <!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass 

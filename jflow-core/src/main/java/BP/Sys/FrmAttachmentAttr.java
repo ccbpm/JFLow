@@ -109,7 +109,7 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 保存到
 	 
 	*/
-	public static final String SaveTo_del = "SaveTo";
+	public static final String SaveTo = "SaveTo";
 	/** 
 	 是否要转换成html，方便在线浏览.
 	 

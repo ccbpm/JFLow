@@ -1,5 +1,11 @@
 package BP.Sys.FrmUI;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
+import org.apache.commons.net.ftp.FTPClient;
+
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -82,22 +88,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	{
 		this.SetPara(FrmAttachmentAttr.UploadFileNumCheck,  value.getValue());
 	}
-	/** 
-	 保存方式
-	 0 =文件方式保存。
-	 1 = 保存到数据库.
-	*/
-	public final int getSaveWay()
-	{
-		return this.GetParaInt(FrmAttachmentAttr.AthSaveWay);
-	}
-	public final void setSaveWay(int value)
-	{
-		this.SetPara(FrmAttachmentAttr.AthSaveWay, value);
-	}
-	//#endregion 参数属性.
-
-	//#region 属性
+	
 	/** 
 	 节点编号
 	*/
@@ -120,6 +111,24 @@ public class FrmAttachmentExt extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentAttr.UploadType, value.getValue());
 	}
+	
+	/** 
+	 保存方式
+	 0 =文件方式保存。
+	 1 = 保存到数据库.
+	*/
+	public final int getSaveWay()
+	{
+		return this.GetParaInt(FrmAttachmentAttr.AthSaveWay);
+	}
+	public final void setSaveWay(int value)
+	{
+		this.SetPara(FrmAttachmentAttr.AthSaveWay, value);
+	}
+	//#endregion 参数属性.
+
+	//#region 属性
+	
 	/** 
 	 类型名称
 	*/
@@ -267,7 +276,7 @@ public class FrmAttachmentExt extends EntityMyPK
 		this.SetValByKey(FrmAttachmentAttr.Exts, value);
 	}
 	
-	/*
+	
 	public final String getSaveTo()
 	{
 		String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
@@ -280,7 +289,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	public final void setSaveTo(String value)
 	{
 		this.SetValByKey(FrmAttachmentAttr.SaveTo, value);
-	} */
+	} 
 	/** 
 	 附件编号
 	*/
@@ -668,8 +677,11 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddTBString(FrmAttachmentAttr.Name, null, "附件名称", true, false, 0, 50, 20,true);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "文件格式(*.*,*.doc)", true, false, 0, 50, 20, true, null);
-
-		//map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20,true,null);
+		
+		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay,
+                "@0=保存到Web服务器@1=保存到数据库@2=ftp服务器");
+		
+		map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20,true,null);
 		map.AddTBString(FrmAttachmentAttr.Sort, null, "类别(可为空)", true, false, 0, 500, 20, true, null);
 		map.AddBoolean(FrmAttachmentAttr.IsTurn2Html, false, "是否转换成html(方便手机浏览)", true, true,true);
 
@@ -702,7 +714,7 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddDDLSysEnum(FrmAttachmentAttr.AthUploadWay, 0, "控制上传控制方式", true, true, FrmAttachmentAttr.CtrlWay, "@0=继承模式@1=协作模式");
 		//#endregion 权限控制。
-
+		 map.AddTBString(FrmAttachmentAttr.DataRefNoOfObj, "AttachM1", "对应附件标识(对WorkID权限模式有效)", true, false, 0, 150, 20);
 		//#region WebOffice控制方式。
 		map.AddBoolean(FrmAttachmentAttr.IsRowLock, true, "是否启用锁定行", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsWoEnableWF, true, "是否启用weboffice", true, true);
@@ -750,12 +762,43 @@ public class FrmAttachmentExt extends EntityMyPK
 		rm.ClassMethodName = this.toString() + ".DoSettingSort";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
-
+		
+		 rm = new RefMethod();
+         rm.Title = "测试FTP服务器";
+         rm.ClassMethodName = this.toString() + ".DoTestFTPHost";
+         rm.refMethodType = RefMethodType.Func;
+         map.AddRefMethod(rm);
+         
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 	//#endregion
-
+	/// <summary>
+    /// 测试连接
+    /// </summary>
+    /// <returns></returns>
+    public String DoTestFTPHost()
+    {
+        try
+        {
+        	FTPClient  ftp ;
+            //创建地址  
+            //InetAddress addr = new InetSorcketAddress(SystemConfig.getFTPServerIP(),0);  
+            //连接  
+            ftp = new FTPClient();  
+            ftp.connect(SystemConfig.getFTPServerIP());  
+            //登陆  
+            ftp.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());  
+            
+            return "连接成功.";
+       
+        }catch(Exception ex)
+        {
+            return "err@连接失败:"+ex.getMessage();
+        }
+    }
+    
+    
 	/** 
 	 固定模式类别设置
 	 

@@ -2185,7 +2185,7 @@ public class DBAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean IsExitsObject(String obj) {
+	public static boolean IsExitsObject(String obj) throws Exception {
 		Paras ps = new Paras();
 		ps.Add("obj", obj);
 

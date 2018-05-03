@@ -29,25 +29,28 @@ public class SystemConfig {
 	 private static boolean _IsBSsystem = true;
 	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	  ///#region ftp配置.
-			public static String getFTPServerIP()
-			{
-				return SystemConfig.getAppSettings().get("FTPServerIP").toString();
-			}
+	public static String getFTPServerIP()
+	{
+		return SystemConfig.getAppSettings().get("FTPServerIP").toString();
+	}
 
-			public static String getFTPUserNo()
-			{
-				return SystemConfig.getAppSettings().get("FTPUserNo").toString();
-			}
+	public static String getFTPUserNo() throws Exception
+	{
+		
+		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();
+		return BP.Sys.Glo.String_JieMi(str);
+	}
 
-			public static String getFTPUserPassword()
-			{
-				return SystemConfig.getAppSettings().get("FTPUserPassword").toString();
-			}
+	public static String getFTPUserPassword() throws Exception
+	{
+		String str = SystemConfig.getAppSettings().get("FTPUserPassword").toString();
+		return  BP.Sys.Glo.String_JieMi(str);
+	}
 
-			public static String getAttachWebSite()
-			{
-				return SystemConfig.getAppSettings().get("AttachWebSite").toString();
-			}
+	public static String getAttachWebSite()
+	{
+		return SystemConfig.getAppSettings().get("AttachWebSite").toString();
+	}
 	 
 	/** 
 	 OS结构
@@ -727,14 +730,17 @@ public class SystemConfig {
 	/**
 	 * 当前数据库连接用户.
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String getUser() {
+	public static String getUser() throws Exception {
 		String user = getAppSettings().get("JflowUser").toString();
+		user = Glo.String_JieMi(user);
 		return user;
 	}
 
-	public static String getPassword() {
+	public static String getPassword() throws Exception {
 		String password = getAppSettings().get("JflowPassword").toString();
+		password = Glo.String_JieMi(password);
 		return password;
 	}
 

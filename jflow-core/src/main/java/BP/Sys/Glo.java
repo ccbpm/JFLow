@@ -13,6 +13,8 @@ import BP.DA.DBAccess;
 import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.En.Attr;
+import BP.Tools.Cryptos;
+import BP.Tools.En3Des;
 import BP.WF.StartWorkAttr;
 import BP.WF.Work;
 import BP.WF.WorkAttr;
@@ -372,4 +374,47 @@ public class Glo
 		
 		return DigestUtils.md5Hex(s).toLowerCase();
 	}
+	
+	/**
+	 * 文件上传加密
+	 * @param fileFullPath上传的文件
+	 * @param toFileFullPath 加密的文件
+	 */
+	 ///#region 加密解密文件.
+     public static void File_JiaMi(String fileFullPath,String toFileFullPath){
+         //南京宝旺达.
+         if (SystemConfig.getCustomerNo().equals( "BWDA")){
+        	 
+        	 En3Des.EncryptFile3Des(fileFullPath,toFileFullPath);
+         }
+     }
+     
+     /**
+      * 文件下载解密
+      * @param fileFullPath 下载的文件
+      * @param toFileFullPath解密的文件
+      */
+     public static void File_JieMi(String fileFullPath,String toFileFullPath){
+         //南京宝旺达.
+         if (SystemConfig.getCustomerNo().equals( "BWDA")){
+        	 En3Des.DecryptFile3Des(toFileFullPath,fileFullPath);
+         }
+     }
+     /// <summary>
+     /// 字符串的解密
+     /// </summary>
+     /// <param name="str">加密的字符串</param>
+     /// <returns>返回解密后的字符串</returns>
+     public static String String_JieMi(String str) throws Exception
+     {
+
+         //南京宝旺达.
+         if (SystemConfig.getCustomerNo().equals( "BWDA"))
+         {
+             return Cryptos.aesDecrypt(str);
+         }
+
+         return str;
+     }
+     ///#endregion 加密解密文件.
 }

@@ -500,19 +500,15 @@ public abstract class EnObj implements Serializable
 	 */
 	public final void SetValByKey(String attrKey, String val)
 	{
-		if (val == null || val.equals("&nbsp;"))
-		{
+		if (val == null || val.equals("&nbsp;")){
 			val = "";
-		} else if (attrKey.equals("RDT"))
-		{
+		} else if (attrKey.equals("RDT")){
 			if (val.length() > 4)
 			{
 				this.SetValByKey("FK_NY", val.substring(0, 7));
 				this.SetValByKey("FK_ND", val.substring(0, 4));
 			}
-	}// else
-//		{
-//		}
+		}
 		this.getRow().SetValByKey(attrKey, val);
 	}
 	/**

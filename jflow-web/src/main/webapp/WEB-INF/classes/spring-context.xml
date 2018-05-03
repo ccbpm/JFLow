@@ -18,6 +18,15 @@
 	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring  
 	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
 	
+	<bean id="propertyConfigurer"  
+        class="cn.jflow.common.util.GvtvPropertyPlaceholderConfigurer">  
+        <property name="locations">  
+            <list>  
+                <value>classpath:jflow.properties</value>  
+            </list>  
+        </property>  
+    </bean>  
+	
 	<!-- 默认数据源配置, 使用 Druid 数据库连接池 -->
 	<bean id="dataSourceJflow" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
 	    <!-- 数据源驱动类可不写，Druid默认会自动根据URL识别DriverClass 
@@ -45,10 +54,12 @@
 		<!-- 泄露的连接可以被删除的超时值，单位秒 
 		<property name="removeAbandoned" value="true" />
 		<property name="removeAbandonedTimeout" value="1800" />-->
-		
-<!-- 		<property name="validationQuery" value="${jdbc.testSql}" /> -->
+				 
+  		<!-- 该选项用来验证数据库连接池的有效性 , 如果是 -->
+		<property name="validationQuery" value="${JflowTestSql}" />
 		<property name="testWhileIdle" value="false" />
-		<property name="testOnBorrow" value="false" />
+		<!-- testOnBorrow true 指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个. -->
+		<property name="testOnBorrow" value="true" />
 		<property name="testOnReturn" value="false" />
 		
 		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用）

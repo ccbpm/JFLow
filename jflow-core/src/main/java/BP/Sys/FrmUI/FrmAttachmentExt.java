@@ -781,16 +781,16 @@ public class FrmAttachmentExt extends EntityMyPK
     {
         try
         {
-        	FTPClient  ftp ;
+        	//FTPClient  ftp ;
             //创建地址  
             //InetAddress addr = new InetSorcketAddress(SystemConfig.getFTPServerIP(),0);  
             //连接  
-            ftp = new FTPClient();  
-            ftp.connect(SystemConfig.getFTPServerIP());  
+          //  ftp = new FTPClient();  
+           // ftp.connect(SystemConfig.getFTPServerIP());  
             //登陆  
-            ftp.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());  
+           // ftp.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());  
             
-            return "连接成功.";
+            return "代码为完成.";
        
         }catch(Exception ex)
         {

@@ -278,11 +278,11 @@ public class WF_CommEntity extends WebContralBase {
 
             //增加上.
             DataTable dtGroups = new DataTable("Sys_GroupField");
-            dtGroups.Columns.Add("OID");
-            dtGroups.Columns.Add("Lab");
-            dtGroups.Columns.Add("Tip");
-            dtGroups.Columns.Add("CtrlType");
-            dtGroups.Columns.Add("CtrlID");
+            dtGroups.Columns.Add("OID",String.class);
+            dtGroups.Columns.Add("Lab",String.class);
+            dtGroups.Columns.Add("Tip",String.class);
+            dtGroups.Columns.Add("CtrlType",String.class);
+            dtGroups.Columns.Add("CtrlID",String.class);
 
             String[] strs = groupTitle.split("@");
             for (String str : strs)

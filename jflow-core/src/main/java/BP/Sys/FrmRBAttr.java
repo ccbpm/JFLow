@@ -60,5 +60,6 @@ public class FrmRBAttr extends EntityMyPKAttr
 	*/
 	public static final String GUID = "GUID";
 	public static final String Tip = "Tip";
+	public static final String SetVal = "SetVal";
 
 }

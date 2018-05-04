@@ -388,7 +388,7 @@ public class FrmAttachmentDB extends EntityMyPK
 		try
 		{
 			// @于庆海需要翻译.
-			if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.IISServer)
+			if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.WebServer)
 			{
 				new File(this.getFileFullName()).delete();
 			}
@@ -438,7 +438,7 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	public String GenerTempFile(AthSaveWay saveWay)
     {
-        if (saveWay == BP.Sys.AthSaveWay.IISServer)
+        if (saveWay == BP.Sys.AthSaveWay.WebServer)
             return this.getFileFullName();
 
         if (saveWay == BP.Sys.AthSaveWay.FTPServer)

@@ -414,7 +414,7 @@ public class WF_CCForm extends WebContralBase {
          // DataRow dr = dt.NewRow();
           
           
- 		if (dbAtt.getAthSaveWay() == AthSaveWay.IISServer) {
+ 		if (dbAtt.getAthSaveWay() == AthSaveWay.WebServer) {
  			//dr.put("FileName",downDB.getFileName());;
  	         //dr.put("FileType",downDB.getFileExts());
  	         //dr.put("FlieContent",docs);
@@ -1868,7 +1868,7 @@ public class WF_CCForm extends WebContralBase {
 		dbUpload.setFileExts(ext);
 
 		/// #region 处理文件路径，如果是保存到数据库，就存储pk.
-		if (frmAth.getAthSaveWay() == AthSaveWay.IISServer) {
+		if (frmAth.getAthSaveWay() == AthSaveWay.WebServer) {
 			// 文件方式保存
 			dbUpload.setFileFullName(saveTo);
 		}
@@ -2239,7 +2239,7 @@ public class WF_CCForm extends WebContralBase {
 			dbUpload.setFileExts(exts);
 
 			/// #region 处理文件路径，如果是保存到数据库，就存储pk.
-			if (athDesc.getAthSaveWay() == AthSaveWay.IISServer) {
+			if (athDesc.getAthSaveWay() == AthSaveWay.WebServer) {
 				// 文件方式保存
 				dbUpload.setFileFullName(saveTo);
 			}

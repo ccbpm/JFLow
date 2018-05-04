@@ -23,6 +23,19 @@ public class FrmRB extends EntityMyPK
 	{
 		this.SetValByKey(FrmRBAttr.Tip, value);
 	}
+	
+	/** 
+	 设置值
+	 
+	*/
+	public final String getSetVal()
+	{
+		return this.GetValStringByKey(FrmRBAttr.SetVal);
+	}
+	public final void setSetVal(String value)
+	{
+		this.SetValByKey(FrmRBAttr.SetVal, value);
+	}
 	/** 
 	 要执行的脚本
 	 
@@ -159,6 +172,7 @@ public class FrmRB extends EntityMyPK
 		map.AddTBString(FrmRBAttr.FieldsCfg, null, "配置信息@FieldName=Sta", true, false, 0, 4000, 20);
 
 		map.AddTBString(FrmRBAttr.Tip, null, "选择后提示的信息", true, false, 0, 1000, 20);
+		 map.AddTBString(FrmRBAttr.SetVal, null, "设置的值", true, false, 0, 200, 20);
 
 		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 

@@ -1,9 +1,14 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.DBAccess;
+import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.En.UIContralType;
+import BP.Sys.FrmRB;
+import BP.Sys.FrmRBAttr;
+import BP.Sys.FrmRBs;
+import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
@@ -17,6 +22,8 @@ import BP.Sys.PopValFormat;
 import BP.Sys.PopValSelectModel;
 import BP.Sys.PopValWorkModel;
 import BP.Sys.SFDBSrcs;
+import BP.Sys.SysEnum;
+import BP.Sys.SysEnums;
 import BP.Tools.StringHelper;
 import BP.WF.HttpHandler.Base.WebContralBase;
 
@@ -1113,6 +1120,82 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		me.Delete(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 		return "删除成功.";
 	}
+	
+	   //#region 单选按钮事件
+       /// <summary>
+       /// 返回信息。
+       /// </summary>
+       /// <returns></returns>
+       public String RadioBtns_Init() throws Exception
+       {
+           DataSet ds = new DataSet();
+
+           //放入表单字段.
+           MapAttrs attrs = new MapAttrs(this.getFK_MapData());
+           ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
+
+           //属性.
+           MapAttr attr = new MapAttr();
+           attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+           attr.Retrieve();
+
+           //把分组加入里面.
+           GroupFields gfs = new GroupFields(this.getFK_MapData());
+           ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
+
+           //字段值.
+           FrmRBs rbs = new FrmRBs();
+           rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+           if (rbs.size() == 0)
+           {
+               /*初始枚举值变化.
+                */
+               SysEnums ses = new SysEnums(attr.getUIBindKey());
+               for (SysEnum se: ses.ToJavaList())
+               {
+                   FrmRB rb = new FrmRB();
+                   rb.setFK_MapData(this.getFK_MapData());
+                   rb.setKeyOfEn(this.getKeyOfEn());
+                   rb.setIntKey(se.getIntKey());
+                   rb.setLab(se.getLab());
+                   rb.setEnumKey(attr.getUIBindKey());
+                   rb.Insert(); //插入数据.
+               }
+
+               rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+           }
+
+           //加入单选按钮.
+           ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
+           return BP.Tools.Json.ToJson(ds);
+       }
+       /// <summary>
+       /// 执行保存
+       /// </summary>
+       /// <returns></returns>
+       public String RadioBtns_Save() throws Exception
+       {
+           String json = this.getRequest().getParameter("data"); 
+           DataTable dt = BP.Tools.Json.ToDataTable(json);
+
+           for (DataRow dr : dt.Rows)
+           {
+               FrmRB rb = new FrmRB();
+               rb.setMyPK( dr.getValue("MyPK").toString());
+               rb.Retrieve();
+
+               rb.setScript(dr.getValue("Script").toString());
+               rb.setFieldsCfg(dr.getValue("FieldsCfg").toString()); //格式为 @字段名1=1@字段名2=0
+               rb.setTip(dr.getValue("Tip").toString()); //提示信息
+
+               rb.setSetVal(dr.getValue("SetVal").toString()); //设置值.
+
+               rb.Update();
+           }
+
+           return "保存成功.";
+       }
+       ///#endregion
 	
 
 }

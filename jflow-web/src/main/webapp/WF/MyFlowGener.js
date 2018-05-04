@@ -668,11 +668,11 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
     //获取表单中隐藏的表单元素的值
     var hiddens = $('input[type=hidden]');
-    $.each(hiddens, function (i, hidden) {
-        if ($(hidden).attr("id").indexOf('TB_') == 0) {
-            //formArrResult.push($(hidden).attr("name") + '=' + $(hidden).val());
-        }
-    });
+    //$.each(hiddens, function (i, hidden) {
+    //    if ($(hidden).attr("id").indexOf('TB_') == 0) {
+     //       //formArrResult.push($(hidden).attr("name") + '=' + $(hidden).val());
+      //  }
+   // });
 
     if (!isCotainTextArea) {
         formArrResult = $.grep(formArrResult, function (value) {
@@ -1226,7 +1226,7 @@ function GenerWorkNode() {
 
             if (data.indexOf('err@') == 0) {
                 alert(data);
-                console.log(data);
+               // console.log(data);
                 return;
             }
 
@@ -1235,14 +1235,14 @@ function GenerWorkNode() {
                 flowData = JSON.parse(data);
 
             } catch (err) {
-                console.log(data);
+                //console.log(data);
                 alert(" GenerWorkNode转换JSON失败,请查看控制台日志,或者联系管理员.");
                 return;
             }
 
             var node = flowData.WF_Node[0];
             var gfs = flowData.Sys_MapAttr;
-            console.log(gfs);
+            //console.log(gfs);
 
             //设置标题.
             document.title = node.FlowName + ',' + node.Name; // "业务流程管理（BPM）平台";

@@ -6288,6 +6288,11 @@ public class WorkNode {
 				 */
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
 						this.getHisGenerWorkFlow().getTitle(), null);
+				
+			    // 执行发送.
+                String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+                        this.rptGe, null, this.HisMsgObjs);
+
 				return HisMsgObjs;
 			}
 

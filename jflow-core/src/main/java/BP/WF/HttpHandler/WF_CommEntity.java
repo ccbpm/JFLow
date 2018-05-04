@@ -7,6 +7,7 @@ import com.sun.star.lib.uno.environments.remote.Job;
 
 import BP.DA.DBAccess;
 import BP.DA.DBType;
+import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -278,11 +279,11 @@ public class WF_CommEntity extends WebContralBase {
 
             //增加上.
             DataTable dtGroups = new DataTable("Sys_GroupField");
-            dtGroups.Columns.Add("OID",String.class);
-            dtGroups.Columns.Add("Lab",String.class);
-            dtGroups.Columns.Add("Tip",String.class);
-            dtGroups.Columns.Add("CtrlType",String.class);
-            dtGroups.Columns.Add("CtrlID",String.class);
+            dtGroups.Columns.Add(new DataColumn("OID", String.class, true));
+            dtGroups.Columns.Add(new DataColumn("Lab", String.class, true));
+            dtGroups.Columns.Add(new DataColumn("Tip", String.class, true));
+            dtGroups.Columns.Add(new DataColumn("CtrlType", String.class, true));
+            dtGroups.Columns.Add(new DataColumn("CtrlID", String.class, true));
 
             String[] strs = groupTitle.split("@");
             for (String str : strs)
@@ -315,10 +316,10 @@ public class WF_CommEntity extends WebContralBase {
            // #region 字段属性.
             MapAttrs attrs = en.getEnMap().getAttrs().ToMapAttrs();
             DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
-            sys_MapAttrs.Columns.remove(MapAttrAttr.GroupID);
-            sys_MapAttrs.Columns.Add("GroupID");
+            //sys_MapAttrs.Columns.remove(MapAttrAttr.GroupID);
+            //sys_MapAttrs.Columns.Add(new DataColumn("GroupID", String.class, true));
 
-            //sys_MapAttrs.Columns[MapAttrAttr.GroupID].DataType = typeof(string); //改变列类型.
+            sys_MapAttrs.Columns.get(MapAttrAttr.GroupID).setDataType(String.class); //改变列类型.
 
             //给字段增加分组.
             String currGroupID = "";
@@ -534,7 +535,7 @@ public class WF_CommEntity extends WebContralBase {
 
            String str= BP.Tools.Json.ToJson(ds);
             
-            //BP.DA.DataType.WriteFile("C:\\EntityOnly_Init.TXT", str);
+           // BP.DA.DataType.WriteFile("C:\\EntityOnly_Init.TXT", str);
             return str;
             
         }

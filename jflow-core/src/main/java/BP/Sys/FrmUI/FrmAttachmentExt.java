@@ -671,7 +671,7 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddTBInt(FrmAttachmentAttr.FK_Node, 0, "节点控制(对sln有效)", false, false);
 
 		//for渔业厅增加.
-		map.AddDDLSysEnum(FrmAttachmentAttr.AthRunModel, 0, "运行模式", true, true, FrmAttachmentAttr.AthRunModel, "@0=流水模式@1=固定模式");
+		map.AddDDLSysEnum(FrmAttachmentAttr.AthRunModel, 0, "运行模式", true, true, FrmAttachmentAttr.AthRunModel, "@0=流水模式@1=固定模式@自定义页面");
 
 		map.AddTBString(FrmAttachmentAttr.Name, null, "附件名称", true, false, 0, 50, 20,true);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "文件格式(*.*,*.doc)", true, false, 0, 50, 20, true, null);

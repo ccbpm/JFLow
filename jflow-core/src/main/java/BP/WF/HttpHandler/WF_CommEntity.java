@@ -533,7 +533,7 @@ public class WF_CommEntity extends WebContralBase {
             //增加方法。
             ds.Tables.add(dtM);
 
-           String str= BP.Tools.Json.ToJson(ds);
+           String str= BP.Tools.Json.ToJson(ds); 
             
            // BP.DA.DataType.WriteFile("C:\\EntityOnly_Init.TXT", str);
             return str;

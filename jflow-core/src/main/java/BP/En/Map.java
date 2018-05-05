@@ -2674,6 +2674,11 @@ public class Map
 			boolean isReadonly, int minLength, int maxLength, int tbWith,
 			int rows, boolean isUILine)
 	{
+		
+		if (field==null)
+			field=key;
+		
+		
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);

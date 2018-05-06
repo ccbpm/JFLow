@@ -781,10 +781,9 @@ public class Attrs extends ArrayList<Attr>
 	{
 		for (Attr myattr : this)
 		{
-			if (myattr.getKey().equals(attr.getKey()))
-			{
+			if (myattr.getKey().equals(attr.getKey()))			
 				return;
-			}
+			
 		}
 		
 		this.add(attr);

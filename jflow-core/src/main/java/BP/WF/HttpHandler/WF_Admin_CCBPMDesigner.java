@@ -6,6 +6,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.sound.sampled.Port;
+
 import org.springframework.util.StringUtils;
 
 import cn.jflow.common.model.AjaxJson;
@@ -18,6 +20,7 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.Sys.FrmTree;
 import BP.Sys.MapData;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
@@ -195,7 +198,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				Object tempVar2 = emps.GetEntityByKey(es.getFK_Emp());
 				emp = (BP.Port.Emp)((tempVar2 instanceof BP.Port.Emp) ? tempVar2 : null);
 
-				dt.Rows.AddRow(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+				dt.Rows.AddDatas(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
 			}
 		}
 		else
@@ -212,7 +215,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				Object tempVar3 = emps.GetEntityByKey(des.getFK_Emp());
 				emp = (BP.GPM.Emp)((tempVar3 instanceof BP.GPM.Emp) ? tempVar3 : null);
 
-				dt.Rows.AddRow(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
+				dt.Rows.AddDatas(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
 			}
 		}
 
@@ -266,8 +269,14 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					dept.setParentNo("");
 				}
 			}
+			
+			DataRow dr=dt.NewRow();
+			dr.setValue(0, dept.getNo());
+			dr.setValue(1, dept.getParentNo());
+			dr.setValue(2, dept.getName());
+			dr.setValue(3, "DEPT");
 
-			dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+			dt.Rows.add(dr);  
 		}
 		else
 		{
@@ -291,8 +300,18 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					dept.setParentNo("");
 				}
 			}
+			
+			
+			DataRow dr=dt.NewRow();
+			dr.setValue(0, dept.getNo());
+			dr.setValue(1, dept.getParentNo());
+			dr.setValue(2, dept.getName());
+			dr.setValue(3, "DEPT");
 
-			dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+			dt.Rows.add(dr);  
+			
+
+			//dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -331,7 +350,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			//增加部门
 			for (BP.Port.Dept dept : depts.ToJavaList())
 			{
-				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 			}
 
 			//增加岗位
@@ -348,7 +367,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					}
 
 					insts.add(es.getFK_Station());
-					dt.Rows.AddRow(es.getFK_Station(), rootid, es.getFK_StationT(), "STATION");
+					dt.Rows.AddDatas(es.getFK_Station(), rootid, es.getFK_StationT(), "STATION");
 				}
 
 				if (ess.size() == 0)
@@ -360,7 +379,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			//增加没有岗位的人员
 			for (BP.Port.Emp emp : inemps)
 			{
-				dt.Rows.AddRow(emp.getNo(), rootid, emp.getName(), "EMP");
+				dt.Rows.AddDatas(emp.getNo(), rootid, emp.getName(), "EMP");
 			}
 		}
 		else
@@ -382,7 +401,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (BP.GPM.Dept dept : depts.ToJavaList())
 			{
 				//增加部门
-				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 			}
 
 			//增加部门岗位
@@ -396,7 +415,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					continue;
 				}
 
-				dt.Rows.AddRow(ds.getFK_Station(), rootid, stt.getName(), "STATION");
+				dt.Rows.AddDatas(ds.getFK_Station(), rootid, stt.getName(), "STATION");
 			}
 
 			//增加没有岗位的人员
@@ -416,7 +435,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (String inemp : inemps)
 			{
 				emp = new BP.GPM.Emp(inemp);
-				dt.Rows.AddRow(emp.getNo(), rootid, emp.getName(), "EMP");
+				dt.Rows.AddDatas(emp.getNo(), rootid, emp.getName(), "EMP");
 			}
 		}
 
@@ -994,7 +1013,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			fs.setName("流程树");
 			fs.Insert();
 
-			dt.Rows.AddRow("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+			dt.Rows.AddDatas("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
 		}
 		else
 		{
@@ -1089,136 +1108,117 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 	public final String GetFormTreeTable() throws Exception
 	{
-			String rootNo = DBAccess.RunSQLReturnStringIsNull("SELECT No FROM Sys_FormTree WHERE ParentNo='' OR ParentNo IS NULL", null);
 
-			if (!StringUtils.isEmpty(rootNo))
-			{
-				DBAccess.RunSQL(String.format("DELETE FROM Sys_FormTree WHERE No='%1$s'", rootNo));
-				DataTable dtRoot = DBAccess.RunSQLReturnTable("SELECT No,ParentNo FROM Sys_FormTree WHERE No='1'");
+		 // #region 检查数据是否符合规范.
+          String rootNo =DBAccess.RunSQLReturnStringIsNull("SELECT No FROM Sys_FormTree WHERE ParentNo='' OR ParentNo IS NULL", null);
+          if (DataType.IsNullOrEmpty(rootNo)==false)
+          {
+              //删除垃圾数据.
+              DBAccess.RunSQL(String.format("DELETE FROM Sys_FormTree WHERE No='{0}'", rootNo));
+          }
+          //检查根目录是否符合规范.
+          FrmTree ft = new FrmTree();
+          ft.setNo( "1");
+          if (ft.RetrieveFromDBSources() == 0)
+          {
+              ft.setName("表单库");
+              ft.setParentNo("0");
+              ft.Insert();
+          }
+          if (ft.getParentNo().equals("0") == false)
+          {
+              ft.setParentNo("0");
+              ft.Update();
+          }
+         // #endregion 检查数据是否符合规范.
 
-				if (dtRoot.Rows.size() == 0)
-				{
-					DBAccess.RunSQL("INSERT INTO Sys_FormTree (No,Name,ParentNo) VALUES ('1','根目录','0')");
-				}
-				else if (dtRoot.Rows.get(0).getValue("ParentNo").equals("0") == false)
-				{
-					DBAccess.RunSQL("UPDATE Sys_FormTree SET ParentNo='0' WHERE No='1'");
-				}
+          //组织数据源.
+          String sqls = "";
+          if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+          {
+              sqls = "SELECT No \"No\", ParentNo \"ParentNo\",Name \"Name\", Idx \"Idx\", 1 \"IsParent\", 'FORMTYPE' \"TType\" FROM Sys_FormTree ORDER BY Idx ASC ; ";
+              sqls += "SELECT No \"No\", FK_FormTree as \"ParentNo\", Name \"Name\",Idx \"Idx\", 0 \"IsParent\", 'FORM' \"TType\" FROM Sys_MapData  WHERE AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree) ORDER BY Idx ASC";
+          }
+          else
+          {
+              sqls = "SELECT No,ParentNo,Name, Idx, 1 IsParent, 'FORMTYPE' TType FROM Sys_FormTree ORDER BY Idx ASC ; ";
+              sqls += "SELECT No, FK_FormTree as ParentNo,Name,Idx,0 IsParent, 'FORM' TType FROM Sys_MapData  WHERE AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree) ORDER BY Idx ASC";
+          }
+          
+         // String sqls = "SELECT No,ParentNo,Name, Idx, 1 IsParent, 'FORMTYPE' TType FROM Sys_FormTree ORDER BY Idx ASC ; ";
+          //sqls += "SELECT No, FK_FormTree as ParentNo,Name,Idx,0 IsParent, 'FORM' TType FROM Sys_MapData  WHERE AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree) ORDER BY Idx ASC";
+          
+          
+          DataSet ds = DBAccess.RunSQLReturnDataSet(sqls);
 
-				DBAccess.RunSQL(String.format("UPDATE Sys_FormTree SET ParentNo='1' WHERE ParentNo='%1$s' AND No != '1'", rootNo));
-			}
-			///#endregion 检查数据是否符合规范.
+          //获得表单数据.
+          DataTable dtSort = ds.Tables.get(0); //类别表.
+          DataTable dtForm = ds.Tables.get(1).clone(); //表单表,这个是最终返回的数据.
+          
 
-			//组织数据源.
-			String sqls = "SELECT No ,ParentNo,Name, Idx, 1 IsParent, 'FORMTYPE' TType, 'local' as DBSRC FROM Sys_FormTree ORDER BY Idx ASC ; ";
-			sqls += "SELECT No, FK_FrmSort as ParentNo,Name,Idx,0 IsParent, 'FORM' TType FROM Sys_MapData   WHERE AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree)";
-			DataSet ds = DBAccess.RunSQLReturnDataSet(sqls);
+          //增加顶级目录.
+          DataRow[] rowsOfSort = dtSort.Select("ParentNo='0'");
+          DataRow drFormRoot = dtForm.NewRow();
+          drFormRoot.setValue("No", rowsOfSort[0].getValue("No"));
+          drFormRoot.setValue("ParentNo", "0");
+          drFormRoot.setValue("Name", rowsOfSort[0].getValue("Name"));
+          drFormRoot.setValue("Idx", rowsOfSort[0].getValue("Idx"));
+          drFormRoot.setValue("IsParent", rowsOfSort[0].getValue("IsParent"));
+          drFormRoot.setValue("TType", rowsOfSort[0].getValue("TType"));
+          dtForm.Rows.add(drFormRoot); //增加顶级类别..
+          
+       //   dtForm.Rows.AddDatas(drFormRoot); //增加顶级类别..
+        
+          /*
+          drFormRoot.setValue(0, rowsOfSort[0].getValue("No"]); 
+          drFormRoot[1] = "0";
+          drFormRoot[2] = rowsOfSort[0]["Name"];
+          drFormRoot[3] = rowsOfSort[0]["Idx"];
+          drFormRoot[4] = rowsOfSort[0]["IsParent"];
+          drFormRoot[5] = rowsOfSort[0]["TType"];*/
+          
 
-			//获得表单数据.
-			DataTable dtSort = ds.Tables.get(0); //类别表.
-			DataTable dtForm = ds.Tables.get(1).clone(); //表单表.
+          //把类别数据组装到form数据里.
+          for (DataRow dr : dtSort.Rows)
+          {
+              DataRow drForm = dtForm.NewRow();
+              drForm.setValue("No", dr.getValue("No"));
+              drForm.setValue("ParentNo", dr.getValue("ParentNo")); 
+              drForm.setValue("Name", dr.getValue("Name")); 
+              drForm.setValue("Idx", dr.getValue("Idx")); 
+              drForm.setValue("IsParent", dr.getValue("IsParent")); 
+              drForm.setValue("TType", dr.getValue("TType")); 
+               
+              dtForm.Rows.add(drForm); //类别.
+          }
 
+          if (WebUser.getNo().equals("admin")==false)
+          {
+              AdminEmp aemp = new AdminEmp();
+              aemp.setNo(WebUser.getNo());
+              aemp.RetrieveFromDBSources();
 
-			for (DataRow dr : dtSort.Rows)
-			{
-				if(SystemConfig.getAppCenterDBType() == DBType.Oracle)
-					dtForm.Rows.AddRow(dr.getValue("NO"), dr.getValue("PARENTNO"), dr.getValue("NAME"), dr.getValue("IDX"), dr.getValue("ISPARENT"), dr.getValue("TTYPE"));
-				else
-					dtForm.Rows.AddRow(dr.getValue("No"), dr.getValue("ParentNo"), dr.getValue("Name"), dr.getValue("Idx"), dr.getValue("IsParent"), dr.getValue("TType"));
-			}
-			
-			//过滤
-			DataRow[] rowsOfSort = dtSort.Select("ParentNo='0'");
-			if (rowsOfSort.length == 0)
-			{
-				dtForm.Rows.AddRow("1", "0", "表单库", 0, 1, "FORMTYPE");
-			}
-			else
-			{
-				if(SystemConfig.getAppCenterDBType() == DBType.Oracle)
-					dtForm.Rows.AddRow(rowsOfSort[0].getValue("NO"), "0", rowsOfSort[0].getValue("NAME"), rowsOfSort[0].getValue("IDX"), rowsOfSort[0].getValue("ISPARENT"), rowsOfSort[0].getValue("TTYPE"));
-				else
-					dtForm.Rows.AddRow(rowsOfSort[0].getValue("No"), "0", rowsOfSort[0].getValue("Name"), rowsOfSort[0].getValue("IDX"), rowsOfSort[0].getValue("ISPARENT"), rowsOfSort[0].getValue("TTYPE"));
-			}
+              if (aemp.getUserType() != 1)
+                  return "err@您[" + WebUser.getNo() + "]已经不是二级管理员了.";
+              if (aemp.getRootOfForm().equals("") )
+                  return "err@没有给二级管理员[" + WebUser.getNo() + "]设置表单树的权限...";
 
-			for (DataRow row : ds.Tables.get(1).Rows)
-			{
-				dtForm.Rows.AddRow(row.getItemArray());
-			}
+              DataRow[] rootRows = dtForm.Select("No='" + aemp.getRootOfForm() + "'");
+              DataRow newRootRow = rootRows[0];
 
-			if ( ! WebUser.getNo().equals("admin"))
-			{
-				BP.WF.Port.AdminEmp aemp = new AdminEmp();
-				aemp.setNo(WebUser.getNo());
-				aemp.RetrieveFromDBSources();
-				if (!aemp.getIsAdmin())
-				{
-					return "err@您[" + WebUser.getNo() + "]已经不是二级管理员了.";
-				}
-				if (aemp.getRootOfForm().equals(""))
-				{
-					return "err@没有给二级管理员[" + WebUser.getNo() + "]设置表单树的权限...";
-				}
-								
-				DataRow[] rootRows = dtForm.Select("No='" + aemp.getRootOfForm() + "'");
-				DataRow newRootRow = rootRows[0];
+              newRootRow.setValue("ParentNo", "0");
+              DataTable newDt = dtForm.clone();
+              newDt.Rows.AddRow(newRootRow);
 
-				newRootRow.setValue("ParentNo", "0");
-				DataTable newDt = dtForm.clone();
-				
-				newDt.Rows.AddRow(newRootRow.ItemArray);
-				GenerChildRowsX(dtForm, newDt, newRootRow);
-				dtForm = newDt;
-				
-				if(newRootRow.size()!=0 && !"表单库".equals(newRootRow.getValue("Name"))){
-					for(int i=0;i<dtForm.Rows.size();i++){
-						if("表单库".equals(dtForm.Rows.get(i).getValue("Name"))){
-							dtForm.Rows.remove(i);
-						}
-					}
-				}
-			}
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-			{
-				dtSort.Columns.get("NO").ColumnName = "No";
-				dtSort.Columns.get("PARENTNO").ColumnName = "ParentNo";
-				dtSort.Columns.get("NAME").ColumnName = "Name";
-				dtSort.Columns.get("IDX").ColumnName = "Idx";
-				dtSort.Columns.get("ISPARENT").ColumnName = "IsParent";
-				dtSort.Columns.get("TTYPE").ColumnName = "TType";
-
-				dtForm.Columns.get("NO").ColumnName = "No";
-				dtForm.Columns.get("IDX").ColumnName = "Idx";
-				dtForm.Columns.get("NAME").ColumnName = "Name";
-				dtForm.Columns.get("PARENTNO").ColumnName = "ParentNo";
-				dtForm.Columns.get("ISPARENT").ColumnName = "IsParent";
-				dtForm.Columns.get("TTYPE").ColumnName = "TType";
-			}
-			if(SystemConfig.getAppCenterDBType() == DBType.Oracle)
-				return BP.Tools.Json.DataTableToJson(dtForm, false, false, true);
-			else
-				return BP.Tools.Json.DataTableToJson(dtForm, false);
+              GenerChildRows(dtForm, newDt, newRootRow);
+              dtForm = newDt;
+          }
+          
+          String str= BP.Tools.Json.ToJson(dtForm);
+         // BP.DA.DataType.WriteFile("C:\\TreeJflow.txt", str);
+          return str; 
 	}
-	public final String GetSrcTreeTable()
-	{
-		String sql1 = "SELECT ss.NO,'SrcRoot' PARENTNO,ss.NAME,0 IDX, 1 ISPARENT, 'SRC' TTYPE FROM Sys_SFDBSrc ss ORDER BY ss.DBSrcType ASC";
-		String sql2 = "SELECT st.NO, st.FK_SFDBSrc AS PARENTNO,st.NAME,0 AS IDX, 0 ISPARENT, 'SRCTABLE' TTYPE FROM Sys_SFTable st";
-		String sqls = sql1 + ";" + "\r\n"+ sql2 + " ;";
-		DataSet ds = DBAccess.RunSQLReturnDataSet(sqls);
-		DataTable dt = ds.Tables.get(0).clone();
-
-		for (DataRow row : ds.Tables.get(0).Rows)
-		{
-			dt.Rows.AddRow(row.ItemArray);
-		}
-
-		for (DataRow row : ds.Tables.get(1).Rows)
-		{
-			dt.Rows.AddRow(row.ItemArray);
-		}
-
-		return BP.Tools.Json.DataTableToJson(dt, false);
-	}
+	 
 
 	public final String GetStructureTreeTable() throws Exception
 	{
@@ -1253,7 +1253,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (BP.WF.Port.Dept dept : depts.ToJavaList())
 			{
 				//增加部门
-				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 				des.put(dept.getNo(), new java.util.ArrayList<String>());
 				dss.put(dept.getNo(), new java.util.ArrayList<String>());
 
@@ -1290,7 +1290,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 							}
 
 							dss.get(dept.getNo()).add(es.getFK_Station());
-							dt.Rows.AddRow(dept.getNo() + "|" + es.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
+							dt.Rows.AddDatas(dept.getNo() + "|" + es.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
 						}
 					}
 				}
@@ -1310,7 +1310,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 							continue;
 						}
 
-						dt.Rows.AddRow(ds.getKey() + "|" + st + "|" + emp, ds.getKey() + "|" + st, empt.getName(), "EMP");
+						dt.Rows.AddDatas(ds.getKey() + "|" + st + "|" + emp, ds.getKey() + "|" + st, empt.getName(), "EMP");
 					}
 				}
 			}
@@ -1333,7 +1333,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (BP.GPM.Dept dept : depts.ToJavaList())
 			{
 				//增加部门
-				dt.Rows.AddRow(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
+				dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 
 				//增加部门岗位
 				dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, dept.getNo());
@@ -1347,7 +1347,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 						continue;
 					}
 
-					dt.Rows.AddRow(dept.getNo() + "|" + ds.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
+					dt.Rows.AddDatas(dept.getNo() + "|" + ds.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
 
 					//增加部门岗位人员
 					dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, dept.getNo(), BP.GPM.DeptEmpStationAttr.FK_Station, ds.getFK_Station());
@@ -1362,7 +1362,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 							continue;
 						}
 
-						dt.Rows.AddRow(dept.getNo() + "|" + ds.getFK_Station() + "|" + des.getFK_Emp(), dept.getNo() + "|" + ds.getFK_Station(), empt.getName(), "EMP");
+						dt.Rows.AddDatas(dept.getNo() + "|" + ds.getFK_Station() + "|" + des.getFK_Emp(), dept.getNo() + "|" + ds.getFK_Station(), empt.getName(), "EMP");
 					}
 				}
 			}

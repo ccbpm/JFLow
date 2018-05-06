@@ -120,15 +120,15 @@ public class CCMobile_WorkOpt extends WebContralBase
 		WF_WorkOpt en = new WF_WorkOpt(this.context);
 		return en.AccepterOfGener_Delete();
 	}
-	public final String AccepterOfGener_Send()
+	
+	public final String AccepterOfGener_Send() throws Exception
 	{
-		WF_WorkOpt en = new WF_WorkOpt(this.context);
-		return en.AccepterOfGener_Send();
+		    WF_WorkOpt en = new WF_WorkOpt(this.context);		 
+		    return en.AccepterOfGener_Send(); 
 	}
 
 		///#endregion 接收人选择器(通用).
-
-
+ 
 		///#region 选择人员(通用).
 	/** 
 	 将要去掉.

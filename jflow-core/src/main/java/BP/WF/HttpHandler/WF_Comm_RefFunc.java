@@ -977,7 +977,7 @@ public class WF_Comm_RefFunc extends WebContralBase {
             dt = DBAccess.RunSQLReturnTable(sql);
 
             if (dt.Rows.size() == 0)
-                dt.Rows.AddRow("-1", "无单位数据", parentrootid); 
+                dt.Rows.AddDatas("-1", "无单位数据", parentrootid); 
 
             node = new EasyuiTreeNode();
             node.setid("UNITROOT_" + dt.Rows.get(0).getValue("No"));

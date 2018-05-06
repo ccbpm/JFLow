@@ -1816,11 +1816,10 @@ public class WF_WorkOpt extends WebContralBase {
 	/// 执行发送.
 	/// </summary>
 	/// <returns></returns>
-	public String AccepterOfGener_Send() {
-		try {
-			
-			int toNodeID = this.GetRequestValInt("ToNode");
+	public String AccepterOfGener_Send() throws Exception {
 
+
+		    int toNodeID = this.GetRequestValInt("ToNode");
 			/* 仅仅设置一个,检查压入的人员个数. */
 			String sql = "SELECT count(WorkID) as Num FROM WF_SelectAccper WHERE FK_Node=" + toNodeID + " AND WorkID="
 					+ this.getWorkID() + " AND AccType=0";
@@ -1838,9 +1837,7 @@ public class WF_WorkOpt extends WebContralBase {
 			String strs = objs.ToMsgOfHtml();
 			strs = strs.replace("@", "<br>@");
 			return strs;
-		} catch (Exception ex) {
-			return "err@" + ex.getMessage();
-		}
+	 
 	}
 
 	// 查询select集合

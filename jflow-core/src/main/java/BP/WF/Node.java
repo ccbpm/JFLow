@@ -170,7 +170,9 @@ public class Node extends Entity
 			return obj; 
 		}
 		
-		 if (this.getFormType() != NodeFormType.FoolTruck || this.WorkID == 0 || this.getIsStartNode() == true)
+		 if (this.getFormType() != NodeFormType.FoolTruck 
+				 || this.WorkID == 0 
+				 || this.getIsStartNode() == true)
          {
 			obj = new BP.WF.GEWork(this.getNodeID(), this.getNodeFrmID());
 			obj.setHisNode(this);
@@ -226,7 +228,7 @@ public class Node extends Entity
              {
                  item.setUIIsEnable( false); //设置为只读的.
                  item.setDefValReal("");    //设置默认值为空.
-                 ma.getAttrs().add(item.getHisAttr());
+                 ma.getAttrs().Add(item.getHisAttr());
              }
 
              //设置为空.

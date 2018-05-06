@@ -1682,6 +1682,7 @@ public class WF_MyFlow extends WebContralBase {
 		}
 	}
 	
+	//执行保存.
 	public String Save() throws Exception{
 		try {
 			
@@ -1775,12 +1776,7 @@ public class WF_MyFlow extends WebContralBase {
 
 				///#endregion 增加上流程的信息.
 
-
-				//把他转化小写,适应多个数据库.
-				//   wf_generWorkFlowDt = DBAccess.ToLower(wf_generWorkFlowDt);
-				// ds.Tables.Add(wf_generWorkFlowDt);			   
-				//ds.WriteXml("c:\\xx.xml");
-				
+ 
 				///#region 如果是移动应用就考虑多表单的问题.
 				if (getcurrND().getHisFormType() == NodeFormType.SheetTree && this.getIsMobile() == true)
 				{
@@ -1800,10 +1796,9 @@ public class WF_MyFlow extends WebContralBase {
 
 				String str= BP.Tools.Json.ToJson(ds);
 				
-				DataType.WriteFile("c:\\aaa.Txt", str);
 				
-				return str;
-				 
+				DataType.WriteFile("c:\\aaabbbb.Txt", str);				
+				return str;				 
 			}
 			catch (RuntimeException ex)
 			{
@@ -1947,9 +1942,7 @@ public class WF_MyFlow extends WebContralBase {
 		url = url.replace("&&", "&");
 		return url;
 	}
-
-	
-
+ 
 	private Node _currNode = null;
 
 	public final Node getcurrND() throws Exception {
@@ -2139,21 +2132,25 @@ public class WF_MyFlow extends WebContralBase {
 			}
 
 			if (key.contains("TB_")) {
-				htMain.put(key.replace("TB_", ""), this.GetRequestVal(key));
+				if (htMain.containsKey(key.replace("TB_", "")) ==false)
+			    	htMain.put(key.replace("TB_", ""), this.GetRequestVal(key));
 				continue;
 			}
 
 			if (key.contains("DDL_")) {
+				if (htMain.containsKey(key.replace("DDL_", "")) ==false)
 				htMain.put(key.replace("DDL_", ""), this.GetRequestVal(key));
 				continue;
 			}
 
 			if (key.contains("CB_")) {
+				if (htMain.containsKey(key.replace("CB_", "")) ==false)
 				htMain.put(key.replace("CB_", ""), this.GetRequestVal(key));
 				continue;
 			}
 
 			if (key.contains("RB_")) {
+				if (htMain.containsKey(key.replace("RB_", "")) ==false)
 				htMain.put(key.replace("RB_", ""), this.GetRequestVal(key));
 				continue;
 			}

@@ -3,6 +3,8 @@ package BP.DA;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.sun.star.bridge.oleautomation.Decimal;
+
 public class DataRowCollection extends ArrayList<DataRow>
 {
 	
@@ -36,29 +38,78 @@ public class DataRowCollection extends ArrayList<DataRow>
 		return this.Table;
 	}
 	
-	public DataRow AddRow(Object... vals){
-		DataRow row = new DataRow(Table);
-		if (vals != null){
-			int i = 0;
-			for (Object val : vals){
-				/*
-				 * 20171023
-				 * 设置接收人选择'与指定节点处理人相同'
-				 * 当提交到此节点时, 该方法传入的参数vals为DataRow的集合
-				 */
-//				row.put(Table.Columns.get(i++).ColumnName, val);
+	public DataRow AddRow(Object vals){
+		
+		if (vals==null)
+			return null;
+		  
+		
+		DataRow row = new DataRow(Table);		 
+		Map ap=   ((Map<String, Object>) vals);
+		
+		for(DataColumn dc : Table.Columns)
+		{
+
+            String key= dc.ColumnName;
+			String valStr=String.valueOf( ap.get(key)); 
+			
+			if (valStr==null)
+			{
+				valStr="";				
+				/*				
+				 if (dc.getDataType() == int.class 
+						 ||dc.getDataType() ==  Decimal.class
+					     
+						 ||dc.getDataType() ==  float.class 
+						 )
+				valStr=0;*/
+				 
+			}
+			
+			
+			 row.put(key, valStr);
+			 continue;
+			 
+            /*
+			Object obj=ap.get(key);
+			
+		    if (obj==null)
+		       row.put(key, "");
+		    else
+		      row.put(key, obj); */
+		}
+       
+		this.add(row);		
+		return row;
+	}
+	
+	public DataRow AddDatas(Object... vals){
+		
+		if (vals==null)
+			return null;
+		 
+		
+		DataRow row = new DataRow(Table);	
+		int i=0;
+			for (Object val : vals) {
+				 
 				
 				String key = Table.Columns.get(i++).ColumnName;
+				
 				Object value;
 				if (val instanceof Map) {
 					value = ((Map<String, Object>) val).get(key);
 				} else {
 					value = val;
 				}
-				row.put(key, value);
+				
+				if (value==null)
+					value="";
+				
+				row.put(key, value); 
 			}
 			this.add(row);
-		}
+		
 		return row;
 	}
 }

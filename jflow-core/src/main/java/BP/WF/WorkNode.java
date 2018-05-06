@@ -2316,7 +2316,9 @@ public class WorkNode {
 		/// #endregion
 
 		/// #region 初始化发起的工作节点。
-		if (this.getHisWork().getEnMap().getPhysicsTable() == toWK.getEnMap().getPhysicsTable()) {
+
+		
+		if (this.getHisWork().getEnMap().getPhysicsTable().equals(  toWK.getEnMap().getPhysicsTable()) ) {
 			// 这是数据合并模式, 就不执行copy
 			this.CopyData(toWK, toND, true);
 		} else {
@@ -3785,6 +3787,7 @@ public class WorkNode {
 	/// #region 执行数据copy.
 	public final void CopyData(Work toWK, Node toND, boolean isSamePTable) throws Exception {
 		String errMsg = "如果两个数据源不想等，就执行 copy - 期间出现错误.";
+		
 		if (isSamePTable == true) {
 			return;
 		}
@@ -5833,6 +5836,7 @@ public class WorkNode {
 	 * @throws Exception 
 	 */
 	public final SendReturnObjs NodeSend(Node jumpToNode, String jumpToEmp) throws Exception {
+		
 		DBAccess.DoTransactionCommit();
 		if (this.getHisNode().getIsGuestNode()) {
 			if (!this.getExecer().equals("Guest")) {
@@ -5896,7 +5900,7 @@ public class WorkNode {
 			this.addMsg("SendWhen", sendWhen, sendWhen, SendReturnMsgType.Info);
 		}
 
-		/// #endregion 安全性检查.
+		// #endregion 安全性检查.
 
 		// 加入系统变量.
 		this.addMsg(SendReturnMsgFlag.VarCurrNodeID, (new Integer(this.getHisNode().getNodeID())).toString(),

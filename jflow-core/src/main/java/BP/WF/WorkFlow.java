@@ -1045,6 +1045,10 @@ public class WorkFlow
 
 		// 因为前面已经对他进行个直接更新所以这里需要进行查询之后在执行更新.
 		this.getHisGenerWorkFlow().RetrieveFromDBSources();
+		
+
+        //当前登录用户.
+        String currUserNo = BP.Web.WebUser.getNo();
 
 		try
 		{
@@ -1058,17 +1062,17 @@ public class WorkFlow
 			Emp emp = new Emp();
 			emp.setNo(pEmp);
 			if (emp.RetrieveFromDBSources() == 0)
-			{
 				throw new RuntimeException("@吊起子流程上的人员编号(" + pEmp + ")已不存在,无法启动父流程.");
-			}
+			
 
 			//改变当前节点的状态，不然父流程如果做了让所有的子流程发送完成后才能运行的设置后，不能不能让其发送了.
 			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
 			this.getHisGenerWorkFlow().DirectUpdate();
-
-
+ 
 			GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
-
+ 
+            //让父流程的userNo登录.
+            BP.WF.Dev2Interface.Port_Login(emp.getNo());
 
 			// 让当前人员向下发送，但是这种发送一定不要检查发送权限，否则的话就出错误，不能发送下去.
 			SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getWorkID(), rpt.getRow(), null, 0, null, emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(), null);
@@ -1082,7 +1086,21 @@ public class WorkFlow
 		{
 			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
 			this.getHisGenerWorkFlow().DirectUpdate();
-			return "@在最后一个子流程完成后，让父流程的节点自动发送时，出现错误:" + ex.getMessage();
+			
+			   //切换到当前流程节点.
+            BP.WF.Dev2Interface.Port_Login(currUserNo);
+            
+
+            String info = "这个错误";
+            if (ex.getMessage().contains("WorkOpt/") == true)
+            {
+                info += "@流程设计错误:自动运行到的下一个节点的接收人规则是由上一个人员来选择的,导致到不能自动运行到下一步骤.";
+                return info;
+            }
+
+            return "@在最后一个子流程完成后，让父流程的节点自动发送时，出现错误:" + ex.getMessage();
+            
+			 
 		}
 	}
 	/** 

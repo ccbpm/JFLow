@@ -5385,6 +5385,7 @@ public class Flow extends BP.En.EntityNoName
 		
 		try
 		{
+			
 		java.io.File info = new java.io.File(path);
 		DataSet ds = new DataSet();
 		ds.readXml(path);
@@ -5412,10 +5413,7 @@ public class Flow extends BP.En.EntityNoName
 		//String timeKey = new java.util.Date().toString("yyMMddhhmmss");
 		SimpleDateFormat format = new SimpleDateFormat("yyMMddhhmmss");
 		String timeKey = format.format(new Date());
-		
-	 
-
-
+		 
 			///#region 根据不同的流程模式，设置生成不同的流程编号.
 		switch (model)
 		{
@@ -7525,6 +7523,7 @@ public class Flow extends BP.En.EntityNoName
 		//删除流程数据.
 		this.DoDelData();
 
+		 
 		String sql = "";
 		//sql = " DELETE FROM WF_chofflow WHERE FK_Flow='" + this.getNo() + "'";
 		sql += "@ DELETE  FROM WF_GenerWorkerlist WHERE FK_Flow='" + this.getNo() + "'";
@@ -7555,7 +7554,7 @@ public class Flow extends BP.En.EntityNoName
 
 		sql += "@ DELETE FROM WF_NodeToolbar WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
 		sql += "@ DELETE FROM WF_SelectAccper WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
-		sql += "@ DELETE FROM WF_TurnTo WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
+		//sql += "@ DELETE FROM WF_TurnTo WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
 
  
 		// 删除d2d数据.

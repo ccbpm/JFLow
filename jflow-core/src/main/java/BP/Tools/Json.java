@@ -326,8 +326,12 @@ public class Json
 				
 				if (null == obj )
 				{
-					jsonString += "\"\","; 
-					continue;
+					obj = drc.get(i).getValue(column.ColumnName);	//解决构造tabele的问题.				
+					if (obj==null)
+					{
+					   jsonString += "\"\","; 
+					   continue;
+					}
 				} 
 				
 

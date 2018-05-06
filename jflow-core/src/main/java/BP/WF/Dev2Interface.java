@@ -7202,8 +7202,7 @@ public class Dev2Interface
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, java.util.Hashtable htWork, DataSet workDtls, int toNodeID, String nextWorkers, String execUserNo, String execUserName, String execUserDeptNo, String execUserDeptName, String title) throws Exception
 	{
 		//给临时的发送变量赋值，解决带有参数的转向。
-		
-			Glo.setSendHTOfTemp(htWork);
+		Glo.setSendHTOfTemp(htWork);
 
 
 		// 转化成编号.

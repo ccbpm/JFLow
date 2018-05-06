@@ -353,11 +353,11 @@ public class WF_RptDfine extends WebContralBase{
 								else
 								{
 									dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-									dtNoName.Rows.AddRow("all", "全部");
+									dtNoName.Rows.AddDatas("all", "全部");
 
 									for (Entity en : ens.ToJavaListEn())
 									{
-										dtNoName.Rows.AddRow(en.GetValStringByKey(ar.getHisAttr().getUIRefKeyValue()), en.GetValStringByKey(ar.getHisAttr().getUIRefKeyText()));
+										dtNoName.Rows.AddDatas(en.GetValStringByKey(ar.getHisAttr().getUIRefKeyValue()), en.GetValStringByKey(ar.getHisAttr().getUIRefKeyText()));
 									}
 
 									ds.Tables.add(dtNoName);
@@ -379,13 +379,13 @@ public class WF_RptDfine extends WebContralBase{
 						//    break;
 						case Enum:
 							dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-							dtNoName.Rows.AddRow("all", "全部");
+							dtNoName.Rows.AddDatas("all", "全部");
 
 							SysEnums enums = new SysEnums(ar.getUIBindKey());
 
 							for (SysEnum en : enums.ToJavaList())
 							{
-								dtNoName.Rows.AddRow(en.getIntKey(), en.getLab());
+								dtNoName.Rows.AddDatas(en.getIntKey(), en.getLab());
 							}
 
 							ds.Tables.add(dtNoName);

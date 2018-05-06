@@ -43,6 +43,22 @@ public class DataSet {
 			hashTables = new Hashtable<String, DataTable>();
 		}
 	}
+	
+	public DataTable GetTableByName(String tableName)
+	{
+		
+		for (DataTable dtb : this.Tables)
+			{
+				if( tableName.equals(dtb.getTableName()))
+				{
+					return dtb;
+				 
+				}
+			}	
+		
+		return null;
+	   
+	}
 
 	public DataSet(String name) {
 		if (Tables == null) {

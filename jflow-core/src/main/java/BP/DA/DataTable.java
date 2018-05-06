@@ -47,8 +47,7 @@ public class DataTable implements Cloneable
 	public DataTable()
 	{
 		this.Columns = new DataColumnCollection(this);
-		this.Rows = new DataRowCollection(this);
-		
+		this.Rows = new DataRowCollection(this);		
 	}
 	
 	/**

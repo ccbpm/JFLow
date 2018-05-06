@@ -60,7 +60,7 @@ INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.Sys.FrmUI.FrmAttachmentExt',
 '@MyPK=基础信息,附件的基本配置.
 @DeleteWay=权限控制,控制附件的下载与上传权限.@IsRowLock=WebOffice属性,设置与公文有关系的属性配置.
 @IsToHeLiuHZ=流程相关,控制节点附件的分合流.
-@FastKeyIsEnable=快捷键,为附件生成快捷键放入指定的目录.');
+@Attrs=属性,为该附件设置多个属性.');
 
 -- 2016.07.20 升级明细表维护分组;
 DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.MapDtlExt';

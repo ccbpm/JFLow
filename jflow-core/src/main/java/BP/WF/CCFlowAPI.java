@@ -264,11 +264,13 @@ public class CCFlowAPI
 
                          if (insertNum == 0 && numOfBar == 1)
                          {
-                             gf.Rows.add(0,dr); //增加一行.
+                             //gf.Rows.add(0,dr); //增加一行.
+                             gf.Rows.AddRow(dr,0); //增加一行.
                              break;
                          }
                          
-                         gf.Rows.add(0,dr); //增加一行.
+                         //gf.Rows.add(0,dr); //增加一行.
+                         gf.Rows.AddRow(dr,0); //增加一行.
                      }    
                  }
                  

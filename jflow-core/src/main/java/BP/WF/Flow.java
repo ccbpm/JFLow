@@ -6863,6 +6863,10 @@ public class Flow extends BP.En.EntityNoName
 							{
 									val = val.replace("ND" + oldFlowID, "ND" + flowID);
 							}
+							else if (dc.ColumnName.toLowerCase().equals("frmid")) //升级傻瓜表单的时候,新增加的字段 add by zhoupeng 2016.11.21
+							{
+									val = val.replace("ND" + oldFlowID, "ND" + flowID);
+							}
 							else
 							{
 							}

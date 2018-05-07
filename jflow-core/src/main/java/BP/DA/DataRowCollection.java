@@ -38,12 +38,16 @@ public class DataRowCollection extends ArrayList<DataRow>
 		return this.Table;
 	}
 	
-	public DataRow AddRow(Object vals){
+	public DataRow AddRow(Object vals)
+	{
+		return AddRow(vals,-1);
+	}
+	
+	public DataRow AddRow(Object vals, int idx){
 		
 		if (vals==null)
 			return null;
-		  
-		
+		 
 		DataRow row = new DataRow(Table);		 
 		Map ap=   ((Map<String, Object>) vals);
 		
@@ -55,31 +59,31 @@ public class DataRowCollection extends ArrayList<DataRow>
 			
 			if (valStr==null)
 			{
-				valStr="";				
+				valStr="";
 				/*				
 				 if (dc.getDataType() == int.class 
-						 ||dc.getDataType() ==  Decimal.class
-					     
+						 ||dc.getDataType() ==  Decimal.class					     
 						 ||dc.getDataType() ==  float.class 
 						 )
-				valStr=0;*/
-				 
+				valStr=0;*/				 
 			}
-			
-			
+			 
 			 row.put(key, valStr);
 			 continue;
 			 
             /*
-			Object obj=ap.get(key);
-			
+			Object obj=ap.get(key);			
 		    if (obj==null)
 		       row.put(key, "");
 		    else
 		      row.put(key, obj); */
 		}
        
-		this.add(row);		
+		if (idx==-1)
+	    	this.add(row);
+		else
+			this.add(row);
+			
 		return row;
 	}
 	

@@ -1801,6 +1801,11 @@ public abstract class Entity extends EnObj
 		return getAtPara().GetValIntByKey(key);
 	}
 	
+	public final int GetParaInt(String key,int isNullAsVal)
+	{
+		return getAtPara().GetValIntByKey(key,isNullAsVal);
+	}
+	
 	public final float GetParaFloat(String key)
 	{
 		return getAtPara().GetValFloatByKey(key);

@@ -470,19 +470,21 @@ public class WorkNode {
 			int hh = 0;
 
 			// 增加天数. 考虑到了节假日.
-			dtOfShould = Glo.AddDayHoursSpan(new Date(), this.town.getHisNode().getTimeLimit(),
-					this.town.getHisNode().getTSpanMinues());
+			dtOfShould = Glo.AddDayHoursSpan(new Date(),
+					this.town.getHisNode().getTimeLimit(),
+					this.town.getHisNode().getTimeLimitHH(),
+					this.town.getHisNode().getTimeLimitMM());
 		}
 
 		// 求警告日期.
 		java.util.Date dtOfWarning = new java.util.Date();
-		if (this.town.getHisNode().getWarningDay() == 0 && this.town.getHisNode().getWarningHour() == 0) {
+		if (this.town.getHisNode().getWarningDay() == 0 ) {
 			dtOfWarning = dtOfShould;
 		} else {
 			// 计算警告日期。
 			// 增加小时数. 考虑到了节假日.
 			dtOfWarning = Glo.AddDayHoursSpan(new Date(), this.town.getHisNode().getTimeLimit(),
-					this.town.getHisNode().getTSpanMinues());
+					this.town.getHisNode().getTimeLimitHH(),this.town.getHisNode().getTimeLimitMM() );
 		}
 
 		switch (this.getHisNode().getHisNodeWorkType()) {
@@ -547,7 +549,7 @@ public class WorkNode {
 
 			wl.setFK_EmpText(emp.getName());
 			wl.setFK_Dept(emp.getFK_Dept());
-			wl.setWarningHour(town.getHisNode().getWarningHour());
+			wl.setWarningHour(0);
 			wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
 
 			wl.setDTOfWarning(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
@@ -708,7 +710,7 @@ public class WorkNode {
 
 				wl.setFK_EmpText(emp.getName());
 				wl.setFK_Dept(emp.getFK_Dept());
-				wl.setWarningHour(town.getHisNode().getWarningHour());
+				wl.setWarningHour( 0);
 				wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
 				wl.setDTOfWarning(DateUtils.format(dtOfWarning, DataType.getSysDataTimeFormat()));
 				wl.setRDT(DataType.getCurrentDataTime());
@@ -7127,7 +7129,7 @@ public class WorkNode {
 		wl.setFK_EmpText(this.getExecerName());
 		wl.setFK_Flow(this.getHisNode().getFK_Flow());
 		wl.setFK_Dept(this.getExecerDeptNo());
-		wl.setWarningHour(this.getHisNode().getWarningHour());
+		wl.setWarningHour(0);
 		wl.setSDT(DataType.getCurrentDataTime());
 		wl.setDTOfWarning(DataType.getCurrentData());
 		wl.setRDT(DataType.getCurrentDataTime());

@@ -944,50 +944,39 @@ public class Node extends Entity
 	{
 		this.SetValByKey(EntityOIDNameAttr.Name, value);
 	}
-	/** 
-	 需要小时数（限期）
-	*/
-	public final float getTSpanHour()
-	{
-		float i = this.GetValFloatByKey(NodeAttr.TSpanHour);
-		if (i == 0)
-		{
-			return 0;
-		}
-		return i;
-	}
-	public final void setTSpanHour(float value)
-	{
-		if (value != 0)
-		{
-			throw new RuntimeException("@目前不支持小时制.");
-		}
-
-		this.SetValByKey(NodeAttr.TSpanHour, value);
-	}
+	 
 	/** 
 	 限期天
 	*/
 	public final int getTimeLimit()
 	{
 		int i= this.GetValIntByKey(NodeAttr.TimeLimit);
-		if (i == 0)
-		{
-			return 2;
-		}
+		if (i == 0)		
+			return 0;
+		
 		return i;
 	}
 	public final void setTimeLimit(int value)
 	{
 		this.SetValByKey(NodeAttr.TimeLimit, value);
 	}
-	/** 
-	 本天分钟数.
-	*/
-	public final int getTSpanMinues()
+	
+	/*
+	 * 小时
+	 * */
+	public final int getTimeLimitHH()
 	{
-		return (int)(this.getTSpanHour() * 60f);
+		return this.GetParaInt("TimeLimitHH",0);	 
 	}
+	
+	/*
+	 * 分钟
+	 * */
+	public final int getTimeLimitMM()
+	{
+		return this.GetParaInt("TimeLimitMM",0);	 
+	}
+	 
 	/** 
 	 逾期提醒规则
 	*/
@@ -1021,15 +1010,7 @@ public class Node extends Entity
 	{
 		this.SetValByKey(NodeAttr.TAlertWay, value.getValue());
 	}
-
-	/** 
-	 合计分钟.
-	*/
-	public final int getTSpanTotalMinues()
-	{
-		float dayM = this.getTimeLimit() * (float)Glo.getAMPMHours() * 60f;
-		return (int)(this.getTSpanHour() * 60f) + (int)dayM;
-	}
+ 
 	/** 
 	 预警天
 	*/
@@ -1046,22 +1027,7 @@ public class Node extends Entity
 	{
 		this.SetValByKey(NodeAttr.WarningDay, value);
 	}
-	/** 
-	 预警(小时)
-	*/
-	public final int getWarningHour()
-	{
-		int i = this.GetValIntByKey(NodeAttr.WarningHour);
-		if (i == 0)
-		{
-			return 0;
-		}
-		return i;
-	}
-	public final void setWarningHour(float value)
-	{
-		this.SetValByKey(NodeAttr.WarningHour, value);
-	}
+	  
 
 	/** 
 	 预警 - 提醒规则

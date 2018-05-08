@@ -1576,7 +1576,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 								//switch (type){
 
 								//}
-							}
+				    }
 					
 					 public final String SortingMapAttrs_Save() throws Exception
 						{
@@ -1726,65 +1726,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
 							return "保存成功...";
 						}			
-			
-	 /**
-	  * 初始化考核规则.
-	  * @return
-	 * @throws Exception 
-	  */
-    public String CHOvertimeRole_Init() throws Exception
-    {
-
-        BP.WF.Node nd = new Node(this.getFK_Node());
-
-        Nodes nds = new Nodes();
-        nds.Retrieve(NodeAttr.FK_Flow, nd.getFK_Flow());
-
-        //组装json.
-        DataSet ds = new DataSet();
-
-        DataTable dtNodes = nds.ToDataTableField("Nodes");
-        dtNodes.TableName = "Nodes";
-        ds.Tables.add(dtNodes);
-
-        DataTable dtNode = nd.ToDataTableField("Node");
-        dtNode.TableName = "Node";
-        ds.Tables.add(dtNode);
-
-        return BP.Tools.Json.ToJson(ds); 
-    }
-    public String CHOvertimeRole_Save() throws Exception
-    {
-        BP.WF.Node nd = new Node(this.getFK_Node());
-        int val = this.GetRequestValInt("RB_OutTimeDeal");
-
-        OutTimeDeal deal = BP.WF.Template.OutTimeDeal.forValue(val);
-
-        nd.setHisOutTimeDeal(deal);
-
-        if (nd.getHisOutTimeDeal() == OutTimeDeal.AutoJumpToSpecNode)
-            nd.setDoOutTime(this.GetRequestVal("DDL_Nodes"));
-
-        if (nd.getHisOutTimeDeal() == OutTimeDeal.AutoShiftToSpecUser)
-            nd.setDoOutTime(this.GetRequestVal("TB_Shift"));
-
-        if (nd.getHisOutTimeDeal() == OutTimeDeal.SendMsgToSpecUser)
-            nd.setDoOutTime(this.GetRequestVal("TB_SendEmps"));
-
-        if (nd.getHisOutTimeDeal() == OutTimeDeal.RunSQL)
-            nd.setDoOutTime(this.GetRequestVal("TB_SQL"));
-
-        //是否质量考核节点.
-        if (this.GetRequestValInt("IsEval") == 0)
-            nd.setIsEval(false);
-        else
-        	nd.setIsEval(true);
-
-        //执行更新.
-        nd.Update();
-
-        return "@保存成功.";
-    }
+			 
     /**
      * 初始化
      * @throws Exception 
@@ -1811,41 +1753,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
         nd.Update();
         return "保存成功...";
     }
-    /**
-     * 考核规则.
-     * @return
-     * @throws Exception 
-     */
-    public String CHRole_Init() throws Exception
-    {
-        BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
-        return nd.ToJson();
-    }
-
-    public String CHRole_Save() throws Exception
-    {
-        BP.WF.Node nd = new BP.WF.Node();
-        nd.setNodeID(this.getFK_Node());
-        nd.RetrieveFromDBSources();
-
-        nd.setHisCHWay(CHWay.forValue(this.GetRequestValInt("RB_CHWay")));  //考核方式.
-
-        nd.setTimeLimit(this.GetRequestValInt("TB_TimeLimit"));
-        nd.setWarningDay(this.GetRequestValInt("TB_WarningDay"));
-        nd.setTCent(this.GetRequestValInt("TB_TCent"));
-
-        nd.setTWay(BP.DA.TWay.forValue(this.GetRequestValInt("DDL_TWay")));  //节假日计算方式.
-
-        if (this.GetRequestValInt("CB_IsEval") == 1)
-        	nd.setIsEval(false);
-        else
-        	nd.setIsEval(true);
-
-        nd.Update();
-
-        return "保存成功...";
-    }
-    
+     
     /**
      * 初始化节点属性列表.
      * @return

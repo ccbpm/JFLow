@@ -4151,8 +4151,22 @@ public class Glo
 	 @return 
 	 * @throws Exception 
 	*/
-	private static java.util.Date AddMinutes(java.util.Date dt, int minutes) throws Exception
+	private static java.util.Date AddMinutes(java.util.Date dt,int hh, int minutes) throws Exception
 	{
+		
+		 if (1 == 1)
+         {
+			 Calendar c = Calendar.getInstance();
+				c.setTime(dt);
+				c.add(Calendar.HOUR,  hh);
+				c.add(Calendar.MINUTE,  minutes);
+				return c.getTime();
+				
+          //   dt = dt.a(hh);            
+            // dt = dt.addMinutes(minutes);
+             //return dt;
+         }
+		 
 		//如果没有设置,就返回.
 		if (minutes == 0)
 		{
@@ -4271,7 +4285,7 @@ public class Glo
 					dt = DataType.AddDays(DataType.ParseSysDateTime2DateTime(DateUtils.format(dt,
 					"yyyy-MM-dd") + " " + Glo.getAMFrom()), 1,TWay.Holiday);
 					//递归调用,让其在次日的上班时间在增加，分钟数。
-					return Glo.AddMinutes(dt, leftMin);
+					return Glo.AddMinutes(dt, 0,leftMin);
 				}
 
 			}
@@ -4291,7 +4305,7 @@ public class Glo
 	public static java.util.Date AddMinutes(String sysdt, int minutes) throws Exception
 	{
 		java.util.Date dt = DataType.ParseSysDate2DateTime(sysdt);
-		return AddMinutes(dt, minutes);
+		return AddMinutes(dt,0, minutes);
 	}
 	/** 
 	 在指定的日期上增加n天n小时，并考虑节假日
@@ -4301,7 +4315,7 @@ public class Glo
 	 @param minutes 分钟数
 	 @return 返回计算后的日期
 	*/
-	public static java.util.Date AddDayHoursSpan(Date specDT, int day, int minutes)
+	public static java.util.Date AddDayHoursSpan(Date specDT, int day, int hh, int minutes)
 	{
 		if (specDT == null) {
 			return null;
@@ -4311,12 +4325,12 @@ public class Glo
 		//return Glo.AddMinutes(mydt, minutes);
 	}
 	
-	public static java.util.Date AddDayHoursSpan(String specDT, int day,int minutes, TWay tWay) throws Exception {
+	public static java.util.Date AddDayHoursSpan(String specDT, int day, int hh, int minutes, TWay tWay) throws Exception {
 		if (specDT == null) {
 			return null;
 		}
 		java.util.Date mydt = DataType.AddDays(specDT, day,tWay);
-		return Glo.AddMinutes(mydt, minutes);
+		return Glo.AddMinutes(mydt,hh, minutes);
 	}
 //	/** 
 //	 在指定的日期上增加n天n小时，并考虑节假日
@@ -4367,7 +4381,9 @@ public class Glo
 		}
 
 		//如果设置为0 则不考核.
-		if (nd.getTimeLimit() == 0)
+		if (nd.getTimeLimit() == 0 
+				&& nd.getTimeLimitHH() == 0
+				&& nd.getTimeLimitMM() == 0)
 		{
 			return;
 		}
@@ -4562,225 +4578,7 @@ public class Glo
 		}
 
 	}
-	public static void InitCH2016(Flow fl, Node nd, long workid, long fid, String title, String prvRDT, String sdt, java.util.Date dtNow) throws Exception
-	{
-		//开始节点不考核.
-		if (nd.getIsStartNode())
-		{
-			return;
-		}
-
-		//如果设置为0 则不考核.
-		if (nd.getTimeLimit() == 0 && nd.getTSpanHour() == 0)
-		{
-			return;
-		}
-
-		if (dtNow == null)
-		{
-			dtNow = new java.util.Date();
-		}
-
-		if (sdt == null || prvRDT == null)
-		{
-			String dbstr = SystemConfig.getAppCenterDBVarStr();
-			Paras ps = new Paras();
-			switch (SystemConfig.getAppCenterDBType())
-			{
-				case MSSQL:
-					ps.SQL = "SELECT TOP 1 RDT,SDT FROM WF_GENERWORKERLIST  WHERE WorkID=" + dbstr + "WorkID AND FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr + "FK_Node ORDER BY RDT DESC";
-					break;
-				case Oracle:
-					ps.SQL = "SELECT  RDT,SDT FROM WF_GENERWORKERLIST  WHERE WorkID=" + dbstr + "WorkID AND FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr + "FK_Node AND ROWNUM=1 ORDER BY RDT DESC ";
-					break;
-				case MySQL:
-					ps.SQL = "SELECT  RDT,SDT FROM WF_GENERWORKERLIST  WHERE WorkID=" + dbstr + "WorkID AND FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr + "FK_Node ORDER BY RDT DESC limit 0,1 ";
-					break;
-				default:
-					break;
-			}
-
-			ps.Add("WorkID", workid);
-			ps.Add("FK_Emp", WebUser.getNo());
-			ps.Add("FK_Node", nd.getNodeID());
-
-			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.size() == 0)
-			{
-				return;
-			}
-			prvRDT = dt.Rows.get(0).getValue(0).toString();
-			sdt = dt.Rows.get(0).getValue(1).toString();
-		}
-
-
-			// 初始化基础数据.
-		BP.WF.Data.CH ch = new CH();
-		ch.setWorkID(workid);
-		ch.setFID(fid);
-		ch.setTitle(title);
-
-		int hh = (int)nd.getTSpanHour();
-		float mm = (nd.getTSpanHour() - hh) * 60;
-		ch.setTimeLimit(nd.getTimeLimit()); // +"天" + hh + "时" + mm + "分";
-		ch.setFK_NY(DateUtils.format(new Date(), "yyyy-MM"));
-
-		ch.setDTFrom(prvRDT); //任务下达时间.
-		ch.setSDT(sdt); //应该完成时间.
-
-		ch.setFK_Flow(nd.getFK_Flow());
-		ch.setFK_FlowT(nd.getFlowName());
-
-		ch.setFK_Node(nd.getNodeID());
-		ch.setFK_NodeT(nd.getName());
-
-		ch.setFK_Dept(WebUser.getFK_Dept());
-		ch.setFK_DeptT(WebUser.getFK_DeptName());
-
-		ch.setFK_Emp(WebUser.getNo());
-		ch.setFK_EmpT(WebUser.getName());
-
-		//求出是第几个周.
-		// ch.Week = (int)dtNow.w;
-		//System.Globalization.CultureInfo myCI = new System.Globalization.CultureInfo("zh-CN");
-
-		//ch.setWeekNum(myCI.Calendar.GetWeekOfYear(dtNow, System.Globalization.CalendarWeekRule.FirstDay, System.DayOfWeek.Monday));
-
-		// mypk.
-		ch.setMyPK(nd.getNodeID() + "_" + workid + "_" + fid + "_" + WebUser.getNo());
-
-			 //初始化基础数据.
-
-		// 求出结算时间点 dtFrom.
-		java.util.Date dtFrom = BP.DA.DataType.ParseSysDateTime2DateTime(ch.getDTFrom());
-		dtFrom = Glo.SetToWorkTime(dtFrom);
-
-		//当前时间.  -设置结算时间到.
-		ch.setDTTo(DateUtils.format(new Date(), DataType.getSysDataTimeFormat())); // dtto..
-		dtNow = Glo.SetToWorkTime(dtNow);
-
-		int dtHHmm = 0;
-		if (dtFrom.getYear() == dtNow.getYear() && dtFrom.getMonth() == dtNow.getMonth() && dtFrom.getDay() == dtFrom.getDay())
-		{
-			//// 计算发送时间是否是中午?
-			//dtHHmm = int.Parse(dtFrom.ToString("HHmm"));
-			//bool isSendAM = false;
-			//if (dtHHmm >= Glo.AMFromInt && dtHHmm <= Glo.AMToInt)
-			//{
-			//    /*发送人发送时间是上午, 并且处理人处理时间也是上午.*/
-			//    isSendAM = true;
-			//}
-
-			//// 计算处理时间是否是中午？
-			//dtHHmm = int.Parse(dtFrom.ToString("HHmm"));
-			//bool isCurrAM = false;
-			//if (dtHHmm >= Glo.AMFromInt && dtHHmm <= Glo.AMToInt)
-			//{
-			//    /*发送人发送时间是上午, 并且处理人处理时间也是上午.*/
-			//    isCurrAM = true;
-			//}
-
-			/*** 如果是同一天.  如果都是中午.*/
-			//if (isSendAM && isCurrAM)
-			//{
-			//    TimeSpan ts = dtNow - dtFrom;
-			//    ch.UseMinutes += (int)ts.TotalMinutes; // 得到实际用的时间.
-			//}
-			
-
-			/*** 如果是同一天.  如果都是下午.*/
-			//if (isSendAM == false && isCurrAM == false)
-			//{
-			//    TimeSpan ts = dtNow - dtFrom;
-			
-
-			//    //两个时间差，并减去午休的时间.
-			//    ch.UseMinutes += (int)ts.TotalMinutes; // 得到实际用的时间.
-			//}
-
-			/*** 如果是同一天.  如果一个是中午一个是下午.*/
-			//if (isSendAM == true && isCurrAM == false)
-			//{
-			//    float f60 = 60;
-			//    TimeSpan ts = dtNow - dtFrom;
-			//    //ts.TotalMinutes
-			//    float hours = (float)ts.TotalHours - Glo.AMPMTimeSpan; // 得到实际用的时间.
-			
-
-			//    // 实际使用时间.
-			//    ch.UseMinutes += (int)hours * 60;
-			//}
-
-			////求超过时限.
-			//ch.OverMinutes = ch.UseMinutes - nd.TSpanMinues;
-
-			////设置时限状态.
-			//if (ch.OverMinutes > 0)
-			//{
-			//    /* 如果是正数，就说明它是一个超期完成的状态. */
-			//    if (ch.OverMinutes / 2 > nd.TSpanMinues)
-			//        ch.CHSta = CHSta.ChaoQi; //如果超过了时间的一半，就是超期.
-			//    else
-			//        ch.CHSta = CHSta.YuQi;   //在规定的时间段以内完成，就是预期。
-			//}
-			//else
-			//{
-			//    /* 是负数就是提前完成. */
-			//    if (ch.OverMinutes / 2 > -nd.TSpanMinues)
-			//        ch.CHSta = CHSta.JiShi; //如果提前了一半的时间，就是及时完成.
-			//    else
-			//        ch.CHSta = CHSta.AnQi; // 否则就是按期完成.
-			//}
-
-
-				// 计算出来可以识别的分钟数.
-			////求使用天数.
-			//float day = ch.UseMinutes / 60f / Glo.AMPMHours;
-			//int dayInt = (int)day;
-
-			////求小时数.
-			//float hour = (ch.UseMinutes - dayInt * Glo.AMPMHours * 60f) / 60f;
-			//int hourInt = (int)hour;
-
-			////求分钟数.
-			//float minute = (hour - hourInt) * 60;
-
-			////使用时间.
-			//ch.UseTime = dayInt + "天" + hourInt + "时" + minute + "分";
-
-			////求预期天数.
-			//int overMinus = Math.Abs(ch.OverMinutes);
-			//day = overMinus / 60f / Glo.AMPMHours;
-			//dayInt = (int)day;
-
-			////求小时数.
-			//hour = (overMinus - dayInt * Glo.AMPMHours * 60f) / 60f;
-			//hourInt = (int)hour;
-
-			////求分钟数.
-			//minute = (hour - hourInt) * 60;
-
-			////使用时间.
-			//if (ch.OverMinutes > 0)
-			//    ch.OverTime = "预期:" + dayInt + "天" + hourInt + "小时" + (int)minute + "分";
-			//else
-			//    ch.OverTime = "提前:" + dayInt + "天" + hourInt + "小时" + (int)minute + "分";
-
-
-				 //计算出来可以识别的分钟数.
-
-			//执行保存.
-			try
-			{
-				ch.DirectInsert();
-			}
-			catch (java.lang.Exception e)
-			{
-				ch.CheckPhysicsTable();
-				ch.DirectUpdate();
-			}
-		}
-	}
+	
 	/** 
 	 中午时间从
 	 

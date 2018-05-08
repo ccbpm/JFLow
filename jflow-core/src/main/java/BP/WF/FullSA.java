@@ -303,7 +303,7 @@ public class FullSA
 		sa.setPlanADT(this.LastTimeDot);
 		//计算当前节点的应该完成日期。
 		java.util.Date dtOfShould;
-		dtOfShould = Glo.AddDayHoursSpan(this.LastTimeDot, nd.getTimeLimit(), nd.getTSpanMinues(),nd.getTWay());
+		dtOfShould = Glo.AddDayHoursSpan(this.LastTimeDot, nd.getTimeLimit(), nd.getTimeLimitHH(), nd.getTimeLimitMM(),nd.getTWay());
 		sa.setPlanSDT(DateUtils.format(dtOfShould,DataType.getSysDatatimeFormatCN()));
 		//给最后的时间点复制.
 		this.LastTimeDot = sa.getPlanSDT();

@@ -1323,11 +1323,11 @@ public class WorkReturn
 
 		wl.setFK_Node(backtoNodeID);
 		wl.setFK_NodeText(nd.getName());
-		wl.setWarningHour(nd.getWarningHour());
+		wl.setWarningHour(0);
 		wl.setFK_Dept(emp.getFK_Dept());
 
 		java.util.Date dtNew = new java.util.Date();
-		dtNew = DateUtils.addDay(dtNew, (int)nd.getWarningHour());
+		dtNew = DateUtils.addDay(dtNew, 0);
 		wl.setSDT(DateUtils.format(dtNew,DataType.getSysDataTimeFormat())); // DataType.getCurrentDataTime();
 		wl.setFK_Flow(this.HisNode.getFK_Flow());
 		wl.Insert();

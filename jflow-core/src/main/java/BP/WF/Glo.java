@@ -4320,8 +4320,21 @@ public class Glo
 		if (specDT == null) {
 			return null;
 		}
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(specDT);
+		
+		cal.add(Calendar.DATE, day);
+		cal.add(Calendar.HOUR, hh);
+		cal.add(Calendar.MINUTE, minutes);
+
+return cal.getTime();
+
+/*
+		
 		java.util.Date mydt = BP.DA.DataType.AddDays(specDT, day);
-		return mydt;
+		mydt.
+		return mydt; */
 		//return Glo.AddMinutes(mydt, minutes);
 	}
 	

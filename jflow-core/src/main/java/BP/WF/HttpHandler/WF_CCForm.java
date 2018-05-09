@@ -240,7 +240,7 @@ public class WF_CCForm extends WebContralBase {
                  }
              }
              athDesc.setIsUpload(isUpdate);
-             athDesc.setHisDeleteWay(AthDeleteWay.DelAll); 
+             //athDesc.setHisDeleteWay(AthDeleteWay.DelAll); 
              ///#endregion 处理权限问题.
 
              //增加附件描述.

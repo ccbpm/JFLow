@@ -399,17 +399,20 @@ public class FlowExt extends EntityNoName
 		map.AddBoolean(FlowAttr.IsResetData, false, "是否启用开始节点数据重置按钮？", true, true, true);
 		map.AddBoolean(FlowAttr.IsLoadPriData, false, "是否自动装载上一笔数据？", true, true, true);
         map.AddBoolean(FlowAttr.IsDBTemplate, true, "是否启用数据模版？", true, true, true);
-
-
-			//为 莲荷科技增加一个系统类型, 用于存储当前所在流程树的第2级流程树编号.
+ 
+		//为 莲荷科技增加一个系统类型, 用于存储当前所在流程树的第2级流程树编号.
 		map.AddTBString(FlowAttr.SysType, null, "类型类型", false, false, 0, 100, 10, false);
 
-			// add for 华夏银行.
+	    // add for 华夏银行.
 		map.AddDDLSysEnum(FlowAttr.FlowDeleteRole, FlowDeleteRole.AdminOnly.getValue(), "流程实例删除规则", true, true, FlowAttr.FlowDeleteRole, "@0=超级管理员可以删除@1=分级管理员可以删除@2=发起人可以删除@3=节点启动删除按钮的操作员");
 
 		  //为 莲荷科技增加一个系统类型, 用于存储当前所在流程树的第2级流程树编号.
         map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 100, 10, false);
         map.AddTBString(FlowAttr.Tester, null, "设置流程发起测试人", true, false, 0, 300, 10, true);
+        
+        
+        map.AddTBString("NodeAppType", null, "业务类型枚举", true, false, 0, 50, 10, true);
+
 
         map.AddTBString(FlowAttr.DesignerNo, null, "设计者编号", true, false, 0, 50, 10, false);
         map.AddTBString(FlowAttr.DesignerName, null, "设计者名称", true, false, 0, 50, 10, false);

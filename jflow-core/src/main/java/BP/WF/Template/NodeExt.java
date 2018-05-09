@@ -317,6 +317,10 @@ public class NodeExt extends Entity
 		map.AddBoolean(NodeAttr.IsGuestNode, false, "是否是外部用户执行的节点(非组织结构人员参与处理工作的节点)?", true, true, true);
 
 		map.AddTBString(NodeAttr.SelfParas, null, "自定义参数", true, false, 0, 500, 10, true);
+		 
+        //节点业务类型.
+        map.AddTBInt("NodeAppType", 0, "节点业务类型", false, false);
+
 
 			///#endregion  基础属性
 
@@ -949,6 +953,15 @@ public class NodeExt extends Entity
 		rm.GroupName = "实验中的功能";
 		map.AddRefMethod(rm);*/
 
+		
+		 rm = new RefMethod();
+         rm.Title = "设置节点类型";
+         rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+         rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
+         rm.refMethodType = RefMethodType.RightFrameOpen;
+         rm.GroupName = "实验中的功能";
+         rm.Visable = false;
+         map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "工作批处理规则";
@@ -965,15 +978,17 @@ public class NodeExt extends Entity
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.GroupName = "实验中的功能";
 //		map.AddRefMethod(rm);
-
-
-
+ 
 			///#endregion 实验中的功能
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
+	  public final String DoNodeAppType()
+      {
+          return "../../Admin/AttrNode/NodeAppType.htm?FK_Node=" + this.getNodeID() + "&FK_Flow="+this.getFK_Flow()+"&tk=ss";
+      }
 	/** 
 	 考核规则
 	 @return 

@@ -2,6 +2,7 @@ package BP.Sys;
 
 import java.io.File;
 import org.apache.commons.lang.StringUtils;
+import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 
 import BP.DA.*;
 import BP.En.*;
@@ -396,9 +397,13 @@ public class FrmAttachmentDB extends EntityMyPK
 
 			if (ath.getAthSaveWay() == BP.Sys.AthSaveWay.FTPServer)
 			{
-				//FtpSupport.FtpConnection ftpconn = new FtpSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
-
-				String fullName = this.getFileFullName();
+				
+				//特殊处理宝旺达的项目，由这个标记，就不要删除ftp文件.
+				if ( this.GetParaBoolen("NotDeleteFtpFile")==true)
+					return  ;
+				
+     			//	ForEachSupport.FtpConnection ftpconn =  new ForEachSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+				//String fullName = this.getFileFullName();
 				//ny + "//" + athDesc.FK_MapData + "//" + guid + "." + dbUpload.FileExts;
 
 			}

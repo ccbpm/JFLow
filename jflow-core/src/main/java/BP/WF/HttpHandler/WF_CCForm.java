@@ -392,6 +392,7 @@ public class WF_CCForm extends WebContralBase {
 
          FrmAttachmentDB delDB = new FrmAttachmentDB();
          delDB.setMyPK (delPK == null ? this.getMyPK() : delPK);
+         delDB.RetrieveFromDBSources();
          delDB.Delete(); //删除上传的文件.
          return "删除成功.";
      }

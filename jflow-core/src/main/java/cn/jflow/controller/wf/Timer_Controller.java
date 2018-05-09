@@ -16,18 +16,19 @@ import BP.WF.HttpHandler.Base.HttpHandlerBase;
 @ResponseBody
 public class Timer_Controller extends HttpHandlerBase{
 
-	/**
-    * 默认执行的方法
-	 * @return 
-    * @return 
-    */
+	/**   
+	 * @DL.D
+	 * createDate 2018-05-09
+	 * 定时任务  
+	 * 按约定处理逾期流程
+	 */ 
 	@RequestMapping("/Timer")
     public  ModelAndView ProcessRequest(HttpServletRequest request)
     {
 		AutoRunOverTimeFlow  overTime = new AutoRunOverTimeFlow();
 		String info = null ;
 		try {
-			 info = overTime.Do();
+			 info = overTime.Do().toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			info += e.getMessage();

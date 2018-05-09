@@ -666,7 +666,7 @@ public class MapFrmFool extends EntityNoName
 	}
 	public final String DoPageLoadFull()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/PageLoadFull.jsp?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoInitScript()
 	{

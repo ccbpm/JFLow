@@ -224,56 +224,53 @@ public class CCFlowAPI
             		 && nd.getIsStartNode() == false
             		 && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs)==false )
              {
-            	 
-            	 // myds.Tables.remove( ).remove(o)
-            	 
-                 //计算累加的字段分组.
-                 GroupFields gfs = new GroupFields();
-                 gfs.RetrieveIn(GroupFieldAttr.FrmID, "("+wk.HisPassedFrmIDs+")" );
-                 DataTable gf= myds.GetTableByName("Sys_GroupField");
-                      			
-                 //让其按照顺序排列.
-                 String[] frmIDs = wk.HisPassedFrmIDs.split(",");                 
-                 for (int i = 0; i < frmIDs.length; i++)
-                 {
-                     int idx = frmIDs.length - i-1;
+            	  
+                     // #region 处理字段分组排序.
+                     //查询所有的分组.            	 
+                     String myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node+"'";
+                     GroupFields gfs = new GroupFields();
+                     gfs.RetrieveIn(GroupFieldAttr.FrmID, "(" + myFrmIDs + ")");
 
-                     String frmID = frmIDs[idx];
-                     frmID = frmID.replace("'", "");
-                     frmID = frmID.replace("'", "");
-
-                     //数量.
-                     int numOfBar = gfs.GetCountByKey(GroupFieldAttr.FrmID, frmID);
-                     int insertNum = 0; //已经插入的数量.
-
-                     for (int ii = 0; ii < gfs.size(); ii++)
+                     //按照时间的顺序查找出来 ids .
+                     String sqlOrder = "SELECT OID FROM  Sys_GroupField WHERE   FrmID IN (" + myFrmIDs + ")";
+                     if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
                      {
-                         idx = gfs.size() - ii - 1;
-                         
-                         GroupField item = (GroupField)gfs.get(idx);
-                         if (item.getFrmID().equals(frmID)==false)
-                             continue;
+                         myFrmIDs = myFrmIDs.replace("'", "");
+                         sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "', FrmID) , Idx";
+                     }
 
-                         DataRow dr = gf.NewRow();
-                         dr.put(GroupFieldAttr.CtrlID, item.getCtrlID());
-                         dr.put(GroupFieldAttr.CtrlType ,item.getCtrlType());
-                         dr.put(GroupFieldAttr.Idx , item.getIdx());
-                         dr.put(GroupFieldAttr.Lab , item.getLab());
-                         dr.put(GroupFieldAttr.OID ,item.getOID());
-                         dr.put(GroupFieldAttr.FrmID,item.getFrmID());
+                     if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+                     {
+                         myFrmIDs = myFrmIDs.replace("'", "");
+                         sqlOrder += " ORDER BY CHARINDEX(FrmID, '" + myFrmIDs + "'), Idx";
+                     }
 
-                         if (insertNum == 0 && numOfBar == 1)
-                         {
-                             //gf.Rows.add(0,dr); //增加一行.
-                             gf.Rows.AddRow(dr,0); //增加一行.
-                             break;
-                         }
-                         
-                         //gf.Rows.add(0,dr); //增加一行.
-                         gf.Rows.AddRow(dr,0); //增加一行.
-                     }    
-                 }
-                 
+                     if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+                     {
+                         myFrmIDs = myFrmIDs.replace("'", "");
+                         sqlOrder += " ORDER BY CHARINDEX(FrmID, '" + myFrmIDs + "'), Idx";
+                     }
+                     
+                     DataTable dtOrder = DBAccess.RunSQLReturnTable(sqlOrder);
+
+                     //创建容器,把排序的分组放入这个容器.
+                     GroupFields gfsNew = new GroupFields();
+
+                     //遍历查询出来的分组.
+                     for (DataRow dr : dtOrder.Rows)
+                     {
+                         String pkOID = dr.getValue(0).toString();
+                         Entity mygf  =gfs.GetEntityByKey( pkOID);
+                         gfsNew.AddEntity(mygf); //把分组字段加入里面去.
+                     }
+
+                     DataTable dtGF = gfsNew.ToDataTableField("Sys_GroupField");
+                     myds.Tables.remove("Sys_GroupField");
+                     myds.Tables.add(dtGF);
+                    // #endregion 处理字段分组排序.
+                     
+                     
+                     
                  
                  //计算累加的字段集合.
                  MapAttrs attrs = new MapAttrs();

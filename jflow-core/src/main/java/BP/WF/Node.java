@@ -1294,6 +1294,10 @@ public class Node extends Entity
 		  String str = this.GetValStrByKey(NodeAttr.NodeFrmID);
           if (DataType.IsNullOrEmpty(str))
               return "ND" + this.getNodeID();
+          
+          if (this.getHisFormType() ==  NodeFormType.FoolTruck)
+              return "ND" + this.getNodeID();
+
 
           if (str.equals("Pri") == true &&
               (this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.FreeForm))

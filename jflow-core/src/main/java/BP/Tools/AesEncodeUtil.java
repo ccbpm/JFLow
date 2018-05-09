@@ -1,4 +1,4 @@
-package com.bwda.engine.modules.sys.utils;
+package BP.Tools;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -189,8 +189,8 @@ public class AesEncodeUtil {
 //
 //        System.out.println(decryptAESHex(strEn));
 
-        encryptFile("D:\\终端准入版本说明书.docx", "D:\\终端准入版本说明书1.docx");
+       // encryptFile("D:\\终端准入版本说明书.docx", "D:\\终端准入版本说明书1.docx");
 
-        decryptFile("D:\\终端准入版本说明书1.docx", "D:\\终端准入版本说明书2.docx");
+        decryptFile("I:\\apache-tomcat-7.0.6\\webapps\\jflow-web\\DataUser\\UploadFile\\ND22501\\450\\0fe8d1c553294df39142feb685e58633.URL.txt", "I:\\apache-tomcat-7.0.6\\webapps\\jflow-web\\DataUser\\UploadFile\\ND22501\\450\\0fe8d1c553294df39142feb685e58633.URL.txt.tmp");
     }
 }

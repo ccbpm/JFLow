@@ -84,6 +84,12 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String IsNote = "IsNote";
+	
+	/// <summary>
+    /// 是否启用扩展列
+    /// </summary>
+    public static final String IsExpCol = "IsExpCol";
+    
 	/** 
 	 是否显示标题列
 	 

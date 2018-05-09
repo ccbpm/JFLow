@@ -248,6 +248,16 @@ public class WF_CCForm extends WebContralBase {
 
              //增加附件.
              ds.Tables.add(dbs.ToDataTableField("DBAths"));
+             
+             //创建实体对象.
+             MapData md = new MapData(this.getPKVal());
+             //加入枚举表.
+             DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
+             ds.Tables.add(Sys_Menu);
+
+             //加入外键属性.
+             DataTable Sys_MapAttr = md.getMapAttrs().ToDataTableField("Sys_MapAttr");
+             ds.Tables.add(Sys_MapAttr);
 
              //返回.
              return BP.Tools.Json.ToJson(ds);

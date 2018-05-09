@@ -69,16 +69,33 @@ public class AttachmentUploadController extends BaseController {
 		return ContextHolderUtils.getRequest().getParameter("PKVal");
 	}
 	
-	@RequestMapping(value = "/AttachmentUpload.do", method = RequestMethod.POST)
+	public String getParasData() {
+		return ContextHolderUtils.getRequest().getParameter("parasData");
+	}
+	
+	@RequestMapping(value = "/AttachmentUpload.do")
 	public void upload(@RequestParam("Filedata")MultipartFile multiFile,HttpServletRequest request, HttpServletResponse response, BindException errors)
 			throws Exception {
 		String error = "";
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		String parasData = multipartRequest.getParameter("parasData");
 		CommonsMultipartFile item = (CommonsMultipartFile) multipartRequest .getFile("file");
 		if(item == null) item = (CommonsMultipartFile) multiFile;
 		int maxSize = 50 * 1024 * 1024; // 单个上传文件大小的上限
-
-		if (item.getOriginalFilename() != null && !item.getOriginalFilename().equals("")) {// 判断是否选择了文件
+		
+		//获取初始化信息
+		FrmAttachment athDesc = new FrmAttachment( this.getFK_FrmAttachment());
+		GEEntity en = new GEEntity(athDesc.getFK_MapData());
+		en.setPKVal(this.getPKVal());
+		en.Retrieve();
+		MapData mapData = new MapData(athDesc.getFK_MapData());
+		String msg = null;				
+		uploadFile(item,athDesc,en,msg,mapData,this.getFK_FrmAttachment(),parasData);
+		
+		return;
+		
+		
+		/*if (item.getOriginalFilename() != null && !item.getOriginalFilename().equals("")) {// 判断是否选择了文件
 			long upFileSize = item.getSize(); // 上传文件的大小
 			String fileName = item.getOriginalFilename(); // 获取文件名
 			if (upFileSize > maxSize) {
@@ -86,7 +103,7 @@ public class AttachmentUploadController extends BaseController {
 				
 				return ;
 			}
-			FrmAttachment athDesc = new FrmAttachment( this.getFK_FrmAttachment());
+			
 
 			String exts = FileAccess.getExtensionName(fileName).toLowerCase() .replace(".", "");
 
@@ -107,9 +124,7 @@ public class AttachmentUploadController extends BaseController {
 			if (savePath.contains("@") || savePath.contains("*")) {
 				// 如果有变量
 				savePath = savePath.replace("*", "@");
-				GEEntity en = new GEEntity(athDesc.getFK_MapData());
-				en.setPKVal(this.getPKVal());
-				en.Retrieve();
+				
 				savePath = BP.WF.Glo.DealExp(savePath, en, null);
 
 				if (savePath.contains("@") && this.getFK_Node() != 0) {
@@ -224,7 +239,16 @@ public class AttachmentUploadController extends BaseController {
 			if (athDesc.getSort().contains(",")) {
 				dbUpload.setSort(this.getddl());
 			}
-
+			
+			 if (athDesc.getIsExpCol() == true)
+             {
+                 if (parasData != null && parasData.length() > 0)
+                 {
+                     for(String para : parasData.split("@")){
+                          dbUpload.SetPara(para.split("=")[0],para.split("=")[1]);
+                     }
+                 }
+             }
 			dbUpload.setUploadGUID(guid);
 			dbUpload.Insert();
 		} else {
@@ -241,7 +265,7 @@ public class AttachmentUploadController extends BaseController {
 			e.printStackTrace();
 			
 			return;
-		}
+		}*/
 	}
 	
 	@RequestMapping(value = "/AttachmentUploadS.do", method = RequestMethod.POST)
@@ -251,8 +275,17 @@ public class AttachmentUploadController extends BaseController {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		CommonsMultipartFile item = (CommonsMultipartFile) multipartRequest .getFile("file");
 		int maxSize = 50 * 1024 * 1024; // 单个上传文件大小的上限
-
-		if (item.getOriginalFilename() != null && !item.getOriginalFilename().equals("")) {// 判断是否选择了文件
+		
+		//获取初始化信息
+		FrmAttachment athDesc = new FrmAttachment( this.getFK_FrmAttachment());
+		GEEntity en = new GEEntity(athDesc.getFK_MapData());
+		en.setPKVal(this.getPKVal());
+		en.Retrieve();
+		MapData mapData = new MapData(athDesc.getFK_MapData());
+		String msg = null;				
+		uploadFile(item,athDesc,en,msg,mapData,this.getFK_FrmAttachment(),getParasData());
+		return;
+		/*if (item.getOriginalFilename() != null && !item.getOriginalFilename().equals("")) {// 判断是否选择了文件
 			long upFileSize = item.getSize(); // 上传文件的大小
 			String fileName = item.getOriginalFilename(); // 获取文件名
 			if (upFileSize > maxSize) {
@@ -396,6 +429,16 @@ public class AttachmentUploadController extends BaseController {
 			if (athDesc.getSort().contains(",")) {
 				dbUpload.setSort(this.getddl());
 			}
+			
+			if (athDesc.getIsExpCol() == true)
+            {
+                if (getParasData() != null && getParasData().length() > 0)
+                {
+                    for(String para : getParasData().split("@")){
+                         dbUpload.SetPara(para.split("=")[0],para.split("=")[1]);
+                    }
+                }
+            }
 
 			dbUpload.setUploadGUID(guid);
 			dbUpload.Insert();
@@ -403,7 +446,7 @@ public class AttachmentUploadController extends BaseController {
 			error = "没有选择上传文件！";
 			
 			return;
-		}
+		}*/
 		 
 
 	}
@@ -418,11 +461,11 @@ public class AttachmentUploadController extends BaseController {
              FrmAttachment dbAtt = new FrmAttachment();
              dbAtt.setMyPK(downDB.getFK_FrmAttachment());
              dbAtt.Retrieve();
-            if (dbAtt.getAthSaveWay()   == AthSaveWay.WebServer)
-             {
-            	 PubClass.DownloadFile(downDB.getFileFullName(), downDB.getFileName());
+           if (dbAtt.getAthSaveWay()   == AthSaveWay.WebServer)
+            {
+           	 PubClass.DownloadFile(downDB.getFileFullName(), downDB.getFileName());
                  
-             }
+            }
 
              if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer)
              {
@@ -431,13 +474,13 @@ public class AttachmentUploadController extends BaseController {
                  String filepath = downDB.getFileFullName() + ".tmp";
                  String tempName = downDB.getFileFullName();
 
-                 //EncHelper.DecryptDES(downDB.getFileFullName(), filepath);
+                 Glo.File_JieMi(downDB.getFileFullName(), filepath);
                  
                  //#region 文件下载（并删除临时明文文件）
                  tempName = PubClass.toUtf8String(request, tempName);
 
                  response.setContentType("application/octet-stream;charset=utf8");
-         		response.setHeader("Content-Disposition", "attachment;filename=" + tempName);
+         		response.setHeader("Content-Disposition", "attachment;filename=" + downDB.getFileName());
          		response.setHeader("Connection", "close");
  
 
@@ -452,7 +495,7 @@ public class AttachmentUploadController extends BaseController {
          		}
          		in.close();
          		out.close();
-                 PubClass.DownloadFile(downDB.GenerTempFile(dbAtt.getAthSaveWay()), downDB.getFileName());
+                 //PubClass.DownloadFile(downDB.GenerTempFile(dbAtt.getAthSaveWay()), downDB.getFileName());
              }
 
              if (dbAtt.getAthSaveWay() == AthSaveWay.DB)
@@ -496,8 +539,11 @@ public class AttachmentUploadController extends BaseController {
 	
 	 
 
-	 private void uploadFile(File file,FrmAttachment athDesc,GEEntity en,String msg,MapData mapData,String attachPk) throws Exception{
-		 ///#region 文件上传的tomact服务器上 or db数据库里.
+	 private void uploadFile(CommonsMultipartFile item,FrmAttachment athDesc,GEEntity en,String msg,MapData mapData,String attachPk,String parasData) throws Exception{
+		 // 获取文件名
+		 String fileName = item.getOriginalFilename();
+		 //扩展名
+		 String exts = FileAccess.getExtensionName(fileName).toLowerCase() .replace(".", "");
          if (athDesc.getAthSaveWay() == AthSaveWay.WebServer){
 
              String savePath = athDesc.getSaveTo();
@@ -537,30 +583,33 @@ public class AttachmentUploadController extends BaseController {
  						+ savePath + "@技术问题:" + ex.getMessage());
             	
              }
-
-             String exts = file.getName().substring(file.getName().lastIndexOf(".") + 1);
-             String guid = BP.DA.DBAccess.GenerGUID();
-             String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-             String ext = file.getName().substring(file.getName().lastIndexOf("."));
-             String realSaveTo = savePath + "\\" + guid + "." + fileName + ext;
+           
+           	String guid = BP.DA.DBAccess.GenerGUID();
+			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+			String ext = FileAccess.getExtensionName(item.getOriginalFilename());
+            String realSaveTo = savePath + "\\" + guid + "." + fileName + "." + ext;
 
              realSaveTo = realSaveTo.replace("~", "-");
              realSaveTo = realSaveTo.replace("'", "-");
              realSaveTo = realSaveTo.replace("*", "-");
-             // file.saveAs(realSaveTo);
-             //保存上传的文件信息
-             File savefile = new File(realSaveTo); // 获取根目录对应的真实物理路径
-             try {
+            
+ 			String saveTo = realSaveTo;
+ 			
+ 			File file = new File(realSaveTo); // 获取根目录对应的真实物理路径
+ 			try {
  				// 构造临时对象
  				
- 				InputStream is =new  FileInputStream(file) ;
+ 				InputStream is = item.getInputStream();
  				int buffer = 1024; // 定义缓冲区的大小
  				int length = 0;
  				byte[] b = new byte[buffer];
  				double percent = 0;
- 				FileOutputStream fos = new FileOutputStream(savefile);
+ 				FileOutputStream fos = new FileOutputStream(file);
  				while ((length = is.read(b)) != -1) {
+ 					//percent += length / (double) upFileSize * 100D; // 计算上传文件的百分比
  					fos.write(b, 0, length); // 向文件输出流写读取的数据
+ 					// session.setAttribute("progressBar",Math.round(percent));
+ 					// //将上传百分比保存到Session中
  				}
  				fos.close();
  			} catch (RuntimeException ex) {
@@ -573,10 +622,11 @@ public class AttachmentUploadController extends BaseController {
              if (!DataType.IsNullOrEmpty(msg))
              {
                  BP.Sys.Glo.WriteLineError("@AthUploadeBefore事件返回信息，文件：" + file.getName() + "，" + msg);
-                 savefile.delete();
+                 file.delete();
                  return;
             }
-
+             
+             //Glo.File_JiaMi(realSaveTo,"D:"+ "//" + guid + "." + ext);
              File info = new File(realSaveTo);
 
              FrmAttachmentDB dbUpload = new FrmAttachmentDB();
@@ -586,6 +636,16 @@ public class AttachmentUploadController extends BaseController {
              dbUpload.setFK_MapData(athDesc.getFK_MapData());
              dbUpload.setFK_FrmAttachment(attachPk);
              dbUpload.setFileExts(exts);
+             if (athDesc.getIsExpCol() == true)
+             {
+                 if (parasData != null && parasData.length() > 0)
+                 {
+                     for(String para : parasData.split("@")){
+                    	 if(para.split("=").length==2)
+                          dbUpload.SetPara(para.split("=")[0],para.split("=")[1]);
+                     }
+                 }
+             }
 
              ///#region 处理文件路径，如果是保存到数据库，就存储pk.
              if (athDesc.getAthSaveWay() == AthSaveWay.WebServer)
@@ -601,7 +661,7 @@ public class AttachmentUploadController extends BaseController {
              }
              ///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
 
-             dbUpload.setFileName(file.getName());
+             dbUpload.setFileName(item.getOriginalFilename());
              dbUpload.setFileSize ((float)info.length());
              dbUpload.setRDT(DataType.getCurrentDataTimess());
              dbUpload.setRec(BP.Web.WebUser.getNo());
@@ -635,8 +695,7 @@ public class AttachmentUploadController extends BaseController {
              InputStream is = null;
              try {
   				// 构造临时对象
-  				
-  				is =new  FileInputStream(file) ;
+  				is =item.getInputStream() ;
   				int buffer = 1024; // 定义缓冲区的大小
   				int length = 0;
   				byte[] b = new byte[buffer];
@@ -657,7 +716,7 @@ public class AttachmentUploadController extends BaseController {
              msg = mapData.DoEvent(FrmEventList.AthUploadeBefore, en, "@FK_FrmAttachment=" + athDesc.getMyPK() + "@FileFullName=" + temp);
              if (DataType.IsNullOrEmpty(msg) == false)
              {
-                 BP.Sys.Glo.WriteLineError("@AthUploadeBefore事件返回信息，文件：" + file.getName() + "，" + msg);
+                 BP.Sys.Glo.WriteLineError("@AthUploadeBefore事件返回信息，文件：" + fileName + "，" + msg);
 
                  tempFile.delete();
                 
@@ -685,15 +744,26 @@ public class AttachmentUploadController extends BaseController {
                      pWorkID = getPKVal();
                  dbUpload.setRefPKVal(pWorkID);
              }
-
+             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+ 			 String ext = FileAccess.getExtensionName(item.getOriginalFilename());
              dbUpload.setFK_MapData(athDesc.getFK_MapData());
              dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
-             dbUpload.setFileName(file.getName());
+             dbUpload.setFileName(item.getOriginalFilename());
+             dbUpload.setFileExts(exts);
              dbUpload.setFileSize((float)info.length());
              dbUpload.setRDT(DataType.getCurrentDataTimess());
              dbUpload.setRec(BP.Web.WebUser.getNo());
              dbUpload.setRecName(BP.Web.WebUser.getName());
-
+             if (athDesc.getIsExpCol() == true)
+             {
+                 if (parasData != null && parasData.length() > 0)
+                 {
+                     for(String para : parasData.split("@")){
+                    	  if(para.split("=").length==2)
+                          dbUpload.SetPara(para.split("=")[0],para.split("=")[1]);
+                     }
+                 }
+             }
 
              dbUpload.setUploadGUID(guid);
 
@@ -738,7 +808,7 @@ public class AttachmentUploadController extends BaseController {
                      is.close();
                      //文件加密
                      Glo.File_JiaMi(temp,ny + "//" + athDesc.getFK_MapData() + "//" + guid + "." + dbUpload.getFileExts());
-                    // ftpClient.PutFile(temp, guid + "." + dbUpload.getFileExts());
+                   
                      ftpClient.logout();
                  }
                 

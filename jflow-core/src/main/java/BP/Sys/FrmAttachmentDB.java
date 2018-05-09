@@ -332,7 +332,8 @@ public class FrmAttachmentDB extends EntityMyPK
 		map.AddTBInt(FrmAttachmentDBAttr.Idx, 0, "排序", true, false);
 			//这个值在上传时候产生.
 		map.AddTBString(FrmAttachmentDBAttr.UploadGUID, null, "上传GUID", true, false, 0, 500, 20);
-		
+		map.AddTBAtParas(3000); //增加参数属性.
+		 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

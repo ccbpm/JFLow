@@ -479,6 +479,10 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	*/
 	public final String MapDefDtlFreeFrm_Init() throws Exception
 	{
+		 String isFor = this.GetRequestVal("For");
+         if (isFor != "")
+             return "sln@" + isFor;
+         
 		MapDtl dtl = new MapDtl();
 
 		//如果传递来了节点信息, 就是说明了独立表单的节点方案处理, 现在就要做如下判断
@@ -1304,7 +1308,19 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		{
 
 		}
-
+		
+		 try
+         {
+             MapData md = new MapData();
+             md.setNo(this.getFK_MapData());
+             if (md.RetrieveFromDBSources() != 0)
+                 md.CheckPTableSaveModel(newNo);
+         }
+         catch (Exception ex)
+         {
+             return "err@" + ex.getMessage();
+         }
+		 
 		//求出选择的字段类型.
 		MapAttr attr = new MapAttr();
 		attr.setName(newName);

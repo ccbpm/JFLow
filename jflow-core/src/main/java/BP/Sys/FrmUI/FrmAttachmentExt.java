@@ -703,6 +703,7 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddBoolean(FrmAttachmentAttr.IsAutoSize, true, "自动控制大小", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsNote, true, "是否增加备注", true, true);
+		map.AddBoolean(FrmAttachmentAttr.IsExpCol, true, "是否启用扩展列", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsShowTitle, true, "是否显示标题列", true, true);
 		map.AddDDLSysEnum(FrmAttachmentAttr.UploadType, 0, "上传类型", true, false, FrmAttachmentAttr.CtrlWay, "@0=单个@1=多个@2=指定");
 
@@ -767,9 +768,22 @@ public class FrmAttachmentExt extends EntityMyPK
          rm.refMethodType = RefMethodType.Func;
          map.AddRefMethod(rm);
          
+         rm = new RefMethod();
+         rm.Title = "设置扩展列";
+         rm.ClassMethodName = this.toString() + ".DtlOfAth";
+         rm.refMethodType = RefMethodType.LinkeWinOpen;
+         map.AddRefMethod(rm);
+         
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	
+	 public String DtlOfAth()
+     {
+         String url = "../../Admin/FoolFormDesigner/MapDefDtlFreeFrm.htm?FK_MapDtl="+this.getMyPK()+"&For="+this.getMyPK();
+         return url;
+     }
+	 
 	//#endregion
 	/// <summary>
     /// 测试连接

@@ -13,6 +13,7 @@ import BP.DA.DBAccess;
 import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.En.Attr;
+import BP.Tools.AesEncodeUtil;
 import BP.Tools.Cryptos;
 import BP.Tools.En3Des;
 import BP.WF.StartWorkAttr;
@@ -385,7 +386,7 @@ public class Glo
          //南京宝旺达.
          if (SystemConfig.getCustomerNo().equals( "BWDA")){
         	 
-        	 En3Des.EncryptFile3Des(fileFullPath,toFileFullPath);
+        	 AesEncodeUtil.encryptFile(fileFullPath,toFileFullPath);
          }
      }
      
@@ -397,7 +398,7 @@ public class Glo
      public static void File_JieMi(String fileFullPath,String toFileFullPath){
          //南京宝旺达.
          if (SystemConfig.getCustomerNo().equals( "BWDA")){
-        	 En3Des.DecryptFile3Des(toFileFullPath,fileFullPath);
+        	 AesEncodeUtil.decryptFile(fileFullPath,toFileFullPath);
          }
      }
      /// <summary>

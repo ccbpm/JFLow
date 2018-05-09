@@ -6296,6 +6296,14 @@ public class Dev2Interface
 
 		return i >= 0 ? true : false;
 	}
+	/*
+	 * 
+	 * */
+    public static String Flow_GetFlowNoByFlowMark(String flowMark)
+    {
+    	String sql = "SELECT No FROM WF_Flow WHERE FlowMark='"+flowMark+"'";
+        return DBAccess.RunSQLReturnStringIsNull(sql, null);
+    }
 	/** 
 	 取消委托当前登录人的委托信息
 	 

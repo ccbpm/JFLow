@@ -50,7 +50,7 @@
             var ulListValuesLiHtml = '';
 
             $.each(initData.Sys_FrmRB, function (i, rb) {
-                ulListValuesLiHtml += '<li style=\"float:left\" >' + '<input id="RB_' + rb.KeyOfEn + rb.IntKey + '"' + (rb.IntKey == pageData.selectIntKey ? ' checked="true" ' : '') + '     type="radio" name="' + pageData.KeyOfEn + '" value="' + rb.IntKey + '" /> <label for="RB_' + rb.KeyOfEn + rb.IntKey + '" > ' + rb.Lab + '</label></li>';
+                ulListValuesLiHtml += '<li style="list-style-type:none;float:left;" >' + '<input id="RB_' + rb.KeyOfEn + rb.IntKey + '"' + (rb.IntKey == pageData.selectIntKey ? ' checked="true" ' : '') + '     type="radio" name="' + pageData.KeyOfEn + '" value="' + rb.IntKey + '" /> <label for="RB_' + rb.KeyOfEn + rb.IntKey + '" > ' + rb.Lab + '</label></li>';
             })
             $('#ulListValues').html(ulListValuesLiHtml);
 
@@ -220,7 +220,11 @@
 
         function SaveAndClose() {
             Save();
-            window.close();
+            if (parent && parent.parent && typeof parent.parent.doCloseDialog === 'function') {
+                parent.parent.doCloseDialog.call();
+            } else {
+                window.close();
+            }
         }
 
         //设置是否启用
@@ -234,7 +238,11 @@
         }
 
         function Close() {
-            window.close();
+            if (parent && parent.parent && typeof parent.parent.doCloseDialog === 'function') {
+                parent.parent.doCloseDialog.call();
+            } else {
+                window.close();
+            }
         }
     </script>
 </head>
@@ -256,7 +264,7 @@
            
             <fieldset>
                     <legend> 列表值 </legend>
-                    <ul id="ulListValues">
+                    <ul id="ulListValues" style = "margin: 0;border: 0;padding: 0;">
                         
                     </ul>
                 </fieldset>

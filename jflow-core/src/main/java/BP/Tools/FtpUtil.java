@@ -23,7 +23,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Vector;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -258,8 +258,9 @@ public final class FtpUtil {
      * @param strRemoteFile 远程文件名
      * @param strLocalFile 本地文件路径（含文件名）
      * @return boolean true 上传成功 false 上传失败
+     * @throws Exception 
      */
-    public final boolean uploadFile(String strRemoteFile, String strLocalFile) {
+    public final boolean uploadFile(String strRemoteFile, String strLocalFile) throws Exception {
         boolean booResult = false;
         strRemoteFile = BaseFileUtils.formatSeparator(strRemoteFile);
         if (!this.isSFTP) {
@@ -367,8 +368,9 @@ public final class FtpUtil {
      * 
      * @param strLocalFile 本地文件路径（含文件名）
      * @return true 上传成功 false 上传失败
+     * @throws Exception 
      */
-    public final boolean uploadFile(String strLocalFile) {
+    public final boolean uploadFile(String strLocalFile) throws Exception {
         boolean booResult = false;
         if (!this.isSFTP) {
             booResult = this.uploadFileToFtp(strLocalFile);
@@ -384,8 +386,9 @@ public final class FtpUtil {
      * 
      * @param strLocalFile 本地文件路径（含文件名）
      * @return true 上传成功 false 上传失败
+     * @throws Exception 
      */
-    private final boolean uploadFileToFtp(String strLocalFile) {
+    private final boolean uploadFileToFtp(String strLocalFile) throws Exception {
         String strRemoteFile = StringUtils.substringAfterLast(strLocalFile.replaceAll("\\\\", "/"), "/");
         return this.uploadFile(strRemoteFile, strLocalFile);
     }

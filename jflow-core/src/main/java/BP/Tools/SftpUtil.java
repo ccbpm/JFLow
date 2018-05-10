@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,7 +223,9 @@ public class SftpUtil {
         catch (SftpException e) {
             booResult = false;
             if (booAutoCreate) {
+            	strWorkingDirectory="2018/05/10";
                 String[] strArrayDirs = StringUtils.split(strWorkingDirectory, "/");
+            	//String[] strArrayDirs = strWorkingDirectory.split( "/");
                 if(strWorkingDirectory.startsWith("/")){
                     strArrayDirs[0]="/"+strArrayDirs[0];
                 }
@@ -250,8 +252,9 @@ public class SftpUtil {
      * @param strRemoteFile 远程文件名
      * @param strLocalFile 本地文件路径（含文件名）
      * @return boolean true 上传成功 false 上传失败
+     * @throws Exception 
      */
-    public final boolean uploadFile(String strRemoteFile, String strLocalFile) {
+    public final boolean uploadFile(String strRemoteFile, String strLocalFile) throws Exception {
         boolean booResult = false;
         //strRemoteFile="\\"+strRemoteFile;
         InputStream inputStream = null;
@@ -270,6 +273,7 @@ public class SftpUtil {
         catch (Exception e) {
             logger.error("{}", e.toString());
             booResult = false;
+            throw e;            
         }
         finally {
             if (this.closeConnection) {
@@ -322,8 +326,9 @@ public class SftpUtil {
      * 
      * @param strLocalFile 本地文件路径（含文件名）
      * @return true 上传成功 false 上传失败
+     * @throws Exception 
      */
-    public final boolean uploadFile(String strLocalFile) {
+    public final boolean uploadFile(String strLocalFile) throws Exception {
         String strRemoteFile = StringUtils.substringAfterLast(strLocalFile.replaceAll("\\\\", "/"), "/");
         return this.uploadFile(strRemoteFile, strLocalFile);
     }

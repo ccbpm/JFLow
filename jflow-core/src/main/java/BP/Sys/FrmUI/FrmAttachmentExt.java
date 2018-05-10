@@ -656,10 +656,9 @@ public class FrmAttachmentExt extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
-		{
+		if (this.get_enMap() != null)		
 			return this.get_enMap();
-		}
+		
 
 		Map map = new Map("Sys_FrmAttachment", "附件");
 
@@ -679,7 +678,7 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddTBString(FrmAttachmentAttr.Name, null, "附件名称", true, false, 0, 50, 20,true);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "文件格式(*.*,*.doc)", true, false, 0, 50, 20, true, null);
 		
-		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 2, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay,
+		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay,
                 "@0=保存到Web服务器@1=保存到数据库@2=ftp服务器");
 		
 		map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20,true,null);

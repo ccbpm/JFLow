@@ -385,8 +385,7 @@ public class Glo
 	 ///#region 加密解密文件.
      public static void File_JiaMi(String fileFullPath,String toFileFullPath) throws Exception{
          //南京宝旺达.
-         if (SystemConfig.getCustomerNo().equals( "BWDA")){
-        	 
+         if (SystemConfig.getCustomerNo().equals("BWDA")) {
         	 AesEncodeUtil.encryptFile(fileFullPath,toFileFullPath);
          }
      }

@@ -589,27 +589,30 @@ public class AttachmentUploadController extends BaseController {
 
 				String workDir = ny + "\\" + athDesc.getFK_MapData() + "\\";
  
-			
-				
+
 				//特殊处理文件路径.
 				if (SystemConfig.getCustomerNo().equals( "BWDA") ) {
 					
 					sdf = new SimpleDateFormat("yyyy_MM_dd");
 					ny = sdf.format(new Date());
 
-					ny = ny.replace("_", "\\\\");
-					ny = ny.replace("_", "\\\\");
+					ny = ny.replace("_", "/");
+					ny = ny.replace("_", "/");
 					
-					workDir = ny + "\\" + WebUser.getNo() + "\\";
+					workDir =  ny+ "/" + WebUser.getNo();
 				}
+				
+				boolean  isOK=false;
 
 				Glo.File_JiaMi(temp, SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
 				if (SystemConfig.getFTPServerType().equals("FTP") ) {
 
 					FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
+					
+					ftpUtil.changeWorkingDirectory(workDir,true);
 
 					// 把文件放在FTP服务器上去.
-					ftpUtil.uploadFile(workDir + guid + "." + dbUpload.getFileExts(),
+					isOK=ftpUtil.uploadFile( guid + "." + dbUpload.getFileExts(),
 							SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
 
 					ftpUtil.releaseConnection();
@@ -618,8 +621,10 @@ public class AttachmentUploadController extends BaseController {
 				if (SystemConfig.getFTPServerType().equals("SFTP") ) {
 
 					SftpUtil ftpUtil = BP.WF.Glo.getSftpUtil();
+					 
+					ftpUtil.changeWorkingDirectory(workDir,true);
 					// 把文件放在FTP服务器上去.
-					ftpUtil.uploadFile(workDir + guid + "." + dbUpload.getFileExts(),
+					isOK=ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(),
 							SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
 					ftpUtil.releaseConnection();
 				}
@@ -631,16 +636,20 @@ public class AttachmentUploadController extends BaseController {
 					
 				// 设置路径.
 				dbUpload.setFileFullName(  workDir  + guid + "." + dbUpload.getFileExts());
-			
 				
+				if (isOK==false)
+					throw new com.sun.star.uno.Exception("err文件上传失败，请检查ftp服务器配置信息");
+					
 				dbUpload.Insert();
+				
 			}
 
 			// 执行附件上传后事件，added by liuxc,2017-7-15
 			msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en,
 					"@FK_FrmAttachment=" + dbUpload.getFK_FrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK()
 							+ "@FileFullName=" + temp);
-			if (!DataType.IsNullOrEmpty(msg))
+			
+			if (DataType.IsNullOrEmpty(msg)==false)
 				BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
 		}
 		/// #endregion 保存到数据库.

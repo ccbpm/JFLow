@@ -62,8 +62,8 @@
 
             //绑定表单的所有字段
             var mapAttrHtml = '';
-            $.each(initData.Sys_MapAttr, function (i, attr) {
-
+//            alert(initData.Sys_MapAttr);
+			$.each(initData.Sys_MapAttr, function (i, attr) {
 
                 mapAttrHtml += '<tr>';
                 mapAttrHtml += '<td>' + (i + 1) + '</td>';
@@ -75,7 +75,26 @@
                 mapAttrHtml += '<td><input type="radio" id="' + attr.KeyOfEn + '3" name="' + attr.KeyOfEn + '" value="3"/><label for="' + attr.KeyOfEn + '3" >不可见</label></td>';
 
                 //设置的值.
-                mapAttrHtml += '<td><input type="text" id="TB_' + attr.KeyOfEn + '" name="TB_' + attr.KeyOfEn + '" value="" /></td>';
+                //判断是否枚举类型                           
+            	if (attr.MyDataType == 2 && attr.LGType == 1) { 
+            		alert("枚举类型");
+                    var ses = new Entities("BP.Sys.SysEnums");
+                    ses.Retrieve("EnumKey", attr.UIBindKey)
+                    var operations = '';
+                    var empty = "<option  value='' selected>" + "" + "</option>";
+                    $.each(ses, function (i, obj) {
+                    	if(i==0){
+                    		operations += empty + "<option  value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
+                    	}else{
+                    		operations += "<option  value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
+                    	}
+                    });
+                     mapAttrHtml += "<td><div id='DIV_" + attr.KeyOfEn + "'><select class='form-control' name='DDL_" + attr.KeyOfEn + "' id='DDL_" + attr.KeyOfEn +">" + empty + "</select></div></td>";
+                    //mapAttrHtml += "<td><select><option value=''>"+"空"+"</option></select></td>"
+                    mapAttrHtml += "<td><select>"+empty+"<select></td>"
+            	}else{
+                	mapAttrHtml += '<td><input type="text" id="TB_' + attr.KeyOfEn + '" name="TB_' + attr.KeyOfEn + '" value="" /></td>';
+            		}
 
                 mapAttrHtml += '</tr>';
 
@@ -85,12 +104,12 @@
             $('#Fields tbody').html(mapAttrHtml);
 
             //为表单字段绑定DATA
-            $.each($('#Fields tbody tr'), function (i, tr) {
-                $(tr).data(initData.Sys_MapAttr[i]);
-            });
+   //         $.each($('#Fields tbody tr'), function (i, tr) {
+    //            $(tr).data(initData.Sys_MapAttr[i]);
+     //       });
 
-            BindConfig();
-        })
+     //       BindConfig();
+   })
 
         function bindData() {
 

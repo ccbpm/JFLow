@@ -96,6 +96,7 @@ public class AttachmentUploadController extends BaseController {
 		en.Retrieve();
 		MapData mapData = new MapData(athDesc.getFK_MapData());
 		String msg = null;
+		
 		uploadFile(item, athDesc, en, msg, mapData, this.getFK_FrmAttachment(), parasData);
 
 		return;
@@ -386,10 +387,21 @@ public class AttachmentUploadController extends BaseController {
 				// 解密的文件保存的路径
 				String jieMiFile = SystemConfig.getPathOfTemp() + "" + guid + downDB.getFileExts();
 
-				// 连接FTP服务器并下载文件到本地
-				FtpUtil ftpUtil = new FtpUtil(SystemConfig.getFTPServerIP(), 21, SystemConfig.getFTPUserNo(),
-						SystemConfig.getFTPUserPassword());
-				ftpUtil.downloadFile(downDB.getFileFullName(), temp);
+				if (SystemConfig.getFTPServerType() == "SFTP") {
+
+					// 连接FTP服务器并下载文件到本地
+					SftpUtil ftpUtil =BP.WF.Glo.getSftpUtil(); 
+					ftpUtil.downloadFile(downDB.getFileFullName(), temp);
+				}
+				
+				
+				if (SystemConfig.getFTPServerType() == "FTP") {
+
+					// 连接FTP服务器并下载文件到本地
+					FtpUtil ftpUtil =BP.WF.Glo.getFtpUtil();					 
+					ftpUtil.downloadFile(downDB.getFileFullName(), temp);
+				}
+
 
 				// 解密文件
 				Glo.File_JieMi(temp, jieMiFile);
@@ -689,19 +701,27 @@ public class AttachmentUploadController extends BaseController {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
 				String ny = sdf.format(new Date());
 
-				String workDir =ny + "\\" + athDesc.getFK_MapData() + "\\";
+				String workDir = ny + "\\" + athDesc.getFK_MapData() + "\\";
+ 
+			
 				
-				if (SystemConfig.getCustomerNo()=="BWD")
-				{
+				//特殊处理文件路径.
+				if (SystemConfig.getCustomerNo().equals( "BWDA") ) {
+					
+					sdf = new SimpleDateFormat("yyyy_MM_dd");
+					ny = sdf.format(new Date());
+
+					ny = ny.replace("_", "\\\\");
+					ny = ny.replace("_", "\\\\");
+					
 					workDir = ny + "\\" + WebUser.getNo() + "\\";
 				}
-				
 
 				Glo.File_JiaMi(temp, SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
-				if (SystemConfig.getFTPServerType() == "FTP") {
+				if (SystemConfig.getFTPServerType().equals("FTP") ) {
 
 					FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
-					
+
 					// 把文件放在FTP服务器上去.
 					ftpUtil.uploadFile(workDir + guid + "." + dbUpload.getFileExts(),
 							SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
@@ -709,7 +729,7 @@ public class AttachmentUploadController extends BaseController {
 					ftpUtil.releaseConnection();
 				}
 
-				if (SystemConfig.getFTPServerType() == "SFTP") {
+				if (SystemConfig.getFTPServerType().equals("SFTP") ) {
 
 					SftpUtil ftpUtil = BP.WF.Glo.getSftpUtil();
 					// 把文件放在FTP服务器上去.
@@ -722,9 +742,11 @@ public class AttachmentUploadController extends BaseController {
 				tempFile.delete();
 				new File(SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp").delete();
 
+					
 				// 设置路径.
-				dbUpload.setFileFullName(
-						ny + "\\" + athDesc.getFK_MapData() + "\\" + guid + "." + dbUpload.getFileExts());
+				dbUpload.setFileFullName(  workDir  + guid + "." + dbUpload.getFileExts());
+			
+				
 				dbUpload.Insert();
 			}
 

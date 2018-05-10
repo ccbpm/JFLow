@@ -2195,7 +2195,10 @@ public class DBAccess {
 				obj = obj.split("[.]", -1)[1];
 			}
 			
-            return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" +  BP.Sys.SystemConfig.getUser().toUpperCase() + "' ", ps);
+			String sql="select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" +  BP.Sys.SystemConfig.getUser().toUpperCase() + "' ";
+			 
+			
+            return IsExits(sql, ps);
 
 			
            // return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) ", ps);

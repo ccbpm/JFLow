@@ -118,12 +118,12 @@ public class Glo
 	public static SftpUtil  getSftpUtil() throws Exception
 	{
 		//获取
-		String ip =BP.Sys.Glo.String_JieMi( SystemConfig.getFTPServerIP() );
+		String ip =BP.Sys.Glo.String_JieMi_FTP( SystemConfig.getFTPServerIP() );
 		
-		String userNo =BP.Sys.Glo.String_JieMi(SystemConfig.getFTPUserNo());
-		String pass =BP.Sys.Glo.String_JieMi(SystemConfig.getFTPUserPassword());
+		String userNo =BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserNo());
+		String pass =BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserPassword());
 		
-		SftpUtil ftp=new SftpUtil(ip, 21, userNo, pass);		
+		SftpUtil ftp=new SftpUtil(ip, 22, userNo, pass);		
 		return ftp;	 
 		
 		//return Platform.JFlow;

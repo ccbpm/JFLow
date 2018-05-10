@@ -418,5 +418,19 @@ public class Glo
 
          return str;
      }
+     public static String String_JieMi_FTP(String str) throws Exception
+     {
+
+    	 if (1==1)
+    	 return str;
+    			 
+         //南京宝旺达.
+         if (SystemConfig.getCustomerNo().equals( "BWDA"))
+         {
+             return Cryptos.aesDecrypt(str);
+         }
+
+         return str;
+     }
      ///#endregion 加密解密文件.
 }

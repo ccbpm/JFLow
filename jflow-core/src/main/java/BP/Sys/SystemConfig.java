@@ -26,52 +26,46 @@ import BP.Tools.StringHelper;
  * 
  */
 public class SystemConfig {
-	 private static boolean _IsBSsystem = true;
-	 
-	 public static String getFTPServerType()
-	{
-			return SystemConfig.getAppSettings().get("FTPServerType").toString();
-    }
+	private static boolean _IsBSsystem = true;
 
-	 
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	  ///#region ftp配置.
-	public static String getFTPServerIP()
-	{
+	public static String getFTPServerType() {
+		
+		return SystemConfig.getAppSettings().get("FTPServerType").toString();
+	}
+
+	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	/// #region ftp配置.
+	public static String getFTPServerIP() {
 		return SystemConfig.getAppSettings().get("FTPServerIP").toString();
 	}
 
-	public static String getFTPUserNo() throws Exception
-	{
-		
+	public static String getFTPUserNo() throws Exception {
+
 		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();
 		return str;
-		 
-		//return str;
+
+		// return str;
 	}
 
-	public static String getFTPUserPassword() throws Exception
-	{
+	public static String getFTPUserPassword() throws Exception {
 		String str = SystemConfig.getAppSettings().get("FTPUserPassword").toString();
 		return str;
-		//return  BP.Sys.Glo.String_JieMi(str);
-		//return str;
+		// return BP.Sys.Glo.String_JieMi(str);
+		// return str;
 	}
 
-	public static String getAttachWebSite()
-	{
+	public static String getAttachWebSite() {
 		return SystemConfig.getAppSettings().get("AttachWebSite").toString();
 	}
-	 
-	/** 
-	 OS结构
-	*/
-	public static OSModel getOSModel()
-	{
+
+	/**
+	 * OS结构
+	 */
+	public static OSModel getOSModel() {
 		return OSModel.forValue(SystemConfig.GetValByKeyInt("OSModel", 0));
 	}
-	public static OSDBSrc getOSDBSrc()
-	{
+
+	public static OSDBSrc getOSDBSrc() {
 		return OSDBSrc.forValue(SystemConfig.GetValByKeyInt("OSDBSrc", 0));
 	}
 
@@ -92,8 +86,8 @@ public class SystemConfig {
 			properties.load(fis);
 			for (Object s : properties.keySet()) {
 				getCS_AppSettings().put(s.toString(), String.valueOf(properties.get(s)));
-				//						new String(String.valueOf(properties.get(s)).getBytes(
-				//								"ISO8859-1"), "UTF-8"));
+				// new String(String.valueOf(properties.get(s)).getBytes(
+				// "ISO8859-1"), "UTF-8"));
 			}
 			fis.close();
 		} catch (IOException e) {
@@ -125,7 +119,8 @@ public class SystemConfig {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();;
+			ex.printStackTrace();
+			;
 		}
 		return null;
 	}
@@ -220,27 +215,28 @@ public class SystemConfig {
 
 	public static Hashtable<String, Object> getCS_AppSettings() {
 
-		if (_CS_AppSettings == null || _CS_AppSettings.size()==0) {
+		if (_CS_AppSettings == null || _CS_AppSettings.size() == 0) {
 			try {
 				_CS_AppSettings = new java.util.Hashtable<String, Object>();
-//				Map<String, String> properties = CustomPropertyConfigurer.getProperties();
-//				for (String s : properties.keySet()) {
-//					_CS_AppSettings.put(s, String.valueOf(properties.get(s)));
-//					//							new String(String.valueOf(properties.get(s))
-//					//									.getBytes("ISO8859-1"), "UTF-8"));
-//				}
+				// Map<String, String> properties =
+				// CustomPropertyConfigurer.getProperties();
+				// for (String s : properties.keySet()) {
+				// _CS_AppSettings.put(s, String.valueOf(properties.get(s)));
+				// // new String(String.valueOf(properties.get(s))
+				// // .getBytes("ISO8859-1"), "UTF-8"));
+				// }
 				Properties props = new Properties();
 				InputStream is = null;
 				try {
 					ResourceLoader loader = new DefaultResourceLoader();
 					Resource resource = loader.getResource("jflow.properties");
 					is = resource.getInputStream();
-					BufferedReader bf = new BufferedReader(new  InputStreamReader(is,"UTF-8"));//解决读取properties文件中产生中文乱码的问题
+					BufferedReader bf = new BufferedReader(new InputStreamReader(is, "UTF-8"));// 解决读取properties文件中产生中文乱码的问题
 					props.load(bf);
 				} finally {
 					IOUtils.closeQuietly(is);
 				}
-				_CS_AppSettings = (Hashtable)props;
+				_CS_AppSettings = (Hashtable) props;
 			} catch (Exception e) {
 				throw new RuntimeException("读取配置文件失败", e);
 			}
@@ -302,9 +298,11 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPathOfData() {
-		
-		BP.DA.Log.DebugWriteInfo(getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data" + File.separator);
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data" + File.separator;
+
+		BP.DA.Log.DebugWriteInfo(getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()
+				+ File.separator + "Data" + File.separator);
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data"
+				+ File.separator;
 	}
 
 	public static String getPathOfDataUser() {
@@ -372,9 +370,9 @@ public class SystemConfig {
 	public static String getPathOfWebApp() {
 		// return "D:\\JJFlow\\trunk\\JJFlow";
 		if (SystemConfig.getIsBSsystem()) {
-			if(Glo.getRequest()==null||Glo.getRequest().getSession()==null){
-				return BP.WF.Glo.getHostURL()+"/";
-			}else{
+			if (Glo.getRequest() == null || Glo.getRequest().getSession() == null) {
+				return BP.WF.Glo.getHostURL() + "/";
+			} else {
 				return Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
 			}
 		} else {
@@ -385,9 +383,8 @@ public class SystemConfig {
 	public static boolean getIsBSsystem() {
 		return SystemConfig.GetValByKeyBoolen("IsBSsystem", true);
 	}
-	
-	public static void setIsBSsystem(boolean value)
-	{
+
+	public static void setIsBSsystem(boolean value) {
 		SystemConfig._IsBSsystem = value;
 	}
 
@@ -456,7 +453,8 @@ public class SystemConfig {
 		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
 		 * + "" + getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
 		 */
-		return Glo.class.getClass().getResource("/").getPath() + "" + getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
+		return Glo.class.getClass().getResource("/").getPath() + ""
+				+ getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
 	}
 
 	/**
@@ -469,7 +467,8 @@ public class SystemConfig {
 		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
 		 * + "" + getAppSettings().get("PageOfLostSession").toString();
 		 */
-		return Glo.class.getClass().getResource("/").getPath() + "" + getAppSettings().get("PageOfLostSession").toString();
+		return Glo.class.getClass().getResource("/").getPath() + ""
+				+ getAppSettings().get("PageOfLostSession").toString();
 	}
 
 	/**
@@ -588,6 +587,7 @@ public class SystemConfig {
 			return false;
 		}
 	}
+
 	// 处理临时缓存
 	/**
 	 * 放在 Temp 中的cash 多少时间失效。0, 表示永久不失效
@@ -671,10 +671,10 @@ public class SystemConfig {
 	}
 
 	public static String GetValByKey(String key, String isNullas) {
-		
-		if (getAppSettings().containsKey(key)==false)
+
+		if (getAppSettings().containsKey(key) == false)
 			return isNullas;
-		
+
 		Object s = getAppSettings().get(key);
 		if (s == null) {
 			s = isNullas;
@@ -683,44 +683,41 @@ public class SystemConfig {
 	}
 
 	public static boolean GetValByKeyBoolen(String key, boolean isNullas) {
-		
-		if (getAppSettings().containsKey(key)==false)
+
+		if (getAppSettings().containsKey(key) == false)
 			return isNullas;
-		
-		
+
 		String s = getAppSettings().get(key).toString();
-		if (s==null)
+		if (s == null)
 			return isNullas;
-		
-		if (s == null) 
+
+		if (s == null)
 			return isNullas;
-		
-		
-		if (s.equals("1")) 
+
+		if (s.equals("1"))
 			return true;
-		 
-		
-	   return false;
-		
+
+		return false;
+
 	}
 
 	public static int GetValByKeyInt(String key, int isNullas) {
-		
-		if (getAppSettings().containsKey(key)==false)
+
+		if (getAppSettings().containsKey(key) == false)
 			return isNullas;
-		
+
 		Object s = getAppSettings().get(key);
 		if (s == null) {
 			return isNullas;
 		}
 		return Integer.parseInt(s.toString());
 	}
-	
+
 	public static float GetValByKeyFloat(String key, int isNullas) {
-		
-		if (getAppSettings().containsKey(key)==false)
+
+		if (getAppSettings().containsKey(key) == false)
 			return isNullas;
-		
+
 		Object s = getAppSettings().get(key);
 		if (s == null) {
 			return isNullas;
@@ -740,19 +737,31 @@ public class SystemConfig {
 
 	/**
 	 * 当前数据库连接用户.
+	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static String getUser() throws Exception {
-		String user = getAppSettings().get("JflowUser").toString();
-		user = Glo.String_JieMi(user);
-		return user;
+
+		if (SystemConfig.getCustomerNo().equals( "BWDA")) {
+			String user = getAppSettings().get("JflowUser.encryption").toString();
+			user = Glo.String_JieMi(user);
+			return user;
+		}
+
+		return getAppSettings().get("JflowUser").toString();
 	}
 
 	public static String getPassword() throws Exception {
-		String password = getAppSettings().get("JflowPassword").toString();
-		password = Glo.String_JieMi(password);
-		return password;
+		
+		if (SystemConfig.getCustomerNo().equals("BWDA") ) {
+			String user = getAppSettings().get("JflowPassword.encryption").toString();
+			user = Glo.String_JieMi(user);
+			return user;
+		}
+		
+		return  getAppSettings().get("JflowPassword").toString();
+	 
 	}
 
 	public static void setAppCenterDSN(String value) {
@@ -764,11 +773,12 @@ public class SystemConfig {
 
 	/**
 	 * 获取主应用程序的数据库类型
+	 * 
 	 * @return
 	 */
 	public static BP.DA.DBType getAppCenterDBType() {
 		Object jdbcType = getAppSettings().get("AppCenterDBType");
-		if (jdbcType != null){
+		if (jdbcType != null) {
 			String dbType = jdbcType.toString();
 			if (dbType.equalsIgnoreCase("MSMSSQL") || dbType.equalsIgnoreCase("MSSQL")) {
 				return BP.DA.DBType.MSSQL;
@@ -788,16 +798,16 @@ public class SystemConfig {
 	 */
 	public static String getAppCenterDBVarStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
-			case MSSQL:
-				return ":";
-			case Oracle:
-				return ":";
-			case Informix:
-				return "?";
-			case MySQL:
-				return ":";
-			default:
-				return "";
+		case MSSQL:
+			return ":";
+		case Oracle:
+			return ":";
+		case Informix:
+			return "?";
+		case MySQL:
+			return ":";
+		default:
+			return "";
 		}
 	}
 
@@ -910,33 +920,31 @@ public class SystemConfig {
 		try {
 			// System.Web.HttpContext.Current.Session.Clear();
 			// System.Web.HttpContext.Current.Application.Clear();
-		} catch (java.lang.Exception e) {}
+		} catch (java.lang.Exception e) {
+		}
 	}
-	
+
 	/**
-	 *  是否启用CCIM?
+	 * 是否启用CCIM?
+	 * 
 	 * @return
 	 */
-	 public static boolean getIsEnableCCIM()
-	 {
-		 if ("1".equals(getAppSettings().get("IsEnableCCIM")))
-		 {
-			 return true;
-		 }
-		 else
-		 {
-			 return false;
-		 }
-	 }
+	public static boolean getIsEnableCCIM() {
+		if ("1".equals(getAppSettings().get("IsEnableCCIM"))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-	 /** 是否启用密码加密
-	 
+	/**
+	 * 是否启用密码加密
+	 * 
 	 */
-	public static boolean getIsEnablePasswordEncryption()
-	{
-		String s = (String)((SystemConfig.getAppSettings().get("IsEnablePasswordEncryption") instanceof String) ? SystemConfig.getAppSettings().get("IsEnablePasswordEncryption") : null);
-		if (s == null || s.equals("0"))
-		{
+	public static boolean getIsEnablePasswordEncryption() {
+		String s = (String) ((SystemConfig.getAppSettings().get("IsEnablePasswordEncryption") instanceof String)
+				? SystemConfig.getAppSettings().get("IsEnablePasswordEncryption") : null);
+		if (s == null || s.equals("0")) {
 			return false;
 		}
 		return true;

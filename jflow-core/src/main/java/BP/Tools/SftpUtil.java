@@ -253,6 +253,7 @@ public class SftpUtil {
      */
     public final boolean uploadFile(String strRemoteFile, String strLocalFile) {
         boolean booResult = false;
+        //strRemoteFile="\\"+strRemoteFile;
         InputStream inputStream = null;
         try {
             // 获得文件输入流

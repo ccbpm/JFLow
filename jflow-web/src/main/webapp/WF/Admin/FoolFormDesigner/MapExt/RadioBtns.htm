@@ -135,10 +135,13 @@
 
             if (configDataArr.length > 0) {
                 for (var i = 0; i < configDataArr.length; i++) {
-                    if (configDataArr[i].indexOf("TB_") == -1)
+                    if (configDataArr[i].indexOf("TB_") == -1 && configDataArr[i].indexOf("DDL_") == -1)
                         fieldsCfg += '@' + configDataArr[i];
                     else
-                        setValue += '@' + configDataArr[i].replace("TB_","");
+                    	if(configDataArr[i].indexOf("TB_") >=0)
+                        	setValue += '@' + configDataArr[i].replace("TB_","");
+                    	else
+                    		setValue += '@' + configDataArr[i].replace("DDL_","");
                 }
                
             }

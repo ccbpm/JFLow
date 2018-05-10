@@ -77,21 +77,14 @@
                 //设置的值.
                 //判断是否枚举类型                           
             	if (attr.MyDataType == 2 && attr.LGType == 1) { 
-            		alert("枚举类型");
                     var ses = new Entities("BP.Sys.SysEnums");
-                    ses.Retrieve("EnumKey", attr.UIBindKey)
-                    var operations = '';
-                    var empty = "<option  value='' selected>" + "" + "</option>";
+                    ses.Retrieve("EnumKey", attr.UIBindKey);
+                    var operations ="<option  value=''><label>&nbsp;&nbsp;&nbsp;</label></option>";
                     $.each(ses, function (i, obj) {
-                    	if(i==0){
-                    		operations += empty + "<option  value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
-                    	}else{
-                    		operations += "<option  value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
-                    	}
+                    	operations += "<option  value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
+                    	
                     });
-                     mapAttrHtml += "<td><div id='DIV_" + attr.KeyOfEn + "'><select class='form-control' name='DDL_" + attr.KeyOfEn + "' id='DDL_" + attr.KeyOfEn +">" + empty + "</select></div></td>";
-                    //mapAttrHtml += "<td><select><option value=''>"+"空"+"</option></select></td>"
-                    mapAttrHtml += "<td><select>"+empty+"<select></td>"
+                     mapAttrHtml += "<td><div id='DIV_" + attr.KeyOfEn + "'><select class='form-control' name='DDL_" + attr.KeyOfEn + "' id='DDL_" + attr.KeyOfEn +"' style='width:150px'>" + operations + "</select></div></td>";
             	}else{
                 	mapAttrHtml += '<td><input type="text" id="TB_' + attr.KeyOfEn + '" name="TB_' + attr.KeyOfEn + '" value="" /></td>';
             		}
@@ -104,12 +97,12 @@
             $('#Fields tbody').html(mapAttrHtml);
 
             //为表单字段绑定DATA
-   //         $.each($('#Fields tbody tr'), function (i, tr) {
-    //            $(tr).data(initData.Sys_MapAttr[i]);
-     //       });
+            $.each($('#Fields tbody tr'), function (i, tr) {
+               $(tr).data(initData.Sys_MapAttr[i]);
+            });
 
-     //       BindConfig();
-   })
+            BindConfig();
+   		});
 
         function bindData() {
 
@@ -183,7 +176,10 @@
                 for (var i = 0; i < setVals.length; i++) {
                     if (setVals[i] != '' && setVals[i]) {
                         var valObjs = setVals[i].split('=');
+                        if($("#TB_"+valObjs[0]).length>0)
                         $("#TB_"+valObjs[0]).val(valObjs[1]);
+                        if($("#DDL_"+valObjs[0]).length>0)
+                        $("#DDL_"+valObjs[0]).val(valObjs[1]);
                     }
                 }
 

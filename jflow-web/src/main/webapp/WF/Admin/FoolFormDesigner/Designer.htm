@@ -603,9 +603,10 @@
                     ctrl.val(value);
                 }
 
-                ctrl = $("#RB_" + key);
+                ctrl = $("#RB_" + key+"_"+value);
                 if (ctrl.length > 0) {
                     ctrl.val(value);
+                    ctrl.attr('checked', true);
                 }
             }
 

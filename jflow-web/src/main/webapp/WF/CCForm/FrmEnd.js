@@ -63,6 +63,40 @@
                 $('#CB_' + mapAttr.KeyOfEn).attr("checked", "true");
         }
     }
+    
+    var mapAttrs = frmData.Sys_MapAttr;
+    //解析设置表单字段联动显示与隐藏.
+    for (var i = 0; i < mapAttrs.length; i++) {
+
+        var mapAttr = mapAttrs[i];
+        if (mapAttr.UIVisible == 0)
+            continue;
+
+        if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {  // AppInt Enum
+            if (mapAttr.AtPara.indexOf('@IsEnableJS=1') >= 0) {
+                if (mapAttr.UIContralType == 1) {
+                    /*启用了显示与隐藏.*/
+                    var ddl = $("#DDL_" + mapAttr.KeyOfEn);
+                    //初始化页面的值
+                    var nowKey = ddl.val();
+
+
+                    setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey);
+
+                }
+                if (mapAttr.UIContralType == 3) {
+                    /*启用了显示与隐藏.*/
+                    var rb = $("#RB_" + mapAttr.KeyOfEn);
+                    var nowKey = $('input[name="RB_' + mapAttr.KeyOfEn + '"]:checked').val();
+                    setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey);
+
+                }
+            }
+        }
+
+    }
+
+    
 }
 
 //处理 MapExt 的扩展. 工作处理器，独立表单都要调用他.

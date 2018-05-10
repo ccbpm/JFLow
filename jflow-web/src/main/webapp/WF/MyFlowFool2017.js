@@ -127,6 +127,8 @@ function GenerFoolFrm(wn) {
     html += "</table>";
 
     $('#CCForm').html(html);
+    
+
 }
 
 //解析表单字段 MapAttr.
@@ -218,7 +220,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1) {
 
         if (mapAttr.UIIsEnable == 0) {
-            var ctrl = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' type=hidden  class='form-control' type='text'/>";
+            var ctrl = "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' type=hidden  class='form-control' type='text'/></div>";
 
 
            //console.log(flowData);
@@ -228,7 +230,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             if (defValue == '' || defValue == null)
                 defValue = '无';
 
-            ctrl += "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "Text'  value='" + defValue + "' disabled='disabled'   class='form-control' type='text'/>";
+            ctrl += "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "Text'  value='" + defValue + "' disabled='disabled'   class='form-control' type='text'/></div>";
             return ctrl;
         }
 
@@ -255,7 +257,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     if (mapAttr.MyDataType == "1") {  //不是外键
 
         if (mapAttr.UIHeight <= 40) //普通的文本框.
-            return "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  class='form-control' type='text'/>";
+            return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  class='form-control' type='text'/></div>";
 
         if (mapAttr.AtPara && mapAttr.AtPara.indexOf("@IsRichText=1") >= 0) {
 
@@ -285,7 +287,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         }
 
         //普通的大块文本.
-        return "<textarea maxlength=" + mapAttr.MaxLen + "  class='form-control' style='height:" + mapAttr.UIHeight + "px;width:100%;' id='TB_" + mapAttr.KeyOfEn + "' type='text'  " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + " />"
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <textarea maxlength=" + mapAttr.MaxLen + "  class='form-control' style='height:" + mapAttr.UIHeight + "px;width:100%;' id='TB_" + mapAttr.KeyOfEn + "' type='text'  " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + " /></div>"
     }
 
     //日期类型.
@@ -296,7 +298,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         else
             enableAttr = "disabled='disabled'";
 
-        return "<input type='text' " + enableAttr + " value='" + defValue + "' style='width:125px;' class='form-control' id='TB_" + mapAttr.KeyOfEn + "' />";
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input type='text' " + enableAttr + " value='" + defValue + "' style='width:125px;' class='form-control' id='TB_" + mapAttr.KeyOfEn + "' /></div>";
     }
 
     //时期时间类型.
@@ -308,7 +310,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         else
             enableAttr = "disabled='disabled'";
 
-        return "<input  type='text'  value='" + defValue + "' style='width:145px;' class='form-control' " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input  type='text'  value='" + defValue + "' style='width:145px;' class='form-control' " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' /></div>";
     }
 
     // boolen 类型.
@@ -327,7 +329,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
         checkedStr = ConvertDefVal(flowData, '', mapAttr.KeyOfEn);
 
-        return "<div class='checkbox'><label ><input " + enableAttr + " " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "' class='checkbox'><label ><input " + enableAttr + " " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
     }
 
     //枚举类型.
@@ -351,7 +353,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
     // AppDouble  AppFloat
     if (mapAttr.MyDataType == 5 || mapAttr.MyDataType == 3) {
-        return "<input  value='" + defValue + "' style='text-align:right;width:80px;'class='form-control'  onkeyup=" + '"' + "if(isNaN(value)) execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "'/>";
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input  value='" + defValue + "' style='text-align:right;width:80px;'class='form-control'  onkeyup=" + '"' + "if(isNaN(value)) execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "'/></div>";
     }
 
     if ((mapAttr.MyDataType == 2)) { //AppInt
@@ -362,12 +364,12 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
         //alert(defValue);
 
-        return "<input  value='" + defValue + "' style='text-align:right;width:80px;' class='form-control' onkeyup=" + '"' + "if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'/>";
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input  value='" + defValue + "' style='text-align:right;width:80px;' class='form-control' onkeyup=" + '"' + "if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'/></div>";
     }
 
     //AppMoney  AppRate
     if (mapAttr.MyDataType == 8) {
-        return "<input  value='" + defValue + "' style='text-align:right;width:80px;' class='form-control' onkeyup=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "'/>";
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input  value='" + defValue + "' style='text-align:right;width:80px;' class='form-control' onkeyup=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "'/></div>";
     }
 
     alert(mapAttr.Name + "的类型没有判断.");
@@ -377,11 +379,11 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 //记录改变字段样式 不可编辑，不可见
 var mapAttrs = [];
 function changeEnable(obj, FK_MapData, KeyOfEn, AtPara) {
-    var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-    cleanAll();
-    if (AtPara.indexOf('@IsEnableJS=1') >= 0)
+    if (AtPara.indexOf('@IsEnableJS=1') >= 0){
+    	var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
+    	cleanAll();
         setEnable(FK_MapData, KeyOfEn, selecedval);
-
+    }
 }
 //清空所有的设置
 function cleanAll(){
@@ -400,7 +402,24 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
 
     //解决字段隐藏显示.
     var cfgs = frmRB.FieldsCfg;
+    
+    //解决为其他字段设置值.
+    var setVal = frmRB.SetVal;
+    if (setVal) {
+        var strs = setVal.split('@');
 
+        for (var i = 0; i < strs.length; i++) {
+
+            var str = strs[i];
+            var kv = str.split('=');
+
+            var key = kv[0];
+            var value = kv[1];
+            SetCtrlVal(key, value);
+            mapAttrs.push(key);
+
+        }
+    }
     //@Title=3@OID=2@RDT=1@FID=3@CDT=2@Rec=1@Emps=3@FK_Dept=2@FK_NY=3
     if (cfgs) {
 
@@ -439,23 +458,7 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
 
     }
 
-    //解决为其他字段设置值.
-    var setVal = frmRB.SetVal;
-    if (setVal) {
-        var strs = setVal.split('@');
-
-        for (var i = 0; i < strs.length; i++) {
-
-            var str = strs[i];
-            var kv = str.split('=');
-
-            var key = kv[0];
-            var value = kv[1];
-            SetCtrlVal(key, value);
-            mapAttrs.push(key);
-
-        }
-    }
+    
 }
 
 //设置是否可以用?
@@ -536,17 +539,21 @@ function SetCtrlVal(key, value) {
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
-        ctrl.val(value);
+    	ctrl.val(value);
+    	// ctrl.attr("value",value);
+    	//$("#DDL_"+key+" option[value='"+value+"']").attr("selected", "selected");
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
-        ctrl.val(value);
+    	ctrl.val(value);
+    	ctrl.attr('checked', true);
     }
 
-    ctrl = $("#RB_" + key);
+    ctrl = $("#RB_" + key+"_"+value);
     if (ctrl.length > 0) {
         ctrl.val(value);
+        ctrl.attr('checked', true);
     }
 }
 
@@ -559,17 +566,19 @@ function CleanCtrlVal(key) {
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
-        ctrl.val('');
+    	//ctrl.attr("value",'');
+    	ctrl.val('');
+       // $("#DDL_"+key+" option:first").attr('selected','selected');
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
-        ctrl.val('');
+    	ctrl.attr('checked', false);;
     }
 
-    ctrl = $("#RB_" + key);
+    ctrl = $("#RB_" + key+"_"+0);
     if (ctrl.length > 0) {
-        ctrl.val('');
+    	ctrl.attr('checked', true);
     }
 }
 

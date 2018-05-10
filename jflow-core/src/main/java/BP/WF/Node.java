@@ -192,6 +192,7 @@ public class Node extends Entity
          sql += "  AND B.FormType=" + NodeFormType.FoolTruck.getValue() + " "; // 仅仅找累加表单.
          sql += "  AND NDFrom!=" + this.getNodeID() + " "; //排除当前的表单.
 
+         /*
          if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
              sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
 
@@ -200,6 +201,7 @@ public class Node extends Entity
 
          if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
              sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
+             */
 
          sql += "  AND (A.WorkID=" + this.WorkID + ") ";
          sql += " ORDER BY A.RDT ";
@@ -1311,6 +1313,7 @@ public class Node extends Entity
               sql += " WHERE A.NDFrom=B.NodeID AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue() + ")  ";
               sql += "  AND (FormType=0 OR FormType=1) ";
               
+              /*
               if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
                   sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
 
@@ -1319,7 +1322,7 @@ public class Node extends Entity
 
               if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
                   sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'||to_char(B.NodeID) ) ";
-              
+              */
               
               sql += "  AND (A.WorkID="+this.WorkID+") ";
 
@@ -1670,6 +1673,11 @@ public class Node extends Entity
 	public final void setHisCancelRole(CancelRole value)
 	{
 		this.SetValByKey(NodeAttr.CancelRole, value.getValue());
+	}
+	
+	public final boolean getCancelDisWhenRead()
+	{
+		return this.GetValBooleanByKey(NodeAttr.CancelDisWhenRead);
 	}
 
 	/** 
@@ -2339,6 +2347,8 @@ public class Node extends Entity
         map.AddTBInt(NodeAttr.IsExpSender, 1, "本节点接收人不允许包含上一步发送人", true, true);
 
         map.AddTBInt(NodeAttr.CancelRole, 0, "撤销规则", true, true);
+        map.AddTBInt(NodeAttr.CancelDisWhenRead, 0, "撤销规则", true, true);
+        
 
         map.AddTBInt(NodeAttr.WhenNoWorker, 0, "未找到处理人时", true, true);
         map.AddTBString(NodeAttr.DeliveryParas, null, "访问规则设置", true, false, 0, 600, 10);

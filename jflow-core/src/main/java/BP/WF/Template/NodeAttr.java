@@ -424,6 +424,8 @@ public class NodeAttr
 	 
 	*/
 	public static final String CancelRole = "CancelRole";
+	
+	public static final String CancelDisWhenRead = "CancelDisWhenRead";	
 	/** 
 	 抄送数据写入规则
 	 

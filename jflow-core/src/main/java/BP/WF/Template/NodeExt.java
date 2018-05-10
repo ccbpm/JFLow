@@ -325,7 +325,7 @@ public class NodeExt extends Entity
         map.AddTBInt("NodeAppType", 0, "节点业务类型", false, false);
 
 
-			///#endregion  基础属性
+	    /// #endregion  基础属性
 
 
 			///#region 分合流子线程属性

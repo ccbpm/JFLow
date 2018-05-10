@@ -15,6 +15,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import BP.Sys.SystemConfig;
+
 /**
  * 
  * 文件AES加密
@@ -125,8 +127,8 @@ public class AesEncodeUtil {
     }
 
     // 加密文件
-    public static void encryptFile(String strSrcFile, String strDestFile) {
-        try {
+    public static  void encryptFile(String strSrcFile, String strDestFile) throws Exception {
+        try {       	
             File file = new File(strSrcFile);
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream bis = new BufferedInputStream(fis);

@@ -1551,8 +1551,6 @@ public class PubClass {
 		HttpServletRequest request = ContextHolderUtils.getRequest();
 
 		tempName = toUtf8String(request, tempName);
-		Glo.File_JieMi(filepath, tempName);
-
 		response.reset();
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment;filename=" + tempName);

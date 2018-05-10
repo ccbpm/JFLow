@@ -34,7 +34,9 @@ import BP.Sys.MapData;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.Sys.FrmEventList;
+import BP.Tools.BaseFileUtils;
 import BP.Tools.FileAccess;
+import BP.Tools.FtpUtil;
 import BP.WF.Flow;
 import BP.Sys.Glo;
 import BP.Web.WebUser;
@@ -470,32 +472,42 @@ public class AttachmentUploadController extends BaseController {
              if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer)
              {
             	 //#region 解密下载
-                 //1、先解密到本地
-                 String filepath = downDB.getFileFullName() + ".tmp";
-                 String tempName = downDB.getFileFullName();
-
-                 Glo.File_JieMi(downDB.getFileFullName(), filepath);
+                 //1、先下载到本地
+            	 String guid = BP.DA.DBAccess.GenerGUID();
+                 //把文件临时保存到一个位置.
+                 String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
                  
+                 //解密的文件保存的路径
+                 String jieMiFile = SystemConfig.getPathOfTemp() + "" + guid +downDB.getFileExts();
+                 
+                 //连接FTP服务器并下载文件到本地
+            	 FtpUtil ftpUtil = new FtpUtil(SystemConfig.getFTPServerIP(), 21, SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+                 ftpUtil.downloadFile(downDB.getFileFullName(), temp);
+                 
+                 //解密文件
+                 Glo.File_JieMi(temp, jieMiFile);
+                
                  //#region 文件下载（并删除临时明文文件）
-                 tempName = PubClass.toUtf8String(request, tempName);
+                 jieMiFile = PubClass.toUtf8String(request, jieMiFile);
 
-                 response.setContentType("application/octet-stream;charset=utf8");
-         		response.setHeader("Content-Disposition", "attachment;filename=" + downDB.getFileName());
-         		response.setHeader("Connection", "close");
- 
-
-              // 读取目标文件，通过response将目标文件写到客户端
-         		// 读取文件
-         		InputStream in = new FileInputStream(new File(filepath));
-         		OutputStream out = response.getOutputStream();
-         		// 写文件
-         		int b;
-         		while ((b = in.read()) != -1) {
-         			out.write(b);
-         		}
-         		in.close();
-         		out.close();
-                 //PubClass.DownloadFile(downDB.GenerTempFile(dbAtt.getAthSaveWay()), downDB.getFileName());
+                response.setContentType("application/octet-stream;charset=utf8");
+           		response.setHeader("Content-Disposition", "attachment;filename=" + PubClass.toUtf8String(request, downDB.getFileName()));
+           		response.setHeader("Connection", "close");
+                // 读取目标文件，通过response将目标文件写到客户端
+           		// 读取文件
+           		InputStream in = new FileInputStream(new File(jieMiFile));
+           		OutputStream out = response.getOutputStream();
+           		// 写文件
+           		int b;
+           		while ((b = in.read()) != -1) {
+           			out.write(b);
+           		}
+           		in.close();
+           		out.close();
+           		
+           		//删除临时文件
+           		new File(temp).delete();
+           		new File(jieMiFile).delete();
              }
 
              if (dbAtt.getAthSaveWay() == AthSaveWay.DB)
@@ -705,6 +717,7 @@ public class AttachmentUploadController extends BaseController {
   					fos.write(b, 0, length); // 向文件输出流写读取的数据
   				}
   				fos.close();
+  				is.close();
   			} catch (Exception ex) {
   				tempFile.delete();
   				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
@@ -778,42 +791,23 @@ public class AttachmentUploadController extends BaseController {
              {
             	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
          		 String ny = sdf.format(new Date());
-            	 FTPClient ftpClient= new FTPClient();
-                 ftpClient.setControlEncoding("utf-8");
-                 ftpClient.connect(SystemConfig.getFTPServerIP()); //连接ftp服务器
-                 ftpClient.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword()); //登录ftp服务器
-                 int replyCode = ftpClient.getReplyCode(); //是否成功登录服务器
-                 if(FTPReply.isPositiveCompletion(replyCode)){
-                	//判断目录年月是否存在.
-                	 FTPFile[] ftpFileArr = ftpClient.listFiles(ny);
-                     if (ftpFileArr.length<= 0) {
-                    	 ftpClient.makeDirectory(ny);
-                     }
-
-                    
-                     ftpClient.changeWorkingDirectory(ny);
-
-                     //判断目录是否存在.
-                     ftpFileArr = ftpClient.listFiles(athDesc.getFK_MapData());
-                     if (ftpFileArr.length<= 0) {
-                    	 ftpClient.makeDirectory(athDesc.getFK_MapData());
-                     }
-                    
-
-                     //设置当前目录，为操作的目录。
-                     ftpClient.changeWorkingDirectory(athDesc.getFK_MapData());
-
-                     //把文件放上去.
-                     ftpClient.storeFile(temp, is);
-                     is.close();
-                     //文件加密
-                     Glo.File_JiaMi(temp,ny + "//" + athDesc.getFK_MapData() + "//" + guid + "." + dbUpload.getFileExts());
-                   
-                     ftpClient.logout();
-                 }
-                
+         		 FtpUtil ftpUtil = new FtpUtil(SystemConfig.getFTPServerIP(), 21, SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+         		 String  workDir = ny + "\\" + athDesc.getFK_MapData() + "\\";
+         		      
+     		      //文件加密
+     		     Glo.File_JiaMi(temp,SystemConfig.getPathOfTemp() + "" + guid +"_Desc"+ ".tmp");
+     		     
+                 //把文件放在FTP服务器上去.
+                 ftpUtil.uploadFile(workDir+guid + "." + dbUpload.getFileExts(), SystemConfig.getPathOfTemp() + "" + guid +"_Desc"+ ".tmp");
+                     
+                 ftpUtil.releaseConnection();
+                 
+                 //删除临时文件
+                 tempFile.delete();
+                 new File(SystemConfig.getPathOfTemp() + "" + guid +"_Desc"+ ".tmp").delete();
+                     
                  //设置路径.
-                 dbUpload.setFileFullName(ny + "//" + athDesc.getFK_MapData() + "//" + guid + "." + dbUpload.getFileExts());
+                 dbUpload.setFileFullName(ny + "\\" + athDesc.getFK_MapData() + "\\" + guid + "." + dbUpload.getFileExts());
                  dbUpload.Insert();
              }
 

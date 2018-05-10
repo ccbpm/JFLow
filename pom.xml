@@ -14,10 +14,11 @@
 		<properties>
 		
 		<jdk.version>1.6</jdk.version>
-		<slf4j.version>1.6.4</slf4j.version>
+		<slf4j.version>1.7.12</slf4j.version>
 		<javax.transaction.version>1.0.1B</javax.transaction.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.apache.poi.version>3.11</org.apache.poi.version>
+		<org.apache.ant.version>1.9.7</org.apache.ant.version>
  		<spring.version>4.1.9.RELEASE</spring.version>
 		<!-- <spring.version>3.2.0.RELEASE</spring.version> -->
 		<dom4j.version>1.6.1</dom4j.version>
@@ -29,7 +30,7 @@
 		<jackson2.version>2.1.2</jackson2.version>
 		<commons-fileupload.version>1.2.1</commons-fileupload.version>
 		<commons-io.version>2.4</commons-io.version>
-		<commons-lang3.version>3.3.2</commons-lang3.version>
+		<commons-lang3.version>3.7</commons-lang3.version>
 		<commons-net.version>3.5</commons-net.version>
 		<httpclient.version>4.3.1</httpclient.version>
 		<org.htmlparser.version>2.1</org.htmlparser.version>
@@ -43,6 +44,8 @@
 		<jaxen.version>1.1.4</jaxen.version>
 		<commons-codec.version>1.10</commons-codec.version>
 		<morph.version>1.1.1</morph.version>
+		<com.jcraft.version>0.0.7</com.jcraft.version>
+		<com.google.auto.version>0.6</com.google.auto.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -51,13 +54,11 @@
 				<artifactId>jodconverter-core</artifactId>
 				<version>${com.github.livesense.version}</version>
 			</dependency>
-		 	<!--<dependency>
-				<groupId>com.sun</groupId>
-				<artifactId>tools</artifactId>
-				<version>${com.sun.version}</version>
-				<scope>system</scope> 
-				<systemPath>C:\Program Files\Java\jdk1.6.0_16\lib\tools.jar</systemPath> 
-			</dependency>-->
+		 	<dependency>
+				<groupId>com.jcraft</groupId>
+				<artifactId>jsch.agentproxy.jsch</artifactId>
+				<version>${com.jcraft.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>dom4j</groupId>
 				<artifactId>dom4j</artifactId>
@@ -68,6 +69,16 @@
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml</artifactId>
 				<version>${org.apache.poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-scratchpad</artifactId>
+				<version>${org.apache.poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.ant</groupId>
+				<artifactId>ant</artifactId>
+				<version>${org.apache.ant.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.morph</groupId>
@@ -393,6 +404,13 @@
 				<artifactId>httpclient</artifactId>
 				<version>${httpclient.version}</version>
 			</dependency>
+			
+			<dependency>
+			    <groupId>com.google.auto</groupId>
+			    <artifactId>auto-common</artifactId>
+			    <version>${com.google.auto.version}</version>
+			</dependency>
+			
 
 		</dependencies>
 	</dependencyManagement>

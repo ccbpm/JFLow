@@ -39,12 +39,14 @@ public class SystemConfig {
 		
 		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();
 		return BP.Sys.Glo.String_JieMi(str);
+		//return str;
 	}
 
 	public static String getFTPUserPassword() throws Exception
 	{
 		String str = SystemConfig.getAppSettings().get("FTPUserPassword").toString();
 		return  BP.Sys.Glo.String_JieMi(str);
+		//return str;
 	}
 
 	public static String getAttachWebSite()

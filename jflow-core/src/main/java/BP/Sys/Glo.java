@@ -380,9 +380,10 @@ public class Glo
 	 * 文件上传加密
 	 * @param fileFullPath上传的文件
 	 * @param toFileFullPath 加密的文件
+	 * @throws Exception 
 	 */
 	 ///#region 加密解密文件.
-     public static void File_JiaMi(String fileFullPath,String toFileFullPath){
+     public static void File_JiaMi(String fileFullPath,String toFileFullPath) throws Exception{
          //南京宝旺达.
          if (SystemConfig.getCustomerNo().equals( "BWDA")){
         	 

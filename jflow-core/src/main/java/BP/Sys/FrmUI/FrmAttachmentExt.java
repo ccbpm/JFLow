@@ -1,8 +1,11 @@
 package BP.Sys.FrmUI;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.net.SocketException;
+
 import org.apache.commons.net.ftp.FTPClient;
 import BP.DA.Depositary;
 import BP.En.EnType;
@@ -789,25 +792,16 @@ public class FrmAttachmentExt extends EntityMyPK
     /// 测试连接
     /// </summary>
     /// <returns></returns>
-    public String DoTestFTPHost()
+    public String DoTestFTPHost() throws SocketException, IOException,Exception
     {
-        try
-        {
-        	//FTPClient  ftp ;
-            //创建地址  
-            //InetAddress addr = new InetSorcketAddress(SystemConfig.getFTPServerIP(),0);  
-            //连接  
-          //  ftp = new FTPClient();  
-           // ftp.connect(SystemConfig.getFTPServerIP());  
-            //登陆  
-           // ftp.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());  
+        	 FTPClient ftpClient= new FTPClient();
+             ftpClient.setControlEncoding("utf-8");
+             ftpClient.connect(SystemConfig.getFTPServerIP()); //连接ftp服务器
+             ftpClient.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword()); //登录ftp服务器
             
             return "代码为完成.";
        
-        }catch(Exception ex)
-        {
-            return "err@连接失败:"+ex.getMessage();
-        }
+       
     }
     
     

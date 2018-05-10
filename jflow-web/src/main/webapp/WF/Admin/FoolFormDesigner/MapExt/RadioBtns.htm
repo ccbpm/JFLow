@@ -127,7 +127,9 @@
             configDataArr = configData.split('&');
 
             configDataArr = $.grep(configDataArr, function (value) {
-                return value.split('=').length == 2 && value.split('=')[1] != 0;
+
+            	return (value.split('=').length == 2 && value.split('=')[1] != 0) || (value.split('=').length == 2 && value.split('=')[0].indexOf("DDL_") !=-1 && value.split('=')[1] != '');
+                 
             });
 
             var fieldsCfg = "";

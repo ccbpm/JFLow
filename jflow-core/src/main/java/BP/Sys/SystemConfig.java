@@ -27,6 +27,13 @@ import BP.Tools.StringHelper;
  */
 public class SystemConfig {
 	 private static boolean _IsBSsystem = true;
+	 
+	 public static String getFTPServerType()
+	{
+			return SystemConfig.getAppSettings().get("FTPServerType").toString();
+    }
+
+	 
 	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	  ///#region ftp配置.
 	public static String getFTPServerIP()
@@ -38,14 +45,16 @@ public class SystemConfig {
 	{
 		
 		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();
-		return BP.Sys.Glo.String_JieMi(str);
+		return str;
+		 
 		//return str;
 	}
 
 	public static String getFTPUserPassword() throws Exception
 	{
 		String str = SystemConfig.getAppSettings().get("FTPUserPassword").toString();
-		return  BP.Sys.Glo.String_JieMi(str);
+		return str;
+		//return  BP.Sys.Glo.String_JieMi(str);
 		//return str;
 	}
 

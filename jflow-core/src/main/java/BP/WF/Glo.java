@@ -72,7 +72,9 @@ import BP.Sys.SFTable;
 import BP.Sys.SystemConfig;
 import BP.Sys.ToolbarExcel;
 import BP.Tools.DateUtils;
+import BP.Tools.FtpUtil;
 import BP.Tools.SecurityDES;
+import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.WF.Data.CH;
 import BP.WF.Data.CHSta;
@@ -108,6 +110,43 @@ import cn.jflow.common.util.ContextHolderUtils;
 */
 public class Glo
 {
+
+	/**
+	 * 获得ftp连接对象
+	 * @throws Exception 
+	 * */
+	public static SftpUtil  getSftpUtil() throws Exception
+	{
+		//获取
+		String ip =BP.Sys.Glo.String_JieMi( SystemConfig.getFTPServerIP() );
+		
+		String userNo =BP.Sys.Glo.String_JieMi(SystemConfig.getFTPUserNo());
+		String pass =BP.Sys.Glo.String_JieMi(SystemConfig.getFTPUserPassword());
+		
+		SftpUtil ftp=new SftpUtil(ip, 21, userNo, pass);		
+		return ftp;	 
+		
+		//return Platform.JFlow;
+	}
+	 
+	/**
+	 * 获得ftp连接对象
+	 * @throws Exception 
+	 * */
+	public static FtpUtil  getFtpUtil() throws Exception
+	{
+		//获取
+		String ip =BP.Sys.Glo.String_JieMi( SystemConfig.getFTPServerIP() );
+		
+		String userNo =BP.Sys.Glo.String_JieMi(SystemConfig.getFTPUserNo());
+		String pass =BP.Sys.Glo.String_JieMi(SystemConfig.getFTPUserPassword());
+		
+		FtpUtil ftp=new FtpUtil(ip, 21, userNo, pass);		
+		return ftp;	 
+		
+		//return Platform.JFlow;
+	}
+	 
 	/** 
 	 运行平台.
 	*/

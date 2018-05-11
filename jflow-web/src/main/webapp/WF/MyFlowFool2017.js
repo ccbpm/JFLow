@@ -385,6 +385,14 @@ function changeEnable(obj, FK_MapData, KeyOfEn, AtPara) {
         setEnable(FK_MapData, KeyOfEn, selecedval);
     }
 }
+function clickEnable(obj, FK_MapData, KeyOfEn,AtPara) {
+	if (AtPara.indexOf('@IsEnableJS=1') >= 0){
+    var selectVal = $(obj).val();
+    cleanAll();
+    setEnable(FK_MapData, KeyOfEn, selectVal);
+	}
+}
+
 //清空所有的设置
 function cleanAll(){
     for(var i=0;i<mapAttrs.length;i++){
@@ -759,9 +767,9 @@ function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr)
     $.each(enums, function (i, obj) {
         if (RBShowModel == 3)
         //<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
-            rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' />&nbsp;" + obj.Lab + "</label>";
+            rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' onclick='clickEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' />&nbsp;" + obj.Lab + "</label>";
         else
-            rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "'  />&nbsp;" + obj.Lab + "</label><br/>";
+            rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "'  onclick='clickEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'/>&nbsp;" + obj.Lab + "</label><br/>";
     });
     return rbHtml;
 }

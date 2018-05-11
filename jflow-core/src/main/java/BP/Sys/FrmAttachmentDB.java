@@ -418,8 +418,7 @@ public class FrmAttachmentDB extends EntityMyPK
 
 		//删除附件.
 		
-		try
-		{
+	 
 			// @于庆海需要翻译.
 			if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.WebServer)
 			{
@@ -445,17 +444,8 @@ public class FrmAttachmentDB extends EntityMyPK
 				   en.deleteFile(this.getFileFullName());
 				   
 				}
-				
-					
-			 
-
+				  
 			}
-		}
-		catch(RuntimeException ex)
-		{
-			Log.DebugWriteError(ex.getMessage());
-		}
-
 
 		
 

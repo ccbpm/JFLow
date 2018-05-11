@@ -963,8 +963,10 @@ public class NodeExt extends Entity
          rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
          rm.refMethodType = RefMethodType.RightFrameOpen;
          rm.GroupName = "实验中的功能";
-         rm.Visable = false;
+         rm.Visable = true;
          map.AddRefMethod(rm);
+         
+          
 
 		rm = new RefMethod();
 		rm.Title = "工作批处理规则";

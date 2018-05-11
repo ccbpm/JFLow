@@ -314,9 +314,9 @@ public class CCFlowAPI
                 DataTable mdtls= myds.GetTableByName("Sys_MapDtl");                
      			for (DataRow dr : dtDtls.Rows)
      	        {
-     	            dr.put(MapDtlAttr.IsDelete , 0); //把字段设置为只读的.
-     	            dr.put(MapDtlAttr.IsInsert , 0);
-     	            dr.put(MapDtlAttr.IsUpdate , 0);
+     	            dr.setValue(MapDtlAttr.IsDelete , 0); //把字段设置为只读的.
+     	            dr.setValue(MapDtlAttr.IsInsert , 0);
+     	            dr.setValue(MapDtlAttr.IsUpdate , 0);
      	            mdtls.Rows.AddRow(dr);
      	        }
      				 
@@ -327,13 +327,14 @@ public class CCFlowAPI
                  qo.DoQuery();
                  
 
-                 DataTable dtAths = aths.ToDataTableField();                  
+                 DataTable dtAths = aths.ToDataTableField();      
                  DataTable mAths = myds.GetTableByName("Sys_FrmAttachment");
                    
+                 
                  for (DataRow dr : dtAths.Rows)
                  {
-                     dr.put(FrmAttachmentAttr.IsUpload , 0); //把字段设置为只读的.
-                     dr.put(FrmAttachmentAttr.IsDownload , 0);
+                     dr.setValue(FrmAttachmentAttr.IsUpload , 0); //把字段设置为只读的.
+                     dr.setValue(FrmAttachmentAttr.IsDownload , 0);
                      mAths.Rows.AddRow(dr);
                  }
 
@@ -353,8 +354,7 @@ public class CCFlowAPI
 				
 				 if (nd.getIsStartNode() == true || gwf.getTodoEmps().contains(WebUser.getNo() + ",") == true)
                  {
-					 
-                  
+					  
 				//如果当前节点，是可以显示下拉框的.
 				Nodes nds = nd.getHisToNodes();
 

@@ -427,22 +427,16 @@ public class Glo
     		 return str;
     	 
     	 
+    	 
     	 //ac
         //南京宝旺达.
          if (SystemConfig.getCustomerNo().equals( "BWDA"))
          {
         	 
-           String strIn = "1234567812345678";
-           byte[] bEnc =AesEncodeUtil.encryptAES(strIn.getBytes(), 0, strIn.length());
-           
-         //  System.out.println(strIn.length());
-          // System.out.println(bEnc.length);
-         //  String strEn = encryptAESHex("123456");
-
-          // System.out.println(strEn);
+        	 return AesEncodeUtil.decryptAESHex(str);
         	 
-        	// AesEncodeUtil.(str);
-             return Cryptos.aesDecrypt(str);
+        	 
+             
          }
 
          return str;

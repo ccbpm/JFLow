@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.jcraft.jsch.SftpException;
 
 /**
  * FTP工具类
@@ -204,8 +205,9 @@ public final class FtpUtil {
      * @param strWorkingDirectory 工作目录路径
      * @param booAutoCreate 自动创建目录
      * @return boolean true 成功  false 失败
+     * @throws SftpException 
      */
-    public final boolean changeWorkingDirectory(String strWorkingDirectory, boolean booAutoCreate) {
+    public final boolean changeWorkingDirectory(String strWorkingDirectory, boolean booAutoCreate) throws SftpException {
         boolean booResult = false;
         strWorkingDirectory = BaseFileUtils.formatSeparator(strWorkingDirectory);
         if (!this.isSFTP) {
@@ -224,8 +226,9 @@ public final class FtpUtil {
      * @param strWorkingDirectory 工作目录路径
      * @param booAutoCreate 自动创建目录
      * @return boolean true 成功  false 失败
+     * @throws SftpException 
      */
-    private final boolean changeWorkingDirectoryToFtp(String strWorkingDirectory, boolean booAutoCreate) {
+    private final boolean changeWorkingDirectoryToFtp(String strWorkingDirectory, boolean booAutoCreate) throws SftpException {
         boolean booResult = false;
         if (StringUtils.isNotBlank(strWorkingDirectory)) {
             strWorkingDirectory = strWorkingDirectory.replaceAll("/{2,}", "/");
@@ -679,8 +682,9 @@ public final class FtpUtil {
      * 
      * @param strFileName 文件名
      * @return boolean 删除结果
+     * @throws SftpException 
      */
-    public final boolean deleteFile(String strFileName) {
+    public final boolean deleteFile(String strFileName) throws SftpException {
         boolean booResult = false;
         strFileName = BaseFileUtils.formatSeparator(strFileName);
         if (!this.isSFTP) {
@@ -778,8 +782,9 @@ public final class FtpUtil {
      * @param strWorkingDirectory 工作目录
      * @param enumFtpUtil 操作类型
      * @return boolean 操作结果 true 成功 false 失败
+     * @throws SftpException 
      */
-    public final boolean managerDirectory(String strWorkingDirectory, EnumFtpUtil enumFtpUtil) {
+    public final boolean managerDirectory(String strWorkingDirectory, EnumFtpUtil enumFtpUtil) throws SftpException {
         boolean booResult = false;
         strWorkingDirectory = BaseFileUtils.formatSeparator(strWorkingDirectory);
         if (this.isSFTP == false) {
@@ -802,8 +807,9 @@ public final class FtpUtil {
      * @param strWorkingDirectory 工作目录
      * @param enumFtpUtil 操作类型
      * @return boolean 操作结果 true 成功 false 失败
+     * @throws SftpException 
      */
-    private final boolean managerDirectoryToFtp(String strWorkingDirectory, EnumFtpUtil enumFtpUtil) {
+    private final boolean managerDirectoryToFtp(String strWorkingDirectory, EnumFtpUtil enumFtpUtil) throws SftpException {
         boolean booResult = true;
         if (StringUtils.isNotBlank(strWorkingDirectory)) {
             strWorkingDirectory = strWorkingDirectory.replaceAll("\\\\", "/");
@@ -844,8 +850,9 @@ public final class FtpUtil {
      *
      * @param folderDir 目录
       * @return boolean 操作结果 true 成功 false 失败
+     * @throws SftpException 
      */
-    private boolean removeAll(String folderDir) {
+    private boolean removeAll(String folderDir) throws SftpException {
         try {
             FTPFile[] files = ftpClient.listFiles(folderDir);
             for (FTPFile f : files) {
@@ -854,6 +861,7 @@ public final class FtpUtil {
                     ftpClient.removeDirectory(folderDir + "/" + f.getName());
                 }
                 if (f.isFile()) {
+                	
                     this.deleteFile(folderDir + "/" + f.getName());
                 }
             }
@@ -1083,8 +1091,9 @@ public final class FtpUtil {
      *
      * @param file 要上传的目录或文件
      * @param workingDirectory ftp当前目录
+     * @throws SftpException 
      */
-    private void uploadFile(File file, String workingDirectory) {
+    private void uploadFile(File file, String workingDirectory) throws SftpException {
         
         // 如果是目录
         if (file.isDirectory()) {

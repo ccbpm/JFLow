@@ -582,14 +582,15 @@ public class AttachmentUploadController extends BaseController {
 				// 把文件保存到指定的字段里.
 				dbUpload.SaveFileToDB("FileDB", temp);
 			}
+			
 
 			if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+				
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
 				String ny = sdf.format(new Date());
 
 				String workDir = ny + "\\" + athDesc.getFK_MapData() + "\\";
- 
-
+  
 				//特殊处理文件路径.
 				if (SystemConfig.getCustomerNo().equals( "BWDA") ) {
 					
@@ -604,7 +605,7 @@ public class AttachmentUploadController extends BaseController {
 				
 				boolean  isOK=false;
 
-				Glo.File_JiaMi(temp, SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
+				Glo.File_JiaMi(temp, SystemConfig.getPathOfTemp() + "/" + guid + "_Desc" + ".tmp");
 				if (SystemConfig.getFTPServerType().equals("FTP") ) {
 
 					FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
@@ -613,7 +614,7 @@ public class AttachmentUploadController extends BaseController {
 
 					// 把文件放在FTP服务器上去.
 					isOK=ftpUtil.uploadFile( guid + "." + dbUpload.getFileExts(),
-							SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
+							SystemConfig.getPathOfTemp() + "/" + guid + "_Desc" + ".tmp");
 
 					ftpUtil.releaseConnection();
 				}
@@ -625,7 +626,7 @@ public class AttachmentUploadController extends BaseController {
 					ftpUtil.changeWorkingDirectory(workDir,true);
 					// 把文件放在FTP服务器上去.
 					isOK=ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(),
-							SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp");
+							SystemConfig.getPathOfTemp() + "/" + guid + "_Desc" + ".tmp");
 					ftpUtil.releaseConnection();
 				}
 
@@ -635,7 +636,7 @@ public class AttachmentUploadController extends BaseController {
 
 					
 				// 设置路径.
-				dbUpload.setFileFullName(  workDir  + guid + "." + dbUpload.getFileExts());
+				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
 				
 				if (isOK==false)
 					throw new com.sun.star.uno.Exception("err文件上传失败，请检查ftp服务器配置信息");

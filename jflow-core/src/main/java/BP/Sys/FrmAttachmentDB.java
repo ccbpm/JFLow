@@ -6,6 +6,8 @@ import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.Tools.FtpUtil;
+import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import sun.net.ftp.FtpClient;
 
@@ -384,36 +386,10 @@ public class FrmAttachmentDB extends EntityMyPK
 		{
 			return;
 		}
+		 
 
 		FrmAttachment ath = new FrmAttachment(this.getFK_FrmAttachment());
-
-		try
-		{
-			// @于庆海需要翻译.
-			if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.WebServer)
-			{
-				new File(this.getFileFullName()).delete();
-			}
-
-			if (ath.getAthSaveWay() == BP.Sys.AthSaveWay.FTPServer)
-			{
-				
-				//特殊处理宝旺达的项目，由这个标记，就不要删除ftp文件.
-				if ( this.GetParaBoolen("NotDeleteFtpFile")==true)
-					return  ;
-				
-     			//	ForEachSupport.FtpConnection ftpconn =  new ForEachSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
-				//String fullName = this.getFileFullName();
-				//ny + "//" + athDesc.FK_MapData + "//" + guid + "." + dbUpload.FileExts;
-
-			}
-		}
-		catch(RuntimeException ex)
-		{
-			Log.DebugWriteError(ex.getMessage());
-		}
-
-
+		
 		String fkefs = ath.GetParaString("FK_ExcelFile", null);
 		if (StringHelper.isNullOrWhiteSpace(fkefs) == false)
 		{
@@ -439,6 +415,47 @@ public class FrmAttachmentDB extends EntityMyPK
 				}
 			}
 		}
+
+		try
+		{
+			// @于庆海需要翻译.
+			if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.WebServer)
+			{
+				new File(this.getFileFullName()).delete();
+			}
+
+			if (ath.getAthSaveWay() == BP.Sys.AthSaveWay.FTPServer)
+			{
+				
+				//特殊处理宝旺达的项目，由这个标记，就不要删除ftp文件.
+				if ( this.GetParaBoolen("NotDeleteFtpFile")==true) 
+					return ;
+					
+				if (SystemConfig.getFTPServerType().equals("SFTP"))
+				{
+				   SftpUtil en= BP.WF.Glo.getSftpUtil();
+				   en.deleteFile(this.getFileFullName());				   
+				}
+				
+				if (SystemConfig.getFTPServerType().equals("FTP") )
+				{
+				   FtpUtil  en= BP.WF.Glo.getFtpUtil();
+				   en.deleteFile(this.getFileFullName());
+				   
+				}
+				
+					
+			 
+
+			}
+		}
+		catch(RuntimeException ex)
+		{
+			Log.DebugWriteError(ex.getMessage());
+		}
+
+
+		
 
 		super.afterDelete();
 	}

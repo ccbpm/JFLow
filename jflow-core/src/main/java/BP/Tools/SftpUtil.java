@@ -223,7 +223,7 @@ public class SftpUtil {
         catch (SftpException e) {
             booResult = false;
             if (booAutoCreate) {
-            	strWorkingDirectory="2018/05/10";
+            	//strWorkingDirectory="2018/05/10";
                 String[] strArrayDirs = StringUtils.split(strWorkingDirectory, "/");
             	//String[] strArrayDirs = strWorkingDirectory.split( "/");
                 if(strWorkingDirectory.startsWith("/")){

@@ -408,9 +408,12 @@ public class Glo
      /// <returns>返回解密后的字符串</returns>
      public static String String_JieMi(String str) throws Exception
      {
+    	 
+    	 //AesEncodeUtil  en=new AesEncodeUtil(str);
+    	// retrn
 
          //南京宝旺达.
-         if (SystemConfig.getCustomerNo().equals( "BWDA"))
+         if (SystemConfig.getCustomerNo().equals("BWDA"))
          {
              return Cryptos.aesDecrypt(str);
          }
@@ -421,11 +424,24 @@ public class Glo
      {
 
     	 if (1==1)
-    	 return str;
-    			 
-         //南京宝旺达.
+    		 return str;
+    	 
+    	 
+    	 //ac
+        //南京宝旺达.
          if (SystemConfig.getCustomerNo().equals( "BWDA"))
          {
+        	 
+           String strIn = "1234567812345678";
+           byte[] bEnc =AesEncodeUtil.encryptAES(strIn.getBytes(), 0, strIn.length());
+           
+         //  System.out.println(strIn.length());
+          // System.out.println(bEnc.length);
+         //  String strEn = encryptAESHex("123456");
+
+          // System.out.println(strEn);
+        	 
+        	// AesEncodeUtil.(str);
              return Cryptos.aesDecrypt(str);
          }
 

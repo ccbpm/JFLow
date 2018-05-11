@@ -2254,7 +2254,7 @@ public class Flow extends BP.En.EntityNoName
 					case BySelected: // 由上一步发送人员选择 
 						if (nd.getIsStartNode())
 						{
-							msg += "@错误:开始节点不能设置指定的选择人员访问规则。";
+						//	msg += "@错误:开始节点不能设置指定的选择人员访问规则。";
 							break;
 						}
 						break;

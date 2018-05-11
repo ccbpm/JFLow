@@ -474,6 +474,17 @@ public class SftpUtil {
      * @return boolean 操作结果 true 成功 false 失败
      */
     public final boolean deleteFile(String strFileName) {
+    	
+    	
+    	if (strFileName.indexOf("/")!=-1)
+    	{
+    		// 文件带有路径  2018/12/15/xxxxx.doc
+    		
+    		//String[] strs= "";
+    		
+    	}
+    	
+    	
         boolean booResult = false;
         if (strFileName == null || strFileName.trim().length() <= 0) {
             logger.error("{}", "被删除文件名不能为空.");

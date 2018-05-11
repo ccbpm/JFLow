@@ -124,7 +124,8 @@ public class Glo
 		String pass =BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserPassword());
 		
 		SftpUtil ftp=new SftpUtil(ip, 22, userNo, pass);		
-		return ftp;	 
+		return ftp;	
+		
 		
 		//return Platform.JFlow;
 	}

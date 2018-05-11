@@ -416,6 +416,8 @@ public class FrmAttachmentDB extends EntityMyPK
 			}
 		}
 
+		//删除附件.
+		
 		try
 		{
 			// @于庆海需要翻译.

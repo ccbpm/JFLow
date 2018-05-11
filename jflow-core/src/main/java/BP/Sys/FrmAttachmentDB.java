@@ -349,11 +349,13 @@ public class FrmAttachmentDB extends EntityMyPK
     {
         // string tempFile =  SystemConfig.PathOfTemp +System.Guid.NewGuid()+"."+this.FileExts;
         String tempFile = SystemConfig.getPathOfTemp() + this.getFileName();
+        
         try
         {
         	File file = new File(tempFile);
             if (file.exists() == true)
                 file.delete();
+            
         }
         catch(Exception e)
         {

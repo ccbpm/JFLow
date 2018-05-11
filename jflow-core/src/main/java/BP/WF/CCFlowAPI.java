@@ -268,14 +268,13 @@ public class CCFlowAPI
                      myds.Tables.remove("Sys_GroupField");
                      myds.Tables.add(dtGF);
                     // #endregion 处理字段分组排序.
-                     
-                     
-                     
+                      
                  
                  //计算累加的字段集合.
                  MapAttrs attrs = new MapAttrs();
                  QueryObject qo = new QueryObject(attrs);
-                 qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")" );                 
+                 qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")" );        
+                 qo.addOrderBy(MapAttrAttr.Idx);
                  qo.DoQuery();            
                  DataTable dtAttrsHistroy = attrs.ToDataTableField();                
                  
@@ -299,7 +298,7 @@ public class CCFlowAPI
                      if (isHave==true)
                     	 continue;                      
                      
-                     dr.put(MapAttrAttr.UIIsEnable, 0); //把字段设置为只读的.                        
+                     dr.setValue(MapAttrAttr.UIIsEnable, 0); //把字段设置为只读的.                        
                     mapAttr.Rows.AddRow(dr);                     
                  }
  
@@ -328,8 +327,7 @@ public class CCFlowAPI
                  
 
                  DataTable dtAths = aths.ToDataTableField();      
-                 DataTable mAths = myds.GetTableByName("Sys_FrmAttachment");
-                   
+                 DataTable mAths = myds.GetTableByName("Sys_FrmAttachment");               
                  
                  for (DataRow dr : dtAths.Rows)
                  {
@@ -337,6 +335,24 @@ public class CCFlowAPI
                      dr.setValue(FrmAttachmentAttr.IsDownload , 0);
                      mAths.Rows.AddRow(dr);
                  }
+                 
+               
+                 
+                 
+                 //移除原来的MapExt.
+                 DataTable dtExts = myds.GetTableByName("Sys_MapExt");
+                 myds.Tables.remove("Sys_MapExt");
+                 myds.Tables.remove(dtExts);
+                 
+                 //把扩展放入里面去.
+                 myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node+"'";
+                 BP.Sys.MapExts exts= new  MapExts(); 
+                 exts.Retrieve(myFrmIDs);
+                 
+                 //加入最新的MapExt.
+                 myds.Tables.add( exts.ToDataTableField("Sys_MapExt") );
+                 
+                  
 
              }
             // #endregion 增加 groupfields
@@ -367,16 +383,16 @@ public class CCFlowAPI
 				for (Node item : nds.ToJavaList())
 				{
 					DataRow dr = dtToNDs.NewRow();
-					dr.put("No",item.getNodeID());
-					dr.put("Name",item.getName());
+					dr.setValue("No",item.getNodeID());
+					dr.setValue("Name",item.getName());
 					
 					if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
 					{
-						dr.put("IsSelectEmps","1");
+						dr.setValue("IsSelectEmps","1");
 					}
 					else
 					{
-						dr.put("IsSelectEmps","0"); //是不是，可以选择接受人.
+						dr.setValue("IsSelectEmps","0"); //是不是，可以选择接受人.
 					}
 					dtToNDs.Rows.add(dr);
 				}
@@ -391,20 +407,17 @@ public class CCFlowAPI
                 {
                     DataRow dr = dtToNDs.NewRow();
                     
-                    dr.put("No",  item.getFK_Flow() + "01");
-                    
-                    dr.put("Name",  "启动:" +item.getFlowName() );
-                   
-                    dr.put("IsSelectEmps", "1");
+                    dr.setValue("No",  item.getFK_Flow() + "01");                    
+                    dr.setValue("Name",  "启动:" +item.getFlowName() );                   
+                    dr.setValue("IsSelectEmps", "1");
                     
                     //else
                     //  dr["IsSelectEmps"] = "0";  //是不是，可以选择接受人.
-
                     //设置默认选择的节点.
                     //if (defalutSelectedNodeID == item.NodeID)
-                    //    dr["IsSelected"] = "1";
+                    // dr["IsSelected"] = "1";
                     //else
-                    //    dr["IsSelected"] = "0";
+                    // dr["IsSelected"] = "0";
 
                     dr.put("IsSelected", "0");
                     dtToNDs.Rows.add(dr);

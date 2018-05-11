@@ -434,10 +434,11 @@ public class WF_CCForm extends WebContralBase {
  		}
 
  		if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
+ 			
  			String fileName ="";
  			try{
  			  fileName= downDB.MakeFullFileFromFtp(); 
- 			PubClass.DownloadFile(downDB.MakeFullFileFromFtp(),downDB.getFileName());
+ 			  PubClass.DownloadFile(downDB.MakeFullFileFromFtp(),downDB.getFileName());
  			}catch(Exception e){
  				return "err@"+e.getMessage();
  			}

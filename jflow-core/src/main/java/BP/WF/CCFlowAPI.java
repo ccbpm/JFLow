@@ -43,6 +43,8 @@ import BP.Sys.MapExt;
 import BP.Sys.MapExtAttr;
 import BP.Sys.MapExtXmlList;
 import BP.Sys.MapExts;
+import BP.Sys.SysEnumAttr;
+import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.FTCAttr;
@@ -336,7 +338,20 @@ public class CCFlowAPI
                      mAths.Rows.AddRow(dr);
                  }
                  
-               
+                  //计算累加的枚举类型
+                 DataTable Sys_Menu = myds.GetTableByName("Sys_Enum");
+                 myds.Tables.remove("Sys_Enum");
+                 myds.Tables.remove(Sys_Menu);
+                 
+                 //把枚举放入里面去.
+                 myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node+"'";
+                 SysEnums enums= new  SysEnums(); 
+                 enums.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData in(" + myFrmIDs + ")");
+                 //enums.Retrieve("("+myFrmIDs+")");
+                 
+                 //加入最新的枚举.
+                 myds.Tables.add( enums.ToDataTableField("Sys_Enum") );
+                 
                  
                  
                  //移除原来的MapExt.

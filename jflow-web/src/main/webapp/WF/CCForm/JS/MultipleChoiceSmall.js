@@ -1,5 +1,5 @@
 ﻿//小范围的多选,不需要搜索.
-function MultipleChoiceSmall(mapExt) {
+function MultipleChoiceSmall(mapExt,mapAttr) {
     var webUser = new WebUser();
     var data = [];
     var valueField = "No";
@@ -46,7 +46,7 @@ function MultipleChoiceSmall(mapExt) {
 
         //如果是checkbox 多选.
         if (mapExt.Tag == "1" || mapExt.Tag == "2") {
-            return MakeCheckBoxsModel(mapExt, data);
+            return MakeCheckBoxsModel(mapExt, data,mapAttr);
         }
 
         var tb = $("#TB_" + AttrOfOper);
@@ -100,7 +100,8 @@ function MultipleChoiceSmall(mapExt) {
 
 
 //checkbox 模式.
-function MakeCheckBoxsModel(mapExt, data) {
+function MakeCheckBoxsModel(mapExt, data,mapAttr) {
+	
     var textboxId = "TB_" + mapExt.AttrOfOper
     var textbox = $("#" + textboxId);
     textbox.css("visibility", "hidden");
@@ -123,8 +124,12 @@ function MakeCheckBoxsModel(mapExt, data) {
              id = name + "_" + en.No;
              keyValue = en.No;
          }
-
-         var cb = $("<input type='checkbox' id='" + id + "' name='" + name + "' value='" + keyValue + "'onclick='changeValue(\"" + textboxId + "\",\"" + name + "\")'  />");
+        var enableAttr = '';
+        if (mapAttr!=null&&mapAttr.UIIsEnable != 1) {
+            enableAttr = "disabled='disabled'";
+        }
+      	
+         var cb = $("<input "+ enableAttr+" type='checkbox' id='" + id + "' name='" + name + "' value='" + keyValue + "'onclick='changeValue(\"" + textboxId + "\",\"" + name + "\")'  />");
 
 
          if (tbVal.indexOf(keyValue + ',') != -1)

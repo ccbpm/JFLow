@@ -327,7 +327,7 @@ public class Json
 				if (null == obj )
 				{
 					obj = drc.get(i).getValue(column.ColumnName);	//解决构造tabele的问题.				
-					if (obj==null||obj.equals(""))
+					if (obj==null)
 					{
 					   jsonString += "\"\","; 
 					   continue;
@@ -341,7 +341,8 @@ public class Json
 					    || column.DataType == Double.class
 						|| column.DataType == float.class)
 				{
-					
+					if(obj.equals(""))
+						jsonString += "\"\","; 
 					jsonString += "" + obj.toString() + ",";
 					continue;
 				} 

@@ -601,7 +601,10 @@ public class Json
 		String strs = "{";
 		for (Object key : ht.keySet())
 		{
-			strs += "\"" + key.toString() + "\":\"" +  ht.get(key.toString()) + "\",";
+			if(ht.get(key.toString())!=null)
+				strs += "\"" + key.toString() + "\":\"" +  ToJsonStr(ht.get(key.toString()).toString()) + "\",";
+			else
+				strs += "\"" + key.toString() + "\":\"" +  ht.get(key.toString()) + "\",";	
 		}
 		strs += "\"OutEnd\":\"1\"";
 		strs += "}";

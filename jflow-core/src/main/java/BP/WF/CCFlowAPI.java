@@ -347,7 +347,7 @@ public class CCFlowAPI
                  //把扩展放入里面去.
                  myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node+"'";
                  BP.Sys.MapExts exts= new  MapExts(); 
-                 exts.Retrieve(myFrmIDs);
+                 exts.Retrieve("("+myFrmIDs+")");
                  
                  //加入最新的MapExt.
                  myds.Tables.add( exts.ToDataTableField("Sys_MapExt") );

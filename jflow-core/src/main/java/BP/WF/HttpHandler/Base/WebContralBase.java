@@ -52,7 +52,7 @@ public abstract class WebContralBase extends BaseController {
 	 *            key
 	 * @return 返回值
 	 */
-	public final String GetValFromFrmByKey(String key,String isNullAsVal) {
+	public final String GetValFromFrmByKey(String key, String isNullAsVal) {
 		// String val = context.Request.Form[key];
 		String val = getRequest().getParameter(key);
 		if (val == null && key.contains("DDL_") == false) {
@@ -65,20 +65,20 @@ public abstract class WebContralBase extends BaseController {
 			val = getRequest().getParameter("TB" + key);
 		}
 
-		if (val == null && key.contains("CB_") == false)
-        {
-            val = getRequest().getParameter("CB_" + key);
-        }
-		
+		if (val == null && key.contains("CB_") == false) {
+			val = getRequest().getParameter("CB_" + key);
+		}
+
 		if (val == null) {
 			if (isNullAsVal != null)
-                return isNullAsVal;
+				return isNullAsVal;
 			throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
 		}
 
 		val = val.replace("'", "~");
 		return val;
 	}
+
 	/**
 	 * 获得Form数据.
 	 * 
@@ -99,11 +99,10 @@ public abstract class WebContralBase extends BaseController {
 			val = getRequest().getParameter("TB_" + key);
 		}
 
-		if (val == null && key.contains("CB_") == false)
-        {
-            val = getRequest().getParameter("CB_" + key);
-        }
-		
+		if (val == null && key.contains("CB_") == false) {
+			val = getRequest().getParameter("CB_" + key);
+		}
+
 		if (val == null) {
 			throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
 		}
@@ -141,13 +140,13 @@ public abstract class WebContralBase extends BaseController {
 	 * @param methodName
 	 *            方法
 	 * @return 返回执行的结果，执行错误抛出异常
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DoMethod(WebContralBase myEn, String methodName) throws Exception {
 
 		java.lang.Class tp = myEn.getClass();
 		java.lang.reflect.Method mp = null;
-		
+
 		try {
 			mp = tp.getMethod(methodName);
 		} catch (NoSuchMethodException e) {
@@ -158,12 +157,12 @@ public abstract class WebContralBase extends BaseController {
 
 		if (mp == null) {
 			/* 没有找到方法名字，就执行默认的方法. */
-			String str= myEn.DoDefaultMethod();
-			
-			if (str==null || "".equals(str))
-				return "err@方法:"+methodName+"没有翻译..";
-			
-			return str;	 
+			String str = myEn.DoDefaultMethod();
+
+			if (str == null || "".equals(str))
+				return "err@方法:" + methodName + "没有翻译..";
+
+			return str;
 		}
 
 		// 执行该方法.
@@ -171,49 +170,39 @@ public abstract class WebContralBase extends BaseController {
 		Object tempVar = null;
 		try {
 			tempVar = mp.invoke(this, paras);
-			
+
 		} catch (Exception e) {
-			
-			
+
 			String msg = e.getMessage();
-			
-			if (msg ==null )
-				msg =e.getStackTrace().toString();
-			
-			
-			if (e.getCause()!=null)
-			{
-				msg+= e.getCause().getMessage();
+ 
+			if (e.getCause() != null) {
+				msg = e.getCause().getMessage();
 			}
-			
-			
-			//如果有url返回.
-			if (msg!=null && ( msg.indexOf("url@")==0 || msg.indexOf("info@")==0)   )
+
+			// 如果有url返回.
+			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0))
 				return msg;
-			
-			
-			
+
 			String str = "";
-			if(e.getCause().getMessage().indexOf("wait")>-1){
+			if (e.getCause().getMessage().indexOf("wait") > -1) {
 				str += "@错误原因可能是数据库连接异常";
 			}
-			
-			//str+="\t\n@"+e.getCause().getMessage();
-			
-			 String myParas =  getRequest().getQueryString();
-			 
-			 String  errInfo="err@页面类[" + myEn.toString() + ",方法[" + methodName + "]执行错误.";			 
-			 errInfo+="\t\n@参数:"+myParas;
-			 errInfo+="\t\n@Msg:"+msg;			 
-			 errInfo+="\t\n@getStackTrace:"+ e.getStackTrace();
-			 
-			 
-			 
-			 Log.DebugWriteError("BP.WF.HttpHangerBase.DoMethod()" + errInfo);			 
-			 return errInfo;
-			 
-			 //err   @" + e.getMessage()+str+"@"+e.getStackTrace()+"\t\n@"+myParas;
-			
+
+			// str+="\t\n@"+e.getCause().getMessage();
+
+			String myParas = getRequest().getQueryString();
+
+			String errInfo = "err@页面类[" + myEn.toString() + ",方法[" + methodName + "]执行错误.";
+			errInfo += "\t\n@参数:" + myParas;
+			errInfo += "\t\n@Msg:" + msg;
+			errInfo += "\t\n@getStackTrace:" + e.getStackTrace();
+
+			Log.DebugWriteError("BP.WF.HttpHangerBase.DoMethod()" + errInfo);
+			return errInfo;
+
+			// err @" +
+			// e.getMessage()+str+"@"+e.getStackTrace()+"\t\n@"+myParas;
+
 		}
 		return (String) ((tempVar instanceof String) ? tempVar : null); // 调用由此
 																		// MethodInfo
@@ -224,12 +213,12 @@ public abstract class WebContralBase extends BaseController {
 	 * 执行默认的方法名称
 	 * 
 	 * @return 返回执行的结果
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	protected String DoDefaultMethod() throws Exception {
 		return "@子类没有重写该[" + this.getDoType() + "]方法.";
 	}
-	 
+
 	/**
 	 * 公共方法获取值
 	 * 
@@ -238,39 +227,35 @@ public abstract class WebContralBase extends BaseController {
 	 * @return
 	 */
 	public final String GetRequestVal(String param) {
-		
+
 		String val = getRequest().getParameter(param);
-		
+
 		if (StringHelper.isNullOrEmpty(val)) {
 			val = getRequest().getParameter(param);
 		}
-		
-		
+
 		return val;
-		
-		
-	 /*
-		try {
-			
-		 return URLEncoder.encode(val, "UTF-8");
-		 
-		 } catch (UnsupportedEncodingException e) {
-			 
-		    e.printStackTrace();
-		     return val;
-		 
-		 }
+
+		/*
+		 * try {
+		 * 
+		 * return URLEncoder.encode(val, "UTF-8");
+		 * 
+		 * } catch (UnsupportedEncodingException e) {
+		 * 
+		 * e.printStackTrace(); return val;
+		 * 
+		 * }
 		 */
-	 
+
 	}
-	public Boolean GetRequestValBoolen(String key)
-	{
-	  if (this.GetRequestValInt(key)==0)
-		  return false;
-	  
-	  return true;
+
+	public Boolean GetRequestValBoolen(String key) {
+		if (this.GetRequestValInt(key) == 0)
+			return false;
+
+		return true;
 	}
-	
 
 	/**
 	 * 公共方法获取值
@@ -463,10 +448,10 @@ public abstract class WebContralBase extends BaseController {
 	public final String getFK_MapData() {
 		String str = this.GetRequestVal("FK_MapData");
 		if (str == null || str.equals("") || str.equals("null")) {
-			 str = this.GetRequestVal("FrmID"); 
+			str = this.GetRequestVal("FrmID");
 		}
 		return str;
-		
+
 	}
 
 	/**
@@ -507,11 +492,11 @@ public abstract class WebContralBase extends BaseController {
 	 * 节点ID
 	 */
 	public int getFK_Node() {
-//		return this.GetRequestValInt("FK_Node");
-		 int nodeID = this.GetRequestValInt("FK_Node");
-         if (nodeID == 0)
-             nodeID = this.GetRequestValInt("NodeID");
-         return nodeID;
+		// return this.GetRequestValInt("FK_Node");
+		int nodeID = this.GetRequestValInt("FK_Node");
+		if (nodeID == 0)
+			nodeID = this.GetRequestValInt("NodeID");
+		return nodeID;
 	}
 
 	public final long getFID() {
@@ -525,19 +510,17 @@ public abstract class WebContralBase extends BaseController {
 	}
 
 	public long getWorkID() {
-		
-		
-		 String str = this.GetRequestVal("WorkID");
-         if (str == null || str.equals("") || str.equals("null"))
-             str = this.GetRequestVal("PKVal");
 
-         if (str == null || str.equals("") || str.equals("null"))
-             str = this.GetRequestVal("OID");
+		String str = this.GetRequestVal("WorkID");
+		if (str == null || str.equals("") || str.equals("null"))
+			str = this.GetRequestVal("PKVal");
 
-         if (str == null || str.equals("") || str.equals("null") )
-             return 0;
-          
-		
+		if (str == null || str.equals("") || str.equals("null"))
+			str = this.GetRequestVal("OID");
+
+		if (str == null || str.equals("") || str.equals("null"))
+			return 0;
+
 		return Integer.parseInt(str);
 	}
 
@@ -613,9 +596,9 @@ public abstract class WebContralBase extends BaseController {
 	}
 
 	public final boolean GetValBoolenFromFrmByKey(String key) {
-		String val = this.GetValFromFrmByKey(key,"0");
+		String val = this.GetValFromFrmByKey(key, "0");
 		if (val == "on" || val == "1")
-            return true;
+			return true;
 		if (val == null || val.equals("") || val.equals("0")) {
 			return false;
 		}
@@ -648,609 +631,459 @@ public abstract class WebContralBase extends BaseController {
 
 		return str;
 	}
-	 private long WorkID;
-	 public long getPWorkID()
-	 {
-		 
-		 return this.GetRequestValInt("PWorkID");
-	 }
- 
-	
-	 public final long getCWorkID()
-	 {
-		 return this.GetRequestValInt("CWorkID");
-	 }
-	
-	 ///#region 属性参数.
-			/** 
-			 @于庆海翻译.
-			 
-			*/
-			public String getPKVal()
-			{
-				String str= this.GetRequestVal("PKVal");
-				
-				if (DataType.IsNullOrEmpty(str)==true)
-				{
-					str = this.GetRequestVal("OID");
-				}
 
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					str = this.GetRequestVal("No");
-				}
+	private long WorkID;
 
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					str = this.GetRequestVal("MyPK");
-				}
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					str = this.GetRequestVal("NodeID");
-				}
+	public long getPWorkID() {
 
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					str = this.GetRequestVal("WorkID");
-				}
-				
+		return this.GetRequestValInt("PWorkID");
+	}
 
-                if ("null".equals(str) == true)
-                    return null;
-                
-				return str;
-			}
-	 
+	public final long getCWorkID() {
+		return this.GetRequestValInt("CWorkID");
+	}
+
+	/// #region 属性参数.
+	/**
+	 * @于庆海翻译.
+	 * 
+	 */
+	public String getPKVal() {
+		String str = this.GetRequestVal("PKVal");
+
+		if (DataType.IsNullOrEmpty(str) == true) {
+			str = this.GetRequestVal("OID");
+		}
+
+		if (DataType.IsNullOrEmpty(str) == true) {
+			str = this.GetRequestVal("No");
+		}
+
+		if (DataType.IsNullOrEmpty(str) == true) {
+			str = this.GetRequestVal("MyPK");
+		}
+		if (DataType.IsNullOrEmpty(str) == true) {
+			str = this.GetRequestVal("NodeID");
+		}
+
+		if (DataType.IsNullOrEmpty(str) == true) {
+			str = this.GetRequestVal("WorkID");
+		}
+
+		if ("null".equals(str) == true)
+			return null;
+
+		return str;
+	}
+
 	/// 是否是移动？
-     /// </summary>
-     public boolean getIsMobile()
-     {
-         String v = this.GetRequestVal("IsMobile");
-         if (v != null && v == "1")
-             return true;
+	/// </summary>
+	public boolean getIsMobile() {
+		String v = this.GetRequestVal("IsMobile");
+		if (v != null && v == "1")
+			return true;
 
- 		 if(Glo.getRequest().getRequestURI().contains("/CCMobile/"))
-             return true;
+		if (Glo.getRequest().getRequestURI().contains("/CCMobile/"))
+			return true;
 
-         return false;
-     }
-     
-     
-     protected String ExportDGToExcel(DataTable dt, Entity en, String title) throws Exception
-     {
-    	 
-    	for(DataRow dr:dt.Rows){
-    		
-    	}
- 		String fileName = title + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" +WebUser.getNo() + ".xls";
- 		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
- 		String filePth = BP.Sys.SystemConfig.getPathOfTemp();
- 		// 参数及变量设置
- 		// 如果导出目录没有建立，则建立.
- 		File file = new File(fileDir);
- 		if (!file.exists())
- 		{
- 			file.mkdirs();
- 		}
- 		
- 		filePth = filePth +"/"+ fileName;
- 		file = new File(filePth);
- 		if (file.exists())
- 		{
- 			file.delete();
- 		}
- 		
- 		// String httpFilePath =
- 		// Glo.getCCFlowAppPath()+"DataUser/Temp/"+fileName;
- 		int headerRowIndex = 0; //文件标题行序
-        int titleRowIndex = 1;  //列标题行序
-        int countCell =0;//显示的列数
- 		// 第一步，创建一个webbook，对应一个Excel文件
- 		HSSFWorkbook wb = new HSSFWorkbook();
- 		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
- 		HSSFSheet sheet = wb.createSheet(en.getEnMap().getPhysicsTable());
- 		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
- 		HSSFRow row = null;
- 		// 第四步，创建单元格，并设置值表头 设置表头居中
- 		HSSFCellStyle style = wb.createCellStyle();
- 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
- 		HSSFFont font = null;
-        HSSFDataFormat fmt = wb.createDataFormat();
- 		HSSFCell cell = null;
- 		
- 		// 生成标题
- 		Attrs attrs = en.getEnMap().getAttrs();
-        Attrs selectedAttrs = null;
-        UIConfig cfg = new UIConfig(en);
-        if (cfg.getShowColumns().length == 0)
-              selectedAttrs = attrs;
-	     else{
-             selectedAttrs = new Attrs();
+		return false;
+	}
 
-             for (Attr attr : attrs){
-            	 
-                 boolean contain = false;
+	protected String ExportDGToExcel(DataTable dt, Entity en, String title) throws Exception {
 
-                 for (String col : cfg.getShowColumns()){
-                     if (col == attr.getKey()){
-                         contain = true;
-                         break;
-                     }
-                 }
+		for (DataRow dr : dt.Rows) {
 
-              if (contain)
-                  selectedAttrs.Add(attr);
-               }
-	    }
-        row = sheet.createRow((int) titleRowIndex);
- 		int index = 0;// 控制列 qin 15.9.21
- 		for (int i = 0; i < selectedAttrs.size(); i++)
- 		{
- 			Attr attr = selectedAttrs.get(i);
+		}
+		String fileName = title + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getNo() + ".xls";
+		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
+		String filePth = BP.Sys.SystemConfig.getPathOfTemp();
+		// 参数及变量设置
+		// 如果导出目录没有建立，则建立.
+		File file = new File(fileDir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
 
- 			if (attr.getUIVisible() == false)
- 				continue;	
- 			
- 			if (attr.getKey() == "MyNum")
- 				continue;
- 			cell = row.createCell(index);
- 			cell.setCellStyle(style);
- 			cell.setCellValue(attr.getDesc());
- 			index += 1;
- 			countCell++;
- 		}
- 		 DataRow dr = null;
- 		 for (int i =2;i<=dt.Rows.size()+1;i++)
- 		{
- 			 dr = dt.Rows.get(i-2);
- 			row = sheet.createRow(i);
- 			// 生成文件内容
- 			index = 0;
- 			for (int j = 0; j < selectedAttrs.size(); j++)
- 			{
- 				Attr attr = selectedAttrs.get(j);
- 				
+		filePth = filePth + "/" + fileName;
+		file = new File(filePth);
+		if (file.exists()) {
+			file.delete();
+		}
+
+		// String httpFilePath =
+		// Glo.getCCFlowAppPath()+"DataUser/Temp/"+fileName;
+		int headerRowIndex = 0; // 文件标题行序
+		int titleRowIndex = 1; // 列标题行序
+		int countCell = 0;// 显示的列数
+		// 第一步，创建一个webbook，对应一个Excel文件
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+		HSSFSheet sheet = wb.createSheet(en.getEnMap().getPhysicsTable());
+		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+		HSSFRow row = null;
+		// 第四步，创建单元格，并设置值表头 设置表头居中
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+		HSSFFont font = null;
+		HSSFDataFormat fmt = wb.createDataFormat();
+		HSSFCell cell = null;
+
+		// 生成标题
+		Attrs attrs = en.getEnMap().getAttrs();
+		Attrs selectedAttrs = null;
+		UIConfig cfg = new UIConfig(en);
+		if (cfg.getShowColumns().length == 0)
+			selectedAttrs = attrs;
+		else {
+			selectedAttrs = new Attrs();
+
+			for (Attr attr : attrs) {
+
+				boolean contain = false;
+
+				for (String col : cfg.getShowColumns()) {
+					if (col == attr.getKey()) {
+						contain = true;
+						break;
+					}
+				}
+
+				if (contain)
+					selectedAttrs.Add(attr);
+			}
+		}
+		row = sheet.createRow((int) titleRowIndex);
+		int index = 0;// 控制列 qin 15.9.21
+		for (int i = 0; i < selectedAttrs.size(); i++) {
+			Attr attr = selectedAttrs.get(i);
+
+			if (attr.getUIVisible() == false)
+				continue;
+
+			if (attr.getKey() == "MyNum")
+				continue;
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue(attr.getDesc());
+			index += 1;
+			countCell++;
+		}
+		DataRow dr = null;
+		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
+			dr = dt.Rows.get(i - 2);
+			row = sheet.createRow(i);
+			// 生成文件内容
+			index = 0;
+			for (int j = 0; j < selectedAttrs.size(); j++) {
+				Attr attr = selectedAttrs.get(j);
+
 				if (attr.getUIVisible() == false)
 					continue;
- 				
- 				if (attr.getKey() == "MyNum")
- 					continue;
- 				String str="";
- 				if (attr.getMyDataType() == DataType.AppBoolean)
-                {	
- 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
- 						str = dr.get(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
- 					else
- 						str = dr.get(attr.getKey()).equals(1) ? "是" : "否";
-                }
-                else
-                {
-                	if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-                		str =  ""+dr.get((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
-                	else
-                		str =  ""+dr.get(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
 
-                }
- 				if (str == null || str.equals("") || str.equals("null") )
- 				{
- 					str = " ";
- 				}
- 				cell = row.createCell(index);
- 				cell.setCellStyle(style);
- 				cell.setCellValue(str);
- 				index += 1;
- 			}
- 			
- 		}
- 		 
- 		//列标题单元格样式设定
-         HSSFCellStyle titleStyle = wb.createCellStyle();
-    /*     titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-         titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-         titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-         titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);*/
-         titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-         titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-         font = wb.createFont();
-         font.setBold(true);
-         titleStyle.setFont(font);
-         row = sheet.createRow((int) 0);
-         sheet.addMergedRegion(new Region(headerRowIndex, (short)headerRowIndex, 0,
-                 (short)(countCell - 1)));
-         cell=row.createCell(headerRowIndex);
-         cell.setCellValue(title);
-         cell.setCellStyle(titleStyle);
- 		 
- 		//生成制单人
-         //制表人单元格样式设定
-         HSSFCellStyle userStyle = wb.createCellStyle();
-         userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-         userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-         int creatorRowIndex= titleRowIndex + dt.Rows.size() + 1;
-         
-         row = sheet.createRow((int) creatorRowIndex);
-         
-         sheet.addMergedRegion(new Region(creatorRowIndex, (short)0, creatorRowIndex,
-                 (short)(countCell - 1)));
- 		cell = row.createCell(0);
- 		cell.setCellValue("制表人：" + WebUser.getName() +  "日期：" + BP.DA.DataType.getCurrentDataTimeCNOfShort());
- 		cell.setCellStyle(userStyle);
- 		// 第六步，将文件存到指定位置
- 		try
- 		{
- 			FileOutputStream fout = new FileOutputStream(filePth);
- 			wb.write(fout);
- 			fout.flush();
- 			fout.close();
- 			return "/DataUser/Temp/"+fileName;
- 		} catch (Exception e)
- 		{
- 			e.printStackTrace();
- 			return fileName;
- 		}
- 		
- 		
-        
-     }
-     
-     
-    /* public static String DataTableToExcel(DataTable dt, String filename, String header,
-             String creator, boolean date, boolean index, boolean download)
-         {
+				if (attr.getKey() == "MyNum")
+					continue;
+				String str = "";
+				if (attr.getMyDataType() == DataType.AppBoolean) {
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+						str = dr.get(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
+					else
+						str = dr.get(attr.getKey()).equals(1) ? "是" : "否";
+				} else {
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+						str = "" + dr
+								.get((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
+					else
+						str = "" + dr.get(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
 
-             String file = BP.Sys.SystemConfig.getPathOfTemp() + filename;
+				}
+				if (str == null || str.equals("") || str.equals("null")) {
+					str = " ";
+				}
+				cell = row.createCell(index);
+				cell.setCellStyle(style);
+				cell.setCellValue(str);
+				index += 1;
+			}
 
-             String dir = BP.Sys.SystemConfig.getPathOfTemp();
-             String name = filename;
-             long len = 0;
-             HSSFRow  row = null, headerRow = null, dateRow = null, sumRow = null, creatorRow = null;
-             HSSFCell cell = null;
-             int r = 0;
-             int c = 0;
-             int headerRowIndex = 0; //文件标题行序
-             int dateRowIndex = 0;   //日期行序
-             int titleRowIndex = 0;  //列标题行序
-             int sumRowIndex = 0;    //合计行序
-             int creatorRowIndex = 0;    //创建人行序
-             float DEF_ROW_HEIGHT = 20;  //默认行高
-             float charWidth = 0;    //单个字符宽度
-             int columnWidth = 0;    //列宽，像素
-             boolean isDate;    //是否是日期格式，否则是日期时间格式
-             int decimalPlaces = 2;  //小数位数
-             boolean qian;  //是否使用千位分隔符
-             ArrayList sumColumns = new ArrayList(); //合计列序号集合
-             File files = new File(dir);
-             if (files.exists() == false)
-                 files.mkdirs();
-             
+		}
 
-/*             //一个字符的像素宽度，以Arial，10磅，i进行测算
-             Bitmap bmp = new Bitmap(10, 10);
-             using ()
-             {
-                 using (Graphics g = Graphics.FromImage(bmp))
-                 {
-                     charWidth = g.MeasureString("i", new Font("Arial", 10)).Width;
-                 }
-             }*/
-             //序
-             /*if (index && dt.Columns.contains("序") == false)
-             {
-                 dt.Columns.Add("序").ExtendedProperties.Add("width", 50);
-                 dt.Columns.get("序").setOrdinal(0);
+		// 列标题单元格样式设定
+		HSSFCellStyle titleStyle = wb.createCellStyle();
+		/*
+		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
+		 */
+		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		font = wb.createFont();
+		font.setBold(true);
+		titleStyle.setFont(font);
+		row = sheet.createRow((int) 0);
+		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+		cell = row.createCell(headerRowIndex);
+		cell.setCellValue(title);
+		cell.setCellStyle(titleStyle);
 
-                 for (int i = 0; i < dt.Rows.size(); i++)
-                     dt.Rows.get(i).setValue("序", i + 1);
-             }
-             //合计列
-             for (DataColumn col : dt.Columns)
-             {
-                 if (col.ExtendedProperties.ContainsKey("sum") == false)
-                     continue;
+		// 生成制单人
+		// 制表人单元格样式设定
+		HSSFCellStyle userStyle = wb.createCellStyle();
+		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
 
-                 sumColumns.add(col.getOrdinal());
-             }
+		row = sheet.createRow((int) creatorRowIndex);
 
-             headerRowIndex = StringHelper.isNullOrEmpty(header) ? -1 : 0;
-             dateRowIndex = date ? (headerRowIndex + 1) : -1;
-             titleRowIndex = date
-                                         ? dateRowIndex + 1
-                                         : headerRowIndex == -1 ? 0 : 1;
-             sumRowIndex = sumColumns.size() == 0 ? -1 : titleRowIndex + dt.Rows.size() + 1;
-             creatorRowIndex = StringHelper.isNullOrEmpty(creator)
-                                   ? -1
-                                   : sumRowIndex == -1 ? titleRowIndex + dt.Rows.size() + 1 : sumRowIndex + 1;
-             
-             FileInputStream fs = new FileInputStream(file);
-             HSSFWorkbook wb = new HSSFWorkbook();
-             HSSFSheet  sheet = wb.createSheet("Sheet1");
-             sheet.setDefaultRowHeightInPoints(DEF_ROW_HEIGHT); 
-             HSSFFont font = null;
-             HSSFDataFormat fmt = wb.createDataFormat();
+		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+		cell = row.createCell(0);
+		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + BP.DA.DataType.getCurrentDataTimeCNOfShort());
+		cell.setCellStyle(userStyle);
+		// 第六步，将文件存到指定位置
+		try {
+			FileOutputStream fout = new FileOutputStream(filePth);
+			wb.write(fout);
+			fout.flush();
+			fout.close();
+			return "/DataUser/Temp/" + fileName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return fileName;
+		}
 
-             if (headerRowIndex != -1)
-                 headerRow = sheet.createRow(headerRowIndex);
-             if (date)
-                 dateRow = sheet.createRow(dateRowIndex);
-             if (sumRowIndex != -1)
-                 sumRow = sheet.createRow(sumRowIndex);
-             if (creatorRowIndex != -1)
-                 creatorRow = sheet.createRow(creatorRowIndex);
+	}
 
-             ///#region 单元格样式定义
-             //列标题单元格样式设定
-             HSSFCellStyle titleStyle = wb.createCellStyle();
-             titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-             titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-             titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-             titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-             titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-             font = wb.createFont();
-             font.setBold(true);
-             titleStyle.setFont(font);
+	/*
+	 * public static String DataTableToExcel(DataTable dt, String filename,
+	 * String header, String creator, boolean date, boolean index, boolean
+	 * download) {
+	 * 
+	 * String file = BP.Sys.SystemConfig.getPathOfTemp() + filename;
+	 * 
+	 * String dir = BP.Sys.SystemConfig.getPathOfTemp(); String name = filename;
+	 * long len = 0; HSSFRow row = null, headerRow = null, dateRow = null,
+	 * sumRow = null, creatorRow = null; HSSFCell cell = null; int r = 0; int c
+	 * = 0; int headerRowIndex = 0; //文件标题行序 int dateRowIndex = 0; //日期行序 int
+	 * titleRowIndex = 0; //列标题行序 int sumRowIndex = 0; //合计行序 int
+	 * creatorRowIndex = 0; //创建人行序 float DEF_ROW_HEIGHT = 20; //默认行高 float
+	 * charWidth = 0; //单个字符宽度 int columnWidth = 0; //列宽，像素 boolean isDate;
+	 * //是否是日期格式，否则是日期时间格式 int decimalPlaces = 2; //小数位数 boolean qian;
+	 * //是否使用千位分隔符 ArrayList sumColumns = new ArrayList(); //合计列序号集合 File files
+	 * = new File(dir); if (files.exists() == false) files.mkdirs();
+	 * 
+	 * 
+	 * /* //一个字符的像素宽度，以Arial，10磅，i进行测算 Bitmap bmp = new Bitmap(10, 10); using ()
+	 * { using (Graphics g = Graphics.FromImage(bmp)) { charWidth =
+	 * g.MeasureString("i", new Font("Arial", 10)).Width; } }
+	 */
+	// 序
+	/*
+	 * if (index && dt.Columns.contains("序") == false) {
+	 * dt.Columns.Add("序").ExtendedProperties.Add("width", 50);
+	 * dt.Columns.get("序").setOrdinal(0);
+	 * 
+	 * for (int i = 0; i < dt.Rows.size(); i++) dt.Rows.get(i).setValue("序", i +
+	 * 1); } //合计列 for (DataColumn col : dt.Columns) { if
+	 * (col.ExtendedProperties.ContainsKey("sum") == false) continue;
+	 * 
+	 * sumColumns.add(col.getOrdinal()); }
+	 * 
+	 * headerRowIndex = StringHelper.isNullOrEmpty(header) ? -1 : 0;
+	 * dateRowIndex = date ? (headerRowIndex + 1) : -1; titleRowIndex = date ?
+	 * dateRowIndex + 1 : headerRowIndex == -1 ? 0 : 1; sumRowIndex =
+	 * sumColumns.size() == 0 ? -1 : titleRowIndex + dt.Rows.size() + 1;
+	 * creatorRowIndex = StringHelper.isNullOrEmpty(creator) ? -1 : sumRowIndex
+	 * == -1 ? titleRowIndex + dt.Rows.size() + 1 : sumRowIndex + 1;
+	 * 
+	 * FileInputStream fs = new FileInputStream(file); HSSFWorkbook wb = new
+	 * HSSFWorkbook(); HSSFSheet sheet = wb.createSheet("Sheet1");
+	 * sheet.setDefaultRowHeightInPoints(DEF_ROW_HEIGHT); HSSFFont font = null;
+	 * HSSFDataFormat fmt = wb.createDataFormat();
+	 * 
+	 * if (headerRowIndex != -1) headerRow = sheet.createRow(headerRowIndex); if
+	 * (date) dateRow = sheet.createRow(dateRowIndex); if (sumRowIndex != -1)
+	 * sumRow = sheet.createRow(sumRowIndex); if (creatorRowIndex != -1)
+	 * creatorRow = sheet.createRow(creatorRowIndex);
+	 * 
+	 * ///#region 单元格样式定义 //列标题单元格样式设定 HSSFCellStyle titleStyle =
+	 * wb.createCellStyle();
+	 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
+	 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
+	 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
+	 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
+	 * titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER); font =
+	 * wb.createFont(); font.setBold(true); titleStyle.setFont(font);
+	 * 
+	 * //“序”列标题样式设定 HSSFCellStyle idxTitleStyle = wb.createCellStyle();
+	 * idxTitleStyle.cloneStyleFrom(titleStyle);
+	 * idxTitleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	 * 
+	 * //文件标题单元格样式设定 HSSFCellStyle headerStyle = wb.createCellStyle();
+	 * headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	 * headerStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER); font =
+	 * wb.createFont(); font.setFontHeightInPoints((short)12);
+	 * font.setBold(true); headerStyle.setFont(font);
+	 * 
+	 * //制表人单元格样式设定 HSSFCellStyle userStyle = wb.createCellStyle();
+	 * userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+	 * userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+	 * 
+	 * //单元格样式设定 HSSFCellStyle cellStyle = wb.createCellStyle();
+	 * cellStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
+	 * cellStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
+	 * cellStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
+	 * cellStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
+	 * cellStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+	 * 
+	 * //数字单元格样式设定 HSSFCellStyle numCellStyle = wb.createCellStyle();
+	 * numCellStyle.cloneStyleFrom(cellStyle);
+	 * numCellStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+	 * 
+	 * //“序”列单元格样式设定 HSSFCellStyle idxCellStyle = wb.createCellStyle();
+	 * idxCellStyle.cloneStyleFrom(cellStyle);
+	 * idxCellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	 * 
+	 * //日期单元格样式设定 HSSFCellStyle dateCellStyle = wb.createCellStyle();
+	 * dateCellStyle.cloneStyleFrom(cellStyle);
+	 * dateCellStyle.setDataFormat(fmt.getFormat("yyyy-m-d;@"));
+	 * 
+	 * //日期时间单元格样式设定 HSSFCellStyle timeCellStyle = wb.createCellStyle();
+	 * timeCellStyle.cloneStyleFrom(cellStyle);
+	 * timeCellStyle.setDataFormat(fmt.getFormat("yyyy-m-d h:mm;@"));
+	 * 
+	 * //千分位单元格样式设定 HSSFCellStyle qCellStyle = wb.createCellStyle();
+	 * qCellStyle.cloneStyleFrom(cellStyle);
+	 * qCellStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+	 * qCellStyle.setDataFormat(fmt.getFormat("#,##0_ ;@"));
+	 * 
+	 * //小数点、千分位单元格样式设定 Dictionary<String, HSSFCellStyle> cstyles = new
+	 * Dictionary<String, HSSFCellStyle>(); HSSFCellStyle cstyle = null;
+	 * ///#endregion
+	 * 
+	 * //输出列标题 row = sheet.createRow(titleRowIndex);
+	 * row.setHeightInPoints(DEF_ROW_HEIGHT);
+	 * 
+	 * for (DataColumn col : dt.Columns) { cell = row.createCell(c++);
+	 * cell.setCellValue(col.ColumnName); cell.setCellStyle(col.ColumnName ==
+	 * "序" ? idxTitleStyle : titleStyle);
+	 * 
+	 * columnWidth = col.ExtendedProperties.ContainsKey("width") ?
+	 * ((Integer)col.ExtendedProperties.get("width")).intValue() : 100;
+	 * sheet.setColumnWidth(c - 1, (int)(Math.ceil(columnWidth / charWidth) +
+	 * 0.72) * 256);
+	 * 
+	 * if (headerRow != null) headerRow.createCell(c - 1); if (dateRow != null)
+	 * dateRow.createCell(c - 1); if (sumRow != null) sumRow.createCell(c - 1);
+	 * if (creatorRow != null) creatorRow.createCell(c - 1);
+	 * 
+	 * //定义数字列单元格样式 switch (col.DataType.Name) { case "Single": case "Double":
+	 * case "Decimal": decimalPlaces =
+	 * col.ExtendedProperties.ContainsKey("dots") ?
+	 * ((Integer)col.ExtendedProperties.get("dots")).intValue() : 2; qian =
+	 * col.ExtendedProperties.ContainsKey("k") ?
+	 * (Boolean)col.ExtendedProperties.get("k") : false;
+	 * 
+	 * if (decimalPlaces > 0 && !qian) { cstyle = wb.createCellStyle();
+	 * cstyle.cloneStyleFrom(qCellStyle);
+	 * cstyle.setDataFormat(fmt.getFormat("0." +
+	 * StringHelper.padLeft(decimalPlaces, '0') + "_ ;@")); } else if
+	 * (decimalPlaces == 0 && qian) { cstyle = wb.createCellStyle();
+	 * cstyle.cloneStyleFrom(qCellStyle); } else if (decimalPlaces > 0 && qian)
+	 * { cstyle = wb.createCellStyle(); cstyle.cloneStyleFrom(qCellStyle);
+	 * cstyle.setDataFormat(fmt.GetFormat("#,##0." +
+	 * StringHelper.padLeft(decimalPlaces, '0') + "_ ;@")); }
+	 * 
+	 * cstyles.put(col.ColumnName, cstyle); break; default: break; }
+	 * 
+	 * //输出文件标题 if (headerRow != null) { sheet.addMergedRegion(new
+	 * Region(headerRowIndex, (short)headerRowIndex, 0,
+	 * (short)(dt.Columns.size() - 1))); cell = headerRow.getCell(0);
+	 * cell.setCellValue(header); cell.setCellStyle(headerStyle);
+	 * headerRow.setHeightInPoints(26); } //输出日期 if (dateRow != null) {
+	 * sheet.addMergedRegion(new Region(dateRowIndex, (short)dateRowIndex, 0,
+	 * (short)( dt.Columns.size() - 1))); cell = dateRow.getCell(0);
+	 * cell.SetCellValue("日期：" + DateTime.Today.ToString("yyyy-MM-dd"));
+	 * cell.setCellStyle(userStyle); dateRow.setHeightInPoints(DEF_ROW_HEIGHT);
+	 * } //输出制表人 if (creatorRow != null) { sheet.addMergedRegion(new
+	 * Region(creatorRowIndex, (short)creatorRowIndex, 0,
+	 * (short)(dt.Columns.size() - 1))); cell = creatorRow.getCell(0);
+	 * cell.setCellValue("制表人：" + creator); cell.setCellStyle(userStyle);
+	 * creatorRow.setHeightInPoints(DEF_ROW_HEIGHT); }
+	 * 
+	 * r = titleRowIndex + 1; //输出查询结果 for (DataRow dr : dt.Rows) { row =
+	 * sheet.createRow(r++); row.setHeightInPoints(DEF_ROW_HEIGHT); c = 0;
+	 * 
+	 * for(DataColumn col: dt.Columns) { cell = row.createCell(c++);
+	 * 
+	 * switch (col.DataType.Name) { case "Boolean":
+	 * cell.setCellStyle(cellStyle);
+	 * cell.setCellValue(dr.get(col.ColumnName).equals(true) ? "是" : "否");
+	 * break; case "DateTime": isDate =
+	 * col.ExtendedProperties.ContainsKey("isdate") ?
+	 * (Boolean)col.ExtendedProperties.get("isdate") : false;
+	 * 
+	 * cell.setCellStyle(isDate ? dateCellStyle : timeCellStyle);
+	 * cell.setCellValue(String.valueOf(dr.get(col.ColumnName))); break; case
+	 * "Int16": case "Int32": case "Int64": qian =
+	 * col.ExtendedProperties.ContainsKey("k") ?
+	 * (Boolean)col.ExtendedProperties.get("k") : false;
+	 * 
+	 * cell.setCellStyle(col.ColumnName == "序" ? idxCellStyle : qian ?
+	 * qCellStyle : numCellStyle);
+	 * cell.setCellValue(((Long)dr.get(col.ColumnName))); break; case "Single":
+	 * case "Double": case "Decimal":
+	 * cell.setCellStyle(cstyles.get(col.ColumnName));
+	 * cell.setCellValue(((Double)dr.get(col.ColumnName))); break; default:
+	 * cell.setCellStyle(cellStyle);
+	 * cell.setCellValue(String.valueOf(dr.get(col.ColumnName))); break; } } }
+	 * //合计 if (sumRow != null) { sumRow.setHeightInPoints(DEF_ROW_HEIGHT);
+	 * 
+	 * for (c = 0; c < dt.Columns.size(); c++) { cell = sumRow.getCell(c);
+	 * cell.setCellStyle(cellStyle);
+	 * 
+	 * if (sumColumns.contains(c) == false) continue;
+	 * 
+	 * cell.SetCellFormula(string.Format("SUM({0}:{1})", GetCellName(c,
+	 * titleRowIndex + 1), GetCellName(c, titleRowIndex + dt.Rows.size()))); } }
+	 * 
+	 * wb.write(fs); len = fs; }
+	 * 
+	 * 
+	 * return null; }
+	 */
 
-             //“序”列标题样式设定
-             HSSFCellStyle idxTitleStyle = wb.createCellStyle();
-             idxTitleStyle.cloneStyleFrom(titleStyle);
-             idxTitleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	/// <summary>
+	/// 获取单元格的显示名称，格式如A1,B2
+	/// </summary>
+	/// <param name="columnIdx">单元格列号</param>
+	/// <param name="rowIdx">单元格行号</param>
+	/// <returns></returns>
+	public static String GetCellName(int columnIdx, int rowIdx) {
+		int[] maxs = new int[] { 26, 26 * 26 + 26, 26 * 26 * 26 + (26 * 26 + 26) + 26 };
+		int col = columnIdx + 1;
+		int row = rowIdx + 1;
 
-             //文件标题单元格样式设定
-             HSSFCellStyle headerStyle = wb.createCellStyle();
-             headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-             headerStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-             font = wb.createFont();
-             font.setFontHeightInPoints((short)12);
-             font.setBold(true);
-             headerStyle.setFont(font);
+		if (col > maxs[2])
 
-             //制表人单元格样式设定
-             HSSFCellStyle userStyle = wb.createCellStyle();
-             userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-             userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-
-             //单元格样式设定
-             HSSFCellStyle cellStyle = wb.createCellStyle();
-             cellStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-             cellStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-             cellStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-             cellStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-             cellStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-
-             //数字单元格样式设定
-             HSSFCellStyle numCellStyle = wb.createCellStyle();
-             numCellStyle.cloneStyleFrom(cellStyle);
-             numCellStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-
-             //“序”列单元格样式设定
-             HSSFCellStyle idxCellStyle = wb.createCellStyle();
-             idxCellStyle.cloneStyleFrom(cellStyle);
-             idxCellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-
-             //日期单元格样式设定
-             HSSFCellStyle dateCellStyle = wb.createCellStyle();
-             dateCellStyle.cloneStyleFrom(cellStyle);
-             dateCellStyle.setDataFormat(fmt.getFormat("yyyy-m-d;@"));
-
-             //日期时间单元格样式设定
-             HSSFCellStyle timeCellStyle = wb.createCellStyle();
-             timeCellStyle.cloneStyleFrom(cellStyle);
-             timeCellStyle.setDataFormat(fmt.getFormat("yyyy-m-d h:mm;@"));
-
-             //千分位单元格样式设定
-             HSSFCellStyle qCellStyle = wb.createCellStyle();
-             qCellStyle.cloneStyleFrom(cellStyle);
-             qCellStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-             qCellStyle.setDataFormat(fmt.getFormat("#,##0_ ;@"));
-
-             //小数点、千分位单元格样式设定
-             Dictionary<String, HSSFCellStyle> cstyles = new Dictionary<String, HSSFCellStyle>();
-             HSSFCellStyle cstyle = null;
-             ///#endregion
-
-             //输出列标题
-             row = sheet.createRow(titleRowIndex);
-             row.setHeightInPoints(DEF_ROW_HEIGHT);
-
-             for (DataColumn col : dt.Columns)
-             {
-                 cell = row.createCell(c++);
-                 cell.setCellValue(col.ColumnName);
-                 cell.setCellStyle(col.ColumnName == "序" ? idxTitleStyle : titleStyle);
-
-                 columnWidth = col.ExtendedProperties.ContainsKey("width")
-                                   ? ((Integer)col.ExtendedProperties.get("width")).intValue()
-                                   : 100;
-                 sheet.setColumnWidth(c - 1, (int)(Math.ceil(columnWidth / charWidth) + 0.72) * 256);
-
-                 if (headerRow != null)
-                     headerRow.createCell(c - 1);
-                 if (dateRow != null)
-                     dateRow.createCell(c - 1);
-                 if (sumRow != null)
-                     sumRow.createCell(c - 1);
-                 if (creatorRow != null)
-                     creatorRow.createCell(c - 1);
-
-                 //定义数字列单元格样式
-                 switch (col.DataType.Name)
-                 {
-                     case "Single":
-                     case "Double":
-                     case "Decimal":
-                         decimalPlaces = col.ExtendedProperties.ContainsKey("dots")
-                                             ? ((Integer)col.ExtendedProperties.get("dots")).intValue()
-                                             : 2;
-                         qian = col.ExtendedProperties.ContainsKey("k")
-                                    ? (Boolean)col.ExtendedProperties.get("k")
-                                    : false;
-
-                         if (decimalPlaces > 0 && !qian)
-                         {
-                             cstyle = wb.createCellStyle();
-                             cstyle.cloneStyleFrom(qCellStyle);
-                             cstyle.setDataFormat(fmt.getFormat("0." + StringHelper.padLeft(decimalPlaces, '0') + "_ ;@"));
-                         }
-                         else if (decimalPlaces == 0 && qian)
-                         {
-                             cstyle = wb.createCellStyle();
-                             cstyle.cloneStyleFrom(qCellStyle);
-                         }
-                         else if (decimalPlaces > 0 && qian)
-                         {
-                             cstyle = wb.createCellStyle();
-                             cstyle.cloneStyleFrom(qCellStyle);
-                             cstyle.setDataFormat(fmt.GetFormat("#,##0." + StringHelper.padLeft(decimalPlaces, '0') + "_ ;@"));
-                         }
-
-                         cstyles.put(col.ColumnName, cstyle);
-                         break;
-                     default:
-                         break;
-                 }
-                 
-                 //输出文件标题
-                 if (headerRow != null)
-                 {
-                     sheet.addMergedRegion(new Region(headerRowIndex, (short)headerRowIndex, 0,
-                                                                             (short)(dt.Columns.size() - 1)));
-                     cell = headerRow.getCell(0);
-                     cell.setCellValue(header);
-                     cell.setCellStyle(headerStyle);
-                     headerRow.setHeightInPoints(26);
-                 }
-                 //输出日期
-                 if (dateRow != null)
-                 {
-                     sheet.addMergedRegion(new Region(dateRowIndex, (short)dateRowIndex, 0,
-                                                                            (short)( dt.Columns.size() - 1)));
-                     cell = dateRow.getCell(0);
-                     cell.SetCellValue("日期：" + DateTime.Today.ToString("yyyy-MM-dd"));
-                     cell.setCellStyle(userStyle);
-                     dateRow.setHeightInPoints(DEF_ROW_HEIGHT);
-                 }
-                 //输出制表人
-                 if (creatorRow != null)
-                 {
-                     sheet.addMergedRegion(new Region(creatorRowIndex, (short)creatorRowIndex, 0,
-                                                                             (short)(dt.Columns.size() - 1)));
-                     cell = creatorRow.getCell(0);
-                     cell.setCellValue("制表人：" + creator);
-                     cell.setCellStyle(userStyle);
-                     creatorRow.setHeightInPoints(DEF_ROW_HEIGHT);
-                 }
-
-                 r = titleRowIndex + 1;
-                 //输出查询结果
-                 for (DataRow dr : dt.Rows)
-                 {
-                     row = sheet.createRow(r++);
-                     row.setHeightInPoints(DEF_ROW_HEIGHT);
-                     c = 0;
-
-                     for(DataColumn col: dt.Columns)
-                     {
-                         cell = row.createCell(c++);
-
-                         switch (col.DataType.Name)
-                         {
-                             case "Boolean":
-                                 cell.setCellStyle(cellStyle);
-                                 cell.setCellValue(dr.get(col.ColumnName).equals(true) ? "是" : "否");
-                                 break;
-                             case "DateTime":
-                                 isDate = col.ExtendedProperties.ContainsKey("isdate")
-                                              ? (Boolean)col.ExtendedProperties.get("isdate")
-                                              : false;
-
-                                 cell.setCellStyle(isDate ? dateCellStyle : timeCellStyle);
-                                 cell.setCellValue(String.valueOf(dr.get(col.ColumnName)));
-                                 break;
-                             case "Int16":
-                             case "Int32":
-                             case "Int64":
-                                 qian = col.ExtendedProperties.ContainsKey("k")
-                                                ? (Boolean)col.ExtendedProperties.get("k")
-                                                : false;
-
-                                 cell.setCellStyle(col.ColumnName == "序"
-                                                      ? idxCellStyle
-                                                      : qian ? qCellStyle : numCellStyle);
-                                 cell.setCellValue(((Long)dr.get(col.ColumnName)));
-                                 break;
-                             case "Single":
-                             case "Double":
-                             case "Decimal":
-                                 cell.setCellStyle(cstyles.get(col.ColumnName));
-                                 cell.setCellValue(((Double)dr.get(col.ColumnName)));
-                                 break;
-                             default:
-                                 cell.setCellStyle(cellStyle);
-                                 cell.setCellValue(String.valueOf(dr.get(col.ColumnName)));
-                                 break;
-                         }
-                     }
-                 }
-                 //合计
-                 if (sumRow != null)
-                 {
-                     sumRow.setHeightInPoints(DEF_ROW_HEIGHT);
-
-                     for (c = 0; c < dt.Columns.size(); c++)
-                     {
-                         cell = sumRow.getCell(c);
-                         cell.setCellStyle(cellStyle);
-
-                         if (sumColumns.contains(c) == false)
-                             continue;
-
-                         cell.SetCellFormula(string.Format("SUM({0}:{1})",
-                                                           GetCellName(c, titleRowIndex + 1),
-                                                           GetCellName(c, titleRowIndex + dt.Rows.size())));
-                     }
-                 }
-
-                 wb.write(fs);
-                 len = fs;
-             }
-
-
-             return null; 
-         }*/
-
-         /// <summary>
-         /// 获取单元格的显示名称，格式如A1,B2
-         /// </summary>
-         /// <param name="columnIdx">单元格列号</param>
-         /// <param name="rowIdx">单元格行号</param>
-         /// <returns></returns>
-         public static String GetCellName(int columnIdx,int rowIdx){
-             int[] maxs = new int[]{ 26, 26 * 26 + 26, 26 * 26 * 26 + (26 * 26 + 26) + 26 };
-             int col = columnIdx + 1;
-             int row = rowIdx + 1;
-
-             if (col > maxs[2])
-				
 			return "列序号不正确，超出最大值";
 
+		int alphaCount = 1;
 
-             int alphaCount = 1;
+		for (int m : maxs) {
+			if (m < col)
+				alphaCount++;
+		}
 
-             for(int m : maxs)
-             {
-                 if (m < col)
-                     alphaCount++;
-             }
+		switch (alphaCount) {
+		case 1:
+			return (char) (col + 64) + "" + row;
+		case 2:
+			return (char) ((col / 26) + 64) + "" + (char) ((col % 26) + 64) + row;
+		case 3:
+			return (char) ((col / 26 / 26) + 64) + "" + (char) (((col - col / 26 / 26 * 26 * 26) / 26) + 64) + ""
+					+ (char) ((col % 26) + 64) + row;
+		}
 
-             switch (alphaCount)
-             {
-                 case 1:
-                     return (char)(col + 64) + "" + row;
-                 case 2:
-                     return (char)((col / 26) + 64) + "" + (char)((col % 26) + 64) + row;
-                 case 3:
-                     return (char)((col / 26 / 26) + 64) + "" + (char)(((col - col / 26 / 26 * 26 * 26) / 26) + 64) + "" + (char)((col % 26) + 64) + row;
-             }
-
-             return "Unkown";
-         }
+		return "Unkown";
+	}
 }

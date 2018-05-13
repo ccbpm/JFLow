@@ -285,7 +285,8 @@ public class CCFlowAPI {
 					mapAttr.Rows.AddRow(dr);
 				}
 
-				// 计算累加的 从表字段集合.
+				/*
+				//计算累加的 从表字段集合.
 				MapDtls dtls = new MapDtls();
 				qo = new QueryObject(dtls);
 				qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
@@ -299,7 +300,7 @@ public class CCFlowAPI {
 					dr.setValue(MapDtlAttr.IsInsert, 0);
 					dr.setValue(MapDtlAttr.IsUpdate, 0);
 					mdtls.Rows.AddRow(dr);
-				}
+				}*/
 
 				/*
 				// 计算累加的 附件集合.

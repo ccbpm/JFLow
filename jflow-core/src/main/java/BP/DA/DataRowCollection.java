@@ -38,17 +38,19 @@ public class DataRowCollection extends ArrayList<DataRow>
 		return this.Table;
 	}
 	
-	public DataRow AddRow(Object vals)
+	public DataRow AddRow(DataRow vals)
 	{
 		return AddRow(vals,-1);
 	}
+	 
 	
-	public DataRow AddRow(Object vals, int idx){
+	public DataRow AddRow(DataRow vals, int idx){
 		
 		if (vals==null)
 			return null;
 		 
-		DataRow row = new DataRow(Table);		 
+		DataRow row = new DataRow(Table);
+		
 		Map ap=   ((Map<String, Object>) vals);
 		
 		for(DataColumn dc : Table.Columns)
@@ -69,14 +71,7 @@ public class DataRowCollection extends ArrayList<DataRow>
 			}
 			 
 			 row.setValue(key, valStr);
-			 continue;
 			 
-            /*
-			Object obj=ap.get(key);			
-		    if (obj==null)
-		       row.put(key, "");
-		    else
-		      row.put(key, obj); */
 		}
        
 		if (idx==-1)

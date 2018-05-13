@@ -285,7 +285,8 @@ public class CCFlowAPI {
 						continue;
 
 					dr.setValue(MapAttrAttr.UIIsEnable, 0); // 把字段设置为只读的.
-					mapAttr.Rows.add(dr);
+				//	mapAttr.Rows.add(dr);					 
+					mapAttr.Rows.AddRow(dr);
 				}
 
 				/*

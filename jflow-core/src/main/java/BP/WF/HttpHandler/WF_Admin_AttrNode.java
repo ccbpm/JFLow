@@ -460,7 +460,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 							{
 								if (IsExistInDataRowArray(dtGroups.Rows, GroupFieldAttr.OID, dr.get(MapAttrAttr.GroupID)) == false)
 								{
-									dtNoGroupAttrs.Rows.AddRow(dr.ItemArray);
+									dtNoGroupAttrs.Rows.AddRow(dr);
 								}
 							}
 			//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

@@ -921,7 +921,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 
 			newRootRow.setValue("PARENTNO", "F0");
 			DataTable newDt = dt.clone();
-			newDt.Rows.AddRow(newRootRow.ItemArray);
+			newDt.Rows.AddRow(newRootRow);
 			if(newRootRow.size()!=0 && !aemp.getRootOfFlow().equals("99"))
 				newDt.Rows.remove(dt.select("NAME='流程树'").get(0));
 
@@ -937,7 +937,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		 List<DataRow> rows = dt.select("PARENTNO='" + parentRow.getValue("NO") + "'");
 		for(DataRow r : rows)
 		{
-			newDt.Rows.AddRow(r.ItemArray);
+			newDt.Rows.AddRow(r);
 
 			GenerChildRows(dt, newDt, r);
 		}
@@ -948,7 +948,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		 List<DataRow> rows = dt.select("ParentNo='" + parentRow.getValue("No") + "'");
 		for(DataRow r : rows)
 		{
-			newDt.Rows.AddRow(r.ItemArray);
+			newDt.Rows.AddRow(r);
 
 			GenerChildRowsX(dt, newDt, r);
 		}

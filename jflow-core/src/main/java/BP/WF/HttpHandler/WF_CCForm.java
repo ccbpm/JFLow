@@ -1706,7 +1706,12 @@ public class WF_CCForm extends WebContralBase {
 			DataTable dtCount = new DataTable("DTCout");
 			dtCount.TableName = "DTCout";
 			dtCount.Columns.Add("Count", Integer.class);
-			dtCount.Rows.AddRow(new String[] { count });
+			
+			DataRow dr= dtCount.NewRow();
+			dr.setValue(0, count);			
+			dtCount.Rows.AddRow(dr);
+			
+			
 			ds.Tables.add(dtCount);
 
 			// 处理查询条件.

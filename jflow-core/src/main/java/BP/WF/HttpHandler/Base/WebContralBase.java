@@ -177,9 +177,13 @@ public abstract class WebContralBase extends BaseController {
 			
 			String msg = e.getMessage();
 			
+			if (msg ==null )
+				msg =e.getStackTrace().toString();
+			
+			
 			if (e.getCause()!=null)
 			{
-				msg= e.getCause().getMessage();
+				msg+= e.getCause().getMessage();
 			}
 			
 			

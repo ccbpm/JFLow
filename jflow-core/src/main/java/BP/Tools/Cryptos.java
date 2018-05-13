@@ -171,11 +171,10 @@ public class Cryptos {
 	 * @throws Exception
 	 */
 	public static String aesDecrypt(String input) throws Exception {
-		try {
-			return new String(aesDecrypt(Encodes.decodeHex(input), DEFAULT_KEY), DEFAULT_URL_ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			return "";
-		}
+		 
+		return new String(aesDecrypt(Encodes.decodeHex(input), DEFAULT_KEY),
+					DEFAULT_URL_ENCODING);
+		 
 	}
 
 	/**

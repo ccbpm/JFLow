@@ -408,36 +408,18 @@ public class Glo
      /// <returns>返回解密后的字符串</returns>
      public static String String_JieMi(String str) throws Exception
      {
-    	 
-    	 //AesEncodeUtil  en=new AesEncodeUtil(str);
-    	// retrn
-
          //南京宝旺达.
-         if (SystemConfig.getCustomerNo().equals("BWDA"))
-         {
+         if (SystemConfig.getCustomerNo().equals("BWDA"))         
              return Cryptos.aesDecrypt(str);
-         }
-
+          
          return str;
      }
      public static String String_JieMi_FTP(String str) throws Exception
      {
-
-    	 if (1==1)
-    		 return str;
-    	 
-    	 
-    	 
-    	 //ac
+ 
         //南京宝旺达.
          if (SystemConfig.getCustomerNo().equals( "BWDA"))
-         {
-        	 
-        	 return AesEncodeUtil.decryptAESHex(str);
-        	 
-        	 
-             
-         }
+        	 return AesEncodeUtil.decryptAESHex(str);  
 
          return str;
      }

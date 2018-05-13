@@ -258,6 +258,7 @@ public class CCFlowAPI {
 				myds.Tables.add(dtGF);
 				// #endregion 处理字段分组排序.
 
+				
 				// 计算累加的字段集合.
 				MapAttrs attrs = new MapAttrs();
 				QueryObject qo = new QueryObject(attrs);
@@ -284,7 +285,7 @@ public class CCFlowAPI {
 						continue;
 
 					dr.setValue(MapAttrAttr.UIIsEnable, 0); // 把字段设置为只读的.
-					mapAttr.Rows.AddRow(dr);
+					mapAttr.Rows.add(dr);
 				}
 
 				/*

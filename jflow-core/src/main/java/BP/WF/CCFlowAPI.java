@@ -190,7 +190,9 @@ public class CCFlowAPI {
 						if (cType.equals("FWC") == true)
 							isHave = true;
 					}
+					
 					if (isHave == false) {
+						
 						DataRow dr = gf.NewRow();
 
 						dr.put(GroupFieldAttr.OID, 100);
@@ -765,7 +767,7 @@ public class CCFlowAPI {
 	 * @return 返回dataset
 	 * @throws Exception
 	 */
-	public static DataSet GenerWorkNodeForAndroid(String fk_flow, int fk_node, long workID, long fid, String userNo)
+	public static DataSet GN_Del(String fk_flow, int fk_node, long workID, long fid, String userNo)
 			throws Exception {
 		if (fk_node == 0) {
 			fk_node = Integer.parseInt(fk_flow + "01");

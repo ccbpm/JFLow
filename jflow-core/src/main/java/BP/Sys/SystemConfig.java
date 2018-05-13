@@ -743,7 +743,7 @@ public class SystemConfig {
 	 */
 	public static String getUser() throws Exception {
 
-		if (SystemConfig.getCustomerNo().equals( "BWDA")) {
+		if (SystemConfig.getCustomerNo().equals("BWDA")) {
 			String user = getAppSettings().get("JflowUser.encryption").toString();
 			user = Glo.String_JieMi(user);
 			return user;

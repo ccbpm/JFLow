@@ -68,7 +68,7 @@ public class DataRowCollection extends ArrayList<DataRow>
 				valStr=0;*/				 
 			}
 			 
-			 row.put(key, valStr);
+			 row.setValue(key, valStr);
 			 continue;
 			 
             /*

@@ -1230,11 +1230,11 @@ function GenerWorkNode() {
             }
 
             try {
-            	
+
                 flowData = JSON.parse(data);
 
             } catch (err) {
-                console.log(data);
+                //console.log(data);
                 alert(" GenerWorkNode转换JSON失败,请查看控制台日志,或者联系管理员.");
                 return;
             }
@@ -1340,7 +1340,7 @@ function GenerWorkNode() {
 
             ////加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
             var enName = flowData.Sys_MapData[0].No;
-           /* try {
+            try {
                 ////加载JS文件
                 //jsSrc = "<script language='JavaScript' src='/DataUser/JSLibData/" + enName + "_Self.js' ></script>";
                 //$('body').append($('<div>' + jsSrc + '</div>'));
@@ -1353,7 +1353,7 @@ function GenerWorkNode() {
             }
             catch (err) {
 
-            }*/
+            }
 
             var jsSrc = '';
             try {

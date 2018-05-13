@@ -211,7 +211,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         }
         checkedStr = ConvertDefVal(flowData, '', mapAttr.KeyOfEn);
         eleHtml += "<div class='checkbox' ><label><input " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'  id='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + "/>";
-        eleHtml +=  mapAttr.Name + '</label></div>';
+        eleHtml += mapAttr.Name + '</label></div>';
         return eleHtml;
     }
 
@@ -414,7 +414,7 @@ function ImgAth(url, athMyPK) {
     var dgId = "iframDg";
     url = url + "&s=" + Math.random();
     OpenEasyUiDialog(url, dgId, '图片附件', 900, 580, 'icon-new', false, function () {
-        
+
     }, null, null, function () {
         //关闭也切换图片
         var win = document.getElementById(dgId).contentWindow;

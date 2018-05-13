@@ -127,7 +127,7 @@ function GenerFoolFrm(wn) {
     html += "</table>";
 
     $('#CCForm').html(html);
-    
+
 
 }
 
@@ -223,8 +223,8 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             var ctrl = "<div id='DIV_" + mapAttr.KeyOfEn + "'> <input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' type=hidden  class='form-control' type='text'/></div>";
 
 
-           //console.log(flowData);
-           // defValue = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn + "Text");
+            //console.log(flowData);
+            // defValue = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn + "Text");
             defValue = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn + "T");
 
             if (defValue == '' || defValue == null)
@@ -235,7 +235,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         }
 
         //return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
-        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>"; 
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>";
     }
 
     //外键类型.
@@ -249,7 +249,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             enableAttr = "disabled='disabled'";
 
         //return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
-        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>"; 
+        return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>";
     }
 
     //添加文本框 ，日期控件等.
@@ -339,8 +339,8 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         else
             enableAttr = "disabled='disabled'";
         if (mapAttr.UIContralType == 1)
-            //return "<select " + enableAttr + "  id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
-            return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>";       
+        //return "<select " + enableAttr + "  id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
+            return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>";
         if (mapAttr.UIContralType == 3) {
             //横向排列
             var RBShowModel = 3;
@@ -379,23 +379,23 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 //记录改变字段样式 不可编辑，不可见
 var mapAttrs = [];
 function changeEnable(obj, FK_MapData, KeyOfEn, AtPara) {
-    if (AtPara.indexOf('@IsEnableJS=1') >= 0){
-    	var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-    	cleanAll();
+    if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
+        var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
+        cleanAll();
         setEnable(FK_MapData, KeyOfEn, selecedval);
     }
 }
-function clickEnable(obj, FK_MapData, KeyOfEn,AtPara) {
-	if (AtPara.indexOf('@IsEnableJS=1') >= 0){
-    var selectVal = $(obj).val();
-    cleanAll();
-    setEnable(FK_MapData, KeyOfEn, selectVal);
-	}
+function clickEnable(obj, FK_MapData, KeyOfEn, AtPara) {
+    if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
+        var selectVal = $(obj).val();
+        cleanAll();
+        setEnable(FK_MapData, KeyOfEn, selectVal);
+    }
 }
 
 //清空所有的设置
-function cleanAll(){
-    for(var i=0;i<mapAttrs.length;i++){
+function cleanAll() {
+    for (var i = 0; i < mapAttrs.length; i++) {
         SetCtrlShow(mapAttrs[i]);
         SetCtrlEnable(mapAttrs[i]);
         CleanCtrlVal(mapAttrs[i]);
@@ -410,7 +410,7 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
 
     //解决字段隐藏显示.
     var cfgs = frmRB.FieldsCfg;
-    
+
     //解决为其他字段设置值.
     var setVal = frmRB.SetVal;
     if (setVal) {
@@ -466,14 +466,14 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
 
     }
 
-    
+
 }
 
 //设置是否可以用?
 function SetCtrlEnable(key) {
 
     var ctrl = $("#TB_" + key);
-    if (ctrl.length>0) {
+    if (ctrl.length > 0) {
         ctrl.removeAttr("readonly");
     }
 
@@ -488,10 +488,10 @@ function SetCtrlEnable(key) {
     }
 
     ctr = document.getElementsByName('RB_' + key);
-    if (ctrl!=null) {
+    if (ctrl != null) {
         var ses = new Entities("BP.Sys.SysEnums");
         ses.Retrieve("EnumKey", key);
-        for(var i=0;i<ses.length;i++)
+        for (var i = 0; i < ses.length; i++)
             $("#RB_" + key + "_" + ses[i].IntKey).removeAttr("disabled");
     }
 }
@@ -515,7 +515,7 @@ function SetCtrlUnEnable(key) {
 
     ctrl = $("#RB_" + key);
     if (ctrl != null) {
-         $('input[name=RB_'+key+']').attr("disabled","disabled"); 
+        $('input[name=RB_' + key + ']').attr("disabled", "disabled");
         //ctrl.attr("disabled", "disabled");
     }
 }
@@ -547,18 +547,18 @@ function SetCtrlVal(key, value) {
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
-    	ctrl.val(value);
-    	// ctrl.attr("value",value);
-    	//$("#DDL_"+key+" option[value='"+value+"']").attr("selected", "selected");
+        ctrl.val(value);
+        // ctrl.attr("value",value);
+        //$("#DDL_"+key+" option[value='"+value+"']").attr("selected", "selected");
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
-    	ctrl.val(value);
-    	ctrl.attr('checked', true);
+        ctrl.val(value);
+        ctrl.attr('checked', true);
     }
 
-    ctrl = $("#RB_" + key+"_"+value);
+    ctrl = $("#RB_" + key + "_" + value);
     if (ctrl.length > 0) {
         ctrl.val(value);
         ctrl.attr('checked', true);
@@ -574,19 +574,19 @@ function CleanCtrlVal(key) {
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
-    	//ctrl.attr("value",'');
-    	ctrl.val('');
-       // $("#DDL_"+key+" option:first").attr('selected','selected');
+        //ctrl.attr("value",'');
+        ctrl.val('');
+        // $("#DDL_"+key+" option:first").attr('selected','selected');
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
-    	ctrl.attr('checked', false);;
+        ctrl.attr('checked', false); ;
     }
 
-    ctrl = $("#RB_" + key+"_"+0);
+    ctrl = $("#RB_" + key + "_" + 0);
     if (ctrl.length > 0) {
-    	ctrl.attr('checked', true);
+        ctrl.attr('checked', true);
     }
 }
 
@@ -691,35 +691,35 @@ function Ele_Frame(flowData, gf) {
 
 //初始化 附件
 function Ele_Attachment(flowData, gf) {
-
-    var ath = flowData.Sys_FrmAttachment[0];
-    if (ath == null)
-        return "没有找到附件定义，请与管理员联系。";
+ 
 
     var eleHtml = '';
-
-    var nodeID= GetQueryString("FK_Node");
+    var nodeID = GetQueryString("FK_Node");
     var url = "";
     url += "&WorkID=" + GetQueryString("WorkID");
-    url += "&FK_Node=" +nodeID;
-     
-    var isReadonly=false;
-    if (gf.FrmID.indexOf( nodeID ) == -1 )
+    url += "&FK_Node=" + nodeID;
+
+    var isReadonly = false;
+    if (gf.FrmID.indexOf(nodeID) == -1)
         isReadonly = true;
 
+    var ath = new Entity("BP.Sys.FrmAttachment", gf.CtrlID);
+
+    var athPK = gf.CtrlID;
+    var noOfObj = athPK.replace(gf.FrmID + "_", "");
 
     var src = "";
     if (pageData.IsReadonly || isReadonly == true)
-        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1" + url;
+        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + "&IsReadonly=1" + url;
     else
-        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + url;
+        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url;
 
     //自定义表单模式.
     if (ath.AthRunModel == 2) {
-        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + url;
+        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + athPK + url;
     }
 
-    eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + gf.CtrlID + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     return eleHtml;
 }
 
@@ -755,7 +755,7 @@ function Ele_Dtl(frmDtl) {
             src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&IsReadonly=0&" + urlParam + "&Version=1";
         }
     }
-    return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='F" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
 }
 
 function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr) {

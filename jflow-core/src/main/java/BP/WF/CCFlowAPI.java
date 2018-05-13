@@ -258,38 +258,36 @@ public class CCFlowAPI {
 				myds.Tables.add(dtGF);
 				// #endregion 处理字段分组排序.
 
+				 
 				
-				// 计算累加的字段集合.
-				MapAttrs attrs = new MapAttrs();
-				QueryObject qo = new QueryObject(attrs);
-				qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
-				qo.addOrderBy(MapAttrAttr.Idx);
-				qo.DoQuery();
-				DataTable dtAttrsHistroy = attrs.ToDataTableField();
+				 //#region 处理 mapattrs 
+                 //求当前表单的字段集合.
+                 MapAttrs attrs = new MapAttrs();
+                 QueryObject qo = new QueryObject(attrs);
+                 qo.AddWhere(MapAttrAttr.FK_MapData,  "ND"+nd.getNodeID());
+                 qo.addOrderBy(MapAttrAttr.Idx);
+                 qo.DoQuery();
 
-				DataTable mapAttr = myds.GetTableByName("Sys_MapAttr");
-				for (DataRow dr : dtAttrsHistroy.Rows) {
+                 //计算累加的字段集合.
+                 MapAttrs attrsLeiJia = new MapAttrs();
+                 qo = new QueryObject(attrsLeiJia);
+                 qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")" );
+                 qo.addOrderBy(MapAttrAttr.Idx);
+                 qo.DoQuery();
 
-					boolean isHave = false; // 是否存在. 去掉重复的字段.
+                 //把两个集合接起来.
+                 for (MapAttr item : attrsLeiJia.ToJavaList())
+                 {
+                     item.setUIIsEnable( false); //设置为只读的.
+                     attrs.AddEntity(item);
+                 }
 
-					String mypk = (String) dr.getValue("KeyOfEn");
-					for (DataRow mydr : mapAttr.Rows) {
-						String val = (String) mydr.getValue("KeyOfEn");
-						if (val.equals(mypk) == true) {
-							isHave = true;
-							break;
-						}
-					}
+                 //替换掉现有的.
+                 myds.Tables.remove("Sys_MapAttr"); //移除.
+                 myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); //增加.
 
-					if (isHave == true)
-						continue;
-
-					dr.setValue(MapAttrAttr.UIIsEnable, 0); // 把字段设置为只读的.
-					
-				//	mapAttr.Rows.add(dr);					 
-					mapAttr.Rows.AddRow(dr);
-					//mapAttr.Rows.add(dr);
-				}
+                //#endregion 处理mapattrs
+                  
 
 				/*
 				//计算累加的 从表字段集合.

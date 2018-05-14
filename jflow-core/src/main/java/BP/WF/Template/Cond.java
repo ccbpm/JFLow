@@ -920,7 +920,7 @@ public class Cond extends EntityMyPK
 			  
 			String oper=this.getFK_Operator().trim().toLowerCase();
 
-			if (oper.equals("<>") || oper.equals("budengyu"))
+			if (oper.equals("<>") || oper.equals("budengyu") ||oper.equals("!="))
 			{
 					if (!this.getOperatorValue().toString().equals(en.GetValStringByKey(this.getAttrKey())))
 					{
@@ -986,7 +986,7 @@ public class Cond extends EntityMyPK
 						return false;
 					}
 			}
-			else if (oper.equals("!=") || oper.equals("budengyu"))
+			/*else if (oper.equals("!=") || oper.equals("budengyu"))
 			{
 					if (en.GetValDoubleByKey(this.getAttrKey()) != Double.parseDouble(this.getOperatorValue().toString()))
 					{
@@ -996,7 +996,7 @@ public class Cond extends EntityMyPK
 					{
 						return false;
 					}
-			}
+			}*/
 			else if (oper.equals("like"))
 			{
 					if (en.GetValStringByKey(this.getAttrKey()).indexOf(this.getOperatorValue().toString()) == -1)

@@ -33,6 +33,7 @@ import BP.DA.DataType;
 import BP.DA.Log;
 import BP.DA.Paras;
 import BP.En.QueryObject;
+import BP.Sys.AthCtrlWay;
 import BP.Sys.AthDeleteWay;
 import BP.Sys.AthSaveWay;
 import BP.Sys.AthUploadWay;
@@ -66,6 +67,8 @@ import BP.Sys.PopValWorkModel;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.Tools.FileAccess;
+import BP.Tools.FtpUtil;
+import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.Tools.ZipCompress;
 import BP.WF.DotNetToJavaStringHelper;
@@ -74,6 +77,7 @@ import BP.WF.Node;
 import BP.WF.NodeFormType;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Template.FTCAttr;
+import BP.WF.Template.FoolTruckNodeFrm;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodeComponent;
@@ -276,6 +280,13 @@ public class WF_CCForm extends WebContralBase {
      /// <returns></returns>
      public BP.Sys.FrmAttachment GenerAthDesc() throws Exception
      {
+    	 //#region 为累加表单做的特殊判断.
+         if (this.GetRequestValInt("FormType") ==10 && this.GetRequestValBoolen("IsStartNode")==false)
+         {
+             if (this.getFK_FrmAttachment().indexOf(this.getFK_MapData())>=0)
+                 return GenerAthDescOfFoolTruck();
+         }
+         //#endregion
          BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
          athDesc.setMyPK (this.getFK_FrmAttachment());
          if (this.getFK_Node() == 0 || this.getFK_Flow() == null)
@@ -380,6 +391,49 @@ public class WF_CCForm extends WebContralBase {
          return athDesc;
      }
      
+     public BP.Sys.FrmAttachment GenerAthDescOfFoolTruck() throws Exception
+     {
+         FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
+         sln.setMyPK(this.getFK_MapData() + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
+         if (sln.RetrieveFromDBSources() == 0)
+         {
+             BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+             athDesc.setMyPK(this.getFK_FrmAttachment());
+             athDesc.RetrieveFromDBSources();
+             return athDesc;
+         }
+         if ( sln.getFrmSln()==1 || sln.getFrmSln()==0 )
+         {
+             /*没有查询到解决方案, 就是只读方案 */
+             BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+             athDesc.setMyPK(this.getFK_FrmAttachment());
+             athDesc.setIsUpload(false);
+             athDesc.setIsDownload(false);
+             athDesc.setHisDeleteWay(AthDeleteWay.None); //删除模式.
+             return athDesc;
+         }
+
+         //如果是自定义方案,就查询自定义方案信息.
+         if (sln.getFrmSln() == 2)
+         {
+             /*没有查询到解决方案, 就是只读方案 */
+             BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+             athDesc.setMyPK(this.getFK_Node()+"_Ath1");
+             if (athDesc.RetrieveFromDBSources() == 0)
+             {
+                 athDesc.setIsUpload(false);
+                 athDesc.setHisDeleteWay(AthDeleteWay.None);
+                 athDesc.setIsDownload(false);
+                 athDesc.setHisCtrlWay(AthCtrlWay.WorkID); //没有方案.
+                 athDesc.Insert();
+             }
+             return athDesc;
+         }
+        
+         return null;
+     }
+     
+     
      //#region 附件组件.
      /// <summary>
      /// 执行删除
@@ -393,6 +447,31 @@ public class WF_CCForm extends WebContralBase {
          FrmAttachmentDB delDB = new FrmAttachmentDB();
          delDB.setMyPK (delPK == null ? this.getMyPK() : delPK);
          delDB.RetrieveFromDBSources();
+         
+        /* //删除文件存储的位置
+         FrmAttachment dbAtt = new FrmAttachment();
+		dbAtt.setMyPK(delDB.getFK_FrmAttachment());
+		dbAtt.Retrieve();
+        
+         if (dbAtt.getAthSaveWay() == AthSaveWay.DB || dbAtt.getAthSaveWay() == AthSaveWay.WebServer){
+        	 File file  = new File(delDB.getFileFullName());
+        	 if(file.exists())
+        		 file.delete();
+         }
+         if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
+        	 if (SystemConfig.getFTPServerType().equals("SFTP") ) {
+        		 	// 连接FTP服务器并删除文件
+					SftpUtil ftpUtil =BP.WF.Glo.getSftpUtil(); 
+					ftpUtil.deleteFile(delDB.getFileFullName());
+        	 }
+        	 if (SystemConfig.getFTPServerType().equals("FTP") ) {
+
+					// 连接FTP服务器并删除文件
+					FtpUtil ftpUtil =BP.WF.Glo.getFtpUtil();	
+					ftpUtil.deleteFile(delDB.getFileFullName());
+        	 }
+        	 
+         }*/
          delDB.Delete(); //删除上传的文件.
          return "删除成功.";
      }

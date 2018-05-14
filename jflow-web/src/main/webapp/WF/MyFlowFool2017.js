@@ -67,7 +67,7 @@ function GenerFoolFrm(wn) {
             html += "<tr>";
             html += "  <td colspan='4' >";
 
-            html += Ele_Attachment(flowData, gf);
+            html += Ele_Attachment(flowData, gf,node);
 
             html += "  </td>";
             html += "</tr>";
@@ -340,7 +340,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             enableAttr = "disabled='disabled'";
         if (mapAttr.UIContralType == 1)
         //return "<select " + enableAttr + "  id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
-            return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>";
+            return "<div id='DIV_" + mapAttr.KeyOfEn + "'> <select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' value='"+defValue+"'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select></div>";
         if (mapAttr.UIContralType == 3) {
             //横向排列
             var RBShowModel = 3;
@@ -690,33 +690,39 @@ function Ele_Frame(flowData, gf) {
 
 
 //初始化 附件
-function Ele_Attachment(flowData, gf) {
- 
+function Ele_Attachment(flowData, gf, node) {
 
     var eleHtml = '';
     var nodeID = GetQueryString("FK_Node");
     var url = "";
     url += "&WorkID=" + GetQueryString("WorkID");
     url += "&FK_Node=" + nodeID;
+    url += "&FK_Flow=" + node.FK_Flow;
+    url += "&FormType=" + node.FormType; //表单类型，累加表单，傻瓜表单，自由表单.
+    var no = node.NodeID.toString().substring(node.NodeID.toString().length - 2);
+    var IsStartNode = 0;
+    if(no=="01") 
+     url += "&IsStartNode=" + 1; //是否是开始节点
 
     var isReadonly = false;
     if (gf.FrmID.indexOf(nodeID) == -1)
         isReadonly = true;
 
+        //创建附件描述信息.
     var ath = new Entity("BP.Sys.FrmAttachment", gf.CtrlID);
 
     var athPK = gf.CtrlID;
     var noOfObj = athPK.replace(gf.FrmID + "_", "");
 
     var src = "";
-    if (pageData.IsReadonly || isReadonly == true)
-        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + "&IsReadonly=1" + url;
-    else
+    //if (pageData.IsReadonly || isReadonly == true)
+    //    src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + "&IsReadonly=1" + url;
+   // else
         src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url;
 
     //自定义表单模式.
     if (ath.AthRunModel == 2) {
-        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + athPK + url;
+        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url;
     }
 
     eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + gf.CtrlID + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';

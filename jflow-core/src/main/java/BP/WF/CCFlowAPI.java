@@ -289,39 +289,7 @@ public class CCFlowAPI {
 
                 //#endregion 处理mapattrs
                   
-
-				/*
-				//计算累加的 从表字段集合.
-				MapDtls dtls = new MapDtls();
-				qo = new QueryObject(dtls);
-				qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
-				qo.DoQuery();
-
-				DataTable dtDtls = dtls.ToDataTableField();
-
-				DataTable mdtls = myds.GetTableByName("Sys_MapDtl");
-				for (DataRow dr : dtDtls.Rows) {
-					dr.setValue(MapDtlAttr.IsDelete, 0); // 把字段设置为只读的.
-					dr.setValue(MapDtlAttr.IsInsert, 0);
-					dr.setValue(MapDtlAttr.IsUpdate, 0);
-					mdtls.Rows.AddRow(dr);
-				}*/
-
-				/*
-				// 计算累加的 附件集合.
-				FrmAttachments aths = new FrmAttachments();
-				qo = new QueryObject(aths);
-				qo.AddWhere(FrmAttachmentAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
-				qo.DoQuery();
-
-				DataTable dtAths = aths.ToDataTableField();
-				DataTable mAths = myds.GetTableByName("Sys_FrmAttachment");
-
-				for (DataRow dr : dtAths.Rows) {
-					dr.setValue(FrmAttachmentAttr.IsUpload, 0); // 把字段设置为只读的.
-					dr.setValue(FrmAttachmentAttr.IsDownload, 0);
-					mAths.Rows.AddRow(dr);
-				} */
+ 
 
 				// 计算累加的枚举类型
 				DataTable Sys_Menu = myds.GetTableByName("Sys_Enum");
@@ -484,8 +452,7 @@ public class CCFlowAPI {
 
 			// 需要放到这里，不然无法转换出去.
 			wk.ResetDefaultVal();
-			
-			
+			 
 			  //如果是累加表单，就把整个rpt数据都放入里面去.
             if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false
               && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)

@@ -46,6 +46,7 @@ import BP.Sys.MapExts;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
+import BP.WF.Data.GERpt;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.FTCAttr;
 import BP.WF.Template.FrmNode;
@@ -483,9 +484,30 @@ public class CCFlowAPI {
 
 			// 需要放到这里，不然无法转换出去.
 			wk.ResetDefaultVal();
-			DataTable mainTable = wk.ToDataTableField(md.getNo());
-			mainTable.TableName = "MainTable";
-			myds.Tables.add(mainTable);
+			
+			
+			  //如果是累加表单，就把整个rpt数据都放入里面去.
+            if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false
+              && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
+            {
+                GERpt rpt = nd.getHisFlow().getHisGERpt();
+                rpt.setOID( workID);
+                rpt.RetrieveFromDBSources();
+                rpt.Copy(wk);
+
+                DataTable mainTable = wk.ToDataTableField(md.getNo());
+                mainTable.TableName = "MainTable";
+                myds.Tables.add(mainTable);
+
+            }
+            else
+            {
+            	DataTable mainTable = wk.ToDataTableField(md.getNo());
+    			mainTable.TableName = "MainTable";
+    			myds.Tables.add(mainTable);
+            }
+			
+			
 
 			String sql = "";
 			DataTable dt = null;

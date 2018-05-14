@@ -354,8 +354,7 @@ public class FrmAttachmentDB extends EntityMyPK
         {
         	File file = new File(tempFile);
             if (file.exists() == true)
-                file.delete();
-            
+                file.delete();            
         }
         catch(Exception e)
         {

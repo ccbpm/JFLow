@@ -600,7 +600,7 @@ public class AttachmentUploadController extends BaseController {
 					ny = ny.replace("_", "/");
 					ny = ny.replace("_", "/");
 					
-					workDir =  ny+ "/" + WebUser.getNo();
+					workDir =  ny+ "/" + WebUser.getNo()+"/";
 				}
 				
 				boolean  isOK=false;

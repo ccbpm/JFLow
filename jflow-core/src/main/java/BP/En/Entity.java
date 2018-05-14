@@ -12,6 +12,7 @@ import BP.DA.CashEntity;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
 import BP.DA.DBUrlType;
+import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.DA.DataType;
@@ -114,7 +115,55 @@ public abstract class Entity extends EnObj
 		}
 		return str;
 	}
-	 
+	public final DataTable ToEmptyTableField()
+	{
+		return ToEmptyTableField(null);	 
+	}
+	public final DataTable ToEmptyTableField(Entity en)
+	{
+		DataTable dt = new DataTable();
+		
+		if (en ==null)
+			en=this;
+		
+		dt.TableName = en.getEnMap().getPhysicsTable();
+		
+		for (Attr attr : en.getEnMap().getAttrs())
+		{
+			switch (attr.getMyDataType())
+			{
+				case DataType.AppString:
+					dt.Columns.Add(new DataColumn(attr.getKey(), String.class, true));
+					break;
+				case DataType.AppInt:
+					dt.Columns.Add(new DataColumn(attr.getKey(), Integer.class, true));
+					break;
+				case DataType.AppFloat:
+					dt.Columns.Add(new DataColumn(attr.getKey(), Float.class, true));
+					break;
+				case DataType.AppBoolean:
+					dt.Columns.Add(new DataColumn(attr.getKey(), String.class, true));
+					break;
+				case DataType.AppDouble:
+					dt.Columns.Add(new DataColumn(attr.getKey(), Double.class, true));
+					break;
+				case DataType.AppMoney:
+					dt.Columns.Add(new DataColumn(attr.getKey(), Double.class, true));
+					break;
+				case DataType.AppDate:
+					dt.Columns.Add(new DataColumn(attr.getKey(), String.class, true));
+					break;
+				case DataType.AppDateTime:
+					dt.Columns.Add(new DataColumn(attr.getKey(), String.class, true));
+					break;
+				default:
+					throw new RuntimeException(
+							"@bulider insert sql error: 没有这个数据类型");
+			}
+		}
+		return dt;
+	}
+	
 	
 	/**
 	 * 区分大小写
@@ -123,51 +172,8 @@ public abstract class Entity extends EnObj
 	 */
 	public final DataTable ToDataTableField(String tableName)
 	{
-		/*
-		String json=this.ToJson();
-		
-		DataTable dt = this.getGetNewEntities().ToEmptyTableField();
-		dt.TableName = tableName;
-		
-		json=this.ToJson();
-		
-		DataRow dr = dt.NewRow();
-		
-		for (Attr attr : this.getEnMap().getAttrs())
-		{
-			if (attr.getMyDataType() == DataType.AppBoolean)
-			{
-				if (this.GetValIntByKey(attr.getKey()) == 1)
-				{
-					dr.put(attr.getKey(), "1");
-				} else
-				{
-					dr.put(attr.getKey(), "0");
-				}
-				continue;
-			}
-			
-			
-			// 如果是外键 就要去掉左右空格。
-			if (attr.getMyFieldType() == FieldType.FK
-					|| attr.getMyFieldType() == FieldType.PKFK)
-			{
-				String val1= this.GetValByKey(attr.getKey()).toString().trim();				
-				dr.put(attr.getKey(), val1);
-			} else
-			{
-				Object val= this.GetValByKey(attr.getKey());
-				dr.put(attr.getKey(),val);
-			}
-			
-			json=this.ToJson();
-		}
-		dt.Rows.add(dr);
-		
-		json=this.ToJson();
-		return dt; */
-		 
-		DataTable dt = this.getGetNewEntities().ToEmptyTableField();
+		  
+		DataTable dt = this.ToEmptyTableField();
 		dt.TableName = tableName;
 
 		//增加参数列.

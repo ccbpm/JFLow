@@ -44,6 +44,23 @@ public class DataSet {
 		}
 	}
 	
+	public boolean removeTableByName(String tableName)
+	{
+		
+		for (DataTable dtb : this.Tables)
+			{
+				if( tableName.equals(dtb.getTableName()))
+				{
+					this.Tables.remove(dtb);
+					return true;
+							 
+				}
+			}	
+		
+		return false;
+		 
+	}
+	
 	public DataTable GetTableByName(String tableName)
 	{
 		

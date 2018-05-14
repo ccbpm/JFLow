@@ -284,7 +284,9 @@ public class CCFlowAPI {
                  }
 
                  //替换掉现有的.
-                 myds.Tables.remove("Sys_MapAttr"); //移除.
+              
+                 myds.removeTableByName("Sys_MapAttr");              
+               
                  myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); //增加.
 
                 //#endregion 处理mapattrs
@@ -457,6 +459,7 @@ public class CCFlowAPI {
             if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false
               && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
             {
+            	
                 GERpt rpt = nd.getHisFlow().getHisGERpt();
                 rpt.setOID( workID);
                 rpt.RetrieveFromDBSources();

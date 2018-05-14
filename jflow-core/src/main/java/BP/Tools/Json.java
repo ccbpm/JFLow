@@ -343,26 +343,10 @@ public class Json
 				{
 					if(obj.equals(""))
 						jsonString += "\"\","; 
-					jsonString += "" + obj.toString() + ",";
+					else
+						jsonString += "" + obj.toString() + ",";
 					continue;
-				} 
-				
-				
-				/*if (column.DataType == java.util.Date.class || column.DataType == String.class)
-				{
-					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
-					
-					continue;
-				} 
-				
-				
-				if (column.DataType == Integer.class  
-						|| column.DataType == Long.class
-						|| column.DataType == float.class)
-				{
-					jsonString += "\"" + ToJsonStr(obj.toString()) + "\",";
-					continue;
-				} */
+				} 				
 				 
 				
 				String str=obj.toString();
@@ -376,8 +360,9 @@ public class Json
 					continue;
 				}
 				
-				//jsonString +=   "\""+ str + "\",";
+				
 			}
+			//jsonString = TranJsonStr(jsonString);
 			jsonString = DeleteLast(jsonString) + "},";
 		}		 
 		
@@ -496,33 +481,6 @@ public class Json
          }       
         return sb.toString().trim();    
         
- 
-			/*
-		String temstr;
-		temstr = value;
-		
-		temstr = temstr.replace("{", "｛").replace("}", "｝").replace("[", "【").replace("]", "】").replace("\n", "<br/>").replace("\r", "");
-		
-		temstr = temstr.replace("\t", "   ");
-		
-		//不解决好 fontstyle 的问题，就不能把他删除掉.
-		temstr = temstr.replace("\"", "\'");
-		temstr = temstr.replace("\"", "\'");
-		
-		temstr = temstr.replace("''", "\'");
-		 
-		temstr = temstr.replace("'", "\'");
-		temstr = temstr.replace("\\", "\\\\");
-		temstr = temstr.replace("\"", "\"\"");		
-		  
-		temstr = temstr.replace("\n", "\\n");
-		temstr = temstr.replace("\b", "\\b");
-		temstr = temstr.replace("\t", "\\t");
-		temstr = temstr.replace("\f", "\\f");
-		temstr = temstr.replace("/", "\\/");
-		
-		return temstr; */
-		
 	}
 	
 	 /** 
@@ -964,4 +922,24 @@ public class Json
 		public static String ToJson_object(Object table){
 			return ToJson(table);
 		}
+		
+		/// <summary>
+        /// JSON字符串的转义
+        /// </summary>
+        /// <param name="jsonStr"></param>
+        /// <returns></returns>
+        private static String TranJsonStr(String jsonStr) {
+            String strs = jsonStr;
+            strs = strs.replace("\\", "\\\\");
+            strs = strs.replace("\n", "\\n");
+            strs = strs.replace("\b", "\\b");
+            strs = strs.replace("\t", "\\t");
+            strs = strs.replace("\f", "\\f");
+            strs = strs.replace("\r", "\\r");
+            strs = strs.replace("/", "\\/");
+            strs = strs.replace("\"", "\"\"");
+            strs = strs.replace("'", "\'");
+            strs = strs.replace("\t", "   ");
+            return strs;
+        }
 }

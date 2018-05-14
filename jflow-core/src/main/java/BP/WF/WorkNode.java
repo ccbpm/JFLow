@@ -6102,8 +6102,13 @@ public class WorkNode {
 		// 处理自动运行 - 预先设置未来的运行节点.
 		this.DealAutoRunEnable();
 
-		// 把数据更新到数据库里.
+		// 把数据更新到数据库里.	 
+		if (this.getHisNode().getHisFormType()== NodeFormType.FoolTruck)
+			this.getHisWork().setSQLCash(null);
+		
 		this.getHisWork().DirectUpdate();
+		 
+		
 		if (this.getHisWork().getEnMap().getPhysicsTable() != this.rptGe.getEnMap().getPhysicsTable()) {
 			// 有可能外部参数传递过来导致，rpt表数据没有发生变化。
 			this.rptGe.Copy(this.getHisWork());

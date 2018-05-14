@@ -494,10 +494,8 @@ public class CCFlowAPI {
                 rpt.setOID( workID);
                 rpt.RetrieveFromDBSources();
                 rpt.Copy(wk);
-
-                DataTable mainTable = wk.ToDataTableField(md.getNo());
-                mainTable.TableName = "MainTable";
-                myds.Tables.add(mainTable);
+                 
+                myds.Tables.add(rpt.ToDataTableField("MainTable"));
 
             }
             else

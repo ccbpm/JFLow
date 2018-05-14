@@ -449,7 +449,7 @@ public class WF_CCForm extends WebContralBase {
          delDB.setMyPK (delPK == null ? this.getMyPK() : delPK);
          delDB.RetrieveFromDBSources();
          
-        /* //删除文件存储的位置
+        //删除文件存储的位置
          FrmAttachment dbAtt = new FrmAttachment();
 		dbAtt.setMyPK(delDB.getFK_FrmAttachment());
 		dbAtt.Retrieve();
@@ -464,15 +464,17 @@ public class WF_CCForm extends WebContralBase {
         		 	// 连接FTP服务器并删除文件
 					SftpUtil ftpUtil =BP.WF.Glo.getSftpUtil(); 
 					ftpUtil.deleteFile(delDB.getFileFullName());
-        	 }
+					ftpUtil.releaseConnection();
+        	 }		
         	 if (SystemConfig.getFTPServerType().equals("FTP") ) {
 
 					// 连接FTP服务器并删除文件
 					FtpUtil ftpUtil =BP.WF.Glo.getFtpUtil();	
 					ftpUtil.deleteFile(delDB.getFileFullName());
+					ftpUtil.releaseConnection();
         	 }
         	 
-         }*/
+         }
          delDB.Delete(); //删除上传的文件.
          return "删除成功.";
      }

@@ -5857,8 +5857,11 @@ public class WorkNode {
 		//// this.ExecerName + ")没有处理当前工作的权限。");
 
 		// 第1.2: 调用发起前的事件接口,处理用户定义的业务逻辑.
+		Work wk=this.getHisWork();
+		wk.setOID(this.getWorkID());
+		
 		String sendWhen = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, this.getHisNode(),
-				this.getHisWork(), null);
+				wk, null);
 
 		// 返回格式. @Info=xxxx@ToNodeID=xxxx@ToEmps=xxxx
 		if (sendWhen != null && sendWhen.indexOf("@") >= 0) {

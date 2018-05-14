@@ -176,6 +176,10 @@ public class Node extends Entity
          {
 			obj = new BP.WF.GEWork(this.getNodeID(), this.getNodeFrmID());
 			obj.setHisNode(this);
+			
+			if (this.getFormType() == NodeFormType.FoolTruck )
+				obj.setSQLCash(null);
+			 
 			obj.setNodeID(this.getNodeID());
 			return obj;				 
 		}

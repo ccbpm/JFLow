@@ -697,7 +697,12 @@ public class Flow extends BP.En.EntityNoName
 			{
 				// 判断是否有内容，hasNext()
 				String key = (String) enu.nextElement();
-				paras.put(key, BP.Sys.Glo.getRequest().getParameter(key));
+				 if (key == "OID" || key == "WorkID" || key==null)
+                     continue;
+				 if (paras.containsKey(key))
+					 paras.remove(key);
+                
+                 paras.put(key, BP.Sys.Glo.getRequest().getParameter(key));
 			}
 		}
 
@@ -975,7 +980,8 @@ public class Flow extends BP.En.EntityNoName
 		{
 			PFlowNo = paras.get("PFlowNo").toString();
 			PNodeIDStr = paras.get("PNodeID").toString();
-			PWorkIDStr = paras.get("PWorkID").toString();
+			if (paras.containsKey("PWorkID") == true)
+				PWorkIDStr = paras.get("PWorkID").toString();
 			PFIDStr = "0";
 			if (paras.containsKey("PFID") == true)
 			{

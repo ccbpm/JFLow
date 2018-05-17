@@ -471,9 +471,9 @@
 
                     html += "文件:"
                     if (athDesc.IsExpCol == 1)
-                        html += "<input type='file' name='file' id='file' >"
+                        html += "<input type='file' name='file' id='file' onclick='Upload();' >"
                     else
-                        html += "<input type='file' name='file' id='file'  onchange='UploadChange();'>"
+                        html += "<input type='file' name='file' id='file' onclick='Upload();' onchange='UploadChange();'>"
                     if (athDesc.IsNote)
                         html += "<input type='text' id='TB_Note' style='width:90%;display:none;' size='30'/>";
 

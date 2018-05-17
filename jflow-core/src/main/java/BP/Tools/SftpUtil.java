@@ -211,40 +211,36 @@ public class SftpUtil {
 	 * @param booAutoCreate
 	 *            自动创建目录
 	 * @return boolean true 成功 false 失败
+	 * @throws SftpException 
 	 */
-	private boolean innerChangeDirectory(String strWorkingDirectory, boolean booAutoCreate) throws SftpException {
-		
-		boolean booResult;
-		try {
-		
-			
-			sftp.cd(strWorkingDirectory);
-			booResult = true;
-			
-			
-		} catch (SftpException e) {
-			
-			booResult = false;
-			if (booAutoCreate) {
-				// strWorkingDirectory="2018/05/10";
-				String[] strArrayDirs = StringUtils.split(strWorkingDirectory, "/");
-				// String[] strArrayDirs = strWorkingDirectory.split( "/");
-				if (strWorkingDirectory.startsWith("/")) {
-					strArrayDirs[0] = "/" + strArrayDirs[0];
-				}
-				for (String strDir : strArrayDirs) {
-					try {
-						sftp.ls(strDir);
-					} catch (Exception e1) {
-						sftp.mkdir(strDir);
-					}
-					sftp.cd(strDir);
-				}
-				sftp.cd(strWorkingDirectory);
-				booResult = true;
-			}   
-		}
-		return booResult;
+	private boolean innerChangeDirectory(String strWorkingDirectory, boolean booAutoCreate) throws SftpException{
+		 boolean booResult;
+		 this.openConnection();
+        try {
+            sftp.cd(strWorkingDirectory);
+            booResult = true;
+        }
+        catch (SftpException e) {
+            booResult = false;
+            if (booAutoCreate) {
+                String[] strArrayDirs = StringUtils.split(strWorkingDirectory, "/");
+                if(strWorkingDirectory.startsWith("/")){
+                    strArrayDirs[0]="/"+strArrayDirs[0];
+                }
+                for (String strDir : strArrayDirs) {
+                    try {
+                        sftp.ls(strDir);
+                    }
+                    catch (Exception e1) {
+                        sftp.mkdir(strDir);
+                    }
+                    sftp.cd(strDir);
+                }
+                sftp.cd(strWorkingDirectory);
+                booResult = true;
+            }
+        }
+	    return booResult;
 	}
 
 	/**
@@ -486,7 +482,7 @@ public class SftpUtil {
 			String dir = strFileName.substring(0, strFileName.lastIndexOf('/'));
  
 			//设置当前目录.
-			this.innerChangeDirectory(dir, true);
+			this.innerChangeDirectory(dir, false);
 
 			strFileName = fileName;
 
@@ -497,6 +493,7 @@ public class SftpUtil {
 			logger.error("{}", "被删除文件名不能为空.");
 		} else {
 			try {
+				if(sftp.isConnected()==false)
 				this.openConnection();
 				if (this.sftp != null) {
 					sftp.rm(strFileName);

@@ -418,8 +418,8 @@ public class Glo
      {
  
         //南京宝旺达.
-         if (SystemConfig.getCustomerNo().equals( "BWDA"))
-        	 return AesEncodeUtil.decryptAESHex(str);  
+       if (SystemConfig.getCustomerNo().equals( "BWDA"))
+        	 return Cryptos.aesDecrypt(str);  
 
          return str;
      }

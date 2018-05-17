@@ -180,7 +180,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jcraft</groupId>
-			<artifactId>jsch.agentproxy.jsch</artifactId>
+			<artifactId>jsch</artifactId>
 		</dependency>
 		
 		<!-- jackson json -->

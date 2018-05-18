@@ -403,6 +403,9 @@ public class WF_CCForm extends WebContralBase {
              athDesc.RetrieveFromDBSources();
              return athDesc;
          }
+         
+         // @0=默认方案@1=只读方案@2=自定义方案
+         
          if ( sln.getFrmSln()==1 || sln.getFrmSln()==0 )
          {
              /*没有查询到解决方案, 就是只读方案 */

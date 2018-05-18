@@ -1037,10 +1037,9 @@ public class PushMsg extends EntityMyPK
 					String empName = dr.getValue("Name").toString();
 					String empNo = dr.getValue("No").toString();
 
-					if (StringHelper.isNullOrEmpty(tel))
-					{
+					if (StringHelper.isNullOrEmpty(tel))					
 						continue;
-					}
+					
 
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
 					Object tempVar2 = smsDocTmp;

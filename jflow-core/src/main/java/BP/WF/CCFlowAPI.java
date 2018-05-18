@@ -464,7 +464,7 @@ public class CCFlowAPI {
                 GERpt rpt = nd.getHisFlow().getHisGERpt();
                 rpt.setOID( workID);
                 rpt.RetrieveFromDBSources();
-                rpt.Copy(wk);
+              //  rpt.Copy(wk);
                  
                 myds.Tables.add(rpt.ToDataTableField("MainTable"));
 

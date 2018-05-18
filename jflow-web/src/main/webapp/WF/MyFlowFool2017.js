@@ -578,8 +578,9 @@ function SetCtrlVal(key, value) {
 
     ctrl = $("#RB_" + key + "_" + value);
     if (ctrl.length > 0) {
-        ctrl.val(value);
-        ctrl.attr('checked', true);
+    	var checkVal = $('input:radio[name=RB_' + key + ']:checked').val();
+        document.getElementById("RB_" + key + "_" + checkVal).checked = false;
+        document.getElementById("RB_" + key + "_" + value).checked = true;
     }
 }
 

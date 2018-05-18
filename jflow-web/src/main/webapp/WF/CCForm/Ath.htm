@@ -120,10 +120,6 @@
             data = JSON.parse(data);
 
             var athDesc = data["AthDesc"][0];
-            
-         //   alert(athDesc.IsUpload);
-           // alert(athDesc.IsDownload);
-            
 
 
             //自定义表单模式.
@@ -329,16 +325,12 @@
 
                             html += "<td>" + defVal + "</td>";
                             //html += "<td></td>";
-
                         }
-
                     }
                     //输出操作部分.
                     html += "<td>";
-                    
                     if (athDesc.IsDownload==1)
                         html += "<a href=\"javascript:Down2018('" + FK_FrmAttachment + "','" + PKVal + "','" + db.MyPK + "')\">下载</a>";
-                        
                     if (IsReadonly != "1") {
                         var op = "";
 

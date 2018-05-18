@@ -284,9 +284,10 @@ public class CCFlowAPI {
                  }
 
                  //替换掉现有的.
-              
-                 myds.removeTableByName("Sys_MapAttr");              
-               
+                 DataTable Sys_MapAttr = myds.GetTableByName("Sys_MapAttr");
+                 myds.Tables.remove("Sys_MapAttr");
+ 				 myds.Tables.remove(Sys_MapAttr);
+                           
                  myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); //增加.
 
                 //#endregion 处理mapattrs

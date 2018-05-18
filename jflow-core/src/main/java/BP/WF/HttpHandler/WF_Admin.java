@@ -164,7 +164,7 @@ public class WF_Admin extends WebContralBase {
 					}
 
 					if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.MySQL) {
-						sql = "SELECT  No as FK_Emp FROM Port_Emp WHERE limit 0,300 ";
+						sql = "SELECT  No as FK_Emp FROM Port_Emp limit 0,300 ";
 					}
 				}
 			}

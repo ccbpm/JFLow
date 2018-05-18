@@ -235,20 +235,20 @@
                     for (var ii = 0; ii < mapAttrs.length; ii++) {
                         var attr = mapAttrs[ii];
                         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1)
-                        	html += "<th nowrap=true ><span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
+                            html += "<th nowrap=true ><span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
                         else
-                        	html += "<th nowrap=true >";
+                            html += "<th nowrap=true >";
                         if (attr.UIContralType == 0)
-                        	html += "<label for='TB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "' >" + attr.Name + "</label></th>";
+                            html += "<label for='TB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "' >" + attr.Name + "</label></th>";
 
                         if (attr.UIContralType == 1)
-                        	html += "<label for='DDL_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "' >" + attr.Name + "</label></th>";
-                       if (attr.UIContralType == 2)
-                             html += "<label for='TB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'  >" + attr.Name + "</label></th>";
-                       //
+                            html += "<label for='DDL_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "' >" + attr.Name + "</label></th>";
+                        if (attr.UIContralType == 2)
+                            html += "<label for='TB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'  >" + attr.Name + "</label></th>";
+                        //
                         if (attr.UIContralType == 3)
-                        	html += "<label for='RB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'  >" + attr.Name + "</label></th>";
-                        
+                            html += "<label for='RB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'  >" + attr.Name + "</label></th>";
+
                     }
                     columnNum = columnNum + mapAttrs.length;
                 }
@@ -351,7 +351,7 @@
                     html += "</tr>";
                 }
             }
-            if (i == 0 || (athDesc.IsExpCol == 1&&athDesc.IsUpload == true)) {
+            if (i == 0 || (athDesc.IsExpCol == 1 && athDesc.IsUpload == true)) {
                 html += "<tr>";
                 html += "<td class='Idx' nowrap>*</td>"; ;
                 if (athDesc.Sort != null && athDesc.Sort.indexOf(",") != -1)
@@ -372,7 +372,7 @@
                     mapAttrs.Retrieve("FK_MapData", athDesc.MyPK);
                     for (var ii = 0; ii < mapAttrs.length; ii++) {
 
-                        html += "<td>" + InitMapAttrOfCtrlFool("", mapAttrs[ii]) + "</td>";
+                        html += "<td>" + InitAthMapAttrOfCtrlFool("", mapAttrs[ii]) + "</td>";
                     }
                 }
                 if (athDesc.IsExpCol == 1)
@@ -470,7 +470,7 @@
                         var sortColumn = athDesc.Sort.indexOf("@") != -1 ? athDesc.Sort.substring(0, athDesc.Sort.indexOf("@")) : "类别";
                         var strs = athDesc.Sort.indexOf("@") != -1 ? athDesc.Sort.substring(athDesc.Sort.lastIndexOf("@") + 1).split(',') : athDesc.Sort.split(',');
                         html += "请选择" + sortColumn + "：";
-                       
+
                     }
 
                     html += "文件:"
@@ -502,7 +502,7 @@
             }
         }
         function SaveUpload() {
-        	 //必填项和正则表达式检查
+            //必填项和正则表达式检查
             var formCheckResult = true;
 
             if (checkBlanks() == false) {
@@ -512,7 +512,7 @@
             if (checkReg() == false) {
                 formCheckResult = false;
             }
-            
+
             if (formCheckResult == false) {
                 alert("请检查表单必填项和正则表达式");
                 return false;
@@ -520,11 +520,11 @@
 
             var explorer = window.navigator.userAgent;
             if ((explorer.indexOf('MSIE') >= 0) && (explorer.indexOf('Opera') < 0) || (explorer.indexOf('Trident') >= 0))
-            	 $('#file_upload').uploadify("upload", "*");
+                $('#file_upload').uploadify("upload", "*");
             else
                 UploadChange();
         }
-        function UploadChange() {         
+        function UploadChange() {
             var fileObj = document.getElementById("file").files[0]; // js 获取文件对象
             if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
                 alert("请选择上传的文件.");

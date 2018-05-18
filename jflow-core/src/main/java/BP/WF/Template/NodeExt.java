@@ -1128,19 +1128,7 @@ public class NodeExt extends Entity
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeRunModel.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
 
-	/** 
-	 集团部门树
-	 @return 
-	*/
-	public final String DoDepts()
-	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),Glo.getCCFlowAppPath() + "WF/Comm/Port/DeptTree.jsp?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID()+ "&RefNo=" + DataType.getCurrentDataTime(), 500, 550);
-		} catch (IOException e) {
-			Log.DebugWriteError("NodeExt DoDepts()" + e.getMessage());
-		}		
-		return null;
-	}
+ 
 	/** 
 	 设置独立表单树权限
 	 @return 
@@ -1156,7 +1144,7 @@ public class NodeExt extends Entity
 	public final String DoZhiDu()
 	{
 		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), Glo.getCCFlowAppPath() + "ZhiDu/NodeZhiDuDtl.jsp?FK_Node=" + this.getNodeID()+ "&FK_Flow=" + this.getFK_Flow(), "制度", "Bill", 700, 400, 200, 300);
+			PubClass.WinOpen(ContextHolderUtils.getResponse(), Glo.getCCFlowAppPath() + "ZhiDu/NodeZhiDuDtl.htm?FK_Node=" + this.getNodeID()+ "&FK_Flow=" + this.getFK_Flow(), "制度", "Bill", 700, 400, 200, 300);
 		} catch (IOException e) {
 			Log.DebugWriteError("NodeExt DoZhiDu()" + e.getMessage());
 		}
@@ -1169,7 +1157,7 @@ public class NodeExt extends Entity
 	public final String DoFengXianDian()
 	{
 		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), Glo.getCCFlowAppPath() + "ZhiDu/NodeFengXianDian.jsp?FK_Node=" + this.getNodeID()+ "&FK_Flow=" + this.getFK_Flow(), "制度", "Bill", 700, 400, 200, 300);
+			PubClass.WinOpen(ContextHolderUtils.getResponse(), Glo.getCCFlowAppPath() + "ZhiDu/NodeFengXianDian.htm?FK_Node=" + this.getNodeID()+ "&FK_Flow=" + this.getFK_Flow(), "制度", "Bill", 700, 400, 200, 300);
 		} catch (IOException e) {
 			Log.DebugWriteError("NodeExt DoFengXianDian()" + e.getMessage());		}		
 		return null;
@@ -1184,7 +1172,7 @@ public class NodeExt extends Entity
 		BP.WF.Node nd = new BP.WF.Node(this.getNodeID());
 		if (nd.getHisDeliveryWay() != DeliveryWay.ByCCFlowBPM)
 		{
-			return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.jsp?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+			return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 		}
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeAccepterRole.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
@@ -1199,11 +1187,11 @@ public class NodeExt extends Entity
 
 		if (nd.getHisDeliveryWay() != DeliveryWay.ByCCFlowBPM)
 		{
-			return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.jsp?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+			return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 		}
 		//    return "节点访问规则您没有设置按照bpm模式，所以您能执行该操作。要想执行该操作请选择节点属性中节点规则访问然后选择按照bpm模式计算，点保存按钮。";
 
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.jsp?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	 //   return null;
 	}
 	public final String DoTurn()
@@ -1239,7 +1227,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoActiveFlows()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/ConditionSubFlow.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Cond/ConditionSubFlow.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
 	 退回节点
@@ -1263,15 +1251,15 @@ public class NodeExt extends Entity
 	*/
 	public final String DXReport()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/DXReport.jsp?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/DXReport.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	public final String DoPush2Current()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Listen.jsp?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Listen.htm?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
 	}
 	public final String DoPush2Spec()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Listen.jsp?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Listen.htm?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
 	}
 	/** 
 	 执行消息收听
@@ -1279,19 +1267,19 @@ public class NodeExt extends Entity
 	*/
 	public final String DoListen()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Listen.jsp?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Listen.htm?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
 	}
 	public final String DoFeatureSet()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FeatureSetUI.jsp?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FeatureSetUI.htm?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
 	}
 	public final String DoShowSheets()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/ShowSheets.jsp?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/ShowSheets.htm?CondType=0&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=";
 	}
 	public final String DoCond()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Condition.jsp?CondType=" + CondType.Flow.getValue() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MainNode=" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=" + this.getNodeID();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Cond/Condition.htm?CondType=" + CondType.Flow.getValue() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MainNode=" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=" + this.getNodeID();
 	}
 	/** 
 	 设计傻瓜表单
@@ -1307,7 +1295,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoFormFree()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/CCForm/Frm.jsp?FK_MapData=ND" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=ND" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
 	 绑定独立表单
@@ -1329,7 +1317,7 @@ public class NodeExt extends Entity
 			case FreeForm:
 			try {
 				PubClass.WinOpen(ContextHolderUtils.getResponse(),
-						Glo.getCCFlowAppPath() + "WF/MapDef/CCForm/Frm.jsp?FK_MapData=ND" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow(),
+						Glo.getCCFlowAppPath() + "WF/MapDef/CCForm/Frm.htm?FK_MapData=ND" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow(),
 						"设计表单", "sheet", 1024, 768, 0, 0);
 			} catch (IOException e) {
 				Log.DebugWriteError("NodeExt DoMapData() case FreeForm" + e);

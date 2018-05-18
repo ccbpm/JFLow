@@ -670,7 +670,7 @@ public class MapFrmFool extends EntityNoName
 	}
 	public final String DoInitScript()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/InitScript.jsp?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 傻瓜表单属性.
@@ -678,7 +678,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoBodyAttr()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/BodyAttr.jsp?s=34&FK_MapData=" + this.getNo() + "&ExtType=BodyAttr&RefNo=";
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -686,7 +686,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoEvent()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Action.jsp?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
+		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 	/** 
 	 导出

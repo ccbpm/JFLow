@@ -679,7 +679,7 @@ public class MapFrmFree extends EntityNoName {
 	}
 
 	public final String DoInitScript() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/InitScript.jsp?s=34&FK_MapData="
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData="
 				+ this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 
@@ -689,7 +689,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoBodyAttr() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/BodyAttr.jsp?s=34&FK_MapData=" + this.getNo()
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo()
 				+ "&ExtType=BodyAttr&RefNo=";
 	}
 
@@ -699,7 +699,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoEvent() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Action.jsp?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
+		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 
 	/**
@@ -708,7 +708,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoMapExt() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/List.jsp?FK_MapData=" + this.getNo()
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/List.htm?FK_MapData=" + this.getNo()
 				+ "&T=sd";
 	}
 

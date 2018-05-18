@@ -1189,7 +1189,7 @@ public class MapDataExt extends EntityNoName
 	
 	public final String DoInitScript()
 	{
-		return basePath + "WF/Admin/FoolFormDesigner/MapExt/InitScript.jsp?s=34&FK_MapData="
+		return basePath + "WF/Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData="
 				+ this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 	
@@ -1200,7 +1200,7 @@ public class MapDataExt extends EntityNoName
 	 */
 	public final String DoEvent()
 	{
-		return basePath + "WF/Admin/AttrNode/Action.jsp?FK_MapData=" + this.getNo()
+		return basePath + "WF/Admin/AttrNode/Action.htm?FK_MapData=" + this.getNo()
 				+ "&T=sd&FK_Node=0";
 	}
 	

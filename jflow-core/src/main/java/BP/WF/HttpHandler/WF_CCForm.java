@@ -426,7 +426,7 @@ public class WF_CCForm extends WebContralBase {
                  athDesc.setHisDeleteWay(AthDeleteWay.None);
                  athDesc.setIsDownload(false);
                  athDesc.setHisCtrlWay(AthCtrlWay.WorkID); //没有方案.
-                 athDesc.Insert();
+                // athDesc.Insert();
              }
              return athDesc;
          }

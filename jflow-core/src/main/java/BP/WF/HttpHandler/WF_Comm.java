@@ -492,7 +492,9 @@ public class WF_Comm extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Entities_Init() throws Exception {
+		
 		try {
+			
 			Entities ens = ClassFactory.GetEns(this.getEnsName());
 			if (this.getParas() == null) {
 				return "0";

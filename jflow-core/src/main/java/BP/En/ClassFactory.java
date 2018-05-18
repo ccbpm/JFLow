@@ -448,7 +448,8 @@ public class ClassFactory {
 	 * @return En
 	 */
 	public static Entities GetEns(String className) {
-		if (!className.contains(".")) {
+		
+		if (className.contains(".")==false) {
 			BP.Sys.GEEntitys myens = new BP.Sys.GEEntitys(className);
 			return myens;
 		}

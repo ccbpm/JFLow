@@ -792,35 +792,6 @@ public class MapData extends EntityNoName
 	{
 		BP.Web.WebUser.SetSessionByKey("IsEditDtlModel", "1");
 	}
-
-
-		///#region 表单结构数据json
-	/** 
-	 表单图数据
-	 * @throws IOException 
-	 
-	*/
-	public final String getFormJson() throws IOException
-	{
-		String str= this.GetBigTextFromDB("FormJson");
-		if (str == null)
-		{
-			return "";
-		}
-		return str;
-	}
-	public final void setFormJson(String value)
-	{
-		try {
-			this.SaveBigTxtToDB("FormJson", value);
-		} catch (Exception e) {
-			Log.DebugWriteError("MapData setFormJson "+e.getMessage());
-		}
-	}
-
-		///#endregion
-
-
 		
 	/** 
 	 物理表

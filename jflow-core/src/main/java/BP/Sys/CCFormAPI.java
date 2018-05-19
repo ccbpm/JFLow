@@ -638,9 +638,6 @@ public class CCFormAPI
 		mapData.setDesignerTool("Html5");
 		mapData.Update();
 
-		//表单描述文件直接保存到数据库.  
-		mapData.setFormJson(jsonStrOfH5Frm);
-
 		//执行保存.
 		SaveFrm(fk_mapdata, jd);
 		

@@ -78,15 +78,6 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		return "绑定成功.";
 	}
 
-	/// <summary>
-	/// 加载表单
-	/// </summary>
-	/// <returns></returns>
-	public final String Loadform() throws Exception {
-		MapData mapData = new MapData(this.getFK_MapData());
-		return mapData.getFormJson(); // 要返回的值.
-	}
-
 	/**
 	 * 创建外键字段.
 	 * 
@@ -113,23 +104,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		}
 	}
 
-	/**
-	 * 加载表单
-	 * 
-	 * @return
-	 * @throws Exception 
-	 */
-	public final String FormDesigner_Loadform() throws Exception {
-		MapData mapData = new MapData(this.getFK_MapData());
-		try {
-			return mapData.getFormJson(); // 要返回的值.
-		} catch (IOException e) {
-			Log.DebugWriteError("WF_Admin_CCFormDesigner Loadform() :" + e.getMessage());
-			e.printStackTrace();
-		}
-		return "";
-	}
-
+	
 	/**
 	 * 转换拼音
 	 * 
@@ -497,7 +472,6 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	{
 		MapData md = new MapData(this.getFK_MapData());
 		md.ResetMaxMinXY();
-		md.setFormJson("");
 		md.Update();
 
 		return "重置成功.";

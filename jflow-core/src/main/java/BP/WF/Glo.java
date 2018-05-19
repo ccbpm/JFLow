@@ -250,10 +250,6 @@ public class Glo {
 			BP.Sys.Serial se = new BP.Sys.Serial();
 			se.CheckPhysicsTable();
 
-			// 升级fromjson .
-			MapData mapData = new MapData();
-			mapData.setFormJson("");
-
 			Flow flP = new Flow();
 			flP.setFlowJson("");
 

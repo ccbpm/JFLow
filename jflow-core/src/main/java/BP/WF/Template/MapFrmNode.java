@@ -279,17 +279,6 @@ public class MapFrmNode extends EntityNoName
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
 		//map.AddRefMethod(rm);
- 
-
-		rm = new RefMethod();
-		rm.Title = "重置表单"; //"设计表单";
-		rm.ClassMethodName = this.toString() + ".DoReset";
-		rm.Warning = "重置就是重新让设计器还原原来的设置. \t\n注意:执行重置有可能会导致部分的界面元素不能按照原始的方式还原上来.";
-		rm.Visable = true;
-		rm.RefAttrLinkLabel = "重置表单";
-		rm.Icon = "../../WF/Img/Check.png";
-		map.AddRefMethod(rm);
-
 
 		rm = new RefMethod();
 		rm.Title = "Tab顺序键"; // "设计表单";
@@ -333,13 +322,6 @@ public class MapFrmNode extends EntityNoName
 
 		rm.ClassMethodName = this.toString() + ".DoCopyFrm";
 		rm.Icon = "../../WF/Img/Btn/Copy.GIF";
-		rm.GroupName = "高级设置";
-		//map.AddRefMethod(rm);
-
-
-		rm = new RefMethod();
-		rm.Title = "重置表单";
-		rm.ClassMethodName = this.toString() + ".DoResetFrm";
 		rm.GroupName = "高级设置";
 		//map.AddRefMethod(rm);
 
@@ -407,13 +389,6 @@ public class MapFrmNode extends EntityNoName
 		return BP.WF.Glo.getCCFlowAppPath() +"WF/Admin/FoolFormDesigner/TabIdx.htm?FK_MapData=" + this.getNo();
 	}
 
-	public final String DoResetFrm()
-	{
-		String sql = "UPDATE Sys_MapData SET FormJson= null WHERE No='"+this.getNo()+"'";
-		DBAccess.RunSQL(sql);
-		return "表单已经重置成功, 请关闭表单设计器重新打开.";
-	}
-
 	/** 
 	 复制表单
 	 
@@ -425,14 +400,6 @@ public class MapFrmNode extends EntityNoName
 		return BP.Sys.CCFormAPI.CopyFrm(this.getNo(), frmID, frmName, fk_frmTree);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 节点表单方法.
-	public final String DoReset()
-	{
-		String sql = "UPDATE Sys_MapData SET FormJson = null WHERE No='"+this.getNo()+"'";
-		BP.DA.DBAccess.RunSQL(sql);
-		return "重置成功,您需要关闭当前H5的表单设计器然后重新打开.";
-	}
 	/** 
 	 启动自由表单设计器(SL)
 	 

@@ -175,6 +175,9 @@ public class FrmRB extends EntityMyPK
 		 map.AddTBString(FrmRBAttr.SetVal, null, "设置的值", true, false, 0, 200, 20);
 
 		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		
+        map.AddTBAtParas(1000);
+
 
 		this.set_enMap(map);
 		return this.get_enMap();

@@ -396,23 +396,18 @@ public class WF_CCForm extends WebContralBase {
      
      public BP.Sys.FrmAttachment GenerAthDescOfFoolTruck() throws Exception
      {
-         FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
-         sln.setMyPK(this.getFK_MapData() + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
-         if (sln.RetrieveFromDBSources() == 0)
-         {
-             BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-             athDesc.setMyPK(this.getFK_FrmAttachment());
-             athDesc.RetrieveFromDBSources();
-             return athDesc;
-         }
+    	 FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
          
-         // @0=默认方案@1=只读方案@2=自定义方案
-         
-         if ( sln.getFrmSln()==1 || sln.getFrmSln()==0 )
+         sln.setMyPK( this.GetRequestVal("FromFrm") + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
+         int result=sln.RetrieveFromDBSources();
+
+         if (result == 0 || sln.getFrmSln() == 1)
          {
              /*没有查询到解决方案, 就是只读方案 */
              BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
              athDesc.setMyPK(this.getFK_FrmAttachment());
+             athDesc.RetrieveFromDBSources();
+
              athDesc.setIsUpload(false);
              athDesc.setIsDownload(false);
              athDesc.setHisDeleteWay(AthDeleteWay.None); //删除模式.
@@ -428,14 +423,14 @@ public class WF_CCForm extends WebContralBase {
              if (athDesc.RetrieveFromDBSources() == 0)
              {
                  athDesc.setIsUpload(false);
-                 athDesc.setHisDeleteWay(AthDeleteWay.None);
+                 athDesc.setHisDeleteWay( AthDeleteWay.None);
                  athDesc.setIsDownload(false);
-                 athDesc.setHisCtrlWay(AthCtrlWay.WorkID); //没有方案.
-                // athDesc.Insert();
+                 athDesc.setHisCtrlWay( AthCtrlWay.WorkID); //没有方案.
+                 athDesc.Insert();
              }
              return athDesc;
          }
-        
+         
          return null;
      }
      

@@ -439,7 +439,7 @@ public class CCFormParse
 			}
 			else if (type.equals("FontWeight"))
 			{
-					if (val == null || val.toString().equals("normal"))
+					if ( DataType.IsNullOrEmpty(val) || val.toString().equals("normal"))
 					{
 						lab.setIsBold(false);
 						fontStyle.append(String.format("font-weight:normal;"));

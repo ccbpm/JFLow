@@ -45,7 +45,7 @@ public class DataType
 	  public static boolean IsNullOrEmpty(String s)
 			{
 		  
-		  if (s==null || s.equals("")==true)
+		  if (s==null || s.equals("")==true || s.equals("null")==true )
 			  return true;
 		  
 		  return false;

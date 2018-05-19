@@ -17,6 +17,14 @@ import BP.DA.Log;
 import BP.En.EditType;
 import BP.En.FieldTypeS;
 import BP.En.UIContralType;
+import BP.Sys.FrmAttachments;
+import BP.Sys.FrmBtns;
+import BP.Sys.FrmImgAths;
+import BP.Sys.FrmImgs;
+import BP.Sys.FrmLabs;
+import BP.Sys.FrmLines;
+import BP.Sys.FrmLinks;
+import BP.Sys.FrmRBs;
 import BP.Sys.GEDtl;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
@@ -24,6 +32,7 @@ import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapDataAttr;
 import BP.Sys.MapDtl;
+import BP.Sys.MapDtls;
 import BP.Sys.SFDBSrc;
 import BP.Sys.SysEnumMain;
 import BP.Sys.SystemConfig;
@@ -347,101 +356,65 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		
 		try {
 			
-			MapData mapData = new MapData(this.getFK_MapData());
+			  DataSet ds = new DataSet();
 
-			// 获取表单元素
-			String sqls = "SELECT * FROM Sys_MapAttr WHERE UIVisible=1 AND FK_MapData='" + this.getFK_MapData() + "';"
-					+ System.getProperty("line.separator") + "SELECT * FROM Sys_FrmBtn WHERE FK_MapData='"
-					+ this.getFK_MapData() + "';" + System.getProperty("line.separator")
-					+ "SELECT * FROM Sys_FrmRB WHERE FK_MapData='" + this.getFK_MapData() + "';"
-					+ System.getProperty("line.separator") + "SELECT * FROM Sys_FrmLab WHERE FK_MapData='"
-					+ this.getFK_MapData() + "';" + "SELECT * FROM Sys_FrmLink WHERE FK_MapData='"
-					+ this.getFK_MapData() + "';" + "SELECT * FROM Sys_FrmImg WHERE FK_MapData='" + this.getFK_MapData()
-					+ "';" + "SELECT * FROM Sys_FrmImgAth WHERE FK_MapData='" + this.getFK_MapData() + "';"
-					+ "SELECT * FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getFK_MapData() + "';"
-					+ "SELECT * FROM Sys_MapDtl WHERE FK_MapData='" + this.getFK_MapData() + "';"
-					+ "SELECT * FROM Sys_FrmLine WHERE FK_MapData='" + this.getFK_MapData() + "';"
-					+ "select '轨迹图' Name,'FlowChart' No,FrmTrackSta Sta,FrmTrack_X X,FrmTrack_Y Y,FrmTrack_H H,FrmTrack_W  W from WF_Node where nodeid="
-					+ this.getFK_Node()
-					+ " union select '审核组件' Name, 'FrmCheck' No,FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node where nodeid="
-					+ this.getFK_Node()
-					+ " union select '子流程' Name,'SubFlowDtl' No,SFSta Sta,SF_X X,SF_Y Y,SF_H H, SF_W W from WF_Node  where nodeid="
-					+ this.getFK_Node()
-					+ " union select '子线程' Name, 'ThreadDtl' No,FrmThreadSta Sta,FrmThread_X X,FrmThread_Y Y,FrmThread_H H,FrmThread_W W from WF_Node where nodeid="
-					+ this.getFK_Node()
-					+ " union select '流转自定义' Name,'FrmTransferCustom' No,FTCSta Sta,FTC_X X,FTC_Y Y,FTC_H H,FTC_W  W FROM WF_Node  where nodeid="
-					+ this.getFK_Node() + ";";
-			;
+              MapData mapData = new MapData(this.getFK_MapData());
 
-			 
+              //属性.
+              MapAttrs attrs = new MapAttrs(this.getFK_MapData());
+              attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIVisible, 1);
+              ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
-			DataSet ds = DBAccess.RunSQLReturnDataSet(sqls);
+              FrmBtns btns = new FrmBtns(this.getFK_MapData());
+              ds.Tables.add(btns.ToDataTableField("Sys_FrmBtn"));
 
-			//// 用列名称进行比对 重新设置
-			String mapAttrCols, frmBtnCols, frmRbCols, frmLabCols, sys_FrmLinkCols, sys_FrmImgCols, sys_FrmImgAthCols,
-					sys_FrmAttachmentCols, sys_MapDtlCols, sys_FrmLineCols, figureComCols;
-			mapAttrCols = "MyPK,FK_MapData,KeyOfEn,Name,DefVal,UIContralType,MyDataType,LGType,UIWidth,UIHeight,UIBindKey,UIRefKey,UIRefKeyText,UIVisible,UIIsEnable,UIIsLine,UIIsInput,Idx,IsSigan,X,Y,GUID,Tag,EditType,AtPara,ExtDefVal,ExtDefValText,MinLen,MaxLen,ExtRows,IsRichText,IsSupperText,Tip,ColSpan,ColSpanText,GroupID,GroupIDText";
-			frmBtnCols = "MyPK,FK_MapData,Text,X,Y,IsView,IsEnable,BtnType,UAC,UACContext,EventType,EventContext,MsgOK,MsgErr,GUID,GroupID";
-			frmRbCols = "MyPK,FK_MapData,KeyOfEn,EnumKey,Lab,IntKey,X,Y,GUID,Script,FieldsCfg,Tip";
-			frmLabCols = "MyPK,FK_MapData,Text,X,Y,FontSize,FontColor,FontName,FontStyle,FontWeight,IsBold,IsItalic,GUID";
-			sys_FrmLinkCols = "MyPK,FK_MapData,Text,URL,Target,X,Y,FontSize,FontColor,FontName,FontStyle,IsBold,IsItalic,GUID";
-			sys_FrmImgCols = "MyPK,FK_MapData,ImgAppType,X,Y,H,W,ImgURL,ImgPath,LinkURL,LinkTarget,GUID,Tag0,SrcType,IsEdit,Name,EnPK,ImgSrcType";
-			sys_FrmImgAthCols = "MyPK,FK_MapData,CtrlID,X,Y,H,W,IsEdit,GUID,Name,IsRequired";
-			sys_FrmAttachmentCols = "MyPK,FK_MapData,NoOfObj,FK_Node,Name,Exts,SaveTo,Sort,X,Y,W,H,IsUpload,IsDelete,IsDownload,IsOrder,IsAutoSize,IsNote,IsShowTitle,UploadType,CtrlWay,AthUploadWay,AtPara,RowIdx,GroupID,GUID,DeleteWay,IsWoEnableWF,IsWoEnableSave,IsWoEnableReadonly,IsWoEnableRevise,IsWoEnableViewKeepMark,IsWoEnablePrint,IsWoEnableOver,IsWoEnableSeal,IsWoEnableTemplete,IsWoEnableCheck,IsWoEnableInsertFlow,IsWoEnableInsertFengXian,IsWoEnableMarks,IsWoEnableDown,IsRowLock,IsToHeLiuHZ,IsHeLiuHuiZong,IsTurn2Html,AthRunModel";
-			sys_MapDtlCols = "No,Name,FK_MapData,PTable,GroupField,Model,ImpFixTreeSql,ImpFixDataSql,RowIdx,GroupID,RowsOfList,IsEnableGroupField,IsShowSum,IsShowIdx,IsCopyNDData,IsHLDtl,IsReadonly,IsShowTitle,IsView,IsInsert,IsDelete,IsUpdate,IsEnablePass,IsEnableAthM,IsEnableM2M,IsEnableM2MM,WhenOverSize,DtlOpenType,DtlShowModel,X,Y,H,W,FrmW,FrmH,MTR,GUID,FK_Node,AtPara,IsExp,ImpModel,ImpSQLSearch,ImpSQLInit,ImpSQLFull,FilterSQLExp,SubThreadWorker,SubThreadWorkerText";
-			sys_FrmLineCols = " MyPK,FK_MapData,X,Y,X1,Y1,X2,Y2,BorderWidth,BorderColor,GUID";
-			figureComCols = "Name,No,Sta,X,Y,H,W";
+              FrmRBs rbs = new FrmRBs(this.getFK_MapData());
+              ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
 
-			String[] tableCols = new String[11];
-			ds.Tables.get(0).TableName = "Sys_MapAttr";
-			tableCols[0] = mapAttrCols;
+              FrmLabs labs = new FrmLabs(this.getFK_MapData());
+              ds.Tables.add(labs.ToDataTableField("Sys_FrmLab"));
 
-			ds.Tables.get(1).TableName = "Sys_FrmBtn";
-			tableCols[1] = frmBtnCols;
-			ds.Tables.get(2).TableName = "Sys_FrmRB";
-			tableCols[2] = frmRbCols;
-			ds.Tables.get(3).TableName = "Sys_FrmLab";
-			tableCols[3] = frmLabCols;
-			ds.Tables.get(4).TableName = "Sys_FrmLink";
-			tableCols[4] = sys_FrmLineCols;
-			ds.Tables.get(5).TableName = "Sys_FrmImg";
-			tableCols[5] = sys_FrmImgCols;
-			ds.Tables.get(6).TableName = "Sys_FrmImgAth";
-			tableCols[6] = sys_FrmImgAthCols;
-			ds.Tables.get(7).TableName = "Sys_FrmAttachment";
-			tableCols[7] = sys_FrmAttachmentCols;
-			ds.Tables.get(8).TableName = "Sys_MapDtl";
-			tableCols[8] = sys_MapDtlCols;
-			ds.Tables.get(9).TableName = "Sys_FrmLine";
-			tableCols[9] = sys_FrmLineCols;
-			ds.Tables.get(10).TableName = "FigureCom";
-			tableCols[10] = figureComCols;
+              FrmLinks links = new FrmLinks(this.getFK_MapData());
+              ds.Tables.add(links.ToDataTableField("Sys_FrmLink"));
 
-			/// #region 解决oracle大小写问题.
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-				java.util.HashMap<String, String> dicCols = new java.util.HashMap<String, String>();
-				// 将所有的列名进行转换（适应ORACLE） ORACLE 不区分大小写，都是大写
-				for (int i = 0; i < ds.Tables.size(); i++) {
-					dicCols.clear();
-					// dicCols = (new
-					// List<string>(tableCols[i].Split(','))).ToDictionary(m =>
-					// m.ToString().Trim().ToLower(), m => m.Trim());
-					for (int m = 0; m < tableCols[i].split(",").length; m++) {
-						dicCols.put(tableCols[i].split(",")[m].toLowerCase(), tableCols[i].split(",")[m]);
-					}
-					DataTable dt = ds.Tables.get(i);
-					for (DataColumn dc : dt.Columns) {
-						if (dicCols.containsKey(dc.ColumnName.toLowerCase())) {
-							dc.ColumnName = dicCols.get(dc.ColumnName.toLowerCase());
-						}
-					}
-				}
-			}
-			
-			/// #endregion 解决oracle大小写问题.
+              FrmImgs imgs = new FrmImgs(this.getFK_MapData());
+              ds.Tables.add(imgs.ToDataTableField("Sys_FrmImg"));
 
-			 
-			return BP.Tools.Json.ToJson(ds);
+              FrmImgAths imgAths = new FrmImgAths(this.getFK_MapData());
+              ds.Tables.add(imgAths.ToDataTableField("Sys_FrmImgAth"));
+
+              FrmAttachments aths = new FrmAttachments(this.getFK_MapData());
+              ds.Tables.add(aths.ToDataTableField("Sys_FrmAttachment"));
+
+              MapDtls dtls = new MapDtls(this.getFK_MapData());
+              ds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
+
+              FrmLines lines = new FrmLines(this.getFK_MapData());
+              ds.Tables.add(lines.ToDataTableField("Sys_FrmLine"));
+
+              //组织节点组件信息.
+              String sql = "";
+              sql += "select '轨迹图' Name,'FlowChart' No,FrmTrackSta Sta,FrmTrack_X X,FrmTrack_Y Y,FrmTrack_H H,FrmTrack_W  W from WF_Node WHERE nodeid=" + this.getFK_Node();
+              sql += " union select '审核组件' Name, 'FrmCheck' No,FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node WHERE nodeid=" + this.getFK_Node();
+              sql += " union select '子流程' Name,'SubFlowDtl' No,SFSta Sta,SF_X X,SF_Y Y,SF_H H, SF_W W from WF_Node  WHERE nodeid=" + this.getFK_Node();
+              sql += " union select '子线程' Name, 'ThreadDtl' No,FrmThreadSta Sta,FrmThread_X X,FrmThread_Y Y,FrmThread_H H,FrmThread_W W from WF_Node WHERE nodeid=" + this.getFK_Node();
+              sql += " union select '流转自定义' Name,'FrmTransferCustom' No,FTCSta Sta,FTC_X X,FTC_Y Y,FTC_H H,FTC_W  W FROM WF_Node WHERE nodeid=" + this.getFK_Node() ;
+
+              DataTable dt = DBAccess.RunSQLReturnTable(sql);
+              dt.TableName = "FigureCom";
+              if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+              {
+                //  figureComCols = "Name,No,Sta,X,Y,H,W";
+                  dt.Columns.get(0).setColumnName("Name");
+                  dt.Columns.get(1).setColumnName("No");
+                  dt.Columns.get(2).setColumnName("Sta");
+                  dt.Columns.get(3).setColumnName("X");
+                  dt.Columns.get(4).setColumnName("Y");
+                  dt.Columns.get(5).setColumnName("H");
+                  dt.Columns.get(6).setColumnName("W");                
+                   
+              }
+              return BP.Tools.Json.ToJson(ds);
 			
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();

@@ -332,7 +332,7 @@ public class Json
 					   jsonString += "\"\","; 
 					   continue;
 					}
-				} 
+				}
 				
 
 				if (column.DataType == Integer.class

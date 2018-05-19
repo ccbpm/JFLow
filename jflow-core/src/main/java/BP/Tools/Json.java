@@ -339,6 +339,7 @@ public class Json
 						|| column.DataType == Long.class
 					    || column.DataType == long.class
 					    || column.DataType == Float.class
+					    || column.DataType == java.lang.Float.class
 					    || column.DataType == float.class
 					    || column.DataType == Double.class
 					    || column.DataType == double.class

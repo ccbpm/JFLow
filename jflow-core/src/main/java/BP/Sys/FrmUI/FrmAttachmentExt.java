@@ -861,6 +861,28 @@ public class FrmAttachmentExt extends EntityMyPK
 		{
 			this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
 		}
+		
+		
+		
+		  //更新相关的分组信息.
+        GroupField gf = new GroupField();
+        int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
+        if (i == 0)
+        {
+            gf.setLab(this.getName());
+            gf.setFrmID( this.getFK_MapData());
+            gf.setCtrlType("Ath");
+            gf.Insert();
+        }
+        else
+        {
+            gf.setLab(this.getName());
+            gf.setFrmID(this.getFK_MapData());
+            gf.setCtrlType( "Ath");
+            gf.Update();
+        }
+
+        
 
 		return super.beforeUpdateInsertAction();
 	}

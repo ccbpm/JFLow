@@ -1289,6 +1289,16 @@ public class MapDtlExt extends EntityNoName
         dtl.setLinkTarget( this.getLinkTarget());        
 		dtl.Update();
 		
+		/* 
+        //获得事件实体.
+        String febd = BP.Sys.Glo.GetFormDtlEventBaseByEnName(this.getNo());
+        if (febd == null)
+            this.setFEBD = "";
+        else
+            this.FEBD = febd.ToString();
+        */
+		
+        
 		
         //更新分组标签.
         BP.Sys.GroupField gf = new GroupField();

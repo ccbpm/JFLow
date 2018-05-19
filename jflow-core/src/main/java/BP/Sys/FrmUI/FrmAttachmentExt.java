@@ -667,88 +667,106 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.Java_SetEnType(EnType.Sys);
 		map.AddMyPK();
 
-		//#region 基本属性。
-		map.AddTBString(FrmAttachmentAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
-		map.AddTBString(FrmAttachmentAttr.NoOfObj, null, "附件编号", true, true, 0, 50, 20);
-		map.AddTBInt(FrmAttachmentAttr.FK_Node, 0, "节点控制(对sln有效)", false, false);
+		 
 
-		//for渔业厅增加.
-		map.AddDDLSysEnum(FrmAttachmentAttr.AthRunModel, 0, "运行模式", true, true, FrmAttachmentAttr.AthRunModel, "@0=流水模式@1=固定模式@自定义页面");
+       // #region 基本属性。
+        map.AddTBString(FrmAttachmentAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
+        map.AddTBString(FrmAttachmentAttr.NoOfObj, null, "附件标识", true, true, 0, 50, 20);
+        map.AddTBInt(FrmAttachmentAttr.FK_Node, 0, "节点控制(对sln有效)", false, false);
 
-		map.AddTBString(FrmAttachmentAttr.Name, null, "附件名称", true, false, 0, 50, 20,true);
-		map.AddTBString(FrmAttachmentAttr.Exts, null, "文件格式(*.*,*.doc)", true, false, 0, 50, 20, true, null);
-		
-		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay,
-                "@0=保存到Web服务器@1=保存到数据库@2=ftp服务器");
-		
-		map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20,true,null);
-		map.AddTBString(FrmAttachmentAttr.Sort, null, "类别(可为空)", true, false, 0, 500, 20, true, null);
-		map.AddBoolean(FrmAttachmentAttr.IsTurn2Html, false, "是否转换成html(方便手机浏览)", true, true,true);
+        //for渔业厅增加.
+        map.AddDDLSysEnum(FrmAttachmentAttr.AthRunModel, 0, "运行模式", true, true, FrmAttachmentAttr.AthRunModel,
+          "@0=流水模式@1=固定模式@2=自定义页面");
 
-			//位置.
-		map.AddTBFloat(FrmAttachmentAttr.X, 5, "X", false, false);
-		map.AddTBFloat(FrmAttachmentAttr.Y, 5, "Y", false, false);
+        map.AddTBString(FrmAttachmentAttr.Name, null, "附件名称", true, false, 0, 50, 20,true);
 
-		map.AddTBFloat(FrmAttachmentAttr.W, 40, "宽度", false, false);
-		map.AddTBFloat(FrmAttachmentAttr.H, 150, "高度", false, false);
-		//#endregion 基本属性。
+        map.AddTBString(FrmAttachmentAttr.Exts, null, "文件格式", true, false, 0, 50, 20, true, null);
+        map.SetHelperAlert(FrmAttachmentAttr.Exts, "上传要求,设置模式为: *.*, *.doc, *.docx, *.png,多个中间用逗号分开.\t\n表示仅仅允许上传指定的后缀的文件.");
 
-		//#region 权限控制。
-		//hzm新增列
-		// map.AddTBInt(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的", false, false);
+        map.AddTBInt("NumOfUpolad", 0, "最低上传数量", true, false);
+        map.SetHelperAlert("NumOfUpolad", "如果为0则标识必须上传. \t\n用户上传的附件数量低于指定的数量就不让保存.");
 
-		map.AddDDLSysEnum(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, "@0=不能删除@1=删除所有@2=只能删除自己上传的");
+        //for tianye group 
+        map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay,
+          "@0=保存到IIS服务器@1=保存到数据库@2=ftp服务器");
 
-		map.AddBoolean(FrmAttachmentAttr.IsUpload, true, "是否可以上传", false, false);
-		map.AddBoolean(FrmAttachmentAttr.IsDownload, true, "是否可以下载", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsOrder, false, "是否可以排序", true, true);
+        map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", false, false, 0, 150, 20, true, null);
 
-		map.AddBoolean(FrmAttachmentAttr.IsAutoSize, true, "自动控制大小", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsNote, true, "是否增加备注", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsExpCol, true, "是否启用扩展列", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsShowTitle, true, "是否显示标题列", true, true);
-		map.AddDDLSysEnum(FrmAttachmentAttr.UploadType, 0, "上传类型", true, false, FrmAttachmentAttr.CtrlWay, "@0=单个@1=多个@2=指定");
 
-		//对于父子流程有效.
-		//map.AddTBInt(FrmAttachmentAttr.CtrlWay, 0, "控制呈现控制方式0=PK,1=FID,2=ParentID", true, false);
-		map.AddDDLSysEnum(FrmAttachmentAttr.CtrlWay, 0, "控制呈现控制方式", true, true, FrmAttachmentAttr.CtrlWay + "Ath", "@0=PK-主键@1=FID-流程ID@2=ParentID-父流程ID@3=仅能查看自己上传的数据");
+        map.AddTBString(FrmAttachmentAttr.Sort, null, "类别", true, false, 0, 500, 20, true, null);
+        map.SetHelperAlert(FrmAttachmentAttr.Sort, "比如:生产类,文件类,目前已经支持了扩展列,可以使用扩展列定义更多的字段，该设置将要被取消.");
 
-		map.AddDDLSysEnum(FrmAttachmentAttr.AthUploadWay, 0, "控制上传控制方式", true, true, FrmAttachmentAttr.CtrlWay, "@0=继承模式@1=协作模式");
-		//#endregion 权限控制。
-		 map.AddTBString(FrmAttachmentAttr.DataRefNoOfObj, "AttachM1", "对应附件标识(对WorkID权限模式有效)", true, false, 0, 150, 20);
-		//#region WebOffice控制方式。
-		map.AddBoolean(FrmAttachmentAttr.IsRowLock, true, "是否启用锁定行", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableWF, true, "是否启用weboffice", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableSave, true, "是否启用保存", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableReadonly, true, "是否只读", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableRevise, true, "是否启用修订", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableViewKeepMark, true, "是否查看用户留痕", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnablePrint, true, "是否打印", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableSeal, true, "是否启用签章", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableOver, true, "是否启用套红", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableTemplete, true, "是否启用公文模板", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableCheck, true, "是否自动写入审核信息", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableInsertFlow, true, "是否插入流程", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableInsertFengXian, true, "是否插入风险点", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableMarks, true, "是否启用留痕模式", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsWoEnableDown, true, "是否启用下载", true, true);
-		//#endregion WebOffice控制方式。
+        map.AddBoolean(FrmAttachmentAttr.IsTurn2Html, false, "是否转换成html(方便手机浏览)", true, true,true);
 
-		//#region 节点相关
-		//map.AddDDLSysEnum(FrmAttachmentAttr.DtlOpenType, 0, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, 
-		//    "@0=不能删除@1=删除所有@2=只能删除自己上传的");
-		map.AddBoolean(FrmAttachmentAttr.IsToHeLiuHZ, true, "该附件是否要汇总到合流节点上去？(对子线程节点有效)", true, true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsHeLiuHuiZong, true, "是否是合流节点的汇总附件组件？(对合流节点有效)", true, true, true);
-		///#endregion 节点相关
+        //位置.
+        map.AddTBFloat(FrmAttachmentAttr.X, 5, "X", false, false);
+        map.AddTBFloat(FrmAttachmentAttr.Y, 5, "Y", false, false);
 
-		//map.AddTBInt(FrmAttachmentAttr.AthUploadWay, 0, "控制上传控制方式0=继承模式,1=协作模式.", true, false);
+        map.AddTBFloat(FrmAttachmentAttr.W, 40, "宽度", true, false);
+        map.AddTBFloat(FrmAttachmentAttr.H, 150, "高度", true, false);
+      //  #endregion 基本属性。
 
-		///#region 其他属性。
-		//参数属性.
-		map.AddTBAtParas(3000);
-		map.AddTBInt(FrmAttachmentAttr.GroupID, 0, "GroupID", false, true);
-		map.AddTBString(FrmAttachmentAttr.GUID, null, "GUID", false, true, 0, 128, 20);
-		///#endregion 其他属性。
+      //  #region 权限控制。
+        //hzm新增列
+        // map.AddTBInt(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的", false, false);
+
+        map.AddDDLSysEnum(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, 
+            "@0=不能删除@1=删除所有@2=只能删除自己上传的");
+
+        map.AddBoolean(FrmAttachmentAttr.IsUpload, true, "是否可以上传", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsDownload, true, "是否可以下载", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsOrder, false, "是否可以排序", true, true);
+
+        map.AddBoolean(FrmAttachmentAttr.IsAutoSize, true, "自动控制大小", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsNote, true, "是否增加备注", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsExpCol, true, "是否启用扩展列", true, true);
+
+        map.AddBoolean(FrmAttachmentAttr.IsShowTitle, true, "是否显示标题列", true, true);
+        map.AddDDLSysEnum(FrmAttachmentAttr.UploadType, 0, "上传类型", true, false,FrmAttachmentAttr.CtrlWay, "@0=单个@1=多个@2=指定");
+
+        map.AddDDLSysEnum(FrmAttachmentAttr.AthUploadWay, 0, "控制上传控制方式", true, true, FrmAttachmentAttr.AthUploadWay,"@0=继承模式@1=协作模式");
+
+        map.AddDDLSysEnum(FrmAttachmentAttr.CtrlWay, 0, "控制呈现控制方式", true, true, "Ath"+FrmAttachmentAttr.CtrlWay,
+            "@0=PK-主键@1=FID-流程ID@2=ParentID-父流程ID@3=仅能查看自己上传的附件@4=按照WorkID计算(对流程节点表单有效)");
+
+
+        //map.AddDDLSysEnum(FrmAttachmentAttr.DataRef, 0, "数据引用", true, true, FrmAttachmentAttr.DataRef,
+        //    "@0=当前组件ID@1=指定的组件ID");
+     //   #endregion 权限控制。
+
+     //   #region WebOffice控制方式。
+        map.AddBoolean(FrmAttachmentAttr.IsRowLock, true, "是否启用锁定行", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableWF, true, "是否启用weboffice", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableSave, true, "是否启用保存", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableReadonly, true, "是否只读", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableRevise, true, "是否启用修订", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableViewKeepMark, true, "是否查看用户留痕", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnablePrint, true, "是否打印", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableSeal, true, "是否启用签章", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableOver, true, "是否启用套红", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableTemplete, true, "是否启用公文模板", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableCheck, true, "是否自动写入审核信息", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableInsertFlow, true, "是否插入流程", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableInsertFengXian, true, "是否插入风险点", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableMarks, true, "是否启用留痕模式", true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsWoEnableDown, true, "是否启用下载", true, true);
+      //  #endregion WebOffice控制方式。
+
+       // #region 节点相关
+        //map.AddDDLSysEnum(FrmAttachmentAttr.DtlOpenType, 0, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, 
+        //    "@0=不能删除@1=删除所有@2=只能删除自己上传的");
+        map.AddBoolean(FrmAttachmentAttr.IsToHeLiuHZ, true, "该附件是否要汇总到合流节点上去？(对子线程节点有效)", true, true, true);
+        map.AddBoolean(FrmAttachmentAttr.IsHeLiuHuiZong, true, "是否是合流节点的汇总附件组件？(对合流节点有效)", true, true, true);
+        map.AddTBString(FrmAttachmentAttr.DataRefNoOfObj, "AttachM1", "对应附件标识", true, false, 0, 150, 20);
+        map.SetHelperAlert("DataRefNoOfObj", "对WorkID权限模式有效,用于查询贯穿整个流程的附件标识,与从表的标识一样.");
+
+        
+       // #endregion 节点相关
+
+       // #region 其他属性。
+        //参数属性.
+        map.AddTBAtParas(3000);
+       // #endregion 其他属性。
 
 
 		RefMethod rm = new RefMethod();

@@ -875,117 +875,104 @@ public class MapDtlExt extends EntityNoName
  //System.out.println(EnType.Sys);
 		
 		//  #region 基础信息.
+ 
 
-          map.AddTBStringPK(MapDtlAttr.No, null, "编号", true, false, 1, 100, 20);
-          map.AddTBString(MapDtlAttr.Name, null, "名称", true, false, 1, 200, 20);
-          map.AddTBString(MapDtlAttr.Alias, null, "别名", true, false, 0, 100, 20, false);
-          map.AddTBString(MapDtlAttr.FK_MapData, null, "表单ID", true, true, 0, 100, 20);
-          map.AddTBString(MapDtlAttr.PTable, null, "存储表", true, false, 0, 200, 20);
-          map.AddTBString(MapDtlAttr.FEBD, null, "事件类实体类", true, true, 0, 100, 20, false);
+     //   #region 基础信息.
+        map.AddTBStringPK(MapDtlAttr.No, null, "编号", true, false, 1, 100, 20);
+        map.AddTBString(MapDtlAttr.Name, null, "名称", true, false, 1, 200, 20);
+        map.AddTBString(MapDtlAttr.Alias, null, "别名", true, false, 0, 100, 20, false);
+        map.SetHelperAlert(MapDtlAttr.Alias, "用于Excel表单有效.");
 
-          map.AddDDLSysEnum(MapDtlAttr.Model, 0, "工作模式", true, true,MapDtlAttr.Model, "@0=普通@1=固定行");
+        map.AddTBString(MapDtlAttr.FK_MapData, null, "表单ID", true, true, 0, 100, 20);
+        map.AddTBString(MapDtlAttr.PTable, null, "存储表", true, false, 0, 200, 20);
+        map.SetHelperAlert(MapDtlAttr.PTable, "默认与编号为同一个存储表.");
 
-          //map.AddTBString(MapDtlAttr.ImpFixTreeSql, null, "固定列树形SQL", true, false, 0, 500, 20);
-          //map.AddTBString(MapDtlAttr.ImpFixDataSql, null, "固定列数据SQL", true, false, 0, 500, 20);
+        map.AddTBString(MapDtlAttr.FEBD, null, "事件类实体类", true, true, 0, 100, 20, false);
 
-          map.AddTBInt(MapDtlAttr.RowsOfList, 6, "初始化行数", true, false);
+        map.AddDDLSysEnum(MapDtlAttr.Model, 0, "工作模式", true, true,MapDtlAttr.Model, "@0=普通@1=固定行");
 
-          map.AddBoolean(MapDtlAttr.IsEnableGroupField, false, "是否启用分组字段", true, true);
+        //map.AddTBString(MapDtlAttr.ImpFixTreeSql, null, "固定列树形SQL", true, false, 0, 500, 20);
+        //map.AddTBString(MapDtlAttr.ImpFixDataSql, null, "固定列数据SQL", true, false, 0, 500, 20);
 
-          map.AddBoolean(MapDtlAttr.IsShowSum, true, "是否显示合计？", true, true);
-          map.AddBoolean(MapDtlAttr.IsShowIdx, true, "是否显示序号？", true, true);
+        map.AddTBInt(MapDtlAttr.RowsOfList, 6, "初始化行数", true, false);
+        map.SetHelperAlert(MapDtlAttr.RowsOfList, "对第1个版本有效.");
 
-          map.AddBoolean(MapDtlAttr.IsReadonly, false, "是否只读？", true, true);
-          map.AddBoolean(MapDtlAttr.IsShowTitle, true, "是否显示标题？", true, true);
-          map.AddBoolean(MapDtlAttr.IsView, true, "是否可见？", true, true);
+        map.AddBoolean(MapDtlAttr.IsEnableGroupField, false, "是否启用分组字段", true, true);
 
+        map.AddBoolean(MapDtlAttr.IsShowSum, true, "是否显示合计？", true, true);
+        map.AddBoolean(MapDtlAttr.IsShowIdx, true, "是否显示序号？", true, true);
 
-          map.AddBoolean(MapDtlAttr.IsInsert, true, "是否可以插入行？", true, true);
-          map.AddBoolean(MapDtlAttr.IsDelete, true, "是否可以删除行？", true, true);
-          map.AddBoolean(MapDtlAttr.IsUpdate, true, "是否可以更新？", true, true);
+        map.AddBoolean(MapDtlAttr.IsReadonly, false, "是否只读？", true, true);
+        map.AddBoolean(MapDtlAttr.IsShowTitle, true, "是否显示标题？", true, true);
+        map.AddBoolean(MapDtlAttr.IsView, true, "是否可见？", true, true);
 
-          map.AddBoolean(MapDtlAttr.IsEnablePass, false, "是否启用通过审核功能?", true, true);
-          map.AddBoolean(MapDtlAttr.IsEnableAthM, false, "是否启用多附件", true, true);
+        map.AddBoolean(MapDtlAttr.IsInsert, true, "是否可以插入行？", true, true);
+        map.AddBoolean(MapDtlAttr.IsDelete, true, "是否可以删除行？", true, true);
+        map.AddBoolean(MapDtlAttr.IsUpdate, true, "是否可以更新？", true, true);
+        map.AddBoolean(MapDtlAttr.IsEnableAthM, false, "是否启用多附件", true, true);
+        map.AddDDLSysEnum(MapDtlAttr.WhenOverSize, 0, "超出行数", true, true,MapDtlAttr.WhenOverSize, "@0=不处理@1=向下顺增行@2=次页显示");
 
-          //map.AddBoolean(MapDtlAttr.IsEnableM2M, false, "是否启用M2M", true, true);
-          //map.AddBoolean(MapDtlAttr.IsEnableM2MM, false, "是否启用M2M2", true, true);
+        // 为浙商银行设置从表打开.翻译.
+        map.AddDDLSysEnum(MapDtlAttr.ListShowModel, 0, "列表数据显示格式", true, true,MapDtlAttr.ListShowModel, "@0=表格@1=卡片");
 
+        map.AddDDLSysEnum(MapDtlAttr.EditModel, 0, "编辑数据方式", true, true, MapDtlAttr.EditModel, "@0=表格模式@1=傻瓜表单@2=自由表单");
+        map.SetHelperAlert(MapDtlAttr.EditModel, "格式为:第1种类型就要新建行,其他类型新建的时候弹出卡片.");
+ 
 
-          map.AddDDLSysEnum(MapDtlAttr.WhenOverSize, 0, "超出行数", true, true,MapDtlAttr.WhenOverSize, "@0=不处理@1=向下顺增行@2=次页显示");
+        //对显示的结果要做一定的限制.
+        map.AddTBString(MapDtlAttr.FilterSQLExp, null, "过滤数据SQL表达式", true, false, 0, 200, 20,true);
+        map.SetHelperAlert(MapDtlAttr.FilterSQLExp, "格式为:WFState=1 过滤WFState=1的数据");
 
-          // 为浙商银行设置从表打开. @于庆海翻译.
-          map.AddDDLSysEnum(MapDtlAttr.ListShowModel, 0, "列表数据显示格式", true, true,MapDtlAttr.ListShowModel, "@0=表格@1=卡片");
-          map.AddDDLSysEnum(MapDtlAttr.EditModel, 0, "行数据显示格式", true, true,MapDtlAttr.EditModel, "@0=无@1=傻瓜表单@2=自由表单");
-          map.AddDDLSysEnum(MapDtlAttr.DtlOpenType, 1, "数据开放类型", true, true,MapDtlAttr.DtlOpenType, "@0=操作员@1=工作ID@2=流程ID");
+        //列自动计算表达式.
+        map.AddTBString(MapDtlAttr.ColAutoExp, null, "列自动计算", true, false, 0, 200, 20, true);
+        map.SetHelperAlert(MapDtlAttr.ColAutoExp, "格式为:@XiaoJi:Sum@NingLing:Avg 要对小计求合计,对年龄求平均数.不配置不显示.");
 
-
-          //map.AddTBFloat(MapDtlAttr.X, 5, "距左", false, false);
-          //map.AddTBFloat(MapDtlAttr.Y, 5, "距上", false, false);
-
-          //map.AddTBFloat(MapDtlAttr.H, 150, "高度", false, false);
-          //map.AddTBFloat(MapDtlAttr.W, 200, "宽度", false, false);
-
-          //map.AddTBFloat(MapDtlAttr.FrmW, 900, "表单宽度", true, true);
-          //map.AddTBFloat(MapDtlAttr.FrmH, 1200, "表单高度", true, true);
-
-          //对显示的结果要做一定的限制.
-          map.AddTBString(MapDtlAttr.FilterSQLExp, null, "过滤数据SQL表达式", true, false, 0, 200, 20,true);
-          map.SetHelperAlert(MapDtlAttr.FilterSQLExp, "格式为:WFState=1 过滤WFState=1的数据");
-
-          
-          //要显示的列.
-          map.AddTBString(MapDtlAttr.ShowCols, null, "显示的列", true, false, 0, 500, 20, true);
-          map.SetHelperAlert(MapDtlAttr.ShowCols, "默认为空,全部显示,如果配置了就按照配置的计算,格式为:field1,field2");
+        //要显示的列.
+        map.AddTBString(MapDtlAttr.ShowCols, null, "显示的列", true, false, 0, 500, 20, true);
+        map.SetHelperAlert(MapDtlAttr.ShowCols, "默认为空,全部显示,如果配置了就按照配置的计算,格式为:field1,field2");
         
-          
-          //列自动计算表达式.
-          map.AddTBString(MapDtlAttr.ColAutoExp, null, "列自动计算", true, false, 0, 200, 20, true);
-          map.SetHelperAlert(MapDtlAttr.ColAutoExp, "格式为:@XiaoJi:Sum@NingLing:Avg 要对小计求合计,对年龄求平均数.不配置不显示.");
+        map.AddTBString(FrmBtnAttr.GUID, null, "GUID", false, false, 0, 128, 20);
 
-         
-          map.AddTBString(FrmBtnAttr.GUID, null, "GUID", false, false, 0, 128, 20);
-         // #endregion 基础信息.
+     //   #endregion 基础信息.
 
-          //#region 导入导出填充.
-          // 2014-07-17 for xinchang bank.
+     //   #region 导入导出填充.
+        // 2014-07-17 for xinchang bank.
+        map.AddBoolean(MapDtlAttr.IsExp, true, "是否可以导出？(导出到Excel,Txt,html类型文件.)", true, true);
 
-          map.AddBoolean(MapDtlAttr.IsExp, true, "是否可以导出？(导出到Excel,Txt,html类型文件.)", true, true, true);
-          
-          //导入模式.
-          map.AddDDLSysEnum(MapDtlAttr.ImpModel, 0, "导入方式", true, true, MapDtlAttr.ImpModel,
-              "@0=不导入@1=按SQL设置导入@2=按JSON模式导入@3=按照xls文件模版导入");
-          map.SetHelperAlert(MapDtlAttr.EditModel, "您需要在相关功能里设置相对应的导入模式设置.");
-           
-          map.AddTBStringDoc(MapDtlAttr.ImpSQLInit, null, "初始化SQL(初始化表格的时候的SQL数据,可以为空)", true, false, true);
-          map.AddTBStringDoc(MapDtlAttr.ImpSQLSearch, null, "查询SQL(SQL里必须包含@Key关键字.)", true, false,true);
-          map.AddTBStringDoc(MapDtlAttr.ImpSQLFullOneRow, null, "数据填充一行数据的SQL(必须包含@Key关键字,为选择的主键)", true, false,true);
+        //导入模式.
+        map.AddDDLSysEnum(MapDtlAttr.ImpModel, 0, "导入方式", true, true, MapDtlAttr.ImpModel,
+            "@0=不导入@1=按配置模式导入@2=按照xls文件模版导入");
+        map.SetHelperAlert(MapDtlAttr.ImpModel, "您需要在相关功能里设置相对应的导入模式设置.");
+        map.AddTBStringDoc(MapDtlAttr.ImpSQLInit, null, "初始化SQL(初始化表格的时候的SQL数据,可以为空)", true, false, true);
+        map.AddTBStringDoc(MapDtlAttr.ImpSQLSearch, null, "查询SQL(SQL里必须包含@Key关键字.)", true, false,true);
+        map.AddTBStringDoc(MapDtlAttr.ImpSQLFullOneRow, null, "数据填充一行数据的SQL(必须包含@Key关键字,为选择的主键)", true, false,true);
+        map.AddTBString(MapDtlAttr.ImpSQLNames, null, "列的中文名称", true, false, 0, 900, 20, true);
+      //  #endregion 导入导出填充.
 
-        //  #endregion 导入导出填充.
+      //  #region 多表头.
+        //MTR 多表头列.
+        map.AddTBStringDoc(MapDtlAttr.MTR, null, "请书写html标记,以《TR》开头，以《/TR》结尾。", true, false, true);
+      //  #endregion 多表头.
 
-          //#region 多表头.
-          //MTR 多表头列.
-          map.AddTBStringDoc(MapDtlAttr.MTR, null, "请书写html标记,以《TR》开头，以《/TR》结尾。", true, false, true);
-          //#endregion 多表头.
+       // #region 超链接.
+        map.AddBoolean(MapDtlAttr.IsEnableLink, false, "是否启用超链接", true, true);
+        map.AddTBString(MapDtlAttr.LinkLabel, "", "超连接标签", true, false, 0, 50, 100);
+        map.AddTBString(MapDtlAttr.LinkTarget, null, "连接目标", true, false, 0, 10, 100);
+        map.AddTBString(MapDtlAttr.LinkUrl, null, "连接URL", true, false, 0, 200, 200, true);
+        //#endregion 多表头.
 
-          //#region 超链接.
-          map.AddBoolean(MapDtlAttr.IsEnableLink, false, "是否启用超链接", true, true);
-          map.AddTBString(MapDtlAttr.LinkLabel, "", "超连接标签", true, false, 0, 50, 100);
-          map.AddTBString(MapDtlAttr.LinkTarget, null, "连接目标", true, false, 0, 10, 100);
-          map.AddTBString(MapDtlAttr.LinkUrl, null, "连接URL", true, false, 0, 200, 200, true);
-        //  #region 工作流相关.
-          //add 2014-02-21.
-          map.AddTBInt(MapDtlAttr.FK_Node, 0, "节点(用户独立表单权限控制)", false, false);
-          map.AddBoolean(MapDtlAttr.IsCopyNDData, true, "是否允许copy节点数据", false, false);
-          map.AddBoolean(MapDtlAttr.IsHLDtl, false, "是否是合流汇总", false, false);
-
-          String sql = "SELECT KeyOfEn as No, Name FROM Sys_MapAttr WHERE FK_MapData='@No' AND  ( (MyDataType =1 and UIVisible=1 ) or (UIContralType=1))";
-          map.AddDDLSQL(MapDtlAttr.SubThreadWorker, null, "子线程处理人字段", sql, true);
-          map.AddBoolean(MapDtlAttr.IsEnablePass, false, "是否启用通过审核功能?", true, true);
-          map.AddDDLSysEnum(MapDtlAttr.DtlOpenType, 1, "数据开放类型", true, true, MapDtlAttr.DtlOpenType, "@0=操作员@1=工作ID@2=流程ID");
-          //#endregion 工作流相关.
-          
-		
-
+        //#region 工作流相关.
+        //add 2014-02-21.
+        map.AddBoolean(MapDtlAttr.IsCopyNDData, true, "是否允许copy节点数据", true, false);
+        map.AddTBInt(MapDtlAttr.FK_Node, 0, "节点(用户独立表单权限控制)", false, false);
+        map.AddBoolean(MapDtlAttr.IsHLDtl, false, "是否是合流汇总", true, true);
+        String sql = "SELECT KeyOfEn as No, Name FROM Sys_MapAttr WHERE FK_MapData='@No' AND  ( (MyDataType =1 and UIVisible=1 ) or (UIContralType=1))";
+        map.AddDDLSQL(MapDtlAttr.SubThreadWorker, null, "子线程处理人字段", sql, true);
+        map.AddBoolean(MapDtlAttr.IsEnablePass, false, "是否启用通过审核功能?", true, true);
+        map.AddDDLSysEnum(MapDtlAttr.DtlOpenType, 1, "数据开放类型", true, true, MapDtlAttr.DtlOpenType, "@0=操作员@1=工作ID@2=流程ID");
+        //#endregion 工作流相关.
+        
+ 
 		RefMethod rm = new RefMethod();
 //		rm.Title = "高级设置"; // "设计表单";
 //		rm.ClassMethodName = this.toString() + ".DoAdvSetting";
@@ -994,9 +981,7 @@ public class MapDtlExt extends EntityNoName
 //		rm.refMethodType = RefMethodType.RightFrameOpen;
 //		rm.Target = "_blank";
 //		map.AddRefMethod(rm);
-
-		 
-
+ 
 //		rm = new RefMethod();
 //		rm.Title = "事件"; // "设计表单";
 //		rm.ClassMethodName = this.toString() + ".DoAction";

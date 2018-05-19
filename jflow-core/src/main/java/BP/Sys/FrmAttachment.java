@@ -706,10 +706,7 @@ public class FrmAttachment extends EntityMyPK
 		this.SetPara(FrmAttachmentAttr.FastKeyGenerRole, value);
 	}
 
-		///#endregion 快捷键
-
-
-		
+	 
 	/** 
 	 附件
 	 
@@ -757,6 +754,9 @@ public class FrmAttachment extends EntityMyPK
 
 		map.AddTBString(FrmAttachmentAttr.Name, null, "名称", true, false, 0, 50, 20);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "要求上传的格式", true, false, 0, 50, 20);
+        map.AddTBInt("NumOfUpolad", 0, "最低上传数量", true, false);
+
+//		map.AddTBInt(FrmAttachmentAttr., 5, "X", true, false);
 		
 		map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20);
 		

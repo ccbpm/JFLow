@@ -94,7 +94,7 @@ public class MapDtlAttr extends EntityNoNameAttr
 	
 	public static final String ImpSQLFullOneRow = "ImpSQLFullOneRow";
 	public static final String EditModel = "EditModel";
-	
+	public static final String ImpSQLNames = "ImpSQLNames"; 
 	
 	/** 
 	 是否显示标题

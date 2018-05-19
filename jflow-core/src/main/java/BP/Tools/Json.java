@@ -335,11 +335,14 @@ public class Json
 				} 
 				
 
-				if (column.DataType == Integer.class  
+				if (column.DataType == Integer.class
 						|| column.DataType == Long.class
+					    || column.DataType == long.class
 					    || column.DataType == Float.class
+					    || column.DataType == float.class
 					    || column.DataType == Double.class
-						|| column.DataType == float.class)
+					    || column.DataType == double.class
+						)
 				{
 					if(obj.equals(""))
 						jsonString += "\"\","; 
@@ -347,12 +350,12 @@ public class Json
 						jsonString += "" + obj.toString() + ",";
 					continue;
 				} 				
-				 
+				
 				
 				String str=obj.toString();
 				if (str.equals("true") || str.equals("false"))
 				{
-					jsonString +=    str + ",";	
+					jsonString +=  str + ",";	
 					continue;
 				}else{
 					

@@ -305,17 +305,12 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		String re = "[";
 		OneWorkXmls xmls = new OneWorkXmls();
 		xmls.RetrieveAll();		
-		
-		
-		//OneWorkXml xml=new OneWorkXml();
-		//xml.setNo("xxx");
-		
-		
+		 
 
 		for (OneWorkXml item : xmls.ToJavaListXmlEnss())
 		{
 			String url = "";
-			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s", item.getURL(), this.getFK_Node(), this.getWorkID(), this.getFK_Flow(), this.getFID());
+			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), this.getFK_Node(), this.getWorkID(), this.getFK_Flow(), this.getFID());
 
 			String strx = String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\"", item.getNo(), item.getName(), url);
 			re += "{" + strx + "},";

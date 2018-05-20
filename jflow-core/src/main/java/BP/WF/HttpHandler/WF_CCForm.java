@@ -101,590 +101,550 @@ public class WF_CCForm extends WebContralBase {
 
 	}
 
-	 ///#region 多附件.
-     public String Ath_Init()
-     {
-         try
-         {
-             DataSet ds = new DataSet();
+	/// #region 多附件.
+	public String Ath_Init() {
+		try {
+			DataSet ds = new DataSet();
 
-             FrmAttachment athDesc = this.GenerAthDesc();
+			FrmAttachment athDesc = this.GenerAthDesc();
 
+			// 查询出来数据实体.
+			BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, this.getPKVal(),
+					this.getFK_FrmAttachment());
 
-             //查询出来数据实体.
-             BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, this.getPKVal(),this.getFK_FrmAttachment());
+			/// #region 如果图片显示.(先不考虑.)
+			if (athDesc.getFileShowWay() == FileShowWay.Pict) {
+				/* 如果是图片轮播，就在这里根据数据输出轮播的html代码. */
+				if (dbs.size() == 0 && athDesc.getIsUpload() == true) {
+					/* 没有数据并且，可以上传,就转到上传的界面上去. */
+					return "url@AthImg.htm?1=1" + this.getRequestParas();
+				}
+			}
+			/// #endregion 如果图片显示.
 
-             ///#region 如果图片显示.(先不考虑.)
-             if (athDesc.getFileShowWay() == FileShowWay.Pict)
-             {
-                 /* 如果是图片轮播，就在这里根据数据输出轮播的html代码.*/
-                 if (dbs.size() == 0 && athDesc.getIsUpload() == true)
-                 {
-                     /*没有数据并且，可以上传,就转到上传的界面上去.*/
-                     return "url@AthImg.htm?1=1" + this.getRequestParas();
-                 }
-             }
-             ///#endregion 如果图片显示.
+			/// #region 执行装载模版.
+			if (dbs.size() == 0 && athDesc.getIsWoEnableTemplete() == true) {
+				/* 如果数量为0,就检查一下是否有模版如果有就加载模版文件. */
+				String templetePath = BP.Sys.SystemConfig.getPathOfDataUser() + "AthTemplete/"
+						+ athDesc.getNoOfObj().trim();
+				File file = new File(templetePath);
+				if (file.exists() == false)
+					file.mkdirs();
 
-             ///#region 执行装载模版.
-             if (dbs.size() == 0 && athDesc.getIsWoEnableTemplete() == true)
-             {
-                 /*如果数量为0,就检查一下是否有模版如果有就加载模版文件.*/
-                 String templetePath = BP.Sys.SystemConfig.getPathOfDataUser() + "AthTemplete/" + athDesc.getNoOfObj().trim();
-                File file = new File(templetePath);
-                 if (file.exists() == false)
-                	 file.mkdirs();
+				/* 有模版文件夹 */
+				File mydir = new File(templetePath);
+				File[] fls = mydir.listFiles();
+				if (fls.length == 0)
+					throw new Exception("@流程设计错误，该多附件启用了模版组件，模版目录:" + templetePath + "里没有模版文件.");
 
-                 /*有模版文件夹*/
-                 File mydir = new File(templetePath);
-         		 File [] fls = mydir.listFiles();
-                 if (fls.length == 0)
-                     throw new Exception("@流程设计错误，该多附件启用了模版组件，模版目录:" + templetePath + "里没有模版文件.");
+				for (File fl : fls) {
+					File saveToFile = new File(athDesc.getSaveTo());
+					if (saveToFile.exists() == false)
+						saveToFile.mkdirs();
 
-                 for (File fl : fls)
-                 {
-                	 File saveToFile = new File(athDesc.getSaveTo());
-                     if (saveToFile.exists() == false)
-                    	 saveToFile.mkdirs();
+					int oid = BP.DA.DBAccess.GenerOID();
+					String saveTo = athDesc.getSaveTo() + "\\" + oid + "."
+							+ fl.getName().substring(fl.getName().lastIndexOf('.') + 1);
+					if (saveTo.contains("@") == true || saveTo.contains("*") == true) {
+						/* 如果有变量 */
+						saveTo = saveTo.replace("*", "@");
+						if (saveTo.contains("@") && this.getFK_Node() != 0) {
+							/* 如果包含 @ */
+							BP.WF.Flow flow = new BP.WF.Flow(this.getFK_Flow());
+							BP.WF.Data.GERpt myen = flow.getHisGERpt();
+							myen.setOID(this.getWorkID());
+							myen.RetrieveFromDBSources();
+							saveTo = BP.WF.Glo.DealExp(saveTo, myen, null);
+						}
+						if (saveTo.contains("@") == true)
+							throw new Exception("@路径配置错误,变量没有被正确的替换下来." + saveTo);
+					}
 
-                     int oid = BP.DA.DBAccess.GenerOID();
-                     String saveTo = athDesc.getSaveTo() + "\\" + oid + "." + fl.getName().substring(fl.getName().lastIndexOf('.') + 1);
-                     if (saveTo.contains("@") == true || saveTo.contains("*") == true)
-                     {
-                         /*如果有变量*/
-                         saveTo = saveTo.replace("*", "@");
-                         if (saveTo.contains("@") && this.getFK_Node() != 0)
-                         {
-                             /*如果包含 @ */
-                             BP.WF.Flow flow = new BP.WF.Flow(this.getFK_Flow());
-                             BP.WF.Data.GERpt myen = flow.getHisGERpt();
-                             myen.setOID(this.getWorkID());
-                             myen.RetrieveFromDBSources();
-                             saveTo = BP.WF.Glo.DealExp(saveTo, myen, null);
-                         }
-                         if (saveTo.contains("@") == true)
-                             throw new Exception("@路径配置错误,变量没有被正确的替换下来." + saveTo);
-                     }
-                     
-                     try {
-         				InputStream is =  new FileInputStream(saveTo); ;
-         				int buffer = 1024; // 定义缓冲区的大小
-         				int length = 0;
-         				byte[] b = new byte[buffer];
-         				double percent = 0;
-         				FileOutputStream fos = new FileOutputStream(fl);
-         				while ((length = is.read(b)) != -1) {
-         					//percent += length / (double) new File(saveTo).supFileSize * 100D; // 计算上传文件的百分比
-         					fos.write(b, 0, length); // 向文件输出流写读取的数据
-         					
-         				}
-         				fos.close();
-         			} catch (RuntimeException ex) {
-         				ex.getMessage();
-         			}
-                     //fl.copyTo(saveTo);
+					try {
+						InputStream is = new FileInputStream(saveTo);
+						;
+						int buffer = 1024; // 定义缓冲区的大小
+						int length = 0;
+						byte[] b = new byte[buffer];
+						double percent = 0;
+						FileOutputStream fos = new FileOutputStream(fl);
+						while ((length = is.read(b)) != -1) {
+							// percent += length / (double) new
+							// File(saveTo).supFileSize * 100D; // 计算上传文件的百分比
+							fos.write(b, 0, length); // 向文件输出流写读取的数据
 
-                     File info = new File(saveTo);
-                     FrmAttachmentDB dbUpload = new FrmAttachmentDB();
+						}
+						fos.close();
+					} catch (RuntimeException ex) {
+						ex.getMessage();
+					}
+					// fl.copyTo(saveTo);
 
-                     dbUpload.CheckPhysicsTable();
-                     dbUpload.setMyPK(athDesc.getFK_MapData() + String.valueOf(oid));
-                     dbUpload.setNodeID(Integer.toString(this.getFK_Node()));
-                     dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
+					File info = new File(saveTo);
+					FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 
-                     if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
-                     {
-                         /*如果是继承，就让他保持本地的PK. */
-                         dbUpload.setRefPKVal(this.getPKVal().toString());
-                     }
+					dbUpload.CheckPhysicsTable();
+					dbUpload.setMyPK(athDesc.getFK_MapData() + String.valueOf(oid));
+					dbUpload.setNodeID(Integer.toString(this.getFK_Node()));
+					dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
 
-                     if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
-                     {
-                         /*如果是协同，就让他是PWorkID. */
-                         String pWorkID = String.valueOf(BP.DA.DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getPKVal(), 0));
-                         if (pWorkID == null || pWorkID == "0")
+					if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
+						/* 如果是继承，就让他保持本地的PK. */
+						dbUpload.setRefPKVal(this.getPKVal().toString());
+					}
 
-                             pWorkID = this.getPKVal();
-                         dbUpload.setRefPKVal(pWorkID);
-                     }
+					if (athDesc.getAthUploadWay() == AthUploadWay.Interwork) {
+						/* 如果是协同，就让他是PWorkID. */
+						String pWorkID = String.valueOf(BP.DA.DBAccess.RunSQLReturnValInt(
+								"SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getPKVal(), 0));
+						if (pWorkID == null || pWorkID == "0")
 
-                     dbUpload.setFK_MapData(athDesc.getFK_MapData());
-                     dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
+							pWorkID = this.getPKVal();
+						dbUpload.setRefPKVal(pWorkID);
+					}
 
-                     dbUpload.setFileExts(info.getName().substring(info.getName().lastIndexOf(".") + 1));
-                     dbUpload.setFileFullName(saveTo);
-                     dbUpload.setFileName(fl.getName());
-                     dbUpload.setFileSize((float)info.length());
+					dbUpload.setFK_MapData(athDesc.getFK_MapData());
+					dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
 
-                     dbUpload.setRDT(DataType.getCurrentDataTime());
-                     dbUpload.setRec(BP.Web.WebUser.getNo());
-                     dbUpload.setRecName(BP.Web.WebUser.getName());
+					dbUpload.setFileExts(info.getName().substring(info.getName().lastIndexOf(".") + 1));
+					dbUpload.setFileFullName(saveTo);
+					dbUpload.setFileName(fl.getName());
+					dbUpload.setFileSize((float) info.length());
 
-                     dbUpload.Insert();
+					dbUpload.setRDT(DataType.getCurrentDataTime());
+					dbUpload.setRec(BP.Web.WebUser.getNo());
+					dbUpload.setRecName(BP.Web.WebUser.getName());
 
-                     dbs.AddEntity(dbUpload);
-                 }
-             }
-             ///#endregion 执行装载模版.
+					dbUpload.Insert();
 
-             ///#region 处理权限问题.
-             // 处理权限问题, 有可能当前节点是可以上传或者删除，但是当前节点上不能让此人执行工作。
-             // bool isDel = athDesc.IsDeleteInt == 0 ? false : true;
-             boolean isDel = athDesc.getHisDeleteWay() == AthDeleteWay.None ? false : true;
-             boolean isUpdate = athDesc.getIsUpload();
-             if (isDel == true || isUpdate == true)
-             {
-                 if (this.getWorkID() != 0
-                     && DataType.IsNullOrEmpty(this.getFK_Flow()) == false
-                     && this.getFK_Node() != 0)
-                 {
-                     isDel = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), WebUser.getNo());
-                     if (isDel == false)
-                         isUpdate = false;
-                 }
-             }
-             athDesc.setIsUpload(isUpdate);
-             
-             //athDesc.setHisDeleteWay(AthDeleteWay.DelAll); 
-             ///#endregion 处理权限问题.
+					dbs.AddEntity(dbUpload);
+				}
+			}
+			/// #endregion 执行装载模版.
 
-             //增加附件描述.
-             ds.Tables.add(athDesc.ToDataTableField("AthDesc"));
+			/// #region 处理权限问题.
+			// 处理权限问题, 有可能当前节点是可以上传或者删除，但是当前节点上不能让此人执行工作。
+			// bool isDel = athDesc.IsDeleteInt == 0 ? false : true;
+			boolean isDel = athDesc.getHisDeleteWay() == AthDeleteWay.None ? false : true;
+			boolean isUpdate = athDesc.getIsUpload();
+			if (isDel == true || isUpdate == true) {
+				if (this.getWorkID() != 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false
+						&& this.getFK_Node() != 0) {
+					isDel = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(),
+							this.getWorkID(), WebUser.getNo());
+					if (isDel == false)
+						isUpdate = false;
+				}
+			}
+			athDesc.setIsUpload(isUpdate);
 
-             //增加附件.
-             ds.Tables.add(dbs.ToDataTableField("DBAths"));
-             
-             
-             /*
-             //创建实体对象.
-             MapData md = new MapData(this.getPKVal());
-             //加入枚举表.
-             DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
-             ds.Tables.add(Sys_Menu);
+			// athDesc.setHisDeleteWay(AthDeleteWay.DelAll);
+			/// #endregion 处理权限问题.
 
-             //加入外键属性.
-             DataTable Sys_MapAttr = md.getMapAttrs().ToDataTableField("Sys_MapAttr");
-             ds.Tables.add(Sys_MapAttr); */
+			// 增加附件描述.
+			ds.Tables.add(athDesc.ToDataTableField("AthDesc"));
 
-             //返回.
-             return BP.Tools.Json.ToJson(ds);
-         }
-         catch (Exception ex)
-         {
-             return "err@" + ex.getMessage();
-         }
-     }
-     
-     
-     ///#endregion 多附件.
-     /// <summary>
-     /// 生成描述
-     /// </summary>
-     /// <returns></returns>
-     public BP.Sys.FrmAttachment GenerAthDesc() throws Exception
-     {
-    	 //#region 为累加表单做的特殊判断.
-         if (this.GetRequestValInt("FormType") ==10 && this.GetRequestValBoolen("IsStartNode")==false)
-         {
-             if (this.getFK_FrmAttachment().indexOf(this.getFK_MapData())>=0)
-                 return GenerAthDescOfFoolTruck();
-         }
-         //#endregion
-         BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-         athDesc.setMyPK (this.getFK_FrmAttachment());
-         if (this.getFK_Node() == 0 || this.getFK_Flow() == null)
-         {
-             athDesc.RetrieveFromDBSources();
-         }
-         else
-         {
-             athDesc.setMyPK(this.getFK_FrmAttachment());
-             int result = athDesc.RetrieveFromDBSources();
+			// 增加附件.
+			ds.Tables.add(dbs.ToDataTableField("DBAths"));
 
-             ///#region 判断是否是明细表的多附件.
-             if (result == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false
-                && this.getFK_FrmAttachment().contains("AthMDtl"))
-             {
-                 athDesc.setFK_MapData(this.getFK_MapData());
-                 athDesc.setNoOfObj("AthMDtl");
-                 athDesc.setName("我的从表附件");
-                 athDesc.setUploadType(AttachmentUploadType.Multi);
-                 athDesc.Insert();
-             }
-             ///#endregion 判断是否是明细表的多附件。
+			/*
+			 * //创建实体对象. MapData md = new MapData(this.getPKVal()); //加入枚举表.
+			 * DataTable Sys_Menu =
+			 * md.getSysEnums().ToDataTableField("Sys_Enum");
+			 * ds.Tables.add(Sys_Menu);
+			 * 
+			 * //加入外键属性. DataTable Sys_MapAttr =
+			 * md.getMapAttrs().ToDataTableField("Sys_MapAttr");
+			 * ds.Tables.add(Sys_MapAttr);
+			 */
 
-             ///#region 判断是否可以查询出来，如果查询不出来，就可能是公文流程。
-             if (result == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false
-                 && this.getFK_FrmAttachment().contains("DocMultiAth"))
-             {
-                 /*如果没有查询到它,就有可能是公文多附件被删除了.*/
-                 athDesc.setMyPK(this.getFK_FrmAttachment());
-                 athDesc.setNoOfObj("DocMultiAth");
-                 athDesc.setFK_MapData(this.getFK_MapData());
-                 athDesc.setExts("*.*");
+			// 返回.
+			return BP.Tools.Json.ToJson(ds);
+		} catch (Exception ex) {
+			return "err@" + ex.getMessage();
+		}
+	}
 
-                 //存储路径.
-               //  athDesc.setSaveTo("/DataUser/UploadFile/");
-                 athDesc.setIsNote(false); //不显示note字段.
-                 athDesc.setIsVisable(false); // 让其在form 上不可见.
+	/// #endregion 多附件.
+	/// <summary>
+	/// 生成描述
+	/// </summary>
+	/// <returns></returns>
+	public BP.Sys.FrmAttachment GenerAthDesc() throws Exception {
+		// #region 为累加表单做的特殊判断.
+		if (this.GetRequestValInt("FormType") == 10 && this.GetRequestValBoolen("IsStartNode") == false) {
+			if (this.getFK_FrmAttachment().indexOf(this.getFK_MapData()) >= 0)
+				return GenerAthDescOfFoolTruck();
+		}
+		// #endregion
+		BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+		athDesc.setMyPK(this.getFK_FrmAttachment());
+		if (this.getFK_Node() == 0 || this.getFK_Flow() == null) {
+			athDesc.RetrieveFromDBSources();
+		} else {
+			athDesc.setMyPK(this.getFK_FrmAttachment());
+			int result = athDesc.RetrieveFromDBSources();
 
-                 //位置.
-                 athDesc.setX((float)94.09);
-                 athDesc.setY((float)333.18);
-                 athDesc.setW((float)626.36);
-                 athDesc.setH((float)150);
+			/// #region 判断是否是明细表的多附件.
+			if (result == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false
+					&& this.getFK_FrmAttachment().contains("AthMDtl")) {
+				athDesc.setFK_MapData(this.getFK_MapData());
+				athDesc.setNoOfObj("AthMDtl");
+				athDesc.setName("我的从表附件");
+				athDesc.setUploadType(AttachmentUploadType.Multi);
+				athDesc.Insert();
+			}
+			/// #endregion 判断是否是明细表的多附件。
 
-                 //多附件.
-                 athDesc.setUploadType(AttachmentUploadType.Multi);
-                 athDesc.setName("公文多附件(系统自动增加)");
-                 athDesc.SetValByKey("AtPara",
-                     "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=@IsWoEnableTemplete=1");
-                 athDesc.Insert();
+			/// #region 判断是否可以查询出来，如果查询不出来，就可能是公文流程。
+			if (result == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false
+					&& this.getFK_FrmAttachment().contains("DocMultiAth")) {
+				/* 如果没有查询到它,就有可能是公文多附件被删除了. */
+				athDesc.setMyPK(this.getFK_FrmAttachment());
+				athDesc.setNoOfObj("DocMultiAth");
+				athDesc.setFK_MapData(this.getFK_MapData());
+				athDesc.setExts("*.*");
 
-                 //有可能在其其它的节点上没有这个附件，所以也要循环增加上它.
-                 BP.WF.Nodes nds = new BP.WF.Nodes(this.getFK_Flow());
-                 for(BP.WF.Node nd : nds.ToJavaList())
-                 {
-                     athDesc.setFK_MapData("ND" + nd.getNodeID());
-                     athDesc.setMyPK(athDesc.getFK_MapData() + "_" + athDesc.getNoOfObj());
-                     if (athDesc.getIsExits() == true)
-                         continue;
+				// 存储路径.
+				// athDesc.setSaveTo("/DataUser/UploadFile/");
+				athDesc.setIsNote(false); // 不显示note字段.
+				athDesc.setIsVisable(false); // 让其在form 上不可见.
 
-                     athDesc.Insert();
-                 }
+				// 位置.
+				athDesc.setX((float) 94.09);
+				athDesc.setY((float) 333.18);
+				athDesc.setW((float) 626.36);
+				athDesc.setH((float) 150);
 
-                 //重新查询一次，把默认值加上.
-                 athDesc.RetrieveFromDBSources();
-             }
-             ///#endregion 判断是否可以查询出来，如果查询不出来，就可能是公文流程。
+				// 多附件.
+				athDesc.setUploadType(AttachmentUploadType.Multi);
+				athDesc.setName("公文多附件(系统自动增加)");
+				athDesc.SetValByKey("AtPara",
+						"@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=@IsWoEnableTemplete=1");
+				athDesc.Insert();
 
-             ///#region 处理权限方案。
-             /*首先判断是否具有权限方案*/
-             String at = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-             Paras ps = new BP.DA.Paras();
-             ps.SQL = "SELECT FrmSln FROM WF_FrmNode WHERE FK_Node=" + at + "FK_Node AND FK_Flow=" + at + "FK_Flow AND FK_Frm=" + at + "FK_Frm";
-             ps.Add("FK_Node", this.getFK_Node());
-             ps.Add("FK_Flow", this.getFK_Flow());
-             ps.Add("FK_Frm", this.getFK_MapData());
-             DataTable dt = DBAccess.RunSQLReturnTable(ps);
-             if (dt.Rows.size() == 0)
-             {
-                 athDesc.RetrieveFromDBSources();
-             }
-             else
-             {
-                 int sln = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
-                 if (sln == 0)
-                 {
-                     athDesc.RetrieveFromDBSources();
-                 }
-                 else
-                 {
-                     result = athDesc.Retrieve(FrmAttachmentAttr.FK_MapData, this.getFK_MapData(),
-                         FrmAttachmentAttr.FK_Node, this.getFK_Node(), FrmAttachmentAttr.NoOfObj, this.getAth());
+				// 有可能在其其它的节点上没有这个附件，所以也要循环增加上它.
+				BP.WF.Nodes nds = new BP.WF.Nodes(this.getFK_Flow());
+				for (BP.WF.Node nd : nds.ToJavaList()) {
+					athDesc.setFK_MapData("ND" + nd.getNodeID());
+					athDesc.setMyPK(athDesc.getFK_MapData() + "_" + athDesc.getNoOfObj());
+					if (athDesc.getIsExits() == true)
+						continue;
 
-                     if (result == 0) /*如果没有定义，就获取默认的.*/
-                         athDesc.RetrieveFromDBSources();
-                     //  throw new Exception("@该独立表单在该节点("+this.FK_Node+")使用的是自定义的权限控制，但是没有定义该附件的权限。");
-                 }
-             }
-             ///#endregion 处理权限方案。
-         }
+					athDesc.Insert();
+				}
 
-         return athDesc;
-     }
-     
-     public BP.Sys.FrmAttachment GenerAthDescOfFoolTruck() throws Exception
-     {
-    	 FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
-         
-         sln.setMyPK( this.GetRequestVal("FromFrm") + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
-         int result=sln.RetrieveFromDBSources();
+				// 重新查询一次，把默认值加上.
+				athDesc.RetrieveFromDBSources();
+			}
+			/// #endregion 判断是否可以查询出来，如果查询不出来，就可能是公文流程。
 
-         if (result == 0 || sln.getFrmSln() == 1)
-         {
-             /*没有查询到解决方案, 就是只读方案 */
-             BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-             athDesc.setMyPK(this.getFK_FrmAttachment());
-             athDesc.RetrieveFromDBSources();
+			/// #region 处理权限方案。
+			/* 首先判断是否具有权限方案 */
+			String at = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+			Paras ps = new BP.DA.Paras();
+			ps.SQL = "SELECT FrmSln FROM WF_FrmNode WHERE FK_Node=" + at + "FK_Node AND FK_Flow=" + at
+					+ "FK_Flow AND FK_Frm=" + at + "FK_Frm";
+			ps.Add("FK_Node", this.getFK_Node());
+			ps.Add("FK_Flow", this.getFK_Flow());
+			ps.Add("FK_Frm", this.getFK_MapData());
+			DataTable dt = DBAccess.RunSQLReturnTable(ps);
+			if (dt.Rows.size() == 0) {
+				athDesc.RetrieveFromDBSources();
+			} else {
+				int sln = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
+				if (sln == 0) {
+					athDesc.RetrieveFromDBSources();
+				} else {
+					result = athDesc.Retrieve(FrmAttachmentAttr.FK_MapData, this.getFK_MapData(),
+							FrmAttachmentAttr.FK_Node, this.getFK_Node(), FrmAttachmentAttr.NoOfObj, this.getAth());
 
-             athDesc.setIsUpload(false);
-             athDesc.setIsDownload(false);
-             athDesc.setHisDeleteWay(AthDeleteWay.None); //删除模式.
-             return athDesc;
-         }
+					if (result == 0) /* 如果没有定义，就获取默认的. */
+						athDesc.RetrieveFromDBSources();
+					// throw new
+					// Exception("@该独立表单在该节点("+this.FK_Node+")使用的是自定义的权限控制，但是没有定义该附件的权限。");
+				}
+			}
+			/// #endregion 处理权限方案。
+		}
 
-         //如果是自定义方案,就查询自定义方案信息.
-         if (sln.getFrmSln() == 2)
-         {
-             /*没有查询到解决方案, 就是只读方案 */
-             BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-             athDesc.setMyPK(this.getFK_Node()+"_Ath1");
-             if (athDesc.RetrieveFromDBSources() == 0)
-             {
-                 athDesc.setIsUpload(false);
-                 athDesc.setHisDeleteWay( AthDeleteWay.None);
-                 athDesc.setIsDownload(false);
-                 athDesc.setHisCtrlWay( AthCtrlWay.WorkID); //没有方案.
-                 athDesc.Insert();
-             }
-             return athDesc;
-         }
-         
-         return null;
-     }
-     
-     
-     //#region 附件组件.
-     /// <summary>
-     /// 执行删除
-     /// </summary>
-     /// <returns></returns>
-     public String AttachmentUpload_Del() throws Exception
-     {
-         //执行删除.
-         String delPK = this.GetRequestVal("DelPKVal");
+		return athDesc;
+	}
 
-         FrmAttachmentDB delDB = new FrmAttachmentDB();
-         delDB.setMyPK (delPK == null ? this.getMyPK() : delPK);
-         delDB.RetrieveFromDBSources();
-         
-        //删除文件存储的位置
-         FrmAttachment dbAtt = new FrmAttachment();
+	public BP.Sys.FrmAttachment GenerAthDescOfFoolTruck() throws Exception {
+		FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
+
+		sln.setMyPK(this.GetRequestVal("FromFrm") + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
+		int result = sln.RetrieveFromDBSources();
+
+		if (result == 0 || sln.getFrmSln() == 1) {
+			/* 没有查询到解决方案, 就是只读方案 */
+			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+			athDesc.setMyPK(this.getFK_FrmAttachment());
+			athDesc.RetrieveFromDBSources();
+
+			athDesc.setIsUpload(false);
+			athDesc.setIsDownload(false);
+			athDesc.setHisDeleteWay(AthDeleteWay.None); // 删除模式.
+			return athDesc;
+		}
+
+		// 如果是自定义方案,就查询自定义方案信息.
+		if (sln.getFrmSln() == 2) {
+			/* 没有查询到解决方案, 就是只读方案 */
+			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+			athDesc.setMyPK(this.getFK_Node() + "_Ath1");
+			if (athDesc.RetrieveFromDBSources() == 0) {
+				athDesc.setIsUpload(false);
+				athDesc.setHisDeleteWay(AthDeleteWay.None);
+				athDesc.setIsDownload(false);
+				athDesc.setHisCtrlWay(AthCtrlWay.WorkID); // 没有方案.
+				athDesc.Insert();
+			}
+			return athDesc;
+		}
+
+		return null;
+	}
+
+	// #region 附件组件.
+	/// <summary>
+	/// 执行删除
+	/// </summary>
+	/// <returns></returns>
+	public String AttachmentUpload_Del() throws Exception {
+		// 执行删除.
+		String delPK = this.GetRequestVal("DelPKVal");
+
+		FrmAttachmentDB delDB = new FrmAttachmentDB();
+		delDB.setMyPK(delPK == null ? this.getMyPK() : delPK);
+		delDB.RetrieveFromDBSources();
+
+		// 删除文件存储的位置
+		FrmAttachment dbAtt = new FrmAttachment();
 		dbAtt.setMyPK(delDB.getFK_FrmAttachment());
 		dbAtt.Retrieve();
-        
-         if (dbAtt.getAthSaveWay() == AthSaveWay.DB || dbAtt.getAthSaveWay() == AthSaveWay.WebServer){
-        	 File file  = new File(delDB.getFileFullName());
-        	 if(file.exists())
-        		 file.delete();
-         }
-         if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
-        	 if (SystemConfig.getFTPServerType().equals("SFTP") ) {
-        		 	// 连接FTP服务器并删除文件
-					SftpUtil ftpUtil =BP.WF.Glo.getSftpUtil(); 
-					ftpUtil.deleteFile(delDB.getFileFullName());
-					ftpUtil.releaseConnection();
-        	 }		
-        	 if (SystemConfig.getFTPServerType().equals("FTP") ) {
 
-					// 连接FTP服务器并删除文件
-					FtpUtil ftpUtil =BP.WF.Glo.getFtpUtil();	
-					ftpUtil.deleteFile(delDB.getFileFullName());
-					ftpUtil.releaseConnection();
-        	 }
-        	 
-         }
-         delDB.Delete(); //删除上传的文件.
-         return "删除成功.";
-     }
-     public String AttachmentUpload_DownByStream() throws Exception
-     {
-        // return AttachmentUpload_Down(true);
-         return AttachmentUpload_Down();
-     }
-     /**
- 	 * 下载
- 	 * 
- 	 * @return
-     * @throws Exception 
- 	 */
- 	public final String AttachmentUpload_Down() throws Exception {
- 		FrmAttachmentDB downDB = new FrmAttachmentDB();
- 		downDB.setMyPK(this.getMyPK());
- 		downDB.Retrieve();
+		if (dbAtt.getAthSaveWay() == AthSaveWay.DB || dbAtt.getAthSaveWay() == AthSaveWay.WebServer) {
+			File file = new File(delDB.getFileFullName());
+			if (file.exists())
+				file.delete();
+		}
+		if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
+			if (SystemConfig.getFTPServerType().equals("SFTP")) {
+				// 连接FTP服务器并删除文件
+				SftpUtil ftpUtil = BP.WF.Glo.getSftpUtil();
+				ftpUtil.deleteFile(delDB.getFileFullName());
+				ftpUtil.releaseConnection();
+			}
+			if (SystemConfig.getFTPServerType().equals("FTP")) {
 
- 		FrmAttachment dbAtt = new FrmAttachment();
- 		dbAtt.setMyPK(downDB.getFK_FrmAttachment());
- 		dbAtt.Retrieve();
- 		
- 		String docs = DataType.ReadTextFile(downDB.getFileFullName());
+				// 连接FTP服务器并删除文件
+				FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
+				ftpUtil.deleteFile(delDB.getFileFullName());
+				ftpUtil.releaseConnection();
+			}
 
-          //DataTable dt = new DataTable();
-          //dt.Columns.Add("FileName");
-         // dt.Columns.Add("FileType");
-          //dt.Columns.Add("FlieContent");
-         // DataRow dr = dt.NewRow();
-          
-          
- 		if (dbAtt.getAthSaveWay() == AthSaveWay.WebServer) {
- 			//dr.put("FileName",downDB.getFileName());;
- 	         //dr.put("FileType",downDB.getFileExts());
- 	         //dr.put("FlieContent",docs);
- 			return "url@" + DataType.PraseStringToUrlFileName( downDB.getFileFullName());
- 			//return docs;
- 		}
+		}
+		delDB.Delete(); // 删除上传的文件.
+		return "删除成功.";
+	}
 
- 		if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
- 			
- 			String fileName ="";
- 			try{
- 			  fileName= downDB.MakeFullFileFromFtp(); 
- 			  PubClass.DownloadFile(downDB.MakeFullFileFromFtp(),downDB.getFileName());
- 			}catch(Exception e){
- 				return "err@"+e.getMessage();
- 			}
- 			return "url@" + fileName;
- 		}
+	public String AttachmentUpload_DownByStream() throws Exception {
+		// return AttachmentUpload_Down(true);
+		return AttachmentUpload_Down();
+	}
 
- 		if (dbAtt.getAthSaveWay() == AthSaveWay.DB) {
- 			//// PubClass.DownloadHttpFile(downDB.getFileFullName(),
- 			//// downDB.getFileName());暂时未翻译
- 		}
- 		//dt.Rows.add(dr);
-         return docs;
- 		
- 	}
+	/**
+	 * 下载
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String AttachmentUpload_Down() throws Exception {
+		FrmAttachmentDB downDB = new FrmAttachmentDB();
+		downDB.setMyPK(this.getMyPK());
+		downDB.Retrieve();
 
+		FrmAttachment dbAtt = new FrmAttachment();
+		dbAtt.setMyPK(downDB.getFK_FrmAttachment());
+		dbAtt.Retrieve();
 
-     public void AttachmentDownFromByte() throws Exception
-     {
-         FrmAttachmentDB downDB = new FrmAttachmentDB();
-         downDB.setMyPK(this.getMyPK());
-         downDB.Retrieve();
-         downDB.setFileName(downDB.getFileName());
-      
-	         byte[] byteList = downDB.GetFileFromDB("FileDB", null);
-	         if (byteList != null)
-	         {
-	        	 ContextHolderUtils.getResponse().setCharacterEncoding("GB2312");
-	        	 ContextHolderUtils.getResponse().setHeader("Content-Disposition", "attachment;filename=" + downDB.getFileName());
-	        	 ContextHolderUtils.getResponse().setContentType("application/octet-stream;charset=gb2312");
-	        	 //ContextHolderUtils.getResponse().BinaryWrite(byteList);
-	        	 FileInputStream fileInputStream;
-				
-				fileInputStream = new FileInputStream(downDB.getFileName());
-				 BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);    
-	                
-	             bufferedInputStream.read(byteList);    
-	             OutputStream outputStream = ContextHolderUtils.getResponse().getOutputStream();    
-	             outputStream.write(byteList);    
-	             bufferedInputStream.close();    
-	             outputStream.flush();    
-	             outputStream.close(); 
-	         }
-		 
-     }
-     
-   /// <summary>
-     /// 打包下载.
-     /// </summary>
-     /// <returns></returns>
-     public String AttachmentUpload_DownZip() throws Exception
-     {
-         String zipName = this.getWorkID() + "_" + this.getFK_FrmAttachment();
-         ///#region 处理权限控制.
-         BP.Sys.FrmAttachment athDesc = this.GenerAthDesc();
+		String docs = DataType.ReadTextFile(downDB.getFileFullName());
 
-         //查询出来数据实体.
-         BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, this.getPKVal(), this.getFK_FrmAttachment());
-         ///#endregion 处理权限控制.
+		// DataTable dt = new DataTable();
+		// dt.Columns.Add("FileName");
+		// dt.Columns.Add("FileType");
+		// dt.Columns.Add("FlieContent");
+		// DataRow dr = dt.NewRow();
 
-         if (dbs.size() == 0)
-             return "err@文件不存在，不需打包下载。";
+		if (dbAtt.getAthSaveWay() == AthSaveWay.WebServer) {
+			// dr.put("FileName",downDB.getFileName());;
+			// dr.put("FileType",downDB.getFileExts());
+			// dr.put("FlieContent",docs);
+			return "url@" + DataType.PraseStringToUrlFileName(downDB.getFileFullName());
+			// return docs;
+		}
 
-         String basePath = SystemConfig.getPathOfDataUser() + "Temp";
-         String tempUserPath = basePath + "/" + WebUser.getNo();
-         String tempFilePath = basePath + "/" + WebUser.getNo()+"/"+this.getOID();
-         String zipPath = basePath + "/" + WebUser.getNo();
-         String zipFile = zipPath + "/" + zipName + ".zip";
-         String info = "";
-         
-         File tempFile = new File(tempFilePath);
-         try
-         {
-             //删除临时文件，保证一个用户只能存一份，减少磁盘占用空间.
-             info = "@创建用户临时目录:" + tempUserPath;
-             File file = new File(tempUserPath);
-             if (file.exists() == false)
-            	 file.mkdirs();
+		if (dbAtt.getAthSaveWay() == AthSaveWay.FTPServer) {
 
-             //如果有这个临时的目录就把他删除掉.            
-             if (tempFile.exists() == true){
-            	// tempFile.delete();
-            	 boolean success = FileAccess.deletesFile(tempFile);
-            	 if(!success){
-            		 Log.DebugWriteInfo("删除临时目录失败");
-            	 }           	 
-             }
-            if(!tempFile.exists()){
-            	 tempFile.mkdirs();
-            }    
-         }
-         catch (Exception ex)
-         {
-             return "err@组织临时目录出现错误:" + ex.getMessage();
-         }
+			String fileName = "";
+			try {
+				fileName = downDB.MakeFullFileFromFtp();
+				PubClass.DownloadFile(downDB.MakeFullFileFromFtp(), downDB.getFileName());
+			} catch (Exception e) {
+				return "err@" + e.getMessage();
+			}
+			return "url@" + fileName;
+		}
 
-         try
-         {
-             for(FrmAttachmentDB db : dbs.ToJavaList())
-             {
-                 String copyToPath = tempFilePath;
+		if (dbAtt.getAthSaveWay() == AthSaveWay.DB) {
+			//// PubClass.DownloadHttpFile(downDB.getFileFullName(),
+			//// downDB.getFileName());暂时未翻译
+		}
+		// dt.Rows.add(dr);
+		return docs;
 
-                 //求出文件路径.
-                 String fileTempPath = db.GenerTempFile(athDesc.getAthSaveWay());
+	}
 
-                 if (DataType.IsNullOrEmpty(db.getSort()) == false)
-                 {
-                     copyToPath = tempFilePath + "//" + db.getSort();
-                     File copyPath = new File(copyToPath);
-                     if (copyPath.exists() == false)
-                    	 copyPath.mkdirs();
-                 }
-                 //新文件目录
-                 copyToPath = copyToPath + "//" + db.getFileName();
-                 try {
-      				InputStream is =  new FileInputStream(fileTempPath); ;
-      				int buffer = 1024; // 定义缓冲区的大小
-      				int length = 0;
-      				byte[] b = new byte[buffer];
-      				double percent = 0;
-      				FileOutputStream fos = new FileOutputStream(new File(copyToPath));
-      				while ((length = is.read(b)) != -1) {
-      					//percent += length / (double) new File(saveTo).supFileSize * 100D; // 计算上传文件的百分比
-      					fos.write(b, 0, length); // 向文件输出流写读取的数据
-      					
-      				}
-      				fos.close();
-      			} catch (RuntimeException ex) {
-      				ex.getMessage();
-      			}
-                 //File.Copy(fileTempPath, copyToPath, true);
-             }
-         }
-         catch (Exception ex)
-         {
-             return "err@组织文件期间出现错误:" + ex.getMessage();
-         }
-         
-         File zipFileFile  =  new File(zipFile);
-         try
-         {
-             while (zipFileFile.exists() == true)
-             {
-            	 zipFileFile.delete();
-             }
-             //执行压缩.
-             ZipCompress fz = new ZipCompress(zipFile, tempFilePath);
-             fz.zip();
-             //删除临时文件夹
-             tempFile.delete();
-         }
-         catch (Exception ex)
-         {
-             return "err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + tempFilePath + ",zipFile=" + zipFile;
-         }
+	public void AttachmentDownFromByte() throws Exception {
+		FrmAttachmentDB downDB = new FrmAttachmentDB();
+		downDB.setMyPK(this.getMyPK());
+		downDB.Retrieve();
+		downDB.setFileName(downDB.getFileName());
 
-         if (zipFileFile.exists() == false)
-             return "err@压缩文件未生成成功,请在点击一次.";
+		byte[] byteList = downDB.GetFileFromDB("FileDB", null);
+		if (byteList != null) {
+			ContextHolderUtils.getResponse().setCharacterEncoding("GB2312");
+			ContextHolderUtils.getResponse().setHeader("Content-Disposition",
+					"attachment;filename=" + downDB.getFileName());
+			ContextHolderUtils.getResponse().setContentType("application/octet-stream;charset=gb2312");
+			// ContextHolderUtils.getResponse().BinaryWrite(byteList);
+			FileInputStream fileInputStream;
 
-         zipName = DataType.PraseStringToUrlFileName(zipName);
+			fileInputStream = new FileInputStream(downDB.getFileName());
+			BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
 
-         String url = getRequest().getContextPath()+ "DataUser/Temp/" + WebUser.getNo() + "/" + zipName + ".zip";
-         return "url@" + url;
+			bufferedInputStream.read(byteList);
+			OutputStream outputStream = ContextHolderUtils.getResponse().getOutputStream();
+			outputStream.write(byteList);
+			bufferedInputStream.close();
+			outputStream.flush();
+			outputStream.close();
+		}
 
-     }
+	}
+
+	/// <summary>
+	/// 打包下载.
+	/// </summary>
+	/// <returns></returns>
+	public String AttachmentUpload_DownZip() throws Exception {
+		String zipName = this.getWorkID() + "_" + this.getFK_FrmAttachment();
+		/// #region 处理权限控制.
+		BP.Sys.FrmAttachment athDesc = this.GenerAthDesc();
+
+		// 查询出来数据实体.
+		BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, this.getPKVal(),
+				this.getFK_FrmAttachment());
+		/// #endregion 处理权限控制.
+
+		if (dbs.size() == 0)
+			return "err@文件不存在，不需打包下载。";
+
+		String basePath = SystemConfig.getPathOfDataUser() + "Temp";
+		String tempUserPath = basePath + "/" + WebUser.getNo();
+		String tempFilePath = basePath + "/" + WebUser.getNo() + "/" + this.getOID();
+		String zipPath = basePath + "/" + WebUser.getNo();
+		String zipFile = zipPath + "/" + zipName + ".zip";
+		String info = "";
+
+		File tempFile = new File(tempFilePath);
+		try {
+			// 删除临时文件，保证一个用户只能存一份，减少磁盘占用空间.
+			info = "@创建用户临时目录:" + tempUserPath;
+			File file = new File(tempUserPath);
+			if (file.exists() == false)
+				file.mkdirs();
+
+			// 如果有这个临时的目录就把他删除掉.
+			if (tempFile.exists() == true) {
+				// tempFile.delete();
+				boolean success = FileAccess.deletesFile(tempFile);
+				if (!success) {
+					Log.DebugWriteInfo("删除临时目录失败");
+				}
+			}
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+		} catch (Exception ex) {
+			return "err@组织临时目录出现错误:" + ex.getMessage();
+		}
+
+		try {
+			for (FrmAttachmentDB db : dbs.ToJavaList()) {
+				String copyToPath = tempFilePath;
+
+				// 求出文件路径.
+				String fileTempPath = db.GenerTempFile(athDesc.getAthSaveWay());
+
+				if (DataType.IsNullOrEmpty(db.getSort()) == false) {
+					copyToPath = tempFilePath + "//" + db.getSort();
+					File copyPath = new File(copyToPath);
+					if (copyPath.exists() == false)
+						copyPath.mkdirs();
+				}
+				// 新文件目录
+				copyToPath = copyToPath + "//" + db.getFileName();
+				try {
+					InputStream is = new FileInputStream(fileTempPath);
+					;
+					int buffer = 1024; // 定义缓冲区的大小
+					int length = 0;
+					byte[] b = new byte[buffer];
+					double percent = 0;
+					FileOutputStream fos = new FileOutputStream(new File(copyToPath));
+					while ((length = is.read(b)) != -1) {
+						// percent += length / (double) new
+						// File(saveTo).supFileSize * 100D; // 计算上传文件的百分比
+						fos.write(b, 0, length); // 向文件输出流写读取的数据
+
+					}
+					fos.close();
+				} catch (RuntimeException ex) {
+					ex.getMessage();
+				}
+				// File.Copy(fileTempPath, copyToPath, true);
+			}
+		} catch (Exception ex) {
+			return "err@组织文件期间出现错误:" + ex.getMessage();
+		}
+
+		File zipFileFile = new File(zipFile);
+		try {
+			while (zipFileFile.exists() == true) {
+				zipFileFile.delete();
+			}
+			// 执行压缩.
+			ZipCompress fz = new ZipCompress(zipFile, tempFilePath);
+			fz.zip();
+			// 删除临时文件夹
+			tempFile.delete();
+		} catch (Exception ex) {
+			return "err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + tempFilePath + ",zipFile=" + zipFile;
+		}
+
+		if (zipFileFile.exists() == false)
+			return "err@压缩文件未生成成功,请在点击一次.";
+
+		zipName = DataType.PraseStringToUrlFileName(zipName);
+
+		String url = getRequest().getContextPath() + "DataUser/Temp/" + WebUser.getNo() + "/" + zipName + ".zip";
+		return "url@" + url;
+
+	}
+
 	public String HandlerMapExt() throws Exception {
 
 		String fk_mapExt = getRequest().getParameter("FK_MapExt");
@@ -723,21 +683,22 @@ public class WF_CCForm extends WebContralBase {
 				|| me.getExtType().equals(BP.Sys.MapExtXmlList.TBFullCtrl)
 				|| me.getExtType().equals(BP.Sys.MapExtXmlList.DDLFullCtrl)) { // 填充下拉框
 			// ORIGINAL LINE: case "ReqCtrl":
-			if(getRequest().getParameter("DoTypeExt")!=null && StringUtils.isEmpty(getRequest().getParameter("DoTypeExt")) && getRequest().getParameter("DoTypeExt").equals("null")){
+			if (getRequest().getParameter("DoTypeExt") != null
+					&& StringUtils.isEmpty(getRequest().getParameter("DoTypeExt"))
+					&& getRequest().getParameter("DoTypeExt").equals("null")) {
 				if (getRequest().getParameter("DoTypeExt").equals("ReqCtrl")) {
 					// 获取填充 ctrl 值的信息.
 					sql = this.DealSQL(me.getDocOfSQLDeal(), key);
 					HttpSession session = getRequest().getSession();
 					session.setAttribute("DtlKey", key);
 					dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-	
+
 					return JSONTODT(dt);
 				}
 				// ORIGINAL LINE: case "ReqM2MFullList":
-	
-				 
+
 				// ORIGINAL LINE: case "ReqDtlFullList":
-	
+
 				if (getRequest().getParameter("DoTypeExt").equals("ReqDtlFullList")) {
 					// 获取填充的从表集合.
 					DataTable dtDtl = new DataTable("Head");
@@ -747,7 +708,7 @@ public class WF_CCForm extends WebContralBase {
 						if (DotNetToJavaStringHelper.isNullOrEmpty(str)) {
 							continue;
 						}
-	
+
 						String[] ss = str.split("[:]", -1);
 						String fk_dtl = ss[0];
 						String dtlKey = (String) ((getRequest().getSession().getAttribute("DtlKey") instanceof String)
@@ -756,10 +717,10 @@ public class WF_CCForm extends WebContralBase {
 							dtlKey = key;
 						}
 						String mysql = DealSQL(ss[1], dtlKey);
-	
+
 						GEDtls dtls = new GEDtls(fk_dtl);
 						MapDtl dtl = new MapDtl(fk_dtl);
-	
+
 						DataTable dtDtlFull = DBAccess.RunSQLReturnTable(mysql);
 						BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + oid);
 						for (DataRow dr : dtDtlFull.Rows) {
@@ -776,7 +737,7 @@ public class WF_CCForm extends WebContralBase {
 								mydtl.setOID(0);
 								mydtl.Insert();
 							}
-	
+
 						}
 						DataRow drRe = dtDtl.NewRow();
 						drRe.setValue(0, fk_dtl);
@@ -785,7 +746,7 @@ public class WF_CCForm extends WebContralBase {
 					return JSONTODT(dtDtl);
 				}
 				// ORIGINAL LINE: case "ReqDDLFullList":
-	
+
 				if (getRequest().getParameter("DoTypeExt").equals("ReqDDLFullList")) {
 					// 获取要个性化填充的下拉框.
 					DataTable dt1 = new DataTable("Head");
@@ -796,7 +757,7 @@ public class WF_CCForm extends WebContralBase {
 						if (str.equals("") || str == null) {
 							continue;
 						}
-	
+
 						String[] ss = str.split("[:]", -1);
 						DataRow dr = dt1.NewRow();
 						dr.setValue(0, ss[0]);
@@ -806,7 +767,7 @@ public class WF_CCForm extends WebContralBase {
 					return JSONTODT(dt);
 				}
 				// ORIGINAL LINE: case "ReqDDLFullListDB":
-	
+
 				if (getRequest().getParameter("DoTypeExt").equals("ReqDDLFullListDB")) {
 					// 获取要个性化填充的下拉框的值. 根据已经传递过来的 ddl id.
 					String myDDL = getRequest().getParameter("MyDDL");
@@ -816,7 +777,7 @@ public class WF_CCForm extends WebContralBase {
 						if (str.equals("") || str == null) {
 							continue;
 						}
-	
+
 						String[] ss = str.split("[:]", -1);
 						if (myDDL.equals(ss[0]) && ss.length == 2) {
 							sql = ss[1];
@@ -826,13 +787,13 @@ public class WF_CCForm extends WebContralBase {
 					}
 					dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 					return JSONTODT(dt);
-				} 
-			}else{
+				}
+			} else {
 				sql = this.DealSQL(me.getDocOfSQLDeal(), key);
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				return JSONTODT(dt);
 			}
-				return "";
+			return "";
 		}
 
 		return "err@没有解析的标记" + me.getExtType();
@@ -840,14 +801,13 @@ public class WF_CCForm extends WebContralBase {
 	}
 
 	public String Frm_Init() throws Exception {
-		
-		if (this.GetRequestVal("IsTest") != null)
-        {
-            MapData mymd = new MapData(this.getEnsName());
-            mymd.RepairMap();
-            BP.Sys.SystemConfig.DoClearCash();
-        }
-		
+
+		if (this.GetRequestVal("IsTest") != null) {
+			MapData mymd = new MapData(this.getEnsName());
+			mymd.RepairMap();
+			BP.Sys.SystemConfig.DoClearCash();
+		}
+
 		MapData md = new MapData(this.getEnsName());
 
 		// /#region 判断是否是返回的URL.
@@ -866,45 +826,41 @@ public class WF_CCForm extends WebContralBase {
 
 			return "url@" + url;
 		}
-		
-		if (md.getHisFrmType() == FrmType.Entity)
-        {
-            String no = this.GetRequestVal("NO");
-            String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + this.getSID();
 
-            BP.En.Entities ens = BP.En.ClassFactory.GetEns(md.getPTable());
+		if (md.getHisFrmType() == FrmType.Entity) {
+			String no = this.GetRequestVal("NO");
+			String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node="
+					+ this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + this.getSID();
 
-            BP.En.Entity en = ens.getGetNewEntity();
+			BP.En.Entities ens = BP.En.ClassFactory.GetEns(md.getPTable());
 
-            if (en.getIsOIDEntity() == true)
-            {
-                BP.En.EntityOID enOID = null;
+			BP.En.Entity en = ens.getGetNewEntity();
 
-                enOID = (BP.En.EntityOID)en;
-                if (enOID == null)
-                {
-                    return "err@系统错误，无法将" + md.getPTable() + "转化成BP.En.EntityOID.";
-                }
+			if (en.getIsOIDEntity() == true) {
+				BP.En.EntityOID enOID = null;
 
-                enOID.SetValByKey("OID", this.getWorkID());
+				enOID = (BP.En.EntityOID) en;
+				if (enOID == null) {
+					return "err@系统错误，无法将" + md.getPTable() + "转化成BP.En.EntityOID.";
+				}
 
-                if (en.RetrieveFromDBSources() == 0)
-                {	
-                	while (getRequest().getParameterNames().hasMoreElements())
-					{
+				enOID.SetValByKey("OID", this.getWorkID());
+
+				if (en.RetrieveFromDBSources() == 0) {
+					while (getRequest().getParameterNames().hasMoreElements()) {
 						String key = (String) BP.Sys.Glo.getRequest().getParameterNames().nextElement();
 						String val = BP.Sys.Glo.getRequest().getParameter(key);
 						enOID.SetValByKey(key, val);
 					}
-                	
-                    enOID.SetValByKey("OID", this.getWorkID());
 
-                    enOID.InsertAsOID(this.getWorkID());
-                }
-            }
-            return "url@../Comm/En.htm?EnName=" + md.getPTable() + "&PKVal=" + this.getWorkID();
-        }
-		
+					enOID.SetValByKey("OID", this.getWorkID());
+
+					enOID.InsertAsOID(this.getWorkID());
+				}
+			}
+			return "url@../Comm/En.htm?EnName=" + md.getPTable() + "&PKVal=" + this.getWorkID();
+		}
+
 		if (md.getHisFrmType() == FrmType.VSTOForExcel && this.GetRequestVal("IsFreeFrm") == null) {
 			String url = "FrmVSTO.jsp?1=1&" + this.getRequestParas();
 			return "url@" + url;
@@ -940,54 +896,49 @@ public class WF_CCForm extends WebContralBase {
 			return "url@FrmExcel.jsp?1=2" + this.getRequestParas();
 		}
 		// /#endregion 判断是否是返回的URL.
-		
-		//处理参数.
-        String paras = this.getRequestParas();
-        paras = paras.replace("&DoType=Frm_Init", "");
 
-      
-        if (md.getHisFrmType() == FrmType.FreeFrm)
-        {
-            if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
-                return "url@FrmGener.htm?1=2" + paras;
-            else
-                return "url@FrmGener.htm?1=2" + paras;
-        }
+		// 处理参数.
+		String paras = this.getRequestParas();
+		paras = paras.replace("&DoType=Frm_Init", "");
 
-        if (md.getHisFrmType() == FrmType.VSTOForExcel || md.getHisFrmType() == FrmType.ExcelFrm )
-        {
-            if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
-                return "url@FrmVSTO.jsp?1=2" + paras;
-            else
-                return "url@FrmVSTO.jsp?1=2" + paras;
-        }
+		if (md.getHisFrmType() == FrmType.FreeFrm) {
+			if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+				return "url@FrmGener.htm?1=2" + paras;
+			else
+				return "url@FrmGener.htm?1=2" + paras;
+		}
 
-        if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
-            return "url@FrmGener.htm?1=2" + paras;
-        else
-            return "url@FrmGener.htm?1=2" + paras;
+		if (md.getHisFrmType() == FrmType.VSTOForExcel || md.getHisFrmType() == FrmType.ExcelFrm) {
+			if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+				return "url@FrmVSTO.jsp?1=2" + paras;
+			else
+				return "url@FrmVSTO.jsp?1=2" + paras;
+		}
+
+		if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+			return "url@FrmGener.htm?1=2" + paras;
+		else
+			return "url@FrmGener.htm?1=2" + paras;
 
 	}
-	
+
 	/// <summary>
-    /// 附件图片
-    /// </summary>
-    /// <returns></returns>
-    public String FrmImgAthDB_Init() throws Exception
-    {
-        String ImgAthPK = this.GetRequestVal("ImgAth");
+	/// 附件图片
+	/// </summary>
+	/// <returns></returns>
+	public String FrmImgAthDB_Init() throws Exception {
+		String ImgAthPK = this.GetRequestVal("ImgAth");
 
-        FrmImgAthDBs imgAthDBs = new FrmImgAthDBs();
-        QueryObject obj = new QueryObject(imgAthDBs);
-        obj.AddWhere(FrmImgAthDBAttr.FK_MapData, this.getFK_MapData());
-        obj.addAnd();
-        obj.AddWhere(FrmImgAthDBAttr.FK_FrmImgAth, ImgAthPK);
-        obj.addAnd();
-        obj.AddWhere(FrmImgAthDBAttr.RefPKVal, this.getMyPK());
-        obj.DoQuery();
-        return BP.Tools.Entitis2Json.ConvertEntities2ListJson(imgAthDBs);
-    }
-
+		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs();
+		QueryObject obj = new QueryObject(imgAthDBs);
+		obj.AddWhere(FrmImgAthDBAttr.FK_MapData, this.getFK_MapData());
+		obj.addAnd();
+		obj.AddWhere(FrmImgAthDBAttr.FK_FrmImgAth, ImgAthPK);
+		obj.addAnd();
+		obj.AddWhere(FrmImgAthDBAttr.RefPKVal, this.getMyPK());
+		obj.DoQuery();
+		return BP.Tools.Entitis2Json.ConvertEntities2ListJson(imgAthDBs);
+	}
 
 	public final String DtlFrm_Init() throws Exception {
 		long pk = this.getRefOID();
@@ -1022,7 +973,7 @@ public class WF_CCForm extends WebContralBase {
 
 	public final String DtlFrm_Delete() throws Exception {
 		try {
-			
+
 			GEEntity en = new GEEntity(this.getEnsName());
 			en.setOID(Long.parseLong(this.getOID()));
 			en.Delete();
@@ -1035,9 +986,26 @@ public class WF_CCForm extends WebContralBase {
 
 	public String FrmGener_Init() throws Exception {
 
+		// #region 特殊判断 适应累加表单.
+		String fromWhere = this.GetRequestVal("FromWorkOpt");
+		if (fromWhere != null && fromWhere.equals("1") && this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
+			Node nd = new Node(this.getFK_Node());
+
+			nd.WorkID = this.getWorkID(); // 为获取表单ID ( NodeFrmID )提供参数.
+
+			// 如果是累加表单.
+			if (nd.getHisFormType() == NodeFormType.FoolTruck) {
+				DataSet myds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(),
+						this.getFID(), BP.Web.WebUser.getNo());
+
+				return BP.Tools.Json.ToJson(myds);
+			}
+		}
+		// #endregion 特殊判断.适应累加表单
+
 		long pk = this.getRefOID();
 		if (pk == 0) {
-			if(!StringUtils.isEmpty(this.getOID()))
+			if (!StringUtils.isEmpty(this.getOID()))
 				pk = Long.parseLong(this.getOID());
 		}
 		if (pk == 0) {
@@ -1050,7 +1018,7 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		MapData md = new MapData(this.getEnsName());
-		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
+		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), null);
 
 		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		// /#region 把主表数据放入.
@@ -1154,62 +1122,59 @@ public class WF_CCForm extends WebContralBase {
 
 		ds.Tables.add(mainTable);
 		// /#endregion 把主表数据放入.
-		
-		///#region 把外键表加入DataSet
+
+		/// #region 把外键表加入DataSet
 		DataTable dtMapAttr = null;
-		for(int i=0;i<ds.Tables.size();i++){
-			if(ds.Tables.get(i).TableName.equals("Sys_MapAttr")){
+		for (int i = 0; i < ds.Tables.size(); i++) {
+			if (ds.Tables.get(i).TableName.equals("Sys_MapAttr")) {
 				dtMapAttr = ds.Tables.get(i);
 			}
 		}
 
 		MapExts mes = md.getMapExts();
 
-		for (DataRow dr : dtMapAttr.Rows)
-		{
+		for (DataRow dr : dtMapAttr.Rows) {
 			String lgType = dr.getValue("LGType").toString();
-			if (!lgType.equals("2"))
-			{
+			if (!lgType.equals("2")) {
 				continue;
 			}
 
 			String UIIsEnable = dr.getValue("UIVisible").toString();
-			if (UIIsEnable.equals("0"))
-			{
+			if (UIIsEnable.equals("0")) {
 				continue;
 			}
 
 			String uiBindKey = dr.getValue("UIBindKey").toString();
-			if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true)
-			{
+			if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true) {
 				String myPK = dr.getValue("MyPK").toString();
-				//如果是空的
-				//   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
+				// 如果是空的
+				// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
+				// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey
+				// IsNull ");
 			}
 
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.getValue("KeyOfEn").toString();
 			String fk_mapData = dr.getValue("FK_MapData").toString();
 
-			///#region 处理下拉框数据范围. for 小杨.
-			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
-			me = (MapExt)((tempVar instanceof MapExt) ? tempVar : null);
-			if (me != null)
-			{
+			/// #region 处理下拉框数据范围. for 小杨.
+			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
+					keyOfEn);
+			me = (MapExt) ((tempVar instanceof MapExt) ? tempVar : null);
+			if (me != null) {
 				Object tempVar2 = me.getDoc();
-				String fullSQL = (String)((tempVar2 instanceof String) ? tempVar2 : null);
+				String fullSQL = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
 				fullSQL = fullSQL.replace("~", ",");
 				fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
 				DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
-				dt.TableName = keyOfEn; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
+				dt.TableName = keyOfEn; // 可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
 				ds.Tables.add(dt);
 				continue;
 			}
-			///#endregion 处理下拉框数据范围.
+			/// #endregion 处理下拉框数据范围.
 
 			// 判断是否存在.
-			if (ds.Tables.contains(uiBindKey) == true)
-			{
+			if (ds.Tables.contains(uiBindKey) == true) {
 				continue;
 			}
 
@@ -1219,10 +1184,11 @@ public class WF_CCForm extends WebContralBase {
 		// #region 加入组件的状态信息, 在解析表单的时候使用.
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
 			Node nd = new Node(this.getFK_Node());
-			nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
+			nd.WorkID = this.getWorkID(); // 为求当前表单ID获得参数，而赋值.
 			BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false
-					&& nd.getHisFormType() != NodeFormType.RefOneFrmTree ) {
+					&& nd.getHisFormType() != NodeFormType.RefOneFrmTree) {
+				
 				/* 说明这是引用到了其他节点的表单，就需要把一些位置元素修改掉. */
 				int refNodeID = Integer.parseInt(nd.getNodeFrmID().replace("ND", ""));
 
@@ -1294,7 +1260,7 @@ public class WF_CCForm extends WebContralBase {
 	public final String FrmFreeReadonly_Init() throws Exception {
 		try {
 			MapData md = new MapData(this.getEnsName());
-			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(),null);
+			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), null);
 
 			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region 把主表数据放入.
@@ -1363,7 +1329,7 @@ public class WF_CCForm extends WebContralBase {
 	 * 初始化从表数据
 	 * 
 	 * @return 返回结果数据
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String Dtl_Init() throws Exception {
 
@@ -1384,7 +1350,7 @@ public class WF_CCForm extends WebContralBase {
 		mdtl.RetrieveFromDBSources();
 
 		if (this.getFK_Node() != 0 && !mdtl.getFK_MapData().equals("Temp")
-				&& this.getEnsName().contains("ND" + this.getFK_Node()) == false && this.getFK_Node()!=999999 ) {
+				&& this.getEnsName().contains("ND" + this.getFK_Node()) == false && this.getFK_Node() != 999999) {
 			Node nd = new BP.WF.Node(this.getFK_Node());
 			// 如果
 			// * 1,传来节点ID, 不等于0.
@@ -1430,7 +1396,7 @@ public class WF_CCForm extends WebContralBase {
 	 * 执行从表的保存.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String Dtl_Save() throws Exception {
 		MapDtl mdtl = new MapDtl(this.getEnsName());
@@ -1550,7 +1516,7 @@ public class WF_CCForm extends WebContralBase {
 	 * 删除
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String Dtl_DeleteRow() throws Exception {
 		GEDtl dtl = new GEDtl(this.getFK_MapDtl());
@@ -1788,12 +1754,11 @@ public class WF_CCForm extends WebContralBase {
 			DataTable dtCount = new DataTable("DTCout");
 			dtCount.TableName = "DTCout";
 			dtCount.Columns.Add("Count", Integer.class);
-			
-			DataRow dr= dtCount.NewRow();
-			dr.setValue(0, count);			
+
+			DataRow dr = dtCount.NewRow();
+			dr.setValue(0, count);
 			dtCount.Rows.AddRow(dr);
-			
-			
+
 			ds.Tables.add(dtCount);
 
 			// 处理查询条件.
@@ -1928,7 +1893,7 @@ public class WF_CCForm extends WebContralBase {
 				saveTo = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(saveTo);
 			}
 		} catch (java.lang.Exception e) {
-			
+
 			return "false";
 			// saveTo = saveTo;
 		}
@@ -2258,7 +2223,7 @@ public class WF_CCForm extends WebContralBase {
 		String ensNamestring = this.getRequest().getParameter("ensNamestring");
 		String fk_flow = this.getRequest().getParameter("fk_flow");
 		String pkVal = this.getRequest().getParameter("pkVal");
-		
+
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) this.getRequest();
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 		// 多附件描述.
@@ -2558,7 +2523,7 @@ public class WF_CCForm extends WebContralBase {
 	 * 初始化数据
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DtlOpt_Init() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
@@ -2575,7 +2540,7 @@ public class WF_CCForm extends WebContralBase {
 	 * 增加
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DtlOpt_Add() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
@@ -2611,7 +2576,7 @@ public class WF_CCForm extends WebContralBase {
 	 * 执行查询.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DtlOpt_Search() throws Exception {
 		MapDtl dtl = new MapDtl(this.getFK_MapDtl());
@@ -2629,38 +2594,36 @@ public class WF_CCForm extends WebContralBase {
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #endregion 从表的选项.
 
-	
-	/** 初始化
-	 
-	 @return 
-	 * @throws Exception 
-*/
-	public final String DtlCard_Init() throws Exception
-	{
+	/**
+	 * 初始化
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String DtlCard_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		MapDtl md = new MapDtl(this.getEnsName());
 
-		//主表数据.
+		// 主表数据.
 		DataTable dt = md.ToDataTableField("Main");
 		ds.Tables.add(dt);
 
-		//主表字段.
+		// 主表字段.
 		MapAttrs attrs = md.getMapAttrs();
 		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
-		//从表.
+		// 从表.
 		MapDtls dtls = md.getMapDtls();
 		ds.Tables.add(dtls.ToDataTableField("MapDtls"));
 
-		//从表的从表.
-		for (MapDtl dtl : dtls.ToJavaList())
-		{
+		// 从表的从表.
+		for (MapDtl dtl : dtls.ToJavaList()) {
 			MapAttrs subAttrs = new MapAttrs(dtl.getNo());
 			ds.Tables.add(subAttrs.ToDataTableField(dtl.getNo()));
 		}
 
-		//从表的数据.
+		// 从表的数据.
 		GEDtls enDtls = new GEDtls(this.getEnsName());
 		enDtls.Retrieve(GEDtlAttr.RefPK, this.getRefPKVal());
 		ds.Tables.add(enDtls.ToDataTableField("DTDtls"));
@@ -2668,23 +2631,23 @@ public class WF_CCForm extends WebContralBase {
 		return BP.Tools.Json.ToJson(ds);
 
 	}
-	/** 
-	 获得从表的从表数据
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String DtlCard_Init_Dtl() throws Exception
-	{
+
+	/**
+	 * 获得从表的从表数据
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String DtlCard_Init_Dtl() throws Exception {
 		DataSet ds = new DataSet();
 
 		MapDtl md = new MapDtl(this.getEnsName());
 
-		//主表数据.
+		// 主表数据.
 		DataTable dt = md.ToDataTableField("Main");
 		ds.Tables.add(dt);
 
-		//主表字段.
+		// 主表字段.
 		MapAttrs attrs = md.getMapAttrs();
 		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
@@ -2694,10 +2657,9 @@ public class WF_CCForm extends WebContralBase {
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-	
-	public String getFK_FrmAttachment(){
+
+	public String getFK_FrmAttachment() {
 		return GetRequestVal("FK_FrmAttachment");
 	}
-	
-	
+
 }

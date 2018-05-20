@@ -2787,7 +2787,12 @@ public class Flow extends BP.En.EntityNoName
           
 
          // Sys_MapAttr.
-         sql = "SELECT MyPK FROM Sys_MapAttr WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql += " UNION ";   //增加多附件的扩展列.
+         sql += "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData IN ( SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") +" ) "; 
+
+         
+         //sql = "SELECT MyPK FROM Sys_MapAttr WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          MapAttrs attrs = new MapAttrs();
          attrs.RetrieveInSQL(MapAttrAttr.MyPK, sql);
          ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));

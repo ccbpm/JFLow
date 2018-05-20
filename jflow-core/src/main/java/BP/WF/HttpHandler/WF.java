@@ -241,8 +241,13 @@ public class WF extends WebContralBase
                 md.Update();
             }
         }
+        
+        //加入是累加表单的标志，目的是让附件可以看到.
+        String endUrl = "";
+        if (nd.getHisFormType() == NodeFormType.FoolTruck)
+            endUrl = "&FormType=10&FromWorkOpt=" + this.GetRequestVal("FromWorkOpt");
 
-        return "url@./CCForm/Frm.htm?FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
+        return "url@./CCForm/Frm.htm?FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1"+endUrl;
  
         //return "url@./MyFlowTreeReadonly.htm?3=3" + this.getRequestParas();
         

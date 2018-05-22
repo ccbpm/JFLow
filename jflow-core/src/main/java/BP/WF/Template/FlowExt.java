@@ -422,8 +422,7 @@ public class FlowExt extends EntityNoName
 			//查询条件.
 		map.AddSearchAttr(FlowAttr.FK_FlowSort);
 		map.AddSearchAttr(FlowAttr.TimelineRole);
-
-
+ 
 			///#region 基本功能.
 			//map.AddRefMethod(rm);
 		RefMethod rm = new RefMethod();

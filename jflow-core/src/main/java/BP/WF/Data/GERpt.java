@@ -4,6 +4,7 @@ import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entity;
 import BP.En.Map;
+import BP.En.SQLCash;
 import BP.Sys.MapData;
 import BP.WF.Node;
 import BP.WF.WFSta;
@@ -405,6 +406,8 @@ public class GERpt extends BP.En.EntityOID
 	*/
 	public GERpt(String rptName)
 	{
+		this._SQLCash=null;
+		this.clearSQLCash();
 		this.setRptName(rptName);
 	}
 	public GERpt()
@@ -418,10 +421,13 @@ public class GERpt extends BP.En.EntityOID
 	*/
 	public GERpt(String rptName, long oid) throws Exception
 	{
+		this._SQLCash=null;
+		this.clearSQLCash();
 		this.setRptName(rptName);
 		this.setOID((int)oid);
 		this.Retrieve();
 	}
+	 
 
 		///#endregion attrs
 }

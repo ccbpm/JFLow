@@ -191,9 +191,9 @@ public class CCFlowAPI {
 						if (cType.equals("FWC") == true)
 							isHave = true;
 					}
-					
+
 					if (isHave == false) {
-						
+
 						DataRow dr = gf.NewRow();
 
 						dr.put(GroupFieldAttr.OID, 100);
@@ -259,40 +259,35 @@ public class CCFlowAPI {
 				myds.Tables.add(dtGF);
 				// #endregion 处理字段分组排序.
 
-				 
-				
-				 //#region 处理 mapattrs 
-                 //求当前表单的字段集合.
-                 MapAttrs attrs = new MapAttrs();
-                 QueryObject qo = new QueryObject(attrs);
-                 qo.AddWhere(MapAttrAttr.FK_MapData,  "ND"+nd.getNodeID());
-                 qo.addOrderBy(MapAttrAttr.Idx);
-                 qo.DoQuery();
+				// #region 处理 mapattrs
+				// 求当前表单的字段集合.
+				MapAttrs attrs = new MapAttrs();
+				QueryObject qo = new QueryObject(attrs);
+				qo.AddWhere(MapAttrAttr.FK_MapData, "ND" + nd.getNodeID());
+				qo.addOrderBy(MapAttrAttr.Idx);
+				qo.DoQuery();
 
-                 //计算累加的字段集合.
-                 MapAttrs attrsLeiJia = new MapAttrs();
-                 qo = new QueryObject(attrsLeiJia);
-                 qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")" );
-                 qo.addOrderBy(MapAttrAttr.Idx);
-                 qo.DoQuery();
+				// 计算累加的字段集合.
+				MapAttrs attrsLeiJia = new MapAttrs();
+				qo = new QueryObject(attrsLeiJia);
+				qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
+				qo.addOrderBy(MapAttrAttr.Idx);
+				qo.DoQuery();
 
-                 //把两个集合接起来.
-                 for (MapAttr item : attrsLeiJia.ToJavaList())
-                 {
-                     item.setUIIsEnable( false); //设置为只读的.
-                     attrs.AddEntity(item);
-                 }
+				// 把两个集合接起来.
+				for (MapAttr item : attrsLeiJia.ToJavaList()) {
+					item.setUIIsEnable(false); // 设置为只读的.
+					attrs.AddEntity(item);
+				}
 
-                 //替换掉现有的.
-                 DataTable Sys_MapAttr = myds.GetTableByName("Sys_MapAttr");
-                 myds.Tables.remove("Sys_MapAttr");
- 				 myds.Tables.remove(Sys_MapAttr);
-                           
-                 myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); //增加.
+				// 替换掉现有的.
+				DataTable Sys_MapAttr = myds.GetTableByName("Sys_MapAttr");
+				myds.Tables.remove("Sys_MapAttr");
+				myds.Tables.remove(Sys_MapAttr);
 
-                //#endregion 处理mapattrs
-                  
- 
+				myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); // 增加.
+
+				// #endregion 处理mapattrs
 
 				// 计算累加的枚举类型
 				DataTable Sys_Menu = myds.GetTableByName("Sys_Enum");
@@ -455,28 +450,36 @@ public class CCFlowAPI {
 
 			// 需要放到这里，不然无法转换出去.
 			wk.ResetDefaultVal();
-			 
-			  //如果是累加表单，就把整个rpt数据都放入里面去.
-            if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false
-              && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
-            {
-            	
-                GERpt rpt = nd.getHisFlow().getHisGERpt();
-                rpt.setOID( workID);
-                rpt.RetrieveFromDBSources();
-              //  rpt.Copy(wk);
-                
-                myds.Tables.add(rpt.ToDataTableField("MainTable"));
 
-            }
-            else
-            {
-            	DataTable mainTable = wk.ToDataTableField(md.getNo());
-    			mainTable.TableName = "MainTable";
-    			myds.Tables.add(mainTable);
-            }
-			
-			
+			// 如果是累加表单，就把整个rpt数据都放入里面去.
+			if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false
+					&& DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false) {
+
+				GERpt rpt = nd.getHisFlow().getHisGERpt();
+				rpt.setOID(workID);
+				rpt.RetrieveFromDBSources();
+				
+				rpt.ResetDefaultVal();
+				
+				DataTable dt=rpt.ToDataTableField("aaa");
+				
+				String json=BP.Tools.Json.ToJson(dt);
+				DataType.WriteFile("c:\\111.txt", json);
+				
+				DataType.WriteFile("c:\\2222.txt", BP.Tools.Json.ToJson(rpt.getRow()));
+				
+				
+				 
+				// rpt.Copy(wk);
+
+				myds.Tables.add(rpt.ToDataTableField("MainTable"));
+				
+
+			} else {
+				DataTable mainTable = wk.ToDataTableField(md.getNo());
+				mainTable.TableName = "MainTable";
+				myds.Tables.add(mainTable);
+			}
 
 			String sql = "";
 			DataTable dt = null;
@@ -760,8 +763,7 @@ public class CCFlowAPI {
 	 * @return 返回dataset
 	 * @throws Exception
 	 */
-	public static DataSet GN_Del(String fk_flow, int fk_node, long workID, long fid, String userNo)
-			throws Exception {
+	public static DataSet GN_Del(String fk_flow, int fk_node, long workID, long fid, String userNo) throws Exception {
 		if (fk_node == 0) {
 			fk_node = Integer.parseInt(fk_flow + "01");
 		}

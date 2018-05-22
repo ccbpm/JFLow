@@ -1790,14 +1790,14 @@ public class WF_MyFlow extends WebContralBase {
 					qo.DoQuery();
 					//把节点与表单的关联管理放入到系统.
 					ds.Tables.add(fns.ToDataTableField("FrmNodes"));
-
 				}
+				
 				///#endregion 如果是移动应用就考虑多表单的问题.
 
 				String str= BP.Tools.Json.ToJson(ds);
 				
 				
-				DataType.WriteFile("c:\\aaabbbb.Txt", str);				
+			//	DataType.WriteFile("c:\\aaabbbb.Txt", str);				
 				return str;				 
 			}
 			catch (RuntimeException ex)

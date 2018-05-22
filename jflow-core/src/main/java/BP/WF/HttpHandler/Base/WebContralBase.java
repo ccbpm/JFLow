@@ -169,30 +169,28 @@ public abstract class WebContralBase extends BaseController {
 		Object[] paras = null;
 		Object tempVar = null;
 		try {
+
 			tempVar = mp.invoke(this, paras);
 
 		} catch (Exception e) {
 
-			String msg =null; 
- 
+			String msg = null;
+
 			if (e.getCause() != null) {
 				msg = e.getCause().getMessage();
 			}
-			
-			
-			if (msg==null)
-				  msg = e.getMessage();
+
+			if (msg == null)
+				msg = e.getMessage();
 
 			// 如果有url返回.
 			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0))
 				return msg;
 
 			String str = "";
-			if (e.getCause().getMessage().indexOf("wait") > -1) {
+			if (e.getCause() != null && e.getCause().getMessage().indexOf("wait") > -1) {
 				str += "@错误原因可能是数据库连接异常";
 			}
-
-			// str+="\t\n@"+e.getCause().getMessage();
 
 			String myParas = getRequest().getQueryString();
 

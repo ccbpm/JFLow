@@ -407,7 +407,7 @@ public class GERpt extends BP.En.EntityOID
 	public GERpt(String rptName)
 	{
 		this._SQLCash=null;
-		this.clearSQLCash();
+	//	this.clearSQLCash();
 		this.setRptName(rptName);
 	}
 	public GERpt()
@@ -422,7 +422,7 @@ public class GERpt extends BP.En.EntityOID
 	public GERpt(String rptName, long oid) throws Exception
 	{
 		this._SQLCash=null;
-		this.clearSQLCash();
+	//	this.clearSQLCash();
 		this.setRptName(rptName);
 		this.setOID((int)oid);
 		this.Retrieve();

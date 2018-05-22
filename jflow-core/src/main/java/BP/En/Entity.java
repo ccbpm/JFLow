@@ -98,7 +98,12 @@ public abstract class Entity extends EnObj
 	
 	public void setSQLCash(SQLCash value)
 	{
-		_SQLCash = value;
+		_SQLCash = value;		 
+	}
+	// 清除缓存SQLCase.
+	public void clearSQLCash()
+	{
+		BP.DA.Cash.SetSQL(this.toString(), null);
 	}
 	
 	/**

@@ -112,9 +112,14 @@ public abstract class EnObj implements Serializable {
 
 	private final void ResetDefaultValRowValues() throws Exception {
 
-		for (String key : this._row.keySet()) {
+		  if (this.get_enMap() == null)
+              return ;
+		  
+		for (Attr attr : this.get_enMap().getAttrs()) {
+			
+			String key=attr.getKey();			
 
-			String v = this.GetValStrByKey(key);
+			String v = this.GetValStringByKey(key,null);
 
 			if (v == null || v.indexOf('@') ==-1)
 				continue;
@@ -147,7 +152,7 @@ public abstract class EnObj implements Serializable {
 				continue;
 			} else if (v.equals("@RDT")) {
 
-				Attr attr = this.getEnMap().GetAttrByKey(key);
+				//Attr attr = this.getEnMap().GetAttrByKey(key);
 
 				if (attr.getMyDataType() == DataType.AppDate) {
 					this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));

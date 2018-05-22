@@ -243,6 +243,12 @@ public class Node extends Entity
  
          obj.setHisNode(this);
          obj.setNodeID(this.getNodeID());
+         
+     //    obj.HisNode = this;
+       //  obj.NodeID = this.NodeID;
+         obj.clearSQLCash(); 
+         BP.DA.Cash.getSQL_Cash().remove( "ND"+this.getNodeID());
+          
          return obj;
 	}
 	/** 

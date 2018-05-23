@@ -1520,7 +1520,7 @@ public class WF_CCForm extends WebContralBase {
 		GEDtl dtl = new GEDtl(this.getFK_MapDtl());
 		dtl.setOID(this.getRefOID());
 		dtl.Delete();
-		return "删除成功";
+		return "{\"success\":\"删除成功\"}";
 	}
 
 	/**

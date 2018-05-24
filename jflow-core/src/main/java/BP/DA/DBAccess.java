@@ -754,8 +754,11 @@ public class DBAccess {
 		if (DBAccess.IsExitsTabPK(tab)) {
 			return;
 		}
+		//先创建表的主键列.
+		sql = "ALTER TABLE " + tab.toUpperCase() +  " ADD COLUMN " + pk + " int(11) ";
+		RunSQL(sql);
 
-		// 执行创建表的主键.
+		//然后添加主键约束.
 		sql = "ALTER TABLE " + tab.toUpperCase() + " ADD CONSTRAINT " + tab + "pk PRIMARY KEY(" + pk.toUpperCase()
 				+ ")";
 		RunSQL(sql);

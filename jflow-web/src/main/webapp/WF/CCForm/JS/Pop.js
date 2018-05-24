@@ -20,9 +20,11 @@ function SelfUrl_Done(mapExt) {
 
     //获得主键.
     var pkval = GetPKVal();
+    var webUser = new WebUser();
+    
     var url = mapExt.Tag;
     if (url.indexOf('?') == -1)
-        url = url + "?PKVal=" + pkval;
+        url = url + "?PKVal=" + pkval+"&UserNo="+webUser.No;
     var title = mapExt.GetPara("Title");
 
     if (window.parent && window.parent.OpenBootStrapModal) {
@@ -162,8 +164,12 @@ function ValSetter(tag4, key) {
 		return;
 	}
 	tag4 = tag4.replace(/@Key/g, key).replace(/~/g, "'");
-	var dt = DBAccess.RunSQLReturnTable(tag4);
-	GenerFullAllCtrlsVal(dt)
+	var dt;
+	if(tag4.indexOf("/")==0)
+		dt = DBAccess.RunDBSrc(tag4);
+	else
+		dt = DBAccess.RunSQLReturnTable(tag4);
+	GenerFullAllCtrlsVal(dt);
 }
 
 //树干模式.
@@ -209,12 +215,16 @@ function PopBranches(mapExt) {
                 var iframe = document.getElementById(iframeId);
                 if (iframe) {
                     var nodes = iframe.contentWindow.GetCheckNodes();
+                    var nodeText;
                     if ($.isArray(nodes)) {
                         $.each(nodes, function (i, node) {
                             SaveVal_FrmEleDB(mapExt.FK_MapData, mapExt.AttrOfOper, oid, node.No, node.Name);
+                            nodeText = node.Name+",";
                         });
                         //重新加载
                         Refresh_Mtags(mapExt.FK_MapData, mapExt.AttrOfOper, oid);
+                        if(nodeText!=null)
+                        	$("#TB_" + mapExt.AttrOfOper).val(nodeText.substring(0,nodeText.length-1));
 						// 单选复制当前表单
 						if (selectType == "0" && nodes.length == 1) {
 							ValSetter(mapExt.Tag4, nodes[0].No);
@@ -335,6 +345,8 @@ function PopGroupList_Done(mapExt) {
 
     //获得主键.
     var pkval = GetPKVal();
+    
+    
 
     //弹出这个url, 主要有高度宽度, 可以在  ReturnValCCFormPopValGoogle 上做修改.
     var local = window.location.href;

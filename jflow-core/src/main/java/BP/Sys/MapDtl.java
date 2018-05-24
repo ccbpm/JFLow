@@ -1315,6 +1315,10 @@ public class MapDtl extends EntityNoName
 		if (md.RetrieveFromDBSources() == 1)
 		{
 			md.setName(this.getName());
+			md.setPTable(this.getPTable());
+			//避免显示在表单库
+			md.setFK_FormTree("");
+            md.setFK_FrmSort("");
 			md.DirectUpdate();
 		}
 

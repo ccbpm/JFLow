@@ -40,6 +40,22 @@ public class MapFrmFool extends EntityNoName
 		return false;
 	}
 	/** 
+	物理存储表.
+	 
+	*/
+    public final String getPTable()
+    {
+    	return this.GetValStrByKey(MapDataAttr.PTable);
+    }
+	/** 
+	物理存储表.
+	 
+	*/
+    public final void setPTable(String value)
+    {
+    	this.SetValByKey(MapDataAttr.PTable, value);
+    }
+	/** 
 	 节点ID.
 	 
 	*/
@@ -319,6 +335,24 @@ public class MapFrmFool extends EntityNoName
 
 		///#endregion
 
+	@Override
+	protected void afterInsertUpdateAction() throws Exception {
+		//修改关联明细表
+        MapDtl dtl = new MapDtl();
+        dtl.setNo(this.getNo());
+        if (dtl.RetrieveFromDBSources() == 1)
+        {
+        	dtl.setName(this.getName());
+        	dtl.setPTable(this.getPTable());
+        	dtl.DirectUpdate();
+
+            MapData map = new MapData(this.getNo());
+            //避免显示在表单库中
+            map.setFK_FrmSort("");
+            map.setFK_FormTree("");
+            map.DirectUpdate();
+        }	
+	}
 
 		///#region 节点表单方法.
 

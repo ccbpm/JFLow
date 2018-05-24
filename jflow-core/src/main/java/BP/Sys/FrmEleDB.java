@@ -180,6 +180,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	public final void GenerPKVal()
 	{
-		this.setMyPK(this.getFK_MapData() + "_" + this.getEleID() + "_" + this.getRefPKVal());
+		this.setMyPK(this.getFK_MapData() + "_" + this.getEleID() + "_" + this.getRefPKVal()+"_"+this.getTag1());
 	}
 }

@@ -30,7 +30,17 @@ public enum SrcType
 	 WebServices
 	 
 	*/
-	WebServices(4);
+	WebServices(4),
+	
+	/**
+	 * 微服务Handler外部数据源
+	 */
+	Handler(5),
+	
+	/**
+	 * JavaScript外部数据源
+	 */
+	JQuery(6);
 
 	private int intValue;
 	private static java.util.HashMap<Integer, SrcType> mappings;

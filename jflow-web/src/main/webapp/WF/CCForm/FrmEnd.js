@@ -277,9 +277,12 @@ function AfterBindEn_DealMapExt(frmData) {
                 var tbAuto = $("#TB_" + mapExt.AttrOfOper);
                 if (tbAuto == null)
                     continue;
-
                 tbAuto.attr("ondblclick", "ReturnValTBFullCtrl(this,'" + mapExt.MyPK + "');");
-                tbAuto.attr("onkeyup", "DoAnscToFillDiv(this,this.value,\'TB_" + mapExt.AttrOfOper + "\', \'" + mapExt.MyPK + "\');");
+                var dbsrc = mapExt.Doc;
+                if(mapExt.DBType==0)  
+                	dbSrc = "";
+
+                tbAuto.attr("onkeyup", "DoAnscToFillDiv(this,this.value,\'TB_" + mapExt.AttrOfOper + "\', \'" + mapExt.MyPK + "\', \'" + mapExt.dbSrc + "\', \'" + mapExt.DBType + "\');");
                 tbAuto.attr("AUTOCOMPLETE", "OFF");
                 if (mapExt.Tag != "") {
                     /* 处理下拉框的选择范围的问题 */
@@ -347,11 +350,18 @@ function AfterBindEn_DealMapExt(frmData) {
                 var ddlChild = $("#DDL_" + mapExt.AttrsOfActive);
                 if (ddlPerant == null || ddlChild == null)
                     continue;
-                ddlPerant.attr("onchange", "DDLAnsc(this.value,\'" + "DDL_" + mapExt.AttrsOfActive + "\', \'" + mapExt.MyPK + "\')");
-                // 处理默认选择。
-                //string val = ddlPerant.SelectedItemStringVal;
+                var dbSrc = mapExt.Doc;
+                if(mapExt.DBType == 0)
+                	dbSrc="";
+                
+                ddlPerant.attr("onchange", "DDLAnsc(this.value,\'" + "DDL_" + mapExt.AttrsOfActive + "\', \'" + mapExt.MyPK + "\', \'" + dbSrc + "\', \'" + mapExt.DBType + "\',\'"+ddlPerant.val()+"\')");
+                
                 var valClient = ConvertDefVal(frmData, '', mapExt.AttrsOfActive); // ddlChild.SelectedItemStringVal;
-
+                
+                //初始化页面时方法加载
+                	
+                DDLAnsc($("#DDL_" + mapExt.AttrOfOper).val(),"DDL_" + mapExt.AttrsOfActive ,  mapExt.MyPK,dbSrc, mapExt.DBType);
+                
                 //ddlChild.select(valClient);  未写
                 break;
             case "AutoFullDLL": // 自动填充下拉框.
@@ -397,8 +407,13 @@ function AfterBindEn_DealMapExt(frmData) {
                     continue;
 
                 var enName = frmData.Sys_MapData[0].No;
+                var dbSrc=mapExt.Doc;
+                
+                //SQL 数据源获取
+                if(mapExt.DBType == 0)
+                	dbSrc ="";
 
-                ddlOper.attr("onchange", "Change('" + enName + "');DDLFullCtrl(this.value,\'" + "DDL_" + mapExt.AttrOfOper + "\', \'" + mapExt.MyPK + "\')");
+                ddlOper.attr("onchange", "Change('" + enName + "');DDLFullCtrl(this.value,\'" + "DDL_" + mapExt.AttrOfOper + "\', \'" + mapExt.MyPK + "\', \'" + dbSrc+ "\', \'" + mapExt.DBType + "\')");
 
                 // alert(enName + " " + ddlOper.length + " " + mapExt.AttrOfOper + " " + document.getElementById("DDL_" + mapExt.AttrOfOper));
                 //ddlOper.bind("change", function () {

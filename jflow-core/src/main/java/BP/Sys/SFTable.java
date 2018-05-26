@@ -206,7 +206,10 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 			String sql = "SELECT No, Name FROM " + this.getNo();
 			return src.RunSQLReturnTable(sql);
 		}
-		throw new RuntimeException("@没有判断的数据类型." + this.getSrcType() + " - " + this.getSrcTypeText());
+		
+		//@浙商银行
+		//throw new RuntimeException("@没有判断的数据类型." + this.getSrcType() + " - " + this.getSrcTypeText());
+		return null;
 	}
 	/** 
 	 实例化 WebServices
@@ -607,7 +610,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 		map.AddTBStringPK(SFTableAttr.No, null, "表英文名称", true, false, 1, 200, 20);
 		map.AddTBString(SFTableAttr.Name, null, "表中文名称", true, false, 0, 200, 20);
 
-		map.AddDDLSysEnum(SFTableAttr.SrcType, 0, "数据表类型", true, false, SFTableAttr.SrcType, "@0=本地的类@1=创建表@2=表或视图@3=SQL查询表@4=WebServices");
+		map.AddDDLSysEnum(SFTableAttr.SrcType, 0, "数据表类型", true, false, SFTableAttr.SrcType, "@0=本地的类@1=创建表@2=表或视图@3=SQL查询表@4=WebServices@5=微服务Handler外部数据源@6=JavaScript外部数据源");
 
 		map.AddDDLSysEnum(SFTableAttr.CodeStruct, 0, "字典表类型", true, false, SFTableAttr.CodeStruct);
 

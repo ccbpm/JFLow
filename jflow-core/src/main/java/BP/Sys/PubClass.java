@@ -778,9 +778,12 @@ public class PubClass {
           //added by liuxc,2017-09-11,增加动态SQL查询类型的处理，此种类型没有固定的数据表或视图
           SFTable sf = new SFTable();
           sf.setNo(  uiBindKey);
-          if (sf.RetrieveFromDBSources() != 0)
+          if (sf.RetrieveFromDBSources() != 0){
+        	  //@浙商银行
+        	  if(sf.getSrcType() == SrcType.Handler || sf.getSrcType() == SrcType.JQuery)
+        		  return null;
               dt = sf.getGenerHisDataTable();
-
+          }
           if (dt == null)
               dt = new DataTable();
 

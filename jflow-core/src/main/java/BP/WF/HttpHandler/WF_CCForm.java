@@ -1175,8 +1175,10 @@ public class WF_CCForm extends WebContralBase {
 			if (ds.Tables.contains(uiBindKey) == true) {
 				continue;
 			}
-
-			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+			//@浙商银行
+			DataTable dt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+			if(dt!=null)
+			ds.Tables.add(dt);
 		}
 
 		// #region 加入组件的状态信息, 在解析表单的时候使用.

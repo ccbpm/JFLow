@@ -174,12 +174,13 @@ public class FrmEleDB extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
+		//@浙商银行
 		//this.MyPK = this.FK_MapData + "_" + this.EleID + "_" + this.RefPKVal;
-		this.GenerPKVal();
+		//this.GenerPKVal();
 		return super.beforeUpdateInsertAction();
 	}
 	public final void GenerPKVal()
 	{
-		this.setMyPK(this.getFK_MapData() + "_" + this.getEleID() + "_" + this.getRefPKVal()+"_"+this.getTag1());
+		this.setMyPK(this.getFK_MapData() + "_" + this.getEleID() + "_" + this.getRefPKVal());
 	}
 }

@@ -475,21 +475,49 @@ public abstract class WebContralBase extends BaseController {
 	 */
 	public final String getFK_Flow() {
 		String str = this.GetRequestVal("FK_Flow");
-		if (str == null || str.equals("") || str.equals("null")) {
+		if ( DataType.IsNullOrEmpty(str)) {
 			return null;
 		}
 		return str;
 	}
+	
+	public final String getPFlowNo() {
+		String str = this.GetRequestVal("PFlowNo");
+		if ( DataType.IsNullOrEmpty(str)) {
+			return null;
+		}
+		return str;
+	}
+	 
 
-	public final int getGroupField() {
-		String str = this.GetRequestVal("GroupField");
-		if (str == null || str.equals("") || str.equals("null")) {
+	public final int getPNodeID() {
+		String str = this.GetRequestVal("PNodeID");
+		if (DataType.IsNullOrEmpty(str)) {
 			return 0;
 		}
 
 		return Integer.parseInt(str);
 	}
+	
+	 
+	
+	public final long getPFID() { 
+		String str = getRequest().getParameter("PFID");
+		if (str == null || str.equals("") || str.equals("null")) {
+			return 0;
+		}
+		return Integer.parseInt(str);
+	}
 
+	public final int getGroupField() {
+		String str = this.GetRequestVal("GroupField");
+		if (DataType.IsNullOrEmpty(str)) {
+			return 0;
+		}
+
+		return Integer.parseInt(str);
+	}
+	
 	/**
 	 * 节点ID
 	 */
@@ -501,9 +529,7 @@ public abstract class WebContralBase extends BaseController {
 		return nodeID;
 	}
 
-	public final long getFID() {
-		// return this.GetRequestValInt("FID");
-
+	public final long getFID() { 
 		String str = getRequest().getParameter("FID");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return 0;

@@ -1116,7 +1116,7 @@ public class MapAttr extends EntityMyPK {
 	 * 下移
 	 * @throws Exception 
 	 */
-	public final void DoDown() throws Exception {
+	public final String DoDown() throws Exception {
 		this.DoOrderDown(MapAttrAttr.GroupID, (new Integer(this.getGroupID())).toString(), MapAttrAttr.UIVisible, "1",
 				MapAttrAttr.Idx);
 
@@ -1125,13 +1125,15 @@ public class MapAttr extends EntityMyPK {
 		if (attr.RetrieveFromDBSources() == 1) {
 			attr.Update("Idx", -1);
 		}
+		
+		return "执行成功";
 	}
 
 	/**
 	 * 上移for 明细表.
 	 * @throws Exception 
 	 */
-	public final void DoUpForMapDtl() throws Exception {
+	public final String DoUpForMapDtl() throws Exception {
 		// 规整groupID.
 		GroupField gf = new GroupField();
 		gf.Retrieve(GroupFieldAttr.EnName, this.getFK_MapData());
@@ -1146,13 +1148,14 @@ public class MapAttr extends EntityMyPK {
 			// attr.Idx = -1;
 			attr.Update("Idx", -1);
 		}
+		return "执行成功";
 	}
 
 	/**
 	 * 下移 for 明细表.
 	 * @throws Exception 
 	 */
-	public final void DoDownForMapDtl() throws Exception {
+	public final String DoDownForMapDtl() throws Exception {
 		// 规整groupID.
 		GroupField gf = new GroupField();
 		gf.Retrieve(GroupFieldAttr.EnName, this.getFK_MapData());
@@ -1166,9 +1169,10 @@ public class MapAttr extends EntityMyPK {
 		if (attr.RetrieveFromDBSources() == 1) {
 			attr.Update("Idx", -1);
 		}
+		return "执行成功";
 	}
 
-	public final void DoDtlDown() throws Exception {
+	public final String DoDtlDown() throws Exception {
 		try {
 			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE FrmID='"
 					+ this.getFK_MapData() + "') WHERE FK_MapData='" + this.getFK_MapData() + "'";
@@ -1177,9 +1181,11 @@ public class MapAttr extends EntityMyPK {
 		}
 
 		this.DoDown();
+		
+		return "执行成功";
 	}
 
-	public final void DoDtlUp() throws Exception {
+	public final String DoDtlUp() throws Exception {
 		try {
 			String sql = "UPDATE Sys_MapAttr SET GroupID=( SELECT OID FROM Sys_GroupField WHERE FrmID='"
 					+ this.getFK_MapData() + "') WHERE FK_MapData='" + this.getFK_MapData() + "'";
@@ -1187,6 +1193,8 @@ public class MapAttr extends EntityMyPK {
 		} catch (java.lang.Exception e) {
 		}
 		this.DoUp();
+		
+		return "执行成功";
 	}
 
 	public final void DoJump(MapAttr attrTo) throws Exception {

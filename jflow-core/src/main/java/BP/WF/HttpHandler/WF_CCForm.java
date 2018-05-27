@@ -993,8 +993,10 @@ public class WF_CCForm extends WebContralBase {
 
 			// 如果是累加表单.
 			if (nd.getHisFormType() == NodeFormType.FoolTruck) {
-				DataSet myds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(),
-						this.getFID(), BP.Web.WebUser.getNo());
+				DataSet myds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(),
+						this.getFK_Node(), this.getWorkID(),
+						this.getFID(), BP.Web.WebUser.getNo(),
+						this.GetRequestVal("FromWorkOpt"));
 
 				return BP.Tools.Json.ToJson(myds);
 			}
@@ -1456,7 +1458,7 @@ public class WF_CCForm extends WebContralBase {
 			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region 从表保存前处理事件.
 			// 获得主表事件.
-			FrmEvents fes = new FrmEvents(this.getFK_MapData()); // 获得事件.
+			FrmEvents fes = new FrmEvents(this.getFK_MapDtl()); // 获得事件.
 			GEEntity mainEn = null;
 			if (fes.size() > 0) {
 				mainEn = mdtl.GenerGEMainEntity(this.getRefPKVal());
@@ -2381,6 +2383,9 @@ public class WF_CCForm extends WebContralBase {
 	// /////////////////////////////////////////////////
 	// /#region HanderMapExt
 	private String DealSQL(String sql, String key) throws Exception {
+		
+		key=key.replaceAll("'", "");
+		
 
 		sql = sql.replace("@Key", key);
 		sql = sql.replace("@key", key);
@@ -2398,10 +2403,10 @@ public class WF_CCForm extends WebContralBase {
 
 		String kvs = this.GetRequestVal("KVs");
 
-		if (DotNetToJavaStringHelper.isNullOrEmpty(kvs) == false && sql.contains("@") == true) {
+		if (DataType.IsNullOrEmpty(kvs) == false && sql.contains("@") == true) {
 			String[] strs = kvs.split("[~]", -1);
 			for (String s : strs) {
-				if (DotNetToJavaStringHelper.isNullOrEmpty(s) || s.contains("=") == false) {
+				if (DataType.IsNullOrEmpty(s) || s.contains("=") == false) {
 					continue;
 				}
 

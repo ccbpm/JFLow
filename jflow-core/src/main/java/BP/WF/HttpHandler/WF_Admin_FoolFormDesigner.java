@@ -1295,7 +1295,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		}
 		
 		///#region 计算GroupID @于庆海 需要翻译
-		int iGroupID = this.getGroupField();
+		int iGroupID =0;// this.getg();
 		try
 		{
 			DataTable dt = DBAccess.RunSQLReturnTable("SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getFK_MapData() + "' and (CtrlID is null or ctrlid ='')  ORDER BY OID DESC  ");

@@ -576,9 +576,8 @@ public class WF_MyFlow extends WebContralBase {
 					for (EntityMultiTree item : convertEntityMultiTree(ens))
 					{
 						if (!item.getParentNo().equals(parentEn.getNo()))
-						{
-							continue;
-						}
+						 	continue;
+						
 
 						if (checkIds.contains("," + item.getNo() + ","))
 						{
@@ -691,6 +690,10 @@ public class WF_MyFlow extends WebContralBase {
 				&& this.GetRequestVal("IsCheckGuide") == null) {
 			long workid = BP.WF.Dev2Interface.Node_CreateBlankWork(this
 					.getFK_Flow());
+			
+			if (this.getPWorkID()!=0)
+               BP.WF.Dev2Interface.SetParentInfo(this.getFK_Flow(), workid, this.getPFlowNo(), this.getPWorkID(), this.getPNodeID(), WebUser.getNo());
+
 			switch (this.getcurrFlow().getStartGuideWay()) {
 			case None:
 				break;
@@ -1735,7 +1738,7 @@ public class WF_MyFlow extends WebContralBase {
 					return BP.Tools.Json.ToJson(ds);
 				}
 
-				ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), BP.Web.WebUser.getNo());
+				ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), BP.Web.WebUser.getNo(),"0");
 
 
 				///#region 增加上流程的信息.

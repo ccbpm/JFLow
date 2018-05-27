@@ -77,7 +77,7 @@ public class CCFlowAPI {
 	 * @return 返回dataset
 	 * @throws Exception
 	 */
-	public static DataSet GenerWorkNode(String fk_flow, int fk_node, long workID, long fid, String userNo)
+	public static DataSet GenerWorkNode(String fk_flow, int fk_node, long workID, long fid, String userNo, String fromWorkOpt)
 			throws Exception {
 
 		// 让其登录. ??? 为什么需要登录？
@@ -221,7 +221,24 @@ public class CCFlowAPI {
 
 				// #region 处理字段分组排序.
 				// 查询所有的分组.
-				String myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
+
+				 //查询所有的分组, 如果是查看表单的方式，就不应该把当前的表单显示出来.
+                String myFrmIDs = ""; 
+                if (fromWorkOpt.equals("1") == true)
+                {
+                    if (gwf.getWFState() == WFState.Complete)
+                        myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
+                    else
+                        myFrmIDs = wk.HisPassedFrmIDs; //流程未完成并且是查看表单的情况.
+                }
+                else
+                {
+                    myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
+                }
+                
+				
+				
+				
 				GroupFields gfs = new GroupFields();
 				gfs.RetrieveIn(GroupFieldAttr.FrmID, "(" + myFrmIDs + ")");
 

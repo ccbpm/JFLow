@@ -2,7 +2,7 @@
 var oldValue = "";
 var oid;
 var highlightindex = -1;
-function DoAnscToFillDiv(sender, e, tbid, fk_mapExt,dbSrc,dbType) {
+function DoAnscToFillDiv(sender, e, tbid, fk_mapExt, dbSrc, dbType) {
     openDiv(sender, tbid);
 
     var myEvent = window.event || arguments[0];
@@ -56,7 +56,7 @@ function DoAnscToFillDiv(sender, e, tbid, fk_mapExt,dbSrc,dbType) {
             oldValue = strs[0];
 
             // 填充.
-            FullIt(oldValue, tbid, fk_mapExt,dbSrc,dbType);
+            FullIt(oldValue, tbid, fk_mapExt, dbSrc, dbType);
             highlightindex = -1;
         }
     }
@@ -64,23 +64,23 @@ function DoAnscToFillDiv(sender, e, tbid, fk_mapExt,dbSrc,dbType) {
         if (e != oldValue) {
             $("#divinfo").empty();
             var url = GetLocalWFPreHref();
-            
+
             var dataObj;
             //URL 获取数据源
-            if(dbType ==1){
-        	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-        	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-        	    
-        	 //JQuery 获取数据源
-            }else if(dbType == 2){   
-            	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-            }else{
-            	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-            	handler.AddPara("Key",e);
-            	handler.AddPara("FK_MapExt",fk_mapExt);
-            	handler.AddPara("KVs",kvs);
-            	var data = handler.DoMethodReturnString("HandlerMapExt");
-            	if (data.indexOf('err@') >= 0) {
+            if (dbType == 1) {
+                dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+                dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+                //JQuery 获取数据源
+            } else if (dbType == 2) {
+                dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+            } else {
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+                handler.AddPara("Key", e);
+                handler.AddPara("FK_MapExt", fk_mapExt);
+                handler.AddPara("KVs", kvs);
+                var data = handler.DoMethodReturnString("HandlerMapExt");
+                if (data.indexOf('err@') >= 0) {
                     alert(data);
                     $("#divinfo").hide();
                     return;
@@ -90,9 +90,9 @@ function DoAnscToFillDiv(sender, e, tbid, fk_mapExt,dbSrc,dbType) {
                     $("#divinfo").hide();
                     return;
                 }
-            	dataObj = eval("(" + data + ")"); //转换为json对象 
+                dataObj = eval("(" + data + ")"); //转换为json对象 
             }
-            
+
 
             highlightindex = -1;
             if (dataObj.Head.length == 0) {
@@ -100,14 +100,14 @@ function DoAnscToFillDiv(sender, e, tbid, fk_mapExt,dbSrc,dbType) {
             }
 
             $.each(dataObj.Head, function (idx, item) {
-                $("#divinfo").append("<div style='" + itemStyle + "' name='" + idx + "' onmouseover='MyOver(this)' onmouseout='MyOut(this)' onclick=\"ItemClick('" + sender.id + "','" + item.No + "','" + tbid + "','" + fk_mapExt + "','" + dbSrc+ "','" + dbType+ "');\" value='" + item.No + "'>" + item.No + '|' + item.Name + "</div>");
-            }); 
+                $("#divinfo").append("<div style='" + itemStyle + "' name='" + idx + "' onmouseover='MyOver(this)' onmouseout='MyOut(this)' onclick=\"ItemClick('" + sender.id + "','" + item.No + "','" + tbid + "','" + fk_mapExt + "','" + dbSrc + "','" + dbType + "');\" value='" + item.No + "'>" + item.No + '|' + item.Name + "</div>");
+            });
             oldValue = e;
         }
     }
 }
 
-function FullIt(oldValue, tbid, fk_mapExt,dbSrc,dbType) {
+function FullIt(oldValue, tbid, fk_mapExt, dbSrc, dbType) {
 
     if (oid == null)
         oid = GetQueryString('OID');
@@ -119,20 +119,20 @@ function FullIt(oldValue, tbid, fk_mapExt,dbSrc,dbType) {
         oid = 0;
 
     //执行填充主表的控件.
-    FullCtrl(oldValue, tbid, fk_mapExt,dbSrc,dbType);
+    FullCtrl(oldValue, tbid, fk_mapExt, dbSrc, dbType);
 
     //执行个性化填充下拉框.
-    FullCtrlDDL(oldValue, tbid, fk_mapExt,dbSrc,dbType);
+    FullCtrlDDL(oldValue, tbid, fk_mapExt, dbSrc, dbType);
 
     //执行填充从表.
-    FullDtl(oldValue, fk_mapExt,dbSrc,dbType);
+    FullDtl(oldValue, fk_mapExt, dbSrc, dbType);
 
     //执行m2m 关系填充.
-    FullM2M(oldValue, fk_mapExt,dbSrc,dbType);
+    FullM2M(oldValue, fk_mapExt, dbSrc, dbType);
 }
 function openDiv(e, tbID) {
 
-     
+
     if (document.getElementById("divinfo").style.display == "none") {
 
         var txtObject = e; //  document.getElementById(tbID);
@@ -187,13 +187,13 @@ function SetEleValByName(eleName, val) {
         switch (ele[0].tagName.toUpperCase()) {
             case "INPUT":
                 switch (ele[0].type.toUpperCase()) {
-                    case "CHECKBOX"://复选框  0:false  1:true
-                        val.indexOf('1')>=0 ? $(ele).attr('checked', true) : $(ele).attr('checked', false);
+                    case "CHECKBOX": //复选框  0:false  1:true
+                        val.indexOf('1') >= 0 ? $(ele).attr('checked', true) : $(ele).attr('checked', false);
                         break;
-                    case "TEXT"://文本框
+                    case "TEXT": //文本框
                         $(ele).val(val);
                         break;
-                    case "RADIO"://单选钮
+                    case "RADIO": //单选钮
                         $(ele).attr('checked', false);
                         $('[name=RB_' + eleName + '][value=' + val + ']').attr('checked', true);
                         break;
@@ -202,11 +202,11 @@ function SetEleValByName(eleName, val) {
                         break;
                 }
                 break;
-                //下拉框
+            //下拉框 
             case "SELECT":
                 $(ele).val(val);
                 break;
-                //文本区域
+            //文本区域 
             case "TEXTAREA":
                 $(ele).val(val);
                 break;
@@ -215,12 +215,12 @@ function SetEleValByName(eleName, val) {
 }
 
 function PopFullCtrl(val1, val2) {
-    alert(val1,val2);
+    alert(val1, val2);
 }
 
 /* 内置的Pop自动返回值. google 版 软通*/
 
-function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, title, formData, dtlNo,extType) {
+function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, title, formData, dtlNo, extType) {
     //设置摸态框的宽度和高度
     $('#returnPopValModal .modal-dialog').height(height);
     $('#returnPopValModal .modal-dialog').width(width);
@@ -228,9 +228,9 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
     $('#returnPopValModal .modal-dialog').css('margin-right', 'auto');
 
     //ctrl = $('#' + ctrl);
-	if (typeof ctrl == "string") {
-		ctrl = document.getElementById(ctrl);
-}
+    if (typeof ctrl == "string") {
+        ctrl = document.getElementById(ctrl);
+    }
     debugger
     var wfpreHref = GetLocalWFPreHref();
     var fd;
@@ -246,7 +246,7 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
 
     var url = "";
 
-    if (extType == "PopVal" || extType==undefined )
+    if (extType == "PopVal" || extType == undefined)
         url = wfpreHref + '/WF/CCForm/PopVal.htm?FK_MapExt=' + fk_mapExt + '&RefPK=' + refEnPK + '&CtrlVal=' + ctrl.value + "&FormData=" + escape(fd) + "&m=" + Math.random();
 
     if (extType == "PopFullCtrl")
@@ -280,14 +280,14 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
                     //$(ctrl).val(returnValObj.Name);
                     setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
                 } else {
-					// ??????????
+                    // ??????????
                     for (var property in returnValObj) {
                         //$('[id$=_' + property + ']').val(returnValObj[property]);
 
                         SetEleValByName(property, returnValObj[property]);
                     }
 
-					setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
+                    setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
                 }
             } else if (returnValSetObj[0].PopValWorkModel == "Group") { //分组模式
                 frames["iframePopModalForm"].window.GetGroupReturnVal();
@@ -303,13 +303,13 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
                     //$(ctrl).val(returnValObj.Name);
                     setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
                 } else {
-					// ??????????
+                    // ??????????
                     for (var property in returnValObj) {
                         //$('[id$=_' + property + ']').val(returnValObj[property]);
                         SetEleValByName(property, returnValObj[property]);
                     }
-					
-					setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
+
+                    setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
                 }
             } else if (returnValSetObj[0].PopValWorkModel == "SelfUrl") { //自定义URL
                 //frames["iframePopModalForm"].window.GetTreeReturnVal();
@@ -410,33 +410,33 @@ function GenerPageKVs() {
 
 
 /* 自动填充 */
-function DDLFullCtrl(e, ddlChild, fk_mapExt,dbSrc) {
-	
+function DDLFullCtrl(e, ddlChild, fk_mapExt, dbSrc,dbType) {
+
     GenerPageKVs();
     var url = GetLocalWFPreHref();
-    
+
     var dataObj;
     //URL 获取数据源
-    if(dbType ==1){
-	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-	    
-	 //JQuery 获取数据源
-    }else if(dbType == 2){   
-    	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-    }else{
-    	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    	handler.AddPara("Key",e);
-    	handler.AddPara("FK_MapExt",fk_mapExt);
-    	handler.AddPara("KVs",kvs);
-    	var data = handler.DoMethodReturnString("HandlerMapExt");
-    	if (data.indexOf('err@') == 0) {
+    if (dbType == 1) {
+        dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+        dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+        //JQuery 获取数据源
+    } else if (dbType == 2) {
+        dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+    } else {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddPara("Key", e);
+        handler.AddPara("FK_MapExt", fk_mapExt);
+        handler.AddPara("KVs", kvs);
+        var data = handler.DoMethodReturnString("HandlerMapExt");
+        if (data.indexOf('err@') == 0) {
             alert(data);
             return;
         }
-    	dataObj = eval("(" + data + ")"); //转换为json对象 
+        dataObj = eval("(" + data + ")"); //转换为json对象 
     }
-    
+
     for (var i in dataObj.Head) {
         if (typeof (i) == "function")
             continue;
@@ -446,56 +446,56 @@ function DDLFullCtrl(e, ddlChild, fk_mapExt,dbSrc) {
 }
 
 /* 级联下拉框  param 传到后台的一些参数  例如从表的行数据 主表的字段值 如果param参数在，就不去页面中取KVS 了，PARAM 就是*/
-function DDLAnsc(e, ddlChild, fk_mapExt,dbSrc,dbType, param) {	
-	if(e==null || e==""){
-		$("#" + ddlChild).empty();
-		//无数据返回时，提示显示无数据，并将与此关联的下级下拉框也处理一遍，edited by liuxc,2015-10-22
+function DDLAnsc(e, ddlChild, fk_mapExt, dbSrc, dbType, param) {
+    if (e == null || e == "") {
+        $("#" + ddlChild).empty();
+        //无数据返回时，提示显示无数据，并将与此关联的下级下拉框也处理一遍，edited by liuxc,2015-10-22
         $("#" + ddlChild).append("<option value='' selected='selected' >无数据</option");
         var chg = $("#" + ddlChild).attr("onchange");
-        
+
         $("#" + ddlChild).change();
 
         return;
-	}
-	 
-	GenerPageKVs();
+    }
+
+    GenerPageKVs();
     var url = GetLocalWFPreHref();
     if (param != undefined) {
         kvs = '';
     }
 
-    var dataObj="";
+    var dataObj = "";
     //Url获取数据源
-    if(dbType ==1){
-	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-	    
-	 //JQuery 获取数据源
-    }else if(dbType == 2){   
-    	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-    	
-     //SQL 获取数据源
-    }else{
-    	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    	handler.AddPara("Key",e);
-    	handler.AddPara("FK_MapExt",fk_mapExt);
-    	handler.AddPara("KVs",kvs);
-    	if (param != undefined) {
+    if (dbType == 1) {
+        dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+        dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+        //JQuery 获取数据源
+    } else if (dbType == 2) {
+        dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+
+        //SQL 获取数据源
+    } else {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddPara("Key", e);
+        handler.AddPara("FK_MapExt", fk_mapExt);
+        handler.AddPara("KVs", kvs);
+        if (param != undefined) {
             for (var pro in param) {
                 if (pro == 'DoType')
                     continue;
-                handler.AddPara(pro,param[pro]);
+                handler.AddPara(pro, param[pro]);
             }
         }
-    	var data = handler.DoMethodReturnString("HandlerMapExt");
-    	 if (data.indexOf('err@') == 0) {
-    	        alert(data);
-    	        return;
-    	 }
-    	 dataObj = eval("(" + data + ")"); //转换为json对象.
+        var data = handler.DoMethodReturnString("HandlerMapExt");
+        if (data.indexOf('err@') == 0) {
+            alert(data);
+            return;
+        }
+        dataObj = eval("(" + data + ")"); //转换为json对象.
     }
-    
-	
+
+
     // 这里要设置一下获取的外部数据.
     // var seleValOfOld = $("#" + ddlChild).selectedindex;
     // alert(seleValOfOld);
@@ -513,7 +513,7 @@ function DDLAnsc(e, ddlChild, fk_mapExt,dbSrc,dbType, param) {
 
     $("#" + ddlChild).empty();
 
-    if (data == ""||dataObj==null) {
+    if (data == "" || dataObj == null) {
         //无数据返回时，提示显示无数据，并将与此关联的下级下拉框也处理一遍，edited by liuxc,2015-10-22
         $("#" + ddlChild).append("<option value='' selected='selected' >无数据</option");
         var chg = $("#" + ddlChild).attr("onchange");
@@ -548,37 +548,37 @@ function DDLAnsc(e, ddlChild, fk_mapExt,dbSrc,dbType, param) {
 
     }
 
-   
+
 }
 
 
-function FullM2M(key, fk_mapExt,dbSrc,dbType) {
+function FullM2M(key, fk_mapExt, dbSrc, dbType) {
     GenerPageKVs();
     var url = GetLocalWFPreHref();
     var dataObj;
-    if(dbType ==1){
-	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-	    
-	 //JQuery 获取数据源
-    }else if(dbType == 2){   
-    	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-    }else{
-    	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    	handler.AddPara("Key",e);
-    	handler.AddPara("FK_MapExt",fk_mapExt);
-    	handler.AddPara("KVs",kvs);
-    	handler.AddPara("DoTypeExt","ReqM2MFullList");
-    	handler.AddPara("OID",oid);
-    	var data = handler.DoMethodReturnString("HandlerMapExt");
-    	if (data == "")
+    if (dbType == 1) {
+        dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+        dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+        //JQuery 获取数据源
+    } else if (dbType == 2) {
+        dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+    } else {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddPara("Key", e);
+        handler.AddPara("FK_MapExt", fk_mapExt);
+        handler.AddPara("KVs", kvs);
+        handler.AddPara("DoTypeExt", "ReqM2MFullList");
+        handler.AddPara("OID", oid);
+        var data = handler.DoMethodReturnString("HandlerMapExt");
+        if (data == "")
             return;
 
         if (data.indexOf('err@') == 0) {
             alert(data);
             return;
         }
-    	 dataObj = eval("(" + data + ")"); //转换为json对象 	
+        dataObj = eval("(" + data + ")"); //转换为json对象 	
     }
     for (var i in dataObj.Head) {
         if (typeof (i) == "function")
@@ -599,39 +599,39 @@ function FullM2M(key, fk_mapExt,dbSrc,dbType) {
             frm.src = src;
         }
     }
-    
+
 }
 
 //填充明细.
-function FullDtl(key, fk_mapExt,dbSrc,dbType) {
+function FullDtl(key, fk_mapExt, dbSrc, dbType) {
     GenerPageKVs();
     var url = GetLocalWFPreHref();
     var dataObj;
-    if(dbType ==1){
-	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-	    
-	 //JQuery 获取数据源
-    }else if(dbType == 2){   
-    	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-    }else{
-    	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    	handler.AddPara("Key",e);
-    	handler.AddPara("FK_MapExt",fk_mapExt);
-    	handler.AddPara("KVs",kvs);
-    	handler.AddPara("DoTypeExt","ReqDtlFullList");
-    	handler.AddPara("OID",oid);
-    	var data = handler.DoMethodReturnString("HandlerMapExt");
-    	if (data == "")
+    if (dbType == 1) {
+        dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+        dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+        //JQuery 获取数据源
+    } else if (dbType == 2) {
+        dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+    } else {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddPara("Key", e);
+        handler.AddPara("FK_MapExt", fk_mapExt);
+        handler.AddPara("KVs", kvs);
+        handler.AddPara("DoTypeExt", "ReqDtlFullList");
+        handler.AddPara("OID", oid);
+        var data = handler.DoMethodReturnString("HandlerMapExt");
+        if (data == "")
             return;
 
         if (data.indexOf('err@') == 0) {
             alert(data);
             return;
         }
-    	 dataObj = eval("(" + data + ")"); //转换为json对象 	
+        dataObj = eval("(" + data + ")"); //转换为json对象 	
     }
-    
+
     for (var i in dataObj.Head) {
         if (typeof (i) == "function")
             continue;
@@ -649,37 +649,37 @@ function FullDtl(key, fk_mapExt,dbSrc,dbType) {
             frm.src = src;
         }
     }
-    
+
 }
 
-function FullCtrlDDL(key, ctrlIdBefore, fk_mapExt,dbSrc,dbType) {
+function FullCtrlDDL(key, ctrlIdBefore, fk_mapExt, dbSrc, dbType) {
     GenerPageKVs();
     var url = GetLocalWFPreHref();
     var dataObj;
-    if(dbType ==1){
-	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-	    
-	 //JQuery 获取数据源
-    }else if(dbType == 2){   
-    	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-    }else{
-    	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    	handler.AddPara("Key",e);
-    	handler.AddPara("FK_MapExt",fk_mapExt);
-    	handler.AddPara("KVs",kvs);
-    	handler.AddPara("DoTypeExt","ReqDDLFullList");
-    	var data = handler.DoMethodReturnString("HandlerMapExt");
-    	if (data == "")
+    if (dbType == 1) {
+        dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+        dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+        //JQuery 获取数据源
+    } else if (dbType == 2) {
+        dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+    } else {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddPara("Key", e);
+        handler.AddPara("FK_MapExt", fk_mapExt);
+        handler.AddPara("KVs", kvs);
+        handler.AddPara("DoTypeExt", "ReqDDLFullList");
+        var data = handler.DoMethodReturnString("HandlerMapExt");
+        if (data == "")
             return;
 
         if (data.indexOf('err@') == 0) {
             alert(data);
             return;
         }
-    	 dataObj = eval("(" + data + ")"); //转换为json对象 	
+        dataObj = eval("(" + data + ")"); //转换为json对象 	
     }
-    
+
     var beforeID = ctrlIdBefore.substring(0, ctrlIdBefore.indexOf('DDL_'));
     var endId = ctrlIdBefore.substring(ctrlIdBefore.lastIndexOf('_'));
 
@@ -691,39 +691,39 @@ function FullCtrlDDL(key, ctrlIdBefore, fk_mapExt,dbSrc,dbType) {
             var fullDDLID = dataObj.Head[i][k];
 
             //alert(fullDDLID);
-            FullCtrlDDLDB(key, fullDDLID, beforeID, endId, fk_mapExt);
+            FullCtrlDDLDB(key, fullDDLID, beforeID, endId, fk_mapExt, dbSrc, dbType);
         }
-    } 
-   
+    }
+
 }
 
-function FullCtrlDDLDB(e, ddlID, ctrlIdBefore, endID, fk_mapExt,dbSrc,dbType) {
+function FullCtrlDDLDB(e, ddlID, ctrlIdBefore, endID, fk_mapExt, dbSrc, dbType) {
     GenerPageKVs();
     var url = GetLocalWFPreHref();
-    
+
     var dataObj;
-    if(dbType ==1){
-	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-	    
-	 //JQuery 获取数据源
-    }else if(dbType == 2){   
-    	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-    }else{
-    	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    	handler.AddPara("Key",e);
-    	handler.AddPara("FK_MapExt",fk_mapExt);
-    	handler.AddPara("KVs",kvs);
-    	handler.AddPara("DoTypeExt","ReqDDLFullListDB");
-    	handler.AddPara("MyDDL",ddlID);
-    	var data = handler.DoMethodReturnString("HandlerMapExt");
-    	if(data.indexOf("err@")>=0){
-    		alert(data);
-    		return;
-    	}
-    	 dataObj = eval("(" + data + ")"); //转换为json对象 	
+    if (dbType == 1) {
+        dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+        dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+        //JQuery 获取数据源
+    } else if (dbType == 2) {
+        dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+    } else {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddPara("Key", e);
+        handler.AddPara("FK_MapExt", fk_mapExt);
+        handler.AddPara("KVs", kvs);
+        handler.AddPara("DoTypeExt", "ReqDDLFullListDB");
+        handler.AddPara("MyDDL", ddlID);
+        var data = handler.DoMethodReturnString("HandlerMapExt");
+        if (data.indexOf("err@") >= 0) {
+            alert(data);
+            return;
+        }
+        dataObj = eval("(" + data + ")"); //转换为json对象 	
     }
-    
+
     endID = endID.replace('_', '');
     if (endID != parseInt(endID)) {
         endID = "";
@@ -738,11 +738,11 @@ function FullCtrlDDLDB(e, ddlID, ctrlIdBefore, endID, fk_mapExt,dbSrc,dbType) {
     $.each(dataObj.Head, function (idx, item) {
         $("*[id$=" + id + "]").append("<option value='" + item.No + "'>" + item.Name + "</option");
     });
-    
+
 }
 
 //文本框自动填充
-function FullCtrl(e, ctrlIdBefore, fk_mapExt,dbSrc,dbType) {
+function FullCtrl(e, ctrlIdBefore, fk_mapExt, dbSrc, dbType) {
     e = escape(e);
     GenerPageKVs();
 
@@ -756,29 +756,29 @@ function FullCtrl(e, ctrlIdBefore, fk_mapExt,dbSrc,dbType) {
         beforeID = ctrlIdBefore.substring(0, ctrlIdBefore.indexOf('TB_'));
         endId = ctrlIdBefore.substring(ctrlIdBefore.lastIndexOf('_'));
     }
-    
+
     var dataObj;
-    if(dbType ==1){
-	    dbSrc = DealSQL(getDocOfSQLDeal(dbSrc),e,kvs);	
-	    dataObj = DBAccess.RunDBSrc(dbSrc,1);
-	    
-	 //JQuery 获取数据源
-    }else if(dbType == 2){   
-    	dataObj = DBAccess.RunDBSrc(dbSrc,2);  
-    }else{
-    	var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    	handler.AddPara("Key",e);
-    	handler.AddPara("FK_MapExt",fk_mapExt);
-    	handler.AddPara("KVs",kvs);
-    	handler.AddPara("DoTypeExt","ReqCtrl");
-    	var data = handler.DoMethodReturnString("HandlerMapExt");
-    	if(data.indexOf("err@")>=0){
-    		alert(data);
-    		return;
-    	}
-    	 dataObj = eval("(" + data + ")"); //转换为json对象 	
+    if (dbType == 1) {
+        dbSrc = DealSQL(getDocOfSQLDeal(dbSrc), e, kvs);
+        dataObj = DBAccess.RunDBSrc(dbSrc, 1);
+
+        //JQuery 获取数据源
+    } else if (dbType == 2) {
+        dataObj = DBAccess.RunDBSrc(dbSrc, 2);
+    } else {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddPara("Key", e);
+        handler.AddPara("FK_MapExt", fk_mapExt);
+        handler.AddPara("KVs", kvs);
+        handler.AddPara("DoTypeExt", "ReqCtrl");
+        var data = handler.DoMethodReturnString("HandlerMapExt");
+        if (data.indexOf("err@") >= 0) {
+            alert(data);
+            return;
+        }
+        dataObj = eval("(" + data + ")"); //转换为json对象 	
     }
-    
+
     for (var i in dataObj.Head) {
         if (typeof (i) == "function")
             continue;
@@ -808,7 +808,7 @@ function FullCtrl(e, ctrlIdBefore, fk_mapExt,dbSrc,dbType) {
 
 var itemStyle = 'padding:2px;color: #000000;background-color:white;width:100%;border-bottom: 1px solid #336699;';
 var itemStyleOfS = 'padding:2px;color: #000000;background-color:green;width:100%';
-function ItemClick(sender, val, tbid, fk_mapExt,dbSrc,dbType) {
+function ItemClick(sender, val, tbid, fk_mapExt, dbSrc, dbType) {
 
     $("#divinfo").empty();
     $("#divinfo").css("display", "none");
@@ -818,7 +818,7 @@ function ItemClick(sender, val, tbid, fk_mapExt,dbSrc,dbType) {
     $("#" + tbid).val(oldValue);
 
     // 填充.
-    FullIt(oldValue, tbid, fk_mapExt,dbSrc,dbType);
+    FullIt(oldValue, tbid, fk_mapExt, dbSrc, dbType);
 }
 
 function MyOver(sender) {
@@ -857,7 +857,7 @@ function CheckInput(oInput, filter) {
     return re.test(oInput);
 }
 //正则表达式检查
-function CheckRegInput(oInput, filter,tipInfo) {
+function CheckRegInput(oInput, filter, tipInfo) {
     var oInputVal = $("[name=" + oInput + ']').val();
     var result = true;
     if (oInput != '') {
@@ -984,40 +984,40 @@ function GetLocalWFPreHref() {
 }
 
 
-function getDocOfSQLDeal(dbSrc){
-	var webUser = new WebUser();
-	dbSrc = dbSrc.replace("WebUser.No", webUser.No);
-	dbSrc = dbSrc.replace("@WebUser.Name", webUser.Name);
-	dbSrc = dbSrc.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
-	dbSrc = dbSrc.replace("@WebUser.FK_DeptName", webUser.FK_DeptName);
-	dbSrc = dbSrc.replace("@WebUser.FK_Dept", webUser.FK_Dept);
-	return dbSrc;
+function getDocOfSQLDeal(dbSrc) {
+    var webUser = new WebUser();
+    dbSrc = dbSrc.replace("WebUser.No", webUser.No);
+    dbSrc = dbSrc.replace("@WebUser.Name", webUser.Name);
+    dbSrc = dbSrc.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
+    dbSrc = dbSrc.replace("@WebUser.FK_DeptName", webUser.FK_DeptName);
+    dbSrc = dbSrc.replace("@WebUser.FK_Dept", webUser.FK_Dept);
+    return dbSrc;
 }
 
-function DealSQL(dbSrc, key,kvs){
+function DealSQL(dbSrc, key, kvs) {
 
-	dbSrc =  dbSrc.replace(/@Key/g, key);
-	dbSrc = dbSrc.replace(/@Val/g, key);
-	var oid = GetQueryString("OID");
-	if (oid != null) {
-		dbSrc = dbSrc.replace("@OID", oid);
-	}
+    dbSrc = dbSrc.replace(/@Key/g, key);
+    dbSrc = dbSrc.replace(/@Val/g, key);
+    var oid = GetQueryString("OID");
+    if (oid != null) {
+        dbSrc = dbSrc.replace("@OID", oid);
+    }
 
-	if(kvs!=null&&kvs!=""&&dbSrc.indexOf("@")>=0){
-		var strs = kvs.split("[~]", -1);
-		for(var i=0;i<strs.length;i++){
-			var s = strs[i];
-			if(s==null || s=="" || s.indexOf("=")==-1)
-				continue;
-			var mykv = s.split("[=]", -1);
-			dbSrc = dbSrc.replace("@" + mykv[0], mykv[1]);
-			if(dbSrc.indexOf("@")==-1)
-				break;
-		}
-	}
-	
-	if(dbSrc.indexOf("@")>=0){
-		
-	}
-	return dbSrc;
+    if (kvs != null && kvs != "" && dbSrc.indexOf("@") >= 0) {
+        var strs = kvs.split("[~]", -1);
+        for (var i = 0; i < strs.length; i++) {
+            var s = strs[i];
+            if (s == null || s == "" || s.indexOf("=") == -1)
+                continue;
+            var mykv = s.split("[=]", -1);
+            dbSrc = dbSrc.replace("@" + mykv[0], mykv[1]);
+            if (dbSrc.indexOf("@") == -1)
+                break;
+        }
+    }
+
+    if (dbSrc.indexOf("@") >= 0) {
+
+    }
+    return dbSrc;
 }

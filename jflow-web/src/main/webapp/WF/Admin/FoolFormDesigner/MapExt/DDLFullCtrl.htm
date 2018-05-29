@@ -20,7 +20,7 @@
             $.ajax({
                 type: 'post',
                 async: true,
-                url: Handler + "?DoType=DDLFullCtrl_Init&FK_MapData=" + GetQueryString("FK_MapData") + "&KeyOfEn=" +  GetQueryString("KeyOfEn") + "&m=" + Math.random(),
+                url: Handler + "?DoType=DDLFullCtrl_Init&FK_MapData=" + GetQueryString("FK_MapData") + "&KeyOfEn=" + GetQueryString("KeyOfEn") + "&m=" + Math.random(),
                 dataType: 'html',
                 success: function (json) {
 
@@ -43,28 +43,28 @@
                         document.getElementById("Btn_FullDtl").disabled = true;
                         document.getElementById("Btn_FullDDL").disabled = true;
                     }
-					
-                    if(mapExt.DBType != 0)
-                    	$("#TR_SQL").hide();
-                    
+
+                    if (mapExt.DBType != 0)
+                        $("#TR_SQL").hide();
+
                     return;
                 }
             });
 
             $("#Msg").html("");
         });
-        
-        function changeDoc(obj){
-        	if(obj.value == 0)
-        		$("#TR_SQL").show();
-        	else
-        		$("#TR_SQL").hide();
-        	
-    		if(obj.value != mapExt.DBType)
-    			$("#TB_Doc").val("");
-    		else
-    			$("#TB_Doc").val(mapExt.Doc);
-    	}
+
+        function changeDoc(obj) {
+            if (obj.value == 0)
+                $("#TR_SQL").show();
+            else
+                $("#TR_SQL").hide();
+
+            if (obj.value != mapExt.DBType)
+                $("#TB_Doc").val("");
+            else
+                $("#TB_Doc").val(mapExt.Doc);
+        }
 
         //装载  模版.
         function LoadTemplate() {
@@ -146,7 +146,8 @@
 
     function FullDtl() {
         var myPK = GetQueryString('MyPK');
-        var url = 'TBFullCtrlDtl.htm?FK_MapData=' + GetQueryString('FK_MapData') + '&KeyOfEn=' + GetQueryString('KeyOfEn') + '&MyPK=' + myPK+'&FromPage=DDL';
+        var DBType = $("#DDL_DBType").val();
+        var url = 'TBFullCtrlDtl.htm?FK_MapData=' + GetQueryString('FK_MapData') + '&KeyOfEn=' + GetQueryString('KeyOfEn') + '&MyPK=' + myPK + '&FromPage=DDL&DBType='+DBType;
         window.location.href = url;
         return;
     }
@@ -155,7 +156,8 @@
     function FullDDL() {
 
         var myPK = GetQueryString('MyPK');
-        var url = 'TBFullCtrlDDL.htm?FK_MapData=' + GetQueryString('FK_MapData') + '&KeyOfEn=' + GetQueryString('KeyOfEn') + '&MyPK=' + myPK + '&FromPage=DDL';
+        var DBType = $("#DDL_DBType").val();
+        var url = 'TBFullCtrlDDL.htm?FK_MapData=' + GetQueryString('FK_MapData') + '&KeyOfEn=' + GetQueryString('KeyOfEn') + '&MyPK=' + myPK + '&FromPage=DDL&DBType=' + DBType;
         window.location.href = url;
         return;
     }

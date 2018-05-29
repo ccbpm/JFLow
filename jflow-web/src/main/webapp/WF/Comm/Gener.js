@@ -25,6 +25,7 @@ function AtParaToJson(json) {
 }
 
 
+
 function GetPKVal() {
 
     var val = this.GetQueryString("OID"); 
@@ -43,6 +44,9 @@ function GetPKVal() {
 
     if (val == undefined || val == "")
         val = GetQueryString("PKVal");
+
+    if (val == undefined || val == "")
+        val = GetQueryString("PK");
 
     if (val == "null" || val == "" || val == undefined)
         return null;
@@ -170,9 +174,13 @@ function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal) {
         alert('@在绑定[' + ddlCtrlID + ']错误，Name列名' + nameCol + '不存在,无法行程期望的下拉框value. ');
         return;
     }
-    
+
     for (var i = 0; i < json.length; i++) {
-        $("#" + ddlCtrlID).append("<option value='" + json[i][noCol] + "'>" + json[i][nameCol] + "</option>");
+
+        if (json[i][noCol] == undefined)
+            $("#" + ddlCtrlID).append("<option value='" + json[i][0] + "'>" + json[i][1] + "</option>");
+        else
+            $("#" + ddlCtrlID).append("<option value='" + json[i][noCol] + "'>" + json[i][nameCol] + "</option>");
     }
 
     //设置选中的值.
@@ -1529,9 +1537,11 @@ var DBAccess = (function () {
 
         if (dbType == undefined) {
             dbType = 0; //默认为sql.
+
             if (dbSrc.length <= 20) {
                 dbType = 2; //可能是一个方法名称.
             }
+
             if (dbSrc.indexOf('/') != -1) {
                 dbType = 1; //是一个url.
             }
@@ -1920,3 +1930,61 @@ function FormatDate(now, mask) {
         }
     });
 }
+
+//表达式的替换.
+function DealExp(expStr, webUser) {
+
+    if (webUser == null || webUser == undefined)
+        webUser = new WebUser();
+
+    //替换表达式常用的用户信息
+    expStr = expStr.replace('@WebUse.No', webUser.No);
+    expStr = expStr.replace('@WebUse.Name', webUser.Name);
+    expStr = expStr.replace('@WebUse.FK_Dept', webUser.FK_Dept);
+    expStr = expStr.replace('@WebUse.DeptName', webUser.DeptName);
+    expStr = expStr.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
+
+    if (expStr.indexOf('@') == -1)
+        return expStr;
+
+    var objs = document.all;
+    var length1;
+    for (var i = 0; i < objs.length; i++) {
+
+        var obj = objs[i].tagName;
+        if (obj == null)
+            continue;
+
+        //把标签名转换为小写
+        obj = obj.toLowerCase();
+        if (obj != "input" && obj != "select")
+            continue;
+        //获取节点的ID 和值
+        var NodeID = objs[i].getAttribute("id");
+        if (NodeID == null)
+            continue;
+         var NodeType = objs[i].getAttribute("type");
+         var NodeValue ="";
+        if(obj != "input" && (NodeType=="text" || NodeType=="radio" ||NodeType=="checkbox")){
+            NodeValue = objs[i].value;
+           if(NodeType=="checkbox"){
+                NodeValue = 0;
+                var isChecked = NodeID.is(":checked");
+                if (isChecked == true)
+                 NodeValue = 1;
+            }
+             if(NodeType=="radio"){
+                var nodeName = objs[i].getAttribute("name");
+                NodeValue = $("input:radio[name='" + nodeName + "']:checked").val();
+            }
+
+        }else if(obj == "select"){
+            NodeValue = decodeURI(objs[i].value);
+        }
+        expStr = expStr.replace("@" + NodeID.substring(NodeID.indexOf("_")+1),NodeValue);
+
+        
+     }
+    return expStr;
+}
+

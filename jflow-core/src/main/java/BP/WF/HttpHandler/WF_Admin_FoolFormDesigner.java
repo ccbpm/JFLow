@@ -738,13 +738,13 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
                 pTableModel = md.getPTableModel();
             }
         }
-
-        if (pTableModel == 2)
+        //@浙商银行
+        /*if (pTableModel == 2)
         {
             DataTable mydt = MapData.GetFieldsOfPTableMode2(this.getFK_MapData());
             mydt.TableName = "Fields";
             ds.Tables.add(mydt);
-        }
+        }*/
 
         return BP.Tools.Json.ToJson(ds);
          

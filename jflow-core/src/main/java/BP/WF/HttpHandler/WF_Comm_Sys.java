@@ -1,9 +1,15 @@
 package BP.WF.HttpHandler;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 import org.apache.http.protocol.HttpContext;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
@@ -480,6 +486,61 @@ public class WF_Comm_Sys extends WebContralBase
 		src.Delete();
 		return "删除成功..";
 	}
+	
+	
+	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
+		this.request = request;
+	}
 
+	private DefaultMultipartHttpServletRequest request;
+	
+	//javaScript 脚本上传
+	public final String javaScriptImp_Done(){
+		File xmlFile = null;
+		String fileName="";
+		String contentType = getRequest().getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
+			MultipartFile multipartFile = request.getFile("File_Upload");
+			
+			fileName = multipartFile.getOriginalFilename();
+			String savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"JSLibData"+"/"+fileName;
+			xmlFile = new File(savePath);
+			if(xmlFile.exists()){
+				xmlFile.delete();
+			}
+			try {
+				multipartFile.transferTo(xmlFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
+			}
+		}
+		return "脚本"+fileName+"导入成功";
+	}
+
+	/**
+	 * 获取已知目录下的文件列表
+	 * @return
+	 */
+	public final String javaScriptFiles(){
+		String savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"JSLibData";
+		File dirFile = new File(savePath);
+		if(!dirFile.isDirectory()) 
+			return "";
+	    File[] fileList = dirFile.listFiles();
+	    if(fileList==null||fileList.length==0)
+	    	return "";
+	    DataTable dt = new DataTable();
+	    dt.Columns.Add("FileName");
+	    dt.Columns.Add("ChangeTime");
+	    for(File file:fileList){
+	    	DataRow dr = dt.NewRow();
+			dr.setValue("FileName", file.getName());
+			dr.setValue("ChangeTime",new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(file.lastModified())));
+			dt.Rows.add(dr);
+	    }
+	    return BP.Tools.Json.ToJson(dt);
+			
+	}
 		///#endregion
 }

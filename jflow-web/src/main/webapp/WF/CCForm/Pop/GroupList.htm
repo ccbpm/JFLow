@@ -153,11 +153,15 @@
 
             //获得存储的值.
             var selectVals = [];
+            
+            //获得存储的text
+            var  selectValTexts=[];
 
             //获得选择的数据.
             var selectType = mapExt.GetPara("SelectType");
             if (selectType == "0") {  //单选.
                 selectVals.push($("input[name='RB']:checked").val());
+                selectValTexts.push($("input[name='RB']:checked").siblings().text());
             } else {
 
                 var cbs = $("input[type='checkbox']:checked");
@@ -166,6 +170,8 @@
                     if (this.id.indexOf('CB_') == -1)
                         return true;
                     selectVals.push(this.value);
+                   
+                    selectValTexts.push($(this).siblings().text());
                 });
             }
 
@@ -197,7 +203,7 @@
             //loadEntities();
 
             //parent.CloseBootstrapDialog();
-			return selectVals;
+			return selectValTexts;
 
             //插入新选择的数据.
             //获得已经选择的集合.

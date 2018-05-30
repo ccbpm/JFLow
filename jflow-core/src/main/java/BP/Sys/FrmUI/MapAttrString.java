@@ -1,5 +1,7 @@
 package BP.Sys.FrmUI;
 
+import java.net.URLDecoder;
+
 import BP.DA.DBAccess;
 import BP.DA.DBType;
 import BP.DA.Depositary;
@@ -445,7 +447,7 @@ public class MapAttrString extends EntityMyPK
 	public final String DoPopVal()
 	{
 		
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK() + "&FK_MapExt=PopVal_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
 	}
 
 	/** 
@@ -463,7 +465,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoTBFullCtrl()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" +this.getMyPK();
 		//return "/WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 	 public final String DoPopFullCtrl()

@@ -192,7 +192,7 @@ public class MapAttrSFTable extends EntityMyPK
 	*/
 	public final String DoDDLFullCtrl()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn();
+		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=DDLFullCtrl_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
 	}
 	/** 
 	 设置下拉框显示过滤

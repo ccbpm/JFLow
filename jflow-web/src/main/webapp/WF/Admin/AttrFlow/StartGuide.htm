@@ -55,87 +55,77 @@
         function InitPage() {
 
             var fk_flow = GetQueryString("FK_Flow");
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrFlow");
+            handler.AddPara("FK_Flow",fk_flow);
+            var data = handler.DoMethodReturnString("StartGuide_Init");
+			
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+                return;
+            }
+            data = JSON.parse(data);
+            //data = data[0];
+            userId = data.userId;
+            GenerFullAllCtrlsVal(data);
+            if (data.nodesCount == "true") {
+                $("#isShow").show();
+                $('#RB_StartGuideWay_90').attr('checked', 'true');
+            } else {
+                $("#isShow").hide();
+                $('#RB_StartGuideWay_90').removeAttr('checked');
+            }
 
-            //初始化表格.
-            $.ajax({
-                type: 'post',
-                async: true,
-                url: Handler + "?DoType=StartGuide_Init&FK_Flow=" + fk_flow + "&m=" + Math.random(),
-                dataType: 'html',
-                success: function (data) {
-                    console.info(data);
-                    if (data.indexOf('err@') == 0) {
-                        alert(data);
-                        return;
-                    }
-                    data = JSON.parse(data);
-                    //data = data[0];
-                    userId = data.userId;
-                    GenerFullAllCtrlsVal(data);
-                    if (data.nodesCount == "true") {
-                        $("#isShow").show();
-                        $('#RB_StartGuideWay_90').attr('checked', 'true');
-                    } else {
-                        $("#isShow").hide();
-                        $('#RB_StartGuideWay_90').removeAttr('checked');
-                    }
-
-                    GenerFullAllCtrlsVal(data);
-                    //console.info(data.StartGuidePara1)
-                    switch (data.StartGuideWay) {
-                        case '0': //无
-                            //this.RB_None.Checked = true;
-                            break;
-                        case '5': //从开始节点Copy数据
-                            $("#TB_ByHistoryUrl").val(data.StartGuidePara1);
-                            break;
-                        case '10': //按自定义的Url
-                            //console.info(data.StartGuidePara1);
-                            $("#TB_SelfURL").val(data.StartGuidePara1);
-                            break;
-                        case '1': //按照参数.
-                            $("#TB_BySQLOne1").val(data.StartGuidePara1);
-                            $("#TB_BySQLOne2").val(data.StartGuidePara2);
-                            break;
-                        case '6': //SQL多条模式
-                            $("#TB_BySQLMulti1").val(data.StartGuidePara1);
-                            $("#TB_BySQLMulti2").val(data.StartGuidePara2);
-                            break;
-                        case '3':
-                            break;
-                        case '4': //子父流程多条模式- 合卷审批.
-                            $("#TB_SubFlow1").val(data.StartGuidePara1);
-                            $("#TB_SubFlow2").val(data.StartGuidePara2);
-                            break;
-                        default:
-                            break;
-                    }
-                    return;
-                }
-            });
+            GenerFullAllCtrlsVal(data);
+            //console.info(data.StartGuidePara1)
+            switch (data.StartGuideWay) {
+                case '0': //无
+                    //this.RB_None.Checked = true;
+                    break;
+                case '5': //从开始节点Copy数据
+                    $("#TB_ByHistoryUrl").val(data.StartGuidePara1);
+                    break;
+                case '10': //按自定义的Url
+                    //console.info(data.StartGuidePara1);
+                    $("#TB_SelfURL").val(data.StartGuidePara1);
+                    break;
+                case '1': //按照参数.
+                    $("#TB_BySQLOne1").val(data.StartGuidePara1);
+                    $("#TB_BySQLOne2").val(data.StartGuidePara2);
+                    break;
+                case '6': //SQL多条模式
+                    $("#TB_BySQLMulti1").val(data.StartGuidePara1);
+                    $("#TB_BySQLMulti2").val(data.StartGuidePara2);
+                    break;
+                case '3':
+                    break;
+                case '4': //子父流程多条模式- 合卷审批.
+                    $("#TB_SubFlow1").val(data.StartGuidePara1);
+                    $("#TB_SubFlow2").val(data.StartGuidePara2);
+                    break;
+                default:
+                    break;
+            }
+            return;
+           
         }
 
 
         //ajax 提交
         function onSave() {
 
-            var checkBoxIDs = GenerCheckIDs(); //获得所有的 checkBox ID传入到后台去,用于解决checkbox控件，在没有被选择的时候，没有值的问题。
+            var checkBoxIDs = $("input:radio[name='RB_StartGuideWay']:checked").val();
+           // var checkBoxIDs =  GenerCheckIDs(); //获得所有的 checkBox ID传入到后台去,用于解决checkbox控件，在没有被选择的时候，没有值的问题。
 
             var frmData = $("#cc").serialize(); //序列化frm.
 
-            //alert('frmData:' + frmData);
-
-            $.ajax({
-                type: 'post',
-                async: true,
-                url: Handler + "?DoType=StartGuide_Save&FK_Flow=" + GetQueryString("FK_Flow") + "&CheckBoxIDs=" + checkBoxIDs + "&m=" + Math.random(),
-                dataType: 'html',
-                data: frmData,
-                success: function (data) {
-                    alert(data);
-                    window.location.href = window.location.href;
-                }
-            });
+            var fk_flow = GetQueryString("FK_Flow");
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrFlow");
+            handler.AddPara("FK_Flow",fk_flow);
+            handler.AddPara("RB_StartGuideWay",checkBoxIDs);
+            var data = handler.DoMethodReturnString("StartGuide_Save");
+            alert(data);
+            window.location.href = window.location.href;
+           
         }  
      </script>
 </head>

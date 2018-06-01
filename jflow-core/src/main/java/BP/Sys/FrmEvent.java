@@ -512,7 +512,7 @@ public class FrmEvent extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		this.setMyPK(this.getFK_MapData() + "_" + this.getFK_Event());
+		//this.setMyPK(this.getFK_MapData() + "_" + this.getFK_Event());
 		return super.beforeUpdateInsertAction();
 	}
 }

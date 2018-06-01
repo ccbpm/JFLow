@@ -2,13 +2,13 @@ package BP.Sys;
 
 public abstract class BuessUnitBase {
 
-	private int WorkID = 0;
+	private long WorkID = 0;
 
-	public int getWorkID() {
+	public long getWorkID() {
 		return WorkID;
 	}
 
-	public void setWorkID(int workID) {
+	public void setWorkID(long workID) {
 		WorkID = workID;
 	}
 

@@ -1229,7 +1229,7 @@ public class WorkNode {
 				boolean isHave = false;
 				for (DataRow dr : dt.Rows) {
 					// 如果出现了处理人就是提交人的情况.
-					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.getValue(0)
+					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.getValue(0).toString()
 							+ "' AND WorkID=" + this.getWorkID();
 					if (DBAccess.RunSQLReturnValInt(sql) == 1) {
 						// 这里不处理签名.
@@ -1255,7 +1255,7 @@ public class WorkNode {
 				// 处理人与上一步相同
 				boolean isHave = false;
 				for (DataRow dr : dt.Rows) {
-					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.get(0) + "' AND WorkID="
+					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.getValue(0).toString() + "' AND WorkID="
 							+ this.getWorkID() + " AND FK_Node="
 							+ (beforeSkipNodeID > 0 ? beforeSkipNodeID : prvNodeID); // edited
 																						// by

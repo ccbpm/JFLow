@@ -1214,7 +1214,10 @@ public class WorkNode {
 					// 如果发现了，当前人员包含处理人集合.
 					this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
 							nd.getName(), "自动跳转,(处理人就是提交人)", getndFrom());
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd,skipWork, null);
 					setndFrom(nd);
+					//发送成功后事件.
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd,skipWork, null,this.HisMsgObjs);
 					continue;
 				}
 
@@ -1241,7 +1244,10 @@ public class WorkNode {
 				if (isHave == true) {
 					this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
 							nd.getName(), "自动跳转.(处理人已经出现过)", getndFrom());
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd,skipWork, null);
 					setndFrom(nd);
+					// 执行发送.
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd,skipWork, null,this.HisMsgObjs);
 					continue;
 				}
 
@@ -1383,7 +1389,10 @@ public class WorkNode {
 
 					this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
 							nd.getName(), "自动跳转.(处理人与上一步相同)", getndFrom());
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd,wk, null);
 					setndFrom(nd);
+					// 执行发送.
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd,wk, null,this.HisMsgObjs);
 					continue;
 				}
 

@@ -149,6 +149,7 @@
 
             var url = "../../Admin/FoolFormDesigner/ImpExp/Imp.htm?s=34&FK_MapData=" + CCForm_FK_MapData + "&IsShowTitle=0";
             CCForm_ShowDialog(url, '傻瓜表单设计器');
+            Save(true);
             return;
         }
 
@@ -219,6 +220,12 @@
         <a style="text-decoration: none;" href="javascript:Show_HidenField_Panel();" title="显示隐藏字段">
             <img src="Img/toolbar/hidenF.png" id="HField" border="0" width="16" height="16" alt="" />
             <label for="HField" class="toolbarText">隐藏字段</label>
+        </a>
+        
+         <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="18" />
+        <a style="text-decoration: none;" href="javascript:Show_ModleField_Panel();" title="显示模板字段">
+            <img src="Img/toolbar/From.png" id="ModleField" border="0" width="16" height="16" alt="" />
+            <label for="ModleField" class="toolbarText">模板字段</label>
         </a>
 
 

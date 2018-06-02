@@ -130,14 +130,14 @@ function GenerCheckIDs() {
 
     for (var i = 0; i < arrObj.length; i++) {
 
-        if (arrObj[i].type != 'checkbox')
+        if (arrObj[i].getAttribute("type") != 'checkbox')
             continue;
 
-        var cid = arrObj[i].name;
+        var cid = arrObj[i].namegetAttribute("name");
         if (cid == null || cid == "" || cid == '')
             continue;
 
-        checkBoxIDs += arrObj[i].id + ',';
+        checkBoxIDs += arrObj[i].getAttribute("id") + ',';
     }
     return checkBoxIDs;
 }

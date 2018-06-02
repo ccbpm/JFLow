@@ -605,7 +605,7 @@ public class CCFlowAPI {
 				if (myds.Tables.contains(uiBindKey) == true) {
 					continue;
 				}
-
+				if(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey)!=null)
 				myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 			}
 

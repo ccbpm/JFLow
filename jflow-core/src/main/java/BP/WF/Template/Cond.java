@@ -895,7 +895,7 @@ public class Cond extends EntityMyPK
         if (this.getHisDataFrom() == ConnDataFrom.NodeForm)
         {
             if (en.getEnMap().getAttrs().Contains(this.getAttrKey()) == false)            	
-                throw new RuntimeException("err@判断条件方向出现错误：实体：" + nd.getEnDesc() + " 属性" + this.getAttrKey() + "已经被删除方向条件判断失败.");
+                throw new RuntimeException("err@判断条件方向出现错误：实体：" + en.getEnDesc() + " 属性" + this.getAttrKey() + "已经被删除方向条件判断失败.");
 
             this.MsgOfCond = "@以表单值判断方向，值 " + en.getEnDesc() + "." + this.getAttrKey() + " (" + en.GetValStringByKey(this.getAttrKey()) + ") 操作符:(" + this.getFK_Operator() + ") 判断值:(" + this.getOperatorValue().toString() + ")";
             return CheckIsPass(en); 

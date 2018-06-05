@@ -701,7 +701,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoEvent() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
+		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/FrmEvent.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 
 	/**

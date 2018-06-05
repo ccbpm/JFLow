@@ -218,6 +218,10 @@ public abstract class WebContralBase extends BaseController {
 	 * @throws Exception
 	 */
 	protected String DoDefaultMethod() throws Exception {
+		
+		if (this.getDoType().contains(">")==true)
+			return "err@非法的脚本植入";
+		
 		return "@子类没有重写该[" + this.getDoType() + "]方法.";
 	}
 

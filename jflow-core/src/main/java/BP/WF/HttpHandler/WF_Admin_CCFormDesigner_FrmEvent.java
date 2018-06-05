@@ -35,12 +35,19 @@ import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.XML.EventLists;
 
 public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase {
+	
+	
+
+	public WF_Admin_CCFormDesigner_FrmEvent() {
+		
+	}
     /// <summary>
     /// 初始化数据
     /// </summary>
     /// <param name="mycontext"></param>
     public WF_Admin_CCFormDesigner_FrmEvent(HttpContext mycontext)
-    {
+    { 
+   
         this.context = mycontext;
     }
 

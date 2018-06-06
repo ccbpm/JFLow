@@ -216,7 +216,8 @@ public class CCFormParse
 		else if (shape.equals("DropDownListTable")) //外键类型.
 		{
 				attr.setMyDataType(BP.DA.DataType.AppString);
-				attr.setLGType(FieldTypeS.FK);
+				//@改变了外部数据源的类型
+				//attr.setLGType(FieldTypeS.FK);
 				attr.setUIContralType(UIContralType.DDL);
 				attr.setMaxLen(100);
 				attr.setMinLen(0);

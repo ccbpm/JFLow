@@ -63,11 +63,11 @@ public class SysEnums extends Entities
 		SysEnum se = (SysEnum)this.GetEntityByKey(SysEnumAttr.IntKey, def);
 		if (se == null)
 		{
-			sql += " END " + key + "Text";
+			sql += " END \"" + key + "Text\"";
 		}
 		else
 		{
-			sql += " WHEN NULL THEN '" + se.getLab() + "' END " + key + "TEXT";
+			sql += " WHEN NULL THEN '" + se.getLab() + "' END \"" + key + "Text\"";
 		}
 
 		Cash.AddObj("ESQL" + enName + mTable + key + "_" + enumKey, Depositary.Application, sql);
@@ -104,11 +104,11 @@ public class SysEnums extends Entities
 		SysEnum se = (SysEnum)this.GetEntityByKey(SysEnumAttr.IntKey, def);
 		if (se == null)
 		{
-			sql += " END " + key + "Text";
+			sql += " END \"" + key + "Text\"";
 		}
 		else
 		{
-			sql += " WHEN NULL THEN '" + se.getLab() + "' END " + key + "TEXT";
+			sql += " WHEN NULL THEN '" + se.getLab() + "' END \"" + key + "Text\"";
 		}
 
 		// Cash.AddObj("ESQL" + enName + key + "_" + enumKey, Depositary.Application, sql);

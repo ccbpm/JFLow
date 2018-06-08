@@ -21,10 +21,10 @@ function SelfUrl_Done(mapExt) {
     //获得主键.
     var pkval = GetPKVal();
     var webUser = new WebUser();
-    
+
     var url = mapExt.Tag;
     if (url.indexOf('?') == -1)
-        url = url + "?PKVal=" + pkval+"&UserNo="+webUser.No;
+        url = url + "?PKVal=" + pkval + "&UserNo=" + webUser.No;
     var title = mapExt.GetPara("Title");
 
     if (window.parent && window.parent.OpenBootStrapModal) {
@@ -46,7 +46,7 @@ function SelfUrl_Done(mapExt) {
 }
 
 //树干叶子模式.
-function PopBranchesAndLeaf(mapExt,val) {
+function PopBranchesAndLeaf(mapExt, val) {
     var target = $("#TB_" + mapExt.AttrOfOper);
     target.hide();
 
@@ -74,8 +74,8 @@ function PopBranchesAndLeaf(mapExt,val) {
 
     var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
     frmEleDBs.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", oid);
-    if(frmEleDBs.length==0 && val!="")
-    	frmEleDBs=[{"Tag1":"","Tag2":val}];
+    if (frmEleDBs.length == 0 && val != "")
+        frmEleDBs = [{ "Tag1": "", "Tag2": val}];
     var initJsonData = [];
     $.each(frmEleDBs, function (i, o) {
         initJsonData.push({
@@ -90,7 +90,7 @@ function PopBranchesAndLeaf(mapExt,val) {
     container.on("dblclick", function () {
         if (window.parent && window.parent.OpenBootStrapModal) {
             window.parent.OpenBootStrapModal(url, iframeId, title, width, height, "icon-edit", true, function () {
-				var selectType = mapExt.GetPara("SelectType");
+                var selectType = mapExt.GetPara("SelectType");
                 //单选清空数据
                 if (selectType == "0") {
                     //清空数据
@@ -103,10 +103,10 @@ function PopBranchesAndLeaf(mapExt,val) {
                         var mtags = $("#" + mapExt.AttrOfOper + "_mtags")
                         mtags.mtags("loadData", selectedRows);
                         $("#TB_" + mapExt.AttrOfOper).val(mtags.mtags("getText"));
-						// 单选复制当前表单
-						if (selectType == "0" && selectedRows.length == 1) {
-							ValSetter(mapExt.Tag4, selectedRows[0].No);
-						}
+                        // 单选复制当前表单
+                        if (selectType == "0" && selectedRows.length == 1) {
+                            ValSetter(mapExt.Tag4, selectedRows[0].No);
+                        }
                     }
                 }
             }, null, function () {
@@ -162,16 +162,16 @@ function PopBranchesAndLeaf_Deal() {
 }
 
 function ValSetter(tag4, key) {
-	if (!tag4 || !key) {
-		return;
-	}
-	tag4 = tag4.replace(/@Key/g, key).replace(/~/g, "'");
-	var dt = DBAccess.RunDBSrc(tag4);
-	GenerFullAllCtrlsVal(dt);
+    if (!tag4 || !key) {
+        return;
+    }
+    tag4 = tag4.replace(/@Key/g, key).replace(/~/g, "'");
+    var dt = DBAccess.RunDBSrc(tag4);
+    GenerFullAllCtrlsVal(dt);
 }
 
 //树干模式.
-function PopBranches(mapExt,val) {
+function PopBranches(mapExt, val) {
     var target = $("#TB_" + mapExt.AttrOfOper);
     target.hide();
 
@@ -197,7 +197,7 @@ function PopBranches(mapExt,val) {
     var title = mapExt.GetPara("Title");
     var oid = GetPKVal();
     //初始加载
-    Refresh_Mtags(mapExt.FK_MapData, mapExt.AttrOfOper, oid,val);
+    Refresh_Mtags(mapExt.FK_MapData, mapExt.AttrOfOper, oid, val);
     //这里需要相对路径.
     var localHref = GetLocalWFPreHref();
     var url = localHref + "/WF/CCForm/Pop/Branches.htm?MyPK=" + mapExt.MyPK + "&oid=" + oid + "&m=" + Math.random();
@@ -217,16 +217,16 @@ function PopBranches(mapExt,val) {
                     if ($.isArray(nodes)) {
                         $.each(nodes, function (i, node) {
                             SaveVal_FrmEleDB(mapExt.FK_MapData, mapExt.AttrOfOper, oid, node.No, node.Name);
-                            nodeText = node.Name+",";
+                            nodeText = node.Name + ",";
                         });
                         //重新加载
-                        Refresh_Mtags(mapExt.FK_MapData, mapExt.AttrOfOper, oid,null);
-                        if(nodeText!=null)
-                        	$("#TB_" + mapExt.AttrOfOper).val(nodeText.substring(0,nodeText.length-1));
-						// 单选复制当前表单
-						if (selectType == "0" && nodes.length == 1) {
-							ValSetter(mapExt.Tag4, nodes[0].No);
-						}
+                        Refresh_Mtags(mapExt.FK_MapData, mapExt.AttrOfOper, oid, null);
+                        if (nodeText != null)
+                            $("#TB_" + mapExt.AttrOfOper).val(nodeText.substring(0, nodeText.length - 1));
+                        // 单选复制当前表单
+                        if (selectType == "0" && nodes.length == 1) {
+                            ValSetter(mapExt.Tag4, nodes[0].No);
+                        }
                     }
                 }
             }, null, function () {
@@ -246,12 +246,14 @@ function Delete_FrmEleDBs(FK_MapData, keyOfEn, oid) {
         frmEleDB.MyPK = obj.MyPK
         frmEleDB.Delete();
     });
+    $("#TB_" + keyOfEn).val('');
 }
 //删除数据.
 function Delete_FrmEleDB(keyOfEn, oid, No) {
     var frmEleDB = new Entity("BP.Sys.FrmEleDB");
     frmEleDB.MyPK = keyOfEn + "_" + oid + "_" + No;
     frmEleDB.Delete();
+    $("#TB_" + keyOfEn).val('');
 }
 //设置值.
 function SaveVal_FrmEleDB(fk_mapdata, keyOfEn, oid, val1, val2) {
@@ -267,12 +269,12 @@ function SaveVal_FrmEleDB(fk_mapdata, keyOfEn, oid, val1, val2) {
     }
 }
 //刷新
-function Refresh_Mtags(FK_MapData, AttrOfOper, oid,val) {
+function Refresh_Mtags(FK_MapData, AttrOfOper, oid, val) {
     var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
     frmEleDBs.Retrieve("FK_MapData", FK_MapData, "EleID", AttrOfOper, "RefPKVal", oid);
     var initJsonData = [];
-    if(frmEleDBs.length==0 && val!=null && val!="")
-    	frmEleDBs=[{"Tag1":"","Tag2":val}];
+    if (frmEleDBs.length == 0 && val != null && val != "")
+        frmEleDBs = [{ "Tag1": "", "Tag2": val}];
     $.each(frmEleDBs, function (i, o) {
         initJsonData.push({
             "No": o.Tag1,
@@ -345,13 +347,13 @@ function PopGroupList_Done(mapExt) {
 
     //获得主键.
     var pkval = GetPKVal();
-    
-    
+
+
 
     //弹出这个url, 主要有高度宽度, 可以在  ReturnValCCFormPopValGoogle 上做修改.
     var local = window.location.href;
     var url = "";
-    if (local.indexOf('MyFlow')== -1 )
+    if (local.indexOf('MyFlow') == -1)
         url = 'Pop/GroupList.htm?FK_MapExt=' + mapExt.MyPK + "&FK_MapData=" + mapExt.FK_MapData + "&PKVal=" + pkval + "&OID=" + pkval + "&KeyOfEn=" + mapExt.AttrOfOper;
     else
         url = 'CCForm/Pop/GroupList.htm?FK_MapExt=' + mapExt.MyPK + "&FK_MapData=" + mapExt.FK_MapData + "&PKVal=" + pkval + "&OID=" + pkval + "&KeyOfEn=" + mapExt.AttrOfOper;
@@ -365,11 +367,11 @@ function PopGroupList_Done(mapExt) {
                     var selectVals = savefn();
                     $("#TB_" + mapExt.AttrOfOper).val(selectVals);
                 }
-				// 单选复制当前表单
-				var selectType = mapExt.GetPara("SelectType");
-				if (selectType == "0" && selectVals.length == 1) {
-					ValSetter(mapExt.Tag4, selectVals[0]);
-				}
+                // 单选复制当前表单
+                var selectType = mapExt.GetPara("SelectType");
+                if (selectType == "0" && selectVals.length == 1) {
+                    ValSetter(mapExt.Tag4, selectVals[0]);
+                }
             }
         }, null, function () {
 

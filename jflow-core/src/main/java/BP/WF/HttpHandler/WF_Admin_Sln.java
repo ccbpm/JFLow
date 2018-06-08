@@ -545,7 +545,7 @@ public class WF_Admin_Sln extends WebContralBase {
 			{
 				for (FieldsAttrs fieldsAttrs : fieldsAttrsList)
 				{
-					if (attr.getKeyOfEn() != fieldsAttrs.KeyOfEn)
+					if (!attr.getKeyOfEn().equals(fieldsAttrs.KeyOfEn))
 					{
 						continue;
 					}

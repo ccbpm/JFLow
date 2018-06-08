@@ -19,6 +19,9 @@ public class FrmNodeExt extends EntityMyPK{
      {
              return this.GetValIntByKey(FrmNodeAttr.FK_Node);
      }
+     public int getFK_Flow(){
+    	 return this.GetValIntByKey(FrmNodeAttr.FK_Flow);
+     }
 	/**
 	 * UI界面上的访问控制
 	 */
@@ -61,6 +64,7 @@ public class FrmNodeExt extends EntityMyPK{
 
             map.AddDDLEntities(FrmNodeAttr.FK_Frm, null, "表单", new MapDatas(), false);
             map.AddTBInt(FrmNodeAttr.FK_Node, 0, "节点ID", true, true);
+            map.AddTBInt(FrmNodeAttr.FK_Flow, 0, "流程ID", true, true);
 
             map.AddBoolean(FrmNodeAttr.IsPrint, false, "是否可以打印", true, true);
             map.AddBoolean(FrmNodeAttr.IsEnableLoadData, false, "是否启用装载填充事件", true, true);
@@ -135,7 +139,7 @@ public class FrmNodeExt extends EntityMyPK{
     		this.setMyPK(this.getMyPK());
     		this.Retrieve();
     	}
-		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
+		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 	public final String DoFields() throws Exception
 	{
@@ -143,7 +147,7 @@ public class FrmNodeExt extends EntityMyPK{
     		this.setMyPK(this.getMyPK());
     		this.Retrieve();
     	}
-		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
+		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 	public final String DoAths() throws Exception
 	{
@@ -151,7 +155,7 @@ public class FrmNodeExt extends EntityMyPK{
     		this.setMyPK(this.getMyPK());
     		this.Retrieve();
     	}
-		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
+		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
 	public final String DoCopyFromNode() throws Exception
@@ -160,7 +164,7 @@ public class FrmNodeExt extends EntityMyPK{
     		this.setMyPK(this.getMyPK());
     		this.Retrieve();
     	}
-		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
+		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 	public final String DoSelfSln() throws Exception
 	{
@@ -168,7 +172,7 @@ public class FrmNodeExt extends EntityMyPK{
     		this.setMyPK(this.getMyPK());
     		this.Retrieve();
     	}
-		return "../../Admin/Sln/Sln.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Node() + "&DoType=Field";
+		return "../../Admin/Sln/Sln.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 	public final String DoEnableRole() throws Exception
 	{

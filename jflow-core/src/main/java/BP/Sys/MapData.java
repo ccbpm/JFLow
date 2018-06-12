@@ -741,6 +741,24 @@ public class MapData extends EntityNoName
 		}
 		return obj;
 	}
+	
+	/** 
+	 图片附件
+	 * @throws Exception 
+	 
+	*/
+	public final FrmImgAthDBs getFrmImgAthDB() throws Exception
+	{
+		Object tempVar = this.GetRefObject("FrmImgAthDBs");
+		FrmImgAthDBs obj = (FrmImgAthDBs)((tempVar instanceof FrmImgAthDBs) ? tempVar : null);
+		if (obj == null)
+		{
+			obj = new FrmImgAthDBs(this.getNo());
+			this.SetRefObject("FrmImgAthDBs", obj);
+		}
+		return obj;
+	}
+	
 	/** 
 	 单选按钮
 	 * @throws Exception 

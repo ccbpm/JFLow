@@ -18,6 +18,15 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	public FrmImgAthDBs()
 	{
 	}
+	
+	/**
+	 * 图片上传
+	 * @param fk_mapdata
+	 * @throws Exception
+	 */
+	public FrmImgAthDBs(String fk_mapdata) throws Exception{
+		this.Retrieve(FrmImgAthDBAttr.FK_MapData, fk_mapdata);
+	}
 	/** 
 	 剪切图片附件数据存储s
 	 

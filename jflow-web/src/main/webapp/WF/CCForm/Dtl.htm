@@ -305,7 +305,7 @@
 
             //如果允许上传附件.
            // if (sys_MapDtl.IsEnableAthM == 1) {
-                insertTr.append($("<td><a class='Ath' href=\"javascript:alert('保存后才能上传');\" >附件</a></td>"));
+            //    insertTr.append($("<td><a class='Ath' href=\"javascript:alert('保存后才能上传');\" >附件</a></td>"));
             //}
 
             insertTr.append($('<td><img class="delRow" src="../Img/Btn/Cancel.png"  onclick="deleteRow(this)" style="cursor:pointer;" title="移除"/></td>'));
@@ -432,7 +432,7 @@
                       var EditModel = sys_MapDtl.EditModel;
                       window.EditModel = EditModel;
 
-                      var snTh = $('<th data-coltype="SN" style="width:16px;"><img src="../Img/Btn/Add.gif" id="insertBtn"  style="cursor: pointer;" name="insertBtn" onclick="insertRow(' + EditModel + ')" /></th>');
+                      var snTh = $('<th data-coltype="SN" style=\'width:16px;\' ><img src="../Img/Btn/Add.gif" id="insertBtn"  style="cursor: pointer;" name="insertBtn" onclick="insertRow(' + EditModel + ')" /></th>');
 
                       threadTr.append(snTh);
                       $.each(sys_mapAttr, function (i, mapAttrObj) {
@@ -713,21 +713,24 @@
         }
 
 		function triggerStatistics() {
-			$.each($("#dtlDiv div table thead tr th"), function (i, th) {
-				var matchesColumn = $.grep(window.columnExp, function (val) {	// 根据表头的colname与待统计列的KeyOfEn对比
-					return val.KeyOfEn == $(th).data().colname;
-				});
-				if (matchesColumn.length == 1) {	// 如果是统计列
-					var o = $(th);
-					var template = figure_MapAttr_Template(o.data());	// 根据该列表头的数据(data)获取到与当前列类型一致的表单元素
-					var name = template.attr("name");
-					$(":input[name=" + name + "]").each(function (i, e) {	// 根据遍历该列所有元素
-						if (i == 0) {
-							$(e).trigger("change");	// 页面初始化后进行合计计算(仅触发合计列第一个元素即可)
-						}
-					});
-				}
-			});
+		    $.each($("#dtlDiv div table thead tr th"), function (i, th) {
+		        var matchesColumn = [];
+		        if (window.columnExp) {
+		            matchesColumn = $.grep(window.columnExp, function (val) {	// 根据表头的colname与待统计列的KeyOfEn对比
+		                return val.KeyOfEn == $(th).data().colname;
+		            });
+		        }		        
+		        if (matchesColumn.length == 1) {	// 如果是统计列
+		            var o = $(th);
+		            var template = figure_MapAttr_Template(o.data()); // 根据该列表头的数据(data)获取到与当前列类型一致的表单元素
+		            var name = template.attr("name");
+		            $(":input[name=" + name + "]").each(function (i, e) {	// 根据遍历该列所有元素
+		                if (i == 0) {
+		                    $(e).trigger("change"); // 页面初始化后进行合计计算(仅触发合计列第一个元素即可)
+		                }
+		            });
+		        }
+		    });
 		}
 
 		function bindStatistics() {
@@ -910,23 +913,40 @@
 
         //选项 导入导出功能.
 		function Option(impModel) {
+         
 		    if (impModel == 0) {
 		        alert("请配置导入方式。");
 		    }
+
             //SQL\JSON导入方式
 		    if (impModel == 1) {
 		        var url = window.location.href;
 		        //url = url.replace('Dtl.htm', 'DtlOpt.htm');
 		        url = url.replace('Dtl.htm', 'DtlImp.htm');
 		    }
+
 		    //excel模式导入方式
 		    if (impModel == 2) {
 		        var url = window.location.href;
-		        url = url.replace('Dtl.htm', 'DtlOpt.htm');
-
+		        url = url.replace('Dtl.htm', 'DtlImpByExcel.htm');
+		      //  url = url.replace('Dtl.htm', 'DtlOpt.htm');
 		    }
+
+		  //  alert(impModel);
+
+
+		    //SQL\JSON导入方式
+		    if (impModel == 3) {
+		        var url = window.location.href;
+		        //url = url.replace('Dtl.htm', 'DtlOpt.htm');
+		        url = url.replace('Dtl.htm', 'DtlImpByExcel.htm');
+		    }
+
+
 		    if (window.parent && window.parent.OpenBootStrapModal) {
+
 		        var dtl_ImpMapExt = $.grep(mapExts, function (ext) { return ext.ExtType == "DtlImp" });
+
 		        var title = "导入数据";
 		        var digWidth = 900;
 		        var digHeight = 450;
@@ -946,6 +966,7 @@
 		        });
 		        return;
 		    }
+
 		    window.location.href = url;
 		}
 

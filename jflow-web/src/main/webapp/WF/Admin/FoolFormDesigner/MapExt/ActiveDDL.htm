@@ -45,29 +45,28 @@
 
                     //调用公共类库的方法:执行批量主表赋值
                     GenerFullAllCtrlsVal(mapExt);
-                    
-                    if(mapExt.DBType != 0)
-                    	$("#TR_SQL").hide();
-                    
+                    if (mapExt.DBType != 0)
+                        $("#TR_SQL").hide();
+
                     return;
                 }
             });
 
             $("#Msg").html("");
         });
-        
-        function changeDoc(obj){
-        	if(obj.value == 0)
-        		$("#TR_SQL").show();
-        	else
-        		$("#TR_SQL").hide();
-        	
-    		if(obj.value != mapExt.DBType)
-    			$("#TB_Doc").val("");
-    		else
-    			$("#TB_Doc").val(mapExt.Doc);
-    	}
-        
+
+        function changeDoc(obj) {
+            if (obj.value == 0)
+                $("#TR_SQL").show();
+            else
+                $("#TR_SQL").hide();
+
+            if (obj.value != mapExt.DBType)
+                $("#TB_Doc").val("");
+            else
+                $("#TB_Doc").val(mapExt.Doc);
+        }
+
         //装载模版.
         function LoadTemplate() {
 
@@ -172,7 +171,7 @@
         $("#Msg").html("<font color=green>保存成功</font>");
         return;
 
-        
+
     }
 
     function Delete() {

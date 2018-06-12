@@ -354,7 +354,7 @@ function Save() {
     }
     
     if (formCheckResult == false) {
-        alert("请检查表单必填项和正则表达式");
+        //alert("请检查表单必填项和正则表达式");
         return false;
     }
 
@@ -454,7 +454,7 @@ function InitDDLOperation(flowData, mapAttr, defVal) {
     //外键类型的.
     if (mapAttr.LGType == 2) {
 
-    	var data = flowData[mapAttr.KeyOfEn];
+        var data = flowData[mapAttr.KeyOfEn];
 
         if (data == undefined)
             data = flowData[mapAttr.UIBindKey];
@@ -469,7 +469,7 @@ function InitDDLOperation(flowData, mapAttr, defVal) {
                     data = DBAccess.RunDBSrc(selectStatement, 1);
                 //JavaScript获取外部数据源
                 if (srcType == 6)
-                    data = DBAccess.RunDBSrc(selectStatement, 2);
+                    data = DBAccess.RunDBSrc(sfTable.FK_Val, 2);
             }
         }
 
@@ -481,6 +481,8 @@ function InitDDLOperation(flowData, mapAttr, defVal) {
         $.each(data, function (i, obj) {
             operations += "<option " + (obj.No == defVal ? " selected='selected' " : "") + " value='" + obj.No + "'>" + obj.Name + "</option>";
         });
+
+       
         return operations;
     }
 
@@ -1351,6 +1353,10 @@ function GenerWorkNode() {
                         //alert("把表单设置为只读.");
                         SetFrmReadonly();
                         //alert('ssssssssssss');
+                    } else if (frmNode.FrmSln == 2) {
+                        /* 自定义方案。 修改字段权限*/
+                        SetFilesAuth(node.NodeID, node.FK_Flow, flowData.Sys_MapData[0].No);   //位置 CCForm/FrmEnd.js
+
                     }
                 }
             }

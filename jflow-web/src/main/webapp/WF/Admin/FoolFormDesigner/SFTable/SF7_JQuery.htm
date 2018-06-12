@@ -44,8 +44,8 @@
 			    return;
 			}
 
-			en.SrcType = 3; //自定义数据表.
-			en.FK_Val = "FK_" + en.No;
+			en.SrcType = 6; //自定义数据表.
+			en.FK_Val = en.No;
 			en.Insert();
 
 			alert("保存成功.");

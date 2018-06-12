@@ -52,7 +52,7 @@
                 return;
 
             var mapExt = new Entity("BP.Sys.MapExt");
-            mapExt.MyPK = "PopBranchesAndLeaf_" + GetQueryString("FK_MapData")+"_"+GetQueryString("KeyOfEn");
+            mapExt.MyPK = "PopBranchesAndLeaf_" + GetQueryString("FK_MapData") + "_" + GetQueryString("KeyOfEn");
             mapExt.RetrieveFromDBSources(); //从数据库来查询.
             mapExt.Delete();
             window.location.href = window.location.href;

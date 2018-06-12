@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title>流程设计器</title>
     <script src="../../Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../../Scripts/config.js" type="text/javascript"></script>
@@ -42,6 +42,8 @@
                     <button class="btn btn-info" type="button" id="Btn_Imp" onclick="FlowRpt()" >定义报表</button>
                     <button class="btn btn-info" type="button" id="Btn_Check" onclick="FlowCheck()"  >检查流程</button>
                     <button class="btn btn-danger" type="button" id="Btn_Run"  onclick="FlowRun()"  >运行测试</button>
+                    <button class="btn btn-danger" type="button" id="Btn_RunIt"  onclick="FlowRunAdmin()"  >运行</button>
+
                     <!--<button class="btn btn-danger" type="button" id="leipi_clear">清空连接</button>-->
                     <!--<button class="btn btn-info" type="button" id="Btn_OldVer" onclick="OldVer()" >旧版本</button>-->
                     <button class="btn btn-help" type="button" id="Btn_Reload" onclick="Reload()" >刷新</button>
@@ -141,6 +143,8 @@
             <li id="pmNodeAccepterRole"><i class="icon-wrench"></i>&nbsp;<span class="_label">接收人规则</span></li>
             <!--<li id="cmNewNodeFromNode"><i class="icon-plus"></i>&nbsp;<span class="_label">添加步骤</span></li>-->
             <li id="pmDelete"><i class="icon-trash"></i>&nbsp;<span class="_label">删除节点</span></li>
+            <li id="Li1"><i class="icon-plus"></i>&nbsp;<span class="_label" onclick="alert('用鼠标按住节点icon,然后拖拉会出现连接线，然后指向要连接到的节点.');">增加连接线</span></li>
+
         </ul>
     </div>
     <div id="processMenu3" style="width: 100px; padding: 5px; position: absolute; background: #fff; display: none;">
@@ -157,9 +161,12 @@
         <ul>
             <li id="cmNewNode"><i class="icon-plus"></i>&nbsp;<span class="_label">新建节点</span></li>
             <li id="cmNewLabel"><i class="icon-plus"></i>&nbsp;<span class="_label">添加标签</span></li>
+
           <!--  <li id="cmSave"><i class="icon-ok"></i>&nbsp;<span class="_label">保存设计</span></li>
             <li id="cmRefresh"><i class="icon-refresh"></i>&nbsp;<span class="_label">刷新 F5</span></li>
             <li id="cmPaste"><i class="icon-share"></i>&nbsp;<span class="_label">粘贴</span></li>-->
+
+            <li id="Li3"><i class="icon-plus"></i>&nbsp;<span class="_label"  onclick="alert('用鼠标按住节点icon,然后拖拉会出现连接线，然后指向要连接到的节点.');">增加连接线</span></li>
             <li id="cmHelp"><i class="icon-search"></i>&nbsp;<span class="_label">获得帮助</span></li>
         </ul>
     </div>
@@ -581,9 +588,12 @@
 
                         windowtext = windowtext.replace(/(^\s*)|(\s*$)/g, ""); //去掉左右空格.
 
+                        alert(windowtext);
+
+
                         var baocunbut = $("#alertModal3 div:eq(2) button").attr("class", "btn btn-primary savetext" + activeId);
                         var saveNodeName = $("#alertModal3 div:eq(2) button").attr("onclick", "saveLabName(\"" + activeId + "\")");
-                        var xiuNodename = '修改名称：<input id="TB_LAB_' + activeId + '" type="text" value="' + windowtext + '">'
+                        var xiuNodename = '修改名称:<input id="TB_LAB_' + activeId + '" type="text" value="' + windowtext + '">'
                         var spanaa = $("#lab" + activeId + " span").html();
 
                         labAlert(xiuNodename);
@@ -600,6 +610,10 @@
                                   var windowtext = $("#window" + activeId).text();
                                   var baocunbut = $("#alertModal1 div:eq(2) button").attr("class", "btn btn-primary savetext" + activeId);
                                   var saveNodeName = $("#alertModal1 div:eq(2) button").attr("onclick", "saveNodeName(\"" + activeId + "\")");
+
+                                  windowtext = windowtext.replace(/(^\s*)|(\s*$)/g, "");
+
+
                                   var xiuNodename = '修改名称：<input id="TB_' + activeId + '" type="text" value="' + windowtext + '">'
                                   var spanaa = $("#window" + activeId + " span").html();
 
@@ -732,6 +746,9 @@
         //修改节点名称
         function saveNodeName(activeId) {
             var text = document.getElementById("TB_" + activeId).value; //新修改的值.
+
+            //alert(text);
+
             var node = new Entity("BP.WF.Node", activeId);
             node.Name = text;
             node.Update();

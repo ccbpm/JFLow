@@ -494,8 +494,8 @@ function Show_HidenField_Panel() {
     }, this);
 }
 
-function Show_ModleField_Panel(){
-	var url = "../FoolFormDesigner/Template/Fields.htm?FK_MapData=" + CCForm_FK_MapData + "&s=" + Math.random();
+function Show_ModleField_Panel() {
+    var url = "../FoolFormDesigner/Template/Fields.htm?FK_MapData=" + CCForm_FK_MapData + "&s=" + Math.random();
     OpenEasyUiDialog(url, 'FrmHiddenField', '模板字段', 600, 394, 'icon-new', true, function (scope) {
         var win = document.getElementById(dgId).contentWindow;
         var frmVal = win.GetFrmInfo();
@@ -504,9 +504,10 @@ function Show_ModleField_Panel(){
             $.messager.alert('错误', '字段名称不能为空。', 'error');
         }
     }, this);
- 
-	
+
+
 }
+
 //打开窗体
 function CCForm_ShowDialog(url, title, w, h) {
 
@@ -806,6 +807,10 @@ function figure_MapAttr_Template(mapAttr) {
             f.CCForm_Shape = "DropDownListEnum";
         } //外键下拉框
         else if (mapAttr.LGType == 2) {
+            f.CCForm_Shape = "DropDownListTable";
+        }
+        //外部数据源
+        else if (mapAttr.LGType == 0) {
             f.CCForm_Shape = "DropDownListTable";
         }
     } else if (mapAttr.UIContralType == 2) {//复选框

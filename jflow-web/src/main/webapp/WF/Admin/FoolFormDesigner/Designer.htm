@@ -151,8 +151,8 @@
                     //生成内容.
                     html += GenerGroupContext(groupObj, data);
 
+                    //过滤attrs
                     var mapAttrs = $.grep(data.Sys_MapAttr, function (val) { return val.GroupID == groupObj.OID; });
-
 
 
                     var isDrawTR = true; //是否需要话tr ?
@@ -161,7 +161,6 @@
                         var mapAttr = mapAttrs[j];
                         if (mapAttr.UIVisible == 0)
                             continue;
-
 
                         if (mapAttr.ColSpan <= 1 && mapAttr.UIContralType == "1") { //外键.
 
@@ -198,7 +197,7 @@
                                 //跨三列，并且单行.
                                 html += "<tr>";
                                 html += "<td class='FDesc'>" + GenerLabel(mapAttr) + "</td>";
-                                html += "<td ColSpan=" + mapAttr.ColSpan + "><div id='DIV_" + mapAttr.KeyOfEn + "'> <input class='form-control' maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "' type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "/></div></td>";
+                                html += "<td ColSpan=" + mapAttr.ColSpan + "><div id='DIV_" + mapAttr.KeyOfEn + "'><input class='form-control' style='width:99%;margin:3px;' maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "' type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "/></div></td>";
                                 html += "</tr>";
                                 isDrawTR = true;
                                 continue;
@@ -210,7 +209,7 @@
                                 //跨三列，并且单行.
                                 html += "<tr>";
                                 html += "<td class='FDesc'>" + GenerLabel(mapAttr) + "</td>";
-                                html += "<td ColSpan=3><div id='DIV_" + mapAttr.KeyOfEn + "'> <textarea class='form-control' maxlength=" + mapAttr.MaxLen + " style='height:" + uiHeight + "px;' name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "' type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "/></div></td>";
+                                html += "<td ColSpan=3><div id='DIV_" + mapAttr.KeyOfEn + "'> <textarea class='form-control' maxlength=" + mapAttr.MaxLen + " style='height:" + uiHeight + "px;width:100%;' name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "' type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "/></div></td>";
                                 html += "</tr>";
                                 isDrawTR = true;
                                 continue;
@@ -220,7 +219,7 @@
                                 //跨4列，并且多行. 是大块文本的情况.
                                 var uiHeight = mapAttr.UIHeight;
                                 html += "<tr>";
-                                html += "<td ColSpan=4>" + GenerLabel(mapAttr) + "<br><div id='DIV_" + mapAttr.KeyOfEn + "'> <textarea class='form-control' maxlength=" + mapAttr.MaxLen + " name='TB_" + mapAttr.KeyOfEn + "'  id='TB_" + mapAttr.KeyOfEn + "'  type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "/></div></td>";
+                                html += "<td ColSpan=4>" + GenerLabel(mapAttr) + "<br><div id='DIV_" + mapAttr.KeyOfEn + "'> <textarea class='form-control' style='width:100%;height:" + uiHeight + "px;' maxlength=" + mapAttr.MaxLen + " name='TB_" + mapAttr.KeyOfEn + "'  id='TB_" + mapAttr.KeyOfEn + "'  type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "/></div></td>";
                                 html += "</tr>";
                                 isDrawTR = true;
                                 continue;
@@ -269,7 +268,7 @@
                                 html += "<td class='FDesc'>" + GenerLabel(mapAttr) + "</td>";
 
 
-                                html += "<td ColSpan=1 ><div id='DIV_" + mapAttr.KeyOfEn + "'> <input  class='form-control' style='width:120px;' maxlength=" + mapAttr.MaxLen + " value='" + mapAttr.DefVal + "'  type='text' class='TBcalendar'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "'/></div></td>";
+                                html += "<td ColSpan=1 ><div id='DIV_" + mapAttr.KeyOfEn + "'> <input  class='form-control' style='width:160px;' maxlength=" + mapAttr.MaxLen + " value='" + mapAttr.DefVal + "'  type='text' class='TBcalendar'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "'/></div></td>";
 
                                 if (isDrawTR == false) {
                                     html += "</tr>";
@@ -282,7 +281,7 @@
                             if (mapAttr.ColSpan == 3 || mapAttr.ColSpan == 4) {
                                 html += "<tr>";
                                 html += "<td class='FDesc'>" + GenerLabel(mapAttr) + "</td>";
-                                html += "<td ColSpan=" + mapAttr.ColSpan + "><div id='DIV_" + mapAttr.KeyOfEn + "'> <input  class='form-control' style='width:120px;' maxlength=" + mapAttr.MaxLen + " value='" + mapAttr.DefVal + "'  type='text' class='TBcalendar'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "'/></div></td>";
+                                html += "<td ColSpan=" + mapAttr.ColSpan + "><div id='DIV_" + mapAttr.KeyOfEn + "'> <input  class='form-control' style='width:100%;' maxlength=" + mapAttr.MaxLen + " value='" + mapAttr.DefVal + "'  type='text' class='TBcalendar'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "'/></div></td>";
                                 html += "</tr>";
                                 isDrawTR = true;
                                 continue;
@@ -330,7 +329,6 @@
                                 }
 
                                 html += "<td class='FDesc'>" + GenerLabel(mapAttr) + "</td>";
-
 
                                 if (mapAttr.UIContralType == 2) {
                                     var ses = new Entities("BP.Sys.SysEnums");
@@ -734,10 +732,21 @@
                         var athEn = new Entity("BP.Sys.FrmAttachment", groupEn.CtrlID);
                         var src = "../../CCForm/Ath.htm?PKVal=0&FK_MapData=" + pageParam.fk_mapdata + "&FK_FrmAttachment=" + athEn.MyPK;
 
-
-
                         var frameUrl = "<iframe ID='F" + athEn.MyPK + "' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + athEn.H + "px;'  leftMargin='0'  topMargin='0' src='" + src + "'  scrolling='auto'  /></iframe>";
                         return "<tr><td colspan=4 id='TD" + athEn.MyPK + "' style='width:" + athEn.H + "px;'>" + frameUrl + "</td></tr>";
+
+                        break;
+                    case "SubFlow":
+
+                        var flowNo = GetQueryString("FK_Flow");
+                        var nodeID = GetQueryString("FK_Node");
+
+                        var src = "../../WorkOpt/SubFlow.htm?WorkID=0@FK_Flow=" + flowNo + "&FK_Node=" + nodeID;
+
+                        var compent = new Entity("BP.WF.Template.FrmSubFlow", nodeID);
+
+                        var frameDocs = "<iframe ID='F_SubFlow_" + nodeID + "' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + compent.SF_H + "px;'  leftMargin='0'  topMargin='0' src='" + src + "'  scrolling='auto'  /></iframe>";
+                        return "<tr><td colspan=4 id='SubFlow" + nodeID + "' style='width:300px;'>" + frameDocs + "</td></tr>";
 
                         break;
                     case "Frame":
@@ -770,10 +779,15 @@
                         var frameUrl = "<iframe ID='FWC' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + h + "px;' leftMargin='0' topMargin='0' src='" + src + "' scrolling='auto'  /></iframe>";
                         return "<tr><td colspan=4 style='width:100%;height:" + h + "px;' id='FWC' >" + frameUrl + "</td></tr>";
                     case "Dtl":
+
                         var dtl = $.grep(data.Sys_MapDtl, function (dtl) { return dtl.No == groupEn.CtrlID });
+
+                        // alert(dtl[0].H);
+                        // alert(dtl.H);
+
                         if (dtl.length == 1) {
                             var src = "MapDtlDe.htm?DoType=Edit&FK_MapData=" + pageParam.fk_mapdata + "&FK_MapDtl=" + dtl[0].No;
-                            var frameUrl = "<iframe ID='F" + dtl[0].No + "' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + dtl[0].H + "'  leftMargin='0'  topMargin='0' src='" + src + "'  scrolling='auto'  /></iframe>";
+                            var frameUrl = "<iframe ID='F" + dtl[0].No + "' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + dtl[0].H + "px;'  leftMargin='0'  topMargin='0' src='" + src + "'  scrolling='auto'  /></iframe>";
                             return "<tr><td colspan=4 id='TD" + dtl[0].No + "'>" + frameUrl + "</td></tr>";
                         } else {
                             html = "<tr><td colspan=4 style='width:100%;height:200px;' > 从表[" + groupEn.CtrlID + "]丢失</td></tr>";
@@ -880,6 +894,7 @@
 
 
         <script language="javascript" type="text/javascript">
+
             var pageParam = {};
             pageParam.fk_mapdata = GetQueryString("FK_MapData")
             //公共方法

@@ -29,15 +29,14 @@
     for (var i = 0; i < mapAttrs.length; i++) {
 
         var mapAttr = mapAttrs[i];
-        
-       
 
         $('#TB_' + mapAttr.KeyOfEn).attr("name", "TB_" + mapAttr.KeyOfEn);
         $('#DDL_' + mapAttr.KeyOfEn).attr("name", "DDL_" + mapAttr.KeyOfEn);
         $('#CB_' + mapAttr.KeyOfEn).attr("name", "CB_" + mapAttr.KeyOfEn);
 
         var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
-    
+
+        // alert(val);
 
         $('#TB_' + mapAttr.KeyOfEn).val(val);
 
@@ -107,6 +106,95 @@
 
 }
 
+// 处理流程绑定表单字段权限的问题
+function SetFilesAuth(FK_Node, Fk_Flow, FK_MapData) {
+    var frmSlns = new Entities("BP.WF.Template.FrmFields", "FK_Node", FK_Node, "FK_MapData", FK_MapData);
+    if (frmSlns == null || frmSlns.length == 0)
+        return;
+    for (var i = 0; i < frmSlns.length; i++) {
+        var frmSln = frmSlns[i];
+        var keyOfEn = frmSln.KeyOfEn;
+        var myPk = FK_MapData + "_" + keyOfEn;
+        var mapAttr = new Entity("BP.Sys.MapAttr", myPk);
+        //checkbox复选框
+        if (mapAttr.MyDataType == 4) {
+            delFile(frmSln, $("#CB_" + keyOfEn), keyOfEn);
+
+            //初始值
+            if (frmSln.DefVal != null && frmSln.DefVal == 1)
+                $("#CB_" + keyOfEn).attr("checked", "checked");
+            else
+                $("#CB_" + keyOfEn).attr("checked", "");
+
+            continue;
+        }
+        //外部数据源
+        if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1) {
+            delFile(frmSln, $("#DDL_" + keyOfEn), keyOfEn);
+
+            if (frmSln.DefVal != null && frmSln.DefVal != "")
+                $("#DDL_" + keyOfEn).val(frmSln.DefVal);
+
+            continue;
+
+        }
+        //外键类型.
+        if (mapAttr.LGType == "2" && mapAttr.MyDataType == "1") {
+            delFile(frmSln, $("#DDL_" + keyOfEn), keyOfEn);
+
+            if (frmSln.DefVal != null && frmSln.DefVal != "")
+                $("#DDL_" + keyOfEn).val(frmSln.DefVal);
+            continue;
+
+        }
+        //枚举类型.
+        if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {
+            //单选按钮
+            if (mapAttr.UIContralType == 3) {
+                frmSln.UIVisible == 0 ? $('input[name=RB_' + keyOfEn + ']').hide() : $('input[name=RB_' + keyOfEn + ']').show()
+
+                //是否可用
+                frmSln.UIIsEnable == 0 ? $('input[name=RB_' + keyOfEn + ']').attr("disabled", "disabled") : $('input[name=RB_' + keyOfEn + ']').attr("disabled", "");
+
+                //是否必填
+                //var showSpan = '<span style="color:red" class="mustInput" data-keyofen="' + keyOfEn + '">*</span>' ;
+                //frmSln.IsNotNull==1?fileId.append(showSpan):fileId.append("");
+                if (frmSln.DefVal != null && frmSln.DefVal != "")
+                    document.getElementById("RB_" + keyOfEn + "_" + frmSln.DefVal).checked = true;
+            } else {
+                delFile(frmSln, $("#DDL_" + keyOfEn), keyOfEn);
+                if (frmSln.DefVal != null && frmSln.DefVal != "")
+                    $("#DDL_" + keyOfEn).val(frmSln.DefVal);
+            }
+
+            continue;
+        }
+
+        //其余为文本框显示
+        delFile(frmSln, $("#TB_" + keyOfEn), keyOfEn);
+        if (frmSln.DefVal != null && frmSln.DefVal != "")
+            $("#TB_" + keyOfEn).val(frmSln.DefVal);
+        $("#TB_" + keyOfEn).attr("onblur", frmSln.RegularExp);
+
+    }
+
+
+}
+
+function delFile(frmSln, fileId, KeyOfEn) {
+    frmSln.UIVisible == 0 ? fileId.hide() : fileId.show();
+
+    //是否可用
+    frmSln.UIIsEnable == 0 ? fileId.attr("disabled", "disabled") : fileId.attr("disabled", "");
+
+    //是否必填
+    if (frmSln.IsNotNull == 1) {
+        var showSpan = '<span style="color:red" class="mustInput" data-keyofen="' + KeyOfEn + '">*</span>';
+        fileId.after(showSpan);
+    }
+
+}
+
 //处理 MapExt 的扩展. 工作处理器，独立表单都要调用他.
 function AfterBindEn_DealMapExt(frmData) {
 
@@ -127,8 +215,7 @@ function AfterBindEn_DealMapExt(frmData) {
                 break;
             }
         }
-        
-       
+
         //debugger;
         switch (mapExt.ExtType) {
             case "MultipleChoiceSmall":
@@ -138,11 +225,11 @@ function AfterBindEn_DealMapExt(frmData) {
                 MultipleChoiceSearch(mapExt); //调用 /CCForm/JS/MultipleChoiceSmall.js 的方法来完成.
                 break;
             case "PopBranchesAndLeaf": //树干叶子模式.
-            	 var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
                 PopBranchesAndLeaf(mapExt,val); //调用 /CCForm/JS/Pop.js 的方法来完成.
                 break;
             case "PopBranches": //树干简单模式.
-            	 var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
                 PopBranches(mapExt,val); //调用 /CCForm/JS/Pop.js 的方法来完成.
                 break;
             case "PopGroupList": //分组模式.
@@ -220,6 +307,10 @@ function AfterBindEn_DealMapExt(frmData) {
                 tb.parent().html(eleHtml);
                 break;
             case "BindFunction": //控件绑定函数.
+
+              //  alert(mapExt.AttrOfOper);
+               // alert(DynamicBind(mapExt, "TB_"));
+
 
                 if ($('#TB_' + mapExt.AttrOfOper).length == 1) {
                     $('#TB_' + mapExt.AttrOfOper).bind(DynamicBind(mapExt, "TB_"));

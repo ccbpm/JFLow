@@ -55,19 +55,17 @@
         function InitPage() {
 
             var fk_flow = GetQueryString("FK_Flow");
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrFlow");
-            handler.AddPara("FK_Flow",fk_flow);
-            var data = handler.DoMethodReturnString("StartGuide_Init");
-			
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-                return;
-            }
-            data = JSON.parse(data);
-            //data = data[0];
-            userId = data.userId;
+
+            var data = new Entity("BP.WF.Flow", fk_flow);
+
             GenerFullAllCtrlsVal(data);
-            if (data.nodesCount == "true") {
+
+            var nodeID = fk_flow + "01";
+
+            var fns = new Entities("BP.WF.Template.FrmNodes");
+            fns.Retrieve("FK_Node", nodeID);
+
+            if (fns.length >2 ) {
                 $("#isShow").show();
                 $('#RB_StartGuideWay_90').attr('checked', 'true');
             } else {
@@ -76,6 +74,10 @@
             }
 
             GenerFullAllCtrlsVal(data);
+
+            //alert(data.StartGuideWay);
+
+
             //console.info(data.StartGuidePara1)
             switch (data.StartGuideWay) {
                 case '0': //无
@@ -106,32 +108,45 @@
                     break;
             }
             return;
-           
         }
 
+        function SaveEn() {
 
-        //ajax 提交
-        function onSave() {
-
-            var checkBoxIDs = $("input:radio[name='RB_StartGuideWay']:checked").val();
-           // var checkBoxIDs =  GenerCheckIDs(); //获得所有的 checkBox ID传入到后台去,用于解决checkbox控件，在没有被选择的时候，没有值的问题。
-
-            var frmData = $("#cc").serialize(); //序列化frm.
-
+            //指定实体对象,并进行实例化
             var fk_flow = GetQueryString("FK_Flow");
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrFlow");
-            handler.AddPara("FK_Flow",fk_flow);
-            handler.AddPara("RB_StartGuideWay",checkBoxIDs);
-            var data = handler.DoMethodReturnString("StartGuide_Save");
-            alert(data);
+            var data = new Entity("BP.WF.Flow", fk_flow);
+
+            //取得前台所设置的前置导航类型和值
+             inputObj = $("input[name='RB_StartGuideWay']:checked");
+             seleID = inputObj.attr('id');
+             seleVal = inputObj.val();
+            data.StartGuideWay = seleVal;
+            //根据类型值取出对应的div中的子节点textarea的值,并将值赋值给实体对象
+            div = "div[name='"+ seleID +"']"
+            var allChildTA = $(div + " textarea");
+            jQuery.each(allChildTA, function (i, field) {
+                if (i == 0) {
+                    data.StartGuidePara1 = field.value;
+                } else {
+                    data.StartGuidePara2 = field.value;
+                }
+            });
+
+            //右侧连接.
+            guideLink = $("#TB_GuideLink").val();
+            data.StartGuideLink = guideLink;
+            guideLab = $("#TB_GuideLab").val();
+            data.StartGuideLab = guideLab;
+
+            data.Update();
+            alert("保存成功");
             window.location.href = window.location.href;
-           
         }  
      </script>
 </head>
-<body onkeypress="Esc()" >
+<body>
 
-<form id="cc">
+<form action="" id="form1">
 <table style="width:98%">
         <caption>发起前置导航</caption>
         <tr>
@@ -174,11 +189,11 @@
                     </div>
 
                     <!--<input type="text" value="" id="TB_ByHistoryUrl" name="TB_ByHistoryUrl" style="width:98%; height: 24px" />-->
-                    
-                    <textarea id="TB_ByHistoryUrl" runat="server" style="width:98%; height: 24px"></textarea>
+                    <div name="RB_StartGuideWay_5">
+                    <textarea id="TB_ByHistoryUrl" name="TB_ByHistoryUrl" runat="server" style="width:98%; height: 24px"></textarea>
                     <br />
+                    </div>
                 </fieldset>
-
 
                 <fieldset>
                     <legend>
@@ -198,8 +213,10 @@
                     </ul>
                    
                     </div>
+                    <div name="RB_StartGuideWay_10">
                    <!-- <input type="text" id="TB_SelfURL" name="TB_SelfURL" runat="server" style="width:98%; height: 24px"/>-->
-                    <textarea id="TB_SelfURL" runat="server" style="width:98%; height: 24px"></textarea><br />
+                    <textarea id="TB_SelfURL" name="TB_SelfURL" runat="server" style="width:98%; height: 24px"></textarea><br />
+                    </div>
                 </fieldset>
 
                 <fieldset>
@@ -209,16 +226,18 @@
                         </legend>
                     
                     <a href="javascript:ShowHidden('Paras1')">查询参数:</a>
-                    <div id="Paras1" style="display:none;color:gray">
-                    <ul >
-                      <li>比如:SELECT No, Name, No as EmpNo,Name as EmpName,Email FROM WF_Emp WHERE No LIKE '%@key%' </li>
-                      <li>初始化列表参数，该查询语句必须有No,Name两个列，注意显示数量限制。</li>
-                      <li>很多场合下需要用到父子流程，在启动子流程的时候需要选择一个父流程。</li>
-                      <li>实例:SELECT a.WorkID as No, a.Title as Name, a.Starter, a.WorkID As PWorkID, '011' as PFlowNo, a.FK_Node as PNodeID FROM WF_GenerWorkflow a, WF_GenerWorkerlist b WHERE A.WorkID=b.WorkID  AND B.FK_Emp='@WebUser.No' AND B.IsPass=0 AND A.FK_Flow='011' AND a.Title Like '%@Key%'</li>
-                    </ul>
+                    <div id="Paras1" style="display: none; color: gray">
+                        <ul >
+                            <li>比如:SELECT No, Name, No as EmpNo,Name as EmpName,Email FROM WF_Emp WHERE No LIKE '%@key%' </li>
+                            <li>初始化列表参数，该查询语句必须有No,Name两个列，注意显示数量限制。</li>
+                            <li>很多场合下需要用到父子流程，在启动子流程的时候需要选择一个父流程。</li>
+                            <li>实例:SELECT a.WorkID as No, a.Title as Name, a.Starter, a.WorkID As PWorkID, '011' as PFlowNo, a.FK_Node as PNodeID FROM WF_GenerWorkflow a, WF_GenerWorkerlist b WHERE A.WorkID=b.WorkID AND B.FK_Emp='@WebUser.No' AND B.IsPass=0 AND A.FK_Flow='011' AND a.Title Like '%@Key%'</li>
+                        </ul>
                     </div>
+
                     <!--<input type="text" id="TB_BySQLOne1" name="TB_BySQLOne1" rows="3"  runat="server" style="width:98%; height: 51px"/>-->
-                    <textarea id="TB_BySQLOne1"  rows="3"  runat="server" style="width:98%; height: 51px"></textarea><br />
+                    <div name="RB_StartGuideWay_1">
+                    <textarea id="TB_BySQLOne1" name="TB_BySQLOne1"  rows="3"  runat="server" style="width:98%; height: 51px"></textarea><br />
 
                      <a href="javascript:ShowHidden('ByParas2')">初始化列表参数:</a>
                     <div id="ByParas2" style="display:none;color:gray">
@@ -232,7 +251,8 @@
  
                     </font>
                     <!--<input type="text" id="TB_BySQLOne2" name="TB_BySQLOne2" rows="3"  runat="server" style="width:98%; height: 51px"/>-->
-                    <textarea id="TB_BySQLOne2" rows="3"  runat="server" style="width:98%; height: 51px"></textarea><br />
+                    <textarea id="TB_BySQLOne2" name="TB_BySQLOne2" rows="3" runat="server" style="width: 98%; height: 51px"></textarea><br/>
+                    </div>
                 </fieldset>
 
                 <fieldset>
@@ -242,17 +262,20 @@
                         </legend>
                     
                     <a href="javascript:ShowHidden('ParasMulti1')">查询参数:</a>
-                    <div id="ParasMulti1" style="display:none;color:gray">
-                    <ul >
-                      <li>比如:SELECT No, Name, No as EmpNo,Name as EmpName,Email FROM WF_Emp WHERE No LIKE '%@key%' </li>
-                      <li>初始化列表参数，该查询语句必须有No,Name两个列，注意显示数量限制。</li>
-                      <li>很多场合下需要用到父子流程，在启动子流程的时候需要选择一个父流程。</li>
-                      <li>实例:SELECT a.WorkID as No, a.Title as Name, a.Starter, a.WorkID As PWorkID, '011' as PFlowNo, a.FK_Node as PNodeID FROM WF_GenerWorkflow a, WF_GenerWorkerlist b WHERE A.WorkID=b.WorkID  AND B.FK_Emp='@WebUser.No' AND B.IsPass=0 AND A.FK_Flow='011' AND a.Title Like '%@Key%'</li>
-                    </ul>
+                    <div id="ParasMulti1" style="display: none; color: gray">
+                        <ul >
+                            <li>比如:SELECT No, Name, No as EmpNo,Name as EmpName,Email FROM WF_Emp WHERE No LIKE '%@key%' </li>
+                            <li>初始化列表参数，该查询语句必须有No,Name两个列，注意显示数量限制。</li>
+                            <li>很多场合下需要用到父子流程，在启动子流程的时候需要选择一个父流程。</li>
+                            <li>实例:SELECT a.WorkID as No, a.Title as Name, a.Starter, a.WorkID As PWorkID, '011' as PFlowNo, a.FK_Node as PNodeID FROM WF_GenerWorkflow a, WF_GenerWorkerlist b WHERE A.WorkID=b.WorkID AND B.FK_Emp='@WebUser.No' AND B.IsPass=0 AND A.FK_Flow='011' AND a.Title Like '%@Key%'</li>
+                        </ul>
                     </div>
+
+                    <div name="RB_StartGuideWay_6">
                     <!--<input type="text" id="TB_BySQLMulti1" name="TB_BySQLMulti1" rows="3"  runat="server" style="width:98%; height: 51px"/>-->
                     <textarea id="TB_BySQLMulti1" name="TB_BySQLMulti1" rows="3"  runat="server" style="width:98%; height: 51px"/></textarea>
-                    <br />
+                    <br/>
+                    
 
                      <a href="javascript:ShowHidden('ParasMulti2')">初始化列表参数:</a>
                     <div id="ParasMulti2" style="display:none;color:gray">
@@ -267,7 +290,8 @@
                     
                     <!--<input type="text" id="TB_BySQLMulti2" name="TB_BySQLMulti2" rows="3"  runat="server" style="width:98%; height: 51px"/>-->
                     <textarea id="TB_BySQLMulti2" name="TB_BySQLMulti2" rows="3"  runat="server" style="width:98%; height: 51px"></textarea>
-                    <br />
+                    <br/>
+                    </div>
                 </fieldset>
 
                  <fieldset>
@@ -289,7 +313,8 @@
                     </ul>
                     </div>
                     <!--<input id="TB_SubFlow1" name="TB_SubFlow1" rows="3" type="text" runat="server" style="width:98%; height: 51px"/>-->
-                    <textarea id="TB_SubFlow1"  rows="3"  runat="server" style="width:98%; height: 51px"></textarea><br />
+                    <div name="RB_StartGuideWay_4">
+                    <textarea id="TB_SubFlow1"  name="TB_SubFlow1" rows="3"  runat="server" style="width:98%; height: 51px"></textarea><br />
 
                     <a href="javascript:ShowHidden('subflow2')">初始化列表参数:</a>
                     <div id="subflow2" style="display:none;color:gray">
@@ -303,7 +328,8 @@
  
                     </font>
                     <!--<input id="TB_SubFlow2" type="text" name="TB_SubFlow2" rows="3"  runat="server" style="width:98%; height: 51px"/>-->
-                    <textarea id="TB_SubFlow2" rows="3"  runat="server" style="width:98%; height: 51px"></textarea><br />
+                    <textarea id="TB_SubFlow2" name="TB_SubFlow2" rows="3"  runat="server" style="width:98%; height: 51px"></textarea><br />
+                    </div>
                 </fieldset>
 
 
@@ -345,7 +371,8 @@
         <td>
         </td>
             <td>
-                <input type="button" class="easyui-linkbutton" id="Btn_Save" runat="server" value="保存" onclick="onSave()" />
+                <input type="button" class="easyui-linkbutton" id="Btn_Save" runat="server" value="保存" onclick="SaveEn()" />
+
                 | <span id="dtsbt"><a href="../TestFlow.htm?FK_Flow=flowNo&SID=userId&Lang=CH" target="_blank" >运行测试</a></span>
             </td>
 

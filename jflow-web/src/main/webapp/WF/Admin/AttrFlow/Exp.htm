@@ -21,16 +21,17 @@
         //初始化页面函数.....
         $(function () {
 
+
             //  $("#Msg").html("<img src='../../Img/loading.gif' /><font color=blue>ccbpm 正在生成代码.</font>");
 
             var fk_flow = GetQueryString("FK_Flow");
 
             $("#downli").html("驰骋工作流引擎已经为您生成了流程模版文件，<a href=\"javascript:Down();\" >请点击这里下载到本机</a>。");
 
+
             //创建处理类.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
             handler.AddUrlData();
-
             var data = handler.DoMethodReturnString("APICodeFEE_Init"); //执行方法，返回执行结果.
 
             $("#Msg").html(data);
@@ -45,7 +46,6 @@
             //创建处理类.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
             handler.AddUrlData();
-
             var data = handler.DoMethodReturnString("ExpFlowTemplete"); //执行方法，返回执行结果.
 
             if (data.indexOf('url@') == 0) {
@@ -53,6 +53,7 @@
                 window.location.href = url;
                 return;
             }
+
             download(data, flow.Name+".xml", "xml");
             return;
         }
@@ -102,7 +103,7 @@
                 <fieldset>
                     <legend>
                         <img src="../CCBPMDesigner/Img/FlowPublic.png" />共享到共有云服务器(暂停开放)</legend>
-                    <div style='color: red; margin-top: 10px; margin-bottom: 10px'>
+                    <div style='color:  Gray; margin-top: 10px; margin-bottom: 10px'>
                         请先注册ccbpm私有云账号
                         <!--<a href='javascript: window.parent.closeTab("用户注册");window.parent.addTab("RegUser", "用户注册", "../../../WF/Admin/Clound/RegUser.aspx","");'>注册</a>-->
                         <div />
@@ -119,7 +120,7 @@
                     <legend>
                         <img src="../CCBPMDesigner/Img/FlowPrivate.png" />上传到私云服务器(暂停开放)</legend>
                    
-                    <div style='color: red; margin-top: 10px; margin-bottom: 10px'>
+                    <div style='color: Gray; margin-top: 10px; margin-bottom: 10px'>
                         请先注册ccbpm私有云账号
                         
                         <!--<a href='javascript: window.parent.closeTab("用户注册");window.parent.addTab("RegUser", "用户注册", "../../../WF/Admin/Clound/RegUser.aspx","");'>注册</a>

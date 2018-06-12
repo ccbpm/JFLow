@@ -82,15 +82,17 @@ function GenerFreeFrm(wn) {
 
 function figure_MapAttr_Template(mapAttr) {
 
-    
+
     //根据不同的类型控件，生成html.
     var ele = figure_MapAttr_TemplateEle(mapAttr);
-    
-     ele += mapAttr.UIIsInput == 1 ? '<span style="color:red" class="mustInput" data-keyofen="' + mapAttr.KeyOfEn + '">*</span>' : "";
-   
+
+    ele += mapAttr.UIIsInput == 1 ? '<span style="color:red" class="mustInput" data-keyofen="' + mapAttr.KeyOfEn + '">*</span>' : "";
+
     var eleHtml = $('<div>' + ele + '</div>');
 
     eleHtml.children(0).css('width', mapAttr.UIWidth).css('height', mapAttr.UIHeight);
+
+
     eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
 
     return eleHtml;
@@ -113,7 +115,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
     }
 
     /***************** 外部数据源 *****************************/
-    if (mapAttr.LGType == 1 && mapAttr.MyDataType == "1" && mapAttr.UIContralType == "1") {
+    if (mapAttr.LGType == 0 && mapAttr.MyDataType == "1" && mapAttr.UIContralType == "1") {
         eleHtml = "<select  style='padding:0px;'  id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, "") + "</select>";
         return eleHtml;
     }
@@ -198,7 +200,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         if (mapAttr.UIIsEnable == 1) {
             enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'yyyy-MM-dd HH:mm'})" + '";';
         }
-        eleHtml = "<input type='text' class='form-control' " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
+        eleHtml = "<input type='text' class='form-control'  " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
         return eleHtml;
     }
 
@@ -264,11 +266,13 @@ function analysisFontStyle(ele, fontStyle, isBold, isItalic) {
         });
     }
     else {
+
         if (isBold == 1) {
             ele.css('font-weight', 'bold');
         }
+
         if (isItalic == 1) {
-            ele.css('font-style', 'italic')
+            ele.css('font-style', 'italic');
         }
     }
 }
@@ -280,7 +284,7 @@ function figure_Template_Label(frmLab) {
     eleHtml = $(eleHtml);
     var text = frmLab.Text == null ? "" : frmLab.Text.replace(/@/g, "<br>");
     eleHtml.html(text);
-    eleHtml.css('position', 'absolute').css('top', frmLab.Y - 10).css('left', frmLab.X).css('font-size', frmLab.FontSize)
+    eleHtml.css('position', 'absolute').css('top', frmLab.Y - 5).css('left', frmLab.X).css('font-size', frmLab.FontSize)
         .css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColr));
     analysisFontStyle(eleHtml, frmLab.FontStyle, frmLab.isBold, frmLab.IsItalic);
     return eleHtml;
@@ -308,16 +312,16 @@ function figure_Template_Btn(frmBtn) {
 
 //初始化单选按钮
 function figure_Template_RB(frmRb) {
-    var MyPK = frmRb.FK_MapData+"_"+frmRb.KeyOfEn;
+    var MyPK = frmRb.FK_MapData + "_" + frmRb.KeyOfEn;
     var mapAttr = new Entity("BP.Sys.MapAttr", MyPK);
 
     var eleHtml = '<div></div>';
     eleHtml = $(eleHtml);
     var childRbEle = $('<input id="RB_ChuLiFangShi2" type="radio" />');
     var childLabEle = $('<label class="labRb"></label>');
-    childLabEle.html(frmRb.Lab).attr('for', 'RB_' + frmRb.KeyOfEn +"_"+ frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
+    childLabEle.html(frmRb.Lab).attr('for', 'RB_' + frmRb.KeyOfEn + "_" + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
 
-    childRbEle.val(frmRb.IntKey).attr('id', 'RB_' + frmRb.KeyOfEn +"_"+ frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
+    childRbEle.val(frmRb.IntKey).attr('id', 'RB_' + frmRb.KeyOfEn + "_" + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
     if (mapAttr.AtPara.indexOf('@IsEnableJS=1') >= 0)
         childRbEle.attr("onclick", "clickEnable( this ,\"" + frmRb.FK_MapData + "\",\"" + frmRb.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")");
 

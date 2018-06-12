@@ -791,7 +791,16 @@ public class Flow extends BP.En.EntityNoName
 				wk.SetValByKey(GERptAttr.FK_NY, BP.DA.DataType.getCurrentYearMonth());
 				wk.SetValByKey(GERptAttr.FK_Dept, emp.getFK_Dept());
 				wk.setFID(0);
-				wk.DirectInsert();
+
+				  try
+                  {
+                      wk.DirectInsert();
+                  }
+                  catch(Exception ex)
+                  {
+                      wk.CheckPhysicsTable();
+                      wk.DirectInsert();
+                  }
 
 				//设置参数.
 				for (Object k : paras.keySet())

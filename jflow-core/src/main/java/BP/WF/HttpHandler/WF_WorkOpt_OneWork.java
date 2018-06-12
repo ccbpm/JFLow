@@ -665,6 +665,14 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 
 			ds.Tables.add(gwls.ToDataTableField("WF_GenerWorkerList"));
 		}
+		
+	    //把节点审核配置信息.
+        if (this.getFK_Node() != 0)
+        {
+            FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
+            ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
+        }
+        
 
 		//返回结果.
 		return BP.Tools.Json.ToJson(ds);

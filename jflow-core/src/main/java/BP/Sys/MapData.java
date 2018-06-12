@@ -2171,6 +2171,15 @@ public class MapData extends EntityNoName
 
 		MapData mdNew = new MapData(fk_mapdata);
 		mdNew.RepairMap();
+		
+		//
+		  if (mdNew.getNo().indexOf("ND") == 0)
+          {
+              mdNew.setFK_FrmSort("");
+              mdNew.setFK_FormTree("");
+          }
+		  
+		
 		mdNew.Update();
 		return mdNew;
 	}

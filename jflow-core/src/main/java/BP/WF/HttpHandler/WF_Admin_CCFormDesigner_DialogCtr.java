@@ -28,6 +28,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	}
 
 	public WF_Admin_CCFormDesigner_DialogCtr() {
+		  
 	}
 
 	
@@ -125,11 +126,6 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 
 		return BP.Sys.CCFormAPI.DB_SFTableList(pageNumber, pageSize);
 	}
-	public final String FrmEnumeration_Init() throws Exception
-	{
-		  WF_Admin_FoolFormDesigner wf = new  WF_Admin_FoolFormDesigner();
-          return wf.SysEnumList_Init(); 
-	}
 	/** 
 	 默认执行的方法
 	 @return 
@@ -162,91 +158,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	
 	 ///#endregion 执行父类的重写方法.
 
-			public final String EnumerationNew_GetEnum() throws Exception
-			{
-				String enumKey = this.GetRequestVal("EnumKey");
-
-				SysEnumMain sem = new SysEnumMain(enumKey);
-				java.util.Hashtable ht = new java.util.Hashtable();
-				ht.put("No", sem.getNo());
-				ht.put("Name", sem.getName());
-				ht.put("CfgVal", sem.getCfgVal());
-
-				return BP.Tools.Json.ToJsonEntityModel(ht);
-			}
-	
-	
-	public String FrmEnumeration_NewEnumField() throws Exception 
-	{
-		//创建一个字段. 对应 FigureCreateCommand.js  里的方法.
-		UIContralType ctrl = UIContralType.RadioBtn;
-		String ctrlDoType = GetRequestVal("ctrlDoType");
-		if (ctrlDoType.equals("DDL"))
-		{
-			ctrl = UIContralType.DDL;
-		}
-		else
-		{
-			ctrl = UIContralType.RadioBtn;
-		}
-
-		String fk_mapdata = this.GetRequestVal("FK_MapData");
-		String keyOfEn = this.GetRequestVal("KeyOfEn");
-		String fieldDesc = this.GetRequestVal("Name");
-		String enumKeyOfBind = this.GetRequestVal("UIBindKey"); //要绑定的enumKey.
-		float x = Float.parseFloat(this.GetRequestVal("x"));
-		float y = Float.parseFloat(this.GetRequestVal("y"));
-
-		BP.Sys.CCFormAPI.NewEnumField(fk_mapdata, keyOfEn, fieldDesc, enumKeyOfBind, ctrl, x, y,0);
-		return "绑定成功.";
-	}
-	public String FrmEnumeration_SaveEnum() throws Exception
-	{
-		String enumName = this.GetRequestVal("EnumName");
-		String enumKey1 = this.GetRequestVal("EnumKey");
-		String cfgVal = this.GetRequestVal("Vals");
-
-		//调用接口执行保存.
-		return BP.Sys.CCFormAPI.SaveEnum(enumKey1, enumName, cfgVal, false,"CH");
-	}
-	public String FrmEnumeration_NewEnum() throws Exception
-	{
-		String newnEumName = this.GetRequestVal("EnumName");
-		String newEnumKey1 = this.GetRequestVal("EnumKey");
-		String newCfgVal = this.GetRequestVal("Vals");
-
-		//调用接口执行保存.
-		return BP.Sys.CCFormAPI.SaveEnum(newEnumKey1, newnEumName, newCfgVal, true,"CH");
-	}
-	public String FrmEnumeration_DelEnum()
-	{
-		String sql = "";
-		//删除空数据.
-		BP.DA.DBAccess.RunSQL("DELETE FROM Sys_MapAttr WHERE FK_MapData IS NULL OR FK_MapData='' ");
-
-		//获得要删除的枚举值.
-		String enumKey = this.GetRequestVal("EnumKey");
-
-		// 检查这个物理表是否被使用.
-		sql = "SELECT  FK_MapData,KeyOfEn,Name FROM Sys_MapAttr WHERE UIBindKey='" + enumKey + "'";
-		DataTable dtEnum = DBAccess.RunSQLReturnTable(sql);
-		String msgDelEnum = "";
-		for (DataRow dr : dtEnum.Rows)
-		{
-			msgDelEnum += "\n 表单编号:" + dr.getValue("FK_MapData") + " , 字段:" + dr.getValue("KeyOfEn") + ", 名称:" + dr.getValue("Name");
-		}
-
-		if (!msgDelEnum.equals(""))
-		{
-			return "error:该枚举已经被如下字段所引用，您不能删除它。" + msgDelEnum;
-		}
-
-		sql = "DELETE FROM Sys_EnumMain WHERE No='" + enumKey + "'";
-		sql += "@DELETE FROM Sys_Enum WHERE EnumKey='" + enumKey + "' ";
-		DBAccess.RunSQLs(sql);
-		return "执行成功.";
-	}
-	public String FrmTextBox_ParseStringToPinyin()
+			public String FrmTextBox_ParseStringToPinyin()
 	{
 		String name = getRequest().getParameter("name");
 		String flag = getRequest().getParameter("flag");

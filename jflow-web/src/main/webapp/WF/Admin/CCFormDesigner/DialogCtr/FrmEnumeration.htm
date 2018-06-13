@@ -96,12 +96,12 @@
             var info = '';
             for (var i = 0; i < mapAttrs.length; i++) {
                 var attr = mapAttrs[i];
-                info += "\t\n 表单编号:" + attr.FK_MapData + " , 字段:" + attr.KeyOfEn + ", 名称:" + attr.Name;
+                info += "\t\n" + i + ",表单编号:" + attr.FK_MapData + " , 字段:" + attr.KeyOfEn + ", 名称:" + attr.Name;
             }
 
             if (info != '') {
 
-                info = "如下表单引用了该字段您不能删除:\t\n " + info;
+                info = "如下表单引用了该字段您不能删除:" + info;
                 alert(info);
                 return;
             }
@@ -114,7 +114,7 @@
         }
         function Edit(key) {
 
-            var url = "EnumerationNew.htm?EnumKey=" + key;
+            var url = "EnumerationNew.htm?DoType=FrmEnumeration_SaveEnum&EnumKey=" + key;
             OpenDialogAndCloseRefresh(url, '编辑枚举', 560, 400, null, function () { window.location.href = window.location.href; });
         }
     </script>

@@ -995,7 +995,7 @@ public abstract class Entity extends EnObj {
 			return 1;
 		} catch (RuntimeException ex) {
 			String msg = ex.getMessage() == null ? "" : ex.getMessage();
-			if (msg.contains("无效")) {
+			if (msg.contains("无效") || msg.contains("field list") ) {
 				try {
 
 					this.CheckPhysicsTable();

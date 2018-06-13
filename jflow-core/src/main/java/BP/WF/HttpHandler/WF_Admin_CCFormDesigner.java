@@ -69,6 +69,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * @throws Exception 
 	 */
 	public final String FrmEnumeration_NewEnumField() throws Exception {
+		
 		UIContralType ctrl = UIContralType.RadioBtn;
 		String ctrlDoType = GetRequestVal("CtrlDoType");
 		if ("DDL".equals(ctrlDoType))
@@ -93,6 +94,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * @return
 	 */
 	public final String NewSFTableField() {
+		
 		try {
 			String fk_mapdata = this.GetRequestVal("FK_MapData");
 			String keyOfEn = this.GetRequestVal("KeyOfEn");

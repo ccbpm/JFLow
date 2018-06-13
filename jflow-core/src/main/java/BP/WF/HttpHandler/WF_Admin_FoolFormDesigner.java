@@ -775,16 +775,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	}
 	
 	
-	  /** 
-	 删除枚举值
 	 
-	 @return 
-*/
-	public final String SysEnumList_Del()
-	{
-		WF_Admin_CCFormDesigner_DialogCtr en = new WF_Admin_CCFormDesigner_DialogCtr(this.context);
-		return en.FrmEnumeration_DelEnum();
-	}
 	/** 
 	 增加一个枚举类型
 	 

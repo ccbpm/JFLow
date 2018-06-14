@@ -3813,8 +3813,11 @@ public class Glo {
 	 * 运行模式
 	 */
 	public static OSModel getOSModel() {
-		OSModel os = OSModel.forValue(BP.Sys.SystemConfig.GetValByKeyInt("OSModel", 0));
+		/* 取消一对一模式，默认一对多模式
+		 OSModel os = OSModel.forValue(BP.Sys.SystemConfig.GetValByKeyInt("OSModel", 0));
 		return os;
+		 * */
+		return OSModel.OneMore;
 	}
 
 	/**

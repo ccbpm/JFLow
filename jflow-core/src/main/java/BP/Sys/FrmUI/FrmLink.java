@@ -152,10 +152,10 @@ public class FrmLink extends EntityMyPK
 	{
 		UAC uac = new UAC();
 		uac.Readonly();
-		if (BP.Web.WebUser.getNo().equals("admin"))
-		{
+		//if (BP.Web.WebUser.getNo().equals("admin"))
+		//{
 			uac.IsUpdate = true;
-		}
+		//}
 		return uac;
 	}
 	/** 
@@ -192,7 +192,8 @@ public class FrmLink extends EntityMyPK
 
 		map.AddMyPK();
 
-		map.AddTBString(FrmLinkAttr.Target, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
+		map.AddTBString(FrmLinkAttr.Target, "_blank", "连接目标", true, false, 0, 20, 20);
+		map.SetHelperAlert(FrmLinkAttr.Target, "可以输入:_blank,_parent,_self");
 
 		map.AddTBString(FrmLinkAttr.Text, "New Link", "标签", true, false, 0, 500, 20, true);
 		map.AddTBString(FrmLinkAttr.URL, null, "URL", true, false, 0, 500, 20, true);
@@ -200,7 +201,7 @@ public class FrmLink extends EntityMyPK
 
 
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "所在分组", "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'", true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "所在分组", MapAttrString.SQLOfGroupAttr(), true);
 
 
 		this.set_enMap(map);

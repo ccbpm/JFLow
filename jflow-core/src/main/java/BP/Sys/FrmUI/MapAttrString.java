@@ -131,7 +131,6 @@ public class MapAttrString extends EntityMyPK
 		map.AddDDLSysEnum(MapAttrAttr.IsSigan, 0, "签名模式", true, true, MapAttrAttr.IsSigan, "@0=无@1=图片签名@2=山东CA@3=广东CA");
 
 		RefMethod rm = new RefMethod();
- 
 	 
 
 		rm = new RefMethod();
@@ -267,9 +266,7 @@ public class MapAttrString extends EntityMyPK
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
-
  
-
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

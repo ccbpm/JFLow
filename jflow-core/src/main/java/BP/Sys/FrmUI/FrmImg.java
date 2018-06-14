@@ -80,7 +80,7 @@ public class FrmImg extends EntityMyPK
 
 
 		//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "所在分组", "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID'@FK_MapData'", true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "所在分组", MapAttrString.SQLOfGroupAttr(), true);
 
 		this.set_enMap(map);
 		return this.get_enMap();

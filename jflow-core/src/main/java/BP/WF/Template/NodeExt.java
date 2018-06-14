@@ -1048,7 +1048,9 @@ public class NodeExt extends Entity
 	*/
 	public final String DoSheet()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeFromWorkModel.htm?FK_Node=" + this.getNodeID();
+        return "../../Admin/AttrNode/FrmSln/Default.htm?FK_Node=" + this.getNodeID();
+
+	//	return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeFromWorkModel.htm?FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 父子流程

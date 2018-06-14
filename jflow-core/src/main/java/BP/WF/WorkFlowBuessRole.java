@@ -368,7 +368,7 @@ public class WorkFlowBuessRole
 	*/
 	public static String GenerBillNo(String billNo, long workid, Entity en, String flowPTable) throws Exception
 	{
-		if (DotNetToJavaStringHelper.isNullOrEmpty(billNo))
+		if (DataType.IsNullOrEmpty(billNo))
 		{
 			return "";
 		}
@@ -382,7 +382,7 @@ public class WorkFlowBuessRole
 		billNo = billNo.replace("{yyyy}", DateUtils.format(new Date(), "yyyy"));
 
 		billNo = billNo.replace("{yy}", DateUtils.format(new Date(), "yy"));
-		billNo = billNo.replace("{YY}", DateUtils.format(new Date(), "YY"));
+		billNo = billNo.replace("{YY}", DateUtils.format(new Date(), "yy"));
 
 		billNo = billNo.replace("{MM}", DateUtils.format(new Date(), "MM"));
 		billNo = billNo.replace("{mm}", DateUtils.format(new Date(), "mm"));

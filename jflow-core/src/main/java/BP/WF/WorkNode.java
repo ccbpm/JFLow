@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.sun.star.bridge.oleautomation.Decimal;
+
 import BP.En.*;
 import BP.DA.*;
 import BP.Port.*;
@@ -377,7 +379,7 @@ public class WorkNode {
 						this.getWorkID());
 				DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + dbStr + "WorkID", "WorkID",
 						this.getWorkID());
-				DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE FID=" + dbStr + "WorkID", "WorkID", this.getWorkID());
+				 
 			}
 			DeleteToNodesData(nd.getHisToNodes());
 		}
@@ -2044,54 +2046,7 @@ public class WorkNode {
 		/// #endregion
 
 	}
-
-	private void NodeSend_2X_GenerFH() throws Exception {
-
-		/// #region GenerFH
-		GenerFH fh = new GenerFH();
-		fh.setFID(this.getWorkID());
-		if (this.getHisNode().getIsStartNode() || fh.getIsExits() == false) {
-			try {
-				fh.setTitle(this.getHisWork().GetValStringByKey(StartWorkAttr.Title));
-			} catch (RuntimeException ex) {
-				MapAttr attr = new MapAttr();
-				attr.setFK_MapData("ND" + this.getHisNode().getNodeID());
-				attr.setHisEditType(BP.En.EditType.UnDel);
-				attr.setKeyOfEn("Title");
-				int i = attr.Retrieve(MapAttrAttr.FK_MapData, attr.getFK_MapData(), MapAttrAttr.KeyOfEn,
-						attr.getKeyOfEn());
-				if (i == 0) {
-					attr.setKeyOfEn("Title");
-					attr.setName("标题"); // "流程标题");
-					attr.setMyDataType(BP.DA.DataType.AppString);
-					attr.setUIContralType(UIContralType.TB);
-					attr.setLGType(FieldTypeS.Normal);
-					attr.setUIVisible(true);
-					attr.setUIIsEnable(true);
-					attr.setUIIsLine(true);
-					attr.setMinLen(0);
-					attr.setMaxLen(200);
-					attr.setIdx(-100);
-					attr.Insert();
-				}
-				fh.setTitle(
-						this.getExecer() + "-" + this.getExecerName() + " @ " + DataType.getCurrentDataTime() + " ");
-			}
-			fh.setRDT(DataType.getCurrentData());
-			fh.setFID(this.getWorkID());
-			fh.setFK_Flow(this.getHisNode().getFK_Flow());
-			fh.setFK_Node(this.getHisNode().getNodeID());
-			fh.setGroupKey(this.getExecer());
-			fh.setWFState(0);
-			try {
-				fh.DirectInsert();
-			} catch (java.lang.Exception e) {
-				fh.DirectUpdate();
-			}
-		}
-
-		/// #endregion GenerFH
-	}
+ 
 
 	/**
 	 * 处理分流点向下发送 to 异表单.
@@ -2100,7 +2055,7 @@ public class WorkNode {
 	 * @throws Exception 
 	 */
 	private void NodeSend_24_UnSameSheet(Nodes toNDs) throws Exception {
-		NodeSend_2X_GenerFH();
+		 
 
 		// 分别启动每个节点的信息.
 		String msg = "";
@@ -2933,270 +2888,123 @@ public class WorkNode {
 	 * @return
 	 * @throws Exception 
 	 */
-	private void NodeSend_53_SameSheet_To_HeLiu(Node toNode) throws Exception {
-		Work toNodeWK = toNode.getHisWork();
-		toNodeWK.Copy(this.getHisWork());
-		toNodeWK.setOID(this.getHisWork().getFID());
-		toNodeWK.setFID(0);
-		this.town = new WorkNode(toNodeWK, toNode);
+	private void NodeSend_53_SameSheet_To_HeLiu(Node nd) throws Exception {
+		
+		
+		 Work heLiuWK = nd.getHisWork();
+         heLiuWK.setOID(this.getHisWork().getFID());
+         if (heLiuWK.RetrieveFromDBSources() == 0) //查询出来数据.
+             heLiuWK.DirectInsert();
 
-		// 获取到达当前合流节点上 与上一个分流点之间的子线程节点的集合。
-		String spanNodes = this.SpanSubTheadNodes(toNode);
+         heLiuWK.Copy(this.getHisWork()); // 执行copy.
 
-		/// #region 处理FID.
-		long fid = this.getHisWork().getFID();
-		if (fid == 0) {
-			if (this.getHisNode().getHisRunModel() != RunModel.SubThread) {
-				throw new RuntimeException("@当前节点非子线程节点.");
-			}
+         heLiuWK.setOID(this.getHisWork().getFID());
+         heLiuWK.setFID( 0);
 
-			String strs = BP.DA.DBAccess.RunSQLReturnStringIsNull(
-					"SELECT FID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getHisWork().getOID(), "0");
-			if (strs.equals("0")) {
-				throw new RuntimeException("@丢失FID信息");
-			}
-			fid = Long.parseLong(strs);
+         this.town = new WorkNode(heLiuWK, nd);
 
-			this.getHisWork().setFID(fid);
-		}
+         //合流节点上的工作处理者。
+         GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), nd.getNodeID());
+         current_gwls = gwls;
 
-		/// #endregion FID
+         if (gwls.size() == 0)
+         {
+             // 说明第一次到达河流节点。
+             current_gwls = this.Func_GenerWorkerLists(this.town);
+             gwls = current_gwls;
 
-		GenerFH myfh = new GenerFH(fid);
-		if (myfh.getFK_Node() == toNode.getNodeID()) {
-			// 说明不是第一次到这个节点上来了,
-			// * 比如：一条流程：
-			// * A分流-> B普通-> C合流
-			// * 从B 到C 中, B中有N 个线程，在之前已经有一个线程到达过C.
-			//
+             GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
+             gwf.setFK_Node(nd.getNodeID());
+             gwf.setNodeName(nd.getName());
+             gwf.setTodoEmpsNum( gwls.size()) ;
 
-			//
-			// * 首先:更新它的节点 worklist 信息, 说明当前节点已经完成了.
-			// * 不让当前的操作员能看到自己的工作。
-			//
+             String todoEmps = "";
+             for (GenerWorkerList  item : gwls.ToJavaList())
+                 todoEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
 
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr
-					+ "FID AND FK_Node=" + dbStr + "FK_Node AND IsPass=0";
-			ps.Add("WorkID", this.getWorkID());
-			ps.Add("FID", this.getHisWork().getFID());
-			ps.Add("FK_Node", this.getHisNode().getNodeID());
-			DBAccess.RunSQL(ps);
+             gwf.setTodoEmps(todoEmps);
+             gwf.setWFState( WFState.Runing);
+             gwf.Update();
+         }
 
-			this.getHisGenerWorkFlow().setFK_Node(toNode.getNodeID());
-			this.getHisGenerWorkFlow().setNodeName(toNode.getName());
+         String FK_Emp = "";
+         String toEmpsStr = "";
+         String emps = "";
+         for (GenerWorkerList wl : gwls.ToJavaList())
+         {
+             toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
+             if (gwls.size() == 1)
+                 emps = toEmpsStr;
+             else
+                 emps += "@" + toEmpsStr;
+         }
 
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkFlow  SET  WFState=" + WFState.Runing.getValue() + ", FK_Node=" + dbStr
-					+ "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
-			ps.Add("FK_Node", toNode.getNodeID());
-			ps.Add("NodeName", toNode.getName());
-			ps.Add("WorkID", this.getHisWork().getOID());
-			DBAccess.RunSQL(ps);
+ 
 
-			//
-			// * 其次更新当前节点的状态与完成时间.
-			//
-			this.getHisWork().Update(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
+         //#region 复制主表数据. edit 2014-11-20 向合流点汇总数据.
+         //复制当前节点表单数据.
+         heLiuWK.setFID( 0);
+         heLiuWK.setRec( FK_Emp);
+         heLiuWK.setEmps(emps);
+         heLiuWK.setOID( this.getHisWork().getFID());
+         heLiuWK.DirectUpdate(); //在更新一次.
 
-			/// #region 处理完成率
-			ps = new Paras();
-			ps.SQL = "SELECT FK_Emp,FK_EmpText FROM WF_GenerWorkerList WHERE FK_Node=" + dbStr + "FK_Node AND FID="
-					+ dbStr + "FID AND IsPass=1";
-			ps.Add("FK_Node", this.getHisNode().getNodeID());
-			ps.Add("FID", this.getHisWork().getFID());
-			DataTable dt_worker = BP.DA.DBAccess.RunSQLReturnTable(ps);
-			String numStr = "@如下分流人员已执行完成:";
-			for (DataRow dr : dt_worker.Rows) {
-				numStr += "@" + dr.get(0) + "," + dr.get(1);
-			}
+         /* 把数据复制到rpt数据表里. */
+         this.rptGe.setOID(this.getHisWork().getFID());
+         this.rptGe.RetrieveFromDBSources();
+         this.rptGe.Copy(this.getHisWork());
+         this.rptGe.DirectUpdate();
+         //#endregion 复制主表数据.
 
-			// 求出子线程的数量。
-			ps = new Paras();
-			ps.SQL = "SELECT DISTINCT(WorkID) FROM WF_GenerWorkerList WHERE FK_Node=" + dbStr + "FK_Node AND FID="
-					+ dbStr + "FID AND IsPass=1";
-			ps.Add("FK_Node", this.getHisNode().getNodeID());
-			ps.Add("FID", this.getHisWork().getFID());
-			DataTable dt_thread = BP.DA.DBAccess.RunSQLReturnTable(ps);
-			java.math.BigDecimal ok = new java.math.BigDecimal(dt_thread.Rows.size());
+         // 产生合流汇总明细表数据.
+       //  this.GenerHieLiuHuiZhongDtlData_2013(nd);
 
-			ps = new Paras();
-			ps.SQL = "SELECT  COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE   IsEnable=1 AND FID=" + dbStr
-					+ "FID AND FK_Node IN (" + spanNodes + ")";
-			ps.Add("FID", this.getHisWork().getFID());
-			java.math.BigDecimal all = new java.math.BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-			if (all.equals(0)) {
-				throw new RuntimeException(
-						"@获取总子线程数量出现错误,线程数量为0,执行的sql:" + ps.SQL + " FID=" + this.getHisWork().getFID());
-			}
+         //#endregion 处理合流节点表单数据
 
-			java.math.BigDecimal passRate = ok.divide(all, 2).multiply(new BigDecimal(100));
-			numStr = "@您是第(" + ok + ")到达此节点上的处理人，共启动了(" + all + ")个子线程。";
-			if (toNode.getPassRate().compareTo(passRate) <= 0) {
-				// 说明全部的人员都完成了，就让合流点显示它。
-				DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0  WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-						+ dbStr + "WorkID", "FK_Node", toNode.getNodeID(), "WorkID", this.getHisWork().getFID());
-				numStr += "@下一步工作(" + toNode.getName() + ")已经启动。";
-			}
+         /* 合流点需要等待各个分流点全部处理完后才能看到它。*/
+         String info = "";
+         String sql1 = "";
+//#warning 对于多个分合流点可能会有问题。
+         ps = new Paras();
+         ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr + "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
+         ps.Add("FID", this.getHisWork().getFID());
 
-			/// #endregion 处理完成率
-
-			if (myfh.getToEmpsMsg().contains("(")) {
-				// 实际值的格式model: (liyan,李言) . 要获取里面的编号值。
-				String[] emps = myfh.getToEmpsMsg().split("[,]", -1);
-
-				String myemps = "";
-				for (String str : emps) {
-					if (str.contains("(") == true) {
-						myemps += str.replace("(", "");
-					}
-				}
-				if (myemps.contains(",")) {
-					myemps = myemps.substring(0, myemps.length() - 1);
-				}
-
-				this.AddToTrack(ActionType.ForwardHL, myemps, myfh.getToEmpsMsg(), toNode.getNodeID(), toNode.getName(),
-						null);
-
-				// 增加变量.
-				this.addMsg(SendReturnMsgFlag.VarAcceptersID, myemps, SendReturnMsgType.SystemMsg);
-				this.addMsg(SendReturnMsgFlag.VarAcceptersName, myemps, SendReturnMsgType.SystemMsg);
-			}
-
-			// 产生合流汇总从表数据.
-			this.GenerHieLiuHuiZhongDtlData_2013(toNode);
-
-			this.addMsg("ToHeLiuEmp", "@流程已经运行到合流节点[" + toNode.getName() + "]。@您的工作已经发送给如下人员[" + myfh.getToEmpsMsg()
-					+ "]。" + this.GenerWhySendToThem(this.getHisNode().getNodeID(), toNode.getNodeID()) + numStr);
-		} else {
-			// 已经有FID，说明：以前已经有分流或者合流节点。
-			//
-			// * 以下处理的是没有流程到达此位置
-			// * 说明是第一次到这个节点上来了.
-			// * 比如：一条流程:
-			// * A分流-> B普通-> C合流
-			// * 从B 到C 中, B中有N 个线程，在之前他是第一个到达C.
-			//
-
-			// 初试化他们的工作人员．
-			current_gwls = this.Func_GenerWorkerLists(this.town);
-
-			String FK_Emp = "";
-			String toEmpsStr = "";
-			String emps = "";
-			for (GenerWorkerList wl : current_gwls.ToJavaList()) {
-				toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
-
-				if (current_gwls.size() == 1) {
-					emps = wl.getFK_Emp();
-				} else {
-					emps += "@" + FK_Emp;
-				}
-			}
-			// 增加变量.
-			this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps.replace("@", ","), SendReturnMsgType.SystemMsg);
-			this.addMsg(SendReturnMsgFlag.VarAcceptersName, toEmpsStr, SendReturnMsgType.SystemMsg);
-
-			//
-			// * 更新它的节点 worklist 信息, 说明当前节点已经完成了.
-			// * 不让当前的操作员能看到自己的工作。
-			//
-
-			/// #region 设置父流程状态 设置当前的节点为:
-			myfh.Update(GenerFHAttr.FK_Node, toNode.getNodeID(), GenerFHAttr.ToEmpsMsg, toEmpsStr);
-
-			Work mainWK = town.getHisWork();
-			mainWK.setOID(this.getHisWork().getFID());
-			mainWK.RetrieveFromDBSources();
-
-			// 复制报表上面的数据到合流点上去。
-			DataTable dt = DBAccess.RunSQLReturnTable(
-					"SELECT * FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + dbStr + "OID", "OID",
-					this.getHisWork().getFID());
-			for (DataColumn dc : dt.Columns) {
-				mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
-			}
-
-			mainWK.setRec(FK_Emp);
-			mainWK.setEmps(emps);
-			mainWK.setOID(this.getHisWork().getFID());
-			mainWK.Save();
-
-			// 产生合流汇总从表数据.
-			this.GenerHieLiuHuiZhongDtlData_2013(toNode);
-
-			// 合流点需要等待各个分流点全部处理完后才能看到它。
-			String sql1 = "";
-			// "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" +
-			// this.HisNode.NodeID + " AND FID=" + this.HisWork.FID;
-			// string sql1 = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList
-			// WHERE IsPass=0 AND FID=" + this.HisWork.FID;
-
-			/// #warning 对于多个分合流点可能会有问题。
-			sql1 = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE IsEnable=1 AND FID="
-					+ this.getHisWork().getFID() + " AND FK_Node IN (" + spanNodes + ")";
-			java.math.BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(sql1));
+         java.math.BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(sql1));
 			java.math.BigDecimal passRate1 = numAll1.divide(numAll1, 2).multiply(new BigDecimal(100));
-			if (toNode.getPassRate().compareTo(passRate1) <= 0) {
-				// 这时已经通过,可以让主线程看到待办.
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr
-						+ "WorkID";
-				ps.Add("FK_Node", toNode.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				int num = DBAccess.RunSQL(ps);
-				if (num == 0) {
-					throw new RuntimeException("@不应该更新不到它.");
-				}
-			} else {
+			if (nd.getPassRate().compareTo(passRate1) <= 0) {
+				
+		 
+             ps = new Paras();
+             ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
+             ps.Add("FK_Node", nd.getNodeID());
+             ps.Add("WorkID", this.getHisWork().getFID());
+             DBAccess.RunSQL(ps);
 
-				/// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr
-						+ "WorkID";
-				ps.Add("FK_Node", toNode.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				int num = DBAccess.RunSQL(ps);
-				if (num == 0) {
-					throw new RuntimeException("@不应该更新不到它.");
-				}
-			}
+             ps = new Paras();
+             ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
+             ps.Add("FK_Node", nd.getNodeID());
+             ps.Add("NodeName", nd.getName());
+             ps.Add("WorkID", this.getHisWork().getFID());
+             DBAccess.RunSQL(ps);
 
-			this.getHisGenerWorkFlow().setFK_Node(toNode.getNodeID());
-			this.getHisGenerWorkFlow().setNodeName(toNode.getName());
+             info = "@下一步合流点(" + nd.getName() + ")已经启动。";
+         }
+         else
+         {
+//#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
+             ps = new Paras();
+             ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
+             ps.Add("FK_Node", nd.getNodeID());
+             ps.Add("WorkID", this.getHisWork().getOID());
+             DBAccess.RunSQL(ps);
+         }
 
-			// 改变当前流程的当前节点.
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + WFState.Runing.getValue() + ",  FK_Node=" + dbStr
-					+ "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
-			ps.Add("FK_Node", toNode.getNodeID());
-			ps.Add("NodeName", toNode.getName());
-			ps.Add("WorkID", this.getHisWork().getFID());
-			DBAccess.RunSQL(ps);
-
-			// 设置当前子线程已经通过.
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr
-					+ "FID AND IsPass=0";
-			ps.Add("WorkID", this.getWorkID());
-			ps.Add("FID", this.getHisWork().getFID());
-			DBAccess.RunSQL(ps);
-
-			/// #endregion 设置父流程状态
-
-			this.addMsg("InfoToHeLiu",
-					"@流程已经运行到合流节点[" + toNode.getName() + "]。@您的工作已经发送给如下人员[" + toEmpsStr + "]，@您是第一个到达此节点的处理人.");
-		}
-
-		/// #region 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.(不是很合理) 2015.12.30
-		Work towk = town.getHisWork();
-		towk.setOID(this.getHisWork().getFID());
-		towk.RetrieveFromDBSources();
-		towk.Copy(this.getHisWork());
-		towk.DirectUpdate();
-
-		/// #endregion 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
-
+         this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
+         this.getHisGenerWorkFlow().setNodeName(nd.getName());
+  
+         this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps, SendReturnMsgType.SystemMsg);
+         this.addMsg("HeLiuInfo", "@下一步的工作处理人[" + emps + "]" + info, SendReturnMsgType.Info);
+           
 	}
 
 	private String NodeSend_55(Node toNode) {
@@ -7435,272 +7243,120 @@ public class WorkNode {
 	 */
 	private void NodeSend_53_UnSameSheet_To_HeLiu(Node nd) throws Exception {
 
-		Work heLiuWK = nd.getHisWork();
-		heLiuWK.setOID(this.getHisWork().getFID());
-		if (heLiuWK.RetrieveFromDBSources() == 0) // 查询出来数据.
-		{
-			heLiuWK.DirectInsert();
-		}
 
-		heLiuWK.Copy(this.getHisWork()); // 执行copy.
+		 Work heLiuWK = nd.getHisWork();
+         heLiuWK.setOID(this.getHisWork().getFID());
+         if (heLiuWK.RetrieveFromDBSources() == 0) //查询出来数据.
+             heLiuWK.DirectInsert();
 
-		heLiuWK.setOID(this.getHisWork().getFID());
-		heLiuWK.setFID(0);
+         heLiuWK.Copy(this.getHisWork()); // 执行copy.
 
-		this.town = new WorkNode(heLiuWK, nd);
+         heLiuWK.setOID(this.getHisWork().getFID());
+         heLiuWK.setFID( 0);
 
-		// 合流节点上的工作处理者。
-		GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), nd.getNodeID());
-		GenerFH myfh = new GenerFH(this.getHisWork().getFID());
+         this.town = new WorkNode(heLiuWK, nd);
 
-		if (myfh.getFK_Node() == nd.getNodeID() && gwls.size() != 0) {
-			// 说明不是第一次到这个节点上来了,
-			// * 比如：一条流程：
-			// * A分流-> B子线程 -> C合流
-			// * 从B 到C 中, B中有N 个线程，在之前已经至少有一个线程到达过C.
-			//
+         //合流节点上的工作处理者。
+         GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), nd.getNodeID());
+         current_gwls = gwls;
 
-			//
-			// * 首先:更新它的节点 worklist 信息, 说明当前节点已经完成了.
-			// * 不让当前的操作员能看到自己的工作，保持自己是已经完成的状态.
-			//
+         if (gwls.size() == 0)
+         {
+             // 说明第一次到达河流节点。
+             current_gwls = this.Func_GenerWorkerLists(this.town);
+             gwls = current_gwls;
 
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1 WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr
-					+ "FID AND FK_Node=" + dbStr + "FK_Node";
-			ps.Add("WorkID", this.getWorkID());
-			ps.Add("FID", this.getHisWork().getFID());
-			ps.Add("FK_Node", this.getHisNode().getNodeID());
-			DBAccess.RunSQL(ps);
+             GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
+             gwf.setFK_Node(nd.getNodeID());
+             gwf.setNodeName(nd.getName());
+             gwf.setTodoEmpsNum( gwls.size()) ;
 
-			this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
-			this.getHisGenerWorkFlow().setNodeName(nd.getName());
+             String todoEmps = "";
+             for (GenerWorkerList  item : gwls.ToJavaList())
+                 todoEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
 
-			//
-			// * 其次更新当前节点的状态与完成时间.
-			//
-			this.getHisWork().Update(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
-			Nodes fromNds = nd.getFromNodes();
-			String nearHLNodes = "";
-			for (Node mynd : fromNds.ToJavaList()) {
-				if (mynd.getHisNodeWorkType() == NodeWorkType.SubThreadWork) {
-					nearHLNodes += "," + mynd.getNodeID();
-				}
-			}
-			nearHLNodes = nearHLNodes.substring(1);
+             gwf.setTodoEmps(todoEmps);
+             gwf.setWFState( WFState.Runing);
+             gwf.Update();
+         }
 
-			ps = new Paras();
-			ps.SQL = "SELECT FK_Emp,FK_EmpText FROM WF_GenerWorkerList WHERE FK_Node IN (" + nearHLNodes + ") AND FID="
-					+ dbStr + "FID AND IsPass=1 AND IsEnable=1";
-			ps.Add("FID", this.getHisWork().getFID());
-			DataTable dt_worker = BP.DA.DBAccess.RunSQLReturnTable(ps);
-			String numStr = "@如下分流人员已执行完成:";
-			for (DataRow dr : dt_worker.Rows) {
-				numStr += "@" + dr.get(0) + "," + dr.get(1);
-			}
+         String FK_Emp = "";
+         String toEmpsStr = "";
+         String emps = "";
+         for (GenerWorkerList wl : gwls.ToJavaList())
+         {
+             toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
+             if (gwls.size() == 1)
+                 emps = toEmpsStr;
+             else
+                 emps += "@" + toEmpsStr;
+         }
+ 
 
-			// 求子线程数量.
-			ps = new Paras();
-			ps.SQL = "SELECT DISTINCT(WorkID) FROM WF_GenerWorkerList WHERE FK_Node IN (" + nearHLNodes + ") AND FID="
-					+ dbStr + "FID AND IsPass=1 AND IsEnable=1";
-			ps.Add("FID", this.getHisWork().getFID());
-			DataTable dt_thread = BP.DA.DBAccess.RunSQLReturnTable(ps);
-			java.math.BigDecimal ok = new java.math.BigDecimal(dt_thread.Rows.size());
+         //#region 复制主表数据. edit 2014-11-20 向合流点汇总数据.
+         //复制当前节点表单数据.
+         heLiuWK.setFID( 0);
+         heLiuWK.setRec( FK_Emp);
+         heLiuWK.setEmps(emps);
+         heLiuWK.setOID( this.getHisWork().getFID());
+         heLiuWK.DirectUpdate(); //在更新一次.
 
-			ps = new Paras();
-			ps.SQL = "SELECT  COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE IsEnable=1 AND FID=" + dbStr
-					+ "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
-			ps.Add("FID", this.getHisWork().getFID());
-			java.math.BigDecimal all = new java.math.BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-			java.math.BigDecimal passRate = ok.divide(all, 2).multiply(new BigDecimal(100));
-			numStr += "@您是第(" + ok + ")到达此节点上的处理人，共启动了(" + all + ")个子流程。";
-			if (nd.getPassRate().compareTo(passRate) <= 0) {
-				// 说明全部的人员都完成了，就让合流点显示它。
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0  WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-						+ dbStr + "WorkID ";
-				ps.Add("FK_Node", nd.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				DBAccess.RunSQL(ps);
+         /* 把数据复制到rpt数据表里. */
+         this.rptGe.setOID(this.getHisWork().getFID());
+         this.rptGe.RetrieveFromDBSources();
+         this.rptGe.Copy(this.getHisWork());
+         this.rptGe.DirectUpdate();
+         //#endregion 复制主表数据.
 
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkFlow SET   FK_Node=" + dbStr + "FK_Node WHERE  WorkID=" + dbStr
-						+ "WorkID ";
-				ps.Add("FK_Node", nd.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				DBAccess.RunSQL(ps);
+         // 产生合流汇总明细表数据.
+       //  this.GenerHieLiuHuiZhongDtlData_2013(nd);
 
-				numStr += "@下一步工作(" + nd.getName() + ")已经启动。";
-			}
+         //#endregion 处理合流节点表单数据
 
-			if (myfh.getToEmpsMsg().contains("(")) {
-				String FK_Emp1 = myfh.getToEmpsMsg().substring(0, myfh.getToEmpsMsg().lastIndexOf('('));
-				this.AddToTrack(ActionType.ForwardHL, FK_Emp1, myfh.getToEmpsMsg(), nd.getNodeID(), nd.getName(), null);
-			}
-			this.addMsg("ToHeLiuInfo", "@流程已经运行到合流节点[" + nd.getName() + "]，@您的工作已经发送给如下人员[" + myfh.getToEmpsMsg() + "]。"
-					+ this.GenerWhySendToThem(this.getHisNode().getNodeID(), nd.getNodeID()) + numStr);
-		} else {
-			// 说明第一次到达河流节点。
-			current_gwls = this.Func_GenerWorkerLists(this.town);
-			gwls = current_gwls;
-		}
+         /* 合流点需要等待各个分流点全部处理完后才能看到它。*/
+         String info = "";
+         String sql1 = "";
+//#warning 对于多个分合流点可能会有问题。
+         ps = new Paras();
+         ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr + "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
+         ps.Add("FID", this.getHisWork().getFID());
 
-		String FK_Emp = "";
-		String toEmpsStr = "";
-		String emps = "";
-		for (GenerWorkerList wl : gwls.ToJavaList()) {
-			toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
-			if (gwls.size() == 1) {
-				emps = toEmpsStr;
-			} else {
-				emps += "@" + toEmpsStr;
-			}
-		}
+         java.math.BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
+			java.math.BigDecimal passRate1 = numAll1.divide(numAll1, 2).multiply(new BigDecimal(100));
+			if (nd.getPassRate().compareTo(passRate1) <= 0) {
+				
+		 
+             ps = new Paras();
+             ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
+             ps.Add("FK_Node", nd.getNodeID());
+             ps.Add("WorkID", this.getHisWork().getFID());
+             DBAccess.RunSQL(ps);
 
-		// if (string.IsNullOrEmpty(emps) == true)
-		// {
-		// /*没有找到，就到数据库里在找.*/
-		// GenerWorkFlow gwf = new GenerWorkFlow(this.HisWork.FID);
-		// emps = gwf.TodoEmps;
-		// }
+             ps = new Paras();
+             ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
+             ps.Add("FK_Node", nd.getNodeID());
+             ps.Add("NodeName", nd.getName());
+             ps.Add("WorkID", this.getHisWork().getFID());
+             DBAccess.RunSQL(ps);
 
-		//
-		// * 更新它的节点 worklist 信息, 说明当前节点已经完成了.
-		// * 不让当前的操作员能看到自己的工作。
-		//
+             info = "@下一步合流点(" + nd.getName() + ")已经启动。";
+         }
+         else
+         {
+//#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
+             ps = new Paras();
+             ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
+             ps.Add("FK_Node", nd.getNodeID());
+             ps.Add("WorkID", this.getHisWork().getOID());
+             DBAccess.RunSQL(ps);
+         }
 
-		// 设置父流程状态 设置当前的节点为:
-		myfh.Update(GenerFHAttr.FK_Node, nd.getNodeID(), GenerFHAttr.ToEmpsMsg, toEmpsStr);
-
-		/// #region 处理合流节点表单数据。
-
-		/// #region 复制主表数据. edit 2014-11-20 向合流点汇总数据.
-		// 复制当前节点表单数据.
-		heLiuWK.setFID(0);
-		heLiuWK.setRec(FK_Emp);
-		heLiuWK.setEmps(emps);
-		heLiuWK.setOID(this.getHisWork().getFID());
-		heLiuWK.DirectUpdate(); // 在更新一次.
-
-		// 把数据复制到rpt数据表里.
-		this.rptGe.setOID(this.getHisWork().getFID());
-		this.rptGe.RetrieveFromDBSources();
-		this.rptGe.Copy(this.getHisWork());
-		this.rptGe.DirectUpdate();
-
-		/// #endregion 复制主表数据.
-
-		/// #region 复制附件。
-		if (this.getHisNode().getMapData().getFrmAttachments().size() != 0) {
-			FrmAttachmentDBs athDBs = new FrmAttachmentDBs("ND" + this.getHisNode().getNodeID(),
-					(new Long(this.getWorkID())).toString());
-			if (athDBs.size() > 0) {
-				// 说明当前节点有附件数据
-				int idx = 0;
-				for (FrmAttachmentDB athDB : athDBs.ToJavaList()) {
-					idx++;
-					FrmAttachmentDB athDB_N = new FrmAttachmentDB();
-					athDB_N.Copy(athDB);
-					athDB_N.setFK_MapData("ND" + nd.getNodeID());
-					athDB_N.setMyPK(
-							athDB_N.getMyPK().replace("ND" + this.getHisNode().getNodeID(), "ND" + nd.getNodeID()) + "_"
-									+ idx);
-					athDB_N.setFK_FrmAttachment(athDB_N.getFK_FrmAttachment()
-							.replace("ND" + this.getHisNode().getNodeID(), "ND" + nd.getNodeID()));
-					athDB_N.setRefPKVal((new Long(this.getHisWork().getFID())).toString());
-					athDB_N.Save();
-				}
-			}
-		}
-
-		/// #endregion 复制附件。
-
-		/// #region 复制EleDB。
-		if (this.getHisNode().getMapData().getFrmEles().size() != 0) {
-			FrmEleDBs eleDBs = new FrmEleDBs("ND" + this.getHisNode().getNodeID(),
-					(new Long(this.getWorkID())).toString());
-			if (eleDBs.size() > 0) {
-				// 说明当前节点有附件数据
-				int idx = 0;
-				for (FrmEleDB eleDB : eleDBs.ToJavaList()) {
-					idx++;
-					FrmEleDB eleDB_N = new FrmEleDB();
-					eleDB_N.Copy(eleDB);
-					eleDB_N.setFK_MapData("ND" + nd.getNodeID());
-					eleDB_N.setMyPK(
-							eleDB_N.getMyPK().replace("ND" + this.getHisNode().getNodeID(), "ND" + nd.getNodeID()));
-
-					eleDB_N.setRefPKVal((new Long(this.getHisWork().getFID())).toString());
-					eleDB_N.Save();
-				}
-			}
-		}
-
-		/// #endregion 复制EleDB。
-
-		// 产生合流汇总明细表数据.
-		this.GenerHieLiuHuiZhongDtlData_2013(nd);
-
-		/// #endregion 处理合流节点表单数据
-
-		// 合流点需要等待各个分流点全部处理完后才能看到它。
-		String info = "";
-		String sql1 = "";
-
-		/// #warning 对于多个分合流点可能会有问题。
-		ps = new Paras();
-		ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
-				+ "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
-		ps.Add("FID", this.getHisWork().getFID());
-		java.math.BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-		java.math.BigDecimal passRate1 = numAll1.divide(numAll1, 2).multiply(new BigDecimal(100));
-		if (nd.getPassRate().compareTo(passRate1) <= 0) {
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-					+ dbStr + "WorkID";
-			ps.Add("FK_Node", nd.getNodeID());
-			ps.Add("WorkID", this.getHisWork().getFID());
-			DBAccess.RunSQL(ps);
-
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr
-					+ "NodeName WHERE WorkID=" + dbStr + "WorkID";
-			ps.Add("FK_Node", nd.getNodeID());
-			ps.Add("NodeName", nd.getName());
-			ps.Add("WorkID", this.getHisWork().getFID());
-			DBAccess.RunSQL(ps);
-
-			info = "@下一步合流点(" + nd.getName() + ")已经启动。";
-		} else {
-
-			/// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-					+ dbStr + "WorkID";
-			ps.Add("FK_Node", nd.getNodeID());
-			ps.Add("WorkID", this.getHisWork().getOID());
-			DBAccess.RunSQL(ps);
-		}
-
-		this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
-		this.getHisGenerWorkFlow().setNodeName(nd.getName());
-
-		// ps = new Paras();
-		// ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + (int)WFState.Runing
-		// + ", FK_Node=" + nd.NodeID + ",NodeName='" + nd.Name + "' WHERE
-		// WorkID=" + this.HisWork.FID;
-		// ps.Add("FK_Node", nd.NodeID);
-		// ps.Add("NodeName", nd.Name);
-		// ps.Add("WorkID", this.HisWork.FID);
-		// DBAccess.RunSQL(ps);
-		this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps, SendReturnMsgType.SystemMsg);
-
-		if (myfh.getFK_Node() != nd.getNodeID()) {
-			this.addMsg("HeLiuInfo", "@当前工作已经完成，流程已经运行到合流节点[" + nd.getName() + "]。@您的工作已经发送给如下人员[" + toEmpsStr
-					+ "]。@您是第一个到达此节点的处理人." + info);
-		} else {
-			this.addMsg("HeLiuInfo", "@下一步的工作处理人[" + emps + "]" + info, SendReturnMsgType.Info);
-		}
+         this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
+         this.getHisGenerWorkFlow().setNodeName(nd.getName());
+  
+         this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps, SendReturnMsgType.SystemMsg);
+         this.addMsg("HeLiuInfo", "@下一步的工作处理人[" + emps + "]" + info, SendReturnMsgType.Info);
+		
 	}
 
 	/**

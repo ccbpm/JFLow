@@ -274,6 +274,29 @@ public class FindWorker
 			String strs = town.getHisNode().getDeliveryParas();
 			if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStarter)
 			{
+				
+				 long myworkid = this.currWn.getWorkID();
+                 if (this.currWn.getHisWork().getFID() != 0)
+                     myworkid = this.currWn.getHisWork().getFID();
+                 dt = DBAccess.RunSQLReturnTable("SELECT Starter No, StarterName Name FROM WF_GenerWorkFlow WHERE WorkID=" + myworkid);
+                 if (dt.Rows.size() == 1)
+                     return dt;
+
+
+                 /* 有可能当前节点就是第一个节点，那个时间还没有初始化数据，就返回当前人. */
+                 if (this.currWn.getHisNode().getIsStartNode())
+                 {
+                		DataRow dr = dt.NewRow();
+						dr.setValue(0, BP.Web.WebUser.getNo());
+						dt.Rows.add(dr);
+						return dt;
+                 }
+
+                 if (dt.Rows.size() == 0)
+                     throw new RuntimeException("@流程设计错误，到达的节点（" + town.getHisNode().getName() + "）无法找到开始节点的工作人员。");
+                 else
+                     return dt;
+				
 //				//找开始节点的处理人员. 
 //				strs = Integer.parseInt(this.fl.getNo()) + "01";
 //				ps = new Paras();
@@ -289,6 +312,8 @@ public class FindWorker
 //					ps.Add("OID", this.WorkID);
 //				}
 				//@于庆海翻译，去掉上部分.
+                 
+                 /*
 				dt = DBAccess.RunSQLReturnTable("SELECT Starter No, StarterName Name FROM WF_GenerWorkFlow WHERE WorkID=" + this.currWn.getHisWork().getFID() + " OR WorkID=" + this.WorkID);
 				if (dt.Rows.size() == 1)
 				{
@@ -313,7 +338,8 @@ public class FindWorker
 					{
 						return dt;
 					}
-				}
+				}*/
+                 
 			}
 
 			// 首先从本流程里去找。

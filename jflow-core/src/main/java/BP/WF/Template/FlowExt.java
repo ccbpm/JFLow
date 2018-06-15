@@ -1428,8 +1428,7 @@ public class FlowExt extends EntityNoName
 			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE WF_GenerFH SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE FID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQLs(sql);
+			 
 		}
 		Emp emp1 = new Emp("admin");
 		BP.Web.WebUser.SignInOfGener(emp1);
@@ -1485,8 +1484,7 @@ public class FlowExt extends EntityNoName
 			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE WF_GenerFH SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE FID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
-			DBAccess.RunSQLs(sql);
+		 
 		}
 		Emp emp1 = new Emp("admin");
 		BP.Web.WebUser.SignInOfGener(emp1);

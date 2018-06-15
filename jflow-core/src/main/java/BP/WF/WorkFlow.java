@@ -227,7 +227,7 @@ public class WorkFlow
 			// DBAccess.RunSQL("DELETE FROM WF_ForwardWork WHERE WorkID=" + workID);
 
 			//删除它的工作.
-			DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE  FID=" + workID);
+		 
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE (WorkID=" + workID + " OR FID=" + workID + " ) AND FK_Flow='" + flowNo + "'");
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE (WorkID=" + workID + " OR FID=" + workID + " ) AND FK_Flow='" + flowNo + "'");
 
@@ -308,7 +308,7 @@ public class WorkFlow
 			// DBAccess.RunSQL("DELETE FROM WF_ForwardWork WHERE WorkID=" + this.WorkID);
 
 			//删除它的工作.
-			//DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE  FID=" + this.WorkID + " AND FK_Flow='" + this.HisFlow.No + "'");
+		
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE (WorkID=" + this.getWorkID() + " ) AND FK_Flow='" + this.getHisFlow().getNo() + "'");
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE (WorkID=" + this.getWorkID() + " ) AND FK_Flow='" + this.getHisFlow().getNo() + "'");
 
@@ -463,8 +463,7 @@ public class WorkFlow
 		// 删除退回.
 		DBAccess.RunSQL("DELETE FROM WF_ReturnWork WHERE WorkID=" + workid);
 
-		//删除它的工作.
-		DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE  FID=" + workid + " AND FK_Flow='" + flowNo + "'");
+		//删除它的工作.		 
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE (WorkID=" + workid + " OR FID=" + workid + " ) AND FK_Flow='" + flowNo + "'");
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE (WorkID=" + workid + " OR FID=" + workid + " ) AND FK_Flow='" + flowNo + "'");
 
@@ -530,7 +529,7 @@ public class WorkFlow
 			// DBAccess.RunSQL("DELETE FROM WF_ForwardWork WHERE WorkID=" + this.WorkID);
 
 			//删除它的工作.
-			//DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE  FID=" + this.WorkID + " AND FK_Flow='" + this.HisFlow.No + "'");
+		 
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE WorkID=" + this.getWorkID());
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID());
 
@@ -701,7 +700,6 @@ public class WorkFlow
 			DBAccess.RunSQL("DELETE FROM WF_ReturnWork WHERE WorkID=" + this.getWorkID());
 
 			//删除它的工作.
-			DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE  FID=" + this.getWorkID() + " AND FK_Flow='" + this.getHisFlow().getNo() + "'");
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE (WorkID=" + this.getWorkID() + " OR FID=" + this.getWorkID() + " ) AND FK_Flow='" + this.getHisFlow().getNo() + "'");
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE (WorkID=" + this.getWorkID() + " OR FID=" + this.getWorkID() + " ) AND FK_Flow='" + this.getHisFlow().getNo() + "'");
 
@@ -948,7 +946,7 @@ public class WorkFlow
 			case 1:
 				BP.DA.DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow  WHERE FID=" + gwf.getFID() + " OR WorkID=" + gwf.getFID());
 				BP.DA.DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE FID=" + gwf.getFID() + " OR WorkID=" + gwf.getFID());
-				BP.DA.DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE FID=" + gwf.getFID());
+				 
 
 				Work tempVar = this.getHisFlow().getHisStartNode().getHisWork();
 				StartWork wk = (StartWork)((tempVar instanceof StartWork) ? tempVar : null);
@@ -1173,9 +1171,7 @@ public class WorkFlow
 
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
-		ps.SQL = "DELETE FROM WF_GenerFH WHERE FID=" + dbstr + "FID";
-		ps.Add(GenerFHAttr.FID, this.getWorkID());
-		DBAccess.RunSQL(ps);
+	 
 
 		if (Glo.getIsDeleteGenerWorkFlow() == true)
 		{
@@ -1277,28 +1273,7 @@ public class WorkFlow
 		//    msg = "流程成功结束.";
 		return msg;
 	}
-	public final String GenerFHStartWorkInfo() throws Exception
-	{
-		String msg = "";
-		DataTable dt = DBAccess.RunSQLReturnTable("SELECT Title,RDT,Rec,OID FROM ND" + this.getStartNodeID() + " WHERE FID=" + this.getFID());
-		switch (dt.Rows.size())
-		{
-			case 0:
-				Node nd = new Node(this.getStartNodeID());
-				throw new RuntimeException("@没有找到他们开始节点的数据，流程异常。FID=" + this.getFID() + "，节点：" + nd.getName() + "节点ID：" + nd.getNodeID());
-			case 1:
-				msg = String.format("@发起人： %1$s  日期：%2$s 发起的流程 标题：%3$s ，已经成功完成。", dt.Rows.get(0).getValue("Rec").toString(), dt.Rows.get(0).getValue("RDT").toString(), dt.Rows.get(0).getValue("Title").toString());
-				break;
-			default:
-				msg = "@下列(" + dt.Rows.size() + ")位人员发起的流程已经完成。";
-				for (DataRow dr : dt.Rows)
-				{
-					msg += "<br>发起人：" + dr.getValue("Rec") + " 发起日期：" + dr.getValue("RDT") + " 标题：" + dr.getValue("Title") + "<a href='./../../WF/WFRpt.jsp?WorkID=" + dr.getValue("OID") + "&FK_Flow=" + this.getHisFlow().getNo() + "' target=_blank>详细...</a>";
-				}
-				break;
-		}
-		return msg;
-	}
+	 
 	public final int getStartNodeID()
 	{
 		return Integer.parseInt(this.getHisFlow().getNo() + "01");

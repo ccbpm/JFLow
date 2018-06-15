@@ -21,6 +21,7 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.Sys.FrmTree;
+import BP.Sys.FrmTreeAttr;
 import BP.Sys.MapData;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
@@ -1119,18 +1120,15 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
           }
           //检查根目录是否符合规范.
           FrmTree ft = new FrmTree();
-          ft.setNo( "1");
-          if (ft.RetrieveFromDBSources() == 0)
+         int i=  ft.Retrieve(FrmTreeAttr.ParentNo, "0");          
+          if (i== 0)
           {
               ft.setName("表单库");
               ft.setParentNo("0");
               ft.Insert();
           }
-          if (ft.getParentNo().equals("0") == false)
-          {
-              ft.setParentNo("0");
-              ft.Update();
-          }
+
+
          // #endregion 检查数据是否符合规范.
 
           //组织数据源.

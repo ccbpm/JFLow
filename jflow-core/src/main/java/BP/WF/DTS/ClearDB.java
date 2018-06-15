@@ -78,7 +78,7 @@ public class ClearDB extends Method
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist");
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow");
 		DBAccess.RunSQL("DELETE FROM WF_ReturnWork");
-		DBAccess.RunSQL("DELETE FROM WF_GenerFH");
+		 
 		DBAccess.RunSQL("DELETE FROM WF_SelectAccper");
 		DBAccess.RunSQL("DELETE FROM WF_TransferCustom");
 		DBAccess.RunSQL("DELETE FROM WF_RememberMe");

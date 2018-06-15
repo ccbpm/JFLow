@@ -5326,7 +5326,7 @@ public class Flow extends BP.En.EntityNoName
 
 		String sqlIn = " WHERE ReturnNode IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
 		DBAccess.RunSQL("DELETE FROM WF_ReturnWork " + sqlIn);
-		DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE FK_Flow='" + this.getNo() + "'");
+		 
 		DBAccess.RunSQL("DELETE FROM WF_SelectAccper " + sql);
 		DBAccess.RunSQL("DELETE FROM WF_TransferCustom " + sql);
 		// DBAccess.RunSQL("DELETE FROM WF_FileManager " + sql);

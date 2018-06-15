@@ -115,9 +115,7 @@ public class WorkReturn
 
 		// 删除FH, 不管是否有这笔数据.
 		ps.clear();
-		ps.SQL = "DELETE FROM WF_GenerFH WHERE FID=" + dbStr + "FID";
-		ps.Add("FID", this.WorkID);
-		DBAccess.RunSQL(ps);
+		 
 
 		//如果不是退回并原路返回，就需要清除 两个节点之间的数据, 包括WF_GenerWorkerList的数据.
 		if (this.ReturnToNode.getIsStartNode() == true)
@@ -815,7 +813,7 @@ public class WorkReturn
 		//删除流程控制数据。
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FID=" + this.WorkID);
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.WorkID);
-		DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE FID=" + this.WorkID);
+		 
 
 		return ExeReturn1_1();
 	}
@@ -1282,7 +1280,7 @@ public class WorkReturn
 
 				DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FID=" + dbStr + "WorkID", "WorkID", this.WorkID);
 				DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + dbStr + "WorkID", "WorkID", this.WorkID);
-				DBAccess.RunSQL("DELETE FROM WF_GenerFH WHERE FID=" + dbStr + "WorkID", "WorkID", this.WorkID);
+				 
 			}
 			DeleteToNodesData(nd.getHisToNodes());
 		}

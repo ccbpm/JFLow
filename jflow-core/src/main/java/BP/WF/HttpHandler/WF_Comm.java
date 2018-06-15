@@ -1790,7 +1790,7 @@ public class WF_Comm extends WebContralBase {
 		String sql = sqlXml.getSQL();
 		String[] strs = paras.split("@");
 		for (String str : strs) {
-			if (str == null || str == "")
+			if (DataType.IsNullOrEmpty(str))
 				continue;
 			// 参数.
 			String[] p = str.split("=");

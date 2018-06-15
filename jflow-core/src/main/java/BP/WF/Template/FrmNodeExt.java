@@ -63,9 +63,9 @@ public class FrmNodeExt extends EntityMyPK{
             map.AddMyPK();
 
             map.AddDDLEntities(FrmNodeAttr.FK_Frm, null, "表单", new MapDatas(), false);
+            map.AddTBString(FrmNodeAttr.FK_Flow, null, "流程编号", true, true, 0, 4, 20);
             map.AddTBInt(FrmNodeAttr.FK_Node, 0, "节点ID", true, true);
-            map.AddTBInt(FrmNodeAttr.FK_Flow, 0, "流程ID", true, true);
-
+ 
             map.AddBoolean(FrmNodeAttr.IsPrint, false, "是否可以打印", true, true);
             map.AddBoolean(FrmNodeAttr.IsEnableLoadData, false, "是否启用装载填充事件", true, true);
             map.AddDDLSysEnum(FrmNodeAttr.FrmSln, 0, "表单控制方案", true, true, FrmNodeAttr.FrmSln,

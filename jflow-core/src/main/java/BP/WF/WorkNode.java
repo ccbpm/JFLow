@@ -2235,45 +2235,7 @@ public class WorkNode {
 		ps.Add("FK_Node", toNode.getNodeID());
 
 		/// #endregion 删除到达节点的子线程如果有，防止退回信息垃圾数据问题，如果退回处理了这个部分就不需要处理了.
-
-		/// #region GenerFH
-		GenerFH fh = new GenerFH();
-		fh.setFID(this.getWorkID());
-		if (this.getHisNode().getIsStartNode() || fh.getIsExits() == false) {
-			try {
-				fh.setTitle(this.getHisWork().GetValStringByKey(StartWorkAttr.Title));
-			} catch (RuntimeException ex) {
-				BP.Sys.MapAttr attr = new BP.Sys.MapAttr();
-				attr.setFK_MapData("ND" + this.getHisNode().getNodeID());
-				attr.setHisEditType(BP.En.EditType.UnDel);
-				attr.setKeyOfEn("Title");
-				int i = attr.Retrieve(MapAttrAttr.FK_MapData, attr.getFK_MapData(), MapAttrAttr.KeyOfEn,
-						attr.getKeyOfEn());
-				if (i == 0) {
-					attr.setKeyOfEn("Title");
-					attr.setName("标题"); // "流程标题";
-					attr.setMyDataType(BP.DA.DataType.AppString);
-					attr.setUIContralType(UIContralType.TB);
-					attr.setLGType(FieldTypeS.Normal);
-					attr.setUIVisible(true);
-					attr.setUIIsEnable(true);
-					attr.setUIIsLine(true);
-					attr.setMinLen(0);
-					attr.setMaxLen(200);
-					attr.setIdx(-100);
-					attr.Insert();
-				}
-				fh.setTitle(
-						this.getExecer() + "-" + this.getExecerName() + " @ " + DataType.getCurrentDataTime() + " ");
-			}
-			fh.setRDT(DataType.getCurrentData());
-			fh.setFID(this.getWorkID());
-			fh.setFK_Flow(this.getHisNode().getFK_Flow());
-			fh.setFK_Node(this.getHisNode().getNodeID());
-			fh.setGroupKey(this.getExecer());
-			fh.setWFState(0);
-			fh.Save();
-		}
+  
 
 		/// #endregion GenerFH
 

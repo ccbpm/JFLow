@@ -83,11 +83,15 @@ import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodeComponent;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
+import BP.WF.Template.WhoIsPK;
 import BP.WF.XML.EventListDtlList;
 import BP.Web.WebUser;
 import cn.jflow.common.util.ContextHolderUtils;
 
 public class WF_CCForm extends WebContralBase {
+	
+//	private static final String WhoIsPK = null;
+
 	/**
 	 * 初始化函数
 	 * 
@@ -939,9 +943,10 @@ public class WF_CCForm extends WebContralBase {
 	}
 
 	public final String DtlFrm_Init() throws Exception {
+		
 		long pk = this.getRefOID();
 		if (pk == 0) {
-			pk = Integer.parseInt(this.getOID());
+			pk =this.getOID();
 		}
 		if (pk == 0) {
 			pk = this.getWorkID();
@@ -973,7 +978,7 @@ public class WF_CCForm extends WebContralBase {
 		try {
 
 			GEEntity en = new GEEntity(this.getEnsName());
-			en.setOID(Long.parseLong(this.getOID()));
+			en.setOID( this.getOID());
 			en.Delete();
 
 			return "删除成功.";
@@ -1005,8 +1010,8 @@ public class WF_CCForm extends WebContralBase {
 
 		long pk = this.getRefOID();
 		if (pk == 0) {
-			if (!StringUtils.isEmpty(this.getOID()))
-				pk = Long.parseLong(this.getOID());
+			 
+				pk = this.getOID();
 		}
 		if (pk == 0) {
 			pk = this.getWorkID();
@@ -1241,6 +1246,50 @@ public class WF_CCForm extends WebContralBase {
 	public String FrmGener_Save() throws Exception {
 		// 保存主表数据.
 		GEEntity en = new GEEntity(this.getEnsName());
+		
+		
+		
+		// #region 求出 who is pk 值.
+         long pk = this.getRefOID();
+         if (pk == 0)
+             pk = this.getOID();
+         if (pk == 0)
+             pk = this.getWorkID();
+
+         if (this.getFK_Node() != 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false)
+         {
+             /*说明是流程调用它， 就要判断谁是表单的PK.*/
+             FrmNode fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
+             
+          
+             switch (fn.getWhoIsPK())
+             {
+                 case FID:
+                     pk = this.getFID();
+                     if (pk == 0)
+                         throw new Exception("@没有接收到参数FID");
+                     break;
+                 case PWorkID: /*父流程ID*/
+                     pk = this.getPWorkID();
+                     if (pk == 0)
+                         throw new Exception("@没有接收到参数PWorkID");
+                     break;
+                 case OID:
+                 default:
+                     break;
+             }
+             
+
+             if (fn.getFrmSln() == 2)
+             {
+                 /*如果是不可以编辑*/
+                 return "err@不可以,该表单不允许编辑..";
+             }
+         }
+         //#endregion  求who is PK.
+
+         en.setOID(pk);
+         
 		en.setOID(this.getRefOID());
 		int i = en.RetrieveFromDBSources();
 
@@ -1274,7 +1323,7 @@ public class WF_CCForm extends WebContralBase {
 			/// #region 求出 who is pk 值.
 			long pk = this.getRefOID();
 			if (pk == 0) {
-				pk = Long.parseLong(this.getOID());
+				pk =  this.getOID();
 			}
 
 			if (pk == 0) {

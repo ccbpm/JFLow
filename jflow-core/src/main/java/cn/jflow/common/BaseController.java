@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.protocol.HttpContext;
 import org.springframework.context.ApplicationContext;
 
+import BP.DA.DataType;
 import BP.Tools.StringHelper;
 import cn.jflow.common.util.ContextHolderUtils;
 
@@ -107,33 +108,47 @@ public class BaseController {
 
 		return s;
 	}
-	public final String getOID()
+	
+	public String GetRequestVal(String key)
 	{
-		return ContextHolderUtils.getRequest().getParameter("OID");
+		return ContextHolderUtils.getRequest().getParameter(key);
+	}
+	
+	public final Long getOID()
+	{
+		 String str = this.GetRequestVal("RefOID"); // context.Request.QueryString["RefOID"];
+         if (DataType.IsNullOrEmpty(str) == true)
+             str = this.GetRequestVal("OID");  //context.Request.QueryString["OID"];
+
+         if (DataType.IsNullOrEmpty(str) == true)
+             str="0";
+
+         return Long.parseLong(str);
+		
 	}
 	public String getFK_Flow()
 	{
-		return ContextHolderUtils.getRequest().getParameter("FK_Flow");
+		return GetRequestVal("FK_Flow");
 	}
 	public String getEnName()
 	{
-		return ContextHolderUtils.getRequest().getParameter("EnName");
+		return GetRequestVal("EnName");
 	}
 	public String getRefNo()
 	{
-		return ContextHolderUtils.getRequest().getParameter("RefNo");
+		return GetRequestVal("RefNo");
 	}
 	public String getEnsName()
 	{
-		return ContextHolderUtils.getRequest().getParameter("EnsName");
+		return GetRequestVal("EnsName");
 	}
 	public final String getFK_Emp()
 	{
-		return ContextHolderUtils.getRequest().getParameter("FK_Emp");
+		return GetRequestVal("FK_Emp");
 	}
 	public final String getPageID()
 	{
-		return ContextHolderUtils.getRequest().getParameter("PageID");
+		return GetRequestVal("PageID");
 	}
 	public long getWorkID()
 	{
@@ -169,26 +184,26 @@ public class BaseController {
 	}	
 	public final String getTB_Doc()
 	{
-		return ContextHolderUtils.getRequest().getParameter("TB_Doc");
+		return GetRequestVal("TB_Doc");
 	}	
 	public final int getNodeID()
 	{
-		String s = ContextHolderUtils.getRequest().getParameter("NodeID");
+		String s = GetRequestVal("NodeID");
 		if (s == null || s.equals(""))
 		{
-			s = ContextHolderUtils.getRequest().getParameter("FK_Node");
+			s = GetRequestVal("FK_Node");
 		}
 		return Integer.parseInt(s);
 	}
 	public String getSID()
 	{
-		return ContextHolderUtils.getRequest().getParameter("SID");
+		return GetRequestVal("SID");
 	}
 	public int getRefOID()
     {
-            String s = ContextHolderUtils.getRequest().getParameter("RefOID");
+            String s = GetRequestVal("RefOID");
             if (s == null || s.equals("")||s.equals("null"))
-                s = ContextHolderUtils.getRequest().getParameter("OID");
+                s = GetRequestVal("OID");
             if (s == null || s.equals("")||s.equals("null"))
                 return 0;
             return Integer.valueOf(s);
@@ -202,7 +217,7 @@ public class BaseController {
 	
 	
 	public String getMyPK() {
-		String s = ContextHolderUtils.getRequest().getParameter("MyPK");
+		String s = GetRequestVal("MyPK");
 		return s;
 	}
 
@@ -314,28 +329,8 @@ public class BaseController {
 		String str = ContextHolderUtils.getRequest().getParameter("FID");
 		if (str == null || str.equals("")||str.equals("null"))
 			return 0;
-		return Long.valueOf(str);
-
+		return Long.valueOf(str); 
 	}
-
-//	public void setFID(String fID) {
-//		FID = fID;
-//	}
-
-//	public long getWorkID() {
-//		return Long.valueOf(WorkID);
-//	}
-//
-//	public void setWorkID(String workID) {
-//		WorkID = workID;
-//	}
-
-//	public String getFK_Flow() {
-//		return FK_Flow;
-//	}
-
-//	public void setFK_Flow(String fK_Flow) {
-//		FK_Flow = fK_Flow;
-//	}
+ 
 	
 }

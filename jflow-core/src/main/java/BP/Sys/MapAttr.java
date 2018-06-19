@@ -1100,7 +1100,8 @@ public class MapAttr extends EntityMyPK {
 		this.DoOrderUp(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.Idx);
 	}
 
-	public final void DoUp() throws Exception {
+     public final String DoUp() throws Exception {
+		
 		this.DoOrderUp(MapAttrAttr.GroupID, (new Integer(this.getGroupID())).toString(), MapAttrAttr.UIVisible, "1",
 				MapAttrAttr.Idx);
 
@@ -1110,6 +1111,7 @@ public class MapAttr extends EntityMyPK {
 			// attr.Idx = -1;
 			attr.Update("Idx", -1);
 		}
+		return "执行成功.";
 	}
 
 	/**

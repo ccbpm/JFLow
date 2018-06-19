@@ -17,7 +17,7 @@ public class MapFrameExt extends EntityMyPK
 	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
-		uac.IsDelete = false;
+		uac.IsDelete = true;
 		uac.IsInsert = false;
 		return uac;
 	}

@@ -89,6 +89,18 @@ public class MapFrameExt extends EntityMyPK
 		this.set_enMap( map);
 		return map;
 	}
+	
+	@Override
+    protected void afterDelete() throws Exception
+    {
+		  //删除分组信息.
+        GroupField gf = new GroupField();
+        gf.Delete(GroupFieldAttr.CtrlID,this.getMyPK());
+
+        super.afterDelete();
+    }
+
+    
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

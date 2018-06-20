@@ -477,7 +477,7 @@ public class CCFormParse
 	}
 	public static void SaveButton(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
-		FrmBtn btn = new FrmBtn();
+		FrmBtn btn = new FrmBtn(ctrlID);
 		btn.setMyPK(ctrlID);
 		btn.setFK_MapData(fk_mapdata);
 
@@ -487,7 +487,7 @@ public class CCFormParse
 		btn.setX(Float.parseFloat(vector.get(0).toString()));
 		btn.setY(Float.parseFloat(vector.get(1).toString()));
 		btn.setIsEnable(true);
-		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
+		/*for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
 			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
 			if (property == null || ! property.containsKey("property") || property.optString("property") == null)
@@ -517,7 +517,7 @@ public class CCFormParse
 			else
 			{
 			}
-		}
+		}*/
 		if (pks.contains("@" + btn.getMyPK() + "@") == true)
 		{
 			btn.DirectUpdate();
@@ -530,7 +530,7 @@ public class CCFormParse
 
 	public static void SaveHyperLink(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
-		FrmLink link = new FrmLink();
+		FrmLink link = new FrmLink(ctrlID);
 		link.setMyPK(ctrlID);
 		link.setFK_MapData(fk_mapdata);
 		//坐标
@@ -549,13 +549,13 @@ public class CCFormParse
 			}
 
 			String propertyLink = property.optString("property");
-			JSONObject valLink = property.getJSONObject("PropertyValue");
+			String valLink = property.optString("PropertyValue");
 
-			if (propertyLink.equals("primitives.0.str") || propertyLink.equals("SingleText"))
+			/*if (propertyLink.equals("primitives.0.str") || propertyLink.equals("SingleText"))
 			{
 					link.setText(valLink == null ? "" : valLink.toString());
-			}
-			else if (propertyLink.equals("primitives.0.style.fillStyle"))
+			}*/
+			if (propertyLink.equals("primitives.0.style.fillStyle"))
 			{
 					link.setFontColor(valLink == null ? "#FF000000" : valLink.toString());
 					fontStyle.append(String.format("color:%1$s;", link.getFontColor()));
@@ -594,16 +594,20 @@ public class CCFormParse
 					link.setFontColor(valLink == null ? "" : valLink.toString());
 					continue;
 			}
-			else if (propertyLink.equals("URL"))
+			/*else if (propertyLink.equals("URL"))
 			{
+					if(valLink == null) valLink=link.getURL();
+					
 					link.setURL(valLink == null ? "" : valLink.toString());
 					continue;
-			}
-			else if (propertyLink.equals("WinOpenModel"))
+			}*/
+			/*else if (propertyLink.equals("WinOpenModel"))
 			{
+				   if(valLink == null) valLink=link.getTarget();
+				   
 					link.setTarget(valLink == null ? "_blank" : valLink.toString());
 					continue;
-			}
+			}*/
 			else
 			{
 			}

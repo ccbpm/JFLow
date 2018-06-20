@@ -77,14 +77,14 @@ function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage) {
         projectName = basePath;
     var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal;
 
-    if (typeof ((parent && parent.OpenEasyUiDialog) || OpenEasyUiDialog) === "function") {
-        ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal)(url, "editSubGrid", '编辑', wWidth, wHeight, "icon-property", false, null, null, function () {
+    if (typeof ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal) === "function") {
+        ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal)(url ,"editSubGrid", '编辑', wWidth, wHeight, "icon-property", true, function(){}, null, function () {
             if (typeof InitPage === "function") {
                 InitPage.call();
             } else {
                 alert("请手动刷新表单");
             }
-        });
+        },"div_editSubGrid");
     } else {
         window.open(url);
     }
@@ -686,11 +686,12 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
     //获取表单中隐藏的表单元素的值
     var hiddens = $('input[type=hidden]');
-    //$.each(hiddens, function (i, hidden) {
-    //    if ($(hidden).attr("id").indexOf('TB_') == 0) {
-     //       //formArrResult.push($(hidden).attr("name") + '=' + $(hidden).val());
-      //  }
-   // });
+    $.each(hiddens, function (i, hidden) {
+    	var name = $(hidden).attr("id");
+        if (name.indexOf('TB_') == 0) {
+            formArrResult.push(name + '=' + $(hidden).val());
+        }
+    });
 
     if (!isCotainTextArea) {
         formArrResult = $.grep(formArrResult, function (value) {
@@ -1352,7 +1353,10 @@ function GenerWorkNode() {
                         /*只读的方案.*/
                         //alert("把表单设置为只读.");
                         SetFrmReadonly();
-                        //alert('ssssssssssss');
+                    }else if(frmNode.FrmSln == 2){
+                    	/* 自定义方案。 修改字段权限*/
+                    	SetFilesAuth(node.NodeID,node.FK_Flow,flowData.Sys_MapData[0].No);   //位置 CCForm/FrmEnd.js
+                    	
                     } else if (frmNode.FrmSln == 2) {
                         /* 自定义方案。 修改字段权限*/
                         SetFilesAuth(node.NodeID, node.FK_Flow, flowData.Sys_MapData[0].No);   //位置 CCForm/FrmEnd.js

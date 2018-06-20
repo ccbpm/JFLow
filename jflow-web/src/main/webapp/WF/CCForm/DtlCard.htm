@@ -93,6 +93,7 @@
                     td.text(text);
 
                     tbodyTr.append(td);
+                    console.log(td);
                 });
 
                 //添加操作列，删除、编辑
@@ -107,6 +108,7 @@
                     optionTD.append(optionDelete);
                 }
                 tbodyTr.append(optionTD);
+               
 
                 //点击行展开行后的内容
                 var tbodyExpTr = $('<tr></tr>');
@@ -115,6 +117,7 @@
                 //加载子表
                 var childTable = ChildDtls(mapDtls, tbodyExpTd, dataObj.OID);
                 tbodyExpTr.append(childTable);
+                console.log(childTable);
 
                 //添加两条数据行，tbodyTr 父级数据，tbodyExpTr 子级内容
                 tbody.append(tbodyTr);

@@ -48,7 +48,7 @@ figureSets["basic"] = {
         { figureFunction: null, name: "Poiner", image: "Poiner.png", CNName: "指针" },
         { figureFunction: null, name: CCForm_Controls.Line, image: "Line.png", CNName: "直线" },
         { figureFunction: "Label", name: CCForm_Controls.Label, image: "Label.png", CNName: "文字" },
-     //   { figureFunction: "Button", name: CCForm_Controls.Button, image: "Button.png", CNName: "按钮" },
+        { figureFunction: "Button", name: CCForm_Controls.Button, image: "Button.png", CNName: "按钮" },
         { figureFunction: "HyperLink", name: CCForm_Controls.HyperLink, image: "HyperLink.png", CNName: "超链接" },
         { figureFunction: "Image", name: CCForm_Controls.Image, image: "Img.png", CNName: "图片" }
 
@@ -178,7 +178,7 @@ function figure_HyperLink(x, y) {
     f.properties.push(new BuilderProperty('连接地址', 'URL', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('打开窗口', 'WinOpenModel', BuilderProperty.CCFormEnum));
 
-    var t2 = new Text("我的超连接.", x, y + FigureDefaults.radiusSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text("我的超链接.", x, y + FigureDefaults.radiusSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = "#0000ff";
     t2.underlined = true;
 

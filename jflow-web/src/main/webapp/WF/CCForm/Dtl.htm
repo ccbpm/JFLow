@@ -633,7 +633,7 @@
                               $('#dtlDiv div table tbody tr input[type=checkbox]').attr('disabled', 'disabled');
                           } else if ((sys_MapDtl.IsDelete == "1" || sys_MapDtl.IsInsert == "1") && sys_MapDtl.EditModel != 0) {
                               tbodyTrs.on("dblclick", function () {
-                                  updateRow($(this).data().data.OID, lsys_MapDtl.EditModel);
+                                  updateRow($(this).data().data.OID, sys_MapDtl.EditModel);
                               });
                           }
 

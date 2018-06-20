@@ -238,14 +238,13 @@ public class MapAttrString extends EntityMyPK
 		rm.ClassMethodName = this.toString() + ".DoTableList()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "列表查询模式";
-		rm.ClassMethodName = this.toString() + ".DoTableSearch()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
+		
+		 rm = new RefMethod();
+         rm.GroupName = "Pop返回值2018";
+         rm.Title = "表格条件查询";
+         rm.ClassMethodName = this.toString() + ".DoTableSearch()";
+         rm.refMethodType = RefMethodType.RightFrameOpen;
+         map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.GroupName = "Pop返回值2018";

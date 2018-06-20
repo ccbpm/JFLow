@@ -49,11 +49,17 @@ FigureCreateCommand.prototype = {
             switch (createFigureName) {
 
                 case CCForm_Controls.Label:
-                case CCForm_Controls.Button:
-                case CCForm_Controls.HyperLink:
                 case CCForm_Controls.Image:
                     createdFigure.CCForm_MyPK = Util.NewGUID();
                     break;
+                case CCForm_Controls.Button:	 
+                	createdFigure.CCForm_MyPK = Util.NewGUID();
+               	 	this.ButtonCreate(createdFigure,this.x,this.y);
+               	 	break;
+                case CCForm_Controls.HyperLink:
+               	 	createdFigure.CCForm_MyPK = Util.NewGUID();
+               	 	this.HyperLinkCreate(createdFigure,this.x,this.y);
+               	 	break;
                 case CCForm_Controls.TextBox:
                 case CCForm_Controls.TextBoxInt:
                 case CCForm_Controls.TextBoxFloat:
@@ -142,6 +148,32 @@ FigureCreateCommand.prototype = {
         else { //redo
             throw "Not implemented";
         }
+    },
+    ButtonCreate: function (createdFigure,x,y){
+    	// 定义参数，让其保存到数据库里。
+    	var btn = new Entity("BP.Sys.FrmBtn");
+    	btn.MyPK = createdFigure.CCForm_MyPK;
+    	btn.FK_MapData = CCForm_FK_MapData;
+    	btn.Text="";
+    	btn.EventType = 2;
+    	btn.EventContext="";
+    	btn.X = x;
+    	btn.Y = y;
+    	btn.Insert();
+    	
+    },
+    
+    HyperLinkCreate: function (createdFigure,x,y){
+    	// 定义参数，让其保存到数据库里。
+    	var frmLink = new Entity("BP.Sys.FrmLink");
+    	frmLink.MyPK = createdFigure.CCForm_MyPK;
+    	frmLink.FK_MapData = CCForm_FK_MapData;
+    	frmLink.Target="_blank";
+    	frmLink.Text = "我的超链接";
+    	frmLink.X = x;
+    	frmLink.Y = y;
+    	frmLink.Insert();
+    	
     },
     /**创建数据字段**/
     DataFieldCreate: function (createdFigure, x, y) {

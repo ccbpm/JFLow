@@ -112,5 +112,46 @@
   <GovWordRight No="14"  Name="协助办理。" />
   <GovWordRight No="15"  Name="派员参加。" />
   <GovWordRight No="16"  Name="提出拟办意见。" />
+
+ <!-- 处理名字多音字. -->
+  <PinYin No="阿"  Name="a" />
+  <PinYin No="挨"  Name="ai" />
+  <PinYin No="拗"  Name="niu" />
+  <PinYin No="扒"  Name="ba" />
+  <PinYin No="把"  Name="ba" />
+  <PinYin No="蚌"  Name="bang" />
+  <PinYin No="薄"  Name="bo" />
+  <PinYin No="堡"  Name="bao" />
+  <PinYin No="暴"  Name="bao" />
+  <PinYin No="辟"  Name="bi" />
+  <PinYin No="辟"  Name="pi" />
+  <PinYin No="扁"  Name="bian" />
+  <PinYin No="扁"  Name="pian" />
+  <PinYin No="泊"  Name="bo" />
+  <PinYin No="藏"  Name="cong" />
+  <PinYin No="禅"  Name="shon" />
+  <PinYin No="颤"  Name="chan" />
+  <PinYin No="单"  Name="shan" />
+  <PinYin No="度"  Name="du" />
+  <PinYin No="囤"  Name="tun" />
+  <PinYin No="给"  Name="gei" />
+  <PinYin No="会"  Name="hui" />
+  <PinYin No="奇"  Name="qi" />
+  <PinYin No="落"  Name="luo" />
+  <PinYin No="蔓"  Name="man" />
+  <PinYin No="强"  Name="qiang" />
+  <PinYin No="血"  Name="xie" />
+  <PinYin No="幢"  Name="zhuang" />
+  <PinYin No="红"  Name="hong" />
+  <PinYin No="万"  Name="wan" />
+  <PinYin No="盛"  Name="sheng" />
+  <PinYin No="汤"  Name="tang" />
+  <PinYin No="曾"  Name="zeng" />  
+  <PinYin No="解"  Name="xie" /> 
+  <PinYin No="贾"  Name="jia" /> 
+  <PinYin No="翟"  Name="zhai" />   
+  <PinYin No="查"  Name="zha" />
+  <PinYin No="家"  Name="jia" />
+  <PinYin No="邹"  Name="zou" />  
 </DS>
 

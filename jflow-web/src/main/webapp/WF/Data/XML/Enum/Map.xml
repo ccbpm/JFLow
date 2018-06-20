@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" standalone="yes"?>
 <NewDataSet>
 
+  <Item Key="UIRowStyleGlo" Name="表格数据行风格(应用全局)"
+  CH="@0=无风格@1=交替风格@2=鼠标移动@3=交替并鼠标移动"
+  EN="" JP="" RU=""  />
+  
+  <Item Key="MoveToShowWay" Name="移动到"
+  CH="@0=不显示@1=下拉列表0@2=平铺"
+  EN="" JP="" RU=""  />
+
+  
+
+  <Item Key="EditerType" Name="编辑器类型"
+  CH="@0=无编辑器@1=Sina编辑器0@2=FKEditer@3=KindEditor@4=百度的UEditor"
+  EN="" JP="" RU=""  />
+
 <Item Key="UploadFileCheck" Name="多附件文件上传控制"
 CH="@0=不控制@1=上传附件个数不能为0@2=每个类别下面的个数不能为0"
 EN="" JP="" RU=""  />
@@ -39,7 +53,7 @@ RU="" />
  RU="@1=字符串String@2=整数类型Int@3=浮点类型AppFloat@4=判断类型Boolean@5=双精度类型Double@6=日期型Date@7=时间类型Datetime@8=金额类型AppMoney"
 />
   
-  <Item Key="DtlShowModel"
+  <Item Key="EditModel"
     CH="@0=表格@1=卡片(自由模式)@2=卡片(傻瓜模式)"
     EN=""
     JP=""
@@ -63,7 +77,6 @@ RU="" />
   JP="@0=Disable@1=SQL/Produces@2=URL@3=WebServices@4=exe file"
   RU="@0=Disable@1=SQL/Produces@2=URL@3=WebServices@4=exe file" />
     
-
     <Item Key="FrmUrlShowWay"
     CH="@0=不显示@1=自动大小@2=指定大小@3=新窗口"
     EN="@0=Disable@1=SQL/Produces@2=URL@3=WebServices@4=exe file"
@@ -77,8 +90,8 @@ RU="" />
      RU="@0=单行文本@1=多行文本@2=富文本@3=超大文本" />
 
   <Item Key="FrmType" Name="表单类型"
-     CH="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单"
-     EN="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单"
-     JP="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单"
-     RU="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单" />
+     CH="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单@7=实体类组件"
+     EN="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单@7=实体类组件"
+     JP="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单@7=实体类组件"
+     RU="@0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=在线编辑模式Excel表单@6=VSTO模式Excel表单@7=实体类组件" />
 </NewDataSet>

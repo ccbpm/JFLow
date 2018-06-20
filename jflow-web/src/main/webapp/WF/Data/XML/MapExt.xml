@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" standalone="yes" ?>
 <NewDataSet>
 	<!-- 扩展  -->
-  <FieldExt111 No="Back"     CH="返回"   DFor="TB,DDL,Checkbox" URL="Do.jsp?DoType=DobackToF" />
+  <FieldExt111 No="Back"     CH="返回"   DFor="TB,DDL,Checkbox" URL="Do.aspx?DoType=DobackToF" />
     <FieldExt No="PageLoadFull"  CH="装载填充"   DFor="TB,DDL,Checkbox" URL="MapExt.aspx?s=34" />
   <FieldExt11 No="AutoFull"      CH="数据获取"   DFor="TB,DDL,Checkbox" URL="AutoFull.aspx?s=3" />
   <FieldExt11 No="ActiveDDL"     CH="级联下拉框" DFor="TB,DDL,Checkbox" URL="MapExt.aspx?s=3" />

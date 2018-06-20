@@ -1,5 +1,7 @@
 package BP.WF.HttpHandler;
 
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,17 +12,29 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.channels.FileChannel;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HttpContext;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+
+
 
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
@@ -38,6 +52,7 @@ import BP.Sys.AthDeleteWay;
 import BP.Sys.AthSaveWay;
 import BP.Sys.AthUploadWay;
 import BP.Sys.AttachmentUploadType;
+import BP.Sys.BuessUnitBase;
 import BP.Sys.FileShowWay;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
@@ -46,6 +61,8 @@ import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmEventList;
 import BP.Sys.FrmEventListDtl;
 import BP.Sys.FrmEvents;
+import BP.Sys.FrmImg;
+import BP.Sys.FrmImgAthDB;
 import BP.Sys.FrmImgAthDBAttr;
 import BP.Sys.FrmImgAthDBs;
 import BP.Sys.FrmSubFlowAttr;
@@ -66,12 +83,14 @@ import BP.Sys.MapExts;
 import BP.Sys.PopValWorkModel;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
+import BP.Tools.DateUtils;
 import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.Tools.ZipCompress;
 import BP.WF.DotNetToJavaStringHelper;
+import BP.WF.ExtContral;
 import BP.WF.Glo;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
@@ -942,6 +961,154 @@ public class WF_CCForm extends WebContralBase {
 		return BP.Tools.Entitis2Json.ConvertEntities2ListJson(imgAthDBs);
 	}
 
+//	//图片附件上传
+	public String FrmImgAthDB_Upload() throws Exception{
+		String ImgAthPK = this.GetRequestVal("ImgAth");
+		int zoomW = this.GetRequestValInt("zoomW");
+		int zoomH = this.GetRequestValInt("zoomH");
+		
+		String myName = ImgAthPK +"_" + this.getMyPK();
+		//生成新的图片路径,解决返回相同src后图片不切换的问题
+		String newName = ImgAthPK +"_" + this.getMyPK() + "_" + DateUtils.getCurrentDate("yyyyMMddHHmmss");
+		String webPath = "/DataUser/ImgAth/Data" + newName + ".png";
+		String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data";
+		saveToPath = saveToPath.replace("\\", "/");
+		String fileUploadPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/";
+		fileUploadPath = fileUploadPath.replace("\\", "/");
+		//如果路径不存在就创建,否则拷贝文件报异常
+		File sPath = new File(saveToPath);
+		File uPath = new File(fileUploadPath);
+		if (!sPath.isDirectory()) {
+			sPath.mkdirs();
+		}
+		if (!uPath.isDirectory()) {
+			uPath.mkdirs();
+		}
+		
+		saveToPath = saveToPath + newName + ".png";
+		fileUploadPath = fileUploadPath + newName +".png";
+		File sFile = new File(saveToPath);
+		File uFile = new File(fileUploadPath);
+		
+		String contentType = getRequest().getContentType();
+		if (contentType !=null && contentType.indexOf("multipart/form-data") != -1) {
+			
+			MultipartFile multipartFile = request.getFile("file");
+			//获取文件名,并取其后缀;
+			String fileName = multipartFile.getOriginalFilename();
+			String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
+			try {
+				multipartFile.transferTo(sFile);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				return "err@上传图片保存失败";
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "err@上传图片保存失败";
+			}
+		}
+		//复制一份到uFile
+		try {
+			copyFileUsingFileChannels(sFile,uFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//获取文件大小;
+		long fileSize = uFile.length();
+		if (fileSize > 0) {
+			//对图片进行裁剪
+			//cutImage(saveToPath,0,0,zoomW,zoomH);
+			
+			//更新数据表
+			FrmImgAthDB imgAthDB = new FrmImgAthDB();
+			imgAthDB.setMyPK(myName);
+			imgAthDB.setFK_MapData(this.getFK_MapData());
+			imgAthDB.setFK_FrmImgAth(ImgAthPK);
+			imgAthDB.setRefPKVal(this.getMyPK());
+			imgAthDB.setFileFullName(webPath);
+			imgAthDB.setFileName(newName);
+			imgAthDB.setFileExts("png");
+			imgAthDB.setFileSize(fileSize);
+			imgAthDB.setRDT(DateUtils.getCurrentDate("yyyy-MM-dd HH:mm"));
+			imgAthDB.setRec(BP.Web.WebUser.getNo());
+			imgAthDB.setRecName(BP.Web.WebUser.getName());
+			
+			imgAthDB.Save();
+			
+			return "{SourceImage:\"" + webPath + "\"}";
+		}
+		return "@err没有选择文件";
+		
+	}
+	public String FrmImgAthDB_Cut(){
+		String ImgAthPK = this.GetRequestVal("ImgAth");
+		
+		int zoomW = this.GetRequestValInt("ImgAth");
+		int zoomH = this.GetRequestValInt("zoomH");
+		int x = this.GetRequestValInt("cX");
+		int y = this.GetRequestValInt("cY");
+		int w = this.GetRequestValInt("cW");
+		int h = this.GetRequestValInt("cH");
+		
+		String myPK = ImgAthPK + "_" + this.getMyPK();
+		FrmImgAthDB imgAthDB = new FrmImgAthDB();
+		
+		String newName = ImgAthPK + "_" + DateUtils.getCurrentDate("yyyyMMddHHmmss");
+		String webPath = BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data" + newName + ".png";
+		String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data";
+		saveToPath = saveToPath.replace("\\", "/");
+		//获取上传的大图片
+		String strImgPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/" + imgAthDB.getFileName() + ".png";
+		strImgPath = strImgPath.replace("\\", "/");
+		File file = new File(strImgPath);
+		if (file.exists()) {
+			cutImage(strImgPath,saveToPath,x,y,w,h);
+			imgAthDB.setFileFullName(webPath);
+			return webPath;
+		}
+		return imgAthDB.getFileFullName();
+	}
+	
+	//剪裁图片元方法
+	public static void cutImage(String filePath,String newFilePath, int x, int y, int w, int h){
+		//加载图片到内存
+		try {
+			ImageInputStream iis = ImageIO.createImageInputStream(new FileInputStream(filePath));
+			//构造一个reader
+			Iterator it = ImageIO.getImageReadersByFormatName("png");
+			ImageReader reader = (ImageReader) it.next();
+			//绑定inputStream
+			reader.setInput(iis);
+			//取得剪裁区域
+			ImageReadParam param = reader.getDefaultReadParam();
+			Rectangle rect = new Rectangle(x,y,w,h);
+			param.setSourceRegion(rect);
+			//从reader得到bufferImage
+			BufferedImage bi = reader.read(0,param);
+			//将bufferedImage写成,通过ImageIO
+			ImageIO.write(bi, "png", new File(newFilePath));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//复制文件
+	public static void copyFileUsingFileChannels(File source, File dest) throws IOException{
+		FileChannel inputChannel = null;
+		FileChannel outputChannel = null;
+		try{
+			inputChannel = new FileInputStream(source).getChannel();
+			outputChannel = new FileOutputStream(dest).getChannel();
+			outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+			
+		}finally{
+			inputChannel.close();
+			outputChannel.close();
+		}
+	}
+	
 	public final String DtlFrm_Init() throws Exception {
 		
 		long pk = this.getRefOID();
@@ -2647,7 +2814,61 @@ public class WF_CCForm extends WebContralBase {
 	}
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #endregion 从表的选项.
-
+	/**
+	 * Excel 导入
+	 */
+	public String DtlImpByExcel_Imp(){
+		String tempPath = SystemConfig.getPathOfTemp();
+		try {
+			MapDtl dtl = new MapDtl("this.getFK_MapDtl()");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@" +e;
+		}
+		MultipartFile multipartFile = request.getFile("file");
+		if(multipartFile.getSize() == 0){
+			return "err@请选择要上传的从表模板."; 
+		}
+		//获取文件名,并取其后缀.
+		String fileName = multipartFile.getOriginalFilename();
+		String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
+		if (!prefix.equals("xls") && !prefix.equals("xlsx")) {
+			
+			return "err@上传的文件必须是Excel文件.";
+		}
+		//保存临时文件
+		String userNo = "";
+		try {
+			userNo = BP.Web.WebUser.getNo();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//String file = tempPath + "/" + userNo + prefix;
+		
+		//判断路径是否存在
+		tempPath = tempPath.replace("\\", "/");
+		File tPath = new File(tempPath);
+		if (!tPath.isDirectory()) {
+			tPath.mkdirs();
+		}
+		//执行保存附件
+		File file = new File(tempPath + "/" + userNo + prefix);
+		try {
+			multipartFile.transferTo(file);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			return "err@文件上传失败.";
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "err@文件上传失败.";
+		}
+		GEDtls dtls = new GEDtls(this.getFK_MapDtl());
+		return "此方法未翻译完成";
+	}
+	private DefaultMultipartHttpServletRequest request;
+	public void setMultipartRequest(DefaultMultipartHttpServletRequest request){
+		this.request = request;
+	}
 	/**
 	 * 初始化
 	 * 

@@ -1756,7 +1756,11 @@ public class CCFormAPI
 		//FrmImgAths. 上传图片附件.
 		DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
 		ds.Tables.add(Sys_FrmImgAth);
-
+		
+		//Sys_FrmImgAthDB 图片附件记录
+		DataTable Sys_FrmImgAthDB = md.getFrmImgAthDBs().ToDataTableField("Sys_FrmImgAthDB");
+		ds.Tables.add(Sys_FrmImgAthDB);
+		
 		return ds;
 	}
  

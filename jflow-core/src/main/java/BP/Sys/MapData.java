@@ -747,7 +747,7 @@ public class MapData extends EntityNoName
 	 * @throws Exception 
 	 
 	*/
-	public final FrmImgAthDBs getFrmImgAthDB() throws Exception
+	public final FrmImgAthDBs getFrmImgAthDBs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAthDBs");
 		FrmImgAthDBs obj = (FrmImgAthDBs)((tempVar instanceof FrmImgAthDBs) ? tempVar : null);
@@ -2766,4 +2766,6 @@ public class MapData extends EntityNoName
 	{
 		return DBAccess.RunSQLReturnStringIsNull("SELECT Name FROM Sys_FormTree WHERE No='" + this.getNo() + "'", "数据无");
 	}
+
+
 }

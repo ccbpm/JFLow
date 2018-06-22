@@ -2230,6 +2230,8 @@ public abstract class Entity extends EnObj {
 				return 1;
 			}
 		} else if (this.getPK().equals("MyPK") || this.getPK().equals("No") || this.getPK().equals("ID")) {
+			//自动生成的MYPK，插入前获取主键
+            this.beforeUpdateInsertAction();
 			String pk = this.GetValStrByKey(this.getPK());
 			if (pk.equals("") || pk == null) {
 				this.Insert();

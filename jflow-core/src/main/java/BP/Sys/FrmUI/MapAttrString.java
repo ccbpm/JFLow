@@ -265,6 +265,13 @@ public class MapAttrString extends EntityMyPK
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
+		rm = new RefMethod();
+		rm.Title = "批处理";
+		rm.ClassMethodName = this.toString() + ".DoEleBatch()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.GroupName = "高级设置";
+		map.AddRefMethod(rm);
+
  
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -384,7 +391,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoEleBatch()
 	{
-		return Glo.getCCFlowAppPath() + "WF/MapDef/EleBatch.jsp?EleType=MapAttr&KeyOfEn=" + this.getKeyOfEn() + "&FType=1&MyPK=" + this.getMyPK() + "&FK_MapData=" + this.getFK_MapData();
+		return "../../Admin/FoolFormDesigner/EleBatch.htm?EleType=MapAttr&KeyOfEn=" + this.getKeyOfEn() + "&FType=1&MyPK=" + this.getMyPK() + "&FK_MapData=" + this.getFK_MapData();
 	}
 	public final String DoOldVerAspx()
 	{

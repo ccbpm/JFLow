@@ -182,8 +182,14 @@ public abstract class EnObj implements Serializable {
 		Attrs attrs = this.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
 
+            //含有特定值时取消重新设定默认值
+			 String v = this.GetValStringByKey(attr.getKey(), null);  // this._row[key] as string;
+
+             if (v !=null)
+                 continue;
+             
 			String tempVar = attr.getDefaultValOfReal();
-			String v = (String) ((tempVar instanceof String) ? tempVar : null);
+			v = (String) ((tempVar instanceof String) ? tempVar : null);
 			if (v == null) {
 				continue;
 			}

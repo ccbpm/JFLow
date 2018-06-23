@@ -668,7 +668,7 @@ function Ele_FrmCheck(wf_node) {
     //审核组键FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node
     var sta = wf_node.FWCSta;
 
-    var h = wf_node.FWC_H + 1300;
+    var h = wf_node.FWC_H;
     var src = "./WorkOpt/WorkCheck.htm?s=2";
     var fwcOnload = "";
     var paras = '';
@@ -696,7 +696,7 @@ function Ele_FrmCheck(wf_node) {
 function Ele_SubFlow(wf_node) {
     //SFSta Sta,SF_X X,SF_Y Y,SF_H H, SF_W W
     var sta = wf_node.SFSta;
-    var h = wf_node.SF_H+1300;
+    var h = wf_node.SF_H;
 
     if (sta == 0)
         return $('');

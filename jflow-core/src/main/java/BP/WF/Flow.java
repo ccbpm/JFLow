@@ -5339,8 +5339,8 @@ public class Flow extends BP.En.EntityNoName
 		{
 			DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(this.getNo()) + "Track ");
 		}
-
-		if (DBAccess.IsExitsObject(this.getPTable()))
+		
+		if (DBAccess.IsExitsTabPK(this.getPTable()))
 		{
 			DBAccess.RunSQL("DELETE FROM " + this.getPTable());
 		}
@@ -7617,8 +7617,12 @@ public class Flow extends BP.En.EntityNoName
 		//sunxd 20170714
 		//Integer.parseInt()中对像为空时Integer.parseInt()会报错
 		//Integer.parseInt()中对像作了空值转换
-		md.setNo("ND" + (this.getNo().equals("") ? "" : Integer.parseInt(this.getNo())) + "Rpt");
-		md.Delete();
+		String mdNo = "ND" + (this.getNo().equals("") ? "" : Integer.parseInt(this.getNo())) + "Rpt";
+		if (DBAccess.IsExitsTabPK(mdNo))
+		{
+			md.setNo(mdNo);
+			md.Delete();
+		}
 
 		//删除视图.
 		if (DBAccess.IsExitsObject("V_" + this.getNo()))

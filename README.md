@@ -1,3 +1,10 @@
+﻿**友情连接 **
+
+https://gitee.com/thinkgem
+
+https://gitee.com/thinkgem/jeesite4
+
+
  **`#注：develop分支，是目前正在测试和完善的版本，是最新版本`**
 
 #JFlow开源工作流
@@ -17,7 +24,6 @@
 
 ## 快速运行体验
 
-
 1. 创建一个新库，设置数据库参数：/jflow-web/src/main/resources/jflow.properties
 
 2. 运行 bin/run-tomcat7.bat 文件，快速启动服务。
@@ -34,8 +40,7 @@
 
 	访问地址：http://127.0.0.1:8080/jflow-web/
 	
-	管理员账号：admin  密码：pub
-	其他用户密码：123
+	管理员账号：admin  密码：123 其他用户密码：123
 
 
 ## 嵌入式集成方法：

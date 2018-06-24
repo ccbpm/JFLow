@@ -182,8 +182,7 @@ function GenerFrm() {
                 GenerFreeFrm(mapData, frmData); //自由表单.
             }
             else {
-            	var mapDtl = new Entity("BP.WF.Template.MapDtlExt",mapData.No);
-                if (mapDtl.EditModel == 0 || mapDtl.EditModel == 1) {
+                if (mapData.FrmType == 0) {
                     GenerFoolFrm(mapData, frmData); //生成傻瓜表单.   
                 }
                 else {

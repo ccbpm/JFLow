@@ -91,11 +91,7 @@ function PopBranchesAndLeaf(mapExt, val) {
         if (window.parent && window.parent.OpenBootStrapModal) {
             OpenBootStrapModal(url, iframeId, title, width, height, "icon-edit", true, function () {
                 var selectType = mapExt.GetPara("SelectType");
-                //单选清空数据
-               // if (selectType == "0") {
-                    //清空数据
-                //    Delete_FrmEleDBs(mapExt.FK_MapData, mapExt.AttrOfOper, oid);
-               // }
+
                 var iframe = document.getElementById(iframeId);
                 if (iframe) {
                     var selectedRows = iframe.contentWindow.selectedRows;
@@ -111,7 +107,7 @@ function PopBranchesAndLeaf(mapExt, val) {
                 }
             }, null, function () {
 
-            },"div_"+iframeId);
+            }, "div_" + iframeId);
             return;
         }
         //OpenEasyUiDialog(url, iframeId, title, width, height, undefined, true, function () {
@@ -203,13 +199,9 @@ function PopBranches(mapExt, val) {
     var url = localHref + "/WF/CCForm/Pop/Branches.htm?MyPK=" + mapExt.MyPK + "&oid=" + oid + "&m=" + Math.random();
     container.on("dblclick", function () {
         if (window.parent && window.parent.OpenBootStrapModal) {
-        	OpenBootStrapModal(url,  iframeId, title, width, height, "icon-edit", true, function () {
+            OpenBootStrapModal(url, iframeId, title, width, height, "icon-edit", true, function () {
                 var selectType = mapExt.GetPara("SelectType");
-                //单选清空数据
-               // if (selectType == "0") {
-                    //清空数据
-                //    Delete_FrmEleDBs(mapExt.FK_MapData, mapExt.AttrOfOper, oid);
-               // }
+
                 var iframe = document.getElementById(iframeId);
                 if (iframe) {
                     var nodes = iframe.contentWindow.GetCheckNodes();
@@ -231,7 +223,7 @@ function PopBranches(mapExt, val) {
                 }
             }, null, function () {
 
-            },"div_"+iframeId);
+            }, "div_" + iframeId);
             return;
         }
     });
@@ -313,7 +305,7 @@ function PopTableSearch(mapExt) {
 
     var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
     frmEleDBs.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", oid);
- 
+
     var initJsonData = [];
     $.each(frmEleDBs, function (i, o) {
         initJsonData.push({
@@ -321,6 +313,7 @@ function PopTableSearch(mapExt) {
             "Name": o.Tag2
         });
     });
+    
     $("#" + mapExt.AttrOfOper + "_mtags").mtags("loadData", initJsonData);
 
 
@@ -330,13 +323,9 @@ function PopTableSearch(mapExt) {
 
     container.on("dblclick", function () {
         if (window.parent && window.parent.OpenBootStrapModal) {
-            OpenBootStrapModal(url, iframeId, mapExt.GetPara("Title"), mapExt.W, mapExt.H, "icon-edit", true, function (){
+            OpenBootStrapModal(url, iframeId, mapExt.GetPara("Title"), mapExt.W, mapExt.H, "icon-edit", true, function () {
                 var selectType = mapExt.GetPara("SelectType");
-                //单选清空数据
-                ///if (selectType == "0") {
-                    //清空数据
-                 //   Delete_FrmEleDBs(mapExt.FK_MapData, mapExt.AttrOfOper, oid);
-                //}
+
                 var iframe = document.getElementById(iframeId);
                 if (iframe) {
                     var selectedRows = iframe.contentWindow.selectedRows;
@@ -353,7 +342,7 @@ function PopTableSearch(mapExt) {
 
             }, null, function () {
 
-              },"div_"+iframeId);
+            }, "div_" + iframeId);
             return;
         }
     });
@@ -407,7 +396,7 @@ function PopGroupList_Done(mapExt) {
             }
         }, null, function () {
 
-        },"eudlgframeDiv");
+        }, "eudlgframeDiv");
         return;
     }
 }

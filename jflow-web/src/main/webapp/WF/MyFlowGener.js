@@ -78,13 +78,13 @@ function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage) {
     var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal;
 
     if (typeof ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal) === "function") {
-        ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal)(url ,"editSubGrid", '编辑', wWidth, wHeight, "icon-property", true, function(){}, null, function () {
+        ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal)(url, "editSubGrid", '编辑', wWidth, wHeight, "icon-property", true, function () { }, null, function () {
             if (typeof InitPage === "function") {
                 InitPage.call();
             } else {
                 alert("请手动刷新表单");
             }
-        },"div_editSubGrid");
+        }, "div_editSubGrid");
     } else {
         window.open(url);
     }
@@ -686,12 +686,11 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
     //获取表单中隐藏的表单元素的值
     var hiddens = $('input[type=hidden]');
-    $.each(hiddens, function (i, hidden) {
-    	var name = $(hidden).attr("id");
-        if (name.indexOf('TB_') == 0) {
-            formArrResult.push(name + '=' + $(hidden).val());
-        }
-    });
+    //$.each(hiddens, function (i, hidden) {
+    //    if ($(hidden).attr("id").indexOf('TB_') == 0) {
+     //       //formArrResult.push($(hidden).attr("name") + '=' + $(hidden).val());
+      //  }
+   // });
 
     if (!isCotainTextArea) {
         formArrResult = $.grep(formArrResult, function (value) {
@@ -1265,7 +1264,7 @@ function GenerWorkNode() {
 
             if (data.indexOf('err@') == 0) {
                 alert(data);
-               // console.log(data);
+                // console.log(data);
                 return;
             }
 
@@ -1306,6 +1305,15 @@ function GenerWorkNode() {
             //发送旁边下拉框 edit by zhoupeng 放到这里是为了解决加载不同步的问题.
             InitToNodeDDL(flowData);
 
+            if (node.FormType == 11) {
+                //获得配置信息.
+                var frmNode = flowData["FrmNode"];
+                if (frmNode) {
+                    frmNode = frmNode[0];
+                    if (frmNode.FrmSln == 1)
+                        pageData.IsReadonly = 1
+                }
+            }
             //判断类型不同的类型不同的解析表单. 处理中间部分的表单展示.
 
             if (node.FormType == 5) {
@@ -1339,9 +1347,7 @@ function GenerWorkNode() {
 
             //单表单加载后执行.
             CCFormLoaded();
-
-            //装载表单数据与修改表单元素风格.
-            LoadFrmDataAndChangeEleStyle(flowData);
+           
 
             //2018.1.1 新增加的类型, 流程独立表单， 为了方便期间都按照自由表单计算了.
             if (node.FormType == 11) {
@@ -1353,10 +1359,7 @@ function GenerWorkNode() {
                         /*只读的方案.*/
                         //alert("把表单设置为只读.");
                         SetFrmReadonly();
-                    }else if(frmNode.FrmSln == 2){
-                    	/* 自定义方案。 修改字段权限*/
-                    	SetFilesAuth(node.NodeID,node.FK_Flow,flowData.Sys_MapData[0].No);   //位置 CCForm/FrmEnd.js
-                    	
+                        //alert('ssssssssssss');
                     } else if (frmNode.FrmSln == 2) {
                         /* 自定义方案。 修改字段权限*/
                         SetFilesAuth(node.NodeID, node.FK_Flow, flowData.Sys_MapData[0].No);   //位置 CCForm/FrmEnd.js
@@ -1364,6 +1367,14 @@ function GenerWorkNode() {
                     }
                 }
             }
+
+            Common.MaxLengthError();
+
+            //处理下拉框级联等扩展信息
+            AfterBindEn_DealMapExt(flowData);
+
+            //装载表单数据与修改表单元素风格.
+            LoadFrmDataAndChangeEleStyle(flowData);
 
             //初始化Sys_MapData
             var h = flowData.Sys_MapData[0].FrmH;
@@ -1417,22 +1428,14 @@ function GenerWorkNode() {
 
             }
 
-            Common.MaxLengthError();
-
-            //处理下拉框级联等扩展信息
-            AfterBindEn_DealMapExt(flowData);
+           
 
             //给富文本创建编辑器
             if (document.BindEditorMapAttr) {
-
-                var editor = document.activeEditor = UE.getEditor('editor', {
-                    autoHeightEnabled: false,
-                    emotionLocalization: true,
-                    elementPathEnabled: false,
-                    maximumWords: document.BindEditorMapAttr.MaxLen,
-                    toolbars: [[
-             'cleardoc', 'undo', 'redo', 'bold', 'italic', 'underline', 'forecolor', 'fontfamily', 'fontsize', 'formatmatch', 'indent', 'date', 'time'
-        ]]
+                //给富文本 创建编辑器
+                var editor = document.activeEditor = UM.getEditor('editor', {
+                    'autoHeightEnabled': false,
+                    'fontsize': [10, 12, 14, 16, 18, 20, 24, 36]
                 });
 
                 if (editor) {
@@ -1821,23 +1824,26 @@ function CheckFWC() {
 }
 
 
-//停止流程.
+//结束流程.
 function DoStop(msg, flowNo, workid) {
 
     if (confirm('您确定要执行 [' + msg + '] ?') == false)
         return;
 
-    var para = 'DoType=MyFlow_StopFlow&FK_Flow=' + flowNo + '&WorkID=' + workid;
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+    handler.AddUrlData();
+    var data = handler.DoMethodReturnString("MyFlow_StopFlow");
+    alert(msg);
 
-    AjaxService(para, function (msg, scope) {
+    if (msg.indexOf('err@') == 0)
+        return;
 
-        alert(msg);
-        if (msg.indexOf('err@') == 0) {
-            return;
-        } else {
-            window.close();
-        }
-    });
+    if (window.parent != null) {
+        //@袁丽娜 如何刷新父窗口.
+        //window.parent.ref
+    }
+    window.close();
+
 }
 
 
@@ -1872,6 +1878,7 @@ function DoDelSubFlow(fk_flow, workid) {
 
 //公共方法
 function AjaxService(param, callback, scope, levPath) {
+
     $.ajax({
         type: "GET", //使用GET或POST方法访问后台
         dataType: "text", //返回json格式的数据

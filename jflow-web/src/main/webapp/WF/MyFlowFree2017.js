@@ -245,7 +245,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
 
     // 金额类型. AppMoney  AppRate
     if (mapAttr.MyDataType == 8) {
-        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "'/>";
+        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "if(isNaN(value))execCommand('undo');clearNoNum(this)" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00'/>";
         return eleHtml;
     }
 
@@ -302,11 +302,37 @@ function figure_Template_Btn(frmBtn) {
     var doc = frmBtn.EventContext;
     doc = (doc == null ? "" : doc.replace(/~/g, "'"));
     var eventType = frmBtn.EventType;
-    if (eventType == 0) {//禁用
+    if (eventType == 0 || pageData.IsReadOnly=="1") {//禁用
         btnHtml.attr('disabled', 'disabled').css('background', 'gray');
-    } else if (eventType == 5 || eventType == 6) {//运行Exe文件. 运行JS
-        btnHtml.attr('onclick', doc);
+    } else if (eventType == 1) {//运行Exe文件. 运行JS
+        $.each(flowData.Sys_MapAttr, function (i, obj) {
+            if (doc != null && url.indexOf('@' + obj.KeyOfEn) > 0) {
+                //替换
+                //url=  url.replace(new RegExp(/(：)/g), ':');
+                //先这样吧
+                doc = doc.replace('@' + obj.KeyOfEn, flowData.MainTable[0][obj.KeyOfEn]);
+            }
+        });
 
+        var OID = GetQueryString("OID");
+        if (OID == undefined || OID == "");
+        OID = GetQueryString("WorkID");
+        var FK_Node = GetQueryString("FK_Node");
+        var FK_Flow = GetQueryString("FK_Flow");
+        var webUser = new WebUser();
+        var userNo = webUser.No;
+        var SID = webUser.SID;
+        if (SID == undefined)
+            SID = "";
+        if (doc.indexOf("?") == -1)
+            doc = doc + "?1=1";
+        doc = doc + "&OID=" + OID + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
+
+        btnHtml.attr('onclick', "window.open('" + doc + "')");
+    } else {
+        if (doc.indexOf("(") == -1)
+            doc = doc + "()";
+        btnHtml.attr('onclick', doc);
     }
     eleHtml.append(btnHtml);
     //别的一些属性先不加
@@ -354,6 +380,20 @@ function figure_Template_HyperLink(frmLin) {
             url = url.replace('@' + obj.KeyOfEn, flowData.MainTable[0][obj.KeyOfEn]);
         }
     });
+
+    var OID = GetQueryString("OID");
+    if (OID == undefined || OID == "");
+    OID = GetQueryString("WorkID");
+    var FK_Node = GetQueryString("FK_Node");
+    var FK_Flow = GetQueryString("FK_Flow");
+    var webUser = new WebUser();
+    var userNo = webUser.No;
+    var SID = webUser.SID;
+    if (SID == undefined)
+        SID = "";
+    if (url.indexOf("?") == -1)
+        url = url + "?1=1";
+    url = url + "&OID=" + OID + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
 
     var eleHtml = '<span></span>';
     eleHtml = $(eleHtml);
@@ -444,25 +484,25 @@ function figure_Template_ImageAth(frmImageAth) {
     var eleHtml = $("<div></div>");
     var img = $("<img/>");
 
-    var imgSrc = "/WF/Data/Img/LogH.PNG";
+    var imgSrc = basePath + "/WF/Data/Img/LogH.PNG";
     //获取数据
     if (flowData.Sys_FrmImgAthDB) {
         $.each(flowData.Sys_FrmImgAthDB, function (i, obj) {
-            if (obj.FK_FrmImgAth == frmImageAth.MyPK) {
-                imgSrc = obj.FileFullName;
+            if (obj.MyPK == (frmImageAth.MyPK + '_' + pageData.WorkID)) {
+                imgSrc = basePath + obj.FileFullName;
             }
         });
     }
     //设计属性
     img.attr('id', 'Img' + frmImageAth.MyPK).attr('name', 'Img' + frmImageAth.MyPK);
-    img.attr("src", imgSrc).attr('onerror', "this.src='/WF/Data/Img/LogH.PNG'");
+    img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Data/Img/LogH.PNG'");
     img.css('width', frmImageAth.W).css('height', frmImageAth.H).css('padding', "0px").css('margin', "0px").css('border-width', "0px");
     //不可编辑
-    if (isEdit == "1") {
+    if (isEdit == "1" && pageData.IsReadonly!="1") {
         var fieldSet = $("<fieldset></fieldset>");
         var length = $("<legend></legend>");
         var a = $("<a></a>");
-        var url = "/WF/CCForm/ImgAth.htm?W=" + frmImageAth.W + "&H=" + frmImageAth.H + "&FK_MapData=" + flowData.Sys_MapData[0].No + "&MyPK=" + pageData.WorkID + "&ImgAth=" + frmImageAth.MyPK;
+        var url = basePath + "/WF/CCForm/ImgAth.htm?W=" + frmImageAth.W + "&H=" + frmImageAth.H + "&FK_MapData=" + flowData.Sys_MapData[0].No + "&MyPK=" + pageData.WorkID + "&ImgAth=" + frmImageAth.MyPK;
 
         a.attr('href', "javascript:ImgAth('" + url + "','" + frmImageAth.MyPK + "');").html("编辑");
         length.css('font-style', 'inherit').css('font-weight', 'bold').css('font-size', '12px');

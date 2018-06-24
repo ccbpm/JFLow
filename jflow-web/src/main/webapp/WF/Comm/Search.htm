@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8"/>
     <title>查询</title>
-
     <link href="JS/EasyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="JS/EasyUI/themes/default/datagrid.css" rel="stylesheet" type="text/css" />
     <link href="JS/EasyUI/themes/icon.css" rel="stylesheet" type="text/css" />
@@ -12,11 +11,12 @@
     <script src="JS/EasyUI/locale/easyui-lang-zh_CN.js" type="text/javascript" charset="UTF-8"></script>
     <script src="../Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../Scripts/config.js" type="text/javascript"></script>
+    <script src="Gener.js" type="text/javascript"></script>
+
     <script src="../Scripts/EasyUIUtility.js" type="text/javascript"></script>
     <script language="JavaScript" src="JScript.js" type="text/javascript"></script>
     <script src="../Comm/JS/Calendar/WdatePicker.js" type="text/javascript"></script>
     <link href="../Comm/JS/Calendar/skin/WdatePicker.css" rel="stylesheet" type="text/css" />
-    <script src="Gener.js" type="text/javascript"></script>
      <base target="_self" />
      <style type="text/css">
            .datagrid-cell, .datagrid-cell-group, .datagrid-header-rownumber, .datagrid-cell-rownumber
@@ -321,6 +321,22 @@
                     });
             }
 
+            sysMapData = mapdata["Sys_MapData"][0];
+            sysMapData = new Entity("BP.Sys.MapData", sysMapData); //把他转化成entity.
+
+             var entityAthType = sysMapData.GetPara("BPEntityAthType");
+             if (entityAthType == 1 || entityAthType == 2) {
+                 //加入操作下载文件
+                 columns.push({
+                     field: '_operate',
+                     title: '操作',
+                     width: 80,
+                     align:'center',
+                     formatter: formatOper,
+
+                     
+                 });
+             }
 
             var data = mapdata["DT"];
             $('#dg').datagrid({
@@ -417,9 +433,6 @@
                 else
                     data.originalRows = [];
             }
-            // var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);  
-            //var end = start + parseInt(opts.pageSize);  
-            //data.rows = (data.originalRows.slice(start, end));  
             return data;
         }
 
@@ -526,6 +539,35 @@
             var user = new WebUser();
             var url = "./Sys/SearchSetting.htm?EnsName=" + GetQueryString("EnsName") + "&m=" + Math.random();
             OpenEasyUiDialogExt(url, '设置', 800, 500, true);
+        }
+
+        function formatOper(val,rowData,index){
+            var pkval = rowData["No"];
+            if (pkval == undefined) {
+                pkval = rowData["OID"];
+            }
+            if (pkval == undefined) {
+                pkval = rowData["MyPK"];
+            }
+            if (pkval == undefined) {
+                pkval = rowData["WorkID"];
+            }
+            if (pkval == undefined) {
+                pkval = rowData["NodeID"];
+            }
+            
+            return "<a href='#' onclick='downLoadFile(\""+pkval+"\")'>下载</a>";  
+        }
+
+        function downLoadFile(PKVal){
+            if (plant == "CCFlow")
+                window.open( '../CCForm/DownFile.aspx?DoType=EntityFile_Load&DelPKVal=' + PKVal + '&EnsName=' + GetQueryString("EnsName"));
+            else {
+                var currentPath = window.document.location.href;
+                var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
+                Url = 'EntityFileLoad.do?DelPKVal=' + PKVal + '&EnsName=' + GetQueryString("EnsName");
+                window.location.href = Url;
+            }
         }
 
     </script>

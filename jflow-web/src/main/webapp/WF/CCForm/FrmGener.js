@@ -144,13 +144,13 @@ function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage) {
     }
     var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal;
     if (typeof ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal) === "function") {
-    	OpenBootStrapModal(url, "editSubGrid", '编辑', 1000, 450, "icon-property", true, function(){}, null, function () {
+        OpenBootStrapModal(url, "editSubGrid", '编辑', 1000, 450, "icon-property", true, function () { }, null, function () {
             if (typeof InitPage === "function") {
                 InitPage.call();
             } else {
                 alert("请手动刷新表单");
             }
-        },"editSubGridDiv");
+        }, "editSubGridDiv");
     } else {
         window.open(url);
     }
@@ -282,7 +282,7 @@ function GenerFrm() {
             if (isReadonly != "1") {
 
                 Common.MaxLengthError();
-
+                //debugger
                 //处理下拉框级联等扩展信息
                 AfterBindEn_DealMapExt(frmData);
             }
@@ -297,6 +297,9 @@ function GenerFrm() {
                 var defValue = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
 
                 if ($('#TB_' + mapAttr.KeyOfEn).length == 1) {
+                    if (mapAttr.MyDataType == 8)
+                        if (!/\./.test(defValue))
+                            defValue += '.00';  
                     $('#TB_' + mapAttr.KeyOfEn).val(defValue);
                 }
 
@@ -318,7 +321,8 @@ function GenerFrm() {
                         $('#CB_' + mapAttr.KeyOfEn).attr("checked", false);
                 }
 
-                if (mapAttr.UIIsEnable == "0") {
+                //只读或者属性为不可编辑时设置
+                if (mapAttr.UIIsEnable == "0" ||  pageData.IsReadonly=="1") {
 
                     $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
                     $('#DDL_' + mapAttr.KeyOfEn).attr('disabled', true);
@@ -738,20 +742,20 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                         break;
                 }
                 break;
-            //下拉框  
+            //下拉框   
             case "SELECT":
                 formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());
                 break;
 
-            //对于复选下拉框获取值得方法  
-            //                if ($('[data-id=' + name + ']').length > 0) { 
-            //                    var val = $(disabledEle).val().join(','); 
-            //                    formArrResult.push(name + '=' + val); 
-            //                } else { 
-            //                    formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val()); 
-            //                } 
-            //                break; 
-            //文本区域  
+            //对于复选下拉框获取值得方法   
+            //                if ($('[data-id=' + name + ']').length > 0) {  
+            //                    var val = $(disabledEle).val().join(',');  
+            //                    formArrResult.push(name + '=' + val);  
+            //                } else {  
+            //                    formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());  
+            //                }  
+            //                break;  
+            //文本区域   
             case "TEXTAREA":
                 formArrResult.push(name + '=' + $(disabledEle).val());
                 break;

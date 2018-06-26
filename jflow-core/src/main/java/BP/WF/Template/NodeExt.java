@@ -1360,7 +1360,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoBill()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Bill.htm?NodeID=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Bill.htm?NodeID=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() +"&FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 设置

@@ -56,7 +56,7 @@ public class BillTemplate extends EntityNoName
 	public final void setNo(String value)
 	{
 		this.SetValByKey("No", value);
-		this.SetValByKey(BillTemplateAttr.Url, value);
+		this.SetValByKey(BillTemplateAttr.TempFilePath, value);
 	}
 	/** 
 	 生成的单据类型
@@ -65,25 +65,45 @@ public class BillTemplate extends EntityNoName
 	{
 		return BillFileType.forValue(this.GetValIntByKey(BillTemplateAttr.BillFileType));
 	}
-	public final void setHisBillFileType(BillFileType value)
+	public final void setHisBillFileType(int value)
 	{
-		this.SetValByKey(BillTemplateAttr.BillFileType, value.getValue());
+		this.SetValByKey(BillTemplateAttr.BillFileType, (int)value);
 	}
+    /// <summary>
+    /// 生成的单据打开方式
+    /// </summary>
+    public final BillOpenModel getBillOpenModel()
+    {
+    		return BillOpenModel.forValue(this.GetValIntByKey(BillTemplateAttr.BillOpenModel));
+    }
+    public final void setBillOpenModel(int value)
+    {
+    	 this.SetValByKey(BillTemplateAttr.BillOpenModel, (int)value);
+    }
+    //是否生成二维码
+    public final QRModel getQRModel(){
+    	
+    	return QRModel.forValue(this.GetValIntByKey(BillTemplateAttr.QRModel));
+    }
+    public final void setQRModel(int value){
+    	
+    	 this.SetValByKey(BillTemplateAttr.QRModel,(int)value);
+    }
 	/** 
 	 打开的连接
 	*/
-	public final String getUrl()
+	public final String getTempFilePath()
 	{
-		String s= this.GetValStrByKey(BillTemplateAttr.Url);
+		String s= this.GetValStrByKey(BillTemplateAttr.TempFilePath);
 		if (s.equals("") || s == null)
 		{
 			return this.getNo();
 		}
 		return s;
 	}
-	public final void setUrl(String value)
+	public final void setTempFilePath(String value)
 	{
-		this.SetValByKey(BillTemplateAttr.Url, value);
+		this.SetValByKey(BillTemplateAttr.TempFilePath, value);
 	}
 	/** 
 	 节点名称
@@ -138,11 +158,17 @@ public class BillTemplate extends EntityNoName
 
 		map.AddTBStringPK(BillTemplateAttr.No, null, "No", true, false, 1, 190, 6);
 		map.AddTBString(BillTemplateAttr.Name, null, "Name", true, false, 0, 200, 20);
-		//map.AddTBString(BillTemplateAttr.Url, null, "URL", true, false, 0, 200, 20);
+		map.AddTBString(BillTemplateAttr.TempFilePath, null, "模板路径", true, false, 0, 200, 20);
 		map.AddTBInt(BillTemplateAttr.NodeID, 0, "NodeID", true, false);
 
 		map.AddDDLSysEnum(BillTemplateAttr.BillFileType, 0, "生成的文件类型", true, false, "BillFileType","@0=Word@1=PDF@2=Excel(未完成)@3=Html(未完成)@5=锐浪报表");
 
+        map.AddDDLSysEnum(BillTemplateAttr.BillOpenModel, 0, "生成的文件打开方式", true, false,
+                "BillOpenModel", "@0=下载本地@1=在线WebOffice打开");
+
+        map.AddDDLSysEnum(BillTemplateAttr.QRModel, 0, "二维码生成方式", true, false,
+               BillTemplateAttr.QRModel, "@0=不生成@1=生成二维码");
+        
 		map.AddTBString(BillTemplateAttr.FK_BillType, null, "单据类型", true, false, 0, 4, 4);
 
 		map.AddTBString("IDX", null, "IDX", false, false, 0, 200, 20);

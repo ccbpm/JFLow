@@ -6,7 +6,7 @@ package BP.WF.Template;
 */
 public class BillTemplateAttr extends BP.En.EntityNoNameAttr
 {
-	public static final String Url = "Url";
+	public static final String TempFilePath = "TempFilePath";
 	/** 
 	 NodeID
 	*/
@@ -35,4 +35,12 @@ public class BillTemplateAttr extends BP.En.EntityNoNameAttr
 	 是否生成PDF
 	*/
 	public static final String BillFileType = "BillFileType";
+    /// <summary>
+    /// 文件打开方式
+    /// </summary>
+    public static final String BillOpenModel = "BillOpenModel";
+    /// <summary>
+    /// 是否生成二维码
+    /// </summary>
+    public static final String QRModel = "QRModel";
 }

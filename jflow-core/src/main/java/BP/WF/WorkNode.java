@@ -5907,7 +5907,7 @@ public class WorkNode {
 								(new java.io.File(path)).mkdirs();
 							}
 
-							rtf.MakeDoc(func.getUrl() + ".rtf", path, file, func.getReplaceVal(), false);
+							rtf.MakeDoc(func.getTempFilePath() + ".rtf", path, file, func.getReplaceVal(), false);
 							/// #region 转化成pdf.
 							if (func.getHisBillFileType() == BillFileType.PDF) {
 								String rtfPath = path + file;

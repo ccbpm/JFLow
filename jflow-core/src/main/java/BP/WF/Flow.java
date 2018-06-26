@@ -2413,6 +2413,31 @@ public class Flow extends BP.En.EntityNoName
 				///#endregion
 
 			msg += "@流程报表检查完成...";
+			
+			//#region 检查如果是合流节点必须不能是由上一个节点指定接受人员。 @dudongliang 需要翻译.
+            for (Node nd : nds.ToJavaList())
+            {
+                //如果是合流节点.
+                if (nd.getHisNodeWorkType() == NodeWorkType.WorkHL || nd.getHisNodeWorkType() == NodeWorkType.WorkFHL)
+                {
+                    if (nd.getHisDeliveryWay() == DeliveryWay.BySelected)
+                        msg += "@错误:节点ID:" + nd.getNodeID() + " 名称:" + nd.getName() + "是合流或者分合流节点，但是该节点设置的接收人规则为由上一步指定，这是错误的，应该为自动计算而非每个子线程人为的选择.";
+                }
+
+                //子线程节点
+                if (nd.getHisNodeWorkType() == NodeWorkType.SubThreadWork)
+                {
+                    if (nd.getCondModel() == CondModel.ByUserSelected)
+                    {
+                        Nodes toNodes = nd.getHisToNodes();
+                        if (toNodes.size() == 1)
+                        {
+                            //msg += "@错误:节点ID:" + nd.NodeID + " 名称:" + nd.Name + " 错误当前节点为子线程，但是该节点的到达.";
+                        }
+                    }
+                }
+            }
+           // #endregion 检查如果是合流节点必须不能是由上一个节点指定接受人员。
 
 			// 检查流程.
 			Node.CheckFlow(this);

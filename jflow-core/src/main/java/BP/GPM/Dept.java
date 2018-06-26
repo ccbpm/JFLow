@@ -4,6 +4,7 @@ import BP.DA.DBUrl;
 import BP.DA.DBUrlType;
 import BP.DA.Depositary;
 import BP.En.EnType;
+import BP.En.Entity;
 import BP.En.EntityTree;
 import BP.En.Map;
 import BP.En.UAC;
@@ -145,6 +146,28 @@ public class Dept extends EntityTree
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	
+	
+	  /// <summary>
+    /// 创建下级节点.
+    /// </summary>
+    /// <returns></returns>
+    public final String DoMyCreateSubNode() throws Exception
+    {
+        Entity en = this.DoCreateSubNode();
+        return en.ToJson();
+    }
+
+    /// <summary>
+    /// 创建同级节点.
+    /// </summary>
+    /// <returns></returns>
+    public final String DoMyCreateSameLevelNode() throws Exception
+    {
+        Entity en = this.DoCreateSameLevelNode();
+        return en.ToJson();
+    }
+
 	
 	/** 
 	 生成部门全名称.

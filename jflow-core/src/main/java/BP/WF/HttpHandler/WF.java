@@ -136,9 +136,10 @@ public class WF extends WebContralBase
     public String Runing_OpenFrm() throws Exception
     {
     	int nodeID = this.getFK_Node();
+    	 GenerWorkFlow gwf =null;
     	if (nodeID == 0)
         {
-            GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+            gwf = new GenerWorkFlow(this.getWorkID());
             nodeID = gwf.getFK_Node();
         }
         Node nd = null;
@@ -163,7 +164,16 @@ public class WF extends WebContralBase
         long workid = 0;
         
         if (nd.getHisRunModel() == RunModel.SubThread)
+        {
             workid = tk.getFID();
+            if (workid==0)
+            {
+               if (gwf==null)
+            	   gwf=new GenerWorkFlow(this.getWorkID());
+               
+               workid=gwf.getFID();
+            }
+        }
         else
             workid = tk.getWorkID();
 
@@ -209,7 +219,7 @@ public class WF extends WebContralBase
             wk.setRow( rtp.getRow());
         }
 
-        GenerWorkFlow gwf = new GenerWorkFlow();
+        gwf = new GenerWorkFlow();
         gwf.setWorkID( wk.getOID());
 
         if (nd.getHisFlow().getIsMD5() && wk.IsPassCheckMD5() == false)

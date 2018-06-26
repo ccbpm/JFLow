@@ -356,7 +356,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 			ds.Tables.add(dt);
 
 			//获取流程中的线段方向信息
-            sql = "SELECT Node \"Node\", ToNode \"ToNode\",DirType \"DirType\", IsCanBack \"IsCanBack\",Dots \"Dots\" FROM WF_Direction WHERE FK_Flow='" + fk_flow + "'";
+            sql = "SELECT Node \"Node\", ToNode \"ToNode\", IsCanBack \"IsCanBack\",Dots \"Dots\" FROM WF_Direction WHERE FK_Flow='" + fk_flow + "'";
  			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_DIRECTION";
 			ds.Tables.add(dt);

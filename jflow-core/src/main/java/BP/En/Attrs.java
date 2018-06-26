@@ -921,7 +921,8 @@ public class Attrs extends ArrayList<Attr>
             mattr.setDefValReal(item.getDefaultValOfReal());
 
             mattr.setUIIsEnable(item.getUIIsReadonly());
-            if (item.getMyFieldType() == FieldType.Normal)
+            if (item.getMyFieldType() == FieldType.Normal 
+            		|| item.getMyFieldType() == FieldType.PK)
             {
                 if (item.getMyDataType() == DataType.AppInt ||
                     item.getMyDataType() == DataType.AppFloat ||

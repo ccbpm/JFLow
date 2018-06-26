@@ -2865,42 +2865,27 @@ public class WorkNode {
 
          this.town = new WorkNode(heLiuWK, nd);
 
-         //合流节点上的工作处理者。
-         GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), nd.getNodeID());
-         current_gwls = gwls;
 
-         if (gwls.size() == 0)
-         {
-             // 说明第一次到达河流节点。
-             current_gwls = this.Func_GenerWorkerLists(this.town);
-             gwls = current_gwls;
 
-             GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
-             gwf.setFK_Node(nd.getNodeID());
-             gwf.setNodeName(nd.getName());
-             gwf.setTodoEmpsNum( gwls.size()) ;
-
-             String todoEmps = "";
-             for (GenerWorkerList  item : gwls.ToJavaList())
-                 todoEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
-
-             gwf.setTodoEmps(todoEmps);
-             gwf.setWFState( WFState.Runing);
-             gwf.Update();
-         }
+         // 先查询一下是否有人员，在合流节点上，如果没有就让其初始化人员. 
+         current_gwls = new GenerWorkerLists();
+         current_gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getHisWork().getFID(),GenerWorkerListAttr.FK_Node, nd.getNodeID() );
+         if (current_gwls.size() == 0)
+             current_gwls = this.Func_GenerWorkerLists(this.town);// 初试化他们的工作人员．
+         
+ 
 
          String FK_Emp = "";
          String toEmpsStr = "";
          String emps = "";
-         for (GenerWorkerList wl : gwls.ToJavaList())
+         for (GenerWorkerList wl : current_gwls.ToJavaList())
          {
              toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
-             if (gwls.size() == 1)
+             if (current_gwls.size() == 1)
                  emps = toEmpsStr;
              else
                  emps += "@" + toEmpsStr;
          }
-
  
 
          //#region 复制主表数据. edit 2014-11-20 向合流点汇总数据.

@@ -1,9 +1,21 @@
 package BP.WF.HttpHandler;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import javax.servlet.http.HttpServletResponse;
+
+
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+
+import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataRowCollection;
 import BP.DA.DataSet;
@@ -31,8 +43,8 @@ import BP.Sys.MapDatas;
 import BP.Sys.MapDtl;
 import BP.Sys.MapDtlAttr;
 import BP.Sys.MapDtls;
+import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
-import BP.WF.CHWay;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
@@ -40,13 +52,13 @@ import BP.WF.Nodes;
 import BP.WF.TeamLeaderConfirmRole;
 import BP.WF.TodolistModel;
 import BP.WF.HttpHandler.Base.WebContralBase;
+import BP.WF.Template.BillTemplate;
 import BP.WF.Template.BtnLab;
 import BP.WF.Template.NodeAttr;
 import BP.WF.Template.NodeCancel;
 import BP.WF.Template.NodeCancelAttr;
 import BP.WF.Template.NodeReturn;
 import BP.WF.Template.NodeReturnAttr;
-import BP.WF.Template.OutTimeDeal;
 import BP.WF.Template.WebOfficeWorkModel;
 import BP.WF.XML.EventLists;
 
@@ -2170,8 +2182,82 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
         return "保存成功...";
     }
-    
+    private DefaultMultipartHttpServletRequest request;
+    public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
+		this.request = request;
+	}
+    private HttpServletResponse  response;
+	public void setHttpServletResp(HttpServletResponse response) {
+		
+		this.response = response;
+	}
+    //单据模板维护
+    public String Bill_Save() throws IllegalStateException, IOException{
+    	BillTemplate bt = new BillTemplate();
 
+    	//上传附件
+    	String filpath = "";
+    	String contentType = getRequest().getContentType();
+    	MultipartFile multipartFile = null;
+    	if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+			multipartFile = request.getFile("bill");
+			if (multipartFile.getSize() == 0) {
+				return "err@请选择要上传的模板文件";				
+			}
+		}
+    	String fileName = multipartFile.getOriginalFilename();
+    	String filepath = SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + fileName;
+    	filepath = filepath.replace("\\", "/");
+    	multipartFile.transferTo(new File(filepath));
+    	
+    	bt.setNodeID(this.getFK_Node());
+    	bt.setNo(request.getParameter("TB_No"));
+    	if (StringHelper.isNullOrEmpty(bt.getNo())) {
+			bt.setNo(Integer.toString(DBAccess.GenerOID()));
+		}
+    	bt.setName(request.getParameter("TB_Name"));
+    	bt.setTempFilePath(filepath);
+        bt.setHisBillFileType(Integer.parseInt(request.getParameter("DDL_BillFileType")));
+        bt.setBillOpenModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));     
+        bt.setQRModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
+        
+        bt.Save();
+        
+		return "保存成功";
+    	
+    }
+
+	/// <summary>
+	/// 下载文件.
+	/// </summary>
+	public void Bill_Download() throws Exception {
+		BillTemplate en = new BillTemplate(this.getNo());
+		String MyFilePath = en.getTempFilePath();
+		String fileName = MyFilePath.substring(MyFilePath.lastIndexOf("/") + 1);
+
+		// 设置响应头和客户端保存文件名
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("multipart/form-data");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+
+		InputStream inputStream = new FileInputStream(MyFilePath);
+
+		OutputStream os = response.getOutputStream();
+
+		long downloadedLength = 0l;
+		byte[] b = new byte[2048];
+		int length;
+		while ((length = inputStream.read(b)) > 0) {
+			os.write(b, 0, length);
+			downloadedLength += b.length;
+		}
+
+		os.close();
+		inputStream.close();
+
+	}
+	// #endregion
+    
    // #region  节点消息
     public String PushMsg_Init() throws Exception
     {
@@ -2299,4 +2385,5 @@ public class WF_Admin_AttrNode extends WebContralBase{
 
 		return "保存成功..";
 	}
+
 }

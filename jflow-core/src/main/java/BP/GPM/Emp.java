@@ -100,35 +100,8 @@ public class Emp extends EntityNoName
 	{
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
-	/** 
-	 职务
 	 
-	*/
-	public final String getFK_Duty()
-	{
-		return this.GetValStrByKey(EmpAttr.FK_Duty);
-	}
-	public final void setFK_Duty(String value)
-	{
-		this.SetValByKey(EmpAttr.FK_Duty, value);
-	}
-	/** 
-	 职务
-	 * @throws Exception 
 	 
-	*/
-	public final String getFK_DutyText() throws Exception
-	{
-		String fk_Duty = this.GetValStrByKey(EmpAttr.FK_Duty);
-		if (StringHelper.isNullOrEmpty(fk_Duty))
-		{
-			
-			return "";
-		}
-		Duty duty = new Duty();
-		duty.RetrieveByAttr(DutyAttr.No, fk_Duty);
-		return duty.getName();
-	}
 	public final String getFK_DeptText()
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
@@ -259,23 +232,21 @@ public class Emp extends EntityNoName
 
 			//关于字段属性的增加 
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 1, 50, 50);
-		map.AddTBString(EmpAttr.EmpNo, null, "职工编号", true, false, 0, 50, 50);
+		 
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 200, 30);
 		map.AddTBString(EmpAttr.Pass, "123", "密码", false, false, 0, 100, 10);
 
 			//map.AddDDLEntities(EmpAttr.FK_Dept, null, "部门", new Port.Depts(), true);
 
 		map.AddTBString(EmpAttr.FK_Dept, null, "当前部门", false, false, 0, 50, 50);
-		map.AddTBString(EmpAttr.FK_Duty, null, "当前职务", false, false, 0, 20, 10);
-		map.AddTBString(DeptEmpAttr.Leader, null, "当前领导", false, false, 0, 50, 1);
+		 
 
 		map.AddTBString(EmpAttr.SID, null, "安全校验码", false, false, 0, 36, 36);
 		map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);
 		map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132);
-		map.AddTBInt(EmpAttr.NumOfDept, 0, "部门数量", true, false);
-
+ 
 		map.AddTBInt(EmpAttr.Idx, 0, "序号", true, false);
-		 map.AddSearchAttr(EmpAttr.FK_Dept);
+	//	 map.AddSearchAttr(EmpAttr.FK_Dept);
 
 			////#region 增加点对多属性
 			////他的部门权限

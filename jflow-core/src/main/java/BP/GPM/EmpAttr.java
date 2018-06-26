@@ -5,23 +5,13 @@ package BP.GPM;
  */
 public class EmpAttr extends BP.En.EntityNoNameAttr
 {
-	// 基本属性
-	/**
-	 * 员工编号
-	 */
-	public static final String EmpNo = "EmpNo";
+ 
+	 
 	/**
 	 * 部门
 	 */
 	public static final String FK_Dept = "FK_Dept";
-	/**
-	 * 职务
-	 */
-	public static final String FK_Duty = "FK_Duty";
-	/**
-	 * FK_Unit
-	 */
-	public static final String FK_Unit = "FK_Unit";
+	 
 	/**
 	 * 密码
 	 */
@@ -30,10 +20,7 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	 * sid
 	 */
 	public static final String SID = "SID";	 
-	/**
-	 * 部门数量
-	 */
-	public static final String NumOfDept = "NumOfDept";
+	 
 	/**
 	 * 序号
 	 */

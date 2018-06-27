@@ -6284,12 +6284,14 @@ public class WorkNode {
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.getWorkID() + " AND FK_Node="
 					+ this.town.getHisNode().getNodeID());
 			// 删除子线程数据.
-			DBAccess.RunSQL("DELETE FROM " + this.town.getHisWork().getEnMap().getPhysicsTable() + " WHERE FID="
+            if (BP.DA.DBAccess.IsExitsObject(this.town.getHisWork().getEnMap().getPhysicsTable()) == true)
+      			DBAccess.RunSQL("DELETE FROM " + this.town.getHisWork().getEnMap().getPhysicsTable() + " WHERE FID="
 					+ this.getWorkID());
 		}
 
 		/// #endregion 如果是分流点下同表单发送失败再次发送就出现错误
 		try {
+			
 			// 删除发生的日志.
 			DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Track WHERE WorkID="
 					+ this.getWorkID() + " AND NDFrom=" + this.getHisNode().getNodeID() + " AND ActionType="

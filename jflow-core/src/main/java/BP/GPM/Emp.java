@@ -18,6 +18,10 @@ import BP.Tools.StringHelper;
 */
 public class Emp extends EntityNoName
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 222;
 	/** 
 	 该人员是否被禁用.
 	*/
@@ -60,18 +64,7 @@ public class Emp extends EntityNoName
 
 		return true;
 	}
-	/** 
-	 员工编号
 	 
-	*/
-	public final String getEmpNo()
-	{
-		return this.GetValStrByKey(EmpAttr.EmpNo);
-	}
-	public final void setEmpNo(String value)
-	{
-		this.SetValByKey(EmpAttr.EmpNo, value);
-	}
 	/** 
 	 主要的部门。
 	 * @throws Exception 

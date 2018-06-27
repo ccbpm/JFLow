@@ -1241,7 +1241,7 @@ public class MapDtlExt extends EntityNoName
 	public final String DoAction()
 	{
 		//return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Action.jsp?DoType=Edit&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
-		return "../../Admin/FoolFormDesigner/Action.htm?DoType=Edit&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/ActionForDtl.htm?DoType=Edit&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
 	}
 	public final String HidAttr()
 	{

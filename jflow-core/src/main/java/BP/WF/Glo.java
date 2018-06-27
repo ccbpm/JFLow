@@ -3537,7 +3537,7 @@ public class Glo {
 	}
 
 	public static String getNodeImagePath() {
-		return Glo.getIntallPath() + "\\Data\\Node\\";
+		return Glo.getIntallPath() + "/Data/Node/";
 	}
 
 	public static void ClearDBData() {
@@ -3551,7 +3551,7 @@ public class Glo {
 	public static String OEM_Flag = "CCS";
 
 	public static String getFlowFileBill() {
-		return Glo.getIntallPath() + "\\DataUser\\Bill\\";
+		return Glo.getIntallPath() + "/DataUser/Bill/";
 	}
 
 	private static String _IntallPath = null;

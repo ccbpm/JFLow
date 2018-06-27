@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>设置</title>
+    <title>基本设置</title>
     <script type="text/javascript" src="../../Scripts/bootstrap/js/jquery.min.js"></script>
-    <script src="../../Scripts/QueryString2016.js" type="text/javascript"></script>
+    <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
     <script type="text/javascript" src="../../Scripts/config.js"  ></script>
     <script src="../../Comm/Gener.js?va2=2" type="text/javascript"></script>
     <link href="../../../DataUser/Style/ccbpm.css" rel="Stylesheet" />
@@ -66,10 +66,16 @@
             window.location.href = window.location.href;
         }
 
+            function ShowCols() {
+                var url = "SearchSettingCols.htm?EnsName=" + GetQueryString("EnsName");
+                window.location.href = url;
+            }
+
     </script>
 </head>
 <body>
 <table style="width:96%;">
+<caption>基本设置</caption>
 <tr>
 <th >配置项</th>
 <th>内容</th>
@@ -86,13 +92,13 @@
 <tr bgcolor='AliceBlue' >
 <td>IsEnableDouclickGlo</td>
 <td>是否启动双击打开(应用全局)</td>
-<td ><input id="CBPara_IsEnableDouclickGlo" type="checkbox" name="CBPara_IsEnableDouclickGlo" /><label for="CB_IsEnableDouclickGlo">是否启动双击打开(应用全局)</label></td>
+<td ><label ><input id="CBPara_IsEnableDouclickGlo" type="checkbox" name="CBPara_IsEnableDouclickGlo" />是否启动双击打开(应用全局)</label></td>
 </tr>
 
 <tr bgcolor='white' >
 <td>IsEnableFocusField</td>
 <td>是否启用焦点字段</td>
-<td ><input id="CBPara_IsEnableFocusField" type="checkbox" name="CBPara_IsEnableFocusField"  /><label for="CB_IsEnableFocusField">是否启用焦点字段</label></td>
+<td ><label ><input id="CBPara_IsEnableFocusField" type="checkbox" name="CBPara_IsEnableFocusField"  />是否启用焦点字段</label></td>
 </tr>
 
 <tr bgcolor='AliceBlue' >
@@ -103,12 +109,12 @@
 <tr bgcolor='white' >
 <td>IsEnableRefFunc</td>
 <td>是否启用相关功能列</td>
-<td ><input id="CBPara_IsEnableRefFunc" type="checkbox" name="CBPara_IsEnableRefFunc"  /><label for="CBPara_IsEnableRefFunc">是否启用相关功能列</label></td>
+<td ><label ><input id="CBPara_IsEnableRefFunc" type="checkbox" name="CBPara_IsEnableRefFunc"  />是否启用相关功能列</label></td>
 </tr>
 <tr bgcolor='AliceBlue' >
 <td>IsEnableOpenICON</td>
 <td>是否启用打开图标</td>
-<td ><input id="CBPara_IsEnableOpenICON" type="checkbox" name="CBPara_IsEnableOpenICON"  /><label for="CBPara_IsEnableOpenICON">是否启用打开图标</label></td>
+<td ><label ><input id="CBPara_IsEnableOpenICON" type="checkbox" name="CBPara_IsEnableOpenICON"  />是否启用打开图标</label></td>
 </tr>
 <tr bgcolor='white' >
 <td>MoveToShowWay</td>
@@ -148,6 +154,8 @@
 </table>
 
 <input type="button" value="保存"  onclick="Save()" />
+<input type="button" value="设置显示的列"  onclick="ShowCols()" />
+
 
 </body>
 </html>

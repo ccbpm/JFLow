@@ -645,7 +645,7 @@ function Ele_ImgAth(frmImageAth) {
         var fieldSet = $("<fieldset></fieldset>");
         var length = $("<legend></legend>");
         var a = $("<a></a>");
-        var url = "/WF/CCForm/ImgAth.htm?W=" + frmImageAth.W + "&H=" + frmImageAth.H + "&FK_MapData=ND" + pageData.FK_Node + "&MyPK=" + pageData.WorkID + "&ImgAth=" + frmImageAth.MyPK;
+        var url = "./CCForm/ImgAth.htm?W=" + frmImageAth.W + "&H=" + frmImageAth.H + "&FK_MapData=ND" + pageData.FK_Node + "&MyPK=" + pageData.WorkID + "&ImgAth=" + frmImageAth.MyPK;
 
         a.attr('href', "javascript:ImgAth('" + url + "','" + frmImageAth.MyPK + "');").html("编辑");
         length.css('font-style', 'inherit').css('font-weight', 'bold').css('font-size', '12px');
@@ -668,7 +668,7 @@ function Ele_FrmCheck(wf_node) {
     //审核组键FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node
     var sta = wf_node.FWCSta;
 
-    var h = wf_node.FWC_H;
+    var h = wf_node.FWC_H + 1300;
     var src = "./WorkOpt/WorkCheck.htm?s=2";
     var fwcOnload = "";
     var paras = '';
@@ -696,7 +696,7 @@ function Ele_FrmCheck(wf_node) {
 function Ele_SubFlow(wf_node) {
     //SFSta Sta,SF_X X,SF_Y Y,SF_H H, SF_W W
     var sta = wf_node.SFSta;
-    var h = wf_node.SF_H;
+    var h = wf_node.SF_H+1300;
 
     if (sta == 0)
         return $('');

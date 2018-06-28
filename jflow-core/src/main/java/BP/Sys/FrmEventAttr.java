@@ -29,7 +29,7 @@ public class FrmEventAttr
 	 执行类型
 	 
 	*/
-	public static final String DoType = "DoType";
+	public static final String EventDoType = "EventDoType";
 	/** 
 	 执行内容
 	 

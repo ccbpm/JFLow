@@ -112,11 +112,11 @@ public class FrmEvent extends EntityMyPK
 	}
 
 	public int getHisDoTypeInt() {
-		return this.GetValIntByKey(FrmEventAttr.DoType);
+		return this.GetValIntByKey(FrmEventAttr.EventDoType);
 	}
 
 	public void setHisDoTypeInt(int value) {
-		this.SetValByKey(FrmEventAttr.DoType, value);
+		this.SetValByKey(FrmEventAttr.EventDoType, value);
 	}
 
 	/** 
@@ -198,11 +198,11 @@ public class FrmEvent extends EntityMyPK
 	*/
 	public final EventDoType getHisDoType()
 	{
-		return EventDoType.forValue(this.GetValIntByKey(FrmEventAttr.DoType));
+		return EventDoType.forValue(this.GetValIntByKey(FrmEventAttr.EventDoType));
 	}
 	public final void setHisDoType(EventDoType value)
 	{
-		this.SetValByKey(FrmEventAttr.DoType, value.getValue());
+		this.SetValByKey(FrmEventAttr.EventDoType, value.getValue());
 	}
 	/** 
 	 消息控制类型.
@@ -481,7 +481,7 @@ public class FrmEvent extends EntityMyPK
 		map.AddTBString(FrmEventAttr.FK_Event, null, "事件名称", true, true, 0, 400, 10);
 		map.AddTBString(FrmEventAttr.FK_MapData, null, "FK_MapData", true, true, 0, 100, 10);
 
-		map.AddTBInt(FrmEventAttr.DoType, 0, "事件类型", true, true);
+		map.AddTBInt(FrmEventAttr.EventDoType, 0, "事件类型", true, true);
 		map.AddTBString(FrmEventAttr.DoDoc, null, "执行内容", true, true, 0, 400, 10);
 		map.AddTBString(FrmEventAttr.MsgOK, null, "成功执行提示", true, true, 0, 400, 10);
 		map.AddTBString(FrmEventAttr.MsgError, null, "异常信息提示", true, true, 0, 400, 10);

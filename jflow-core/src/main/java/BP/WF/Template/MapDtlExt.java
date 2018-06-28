@@ -1247,8 +1247,7 @@ public class MapDtlExt extends EntityNoName
 	{
 		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/HidAttr.htm?DoType=Edit&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
 	}
-
-
+	
 	public final float getX()
 	{
 		return this.GetValFloatByKey(FrmImgAttr.X);

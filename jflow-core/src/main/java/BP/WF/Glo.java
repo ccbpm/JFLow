@@ -51,6 +51,7 @@ import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
 import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachments;
+import BP.Sys.FrmEvent;
 import BP.Sys.FrmImg;
 import BP.Sys.FrmRB;
 import BP.Sys.GEDtl;
@@ -217,7 +218,7 @@ public class Glo {
 	/**
 	 * 当前版本号-为了升级使用.
 	 */
-	public static int Ver = 20171117;
+	public static int Ver = 20180614;
 
 	/**
 	 * 执行升级
@@ -238,6 +239,19 @@ public class Glo {
 
 		String msg = "";
 		try {
+			
+			
+			 // #region 升级事件.
+              if (DBAccess.IsExitsTableCol("Sys_FrmEvent", "DoType") == true)
+              {
+                  BP.Sys.FrmEvent fe = new FrmEvent();
+                  fe.CheckPhysicsTable();
+
+                  DBAccess.RunSQL("UPDATE Sys_FrmEvent SET EventDoType=DoType  ");
+                  DBAccess.RunSQL("ALTER TABLE Sys_FrmEvent   DROP COLUMN	DoType  ");
+              }
+              //#endregion
+              
 
 			/*
 			 * 升级版本记录: 20150330: 优化发起列表的效率, by:zhoupeng. 2, 升级表单树,支持动态表单树. 1,

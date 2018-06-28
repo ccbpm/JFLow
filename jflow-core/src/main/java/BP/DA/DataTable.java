@@ -188,7 +188,7 @@ public class DataTable implements Cloneable
             return rows;
 
         } else {
-            return rows;
+            return this.Rows;
         }
    }
    

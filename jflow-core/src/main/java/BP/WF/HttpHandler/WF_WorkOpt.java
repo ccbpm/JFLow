@@ -1,12 +1,9 @@
 package BP.WF.HttpHandler;
 
-import java.awt.List;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.http.protocol.HttpContext;
@@ -27,7 +24,6 @@ import BP.DA.Log;
 import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.Attrs;
-import BP.En.Entities;
 import BP.En.Entity;
 import BP.En.QueryObject;
 import BP.En.UIContralType;
@@ -37,11 +33,9 @@ import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachmentDBs;
-import BP.Sys.FrmAttachments;
 import BP.Sys.FrmRB;
 import BP.Sys.FrmRBAttr;
 import BP.Sys.FrmRBs;
-import BP.Sys.GEEntity;
 import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
@@ -69,18 +63,11 @@ import BP.WF.RunModel;
 import BP.WF.SendReturnObjs;
 import BP.WF.TodolistModel;
 import BP.WF.Track;
-import BP.WF.TrackAttr;
 import BP.WF.Tracks;
 import BP.WF.WFState;
 import BP.WF.Work;
 import BP.WF.WorkCheck;
 import BP.WF.HttpHandler.Base.WebContralBase;
-import BP.WF.Template.Bill;
-import BP.WF.Template.BillFileType;
-import BP.WF.Template.BillOpenModel;
-import BP.WF.Template.BillTemplate;
-import BP.WF.Template.BillTemplateAttr;
-import BP.WF.Template.BillTemplates;
 import BP.WF.Template.BtnLab;
 import BP.WF.Template.CCSta;
 import BP.WF.Template.FWCOrderModel;
@@ -109,218 +96,6 @@ public class WF_WorkOpt extends WebContralBase {
 
 	public WF_WorkOpt() {
 	}
-    ///#region 打印 rtf
-    /// <summary>
-    /// 初始化
-    /// </summary>
-    /// <returns></returns>
-    public String PrintDoc_Init() throws Exception
-    {
-        BillTemplates templetes = new BillTemplates();
-        String billNo = this.GetRequestVal("FK_Bill");
-        if (billNo == null)
-        {
-            templetes.Retrieve(BillTemplateAttr.NodeID, this.getFK_Node());
-        }
-        else
-        {
-            templetes.Retrieve(BillTemplateAttr.NodeID, this.getFK_Node(), BillTemplateAttr.No, billNo);
-        }
-
-        if (templetes.size() == 0)
-            return "err@当前节点上没有绑定单据模板。";
-
-        if (templetes.size() == 1)
-        {
-            BillTemplate templete = (BillTemplate) templetes.get(0);
-            return PrintDoc_Done(templete.getNo());
-        }
-        return templetes.ToJson();
-    }
-    
-    /// <summary>
-    /// 打印pdf.
-    /// </summary>
-    /// <param name="func"></param>
-    /// <returns></returns>
-    public String PrintDoc_Done(String billTemplateNo) throws Exception
-    {
-
-        if (billTemplateNo == null)
-            billTemplateNo = this.GetRequestVal("FK_Bill");
-
-        BillTemplate func = new BillTemplate(billTemplateNo);
-
-        String billInfo = "";
-        Node nd = new Node(this.getFK_Node());
-        Work wk = nd.getHisWork();
-        wk.setOID(this.getWorkID());
-        wk.RetrieveFromDBSources();
-
-        String file = DateUtils.getCurrentDate("yyyy") + "_" + WebUser.getFK_Dept() + "_" + func.getNo() + "_" + this.getWorkID() + ".doc";
-        BP.Pub.RTFEngine rtf = new BP.Pub.RTFEngine();
-
-        //String[] paths;
-        ;// = new ArrayList<String> ();
-        String path;
-        int newWorkID = 0;
-        try
-        {
-            //#region 单据变量.
-            Bill bill = new Bill();
-            bill.setMyPK(wk.getFID() + "_" + wk.getOID() + "_" + nd.getNodeID() + "_" + func.getNo());
-            //#endregion
-
-            //#region 生成单据
-            rtf.getHisEns().clear();
-            rtf.getEnsDataDtls().clear();
-            if (func.getNodeID() != 0)
-            {
-                //把流程主表数据放入里面去.
-                GEEntity ndxxRpt = new GEEntity("ND" + nd.getFK_Flow() + "Rpt");
-                try
-                {
-                    ndxxRpt.setPKVal(this.getWorkID());
-                    ndxxRpt.Retrieve();
-
-                    newWorkID = (int) this.getWorkID();
-                }
-                catch (Exception ex)
-                {
-                	int FID = this.GetRequestValInt("FID");
-                    if (FID > 0)
-                    {
-                        ndxxRpt.setPKVal(FID);
-                        ndxxRpt.Retrieve();
-
-                        newWorkID = FID;
-
-                        wk = null;
-                        wk = nd.getHisWork();
-                        wk.setOID(FID);
-                        wk.RetrieveFromDBSources();
-                    }
-                    else
-                    {
-                        BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
-                        dir.Do();
-                        path = BP.WF.Glo.getFlowFileBill() + DateUtils.getCurrentDate("yyyy") + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
-                        String msgErr = "@生成单据失败，请让管理员检查目录设置" + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
-                        billInfo += "@<font color=red>" + msgErr + "</font>";
-                        throw new Exception(msgErr + "@其它信息:" + ex.getMessage());
-                    }
-                }
-                ndxxRpt.Copy(wk);
-
-                //把数据赋值给wk. 有可能用户还没有执行流程检查，字段没有同步到 NDxxxRpt.
-                if (ndxxRpt.getRow().size() > wk.getRow().size())
-                    wk.setRow(ndxxRpt.getRow());
-
-                rtf.HisGEEntity = wk;
-
-                //加入他的明细表.
-                ArrayList<Entities> al = new ArrayList<Entities>();
-                al = wk.GetDtlsDatasOfList();
-                for (Entities ens : al)
-                    rtf.AddDtlEns(ens);
-
-                //增加多附件数据
-                FrmAttachments aths = wk.getHisFrmAttachments();
-                for (FrmAttachment athDesc : aths.ToJavaList())
-                {
-                    FrmAttachmentDBs athDBs = new FrmAttachmentDBs();
-                    if (athDBs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK(), FrmAttachmentDBAttr.RefPKVal, newWorkID, "RDT") == 0)
-                        continue;
-
-                    rtf.getEnsDataAths().put(athDesc.getNoOfObj(), athDBs);
-                }
-
-                //把审核日志表加入里面去.
-                Paras ps = new BP.DA.Paras();
-                ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
-                ps.Add(TrackAttr.ActionType, ActionType.WorkCheck);
-                ps.Add(TrackAttr.WorkID, newWorkID);
-
-                //rtf.dtTrack = BP.DA.DBAccess.RunSQLReturnTable(ps);
-            }
-
-           // paths = file.split('_');
-            String[] paths = file.split("_");
-            path = paths[0] + "/" + paths[1] + "/" + paths[2] + "/";
-
-            String billUrl = "url@" + BP.WF.Glo.getCCFlowAppPath() + "DataUser/Bill/" + path + file;
-            if (func.getHisBillFileType() == BillFileType.PDF)
-                billUrl = billUrl.replace(".doc", ".pdf");
-
-            path = BP.WF.Glo.getFlowFileBill() + DateUtils.getCurrentDate("yyyy") + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
-
-            File fpath = new File(path);
-            if (!fpath.exists() || !fpath.isDirectory()) {
-				fpath.mkdirs();
-			}
-            String tempFile = func.getTempFilePath();
-            if (tempFile.contains(".rtf") == false)
-                tempFile = tempFile + ".rtf";
-
-            //用于扫描打印.(这个应该用不到,先注释到)
-            String qrUrl = BP.WF.Glo.getCCFlowAppPath() + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.getMyPK();
-            rtf.MakeDoc(tempFile, path, file, func.getReplaceVal(), false, qrUrl);
-//            #endregion
-
-           // #region 转化成pdf.
-            if (func.getHisBillFileType() == BillFileType.PDF)
-            {
-                String rtfPath = path + file;
-                String pdfPath = rtfPath.replace(".doc", ".pdf");
-                try
-                {
-                    BP.WF.Glo.Rtf2PDF(rtfPath, pdfPath);
-                }
-                catch (Exception ex)
-                {
-                    return "err@" + ex.getMessage();
-                }
-            }
-            //#endregion
-
-           // #region 保存单据.
-
-            bill.setFID(wk.getFID());
-            bill.setWorkID(wk.getOID());
-            bill.setFK_Node(wk.getNodeID());
-            bill.setFK_Dept(WebUser.getFK_Dept());
-            bill.setFK_Emp(WebUser.getNo());
-            bill.setUrl(billUrl);
-            bill.setRDT(DataType.getCurrentDataTime());
-            bill.setFullPath(path + file);
-            bill.setFK_NY(DataType.getCurrentYearMonth());
-            bill.setFK_Flow(nd.getFK_Flow());
-            bill.setFK_BillType(func.getFK_BillType());
-            bill.setEmps(rtf.HisGEEntity.GetValStrByKey("Emps"));
-            bill.setFK_Starter(rtf.HisGEEntity.GetValStrByKey("Rec"));
-            bill.setStartDT(rtf.HisGEEntity.GetValStrByKey("RDT"));
-            bill.setTitle(rtf.HisGEEntity.GetValStrByKey("Title"));
-            bill.setFK_Dept(rtf.HisGEEntity.GetValStrByKey("FK_Dept"));
-            
-            bill.Save();
-
-            //#endregion
-
-            //在线WebOffice打开
-            if (func.getBillOpenModel() == BillOpenModel.WebOffice)
-                return "url@../WebOffice/PrintOffice.aspx?MyPK=" + bill.getMyPK();
-            return billUrl;
-        }
-        catch (Exception ex)
-        {
-            BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
-            dir.Do();
-            path = BP.WF.Glo.getFlowFileBill() + DateUtils.getCurrentDate("yyyy") + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
-            String msgErr = "@生成单据失败，请让管理员检查目录设置[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
-            return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
-        }
-    }
-   // #endregion
 
 	public final String SelectEmps_Init() throws Exception {
 		String fk_dept = this.getFK_Dept();

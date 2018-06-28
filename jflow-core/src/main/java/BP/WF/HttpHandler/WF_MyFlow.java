@@ -1608,7 +1608,7 @@ public class WF_MyFlow extends WebContralBase {
 					}
 
 					myurl += "&FromFlow=" + this.getFK_Flow() + "&FromNode=" + this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID();
-					return "url@" + myurl;
+					return "TurnUrl@" + myurl;
 				case TurnToByCond:
 					TurnTos tts = new TurnTos(this.getFK_Flow());
 					if (tts.size() == 0)

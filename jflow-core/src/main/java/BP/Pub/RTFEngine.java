@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 
@@ -92,7 +93,20 @@ public class RTFEngine
 		}
 		return _EnsDataDtls;
 	}
-	
+    //多附件数据
+    private Hashtable _EnsDataAths = null;
+    public Hashtable getEnsDataAths()
+    {
+        
+            if (_EnsDataAths == null)
+                _EnsDataAths = new Hashtable<Object, Object>();
+            return _EnsDataAths;
+        
+    }
+    /// <summary>
+    /// 轨迹表（用于输出打印审核轨迹,审核信息.）
+    /// </summary>
+    public DataTable dtTrack = null;
 	// 数据明细实体
 	
 	/**
@@ -361,7 +375,48 @@ public class RTFEngine
 		return pict.toString();
 	}
  
-	
+    /// <summary>
+    /// 获取ICON图片的数据。
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public String GetValueImgStrsOfQR(String billUrl)
+    {
+		return billUrl;
+//        /*说明是图片文件.*/
+//        String path = SystemConfig.getPathOfTemp() + Guid.NewGuid() + ".png"; // key.Replace("OID.Img@AppPath", SystemConfig.PathOfWebApp);
+//
+//        //#region 生成二维码.
+//        ThoughtWorks.QRCode.Codec.QRCodeEncoder qrc = new ThoughtWorks.QRCode.Codec.QRCodeEncoder();
+//        qrc.QRCodeEncodeMode = ThoughtWorks.QRCode.Codec.QRCodeEncoder.ENCODE_MODE.BYTE;
+//        qrc.QRCodeScale = 4;
+//        qrc.QRCodeVersion = 7;
+//        qrc.QRCodeErrorCorrect = ThoughtWorks.QRCode.Codec.QRCodeEncoder.ERROR_CORRECTION.M;
+//        System.Drawing.Bitmap btm = qrc.Encode(billUrl, System.Text.Encoding.UTF8);
+//        btm.Save(path);
+//        #endregion
+//
+//        //定义rtf中图片字符串
+//        StringBuilder pict = new StringBuilder();
+//        //获取要插入的图片
+//        System.Drawing.Image img = System.Drawing.Image.FromFile(path);
+//
+//        //将要插入的图片转换为16进制字符串.
+//        string imgHexString;
+//        imgHexString = GetImgHexString(img, System.Drawing.Imaging.ImageFormat.Png);
+//
+//        //生成rtf中图片字符串
+//        pict.AppendLine();
+//        pict.Append(@"{\pict");
+//        pict.Append(@"\jpegblip");
+//        pict.Append(@"\picscalex100");
+//        pict.Append(@"\picscaley100");
+//        pict.Append(@"\picwgoal" + img.Size.Width * 15);
+//        pict.Append(@"\pichgoal" + img.Size.Height * 15);
+//        pict.Append(imgHexString + "}");
+//        pict.AppendLine();
+//        return pict.ToString();
+    }
 	/**
 	 * 获取写字版的数据
 	 * 
@@ -860,8 +915,7 @@ public class RTFEngine
 	public final void MakeDoc(String cfile, String replaceVal) throws Exception
 	{
 		String file = PubClass.GenerTempFileName("doc");
-		this.MakeDoc(cfile, SystemConfig.getPathOfTemp(), file, replaceVal,
-				true);
+		this.MakeDoc(cfile, SystemConfig.getPathOfTemp(), file, replaceVal,true,"");
 	}
 	
 	public String ensStrs = "";
@@ -878,8 +932,7 @@ public class RTFEngine
 	 * @param isOpen
 	 *            是否用IE打开？
 	 */
-	public final void MakeDoc(String cfile, String path, String file,
-			String replaceVals, boolean isOpen)
+	public final void MakeDoc(String cfile, String path, String file,String replaceVals, boolean isOpen, String billUrl)
 	{
 		StringBuilder str = new StringBuilder(Cash.GetBillStr(cfile, false)
 				.substring(0));
@@ -940,7 +993,12 @@ public class RTFEngine
 					{
 						str = new StringBuilder(str.toString().replace(
 								"<" + para + ">", this.GetValueImgStrs(para)));
-					} else if (para.contains(".BPPaint"))
+					}else if (para.contains("Img@QR"))
+					{
+                        str = new StringBuilder(str.toString().replace(
+                        		"<" + para + ">", this.GetValueImgStrsOfQR(billUrl)));
+					}
+					else if (para.contains(".BPPaint"))
 					{
 						str = new StringBuilder(str.toString().replace(
 								"<" + para + ">",
@@ -1283,6 +1341,8 @@ public class RTFEngine
 		}
 	}
 	
+
+
 	// 生成单据
 	/**
 	 * 生成单据根据

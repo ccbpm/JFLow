@@ -629,6 +629,7 @@ public class WF_CommEntity extends WebContralBase {
             dtM.Columns.Add("Icon");
             dtM.Columns.Add("IsCanBatch");
             dtM.Columns.Add("RefAttrKey");
+            dtM.Columns.Add("FunPara");
 
             RefMethods rms = map.getHisRefMethods();
             for (RefMethod item : rms)
@@ -670,6 +671,13 @@ public class WF_CommEntity extends WebContralBase {
                 dr.setValue("Icon", item.Icon) ;
                 dr.setValue("IsCanBatch", item.IsCanBatch) ;
                 dr.setValue("GroupName", item.GroupName) ;
+                
+                //判断有无参数的方法
+                Attrs attrs = item.getHisAttrs();
+                if(attrs.size()==0)
+                	dr.setValue("FunPara", "false") ;
+                else
+                	dr.setValue("FunPara", "true") ;
 
                 dtM.Rows.add(dr); //增加到rows.
             }

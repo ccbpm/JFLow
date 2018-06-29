@@ -661,7 +661,25 @@ public class WF extends WebContralBase
 
 	   return BP.Tools.Json.DataTableToJson(dt, false);
 	}
-	
+	/**
+	 * 申请任务.
+	 * 
+	 * @return
+	 */
+    public String TaskPoolSharing_Apply()
+    {
+        boolean b = false;
+		try {
+			b = BP.WF.Dev2Interface.Node_TaskPoolTakebackOne(this.getWorkID());
+		} catch (Exception e) {
+			Log.DebugWriteError(e.getMessage());
+			e.printStackTrace();
+		}
+        if (b == true)
+            return "申请成功.";
+        else
+            return "err@申请失败...";
+    }
 	/** 我申请下来的任务
 	 yqh add
 	 @return 

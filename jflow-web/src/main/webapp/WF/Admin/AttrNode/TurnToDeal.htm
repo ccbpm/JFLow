@@ -63,11 +63,18 @@
             var turnToDeal = $("input[name='TurnToDeal']:checked").val();
             node.TurnToDeal = turnToDeal;
 
-            if (node.TurnToDeal == 1)
+            if (node.TurnToDeal == 1) 
                 node.TurnToDealDoc = $("#TB_SpecMsg").val();
 
-            if (node.TurnToDeal == 2) 
+            if (node.TurnToDeal == 2)
                 node.TurnToDealDoc = $("#TB_SpecURL").val();
+
+            if (node.TurnToDeal != 0) {
+                if (node.TurnToDealDoc == '') {
+                    alert('执行内容没有填写');
+                    return;
+                }
+            }
 
             node.Update();
 

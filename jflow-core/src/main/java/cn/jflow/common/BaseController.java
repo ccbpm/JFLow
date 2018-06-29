@@ -186,15 +186,7 @@ public class BaseController {
 	{
 		return GetRequestVal("TB_Doc");
 	}	
-	public final int getNodeID()
-	{
-		String s = GetRequestVal("NodeID");
-		if (s == null || s.equals(""))
-		{
-			s = GetRequestVal("FK_Node");
-		}
-		return Integer.parseInt(s);
-	}
+ 
 	public String getSID()
 	{
 		return GetRequestVal("SID");

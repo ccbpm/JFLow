@@ -10,6 +10,7 @@ import BP.En.Map;
 public class GEStartWork extends StartWork
 {
 
+	
 		
 	/** 
 	 开始工作节点
@@ -43,25 +44,22 @@ public class GEStartWork extends StartWork
 		this.setOID(_oid);
 		this.setSQLCash(null);
 	}
-
-		///#endregion
-
-
-		///#region Map
+	 
 	/** 
 	 重写基类方法
-	 * @throws Exception 
 	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		try {
-			this.set_enMap(BP.Sys.MapData.GenerHisMap(this.NodeFrmID));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		 
+			try {
+				this.set_enMap(BP.Sys.MapData.GenerHisMap(this.NodeFrmID));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 
 		return this.get_enMap();
 	}
 	@Override

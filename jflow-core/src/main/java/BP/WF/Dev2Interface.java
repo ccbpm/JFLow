@@ -6499,7 +6499,8 @@ public class Dev2Interface {
 			String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp,
 			int jumpToNode, String jumpToEmp) throws Exception {
 		// 把一些其他的参数也增加里面去,传递给ccflow.
-		java.util.Hashtable htPara = new java.util.Hashtable();
+		java.util.Hashtable<String, Comparable> htPara = new java.util.Hashtable<String, Comparable>();
+		
 		if (parentWorkID != 0) {
 			htPara.put(StartFlowParaNameList.PWorkID, parentWorkID);
 		}

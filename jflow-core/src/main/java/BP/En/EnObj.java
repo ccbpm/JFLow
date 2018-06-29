@@ -20,10 +20,7 @@ import BP.Web.WebUser;
  * Entity 的摘要说明。
  */
 public abstract class EnObj implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	 
 	// 访问控制.
 	private String _DBVarStr = null;
 

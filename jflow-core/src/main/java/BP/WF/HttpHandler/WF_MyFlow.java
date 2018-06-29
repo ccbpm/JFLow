@@ -1951,6 +1951,11 @@ public class WF_MyFlow extends WebContralBase {
 	public final Node getcurrND() throws Exception {
 		if (_currNode == null) {
 			_currNode = new Node(this.getFK_Node());
+		}else
+		{
+			if (this.getFK_Node()!=_currNode.getNodeID())
+				_currNode = new Node(this.getFK_Node());
+				
 		}
 		return _currNode;
 	}
@@ -1960,6 +1965,12 @@ public class WF_MyFlow extends WebContralBase {
 	public final Flow getcurrFlow() throws Exception {
 		if (_currFlow == null) {
 			_currFlow = new Flow(this.getFK_Flow());
+		}
+		else
+		{
+			if (this.getFK_Flow().equals(_currFlow.getNo())==false)
+				_currFlow = new Flow(this.getFK_Flow());
+				
 		}
 		return _currFlow;
 	}

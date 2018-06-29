@@ -53,35 +53,7 @@ public class Node extends Entity
 		}
 		return _SendSuccess_FrmEvent;
 	}
-	/** 
-	 执行运动事件
-	 @param doType 事件类型
-	 @param en 实体参数
-	//public string DoNodeEventEntity(string doType,Node currNode, Entity en, string atPara)
-	//{
-	//    if (this.NDEventEntity != null)
-	//        return NDEventEntity.DoIt(doType,currNode, en, atPara);
-	*/
-
-	//    return this.MapData.FrmEvents.DoEventNode(doType, en, atPara);
-	//}
-	//private BP.WF.NodeEventBase _NDEventEntity = null;
-	///// <summary>
-	///// 节点实体类，没有就返回为空.
-	///// </summary>
-	//private BP.WF.NodeEventBase NDEventEntity11
-	//{
-	//    get
-	//    {
-	//        if (_NDEventEntity == null && this.NodeMark!="" && this.NodeEventEntity!="" )
-	//            _NDEventEntity = BP.WF.Glo.GetNodeEventEntityByEnName( this.NodeEventEntity);
-
-	//        return _NDEventEntity;
-	//    }
-	//}
-	/** 
-	 方向条件控制规则
-	*/
+	 
 	public final CondModel getCondModel()
 	{
 		return CondModel.forValue(this.GetValIntByKey(NodeAttr.CondModel));

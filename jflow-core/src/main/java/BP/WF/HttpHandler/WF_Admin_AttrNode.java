@@ -105,16 +105,7 @@ public class WF_Admin_AttrNode extends WebContralBase{
 	// / </summary>
 	// / <returns></returns>
 	public String ActionDtl_Init() throws Exception {
-		DataSet ds = new DataSet();
-
-		// 事件实体.
-		FrmEvents ndevs = new FrmEvents();
-		String fk_Event = this.GetRequestVal("FK_Event"); // 发送成功，失败标记.
-
-		ndevs.Retrieve(FrmEventAttr.FK_Event, fk_Event, FrmEventAttr.FK_Node, this.getFK_Node());
-		DataTable dt = ndevs.ToDataTableField("FrmEvents");
-		ds.Tables.add(dt);
-
+		  
 		// 业务单元集合.
 		DataTable dtBuess = new DataTable();
 		dtBuess.Columns.Add("No", String.class);
@@ -127,43 +118,10 @@ public class WF_Admin_AttrNode extends WebContralBase{
 			dr.setValue("Name", en.getTitle());
 			dtBuess.Rows.add(dr);
 		}
-		ds.Tables.add(dtBuess);
-		return BP.Tools.Json.ToJson(ds);
+		 
+		return BP.Tools.Json.ToJson(dtBuess);
 	}
-
-	 /// <summary>
-    /// 执行删除
-    /// </summary>
-    /// <returns></returns>
-	public String ActionDtl_Delete() throws Exception {
-		// 事件实体.
-		FrmEvent en = new FrmEvent(this.getMyPK());
-		en.Delete();
-		return "删除成功.";
-	}
-
-	public String ActionDtl_Save() throws Exception {
-		// 事件实体.
-		FrmEvent en = new FrmEvent();
-		en.setFK_Node(this.getFK_Node());
-		en.setFK_Event(this.GetRequestVal("FK_Event")); // 事件类型.
-		en.setHisDoTypeInt(this.GetValIntFromFrmByKey("EventDoType")); // 执行类型.
-		en.setMyPK(this.getFK_Node() + "_" + en.getFK_Event() + "_" + en.getHisDoTypeInt()); // 组合主键.
-		en.RetrieveFromDBSources();
-
-		en.setMsgOKString(this.GetValFromFrmByKey("MsgOK")); // 成功的消息.
-		en.setMsgErrorString(this.GetValFromFrmByKey("MsgError")); // 失败的消息.
-
-		// 执行内容.
-		if (en.getHisDoType() == EventDoType.BuessUnit)
-			en.setDoDoc(this.GetValFromFrmByKey("DDL_Doc"));
-		else
-			en.setDoDoc(this.GetValFromFrmByKey("TB_Doc"));
-
-		en.Save();
-
-		return "保存成功.";
-	}
+  
 
 	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	///#region 表单模式

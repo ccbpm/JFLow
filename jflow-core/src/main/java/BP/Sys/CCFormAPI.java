@@ -286,7 +286,10 @@ public class CCFormAPI
         	 attr.setLGType( FieldTypeS.Normal);
         }
         	
-        
+        //frmID设置字段所属的分组
+        GroupField groupField = new GroupField();
+        groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+        attr.setGroupID((int)groupField.getOID());
         attr.Save();
 
         //如果是普通的字段, 这个属于外部数据类型,或者webservices类型.
@@ -368,6 +371,12 @@ public class CCFormAPI
 				rb.Save();
 			}
 		}
+		
+		//frmID设置字段所属的分组
+        GroupField groupField = new GroupField();
+        groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+        ma.setGroupID((int)groupField.getOID());
+        
 		ma.Save();
 	}
 	/** 
@@ -392,6 +401,12 @@ public class CCFormAPI
 		ma.setMyDataType(mydataType);
 		ma.setX(x);
 		ma.setY(y);
+		
+		//frmID设置字段所属的分组
+        GroupField groupField = new GroupField();
+        groupField.Retrieve(GroupFieldAttr.FrmID, frmID, GroupFieldAttr.CtrlType, "");
+        ma.setGroupID((int)groupField.getOID());
+        
 		ma.Insert();
 
 	}
@@ -410,6 +425,11 @@ public class CCFormAPI
 		ma.setLGType(FieldTypeS.Enum);
 		ma.setUIContralType(ctrlType);
 		ma.setUIBindKey(enumKey);
+		
+		//frmID设置字段所属的分组
+        GroupField groupField = new GroupField();
+        groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+        ma.setGroupID((int)groupField.getOID());
 		ma.Insert();
 
 		if (ma.getUIContralType() != UIContralType.RadioBtn)

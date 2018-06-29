@@ -22,8 +22,22 @@ public class DataTable implements Cloneable
 	 */
 	public String TableName;
 	private DataRow[] dataRows;
+	
+	
 	/**
-	 * @return 创建并返回此对象的一个副本。
+	 * @return 复制DataTable的结构
+	 */
+	public DataTable copy(){		
+		DataTable v = new DataTable();
+		for(DataColumn Column: this.Columns){
+			v.Columns.Add(Column.ColumnName,Column.DataType);
+		}
+		return v;
+		
+	}
+	
+	/**
+	 * @return 复制DataTable的结构与数据。
 	 * @throws CloneNotSupportedException
 	 */
 	public DataTable clone()

@@ -65,6 +65,7 @@ import BP.WF.XML.EventLists;
 public class WF_Admin_AttrNode extends WebContralBase {
 
 	public String getShowType() {
+		
 		if (this.getFK_Node() != 0)
 			return "Node";
 

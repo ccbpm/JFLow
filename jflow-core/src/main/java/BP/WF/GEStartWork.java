@@ -12,6 +12,10 @@ public class GEStartWork extends StartWork
 
 	
 		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2209840289945012750L;
 	/** 
 	 开始工作节点
 	 
@@ -29,6 +33,14 @@ public class GEStartWork extends StartWork
 		this.setNodeID(nodeid);
 		this.NodeFrmID = nodeFrmID;
 		this.setSQLCash(null);
+		
+		try {
+			Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);		  
+			this.set_enMap(map);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 	}
 	/** 
@@ -43,6 +55,15 @@ public class GEStartWork extends StartWork
 		this.NodeFrmID = nodeFrmID;
 		this.setOID(_oid);
 		this.setSQLCash(null);
+		
+		try {
+		Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);		  
+		this.set_enMap(map);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 	}
 	 
 	/** 
@@ -52,13 +73,21 @@ public class GEStartWork extends StartWork
 	@Override
 	public Map getEnMap()
 	{
+		  
 		 
 			try {
-				this.set_enMap(BP.Sys.MapData.GenerHisMap(this.NodeFrmID));
+				
+				Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);
+				  
+			this.set_enMap(map);
+			
+			return map;
+				//return map;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 		 
 		return this.get_enMap();
 	}

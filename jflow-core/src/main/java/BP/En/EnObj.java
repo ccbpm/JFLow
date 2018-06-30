@@ -344,6 +344,7 @@ public abstract class EnObj implements Serializable {
 	 * Map
 	 */
 	protected final Map get_enMap() {
+		
 		if (_tmpEnMap != null) {
 			return _tmpEnMap;
 		}

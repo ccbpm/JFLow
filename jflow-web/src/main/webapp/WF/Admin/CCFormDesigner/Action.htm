@@ -26,13 +26,13 @@
             $("#Msg").html("正在加载,请稍后......");
 
             //初始化groupID.
-            var nodeID = GetQueryString("FK_Node");
+            var frmID = GetQueryString("FK_MapData");
 
             var ens = new Entities("BP.Sys.FrmEvents");
-            ens.Retrieve("FK_Node", nodeID);
+            ens.Retrieve("FK_MapData", frmID);
 
             var html = "<table style='width:98%;'>";
-            html += "<caption><img src='../../Img/Event.png' />节点事件 </caption>";
+            html += "<caption><img src='../../Img/Event.png' />表单事件 </caption>";
             html += "<tr>";
             html += "<th>序</th>";
             html += "<th>事件标记</th>";
@@ -61,7 +61,7 @@
         });
 
         function New() {
-            var url = "ActionDtl.htm?FK_Node=" + GetQueryString("FK_Node");
+            var url = "ActionDtl.htm?FK_MapData=" + GetQueryString("FK_MapData");
             window.location.href = url;
         }
 
@@ -78,15 +78,10 @@
         function GetActionTypeName(type) {
             //事件类型.
             var eventLists = [
-            { No: "WorkArrive", Name: "工作到达", IsHaveMsg: 1, Note: '到达当前的工作的时候.' },
-            { No: "SendWhen", Name: "当节点发送前", IsHaveMsg: 0, Note: '发送前事件，可以抛出异常阻止流程向下发送.' },
-            { No: "SendSuccess", Name: "节点发送成功时", IsHaveMsg: 1, Note: '成功的事件.' },
-            { No: "SendError", Name: "节点发送失败时", IsHaveMsg: 0, Note: '失败后的处理业务.' },
-            { No: "ReturnBefore", Name: "当节点退回前", IsHaveMsg: 0, Note: '退回前的业务逻辑，可以抛出异常阻止退回.' },
-            { No: "ReturnAfter", Name: "当节点退回后", IsHaveMsg: 1, Note: '退回后的业务逻辑.' },
-            { No: "UndoneBefore", Name: "当节点撤销发送前", IsHaveMsg: 0, Note: '可以抛出异常阻止撤销动作.' },
-            { No: "UndoneAfter", Name: "当节点撤销发送后", IsHaveMsg: 1, Note: '.' },
-            { No: "WhenReadWork", Name: "工作打开后", IsHaveMsg: 0, Note: '打开工作的时候，就是接受人阅读的时候.' }
+            { No: "FrmLoadBefore", Name: "节点表单载入前" },
+            { No: "FrmLoadAfter", Name: "节点表单载入后" },
+            { No: "SaveBefore", Name: "当表单保存前" },
+            { No: "SaveAfter", Name: "当表单保存后" }
             ]
 
             for (var i = 0; i < eventLists.length; i++) {
@@ -125,8 +120,8 @@
      <div id="Msg"></div>
      
      <br />
-     <input type=button value="+新建节点事件"  onclick="javascript:New()" />
-     <input type=button value="什么是节点事件？"  onclick="javascript:Help()" />
+     <input type=button value="+新建事件"  onclick="javascript:New()" />
+     <input type=button value="什么是事件？"  onclick="javascript:Help()" />
 
 
 	</form>

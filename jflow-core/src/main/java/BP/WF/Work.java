@@ -327,66 +327,7 @@ public abstract class Work extends Entity
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
 	}
-	/** 
-	 产生本工作中所有的外键参数
-	 附加一些必要的属性.
-	 @return 
-	 * @throws Exception 
-	*/
-	private String GenerParas_del() throws Exception
-	{
-		String paras = "*WorkID" + this.getOID() + "*UserNo=" + this.getRec();
-		for (Attr attr : this.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.Normal)
-			{
-				continue;
-			}
-
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-
-			if (attr.getMyFieldType() == FieldType.NormalVirtual)
-			{
-				continue;
-			}
-
-			if (WorkAttr.Rec.equals(attr.getKey()) || attr.getKey().equals("OID"))
-			{
-				continue;
-			}
-
-			paras += "*" + attr.getKey() + "=" + this.GetValStringByKey(attr.getKey());
-		}
-		return paras;
-	}
-	public String getWorkEndInfo()
-	{
-		String tp = "";
-			//FAppSets sets = new FAppSets(this.NodeID);
-			//foreach (FAppSet set in sets)
-			//{
-			//    if (set.DoWhat.Contains("?"))
-			//        tp += "[<a href=\"javascript:WinOpen('" + set.DoWhat + "&WorkID=" + this.OID + "' ,'sd');\" ><img src='/WF/Img/Btn/Do.gif' border=0/>" + set.Name + "</a>]";
-			//    else
-			//        tp += "[<a href=\"javascript:WinOpen('" + set.DoWhat + "?WorkID=" + this.OID + "' ,'sd');\" ><img src='/WF/Img/Btn/Do.gif' border=0/>" + set.Name + "</a>]";
-			//}
-			//if (this.HisNode.IsHaveSubFlow)
-			//{
-			//    NodeFlows flows = new NodeFlows(this.HisNode.NodeID);
-			//    foreach (NodeFlow fl in flows)
-			//    {
-			//        tp += "[<a href='CallSubFlow.jsp?FID=" + this.OID + "&FK_Flow=" + fl.FK_Flow + "&FK_FlowFrom=" + this.HisNode.FK_Flow + "' ><img src='/WF/Img/Btn/Do.gif' border=0/>" + fl.FK_FlowT + "</a>]";
-			//    }
-			//}
-		if (tp.length() > 0)
-		{
-			return "<div align=left>" + tp + "</div>";
-		}
-		return tp;
-	}
+	  
 	/** 
 	 产生要执行的url.
 	 * @throws Exception 

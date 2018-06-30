@@ -44,6 +44,8 @@ public class GEWork extends Work
 		this.NodeFrmID = nodeFrmID;
 		this.setNodeID(nodeid);
 		this.setSQLCash(null);
+		
+		
 	}
 	/** 
 	 普通工作
@@ -56,6 +58,14 @@ public class GEWork extends Work
 		this.setNodeID(nodeid);
 		this.setOID(_oid);
 		this.setSQLCash(null);
+		
+		try {
+			Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);		  
+			this.set_enMap(map);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	/** 
 	 重写基类方法

@@ -8,7 +8,6 @@
 	<modules>
 		<module>jflow-core</module>
 		<module>jflow-web</module>
-    	<module>JMobile</module>
   </modules>
 	
 		<properties>

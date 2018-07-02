@@ -5205,16 +5205,11 @@ public class Flow extends BP.En.EntityNoName
 		map.AddTBInt(FlowAttr.DType, 0, "设计类型0=ccbpm,1=bpmn", true, false);
 
 		map.AddTBInt(FlowAttr.FlowDeleteRole, 0, "流程实例删除规则", true, false);
-
-
-
-
-
+ 
 			//参数.
 		map.AddTBAtParas(1000);
 
-
-
+ 
 			///#region 数据同步方案
 			//数据同步方式.
 		map.AddTBInt(FlowAttr.DTSWay, FlowDTSWay.None.getValue(), "同步方式", true, true);

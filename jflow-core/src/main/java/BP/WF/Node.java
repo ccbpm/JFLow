@@ -1947,14 +1947,7 @@ public class Node extends Entity
 	{
 		this.SetValByKey(NodeAttr.IsCanOver, value);
 	}
-	public final boolean getIsCanRpt()
-	{
-		return this.GetValBooleanByKey(NodeAttr.IsCanRpt);
-	}
-	public final void setIsCanRpt(boolean value)
-	{
-		this.SetValByKey(NodeAttr.IsCanRpt, value);
-	}
+	 
 	/** 
 	 是否可以移交
 	*/
@@ -2343,9 +2336,7 @@ public class Node extends Entity
         map.AddTBInt(NodeAttr.SaveModel, 0, "保存模式", true, true);
 
 
-        map.AddTBInt(NodeAttr.IsCanRpt, 1, "是否可以查看工作报告?", true, true);
-        map.AddTBInt(NodeAttr.IsCanOver, 0, "是否可以终止流程", true, true);
-        map.AddTBInt(NodeAttr.IsSecret, 0, "是否是保密步骤", true, true);
+         
         map.AddTBInt(NodeAttr.IsCanDelFlow, 0, "是否可以删除流程", true, true);
 
         map.AddTBInt(NodeAttr.ThreadKillRole, 0, "子线程删除方式", true, true);

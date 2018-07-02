@@ -9,17 +9,14 @@ import BP.En.Entity;
 public class GEWorks extends Works
 {
 
-		///#region 重载基类方法
+		 
 	/** 
 	 节点ID
 	 
 	*/
 	public int NodeID = 0;
 
-		///#endregion
-
-
-		///#region 方法
+	 
 	/** 
 	 得到它的 Entity
 	 
@@ -52,5 +49,5 @@ public class GEWorks extends Works
 	}
 	public String NodeFrmID = "";
 
-		///#endregion
+		 
 }

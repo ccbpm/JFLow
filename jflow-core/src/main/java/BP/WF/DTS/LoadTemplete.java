@@ -152,7 +152,7 @@ public class LoadTemplete extends Method
 		dirs = dirInfo.listFiles();
 
 		FlowSort fsRoot = new FlowSort();
-		fsRoot.setNo ( "99");
+		fsRoot.setNo ( "1");
 		fsRoot.setName("流程树");
 		fsRoot.setParentNo ( "0");
 		fsRoot.DirectInsert();

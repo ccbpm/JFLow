@@ -104,11 +104,7 @@ public class NodeAttr
 	public static final String IsRM = "IsRM";
 	public static final String FormType = "FormType";
 	public static final String FormUrl = "FormUrl";
-	/** 
-	 是否可以查看工作报告
 	 
-	*/
-	public static final String IsCanRpt = "IsCanRpt";
 	/** 
 	 发送之前的信息提示
 	 

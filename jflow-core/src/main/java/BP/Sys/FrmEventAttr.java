@@ -22,6 +22,7 @@ public class FrmEventAttr
 	 
 	*/
 	public static final String FK_MapData = "FK_MapData";
+	public static final String FK_Flow = "FK_Flow";	
 
 	public static final String FK_Node = "FK_Node";
 

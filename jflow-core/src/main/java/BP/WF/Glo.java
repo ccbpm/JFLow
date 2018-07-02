@@ -357,18 +357,7 @@ public class Glo {
 			// 查询.
 			BP.WF.Data.CH ch = new CH();
 			ch.CheckPhysicsTable();
-
-			// 没有Week字段，所以注释掉 2016-7-20
-			// sql = "SELECT MyPK,DTFrom FROM WF_CH WHERE WeekNum=0 or WeekNum
-			// is null ";
-			// dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			// for (DataRow dr : dt.Rows) {
-			// sql = "UPDATE WF_CH SET Week=" + BP.DA.DataType.WeekOfYear(
-			// BP.DA.DataType.ParseSysDateTime2DateTime(dr.getValue(1).toString()))
-			// + " WHERE MyPK='" + dr.getValue(0).toString() + "'";
-			// BP.DA.DBAccess.RunSQL(sql);
-			// }
-			// /#endregion 增加week字段.
+ 
 
 			// /#region 检查数据源.
 			SFDBSrc src = new SFDBSrc();
@@ -566,9 +555,7 @@ public class Glo {
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm+'_'+convert(varchar,FK_Node )+'_'+FK_Flow");
 
 			// /#region 检查必要的升级。
-			// 部门
-			BP.Port.Dept d = new BP.Port.Dept();
-			d.CheckPhysicsTable();
+		 
 
 			FrmWorkCheck fwc = new FrmWorkCheck();
 			fwc.CheckPhysicsTable();
@@ -876,34 +863,7 @@ public class Glo {
 		if (demoType == 2) {
 			isInstallFlowDemo = false;
 		}
-
-		// String msqlscript = SystemConfig.getPathOfData() +
-		// "\\Install\\SQLScript\\InitPublicData.sql";
-		// BP.DA.DBAccess.RunSQLScript(msqlscript);
-
-		/*
-		 * String msqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() +
-		 * "\\WF\\Data\\Install\\SQLScript\\InitView_SQL.sql";
-		 * BP.DA.DBAccess.RunSQLScript(msqlscript); if (msqlscript.length()!=2)
-		 * return ;
-		 */
-
-		// 如果是OneOne模式
-		// String msqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() +
-		// "\\WF\\Data\\Install\\SQLScript\\Port_Inc_CH_WorkFlow.sql";
-		// BP.DA.DBAccess.RunSQLScript(msqlscript);
-
-		// 检查是否是空白的数据库。
-		// if (BP.DA.DBAccess.IsExitsObject("WF_Emp")
-		// || BP.DA.DBAccess.IsExitsObject("WF_Flow")
-		// || BP.DA.DBAccess.IsExitsObject("Port_Emp")
-		// || BP.DA.DBAccess.IsExitsObject("CN_City"))
-		// {
-		// throw new
-		// Exception("@当前的数据库好像是一个安装执行失败的数据库，里面包含了一些cc的表，所以您需要删除这个数据库然后执行重新安装。");
-		// }
-
-		// 检查是否是空白的数据库。
+ 
 
 		java.util.ArrayList al = null;
 		String info = "BP.En.Entity";
@@ -921,11 +881,12 @@ public class Glo {
 
 		NodeExt ne = new NodeExt();
 		ne.CheckPhysicsTable();
-
+ 
 		// 先创建表，否则列的顺序就会变化.
 
 		// 1, 创建or修复表
 		for (Object obj : al) {
+			
 			Entity en = null;
 			en = (Entity) ((obj instanceof Entity) ? obj : null);
 			if (en == null) {
@@ -934,14 +895,7 @@ public class Glo {
 
 			// 获得类名.
 			String clsName = en.toString();
-
-			/*
-			 * if (!StringUtils.isEmpty(clsName) &&
-			 * clsName.contains("FlowSheet") == true) continue; if
-			 * (!StringUtils.isEmpty(clsName) && clsName.contains("NodeSheet")
-			 * == true) continue;
-			 */
-
+ 
 			// 不安装CCIM的表.
 			if (clsName != null && clsName.contains("BP.CCIM")) {
 				continue;
@@ -975,13 +929,7 @@ public class Glo {
 					|| table.equals("V_FlowData")) {
 				continue;
 			}
-			// ORIGINAL LINE: case "Sys_Enum":
-			else if (table.equals("Sys_Enum")) {
-				en.CheckPhysicsTable();
-			} else {
-				en.CheckPhysicsTable();
-			}
-
+			 
 			en.CheckPhysicsTable();
 
 		}
@@ -1010,18 +958,10 @@ public class Glo {
 		BP.DA.DBAccess.RunSQL("DELETE FROM Port_DeptStation");
 
 		String sqlscript = "";
-		if (Glo.getOSModel() == BP.Sys.OSModel.OneOne) {
-			// 如果是OneOne模式
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath()
-					+ "\\WF\\Data\\Install\\SQLScript\\Port_Inc_CH_WorkFlow.sql";
-			BP.DA.DBAccess.RunSQLScript(sqlscript);
-		}
-
-		if (Glo.getOSModel() == BP.Sys.OSModel.OneMore) {
-			// 如果是OneMore模式
+		  
 			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\Port_Inc_CH_BPM.sql";
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
-		}
+		
 		// 修复
 		// 4, 创建视图与数据.
 		// 执行必须的sql.
@@ -1051,7 +991,7 @@ public class Glo {
 		} else {
 			FlowSort fs = new FlowSort();
 			fs.setNo("02");
-			fs.setParentNo("99");
+			fs.setParentNo("1");
 			fs.setName("其他类");
 			fs.DirectInsert();
 		}
@@ -1108,22 +1048,18 @@ public class Glo {
 		// 初始化数据
 		// 装载 demo.flow
 		if (isInstallFlowDemo == true) {
+			
 			BP.Port.Emp emp = new BP.Port.Emp("admin");
 			BP.Web.WebUser.SignInOfGener(emp);
 			BP.Sys.Glo.WriteLineInfo("开始装载模板...");
 
 			String msg = "";
-			if (demoType == 0) {
+			 
 				// 装载数据模版.
 				BP.WF.DTS.LoadTemplete l = new BP.WF.DTS.LoadTemplete();
 				Object tempVar = l.Do();
 				msg = (String) ((tempVar instanceof String) ? tempVar : null);
-			} else {
-				// 装载数据模版.
-				BP.WF.DTS.LoadTempleteOfBuess l2 = new BP.WF.DTS.LoadTempleteOfBuess();
-				Object tempVar2 = l2.Do();
-				msg = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
-			}
+			 
 
 			BP.Sys.Glo.WriteLineInfo("装载模板完成......");
 
@@ -1137,7 +1073,7 @@ public class Glo {
 
 			FlowSort fs = new FlowSort();
 			fs.setName("流程树");
-			fs.setNo("01");
+			fs.setNo("1");
 			fs.setTreeNo("01");
 			fs.setIsDir(true);
 			fs.setParentNo("0");

@@ -1109,7 +1109,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoAction()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Action.htm?NodeID=0&FK_Flow=" + this.getNo() + "&tk=" + new java.util.Random().nextDouble();
+		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/Action.htm?FK_Flow=" + this.getNo() + "&tk=" + new java.util.Random().nextDouble();
 	}
 	public final String DoDBSrc()
 	{

@@ -3021,7 +3021,7 @@ public abstract class Entity extends EnObj {
 			case DataType.AppInt:
 			case DataType.AppBoolean:
 				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField()
-						+ " INT DEFAULT '" + attr.getDefaultVal() + "' NULL");
+						+ " INT DEFAULT " + attr.getDefaultVal() + " NULL");
 				break;
 			case DataType.AppFloat:
 			case DataType.AppMoney:
@@ -3178,7 +3178,7 @@ public abstract class Entity extends EnObj {
 			case DataType.AppInt:
 			case DataType.AppBoolean:
 				DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
-						+ " INT DEFAULT '" + attr.getDefaultVal() + "'   NULL");
+						+ " INT DEFAULT " + attr.getDefaultVal() + "  NULL");
 				break;
 			case DataType.AppFloat:
 			case DataType.AppMoney:

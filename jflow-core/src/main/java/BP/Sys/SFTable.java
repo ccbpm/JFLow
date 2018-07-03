@@ -780,7 +780,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 	 
 	 @return 
 	*/
-	public final DataTable GenerData()
+	public final DataTable GenerData_bak()
 	{
 		String sql = "";
 		if (this.getSrcType() == BP.Sys.SrcType.CreateTable)
@@ -800,11 +800,12 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 
 	/** 
 	 初始化数据.
+	 * @throws Exception 
 	 
 	*/
-	public final void InitDataTable()
+	public final void InitDataTable() throws Exception
 	{
-		DataTable dt = this.GenerData();
+		DataTable dt = this.getGenerHisDataTable();
 
 		String sql = "";
 		if (dt.Rows.size() == 0)
@@ -841,8 +842,8 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 	 /// 返回json.
     /// </summary>
     /// <returns></returns>
-    public String GenerDataOfJson()
+    public String GenerDataOfJson() throws Exception
     {
-        return BP.Tools.Json.ToJson(this.GenerData());
+        return BP.Tools.Json.ToJson(this.getGenerHisDataTable());
     }
 }

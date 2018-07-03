@@ -1552,7 +1552,7 @@ public class WF_Comm extends WebContralBase {
 	/// #region 公共方法。
 	public final String SFTable() throws Exception {
 		BP.Sys.SFTable sftable = new BP.Sys.SFTable(this.GetRequestVal("SFTable"));
-		DataTable dt = sftable.GenerData();
+		DataTable dt = sftable.getGenerHisDataTable();
 		return BP.Tools.Json.ToJson(dt);
 	}
 

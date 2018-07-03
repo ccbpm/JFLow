@@ -45,7 +45,7 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
     (function (AttrOfOper, data, FK_MapData) {
 
         //如果是checkbox 多选.
-        if (mapExt.Tag == "1" || mapExt.Tag == "2") {
+        if (mapExt.Tag == "1") {
             return MakeCheckBoxsModel(mapExt, data, mapAttr);
         }
 

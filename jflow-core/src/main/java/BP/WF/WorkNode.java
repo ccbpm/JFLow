@@ -1116,7 +1116,7 @@ public class WorkNode {
 				// 跳过去的节点也要写入数据，不然会造成签名错误。
 				skipWork = nd.getHisWork();
 
-				if (skipWork.getEnMap().getPhysicsTable() != this.rptGe.getEnMap().getPhysicsTable()) {
+				if (!skipWork.getEnMap().getPhysicsTable().equals(this.rptGe.getEnMap().getPhysicsTable())) {
 					skipWork.Copy(this.rptGe);
 					skipWork.Copy(mywork);
 

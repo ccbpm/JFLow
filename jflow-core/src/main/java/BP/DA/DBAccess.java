@@ -1615,15 +1615,18 @@ public class DBAccess {
 		try {
 			conn = DBAccess.getGetAppCenterDBConn_MySQL();
 			DataTable oratb = new DataTable("otb");
+			String nameLabel = "";
 			if (null != paras && paras.size() > 0) {
 				pstmt = new NamedParameterStatement(conn, sql);
 				PrepareCommand(pstmt, paras);
-				// pstmt.setString(1, "李思");
 				rs = pstmt.executeQuery();
 				ResultSetMetaData rsmd = rs.getMetaData();
 				int size = rsmd.getColumnCount();
 				for (int i = 0; i < size; i++) {
-					oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+					//原来的  oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+					//mysql取值导致流程名称重复，改为label取值
+					nameLabel =rsmd.getColumnLabel(i + 1);
+					oratb.Columns.Add(nameLabel, Para.getDAType(rsmd.getColumnType(i + 1)));
 				}
 				while (rs.next()) {
 					DataRow dr = oratb.NewRow();// 產生一列DataRow
@@ -1653,7 +1656,9 @@ public class DBAccess {
 				ResultSetMetaData rsmd = rs.getMetaData();
 				int size = rsmd.getColumnCount();
 				for (int i = 0; i < size; i++) {
-					oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+					//oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+					nameLabel = rsmd.getColumnLabel(i+1);
+					oratb.Columns.Add(nameLabel,Para.getDAType(rsmd.getColumnType(i+1)));
 				}
 				while (rs.next()) {
 					DataRow dr = oratb.NewRow();// 產生一列DataRow

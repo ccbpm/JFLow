@@ -35,6 +35,16 @@ import BP.WF.Rpt.RptDfine;
 import BP.Web.WebUser;
 
 public class WF_RptDfine extends WebContralBase{
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_RptDfine()
+	{
+	
+	}
+	
+	
 	public final String getSearchType()
 	{
 		return this.GetRequestVal("SearchType");

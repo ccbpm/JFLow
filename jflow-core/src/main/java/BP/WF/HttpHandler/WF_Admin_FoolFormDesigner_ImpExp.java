@@ -26,6 +26,17 @@ import BP.WF.Node;
 import BP.WF.HttpHandler.Base.WebContralBase;
 
 public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
+	
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_FoolFormDesigner_ImpExp()
+	{
+	
+	}
+	
+	
 	/**
 	 * 初始化 导入的界面 .
 	 * @return

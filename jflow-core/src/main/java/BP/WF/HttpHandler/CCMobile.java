@@ -18,6 +18,14 @@ import BP.WF.Template.*;
 public class CCMobile extends WebContralBase
 {
 
+	/**
+	 * 构造函数
+	 */
+	public CCMobile()
+	{
+	
+	}
+	
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法

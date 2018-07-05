@@ -8,6 +8,14 @@ import BP.WF.HttpHandler.Base.WebContralBase;
 */
 public class CCMobile_Setting extends WebContralBase
 {
+	/**
+	 * 构造函数
+	 */
+	public CCMobile_Setting()
+	{
+	
+	}
+	
 	public final String ChangeDept_Init() throws Exception
 	{
 		WF_Setting ccform = new WF_Setting();

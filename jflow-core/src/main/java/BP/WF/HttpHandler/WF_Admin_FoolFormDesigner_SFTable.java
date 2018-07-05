@@ -19,6 +19,15 @@ import BP.Sys.SrcType;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_FoolFormDesigner_SFTable()
+	{
+	
+	}
+	
 	///#region 执行父类的重写方法.
     /// <summary>
     /// 默认执行的方法

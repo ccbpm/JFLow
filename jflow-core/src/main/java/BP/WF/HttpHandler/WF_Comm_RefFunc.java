@@ -26,6 +26,16 @@ import BP.WF.Template.NodeDept;
 import BP.WF.Template.NodeDeptAttr;
 
 public class WF_Comm_RefFunc extends WebContralBase {
+	
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Comm_RefFunc()
+	{
+	
+	}
+	
 	/**
 	 * 保存节点绑定人员信息
 	 * @return

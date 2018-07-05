@@ -62,6 +62,15 @@ import BP.WF.Template.SysFormTrees;
 */
 public class WF_Admin_RptDfine extends WebContralBase
 {
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_RptDfine()
+	{
+	
+	}
+	
 	/** 
 	 初始化方法
 	 

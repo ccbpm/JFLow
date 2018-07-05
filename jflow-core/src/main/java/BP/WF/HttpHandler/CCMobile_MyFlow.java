@@ -15,6 +15,14 @@ import BP.WF.Template.*;
 */
 public class CCMobile_MyFlow extends WebContralBase
 {
+	/**
+	 * 构造函数
+	 */
+	public CCMobile_MyFlow()
+	{
+	
+	}
+	
 	/** 
 	 获得工作节点
 	 

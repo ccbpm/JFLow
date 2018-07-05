@@ -78,6 +78,16 @@ import BP.XML.XmlEn;
 import cn.jflow.common.model.AjaxJson;
 
 public class WF_WorkOpt_OneWork extends WebContralBase {
+	
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_WorkOpt_OneWork()
+	{
+	
+	}
+	
 	/**
 	 * 初始化函数
 	 * 
@@ -86,10 +96,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	public WF_WorkOpt_OneWork(HttpContext mycontext) {
 		this.context = mycontext;
 	}
-
-	public WF_WorkOpt_OneWork() {
-	}
-	
+ 
 	
 
 	

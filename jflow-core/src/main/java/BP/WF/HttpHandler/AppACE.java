@@ -187,7 +187,6 @@ public class AppACE extends WebContralBase{
 		
 		
 		
-		
 		return BP.Tools.Json.ToJsonEntityModel(ht);
     }
     

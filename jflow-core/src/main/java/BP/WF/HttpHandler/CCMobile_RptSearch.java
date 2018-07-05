@@ -15,6 +15,15 @@ import BP.WF.Template.*;
 */
 public class CCMobile_RptSearch extends WebContralBase
 {
+	
+	/**
+	 * 构造函数
+	 */
+	public CCMobile_RptSearch()
+	{
+	
+	}
+	
 
 	protected String DtlFieldUp(){
 		return "执行成功.";

@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
  * 页面功能实体
  */
 public class WF_Admin_Sln extends WebContralBase {
+	
 	public WF_Admin_Sln() {
 
 	}

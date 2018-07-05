@@ -110,6 +110,21 @@ public class CCFlowAPI {
 			wk.setOID(workID);
 			wk.RetrieveFromDBSources();
 			wk.ResetDefaultVal();
+			
+			
+			/*  @樊雷伟,  ba 
+			  System.Web.HttpContext.Current.Request.QueryString.AllKeys;			  
+			  // wk.SetValByKey(k,
+			  System.Web.HttpContext.Current.Request.QueryString[k]); // }
+			  Enumeration enu =
+			  ContextHolderUtils.getRequest().getParameterNames(); 
+			  while (enu.hasMoreElements())
+			  { String k = (String) enu.nextElement();
+			  wk.SetValByKey(k,ContextHolderUtils.getRequest().getParameter(k));
+			  
+			   }*/
+			  
+			  
 
 			// 第1.2: 调用,处理用户定义的业务逻辑.
 			String sendWhen = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.FrmLoadBefore, nd, wk, null);

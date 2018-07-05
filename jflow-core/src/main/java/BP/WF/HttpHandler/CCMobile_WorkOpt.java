@@ -15,6 +15,15 @@ import BP.WF.Template.*;
 */
 public class CCMobile_WorkOpt extends WebContralBase
 {
+	
+	/**
+	 * 构造函数
+	 */
+	public CCMobile_WorkOpt()
+	{
+	
+	}
+	
 	/** 
 	 打包下载
 	 

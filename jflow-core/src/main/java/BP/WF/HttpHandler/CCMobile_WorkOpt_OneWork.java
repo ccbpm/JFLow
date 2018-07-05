@@ -15,6 +15,14 @@ import BP.WF.Template.*;
 */
 public class CCMobile_WorkOpt_OneWork extends WebContralBase
 {
+	/**
+	 * 构造函数
+	 */
+	public CCMobile_WorkOpt_OneWork()
+	{
+	
+	}
+	
 
     ///#region xxx 界面 .
 	public final String TimeBase_Init() throws Exception

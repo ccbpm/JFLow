@@ -77,6 +77,14 @@ import BP.Web.WebUser;
 
 public class WF_MyFlow extends WebContralBase {
 	
+	/**
+	 * 构造函数
+	 */
+	public WF_MyFlow()
+	{
+	
+	}
+	
 	public long _WorkID=0;
 	@SuppressWarnings("unchecked")
 	public static ArrayList<EntityMultiTree> convertEntityMultiTree(Object obj)
@@ -644,8 +652,7 @@ public class WF_MyFlow extends WebContralBase {
 					appendMenuSb.setLength(0);;
 				}
 	 		
-	public WF_MyFlow() {
-	}
+ 
 
 	public String MyFlow_Init() throws Exception{
 		

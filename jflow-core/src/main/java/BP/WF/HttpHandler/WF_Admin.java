@@ -53,6 +53,16 @@ import BP.WF.Template.SysFormTrees;
  * 页面功能实体
  */
 public class WF_Admin extends WebContralBase {
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin()
+	{
+	
+	}
+	
+	
 	public final String getRefNo() {
 		return this.GetRequestVal("RefNo");
 	}

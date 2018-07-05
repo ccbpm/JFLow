@@ -64,6 +64,15 @@ import BP.WF.XML.EventLists;
 
 public class WF_Admin_AttrNode extends WebContralBase {
 
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_AttrNode()
+	{
+	
+	}
+	
 	public String getShowType() {
 		
 		if (this.getFK_Node() != 0)

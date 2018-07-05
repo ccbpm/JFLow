@@ -41,6 +41,15 @@ import cn.jflow.common.util.ContextHolderUtils;
 */
 public class CCMobile_CCForm extends WebContralBase
 {
+
+	/**
+	 * 构造函数
+	 */
+	public CCMobile_CCForm()
+	{
+	
+	}
+	
 	public final String HandlerMapExt() throws Exception
 	{
 		WF_CCForm en = new WF_CCForm();

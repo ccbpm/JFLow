@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import BP.DA.DataType;
 import BP.DA.Log;
 import BP.Sys.EventBase;
 import BP.Sys.GEDtl;
@@ -538,4 +539,34 @@ public class ClassFactory {
 		}
 		return path.substring(path.indexOf("/") + 1, path.lastIndexOf("/") - 7);
 	}
+	 
+
+	 // #region 获取 HandlerBase
+     private static Hashtable Htable_HandlerPage;
+     /// <summary>
+     /// 得到一个实体
+     /// </summary>
+     /// <param name="className">类名称</param>
+     /// <returns>En</returns>
+     public static Object GetHandlerPage(String className)
+     {
+
+         if (Htable_HandlerPage == null)
+         {
+             Htable_HandlerPage = new Hashtable();
+             String cl = "BP.WF.HttpHandler.DirectoryPageBase";
+             ArrayList al = ClassFactory.GetObjects(cl);
+             for (Object en : al)
+             {
+                 String key = "";
+                 if (null == en || DataType.IsNullOrEmpty(key = en.toString()))
+                     continue;
+
+                 if (Htable_HandlerPage.containsKey(key) == false)
+                     Htable_HandlerPage.put(key, en);
+
+             }
+         }
+         return Htable_HandlerPage.get(className);
+     }
 }

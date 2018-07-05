@@ -18,6 +18,8 @@ import BP.WF.HttpHandler.Base.WebContralBase;
 */
 public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 {
+	
+ 
 	/** 
 	 初始化函数
 	 @param mycontext

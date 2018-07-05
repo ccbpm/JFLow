@@ -30,6 +30,13 @@ import BP.WF.HttpHandler.Base.WebContralBase;
 public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
 	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_FoolFormDesigner_MapExt()
+	{
+	
+	}
 	/// <summary>
     /// 保存
     /// </summary>

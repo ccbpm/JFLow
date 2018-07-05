@@ -74,6 +74,15 @@ import BP.Web.WebUser;
 */
 public class WF_Admin_FoolFormDesigner extends WebContralBase
 {
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_FoolFormDesigner()
+	{
+	
+	}
+	
 	  /// <summary>
     /// 获得表单对应的物理表特定的数据类型字段
     /// </summary>

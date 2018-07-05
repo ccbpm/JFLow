@@ -11,6 +11,15 @@ import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
 public class WF_RptSearch extends WebContralBase{
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_RptSearch()
+	{
+	
+	}
+	
 	/**
 	 * 流程分布
 	 * @return

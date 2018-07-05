@@ -57,6 +57,15 @@ import BP.XML.XmlEn;
 public class WF_Admin_CCBPMDesigner extends WebContralBase
 {
 	 
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_CCBPMDesigner()
+	{
+	
+	}
+	
+	
 	/** 
 	 流程信息.
 	 

@@ -38,6 +38,15 @@ import BP.WF.HttpHandler.Base.WebContralBase;
 */
 public class WF_Comm_Sys extends WebContralBase
 {
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Comm_Sys()
+	{
+	
+	}
+	
 	/** 
 	 函数库
 	 

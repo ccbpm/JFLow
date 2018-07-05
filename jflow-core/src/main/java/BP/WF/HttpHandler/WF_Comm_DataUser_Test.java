@@ -7,6 +7,17 @@ import BP.DA.DataTable;
 import BP.WF.HttpHandler.Base.WebContralBase;
 
 public class WF_Comm_DataUser_Test extends WebContralBase {
+	
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Comm_DataUser_Test()
+	{
+	
+	}
+	
+	
 	String sql = "";
 	String doType = this.getRequest().getParameter("DoType");
 			///#region 开窗返回值的demo.

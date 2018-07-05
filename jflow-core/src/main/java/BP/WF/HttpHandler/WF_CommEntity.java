@@ -44,6 +44,14 @@ import BP.Web.WebUser;
 public class WF_CommEntity extends WebContralBase {
 
 	
+	/**
+	 * 构造函数
+	 */
+	public WF_CommEntity()
+	{
+	
+	}
+	
 	  public String BranchesAndLeaf_SearchByNodeID() throws Exception
       {
 		  String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");

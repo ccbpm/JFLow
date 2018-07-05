@@ -16,6 +16,15 @@ import BP.WF.Template.*;
 public class WF_Setting extends WebContralBase
 {
 	
+	/**
+	 * 构造函数
+	 */
+	public WF_Setting()
+	{
+	
+	}
+	
+	
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 执行父类的重写方法.
 	/** 

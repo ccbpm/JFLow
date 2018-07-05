@@ -33,6 +33,16 @@ import BP.WF.Template.TruckViewPower;
 public class WF_Admin_AttrFlow extends WebContralBase {
 	// private static final String FK_Flow = null;
 
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_AttrFlow()
+	{
+	
+	}
+	
+	
 	/**
 	 * 代码生成器.
 	 * 

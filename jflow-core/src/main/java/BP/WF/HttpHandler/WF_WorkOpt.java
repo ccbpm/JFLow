@@ -84,6 +84,14 @@ import BP.WF.Template.TimelineRole;
 import BP.Web.WebUser;
 
 public class WF_WorkOpt extends WebContralBase {
+	
+	/**
+	 * 构造函数
+	 */
+	public WF_WorkOpt()
+	{
+	
+	}
 
 	/**
 	 * 初始化函数
@@ -94,8 +102,7 @@ public class WF_WorkOpt extends WebContralBase {
 		this.context = mycontext;
 	}
 
-	public WF_WorkOpt() {
-	}
+	 
 
 	public final String SelectEmps_Init() throws Exception {
 		String fk_dept = this.getFK_Dept();

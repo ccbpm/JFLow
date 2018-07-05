@@ -380,7 +380,22 @@ public class DataSet {
 					if (!isContains(dt.Columns.subList(0, dt.Columns.size()), at.getName())) {
 						dt.Columns.Add(at.getName());
 					}
-					dr.setValue(at.getName(), at.getText());
+					String value = at.getText();
+					try {
+						//导出模板进行了转义，现在进行反转 dgq 2018-7-5
+						if (value.toString().contains("&gt;") || value.toString().contains("&lt;") 
+								|| value.toString().contains("&amp;") || value.toString().contains("&apos;") 
+								|| value.toString().contains("&quot;")) {
+							value = value.toString().replace("&amp;", "&");
+							value = value.toString().replace("&gt;",">");
+							value = value.toString().replace("&lt;","<");
+							value = value.toString().replace("&apos;","'");
+							value = value.toString().replace("&quot;","\"");
+						}
+					} catch (Exception e) {
+
+					}
+					dr.setValue(at.getName(), value);
 				}
 			}
 		} catch (Exception e) {

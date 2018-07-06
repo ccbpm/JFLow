@@ -1281,7 +1281,7 @@ public class NodeExt extends Entity
 	}
 	public final String DoCond()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Cond/Condition.htm?CondType=" + CondType.Flow.getValue() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MainNode=" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=" + this.getNodeID();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Cond/List.htm?CondType=" + CondType.Flow.getValue() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MainNode=" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=" + this.getNodeID();
 	}
 	/** 
 	 设计傻瓜表单

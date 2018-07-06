@@ -435,17 +435,13 @@
                 html += "<tr>";
                 html += "<td class='FDesc' style='width:20%;'>附件上传</td>";
                 html += "<td colspan=3>";
-                html += "<input type='file' id='File_Upload' name='File_Upload' style='background-color:white' />";
+                html += "<input type='file' id='File_Upload' name='File_Upload' style='background-color:white' onchange='uploadFile()'/>";
                 html += "</td>";
                 html += "</tr>";
 
             }
 
             html += "</table>";
-
-
-          
-
             return html;
         }
 
@@ -787,14 +783,11 @@
 
                 }
 
-                en.Insert();
-
-
-                var pkval = en.GetPKVal();
-                //保存实体后文件上传
-                var entityAthType = mapData.GetPara("BPEntityAthType")
-                if (entityAthType == 1 || entityAthType == 2)
-                    uploadFile(pkval);
+                var info = en.Insert();
+                if (info != 1) {
+                    alert('更新错误:' + info);
+                    return;
+                }
 
 
                 url += "?EnName=" + GetQueryString("EnName") + "&PKVal=" + pkval + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal");
@@ -813,18 +806,20 @@
             var info = en.Update();
             if (info != 1) {
                 alert('更新错误:' + info);
+                return;
             }
-            //保存实体后文件上传
-            var entityAthType = mapData.GetPara("BPEntityAthType")
-            if (entityAthType == 1 || entityAthType == 2)
-                uploadFile(pkval);
 
              url += "?EnName=" + GetQueryString("EnName") + "&PKVal=" + en.pkval + "&RefKey=" + GetQueryString("RefKey") + "&RefVal=" + GetQueryString("RefVal");
             window.location.href = window.location.href; //刷新.
         }
 
         //文件上传
-        function uploadFile(pkval) {
+        function uploadFile() {
+            var pkval = GetPKVal();
+            if (pkval == null || pkval == "") {
+                alert("请先保存实体信息，然后才可以上传文件 ");
+                return ;
+            }
             var fileObj = document.getElementById("File_Upload").files[0]; // js 获取文件对象
             if (fileObj == null || (fileObj) == "undefined" || fileObj.size <= 0) {
                 alert("请选择上传的文件.");
@@ -867,7 +862,6 @@
 
         }
         function Delete() {
-
 
             if (window.confirm('您确定要删除吗？') == false)
                 return;
@@ -925,15 +919,14 @@
 <body class="easyui-layout">
 	
 	<div class="easyui-layout" data-options="region:'center'" border="false">
-        
 		
             <div class="easyui-layout" data-options="fit:true">
                 <div id="Btns" data-options="region:'north',noheader:true,split:false,border:false" style="height: 30px;padding: 2px; background-color: #E0ECFF">
                     <a id="Btn_New" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-new'" onclick="New()">新建</a>
                     <a id="Btn_Save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" onclick="Update()">保存</a>
                     <a id="Btn_Delete" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-delete'" onclick="Delete()">删除</a>
-                   
                 </div>
+
                 <div data-options="region:'center',noheader:true,border:false" style="margin:0px">
                    <div id="CCFormTabs" data-options="region:'center',noheader:true,border:false" style="margin:0px;padding:0px;overflow:auto">
              

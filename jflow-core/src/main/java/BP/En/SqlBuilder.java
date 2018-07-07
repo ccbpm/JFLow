@@ -3378,22 +3378,6 @@ public class SqlBuilder
 				case DataType.AppString:
 					if (attr.getUIIsDoc() && attr.getKey().equals("Doc"))
 					{
-						// String doc =
-						// en.GetValStrByKey(attr.getKey()).replace('\'', '~');
-						
-						// if (map.Attrs.Contains("DocLength"))
-						// en.SetValByKey("DocLength", doc.Length);
-						// if (doc.Length >= 2000)
-						// {
-						// Sys.SysDocFile.SetValV2(en.ToString(),
-						// en.PKVal.ToString(), doc);
-						// ps.Add(attr.Key, "");
-						// }
-						// else
-						// {
-						// ps.Add(attr.Key,
-						// en.GetValStrByKey(attr.Key).replace('\'', '~'));
-						// }
 						ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey())
 								.replace('\'', '~'));
 					} else

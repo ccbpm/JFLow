@@ -883,6 +883,15 @@ public class Flow extends BP.En.EntityNoName
 				//调用 OnCreateWorkID的方法.  add by zhoupeng 2016.12.4 for LIMS.
 				this.DoFlowEventEntity(EventListOfNode.FlowOnCreateWorkID, nd, wk, null, null, null);
 
+			}else
+			{
+				rpt.setOID(wk.getOID());
+				rpt.RetrieveFromDBSources();
+				
+				rpt.setFID(0);
+				rpt.setFlowStartRDT(BP.DA.DataType.getCurrentData());
+				rpt.setFlowEnderRDT(BP.DA.DataType.getCurrentData());
+				rpt.setMyNum(1);
 			}
 		}
 		catch (RuntimeException ex)

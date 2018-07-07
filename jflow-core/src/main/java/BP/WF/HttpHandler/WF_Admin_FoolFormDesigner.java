@@ -1283,6 +1283,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	{
 		
 		String no = this.GetRequestVal("KeyOfEn");
+		//系统判定特殊字段
+		if("BILLNO".equals(no))
+		{
+			no="BillNo";
+		}
 		String name = this.GetRequestVal("name");
 		String newNo = DataType.ParseStringForNo(no, 20);
 		String newName = DataType.ParseStringForName(name, 20);

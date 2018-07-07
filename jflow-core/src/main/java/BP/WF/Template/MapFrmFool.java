@@ -276,14 +276,14 @@ public class MapFrmFool extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "导出XML表单模版"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoExp";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Export.png";
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
-		//map.AddRefMethod(rm);
+		map.AddRefMethod(rm);
 
-
-			//带有参数的方法.
+		//带有参数的方法.
 		rm = new RefMethod();
 		rm.Title = "重命名字段";
 		rm.getHisAttrs().AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
@@ -736,13 +736,14 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoExp()
 	{
-		String urlExt = Glo.getCCFlowAppPath() + "WF/Admin/XAP/DoPort.jsp?DoType=DownFormTemplete&FK_MapData=" + this.getNo();
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData=" + this.getNo();
+		/*String urlExt = Glo.getCCFlowAppPath() + "WF/Admin/XAP/DoPort.jsp?DoType=DownFormTemplete&FK_MapData=" + this.getNo();
 		try {
 			PubClass.WinOpen(ContextHolderUtils.getResponse(), urlExt, 900, 1000);
 		} catch (IOException e) {
 			Log.DebugWriteError("MapFrmFool DoExp()" + e);
 		}
-		return null;
+		return null;*/
 	}
 
 		///#endregion 方法.

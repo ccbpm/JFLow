@@ -28,4 +28,7 @@ public class EnCfgAttr extends EntityNoAttr
 	 * Search,Group,设置.
 	 */
 	public static final String UI = "UI";
+	
+	public static final String Url = "Url";
+ 
 }

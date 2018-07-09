@@ -128,6 +128,8 @@ public class EnCfg extends EntityNo
 		map.AddTBStringPK(EnCfgAttr.No, null, "实体名称", true, false, 1, 100, 60);
 		map.AddTBString(EnCfgAttr.GroupTitle, null, "分组标签", true, false, 0,
 				2000, 60);
+        map.AddTBString(EnCfgAttr.Url, null, "要打开的Url", true, false, 0, 500, 60);
+
 		map.AddTBString(EnCfgAttr.FJSavePath, null, "保存路径", true, false, 0,
 				100, 60);
 		map.AddTBString(EnCfgAttr.FJWebPath, null, "附件Web路径", true, false, 0,

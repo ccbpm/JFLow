@@ -100,8 +100,12 @@ public class WorkCheck
 			else
 			{
 				qo.AddWhere(TrackAttr.WorkID, this.WorkID);
+				
+				if (this.WorkID!=0)
+				{
 				qo.addOr();
 				qo.AddWhere(TrackAttr.FID, this.WorkID);
+				}
 			}
 
 			qo.addOrderBy(TrackAttr.RDT);

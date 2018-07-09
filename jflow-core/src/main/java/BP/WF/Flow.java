@@ -5459,6 +5459,7 @@ public class Flow extends BP.En.EntityNoName
 		String oldFlowName = dtFlow.Rows.get(0).getValue("Name").toString();
 		
 		int oldFlowID = Integer.parseInt("".equals(oldFlowNo) ? "0" : oldFlowNo);
+		int iOldFlowLength = String.valueOf(oldFlowID).length();
 		//String timeKey = new java.util.Date().toString("yyMMddhhmmss");
 		SimpleDateFormat format = new SimpleDateFormat("yyMMddhhmmss");
 		String timeKey = format.format(new Date());
@@ -5658,12 +5659,12 @@ public class Flow extends BP.En.EntityNoName
 	                        
 	                        if (colName.equals("nodeid") || colName.equals("fk_node"))
 	                        {
-	                        	 if (val.length() == 3)
-	                                    val = flowID + val.substring(1);
-	                                else if (val.length() == 4)
-	                                    val = flowID + val.substring(2);
-	                                else if (val.length() == 5)
-	                                    val = flowID + val.substring(3);
+	                        	if (val.length() < iOldFlowLength)
+	                        	{
+	                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+	                        	        continue;   
+	                        	}
+	                        	val = flowID + val.substring(iOldFlowLength);
 	                        }
 	                        
 	                        if (colName.equals("fk_flow"))
@@ -5752,18 +5753,12 @@ public class Flow extends BP.En.EntityNoName
 //ORIGINAL LINE: case "tonodeid":
 							if (dc.ColumnName.toLowerCase().equals("tonodeid") || dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("nodeid"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow"))
 							{
@@ -5795,18 +5790,12 @@ public class Flow extends BP.En.EntityNoName
 //ORIGINAL LINE: case "tonodeid":
 							if (dc.ColumnName.toLowerCase().equals("tonodeid") || dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("nodeid"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow"))
 							{
@@ -5838,18 +5827,12 @@ public class Flow extends BP.En.EntityNoName
 //ORIGINAL LINE: case "tonodeid":
 							if (dc.ColumnName.toLowerCase().equals("tonodeid") || dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("nodeid"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow"))
 							{
@@ -5941,18 +5924,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow"))
 							{
@@ -5984,18 +5961,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("nodeid"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow"))
 							{
@@ -6027,18 +5998,12 @@ public class Flow extends BP.En.EntityNoName
 							}
 							if (dc.ColumnName.toLowerCase().equals("tonodeid") || dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("nodeid"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow"))
 							{
@@ -6097,18 +6062,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6143,18 +6102,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("returnn"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6191,18 +6144,12 @@ public class Flow extends BP.En.EntityNoName
 //ORIGINAL LINE: case "node":
 							if (dc.ColumnName.toLowerCase().equals("node") || dc.ColumnName.toLowerCase().equals("tonode"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6230,18 +6177,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6288,18 +6229,12 @@ public class Flow extends BP.En.EntityNoName
  
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6325,35 +6260,14 @@ public class Flow extends BP.En.EntityNoName
 							{
 								continue;
 							}
-							if (dc.ColumnName.toLowerCase().equals("nodefrmid"))
+							if (dc.ColumnName.toLowerCase().equals("nodeid"))
 							{
-									if (val.length() == 5)
-									{
-										val = "ND" + flowID + val.substring(3);
-									}
-									else if (val.length() == 6)
-									{
-										val = "ND" + flowID + val.substring(4);
-									}
-									else if (val.length() == 7)
-									{
-										val = "ND" + flowID + val.substring(5);
-									}
-							}
-							else if (dc.ColumnName.toLowerCase().equals("nodeid"))
-							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow")
 									|| dc.ColumnName.toLowerCase().equals("fk_flowsort"))
@@ -6413,6 +6327,9 @@ public class Flow extends BP.En.EntityNoName
 						nd.setNodeID(dr.getValue(NodeAttr.NodeID).toString().equals("") ? 0 : Integer.parseInt(dr.getValue(NodeAttr.NodeID).toString()));
 						nd.RetrieveFromDBSources();
 						nd.setFK_Flow(fl.getNo());
+						
+						//获取表单类别
+                        String formType = dr.getValue(NodeAttr.FormType).toString();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = (String)((dr.getValue(dc.ColumnName) instanceof String) ? dr.getValue(dc.ColumnName) : null);
@@ -6424,33 +6341,24 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("nodefrmid"))
 							{
-									if (val.length() == 5)
-									{
-										val = "ND" + flowID + val.substring(3);
-									}
-									else if (val.length() == 6)
-									{
-										val = "ND" + flowID + val.substring(4);
-									}
-									else if (val.length() == 7)
-									{
-										val = "ND" + flowID + val.substring(5);
-									}
+									//绑定表单库的表单11不需要替换表单编号
+                                    if (formType.equals("11") == false)
+                                    {
+                                        int iFormTypeLength = iOldFlowLength + 2;
+                                        if (val.length() > iFormTypeLength)
+                                        {
+                                            val = "ND" + flowID + val.substring(iFormTypeLength);
+                                        }
+                                    }
 							}
 							else if (dc.ColumnName.toLowerCase().equals("nodeid"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else if (dc.ColumnName.toLowerCase().equals("fk_flow") || dc.ColumnName.toLowerCase().equals("fk_flowsort"))
 							{
@@ -6488,18 +6396,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6869,18 +6771,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6943,18 +6839,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{
@@ -6983,18 +6873,12 @@ public class Flow extends BP.En.EntityNoName
 //							switch (dc.ColumnName.ToLower())
 							if (dc.ColumnName.toLowerCase().equals("fk_node"))
 							{
-									if (val.length() == 3)
-									{
-										val = flowID + val.substring(1);
-									}
-									else if (val.length() == 4)
-									{
-										val = flowID + val.substring(2);
-									}
-									else if (val.length() == 5)
-									{
-										val = flowID + val.substring(3);
-									}
+									if (val.length() < iOldFlowLength)
+		                        	{
+		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+		                        	        continue;   
+		                        	}
+		                        	val = flowID + val.substring(iOldFlowLength);
 							}
 							else
 							{

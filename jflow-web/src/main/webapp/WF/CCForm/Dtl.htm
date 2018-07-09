@@ -49,12 +49,7 @@
             saveRowCurrent: { count: 0, overCount: 0, saveAll: false, rowIndex: 0 },
             currentRowIndex: -1//如果该值有改变，就表明需要存盘，入库  -1 表示还未做操作  光标所在行
         };
-        /* ESC Key Down */
-        function Esc() {
-            if (event.keyCode == 27)
-                window.close();
-            return true;
-        }
+      
 
         //页面启动函数.
         $(function () {
@@ -98,7 +93,7 @@
                     
                       if (msg.indexOf('err@')==0)
                       {
-                         //alert(msg);
+                         alert(msg);
 						 console.log(msg);
                          return;
                       }
@@ -1154,7 +1149,13 @@
                             } else {
                                 enableAttr = "disabled='disabled'";
                             }
-                            eleHtml += "<input style='text-align:right;' onblur='valitationAfter(this, \"float\")' onkeydown='valitationBefore(this, \"float\")' onkeyup=" + '"' + "valitationAfter(this, 'float'); if(isNaN(value))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'float'); if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
+                            //获取DefVal,根据默认的小数点位数来限制能输入的最多小数位数
+                            var defVal = mapAttr.DefVal;
+                            var bit;
+                            if (defVal != null && defVal !== "" && defVal.indexOf(".") >= 0)
+                                bit = defVal.substring(defVal.indexOf(".") + 1).length;
+
+                            eleHtml += "<input  class='form-control' style='text-align:right;' onblur='valitationAfter(this, \"float\")' onkeydown='valitationBefore(this, \"float\")' onkeyup=" + '"' + "valitationAfter(this, 'float'); if(isNaN(value))execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'float'); if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
                         }
                         if ((mapAttr.MyDataType == 2 && mapAttr.LGType != 1)) {//AppInt
                             var enableAttr = '';

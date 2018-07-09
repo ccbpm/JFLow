@@ -692,14 +692,14 @@ public class Glo {
 					"DELETE FROM Sys_Enum WHERE EnumKey IN ('DeliveryWay','RunModel','OutTimeDeal','FlowAppType')");
 			// /#region 升级表单树
 			// 首先检查是否升级过.
-			sql = "SELECT * FROM Sys_FormTree WHERE No = '0'";
+			sql = "SELECT * FROM Sys_FormTree WHERE No = '1'";
 			DataTable formTree_dt = DBAccess.RunSQLReturnTable(sql);
 			if (formTree_dt.Rows.size() == 0) {
 				/* 没有升级过.增加根节点 */
 				SysFormTree formTree = new SysFormTree();
-				formTree.setNo("0");
+				formTree.setNo("1");
 				formTree.setName("表单库");
-				formTree.setParentNo("");
+				formTree.setParentNo("0");
 				// formTree.TreeNo = "0";
 				formTree.setIdx(0);
 				formTree.setIsDir(true);

@@ -79,9 +79,9 @@ public class LoadTemplete extends Method
 
 		//创建root.
 		SysFormTree root = new SysFormTree();
-		root.setNo("0");
+		root.setNo("1");
 		root.setName("表单库");
-		root.setParentNo("");
+		root.setParentNo("0");
 		root.Insert();
 
 		String frmPath = SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Form/";
@@ -104,7 +104,7 @@ public class LoadTemplete extends Method
 			SysFormTree fs = new SysFormTree();
 			fs.setNo( item.getName().substring(0, 2));
 			fs.setName(item.getName().substring(3));
-			fs.setParentNo("0");
+			fs.setParentNo("1");
 			fs.setIdx(i++);
 			fs.Insert();
 

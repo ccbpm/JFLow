@@ -5662,7 +5662,7 @@ public class Flow extends BP.En.EntityNoName
 	                        	if (val.length() < iOldFlowLength)
 	                        	{
 	                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-	                        	        continue;   
+	                        		throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点NodeYGFlow下FK_Node值错误:" + val);
 	                        	}
 	                        	val = flowID + val.substring(iOldFlowLength);
 	                        }
@@ -5756,7 +5756,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_NodeForm下FK_Node值错误:" + val);   
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -5793,7 +5793,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点Sys_FrmSln下FK_Node值错误:" + val);   
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -5830,7 +5830,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_NodeToolbar下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -5927,7 +5927,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_FrmNode下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -5964,7 +5964,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_FindWorkerRole下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6001,7 +6001,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_Cond下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6065,7 +6065,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_CCDept下FK_Node值错误:" + val);   
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6105,7 +6105,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_NodeReturn下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6147,7 +6147,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_Direction下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6180,7 +6180,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_TurnTo下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6232,7 +6232,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_NodeDept下FK_Node值错误:" + val);   
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6265,7 +6265,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_Node下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6356,7 +6356,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_Node下FK_Node值错误:" + val);   
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6399,7 +6399,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_NodeStation下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6774,7 +6774,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_NodeEmp下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6842,7 +6842,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_CCEmp下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}
@@ -6876,7 +6876,7 @@ public class Flow extends BP.En.EntityNoName
 									if (val.length() < iOldFlowLength)
 		                        	{
 		                        		//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-		                        	        continue;   
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_CCStation下FK_Node值错误:" + val);
 		                        	}
 		                        	val = flowID + val.substring(iOldFlowLength);
 							}

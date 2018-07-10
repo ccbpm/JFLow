@@ -188,15 +188,15 @@ public class GroupField extends EntityOID
         return super.beforeUpdateInsertAction();
     }
  
-	public final void DoDown()
+	public final String DoDown()
 	{
 		this.DoOrderDown(GroupFieldAttr.EnName, this.getEnName(), GroupFieldAttr.Idx);
-		return;
+		return "执行成功";
 	}
-	public final void DoUp()
+	public final String DoUp()
 	{
 		this.DoOrderUp(GroupFieldAttr.EnName, this.getEnName(), GroupFieldAttr.Idx);
-		return;
+		return "执行成功";
 	}
 	@Override
 	protected boolean beforeInsert() throws Exception

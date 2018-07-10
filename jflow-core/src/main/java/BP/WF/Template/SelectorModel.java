@@ -37,7 +37,11 @@ public enum SelectorModel
     /// <summary>
     /// 自定义链接
     /// </summary>
-    Url;
+    Url,
+	/// <summary>
+    /// 通用部门岗位人员选择器
+    /// </summary>
+    AccepterOfDeptStationEmp;
 
 	public int getValue()
 	{

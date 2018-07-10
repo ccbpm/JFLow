@@ -1216,6 +1216,9 @@ public class WF_WorkOpt extends WebContralBase {
         if (select.getSelectorModel() == SelectorModel.GenerUserSelecter)
             return "url@AccepterOfGener.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + nd.getFK_Flow() + "&ToNode=" + toNodeID;
 
+        if (select.getSelectorModel() == SelectorModel.AccepterOfDeptStationEmp)
+            return "url@AccepterOfDeptStationEmp.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + nd.getFK_Flow() + "&ToNode=" + toNodeID;
+
         //获得 部门与人员.
         DataSet ds = select.GenerDataSet(toNodeID, wk);
 

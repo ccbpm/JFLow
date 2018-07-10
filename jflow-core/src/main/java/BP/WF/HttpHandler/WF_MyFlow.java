@@ -863,7 +863,7 @@ public class WF_MyFlow extends WebContralBase {
 			// toUrl += "&Nos=" + this.Nos;
 			
 			if (toUrl.indexOf("FK_Node=")==-1)
-				toUrl = toUrl+"&FK_Node="+gwf.getFK_Node();
+				toUrl = toUrl+"&FK_Node="+this.getcurrND().getNodeID();
 			
 			return "url@" + toUrl;
 		}

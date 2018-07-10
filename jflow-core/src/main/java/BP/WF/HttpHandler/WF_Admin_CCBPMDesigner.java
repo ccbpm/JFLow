@@ -44,6 +44,8 @@ import BP.WF.Template.NodeAttr;
 import BP.WF.Template.SysFormTree;
 import BP.WF.Template.WorkflowDefintionManager;
 import BP.WF.XML.AdminMenu;
+import BP.WF.XML.AdminMenuGroup;
+import BP.WF.XML.AdminMenuGroups;
 import BP.WF.XML.AdminMenus;
 import BP.WF.XML.EventListDtl;
 import BP.Web.WebUser;
@@ -968,10 +970,31 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		 */
 	   public String GetTreeJson_AdminMenu() throws Exception
        {
+		   //查询全部
+           AdminMenuGroups groups = new AdminMenuGroups();
+           groups.RetrieveAll();
+		   
 		   AdminMenus menus = new AdminMenus();
 			menus.RetrieveAll();
-
+			 // 定义容器.
 			AdminMenus newMenus = new AdminMenus();
+			
+			
+			for (AdminMenuGroup menu : groups.ToJavaList())
+            {
+                //是否可以使用？
+                if (menu.IsCanUse(WebUser.getNo()) == false)
+                    continue;
+
+                AdminMenu newMenu = new AdminMenu();
+                newMenu.setNo(menu.getNo());
+                newMenu.setName(menu.getName());
+                newMenu.setGroupNo("0");
+                newMenu.setFor(menu.getFor());
+                newMenu.setUrl("");
+                newMenus.Add(newMenu);
+            }
+			
 			for (AdminMenu  menu: menus.ToJavaList())
 			{
 				//是否可以使用？
@@ -990,7 +1013,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				menu.setUrl("");
 				newMenus.Add(menu);
 			}
-			return BP.Tools.Json.DataTableToJson(newMenus.ToDataTable(), true);
+			DataTable dt = newMenus.ToDataTable();
+            return BP.Tools.Json.ToJson(newMenus.ToDataTable());
        }
 
 	private StringBuilder sbJson = new StringBuilder();

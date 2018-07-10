@@ -18,6 +18,14 @@ public class AdminMenu extends XmlEn
 	{
 		return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
 	}
+	public final String getGroupNo()
+	{
+		return this.GetValStringByKey("GroupNo");
+	}
+	public final void setGroupNo(String value)
+	{
+		this.SetVal("GroupNo", value);
+	}
 	public final String getUrl()
 	{
 		return this.GetValStringByKey("Url");

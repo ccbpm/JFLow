@@ -1181,9 +1181,9 @@ function checkBlanks() {
 
         var keyofen = $(obj).data().keyofen;
         var ele = $('[id$=_' + keyofen + ']');
-
         if (ele.length == 0)
             return;
+
         $.each(ele, function (i, obj) {
             var eleM = $(obj);
             switch (eleM[0].tagName.toUpperCase()) {
@@ -1215,6 +1215,7 @@ function checkBlanks() {
                     break;
             }
         });
+
     });
 
 

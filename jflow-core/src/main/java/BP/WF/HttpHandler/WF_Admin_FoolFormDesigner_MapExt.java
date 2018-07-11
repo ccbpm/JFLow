@@ -1,9 +1,12 @@
 package BP.WF.HttpHandler;
 
+import java.io.File;
+
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.En.UIContralType;
 import BP.Sys.FrmRB;
 import BP.Sys.FrmRBAttr;
@@ -26,6 +29,7 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Tools.StringHelper;
 import BP.WF.HttpHandler.Base.WebContralBase;
+import cn.jflow.common.util.ContextHolderUtils;
 
 public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
@@ -1204,5 +1208,84 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
        }
        ///#endregion
 	
+
+       //杨玉慧  表单设计--表单属性   JS编程 
+       /**
+        * JS编程 初始化
+        * @return content
+        */
+       public String InitScript_Init()
+       {
+           try {
+	        	   String webPath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("/");
+	        	   webPath = webPath.replace("\\", "/");
+	               String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+	               String content = "";	
+	               File file = new File(filePath);
+	               if(!file.exists())
+	               {
+	            	   content = "";
+	               }else{
+	            	   content =DataType.ReadTextFile(filePath);
+	               }
+	               
+	               return content;
+	           }
+	           catch (Exception ex)
+	           {
+	               return "err@" + ex.getMessage();
+	           }
+       }
+
+       /**
+        * 保存
+        * @return
+        */
+       public String InitScript_Save()
+       {
+           try
+           {
+        	   String webPath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("/");
+        	   webPath = webPath.replace("\\", "/");
+               String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+               String content = ContextHolderUtils.getRequest().getParameter("JSDoc");
+
+               //在应用程序当前目录下的File1.txt文件中追加文件内容，如果文件不存在就创建，默认编码
+               //File.WriteAllText(filePath, content);
+               DataType.WriteFile(filePath, content);
+
+               return "保存成功";
+           }
+           catch (Exception ex)
+           {
+               return "err@" + ex.getMessage();
+           }
+
+       }
+
+       /**
+        * 删除
+        * @return
+        */
+       public String InitScript_Delete()
+       {
+           try {
+        	   String webPath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("/");
+        	   webPath = webPath.replace("\\", "/");
+               String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+               
+               File file = new File(filePath);
+               if (file.exists())
+               {
+                   file.delete();
+               }
+
+               return "删除成功";
+           }
+           catch (Exception ex)
+           {
+               return "err@" + ex.getMessage();
+           }
+       }
 
 }

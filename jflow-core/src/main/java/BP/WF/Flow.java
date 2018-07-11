@@ -7455,6 +7455,100 @@ public class Flow extends BP.En.EntityNoName
 		String sql = "UPDATE WF_Flow SET VER='" + BP.DA.DataType.getCurrentDataTimess() + "' WHERE No='" + flowNo + "'";
 		DBAccess.RunSQL(sql);
 	}
+	
+	//region 版本管理
+	/**
+	 * 创建新版本
+	 * @return
+	 */
+	public String VerCreateNew() 
+	{
+		try {
+			// 生成模板
+			String file = "";
+			Flow newFlow = Flow.DoLoadFlowTemplate(this.getFK_FlowSort(), file, ImpFlowTempleteModel.AsNewFlow);
+			newFlow.setPTable(this.getPTable());
+			newFlow.setFK_FlowSort(""); // 不能显示在流程树上
+			newFlow.setName(this.getName());
+			newFlow.setVer(DataType.getCurrentDataTime());
+			newFlow.setIsCanStart(false); // 不能发起
+			newFlow.DirectUpdate();
+			return newFlow.getNo();
+		} catch (Exception e) {
+			return "err@" + e.getMessage();
+		}
+	}
+	
+	/**
+	 * 设置当前的版本为新版本
+	 * @return
+	 */
+	public String VerSetCurrentVer() {
+		String sql = "SELECT FK_FlowSort FROM WF_Flow WHERE PTable='" + this.getPTable() + "' AND FK_FlowSort!='' ";
+		String flowSort = DBAccess.RunSQLReturnStringIsNull(sql, "");
+		if (DataType.IsNullOrEmpty(flowSort))
+			return "err@没有找到主版本,请联系管理员.";
+		sql = "UPDATE WF_Flow SET FK_FlowSort ='',IsCanStart=0 WHERE PTable='" + this.getPTable() + "' ";
+		DBAccess.RunSQL(sql);
+
+		sql = "UPDATE WF_Flow SET FK_FlowSort ='" + this.getFK_FlowSort() + "',IsCanStart=1 WHERE No='" + this.getNo() + "' ";
+		DBAccess.RunSQL(sql);
+		return "info@设置成功";
+	}
+	
+	/**
+	 * 获得版本列表
+	 * @return
+	 */
+	public String VerGenerVerList(){
+		//if (this.FK_FlowSort.Equals("") == true)
+        //    return "err@当前版本为分支版本，您无法管理，只有主版本才能管理。";
+		
+		DataTable dt = new DataTable();
+		dt.Columns.Add("Ver");
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
+		dt.Columns.Add("IsRel");
+		dt.Columns.Add("NumOfRuning");
+		dt.Columns.Add("NumOfOK");
+		try {
+
+			String ptable = this.GetValStringByKey(FlowAttr.PTable);
+			if (DataType.IsNullOrEmpty(ptable)) {
+				this.SetValByKey(FlowAttr.PTable, this.getPTable());
+				this.DirectUpdate();
+			}
+
+			String sql = "SELECT No FROM WF_Flow WHERE PTable='" + this.getPTable() + "' ";
+			Flows fls = new Flows();
+			fls.RetrieveInSQL(sql);
+			for (Flow item : fls.ToJavaList()) {
+				DataRow dr = dt.NewRow();
+				dr.put("Ver", item.getVer());
+				dr.put("No", item.getNo());
+				dr.put("Name", item.getName());
+				if (DataType.IsNullOrEmpty(item.getFK_FlowSort())) {
+					dr.put("IsRel", "0");
+				} else {
+					dr.put("IsRel", "1");
+				}
+				dr.put("NumOfRuning",
+						DBAccess.RunSQLReturnValInt("SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='"
+								+ item.getNo() + "' AND WFState=2"));
+				dr.put("NumOfOK",
+						DBAccess.RunSQLReturnValInt("SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='"
+								+ item.getNo() + "' AND WFState=3"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@版本列表获取失败 " +e.getMessage();
+		}
+		return BP.Tools.Json.ToJson(dt);
+	}
+	
+	//endregion 版本管理
+	
 	public final void DoDelete() throws Exception
 	{
 		//删除流程数据.

@@ -539,6 +539,15 @@ public class FlowExt extends EntityNoName
 		rm.Warning = "您确定要设置审核组件模式吗？ \t\n 1, 表NDxxxRpt是自动创建的.  \t\n  2, 在设置流程过程中有些多余的字段会生成到NDxxxRpt表里. \t\n 3,这里是删除数据字段为null 并且是多余的字段.";
 		rm.GroupName = "实验中的功能";
 		map.AddRefMethod(rm);
+		
+		rm = new RefMethod();
+        rm.Title = "版本管理";
+        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+        rm.ClassMethodName = this.toString() + ".DoVer()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        // rm.GroupName = "实验中的功能";
+        map.AddRefMethod(rm);
+        
 			///#endregion 实验中的功能
 
 
@@ -1624,6 +1633,14 @@ public class FlowExt extends EntityNoName
 	{
 		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/Exp.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
+	/**
+	 * 版本管理
+	 * @return
+	 */
+	public String DoVer()
+    {
+        return Glo.getCCFlowAppPath() + "../../Admin/AttrFlow/Ver.htm?FK_Flow=" + this.getNo();
+    }
 	/** 
 	 执行重新装载数据
 	 @return 

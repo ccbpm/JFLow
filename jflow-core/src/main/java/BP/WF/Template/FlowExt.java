@@ -477,7 +477,13 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-			 
+		rm = new RefMethod();
+        rm.Title = "版本管理";
+        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+        rm.ClassMethodName = this.toString() + ".DoVer()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        // rm.GroupName = "实验中的功能";
+        map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "流程轨迹表单";
@@ -540,14 +546,7 @@ public class FlowExt extends EntityNoName
 		rm.GroupName = "实验中的功能";
 		map.AddRefMethod(rm);
 		
-		rm = new RefMethod();
-        rm.Title = "版本管理";
-        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
-        rm.ClassMethodName = this.toString() + ".DoVer()";
-        rm.refMethodType = RefMethodType.RightFrameOpen;
-        // rm.GroupName = "实验中的功能";
-        map.AddRefMethod(rm);
-        
+		
 			///#endregion 实验中的功能
 
 

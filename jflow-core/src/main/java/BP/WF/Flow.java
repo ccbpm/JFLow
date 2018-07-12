@@ -7465,7 +7465,7 @@ public class Flow extends BP.En.EntityNoName
 	{
 		try {
 			// 生成模板
-			String file = "";
+			String file = GenerFlowXmlTemplete();
 			Flow newFlow = Flow.DoLoadFlowTemplate(this.getFK_FlowSort(), file, ImpFlowTempleteModel.AsNewFlow);
 			newFlow.setPTable(this.getPTable());
 			newFlow.setFK_FlowSort(""); // 不能显示在流程树上
@@ -7538,6 +7538,7 @@ public class Flow extends BP.En.EntityNoName
 				dr.put("NumOfOK",
 						DBAccess.RunSQLReturnValInt("SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='"
 								+ item.getNo() + "' AND WFState=3"));
+				dt.Rows.add(dr);
 			}
 
 		} catch (Exception e) {

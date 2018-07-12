@@ -1639,7 +1639,7 @@ public class FlowExt extends EntityNoName
 	 */
 	public String DoVer()
     {
-        return Glo.getCCFlowAppPath() + "../../Admin/AttrFlow/Ver.htm?FK_Flow=" + this.getNo();
+        return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/Ver.htm?FK_Flow=" + this.getNo();
     }
 	/** 
 	 执行重新装载数据

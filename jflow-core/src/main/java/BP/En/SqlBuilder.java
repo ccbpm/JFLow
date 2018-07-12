@@ -8,10 +8,12 @@ import BP.DA.DBType;
 import BP.DA.DataType;
 import BP.DA.Depositary;
 import BP.DA.Paras;
+import BP.Sys.MapAttr;
 import BP.Sys.SysDocFile;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
+import BP.WF.Template.FindLeaderType;
 
 public class SqlBuilder
 {
@@ -1352,6 +1354,7 @@ public class SqlBuilder
 		
 		String mytable = en.getEnMap().getPhysicsTable();
 		Attrs fkAttrs = en.getEnMap().getAttrs();
+		MapAttr mapAttr = null ;
 		for (Attr attr : fkAttrs)
 		{
 			
@@ -1359,8 +1362,30 @@ public class SqlBuilder
 			{
 				continue;
 			}
+			if(!attr.getIsFK())
+				continue;
 			
-			if (attr.getIsFK())
+			mapAttr = attr.getToMapAttr();
+			
+			//去除webservice填充DDL数据的类型
+			if(mapAttr.getLGType() == FieldTypeS.Normal && mapAttr.getUIContralType() == UIContralType.DDL)
+				continue;
+			String fktable = attr.getHisFKEn().getEnMap().getPhysicsTable();
+			Attr refAttr = attr.getHisFKEn().getEnMap().GetAttrByKey(attr.getUIRefKeyValue());
+			
+			//此处增加是否存在实体表，因新增的字典表类型“动态SQL查询”，此类型没有具体的实体表，完全由SQL动态生成的数据集合，此处不判断会使生成的SQL报错
+			try {
+				if(DBAccess.IsExitsObject(fktable))
+				{
+					from += " LEFT JOIN " + fktable + " AS " + fktable + "_" + attr.getKey() + " ON " + mytable + "." + attr.getField() + "=" + fktable + "_" + attr.getField() + "." + refAttr.getField();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return from + " WHERE (1=1) ";
+		
+			/*if (attr.getIsFK())
 			{
 				String fktable = attr.getHisFKEn().getEnMap().getPhysicsTable();
 				Attr refAttr = attr.getHisFKEn().getEnMap()
@@ -1379,7 +1404,7 @@ public class SqlBuilder
 						+ attr.getUIRefKeyValue();
 			}
 		}
-		return from + " WHERE (1=1) ";
+		return from + " WHERE (1=1) ";*/
 	}
 	
 	/**
@@ -2258,6 +2283,16 @@ public class SqlBuilder
 							|| attr.getMyFieldType() == FieldType.PKFK)
 					{
 						Map map = attr.getHisFKEn().getEnMap();
+						
+						//增加外键sql表判断，不存在返回
+						if(attr.getMyFieldType() == FieldType.FK)
+						{
+							if(!DBAccess.IsExitsObject(map.getPhysicsTable()))
+							{
+								continue;
+							}
+						}
+						
 						val = val + ", " + map.getPhysicsTable() + "_"
 								+ attr.getKey() + "."
 								+ map.GetFieldByKey(attr.getUIRefKeyText())
@@ -2305,6 +2340,9 @@ public class SqlBuilder
 					if (attr.getMyFieldType() == FieldType.FK
 							|| attr.getMyFieldType() == FieldType.PKFK)
 					{
+						if (attr.getHisFKEns() == null)
+                            throw new Exception("@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc() + ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
+
 						Map map = attr.getHisFKEn().getEnMap();
 						val = val + ", " + map.getPhysicsTable() + "_"
 								+ attr.getKey() + "."

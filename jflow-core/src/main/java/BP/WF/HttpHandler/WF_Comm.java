@@ -243,6 +243,28 @@ public class WF_Comm extends WebContralBase {
 		try {
 
 			Entity en = ClassFactory.GetEn(this.getEnName());
+			
+			//  #region 首先判断参数删除. @fanleiwei 
+              String key1 = this.GetRequestVal("Key1");
+              String key2 = this.GetRequestVal("Key2");
+              String val1 = this.GetRequestVal("Val1");
+              String val2 = this.GetRequestVal("Val2");
+
+              if (key1.equals("undefined") == false)
+              {
+                  int num = 0;
+                  if (key2.equals("undefined") == false)
+                  {
+                      num = en.Delete(key1, val1, key2, val2);
+                  }
+                  else
+                  {
+                      num = en.Delete(key1, val1);
+                  }
+                  return String.valueOf(num);
+              }
+              //#endregion 首先判断参数删除.
+              
 
 			if (en.getPKCount() != 1) {
 				// 遍历属性，循环赋值.

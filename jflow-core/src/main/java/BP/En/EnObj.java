@@ -182,7 +182,7 @@ public abstract class EnObj implements Serializable {
             //含有特定值时取消重新设定默认值
 			 String v = this.GetValStringByKey(attr.getKey(), null);  // this._row[key] as string;
 
-             if (v !=null)
+             if (v !=null  && v.contains("@")==false)
                  continue;
              
 			String tempVar = attr.getDefaultValOfReal();

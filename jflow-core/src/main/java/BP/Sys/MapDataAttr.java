@@ -250,6 +250,11 @@ public class MapDataAttr extends EntityNoNameAttr
 	 
 */
 	public static final String FormEventEntity = "FormEventEntity";
+	
+	/**
+	 *  参数属性.
+	 */
+	public static final String EnsName = "EnsName";
 
 		///#endregion weboffice属性。
 }

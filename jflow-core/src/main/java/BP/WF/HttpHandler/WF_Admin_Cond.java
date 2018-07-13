@@ -223,23 +223,26 @@ public class WF_Admin_Cond extends WebContralBase {
 		conds.Retrieve(CondAttr.FK_Node, fk_mainNode, CondAttr.ToNodeID,
 				toNodeID);
 		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
+		
+		//字段集合
+		String noteIn = "'FID','PRI','PNodeID','PrjNo', 'PrjName', 'FK_NY','FlowDaySpan', 'MyNum','Rec','CDT','RDT','AtPara','WFSta','FlowNote','FlowStartRDT','FlowEnderRDT','FlowEnder','FlowSpanDays','WFState','OID','PWorkID','PFlowNo','PEmp','FlowEndNode','GUID'";
 
 		// 增加字段集合.
 		String sql = "";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 			sql = "SELECT KeyOfEn as No, KeyOfEn||' - '||Name as Name FROM Sys_MapAttr WHERE FK_MapData='ND"
 					+ Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
-			sql += " AND KeyOfEn Not IN('FID','MyNum','Rec','CDT','RDT','AtPara','WFSta','FlowNote','FlowStartRDT','FlowEnderRDT','FlowEnder','FlowSpanDays','WFState','OID','PWorkID','PFlowNo','PEmp','FlowEndNode','GUID')";
+			sql += " AND KeyOfEn Not IN(" + noteIn + ")";
 			sql += " AND MyDataType NOT IN (6,7) ";
 		} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			sql = "SELECT KeyOfEn as No, concat(KeyOfEn , '-' , Name) as Name FROM Sys_MapAttr WHERE FK_MapData='ND"
 					+ Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
-			sql += " AND KeyOfEn Not IN('FID','MyNum','Rec','CDT','RDT','AtPara','WFSta','FlowNote','FlowStartRDT','FlowEnderRDT','FlowEnder','FlowSpanDays','WFState','OID','PWorkID','PFlowNo','PEmp','FlowEndNode','GUID')";
+			sql += " AND KeyOfEn Not IN(" + noteIn + ")";
 			sql += " AND MyDataType NOT IN (6,7) ";
 		} else {
 			sql = "SELECT KeyOfEn as No, KeyOfEn+' - '+Name as Name FROM Sys_MapAttr WHERE FK_MapData='ND"
 					+ Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
-			sql += " AND KeyOfEn Not IN('FID','MyNum','Rec','CDT','RDT','AtPara','WFSta','FlowNote','FlowStartRDT','FlowEnderRDT','FlowEnder','FlowSpanDays','WFState','OID','PWorkID','PFlowNo','PEmp','FlowEndNode','GUID')";
+			sql += " AND KeyOfEn Not IN(" + noteIn + ")";
 			sql += " AND MyDataType NOT IN (6,7) ";
 		}
 

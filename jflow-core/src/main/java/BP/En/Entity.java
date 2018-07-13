@@ -22,6 +22,9 @@ import BP.DA.LogType;
 import BP.DA.Paras;
 import BP.Sys.EnVer;
 import BP.Sys.EnVerDtl;
+import BP.Sys.MapAttr;
+import BP.Sys.MapData;
+import BP.Sys.MapDtl;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
@@ -3548,4 +3551,159 @@ public abstract class Entity extends EnObj {
 					"@获取参数AtPara时出现异常" + ex.getMessage() + "，可能是您没有加入约定的参数字段AtPara. " + ex.getMessage());
 		}
 	}
+	
+	/**
+	 * 把entity的实体属性调度到en里面去.
+	 * @param fk_mapdata
+	 * @return
+	 */
+	public MapData DTSMapToSys_MapData(String fk_mapdata){
+		if(DataType.IsNullOrEmpty(fk_mapdata))
+		{
+			fk_mapdata = this.getClassIDOfShort();
+		}
+		
+		Map map = this.getEnMap();
+		
+		//获得短的类名称.
+		//region 更新主表信息.
+		MapData md = new MapData();
+		
+		try {
+			md.setNo(fk_mapdata);
+			if (md.RetrieveFromDBSources() == 0)
+				md.Insert();
+
+			md.setEnPK(this.getPK());
+			md.setEnsName(this.getClassID());
+			md.setName(map.getEnDesc());
+			md.setPTable(map.getPhysicsTable());
+			md.Update();
+			// endregion 更新主表信息.
+
+			// 同步属性 mapattr.
+			DTSMapToSys_MapData_InitMapAttr(map.getAttrs(), fk_mapdata);
+
+			// region 同步从表.
+			EnDtls dtls = map.getDtls();
+			for (EnDtl dtl : dtls.ToJavaList()) {
+				MapDtl mdtl = new MapDtl();
+
+				Entity enDtl = dtl.getEns().getGetNewEntity();
+
+				mdtl.setNo(enDtl.getClassIDOfShort());
+				if (mdtl.RetrieveFromDBSources() == 0)
+					mdtl.Insert();
+
+				mdtl.setName(enDtl.getEnDesc());
+				mdtl.setFK_MapData(fk_mapdata);
+				mdtl.setPTable(enDtl.getEnMap().getPhysicsTable());
+
+				mdtl.setRefPK(dtl.getRefKey()); // 关联的主键.
+
+				mdtl.Update();
+
+				// 同步字段.
+				DTSMapToSys_MapData_InitMapAttr(enDtl.getEnMap().getAttrs(), enDtl.getClassIDOfShort());
+				//endregion 同步从表.
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return md;
+	}
+	
+	
+	private void DTSMapToSys_MapData_InitMapAttr(Attrs attrs, String fk_mapdata)
+	{
+		for (Attr attr : attrs.ToJavaList())
+        {
+            if (attr.getIsRefAttr())
+                continue;
+
+            MapAttr mattr = new MapAttr();
+            mattr.setKeyOfEn(attr.getKey());
+            mattr.setFK_MapData(fk_mapdata);
+            mattr.setMyPK(mattr.getFK_MapData() + "_" + mattr.getKeyOfEn());
+            try {
+				mattr.RetrieveFromDBSources();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+            mattr.setName(attr.getDesc());
+            mattr.setDefVal(attr.getDefaultVal().toString());
+            mattr.setKeyOfEn(attr.getField());
+
+            mattr.setMaxLen(attr.getMaxLength());
+            mattr.setMinLen(attr.getMinLength());
+            mattr.setUIBindKey(attr.getUIBindKey());
+            mattr.setUIIsLine(attr.UIIsLine);
+            mattr.setUIHeight(0);
+
+            if (attr.getMaxLength() > 3000)
+                mattr.setUIHeight(10);
+
+            mattr.setUIWidth(attr.getUIWidth());
+            mattr.setMyDataType(attr.getMyDataType());
+
+            mattr.setUIRefKey(attr.getUIRefKeyValue());
+
+            mattr.setUIRefKeyText(attr.getUIRefKeyText());
+            mattr.setUIVisible(attr.getUIVisible());
+
+            switch (attr.getMyFieldType())
+            {
+                case Enum:
+                case PKEnum:
+                    mattr.setUIContralType(attr.getUIContralType());
+                    mattr.setLGType(FieldTypeS.Enum);
+                    mattr.setUIIsEnable(attr.getUIIsReadonly());
+                    break;
+                case FK:
+                case PKFK:
+                    mattr.setUIContralType(attr.getUIContralType());
+                    mattr.setLGType(FieldTypeS.FK);
+                    //attr.MyDataType = (int)FieldType.FK;
+                    mattr.setUIRefKey("No");
+                    mattr.setUIRefKeyText("Name");
+                    mattr.setUIIsEnable(attr.getUIIsReadonly());
+                    break;
+                default:
+                    mattr.setUIContralType(UIContralType.TB);
+                    mattr.setLGType(FieldTypeS.Normal);
+                    mattr.setUIIsEnable(!attr.getUIIsReadonly());
+                    switch (attr.getMyDataType())
+                    {
+                        case DataType.AppBoolean:
+                            mattr.setUIContralType(UIContralType.CheckBok);
+                            mattr.setUIIsEnable(attr.getUIIsReadonly());
+                            break;
+                        case DataType.AppDate:
+                            //if (this.Tag == "1")
+                            //    attr.DefaultVal = DataType.CurrentData;
+                            break;
+                        case DataType.AppDateTime:
+                            //if (this.Tag == "1")
+                            //    attr.DefaultVal = DataType.CurrentData;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+            }
+            try {
+				if (mattr.Update() == 0)
+				    mattr.Insert();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+	}
+	
+	public String getClassIDOfShort(){
+		String clsID  = this.getClassID();
+		return clsID.substring(clsID.lastIndexOf('.')+1);
+	}
+	
 }

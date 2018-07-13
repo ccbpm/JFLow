@@ -66,6 +66,22 @@ public class MapData extends EntityNoName
         
     }
 	
+    //region entity 相关属性(参数属性)
+    /**
+     * 属性ens
+     * @return
+     */
+    public String getEnsName()
+    {
+    	return this.GetValStringByKey(MapDataAttr.EnsName);
+    }
+    
+    public void setEnsName(String value)
+    {
+    	this.SetPara(MapDataAttr.EnsName, value);
+    }
+    //endregion entity 相关操作.
+    
 	 /// <summary>
    /// 执行事件.
    /// </summary>

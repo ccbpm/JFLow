@@ -155,6 +155,9 @@ public class GenerWorkFlow extends Entity
 	}
 	public final void setTodoEmps(String value)
 	{
+		String val = this.GetValStrByKey(GenerWorkFlowAttr.TodoEmps);
+        if (val.contains(value) == true)
+            return;
 		SetValByKey(GenerWorkFlowAttr.TodoEmps, value);
 	}
 	/** 

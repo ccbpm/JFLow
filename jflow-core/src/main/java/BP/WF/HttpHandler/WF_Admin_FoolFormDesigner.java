@@ -32,6 +32,7 @@ import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
 import BP.Sys.FrmAttachments;
 import BP.Sys.FrmLab;
+import BP.Sys.FrmType;
 import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
 import BP.Sys.GroupFields;
@@ -408,6 +409,24 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		//如果是第一次进入，就执行旧版本的升级检查.
 		if (this.getIsFirst() == true)
 		{
+            if (this.getFK_MapData().contains("BP.") == true)
+            {
+                /*如果是类的实体.*/
+                Entities ens = ClassFactory.GetEns(this.getFK_MapData());
+                Entity en = ens.getGetNewEntity();
+
+                MapData mymd = new MapData();
+                mymd.setNo(this.getFK_MapData());
+                int i = mymd.RetrieveFromDBSources();
+                if (i == 0)
+                    en.DTSMapToSys_MapData(this.getFK_MapData()); //调度数据到
+
+                mymd.RetrieveFromDBSources();
+                mymd.setHisFrmType(FrmType.FoolForm);
+                mymd.Update();
+
+            }
+
 			MapFrmFool cols = new MapFrmFool(this.getFK_MapData());
 			cols.DoCheckFixFrmForUpdateVer();
 			return "url@Designer.htm?FK_MapData=" + this.getFK_MapData() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();

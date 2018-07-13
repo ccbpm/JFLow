@@ -12,6 +12,20 @@ public class MapDtl extends EntityNoName
 {
 
 		///#region 导入导出属性.
+	/**
+	 * 关联主键
+	 */
+	public String getRefPK() {
+		String str = this.GetValStrByKey(MapDtlAttr.RefPK);
+		if (DataType.IsNullOrEmpty(str))
+			return "RefPK";
+		return str;
+	}
+
+	public void setRefPK(String value) {
+		this.SetValByKey(MapDtlAttr.RefPK, value);
+	}
+	
 	/** 
 	 Rowid
 	 

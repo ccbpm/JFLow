@@ -1,6 +1,7 @@
 package BP.En;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /** 
  
@@ -115,5 +116,10 @@ public class EnDtls extends ArrayList<EnDtl>
 			}
 		}
 		throw new RuntimeException("@没有找到他的明细:" + className);
+	}
+	
+	public List<EnDtl> ToJavaList()
+	{
+		return (List<EnDtl>)(Object)this;
 	}
 }

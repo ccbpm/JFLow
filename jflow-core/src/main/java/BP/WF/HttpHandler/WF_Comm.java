@@ -954,8 +954,11 @@ public class WF_Comm extends WebContralBase {
 		// ur.SetPara("RecCount", qo.GetCount());
 		// ur.Update();
 		// }
-
-		qo.DoQuery(en.getPK(), this.getPageSize(), this.getPageIdx());
+		
+		if (GetRequestVal("DoWhat") != null && GetRequestVal("DoWhat").equals("Batch"))
+            qo.DoQuery(en.getPK(),500,1);
+        else
+        	qo.DoQuery(en.getPK(), this.getPageSize(), this.getPageIdx());	
 		/// #endregion 获得查询数据.
 
 		DataTable mydt = ens.ToDataTableField();

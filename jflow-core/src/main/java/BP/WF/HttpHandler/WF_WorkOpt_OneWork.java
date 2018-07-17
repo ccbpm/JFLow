@@ -592,7 +592,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		DataTable dt = BP.WF.Dev2Interface.DB_GenerTrackTable(this.getFK_Flow(), this.getWorkID(), this.getFID());
 		ds.Tables.add(dt);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region  父子流程数据存储到这里.
 
 		java.util.Hashtable ht = new java.util.Hashtable();
@@ -656,7 +655,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				ht.put(mypk, msg);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 		//获取 WF_GenerWorkFlow
@@ -674,12 +672,8 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		}
 		
 	    //把节点审核配置信息.
-        if (this.getFK_Node() != 0)
-        {
-            FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
-            ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
-        }
-        
+		FrmWorkCheck fwc = new FrmWorkCheck(gwf.getFK_Node());
+		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 		//返回结果.
 		return BP.Tools.Json.ToJson(ds);

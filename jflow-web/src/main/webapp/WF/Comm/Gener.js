@@ -753,8 +753,14 @@ var Entity = (function () {
 
         var params = ["t=" + new Date().getTime()];
         $.each(jsonString, function (n, o) {
+
             if (typeof self[n] !== "function" && (self[n] != o || true)) {
-                params.push(n + "=" + self[n]);
+
+                if (self[n].indexOf('<script') != -1)
+                    params.push(n + "=aa");
+                else
+                    params.push(n + "=" + self[n]);
+
             }
         });
         return params.join("&");
@@ -1837,14 +1843,14 @@ var HttpHandler = (function () {
         AddFormData: function () {
             formData = $("form").serialize();
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
-            formData = decodeURIComponent(formData, true);
+           // formData = decodeURIComponent(formData, true);
             if (formData.length > 0) {
                 var self = this;
                 $.each(formData.split("&"), function (i, o) {
                     var param = o.split("=");
                     if (param.length == 2 && validate(param[1])) {
                         (function (key, value) {
-                            self.AddPara(key, value);
+                            self.AddPara(key, decodeURIComponent(value, true));
                         })(param[0], param[1]);
                     }
                 });
@@ -1870,8 +1876,17 @@ var HttpHandler = (function () {
         getParams: function () {
             var params = [];
             $.each(parameters, function (key, value) {
+
+                if (value.indexOf('<script') != -1)
+                    value = '';      
+                                   
                 params.push(key + "=" + value);
+
             });
+
+
+
+
             return params.join("&");
         },
 

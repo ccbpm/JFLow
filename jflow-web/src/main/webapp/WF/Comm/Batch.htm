@@ -93,15 +93,11 @@
                 html += mapBase.DTSearchLable;
 
                 if (mapBase.DTSearchWay == "1") {
-                    //html += '<div class="form-group">';
                     html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:100px;' class='form-control' />";
                     html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:100px;' class='form-control' />";
-                    //html += '</div>';
                 } else {
-                    //html += '<div class="form-group">';
                     html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\" style='width:95px;' class='form-control' />";
                     html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\"  style='width:95px;' class='form-control' />";
-                    //html += '</div>';
                 }
             }
 
@@ -148,6 +144,13 @@
             operations += "<option value='all' >全部</option>";
 
             var ens = frmData[mapAttr.Field];
+
+           
+            //ens为null时则为枚举类型
+            if(ens==null){
+                ens=[{'IntKey':0,'Lab':'否'},{'IntKey':1,'Lab':'是'}];
+            }
+
             for (var i = 0; i < ens.length; i++) {
 
                 var en = ens[i];
@@ -195,18 +198,19 @@
             ur.FK_MapData = ensName;
             ur.SetPara("RecCount", count);
             var i = ur.Save();
-            var pager = $("#dg").datagrid('getPager').data("pagination").options;
-            var pageIndex = pager.pageNumber;
-            var pageSize = pager.pageSize;
-            window.location.href = "?EnsName=" + ensName + "&PageIdx=" + pageIndex + "&PageSize=" + pageSize;
+            //var pager = $("#dg").datagrid('getPager').data("pagination").options;
+            //var pageIndex = pager.pageNumber;
+            //var pageSize = pager.pageSize;
+            window.location.href = "?EnsName=" + ensName;
         }
 
         //获取查询数据
-        function SearchData(pageIdx, pageSize) {
+        function SearchData() {
             //创建处理器.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-            handler.AddPara("PageIdx", pageIdx);
-            handler.AddPara("PageSize", pageSize);
+            //handler.AddPara("PageIdx",1);
+           // handler.AddPara("PageSiz", 500);
+            handler.AddPara("DoWhat" ,"Batch");
             handler.AddPara("EnsName", GetQueryString("EnsName"));
             //查询集合
             var data = handler.DoMethodReturnString("Search_SearchIt");
@@ -216,6 +220,12 @@
             }
 
             data = JSON.parse(data);
+            //当前用户页面信息.
+            var ur = new Entity("BP.Sys.UserRegedit");
+            ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
+            ur.RetrieveFromDBSources();
+
+            count = ur.GetPara("RecCount");
             return data;
         }
 
@@ -223,15 +233,15 @@
         function BindTable() {
 
             //获得查询的基本信息, 实体属性 attrs, 实体数据.
-            var pageIdx = this.GetQueryString("PageIdx");
-            var pageSize = this.GetQueryString("PageSize");
+            //var pageIdx = this.GetQueryString("PageIdx");
+            //var pageSize = this.GetQueryString("PageSize");
 
-            if (pageIdx == "" || pageIdx == undefined)
-                pageIdx = "1";
-            if (pageSize == "" || pageSize == undefined)
-                pageSize = "10";
+            //if (pageIdx == "" || pageIdx == undefined)
+            //    pageIdx = "1";
+            //if (pageSize == "" || pageSize == undefined)
+             //   pageSize = "10";
 
-            var mapdata = SearchData(pageIdx, pageSize);
+            var mapdata = SearchData();
 
             var attrs = mapdata["Attrs"];
 
@@ -297,10 +307,10 @@
                 rownumbers: true,
                 striped: true,
                 singleSelect: false,
-                pagination: true,
+                pagination: false,
                 pagePosition: 'bottom',
                 toolbar: "#tb",
-                loadFilter: pagerFilter,
+                //loadFilter: pagerFilter,
                 checkOnSelect:false,
                 selectOnCheck:false,
                 onDblClickRow: function (index, rowData) {
@@ -532,14 +542,14 @@
                 windowH = 500;
 
             var localUrl = window.location.href;
-            var pager = $("#dg").datagrid('getPager').data("pagination").options;
-            var pageIndex = pager.pageNumber;
-            var pageSize = pager.pageSize;
+            //var pager = $("#dg").datagrid('getPager').data("pagination").options;
+            //var pageIndex = pager.pageNumber;
+            //var pageSize = pager.pageSize;
 
-            var localArr = new Array();
+           /* var localArr = new Array();
             localArr = localUrl.split("&");
             if (localArr.length == 1) {
-                localUrl = localUrl + "&PageIdx=" + pageIndex + "&PageSize=" + pageSize;
+                localUrl = localUrl;
             } else {
                 for (var i = 0; i < localArr.length; i++) {
                     if (localArr[i].indexOf("PageIdx") != -1) {
@@ -554,10 +564,10 @@
                     localUrl += localArr[i];
                     if (i != localArr.length - 1) localUrl += "&";
                 }
-            }
+            }*/
 
             OpenEasyUiDialog(url, "eudlgframe", mapBase.EnDesc + ' : 详细', windowW, windowH, "icon-property", true, null, null, null, function () {
-                window.location.href = localUrl;
+                window.location.href = window.location.href;
 
 
             });

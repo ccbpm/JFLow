@@ -619,7 +619,7 @@ function DDLAnsc(selectVal, ddlChild, fk_mapExt, param) {
         var chg = $("#" + ddlChild).attr("onchange");
         $("#" + ddlChild).change();
         //增加默认选择第一条数据
-        ddl.options[0].selected=true;
+        ddl.options[0].selected = true;
     }
 }
 

@@ -273,8 +273,8 @@ public class AppACE extends WebContralBase{
      */
     public String Login_Submit() throws Exception
     {
-    	String userNo = this.GetRequestVal("TB_UserNo");
-		String pass = this.GetRequestVal("TB_Pass");
+    	String userNo = this.GetRequestVal("TB_No");
+		String pass = this.GetRequestVal("TB_PW");
 
 		BP.Port.Emp emp = new Emp();
 		emp.setNo(userNo);

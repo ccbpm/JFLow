@@ -568,7 +568,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	{
 		
 		 BP.Port.Emp emp = new BP.Port.Emp();
-         emp.setNo( this.GetValFromFrmByKey("TB_UserNo"));
+         emp.setNo( this.GetValFromFrmByKey("TB_No"));
 
          if (emp.RetrieveFromDBSources() == 0)
              return "err@用户名或密码错误.";
@@ -585,7 +585,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
                  return "err@您非管理员用户或已被禁用，不能登录.";
          }
 
-         String pass = this.GetValFromFrmByKey("TB_Pass");
+         String pass = this.GetValFromFrmByKey("TB_PW");
          if (emp.CheckPass(pass) == false)
              return "err@用户名或密码错误.";
 

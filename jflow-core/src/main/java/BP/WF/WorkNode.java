@@ -2910,13 +2910,12 @@ public class WorkNode {
 
          /* 合流点需要等待各个分流点全部处理完后才能看到它。*/
          String info = "";
-         String sql1 = "";
 //#warning 对于多个分合流点可能会有问题。
          ps = new Paras();
          ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr + "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
          ps.Add("FID", this.getHisWork().getFID());
 
-         java.math.BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(sql1));
+         java.math.BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
 			java.math.BigDecimal passRate1 = numAll1.divide(numAll1, 2).multiply(new BigDecimal(100));
 			if (nd.getPassRate().compareTo(passRate1) <= 0) {
 				

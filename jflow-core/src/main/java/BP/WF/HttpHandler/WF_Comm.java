@@ -21,7 +21,9 @@ import BP.En.AttrSearch;
 import BP.En.AttrSearchs;
 import BP.En.ClassFactory;
 import BP.En.Entities;
+import BP.En.EntitiesTree;
 import BP.En.Entity;
+import BP.En.EntityTreeAttr;
 import BP.En.FieldType;
 import BP.En.FieldTypeS;
 import BP.En.Map;
@@ -101,6 +103,19 @@ public class WF_Comm extends WebContralBase {
 		// return this.GetRequestVal("PKVal");
 	}
 
+	//#region 树的实体.
+    /// <summary>
+    /// 获得树的结构
+    /// </summary>
+    /// <returns></returns>
+    public String Tree_Init() throws Exception
+    {
+        EntitiesTree ens = (EntitiesTree) ClassFactory.GetEns(this.getEnsName());
+        ens.RetrieveAll(EntityTreeAttr.Idx);
+        return ens.ToJsonOfTree("0");  
+    }
+    //#endregion 树的实体
+    
 	// <summary>
 	// 获得实体
 	// </summary>

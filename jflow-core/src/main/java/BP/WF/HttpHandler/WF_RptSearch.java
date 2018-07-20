@@ -102,29 +102,24 @@ public class WF_RptSearch extends WebContralBase{
 		int myselft = this.GetRequestValInt("CHK_Myself");
 		String sql = "";
 
-//		switch (type)
-//ORIGINAL LINE: case "ByWorkID":
 		if (type.equals("ByWorkID"))
 		{
 				if (myselft == 1)
 				{
-					sql = "SELECT FlowName,NodeName,FK_Flow,FK_Node,WorkID,Title,Starter,RDT,WFSta,Emps,TodoEmps,IsCanDo FROM WF_GenerWorkFlow WHERE  WorkID=" + keywords + " AND Emps LIKE '@%" + WebUser.getNo() + "%'";
+					sql = "SELECT FlowName,NodeName,FK_Flow,FK_Node,WorkID,Title,StarterName,RDT,WFSta,Emps,TodoEmps,IsCanDo FROM WF_GenerWorkFlow WHERE  WorkID=" + keywords + " AND Emps LIKE '@%" + WebUser.getNo() + "%'";
 				}
 				else
 				{
-					sql = "SELECT FlowName,NodeName,FK_Flow,FK_Node,WorkID,Title,Starter,RDT,WFSta,Emps,TodoEmps,IsCanDo FROM WF_GenerWorkFlow WHERE  WorkID=" + keywords;
+					sql = "SELECT FlowName,NodeName,FK_Flow,FK_Node,WorkID,Title,StarterName,RDT,WFSta,Emps,TodoEmps,IsCanDo FROM WF_GenerWorkFlow WHERE  WorkID=" + keywords;
 				}
 		}
-//ORIGINAL LINE: case "ByTitle":
 		else if (type.equals("ByTitle"))
 		{
-				sql = "SELECT A.FlowName,A.NodeName,A.FK_Flow,A.FK_Node,A.WorkID,A.Title,A.Starter,A.RDT,A.WFSta,A.Emps, A.TodoEmps, A.WFState ";
+				sql = "SELECT A.FlowName,A.NodeName,A.FK_Flow,A.FK_Node,A.WorkID,A.Title,A.StarterName,A.RDT,A.WFSta,A.Emps, A.TodoEmps, A.WFState ";
 				sql += " FROM WF_GenerWorkFlow A ";
 				sql += " WHERE A.Title LIKE '%" + keywords + "%' ";
 				sql += " AND A.Title LIKE '%" + keywords + "%' ";
 				sql += " AND A.Emps LIKE '@%" + WebUser.getNo() + "%' ";
-				// sql += " AND ( A.Emps LIKE '@%" + WebUser.No + "%' OR B.FK_Emp='" + WebUser.No + "') ";
-			  //  sql += " AND A.WorkID=B.WorkID ";
 				sql += " AND A.WFState!=0 ";
 				
 		}
@@ -147,7 +142,6 @@ public class WF_RptSearch extends WebContralBase{
 			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps"; //处理人.
 			dt.Columns.get("WFSTATE").ColumnName = "WFState"; //处理人.
 
-			//  dt.Columns["ISCANDO"].ColumnName = "IsCanDo"; //是否可以处理？
 		}
 
 		///#region 加入当前用户信息.
@@ -169,6 +163,6 @@ public class WF_RptSearch extends WebContralBase{
 		ds.Tables.add(mydt);
 		ds.Tables.add(dt);
 
-		return BP.Tools.Json.ToJson(ds);
+		return BP.Tools.Json.ToJson(dt);
 	}
 }

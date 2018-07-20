@@ -5590,6 +5590,15 @@ public class WorkNode {
 
 		// 如果是协作模式节点, 就判断当前的队列人员是否走完.
 		if (this.getTodolistModel() == TodolistModel.Teamup) {
+			
+			
+			  // ,增加了此部分.
+            String todoEmps = this.getHisGenerWorkFlow().getTodoEmps();
+            todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
+            this.getHisGenerWorkFlow().setTodoEmps( todoEmps);
+            this.getHisGenerWorkFlow().Update(GenerWorkFlowAttr.TodoEmps, todoEmps);
+
+            
 			// 如果是协作.
 			if (this.DealTeamUpNode() == true) {
 				// if (this._transferCustom != null)

@@ -17,6 +17,8 @@ import BP.WF.Data.*;
 */
 public class WorkReturn
 {
+	 
+	
 	/** 
 	 从节点
 	 

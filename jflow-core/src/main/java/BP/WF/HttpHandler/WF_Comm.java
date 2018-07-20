@@ -1,19 +1,13 @@
 package BP.WF.HttpHandler;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
-
 import org.apache.commons.lang.StringUtils;
-import org.htmlparser.lexer.PageIndex;
-
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
@@ -25,7 +19,6 @@ import BP.En.Attr;
 import BP.En.AttrOfSearch;
 import BP.En.AttrSearch;
 import BP.En.AttrSearchs;
-import BP.En.Attrs;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;
@@ -37,19 +30,21 @@ import BP.En.QueryObject;
 import BP.En.RefMethodType;
 import BP.En.UAC;
 import BP.Sys.DTSearchWay;
+import BP.Sys.EventListOfNode;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Sys.UserRegedit;
-import BP.Tools.StringHelper;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Glo;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
 public class WF_Comm extends WebContralBase {
+	
+	 
 	
 	/**
 	 * 构造函数

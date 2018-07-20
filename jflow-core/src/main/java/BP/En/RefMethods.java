@@ -1,6 +1,7 @@
 package BP.En;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /** 
  
@@ -76,5 +77,10 @@ public class RefMethods extends ArrayList<RefMethod>
 		/*
 		 * warning return (RefMethod)this.get(index);
 		 */
+	}
+	
+	public List<RefMethod> ToJavaList()
+	{
+		return (List<RefMethod>)(Object)this;
 	}
 }

@@ -657,6 +657,11 @@ public class Map
 		return true;
 	}
 	
+	public BPEntityAthType HisBPEntityAthType = BPEntityAthType.None;
+	
+	/**
+	 *  附件存储位置
+	 */
 	public boolean IsHaveFJ = false;
 	/**
 	 * 移动到显示方式

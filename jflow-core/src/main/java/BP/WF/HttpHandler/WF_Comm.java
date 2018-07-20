@@ -27,12 +27,15 @@ import BP.En.FieldTypeS;
 import BP.En.Map;
 import BP.En.Method;
 import BP.En.QueryObject;
+import BP.En.RefMethod;
 import BP.En.RefMethodType;
+import BP.En.RefMethods;
 import BP.En.UAC;
 import BP.Sys.DTSearchWay;
 import BP.Sys.EventListOfNode;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
+import BP.Sys.MapData;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
@@ -634,6 +637,8 @@ public class WF_Comm extends WebContralBase {
 	public String Search_MapBaseInfo() throws Exception {
 		// 获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
+		if (ens == null)
+            return "err@类名:" + this.getEnsName() + "错误";
 		Entity en = ens.getGetNewEntity();
 		Map map = ens.getGetNewEntity().getEnMapInTime();
 
@@ -746,6 +751,16 @@ public class WF_Comm extends WebContralBase {
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtAttrs); // 把描述加入.
 
+		//定义Sys_MapData.
+        MapData md = new MapData();
+        md.setNo(this.getEnsName().substring(0,this.getEnsName().length()-1));
+        md.setName(map.getEnDesc());
+
+        //附件类型.
+        md.SetPara("BPEntityAthType", String.valueOf(map.HisBPEntityAthType.ordinal()));
+		
+        ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+        
 		// 取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
 		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
@@ -959,6 +974,58 @@ public class WF_Comm extends WebContralBase {
 		DataTable mydt = ens.ToDataTableField();
 		mydt.TableName = "DT";
 
+		//region 获得方法的集合
+        DataTable dtM = new DataTable("dtM");
+        dtM.Columns.Add("No");
+        dtM.Columns.Add("Title");
+        dtM.Columns.Add("Tip");
+        dtM.Columns.Add("Visable");
+
+        dtM.Columns.Add("Url");
+        dtM.Columns.Add("Target");
+        dtM.Columns.Add("Warning");
+        dtM.Columns.Add("RefMethodType");
+        dtM.Columns.Add("GroupName");
+        dtM.Columns.Add("W");
+        dtM.Columns.Add("H");
+        dtM.Columns.Add("Icon");
+        dtM.Columns.Add("IsCanBatch");
+        dtM.Columns.Add("RefAttrKey");
+
+        RefMethods rms = map.getHisRefMethods();
+        for (RefMethod item : rms.ToJavaList())
+        {
+            if (item.IsForEns == false)
+                continue;
+
+            if (item.Visable == false)
+                continue;
+
+            String myurl = "";
+
+            myurl = "../RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=";
+
+            DataRow dr = dtM.NewRow();
+
+            dr.put("No",item.Index);
+            dr.put("Title",item.Title);
+            dr.put("Tip",item.ToolTip);
+            dr.put("Visable",item.Visable);
+            dr.put("Warning",item.Warning);
+            dr.put("RefMethodType",item.refMethodType.ordinal());
+            dr.put("RefAttrKey",item.RefAttrKey);
+            dr.put("URL", myurl);
+            dr.put("W",item.Width);
+            dr.put("H",item.Height);
+            dr.put("Icon",item.Icon);
+            dr.put("IsCanBatch",item.IsCanBatch);
+            dr.put("GroupName",item.GroupName);
+
+            dtM.Rows.add(dr); //增加到rows.
+        }
+        ds.Tables.add(dtM); //把数据加入里面.
+        //endregion
+		
 		ds.Tables.add(mydt); // 把数据加入里面.
 
 		return BP.Tools.Json.ToJson(ds);
@@ -1848,8 +1915,12 @@ public class WF_Comm extends WebContralBase {
 		ht.put("FK_Dept", WebUser.getFK_Dept() == null ? "" : WebUser.getFK_Dept());
 		ht.put("FK_DeptName", WebUser.getFK_DeptName() == null ? "" : WebUser.getFK_DeptName());
 		ht.put("FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull() == null ? "" : WebUser.getFK_DeptNameOfFull());
+		
+		ht.put("CustomerNo", BP.Sys.SystemConfig.getCustomerNo());
+        ht.put("CustomerName", BP.Sys.SystemConfig.getCustomerName());
+		
 		ht.put("GroupNo", "0");
-		ht.put("orgNo", WebUser.getFK_Dept() == null ? "" : WebUser.getFK_Dept());
+		//ht.put("orgNo", WebUser.getFK_Dept() == null ? "" : WebUser.getFK_Dept());
 		return BP.Tools.Json.ToJson(ht);
 	}
 

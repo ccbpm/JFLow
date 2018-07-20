@@ -93,7 +93,7 @@ public class WF_RptSearch extends WebContralBase{
 			type = "ByTitle";
 		}
 
-		String keywords = this.GetValFromFrmByKey("TB_KeyWords");
+		String keywords = this.GetValFromFrmByKey("TB_KWds");
 		if (DataType.IsNullOrEmpty(keywords)==true)
 		{
 			keywords = this.GetRequestVal("TB_Key");

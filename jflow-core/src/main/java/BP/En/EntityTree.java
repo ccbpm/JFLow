@@ -256,32 +256,12 @@ public abstract class EntityTree extends Entity
 	 */
 	public EntityTree DoCreateSameLevelNode() throws Exception
 	{
-		Entity tempVar = this.CreateInstance();
-		EntityTree en = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar
-				: null);
-		try
-		{
-			en.setNo((new Long(BP.DA.DBAccess.GenerOID(this.toString())))
-					.toString());
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		} // en.GenerNewNoByKey(EntityTreeAttr.No);
+		EntityTree en = (EntityTree) this.CreateInstance();
+		
+		en.setNo((new Long(BP.DA.DBAccess.GenerOID(this.toString()))).toString());
+		
 		en.setName("新建节点" + en.getNo());
 		en.setParentNo(this.getParentNo());
-		en.setIsDir(false);
-		// en.TreeNo=this.GenerNewNoByKey(EntityTreeAttr.TreeNo,EntityTreeAttr.ParentNo,this.ParentNo)
-		try
-		{
-			en.setTreeNo(this.GenerNewNoByKey(EntityTreeAttr.TreeNo,
-					EntityTreeAttr.ParentNo, this.getParentNo()));
-		} catch (NumberFormatException e)
-		{
-			e.printStackTrace();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 		en.Insert();
 		return en;
 	}
@@ -294,44 +274,14 @@ public abstract class EntityTree extends Entity
 	 */
 	public EntityTree DoCreateSubNode() throws Exception
 	{
-		Entity tempVar = this.CreateInstance();
-		EntityTree en = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar
-				: null);
-		try
-		{
-			en.setNo((new Long(BP.DA.DBAccess.GenerOID(this.toString())))
-					.toString());
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		} // en.GenerNewNoByKey(EntityTreeAttr.No);
+		EntityTree en = (EntityTree) this.CreateInstance();
+		
+		en.setNo((new Long(BP.DA.DBAccess.GenerOID(this.toString()))).toString());
+		
 		en.setName("新建节点" + en.getNo());
 		en.setParentNo(this.getNo());
-		en.setIsDir(false);
-		try
-		{
-			en.setTreeNo(this.GenerNewNoByKey(EntityTreeAttr.TreeNo,
-					EntityTreeAttr.ParentNo, this.getNo()));
-		} catch (NumberFormatException e)
-		{
-			e.printStackTrace();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		if (en.getTreeNo().substring(en.getTreeNo().length() - 2).equals("01"))
-		{
-			en.setTreeNo(this.getTreeNo() + "01");
-		}
-		en.Insert();
 		
-		// 设置此节点是目录
-		if (!this.getIsDir())
-		{
-			this.Retrieve();
-			this.setIsDir(true);
-			this.Update();
-		}
+		en.Insert();
 		return en;
 	}
 	

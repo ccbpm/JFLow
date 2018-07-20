@@ -1280,7 +1280,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
           else
               attr.setUIContralType(UIContralType.TB);
           
-          String sql="SELECT OID FROM Sys_GroupField A WHERE A.EnName='"+this.getFK_MapData()+"' AND CtrlType='' OR CtrlType= NULL";
+          String sql="SELECT OID FROM Sys_GroupField A WHERE A.FrmID='"+this.getFK_MapData()+"' AND CtrlType='' OR CtrlType= NULL";
           int groupID=DBAccess.RunSQLReturnValInt(sql,0) ;
           
           attr.setGroupID(groupID);

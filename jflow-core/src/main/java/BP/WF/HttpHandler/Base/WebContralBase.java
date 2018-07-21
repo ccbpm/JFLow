@@ -399,7 +399,9 @@ public abstract class WebContralBase extends BaseController {
 		}
 
 		if (str == null || str.equals("") || str.equals("null")) {
-			return null;
+			if (this.getEnName() == null)
+                return null;
+            return this.getEnName() + "s";
 		}
 
 		return str;

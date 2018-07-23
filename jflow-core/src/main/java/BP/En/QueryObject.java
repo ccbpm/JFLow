@@ -439,7 +439,7 @@ public class QueryObject
 					if (!val.contains("'"))
 					{
 						this.setSQL("( " + attr2Field(attr) + " " + exp
-								+ "  '%" + val + "%' )");
+								+ "  '" + val + "' )");
 					} else
 					{
 						this.setSQL("( " + attr2Field(attr) + " " + exp + "  "
@@ -791,9 +791,19 @@ public class QueryObject
 		_HisMap = value;
 	}
 	
-	private String attr2Field(String attr)
+	private String attr2Field(String attrKey)
 	{
-		return this.getHisMap().getPhysicsTable() + "." + this.getHisMap().GetFieldByKey(attr);
+		//@yln翻译
+		Attr attr = this.getHisMap().GetAttrByKey(attrKey);
+		if(attr.getIsRefAttr() == true){
+			if(this.HisDBType == DBType.Oracle){
+				return "T"+attr.getKey().replace("Text", "")+".Name";
+			}else{
+				Entity en = attr.getHisFKEn();
+				return en.getEnMap().getPhysicsTable()+"_"+attr.getKey().replace("Text", "")+".Name";
+			}
+		}
+		return this.getHisMap().getPhysicsTable() + "." + attr.getField();
 	}
 	
 	public final DataTable DoGroupReturnTable(Entity en, Attrs attrsOfGroupKey,
@@ -1432,19 +1442,17 @@ public class QueryObject
 							}
 						} else
 						{
+							String mySql = this.getSQL();
+							mySql = mySql.substring(mySql.indexOf("FROM"));
+							
 							if (top == 0)
 							{
-								sql = "SELECT * FROM ( SELECT  " + pk
-										+ " FROM " + map.getPhysicsTable()
-										+ " WHERE " + this._sql + " "
-										+ this._orderBy
-										+ "   )  WHERE ROWNUM <=" + pageSize;
+								sql = "SELECT * FROM ( SELECT  " + map.getPhysicsTable()+"."+pk+" "+mySql+" ) WHERE ROWNUM <=" + pageSize ;
+										
 							} else
 							{
-								sql = "SELECT * FROM ( SELECT  " + pk
-										+ " FROM " + map.getPhysicsTable()
-										+ " WHERE " + this._sql + " "
-										+ this._orderBy + "   ) ";
+								sql = "SELECT * FROM ( SELECT  " + map.getPhysicsTable()+"."+pk+" "+mySql+" )";
+										
 							}
 						}
 						
@@ -1481,18 +1489,17 @@ public class QueryObject
 							}
 						} else
 						{
+							String mySql = this.getSQL();
+							mySql = mySql.substring(mySql.indexOf("FROM"));
+							
 							if (top == 0)
 							{
-								sql = "SELECT first " + pageSize + " "
-										+ this.getEn().getPKField() + " FROM "
-										+ map.getPhysicsTable() + " WHERE "
-										+ this._sql + " " + this._orderBy;
+								sql = "SELECT first " + pageSize + " "+ this.getEn().getPKField() + " "+mySql;
+										
 							} else
 							{
-								sql = "SELECT  " + this.getEn().getPKField()
-										+ " FROM " + map.getPhysicsTable()
-										+ " WHERE " + this._sql + " "
-										+ this._orderBy;
+								sql = "SELECT  " + this.getEn().getPKField()+" "+mySql;
+										
 							}
 						}
 						
@@ -1530,18 +1537,16 @@ public class QueryObject
 							}
 						} else
 						{
+							String mySql = this.getSQL();
+							mySql = mySql.substring(mySql.indexOf("FROM"));
+							
 							if (top == 0)
 							{
-								sql = "SELECT  " + this.getEn().getPKField()
-										+ " FROM " + map.getPhysicsTable()
-										+ " WHERE " + this._sql + " "
-										+ this._orderBy + " LIMIT " + pageSize;
+								sql = "SELECT  " + map.getPhysicsTable() +"."+this.getEn().getPKField()+" "+mySql+ " LIMIT " + pageSize;
+										
 							} else
 							{
-								sql = "SELECT  " + this.getEn().getPKField()
-										+ " FROM " + map.getPhysicsTable()
-										+ " WHERE " + this._sql + " "
-										+ this._orderBy;
+								sql = "SELECT  " + map.getPhysicsTable() +"."+this.getEn().getPKField()+" "+mySql;
 							}
 						}
 						
@@ -1567,33 +1572,13 @@ public class QueryObject
 						
 						if (this._sql.equals("") || this._sql == null)
 						{
-							if (top == 0)
-							{
-								sql = " SELECT top " + pageSize + "  ["
-										+ this.getEn().getPKField() + "] FROM "
-										+ map.getPhysicsTable() + " "
-										+ this._orderBy;
-							} else
-							{
-								sql = " SELECT  [" + this.getEn().getPKField()
-										+ "] FROM " + map.getPhysicsTable()
-										+ " " + this._orderBy;
-							}
+							sql = " SELECT  [" + this.getEn().getPKField() + "] FROM " + map.getPhysicsTable() + " " + this._orderBy;
 						} else
 						{
-							if (top == 0)
-							{
-								sql = "SELECT TOP " + pageSize + " ["
-										+ this.getEn().getPKField() + "] FROM "
-										+ map.getPhysicsTable() + " WHERE "
-										+ this._sql + " " + this._orderBy;
-							} else
-							{
-								sql = "SELECT  [" + this.getEn().getPKField()
-										+ "] FROM " + map.getPhysicsTable()
-										+ " WHERE " + this._sql + " "
-										+ this._orderBy;
-							}
+							String mySql = this.getSQL();
+							mySql = mySql.substring(mySql.indexOf("FROM"));
+							
+							 sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " as  [" + this.getEn().getPKField()+ "]  " + mySql;
 						}
 						
 						sql = sql.replace("AND ( ( 1=1 ) )", " ");
@@ -1708,8 +1693,11 @@ public class QueryObject
 							+ ptable;
 				} else
 				{
-					sql = "SELECT COUNT(" + ptable + "." + pk + ") as C FROM "
-							+ ptable + " WHERE " + this._sql;
+					  sql = sql.substring(sql.indexOf("FROM "));
+                      if(sql.indexOf("ORDER BY")>=0)
+                          sql = sql.substring(0,sql.indexOf("ORDER BY")-1);
+                      sql = "SELECT COUNT(" + ptable + "." + pk + ") as C " + sql;
+                      
 				}
 				
 				// sql="SELECT COUNT(*) as C "+this._endSql +sql.substing(

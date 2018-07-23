@@ -791,18 +791,20 @@ public class WF_Comm extends WebContralBase {
 		/// #region 关键字字段.
 		if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() > 1) {
 			Attr attrPK = new Attr();
-			for (Attr attr : map.getAttrs()) {
+			for (Attr attr : map.getAttrs().ToJavaList()) {
 				if (attr.getIsPK()) {
 					attrPK = attr;
 					break;
 				}
 			}
 			int i = 0;
-			for (Attr attr : map.getAttrs()) {
+			String enumKey =",";//求出枚举值外键
+			for (Attr attr : map.getAttrs().ToJavaList()) {
 				switch (attr.getMyFieldType()) {
 				case Enum:
+					enumKey =","+attr.getKey()+"Text,";
+					break;
 				case FK:
-				case PKFK:
 					continue;
 				default:
 					break;
@@ -811,9 +813,11 @@ public class WF_Comm extends WebContralBase {
 				if (attr.getMyDataType() != DataType.AppString) {
 					continue;
 				}
-
+				
+				//排除枚举值关联refText
 				if (attr.getMyFieldType() == FieldType.RefText) {
-					continue;
+					if(enumKey.contains(","+attr.getKey()+",") ==true)
+						continue;
 				}
 
 				if (attr.getKey().equals("FK_Dept")) {
@@ -824,7 +828,7 @@ public class WF_Comm extends WebContralBase {
 				if (i == 1) {
 					// 第一次进来。
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@")) {
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":")) {
 						qo.AddWhere(attr.getKey(), " LIKE ",
 								SystemConfig.getAppCenterDBType() == DBType.MySQL
 										? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")
@@ -837,7 +841,7 @@ public class WF_Comm extends WebContralBase {
 				}
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@")) {
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":")) {
 					qo.AddWhere(attr.getKey(), " LIKE ",
 							SystemConfig.getAppCenterDBType() == DBType.MySQL
 									? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")
@@ -853,7 +857,6 @@ public class WF_Comm extends WebContralBase {
 		} else {
 			qo.AddHD();
 		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		/// #endregion
 
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false) {
@@ -861,10 +864,12 @@ public class WF_Comm extends WebContralBase {
 											// "-");
 			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().Replace("/",
 										// "-");
-
+			//按日期查询
 			if (map.DTSearchWay == DTSearchWay.ByDate) {
 				qo.addAnd();
 				qo.addLeftBracket();
+				dtFrom += " 00:00:00";
+                dtTo += " 23:59:59";
 				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
 				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
@@ -971,14 +976,8 @@ public class WF_Comm extends WebContralBase {
 		}
 
 		// 获得行数.
-		// if (this.getPageIdx() == 1)
-		// {
 		ur.SetPara("RecCount", qo.GetCount());
 		ur.Save();
-		// }else{
-		// ur.SetPara("RecCount", qo.GetCount());
-		// ur.Update();
-		// }
 		
 		if (GetRequestVal("DoWhat") != null && GetRequestVal("DoWhat").equals("Batch"))
             qo.DoQuery(en.getPK(),500,1);

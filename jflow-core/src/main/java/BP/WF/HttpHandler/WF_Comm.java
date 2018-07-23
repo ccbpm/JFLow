@@ -789,7 +789,7 @@ public class WF_Comm extends WebContralBase {
 		QueryObject qo = new QueryObject(ens);
 
 		/// #region 关键字字段.
-		if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() > 1) {
+		if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >=1) {
 			Attr attrPK = new Attr();
 			for (Attr attr : map.getAttrs().ToJavaList()) {
 				if (attr.getIsPK()) {

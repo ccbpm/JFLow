@@ -128,7 +128,7 @@
                 $("#DDL_" + attr.Field).val(selectVal);
             }
 
-            if (mapBase.IsInsert == "True") {
+            if (mapBase.IsInsert) {
                 $("#newWin").show();
             } else {
                 $("#newWin").hide();
@@ -517,7 +517,7 @@
         }
 
         function New() {
-            OpenEn("");
+            OpenEn("0");
         }
 
         function Exp() {

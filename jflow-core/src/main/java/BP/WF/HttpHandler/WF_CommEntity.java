@@ -33,6 +33,7 @@ import BP.Sys.EnCfg;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
+import BP.Sys.MapExts;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
@@ -351,6 +352,12 @@ public class WF_CommEntity extends WebContralBase {
             ds.Tables.add(sys_MapAttrs);
             
             //#endregion 字段属性.
+            
+            //#region 加入扩展属性.
+            MapExts mapExts = new MapExts(this.getEnName()+"s");
+            DataTable Sys_MapExt = mapExts.ToDataTableField("Sys_MapExt");
+            ds.Tables.add(Sys_MapExt);
+            //#endregion 加入扩展属性.
 
             //#region 把外键与枚举放入里面去.
 

@@ -49,7 +49,10 @@ import BP.Sys.SystemConfig;
 import BP.WF.Data.GERpt;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.FTCAttr;
+import BP.WF.Template.FrmField;
+import BP.WF.Template.FrmFields;
 import BP.WF.Template.FrmNode;
+import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodeComponent;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
@@ -131,6 +134,42 @@ public class CCFlowAPI {
 
 			// 获得表单模版.
 			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), nd.getName());
+			
+			 //获取表单的mapAttr
+            //求出集合.
+			myds.Tables.remove("Sys_MapAttr"); //移除
+            MapAttrs mattrs = new MapAttrs(md.getNo());
+            if (fk_node != 0)
+            {
+                /*处理表单权限控制方案*/
+                FrmNode frmNode = new FrmNode();
+                int count = frmNode.Retrieve(FrmNodeAttr.FK_Frm, md.getNo(), FrmNodeAttr.FK_Node, fk_node);
+                if (count != 0 && frmNode.getFrmSln() != 0)
+                {
+
+                    FrmFields fls = new FrmFields(md.getNo(), frmNode.getFK_Node());
+
+                    for(FrmField item : fls.ToJavaList())
+                    {
+                        for (MapAttr attr : mattrs.ToJavaList())
+                        {
+                            if (attr.getKeyOfEn() != item.getKeyOfEn())
+                                continue;
+
+                            if (item.getIsSigan())
+                                item.setUIIsEnable(false);
+
+                            attr.setUIIsEnable(item.getUIIsEnable());
+                            attr.setUIVisible(item.getUIVisible());
+                            attr.setIsSigan(item.getIsSigan());
+                            attr.setDefValReal(item.getDefVal());
+                        }
+                    }
+                }
+            }
+
+            DataTable Sys_MapAttr = mattrs.ToDataTableField("Sys_MapAttr");
+            myds.Tables.add(Sys_MapAttr);
 
 			// 把流程信息表发送过去.
 			GenerWorkFlow gwf = new GenerWorkFlow();
@@ -292,6 +331,7 @@ public class CCFlowAPI {
 				// #endregion 处理字段分组排序.
 
 				// #region 处理 mapattrs
+
 				// 求当前表单的字段集合.
 				MapAttrs attrs = new MapAttrs();
 				QueryObject qo = new QueryObject(attrs);
@@ -313,12 +353,12 @@ public class CCFlowAPI {
 				}
 
 				// 替换掉现有的.
-				DataTable Sys_MapAttr = myds.GetTableByName("Sys_MapAttr");
+				Sys_MapAttr = myds.GetTableByName("Sys_MapAttr");
 				myds.Tables.remove("Sys_MapAttr");
 				myds.Tables.remove(Sys_MapAttr);
 
 				myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); // 增加.
-
+					
 				// #endregion 处理mapattrs
 
 				// 计算累加的枚举类型

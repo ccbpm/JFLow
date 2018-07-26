@@ -3,6 +3,7 @@ package cn.jflow.controller.wf.ccform;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.BindException;
@@ -25,6 +26,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import BP.DA.DataType;
+import BP.En.ClassFactory;
+import BP.En.Entities;
+import BP.En.Entity;
 import BP.Sys.AthSaveWay;
 import BP.Sys.AthUploadWay;
 import BP.Sys.FrmAttachment;
@@ -330,6 +334,51 @@ public class AttachmentUploadController extends BaseController {
 
 	}
 
+	
+	@RequestMapping(value = "/EntityFileLoad.do", method = RequestMethod.GET)
+	public void EntityFileLoad(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		 //根据EnsName获取Entity
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        Entity en = ens.getGetNewEntity();
+        en.setPKVal(this.getDelPKVal());
+        int i = en.RetrieveFromDBSources();
+        if (i == 0)
+            return ;
+        
+        String filePath = (String)en.GetValByKey("MyFilePath");
+        String fileName = (String)en.GetValByKey("MyFileName");
+        //获取使用的客户 TianYe集团保存在FTP服务器上
+        if (SystemConfig.getCustomerNo().equals("TianYe"))
+        {
+           
+            //临时存储位置
+            String guid = BP.DA.DBAccess.GenerGUID();
+            String tempFile = SystemConfig.getPathOfTemp() + guid + "." + en.GetValByKey("MyFileExt");
+
+            if (new File(tempFile).exists() == true)
+            	new File(tempFile).delete();
+            
+            // 连接FTP服务器并下载文件到本地
+			FtpUtil ftpUtil =BP.WF.Glo.getFtpUtil();					 
+			ftpUtil.downloadFile(filePath, tempFile);
+
+     
+            PubClass.DownloadFile(tempFile, fileName);
+            //删除临时文件
+            new File(tempFile);
+        }
+        else
+        {
+        	PubClass.DownloadFile(filePath, fileName);
+           
+        }
+        
+		
+
+	}
+
+	
 	private String GetRealPath(String fileFullName) throws Exception {
 		boolean isFile = false;
 		String downpath = "";

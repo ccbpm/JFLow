@@ -579,8 +579,8 @@ public class WF_CommEntity extends WebContralBase {
         {
             //是否是空白记录.
             Boolean isBlank = DataType.IsNullOrEmpty(this.getPKVal());
-            if (DataType.IsNullOrEmpty(this.getPKVal()) == true)
-                return "err@主键数据丢失，不能初始化En.htm";
+            //if (DataType.IsNullOrEmpty(this.getPKVal()) == true)
+             //   return "err@主键数据丢失，不能初始化En.htm";
 
             //初始化entity.
             String enName = this.getEnName();
@@ -603,10 +603,10 @@ public class WF_CommEntity extends WebContralBase {
             //获得描述.
             Map map = en.getEnMap();
             String pkVal = this.getPKVal();
-
-            en.setPKVal(pkVal);
-            en.RetrieveFromDBSources();
-
+            if(isBlank == false){
+	            en.setPKVal(pkVal);
+	            en.RetrieveFromDBSources();
+            }
             //定义容器.
             DataSet ds = new DataSet();
 
@@ -619,6 +619,9 @@ public class WF_CommEntity extends WebContralBase {
             //把权限加入参数里面.
             if (en.getHisUAC().IsInsert)
                 md.SetPara("IsInsert", "1");
+            
+          //附件类型.
+            md.SetPara("BPEntityAthType", map.HisBPEntityAthType.ordinal() );
 
             if (isBlank == true)
             {

@@ -231,7 +231,9 @@ public class WF_CommEntity extends WebContralBase {
             if (isBlank == false)
             {
                 en.setPKVal(pkVal);
-                en.RetrieveFromDBSources();
+                int i = en.RetrieveFromDBSources();
+                if(i == 0)
+                	 return "err@数据[" + map.getEnDesc() + "]主键为[" + pkVal + "]不存在，或者没有保存。";
             }
             else
             {
@@ -242,6 +244,10 @@ public class WF_CommEntity extends WebContralBase {
                 en.ResetDefaultVal();
 
                 en.SetValByKey("RefPKVal", this.getRefPKVal());
+                
+                //自动生成一个编号.
+                if (en.getIsNoEntity() == true && en.getEnMap().getIsAutoGenerNo() == true)
+                    en.SetValByKey("No", en.GenerNewNoByKey("No"));
             }
 
             //定义容器.
@@ -251,6 +257,9 @@ public class WF_CommEntity extends WebContralBase {
             MapData md = new MapData();
             md.setNo( this.getEnName());
             md.setName(  map.getEnDesc());
+            
+            //附件类型.
+            md.SetPara("BPEntityAthType", map.HisBPEntityAthType.ordinal());
 
            // #region 加入权限信息.
             //把权限加入参数里面.

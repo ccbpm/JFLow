@@ -1,5 +1,8 @@
 package BP.WF.HttpHandler;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -8,6 +11,11 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
@@ -42,6 +50,8 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Sys.UserRegedit;
+import BP.Tools.FileAccess;
+import BP.Tools.FtpUtil;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Glo;
 import BP.WF.HttpHandler.Base.WebContralBase;
@@ -1947,4 +1957,173 @@ public class WF_Comm extends WebContralBase {
 		String strs = DataType.ReadURLContext(url, 9999);
 		return strs;
 	}
+	
+	
+	private DefaultMultipartHttpServletRequest request;
+	public void setMultipartRequest(DefaultMultipartHttpServletRequest request){
+		this.request = request;
+	}
+	
+	/// <summary>
+    /// 实体Entity 文件上传
+    /// </summary>
+    /// <returns></returns>
+
+    public String EntityAth_Upload() throws Exception
+    {
+    	MultipartFile multiFile =  request.getFile("file");
+    	
+        if (multiFile==null)
+            return "err@请选择要上传的文件。";
+        //获取保存文件信息的实体
+
+        String enName = this.getEnName();
+        Entity en = null;
+
+        //是否是空白记录.
+        boolean isBlank = DataType.IsNullOrEmpty(this.getPKVal());
+        if (isBlank == true)
+            return "err@请先保存实体信息然后再上传文件";
+        else
+            en = ClassFactory.GetEn(this.getEnName());
+
+        if (en == null)
+            return "err@参数类名不正确.";
+        en.setPKVal(this.getPKVal());
+        int i = en.RetrieveFromDBSources();
+        if (i == 0)
+            return "err@数据[" + this.getEnName() + "]主键为[" + en.getPKVal() + "]不存在，或者没有保存。";
+
+        //获取文件的名称
+        String fileName = multiFile.getOriginalFilename();
+       
+        //文件后缀
+        String ext = FileAccess.getExtensionName(fileName).toLowerCase().replace(".", "");
+
+        //文件大小
+        float size = multiFile.getSize()/1024;
+
+        //保存位置
+        String filepath = "";
+        //获取EnName 的类名称
+		String className = this.getEnName().substring(this.getEnName().lastIndexOf('.')+1);
+
+        //如果是天业集团则保存在ftp服务器上
+        if (SystemConfig.getCustomerNo().equals("TianYe"))
+        {
+            String guid = DBAccess.GenerGUID();
+
+            //把文件临时保存到一个位置.
+            String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
+            File tempFile = new File(temp);
+			InputStream is = null;
+			try {
+				// 构造临时对象
+				is = multiFile.getInputStream();
+				int buffer = 1024; // 定义缓冲区的大小
+				int length = 0;
+				byte[] b = new byte[buffer];
+				double percent = 0;
+				FileOutputStream fos = new FileOutputStream(tempFile);
+				while ((length = is.read(b)) != -1) {
+					fos.write(b, 0, length); // 向文件输出流写读取的数据
+				}
+				fos.close();
+				is.close();
+			} catch (Exception ex) {
+				tempFile.delete();
+				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
+
+			}
+            
+            /*保存到fpt服务器上.*/
+            
+            FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
+			String ny = sdf.format(new Date());
+			
+			
+			String workDir =  ny+ "/" + className;
+			
+			ftpUtil.changeWorkingDirectory(workDir,true);
+			
+			// 把文件放在FTP服务器上去.
+			boolean isOK=ftpUtil.uploadFile( guid + "." + ext,temp);
+
+			ftpUtil.releaseConnection();
+
+
+
+            //删除临时文件
+			tempFile.delete();
+
+            //设置路径.
+            filepath = ny + "//"+className+"//" + guid + "." + ext;
+            
+        }
+        else
+        {
+
+            String savePath = BP.Sys.SystemConfig.getPathOfDataUser() + className;
+            
+
+            if (new File(savePath).isDirectory() == false)
+            	new File(savePath).mkdirs();
+
+            filepath = savePath + "\\" + fileName + "." + ext;
+            File info = new File(filepath);
+            //存在文件则删除
+            if (info.exists() == true)
+            	info.delete();
+			try {
+				// 构造临时对象
+
+				InputStream is = multiFile.getInputStream();
+				int buffer = 1024; // 定义缓冲区的大小
+				int length = 0;
+				byte[] b = new byte[buffer];
+				double percent = 0;
+				FileOutputStream fos = new FileOutputStream(info);
+				while ((length = is.read(b)) != -1) {
+					// percent += length / (double) upFileSize * 100D; //
+					// 计算上传文件的百分比
+					fos.write(b, 0, length); // 向文件输出流写读取的数据
+					// session.setAttribute("progressBar",Math.round(percent));
+					// //将上传百分比保存到Session中
+				}
+				fos.close();
+			} catch (RuntimeException ex) {
+				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
+
+			}
+
+        }
+        //获取上传文件的信息
+        for(Attr attr : en.getEnMap().getAttrs())
+        {
+            //文件名
+            if (attr.getKey().equals("MyFileName"))
+                en.SetValByKey(attr.getKey(), fileName);
+
+            //保存路径
+            if (attr.getKey().equals("MyFilePath"))
+                en.SetValByKey(attr.getKey(), filepath);
+            //文件后缀名
+            if (attr.getKey().equals("MyFileExt"))
+                en.SetValByKey(attr.getKey(), ext);
+
+            //文件大小
+            if (attr.getKey().equals("MyFileSize"))
+                en.SetValByKey(attr.getKey(), size);
+
+            //文件保存的网络路径
+            if (attr.getKey().equals("WebPath"))
+                en.SetValByKey(attr.getKey(), filepath);
+        }
+
+
+        en.Update();
+        return "文件保存成功";
+    }
 }

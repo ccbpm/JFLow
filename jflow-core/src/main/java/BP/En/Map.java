@@ -662,7 +662,7 @@ public class Map
 	/**
 	 *  附件存储位置
 	 */
-	public boolean IsHaveFJ = false;
+	public String FJSavePath = null;
 	/**
 	 * 移动到显示方式
 	 */
@@ -2566,7 +2566,7 @@ public class Map
 	public final void AddMyFileS()
 	{
 		this.AddTBInt(EntityNoMyFileAttr.MyFileNum, 0, "附件", false, false);
-		this.IsHaveFJ = true;
+		this.HisBPEntityAthType = BPEntityAthType.Multi; 
 	}
 	
 	/**
@@ -2577,7 +2577,7 @@ public class Map
 	public final void AddMyFileS(String desc)
 	{
 		this.AddTBInt(EntityNoMyFileAttr.MyFileNum, 0, desc, false, false);
-		this.IsHaveFJ = true;
+		this.HisBPEntityAthType = BPEntityAthType.Multi; 
 	}
 	
 	/**
@@ -2597,7 +2597,7 @@ public class Map
 		this.AddTBInt(EntityNoMyFileAttr.MyFileH, 0, "MyFileH", false, false);
 		this.AddTBInt(EntityNoMyFileAttr.MyFileW, 0, "MyFileW", false, false);
 		this.AddTBFloat("MyFileSize", 0, "MyFileSize", false, false);
-		this.IsHaveFJ = true;
+		this.HisBPEntityAthType = BPEntityAthType.Single; 
 	}
 	
 	/**
@@ -2608,18 +2608,18 @@ public class Map
 	 */
 	public final void AddMyFile(String fileDesc)
 	{
-		this.AddTBString(EntityNoMyFileAttr.MyFileName, null, fileDesc, false,
-				false, 0, 100, 200);
-		this.AddTBString(EntityNoMyFileAttr.MyFilePath, null, "MyFilePath",
-				false, false, 0, 100, 200);
-		this.AddTBString(EntityNoMyFileAttr.MyFileExt, null, "MyFileExt",
-				false, false, 0, 10, 10);
-		this.AddTBString(EntityNoMyFileAttr.WebPath, null, "WebPath", false,
-				false, 0, 200, 10);
+		if (fileDesc == null)
+			fileDesc = "附件或图片";
+		
+		this.AddTBString(EntityNoMyFileAttr.MyFileName, null, fileDesc, false,false, 0, 100, 200);
+		this.AddTBString(EntityNoMyFileAttr.MyFilePath, null, "MyFilePath",false, false, 0, 100, 200);
+		this.AddTBString(EntityNoMyFileAttr.MyFileExt, null, "MyFileExt",false, false, 0, 10, 10);
+		this.AddTBString(EntityNoMyFileAttr.WebPath, null, "WebPath", false,false, 0, 200, 10);
 		this.AddTBInt(EntityNoMyFileAttr.MyFileH, 0, "MyFileH", false, false);
 		this.AddTBInt(EntityNoMyFileAttr.MyFileW, 0, "MyFileW", false, false);
 		this.AddTBFloat("MyFileSize", 0, "MyFileSize", false, false);
-		this.IsHaveFJ = true;
+		this.HisBPEntityAthType = BPEntityAthType.Single; 
+		//this.FJSavePath = savePath;
 	}
 	
 	private AttrFiles _HisAttrFiles = null;
@@ -2642,7 +2642,7 @@ public class Map
 	public final void AddMyFile(String fileDesc, String fExt)
 	{
 		getHisAttrFiles().Add(fExt, fileDesc);
-		this.IsHaveFJ = true;
+		 this.HisBPEntityAthType = BPEntityAthType.Single; 
 	}
 	
 	// 增加大块文本输入

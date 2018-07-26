@@ -928,7 +928,9 @@ public class Attrs extends ArrayList<Attr>
                     item.getMyDataType() == DataType.AppFloat ||
                     item.getMyDataType() == DataType.AppDouble ||
                     item.getMyDataType() == DataType.AppMoney ||
-                    item.getMyDataType() == DataType.AppString)
+                    item.getMyDataType() == DataType.AppString ||
+	                item.getMyDataType() == DataType.AppDate ||
+	                item.getMyDataType() == DataType.AppDateTime)
                 {
                     mattr.setUIIsEnable(!item.getUIIsReadonly()) ; 
                 }

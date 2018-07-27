@@ -1074,8 +1074,7 @@ public class Glo {
 			FlowSort fs = new FlowSort();
 			fs.setName("流程树");
 			fs.setNo("1");
-			fs.setTreeNo("01");
-			fs.setIsDir(true);
+		 
 			fs.setParentNo("0");
 			fs.Insert();
 
@@ -1349,8 +1348,7 @@ public class Glo {
 			FlowSort fs = new FlowSort();
 			fs.setName("流程树");
 			fs.setNo("01");
-			fs.setTreeNo("01");
-			fs.setIsDir(true);
+		 
 			fs.setParentNo("0");
 			fs.Insert();
 

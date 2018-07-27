@@ -41,19 +41,7 @@ public abstract class EntityTree extends Entity
 		this.SetValByKey(EntityTreeAttr.No, value);
 	}
 	
-	/**
-	 * 树结构编号
-	 */
-	public String getTreeNo()
-	{
-		return this.GetValStringByKey(EntityTreeAttr.TreeNo);
-	}
-	
-	public void setTreeNo(String value)
-	{
-		this.SetValByKey(EntityTreeAttr.TreeNo, value);
-	}
-	
+	 
 	/**
 	 * 名称
 	 */
@@ -93,18 +81,7 @@ public abstract class EntityTree extends Entity
 		this.SetValByKey(EntityTreeAttr.ICON, value);
 	}
 	
-	/**
-	 * 是否是目录
-	 */
-	public boolean getIsDir()
-	{
-		return this.GetValBooleanByKey(EntityTreeAttr.IsDir);
-	}
-	
-	public void setIsDir(boolean value)
-	{
-		this.SetValByKey(EntityTreeAttr.IsDir, value);
-	}
+	 
 	
 	/**
 	 * 顺序号
@@ -119,13 +96,7 @@ public abstract class EntityTree extends Entity
 		this.SetValByKey(EntityTreeAttr.Idx, value);
 	}
 	
-	/**
-	 * 级别
-	 */
-	public int getGrade()
-	{
-		return this.getTreeNo().length() / 2;
-	}
+	 
 	
 	// 构造函数
 	/**

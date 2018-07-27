@@ -17,22 +17,12 @@ public class EntityTreeAttr
 	 * 父节编号
 	 */
 	public static final String ParentNo = "ParentNo";
-	/**
-	 * 树编号
-	 */
-	public static final String TreeNo = "TreeNo";
+	 
 	/**
 	 * 顺序号
 	 */
 	public static final String Idx = "Idx";
-	/**
-	 * 是否是目录
-	 */
-	public static final String IsDir = "IsDir";
-	/**
-	 * 控制参数
-	 */
-	public static final String CtrlWayPara = "CtrlWayPara";
+	 
 	/**
 	 * 图标
 	 */

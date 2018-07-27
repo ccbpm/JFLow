@@ -53,11 +53,11 @@ public class FlowSort extends EntityTree
 		map.AddTBStringPK(FlowSortAttr.No, null, "编号", true, true, 1, 10, 20);
 		map.AddTBString(FlowSortAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(FlowSortAttr.ParentNo, null, "父节点No", false, false, 0, 100, 30);
-		map.AddTBString(FlowSortAttr.TreeNo, null, "TreeNo", false, false, 0, 100, 30);
+		//map.AddTBString(FlowSortAttr.TreeNo, null, "TreeNo", false, false, 0, 100, 30);
 		map.AddTBString(FlowSortAttr.OrgNo, "0", "组织编号(0为系统组织)", false, false, 0, 50, 30);
 
 		map.AddTBInt(FlowSortAttr.Idx, 0, "Idx", false, false);
-		map.AddTBInt(FlowSortAttr.IsDir, 0, "IsDir", false, false);
+		//map.AddTBInt(FlowSortAttr.IsDir, 0, "IsDir", false, false);
 
 		this.set_enMap(map);
 		return this.get_enMap();

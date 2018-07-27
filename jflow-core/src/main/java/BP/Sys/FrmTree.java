@@ -13,18 +13,7 @@ public class FrmTree extends EntitySimpleTree
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	///#region 属性.
-	/** 
-	 是否是目录
 	 
-	*/
-	public final boolean getIsDir()
-	{
-		return this.GetValBooleanByKey(FrmTreeAttr.IsDir);
-	}
-	public final void setIsDir(boolean value)
-	{
-		this.SetValByKey(FrmTreeAttr.IsDir, value);
-	}
 	/** 
 	 序号
 	 
@@ -98,9 +87,9 @@ public class FrmTree extends EntitySimpleTree
 		map.AddTBStringPK(FrmTreeAttr.No, null, "编号", true, true, 1, 10, 20);
 		map.AddTBString(FrmTreeAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(FrmTreeAttr.ParentNo, null, "父节点No", false, false, 0, 100, 30);
-		map.AddTBString(FrmTreeAttr.DBSrc, null, "DBSrc", false, false, 0, 100, 30);
+		//map.AddTBString(FrmTreeAttr.DBSrc, null, "DBSrc", false, false, 0, 100, 30);
 
-		map.AddTBInt(FrmTreeAttr.IsDir, 0, "是否是目录?", false, false);		 
+		//map.AddTBInt(FrmTreeAttr.IsDir, 0, "是否是目录?", false, false);		 
 		map.AddTBInt(FrmTreeAttr.Idx, 0, "Idx", false, false);
 
 		this.set_enMap(map);

@@ -14,11 +14,8 @@ public class DeptAttr extends EntityTreeAttr
 	/** 
 	 部门负责人
 	*/
-	public static final String Leader = "Leader";
-	/** 
-	 联系电话
-	*/
-	public static final String Tel = "Tel";
+	public static final String OrgNo = "OrgNo";
+	 
 	/** 
 	 单位全名
 	*/

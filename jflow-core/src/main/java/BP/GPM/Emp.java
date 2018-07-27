@@ -99,22 +99,7 @@ public class Emp extends EntityNoName
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
 	}
-	public final String getTel()
-	{
-		return this.GetValStrByKey(EmpAttr.Tel);
-	}
-	public final void setTel(String value)
-	{
-		this.SetValByKey(EmpAttr.Tel, value);
-	}
-	public final String getEmail()
-	{
-		return this.GetValStrByKey(EmpAttr.Email);
-	}
-	public final void setEmail(String value)
-	{
-		this.SetValByKey(EmpAttr.Email, value);
-	}
+	 
 
 	public final String getLeader()
 	{
@@ -218,8 +203,8 @@ public class Emp extends EntityNoName
 
 		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); //要连接的数据源（表示要连接到的那个系统数据库）。
 		map.setPhysicsTable("Port_Emp"); // 要物理表。
-		map.Java_SetDepositaryOfMap(Depositary.Application); //实体map的存放位置.
-		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体存放位置
+		//map.Java_SetDepositaryOfMap(Depositary.Application); //实体map的存放位置.
+	//	map.Java_SetDepositaryOfEntity(Depositary.Application); //实体存放位置
 		map.setEnDesc("用户"); // "用户"; // 实体的描述.
 		map.Java_SetEnType(EnType.App); //实体类型。
 
@@ -235,8 +220,8 @@ public class Emp extends EntityNoName
 		 
 
 		map.AddTBString(EmpAttr.SID, null, "安全校验码", false, false, 0, 36, 36);
-		map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);
-		map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132);
+	//	map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);
+		//map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132);
  
 		map.AddTBInt(EmpAttr.Idx, 0, "序号", true, false);
 	//	 map.AddSearchAttr(EmpAttr.FK_Dept);

@@ -128,8 +128,7 @@ public class SMS extends EntityMyPK
 	}
 
 		///#endregion
-
-
+ 
 		///#region  邮件属性
 	/** 
 	 参数

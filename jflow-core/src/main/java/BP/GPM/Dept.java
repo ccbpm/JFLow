@@ -37,17 +37,7 @@ public class Dept extends EntityTree
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
-	/** 
-	 领导
-	*/
-	public final String getLeader()
-	{
-		return this.GetValStrByKey(DeptAttr.Leader);
-	}
-	public final void setLeader(String value)
-	{
-		this.SetValByKey(DeptAttr.Leader, value);
-	}
+	 
 	private Depts _HisSubDepts = null;
 	/**
 	 * 部门类型
@@ -127,19 +117,19 @@ public class Dept extends EntityTree
 		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", false, false, 0, 100, 30);
 
 			// 01,0101,010101.
-		map.AddTBString(DeptAttr.TreeNo, null, "树编号", false, false, 0, 100, 30);
-
+		//map.AddTBString(DeptAttr.TreeNo, null, "树编号", false, false, 0, 100, 30);
 			//部门领导.
-		map.AddTBString(DeptAttr.Leader, null, "领导", false, false, 0, 100, 30);
+		//map.AddTBString(DeptAttr.Leader, null, "领导", false, false, 0, 100, 30);
+		
 		map.AddTBString(DeptAttr.Tel, null, "联系电话", false, false, 0, 100, 30);
 		
-		map.AddTBString("OrgNo", null, "联系电话", false, false, 0, 100, 30);
+		map.AddTBString("OrgNo", null, "隶属公司", false, false, 0, 100, 30);
 
 			//顺序号.
 		map.AddTBInt(DeptAttr.Idx, 0, "Idx", false, false);
 
 			//是否是目录
-		map.AddTBInt(DeptAttr.IsDir, 0, "是否是目录", false, false);
+		//map.AddTBInt(DeptAttr.IsDir, 0, "是否是目录", false, false);
 
 		  //  map.AddDDLEntities(DeptAttr. null, "部门类型", new DeptTypes(), true);
 

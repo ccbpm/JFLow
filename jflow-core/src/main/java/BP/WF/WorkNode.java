@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -1093,7 +1094,7 @@ public class WorkNode {
 		Node mynd = this.getHisNode();
 		Work mywork = this.getHisWork();
 		int beforeSkipNodeID = 0; // added by liuxc,2015-7-13,标识自动跳转之前的节点ID
-
+	
 		this.setndFrom(this.getHisNode());
 		while (true) {
 			// 上一步的工作节点.
@@ -6260,7 +6261,10 @@ public class WorkNode {
 			}
 
 			/// #endregion 处理发送成功后事件.
-
+			
+			//处理事件.
+            this.Deal_Event();
+            
 			// 返回这个对象.
 			return this.HisMsgObjs;
 		} catch (RuntimeException ex) {
@@ -6269,7 +6273,52 @@ public class WorkNode {
 			throw new RuntimeException("Message:" + ex.getMessage());
 		}
 	}
+	
+    /// <summary>
+    /// 处理事件
+    /// </summary>
+    private void Deal_Event() throws Exception
+    {
+        ///#region 处理节点到达事件..
+        //执行发送到达事件.
+        if (this.town != null)
+        {
+            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive,
+                this.town.getHisNode(), this.rptGe, null, null);
+        }
+        ///#endregion 处理节点到达事件.
 
+        ///#region 处理发送成功后事件.
+        try
+        {
+            //调起发送成功后的事件，把参数传入进去。
+            if (this.SendHTOfTemp != null)
+            {
+            	Enumeration<String> e = this.SendHTOfTemp.keys();
+            	while(e.hasMoreElements()){
+            		String key = e.nextElement();
+                    if (rptGe.getRow().containsKey(key) == true)
+                        this.rptGe.SetValByKey(key,this.SendHTOfTemp.get(key).toString());
+                    else
+                        this.rptGe.getRow().put(key, this.SendHTOfTemp.get(key).toString());
+                }
+            }
+
+            //执行发送.
+            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+
+            //string SendSuccess = this.HisNode.MapData.FrmEvents.DoEventNode(EventListOfNode.SendSuccess, this.HisWork);
+            if (sendSuccess != null)
+                this.addMsg(SendReturnMsgFlag.SendSuccessMsg, sendSuccess);
+        }
+        catch (Exception ex)
+        {
+            this.addMsg(SendReturnMsgFlag.SendSuccessMsgErr, ex.getMessage());
+        }
+        ///#endregion 处理发送成功后事件.
+    }
+    
 	/**
 	 * 执行业务表数据同步.
 	 */

@@ -229,25 +229,23 @@ public class WF_Admin_RptDfine extends WebContralBase
 		{
 			RptDfine rd = new RptDfine(this.getFK_Flow());
 
-
-//			switch (rptNo.Substring(("ND" + int.Parse(this.getFK_Flow()) + "Rpt").Length))
-//ORIGINAL LINE: case "My":
-			if (rptNo.substring(("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt").length()).equals("My"))
+			String searchType = rptNo.substring(("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt").length());
+			if (searchType.equals("My"))
 			{
 					rd.DoReset_MyStartFlow();
 			}
-//ORIGINAL LINE: case "MyDept":
-			else if (rptNo.substring(("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt").length()).equals("MyDept"))
+
+			else if (searchType.equals("MyDept"))
 			{
 					rd.DoReset_MyDeptFlow();
 			}
-//ORIGINAL LINE: case "MyJoin":
-			else if (rptNo.substring(("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt").length()).equals("MyJoin"))
+
+			else if (searchType.equals("MyJoin"))
 			{
 					rd.DoReset_MyJoinFlow();
 			}
-//ORIGINAL LINE: case "Adminer":
-			else if (rptNo.substring(("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt").length()).equals("Adminer"))
+
+			else if (searchType.equals("Adminer"))
 			{
 					rd.DoReset_AdminerFlow();
 			}

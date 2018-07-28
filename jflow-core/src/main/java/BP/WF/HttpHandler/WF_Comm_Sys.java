@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.http.protocol.HttpContext;
@@ -11,15 +12,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import com.sun.star.util.DateTime;
+
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.En.Attr;
+import BP.En.Attrs;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;
+import BP.En.EntityNoName;
 import BP.En.FieldType;
 import BP.Sys.DBSrcType;
 import BP.Sys.SFDBSrc;
@@ -31,6 +36,8 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.FrmUI.SFTables;
+import BP.Tools.DealString;
+import BP.Tools.StringHelper;
 import BP.WF.HttpHandler.Base.WebContralBase;
 /** 
  页面功能实体
@@ -552,4 +559,225 @@ public class WF_Comm_Sys extends WebContralBase
 			
 	}
 		///#endregion
+
+	/// <summary>
+    /// 执行导入
+    /// </summary>
+    /// <returns></returns>
+    public String ImpData_Done() throws Exception
+    {
+
+    	MultipartFile multiFile =  request.getFile("File_Upload");
+    	
+        if (multiFile==null)
+            return "err@请选择要导入的数据信息。";
+
+        String errInfo="";
+
+        String ext = ".xls";
+        String fileName = multiFile.getOriginalFilename();
+        if (fileName.contains(".xlsx"))
+            ext = ".xlsx";
+
+
+        //设置文件名
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String currDate = sdf.format(new Date());
+		
+        String fileNewName = currDate + ext;
+        //文件存放路径
+        String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "\\" + fileNewName;
+        File tempFile = new File(filePath);
+        if(tempFile.exists()){
+        	tempFile.delete();
+		}
+		try {
+			multiFile.transferTo(tempFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@执行失败";
+		}
+
+
+        //从excel里面获得数据表.
+        DataTable dt = BP.DA.DBLoad.GetTableByExt(filePath);
+
+        //删除临时文件
+        tempFile.delete();
+
+        if (dt.Rows.size()==0)
+            return "err@无导入的数据";
+
+        //获得entity.
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        Entity en =ens.getGetNewEntity();
+        if (en.getIsNoEntity()==false)
+            return "err@必须是EntityNo是实体";
+
+        String noColName = ""; //实体列的编号名称.
+        String nameColName = ""; //实体列的名字名称.
+        BP.En.Map map = en.getEnMap();
+        String codeStruct = map.getCodeStruct();
+        Attr attr=map.GetAttrByKey("No");
+        noColName = attr.getDesc(); //
+
+        attr=en.getEnMap().GetAttrByKey("Name");
+        nameColName = attr.getDesc(); //
+
+        //定义属性.
+        Attrs attrs = en.getEnMap().getAttrs();
+
+        int impWay = this.GetRequestValInt("ImpWay");
+
+        ///#region 清空方式导入.
+        //清空方式导入.
+        if (impWay==0)
+        {
+            ens.ClearTable();
+            for(DataRow dr : dt.Rows)
+            {
+                String no = dr.getValue(noColName).toString();
+                //判断是否是自增序列，序列的格式
+                if(!StringHelper.isNullOrEmpty(codeStruct)){
+                	no = DealString.padLeft(no,Integer.parseInt(codeStruct),'0');
+                }
+                
+                String name = dr.getValue(nameColName).toString();
+
+                EntityNoName myen = (EntityNoName) ens.getGetNewEntity();
+                myen.setNo(no);
+                if (myen.getIsExits()==true)
+                {
+                    errInfo += "err@编号["+no+"]["+name+"]重复.";
+                    continue;
+                }
+               
+                myen.setName(name);
+
+                 en = ens.getGetNewEntity();
+
+                //给实体赋值
+                errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
+            }
+        }
+
+        ///#endregion 清空方式导入.
+
+
+        ///#region 更新方式导入
+        if (impWay == 1 || impWay == 2)
+        {
+            for(DataRow dr : dt.Rows)
+            {
+            	String no = dr.getValue(noColName).toString();
+            	//判断是否是自增序列，序列的格式
+                if(!StringHelper.isNullOrEmpty(codeStruct)){
+                	no = DealString.padLeft(no,Integer.parseInt(codeStruct),'0');
+                }
+                String name = dr.getValue(nameColName).toString();
+
+                EntityNoName myen = (EntityNoName) ens.getGetNewEntity();
+                myen.setNo(no);
+                if (myen.getIsExits() == true)
+                {
+                    //给实体赋值
+                    errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,1);
+                    continue;
+                }
+                myen.setName(name);
+
+                //给实体赋值
+                errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
+            }
+        }
+       /// #endregion
+
+        if (errInfo != "")
+            return errInfo;
+
+        return "导入成功.";
+    }
+
+    private String SetEntityAttrVal(String no,DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType) throws Exception
+    {
+        String errInfo = "";
+        //按照属性赋值.
+        for (Attr item : attrs)
+        {
+            if (item.getKey() == "No" )
+            {
+                en.SetValByKey(item.getKey(), no);
+                
+                continue;
+            }
+            if(item.getKey() == "Name"){
+                en.SetValByKey(item.getKey(), dr.getValue(item.getDesc()).toString());
+                continue;
+            }
+                
+
+            if (dt.Columns.contains(item.getDesc()) == false)
+                continue;
+
+            //枚举处理.
+            if (item.getMyFieldType() == FieldType.Enum)
+            {
+                String val = dr.getValue(item.getDesc()).toString();
+
+                SysEnum se = new SysEnum();
+                int i = se.Retrieve(SysEnumAttr.EnumKey, item.getUIBindKey(), SysEnumAttr.Lab, val);
+
+                if (i == 0)
+                {
+                    errInfo += "err@枚举[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
+                    continue;
+                }
+
+                en.SetValByKey(item.getKey(), se.getIntKey());
+                continue;
+            }
+
+            //外键处理.
+            if (item.getMyFieldType() == FieldType.FK)
+            {
+                String val = dr.getValue(item.getDesc()).toString();
+                Entity attrEn = item.getHisFKEn();
+                int i = attrEn.Retrieve("Name", val);
+                if (i == 0)
+                {
+                    errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
+                    continue;
+                }
+
+                if (i != 1)
+                {
+                    errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]重复..";
+                    continue;
+                }
+
+                //把编号值给他.
+                en.SetValByKey(item.getKey(), attrEn.GetValByKey("No"));
+                continue;
+            }
+
+            //boolen类型的处理..
+            if (item.getMyDataType() == DataType.AppBoolean)
+            {
+                String val = dr.getValue(item.getDesc()).toString();
+                if (val == "是" || val == "有")
+                    en.SetValByKey(item.getKey(), 1);
+                else
+                    en.SetValByKey(item.getKey(), 0);
+                continue;
+            }
+
+            String myval = dr.getValue(item.getDesc()).toString();
+            en.SetValByKey(item.getKey(), myval);
+        }
+        if (saveType == 0)
+            en.Insert(); //执行插入.
+        else
+            en.Update();
+        return errInfo;
+    }
 }

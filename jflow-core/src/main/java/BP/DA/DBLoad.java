@@ -3,8 +3,12 @@ package BP.DA;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -236,15 +240,56 @@ public class DBLoad
 		{
 			// 返回布尔类型的值
 			return String.valueOf(hssfCell.getBooleanCellValue());
-		} else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC)
-		{
-			// 返回数值类型的值
-			return String.valueOf(hssfCell.getNumericCellValue());
-		} else
-		{
-			// 返回字符串类型的值
-			return String.valueOf(hssfCell.getStringCellValue());
+		} 
+		if(hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC){
+			// 获取单元格的样式值，即获取单元格格式对应的数值
+			int style = hssfCell.getCellStyle().getDataFormat();
+			// 判断是否是日期格式
+			if (HSSFDateUtil.isCellDateFormatted(hssfCell)) {
+				Date date = hssfCell.getDateCellValue();
+				// 对不同格式的日期类型做不同的输出，与单元格格式保持一致
+				switch (style) {
+				case 178:
+					return new SimpleDateFormat("yyyy'年'M'月'd'日'").format(date);
+					
+				case 14:
+					return new SimpleDateFormat("yyyy/MM/dd").format(date);
+
+				case 179:
+					return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(date);
+					
+				case 181:
+					return new SimpleDateFormat("yyyy/MM/dd HH:mm a ").format(date);
+					
+				case 22:
+					return new SimpleDateFormat(" yyyy/MM/dd HH:mm:ss ").format(date);
+
+				default:
+					break;
+				}
+			} else {
+				switch (style) {
+				// 单元格格式为百分比，不格式化会直接以小数输出
+				case 9:
+					return  new DecimalFormat("0.00%").format(hssfCell.getNumericCellValue());
+
+				// DateUtil判断其不是日期格式，在这里也可以设置其输出类型
+				case 57:
+					return new SimpleDateFormat(" yyyy'年'MM'月' ").format(hssfCell.getDateCellValue());
+
+				default:
+					hssfCell.setCellType(HSSFCell.CELL_TYPE_STRING); 
+					return String.valueOf(hssfCell.getStringCellValue());
+				}
+			}
+
+
 		}
+		//其余的格式设置成String，返回String
+		hssfCell.setCellType(HSSFCell.CELL_TYPE_STRING);  
+		// 返回字符串类型的值
+		return String.valueOf(hssfCell.getStringCellValue());
+		
 	}
 	
 	@SuppressWarnings("resource")
@@ -321,9 +366,12 @@ public class DBLoad
 	public static DataTable GetTableByExt(String filePath)
 	{
 		FileInputStream stream = null;
+		DataTable dataTable = null;
 		try
 		{
 			stream = new FileInputStream(filePath);
+			dataTable = GetTableByExt(stream);
+			
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -337,118 +385,7 @@ public class DBLoad
 			}
 		}
 		
-		return GetTableByExt(stream);
+		return dataTable;
 		
-		// }
-		// String typ = System.IO.Path.GetExtension(filePath).toLowerCase();
-		// String strConn;
-		// if (typ.toLowerCase().equals(".xls"))
-		// {
-		// if (sql==null)
-		// {
-		// sql = "SELECT * FROM [" + GenerFirstTableName(filePath) + "]";
-		// }
-		// strConn = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source =" + filePath
-		// + ";Extended Properties=Excel 8.0";
-		// System.Data.OleDb.OleDbConnection conn = new
-		// OleDbConnection(strConn);
-		// OleDbDataAdapter ada = new OleDbDataAdapter(sql, conn);
-		// try
-		// {
-		// conn.Open();
-		// ada.Fill(Tb);
-		// Tb.TableName = Path.GetFileNameWithoutExtension(filePath);
-		// }
-		// catch (RuntimeException ex)
-		// {
-		// conn.Close();
-		// throw ex; //(ex.Message);
-		// }
-		// conn.Close();
-		// }
-		// //ORIGINAL LINE: case ".xlsx":
-		// else if (typ.toLowerCase().equals(".xlsx"))
-		// {
-		// if (sql == null)
-		// {
-		// sql = "SELECT * FROM [" + GenerFirstTableName(filePath)+"]";
-		// }
-		// try
-		// {
-		// strConn = "Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath +
-		// ";Extended Properties=\"Excel 12.0 Xml;HDR=YES\"";
-		// System.Data.OleDb.OleDbConnection conn121 = new
-		// OleDbConnection(strConn);
-		// OleDbDataAdapter ada91 = new OleDbDataAdapter(sql, conn121);
-		// conn121.Open();
-		// ada91.Fill(Tb);
-		// Tb.TableName = Path.GetFileNameWithoutExtension(filePath);
-		// conn121.Close();
-		// ada91.dispose();
-		// }
-		// catch (RuntimeException ex1)
-		// {
-		// try
-		// {
-		// strConn = "Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath +
-		// ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\"";
-		// System.Data.OleDb.OleDbConnection conn1215 = new
-		// OleDbConnection(strConn);
-		// OleDbDataAdapter ada919 = new OleDbDataAdapter(sql, conn1215);
-		// ada919.Fill(Tb);
-		// Tb.TableName = Path.GetFileNameWithoutExtension(filePath);
-		// ada919.dispose();
-		// conn1215.Close();
-		// }
-		// catch (java.lang.Exception e)
-		// {
-		//
-		// }
-		// throw ex1; //(ex.Message);
-		// }
-		// }
-		// //ORIGINAL LINE: case ".dbf":
-		// else if (typ.toLowerCase().equals(".dbf"))
-		// {
-		// strConn = "Driver={Microsoft dBASE Driver (*.DBF)};DBQ=" +
-		// System.IO.Path.GetDirectoryName(filePath) + "\\"; //+FilePath;//
-		// OdbcConnection conn1 = new OdbcConnection(strConn);
-		// OdbcDataAdapter ada1 = new OdbcDataAdapter(sql, conn1);
-		// conn1.Open();
-		// try
-		// {
-		// ada1.Fill(Tb);
-		// }
-		// catch (java.lang.Exception e2) //(System.Exception ex)
-		// {
-		// try
-		// {
-		// int sel =
-		// ada1.SelectCommand.getCommandText().toLowerCase().indexOf("select") +
-		// 6;
-		// int from =
-		// ada1.SelectCommand.getCommandText().toLowerCase().indexOf("from");
-		// String tempVar = ada1.SelectCommand.getCommandText();
-		// ada1.SelectCommand.setCommandText(tempVar.substring(0, sel) +
-		// tempVar.substring(sel + from - sel));
-		// ada1.SelectCommand.setCommandText(ada1.SelectCommand.getCommandText().insert(sel,
-		// " top 10 * "));
-		// ada1.Fill(Tb);
-		// Tb.TableName = "error";
-		// }
-		// catch (RuntimeException ex)
-		// {
-		// conn1.Close();
-		// throw new RuntimeException("读取DBF数据失败！" + ex.getMessage() + " SQL:" +
-		// sql);
-		// }
-		// }
-		// conn1.Close();
-		// }
-		// else
-		// {
-		// }
-		// return Tb;
-		// return null;
 	}
 }

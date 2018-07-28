@@ -543,7 +543,7 @@ public class WF_RptDfine extends WebContralBase{
 				if (i == 1)
 				{
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")|| SystemConfig.getAppCenterDBVarStr().equals(":"))
 					{
 						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
@@ -556,7 +556,7 @@ public class WF_RptDfine extends WebContralBase{
 
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":"))
 				{
 					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}

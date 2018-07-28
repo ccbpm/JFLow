@@ -46,7 +46,12 @@ import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
 import BP.DA.Paras;
+import BP.En.Attr;
+import BP.En.Attrs;
+import BP.En.Entities;
+import BP.En.Entity;
 import BP.En.QueryObject;
+import BP.En.FieldType;
 import BP.Sys.AthCtrlWay;
 import BP.Sys.AthDeleteWay;
 import BP.Sys.AthSaveWay;
@@ -72,6 +77,7 @@ import BP.Sys.GEDtl;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
+import BP.Sys.GENoNames;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapDtl;
@@ -82,6 +88,8 @@ import BP.Sys.MapExtXmlList;
 import BP.Sys.MapExts;
 import BP.Sys.PopValWorkModel;
 import BP.Sys.PubClass;
+import BP.Sys.SysEnum;
+import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.DateUtils;
 import BP.Tools.FileAccess;
@@ -2821,49 +2829,176 @@ public class WF_CCForm extends WebContralBase {
 		String tempPath = SystemConfig.getPathOfTemp();
 		try {
 			MapDtl dtl = new MapDtl("this.getFK_MapDtl()");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "err@" +e;
-		}
-		MultipartFile multipartFile = request.getFile("file");
-		if(multipartFile.getSize() == 0){
-			return "err@请选择要上传的从表模板."; 
-		}
-		//获取文件名,并取其后缀.
-		String fileName = multipartFile.getOriginalFilename();
-		String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
-		if (!prefix.equals("xls") && !prefix.equals("xlsx")) {
-			
-			return "err@上传的文件必须是Excel文件.";
-		}
-		//保存临时文件
-		String userNo = "";
-		try {
-			userNo = BP.Web.WebUser.getNo();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		//String file = tempPath + "/" + userNo + prefix;
 		
-		//判断路径是否存在
-		tempPath = tempPath.replace("\\", "/");
-		File tPath = new File(tempPath);
-		if (!tPath.isDirectory()) {
-			tPath.mkdirs();
-		}
-		//执行保存附件
-		File file = new File(tempPath + "/" + userNo + prefix);
-		try {
-			multipartFile.transferTo(file);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			return "err@文件上传失败.";
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "err@文件上传失败.";
-		}
-		GEDtls dtls = new GEDtls(this.getFK_MapDtl());
-		return "此方法未翻译完成";
+			MultipartFile multipartFile = request.getFile("file");
+			if(multipartFile.getSize() == 0){
+				return "err@请选择要上传的从表模板."; 
+			}
+			//获取文件名,并取其后缀.
+			String fileName = multipartFile.getOriginalFilename();
+			String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
+			if (!prefix.equals("xls") && !prefix.equals("xlsx")) {
+				
+				return "err@上传的文件必须是Excel文件.";
+			}
+			//保存临时文件
+			String userNo = "";
+			try {
+				userNo = BP.Web.WebUser.getNo();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			//String file = tempPath + "/" + userNo + prefix;
+			
+			//判断路径是否存在
+			tempPath = tempPath.replace("\\", "/");
+			File tPath = new File(tempPath);
+			if (!tPath.isDirectory()) {
+				tPath.mkdirs();
+			}
+			//执行保存附件
+			File file = new File(tempPath + "/" + userNo + prefix);
+			try {
+				multipartFile.transferTo(file);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				return "err@文件上传失败.";
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "err@文件上传失败.";
+			}
+			GEDtls dtls = new GEDtls(this.getFK_MapDtl());
+		    DataTable dt = BP.DA.DBLoad.GetTableByExt(tempPath + "/" + userNo + prefix);
+	
+	        ///#region 检查两个文件是否一致。 生成要导入的属性
+	        Attrs attrs = dtls.getGetNewEntity().getEnMap().getAttrs();
+	        Attrs attrsExp = new BP.En.Attrs();
+	
+	        boolean isHave = false;
+	        for (DataColumn dc : dt.Columns)
+	        {
+	          for (Attr attr : attrs)
+	          {
+	              if (dc.ColumnName == attr.getDesc())
+	              {
+	                  isHave = true;
+	                  attrsExp.Add(attr);
+	                  continue;
+	              }
+	
+	              if (dc.ColumnName.toLowerCase() == attr.getKey().toLowerCase())
+	              {
+	                  isHave = true;
+	                  attrsExp.Add(attr);
+	                  dc.ColumnName = attr.getDesc();
+	              }
+	            }
+	          }
+	          if (isHave == false)
+	              throw new Exception("@您导入的excel文件不符合系统要求的格式，请下载模版文件重新填入。");
+	          ///#endregion
+	
+	          ///#region 执行导入数据.
+	
+	          if (this.GetRequestValInt("DDL_ImpWay") == 0)
+	              BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + this.getWorkID() + "'");
+	
+	          int i = 0;
+	          int oid = (int) BP.DA.DBAccess.GenerOID("Dtl", dt.Rows.size());
+	          String rdt = BP.DA.DataType.getCurrentData();
+	
+	          String errMsg = "";
+	          for (DataRow dr : dt.Rows)
+	          {
+	              GEDtl dtlEn = (GEDtl) dtls.getGetNewEntity();
+	              dtlEn.ResetDefaultVal();
+	
+	              for (Attr attr : attrsExp)
+	              {
+	                  if (attr.getUIVisible() == false || dr.getValue(attr.getDesc()) == "")
+	                      continue;
+	                  String val = dr.getValue(attr.getDesc()).toString();
+	                  if (val == null)
+	                      continue;
+	                  val = val.trim();
+	                  switch (attr.getMyFieldType())
+	                  {
+	                      case Enum:
+	                      case PKEnum:
+	                          SysEnums ses = new SysEnums(attr.getUIBindKey());
+	                          boolean isHavel = false;
+	                          for (SysEnum se : ses.ToJavaList())
+	                          {
+	                              if (val == se.getLab())
+	                              {
+	                                  val = String.valueOf(se.getIntKey());
+	                                  isHavel = true;
+	                                  break;
+	                              }
+	                          }
+	                          if (isHavel == false)
+	                          {
+	                              errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.getDesc() + ")，数据(" + val + ")不符合格式,改值没有在枚举列表里.";
+	                              val = attr.getDefaultVal().toString();
+	                          }
+	                          break;
+	                      case FK:
+	                      case PKFK:
+	                          Entities ens = null;
+	                          if (attr.getUIBindKey().contains("."))
+	                              ens = BP.En.ClassFactory.GetEns(attr.getUIBindKey());
+	                          else
+	                              ens = new GENoNames(attr.getUIBindKey(), "desc");
+	
+	                          ens.RetrieveAll();
+	                          boolean isHavelIt = false;
+	                          for (Entity en : ens)
+	                          {
+	                              if (val == en.GetValStrByKey("Name"))
+	                              {
+	                                  val = en.GetValStrByKey("No");
+	                                  isHavelIt = true;
+	                                  break;
+	                              }
+	                          }
+	                          if (isHavelIt == false)
+	                              errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.getDesc() + ")，数据(" + val + ")不符合格式,改值没有在外键数据列表里.";
+	                          break;
+	                      default:
+	                          break;
+	                  }
+	
+	                  if (attr.getMyDataType() == BP.DA.DataType.AppBoolean)
+	                  {
+	                      if (val.trim() == "是" || val.trim().toLowerCase() == "yes")
+	                          val = "1";
+	
+	                      if (val.trim() == "否" || val.trim().toLowerCase() == "no")
+	                          val = "0";
+	                  }
+	
+	                  dtlEn.SetValByKey(attr.getKey(), val);
+	              }
+	              dtlEn.setRefPKInt((int)this.getWorkID());
+	              dtlEn.SetValByKey("RDT", rdt);
+	              dtlEn.SetValByKey("Rec", WebUser.getNo());
+	              i++;
+	
+	              dtlEn.InsertAsOID(oid);
+	              oid++;
+	          }
+	          ///#endregion 执行导入数据.
+	
+	          if (StringUtils.isEmpty(errMsg) == true)
+	              return "info@共有(" + i + ")条数据导入成功。";
+	          else
+	              return "共有(" + i + ")条数据导入成功，但是出现如下错误:" + errMsg;
+
+	      }catch (Exception ex){
+	          String msg = ex.getMessage().replace("'", "‘");
+	          return "err@" + msg;
+	      }
+
 	}
 	private DefaultMultipartHttpServletRequest request;
 	public void setMultipartRequest(DefaultMultipartHttpServletRequest request){

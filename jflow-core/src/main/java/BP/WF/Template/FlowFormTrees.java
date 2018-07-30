@@ -30,7 +30,7 @@ public class FlowFormTrees extends EntitiesTree
 		   tree.setNo("100");
 		   tree.setFK_Flow(flowNo);
 		   tree.setName("根目录");
-		   tree.setIsDir(false);
+		 
 		   tree.setParentNo("0");
 		   tree.Insert();
 

@@ -139,13 +139,7 @@ public abstract class EntityTree extends Entity
 		}
 	}
 	
-	// 业务逻辑处理
-	/**
-	 * 重新设置treeNo
-	 */
-	public void ResetTreeNo()
-	{
-	}
+ 
 	
 	/**
 	 * 检查名称的问题.

@@ -8,7 +8,8 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.En.Entities;
-import BP.En.EntityMultiTree;
+import BP.En.EntitiesTree;
+import BP.En.EntityTree;
 import BP.En.FieldTypeS;
 import BP.En.QueryObject;
 import BP.Port.Depts;
@@ -76,7 +77,7 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final void TansEntitiesToGenerTree(Entities ens, String rootNo,
 			String checkIds) {
 		Object tempVar = ens.GetEntityByKey(rootNo);
-		EntityMultiTree root = (EntityMultiTree) ((tempVar instanceof EntityMultiTree) ? tempVar
+		EntityTree root = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar
 				: null);
 		if (root == null) {
 			throw new RuntimeException("@没有找到rootNo=" + rootNo + "的entity.");
@@ -103,13 +104,13 @@ public class WF_Admin_Cond extends WebContralBase {
 		appendMenus.append("}]");
 	}
 
-	public final void AddChildren(EntityMultiTree parentEn, Entities ens,
+	public final void AddChildren(EntityTree parentEn, Entities ens,
 			String checkIds) {
 		appendMenus.append(appendMenuSb);
 		appendMenuSb.delete(0, appendMenuSb.length());
 
 		appendMenuSb.append("[");
-		for (EntityMultiTree item : convertEntityMultiTree(ens)) {
+		for (EntityTree item : convertEntityMultiTree(ens)) {
 			if (item.getParentNo() != null
 					&& !item.getParentNo().equals(parentEn.getNo())) {
 				continue;
@@ -159,8 +160,8 @@ public class WF_Admin_Cond extends WebContralBase {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static ArrayList<EntityMultiTree> convertEntityMultiTree(Object obj) {
-		return (ArrayList<EntityMultiTree>) obj;
+	public static ArrayList<EntityTree> convertEntityMultiTree(Object obj) {
+		return (ArrayList<EntityTree>) obj;
 	}
 
 	/**

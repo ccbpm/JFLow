@@ -116,8 +116,7 @@ public class Dept extends EntityTree
 		map.AddTBString(DeptAttr.NameOfPath, null, "部门路径", false, false, 0, 300, 30);
 		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", false, false, 0, 100, 30);
 
-			// 01,0101,010101.
-		//map.AddTBString(DeptAttr.TreeNo, null, "树编号", false, false, 0, 100, 30);
+	 
 			//部门领导.
 		//map.AddTBString(DeptAttr.Leader, null, "领导", false, false, 0, 100, 30);
 		

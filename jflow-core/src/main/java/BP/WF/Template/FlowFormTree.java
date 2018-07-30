@@ -1,7 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.Depositary;
-import BP.En.EntityMultiTree;
+import BP.En.EntityTree;
 import BP.En.Map;
 import BP.WF.Glo;
 
@@ -9,7 +9,7 @@ import BP.WF.Glo;
  独立表单树
  
 */
-public class FlowFormTree extends EntityMultiTree
+public class FlowFormTree extends EntityTree
 {
 
 	/** 
@@ -88,15 +88,7 @@ public class FlowFormTree extends EntityMultiTree
 
 		///#endregion
 
-	/** 
-	 分组字段
 	 
-	*/
-	@Override
-	public String getRefObjField()
-	{
-		return FlowFormTreeAttr.FK_Flow;
-	}
 	/** 
 	 独立表单树Map
 	 

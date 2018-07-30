@@ -1405,7 +1405,7 @@ public class Glo {
 		String tmp = "SELECT Name FROM WF_FlowSort WHERE ParentNo='0'";
 		tmp = DBAccess.RunSQLReturnString(tmp);
 		if (StringHelper.isNullOrEmpty(tmp)) {
-			tmp = "INSERT INTO WF_FlowSort(No,Name,ParentNo,TreeNo,idx,IsDir) values('01','流程树',0,'',0,0)";
+			tmp = "INSERT INTO WF_FlowSort(No,Name,ParentNo,idx) values('01','流程树',0,0)";
 			DBAccess.RunSQLReturnString(tmp);
 		}
 
@@ -1413,7 +1413,7 @@ public class Glo {
 		tmp = "SELECT Name FROM Sys_FormTree WHERE ParentNo = '0' ";
 		tmp = DBAccess.RunSQLReturnString(tmp);
 		if (StringHelper.isNullOrEmpty(tmp)) {
-			tmp = "INSERT INTO Sys_FormTree(No,Name,ParentNo,TreeNo,Idx,IsDir) values('001','表单树',0,'',0,0)";
+			tmp = "INSERT INTO Sys_FormTree(No,Name,ParentNo,Idx) values('001','表单树',0,0)";
 			DBAccess.RunSQLReturnString(tmp);
 		}
 

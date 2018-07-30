@@ -12,7 +12,6 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.En.Entities;
-import BP.En.EntityMultiTree;
 import BP.En.FieldTypeS;
 import BP.En.QueryObject;
 import BP.Port.Depts;

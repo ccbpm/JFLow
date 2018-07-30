@@ -22,7 +22,8 @@ import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entities;
-import BP.En.EntityMultiTree;
+import BP.En.EntitiesTree;
+import BP.En.EntityTree;
 import BP.En.QueryObject;
 import BP.Sys.FrmType;
 import BP.Sys.MapData;
@@ -87,9 +88,9 @@ public class WF_MyFlow extends WebContralBase {
 	
 	public long _WorkID=0;
 	@SuppressWarnings("unchecked")
-	public static ArrayList<EntityMultiTree> convertEntityMultiTree(Object obj)
+	public static ArrayList<EntityTree> convertEntityMultiTree(Object obj)
 	{
-		return (ArrayList<EntityMultiTree>) obj;
+		return (ArrayList<EntityTree>) obj;
 	}
 	/**
 	 * 初始化函数
@@ -549,7 +550,7 @@ public class WF_MyFlow extends WebContralBase {
 			public final void TansEntitiesToGenerTree(Entities ens, String rootNo, String checkIds)
 			{
 				Object tempVar = ens.GetEntityByKey(rootNo);
-				EntityMultiTree root = (EntityMultiTree)((tempVar instanceof EntityMultiTree) ? tempVar : null);
+				EntityTree root = (EntityTree)((tempVar instanceof EntityTree) ? tempVar : null);
 				if (root == null)
 				{
 					throw new RuntimeException("@没有找到rootNo=" + rootNo + "的entity.");
@@ -575,13 +576,13 @@ public class WF_MyFlow extends WebContralBase {
 			}
 			
 			
-			 public final void AddChildren(EntityMultiTree parentEn, Entities ens, String checkIds)
+			 public final void AddChildren(EntityTree parentEn, Entities ens, String checkIds)
 				{
 					appendMenus.append(appendMenuSb);
 					appendMenuSb.setLength(0);        //clear();
 
 					appendMenuSb.append("[");
-					for (EntityMultiTree item : convertEntityMultiTree(ens))
+					for (EntityTree item : convertEntityMultiTree(ens))
 					{
 						if (!item.getParentNo().equals(parentEn.getNo()))
 						 	continue;

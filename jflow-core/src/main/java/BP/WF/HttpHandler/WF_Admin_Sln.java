@@ -257,7 +257,7 @@ public class WF_Admin_Sln extends WebContralBase {
 	public final void TansEntitiesToGenerTree(Entities ens, String rootNo,
 			String checkIds) {
 		Object tempVar = ens.GetEntityByKey(rootNo);
-		EntityMultiTree root = (EntityMultiTree) ((tempVar instanceof EntityMultiTree) ? tempVar
+		EntityTree root = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar
 				: null);
 		if (root == null) {
 			throw new RuntimeException("@没有找到rootNo=" + rootNo + "的entity.");
@@ -284,7 +284,7 @@ public class WF_Admin_Sln extends WebContralBase {
 		appendMenus.append("}]");
 	}
 
-	public final void AddChildren(EntityMultiTree parentEn, Entities ens,
+	public final void AddChildren(EntityTree parentEn, Entities ens,
 			String checkIds) {
 		appendMenus.append(appendMenuSb);
 		appendMenuSb = new StringBuilder();
@@ -292,7 +292,7 @@ public class WF_Admin_Sln extends WebContralBase {
 
 		appendMenuSb.append("[");
 		for (Entity en : ens) {
-			EntityMultiTree item = (EntityMultiTree) en;
+			EntityTree item = (EntityTree) en;
 			if (!item.getParentNo().equals(parentEn.getNo())) {
 				continue;
 			}

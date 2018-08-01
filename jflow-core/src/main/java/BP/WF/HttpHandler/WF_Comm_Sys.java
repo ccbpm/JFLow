@@ -631,6 +631,8 @@ public class WF_Comm_Sys extends WebContralBase
 
         ///#region 清空方式导入.
         //清空方式导入.
+        int count =0;//导入的行数
+        String successInfo="";
         if (impWay==0)
         {
             ens.ClearTable();
@@ -658,6 +660,9 @@ public class WF_Comm_Sys extends WebContralBase
 
                 //给实体赋值
                 errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
+                count++;
+                successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的导入成功</span><br/>";
+                
             }
         }
 
@@ -682,20 +687,22 @@ public class WF_Comm_Sys extends WebContralBase
                 {
                     //给实体赋值
                     errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,1);
+                    count++;
+                    successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的更新成功</span><br/>";
                     continue;
                 }
                 myen.setName(name);
 
                 //给实体赋值
                 errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
+                count++;
+                successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的导入成功</span><br/>";
             }
         }
        /// #endregion
 
-        if (errInfo != "")
-            return errInfo;
+           return "errInfo="+errInfo+"_"+"count="+count+"_successInfo="+successInfo;
 
-        return "导入成功.";
     }
 
     private String SetEntityAttrVal(String no,DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType) throws Exception

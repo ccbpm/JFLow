@@ -6100,7 +6100,7 @@ public class Flow extends BP.En.EntityNoName
 							}
 
 //							switch (dc.ColumnName.ToLower())
-							if (dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("returnn"))
+							if (dc.ColumnName.toLowerCase().equals("fk_node") || dc.ColumnName.toLowerCase().equals("returnto"))
 							{
 									if (val.length() < iOldFlowLength)
 		                        	{

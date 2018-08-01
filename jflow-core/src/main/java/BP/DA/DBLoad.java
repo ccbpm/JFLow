@@ -315,7 +315,7 @@ public class DBLoad
 			return null;
 		}
 		// 循环行Row
-		int row_size = hssfSheet.getLastRowNum();
+		int row_size = hssfSheet.getPhysicalNumberOfRows();
 		for (int j = 0; j < row_size; j++)
 		{
 			HSSFRow hssfRow = hssfSheet.getRow(j);

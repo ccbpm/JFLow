@@ -220,8 +220,8 @@ public class Emp extends EntityNoName
 		 
 
 		map.AddTBString(EmpAttr.SID, null, "安全校验码", false, false, 0, 36, 36);
-	//	map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);
-		//map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132);
+		map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);
+		map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132);
  
 		map.AddTBInt(EmpAttr.Idx, 0, "序号", true, false);
 	//	 map.AddSearchAttr(EmpAttr.FK_Dept);

@@ -11,6 +11,8 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	 * 部门
 	 */
 	public static final String FK_Dept = "FK_Dept";
+	
+	
 	 
 	/**
 	 * 密码
@@ -25,5 +27,8 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	 * 序号
 	 */
 	public static final String Idx = "Idx";
+	
+	public static final String Tel = "Tel";
+	public static final String Email = "Email";
 	 
 }

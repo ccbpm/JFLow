@@ -701,7 +701,7 @@ public class WF_Comm_Sys extends WebContralBase
         }
        /// #endregion
 
-           return "errInfo="+errInfo+"_"+"count="+count+"_successInfo="+successInfo;
+           return "errInfo="+errInfo+"@Split"+"count="+count+"@Split"+"successInfo="+successInfo;
 
     }
 
@@ -737,6 +737,7 @@ public class WF_Comm_Sys extends WebContralBase
                 if (i == 0)
                 {
                     errInfo += "err@枚举[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
+                    en.SetValByKey(item.getKey(),"");
                     continue;
                 }
 
@@ -753,12 +754,14 @@ public class WF_Comm_Sys extends WebContralBase
                 if (i == 0)
                 {
                     errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
+                    en.SetValByKey(item.getKey(),"");
                     continue;
                 }
 
                 if (i != 1)
                 {
                     errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]重复..";
+                    en.SetValByKey(item.getKey(),"");
                     continue;
                 }
 

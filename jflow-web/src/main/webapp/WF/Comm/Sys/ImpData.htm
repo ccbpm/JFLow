@@ -80,7 +80,7 @@
                 	$("#result").append("成功导入条数&nbsp;&nbsp;&nbsp;"+count+"<br/>");
                 	$("#result").append("成功导入数据<br/>");
                 	$("#result").append(successInfo);
-                	$("#result").append("<span style='color:red'>警告</span><br/>");
+                	$("#result").append("<br/><span style='color:red'>警告</span><br/>");
                 	$("#result").append(waringInfo);
                 	
                 	
@@ -93,7 +93,7 @@
             var downloadUrl = "../../../DataUser/TempleteOfImp/" + ensName + ".xls";
             var a = document.getElementById("downFileID");
             a.href = downloadUrl;
-            a.download = "11.txt";
+            a.download = ensName + ".xls";
             a.click();
         }
 

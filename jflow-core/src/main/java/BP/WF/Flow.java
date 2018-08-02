@@ -305,27 +305,7 @@ public class Flow extends BP.En.EntityNoName
 		this.SetValByKey(FlowAttr.DTSFields, value);
 	}
 
-	/** 
-	 流程图数据
-	 
-	*/
-	public final String getFlowJson()
-	{
-		try {
-			return this.GetBigTextFromDB("FlowJson");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	public final void setFlowJson(String value)
-	{
-		try {
-			this.SaveBigTxtToDB("FlowJson", value);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+ 
 	/*****************************H5流程列表使用，不做其他用处*********************************************/
 	public final int getSta0(){
 		return this.GetValIntByKey(FlowAttr.Sta0);

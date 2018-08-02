@@ -436,8 +436,7 @@ public class FlowAttr
 	 
 	*/
 	public static final String PSpecEmp = "PSpecEmp";
-	
-	public static final String FlowJson = "FlowJson";
+ 
 	
 	public static final String Sta0 = "Sta0";
 	public static final String Sta1 = "Sta1";

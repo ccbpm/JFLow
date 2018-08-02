@@ -595,17 +595,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
           
 	}
 
-	/** 
-	 加载流程数据
-	 @return 流程图数据的JSON
-	 * @throws Exception 
-	*/
-	public final String Designer_LoadOneFlow() throws Exception
-	{
-		String flowNo = this.GetValFromFrmByKey("FK_Flow");
-		BP.WF.Flow fl = new BP.WF.Flow(flowNo);
-		return fl.getFlowJson();
-	}
+ 
 	/** 
 	 保存流程图信息
 	 
@@ -635,8 +625,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		BP.WF.Flow fl = new BP.WF.Flow(flowNo);
 		//修改版本
 		fl.setDType(fl.getDType() == BP.WF.CCBPM_DType.BPMN.getValue() ? BP.WF.CCBPM_DType.BPMN.getValue() : BP.WF.CCBPM_DType.CCBPM.getValue());
-		//直接保存了.
-		fl.setFlowJson(diagram);
+	 
 		fl.Update();
 
 		//节点方向
@@ -715,16 +704,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
        }*/
 		 return "true";
 	}
-	/** 
-	 重置流程版本为1.0
-	 @return 
-	*/
-	public final String Flow_ResetFlowVersion()
-	{
-		DBAccess.RunSQL("UPDATE WF_FLOW SET DType=0, FlowJson='' WHERE No='" + this.getFK_Flow() + "'");
-		return "重置成功.";
-	}
-
+ 
 	/** 
 	 获取流程所有元素
 	 @return json data

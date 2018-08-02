@@ -264,8 +264,7 @@ public class Glo {
 			BP.Sys.Serial se = new BP.Sys.Serial();
 			se.CheckPhysicsTable();
 
-			Flow flP = new Flow();
-			flP.setFlowJson("");
+		 
 
 			BP.WF.Template.NodeExt ext = new BP.WF.Template.NodeExt();
 			ext.CheckPhysicsTable();
@@ -442,39 +441,7 @@ public class Glo {
 			// 增加部门字段。
 			CCList cc = new CCList();
 			cc.CheckPhysicsTable();
-
-			if (BP.DA.DBAccess.IsExitsTableCol("WF_Flow", "FlowJson") == false) {
-				DataTable columns = src.GetColumns("WF_Flow");
-				HashMap<String, Object> filterMap = new HashMap<String, Object>();
-				filterMap.put("No", "FLOWJSON");
-				System.out.println("columns.Select(filterMap).size() = " + columns.Select(filterMap).size());
-				if (columns.Select(filterMap).size() == 0) {
-					switch (src.getHisDBType()) {
-					case MSSQL:
-						DBAccess.RunSQL("ALTER TABLE WF_Flow ADD FlowJson IMAGE NULL");
-						break;
-					case Oracle:
-						filterMap.clear();
-						filterMap.put("NO", "FLOWJSON");
-						if (columns.Select(filterMap).size() == 0) {
-							DBAccess.RunSQL("ALTER TABLE WF_Flow ADD FlowJson BLOB NULL");
-							break;
-						} else {
-							break;
-						}
-					case Informix:
-						DBAccess.RunSQL("ALTER TABLE WF_Flow ADD FlowJson BLOB NULL");
-						break;
-					case MySQL:
-						DBAccess.RunSQL("ALTER TABLE WF_Flow ADD FlowJson LONGTEXT");
-						break;
-					default:
-						break;
-					}
-				}
-
-			}
-
+ 
 			// /#region 升级sys_sftable
 			// 升级
 			BP.Sys.SFTable tab = new SFTable();
@@ -1189,7 +1156,10 @@ public class Glo {
 			}
 
 		}
-
+		
+		BP.GPM.Emp empP=new BP.GPM.Emp();
+		empP.CheckPhysicsTable();
+		 
 		// /#endregion 修复
 
 		// /#region 2, 注册枚举类型 SQL
@@ -1223,6 +1193,7 @@ public class Glo {
 			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
 		}
+		
 		// /#endregion 修复
 
 		// /#region 4, 创建视图与数据.

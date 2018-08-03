@@ -4571,15 +4571,12 @@ public class Flow extends BP.En.EntityNoName
 	}
 	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
 	{
-		if (currNode == null)
-		{
+		if (currNode == null)		
 			return null;
-		}
+		
 		
 		//调用通用方法.
-		BP.WF.OverrideClass.FEE(doType, currNode, en, atPara, objs, jumpToNode, jumpToEmps);
-		
-		
+		BP.WF.OverrideClass.FEE(doType, currNode, en, atPara, objs, jumpToNode, jumpToEmps); 
 
 		String str = null;
 		if (this.getFEventEntity() != null)
@@ -4626,7 +4623,12 @@ public class Flow extends BP.En.EntityNoName
 			}
 
 			//执行发送消息.
-			msgAlert += item.DoSendMessage(currNode, en, atPara, objs, jumpToNode, jumpToEmps);
+			
+			if (doType.equals(EventListOfNode.WorkArrive))
+			msgAlert += item.DoSendMessage(currNode, en, atPara, objs, jumpToNode, objs.getVarAcceptersID());
+		else
+		  msgAlert += item.DoSendMessage(currNode, en, atPara, objs, jumpToNode, jumpToEmps);
+				
 		}
 		return str + msgAlert;
 	}

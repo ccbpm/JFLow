@@ -416,10 +416,9 @@ public class SMS extends EntityMyPK
 	protected void afterInsert() throws Exception
 	{
 		/* 发送消息开关 */
-		if (BP.WF.Glo.getIsEnableSysMessage() == false)
-		{
+		if (BP.WF.Glo.getIsEnableSysMessage() == false)		
 			return;
-		}
+		
 		
 		try
 		{

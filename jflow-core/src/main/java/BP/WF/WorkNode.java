@@ -6283,8 +6283,13 @@ public class WorkNode {
         //执行发送到达事件.
         if (this.town != null)
         {
-            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive,
-                this.town.getHisNode(), this.rptGe, null, null);
+        	//this.town
+            String toMsg = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive,
+                this.town.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+            
+            if (toMsg!=null)
+            	this.addMsg("WorkArrive", toMsg);
+            	
         }
         ///#endregion 处理节点到达事件.
 

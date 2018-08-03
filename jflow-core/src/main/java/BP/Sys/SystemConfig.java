@@ -33,7 +33,6 @@ public class SystemConfig {
 		return SystemConfig.getAppSettings().get("FTPServerType").toString();
 	}
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #region ftp配置.
 	public static String getFTPServerIP() {
 		return SystemConfig.getAppSettings().get("FTPServerIP").toString();
@@ -50,8 +49,6 @@ public class SystemConfig {
 	public static String getFTPUserPassword() throws Exception {
 		String str = SystemConfig.getAppSettings().get("FTPUserPassword").toString();
 		return str;
-		// return BP.Sys.Glo.String_JieMi(str);
-		// return str;
 	}
 
 	public static String getAttachWebSite() {
@@ -86,8 +83,6 @@ public class SystemConfig {
 			properties.load(fis);
 			for (Object s : properties.keySet()) {
 				getCS_AppSettings().put(s.toString(), String.valueOf(properties.get(s)));
-				// new String(String.valueOf(properties.get(s)).getBytes(
-				// "ISO8859-1"), "UTF-8"));
 			}
 			fis.close();
 		} catch (IOException e) {
@@ -670,18 +665,115 @@ public class SystemConfig {
 		return getAppSettings().get("CustomerTel").toString();
 	}
 
-	public static String GetValByKey(String key, String isNullas) {
+	/// #region 微信相关配置信息
+     /// <summary>
+     /// 企业标识
+     /// </summary>
+     public static String getWX_CorpID(){
+    	 return getAppSettings().get("CorpID").toString();
+     }
+     
+     /// <summary>
+     /// 帐号钥匙
+     /// </summary>
+     public static String getWX_AppSecret(){
+    	 return getAppSettings().get("AppSecret").toString();
+     }
+    
+     /// <summary>
+     /// 应用令牌
+     /// </summary>
+     public static String getWX_WeiXinToken(){
+    	 return getAppSettings().get("WeiXinToken").toString();
+     }
+     
+     /// <summary>
+     /// 应用加密所用的秘钥
+     /// </summary>
+     public static String getWX_EncodingAESKey(){
+    	 return getAppSettings().get("EncodingAESKey").toString();
+     }
+    
+     /// <summary>
+     /// 进入应用后的欢迎提示
+     /// </summary>
+     public static boolean getWeiXin_AgentWelCom(){
+    	 return GetValByKeyBoolen("WeiXin_AgentWelCom", false);
+     }
+     
+     /// <summary>
+     /// 应用ID
+     /// </summary>
+     public static String getWX_AgentID(){
+    	 return getAppSettings().get("AgentID").toString();
+     }
+     
+     /// <summary>
+     /// 消息链接网址
+     /// </summary>
+     public static String getWX_MessageUrl()
+     {
+    	 return getAppSettings().get("WeiXin_MessageUrl").toString();
+     }
+     ///#endregion
 
-		if (getAppSettings().containsKey(key) == false)
-			return isNullas;
+     ///#region 钉钉配置相关
+     /// <summary>
+     /// 企业标识
+     /// </summary>
+     public static String getDing_CorpID()
+     {
+    	 return getAppSettings().get("Ding_CorpID").toString();
+        
+     }
+     /// <summary>
+     /// 密钥
+     /// </summary>
+     public static String getDing_CorpSecret()
+     {
+    	 return getAppSettings().get("Ding_CorpSecret").toString();
+    
+     }
+     /// <summary>
+     /// 登录验证密钥
+     /// </summary>
+     public static String getDing_SSOsecret()
+     {
+    	 return getAppSettings().get("Ding_SSOsecret").toString();
+        
+     }
+     /// <summary>
+     /// 消息超链接服务器地址
+     /// </summary>
+     public static String getDing_MessageUrl()
+     {
+    	 return getAppSettings().get("Ding_MessageUrl").toString();
+       
+     }
+     /// <summary>
+     /// 企业应用编号
+     /// </summary>
+     public static String getDing_AgentID()
+     {
+    	 return getAppSettings().get("Ding_AgentID").toString();
+    	
+     }
+     ///#endregion
 
-		Object s = getAppSettings().get(key);
-		if (s == null) {
-			s = isNullas;
-		}
-		return s.toString();
-	}
 
+ 	public static String GetValByKey(String key, String isNullas) {
+
+ 		if (getAppSettings().containsKey(key) == false)
+ 			return isNullas;
+
+ 		Object s = getAppSettings().get(key);
+ 		if (s == null) {
+ 			s = isNullas;
+ 		}
+ 		return s.toString();
+ 	}
+ 	
+ 	
 	public static boolean GetValByKeyBoolen(String key, boolean isNullas) {
 
 		if (getAppSettings().containsKey(key) == false)

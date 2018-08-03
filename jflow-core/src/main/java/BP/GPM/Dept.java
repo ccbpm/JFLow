@@ -7,6 +7,8 @@ import BP.En.EnType;
 import BP.En.Entity;
 import BP.En.EntityTree;
 import BP.En.Map;
+import BP.En.RefMethod;
+import BP.En.RefMethodType;
 import BP.En.UAC;
 
 /** 
@@ -116,21 +118,53 @@ public class Dept extends EntityTree
 		map.AddTBString(DeptAttr.NameOfPath, null, "部门路径", false, false, 0, 300, 30);
 		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", false, false, 0, 100, 30);
 
-	 
-			//部门领导.
-		//map.AddTBString(DeptAttr.Leader, null, "领导", false, false, 0, 100, 30);
-		
-		//map.AddTBString(DeptAttr.Tel, null, "联系电话", false, false, 0, 100, 30);
 		
 		map.AddTBString(DeptAttr.OrgNo, null, "隶属公司", false, false, 0, 100, 30);
 
 			//顺序号.
 		map.AddTBInt(DeptAttr.Idx, 0, "Idx", false, false);
+		
+		 RefMethod rm = new RefMethod();
+         rm.Title = "重置该部门一下的部门路径";
+         rm.ClassMethodName = this.toString() + ".DoResetPathName";
+         rm.refMethodType = RefMethodType.Func;
 
-			//是否是目录
-		//map.AddTBInt(DeptAttr.IsDir, 0, "是否是目录", false, false);
+         String msg = "当该部门名称变化后,该部门与该部门的子部门名称路径(Port_Dept.NameOfPath)将发生变化.";
+         msg += "\t\n 该部门与该部门的子部门的人员路径也要发生变化Port_Emp列DeptDesc.StaDesc.";
+         msg += "\t\n 您确定要执行吗?";
+         rm.Warning = msg;
 
-		  //  map.AddDDLEntities(DeptAttr. null, "部门类型", new DeptTypes(), true);
+         map.AddRefMethod(rm);
+
+         rm = new RefMethod();
+         rm.Title = "增加同级部门";
+         rm.ClassMethodName = this.toString() + ".DoSameLevelDept";
+         rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+         rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+         map.AddRefMethod(rm);
+
+         rm = new RefMethod();
+         rm.Title = "增加下级部门";
+         rm.ClassMethodName = this.toString() + ".DoSubDept";
+         rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+         rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+         map.AddRefMethod(rm);
+
+
+         //节点绑定人员. 使用树杆与叶子的模式绑定.
+         map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new BP.Port.Emps(),
+            DeptEmpAttr.FK_Dept,
+            DeptEmpAttr.FK_Emp, "对应人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+
+
+         //平铺模式.
+         map.getAttrsOfOneVSM().AddGroupPanelModel(new DeptStations(), new Stations(),
+             DeptStationAttr.FK_Dept,
+             DeptStationAttr.FK_Station, "对应岗位(平铺)", StationAttr.FK_StationType,StationAttr.Name,StationAttr.No);
+
+         map.getAttrsOfOneVSM().AddGroupListModel(new DeptStations(), new Stations(),
+           DeptStationAttr.FK_Dept,
+           DeptStationAttr.FK_Station, "对应岗位(树)", StationAttr.FK_StationType,StationAttr.Name,StationAttr.No);
 
 		this.set_enMap(map);
 		return this.get_enMap();

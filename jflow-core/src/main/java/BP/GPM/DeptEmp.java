@@ -115,8 +115,7 @@ public class DeptEmp extends EntityMyPK
 		Map map = new Map("Port_DeptEmp");
 		map.setEnDesc("部门人员信息");
 
-		map.AddMyPK();
-		map.AddTBString(DeptEmpAttr.FK_Emp, null, "操作员", false, false, 1, 50, 1);
+		map.AddMyPK(); map.AddDDLEntities(DeptEmpAttr.FK_Emp, null, "操作员", new BP.Port.Emps(), false);
 		map.AddTBString(DeptEmpAttr.FK_Dept, null, "部门", false, false, 1, 50, 1);
 		 
 		this.set_enMap(map);

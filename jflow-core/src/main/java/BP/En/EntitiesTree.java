@@ -173,15 +173,5 @@ public abstract class EntitiesTree extends Entities
 	{
 	}
 	
-	/**
-	 * 查询全部
-	 * 
-	 * @return
-	 * @throws Exception 
-	 */
-	@Override
-	public int RetrieveAll() throws Exception
-	{
-		return super.RetrieveAll("TreeNo");
-	}
+
 }

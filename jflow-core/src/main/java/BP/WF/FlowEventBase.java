@@ -337,6 +337,14 @@ public abstract class FlowEventBase
 		return null;
 	}
 	/** 
+	流程到达
+	 
+	*/
+	public String WorkArrive()
+	{
+		return null;
+	}
+	/** 
 	发送前
 	 
 	*/
@@ -572,6 +580,10 @@ public abstract class FlowEventBase
 		{
 				return this.FlowOnCreateWorkID();
 		}
+		else if (eventType.equals(EventListOfNode.WorkArrive)) // 流程到达
+		{
+				return this.WorkArrive();
+		} 
 		else if (eventType.equals(EventListOfNode.FlowOverBefore)) // 流程结束前.。
 		{
 				return this.FlowOverBefore();

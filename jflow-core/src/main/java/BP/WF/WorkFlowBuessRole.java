@@ -1828,11 +1828,11 @@ public class WorkFlowBuessRole
                 BP.WF.Port.WFEmp wfemp = new WFEmp(list.getCCTo());
 
                 String sid = list.getCCTo() + "_" + list.getWorkID() + "_" + list.getFK_Node() + "_" + list.getRDT();
-                String url = basePath + "WF/Do.jsp?DoType=OF&SID=" + sid;
+                String url = basePath + "WF/Do.htm?DoType=OF&SID=" + sid;
                 url = url.replace("//", "/");
                 url = url.replace("//", "/");
 
-                String urlWap = basePath + "WF/Do.jsp?DoType=OF&SID=" + sid + "&IsWap=1";
+                String urlWap = basePath + "WF/Do.htm?DoType=OF&SID=" + sid + "&IsWap=1";
                 urlWap = urlWap.replace("//", "/");
                 urlWap = urlWap.replace("//", "/");
 

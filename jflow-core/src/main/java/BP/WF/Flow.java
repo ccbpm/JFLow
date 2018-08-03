@@ -4612,16 +4612,13 @@ public class Flow extends BP.En.EntityNoName
 		String msgAlert = ""; //生成的提示信息.
 		for (PushMsg item : pms.ToJavaList())
 		{
-			if (!item.getFK_Event().equals(doType))
-			{
+			if (!item.getFK_Event().equals(doType))			
 				continue;
-			}
+			
 
-			if (item.getSMSPushWay() == 0 && item.getMailPushWay() == 0)
-			{
+			if (item.getSMSPushWay() == 0 || item.getMailPushWay() == 0)		
 				continue; // 如果都没有消息设置，就放过.
-			}
-
+			 
 			//执行发送消息.
 			
 			if (doType.equals(EventListOfNode.WorkArrive))

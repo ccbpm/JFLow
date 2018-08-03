@@ -3600,7 +3600,7 @@ public class Dev2Interface {
 	public static void Port_SendMsg(String userNo, String title, String msgDoc, String msgFlag, String msgType,
 			String flowNo, long nodeID, long workID, long fid) throws Exception {
 		if (workID != 0) {
-			String url = Glo.getHostURL() + "WF/Do.jsp?SID=" + userNo + "_" + workID + "_" + nodeID;
+			String url = Glo.getHostURL() + "WF/Do.htm?SID=" + userNo + "_" + workID + "_" + nodeID;
 			url = url.replace("//", "/");
 			url = url.replace("//", "/");
 			msgDoc += " <hr>打开工作: " + url;

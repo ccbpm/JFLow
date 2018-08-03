@@ -527,7 +527,7 @@ public class PushMsg extends EntityMyPK
 
 		String hostUrl = Glo.getHostURL();
 		String sid = "{EmpStr}_" + workid + "_" + currNode.getNodeID() + "_" + DataType.getCurrentDataTime();
-		String openWorkURl = hostUrl + "WF/Do.jsp?DoType=OF&SID=" + sid;
+		String openWorkURl = hostUrl + "WF/Do.htm?DoType=OF&SID=" + sid;
 		openWorkURl = openWorkURl.replace("//", "/");
 		openWorkURl = openWorkURl.replace("//", "/");
 ///#endregion

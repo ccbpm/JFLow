@@ -395,11 +395,11 @@ public class MapFrmExcel extends EntityNoName
 	{
 		if (this.getNo().contains("ND") == true)
 		{
-			return Glo.getCCFlowAppPath() + "WF/Comm/RefFunc/UIEn.jsp?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.getNo().replace("ND", "") + "&t=" + DataType.getCurrentDataTime();
+			return Glo.getCCFlowAppPath() + "WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.getNo().replace("ND", "") + "&t=" + DataType.getCurrentDataTime();
 		}
 		else
 		{
-			return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Do.jsp&DoType=FWCShowError";
+			return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Do.htm&DoType=FWCShowError";
 		}
 	}
 	 

@@ -38,7 +38,7 @@ public abstract class EntitiesTree extends Entities
           appendMenuSb = new StringBuilder();
           EntityTree root = (EntityTree) this.GetEntityByKey(EntityTreeAttr.ParentNo, rootNo) ;
           if (root == null)
-              return "@没有找到rootNo=" + rootNo + "的entity.";
+              return "err@没有找到rootNo=" + rootNo + "的entity.";
 
           appendMenus.append("[{");
           appendMenus.append("'id':'" + root.getNo() + "',");

@@ -3,11 +3,12 @@ var basePath = basePath();
 
 function basePath()
 {
-	var rowUrl = window.document.location.href;		
-	var path=rowUrl.substring(0,rowUrl.indexOf('/WF')+1);
-	
-	//alert(path);
-	
+	var rowUrl = window.document.location.href;	
+	var path=rowUrl.substring(0,rowUrl.indexOf('/WF')+1)
+	if(rowUrl.indexOf("/WF")==-1){
+		path=rowUrl.substring(0,rowUrl.indexOf('/jflow-web')+11);
+		
+	}	
 	return path;
 	
 	
@@ -21,7 +22,7 @@ function basePath()
 	
 	var path= localhostPaht + projectName ;
 	
-	//alert(path);	
+	
 	
 }
 

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import org.apache.commons.lang.StringUtils;
@@ -16,17 +17,22 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+import com.sun.star.bridge.oleautomation.Decimal;
+
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
+import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.AttrOfSearch;
 import BP.En.AttrSearch;
 import BP.En.AttrSearchs;
+import BP.En.Attrs;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.EntitiesTree;
@@ -41,6 +47,7 @@ import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.RefMethods;
 import BP.En.UAC;
+import BP.En.UIContralType;
 import BP.Sys.DTSearchWay;
 import BP.Sys.EventListOfNode;
 import BP.Sys.MapAttr;
@@ -50,6 +57,9 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Sys.UserRegedit;
+import BP.Sys.XML.ActiveAttr;
+import BP.Sys.XML.ActiveAttrAttr;
+import BP.Sys.XML.ActiveAttrs;
 import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.WF.DotNetToJavaStringHelper;
@@ -74,15 +84,268 @@ public class WF_Comm extends WebContralBase {
 	// 页面功能实体
 	// </summary>
 	// <param name="mycontext"></param>
+	private String FK_Dept;
+	public void setFK_Dept(String value){
+		 String val = value;
+         if (val == "all")
+             return;
+
+         if (this.FK_Dept == null)
+         {
+             this.FK_Dept = value;
+             return;
+         }
+	}
+	
+	 public boolean getIsContainsNDYF()
+     {
+		 String IsContainsNDYF = this.GetRequestVal("IsContainsNDYF");
+         
+         if (!DataType.IsNullOrEmpty(IsContainsNDYF)&& IsContainsNDYF.toString().toUpperCase() == "TRUE")
+             return true;
+         else
+             return false;
+         
+     }
 
 	// #region 统计分析组件.
 	// <summary>
 	// 初始化数据
 	// </summary>
 	// <returns></returns>
-	public String ContrastDtl_Init() {
-		return "";
+	public String ContrastDtl_Init() throws Exception {       
+        // 获得
+ 		Entities ens = ClassFactory.GetEns(this.getEnsName());
+ 		Entity en = ens.getGetNewEntity();
+ 		Map map = ens.getGetNewEntity().getEnMapInTime();
+
+ 		MapAttrs attrs = map.getAttrs().ToMapAttrs();
+
+        //属性集合.
+        DataTable dtAttrs = attrs.ToDataTableField();
+        dtAttrs.TableName = "Sys_MapAttrs";
+
+        DataSet ds = new DataSet();
+        ds.Tables.add(dtAttrs); //把描述加入.
+
+        //查询结果
+        QueryObject qo = new QueryObject(ens);
+        Enumeration enu=getRequest().getParameterNames();  
+        boolean isExist = false;
+        while(enu.hasMoreElements()){ 
+        	isExist = false;
+        	String key=(String)enu.nextElement();  
+            if (key.indexOf("EnsName") != -1)
+                continue;
+
+            if (key == "OID" || key == "MyPK")
+                continue;
+
+            if (key == "FK_Dept")
+            {
+                this.setFK_Dept(getRequest().getParameter(key));
+                continue;
+            }
+            
+            
+            for(Attr attr :en.getEnMap().getAttrs() ){
+            	if(attr.getKey().equals(key)){
+            		isExist = true;
+            		break;
+            	}
+            }
+            
+            if(isExist==false)
+            	continue;
+            
+
+            if (getRequest().getParameter(key) == "mvals")
+            {
+                //如果用户多项选择了，就要找到它的选择项目.
+
+                UserRegedit sUr = new UserRegedit();
+                sUr.setMyPK(WebUser.getNo() + this.getEnsName() + "_SearchAttrs");
+                sUr.RetrieveFromDBSources();
+
+                /* 如果是多选值 */
+                String cfgVal = sUr.getMVals();
+                AtPara ap = new AtPara(cfgVal);
+                String instr = ap.GetValStrByKey(key);
+                String val = "";
+                if (instr == null || instr == "")
+                {
+                    if (key == "FK_Dept" || key == "FK_Unit")
+                    {
+                        if (key == "FK_Dept")
+                            val = WebUser.getFK_Dept();
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    instr = instr.replace("..", ".");
+                    instr = instr.replace(".", "','");
+                    instr = instr.substring(2);
+                    instr = instr.substring(0, instr.length() - 2);
+                    qo.AddWhereIn(key, instr);
+                }
+            }
+            else
+            {
+                qo.AddWhere(key, getRequest().getParameter(key));
+            }
+            qo.addAnd();
+        }
+
+        if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null
+            || this.GetRequestVal("FK_Emp") == "all"))
+        {
+            if (this.getFK_Dept().length() == 2)
+            {
+                qo.AddWhere("FK_Dept", " = ", "all");
+                qo.addAnd();
+            }
+            else
+            {
+                if (this.getFK_Dept().length() == 8)
+                {
+                    qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+                }
+                else
+                {
+                    qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+                }
+
+                qo.addAnd();
+            }
+        }
+
+        qo.AddHD();
+
+        DataTable dt = qo.DoQueryToTable();
+        dt.TableName = "Group_Dtls";
+        ds.Tables.add(dt);
+
+        return BP.Tools.Json.ToJson(ds);
 	}
+	
+	 /// <summary>
+    /// 执行导出
+    /// </summary>
+    /// <returns></returns>
+    public String GroupDtl_Exp() throws Exception
+    {
+    	 // 获得
+ 		Entities ens = ClassFactory.GetEns(this.getEnsName());
+ 		Entity en = ens.getGetNewEntity();
+ 		Map map = ens.getGetNewEntity().getEnMapInTime();
+
+        //查询结果
+        QueryObject qo = new QueryObject(ens);
+        Enumeration enu=getRequest().getParameterNames();  
+        boolean isExist = false;
+        while(enu.hasMoreElements()){ 
+        	isExist = false;
+        	String key=(String)enu.nextElement();  
+            if (key.indexOf("EnsName") != -1)
+                continue;
+
+
+            if (key == "OID" || key == "MyPK")
+                continue;
+
+            if (key == "FK_Dept")
+            {
+                this.setFK_Dept(getRequest().getParameter(key));
+                continue;
+            }
+
+            for(Attr attr :en.getEnMap().getAttrs() ){
+            	if(attr.getKey().equals(key)){
+            		isExist = true;
+            		break;
+            	}
+            }
+            
+            if(isExist==false)
+            	continue;
+
+            if (getRequest().getParameter(key) == "mvals")
+            {
+                //如果用户多项选择了，就要找到它的选择项目.
+
+                UserRegedit sUr = new UserRegedit();
+                sUr.setMyPK(WebUser.getNo() + this.getEnsName() + "_SearchAttrs");
+                sUr.RetrieveFromDBSources();
+
+                /* 如果是多选值 */
+                String cfgVal = sUr.getMVals();
+                AtPara ap = new AtPara(cfgVal);
+                String instr = ap.GetValStrByKey(key);
+                String val = "";
+                if (instr == null || instr == "")
+                {
+                    if (key == "FK_Dept" || key == "FK_Unit")
+                    {
+                        if (key == "FK_Dept")
+                            val = WebUser.getFK_Dept();
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    instr = instr.replace("..", ".");
+                    instr = instr.replace(".", "','");
+                    instr = instr.substring(2);
+                    instr = instr.substring(0, instr.length() - 2);
+                    qo.AddWhereIn(key, instr);
+                }
+            }
+            else
+            {
+                qo.AddWhere(key, getRequest().getParameter(key));
+            }
+            qo.addAnd();
+        }
+
+        if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null
+            || this.GetRequestVal("FK_Emp") == "all"))
+        {
+            if (this.getFK_Dept().length() == 2)
+            {
+                qo.AddWhere("FK_Dept", " = ", "all");
+                qo.addAnd();
+            }
+            else
+            {
+                if (this.getFK_Dept().length() == 8)
+                {
+                    qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+                }
+                else
+                {
+                    qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+                }
+
+                qo.addAnd();
+            }
+        }
+
+        qo.AddHD();
+
+        DataTable dt = qo.DoQueryToTable();
+
+        String filePath = ExportDGToExcel(dt, en,en.getEnDesc());
+
+
+        return filePath;
+    }
 
 	// #endregion 统计分析组件.
 
@@ -2126,4 +2389,770 @@ public class WF_Comm extends WebContralBase {
         en.Update();
         return "文件保存成功";
     }
+    
+    /// <summary>
+    /// 获得分组统计的查询条件.
+    /// </summary>
+    /// <returns></returns>
+    public String Group_MapBaseInfo() throws Exception
+    {
+        //获得
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        if (ens == null)
+            return "err@类名:" + this.getEnsName() + "错误";
+
+        Entity en = ens.getGetNewEntity();
+        Map map = en.getEnMapInTime();
+
+        Hashtable ht = new Hashtable();
+
+        //把权限信息放入.
+        UAC uac = en.getHisUAC();
+        if (this.GetRequestValBoolen("IsReadonly"))
+        {
+            ht.put("IsUpdata", false);
+
+            ht.put("IsInsert", false);
+            ht.put("IsDelete", false);
+        }
+        else
+        {
+            ht.put("IsUpdata", uac.IsUpdate);
+
+            ht.put("IsInsert", uac.IsInsert);
+            ht.put("IsDelete", uac.IsDelete);
+            ht.put("IsView", uac.IsView);
+        }
+       
+        ht.put("IsExp", uac.IsExp); //是否可以导出?
+        ht.put("IsImp", uac.IsImp); //是否可以导入?
+
+        ht.put("EnDesc", en.getEnDesc()); //描述?
+        ht.put("EnName", en.toString()); //类名?
+
+
+        //把map信息放入
+        ht.put("PhysicsTable", map.getPhysicsTable());
+        ht.put("CodeStruct", map.getCodeStruct());
+        ht.put("CodeLength", map.getCodeLength());
+
+        //查询条件.
+        if (map.IsShowSearchKey == true)
+            ht.put("IsShowSearchKey", 1);
+        else
+            ht.put("IsShowSearchKey", 0);
+
+        //按日期查询.
+        ht.put("DTSearchWay", map.DTSearchWay.getValue());
+        ht.put("DTSearchLable", map.DTSearchLable);
+        ht.put("DTSearchKey", map.DTSearchKey);
+
+        return BP.Tools.Json.ToJson(ht);
+    }
+    ///#endregion
+
+    /// <summary>
+    /// 外键或者枚举的分组查询条件.
+    /// </summary>
+    /// <returns></returns>
+    public String Group_SearchAttrs() throws Exception
+    {
+        //获得
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        if (ens == null)
+            return "err@类名错误:" + this.getEnsName();
+
+        Entity en = ens.getGetNewEntity();
+        Map map = en.getEnMapInTime();
+
+        DataSet ds = new DataSet();
+
+        //构造查询条件集合.
+        DataTable dt = new DataTable();
+        dt.Columns.Add("Field");
+        dt.Columns.Add("Name");
+        dt.Columns.Add("MyFieldType");
+        dt.TableName = "Attrs";
+
+        AttrSearchs attrs = map.getSearchAttrs();
+        for (AttrSearch item : attrs)
+        {
+            DataRow dr = dt.NewRow();
+            dr.setValue("Field",item.Key);
+            dr.setValue("Name",item.HisAttr.getDesc());
+            dr.setValue("MyFieldType",item.HisAttr.getMyFieldType());
+            dt.Rows.add(dr);
+        }
+        ds.Tables.add(dt);
+
+        //把外键枚举增加到里面.
+        for(AttrSearch item : attrs)
+        {
+            if (item.HisAttr.getIsEnum() == true)
+            {
+                SysEnums ses = new SysEnums(item.HisAttr.getUIBindKey());
+                DataTable dtEnum = ses.ToDataTableField();
+                dtEnum.TableName = item.Key;
+                ds.Tables.add(dtEnum);
+                continue;
+            }
+
+            if (item.HisAttr.getIsFK() == true)
+            {
+                Entities ensFK = item.HisAttr.getHisFKEns();
+                ensFK.RetrieveAll();
+
+                DataTable dtEn = ensFK.ToDataTableField();
+                dtEn.TableName = item.Key;
+
+                ds.Tables.add(dtEn);
+            }
+        }
+
+        return BP.Tools.Json.ToJson(ds);
+    }
+    
+     /// <summary>
+     ///获取分组的外键、枚举
+    /// </summary>
+    /// <returns></returns>
+    public String Group_ContentAttrs() throws Exception
+    {
+        //获得
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        if (ens == null)
+            return "err@类名错误:" + this.getEnsName();
+
+        Entity en = ens.getGetNewEntity();
+        Map map = en.getEnMapInTime();
+        Attrs attrs = map.getAttrs();
+        DataTable dt = new DataTable();
+        dt.Columns.Add("Field");
+        dt.Columns.Add("Name");
+        dt.Columns.Add("Checked",String.class);
+        dt.TableName = "Attrs";
+
+        //获取注册信心表
+        UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
+        String reAttrs = this.GetRequestVal("Attrs");
+        for (Attr attr : attrs)
+        {
+            if (attr.getUIContralType() == UIContralType.DDL)
+            {
+                DataRow dr = dt.NewRow();
+                dr.setValue("Field",attr.getKey());
+                dr.setValue("Name", attr.getDesc());
+
+                // 根据状态 设置信息.
+                if (ur.getVals().indexOf(attr.getKey()) != -1)
+                	dr.setValue("Checked","true");
+
+                if (ur.getVals().indexOf(attr.getKey()) != -1)
+                	dr.setValue("Checked","true");
+
+                dt.Rows.add(dr);
+            }
+            
+        }
+        return BP.Tools.Json.ToJson(dt);
+    }
+    
+    public String Group_Analysis() throws Exception
+    {
+        //获得
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        if (ens == null)
+            return "err@类名错误:" + this.getEnsName();
+
+        Entity en = ens.getGetNewEntity();
+        Map map =en.getEnMapInTime();
+        DataSet ds = new DataSet();
+        // 查询出来关于它的活动列配置。
+        ActiveAttrs aas = new ActiveAttrs();
+        aas.RetrieveBy(ActiveAttrAttr.For, this.getEnsName());
+
+        //获取注册信息表
+        UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
+
+        DataTable dt = new DataTable();
+        dt.Columns.Add("Field");
+        dt.Columns.Add("Name");
+        dt.Columns.Add("Checked",String.class);
+       
+        dt.TableName = "Attrs";
+
+        for (Attr attr : map.getAttrs().ToJavaList())
+        {
+            if (attr.getIsPK() || attr.getIsNum() == false)
+                continue;
+            if (attr.getUIContralType() == UIContralType.TB == false)
+                continue;
+            if (attr.getUIVisible() == false)
+                continue;
+            if (attr.getMyFieldType() == FieldType.FK)
+                continue;
+            if (attr.getMyFieldType() == FieldType.Enum)
+                continue;
+            if (attr.getKey() == "OID" || attr.getKey() == "WorkID" || attr.getKey() == "MID")
+                continue;
+
+
+            boolean isHave = false;
+            // 有没有配置抵消它的属性。
+            for (ActiveAttr aa : aas.ToJavaList())
+            {
+                if (aa.getAttrKey() != attr.getKey())
+                    continue;
+                DataRow dr = dt.NewRow();
+                dr.setValue("Field", attr.getKey());
+                dr.setValue("Name", attr.getDesc());
+
+                // 根据状态 设置信息.
+                if (ur.getVals().indexOf(attr.getKey()) != -1)
+                	dr.setValue("Checked", "true");
+                dt.Rows.add(dr);
+
+                isHave = true;
+            }
+
+            if (isHave)
+                continue;
+            DataRow dtr = dt.NewRow();
+            dtr.setValue("Field", attr.getKey());
+            dtr.setValue("Name", attr.getDesc());
+            
+
+            // 根据状态 设置信息.
+            if (ur.getVals().indexOf(attr.getKey()) != -1)
+            	dtr.setValue("Checked", "true");
+
+            dt.Rows.add(dtr);
+
+            DataTable ddlDt = new DataTable();
+            ddlDt.Columns.Add("No");
+            ddlDt.Columns.Add("Name");
+            ddlDt.Columns.Add("Selected",String.class);
+            ddlDt.TableName = attr.getKey();
+
+            DataRow ddlDr = ddlDt.NewRow();
+            ddlDr.setValue("No", "SUM");
+            ddlDr.setValue("Name","求和");
+            if (ur.getVals().indexOf("@" + attr.getKey() + "=SUM") != -1)
+                ddlDr.setValue("Selected", "true");
+            ddlDt.Rows.add(ddlDr);
+
+            ddlDr = ddlDt.NewRow();
+            ddlDr.setValue("No", "AVG");
+            ddlDr.setValue("Name","求平均");
+
+            if (ur.getVals().indexOf("@" + attr.getKey() + "=AVG") != -1)
+            	ddlDr.setValue("Selected", "true");
+            ddlDt.Rows.add(ddlDr);
+            
+            if (this.getIsContainsNDYF())
+            {
+                ddlDr = ddlDt.NewRow();
+                ddlDr.setValue("No", "AMOUNT");
+                ddlDr.setValue("Name","求累计");
+                if (ur.getVals().indexOf("@" + attr.getKey() + "=AMOUNT") != -1)
+                	ddlDr.setValue("Selected", "true");
+                ddlDt.Rows.add(ddlDr);
+            }
+
+            ds.Tables.add(ddlDt);
+           // if (ur.Vals.IndexOf("@" + attr.Key + "=MAX") != -1)
+           // if (ur.Vals.IndexOf("@" + attr.Key + "=MIN") != -1)
+           // if (ur.Vals.IndexOf("@" + attr.Key + "=BZC") != -1)
+           // if (ur.Vals.IndexOf("@" + attr.Key + "=LSXS") != -1)
+            
+
+        }
+        ds.Tables.add(dt);
+        return BP.Tools.Json.ToJson(ds);
+    }
+
+    public String Group_Search() throws Exception
+    {
+        //获得
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        if (ens == null)
+            return "err@类名错误:" + this.getEnsName();
+
+        Entity en = ens.getGetNewEntity();
+        Map map = en.getEnMapInTime();
+        DataSet ds = new DataSet();
+
+        //获取注册信息表
+        UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
+
+        // 查询出来关于它的活动列配置.
+        ActiveAttrs aas = new ActiveAttrs();
+        aas.RetrieveBy(ActiveAttrAttr.For, this.getEnsName());
+
+        ds = GroupSearchSet(ens, en, map, ur, ds, aas);
+        if (ds == null)
+            return "info@<img src='../Img/Warning.gif' /><b><font color=red> 您没有选择分析的数据</font></b>";
+
+        //不显示合计列。
+        String NoShowSum = SystemConfig.GetConfigXmlEns("NoShowSum", this.getEnsName());
+        DataTable showSum = new DataTable("NoShowSum");
+        showSum.Columns.Add("NoShowSum");
+        DataRow sumdr = showSum.NewRow();
+        sumdr.setValue("NoShowSum", NoShowSum);
+        showSum.Rows.add(sumdr);
+
+        DataTable activeAttr = aas.ToDataTable();
+        activeAttr.TableName="ActiveAttr";
+        ds.Tables.add(activeAttr);
+        ds.Tables.add(showSum);
+
+        return BP.Tools.Json.ToJson(ds);
+    }
+
+    private DataSet GroupSearchSet(Entities ens, Entity en, Map map, UserRegedit ur, DataSet ds, ActiveAttrs aas) throws Exception
+    {
+
+        //查询条件
+        //分组
+        String groupKey = "";
+        Attrs AttrsOfNum = new Attrs();//列
+        String Condition = ""; //处理特殊字段的条件问题。
+
+
+        //根据注册表信息获取里面的分组信息
+        String StateNumKey = ur.getVals().substring(ur.getVals().indexOf("@StateNumKey") + 1);
+        String[] statNumKeys = StateNumKey.split("@");
+        for (String ct : statNumKeys)
+        {
+            if (ct.split("=").length != 2)
+                continue;
+            String[] paras = ct.split("=");
+
+            AttrsOfNum.Add(map.GetAttrByKey(paras[0]));
+
+            if (this.GetRequestVal("DDL_" + paras[0]) == null)
+            {
+                ActiveAttr aa = (ActiveAttr)aas.GetEnByKey(ActiveAttrAttr.AttrKey, paras[0]);
+                if (aa == null)
+                    continue;
+
+                Condition += aa.getCondition();
+                groupKey += " round (" + aa.getExp() + ", 4) AS " + paras[0] + ",";
+                StateNumKey += paras[0] + "=Checked@"; // 记录状态
+                continue;
+            }
+            switch (paras[1])
+            {
+                case "SUM":
+                    groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+                    break;
+                case "AVG":
+                    groupKey += " round (AVG(" + paras[0] + "), 4)  " + paras[0] + ",";
+                    break;
+                case "AMOUNT":
+                    groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+                    break;
+                default:
+                    throw new Exception("没有判断的情况.");
+            }
+
+
+        }
+        boolean isHaveLJ = false; // 是否有累计字段。
+        if (StateNumKey.indexOf("AMOUNT@") != -1)
+            isHaveLJ = true;
+
+        if (groupKey == "")
+        {
+            return null;
+        }
+
+        /* 如果包含累计数据，那它一定需要一个月份字段。业务逻辑错误。*/
+        groupKey = groupKey.substring(0, groupKey.length() - 1);
+        Paras ps = new Paras();
+        // 生成 sql.
+        String selectSQL = "SELECT ";
+        String groupBy = " GROUP BY ";
+        Attrs AttrsOfGroup = new Attrs();
+
+        String SelectedGroupKey = ur.getVals().substring(0, ur.getVals().indexOf("@StateNumKey")); // 为保存操作状态的需要。
+        if (!DataType.IsNullOrEmpty(SelectedGroupKey))
+        {
+            boolean isSelected = false;
+            String[] SelectedGroupKeys = SelectedGroupKey.split("@");
+            for (String key : SelectedGroupKeys)
+            {
+                if (key.contains("=") == true)
+                    continue;
+                selectSQL += key + ",";
+                groupBy += key + ",";
+                // 加入组里面。
+                AttrsOfGroup.Add(map.GetAttrByKey(key), false, false);
+
+            }
+        }
+
+        String groupList = this.GetRequestVal("GroupList");
+        if (!DataType.IsNullOrEmpty(SelectedGroupKey))
+        {
+            /* 如果是年月 分组， 并且如果内部有 累计属性，就强制选择。*/
+            if (groupList.indexOf("FK_NY") != -1 && isHaveLJ)
+            {
+                selectSQL += "FK_NY,";
+                groupBy += "FK_NY,";
+                SelectedGroupKey += "@FK_NY";
+                // 加入组里面。
+                AttrsOfGroup.Add(map.GetAttrByKey("FK_NY"), false, false);
+            }
+        }
+
+        groupBy = groupBy.substring(0, groupBy.length() - 1);
+
+
+
+        // 查询语句的生成
+        String where = " WHERE ";
+        String whereOfLJ = " WHERE "; // 累计的where.
+        String url = "";
+        Paras myps = new Paras();
+        //获取查询的注册表
+        BP.Sys.UserRegedit searchUr = new UserRegedit();
+        searchUr.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
+        searchUr.RetrieveFromDBSources();
+
+        ///#region 查询条件
+        //关键字查询
+        String keyWord = searchUr.getSearchKey();
+        AtPara ap = new AtPara(searchUr.getVals());
+        if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
+        {
+            String whereLike = "";
+            boolean isAddAnd = false;
+            for (Attr attr : map.getAttrs())
+            {
+                if (attr.getIsNum())
+                    continue;
+                if (attr.getIsRefAttr())
+                    continue;
+
+                switch (attr.getField())
+                {
+                    case "MyFileExt":
+                    case "MyFilePath":
+                    case "WebPath":
+                        continue;
+                    default:
+                        break;
+                }
+                if (isAddAnd == false)
+                {
+                    isAddAnd = true;
+                    whereLike += "      " + attr.getField() + " LIKE '%" + keyWord + "%' ";
+                }
+                else
+                {
+                    whereLike += "   AND   " + attr.getField() + " LIKE '%" + keyWord + "%'";
+                }
+            }
+            whereLike += "          ";
+            where += whereLike;
+        }
+
+        //其余查询条件
+        //时间
+        if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
+        {
+            String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
+            String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
+
+            //按日期查询
+            if (map.DTSearchWay == DTSearchWay.ByDate)
+            {
+
+                dtFrom += " 00:00:00";
+                dtTo += " 23:59:59";
+                where += " and (" + map.DTSearchKey + " >= '" + dtFrom + "'";
+                where += " and " + map.DTSearchKey + " <= '" + dtTo + "'";
+                where += ")";
+            }
+
+            if (map.DTSearchWay == DTSearchWay.ByDateTime)
+            {
+                //取前一天的24：00
+                if (dtFrom.trim().length() == 10) //2017-09-30
+                    dtFrom += " 00:00:00";
+                if (dtFrom.trim().length() == 16) //2017-09-30 00:00
+                    dtFrom += ":00";
+                
+                Date dBefore = new Date();
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(new Date());
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
+				dBefore = calendar.getTime(); // 得到前一天的时间
+				
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String defaultStartDate = sdf.format(dBefore);
+				dtFrom = dBefore + " 24:00";
+
+
+                if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
+                    dtTo += " 24:00";
+
+                where += " and (" + map.DTSearchKey + " >= '" + dtFrom + "'";
+                where += " and " + map.DTSearchKey + " <= '" + dtTo + "'";
+                where += ")";
+            }
+        }
+
+        
+      /// #region 获得查询数据.
+  		for (String str : ap.getHisHT().keySet()) {
+  			Object val = ap.GetValStrByKey(str);
+  			if (val.equals("all")) {
+  				continue;
+  			}
+  			where += " " + str + "=" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
+            if (str != "FK_NY")
+                whereOfLJ += " " + str + " =" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
+
+            myps.Add(str, val);
+  			
+  		}
+
+        ///#endregion
+
+        if (where == " WHERE ")
+        {
+            where = "" + Condition.replace("and", "");
+            whereOfLJ = "" + Condition.replace("and", "");
+        }
+        else
+        {
+            where = where.substring(0, where.length() - " AND ".length()) + Condition;
+            whereOfLJ = whereOfLJ.substring(0, whereOfLJ.length() - " AND ".length()) + Condition;
+        }
+
+        String orderByReq = this.GetRequestVal("OrderBy");
+
+        String orderby = "";
+
+        if (orderByReq != null && (selectSQL.contains(orderByReq) || groupKey.contains(orderByReq)))
+        {
+            orderby = " ORDER BY " + orderByReq;
+            if (this.GetRequestVal("OrderWay") != "Up")
+                orderby += " DESC ";
+        }
+
+        // 组装成需要的 sql 
+        String sql = selectSQL + groupKey + " FROM " + map.getPhysicsTable() + where + groupBy + orderby;
+
+
+        myps.SQL = sql;
+        //  物理表。
+
+        DataTable dt2 = DBAccess.RunSQLReturnTable(myps);
+
+        DataTable dt1 = dt2.copy();
+
+        dt1.Columns.Add("IDX", Integer.class);
+
+        //#region 对他进行分页面
+
+        int myIdx = 0;
+        for (DataRow dr : dt2.Rows)
+        {
+            myIdx++;
+            DataRow mydr = dt1.NewRow();
+            mydr.setValue("IDX", myIdx);
+            for (DataColumn dc : dt2.Columns)
+            {
+                mydr.setValue(dc.ColumnName, dr.getValue(dc.ColumnName));
+            }
+            dt1.Rows.add(mydr);
+        }
+        ///#endregion
+
+        ///#region 处理 Int 类型的分组列。
+        DataTable dt = dt1.copy();
+        dt.TableName = "GroupSearch";
+        dt.Rows.clear();
+        for (Attr attr : AttrsOfGroup)
+        {
+            dt.Columns.get(attr.getKey()).DataType = String.class;
+        }
+        for (DataRow dr : dt1.Rows)
+        {
+            dt.Rows.add(dr);
+        }
+        ///#endregion
+
+        // 处理这个物理表 , 如果有累计字段, 就扩展它的列。
+        if (isHaveLJ)
+        {
+            // 首先扩充列.
+            for (Attr attr : AttrsOfNum)
+            {
+                if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
+                    continue;
+
+                switch (attr.getMyDataType())
+                {
+                    case DataType.AppInt:
+                        dt.Columns.Add(attr.getKey() + "Amount", Integer.class);
+                        break;
+                    default:
+                        dt.Columns.Add(attr.getKey() + "Amount", Decimal.class);
+                        break;
+                }
+            }
+
+            // 添加累计汇总数据.
+            for (DataRow dr : dt.Rows)
+            {
+                for (Attr attr : AttrsOfNum)
+                {
+                    if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
+                        continue;
+
+                    //形成查询sql.
+                    if (whereOfLJ.length() > 10)
+                        sql = "SELECT SUM(" + attr.getKey() + ") FROM " + map.getPhysicsTable() + whereOfLJ + " AND ";
+                    else
+                        sql = "SELECT SUM(" + attr.getKey() + ") FROM " + map.getPhysicsTable() + " WHERE ";
+
+                    for (Attr attr1 : AttrsOfGroup)
+                    {
+                        switch (attr1.getKey())
+                        {
+                            case "FK_NY":
+                                sql += " FK_NY <= '" + dr.getValue("FK_NY") + "' AND FK_ND='" + dr.getValue("FK_NY").toString().substring(0, 4) + "' AND ";
+                                break;
+                            case "FK_Dept":
+                                sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
+                                break;
+                            case "FK_SJ":
+                            case "FK_XJ":
+                                sql += attr1.getKey() + " LIKE '" + dr.getValue(attr1.getKey()) + "%' AND ";
+                                break;
+                            default:
+                                sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
+                                break;
+                        }
+                    }
+
+                    sql = sql.substring(0, sql.length() - "AND ".length());
+                    if (attr.getMyDataType() == DataType.AppInt)
+                        dr.setValue(attr.getKey() + "Amount",DBAccess.RunSQLReturnValInt(sql, 0));
+                    else
+                        dr.setValue(attr.getKey() + "Amount",DBAccess.RunSQLReturnValDecimal(sql, BigDecimal.valueOf(0), 2));
+                }
+            }
+        }
+
+        // 为表扩充外键
+        for (Attr attr : AttrsOfGroup)
+        {
+            dt.Columns.Add(attr.getKey() + "T", String.class);
+        }
+        for (Attr attr : AttrsOfGroup)
+        {
+            if (attr.getUIBindKey().indexOf(".") == -1)
+            {
+                /* 说明它是枚举类型 */
+                SysEnums ses = new SysEnums(attr.getUIBindKey());
+                for (DataRow dr : dt.Rows)
+                {
+                    int val = 0;
+                    try
+                    {
+                        val = Integer.parseInt(dr.getValue(attr.getKey()).toString());
+                    }catch(Exception e)
+                    {
+                        dr.setValue(attr.getKey() + "T", " ");
+                        continue;
+                    }
+
+                    for (SysEnum se : ses.ToJavaList())
+                    {
+                        if (se.getIntKey() == val)
+                            dr.setValue(attr.getKey() + "T", se.getLab());
+                    }
+                }
+                continue;
+            }
+            for (DataRow dr : dt.Rows)
+            {
+                Entity myen = attr.getHisFKEn();
+                String val = dr.getValue(attr.getKey()).toString();
+                myen.SetValByKey(attr.getUIRefKeyValue(), val);
+                try
+                {
+                    myen.Retrieve();
+                    dr.setValue(attr.getKey() + "T",myen.GetValStrByKey(attr.getUIRefKeyText()));
+                }catch(Exception e){
+                    if (val == null || val.length() <= 1)
+                    {
+                        dr.setValue(attr.getKey() + "T",val);
+                    }
+                    else if (val.substring(0, 2) == "63")
+                    {
+                        try
+                        {
+                            BP.Port.Dept Dept = new BP.Port.Dept(val);
+                            dr.setValue(attr.getKey() + "T",Dept.getName());
+                        }catch(Exception e1){
+                        	dr.setValue(attr.getKey() + "T",val);
+                        }
+                    }
+                    else
+                    {
+                    	dr.setValue(attr.getKey() + "T",val);
+                    }
+                }
+            }
+        }
+        ds.Tables.add(dt);
+        ds.Tables.add(AttrsOfNum.ToMapAttrs().ToDataTableField("AttrsOfNum"));
+        ds.Tables.add(AttrsOfGroup.ToMapAttrs().ToDataTableField("AttrsOfGroup"));
+        return ds;
+    }
+    public String ParseExpToDecimal()
+    {
+        String exp = this.GetRequestVal("Exp");
+        BigDecimal d = DataType.ParseExpToDecimal(exp);
+        return d.toString();
+    }
+
+    /// <summary>
+    /// 执行导出
+    /// </summary>
+    /// <returns></returns>
+    public String Group_Exp() throws Exception
+    {
+        //获得
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        if (ens == null)
+            return "err@类名错误:" + this.getEnsName();
+
+        Entity en = ens.getGetNewEntity();
+        Map map = en.getEnMapInTime();
+        DataSet ds = new DataSet();
+
+        //获取注册信息表
+        UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
+
+        // 查询出来关于它的活动列配置.
+        ActiveAttrs aas = new ActiveAttrs();
+        aas.RetrieveBy(ActiveAttrAttr.For, this.getEnsName());
+
+        ds = GroupSearchSet(ens, en, map, ur, ds, aas);
+        if (ds == null)
+            return "info@<img src='../Img/Pub/warning.gif' /><b><font color=red> 您没有选择分析的数据</font></b>";
+
+        String filePath = ExportDGToExcel(ds.GetTableByName("GroupSearch"),  en.getEnDesc());
+
+
+        return filePath;
+    }
+
 }

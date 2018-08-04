@@ -359,6 +359,7 @@ public abstract class WebContralBase extends BaseController {
 		}
 		return str;
 	}
+	
 
 	public final String getName() {
 		String str = getRequest().getParameter("Name");
@@ -722,7 +723,116 @@ public abstract class WebContralBase extends BaseController {
 
 		return false;
 	}
+	
+	protected String ExportDGToExcel(DataTable dt,  String title) throws Exception {
 
+		String fileName = title+"Ep" + title + ".xls";
+		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
+		String filePth = BP.Sys.SystemConfig.getPathOfTemp();
+		// 参数及变量设置
+		// 如果导出目录没有建立，则建立.
+		File file = new File(fileDir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+
+		filePth = filePth + "/" + fileName;
+		file = new File(filePth);
+		if (file.exists()) {
+			file.delete();
+		}
+
+		// String httpFilePath =
+		// Glo.getCCFlowAppPath()+"DataUser/Temp/"+fileName;
+		int headerRowIndex = 0; // 文件标题行序
+		int titleRowIndex = 1; // 列标题行序
+		int countCell = 0;// 显示的列数
+		// 第一步，创建一个webbook，对应一个Excel文件
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+		HSSFSheet sheet = wb.createSheet(title+"Ep" + title);
+		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+		HSSFRow row = null;
+		// 第四步，创建单元格，并设置值表头 设置表头居中
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+		HSSFFont font = null;
+		HSSFDataFormat fmt = wb.createDataFormat();
+		HSSFCell cell = null;
+
+		// 生成标题
+
+		row = sheet.createRow((int) titleRowIndex);
+		int index = 0;// 控制列 qin 15.9.21
+		for (DataColumn attr : dt.Columns) {
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue(attr.ColumnName);
+			index += 1;
+			countCell++;
+		}
+		DataRow dr = null;
+		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
+			dr = dt.Rows.get(i - 2);
+			row = sheet.createRow(i);
+			// 生成文件内容
+			index = 0;
+			for (DataColumn attr : dt.Columns) {
+				
+				cell = row.createCell(index);
+				cell.setCellStyle(style);
+				cell.setCellValue(dr.getValue(attr.ColumnName).toString());
+				index += 1;
+			}
+
+		}
+
+		// 列标题单元格样式设定
+		HSSFCellStyle titleStyle = wb.createCellStyle();
+		/*
+		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
+		 */
+		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		font = wb.createFont();
+		font.setBold(true);
+		titleStyle.setFont(font);
+		row = sheet.createRow((int) 0);
+		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+		cell = row.createCell(headerRowIndex);
+		cell.setCellValue(title);
+		cell.setCellStyle(titleStyle);
+
+		// 生成制单人
+		// 制表人单元格样式设定
+		HSSFCellStyle userStyle = wb.createCellStyle();
+		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
+
+		row = sheet.createRow((int) creatorRowIndex);
+
+		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+		cell = row.createCell(0);
+		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + BP.DA.DataType.getCurrentDataTimeCNOfShort());
+		cell.setCellStyle(userStyle);
+		// 第六步，将文件存到指定位置
+		try {
+			FileOutputStream fout = new FileOutputStream(filePth);
+			wb.write(fout);
+			fout.flush();
+			fout.close();
+			return "/DataUser/Temp/" + fileName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return fileName;
+		}
+
+	}
+	
 	protected String ExportDGToExcel(DataTable dt, Entity en, String title) throws Exception {
 
 		for (DataRow dr : dt.Rows) {

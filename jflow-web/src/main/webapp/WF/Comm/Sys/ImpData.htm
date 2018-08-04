@@ -43,12 +43,7 @@
                 $.messager.alert("提示", "所选不是excel文件，请重新选择。");
                 return;
             }
-			
-            //页面按钮失效
-            //$("#File_Upload").attr("disabled",true);
-            $("#Button1").attr("disabled",true);
-            $("input[name='RB_ImpType']").attr("disabled","disabled"); 
-            
+
             //URL 路径
             var URL = Handler + "?DoType=javaScriptImp_Done";
 
@@ -62,29 +57,22 @@
                     //return false; //这里可以做表单的验证，如果验证失败，就return false 来终止表单提交  
                 },
                 success: function (data) {
-                    $("#Button1").attr("disabled",false);
-                    $("input[name='RB_ImpType']").attr("disabled",false); 
-                	if(data.indexOf("err@")!=-1 && data.indexOf("errInfo=")==-1){
-                		alert(data);
-                		$("#result").html('');
-                		$("#result").append("<span style='color:red'>导入失败</span><br/>");
-                		$("#result").append(data);
-                		return;
-                	}
-                	
-                	var datas = data.split("@Split");
-                	var waringInfo = datas[0].replace("errInfo=","");
-                	var count = datas[1].replace("count=","");
-                	var successInfo = datas[2].replace("successInfo=","");
-                	$("#result").html('');
-                	$("#result").append("<span>导入成功</span><br/>")
-                	$("#result").append("成功导入条数&nbsp;&nbsp;&nbsp;"+count+"<br/>");
-                	$("#result").append("成功导入数据<br/>");
-                	$("#result").append(successInfo);
-                	$("#result").append("<span style='color:red'>警告</span><br/>");
-                	$("#result").append(waringInfo);
-                	
-                	
+
+                    if (data.indexOf('err@') == 0) {
+                        alert(data);
+                        return;
+                    }
+
+                    var json = eval('(' + data + ')');
+
+                    $.messager.alert("提示", json.Msg, "icon-info", function () {
+                       
+                        //关闭导入界面
+                        if (typeof window.parent.TabCloseByTitle != "undefined") {
+                            //需要延时关闭，不可立即关闭。
+                            setTimeout("window.parent.TabCloseByTitle('导入流程模版')", 1000);
+                        }
+                    });
                 }
             });
         }
@@ -94,7 +82,7 @@
             var downloadUrl = "../../../DataUser/TempleteOfImp/" + ensName + ".xls";
             var a = document.getElementById("downFileID");
             a.href = downloadUrl;
-            a.download = ensName + ".xls";
+            a.download = "11.txt";
             a.click();
         }
 
@@ -137,10 +125,7 @@
 该模版存在:D:\ccflow\CCFlow\DataUser\TempleteOfImp\下面.
 比如: :D:\ccflow\CCFlow\DataUser\TempleteOfImp\BP.Demo.BPFramework.Students.xls
 </fieldset>
-<fieldset>
-<legend>导入结果</legend>
-<div id="result"></div>
-</fieldset>
+
  </td>
 </tr>
 </table>

@@ -442,11 +442,11 @@
             }
 
             baseUrl = baseUrl + keys;
-            
+
 
             //生成数据行
             for (var i = 0; i < groupSearch.length; i++) {
-            	var url="";
+                var url = "";
                 var dr = groupSearch[i];
                 $.each(AttrsOfGroup, function (k, o) {
                     if (url.indexOf(o.KeyOfEn) == -1)
@@ -481,7 +481,7 @@
                         }
                     }
                 }
-				url = baseUrl+url;
+                url = baseUrl + url;
                 html += "<td nowrap ><a href=\"javascript:WinOpen('" + url + "', 'wincommgroup',900,900);\"  class='easyui-linkbutton'>详细</a></td>";
                 html += "</tr>";
             }

@@ -6234,6 +6234,7 @@ public class WorkNode {
 
 				this.addMsg(SendReturnMsgFlag.MsgOfText, textInfo);
 			}
+			
 			try {
 				// 调起发送成功后的事件，把参数传入进去。
 				if (this.SendHTOfTemp != null) {
@@ -6245,17 +6246,7 @@ public class WorkNode {
 						}
 					}
 				}
-
-				// 执行发送.
-				String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
-						this.rptGe, null, this.HisMsgObjs);
-
-				// string SendSuccess =
-				// this.HisNode.MapData.FrmEvents.DoEventNode(EventListOfNode.SendSuccess,
-				// this.HisWork);
-				if (sendSuccess != null) {
-					this.addMsg(SendReturnMsgFlag.SendSuccessMsg, sendSuccess);
-				}
+ 
 			} catch (RuntimeException ex) {
 				this.addMsg(SendReturnMsgFlag.SendSuccessMsgErr, ex.getMessage());
 			}

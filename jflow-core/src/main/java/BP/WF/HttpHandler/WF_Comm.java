@@ -2580,7 +2580,8 @@ public class WF_Comm extends WebContralBase {
         dt.Columns.Add("Checked",String.class);
        
         dt.TableName = "Attrs";
-
+        //标注是否有分析项
+        boolean IsExitAnalySis = false;
         for (Attr attr : map.getAttrs().ToJavaList())
         {
             if (attr.getIsPK() || attr.getIsNum() == false)
@@ -2613,6 +2614,7 @@ public class WF_Comm extends WebContralBase {
                 dt.Rows.add(dr);
 
                 isHave = true;
+                IsExitAnalySis = true;
             }
 
             if (isHave)
@@ -2625,7 +2627,7 @@ public class WF_Comm extends WebContralBase {
             // 根据状态 设置信息.
             if (ur.getVals().indexOf(attr.getKey()) != -1)
             	dtr.setValue("Checked", "true");
-
+            IsExitAnalySis = true;
             dt.Rows.add(dtr);
 
             DataTable ddlDt = new DataTable();
@@ -2667,6 +2669,27 @@ public class WF_Comm extends WebContralBase {
             
 
         }
+        if(IsExitAnalySis == false){
+        	//如果不存在分析项手动添加一个分析项
+        	 DataRow dtr = dt.NewRow();
+             dtr.setValue("Field", "Group_Number");
+             dtr.setValue("Name", "数量");
+             dtr.setValue("Checked", "true");
+             dt.Rows.add(dtr);
+             
+             DataTable ddlDt = new DataTable();
+             ddlDt.TableName = "Group_Number";
+             ddlDt.Columns.Add("No");
+             ddlDt.Columns.Add("Name");
+             ddlDt.Columns.Add("Selected",String.class);
+             DataRow ddlDr = ddlDt.NewRow();
+             ddlDr.setValue("No", "SUM");
+             ddlDr.setValue("Name","求和");
+             ddlDr.setValue("Selected", "true");
+             ddlDt.Rows.add(ddlDr);
+             ds.Tables.add(ddlDt);
+        }
+        
         ds.Tables.add(dt);
         return BP.Tools.Json.ToJson(ds);
     }
@@ -2727,8 +2750,16 @@ public class WF_Comm extends WebContralBase {
             if (ct.split("=").length != 2)
                 continue;
             String[] paras = ct.split("=");
-
-            AttrsOfNum.Add(map.GetAttrByKey(paras[0]));
+            
+            //判断paras[0]的类型
+            int dataType = 2;
+            if(paras[0].equals("Group_Number")){
+            	 AttrsOfNum.Add(new Attr("Group_Number", "Group_Number", 1,DataType.AppInt,false,"数量"));
+            }else{
+            	Attr attr = map.GetAttrByKey(paras[0]);
+            	AttrsOfNum.Add(attr);
+            	dataType = attr.getMyDataType();
+            }
 
             if (this.GetRequestVal("DDL_" + paras[0]) == null)
             {
@@ -2741,16 +2772,26 @@ public class WF_Comm extends WebContralBase {
                 StateNumKey += paras[0] + "=Checked@"; // 记录状态
                 continue;
             }
-            
-            if(paras[1].equals("SUM")){
-            	 groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
-            }else if(paras[1].equals("AVG")){
-            	groupKey += " round (AVG(" + paras[0] + "), 4)  " + paras[0] + ",";
-            }else if(paras[1].equals("AMOUNT")){
-            	groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+            if(paras[0].equals("Group_Number")){
+            	 groupKey += " count(*) " + paras[0] + ",";
             }else{
-            	throw new Exception("没有判断的情况.");
+            	 if(paras[1].equals("SUM")){
+            		 if(dataType == 2)
+            			 groupKey += " SUM(" + paras[0] + ")" + paras[0] + ",";
+            		 else
+            			 groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+                }else if(paras[1].equals("AVG")){
+                	groupKey += " round (AVG(" + paras[0] + "), 4)  " + paras[0] + ",";
+                }else if(paras[1].equals("AMOUNT")){
+                	 if(dataType == 2)
+                		 groupKey += " SUM(" + paras[0] + ")" + paras[0] + ",";
+            		 else
+                		 groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+                }else{
+                	throw new Exception("没有判断的情况.");
+                }
             }
+           
             
 
         }
@@ -2932,7 +2973,7 @@ public class WF_Comm extends WebContralBase {
         if (orderByReq != null && (selectSQL.contains(orderByReq) || groupKey.contains(orderByReq)))
         {
             orderby = " ORDER BY " + orderByReq;
-            if (this.GetRequestVal("OrderWay") != "Up")
+            if (!this.GetRequestVal("OrderWay").equals("Up"))
                 orderby += " DESC ";
         }
 

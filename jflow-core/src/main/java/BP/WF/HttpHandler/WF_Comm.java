@@ -2741,21 +2741,17 @@ public class WF_Comm extends WebContralBase {
                 StateNumKey += paras[0] + "=Checked@"; // 记录状态
                 continue;
             }
-            switch (paras[1])
-            {
-                case "SUM":
-                    groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
-                    break;
-                case "AVG":
-                    groupKey += " round (AVG(" + paras[0] + "), 4)  " + paras[0] + ",";
-                    break;
-                case "AMOUNT":
-                    groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
-                    break;
-                default:
-                    throw new Exception("没有判断的情况.");
+            
+            if(paras[1].equals("SUM")){
+            	 groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+            }else if(paras[1].equals("AVG")){
+            	groupKey += " round (AVG(" + paras[0] + "), 4)  " + paras[0] + ",";
+            }else if(paras[1].equals("AMOUNT")){
+            	groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+            }else{
+            	throw new Exception("没有判断的情况.");
             }
-
+            
 
         }
         boolean isHaveLJ = false; // 是否有累计字段。
@@ -2834,16 +2830,13 @@ public class WF_Comm extends WebContralBase {
                     continue;
                 if (attr.getIsRefAttr())
                     continue;
-
-                switch (attr.getField())
-                {
-                    case "MyFileExt":
-                    case "MyFilePath":
-                    case "WebPath":
-                        continue;
-                    default:
-                        break;
+                
+                if(attr.getField().equals("MyFileExt") || 
+                		attr.getField().equals("MyFilePath") ||
+                		attr.getField().equals("WebPath")){
+                	continue;
                 }
+                
                 if (isAddAnd == false)
                 {
                     isAddAnd = true;
@@ -3022,22 +3015,16 @@ public class WF_Comm extends WebContralBase {
 
                     for (Attr attr1 : AttrsOfGroup)
                     {
-                        switch (attr1.getKey())
-                        {
-                            case "FK_NY":
-                                sql += " FK_NY <= '" + dr.getValue("FK_NY") + "' AND FK_ND='" + dr.getValue("FK_NY").toString().substring(0, 4) + "' AND ";
-                                break;
-                            case "FK_Dept":
-                                sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
-                                break;
-                            case "FK_SJ":
-                            case "FK_XJ":
-                                sql += attr1.getKey() + " LIKE '" + dr.getValue(attr1.getKey()) + "%' AND ";
-                                break;
-                            default:
-                                sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
-                                break;
+                        if(attr1.getKey().equals("FK_NY")){
+                        	sql += " FK_NY <= '" + dr.getValue("FK_NY") + "' AND FK_ND='" + dr.getValue("FK_NY").toString().substring(0, 4) + "' AND ";
+                        }else if (attr1.getKey().equals("FK_Dept")){
+                        	sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
+                        }else if (attr1.getKey().equals("FK_SJ") || attr1.getKey().equals("FK_XJ")){
+                        	 sql += attr1.getKey() + " LIKE '" + dr.getValue(attr1.getKey()) + "%' AND ";
+                        }else{
+                        	 sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
                         }
+                    	
                     }
 
                     sql = sql.substring(0, sql.length() - "AND ".length());

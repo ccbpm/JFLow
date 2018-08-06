@@ -2973,7 +2973,8 @@ public class WF_Comm extends WebContralBase {
         if (orderByReq != null && (selectSQL.contains(orderByReq) || groupKey.contains(orderByReq)))
         {
             orderby = " ORDER BY " + orderByReq;
-            if (!this.GetRequestVal("OrderWay").equals("Up"))
+            String orderWay = this.GetRequestVal("OrderWay");
+            if (!DataType.IsNullOrEmpty(orderWay) && !orderWay.equals("Up"))
                 orderby += " DESC ";
         }
 

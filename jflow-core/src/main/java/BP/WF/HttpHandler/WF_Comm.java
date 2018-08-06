@@ -3178,7 +3178,7 @@ public class WF_Comm extends WebContralBase {
         if (ds == null)
             return "info@<img src='../Img/Pub/warning.gif' /><b><font color=red> 您没有选择分析的数据</font></b>";
 
-        String filePath = ExportDGToExcel(ds.GetTableByName("GroupSearch"),  en.getEnDesc());
+        String filePath = ExportDGToExcel(ds,  en.getEnDesc());
 
 
         return filePath;

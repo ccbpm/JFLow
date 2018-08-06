@@ -2582,6 +2582,25 @@ public class WF_Comm extends WebContralBase {
         dt.TableName = "Attrs";
         //标注是否有分析项
         boolean IsExitAnalySis = false;
+    	//分析项手动添加一个分析项统计个数
+	   	DataRow dtr = dt.NewRow();
+        dtr.setValue("Field", "Group_Number");
+        dtr.setValue("Name", "数量");
+        dtr.setValue("Checked", "true");
+        dt.Rows.add(dtr);
+        
+        DataTable ddlDt = new DataTable();
+        ddlDt.TableName = "Group_Number";
+        ddlDt.Columns.Add("No");
+        ddlDt.Columns.Add("Name");
+        ddlDt.Columns.Add("Selected",String.class);
+        DataRow ddlDr = ddlDt.NewRow();
+        ddlDr.setValue("No", "SUM");
+        ddlDr.setValue("Name","求和");
+        ddlDr.setValue("Selected", "true");
+        ddlDt.Rows.add(ddlDr);
+        ds.Tables.add(ddlDt);
+        
         for (Attr attr : map.getAttrs().ToJavaList())
         {
             if (attr.getIsPK() || attr.getIsNum() == false)
@@ -2619,7 +2638,7 @@ public class WF_Comm extends WebContralBase {
 
             if (isHave)
                 continue;
-            DataRow dtr = dt.NewRow();
+            dtr = dt.NewRow();
             dtr.setValue("Field", attr.getKey());
             dtr.setValue("Name", attr.getDesc());
             
@@ -2630,13 +2649,13 @@ public class WF_Comm extends WebContralBase {
             IsExitAnalySis = true;
             dt.Rows.add(dtr);
 
-            DataTable ddlDt = new DataTable();
+            ddlDt = new DataTable();
             ddlDt.Columns.Add("No");
             ddlDt.Columns.Add("Name");
             ddlDt.Columns.Add("Selected",String.class);
             ddlDt.TableName = attr.getKey();
 
-            DataRow ddlDr = ddlDt.NewRow();
+            ddlDr = ddlDt.NewRow();
             ddlDr.setValue("No", "SUM");
             ddlDr.setValue("Name","求和");
             if (ur.getVals().indexOf("@" + attr.getKey() + "=SUM") != -1)
@@ -2669,27 +2688,8 @@ public class WF_Comm extends WebContralBase {
             
 
         }
-        if(IsExitAnalySis == false){
-        	//如果不存在分析项手动添加一个分析项
-        	 DataRow dtr = dt.NewRow();
-             dtr.setValue("Field", "Group_Number");
-             dtr.setValue("Name", "数量");
-             dtr.setValue("Checked", "true");
-             dt.Rows.add(dtr);
-             
-             DataTable ddlDt = new DataTable();
-             ddlDt.TableName = "Group_Number";
-             ddlDt.Columns.Add("No");
-             ddlDt.Columns.Add("Name");
-             ddlDt.Columns.Add("Selected",String.class);
-             DataRow ddlDr = ddlDt.NewRow();
-             ddlDr.setValue("No", "SUM");
-             ddlDr.setValue("Name","求和");
-             ddlDr.setValue("Selected", "true");
-             ddlDt.Rows.add(ddlDr);
-             ds.Tables.add(ddlDt);
-        }
-        
+         
+          
         ds.Tables.add(dt);
         return BP.Tools.Json.ToJson(ds);
     }

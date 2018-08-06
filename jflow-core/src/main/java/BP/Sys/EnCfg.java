@@ -138,6 +138,8 @@ public class EnCfg extends EntityNo
 				60);
 		map.AddTBString(EnCfgAttr.UI, null, "UI设置", true, false, 0, 2000, 60);
 		
+		map.AddTBAtParas(3000);  //参数属性.
+		
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

@@ -1,6 +1,7 @@
 package BP.Sys.XML;
 
 import BP.En.Entities;
+import BP.GPM.Dept;
 import BP.Sys.SystemConfig;
 import BP.XML.XmlEn;
 import BP.XML.XmlEns;
@@ -53,5 +54,14 @@ public class ActiveAttrs extends XmlEns
 	public Entities getRefEns()
 	{
 		return null;
+	}
+	
+	/** 
+	 转化成 java list,C#不能调用.
+	 @return List
+	*/
+	public final java.util.List<ActiveAttr> ToJavaList()
+	{
+		return (java.util.List<ActiveAttr>)(Object)this;
 	}
 }

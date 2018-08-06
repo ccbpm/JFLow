@@ -30,6 +30,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import BP.DA.DBType;
 import BP.DA.DataColumn;
 import BP.DA.DataRow;
+import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
@@ -724,7 +725,11 @@ public abstract class WebContralBase extends BaseController {
 		return false;
 	}
 	
-	protected String ExportDGToExcel(DataTable dt,  String title) throws Exception {
+	protected String ExportDGToExcel(DataSet ds,  String title) throws Exception {
+		
+		DataTable dt = ds.GetTableByName("GroupSearch");
+		DataTable AttrsOfNum = ds.GetTableByName("AttrsOfNum");
+		DataTable AttrsOfGroup = ds.GetTableByName("AttrsOfGroup"); 		
 
 		String fileName = title+"Ep" + title + ".xls";
 		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
@@ -764,10 +769,23 @@ public abstract class WebContralBase extends BaseController {
 
 		row = sheet.createRow((int) titleRowIndex);
 		int index = 0;// 控制列 qin 15.9.21
-		for (DataColumn attr : dt.Columns) {
+		//添加序号
+		cell = row.createCell(index);
+		cell.setCellStyle(style);
+		cell.setCellValue("序号");
+		index += 1;
+		countCell++;
+		for (DataRow attr : AttrsOfGroup.Rows) {
 			cell = row.createCell(index);
 			cell.setCellStyle(style);
-			cell.setCellValue(attr.ColumnName);
+			cell.setCellValue(attr.getValue("Name").toString());
+			index += 1;
+			countCell++;
+		}
+		for (DataRow attr : AttrsOfNum.Rows) {
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue(attr.getValue("Name").toString());
 			index += 1;
 			countCell++;
 		}
@@ -777,11 +795,22 @@ public abstract class WebContralBase extends BaseController {
 			row = sheet.createRow(i);
 			// 生成文件内容
 			index = 0;
-			for (DataColumn attr : dt.Columns) {
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue(dr.getValue("IDX").toString());
+			index += 1;
+			for (DataRow attr : AttrsOfGroup.Rows) {
 				
 				cell = row.createCell(index);
 				cell.setCellStyle(style);
-				cell.setCellValue(dr.getValue(attr.ColumnName).toString());
+				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn")+"T").toString());
+				index += 1;
+			}
+			for (DataRow attr : AttrsOfNum.Rows) {
+							
+				cell = row.createCell(index);
+				cell.setCellStyle(style);
+				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn").toString()).toString());
 				index += 1;
 			}
 

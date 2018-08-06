@@ -725,7 +725,7 @@ public abstract class WebContralBase extends BaseController {
 		return false;
 	}
 	
-	protected String ExportDGToExcel(DataSet ds,  String title) throws Exception {
+	protected String ExportDGToExcel(DataSet ds,  String title,String params) throws Exception {
 		
 		DataTable dt = ds.GetTableByName("GroupSearch");
 		DataTable AttrsOfNum = ds.GetTableByName("AttrsOfNum");
@@ -815,6 +815,46 @@ public abstract class WebContralBase extends BaseController {
 			}
 
 		}
+		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
+
+		row = sheet.createRow((int) creatorRowIndex);
+		
+		// 生成文件内容
+		index = 0;
+		cell = row.createCell(index);
+		cell.setCellStyle(style);
+		cell.setCellValue("汇总");
+		index += 1;
+		for (DataRow attr : AttrsOfGroup.Rows) {
+			
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue("");
+			index += 1;
+		}
+
+		for (DataRow attr : AttrsOfNum.Rows) {
+			double d =0;
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			for(DataRow dtr : dt.Rows){
+				d += Double.parseDouble(dtr.getValue(attr.getValue("KeyOfEn").toString()).toString());
+			}
+			if(params.contains("=AVG")){
+				if(dt.Rows.size()!=0)
+					d = d/dt.Rows.size();
+			}
+			
+			if(Integer.parseInt(attr.getValue("MyDataType").toString()) == DataType.AppInt){
+				if(params.contains("=AVG"))
+					cell.setCellValue(d);
+				else
+					cell.setCellValue((int)d);
+			}
+			
+			index += 1;
+		}
+		
 
 		// 列标题单元格样式设定
 		HSSFCellStyle titleStyle = wb.createCellStyle();
@@ -840,7 +880,7 @@ public abstract class WebContralBase extends BaseController {
 		HSSFCellStyle userStyle = wb.createCellStyle();
 		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
 		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
+		creatorRowIndex = creatorRowIndex+1;
 
 		row = sheet.createRow((int) creatorRowIndex);
 

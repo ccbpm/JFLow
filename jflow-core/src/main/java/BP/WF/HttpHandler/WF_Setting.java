@@ -1,5 +1,13 @@
 package BP.WF.HttpHandler;
 
+import java.io.File;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+
 import BP.DA.*;
 import BP.Sys.*;
 import BP.Web.*;
@@ -99,55 +107,50 @@ public class WF_Setting extends WebContralBase
 		return BP.Tools.Json.ToJson(ht);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 图片签名.
-	public final String Siganture_Init()
+	public final String Siganture_Init() throws Exception
 	{
-		return "sss";
+		if (BP.Web.WebUser.getNoOfRel() == null)
+            return "err@登录信息丢失";
+
+		java.util.Hashtable ht = new java.util.Hashtable();
+        ht.put("No", BP.Web.WebUser.getNo());
+        ht.put("Name", BP.Web.WebUser.getName());
+        ht.put("FK_Dept", BP.Web.WebUser.getFK_Dept());
+        ht.put("FK_DeptName", BP.Web.WebUser.getFK_DeptName());
+        return BP.Tools.Json.ToJson(ht);
 	}
+	
+	private DefaultMultipartHttpServletRequest request;
+	
+	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
+		this.request = request;
+	}
+
 	public final String Siganture_Save()
 	{
-		return "";
-
-		//FileUpload f = (FileUpload)this.FindControl("F");
-		//if (f.HasFile == false)
-		//    return "err@请上传文件.";
-
-		////if (f.FileName.EndsW
-
-		////判断文件类型.
-		//string fileExt = ",bpm,jpg,jpeg,png,gif,";
-		//string ext = f.FileName.Substring(f.FileName.LastIndexOf('.') + 1).ToLower();
-		//if (fileExt.IndexOf(ext + ",") == -1)
-		//{
-		//    return "err@上传的文件必须是以图片格式:" + fileExt + "类型, 现在类型是:" + ext;
-		//}
-
-		//try
-		//{
-		//    string tempFile = BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/T" + WebUser.No + ".jpg";
-		//    if (System.IO.File.Exists(tempFile) == true)
-		//        System.IO.File.Delete(tempFile);
-
-		//    f.SaveAs(tempFile);
-		//    System.Drawing.Image img = System.Drawing.Image.FromFile(tempFile);
-		//    img.Dispose();
-		//}
-		//catch (Exception ex)
-		//{
-		//    return "err@"+ex.Message;
-		//}
-
-		//f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.No + ".jpg");
-		//f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.Name + ".jpg");
-
-		//f.PostedFile.InputStream.Close();
-		//f.PostedFile.InputStream.Dispose();
-		//f.Dispose();
-
-		//   this.Response.Redirect(this.Request.RawUrl, true);
+		try
+		{
+			String contentType = getRequest().getContentType();
+			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
+				MultipartFile multipartFile = request.getFile("File_Upload");
+				
+				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + WebUser.getNo() + ".jpg";
+				File tempFile = new File(tempFilePath);
+				if(tempFile.exists()){
+					tempFile.delete();
+				}
+				multipartFile.transferTo(tempFile);
+			 }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@执行失败";
+		}
+		
+		return "文件上传成功";
+    
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 图片签名.
 
 	public final String UserIcon_Init()

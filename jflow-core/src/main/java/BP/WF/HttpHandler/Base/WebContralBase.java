@@ -850,6 +850,8 @@ public abstract class WebContralBase extends BaseController {
 					cell.setCellValue(d);
 				else
 					cell.setCellValue((int)d);
+			}else{
+				cell.setCellValue(d);
 			}
 			
 			index += 1;

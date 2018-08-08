@@ -100,7 +100,21 @@ function EditNode(type) {
             url = "En.htm?EnName=" + enName + "&PKVal=" + node.id+"&isTree=1";
         else
             url = "En.htm?EnName=" + enName + "&PKVal=" + node.id + "&isTree=1" + "&isReadonly=1";
-        OpenEasyUiDialog(url, 'treeFrame', '编辑', 850, 650, null, null, null, null, null, function () {
+        
+        var cfg = new Entity("BP.Sys.EnCfg");
+        cfg.No = GetQueryString("EnsName");
+        cfg.RetrieveFromDBSources();
+        
+        var windowW = cfg.GetPara("WinCardW");
+        if (windowW == "" || windowW == undefined)
+            windowW = 700;
+
+        var windowH = cfg.GetPara("WinCardH");
+        if (windowH == "" || windowH == undefined)
+            windowH = 500;
+        
+        
+        OpenEasyUiDialog(url, 'treeFrame', '编辑', windowW, windowH, null, null, null, null, null, function () {
             var en = new Entity(enName, node.id);
             $('#enTree').tree('update', { target: node.target, text: en.Name });
 

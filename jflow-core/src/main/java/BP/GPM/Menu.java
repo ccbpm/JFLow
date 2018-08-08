@@ -20,7 +20,7 @@ public class Menu extends EntityTree
 		{
 			uac.IsDelete = true;
 			uac.IsUpdate = true;
-			uac.IsInsert = false;
+			uac.IsInsert = true;
 			return uac;
 		}
 		else

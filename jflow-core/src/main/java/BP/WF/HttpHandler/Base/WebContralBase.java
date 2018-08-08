@@ -11,6 +11,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Dictionary;
 
@@ -840,13 +841,16 @@ public abstract class WebContralBase extends BaseController {
 			for(DataRow dtr : dt.Rows){
 				d += Double.parseDouble(dtr.getValue(attr.getValue("KeyOfEn").toString()).toString());
 			}
-			if(params.contains("=AVG")){
-				if(dt.Rows.size()!=0)
-					d = d/dt.Rows.size();
+			if(params.contains(attr.getValue("KeyOfEn")+"=AVG")){
+				if(dt.Rows.size()!=0){
+					DecimalFormat df = new DecimalFormat("#.0000");            
+					d = Double.valueOf(df.format(d/dt.Rows.size()));
+				}
+					
 			}
 			
 			if(Integer.parseInt(attr.getValue("MyDataType").toString()) == DataType.AppInt){
-				if(params.contains("=AVG"))
+				if(params.contains(attr.getValue("KeyOfEn")+"=AVG"))
 					cell.setCellValue(d);
 				else
 					cell.setCellValue((int)d);

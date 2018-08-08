@@ -211,7 +211,7 @@ public class Menu extends EntityTree
 		map.AddTBStringPK(MenuAttr.No, null, "功能编号", true, true, 4, 4, 4);
 		map.AddTBString(MenuAttr.Name, null, "名称", true, false, 0, 300, 400);
 
-		map.AddDDLEntities(MenuAttr.ParentNo, null, DataType.AppString, "父节点", new Menus(), "No", "Name", true);
+		map.AddDDLEntities(MenuAttr.ParentNo, null, DataType.AppString, "父节点", new Menus(), "No", "Name", false);
 			//map.AddTBString(MenuAttr.ParentNo, null, "父节点编号", true, true, 0, 10, 10);
 		map.AddTBInt(MenuAttr.Idx, 0, "顺序号", true, false);
 			///#endregion 与树有关的必备属性.
@@ -249,6 +249,31 @@ public class Menu extends EntityTree
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+
+	  /// <summary>
+    /// 创建下级节点.
+    /// </summary>
+    /// <returns></returns>
+    public final String DoMyCreateSubNode() throws Exception
+    {
+        Entity en = this.DoCreateSubNode();
+        en.SetValByKey(MenuAttr.FK_App, this.GetValByKey(MenuAttr.FK_App));
+        en.Update();
+        
+        return en.ToJson();
+    }
+
+    /// <summary>
+    /// 创建同级节点.
+    /// </summary>
+    /// <returns></returns>
+    public final String DoMyCreateSameLevelNode() throws Exception
+    {
+        Entity en = this.DoCreateSameLevelNode();
+        en.SetValByKey(MenuAttr.FK_App, this.GetValByKey(MenuAttr.FK_App));
+        en.Update();
+        return en.ToJson();
+    }
 
 
 	public final String getWebPath()

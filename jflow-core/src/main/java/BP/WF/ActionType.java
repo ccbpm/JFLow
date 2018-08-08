@@ -70,7 +70,7 @@ public enum ActionType
 	 子线程前进
 	 
 	*/
-	SubFlowForward(11),
+	SubThreadForward(11),
 	/** 
 	 取回
 	 

@@ -10019,25 +10019,25 @@ public class Dev2Interface {
 			sql = "SELECT TOP 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='"
 					+ BP.Web.WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType="
 					+ ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue()
-					+ " OR ActionType=" + ActionType.SubFlowForward.getValue() + ")  ORDER BY RDT DESC";
+					+ " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 			break;
 		case Oracle:
 			sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  RowNum=1 AND EmpFrom='"
 					+ BP.Web.WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType="
 					+ ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue()
-					+ " OR ActionType=" + ActionType.SubFlowForward.getValue() + ")  ORDER BY RDT DESC";
+					+ " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 			break;
 		case MySQL:
 			sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + BP.Web.WebUser.getNo()
 					+ "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType="
-					+ ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubFlowForward.getValue()
+					+ ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue()
 					+ ") limit 0,1";
 			break;
 		case Informix:
 			sql = "SELECT first 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='"
 					+ BP.Web.WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType="
 					+ ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue()
-					+ " OR ActionType=" + ActionType.SubFlowForward.getValue() + ")  ORDER BY RDT DESC";
+					+ " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 			break;
 		default:
 			throw new RuntimeException("@没有实现该类型的数据库支持.");

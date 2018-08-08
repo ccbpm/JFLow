@@ -103,7 +103,7 @@ public class WorkNodes extends ArrayList<WorkNode>
 	public final int GenerByWorkID(Flow flow, long oid) throws NumberFormatException, Exception
 	{
 		String table = "ND" + Integer.parseInt(flow.getNo()) + "Track";
-		String actionSQL = "SELECT EmpFrom,EmpFromT,RDT,NDFrom FROM " + table + " WHERE WorkID=" + oid + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.ForwardHL.getValue() + " OR ActionType=" + ActionType.SubFlowForward.getValue() + " ) ORDER BY RDT";
+		String actionSQL = "SELECT EmpFrom,EmpFromT,RDT,NDFrom FROM " + table + " WHERE WorkID=" + oid + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.ForwardHL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + " ) ORDER BY RDT";
 		DataTable dt = DBAccess.RunSQLReturnTable(actionSQL);
 
 		String nds = "";

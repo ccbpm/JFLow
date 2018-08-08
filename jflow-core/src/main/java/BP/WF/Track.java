@@ -215,7 +215,7 @@ public class Track extends BP.En.Entity
 				return "子流程调用";
 			case StartChildenFlow:
 				return "子流程发起";
-			case SubFlowForward:
+			case SubThreadForward:
 				return "线程前进";
 			case RebackOverFlow:
 				return "恢复已完成的流程";

@@ -841,7 +841,7 @@ public class WorkNode {
 			at = ActionType.ForwardHL;
 			break;
 		case SubThreadWork:
-			at = ActionType.SubFlowForward;
+			at = ActionType.SubThreadForward;
 			break;
 		default:
 			break;
@@ -2198,6 +2198,13 @@ public class WorkNode {
 		this.addMsg(SendReturnMsgFlag.VarAcceptersID, empIDs, empIDs, SendReturnMsgType.SystemMsg);
 		this.addMsg(SendReturnMsgFlag.VarAcceptersName, empNames, empNames, SendReturnMsgType.SystemMsg);
 		this.addMsg(SendReturnMsgFlag.VarToNodeIDs, toNodeIDs, toNodeIDs, SendReturnMsgType.SystemMsg);
+		
+		
+		  //写入日志.
+        if (this.getHisNode().getIsStartNode()==true)
+            this.AddToTrack(ActionType.Start, empIDs, empNames, this.getHisNode().getNodeID(), this.getHisNode().getName(), msg);
+        else
+            this.AddToTrack(ActionType.Forward, empIDs, empNames, this.getHisNode().getNodeID(), this.getHisNode().getName(), msg);
 	}
 
 	/**
@@ -6831,8 +6838,8 @@ public class WorkNode {
 			break;
 		}
 
-		if (at == ActionType.SubFlowForward || at == ActionType.StartChildenFlow || at == ActionType.Start
-				|| at == ActionType.Forward || at == ActionType.SubFlowForward || at == ActionType.ForwardHL
+		if (at == ActionType.SubThreadForward || at == ActionType.StartChildenFlow || at == ActionType.Start
+				|| at == ActionType.Forward || at == ActionType.SubThreadForward || at == ActionType.ForwardHL
 				|| at == ActionType.FlowOver) {
 			if (this.getHisNode().getIsFL()) {
 				at = ActionType.ForwardFL;
@@ -6849,8 +6856,8 @@ public class WorkNode {
 			t.CheckPhysicsTable();
 		}
 
-		if (at == ActionType.SubFlowForward || at == ActionType.StartChildenFlow || at == ActionType.Start
-				|| at == ActionType.Forward || at == ActionType.SubFlowForward || at == ActionType.ForwardHL
+		if (at == ActionType.SubThreadForward || at == ActionType.StartChildenFlow || at == ActionType.Start
+				|| at == ActionType.Forward || at == ActionType.SubThreadForward || at == ActionType.ForwardHL
 				|| at == ActionType.FlowOver) {
 			this.getHisGenerWorkFlow().setParas_LastSendTruckID(t.getMyPK());
 		}
@@ -7809,12 +7816,12 @@ public class WorkNode {
 			case SubThread:
 				sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE WorkID="
 						+ this.getWorkID() + " AND NDTo=" + this.getHisNode().getNodeID() + " " + " AND ActionType="
-						+ ActionType.SubFlowForward.getValue() + " ORDER BY RDT DESC";
+						+ ActionType.SubThreadForward.getValue() + " ORDER BY RDT DESC";
 				if (DBAccess.RunSQLReturnCOUNT(sql) == 0) {
 					sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow())
 							+ "Track WHERE WorkID=" + this.getHisWork().getFID() + " AND NDTo="
 							+ this.getHisNode().getNodeID() + " " + " AND ActionType="
-							+ ActionType.SubFlowForward.getValue() + " ORDER BY RDT DESC";
+							+ ActionType.SubThreadForward.getValue() + " ORDER BY RDT DESC";
 				}
 
 				break;

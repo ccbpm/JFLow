@@ -10,9 +10,9 @@ import BP.En.*;
 */
 public class EmpMenu extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+ //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getCtrlObjs()
+	public final String getCtrlObjs()  
 	{
 		return this.GetValStringByKey(MenuAttr.CtrlObjs);
 	}
@@ -53,8 +53,7 @@ public class EmpMenu extends EntityMyPK
 		this.SetValByKey(MenuAttr.CtrlWay, value.getValue());
 	}
 	/** 
-	 功能
-	 
+	 功能	 
 	*/
 	public final MenuType getHisMenuType()
 	{
@@ -149,7 +148,7 @@ public class EmpMenu extends EntityMyPK
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("V_GPM_EmpMenu");
+		Map map = new Map("GPM_EmpMenu");
 		map.setDepositaryOfEntity(Depositary.None);
 		map.setDepositaryOfMap(Depositary.Application);
 		map.setEnDesc("人员菜单功能");

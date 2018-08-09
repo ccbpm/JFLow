@@ -204,7 +204,7 @@ public class Glo
 				em.setFK_Emp(emp.getNo());
 				em.setFK_App(menu.getFK_App());
 				em.setFK_Menu(menu.getNo());
-				em.setMyPK(menu.getNo() + "_" + emp.getNo());
+				//em.setMyPK(menu.getNo() + "_" + emp.getNo());
 				em.Insert();
 			}
 				///#endregion

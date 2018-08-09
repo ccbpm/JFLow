@@ -785,7 +785,7 @@ public class WF_CommEntity extends WebContralBase {
                     // 获得选择的数量.
                     try
                     {
-                        sql = "SELECT COUNT(*) as NUM FROM " + vsM.getEnsOfMM().getGetNewEntity().getEnMap().getPhysicsTable() + " WHERE " + vsM.getAttrOfOneInMM() + " =' " + en.getPKVal().toString() + "'";
+                        sql = "SELECT COUNT(*) as NUM FROM " + vsM.getEnsOfMM().getGetNewEntity().getEnMap().getPhysicsTable() + " WHERE " + vsM.getAttrOfOneInMM() + " ='" + en.getPKVal().toString() + "'";
                         i = DBAccess.RunSQLReturnValInt(sql);
                     }
                     catch(Exception ex)

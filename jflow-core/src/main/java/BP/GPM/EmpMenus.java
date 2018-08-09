@@ -8,7 +8,7 @@ import BP.En.*;
  人员菜单功能s
  
 */
-public class EmpMenus extends EntitiesMyPK
+public class EmpMenus extends EntitiesMM
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造

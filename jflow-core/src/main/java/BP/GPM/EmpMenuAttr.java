@@ -25,4 +25,9 @@ public class EmpMenuAttr
 	 
 	*/
 	public static final String FK_App = "FK_App";
+	/**
+	 * 是否选中
+	 */
+	public static final String IsChecked = "IsChecked";
+	
 }

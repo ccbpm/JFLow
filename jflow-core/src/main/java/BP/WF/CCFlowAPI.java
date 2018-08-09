@@ -536,9 +536,9 @@ public class CCFlowAPI {
 				DataTable dt=rpt.ToDataTableField("aaa");
 				
 				String json=BP.Tools.Json.ToJson(dt);
-				DataType.WriteFile("c:\\111.txt", json);
+				//DataType.WriteFile("c:\\111.txt", json);
 				
-				DataType.WriteFile("c:\\2222.txt", BP.Tools.Json.ToJson(rpt.getRow()));
+				//DataType.WriteFile("c:\\2222.txt", BP.Tools.Json.ToJson(rpt.getRow()));
 				
 				
 				 

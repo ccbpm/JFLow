@@ -54,6 +54,7 @@ import BP.Sys.GEDtl;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
+import BP.Sys.Glo;
 import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
 import BP.Sys.GroupFields;
@@ -660,7 +661,7 @@ public class Flow extends BP.En.EntityNoName
 	public final Work NewWork(Emp emp, java.util.Hashtable paras) throws Exception
 	{
 		// 检查是否可以发起该流程？
-		if (Glo.CheckIsCanStartFlow_InitStartFlow(this) == false)
+		if (BP.WF.Glo.CheckIsCanStartFlow_InitStartFlow(this) == false)
 		{
 			throw new RuntimeException("@您违反了该流程的【" + this.getStartLimitRole() + "】限制规则。" + this.getStartLimitAlert());
 		}
@@ -801,17 +802,17 @@ public class Flow extends BP.En.EntityNoName
 					rpt.setWFState(WFState.Blank);
 					rpt.setFlowStarter(emp.getNo());
 					rpt.setFK_NY(DataType.getCurrentYearMonth());
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
 					{
 						rpt.setFlowEmps("@" + emp.getName());
 					}
 
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
 						rpt.setFlowEmps("@" + emp.getNo());
 					}
 
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
 						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName());
 					}
@@ -839,17 +840,17 @@ public class Flow extends BP.En.EntityNoName
 					rpt.setFlowStarter(emp.getNo());
 
 					rpt.setFlowEndNode(this.getStartNodeID());
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
 					{
 						rpt.setFlowEmps("@" + emp.getName());
 					}
 
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
 						rpt.setFlowEmps("@" + emp.getNo());
 					}
 
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
 						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName());
 					}
@@ -1087,17 +1088,17 @@ public class Flow extends BP.En.EntityNoName
 				rpt.SetValByKey(GERptAttr.FK_Dept, emp.getFK_Dept());
 				rpt.SetValByKey(GERptAttr.FK_NY, DataType.getCurrentYearMonth());
 
-				if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
+				if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
 				{
 					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getName());
 				}
 
-				if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
+				if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 				{
 					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo());
 				}
 
-				if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
+				if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 				{
 					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo() + "," + emp.getName());
 				}
@@ -2364,7 +2365,7 @@ public class Flow extends BP.En.EntityNoName
 
 				Object tempVar = nd.getFocusField();
 				String strs = (String)((tempVar instanceof String) ? tempVar : null);
-				strs = Glo.DealExp(strs, rpt, "err");
+				strs = BP.WF.Glo.DealExp(strs, rpt, "err");
 				if (strs.contains("@") == true)
 				{
 					msg += "@错误:焦点字段（" + nd.getFocusField() + "）在节点(step:" + nd.getStep() + " 名称:" + nd.getName() + ")属性里的设置已无效，表单里不存在该字段.";
@@ -2803,16 +2804,16 @@ public class Flow extends BP.En.EntityNoName
          ds.Tables.add(fls.ToDataTableField("WF_NodeSubFlow"));
 
          //表单信息，包含从表.
-         sql = "SELECT No FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.getNo(), "No");
+         sql = "SELECT No FROM Sys_MapData WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "No");
          MapDatas mds = new MapDatas();
          mds.RetrieveInSQL(MapDataAttr.No, sql);
          ds.Tables.add(mds.ToDataTableField("Sys_MapData"));
           
 
          // Sys_MapAttr.
-         sql = "SELECT MyPK FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_MapAttr WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          sql += " UNION ";   //增加多附件的扩展列.
-         sql += "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData IN ( SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") +" ) "; 
+         sql += "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData IN ( SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData") +" ) "; 
 
          
          //sql = "SELECT MyPK FROM Sys_MapAttr WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
@@ -2822,28 +2823,28 @@ public class Flow extends BP.En.EntityNoName
           
 
          // Sys_EnumMain
-         sql = "SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + ")";
+         sql = "SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + ")";
          SysEnumMains ses = new SysEnumMains();
          ses.RetrieveInSQL(SysEnumMainAttr.No, sql);
          ds.Tables.add(ses.ToDataTableField("Sys_EnumMain"));
           
 
          // Sys_Enum
-         sql = "SELECT MyPK FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) )";
+         sql = "SELECT MyPK FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) )";
          SysEnums sesDtl = new SysEnums();
          sesDtl.RetrieveInSQL("MyPK", sql);
          ds.Tables.add(sesDtl.ToDataTableField("Sys_Enum"));
            
 
          // Sys_MapDtl
-         sql = "SELECT No FROM Sys_MapDtl WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT No FROM Sys_MapDtl WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          MapDtls mdtls = new MapDtls();
          mdtls.RetrieveInSQL(sql);
          ds.Tables.add(mdtls.ToDataTableField("Sys_MapDtl"));
 
 
          // Sys_MapExt
-         sql = "SELECT MyPK FROM Sys_MapExt WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_MapExt WHERE  " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          MapExts mexts = new MapExts();
          mexts.RetrieveInSQL(sql);
          ds.Tables.add(mexts.ToDataTableField("Sys_MapExt"));
@@ -2851,14 +2852,14 @@ public class Flow extends BP.En.EntityNoName
           
 
          // Sys_GroupField
-         sql = "SELECT OID FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.No, "EnName");
+         sql = "SELECT OID FROM Sys_GroupField WHERE   " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.No, "EnName");
          GroupFields gfs = new GroupFields();
          gfs.RetrieveInSQL(sql);
          ds.Tables.add(gfs.ToDataTableField("Sys_GroupField"));
           
 
          // Sys_MapFrame
-         sql = "SELECT MyPK FROM Sys_MapFrame WHERE" + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_MapFrame WHERE" + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          MapFrames mfs = new MapFrames();
          mfs.RetrieveInSQL("MyPK",sql);
          ds.Tables.add(mfs.ToDataTableField("Sys_MapFrame"));
@@ -2866,14 +2867,14 @@ public class Flow extends BP.En.EntityNoName
         
 
          // Sys_FrmLine.
-         sql = "SELECT MyPK FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmLine WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmLines frmls = new FrmLines();
          frmls.RetrieveInSQL(sql);
          ds.Tables.add(frmls.ToDataTableField("Sys_FrmLine"));
         
 
          // Sys_FrmLab.
-         sql = "SELECT MyPK FROM Sys_FrmLab WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmLab WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmLabs frmlabs = new FrmLabs();
          frmlabs.RetrieveInSQL(sql);
          ds.Tables.add(frmlabs.ToDataTableField("Sys_FrmLab"));
@@ -2881,46 +2882,46 @@ public class Flow extends BP.En.EntityNoName
          
 
          // Sys_FrmEle.
-         sql = "SELECT MyPK FROM Sys_FrmEle WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmEle WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 
          FrmEles frmEles = new FrmEles();
          frmEles.RetrieveInSQL(sql);
          ds.Tables.add(frmEles.ToDataTableField("Sys_FrmEle"));
 
          // Sys_FrmLink.
-         sql = "SELECT MyPK FROM Sys_FrmLink WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmLink WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmLinks frmLinks = new FrmLinks();
          frmLinks.RetrieveInSQL(sql);
          ds.Tables.add(frmLinks.ToDataTableField("Sys_FrmLink"));
 
          // Sys_FrmRB.
-         sql = "SELECT MyPK FROM Sys_FrmRB WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmRB WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmRBs frmRBs = new FrmRBs();
          frmRBs.RetrieveInSQL(sql);
          ds.Tables.add(frmRBs.ToDataTableField("Sys_FrmRB"));
 
 
          // Sys_FrmImgAth.
-         sql = "SELECT MyPK FROM Sys_FrmImgAth WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmImgAth WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmImgAths frmIs = new FrmImgAths();
          frmIs.RetrieveInSQL(sql);
          ds.Tables.add(frmIs.ToDataTableField("Sys_FrmImgAth"));
 
          // Sys_FrmImg.
-         sql = "SELECT MyPK FROM Sys_FrmImg WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmImg WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmImgs frmImgs = new FrmImgs();
          frmImgs.RetrieveInSQL(sql);
          ds.Tables.add(frmImgs.ToDataTableField("Sys_FrmImg"));
 
 
          // Sys_FrmAttachment.
-         sql = "SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmAttachments frmaths = new FrmAttachments();
          frmaths.RetrieveInSQL(sql);
          ds.Tables.add(frmaths.ToDataTableField("Sys_FrmAttachment"));
 
          // Sys_FrmEvent.
-         sql = "SELECT MyPK FROM Sys_FrmEvent WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+         sql = "SELECT MyPK FROM Sys_FrmEvent WHERE " +BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
          FrmEvents frmevens = new FrmEvents();
          frmevens.RetrieveInSQL(sql);
          ds.Tables.add(frmevens.ToDataTableField("Sys_FrmEvent"));
@@ -2937,7 +2938,7 @@ public class Flow extends BP.En.EntityNoName
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Flow";
 		ds.Tables.add(dt);
-
+ 
 		// 节点信息
 		sql = "SELECT * FROM WF_Node WHERE FK_Flow='" + this.getNo() + "'";
 		dt = DBAccess.RunSQLReturnTable(sql);
@@ -3108,14 +3109,14 @@ public class Flow extends BP.En.EntityNoName
 		// ds.Tables.Add(rptEmps.ToDataTableField("RptEmps"));
 
 		int flowID = Integer.parseInt(this.getNo());
-		sql = "SELECT * FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.getNo(), "No");
+		sql = "SELECT * FROM Sys_MapData WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "No");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapData";
 		ds.Tables.add(dt);
 
 
 		// Sys_MapAttr.
-		sql = "SELECT * FROM Sys_MapAttr WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ORDER BY FK_MapData,Idx";
+		sql = "SELECT * FROM Sys_MapAttr WHERE  " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ORDER BY FK_MapData,Idx";
 		//sql = "SELECT * FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + "  ORDER BY FK_MapData,Idx";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapAttr";
@@ -3123,39 +3124,39 @@ public class Flow extends BP.En.EntityNoName
 
 		// Sys_EnumMain
 		//sql = "SELECT * FROM Sys_EnumMain WHERE No IN (SELECT KeyOfEn from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") +")";
-		sql = "SELECT * FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + ")";
+		sql = "SELECT * FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + ")";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_EnumMain";
 		ds.Tables.add(dt);
 
 		// Sys_Enum
-		sql = "SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) )";
+		sql = "SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) )";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_Enum";
 		ds.Tables.add(dt);
 
 		// Sys_MapDtl
-		sql = "SELECT * FROM Sys_MapDtl WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_MapDtl WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapDtl";
 		ds.Tables.add(dt);
 
 		// Sys_MapExt
 		//sql = "SELECT * FROM Sys_MapExt WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
-		sql = "SELECT * FROM Sys_MapExt WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData"); // +Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_MapExt WHERE  " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData"); // +Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
 		// Sys_GroupField
-		sql = "SELECT * FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.getNo(), "EnName");
+		sql = "SELECT * FROM Sys_GroupField WHERE   " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.getNo(), "EnName");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_GroupField";
 		ds.Tables.add(dt);
 
 		// Sys_MapFrame
-		sql = "SELECT * FROM Sys_MapFrame WHERE" + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_MapFrame WHERE" + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapFrame";
 		ds.Tables.add(dt);
@@ -3167,55 +3168,55 @@ public class Flow extends BP.En.EntityNoName
 		//ds.Tables.add(dt);
 
 		// Sys_FrmLine.
-		sql = "SELECT * FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmLine WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmLine";
 		ds.Tables.add(dt);
 
 		// Sys_FrmLab.
-		sql = "SELECT * FROM Sys_FrmLab WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmLab WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmLab";
 		ds.Tables.add(dt);
 
 		// Sys_FrmEle.
-		sql = "SELECT * FROM Sys_FrmEle WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmEle WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmEle";
 		ds.Tables.add(dt);
 
 		// Sys_FrmLink.
-		sql = "SELECT * FROM Sys_FrmLink WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmLink WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmLink";
 		ds.Tables.add(dt);
 
 		// Sys_FrmRB.
-		sql = "SELECT * FROM Sys_FrmRB WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmRB WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmRB";
 		ds.Tables.add(dt);
 
 		// Sys_FrmImgAth.
-		sql = "SELECT * FROM Sys_FrmImgAth WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmImgAth WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmImgAth";
 		ds.Tables.add(dt);
 
 		// Sys_FrmImg.
-		sql = "SELECT * FROM Sys_FrmImg WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmImg WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmImg";
 		ds.Tables.add(dt);
 
 		// Sys_FrmAttachment.
-		sql = "SELECT * FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmAttachment";
 		ds.Tables.add(dt);
 
 		// Sys_FrmEvent.
-		sql = "SELECT * FROM Sys_FrmEvent WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmEvent WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmEvent";
 		ds.Tables.add(dt);
@@ -5273,7 +5274,7 @@ public class Flow extends BP.En.EntityNoName
 	public final String DoExp() throws Exception
 	{
 		this.DoCheck();
-		return Glo.getCCFlowAppPath() + "WF/Admin/Exp.jsp?CondType=0&FK_Flow=" + this.getNo();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Exp.jsp?CondType=0&FK_Flow=" + this.getNo();
 		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Admin/Exp.jsp?CondType=0&FK_Flow=" + this.getNo(), "单据", "cdsn", 800, 500, 210, 300);
 		//return null;
 	}
@@ -5285,7 +5286,7 @@ public class Flow extends BP.En.EntityNoName
 	public final String DoDRpt() throws Exception
 	{
 		this.DoCheck();
-		PubClass.WinOpen(ContextHolderUtils.getResponse(),Glo.getCCFlowAppPath() + "WF/Admin/WFRpt.jsp?CondType=0&FK_Flow=" + this.getNo(), "单据", "cdsn", 800, 500, 210, 300);
+		PubClass.WinOpen(ContextHolderUtils.getResponse(),BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/WFRpt.jsp?CondType=0&FK_Flow=" + this.getNo(), "单据", "cdsn", 800, 500, 210, 300);
 		return null;
 	}
 	/** 
@@ -6511,6 +6512,8 @@ public class Flow extends BP.En.EntityNoName
 							md.SetValByKey(dc.ColumnName, val);
 						}
 						md.Save();
+                        md.IntMapAttrs(); //初始化他的字段属性.
+
 					}
 			}
 			else if (dt.TableName.equals("Sys_MapExt"))
@@ -7361,7 +7364,7 @@ public class Flow extends BP.En.EntityNoName
 	public final void WritToGPM(String flowSort)
 	{
 
-		if (Glo.getOSModel() == OSModel.OneMore)
+		if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
 		{
  
 		}

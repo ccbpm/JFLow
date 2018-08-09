@@ -1550,6 +1550,8 @@ public class WF_WorkOpt extends WebContralBase {
            
 
            String fk_emp = this.GetRequestVal("AddEmps");
+           
+           
            Emp emp = new Emp(fk_emp);
 
            //查查是否存在队列里？

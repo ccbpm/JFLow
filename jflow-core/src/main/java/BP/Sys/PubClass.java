@@ -1016,8 +1016,9 @@ public class PubClass {
 	 * 为表增加注释
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String AddComment() {
+	public static String AddComment() throws Exception {
 		// 取出全部的实体
 		java.util.ArrayList als = ClassFactory.GetObjects("BP.En.Entities");
 		String msg = "";
@@ -1044,7 +1045,13 @@ public class PubClass {
 		return msg;
 	}
 
-	public static String AddComment(Entity en) {
+	public static String AddComment(Entity en) throws Exception {
+		
+		 
+		
+		if (DBAccess.IsExitsObject(en.getEnMap().getPhysicsTable())==false)
+			return "表不存在.";
+		
 		try {
 			switch (en.getEnMap().getEnDBUrl().getDBType()) {
 			case Oracle:
@@ -1068,6 +1075,8 @@ public class PubClass {
 	}
 
 	public static void AddCommentForTable_Ora(Entity en) throws Exception {
+		
+	  
 		en.RunSQL("comment on table " + en.getEnMap().getPhysicsTable() + " IS '" + en.getEnDesc() + "'");
 		SysEnums ses = new SysEnums();
 		for (Attr attr : en.getEnMap().getAttrs()) {
@@ -1261,8 +1270,9 @@ public class PubClass {
 	 * 产程系统报表，如果出现问题，就写入日志里面。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String DBRpt1(DBCheckLevel level, Entities ens) {
+	public static String DBRpt1(DBCheckLevel level, Entities ens) throws Exception {
 		Entity en = ens.getGetNewEntity();
 		if (en.getEnMap().getEnDBUrl().getDBUrlType() != DBUrlType.AppCenterDSN) {
 			return null;

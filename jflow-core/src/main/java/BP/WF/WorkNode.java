@@ -847,9 +847,22 @@ public class WorkNode {
 			break;
 		}
 
+		
+		//  #region 如果是子线城前进.
+          if (at == ActionType.SubThreadForward)
+          {
+              for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList())
+              {
+                  this.AddToTrack(at, wl, "子线程",this.town.getHisWork().getOID());
+              }
+              //写入到日志.
+          }
+          //#endregion 如果是子线城前进.
+          
 		// 把工作的当时信息存入数据库.
-		String json = this.getHisWork().ToJson();
-
+		//String json = this.getHisWork().ToJson();
+          if (at != ActionType.SubThreadForward)
+          {
 		if (this.HisWorkerLists.size() == 1) {
 			GenerWorkerList wl = (GenerWorkerList) ((this.HisWorkerLists.get(0) instanceof GenerWorkerList)
 					? this.HisWorkerLists.get(0) : null);
@@ -870,7 +883,7 @@ public class WorkNode {
 			this.AddToTrack(at, this.getExecer(), "多人接受(见信息栏)", town.getHisNode().getNodeID(),
 					town.getHisNode().getName(), info, this.getndFrom(), null, emps);
 		}
-
+        }
 		/// #endregion
 
 		/// #region 把数据加入变量中.
@@ -6742,6 +6755,106 @@ public class WorkNode {
 			this.rptGe.SetValByKey("Title", fromWK.GetValByKey("Title"));
 		}
 	}
+	
+	/// <summary>
+    /// 增加日志
+    /// </summary>
+    /// <param name="at"></param>
+    /// <param name="gwl"></param>
+    /// <param name="msg"></param>
+    public void AddToTrack(ActionType at, GenerWorkerList gwl, String msg, long subTreadWorkID) throws Exception
+    {
+        Track t = new Track();
+
+        if (this.getHisGenerWorkFlow().getFID() == 0)
+        {
+            t.setWorkID(subTreadWorkID);
+            t.setFID( this.getHisWork().getOID());
+        }
+        else
+        {
+            t.setWorkID( this.getHisWork().getOID());
+            t.setFID( this.getHisGenerWorkFlow().getFID());
+        }
+
+        t.setRDT( DataType.getCurrentDataTimess());
+        t.setHisActionType( at);
+
+        t.setNDFrom( this.getndFrom().getNodeID());
+        t.setNDFromT(this.getndFrom().getName());
+
+        t.setEmpFrom(this.getExecer());
+        t.setEmpFromT(this.getExecerName());
+        t.setFK_Flow( this.getHisNode().getFK_Flow());
+
+   //     t.Tag = tag + "@SendNode=" + this.HisNode.NodeID;
+
+        t.setNDTo( gwl.getFK_Node());
+        t.setNDToT( gwl.getFK_NodeText());
+
+        t.setEmpTo ( gwl.getFK_Emp());
+        t.setEmpToT ( gwl.getFK_EmpText());
+        t.setMsg ( msg);
+        //t.FrmDB = frmDBJson; //表单数据Json.
+
+        /*
+        switch (at)
+        {
+            case ActionType.Forward:
+            case ActionType.ForwardAskfor:
+            case ActionType.Start:
+            case ActionType.UnSend:
+            case ActionType.ForwardFL:
+            case ActionType.ForwardHL:
+            case ActionType.TeampUp:
+                //判断是否有焦点字段，如果有就把它记录到日志里。
+                if (this.HisNode.FocusField.Length > 1)
+                {
+                    string exp = this.HisNode.FocusField;
+                    if (this.rptGe != null)
+                        exp = Glo.DealExp(exp, this.rptGe, null);
+                    else
+                        exp = Glo.DealExp(exp, this.HisWork, null);
+
+                    t.Msg += exp;
+                    if (t.Msg.Contains("@"))
+                        Log.DebugWriteError("@在节点(" + this.HisNode.NodeID + " ， " + this.HisNode.Name + ")焦点字段被删除了,表达式为:" + this.HisNode.FocusField + " 替换的结果为:" + t.Msg);
+                }
+                break;
+            default:
+                break;
+        }
+
+
+        if (at == ActionType.SubThreadForward
+            || at == ActionType.StartChildenFlow
+            || at == ActionType.Start
+            || at == ActionType.Forward
+            || at == ActionType.SubThreadForward
+            || at == ActionType.ForwardHL
+            || at == ActionType.FlowOver)
+        {
+            if (this.HisNode.IsFL)
+                at = ActionType.ForwardFL;
+            t.FrmDB = this.HisWork.ToJson();
+        }*/
+
+       
+            // t.MyPK = t.WorkID + "_" + t.FID + "_"  + t.NDFrom + "_" + t.NDTo +"_"+t.EmpFrom+"_"+t.EmpTo+"_"+ DateTime.Now.ToString("yyMMddHHmmss");
+        t.Insert();
+       /*
+
+        if (at == ActionType.SubThreadForward
+          || at == ActionType.StartChildenFlow
+          || at == ActionType.Start
+          || at == ActionType.Forward
+          || at == ActionType.SubThreadForward
+          || at == ActionType.ForwardHL
+          || at == ActionType.FlowOver)
+        {
+            this.HisGenerWorkFlow.Paras_LastSendTruckID = t.MyPK;
+        }*/
+    }
 
 	/**
 	 * 增加日志

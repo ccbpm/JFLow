@@ -865,6 +865,21 @@ public class Glo {
 			if (clsName != null && clsName.contains("BP.CCIM")) {
 				continue;
 			}
+			
+			// 不安装CCIM的表.
+						if (clsName != null && clsName.contains("StartWork")) {
+							continue;
+						}
+			 
+			
+			// 不安装Work的表.
+			if (clsName != null && clsName.equals("BP.WF.Work")) {
+			    continue;
+			}
+						
+			if (clsName != null && clsName.equals("BP.WF.GEWork")) {
+				continue;
+			}
 
 			if (isInstallFlowDemo == false) {
 				// 如果不安装demo.

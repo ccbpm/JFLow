@@ -192,9 +192,7 @@ public abstract class EnObj implements Serializable {
 			}
 
 			if (attr.getDefaultValOfReal().contains("@") == false) {
-				// added by
-				// liuxc,2015-7-13,字符串类型的字段，如果有默认值的，按默认值填写值，比如审批意见默认为“同意”的等等
-
+				 
 				String val = this.GetValStrByKey(attr.getKey());
 				if (val == null || val == "")
 					this.SetValByKey(attr.getKey(), attr.getDefaultVal());

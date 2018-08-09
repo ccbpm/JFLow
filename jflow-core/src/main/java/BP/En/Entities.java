@@ -806,8 +806,9 @@ public abstract class Entities extends ArrayList<Entity>
 	
 	/**
 	 * 执行一次数据检查
+	 * @throws Exception 
 	 */
-	public final String DoDBCheck(DBCheckLevel level)
+	public final String DoDBCheck(DBCheckLevel level) throws Exception
 	{
 		return PubClass.DBRpt1(level, this);
 	}

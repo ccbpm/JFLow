@@ -616,10 +616,11 @@ function DDLAnsc(selectVal, ddlChild, fk_mapExt, param) {
         //此处修改，去掉直接选中上次的结果，避免错误数据的产生，edited by liuxc,2015-10-22
         //$("#" + ddlChild).prepend("<option value='' selected='selected' >*请选择</option");
         $("#" + ddlChild).val('');
-        var chg = $("#" + ddlChild).attr("onchange");
-        $("#" + ddlChild).change();
         //增加默认选择第一条数据
         ddl.options[0].selected = true;
+        var chg = $("#" + ddlChild).attr("onchange");
+        $("#" + ddlChild).change();
+       
     }
 }
 
@@ -740,10 +741,10 @@ function FullCtrl(selectVal, ctrlIdBefore, mapExt) {
         dbSrc = mapExt.Doc;
     var dataObj = GenerDB(dbSrc, selectVal, mapExt.DBType);
 
-    TableFullCtrl(dataObj);
+    TableFullCtrl(dataObj,ctrlIdBefore);
 }
 
-function TableFullCtrl(dataObj) {
+function TableFullCtrl(dataObj,ctrlIdBefore) {
 
     if ($.isEmptyObject(dataObj)) {
          // alert('系统错误不应该查询不到数据:'+dbSrc);
@@ -752,30 +753,59 @@ function TableFullCtrl(dataObj) {
 
     var data = dataObj[0]; //获得这一行数据.
 
-    //遍历属性，给属性赋值.
+
+    //针对主表或者从表的文本框自动填充功能，需要确定填充的ID
+     var beforeID = null;
+     var endId = null;
+
+    // 根据ddl 与 tb 不同。
+     if (ctrlIdBefore.indexOf('DDL_') > 1) {
+         beforeID = ctrlIdBefore.substring(0, ctrlIdBefore.indexOf('DDL_'));
+         endId = ctrlIdBefore.substring(ctrlIdBefore.lastIndexOf('_'));
+     } else {
+         beforeID = ctrlIdBefore.substring(0, ctrlIdBefore.indexOf('TB_'));
+         endId = ctrlIdBefore.substring(ctrlIdBefore.lastIndexOf('_'));
+     }
+
+     //遍历属性，给属性赋值.
+     var valID;
     for (var key in data) {
 
         var val = data[key];
-        var valID = $("#TB_" + key);
-
-        if (valID.length > 0) {
+        valID = $("#" + beforeID + "TB_" + key);
+        if (valID.length == 1) {
             valID.val(val);
             continue;
         }
-       
-
-        if (valID.length == 0)
-            valID = $("#DDL_" + key);
-
-        if (valID.length > 0) {
+        valID = $("#" + beforeID + "TB_" + key + endId);
+        if (valID.length == 1) {
             valID.val(val);
             continue;
         }
 
-        if (valID.length == 0)
-            valID = $("#CB_" + key);  
+        valID = $("#" + beforeID + "DDL_" + key)
+        if (valID.length == 1) {
+            valID.val(val);
+            continue;
+        }
+        valID = $("#" + beforeID + "DDL_" + key + endId);
+        if (valID.length == 1) {
+            valID.val(val);
+            continue;
+        }
 
-        if (valID.length > 0) {
+        valID = $("#" + beforeID + 'CB_' + key);
+        if (valID.length == 1) {
+            if (val == '1') {
+                valID.attr("checked", true);
+            } else {
+                valID.attr("checked", false);
+
+            }
+            continue;
+        }
+        valID = $("#" + beforeID + 'CB_' + key + endId);
+        if (valID.length == 1) {
             if (val == '1') {
                 valID.attr("checked", true);
             } else {
@@ -785,8 +815,10 @@ function TableFullCtrl(dataObj) {
             continue;
         }
 
+        
+
         //获取表单中所有的字段
-        if (valID.length == 0) {
+       if (valID.length == 0) {
             var tbs = $('input');
             $.each(tbs, function (i, tb) {
                 var name = $(tb).attr("id");

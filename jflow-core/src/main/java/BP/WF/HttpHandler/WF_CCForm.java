@@ -1421,9 +1421,7 @@ public class WF_CCForm extends WebContralBase {
 	public String FrmGener_Save() throws Exception {
 		// 保存主表数据.
 		GEEntity en = new GEEntity(this.getEnsName());
-		
-		
-		
+		 
 		// #region 求出 who is pk 值.
          long pk = this.getRefOID();
          if (pk == 0)
@@ -1464,8 +1462,7 @@ public class WF_CCForm extends WebContralBase {
          //#endregion  求who is PK.
 
          en.setOID(pk);
-         
-		en.setOID(this.getRefOID());
+          
 		int i = en.RetrieveFromDBSources();
 
 		en.ResetDefaultVal();
@@ -1473,7 +1470,7 @@ public class WF_CCForm extends WebContralBase {
 		Object tempVar = BP.Sys.PubClass.CopyFromRequest(en, this.getRequest());
 		en = (GEEntity) ((tempVar instanceof GEEntity) ? tempVar : null);
 
-		en.setOID(this.getRefOID());
+		en.setOID(pk);
 		if (i == 0) {
 			en.Insert();
 		} else {

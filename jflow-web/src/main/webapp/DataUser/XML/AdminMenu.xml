@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="yes"?>
+﻿<?xml version="1.0" standalone="yes"?>
 <NewDataSet>
   <!-- 管理员菜单:
   1, 用于显示在流程设计器功能菜单栏.
@@ -39,6 +39,7 @@
   <Item No="903" GroupNo="GPM" Name="权限组菜单" For="" Url="../../Comm/Search.htm?EnsName=BP.GPM.Groups"  />
   <Item No="904" GroupNo="GPM" Name="岗位菜单" For="" Url="../../Comm/Search.htm?EnsName=BP.GPM.StationExts"  />
   <Item No="905" GroupNo="GPM" Name="人员菜单" For="" Url="../../Comm/Search.htm?EnsName=BP.GPM.GPMEmps"  />
+  
   <!--  <Item No="906" GroupNo="GPM" Name="菜单台帐" For="" Url="../../Comm/Search.htm?EnsName=BP.GPM.Menus"  />--> 
   <Item No="907" GroupNo="GPM" Name="菜单树" For="" Url="../../Comm/Tree.htm?EnsName=BP.GPM.Menus"  />
 
@@ -48,6 +49,7 @@
   <Item No="502" GroupNo="Org" Name="部门台帐" For="admin" Url="../../Comm/Search.htm?EnsName=BP.WF.Port.SubInc.Depts"  />
   <Item No="503" GroupNo="Org" Name="人员台帐" For="" Url="../../Comm/Search.htm?EnsName=BP.WF.Port.SubInc.Emps"  />
   <Item No="504" GroupNo="Org" Name="组织结构维护" For="" Url="../../Comm/Search.htm?EnsName=BP.WF.Port.SubInc.AdminEmps"  />-->
+  
 
 
 </NewDataSet>

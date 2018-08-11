@@ -37,6 +37,7 @@ import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.EntitiesTree;
 import BP.En.Entity;
+import BP.En.EntityTree;
 import BP.En.EntityTreeAttr;
 import BP.En.FieldType;
 import BP.En.FieldTypeS;
@@ -389,6 +390,96 @@ public class WF_Comm extends WebContralBase {
     }
     //#endregion 树的实体
     
+	///#region 部门-人员关系.
+
+	public final String Tree_MapBaseInfo()
+	{
+		EntitiesTree enTrees = (EntitiesTree) ClassFactory.GetEns(this.getTreeEnsName());
+		
+		EntityTree enenTree = (EntityTree) enTrees.getGetNewEntity() ;
+		Entities ens = ClassFactory.GetEns(this.getEnsName());
+		Entity en = ens.getGetNewEntity();
+		java.util.Hashtable ht = new java.util.Hashtable();
+		ht.put("TreeEnsDesc", enenTree.getEnDesc());
+		ht.put("EnsDesc", en.getEnDesc());
+		ht.put("EnPK", en.getPK());
+		return BP.Tools.Json.ToJson(ht);
+	}
+
+	/** 
+	 获得树的结构
+	 
+	 @return 
+	 * @throws Exception 
+	*/
+	public final String TreeEn_Init() throws Exception
+	{
+		Object tempVar = ClassFactory.GetEns(this.getTreeEnsName());
+		EntitiesTree ens = (EntitiesTree)((tempVar instanceof EntitiesTree) ? tempVar : null);
+		ens.RetrieveAll(EntityTreeAttr.Idx);
+		return ens.ToJsonOfTree("0");
+	}
+
+	/** 
+	 获取树关联的集合
+	 
+	 @return 
+	 * @throws Exception 
+	*/
+	public final String TreeEmp_Init() throws Exception
+	{
+		DataSet ds = new DataSet();
+		String RefPK = this.GetRequestVal("RefPK");
+		String FK = this.GetRequestVal("FK");
+		//获取关联的信息集合
+		Entities ens = ClassFactory.GetEns(this.getEnsName());
+		ens.RetrieveByAttr(RefPK, FK);
+		DataTable dt = ens.ToDataTableField("GridData");
+		ds.Tables.add(dt);
+
+		//获取实体对应的列明
+		Entity en = ens.getGetNewEntity();
+		Map map = en.getEnMapInTime();
+		MapAttrs attrs = map.getAttrs().ToMapAttrs();
+		
+		//属性集合.
+		DataTable dtAttrs = new DataTable("Sys_MapAttr");
+		dtAttrs.Columns.Add("field", String.class);
+		dtAttrs.Columns.Add("title", String.class);
+		dtAttrs.Columns.Add("Width", Integer.class);
+		dtAttrs.Columns.Add("UIContralType", Integer.class);
+		DataRow row = null;
+		for (MapAttr attr : attrs.ToJavaList())
+		{
+			if (attr.getUIVisible() == false)
+			{
+				continue;
+			}
+
+			if (attr.getKeyOfEn() == this.getRefPK())
+			{
+				continue;
+			}
+
+			row = dtAttrs.NewRow();
+			row.setValue("field",attr.getKeyOfEn());
+			row.setValue("title",attr.getName());
+			row.setValue("Width",attr.getUIWidthInt()*2);
+			row.setValue("UIContralType",attr.getUIContralType().getValue());
+
+			if (attr.getHisAttr().getIsFKorEnum())
+			{
+				row.setValue("field",attr.getKeyOfEn() + "Text");
+			}
+			dtAttrs.Rows.add(row);
+		}
+
+		ds.Tables.add(dtAttrs);
+
+		return BP.Tools.Json.ToJson(ds);
+	}
+
+	///#endregion 部门-人员关系
 	// <summary>
 	// 获得实体
 	// </summary>

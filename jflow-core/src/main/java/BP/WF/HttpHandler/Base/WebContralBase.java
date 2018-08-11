@@ -409,7 +409,19 @@ public abstract class WebContralBase extends BaseController {
 
 		return str;
 	}
+	
+	public final String getTreeEnsName() {
+		String str = this.GetRequestVal("TreeEnsName");
 
+		if (str == null || str.equals("") || str.equals("null")) {
+			if (this.getEnName() == null)
+                return null;
+            return this.getEnName() + "s";
+		}
+
+		return str;
+	}
+	
 	public final String getMyPK() {
 		String str = this.GetRequestVal("MyPK");
 		if (str == null || str.equals("") || str.equals("null")) {

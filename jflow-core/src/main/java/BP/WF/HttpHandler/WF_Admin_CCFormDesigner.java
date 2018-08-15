@@ -1,6 +1,8 @@
 package BP.WF.HttpHandler;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -202,6 +204,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	public final String NewFrmGuide_GenerPinYin() throws Exception {
 		String isQuanPin = this.GetRequestVal("IsQuanPin");
 		String name = this.GetRequestVal("TB_Name");
+		name = URLDecoder.decode(name, "UTF-8");
 
 		String str = "";
 		if (isQuanPin.equals("1")) {

@@ -157,6 +157,13 @@ public class RptDfine extends EntityNoName {
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
+		
+		 rm.Title = "执行分析";
+         rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
+         rm.ClassMethodName = this.toString() + ".DoGroup_MyStartFlow()";
+         rm.refMethodType = RefMethodType.RightFrameOpen;
+         rm.GroupName = "我发起的流程";
+         map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "恢复设置";
@@ -210,6 +217,14 @@ public class RptDfine extends EntityNoName {
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我参与的流程";
 		map.AddRefMethod(rm);
+		
+		 rm = new RefMethod();
+         rm.Title = "执行分析";
+         rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
+         rm.ClassMethodName = this.toString() + ".DoGroup_MyJoinFlow()";
+         rm.refMethodType = RefMethodType.RightFrameOpen;
+         rm.GroupName = "我参与的流程";
+         map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "恢复设置";
@@ -263,6 +278,14 @@ public class RptDfine extends EntityNoName {
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
+		
+		 rm = new RefMethod();
+         rm.Title = "执行分析";
+         rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
+         rm.ClassMethodName = this.toString() + ".DoGroup_MyDeptFlow()";
+         rm.refMethodType = RefMethodType.RightFrameOpen;
+         rm.GroupName = "本部门发起的流程";
+         map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "恢复设置";
@@ -316,6 +339,14 @@ public class RptDfine extends EntityNoName {
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
+		
+	   rm = new RefMethod();
+       rm.Title = "执行分析";
+       rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
+       rm.ClassMethodName = this.toString() + ".DoGroup_AdminerFlow()";
+       rm.refMethodType = RefMethodType.RightFrameOpen;
+       rm.GroupName = "高级查询";
+       map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "恢复设置";
@@ -539,6 +570,15 @@ public class RptDfine extends EntityNoName {
 	public final String DoSearch_MyStartFlow() {
 		return "../../RptDfine/FlowSearch.htm?SearchType=My&FK_Flow=" + this.getNo();
 	}
+	
+	/**
+	 * 分析
+	 * 
+	 * @return
+	 */
+	public final String DoGroup_MyStartFlow() {
+		return "../../RptDfine/Group.htm?SearchType=My&FK_Flow=" + this.getNo();
+	}
 
 	/// #endregion
 
@@ -596,6 +636,15 @@ public class RptDfine extends EntityNoName {
 	 */
 	public final String DoSearch_MyJoinFlow() {
 		return "../../RptDfine/FlowSearch.htm?SearchType=MyJoin&FK_Flow=" + this.getNo();
+	}
+	
+	/**
+	 * 分析
+	 * 
+	 * @return
+	 */
+	public final String DoGroup_MyJoinFlow() {
+		return "../../RptDfine/Group.htm?SearchType=MyJoin&FK_Flow=" + this.getNo();
 	}
 
 	/// #endregion 我参与的流程
@@ -655,6 +704,16 @@ public class RptDfine extends EntityNoName {
 	public final String DoSearch_MyDeptFlow() {
 		return "../../RptDfine/FlowSearch.htm?SearchType=MyDept&FK_Flow=" + this.getNo();
 	}
+	
+	/**
+	 * 分析
+	 * 
+	 * @return
+	 */
+	public final String DoGroup_MyDeptFlow() {
+		return "../../RptDfine/Group.htm?SearchType=MyDept&FK_Flow=" + this.getNo();
+	}
+
 
 	/// #endregion 本部门发起的流程
 
@@ -713,6 +772,16 @@ public class RptDfine extends EntityNoName {
 	public final String DoSearch_AdminerFlow() {
 		return "../../RptDfine/FlowSearch.htm?SearchType=Adminer&FK_Flow=" + this.getNo();
 	}
+	
+	/**
+	 * 分析
+	 * 
+	 * @return
+	 */
+	public final String DoGroup_AdminerFlow() {
+		return "../../RptDfine/Group.htm?SearchType=Adminer&FK_Flow=" + this.getNo();
+	}
+
 
 	/// #endregion 高级查询
 

@@ -342,7 +342,7 @@ public class WF_Comm extends WebContralBase {
 
         DataTable dt = qo.DoQueryToTable();
 
-        String filePath = ExportDGToExcel(dt, en,en.getEnDesc());
+        String filePath = ExportDGToExcel(dt, en,en.getEnDesc(),null);
 
 
         return filePath;
@@ -1619,7 +1619,7 @@ public class WF_Comm extends WebContralBase {
 		Entity en = ens.getGetNewEntity();
 		String name = "数据导出";
 		String filename = name + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getName() + ".xls";
-		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name);
+		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name,null);
 		// DataTableToExcel(Search_Data(ens, en),en, filename, name,
 		// BP.Web.WebUser.Name, true, true, true);
 

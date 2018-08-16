@@ -1745,6 +1745,41 @@ public class QueryObject
 		}
 	}
 	
+	
+	 public DataTable DoGroupQueryToTable(String selectSQl,String groupBy,String orderBy) throws Exception
+     {
+         String sql = this.getSQL();
+         String ptable = this.getEn().getEnMap().getPhysicsTable();
+         String pk = this.getEn().getPKField();
+
+         switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
+         {
+             case Oracle:
+                 if (this._sql == "" || this._sql == null)
+                     sql = selectSQl + " FROM " + ptable + "WHERE " + groupBy + orderBy;
+                 else
+                     sql =  selectSQl + sql.substring(sql.indexOf(" FROM ")) + groupBy + orderBy;
+                 break;
+             default:
+                 if (this._sql == "" || this._sql == null)
+                     sql =  selectSQl + " FROM " + ptable + "WHERE " + groupBy + orderBy;
+                 else
+                 {
+                     sql = sql.substring(sql.indexOf(" FROM "));
+                     if (sql.indexOf("ORDER BY") >= 0)
+                         sql = sql.substring(0, sql.indexOf("ORDER BY") - 1);
+                     sql = selectSQl + sql + groupBy + orderBy;
+                 }
+
+
+               
+                 break;
+         }
+        return DBAccess.RunSQLReturnTable(sql, this.getMyParas());
+            
+     }
+	 
+	
 	/**
 	 * 最大的数量
 	 * 

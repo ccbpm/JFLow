@@ -920,7 +920,7 @@ public abstract class WebContralBase extends BaseController {
 
 	}
 	
-	protected String ExportDGToExcel(DataTable dt, Entity en, String title) throws Exception {
+	protected String ExportDGToExcel(DataTable dt, Entity en, String title, Attrs mapAttrs) throws Exception {
 
 		for (DataRow dr : dt.Rows) {
 
@@ -941,8 +941,6 @@ public abstract class WebContralBase extends BaseController {
 			file.delete();
 		}
 
-		// String httpFilePath =
-		// Glo.getCCFlowAppPath()+"DataUser/Temp/"+fileName;
 		int headerRowIndex = 0; // 文件标题行序
 		int titleRowIndex = 1; // 列标题行序
 		int countCell = 0;// 显示的列数
@@ -960,7 +958,11 @@ public abstract class WebContralBase extends BaseController {
 		HSSFCell cell = null;
 
 		// 生成标题
-		Attrs attrs = en.getEnMap().getAttrs();
+		Attrs attrs = null;
+		if(mapAttrs!=null)
+			attrs = mapAttrs;
+		else
+			attrs = en.getEnMap().getAttrs();
 		Attrs selectedAttrs = null;
 		UIConfig cfg = new UIConfig(en);
 		if (cfg.getShowColumns().length == 0)
@@ -988,14 +990,25 @@ public abstract class WebContralBase extends BaseController {
 		for (int i = 0; i < selectedAttrs.size(); i++) {
 			Attr attr = selectedAttrs.get(i);
 
-			if (attr.getUIVisible() == false)
-				continue;
+			//if (attr.getUIVisible() == false)
+			//	continue;
 
 			if (attr.getKey() == "MyNum")
 				continue;
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue(attr.getDesc());
+			
+			 if (attr.getIsFKorEnum())
+                 continue;
+             if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt") 
+                 || attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
+                 || attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
+                 continue;
+             
+             cell = row.createCell(index);
+ 			 cell.setCellStyle(style);
+             if(attr.getMyFieldType() == FieldType.RefText)
+            	 cell.setCellValue(attr.getDesc().replace("名称",""));  
+             else
+            	 cell.setCellValue(attr.getDesc());
 			index += 1;
 			countCell++;
 		}

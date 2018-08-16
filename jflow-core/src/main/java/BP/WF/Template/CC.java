@@ -75,10 +75,7 @@ public class CC extends Entity
          {
              if (this.getCCStaWay() == CCStaWay.StationOnly)
              {
-                 /* 如果抄送到岗位. */
-                 if (Glo.getOSModel() == OSModel.OneOne)
-                     sql = "SELECT No,Name FROM Port_Emp A, Port_EmpStation B, WF_CCStation C  WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Node="+this.getNodeID();
-                 else
+                
                      sql = "SELECT No,Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C  WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Node=" + this.getNodeID();
 
                  mydt = DBAccess.RunSQLReturnTable(sql);
@@ -100,10 +97,7 @@ public class CC extends Entity
                  else
                      deptNo = DBAccess.RunSQLReturnStringIsNull("SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + workid + " AND IsEnable=1 AND IsPass=0", BP.Web.WebUser.getFK_Dept());
 
-                 /* 抄送到当前登陆人. */
-                 if (Glo.getOSModel() == OSModel.OneOne)
-                     sql = "SELECT No,Name FROM Port_Emp A, Port_EmpStation B, WF_CCStation C WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node=" + this.getNodeID() + " AND A.FK_Dept='" + deptNo + "'";
-                 else
+               
                      sql = "SELECT No,Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node=" + this.getNodeID() + " AND B.FK_Dept='" + deptNo + "'";
 
                  mydt = DBAccess.RunSQLReturnTable(sql);
@@ -118,10 +112,7 @@ public class CC extends Entity
 
              if (this.getCCStaWay() == CCStaWay.StationAdndDept)
              {
-                 /* 如果抄送到岗位与部门的交集. */
-                 if (Glo.getOSModel() == OSModel.OneOne)
-                     sql = "SELECT No,Name FROM Port_Emp A, Port_EmpStation B, WF_CCStation C, WF_CCDept D WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND A.FK_Dept=D.FK_Dept AND C.FK_Node=D.FK_Node AND D.FK_Node="+this.getNodeID();
-                 else
+                
                      sql = "SELECT No,Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C, WF_CCDept D WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND A.FK_Dept=D.FK_Dept AND B.FK_Dept=D.FK_Dept AND C.FK_Node="+this.getNodeID()+" AND D.FK_Node="+this.getNodeID();
 
                  mydt = DBAccess.RunSQLReturnTable(sql);
@@ -150,10 +141,7 @@ public class CC extends Entity
                  {
                      BP.Port.Dept dept = new Dept(deptNo);
 
-                     /* 抄送到当前登陆人. */
-                     if (Glo.getOSModel() == OSModel.OneOne)
-                         sql = "SELECT No,Name FROM Port_Emp A, Port_EmpStation B, WF_CCStation C WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node="+this.getNodeID()+" AND A.FK_Dept='"+deptNo+"'";
-                     else
+                  
                          sql = "SELECT No,Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node="+this.getNodeID()+" AND B.FK_Dept='"+deptNo+"'";
 
                      mydt = DBAccess.RunSQLReturnTable(sql);

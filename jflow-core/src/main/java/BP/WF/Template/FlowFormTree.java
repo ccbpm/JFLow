@@ -29,12 +29,12 @@ public class FlowFormTree extends EntityTree
 	 是否可编辑
 	 
 	*/
-	private String privateIsEdit;
-	public final String getIsEdit()
+	private int privateIsEdit;
+	public final int getIsEdit()
 	{
 		return privateIsEdit;
 	}
-	public final void setIsEdit(String value)
+	public final void setIsEdit(int value)
 	{
 		privateIsEdit = value;
 	}

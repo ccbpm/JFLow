@@ -1,7 +1,5 @@
 package BP.WF.DTS;
-
 import java.io.File;
-
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.Log;
@@ -11,7 +9,6 @@ import BP.En.QueryObject;
 import BP.Port.Dept;
 import BP.Port.Depts;
 import BP.Port.Emp;
-import BP.Port.EmpStations;
 import BP.Port.Emps;
 import BP.Port.Station;
 import BP.Port.Stations;
@@ -180,17 +177,7 @@ public class OneKeyLoadTemplete extends Method
 					item.DirectInsert(); //插入数据.
 				}
 			}
-			
-			//EmpStations.
-			EmpStations ess = new EmpStations();
-			ess.ClearTable();
-			dt = ds.hashTables.get("Port_EmpStation");
-			Object tempVar5 = QueryObject.InitEntitiesByDataTable(ess, dt, null);
-			ess = (EmpStations)((tempVar5 instanceof EmpStations) ? tempVar5 : null);
-			for (Object item : ess)
-			{
-				((Entity) item).DirectInsert(); //插入数据.
-			}
+		 
 			
 			///#endregion 2 组织结构.
 			

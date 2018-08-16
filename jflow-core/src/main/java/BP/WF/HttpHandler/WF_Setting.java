@@ -59,8 +59,7 @@ public class WF_Setting extends WebContralBase
 		//部门名称.
 		ht.put("DeptName", emp.getFK_DeptText());
 
-		if (SystemConfig.getOSModel() == OSModel.OneMore)
-		{
+		 
 			BP.GPM.DeptEmpStations des = new BP.GPM.DeptEmpStations();
 			des.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Emp, WebUser.getNo());
 
@@ -80,25 +79,9 @@ public class WF_Setting extends WebContralBase
 
 			ht.put("Depts", depts);
 			ht.put("Stations", stas);
-		}
+		
 
-		if (SystemConfig.getOSModel() == OSModel.OneOne)
-		{
-			BP.Port.EmpStations des = new BP.Port.EmpStations();
-			des.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Emp, WebUser.getNo());
-
-			String depts = "";
-			String stas = "";
-
-			for (BP.Port.EmpStation item : des.ToJavaList())
-			{
-				BP.Port.Station sta = new Station(item.getFK_Station());
-				stas += sta.getName() + "、";
-			}
-
-			ht.put("Depts", emp.getFK_DeptText());
-			ht.put("Stations", stas);
-		}
+		 
 
 		BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(WebUser.getNo());
 		ht.put("Tel", wfemp.getTel());

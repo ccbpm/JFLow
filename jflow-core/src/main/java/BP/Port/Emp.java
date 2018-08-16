@@ -38,18 +38,7 @@ public class Emp extends EntityNoName
 					+ ex.getMessage());
 		}
 	}
-	
-	/**
-	 * 工作岗位集合。
-	 * @throws Exception 
-	 */
-	public final Stations getHisStations() throws Exception
-	{
-		EmpStations sts = new EmpStations();
-		Stations mysts = sts.GetHisStations(this.getNo());
-		return mysts;
-		// return new Station(this.FK_Station);
-	}
+	 
 	
 	/**
 	 * 工作部门集合
@@ -133,21 +122,7 @@ public class Emp extends EntityNoName
 	{
 	}
 	
-	@Override
-	protected boolean beforeDelete() throws Exception
-	{
-		try
-		{
-			// 删除岗位
-			EmpStations empStation = new EmpStations();
-			empStation.Delete(EmpStationAttr.FK_Emp, getNo());
-			
-		 
-		} catch (Exception e)
-		{
-		}
-		return super.beforeDelete();
-	}
+	 
 	
 	/**
 	 * 操作员
@@ -238,10 +213,7 @@ public class Emp extends EntityNoName
 		map.AddSearchAttr(EmpAttr.FK_Dept);
 		
 		 
-		map.getAttrsOfOneVSM().Add(new EmpStations(), new Stations(),
-				EmpStationAttr.FK_Emp, EmpStationAttr.FK_Station,
-				DeptAttr.Name, DeptAttr.No, "岗位权限");
-		
+		 
 		// 不带有参数的方法.
 		// xiaozhoupeng 注掉，原因不需要销毁人员 Start
 		// RefMethod rm = new RefMethod();

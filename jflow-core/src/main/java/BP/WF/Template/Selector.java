@@ -450,28 +450,17 @@ public class Selector extends Entity
 
 		//部门.
 		String sql = "";
-		if (SystemConfig.getOSModel() == OSModel.OneOne)
-		{
-			sql = "SELECT distinct a.No, a.Name, a.ParentNo FROM Port_Dept a, WF_NodeStation b, Port_EmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID;
-		}
-		else
-		{
+		 
 			sql = "SELECT distinct a.No, a.Name, a.ParentNo FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID;
-		}
+		 
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
 		ds.Tables.add(dt);
 
-		//人员.
-		if (SystemConfig.getOSModel() == OSModel.OneOne)
-		{
-			sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_EmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID;
-		}
-		else
-		{
+	 
 			sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID;
-		}
+		 
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
@@ -490,24 +479,7 @@ public class Selector extends Entity
 		// 定义数据容器.
 		DataSet ds = new DataSet();
 
-		if (SystemConfig.getOSModel() == OSModel.OneOne)
-		{
-			//部门.
-			String sql = "SELECT distinct a.No, a.Name, a.ParentNo FROM Port_Dept a, WF_NodeStation b, Port_EmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID;
-			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Depts";
-			ds.Tables.add(dt);
-
-
-			//人员.
-			sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_EmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID;
-			DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			dtEmp.TableName = "Emps";
-			ds.Tables.add(dtEmp);
-		}
-
-		if (SystemConfig.getOSModel() == OSModel.OneMore)
-		{
+		  
 			//部门.
 			String sql = "SELECT distinct a.No, a.Name, a.ParentNo FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID;
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -519,7 +491,7 @@ public class Selector extends Entity
 			DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dtEmp.TableName = "Emps";
 			ds.Tables.add(dtEmp);
-		}
+		
 
 
 		return ds;

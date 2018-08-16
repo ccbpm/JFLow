@@ -584,25 +584,11 @@ public class FindWorker
 			///#region 按部门与岗位的交集计算.
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 		{
-			//added by liuxc,2015.6.29.
-			//区别集成与BPM模式
-			if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneOne)
-			{
-				sql = " SELECT a.No,a.Name FROM Port_Emp A, WF_NodeDept B, WF_NodeStation C, Port_EmpStation D ";
-				sql += " WHERE A.FK_Dept=B.FK_Dept AND A.No=D.FK_Emp AND C.FK_Station=D.FK_Station AND B.FK_Node=C.FK_Node ";
-				sql += " AND B.FK_Node=" + dbStr + "FK_Node";
-
-				ps = new Paras();
-				ps.Add("FK_Node", town.getHisNode().getNodeID());
-				ps.SQL = sql;
-				dt = DBAccess.RunSQLReturnTable(ps);
-			}
-			else
-			{
+			 
 				sql = "SELECT pdes.FK_Emp AS No" + " FROM   Port_DeptEmpStation pdes" + " INNER JOIN WF_NodeDept wnd ON wnd.FK_Dept = pdes.FK_Dept" + " AND wnd.FK_Node = " + town.getHisNode().getNodeID() + " INNER JOIN WF_NodeStation wns ON  wns.FK_Station = pdes.FK_Station" + " AND wns.FK_Node =" + town.getHisNode().getNodeID() + " ORDER BY pdes.FK_Emp";
 
 				dt = DBAccess.RunSQLReturnTable(sql);
-			}
+			
 
 			if (dt.Rows.size() > 0)
 			{
@@ -894,14 +880,9 @@ public class FindWorker
 			{
 				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 				{
-					if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneMore)
-					{
+				 
 						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B         WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
-					}
-					else
-					{
-						sql = "SELECT FK_Emp as No FROM Port_EmpStation A, WF_NodeStation B, Port_Emp C WHERE A.FK_Station=B.FK_Station AND A.FK_Emp=C.No  AND B.FK_Node=" + dbStr + "FK_Node AND C.FK_Dept=" + dbStr + "FK_Dept";
-					}
+					 
 					ps = new Paras();
 					ps.SQL = sql;
 					ps.Add("FK_Node", town.getHisNode().getNodeID());
@@ -1101,11 +1082,9 @@ public class FindWorker
 		
 		 if (this.town.getHisNode().getIsExpSender() == true)
          {
-		   if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneMore)
-			   sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
-		   else
-			 sql = "SELECT FK_Emp as No FROM Port_EmpStation A, WF_NodeStation B, Port_Emp C WHERE A.FK_Station=B.FK_Station AND A.FK_Emp=C.No AND B.FK_Node=" + dbStr + "FK_Node AND C.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
 		   
+			   sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
+		    
 			ps.SQL = sql;
 			ps.Add("FK_Node", town.getHisNode().getNodeID());
 			ps.Add("FK_Dept", deptNo);
@@ -1113,11 +1092,9 @@ public class FindWorker
 		 
          }else
          {
-        	 if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneMore)
-  			   sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept ";
-  		   else
-  			 sql = "SELECT FK_Emp as No FROM Port_EmpStation A, WF_NodeStation B, Port_Emp C WHERE A.FK_Station=B.FK_Station AND A.FK_Emp=C.No AND B.FK_Node=" + dbStr + "FK_Node AND C.FK_Dept=" + dbStr + "FK_Dept ";
         	 
+  			   sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept ";
+  		  
         		ps.SQL = sql;
         		ps.Add("FK_Node", town.getHisNode().getNodeID());
         		ps.Add("FK_Dept", deptNo);

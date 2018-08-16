@@ -109,13 +109,10 @@ public class WF_Admin extends WebContralBase {
 					|| nd.getHisDeliveryWay().equals(DeliveryWay.ByStationOnly))// 如果是BPM
 																				// 就不能工作.
 			{
-				if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneOne) {
-					sql = "SELECT Port_Emp.No  FROM Port_Emp LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_EmpStation on (fk_emp=Port_Emp.No)   join WF_NodeStation on (WF_NodeStation.fk_station=Port_Empstation.fk_station) WHERE (1=1) AND  FK_Node="
-							+ nd.getNodeID();
-				} else {
+			 
 					sql = "SELECT Port_Emp.No  FROM Port_Emp LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.No)   join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node="
 							+ nd.getNodeID();
-				}
+				
 			}
 
 			if (nd.getHisDeliveryWay().equals(DeliveryWay.ByDept)) {

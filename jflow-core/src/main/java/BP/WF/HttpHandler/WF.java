@@ -200,6 +200,15 @@ public class WF extends WebContralBase
 
             return "url@" + nd.getFormUrl() + "?IsReadonly=1&WorkID=" + workid + "&FK_Node=" + nd.getNodeID() + "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt;
         }
+        
+        
+        if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.SheetAutoTree)
+            return "url@../../MyFlowTreeReadonly.htm?3=4&WorkID=" +this.getWorkID() + "&FID=" + this.getFID() + "&OID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + this.getWorkID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
+
+        
+       // if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.SheetAutoTree)
+         //   return "url@../../../MyFlowTreeReadonly.htm?3=4&FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
+
 
         Work wk = nd.getHisWork();
         wk.setOID( workid);
@@ -229,10 +238,7 @@ public class WF extends WebContralBase
             return "err@" + err;
         }
 
-        
-        if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.SheetAutoTree)
-            return "url@../../../MyFlowTreeReadonly.htm?3=4&FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
-
+       
         if (nd.getHisFormType() == NodeFormType.FreeForm)
         {
             MapData md = new MapData(nd.getNodeFrmID());

@@ -82,20 +82,7 @@ public class Nodes extends EntitiesOID
 		this.AddEntities(nds);
 		return this.size();
 	}
-	/** 
-	 开始节点
-	 * @throws Exception 
-	*/
-	public final void RetrieveStartNode() throws Exception
-	{
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(NodeAttr.NodePosType, NodePosType.Start.getValue());
-		qo.addAnd();
-		qo.AddWhereInSQL(NodeAttr.NodeID, "SELECT FK_Node FROM WF_NodeStation WHERE FK_STATION IN (SELECT FK_STATION FROM Port_EmpSTATION WHERE FK_Emp='" + BP.Web.WebUser.getNo() + "')");
-
-		qo.addOrderBy(NodeAttr.FK_Flow);
-		qo.DoQuery();
-	}
+ 
 
 		///#endregion
 

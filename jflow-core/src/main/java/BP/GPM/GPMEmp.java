@@ -23,8 +23,7 @@ public class GPMEmp extends EntityNoName
 			return true;
 		}
 
-		if (BP.Sys.SystemConfig.getOSModel() == OSModel.OneMore)
-		{
+		 
 			String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp='" + this.getNo() + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
@@ -36,22 +35,9 @@ public class GPMEmp extends EntityNoName
 			{
 				return false;
 			}
-		}
+		
 
-		if (BP.Sys.SystemConfig.getOSModel() == OSModel.OneOne)
-		{
-			String sql = "SELECT COUNT(FK_Emp) FROM Port_EmpStation WHERE FK_Emp='" + this.getNo() + "'";
-			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
-			{
-				return false;
-			}
-
-			sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp='" + this.getNo() + "'";
-			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
-			{
-				return false;
-			}
-		}
+		 
 
 		return true;
 	}

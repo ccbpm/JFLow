@@ -5149,21 +5149,7 @@ public class WorkNode {
                 //按照岗位与部门的交集.
                 if (node.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
                 {
-                    //added by liuxc,2015.6.29.
-                    //区别集成与BPM模式
-                    if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneOne)
-                    {
-                        sql = " SELECT a.No,a.Name FROM Port_Emp A, WF_NodeDept B, WF_NodeStation C, Port_EmpStation D ";
-                        sql += " WHERE A.FK_Dept=B.FK_Dept AND A.No=D.FK_Emp AND C.FK_Station=D.FK_Station AND B.FK_Node=C.FK_Node ";
-                        sql += " AND B.FK_Node=" + dbStr + "FK_Node";
-
-                        ps = new Paras();
-                        ps.Add("FK_Node", node.getNodeID());
-                        ps.SQL = sql;
-                        dt = DBAccess.RunSQLReturnTable(ps);
-                    }
-                    else
-                    {
+                    
                         sql = "SELECT pdes.FK_Emp AS No"
                               + " FROM   Port_DeptEmpStation pdes"
                               + " INNER JOIN WF_NodeDept wnd ON wnd.FK_Dept = pdes.FK_Dept"
@@ -5173,7 +5159,7 @@ public class WorkNode {
                               + " ORDER BY pdes.FK_Emp";
 
                         dt = DBAccess.RunSQLReturnTable(sql);
-                    }
+                    
 
                     if (dt.Rows.size() == 0)
 						try {

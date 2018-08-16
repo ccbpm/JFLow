@@ -44,7 +44,7 @@ public class UAC
 		ps.Add("user", WebUser.getNo());
 		ps.Add("st", fk_station);
 		
-		if (DBAccess.IsExits("SELECT FK_Emp FROM Port_EmpStation WHERE FK_Emp="
+		if (DBAccess.IsExits("SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Emp="
 				+ SystemConfig.getAppCenterDBVarStr() + "user AND FK_Station="
 				+ SystemConfig.getAppCenterDBVarStr() + "st", ps))
 		{

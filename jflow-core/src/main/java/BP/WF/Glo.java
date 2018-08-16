@@ -2196,11 +2196,9 @@ public class Glo {
 	 * 根据配置的信息不同，从不同的表里获取人员岗位信息。
 	 */
 	public static String getEmpStation() {
-		if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneMore) {
+		 
 			return "Port_DeptEmpStation";
-		} else {
-			return "Port_EmpStation";
-		}
+		 
 	}
 
 	public static String getEmpDept() {

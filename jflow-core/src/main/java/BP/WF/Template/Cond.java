@@ -7,7 +7,6 @@ import BP.En.Attr;
 import BP.En.Entity;
 import BP.En.EntityMyPK;
 import BP.En.Map;
-import BP.Port.EmpStations;
 import BP.Sys.GEEntity;
 import BP.Sys.MapAttr;
 import BP.Sys.OSModel;
@@ -483,19 +482,7 @@ public class Cond extends EntityMyPK
 		{
 			String strs = this.getOperatorValue().toString();
 			String strs1 = "";
-			if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
-			{
-				BP.Port.EmpStations sts = new BP.Port.EmpStations(this.getSpecOper());
-				for (BP.Port.EmpStation st : EmpStations.convertEmpStations(sts))
-				{
-					if (strs.contains("@" + st.getFK_Station() + "@"))
-					{
-						this.MsgOfCond = "@以岗位判断方向，条件为true：岗位集合" + strs + "，操作员(" + BP.Web.WebUser.getNo() + ")岗位:" + st.getFK_Station() + st.getFK_StationT();
-						return true;
-					}
-					strs1 += st.getFK_Station() + "-" + st.getFK_StationT();
-				}
-			}
+			 
 
 			if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneMore)
 			{

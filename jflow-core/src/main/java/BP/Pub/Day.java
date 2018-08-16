@@ -4,8 +4,8 @@ import BP.En.SimpleNoNameFix;
 
 public class Day extends SimpleNoNameFix
 {
-	// 实现基本的方方法
-	
+	// 实现基本的方方法 
+	 
 	/**
 	 * 物理表
 	 */

@@ -345,58 +345,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		String rootid = getRequest().getParameter("rootid");
 
-		if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
-		{
-			BP.Port.Depts depts = new BP.Port.Depts();
-			depts.Retrieve(BP.Port.DeptAttr.ParentNo, rootid, BP.Port.DeptAttr.Name);
-			BP.Port.Stations sts = new BP.Port.Stations();
-			sts.RetrieveAll();
-			BP.Port.Emps emps = new BP.Port.Emps();
-			emps.Retrieve(BP.Port.EmpAttr.FK_Dept, rootid, BP.Port.EmpAttr.Name);
-			BP.Port.EmpStations empsts = new BP.Port.EmpStations();
-			empsts.RetrieveAll();
-
-			BP.Port.EmpStations ess = null;
-			java.util.ArrayList<String> insts = new java.util.ArrayList<String>();
-			java.util.ArrayList<BP.Port.Emp> inemps = new java.util.ArrayList<BP.Port.Emp>();
-
-			//增加部门
-			for (BP.Port.Dept dept : depts.ToJavaList())
-			{
-				dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
-			}
-
-			//增加岗位
-			for (BP.Port.Emp emp : emps.ToJavaList())
-			{
-				ess = new BP.Port.EmpStations();
-				ess.Retrieve(BP.Port.EmpStationAttr.FK_Emp, emp.getNo());
-
-				for (BP.Port.EmpStation es : ess.ToJavaList())
-				{
-					if (insts.contains(es.getFK_Station()))
-					{
-						continue;
-					}
-
-					insts.add(es.getFK_Station());
-					dt.Rows.AddDatas(es.getFK_Station(), rootid, es.getFK_StationT(), "STATION");
-				}
-
-				if (ess.size() == 0)
-				{
-					inemps.add(emp);
-				}
-			}
-
-			//增加没有岗位的人员
-			for (BP.Port.Emp emp : inemps)
-			{
-				dt.Rows.AddDatas(emp.getNo(), rootid, emp.getName(), "EMP");
-			}
-		}
-		else
-		{
+		 
 			BP.GPM.Depts depts = new BP.GPM.Depts();
 			depts.Retrieve(BP.GPM.DeptAttr.ParentNo, rootid);
 			BP.GPM.Stations sts = new BP.GPM.Stations();
@@ -450,7 +399,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				emp = new BP.GPM.Emp(inemp);
 				dt.Rows.AddDatas(emp.getNo(), rootid, emp.getName(), "EMP");
 			}
-		}
+		
 
 		return BP.Tools.Json.ToJson(dt);
 	}

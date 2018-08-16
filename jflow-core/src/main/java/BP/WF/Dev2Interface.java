@@ -3344,6 +3344,7 @@ public class Dev2Interface {
 	 * @throws Exception
 	 */
 	public static void Port_Login(String userNo, String sid) throws Exception {
+		
 		if (userNo.equals(WebUser.getNo())) {
 			return;
 		}
@@ -3357,7 +3358,7 @@ public class Dev2Interface {
 				throw new RuntimeException("用户不存在或者SID错误。");
 			}
 
-			if (!dt.Rows.get(0).get("SID").toString().equals(sid)) {
+			if (!dt.Rows.get(0).get("SID").toString().equals(sid)) {				
 				throw new RuntimeException("用户不存在或者SID错误。");
 			}
 		}

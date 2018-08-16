@@ -279,14 +279,12 @@ public class AppACE extends WebContralBase{
 		BP.Port.Emp emp = new Emp();
 		emp.setNo(userNo);
 		if (emp.RetrieveFromDBSources() ==0)
-		{
 			return "err@用户名或者密码错误.";
-		}
+	
 
-		if (!pass.equals(emp.getPass()))
-		{
+		if (emp.CheckPass(pass)==false)		
 			return "err@用户名或者密码错误.";
-		}
+		
 
 		//调用登录方法.
 		try {

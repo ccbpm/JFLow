@@ -422,6 +422,8 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
                   dt.Columns.get(6).setColumnName("W");                
                    
               }
+              
+              ds.Tables.add( dt);
               return BP.Tools.Json.ToJson(ds);
 			
 		} catch (RuntimeException ex) {

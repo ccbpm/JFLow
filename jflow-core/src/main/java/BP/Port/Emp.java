@@ -10,6 +10,7 @@ import BP.En.Map;
 import BP.En.QueryObject;
 import BP.En.UAC;
 import BP.GPM.EmpAttr;
+import BP.Sys.SystemConfig;
 
 /**
  * Emp 的摘要说明。
@@ -101,10 +102,24 @@ public class Emp extends EntityNoName
 	 */
 	public final boolean CheckPass(String pass)
 	{
+		
+		if (1==1)
+			return true;
+		 
+		 //启用加密
+    //    if (SystemConfig.getIsEnablePasswordEncryption() == true)
+      //      pass = BP.Tools.Cryptography.EncryptString(pass);
+
+        /*使用数据库校验.*/
+        if (this.getPass().equals( pass)==true)
+            return true;
+        
 //		if (SystemConfig.getIsDebug())
 //		{
 //			return true;
 //		}
+		//UserService.encryptPassword();
+		
 		if (this.getPass().equals(pass))
 		{
 			return true;
@@ -120,9 +135,8 @@ public class Emp extends EntityNoName
 	 */
 	public Emp()
 	{
-	}
-	
-	 
+		
+	}	 
 	
 	/**
 	 * 操作员

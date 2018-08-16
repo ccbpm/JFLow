@@ -3,16 +3,24 @@
 <head>
     <meta charset="UTF-8"/>
     <title>查询</title>
-    <link href="../Scripts/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
-    <link href="../Scripts/easyUI/themes/default/datagrid.css" rel="stylesheet" type="text/css" />
-    <link href="../Scripts/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
-    <script src="../Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
-    <script src="../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
-    <script src="../Scripts/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="../Scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="../Scripts/bootstrap/css/font-awesome.css" rel="stylesheet" />
+    <link href="../Scripts/bootstrap/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../Scripts/bootstrap/css/style.min.css" type="text/css" media="all" />
+    <!--jquery-->
+    <script src="../Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="../Scripts/bootstrap/js/bootstrap.min.js" type="text/javascript" ></script>
+
+    <!--bootstrap-table-->
+    <script src="../Scripts/bootstrap/bootstrap-table/src/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../Scripts/bootstrap/bootstrap-table/src/locale/bootstrap-table-zh-CN.js" type="text/javascript"></script>
+
+    <script src="../Scripts/bootstrap/BootstrapUIDialog.js" type="text/javascript"></script>
+    
+    <!--公共JS-->
     <script src="../Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../Scripts/config.js" type="text/javascript"></script>
     <script src="Gener.js" type="text/javascript"></script>
-    <script src="../Scripts/EasyUIUtility.js" type="text/javascript"></script>
     <script language="JavaScript" src="JScript.js" type="text/javascript"></script>
     <script src="../Comm/JS/Calendar/WdatePicker.js" type="text/javascript"></script>
     <link href="../Comm/JS/Calendar/skin/WdatePicker.css" rel="stylesheet" type="text/css" />
@@ -23,7 +31,7 @@
                 text-overflow: ellipsis;
             }
      </style>
-    <script language="javascript" type="text/javascript" >
+    <script language="javascript" type="text/javascript">
 
         //定义公共个变量.
         var webUser = new WebUser();
@@ -35,6 +43,13 @@
         ur.RetrieveFromDBSources();
         var count = ur.GetPara("RecCount");
         var mapBase;
+        var pageIdx = this.GetQueryString("PageIdx");
+        var pageSize = 10;
+        var pages = 0;
+        if (count%pageSize!=0)
+            pages = parseInt(count / pageSize) + 1;
+        else
+            pages = parseInt(count / pageSize);
 
         //页面启动函数.
         $(function () {
@@ -57,9 +72,8 @@
 
             //执行查询.
             BindTable();
+ 
 
-            //生成翻页.
-            GenerPageIdx();
             $("#Msg").html("");
         });
 
@@ -72,7 +86,7 @@
             //获得map基本信息.
             mapBase = handler.DoMethodReturnJSON("Search_MapBaseInfo");
 
-            // $("#Title").html(mapBase.EnDesc); 
+            // $("#Title").html(mapBase.EnDesc);
             document.title = mapBase.EnDesc;
 
             //获得查询信息，包含了查询数据表.
@@ -80,22 +94,24 @@
 
             var html = "";
             if (mapBase.IsShowSearchKey == "1")
-                html += "<label for='TB_Key'>关键字:</label><input  style='width:100px;' type=text id='TB_Key' name='TB_Key' value='" + ur.SearchKey + "' class='form-control' />&nbsp;&nbsp;&nbsp;&nbsp;";
-
+                html += "<label class='col-sm-1 control-label' style='text-align: right; margin-top:5px;width:100px;' for='TB_Key'>关键字:</label>"
+                html +="<div class='col-sm-2'style='width:150px'>";
+                html +="<input style='width:150px' type=text id='TB_Key' name='TB_Key' value='" + ur.SearchKey + "' class='form-control' />";
+                html += "</div>";
             if (mapBase.DTSearchWay != "0") {
 
-                html += mapBase.DTSearchLable;
+                html += "<label class='col-sm-1 control-label' style='text-align: right; margin-top:5px;width:100px'>" + mapBase.DTSearchLable + "</label>";
 
                 if (mapBase.DTSearchWay == "1") {
-                    //html += '<div class="form-group">';
-                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:100px;' class='form-control' />";
-                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:100px;' class='form-control' />&nbsp;&nbsp;&nbsp;&nbsp;";
-                    //html += '</div>';
+                    html += '<div class="col-sm-2" style="width:150px">';
+                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:120px;' class='form-control' />";
+                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:120px;' class='form-control' />";
+                    html += '</div>';
                 } else {
-                    //html += '<div class="form-group">';
-                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\" style='width:95px;' class='form-control' />";
-                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\"  style='width:95px;' class='form-control' />&nbsp;&nbsp;&nbsp;&nbsp;";
-                    //html += '</div>';
+                    html += '<div class="col-sm-2" style="width:150px">';
+                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\" style='width:120px;' class='form-control' />";
+                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\"  style='width:120px;' class='form-control' />";
+                    html += '</div>';
                 }
             }
 
@@ -105,16 +121,19 @@
             //格式为: @WFSta=0@FK_Dept=02
             var json = AtParaToJson(ur.Vals);
 
-            $("#toolbar").html(html); //设置基础信息.
+
             for (var i = 0; i < attrs.length; i++) {
 
                 var attr = attrs[i];
                 var str = "";
-                str += "<label for='DDL_" + attr.Field + "'>" + attr.Name + " : </label><select class='form-control' name='DDL_" + attr.Field + "' ID='DDL_" + attr.Field + "'>" + InitDDLOperation(data, attr, "all") + "</select>&nbsp;&nbsp;&nbsp;&nbsp;";
+                str += "<label class='col-sm-1 control-label' style='text-align: right; margin-top:5px;width:100px' for='DDL_" + attr.Field + "'>" + attr.Name + "  </label>";
+                str += '<div class="col-sm-2" style="width:150px">';
+                str += "<select class='form-control' name='DDL_" + attr.Field + "' ID='DDL_" + attr.Field + "'>" + InitDDLOperation(data, attr, "all") + "</select>";
+                str += "</div>";
                 str = $(str);
-                $("#toolbar").append(str); //设置基础信息.
+                $("#toolbar").prepend(str); //设置基础信息.
             }
-
+            $("#toolbar").prepend(html); //设置基础信息.
 
             //为查询外键赋值.
             for (var i = 0; i < attrs.length; i++) {
@@ -192,10 +211,7 @@
             ur.FK_MapData = ensName;
             ur.SetPara("RecCount", count);
             var i = ur.Save();
-            var pager = $("#dg").datagrid('getPager').data("pagination").options;
-            var pageIndex = pager.pageNumber;
-            var pageSize = pager.pageSize;
-            window.location.href = "?EnsName=" + ensName + "&PageIdx=" + pageIndex + "&PageSize=" + pageSize;
+            window.location.href = "?EnsName=" + ensName + "&PageIdx=" + pageIdx + "&PageSize=" + pageSize;
         }
 
         function Exp() {
@@ -236,7 +252,7 @@
             });
         }
 
-        function SearchData(pageIdx, pageSize) {
+        function SearchData() {
             //创建处理器.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
             handler.AddPara("PageIdx", pageIdx);
@@ -256,15 +272,15 @@
             ur.RetrieveFromDBSources();
 
             count = ur.GetPara("RecCount");
+            if (count%pageSize!=0)
+                pages = parseInt(count / pageSize) + 1;
+            else
+                pages = parseInt(count / pageSize);
             return data;
         }
 
         //生成查询页面..
         function BindTable() {
-
-            //获得查询的基本信息, 实体属性 attrs, 实体数据.
-            var pageIdx = this.GetQueryString("PageIdx");
-            var pageSize = this.GetQueryString("PageSize");
 
             if (pageIdx == "" || pageIdx == undefined)
                 pageIdx = "1";
@@ -272,7 +288,7 @@
                 pageSize = "10";
 
 
-            var mapdata = SearchData(pageIdx, pageSize);
+            var mapdata = SearchData();
             var attrs = mapdata["Attrs"];
 
             if (attrs == undefined) {
@@ -283,6 +299,14 @@
             var keyOfEn = "";
 
             var columns = new Array(); ;
+           columns.push({
+                title: '序号',
+                field: '',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return pageSize * (pageIdx - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
+                }
+           });
             for (var i = 0; i < attrs.length; i++) {
                 var attr = attrs[i];
 
@@ -305,6 +329,7 @@
                     columns.push({
                         field: field,
                         title: title,
+                        //width:attr.UIWidth*2,
                         fixed: false,
                         formatter: function (value, row, index) {
                             if (value == "0") return "否";
@@ -316,6 +341,7 @@
                     columns.push({
                         field: field,
                         title: title,
+                        //width:attr.UIWidth*2,
                         fixed: false
 
                     });
@@ -336,103 +362,176 @@
                  });
              }
 
-            var data = mapdata["DT"];
-            $('#dg').datagrid({
-                data: data,
+
+
+            $('#dg').bootstrapTable({
+                data: mapdata["DT"],
                 columns: [columns],
-                fitColumns: false,
-                fit: true,
-                rownumbers: true,
+                cache:false,
                 striped: true,
                 singleSelect: true,
-                pagination: true,
-                pagePosition: 'bottom',
-                toolbar: "#tb",
-                loadFilter: pagerFilter,
-                onDblClickRow: function (index, rowData) {
-                    var pkval = rowData["No"];
+                //pagination: true,
+                sidePagination: "server",
+                pageNumber: 1,
+                //pageSize: 10,
+               // pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+               // showPaginationSwitch:true,
+                strictSearch: true,
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        rows: 10,                         //页面大小
+                        page: (count /10) + 1,   //页码
+
+                    };
+                    return temp;
+                },
+
+               // loadFilter: pagerFilter,
+                onDblClickRow: function (row, $element) {
+                    var pkval = row["No"];
                     var objectID = "No";
                     if (pkval == undefined) {
-                        pkval = rowData["OID"];
+                        pkval = row["OID"];
                         objectID = "OID";
                     }
                     if (pkval == undefined) {
-                        pkval = rowData["MyPK"];
+                        pkval = row["MyPK"];
                         objectID = "MyPK";
                     }
                     if (pkval == undefined) {
-                        pkval = rowData["WorkID"];
+                        pkval = row["WorkID"];
                         objectID = "WorkID";
                     }
                     if (pkval == undefined) {
-                        pkval = rowData["NodeID"];
+                        pkval = row["NodeID"];
                         objectID = "NodeID";
                     }
                     var paras = "&" + objectID + "=" + pkval;
                     for (var i = 0; i < attrs.length; i++) {
                         var attr = attrs[i];
                         if (attr.UIContralType == 1)
-                            paras += "&" + attr.KeyOfEn + "=" + rowData[attr.KeyOfEn];
+                            paras += "&" + attr.KeyOfEn + "=" + row[attr.KeyOfEn];
                     }
 
                     OpenEn(pkval, paras);
                 }
 
             });
+
+            if (pages == 0) pages = 1;
+
+            
+            build_page_nav();
+            build_page_info();
+
+
+
+     }
+
+   
+         //解析显示分页信息
+
+        function build_page_info() {
+            
+
+                $("#page_info_area").empty();
+                $("#page_info_area").append("当前第" + pageIdx + "页，总共" + pages +
+                                "页,总共"+count+"条记录。");
         }
 
-        //分页功能 
-        var IsUrl = true;
-        function pagerFilter(data) {
-            if (typeof data.length == 'number' && typeof data.splice == 'function') {
-                data = {
-                    total: count,
-                    rows: data
-                }
-            }
-            var dg = $(this);
-            var opts = dg.datagrid('options');
-            var pager = dg.datagrid('getPager');
+       //解析显示分页条
+        function build_page_nav() {
+             $("#page_nav_area").empty();
+            var ul = $("<ul></ul>").addClass("pagination");
 
-            //url 路径上包含PageIdx、PageSize
-            if (IsUrl) {
-                var pageIdx = GetQueryString("PageIdx");
-                var pageSize = GetQueryString("PageSize");
-                if (pageIdx !== null && pageIdx != "") {
-                    opts.pageNumber = parseInt(pageIdx);
-                    opts.pageSize = parseInt(pageSize);
-                    pager.data("pagination").options.pageNumber = parseInt(pageIdx);
-                    pager.data("pagination").options.pageSize = parseInt(pageSize);
-                }
-            }
-            //点击分页
-            pager.pagination({
-                onSelectPage: function (pageNum, pageSize) {
-                    opts.pageNumber = pageNum;
-                    opts.pageSize = pageSize;
-                    pager.pagination('refresh', {
-                        pageNumber: pageNum,
-                        pageSize: pageSize
-                    });
-                    IsUrl = false;
-                    var mapdata = SearchData(opts.pageNumber, opts.pageSize);
-                    data = mapdata["DT"];
-                    dg.datagrid('loadData', data);
-                }
+            var firstPageLi = $("<li></li>").append($("<a></a>").append("首页").attr("href","#"));
+
+            var prePageLi =  $("<li></li>").append($("<a></a>").append("&laquo;"));
+
+            if (pageIdx==1) {
+                    firstPageLi.addClass("disabled");
+
+                    prePageLi.addClass("disabled");
+
+            } 
+
+            firstPageLi.click(function () {
+                pageIdx = 1;
+                $("#numli").html("<a >" + pageIdx + "</a>");
+                var mapdata = SearchData();
+                $("#dg").bootstrapTable("load", mapdata["DT"]);
+                nextPageLi.removeClass("disabled");
+                lastPageLi.removeClass("disabled");
+                build_page_info();
+
             });
 
+            prePageLi.click(function () {
+                pageIdx =parseInt(pageIdx) - 1;
+                if (pageIdx < 1) pageIdx = 1;
+                $("#numli").html("<a >" + pageIdx + "</a>");
+                var mapdata = SearchData();
+                $("#dg").bootstrapTable("load", mapdata["DT"]);
+                nextPageLi.removeClass("disabled");
+                lastPageLi.removeClass("disabled");
+                build_page_info();
+                    
+            });
+            
+            
 
+            ul.append(firstPageLi).append(prePageLi);
 
-            if (!data.originalRows) {
-                if (data.rows)
-                    data.originalRows = (data.rows);
-                else if (data.data && data.data.rows)
-                    data.originalRows = (data.data.rows);
-                else
-                    data.originalRows = [];
+            var nextPageLi =  $("<li></li>").append($("<a></a>").append("&raquo;"));
+
+            var lastPageLi = $("<li></li>").append($("<a></a>").append("末页").attr("href","#"));
+
+            if (pageIdx == pages) {
+
+                    nextPageLi.addClass("disabled");
+
+                    lastPageLi.addClass("disabled");
+
             }
-            return data;
+            lastPageLi.click(function () {
+                pageIdx = pages;
+                $("#numli").html("<a >" + pageIdx + "</a>");
+                var mapdata = SearchData();
+                $("#dg").bootstrapTable("load", mapdata["DT"]);
+                firstPageLi.removeClass("disabled");
+                prePageLi.removeClass("disabled");
+                build_page_info();
+
+            });
+
+            nextPageLi.click(function () {
+                pageIdx = parseInt(pageIdx) + 1;
+                if (pageIdx > pages) pageIdx = pages;
+                $("#numli").html("<a >" + pageIdx + "</a>");
+                var mapdata = SearchData();
+                $("#dg").bootstrapTable("load", mapdata["DT"]);
+                firstPageLi.removeClass("disabled");
+                prePageLi.removeClass("disabled");
+                build_page_info();
+
+            });
+           
+            
+            var numLi = $("<li id='numli'></li>").append($("<a ></a>").append(1));
+            numLi.addClass("active");
+            ul.append(numLi);
+           
+            ul.append(nextPageLi).append(lastPageLi);
+
+            var navEle = $("<nav></nav>").append(ul);
+
+            $("#page_nav_area").append(ul);
+
         }
+
+
 
         function operate(value, row, index) {
             return '<a href="#" onclick="editUser(' + index + ')">查看明细</a>';
@@ -486,18 +585,16 @@
                 windowH = 500;
 
             var localUrl = window.location.href;
-            var pager = $("#dg").datagrid('getPager').data("pagination").options;
-            var pageIndex = pager.pageNumber;
-            var pageSize = pager.pageSize;
+
 
             var localArr = new Array();
             localArr = localUrl.split("&");
             if (localArr.length == 1) {
-                localUrl = localUrl + "&PageIdx=" + pageIndex + "&PageSize=" + pageSize;
+                localUrl = localUrl + "&PageIdx=" + pageIdx + "&PageSize=" + pageSize;
             } else {
                 for (var i = 0; i < localArr.length; i++) {
                     if (localArr[i].indexOf("PageIdx") != -1) {
-                        localArr[i] = "PageIdx=" + pageIndex;
+                        localArr[i] = "PageIdx=" + pageIdx;
                     }
                     if (localArr[i].indexOf("PageSize") != -1) {
                         localArr[i] = "PageSize=" + pageSize;
@@ -510,9 +607,9 @@
                 }
             }
 
-            OpenEasyUiDialog(url, "eudlgframe", mapBase.EnDesc + ' : 详细', windowW, windowH, "icon-property", true, null, null, null, function () {
+            OpenBootStrapModal(url, "eudlgframe", mapBase.EnDesc + ' : 详细', windowW, windowH, "icon-property", null, null,  null, function () {
                 window.location.href = localUrl;
-            });
+            },null,'black');
         }
 
         function New() {
@@ -539,20 +636,12 @@
         }
 
 
-        function GenerPageIdx() {
-
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-            handler.AddPara("EnsName", GetQueryString("EnsName"));
-            handler.AddPara("PageIdx", this.GetQueryString("PageIdx"));
-
-            var html = handler.DoMethodReturnString("Search_GenerPageIdx");
-            $("#end").html(html);
-        }
 
         function Setting() {
             var user = new WebUser();
             var url = "./Sys/SearchSetting.htm?EnsName=" + GetQueryString("EnsName") + "&m=" + Math.random();
-            OpenEasyUiDialogExt(url, '设置', 800, 500, true);
+            OpenBootStrapModal(url, "eudlgframe", '设置', 800, 500, "icon-property", null, null, null, null, null, 'black');
+            //OpenEasyUiDialogExt(url, '设置', 800, 500, true);
         }
 
         function formatOper(val,rowData,index){
@@ -569,10 +658,11 @@
             if (pkval == undefined) {
                 pkval = rowData["NodeID"];
             }
-            if (rowData.MyFileName != null && rowData.MyFileName != "")
-            	return "<a href='#' onclick='downLoadFile(\"" + pkval + "\")' target='_self'>下载</a>"; 
+
+             if (rowData.MyFileName != null && rowData.MyFileName != "")
+                return "<a href='#' onclick='downLoadFile(\"" + pkval + "\")' target='_self'>下载</a>";
             else
-            	return "-";
+                return "-"; 
         }
 
         function downLoadFile(PKVal) {
@@ -605,27 +695,22 @@
 <body>
 
 <form id="cc">
- <div data-options="region:'center'" style="padding: 0px;" border="false" style="overflow: hidden;">
-        <div class="easyui-panel" style="height:600px">
-        <div id="tb" style="padding: 3px;">
-            <div id="Div1" style="height: 30px;">
-                <div id="toolbar" style="float: left;"> 
-                </div>
-                <div  style="float: left;"> 
-                    <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="Search()">查询</a>
-                     <a id="newWin" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-new'" onclick="New()">新建</a>
-                </div>
-
-                <div  style="float: left;">
-                    <a href="#"  class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-excel'" onclick="Exp()">导出</a>
-                    <a href="#"  class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-4'" onclick="Setting()">设置</a>
-                </div> 
-
-            </div>
+    <div class="row" style="margin-top:10px">
+    	<div class="panel panel-default" style="border-bottom-width:0px;border-top-width:0px"> 
+    		 <div class="panel-body  form-group" id="toolbar">
+                <a href="#"class="btn btn-primary" id="search_btn" onclick="Search()">查询</a>
+                <a href="#" class="btn btn-primary" id="new_btn" onclick="New()">新建</a>
+                <a href="#" class="btn btn-primary" id="exp_btn" onclick="Exp()">导出</a>               
+                <a href="#" class="btn btn-primary" id="setting_btn" onclick="Setting()">设置</a>
+              </div>
         </div>
-        
-        <table id="dg"></table>
-       </div>
+    </div>
+    <table id="dg" class="table table-hover"></table>
+    <!-- 显示分页信息 -->
+    <div class="row">
+        <div class="col-md-6" id="page_info_area"></div>
+        <!-- 分页导航条 -->
+        <div class="col-md-6" id="page_nav_area"></div>
     </div>
 <div id="Msg"></div>
 </form>

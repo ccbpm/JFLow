@@ -438,19 +438,17 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 
 		java.util.Hashtable ht = new java.util.Hashtable();
-		if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
-		{
-			ht.put("OSModel", "0");
-		}
-		else
-		{
+	 
 			ht.put("OSModel", "1");
-		}
+	 
 		
 
         //把系统信息加入里面去.
         ht.put("SysNo", SystemConfig.getSysNo());
         ht.put("SysName", SystemConfig.getSysName());
+        
+        //集成的平台.
+        ht.put("RunOnPlant", SystemConfig.getRunOnPlant());
 
 
 		try
@@ -521,8 +519,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
          if (emp.RetrieveFromDBSources() == 0)
              return "err@用户名或密码错误.";
-
-         if (!"admin".equals(emp.getNo()))
+                  
+         if ("admin".equals(emp.getNo())==false)
          {
              //检查是否是管理员？
              AdminEmp adminEmp = new AdminEmp();
@@ -533,6 +531,16 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
              if (adminEmp.getIsAdmin() == false)
                  return "err@您非管理员用户或已被禁用，不能登录.";
          }
+         
+         
+         //判断集成的平台.
+         String plant=BP.Sys.SystemConfig.getRunOnPlant();
+         
+         if (plant.equals("jeesite")==true)
+         {
+        	 
+         }
+          
 
          String pass = this.GetValFromFrmByKey("TB_PW");
          if (emp.CheckPass(pass) == false)
@@ -540,6 +548,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
          //让其登录.
          BP.WF.Dev2Interface.Port_Login(emp.getNo());
+         
          return "url@Default.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getNo();
           
 	}

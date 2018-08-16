@@ -348,6 +348,20 @@ public class SystemConfig {
 		return getPathOfWebApp();
 	}
 
+	/*
+	 * 集成的框架.
+	 * */
+	public static String getRunOnPlant() {
+		 
+		String str= (String) SystemConfig.getAppSettings().get("RunOnPlant") ;
+		if ( str== null) {
+			return "BP";			 
+		}
+		
+		return str;
+		 
+	}
+	
 	/**
 	 * ccflow网站目录
 	 * 

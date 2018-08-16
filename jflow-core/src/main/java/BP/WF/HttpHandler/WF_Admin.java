@@ -62,6 +62,14 @@ public class WF_Admin extends WebContralBase {
 	
 	}
 	
+	  /// <summary>
+    /// 获得运行的集成平台.
+    /// </summary>
+    /// <returns></returns>
+    public String TestFlow_GetRunOnPlant()
+    {
+        return BP.Sys.SystemConfig.getRunOnPlant();
+    }
 	
 	public final String getRefNo() {
 		return this.GetRequestVal("RefNo");

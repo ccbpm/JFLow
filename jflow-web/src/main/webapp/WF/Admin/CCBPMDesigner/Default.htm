@@ -9,7 +9,8 @@
     <link href="../../Scripts/easyUI145/themes/default/dialog.css" rel="stylesheet" type="text/css" />
     
     <link href="../../Scripts/easyUI145/themes/icon.css" rel="stylesheet" type="text/css" />
-    <script src="../../Scripts/easyUI145/jquery.min.js" type="text/javascript"></script>
+
+    <script src="../../Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="../../Scripts/easyUI145/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="../../Scripts/EasyUIUtility.js" type="text/javascript"></script>
     <script src="../../Scripts/config.js" type="text/javascript"></script>
@@ -182,7 +183,9 @@
         }
     </style>
     <script language="javascript" type="text/javascript">
-        var osModel = 0;
+        var osModel = 1;
+        var runOnPlant = "BP";
+        var initData = null;
         $(function () {
 
             //定义等待界面的位置
@@ -205,9 +208,11 @@
 
             data = JSON.parse(data);
 
+            initData = data;
+
             var msg = data.Msg;
             osModel = data.OSModel;
-            if (msg != ""&& msg!="0")
+            if (msg != "" && msg != "0")
                 alert(msg);
 
             var content = createFrame('../../../DataUser/AppCoder/FlowDesignerWelcome.htm');
@@ -492,8 +497,19 @@
         //登录,判断为天业BPM，转向到天业新版界面
         function Login2App() {
 
-            window.location.href = "../../AppClassic/Login.htm?DoType=Logout";
+            if (initData.RunOnPlant == "BP") {
+                window.location.href = "../../AppClassic/Login.htm?DoType=Logout";
+                return;
+            }
+
+            if (initData.RunOnPlant == "jeesite") {
+                window.location.href = "/js/a/logout";
+                return;
+            }
+
+            alert("没有判断的集成平台:" + initData.RunOnPlant);
             return;
+
 
             $.ajax({
                 type: 'post',
@@ -710,7 +726,7 @@ function newFlowSort(isSub) {
                 text: val,
                 attributes: { ISPARENT: '1', MenuId: "mFlowSort", TType: "FLOWTYPE" },
                 checked: false,
-                iconCls: 'icon-tree_folder',
+                iconCls: 'icon-flowtree',
                 state: 'open',
                 children: []
             }]

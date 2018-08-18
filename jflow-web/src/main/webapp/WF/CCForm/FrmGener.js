@@ -391,7 +391,7 @@ function DtlFoolFrm(dtl, refPK, refOID) {
 }
 
 //保存
-function Save() {
+function Save(scope) {
 
     //必填项和正则表达式检查
     var formCheckResult = true;
@@ -410,7 +410,7 @@ function Save() {
 
     $.ajax({
         type: 'post',
-        async: true,
+        async: false,
         data: getFormData(true, true),
         url: Handler + "?DoType=FrmGener_Save&OID=" + pageData.OID,
         dataType: 'html',
@@ -421,7 +421,8 @@ function Save() {
                 $('.Message').show();
                 return;
             }
-            window.location.href = window.location.href;
+            if(scope != "btnsave")
+            	window.location.href = window.location.href;
             //alert(data);
         }
     });

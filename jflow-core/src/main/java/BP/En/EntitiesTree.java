@@ -65,7 +65,7 @@ public abstract class EntitiesTree extends Entities
               if (!item.getParentNo().equals(parentEn.getNo()))
                   continue;
 
-              appendMenuSb.append("{'id':'" + item.getNo() + "','pid':'"+item.getParentNo()+"','text':'" + item.getName() + "','state':'closed'");
+              appendMenuSb.append("{'id':'" + item.getNo() + "','pid':'"+item.getParentNo()+"','text':'" + item.getName() + "'");
               //appendMenuSb.Append(IsPermissionsNodes(ens, dms, item.No));
               EntityTree treeNode = item ;
               // 增加它的子级.

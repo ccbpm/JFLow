@@ -24,20 +24,14 @@ public class UAC
             String tag = dr.getValue(0).toString();
 
             if (tag.contains("Insert") == true)
-                this.IsInsert = true;
-            else
-                this.IsInsert = false;
+                this.IsInsert = true;          
 
             if (tag.contains("Update") == true)
                 this.IsUpdate = true;
-            else
-                this.IsUpdate = false;
-
-
+          
             if (tag.contains("Delete") == true)
                 this.IsDelete = true;
-            else
-                this.IsDelete = false;
+         
         }
 
     }

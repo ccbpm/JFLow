@@ -193,18 +193,23 @@ public class FrmNode extends EntityMyPK
 	{
 		this.SetValByKey(FrmNodeAttr.GuanJianZiDuan,value);
 	}
+	
 	/** 
 	 对应的解决方案
 	 0=默认方案.节点编号=自定义方案, 1=不可编辑.
 	 
 	*/
-	public final int getFrmSln()
+	public final int getFrmSlnInt()
 	{
 		return this.GetValIntByKey(FrmNodeAttr.FrmSln);
 	}
-	public final void setFrmSln(int value)
+	public final void setFrmSlnInt(int value)
 	{
 		this.SetValByKey(FrmNodeAttr.FrmSln, value);
+	}
+	public final FrmSln getFrmSln()
+	{
+		return FrmSln.forValue(this.GetValIntByKey(FrmNodeAttr.FrmSln));
 	}
 	/** 
 	 启用规则
@@ -279,7 +284,7 @@ public class FrmNode extends EntityMyPK
 	}
 	public final boolean getIsEdit()
 	{
-		if (this.getFrmSln() == 1)
+		if (this.getFrmSlnInt() == 1)
 		{
 			return false;
 		}
@@ -366,7 +371,7 @@ public class FrmNode extends EntityMyPK
 			this.setIsPrint(false);
 
 			//不可以编辑.
-			this.setFrmSln(1);
+			this.setFrmSlnInt(1);
 
 			// this.IsEdit = false;
 			return;

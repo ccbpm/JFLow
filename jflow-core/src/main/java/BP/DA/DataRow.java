@@ -86,6 +86,16 @@ public class DataRow extends LinkedHashMap<String, Object>
 		// this.put(columnName, value);
 	}
 	
+	public void setValue(String columnName, Boolean value)
+	{
+		if (value==true)
+		this.put(columnName, 1);
+		else
+			this.put(columnName, 0);	
+			
+		// this.put(columnName, value);
+	}
+	
 	public void setValueStr(String columnName, String value)
 	{
 		this.put(columnName, "\""+value+"\"");

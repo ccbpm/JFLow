@@ -144,7 +144,7 @@ public class CCFlowAPI {
                 /*处理表单权限控制方案*/
                 FrmNode frmNode = new FrmNode();
                 int count = frmNode.Retrieve(FrmNodeAttr.FK_Frm, md.getNo(), FrmNodeAttr.FK_Node, fk_node);
-                if (count != 0 && frmNode.getFrmSln() != 0)
+                if (count != 0 && frmNode.getFrmSlnInt() != 0)
                 {
 
                     FrmFields fls = new FrmFields(md.getNo(), frmNode.getFK_Node());

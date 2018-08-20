@@ -1608,7 +1608,7 @@ public class WF_MyFlow extends WebContralBase {
 			BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(),
 					mdtl.getFK_MapData());
 			int i = fn.Retrieve(FrmNodeAttr.FK_Frm, mdtl.getFK_MapData(), FrmNodeAttr.FK_Node, this.getFK_Node());
-			if (i != 0 && fn.getFrmSln() != 0) {
+			if (i != 0 && fn.getFrmSlnInt() != 0) {
 				// 使用了自定义的方案.
 				// * 并且，一定为dtl设定了自定义方案，就用自定义方案.
 				//

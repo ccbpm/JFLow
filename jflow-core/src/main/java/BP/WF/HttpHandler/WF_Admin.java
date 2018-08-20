@@ -337,7 +337,7 @@ public class WF_Admin extends WebContralBase {
 			fn.setFK_Node(this.getFK_Node());
 
 			fn.setFrmEnableRole(FrmEnableRole.Disable); // 就是默认不启用.
-			fn.setFrmSln(0);
+			fn.setFrmSlnInt(0);
 			// fn.IsEdit ( true;
 			fn.setIsEnableLoadData(true);
 			//System.out.println(fn);

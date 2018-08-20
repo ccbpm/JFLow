@@ -4235,7 +4235,7 @@ public class WorkNode {
 			}
 
 			// 如果使用默认方案,就return出去.
-			if (item.getFrmSln() == 0) {
+			if (item.getFrmSlnInt() == 0) {
 				continue;
 			}
 

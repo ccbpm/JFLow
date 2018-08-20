@@ -78,6 +78,7 @@ import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
 import BP.Sys.GENoNames;
+import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapDtl;
@@ -105,9 +106,13 @@ import BP.WF.NodeFormType;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Template.FTCAttr;
 import BP.WF.Template.FoolTruckNodeFrm;
+import BP.WF.Template.FrmField;
+import BP.WF.Template.FrmFieldAttr;
+import BP.WF.Template.FrmFields;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodeComponent;
+import BP.WF.Template.FrmSln;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
 import BP.WF.Template.WhoIsPK;
@@ -1164,10 +1169,11 @@ public class WF_CCForm extends WebContralBase {
 
 	public String FrmGener_Init() throws Exception {
 
+		Node nd=null;
 		// #region 特殊判断 适应累加表单.
 		String fromWhere = this.GetRequestVal("FromWorkOpt");
 		if (fromWhere != null && fromWhere.equals("1") && this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
-			Node nd = new Node(this.getFK_Node());
+			nd = new Node(this.getFK_Node());
 
 			nd.WorkID = this.getWorkID(); // 为获取表单ID ( NodeFrmID )提供参数.
 
@@ -1365,7 +1371,7 @@ public class WF_CCForm extends WebContralBase {
 
 		// #region 加入组件的状态信息, 在解析表单的时候使用.
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
-			Node nd = new Node(this.getFK_Node());
+			  nd = new Node(this.getFK_Node());
 			nd.WorkID = this.getWorkID(); // 为求当前表单ID获得参数，而赋值.
 			BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false
@@ -1409,6 +1415,60 @@ public class WF_CCForm extends WebContralBase {
 
 			ds.Tables.add(dtNode);
 		}
+		
+		
+		//#region 处理权限方案
+        if (nd != null && nd.getFormType()== NodeFormType.SheetTree)
+        {
+            FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
+
+          //  #region 只读方案.
+            if (fn.getFrmSln() == FrmSln.Readonly)
+            {
+                for (DataRow dr : dtMapAttr.Rows)
+                {
+                    dr.setValue(MapAttrAttr.UIIsEnable, 0);
+                }
+
+                //改变他的属性. 不知道是否应该这样写？
+                ds.Tables.remove("Sys_MapAttr");
+                ds.Tables.add(dtMapAttr);
+            }
+            
+            
+            //#endregion 只读方案.
+
+            //#region 自定义方案.
+            if (fn.getFrmSln() == FrmSln.Self)
+            {
+                //查询出来自定义的数据.
+                FrmFields ffs = new FrmFields();
+                ffs.Retrieve(FrmFieldAttr.FK_Node, nd.getNodeID(), FrmFieldAttr.FK_MapData, md.getNo());
+
+                //遍历属性集合.
+                for (DataRow dr : dtMapAttr.Rows)
+                {
+                    String keyOfEn=(String) dr.getValue(MapAttrAttr.KeyOfEn);
+                    for (FrmField ff : ffs.ToJavaList())
+                    {
+                        if (ff.getKeyOfEn().equals(keyOfEn) == false)
+                            continue;
+                          
+                        	dr.setValue(MapAttrAttr.UIIsEnable, ff.getUIIsEnable());//是否只读?	
+                        	
+                        	dr.setValue(MapAttrAttr.UIVisible, ff.getUIVisible());//是否只读?	
+                             
+                    }
+                }
+
+                //改变他的属性. 不知道是否应该这样写？
+                ds.Tables.remove("Sys_MapAttr");
+                ds.Tables.add(dtMapAttr);
+            }
+           // #endregion 自定义方案.
+
+        }
+     //   #endregion 处理权限方案s
 
 		// #endregion 加入组件的状态信息, 在解析表单的时候使用.
 
@@ -1453,7 +1513,7 @@ public class WF_CCForm extends WebContralBase {
              }
              
 
-             if (fn.getFrmSln() == 2)
+             if (fn.getFrmSlnInt() == 2)
              {
                  /*如果是不可以编辑*/
                  return "err@不可以,该表单不允许编辑..";
@@ -1581,14 +1641,14 @@ public class WF_CCForm extends WebContralBase {
 
 			BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(),
 					mdtl.getFK_MapData());
-			int i = fn.Retrieve(FrmNodeAttr.FK_Frm, mdtl.getFK_MapData(), FrmNodeAttr.FK_Node, this.getFK_Node());
-			if (i != 0 && fn.getFrmSln() > 1) {
+	 
+			if (  fn.getFrmSlnInt() > 1) {
 
 				mdtl.setNo(this.getEnsName() + "_" + this.getFK_Node());
 				mdtl.RetrieveFromDBSources();
 			}
 
-			if (i != 0 && fn.getFrmSln() == 1) {
+			if ( fn.getFrmSlnInt() == 1) {
 				mdtl.setIsInsert(false);
 				mdtl.setIsDelete(false);
 				mdtl.setIsUpdate(false);

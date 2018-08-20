@@ -269,7 +269,7 @@ public class Menu extends EntityTree
 
 	  public String DoAddRight3() throws Exception
       {
-          if (this.getUrl().contains("Search.htm") == false)
+          if (this.getUrl().contains("Search.htm") == false && this.getUrl().contains("SearchBS.htm") == false)
               return "该功能非Search组件，所以您不能增加功能权限.";
 
           Menu en = (Menu) this.DoCreateSubNode()  ;

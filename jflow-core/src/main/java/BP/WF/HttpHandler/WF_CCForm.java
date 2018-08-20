@@ -1513,7 +1513,7 @@ public class WF_CCForm extends WebContralBase {
              }
              
 
-             if (fn.getFrmSlnInt() == 2)
+             if (fn.getFrmSlnInt() == 1)
              {
                  /*如果是不可以编辑*/
                  return "err@不可以,该表单不允许编辑..";

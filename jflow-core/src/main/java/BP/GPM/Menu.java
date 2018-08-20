@@ -80,6 +80,11 @@ public class Menu extends EntityTree
 				return "";
 		}
 	}
+	
+	public final void setMenuTypeEnum(MenuType value)
+	{
+		this.SetValByKey(MenuAttr.MenuType, value.getValue());
+	}
 	/** 
 	 是否是ccSytem
 	 
@@ -140,6 +145,10 @@ public class Menu extends EntityTree
 	public final void setUrl(String value)
 	{
 		this.SetValByKey(MenuAttr.Url, value);
+	}
+	public final void setTag1(String value)
+	{
+		this.SetValByKey(MenuAttr.Tag1, value);
 	}
 	public boolean IsCheck = false;
 
@@ -244,12 +253,48 @@ public class Menu extends EntityTree
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new EmpMenus(), new BP.Port.Emps(), EmpMenuAttr.FK_Menu, EmpMenuAttr.FK_Emp, "绑定人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		
+		
+		   //不带有参数的方法.
+        RefMethod rm = new RefMethod();
+        rm.Title = "增加(增删改查)功能权限";
+        rm.Warning = "确定要增加吗？";
+        rm.ClassMethodName = this.toString() + ".DoAddRight3";
+        map.AddRefMethod(rm);
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
+	  public String DoAddRight3() throws Exception
+      {
+          if (this.getUrl().contains("Search.htm") == false)
+              return "该功能非Search组件，所以您不能增加功能权限.";
+
+          Menu en = (Menu) this.DoCreateSubNode()  ;
+          en.setName( "增加权限");
+          en.setMenuTypeEnum( MenuType.Function); //功能权限.
+          en.setUrl(  this.getUrl());
+          en.setTag1(  "Insert");
+          en.Update();
+
+          en = (Menu) this.DoCreateSubNode() ;
+          en.setName("修改权限");
+          en.setMenuTypeEnum( MenuType.Function); //功能权限.
+          en.setUrl( this.getUrl());
+          en.setTag1( "Update");
+          en.Update();
+
+          en = (Menu) this.DoCreateSubNode();
+          en.setName ("删除权限");
+          en.setMenuTypeEnum( MenuType.Function); //功能权限.
+          en.setUrl( this.getUrl());
+          en.setTag1( "Delete");        
+          en.Update();
+
+          return "增加成功,请刷新节点.";
+      }
 	  /// <summary>
     /// 创建下级节点.
     /// </summary>

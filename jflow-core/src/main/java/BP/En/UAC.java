@@ -1,6 +1,7 @@
 package BP.En;
 
 import BP.DA.DBAccess;
+import BP.DA.DataTable;
 import BP.DA.Paras;
 import BP.Sys.SystemConfig;
 import BP.Web.WebUser;
@@ -10,6 +11,37 @@ import BP.Web.WebUser;
  */
 public class UAC
 {
+	 /// <summary>
+    /// 从权限管理系统里装载数据.
+    /// </summary>
+    private static final String DataRow = null;
+	public void LoadRightFromCCGPM(Entity en) throws Exception
+    {
+        String sql = "SELECT Tag1  FROM V_GPM_EmpMenu WHERE  FK_Emp='"+BP.Web.WebUser.getNo()+"'  AND Url LIKE '%" + en.toString()+ "%'  ";
+        DataTable dt = DBAccess.RunSQLReturnTable(sql);
+        for (BP.DA.DataRow dr : dt.Rows)
+        {
+            String tag = dr.getValue(0).toString();
+
+            if (tag.contains("Insert") == true)
+                this.IsInsert = true;
+            else
+                this.IsInsert = false;
+
+            if (tag.contains("Update") == true)
+                this.IsUpdate = true;
+            else
+                this.IsUpdate = false;
+
+
+            if (tag.contains("Delete") == true)
+                this.IsDelete = true;
+            else
+                this.IsDelete = false;
+        }
+
+    }
+    
 	// 常用方法
 	public final void Readonly()
 	{

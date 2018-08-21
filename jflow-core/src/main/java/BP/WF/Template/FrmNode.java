@@ -365,15 +365,13 @@ public class FrmNode extends EntityMyPK
 	*/
 	public FrmNode(String fk_flow, int fk_node, String fk_frm) throws Exception
 	{
-		int i = this.Retrieve(FrmNodeAttr.FK_Flow, fk_flow, FrmNodeAttr.FK_Node, fk_node, FrmNodeAttr.FK_Frm, fk_frm);
+		int i = this.Retrieve(FrmNodeAttr.FK_Node, fk_node, FrmNodeAttr.FK_Frm, fk_frm);
 		if (i == 0)
 		{
 			this.setIsPrint(false);
 
-			//不可以编辑.
-			this.setFrmSlnInt(1);
-
-			// this.IsEdit = false;
+			//默认方案.
+			this.setFrmSlnInt(0); 
 			return;
 			//throw new RuntimeException("@表单关联信息已被删除。");
 		}

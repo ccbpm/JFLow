@@ -29,6 +29,7 @@ import BP.DA.DataType;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;
+import BP.Sys.AthCtrlWay;
 import BP.Sys.AthSaveWay;
 import BP.Sys.AthUploadWay;
 import BP.Sys.FrmAttachment;
@@ -43,6 +44,9 @@ import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
 import BP.WF.Flow;
+import BP.WF.Template.FrmNode;
+import BP.WF.Template.FrmSln;
+import BP.WF.Template.WhoIsPK;
 import BP.Sys.Glo;
 import BP.Web.WebUser;
 import cn.jflow.common.util.ContextHolderUtils;
@@ -97,139 +101,14 @@ public class AttachmentUploadController extends BaseController {
 		FrmAttachment athDesc = new FrmAttachment(this.getFK_FrmAttachment());
 		GEEntity en = new GEEntity(athDesc.getFK_MapData());
 		en.setPKVal(this.getPKVal());
-		en.Retrieve();
+		en.RetrieveFromDBSources();
 		MapData mapData = new MapData(athDesc.getFK_MapData());
 		String msg = null;
 		
 		uploadFile(item, athDesc, en, msg, mapData, this.getFK_FrmAttachment(), parasData);
 
 		return;
-
-		/*
-		 * if (item.getOriginalFilename() != null &&
-		 * !item.getOriginalFilename().equals("")) {// 判断是否选择了文件 long upFileSize
-		 * = item.getSize(); // 上传文件的大小 String fileName =
-		 * item.getOriginalFilename(); // 获取文件名 if (upFileSize > maxSize) {
-		 * error = "您上传的文件太大，请选择不超过50M的文件";
-		 * 
-		 * return ; }
-		 * 
-		 * 
-		 * String exts = FileAccess.getExtensionName(fileName).toLowerCase()
-		 * .replace(".", "");
-		 * 
-		 * // 如果有上传类型限制，进行判断格式 if (athDesc.getExts().equals("*.*") ||
-		 * athDesc.getExts().equals("")) { // 任何格式都可以上传 } else { if
-		 * (!athDesc.getExts().toLowerCase().contains(exts)) {
-		 * 
-		 * error = "您上传的文件，不符合系统的格式要求，要求的文件格式:" + athDesc.getExts() +
-		 * "，您现在上传的文件格式为:" + exts;
-		 * 
-		 * return ; } }
-		 * 
-		 * String savePath = athDesc.getSaveTo();
-		 * 
-		 * if (savePath.contains("@") || savePath.contains("*")) { // 如果有变量
-		 * savePath = savePath.replace("*", "@");
-		 * 
-		 * savePath = BP.WF.Glo.DealExp(savePath, en, null);
-		 * 
-		 * if (savePath.contains("@") && this.getFK_Node() != 0) { // 如果包含 @
-		 * Flow flow = new Flow( this.getFK_Flow()); BP.WF.Data.GERpt myen =
-		 * flow.getHisGERpt(); myen.setOID(this.getWorkID());
-		 * myen.RetrieveFromDBSources(); savePath = BP.WF.Glo.DealExp(savePath,
-		 * myen, null); } if (savePath.contains("@")) { throw new
-		 * RuntimeException("@路径配置错误,变量没有被正确的替换下来." + savePath); } }
-		 * 
-		 * // 替换关键的字串. savePath = savePath.replace("\\\\", "\\"); try {
-		 * if(savePath.indexOf(":")==-1){ savePath =
-		 * ContextHolderUtils.getRequest().getSession().getServletContext().
-		 * getRealPath(savePath); } } catch (RuntimeException e) {
-		 * 
-		 * } try { File fileInfo = new File(savePath);
-		 * 
-		 * if (!fileInfo.exists()) { fileInfo.mkdirs(); } } catch
-		 * (RuntimeException ex) { throw new
-		 * RuntimeException("@创建路径出现错误，可能是没有权限或者路径配置有问题:" +
-		 * ContextHolderUtils.getRequest().getSession().getServletContext().
-		 * getRealPath("~/" + savePath) + "===" + savePath + "@技术问题:" +
-		 * ex.getMessage()); }
-		 * 
-		 * String guid = BP.DA.DBAccess.GenerGUID();
-		 * 
-		 * fileName = fileName.substring(0, fileName.lastIndexOf('.')); String
-		 * ext = FileAccess .getExtensionName(item.getOriginalFilename());
-		 * 
-		 * 
-		 * String realSaveTo = savePath + File.separator + guid + "." + fileName
-		 * + "." + ext;
-		 * 
-		 * String saveTo = realSaveTo;
-		 * 
-		 * try { // 构造临时对象 File file = new File(realSaveTo); // 获取根目录对应的真实物理路径
-		 * InputStream is = item.getInputStream(); int buffer = 1024; //
-		 * 定义缓冲区的大小 int length = 0; byte[] b = new byte[buffer]; double percent
-		 * = 0; FileOutputStream fos = new FileOutputStream(file); while
-		 * ((length = is.read(b)) != -1) { percent += length / (double)
-		 * upFileSize * 100D; // 计算上传文件的百分比 fos.write(b, 0, length); //
-		 * 向文件输出流写读取的数据 //
-		 * session.setAttribute("progressBar",Math.round(percent)); //
-		 * //将上传百分比保存到Session中 } fos.close(); } catch (RuntimeException ex) {
-		 * error = "@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage();
-		 * 
-		 * return ; }
-		 * 
-		 * File info = new File(realSaveTo); FrmAttachmentDB dbUpload = new
-		 * FrmAttachmentDB();
-		 * 
-		 * dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();
-		 * dbUpload.setNodeID((new Integer(getFK_Node())).toString());
-		 * dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
-		 * 
-		 * if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) { //
-		 * 如果是继承，就让他保持本地的PK. dbUpload.setRefPKVal(this.getPKVal().toString()); }
-		 * 
-		 * if (athDesc.getAthUploadWay() == AthUploadWay.Interwork) { //
-		 * 如果是协同，就让他是PWorkID. String pWorkID = String.valueOf(BP.DA.DBAccess
-		 * .RunSQLReturnValInt(
-		 * "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" +
-		 * this.getPKVal(), 0)); if (pWorkID == null || pWorkID.equals("0")) {
-		 * pWorkID = this.getPKVal(); }
-		 * 
-		 * dbUpload.setRefPKVal(pWorkID); }
-		 * 
-		 * dbUpload.setFK_MapData(athDesc.getFK_MapData());
-		 * dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
-		 * 
-		 * dbUpload.setFileExts(ext); dbUpload.setFileFullName(saveTo);
-		 * dbUpload.setFileName(item.getOriginalFilename());
-		 * dbUpload.setFileSize(item.getSize());
-		 * 
-		 * dbUpload.setRDT(DataType.getCurrentDataTimess());
-		 * dbUpload.setRec(WebUser.getNo());
-		 * dbUpload.setRecName(WebUser.getName()); if (athDesc.getIsNote()) {
-		 * dbUpload.setMyNote(this.getTB_Note()); }
-		 * 
-		 * if (athDesc.getSort().contains(",")) {
-		 * dbUpload.setSort(this.getddl()); }
-		 * 
-		 * if (athDesc.getIsExpCol() == true) { if (parasData != null &&
-		 * parasData.length() > 0) { for(String para : parasData.split("@")){
-		 * dbUpload.SetPara(para.split("=")[0],para.split("=")[1]); } } }
-		 * dbUpload.setUploadGUID(guid); dbUpload.Insert(); } else { error =
-		 * "没有选择上传文件！";
-		 * 
-		 * return; }
-		 * 
-		 * try {
-		 * 
-		 * //BaseModel.sendRedirect(Glo.getCCFlowAppPath()+"WF/CCForm/Ath.htm?"+
-		 * request.getQueryString());
-		 * 
-		 * } catch (Exception e) { e.printStackTrace();
-		 * 
-		 * return; }
-		 */
+ 
 	}
 
 	@RequestMapping(value = "/AttachmentUploadS.do", method = RequestMethod.POST)
@@ -403,6 +282,8 @@ public class AttachmentUploadController extends BaseController {
 
 	private void uploadFile(CommonsMultipartFile item, FrmAttachment athDesc, GEEntity en, String msg, MapData mapData,
 			String attachPk, String parasData) throws Exception {
+		
+		
 		// 获取文件名
 		String fileName = item.getOriginalFilename();
 		// 扩展名
@@ -479,6 +360,7 @@ public class AttachmentUploadController extends BaseController {
 				}
 				fos.close();
 			} catch (RuntimeException ex) {
+				
 				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
 
 			}
@@ -496,12 +378,13 @@ public class AttachmentUploadController extends BaseController {
 			File info = new File(realSaveTo);
 
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();
-			dbUpload.setNodeID(String.valueOf(this.getFK_Node()));
+			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();			 
 			dbUpload.setFK_FrmAttachment(attachPk);
 			dbUpload.setFK_MapData(athDesc.getFK_MapData());
 			dbUpload.setFK_FrmAttachment(attachPk);
 			dbUpload.setFileExts(exts);
+			dbUpload.setFID(this.getFID());
+			dbUpload.setNodeID( this.getFK_Node());
 			if (athDesc.getIsExpCol() == true) {
 				if (parasData != null && parasData.length() > 0) {
 					for (String para : parasData.split("@")) {
@@ -528,9 +411,57 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setRDT(DataType.getCurrentDataTimess());
 			dbUpload.setRec(BP.Web.WebUser.getNo());
 			dbUpload.setRecName(BP.Web.WebUser.getName());
-			dbUpload.setRefPKVal(getPKVal());
+			
+			String pkVal=this.getPKVal();			
+			if (athDesc.getHisCtrlWay()==  AthCtrlWay.FID)
+				pkVal=String.valueOf(this.getFID());
+			if (athDesc.getHisCtrlWay()==  AthCtrlWay.PWorkID)
+				pkVal=String.valueOf(this.getPWorkID());
+			
+			
+			
 			dbUpload.setFID(this.getFID());
 			dbUpload.setUploadGUID(guid);
+			
+			
+			
+			 //求主键. 如果该表单挂接到流程上.
+            if (this.getFK_Node() != 0)
+            {
+            	
+                //判断表单方案。
+                FrmNode fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), athDesc.getFK_MapData());
+                if (fn.getFrmSln() == FrmSln.Readonly)
+                	return  ;
+                
+                //    return "err@不允许上传附件.";
+
+                //是默认的方案的时候.
+                if (fn.getFrmSln() == FrmSln.Default)
+                {
+                    //判断当前方案设置的whoIsPk ，让附件集成 whoIsPK 的设置。
+                    if (fn.getWhoIsPK() == WhoIsPK.FID)
+                        pkVal = String.valueOf( this.getFID());
+
+                    if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
+                        pkVal = this.getPWorkID().toString();
+                }
+
+                //自定义方案.
+                if (fn.getFrmSln() == FrmSln.Self)
+                {
+                    athDesc = new FrmAttachment(attachPk + "_" + this.getFK_Node());
+                    if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+                        pkVal = String.valueOf( this.getFID());
+
+                    if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+                        pkVal = String.valueOf( this.getPWorkID());
+                }
+            }
+			
+			
+			dbUpload.setRefPKVal(pkVal);
+			
 			dbUpload.Insert();
 
 			if (athDesc.getAthSaveWay() == AthSaveWay.DB) {
@@ -589,7 +520,7 @@ public class AttachmentUploadController extends BaseController {
 			File info = new File(temp);
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 			dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
-			dbUpload.setNodeID(String.valueOf(getFK_Node()));
+			dbUpload.setNodeID( getFK_Node());
 			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
 			dbUpload.setFID(this.getFID()); // 流程id.
 			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
@@ -704,6 +635,11 @@ public class AttachmentUploadController extends BaseController {
 		}
 		/// #endregion 保存到数据库.
 		return;
+	}
+
+	private char[] getPWorkID() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

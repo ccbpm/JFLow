@@ -243,17 +243,17 @@ public class FrmAttachmentDB extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.SaveWay, value);
 	}
+	
 	/** 
-	 附件扩展名
-	 
+	 附件扩展名	 
 	*/
-	public final String getNodeID()
+	public final int getNodeID()
 	{
-		return this.GetValStringByKey(FrmAttachmentDBAttr.NodeID);
+		return this.GetValIntByKey(FrmAttachmentDBAttr.NodeID);
 	}
-	public final void setNodeID(String value)
+	public final void setNodeID(int fk_node)
 	{
-		this.SetValByKey(FrmAttachmentDBAttr.NodeID, value);
+		this.SetValByKey(FrmAttachmentDBAttr.NodeID, fk_node);
 	}
 	/** 
 	 附件类型

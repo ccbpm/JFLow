@@ -4452,7 +4452,7 @@ public class Glo {
 			return dbs;
 		}
 
-		if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID || athDesc.getHisCtrlWay() == AthCtrlWay.FID) {
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID ) {
 			/* 继承模式 */
 			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 			qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
@@ -4463,6 +4463,18 @@ public class Glo {
 			// qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment,
 			// FK_FrmAttachment);
 
+			qo.addOrderBy("RDT");
+			qo.DoQuery();
+			return dbs;
+		}
+		
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.FID ) {
+			/* 继承模式 */
+			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+			qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK());
+			qo.addAnd();
+			qo.AddWhere(FrmAttachmentDBAttr.FID, Integer.parseInt(pkval));
+ 
 			qo.addOrderBy("RDT");
 			qo.DoQuery();
 			return dbs;

@@ -68,10 +68,13 @@ public class FrmNodeExt extends EntityMyPK{
  
             map.AddBoolean(FrmNodeAttr.IsPrint, false, "是否可以打印", true, true);
             map.AddBoolean(FrmNodeAttr.IsEnableLoadData, false, "是否启用装载填充事件", true, true);
+            
+            map.AddDDLSysEnum(FrmNodeAttr.WhoIsPK, 0, "谁是主键?", true, true);
+            
             map.AddDDLSysEnum(FrmNodeAttr.FrmSln, 0, "表单控制方案", true, true, FrmNodeAttr.FrmSln,
                 "@0=默认方案@1=只读方案@2=自定义方案");
 
-            map.AddDDLSysEnum(FrmNodeAttr.WhoIsPK, 0, "谁是主键?", true, true);
+          
 
             //显示的
             map.AddTBInt(FrmNodeAttr.Idx, 0, "顺序号(显示的顺序)", true, false);
@@ -93,18 +96,7 @@ public class FrmNodeExt extends EntityMyPK{
             
 
             RefMethod rm = new RefMethod();
-
-            //rm.Title = "启用规则";
-            //rm.ClassMethodName = this.ToString() + ".DoEnableRole()";
-            //rm.RefMethodType = RefMethodType.RightFrameOpen;
-            //map.AddRefMethod(rm);
-
-            rm = new RefMethod();
-            rm.Title = "自定义方案(权限设置)";
-            rm.ClassMethodName = this.toString() + ".DoSelfSln()";
-            rm.refMethodType=RefMethodType.LinkeWinOpen;
-            map.AddRefMethod(rm);
-            
+  
             rm = new RefMethod();
             rm.Title = "字段权限";
             rm.ClassMethodName = this.toString() + ".DoFields()";
@@ -114,13 +106,13 @@ public class FrmNodeExt extends EntityMyPK{
             rm = new RefMethod();
             rm.Title = "从表权限";
             rm.ClassMethodName = this.toString() + ".DoDtls()";
-            rm.refMethodType = RefMethodType.LinkeWinOpen;
+            rm.refMethodType = RefMethodType.RightFrameOpen;
             map.AddRefMethod(rm);
 
             rm = new RefMethod();
             rm.Title = "附件权限";
             rm.ClassMethodName = this.toString() + ".DoAths()";
-            rm.refMethodType = RefMethodType.LinkeWinOpen;
+            rm.refMethodType = RefMethodType.RightFrameOpen;
             map.AddRefMethod(rm);
 
             rm = new RefMethod();

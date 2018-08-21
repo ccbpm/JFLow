@@ -410,7 +410,7 @@ function Save(scope) {
 
     $.ajax({
         type: 'post',
-        async: false,
+        async: true,
         data: getFormData(true, true),
         url: Handler + "?DoType=FrmGener_Save&OID=" + pageData.OID,
         dataType: 'html',
@@ -421,8 +421,9 @@ function Save(scope) {
                 $('.Message').show();
                 return;
             }
-            if(scope != "btnsave")
-            	window.location.href = window.location.href;
+
+            if (scope != "btnsave")
+                window.location.href = window.location.href;
             //alert(data);
         }
     });

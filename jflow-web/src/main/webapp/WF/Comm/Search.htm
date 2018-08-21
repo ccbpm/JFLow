@@ -570,9 +570,9 @@
                 pkval = rowData["NodeID"];
             }
             if (rowData.MyFileName != null && rowData.MyFileName != "")
-            	return "<a href='#' onclick='downLoadFile(\"" + pkval + "\")' target='_self'>下载</a>"; 
+                return "<a href='#' onclick='downLoadFile(\"" + pkval + "\")' target='_self'>下载</a>";
             else
-            	return "-";
+                return "-";
         }
 
         function downLoadFile(PKVal) {

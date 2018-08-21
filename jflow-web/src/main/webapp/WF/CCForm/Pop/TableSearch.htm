@@ -409,6 +409,7 @@
             var reg = new RegExp("@Key", "g");
             dbSrc = dbSrc.replace(reg, keyWord);
             dbSrc = DealExp(dbSrc);
+
             $.each(condtionFieldsArry, function (i, obj) {
                 var regC = new RegExp("@" + obj.FieldKey, "g");
                 var value = $("#" + obj.FieldKey).val();

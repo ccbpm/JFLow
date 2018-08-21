@@ -153,7 +153,6 @@
             numOfUpload = athDesc.NumOfUpload; //最低上传的数量.
             numOfAths = dbs.length; //现有的数量.
 
-
             var mapAttrs = null;
 
             if (athDesc.IsExpCol != 0) {
@@ -238,7 +237,7 @@
         //检查上传附件的数量,如果不符合最低要求alert错误，并且返回false.
         function CheckNumOfUpload() {
             if ( numOfUpload > numOfAths) {
-                alert('您必须上传["+numOfUpload+"]个附件');
+                alert('您至少需要上传["+numOfUpload+"]个附件');
                 return false;
             }
             return true;          
@@ -602,6 +601,11 @@
                 Url = path + "/WF/CCForm/AttachmentUploadS.do/?FK_FrmAttachment=" + FK_FrmAttachment + "&PKVal=" + PKVal + "&parasData=" + parasData;
             }
 
+            Url += "&FID=" + GetQueryString("FID");
+            Url += "&FK_Node=" + GetQueryString("FK_Node");
+            Url += "&PWorkID=" + GetQueryString("PWorkID");
+            Url += "&FK_MapData=" + GetQueryString("FK_MapData");
+
 
             $.ajax({
                 url: Url,
@@ -616,9 +620,16 @@
                     console.log("正在进行，请稍候");
                 },
                 success: function (responseStr) {
+
+                    if (responseStr.indexOf('err@') != -1)
+                        alert(responseStr);
+
                 },
                 error: function (responseStr) {
-                    console.log("error");
+                    if (responseStr.indexOf('err@') != -1)
+                        alert(responseStr);
+
+                    console.log(responseStr);
                 }
             });
 

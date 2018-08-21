@@ -127,6 +127,7 @@ function addTab(id, title, url) {
             closable: true,
         });
     }
+    
     OnTabChange("saveOther");
     var tabs = $("#tabs").tabs().tabs('tabs');
     for (var i = 0; i < tabs.length; i++) {
@@ -135,6 +136,7 @@ function addTab(id, title, url) {
 	    	OnTabChange();
 	    });
     }
+    ChangTabFormTitle();
     $('#tabs').tabs('select', title);
     tabClose();
 }

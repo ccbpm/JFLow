@@ -920,8 +920,7 @@
             //获取发送请求时的参数
             var queryString = document.location.search.substr(1);
 
-            if (queryString.indexOf("PKVal=&") != -1)
-                queryString = replaceParamVal(queryString, "PKVal", pkval);
+            queryString = replaceParamVal(queryString, "PKVal", pkval);
 
 
             //URL 路径

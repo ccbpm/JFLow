@@ -1,4 +1,4 @@
-﻿package BP.GPM;
+package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;

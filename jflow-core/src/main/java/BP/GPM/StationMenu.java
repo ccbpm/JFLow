@@ -1,7 +1,6 @@
-﻿package BP.GPM;
+package BP.GPM;
 
 import BP.DA.*;
-import BP.Web.*;
 import BP.En.*;
 
 /** 
@@ -10,8 +9,11 @@ import BP.En.*;
 */
 public class StationMenu extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	///#region 属性
 	/** 
 	 菜单
 	 
@@ -48,11 +50,8 @@ public class StationMenu extends EntityMM
 	{
 		this.SetValByKey(StationMenuAttr.IsChecked, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
+	///#region 构造方法
 	/** 
 	 岗位菜单
 	 
@@ -93,6 +92,5 @@ public class StationMenu extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

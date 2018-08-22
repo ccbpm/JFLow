@@ -85,7 +85,7 @@ public class VGPMEmpMenu extends EntityMyPK
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("GPM_EmpMenu");
+		Map map = new Map("V_GPM_EmpMenu");
 		map.setDepositaryOfEntity(Depositary.None);
 		map.setDepositaryOfMap(Depositary.Application);
 		map.setEnDesc("人员菜单功能");

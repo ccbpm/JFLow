@@ -1,10 +1,8 @@
-﻿package BP.GPM;
+package BP.GPM;
 
 import BP.DA.*;
-import BP.En.*;
 import BP.Web.*;
 import BP.Sys.*;
-import BP.Port.*;
 
 /** 
  权限调用API

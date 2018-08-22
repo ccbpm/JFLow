@@ -993,7 +993,7 @@ public abstract class WebContralBase extends BaseController {
 			if (attr.getKey() == "MyNum")
 				continue;
 			
-			if (attr.getUIVisible() == false)
+			if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
 				continue;
 			
 			 if (attr.getIsFKorEnum())

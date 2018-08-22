@@ -990,10 +990,10 @@ public abstract class WebContralBase extends BaseController {
 		for (int i = 0; i < selectedAttrs.size(); i++) {
 			Attr attr = selectedAttrs.get(i);
 
-			//if (attr.getUIVisible() == false)
-			//	continue;
-
 			if (attr.getKey() == "MyNum")
+				continue;
+			
+			if (attr.getUIVisible() == false)
 				continue;
 			
 			 if (attr.getIsFKorEnum())

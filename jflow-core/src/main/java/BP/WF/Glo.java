@@ -4473,8 +4473,11 @@ public class Glo {
 			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 			qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK());
 			qo.addAnd();
+			qo.addLeftBracket();
 			qo.AddWhere(FrmAttachmentDBAttr.FID, Integer.parseInt(pkval));
- 
+			qo.addOr();
+			qo.addRightBracket();
+			 
 			qo.addOrderBy("RDT");
 			qo.DoQuery();
 			return dbs;

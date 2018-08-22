@@ -1945,7 +1945,7 @@ table.dataTable thead .sorting:after {
 	border: 1px solid #e5e6e7;
 	border-radius: 1px;
 	color: inherit;
-	display: block;
+	display: inline;
 	padding: 6px 12px;
 	-webkit-transition: border-color .15s ease-in-out 0s, box-shadow .15s ease-in-out 0s;
 	transition: border-color .15s ease-in-out 0s, box-shadow .15s ease-in-out 0s;

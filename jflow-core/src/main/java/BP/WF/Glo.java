@@ -4474,8 +4474,9 @@ public class Glo {
 			qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK());
 			qo.addAnd();
 			qo.addLeftBracket();
-			qo.AddWhere(FrmAttachmentDBAttr.FID, Integer.parseInt(pkval));
+			qo.AddWhere(FrmAttachmentDBAttr.FID, Integer.parseInt(pkval));			 
 			qo.addOr();
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, Integer.parseInt(pkval));
 			qo.addRightBracket();
 			 
 			qo.addOrderBy("RDT");

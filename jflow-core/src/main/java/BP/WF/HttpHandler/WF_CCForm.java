@@ -415,10 +415,9 @@ public class WF_CCForm extends WebContralBase {
 			}
 		}
 		// #endregion 处理权限方案。
-		
+
 		athDesc.setMyPK(this.getFK_FrmAttachment());
 		return athDesc;
-		 
 
 	}
 
@@ -1317,12 +1316,6 @@ public class WF_CCForm extends WebContralBase {
 
 		json = en.ToJson();
 
-		// 增加主表数据.
-		DataTable mainTable = en.ToDataTableField("MainTable");
-
-		json = en.ToJson();
-
-		ds.Tables.add(mainTable);
 		// /#endregion 把主表数据放入.
 
 		/// #region 把外键表加入DataSet
@@ -1457,15 +1450,103 @@ public class WF_CCForm extends WebContralBase {
 
 				// 遍历属性集合.
 				for (DataRow dr : dtMapAttr.Rows) {
+
 					String keyOfEn = (String) dr.getValue(MapAttrAttr.KeyOfEn);
 					for (FrmField ff : ffs.ToJavaList()) {
 						if (ff.getKeyOfEn().equals(keyOfEn) == false)
 							continue;
 
 						dr.setValue(MapAttrAttr.UIIsEnable, ff.getUIIsEnable());// 是否只读?
-
 						dr.setValue(MapAttrAttr.UIVisible, ff.getUIVisible());// 是否只读?
+						if (DataType.IsNullOrEmpty(ff.getDefVal()) == true)
+							continue;
 
+						dr.setValue(MapAttrAttr.DefVal, ff.getDefVal());// 是否只读?
+
+						Attr attr = new Attr();
+						attr.setMyDataType( Integer.parseInt(  dr.getValue(MapAttrAttr.MyDataType).toString())  );
+						attr.setDefaultValOfReal(ff.getDefVal());
+						
+						 
+						attr.setKey(ff.getKeyOfEn());
+						if (dr.getValue(MapAttrAttr.UIIsEnable).toString().equals("0"))
+							attr.setUIIsReadonly(true);
+
+						if (DataType.IsNullOrEmpty(ff.getDefVal()) == true)
+							continue;
+
+						String tempVar = ff.getDefVal();
+						String v = (String) ((tempVar instanceof String) ? tempVar : null);
+
+						// 设置默认值.
+						String myval = en.GetValStrByKey(ff.getKeyOfEn());
+
+						// 设置默认值.
+						if (v.equals("@WebUser.No")) {
+							if (attr.getUIIsReadonly()) {
+								en.SetValByKey(attr.getKey(), WebUser.getNo());
+							} else {
+								if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), WebUser.getNo());
+								}
+							}
+							continue;
+						} else if (v.equals("@WebUser.Name")) {
+							if (attr.getUIIsReadonly()) {
+								en.SetValByKey(attr.getKey(), WebUser.getName());
+							} else {
+								if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), WebUser.getName());
+								}
+							}
+							continue;
+						} else if (v.equals("@WebUser.FK_Dept")) {
+							if (attr.getUIIsReadonly()) {
+								en.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
+							} else {
+								if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
+								}
+							}
+							continue;
+						} else if (v.equals("@WebUser.FK_DeptName")) {
+							if (attr.getUIIsReadonly()) {
+								en.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
+							} else {
+								if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
+								}
+							}
+							continue;
+						} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
+							if (attr.getUIIsReadonly()) {
+								en.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
+							} else {
+								if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
+								}
+							}
+							continue;
+						} else if (v.equals("@RDT")) {
+							if (attr.getUIIsReadonly()) {
+								if (attr.getMyDataType() == DataType.AppDate || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+								}
+
+								if (attr.getMyDataType() == DataType.AppDateTime || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
+								}
+							} else {
+								if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+									if (attr.getMyDataType() == DataType.AppDate) {
+										en.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+									} else {
+										en.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
+									}
+								}
+							}
+							continue;
+						}
 					}
 				}
 
@@ -1479,6 +1560,11 @@ public class WF_CCForm extends WebContralBase {
 		// #endregion 处理权限方案s
 
 		// #endregion 加入组件的状态信息, 在解析表单的时候使用.
+
+		// 增加主表数据.
+		DataTable mainTable = en.ToDataTableField("MainTable");
+		json = en.ToJson();
+		ds.Tables.add(mainTable);
 
 		json = BP.Tools.Json.ToJson(ds);
 

@@ -417,14 +417,10 @@ public class AttachmentUploadController extends BaseController {
 				pkVal=String.valueOf(this.getFID());
 			if (athDesc.getHisCtrlWay()==  AthCtrlWay.PWorkID)
 				pkVal=String.valueOf(this.getPWorkID());
-			
-			
-			
+			 
 			dbUpload.setFID(this.getFID());
 			dbUpload.setUploadGUID(guid);
-			
-			
-			
+			  
 			 //求主键. 如果该表单挂接到流程上.
             if (this.getFK_Node() != 0)
             {

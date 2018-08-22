@@ -1235,7 +1235,6 @@ public class WF_Comm extends WebContralBase {
 			if (map.DTSearchWay == DTSearchWay.ByDate) {
 				qo.addAnd();
 				qo.addLeftBracket();
-				dtFrom += " 00:00:00";
                 dtTo += " 23:59:59";
 				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
@@ -2996,8 +2995,6 @@ public class WF_Comm extends WebContralBase {
             //按日期查询
             if (map.DTSearchWay == DTSearchWay.ByDate)
             {
-
-                dtFrom += " 00:00:00";
                 dtTo += " 23:59:59";
                 where += " and (" + map.DTSearchKey + " >= '" + dtFrom + "'";
                 where += " and " + map.DTSearchKey + " <= '" + dtTo + "'";
@@ -3277,5 +3274,204 @@ public class WF_Comm extends WebContralBase {
 
         return filePath;
     }
+    
+    public final String Entitys_Init() throws Exception
+	{
+		//定义容器.
+		DataSet ds = new DataSet();
+
+		//查询出来从表数据.
+		Entities dtls = ClassFactory.GetEns(this.getEnsName());
+		Entity en = dtls.getGetNewEntity();
+		QueryObject qo = new QueryObject(dtls);
+		qo.addOrderBy(en.getPK());
+		qo.DoQuery();
+		ds.Tables.add(dtls.ToDataTableField("Ens"));
+		//定义Sys_MapData.
+		MapData md = new MapData();
+		md.setNo(this.getEnName());
+		md.setName(en.getEnDesc());
+
+		///#region 加入权限信息.
+		//把权限加入参数里面.
+		if (en.getHisUAC().IsInsert)
+		{
+			md.SetPara("IsInsert", "1");
+		}
+		if (en.getHisUAC().IsUpdate)
+		{
+			md.SetPara("IsUpdate", "1");
+		}
+		if (en.getHisUAC().IsDelete)
+		{
+			md.SetPara("IsDelete", "1");
+		}
+		///#endregion 加入权限信息.
+
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+		///#region 字段属性.
+		MapAttrs attrs = en.getEnMap().getAttrs().ToMapAttrs();
+		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
+		ds.Tables.add(sys_MapAttrs);
+		///#endregion 字段属性.
+		///#region 把外键与枚举放入里面去.
+		for (DataRow dr : sys_MapAttrs.Rows)
+		{
+			String uiBindKey = dr.getValue("UIBindKey").toString();
+			String lgType =  dr.getValue("LGType").toString();
+			if (lgType.equals("2") == false)
+			{
+				continue;
+			}
+
+			String UIIsEnable = dr.getValue("UIVisible").toString();
+			if (UIIsEnable.equals("0"))
+			{
+				continue;
+			}
+
+			if (DataType.IsNullOrEmpty(uiBindKey) == true)
+			{
+				String myPK =  dr.getValue("MyPK").toString();
+				//如果是空的
+				//   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
+			}
+
+			// 检查是否有下拉框自动填充。
+			String keyOfEn =  dr.getValue("KeyOfEn").toString();
+			String fk_mapData =  dr.getValue("FK_MapData").toString();
+
+
+			// 判断是否存在.
+			if (ds.Tables.contains(uiBindKey) == true)
+			{
+				continue;
+			}
+
+			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+		}
+
+		String enumKeys = "";
+		for (Attr attr : en.getEnMap().getAttrs())
+		{
+			if (attr.getMyFieldType() == FieldType.Enum)
+			{
+				enumKeys += "'" + attr.getUIBindKey() + "',";
+			}
+		}
+
+		if (enumKeys.length() > 2)
+		{
+			enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
+			String sqlEnum = "SELECT * FROM Sys_Enum WHERE EnumKey IN (" + enumKeys + ")";
+			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
+			dtEnum.TableName = "Sys_Enum";
+
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			{
+				dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
+				dtEnum.Columns.get("LAB").ColumnName = "Lab";
+				dtEnum.Columns.get("ENUMKEY").ColumnName = "EnumKey";
+				dtEnum.Columns.get("INTKEY").ColumnName = "IntKey";
+				dtEnum.Columns.get("LANG").ColumnName = "Lang";
+			}
+			ds.Tables.add(dtEnum);
+		}
+		///#endregion 把外键与枚举放入里面去.
+
+		return BP.Tools.Json.ToJson(ds);
+	}
+
+	///#region 实体集合的保存.
+	/** 
+	 实体集合的删除
+	 
+	 @return 
+	*/
+	public final String Entities_Delete()
+	{
+		return "err@该方法没有完成，请使用Entiy_Delete. 可以按照条件删除.";
+	}
+	/** 
+	 初始化
+	 
+	 @return 
+	 * @throws Exception 
+	*/
+	public final String Entities_Save() throws Exception
+	{
+		try
+		{
+			///#region  查询出来s实体数据.
+			Entities dtls = BP.En.ClassFactory.GetEns(this.getEnsName());
+			Entity en = dtls.getGetNewEntity();
+			QueryObject qo = new QueryObject(dtls);
+			qo.DoQuery();
+			Map map = en.getEnMap();
+			for (Entity item : dtls)
+			{
+				String pkval = item.getPKVal().toString();
+
+				for (Attr attr : map.getAttrs())
+				{
+					if (attr.getIsRefAttr() == true)
+					{
+						continue;
+					}
+
+					if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+					{
+						if (attr.getUIIsReadonly() == false)
+						{
+							continue;
+						}
+
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						item.SetValByKey(attr.getKey(), val);
+						continue;
+					}
+
+
+					if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
+					{
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						item.SetValByKey(attr.getKey(), val);
+						continue;
+					}
+
+					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
+					{
+						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
+						item.SetValByKey(attr.getKey(), val);
+						continue;
+					}
+
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+					{
+						String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
+						if (val.equals("-1"))
+						{
+							item.SetValByKey(attr.getKey(), 0);
+						}
+						else
+						{
+							item.SetValByKey(attr.getKey(), 1);
+						}
+						continue;
+					}
+				}
+
+				item.Update(); //执行更新.
+			}
+
+
+			return "保存成功.";
+		}
+		catch (RuntimeException ex)
+		{
+			return "err@" + ex.getMessage();
+		}
+	}
+	///#endregion
 
 }

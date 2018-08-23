@@ -7473,7 +7473,7 @@ public class Flow extends BP.En.EntityNoName
 		sql = "UPDATE WF_Flow SET FK_FlowSort ='',IsCanStart=0 WHERE PTable='" + this.getPTable() + "' ";
 		DBAccess.RunSQL(sql);
 
-		sql = "UPDATE WF_Flow SET FK_FlowSort ='" + this.getFK_FlowSort() + "',IsCanStart=1 WHERE No='" + this.getNo() + "' ";
+		sql = "UPDATE WF_Flow SET FK_FlowSort ='" + flowSort + "',IsCanStart=1 WHERE No='" + this.getNo() + "' ";
 		DBAccess.RunSQL(sql);
 		return "info@设置成功";
 	}

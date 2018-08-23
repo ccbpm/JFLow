@@ -701,25 +701,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                 dt = DBAccess.RunSQLReturnTable(sql);
                 dt.TableName = "DISPOSE";
                 ds.Tables.add(dt);
-<<<<<<< .mine
-
-                GenerWorkerLists gwls = new GenerWorkerLists();
-                
-                
-                long id=this.getFID();
-                if (id==0)
-                	id= this.getWorkID();
-                 
-                    QueryObject qo = new QueryObject(gwls);
-                    qo.AddWhere(GenerWorkerListAttr.FID, id);
-                    qo.addOr();
-                    qo.AddWhere(GenerWorkerListAttr.WorkID, id);
-                    qo.DoQuery();
-                
-
-                DataTable dtGwls = gwls.ToDataTableField("WF_GenerWorkerList");
-                ds.Tables.add(dtGwls);
-=======
                 
                
                 
@@ -740,7 +721,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                 	 
                 }
                 
->>>>>>> .r908
             }
             else
             {

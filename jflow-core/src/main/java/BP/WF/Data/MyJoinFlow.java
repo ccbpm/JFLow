@@ -544,7 +544,7 @@ public class MyJoinFlow extends Entity
 		map.AddSearchAttr(MyJoinFlowAttr.FK_Flow);
 		map.AddSearchAttr(MyJoinFlowAttr.WFSta);
 		map.AddSearchAttr(MyJoinFlowAttr.TSpan);
-
+		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 
 			//增加隐藏的查询条件.
 		AttrOfSearch search = new AttrOfSearch(MyJoinFlowAttr.Emps, "人员", MyJoinFlowAttr.Emps, " LIKE ", "%@WebUser.No%", 0, true);

@@ -488,6 +488,7 @@ public class MyDeptFlow extends Entity
 
 		map.AddSearchAttr(MyDeptFlowAttr.FK_Flow);
 		map.AddSearchAttr(MyDeptFlowAttr.WFSta);
+		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 
 			//增加隐藏的查询条件.
 		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", BP.Web.WebUser.getFK_Dept(), 0, true);

@@ -450,17 +450,16 @@ public class WF_RptDfine extends WebContralBase{
 		{
 				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 		}
-//ORIGINAL LINE: case "MyDept":
+
 		else if (this.getSearchType().equals("MyDept")) //我部门发起的.
 		{
 				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
 		}
-//ORIGINAL LINE: case "MyJoin":
+
 		else if (this.getSearchType().equals("MyJoin")) //我参与的.
 		{
 				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
 		}
-//ORIGINAL LINE: case "Adminer":
 		else if (this.getSearchType().equals("Adminer"))
 		{
 		}
@@ -472,7 +471,8 @@ public class WF_RptDfine extends WebContralBase{
 		qo = InitQueryObject(qo, md, ges.getGetNewEntity().getEnMap().getAttrs(), attrs, ur);
 
 		qo.AddWhere(" AND  WFState > 1 ");
-
+		qo.AddWhere(" AND  FID = 0  ");
+		
 		md.SetPara("T_total", qo.GetCount());
 		qo.DoQuery("OID", StringUtils.isEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), 1);
 		ds.Tables.add(ges.ToDataTableField("MainData"));
@@ -805,6 +805,8 @@ public class WF_RptDfine extends WebContralBase{
 
 			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
 			{
+				dtFrom += " 00:00:00";
+                dtTo += " 23:59:59";
 				qo.addAnd();
 				qo.addLeftBracket();
 				qo.setSQL(dtKey + " >= '" + dtFrom + "'");

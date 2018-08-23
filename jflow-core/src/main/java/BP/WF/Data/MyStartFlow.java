@@ -505,8 +505,8 @@ public class MyStartFlow extends Entity
 		map.AddSearchAttr(MyStartFlowAttr.FK_Flow);
 		map.AddSearchAttr(MyStartFlowAttr.WFSta);
 		map.AddSearchAttr(MyStartFlowAttr.TSpan);
-
-
+		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
+	
 		
 		try {
 			AttrOfSearch  search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", BP.Web.WebUser.getNo(), 0, true);

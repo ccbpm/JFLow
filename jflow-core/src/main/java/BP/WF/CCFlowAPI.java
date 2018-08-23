@@ -310,7 +310,7 @@ public class CCFlowAPI {
 
 				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 					myFrmIDs = myFrmIDs.replace("'", "");
-					sqlOrder += " ORDER BY INSTR(FrmID, '" + myFrmIDs + "'), Idx";
+					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "',FrmID), Idx";
 				}
 
 				DataTable dtOrder = DBAccess.RunSQLReturnTable(sqlOrder);

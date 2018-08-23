@@ -2,12 +2,10 @@
 <head>
     <title>组织结构管理</title>
     <link rel="stylesheet" type="text/css" href="themes/default/easyui.css" />
-    <link rel="stylesheet" type="text/css" href="themes/icon.css" />
     <script type="text/javascript" src="../WF/Scripts/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../WF/Scripts/jquery/jquery.easyui.min.js"></script>
     <script src="../WF/Scripts/jquery/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../WF/Scripts/QueryString.js" type="text/javascript"></script>
-
     <link href="../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
     <!-- 引入新版本的类库. -->
     <script src="../WF/Scripts/config.js" type="text/javascript"></script>
@@ -22,7 +20,7 @@
     <script src="../WF/Scripts/bootstrap/bootstrap-table/src/bootstrap-table.js" type="text/javascript"></script>
     <link href="../WF/Scripts/bootstrap/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" type="text/css" />
     <script src="../WF/Scripts/bootstrap/bootstrap-table/src/locale/bootstrap-table-zh-CN.js" type="text/javascript"></script>
-
+	<script src="../WF/Scripts/bootstrap/BootstrapUIDialog.js" type="text/javaScript"></script>
    <script type="text/javascript">
        var global = window;
        var deptNo = "";
@@ -32,20 +30,20 @@
        //初始化
        $(function () {
 
-           //deptInfoDialogClose();
            $('#deptInfoDialog').dialog("close");
            $('#deptEmpDialog').dialog("close");
            $('#empInfo').dialog("close");
            $('#connecteEmp').dialog("close");
-           //empBelongDeptDialogClose();
            $('#empDepts_Panel').dialog("close");
            $("#pageloading").show();
 
            //加载菜单
-           //LoadDeptTree();
            LoadDeptTreeV2();
-       });
 
+           //绑定帮助信息.
+           var html = "<h3>欢迎使用GPM系统...</h3>";
+           $("#Emps").html(html);
+       });
 
        var nodeId = "";
        function LoadDeptTreeV2() {
@@ -53,16 +51,13 @@
            var ens = new Entities("BP.GPM.Depts");
            ens.RetrieveAll();
 
-           //把json转成树状的json.
            var pushData = createJsonToTree(ens, "0");
            var jsonTree = pushData;
 
            $('#appTree').treeview({
 
                data: jsonTree,         // 数据源
-               //showCheckbox: true,   //是否显示复选框
                highlightSelected: true,    //是否高亮选中
-               //nodeIcon: 'glyphicon glyphicon-user',    //节点上的图标
                nodeIcon: 'glyphicon',
                emptyIcon: '',    //没有子节点的节点图标
                multiSelect: false,    //多选
@@ -79,11 +74,8 @@
                    }
                },
                onNodeSelected: function (event, node) {
-
-                    //alert(node);
-                    //alert( JSON.stringify( node) );
-                   
                    nodeId = node.nodeId;
+                   deptNo = node.id
                    BindEmps(node.id);
 
                    deptNo = $('#appTree').treeview('getNode', node.nodeId).id;
@@ -98,15 +90,15 @@
                    }
                }
            });
-         
+
            $("#pageloading").hide();
        }
-       
+
        //绑定人员.
        function BindEmps() {
 
-           var dept = new Entity("BP.GPM.Dept",deptNo);
-        
+           var dept = new Entity("BP.GPM.Dept", deptNo);
+
            var html = "";
            html += "<table style='width:95%;'>";
            html += "<caption ><a href=\"javascript:EditDept('" + dept.No + "')\" >" + dept.Name + " </a> - <a href='javascript:EditEmp()'>新建人员</a> -  <a href='javascript:RefEmps()'>关联兼职</a>  </caption>";
@@ -122,7 +114,7 @@
            html += "</tr>";
 
            var emps = new Entities("BP.GPM.Emps");
-           emps.Retrieve("FK_Dept", dept.No);
+           emps.Retrieve("FK_Dept", dept.No, "Idx");
 
 
            var empNos = ",";
@@ -131,12 +123,12 @@
                html += "<tr ondblclick=\"EditEmp('" + emp.No + "')\" >";
                html += "<td class='Idx' >" + i + "</td>";
                html += "<td>" + emp.No + "</td>";
-               html += "<td><a href=\"javascript:EditEmp('"+emp.No+"')\">" + emp.Name + "</a></td>";
+               html += "<td><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
                html += "<td>" + dept.Name + "</td>";
                html += "<td>" + emp.Email + "</td>";
                html += "<td>" + emp.Tel + "</td>";
                html += "<td><a href=\"javascript:Del('" + emp.No + "')\" ><img src='../WF/Img/Btn/Delete.gif'>删除</a></td>";
-               html += "<td><img src='../WF/Img/Btn/Up.gif' onclick=\"Up('" + emp.No + "')\" alt='上移' />-<img src='../WF/Img/Btn/Down.gif' onclick=\"Down('" + emp.No + "')\" alt='下移' /> </td>";
+               html += "<td><img src='../WF/Img/Btn/Up.GIF' onclick=\"Up('" + emp.No + "')\" alt='上移' />-<img src='../WF/Img/Btn/Down.gif' onclick=\"Down('" + emp.No + "')\" alt='下移' /> </td>";
                html += "</tr>";
                empNos += emp.No + ',';
            }
@@ -152,17 +144,13 @@
                if (empNos.indexOf(',' + deptEmp.FK_Emp + ',') != -1)
                    continue;
 
-               var emp = new Entity("BP.GPM.Emp");
-               emp.SetPKVal(deptEmp.FK_Emp);
-               if (emp.RetrieveFromDBSources() == 0)
-                   continue;
+               var emp = new Entity("BP.GPM.Emp", deptEmp.FK_Emp);
 
-               html += "<tr ondblclick=\"EditEmp('"+emp.No+"')\" >";
+               html += "<tr ondblclick=\"EditEmp('" + emp.No + "')\" >";
                html += "<td class='Idx' >" + num + "</td>";
                html += "<td>" + emp.No + "</td>";
                html += "<td><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
                html += "<td>兼职</td>";
-               //html += "<td>" + emp.FK_DeptText + "</td>";
                html += "<td>" + emp.Email + "</td>";
                html += "<td>" + emp.Tel + "</td>";
                html += "<td><a href=\"javascript:Remove('" + emp.No + "')\" >移除<img src='../WF/Img/Btn/Delete.gif'></a></td>";
@@ -189,34 +177,36 @@
 
        function EditDept(no) {
            var url = '../WF/Comm/En.htm?EnName=BP.GPM.Dept&No=' + no;
-           WinOpen(url);
+           OpenBootStrapModal(url, "eudlgframe", "编辑", '800', '500', "icon-edit", true, null, null);
        }
 
        function EditEmp(no) {
 
            if (no == undefined) {
                var url = '../WF/Comm/En.htm?EnName=BP.GPM.Emp&FK_Dept=' + deptNo;
-               WinOpen(url);
+               OpenBootStrapModal(url, "eudlgframe", "新增", '800', '500', "icon-edit", true, null, null);
                return;
            }
 
            var url = '../WF/Comm/En.htm?EnName=BP.GPM.Emp&No=' + no;
-           WinOpen(url);
+           OpenBootStrapModal(url, "eudlgframe", "编辑", '800', '500', "icon-edit", true, null, null);
        }
 
        function RefEmps() {
 
            var url = "../WF/Comm/RefFunc/BranchesAndLeaf.htm?EnName=BP.GPM.Dept&Dot2DotEnsName=BP.GPM.DeptEmps&Dot2DotEnName=BP.GPM.DeptEmp&AttrOfOneInMM=FK_Dept&AttrOfMInMM=FK_Emp&EnsOfM=BP.Port.Emps&DefaultGroupAttrKey=FK_Dept&No=" + deptNo + "&PKVal=" + deptNo + "&s=0.13113811473063341";
-
-           //  RefEmps
-           //   var url = '../WF/Comm/En.htm?EnName=BP.GPM.Dept&No=' + deptNo;
-           WinOpen(url);
+           OpenBootStrapModal(url, "eudlgframe", "关联人员", '1000', '500', "icon-edit", true, null, null);
        }
 
        function Del(no) {
 
            if (confirm('您确定要删除该人员吗？') == false)
                return;
+
+           //取消人员部门管理关系
+           var en = new Entity("BP.GPM.DeptEmp");
+           en.SetPKVal(deptNo + "_" + no);
+           en.Delete();
 
            var en = new Entity("BP.GPM.Emp", no);
            en.Delete();
@@ -239,7 +229,6 @@
        //树形结构转换
        var treeJson = [];
        function createJsonToTree(jsonArray, parentNo) {
-
            for (var i = 0; i < jsonArray.length; i++) {
                var data = jsonArray[i];
                if (data.ParentNo == parentNo) {
@@ -280,7 +269,7 @@
                var data = jsonArray[i];
                if (data.ParentNo == parentNo) {
                    var checked = false;
-                 
+
                    childList.push({
                        "id": data.No,
                        "text": data.Name,
@@ -326,16 +315,6 @@
     <div id="pageloading">
     </div>
     <div data-options="region:'west',split:true" style="width: 350px; padding: 1px; overflow: hidden;">
-      <!--  <div class="easyui-panel" style="padding: 1px; background-color: #F4F4F4; border: 0px;
-            height: 30px; width: auto;">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkDeptInfo()" data-options="plain:true,iconCls:'icon-edit'">编辑</a> 
-            <a href="javascript:void(0)" class="easyui-menubutton" data-options="menu:'#addNewDept',iconCls:'icon-new'">新建</a>
-            <div id="addNewDept" style="width: 10px;">
-                <div data-options="iconCls:'icon-add'" onclick="append('peer')">同级</div>
-                <div data-options="iconCls:'icon-add'" onclick="append('son')">子级</div>
-            </div>
-            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-sum',plain:true" onclick="RefEmps()">关联人员</a>
-        </div>-->
         <div style="width: 100%; height: 95%; overflow: auto;">
             <ul id="appTree" class="easyui-tree-line" data-options="animate:false,dnd:false">
             </ul>

@@ -623,10 +623,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 
             if (workid != 0)
             {
-                //获取流程信息，added by liuxc,2016-10-26
-                //sql =
-                //    "SELECT wgwf.Starter,wgwf.StarterName,wgwf.RDT,wgwf.WFSta,wgwf.WFState FROM WF_GenerWorkFlow wgwf WHERE wgwf.WorkID = " +
-                //    workid;
                 sql = "SELECT wgwf.Starter as \"Starter\","
                       + "        wgwf.StarterName as \"StarterName\","
                       + "        wgwf.RDT as \"RDT\","
@@ -658,6 +654,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                 dt = DBAccess.RunSQLReturnTable(sql);
                 dt.TableName = "FlowInfo";
                 ds.Tables.add(dt);
+                
+                //获得流程状态.
+                WFState wfState = WFState.forValue(Integer.parseInt(dt.Rows.get(0).getValue("WFState").toString()));
 
                 //获取工作轨迹信息
                 String trackTable = "ND" + Integer.parseInt(fk_flow) + "Track";
@@ -702,23 +701,26 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                 dt = DBAccess.RunSQLReturnTable(sql);
                 dt.TableName = "DISPOSE";
                 ds.Tables.add(dt);
-
-                GenerWorkerLists gwls = new GenerWorkerLists();
-                if (this.getFID() == 0)
-                {
-                    gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID());
+                
+               
+                
+                //如果流程没有完成.
+                if (wfState != WFState.Complete){
+                	 GenerWorkerLists gwls = new GenerWorkerLists();
+                	 long id = this.getFID();
+                	 if(id == 0)
+                		 id = this.getWorkID();
+                	 
+                	 QueryObject qo = new QueryObject(gwls);
+                     qo.AddWhere(GenerWorkerListAttr.FID, id);
+                     qo.addOr();
+                     qo.AddWhere(GenerWorkerListAttr.WorkID, id);
+                     qo.DoQuery();
+                     DataTable dtGwls = gwls.ToDataTableField("WF_GenerWorkerList");
+                     ds.Tables.add(dtGwls);
+                	 
                 }
-                else
-                {
-                    QueryObject qo = new QueryObject(gwls);
-                    qo.AddWhere(GenerWorkerListAttr.FID, this.getFID());
-                    qo.addOr();
-                    qo.AddWhere(GenerWorkerListAttr.WorkID, this.getFID());
-                    qo.DoQuery();
-                }
-
-                DataTable dtGwls = gwls.ToDataTableField("WF_GenerWorkerList");
-                ds.Tables.add(dtGwls);
+                
             }
             else
             {

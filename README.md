@@ -1,7 +1,7 @@
 ﻿**驰骋工作流程引擎资源 **
-在线文档: http://ccbpm.mydoc.io
-视频/资料教程下载: svn http://140.143.236.168:7080/svn/ccbpmdocs 用户名: ccbpm密码:ccbpm  也可以使用在线浏览.
-官方网站: http://ccflow.org 在线演示: http://demo.ccflow.org
+1. 在线文档: http://ccbpm.mydoc.io
+2. 视频/资料教程下载: svn http://140.143.236.168:7080/svn/ccbpmdocs 用户名: ccbpm密码:ccbpm  也可以使用在线浏览.
+3. 官方网站: http://ccflow.org 在线演示: http://demo.ccflow.org
 
 #JFlow开源工作流
 

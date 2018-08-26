@@ -40,13 +40,25 @@ function FlowCheck() {
 
 //运行流程
 function FlowRun() {
+	
+	   //执行流程检查.
+    var flow = new Entity("BP.WF.Flow", flowNo);
+    flow.DoMethodReturnString("DoCheck"); 
+    
     var url = "../TestFlow.htm?FK_Flow=" + flowNo + "&Lang=CH";
     //WinOpen(url);
     window.parent.addTab(flowNo + "_YXLH", "运行流程" + flowNo, url);
 }
 //运行流程
 function FlowRunAdmin() {
-
+ 
+	
+    //执行流程检查.
+    var flow = new Entity("BP.WF.Flow", flowNo);
+    flow.DoMethodReturnString("DoCheck"); 
+     
+	
+	
     //var url = "../TestFlow.htm?FK_Flow=" + flowNo + "&Lang=CH";
     var webUser = new WebUser();
     var url = "../TestFlow.htm?DoType=TestFlow_ReturnToUser&DoWhat=StartClassic&UserNo=" + webUser.No + "&FK_Flow=" + flowNo;

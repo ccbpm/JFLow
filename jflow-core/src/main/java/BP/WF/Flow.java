@@ -2025,6 +2025,8 @@ public class Flow extends BP.En.EntityNoName
 	public final String DoCheck() throws Exception
 	{
 
+		BP.DA.Cash.ClearCash();
+		
 			///#region 检查独立表单
 		FrmNodes fns = new FrmNodes();
 		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());

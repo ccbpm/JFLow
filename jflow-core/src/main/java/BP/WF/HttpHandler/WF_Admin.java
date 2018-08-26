@@ -82,6 +82,7 @@ public class WF_Admin extends WebContralBase {
 	 * @throws Exception 
 	 */
 	public final String TestFlow_Init() throws Exception {
+		
 		BP.Sys.SystemConfig.DoClearCash();
 
 		// 让admin 登录.
@@ -253,6 +254,14 @@ public class WF_Admin extends WebContralBase {
 	 * @throws Exception 
 	 */
 	public final String TestFlow_ReturnToUser() throws Exception {
+		
+	    //检查物理表,避免错误.
+        Nodes nds = new Nodes(this.getFK_Flow());
+        for (Node mynd : nds.ToJavaList())
+        {
+            mynd.getHisWork().CheckPhysicsTable();
+        }
+        
 		String userNo = this.GetRequestVal("UserNo");
 		String sid = BP.WF.Dev2Interface.Port_Login(userNo);
 		String url = "../../WF/Port.htm?UserNo=" + userNo + "&SID=" + sid

@@ -7532,7 +7532,7 @@ public class Flow extends BP.En.EntityNoName
 	
 	//endregion 版本管理
 	
-	public final void DoDelete() throws Exception
+	public final String DoDelete() throws Exception
 	{
 		//删除流程数据.
 		this.DoDelData();
@@ -7649,6 +7649,8 @@ public class Flow extends BP.En.EntityNoName
 		//    {
 		//    }
 		//}
+		
+		return "info@删除成功.";
 	}
 	/** 是否启用数据模版？
 	 

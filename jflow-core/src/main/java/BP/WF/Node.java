@@ -495,7 +495,8 @@ public class Node extends Entity
 		Nodes nds = new Nodes();
 		nds.Retrieve(NodeAttr.FK_Flow, fl.getNo());
 
-		FlowSort fs = new FlowSort(fl.getFK_FlowSort());
+		//FlowSort fs = new FlowSort();
+		
 		if (nds.size() == 0)
 		{
 			return "流程[" + fl.getNo() + fl.getName() + "]中没有节点数据，您需要注册一下这个流程。";

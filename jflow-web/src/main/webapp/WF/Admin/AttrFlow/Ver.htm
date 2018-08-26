@@ -35,6 +35,7 @@
 	    html += "<caption>版本管理</caption>";
 	    html += "<tr>";
 	    html += "<th>版本号</th>";
+	    html += "<th>流程编号</th>";
 	    html += "<th>名称</th>";
 	    html += "<th>发布状态</th>";
 	    html += "<th>运行中数量</th>";
@@ -49,23 +50,25 @@
 
 	        html += "<tr>";
 	        html += "<td>" + item.Ver + "</td>";
+	        html += "<td>" + item.No + "</td>";
 	        html += "<td>" + item.Name + "</td>";
 	        html += "<td>" + item.IsRel + "</td>";
 	        html += "<td>" + item.NumOfRuning + "</td>";
 	        html += "<td>" + item.NumOfOK + "</td>";
 
 	        if (item.IsRel == 0) {
-	            html += "<td>--</td>";
+	            html += "<td><a href=\"javascript:Del('" + item.No + "')\"><img src='../../Img/Btn/Delete.gif' /></a></td>";
 	            html += "<td><a href=\"javascript:SetCurrentVer('" + item.No + "')\">设置主版本</a></td>";
 	        }
 	        else {
-	            html += "<td><a href=\"javascript:Del('" + item.No + "')\"><img src='../../Img/Btn/Delete.gif' /></a></td>";
 	            html += "<td>--</td>";
+	            html += "<td>主版本</td>";
 	        }
 
-	        if (item.IsRel == 0)
-	            html += "<td>-</td>";
-	        else
+	     //、  if (item.IsRel == 0)
+	       //     html += "<td>-</td>";
+	        //else
+	        	
 	            html += "<td><a href='../CCBPMDesigner/Designer.htm?FK_Flow=" + item.No + "' target=_blank >编辑</a></td>";
 
 	        html += "</tr>";
@@ -78,7 +81,7 @@
 
 	    if (window.confirm('您确定要删除吗？') == false)
 	        return;
-
+ 
 	    var en = new Entity("BP.WF.Flow", no);
 	    var data = en.DoMethodReturnString("DoDelete");
 

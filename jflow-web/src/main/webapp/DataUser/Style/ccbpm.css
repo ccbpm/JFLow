@@ -1,12 +1,12 @@
 ﻿/*  Table 风格   */
-body 
+body
 {
-  color: #333333;
-  font-family: "Open Sans", sans-serif;
-  padding: 0px !important;
-  margin: 0px !important;
-  font-size: 14px;
-  direction: ltr;
+    color: #333333;
+    font-family: "Open Sans" , sans-serif;
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 14px;
+    direction: ltr;
 }
 
 /* 按钮风格 */
@@ -301,31 +301,7 @@ caption
     border-right-style: none;
     border-left-style: none;
 }
-
-.BigDoc
-{
-}
-
-/* 内部标签风格 */
-fieldset
-{
-    border-style: 1;
-    border-width: 1px;
-    border-color: #D8D8D8;
-    margin: 5px;
-    table-layout: auto;
-    padding: 2px;
-    text-align: left;
-}
-
-legend
-{
-    color: green;
-    font-style: inherit;
-    font-weight: bold;
-    margin-bottom: 0px;
-    margin-top: 0px;
-}
+ 
  
 #bottomToolBar {
 display:block;
@@ -427,13 +403,11 @@ select {
     height: 29px;
 }
 
- 
-
-textarea,iframe[src*="AttachmentUpload.aspx"] {
+textarea,iframe[src*="Ath.htm"] {
     margin-top:6px !important;
     border-radius: 5px !important;
-    border: #2884fa 1px solid;
-    /*margin: 0px 10px;*/
+    /* border: #2884fa 1px solid;
+    margin: 0px 10px;*/
     line-height: 15px !important;
     padding-left: 6px !important;
     margin: 4px 0px !important;
@@ -497,7 +471,6 @@ display:none;
     border:1px solid #2884fa !important;
 
 }
-
 
         /*提示框的CSS 设置*/
 .popover-title {
@@ -762,3 +735,25 @@ body table tr td {
 .errorInput {
     border-color: red;
 }
+
+
+
+
+
+/*杨玉慧  --临时增加  处理弹窗返回值得表单布局乱掉的问题*/
+
+.FContext div[id*=_mtags],.FContext div[id*=_mtags] .main-container {
+    width: 100% !important;
+    clear: both;
+}
+
+
+
+    .FContext div[id*=_mtags] .main-container {
+        height: auto !important;
+    }
+
+.ccflow-tag {
+    margin-right: 10px !important;
+}
+/*杨玉慧  --临时增加  处理弹窗返回值得表单乱掉的问题*/

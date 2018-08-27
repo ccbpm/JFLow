@@ -868,7 +868,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoCHRole()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/CHRole.htm?FK_Node=" + this.getNodeID();
+		return "../../Admin/AttrNode/CHRole.htm?FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 超时处理规则
@@ -876,7 +876,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoCHOvertimeRole()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/CHOvertimeRole.htm?FK_Node=" + this.getNodeID();
+		return "../../Admin/AttrNode/CHOvertimeRole.htm?FK_Node=" + this.getNodeID();
 	}
 	 /**
 	  * 多人处理规则.
@@ -884,7 +884,7 @@ public class NodeExt extends Entity
 	  */
     public String DoTodolistModel()
     {
-        return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/TodolistModel.htm?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID();
+        return   "../../Admin/AttrNode/TodolistModel.htm?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID();
     }
     /// <summary>
     /// 延续子流程
@@ -892,7 +892,7 @@ public class NodeExt extends Entity
     /// <returns></returns>
     public String DoYGFlows()
     {
-        return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeYGFlow.htm?FK_Node=" + this.getNodeID() + "&tk=2222";
+        return  "../../Admin/AttrNode/NodeYGFlow.htm?FK_Node=" + this.getNodeID() + "&tk=2222";
     }
 	/** 
 	 批处理规则
@@ -900,7 +900,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoBatchStartFields()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node="+this.getNodeID();
+		return "../../Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node="+this.getNodeID();
 	}
 	/** 
 	 批量修改节点属性
@@ -908,7 +908,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoNodeAttrs()
 	{
-		return  Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow=" + this.getFK_Flow();
+		return    "../../Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
 	 表单方案

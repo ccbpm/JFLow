@@ -1572,7 +1572,7 @@ public class FlowExt extends EntityNoName
 	public final String DoSetStartFlowDataSources()
 	{
 		String flowID = Integer.parseInt(this.getNo()) + "01";
-		return "../../WF/Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
+		return "../../Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
 		//return Glo.CCFlowAppPath + "WF/Admin/FoolFormDesigner/MapExt.jsp?s=d34&FK_MapData=ND" + flowID + "&ExtType=StartFlow&RefNo=";
 	}
 	public final String DoCCNode()
@@ -1590,7 +1590,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoRunIt()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/TestFlow.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
+		return  "../../Admin/TestFlow.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
 	 执行检查
@@ -1598,7 +1598,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoCheck()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/CheckFlow.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
+		return  "../../Admin/AttrFlow/CheckFlow.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 
 	/** 
@@ -1607,7 +1607,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoLimit()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/Limit.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
+		return   "../../Admin/AttrFlow/Limit.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
 	 设置发起前置导航
@@ -1615,7 +1615,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoStartGuide()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/StartGuide.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
+		return   "../../Admin/AttrFlow/StartGuide.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
 	 执行数据同步
@@ -1623,7 +1623,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoDTS()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/DTSBTable.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
+		return   "../../Admin/AttrFlow/DTSBTable.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
 	 导入
@@ -1631,7 +1631,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoImp()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/Imp.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
+		return "../../Admin/AttrFlow/Imp.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
 	 导出
@@ -1639,7 +1639,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoExps()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/Exp.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
+		return  "../../Admin/AttrFlow/Exp.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/**
 	 * 版本管理
@@ -1647,7 +1647,7 @@ public class FlowExt extends EntityNoName
 	 */
 	public String DoVer()
     {
-        return Glo.getCCFlowAppPath() + "WF/Admin/AttrFlow/Ver.htm?FK_Flow=" + this.getNo();
+        return "../../Admin/AttrFlow/Ver.htm?FK_Flow=" + this.getNo();
     }
 	/** 
 	 执行重新装载数据

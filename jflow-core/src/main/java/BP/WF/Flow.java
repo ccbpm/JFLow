@@ -7349,7 +7349,7 @@ public class Flow extends BP.En.EntityNoName
 			//写入权限.
 			WritToGPM(flowSort);
 
-			this.DoCheck_CheckRpt(this.getHisNodes());
+		//	this.DoCheck_CheckRpt(this.getHisNodes());
 			//  Flow.RepareV_FlowData_View();
 			return this.getNo();
 		}

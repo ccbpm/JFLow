@@ -7063,6 +7063,8 @@ public class Flow extends BP.En.EntityNoName
 			Flow fl = new Flow(this.getNo());
 			fl.DoDelData();
 			fl.DoDelete();
+			
+			fl.setVer("原始版");
 
 			this.Save();
 

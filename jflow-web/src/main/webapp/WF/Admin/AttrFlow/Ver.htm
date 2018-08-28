@@ -49,7 +49,12 @@
 	        var item = data[i];
 
 	        html += "<tr>";
-	        html += "<td>" + item.Ver + "</td>";
+
+	        var ver = item.Ver;
+	        if (ver == "")
+	            ver = "原始版";
+
+	        html += "<td>" + ver + "</td>";
 	        html += "<td>" + item.No + "</td>";
 	        html += "<td>" + item.Name + "</td>";
 	        html += "<td>" + item.IsRel + "</td>";

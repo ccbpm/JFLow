@@ -1456,10 +1456,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		try
 		{
 			String[] ps = this.GetRequestVal("paras").split("[,]", -1);
-			if (ps.length != 6)
-			{
+			if (ps.length != 6)			
 				throw new RuntimeException("@创建流程参数错误");
-			}
+			
 
 			String fk_floSort = ps[0]; //类别编号.
 			fk_floSort = fk_floSort.replace("F", ""); //传入的编号多出F符号，需要替换掉

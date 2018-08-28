@@ -15,7 +15,7 @@ import BP.WF.Template.Direction;
 
 public class Glo {
 	/** 
-	 创建一个流程.
+	   创建一个流程.
 	 @param flowSort 流程类别
 	 @return string
 	 * @throws Exception 
@@ -23,6 +23,7 @@ public class Glo {
 	public static String NewFlow(String flowSort, String flowName, DataStoreModel dsm, String ptable, String flowMark, String flowVer) throws Exception {
 		//执行保存.
 		BP.WF.Flow fl = new BP.WF.Flow();
+		
 		//修改类型为CCBPMN
 		fl.setDType(StringHelper.isNullOrEmpty(flowVer) ? 1 : Integer.parseInt(flowVer));
 		String flowNo = fl.DoNewFlow(flowSort, flowName, dsm, ptable, flowMark);

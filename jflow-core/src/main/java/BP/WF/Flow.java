@@ -2016,8 +2016,13 @@ public class Flow extends BP.En.EntityNoName
 		//}
 		//return null;
 	}
+	public final String ClearCash() 
+	{
+		BP.DA.Cash.ClearCash();
+		return "清除成功.";
+	}
 	/** 
-	 校验流程
+	 校验流程	
 	 
 	 @return 
 	 * @throws Exception 
@@ -2027,7 +2032,7 @@ public class Flow extends BP.En.EntityNoName
 
 		BP.DA.Cash.ClearCash();
 		
-			///#region 检查独立表单
+	    ///#region 检查独立表单
 		FrmNodes fns = new FrmNodes();
 		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
 		String frms = "";
@@ -2051,6 +2056,7 @@ public class Flow extends BP.En.EntityNoName
 				err += "@节点绑定的表单:" + item.getFK_Frm() + ",已经被删除了.异常信息." + ex.getMessage();
 			}
 		}
+		
 		try
 		{
 			// 设置流程名称.
@@ -2078,8 +2084,7 @@ public class Flow extends BP.En.EntityNoName
 			//条件集合.
 			Conds conds = new Conds(this.getNo());
 
-
-				///#region 对节点进行检查
+		    ///#region 对节点进行检查
 			//节点表单字段数据类型检查--begin---------
 			msg += CheckFormFields();
 			//表单字段数据类型检查-------End-----

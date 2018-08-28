@@ -1078,8 +1078,34 @@ public class MapData extends EntityNoName
 		SysEnums obj = (SysEnums)((tempVar instanceof SysEnums) ? tempVar : null);
 		if (obj == null)
 		{
-			obj = new SysEnums();
-			obj.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'");
+			
+			  obj = new SysEnums();
+			  
+              if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+              {
+                  QueryObject qo = new QueryObject(obj);             
+                  
+                  DataTable dt = DBAccess.RunSQLReturnTable("SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'");
+                  for (DataRow dr : dt.Rows)
+                  {
+                      qo.AddWhere("EnumKey", dr.getValue(0).toString());
+                      qo.addOr();
+                  }
+
+                  if (dt.Rows.size() >= 1)
+                      qo.AddWhere("EnumKey","s1s2");
+
+                  qo.DoQuery();
+              }
+              else
+              {
+                  obj.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'");
+              }
+              
+		//	obj = new SysEnums();
+		//	obj.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'");
+			
+			
 			//obj.RetrieveInSQL(SysEnumAttr.EnumKey, "select UIBindKey from ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' ) as tab1");
 			this.SetRefObject("SysEnums", obj);
 

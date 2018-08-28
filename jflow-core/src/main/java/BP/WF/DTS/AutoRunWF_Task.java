@@ -23,7 +23,7 @@ public class AutoRunWF_Task extends Method
     /// </summary>
     public AutoRunWF_Task()
     {
-        this.Title = "自动启动流程";
+        this.Title = "自动启动触发模式发起的流程";
         this.Help = "自动启动任务方式的流程, WF_Task";
     }
     /// <summary>

@@ -139,7 +139,7 @@ public final class FtpUtil {
     /**
      * 建立一个FTP链接
      */
-    private final void openConnection() {
+    public final String openConnection() {
         // 设置FTP链接对象
         if (this.ftpClient == null) {
             boolean booLogin = false;
@@ -153,26 +153,31 @@ public final class FtpUtil {
                 if (!FTPReply.isPositiveCompletion(this.ftpClient.getReplyCode())) {
                     this.ftpClient = null;
                     logger.info("FTP Server:{},Port{},MSG:{}", this.ip, String.valueOf(this.port), "服务器拒绝建立连接！");
+                    return "err@服务器拒绝建立连接！";
                 }
                 else {
                     booLogin = this.ftpClient.login(this.user, this.pass);
                     if (!booLogin) {
                         this.ftpClient = null;
                         logger.info("FTP Server:{},Port{},MSG:{}", this.ip, String.valueOf(this.port), "检查用户名/密码是否正确");
+                        return "err@检查用户名/密码是否正确";
                     }
                     else {
                         logger.info("FTP Server:{},Port{},MSG:{}", this.ip, String.valueOf(this.port), "FTP登陆成功");
                         this.ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
                         this.ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                         this.ftpClient.enterLocalPassiveMode();
+                        return "FTP登陆成功";
                     }
                 }
             }
             catch (Exception e) {
                 this.ftpClient = null;
                 logger.error("{}", e.toString());
+                return "err@FTP登陆失败";
             }
         }
+        return "FTP登陆成功";
     }
     
     /**

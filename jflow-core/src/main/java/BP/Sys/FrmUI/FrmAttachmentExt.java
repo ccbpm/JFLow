@@ -24,6 +24,7 @@ import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
 import BP.Sys.SystemConfig;
 import BP.Sys.UploadFileNumCheck;
+import BP.Tools.FtpUtil;
 import BP.Tools.StringHelper;
 
 /**
@@ -735,11 +736,11 @@ public class FrmAttachmentExt extends EntityMyPK {
 		// #endregion 其他属性。
 
 		RefMethod rm = new RefMethod();
-		rm.Title = "高级配置";
+		//rm.Title = "高级配置";
 		// rm.Icon = "/WF/Admin/CCFormDesigner/Img/Menu/CC.png";
-		rm.ClassMethodName = this.toString() + ".DoAdv";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//rm.ClassMethodName = this.toString() + ".DoAdv";
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "类别设置";
@@ -774,13 +775,17 @@ public class FrmAttachmentExt extends EntityMyPK {
 	/// 测试连接
 	/// </summary>
 	/// <returns></returns>
-	public String DoTestFTPHost() throws SocketException, IOException, Exception {
-		FTPClient ftpClient = new FTPClient();
-		ftpClient.setControlEncoding("utf-8");
-		ftpClient.connect(SystemConfig.getFTPServerIP()); // 连接ftp服务器
-		ftpClient.login(SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword()); // 登录ftp服务器
-
-		return "代码为完成.";
+	public String DoTestFTPHost(){
+		FtpUtil ftpUtil;
+		try {
+			ftpUtil = BP.WF.Glo.getFtpUtil();
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			return "err@"+e.getMessage();
+		}
+		return ftpUtil.openConnection();
+	
 
 	}
 
@@ -790,7 +795,7 @@ public class FrmAttachmentExt extends EntityMyPK {
 	 * @return
 	 */
 	public final String DoSettingSort() {
-		return "/WF/Admin/FoolFormDesigner/AttachmentSortSetting.htm?FK_MapData=" + this.getFK_MapData() + "&MyPK="
+		return "../../Admin/FoolFormDesigner/AttachmentSortSetting.htm?FK_MapData=" + this.getFK_MapData() + "&MyPK="
 				+ this.getMyPK() + "&Ath=" + this.getNoOfObj();
 	}
 

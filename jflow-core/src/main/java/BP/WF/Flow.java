@@ -2039,10 +2039,10 @@ public class Flow extends BP.En.EntityNoName
 		String err = "";
 		for (FrmNode item : fns.ToJavaList())
 		{
-			if (frms.contains(item.getFK_Frm() + ","))
-			{
+			if (frms.contains(item.getFK_Frm() + ","))			
 				continue;
-			}
+			
+			
 			frms += item.getFK_Frm() + ",";
 			try
 			{
@@ -2112,7 +2112,8 @@ public class Flow extends BP.En.EntityNoName
 			//	DBAccess.RunSQL("UPDATE Sys_MapData SET Name='" + nd.getName() + "' WHERE No='ND" + nd.getNodeID() + "'");
 				try
 				{
-					nd.getHisWork().CheckPhysicsTable();
+					//if (nd.getHisWork().getEnMap().getPhysicsTable().equals(  this.getPTable())
+				//	nd.getHisWork().CheckPhysicsTable();
 				}
 				catch (RuntimeException ex)
 				{
@@ -7081,18 +7082,15 @@ public class Flow extends BP.En.EntityNoName
 			nd.setX(200);
 			nd.setY(150);
 			nd.setICON("前台");
-			
-
+			 
 
 			//增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
 			nd.setCondModel(CondModel.SendButtonSileSelect); //默认的发送方向.
 			nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
 			nd.setFormType(NodeFormType.FoolForm); //表单类型.
-
 			nd.Insert();
-
 			nd.CreateMap();
-			nd.getHisWork().CheckPhysicsTable();
+		//	nd.getHisWork().CheckPhysicsTable();
 
 			// 周朋@于庆海需要翻译.
             CreatePushMsg(nd);
@@ -7136,7 +7134,7 @@ public class Flow extends BP.En.EntityNoName
 
 			nd.Insert();
 			nd.CreateMap();
-			nd.getHisWork().CheckPhysicsTable();
+			//nd.getHisWork().CheckPhysicsTable();
 			 // 周朋@于庆海需要翻译.
             CreatePushMsg(nd);
 
@@ -7153,7 +7151,7 @@ public class Flow extends BP.En.EntityNoName
 
 			// 装载模版.
 			String file = BP.Sys.SystemConfig.getPathOfDataUser() + "XML/TempleteSheetOfStartNode.xml";
-			if ((new java.io.File(file)).isFile())
+			if ((new java.io.File(file)).isFile() &&  1==2)
 			{
 				//如果存在开始节点表单模版
 				DataSet ds = new DataSet();
@@ -7162,194 +7160,8 @@ public class Flow extends BP.En.EntityNoName
 				String nodeID = "ND" + Integer.parseInt(this.getNo() + "01");
 				BP.Sys.MapData.ImpMapData(nodeID, ds);
 			}
-			else
-			{
-
-					///#region 生成CCForm 的装饰.
-				FrmImg img = new FrmImg();
-				img.setMyPK("Img" + DateUtils.getCurrentDate("yyMMddhhmmss") + WebUser.getNo());
-				img.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				img.setX((float) 577.26);
-				img.setY((float) 3.45);
-				
-				img.setW((float) 137);
-				img.setH((float) 40);
-
-				img.setImgURL("/ccform;component/Img/LogoBig.png");
-				img.setLinkURL("http://ccflow.org");
-				img.setLinkTarget("_blank");
-				img.Insert();
-
-				FrmLab lab = new FrmLab();
-
-				lab = new FrmLab();
-				lab.setMyPK("Lab"
-						+ DataType.dateToStr(new Date(), "yyMMddhhmmss")
-						+ WebUser.getNo() + 2);
-				lab.setText("发起人");
-				lab.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				lab.setX((float) 106.48);
-				lab.setY((float) 96.08);
-				lab.setFontSize(11);
-				lab.setFontColor("black");
-				lab.setFontName("Portable User Interface");
-				lab.setFontStyle("Normal");
-				lab.setFontWeight("normal");
-				lab.Insert();
-
-				lab = new FrmLab();
-				lab.setMyPK("Lab"
-						+ DataType.dateToStr(new Date(), "yyMMddhhmmss")
-						+ WebUser.getNo() + 3);
-				lab.setText("发起时间");
-				lab.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				lab.setX((float) 307.64);
-				lab.setY((float) 95.17);
-				
-				lab.setFontSize(11);
-				lab.setFontColor("black");
-				lab.setFontName("Portable User Interface");
-				lab.setFontStyle("Normal");
-				lab.setFontWeight("normal");
-				lab.Insert();
-
-				lab = new FrmLab();
-				lab.setMyPK("Lab"
-						+ DataType.dateToStr(new Date(), "yyMMddhhmmss")
-						+ WebUser.getNo() + 4);
-				lab.setText("新建节点(请修改标题)");
-				lab.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				
-				lab.setX((float) 294.67);
-				lab.setY((float) 8.27);
-				
-				lab.setFontSize(23);
-				lab.setFontColor("Blue");
-				lab.setFontName("Portable User Interface");
-				lab.setFontStyle("Normal");
-				lab.setFontWeight("normal");
-				lab.Insert();
-
-				lab = new FrmLab();
-				lab.setMyPK("Lab" + DataType.dateToStr(new Date(), "yyMMddhhmmss") + WebUser.getNo() + 5);
-				lab.setText("说明:以上内容是ccflow自动产生的，您可以修改/删除它。@为了更方便您的设计您可以到http://ccflow.org官网下载表单模板.");
-				lab.setText(lab.getText() + "@因为当前技术问题与silverlight开发工具使用特别说明如下:@");
-				lab.setText(lab.getText() + "@1,改变控件位置: ");
-				lab.setText(lab.getText() + "@  所有的控件都支持 wasd, 做为方向键用来移动控件的位置， 部分控件支持方向键. ");
-				lab.setText(lab.getText() + "@2, 增加textbox, 从表, dropdownlistbox, 的宽度 shift+ -> 方向键增加宽度 shift + <- 减小宽度.");
-				lab.setText(lab.getText() + "@3, 保存 windows键 + s.  删除 delete.  复制 ctrl+c   粘帖: ctrl+v.");
-				lab.setText(lab.getText() + "@4, 支持全选，批量移动， 批量放大缩小字体., 批量改变线的宽度.");
-				lab.setText(lab.getText() + "@5, 改变线的长度： 选择线，点绿色的圆点，拖拉它。.");
-				lab.setText(lab.getText() + "@6, 放大或者缩小　label 的字体 , 选择一个多个label , 按 A+ 或者　A－　按钮.");
-				lab.setText(lab.getText() + "@7, 改变线或者标签的颜色， 选择操作对象，点工具栏上的调色板.");
-
-				lab.setX((float) 168.24);
-				lab.setY((float) 163.7);
-				lab.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				lab.setFontSize(11);
-				lab.setFontColor("Red");
-				lab.setFontName("Portable User Interface");
-				lab.setFontStyle("Normal");
-				lab.setFontWeight("normal");
-				lab.Insert();
-
-
-				String key = "L" + DateUtils.getCurrentDate("yyMMddhhmmss") + WebUser.getNo();
-				FrmLine line = new FrmLine();
-				line.setMyPK(key + "_1");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 281.82);
-				line.setY1((float) 81.82);
-				line.setX2((float) 281.82);
-				line.setY2((float) 121.82);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-
-				line.setMyPK(key + "_2");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 360);
-				line.setY1((float) 80.91);
-				line.setX2((float) 360);
-				line.setY2((float) 120.91);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-
-				line.setMyPK(key + "_3");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 158.82);
-				line.setY1((float) 41.82);
-				line.setX2((float) 158.82);
-				line.setY2((float) 482.73);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-
-				line.setMyPK(key + "_4");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 81.55);
-				line.setY1((float) 80);
-				line.setX2((float) 718.82);
-				line.setY2((float) 80);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-
-
-				line.setMyPK(key + "_5");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 81.82);
-				line.setY1((float) 40);
-				line.setX2((float) 81.82);
-				line.setY2((float) 480.91);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-
-				line.setMyPK(key + "_6");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 81.82);
-				line.setY1((float) 481.82);
-				line.setX2((float) 720);
-				line.setY2((float) 481.82);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-				
-				line.setMyPK(key + "_7");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 83.36);
-				line.setY1((float) 40.91);
-				line.setX2((float) 717.91);
-				line.setY2((float) 40.91);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-				
-				line.setMyPK(key + "_8");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 83.36);
-				line.setY1((float) 120.91);
-				line.setX2((float) 717.91);
-				line.setY2((float) 120.91);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-				
-				line.setMyPK(key + "_9");
-				line.setFK_MapData("ND" + Integer.parseInt(this.getNo() + "01"));
-				line.setX1((float) 719.09);
-				line.setY1((float) 40);
-				line.setX2((float) 719.09);
-				line.setY2((float) 482.73);
-				line.setBorderWidth((float) 2);
-				line.setBorderColor("Black");
-				line.Insert();
-			}
-
-			//写入权限.
-			WritToGPM(flowSort);
+			 
+		 
 
 		//	this.DoCheck_CheckRpt(this.getHisNodes());
 			//  Flow.RepareV_FlowData_View();

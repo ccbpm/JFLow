@@ -2321,11 +2321,12 @@ public class MapData extends EntityNoName
 			attr.setTag("1");
 			attr.Insert();
 		}
-
-		//检查特殊UIBindkey丢失的问题.
+		
+		return;
+		
+/*		//检查特殊UIBindkey丢失的问题.
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getNo());
-
 		for (Object item : attrs)
 		{
 			if (((MapAttr) item).getLGType() == FieldTypeS.Enum || ((MapAttr) item).getLGType() == FieldTypeS.FK)
@@ -2337,7 +2338,7 @@ public class MapData extends EntityNoName
 					((Entity) item).Update();
 				}
 			}
-		}
+		}*/
 	}
 	@Override
 	protected boolean beforeInsert() throws Exception

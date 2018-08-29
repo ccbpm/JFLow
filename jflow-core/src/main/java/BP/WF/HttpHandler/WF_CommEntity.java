@@ -609,35 +609,11 @@ public class WF_CommEntity extends WebContralBase {
             }
             //定义容器.
             DataSet ds = new DataSet();
-
-            //定义Sys_MapData.
-            MapData md = new MapData();
-            md.setNo(  this.getEnName());
-            md.setName( map.getEnDesc());
-
-           // #region 加入权限信息.
-            //把权限加入参数里面.
-            if (en.getHisUAC().IsInsert)
-                md.SetPara("IsInsert", "1");
             
-          //附件类型.
-            md.SetPara("BPEntityAthType", map.HisBPEntityAthType.ordinal() );
-
-            if (isBlank == true)
-            {
-                if (en.getHisUAC().IsUpdate)
-                    md.SetPara("IsUpdate", "0");
-                if (en.getHisUAC().IsDelete)
-                    md.SetPara("IsDelete", "0");
-            }
-            else
-            {
-                if (en.getHisUAC().IsUpdate)
-                    md.SetPara("IsUpdate", "1");
-                if (en.getHisUAC().IsDelete)
-                    md.SetPara("IsDelete", "1");
-            }
-           // #endregion 加入权限信息.
+            //把主数据放入里面去.
+            DataTable dtMain = en.ToDataTableField("MainTable");
+            ds.Tables.add(dtMain);
+           
 
             //#region 增加 上方法.
             DataTable dtM = new DataTable("dtM");

@@ -196,7 +196,7 @@ public class FrmNode extends EntityMyPK
 	
 	/** 
 	 对应的解决方案
-	 0=默认方案.节点编号=自定义方案, 1=不可编辑.
+	 0=默认方案.节点编号1=不可编辑,2=自定义方案, .
 	 
 	*/
 	public final int getFrmSlnInt()

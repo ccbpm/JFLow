@@ -215,31 +215,13 @@ public class ClassFactory {
     /// </summary>
     /// <param name="className"></param>
     /// <returns></returns>
-//    public static object GetObject_OK(string className)
-//    {
-//        if (className == "" || className == null)
-//            throw new Exception("@要转化类名称为空...");
-//
-//        Type ty = null;
-//        object obj = null;
-//        foreach (Assembly ass in BPAssemblies)
-//        {
-//            ty = ass.GetType(className);
-//            if (ty == null)
-//                continue;
-//
-//            obj = ass.CreateInstance(className);
-//            if (obj != null)
-//                return obj;
-//            else
-//                throw new Exception("@创建对象实例 " + className + " 失败！");
-//
-//        }
-//        if (obj == null)
-//            throw new Exception("@创建对象类型 " + className + " 失败，请确定拼写是否错误。");
-//
-//        return obj;
-//    }
+    public static Object GetObject_OK(String className) throws Exception
+    {
+        if (className == "" || className == null)
+            return "err@要转化类名称为空...";
+        Class clazz = Class.forName(className);
+        return clazz.newInstance();
+    }
 
 	/**
 	 * 根据一个抽象的基类，取出此系统中从他上面继承的子类集合。 非抽象的类。
@@ -249,96 +231,6 @@ public class ClassFactory {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static ArrayList GetObjects(String baseEnsName) {
-		
-		// ArrayList arr = new ArrayList();
-		// java.lang.Class baseClass = null;
-		// for (Assembly ass : getBPAssemblies()) {
-		// if (baseClass == null) {
-		// baseClass = ass.GetType(baseEnsName);
-		// }
-		//
-		// java.lang.Class[] tps = null;
-		// try {
-		// tps = ass.GetTypes();
-		// } catch (java.lang.Exception e) {
-		// // throw new Exception(ass.FullName+ass.Evidence.ToString()+
-		// // ex.Message);
-		// continue;
-		// }
-		//
-		// for (int i = 0; i < tps.length; i++) {
-		// if (tps[i].IsAbstract || tps[i].getSuperclass() == null
-		// || !tps[i].IsClass || !tps[i].IsPublic) {
-		// continue;
-		// }
-		//
-		// java.lang.Class tmp = tps[i].getSuperclass();
-		// if (tmp.Namespace == null) {
-		// throw new RuntimeException(tmp.FullName);
-		// }
-		//
-		// while (tmp != null && tmp.Namespace.indexOf("BP") != -1) {
-		// if (baseEnsName.equals(tmp.FullName)) {
-		// arr.add(ass.CreateInstance(tps[i].FullName));
-		// }
-		// tmp = tmp.getSuperclass();
-		// }
-		// }
-		// }
-		// if (baseClass == null) {
-		// throw new RuntimeException("@找不到类型" + baseEnsName + "！");
-		// }
-		// return arr;
-
-		//		JarFile jar;
-		//		try
-		//		{
-		//			Class clazzA = Class.forName(baseEnsName);
-		//			ArrayList arr = new ArrayList();
-		//			String jarPath = clazzA.getProtectionDomain().getCodeSource()
-		//					.getLocation().getFile();
-		//			jar = new JarFile(getClassPath() + "jflow-core-1.0.0-SNAPSHOT.jar");
-		//			Enumeration<JarEntry> entries = jar.entries();
-		//			
-		//			// 打印JAR文件中的所有目录名和文件名
-		//			while (entries.hasMoreElements())
-		//			{
-		//				JarEntry o = entries.nextElement();
-		//				if (o.getName().lastIndexOf(".class") >= 0
-		//						&& o.getName().indexOf("BP/") >= 0
-		//						&& o.getName().indexOf("$") < 0)
-		//				{
-		//					String classBStr = o.getName().replace("/", ".")
-		//							.replace(".class", "");
-		//					Class classB = Class.forName(classBStr);
-		//					
-		//					if (clazzA.isAssignableFrom(classB)
-		//							&& !classBStr.equals(baseEnsName)
-		//							&& !Modifier.isAbstract(classB.getModifiers()))
-		//					{
-		//						Object obj;
-		//						try
-		//						{
-		//							obj = classB.newInstance();
-		//							arr.add(obj);
-		//						} catch (InstantiationException e)
-		//						{
-		//							e.printStackTrace();
-		//						} catch (IllegalAccessException e)
-		//						{
-		//							e.printStackTrace();
-		//						}
-		//					}
-		//				}
-		//			}
-		//			return arr;
-		//		} catch (IOException e)
-		//		{
-		//			e.printStackTrace();
-		//		} catch (ClassNotFoundException e)
-		//		{
-		//			e.printStackTrace();
-		//		}
 
 		ArrayList list = (ArrayList) objects.get(baseEnsName);
 
@@ -455,7 +347,7 @@ public class ClassFactory {
 			return myens;
 		}
 
-		if (Htable_Ens == null || Htable_Ens.isEmpty()) {
+		//if (Htable_Ens == null || Htable_Ens.isEmpty()) {
 			Htable_Ens = new Hashtable<String, Object>();
 			String cl = "BP.En.Entities";
 			ArrayList al = ClassFactory.GetObjects(cl);
@@ -466,7 +358,7 @@ public class ClassFactory {
 					Htable_Ens.put(en.getClass().getName(), en);
 				} catch (java.lang.Exception e) {}
 			}
-		}
+		//}
 		Entities ens = (Entities) ((Htable_Ens.get(className) instanceof Entities) ? Htable_Ens.get(className) : null);
 
 		

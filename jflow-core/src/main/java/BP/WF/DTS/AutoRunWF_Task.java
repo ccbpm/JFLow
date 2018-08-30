@@ -83,10 +83,8 @@ public class AutoRunWF_Task extends Method
             Flow fl = new Flow(fk_flow);
             try
             {
-                String fTable = "ND" + Integer.parseInt(fl.getNo() + "01");
-                MapData md = new MapData(fTable);
-                sql = "";
-                //   sql = "SELECT * FROM " + md.PTable + " WHERE MainPK='" + mypk + "' AND WFState=1";
+   
+                sql = "SELECT * FROM " + fl.getPTable() + " WHERE MainPK='" + mypk + "' AND WFState=1";
                 try
                 {
                     if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
@@ -94,7 +92,7 @@ public class AutoRunWF_Task extends Method
                 }
                 catch(Exception e)
                 {
-                    info += "开始节点表单表:" + fTable + "没有设置的默认字段MainPK. " + sql; ;
+                    info += "开始节点表单表:" + fl.getPTable() + "没有设置的默认字段MainPK. " + sql; ;
                     continue;
                 }
 

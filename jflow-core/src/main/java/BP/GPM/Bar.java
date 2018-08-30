@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import BP.DA.*;
 import BP.En.*;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 
 /** 
  信息块

@@ -673,18 +673,21 @@ public class Flow extends BP.En.EntityNoName
 		}
 		if (BP.Sys.SystemConfig.getIsBSsystem() == true)
 		{
-			Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();
-			while (enu.hasMoreElements())
-			{
-				// 判断是否有内容，hasNext()
-				String key = (String) enu.nextElement();
-				 if (key == "OID" || key == "WorkID" || key==null)
-                     continue;
-				 if (paras.containsKey(key))
-					 paras.remove(key);
-                
-                 paras.put(key, BP.Sys.Glo.getRequest().getParameter(key));
+			if(BP.Sys.Glo.getRequest()!=null){
+				Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();
+				while (enu.hasMoreElements())
+				{
+					// 判断是否有内容，hasNext()
+					String key = (String) enu.nextElement();
+					 if (key == "OID" || key == "WorkID" || key==null)
+	                     continue;
+					 if (paras.containsKey(key))
+						 paras.remove(key);
+	                
+	                 paras.put(key, BP.Sys.Glo.getRequest().getParameter(key));
+				}
 			}
+			
 		}
 
 		//开始节点.

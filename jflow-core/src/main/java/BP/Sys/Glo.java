@@ -219,14 +219,16 @@ public class Glo
 	{
 		// 处理传递过来的参数。
 		ArrayList<String> requestKeys = new ArrayList<String>();
-		
-		Enumeration enu = getRequest().getParameterNames();
-		while (enu.hasMoreElements())
-		{
-			// 判断是否有内容，hasNext()
-			String key = (String) enu.nextElement();
-			requestKeys.add(key);
+		if(getRequest()!=null){
+			Enumeration enu = getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				// 判断是否有内容，hasNext()
+				String key = (String) enu.nextElement();
+				requestKeys.add(key);
+			}
 		}
+		
 		return requestKeys;
 	}
 	

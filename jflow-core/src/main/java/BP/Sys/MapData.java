@@ -1083,30 +1083,24 @@ public class MapData extends EntityNoName
 			  
               if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
               {
-                  QueryObject qo = new QueryObject(obj);             
+            	  String strs = "";         
                   
                   DataTable dt = DBAccess.RunSQLReturnTable("SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'");
                   for (DataRow dr : dt.Rows)
                   {
-                      qo.AddWhere("EnumKey", dr.getValue(0).toString());
-                      qo.addOr();
+                	  strs += "'"+dr.getValue(0).toString()+"',";
                   }
 
                   if (dt.Rows.size() >= 1)
-                      qo.AddWhere("EnumKey","s1s2");
+                	  strs+="''";
 
-                  qo.DoQuery();
+                  obj.RetrieveIn("EnumKey", strs);
               }
               else
               {
                   obj.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'");
               }
               
-		//	obj = new SysEnums();
-		//	obj.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'");
-			
-			
-			//obj.RetrieveInSQL(SysEnumAttr.EnumKey, "select UIBindKey from ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' ) as tab1");
 			this.SetRefObject("SysEnums", obj);
 
 		}

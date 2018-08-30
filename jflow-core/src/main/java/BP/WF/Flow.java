@@ -1486,7 +1486,7 @@ public class Flow extends BP.En.EntityNoName
 
 
 			///#region 判断是否有删除草稿的需求.
-		if (SystemConfig.getIsBSsystem() == true && isPostBack == false && nd.getIsStartNode() && BP.Sys.Glo.getRequest().getParameter("IsDeleteDraft").equals("1"))
+		if (SystemConfig.getIsBSsystem() == true && isPostBack == false && nd.getIsStartNode() && BP.Sys.Glo.getRequest()!=null &&  BP.Sys.Glo.getRequest().getParameter("IsDeleteDraft").equals("1"))
 		{
 
 			//需要删除草稿.

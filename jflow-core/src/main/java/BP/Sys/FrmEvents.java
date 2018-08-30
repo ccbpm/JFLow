@@ -178,7 +178,7 @@ public class FrmEvents extends EntitiesOID
 			// doc += "&FK_Unit=" + WebUser.FK_Unit;
 			doc += "&OID=" + en.getPKVal();
 
-			if (SystemConfig.getIsBSsystem())
+			if (SystemConfig.getIsBSsystem()&&BP.Sys.Glo.getRequest()!=null)
 			{
 				//是bs系统，并且是url参数执行类型.
 				 url = BP.Sys.Glo.getRequest().getRemoteAddr();
@@ -404,7 +404,7 @@ public class FrmEvents extends EntitiesOID
 						}
 					}
 
-					if (SystemConfig.getIsBSsystem())
+					if (SystemConfig.getIsBSsystem()&&BP.Sys.Glo.getRequest()!=null)
 					{
 						java.util.Enumeration params=BP.Sys.Glo.getRequest().getParameterNames();
 						//如果是bs系统, 就加入外部url的变量.

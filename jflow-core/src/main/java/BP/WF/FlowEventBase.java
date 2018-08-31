@@ -498,17 +498,6 @@ public abstract class FlowEventBase
 			{
 				r.put(key, BP.Sys.Glo.getRequest().getParameter(key));
 			}
-			// String queryStr = Glo.getRequest().getQueryString()
-			// .replace("?", "");
-			// String[] params = queryStr.split("&");
-			// for (int i = 0; i < params.length; i++) {
-			// String[] key_value = params[i].split("=");
-			// if(key_value.length == 1){
-			// r.put(key_value[0], "");
-			// }else{
-			// r.put(key_value[0], key_value[1]);
-			// }
-			// }
 		}
 		this.setSysPara(r);
 		if (eventType.equals(EventListOfNode.CreateWorkID)) // 节点表单事件。

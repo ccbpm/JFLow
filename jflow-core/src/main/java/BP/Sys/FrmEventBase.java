@@ -250,7 +250,7 @@ public abstract class FrmEventBase
 			}
 		}
 
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.getIsBSsystem() == true&&BP.Sys.Glo.getRequest()!=null)
 		{
 			while (BP.Sys.Glo.getRequest().getParameterNames().hasMoreElements())
 			{

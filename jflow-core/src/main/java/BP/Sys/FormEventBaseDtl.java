@@ -338,7 +338,7 @@ public abstract class FormEventBaseDtl
 			}
 		}
 
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.getIsBSsystem() == true && BP.Sys.Glo.getRequest()!=null)
 		{
 			
 			Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();

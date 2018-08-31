@@ -1864,7 +1864,7 @@ public class WorkFlow
 	{
 		if (_VirPath == null)
 		{
-			if (BP.Sys.SystemConfig.getIsBSsystem())
+			if (BP.Sys.SystemConfig.getIsBSsystem() &&  BP.Sys.Glo.getRequest()!=null)
 			{
 				_VirPath =BP.Sys.Glo.getRequest().getRemoteAddr();
 			}

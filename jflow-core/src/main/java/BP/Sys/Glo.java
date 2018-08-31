@@ -203,7 +203,7 @@ public class Glo
 		ul.setRDT(DataType.getCurrentDataTime());
 		try
 		{
-			if (BP.Sys.SystemConfig.getIsBSsystem())
+			if (BP.Sys.SystemConfig.getIsBSsystem() && BP.Sys.Glo.getRequest()!=null)
 			{
 				ul.setIP(BP.Sys.Glo.getRequest().getRemoteHost());
 			}

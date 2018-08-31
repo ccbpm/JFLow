@@ -627,7 +627,7 @@ public class Cond extends EntityMyPK
 
 
 				///#region 对url进行处理.
-			if (SystemConfig.getIsBSsystem())
+			if (SystemConfig.getIsBSsystem() && BP.Sys.Glo.getRequest()!=null)
 			{
 					//是bs系统，并且是url参数执行类型.
 				String myurl = BP.Sys.Glo.getRequest().getRequestURI();
@@ -669,7 +669,7 @@ public class Cond extends EntityMyPK
 			if (url.contains("http") == false)
 			{
 					//如果没有绝对路径 
-				if (SystemConfig.getIsBSsystem())
+				if (SystemConfig.getIsBSsystem()  && BP.Sys.Glo.getRequest()!=null)
 				{
 						//在cs模式下自动获取
 					String host = BP.Sys.Glo.getRequest().getRemoteHost();

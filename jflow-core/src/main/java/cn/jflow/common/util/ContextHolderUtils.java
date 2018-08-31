@@ -87,25 +87,27 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	}
 
 	public static void addCookie(String name, int expiry, String value) {
-		Cookie cookies[] = getRequest().getCookies();
-		if (cookies == null) {
-			Cookie cookie = new Cookie(name, value);
-			cookie.setMaxAge(expiry);
-			getResponse().addCookie(cookie);
-		} else {
-			for (Cookie cookie : cookies) {
-				if (name.equals(cookie.getName())) {
-					cookie.setValue(value);
-					cookie.setMaxAge(expiry);
-					getResponse().addCookie(cookie);
-					return;
-				}
-			}
-			Cookie cookie = new Cookie(name, value);
-			cookie.setMaxAge(expiry);
-			getResponse().addCookie(cookie);
-		}
 
+		if(getRequest()!= null){
+			Cookie cookies[] = getRequest().getCookies() ;
+			if (cookies == null) {
+				Cookie cookie = new Cookie(name, value);
+				cookie.setMaxAge(expiry);
+				getResponse().addCookie(cookie);
+			} else {
+				for (Cookie cookie : cookies) {
+					if (name.equals(cookie.getName())) {
+						cookie.setValue(value);
+						cookie.setMaxAge(expiry);
+						getResponse().addCookie(cookie);
+						return;
+					}
+				}
+				Cookie cookie = new Cookie(name, value);
+				cookie.setMaxAge(expiry);
+				getResponse().addCookie(cookie);
+			}
+		}
 	}
 
 	public static Cookie getCookie(String name) {

@@ -170,11 +170,15 @@ public class WorkNode {
 			if (BP.Web.WebUser.getIsWap()) {
 				_AppType = "WF/WAP";
 			} else {
-				boolean b = BP.Sys.Glo.getRequest().getRequestURI().toLowerCase().contains("oneflow");
-				if (b) {
-					_AppType = "WF/OneFlow";
-				} else {
+				if(BP.Sys.Glo.getRequest() == null)
 					_AppType = "WF";
+				else{
+					boolean b = BP.Sys.Glo.getRequest().getRequestURI().toLowerCase().contains("oneflow");
+					if (b) {
+						_AppType = "WF/OneFlow";
+					} else {
+						_AppType = "WF";
+					}
 				}
 			}
 		}
@@ -6155,7 +6159,7 @@ public class WorkNode {
 							"<a href='/WF/WFRpt.jsp?FK_Flow=" + this.getHisFlow().getNo() + "&WorkID="
 									+ this.getWorkID() + "' target=_blank >打开子流程</a>",
 							paras);
-				} else if (SystemConfig.getIsBSsystem() == true) {
+				} else if (SystemConfig.getIsBSsystem() == true && BP.Sys.Glo.getRequest()!=null) {
 					// 如果是BS系统
 					String pflowNo = BP.Sys.Glo.getRequest().getParameter("PFlowNo");
 					if (StringHelper.isNullOrEmpty(pflowNo) == false) {

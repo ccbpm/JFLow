@@ -69,19 +69,20 @@
 	            html += "<td>--</td>";
 	            html += "<td>主版本</td>";
 	        }
-
-	     //、  if (item.IsRel == 0)
-	       //     html += "<td>-</td>";
-	        //else
 	        	
-	            html += "<td><a href='../CCBPMDesigner/Designer.htm?FK_Flow=" + item.No + "' target=_blank >编辑</a></td>";
-
+	            //html += "<td><a href='../CCBPMDesigner/Designer.htm?FK_Flow=" + item.No + "' target=_blank >编辑</a></td>";
+				html += "<td><a href='javaScript:void(0)' onclick='changeOrOpenTab(\""+item.Name+"\",\""+item.No+"\")'>编辑</a></td>";
 	        html += "</tr>";
 	    }
 	    html += "</table>";
 	    $("#docs").html(html);
 	}
-
+	
+	function changeOrOpenTab(flowName,flowNo){
+		var url ="../CCBPMDesigner/Designer.htm?FK_Flow=" + flowNo+"&UserNo=" + WebUser.No + "&SID=" + WebUser.SID + "&Flow_V=1";
+		 window.parent.parent.addTab(flowNo, flowNo+"."+flowName, url,"icon-flow1");
+	}
+	
 	function Del(no) {
 
 	    if (window.confirm('您确定要删除吗？') == false)
@@ -90,7 +91,7 @@
 	    var en = new Entity("BP.WF.Flow", no);
 	    var data = en.DoMethodReturnString("DoDelete");
 
-	    alert(data);
+	    alert("删除成功");
 	    window.location.href = window.location.href;
 	}
     //创建新版本.
@@ -117,6 +118,8 @@
 	    var data = en.DoMethodReturnString("VerSetCurrentVer");
 	    window.location.href = window.location.href;
 	}
+	
+
 </script>
 </head>
 <body >

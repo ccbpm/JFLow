@@ -307,11 +307,11 @@ public class CCMobile extends WebContralBase
 
 				if (tSpan == null)
 				{
-					sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE  Emps LIKE '%" + WebUser.getNo() + "%' GROUP BY FK_Flow, FlowName";
+					sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE  Emps LIKE '%" + WebUser.getNo() + "%' AND FID=0 GROUP BY FK_Flow, FlowName";
 				}
 				else
 				{
-					sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE TSpan=" + tSpan + " AND Emps LIKE '%" + WebUser.getNo() + "%' GROUP BY FK_Flow, FlowName";
+					sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE TSpan=" + tSpan + " AND Emps LIKE '%" + WebUser.getNo() + "%' AND FID=0 GROUP BY FK_Flow, FlowName";
 				}
 
 

@@ -416,8 +416,8 @@
                 if (value == null || value == "null") value = "";
                 dbSrc = dbSrc.replace(regC, value);
                 if (mapExt.DBType == 0) {
-                    if (dbSrc.indexOf("where") == -1)
-                        dbSrc = dbSrc + "Where 1=1";
+                    if (dbSrc.toLowerCase().indexOf("where") == -1)
+                        dbSrc = dbSrc + "WHERE 1=1";
                     if (value != "" )
                         dbSrc = dbSrc + " and " + obj.FieldKey + "=" + value;
                 }

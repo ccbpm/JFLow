@@ -122,6 +122,7 @@ import BP.WF.Template.FrmNodes;
 import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.LabNote;
 import BP.WF.Template.LabNotes;
+import BP.WF.Template.MapFrmFool;
 import BP.WF.Template.NodeAttr;
 import BP.WF.Template.NodeDept;
 import BP.WF.Template.NodeDeptAttr;
@@ -6897,7 +6898,13 @@ public class Flow extends BP.En.EntityNoName
 		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE FK_Node NOT IN (SELECT NodeID FROM WF_Node) AND FK_Node > 0");
 
 		 
-
+		   //处理分组错误.
+        Nodes nds = new Nodes(fl.getNo());
+        for (Node nd : nds.ToJavaList())
+        {
+            MapFrmFool cols = new MapFrmFool("ND" + nd.getNodeID());
+            cols.DoCheckFixFrmForUpdateVer();
+        }
       
          
           

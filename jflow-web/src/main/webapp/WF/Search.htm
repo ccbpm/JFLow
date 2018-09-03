@@ -148,12 +148,11 @@
             var realIndex = 0;
             for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
-                
-                if (en.FID!=0)
-                	continue;
-                
+
+                if (en.FID != 0)
+                    continue;
+
                 realIndex++;
-                
 
                 var fk_flow = en.FK_Flow,
                             fk_node = en.FK_Node,

@@ -4302,8 +4302,8 @@ public class Glo {
 		java.util.Date dtTo = DataType.ParseSysDate2DateTime(ch.getDTTo());
 
 		long ts = dtTo.getTime() - dtFrom.getTime();
-		ch.setUseDays(ts / 60 / 60 / 24); // 用时，天数
-		ch.setUseMinutes(ts / 60 / 60); // 用时，分钟
+		ch.setUseDays(ts /1000/ 60 / 60 / 24); // 用时，天数
+		ch.setUseMinutes(ts /1000 / 60); // 用时，分钟
 		// ch.setUseDays(ts.Days); //用时，天数
 		// ch.setUseMinutes(ts.Minutes); //用时，分钟
 		// int hour = ts.Hours;
@@ -4313,8 +4313,8 @@ public class Glo {
 		java.util.Date sdtOfDT = DataType.ParseSysDate2DateTime(ch.getSDT());
 
 		long myts = dtTo.getTime() - sdtOfDT.getTime();
-		ch.setOverDays(myts / 60 / 60 / 24); // 逾期的天数.
-		ch.setOverMinutes(myts / 60 / 60); // 逾期的分钟数
+		ch.setOverDays(myts/1000 / 60 / 60 / 24); // 逾期的天数.
+		ch.setOverMinutes(myts/1000 / 60); // 逾期的分钟数
 		// TimeSpan myts = dtTo - sdtOfDT;
 		// ch.setOverDays(myts.getDays()); //逾期的天数.
 		// ch.setOverMinutes(myts.getMinutes()); //逾期的分钟数

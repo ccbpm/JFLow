@@ -445,6 +445,7 @@ public class CH extends EntityMyPK
         map.AddTBString(CHAttr.TimeLimit, null, "规定限期", true, true, 0, 50, 5);
         map.AddTBFloat(CHAttr.OverMinutes, 0, "逾期分钟", false, true);
         map.AddTBFloat(CHAttr.UseDays, 0, "实际使用天", false, true);
+        map.AddTBFloat(CHAttr.UseMinutes, 0, "实际使用分钟", false, true);
         map.AddTBFloat(CHAttr.OverDays, 0, "逾期天", false, true);
         map.AddTBInt(CHAttr.CHSta, 0, "状态", true, true);
         map.AddTBInt(CHAttr.WeekNum, 0, "第几周", false, true);

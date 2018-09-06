@@ -657,10 +657,15 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                 
                 //获得流程状态.
                 WFState wfState = WFState.forValue(Integer.parseInt(dt.Rows.get(0).getValue("WFState").toString()));
+                String fk_Node = dt.Rows.get(0).getValue("FK_Node").toString();
+                //把节点审核配置信息.
+        		FrmWorkCheck fwc = new FrmWorkCheck(fk_Node);
+        		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
+        		
 
                 //获取工作轨迹信息
                 String trackTable = "ND" + Integer.parseInt(fk_flow) + "Track";
-                sql = "SELECT NDFrom \"NDFrom\",NDFromT \"NDFromT\",NDTo  \"NDTo\", NDToT \"NDToT\", ActionType \"ActionType\",ActionTypeText \"ActionTypeText\",Msg \"Msg\",RDT \"RDT\",EmpFrom \"EmpFrom\",EmpFromT \"EmpFromT\", EmpToT \"EmpToT\",EmpTo \"EmpTo\" FROM " + trackTable +
+                sql = "SELECT FID \"FID\",NDFrom \"NDFrom\",NDFromT \"NDFromT\",NDTo  \"NDTo\", NDToT \"NDToT\", ActionType \"ActionType\",ActionTypeText \"ActionTypeText\",Msg \"Msg\",RDT \"RDT\",EmpFrom \"EmpFrom\",EmpFromT \"EmpFromT\", EmpToT \"EmpToT\",EmpTo \"EmpTo\" FROM " + trackTable +
                       " WHERE WorkID=" +
                       workid + (fid == 0 ? (" OR FID=" + workid) : (" OR WorkID=" + fid + " OR FID=" + fid)) + " ORDER BY RDT ASC";
 

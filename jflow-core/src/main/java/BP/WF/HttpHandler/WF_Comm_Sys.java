@@ -533,6 +533,35 @@ public class WF_Comm_Sys extends WebContralBase
 		}
 		return "脚本"+fileName+"导入成功";
 	}
+	
+	 public String RichUploadFile()
+     {
+		 File xmlFile = null;
+		String fileName="";
+		String savePath="";
+		String contentType = getRequest().getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
+			MultipartFile multipartFile = request.getFile("upfile");
+			
+			fileName = multipartFile.getOriginalFilename();
+			 savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"RichTextFile";
+			if(new File(savePath).exists()==false)
+				new File(savePath).mkdirs();
+			savePath = savePath+"/"+fileName;
+			xmlFile = new File(savePath);
+			if(xmlFile.exists()){
+				xmlFile.delete();
+			}
+			try {
+				multipartFile.transferTo(xmlFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
+			}
+		}
+         
+         return savePath;
+     }
 
 	/**
 	 * 获取已知目录下的文件列表

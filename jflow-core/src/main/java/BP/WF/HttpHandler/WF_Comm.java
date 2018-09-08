@@ -52,6 +52,7 @@ import BP.En.UIContralType;
 import BP.Sys.DTSearchWay;
 import BP.Sys.EventListOfNode;
 import BP.Sys.MapAttr;
+import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.SysEnum;
@@ -1123,19 +1124,49 @@ public class WF_Comm extends WebContralBase {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
 		Map map = en.getEnMapInTime();
-
-		MapAttrs attrs = map.getAttrs().ToMapAttrs();
-
+		
 		// 属性集合.
-		DataTable dtAttrs = attrs.ToDataTableField();
-		dtAttrs.TableName = "Attrs";
+		MapAttrs attrs =  new MapAttrs();
+		
+		MapData md = new MapData();
+        md.setNo(this.getEnsName());
+        int count = md.RetrieveFromDBSources();
+        if(count==0)
+           attrs =  map.getAttrs().ToMapAttrs();
+        else
+        	attrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
+				
+       
+        //根据设置的显示列显示字段
+        DataRow row = null;
+        DataTable dtAttrs = new DataTable("Attrs");
+        dtAttrs.Columns.Add("KeyOfEn", String.class);
+        dtAttrs.Columns.Add("Name", String.class);
+        dtAttrs.Columns.Add("Width", int.class);
+        dtAttrs.Columns.Add("UIContralType", int.class);
+        for (MapAttr attr : attrs.ToJavaList())
+        {
+            String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
+            if (searchVisable == "0")
+                continue;
+            if (DataType.IsNullOrEmpty(searchVisable) && attr.getUIVisible() == false)
+                continue;
+            row = dtAttrs.NewRow();
+            row.setValue("KeyOfEn",attr.getKeyOfEn());
+            row.setValue("Name", attr.getName());
+            row.setValue("Width", attr.getUIWidthInt());
+            row.setValue("UIContralType",  attr.getUIContralType());
+
+            dtAttrs.Rows.add(row);
+        }
+        
+		
 
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtAttrs); // 把描述加入.
 
 		//定义Sys_MapData.
-        MapData md = new MapData();
-        md.setNo(this.getEnsName().substring(0,this.getEnsName().length()-1));
+        
         md.setName(map.getEnDesc());
 
         //附件类型.

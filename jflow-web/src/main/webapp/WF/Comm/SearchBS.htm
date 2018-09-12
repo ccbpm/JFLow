@@ -135,15 +135,16 @@
             for (var i = 0; i < attrs.length; i++) {
             	 var attr = attrs[i];
                  var str = "";
-				if(barCount%4==0)
-					str +="<br/>";
+				//if(barCount%4==0)
+				//	str +="<br/>";
 					
-                str += "<label  style='text-align: right; margin-top:5px;margin-left:5px;' for='DDL_" + attr.Field + "'>" + attr.Name + ":&nbsp;&nbsp  </label>";
+                str += "<label style='text-align: right; margin-top:5px;margin-left:5px;' for='DDL_" + attr.Field + "'>" + attr.Name + ":</label>";
                 
-                if(barCount%4==0)
-                	str += "<select class='form-control' style='margin-top:5px;width:140px' name='DDL_" + attr.Field + "' ID='DDL_" + attr.Field + "'>" + InitDDLOperation(data, attr, "all") + "</select>";
-                else
-                	str += "<select class='form-control' style='padding:0px;width:140px' name='DDL_" + attr.Field + "' ID='DDL_" + attr.Field + "'>" + InitDDLOperation(data, attr, "all") + "</select>";
+               // if(barCount%4==0)
+               // 	str += "<select class='form-control' style='margin-top:5px;width:140px' name='DDL_" + attr.Field + "' ID='DDL_" + attr.Field + "'>" + InitDDLOperation(data, attr, "all") + "</select>";
+               // else
+
+                	str += "<select class='form-control' style='margin-top:5px;width:"+attr.Width+"px' name='DDL_" + attr.Field + "' ID='DDL_" + attr.Field + "'>" + InitDDLOperation(data, attr, "all") + "</select>";
                 str = $(str);
               
                 barCount += 1;
@@ -163,8 +164,9 @@
                 $("#DDL_" + attr.Field).val(selectVal);
             }
             
-           if(barCount%4==0)
-            	html+="</br>";
+           //if(barCount%4==0)
+            //	html+="</br>";
+
             html += '<a href="#"class="btn btn-primary" style="margin-left:20px" id="search_btn" onclick="Search()">查询</a>  ';
             
             
@@ -356,7 +358,7 @@
                     columns.push({
                         field: field,
                         title: title,
-                        //width:attr.UIWidth*2,
+                        width:attr.UIWidth*2,
                         fixed: false,
                         formatter: function (value, row, index) {
                             if (value == "0") return "否";
@@ -368,7 +370,7 @@
                     columns.push({
                         field: field,
                         title: title,
-                        //width:attr.UIWidth*2,
+                        width:attr.UIWidth*2,
                         fixed: false
 
                     });
@@ -605,7 +607,7 @@
 
             var windowW = cfg.GetPara("WinCardW");
             if (windowW == "" || windowW == undefined)
-                windowW = 700;
+                windowW = 900;
 
             var windowH = cfg.GetPara("WinCardH");
             if (windowH == "" || windowH == undefined)
@@ -720,10 +722,10 @@
     </style>
 </head>
 <body >
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content animated fadeInRight" style="padding:0px 10px 20px 10px">
         <div class="ibox-content">
-            <div class="row" style="margin-top:10px">
-    	        <div class="panel panel-default" style="border:0px"> 
+            <div class="row">
+    	        <div class="panel panel-default" style="border:0px;margin-bottom:3px"> 
     		    <div id="toolbar" style="width:100%"></div>
             </div>
             <table id="dg" class="table table-hover"></table>

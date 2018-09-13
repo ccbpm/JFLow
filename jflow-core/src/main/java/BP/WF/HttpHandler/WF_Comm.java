@@ -2659,6 +2659,10 @@ public class WF_Comm extends WebContralBase {
         //获取注册信心表
         UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
         String reAttrs = this.GetRequestVal("Attrs");
+        
+        //判断是否已经选择分组
+        boolean contentFlag = false;
+        
         for (Attr attr : attrs)
         {
             if (attr.getUIContralType() == UIContralType.DDL)
@@ -2668,16 +2672,18 @@ public class WF_Comm extends WebContralBase {
                 dr.setValue("Name", attr.getDesc());
 
                 // 根据状态 设置信息.
-                if (ur.getVals().indexOf(attr.getKey()) != -1)
+                if (ur.getVals().indexOf(attr.getKey()) != -1){
                 	dr.setValue("Checked","true");
-
-                if (ur.getVals().indexOf(attr.getKey()) != -1)
-                	dr.setValue("Checked","true");
-
+                	contentFlag = true;
+                }
                 dt.Rows.add(dr);
             }
             
         }
+        
+        if (contentFlag == false && dt.Rows.size() != 0)
+             dt.Rows.get(0).setValue("Checked","true");
+        
         return BP.Tools.Json.ToJson(dt);
     }
     
@@ -2969,7 +2975,9 @@ public class WF_Comm extends WebContralBase {
 
         groupBy = groupBy.substring(0, groupBy.length() - 1);
 
-
+        if(groupBy.trim().equals("GROUP BY")){
+            return null;
+        }
 
         // 查询语句的生成
         String where = " WHERE ";

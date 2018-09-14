@@ -1053,7 +1053,7 @@ public class PubClass {
 			return "表不存在.";
 		
 		try {
-			switch (en.getEnMap().getEnDBUrl().getDBType()) {
+			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
 				AddCommentForTable_Ora(en);
 				break;
@@ -1368,7 +1368,7 @@ public class PubClass {
 
 				}
 				// 外键的实体是否为空
-				switch (en.getEnMap().getEnDBUrl().getDBType()) {
+				switch (SystemConfig.getAppCenterDBType()) {
 				case Oracle:
 					sql = "SELECT COUNT(*) FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + attr.getField() + " is null or length("
 							+ attr.getField() + ") < 1 ";

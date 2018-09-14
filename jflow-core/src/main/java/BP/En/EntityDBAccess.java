@@ -263,21 +263,7 @@ public class EntityDBAccess
 	public static int Retrieve(Entity en, String sql, Paras paras)
 	{
 		
-		DataTable dt;
-		switch (en.getEnMap().getEnDBUrl().getDBUrlType())
-		{
-			case AppCenterDSN:
-				dt = DBAccess.RunSQLReturnTable(sql, paras);
-				break;
-			// case DBAccessOfMSMSSQL:
-			// dt = DBAccessOfMSMSSQL.RunSQLReturnTable(sql);
-			// break;
-			// case DBAccessOfOracle:
-			// dt = DBAccessOfOracle.RunSQLReturnTable(sql);
-			// break;
-			default:
-				throw new RuntimeException("@没有设置DB类型。");
-		}
+		DataTable dt= DBAccess.RunSQLReturnTable(sql, paras);
 		
 		if (null == dt || null == dt.Rows || dt.Rows.size() == 0)
 		{
@@ -292,35 +278,7 @@ public class EntityDBAccess
 		return i;
 	}
 	
-	public static int Retrieve2017(Entity en, String sql, Paras paras)
-	{
-		
-		DataTable dt;
-		switch (en.getEnMap().getEnDBUrl().getDBUrlType())
-		{
-			case AppCenterDSN:
-				dt = DBAccess.RunSQLReturnTable(sql, paras);
-				break;
-			// case DBAccessOfMSMSSQL:
-			// dt = DBAccessOfMSMSSQL.RunSQLReturnTable(sql);
-			// break;
-			// case DBAccessOfOracle:
-			// dt = DBAccessOfOracle.RunSQLReturnTable(sql);
-			// break;
-			default:
-				throw new RuntimeException("@没有设置DB类型。");
-		}
-		
-		if (null == dt || null == dt.Rows || dt.Rows.size() == 0)
-		{
-			return 0;
-		}
-		Attrs attrs = en.getEnMap().getAttrs();
-		EntityDBAccess.fullDate2017(dt, en, attrs);
-		int i = dt.Rows.size();
-		// dt.dispose();
-		return i;
-	}
+	 
 	
 	/**
 	 * 查询
@@ -477,40 +435,16 @@ public class EntityDBAccess
 	public static int Retrieve(Entities ens, String sql, Paras paras,
 			String[] fullAttrs)
 	{
-		DataTable dt = null;
-		switch (ens.getGetNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
-		{
-			case AppCenterDSN:
-				dt = DBAccess.RunSQLReturnTable(sql, paras);
-				break;
-			// case DBAccessOfMSMSSQL:
-			// dt = DBAccessOfMSMSSQL.RunSQLReturnTable(sql);
-			// break;
-			// case DBAccessOfOracle:
-			// dt = DBAccessOfOracle.RunSQLReturnTable(sql);
-			// break;
-			// case DBAccessOfOLE:
-			// dt = DBAccessOfOLE.RunSQLReturnTable(sql);
-			// break;
-			default:
-				throw new RuntimeException("@没有设置DB类型。");
-		}
+		//@xushuhao
+		DataTable dt = DBAccess.RunSQLReturnTable(sql, paras);	  
 		
-		// if(dt==null){
-		// return 0;
-		// }
-		
-		if (dt.Rows.size() == 0)
-		{
+		if (dt.Rows.size() == 0)		
 			return 0;
-		}
 		
 		// 设置查询.
 		QueryObject.InitEntitiesByDataTable(ens, dt, fullAttrs);
 		
-		int i = dt.Rows.size();
-		// dt.dispose();
-		return i;
-		// return dt.Rows.Count;
+		return dt.Rows.size();
+		 
 	}
 }

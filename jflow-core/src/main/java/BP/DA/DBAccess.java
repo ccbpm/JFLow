@@ -1171,7 +1171,7 @@ public class DBAccess {
 			//首先取具有事务的conn.  @xushuhao
 			conn = GetConnOfTransactionForMySQL(WebUser.getNo());
 			
-			if (conn == null)			
+			if (conn == null)
 				conn = DBAccess.getGetAppCenterDBConn_MySQL();
 			else
 				isTtrack=true; 

@@ -11,7 +11,7 @@ import BP.Sys.*;
  0,集成该基类的子类,可以重写事件的方法与基类交互.
  1,一个子类必须与一个流程模版绑定.
  2,基类里有很多流程运行过程中的变量，这些变量可以辅助开发者在编写复杂的业务逻辑的时候使用.
- 3,该基类有一个子类模版，位于:\CCFlow\WF\Admin\AttrFlow\F001Templepte.cs .
+ 3,该基类有一个子类模版，位于:\\WF\Admin\AttrFlow\F001Templepte.cs .
  
 */
 public abstract class FlowEventBase
@@ -20,15 +20,11 @@ public abstract class FlowEventBase
 		///#region 要求子类强制重写的属性.
 	/** 
 	 流程编号/流程标记.
-	 该参数用于说明要把此事件注册到那一个流程模版上.
-	 
+	 该参数用于说明要把此事件注册到那一个流程模版上.	 
 	*/
 	public abstract String getFlowMark();
 
-		///#endregion 要求子类重写的属性.
-
-
-		//内部变量(流程在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
+		 
 	/** 
 	 发送对象
 	 

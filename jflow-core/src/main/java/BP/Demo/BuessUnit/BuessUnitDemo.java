@@ -12,6 +12,7 @@ public class BuessUnitDemo extends BuessUnitBase {
 
 	@Override
 	public String DoIt() {
+		
 		Log.DebugWriteInfo("调用业务单元[" + this.toString() + "] WorkID: " + this.getWorkID());
 		return super.DoIt();
 	}

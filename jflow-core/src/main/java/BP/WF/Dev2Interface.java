@@ -6650,11 +6650,9 @@ public class Dev2Interface {
 		gwf.setPFID(parentFID);
 		gwf.setPFlowNo(parentFlowNo);
 		gwf.setPNodeID(parentNodeID);
-		if (i == 0) {
+		if (gwf.Update() == 0)  
 			gwf.Insert();
-		} else {
-			gwf.Update();
-		}
+		 
 
 		// 插入待办.
 		GenerWorkerList gwl = new GenerWorkerList();
@@ -6674,11 +6672,9 @@ public class Dev2Interface {
 		gwl.setIsEnable(true);
 		gwl.setIsPass(false);
 		gwl.setPRI(gwf.getPRI());
-		if (i == 0) {
+		if (gwl.Update() == 0) {
 			gwl.Insert();
-		} else {
-			gwl.Update();
-		}
+		} 
 
 		if (parentWorkID != 0) {
 			// 设置父流程信息
@@ -9745,87 +9741,7 @@ public class Dev2Interface {
 				400);
 	}
 
-	/**
-	 * 下一步工作的接受人
-	 * 
-	 * @param fk_flow
-	 *            流程编号
-	 * @param fk_node
-	 *            当前节点编号
-	 * @param workid
-	 *            工作ID
-	 * @param fid
-	 *            流程ID
-	 * @throws IOException
-	 */
-	public static void UI_Window_Accepter(String fk_flow, int fk_node, long workid, long fid) throws IOException {
-		// 转化成编号.
-		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
-
-		PubClass.WinOpen(ContextHolderUtils.getResponse(), Glo.getCCFlowAppPath() + "WF/WorkOpt/Accepter.jsp?FK_Flow="
-				+ fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workid + "&FID=" + fid, 500, 400);
-	}
-
-	/**
-	 * 打开流程图窗口
-	 * 
-	 * @param fk_flow
-	 *            流程编号
-	 * @param fk_node
-	 *            当前节点编号
-	 * @param workid
-	 *            工作ID
-	 * @param fid
-	 *            流程ID
-	 * @throws IOException
-	 */
-	public static void UI_Window_FlowChart(String fk_flow) throws IOException {
-		// 转化成编号.
-		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
-		PubClass.WinOpen(ContextHolderUtils.getResponse(),
-				Glo.getCCFlowAppPath() + "WF/WorkOpt/OneWork/ChartTrack.jsp?FK_Flow=" + fk_flow, 500, 400);
-	}
-
-	/**
-	 * 打开OneWork
-	 * 
-	 * @param fk_flow
-	 *            流程编号
-	 * @param workid
-	 *            工作ID
-	 * @param fid
-	 *            流程ID
-	 */
-	public static void UI_Window_OneWork(String fk_flow, long workid, long fid) {
-		// 转化成编号.
-		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), Glo.getCCFlowAppPath()
-					+ "WF/WorkOpt/OneWork/Track.jsp?FK_Flow=" + fk_flow + "&WorkID=" + workid + "&FID=" + fid, 500,
-					400);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 查看子线程信息
-	 * 
-	 * @param fk_flow
-	 * @param fk_node
-	 * @param workid
-	 * @param fid
-	 * @throws IOException
-	 */
-	public static void UI_Window_ThreadInfo(String fk_flow, int fk_node, long workid, long fid) throws IOException {
-		// 转化成编号.
-		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
-		String key = DateUtils.format(new Date(), "yyyyMMddhhmmss");
-		String url = Glo.getCCFlowAppPath() + "WF/ThreadDtl.jsp?FK_Node=" + fk_node + "&FID=" + fid + "&WorkID="
-				+ workid + "&FK_Flow=" + fk_flow + "&s=" + key;
-		PubClass.WinOpen(ContextHolderUtils.getResponse(), url, 500, 400);
-	}
-
+	    
 	/// #region ccform 接口
 	/**
 	 * 获得指定轨迹的json数据.

@@ -1078,6 +1078,7 @@ public class WF_Comm extends WebContralBase {
 		DataTable dt = new DataTable();
 		dt.Columns.Add("Field");
 		dt.Columns.Add("Name");
+		dt.Columns.Add("Width");
 		dt.TableName = "Attrs";
 
 		AttrSearchs attrs = map.getSearchAttrs();
@@ -1085,6 +1086,7 @@ public class WF_Comm extends WebContralBase {
 			DataRow dr = dt.NewRow();
 			dr.setValue("Field", item.Key);
 			dr.setValue("Name", item.HisAttr.getDesc());
+			dr.setValue("Width", item.Width);
 			dt.Rows.add(dr);
 		}
 		ds.Tables.add(dt);

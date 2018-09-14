@@ -20,11 +20,23 @@ public class AttrSearchs extends ArrayList<AttrSearch>
 	public final void Add(Attr attr, boolean isShowSelectedAll,
 			String relationalDtlKey)
 	{
+	 
+		Add(attr,isShowSelectedAll,relationalDtlKey,130 );
+		
+		/*
+		 * warning en.setKey(attr.getKey()); this.add(en);
+		 */
+	}
+	
+	public final void Add(Attr attr, boolean isShowSelectedAll,
+			String relationalDtlKey,int width)
+	{
 		AttrSearch en = new AttrSearch();
 		en.HisAttr = attr;
 		en.IsShowAll = isShowSelectedAll;
 		en.RelationalDtlKey = relationalDtlKey;
 		en.Key = attr.getKey();
+		en.Width= width;
 		this.add(en);
 		/*
 		 * warning en.setKey(attr.getKey()); this.add(en);

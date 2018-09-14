@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import BP.Sys.SystemConfig;
 import BP.Tools.CRC32Helper;
 import BP.Tools.StringHelper;
+import BP.Web.WebUser;
 import cn.jflow.common.util.ContextHolderUtils;
 
 /**
@@ -683,24 +684,49 @@ public class DBAccess {
 		return ContextHolderUtils.getInstance().getDataSource().getConnection();
 	}
 
+	   
+	private static Hashtable<String, Connection> _HashtableConn = null;
+
+	public static void SetConnOfTransactionForMySQL(String buessID, Connection conn) {
+		if (_HashtableConn == null)
+			_HashtableConn = new Hashtable();
+
+		_HashtableConn.put(buessID, conn);
+	}
+ 
+	public static Connection GetConnOfTransactionForMySQL(String buessID) throws Exception
+	{
+		if (buessID==null)
+			return null;
+		
+		if (_HashtableConn == null) {
+			_HashtableConn = new Hashtable();
+			return null;
+		}
+
+		if (_HashtableConn.containsKey(buessID) == false)
+			return null;
+
+		Connection conn = _HashtableConn.get(buessID);
+		return conn;
+	}
+	
+	 
 	public static Connection getGetAppCenterDBConn_MySQL() throws Exception {
-		// Class.forName("com.mysql.jdbc.Driver");
-		// Connection conn =
-		// DriverManager.getConnection(SystemConfig.getAppCenterDSN(),
-		// SystemConfig.getUser(), SystemConfig.getPassword());
-		// // Connection conn = DriverManager
-		// // .getConnection(
-		// //
-		// "jdbc:mysql://127.0.0.1:3307/jflow?useUnicode=true&characterEncoding=UTF-8&useOldAliasMetadataBehavior=true",
-		// // "root", "root");
-		// /*
-		// * warning MySqlConnection conn = new MySqlConnection(
-		// * SystemConfig.getAppCenterDSN()); if (conn.State !=
-		// * System.Data.ConnectionState.Open) { conn.ConnectionString =
-		// * SystemConfig.getAppCenterDSN(); conn.Open(); } return conn;
-		// */
-		// return conn;
+		
 		return ContextHolderUtils.getInstance().getDataSource().getConnection();
+		
+		/*
+		String id= WebUser.getNoOfRel();
+		if (id==null)
+			return ContextHolderUtils.getInstance().getDataSource().getConnection();
+		
+		Connection conn= GetConn(id);
+		if (conn==null)
+			return ContextHolderUtils.getInstance().getDataSource().getConnection();
+		
+		return conn; */
+		
 	}
 
 	public static Connection getGetAppCenterDBConn_Oracle() throws Exception {
@@ -754,11 +780,12 @@ public class DBAccess {
 		if (DBAccess.IsExitsTabPK(tab)) {
 			return;
 		}
-//		//先创建表的主键列.
-//		sql = "ALTER TABLE " + tab.toUpperCase() +  " ADD COLUMN " + pk + " int(11) ";
-//		RunSQL(sql);
+		// //先创建表的主键列.
+		// sql = "ALTER TABLE " + tab.toUpperCase() + " ADD COLUMN " + pk + "
+		// int(11) ";
+		// RunSQL(sql);
 
-		//然后添加主键约束.
+		// 然后添加主键约束.
 		sql = "ALTER TABLE " + tab.toUpperCase() + " ADD CONSTRAINT " + tab + "pk PRIMARY KEY(" + pk.toUpperCase()
 				+ ")";
 		RunSQL(sql);
@@ -949,9 +976,11 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static int RunSQL(String sql) {
-		if (sql == null || sql.trim().equals("")) {
+		
+		if (DataType.IsNullOrEmpty(sql)==true) {
 			return 1;
 		}
+		
 		Paras ps = new Paras();
 		ps.SQL = sql;
 		return RunSQL(ps);
@@ -1132,25 +1161,38 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	private static int RunSQL_200705_MySQL(String sql, Paras paras) {
-		ResultSet rs = null;
+	 
 		Connection conn = null;
 		Statement stmt = null;
 		NamedParameterStatement pstmt = null;
+		boolean isTtrack=false;
 		try {
-			conn = DBAccess.getGetAppCenterDBConn_MySQL();
+			
+			//首先取具有事务的conn.  @xushuhao
+			conn = GetConnOfTransactionForMySQL(WebUser.getNo());
+			
+			if (conn == null)			
+				conn = DBAccess.getGetAppCenterDBConn_MySQL();
+			else
+				isTtrack=true; 
+			 
+
 			int i = 0;
 			if (null != paras && paras.size() > 0) {
 				pstmt = new NamedParameterStatement(conn, sql);
 				PrepareCommand(pstmt, paras);
 				i = pstmt.executeUpdate();
+				
 			} else {
 				stmt = conn.createStatement();// 创建用于执行静态sql语句的Statement对象，st属局部变量
 				i = stmt.executeUpdate(sql);
 			}
+			
 			if (Log.isLoggerDebugEnabled()) {
 				Log.DefaultLogWriteLineDebug("SQL: " + sql);
 				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + i);
 			}
+			// conn.commit();
 			return i;
 		} catch (Exception ex) {
 			String msg = "@运行更新在(RunSQL_200705_MySQL)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
@@ -1159,14 +1201,16 @@ public class DBAccess {
 			throw new RuntimeException(msg, ex);
 		} finally {
 			try {
-				if (rs != null)
-					rs.close();
+				 
 				if (stmt != null)
 					stmt.close();
+				
 				if (pstmt != null)
-					pstmt.close();
-				if (conn != null)
+					pstmt.close();				
+				
+				if (isTtrack==false && conn != null)
 					conn.close();
+				
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
@@ -1609,9 +1653,7 @@ public class DBAccess {
 		Connection conn = null;
 		Statement stmt = null;
 		NamedParameterStatement pstmt = null;
-		if (sql.trim().endsWith("WHERE")) {
-			sql = sql.replace("WHERE", "");
-		}
+		 
 		try {
 			conn = DBAccess.getGetAppCenterDBConn_MySQL();
 			DataTable oratb = new DataTable("otb");
@@ -1623,9 +1665,10 @@ public class DBAccess {
 				ResultSetMetaData rsmd = rs.getMetaData();
 				int size = rsmd.getColumnCount();
 				for (int i = 0; i < size; i++) {
-					//原来的  oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
-					//mysql取值导致流程名称重复，改为label取值
-					nameLabel =rsmd.getColumnLabel(i + 1);
+					// 原来的 oratb.Columns.Add(rsmd.getColumnName(i + 1),
+					// Para.getDAType(rsmd.getColumnType(i + 1)));
+					// mysql取值导致流程名称重复，改为label取值
+					nameLabel = rsmd.getColumnLabel(i + 1);
 					oratb.Columns.Add(nameLabel, Para.getDAType(rsmd.getColumnType(i + 1)));
 				}
 				while (rs.next()) {
@@ -1656,9 +1699,10 @@ public class DBAccess {
 				ResultSetMetaData rsmd = rs.getMetaData();
 				int size = rsmd.getColumnCount();
 				for (int i = 0; i < size; i++) {
-					//oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
-					nameLabel = rsmd.getColumnLabel(i+1);
-					oratb.Columns.Add(nameLabel,Para.getDAType(rsmd.getColumnType(i+1)));
+					// oratb.Columns.Add(rsmd.getColumnName(i + 1),
+					// Para.getDAType(rsmd.getColumnType(i + 1)));
+					nameLabel = rsmd.getColumnLabel(i + 1);
+					oratb.Columns.Add(nameLabel, Para.getDAType(rsmd.getColumnType(i + 1)));
 				}
 				while (rs.next()) {
 					DataRow dr = oratb.NewRow();// 產生一列DataRow
@@ -1715,9 +1759,7 @@ public class DBAccess {
 		Connection conn = null;
 		Statement stmt = null;
 		NamedParameterStatement pstmt = null;
-		if (sql.trim().endsWith("WHERE")) {
-			sql = sql.replace("WHERE", "");
-		}
+	 
 		try {
 			conn = DBAccess.getGetAppCenterDBConn_MySQL();
 			DataTable oratb = new DataTable("otb");
@@ -2591,97 +2633,38 @@ public class DBAccess {
 		 */
 	}
 
-	public static Connection getGetAppCenterDBConn() {
-		return null;
-		/*
-		 * String connstr = BP.Sys.SystemConfig.getAppCenterDSN(); switch
-		 * (getAppCenterDBType()) { case MSSQL: return new Connection(connstr);
-		 * case Oracle: return new Connection(connstr); case MySQL: return new
-		 * Connection(connstr); case Informix: return new Connection(connstr);
-		 * case Access: default: throw new RuntimeException("发现未知的数据库连接类型！"); }
-		 */
-	}
-
 	/**
-	 * 开启事物
+	 * 开启事物  @xushuaho
 	 */
-	public static void DoTransactionBegin() {
-		// try {
-		// Connection conn = null;
-		// switch (SystemConfig.getAppCenterDBType()) {
-		// case MSSQL:
-		// conn = DBAccess.getGetAppCenterDBConn_MSSQL();
-		// conn.setAutoCommit(true);
-		// break;
-		// case Oracle:
-		// conn = DBAccess.getGetAppCenterDBConn_Oracle();
-		// conn.setAutoCommit(true);
-		// break;
-		// case MySQL:
-		// conn = DBAccess.getGetAppCenterDBConn_MySQL();
-		// conn.setAutoCommit(true);
-		// break;
-		// default:
-		// break;
-		// }
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
+	public static void DoTransactionBegin() throws Exception {
+		
+		Connection conn = ContextHolderUtils.getInstance().getDataSource().getConnection();
+		conn.setAutoCommit(false); // 设置不能自动提交.
+		SetConnOfTransactionForMySQL(WebUser.getNo(), conn);		
 	}
 
-	// 提交事物
-	public static void DoTransactionCommit() {
-		// try {
-		// Connection conn = null;
-		// for (DBType g : DBType.values()) {
-		// switch (g) {
-		// case MSSQL:
-		// conn = DBAccess.getGetAppCenterDBConn_MSSQL();
-		// conn.commit();
-		// break;
-		// case Oracle:
-		// conn = DBAccess.getGetAppCenterDBConn_Oracle();
-		// conn.commit();
-		// break;
-		// case MySQL:
-		// conn = DBAccess.getGetAppCenterDBConn_MySQL();
-		// conn.commit();
-		// break;
-		// default:
-		// break;
-		// }
-		// }
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
+	// 提交事物   @xushuaho
+	public static void DoTransactionCommit() throws Exception {
+
+		String id=WebUser.getNo();
+		Connection conn = DBAccess.GetConnOfTransactionForMySQL(id);
+		conn.commit();
+		conn.setAutoCommit(true); // 设置不能自动提交.
+		conn.close();
+		_HashtableConn.remove(id);
 	}
 
-	// 回滚事物
-	public static void DoTransactionRollback() {
-		// try {
-		// Connection conn = null;
-		// //for (DBType g : DBType.values()) {
-		// switch (SystemConfig.getAppCenterDBType()) {
-		// case MSSQL:
-		// conn = DBAccess.getGetAppCenterDBConn_MSSQL();
-		// conn.rollback();
-		// break;
-		// case Oracle:
-		// conn = DBAccess.getGetAppCenterDBConn_Oracle();
-		// conn.rollback();
-		// break;
-		// case MySQL:
-		// conn = DBAccess.getGetAppCenterDBConn_MySQL();
-		// conn.rollback();
-		// break;
-		// default:
-		// break;
-		// }
-		// //}
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		return;
+	// 回滚事物   @xushuaho
+	public static void DoTransactionRollback() throws Exception {
+
+		String buessID=WebUser.getNo();
+		
+		Connection conn = DBAccess.GetConnOfTransactionForMySQL(buessID);
+		conn.rollback();
+		conn.setAutoCommit(true); // 设置不能自动提交.
+		conn.close();
+		_HashtableConn.remove(buessID);
+
 	}
 
 	public static DataTable ToLower(DataTable dt) {

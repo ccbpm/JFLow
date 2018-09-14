@@ -663,9 +663,8 @@ public class Flow extends BP.En.EntityNoName
 	{
 		// 检查是否可以发起该流程？
 		if (BP.WF.Glo.CheckIsCanStartFlow_InitStartFlow(this) == false)
-		{
 			throw new RuntimeException("@您违反了该流程的【" + this.getStartLimitRole() + "】限制规则。" + this.getStartLimitAlert());
-		}
+		
 
 		//如果是bs系统.
 		if (paras == null)
@@ -885,7 +884,7 @@ public class Flow extends BP.En.EntityNoName
 
 			//检查报表.
 			this.CheckRpt();
-			throw new RuntimeException("@创建工作失败：有可能是您在设计表单时候，新增加的控件，没有预览导致的，请您刷新一次应该可以解决，技术信息：" + ex.getStackTrace() + " @ 技术信息:" + ex.getMessage());
+			throw new RuntimeException("@创建工作失败：有可能是您在设计表单时候，新增加的控件，没有预览导致的，请您刷新一次应该可以解决，技术信息：" + ex.getMessage() + " @ 技术信息:" + ex.getStackTrace());
 		}
 
 		//在创建WorkID的时候调用的事件.
@@ -1319,14 +1318,12 @@ public class Flow extends BP.En.EntityNoName
 		wk.SetValByKey(NDXRptBaseAttr.BillNo, rpt.getBillNo());
 		wk.setFID(0);
 		wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
-		if (wk.getIsExits() == false)
-		{
-			wk.DirectInsert();
-		}
-		else
-		{
-			wk.Update();
-		}
+	 
+	   int i=wk.Update();
+	   if (i==0)
+		   wk.DirectInsert();
+	   
+		
 
 		///#endregion 最后整理参数.
 
@@ -6905,9 +6902,7 @@ public class Flow extends BP.En.EntityNoName
             MapFrmFool cols = new MapFrmFool("ND" + nd.getNodeID());
             cols.DoCheckFixFrmForUpdateVer();
         }
-      
-         
-          
+       
 			///#endregion
 		
 

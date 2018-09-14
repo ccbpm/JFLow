@@ -18,7 +18,7 @@ public class AttrSearch
 	 */
 	public String RelationalDtlKey = null;
 	public String Key = null;
-	
+	public int Width=130; //宽度
 	public AttrSearch()
 	{
 	}

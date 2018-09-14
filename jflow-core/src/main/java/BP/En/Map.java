@@ -309,16 +309,17 @@ public class Map
 	 */
 	public final void AddSearchAttr(String key)
 	{
-		Attr attr = this.GetAttrByKey(key);
-		if (attr.getKey().equals("FK_Dept"))
-		{
-			this.getSearchAttrs().Add(attr, false, null);
-		} else
-		{
-			this.getSearchAttrs().Add(attr, true, null);
-		}
+		AddSearchAttr(key,130);
 	}
-	
+	public final void AddSearchAttr(String key, int width)
+	{
+		Attr attr = this.GetAttrByKey(key);
+		
+		if (attr.getKey().equals("FK_Dept"))	
+			this.getSearchAttrs().Add(attr, false, null,width);
+		 else		 
+			this.getSearchAttrs().Add(attr, true, null,width); 
+	}
 	/**
 	 * 加入查找属性.必须是外键盘/枚举类型/boolen.
 	 * 

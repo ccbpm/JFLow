@@ -5306,7 +5306,8 @@ public class WorkNode {
 	 */
 	public final SendReturnObjs NodeSend(Node jumpToNode, String jumpToEmp) throws Exception {
 		
-		DBAccess.DoTransactionCommit();
+	 
+		
 		if (this.getHisNode().getIsGuestNode()) {
 			if (!this.getExecer().equals("Guest")) {
 				throw new RuntimeException(
@@ -5647,7 +5648,7 @@ public class WorkNode {
 		}
 
 		// 启动事务, 这里没有实现.
-		DBAccess.DoTransactionBegin();
+		//DBAccess.DoTransactionBegin(this.getWorkID().toString());
 		try {
 			if (this.getHisNode().getIsStartNode()) {
 				InitStartWorkDataV2(); // 初始化开始节点数据, 如果当前节点是开始节点.
@@ -5988,7 +5989,7 @@ public class WorkNode {
 				}
 			}
 
-			DBAccess.DoTransactionCommit(); // 提交事务.
+	//		DBAccess.DoTransactionCommit(); // 提交事务.
 			/// #endregion 处理主要业务逻辑.
 
 			/// #region 执行启动子流程.
@@ -6270,7 +6271,7 @@ public class WorkNode {
 			return this.HisMsgObjs;
 		} catch (RuntimeException ex) {
 			this.WhenTranscactionRollbackError(ex);
-			DBAccess.DoTransactionRollback();
+		//	DBAccess.DoTransactionRollback();
 			throw new RuntimeException("Message:" + ex.getMessage());
 		}
 	}

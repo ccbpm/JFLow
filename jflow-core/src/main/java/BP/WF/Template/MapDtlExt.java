@@ -153,7 +153,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final boolean getIsEnableLink()
 	{
-		return this.GetValBooleanByKey(MapDtlAttr.IsEnableLink,false);
+		return this.GetValBooleanByKey(MapDtlAttr.IsEnableLink);
 	}
 	public final void setIsEnableLink(boolean value)
 	{

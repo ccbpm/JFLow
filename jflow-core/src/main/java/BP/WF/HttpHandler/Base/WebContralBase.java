@@ -149,13 +149,9 @@ public abstract class WebContralBase extends BaseController {
 		java.lang.Class tp = myEn.getClass();
 		java.lang.reflect.Method mp = null;
 
-		try {
+		 
 			mp = tp.getMethod(methodName);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		}
+		 
 
 		if (mp == null) {
 			/* 没有找到方法名字，就执行默认的方法. */
@@ -339,6 +335,34 @@ public abstract class WebContralBase extends BaseController {
 
 			urlExt += "&" + para;
 		}
+		return urlExt;
+	}
+	public final String getRequestParasOfAll() {
+		String urlExt = "";
+		String rawUrl = this.getRequest().getQueryString();
+		rawUrl = "&" + rawUrl.substring(rawUrl.indexOf('?') + 1);
+		String[] paras = rawUrl.split("[&]", -1);
+		for (String para : paras) {
+			
+			if (para == null || para.equals("") || para.contains("=") == false) {
+				continue;
+			}
+
+			if (para.equals("1=1")) {
+				continue;
+			}
+
+			urlExt += "&" + para;
+		}
+
+
+        /*  @yuanlina
+        foreach (string key in this.context.Request.Form.Keys)
+        {
+            urlExt += "&" + key + "=" + this.context.Request.Form[key];
+        }
+        */
+		
 		return urlExt;
 	}
 

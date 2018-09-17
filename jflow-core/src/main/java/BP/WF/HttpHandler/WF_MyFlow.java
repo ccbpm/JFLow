@@ -586,7 +586,7 @@ public class WF_MyFlow extends WebContralBase {
 			case BySQLOne:
 				return "url@StartGuideEntities.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid;
 			case BySelfUrl: // 按照定义的url.
-				return "url@" + this.getcurrFlow().getStartGuidePara1() + this.getRequestParas() + "&WorkID=" + workid;
+				return "url@" + this.getcurrFlow().getStartGuidePara1() + this.getRequestParasOfAll() + "&WorkID=" + workid;
 			case ByFrms: // 选择表单.
 				return "url@./WorkOpt/StartGuideFrms.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid;
 			default:

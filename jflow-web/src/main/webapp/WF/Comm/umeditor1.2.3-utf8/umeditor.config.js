@@ -134,13 +134,30 @@ etpl.config({
     /**
      * 配置项主体。注意，此处所有涉及到路径的配置别遗漏URL变量。
      */
+     var richurl ;
+     var directory = GetQueryString("EnName");
+     if(directory==null || directory=="undefined")
+        directory = "ND"+GetQueryString("FK_Flow");
+      
+      if (plant == "CCFlow") {
+        // CCFlow
+        var handlerUrl = "/WF/Comm/Handler.ashx";
+        richurl =  handlerUrl+'?DoType=HttpHandler&DoMethod=RichUploadFile&HttpHandlerName=BP.WF.HttpHandler.WF_Comm_Sys&Directory='+directory;
+    } else {
+        // JFlow
+    	var handlerUrl = basePath + "/WF/Comm/Sys/ProcessRequest.do";
+        richurl =  handlerUrl+'?DoType=RichUploadFile&Directory='+directory;
+    }
+
+      
+      //richurl = '/WF/Comm/Sys/Handler.ashx?DoType=RichUploadFile&Directory='+directory;
     window.UMEDITOR_CONFIG = {
 
         //为编辑器实例添加一个路径，这个不能被注释
         UMEDITOR_HOME_URL : URL
-
+         
         //图片上传配置区
-        ,imageUrl:URL+"asp/imageUp.asp"             //图片上传提交地址
+        ,imageUrl:richurl            //图片上传提交地址
         ,imagePath:URL + "asp/"                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
         ,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
 
@@ -230,11 +247,11 @@ etpl.config({
 
         //dropFileEnabled
         // 是否允许拖放图片到编辑区域，上传并插入,默认true
-        //,dropFileEnabled:true
+        ,dropFileEnabled:true
 
         //pasteImageEnabled
         // 是否允许粘贴QQ截屏，上传并插入,默认true
-        //,pasteImageEnabled:true
+        ,pasteImageEnabled:true
 
         //autoHeightEnabled
         // 是否自动长高,默认true

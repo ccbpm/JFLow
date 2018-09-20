@@ -645,34 +645,69 @@ public class WF_MyFlow extends WebContralBase {
 				}
 			}
 
-			String toUrl = "";
-			if (this.getcurrND().getHisFormType() == NodeFormType.SheetTree
-					|| this.getcurrND().getHisFormType() == NodeFormType.SheetAutoTree) {
-				if (this.getIsMobile() == true) {
-					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="
-							+ WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo="
-							+ pFlowNo + "&PWorkID=" + pWorkID;
-				} else {
-					toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="
-							+ WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo="
-							+ pFlowNo + "&PWorkID=" + pWorkID;
-				}
-			} else {
-				toUrl = "./WebOffice/Default.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow()
-						+ "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID()
-						+ "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
-			}
+			 String toUrl = "";
+			 
+             if (this.getcurrND().getHisFormType() == NodeFormType.SheetTree || this.getcurrND().getHisFormType() == NodeFormType.SheetAutoTree)
+             {
+                 //toUrl = "./FlowFormTree/Default.htm?WorkID=" + this.WorkID + "&FK_Flow=" + this.FK_Flow + "&UserNo=" + WebUser.No + "&FID=" + this.FID + "&SID=" + WebUser.SID + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+                 if (this.getIsMobile() == true)
+                 {
+                     if (gwf.getParas_Frms().equals("") == false)
+                         toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
+                     else
+                         toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+                 }
+                 else
+                 {
+                     if (gwf.getParas_Frms().equals("")==false)
+                         toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
+                     else
+                         toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+                 }
 
-			String[] ps = this.getRequestParas().split("[&]", -1);
-			for (String s : ps) {
-				if (DotNetToJavaStringHelper.isNullOrEmpty(s)) {
-					continue;
-				}
-				if (toUrl.contains(s)) {
-					continue;
-				}
-				toUrl += "&" + s;
-			}
+                String[] strs = this.getRequestParas().split("&");
+                 for (String str : strs)
+                 {
+                     if (toUrl.contains(str) == true)
+                         continue;
+                     if (str.contains("DoType=") == true)
+                         continue;
+                     if (str.contains("DoMethod=") == true)
+                         continue;
+                     if (str.contains("HttpHandlerName=") == true)
+                         continue;
+                     if (str.contains("IsLoadData=") == true)
+                         continue;
+                     if (str.contains("IsCheckGuide=") == true)
+                         continue;                     
+
+                     toUrl += "&" + str;
+                     
+                 }
+                 /*for (String key in context.Request.Form.Keys)
+                 {
+                     if (toUrl.contains(key+"=") == true)
+                         continue;
+
+                     toUrl += "&" + key + "=" + context.GETRequest.Form[key];
+                 }*/
+                 
+                 Enumeration enu = getRequest().getParameterNames();
+     			while (enu.hasMoreElements())
+     			{
+     				
+     				String key = (String) enu.nextElement();
+     				 if (toUrl.contains(key+"=") == true)
+                         continue;
+     				
+     				 toUrl += "&" + key + "=" + getRequest().getParameter(key);
+     			}
+
+             }
+             else
+             {
+                 toUrl = "./WebOffice/Default.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+             }
 
 			if (gwf == null) {
 				gwf = new GenerWorkFlow();

@@ -684,14 +684,7 @@ public class WF_MyFlow extends WebContralBase {
                      toUrl += "&" + str;
                      
                  }
-                 /*for (String key in context.Request.Form.Keys)
-                 {
-                     if (toUrl.contains(key+"=") == true)
-                         continue;
-
-                     toUrl += "&" + key + "=" + context.GETRequest.Form[key];
-                 }*/
-                 
+               
                  Enumeration enu = getRequest().getParameterNames();
      			while (enu.hasMoreElements())
      			{

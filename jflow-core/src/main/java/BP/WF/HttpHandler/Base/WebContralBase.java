@@ -74,8 +74,7 @@ public abstract class WebContralBase extends BaseController {
 		if (val == null) {
 			if (isNullAsVal != null)
 				return isNullAsVal;
-			return "";
-			//throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
+			throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
 		}
 
 		val = val.replace("'", "~");

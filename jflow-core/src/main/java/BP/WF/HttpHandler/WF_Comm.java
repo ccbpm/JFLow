@@ -27,6 +27,7 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.DA.Log;
 import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.AttrOfSearch;
@@ -3467,7 +3468,7 @@ public class WF_Comm extends WebContralBase {
 							continue;
 						}
 
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), "");
 						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
@@ -3475,7 +3476,7 @@ public class WF_Comm extends WebContralBase {
 
 					if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
 					{
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), "");
 						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
@@ -3505,7 +3506,77 @@ public class WF_Comm extends WebContralBase {
 				item.Update(); //执行更新.
 			}
 
+			///#region 保存新加行.
+             //没有新增行
+             if (this.GetRequestValBoolen("InsertFlag") == false)
+                 return "保存成功.";
 
+             String valValue = "";
+
+
+             for (Attr attr : map.getAttrs())
+             {
+
+                 if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+                 {
+                     if (attr.getUIIsReadonly() == false)
+                         continue;
+
+                     valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.getKey(), "");
+                     en.SetValByKey(attr.getKey(), valValue);
+                     continue;
+                 }
+
+                 if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
+                 {
+                     valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.getKey(),"");
+                     en.SetValByKey(attr.getKey(), valValue);
+                     continue;
+                 }
+
+                 if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
+                 {
+                     valValue = this.GetValFromFrmByKey("DDL_" + 0 + "_" + attr.getKey());
+                     en.SetValByKey(attr.getKey(), valValue);
+                     continue;
+                 }
+
+                 if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+                 {
+                     valValue = this.GetValFromFrmByKey("CB_" + 0 + "_" + attr.getKey(), "-1");
+                     if (valValue == "-1")
+                         en.SetValByKey(attr.getKey(), 0);
+                     else
+                         en.SetValByKey(attr.getKey(), 1);
+                     continue;
+                 }
+             }
+
+             if (en.getIsNoEntity())
+             {
+                 if ( en.getEnMap().getIsAutoGenerNo())
+                     en.SetValByKey("No", en.GenerNewNoByKey("No"));
+             }
+
+             try
+             {
+                 if (en.getPKVal().toString() == "0")
+                 {
+                 }
+                 else
+                 {
+                     en.Insert();
+                 }
+             }
+             catch (Exception ex)
+             {
+                 //异常处理..
+                 Log.DebugWriteInfo(ex.getMessage());
+             }
+           
+
+
+             ///#endregion 保存新加行.
 			return "保存成功.";
 		}
 		catch (RuntimeException ex)

@@ -924,10 +924,15 @@
             if (fileObj == null || (fileObj) == "undefined" || fileObj.size <= 0) {
                 return;
             }
+        	//获取文件的后缀名
+            if (fileObj.name.indexOf(".") == -1) {
+                alert("上传的文件名没有扩展名，请检查后上传");
+                return;
+            }
+        	
             //form表单序列话
-
             var formData = new FormData();
-            var name = $("input").val();
+            var name = $("input").val();          
             formData.append("file", fileObj);
             formData.append("name", name);
             //获取发送请求时的参数

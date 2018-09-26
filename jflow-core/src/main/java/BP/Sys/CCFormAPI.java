@@ -277,7 +277,7 @@ public class CCFormAPI
         attr.setY( y);
 
 		if (sf.getSrcType() == SrcType.CreateTable || sf.getSrcType() == SrcType.BPClass
-				|| sf.getSrcType() == SrcType.TableOrView || sf.getSrcType() == SrcType.SQL)
+				|| sf.getSrcType() == SrcType.TableOrView )
         {
         	attr.setLGType(FieldTypeS.FK);
         }else        	

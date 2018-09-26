@@ -2156,8 +2156,12 @@ public class MapData extends EntityNoName
 						SysEnum se = new SysEnum();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = (String)((dr.get(dc.ColumnName) instanceof String) ? dr.get(dc.ColumnName) : null);
-							se.SetValByKey(dc.ColumnName, val);
+							Object val = (Object)((dr.get(dc.ColumnName) instanceof Object) ? dr.get(dc.ColumnName) : null);
+							if (val == null)
+							{
+								continue;
+							}
+							se.SetValByKey(dc.ColumnName, val.toString());
 						}
 						se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getIntKey());
 						if (se.getIsExits())

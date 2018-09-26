@@ -4123,11 +4123,12 @@ public class WorkNode {
 					continue;
 				}
 
-				String str = (String) ((row.get(attr.getKeyOfEn()) instanceof String) ? row.get(attr.getKeyOfEn())
-						: null);
-				// 如果是检查不能为空
-				if (str == null || DotNetToJavaStringHelper.isNullOrEmpty(str) == true || str.trim().equals("")) {
-					err += "@字段{" + attr.getKeyOfEn() + " ; " + attr.getName() + "}，不能为空。";
+				if((row.get(attr.getKeyOfEn()) instanceof String) == true ){
+					String str = (String) (DataType.IsNullOrEmpty(row.get(attr.getKeyOfEn()).toString())==true ?null: row.get(attr.getKeyOfEn()));
+					// 如果是检查不能为空
+					if (str == null || DotNetToJavaStringHelper.isNullOrEmpty(str) == true || str.trim().equals("")) {
+						err += "@字段{" + attr.getKeyOfEn() + " ; " + attr.getName() + "}，不能为空。";
+					}
 				}
 			}
 

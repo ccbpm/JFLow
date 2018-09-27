@@ -118,8 +118,10 @@ public class WF_RptSearch extends WebContralBase{
 				sql = "SELECT A.FlowName,A.NodeName,A.FK_Flow,A.FK_Node,A.WorkID,A.Title,A.StarterName,A.RDT,A.WFSta,A.Emps, A.TodoEmps, A.WFState ";
 				sql += " FROM WF_GenerWorkFlow A ";
 				sql += " WHERE A.Title LIKE '%" + keywords + "%' ";
-				sql += " AND A.Title LIKE '%" + keywords + "%' ";
-				sql += " AND A.Emps LIKE '@%" + WebUser.getNo() + "%' ";
+				sql += " AND (A.Emps LIKE '@%" + WebUser.getNo() + "%' ";
+				sql += " or A.TodoEmps LIKE '%" + WebUser.getNo() + "%') ";
+				sql += " AND (A.Starter LIKE '%" + keywords + "%' ";
+				sql += " or A.StarterName LIKE '%" + keywords + "%') ";
 				sql += " AND A.WFState!=0 ";
 				
 		}

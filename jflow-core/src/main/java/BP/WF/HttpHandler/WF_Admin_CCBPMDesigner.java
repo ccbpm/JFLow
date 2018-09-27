@@ -135,7 +135,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
     
     public String DownFormTemplete() throws Exception
     {
-        DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(this.getFK_MapData());
+        DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(this.getFK_MapData());
         String file = BP.Sys.SystemConfig.getPathOfTemp() + this.getFK_MapData() + ".xml";
         //表单导出方式修改
         ds.WriteXml(file,null,ds);

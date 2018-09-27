@@ -902,6 +902,68 @@ public class WF_RptDfine extends WebContralBase{
 		return BP.Tools.Json.ToJson(ds);
 	}
 	
+	/**
+	 * 流程查询导出
+	 * @return
+	 * @throws Exception
+	 */
+	public final String FlowSearch_Exp() throws Exception
+	{
+		String vals = this.GetRequestVal("vals");
+		String searchKey = GetRequestVal("key");
+		String dtFrom = GetRequestVal("dtFrom");
+		String dtTo = GetRequestVal("dtTo");
+		String mvals = GetRequestVal("mvals");
+		String pageSize = GetRequestVal("pageSize");
+		int pageIdx = Integer.parseInt(GetRequestVal("pageIdx"));
+
+		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
+		UserRegedit ur = new UserRegedit();
+		ur.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+		ur.RetrieveFromDBSources();
+
+		ur.setSearchKey(searchKey);
+		ur.setDTFrom_Data(dtFrom);
+		ur.setDTTo_Data(dtTo);
+		ur.setVals(vals);
+		ur.setMVals(mvals);
+		ur.Update();
+
+		DataSet ds = new DataSet();
+		MapData md = new MapData(rptNo);
+		MapAttrs attrs = new MapAttrs(rptNo);
+		GEEntitys ges = new GEEntitys(rptNo);
+		QueryObject qo = new QueryObject(ges);
+
+		if (this.getSearchType().equals("My")) //我发起的.
+		{
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
+		}
+		else if (this.getSearchType().equals("MyDept")) //我部门发起的.
+		{
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
+		}
+		else if (this.getSearchType().equals("MyJoin")) //我参与的.
+		{
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
+		}
+		else if (this.getSearchType().equals("Adminer"))
+		{
+		}
+		else
+		{
+				return "err@" + this.getSearchType() + "标记错误.";
+		}
+		
+		Entity entity = ges.getGetNewEntity();
+		Attrs enAttrs = entity.getEnMap().getAttrs();
+		qo = InitQueryObject(qo, md,enAttrs , attrs, ur);
+		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
+
+		String filePath = ExportDGToExcel(qo.DoQueryToTable(), entity, this.getSearchType(), enAttrs);
+		return filePath;
+	}
+	
 	 /** 
 	 流程分組分析 1.获取查询条件 2.获取分组的枚举或者外键值 3.获取分析的信息列表进行求和、求平均
 	 

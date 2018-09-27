@@ -1013,8 +1013,9 @@ public abstract class WebContralBase extends BaseController {
 		int index = 0;// 控制列 qin 15.9.21
 		for (int i = 0; i < selectedAttrs.size(); i++) {
 			Attr attr = selectedAttrs.get(i);
-
-			if (attr.getKey() == "MyNum")
+			if (attr.getKey().equals("MyNum"))
+				continue;
+			if (attr.getKey().equals("OID"))
 				continue;
 			
 			if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)

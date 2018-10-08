@@ -1534,7 +1534,7 @@ public class DataType
 		 * @update 修改版本时间（java中不支持空格）
 		 * @author xiongwei
 		 */
-		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return matter.format(new Date());
 	}
 	

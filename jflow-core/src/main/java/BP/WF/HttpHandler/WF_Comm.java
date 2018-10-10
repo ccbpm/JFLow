@@ -1174,6 +1174,9 @@ public class WF_Comm extends WebContralBase {
 
         //附件类型.
         md.SetPara("BPEntityAthType", String.valueOf(map.HisBPEntityAthType.ordinal()));
+        
+        //获取实体类的主键
+        md.SetPara("PK", en.getPK());
 		
         ds.Tables.add(md.ToDataTableField("Sys_MapData"));
         

@@ -1405,6 +1405,7 @@ public class WF_Comm extends WebContralBase {
         dtM.Columns.Add("Icon");
         dtM.Columns.Add("IsCanBatch");
         dtM.Columns.Add("RefAttrKey");
+        dtM.Columns.Add("ClassMethodName");
 
         RefMethods rms = map.getHisRefMethods();
         for (RefMethod item : rms.ToJavaList())
@@ -1417,7 +1418,7 @@ public class WF_Comm extends WebContralBase {
 
             String myurl = "";
 
-            myurl = "../RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=";
+            myurl = "RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=";
 
             DataRow dr = dtM.NewRow();
 
@@ -1434,6 +1435,7 @@ public class WF_Comm extends WebContralBase {
             dr.put("Icon",item.Icon);
             dr.put("IsCanBatch",item.IsCanBatch);
             dr.put("GroupName",item.GroupName);
+            dr.put("ClassMethodName",item.ClassMethodName);
 
             dtM.Rows.add(dr); //增加到rows.
         }

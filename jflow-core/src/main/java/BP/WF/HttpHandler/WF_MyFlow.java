@@ -748,37 +748,6 @@ public class WF_MyFlow extends WebContralBase {
 			return "url@" + url;
 		}
 
-		if (this.getcurrND().getHisFormType() == NodeFormType.FoolTruck && this.getIsMobile() == false) {
-			// 如果是傻瓜表单，就转到傻瓜表单的解析执行器上，为软通动力改造。
-			if (this.getWorkID() == 0) {
-				currWK = this.getcurrFlow().NewWork();
-				this.setWorkID(currWK.getOID());
-			}
-
-			String url = "MyFlowGener.htm";
-
-			// 处理连接.
-			url = this.MyFlow_Init_DealUrl(getcurrND(), currWK, url);
-			url = url.replace("DoType=MyFlow_Init&", "");
-			url = url.replace("&DoWhat=StartClassic", "");
-			return "url@" + url;
-		}
-
-		if (this.getcurrND().getHisFormType() == NodeFormType.FoolTruck && this.getIsMobile() == false) {
-			// 如果是傻瓜表单，就转到傻瓜表单的解析执行器上，为软通动力改造。
-			if (this.getWorkID() == 0) {
-				currWK = this.getcurrFlow().NewWork();
-				this.setWorkID(currWK.getOID());
-			}
-
-			String url = "MyFlowFoolTruck.htm";
-
-			// 处理连接.
-			url = this.MyFlow_Init_DealUrl(this.getcurrND(), currWK, url);
-			return "url@" + url;
-		}
-		// /#endregion 处理表单类型.
-
 		// 求出当前节点frm的类型.
 		NodeFormType frmtype = this.getcurrND().getHisFormType();
 		if (frmtype != NodeFormType.RefOneFrmTree) {
@@ -796,7 +765,9 @@ public class WF_MyFlow extends WebContralBase {
 				frmtype = nd.getHisFormType();
 			}
 		}
+		// /#endregion 处理表单类型.
 
+		
 		// #region 内置表单类型的判断.
 		/* 如果是傻瓜表单，就转到傻瓜表单的解析执行器上，为软通动力改造。 */
 		if (this.getWorkID() == 0) {
@@ -811,7 +782,7 @@ public class WF_MyFlow extends WebContralBase {
 				this._WorkID = currWK.getOID();
 			}
 
-			String url = "MyFlowFoolTruck.htm";
+			String url = "MyFlowGener.htm";
 
 			// 处理连接.
 			url = this.MyFlow_Init_DealUrl(this.getcurrND(), currWK, url);
@@ -1711,7 +1682,8 @@ public class WF_MyFlow extends WebContralBase {
 		}
 
 		if (urlExt.contains("&FID") == false && currWK != null) {
-			urlExt += "&FID=" + currWK.getFID();
+			//urlExt += "&FID=" + currWK.getFID();
+			urlExt += "&FID=" + this.getFID();
 		}
 
 		if (urlExt.contains("&UserNo") == false) {

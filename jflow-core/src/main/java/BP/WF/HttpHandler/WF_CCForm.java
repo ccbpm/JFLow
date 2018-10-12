@@ -383,7 +383,7 @@ public class WF_CCForm extends WebContralBase {
 		// #region 处理权限方案。
 		if (this.getFK_Node() != 0) {
 			Node nd = new Node(this.getFK_Node());
-			if (nd.getHisFormType() == NodeFormType.SheetTree) {
+			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree) {
 				FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
 				if (fn.getFrmSln() == FrmSln.Default) {
 					if (fn.getWhoIsPK() == WhoIsPK.FID)

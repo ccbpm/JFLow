@@ -2121,8 +2121,29 @@ public class Flow extends BP.En.EntityNoName {
 					}
 					msg += "@(" + nd.getName() + ")方向条件检查完成.....";
 				}
-			}
+				
+				//#region 如果是引用的表单库的表单，就要检查该表单是否有FID字段，没有就自动增加.
+                if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+                {
+                    MapAttr mattr = new MapAttr();
+                    mattr.setMyPK(nd.getNodeFrmID() + "_FID");
+                    if (mattr.RetrieveFromDBSources() == 0)
+                    {
+                        mattr.setKeyOfEn("FID");
+                        mattr.setFK_MapData(nd.getNodeFrmID());
+                        mattr.setMyDataType(DataType.AppInt);
+                        mattr.setUIVisible(false);
+                        mattr.setName("FID(自动增加)");
+                        mattr.Insert();
 
+                        GEEntity en = new GEEntity(nd.getNodeFrmID());
+                        en.CheckPhysicsTable();
+                    }
+                }
+                //#endregion 如果是引用的表单库的表单，就要检查该表单是否有FID字段，没有就自动增加.
+			}
+			
+			
 			// #region 执行一次保存. @于庆海翻译. 增加了此部分.
 			NodeExts nes = new NodeExts();
 			nes.Retrieve(NodeAttr.FK_Flow, this.getNo());

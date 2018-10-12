@@ -5,8 +5,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.swing.Spring;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HttpContext;
 
@@ -26,10 +24,13 @@ import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
 import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachments;
+import BP.Sys.FrmEvents;
 import BP.Sys.FrmImgAthDBs;
 import BP.Sys.FrmSubFlowAttr;
 import BP.Sys.FrmType;
 import BP.Sys.FrmWorkCheckAttr;
+import BP.Sys.GEDtl;
+import BP.Sys.GEDtls;
 import BP.Sys.MapData;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtAttr;
@@ -44,6 +45,8 @@ import BP.WF.DoWhatList;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Flow;
 import BP.WF.GenerWorkFlow;
+import BP.WF.GenerWorkerList;
+import BP.WF.GenerWorkerListAttr;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
 import BP.WF.RunModel;
@@ -52,18 +55,20 @@ import BP.WF.SMSMsgType;
 import BP.WF.Track;
 import BP.WF.WFSta;
 import BP.WF.Work;
+import BP.WF.WorkFlow;
+import BP.WF.Data.Bill;
 import BP.WF.Data.GERpt;
 import BP.WF.HttpHandler.Base.WebContralBase;
-import BP.WF.Port.Inc;
 import BP.WF.Port.WFEmp;
 import BP.WF.Port.WFEmpAttr;
+import BP.WF.Template.CCList;
+import BP.WF.Template.CCSta;
 import BP.WF.Template.FTCAttr;
 import BP.WF.Template.FlowSortAttr;
 import BP.WF.Template.FlowSorts;
 import BP.WF.Template.FrmNodeComponent;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
-import BP.WF.Template.Frms;
 import BP.Web.WebUser;
 
 public class WF extends WebContralBase {
@@ -105,6 +110,225 @@ public class WF extends WebContralBase {
 	public boolean getIsReusable() {
 		return false;
 	}
+	
+	/// <summary>
+    /// 执行的方法.
+    /// </summary>
+    /// <returns></returns>
+    public String Do_Init()
+    {
+        String at = this.GetRequestVal("ActionType");
+        if (DataType.IsNullOrEmpty(at))
+            at = this.GetRequestVal("DoType");
+        if (DataType.IsNullOrEmpty(at) && this.getSID() != null)
+            at = "Track";
+        try
+        {
+            switch (at)
+            {
+
+                case "Focus": //把任务放入任务池.
+                    BP.WF.Dev2Interface.Flow_Focus(this.getWorkID());
+                    return "info@Close";
+                case "PutOne": //把任务放入任务池.
+                    BP.WF.Dev2Interface.Node_TaskPoolPutOne(this.getWorkID());
+                    return "info@Close";
+                case "DoAppTask": // 申请任务.
+                    BP.WF.Dev2Interface.Node_TaskPoolTakebackOne(this.getWorkID());
+                    return "info@Close";
+                case "DoOpenCC":
+
+                    String Sta = this.GetRequestVal("Sta");
+                    if (Sta == "0")
+                    {
+                        BP.WF.Template.CCList cc1 = new BP.WF.Template.CCList();
+                        cc1.setMyPK(this.getMyPK());
+                        cc1.Retrieve();
+                        cc1.setHisSta(CCSta.Read);
+                        cc1.Update();
+                    }
+                    return "url@./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID();
+                case "DelCC": //删除抄送.
+                    CCList cc = new CCList();
+                    cc.setMyPK(this.getMyPK());
+                    cc.Retrieve();
+                    cc.setHisSta(CCSta.Del);
+                    cc.Update();
+                    return "info@Close";
+                case "DelSubFlow": //删除进程。
+                    try
+                    {
+                        BP.WF.Dev2Interface.Flow_DeleteSubThread(this.getFK_Flow(), this.getWorkID(), "手工删除");
+                        return "info@Close";
+                    }
+                    catch (Exception ex)
+                    {
+                        return "err@" + ex.getMessage();
+                    }
+                case "DownBill":
+                    Bill b = new Bill(this.getMyPK());
+                    b.DoOpen();
+                    break;
+                case "DelDtl":
+                    GEDtls dtls = new GEDtls(this.getEnsName());
+                    GEDtl dtl = (GEDtl)dtls.getGetNewEntity();
+                    dtl.setOID(this.getRefOID());
+                    if (dtl.RetrieveFromDBSources() == 0)
+                    {
+                        return "info@Close";
+                    }
+                    FrmEvents fes = new FrmEvents(this.getEnsName()); //获得事件.
+
+                    // 处理删除前事件.
+                    try
+                    {
+                        fes.DoEventNode(BP.WF.XML.EventListDtlList.DtlItemDelBefore, dtl);
+                    }
+                    catch (Exception ex)
+                    {
+                        return "err@" + ex.getMessage();
+                    }
+                    dtl.Delete();
+
+                    // 处理删除后事件.
+                    try
+                    {
+                        fes.DoEventNode(BP.WF.XML.EventListDtlList.DtlItemDelAfter, dtl);
+                    }
+                    catch (Exception ex)
+                    {
+                        return "err@" + ex.getMessage();
+                    }
+                    return "info@Close";
+                case "EmpDoUp":
+                    BP.WF.Port.WFEmp ep = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
+                    ep.DoUp();
+
+                    BP.WF.Port.WFEmps emps111 = new BP.WF.Port.WFEmps();
+                    //  emps111.RemoveCash();
+                    emps111.RetrieveAll();
+                    return "info@Close";
+                case "EmpDoDown":
+                    BP.WF.Port.WFEmp ep1 = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
+                    ep1.DoDown();
+
+                    BP.WF.Port.WFEmps emps11441 = new BP.WF.Port.WFEmps();
+                    //  emps11441.RemoveCash();
+                    emps11441.RetrieveAll();
+                    return "info@Close";
+                case "Track": //通过一个串来打开一个工作.
+                    String mySid = this.getSID(); // this.Request.QueryString["SID"];
+                    String[] mystrs = mySid.split("_");
+
+                    int myWorkID = Integer.parseInt(mystrs[1]);
+                    String fk_emp = mystrs[0];
+                    int fk_node = Integer.parseInt(mystrs[2]);
+                    Node mynd = new Node();
+                    mynd.setNodeID(fk_node);
+                    mynd.RetrieveFromDBSources();
+
+                    String fk_flow = mynd.getFK_Flow();
+                    String myurl = "./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Node=" + mynd.getNodeID() + "&WorkID=" + myWorkID + "&FK_Flow=" + fk_flow;
+                    BP.Web.WebUser.SignInOfGener(new BP.Port.Emp(fk_emp));
+
+                    return "url@" + myurl;
+                case "OF": //通过一个串来打开一个工作.
+                    String sid = this.getSID();
+                    String[] strs = sid.split("_");
+                    GenerWorkerList wl = new GenerWorkerList();
+                    int i = wl.Retrieve(GenerWorkerListAttr.FK_Emp, strs[0],
+                        GenerWorkerListAttr.WorkID, strs[1],
+                        GenerWorkerListAttr.IsPass, 0);
+
+                    if (i == 0)
+                    {
+                        return "info@此工作已经被别人处理或者此流程已删除";
+                    }
+
+                    BP.Port.Emp empOF = new BP.Port.Emp(wl.getFK_Emp());
+                    BP.Web.WebUser.SignInOfGener(empOF);
+                    String u = "MyFlow.htm?FK_Flow=" + wl.getFK_Flow() + "&WorkID=" + wl.getWorkID() + "&FK_Node=" + wl.getFK_Node() + "&FID=" + wl.getFID();
+                    return "url@" + u;
+                case "ExitAuth":
+                    BP.Port.Emp emp = new BP.Port.Emp(this.getFK_Emp());
+                    //首先退出，再进行登录
+                    BP.Web.WebUser.Exit();
+                    BP.Web.WebUser.SignInOfGener(emp, WebUser.getSysLang());
+                    return "info@Close";
+                case "LogAs":
+                    BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(this.getFK_Emp());
+                    if (wfemp.getAuthorIsOK() == false)
+                    {
+                        return "err@授权失败";
+                    }
+                    BP.Port.Emp emp1 = new BP.Port.Emp(this.getFK_Emp());
+                    BP.Web.WebUser.SignInOfGener(emp1, "CH", false, false, wfemp.getAuthor(), WebUser.getName());
+                    return "info@Close";
+                case "TakeBack": // 取消授权。
+                    BP.WF.Port.WFEmp myau = new BP.WF.Port.WFEmp(WebUser.getNo());
+                    BP.DA.Log.DefaultLogWriteLineInfo("取消授权:" + WebUser.getNo() + "取消了对(" + myau.getAuthor() + ")的授权。");
+                    myau.setAuthor("");
+                    myau.setAuthorWay(0);
+                    myau.Update();
+                    return "info@Close";
+                case "AutoTo": // 执行授权。
+                    BP.WF.Port.WFEmp au = new BP.WF.Port.WFEmp();
+                    au.setNo(WebUser.getNo());
+                    au.RetrieveFromDBSources();
+                    au.setAuthorDate(BP.DA.DataType.getCurrentData());
+                    au.setAuthor(this.getFK_Emp());
+                    au.setAuthorWay(1);
+                    au.Save();
+                    BP.DA.Log.DefaultLogWriteLineInfo("执行授权:" + WebUser.getNo() + "执行了对(" + au.getAuthor() + ")的授权。");
+                    return "info@Close";
+                case "UnSend": //执行撤消发送。
+                    String url = "./WorkOpt/UnSend.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
+                    return "url@" + url;
+                case "SetBillState":
+                    break;
+                case "WorkRpt":
+                    //  Bill bk1 = new Bill(this.OID);
+                    //  Node nd = new Node(bk1.FK_Node);
+                    // this.Response.Redirect("WFRpt.htm?WorkID=" + bk1.WorkID + "&FID=" + bk1.FID + "&FK_Flow=" + nd.FK_Flow + "&NodeId=" + bk1.FK_Node, false);
+                    //this.WinOpen();
+                    //this.WinClose();
+                    break;
+                case "PrintBill":
+                    //Bill bk2 = new Bill(this.Request.QueryString["OID"]);
+                    //Node nd2 = new Node(bk2.FK_Node);
+                    //this.Response.Redirect("NodeRefFunc.aspx?NodeId=" + bk2.FK_Node + "&FlowNo=" + nd2.FK_Flow + "&NodeRefFuncOID=" + bk2.FK_NodeRefFunc + "&WorkFlowID=" + bk2.WorkID);
+                    ////this.WinClose();
+                    break;
+                //删除流程中第一个节点的数据，包括待办工作
+                case "DeleteFlow":
+                    //调用DoDeleteWorkFlowByReal方法
+                    WorkFlow wf = new WorkFlow(new Flow(this.getFK_Flow()), this.getWorkID());
+                    wf.DoDeleteWorkFlowByReal(true);
+                    return BP.WF.Glo.getCCFlowAppPath() + "WF/MyFlowInfo.htm?Msg=流程删除成功";
+                case "DownFlowSearchExcel":    //下载流程查询结果，转到下面的逻辑，不放在此try..catch..中
+                    break;
+                case "DownFlowSearchToTmpExcel":    //导出到模板
+                    break;
+                default:
+                    throw new Exception("没有判断的at标记:" + at);
+            }
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+        //此处之所以再加一个switch，是因为在下载文件逻辑中，调用Response.End()方法，如果此方法放在try..catch..中，会报线程中止异常
+        switch (at)
+        {
+            case "DownFlowSearchExcel":
+                //  DownMyStartFlowExcel();
+                break;
+            case "DownFlowSearchToTmpExcel":    //导出到模板
+                // DownMyStartFlowToTmpExcel();
+                break;
+        }
+        return "";
+    }
 
 	/**
 	 * 运行 <param name="UserNo">人员编号</param> <param name="fk_flow">流程编号</param>

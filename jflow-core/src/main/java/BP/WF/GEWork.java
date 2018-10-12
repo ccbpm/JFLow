@@ -35,6 +35,11 @@ public class GEWork extends Work
 	public GEWork()
 	{
 	}
+	@Override
+	public String toString(){
+		return this.NodeFrmID;
+		
+	}
 	/** 
 	 普通工作
 	 @param nodeid 节点ID

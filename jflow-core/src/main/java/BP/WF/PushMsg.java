@@ -519,6 +519,8 @@ public class PushMsg extends EntityMyPK
 		if (en.getRow().containsKey("Title") == true)
 		{
 			title = en.GetValStringByKey("Title"); // 获得工作标题.
+			if(DataType.IsNullOrEmpty(title))
+				title = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + en.getPKVal(), "标题");
 		}
 		else
 		{
@@ -569,26 +571,28 @@ public class PushMsg extends EntityMyPK
 				{
 					/*如果向接受人发送邮件.*/
 					toEmpIDs = jumpToEmps;
-					String[] emps = toEmpIDs.split("[,]", -1);
-					for (String emp : emps)
-					{
-						if (StringHelper.isNullOrEmpty(emp))
+					if(DataType.IsNullOrEmpty(toEmpIDs) == false){
+						String[] emps = toEmpIDs.split("[,]", -1);
+						for (String emp : emps)
 						{
-							continue;
+							if (StringHelper.isNullOrEmpty(emp))
+							{
+								continue;
+							}
+	
+							// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
+							Object tempVar = mailDocTmp;
+							String mailDocReal = (String)((tempVar instanceof String) ? tempVar : null);
+							mailDocReal = mailDocReal.replace("{EmpStr}", emp);
+	
+							//获得当前人的邮件.
+							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+	
+							//发送邮件.
+								BP.WF.Dev2Interface.Port_SendEmail(empEn.getEmail(), mailTitleTmp, mailDocReal, "ToDo", "WKAlt" + currNode.getNodeID() + "_" + workid,null,null,null,null);
 						}
-
-						// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-						Object tempVar = mailDocTmp;
-						String mailDocReal = (String)((tempVar instanceof String) ? tempVar : null);
-						mailDocReal = mailDocReal.replace("{EmpStr}", emp);
-
-						//获得当前人的邮件.
-						BP.WF.Port.WFEmp empEn = new WFEmp(emp);
-
-						//发送邮件.
-							BP.WF.Dev2Interface.Port_SendEmail(empEn.getEmail(), mailTitleTmp, mailDocReal, "ToDo", "WKAlt" + currNode.getNodeID() + "_" + workid,null,null,null,null);
+						generAlertMessage += "@已向:{" + toEmpIDs + "}发送提醒邮件.";
 					}
-					generAlertMessage += "@已向:{" + toEmpIDs + "}发送提醒邮件.";
 				}
 
 				if (this.getMailPushWay() == 2)
@@ -609,25 +613,27 @@ public class PushMsg extends EntityMyPK
 				{
 					/*如果向接受人发送邮件.*/
 					toEmpIDs = objs.getVarAcceptersID();
-					String[] emps = toEmpIDs.split("[,]", -1);
-					for (String emp : emps)
-					{
-						if (StringHelper.isNullOrEmpty(emp))
+					if(DataType.IsNullOrEmpty(toEmpIDs) == false){
+						String[] emps = toEmpIDs.split("[,]", -1);
+						for (String emp : emps)
 						{
-							continue;
+							if (StringHelper.isNullOrEmpty(emp))
+							{
+								continue;
+							}
+							// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
+							Object tempVar2 = mailDocTmp;
+							String mailDocReal = (String)((tempVar2 instanceof String) ? tempVar2 : null);
+							mailDocReal = mailDocReal.replace("{EmpStr}", emp);
+	
+							//获得当前人的邮件.
+							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+	
+							//发送邮件.
+							BP.WF.Dev2Interface.Port_SendEmail(empEn.getEmail(), mailTitleTmp, mailDocReal, "ToDo", "WKAlt" + objs.getVarToNodeID() + "_" + workid,null,null,null,null);
 						}
-						// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-						Object tempVar2 = mailDocTmp;
-						String mailDocReal = (String)((tempVar2 instanceof String) ? tempVar2 : null);
-						mailDocReal = mailDocReal.replace("{EmpStr}", emp);
-
-						//获得当前人的邮件.
-						BP.WF.Port.WFEmp empEn = new WFEmp(emp);
-
-						//发送邮件.
-						BP.WF.Dev2Interface.Port_SendEmail(empEn.getEmail(), mailTitleTmp, mailDocReal, "ToDo", "WKAlt" + objs.getVarToNodeID() + "_" + workid,null,null,null,null);
+						generAlertMessage += "@已向:{" + toEmpIDs + "}发送提醒邮件.";
 					}
-					generAlertMessage += "@已向:{" + toEmpIDs + "}发送提醒邮件.";
 				}
 
 				if (this.getMailPushWay() == 2)
@@ -686,23 +692,25 @@ public class PushMsg extends EntityMyPK
 				{
 					/*如果向接受人发送短信.*/
 					toEmpIDs = jumpToEmps;
-					String[] emps = toEmpIDs.split("[,]", -1);
-					for (String emp : emps)
-					{
-						if (StringHelper.isNullOrEmpty(emp))
+					if(DataType.IsNullOrEmpty(toEmpIDs) == false){
+						String[] emps = toEmpIDs.split("[,]", -1);
+						for (String emp : emps)
 						{
-							continue;
+							if (StringHelper.isNullOrEmpty(emp))
+							{
+								continue;
+							}
+	
+							Object tempVar4 = smsDocTmp;
+							String smsDocTmpReal = (String)((tempVar4 instanceof String) ? tempVar4 : null);
+							smsDocTmpReal = smsDocTmpReal.replace("{EmpStr}", emp);
+							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+	
+							//发送短信.
+							Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, msgType, "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);
 						}
-
-						Object tempVar4 = smsDocTmp;
-						String smsDocTmpReal = (String)((tempVar4 instanceof String) ? tempVar4 : null);
-						smsDocTmpReal = smsDocTmpReal.replace("{EmpStr}", emp);
-						BP.WF.Port.WFEmp empEn = new WFEmp(emp);
-
-						//发送短信.
-						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, msgType, "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);
+						generAlertMessage += "@已向:{" + toEmpIDs + "}发送短消息提醒，由 " + this.getFK_Event() + " 发出.";
 					}
-					generAlertMessage += "@已向:{" + toEmpIDs + "}发送短消息提醒，由 " + this.getFK_Event() + " 发出.";
 				}
 
 				if (this.getMailPushWay() == 2)
@@ -726,24 +734,26 @@ public class PushMsg extends EntityMyPK
 				{
 					/*如果向接受人发送短信.*/
 					toEmpIDs = objs.getVarAcceptersID();
-					String[] emps = toEmpIDs.split("[,]", -1);
-					for (String emp : emps)
-					{
-						if (StringHelper.isNullOrEmpty(emp))
+					if(DataType.IsNullOrEmpty(toEmpIDs) == false){
+						String[] emps = toEmpIDs.split("[,]", -1);
+						for (String emp : emps)
 						{
-							continue;
+							if (StringHelper.isNullOrEmpty(emp))
+							{
+								continue;
+							}
+	
+							Object tempVar5 = smsDocTmp;
+							String smsDocTmpReal = (String)((tempVar5 instanceof String) ? tempVar5 : null);
+							smsDocTmpReal = smsDocTmpReal.replace("{EmpStr}", emp);
+	
+							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+	
+							//发送短信.
+							Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, "ToDo", "WKAlt" + objs.getVarToNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);
 						}
-
-						Object tempVar5 = smsDocTmp;
-						String smsDocTmpReal = (String)((tempVar5 instanceof String) ? tempVar5 : null);
-						smsDocTmpReal = smsDocTmpReal.replace("{EmpStr}", emp);
-
-						BP.WF.Port.WFEmp empEn = new WFEmp(emp);
-
-						//发送短信.
-						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, "ToDo", "WKAlt" + objs.getVarToNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);
+						generAlertMessage += "@已向:{" + toEmpIDs + "}发送提醒手机短信，由 SendSuccess 发出.";
 					}
-					generAlertMessage += "@已向:{" + toEmpIDs + "}发送提醒手机短信，由 SendSuccess 发出.";
 				}
 
 				if (this.getMailPushWay() == 2)

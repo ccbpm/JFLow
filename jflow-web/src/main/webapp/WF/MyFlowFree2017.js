@@ -1,5 +1,6 @@
 ﻿var flowData = null;
 var IsCC = false;
+var isSigantureChecked = false;
 function GenerFreeFrm(wn) {
 
     flowData = wn;
@@ -93,8 +94,13 @@ function figure_MapAttr_Template(mapAttr) {
     ele += mapAttr.UIIsInput == 1 ? '<span style="color:red" class="mustInput" data-keyofen="' + mapAttr.KeyOfEn + '" >*</span>' : "";
 
     var eleHtml = $('<div>' + ele + '</div>');
+    var W = mapAttr.UIWidth;
+    if (mapAttr.MyDataType == 6)
+        if (W < 120) W = 120;
+    if (mapAttr.MyDataType == 7)
+        if (W < 160) W = 160;
 
-    eleHtml.children(0).css('width', mapAttr.UIWidth).css('height', mapAttr.UIHeight).css("padding","0px 12px") ;
+    eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding","0px 12px") ;
 
 
     eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
@@ -153,12 +159,29 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         //普通类型的单行文本.
         if (mapAttr.UIHeight <= 40) {
 
-            if (mapAttr.IsSigan == "1") {
-
-                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' type=hidden />";
+            //如果是图片签名，并且可以编辑
+            if (mapAttr.IsSigan == "1" && mapAttr.UIIsEnable == 1) {
+                //查找默认值
                 var val = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
+                //是否签过
+                var sealData = new Entities("BP.Tools.WFSealDatas");
+                sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", GetQueryString("UserNo"));
 
-                eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/UnName.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                if (sealData.length > 0) {
+                    eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/UnName.jpg'\"  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    isSigantureChecked = true;
+                }
+                else {
+                    eleHtml += "<img src='../DataUser/Siganture/siganture.jpg' onerror=\"this.src='../DataUser/Siganture/UnName.jpg'\" ondblclick='figure_Template_Siganture(\"" + mapAttr.KeyOfEn + "\",\"" + val + "\")' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                } 
+                return eleHtml;
+            }
+            //如果不可编辑，并且是图片名称
+            if (mapAttr.IsSigan == "1") {
+                var val = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
+                eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/siganture.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 return eleHtml;
             }
 
@@ -206,7 +229,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
             enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'yyyy-MM-dd'})" + '";';
         }
 
-        eleHtml = "<input  type='text' class='form-control' " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'/>";
+        eleHtml = "<input  type='text' class='form-control Wdate' " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
         return eleHtml;
     }
 
@@ -216,7 +239,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         if (mapAttr.UIIsEnable == 1) {
             enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'yyyy-MM-dd HH:mm'})" + '";';
         }
-        eleHtml = "<input type='text' class='form-control'  " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
+        eleHtml = "<input type='text' class='form-control Wdate'  " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
         return eleHtml;
     }
 
@@ -326,7 +349,7 @@ function figure_Template_Btn(frmBtn) {
         btnHtml.attr('disabled', 'disabled').css('background', 'gray');
     } else if (eventType == 1) {//运行Exe文件. 运行JS
         $.each(flowData.Sys_MapAttr, function (i, obj) {
-            if (doc != null && url.indexOf('@' + obj.KeyOfEn) > 0) {
+            if (doc != null && doc.indexOf('@' + obj.KeyOfEn) > 0) {
                 //替换
                 //url=  url.replace(new RegExp(/(：)/g), ':');
                 //先这样吧
@@ -515,7 +538,7 @@ function figure_Template_ImageAth(frmImageAth) {
     }
     //设计属性
     img.attr('id', 'Img' + frmImageAth.MyPK).attr('name', 'Img' + frmImageAth.MyPK);
-    img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Data/Img/LogH.PNG'");
+    img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Admin/CCFormDesigner/Controls/DataView/AthImg.png'");
     img.css('width', frmImageAth.W).css('height', frmImageAth.H).css('padding', "0px").css('margin', "0px").css('border-width', "0px");
     //不可编辑
     if (isEdit == "1" && pageData.IsReadonly!="1") {
@@ -547,9 +570,9 @@ function figure_Template_Attachment(frmAttachment) {
     }
     var src = "";
     if (pageData.IsReadonly)
-        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
+        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
     else
-        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
+        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
 
     eleHtml += '<div>' + "<iframe style='width:" + ath.W + "px;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     eleHtml = $(eleHtml);

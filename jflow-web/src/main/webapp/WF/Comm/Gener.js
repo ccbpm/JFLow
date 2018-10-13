@@ -4,7 +4,7 @@ if (plant == "CCFlow") {
     dynamicHandler = "/WF/Comm/Handler.ashx";
 } else {
     // JFlow
-    dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do"; 
+    dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
 }
 
 /* 把一个 @XB=1@Age=25 转化成一个js对象.  */
@@ -26,9 +26,9 @@ function AtParaToJson(json) {
 
 function GetPKVal() {
 
-    var val = this.GetQueryString("OID"); 
+    var val = this.GetQueryString("OID");
 
-    if (val==undefined || val=="")
+    if (val == undefined || val == "")
         val = GetQueryString("No");
 
     if (val == undefined || val == "")
@@ -83,7 +83,7 @@ function DearUrlParas(urlParam) {
                             && value != "null"
                             && value != "undefined") {
 
-                     //  value = value.trim();
+                        //  value = value.trim();
 
                         if (value != "" && value.length > 0) {
                             if (typeof params[key] == "undefined") {
@@ -338,7 +338,7 @@ function GenerFullAllCtrlsVal(data) {
         return;
     //判断data是否是一个数组，如果是一个数组，就取第1个对象.
     var json = data;
-    if ($.isArray(data) &&data.length>0)
+    if ($.isArray(data) && data.length > 0)
         json = data[0];
 
     var unSetCtrl = "";
@@ -427,7 +427,7 @@ function GenerFullAllCtrlsVal(data) {
                         if (ddl.options.length == 0)
                             return true;
 
-                       // console.log(suffix + "_before_" + val);
+                        // console.log(suffix + "_before_" + val);
 
                         //$("#DDLPara_" + suffix).val(""); // 操作权限.
 
@@ -1587,9 +1587,9 @@ function ToJson(data) {
     } catch (e) {
         return eval(data);
     }
-     
+
 }
- 
+
 
 var DBAccess = (function () {
 
@@ -1649,10 +1649,10 @@ var DBAccess = (function () {
         }
 
         /*if (dbSrc.indexOf('@') != -1) {
-            //val = val.replace(/~/g, "'"); //替换掉特殊字符,设置的sql语句的引号.
-            var alt = "如果关键字有多个，可以使用.  /myword/g 作为通配符替换。  ";
-            alert("数据源参数没有替换" + dbSrc + " \t\n" + alt);
-            return;
+        //val = val.replace(/~/g, "'"); //替换掉特殊字符,设置的sql语句的引号.
+        var alt = "如果关键字有多个，可以使用.  /myword/g 作为通配符替换。  ";
+        alert("数据源参数没有替换" + dbSrc + " \t\n" + alt);
+        return;
         }*/
 
 
@@ -1693,6 +1693,20 @@ var DBAccess = (function () {
             if (e.message)
                 alert("执行方法[" + funcName + "]错误:" + e.message);
         }
+    };
+
+    //执行方法名返回str.
+    DBAccess.RunSQLReturnVal = function (sql) {
+        var dt = DBAccess.RunSQLReturnTable(sql);
+        if (dt.length == 0)
+            return null;
+        var firItem = dt[0];
+        var firAttr = "";
+        for (var k in firItem) {
+            firAttr = k;
+            break;
+        }
+        return firItem[firAttr];
     };
 
     DBAccess.RunSQLReturnTable = function (sql) {
@@ -1821,9 +1835,10 @@ var HttpHandler = (function () {
 
         constructor: HttpHandler,
 
-        AddUrlData: function () {
-
-            var queryString = document.location.search.substr(1);
+        AddUrlData: function (url) {
+            var queryString = url;
+            if (url == null || url == undefined || url == "")
+                queryString = document.location.search.substr(1);
 
 
             if (queryString.length > 0) {
@@ -1843,7 +1858,7 @@ var HttpHandler = (function () {
         AddFormData: function () {
             formData = $("form").serialize();
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
-           // formData = decodeURIComponent(formData, true);
+            // formData = decodeURIComponent(formData, true);
             if (formData.length > 0) {
                 var self = this;
                 $.each(formData.split("&"), function (i, o) {
@@ -1878,8 +1893,8 @@ var HttpHandler = (function () {
             $.each(parameters, function (key, value) {
 
                 if (value.indexOf('<script') != -1)
-                    value = '';      
-                                   
+                    value = '';
+
                 params.push(key + "=" + value);
 
             });
@@ -2078,28 +2093,28 @@ function DealExp(expStr, webUser) {
         var NodeID = objs[i].getAttribute("id");
         if (NodeID == null)
             continue;
-         var NodeType = objs[i].getAttribute("type");
-         var NodeValue ="";
-        if(obj != "input" && (NodeType=="text" || NodeType=="radio" ||NodeType=="checkbox")){
+        var NodeType = objs[i].getAttribute("type");
+        var NodeValue = "";
+        if (obj != "input" && (NodeType == "text" || NodeType == "radio" || NodeType == "checkbox")) {
             NodeValue = objs[i].value;
-           if(NodeType=="checkbox"){
+            if (NodeType == "checkbox") {
                 NodeValue = 0;
                 var isChecked = NodeID.is(":checked");
                 if (isChecked == true)
-                 NodeValue = 1;
+                    NodeValue = 1;
             }
-             if(NodeType=="radio"){
+            if (NodeType == "radio") {
                 var nodeName = objs[i].getAttribute("name");
                 NodeValue = $("input:radio[name='" + nodeName + "']:checked").val();
             }
 
-        }else if(obj == "select"){
+        } else if (obj == "select") {
             NodeValue = decodeURI(objs[i].value);
         }
-        expStr = expStr.replace("@" + NodeID.substring(NodeID.indexOf("_")+1),NodeValue);
+        expStr = expStr.replace("@" + NodeID.substring(NodeID.indexOf("_") + 1), NodeValue);
 
-        
-     }
+
+    }
     return expStr;
 }
 

@@ -21,6 +21,12 @@
 
             $("#Msg").html("<img src=../../Img/loading.gif />&nbsp;正在加载,请稍后......");
 
+            //var user = new WebUser();
+            //if (user.No != "admin") {
+               // alert("您无权使用该功能.");
+              //  return;
+            //}
+
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm_Sys");
 
             var data = handler.DoMethodReturnJSON("SystemClass_Init");

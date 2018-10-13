@@ -9,6 +9,7 @@
     <script src="../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
     <script src="../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="JS/Calendar/WdatePicker.js" type="text/javascript"></script>
+    <link href="JS/Calendar/skin/WdatePicker.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/EasyUIUtility.js" type="text/javascript"></script>
 
     <!--引入图表-->
@@ -116,11 +117,11 @@
                 html += mapBase.DTSearchLable;
 
                 if (mapBase.DTSearchWay == "1") {
-                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:100px;' class='form-control' />";
-                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:100px;' class='form-control' />&nbsp;&nbsp;&nbsp;&nbsp;";
+                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:120px;' class='form-control Wdate' />";
+                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:120px;' class='form-control Wdate' />&nbsp;&nbsp;&nbsp;&nbsp;";
                 } else {
-                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\" style='width:95px;' class='form-control' />";
-                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\"  style='width:95px;' class='form-control' />&nbsp;&nbsp;&nbsp;&nbsp;";
+                    html += "<input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + ur.DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\" style='width:135px;' class='form-control Wdate' />";
+                    html += "到<input type=text id='TB_DTTo' name='TB_DTTo' value='" + ur.DTTo + "' onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'});\"  style='width:135px;' class='form-control Wdate' />&nbsp;&nbsp;&nbsp;&nbsp;";
                 }
             }
 
@@ -469,6 +470,7 @@
                 }
                 for (var j = 0; j < AttrsOfNum.length; j++) {
                     var obj = dr[AttrsOfNum[j].KeyOfEn];
+                    if (obj == null || obj == undefined) obj = "-";
                     if (AttrsOfNum[j].MyDataType == 8) {
                         if (ur.Vals.indexOf(AttrsOfNum[j].KeyOfEn + "=AMOUNT") != -1) {
                             //需要转换为金额类型，小数位数不到两位的补全,功能待定
@@ -543,12 +545,14 @@
                         if (ur.Vals.indexOf(AttrsOfNum[i].KeyOfEn + "=AMOUNT") != -1) {
                             d = 0;
                             $.each(groupSearch, function (k, o) {
+                                if (o[AttrsOfNum[i].KeyOfEn] != null && o[AttrsOfNum[i].KeyOfEn] != undefined)
                                 d += parseFloat(o[AttrsOfNum[i].KeyOfEn]);
                             });
                             html += "<td class='TDNum' nowrap >" + d.toFixed(4) + "</td>";
 
                             d = 0;
                             $.each(groupSearch, function (k, o) {
+                                if (o[AttrsOfNum[i].KeyOfEn + "Amount"] != null && o[AttrsOfNum[i].KeyOfEn + "Amount"] != undefined)
                                 d += parseFloat(o[AttrsOfNum[i].KeyOfEn + "Amount"]);
                             });
                             html += "<td class='TDNum' nowrap >" + d.toFixed(4) + "</td>";
@@ -556,6 +560,7 @@
                         else {
                             d = 0;
                             $.each(groupSearch, function (k, o) {
+                                if (o[AttrsOfNum[i].KeyOfEn + "Amount"] != null && o[AttrsOfNum[i].KeyOfEn + "Amount"] != undefined)
                                 d += parseFloat(o[AttrsOfNum[i].KeyOfEn + "Amount"]);
                             });
 
@@ -573,13 +578,15 @@
                         if (ur.Vals.indexOf(AttrsOfNum[i].KeyOfEn + "=AMOUNT") != -1) {
                             d = 0;
                             $.each(groupSearch, function (k, o) {
-                                d += parseFloat(o[AttrsOfNum[i].KeyOfEn]);
+                                if (o[AttrsOfNum[i].KeyOfEn] != null && o[AttrsOfNum[i].KeyOfEn] != undefined)
+                                    d += parseFloat(o[AttrsOfNum[i].KeyOfEn]);
                             });
 
                             html += "<td class='TDNum' nowrap >" + d + "</td>";
 
                             d = 0;
                             $.each(groupSearch, function (k, o) {
+                                if (o[AttrsOfNum[i].KeyOfEn + "Amount"] != null && o[AttrsOfNum[i].KeyOfEn + "Amount"] != undefined)
                                 d += parseFloat(o[AttrsOfNum[i].KeyOfEn + "Amount"]);
                             });
                             html += "<td class='TDNum' nowrap >" + d + "</td>";
@@ -587,7 +594,8 @@
                         } else {
                             d = 0;
                             $.each(groupSearch, function (k, o) {
-                                d += parseFloat(o[AttrsOfNum[i].KeyOfEn]);
+                                if(o[AttrsOfNum[i].KeyOfEn]!=null && o[AttrsOfNum[i].KeyOfEn]!=undefined)
+                                    d += parseFloat(o[AttrsOfNum[i].KeyOfEn]);
                             });
 
                             if (ur.Vals.indexOf(AttrsOfNum[i].KeyOfEn + "=AVG") == -1)

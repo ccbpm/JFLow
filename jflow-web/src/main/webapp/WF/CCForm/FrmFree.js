@@ -452,8 +452,14 @@ function figure_MapAttr_Template(mapAttr) {
     ele += mapAttr.UIIsInput == 1 ? '<span style="color:red" class="mustInput" data-keyofen="' + mapAttr.KeyOfEn + '">*</span>' : "";
 
     var eleHtml = $('<div>' + ele + '</div>');
+    var W = mapAttr.UIWidth;
+    if (mapAttr.MyDataType == 6)
+        if (W < 120) W = 120;
+    if (mapAttr.MyDataType == 7)
+        if (W < 160) W = 160;
 
-    eleHtml.children(0).css('width', mapAttr.UIWidth).css('height', mapAttr.UIHeight).css("padding", "0px 12px");
+
+    eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 12px");
     eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
 
     return eleHtml;
@@ -486,7 +492,6 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         eleHtml = "<select style='padding:0px;' class='form-control' data-val='" + ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' name='DDL_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
         return eleHtml;
     }
-
  
     /***************** 作为附件展示的控件. *****************************/
     if (mapAttr.UIContralType == 6) {
@@ -558,7 +563,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         } else {
             enableAttr = "disabled='disabled'";
         }
-        eleHtml = "<input class='TBcalendar form-control' type='text' " + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
+        eleHtml = "<input class='form-control Wdate' type='text' " + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
         return eleHtml;
     }
 
@@ -570,7 +575,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         } else {
             enableAttr = "disabled='disabled'";
         }
-        eleHtml = "<input  class='TBcalendar form-control' type='text' " + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' />";
+        eleHtml = "<input  class='form-control Wdate' type='text' " + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' />";
         return eleHtml;
     }
 
@@ -841,7 +846,7 @@ function figure_Template_ImageAth(frmImageAth) {
     }
     //设计属性
     img.attr('id', 'Img' + frmImageAth.MyPK).attr('name', 'Img' + frmImageAth.MyPK);
-    img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Data/Img/LogH.PNG'");
+    img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Admin/CCFormDesigner/Controls/DataView/AthImg.png'");
     img.css('width', frmImageAth.W).css('height', frmImageAth.H).css('padding', "0px").css('margin', "0px").css('border-width', "0px");
     //不可编辑
     eleHtml.append(img);

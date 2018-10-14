@@ -24,9 +24,9 @@
                 document.getElementById("Msg").innerHTML = data;
                 return;
             }
-
+			alert(data);
             var filetype = GetQueryString("FileType");
-            var urls = JSON.parse(data);
+ 			var urls = JSON.parse(data);
             var html = "";
             for (var i = 0; i < urls.length; i++) {
 
@@ -61,8 +61,11 @@
                         html += "<li>点击这里<a href=" + url.Name + " target=_blank ><img src='../Img/FileType/pdf.gif' />进行下载与在线预览</a></li>";
                         html += "</ul>";
                         html += "</fieldset>";
-
-                        downloadFile(url.Name);
+						//PDF文件为汉字时，进行转码escape()
+						var pdfhref = encodeURI(url.Name);
+						alert(pdfhref);
+						downloadFile(pdfhref);
+                       // downloadFile(url.Name);
                     }
                 }
 

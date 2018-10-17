@@ -375,7 +375,10 @@ public class QueryObject {
 				}
 			} else {
 				if (val.contains(":") || val.contains("@")) {
-					this.setSQL("( " + attr2Field(attr) + " " + exp + "  " + val + " )");
+					 if (val.contains("'") == false)
+						 this.setSQL("( " + attr2Field(attr) + " " + exp + "  '" + val + "' )");
+					 else
+						 this.setSQL("( " + attr2Field(attr) + " " + exp + "  " + val + " )"); 
 				} else {
 					if (!val.contains("'")) {
 						this.setSQL("( " + attr2Field(attr) + " " + exp + "  '" + val + "' )");

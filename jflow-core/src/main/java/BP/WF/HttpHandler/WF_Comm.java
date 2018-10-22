@@ -1,7 +1,10 @@
 package BP.WF.HttpHandler;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -51,7 +54,9 @@ import BP.En.RefMethods;
 import BP.En.UAC;
 import BP.En.UIContralType;
 import BP.Sys.DTSearchWay;
+import BP.Sys.DefVals;
 import BP.Sys.EventListOfNode;
+import BP.Sys.GEEntitys;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
@@ -63,10 +68,13 @@ import BP.Sys.UserRegedit;
 import BP.Sys.XML.ActiveAttr;
 import BP.Sys.XML.ActiveAttrAttr;
 import BP.Sys.XML.ActiveAttrs;
+import BP.Tools.DataTableConvertJson;
 import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Glo;
+import BP.WF.Node;
+import BP.WF.NodeFormType;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
@@ -3590,5 +3598,204 @@ public class WF_Comm extends WebContralBase {
 		}
 	}
 	///#endregion
+	
+	///#region 常用词汇功能开始
+	/** 
+	 常用词汇
+	 
+	 @return 
+	 * @throws Exception 
+	*/
+	public final String HelperWordsData() throws Exception
+	{
+
+		String FK_MapData = this.GetRequestVal("FK_MapData");
+		String AttrKey = this.GetRequestVal("AttrKey");
+		String lb = this.GetRequestVal("lb");
+
+		//读取txt文件
+		if (lb.equals("readWords"))
+		{
+			return readTxt();
+		}
+
+		//读取其他常用词汇
+		DataSet ds = new DataSet();
+		//我的词汇
+		if (lb.equals("myWords"))
+		{
+			DefVals dvs = new DefVals();
+			QueryObject qo = new QueryObject(dvs);
+			qo.AddHD();
+
+			qo.addAnd();
+			qo.AddWhere("FK_MapData", "=", FK_MapData);
+			qo.addAnd();
+			qo.AddWhere("AttrKey", "=", AttrKey);
+			qo.addAnd();
+			qo.AddWhere("FK_Emp", "=", WebUser.getNo());
+			qo.addAnd();
+			qo.AddWhere("LB", "=", "1");
+
+			String pageNumber = GetRequestVal("pageNumber");
+			int iPageNumber = DotNetToJavaStringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			//每页多少行
+			String pageSize = GetRequestVal("pageSize");
+			int iPageSize = DotNetToJavaStringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+
+			DataTable dt = new DataTable("DataCount");
+			dt.Columns.Add("DataCount", Integer.class);
+			DataRow dr = dt.NewRow();
+			dr.setValue("DataCount", qo.GetCount());
+			dt.Rows.add(dr);
+			ds.Tables.add(dt);
+
+			qo.DoQuery("MyPK", iPageSize, iPageNumber);
+
+			ds.Tables.add(dvs.ToDataTableField("MainTable")); //把描述加入.
+		}
+		if (lb.equals("hisWords"))
+		{
+			Node nd = new Node(this.getFK_Node());
+			String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
+			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+			{
+				MapData mapData = new MapData(this.getFK_MapData());
+				rptNo = mapData.getPTable();
+			}
+
+
+			GEEntitys ges = new GEEntitys(rptNo);
+			QueryObject qo = new QueryObject(ges);
+			String fk_emp = this.GetRequestVal("FK_Emp");
+			qo.AddWhere(fk_emp, "=", WebUser.getNo());
+			qo.addAnd();
+			qo.AddWhere(AttrKey, "!=", "");
+			String pageNumber = GetRequestVal("pageNumber");
+			int iPageNumber = DotNetToJavaStringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			//每页多少行
+			String pageSize = GetRequestVal("pageSize");
+			int iPageSize = DotNetToJavaStringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+
+			DataTable dt = new DataTable("DataCount");
+			dt.Columns.Add("DataCount", Integer.class);
+			DataRow dr = dt.NewRow();
+			dr.setValue("DataCount", qo.GetCount());
+			dt.Rows.add(dr);
+			ds.Tables.add(dt);
+
+			qo.DoQuery("OID", iPageSize, iPageNumber);
+
+			dt = ges.ToDataTableField();
+			DataTable newDt = new DataTable("MainTable");
+			newDt.Columns.Add("CurValue");
+			newDt.Columns.Add("MyPk");
+			for (DataRow drs : dt.Rows)
+			{
+				if (DataType.IsNullOrEmpty(drs.getValue(AttrKey).toString()))
+				{
+					continue;
+				}
+				dr = newDt.NewRow();
+				dr.setValue("CurValue", drs.getValue(AttrKey));
+				dr.setValue("MyPK",drs.getValue("OID"));
+				newDt.Rows.add(dr);
+			}
+
+			ds.Tables.add(newDt); //把描述加入.
+
+
+		}
+		return BP.Tools.Json.ToJson(ds);
+
+
+	}
+
+	/** 
+	 注意特殊字符的处理
+	 
+	 @return 
+	*/
+	private String readTxt()
+	{
+		try
+		{
+			String path = BP.Sys.SystemConfig.getPathOfDataUser() + "Fastenter\\" + getFK_MapData() + "\\" + GetRequestVal("AttrKey");
+			File folder = new File(path);
+			if(folder.exists() == false)
+				folder.mkdirs();
+			
+
+			File[] folderArray = folder.listFiles();
+			if (folderArray.length == 0)
+			{
+				return "";
+			}
+
+			String fileName;
+			String[] strArray;
+
+			String pageNumber = GetRequestVal("pageNumber");
+			int iPageNumber = DotNetToJavaStringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			String pageSize = GetRequestVal("pageSize");
+			int iPageSize = DotNetToJavaStringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+
+			DataSet ds = new DataSet();
+			DataTable dt = new DataTable("MainTable");
+			dt.Columns.Add("MyPk", String.class);
+			dt.Columns.Add("TxtStr", String.class);
+			dt.Columns.Add("CurValue", String.class);
+
+			String liStr = "";
+			int count = 0;
+			int index = iPageSize * (iPageNumber - 1);
+			for (File file : folderArray)
+			{
+				if (count >= index && count < iPageSize * iPageNumber)
+				{
+					dt.Rows.get(count).setValue("MyPk", BP.DA.DBAccess.GenerGUID());
+
+					fileName = file.getName().replace("\"", "").replace("'", "");
+					
+					BufferedReader reader = null; 
+					String tempString = null;   
+		            try {
+						reader = new BufferedReader(new FileReader(file));
+						int line = 1;  
+			            // 一次读入一行，直到读入null为文件结束  
+			            while ((tempString = reader.readLine()) != null) {  
+			            	tempString +=tempString;
+			                line++;  
+			            }  
+			            reader.close();  
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}  
+		           
+					liStr += String.format("%s},", DataTableConvertJson.GetFilteredStrForJSON(fileName), DataTableConvertJson.GetFilteredStrForJSON(tempString));
+
+					dt.Rows.get(count).setValue("CurValue",DataTableConvertJson.GetFilteredStrForJSON(fileName));
+					dt.Rows.get(count).setValue("TxtStr",DataTableConvertJson.GetFilteredStrForJSON(tempString));
+				}
+				count += 1;
+			}
+
+			ds.Tables.add(dt);
+			dt = new DataTable("DataCount");
+			dt.Columns.Add("DataCount", Integer.class);
+			DataRow dr = dt.NewRow();
+			dr.setValue("DataCount", folderArray.length);
+			dt.Rows.add(dr);
+			ds.Tables.add(dt);
+			return BP.Tools.Json.ToJson(ds);
+		}
+		catch (RuntimeException e)
+		{
+			return "";
+		}
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	///#endregion 常用词汇结束
 
 }

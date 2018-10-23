@@ -2644,6 +2644,8 @@ public class Map
 	{
 		getHisAttrFiles().Add(fExt, fileDesc);
 		 this.HisBPEntityAthType = BPEntityAthType.Single; 
+
+		 AddMyFile(fileDesc,fExt,null);
 	}
 	
 	// 增加大块文本输入

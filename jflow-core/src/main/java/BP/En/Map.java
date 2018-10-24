@@ -2647,6 +2647,29 @@ public class Map
 
 		 AddMyFile(fileDesc,fExt,null);
 	}
+	/**
+	 * 增加一个附件
+	 * 
+	 * @param fileDesc
+	 *            描述
+	 */
+	public final void AddMyFile(String fileDesc,String fExt,String savePath)
+	{
+		if (fileDesc == null)
+			fileDesc = "附件或图片";
+
+        this.AddTBString(EntityNoMyFileAttr.MyFileName, null, fileDesc, false, false, 0, 300, 200);
+		this.AddTBString(EntityNoMyFileAttr.MyFilePath, null, "MyFilePath", false, false, 0, 300, 200);
+		this.AddTBString(EntityNoMyFileAttr.MyFileExt, null, "MyFileExt", false, false, 0, 20, 10);
+        this.AddTBString(EntityNoMyFileAttr.WebPath, null, "WebPath", false, false, 0, 300, 10);
+
+		this.AddTBInt(EntityNoMyFileAttr.MyFileH, 0, "MyFileH", false, false);
+		this.AddTBInt(EntityNoMyFileAttr.MyFileW, 0, "MyFileW", false, false);
+		this.AddTBFloat("MyFileSize", 0, "MyFileSize", false, false);
+
+        this.HisBPEntityAthType = BPEntityAthType.Single; 
+		this.FJSavePath = savePath;
+	}
 	
 	// 增加大块文本输入
 	public final void AddTBStringDoc()

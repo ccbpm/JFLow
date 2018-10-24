@@ -353,7 +353,59 @@ public class DataType
 			return 0;
 		}
 	}
-	
+	/**
+	 * 处理文件名称
+	 * @param fileNameFormat 文件格式
+	 * @return返回合法的文件名
+	 */ 
+    public static String PraseStringToFileName(String fileNameFormat)
+    {
+        char[] strs = "+#?*\"<>/;,-:%~".toCharArray();
+        for (char c :strs)
+            fileNameFormat = fileNameFormat.replace(String.valueOf(c), "_");
+
+        strs = "：，。；？".toCharArray();
+        for (char c : strs)
+            fileNameFormat = fileNameFormat.replace(String.valueOf(c), "_");
+
+        //去掉空格.
+        while (fileNameFormat.contains(" ") == true)
+            fileNameFormat = fileNameFormat.replace(" ", "");
+
+        //替换特殊字符.
+        fileNameFormat = fileNameFormat.replace("\t\n", "");
+
+        //处理合法的文件名.
+        StringBuilder rBuilder = new StringBuilder(fileNameFormat);
+        /* 暂时不做替换
+        for (char rInvalidChar :Path.GetInvalidFileNameChars())
+        	String.valueOf(rBuilder).replace(String.valueOf(rInvalidChar),"");
+*/
+        fileNameFormat = String.valueOf(rBuilder);
+
+        fileNameFormat = fileNameFormat.replace("__","_");
+        fileNameFormat = fileNameFormat.replace("__", "_");
+        fileNameFormat = fileNameFormat.replace("__", "_");
+        fileNameFormat = fileNameFormat.replace("__", "_");
+        fileNameFormat = fileNameFormat.replace("__", "_");
+        fileNameFormat = fileNameFormat.replace("__", "_");
+        fileNameFormat = fileNameFormat.replace("__", "_");
+        fileNameFormat = fileNameFormat.replace("__", "_");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+        fileNameFormat = fileNameFormat.replace(" ", "");
+
+        if (fileNameFormat.length() > 240)
+            fileNameFormat = fileNameFormat.substring(0, 240);
+
+        return fileNameFormat;
+    }
+    
 	/**
 	 * @param strs
 	 * @param isNumber

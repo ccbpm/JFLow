@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,23 +14,12 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpRequest;
 import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBAccess;
 import BP.DA.DBCheckLevel;
@@ -58,8 +46,6 @@ import BP.Sys.MapData;
 import BP.Sys.MapDatas;
 import BP.Sys.MapDtl;
 import BP.Sys.MapDtls;
-import BP.Tools.StringHelper;
-import BP.Web.WebUser;
 
 /**
  * PageBase 的摘要说明。
@@ -68,80 +54,7 @@ public class PubClass {
 	
 	private static final String Color = null;
 
-	/**
-	 * 发送邮件
-	 * 
-	 * @param maillAddr
-	 *            地址
-	 * @param title
-	 *            标题
-	 * @param doc
-	 *            内容
-	 */
-	public static void SendMail(String maillAddr, String title, String doc) {
-
-		String host = SystemConfig.GetValByKey("SendEmailHost", "smtp.gmail.com"); // smtp服务器
-		String user = SystemConfig.GetValByKey("SendEmailAddress", "ccflow.cn@gmail.com"); // 用户名
-		String pwd = SystemConfig.GetValByKey("SendEmailPass", "ccflow123"); // 密码
-		// 上述写你的邮箱和密码
-		// client.Port = SystemConfig.GetValByKeyInt("SendEmailPort", 587);
-		// //使用的端口
-		// client.Host = ;
-		// client.EnableSsl = true; //经过ssl加密.
-		Properties props = new Properties();
-		// 设置发送邮件的邮件服务器的属性（这里使用网易的smtp服务器）
-		props.put("mail.smtp.host", host);
-		// 需要经过授权，也就是有户名和密码的校验，这样才能通过验证（一定要有这一条）
-		props.put("mail.smtp.auth", "true");
-		// 用刚刚设置好的props对象构建一个session
-		Session session = Session.getDefaultInstance(props);
-		// 有了这句便可以在发送邮件的过程中在console处显示过程信息，供调试使
-		// 用（你可以在控制台（console)上看到发送邮件的过程）
-		session.setDebug(true);
-		// 用session为参数定义消息对象
-		MimeMessage message = new MimeMessage(session);
-		try {
-			// 加载发件人地址
-			message.setFrom(new InternetAddress(user));
-			// 加载收件人地址
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(maillAddr));
-			// 加载标题
-			message.setSubject(title);
-			// 向multipart对象中添加邮件的各个部分内容，包括文本内容和附件
-			Multipart multipart = new MimeMultipart();
-
-			// 设置邮件的文本内容
-			BodyPart contentPart = new MimeBodyPart();
-			contentPart.setText(doc);
-			multipart.addBodyPart(contentPart);
-
-			// 添加附件
-			// BodyPart messageBodyPart = new MimeBodyPart();
-			// DataSource source = new FileDataSource(affix);
-			// 添加附件的内容
-			// messageBodyPart.setDataHandler(new DataHandler(source));
-			// 添加附件的标题
-			// 这里很重要，通过下面的Base64编码的转换可以保证你的中文附件标题名在发送时不会变成乱码
-			// sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-			// messageBodyPart.setFileName("=?GBK?B?"+
-			// enc.encode(affixName.getBytes()) + "?=");
-			// multipart.addBodyPart(messageBodyPart);
-
-			// 将multipart对象放到message中
-			message.setContent(multipart);
-			// 保存邮件
-			message.saveChanges();
-			// 发送邮件
-			Transport transport = session.getTransport("smtp");
-			// 连接服务器的邮箱
-			transport.connect(host, user, pwd);
-			// 把邮件发送出去
-			transport.sendMessage(message, message.getAllRecipients());
-			transport.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	public static String ToHtmlColor(String colorName) throws Exception {
 		try

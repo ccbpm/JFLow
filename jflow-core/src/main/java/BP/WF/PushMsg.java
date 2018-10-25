@@ -586,7 +586,7 @@ public class PushMsg extends EntityMyPK
 							mailDocReal = mailDocReal.replace("{EmpStr}", emp);
 	
 							//获得当前人的邮件.
-							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+							BP.GPM.Emp empEn = new BP.GPM.Emp(emp);
 	
 							//发送邮件.
 								BP.WF.Dev2Interface.Port_SendEmail(empEn.getEmail(), mailTitleTmp, mailDocReal, "ToDo", "WKAlt" + currNode.getNodeID() + "_" + workid,null,null,null,null);
@@ -627,7 +627,7 @@ public class PushMsg extends EntityMyPK
 							mailDocReal = mailDocReal.replace("{EmpStr}", emp);
 	
 							//获得当前人的邮件.
-							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+							BP.GPM.Emp empEn = new BP.GPM.Emp(emp);
 	
 							//发送邮件.
 							BP.WF.Dev2Interface.Port_SendEmail(empEn.getEmail(), mailTitleTmp, mailDocReal, "ToDo", "WKAlt" + objs.getVarToNodeID() + "_" + workid,null,null,null,null);
@@ -704,7 +704,7 @@ public class PushMsg extends EntityMyPK
 							Object tempVar4 = smsDocTmp;
 							String smsDocTmpReal = (String)((tempVar4 instanceof String) ? tempVar4 : null);
 							smsDocTmpReal = smsDocTmpReal.replace("{EmpStr}", emp);
-							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+							BP.GPM.Emp empEn = new BP.GPM.Emp(emp);
 	
 							//发送短信.
 							Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, msgType, "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);
@@ -747,7 +747,7 @@ public class PushMsg extends EntityMyPK
 							String smsDocTmpReal = (String)((tempVar5 instanceof String) ? tempVar5 : null);
 							smsDocTmpReal = smsDocTmpReal.replace("{EmpStr}", emp);
 	
-							BP.WF.Port.WFEmp empEn = new WFEmp(emp);
+							 BP.GPM.Emp empEn = new BP.GPM.Emp(emp);
 	
 							//发送短信.
 							Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, "ToDo", "WKAlt" + objs.getVarToNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);

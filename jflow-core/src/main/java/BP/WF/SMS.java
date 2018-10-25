@@ -1,9 +1,24 @@
 package BP.WF;
 
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
 import BP.DA.DBAccess;
 import BP.En.EntityMyPK;
 import BP.En.Map;
 import BP.En.UAC;
+import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
 
@@ -365,47 +380,55 @@ public class SMS extends EntityMyPK
 	*/
 	public static boolean SendEmailNow(String mail, String mailTitle, String mailDoc)
 	{
-		/*System.Net.Mail.MailMessage myEmail = new System.Net.Mail.MailMessage();
-		myEmail.From = new System.Net.Mail.MailAddress("ccflow.cn@gmail.com", "ccflow", System.Text.Encoding.UTF8);
+		  //邮件地址.
+        String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
+       
 
-		myEmail.To.Add(mail);
-		myEmail.Subject = mailTitle;
-		myEmail.SubjectEncoding = System.Text.Encoding.UTF8; //邮件标题编码
+        String emailPassword = SystemConfig.GetValByKey("SendEmailPass", "ccbpm123");
+		// 第一步：配置javax.mail.Session对象  
+		Properties props = new Properties(); 
+		props.setProperty("mail.transport.protocol", "smtp"); 
+		props.put("mail.smtp.host",SystemConfig.GetValByKey("SendEmailHost", "smtp.tom.com"));//发邮件地址
+		props.put("mail.smtp.port",SystemConfig.GetValByKeyInt("SendEmailPort", 25)); //端口号
+		props.put("mail.smtp.auth","true");//使用 STARTTLS安全连接  
+		Authenticator auth = new Authenticator() {
+			public PasswordAuthentication getPasswordAuthentication(){
+			    return new PasswordAuthentication(emailAddr,emailPassword);
+			 }
+		};
 
-		myEmail.Body = mailDoc;
-		myEmail.BodyEncoding = System.Text.Encoding.UTF8; //邮件内容编码
-		myEmail.IsBodyHtml = true; //是否是HTML邮件
-
-		myEmail.Priority = MailPriority.High; //邮件优先级
-
-		SmtpClient client = new SmtpClient();
-		client.Credentials = new System.Net.NetworkCredential(SystemConfig.GetValByKey("SendEmailAddress", "ccflow.cn@gmail.com"), SystemConfig.GetValByKey("SendEmailPass", "ccflow123"));
-
-		//上述写你的邮箱和密码
-		client.Port = SystemConfig.GetValByKeyInt("SendEmailPort", 587); //使用的端口
-		client.Host = SystemConfig.GetValByKey("SendEmailHost", "smtp.gmail.com");
-
-		// 经过ssl加密. 
-		if (SystemConfig.GetValByKeyInt("SendEmailEnableSsl", 1) == 1)
-		{
-			client.EnableSsl = true; //经过ssl加密.
-		}
-		else
-		{
-			client.EnableSsl = false; //经过ssl加密.
-		}
-
-		try
-		{
-			Object userState = myEmail;
-			client.SendAsync(myEmail, userState);
-			return true;
-		}
-		catch (java.lang.Exception e)
-		{
+		Session mailSession = Session.getInstance(props,auth);
+	       
+		   try {
+			InternetAddress fromAddress = new InternetAddress(emailAddr);
+	        InternetAddress toAddress = new InternetAddress(mail);
+	
+			// 3. 创建一封邮件
+	        MimeMessage message = new MimeMessage(mailSession);
+	        
+	        message.setFrom(fromAddress);
+	        message.addRecipient(RecipientType.TO, toAddress);
+	        
+	        message.setSentDate(BP.Tools.DateUtils.currentDate());
+	        message.setSubject(mailTitle);
+	        message.setText(mailDoc);
+	        
+	        //4.发送Email,
+	        Transport transport = mailSession.getTransport("smtp");//定义发送协议
+       
+			//transport.connect(SystemConfig.GetValByKey("SendEmailHost", "smtp.gmail.com"),emailAddr, emailPassword);
+			//登录邮箱
+	        transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
+	        
+	        return true;
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return false;
-		}*/
-		return false;
+		}
+		
+		
+		
 	}
 	/** 
 	 插入之后执行的方法.
@@ -447,7 +470,9 @@ public class SMS extends EntityMyPK
 				   +"</soapenv:Body>"
 				+"</soapenv:Envelope>";
 				//发送邮件
-				BP.WF.Glo.GetPortalInterfaceSoapClient("SendToEmail",xmlStr);
+				
+				SendEmailNow(this.getEmail(), this.getTitle(), this.getDocOfEmail());
+				//BP.WF.Glo.GetPortalInterfaceSoapClient("SendToEmail",xmlStr);
 				//soap.SendToEmail(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getEmail(), this.getTitle(), this.getDocOfEmail());
 				return;
 			}

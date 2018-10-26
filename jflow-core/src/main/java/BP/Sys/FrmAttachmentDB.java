@@ -1,15 +1,13 @@
 package BP.Sys;
 
 import java.io.File;
-import org.apache.commons.lang.StringUtils;
-import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 
 import BP.DA.*;
 import BP.En.*;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
-import sun.net.ftp.FtpClient;
+import BP.Tools.StringUtils;
 
 /** 
  附件数据存储
@@ -395,7 +393,6 @@ public class FrmAttachmentDB extends EntityMyPK
 		if (StringHelper.isNullOrWhiteSpace(fkefs) == false)
 		{
 			String[] efarr = StringUtils.split(fkefs, ",");
-					//split((new String(",")).toCharArray(), StringSplitOptions.RemoveEmptyEntries);
 			ExcelFile ef = null;
 			ExcelTables ets = null;
 			for (String fk_ef : efarr)

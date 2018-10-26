@@ -28,7 +28,7 @@ public class Attrs extends ArrayList<Attr>
 	
 	//关于属性的增加 String
 	protected final void AddTBString(String key, String field,
-			Object defaultVal, FieldType _FieldType, TBType tbType,
+			Object defaultVal, FieldType _FieldType,
 			String desc, boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith)
 	{
@@ -38,7 +38,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppString);
 		attr.setDesc(desc);
-		attr.setUITBShowType(tbType);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -52,7 +52,7 @@ public class Attrs extends ArrayList<Attr>
 			boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith)
 	{
-		AddTBString(key, key, defaultVal, FieldType.Normal, TBType.TB, desc,
+		AddTBString(key, key, defaultVal, FieldType.Normal,   desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 	
@@ -60,7 +60,7 @@ public class Attrs extends ArrayList<Attr>
 			String desc, boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith)
 	{
-		AddTBString(key, field, defaultVal, FieldType.Normal, TBType.TB, desc,
+		AddTBString(key, field, defaultVal, FieldType.Normal,   desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 	
@@ -90,7 +90,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppString);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.TB);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(300);
 		attr.setUIIsReadonly(isReadonly);
@@ -142,7 +142,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setMyDataType(DataType.AppInt);
 		attr.setMyFieldType(FieldType.Normal);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Int);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		this.Add(attr);
@@ -202,7 +202,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppFloat);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Num);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		this.Add(attr);
@@ -233,7 +233,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppDouble);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Decimal);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		this.Add(attr);
@@ -263,7 +263,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppDate);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Date);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		attr.setMaxLength(20);
@@ -311,7 +311,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppDateTime);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.DateTime);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		attr.setMaxLength(30);
@@ -391,7 +391,7 @@ public class Attrs extends ArrayList<Attr>
 		attr.setMyFieldType(FieldType.Enum);
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
-		attr.setUIDDLShowType(DDLShowType.SysEnum);
+	 
 		attr.setUIBindKey(sysEnumKey);
 		attr.UITag = cfgVal;
 		attr.setUIVisible(isUIVisable);
@@ -449,7 +449,7 @@ public class Attrs extends ArrayList<Attr>
 		
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
-		attr.setUIDDLShowType(DDLShowType.Ens);
+		 
 		attr.setUIBindKey(ens.toString());
 		// attr.UIBindKeyOfEn = ens.GetNewEntity.ToString();
 		attr.setHisFKEns(ens);

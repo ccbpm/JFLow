@@ -1,8 +1,11 @@
 package BP.Demo;
 
+import java.math.BigDecimal;
+
 import BP.DA.DataType;
 import BP.En.EntityNoName;
 import BP.En.Map;
+import BP.En.RefMethod;
 import BP.En.UAC;
 
 /**
@@ -287,21 +290,21 @@ public class Student extends EntityNoName
 		// 明细表映射.
 		// map.AddDtl(new Resumes(), ResumeAttr.FK_Emp);
 		//
-		// //带有参数的方法.
-		// RefMethod rm = new RefMethod();
-		// rm.Title = "缴纳班费";
-		// rm.getHisAttrs().AddTBDecimal("JinE", new BigDecimal(100), "缴纳金额",
-		// true, false);
-		// rm.getHisAttrs().AddTBString("Note", null, "备注", true, false, 0, 100,
-		// 100);
-		// rm.ClassMethodName = this.toString() + ".DoJiaoNaBanFei";
-		// map.AddRefMethod(rm);
-		//
-		// //不带有参数的方法.
-		// rm = new RefMethod();
-		// rm.Title = "注销学籍";
-		// rm.ClassMethodName = this.toString() + ".DoZhuXiao";
-		// map.AddRefMethod(rm);
+		 //带有参数的方法.
+		 RefMethod rm = new RefMethod();
+		 rm.Title = "缴纳班费";
+		 rm.getHisAttrs().AddTBDecimal("JinE", new BigDecimal(100), "缴纳金额",
+		 true, false);
+		 rm.getHisAttrs().AddTBString("Note", null, "备注", true, false, 0, 100,
+		 100);
+		 rm.ClassMethodName = this.toString() + ".DoJiaoNaBanFei";
+		 map.AddRefMethod(rm);
+		
+		 //不带有参数的方法.
+		 rm = new RefMethod();
+		 rm.Title = "注销学籍";
+		 rm.ClassMethodName = this.toString() + ".DoZhuXiao";
+		 map.AddRefMethod(rm);
 		
 		this.set_enMap(map);
 		return this.get_enMap();

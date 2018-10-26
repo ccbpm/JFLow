@@ -412,16 +412,6 @@ public class GenerWorkerList extends Entity
 		this.SetValByKey(GenerWorkerListAttr.HungUpTimes, value);
 	}
 	
-	// 构造函数
-	/**
-	 * 主键
-	 */
-	@Override
-	public String getPKField()
-	{
-		return "WorkID,FK_Emp,FK_Node";
-	}
-	
 	/**
 	 * 工作者
 	 */

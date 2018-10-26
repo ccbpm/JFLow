@@ -2,16 +2,6 @@ package BP.WF.HttpHandler.Base;
 
 import java.io.PrintWriter;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.http.protocol.HttpContext;
-
-import BP.DA.Log;
-import cn.jflow.common.util.ContextHolderUtils;
-import cn.jflow.common.BaseController;
-
 public abstract class HttpHandlerBase extends BaseController
 {
 	/** 

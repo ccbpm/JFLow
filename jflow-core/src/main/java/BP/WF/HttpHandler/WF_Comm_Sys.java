@@ -1,18 +1,12 @@
 package BP.WF.HttpHandler;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
 
-import org.apache.http.protocol.HttpContext;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-
-import com.sun.star.util.DateTime;
 
 import BP.DA.DBAccess;
 import BP.DA.DataRow;

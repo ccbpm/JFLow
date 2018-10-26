@@ -73,11 +73,6 @@ public class GEDtl extends EntityOID
 		this.SetValByKey(GEDtlAttr.RefPK, value);
 	}
 	
-	public final void setRefPK2017(String value)
-	{
-		this.SetValByKey2017(GEDtlAttr.RefPK, value);
-	}
-	
 	public final long getRefPKInt64()
 	{
 		return this.GetValInt64ByKey(GEDtlAttr.RefPK);

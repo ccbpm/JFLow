@@ -2,12 +2,8 @@ package BP.Tools;
 
 import java.awt.geom.Arc2D.Float;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Iterator;
-
-import org.springframework.util.StringUtils;
 
 import BP.DA.DBType;
 import BP.DA.DataColumn;
@@ -17,9 +13,6 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.Sys.SystemConfig;
-//import BP.Tools.JsonTest.NullStringAdapter;
-import BP.WF.DotNetToJavaStringHelper;
-import BP.WF.Comm.JsonResultInnerData;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.google.gson.Gson;

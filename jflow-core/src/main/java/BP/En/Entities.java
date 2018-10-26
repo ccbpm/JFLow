@@ -3,10 +3,9 @@ package BP.En;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import BP.DA.Cash;
 import BP.DA.CashEntity;
-import BP.DA.DBCheckLevel;
+ 
 import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
@@ -804,14 +803,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return num;
 	}
 	
-	/**
-	 * 执行一次数据检查
-	 * @throws Exception 
-	 */
-	public final String DoDBCheck(DBCheckLevel level) throws Exception
-	{
-		return PubClass.DBRpt1(level, this);
-	}
+ 
 	
 	/**
 	 * 从集合中删除该对象
@@ -1505,72 +1497,8 @@ public abstract class Entities extends ArrayList<Entity>
 		 * attr.getKey()].ColumnName = attr.getKey(); continue; } } return dt;
 		 */
 	}
-	
-	/**
-	 * 查询全部的结果放到RetrieveAllToDataSet。 包含它们的关联的信息。
-	 * 
-	 * @return
-	 */
-	public final DataSet RetrieveAllToDataSet()
-	{
-		// 未实现
-		return null;
-		/*
-		 * warning 
-		 * Java: ///#region 形成dataset Entity en = this.getGetNewEntity();
-		 * DataSet ds = new DataSet(this.toString()); QueryObject qo = new
-		 * QueryObject(this); DataTable dt = qo.DoQueryToTable(); dt.TableName =
-		 * en.getEnMap().getPhysicsTable(); ds.Tables.Add(dt); for (Attr attr :
-		 * en.getEnMap().getAttrs()) { if (attr.getMyFieldType() == FieldType.FK
-		 * || attr.getMyFieldType() == FieldType.PKFK) { Entities ens =
-		 * attr.getHisFKEns(); QueryObject qo1 = new QueryObject(ens); DataTable
-		 * dt1 = qo1.DoQueryToTable(); dt1.TableName =
-		 * ens.getGetNewEntity().getEnMap().getPhysicsTable();
-		 * ds.Tables.Add(dt1);
-		 *//**
-		 * 加入关系
-		 */
-		/*
-		 * DataColumn parentCol; DataColumn childCol; parentCol =
-		 * dt.Columns[attr.getKey()]; childCol =
-		 * dt1.Columns[attr.getUIRefKeyValue()]; DataRelation relCustOrder = new
-		 * DataRelation(attr.getKey(), parentCol, childCol);
-		 * ds.Relations.Add(relCustOrder); continue; } else if
-		 * (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() ==
-		 * FieldType.PKEnum) { DataTable dt1 =
-		 * DBAccess.RunSQLReturnTable("select * from sys_enum WHERE enumkey=" +
-		 * en.getHisDBVarStr() + "k", "k", attr.getUIBindKey()); dt1.TableName =
-		 * attr.getUIBindKey(); ds.Tables.Add(dt1);
-		 *//**
-		 * 加入关系
-		 */
-		/*
-		 * DataColumn parentCol; DataColumn childCol; parentCol =
-		 * dt.Columns[attr.getKey()]; childCol = dt1.Columns["IntKey"];
-		 * DataRelation relCustOrder = new DataRelation(attr.getKey(), childCol,
-		 * parentCol); ds.Relations.Add(relCustOrder);
-		 * 
-		 * } } 
-		 * Java: ///#endregion
-		 * 
-		 * return ds;
-		 */
-	}
-	
-	/**
-	 * 把当前实体集合的数据库转换成Dataset。
-	 * 
-	 * @return
-	 */
-	public final DataSet ToDataSet()
-	{
-		DataSet ds = new DataSet();
-		ds.Tables.add(this.ToDataTableField());
-		/*
-		 * warning ds.Tables.Add(this.ToDataTableField());
-		 */
-		return ds;
-	}
+	 
+	 
 	
 	public final DataTable ToDataTableField()
 	{

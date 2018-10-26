@@ -1,11 +1,10 @@
 package BP.Sys;
-import org.apache.commons.lang.StringUtils;
-
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
 import BP.En.Map;
 import BP.Tools.StringHelper;
+import BP.Tools.StringUtils;
 
 /** 
  附件

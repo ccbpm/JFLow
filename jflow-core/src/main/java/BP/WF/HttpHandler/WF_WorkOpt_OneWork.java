@@ -1,12 +1,6 @@
 package BP.WF.HttpHandler;
 
-import java.util.Enumeration;
-
-import net.sf.json.JSONArray;
-
 import org.apache.http.protocol.HttpContext;
-import org.apache.log4j.Logger;
-
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
 import BP.DA.DataColumn;
@@ -14,68 +8,27 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
-import BP.DA.Log;
 import BP.DA.Paras;
-import BP.En.Attr;
-import BP.En.Attrs;
 import BP.En.QueryObject;
-import BP.Port.Emp;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapData;
-import BP.Sys.SysEnum;
-import BP.Sys.SysEnumAttr;
-import BP.Sys.SysEnums;
-import BP.Sys.SystemConfig;
-import BP.Tools.StringHelper;
 import BP.WF.ActionType;
-import BP.WF.BatchRole;
-import BP.WF.CCRole;
-import BP.WF.CancelRole;
-import BP.WF.Dev2Interface;
 import BP.WF.DotNetToJavaStringHelper;
-import BP.WF.Flow;
-import BP.WF.FlowAppType;
 import BP.WF.GenerWorkFlow;
 import BP.WF.GenerWorkerListAttr;
 import BP.WF.GenerWorkerLists;
 import BP.WF.GetTask;
-import BP.WF.Glo;
-import BP.WF.Node;
-import BP.WF.NodeFormType;
-import BP.WF.Nodes;
-import BP.WF.PrintDocEnable;
 import BP.WF.SMS;
 import BP.WF.SMSAttr;
-import BP.WF.SMSMsgType;
-import BP.WF.SendReturnObjs;
 import BP.WF.TrackAttr;
-import BP.WF.WFSta;
 import BP.WF.WFState;
-import BP.WF.Work;
 import BP.WF.WorkFlow;
 import BP.WF.Data.BillAttr;
 import BP.WF.Data.Bills;
 import BP.WF.HttpHandler.Base.WebContralBase;
-import BP.WF.Template.BtnLab;
-import BP.WF.Template.CondModel;
-import BP.WF.Template.FlowSort;
-import BP.WF.Template.FlowSorts;
 import BP.WF.Template.FrmWorkCheck;
-import BP.WF.Template.FrmWorkCheckSta;
-import BP.WF.Template.NodeToolbar;
-import BP.WF.Template.NodeToolbarAttr;
-import BP.WF.Template.NodeToolbars;
-import BP.WF.Template.Selector;
-import BP.WF.Template.ShowWhere;
-import BP.WF.Template.TurnTo;
-import BP.WF.Template.TurnTos;
-import BP.WF.Template.WebOfficeWorkModel;
 import BP.WF.XML.OneWorkXml;
 import BP.WF.XML.OneWorkXmls;
 import BP.Web.WebUser;
-import BP.XML.XmlEn;
-import cn.jflow.common.model.AjaxJson;
+
 
 public class WF_WorkOpt_OneWork extends WebContralBase {
 	
@@ -156,14 +109,14 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 
 	public String OP_UnHungUp() throws Exception
 	{
-		WorkFlow wf2 = new WorkFlow(this.getFK_Flow(), this.getWorkID());
+		//WorkFlow wf2 = new WorkFlow(this.getFK_Flow(), this.getWorkID());
 		//  wf2.DoUnHungUp();
 		return "流程已经被解除挂起.";
 	}
 
 	public String OP_HungUp() throws Exception
 	{
-		WorkFlow wf1 = new WorkFlow(this.getFK_Flow(), this.getWorkID());
+		//WorkFlow wf1 = new WorkFlow(this.getFK_Flow(), this.getWorkID());
 		//wf1.DoHungUp()
 		return "流程已经被挂起.";
 	}

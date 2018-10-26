@@ -1,17 +1,17 @@
 package BP.En;
 
 import java.io.File;
+import java.io.Serializable;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-
 import BP.DA.AtPara;
+import BP.DA.Cash;
 import BP.DA.CashEntity;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
-import BP.DA.DBUrlType;
 import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
@@ -25,19 +25,20 @@ import BP.Sys.EnVerDtl;
 import BP.Sys.MapAttr;
 import BP.Sys.MapData;
 import BP.Sys.MapDtl;
+import BP.Sys.SysDocFile;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
-import BP.WF.DotNetToJavaStringHelper;
+import BP.Tools.StringUtils;
 import BP.Web.WebUser;
 import BP.XML.XmlEn;
 
 /**
  * Entity 的摘要说明。
  */
-public abstract class Entity extends EnObj {
+public abstract class Entity implements Serializable {
 	/**
 	 * 
 	 */
@@ -45,10 +46,18 @@ public abstract class Entity extends EnObj {
 	// 与缓存有关的操作
 	private Entities _GetNewEntities = null;
 
+	@SuppressWarnings("rawtypes")
 	public Entities getGetNewEntities() {
+
 		if (_GetNewEntities == null) {
 			String str = this.toString();
-			java.util.ArrayList al = ClassFactory.GetObjects("BP.En.Entities");
+			String ensName = str + "s";
+
+			_GetNewEntities = ClassFactory.GetEns(ensName);
+			if (_GetNewEntities != null)
+				return _GetNewEntities;
+
+			ArrayList al = ClassFactory.GetObjects("BP.En.Entities");
 			for (Object o : al) {
 				Entities ens = (Entities) ((o instanceof Entities) ? o : null);
 
@@ -65,34 +74,99 @@ public abstract class Entity extends EnObj {
 		return _GetNewEntities;
 	}
 
-	protected String getCashKey_Del() {
-		return null;
-	}
-
 	public String getClassID() {
 		return this.toString();
 	}
 
-	// 与sql操作有关
-	protected SQLCash _SQLCash = null;
-	public SQLCash getSQLCash() throws Exception {
-		if (_SQLCash == null) {
-			_SQLCash = BP.DA.Cash.GetSQL(this.toString());
-			if (_SQLCash == null) {
-				_SQLCash = new SQLCash(this);
-				BP.DA.Cash.SetSQL(this.toString(), _SQLCash);
+	// 检查一个属性值是否存在于实体集合中
+	/**
+	 * 检查一个属性值是否存在于实体集合中 这个方法经常用到在beforeinsert中。
+	 * 
+	 * @param key
+	 *            要检查的key.
+	 * @param val
+	 *            要检查的key.对应的val
+	 * @return
+	 * @throws Exception
+	 * @throws NumberFormatException
+	 */
+	protected final int ExitsValueNum(String key, String val) throws NumberFormatException, Exception {
+		Paras ps = new Paras();
+		ps.Add("p", val);
+
+		String sql = "SELECT COUNT( " + key + " ) FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + key + "="
+				+ this.getHisDBVarStr() + "p";
+		return Integer.parseInt(DBAccess.RunSQLReturnVal(sql, ps).toString());
+	}
+
+	/**
+	 * 取出他的明细集合。
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	
+	public final ArrayList<Entities> GetDtlsDatasOfArrayList() throws Exception {
+		ArrayList<Entities> al = new ArrayList<Entities>();
+		for (EnDtl dtl : this.getEnMap().getDtls()) {
+			al.add(this.GetDtlEnsDa(dtl.getEns()));
+		}
+		return al;
+	}
+
+	public final ArrayList<Entities> GetDtlsDatasOfList() throws Exception {
+		ArrayList<Entities> al = new ArrayList<Entities>();
+		for (EnDtl dtl : this.getEnMap().getDtls()) {
+			al.add(this.GetDtlEnsDa(dtl));
+		}
+		return al;
+	}
+
+	// 关于明细的操作
+	/**
+	 * 得到他的数据实体
+	 * 
+	 * @param EnsName
+	 *            类名称
+	 * @return
+	 * @throws Exception
+	 */
+	public final Entities GetDtlEnsDa(String EnsName) throws Exception {
+		Entities ens = ClassFactory.GetEns(EnsName);
+		return GetDtlEnsDa(ens);
+	}
+
+	public final Entities GetDtlEnsDa(EnDtl dtl) throws Exception {
+
+		try {
+			QueryObject qo = new QueryObject(dtl.getEns());
+			qo.AddWhere(dtl.getRefKey(), this.getPKVal().toString());
+			qo.DoQuery();
+			return dtl.getEns();
+		} catch (RuntimeException e) {
+			throw new RuntimeException("@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + dtl.getDesc() + "],不在他的集合内。");
+		}
+	}
+
+	/**
+	 * 取出他的数据实体
+	 * 
+	 * @param ens
+	 *            集合
+	 * @return 执行后的实体信息
+	 * @throws Exception
+	 */
+	public final Entities GetDtlEnsDa(Entities ens) throws Exception {
+		for (EnDtl dtl : this.getEnMap().getDtls()) {
+			if (dtl.getEns().getClass() == ens.getClass()) {
+				QueryObject qo = new QueryObject(dtl.getEns());
+				qo.AddWhere(dtl.getRefKey(), this.getPKVal().toString());
+				qo.DoQuery();
+				return dtl.getEns();
 			}
 		}
-		return _SQLCash;
-	}
-
-	public void setSQLCash(SQLCash value) {
-		_SQLCash = value;
-	}
-
-	// 清除缓存SQLCase.
-	public void clearSQLCash() {
-		BP.DA.Cash.getSQL_Cash().remove(this.toString());
+		throw new RuntimeException(
+				"@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + ens.getGetNewEntity().getEnDesc() + "],不在他的集合内。");
 	}
 
 	/**
@@ -191,14 +265,15 @@ public abstract class Entity extends EnObj {
 			 */
 			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 				dr.setValue(attr.getKey(), this.GetValByKey(attr.getKey()).toString().trim());
-			} else {
-
-				String obj = this.GetValStrByKey(attr.getKey());
-				if (obj == null && attr.getIsNum())
-					obj = "0";
-
-				dr.setValue(attr.getKey(), obj);
+				continue;
 			}
+
+			String obj = this.GetValStrByKey(attr.getKey());
+			if (obj == null && attr.getIsNum())
+				obj = "0";
+
+			dr.setValue(attr.getKey(), obj);
+
 		}
 
 		/* 如果包含这个字段 */
@@ -230,29 +305,11 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	public final int RunSQL(Paras ps) {
-		switch (this.getEnMap().getEnDBUrl().getDBUrlType()) {
-		case AppCenterDSN:
-			return DBAccess.RunSQL(ps);
-		// case DBAccessOfMSMSSQL:
-		// return DBAccessOfMSMSSQL.RunSQL(ps.SQL);
-		// case DBAccessOfOracle:
-		// return DBAccessOfOracle.RunSQL(ps.SQL);
-		default:
-			throw new RuntimeException("@没有设置类型。");
-		}
+		return DBAccess.RunSQL(ps);
 	}
 
 	public final int RunSQL(String sql, Paras paras) {
-		switch (this.getEnMap().getEnDBUrl().getDBUrlType()) {
-		case AppCenterDSN:
-			return DBAccess.RunSQL(sql, paras);
-		// case DBAccessOfMSMSSQL:
-		// return DBAccessOfMSMSSQL.RunSQL(sql);
-		// case DBAccessOfOracle:
-		// return DBAccessOfOracle.RunSQL(sql);
-		default:
-			throw new RuntimeException("@没有设置类型。");
-		}
+		return DBAccess.RunSQL(sql, paras);
 	}
 
 	/**
@@ -264,184 +321,8 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	public DataTable RunSQLReturnTable(String sql) {
-		switch (this.getEnMap().getEnDBUrl().getDBUrlType()) {
-		case AppCenterDSN:
-			return DBAccess.RunSQLReturnTable(sql);
-		// case DBAccessOfMSMSSQL:
-		// return DBAccessOfMSMSSQL.RunSQLReturnTable(sql);
-		// case DBAccessOfOracle:
-		// return DBAccessOfOracle.RunSQLReturnTable(sql);
-		default:
-			throw new RuntimeException("@没有设置类型。");
-		}
-	}
+		return DBAccess.RunSQLReturnTable(sql);
 
-	// 关于明细的操作
-	public final Entities GetEnsDaOfOneVSM(AttrOfOneVSM attr) throws Exception {
-		Entities ensOfMM = attr.getEnsOfMM();
-		Entities ensOfM = attr.getEnsOfM();
-		ensOfM.clear();
-
-		QueryObject qo = new QueryObject(ensOfMM);
-		qo.AddWhere(attr.getAttrOfOneInMM(), this.getPKVal().toString());
-		qo.DoQuery();
-
-		for (Entity en : Entities.convertEntities(ensOfMM)) {
-			Entity enOfM = ensOfM.getGetNewEntity();
-			enOfM.setPKVal(en.GetValStringByKey(attr.getAttrOfMInMM()));
-			enOfM.Retrieve();
-			ensOfM.AddEntity(enOfM);
-		}
-		return ensOfM;
-	}
-
-	/**
-	 * 取得实体集合多对多的实体集合.
-	 * 
-	 * @param ensOfMMclassName
-	 *            实体集合的类名称
-	 * @return 数据实体
-	 * @throws Exception
-	 */
-	public final Entities GetEnsDaOfOneVSM(String ensOfMMclassName) throws Exception {
-		AttrOfOneVSM attr = this.getEnMap().GetAttrOfOneVSM(ensOfMMclassName);
-
-		return GetEnsDaOfOneVSM(attr);
-	}
-
-	public final Entities GetEnsDaOfOneVSMFirst() throws Exception {
-		AttrOfOneVSM attr = this.getEnMap().getAttrsOfOneVSM().getItem(0);
-		// throw new Exception("err "+attr.Desc);
-		return this.GetEnsDaOfOneVSM(attr);
-	}
-
-	// 关于明细的操作
-	/**
-	 * 得到他的数据实体
-	 * 
-	 * @param EnsName
-	 *            类名称
-	 * @return
-	 * @throws Exception
-	 */
-	public final Entities GetDtlEnsDa(String EnsName) throws Exception {
-		Entities ens = ClassFactory.GetEns(EnsName);
-		return GetDtlEnsDa(ens);
-		//
-		// EnDtls eds =this.EnMap.Dtls;
-		// foreach(EnDtl ed in eds)
-		// {
-		// if (ed.EnsName==EnsName)
-		// {
-		// Entities ens =ClassFactory.GetEns(EnsName) ;
-		// QueryObject qo = new QueryObject(ClassFactory.GetEns(EnsName));
-		// qo.AddWhere(ed.RefKey,this.PKVal.ToString());
-		// qo.DoQuery();
-		// return ens;
-		// }
-		// }
-		// throw new Exception("@实体["+this.EnDesc+"],不包含"+EnsName);
-		//
-	}
-
-	/**
-	 * 取出他的数据实体
-	 * 
-	 * @param ens
-	 *            集合
-	 * @return 执行后的实体信息
-	 * @throws Exception
-	 */
-	public final Entities GetDtlEnsDa(Entities ens) throws Exception {
-		for (EnDtl dtl : this.getEnMap().getDtls()) {
-			if (dtl.getEns().getClass() == ens.getClass()) {
-				QueryObject qo = new QueryObject(dtl.getEns());
-				qo.AddWhere(dtl.getRefKey(), this.getPKVal().toString());
-				qo.DoQuery();
-				return dtl.getEns();
-			}
-		}
-		throw new RuntimeException(
-				"@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + ens.getGetNewEntity().getEnDesc() + "],不在他的集合内。");
-	}
-
-	public final Entities GetDtlEnsDa(EnDtl dtl) throws Exception {
-
-		try {
-			QueryObject qo = new QueryObject(dtl.getEns());
-			qo.AddWhere(dtl.getRefKey(), this.getPKVal().toString());
-			qo.DoQuery();
-			return dtl.getEns();
-		} catch (RuntimeException e) {
-			throw new RuntimeException("@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + dtl.getDesc() + "],不在他的集合内。");
-		}
-	}
-
-	// /// <summary>
-	// /// 返回第一个实体
-	// /// </summary>
-	// /// <returns>返回第一个实体,如果没有就抛出异常</returns>
-	// public Entities GetDtl()
-	// {
-	// return this.GetDtls(0);
-	// }
-	// /// <summary>
-	// /// 返回第一个实体
-	// /// </summary>
-	// /// <returns>返回第一个实体</returns>
-	// public Entities GetDtl(int index)
-	// {
-	// try
-	// {
-	// return this.GetDtls(this.EnMap.Dtls[index].Ens);
-	// }
-	// catch( Exception ex)
-	// {
-	// throw new Exception("@在取得按照顺序取["+this.EnDesc+"]的明细,出现错误:"+ex.Message);
-	// }
-	// }
-	/**
-	 * 取出他的明细集合。
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public final java.util.ArrayList GetDtlsDatasOfArrayList() throws Exception {
-		java.util.ArrayList al = new java.util.ArrayList();
-		for (EnDtl dtl : this.getEnMap().getDtls()) {
-			al.add(this.GetDtlEnsDa(dtl.getEns()));
-		}
-		return al;
-	}
-
-	public final java.util.ArrayList<Entities> GetDtlsDatasOfList() throws Exception {
-		java.util.ArrayList<Entities> al = new java.util.ArrayList<Entities>();
-		for (EnDtl dtl : this.getEnMap().getDtls()) {
-			al.add(this.GetDtlEnsDa(dtl));
-		}
-		return al;
-	}
-
-	// 检查一个属性值是否存在于实体集合中
-	/**
-	 * 检查一个属性值是否存在于实体集合中 这个方法经常用到在beforeinsert中。
-	 * 
-	 * @param key
-	 *            要检查的key.
-	 * @param val
-	 *            要检查的key.对应的val
-	 * @return
-	 * @throws Exception
-	 * @throws NumberFormatException
-	 */
-	protected final int ExitsValueNum(String key, String val) throws NumberFormatException, Exception {
-		String field = this.getEnMap().GetFieldByKey(key);
-		Paras ps = new Paras();
-		ps.Add("p", val);
-
-		String sql = "SELECT COUNT( " + key + " ) FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + key + "="
-				+ this.getHisDBVarStr() + "p";
-		return Integer.parseInt(DBAccess.RunSQLReturnVal(sql, ps).toString());
 	}
 
 	// 于编号有关系的处理。
@@ -456,29 +337,30 @@ public abstract class Entity extends EnObj {
 	public final String GenerNewNoByKey(String attrKey) throws Exception {
 		try {
 			String sql = null;
-			Attr attr = this.getEnMap().GetAttrByKey(attrKey);
+			Map map = this.getEnMap();
+
+			Attr attr = map.GetAttrByKey(attrKey);
 			if (!attr.getUIIsReadonly()) {
 				throw new RuntimeException("@需要自动生成编号的列(" + attr.getKey() + ")必须为只读。");
 			}
 
-			String field = this.getEnMap().GetFieldByKey(attrKey);
-			switch (this.getEnMap().getEnDBUrl().getDBType()) {
+			String field = map.GetFieldByKey(attrKey);
+			switch (map.getEnDBUrl().getDBType()) {
 			case MSSQL:
-				sql = "SELECT CONVERT(INT, MAX(CAST(" + field + " as int)) )+1 AS No FROM "
-						+ this.get_enMap().getPhysicsTable();
+				sql = "SELECT CONVERT(INT, MAX(CAST(" + field + " as int)) )+1 AS No FROM " + map.getPhysicsTable();
 				break;
 			case Oracle:
-				sql = "SELECT MAX(" + field + ") +1 AS No FROM " + this.get_enMap().getPhysicsTable();
+				sql = "SELECT MAX(" + field + ") +1 AS No FROM " + map.getPhysicsTable();
 				break;
 			case MySQL:
 				sql = "SELECT CONVERT(MAX(CAST(" + field + " AS SIGNED INTEGER)),SIGNED) +1 AS No FROM "
-						+ this.get_enMap().getPhysicsTable();
+						+ map.getPhysicsTable();
 				break;
 			case Informix:
-				sql = "SELECT MAX(" + field + ") +1 AS No FROM " + this.get_enMap().getPhysicsTable();
+				sql = "SELECT MAX(" + field + ") +1 AS No FROM " + map.getPhysicsTable();
 				break;
 			case Access:
-				sql = "SELECT MAX( [" + field + "]) +1 AS  No FROM " + this.get_enMap().getPhysicsTable();
+				sql = "SELECT MAX( [" + field + "]) +1 AS  No FROM " + map.getPhysicsTable();
 				break;
 			default:
 				throw new RuntimeException("error");
@@ -487,12 +369,8 @@ public abstract class Entity extends EnObj {
 			if (str.equals("0") || str.equals("")) {
 				str = "1";
 			}
-			return StringUtils.leftPad(str, Integer.parseInt(this.get_enMap().getCodeStruct()), "0");
-			/*
-			 * warning return
-			 * str.PadLeft(Integer.parseInt(this.get_enMap().getCodeStruct()),
-			 * '0');
-			 */
+			return StringUtils.leftPad(str, Integer.parseInt(map.getCodeStruct()), "0");
+
 		} catch (RuntimeException ex) {
 			this.CheckPhysicsTable();
 			throw ex;
@@ -517,34 +395,36 @@ public abstract class Entity extends EnObj {
 			throw new RuntimeException("@分组字段attrGroupKey attrGroupVal 不能为空");
 		}
 
+		Map map = this.getEnMap();
+
 		Paras ps = new Paras();
 
 		String sql = "";
-		String field = this.getEnMap().GetFieldByKey(attrKey);
+		String field = map.GetFieldByKey(attrKey);
 
-		switch (this.getEnMap().getEnDBUrl().getDBType()) {
+		switch (map.getEnDBUrl().getDBType()) {
 		case MSSQL:
-			sql = "SELECT CONVERT(bigint, MAX([" + field + "]))+1 AS Num FROM " + this.getEnMap().getPhysicsTable()
-					+ " WHERE " + attrGroupKey + "='" + attrGroupVal + "'";
+			sql = "SELECT CONVERT(bigint, MAX([" + field + "]))+1 AS Num FROM " + map.getPhysicsTable() + " WHERE "
+					+ attrGroupKey + "='" + attrGroupVal + "'";
 			break;
 		case Oracle:
 			ps.Add("groupKey", attrGroupKey);
 			ps.Add("groupVal", attrGroupVal);
 			ps.Add("f", attrKey);
-			sql = "SELECT MAX( :f )+1 AS No FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ this.getHisDBVarStr() + "groupKey=" + this.getHisDBVarStr() + "groupVal ";
+			sql = "SELECT MAX( :f )+1 AS No FROM " + map.getPhysicsTable() + " WHERE " + this.getHisDBVarStr()
+					+ "groupKey=" + this.getHisDBVarStr() + "groupVal ";
 			break;
 		case Informix:
-			sql = "SELECT MAX( :f )+1 AS No FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ this.getHisDBVarStr() + "groupKey=" + this.getHisDBVarStr() + "groupVal ";
+			sql = "SELECT MAX( :f )+1 AS No FROM " + map.getPhysicsTable() + " WHERE " + this.getHisDBVarStr()
+					+ "groupKey=" + this.getHisDBVarStr() + "groupVal ";
 			break;
 		case MySQL:
-			sql = "SELECT MAX(" + field + ") +1 AS Num FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ attrGroupKey + "='" + attrGroupVal + "'";
+			sql = "SELECT MAX(" + field + ") +1 AS Num FROM " + map.getPhysicsTable() + " WHERE " + attrGroupKey + "='"
+					+ attrGroupVal + "'";
 			break;
 		case Access:
-			sql = "SELECT MAX([" + field + "]) +1 AS Num FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ attrGroupKey + "='" + attrGroupVal + "'";
+			sql = "SELECT MAX([" + field + "]) +1 AS Num FROM " + map.getPhysicsTable() + " WHERE " + attrGroupKey
+					+ "='" + attrGroupVal + "'";
 			break;
 		default:
 			throw new RuntimeException("error");
@@ -553,23 +433,13 @@ public abstract class Entity extends EnObj {
 		DataTable dt = DBAccess.RunSQLReturnTable(sql, ps);
 		String str = "1";
 		if (dt.Rows.size() != 0) {
-			// System.DBNull n = new DBNull();
-			/*
-			 * warning if (dt.Rows[0][0] instanceof DBNull)
-			 */
 			if (dt.Rows.get(0).getValue(0) == null) {
 				str = "1";
 			} else {
 				str = dt.Rows.get(0).getValue(0).toString();
-				/*
-				 * warning str = dt.Rows[0][0].toString();
-				 */
 			}
 		}
 		return StringUtils.leftPad(str, nolength, '0');
-		/*
-		 * warning return str.PadLeft(nolength, '0');
-		 */
 	}
 
 	public final String GenerNewNoByKey(String attrKey, String attrGroupKey, String attrGroupVal)
@@ -621,15 +491,8 @@ public abstract class Entity extends EnObj {
 		String str = "1";
 		if (dt.Rows.size() != 0) {
 			str = dt.Rows.get(0).getValue(0).toString();
-			/*
-			 * warning str = dt.Rows[0][0].toString();
-			 */
 		}
 		return StringUtils.leftPad(str, Integer.parseInt(this.getEnMap().getCodeStruct()), '0');
-		/*
-		 * warning return
-		 * str.PadLeft(Integer.parseInt(this.getEnMap().getCodeStruct()), '0');
-		 */
 	}
 
 	// 构造方法
@@ -711,6 +574,7 @@ public abstract class Entity extends EnObj {
 	}
 
 	protected final void DoOrderDown(String groupKeyAttr, String groupKeyVal, String idxAttr) {
+
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -798,17 +662,9 @@ public abstract class Entity extends EnObj {
 	 */
 	public int DirectInsert() throws Exception {
 		try {
-			switch (SystemConfig.getAppCenterDBType()) {
-			case MSSQL:
-				return this.RunSQL(this.getSQLCash().Insert, SqlBuilder.GenerParas(this, null));
-			case Access:
-				return this.RunSQL(this.getSQLCash().Insert, SqlBuilder.GenerParas(this, null));
-			case MySQL:
-			case Informix:
-			default:
-				return this.RunSQL(this.getSQLCash().Insert.replace("[", "").replace("]", ""),
-						SqlBuilder.GenerParas(this, null));
-			}
+
+			return this.RunSQL(this.getSQLCash().getInsert(), SqlBuilder.GenerParas(this, null));
+
 		} catch (RuntimeException ex) {
 			this.roll();
 			if (SystemConfig.getIsDebug()) {
@@ -830,7 +686,7 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	public final void DirectDelete() throws Exception {
-		EntityDBAccess.Delete(this);
+		DBAccess.RunSQL(this.getSQLCash().getDelete(), SqlBuilder.GenerParasPK(this));
 	}
 
 	public void DirectSave() throws Exception {
@@ -915,15 +771,20 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	public int RetrieveFromDBSources() throws Exception {
+
 		try {
-			return EntityDBAccess.Retrieve(this, this.getSQLCash().Select, SqlBuilder.GenerParasPK(this));
+			return DBAccess.RunSQLReturnResultSet(this.getSQLCash().getSelect(), SqlBuilder.GenerParasPK(this), this,
+					this.getEnMap().getAttrs());
+
 		} catch (java.lang.Exception e) {
 			try {
 				this.CheckPhysicsTable();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			return EntityDBAccess.Retrieve(this, this.getSQLCash().Select, SqlBuilder.GenerParasPK(this));
+			return DBAccess.RunSQLReturnResultSet(this.getSQLCash().getSelect(), SqlBuilder.GenerParasPK(this), this,
+					this.getEnMap().getAttrs());
+
 		}
 	}
 
@@ -960,18 +821,83 @@ public abstract class Entity extends EnObj {
 		return qo.DoQuery();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public int Retrieve() throws Exception {
+
+		// 如果是没有放入缓存的实体.
+		try {
+
+			int i = DBAccess.RunSQLReturnResultSet(this.getSQLCash().getSelect(), SqlBuilder.GenerParasPK(this), this,
+					this.getEnMap().getAttrs());
+			if (i > 0)
+				return i;
+
+		} catch (RuntimeException ex) {
+
+			String msg = ex.getMessage() == null ? "" : ex.getMessage();
+			if (msg.contains("无效") || msg.contains("field list")) {
+				try {
+
+					this.CheckPhysicsTable();
+					if (BP.DA.DBAccess.IsExits(this.getEnMap().getPhysicsTable()) == true)
+						return this.RetrieveFromDBSources();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			throw new RuntimeException(msg + "@在Entity(" + this.toString() + ")查询期间出现错误@" + ex.getStackTrace());
+		}
+
+		String msg = "";
+		String pk = this.getPK();
+
+		if (pk.equals("OID")) {
+			msg += "[ 主键=OID 值=" + this.GetValStrByKey("OID") + " ]";
+		} else if (pk.equals("No")) {
+			msg += "[ 主键=No 值=" + this.GetValStrByKey("No") + " ]";
+		} else if (pk.equals("MyPK")) {
+			msg += "[ 主键=MyPK 值=" + this.GetValStrByKey("MyPK") + " ]";
+		} else if (pk.equals("NodeID")) {
+			msg += "[ 主键=NodeID 值=" + this.GetValStrByKey("NodeID") + " ]";
+		} else if (pk.equals("WorkID")) {
+			msg += "[ 主键=WorkID 值=" + this.GetValStrByKey("WorkID") + " ]";
+		} else {
+			Hashtable ht = this.getPKVals(); /*
+									 * warning for (String key : ht.keySet())
+									 */
+			Set<String> keys = ht.keySet();
+			for (String key : keys) {
+				msg += "[ 主键=" + key + " 值=" + ht.get(key) + " ]";
+			}
+
+			throw new RuntimeException("@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
+					+ ", 类[" + this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。" + msg);
+
+		}
+
+		throw new RuntimeException("@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
+				+ ", 类[" + this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。PK = "
+				+ this.GetValByKey(this.getPK()));
+
+	}
+
 	/**
 	 * 按主键查询，返回查询出来的个数。 如果查询出来的是多个实体，那把第一个实体给值。
 	 * 
 	 * @return 查询出来的个数
 	 * @throws Exception
 	 */
-	public int Retrieve() throws Exception {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public int Retrieve_Old() throws Exception {
 
 		// 如果是没有放入缓存的实体.
 		try {
-			if (EntityDBAccess.Retrieve(this, this.getSQLCash().Select, SqlBuilder.GenerParasPK(this)) <= 0) {
-				String msg = "";
+
+			int num = EntityDBAccess.Retrieve(this, this.getSQLCash().getSelect(), SqlBuilder.GenerParasPK(this));
+
+			if (num <= 0) {
+				String msg="";
 				if (this.getPK().equals("OID")) {
 					msg += "[ 主键=OID 值=" + this.GetValStrByKey("OID") + " ]";
 				} else if (this.getPK().equals("No")) {
@@ -981,10 +907,7 @@ public abstract class Entity extends EnObj {
 				} else if (this.getPK().equals("ID")) {
 					msg += "[ 主键=ID 值=" + this.GetValStrByKey("ID") + " ]";
 				} else {
-					java.util.Hashtable ht = this.getPKVals();
-					/*
-					 * warning for (String key : ht.keySet())
-					 */
+					Hashtable ht = this.getPKVals();
 					Set<String> keys = ht.keySet();
 					for (String key : keys) {
 						msg += "[ 主键=" + key + " 值=" + ht.get(key) + " ]";
@@ -993,12 +916,12 @@ public abstract class Entity extends EnObj {
 				Log.DefaultLogWriteLine(LogType.Error,
 						"@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable() + ", 类["
 								+ this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。PK = "
-								+ this.GetValByKey(this.getPK()));
+								+ this.GetValByKey(this.getPK())+msg);
 			}
 			return 1;
 		} catch (RuntimeException ex) {
 			String msg = ex.getMessage() == null ? "" : ex.getMessage();
-			if (msg.contains("无效") || msg.contains("field list") ) {
+			if (msg.contains("无效") || msg.contains("field list")) {
 				try {
 
 					this.CheckPhysicsTable();
@@ -1012,7 +935,6 @@ public abstract class Entity extends EnObj {
 			}
 			throw new RuntimeException(msg + "@在Entity(" + this.toString() + ")查询期间出现错误@" + ex.getStackTrace());
 		}
-
 	}
 
 	/**
@@ -1022,13 +944,15 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	public boolean getIsExits() throws Exception {
+
 		try {
-			if (this.getPKField().contains(",")) {
+
+			if (this.getPK().contains(",")) {
 				Attrs attrs = this.getEnMap().getAttrs();
 
 				// 说明多个主键
 				QueryObject qo = new QueryObject(this);
-				String[] pks = this.getPKField().split("[,]", -1);
+				String[] pks = this.getPK().split("[,]", -1);
 
 				boolean isNeedAddAnd = false;
 				for (String pk : pks) {
@@ -1079,8 +1003,9 @@ public abstract class Entity extends EnObj {
 			}
 
 			// 生成数据库判断语句。
-			String selectSQL = "SELECT " + this.getPKField() + " FROM " + this.getEnMap().getPhysicsTable() + " WHERE ";
-			switch (this.getEnMap().getEnDBUrl().getDBType()) {
+			String selectSQL = "SELECT count( " + this.getPK() + ") as Num FROM " + this.getEnMap().getPhysicsTable()
+					+ " WHERE ";
+			switch (SystemConfig.getAppCenterDBType()) {
 			case MSSQL:
 				selectSQL += SqlBuilder.GetKeyConditionOfMS(this);
 				break;
@@ -1100,26 +1025,17 @@ public abstract class Entity extends EnObj {
 				throw new RuntimeException("@没有设计到。" + this.getEnMap().getEnDBUrl().getDBUrlType());
 			}
 
-			// 从数据库里面查询，判断有没有。
-			switch (this.getEnMap().getEnDBUrl().getDBUrlType()) {
-			case AppCenterDSN:
-				return DBAccess.IsExits(selectSQL, SqlBuilder.GenerParasPK(this));
-			// case DBAccessOfMSMSSQL:
-			// return DBAccessOfMSMSSQL.IsExits(selectSQL);
-			// case DBAccessOfOLE:
-			// return DBAccessOfOLE.IsExits(selectSQL);
-			// case DBAccessOfOracle:
-			// return DBAccessOfOracle.IsExits(selectSQL);
-			default:
-				throw new RuntimeException("@没有设计到的DBUrl。" + this.getEnMap().getEnDBUrl().getDBUrlType());
-			}
+			Paras ps = SqlBuilder.GenerParasPK(this);
+			ps.SQL = selectSQL;
+			int val = DBAccess.RunSQLReturnValInt(ps);
+			if (val == 0)
+				return false;
+
+			return true;
 
 		} catch (RuntimeException ex) {
-			try {
-				this.CheckPhysicsTable();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
+			this.CheckPhysicsTable();
 			throw ex;
 		}
 	}
@@ -1143,6 +1059,7 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	public final boolean IsExit(String pk, Object val) throws Exception {
+
 		if (pk.equals("OID")) {
 			if (Integer.parseInt(val.toString()) == 0) {
 				return false;
@@ -1150,86 +1067,47 @@ public abstract class Entity extends EnObj {
 				return true;
 			}
 		}
-		// else
-		// {
-		// string sql = "SELECT " + pk + " FROM " +
-		// this.getEnMap().getPhysicsTable() +
-		// " WHERE " + pk + " ='" + val + "'";
-		// return DBAccess.IsExits(sql);
-		// }
 
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(pk, val);
-		if (qo.DoQuery() == 0) {
+		Paras ps = new Paras();
+		ps.SQL = "SELECT COUNT(" + pk + ") FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + pk + "="
+				+ ps.getDBStr() + "PK";
+		ps.Add("PK", val);
+		int num = DBAccess.RunSQLReturnValInt(ps);
+		if (num == 0)
 			return false;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	public final boolean IsExit(String pk1, Object val1, String pk2, Object val2) throws Exception {
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(pk1, val1);
-		qo.addAnd();
-		qo.AddWhere(pk2, val2);
 
-		if (qo.DoQuery() == 0) {
+		Paras ps = new Paras();
+		ps.SQL = "SELECT COUNT(" + pk1 + ") as Num FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + pk1 + "="
+				+ ps.getDBStr() + "PK1 AND " + pk2 + "=" + ps.getDBStr() + "PK2";
+
+		ps.Add("PK1", val1);
+		ps.Add("PK2", val2);
+
+		int num = DBAccess.RunSQLReturnValInt(ps);
+		if (num == 0)
 			return false;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	public final boolean IsExit(String pk1, Object val1, String pk2, Object val2, String pk3, Object val3)
 			throws Exception {
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(pk1, val1);
-		qo.addAnd();
-		qo.AddWhere(pk2, val2);
-		qo.addAnd();
-		qo.AddWhere(pk3, val3);
 
-		if (qo.DoQuery() == 0) {
+		Paras ps = new Paras();
+		ps.SQL = "SELECT COUNT(" + pk1 + ") as Num FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + pk1 + "="
+				+ ps.getDBStr() + "PK1 AND " + pk2 + "=" + ps.getDBStr() + "PK2 AND  " + pk3 + "=" + ps.getDBStr()
+				+ "PK3";
+
+		ps.Add("PK1", val1);
+		ps.Add("PK2", val2);
+		ps.Add("PK3", val3);
+
+		int num = DBAccess.RunSQLReturnValInt(ps);
+		if (num == 0)
 			return false;
-		} else {
-			return true;
-		}
-	}
-
-	// delete
-	private boolean CheckDB() {
-
-		// 检查数据.
-		// CheckDatas ens=new CheckDatas(this.getEnMap().getPhysicsTable());
-		// foreach(CheckData en in ens)
-		// {
-		// string
-		// sql="DELETE "+en.RefTBName+" WHERE "+en.RefTBFK+"
-		// ='"+this.GetValByKey(en.MainTBPK)
-		// +"' ";
-		// DBAccess.RunSQL(sql);
-		// }
-
-		// 判断是否有明细
-		for (EnDtl dtl : this.getEnMap().getDtls()) {
-			String sql = "DELETE  FROM  " + dtl.getEns().getGetNewEntity().getEnMap().getPhysicsTable() + "   WHERE  "
-					+ dtl.getRefKey() + " ='" + this.getPKVal().toString() + "' ";
-			// DBAccess.RunSQL(sql);
-			//
-			// //string
-			// sql="SELECT "+dtl.RefKey+" FROM
-			// "+dtl.Ens.GetNewEntity.getEnMap().getPhysicsTable()+" WHERE
-			// "+dtl.RefKey+" ='"+this.PKVal.ToString()
-			// +"' ";
-			// DataTable dt= DBAccess.RunSQLReturnTable(sql);
-			// if(dt.Rows.Count==0)
-			// continue;
-			// else
-			// throw new
-			// Exception("@["+this.EnDesc+"],删除期间出现错误，它有["+dt.Rows.Count+"]个明细存在,不能删除！");
-			//
-		}
-
 		return true;
 	}
 
@@ -1240,59 +1118,7 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	protected boolean beforeDelete() throws Exception {
-		if (this.getEnMap().getAttrs().Contains("MyFileName")) {
-			this.DeleteHisFiles();
-		}
-
-		this.CheckDB();
 		return true;
-	}
-
-	/**
-	 * 删除它的文件
-	 */
-	public final void DeleteHisFiles() {
-		// BP.DA.DBAccess.RunSQL("SELECT * FROM sys_filemanager WHERE EnName='"
-		// + this.ToString() + "' AND RefVal='" + this.PKVal + "'");
-
-		try {
-			BP.DA.DBAccess.RunSQL("DELETE FROM sys_filemanager WHERE EnName='" + this.toString() + "' AND RefVal='"
-					+ this.getPKVal() + "'");
-		} catch (java.lang.Exception e) {
-
-		}
-	}
-
-	/**
-	 * 删除它关连的实体．
-	 * 
-	 * @throws Exception
-	 */
-	public final void DeleteHisRefEns() throws Exception {
-		// 检查数据.
-		// CheckDatas ens=new CheckDatas(this.getEnMap().getPhysicsTable());
-		// foreach(CheckData en in ens)
-		// {
-		// string
-		// sql="DELETE FROM "+en.RefTBName+" WHERE "+en.RefTBFK+"
-		// ='"+this.GetValByKey(en.MainTBPK)
-		// +"' ";
-		// DBAccess.RunSQL(sql);
-		// }
-
-		// 判断是否有明细
-		for (EnDtl dtl : this.getEnMap().getDtls()) {
-			String sql = "DELETE FROM " + dtl.getEns().getGetNewEntity().getEnMap().getPhysicsTable() + "   WHERE  "
-					+ dtl.getRefKey() + " ='" + this.getPKVal().toString() + "' ";
-			DBAccess.RunSQL(sql);
-		}
-
-		// 判断是否有一对对的关系.
-		for (AttrOfOneVSM dtl : this.getEnMap().getAttrsOfOneVSM()) {
-			String sql = "DELETE  FROM " + dtl.getEnsOfMM().getGetNewEntity().getEnMap().getPhysicsTable()
-					+ "   WHERE  " + dtl.getAttrOfOneInMM() + " ='" + this.getPKVal().toString() + "' ";
-			DBAccess.RunSQL(sql);
-		}
 	}
 
 	/**
@@ -1305,7 +1131,7 @@ public abstract class Entity extends EnObj {
 		this.DeleteFromCash();
 	}
 
-	public final void DeleteFromCash() {
+	public final void DeleteFromCash() throws Exception {
 		// 删除缓存.
 		CashEntity.Delete(this.toString(), this.getPKVal().toString());
 		// 删除数据.
@@ -1319,47 +1145,15 @@ public abstract class Entity extends EnObj {
 
 		int i = 0;
 		try {
-			i = EntityDBAccess.Delete(this);
+			i = DBAccess.RunSQL(this.getSQLCash().getDelete(), SqlBuilder.GenerParasPK(this));
 		} catch (RuntimeException ex) {
 			Log.DebugWriteInfo(ex.getMessage());
 			throw ex;
 		}
 
-		// 开始更新内存数据。
-		switch (this.getEnMap().getDepositaryOfEntity()) {
-		case Application:
-			// CashEntity.Insert(this.toString(), this.getPKVal().toString(),
-			// this);
-			// 如果执行了这个，在调用insert就会异常。
-			// this.DeleteFromCash(); //
-			break;
-		case None:
-			break;
-		}
-
 		this.afterDelete();
 
 		return i;
-	}
-
-	/**
-	 * 直接删除指定的
-	 * 
-	 * @param pk
-	 * @throws Exception
-	 */
-	public final int Delete(Object pk) throws Exception {
-		Paras ps = new Paras();
-		ps.Add(this.getPK(), pk);
-		switch (this.getEnMap().getEnDBUrl().getDBType()) {
-		case Oracle:
-		case MSSQL:
-		case MySQL:
-			return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + this.getPK() + " ="
-					+ this.getHisDBVarStr() + pk);
-		default:
-			throw new RuntimeException("没有涉及到的类型。");
-		}
 	}
 
 	/**
@@ -1372,37 +1166,20 @@ public abstract class Entity extends EnObj {
 	public final int Delete(String attr, Object val) {
 		Paras ps = new Paras();
 		ps.Add(attr, val);
-		switch (this.getEnMap().getEnDBUrl().getDBType()) {
-		case Oracle:
-		case MSSQL:
-		case Informix:
-		case MySQL:
-			return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ this.getEnMap().GetAttrByKey(attr).getField() + " =" + this.getHisDBVarStr() + attr, ps);
-		case Access:
-			return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ this.getEnMap().GetAttrByKey(attr).getField() + " =" + this.getHisDBVarStr() + attr, ps);
-		default:
-			throw new RuntimeException("没有涉及到的类型。");
-		}
+
+		return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
+				+ this.getEnMap().GetAttrByKey(attr).getField() + " =" + this.getHisDBVarStr() + attr, ps);
+
 	}
 
 	public final int Delete(String attr1, Object val1, String attr2, Object val2) {
 		Paras ps = new Paras();
 		ps.Add(attr1, val1);
 		ps.Add(attr2, val2);
-		switch (this.getEnMap().getEnDBUrl().getDBType()) {
-		case Oracle:
-		case MSSQL:
-		case Informix:
-		case Access:
-		case MySQL:
-			return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ this.getEnMap().GetAttrByKey(attr1).getField() + " =" + this.getHisDBVarStr() + attr1 + " AND "
-					+ this.getEnMap().GetAttrByKey(attr2).getField() + " =" + this.getHisDBVarStr() + attr2, ps);
-		default:
-			throw new RuntimeException("没有涉及到的类型。");
-		}
+
+		return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + attr1 + " ="
+				+ this.getHisDBVarStr() + attr1 + " AND " + attr2 + " =" + this.getHisDBVarStr() + attr2, ps);
+
 	}
 
 	public final int Delete(String attr1, Object val1, String attr2, Object val2, String attr3, Object val3) {
@@ -1411,18 +1188,10 @@ public abstract class Entity extends EnObj {
 		ps.Add(attr2, val2);
 		ps.Add(attr3, val3);
 
-		switch (this.getEnMap().getEnDBUrl().getDBType()) {
-		case Oracle:
-		case MSSQL:
-		case Access:
-		case MySQL:
-			return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ this.getEnMap().GetAttrByKey(attr1).getField() + " =" + this.getHisDBVarStr() + attr1 + " AND "
-					+ this.getEnMap().GetAttrByKey(attr2).getField() + " =" + this.getHisDBVarStr() + attr2 + " AND "
-					+ this.getEnMap().GetAttrByKey(attr3).getField() + " =" + this.getHisDBVarStr() + attr3, ps);
-		default:
-			throw new RuntimeException("没有涉及到的类型。");
-		}
+		return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + attr1 + " ="
+				+ this.getHisDBVarStr() + attr1 + " AND " + attr2 + " =" + this.getHisDBVarStr() + attr2 + " AND "
+				+ attr3 + " =" + this.getHisDBVarStr() + attr3, ps);
+
 	}
 
 	public final int Delete(String attr1, Object val1, String attr2, Object val2, String attr3, Object val3,
@@ -1433,35 +1202,21 @@ public abstract class Entity extends EnObj {
 		ps.Add(attr3, val3);
 		ps.Add(attr4, val4);
 
-		switch (this.getEnMap().getEnDBUrl().getDBType()) {
-		case Oracle:
-		case MSSQL:
-		case Access:
-		case MySQL:
-			return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE "
-					+ this.getEnMap().GetAttrByKey(attr1).getField() + " =" + this.getHisDBVarStr() + attr1 + " AND "
-					+ this.getEnMap().GetAttrByKey(attr2).getField() + " =" + this.getHisDBVarStr() + attr2 + " AND "
-					+ this.getEnMap().GetAttrByKey(attr3).getField() + " =" + this.getHisDBVarStr() + attr3 + " AND "
-					+ this.getEnMap().GetAttrByKey(attr4).getField() + " =" + this.getHisDBVarStr() + attr4, ps);
-		default:
-			throw new RuntimeException("没有涉及到的类型。");
-		}
+		return DBAccess.RunSQL("DELETE FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + attr1 + " ="
+				+ this.getHisDBVarStr() + attr1 + " AND " + attr2 + " =" + this.getHisDBVarStr() + attr2 + " AND "
+				+ attr3 + " =" + this.getHisDBVarStr() + attr3 + " AND " + attr4 + " =" + this.getHisDBVarStr() + attr4,
+				ps);
+
 	}
 
 	protected void afterDelete() throws Exception {
-		if (this.getEnMap().getDepositaryOfEntity() != Depositary.Application) {
-			return;
-		}
 
-		/**
-		 * 删除缓存。
-		 */
-		BP.DA.CashEntity.Delete(this.toString(), this.getPKVal().toString());
 		return;
 	}
 
 	// 参数字段
 	private AtPara getAtPara() {
+
 		Object tempVar = this.getRow().GetValByKey("_ATObj_");
 		AtPara at = (AtPara) ((tempVar instanceof AtPara) ? tempVar : null);
 		if (at != null) {
@@ -1612,17 +1367,7 @@ public abstract class Entity extends EnObj {
 	 */
 	public final Object GetRefObject(String key) {
 		return this.getRow().GetValByKey("_" + key);
-		/*
-		 * warning return this.getRow()["_" + key];
-		 */
-		// object obj = this.Row[key];
-		// if (obj == null)
-		// {
-		// if (!this.Row.ContainsKey(key))
-		// return null;
-		// obj = this.Row[key];
-		// }
-		// return obj;
+
 	}
 
 	/**
@@ -1654,16 +1399,13 @@ public abstract class Entity extends EnObj {
 		return true;
 	}
 
-	public void InsertWithOutPara() throws Exception {
-		this.RunSQL(SqlBuilder.Insert(this));
-	}
-
 	/**
 	 * Insert .
 	 * 
 	 * @throws Exception
 	 */
 	public int Insert() throws Exception {
+
 		if (!this.beforeInsert()) {
 			return 0;
 		}
@@ -1680,15 +1422,6 @@ public abstract class Entity extends EnObj {
 			throw ex;
 		}
 
-		// 开始更新内存数据。
-		switch (this.getEnMap().getDepositaryOfEntity()) {
-		case Application:
-			CashEntity.Insert(this.toString(), this.getPKVal().toString(), this);
-			break;
-		case None:
-			break;
-		}
-
 		this.afterInsert();
 		this.afterInsertUpdateAction();
 
@@ -1696,52 +1429,53 @@ public abstract class Entity extends EnObj {
 	}
 
 	protected void afterInsert() throws Exception {
+
 		// added by liuxc,2016-02-19,新建时，新增一个版本记录
-		if (this.getEnMap().IsEnableVer) {
-			// 增加版本为1的版本历史记录
-			String enName = this.toString();
-			String rdt = BP.DA.DataType.getCurrentDataTime();
+		if (this.getEnMap().IsEnableVer == false)
+			return;
 
-			// edited by
-			// liuxc,2017-03-24,增加判断，如果相同主键的数据曾被删除掉，再次被增加时，会延续被删除时的版本，原有逻辑报错
-			EnVer ver = new EnVer();
-			ver.setMyPK(enName + "_" + this.getPKVal());
+		// 增加版本为1的版本历史记录
+		String enName = this.toString();
+		String rdt = BP.DA.DataType.getCurrentDataTime();
 
-			if (ver.RetrieveFromDBSources() == 0) {
-				ver.setNo(enName);
-				ver.setPKValue(this.getPKVal().toString());
-				ver.setName(this.getEnMap().getEnDesc());
-			} else {
-				ver.setEVer(ver.getEVer() + 1);
-			}
+		// edited by
+		// liuxc,2017-03-24,增加判断，如果相同主键的数据曾被删除掉，再次被增加时，会延续被删除时的版本，原有逻辑报错
+		EnVer ver = new EnVer();
+		ver.setMyPK(enName + "_" + this.getPKVal());
 
-			ver.setRDT(rdt);
-			ver.setRec(BP.Web.WebUser.getName());
-			ver.Save();
-
-			// 保存字段数据.
-			Attrs attrs = this.getEnMap().getAttrs();
-			for (Attr attr : attrs.ToJavaList()) {
-				if (attr.getIsRefAttr()) {
-					continue;
-				}
-
-				EnVerDtl dtl = new EnVerDtl();
-				dtl.setEnVerPK(ver.getMyPK());
-				dtl.setEnVer(ver.getEVer());
-				dtl.setEnName(ver.getNo());
-				dtl.setAttrKey(attr.getKey());
-				dtl.setAttrName(attr.getDesc());
-				// dtl.OldVal = this.GetValStrByKey(attr.Key); //第一个版本时，旧值没有
-				dtl.setRDT(rdt);
-				dtl.setRec(BP.Web.WebUser.getName());
-				dtl.setNewVal(this.GetValStrByKey(attr.getKey()));
-				dtl.setMyPK(ver.getMyPK() + "_" + attr.getKey() + "_" + dtl.getEnVer());
-				dtl.Insert();
-			}
+		if (ver.RetrieveFromDBSources() == 0) {
+			ver.setNo(enName);
+			ver.setPKValue(this.getPKVal().toString());
+			ver.setName(this.getEnMap().getEnDesc());
+		} else {
+			ver.setEVer(ver.getEVer() + 1);
 		}
 
-		return;
+		ver.setRDT(rdt);
+		ver.setRec(BP.Web.WebUser.getName());
+		ver.Save();
+
+		// 保存字段数据.
+		Attrs attrs = this.getEnMap().getAttrs();
+		for (Attr attr : attrs.ToJavaList()) {
+			if (attr.getIsRefAttr()) {
+				continue;
+			}
+
+			EnVerDtl dtl = new EnVerDtl();
+			dtl.setEnVerPK(ver.getMyPK());
+			dtl.setEnVer(ver.getEVer());
+			dtl.setEnName(ver.getNo());
+			dtl.setAttrKey(attr.getKey());
+			dtl.setAttrName(attr.getDesc());
+			// dtl.OldVal = this.GetValStrByKey(attr.Key); //第一个版本时，旧值没有
+			dtl.setRDT(rdt);
+			dtl.setRec(BP.Web.WebUser.getName());
+			dtl.setNewVal(this.GetValStrByKey(attr.getKey()));
+			dtl.setMyPK(ver.getMyPK() + "_" + attr.getKey() + "_" + dtl.getEnVer());
+			dtl.Insert();
+		}
+
 	}
 
 	/**
@@ -1750,14 +1484,6 @@ public abstract class Entity extends EnObj {
 	 * @throws Exception
 	 */
 	protected void afterInsertUpdateAction() throws Exception {
-		if (this.getEnMap().getHisFKEnumAttrs().size() > 0) {
-			this.RetrieveFromDBSources();
-		}
-
-		if (this.getEnMap().IsAddRefName) {
-			this.ReSetNameAttrVal();
-			this.DirectUpdate();
-		}
 		return;
 	}
 
@@ -1817,7 +1543,8 @@ public abstract class Entity extends EnObj {
 	 * 
 	 * @param ht
 	 */
-	public void Copy(java.util.Hashtable ht) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void Copy(Hashtable ht) {
 		/*
 		 * warning for (String k : ht.keySet())
 		 */
@@ -1883,10 +1610,6 @@ public abstract class Entity extends EnObj {
 	 */
 	public final boolean verifyData() {
 		return true;
-
-		// throw new Exception("@在保存[" + this.EnDesc + "],PK[" + this.PK + "=" +
-		// this.PKVal + "]时出现信息录入不整错误：" + str);
-
 	}
 
 	// 更新，插入之前的工作。
@@ -2010,20 +1733,12 @@ public abstract class Entity extends EnObj {
 			int i = EntityDBAccess.Update(this, keys);
 			str = "@更新之后出现错误";
 
-			// 开始更新内存数据。
-			switch (this.getEnMap().getDepositaryOfEntity()) {
-			case Application:
-				// this.DeleteFromCash();
-				CashEntity.Update(this.toString(), this.getPKVal().toString(), this);
-				break;
-			case None:
-				break;
-			}
 			this.afterUpdate();
 			str = "@更新插入之后出现错误";
 			this.afterInsertUpdateAction();
 			return i;
 		} catch (RuntimeException ex) {
+
 			if (ex.getMessage().contains("将截断字符串") && ex.getMessage().contains("缺少")) {
 				// 说明字符串长度有问题.
 				try {
@@ -2056,36 +1771,6 @@ public abstract class Entity extends EnObj {
 			Log.DefaultLogWriteLine(LogType.Error, ex.getMessage());
 			if (SystemConfig.getIsDebug()) {
 				throw new RuntimeException("@[" + this.getEnDesc() + "]更新期间出现错误:" + str + ex.getMessage());
-			} else {
-				throw ex;
-			}
-		}
-	}
-
-	private int UpdateOfDebug(String[] keys) throws Exception {
-		String str = "";
-		try {
-			str = "@在更新之前出现错误";
-			if (!this.beforeUpdate()) {
-				return 0;
-			}
-			str = "@在beforeUpdateInsertAction出现错误";
-			if (!this.beforeUpdateInsertAction()) {
-				return 0;
-			}
-			int i = EntityDBAccess.Update(this, keys);
-			str = "@在afterUpdate出现错误";
-			this.afterUpdate();
-			str = "@在afterInsertUpdateAction出现错误";
-			this.afterInsertUpdateAction();
-			// this.UpdateMemory();
-			return i;
-		} catch (RuntimeException ex) {
-			String msg = "@[" + this.getEnDesc() + "]UpdateOfDebug更新期间出现错误:" + str + ex.getMessage();
-			Log.DefaultLogWriteLine(LogType.Error, msg);
-
-			if (SystemConfig.getIsDebug()) {
-				throw new RuntimeException(msg);
 			} else {
 				throw ex;
 			}
@@ -2223,112 +1908,57 @@ public abstract class Entity extends EnObj {
 	// 对文件的处理. add by qin 15/10/31
 
 	public int Save() throws Exception {
+
 		if (this.getPK().equals("OID")) {
 			if (this.GetValIntByKey("OID") == 0) {
 				// this.SetValByKey("OID",EnDA.GenerOID());
 				this.Insert();
 				return 1;
-			} else {
-				this.Update();
-				return 1;
 			}
-		} else if (this.getPK().equals("MyPK") || this.getPK().equals("No") || this.getPK().equals("ID")) {
-			//自动生成的MYPK，插入前获取主键
-            this.beforeUpdateInsertAction();
+			this.Update();
+
+			return 1;
+		}
+		if (this.getPK().equals("MyPK") || this.getPK().equals("No") || this.getPK().equals("WorkID")
+				|| this.getPK().equals("NodeID")) {
+			// 自动生成的MYPK，插入前获取主键
 			String pk = this.GetValStrByKey(this.getPK());
 			if (pk.equals("") || pk == null) {
 				this.Insert();
 				return 1;
-			} else {
-				int i = this.Update();
-				if (i == 0) {
-					this.Insert();
-					i = 1;
-				}
-				return i;
 			}
-		} else {
-			if (this.Update() == 0) {
+
+			int i = this.Update();
+			if (i == 0) {
 				this.Insert();
+				return 1;
 			}
-			return 1;
-		}
-	}
 
-	// 关于数据库的处理
-	/**
-	 * 把系统日期转换为 Oracle 能够存储的日期类型.
-	 */
-	protected final void TurnSysDataToOrData() {
-		Map map = this.getEnMap();
-		String val = "";
-		for (Attr attr : map.getAttrs()) {
-			try {
-				val = this.GetValStringByKey(attr.getKey());
-				switch (attr.getMyDataType()) {
-				case DataType.AppDateTime:
-					if (val.toUpperCase().indexOf("_DATE") > 0) {
-						continue;
-					}
-					this.SetValByKey(attr.getKey(),
-							" TO_DATE('" + val + "', '" + DataType.getSysDataTimeFormat() + "') ");
-					break;
-				case DataType.AppDate:
-					if (val.toUpperCase().indexOf("_DATE") > 0) {
-						continue;
-					}
+			return i;
 
-					if (val.length() > 10) {
-						val = val.substring(0, 10);
-					}
-					this.SetValByKey(attr.getKey(),
-							" TO_DATE('" + val + "', '" + DataType.getSysDataFormat() + "'    )");
-					break;
-				default:
-					break;
-				}
-			} catch (RuntimeException ex) {
-				throw new RuntimeException(
-						"执行日期转换期间出现错误:EnName=" + this.toString() + " TurnSysDataToOrData@ Attr=" + attr.getKey()
-								+ " , Val=" + this.GetValStringByKey(attr.getKey()) + " Message=" + ex.getMessage());
-			}
 		}
-	}
 
-	/**
-	 * 检查是否是日期
-	 */
-	protected final void CheckDateAttr() {
-		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs) {
-			if (attr.getMyDataType() == DataType.AppDate || attr.getMyDataType() == DataType.AppDateTime) {
-				java.util.Date dt = this.GetValDateTime(attr.getKey());
-			}
+		if (this.Update() == 0) {
+			this.Insert();
 		}
+		return 1;
 	}
 
 	/**
 	 * 建立物理表
 	 */
 	protected final void CreatePhysicsTable() {
+
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
-
 			DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfOra_OK(this));
-
 			break;
-		// case Informix:
-		// DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfInfoMix(this));
-		// break;
 		case MSSQL:
 			DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfMS(this));
 			break;
 		case MySQL:
 			DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfMySQL(this));
 			break;
-		// case Access:
-		// DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOf_OLE(this));
-		// break;
 		default:
 			throw new RuntimeException("@未判断的数据库类型。");
 		}
@@ -2341,10 +1971,10 @@ public abstract class Entity extends EnObj {
 		int pkconut = this.getPKCount();
 
 		if (pkconut == 1) {
-			DBAccess.CreatePK(this.getEnMap().getPhysicsTable(), this.getPKField(),
+			DBAccess.CreatePK(this.getEnMap().getPhysicsTable(), this.getPK(),
 					this.getEnMap().getEnDBUrl().getDBType());
 
-			DBAccess.CreatIndex(this.getEnMap().getPhysicsTable(), this.getPKField());
+			DBAccess.CreatIndex(this.getEnMap().getPhysicsTable(), this.getPK());
 		} else if (pkconut == 2) {
 			String pk0 = this.getPKs()[0];
 			String pk1 = this.getPKs()[1];
@@ -2363,22 +1993,8 @@ public abstract class Entity extends EnObj {
 		}
 	}
 
-	/**
-	 * 如果一个属性是外键，并且它还有一个字段存储它的名称。 设置这个外键名称的属性。
-	 */
-	protected final void ReSetNameAttrVal() {
-		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs) {
-			if (!attr.getIsFKorEnum()) {
-				continue;
-			}
-
-			String s = this.GetValRefTextByKey(attr.getKey());
-			this.SetValByKey(attr.getKey() + "Name", s);
-		}
-	}
-
 	private void CheckPhysicsTable_SQL() throws Exception {
+
 		String table = this.get_enMap().getPhysicsTable();
 		DBType dbtype = this.get_enMap().getEnDBUrl().getDBType();
 		String sqlFields = "";
@@ -2389,21 +2005,12 @@ public abstract class Entity extends EnObj {
 		sqlYueShu = "SELECT b.name, a.name FName from sysobjects b join syscolumns a on b.id = a.cdefault where a.id = object_id('"
 				+ this.getEnMap().getPhysicsTable() + "') ";
 
-		DataTable dtAttr = null;
-		try {
-			dtAttr = DBAccess.RunSQLReturnTable(sqlFields);
-		} catch (Exception e7) {
-			e7.printStackTrace();
-		}
-		DataTable dtYueShu = null;
-		try {
-			dtYueShu = DBAccess.RunSQLReturnTable(sqlYueShu);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+		DataTable dtAttr = DBAccess.RunSQLReturnTable(sqlFields);
+		DataTable dtYueShu = DBAccess.RunSQLReturnTable(sqlYueShu);
 
 		// 修复表字段。
 		Attrs attrs = this.get_enMap().getAttrs();
+
 		for (Attr attr : attrs) {
 			if (attr.getIsRefAttr()) {
 				continue;
@@ -2421,13 +2028,7 @@ public abstract class Entity extends EnObj {
 					Flen = dr.getValue("FLen") == null ? "0" : dr.getValue("FLen").toString();
 					break;
 				}
-				/*
-				 * warning if
-				 * (dr["FName"].toString().toLowerCase().equals(attr.getField
-				 * ().toLowerCase())) { isHave = true; FType =
-				 * (String)((dr["FType"] instanceof String) ? dr["FType"] :
-				 * null); Flen = dr["FLen"].toString(); break; }
-				 */
+
 			}
 
 			if (isHave == false) {
@@ -2442,61 +2043,50 @@ public abstract class Entity extends EnObj {
 					}
 					// throw new Exception("属性的最小长度不能为0。");
 					if (dbtype == DBType.Access && len >= 254) {
-						try {
-							DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD "
-									+ attr.getField() + "  Memo DEFAULT '" + attr.getDefaultVal() + "' NULL");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+
+						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+								+ "  Memo DEFAULT '" + attr.getDefaultVal() + "' NULL");
+
 					} else {
-						try {
-							DBAccess.RunSQL(
-									"ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
-											+ " NVARCHAR(" + len + ") DEFAULT '" + attr.getDefaultVal() + "' NULL");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+
+						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+								+ " NVARCHAR(" + len + ") DEFAULT '" + attr.getDefaultVal() + "' NULL");
+
 					}
 					continue;
 				case DataType.AppInt:
-					try {
+					if (attr.getIsPK()) {
+						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+								+ " INT DEFAULT '" + attr.getDefaultVal() + "' NOT NULL");
+					} else
 
-						if (attr.getIsPK()) {
-							DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD "
-									+ attr.getField() + " INT DEFAULT '" + attr.getDefaultVal() + "' NOT NULL");
-						} else
-
-						{
-							DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD "
-									+ attr.getField() + " INT DEFAULT '" + attr.getDefaultVal() + "'   NULL");
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					{
+						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+								+ " INT DEFAULT '" + attr.getDefaultVal() + "'   NULL");
 					}
 					continue;
 				case DataType.AppBoolean:
-					try {
-						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
-								+ " INT DEFAULT '" + attr.getDefaultVal() + "'   NULL");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+
+					DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+							+ " INT DEFAULT '" + attr.getDefaultVal() + "'   NULL");
+
 					continue;
 				case DataType.AppFloat:
 				case DataType.AppMoney:
 				case DataType.AppRate:
 				case DataType.AppDouble:
-					try {
-						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
-								+ " FLOAT DEFAULT '" + attr.getDefaultVal() + "' NULL");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+
+					DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+							+ " FLOAT DEFAULT '" + attr.getDefaultVal() + "' NULL");
+
 					continue;
 				default:
 					throw new RuntimeException("error MyFieldType= " + attr.getMyFieldType() + " key=" + attr.getKey());
 				}
 			}
+
+			if (isHave == false)
+				continue;
 
 			// 检查类型是否匹配.
 			switch (attr.getMyDataType()) {
@@ -2522,24 +2112,14 @@ public abstract class Entity extends EnObj {
 										+ attr.getKey() + " NVARCHAR(" + attr.getMaxLength() + ")");
 							}
 						} catch (java.lang.Exception e) {
+
 							// 如果类型不匹配，就删除它在重新建, 先删除约束，在删除列，在重建。
 							for (DataRow dr : dtYueShu.Rows) {
 								if (dr.getValue("FName").toString().toLowerCase().equals(attr.getKey().toLowerCase())) {
-									try {
-										DBAccess.RunSQL("alter table " + table + " drop constraint "
-												+ dr.getValue(0).toString());
-									} catch (Exception e1) {
-										e1.printStackTrace();
-									}
+
+									DBAccess.RunSQL(
+											"alter table " + table + " drop constraint " + dr.getValue(0).toString());
 								}
-								/*
-								 * warning if
-								 * (dr["FName"].toString().toLowerCase
-								 * ().equals(attr.getKey().toLowerCase())) {
-								 * DBAccess.RunSQL("alter table " + table +
-								 * " drop constraint " +
-								 * dr.getValue(0).toString()); }
-								 */
 							}
 
 							// 在执行一遍.
@@ -2558,13 +2138,7 @@ public abstract class Entity extends EnObj {
 						if (dr.getValue("FName").toString().toLowerCase().equals(attr.getKey().toLowerCase())) {
 							DBAccess.RunSQL("alter table " + table + " drop constraint " + dr.getValue(0).toString());
 						}
-						/*
-						 * warning if
-						 * (dr["FName"].toString().toLowerCase().equals
-						 * (attr.getKey().toLowerCase())) {
-						 * DBAccess.RunSQL("alter table " + table +
-						 * " drop constraint " + dr.getValue(0).toString()); }
-						 */
+
 					}
 
 					DBAccess.RunSQL(
@@ -2607,13 +2181,7 @@ public abstract class Entity extends EnObj {
 						if (dr.getValue("FName").toString().toLowerCase().equals(attr.getKey().toLowerCase())) {
 							DBAccess.RunSQL("alter table " + table + " drop constraint " + dr.getValue(0).toString());
 						}
-						/*
-						 * warning if
-						 * (dr["FName"].toString().toLowerCase().equals
-						 * (attr.getKey().toLowerCase())) {
-						 * DBAccess.RunSQL("alter table " + table +
-						 * " drop constraint " + dr.getValue(0).toString()); }
-						 */
+
 					}
 					DBAccess.RunSQL(
 							"ALTER TABLE " + this.getEnMap().getPhysicsTable() + " drop column " + attr.getField());
@@ -2626,121 +2194,7 @@ public abstract class Entity extends EnObj {
 				throw new RuntimeException("error MyFieldType= " + attr.getMyFieldType() + " key=" + attr.getKey());
 			}
 		}
-		// 修复表字段。
 
-		// 检查枚举类型是否存在.
-		attrs = this.get_enMap().getHisEnumAttrs();
-		for (Attr attr : attrs) {
-			if (attr.getMyDataType() != DataType.AppInt) {
-				continue;
-			}
-
-			if (attr.UITag == null) {
-				continue;
-			}
-
-			try {
-				SysEnums ses = new SysEnums(attr.getUIBindKey(), attr.UITag);
-				continue;
-			} catch (java.lang.Exception e2) {
-				e2.printStackTrace();
-			}
-
-			try {
-				String[] strs = attr.UITag.split("[@]", -1);
-				SysEnums ens = new SysEnums();
-				ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
-				for (String s : strs) {
-					if (s.equals("") || s == null) {
-						continue;
-					}
-
-					String[] vk = s.split("[=]", -1);
-					SysEnum se = new SysEnum();
-					se.setIntKey(Integer.parseInt(vk[0]));
-					se.setLab(vk[1]);
-					se.setEnumKey(attr.getUIBindKey());
-					se.Insert();
-				}
-			} catch (RuntimeException ex) {
-				throw new RuntimeException(
-						"@自动增加枚举时出现错误，请确定您的格式是否正确。" + ex.getMessage() + "attr.UIBindKey=" + attr.getUIBindKey());
-			}
-
-		}
-		// 建立索引
-		try {
-			int pkconut = this.getPKCount();
-			if (pkconut == 1) {
-				DBAccess.CreatIndex(this.get_enMap().getPhysicsTable(), this.getPKField());
-			} else if (pkconut == 2) {
-				String pk0 = this.getPKs()[0];
-				String pk1 = this.getPKs()[1];
-				DBAccess.CreatIndex(this.get_enMap().getPhysicsTable(), pk0, pk1);
-			} else if (pkconut == 3) {
-				try {
-					String pk0 = this.getPKs()[0];
-					String pk1 = this.getPKs()[1];
-					String pk2 = this.getPKs()[2];
-					try {
-						DBAccess.CreatIndex(this.get_enMap().getPhysicsTable(), pk0, pk1, pk2);
-					} catch (Exception e) {
-						System.out.println("WF_GenerWorkerlist的索引已经存在");
-					}
-				} catch (java.lang.Exception e3) {
-				}
-			} else if (pkconut == 4) {
-				try {
-					String pk0 = this.getPKs()[0];
-					String pk1 = this.getPKs()[1];
-					String pk2 = this.getPKs()[2];
-					String pk3 = this.getPKs()[3];
-					DBAccess.CreatIndex(this.get_enMap().getPhysicsTable(), pk0, pk1, pk2, pk3);
-				} catch (java.lang.Exception e4) {
-				}
-			}
-		} catch (RuntimeException ex) {
-			Log.DefaultLogWriteLineError(ex.getMessage());
-			throw ex;
-			// throw new Exception("create pk error :"+ex.Message );
-		}
-
-		// 建立主键
-		if (!DBAccess.IsExitsTabPK(this.get_enMap().getPhysicsTable())) {
-			try {
-				int pkconut = this.getPKCount();
-				if (pkconut == 1) {
-					try {
-						DBAccess.CreatePK(this.get_enMap().getPhysicsTable(), this.getPKField(),
-								this.get_enMap().getEnDBUrl().getDBType());
-						DBAccess.CreatIndex(this.get_enMap().getPhysicsTable(), this.getPKField());
-					} catch (RuntimeException ex) {
-					}
-				} else if (pkconut == 2) {
-					try {
-						String pk0 = this.getPKs()[0];
-						String pk1 = this.getPKs()[1];
-						DBAccess.CreatePK(this.get_enMap().getPhysicsTable(), pk0, pk1,
-								this.get_enMap().getEnDBUrl().getDBType());
-						DBAccess.CreatIndex(this.get_enMap().getPhysicsTable(), pk0, pk1);
-					} catch (java.lang.Exception e5) {
-					}
-				} else if (pkconut == 3) {
-					try {
-						String pk0 = this.getPKs()[0];
-						String pk1 = this.getPKs()[1];
-						String pk2 = this.getPKs()[2];
-						DBAccess.CreatePK(this.get_enMap().getPhysicsTable(), pk0, pk1, pk2,
-								this.get_enMap().getEnDBUrl().getDBType());
-						DBAccess.CreatIndex(this.get_enMap().getPhysicsTable(), pk0, pk1, pk2);
-					} catch (java.lang.Exception e6) {
-					}
-				}
-			} catch (RuntimeException ex) {
-				Log.DefaultLogWriteLineError(ex.getMessage());
-				throw ex;
-			}
-		}
 	}
 
 	/**
@@ -2752,24 +2206,17 @@ public abstract class Entity extends EnObj {
 
 		this.set_enMap(this.getEnMap());
 
+		Map map = this.getEnMap();
+
 		// string msg = "";
-		if (this.get_enMap().getEnType() == EnType.View || this.get_enMap().getEnType() == EnType.XML
-				|| this.get_enMap().getEnType() == EnType.ThirdPartApp || this.get_enMap().getEnType() == EnType.Ext) {
+		if (map.getEnType() == EnType.View || map.getEnType() == EnType.XML || map.getEnType() == EnType.ThirdPartApp
+				|| map.getEnType() == EnType.Ext) {
 			return;
 		}
-		if (!DBAccess.IsExitsObject(this.get_enMap().getPhysicsTable())) {
+
+		if (DBAccess.IsExitsObject(this.get_enMap().getPhysicsTable()) == false) {
 			// 如果物理表不存在就新建立一个物理表。
 			this.CreatePhysicsTable();
-			return;
-		}
-
-		DBType dbtype = this.get_enMap().getEnDBUrl().getDBType();
-		if (this.get_enMap().getIsView()) {
-			return;
-		}
-
-		// 如果不是主应用程序的数据库就不让执行检查. 考虑第三方的系统的安全问题.
-		if (this.get_enMap().getEnDBUrl().getDBUrlType() != DBUrlType.AppCenterDSN) {
 			return;
 		}
 
@@ -2866,7 +2313,6 @@ public abstract class Entity extends EnObj {
 				continue;
 			}
 
-			int maxLen = attr.getMaxLength();
 			dt = new DataTable();
 			sql = "select c.*  from syscolumns c inner join systables t on c.tabid = t.tabid where t.tabname = lower('"
 					+ this.getEnMap().getPhysicsTable().toLowerCase() + "') and c.colname = lower('" + attr.getKey()
@@ -2927,10 +2373,10 @@ public abstract class Entity extends EnObj {
 				// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
 				// 增加查询条件owner =
 				// 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
-				sql = "SELECT OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
-						+ "' AND  upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
-						+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
-				String OWNER = DBAccess.RunSQLReturnString(sql);
+//				sql = "SELECT OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
+//						+ "' AND  upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
+//						+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
+//				String OWNER = DBAccess.RunSQLReturnString(sql);
 				try {
 					this.RunSQL("alter table  " + this.getEnMap().getPhysicsTableExt() + " modify " + attr.getField()
 							+ " NUMBER ");
@@ -2950,11 +2396,7 @@ public abstract class Entity extends EnObj {
 			if (attr.UITag == null) {
 				continue;
 			}
-			try {
-				SysEnums ses = new SysEnums(attr.getUIBindKey(), attr.UITag);
-				continue;
-			} catch (java.lang.Exception e) {
-			}
+			
 			String[] strs = attr.UITag.split("[@]", -1);
 			SysEnums ens = new SysEnums();
 			ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
@@ -2976,28 +2418,50 @@ public abstract class Entity extends EnObj {
 	}
 
 	private void CheckPhysicsTable_MySQL() throws Exception {
+
 		// 检查字段是否存在
 		String sql = "SELECT *  FROM " + this.get_enMap().getPhysicsTable() + " WHERE 1=2";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
+		Map map = this.get_enMap();
+		sql = "SELECT character_maximum_length as Len, table_schema as OWNER, column_Name FROM information_schema.columns WHERE TABLE_SCHEMA='"
+				+ BP.Sys.SystemConfig.getAppCenterDBDatabase() + "' AND table_name ='" + map.getPhysicsTable() + "'";
+
+		DataTable dtScheam = this.RunSQLReturnTable(sql);
+
 		// 如果不存在.
-		for (Attr attr : this.get_enMap().getAttrs()) {
-			if (attr.getMyFieldType() == FieldType.RefText) {
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText)
 				continue;
-			}
 
-			if (attr.getIsPK()) {
+			if (attr.getIsPK())
 				continue;
-			}
 
+			// 已经包含此列.
 			if (dt.Columns.get(attr.getKey().toLowerCase()) != null) {
-				continue;
-			}
 
-			if (attr.getKey().equals("AID")) {
-				// 自动增长列
-				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField()
-						+ " INT  Identity(1,1)");
+				if (attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat
+						|| attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney
+						|| attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppRate) {
+					continue;
+				}
+
+				// 最大长度.
+				int maxLen = attr.getMaxLength();
+				for (DataRow dr : dtScheam.Rows) {
+
+					String name = dr.getValue("column_Name").toString();
+					if (name.equals(attr.getKey()) == false)
+						continue;
+
+					String len = dr.getValue("Len").toString();
+					int lenInt = Integer.parseInt(len);
+					if (lenInt >= maxLen)
+						continue;
+					// 需要修改.
+					this.RunSQL("alter table " + dr.getValue("OWNER") + "." + this.get_enMap().getPhysicsTableExt()
+							+ " modify " + attr.getField() + " NVARCHAR(" + attr.getMaxLength() + ")");
+				}
 				continue;
 			}
 
@@ -3005,9 +2469,9 @@ public abstract class Entity extends EnObj {
 			switch (attr.getMyDataType()) {
 			case DataType.AppString:
 				int len = attr.getMaxLength();
-				if (len == 0) {
+				if (len == 0)
 					len = 200;
-				}
+
 				if (len > 3000) {
 					DBAccess.RunSQL(
 							"ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField() + " TEXT ");
@@ -3019,7 +2483,7 @@ public abstract class Entity extends EnObj {
 			case DataType.AppDate:
 			case DataType.AppDateTime:
 				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField()
-						+ " VARCHAR(20) DEFAULT '" + attr.getDefaultVal() + "' NULL");
+						+ " VARCHAR(20)  NULL");
 				break;
 			case DataType.AppInt:
 			case DataType.AppBoolean:
@@ -3038,106 +2502,7 @@ public abstract class Entity extends EnObj {
 			}
 		}
 
-		// 检查字段长度是否符合最低要求
-		for (Attr attr : this.get_enMap().getAttrs()) {
-			if (attr.getMyFieldType() == FieldType.RefText) {
-				continue;
-			}
-			if (attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat
-					|| attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney
-					|| attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppRate) {
-				continue;
-			}
-			// MySQL需要检查数据类型的长度
-
-			int maxLen = attr.getMaxLength();
-			dt = new DataTable();
-			sql = "select character_maximum_length as Len, table_schema as OWNER FROM information_schema.columns WHERE TABLE_SCHEMA='"
-					+ BP.Sys.SystemConfig.getAppCenterDBDatabase() + "' AND table_name ='"
-					+ this.get_enMap().getPhysicsTable() + "' and column_Name='" + attr.getField()
-					+ "' AND character_maximum_length < " + attr.getMaxLength();
-			dt = this.RunSQLReturnTable(sql);
-			if (dt.Rows.size() == 0) {
-				continue;
-			}
-			for (DataRow dr : dt.Rows) {
-				try {
-					this.RunSQL("alter table " + dr.getValue("OWNER") + "." + this.get_enMap().getPhysicsTableExt()
-							+ " modify " + attr.getField() + " NVARCHAR(" + attr.getMaxLength() + ")");
-					/*
-					 * warning this.RunSQL("alter table " + dr["OWNER"] + "." +
-					 * this.get_enMap().getPhysicsTableExt() + " modify " +
-					 * attr.getField() + " NVARCHAR(" + attr.getMaxLength() +
-					 * ")");
-					 */
-				} catch (RuntimeException ex) {
-					BP.DA.Log.DebugWriteWarning(ex.getMessage());
-				}
-			}
-		}
-
-		// 检查枚举类型字段是否是INT 类型
-		Attrs attrs = this.get_enMap().getHisEnumAttrs();
-		for (Attr attr : attrs) {
-			if (attr.getMyDataType() != DataType.AppInt) {
-				continue;
-			}
-
-			sql = "SELECT DATA_TYPE FROM information_schema.columns WHERE table_name='"
-					+ this.get_enMap().getPhysicsTable() + "' AND COLUMN_NAME='" + attr.getField()
-					+ "' and table_schema='" + SystemConfig.getAppCenterDBDatabase() + "'";
-			String val = DBAccess.RunSQLReturnString(sql);
-			if (val == null) {
-				Log.DefaultLogWriteLineError("@没有检测到字段eunm" + attr.getKey());
-			}
-
-			if (val.indexOf("CHAR") != -1) {
-				// 如果它是 varchar 字段
-				sql = "SELECT table_schema as OWNER FROM information_schema.columns WHERE  table_name='"
-						+ this.get_enMap().getPhysicsTableExt() + "' AND COLUMN_NAME='" + attr.getField()
-						+ "' and table_schema='" + SystemConfig.getAppCenterDBDatabase() + "'";
-				String OWNER = DBAccess.RunSQLReturnString(sql);
-				try {
-					this.RunSQL("alter table  " + this.get_enMap().getPhysicsTableExt() + " modify " + attr.getField()
-							+ " NUMBER ");
-				} catch (RuntimeException ex) {
-					Log.DefaultLogWriteLineError("运行sql 失败:alter table  " + this.get_enMap().getPhysicsTableExt()
-							+ " modify " + attr.getField() + " NUMBER " + ex.getMessage());
-				}
-			}
-		}
-
-		// 检查枚举类型是否存在.
-		attrs = this.get_enMap().getHisEnumAttrs();
-		for (Attr attr : attrs) {
-			if (attr.getMyDataType() != DataType.AppInt) {
-				continue;
-			}
-			if (attr.UITag == null) {
-				continue;
-			}
-			try {
-				SysEnums ses = new SysEnums(attr.getUIBindKey(), attr.UITag);
-				continue;
-			} catch (java.lang.Exception e) {
-			}
-			String[] strs = attr.UITag.split("[@]", -1);
-			SysEnums ens = new SysEnums();
-			ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
-			for (String s : strs) {
-				if (s.equals("") || s == null) {
-					continue;
-				}
-
-				String[] vk = s.split("[=]", -1);
-				SysEnum se = new SysEnum();
-				se.setIntKey(Integer.parseInt(vk[0]));
-				se.setLab(vk[1]);
-				se.setEnumKey(attr.getUIBindKey());
-				se.Insert();
-			}
-		}
-		this.CreateIndexAndPK();
+		// this.CreateIndexAndPK();
 	}
 
 	private void CheckPhysicsTable_Ora() throws Exception {
@@ -3206,7 +2571,7 @@ public abstract class Entity extends EnObj {
 				continue;
 			}
 
-			int maxLen = attr.getMaxLength();
+			
 			dt = new DataTable();
 			// SUNXD 20170714
 			// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
@@ -3259,10 +2624,10 @@ public abstract class Entity extends EnObj {
 				// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
 				// 增加查询条件owner =
 				// 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
-				sql = "SELECT A.OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
+				/*sql = "SELECT A.OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
 						+ "' AND upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
 						+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
-				String OWNER = DBAccess.RunSQLReturnString(sql);
+				String OWNER = DBAccess.RunSQLReturnString(sql);*/
 				try {
 					this.RunSQL("alter table  " + this.getEnMap().getPhysicsTableExt() + " modify " + attr.getField()
 							+ " NUMBER ");
@@ -3282,11 +2647,7 @@ public abstract class Entity extends EnObj {
 			if (attr.UITag == null) {
 				continue;
 			}
-			try {
-				SysEnums ses = new SysEnums(attr.getUIBindKey(), attr.UITag);
-				continue;
-			} catch (java.lang.Exception e) {
-			}
+			
 			String[] strs = attr.UITag.split("[@]", -1);
 			SysEnums ens = new SysEnums();
 			ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
@@ -3316,11 +2677,8 @@ public abstract class Entity extends EnObj {
 		}
 
 		Attrs attrs = this.getEnMap().getAttrs();
-		String jsAttrs = "";
-		/*
-		 * warning java.util.ArrayList al = new java.util.ArrayList();
-		 */
-		java.util.ArrayList<Attr> al = new java.util.ArrayList();
+		
+		ArrayList<Attr> al = new ArrayList<Attr>();
 		for (Attr attr : attrs) {
 			if (attr.AutoFullDoc == null || attr.AutoFullDoc.length() == 0) {
 				continue;
@@ -3485,11 +2843,6 @@ public abstract class Entity extends EnObj {
 
 	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getName();
-	}
-
 	public final String ToJson() {
 		return ToJson(true);
 	}
@@ -3500,7 +2853,7 @@ public abstract class Entity extends EnObj {
 	 * @return 返回一个string json串.
 	 */
 	public final String ToJson(Boolean isInParaFields) {
-		Hashtable ht = getRow();
+		Hashtable<String, Object> ht = getRow();
 
 		// 如果不包含参数字段.
 		if (isInParaFields == false) {
@@ -3527,9 +2880,10 @@ public abstract class Entity extends EnObj {
 		if (at != null) {
 			return at;
 		}
+
 		try {
 			String atParaStr = this.GetValStringByKey("AtPara");
-			if (DotNetToJavaStringHelper.isNullOrEmpty(atParaStr)) {
+			if (DataType.IsNullOrEmpty(atParaStr)) {
 				// 没有发现数据，就执行初始化.
 				this.InitParaFields();
 
@@ -3551,24 +2905,25 @@ public abstract class Entity extends EnObj {
 					"@获取参数AtPara时出现异常" + ex.getMessage() + "，可能是您没有加入约定的参数字段AtPara. " + ex.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 把entity的实体属性调度到en里面去.
+	 * 
 	 * @param fk_mapdata
 	 * @return
 	 */
-	public MapData DTSMapToSys_MapData(String fk_mapdata){
-		if(DataType.IsNullOrEmpty(fk_mapdata))
-		{
+	public MapData DTSMapToSys_MapData(String fk_mapdata) {
+
+		if (DataType.IsNullOrEmpty(fk_mapdata)) {
 			fk_mapdata = this.getClassIDOfShort();
 		}
-		
+
 		Map map = this.getEnMap();
-		
-		//获得短的类名称.
-		//region 更新主表信息.
+
+		// 获得短的类名称.
+		// region 更新主表信息.
 		MapData md = new MapData();
-		
+
 		try {
 			md.setNo(fk_mapdata);
 			if (md.RetrieveFromDBSources() == 0)
@@ -3598,112 +2953,1009 @@ public abstract class Entity extends EnObj {
 				mdtl.setName(enDtl.getEnDesc());
 				mdtl.setFK_MapData(fk_mapdata);
 				mdtl.setPTable(enDtl.getEnMap().getPhysicsTable());
-
 				mdtl.setRefPK(dtl.getRefKey()); // 关联的主键.
-
 				mdtl.Update();
 
 				// 同步字段.
 				DTSMapToSys_MapData_InitMapAttr(enDtl.getEnMap().getAttrs(), enDtl.getClassIDOfShort());
-				//endregion 同步从表.
+				// endregion 同步从表.
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return md;
 	}
-	
-	
-	private void DTSMapToSys_MapData_InitMapAttr(Attrs attrs, String fk_mapdata)
-	{
-		for (Attr attr : attrs.ToJavaList())
-        {
-            if (attr.getIsRefAttr())
-                continue;
 
-            MapAttr mattr = new MapAttr();
-            mattr.setKeyOfEn(attr.getKey());
-            mattr.setFK_MapData(fk_mapdata);
-            mattr.setMyPK(mattr.getFK_MapData() + "_" + mattr.getKeyOfEn());
-            try {
-				mattr.RetrieveFromDBSources();
-			} catch (Exception e1) {
-				e1.printStackTrace();
+	private void DTSMapToSys_MapData_InitMapAttr(Attrs attrs, String fk_mapdata) throws Exception {
+
+		for (Attr attr : attrs.ToJavaList()) {
+			if (attr.getIsRefAttr())
+				continue;
+
+			MapAttr mattr = new MapAttr();
+			mattr.setKeyOfEn(attr.getKey());
+			mattr.setFK_MapData(fk_mapdata);
+			mattr.setMyPK(mattr.getFK_MapData() + "_" + mattr.getKeyOfEn());
+			mattr.RetrieveFromDBSources();
+
+			mattr.setName(attr.getDesc());
+			mattr.setDefVal(attr.getDefaultVal().toString());
+			mattr.setKeyOfEn(attr.getField());
+
+			mattr.setMaxLen(attr.getMaxLength());
+			mattr.setMinLen(attr.getMinLength());
+			mattr.setUIBindKey(attr.getUIBindKey());
+			mattr.setUIIsLine(attr.UIIsLine);
+			mattr.setUIHeight(0);
+
+			if (attr.getMaxLength() > 3000)
+				mattr.setUIHeight(10);
+
+			mattr.setUIWidth(attr.getUIWidth());
+			mattr.setMyDataType(attr.getMyDataType());
+
+			mattr.setUIRefKey(attr.getUIRefKeyValue());
+
+			mattr.setUIRefKeyText(attr.getUIRefKeyText());
+			mattr.setUIVisible(attr.getUIVisible());
+
+			switch (attr.getMyFieldType()) {
+			case Enum:
+			case PKEnum:
+				mattr.setUIContralType(attr.getUIContralType());
+				mattr.setLGType(FieldTypeS.Enum);
+				mattr.setUIIsEnable(attr.getUIIsReadonly());
+				break;
+			case FK:
+			case PKFK:
+				mattr.setUIContralType(attr.getUIContralType());
+				mattr.setLGType(FieldTypeS.FK);
+				// attr.MyDataType = (int)FieldType.FK;
+				mattr.setUIRefKey("No");
+				mattr.setUIRefKeyText("Name");
+				mattr.setUIIsEnable(attr.getUIIsReadonly());
+				break;
+			default:
+				mattr.setUIContralType(UIContralType.TB);
+				mattr.setLGType(FieldTypeS.Normal);
+				mattr.setUIIsEnable(!attr.getUIIsReadonly());
+				switch (attr.getMyDataType()) {
+				case DataType.AppBoolean:
+					mattr.setUIContralType(UIContralType.CheckBok);
+					mattr.setUIIsEnable(attr.getUIIsReadonly());
+					break;
+				case DataType.AppDate:
+					// if (this.Tag == "1")
+					// attr.DefaultVal = DataType.CurrentData;
+					break;
+				case DataType.AppDateTime:
+					// if (this.Tag == "1")
+					// attr.DefaultVal = DataType.CurrentData;
+					break;
+				default:
+					break;
+				}
+				break;
 			}
 
-            mattr.setName(attr.getDesc());
-            mattr.setDefVal(attr.getDefaultVal().toString());
-            mattr.setKeyOfEn(attr.getField());
+			mattr.Save();
 
-            mattr.setMaxLen(attr.getMaxLength());
-            mattr.setMinLen(attr.getMinLength());
-            mattr.setUIBindKey(attr.getUIBindKey());
-            mattr.setUIIsLine(attr.UIIsLine);
-            mattr.setUIHeight(0);
+		}
+	}
 
-            if (attr.getMaxLength() > 3000)
-                mattr.setUIHeight(10);
+	public String getClassIDOfShort() {
+		String clsID = this.getClassID();
+		return clsID.substring(clsID.lastIndexOf('.') + 1);
+	}
 
-            mattr.setUIWidth(attr.getUIWidth());
-            mattr.setMyDataType(attr.getMyDataType());
+	public final String getHisDBVarStr() {
+		return SystemConfig.getAppCenterDBVarStr();
+	}
 
-            mattr.setUIRefKey(attr.getUIRefKeyValue());
+	/**
+	 * 他的访问控制.
+	 */
+	protected UAC _HisUAC = null;
 
-            mattr.setUIRefKeyText(attr.getUIRefKeyText());
-            mattr.setUIVisible(attr.getUIVisible());
+	/**
+	 * 得到 uac 控制.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public UAC getHisUAC() throws Exception {
+		if (_HisUAC == null) {
 
-            switch (attr.getMyFieldType())
-            {
-                case Enum:
-                case PKEnum:
-                    mattr.setUIContralType(attr.getUIContralType());
-                    mattr.setLGType(FieldTypeS.Enum);
-                    mattr.setUIIsEnable(attr.getUIIsReadonly());
-                    break;
-                case FK:
-                case PKFK:
-                    mattr.setUIContralType(attr.getUIContralType());
-                    mattr.setLGType(FieldTypeS.FK);
-                    //attr.MyDataType = (int)FieldType.FK;
-                    mattr.setUIRefKey("No");
-                    mattr.setUIRefKeyText("Name");
-                    mattr.setUIIsEnable(attr.getUIIsReadonly());
-                    break;
-                default:
-                    mattr.setUIContralType(UIContralType.TB);
-                    mattr.setLGType(FieldTypeS.Normal);
-                    mattr.setUIIsEnable(!attr.getUIIsReadonly());
-                    switch (attr.getMyDataType())
-                    {
-                        case DataType.AppBoolean:
-                            mattr.setUIContralType(UIContralType.CheckBok);
-                            mattr.setUIIsEnable(attr.getUIIsReadonly());
-                            break;
-                        case DataType.AppDate:
-                            //if (this.Tag == "1")
-                            //    attr.DefaultVal = DataType.CurrentData;
-                            break;
-                        case DataType.AppDateTime:
-                            //if (this.Tag == "1")
-                            //    attr.DefaultVal = DataType.CurrentData;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-            }
-            try {
-				if (mattr.Update() == 0)
-				    mattr.Insert();
+			_HisUAC = new UAC();
+
+			if (BP.Web.WebUser.getNo().equals("admin")) {
+				_HisUAC.IsAdjunct = false;
+				_HisUAC.IsDelete = true;
+				_HisUAC.IsInsert = true;
+				_HisUAC.IsUpdate = true;
+				_HisUAC.IsView = true;
+			}
+
+		}
+		return _HisUAC;
+	}
+
+	public String toString() {
+		return this.getClass().getName();
+	}
+
+	// CreateInstance
+	/**
+	 * 创建一个实例
+	 * 
+	 * @return 自身的实例
+	 */
+	public final Entity CreateInstance() {
+		/*
+		 * warning Object tempVar =
+		 * this.getClass().Assembly.CreateInstance(this.toString());
+		 */
+		Object tempVar = null;
+		try {
+			tempVar = this.getClass().newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return (Entity) ((tempVar instanceof Entity) ? tempVar : null);
+		// return ClassFactory.GetEn(this.ToString());
+	}
+
+	private final void ResetDefaultValRowValues() throws Exception {
+
+		if (this.get_enMap() == null)
+			return;
+
+		for (Attr attr : this.get_enMap().getAttrs()) {
+
+			String key = attr.getKey();
+
+			String v = this.GetValStringByKey(key, null);
+
+			if (v == null || v.indexOf('@') == -1)
+				continue;
+
+			// 设置默认值.
+			if (v.equals("@WebUser.No")) {
+
+				this.SetValByKey(key, WebUser.getNo());
+
+				continue;
+			} else if (v.equals("@WebUser.Name")) {
+
+				this.SetValByKey(key, WebUser.getName());
+
+				continue;
+			} else if (v.equals("@WebUser.FK_Dept")) {
+
+				this.SetValByKey(key, WebUser.getFK_Dept());
+
+				continue;
+			} else if (v.equals("@WebUser.FK_DeptName")) {
+
+				this.SetValByKey(key, WebUser.getFK_DeptName());
+
+				continue;
+			} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
+
+				this.SetValByKey(key, WebUser.getFK_DeptNameOfFull());
+
+				continue;
+			} else if (v.equals("@RDT")) {
+
+				// Attr attr = this.getEnMap().GetAttrByKey(key);
+
+				if (attr.getMyDataType() == DataType.AppDate) {
+					this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+				}
+
+				if (attr.getMyDataType() == DataType.AppDateTime) {
+					this.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
+				}
+				continue;
+			} else {
+				continue;
+			}
+
+		}
+	}
+
+	// 方法
+	/**
+	 * 重新设置默信息.
+	 * 
+	 * @throws Exception
+	 */
+	public final void ResetDefaultVal() throws Exception {
+
+		ResetDefaultValRowValues();
+
+		Attrs attrs = this.getEnMap().getAttrs();
+		for (Attr attr : attrs) {
+
+			// 含有特定值时取消重新设定默认值
+			String v = this.GetValStringByKey(attr.getKey(), null); // this._row[key]
+																	// as
+																	// string;
+
+			if (v != null && v.contains("@") == false)
+				continue;
+
+			String tempVar = attr.getDefaultValOfReal();
+			v = (String) ((tempVar instanceof String) ? tempVar : null);
+			if (v == null) {
+				continue;
+			}
+
+			if (attr.getDefaultValOfReal().contains("@") == false) {
+
+				String val = this.GetValStrByKey(attr.getKey());
+				if (val == null || val == "")
+					this.SetValByKey(attr.getKey(), attr.getDefaultVal());
+
+				continue;
+			}
+
+			String myval = this.GetValStrByKey(attr.getKey());
+			// 设置默认值.
+			if (v.equals("@WebUser.No")) {
+				if (attr.getUIIsReadonly()) {
+					this.SetValByKey(attr.getKey(), WebUser.getNo());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), WebUser.getNo());
+					}
+				}
+				continue;
+			} else if (v.equals("@WebUser.Name")) {
+				if (attr.getUIIsReadonly()) {
+					this.SetValByKey(attr.getKey(), WebUser.getName());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), WebUser.getName());
+					}
+				}
+				continue;
+			} else if (v.equals("@WebUser.FK_Dept")) {
+				if (attr.getUIIsReadonly()) {
+					this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
+					}
+				}
+				continue;
+			} else if (v.equals("@WebUser.FK_DeptName")) {
+				if (attr.getUIIsReadonly()) {
+					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
+					}
+				}
+				continue;
+			} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
+				if (attr.getUIIsReadonly()) {
+					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
+					}
+				}
+				continue;
+			} else if (v.equals("@RDT")) {
+				if (attr.getUIIsReadonly()) {
+					if (attr.getMyDataType() == DataType.AppDate || v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+					}
+
+					if (attr.getMyDataType() == DataType.AppDateTime || v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
+					}
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						if (attr.getMyDataType() == DataType.AppDate) {
+							this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+						} else {
+							this.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
+						}
+					}
+				}
+				continue;
+			} else {
+				continue;
+			}
+		}
+	}
+
+	/**
+	 * 把所有的值都设置成默认值，但是主键除外。
+	 * 
+	 * @throws Exception
+	 */
+	public final void ResetDefaultValAllAttr() throws Exception {
+		Attrs attrs = this.getEnMap().getAttrs();
+		for (Attr attr : attrs) {
+			if (!attr.getUIIsReadonly() && attr.getDefaultValOfReal() != null) {
+				continue;
+			}
+
+			if (attr.getIsPK()) {
+				continue;
+			}
+
+			String tempVar = attr.getDefaultValOfReal();
+			String v = (String) ((tempVar instanceof String) ? tempVar : null);
+			if (v == null) {
+				this.SetValByKey(attr.getKey(), "");
+				continue;
+			}
+
+			if (!v.contains("@") || v.equals("0") || v.equals("0.00")) {
+				this.SetValByKey(attr.getKey(), v);
+				continue;
+			}
+
+			// 设置默认值.
+			if (v.equals("WebUser.No")) {
+				this.SetValByKey(attr.getKey(), WebUser.getNo());
+				continue;
+			} else if (v.equals("@WebUser.Name")) {
+				this.SetValByKey(attr.getKey(), WebUser.getName());
+				continue;
+			} else if (v.equals("@WebUser.FK_Dept")) {
+				this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
+				continue;
+			} else if (v.equals("@WebUser.FK_DeptName")) {
+				this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
+				continue;
+			} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
+				this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
+				continue;
+			} else if (v.equals("@RDT")) {
+				if (attr.getMyDataType() == DataType.AppDate) {
+					this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+				} else {
+					this.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
+				}
+				continue;
+			} else {
+				continue;
+			}
+		}
+	}
+
+	private Map _tmpEnMap = null;
+
+	/**
+	 * Map
+	 */
+	protected final Map get_enMap() {
+
+		if (_tmpEnMap != null) {
+			return _tmpEnMap;
+		}
+
+		Map obj = Cash.GetMap(this.toString());
+		if (obj == null) {
+			if (_tmpEnMap == null) {
+				return null;
+			} else {
+				return _tmpEnMap;
+			}
+		} else {
+			_tmpEnMap = obj;
+		}
+		return _tmpEnMap;
+	}
+
+	protected final void set_enMap(Map value) {
+		if (value == null) {
+			_tmpEnMap = null;
+			return;
+		}
+
+		Map mp = (Map) value;
+		if (mp == null || mp.getDepositaryOfMap() == Depositary.None) {
+			_tmpEnMap = mp;
+			return;
+		}
+		Cash.SetMap(this.toString(), mp);
+		_tmpEnMap = mp;
+	}
+
+	public final void setMap(Map value) {
+		set_enMap(value);
+	}
+
+	/**
+	 * 子类需要继承
+	 */
+	public abstract Map getEnMap();
+
+	/**
+	 * 动态的获取map
+	 */
+	public Map getEnMapInTime() {
+		_tmpEnMap = null;
+		Cash.SetMap(this.getClass().getName(), null);
+		return this.getEnMap();
+	}
+
+	/**
+	 * 实体的 map 信息。
+	 * 
+	 * //public abstract void EnMap();
+	 */
+	private Row _row = null;
+
+	public final Row getRow() {
+		if (this._row == null) {
+
+			// this._row.LoadAttrs(this.getEnMap().getAttrs());
+
+			try {
+				this._row = this.getSQLCash().getRow();
 			} catch (Exception e) {
+				this._row.LoadAttrs(this.getEnMap().getAttrs());
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        }
+
+			// this._row.LoadAttrs(this.getEnMap().getAttrs());
+		}
+		return this._row;
 	}
-	
-	public String getClassIDOfShort(){
-		String clsID  = this.getClassID();
-		return clsID.substring(clsID.lastIndexOf('.')+1);
+
+	public final void setRow(Row value) {
+		this._row = value;
 	}
-	
+
+	// 与sql操作有关
+	protected SQLCash _SQLCash = null;
+
+	public SQLCash getSQLCash() throws Exception {
+		if (_SQLCash == null) {
+			_SQLCash = BP.DA.Cash.GetSQL(this.toString());
+			if (_SQLCash == null) {
+				_SQLCash = new SQLCash(this);
+				BP.DA.Cash.SetSQL(this.toString(), _SQLCash);
+			}
+		}
+		return _SQLCash;
+	}
+
+	public void setSQLCash(SQLCash value) {
+		_SQLCash = value;
+	}
+
+	// 清除缓存SQLCase.
+	public void clearSQLCash() {
+		BP.DA.Cash.getSQL_Cash().remove(this.toString());
+		_SQLCash = null;
+	}
+
+	// 关于属性的操作。
+	/**
+	 * 设置object类型的值
+	 * 
+	 * @param attrKey
+	 *            attrKey
+	 * @param val
+	 *            val
+	 */
+	public final void SetValByKey(String attrKey, String val) {
+		if (val == null) {
+			val = "";
+		}
+
+		this.getRow().SetValByKey(attrKey, val);
+	}
+
+	public final void SetValByKey(String attrKey, int val) {
+		this.getRow().SetValByKey(attrKey, val);
+	}
+
+	public final void SetValByKey(String attrKey, long val) {
+		this.getRow().SetValByKey(attrKey, val);
+	}
+
+	public final void SetValByKey(String attrKey, float val) {
+		this.getRow().SetValByKey(attrKey, val);
+	}
+
+	public final void SetValByKey(String attrKey, java.math.BigDecimal val) {
+		this.getRow().SetValByKey(attrKey, val);
+	}
+
+	public final void SetValByKey(String attrKey, Object val) {
+		this.getRow().SetValByKey(attrKey, val);
+	}
+
+	public final void SetValByDesc(String attrDesc, Object val) {
+		if (val == null) {
+			throw new RuntimeException("@不能设置属性[" + attrDesc + "]null 值。");
+		}
+		this.getRow().SetValByKey(this.getEnMap().GetAttrByDesc(attrDesc).getKey(), val);
+	}
+
+	/**
+	 * 设置关联类型的值
+	 * 
+	 * @param attrKey
+	 *            attrKey
+	 * @param val
+	 *            val
+	 */
+	public final void SetValRefTextByKey(String attrKey, Object val) {
+		this.SetValByKey(attrKey + "Text", val);
+	}
+
+	/**
+	 * 设置bool类型的值
+	 * 
+	 * @param attrKey
+	 *            attrKey
+	 * @param val
+	 *            val
+	 */
+	public final void SetValByKey(String attrKey, boolean val) {
+		if (val) {
+			this.SetValByKey(attrKey, 1);
+		} else {
+			this.SetValByKey(attrKey, 0);
+		}
+	}
+
+	/**
+	 * 设置默认值
+	 */
+	public final void SetDefaultVals() {
+		for (Attr attr : this.getEnMap().getAttrs()) {
+			this.SetValByKey(attr.getKey(), attr.getDefaultVal());
+		}
+	}
+
+	/**
+	 * 设置日期类型的值
+	 * 
+	 * @param attrKey
+	 *            attrKey
+	 * @param val
+	 *            val
+	 */
+	public final void SetDateValByKey(String attrKey, String val) {
+		try {
+			this.SetValByKey(attrKey, DataType.StringToDateStr(val));
+		} catch (RuntimeException ex) {
+			throw new RuntimeException("@不合法的日期数据格式:key=[" + attrKey + "],value=" + val + " " + ex.getMessage());
+		}
+	}
+
+	// 取值方法
+	/**
+	 * 取得Object
+	 * 
+	 * @param attrKey
+	 * @return
+	 */
+	public final Object GetValByKey(String attrKey) {
+		return this.getRow().GetValByKey(attrKey);
+
+	}
+
+	/**
+	 * GetValDateTime
+	 * 
+	 * @param attrKey
+	 * @return
+	 */
+	public final java.util.Date GetValDateTime(String attrKey) {
+		return DataType.ParseSysDateTime2DateTime(this.GetValStringByKey(attrKey));
+	}
+
+	/**
+	 * 在确定 attrKey 存在 map 的情况下才能使用它
+	 * 
+	 * @param attrKey
+	 * @return
+	 */
+	public final String GetValStrByKey(String key) {
+		Object value = this.getRow().GetValByKey(key);
+		if (null == value) {
+			return "";
+		}
+
+		return value.toString();
+	}
+
+	public final String GetValStrByKey(String key, String isNullAs) {
+
+		Object obj = this.getRow().get(key);
+		if (obj == null)
+			return isNullAs;
+
+		return obj.toString();
+	}
+
+	/**
+	 * 取得String
+	 * 
+	 * @param attrKey
+	 * @return
+	 */
+	public final String GetValStringByKey(String attrKey) {
+
+		String val = GetValStrByKey(attrKey, null);
+		if (val == null)
+			throw new RuntimeException("@获取值期间出现如下异常：  " + attrKey + " 您没有在类增加这个属性，EnName=" + this.toString());
+
+		return val;
+	}
+
+	public final String GetValStringByKey(String attrKey, String isNullAsVal) {
+
+		String val = GetValStrByKey(attrKey, null);
+		if (val == null)
+			return isNullAsVal;
+		return val;
+	}
+
+	/**
+	 * 取出大块文本
+	 * 
+	 * @return
+	 */
+	public final String GetValDocText() {
+		String s = this.GetValStrByKey("Doc");
+		if (s.trim().length() != 0) {
+			return s;
+		}
+
+		// s = SysDocFile.GetValTextV2(this.toString(),
+		// this.getPKVal().toString());
+		this.SetValByKey("Doc", s);
+		return s;
+	}
+
+	public final String GetValDocHtml() {
+		String s = this.GetValHtmlStringByKey("Doc");
+		if (s.trim().length() != 0) {
+			return s;
+		}
+
+		s = SysDocFile.GetValHtmlV2(this.toString(), this.getPKVal().toString());
+		this.SetValByKey("Doc", s);
+		return s;
+	}
+
+	/**
+	 * 取到Html 信息。
+	 * 
+	 * @param attrKey
+	 *            attr
+	 * @return html.
+	 */
+	public final String GetValHtmlStringByKey(String attrKey) {
+		return DataType.ParseText2Html(this.GetValStringByKey(attrKey));
+	}
+
+	public final String GetValHtmlStringByKey(String attrKey, String defval) {
+		return DataType.ParseText2Html(this.GetValStringByKey(attrKey, defval));
+	}
+
+	/**
+	 * 取得枚举或者外键的标签 如果是枚举就获取枚举标签. 如果是外键就获取为外键的名称.
+	 * 
+	 * @param attrKey
+	 * @return
+	 */
+	public final String GetValRefTextByKey(String attrKey) {
+
+		return GetValStringByKey(attrKey + "Text");
+
+	}
+
+	public long GetValInt64ByKey(String key) {
+		return Long.parseLong(this.GetValStringByKey(key, "0"));
+	}
+
+	public final int GetValIntByKey(String key, int IsZeroAs) {
+		int i = this.GetValIntByKey(key);
+		if (i == 0) {
+			i = IsZeroAs;
+		}
+		return i;
+	}
+
+	/**
+	 * 根据key 得到int val
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public int GetValIntByKey(String key) {
+		String val = this.GetValStringByKey(key);
+		if (val == null)
+			return 0;
+
+		if (val.endsWith(".0") == true)
+			val = val.replace(".0", "");
+
+		return Integer.parseInt(val);
+	}
+
+	/**
+	 * 根据key 得到 bool val
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public final boolean GetValBooleanByKey(String key) {
+
+		int val = GetValIntByKey(key);
+		if (val == 1)
+			return true;
+
+		return false;
+	}
+
+	public final String GetValBoolStrByKey(String key) {
+		if (GetValBooleanByKey(key) == false) {
+			return "否";
+		} else {
+			return "是";
+		}
+	}
+
+	/**
+	 * 根据key 得到flaot val
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public final float GetValFloatByKey(String key) {
+
+		String val = this.GetValStringByKey(key);
+		if (val == null)
+			return 0;
+		return Float.parseFloat(val);
+	}
+
+	/**
+	 * 根据key 得到flaot val
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public final java.math.BigDecimal GetValDecimalByKey(String key) {
+
+		BigDecimal bd = new BigDecimal(this.GetValStrByKey(key));
+		return bd.setScale(4, BigDecimal.ROUND_HALF_UP);
+
+	}
+
+	public final double GetValDoubleByKey(String key) {
+
+		String val = this.GetValStrByKey(key);
+		if (val == null)
+			return 0;
+		return Double.parseDouble(val);
+	}
+
+	public final boolean getIsBlank() {
+
+		if (this._row == null) {
+			return true;
+		}
+
+		Attrs attrs = this.getEnMap().getAttrs();
+		for (Attr attr : attrs) {
+
+			if (attr.getUIIsReadonly() && !attr.getIsFKorEnum()) {
+				continue;
+			}
+
+			String str = this.GetValStrByKey(attr.getKey());
+			if (str.equals("") || attr.getDefaultVal().toString().equals(str) || str == null) {
+				continue;
+			}
+
+			if (attr.getMyDataType() == DataType.AppDate && attr.getDefaultVal() == null) {
+				if (DataType.getCurrentDateByFormart("yyyy-MM-dd").equals(str)) {
+					continue;
+				} else {
+					return true;
+				}
+			}
+
+			if (attr.getDefaultVal().toString().equals(str) && !attr.getIsFK()) {
+				continue;
+			}
+
+			if (attr.getIsEnum()) {
+				if (attr.getDefaultVal().toString().equals(str)) {
+					continue;
+				} else {
+					return false;
+				}
+				/*
+				 * warning continue;
+				 */
+			}
+
+			if (attr.getIsNum()) {
+				/*
+				 * warning if (java.math.BigDecimal.Parse(str) !=
+				 * java.math.BigDecimal.Parse(attr.getDefaultVal().toString()))
+				 */
+				if ((new BigDecimal(str)).compareTo(new BigDecimal(attr.getDefaultVal().toString())) != 0) {
+					return false;
+				} else {
+					continue;
+				}
+			}
+
+			if (attr.getIsFKorEnum()) {
+				// if (attr.DefaultVal == null || attr.DefaultVal == "")
+				// continue;
+
+				if (!attr.getDefaultVal().toString().equals(str)) {
+					return false;
+				} else {
+					continue;
+				}
+			}
+
+			if (!attr.getDefaultVal().toString().equals(str)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 获取或者设置 是不是空的实体.
+	 */
+	public final boolean getIsEmpty() {
+		if (this._row == null)
+			return true;
+
+		if (this.getPKVal() == null || this.getPKVal().toString().equals("0")
+				|| this.getPKVal().toString().equals("")) {
+			return true;
+		}
+		return false;
+
+	}
+
+	public final void setIsEmpty() {
+		this._row = null;
+	}
+
+	/**
+	 * 对这个实体的描述
+	 */
+	public final String getEnDesc() {
+		return this.getEnMap().getEnDesc();
+	}
+
+	/**
+	 * 取到主健值。如果它的主健不唯一，就返回第一个值。 获取或设置
+	 */
+	public final Object getPKVal() {
+		return this.GetValByKey(this.getPK());
+	}
+
+	public final void setPKVal(Object value) {
+		this.SetValByKey(this.getPK(), value);
+	}
+
+	/**
+	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 */
+	public final int getPKCount() {
+		if (this.getPK().equals("OID") || this.getPK().equals("No") || this.getPK().equals("MyPK")
+				|| this.getPK().equals("NodeID") || this.getPK().equals("WorkID")) {
+			return 1;
+		}
+
+		int i = 0;
+		for (Attr attr : this.getEnMap().getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKEnum
+					|| attr.getMyFieldType() == FieldType.PKFK) {
+				i++;
+			}
+		}
+		if (i == 0) {
+			throw new RuntimeException("@没有给【" + this.getEnDesc() + "，" + this.getEnMap().getPhysicsTable() + "】定义主键。");
+		} else {
+			return i;
+		}
+	}
+
+	/**
+	 * 是不是OIDEntity
+	 */
+	public final boolean getIsOIDEntity() {
+		if (this.getPK().equals("OID")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 是不是OIDEntity
+	 */
+	public final boolean getIsNoEntity() {
+		if (this.getPK().equals("No")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 是否是TreeEntity
+	 */
+	public final boolean getIsTreeEntity() {
+		return this.getEnMap().getAttrs().Contains("ParentNo");
+
+	}
+
+	/**
+	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 */
+	public String getPK() {
+
+		String pks = "";
+		for (Attr attr : this.getEnMap().getAttrs()) {
+			/*
+			 * if (attr.getKey().equals("No")) { return "No"; } else if
+			 * (attr.getKey().equals("OID")) { return "OID"; } else if
+			 * (attr.getKey().equals("MyPK")) { return "MyPK"; }
+			 */
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKEnum
+					|| attr.getMyFieldType() == FieldType.PKFK) {
+				pks += attr.getKey() + ",";
+			}
+		}
+		if (pks.equals("")) {
+			throw new RuntimeException("@没有给【" + this.getEnDesc() + "，" + this.getEnMap().getPhysicsTable() + "】定义主键。");
+		}
+		pks = pks.substring(0, pks.length() - 1);
+		return pks;
+	}
+
+	/**
+	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 */
+	public final String[] getPKs() {
+		String[] strs1 = new String[this.getPKCount()];
+		int i = 0;
+		for (Attr attr : this.getEnMap().getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKEnum
+					|| attr.getMyFieldType() == FieldType.PKFK) {
+				strs1[i] = attr.getKey();
+				i++;
+			}
+		}
+		return strs1;
+	}
+
+	/**
+	 * 取到主健值。
+	 */
+	public final java.util.Hashtable getPKVals() {
+		java.util.Hashtable ht = new java.util.Hashtable();
+		String[] strs = this.getPKs();
+		for (String str : strs) {
+			ht.put(str, this.GetValStringByKey(str));
+		}
+		return ht;
+	}
+
 }

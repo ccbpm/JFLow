@@ -370,11 +370,6 @@ public class GERpt extends BP.En.EntityOID
 	{
 		return "OID";
 	}
-	@Override
-	public String getPKField()
-	{
-		return "OID";
-	}
 	/** 
 	 Map
 	 * @throws Exception 

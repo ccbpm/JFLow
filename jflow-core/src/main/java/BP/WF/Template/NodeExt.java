@@ -15,7 +15,6 @@ import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
 import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
 import BP.Sys.ToolbarExcel;
 import BP.Tools.StringHelper;
 import BP.WF.CancelRole;

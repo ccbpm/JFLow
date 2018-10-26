@@ -39,15 +39,6 @@ public class Track extends BP.En.Entity
 		return "MyPK";
 	}
 
-	@Override
-	public String getPKField()
-	{
-		return "MyPK";
-	}
-
-
-		///#region attrs
-
 	/** 
 	 节点从
 	 

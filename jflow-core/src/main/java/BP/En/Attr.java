@@ -89,23 +89,7 @@ public class Attr
 		// attr.AutoFullDoc = this.AutoFullDoc;
 		return attr;
 	}
-	
-	public final TBType getHisTBType()
-	{
-		switch (this.getMyDataType())
-		{
-			case BP.DA.DataType.AppRate:
-			case BP.DA.DataType.AppMoney:
-				return TBType.Moneny;
-			case BP.DA.DataType.AppInt:
-			case BP.DA.DataType.AppFloat:
-			case BP.DA.DataType.AppDouble:
-				return TBType.Num;
-			default:
-				return TBType.TB;
-		}
-	}
-	
+	 
 	public final boolean getIsFK()
 	{
 		if (this.getMyFieldType() == FieldType.FK
@@ -842,6 +826,7 @@ public class Attr
 				if (this.getUIBindKey().contains("."))
 				{
 					_HisFKEns = ClassFactory.GetEns(this.getUIBindKey());
+					
 				} else
 				{
 					_HisFKEns = new GENoNames(this.getUIBindKey(),
@@ -859,63 +844,7 @@ public class Attr
 	{
 		_HisFKEns = value;
 	}
-	
-	private TBType _TBShowType = TBType.TB;
-	
-	/**
-	 * 要现实的控件类型。
-	 */
-	public final TBType getUITBShowType()
-	{
-		if (this.getMyDataType() == DataType.AppDate)
-		{
-			return TBType.Date;
-		} else if (this.getMyDataType() == DataType.AppFloat)
-		{
-			return TBType.Float;
-		} else if (this.getMyDataType() == DataType.AppBoolean)
-		{
-			return TBType.Date; // throw new Exception("@属性配置错误。");
-		} else if (this.getMyDataType() == DataType.AppDouble)
-		{
-			return TBType.Decimal;
-		} else if (this.getMyDataType() == DataType.AppInt)
-		{
-			return TBType.Num;
-		} else if (this.getMyDataType() == DataType.AppMoney)
-		{
-			return TBType.Moneny;
-		} else
-		{
-			return _TBShowType;
-		}
-	}
-	
-	public final void setUITBShowType(TBType value)
-	{
-		this._TBShowType = value;
-	}
-	
-	private DDLShowType _UIDDLShowType = DDLShowType.None;
-	
-	/**
-	 * 要现实的控件类型。
-	 */
-	public final DDLShowType getUIDDLShowType()
-	{
-		if (this.getMyDataType() == DataType.AppBoolean)
-		{
-			return DDLShowType.Boolean;
-		} else
-		{
-			return this._UIDDLShowType;
-		}
-	}
-	
-	public final void setUIDDLShowType(DDLShowType value)
-	{
-		this._UIDDLShowType = value;
-	}
+	 
 	
 	private String _UIRefParentKey = null;
 	

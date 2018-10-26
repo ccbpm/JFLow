@@ -3,7 +3,6 @@ package cn.jflow.controller.wf.ccform;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.BindException;
@@ -13,9 +12,6 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,18 +35,16 @@ import BP.Sys.MapData;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.Sys.FrmEventList;
-import BP.Tools.BaseFileUtils;
 import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
-import BP.WF.Flow;
+import BP.WF.HttpHandler.Base.BaseController;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmSln;
 import BP.WF.Template.WhoIsPK;
 import BP.Sys.Glo;
 import BP.Web.WebUser;
 import cn.jflow.common.util.ContextHolderUtils;
-import cn.jflow.common.BaseController;
 
 @Controller
 @RequestMapping("/WF/CCForm")

@@ -2,14 +2,12 @@ package BP.Sys;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
-
 import BP.DA.DataType;
 import BP.En.FieldTypeS;
 import BP.En.UIContralType;
 import BP.Tools.Json;
 import BP.Tools.StringHelper;
+import BP.Tools.StringUtils;
 
 /** 
  解析控件并保存.

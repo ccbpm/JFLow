@@ -2,7 +2,6 @@ package BP.WF.Template;
 
 import java.io.IOException;
 
-import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBUrlType;
 import BP.DA.DataType;
 import BP.DA.Log;
@@ -40,6 +39,7 @@ import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Glo;
+import cn.jflow.common.util.ContextHolderUtils;
 
 /** 
  表单属性

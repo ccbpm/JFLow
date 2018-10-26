@@ -54,17 +54,9 @@ public class MapAttr extends EntityMyPK {
 	 * 是否必填字段
 	 */
 	public final boolean getUIIsInput() {
-		return this.GetValBooleanByKey(MapAttrAttr.UIIsInput, false);
+		return this.GetValBooleanByKey(MapAttrAttr.UIIsInput);
 	}
 
-	  /** 
-	 在手机端中是否显示
-	 
-*/
-	public final boolean getIsEnableInAPP()
-	{
-		return this.GetValBooleanByKey(MapAttrAttr.IsEnableInAPP, true);
-	}
 	public final void setIsEnableInAPP(boolean value)
 	{
 		this.SetValByKey(MapAttrAttr.IsEnableInAPP, value);
@@ -435,7 +427,7 @@ public class MapAttr extends EntityMyPK {
 	}
 
 	public final boolean getDefValOfBool() {
-		return this.GetValBooleanByKey(MapAttrAttr.DefVal, false);
+		return this.GetValBooleanByKey(MapAttrAttr.DefVal);
 	}
 
 	public final void setDefValOfBool(boolean value) {
@@ -448,20 +440,7 @@ public class MapAttr extends EntityMyPK {
 	public final String getField() {
 		return this.getKeyOfEn();
 	}
-
-	public final TBType getHisTBType() {
-		switch (this.getMyDataType()) {
-		case BP.DA.DataType.AppRate:
-		case BP.DA.DataType.AppMoney:
-			return TBType.Moneny;
-		case BP.DA.DataType.AppInt:
-		case BP.DA.DataType.AppFloat:
-		case BP.DA.DataType.AppDouble:
-			return TBType.Num;
-		default:
-			return TBType.TB;
-		}
-	}
+ 
 
 	public final int getMyDataType() {
 		return this.GetValIntByKey(MapAttrAttr.MyDataType);

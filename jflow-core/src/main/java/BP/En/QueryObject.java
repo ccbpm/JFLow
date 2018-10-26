@@ -1,6 +1,5 @@
 package BP.En;
 
-import java.util.ArrayList;
 
 import BP.DA.DBAccess;
 import BP.DA.DBType;
@@ -31,17 +30,10 @@ public class QueryObject {
 		}
 	}
 
-	private void setEn(Entity value) {
-		this._en = value;
-	}
-
 	private Entities getEns() {
 		return this._ens;
 	}
 
-	private void setEns(Entities value) {
-		this._ens = value;
-	}
 
 	/**
 	 * 处理Order by , group by .
@@ -54,10 +46,10 @@ public class QueryObject {
 	 * @throws Exception
 	 */
 	public final String getSQL() throws Exception {
-		
+
 		String sql = "";
 		String selecSQL = SqlBuilder.SelectSQL(this.getEn(), this.getTop());
-		
+
 		if (this._sql == null || this._sql.length() == 0) {
 			sql = selecSQL + this._groupBy + this._orderBy;
 		} else {
@@ -151,7 +143,6 @@ public class QueryObject {
 		this._en = en;
 		this.HisDBType = this._en.getEnMap().getEnDBUrl().getDBType();
 		this.HisDBUrlType = this._en.getEnMap().getEnDBUrl().getDBUrlType();
-
 	}
 
 	public QueryObject(Entities ens) {
@@ -375,10 +366,7 @@ public class QueryObject {
 				}
 			} else {
 				if (val.contains(":") || val.contains("@")) {
-					 if (val.contains("'") == false)
-						 this.setSQL("( " + attr2Field(attr) + " " + exp + "  '" + val + "' )");
-					 else
-						 this.setSQL("( " + attr2Field(attr) + " " + exp + "  " + val + " )"); 
+					this.setSQL("( " + attr2Field(attr) + " " + exp + "  " + val + " )");
 				} else {
 					if (!val.contains("'")) {
 						this.setSQL("( " + attr2Field(attr) + " " + exp + "  '" + val + "' )");
@@ -555,6 +543,7 @@ public class QueryObject {
 		this.AddWhere(attr, "=", val);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public final void AddWhere(String attr, Object val) {
 
 		if (val instanceof Enum) {
@@ -839,88 +828,6 @@ public class QueryObject {
 	}
 
 	/**
-	 * 分组查询，返回datatable.
-	 * 
-	 * @param attrsOfGroupKey
-	 * @param groupValField
-	 * @param gw
-	 * @return
-	 */
-	public final DataTable DoGroupReturnTable1(Entity en, Attrs attrsOfGroupKey, Attr attrGroup, GroupWay gw,
-			OrderWay ow) {
-		// 生成要查询的语句
-		String fields = "";
-		String str = "";
-		for (Attr attr : attrsOfGroupKey) {
-			if (attr.getField() == null) {
-				continue;
-			}
-			str = "," + attr.getField();
-			fields += str;
-		}
-
-		if (attrGroup.getKey().equals("MyNum")) {
-			switch (gw) {
-			case BySum:
-				fields += ", COUNT(*) AS MyNum";
-				break;
-			case ByAvg:
-				fields += ", AVG(*)   AS MyNum";
-				break;
-			default:
-				throw new RuntimeException("no such case:");
-			}
-		} else {
-			switch (gw) {
-			case BySum:
-				fields += ",SUM(" + attrGroup.getField() + ") AS " + attrGroup.getKey();
-				break;
-			case ByAvg:
-				fields += ",AVG(" + attrGroup.getField() + ") AS " + attrGroup.getKey();
-				break;
-			default:
-				throw new RuntimeException("no such case:");
-			}
-		}
-
-		String by = "";
-		for (Attr attr : attrsOfGroupKey) {
-			if (attr.getField() == null) {
-				continue;
-			}
-
-			str = "," + attr.getField();
-			by += str;
-		}
-		by = by.substring(1);
-		// string sql
-		String sql = "SELECT " + fields.substring(1) + " FROM " + this.getEn().getEnMap().getPhysicsTable() + " WHERE "
-				+ this._sql + " Group BY " + by;
-
-		Map map = new Map();
-		map.setPhysicsTable("@VT@");
-		map.setAttrs(attrsOfGroupKey);
-		map.getAttrs().Add(attrGroup);
-
-		// string sql1=SqlBuilder.SelectSQLOfMS( map
-		// )+" "+SqlBuilder.GenerFormWhereOfMS( en,map) + " AND ( " +
-		// this._sql+" ) "+_endSql;
-
-		String sql1 = SqlBuilder.SelectSQLOfMS(map) + " " + SqlBuilder.GenerFormWhereOfMS(en, map);
-
-		sql1 = sql1.replace("@TopNum", "");
-		sql1 = sql1.replace("FROM @VT@", "FROM (" + sql + ") VT");
-		sql1 = sql1.replace("@VT@", "VT");
-		sql1 = sql1.replace("TOP", "");
-		if (ow == OrderWay.OrderByUp) {
-			sql1 += " ORDER BY " + attrGroup.getKey() + " DESC ";
-		} else {
-			sql1 += " ORDER BY " + attrGroup.getKey();
-		}
-		return DBAccess.RunSQLReturnTable(sql1);
-	}
-
-	/**
 	 * 在尾部上是否执行了 AddAnd()方法。
 	 */
 	public boolean IsEndAndOR = false;
@@ -955,26 +862,6 @@ public class QueryObject {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-			throw ex;
-		}
-	}
-
-	public final int DoQueryBak20111203() throws Exception {
-		try {
-			if (this._en == null) {
-				return this.doEntitiesQuery();
-			} else {
-				return this.doEntityQuery();
-			}
-		} catch (RuntimeException ex) {
-			try {
-				if (this._en == null) {
-					this.getEns().getGetNewEntity().CheckPhysicsTable();
-				} else {
-					this._en.CheckPhysicsTable();
-				}
-			} catch (java.lang.Exception e) {
 			}
 			throw ex;
 		}
@@ -1174,19 +1061,6 @@ public class QueryObject {
 
 				pageNum = Math.round(recordConut / pageSize); // 页面个数。
 
-				// String[] strs = pageCountD.ToString("0.0000").split("[.]",
-				// -1);
-				// if (Integer.parseInt(strs[1]) > 0)
-				// {
-				// pageNum = Integer.parseInt(strs[0]) + 1;
-				// }
-				// else
-				// {
-				// pageNum = Integer.parseInt(strs[0]);
-				// }
-
-				int myleftCount = recordConut - (pageNum * pageSize);
-
 				pageNum++;
 				int top = pageSize * (pageIdx - 1);
 
@@ -1237,10 +1111,10 @@ public class QueryObject {
 					toIdx = top + pageSize;
 					if (this._sql.equals("") || this._sql == null) {
 						if (top == 0) {
-							sql = " SELECT first  " + pageSize + "  " + this.getEn().getPKField() + " FROM "
+							sql = " SELECT first  " + pageSize + "  " + this.getEn().getPK() + " FROM "
 									+ map.getPhysicsTable() + " " + this._orderBy;
 						} else {
-							sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " "
+							sql = " SELECT  " + this.getEn().getPK() + " FROM " + map.getPhysicsTable() + " "
 									+ this._orderBy;
 						}
 					} else {
@@ -1248,10 +1122,10 @@ public class QueryObject {
 						mySql = mySql.substring(mySql.indexOf("FROM"));
 
 						if (top == 0) {
-							sql = "SELECT first " + pageSize + " " + this.getEn().getPKField() + " " + mySql;
+							sql = "SELECT first " + pageSize + " " + this.getEn().getPK() + " " + mySql;
 
 						} else {
-							sql = "SELECT  " + this.getEn().getPKField() + " " + mySql;
+							sql = "SELECT  " + this.getEn().getPK() + " " + mySql;
 
 						}
 					}
@@ -1274,10 +1148,10 @@ public class QueryObject {
 					toIdx = top + pageSize;
 					if (this._sql.equals("") || this._sql == null) {
 						if (top == 0) {
-							sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " "
+							sql = " SELECT  " + this.getEn().getPK() + " FROM " + map.getPhysicsTable() + " "
 									+ this._orderBy + " LIMIT " + pageSize;
 						} else {
-							sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " "
+							sql = " SELECT  " + this.getEn().getPK() + " FROM " + map.getPhysicsTable() + " "
 									+ this._orderBy;
 						}
 					} else {
@@ -1285,11 +1159,11 @@ public class QueryObject {
 						mySql = mySql.substring(mySql.indexOf("FROM"));
 
 						if (top == 0) {
-							sql = "SELECT  " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " " + mySql
+							sql = "SELECT  " + map.getPhysicsTable() + "." + this.getEn().getPK() + " " + mySql
 									+ " LIMIT " + pageSize;
 
 						} else {
-							sql = "SELECT  " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " " + mySql;
+							sql = "SELECT  " + map.getPhysicsTable() + "." + this.getEn().getPK() + " " + mySql;
 						}
 					}
 
@@ -1312,14 +1186,14 @@ public class QueryObject {
 					toIdx = top + pageSize;
 
 					if (this._sql.equals("") || this._sql == null) {
-						sql = " SELECT  [" + this.getEn().getPKField() + "] FROM " + map.getPhysicsTable() + " "
+						sql = " SELECT  [" + this.getEn().getPK() + "] FROM " + map.getPhysicsTable() + " "
 								+ this._orderBy;
 					} else {
 						String mySql = this.getSQL();
 						mySql = mySql.substring(mySql.indexOf("FROM"));
 
-						sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " as  ["
-								+ this.getEn().getPKField() + "]  " + mySql;
+						sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK() + " as  ["
+								+ this.getEn().getPK() + "]  " + mySql;
 					}
 
 					sql = sql.replace("AND ( ( 1=1 ) )", " ");
@@ -1392,7 +1266,7 @@ public class QueryObject {
 		String sql = this.getSQL();
 		// sql="SELECT COUNT(*) "+sql.substing(sql.IndexOf("FROM") ) ;
 		String ptable = this.getEn().getEnMap().getPhysicsTable();
-		String pk = this.getEn().getPKField();
+		String pk = this.getEn().getPK();
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
@@ -1410,17 +1284,8 @@ public class QueryObject {
 				if (sql.indexOf("ORDER BY") >= 0)
 					sql = sql.substring(0, sql.indexOf("ORDER BY") - 1);
 				sql = "SELECT COUNT(" + ptable + "." + pk + ") as C " + sql;
-
 			}
 
-			// sql="SELECT COUNT(*) as C "+this._endSql +sql.substing(
-			// sql.IndexOf("FROM ") ) ;
-			// sql="SELECT COUNT(*) as C FROM "+
-			// this._ens.GetNewEntity.getEnMap().getPhysicsTable()+ " "
-			// +sql.substing(sql.IndexOf("WHERE") ) ;
-			// int i = sql.IndexOf("ORDER BY") ;
-			// if (i!=-1)
-			// sql=sql.substing(0,i);
 			break;
 		}
 		try {
@@ -1452,7 +1317,6 @@ public class QueryObject {
 	public DataTable DoGroupQueryToTable(String selectSQl, String groupBy, String orderBy) throws Exception {
 		String sql = this.getSQL();
 		String ptable = this.getEn().getEnMap().getPhysicsTable();
-		String pk = this.getEn().getPKField();
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
@@ -1486,24 +1350,27 @@ public class QueryObject {
 	 * @throws Exception
 	 */
 	public final DataTable DoQueryToTable(int topNum) throws Exception {
+
 		return DBAccess.RunSQLReturnTable(this.getSQL(), this.getMyParas());
 
 	}
 
 	private int doEntityQuery() throws Exception {
-		return EntityDBAccess.Retrieve(this.getEn(), this.getSQL(), this.getMyParas());
+		return DBAccess.RunSQLReturnResultSet(this.getSQL(), this.getMyParas(), this.getEn(),
+				this.getEn().getEnMap().getAttrs());
+		// return EntityDBAccess.Retrieve(this.getEn(), , );
 	}
 
 	private int doEntitiesQuery() throws Exception {
 
-		// @xushuhao.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle && this.getTop() != -1) {
 
 			this.addAnd();
 			this.AddWhereField("RowNum", "<=", this.getTop());
 		}
 
-		return EntityDBAccess.Retrieve(this.getEns(), this.getSQL(), this.getMyParas(), this.FullAttrs);
+		return DBAccess.RunSQLReturnResultSet(this.getSQL(), this.getMyParas(), this.getEns(),
+				this.getEn().getEnMap().getAttrs());
 	}
 
 	/**

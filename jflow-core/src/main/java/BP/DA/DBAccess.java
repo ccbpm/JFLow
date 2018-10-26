@@ -15,16 +15,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entities;
 import BP.En.Entity;
-import BP.En.Row;
 import BP.En.SQLCash;
 import BP.Sys.SystemConfig;
 import BP.Tools.CRC32Helper;

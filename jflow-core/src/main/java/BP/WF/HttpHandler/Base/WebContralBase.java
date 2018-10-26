@@ -1,22 +1,11 @@
 package BP.WF.HttpHandler.Base;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Dictionary;
 
 import org.apache.http.protocol.HttpContext;
-import org.apache.poi.hssf.usermodel.HSSFBorderFormatting;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -25,11 +14,8 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.Region;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
 
 import BP.DA.DBType;
-import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -44,7 +30,6 @@ import BP.Sys.SystemConfig;
 import BP.Sys.UIConfig;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
-import cn.jflow.common.BaseController;
 
 public abstract class WebContralBase extends BaseController {
 	/**

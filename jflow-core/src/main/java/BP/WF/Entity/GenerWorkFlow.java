@@ -2,7 +2,6 @@ package BP.WF.Entity;
 
 import java.io.IOException;
 
-import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBAccess;
 import BP.DA.DataTable;
 import BP.En.Entity;
@@ -16,6 +15,7 @@ import BP.WF.WFState;
 import BP.WF.Work;
 import BP.WF.WorkFlow;
 import BP.WF.Template.FlowAttr;
+import cn.jflow.common.util.ContextHolderUtils;
 
 /**
  * 流程实例

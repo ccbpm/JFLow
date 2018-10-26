@@ -7,6 +7,7 @@ import BP.DA.DataType;
 import BP.DA.LogType;
 import BP.En.Method;
 import BP.Port.Emp;
+import BP.Tools.DateUtils;
 import BP.WF.GenerWorkFlowAttr;
 import BP.WF.GenerWorkerList;
 import BP.WF.GenerWorkerListAttr;
@@ -14,8 +15,6 @@ import BP.WF.GenerWorkerLists;
 import BP.WF.Node;
 import BP.WF.WorkNode;
 import BP.WF.Template.NodeAttr;
-import BP.WF.Template.OutTimeDeal;
-import cn.jflow.common.util.DateAndTime;
 
 public class AutoRunOverTimeFlow extends Method{
 
@@ -229,7 +228,7 @@ public class AutoRunOverTimeFlow extends Method{
                         {
                             Emp myemp = new Emp(doOutTime);
                             
-                            boolean boo = BP.WF.Dev2Interface.WriteToSMS(myemp.getNo(), DateAndTime.getDateNow(), "系统发送逾期消息",
+                            boolean boo = BP.WF.Dev2Interface.WriteToSMS(myemp.getNo(), DateUtils.getCurrentDate("yyyy-MM-dd HH:mm:ss"), "系统发送逾期消息",
                                 "您的流程:'" + title + "'的完成时间应该为'" + compleateTime + "',流程已经逾期,请及时处理!", "系统消息");
                             if (boo)
                                 msg = "'" + title + "'逾期消息已经发送给:'" + myemp.getName() + "'";

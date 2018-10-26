@@ -35,12 +35,6 @@ public class GEEntity extends Entity
 	}
 	
 	@Override
-	public String getPKField()
-	{
-		return "OID";
-	}
-	
-	@Override
 	public String toString()
 	{
 		return this.FK_MapData;

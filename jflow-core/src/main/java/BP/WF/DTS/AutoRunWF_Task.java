@@ -4,14 +4,13 @@ import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.En.Method;
-import BP.Sys.MapData;
+import BP.Tools.DateUtils;
 import BP.Tools.StringHelper;
 import BP.WF.Flow;
 import BP.WF.Task;
 import BP.WF.TaskAttr;
 import BP.WF.Work;
 import BP.WF.WorkNode;
-import cn.jflow.common.util.DateAndTime;
 
 /// <summary>
 /// Method 的摘要说明
@@ -76,7 +75,7 @@ public class AutoRunWF_Task extends Method
             if (StringHelper.isNullOrEmpty(startDT) == false)
             {
                 /*如果设置了发起时间,就检查当前时间是否与现在的时间匹配.*/
-                if (DateAndTime.getDateNow().contains(startDT) == false)
+                if (DateUtils.getCurrentDate("yyyy-MM-dd HH:mm:ss").contains(startDT) == false)
                     continue;
             }
 

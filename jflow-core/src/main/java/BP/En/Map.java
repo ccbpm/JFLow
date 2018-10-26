@@ -1510,7 +1510,7 @@ public class Map
 				sql = "SELECT TABTYPE  FROM TAB WHERE UPPER(TNAME)=:v";
 				break;
 			case Access:
-				sql = "select   Type   from   msysobjects   WHERE   UCASE(name)='"
+				sql = "select  Type from   msysobjects   WHERE   UCASE(name)='"
 						+ this.getPhysicsTableExt().toUpperCase() + "'";
 				DataTable dtw = DBAccess.RunSQLReturnTable(sql);
 				if (dtw.Rows.size() == 0)
@@ -1716,66 +1716,7 @@ public class Map
 		}
 	}
 	
-	// 于属性相关的操作
-	
-	// 于帮定 固定 枚举类型有关系的操作。
-	public final void AddDDLFixEnum(String key, String field, int defaultVal,
-			boolean IsPK, String desc, DDLShowType showtype, boolean isReadonly)
-	{
-		Attr attr = new Attr();
-		attr.setKey(key);
-		attr.setField(field);
-		attr.setDefaultVal(defaultVal);
-		attr.setMyDataType(DataType.AppInt);
-		
-		if (IsPK)
-		{
-			attr.setMyFieldType(FieldType.PK);
-		} else
-		{
-			attr.setMyFieldType(FieldType.Normal);
-		}
-		
-		attr.setDesc(desc);
-		attr.setUIContralType(UIContralType.DDL);
-		attr.setUIDDLShowType(showtype);
-		attr.setUIIsReadonly(isReadonly);
-		this.getAttrs().Add(attr);
-	}
-	
-	public final void AddDDLFixEnumPK(String key, int defaultVal, String desc,
-			DDLShowType showtype, boolean isReadonly)
-	{
-		this.AddDDLFixEnum(key, key, defaultVal, true, desc, showtype,
-				isReadonly);
-	}
-	
-	public final void AddDDLFixEnumPK(String key, String field, int defaultVal,
-			String desc, DDLShowType showtype, boolean isReadonly)
-	{
-		this.AddDDLFixEnumPK(key, field, defaultVal, desc, showtype, isReadonly);
-	}
-	
-	public final void AddDDLFixEnum(String key, int defaultVal, String desc,
-			DDLShowType showtype, boolean isReadonly)
-	{
-		this.AddDDLFixEnum(key, key, defaultVal, false, desc, showtype,
-				isReadonly);
-	}
-	
-	public final void AddBoolean_del(String key, int defaultVal, String desc,
-			boolean isReadonly)
-	{
-		this.AddDDLFixEnum(key, key, defaultVal, false, desc,
-				DDLShowType.Boolean, isReadonly);
-	}
-	
-	public final void AddBoolean_del(String key, String field, int defaultVal,
-			String desc, boolean isReadonly)
-	{
-		this.AddDDLFixEnum(key, field, defaultVal, false, desc,
-				DDLShowType.Boolean, isReadonly);
-	}
+	  
 	
 	// 与boolen 有关系的操作.
 	/**
@@ -1923,7 +1864,7 @@ public class Map
 		attr.setMyFieldType(FieldType.PKEnum);
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
-		attr.setUIDDLShowType(DDLShowType.SysEnum);
+	 
 		attr.setUIBindKey(sysEnumKey);
 		attr.setUIVisible(isUIVisable);
 		attr.setUIIsReadonly(isUIEnable);
@@ -1956,7 +1897,7 @@ public class Map
 		attr.setMyFieldType(FieldType.Enum);
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
-		attr.setUIDDLShowType(DDLShowType.SysEnum);
+	 
 		attr.setUIBindKey(sysEnumKey);
 		attr.UITag = cfgVal;
 		attr.setUIVisible(isUIVisable);
@@ -2042,7 +1983,7 @@ public class Map
 		attr.setMyFieldType(FieldType.Enum);
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.RadioBtn);
-		attr.setUIDDLShowType(DDLShowType.Self);
+	 
 		attr.setUIBindKey(sysEnumKey);
 		attr.setUIVisible(isUIVisable);
 		attr.setUIIsReadonly(isUIEnable);
@@ -2091,7 +2032,7 @@ public class Map
 		attr.setMyFieldType(FieldType.BindTable);
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
-		attr.setUIDDLShowType(DDLShowType.BindTable);
+ 
 		attr.setUIBindKey(bindTable);
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
@@ -2212,7 +2153,7 @@ public class Map
 		
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
-		attr.setUIDDLShowType(DDLShowType.Ens);
+	 
 		attr.setUIBindKey(ens.toString());
 		// attr.UIBindKeyOfEn = ens.GetNewEntity.ToString();
 		
@@ -2296,7 +2237,7 @@ public class Map
 
         attr.setDesc(desc);
         attr.setUIContralType(UIContralType.DDL);
-        attr.setUIDDLShowType(DDLShowType.BindTable);
+    
         attr.setUIBindKey(sql);
         attr.setHisFKEns(null);
         attr.setUIIsReadonly(!uiIsEnable);
@@ -2365,7 +2306,7 @@ public class Map
 	
 	// 关于
 	protected final void AddTBString(String key, String field,
-			Object defaultVal, FieldType _FieldType, TBType tbType,
+			Object defaultVal, FieldType _FieldType, 
 			String desc, boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith, boolean isUILine)
 	{
@@ -2376,7 +2317,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppString);
 		attr.setDesc(desc);
-		attr.setUITBShowType(tbType);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -2476,7 +2417,7 @@ public class Map
 		} else
 		{
 			AddTBString(key, key, defaultVal.toString(), FieldType.Normal,
-					TBType.TB, desc, true, false, 0, 1000, 100, false);
+					  desc, true, false, 0, 1000, 100, false);
 		}
 	}
 	
@@ -2508,7 +2449,7 @@ public class Map
 			boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith)
 	{
-		AddTBString(key, key, defaultVal, FieldType.Normal, TBType.TB, desc,
+		AddTBString(key, key, defaultVal, FieldType.Normal,   desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
 	
@@ -2516,7 +2457,7 @@ public class Map
 			String desc, boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith)
 	{
-		AddTBString(key, field, defaultVal, FieldType.Normal, TBType.TB, desc,
+		AddTBString(key, field, defaultVal, FieldType.Normal,   desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
 	
@@ -2524,7 +2465,7 @@ public class Map
 			boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith, boolean isUILine)
 	{
-		AddTBString(key, key, defaultVal, FieldType.Normal, TBType.TB, desc,
+		AddTBString(key, key, defaultVal, FieldType.Normal,   desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine);
 	}
 	
@@ -2532,13 +2473,13 @@ public class Map
 			boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith, boolean isUILine, String helpUrl)
 	{
-		AddTBString(key, key, defaultVal, FieldType.Normal, TBType.TB, desc,
+		AddTBString(key, key, defaultVal, FieldType.Normal,  desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine,
 				helpUrl);
 	}
 	
 	protected final void AddTBString(String key, String field,
-			Object defaultVal, FieldType _FieldType, TBType tbType,
+			Object defaultVal, FieldType _FieldType,  
 			String desc, boolean uiVisable, boolean isReadonly, int minLength,
 			int maxLength, int tbWith, boolean isUILine, String helpUrl)
 	{
@@ -2550,7 +2491,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppString);
 		attr.setDesc(desc);
-		attr.setUITBShowType(tbType);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -2614,7 +2555,7 @@ public class Map
 		
 		this.AddTBString(EntityNoMyFileAttr.MyFileName, null, fileDesc, false,false, 0, 100, 200);
 		this.AddTBString(EntityNoMyFileAttr.MyFilePath, null, "MyFilePath",false, false, 0, 100, 200);
-		this.AddTBString(EntityNoMyFileAttr.MyFileExt, null, "MyFileExt",false, false, 0, 10, 20);
+		this.AddTBString(EntityNoMyFileAttr.MyFileExt, null, "MyFileExt",false, false, 0, 10, 10);
 		this.AddTBString(EntityNoMyFileAttr.WebPath, null, "WebPath", false,false, 0, 200, 10);
 		this.AddTBInt(EntityNoMyFileAttr.MyFileH, 0, "MyFileH", false, false);
 		this.AddTBInt(EntityNoMyFileAttr.MyFileW, 0, "MyFileW", false, false);
@@ -2644,31 +2585,6 @@ public class Map
 	{
 		getHisAttrFiles().Add(fExt, fileDesc);
 		 this.HisBPEntityAthType = BPEntityAthType.Single; 
-
-		 AddMyFile(fileDesc,fExt,null);
-	}
-	/**
-	 * 增加一个附件
-	 * 
-	 * @param fileDesc
-	 *            描述
-	 */
-	public final void AddMyFile(String fileDesc,String fExt,String savePath)
-	{
-		if (fileDesc == null)
-			fileDesc = "附件或图片";
-
-        this.AddTBString(EntityNoMyFileAttr.MyFileName, null, fileDesc, false, false, 0, 300, 200);
-		this.AddTBString(EntityNoMyFileAttr.MyFilePath, null, "MyFilePath", false, false, 0, 300, 200);
-		this.AddTBString(EntityNoMyFileAttr.MyFileExt, null, "MyFileExt", false, false, 0, 20, 10);
-        this.AddTBString(EntityNoMyFileAttr.WebPath, null, "WebPath", false, false, 0, 300, 10);
-
-		this.AddTBInt(EntityNoMyFileAttr.MyFileH, 0, "MyFileH", false, false);
-		this.AddTBInt(EntityNoMyFileAttr.MyFileW, 0, "MyFileW", false, false);
-		this.AddTBFloat("MyFileSize", 0, "MyFileSize", false, false);
-
-        this.HisBPEntityAthType = BPEntityAthType.Single; 
-		this.FJSavePath = savePath;
 	}
 	
 	// 增加大块文本输入
@@ -2716,7 +2632,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppString);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.TB);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(300);
 		attr.setUIIsReadonly(isReadonly);
@@ -2734,7 +2650,7 @@ public class Map
 			int maxLength, int tbWith)
 	{
 		this.PKs = key;
-		AddTBString(key, key, defaultVal, FieldType.PK, TBType.TB, desc,
+		AddTBString(key, key, defaultVal, FieldType.PK,desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
 	
@@ -2743,7 +2659,7 @@ public class Map
 			boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		this.PKs = key;
-		AddTBString(key, field, defaultVal, FieldType.PK, TBType.TB, desc,
+		AddTBString(key, field, defaultVal, FieldType.PK,  desc,
 				uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
 	
@@ -2790,7 +2706,7 @@ public class Map
 		// attr.UIBindKeyOfEn = ens.GetNewEntity.ToString();
 		
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Ens);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -2864,7 +2780,7 @@ public class Map
 		// attr.UIBindKeyOfEn = ens.GetNewEntity.ToString();
 		
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Ens);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -2916,7 +2832,7 @@ public class Map
 		attr.setHisFKEns(attr.getHisFKEns());
 		// attr.UIBindKeyOfEn = ens.GetNewEntity.ToString();
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Ens);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -2998,7 +2914,7 @@ public class Map
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIBindKey(DataHelpKey);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Self);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -3075,7 +2991,7 @@ public class Map
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIBindKey(DataHelpKey);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Self);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
 		attr.setUIIsReadonly(isReadonly);
@@ -3160,7 +3076,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppDate);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Date);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		attr.setMaxLength(50);
@@ -3232,7 +3148,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppDateTime);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.DateTime);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		attr.setMaxLength(50);
@@ -3266,7 +3182,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppMoney);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Moneny);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
@@ -3305,7 +3221,7 @@ public class Map
 		attr.setMyDataType(DataType.AppInt);
 		attr.setMyFieldType(FieldType.Normal);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Int);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
@@ -3359,7 +3275,7 @@ public class Map
 		attr.setMyDataType(DataType.AppInt);
 		attr.setMyFieldType(FieldType.PK);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Int);
+		 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		if (identityKey)
@@ -3400,7 +3316,7 @@ public class Map
 		attr.setMyDataType(DataType.AppInt);
 		attr.setMyFieldType(FieldType.Normal);
 		attr.setDesc("MID");
-		attr.setUITBShowType(TBType.Int);
+		 
 		attr.setUIVisible(false);
 		attr.setUIIsReadonly(true);
 		this.getAttrs().Add(attr);
@@ -3472,7 +3388,7 @@ public class Map
 		attr.setMyDataType(DataType.AppInt);
 		attr.setMyFieldType(FieldType.PK);
 		attr.setDesc("AID");
-		attr.setUITBShowType(TBType.TB);
+	 
 		attr.setUIVisible(false);
 		attr.setUIIsReadonly(true);
 		this.getAttrs().Add(attr);
@@ -3521,7 +3437,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppFloat);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Num);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
@@ -3544,7 +3460,7 @@ public class Map
 		attr.setDefaultVal(defaultVal);
 		attr.setMyDataType(DataType.AppDouble);
 		attr.setDesc(desc);
-		attr.setUITBShowType(TBType.Decimal);
+	 
 		attr.setUIVisible(uiVisable);
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);

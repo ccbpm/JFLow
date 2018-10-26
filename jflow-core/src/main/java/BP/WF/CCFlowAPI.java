@@ -2,7 +2,6 @@ package BP.WF;
 
 import java.util.Enumeration;
 
-import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
 import BP.DA.DataRow;
@@ -10,13 +9,11 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
-import BP.DA.Paras;
 import BP.En.Entity;
 import BP.En.QueryObject;
 import BP.Port.Emp;
 import BP.Sys.AthCtrlWay;
 import BP.Sys.AthUploadWay;
-import BP.Sys.DtlOpenType;
 import BP.Sys.EventListOfNode;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
@@ -27,17 +24,12 @@ import BP.Sys.FrmImgAthDBs;
 import BP.Sys.FrmSubFlowAttr;
 import BP.Sys.FrmType;
 import BP.Sys.FrmWorkCheckAttr;
-import BP.Sys.GEDtlAttr;
-import BP.Sys.GEDtls;
-import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
 import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
-import BP.Sys.MapDtl;
-import BP.Sys.MapDtlAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtAttr;
@@ -56,12 +48,10 @@ import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodeComponent;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
-import BP.WF.Template.HungUpAttr;
-import BP.WF.Template.HungUps;
-import BP.WF.Template.NodeAttr;
 import BP.WF.Template.NodeYGFlow;
 import BP.WF.Template.NodeYGFlows;
 import BP.Web.WebUser;
+import cn.jflow.common.util.ContextHolderUtils;
 
 public class CCFlowAPI {
 	/**

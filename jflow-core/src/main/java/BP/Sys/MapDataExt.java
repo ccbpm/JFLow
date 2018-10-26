@@ -2,7 +2,6 @@ package BP.Sys;
 
 import java.io.IOException;
 
-import cn.jflow.common.util.ContextHolderUtils;
 import BP.DA.DBUrlType;
 import BP.DA.Depositary;
 import BP.En.EnType;
@@ -35,6 +34,7 @@ import BP.Sys.MapExts;
 import BP.Sys.MapFrames;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
+import cn.jflow.common.util.ContextHolderUtils;
 
 /**
  * 映射基础

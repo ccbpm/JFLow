@@ -1,7 +1,6 @@
 package BP.Web;
 
 import java.io.UnsupportedEncodingException;
-import java.net.HttpCookie;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -13,15 +12,11 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 
 import BP.DA.DBAccess;
-import BP.DA.DataTable;
-import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.En.QueryObject;
 import BP.Port.Current;
-import BP.Port.Depts;
 import BP.Port.Emp;
 import BP.Port.Stations;
-import BP.Sys.Glo;
 import BP.Sys.OSDBSrc;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;

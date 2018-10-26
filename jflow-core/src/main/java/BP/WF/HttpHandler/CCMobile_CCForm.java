@@ -1,39 +1,12 @@
 package BP.WF.HttpHandler;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import BP.DA.DBAccess;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.Sys.AthSaveWay;
-import BP.Sys.FrmAttachment;
-import BP.Sys.FrmAttachmentDB;
-import BP.Sys.GEEntity;
-import BP.Tools.FileAccess;
 import BP.WF.HttpHandler.Base.WebContralBase;
-import BP.Web.WebUser;
-import cn.jflow.common.util.ContextHolderUtils;
 
 /** 
  页面功能实体

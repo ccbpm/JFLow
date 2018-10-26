@@ -33,6 +33,9 @@ public class DateUtils
 	/* 年月日时分秒模式字符串 */
 	public static final String YMDHMS_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	
+	public static void main(String[] args){
+		System.out.println(getCurrentDate(YMDHMS_PATTERN));
+	}
 	/**
 	 * 获得系统当前时间YYYY-MM-DD
 	 * 
@@ -46,6 +49,7 @@ public class DateUtils
 	
 	public static String getCurrentDate(String format)
 	{
+
 		return format(new Date(System.currentTimeMillis()), format);
 	}
 	

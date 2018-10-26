@@ -2,20 +2,14 @@ package BP.WF.HttpHandler;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HttpContext;
-import org.slf4j.Logger;
-import org.springframework.util.StringUtils;
-
-import com.sun.star.util.DateTime;
-
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
-import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -24,11 +18,9 @@ import BP.DA.Log;
 import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.Attrs;
-import BP.En.Entity;
 import BP.En.QueryObject;
 import BP.En.UIContralType;
 import BP.Port.Emp;
-import BP.Port.Emps;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.FrmAttachmentDBAttr;
@@ -42,19 +34,14 @@ import BP.Sys.MapAttrs;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
-import BP.Tools.DateUtils;
-import BP.Tools.StringHelper;
 import BP.WF.ActionType;
-import BP.WF.CHWay;
 import BP.WF.CancelRole;
 import BP.WF.DeliveryWay;
 import BP.WF.Dev2Interface;
-import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.GenerWorkFlow;
 import BP.WF.GenerWorkerList;
 import BP.WF.GenerWorkerListAttr;
 import BP.WF.GenerWorkerLists;
-import BP.WF.Glo;
 import BP.WF.HuiQianTaskSta;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
@@ -80,7 +67,6 @@ import BP.WF.Template.SelectAccperAttr;
 import BP.WF.Template.SelectAccpers;
 import BP.WF.Template.Selector;
 import BP.WF.Template.SelectorModel;
-import BP.WF.Template.TimelineRole;
 import BP.Web.WebUser;
 
 public class WF_WorkOpt extends WebContralBase {

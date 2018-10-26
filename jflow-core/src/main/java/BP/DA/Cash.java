@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import cn.jflow.common.util.ContextHolderUtils;
+import cn.jflow.common.util.ConvertTools;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
@@ -18,8 +20,6 @@ import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
-import cn.jflow.common.util.ContextHolderUtils;
-import cn.jflow.common.util.ConvertTools;
 
 /**
  * Cash 的摘要说明。

@@ -721,6 +721,7 @@ public class WorkNode {
 				wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
 				wl.setDTOfWarning(DateUtils.format(dtOfWarning, DataType.getSysDataTimeFormat()));
 				wl.setRDT(DataType.getCurrentDataTime());
+				wl.setCDT(DataType.getCurrentDataTime());
 
 				wl.setFK_Flow(town.getHisNode().getFK_Flow());
 				if (this.IsHaveSubThreadGroupMark == true) {
@@ -7464,6 +7465,39 @@ public class WorkNode {
              ps.Add("WorkID", this.getHisWork().getOID());
              DBAccess.RunSQL(ps);
          }
+			/// #region 求出日志类型，并加入变量中。
+			ActionType at = ActionType.Forward;
+			switch (town.getHisNode().getHisNodeWorkType()) {
+			case StartWork:
+			case StartWorkFL:
+				at = ActionType.Start;
+				break;
+			case Work:
+				if (this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFL
+						|| this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFHL) {
+					at = ActionType.ForwardFL;
+				} else {
+					at = ActionType.Forward;
+				}
+				break;
+			case WorkHL:
+				at = ActionType.ForwardHL;
+				break;
+			case SubThreadWork:
+				at = ActionType.SubThreadForward;
+				break;
+			default:
+				break;
+			}
+		//  #region 如果是子线城前进.
+	          if (at == ActionType.SubThreadForward)
+	          {
+	              for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList())
+	              {
+	                  this.AddToTrack(at, wl, "子线程",this.town.getHisWork().getOID());
+	              }
+	              //写入到日志.
+	          }
 
          this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
          this.getHisGenerWorkFlow().setNodeName(nd.getName());

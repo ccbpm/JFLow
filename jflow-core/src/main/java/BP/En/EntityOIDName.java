@@ -19,13 +19,7 @@ public abstract class EntityOIDName extends EntityOID
 	{
 		return "OID";
 	}
-	
-	@Override
-	public String getPKField()
-	{
-		return "OID";
-	}
-	
+	 
 	/**
 	 * 构造
 	 */

@@ -467,15 +467,7 @@ public abstract class Work extends Entity
 		this.SetValByKey("OID", oid);
 		this.RunSQL(SqlBuilder.Insert(this));
 	}
-	/** 
-	 按照指定的OID Insert. 区分大小写
-	 
-	*/
-	public final void InsertAsOID_2017(long oid)
-	{
-		this.SetValByKey_2017("OID", oid);
-		this.RunSQL(SqlBuilder.Insert(this));
-	}
+
 	/** 
 	 按照指定的OID 保存
 	 
@@ -509,24 +501,7 @@ public abstract class Work extends Entity
 		}
 		return 1;
 	}
-	/** 
-	 保存实体信息 区分大小写
-	 * @throws Exception 
-	 
-	*/
-	public final int Save_2017() throws Exception
-	{
-		if (this.getOID() <= 10)
-		{
-			throw new RuntimeException("@没有给WorkID赋值,不能保存.");
-		}
-		if (this.Update() == 0)
-		{
-			this.InsertAsOID_2017(this.getOID());
-			return 0;
-		}
-		return 1;
-	}
+
 	@Override
 	public void Copy(DataRow dr)
 	{
@@ -571,12 +546,6 @@ public abstract class Work extends Entity
 	@Override
 	protected void afterDelete() throws Exception
 	{
-
-			///#warning 删除了明细，有可能造成其他的影响.
-		//MapDtls dtls = this.HisNode.MapData.MapDtls;
-		//foreach (MapDtl dtl in dtls)。
-		//    DBAccess.RunSQL("DELETE FROM  " + dtl.PTable + " WHERE RefPK=" + this.OID);
-
 		super.afterDelete();
 	}
 

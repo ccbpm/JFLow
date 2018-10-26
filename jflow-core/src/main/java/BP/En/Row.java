@@ -37,57 +37,14 @@ public class Row extends Hashtable<String, Object>
 		{
 			switch (attr.getMyDataType())
 			{
-				case BP.DA.DataType.AppInt:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0);
-					} else
-					{
-						try
-						{
-							this.put(attr.getKey(), Integer
-									.parseInt(attr.getDefaultVal().toString()));
-						} catch (Exception e)
-						{
-							this.put(attr.getKey(), 0);
-							
-						}
-						/*
-						 * warning this.Add(attr.getKey(),
-						 * Integer.parseInt(attr.getDefaultVal().toString()));
-						 */
-					}
+				case BP.DA.DataType.AppInt:					
+					this.put(attr.getKey(), Integer.parseInt(attr.getDefaultVal().toString()));					 
 					break;
 				case BP.DA.DataType.AppFloat:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0.0);
-					} else
-					{
-						this.put(attr.getKey(), Float
-								.parseFloat(attr.getDefaultVal().toString()));
-					}
-					break;
 				case BP.DA.DataType.AppMoney:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0.00);
-					} else
-					{
-						this.put(attr.getKey(),
-								new java.math.BigDecimal(attr.getDefaultVal()
-										.toString()));
-					}
-					break;
+					this.put(attr.getKey(), Float.parseFloat(attr.getDefaultVal().toString()));					 
 				case BP.DA.DataType.AppDouble:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0.00);
-					} else
-					{
-						this.put(attr.getKey(), Double
-								.parseDouble(attr.getDefaultVal().toString()));
-					}
+					this.put(attr.getKey(), Double.parseDouble(attr.getDefaultVal().toString()));					 
 					break;
 				default:
 					this.put(attr.getKey(), attr.getDefaultVal());
@@ -95,104 +52,7 @@ public class Row extends Hashtable<String, Object>
 			}
 		}
 	}
-	/**
-	 * 初始化数据.
-	 * 
-	 * @param attrs
-	 */
-	public final void LoadAttrs2017(Attrs attrs)
-	{
-		this.clear();
-		for (Attr attr : attrs)
-		{
-			switch (attr.getMyDataType())
-			{
-				case BP.DA.DataType.AppInt:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0);
-						/*
-						 * warning this.Add(attr.getKey(), DBNull.getValue());
-						 */
-					} else
-					{
-						try
-						{
-							this.put(attr.getKey(), Integer
-									.parseInt(attr.getDefaultVal().toString()));
-						} catch (Exception e)
-						{
-							this.put(attr.getKey(), 0);
-							
-						}
-						/*
-						 * warning this.Add(attr.getKey(),
-						 * Integer.parseInt(attr.getDefaultVal().toString()));
-						 */
-					}
-					break;
-				case BP.DA.DataType.AppFloat:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0.0);
-						/*
-						 * warning this.Add(attr.getKey(), DBNull.getValue());
-						 */
-					} else
-					{
-						this.put(attr.getKey(), Float
-								.parseFloat(attr.getDefaultVal().toString()));
-						/*
-						 * warning this.Add(attr.getKey(),
-						 * Float.parseFloat(attr.getDefaultVal().toString()));
-						 */
-					}
-					break;
-				case BP.DA.DataType.AppMoney:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0.00);
-						/*
-						 * warning this.Add(attr.getKey(), DBNull.getValue());
-						 */
-					} else
-					{
-						this.put(attr.getKey(),
-								new java.math.BigDecimal(attr.getDefaultVal()
-										.toString()));
-						/*
-						 * warning this.Add(attr.getKey(),
-						 * java.math.BigDecimal.Parse
-						 * (attr.getDefaultVal().toString()));
-						 */
-					}
-					break;
-				case BP.DA.DataType.AppDouble:
-					if (attr.getIsNull())
-					{
-						this.put(attr.getKey(), 0.00);
-						/*
-						 * warning this.Add(attr.getKey(), DBNull.getValue());
-						 */
-					} else
-					{
-						this.put(attr.getKey(), Double
-								.parseDouble(attr.getDefaultVal().toString()));
-						/*
-						 * warning this.Add(attr.getKey(),
-						 * Double.parseDouble(attr.getDefaultVal().toString()));
-						 */
-					}
-					break;
-				default:
-					this.put(attr.getKey(), attr.getDefaultVal());
-					/*
-					 * warning this.Add(attr.getKey(), attr.getDefaultVal());
-					 */
-					break;
-			}
-		}
-	}
+	 
 	/**
 	 * LoadAttrs
 	 * 
@@ -205,9 +65,7 @@ public class Row extends Hashtable<String, Object>
 		{
 			if (dr.containsKey(dc.ColumnName))
 				this.put(dc.ColumnName, dr.getValue(dc.ColumnName));
-			/*
-			 * warning this.Add(dc.ColumnName, dr.getValue(dc.ColumnName));
-			 */
+			 
 		}
 	}
 	

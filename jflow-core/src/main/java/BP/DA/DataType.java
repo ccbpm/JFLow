@@ -353,7 +353,7 @@ public class DataType
 			return 0;
 		}
 	}
-	/**
+/**
 	 * 处理文件名称
 	 * @param fileNameFormat 文件格式
 	 * @return返回合法的文件名
@@ -406,6 +406,8 @@ public class DataType
         return fileNameFormat;
     }
     
+	/**
+	
 	/**
 	 * @param strs
 	 * @param isNumber
@@ -1053,7 +1055,8 @@ public class DataType
 	 */
 	public static String ParseStringToPinyin(String exp)
 	{
-		exp = exp.trim();
+		//exp = exp.trim();
+		exp = exp.replaceAll(" ", "");
 		String pinYin = "", str = null;
 		char[] chars = exp.toCharArray();
 		for (char c : chars)
@@ -1061,9 +1064,9 @@ public class DataType
 			try
 			{
 				str = String.valueOf(c);
-				str = chs2py.convert((new
-				Character(c)).toString());
+				str = chs2py.convert((new Character(c)).toString());
 				pinYin += str.substring(0, 1).toUpperCase() + str.substring(1);
+				
 			} catch (java.lang.Exception e)
 			{
 				pinYin += c;
@@ -1106,6 +1109,7 @@ public class DataType
 	 */
 	public static String ParseStringToPinyinJianXie(String str)
 	{
+		str = str.replaceAll(" ", "");
 		try
 		{
 			String _Temp = "";
@@ -1586,7 +1590,7 @@ public class DataType
 		 * @update 修改版本时间（java中不支持空格）
 		 * @author xiongwei
 		 */
-		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd");
 		return matter.format(new Date());
 	}
 	

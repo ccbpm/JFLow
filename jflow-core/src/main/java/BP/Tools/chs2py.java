@@ -1,7 +1,6 @@
 package BP.Tools;
 
 import BP.DA.Log;
-import cn.jflow.common.util.PingYinUtil;
 
 public class chs2py
 {

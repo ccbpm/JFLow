@@ -84,6 +84,12 @@ public class AttachmentUploadController extends BaseController {
 	public String getParasData() {
 		return ContextHolderUtils.getRequest().getParameter("parasData");
 	}
+	public String getSort() {
+		String sort =  ContextHolderUtils.getRequest().getParameter("Sort");
+		if(DataType.IsNullOrEmpty(sort))
+			sort ="";
+		return sort;
+	}
 
 	@RequestMapping(value = "/AttachmentUpload.do")
 	public void upload(@RequestParam("Filedata") MultipartFile multiFile, HttpServletRequest request,
@@ -380,6 +386,7 @@ public class AttachmentUploadController extends BaseController {
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();			 
 			dbUpload.setFK_FrmAttachment(attachPk);
+			dbUpload.setSort(this.getSort());
 			dbUpload.setFK_MapData(athDesc.getFK_MapData());
 			dbUpload.setFK_FrmAttachment(attachPk);
 			dbUpload.setFileExts(exts);
@@ -518,6 +525,7 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
 			dbUpload.setNodeID( getFK_Node());
 			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+			dbUpload.setSort(this.getSort());
 			dbUpload.setFID(this.getFID()); // 流程id.
 			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
 				/* 如果是继承，就让他保持本地的PK. */

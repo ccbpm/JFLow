@@ -23,7 +23,7 @@
 		<dom4j.version>1.6.1</dom4j.version>
 		<pinyin4j.version>2.5.0</pinyin4j.version>
 		<commons-lang.version>2.5</commons-lang.version>
-		<javax.mail.version>1.5.2</javax.mail.version>
+		<javax.mail.version>1.6.0</javax.mail.version>
 		<junit.version>4.7</junit.version>
 		<jackson.version>1.9.13 </jackson.version>
 		<jackson2.version>2.1.2</jackson2.version>
@@ -130,8 +130,8 @@
 				<version>${commons-net.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>javax.mail-api</artifactId>
+				<groupId >com.sun.mail </groupId >
+            <artifactId >javax.mail </artifactId >
 				<version>${javax.mail.version}</version>
 			</dependency>
 			<dependency>

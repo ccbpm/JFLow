@@ -36,10 +36,10 @@ import BP.Sys.MapExt;
 import BP.Sys.MapExts;
 import BP.Sys.MapFrames;
 import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Glo;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
+
 
 /** 
  表单属性

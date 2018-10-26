@@ -32,9 +32,9 @@ import BP.Sys.MapDataAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExts;
 import BP.Sys.MapFrames;
+import BP.Tools.ContextHolderUtils;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
-import cn.jflow.common.util.ContextHolderUtils;
 
 /**
  * 映射基础

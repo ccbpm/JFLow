@@ -1,9 +1,5 @@
 package BP.GPM;
 
-import BP.DA.*;
-import BP.Web.*;
-import BP.En.*;
-
 /** 
  管理员与系统权限
  

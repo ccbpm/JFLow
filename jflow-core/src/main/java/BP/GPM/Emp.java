@@ -11,7 +11,6 @@ import BP.En.Map;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
-import BP.Tools.StringHelper;
 
 /** 
  操作员 的摘要说明。

@@ -12,8 +12,6 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
-import BP.Sys.PubClass;
-import BP.WF.Template.FrmNode;
 
 /**
  * 数据实体集合

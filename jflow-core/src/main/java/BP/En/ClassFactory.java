@@ -12,8 +12,8 @@ import BP.Sys.EventBase;
 import BP.Sys.GEDtl;
 import BP.Sys.GEEntity;
 import BP.Sys.SystemConfig;
+import BP.Tools.ClassUtils;
 import BP.Tools.StringUtils;
-import cn.jflow.common.util.ClassUtils;
 
 /**
  * ClassFactory 的摘要说明。

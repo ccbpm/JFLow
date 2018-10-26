@@ -3,8 +3,6 @@ package BP.DA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import BP.Sys.SystemConfig;
-
 public class Log {
 
 	private static Logger logger = LoggerFactory.getLogger(Log.class);

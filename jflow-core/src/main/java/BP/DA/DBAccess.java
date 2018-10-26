@@ -26,9 +26,9 @@ import BP.En.Entity;
 import BP.En.SQLCash;
 import BP.Sys.SystemConfig;
 import BP.Tools.CRC32Helper;
+import BP.Tools.ContextHolderUtils;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
-import cn.jflow.common.util.ContextHolderUtils;
 
 /**
  * 数据库访问。 这个类负责处理了 实体信息

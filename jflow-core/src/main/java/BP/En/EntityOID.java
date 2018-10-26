@@ -1,7 +1,6 @@
 package BP.En;
 
 import BP.DA.DBAccess;
-import BP.DA.Paras;
 
 /**
  * OID实体,只有一个实体这个实体只有一个主键属性。

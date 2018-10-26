@@ -26,9 +26,9 @@ import BP.En.Map;
 import BP.Port.Emps;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
+import BP.Tools.ConvertTools;
 import BP.Tools.StringHelper;
 import BP.WF.Glo;
-import cn.jflow.common.util.ConvertTools;
 
 /**
  * WebRtfReport 的摘要说明。

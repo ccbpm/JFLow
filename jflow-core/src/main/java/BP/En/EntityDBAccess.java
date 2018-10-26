@@ -1,15 +1,7 @@
 package BP.En;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-
 import BP.DA.DBAccess;
-import BP.DA.DBType;
-import BP.DA.DBUrl;
-import BP.DA.DataRow;
 import BP.DA.DataTable;
-import BP.DA.Para;
 import BP.DA.Paras;
 import BP.Sys.SystemConfig;
 

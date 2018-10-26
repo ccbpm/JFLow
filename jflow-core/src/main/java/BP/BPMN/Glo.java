@@ -1,12 +1,5 @@
 package BP.BPMN;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-
-import javax.swing.Spring;
-
-import BP.En.ClassFactory;
 import BP.Tools.StringHelper;
 import BP.WF.Flow;
 import BP.WF.Node;

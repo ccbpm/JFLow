@@ -1,8 +1,6 @@
 package BP.GPM;
 
-import BP.DA.*;
 import BP.En.*;
-import BP.Port.*;
 
 /** 
  操作员s

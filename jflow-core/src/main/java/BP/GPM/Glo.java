@@ -3,7 +3,6 @@ package BP.GPM;
 import BP.Sys.*;
 import BP.DA.*;
 import BP.En.*;
-import BP.*;
 
 public class Glo
 {

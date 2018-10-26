@@ -15,7 +15,8 @@ import BP.WF.WFState;
 import BP.WF.Work;
 import BP.WF.WorkFlow;
 import BP.WF.Template.FlowAttr;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
+
 
 /**
  * 流程实例

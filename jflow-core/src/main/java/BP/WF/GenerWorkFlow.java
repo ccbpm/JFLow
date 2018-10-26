@@ -2,7 +2,6 @@ package BP.WF;
 
 import java.io.IOException;
 
-import org.apache.commons.lang.StringUtils;
 
 import BP.DA.DBAccess;
 import BP.DA.DataTable;
@@ -12,8 +11,7 @@ import BP.En.Map;
 import BP.En.QueryObject;
 import BP.En.RefMethod;
 import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
 
 /** 
  流程实例

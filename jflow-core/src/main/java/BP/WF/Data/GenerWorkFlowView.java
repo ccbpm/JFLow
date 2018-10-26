@@ -12,12 +12,11 @@ import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.WF.Flows;
 import BP.WF.Glo;
-import BP.WF.HuiQianTaskSta;
 import BP.WF.TaskSta;
 import BP.WF.WFSta;
 import BP.WF.WFState;
 import BP.WF.Template.FlowSorts;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
 
 /** 
  流程实例

@@ -38,6 +38,7 @@ import BP.Sys.MapExts;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
+import BP.Tools.ContextHolderUtils;
 import BP.WF.Data.GERpt;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.FTCAttr;
@@ -51,7 +52,6 @@ import BP.WF.Template.FrmTrackAttr;
 import BP.WF.Template.NodeYGFlow;
 import BP.WF.Template.NodeYGFlows;
 import BP.Web.WebUser;
-import cn.jflow.common.util.ContextHolderUtils;
 
 public class CCFlowAPI {
 	/**

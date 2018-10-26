@@ -13,12 +13,12 @@ import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.En.Attr;
 import BP.Tools.AesEncodeUtil;
+import BP.Tools.ContextHolderUtils;
 import BP.Tools.Cryptos;
 import BP.Tools.En3Des;
 import BP.WF.StartWorkAttr;
 import BP.WF.Work;
 import BP.WF.WorkAttr;
-import cn.jflow.common.util.ContextHolderUtils;
 
 /**
  * 公用的静态方法.

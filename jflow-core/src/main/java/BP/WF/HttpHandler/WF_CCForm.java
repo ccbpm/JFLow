@@ -103,7 +103,8 @@ import BP.WF.Template.FrmTrackAttr;
 import BP.WF.Template.WhoIsPK;
 import BP.WF.XML.EventListDtlList;
 import BP.Web.WebUser;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
+
 
 public class WF_CCForm extends WebContralBase {
 

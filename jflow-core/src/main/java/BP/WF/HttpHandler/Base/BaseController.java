@@ -6,12 +6,10 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.protocol.HttpContext;
-import org.springframework.context.ApplicationContext;
-
 import BP.DA.DataType;
 import BP.Tools.StringHelper;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
+
 
 public class BaseController {
 

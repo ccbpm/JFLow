@@ -150,7 +150,7 @@ import BP.WF.Template.TimelineRole;
 import BP.WF.Template.TurnTo;
 import BP.Web.GuestUser;
 import BP.Web.WebUser;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
 
 /**
  * 流程 记录了流程的信息． 流程的编号，名称，建立时间．

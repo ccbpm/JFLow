@@ -5,7 +5,7 @@ import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
-import cn.jflow.common.util.ConvertTools;
+import BP.Tools.ConvertTools;
 
 public class RepBill extends BP.DTS.DataIOEn
 {

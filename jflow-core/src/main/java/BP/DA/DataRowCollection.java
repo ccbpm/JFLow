@@ -3,8 +3,6 @@ package BP.DA;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.sun.star.bridge.oleautomation.Decimal;
-
 public class DataRowCollection extends ArrayList<DataRow>
 {
 	

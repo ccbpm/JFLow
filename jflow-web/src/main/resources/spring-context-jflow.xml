@@ -14,7 +14,7 @@
 	<context:property-placeholder ignore-unresolvable="true" location="classpath:jflow.properties" />
 	
 	<!-- JFlow上下文句柄，设置数据源，获取请求与相应对象 -->
-	<bean id="jflowContextHolderUtils" class="cn.jflow.common.util.ContextHolderUtils">
+	<bean id="jflowContextHolderUtils" class="BP.Tools.ContextHolderUtils">
 		<property name="dataSource" ref="dataSourceJflow" />
 <!-- 		<property name="userNoSessionKey" value="org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY" /> -->
 	</bean>

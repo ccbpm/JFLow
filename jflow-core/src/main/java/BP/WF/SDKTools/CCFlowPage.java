@@ -3,7 +3,8 @@ package BP.WF.SDKTools;
 import BP.En.Entities;
 import BP.En.Entity;
 import BP.Sys.Glo;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
+
 
 /**
  * PortalPage 的摘要说明。

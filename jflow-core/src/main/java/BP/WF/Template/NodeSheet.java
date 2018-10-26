@@ -1,38 +1,20 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.DA.Log;
 import BP.En.Entity;
 import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
 import BP.En.UAC;
 import BP.Port.DeptAttr;
-import BP.Port.Depts;
 import BP.Port.EmpAttr;
 import BP.Sys.AttachmentUploadType;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
-import BP.Sys.OSModel;
-import BP.Sys.PubClass;
 import BP.Sys.ToolbarExcel;
 import BP.Tools.StringHelper;
-import BP.WF.BatchRole;
-import BP.WF.BlockModel;
-import BP.WF.CancelRole;
-import BP.WF.DeliveryWay;
 import BP.WF.Flow;
-import BP.WF.Glo;
 import BP.WF.Node;
-import BP.WF.NodeFormType;
 import BP.WF.ReturnRole;
 import BP.WF.RunModel;
-import BP.WF.SubFlowStartWay;
-import BP.WF.ThreadKillRole;
-import BP.WF.TodolistModel;
 import BP.WF.Port.StationAttr;
-import BP.WF.Port.StationTypes;
-import cn.jflow.common.util.ContextHolderUtils;
 import BP.En.Dot2DotModel;
 
 /** 

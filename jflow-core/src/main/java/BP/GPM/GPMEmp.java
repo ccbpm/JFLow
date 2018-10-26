@@ -2,8 +2,6 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
-import BP.Port.*;
-import BP.Sys.OSModel;
 
 /** 
  操作员 的摘要说明。

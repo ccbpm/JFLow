@@ -20,10 +20,10 @@ import BP.Port.Stations;
 import BP.Sys.OSDBSrc;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
+import BP.Tools.ContextHolderUtils;
 import BP.Tools.StringHelper;
 import BP.WF.Dev2Interface;
 import BP.WF.DotNetToJavaStringHelper;
-import cn.jflow.common.util.ContextHolderUtils;
 
 /**
  * User 的摘要说明。

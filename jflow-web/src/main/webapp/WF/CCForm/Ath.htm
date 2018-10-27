@@ -519,8 +519,18 @@
                     if (athDesc.Sort != null && athDesc.Sort.indexOf(",") != -1) {
                         var sortColumn = athDesc.Sort.indexOf("@") != -1 ? athDesc.Sort.substring(0, athDesc.Sort.indexOf("@")) : "类别";
                         var strs = athDesc.Sort.indexOf("@") != -1 ? athDesc.Sort.substring(athDesc.Sort.lastIndexOf("@") + 1).split(',') : athDesc.Sort.split(',');
+                        var operations = "";
+                        for (var idx = 0; idx < strs.length; idx++) {
+                        	 if (strs[idx] == "")
+                                 continue;
+                            operations += "<option  value='" + strs[idx] + "'>" + strs[idx] + "</option>";
+                        }
+                        html += "<div id='s' style='text-align:right;float:left;display:inline;' >";
+                        html += "<div style='float:left;padding-top:7px;padding-right:2px'>";
                         html += "请选择" + sortColumn + "：";
-
+                        html += "<select id='Sort'>" + operations + "</select>";
+                        html += "</div>";
+                        
                     }
 
                     html += "文件:"

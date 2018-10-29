@@ -44,7 +44,8 @@ import BP.WF.Template.FrmSln;
 import BP.WF.Template.WhoIsPK;
 import BP.Sys.Glo;
 import BP.Web.WebUser;
-import cn.jflow.common.util.ContextHolderUtils;
+import BP.Tools.ContextHolderUtils;
+
 
 @Controller
 @RequestMapping("/WF/CCForm")
@@ -84,18 +85,25 @@ public class AttachmentUploadController extends BaseController {
 			sort ="";
 		return sort;
 	}
-
+	private String getPWorkID() {
+		return ContextHolderUtils.getRequest().getParameter("PWorkID");
+	}
+	/**
+	 * 多文件上传
+	 * @param multiFile
+	 * @param request
+	 * @param response
+	 * @param errors
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/AttachmentUpload.do")
 	public void upload(@RequestParam("Filedata") MultipartFile multiFile, HttpServletRequest request,
 			HttpServletResponse response, BindException errors) throws Exception {
-
-		String error = "";
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		String parasData = multipartRequest.getParameter("parasData");
 		CommonsMultipartFile item = (CommonsMultipartFile) multipartRequest.getFile("file");
 		if (item == null)
 			item = (CommonsMultipartFile) multiFile;
-		int maxSize = 50 * 1024 * 1024; // 单个上传文件大小的上限
 
 		// 获取初始化信息
 		FrmAttachment athDesc = new FrmAttachment(this.getFK_FrmAttachment());
@@ -114,11 +122,8 @@ public class AttachmentUploadController extends BaseController {
 	@RequestMapping(value = "/AttachmentUploadS.do", method = RequestMethod.POST)
 	public void execute(HttpServletRequest request, HttpServletResponse response, BindException errors)
 			throws Exception {
-		String error = "";
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		CommonsMultipartFile item = (CommonsMultipartFile) multipartRequest.getFile("file");
-		int maxSize = 50 * 1024 * 1024; // 单个上传文件大小的上限
-
 		// 获取初始化信息
 		FrmAttachment athDesc = new FrmAttachment(this.getFK_FrmAttachment());
 		GEEntity en = new GEEntity(athDesc.getFK_MapData());
@@ -213,7 +218,12 @@ public class AttachmentUploadController extends BaseController {
 
 	}
 
-	
+	/**
+	 * 实体文件上传
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/EntityFileLoad.do", method = RequestMethod.GET)
 	public void EntityFileLoad(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
@@ -256,30 +266,18 @@ public class AttachmentUploadController extends BaseController {
 		
 
 	}
-
 	
-	private String GetRealPath(String fileFullName) throws Exception {
-		boolean isFile = false;
-		String downpath = "";
-		try {
-			// 如果相对路径获取不到可能存储的是绝对路径
-			File downInfo = new File(
-					ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("~/" + fileFullName));
-			isFile = true;
-			downpath = ContextHolderUtils.getRequest().getSession().getServletContext()
-					.getRealPath("~/" + fileFullName);
-		} catch (Exception e) {
-			File downInfo = new File(fileFullName);
-			isFile = true;
-			downpath = fileFullName;
-		}
-		if (!isFile) {
-			throw new Exception("没有找到下载的文件路径！");
-		}
-
-		return downpath;
-	}
-
+	/**
+	 * 文件上传
+	 * @param item
+	 * @param athDesc
+	 * @param en
+	 * @param msg
+	 * @param mapData
+	 * @param attachPk
+	 * @param parasData
+	 * @throws Exception
+	 */
 	private void uploadFile(CommonsMultipartFile item, FrmAttachment athDesc, GEEntity en, String msg, MapData mapData,
 			String attachPk, String parasData) throws Exception {
 		
@@ -635,9 +633,6 @@ public class AttachmentUploadController extends BaseController {
 		return;
 	}
 
-	private char[] getPWorkID() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

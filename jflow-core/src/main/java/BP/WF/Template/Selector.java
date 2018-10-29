@@ -194,7 +194,7 @@ public class Selector extends Entity
         map.AddTBString(SelectorAttr.Name, null, "节点名称", true, true, 0, 100, 100);
 
         map.AddDDLSysEnum(SelectorAttr.SelectorModel, 5, "显示方式", true, true, SelectorAttr.SelectorModel,
-                "@0=按岗位@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与岗位的交集@7=自定义Url@8=使用通用部门岗位人员选择器");
+                "@0=按岗位@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与岗位的交集@7=自定义Url@8=使用通用部门岗位人员选择器@9=按岗位智能计算(操作员所在部门)");
 
         map.AddDDLSQL(SelectorAttr.FK_SQLTemplate, null, "SQL模版","SELECT No,Name FROM WF_SQLTemplate WHERE SQLType=5", true);
 
@@ -274,6 +274,9 @@ public class Selector extends Entity
 				break;
 			case GenerUserSelecter:
 				ds = ByEmp(nodeid);
+				break;
+			case AccepterOfDeptStationOfCurrentOper:
+				ds =  AccepterOfDeptStationOfCurrentOper(nodeid);
 				break;
 			default:
 				throw new RuntimeException("@错误:没有判断的选择类型:"+this.getSelectorModel());
@@ -467,7 +470,33 @@ public class Selector extends Entity
 		ds.Tables.add(dtEmp);
 		return ds;
 	}
+	
+	private DataSet AccepterOfDeptStationOfCurrentOper(int nodeID) throws Exception
+	{
+		   // 定义数据容器.
+        DataSet ds = new DataSet();
 
+
+        //部门.
+        String sql = "";
+        sql = "SELECT d.No,d.Name,d.ParentNo  FROM  Port_DeptEmp  de,port_dept as d where de.FK_Dept = d.No and de.FK_Emp ='"+ WebUser.getNo() +"'";
+
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        dt.TableName = "Depts";
+        ds.Tables.add(dt);
+
+        //人员.
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+            sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND b.FK_Node=" + nodeID + ")  ";
+        else
+            sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID;
+
+
+        DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        dtEmp.TableName = "Emps";
+        ds.Tables.add(dtEmp);
+        return ds;
+	}
 	/** 
 	 按照Station获取部门人员树.
 	 

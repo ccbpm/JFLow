@@ -1,11 +1,6 @@
 package BP.WF.HttpHandler;
 
 
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import BP.WF.HttpHandler.Base.WebContralBase;
 
 /** 
@@ -51,14 +46,5 @@ public class CCMobile_CCForm extends WebContralBase
         return ccform.Dtl_Init();
     }
     
-    public void multipleCommentImageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "file", required = false)List<MultipartFile> files) {
-        response.setContentType("text/html;charset=utf-8");
-      
-        for (MultipartFile file:files) {
-            String fileName = file.getOriginalFilename(); //获取文件名
-        }
-         
-    }
-     
 
 }

@@ -11,7 +11,7 @@ import BP.WF.HttpHandler.WF_Comm;
 import BP.WF.HttpHandler.Base.HttpHandlerBase;
 
 @Controller
-@RequestMapping("/WF/Comm")
+@RequestMapping("/WF/Comm1")
 @ResponseBody
 public class WF_Comm_Controller extends HttpHandlerBase {
 

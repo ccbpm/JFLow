@@ -53,7 +53,7 @@ import BP.Tools.ContextHolderUtils;
 
 
 @Controller
-@RequestMapping("/WF/CCForm")
+@RequestMapping("/WF/Ath")
 @Scope("request")
 public class AttachmentUploadController extends BaseController {
 

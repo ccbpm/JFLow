@@ -20,9 +20,10 @@
 	</bean>
 	
 	<!-- 开启自动扫描类 -->
-	<context:component-scan base-package="cn.jflow" name-generator="BP.WF.HttpHandler.Base.BeanNameGenerator"><!-- base-package 如果多个，用“,”分隔 -->
+	<context:component-scan base-package="cn.jflow,BP.WF.HttpHandler.Base" name-generator="BP.WF.HttpHandler.Base.BeanNameGenerator"><!-- base-package 如果多个，用“,”分隔 -->
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
+	
 	
 	<!-- WebService配置 
 	<http-conf:conduit name="*.http-conduit">

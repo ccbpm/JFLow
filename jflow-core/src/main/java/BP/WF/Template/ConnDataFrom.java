@@ -12,6 +12,10 @@ public enum ConnDataFrom
 	 
 	*/
 	NodeForm,
+	/**
+	 * 独立表单数据
+	 */
+	 StandAloneFrm,
 	/** 
 	 岗位数据
 	 
@@ -27,6 +31,8 @@ public enum ConnDataFrom
 	 
 	*/
 	SQL,
+	/// 按sql模版计算.
+    SQLTemplate,
 	/** 
 	 按参数
 	 
@@ -36,10 +42,9 @@ public enum ConnDataFrom
 	 按Url.
 	 
 	*/
-	Url,
-	/// 按sql模版计算.
-    SQLTemplate,
-    StandAloneFrm;
+	Url;
+	
+   
 
 	public int getValue()
 	{

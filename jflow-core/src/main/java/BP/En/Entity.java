@@ -3696,12 +3696,30 @@ public abstract class Entity implements Serializable {
 	 * @return
 	 */
 	public final boolean GetValBooleanByKey(String key) {
+			
+		 String s = this.GetValStrByKey(key);
+         if (DataType.IsNullOrEmpty(s))
+             s = this.getEnMap().GetAttrByKey(key).getDefaultVal().toString();
 
-		int val = GetValIntByKey(key);
-		if (val == 1)
-			return true;
+         if (s == "0")
+             return false;
+         if (s == "1")
+             return true;
 
-		return false;
+         if (s.toUpperCase().equals("FALSE"))
+             return false;
+         if (s.toUpperCase().equals("TRUE") )
+             return true;
+
+         if (DataType.IsNullOrEmpty(s))
+             return false;
+
+         if (Integer.parseInt(s) == 0)
+             return false;
+
+         return true;
+         
+         
 	}
 
 	public final String GetValBoolStrByKey(String key) {

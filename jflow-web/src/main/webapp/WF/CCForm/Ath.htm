@@ -328,7 +328,7 @@
             var bSort_Add_TD = false;
 
             //存在分組
-            if (athDesc.Sort != null && athDesc.Sort.indexOf(",") != -1) {
+            if (athDesc.Sort != null) {
                 haveAuthSort = true;
                 //追加一个空项
                 if (athDesc.Sort.lastIndexOf(",")+1!=athDesc.Sort.length) athDesc.Sort = athDesc.Sort + ",";

@@ -159,7 +159,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		}
 		SysEnums ses = new SysEnums();
 		if (main.getNo().length() > 0) {
-			ses.Retrieve(SysEnumAttr.EnumKey, main.getNo());
+			ses.Retrieve(SysEnumAttr.EnumKey, main.getNo(),SysEnumAttr.IntKey);
+			//ses.RetrieveAll(SysEnumAttr.EnumKey, main.getNo());
 		}
 		DataSet ds = new DataSet();
 		ds.Tables.add(main.ToDataTableField("Sys_EnumMain"));

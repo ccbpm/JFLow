@@ -1705,6 +1705,12 @@ public class WF_CCForm extends WebContralBase {
 		MapDtl mdtl = new MapDtl(this.getEnsName());
 		mdtl.setNo(this.getEnsName());
 		mdtl.RetrieveFromDBSources();
+		
+		
+	    String frmID = mdtl.getFK_MapData();
+        if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+            frmID = frmID.replace("_" + this.getFK_Node(), "");
+        
 
 		if (this.getFK_Node() != 0 && !mdtl.getFK_MapData().equals("Temp")
 				&& this.getEnsName().contains("ND" + this.getFK_Node()) == false && this.getFK_Node() != 999999) {
@@ -1714,7 +1720,7 @@ public class WF_CCForm extends WebContralBase {
 			// * 2,不是节点表单. 就要判断是否是独立表单，如果是就要处理权限方案。
 
 			BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(),
-					mdtl.getFK_MapData());
+					frmID);
 
 			if (fn.getFrmSlnInt() > 1) {
 
@@ -1743,7 +1749,7 @@ public class WF_CCForm extends WebContralBase {
 		/// #endregion 组织参数.
 
 		// 获得他的描述,与数据.
-		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(mdtl.getFK_MapData(), mdtl,
+		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(frmID, mdtl,
 				Integer.parseInt(this.getRefPKVal()), strs);
 
 		return BP.Tools.Json.ToJson(ds);

@@ -501,7 +501,7 @@ public class CCFlowAPI {
 
 			// 执行装载填充.
 			MapExt me = new MapExt();
-			me.setMyPK(wk.NodeFrmID + "_" + MapExtXmlList.PageLoadFull);
+			me.setMyPK(MapExtXmlList.PageLoadFull + "_" +wk.NodeFrmID );
 			if (me.RetrieveFromDBSources() == 1) {
 				// 执行通用的装载方法.
 				MapAttrs attrs = new MapAttrs("ND" + fk_node);

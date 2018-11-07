@@ -1,10 +1,12 @@
 package BP.WF.Template;
 
 
+import BP.DA.DBAccess;
 import BP.DA.DBType;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.Depositary;
+import BP.DA.Paras;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.UAC;
@@ -276,7 +278,7 @@ public class Selector extends Entity
 				ds = ByEmp(nodeid);
 				break;
 			case AccepterOfDeptStationOfCurrentOper:
-				ds =  AccepterOfDeptStationOfCurrentOper(nodeid);
+				ds =  AccepterOfDeptStationOfCurrentOper(nodeid,en);
 				break;
 			default:
 				throw new RuntimeException("@错误:没有判断的选择类型:"+this.getSelectorModel());
@@ -471,7 +473,7 @@ public class Selector extends Entity
 		return ds;
 	}
 	
-	private DataSet AccepterOfDeptStationOfCurrentOper(int nodeID) throws Exception
+	private DataSet AccepterOfDeptStationOfCurrentOper(int nodeID, Entity en) throws Exception
 	{
 		   // 定义数据容器.
         DataSet ds = new DataSet();
@@ -480,21 +482,46 @@ public class Selector extends Entity
         //部门.
         String sql = "";
         sql = "SELECT d.No,d.Name,d.ParentNo  FROM  Port_DeptEmp  de,port_dept as d where de.FK_Dept = d.No and de.FK_Emp ='"+ WebUser.getNo() +"'";
-
         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-        dt.TableName = "Depts";
-        ds.Tables.add(dt);
 
         //人员.
         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
             sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND b.FK_Node=" + nodeID + ")  ";
         else
             sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID;
-
-
         DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
-        dtEmp.TableName = "Emps";
-        ds.Tables.add(dtEmp);
+        
+        if (dtEmp.Rows.toArray().length > 0)
+        {
+            dt.TableName = "Depts";
+            ds.Tables.add(dt);
+
+            dtEmp.TableName = "Emps";
+            ds.Tables.add(dtEmp);
+        }
+        else //如果没人，就查询父级
+        {
+            //查询当前节点的workdID
+            long workID = Long.parseLong(en.GetValStringByKey("OID"));
+            BP.WF.WorkNode node = new BP.WF.WorkNode(workID, nodeID);
+
+            sql = " select No,Name, ParentNo from port_dept where no  in (  select  ParentNo from port_dept where no  in"
+            +"( SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID ='" + workID + "' ))";
+            dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+            dt.TableName = "Depts";
+            ds.Tables.add(dt);
+
+            // 如果当前的节点不是开始节点， 从轨迹里面查询。
+            sql = "SELECT DISTINCT b.No,b.Name,b.FK_Dept   FROM " + BP.WF.Glo.getEmpStation() + " a,Port_Emp b  WHERE FK_Station IN "
+               + "( SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + nodeID + ") "
+               + "AND a.FK_Dept IN (SELECT ParentNo FROM Port_Dept WHERE No in (SELECT FK_DEPT FROM WF_GenerWorkerlist WHERE WorkID=" + workID + "))"
+               +" AND a.FK_Emp = b.No ";
+            sql += " ORDER BY FK_Emp ";
+
+            dtEmp = DBAccess.RunSQLReturnTable(sql);
+            dtEmp.TableName = "Emps";
+            ds.Tables.add(dtEmp);
+        }
         return ds;
 	}
 	/** 

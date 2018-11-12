@@ -633,7 +633,7 @@ public class CCFlowAPI {
 				Object tempVar2 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL,
 						MapExtAttr.AttrOfOper, keyOfEn);
 				me = (MapExt) ((tempVar2 instanceof MapExt) ? tempVar2 : null);
-				if (me != null) {
+				if (me != null && myds.Tables.contains(keyOfEn) == false) {
 					Object tempVar3 = me.getDoc();
 					String fullSQL = (String) ((tempVar3 instanceof String) ? tempVar3 : null);
 					fullSQL = fullSQL.replace("~", ",");

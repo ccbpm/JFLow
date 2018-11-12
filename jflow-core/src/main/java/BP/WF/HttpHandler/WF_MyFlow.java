@@ -1,42 +1,29 @@
 package BP.WF.HttpHandler;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HttpContext;
 
-import com.sun.star.util.DateTime;
-
 import BP.DA.DBAccess;
-import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
-import BP.DA.Paras;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entities;
-import BP.En.EntitiesTree;
 import BP.En.EntityTree;
 import BP.En.QueryObject;
 import BP.Port.Emp;
-import BP.Sys.FrmType;
 import BP.Sys.MapData;
-import BP.Sys.MapDataAttr;
 import BP.Sys.MapDatas;
 import BP.Sys.MapDtl;
 import BP.Sys.SystemConfig;
-import BP.Tools.DateUtils;
-import BP.Tools.StringHelper;
 import BP.WF.BatchRole;
 import BP.WF.CCRole;
-import BP.WF.DelWorkFlowRole;
 import BP.WF.Dev2Interface;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Flow;
@@ -72,8 +59,6 @@ import BP.WF.Template.SysFormTreeAttr;
 import BP.WF.Template.SysFormTrees;
 import BP.WF.Template.TurnTo;
 import BP.WF.Template.TurnTos;
-import BP.WF.Template.WebOfficeWorkModel;
-import BP.WF.Template.WhoIsPK;
 import BP.Web.WebUser;
 
 public class WF_MyFlow extends WebContralBase {
@@ -126,10 +111,6 @@ public class WF_MyFlow extends WebContralBase {
 		/// #region 添加表单及文件夹
 
 		// 节点表单
-		String tfModel = BP.Sys.SystemConfig.GetValByKey("TreeFrmModel", "");
-		// SystemConfig.getAppSettings()["TreeFrmModel"];
-		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
-
 		FrmNodes frmNodes = new FrmNodes();
 		QueryObject qo = new QueryObject(frmNodes);
 		qo.AddWhere(FrmNodeAttr.FK_Node, this.getFK_Node());
@@ -1266,85 +1247,6 @@ public class WF_MyFlow extends WebContralBase {
 
 	}
 
-	/*
-	 * public String Send(){ // 发送 try { java.util.Hashtable ht =
-	 * this.GetMainTableHT(); SendReturnObjs objs = null; String msg = "";
-	 * 
-	 * objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(),
-	 * this.getWorkID(), ht, null, this.getToNode(), null); msg =
-	 * objs.ToMsgOfHtml(); BP.WF.Glo.setSessionMsg(msg);
-	 * 
-	 * // 当前节点. Node currNode = new Node(this.getFK_Node());
-	 * 
-	 * // /#region 处理发送后转向. // 处理转向问题. switch (currNode.getHisTurnToDeal()) {
-	 * case SpecUrl: String myurl = currNode.getTurnToDealDoc().toString(); if
-	 * (myurl.contains("?") == false) { myurl += "?1=1"; } Attrs myattrs =
-	 * currNode.getHisWork().getEnMap() .getAttrs(); Work hisWK =
-	 * currNode.getHisWork(); for (Attr attr : myattrs.ToJavaList()) { if
-	 * (myurl.contains("@") == false) { break; } myurl = myurl.replace("@" +
-	 * attr.getKey(), hisWK.GetValStrByKey(attr.getKey())); } myurl =
-	 * myurl.replace("@WebUser.No", BP.Web.WebUser.getNo()); myurl =
-	 * myurl.replace("@WebUser.Name", BP.Web.WebUser.getName()); myurl =
-	 * myurl.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
-	 * 
-	 * if (myurl.contains("@")) { BP.WF.Dev2Interface.Port_SendMsg( "admin",
-	 * getcurrFlow().getName() + "在" + getcurrND().getName() + "节点处，出现错误",
-	 * "流程设计错误，在节点转向url中参数没有被替换下来。Url:" + myurl, "Err" + getcurrND().getNo() +
-	 * "_" + this.getWorkID(), SMSMsgType.Err, this.getFK_Flow(),
-	 * this.getFK_Node(), this.getWorkID(), this.getFID()); throw new
-	 * RuntimeException( "流程设计错误，在节点转向url中参数没有被替换下来。Url:" + myurl); }
-	 * 
-	 * if (myurl.contains("PWorkID") == false) { myurl += "&PWorkID=" +
-	 * this.getWorkID(); }
-	 * 
-	 * myurl += "&FromFlow=" + this.getFK_Flow() + "&FromNode=" +
-	 * this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" +
-	 * WebUser.getSID(); return "url@" + myurl; case TurnToByCond: TurnTos tts =
-	 * new TurnTos(this.getFK_Flow()); if (tts.size() == 0) {
-	 * BP.WF.Dev2Interface.Port_SendMsg( "admin", getcurrFlow().getName() + "在"
-	 * + getcurrND().getName() + "节点处，出现错误", "您没有设置节点完成后的转向条件。", "Err" +
-	 * getcurrND().getNo() + "_" + this.getWorkID(), SMSMsgType.Err,
-	 * this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID());
-	 * throw new RuntimeException("@您没有设置节点完成后的转向条件。"); }
-	 * 
-	 * for (TurnTo tt : tts.ToJavaList()) { tt.HisWork = currNode.getHisWork();
-	 * if (tt.getIsPassed() == true) { String url =
-	 * tt.getTurnToURL().toString(); if (url.contains("?") == false) { url +=
-	 * "?1=1"; } Attrs attrs = currNode.getHisWork().getEnMap() .getAttrs();
-	 * Work hisWK1 = currNode.getHisWork(); for (Attr attr : attrs) { if
-	 * (url.contains("@") == false) { break; } url = url .replace("@" +
-	 * attr.getKey(), hisWK1.GetValStrByKey(attr .getKey())); } if
-	 * (url.contains("@")) { throw new RuntimeException(
-	 * "流程设计错误，在节点转向url中参数没有被替换下来。Url:" + url); }
-	 * 
-	 * url += "&PFlowNo=" + this.getFK_Flow() + "&FromNode=" + this.getFK_Node()
-	 * + "&PWorkID=" + this.getWorkID() + "&UserNo=" + WebUser.getNo() + "&SID="
-	 * + WebUser.getSID(); return "url@" + url; } } return msg; default: msg =
-	 * msg .replace("@WebUser.No", BP.Web.WebUser.getNo()); msg =
-	 * msg.replace("@WebUser.Name", BP.Web.WebUser.getName()); msg =
-	 * msg.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept()); return msg;
-	 * } } catch (RuntimeException ex) { if
-	 * (ex.getMessage().contains("请选择下一步骤工作") == true ||
-	 * ex.getMessage().contains("用户没有选择发送到的节点") == true) { if
-	 * (this.getcurrND().getCondModel() == CondModel.ByLineCond) { //
-	 * 如果抛出异常，我们就让其转入选择到达的节点里, 在节点里处理选择人员. return "url@"+appPath +
-	 * "WF/WorkOpt/ToNodes.htm?FK_Flow=" + this.getFK_Flow() + "&FK_Node=" +
-	 * this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" +
-	 * this.getFID(); }
-	 * 
-	 * BtnLab btn = new BtnLab(this.getFK_Node());
-	 * btn.setSelectAccepterEnable(2); btn.Update();
-	 * 
-	 * return
-	 * "err@下一个节点的接收人规则是，当前节点选择来选择，在当前节点属性里您没有启动接受人按钮，系统自动帮助您启动了，请关闭窗口重新打开。"; }
-	 * 
-	 * // 绑定独立表单，表单自定义方案验证错误弹出窗口进行提示 if (this.getcurrND().getHisFrms() != null
-	 * && this.getcurrND().getHisFrms().size() > 0 &&
-	 * ex.getMessage().contains("在提交前检查到如下必输字段填写不完整") == true) { return "err@" +
-	 * ex.getMessage().replace("@@", "@") .replace("@", "<BR>@"); }
-	 * 
-	 * return "err@发送工作出现错误:" + ex.getMessage(); } }
-	 */
 	/**
 	 * 发送
 	 * 
@@ -1507,7 +1409,6 @@ public class WF_MyFlow extends WebContralBase {
 	}
 
 	public String GenerWorkNode() throws Exception {
-		String json = "";
 		try {
 			DataSet ds = new DataSet();
 
@@ -1521,7 +1422,6 @@ public class WF_MyFlow extends WebContralBase {
 			ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 					BP.Web.WebUser.getNo(), "0");
 
-			
 			/// #region 如果是移动应用就考虑多表单的问题.
 			if (getcurrND().getHisFormType() == NodeFormType.SheetTree && this.getIsMobile() == true) {
 				// 如果是表单树并且是，移动模式.
@@ -1535,15 +1435,13 @@ public class WF_MyFlow extends WebContralBase {
 				// 把节点与表单的关联管理放入到系统.
 				ds.Tables.add(fns.ToDataTableField("FrmNodes"));
 			}
-
 			/// #endregion 如果是移动应用就考虑多表单的问题.
 
 			String str = BP.Tools.Json.ToJson(ds);
 
-			// DataType.WriteFile("c:\\aaabbbb.Txt", str);
 			return str;
 		} catch (RuntimeException ex) {
-			// BP.DA.Log.DefaultLogWriteLineError(ex);
+
 			return "err@" + ex.getMessage();
 		}
 	}
@@ -1719,9 +1617,7 @@ public class WF_MyFlow extends WebContralBase {
 		if (_workID != 0) {
 			return _workID;
 		}
-		// string str = context.Request.QueryString["WorkID"];
-		// if (str == null || str == "" || str == "null")
-		// return 0;
+
 		// 杨玉慧
 		String str = this.GetRequestVal("WorkID");
 		if (str == null || str.equals("") || str.equals("null")) {

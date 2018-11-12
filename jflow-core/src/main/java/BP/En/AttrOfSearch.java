@@ -1,5 +1,8 @@
 package BP.En;
 
+import java.util.Enumeration;
+
+import BP.Tools.ContextHolderUtils;
 import BP.Web.WebUser;
 
 /**
@@ -126,9 +129,17 @@ public class AttrOfSearch
 						WebUser.getFK_DeptNameOfFull());
 			}
 			
-			// if (_DefaultVal.Contains("@WebUser.FK_Unit"))
-			// return _DefaultVal.replace("@WebUser.FK_Unit",
-			// Web.WebUser.FK_Unit);
+			//替换URL传的参数
+			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				// 判断是否有内容，hasNext()
+				String key = (String) enu.nextElement();
+				if (_DefaultVal.contains(key))
+					return _DefaultVal.replace("@" + key, ContextHolderUtils.getRequest().getParameter(key));
+			
+			}
+			
 			
 		}
 		return _DefaultVal;

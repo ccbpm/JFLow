@@ -1511,7 +1511,7 @@ public class WF_MyFlow extends WebContralBase {
 		try {
 			DataSet ds = new DataSet();
 
-			if (this.getDoType1().toUpperCase().equals("VIEW")) {
+			if (this.getDoType1()!=null && this.getDoType1().toUpperCase().equals("VIEW")) {
 				DataTable trackDt = BP.WF.Dev2Interface.DB_GenerTrack(this.getFK_Flow(), this.getWorkID(),
 						this.getFID()).Tables.get(0);
 				ds.Tables.add(trackDt);
@@ -1521,44 +1521,7 @@ public class WF_MyFlow extends WebContralBase {
 			ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
 					BP.Web.WebUser.getNo(), "0");
 
-			/// #region 增加上流程的信息.
-			long workid = this.getWorkID();
-			String sql = "";
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-				sql = String.format(
-						"select work1.WFState,work2.WFState PWFState,work1.PFID,work1.PWorkID,work1.PNodeID,work1.PFlowNo,NVL(work2.PWorkID,0) PWorkID2,work2.PNodeID PNodeID2,work2.PFlowNo PFlowNo2,work1.FK_Flow,work1.FK_Node,work1.WorkID from WF_GenerWorkFlow work1 left join  WF_GenerWorkFlow work2 on  work1.FID=work2.WorkID where work1.WorkID='%1$s'",
-						workid);
-			} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
-				sql = String.format(
-						"select work1.WFState,work2.WFState PWFState,work1.PFID,work1.PWorkID,work1.PNodeID,work1.PFlowNo,IFNULL(work2.PWorkID,0) PWorkID2,work2.PNodeID PNodeID2,work2.PFlowNo PFlowNo2,work1.FK_Flow,work1.FK_Node,work1.WorkID from WF_GenerWorkFlow work1 left join  WF_GenerWorkFlow work2 on  work1.FID=work2.WorkID where work1.WorkID='%1$s'",
-						workid);
-			} else {
-				sql = String.format(
-						"select work1.WFState,work2.WFState PWFState,work1.PFID,work1.PWorkID,work1.PNodeID,work1.PFlowNo,ISNULL(work2.PWorkID,0) PWorkID2,work2.PNodeID PNodeID2,work2.PFlowNo PFlowNo2,work1.FK_Flow,work1.FK_Node,work1.WorkID from WF_GenerWorkFlow work1 left join  WF_GenerWorkFlow work2 on  work1.FID=work2.WorkID where work1.WorkID='%1$s'",
-						workid);
-			}
-
-			DataTable wf_generWorkFlowDt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			wf_generWorkFlowDt.TableName = "WF_GenerWorkFlow";
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-				wf_generWorkFlowDt.Columns.get("WFSTATE").ColumnName = "WFState";
-				wf_generWorkFlowDt.Columns.get("PWFSTATE").ColumnName = "PWFState";
-				wf_generWorkFlowDt.Columns.get("PFID").ColumnName = "PFID";
-				wf_generWorkFlowDt.Columns.get("PWORKID").ColumnName = "PWorkID";
-				wf_generWorkFlowDt.Columns.get("PNODEID").ColumnName = "PNodeID";
-				wf_generWorkFlowDt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
-
-				wf_generWorkFlowDt.Columns.get("PWORKID2").ColumnName = "PWorkID2";
-				wf_generWorkFlowDt.Columns.get("PNODEID2").ColumnName = "PNodeID2";
-				wf_generWorkFlowDt.Columns.get("PFLOWNO2").ColumnName = "PFlowNo2";
-
-				wf_generWorkFlowDt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
-				wf_generWorkFlowDt.Columns.get("FK_NODE").ColumnName = "FK_Node";
-				wf_generWorkFlowDt.Columns.get("WORKID").ColumnName = "WorkID";
-			}
-
-			/// #endregion 增加上流程的信息.
-
+			
 			/// #region 如果是移动应用就考虑多表单的问题.
 			if (getcurrND().getHisFormType() == NodeFormType.SheetTree && this.getIsMobile() == true) {
 				// 如果是表单树并且是，移动模式.

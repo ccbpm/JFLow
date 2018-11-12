@@ -25,6 +25,7 @@ import BP.En.Entities;
 import BP.En.EntitiesTree;
 import BP.En.EntityTree;
 import BP.En.QueryObject;
+import BP.Port.Emp;
 import BP.Sys.FrmType;
 import BP.Sys.MapData;
 import BP.Sys.MapDataAttr;
@@ -1845,7 +1846,24 @@ public class WF_MyFlow extends WebContralBase {
 		}
 		return _FK_Node;
 	}
-
+	
+	/**
+	 * 根据用户名单点登录
+	 * @return
+	 * @throws Exception
+	 */
+	public String SingleSignOn() throws Exception{
+		String userNo = this.GetRequestVal("UserNo");
+		BP.Port.Emp emp = new Emp();
+		emp.setNo(userNo);
+		if (emp.RetrieveFromDBSources() ==0)
+			return "err@用户不存在.";
+		//调用登录方法.
+		BP.WF.Dev2Interface.Port_Login(emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(),null,null);
+		return "登录成功";
+	}
+	
+	
 	private String _width = "";
 
 	/**

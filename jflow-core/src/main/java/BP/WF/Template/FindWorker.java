@@ -95,8 +95,19 @@ public class FindWorker
 		}
 
 		//首先判断是否配置了获取下一步接受人员的sql.
-		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySQL || town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySQLAsSubThreadEmpsAndData)
+		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySQL 
+				|| town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySQLTemplate 
+				|| town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySQLAsSubThreadEmpsAndData)
 		{
+			
+			if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySQLTemplate )
+			{
+				SQLTemplate st = new SQLTemplate(town.getHisNode().getDeliveryParas());
+                sql = st.getDocs();
+                
+			}else
+				
+			{
 			if (town.getHisNode().getDeliveryParas().length() < 4)
 			{
 				throw new RuntimeException("@您设置的当前节点按照SQL，决定下一步的接受人员，但是你没有设置SQL.");
@@ -104,6 +115,7 @@ public class FindWorker
 
 			sql = town.getHisNode().getDeliveryParas();
 			sql = sql.toString();
+			}
 
 			//特殊的变量.
 			sql = sql.replace("@FK_Node", this.town.getHisNode().getNodeID()+"");

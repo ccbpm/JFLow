@@ -4387,6 +4387,11 @@ public class WorkNode {
 			ps.SQL = "SELECT * FROM " + md.getPTable() + " WHERE OID=" + ps.getDBStr() + "OID";
 			ps.Add(WorkAttr.OID, pk);
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
+			
+			if (dt.Rows.size() == 0) {
+				err += "@表单{" + md.getName() + "}没有输入数据。";
+				continue;
+			} 
 
 			// 检查数据是否完整.
 			for (FrmField ff : ffs.ToJavaList()) {

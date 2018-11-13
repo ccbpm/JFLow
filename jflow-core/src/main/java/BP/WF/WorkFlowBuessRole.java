@@ -713,8 +713,18 @@ public class WorkFlowBuessRole
 		}
 
 		//首先判断是否配置了获取下一步接受人员的sql.
-		if (toNode.getHisDeliveryWay() == DeliveryWay.BySQL || toNode.getHisDeliveryWay() == DeliveryWay.BySQLAsSubThreadEmpsAndData)
+		if (toNode.getHisDeliveryWay() == DeliveryWay.BySQL 
+				|| toNode.getHisDeliveryWay() == DeliveryWay.BySQLTemplate 
+				|| toNode.getHisDeliveryWay() == DeliveryWay.BySQLAsSubThreadEmpsAndData)
 		{
+			
+			  if (toNode.getHisDeliveryWay() == DeliveryWay.BySQLTemplate)
+              {
+                  SQLTemplate st = new SQLTemplate(toNode.getDeliveryParas());
+                  sql = st.getDocs();
+              }else
+              {
+			
 			if (toNode.getDeliveryParas().length() < 4)
 			{
 				throw new RuntimeException("@您设置的当前节点按照SQL，决定下一步的接受人员，但是你没有设置SQL.");
@@ -722,6 +732,7 @@ public class WorkFlowBuessRole
 
 			sql = toNode.getDeliveryParas();
 			sql = sql.toString();
+              }
 
 			//特殊的变量.
 			sql = sql.replace("@FK_Node", (new Integer(toNode.getNodeID())).toString());

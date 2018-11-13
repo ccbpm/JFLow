@@ -71,6 +71,10 @@ public enum DeliveryWay
 	 
 	*/
 	BySQLAsSubThreadEmpsAndData(12),
+	/*
+	 * 按照sql模版
+	 * */
+	BySQLTemplate(17),
 	/** 
 	 按明细表确定子线程接受人.
 	 

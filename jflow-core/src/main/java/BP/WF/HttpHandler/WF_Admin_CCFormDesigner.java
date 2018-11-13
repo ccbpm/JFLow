@@ -328,6 +328,13 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 			// "url@./FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" +
 			// this.FK_MapData;
 		}
+		
+		   if (md.getHisFrmType() == BP.Sys.FrmType.Url)
+           {
+               /* 自由表单 */
+               return "url@../../Comm/En.htm?EnName=BP.WF.Template.MapDataURL&No=" + this.getFK_MapData();
+           }
+		   
 		return "err@没有判断的表单转入类型" + md.getHisFrmType().toString();
 	}
 

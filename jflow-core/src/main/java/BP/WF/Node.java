@@ -629,23 +629,9 @@ public class Node extends Entity
 		}
 		//更新版本号.
 		Flow.UpdateVer(this.getFK_Flow());
-			///#region //获得 NEE 实体.
-		//if (string.IsNullOrEmpty(this.NodeMark) == false)
-		//{
-		//    object obj = Glo.GetNodeEventEntityByNodeMark(fl.FlowMark,this.NodeMark);
-		//    if (obj == null)
-		//        throw new Exception("@节点标记错误：没有找到该节点标记(" + this.NodeMark + ")的节点事件实体.");
-		//    this.NodeEventEntity = obj.ToString();
-		//}
-		//else
-		//{
-		//    this.NodeEventEntity = "";
-		//}
+			 
 
-			///#endregion 同步事件实体.
-
-
-			///#region 更新流程判断条件的标记。
+	    ///#region 更新流程判断条件的标记。
 		DBAccess.RunSQL("UPDATE WF_Node SET IsCCFlow=0  WHERE FK_Flow='" + this.getFK_Flow() + "'");
 		DBAccess.RunSQL("UPDATE WF_Node SET IsCCFlow=1 WHERE NodeID IN (SELECT NodeID FROM WF_Cond WHERE CondType=1) AND FK_Flow='" + this.getFK_Flow() + "'");
 		Flow fl = new Flow(this.getFK_Flow());

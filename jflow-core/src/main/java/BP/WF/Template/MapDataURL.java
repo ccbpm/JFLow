@@ -903,7 +903,7 @@ public class MapDataURL extends EntityNoName
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Sys_MapData", "表单属性");
+		Map map = new Map("Sys_MapData", "URL表单属性");
 
 
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, false, 1, 200, 20);
@@ -911,12 +911,15 @@ public class MapDataURL extends EntityNoName
 
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", false, false, 0, 500, 20);
 
-			//表单的运行类型.
-		map.AddDDLSysEnum(MapDataAttr.FrmType, BP.Sys.FrmType.FreeFrm.getValue(), "表单类型",true, false, MapDataAttr.FrmType);
-
 		map.AddTBString(MapDataAttr.Url, null, "URL连接", true, false, 0, 500, 20, true);
+		
+
+		//表单的运行类型.
+	   map.AddDDLSysEnum(MapDataAttr.FrmType, BP.Sys.FrmType.FreeFrm.getValue(), "表单类型",true, false, MapDataAttr.FrmType);
+
+	
 			//数据源.
-		map.AddDDLEntities(MapDataAttr.DBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), false);
+		//map.AddDDLEntities(MapDataAttr.DBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), false);
 		map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
 
 			///#endregion 基本属性.
@@ -934,16 +937,7 @@ public class MapDataURL extends EntityNoName
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
 
 			///#endregion 设计者信息.
-
-		RefMethod rm = new RefMethod();
-		rm.Title = "打开URL"; // "设计表单";
-		rm.GroupName = "基本功能";
-		rm.ClassMethodName = this.toString() + ".DoOpenUrl";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FullData.png";
-		rm.Visable = true;
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.Target = "_blank";
-		map.AddRefMethod(rm);
+ 
 
 		this.set_enMap(map);
 		return this.get_enMap();

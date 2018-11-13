@@ -100,9 +100,10 @@ function figure_MapAttr_Template(mapAttr) {
     if (mapAttr.MyDataType == 7)
         if (W < 160) W = 160;
 
-    eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding","0px 12px") ;
-
-
+    if (mapAttr.MyDataType != 4) {
+        eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 12px");  
+     }
+    
     eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
 
     return eleHtml;
@@ -585,12 +586,17 @@ function connector_Template_Line(frmLine) {
     var eleHtml = '';
     eleHtml = '<table><tr><td></td></tr></table>';
     eleHtml = $(eleHtml).css('position', 'absolute').css('top', frmLine.Y1).css('left', frmLine.X1);
-    eleHtml.find('td').css('padding', '0px')
-    //css('top',parseFloat(frmLine.Y1)>parseFloat( frmLine.Y2)?frmLine.Y2:frmLine.Y1).
-    //css('left', parseFloat(frmLine.X1) > parseFloat(frmLine.X2 )? frmLine.X2 : frmLine.X1).
-        .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? frmLine.BorderWidth : Math.abs(frmLine.X1 - frmLine.X2))
-    .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? frmLine.BorderWidth : Math.abs(frmLine.Y1 - frmLine.Y2))
+    if (navigator.userAgent.indexOf('Firefox') >= 0) {
+        eleHtml.find('td').css('padding', '0px')
+        .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 1 : Math.abs(frmLine.X1 - frmLine.X2))
+    .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 2: Math.abs(frmLine.Y1 - frmLine.Y2))
         .css("background", frmLine.BorderColor);
+    } else {
+        eleHtml.find('td').css('padding', '0px')
+        .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 0 : Math.abs(frmLine.X1 - frmLine.X2))
+    .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 1 : Math.abs(frmLine.Y1 - frmLine.Y2))
+        .css("background", frmLine.BorderColor);
+    }
 
     return eleHtml;
 }

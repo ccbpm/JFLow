@@ -3,12 +3,13 @@
     //加入隐藏控件.
     var mapAttrs = frmData.Sys_MapAttr;
     var html = "";
-    for (var mapAttr in mapAttrs) {
-        if (mapAttr.UIVisable == 0) {
+    for (var i = 0; i < mapAttrs.length; i++) {
+        var mapAttr = mapAttrs[i];
+        if (mapAttr.UIVisible == 0) {
             var defval = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
-            html += "<input type='hidden' id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + defval + "' />";
+            html = "<input type='hidden' id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + defval + "' />";
             html = $(html);
-            $('#CCFrom').append(html);
+            $('#CCForm').append(html);
         }
     }
 
@@ -36,10 +37,7 @@
 
         var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
 
-        //if (mapAttr.MyDataType == 8) {
-         //   if (!/\./.test(val))
-        //        val += '.00';
-        //}
+
         $('#TB_' + mapAttr.KeyOfEn).val(val);
 
         //文本框.
@@ -228,11 +226,11 @@ function AfterBindEn_DealMapExt(frmData) {
                 break;
             case "PopBranchesAndLeaf": //树干叶子模式.
                 var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
-                PopBranchesAndLeaf(mapExt,val); //调用 /CCForm/JS/Pop.js 的方法来完成.
+                PopBranchesAndLeaf(mapExt, val); //调用 /CCForm/JS/Pop.js 的方法来完成.
                 break;
             case "PopBranches": //树干简单模式.
                 var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
-                PopBranches(mapExt,val); //调用 /CCForm/JS/Pop.js 的方法来完成.
+                PopBranches(mapExt, val); //调用 /CCForm/JS/Pop.js 的方法来完成.
                 break;
             case "PopGroupList": //分组模式.
                 PopGroupList(mapExt); //调用 /CCForm/JS/Pop.js 的方法来完成.
@@ -257,45 +255,45 @@ function AfterBindEn_DealMapExt(frmData) {
                     popWorkModelStr = mapExt.AtPara.substring(popWorkModelIndex, popWorkModelIndex + 1);
                 }
                 switch (popWorkModelStr) {
-                    /// <summary>        
-                    /// 自定义URL        
-                    /// </summary>        
-                    //SelfUrl =1,        
+                    /// <summary>         
+                    /// 自定义URL         
+                    /// </summary>         
+                    //SelfUrl =1,         
                     case "1":
                         icon = "glyphicon glyphicon-th";
                         break;
-                    /// <summary>        
-                    /// 表格模式        
-                    /// </summary>        
-                    // TableOnly,        
+                    /// <summary>         
+                    /// 表格模式         
+                    /// </summary>         
+                    // TableOnly,         
                     case "2":
                         icon = "glyphicon glyphicon-list";
                         break;
-                    /// <summary>        
-                    /// 表格分页模式        
-                    /// </summary>        
-                    //TablePage,        
+                    /// <summary>         
+                    /// 表格分页模式         
+                    /// </summary>         
+                    //TablePage,         
                     case "3":
                         icon = "glyphicon glyphicon-list-alt";
                         break;
-                    /// <summary>        
-                    /// 分组模式        
-                    /// </summary>        
-                    // Group,        
+                    /// <summary>         
+                    /// 分组模式         
+                    /// </summary>         
+                    // Group,         
                     case "4":
                         icon = "glyphicon glyphicon-list-alt";
                         break;
-                    /// <summary>        
-                    /// 树展现模式        
-                    /// </summary>        
-                    // Tree,        
+                    /// <summary>         
+                    /// 树展现模式         
+                    /// </summary>         
+                    // Tree,         
                     case "5":
                         icon = "glyphicon glyphicon-tree-deciduous";
                         break;
-                    /// <summary>        
-                    /// 双实体树        
-                    /// </summary>        
-                    // TreeDouble        
+                    /// <summary>         
+                    /// 双实体树         
+                    /// </summary>         
+                    // TreeDouble         
                     case "6":
                         icon = "glyphicon glyphicon-tree-deciduous";
                         break;
@@ -310,8 +308,8 @@ function AfterBindEn_DealMapExt(frmData) {
                 break;
             case "BindFunction": //控件绑定函数.
 
-              //  alert(mapExt.AttrOfOper);
-               // alert(DynamicBind(mapExt, "TB_"));
+                //  alert(mapExt.AttrOfOper);
+                // alert(DynamicBind(mapExt, "TB_"));
 
 
                 if ($('#TB_' + mapExt.AttrOfOper).length == 1) {
@@ -333,22 +331,15 @@ function AfterBindEn_DealMapExt(frmData) {
                 break;
             case "RegularExpression": //正则表达式  统一在保存和提交时检查
 
-                if (mapExt.Tag == "onblur") {
-                    var tb = $('[name$=' + "TB_" + mapExt.AttrOfOper + ']');
-                    tb.blur(function () {  // 失去焦点 
-                        //    SetQingJiaTianShu();
-                    });
-                    return;
-                }
-                var tb = $('[name$=' + mapExt.AttrOfOper + ']');
 
-                //tb.attr(mapExt.Tag, "CheckRegInput('" + tb.attr('name') + "'," + mapExt.Doc.replace(/【/g, '[').replace(/】/g, ']').replace(/（/g, '(').replace(/）/g, ')').replace(/｛/g, '{').replace(/｝/g, '}') + ",'" + mapExt.Tag1 + "')");
-
+                var tb = $('#TB_' + mapExt.AttrOfOper);
+                
                 if (tb.attr('class') != undefined && tb.attr('class').indexOf('CheckRegInput') > 0) {
                     break;
                 } else {
                     tb.addClass("CheckRegInput");
                     tb.data(mapExt)
+                    tb.attr(mapExt.Tag, "CheckRegInput('" + tb.attr('name') + "'," + mapExt.Doc.replace(/【/g, '[').replace(/】/g, ']').replace(/（/g, '(').replace(/）/g, ')').replace(/｛/g, '{').replace(/｝/g, '}') + ",'" + mapExt.Tag1 + "')");
                     //tb.data().name = tb.attr('name');
                     //tb.data().Doc = mapExt.Doc;
                     //tb.data().Tag1 = mapExt.Tag1;
@@ -367,6 +358,14 @@ function AfterBindEn_DealMapExt(frmData) {
                 //    if (ddl != null)
                 //        ddl.attr(mapExt.Tag2, mapExt.Tag1 + "(this);");
                 //}
+                break;
+            case "FastInput": //是否启用快速录入
+                if (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0 || GetQueryString("IsReadonly") == "1")
+                    continue;
+                var tbFastInput = $("#TB_" + mapExt.AttrOfOper);
+                var content = $("<span style='margin-left:-120px'></span><br/>");
+                tbFastInput.after(content);
+                content.append("<a href='javascript:void(0)' onclick='TBHelp(\"TB_" + mapExt.AttrOfOper + "\",\"" + mapExt.MyPK + "\")'>常用词汇</a> <a href='javascript:void(0)' onclick='clearContent(\"TB_" + mapExt.AttrOfOper + "\")'>清空<a>");
                 break;
             case "TBFullCtrl": //自动填充
                 var tbAuto = $("#TB_" + mapExt.AttrOfOper);
@@ -534,6 +533,19 @@ function AfterBindEn_DealMapExt(frmData) {
     }
 }
 
+function TBHelp(ObjId, MyPK) {
+    var url = "/WF/CCForm/Pop/HelperOfTBEUI.htm?PKVal=" + MyPK + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
+    var W = document.body.clientWidth - 500;
+    var H = document.body.clientHeight - 140;
+    var str = OpenEasyUiDialogExt(url, "词汇选择", W, H, false);
+}
+function changeFastInt(ctrl, value) {
+    $("#TB_" + ctrl).val(value);
+    $('#eudlg').window('close');
+}
+function clearContent(ctrl) {
+    $("#" + ctrl).val("");
+}
 function DynamicBind(mapExt, ctrlType) {
 
     $('#' + ctrlType + mapExt.AttrOfOper).on(mapExt.Tag, function () {
@@ -582,12 +594,17 @@ function calculator(o) {
     });
     (function (targets, expression, resultTarget, pk, expDefined) {
         $.each(targets, function (i, o) {
+
             var target = o.replace("@", "");
+
             $(":input[name=TB_" + target + "]").bind("change", function () {
+
                 var evalExpression = " var result = ''; ";
                 if (expression.judgement.length > 0) {
                     evalExpression += " if ( " + expression.judgement.join(" || ") + " ) { ";
-                    evalExpression += " 	console.log(\"MyPk: " + pk + ", 表达式: '" + expDefined + "' " + "中有对象在当前页面不存在\");"
+                    evalExpression += " 	alert(\"MyPk: " + pk + ", 表达式: '" + expDefined + "' " + "中有对象在当前页面不存在\");"
+                    // evalExpression += " 	console.log(\"MyPk: " + pk + ", 表达式: '" + expDefined + "' " + "中有对象在当前页面不存在\");"
+
                     evalExpression += " } ";
                 }
                 if (expression.execute_judgement.length > 0) {
@@ -599,7 +616,10 @@ function calculator(o) {
                 if (expression.execute_judgement.length > 0) {
                     evalExpression += " } ";
                 }
+
                 eval(evalExpression);
+
+
                 $(":input[name=TB_" + resultTarget + "]").val(typeof result == "undefined" ? "" : result);
             });
             if (i == 0) {
@@ -647,4 +667,76 @@ function testExpression(exp) {
         return false;
     }
     return true;
+}
+
+/** 为了保障以前的业务逻辑兼容性，特把旧方法移植到这里. **/
+// 获取DDL值
+function ReqDDL(ddlID) {
+    var v = document.getElementById('DDL_' + ddlID).value;
+    if (v == null) {
+        alert('没有找到ID=' + ddlID + '的下拉框控件.');
+        return;
+    }
+    return v;
+}
+
+// 获取TB值
+function ReqTB(tbID) {
+    var v = document.getElementById('TB_' + tbID).value;
+    if (v == null) {
+        alert('没有找到ID=' + tbID + '的文本框控件.');
+        return;
+    }
+    return v;
+}
+
+// 获取CheckBox值
+function ReqCB(cbID) {
+    var v = document.getElementById('CB_' + cbID).value;
+    if (v == null) {
+        alert('没有找到ID=' + cbID + '的文本框控件.');
+        return;
+    }
+    return v;
+}
+
+// 获取 单选按钮的 值.
+function ReqRadio(keyofEn, enumIntVal) {
+    var v = document.getElementById('RB_' + keyofEn + '' + enumIntVal);
+    if (v == null) {
+        alert('没 有找到字段名=' + keyofEn + '值=' + enumIntVal + '的控件.');
+        return;
+    }
+    return v.checked;
+}
+
+/// 获取DDL Obj
+function ReqDDLObj(ddlID) {
+    var v = document.getElementById('DDL_' + ddlID);
+    if (v == null) {
+        alert('没有找到ID=' + ddlID + '的下拉框控件.');
+    }
+    return v;
+}
+// 获取TB Obj
+function ReqTBObj(tbID) {
+    var v = document.getElementById('TB_' + tbID);
+    if (v == null) {
+        alert('没有找到ID=' + tbID + '的文本框控件.');
+    }
+    return v;
+}
+// 获取CheckBox Obj值
+function ReqCBObj(cbID) {
+    var v = document.getElementById('CB_' + cbID);
+    if (v == null) {
+        alert('没有找到ID=' + cbID + '的单选控件.');
+    }
+    return v;
+}
+// 设置值.
+function SetCtrlVal(ctrlID, val) {
+    document.getElementById('TB_' + ctrlID).value = val;
+    document.getElementById('DDL_' + ctrlID).value = val;
+    document.getElementById('CB_' + ctrlID).value = val;
 }

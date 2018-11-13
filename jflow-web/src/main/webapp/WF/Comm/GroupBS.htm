@@ -4,7 +4,7 @@
 <head>
     <title>统计分析</title>
     <link href="../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
-    <link href="../Scripts/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../Scripts/easyUI/themes/gray/easyui.css" rel="stylesheet" type="text/css" />
     <link href="../Scripts/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
     <script src="../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
@@ -26,6 +26,10 @@
             margin: 2px 1px;
             height: 24px;
             background-color: rgba(255, 255, 255, 0.77);
+        }
+        td
+        {
+            border-color:#ccc;
         }
     </style>
 
@@ -68,7 +72,7 @@
             //分析项目
             GroupAnalysis();
             //显示数据
-            doPostBack();
+            doPostBack(0);
 
 
         });
@@ -198,7 +202,7 @@
                 }
                 html += "<tr>";
                 html += "<td>";
-                html += "<input type='checkbox' id='" + groupAttrs[i].Field + "' name='groupContent' " + checked + " onclick='javascript:doPostBack(this,\"\")' value='" + groupAttrs[i].Field + "'/><label for='" + groupAttrs[i].Field + "'>" + groupAttrs[i].Name + "</label>";
+                html += "<input type='checkbox' id='" + groupAttrs[i].Field + "' name='groupContent' " + checked + " onclick='javascript:doPostBack(1,\"\")' value='" + groupAttrs[i].Field + "'/><label for='" + groupAttrs[i].Field + "'>" + groupAttrs[i].Name + "</label>";
                 html += "</td>";
                 html += "</tr>";
                 $("#CheckBoxList").append(html);
@@ -226,10 +230,10 @@
                 }
                 html += "<tr>";
                 html += "<td>";
-                html += "<input type='checkbox' id='" + analyAtts[i].Field + "' name='groupAnaly' " + checked + " onclick='javascript:doPostBack(this,\"\")' value='" + analyAtts[i].Field + "'/><label for='" + analyAtts[i].Field + "'>" + analyAtts[i].Name + "</label>";
+                html += "<input type='checkbox' id='" + analyAtts[i].Field + "' name='groupAnaly' " + checked + " onclick='javascript:doPostBack(1,\"\")' value='" + analyAtts[i].Field + "'/><label for='" + analyAtts[i].Field + "'>" + analyAtts[i].Name + "</label>";
                 html += "</td>";
                 html += "<td style='font-size:12px;text-align:right'>";
-                html += "<select class='form-control' name='DDL_" + analyAtts[i].Field + "' ID='DDL_" + analyAtts[i].Field + "' onchange='javascript:doPostBack(this,\"\")'>" + InitDDLOperation(data, analyAtts[i], null) + "</select>&nbsp;&nbsp;&nbsp;&nbsp;";
+                html += "<select class='form-control' name='DDL_" + analyAtts[i].Field + "' ID='DDL_" + analyAtts[i].Field + "' onchange='javascript:doPostBack(1,\"\")'>" + InitDDLOperation(data, analyAtts[i], null) + "</select>&nbsp;&nbsp;&nbsp;&nbsp;";
                 html += "</td>";
                 html += "</tr>";
                 $("#AnalyGroup").append(html);
@@ -238,14 +242,13 @@
 
         function doPostBack() {
             var groupCount = $('input[name="groupContent"]:checked').length;
-            if (groupCount > 1) {
+            if (groupCount != 1) {
                 $("#CB_IsShowPict").attr("disabled", "disabled");
-
                 $("#CB_IsShowPict").attr("checked", false);
-            }
-
-            else
+            }else {
                 $("#CB_IsShowPict").attr("disabled", false);
+                $("#CB_IsShowPict").attr("checked", true);
+            }
 
             //给注册表信息重新赋值
             ur = new Entity("BP.Sys.UserRegedit");
@@ -255,7 +258,6 @@
                 selectedGroupKey += '@' + $(this).val(); //将选中的值添加到数组chk_value中  
             });
             var stateNumKey = "";
-
             $('input[name="groupAnaly"]:checked').each(function () {
                 var key = $(this).val();
                 //获取下拉框的值
@@ -279,7 +281,6 @@
             Group_Search();
         }
         function Group_Search() {
-             //销毁图例
             if (FusionCharts("column_chart") != undefined)
                 FusionCharts("column_chart").dispose();
             if (FusionCharts("pie_chart") != undefined)
@@ -340,19 +341,19 @@
             /**含有合计的时候**/
             if (ur.Vals.indexOf("=AMOUNT") != -1) {
                 html += "<tr>";
-                html += "<td rowspan=2 class='GroupTitle'>ID</td>";
+                html += "<td rowspan=2 class='GroupTitle' style='background-color:#eee'>ID</td>";
 
                 for (var i = 0; i < AttrsOfGroup.length; i++) {
-                    html += "<td rowspan=2 class='GroupTitle'>" + AttrsOfGroup[i].Name + "</td>";
+                    html += "<td rowspan=2 class='GroupTitle' style='background-color:#eee'>" + AttrsOfGroup[i].Name + "</td>";
                 }
 
                 // 增加数据列
                 for (var i = 0; i < AttrsOfNum.length; i++) {
                     if (ur.Vals.indexOf.indexOf(AttrsOfNum[i].KeyOfEn + "=AMOUNT") != -1)
                     /*  如果本数据列 包含累计 */
-                        html += "<td  colspan=2 class='GroupTitle' >" + AttrsOfNum[i].Name + "</td>";
+                        html += "<td  colspan=2 class='GroupTitle' style='background-color:#eee' >" + AttrsOfNum[i].Name + "</td>";
                     else
-                        html += "<td  rowspan=2 class='GroupTitle' >" + AttrsOfNum[i].Name + "</td>";
+                        html += "<td  rowspan=2 class='GroupTitle' style='background-color:#eee'>" + AttrsOfNum[i].Name + "</td>";
                 }
                 html += "</tr>";
                 html += "<tr>";
@@ -368,7 +369,7 @@
 
             } else {
                 html += "<tr>";
-                html += "<td class='GroupTitle' style='text-align:center' >序</td>";
+                html += "<td class='GroupTitle' style='text-align:center;background-color:#eee' >序</td>";
                 html += "</td>";
                 // 分组条件
                 for (var i = 0; i < AttrsOfGroup.length; i++) {
@@ -376,16 +377,16 @@
                     if (OrderBy == AttrsOfGroup[i].KeyOfEn) {
                         switch (OrderWay) {
                             case "Down":
-                                html += "<td class='GroupTitle' nowrap><a href='Group.htm?EnsName=" + GetQueryString("EnsName") + "&OrderBy=" + AttrsOfGroup[i].KeyOfEn + "&OrderWay=Up' >" + AttrsOfGroup[i].Name + "<img src='../Img/ArrDown.gif' border=0/></a></td>";
+                                html += "<td class='GroupTitle' style='background-color:#eee'><a href='Group.htm?EnsName=" + GetQueryString("EnsName") + "&OrderBy=" + AttrsOfGroup[i].KeyOfEn + "&OrderWay=Up' >" + AttrsOfGroup[i].Name + "<img src='../Img/ArrDown.gif' border=0/></a></td>";
                                 break;
                             case "Up":
                             default:
-                                html += "<td class='GroupTitle' nowrap><a href='Group.htm?EnsName=" + GetQueryString("EnsName") + "&OrderBy=" + AttrsOfGroup[i].KeyOfEn + "&OrderWay=Down' >" + AttrsOfGroup[i].Name + "<img src='../Img/ArrUp.gif' border=0/></a></td>";
+                                html += "<td class='GroupTitle' style='background-color:#eee'><a href='Group.htm?EnsName=" + GetQueryString("EnsName") + "&OrderBy=" + AttrsOfGroup[i].KeyOfEn + "&OrderWay=Down' >" + AttrsOfGroup[i].Name + "<img src='../Img/ArrUp.gif' border=0/></a></td>";
                                 break;
                         }
                     }
                     else {
-                        html += "<td class='GroupTitle' nowrap><a href='Group.htm?EnsName=" + GetQueryString("EnsName") + "&OrderBy=" + AttrsOfGroup[i].KeyOfEn + "&OrderWay=Down' >" + AttrsOfGroup[i].Name + "</a></td>";
+                        html += "<td class='GroupTitle' style='background-color:#eee'><a href='Group.htm?EnsName=" + GetQueryString("EnsName") + "&OrderBy=" + AttrsOfGroup[i].KeyOfEn + "&OrderWay=Down' >" + AttrsOfGroup[i].Name + "</a></td>";
                     }
                 }
 
@@ -403,14 +404,14 @@
                         switch (OrderWay) {
                             case "Down":
                                 if (NumKey == AttrsOfNum[i].KeyOfEn)
-                                    html += "<td class='GroupTitle' nowrap>" + lab + "<a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "&OrderWay=Up'><img src='../Img/ArrDown.gif' border=0/></a></td>";
+                                    html += "<td class='GroupTitle' style='background-color:#eee'>" + lab + "<a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "&OrderWay=Up'><img src='../Img/ArrDown.gif' border=0/></a></td>";
                                 else
-                                    html += "<td class='GroupTitle' nowrap><a href=\"Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "\" >" + lab + "</a><a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "&OrderWay=Up'><img src='../Img/ArrDown.gif' border=0/></a></td>";
+                                    html += "<td class='GroupTitle' style='background-color:#eee'><a href=\"Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "\" >" + lab + "</a><a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "&OrderWay=Up'><img src='../Img/ArrDown.gif' border=0/></a></td>";
                                 break;
                             case "Up":
                             default:
                                 if (NumKey == AttrsOfNum[i].KeyOfEn)
-                                    html += "<td class='GroupTitle' nowrap>" + lab + "<a href='Group.htm?EnsName=" + ensName + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderWay=Down'><img src='../Img/ArrUp.gif' border=0/></a></td>";
+                                    html += "<td class='GroupTitle' style='background-color:#eee'>" + lab + "<a href='Group.htm?EnsName=" + ensName + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderWay=Down'><img src='../Img/ArrUp.gif' border=0/></a></td>";
                                 else
                                     html += "<td class='GroupTitle' nowrap><a href=\"Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "\" >" + lab + "</a><a href='Group.htm?EnsName=" + ensName + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderWay=Down'><img src='../Img/ArrUp.gif' border=0/></a></td>";
                                 break;
@@ -418,13 +419,13 @@
                     }
                     else {
                         if (NumKey == AttrsOfNum[i].KeyOfEn)
-                            html += "<td class='GroupTitle' nowrap>" + lab + "<a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "' ><img src='../Img/ArrDownUp.gif' border=0/></a></td>";
+                            html += "<td class='GroupTitle' style='background-color:#eee'>" + lab + "<a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "' ><img src='../Img/ArrDownUp.gif' border=0/></a></td>";
                         else
-                            html += "<td class='GroupTitle' nowrap><a href=\"Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "\" >" + lab + "</a><a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "' ><img src='../Img/ArrDownUp.gif' border=0/></a></td>";
+                            html += "<td class='GroupTitle' style='background-color:#eee'><a href=\"Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "\" >" + lab + "</a><a href='Group.htm?EnsName=" + ensName + "&NumKey=" + AttrsOfNum[i].KeyOfEn + "&OrderBy=" + AttrsOfNum[i].KeyOfEn + "' ><img src='../Img/ArrDownUp.gif' border=0/></a></td>";
 
                     }
                 }
-                html += "<td class='GroupTitle' nowrap></td>";
+                html += "<td class='GroupTitle' style='background-color:#eee'></td>";
             }
 
             html += "</tr>"
@@ -889,7 +890,7 @@
    <form  id="cc">
         <div id="mainDiv" data-options="region:'center',title:'学生',noheader:true" style="padding: 5px">
             <div class="easyui-layout"  data-options="fit:true">
-                <div id="toolBar" data-options="region:'north',noheader:true,split:false" style="padding: 2px;height: 34px; background-color: #E0ECFF; line-height: 30px">
+                <div id="toolBar" data-options="region:'north',noheader:true,split:false" style="padding: 2px;height: 34px; line-height: 30px">
                      <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="Search()">查询</a>
                       <a href="#"  class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-excel'" onclick="Exp()">导出全部</a>
                 </div>

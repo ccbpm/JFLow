@@ -1020,8 +1020,8 @@ function figure_Template_Rb(frmRb ) {
     var f = new Figure("RadioButton");
     f.CCForm_Shape = "RadioButton";
     f.name = 'TextBox';
-    //f.CCForm_MyPK = frmRb.MyPK + '=' + frmRb.Lab;
     f.CCForm_MyPK = frmRb.EnumKey + "_" + frmRb.IntKey;
+
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.properties.push(new BuilderProperty('控件属性-' + f.CCForm_Shape, 'group', BuilderProperty.TYPE_GROUP_LABEL));
@@ -1049,15 +1049,15 @@ function figure_Template_Rb(frmRb ) {
         }
         f.properties.push(new BuilderProperty(property.ProText, property.proName, property.ProType, propertyVale));
     }
-    //Image
-//    var url = figureSetsURL  + "/DataView/TextBoxStr.png";
 
-//    var ifig = new ImageFrame(url, frmRb.X+15, frmRb.Y+15 , true, 30, 30);
-//    ifig.debug = true;
-//    f.addPrimitive(ifig);
 
-    //var t2 = new Text("*" + frmRb.Lab, frmRb.X + FigureDefaults.radiusSize / 2, frmRb.Y, FigureDefaults.textFont + FigureDefaults.radiusSize / 2, FigureDefaults.textSize);
-    var t2 = new Text("*" + frmRb.Lab, frmRb.X + FigureDefaults.radiusSize / 2, frmRb.Y + FigureDefaults.radiusSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    //获取它的mapattr
+    var mapAttr = new Entity("BP.Sys.MapAttr", frmRb.FK_MapData + "_" + frmRb.KeyOfEn);
+    var t2;
+    if (mapAttr.GetPara("RBShowModel") == "3")
+        t2 = new Text("*" + frmRb.Lab, frmRb.X + (FigureDefaults.radiusSize + 1) / 2, frmRb.Y + FigureDefaults.textSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    else
+        t2 = new Text("*" + frmRb.Lab, frmRb.X + FigureDefaults.radiusSize, frmRb.Y + FigureDefaults.textSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
@@ -1342,7 +1342,7 @@ function figure_Template_Dtl(frmDtl) {
 //初始化轨迹图 审核组件 子流程 子线程
 function figure_Template_FigureCom(figureCom) {
 
-    if (figureCom.Sta == 0) {//未启用该组件
+    if (figureCom.Sta == null || figureCom.Sta == 0) {//未启用该组件
         return;
     }
     var f = new Figure(figureCom.No);

@@ -522,7 +522,7 @@ function DDLAnsc(selectVal, ddlChild, fk_mapExt, param) {
     if (selectVal == null || selectVal == "") {
         $("#" + ddlChild).empty();
         //无数据返回时，提示显示无数据，并将与此关联的下级下拉框也处理一遍，edited by liuxc,2015-10-22
-        $("#" + ddlChild).append("<option value='' selected='selected' >无数据</option");
+        $("#" + ddlChild).append("<option value='' selected='selected' ></option");
         var chg = $("#" + ddlChild).attr("onchange");
 
         $("#" + ddlChild).change();
@@ -584,7 +584,7 @@ function DDLAnsc(selectVal, ddlChild, fk_mapExt, param) {
     //查询数据为空时为级联字段赋值
     if (dataObj == null || dataObj.length == 0) {
         //无数据返回时，提示显示无数据，并将与此关联的下级下拉框也处理一遍，edited by liuxc,2015-10-22
-        $("#" + ddlChild).append("<option value='' selected='selected' >无数据</option");
+        $("#" + ddlChild).append("<option value='' selected='selected' ></option");
         var chg = $("#" + ddlChild).attr("onchange");
 
         if (typeof chg == "function") {
@@ -933,10 +933,24 @@ function CheckRegInput(oInput, filter, tipInfo) {
         }
         result = re.test(oInputVal);
     }
-    if (!result) {//alert(tipInfo);
+    if (!result) {
         $("[name=" + oInput + ']').addClass('errorInput');
+        var errorId = oInput+"error";
+        if($("#"+errorId).length == 0){
+           var span = $("<span id='"+errorId+"' style='color:red'></span>");
+           $("[name=" + oInput + ']').parent().append(span);
+        }
+        $("#"+errorId).html(tipInfo);
+
     } else {
         $("[name=" + oInput + ']').removeClass('errorInput');
+        var errorId = oInput+"error";
+        if ($("#" + errorId).length != 0)
+            $("#" + errorId).remove();
+            //$("[name=" + oInput + ']').parent().removeChild($("#" + errorId));
+
+            
+
     }
     return result;
 }

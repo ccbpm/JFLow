@@ -101,9 +101,13 @@
                 html += "</td>";
 
                 //审核意见
-                if (this.IsDoc=="1" && isReadonly == false) {
+                if (this.IsDoc =="1" && isReadonly == false) {
 
                     html += "<td>";
+
+                    //html += "<div style='float:left'>" + wcDesc.FWCOpLabel + "</div>";
+                    //html += "<div style='float:left'><a href=\"javascript:TBHelp('ND" + nodeid + "')\"><img src='../Img/Emps.gif' width='23px' align='middle' border=0 />选择词汇</a></div>";
+                    //html += "<div style='float:left'></div>";
 
                     if (wcDesc.FWCAth == 1) {
                         html += "<div style='float:right' id='uploaddiv' onmouseover='UploadFileChange(this)'></div>";

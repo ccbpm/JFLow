@@ -36,9 +36,38 @@ function FlowFormTree_Init() {
         return;
     }
 
+    var pushData = eval('(' + data + ')');
+      ////加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
+    var enName = "ND"+GetQueryString("FK_Node");
+    if(enName == null || enName == "")
+        enName = "ND"+parseInt(GetQueryString("FK_Flow"))+"01";
+    try {
+        ////加载JS文件
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = "../DataUser/JSLibData/" + enName + "_Self.js";
+        var tmp = document.getElementsByTagName('script')[0];
+        tmp.parentNode.insertBefore(s, tmp);
+    }
+    catch (err) {
+
+    }
+
+    var jsSrc = '';
+    try {
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = "../DataUser/JSLibData/" + enName + ".js";
+        var tmp = document.getElementsByTagName('script')[0];
+        tmp.parentNode.insertBefore(s, tmp);
+    }
+    catch (err) {
+
+    }
+
     var i = 0;
     var isSelect = false;
-    var pushData = eval('(' + data + ')');
+    
     var urlExt = urlExtFrm();
 
     //加载类别树
@@ -73,9 +102,20 @@ function FlowFormTree_Init() {
 
                 if (isEdit == "0")
                     urlExt = urlExt.replace('IsReadonly=0', 'IsReadonly=1');
+                   else
+                    urlExt = urlExt.replace('IsReadonly=1', 'IsReadonly=0');
+
+              //  alert(isEdit);
+               // alert(urlExt);
 
                 var url = "./CCForm/Frm.htm?FK_MapData=" + node.id + "&IsEdit=" + isEdit + "&IsPrint=0" + urlExt;
-                addTab(node.id, node.text, url);
+
+               // alert(url);
+
+                //alert(node.attributes.IsCloseEtcFrm);
+
+                addTab(node.id, node.text, url,node.attributes.IsCloseEtcFrm);
+
             } else if (node.attributes.NodeType == "tools|0") {/*工具栏按钮添加选项卡*/
                 var url = node.attributes.Url;
                 while (url.indexOf('|') >= 0) {
@@ -87,7 +127,7 @@ function FlowFormTree_Init() {
                 else {
                     url = url + "?FK_MapData=" + node.id + "&" + urlExt;
                 }
-                addTab(node.id, node.text, url);
+                addTab(node.id, node.text, url,node.attributes.IsCloseEtcFrm);
             } else if (node.attributes.NodeType == "tools|1") {/*工具栏按钮打开新窗体*/
                 var url = node.attributes.Url;
                 while (url.indexOf('|') >= 0) {
@@ -103,18 +143,32 @@ function FlowFormTree_Init() {
             }
         }
     });
+
     $("#pageloading").hide();
 }
 
 $(function () {
     var pageName = GetLocalPageName();
+
     if (pageName == "MyFlowTreeReadonly.htm") {
         IsReadonly = "1";
         FlowFormTree_Init();
     }
 });
 
-function addTab(id, title, url) {
+function addTab(id, title, url,IsCloseEtcFrm) {
+    //关闭其余的tab
+   if(IsCloseEtcFrm == "1"){
+        OnTabChange("btnsave");
+        //获取所有可关闭的选项卡
+        $(".tabs li").each(function(index, obj) {
+            //获取所有可关闭的选项卡
+            var currTitile = $(".tabs-closable", this).text();
+            currTitile = currTitile.replace("*","");
+            if(title !=currTitile)
+                $('#tabs').tabs('close', currTitile);
+        });
+    }
     if ($('#tabs').tabs('exists', title)) {
         $('#tabs').tabs('select', title); //选中并刷新
         var currTab = $('#tabs').tabs('getSelected');
@@ -290,7 +344,7 @@ function tabClose() {
 }
 
 function createFrame(url) {
-    var s = '<iframe scrolling="auto" frameborder="0" Onblur="OnTabChange(this)"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+    var s = '<iframe scrolling="auto" frameborder="0"   src="' + url + '" style="width:100%;height:100%;"></iframe>';
     return s;
 }
 
@@ -337,6 +391,7 @@ var RequestArgs = function () {
 
 //传参
 var urlExtFrm = function () {
+
     var extUrl = "";
     var args = new RequestArgs();
     if (args.WorkID != "")
@@ -360,6 +415,7 @@ var urlExtFrm = function () {
     if (args.IsLoadData != "") {
         extUrl += "&IsLoadData=" + args.IsLoadData;
     }
+
     extUrl += "&IsReadonly=" + IsReadonly;
 
     //获取其他参数

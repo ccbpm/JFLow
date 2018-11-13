@@ -2016,66 +2016,49 @@ public class PubClass {
 	}
 	public static BP.En.Entity CopyFromRequest(BP.En.Entity en, HttpServletRequest reqest) {
 		String allKeys = ";";
-		//for (String myK : reqest.Params.keySet()) {
+		
+		 //获取传递来的所有的checkbox ids 用于设置该属性为falsse.
+        String checkBoxIDs = reqest.getParameter("CheckBoxIDs");
+        if (checkBoxIDs != null)
+        {
+            String[] strs = checkBoxIDs.split(",");
+            for (String str : strs)
+            {
+                if (str == null || str == "")
+                    continue;
+
+                //设置该属性为false.
+                en.SetValByKey(str.replace("CB_", ""), 0);
+            }
+        }
+        
 		for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
-			String myK= (String) iter.next();  
-			allKeys += myK + ";";
+			String key= (String) iter.next();  
+			if(key == null || key =="")
+				continue;
+			//获得实际的值, 具有特殊标记的，系统才赋值.
+            String attrKey = key;
+            if (key.startsWith("TB_"))
+                attrKey = attrKey.replace("TB_", "");
+            else if (key.startsWith("CB_"))
+                attrKey = attrKey.replace("CB_", "");
+            else if (key.startsWith("DDL_"))
+                attrKey = attrKey.replace("DDL_", "");
+            else if (key.startsWith("RB_"))
+                attrKey = attrKey.replace("RB_", "");
+            else
+                continue;
+            String val = reqest.getParameter(key);
+            if (key.indexOf("CB_") == 0)
+            {
+                en.SetValByKey(attrKey,1);
+                continue;
+            }
+
+            //其他的属性.
+            en.SetValByKey(attrKey,val);
 		}
 
-		// 给每个属性值.            
-		Attrs attrs = en.getEnMap().getAttrs();
-		for (Attr item : attrs) {
-			String relKey = null;
-			switch (item.getUIContralType()) {
-				case TB:
-					relKey = "TB_" + item.getKey();
-					break;
-				case CheckBok:
-					relKey = "CB_" + item.getKey();
-					break;
-				case DDL:
-					relKey = "DDL_" + item.getKey();
-					break;
-				case RadioBtn:
-					relKey = "RB_" + item.getKey();
-					break;
-				default:
-					break;
-			}
-
-			if (relKey == null) {
-				continue;
-			}
-
-			if (allKeys.contains(relKey + ";")) {
-				//说明已经找到了这个字段信息。
-				/*for (String myK : BP.Sys.Glo.Request.Params.keySet()) {
-					if (myK == null || myK.equals("")) {
-						continue;
-					}*/
-				for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {  
-					String myK= (String) iter.next(); 
-					if (myK == null || "".equals(myK)) {
-						continue;
-					}
-					if (myK.endsWith(relKey)) {
-						if (item.getUIContralType() == UIContralType.CheckBok) {
-							String val = Glo.getRequest().getParameter(myK);
-							if (val.equals("on") || val.equals("1") || val.contains(",on")) {
-								en.SetValByKey(item.getKey(), 1);
-							}
-							else {
-								en.SetValByKey(item.getKey(), 0);
-							}
-						}
-						else {
-							en.SetValByKey(item.getKey(), Glo.getRequest().getParameter(myK));
-						}
-					}
-				}
-				continue;
-			}
-		}
 		return en;
 	}
 

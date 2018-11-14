@@ -2049,12 +2049,7 @@ public class PubClass {
             else
                 continue;
             String val = reqest.getParameter(key);
-            if (key.indexOf("CB_") == 0)
-            {
-                en.SetValByKey(attrKey,1);
-                continue;
-            }
-
+           
             //其他的属性.
             en.SetValByKey(attrKey,val);
 		}

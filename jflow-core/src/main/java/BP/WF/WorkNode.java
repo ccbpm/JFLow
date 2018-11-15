@@ -7313,10 +7313,10 @@ public class WorkNode {
 
 				// string path = BP.Sys.Glo.Request.ApplicationPath;
 				this.addMsg(SendReturnMsgFlag.MacthFlowOver, "@符合工作流程完成条件" + stopMsg + "" + overMsg,
-						"@符合工作流程完成条件" + stopMsg + "" + overMsg + " @查看<img src='" + getVirPath()
+						"@符合工作流程完成条件" + stopMsg + "" + overMsg /*+ " @查看<img src='" + getVirPath()
 								+ "WF/Img/Btn/PrintWorkRpt.gif' ><a href='WFRpt.jsp?WorkID="
 								+ this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID() + "&FK_Flow="
-								+ this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>",
+								+ this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>"*/,
 						SendReturnMsgType.Info);
 				return;
 			}

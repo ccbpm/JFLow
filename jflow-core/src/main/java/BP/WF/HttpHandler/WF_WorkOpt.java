@@ -523,7 +523,7 @@ public class WF_WorkOpt extends WebContralBase {
 		
 		if (gwf.getWFState() == WFState.Complete)
         {
-                tkDt.Clear();
+                tkDt.ClearRow();
                 isDoc = false;
                 tks = wc.getHisWorkChecks();
                 for (BP.WF.Track tk : tks.ToJavaList())

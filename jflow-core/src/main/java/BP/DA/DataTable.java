@@ -144,6 +144,11 @@ public class DataTable implements Cloneable
 		Columns.clear();
 	}
 	
+	public void ClearRow()
+	{
+		Rows.clear();
+	}
+	
 	public List<DataRow> Select(Map<String, Object> filterMap) throws Exception {
 //		return Select(filterMap, false);
 //	}

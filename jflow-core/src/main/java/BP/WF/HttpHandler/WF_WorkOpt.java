@@ -520,44 +520,48 @@ public class WF_WorkOpt extends WebContralBase {
 				tkDt.Rows.add(row);
 			}
 		}
-		// #endregion
+		
+		if (gwf.getWFState() == WFState.Complete)
+        {
+                tkDt.Clear();
+                isDoc = false;
+                tks = wc.getHisWorkChecks();
+                for (BP.WF.Track tk : tks.ToJavaList())
+                {
+                    if (tk.getHisActionType() != ActionType.WorkCheck && tk.getHisActionType() != ActionType.StartChildenFlow)
+                        continue;
+                    row = tkDt.NewRow();
+                    row.setValue("NodeID",tk.getNDFrom());
 
-		// #region 显示有审核组件，但还未审核的节点. 包括退回后的.
-		/*
-		 * if (tks == null) tks = wc.getHisWorkChecks();
-		 * 
-		 * for (FrmWorkCheck item : fwcs.ToJavaList()) { if
-		 * (item.getFWCIsShowTruck() == false) continue; //不需要显示历史记录.
-		 * 
-		 * //是否已审核. Boolean isHave = false; for (BP.WF.Track tk :
-		 * tks.ToJavaList()) { //翻译. if (tk.getNDFrom() == this.getFK_Node() &&
-		 * tk.getHisActionType() == ActionType.WorkCheck) { isHave = true;
-		 * //已经有了 break; } }
-		 * 
-		 * if (isHave == true) continue;
-		 * 
-		 * row = tkDt.NewRow(); row.setValue("NodeID", item.getNodeID());
-		 * 
-		 * 
-		 * Entity en=nds.GetEntityByKey(item.getNodeID()); String
-		 * myname=en.GetValStrByKey("FWCNodeName"); row.setValue("NodeName",
-		 * myname) ; //(nds.GetEntityByKey(item.NodeID)).FWCNodeName);
-		 * row.setValue("IsDoc", false); row.setValue("ParentNode", 0);
-		 * row.setValue("RDT",""); row.setValue("Msg", "");
-		 * row.setValue("EmpFrom",""); row.setValue("EmpFromT", "");
-		 * row.setValue("T_NodeIndex", ++idx); row.setValue("T_CheckIndex",
-		 * ++noneEmpIdx);
-		 * 
-		 * tkDt.Rows.add(row); }
-		 */
+                    row.setValue("NodeName",tk.getNDFromT());
 
-		// #endregion 增加空白.
-		/*
-		 * DataView dv = tkDt.defaultView; dv.Sort =
-		 * "T_NodeIndex ASC,T_CheckIndex ASC"; DataTable sortedTKs =
-		 * dv.ToTable("Tracks"); ds.Tables.remove("Tracks");
-		 * ds.Tables.add(sortedTKs);
-		 */
+                    // zhoupeng 增加了判断，在会签的时候最后会签人发送前不能填写意见.
+                    if (tk.getNDFrom() == this.getFK_Node() && tk.getEmpFrom() == BP.Web.WebUser.getNo() && isCanDo && isDoc == false)
+                    {
+                        isDoc = true;
+                        row.setValue("IsDoc",true);
+                    }
+                    else
+                    	row.setValue("IsDoc",false);
+
+
+                	row.setValue("ParentNode",0);
+                	row.setValue("RDT",DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
+                	row.setValue("T_NodeIndex","");
+                	row.setValue("T_CheckIndex","");
+
+                
+                	row.setValue("Msg",tk.getMsgHtml());
+                    
+
+                    row.setValue("EmpFrom",tk.getEmpFrom());
+                    row.setValue("EmpFromT",tk.getEmpFromT());
+
+                    tkDt.Rows.add(row);
+                }
+            
+
+        }
 
 		ds.Tables.add(tkDt);
 

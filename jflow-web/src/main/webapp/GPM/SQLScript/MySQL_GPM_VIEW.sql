@@ -18,16 +18,30 @@ SELECT a.FK_Group,a.FK_Emp,b.FK_Menu,b.IsChecked FROM V_GPM_EmpGroup a, GPM_Grou
 WHERE a.FK_Group=b.FK_Group
 --GO-- 
 
+
+--GO-- 
+--DROP VIEW V_GPM_EmpStationMenu
+--GO-- 
+CREATE VIEW V_GPM_EmpStationMenu
+AS
+SELECT b.FK_Station,a.FK_Emp,b.FK_Menu,b.IsChecked FROM Port_DeptEmpStation a,GPM_StationMenu b
+WHERE a.FK_Station = b.FK_Station
+
+
 DROP VIEW IF EXISTS V_GPM_EmpMenu
 --GO-- 
 
 CREATE VIEW V_GPM_EmpMenu
 AS
 SELECT CONCAT(a.FK_Emp,'_',a.FK_Menu) as MyPK, a.FK_Emp, b.No as FK_Menu, b.* FROM 
-   GPM_UserMenu a,GPM_Menu b WHERE a.FK_Menu=b.No AND B.IsEnable=1
+   GPM_EmpMenu a,GPM_Menu b WHERE a.FK_Menu=b.No AND B.IsEnable=1
 UNION
 SELECT CONCAT(a.FK_Emp,'_',a.FK_Menu) as MyPK, a.FK_Emp, b.No as FK_Menu, b.* FROM 
   V_GPM_EmpGroupMenu a,GPM_Menu b  WHERE a.FK_Menu=b.No AND B.IsEnable=1
+UNION
+SELECT CONCAT(a.FK_Emp,'_',a.FK_Menu) as MyPK, a.FK_Emp, b.No as FK_Menu, b.* FROM
+  V_GPM_EmpStationMenu a,GPM_Menu b WHERE a.FK_Menu=b.No AND B.IsEnable=1 
+
 
 --GO-- 
 
@@ -36,7 +50,7 @@ DROP VIEW IF EXISTS V_GPM_EmpMenu_GPM
 CREATE VIEW V_GPM_EmpMenu_GPM
 AS
 SELECT CONCAT(a.FK_Emp,'_',a.FK_Menu) as MyPK, a.FK_Emp,a.IsChecked, b.No as FK_Menu, b.* FROM 
-   GPM_UserMenu a,GPM_Menu b WHERE a.FK_Menu=b.No AND B.IsEnable=1
+   GPM_EmpMenu a,GPM_Menu b WHERE a.FK_Menu=b.No AND B.IsEnable=1
 UNION
 SELECT CONCAT(a.FK_Emp,'_',a.FK_Menu) as MyPK, a.FK_Emp,a.IsChecked, b.No as FK_Menu, b.* FROM 
   V_GPM_EmpGroupMenu a,GPM_Menu b  WHERE a.FK_Menu=b.No AND B.IsEnable=1

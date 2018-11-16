@@ -1,4 +1,4 @@
-package BP.Demo.BuessUnit;
+package BP.Demo;
 
 import BP.DA.Log;
 import BP.Sys.BuessUnitBase;

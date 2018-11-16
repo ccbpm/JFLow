@@ -55,6 +55,7 @@ import BP.En.UAC;
 import BP.En.UIContralType;
 import BP.Sys.DTSearchWay;
 import BP.Sys.DefVals;
+import BP.Sys.EnCfg;
 import BP.Sys.EventListOfNode;
 import BP.Sys.GEEntitys;
 import BP.Sys.MapAttr;
@@ -1389,6 +1390,22 @@ public class WF_Comm extends WebContralBase {
 		// 获得行数.
 		ur.SetPara("RecCount", qo.GetCount());
 		ur.Save();
+		
+		//获取配置信息
+        EnCfg encfg = new EnCfg(this.getEnsName());
+       //增加排序
+        if (encfg != null){
+            String orderBy = encfg.GetParaString("OrderBy");
+            boolean isDesc = encfg.GetParaBoolen("IsDeSc");
+
+            if(DataType.IsNullOrEmpty(orderBy) ==false){
+                if(isDesc)
+                   qo.addOrderByDesc(encfg.GetParaString("OrderBy"));
+                else
+                    qo.addOrderBy(encfg.GetParaString("OrderBy"));
+            }
+
+        }
 		
 		if (GetRequestVal("DoWhat") != null && GetRequestVal("DoWhat").equals("Batch"))
             qo.DoQuery(en.getPK(),500,1);

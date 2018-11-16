@@ -12,9 +12,11 @@
 
 		function Test() {
 
-		    //var node = new Entity("BP.WF.Node", "1301");
-		    //alert(node.Name);
-		    //return;
+		    var url = "http://localhost:4842/DataUser/SFTableHandler.ashx";
+		    var val = DBAccess.RunUrlReturnString(url);
+		    alert(val);
+		    //DBAccessRun();
+		    return;
 
 		    //创建一个实体,获取实体的属性.
 		    var emp = new Entity("BP.Port.Emp", "liyan");
@@ -38,7 +40,7 @@
 		    emp.Name = "冉尊";
 		    emp.FK_Dept = "1";
 		    //emp.Email = "sdfsdfsd";
-            //emp.Tel
+		    //emp.Tel
 		    var insert = emp.Insert(); //增加.
 		    alert("插入结果:" + insert);
 
@@ -249,6 +251,7 @@
             // var dt = DBAccess.RunUrlCrossReturnJSON(sql);
             //  var dt = DBAccess.RunUrlCrossReturnString(sql);
         }
+      
     </script>
      
 </head>

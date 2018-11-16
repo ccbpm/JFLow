@@ -423,7 +423,7 @@ function Save(scope) {
 
             if (scope != "btnsave")
                 window.location.href = window.location.href;
-            //alert(data);
+            
         }
     });
 }
@@ -722,7 +722,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
         formArrResult.push(ele);
     });
 
-    //获取表单中checkbox 没有选中时值的情况
+//    //获取表单中checkbox 没有选中时值的情况
     var checkboxs = $('input[type=checkbox]');
     $.each(checkboxs, function (i, checkbox) {
         var name = $(checkbox).attr("name");

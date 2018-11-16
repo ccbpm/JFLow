@@ -542,7 +542,7 @@
                             $.each(tbodyTrs, function (m, tbodyTrObj) {
                                 var threadTh = $('#tableHead thead tr th');
                                 $.each(threadTh, function (k, threadThObj) {
-                                    $(tbodyTrObj).children('td')[k].width = threadThObj.offsetWidth ;
+                                    $(tbodyTrObj).children('td')[k].width = threadThObj.clientWidth;
                                     if ($(threadThObj).data().colname != undefined) {
                                         var o = $(threadThObj);
                                         var tmplate = figure_MapAttr_Template(o.data());
@@ -922,7 +922,7 @@
                     if (!/\./.test(sum))
                         sum += '.00';
                     //防止出现相加小数位数不正确的情况
-                    sum.toFixed(2);
+                    parseFloat(sum).toFixed(2);
                 }
                 template.val(sum);
             } else if (exp == "Avg") {	// 平均数

@@ -35,14 +35,7 @@
 
         function InitPage() {
 
-//            var param = {
-//                DoType: "WorkCheck_Init",
-//                FK_Flow: fk_flow,
-//                FK_Node: nodeid,
-//                WorkID: workid,
-//                FID: fid,
-//                IsReadonly: isReadonly
-//            };
+
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
             handler.AddUrlData();
@@ -115,7 +108,7 @@
 
                     html += "<div style='float:left;width:100%;'>";
                     var msg = this.Msg;
-                    if (msg == null)
+                    if (msg == null || msg == undefined || msg =="")
                         msg = "同意";
 
                     while (msg.indexOf('<BR>') >= 0) {

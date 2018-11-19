@@ -194,6 +194,9 @@ public class CCFormAPI
 		if (i == 0)
 		{
 			//ath.setSaveTo(SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + fk_mapdata + "\\");
+            if (fk_mapdata.contains("ND") == true)
+                 ath.setHisCtrlWay(AthCtrlWay.WorkID); 
+			
 		}
 
 		ath.setUploadType(AttachmentUploadType.Multi);

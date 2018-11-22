@@ -30,14 +30,38 @@
     for (var i = 0; i < mapAttrs.length; i++) {
 
         var mapAttr = mapAttrs[i];
-
         $('#TB_' + mapAttr.KeyOfEn).attr("name", "TB_" + mapAttr.KeyOfEn);
         $('#DDL_' + mapAttr.KeyOfEn).attr("name", "DDL_" + mapAttr.KeyOfEn);
         $('#CB_' + mapAttr.KeyOfEn).attr("name", "CB_" + mapAttr.KeyOfEn);
 
         var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
 
+        if (mapAttr.LGType == "2" && mapAttr.MyDataType == "1") {
+            var uiBindKey = mapAttr.UIBindKey;
+            if (uiBindKey != null && uiBindKey != undefined && uiBindKey != "") {
+                var sfTable = new Entity("BP.Sys.FrmUI.SFTable");
+                sfTable.SetPKVal(uiBindKey);
+                var count = sfTable.RetrieveFromDBSources();
 
+                if (count!=0 &&sfTable.CodeStruct == "1") {
+                    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
+                    handler.AddPara("EnsName", uiBindKey);  //增加参数.
+                    //获得map基本信息.
+                    var pushData = handler.DoMethodReturnString("Tree_Init");
+                    if (pushData.indexOf("err@") != -1) {
+                        alert(pushData);
+                        return;
+                    }
+                    pushData = ToJson(pushData);
+                    $('#DDL_' + mapAttr.KeyOfEn).combotree('loadData', pushData);
+                    if(mapAttr.UIIsEnable == 0)
+                        $('#DDL_' + mapAttr.KeyOfEn).combotree({ disabled: true });
+
+                    $('#DDL_' + mapAttr.KeyOfEn).combotree('setValue', val);
+                }
+            }
+        }
+       
         $('#TB_' + mapAttr.KeyOfEn).val(val);
 
         //文本框.
@@ -363,7 +387,12 @@ function AfterBindEn_DealMapExt(frmData) {
                 if (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0 || GetQueryString("IsReadonly") == "1")
                     continue;
                 var tbFastInput = $("#TB_" + mapExt.AttrOfOper);
-                var content = $("<span style='margin-left:-120px'></span><br/>");
+                //获取大文本的长度
+                var width = tbFastInput.width() + parseInt(tbFastInput.parent().css('left').replace("px", ""));
+                width = width - 140;
+                var top = tbFastInput.height();
+                top = top - 6;
+                var content = $("<span style='margin-left:" + width + "px;top: "+top+"px;position: absolute;'></span><br/>");
                 tbFastInput.after(content);
                 content.append("<a href='javascript:void(0)' onclick='TBHelp(\"TB_" + mapExt.AttrOfOper + "\",\"" + mapExt.MyPK + "\")'>常用词汇</a> <a href='javascript:void(0)' onclick='clearContent(\"TB_" + mapExt.AttrOfOper + "\")'>清空<a>");
                 break;
@@ -534,14 +563,18 @@ function AfterBindEn_DealMapExt(frmData) {
 }
 
 function TBHelp(ObjId, MyPK) {
-    var url = "/WF/CCForm/Pop/HelperOfTBEUI.htm?PKVal=" + MyPK + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
+    var url = "/WF/CCForm/Pop/HelperOfTBEUIBS.htm?PKVal=" + MyPK + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
     var W = document.body.clientWidth - 500;
     var H = document.body.clientHeight - 140;
-    var str = OpenEasyUiDialogExt(url, "词汇选择", W, H, false);
+    //var str = OpenEasyUiDialogExt(url, "词汇选择", W, H, false);
+    OpenBootStrapModal(url,"TBHelpIFram","词汇选择", W, H);
 }
 function changeFastInt(ctrl, value) {
     $("#TB_" + ctrl).val(value);
-    $('#eudlg').window('close');
+    if($('#eudlg').length>0)
+        $('#eudlg').window('close');
+    if($('#bootStrapdlg').length>0)
+    $('#bootStrapdlg').modal('hide');
 }
 function clearContent(ctrl) {
     $("#" + ctrl).val("");

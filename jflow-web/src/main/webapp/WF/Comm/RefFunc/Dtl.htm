@@ -94,13 +94,11 @@
             if (mapData.GetPara("IsUpdate") == 1) {
                 html += "<input type='button' value='保存' id='Btn_Save' onclick='Save()' />";
             }
+            if (mapData.GetPara("IsImp") == 1) {
+                html += "<input type='button' value='导入' id='Btn_Import' onclick='Import()' />";
+            }
 
-            //            if (mapData.GetPara("IsDelete") == 1) {
-            //                var pkVal = GetPKVal();
-            //                if (pkVal != null)
-            //                    html += "<input type='button' value='删除' id='Btn_Delete' onclick='Delete()' />";
-            //            }
-
+            html += "<input type='button' value='导出' id='Btn_Export' onclick='Export()' />";
             html += "<input type='button' value='关闭' id='close' onclick='CloseIt()' />";
 
             $("#Btns").append(html);
@@ -117,7 +115,7 @@
             var html = "<table border=0 id='Table1' style='width:99%;'>";
             html += "<tr>";
             html += "<th>序</th>";
-            html += "<th>....</th>";
+           
             
             for (var i = 0; i < mapAtrrs.length; i++) {
                 var mapAttr = mapAtrrs[i];
@@ -126,6 +124,7 @@
                     continue;
                 html += "<th>" + mapAttr.Name + "</th>";
             }
+            html += "<th>....</th>";
             html += "<th></th>";
             html += "</tr>";
 
@@ -140,7 +139,7 @@
                 var pkval = dtl.OID;
                 html += "<tr>";
                 html += "<td class='Idx'>" + (i + 1) + "</td>";
-                html += "<td ><a href=\"javascript:OpenEn('"+pkval+"')\">详细</a></td>";                
+                     
  
                 for (var attrIdx = 0; attrIdx < mapAtrrs.length; attrIdx++) {
                     var mapAttr = mapAtrrs[attrIdx];
@@ -153,6 +152,7 @@
 
                     html += "<td>" + InitMapAttrOfCtrl(mapAttr,dtl, pkval) + "</td>";
                 }
+                html += "<td ><a href=\"javascript:OpenEn('" + pkval + "')\">详细</a></td>";          
                 if (mapData.GetPara("IsDelete")=="1")
                  html += "<td><a href=\"javascript:Delete('"+pkval+"')\"><img src='../../Img/Btn/Delete.png' /></a></td>";
                 else
@@ -187,7 +187,7 @@
                 else
                     enableAttr = "disabled='disabled'";
 
-                return "<select class='form-control' id='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
+                return "<select style='width:"+mapAttr.UIWidth*2+"px' class='form-control' id='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
             }
 
             //外键类型.
@@ -199,7 +199,7 @@
                 else
                     enableAttr = "disabled='disabled'";
 
-                return "<select class='form-control' id='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "'  name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
+                return "<select style='width:" + mapAttr.UIWidth * 2 + "px' class='form-control' id='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "'  name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
             }
 
             //外部数据类型.
@@ -211,7 +211,7 @@
                 else
                     enableAttr = "disabled='disabled'";
 
-                return "<select class='form-control' id='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
+                return "<select style='width:" + mapAttr.UIWidth * 2 + "px' class='form-control' id='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
             }
 
             //添加文本框 ，日期控件等
@@ -231,7 +231,7 @@
                 }
 
                 //普通的大块文本.
-                return "<textarea class='form-control' maxlength=" + mapAttr.MaxLen + " style='height:" + mapAttr.UIHeight + "px;width:" + mapAttr.UIWidth + "px;' name='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' id='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' type='text'  " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + " />"
+                return "<textarea class='form-control' maxlength=" + mapAttr.MaxLen + " style='height:" + mapAttr.UIHeight + "px;width:" + mapAttr.UIWidth + "px;' name='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' id='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' type='text'  " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + " >" + defValue + "</textarea>"
             }
 
             //日期类型.
@@ -242,7 +242,7 @@
                 else
                     enableAttr = "disabled='disabled'";
 
-                return "<input class='form-control' " + enableAttr + " value='" + defValue + "' style='width:80px;' name='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' type='text' />";
+                return "<input class='form-control' " + enableAttr + " value='" + defValue + "' style='width:105px;' name='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' type='text' />";
             }
 
             //时期时间类型.
@@ -283,7 +283,7 @@
                 else
                     enableAttr = "disabled='disabled'";
 
-                return "<select class='form-control'  name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
+                return "<select  style='width:" + mapAttr.UIWidth*2+ "px' class='form-control'  name='DDL_" + pkval + "_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
             }
 
             // AppDouble  AppFloat
@@ -416,7 +416,7 @@
             var html = "";
             html += "<tr>";
             html += "<td class='Idx'><font color=red>"+(newRowIdx+1)+"</font></td>";
-            html += "<td >....</td>";
+           
             
             var hidden="";
 
@@ -429,6 +429,7 @@
                 }
                 html += "<td>" + InitMapAttrOfCtrl(mapAttr, dtl, newRowIdx) + "</td>";
             }
+            html += "<td >....</td>";
             html += "<td></td>";
             html += "</tr>";
 
@@ -478,7 +479,39 @@
                 window.close();
             }
         }
- 
+
+        //导入
+        function Import() {
+            var title = mapData.Name+"导入数据";
+            var W = document.body.clientWidth - 40;
+            var H = document.body.clientHeight - 40;
+            var url = "../../CCForm/DtlImpByExcel.htm?EnsName=" + GetQueryString("EnsName") + "&RefPKVal=" + GetQueryString("RefVal") + "&FK_MapData=" + GetQueryString("EnName");
+            OpenBootStrapModal(url, "eudlgframe", title, W, H, "icon-edit", false, function () { }, null, function () {
+                location = location;
+            });
+        }
+
+        //导出
+        function Export() {
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_CommEntity");
+            handler.AddPara("EnsName", GetQueryString("EnsName"));
+            handler.AddPara("RefKey", GetQueryString("RefKey"));
+            handler.AddPara("RefVal", GetQueryString("RefVal"));
+            //查询集合
+            var data = handler.DoMethodReturnString("Dtl_Exp");
+            var url = "";
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+            }
+            if (plant != 'CCFlow') {
+                var currentPath = window.document.location.href;
+                var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
+                data = path + data;
+            }
+            window.open(data);
+            return;
+
+        }
     </script>
 </head>
 <body>

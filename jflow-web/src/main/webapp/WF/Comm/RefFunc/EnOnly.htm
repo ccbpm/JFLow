@@ -57,10 +57,14 @@
         var dtM; //方法集合.
         var isReadonly = GetQueryString("isReadonly");
         $(function () {
+            var pkVal = GetPKVal();
+            //新增时En.htm页面隐藏
+            if(window.parent &&  window.parent.$('#EnLayout').length==1 && pkVal==null)
+                window.parent.$('#EnLayout').layout('remove', 'west');
+
             var httpHandler = new HttpHandler("BP.WF.HttpHandler.WF_CommEntity");
             var enName = GetQueryString("EnName");
             var type = GetQueryString("type");
-            var pkVal = GetPKVal();
             httpHandler.AddPara("EnName", enName);
 
             if (pkVal != null) {
@@ -337,11 +341,28 @@
                     }
                 });
             }
-
-            $("#FileInfo").html($("#TB_MyFileName").val() + $("#TB_MyFileExt").val());
+            var html = "-";
+            var fileName = $("#TB_MyFileName").val();
+            if (fileName != null && fileName != "" && fileName != undefined && fileName!="null") {
+                html = "<a href='#' onclick='downLoadFile()' target='_self'>" + $("#TB_MyFileName").val() + $("#TB_MyFileExt").val() + "</a>";
+            }
+            $("#FileInfo").html(html);
+           
             //设置扩展
             AfterBindEn_DealMapExt(frmData);
 
+        }
+
+        function downLoadFile() {
+            var PKVal = GetPKVal();
+            if (plant == "CCFlow")
+                window.location.href = '../../CCForm/DownFile.aspx?DoType=EntityFile_Load&DelPKVal=' + PKVal + '&EnsName=' + GetQueryString("EnName")+"s";
+            else {
+                var currentPath = window.document.location.href;
+                var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
+                Url = path + '/WF/CCForm/EntityFileLoad.do?DelPKVal=' + PKVal + '&EnsName=' + GetQueryString("EnName")+"s";
+                window.location.href = Url;
+            }
         }
 
         //解析表单字段 MapAttr.
@@ -492,7 +513,7 @@
                 html += "<tr>";
                 html += "<td class='FDesc' style='width:20%;'>附件上传</td>";
                 html += "<td colspan=3>";
-                html += "<input type='file' id='File_Upload' name='File_Upload' style='background-color:white;display:inline' onchange='changeFile()' />";
+                html += "<input type='file' id='File_Upload' name='File_Upload' style='background-color:white;' onchange='changeFile()' />";
                 html += "已上传的文件：<span id='FileInfo'></span>";
                 html += "</td>";
                 html += "</tr>";
@@ -820,9 +841,12 @@
             url = url.replace("#", "");
             url = replaceParamVal(url, "tabIndex", index);
             url = replaceParamVal(url, "PKVal", "");
+
+            //新增时En.htm页面隐藏
+            if(window.parent &&  window.parent.$('#EnLayout').length==1)
+                window.parent.$('#EnLayout').layout('remove', 'west');
             window.location.href = url; //刷新.
 
-            var url = window.location.href;
            
         }
 
@@ -868,8 +892,7 @@
                 }
 
                 var info = en.Insert();
-                if (info == 0) {
-                    alert('更新错误:' + info);
+                if (info.toString().indexOf("err@")!=-1) {
                     return;
                 }
 
@@ -885,7 +908,11 @@
 
                 if (url.indexOf('&PKVal=') == -1)
                     url += "&PKVal=" + en.GetPKVal();
+               
 
+                //新增保存后显示En
+                if (window.parent && window.parent.$('#EnLayout').length == 1)
+                    url = url.replace("EnOnly", "En");
                 window.location.href = url; //刷新.
                 return;
             }

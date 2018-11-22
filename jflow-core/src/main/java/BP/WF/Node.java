@@ -1266,7 +1266,8 @@ public class Node extends Entity
           if (DataType.IsNullOrEmpty(str))
               return "ND" + this.getNodeID();
           
-          if (this.getHisFormType() ==  NodeFormType.FoolTruck)
+          if (this.getHisFormType() ==  NodeFormType.FoolTruck 
+        		  || this.getHisFormType() ==  NodeFormType.SheetTree)
               return "ND" + this.getNodeID();
 
 

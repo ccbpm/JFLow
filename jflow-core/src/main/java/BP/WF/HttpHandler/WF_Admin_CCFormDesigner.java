@@ -408,6 +408,8 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
               ds.Tables.add(lines.ToDataTableField("Sys_FrmLine"));
 
               //组织节点组件信息.
+              if (this.getFK_Node() > 100)
+              {
               String sql = "";
               sql += "select '轨迹图' Name,'FlowChart' No,FrmTrackSta Sta,FrmTrack_X X,FrmTrack_Y Y,FrmTrack_H H,FrmTrack_W  W from WF_Node WHERE nodeid=" + this.getFK_Node();
               sql += " union select '审核组件' Name, 'FrmCheck' No,FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node WHERE nodeid=" + this.getFK_Node();
@@ -431,6 +433,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
               }
               
               ds.Tables.add( dt);
+              }
               return BP.Tools.Json.ToJson(ds);
 			
 		} catch (RuntimeException ex) {

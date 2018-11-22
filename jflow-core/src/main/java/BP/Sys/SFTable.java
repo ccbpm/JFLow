@@ -724,9 +724,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 			{
 				sql = "CREATE TABLE " + this.getNo() + " (";
 				sql += "No varchar(30) NOT NULL,";
-				sql += "Name varchar(3900) NULL,";
-				sql += "GUID varchar(36)  NULL";
-
+				sql += "Name varchar(3900) NULL";
 				sql += ")";
 			}
 
@@ -735,8 +733,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 				sql = "CREATE TABLE " + this.getNo() + " (";
 				sql += "No  varchar(30) NOT NULL,";
 				sql += "Name varchar(3900)  NULL,";
-				sql += "ParentNo varchar(3900)  NULL,";
-				sql += "GUID varchar(36)  NULL";
+				sql += "ParentNo varchar(3900)  NULL";				 
 				sql += ")";
 			}
 			this.RunSQL(sql);
@@ -813,7 +810,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 			//初始化数据.
 			if (this.getCodeStruct() == BP.Sys.CodeStruct.Tree)
 			{
-				sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,ParentNo,GUID) VALUES('" + this.getDefVal() + "','根目录','" + this.getDefVal() + "','" + DBAccess.GenerGUID() + "') ";
+				sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,ParentNo) VALUES('1','"+this.getName()+"','0') ";
 				this.RunSQL(sql);
 
 				for (int i = 1; i < 4; i++)
@@ -821,7 +818,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 					String no = (new Integer(i)).toString();
 					no = StringHelper.padLeft("",3, '0');
 
-					sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,ParentNo,GUID) VALUES('" + no + "','Item" + no + "','" + this.getDefVal() + "', '" + DBAccess.GenerGUID() + "') ";
+					sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,ParentNo) VALUES('" + no + "','Item" + no + "','1') ";
 					this.RunSQL(sql);
 				}
 			}
@@ -832,7 +829,7 @@ public class SFTable<CodeCompileUnit> extends EntityNoName
 				{
 					String no = (new Integer(i)).toString();
 					no = StringHelper.padLeft("",3, '0');
-					sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,GUID) VALUES('" + no + "','Item" + no + "','" + DBAccess.GenerGUID() + "') ";
+					sql = "INSERT INTO " + this.getSrcTable() + " (No,Name) VALUES('" + no + "','Item" + no + "') ";
 					this.RunSQL(sql);
 				}
 			}

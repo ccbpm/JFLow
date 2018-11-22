@@ -1225,17 +1225,19 @@ public class WF_MyFlow extends WebContralBase {
 			BP.WF.Template.NodeToolbars bars = new NodeToolbars();
 			bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node());
 			for (NodeToolbar bar : bars.ToJavaList()) {
-				if (bar.getShowWhere() == ShowWhere.Toolbar) {
-					if (!DataType.IsNullOrEmpty(bar.getTarget()) && bar.getTarget().toLowerCase() == "javascript") {
-						toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\""
-								+ bar.getUrl() + "\" />";
-					} else {
-						String urlr3 = bar.getUrl() + "&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID()
-								+ "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-						toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\"WinOpen('"
-								+ urlr3 + "'); \" />";
-					}
+				if (bar.getShowWhere() != ShowWhere.Toolbar) {
+					continue;				
 				}
+				
+				if ( bar.GetValIntByKey("ExcType" )==1 || (!DataType.IsNullOrEmpty(bar.getTarget()) && bar.getTarget().toLowerCase() == "javascript") ) {
+					toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\""
+							+ bar.getUrl() + "\" />";
+				} else {
+					String urlr3 = bar.getUrl() + "&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID()
+							+ "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+					toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\"WinOpen('"
+							+ urlr3 + "'); \" />";
+				} 
 			}
 			// #endregion //加载自定义的button.
 

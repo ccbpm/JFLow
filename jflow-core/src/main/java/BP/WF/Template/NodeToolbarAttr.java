@@ -39,6 +39,8 @@ public class NodeToolbarAttr extends BP.En.EntityOIDNameAttr
 	 
 	*/
 	public static final String ShowWhere = "ShowWhere";
+	
+	public static final String ExcType = "ExcType";
 
 		///#endregion
 }

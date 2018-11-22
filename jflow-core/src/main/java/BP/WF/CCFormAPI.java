@@ -144,6 +144,10 @@ public class CCFormAPI extends Dev2Interface
  
     public static String ParseStringToPinyinField(String name, boolean isQuanPin)
     {
+    	
+    	 if (BP.DA.DataType.IsNullOrEmpty(name) == true)
+             return "";
+    	 
         String s = "";
         try
         {

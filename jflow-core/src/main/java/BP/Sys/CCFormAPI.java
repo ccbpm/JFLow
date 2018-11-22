@@ -1439,6 +1439,9 @@ public class CCFormAPI
 	*/
 	public static String ParseStringToPinyinField(String name, boolean isQuanPin)
 	{
+		 if (BP.DA.DataType.IsNullOrEmpty(name) == true)
+             return "";
+		
 		String s = "";
 		
 		try
@@ -1508,6 +1511,9 @@ public class CCFormAPI
     /// <returns>转化后的拼音，不成功则抛出异常.</returns>
     public static String ParseStringToPinyinField(String name, Boolean isQuanPin, Boolean removeSpecialSymbols, int maxLen)
     {
+    	 if (BP.DA.DataType.IsNullOrEmpty(name) == true)
+             return "";
+    	 
         String s = "";
 
         if (removeSpecialSymbols)

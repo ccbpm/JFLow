@@ -383,8 +383,11 @@ function Save() {
     //树形表单保存
     if (flowData) {
         var node = flowData.WF_Node[0];
+     //   alert(node.FormType);
         if (node && node.FormType == 5) {
             OnTabChange("btnsave");
+            setToobarEnable();
+            return;
         }
     }
 
@@ -702,12 +705,13 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
     var combotrees = $(".easyui-combotree");
     $.each(combotrees, function (i, combotree) {
         var name = $(combotree).attr('id');
-        var tree = $('#' + name).combotree('tree'); 
+        var tree = $('#' + name).combotree('tree');
         //获取当前选中的节点
         var data = tree.tree('getSelected');
-
-        formArrResult.push(name + '=' + data.id);
-        formArrResult.push(name + 'T=' + data.text);
+        if (data != null) {
+            formArrResult.push(name + '=' + data.id);
+            formArrResult.push(name + 'T=' + data.text);
+        }
     });
 
     if (!isCotainTextArea) {
@@ -1393,6 +1397,15 @@ function GenerWorkNode() {
             //装载表单数据与修改表单元素风格.
             LoadFrmDataAndChangeEleStyle(flowData);
 
+            //初始化Sys_MapData
+            var h = flowData.Sys_MapData[0].FrmH;
+            var w = flowData.Sys_MapData[0].FrmW;
+
+            // $('#topContentDiv').height(h);
+            $('#topContentDiv').width(w);
+            $('.Bar').width(w + 15);
+            $('#lastOptMsg').width(w + 15);
+
             //2018.1.1 新增加的类型, 流程独立表单， 为了方便期间都按照自由表单计算了.
             if (node.FormType == 11) {
                 //获得配置信息.
@@ -1421,14 +1434,7 @@ function GenerWorkNode() {
 
            
 
-            //初始化Sys_MapData
-            var h = flowData.Sys_MapData[0].FrmH;
-            var w = flowData.Sys_MapData[0].FrmW;
-
-            // $('#topContentDiv').height(h);
-            $('#topContentDiv').width(w);
-            $('.Bar').width(w + 15);
-            $('#lastOptMsg').width(w + 15);
+            
 
             var marginLeft = $('#topContentDiv').css('margin-left');
             marginLeft = parseFloat(marginLeft.substr(0, marginLeft.length - 2)) + 50;

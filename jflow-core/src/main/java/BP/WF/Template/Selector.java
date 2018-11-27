@@ -516,7 +516,7 @@ public class Selector extends Entity
                + "( SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + nodeID + ") "
                + "AND a.FK_Dept IN (SELECT ParentNo FROM Port_Dept WHERE No in (SELECT FK_DEPT FROM WF_GenerWorkerlist WHERE WorkID=" + workID + "))"
                +" AND a.FK_Emp = b.No ";
-            sql += " ORDER BY FK_Emp ";
+            sql += " ORDER BY b.No ";
 
             dtEmp = DBAccess.RunSQLReturnTable(sql);
             dtEmp.TableName = "Emps";

@@ -381,6 +381,40 @@ public class CCFlowAPI {
 
 				// 加入最新的MapExt.
 				myds.Tables.add(exts.ToDataTableField("Sys_MapExt"));
+				
+				//#region  MapDtl 
+				DataTable dtDtls = myds.GetTableByName("Sys_MapDtl");
+				myds.Tables.remove("Sys_MapDtl");
+				myds.Tables.remove(dtDtls);
+ 
+                //把从表放里面
+                myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
+                BP.Sys.MapDtls dtls = new MapDtls();
+                qo = new QueryObject(dtls);
+                qo.AddWhere(MapExtAttr.FK_MapData, " IN ", "(" + myFrmIDs + ")");
+                qo.DoQuery();
+
+                // 加入最新的MapDtl.
+                myds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
+                //#endregion  MapDtl .
+
+
+                //#region  FrmAttachment .
+                DataTable dtFrmAths = myds.GetTableByName("Sys_FrmAttachment");
+				myds.Tables.remove("Sys_FrmAttachment");
+				myds.Tables.remove(dtFrmAths);
+
+                //把附件放里面
+                myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
+                BP.Sys.FrmAttachment frmAtchs = new FrmAttachment();
+                qo = new QueryObject(frmAtchs);
+                qo.AddWhere(MapExtAttr.FK_MapData, " IN ", "(" + myFrmIDs + ")");
+                qo.DoQuery();
+
+                // 加入最新的Sys_FrmAttachment.
+                myds.Tables.add(frmAtchs.ToDataTableField("Sys_FrmAttachment"));
+                //#endregion  FrmAttachment .
+				
 
 			}
 			// #endregion 增加 groupfields

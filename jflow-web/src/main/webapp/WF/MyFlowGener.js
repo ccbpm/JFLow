@@ -160,6 +160,8 @@ function CloseOKBtn() {
 
 //双击签名
 function figure_Template_Siganture(SigantureID, val) {
+    if (val == "")
+        val = new WebUser().No;
     var src = '../DataUser/Siganture/' + val + '.jpg'   //新图片地址
     document.getElementById("Img" + SigantureID).src = src;
     isSigantureChecked = true;
@@ -178,6 +180,21 @@ function figure_Template_Siganture(SigantureID, val) {
         sealData.Insert();
     }
 
+}
+
+//签字板
+function figure_Template_HandWrite(HandWriteID, val) {
+    var url = "CCForm/HandWriting.htm?WorkID=" + pageData.WorkID + "&FK_Node=" + pageData.FK_Node + "&KeyOfEn=" + HandWriteID;
+    OpenEasyUiDialogExt(url, '签字板', 400, 300, false);
+}
+
+function setHandWriteSrc(HandWriteID, imagePath) {
+    imagePath = "../" + imagePath.substring(imagePath.indexOf("DataUser"));
+    document.getElementById("Img" + HandWriteID).src = "";
+    $("#Img" + HandWriteID).attr("src", imagePath);
+   // document.getElementById("Img" + HandWriteID).src = imagePath;
+    $("#TB_" + HandWriteID).val(imagePath);
+    $('#eudlg').dialog('close');
 }
 //然浏览器最大化.
 function ResizeWindow() {
@@ -385,7 +402,14 @@ function Save() {
         var node = flowData.WF_Node[0];
      //   alert(node.FormType);
         if (node && node.FormType == 5) {
-            OnTabChange("btnsave");
+            if(OnTabChange("btnsave") == true){
+                //判断内容是否保存到待办
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+                handler.AddPara("FK_Flow",pageData.FK_Flow);
+                handler.AddPara("FK_Node",pageData.FK_Node);
+                handler.AddPara("WorkID",pageData.WorkID);
+                handler.DoMethodReturnString("SaveFlow_ToDraftRole");
+            }
             setToobarEnable();
             return;
         }
@@ -1432,11 +1456,13 @@ function GenerWorkNode() {
 
 
 
-           
 
-            
+
+
 
             var marginLeft = $('#topContentDiv').css('margin-left');
+            marginLeft = marginLeft.replace('px', '');
+
             marginLeft = parseFloat(marginLeft.substr(0, marginLeft.length - 2)) + 50;
             $('#topContentDiv i').css('left', marginLeft.toString() + 'px');
             //原有的

@@ -1750,7 +1750,7 @@ public class WF_CCForm extends WebContralBase {
 
 		// 获得他的描述,与数据.
 		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(frmID, mdtl,
-				Integer.parseInt(this.getRefPKVal()), strs);
+				Integer.parseInt(this.getRefPKVal()), strs,this.getFID());
 
 		return BP.Tools.Json.ToJson(ds);
 	}

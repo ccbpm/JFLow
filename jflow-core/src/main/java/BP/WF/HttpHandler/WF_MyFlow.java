@@ -230,7 +230,7 @@ public class WF_MyFlow extends WebContralBase {
 
 			String treeNo = "0";
 			if (isHave && mds.size() == 1) {
-				treeNo = "0";
+				treeNo = "00";
 			} else if (isHave == true) {
 				for (MapData md : mds.ToJavaList()) {
 					if (!md.getFK_FormTree().equals("")) {
@@ -507,9 +507,15 @@ public class WF_MyFlow extends WebContralBase {
 
 	public String MyFlow_Init() throws Exception {
 
+		
+		
 		String userNo = BP.Web.WebUser.getNo();
 		if (DataType.IsNullOrEmpty(userNo) == true)
 			return "err@当前登录信息丢失,请重新登录.";
+		
+		  String isCC = this.GetRequestVal("IsCC");
+          if (isCC!=null && isCC == "1")
+              return "url@WFRpt.htm?1=2" + this.getRequestParasOfAll();
 
 		if (this.getWorkID() != 0) {
 			// 判断是否有执行该工作的权限.
@@ -1495,7 +1501,7 @@ public class WF_MyFlow extends WebContralBase {
 
 		// 获得他的描述,与数据.
 		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(mdtl.getFK_MapData(), mdtl,
-				Integer.parseInt(this.getRefPKVal()), strs);
+				Integer.parseInt(this.getRefPKVal()), strs,this.getFID());
 
 		return BP.Tools.Json.ToJson(ds);
 	}

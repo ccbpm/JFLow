@@ -833,7 +833,7 @@ public class CCFormAPI extends Dev2Interface
 		return myds;
 	}
 	
-	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas) throws Exception
+	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas, long fid) throws Exception
 	{
 		//数据容器,就是要返回的对象.
 		DataSet myds = new DataSet();
@@ -1005,7 +1005,10 @@ public class CCFormAPI extends Dev2Interface
                     qo.AddWhere(GEDtlAttr.RefPK, pkval);
                     break;
                 case ForFID: // 按流程ID来控制.
+                	if (fid==0)
                     qo.AddWhere(GEDtlAttr.FID, pkval);
+                	else
+                		qo.AddWhere(GEDtlAttr.FID, fid);	
                     break;
             }
         }

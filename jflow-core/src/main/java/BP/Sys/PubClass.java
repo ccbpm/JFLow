@@ -939,6 +939,13 @@ public class PubClass {
 		Entity en = null;
 		Entities ens = null;
 		for (Object obj : als) {
+			
+			if (obj==null)
+				continue;
+			
+			String clsName=obj.toString();
+			 
+			  
 			try {
 				ens = (Entities) obj;
 				en = ens.getGetNewEntity();

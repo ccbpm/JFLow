@@ -2431,6 +2431,13 @@ public class WorkNode {
 										|| key.equals(GEDtlAttr.RefPK)) {
 									continue;
 								}
+								
+								
+								  if (attr.getIsRefAttr() == true)
+                                      continue;
+                                  if (attr.getField() == null)
+                                      continue; //
+                                  
 
 								if (myDT.Columns.contains(attr.getField()) == true) {
 									mywk.SetValByKey(attr.getKey(), myDT.Rows.get(0).getValue(attr.getField()));

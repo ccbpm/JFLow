@@ -1032,6 +1032,16 @@ public class MapDtlExt extends EntityNoName
         rm.Target = "_blank";
         map.AddRefMethod(rm);
         
+
+        rm = new RefMethod();
+        rm.Title = "从表附件属性"; // "设计表单";
+        rm.ClassMethodName = this.toString() + ".OpenAthAttr";
+        rm.Icon = "../Img/AttachmentM.png";
+        rm.Visable = true;
+        rm.refMethodType = RefMethodType.LinkeWinOpen;
+        rm.Target = "_blank";
+        map.AddRefMethod(rm);
+        
         
         rm = new RefMethod();
         rm.GroupName = "实验中的功能";
@@ -1080,6 +1090,17 @@ public class MapDtlExt extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	
+	  /// <summary>
+    /// 打开从表附件属性.
+    /// </summary>
+    /// <returns></returns>
+    public String OpenAthAttr()
+    {
+        String url = "../../Comm/RefFunc/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&PKVal=" + this.getNo() + "_AthMDtl";
+        // string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" + this.No + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+        return url;
+    }
 	
 	/** 列自动计算
 	 

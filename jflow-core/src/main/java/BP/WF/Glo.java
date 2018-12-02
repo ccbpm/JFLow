@@ -860,6 +860,9 @@ public class Glo {
 
 			// 获得类名.
 			String clsName = en.toString();
+			
+			if (clsName==null)
+				continue;
  
 			// 不安装CCIM的表.
 			if (clsName != null && clsName.contains("BP.CCIM")) {
@@ -880,6 +883,21 @@ public class Glo {
 			if (clsName != null && clsName.equals("BP.WF.GEWork")) {
 				continue;
 			}
+			
+			   //抽象的类不允许创建表.
+            switch(clsName)
+            {
+                case "BP.WF.StartWork":
+                case "BP.WF.Work":
+                case "BP.WF.GEStartWork":
+                case "BP.En.GENoName":
+                case "BP.En.GETree":
+                case "BP.WF.Data.GERpt":
+                    continue;
+                default:
+                    break;
+            }
+            
 
 			if (isInstallFlowDemo == false) {
 				// 如果不安装demo.

@@ -46,28 +46,7 @@ public abstract class StartWork extends Work{
 	{
 		this.SetValByKey(StartWorkAttr.FK_Dept, value);
 	}
-	//public string FK_DeptOf2Code
-	//{
-	//    get
-	//    {
-	//        return this.FK_Dept.substing(6);
-	//    } 
-	//}
-	/** 
-	 FK_XJ
 	 
-	//public string FK_XJ
-	//{
-	//    get
-	//    {
-	//        return this.GetValStringByKey(StartWorkAttr.FK_Dept);
-	//    }
-	//    set
-	//    {
-	//        this.SetValByKey(StartWorkAttr.FK_Dept, value);
-	//    }
-	//}
-	*/
 		
 	/** 
 	 工作内容标题

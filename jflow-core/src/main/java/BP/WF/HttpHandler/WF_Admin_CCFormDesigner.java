@@ -15,6 +15,7 @@ import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.DA.Log;
 import BP.En.EditType;
 import BP.En.FieldTypeS;
@@ -247,8 +248,15 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		MapData md = new MapData();
 		md.setName(this.GetRequestVal("TB_Name"));
 		md.setNo(this.GetRequestVal("TB_No"));
-		md.setPTable(this.GetRequestVal("TB_PTable"));
 		
+		md.setHisFrmTypeInt(this.GetRequestValInt("DDL_FrmType"));
+		
+		md.setPTable(this.GetRequestVal("TB_PTable"));
+		//表单的物理表.
+        if(md.getHisFrmType() == BP.Sys.FrmType.Url ||  md.getHisFrmType() == BP.Sys.FrmType.Entity)
+            md.setPTable(this.GetRequestVal("TB_PTable"));
+        else
+            md.setPTable(DataType.ParseStringForNo(this.GetRequestVal("TB_PTable"), 100));
 		
 		md.SetValByKey(MapDataAttr.PTableModel, this.GetRequestVal("DDL_PTableModel"));
 
@@ -260,16 +268,12 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 			return "err@表单ID:" + md.getNo() + "已经存在.";
 		}
 
-		md.setHisFrmTypeInt(this.GetRequestValInt("DDL_FrmType"));
-
 		switch (md.getHisFrmType()) {
 		// 自由，傻瓜，SL表单不做判断
 		case FreeFrm:
 		case FoolForm:
 			break;
 		case Url:
-			md.setUrl(this.GetRequestVal("TB_Url"));
-			break;
 		case Entity:
             md.setUrl(md.getPTable());
             break;
@@ -293,6 +297,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		if (md.getHisFrmType() == BP.Sys.FrmType.FreeFrm) {
 			return "url@FormDesigner.htm?FK_MapData=" + md.getNo();
 		}
+		
+		if (md.getHisFrmType() == BP.Sys.FrmType.Entity)
+            return "url@../../Comm/Ens.htm?EnsName=" + md.getPTable();
 
 		return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + md.getNo();
 	}
@@ -335,8 +342,10 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		   if (md.getHisFrmType() == BP.Sys.FrmType.Url)
            {
                /* 自由表单 */
-               return "url@../../Comm/En.htm?EnName=BP.WF.Template.MapDataURL&No=" + this.getFK_MapData();
+               return "url@../../Comm/EnOnly.htm?EnName=BP.WF.Template.MapDataURL&No=" + this.getFK_MapData();
            }
+		   if (md.getHisFrmType() == BP.Sys.FrmType.Entity)
+			   return "url@../../Comm/Ens.htm?EnsName=" + md.getPTable();
 		   
 		return "err@没有判断的表单转入类型" + md.getHisFrmType().toString();
 	}

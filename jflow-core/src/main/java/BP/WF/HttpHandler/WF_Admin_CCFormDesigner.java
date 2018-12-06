@@ -268,8 +268,11 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 		case FoolForm:
 			break;
 		case Url:
-			md.setUrl(md.getPTable());
+			md.setUrl(this.GetRequestVal("TB_Url"));
 			break;
+		case Entity:
+            md.setUrl(md.getPTable());
+            break;
 		// 如果是以下情况，导入模式
 		case WordFrm:
 		case ExcelFrm:

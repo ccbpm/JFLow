@@ -19,7 +19,6 @@
         $(function () {
 
             $("#Msg").html("正在加载,请稍后......");
-
             InitPage();
 
             $("#Msg").html("");
@@ -161,7 +160,7 @@
     <input type="button" value='保存' onclick='Save();' id='Save' />
             <input type=button  onclick="Back()" value="返回" id="Button2" /> 
 
-    <div style="max-height:600px;overflow:auto;">
+    <div id="tableDiv" style="max-height:600px;overflow:auto;height:330px">
             <table id="t1" class="Table" cellspacing="1" cellpadding="1" border="1" style="width: 100%">
             </table>
     </div>

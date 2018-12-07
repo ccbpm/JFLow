@@ -875,7 +875,10 @@ public class FindWorker
 		}
 
 		// 如果执行节点 与 接受节点岗位集合一致 
-		if (this.currWn.getHisNode().getGroupStaNDs() == town.getHisNode().getGroupStaNDs())
+		String currGroupStaNDs = this.currWn.getHisNode().getGroupStaNDs();
+		String toNodeGroupStaNDs = town.getHisNode().getGroupStaNDs();
+				
+		if (DataType.IsNullOrEmpty(currGroupStaNDs) == false && currGroupStaNDs.equals(toNodeGroupStaNDs)==true)
 		{
 			// 说明，就把当前人员做为下一个节点处理人。
 			DataRow dr = dt.NewRow();
@@ -885,7 +888,8 @@ public class FindWorker
 		}
 
 		// 如果执行节点 与 接受节点岗位集合不一致 
-		if (this.currWn.getHisNode().getGroupStaNDs() != town.getHisNode().getGroupStaNDs())
+		if ((DataType.IsNullOrEmpty(toNodeGroupStaNDs) == true && DataType.IsNullOrEmpty(currGroupStaNDs) == true)
+                || currGroupStaNDs.equals(toNodeGroupStaNDs) == false)
 		{
 			// 没有查询到的情况下, 先按照本部门计算。
 			if (flowAppType == FlowAppType.Normal)

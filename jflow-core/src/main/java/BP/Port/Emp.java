@@ -2,6 +2,7 @@ package BP.Port;
 
 import BP.DA.DBUrl;
 import BP.DA.DBUrlType;
+import BP.DA.DataType;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.Entities;
@@ -10,7 +11,10 @@ import BP.En.Map;
 import BP.En.QueryObject;
 import BP.En.UAC;
 import BP.GPM.EmpAttr;
+import BP.Sys.OSDBSrc;
 import BP.Sys.SystemConfig;
+import BP.Tools.Cryptos;
+import BP.WF.PortalInterface;
 
 /**
  * Emp 的摘要说明。
@@ -99,32 +103,34 @@ public class Emp extends EntityNoName
 	 * @param pass
 	 *            密码
 	 * @return 是否匹配成功
+	 * @throws Exception 
 	 */
-	public final boolean CheckPass(String pass)
+	public final boolean CheckPass(String pass) throws Exception
 	{
 		
-		if (1==1)
-			return true;
-		 
-		 //启用加密
-    //    if (SystemConfig.getIsEnablePasswordEncryption() == true)
-      //      pass = BP.Tools.Cryptography.EncryptString(pass);
+		 if (SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
+         {
+             //如果是使用webservices校验.
+			 PortalInterface v = DataType.GetPortalInterfaceSoapClientInstance();
+             //int i = v.CheckUserNoPassWord(this.getNo(), pass);
+             //if (i == 1)
+                 return true;
+             //return false;
+         }
+         else
+         {
+             //启用加密
+             if (SystemConfig.getIsEnablePasswordEncryption() == true)
+                 pass = Cryptos.aesDecrypt(pass);
 
-        /*使用数据库校验.*/
-        if (this.getPass().equals( pass)==true)
-            return true;
-        
-//		if (SystemConfig.getIsDebug())
-//		{
-//			return true;
-//		}
-		//UserService.encryptPassword();
+             /*使用数据库校验.*/
+             if (this.getPass().equals( pass)==true)
+                 return true;
+
+         }
+         return false;
+         
 		
-		if (this.getPass().equals(pass))
-		{
-			return true;
-		}
-		return false;
 	}
 	
 	// 公共方法

@@ -5,18 +5,15 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -248,9 +245,7 @@ public class WF_CCForm extends WebContralBase {
 		}
 		/// #endregion 执行装载模版.
 
-		/// #region 处理权限问题.
 		// 处理权限问题, 有可能当前节点是可以上传或者删除，但是当前节点上不能让此人执行工作。
-		// bool isDel = athDesc.IsDeleteInt == 0 ? false : true;
 		boolean isDel = athDesc.getHisDeleteWay() == AthDeleteWay.None ? false : true;
 		boolean isUpdate = athDesc.getIsUpload();
 		if (isDel == true || isUpdate == true) {
@@ -263,24 +258,11 @@ public class WF_CCForm extends WebContralBase {
 		}
 		athDesc.setIsUpload(isUpdate);
 
-		// athDesc.setHisDeleteWay(AthDeleteWay.DelAll);
-		/// #endregion 处理权限问题.
-
 		// 增加附件描述.
 		ds.Tables.add(athDesc.ToDataTableField("AthDesc"));
 
 		// 增加附件.
 		ds.Tables.add(dbs.ToDataTableField("DBAths"));
-
-		/*
-		 * //创建实体对象. MapData md = new MapData(this.getPKVal()); //加入枚举表.
-		 * DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
-		 * ds.Tables.add(Sys_Menu);
-		 * 
-		 * //加入外键属性. DataTable Sys_MapAttr =
-		 * md.getMapAttrs().ToDataTableField("Sys_MapAttr");
-		 * ds.Tables.add(Sys_MapAttr);
-		 */
 
 		// 返回.
 		return BP.Tools.Json.ToJson(ds);
@@ -2720,9 +2702,126 @@ public class WF_CCForm extends WebContralBase {
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return BP.Tools.Json.ToJson(dt);
 	}
+	
+	/**
+	 * 从不SQL导入
+	 * @return
+	 * @throws Exception 
+	 */
+    public String DtlImpBySQl_Imp() throws Exception
+    {
+        //获取参数
+        String ensName = this.getEnsName();
+        String refpk = this.getRefPKVal();
+        long fid = this.getFID();
+        String pk = this.GetRequestVal("PKs");
+        GEDtls dtls = new GEDtls(ensName);
+        QueryObject qo = new QueryObject(dtls);
+        //获取从表权限
+        MapDtl dtl = new MapDtl(ensName);
+        //处理权限方案
+        if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+        {
+            Node nd = new Node(this.getFK_Node());
+            if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+            {
+                FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), dtl.getFK_MapData());
+                if (fn.getFrmSln() == FrmSln.Self)
+                {
+                    String no = dtl.getNo() + "_" + nd.getNodeID();
+                    MapDtl mdtlSln = new MapDtl();
+                    mdtlSln.setNo(no);
+                    int result = mdtlSln.RetrieveFromDBSources();
+                    if (result != 0)
+                    {
+                        dtl = mdtlSln;
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion 从表的选项.
+                    }
+                }
+            }
+        }
+        
+
+        //判断是否重复导入
+        boolean isInsert = true;
+        if (DataType.IsNullOrEmpty(pk) == false){
+            String[] pks = pk.split("@");
+            int idx = 0;
+            for (String k : pks)
+            {
+                if (DataType.IsNullOrEmpty(k))
+                    continue;
+                if (idx == 0)
+                    qo.AddWhere(k, this.GetRequestVal(k));
+                else
+                {
+                    qo.addAnd();
+                    qo.AddWhere(k, this.GetRequestVal(k));
+                }
+                idx++;
+            }
+            switch (dtl.getDtlOpenType())
+            {
+                case ForEmp:  // 按人员来控制.
+                    qo.addAnd();
+                    qo.AddWhere("RefPk", refpk);
+                    qo.addAnd();
+                    qo.AddWhere("Rec", this.GetRequestVal("UserNo"));
+                    break;
+                case ForWorkID: // 按工作ID来控制
+                    qo.addAnd();
+                    qo.addLeftBracket();
+                    qo.AddWhere("RefPk", refpk);
+                    qo.addOr();
+                    qo.AddWhere("FID", fid);
+                    qo.addRightBracket();
+                    break;
+                case ForFID: // 按流程ID来控制.
+                    qo.addAnd();
+                    qo.AddWhere("FID", fid);
+                    break;
+            }
+            
+            int count = qo.GetCount();
+            if (count > 0)
+                isInsert = false;
+        }
+        //导入数据
+        if (isInsert == true)
+        {
+           
+            GEDtl dtlEn = (GEDtl)dtls.getGetNewEntity();
+            //遍历属性，循环赋值.
+            for (Attr attr : dtlEn.getEnMap().getAttrs())
+            {
+                dtlEn.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
+
+            }
+            switch (dtl.getDtlOpenType())
+            {
+                case ForEmp:  // 按人员来控制.
+                    dtlEn.setRefPKInt(Integer.parseInt(refpk));
+                    break;
+                case ForWorkID: // 按工作ID来控制
+                	dtlEn.setRefPKInt(Integer.parseInt(refpk));
+                    dtlEn.SetValByKey("FID", Integer.parseInt(refpk));
+                    break;
+                case ForFID: // 按流程ID来控制.
+                	dtlEn.setRefPKInt(Integer.parseInt(refpk));
+                    dtlEn.SetValByKey("FID", fid);
+                    break;
+            }
+            dtlEn.SetValByKey("RDT", BP.DA.DataType.getCurrentData());
+            dtlEn.SetValByKey("Rec", this.GetRequestVal("UserNo"));
+
+            dtlEn.InsertAsOID((int)DBAccess.GenerOID(ensName));
+            return Long.toString(dtlEn.getOID());
+        }
+
+        return "";
+
+    }
+
 	/**
 	 * Excel 导入
 	 */

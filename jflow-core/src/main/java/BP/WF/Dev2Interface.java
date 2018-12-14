@@ -4728,11 +4728,20 @@ public class Dev2Interface {
 		WorkFlow wf = new WorkFlow(flowNo, workID);
 		wf.DoDeleteWorkFlowByFlag(msg);
 		if (isDelSubFlow) {
+			//删除子线程
 			GenerWorkFlows gwfs = new GenerWorkFlows();
 			gwfs.Retrieve(GenerWorkFlowAttr.FID, workID);
 			for (GenerWorkFlow item : gwfs.ToJavaList()) {
 				Flow_DoDeleteFlowByFlag(item.getFK_Flow(), item.getWorkID(), "删除子流程:" + msg, false);
 			}
+			
+			//删除子流程
+			gwfs = new GenerWorkFlows();
+			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workID);
+			for (GenerWorkFlow item : gwfs.ToJavaList()) {
+				Flow_DoDeleteFlowByFlag(item.getFK_Flow(), item.getWorkID(), "删除子流程:" + msg, false);
+			}
+			
 		}
 		return "删除成功";
 	}

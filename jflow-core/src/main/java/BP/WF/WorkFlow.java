@@ -473,6 +473,9 @@ public class WorkFlow
 		{
 			try
 			{
+				 if (DBAccess.IsExitsObject("ND" + nd.getNodeID()) == false)
+                     continue;
+				 
 				DBAccess.RunSQL("DELETE FROM ND" + nd.getNodeID() + " WHERE OID=" + workid + " OR FID=" + workid);
 			}
 			catch (RuntimeException ex)

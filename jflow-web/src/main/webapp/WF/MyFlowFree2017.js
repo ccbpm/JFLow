@@ -245,7 +245,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         }
 
         //多行文本模式.
-        eleHtml = "<textarea maxlength=" + mapAttr.MaxLen + " style='height:" + mapAttr.UIHeight + "px;' id='TB_" + mapAttr.KeyOfEn + "' type='text' />";
+        eleHtml = "<textarea maxlength=" + mapAttr.MaxLen + " style='height:" + mapAttr.UIHeight + "px;' id='TB_" + mapAttr.KeyOfEn + "' type='text' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return eleHtml;
     }
 
@@ -256,7 +256,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
             enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'yyyy-MM-dd'})" + '";';
         }
 
-        eleHtml = "<input  type='text' class='form-control Wdate' " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
+        eleHtml = "<input  type='text' class='form-control Wdate' " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return eleHtml;
     }
 
@@ -266,7 +266,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         if (mapAttr.UIIsEnable == 1) {
             enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'yyyy-MM-dd HH:mm'})" + '";';
         }
-        eleHtml = "<input type='text' class='form-control Wdate'  " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' />";
+        eleHtml = "<input type='text' class='form-control Wdate'  " + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return eleHtml;
     }
 
@@ -296,20 +296,20 @@ function figure_MapAttr_TemplateEle(mapAttr) {
         if (defVal != null && defVal !== "" && defVal.indexOf(".") >= 0)
             bit = defVal.substring(defVal.indexOf(".") + 1).length;
 
-        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'float');if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00'/>";
+        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'float');if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return eleHtml;
     }
 
     // int 类型.
     if ((mapAttr.MyDataType == 2 && mapAttr.UIContralType == 0)) { //AppInt
-        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' />";
+        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return eleHtml;
     }
 
     // 金额类型. AppMoney  AppRate
     if (mapAttr.MyDataType == 8) {
 
-        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00'/>";
+        eleHtml += "<input style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return eleHtml;
     }
 
@@ -363,7 +363,10 @@ function figure_Template_Label(frmLab) {
 //初始化按钮
 function figure_Template_Btn(frmBtn) {
     var eleHtml = $('<div></div>');
-    var btnHtml = $('<input type="button" value="">');
+    var btnId = frmBtn.BtnID;
+    if (btnId == null || btnId == "")
+        btnId = frmBtn.MyPK;
+    var btnHtml = $("<input id='" + btnId + "' type='button' value='' >");
     btnHtml.val(frmBtn.Text).width(frmBtn.W).height(frmBtn.H).addClass('btn');
     var doc = frmBtn.EventContext;
     doc = (doc == null ? "" : doc.replace(/~/g, "'"));
@@ -539,8 +542,9 @@ function ImgAth(url, athMyPK) {
         //var obj = document.getElementById(dgId);
         //var win =(obj.contentWindow || obj.contentDocument); 
         var imgSrc = $("#imgSrc").val();
-        if(imgSrc!=null && imgSrc!="")
-            document.getElementById('Img' + athMyPK).setAttribute('src', imgSrc);
+        if (imgSrc != null && imgSrc != "")
+            document.getElementById('Img' + athMyPK).setAttribute('src', imgSrc + "?t=" + Math.random());
+        $("#imgSrc").val("");
     });
 }
 
@@ -548,17 +552,23 @@ function ImgAth(url, athMyPK) {
 function figure_Template_ImageAth(frmImageAth) {
     var isEdit = frmImageAth.IsEdit;
     var eleHtml = $("<div></div>");
-    var img = $("<img/>");
+    var img = $("<img class='pimg'/>");
 
     var imgSrc = basePath + "/WF/Data/Img/LogH.PNG";
+//    //获取数据
+//    if (flowData.Sys_FrmImgAthDB) {
+//        $.each(flowData.Sys_FrmImgAthDB, function (i, obj) {
+//            if (obj.MyPK == (frmImageAth.MyPK + '_' + pageData.WorkID)) {
+//                imgSrc = basePath + obj.FileFullName;
+//            }
+//        });
+    //    }
     //获取数据
-    if (flowData.Sys_FrmImgAthDB) {
-        $.each(flowData.Sys_FrmImgAthDB, function (i, obj) {
-            if (obj.MyPK == (frmImageAth.MyPK + '_' + pageData.WorkID)) {
-                imgSrc = basePath + obj.FileFullName;
-            }
-        });
-    }
+    if (frmImageAth.FK_MapData.indexOf("ND") != -1)
+        imgSrc = basePath + "/DataUser/ImgAth/Data/" + frmImageAth.CtrlID + "_" + pageData.WorkID + ".png";
+    else
+        imgSrc = basePath + "/DataUser/ImgAth/Data/" + frmImageAth.FK_MapData + "_" + frmImageAth.CtrlID + "_" + pageData.WorkID + ".png";
+
     //设计属性
     img.attr('id', 'Img' + frmImageAth.MyPK).attr('name', 'Img' + frmImageAth.MyPK);
     img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Admin/CCFormDesigner/Controls/DataView/AthImg.png'");
@@ -568,7 +578,7 @@ function figure_Template_ImageAth(frmImageAth) {
         var fieldSet = $("<fieldset></fieldset>");
         var length = $("<legend></legend>");
         var a = $("<a></a>");
-        var url = basePath + "/WF/CCForm/ImgAth.htm?W=" + frmImageAth.W + "&H=" + frmImageAth.H + "&FK_MapData=" + flowData.Sys_MapData[0].No + "&MyPK=" + pageData.WorkID + "&ImgAth=" + frmImageAth.MyPK;
+        var url = basePath + "/WF/CCForm/ImgAth.htm?W=" + frmImageAth.W + "&H=" + frmImageAth.H + "&FK_MapData=" + flowData.Sys_MapData[0].No + "&RefPKVal=" + pageData.WorkID + "&CtrlID=" + frmImageAth.CtrlID;
 
         a.attr('href', "javascript:ImgAth('" + url + "','" + frmImageAth.MyPK + "');").html("编辑");
         length.css('font-style', 'inherit').css('font-weight', 'bold').css('font-size', '12px');

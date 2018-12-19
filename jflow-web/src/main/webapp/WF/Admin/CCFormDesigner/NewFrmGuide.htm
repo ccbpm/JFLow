@@ -62,24 +62,36 @@
 
             var frmType = $("#DDL_FrmType").val();
 
+            $("#DDL_PTableModel").show();
+            $("#Idx_6").show();
+            $("#Idx_8").show();
+            $("#idx_td_7").html("7");
+            $("#OtherTd").html("9");
+
             document.getElementById("PTableName").innerHTML = "存储表";
             document.getElementById("PTableDesc").innerHTML = "数据要存储到那个表里？<br>默认与表单编号一致，指定的表名，必须是下划线或者字母开头，不能包含特殊字符，否则创建表失败。";
 
             if (frmType == "7") {
                 document.getElementById("PTableName").innerHTML = "请输入实体类名";
                 document.getElementById("PTableDesc").innerHTML = "该实体必须是以BP.开头的并且从实体BP.En.Entities上继承下来的. <br>比如:BP.Demo.Resumes";
+                $("#Idx_6").hide();
+                $("#Idx_8").hide();
+                $("#idx_td_7").html("6");
+                $("#OtherTd").html("7");
             }
 
             if (frmType == "3") {
                 document.getElementById("PTableName").innerHTML = "请输入URL";
                 document.getElementById("PTableDesc").innerHTML = "请输入嵌入式表单的URL.";
+                $("#Idx_6").hide();
+                $("#Idx_8").hide();
+                $("#idx_td_7").html("6");
+                $("#OtherTd").html("7");
+
+                //隐藏TR
             }
 
-            //              1:拿到select对象： var  myselect=document.getElementById("test");
-            //  2：拿到选中项的索引：var index=myselect.selectedIndex ;             // selectedIndex代表的是你所选中项的index
-            //  3:拿到选中项options的value：  myselect.options[index].value;
-            //  4:拿到选中项options的text：  myselect.options[index].text;
-            //   var frmType = document.getElementById("DDL_FrmType");
+          
         }
 
         //选择一个表.
@@ -133,25 +145,25 @@
 </tr>
 
 
-<tr>
+<tr id="Idx_6">
 <td class="Idx" > 6 </td>
-<td > <div id="PTableName" > 数据表存储类型</div> </td>
+<td > <div> 数据表存储类型</div> </td>
 <td>
  <select id="DDL_PTableModel" name="DDL_PTableModel">
   <option value="0" >自定存储表 </option>
   <option value="1" > 从数据库中指定，可以修改数据库结构。 </option>
   <option value="2" > 从数据库中指定，不允许修改数据库结构。 </option>
  </select>
-
+ 
 </td>
 <td > 
-<div id="PTableDesc" >确定后，不允许修改。</div>
+<div>确定后，不允许修改。</div>
 </td>
 </tr>
 
 
-<tr>
-<td class="Idx" > 7 </td>
+<tr id="Idx_7">
+<td class="Idx" id="idx_td_7"> 7 </td>
 <td > <div id="PTableName" >自定义存储表  </div> </td>
 <td><input type="text" id="TB_PTable" name="TB_PTable" style=" width:100%;" /> </td>
 <td > 
@@ -160,7 +172,7 @@
 </tr>
 
 
-<tr>
+<tr id="Idx_8">
 <td class="Idx" > 8 </td>
 <td > <div id="Div1" >本机已存在的表  </div> </td>
 <td>
@@ -175,7 +187,7 @@
 
 
 <tr>
-<td class="Idx" > 9 </td>
+<td class="Idx" id="OtherTd"> 9 </td>
 <td >  </td>
 
 <td colspan="2">
@@ -208,7 +220,9 @@
         }
 
         $('#TB_No').val("CCFrm_" + data);
-        $('#TB_PTable').val("CCFrm_" + data);
+        var frmType = $("#DDL_FrmType").val();
+        if(frmType!="3" && frmType!="7")
+         $('#TB_PTable').val("CCFrm_" + data);
         return;
     }
     
@@ -226,7 +240,6 @@
             return;
         }
 
-		//$("#DDL_PTable").trigger("change");
 
         var frmData = $("#cc").serialize();
 

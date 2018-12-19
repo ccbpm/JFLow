@@ -134,15 +134,15 @@ function SetHegiht() {
     }
 }
 
-//从表在新建或者在打开行的时候，如果 EditModel 配置了使用卡片的模式显示一行数据的时候，就调用此方法.
-function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage) {
+//从表在新建或者在打开行的时候，如果 EditModel 配置了使用卡片的模式显示一行数据的时候，就调用此方法. // IsSave 弹出页面关闭时是否要删除从表
+function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage, FK_MapData, FK_Node, FID,IsSave) {
     // model=1 自由表单, model=2傻瓜表单.
     var pathName = document.location.pathname;
     var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
     if (projectName.startsWith("/WF")) {
         projectName = "";
     }
-    var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal;
+    var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal + "&FK_MapData=" + FK_MapData + "&FK_Node=" + FK_Node + "&FID=" + FID + "&IsSave=" + IsSave;
     if (typeof ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal) === "function") {
         OpenBootStrapModal(url, "editSubGrid", '编辑', 1000, 450, "icon-property", false, function () { }, null, function () {
             if (typeof InitPage === "function") {
@@ -150,7 +150,7 @@ function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage) {
             } else {
                 alert("请手动刷新表单");
             }
-        }, "editSubGridDiv");
+        }, "editSubGridDiv", null, false);
     } else {
         window.open(url);
     }
@@ -243,7 +243,7 @@ function GenerFrm() {
                     GenerFreeFrm(mapData, frmData); //自由表单.
             }
 
-            //  $.parser.parse("#CCForm");
+            $.parser.parse("#CCForm");
             var isReadonly = GetQueryString("IsReadonly");
 
             //原有的。
@@ -286,13 +286,6 @@ function GenerFrm() {
 
             }
 
-            if (isReadonly != "1") {
-
-                //Common.MaxLengthError();
-                //debugger
-                //处理下拉框级联等扩展信息
-                AfterBindEn_DealMapExt(frmData);
-            }
 
             //设置默认值
             for (var j = 0; j < frmData.Sys_MapAttr.length; j++) {
@@ -316,7 +309,7 @@ function GenerFrm() {
                             var pushData = handler.DoMethodReturnString("Tree_Init");
                             if (pushData.indexOf("err@") != -1) {
                                 alert(pushData);
-                                return;
+                                continue;
                             }
                             pushData = ToJson(pushData);
                             $('#DDL_' + mapAttr.KeyOfEn).combotree('loadData', pushData);
@@ -324,6 +317,8 @@ function GenerFrm() {
                                 $('#DDL_' + mapAttr.KeyOfEn).combotree({ disabled: true });
 
                             $('#DDL_' + mapAttr.KeyOfEn).combotree('setValue', defValue);
+
+                            continue;
                         }
                     }
                 }
@@ -342,7 +337,7 @@ function GenerFrm() {
                         var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
                         $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
                     }
-                    //
+                    
                     $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
                 }
 
@@ -361,6 +356,10 @@ function GenerFrm() {
                     $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
                 }
             }
+
+            //处理下拉框级联等扩展信息
+            AfterBindEn_DealMapExt(frmData);
+          
 
             ShowNoticeInfo();
 
@@ -388,6 +387,10 @@ function GenerFrm() {
             //调整样式,让必选的红色 * 随后垂直居中
             editor.$container.css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
 
+            $(".pimg").on("dblclick",function () {
+                var _this = $(this); //将当前的pimg元素作为_this传入函数  
+                imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
+            });  
             if (typeof setContentHeight == "function") {
                 setContentHeight();
             }
@@ -442,7 +445,7 @@ function Save(scope) {
 
     $.ajax({
         type: 'post',
-        async: true,
+        async: false,
         data: getFormData(true, true),
         url: Handler + "?DoType=FrmGener_Save&OID=" + pageData.OID,
         dataType: 'html',
@@ -1250,11 +1253,11 @@ function To(url) {
     window.name = "dialogPage"; window.open(url, "dialogPage")
 }
 
-function SaveDtlData() {
+function SaveDtlData(scope) {
     if (IsChange == false)
         return;
 
-    Save();
+    Save(scope);
 }
 
 function Change(id) {

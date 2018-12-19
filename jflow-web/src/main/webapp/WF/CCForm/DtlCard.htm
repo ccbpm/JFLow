@@ -349,7 +349,10 @@
             if (EditModel != 0 && window.parent) {
                 var ensName = GetQueryString("EnsName");
                 var refPKVal = GetQueryString("RefPKVal");
-                window.parent.DtlFrm(ensName, refPKVal, '0', EditModel, InitMainTable);
+                var FK_MapData = GetQueryString("FK_MapData");
+                var FID = GetQueryString("FID");
+                var FK_Node = GetQueryString("FK_Node");
+                window.parent.DtlFrm(ensName, refPKVal, '0', EditModel, InitMainTable,FK_MapData,FK_Node,FID,false);
                 return;
             }
         }
@@ -358,7 +361,12 @@
             if (window.parent) {
                 var ensName = GetQueryString("EnsName");
                 var refPKVal = GetQueryString("RefPKVal");
-                window.parent.DtlFrm(ensName, refPKVal, OID, EditModel, InitMainTable);
+                var FK_MapData = GetQueryString("FK_MapData");
+                var fid = GetQueryString("FID");
+                if (fid == "" || fid == undefined)
+                 fid = 0
+                var FK_Node = GetQueryString("FK_Node");
+                window.parent.DtlFrm(ensName, refPKVal, OID, EditModel, InitMainTable, FK_MapData, FK_Node, fid,true);
             }
         }
 
@@ -375,6 +383,7 @@
 
                 hand.AddPara("EnsName", ensName);
                 hand.AddPara("RefOID", OID);
+                hand.AddPara("FK_Node", GetQueryString("FK_Node"));
                 var dtlData = hand.DoMethodReturnJSON("Dtl_DeleteRow");
                 InitMainTable();
             }

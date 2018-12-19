@@ -3176,31 +3176,17 @@ public abstract class Entity implements Serializable {
 
 		Attrs attrs = this.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
-
+			if(attr.getIsRefAttr())
+				this.SetValRefTextByKey(attr.getKey(), "");
+			
+			//获取默认值
+			String v = attr.getDefaultValOfReal();
+			if (v== null ||( v != null && v.contains("@") == false))
+				continue;
+		  
 			// 含有特定值时取消重新设定默认值
-			String v = this.GetValStringByKey(attr.getKey(), null); // this._row[key]
-																	// as
-																	// string;
+			String myval = this.GetValStringByKey(attr.getKey()); 
 
-			if (v != null && v.contains("@") == false)
-				continue;
-
-			String tempVar = attr.getDefaultValOfReal();
-			v = (String) ((tempVar instanceof String) ? tempVar : null);
-			if (v == null) {
-				continue;
-			}
-
-			if (attr.getDefaultValOfReal().contains("@") == false) {
-
-				String val = this.GetValStrByKey(attr.getKey());
-				if (val == null || val == "")
-					this.SetValByKey(attr.getKey(), attr.getDefaultVal());
-
-				continue;
-			}
-
-			String myval = this.GetValStrByKey(attr.getKey());
 			// 设置默认值.
 			if (v.equals("@WebUser.No")) {
 				if (attr.getUIIsReadonly()) {
@@ -3211,7 +3197,8 @@ public abstract class Entity implements Serializable {
 					}
 				}
 				continue;
-			} else if (v.equals("@WebUser.Name")) {
+			}
+			if (v.equals("@WebUser.Name")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getName());
 				} else {
@@ -3220,7 +3207,8 @@ public abstract class Entity implements Serializable {
 					}
 				}
 				continue;
-			} else if (v.equals("@WebUser.FK_Dept")) {
+			} 
+			if (v.equals("@WebUser.FK_Dept")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
 				} else {
@@ -3229,7 +3217,8 @@ public abstract class Entity implements Serializable {
 					}
 				}
 				continue;
-			} else if (v.equals("@WebUser.FK_DeptName")) {
+			} 
+			if (v.equals("@WebUser.FK_DeptName")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
 				} else {
@@ -3238,7 +3227,8 @@ public abstract class Entity implements Serializable {
 					}
 				}
 				continue;
-			} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
+			} 
+			if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 				} else {
@@ -3247,7 +3237,8 @@ public abstract class Entity implements Serializable {
 					}
 				}
 				continue;
-			} else if (v.equals("@RDT")) {
+			}
+			if (v.equals("@RDT")) {
 				if (attr.getUIIsReadonly()) {
 					if (attr.getMyDataType() == DataType.AppDate || v.equals(myval)) {
 						this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
@@ -3266,9 +3257,34 @@ public abstract class Entity implements Serializable {
 					}
 				}
 				continue;
-			} else {
-				continue;
 			}
+			if (v.equals("@FK_ND")){
+	             if (attr.getUIIsReadonly() == true)
+	             {
+	                 this.SetValByKey(attr.getKey(), DataType.getCurrentYear());
+	             }
+	             else
+	             {
+	                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+	                     this.SetValByKey(attr.getKey(), DataType.getCurrentYear());
+	             }
+	             continue;
+			}
+		   if(v.equals("@yyyy年mm月dd日") ||v.equals("@yyyy年mm月dd日HH时mm分")
+				   || v.equals("@yy年mm月dd日")||v.equals("@yy年mm月dd日HH时mm分") ){
+
+             if (attr.getUIIsReadonly() == true)
+             {
+                 this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(v.replace("@", "")));
+             }
+             else
+             {
+                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+                     this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(v.replace("@", "")));
+             }
+             continue;
+		   }
+			
 		}
 	}
 

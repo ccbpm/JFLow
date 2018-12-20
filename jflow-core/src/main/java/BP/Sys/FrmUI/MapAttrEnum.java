@@ -197,7 +197,7 @@ public class MapAttrEnum extends EntityMyPK
 	*/
 	public final String DoSysEnum()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/SysEnum.html?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK() + "&EnumKey=" + this.getUIBindKey();
+		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/DialogCtr/EnumerationNew.htm?DoType=FrmEnumeration_SaveEnum&EnumKey=" + this.getUIBindKey();
 	}
 	/** 
 	 设置自动填充

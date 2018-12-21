@@ -11,9 +11,7 @@ import BP.WF.DotNetToJavaStringHelper;
 */
 public class FrmTree extends EntitySimpleTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#region 属性.
-	 
+
 	/** 
 	 序号
 	 
@@ -38,11 +36,20 @@ public class FrmTree extends EntitySimpleTree
 	{
 		this.SetValByKey(FrmTreeAttr.ParentNo, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#endregion 属性.
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#region 构造方法
+	
+	/**
+	 * 组织编码
+	 * @return
+	 */
+	public final String getOrgNo()
+	{
+		return this.GetValStringByKey(FrmTreeAttr.OrgNo);
+	}
+	public final void setOrgNo(String value)
+	{
+		this.SetValByKey(FrmTreeAttr.OrgNo, value);
+	}
+	
 	/** 
 	 独立表单树
 	 
@@ -60,11 +67,7 @@ public class FrmTree extends EntitySimpleTree
 	{
 		super(_No);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#region 系统方法.
 	/** 
 	 独立表单树Map
 	 
@@ -87,16 +90,13 @@ public class FrmTree extends EntitySimpleTree
 		map.AddTBStringPK(FrmTreeAttr.No, null, "编号", true, true, 1, 10, 20);
 		map.AddTBString(FrmTreeAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(FrmTreeAttr.ParentNo, null, "父节点No", false, false, 0, 100, 30);
-		//map.AddTBString(FrmTreeAttr.DBSrc, null, "DBSrc", false, false, 0, 100, 30);
-
-		//map.AddTBInt(FrmTreeAttr.IsDir, 0, "是否是目录?", false, false);		 
+		map.AddTBString(FrmTreeAttr.OrgNo, null, "组织编号", false, false, 0, 100, 30); 
 		map.AddTBInt(FrmTreeAttr.Idx, 0, "Idx", false, false);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#endregion 系统方法.
+
 
 	@Override
 	protected boolean beforeDelete() throws Exception

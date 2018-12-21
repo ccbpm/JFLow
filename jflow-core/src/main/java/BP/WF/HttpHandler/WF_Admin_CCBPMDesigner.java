@@ -1021,7 +1021,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 	public final void GenerChildRows(DataTable dt, DataTable newDt, DataRow parentRow)
 	{
-		 List<DataRow> rows = dt.select("PARENTNO='" + parentRow.getValue("NO") + "'");
+		 List<DataRow> rows = dt.select("ParentNo='" + parentRow.getValue("NO") + "'");
 		for(DataRow r : rows)
 		{
 			newDt.Rows.AddRow(r);
@@ -1114,7 +1114,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
           //获得表单数据.
           DataTable dtSort = ds.Tables.get(0); //类别表.
-          DataTable dtForm = ds.Tables.get(1).clone(); //表单表,这个是最终返回的数据.
+          DataTable dtForm = ds.Tables.get(1).copy(); //表单表,这个是最终返回的数据.
           
 
           //增加顶级目录.
@@ -1126,19 +1126,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
           drFormRoot.setValue("Idx", rowsOfSort[0].getValue("Idx"));
           drFormRoot.setValue("IsParent", rowsOfSort[0].getValue("IsParent"));
           drFormRoot.setValue("TType", rowsOfSort[0].getValue("TType"));
-          dtForm.Rows.add(drFormRoot); //增加顶级类别..
+          dtForm.Rows.add(drFormRoot); 
+         //增加顶级类别..
           
-       //   dtForm.Rows.AddDatas(drFormRoot); //增加顶级类别..
-        
-          /*
-          drFormRoot.setValue(0, rowsOfSort[0].getValue("No"]); 
-          drFormRoot[1] = "0";
-          drFormRoot[2] = rowsOfSort[0]["Name"];
-          drFormRoot[3] = rowsOfSort[0]["Idx"];
-          drFormRoot[4] = rowsOfSort[0]["IsParent"];
-          drFormRoot[5] = rowsOfSort[0]["TType"];*/
-          
-
           //把类别数据组装到form数据里.
           for (DataRow dr : dtSort.Rows)
           {
@@ -1149,8 +1139,11 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
               drForm.setValue("Idx", dr.getValue("Idx")); 
               drForm.setValue("IsParent", dr.getValue("IsParent")); 
               drForm.setValue("TType", dr.getValue("TType")); 
-               
               dtForm.Rows.add(drForm); //类别.
+          }
+          for(DataRow row : ds.Tables.get(1).Rows)
+          {
+              dtForm.Rows.add(row);
           }
 
           if (WebUser.getNo().equals("admin")==false)
@@ -1168,7 +1161,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
               DataRow newRootRow = rootRows[0];
 
               newRootRow.setValue("ParentNo", "0");
-              DataTable newDt = dtForm.clone();
+              DataTable newDt = dtForm.copy();
               newDt.Rows.AddRow(newRootRow);
 
               GenerChildRows(dtForm, newDt, newRootRow);

@@ -376,6 +376,16 @@ public class WorkUnSend
 	public final String DoUnSend() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
+	    
+		//节点信息
+		Node nd = new Node(gwf.getFK_Node());
+		
+		//如果启用了对方打开不可以撤回的
+		if(nd.getCancelDisWhenRead() == true){
+			int i = DBAccess.RunSQLReturnValInt("SELECT SUM(IsRead) AS Num FROM WF_GenerWorkerList WHERE WorkID=" + this.WorkID + " AND FK_Node=" + gwf.getFK_Node() ,0);
+            if (i >= 1)
+                return "err@当前待办已经有["+i+"]个工作人员打开了该工作,您不能执行撤销.";
+		}
 		
 		//如果是越轨流程状态@du.
         String sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerlist WHERE WorkID="+this.WorkID+" AND IsPass=80";
@@ -393,8 +403,11 @@ public class WorkUnSend
 			
 			return "撤销延续流程执行成功，撤销到["+gwf.getNodeName()+"],撤销给["+gwf.getTodoEmps()+"]";
 		}
-		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 判断是否是会签状态,是否是会签人做的撤销. 主持人是不能撤销的. @于庆海
+		
+        if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(gwf.getFK_Flow(), gwf.getFK_Node(), this.WorkID, WebUser.getNo()) == true)
+            return "info@您有处理当前工作的权限,可能您已经执行了撤销,请使用退回或者发送功能.";
+
+		///判断是否是会签状态,是否是会签人做的撤销. 主持人是不能撤销的
 		if (gwf.getHuiQianTaskSta() != HuiQianTaskSta.None)
 		{
 			GenerWorkerList gwl = new GenerWorkerList();
@@ -432,11 +445,6 @@ public class WorkUnSend
 		{
 			//执行子线程的撤销.
 			return DoThreadUnSend();
-			/***
-			// * 说明该流程是一个子线程，如果子线程的撤销，就需要删除该子线程。
-			// */
-			//BP.WF.Dev2Interface.Flow_DeleteSubThread(this.FlowNo, this.WorkID, "撤销方式删除");
-			//return "@子线程已经被删除.";
 			
 		}
 
@@ -453,18 +461,11 @@ public class WorkUnSend
 
 		}
 
-
-
-
-		// 如果停留的节点是分合流。
-		Node nd = new Node(gwf.getFK_Node());
 		if (nd.getHisCancelRole() == CancelRole.None)
-		{
-			//该节点不允许退回.
-			throw new RuntimeException("当前节点，不允许撤销。");
-		}
-
-
+        {
+            /*该节点不允许退回.*/
+            throw new Exception("当前节点，不允许撤销。");
+        }
 
 		switch (nd.getHisNodeWorkType())
 		{
@@ -497,9 +498,7 @@ public class WorkUnSend
 
 		//定义当前的节点.
 		WorkNode wn = this.GetCurrentWorkNode();
-
-
-			///#region 求的撤销的节点.
+	   ///#region 求的撤销的节点.
 		int cancelToNodeID = 0;
 
 		if (nd.getHisCancelRole() == CancelRole.SpecNodes)

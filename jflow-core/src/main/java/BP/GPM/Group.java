@@ -71,6 +71,6 @@ public class Group extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

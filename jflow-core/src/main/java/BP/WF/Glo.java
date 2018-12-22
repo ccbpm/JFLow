@@ -47,6 +47,7 @@ import BP.Port.Emp;
 import BP.Sys.AthCtrlWay;
 import BP.Sys.AthUploadWay;
 import BP.Sys.DefVal;
+import BP.Sys.DtlOpenType;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
 import BP.Sys.FrmAttachmentDBAttr;
@@ -2600,7 +2601,19 @@ public class Glo {
 
 		return false;
 	}
-
+	
+	/**
+	 * 装载填充
+	 * @param en
+	 * @param item
+	 * @param mattrs
+	 * @param dtls
+	 * @return
+	 * @throws Exception
+	 */
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls) throws Exception{
+		return DealPageLoadFull(en,item,mattrs,dtls,false,0,0);
+	}
 	/**
 	 * 执行PageLoad装载数据
 	 * 
@@ -2611,7 +2624,7 @@ public class Glo {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls) throws Exception {
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls, boolean isSelf,int nodeID,long workID) throws Exception {
 		if (item == null) {
 			return en;
 		}
@@ -2666,9 +2679,8 @@ public class Glo {
 					continue;
 				}
 
-				// /#region 处理sql.
+				//处理sql.
 				sql = Glo.DealExp(mysql, en, null);
-				// /#endregion 处理sql.
 
 				if (StringHelper.isNullOrEmpty(sql)) {
 					continue;
@@ -2677,12 +2689,32 @@ public class Glo {
 				if (sql.contains("@")) {
 					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
 				}
+				if (isSelf == true)
+                {
+                    MapDtl mdtlSln = new MapDtl();
+                    mdtlSln.setNo(dtl.getNo()+"_" +nodeID);
+                    int result = mdtlSln.RetrieveFromDBSources();
+                    if (result != 0)
+                    {
+                        //dtl.No = mdtlSln.No;
+                        dtl.setDtlOpenType( mdtlSln.getDtlOpenType());
+                    }
+                }
 
 				GEDtls gedtls = null;
 
 				try {
 					gedtls = new GEDtls(dtl.getNo());
-					gedtls.Delete(GEDtlAttr.RefPK, en.getPKVal());
+					if (dtl.getDtlOpenType() == DtlOpenType.ForFID)
+                    {
+                        if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, workID) > 0)
+                            continue;
+                    }
+                    else
+                    {
+                        if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, en.getPKVal()) > 0)
+                            continue;
+                    }
 				} catch (RuntimeException ex) {
 					((GEDtl) ((gedtls.getGetNewEntity() instanceof GEDtl) ? gedtls.getGetNewEntity() : null))
 							.CheckPhysicsTable();
@@ -2697,7 +2729,21 @@ public class Glo {
 						gedtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 					}
 
-					gedtl.setRefPK(en.getPKVal().toString());
+					switch (dtl.getDtlOpenType())
+                    {
+                        case ForEmp:  // 按人员来控制.
+                            gedtl.setRefPK(en.getPKVal().toString());
+                            gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+                            break;
+                        case ForWorkID: // 按工作ID来控制
+                        	 gedtl.setRefPK(en.getPKVal().toString());
+                        	 gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+                            break;
+                        case ForFID: // 按流程ID来控制.
+                        	 gedtl.setRefPK(String.valueOf(workID));
+                        	 gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+                            break;
+                    }
 					gedtl.setRDT(DataType.getCurrentDataTime());
 					gedtl.setRec(WebUser.getNo());
 					gedtl.Insert();
@@ -4507,16 +4553,15 @@ public class Glo {
 		}
 
 		if (athDesc.getHisCtrlWay() == AthCtrlWay.MySelfOnly || athDesc.getHisCtrlWay() == AthCtrlWay.PK) {
-			int num = 0;
 			if (FK_FrmAttachment.contains("AthMDtl")) {
 				/* 如果是一个明细表的多附件，就直接按照传递过来的PK来查询. */
 				BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
 				qo.addAnd();
-				qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, " LIKE ", "%AthMDtl");
-				num = qo.DoQuery();
+				qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment);
+				qo.DoQuery();
 			} else {
-				num = dbs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment, FrmAttachmentDBAttr.RefPKVal,
+				dbs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment, FrmAttachmentDBAttr.RefPKVal,
 						pkval, "RDT");
 			}
 			return dbs;

@@ -4,6 +4,7 @@ import BP.DA.DBAccess;
 import BP.En.EntityNoName;
 import BP.En.Map;
 import BP.En.RefMethod;
+import BP.En.RefMethodType;
 import BP.WF.Cryptography;
 import BP.WF.Template.FlowSort;
 import BP.WF.Template.FlowSorts;
@@ -156,21 +157,20 @@ public class AdminEmp extends EntityNoName {
 
 
             RefMethod rm = new RefMethod();
-			rm.Title = "增加管理员";
-			//  rm.GroupName = "高级设置";
-			rm.getHisAttrs().AddTBString("FrmID", null, "管理员编号ID", true, false, 0, 100, 100);
-
-			rm.ClassMethodName = this.toString() + ".DoAddAdminer";
-			rm.Icon = "/WF/Img/Btn/Copy.GIF";
-			map.AddRefMethod(rm);
-
 			rm = new RefMethod();
 			rm.Title = "设置加密密码";
 			rm.getHisAttrs().AddTBString("FrmID", null, "输入密码", true, false, 0, 100, 100);
 			rm.Warning = "您确定要执行设置改密码吗？";
 			rm.ClassMethodName = this.toString() + ".DoSetPassword";
-		   // rm.Icon = "../../WF/Img/Btn/Copy.GIF";
 			map.AddRefMethod(rm);
+			
+			 rm = new RefMethod();
+             rm.Title = "增加管理员";
+             rm.getHisAttrs().AddTBString("emp", null, "管理员帐号", true, false, 0, 100, 100);
+             rm.getHisAttrs().AddTBString("OrgNo", null, "可管理的组织结构代码", true, false, 0, 100, 100);
+             rm.refMethodType = RefMethodType.Func;
+             rm.ClassMethodName = this.toString() + ".DoAdd";
+             map.AddRefMethod(rm);
 
             this.set_enMap(map);
             return this.get_enMap();
@@ -187,30 +187,7 @@ public class AdminEmp extends EntityNoName {
             this.setRootOfDept("0");
             this.setRootOfFlow("0");
             this.setRootOfForm("0");
-        }else{
-        	if (this.getUserType() == 1)
-			{
-				//为树目录更新OrgNo编号.
-				FlowSort fs = new FlowSort();
-				fs.setNo(this.getRootOfFlow());//周朋@于庆海需要对照翻译.
-				if (fs.RetrieveFromDBSources() == 1)
-				{
-					fs.setOrgNo(this.getRootOfDept());
-					fs.Update();
-
-					//更新本级目录.
-					FlowSorts fsSubs = new FlowSorts();
-					fsSubs.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo, fs.getNo());
-					for (FlowSort item : fsSubs.ToJavaListFs())
-					{
-						item.setOrgNo(this.getRootOfDept());
-						item.Update();
-					}
-				}
-				BP.DA.DBAccess.RunSQL("UPDATE WF_FlowSort SET OrgNo='0' WHERE OrgNo NOT IN (SELECT RootOfDept FROM WF_Emp WHERE UserType=1 )");
-			}
         }
-
     	return super.beforeUpdateInsertAction();
     }
     /** 设置加密密码存储
@@ -224,35 +201,83 @@ public class AdminEmp extends EntityNoName {
 		DBAccess.RunSQL("UPDATE Port_Emp SET Pass='" + str + "' WHERE No='" + this.getNo() + "'");
 		return "设置成功..";
 	}
+	
 	/** 
 	 增加二级管理员.
-	 
-	 @param empID
+	 @param empNo 人员编码
+	 @param orgNo 部门编码
 	 @return 
-	 * @throws Exception 
+	 @throws Exception 
 	*/
-	public final String DoAddAdminer(String empID) throws Exception
-	{
-		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.setNo(empID);
-		if (emp.RetrieveFromDBSources() == 0)
-		{
-			return "err@管理员增加失败，ID="+empID+"不存在用户表，您增加的管理员必须存在与Port_Emp用户表.";
-		}
+	public String DoAdd(String empNo, String orgNo) throws Exception
+    {
 
-		AdminEmp adminEmp = new AdminEmp();
-		
-		if (adminEmp.Retrieve(AdminEmpAttr.No,empID,AdminEmpAttr.UserType,1) == 1)
-		{
-			return "err@管理员【" + adminEmp.getName() + "】已经存在，您不需要在增加.";
-		}
+        BP.Port.Emp emp = new BP.Port.Emp();
+        emp.setNo(empNo);
+        if (emp.RetrieveFromDBSources() == 0)
+            return "err@管理员增加失败，ID=" + empNo + "不存在用户表，您增加的管理员必须存在与Port_Emp用户表.";
 
-		adminEmp.Copy(emp);
-		adminEmp.setUserType(1);
-		adminEmp.setUseSta(1);
-		adminEmp.Save();
+        BP.Port.Dept dept = new BP.Port.Dept();
+        dept.setNo(orgNo);
+        if (dept.RetrieveFromDBSources() == 0)
+            return "err@orgNo错误, 不存在 Port_Dept 里面。";
 
-		return "增加成功,请关闭当前窗口查询到该管理员，设置他的权限。";
+        BP.WF.Port.Inc inc = new BP.WF.Port.Inc();
+        inc.setNo(orgNo);
+        if (inc.RetrieveFromDBSources() == 0)
+            return "err@orgNo错误, 不存在 Port_Inc 里面。";
 
-	}
+        //求根目录流程树.
+        BP.WF.Template.FlowSort fsRoot = new BP.WF.Template.FlowSort();
+        fsRoot.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo,"0");
+
+
+        BP.WF.Template.FlowSort fs = new BP.WF.Template.FlowSort();
+        fs.setNo("Inc" + orgNo);
+        if (fs.RetrieveFromDBSources() == 1)
+            return "err@该组织已经初始化过流程树目录.";
+
+        fs.setName(dept.getName()+"-流程树");
+        fs.setParentNo(fsRoot.getNo());
+        fs.setOrgNo(dept.getNo());
+        fs.Insert();
+
+
+        //求根目录流程树.
+        BP.Sys.FrmTree frmRoot = new BP.Sys.FrmTree();
+        frmRoot.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo, "0");
+
+        BP.Sys.FrmTree frmTree = new BP.Sys.FrmTree();
+        frmTree.setNo("Inc" + orgNo);
+        if (frmTree.RetrieveFromDBSources() == 1)
+            return "err@该组织已经初始化过表单树目录.";
+
+        frmTree.setParentNo(frmRoot.getNo());
+        frmTree.setName(dept.getName() + "-表单树");
+        frmTree.setOrgNo(dept.getNo());
+        frmTree.Insert();
+      
+
+        AdminEmp ae = new AdminEmp();
+        ae.setNo(empNo);
+        if (ae.RetrieveFromDBSources() == 1)
+        {
+            if (ae.getIsAdmin() == true)
+                return "err@该管理员已经存在,请删除该管理员重新增加delete from wf_emp where no='" + empNo + "'";
+            ae.Delete();
+        }
+
+       
+
+        ae.Copy(emp);
+
+        ae.setUserType(1);
+        ae.setUseSta(1);
+        ae.setRootOfDept(orgNo);
+        ae.setRootOfFlow("Inc" + orgNo);
+        ae.setRootOfForm("Inc" + orgNo);
+        ae.Insert();
+
+        return "info@管理员增加成功.";
+    }
 }

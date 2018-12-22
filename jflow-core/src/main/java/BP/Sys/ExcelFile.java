@@ -15,7 +15,7 @@ Excel模板
 */
 public class ExcelFile extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#region 属性
 	/** 
 	 获取或设置标识
@@ -56,10 +56,10 @@ public class ExcelFile extends EntityNoName
 		this.SetValByKey(ExcelFileAttr.Note, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#endregion 属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#region 构造方法
 	public ExcelFile()
 	{
@@ -69,10 +69,10 @@ public class ExcelFile extends EntityNoName
 	{
 		this.Retrieve(ExcelFileAttr.No, no);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#endregion 构造方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#region 权限控制
 	@Override
 	public UAC getHisUAC()
@@ -81,10 +81,10 @@ public class ExcelFile extends EntityNoName
 		uac.OpenAll();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#endregion 权限控制
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#region EnMap
 	/** 
 	 Excel模板Map
@@ -120,7 +120,7 @@ public class ExcelFile extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#endregion EnMap
 
 	public final String ExcelConfig()
@@ -128,7 +128,7 @@ public class ExcelFile extends EntityNoName
 		return SystemConfig.getCCFlowWebPath() + "WF/Admin/ExcelUploadConfig.htm?No=" + this.getNo();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#region 重写事件
 	/** 
 	 记录添加前事件
@@ -153,6 +153,6 @@ public class ExcelFile extends EntityNoName
 		return super.beforeUpdateInsertAction();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#endregion 重写事件
 }

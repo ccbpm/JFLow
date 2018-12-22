@@ -14,15 +14,7 @@ import BP.Tools.StringHelper;
  
 */
 public class FrmNode extends EntityMyPK
-{
-
-		///#region 关于节点与office表单的toolbar权限控制方案.
-
-
-		///#endregion 关于节点与office表单的toolbar权限控制方案.
-
-
-		
+{		
 	public final String getFrmUrl()
 	{
 		switch (this.getHisFrmType())
@@ -78,7 +70,6 @@ public class FrmNode extends EntityMyPK
 	{
 		SysEnum se = new SysEnum(FrmNodeAttr.FrmType, this.getHisFrmType().getValue());
 		return se.getLab();
-			// return (BP.Sys.FrmType)this.GetValIntByKey(FrmNodeAttr.FrmType);
 	}
 	/** 
 	 是否启用装载填充事件

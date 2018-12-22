@@ -13,7 +13,7 @@ import BP.Sys.*;
 */
 public class MapFrameExts extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 框架s

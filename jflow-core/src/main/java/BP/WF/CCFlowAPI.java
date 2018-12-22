@@ -464,14 +464,6 @@ public class CCFlowAPI {
 						dr.setValue("Name", "启动:" + item.getFlowName());
 						dr.setValue("IsSelectEmps", "1");
 
-						// else
-						// dr["IsSelectEmps"] = "0"; //是不是，可以选择接受人.
-						// 设置默认选择的节点.
-						// if (defalutSelectedNodeID == item.NodeID)
-						// dr["IsSelected"] = "1";
-						// else
-						// dr["IsSelected"] = "0";
-
 						dr.put("IsSelected", "0");
 						dtToNDs.Rows.add(dr);
 					}
@@ -560,13 +552,6 @@ public class CCFlowAPI {
 				DataTable dt=rpt.ToDataTableField("aaa");
 				
 				String json=BP.Tools.Json.ToJson(dt);
-				//DataType.WriteFile("c:\\111.txt", json);
-				
-				//DataType.WriteFile("c:\\2222.txt", BP.Tools.Json.ToJson(rpt.getRow()));
-				
-				
-				 
-				// rpt.Copy(wk);
 
 				myds.Tables.add(rpt.ToDataTableField("MainTable"));
 				
@@ -734,15 +719,9 @@ public class CCFlowAPI {
 									+ "&WorkID=" + workID + "&FID=" + fid + "' >回复加签意见</a> --");
 					dtAlert.Rows.add(drMsg);
 
-					// 提示信息.
-					// this.FlowMsg.AlertMsg_Info(worker + "," + workerName +
-					// "请求加签:",
-					// DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "
-					// --<a href='./WorkOpt/AskForRe.jsp?FK_Flow=" +
-					// this.FK_Flow + "&FK_Node=" + this.FK_Node + "&WorkID=" +
-					// this.WorkID + "&FID=" + this.FID + "' >回复加签意见</a> --");
+
 				}
-				// isAskFor = true;
+
 				break;
 			case ReturnSta:
 				// 如果工作节点退回了

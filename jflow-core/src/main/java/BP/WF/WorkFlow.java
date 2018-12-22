@@ -69,20 +69,12 @@ public class WorkFlow
 	public final String DoReject(long fid, int fk_node, String msg) throws Exception
 	{
 		GenerWorkerList wl = new GenerWorkerList();
-		int i = wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fk_node);
+		wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fk_node);
 
-		//if (i == 0)
-		//    throw new Exception("系统错误，没有找到应该找到的数据。");
-
-		i = wl.Delete();
-		//if (i == 0)
-		//    throw new Exception("系统错误，没有删除应该删除的数据。");
-
+		wl.Delete();
 		wl = new GenerWorkerList();
-		i = wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.IsPass, 3);
+		wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.IsPass, 3);
 
-		//if (i == 0)
-		//    throw new Exception("系统错误，想找到退回的原始起点没有找到。");
 
 		Node nd = new Node(fk_node);
 		// 更新当前流程管理表的设置当前的节点。
@@ -211,7 +203,7 @@ public class WorkFlow
 		DBAccess.RunSQL("DELETE FROM " + fl.getPTable() + " WHERE OID=" + workID);
 		DBAccess.RunSQL("DELETE FROM WF_CHEval WHERE  WorkID=" + workID); // 删除质量考核数据。
 
-		String info = "";
+		
 			///#region 正常的删除信息.
 		String msg = "";
 		try
@@ -255,7 +247,7 @@ public class WorkFlow
 			Log.DefaultLogWriteLine(LogType.Error, err);
 			throw new RuntimeException(err);
 		}
-		info = "@删除流程删除成功";
+		
 			///#region 删除该流程下面的子流程.
 		if (isDelSubFlow)
 		{
@@ -712,6 +704,8 @@ public class WorkFlow
 			{
 				try
 				{
+					 if (DBAccess.IsExitsObject("ND" + nd.getNodeID()) == false)
+                         continue;
 					DBAccess.RunSQL("DELETE FROM ND" + nd.getNodeID() + " WHERE OID=" + this.getWorkID() + " OR FID=" + this.getWorkID());
 				}
 				catch (RuntimeException ex)
@@ -739,9 +733,9 @@ public class WorkFlow
 		if (this.getFID() != 0)
 		{
 			String sql = "";
-//                 
-//                 * 取出来获取停留点,没有获取到说明没有任何子线程到达合流点的位置.
-//                 
+                 
+          //取出来获取停留点,没有获取到说明没有任何子线程到达合流点的位置.
+                 
 			sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + wn.getHisWork().getFID() + " AND IsPass=3";
 			int fk_node = DBAccess.RunSQLReturnValInt(sql, 0);
 			if (fk_node != 0)

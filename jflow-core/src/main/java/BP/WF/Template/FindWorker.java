@@ -1,14 +1,18 @@
 package BP.WF.Template;
 
+import javax.servlet.http.HttpServletRequest;
+
 import BP.DA.DBAccess;
 import BP.DA.DataColumn;
 import BP.DA.DataRow;
+import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.En.Attrs;
 import BP.Sys.OSDBSrc;
 import BP.Sys.OSModel;
+import BP.Tools.ContextHolderUtils;
 import BP.Tools.StringHelper;
 import BP.WF.ActionType;
 import BP.WF.DeliveryWay;
@@ -24,6 +28,8 @@ import BP.WF.TrackAttr;
 import BP.WF.WorkNode;
 import BP.Web.GuestUser;
 import BP.Web.WebUser;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /** 
 找人规则
@@ -241,6 +247,22 @@ public class FindWorker
 				int i = sas.QueryAccepterPriSetting(this.town.getHisNode().getNodeID());
 				if (i == 0)
 				{
+					/*//获取参数
+					HttpServletRequest request = ContextHolderUtils.getRequest();
+					String isBatch = request.getParameter("IsBatch").toString();
+					if(DataType.IsNullOrEmpty(isBatch) == false && isBatch.equals("1")){
+						//获取接收人
+						BP.WF.HttpHandler.WF_WorkOpt  workopt = new BP.WF.HttpHandler.WF_WorkOpt();
+						Node toNode = this.town.getHisNode();
+						
+						DataTable empdt = workopt.GetNextWorks(this.WorkID,String.valueOf(this.currWn.getHisNode().getNodeID()),toNode.getFK_Flow(),toNode.getNodeID());
+						if(empdt.Rows.size()==0 ||empdt.Rows.size()>1 )
+							throw new Exception("err@由上一节点选择的通用人员选择器,选择的人员不存在或者大于一人");
+						DataRow dr = dt.NewRow();
+						dr.setValue(0,empdt.Rows.get(0).getValue("No") );
+						dt.Rows.add(dr);
+
+					}*/
 					if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected)
                     {
                         Node toNode = this.town.getHisNode();
@@ -255,15 +277,7 @@ public class FindWorker
                         throw new Exception("@流程设计错误，请重写FEE，然后为节点(" + town.getHisNode().getName() + ")设置接受人员，详细请参考cc流程设计手册。");
                     }
 					
-					/*
-					if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected)
-					{
-						throw new RuntimeException("@请选择下一步骤工作(" + town.getHisNode().getName() + ")接受人员。");
-					}
-					else
-					{
-						throw new RuntimeException("@流程设计错误，请重写FEE，然后为节点(" + town.getHisNode().getName() + ")设置接受人员，详细请参考cc流程设计手册。");
-					}*/
+					
 				}
 
 				//插入里面.
@@ -974,7 +988,7 @@ public class FindWorker
 					}
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning edit by peng, 用来确定不同岗位集合的传递包含同一个人的处理方式。
 
 				//  if (isInit == false || isInit == true)
@@ -1053,7 +1067,7 @@ public class FindWorker
 		}
 
 		return mydt;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  按照岗位来执行。
 	}
 	/** 
@@ -1198,7 +1212,7 @@ public class FindWorker
 				return re_dt; //如果只有一个人，就直接返回，就不处理了。
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 根据配置追加接收人 by dgq 2015.5.18
 
 			String paras = this.town.getHisNode().getDeliveryParas();

@@ -1764,92 +1764,7 @@ public class Flow extends BP.En.EntityNoName {
 	 */
 	public static String RepareV_FlowData_View() {
 		return null;
-		// string err = "";
-		// Flows fls = new Flows();
-		// fls.RetrieveAllFromDBSource();
-
-		// if (fls.Count == 0)
-		// return null;
-
-		// string sql = "";
-		// sql = "CREATE VIEW V_FlowData
-		// (FK_FlowSort,FK_Flow,OID,FID,Title,WFState,CDT,FlowStarter,FlowStartRDT,FK_Dept,FK_NY,FlowDaySpan,FlowEmps,FlowEnder,FlowEnderRDT,FlowEndNode,MyNum,
-		// PWorkID,PFlowNo,BillNo,ProjNo) ";
-		//// sql += "\t\n /* WorkFlow Data " +
-		// DateTime.Now.ToString("yyyy-MM-dd") + " */ ";
-		// sql += " AS ";
-		// foreach (Flow fl in fls)
-		// {
-		// if (fl.IsCanStart == false)
-		// continue;
-
-		// string mysql = "\t\n SELECT '" + fl.FK_FlowSort + "' AS
-		// FK_FlowSort,'" + fl.getNo() + "' AS
-		// FK_Flow,OID,FID,Title,WFState,CDT,FlowStarter,FlowStartRDT,FK_Dept,FK_NY,FlowDaySpan,FlowEmps,FlowEnder,FlowEnderRDT,FlowEndNode,1
-		// as MyNum,PWorkID,PFlowNo,BillNo,ProjNo FROM " + fl.PTable + " WHERE
-		// WFState >1 ";
-		// try
-		// {
-		// DBAccess.RunSQLReturnTable(mysql);
-		// }
-		// catch (Exception ex)
-		// {
-		// continue;
-		// try
-		// {
-		// fl.DoCheck();
-		// DBAccess.RunSQLReturnTable(mysql);
-		// }
-		// catch (Exception ex1)
-		// {
-		// err += ex1.Message;
-		// continue;
-		// }
-		// }
-
-		// if (fls.Count == 1)
-		// break;
-
-		// sql += mysql;
-		// sql += "\t\n UNION ";
-		// }
-		// if (sql.Contains("SELECT") == false)
-		// return null;
-
-		// if (fls.Count > 1)
-		// sql = sql.substing(0, sql.Length - 6);
-
-		// if (sql.Length > 20)
-		// {
-		// #region 删除 V_FlowData
-		// try
-		// {
-		// DBAccess.RunSQL("DROP VIEW V_FlowData");
-		// }
-		// catch
-		// {
-		// try
-		// {
-		// DBAccess.RunSQL("DROP table V_FlowData");
-		// }
-		// catch
-		// {
-		// }
-		// }
-		// #endregion 删除 V_FlowData
-
-		// #region 创建视图.
-		// try
-		// {
-		// DBAccess.RunSQL(sql);
-		// }
-		// catch
-		// {
-		// }
-		// #endregion 创建视图.
-
-		// }
-		// return null;
+	
 	}
 
 	public final String ClearCash() {
@@ -1890,7 +1805,9 @@ public class Flow extends BP.En.EntityNoName {
 		try {
 			// 设置流程名称.
 			DBAccess.RunSQL("UPDATE WF_Node SET FlowName = (SELECT Name FROM WF_Flow WHERE NO=WF_Node.FK_Flow)");
-
+			
+		    BP.WF.Node node = new BP.WF.Node();
+		    node.CheckPhysicsTable();
 			// 删除垃圾,非法数据.
 			String sqls = "DELETE FROM Sys_FrmSln where fk_mapdata not in (select no from sys_mapdata)";
 			sqls += "@ DELETE FROM WF_Direction WHERE Node=ToNode";
@@ -1936,12 +1853,8 @@ public class Flow extends BP.En.EntityNoName {
 				}
 
 				msg += "@信息:开始修复节点物理表.";
-				// DBAccess.RunSQL("UPDATE Sys_MapData SET Name='" +
-				// nd.getName() + "' WHERE No='ND" + nd.getNodeID() + "'");
 				try {
-					// if (nd.getHisWork().getEnMap().getPhysicsTable().equals(
-					// this.getPTable())
-					// nd.getHisWork().CheckPhysicsTable();
+					nd.getHisWork().CheckPhysicsTable();
 				} catch (RuntimeException ex) {
 					msg += "@检查节点表字段时出现错误:" + "NodeID" + nd.getNodeID() + " Table:"
 							+ nd.getHisWork().getEnMap().getPhysicsTable() + " Name:" + nd.getName()
@@ -2232,8 +2145,6 @@ public class Flow extends BP.En.EntityNoName {
 					if (nd.getCondModel() == CondModel.ByUserSelected) {
 						Nodes toNodes = nd.getHisToNodes();
 						if (toNodes.size() == 1) {
-							// msg += "@错误:节点ID:" + nd.NodeID + " 名称:" + nd.Name
-							// + " 错误当前节点为子线程，但是该节点的到达.";
 						}
 					}
 				}
@@ -2243,8 +2154,6 @@ public class Flow extends BP.En.EntityNoName {
 			// 检查流程.
 			Node.CheckFlow(this);
 
-			// 生成 V001 视图. del by stone 2016.03.27.
-			// CheckRptViewDel(nds);
 			return msg;
 		} catch (RuntimeException ex) {
 			throw new RuntimeException("@检查流程错误:" + ex.getMessage() + " @" + ex.getStackTrace());
@@ -4968,10 +4877,6 @@ public class Flow extends BP.En.EntityNoName {
 	public final String DoExp() throws Exception {
 		this.DoCheck();
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/Exp.jsp?CondType=0&FK_Flow=" + this.getNo();
-		// PubClass.WinOpen(Glo.CCFlowAppPath +
-		// "WF/Admin/Exp.jsp?CondType=0&FK_Flow=" + this.getNo(), "单据", "cdsn",
-		// 800, 500, 210, 300);
-		// return null;
 	}
 
 	/**

@@ -15,7 +15,7 @@ import BP.WF.Port.*;
 */
 public class NodeSimple extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点属性.
 	/** 
 	 节点编号

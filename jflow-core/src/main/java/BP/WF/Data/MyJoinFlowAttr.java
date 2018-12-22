@@ -2,7 +2,7 @@ package BP.WF.Data;
 
 public class MyJoinFlowAttr {
 	
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 		/** 
 		 工作ID
@@ -189,7 +189,7 @@ public class MyJoinFlowAttr {
 		 
 		*/
 		public static final String GUID = "GUID";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 	}
 

@@ -221,7 +221,7 @@ public class WF_RptDfine extends WebContralBase{
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region //增加显示列信息
 		DataRow row = null;
 		DataTable dt = new DataTable("Sys_MapAttr");
@@ -248,10 +248,10 @@ public class WF_RptDfine extends WebContralBase{
 		}
 
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region //增加枚举/外键字段信息
 		attrs = new MapAttrs(rptNo);
 		dt = new DataTable("FilterCtrls");
@@ -435,10 +435,10 @@ public class WF_RptDfine extends WebContralBase{
 		}
 
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region //增加第一页数据
 		GEEntitys ges = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ges);
@@ -477,7 +477,7 @@ public class WF_RptDfine extends WebContralBase{
 		qo.DoQuery("OID", StringUtils.isEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), 1);
 		ds.Tables.add(ges.ToDataTableField("MainData"));
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 		return BP.Tools.Json.ToJson(ds);
@@ -507,7 +507,7 @@ public class WF_RptDfine extends WebContralBase{
 			qo.addAnd();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 关键字查询
 		if (md.getRptIsSearchKey())
 		{
@@ -582,10 +582,10 @@ public class WF_RptDfine extends WebContralBase{
 			qo.getMyParas().Add("SKey", searchKey);
 			qo.addRightBracket();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Url传参条件
 		for (Attr attr : attrs)
 		{
@@ -628,10 +628,10 @@ public class WF_RptDfine extends WebContralBase{
 				keys.add(attr.getKey());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 过滤条件
 		for (MapAttr attr1 : rptAttrs.ToJavaList())
 		{
@@ -768,10 +768,10 @@ public class WF_RptDfine extends WebContralBase{
 					break;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 日期处理
 		if (md.getRptDTSearchWay() != DTSearchWay.None)
 		{
@@ -825,7 +825,7 @@ public class WF_RptDfine extends WebContralBase{
 				qo.addRightBracket();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 		return qo;

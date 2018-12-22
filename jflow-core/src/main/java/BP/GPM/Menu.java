@@ -10,7 +10,7 @@ import BP.Web.WebUser;
 */
 public class Menu extends EntityTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	@Override
 	public UAC getHisUAC() throws Exception

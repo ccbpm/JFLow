@@ -44,7 +44,7 @@ public class NodeSimples extends EntitiesOID
 	}
 	
    
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

@@ -21,12 +21,10 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.En.QueryObject;
 import BP.Sys.BuessUnitBase;
-import BP.Sys.EventDoType;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachments;
 import BP.Sys.FrmBtn;
 import BP.Sys.FrmBtns;
-import BP.Sys.FrmEvent;
 import BP.Sys.FrmEventAttr;
 import BP.Sys.FrmEvents;
 import BP.Sys.GroupCtrlType;
@@ -134,7 +132,6 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		return BP.Tools.Json.ToJson(dtBuess);
 	}
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #region 表单模式
 	/**
 	 * 表单模式
@@ -308,17 +305,9 @@ public class WF_Admin_AttrNode extends WebContralBase {
 
 		return "保存成功...";
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion 表单模式
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion 表单模式
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region 手机表单字段排序
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region SortingMapAttrs_Init
-
+	/// 手机表单字段排序
 	public final String SortingMapAttrs_Init() throws Exception {
 		MapDatas mapdatas;
 		MapAttrs attrs;
@@ -328,8 +317,6 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		FrmBtns btns;
 
 		Nodes nodes = null;
-
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		/// #region 获取数据
 		mapdatas = new MapDatas();
 		QueryObject qo = new QueryObject(mapdatas);
@@ -354,8 +341,6 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		qo.AddWhere(GroupFieldAttr.FrmID, getFK_MapData());
 		qo.addOrderBy(GroupFieldAttr.Idx);
 		qo.DoQuery();
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion
 
 		DataSet ds = new DataSet();
 
@@ -379,16 +364,11 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		DataTable dtDtls = dtls.ToDataTableField("dtDtls");
 		DataTable dtGroups = groups.ToDataTableField("dtGroups");
 		DataTable dtNoGroupAttrs = null;
-		DataRow[] rows_Attrs = null;
-		// LinkBtn btn = null;
-		// DDL ddl = null;
-		int idx_Attr = 1;
-		int gidx = 1;
 		GroupField group = null;
 
 		if (mapdata != null) {
 
-			/// #region A、构建数据dtNoGroupAttrs，这个放在前面
+			/// A、构建数据dtNoGroupAttrs，这个放在前面
 			// 检索全部字段，查找出没有分组或分组信息不正确的字段，存入"无分组"集合
 			dtNoGroupAttrs = dtAttrs.copy();
 
@@ -397,10 +377,6 @@ public class WF_Admin_AttrNode extends WebContralBase {
 					dtNoGroupAttrs.Rows.AddRow(dr);
 				}
 			}
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			/// #endregion
-
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region B、构建数据dtGroups，这个放在后面(！！涉及更新数据库)
 			/// #region 如果没有，则创建分组（1.明细2.多附件3.按钮）
 			// 01、未分组明细表,自动创建一个
@@ -449,8 +425,6 @@ public class WF_Admin_AttrNode extends WebContralBase {
 					groups.AddEntity(group);
 				}
 			}
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			/// #endregion
 
 			dtGroups = groups.ToDataTableField("dtGroups");
 			
@@ -481,9 +455,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
             
 
             isDtl.Rows.add(tddr);
-            //#endregion
 
-            ///#region 增加节点信息
             nodes = new Nodes();
             nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, getFK_Flow(), BP.WF.Template.NodeAttr.Step);
 
@@ -790,11 +762,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 			return "err@" + ex.getMessage().toString();
 		}
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region 分组、字段排序：下移
 	/**
 	 * 分组、字段排序：下移
 	 * 
@@ -807,9 +775,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 
 		String Type = this.GetRequestVal("Type");
 		try {
-			// C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a
-			// string member and was converted to Java 'if-else' logic:
-			// switch (Type)
+
 			// 分组排序
 			// ORIGINAL LINE: case "group":
 			if (Type.equals("group")) {
@@ -942,11 +908,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 			return "err@" + ex.getMessage().toString();
 		}
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region 将分组、字段排序复制到其他节点
+	///  将分组、字段排序复制到其他节点
 	/**
 	 * 将分组、字段排序复制到其他节点
 	 * 
@@ -2031,8 +1993,6 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		msg.setFK_Flow(nd.getFK_Flow());
 		BP.WF.Nodes nds = new BP.WF.Nodes(nd.getFK_Flow());
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 求出来选择的节点.
 		String nodesOfSMS = "";
 		String nodesOfEmail = "";
 		for (BP.WF.Node mynd : nds.ToJavaList()) {
@@ -2054,11 +2014,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		// 节点.
 		msg.setMailNodes(nodesOfEmail);
 		msg.setSMSNodes(nodesOfSMS);
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 求出来选择的节点.
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 短信保存.
 		// 短信推送方式。
 		msg.setSMSPushWay(Integer.parseInt(this.GetRequestVal("RB_SMS").replace("RB_SMS_", "")));
 
@@ -2066,19 +2022,12 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		msg.setSMSField(this.GetRequestVal("DDL_SMS_Fields").toString());
 		// 替换变量
 		String smsstr = this.GetRequestVal("TB_SMS").toString();
-		// 扬玉慧 此处是配置界面 不应该把用户名和用户编号转化掉
-		// smsstr = smsstr.Replace("@WebUser.Name", BP.Web.WebUser.Name);
-		// smsstr = smsstr.Replace("@WebUser.No", BP.Web.WebUser.No);
 
 		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable();
-		// smsstr = smsstr.Replace("@RDT",);
+
 		// 短信内容模版.
 		msg.setSMSDoc_Real(smsstr);
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 短信保存.
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 邮件保存.
 		// 邮件.
 		msg.setMailPushWay(Integer.parseInt(this.GetRequestVal("RB_Email").toString().replace("RB_Email_", "")));
 
@@ -2089,8 +2038,6 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		// 邮件地址.
 		msg.setMailAddress(this.GetRequestVal("DDL_Email_Fields").toString());
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 邮件保存.
 
 		// 保存.
 		if (DotNetToJavaStringHelper.isNullOrEmpty(msg.getMyPK()) == true) {

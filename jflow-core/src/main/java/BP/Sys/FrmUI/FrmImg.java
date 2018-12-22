@@ -14,7 +14,7 @@ import BP.Sys.MapAttrAttr;
 */
 public class FrmImg extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制权限
@@ -85,7 +85,7 @@ public class FrmImg extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }
 

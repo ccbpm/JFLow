@@ -10,7 +10,7 @@ import BP.WF.DotNetToJavaStringHelper;
 */
 public class MapFrame extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -214,6 +214,6 @@ public class MapFrame extends EntityMyPK
 
 		super.afterDelete();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

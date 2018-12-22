@@ -9,7 +9,7 @@ import BP.En.*;
 */
 public class PerSetting extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 系统

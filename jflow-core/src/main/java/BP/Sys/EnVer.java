@@ -92,10 +92,10 @@ public class EnVer extends EntityMyPK{
 		{
 			this.SetValByKey(EnVerAttr.PKValue, value);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 		/** 
 		 实体版本号
@@ -104,10 +104,10 @@ public class EnVer extends EntityMyPK{
 		public EnVer()
 		{
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写方法
 		@Override
 		public UAC getHisUAC() throws Exception
@@ -147,7 +147,7 @@ public class EnVer extends EntityMyPK{
 			this.set_enMap(map);
 			return this.get_enMap();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 		@Override

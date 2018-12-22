@@ -21,7 +21,7 @@ import BP.WF.Port.DeptAttr;
 import BP.Web.WebUser;
 public class Selector extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	@Override
 	public String getPK()
@@ -150,10 +150,10 @@ public class Selector extends Entity
 		this.SetValByKey(SelectorAttr.IsSimpleSelector, value);
 	}
 	
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 接受人选择器
@@ -245,7 +245,7 @@ public class Selector extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

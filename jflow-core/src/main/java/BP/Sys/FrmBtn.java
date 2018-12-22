@@ -9,7 +9,6 @@ import BP.En.*;
 */
 public class FrmBtn extends EntityMyPK
 {
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	 ///#region 属性
 			/** 
 			 所在的分组

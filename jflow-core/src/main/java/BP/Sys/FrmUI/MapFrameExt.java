@@ -101,6 +101,6 @@ public class MapFrameExt extends EntityMyPK
     }
 
     
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

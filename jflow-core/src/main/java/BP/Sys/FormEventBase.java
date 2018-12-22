@@ -17,7 +17,7 @@ import BP.Sys.*;
 */
 public abstract class FormEventBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 要求子类强制重写的属性.
 	/** 
 	 表单编号/表单标记.
@@ -25,10 +25,10 @@ public abstract class FormEventBase
 	 
 	*/
 	public abstract String getFormMark();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 要求子类重写的属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性/内部变量(表单在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 	/** 
 	 实体，一般是工作实体
@@ -56,10 +56,10 @@ public abstract class FormEventBase
 	{
 		_SysPara = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性/内部变量(表单在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统参数
 	/** 
 	 表单ID
@@ -69,10 +69,10 @@ public abstract class FormEventBase
 	{
 		return this.GetValStr("FK_MapData");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 常用属性.
 	/** 
 	 工作ID
@@ -82,10 +82,10 @@ public abstract class FormEventBase
 	{
 		return this.GetValInt("OID");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 常用属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取参数方法
 	/** 
 	 事件参数
@@ -204,10 +204,10 @@ public abstract class FormEventBase
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 要求子类重写的方法(表单事件).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 要求子类重写的方法(节点事件).
 	/** 
 	 保存后
@@ -266,10 +266,10 @@ public abstract class FormEventBase
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 要求子类重写的方法(节点事件).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基类方法.
 
 	/** 
@@ -285,7 +285,7 @@ public abstract class FormEventBase
 	{
 		this.HisEn = en;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理参数.
 		Row r = en.getRow();
 		try
@@ -383,10 +383,10 @@ public abstract class FormEventBase
 		{
 				throw new RuntimeException("@没有判断的表单事件类型:" + eventType);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 执行事件.
 		
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基类方法.
 }

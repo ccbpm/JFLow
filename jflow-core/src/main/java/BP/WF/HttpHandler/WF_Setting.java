@@ -33,7 +33,7 @@ public class WF_Setting extends WebContralBase
 	}
 	
 	
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法

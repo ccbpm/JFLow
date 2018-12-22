@@ -58,7 +58,7 @@ public class Glo
 		String info = "BP.En.Entity";
 		al = BP.En.ClassFactory.GetObjects(info);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 1, 修复表
 		for (Object obj : al)
 		{

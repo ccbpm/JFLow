@@ -1003,6 +1003,8 @@ public class CCFormAPI extends Dev2Interface
                     break;
                 case ForWorkID: // 按工作ID来控制
                     qo.AddWhere(GEDtlAttr.RefPK, pkval);
+                    qo.addOr();
+                    qo.AddWhere(GEDtlAttr.FID, pkval);
                     break;
                 case ForFID: // 按流程ID来控制.
                 	if (fid==0)

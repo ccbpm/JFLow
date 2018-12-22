@@ -60,6 +60,8 @@ import BP.WF.Template.SysFormTrees;
 import BP.WF.Template.TurnTo;
 import BP.WF.Template.TurnTos;
 import BP.Web.WebUser;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class WF_MyFlow extends WebContralBase {
 
@@ -1966,5 +1968,37 @@ public class WF_MyFlow extends WebContralBase {
 			Nos += row.getValue("No") + ",";
 		}
 		return DotNetToJavaStringHelper.trimEnd(Nos, ',');
+	}
+	
+	public String BathFlow() throws  Exception{
+		String workIds = this.GetRequestVal("WorkIDs");
+		if(DataType.IsNullOrEmpty(workIds))
+			return "不存在待办事项";
+		String[] workIdArray = workIds.split(",");
+		String message="";
+		for (String workId:workIdArray) {
+			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable("SELECT * FROM WF_EmpWorks WHERE WorkID=" + workId+" OR FID="+workId);
+			 if (dt.Rows.size() == 0){
+				 message+="没有找到WORKID="+workId+"的待办事项<br/>";
+				 continue;
+			 }
+			 for(DataRow dr : dt.Rows){
+				 message +="流程"+dr.getValue("FK_Flow").toString()+" "+dr.getValue("FlowName").toString()+"工作ID "+workId;
+				 //获取下一个节点和人员
+				 SendReturnObjs returnObj =  BP.WF.Dev2Interface.Node_SendWork(dr.getValue("FK_Flow").toString(), Long.parseLong(workId), null, null);
+				 message += returnObj.ToMsgOfHtml();
+				 message +="<br/>"; 
+	        }
+		}
+		return message;
+	}
+	
+	//删除流程
+	public String DeleteWorkFlow() throws Exception{
+		boolean isCan = BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(), WebUser.getNo());
+		if(isCan == false)
+			return "你没有删除流程的权限";
+		return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(this.getFK_Flow(), this.getWorkID(), true);
+	
 	}
 }

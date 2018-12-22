@@ -9,7 +9,7 @@ import BP.En.*;
 */
 public class Menus extends EntitiesTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 菜单s

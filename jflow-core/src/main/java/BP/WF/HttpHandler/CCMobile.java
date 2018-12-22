@@ -229,7 +229,7 @@ public class CCMobile extends WebContralBase
 		return en.StartGuide_MulitSend();
 	}
 	
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	
 	///#region 关键字查询.
 			/** 
 			 打开表单

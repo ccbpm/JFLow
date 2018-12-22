@@ -8,7 +8,7 @@ import BP.En.*;
 */
 public class GPMEmps extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 得到它的 Entity 

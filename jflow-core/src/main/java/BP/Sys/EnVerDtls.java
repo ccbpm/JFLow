@@ -28,10 +28,10 @@ public class EnVerDtls extends EntitiesMyPK{
 		{
 			this.Retrieve(EnVerDtlAttr.EnVerPK, enVerPK, EnVerDtlAttr.EnVer, ver);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 		/** 
 		 得到它的 Entity 

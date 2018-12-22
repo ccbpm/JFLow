@@ -4627,8 +4627,6 @@ public class Dev2Interface {
 		flowNo = TurnFlowMarkToFlowNo(flowNo);
 		try {
 			WorkFlow.DeleteFlowByReal(flowNo, workID, isDelSubFlow);
-			// WorkFlow wf = new WorkFlow(flowNo, workID);
-			// wf.DoDeleteWorkFlowByReal(isDelSubFlow);
 		} catch (RuntimeException ex) {
 			throw new RuntimeException("@删除前错误，" + ex.getStackTrace());
 		}
@@ -8286,6 +8284,52 @@ public class Dev2Interface {
 			if (treeWork != null) {
 				wk.Copy(treeWork);
 			}
+			
+			 //获取该节点是是否是绑定表单方案, 如果流程节点中的字段与绑定表单的字段相同时赋值
+            if (nd.getFormType() == NodeFormType.SheetTree || nd.getFormType() == NodeFormType.RefOneFrmTree)
+            {
+                FrmNodes nds = new FrmNodes(fk_flow, fk_node);
+                for(FrmNode item : nds.ToJavaList())
+                {
+                    GEEntity en = null;
+                    try
+                    {
+                        en = new GEEntity(item.getFK_Frm());
+                        en.setPKVal(workID);
+                        if (en.RetrieveFromDBSources() == 0)
+                            continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+
+                    Attrs frmAttrs = en.getEnMap().getAttrs();
+                    Attrs wkAttrs = wk.getEnMap().getAttrs();
+                    for(Attr wkattr : wkAttrs)
+                    {
+                    	String wkattrKey = wkattr.getKey();
+                        if(wkattrKey.equals(StartWorkAttr.OID) || wkattrKey.equals(StartWorkAttr.FID) || wkattrKey.equals(StartWorkAttr.CDT)
+                            || wkattrKey.equals(StartWorkAttr.RDT)||wkattrKey.equals(StartWorkAttr.MD5)||wkattrKey.equals(StartWorkAttr.Emps)
+                            || wkattrKey.equals(StartWorkAttr.FK_Dept) || wkattrKey.equals(StartWorkAttr.PRI)|| wkattrKey.equals(StartWorkAttr.Rec)
+                            || wkattrKey.equals(StartWorkAttr.Title) || wkattrKey.equals(GERptAttr.FK_NY)||wkattrKey.equals(GERptAttr.FlowEmps)
+                            || wkattrKey.equals(GERptAttr.FlowStarter) || wkattrKey.equals(GERptAttr.FlowStartRDT) || wkattrKey.equals(GERptAttr.WFState))
+                                continue;
+                        for(Attr attr : frmAttrs)
+                        {
+                            if (wkattrKey.equals(attr.getKey()))
+                            {
+                                wk.SetValByKey(wkattrKey, en.GetValStrByKey(attr.getKey()));
+                                break;
+                            }
+
+                        }
+                       
+                    }
+                    
+                }
+                wk.Update();
+            }
 			
 			/// #region 处理保存后事件
 			boolean isHaveSaveAfter = false;

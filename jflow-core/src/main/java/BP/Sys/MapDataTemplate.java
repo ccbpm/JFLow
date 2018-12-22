@@ -11,7 +11,7 @@ import BP.En.*;
 */
 public class MapDataTemplate extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 映射基础
@@ -61,7 +61,7 @@ public class MapDataTemplate extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法
 
 }

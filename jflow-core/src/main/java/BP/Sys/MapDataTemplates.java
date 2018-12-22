@@ -12,7 +12,7 @@ import BP.En.*;
 */
 public class MapDataTemplates extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 映射基础s

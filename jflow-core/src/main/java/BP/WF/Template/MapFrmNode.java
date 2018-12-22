@@ -100,10 +100,10 @@ public class MapFrmNode extends EntityNoName
 	{
 		this.SetValByKey(MapFrmNodeAttr.TableCol, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限控制.
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -118,10 +118,10 @@ public class MapFrmNode extends EntityNoName
 		uac.Readonly();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限控制.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 自由表单属性
@@ -155,7 +155,7 @@ public class MapFrmNode extends EntityNoName
 		Map map = new Map("Sys_MapData", "自由表单属性");
 		map.Java_SetEnType(EnType.Sys);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性.
 		map.AddTBStringPK(MapFrmNodeAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.AddTBString(MapFrmNodeAttr.PTable, null, "存储表", true, false, 0, 100, 20);
@@ -171,11 +171,11 @@ public class MapFrmNode extends EntityNoName
 
 			//表单的运行类型.
 		map.AddDDLSysEnum(MapFrmNodeAttr.FrmType, BP.Sys.FrmType.FreeFrm.getValue(), "表单类型", true, false, MapFrmNodeAttr.FrmType);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设计者信息.
 		map.AddTBString(MapFrmNodeAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapFrmNodeAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
@@ -187,7 +187,7 @@ public class MapFrmNode extends EntityNoName
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 		map.AddTBInt(MapFrmNodeAttr.Idx, 100, "顺序号", false, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 设计者信息.
 
 		map.AddMyFile("表单模版");
@@ -195,7 +195,7 @@ public class MapFrmNode extends EntityNoName
 			//查询条件.
 		map.AddSearchAttr(MapFrmNodeAttr.DBSrc);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 方法 - 基本功能.
 		RefMethod rm = new RefMethod();
 
@@ -332,10 +332,10 @@ public class MapFrmNode extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		//map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 高级设置.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 方法 - 开发接口.
 		rm = new RefMethod();
 		rm.Title = "调用查询API"; // "设计表单";
@@ -356,14 +356,14 @@ public class MapFrmNode extends EntityNoName
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
 		//map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 方法 - 开发接口.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 	
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override
@@ -449,7 +449,7 @@ public class MapFrmNode extends EntityNoName
 	}
 	 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 通用方法.
 	/** 
 	 重命名
@@ -710,6 +710,6 @@ public class MapFrmNode extends EntityNoName
 		}
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方法.
 }

@@ -341,6 +341,6 @@ public class GPMEmp extends EntityNoName
 	{
 		return new Emps();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造函数
 }

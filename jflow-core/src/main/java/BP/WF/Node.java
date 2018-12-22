@@ -2387,7 +2387,7 @@ public class Node extends Entity
         map.AddTBString(NodeAttr.PTable, null, "物理表", false, false, 0, 100, 10);
 
         map.AddTBString(NodeAttr.ShowSheets, null, "显示的表单", false, false, 0, 100, 10);
-        map.AddTBString(NodeAttr.GroupStaNDs, null, "岗位分组节点", false, false, 0, 100, 10);
+        map.AddTBString(NodeAttr.GroupStaNDs, null, "岗位分组节点", false, false, 0, 500, 10);
         map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
         map.AddTBInt(NodeAttr.Y, 0, "Y坐标", false, false);
 
@@ -2404,45 +2404,11 @@ public class Node extends Entity
         map.AddTBInt(NodeAttr.SubFlowStartWay, 0, "子线程启动方式", true, false);
         map.AddTBString(NodeAttr.SubFlowStartParas, null, "启动参数", true, false, 0, 100, 10);
 
-     //   map.AddTBString(NodeAttr.DocLeftWord, null, "公文左边词语(多个用@符合隔开)", true, false, 0, 100, 10);
-      //  map.AddTBString(NodeAttr.DocRightWord, null, "公文右边词语(多个用@符合隔开)", true, false, 0, 200, 10);
 
 
         // 启动自动运行. 2013-01-04
         map.AddTBInt(NodeAttr.AutoRunEnable, 0, "是否启动自动运行？", true, false);
         map.AddTBString(NodeAttr.AutoRunParas, null, "自动运行参数", true, false, 0, 100, 10);
-
-        //#region 与参数有关系的属性。
-        //map.AddDDLSysEnum(FrmEventAttr.MsgCtrl, 0, "消息发送控制", true, true, FrmEventAttr.MsgCtrl,
-        //  "@0=不发送@1=按设置的发送范围自动发送@2=由本节点表单系统字段(IsSendEmail,IsSendSMS)来决定@3=由SDK开发者参数(IsSendEmail,IsSendSMS)来决定", true);
-
-        //map.AddBoolean(FrmEventAttr.MailEnable, true, "是否启用邮件发送？(如果启用就要设置邮件模版，支持ccflow表达式。)", true, true, true);
-        //map.AddTBString(FrmEventAttr.MailTitle, null, "邮件标题模版", true, false, 0, 200, 20, true);
-        //map.AddTBStringDoc(FrmEventAttr.MailDoc, null, "邮件内容模版", true, false, true);
-
-        ////是否启用手机短信？
-        //map.AddBoolean(FrmEventAttr.SMSEnable, false, "是否启用短信发送？(如果启用就要设置短信模版，支持ccflow表达式。)", true, true, true);
-        //map.AddTBStringDoc(FrmEventAttr.SMSDoc, null, "短信内容模版", true, false, true);
-        //map.AddBoolean(FrmEventAttr.MobilePushEnable, true, "是否推送到手机、pad端。", true, true, true);
-       // #endregion
-
-
-			///#region 与参数有关系的属性。
-			//map.AddDDLSysEnum(FrmEventAttr.MsgCtrl, 0, "消息发送控制", true, true, FrmEventAttr.MsgCtrl,
-			//  "@0=不发送@1=按设置的发送范围自动发送@2=由本节点表单系统字段(IsSendEmail,IsSendSMS)来决定@3=由SDK开发者参数(IsSendEmail,IsSendSMS)来决定", true);
-
-			//map.AddBoolean(FrmEventAttr.MailEnable, true, "是否启用邮件发送？(如果启用就要设置邮件模版，支持ccflow表达式。)", true, true, true);
-			//map.AddTBString(FrmEventAttr.MailTitle, null, "邮件标题模版", true, false, 0, 200, 20, true);
-			//map.AddTBStringDoc(FrmEventAttr.MailDoc, null, "邮件内容模版", true, false, true);
-
-			////是否启用手机短信？
-			//map.AddBoolean(FrmEventAttr.SMSEnable, false, "是否启用短信发送？(如果启用就要设置短信模版，支持ccflow表达式。)", true, true, true);
-			//map.AddTBStringDoc(FrmEventAttr.SMSDoc, null, "短信内容模版", true, false, true);
-			//map.AddBoolean(FrmEventAttr.MobilePushEnable, true, "是否推送到手机、pad端。", true, true, true);
-
-
-			///#endregion
-
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

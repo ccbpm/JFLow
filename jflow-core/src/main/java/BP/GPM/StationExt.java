@@ -9,7 +9,7 @@ import BP.En.*;
 */
 public class StationExt extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getFK_StationExtType()
 	{
@@ -79,6 +79,6 @@ public class StationExt extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

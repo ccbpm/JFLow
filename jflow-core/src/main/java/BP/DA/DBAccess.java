@@ -2356,16 +2356,9 @@ public class DBAccess {
 		default:
 			throw new RuntimeException("@没有判断的数据库类型");
 		}
-		if (dt.Rows.size() == 0) {
-
-			String cols = "";
-			for (DataColumn dc : dt.Columns) {
-				cols += " , " + dc.ColumnName;
-			}
-
-			// BP.DA.Log.DebugWriteInfo("@SQL=" + sql + " . 列=" + cols);
+		if (dt.Rows.size() == 0)
 			return null;
-		}
+		
 		return dt.Rows.get(0).getValue(0);
 	}
 

@@ -13,7 +13,7 @@ import BP.WF.Flows;
 public class NodeYGFlow extends EntityOID
 {
 public static final String getCondExp = null;
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -62,10 +62,10 @@ public static final String getCondExp = null;
 	public final void setExpType(int value){
 		SetValByKey(NodeYGFlowAttr.ExpType, (int)value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 延续子流程

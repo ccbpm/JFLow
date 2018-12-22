@@ -37,6 +37,7 @@ import BP.DA.DataType;
 import BP.DA.Log;
 import BP.En.Attr;
 import BP.En.Attrs;
+import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;
 import BP.En.QueryObject;
@@ -374,8 +375,14 @@ public class WF_CCForm extends WebContralBase {
 				}
 
 				if (fn.getFrmSln() == FrmSln.Self) {
-					athDesc.setMyPK(this.getFK_FrmAttachment() + "_" + nd.getNodeID());
-					athDesc.RetrieveFromDBSources();
+					 if (this.getFK_FrmAttachment().contains("AthMDtl") == true)
+                     {
+                         athDesc.setMyPK(this.getFK_MapData() + "_" + nd.getNodeID() + "_AthMDtl");
+                         athDesc.RetrieveFromDBSources();
+                     }else{
+                    	 athDesc.setMyPK(this.getFK_FrmAttachment() + "_" + nd.getNodeID());
+     					athDesc.RetrieveFromDBSources(); 
+                     }
 					athDesc.setMyPK(this.getFK_FrmAttachment());
 					return athDesc;
 				}
@@ -1119,7 +1126,8 @@ public class WF_CCForm extends WebContralBase {
 		if (pk != 0) {
 			return FrmGener_Init();
 		}
-
+		
+		MapDtl dtl = new MapDtl(this.getEnsName());
 		GEEntity en = new GEEntity(this.getEnsName());
 		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
 
@@ -1131,7 +1139,40 @@ public class WF_CCForm extends WebContralBase {
 
 		// 设置主键.
 		en.setOID(DBAccess.GenerOID(this.getEnsName()));
-		en.SetValByKey("RefPK", this.getRefPKVal());
+	    //处理权限方案。
+         if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+         {
+             Node nd = new Node(this.getFK_Node());
+             if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+             {
+                 FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
+                 if (fn.getFrmSln() == FrmSln.Self)
+                 {
+                     MapDtl mdtlSln = new MapDtl();
+                     mdtlSln.setNo(this.getEnsName() + "_" + nd.getNodeID());
+                     int result = mdtlSln.RetrieveFromDBSources();
+                     if (result != 0)
+                         dtl = mdtlSln;
+                 }
+             }
+         }
+         //给从表赋值.
+         switch (dtl.getDtlOpenType())
+         {
+             case ForEmp:  // 按人员来控制.
+
+                 en.SetValByKey("RefPK", this.getRefPKVal());
+                 en.SetValByKey("FID", this.getRefPKVal());
+                 break;
+             case ForWorkID: // 按工作ID来控制
+                 en.SetValByKey("RefPK", this.getRefPKVal());
+                 en.SetValByKey("FID", this.getRefPKVal());
+                 break;
+             case ForFID: // 按流程ID来控制.
+                 en.SetValByKey("RefPK", this.getRefPKVal());
+                 en.SetValByKey("FID", this.getFID());
+                 break;
+         }
 		en.Insert();
 
 		return "url@DtlFrm.htm?EnsName=" + this.getEnsName() + "&RefPKVal=" + this.getRefPKVal() + "&OID="
@@ -1150,10 +1191,169 @@ public class WF_CCForm extends WebContralBase {
 			return "err@删除错误:" + ex.getMessage();
 		}
 	}
+	/// <summary>
+    /// 实体类的初始化
+    /// </summary>
+    /// <returns></returns>
+    public String FrmGener_Init_ForBPClass() throws Exception
+    {
+        try
+        {
 
+
+            MapData md = new MapData(this.getEnsName());
+            DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+
+
+            //把主表数据放入.
+            String atParas = "";
+            Entities ens = ClassFactory.GetEns(this.getEnsName());
+            Entity en = ens.getGetNewEntity();
+            en.setPKVal(this.getPKVal());
+
+            if (en.RetrieveFromDBSources() == 0)
+                en.Insert();
+
+            //把参数放入到 En 的 Row 里面。
+            if (DataType.IsNullOrEmpty(atParas) == false)
+            {
+                AtPara ap = new AtPara(atParas);
+                for (String key : ap.getHisHT().keySet())
+                {
+                    if (en.getRow().containsKey(key) == true) //有就该变.
+                        en.getRow().SetValByKey(key, ap.GetValStrByKey(key));
+                    else
+                        en.getRow().put(key, ap.GetValStrByKey(key)); //增加他.
+                }
+            }
+
+            if (BP.Sys.SystemConfig.getIsBSsystem() == true)
+            {
+            	// 处理传递过来的参数。
+    			Enumeration<?> keys = this.getRequest().getParameterNames();
+    			while (keys.hasMoreElements()) {
+    				String key = keys.nextElement().toString();
+
+    				en.SetValByKey(key, this.getRequest().getParameter(key));
+    			}
+            	
+            }
+
+            // 执行表单事件. FrmLoadBefore .
+            String msg = md.getFrmEvents().DoEventNode(FrmEventList.FrmLoadBefore, en);
+            if (DataType.IsNullOrEmpty(msg) == false)
+                return "err@错误:" + msg;
+
+
+            //重设默认值.
+            en.ResetDefaultVal();
+
+            //执行装载填充.
+            MapExt me = new MapExt();
+            if (me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.PageLoadFull, MapExtAttr.FK_MapData, this.getEnsName()) == 1)
+            {
+                //执行通用的装载方法.
+                MapAttrs attrs = new MapAttrs(this.getEnsName());
+                MapDtls dtls = new MapDtls(this.getEnsName());
+                en = BP.WF.Glo.DealPageLoadFull(en, me, attrs, dtls);
+            }
+
+            //执行事件
+            md.DoEvent(FrmEventList.SaveBefore, en, null);
+
+
+            //增加主表数据.
+            DataTable mainTable = en.ToDataTableField(md.getNo());
+            mainTable.TableName = "MainTable";
+
+            ds.Tables.add(mainTable);
+            //把主表数据放入.
+
+           //把外键表加入DataSet
+            DataTable dtMapAttr = null;
+    		for (int i = 0; i < ds.Tables.size(); i++) {
+    			if (ds.Tables.get(i).TableName.equals("Sys_MapAttr")) {
+    				dtMapAttr = ds.Tables.get(i);
+    			}
+    		}
+
+            MapExts mes = md.getMapExts();
+
+            for(DataRow dr : dtMapAttr.Rows)
+            {
+                String lgType = dr.getValue("LGType").toString();
+                if (lgType.equals("2") == false)
+                    continue;
+
+               String UIIsEnable = dr.getValue("UIVisible").toString();
+                if (UIIsEnable == "0")
+                    continue;
+                String uiBindKey = dr.getValue("UIBindKey").toString();
+                if (DataType.IsNullOrEmpty(uiBindKey) == true)
+                {
+                    String myPK = dr.getValue("MyPK").toString();
+                    /*如果是空的*/
+                    //   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
+                }
+
+                // 检查是否有下拉框自动填充。
+                String keyOfEn = dr.getValue("KeyOfEn").toString();
+                String fk_mapData = dr.getValue("FK_MapData").toString();
+
+                // 处理下拉框数据范围. for 小杨.
+                me = (MapExt) mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
+                if (me != null)
+                {
+                    String fullSQL = me.getDoc();
+                    fullSQL = fullSQL.replace("~", ",");
+                    fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
+                    DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
+                    dt.TableName = keyOfEn; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
+                    ds.Tables.add(dt);
+                    continue;
+                }
+                //处理下拉框数据范围.
+
+                // 判断是否存在.
+                if (ds.Tables.contains(uiBindKey) == true)
+                    continue;
+
+                DataTable dataTable = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+                if (dataTable != null)
+                    ds.Tables.add(dataTable);
+            }
+            //End把外键表加入DataSet
+
+            return BP.Tools.Json.ToJson(ds);
+        }
+        catch (Exception ex)
+        {
+            GEEntity myen = new GEEntity(this.getEnsName());
+            myen.CheckPhysicsTable();
+
+            BP.Sys.CCFormAPI.RepareCCForm(this.getEnsName());
+            return "err@装载表单期间出现如下错误,ccform有自动诊断修复功能请在刷新一次，如果仍然存在请联系管理员. @" + ex.getMessage();
+        }
+    }
 	public String FrmGener_Init() throws Exception {
 
-		Node nd = null;
+		if (this.getFK_MapData() != null && this.getFK_MapData().contains("BP.") == true)
+            return FrmGener_Init_ForBPClass();
+		
+		 //定义流程信息的所用的 配置entity.
+         //节点与表单的权限控制.
+         FrmNode fn = null;
+
+         //定义节点变量.
+         Node nd = null;
+         if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+         {
+             nd = new Node(this.getFK_Node());
+             nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
+             fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
+         }
+		
+		
 		// #region 特殊判断 适应累加表单.
 		String fromWhere = this.GetRequestVal("FromWorkOpt");
 		if (fromWhere != null && fromWhere.equals("1") && this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
@@ -1170,6 +1370,11 @@ public class WF_CCForm extends WebContralBase {
 			}
 		}
 		// #endregion 特殊判断.适应累加表单
+		 MapData md = new MapData(this.getEnsName());
+         DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+         String atParas = "";
+         //主表实体.
+         GEEntity en = new GEEntity(this.getEnsName());
 
 		long pk = this.getRefOID();
 		if (pk == 0) {
@@ -1185,40 +1390,33 @@ public class WF_CCForm extends WebContralBase {
 			BP.DA.Cash.ClearCash();
 		}
 
-		MapData md = new MapData(this.getEnsName());
-		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), null);
+		 //是否启用装载填充？
+        boolean isLoadData = true;
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		// /#region 把主表数据放入.
-		String atParas = "";
-		// 主表实体.
-		GEEntity en = new GEEntity(this.getEnsName());
+        if (this.getFK_Node() != 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false)
+        {
+            /*说明是流程调用它， 就要判断谁是表单的PK.*/
+            switch (fn.getWhoIsPK())
+            {
+                case FID:
+                    pk = this.getFID();
+                    if (pk == 0)
+                        throw new Exception("@没有接收到参数FID");
+                    break;
+                case PWorkID: /*父流程ID*/
+                    pk = this.getPWorkID();
+                    if (pk == 0)
+                        throw new Exception("@没有接收到参数PWorkID");
+                    break;
+                case OID:
+                default:
+                    break;
+            }
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+            //对于一个表单绑定到一个表单树上，有的节点不需要装载填充的.
+            isLoadData = fn.getIsEnableLoadData();
+        }
 		// /#region 求出 who is pk 值.
-
-		if (this.getFK_Node() != 0 && DotNetToJavaStringHelper.isNullOrEmpty(this.getFK_Flow()) == false) {
-			// 说明是流程调用它， 就要判断谁是表单的PK.
-			FrmNode fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
-			switch (fn.getWhoIsPK()) {
-			case FID:
-				pk = this.getFID();
-				if (pk == 0) {
-					throw new RuntimeException("@没有接收到参数FID");
-				}
-				break;
-			case PWorkID: // 父流程ID
-				pk = this.getPWorkID();
-				if (pk == 0) {
-					throw new RuntimeException("@没有接收到参数PWorkID");
-				}
-				break;
-			case OID:
-			default:
-				break;
-			}
-		}
-		// /#endregion 求who is PK.
 
 		en.setOID(pk);
 
@@ -1263,27 +1461,43 @@ public class WF_CCForm extends WebContralBase {
 			throw new RuntimeException("err@错误:" + msg);
 		}
 
-		String json = en.ToJson();
-
 		// 重设默认值.
 		en.ResetDefaultVal();
 
-		json = en.ToJson();
-
 		// 执行装载填充.
-		MapExt me = new MapExt();
-		me.setMyPK(this.getEnsName() + "_" + MapExtXmlList.PageLoadFull);
-		if (me.RetrieveFromDBSources() == 1) {
-			// 执行通用的装载方法.
-			MapAttrs attrs = new MapAttrs(this.getEnsName());
-			MapDtls dtls = new MapDtls(this.getEnsName());
-			Object tempVar = BP.WF.Glo.DealPageLoadFull(en, me, attrs, dtls);
-			en = (GEEntity) ((tempVar instanceof GEEntity) ? tempVar : null);
-		}
+		 MapExt me = null;
+         if (isLoadData == true)
+         {
+             me = new MapExt();
+             if (me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.PageLoadFull, MapExtAttr.FK_MapData, this.getEnsName()) == 1)
+             {
+                 //执行通用的装载方法.
+                 MapAttrs attrs = new MapAttrs(this.getEnsName());
+                 MapDtls dtls = new MapDtls(this.getEnsName());
 
-		json = en.ToJson();
+                 if (GetRequestValInt("IsTest") != 1)
+                 {
+                     try
+                     {
+                         //判断是否自定义权限
+                         boolean IsSelf = false;
+                         if ((nd.getHisFormType() == NodeFormType.SheetTree
+                              || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+                              && (fn.getFrmSln() == FrmSln.Self))
+                             IsSelf = true;
 
-		// /#endregion 把主表数据放入.
+                         en =(GEEntity) BP.WF.Glo.DealPageLoadFull(en, me, attrs, dtls, IsSelf, nd.getNodeID(), this.getWorkID());
+                     }
+                     catch (Exception ex)
+                     {
+                     }
+                 }
+
+             }
+         }
+        
+         md.DoEvent(FrmEventList.SaveBefore, en, null);
+         // end执行装载填充.与相关的事件.
 
 		/// #region 把外键表加入DataSet
 		DataTable dtMapAttr = null;
@@ -1309,10 +1523,6 @@ public class WF_CCForm extends WebContralBase {
 			String uiBindKey = dr.getValue("UIBindKey").toString();
 			if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true) {
 				String myPK = dr.getValue("MyPK").toString();
-				// 如果是空的
-				// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
-				// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey
-				// IsNull ");
 			}
 
 			// 检查是否有下拉框自动填充。
@@ -1385,17 +1595,12 @@ public class WF_CCForm extends WebContralBase {
 			}
 
 			ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
-
-			DataTable dtNode = nd.ToDataTableField("WF_Node");
-			dtNode.TableName = "WF_Node";
-
-			ds.Tables.add(dtNode);
 		}
+		  if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+              ds.Tables.add(nd.ToDataTableField("WF_Node"));
 
 		// #region 处理权限方案
 		if (nd != null && nd.getFormType() == NodeFormType.SheetTree) {
-			FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
-
 			// #region 只读方案.
 			if (fn.getFrmSln() == FrmSln.Readonly) {
 				for (DataRow dr : dtMapAttr.Rows) {
@@ -1530,10 +1735,9 @@ public class WF_CCForm extends WebContralBase {
 
 		// 增加主表数据.
 		DataTable mainTable = en.ToDataTableField("MainTable");
-		json = en.ToJson();
 		ds.Tables.add(mainTable);
 
-		json = BP.Tools.Json.ToJson(ds);
+		String json = BP.Tools.Json.ToJson(ds);
 
 		return json;
 
@@ -1778,8 +1982,30 @@ public class WF_CCForm extends WebContralBase {
 	public final String Dtl_SaveRow() {
 		try {
 			// 从表.
+			String fk_mapDtl = this.getFK_MapDtl();
 			MapDtl mdtl = new MapDtl(this.getFK_MapDtl());
-
+			
+			//处理权限方案。
+            if (this.getFK_Node() != 0 && this.getFK_Node()!=999999)
+            {
+                Node nd = new Node(this.getFK_Node());
+                if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+                {
+                    FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
+                    if (fn.getFrmSln() == FrmSln.Self)
+                    {
+                        MapDtl mdtlSln = new MapDtl();
+                        mdtlSln.setNo(fk_mapDtl + "_" + nd.getNodeID());
+                        int result = mdtlSln.RetrieveFromDBSources();
+                        if (result != 0)
+                        {
+                            mdtl = mdtlSln;
+                            fk_mapDtl = fk_mapDtl + "_" + nd.getNodeID();
+                        }
+                    }
+                }
+            }
+			
 			// 从表实体.
 			GEDtl dtl = new GEDtl(this.getFK_MapDtl());
 			int oid = this.getRefOID();
@@ -1787,8 +2013,6 @@ public class WF_CCForm extends WebContralBase {
 				dtl.setOID(oid);
 				dtl.RetrieveFromDBSources();
 			}
-
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region 给实体循环赋值/并保存.
 			BP.En.Attrs attrs = dtl.getEnMap().getAttrs();
 			for (BP.En.Attr attr : attrs.ToJavaList()) {
@@ -1797,8 +2021,21 @@ public class WF_CCForm extends WebContralBase {
 
 			// 关联主赋值.
 			dtl.setRefPK(this.getRefPKVal());
+			switch (mdtl.getDtlOpenType())
+	        {
+	                case ForEmp:  // 按人员来控制.
+	                    dtl.setRefPK(this.getRefPKVal());
+	                    break;
+	                case ForWorkID: // 按工作ID来控制
+	                	dtl.setRefPK(this.getRefPKVal());
+	                    dtl.setFID(Long.parseLong(this.getRefPKVal()));
+	                    break;
+	                case ForFID: // 按流程ID来控制.
+	                	dtl.setRefPK(this.getRefPKVal());
+	                    dtl.setFID(this.getFID());
+	                    break;
+	        }
 
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region 从表保存前处理事件.
 			// 获得主表事件.
 			FrmEvents fes = new FrmEvents(this.getFK_MapDtl()); // 获得事件.
@@ -1821,16 +2058,13 @@ public class WF_CCForm extends WebContralBase {
 			}
 
 			if (dtl.getOID() == 0) {
-				// dtl.OID = DBAccess.GenerOID();
 				dtl.Insert();
 			} else {
 				dtl.Update();
 			}
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			/// #endregion 给实体循环赋值/并保存.
+			///给实体循环赋值/并保存.
 
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			/// #region 从表保存后处理事件。
+			/// 从表保存后处理事件。
 			if (fes.size() > 0) {
 				String msg = fes.DoEventNode(EventListDtlList.DtlSaveEnd, mainEn);
 				if (DataType.IsNullOrEmpty(msg) == false)
@@ -1846,8 +2080,6 @@ public class WF_CCForm extends WebContralBase {
 
 				febd.DoIt(FrmEventListDtl.RowSaveAfter, febd.HisEn, dtl, null);
 			}
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			/// #endregion 处理事件.
 
 			// 返回当前数据存储信息.
 			return dtl.ToJson();
@@ -2821,7 +3053,8 @@ public class WF_CCForm extends WebContralBase {
         return "";
 
     }
-
+    
+  
 	/**
 	 * Excel 导入
 	 */
@@ -2968,7 +3201,23 @@ public class WF_CCForm extends WebContralBase {
 
 					dtlEn.SetValByKey(attr.getKey(), val);
 				}
-				dtlEn.setRefPKInt((int) this.getWorkID());
+				 //dtlEn.RefPKInt = (int)this.WorkID;
+                //关联主赋值. 
+                switch (dtl.getDtlOpenType())
+                {
+                    case ForEmp:  // 按人员来控制.
+                    	dtlEn.setRefPKInt((int) this.getWorkID());
+                        break;
+                    case ForWorkID: // 按工作ID来控制
+                    	dtlEn.setRefPKInt((int) this.getWorkID());
+                        dtl.SetValByKey("FID", this.getWorkID());
+                        break;
+                    case ForFID: // 按流程ID来控制.
+                    	dtlEn.setRefPKInt((int) this.getWorkID());
+                        dtl.SetValByKey("FID", this.getFID());
+                        break;
+                }
+				
 				dtlEn.SetValByKey("RDT", rdt);
 				dtlEn.SetValByKey("Rec", WebUser.getNo());
 				i++;
@@ -3003,34 +3252,95 @@ public class WF_CCForm extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String DtlCard_Init() throws Exception {
-		DataSet ds = new DataSet();
+        DataSet ds = new DataSet();
 
-		MapDtl md = new MapDtl(this.getEnsName());
+        MapDtl md = new MapDtl(this.getEnsName());
+        if (this.getFK_Node() != 0 && md.getFK_MapData() != "Temp"
+           && this.getEnsName().contains("ND" + this.getFK_Node()) == false
+           && this.getFK_Node() != 999999)
+        {
+            Node nd = new BP.WF.Node(this.getFK_Node());
 
-		// 主表数据.
-		DataTable dt = md.ToDataTableField("Main");
-		ds.Tables.add(dt);
+            if (nd.getHisFormType() == NodeFormType.SheetTree)
+            {
+                /*如果
+                 * 1,传来节点ID, 不等于0.
+                 * 2,不是节点表单.  就要判断是否是独立表单，如果是就要处理权限方案。*/
+                BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
+                ///自定义权限.
+                if (fn.getFrmSln() == FrmSln.Self)
+                {
+                    md.setNo(this.getEnsName() + "_" + this.getFK_Node());
+                    if (md.RetrieveFromDBSources() == 0)
+                        md = new MapDtl(this.getEnsName());
+                }
+            }
+        }
 
-		// 主表字段.
-		MapAttrs attrs = md.getMapAttrs();
-		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
+        //主表数据.
+        DataTable dt = md.ToDataTableField("Main");
+        ds.Tables.add(dt);
 
-		// 从表.
-		MapDtls dtls = md.getMapDtls();
-		ds.Tables.add(dtls.ToDataTableField("MapDtls"));
+        //主表字段.
+        MapAttrs attrs = md.getMapAttrs();
+        ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
-		// 从表的从表.
-		for (MapDtl dtl : dtls.ToJavaList()) {
-			MapAttrs subAttrs = new MapAttrs(dtl.getNo());
-			ds.Tables.add(subAttrs.ToDataTableField(dtl.getNo()));
-		}
+        //从表.
+        MapDtls dtls = md.getMapDtls();
+        ds.Tables.add(dtls.ToDataTableField("MapDtls"));
 
-		// 从表的数据.
-		GEDtls enDtls = new GEDtls(this.getEnsName());
-		enDtls.Retrieve(GEDtlAttr.RefPK, this.getRefPKVal());
-		ds.Tables.add(enDtls.ToDataTableField("DTDtls"));
+        //从表的从表.
+        for(MapDtl dtl : dtls.ToJavaList())
+        {
+            MapAttrs subAttrs = new MapAttrs(dtl.getNo());
+            ds.Tables.add(subAttrs.ToDataTableField(dtl.getNo()));
+        }
+       //把从表的数据放入.
+        GEDtls enDtls = new GEDtls(md.getNo());
+        QueryObject qo = null;
+        try
+        {
+            qo = new QueryObject(enDtls);
+            switch (md.getDtlOpenType())
+            {
+                case ForEmp:  // 按人员来控制.
+                    qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
+                    qo.addAnd();
+                    qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
+                    break;
+                case ForWorkID: // 按工作ID来控制
+                    qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
+                    break;
+                case ForFID: // 按流程ID来控制.
+                    if (this.getFID() == 0)
+                        qo.AddWhere(GEDtlAttr.FID, this.getRefPKVal());
+                    else
+                        qo.AddWhere(GEDtlAttr.FID, this.getFID());
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            dtls.getGetNewEntity().CheckPhysicsTable();
+            throw ex;
+        }
 
-		return BP.Tools.Json.ToJson(ds);
+        //条件过滤.
+        if (md.getFilterSQLExp() != "")
+        {
+            String[] strs = md.getFilterSQLExp().split("=");
+            qo.addAnd();
+            qo.AddWhere(strs[0], strs[1]);
+        }
+
+        //增加排序.
+        qo.addOrderBy(enDtls.getGetNewEntity().getPK());
+
+        //从表
+        DataTable dtDtl = qo.DoQueryToTable();
+        dtDtl.TableName = "DTDtls";
+        ds.Tables.add(dtDtl);
+        return BP.Tools.Json.ToJson(ds);
 
 	}
 

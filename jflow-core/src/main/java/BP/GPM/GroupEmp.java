@@ -9,7 +9,7 @@ import BP.En.*;
 */
 public class GroupEmp extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getFK_Emp()
 	{

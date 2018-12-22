@@ -9,7 +9,7 @@ import BP.En.Entity;
 */
 public class RptDfines extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 报表定义s
@@ -27,10 +27,10 @@ public class RptDfines extends EntitiesNoName
 	{
 		return new RptDfine();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.

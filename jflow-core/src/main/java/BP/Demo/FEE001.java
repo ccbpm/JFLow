@@ -79,7 +79,7 @@ public class FEE001 extends BP.WF.FlowEventBase
 	}
 	
 	@Override
-	public String SendSuccess()
+	public String SendSuccess() throws Exception
 	{
 		 
 		if (this.HisNode.getNodeID() == 20501)

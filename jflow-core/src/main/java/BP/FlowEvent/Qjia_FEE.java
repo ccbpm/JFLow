@@ -78,7 +78,7 @@ public class Qjia_FEE extends FlowEventBase
 	}
 	
 	@Override
-	public String SendSuccess()
+	public String SendSuccess() throws Exception
 	{
 		if (this.HisNode.getNodeID() == 14401)
 		{

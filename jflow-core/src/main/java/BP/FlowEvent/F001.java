@@ -41,7 +41,7 @@ private String getOID;
 	 * @throws com.sun.star.uno.Exception 
 	*/
 	@Override
-	public String SendWhen() 
+	public String SendWhen() throws Exception 
 	{
 		
 		//if (1==1)
@@ -73,7 +73,7 @@ private String getOID;
 	 * @throws Exception 
 	*/
 	@Override
-	public String SaveAfter() 
+	public String SaveAfter() throws Exception 
 	{
 		switch (this.HisNode.getNodeID())
 		{
@@ -114,9 +114,10 @@ private String getOID;
 	 发送成功事件，发送成功时，把流程的待办写入其他系统里.
 	 
 	 @return 返回执行结果，如果返回null就不提示。
+	 * @throws Exception 
 	*/
 	@Override
-	public String SendSuccess()
+	public String SendSuccess() throws Exception
 	{
 		try
 		{

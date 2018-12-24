@@ -38,7 +38,6 @@ public class WF_Admin_Sln extends WebContralBase {
 		this.context = mycontext;
 	}
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	// /#region 绑定流程表单
 	/**
 	 * 获取流程所有节点
@@ -552,7 +551,7 @@ public class WF_Admin_Sln extends WebContralBase {
 						continue;
 					}
 
-					if (currND.getHisFormType() == NodeFormType.RefOneFrmTree)
+					if (currND.getHisFormType() == NodeFormType.RefOneFrmTree || currND.getHisFormType() == NodeFormType.SheetTree)
 					{
 						attr.setUIVisible(fieldsAttrs.UIVisible);
 						attr.setUIIsEnable(fieldsAttrs.UIIsEnable);

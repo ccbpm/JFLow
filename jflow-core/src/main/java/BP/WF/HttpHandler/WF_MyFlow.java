@@ -1970,6 +1970,11 @@ public class WF_MyFlow extends WebContralBase {
 		return DotNetToJavaStringHelper.trimEnd(Nos, ',');
 	}
 	
+	/**
+	 * 批量审批
+	 * @return
+	 * @throws Exception
+	 */
 	public String BathFlow() throws  Exception{
 		String workIds = this.GetRequestVal("WorkIDs");
 		if(DataType.IsNullOrEmpty(workIds))
@@ -2001,4 +2006,22 @@ public class WF_MyFlow extends WebContralBase {
 		return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(this.getFK_Flow(), this.getWorkID(), true);
 	
 	}
+	
+	/**
+	 * 单点登录
+	 * @return
+	 * @throws Exception
+	 */
+	public String SingleLogin() throws Exception{
+		String UserNo = this.GetRequestVal("UserNo");
+		if(DataType.IsNullOrEmpty(UserNo) == true){
+			return "err@用户账户不能为空";
+		}
+		BP.Port.Emp emp = new Emp();
+		emp.setNo(UserNo);
+		BP.WF.Dev2Interface.Port_Login(emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(),null,null);
+		return "登录成功.";
+	}
+
+	
 }

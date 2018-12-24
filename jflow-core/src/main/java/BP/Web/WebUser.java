@@ -669,7 +669,7 @@ public class WebUser {
 	}
 
 	public static void setNo(String value) {
-		SetSessionByKey("No", value);
+		SetSessionByKey("No", value.trim());
 	}
 
 	/**

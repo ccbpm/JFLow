@@ -1087,7 +1087,30 @@ public class WorkUnSend
 		gwf.Update();
 
 		BP.DA.DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=0 WHERE WorkID=" + this.WorkID + " AND FK_Node=" + gwf.getFK_Node());
-		 
+		
+		//删除子线程的功能
+        for (Node ndNext : wnPri.getHisNode().getHisToNodes().ToJavaList())
+        {
+            i = DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.WorkID + " AND FK_Node=" + ndNext.getNodeID());
+            if (i == 0)
+                continue;
+
+            if (ndNext.getHisRunModel() == RunModel.SubThread)
+            {
+                /*如果到达的节点是子线程,就查询出来发起的子线程。*/
+                GenerWorkFlows gwfs = new GenerWorkFlows();
+                gwfs.Retrieve(GenerWorkFlowAttr.FID, this.WorkID);
+                for (GenerWorkFlow en : gwfs.ToJavaList())
+                    BP.WF.Dev2Interface.Flow_DeleteSubThread(gwf.getFK_Flow(), en.getWorkID(), "合流节点撤销发送前，删除子线程.");
+                continue;
+            }
+
+            // 删除工作记录。
+            Works wks = ndNext.getHisWorks();
+            if (this.getHisFlow().getHisDataStoreModel() == BP.WF.Template.DataStoreModel.ByCCFlow)
+                wks.Delete(GenerWorkerListAttr.FID, this.WorkID);
+        }
+
 
 		ShiftWorks fws = new ShiftWorks();
 		fws.Delete(ShiftWorkAttr.FK_Node, (new Integer(wn.getHisNode().getNodeID())).toString(), ShiftWorkAttr.WorkID, (new Long(this.WorkID)).toString());

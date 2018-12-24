@@ -333,9 +333,7 @@ public class Selector extends Entity
 		String sqlGroup = this.getSelectorP1();
 		if (DotNetToJavaStringHelper.isNullOrEmpty(sqlGroup) == false)
 		{
-			sqlGroup = sqlGroup.replace("@WebUser.No", WebUser.getNo());
-			sqlGroup = sqlGroup.replace("@WebUser.Name", WebUser.getName());
-			sqlGroup = sqlGroup.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+			 sqlGroup = BP.WF.Glo.DealExp(sqlGroup, en, null);  //@祝梦娟	
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlGroup);
 			dt.TableName = "Depts";
 			ds.Tables.add(dt);
@@ -344,9 +342,7 @@ public class Selector extends Entity
 
 		//求人员范围.
 		String sqlDB = this.getSelectorP2();
-		sqlDB = sqlDB.replace("@WebUser.No", WebUser.getNo());
-		sqlDB = sqlDB.replace("@WebUser.Name", WebUser.getName());
-		sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+		 sqlDB = BP.WF.Glo.DealExp(sqlDB, en, null);
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sqlDB);
 		dtEmp.TableName = "Emps";
 		ds.Tables.add(dtEmp);
@@ -355,19 +351,7 @@ public class Selector extends Entity
 		if (!this.getSelectorP3().equals(""))
 		{
 			sqlDB = this.getSelectorP3();
-
-			sqlDB = sqlDB.replace("@WebUser.No", WebUser.getNo());
-			sqlDB = sqlDB.replace("@WebUser.Name", WebUser.getName());
-			sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
-
-			sqlDB = sqlDB.replace("@WorkID", en.GetValStringByKey("OID"));
-			sqlDB = sqlDB.replace("@OID", en.GetValStringByKey("OID"));
-
-			if (sqlDB.contains("@"))
-			{
-				sqlDB = BP.WF.Glo.DealExp(sqlDB, en, null);
-			}
-
+			sqlDB = BP.WF.Glo.DealExp(sqlDB, en, null); 
 			DataTable dtDef = BP.DA.DBAccess.RunSQLReturnTable(sqlDB);
 			dtDef.TableName = "DefaultSelected";
 

@@ -57,31 +57,15 @@ public class CCFormAPI
 	*/
 	public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y) throws Exception
 	{
-
-//		switch (ctrlType)
-//ORIGINAL LINE: case "Dtl":明细表
-		if (ctrlType.equals("Dtl"))
-		{
+		if (ctrlType.equals("Dtl")){
 				CreateOrSaveDtl(fk_mapdata, no, name, x, y);
-		}
-//ORIGINAL LINE: case "AthMulti":多附件
-		else if (ctrlType.equals("AthMulti"))
-		{
+		}else if (ctrlType.equals("AthMulti")){
 				CreateOrSaveAthMulti(fk_mapdata, no, name, x, y);
-		}
-//ORIGINAL LINE: case "AthSingle":单附件
-		else if (ctrlType.equals("AthSingle"))
-		{
+		}else if (ctrlType.equals("AthSingle")){
 				CreateOrSaveAthSingle(fk_mapdata, no, name, x, y);
-		}
-//ORIGINAL LINE: case "AthImg":图片
-		else if (ctrlType.equals("AthImg"))
-		{
+		}else if (ctrlType.equals("AthImg")){
 				CreateOrSaveAthImg(fk_mapdata, no, name, x, y);
-		}
-		
-//ORIGINAL LINE: case "iFrame":	框架	
-		else if(ctrlType.equals("iFrame")){
+		}else if(ctrlType.equals("iFrame")){
 			FrmEle fe = new FrmEle();
              fe.setMyPK(fk_mapdata + "_" + no);
              if (fe.RetrieveFromDBSources() != 0)
@@ -94,10 +78,8 @@ public class CCFormAPI
              fe.setX(x);
              fe.setY(y);
              fe.Insert();
-		}
-//ORIGINAL LINE: case "Fieldset":
-		else if (ctrlType.equals("Fieldset")) //分组.
-		{
+             //分组.
+		}else if (ctrlType.equals("Fieldset")){
 				FrmEle fe = new FrmEle();
 				fe.setMyPK(fk_mapdata + "_" + no);
 				if (fe.RetrieveFromDBSources() != 0)
@@ -111,10 +93,9 @@ public class CCFormAPI
 				fe.setTag1("http://ccflow.org");
 				fe.setX(x);
 				fe.setY(y);
-				 fe.setW(400);
-                 fe.setH(600);
+				fe.setW(400);
+                fe.setH(600);
 				fe.Insert();
-				//CreateOrSaveAthImg(fk_mapdata, no, name, x, y);
 		}
 		else
 		{
@@ -1675,7 +1656,9 @@ public class CCFormAPI
         ds.Tables.add(Sys_FrmBtn);
 
         //Sys_FrmLab.
-        DataTable Sys_FrmLab = md.getFrmLabs().ToDataTableField("Sys_FrmLab");
+        FrmLabs frmlabs = new FrmLabs();
+        frmlabs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
+        DataTable Sys_FrmLab =frmlabs.ToDataTableField("Sys_FrmLab");
         ds.Tables.add(Sys_FrmLab);
 
         //img.

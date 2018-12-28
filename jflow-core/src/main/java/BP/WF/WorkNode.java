@@ -4120,7 +4120,7 @@ public class WorkNode {
 	public final boolean CheckFrmIsNotNull() throws Exception {
 		// if (this.HisNode.HisFormType != NodeFormType.SheetTree)
 		// return true;
-
+         
 		// 增加节点表单的必填项判断.
 		String err = "";
 		if (this.getHisNode().getHisFormType() == NodeFormType.FreeForm) {
@@ -4142,6 +4142,60 @@ public class WorkNode {
 
 			/// #region 检查附件个数的完整性. - 该部分代码稳定后，移动到独立表单的检查上去。
 			for (FrmAttachment ath : this.getHisWork().getHisFrmAttachments().ToJavaList()) {
+				//region 增加阅读规则
+				if (ath.getReadRole() != 0)
+                {
+                    //查询出来当前的数据.
+                    GenerWorkerList gwl = new GenerWorkerList();
+                    gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),
+                        GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
+
+                    //获得已经下载或者读取的数据. 格式为: a2e06fbf-2bae-44fb-9176-9a0047751e83,a2e06fbf-we-44fb-9176-9a0047751e83
+                    String ids = gwl.GetParaString(ath.getNoOfObj());
+                    if (ids.equals("ALL")==false)
+                    {
+                        //获得当前节点的上传附件.
+                        String sql = "SELECT MyPK,FileName FROM Sys_FrmAttachmentDB WHERE RefPKVal=" + this.getWorkID() + " AND FK_FrmAttachment='" + ath.getMyPK() + "' AND Rec!='" + BP.Web.WebUser.getNo() + "'";
+                        DataTable dt = DBAccess.RunSQLReturnTable(sql);
+                        String errFileUnRead = "";
+                        for (DataRow dr : dt.Rows)
+                        {
+                            String guid = dr.getValue(0).toString();
+                            if (ids.equals(guid) == false)
+                                errFileUnRead += "@文件:" + dr.getValue(1).toString()+ "未阅读.";
+                        }
+
+                        //如果有未阅读的文件.
+                        if (DataType.IsNullOrEmpty(errFileUnRead) == false)
+                        {
+                            //未阅读不让其发送.
+                            if (ath.getReadRole() == 1)
+                                throw new Exception("err@您还有如下文件没有阅读," + errFileUnRead);
+
+                            //未阅读记录日志并让其发送.
+                            if (ath.getReadRole() == 2)
+                            {
+                                AthUnReadLog log = new AthUnReadLog();
+                                log.setMyPK(this.getWorkID() + "_" + this.getHisNode().getNodeID() + "_" + WebUser.getNo());
+                                log.Delete();
+
+                                log.setFK_Emp(WebUser.getNo());
+                                log.setFK_EmpDept(WebUser.getFK_Dept());
+                                log.setFK_EmpDeptName(WebUser.getFK_DeptName());
+                                log.setFK_Flow(this.getHisNode().getFK_Flow());
+                                log.setFlowName(this.getHisFlow().getName());
+
+                                log.setFK_Node(this.getHisNode().getNodeID());
+                                log.setFlowName(this.getHisFlow().getName());
+                                log.setSendDT(DataType.getCurrentDataTime());
+                                log.setWorkID(this.getWorkID());
+
+                                log.Insert(); //插入到数据库.
+
+                            }
+                        }
+                    }
+                }
 				if (ath.getUploadFileNumCheck() == UploadFileNumCheck.None) {
 					continue;
 				}

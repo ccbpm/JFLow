@@ -92,6 +92,7 @@ public class FrmAttachment extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentAttr.FK_Node, value);
 	}
+	
 	/** 
 	 上传类型（单个的，多个，指定的）
 	 
@@ -311,8 +312,13 @@ public class FrmAttachment extends EntityMyPK
 		//}
 		//return s;
 	}
-	 
-	
+	 public final int getReadRole() {
+		 return this.GetValIntByKey(FrmAttachmentAttr.ReadRole);
+		 
+	 }
+	public final void setReadRole(int value) {
+		 this.SetValByKey(FrmAttachmentAttr.ReadRole, value);
+	}
 	  /** 
 	 数据关联组件ID
 	 

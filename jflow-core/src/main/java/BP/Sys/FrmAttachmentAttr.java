@@ -288,7 +288,7 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	public static final String FastKeyGenerRole = "FastKeyGenerRole";
 
 	//#endregion
-	
+	 public static final String ReadRole = "ReadRole";
 	/**
 	 * 是否要转换成html，方便在线浏览.
 	 */

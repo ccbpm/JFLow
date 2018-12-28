@@ -3471,5 +3471,10 @@ public class Map
 	{
 		this.AddTBDecimal(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
+
+	public void AddMyPK(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

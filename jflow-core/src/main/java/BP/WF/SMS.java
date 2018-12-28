@@ -381,10 +381,10 @@ public class SMS extends EntityMyPK
 	public static boolean SendEmailNow(String mail, String mailTitle, String mailDoc)
 	{
 		  //邮件地址.
-        String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
+        final String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
        
 
-        String emailPassword = SystemConfig.GetValByKey("SendEmailPass", "ccbpm123");
+       final String emailPassword = SystemConfig.GetValByKey("SendEmailPass", "ccbpm123");
 		// 第一步：配置javax.mail.Session对象  
 		Properties props = new Properties(); 
 		props.setProperty("mail.transport.protocol", "smtp"); 

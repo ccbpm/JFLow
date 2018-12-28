@@ -49,6 +49,7 @@ import BP.WF.Template.FrmSln;
 import BP.WF.Template.WhoIsPK;
 import BP.Sys.Glo;
 import BP.Web.WebUser;
+import BP.Tools.AesEncodeUtil;
 import BP.Tools.ContextHolderUtils;
 
 
@@ -90,75 +91,15 @@ public class AttachmentUploadController extends BaseController {
 			sort ="";
 		return sort;
 	}
+	
+	public String getPWorkID() {
+		return ContextHolderUtils.getRequest().getParameter("PWorkID");
+	}
 
 	@RequestMapping(value = "/AttachmentUpload.do")
 	public void upload(@RequestParam("Filedata") MultipartFile multiFile, HttpServletRequest request,
 			HttpServletResponse response, BindException errors) throws Exception {
-		String savePath = "upload";
-		try {
-            //使用Apache文件上传组件处理文件上传步骤：
-            //1、创建一个DiskFileItemFactory工厂
-            DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
-            //2、创建一个文件上传解析器
-            ServletFileUpload fileUpload = new ServletFileUpload(diskFileItemFactory);
-            //解决上传文件名的中文乱码
-            fileUpload.setHeaderEncoding("UTF-8");
-            //3、判断提交上来的数据是否是上传表单的数据
-           // if(!fileUpload.isMultipartContent(request)){
-            //    //按照传统方式获取数据
-             //   return;
-           // }
-            //4、使用ServletFileUpload解析器解析上传数据，解析结果返回的是一个List<FileItem>集合，每一个FileItem对应一个Form表单的输入项
-            List<FileItem> list = fileUpload.parseRequest(request);
-            for (FileItem item : list) {
-                //如果fileitem中封装的是普通输入项的数据
-                if(item.isFormField()){
-                    String name = item.getFieldName();
-                    //解决普通输入项的数据的中文乱码问题
-                    String value = item.getString("UTF-8");
-                    String value1 = new String(name.getBytes("iso8859-1"),"UTF-8");
-                    System.out.println(name+"  "+value);
-                    System.out.println(name+"  "+value1);
-                }else{
-                    //如果fileitem中封装的是上传文件，得到上传的文件名称，
-                    String fileName = item.getName();
-                    System.out.println(fileName);
-                    if(fileName==null||fileName.trim().equals("")){
-                        continue;
-                    }
-                    //注意：不同的浏览器提交的文件名是不一样的，有些浏览器提交上来的文件名是带有路径的，如：  c:\a\b\1.txt，而有些只是单纯的文件名，如：1.txt
-                    //处理获取到的上传文件的文件名的路径部分，只保留文件名部分
-                    fileName = fileName.substring(fileName.lastIndexOf(File.separator)+1);
-                    //获取item中的上传文件的输入流
-                    InputStream is = item.getInputStream();
-                    //创建一个文件输出流
-                    FileOutputStream fos = new FileOutputStream(savePath+File.separator+fileName);
-                    //创建一个缓冲区
-                    byte buffer[] = new byte[1024];
-                    //判断输入流中的数据是否已经读完的标识
-                    int length = 0;
-                    //循环将输入流读入到缓冲区当中，(len=in.read(buffer))>0就表示in里面还有数据
-                    while((length = is.read(buffer))>0){
-                        //使用FileOutputStream输出流将缓冲区的数据写入到指定的目录(savePath + "\\" + filename)当中
-                        fos.write(buffer, 0, length);
-                    }
-                    //关闭输入流
-                    is.close();
-                    //关闭输出流
-                    fos.close();
-                    //删除处理文件上传时生成的临时文件
-                    item.delete();
-                    //message = "文件上传成功";
-                }
-            }
-        } catch (FileUploadException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            //message = "文件上传失败";
-        }
-		
-		
-		String error = "";
+	
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		String parasData = multipartRequest.getParameter("parasData");
 		CommonsMultipartFile item = (CommonsMultipartFile) multipartRequest.getFile("file");
@@ -210,8 +151,21 @@ public class AttachmentUploadController extends BaseController {
 			FrmAttachment dbAtt = new FrmAttachment();
 			dbAtt.setMyPK(downDB.getFK_FrmAttachment());
 			dbAtt.Retrieve();
+			//获取文件是否加密
+            boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+            boolean isEncrypt = downDB.GetParaBoolen("IsEncrypt");
+            
 			if (dbAtt.getAthSaveWay() == AthSaveWay.WebServer) {
-				PubClass.DownloadFile(downDB.getFileFullName(), downDB.getFileName());
+				String filepath = downDB.getFileFullName();
+				 if (fileEncrypt == true && isEncrypt == true)
+                 {
+					 filepath = downDB.getFileFullName() + ".tmp";
+                     if (new File(filepath).exists() == true)
+                    	 new File(filepath).delete();
+                     AesEncodeUtil.decryptFile(downDB.getFileFullName(), filepath);
+                    
+                 }
+				PubClass.DownloadFile(filepath, downDB.getFileName());
 
 			}
 
@@ -223,7 +177,7 @@ public class AttachmentUploadController extends BaseController {
 				String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
 
 				// 解密的文件保存的路径
-				String jieMiFile = SystemConfig.getPathOfTemp() + "" + guid + downDB.getFileExts();
+				String jieMiFile = SystemConfig.getPathOfTemp() +"/" + "" + guid + downDB.getFileExts();
 
 				if (SystemConfig.getFTPServerType().equals("SFTP") ) {
 
@@ -240,10 +194,12 @@ public class AttachmentUploadController extends BaseController {
 					ftpUtil.downloadFile(downDB.getFileFullName(), temp);
 				}
 
-
-				// 解密文件
-				Glo.File_JieMi(temp, jieMiFile);
-
+				if (fileEncrypt == true && isEncrypt == true){
+					// 解密文件
+					AesEncodeUtil.decryptFile(temp, jieMiFile);
+				}else{
+					jieMiFile = temp;
+				}
 				// #region 文件下载（并删除临时明文文件）
 				jieMiFile = PubClass.toUtf8String(request, jieMiFile);
 
@@ -265,7 +221,8 @@ public class AttachmentUploadController extends BaseController {
 
 				// 删除临时文件
 				new File(temp).delete();
-				new File(jieMiFile).delete();
+				if(new File(jieMiFile).exists() == true)
+					new File(jieMiFile).delete();
 			}
 
 			if (dbAtt.getAthSaveWay() == AthSaveWay.DB) {
@@ -351,8 +308,54 @@ public class AttachmentUploadController extends BaseController {
 
 	private void uploadFile(CommonsMultipartFile item, FrmAttachment athDesc, GEEntity en, String msg, MapData mapData,
 			String attachPk, String parasData) throws Exception {
-		
-		
+		String pkVal = this.getPKVal();
+		//获取sort\
+		String sort = this.getSort();
+        if (DataType.IsNullOrEmpty(sort))
+        {
+            if (parasData != null && parasData.length() > 0)
+            {
+                for (String para : parasData.split("@"))
+                {
+                    if (para.indexOf("Sort") != -1)
+                        sort = para.split("=")[1];
+                }
+            }
+        }
+        
+      //求主键. 如果该表单挂接到流程上.
+        if (this.getFK_Node() != 0 && this.getFK_Node()!=999999)
+        {
+            //判断表单方案。
+            FrmNode fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), athDesc.getFK_MapData());
+            if (fn.getFrmSln() == FrmSln.Readonly)
+                throw new Exception("err@不允许上传附件.");
+
+            //是默认的方案的时候.
+            if (fn.getFrmSln() == FrmSln.Default)
+            {
+                //判断当前方案设置的whoIsPk ，让附件集成 whoIsPK 的设置。
+                if (fn.getWhoIsPK() == WhoIsPK.FID)
+                    pkVal = Long.toString(this.getFID());
+
+                if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
+                    pkVal = this.getPWorkID();
+            }
+
+            //自定义方案.
+            if (fn.getFrmSln() == FrmSln.Self)
+            {
+                athDesc = new FrmAttachment(attachPk + "_" + this.getFK_Node());
+                if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+                    pkVal =Long.toString(this.getFID());
+
+                if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+                    pkVal = this.getPWorkID();
+            }
+        }
+        //获取上传文件是否需要加密
+        boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+        
 		// 获取文件名
 		String fileName = item.getOriginalFilename();
 		// 扩展名
@@ -407,33 +410,36 @@ public class AttachmentUploadController extends BaseController {
 			realSaveTo = realSaveTo.replace("~", "-");
 			realSaveTo = realSaveTo.replace("'", "-");
 			realSaveTo = realSaveTo.replace("*", "-");
-
+			
 			String saveTo = realSaveTo;
-
-			File file = new File(realSaveTo); // 获取根目录对应的真实物理路径
+			if (fileEncrypt == true)
+				saveTo = realSaveTo + ".tmp";
+			File file = new File(saveTo); // 获取根目录对应的真实物理路径
+			
 			try {
 				// 构造临时对象
-
 				InputStream is = item.getInputStream();
 				int buffer = 1024; // 定义缓冲区的大小
 				int length = 0;
 				byte[] b = new byte[buffer];
-				double percent = 0;
 				FileOutputStream fos = new FileOutputStream(file);
 				while ((length = is.read(b)) != -1) {
-					// percent += length / (double) upFileSize * 100D; //
 					// 计算上传文件的百分比
 					fos.write(b, 0, length); // 向文件输出流写读取的数据
-					// session.setAttribute("progressBar",Math.round(percent));
-					// //将上传百分比保存到Session中
 				}
 				fos.close();
 			} catch (RuntimeException ex) {
 				
 				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
-
 			}
-
+			
+			 if (fileEncrypt == true)
+             {
+                 File fileT = new File(saveTo);
+                 AesEncodeUtil.encryptFile(saveTo, realSaveTo);
+                 fileT.delete();//删除临时文件
+             }
+            
 			// 执行附件上传前事件，added by liuxc,2017-7-15
 			msg = mapData.DoEvent(FrmEventList.AthUploadeBefore, en,
 					"@FK_FrmAttachment=" + athDesc.getMyPK() + "@FileFullName=" + realSaveTo);
@@ -455,6 +461,9 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setFileExts(exts);
 			dbUpload.setFID(this.getFID());
 			dbUpload.setNodeID( this.getFK_Node());
+			 if (fileEncrypt == true)
+                 dbUpload.SetPara("IsEncrypt", 1);
+			 
 			if (athDesc.getIsExpCol() == true) {
 				if (parasData != null && parasData.length() > 0) {
 					for (String para : parasData.split("@")) {
@@ -481,51 +490,8 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setRDT(DataType.getCurrentDataTimess());
 			dbUpload.setRec(BP.Web.WebUser.getNo());
 			dbUpload.setRecName(BP.Web.WebUser.getName());
-			
-			String pkVal=this.getPKVal();			
-			if (athDesc.getHisCtrlWay()==  AthCtrlWay.FID)
-				pkVal=String.valueOf(this.getFID());
-			if (athDesc.getHisCtrlWay()==  AthCtrlWay.PWorkID)
-				pkVal=String.valueOf(this.getPWorkID());
-			 
 			dbUpload.setFID(this.getFID());
 			dbUpload.setUploadGUID(guid);
-			  
-			 //求主键. 如果该表单挂接到流程上.
-            if (this.getFK_Node() != 0)
-            {
-            	
-                //判断表单方案。
-                FrmNode fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), athDesc.getFK_MapData());
-                if (fn.getFrmSln() == FrmSln.Readonly)
-                	return  ;
-                
-                //    return "err@不允许上传附件.";
-
-                //是默认的方案的时候.
-                if (fn.getFrmSln() == FrmSln.Default)
-                {
-                    //判断当前方案设置的whoIsPk ，让附件集成 whoIsPK 的设置。
-                    if (fn.getWhoIsPK() == WhoIsPK.FID)
-                        pkVal = String.valueOf( this.getFID());
-
-                    if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
-                        pkVal = this.getPWorkID().toString();
-                }
-
-                //自定义方案.
-                if (fn.getFrmSln() == FrmSln.Self)
-                {
-                    athDesc = new FrmAttachment(attachPk + "_" + this.getFK_Node());
-                    if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
-                        pkVal = String.valueOf( this.getFID());
-
-                    if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
-                        pkVal = String.valueOf( this.getPWorkID());
-                }
-            }
-			
-			
 			dbUpload.setRefPKVal(pkVal);
 			
 			dbUpload.Insert();
@@ -550,8 +516,12 @@ public class AttachmentUploadController extends BaseController {
 			String guid = BP.DA.DBAccess.GenerGUID();
 
 			// 把文件临时保存到一个位置.
-			String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
-			File tempFile = new File(temp);
+			String temp = SystemConfig.getPathOfTemp() +"/"+ "" + guid + ".tmp";
+			
+			String tempD = temp;
+			if (fileEncrypt == true)
+				tempD = SystemConfig.getPathOfTemp()+"/"+ "" + guid + "_Desc" + ".tmp";
+			File tempFile = new File(tempD);
 			InputStream is = null;
 			try {
 				// 构造临时对象
@@ -559,7 +529,6 @@ public class AttachmentUploadController extends BaseController {
 				int buffer = 1024; // 定义缓冲区的大小
 				int length = 0;
 				byte[] b = new byte[buffer];
-				double percent = 0;
 				FileOutputStream fos = new FileOutputStream(tempFile);
 				while ((length = is.read(b)) != -1) {
 					fos.write(b, 0, length); // 向文件输出流写读取的数据
@@ -571,6 +540,12 @@ public class AttachmentUploadController extends BaseController {
 				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
 
 			}
+			 if (fileEncrypt == true)
+             {
+                 File fileTD =  new File(tempD);
+                 AesEncodeUtil.encryptFile(tempD, temp);//加密
+                 fileTD.delete();//删除临时文件
+             }
 
 			// 执行附件上传前事件，added by liuxc,2017-7-15
 			msg = mapData.DoEvent(FrmEventList.AthUploadeBefore, en,
@@ -604,7 +579,6 @@ public class AttachmentUploadController extends BaseController {
 				dbUpload.setRefPKVal(pWorkID);
 			}
 			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-			String ext = FileAccess.getExtensionName(item.getOriginalFilename());
 			dbUpload.setFK_MapData(athDesc.getFK_MapData());
 			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
 			dbUpload.setFileName(item.getOriginalFilename());
@@ -613,6 +587,8 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setRDT(DataType.getCurrentDataTimess());
 			dbUpload.setRec(BP.Web.WebUser.getNo());
 			dbUpload.setRecName(BP.Web.WebUser.getName());
+			if (fileEncrypt == true)
+                  dbUpload.SetPara("IsEncrypt", 1);
 			if (athDesc.getIsExpCol() == true) {
 				if (parasData != null && parasData.length() > 0) {
 					for (String para : parasData.split("@")) {
@@ -651,8 +627,7 @@ public class AttachmentUploadController extends BaseController {
 				}
 				
 				boolean  isOK=false;
-
-				Glo.File_JiaMi(temp, SystemConfig.getPathOfTemp() + "/" + guid + "_Desc" + ".tmp");
+				
 				if (SystemConfig.getFTPServerType().equals("FTP") ) {
 
 					FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
@@ -660,8 +635,7 @@ public class AttachmentUploadController extends BaseController {
 					ftpUtil.changeWorkingDirectory(workDir,true);
 
 					// 把文件放在FTP服务器上去.
-					isOK=ftpUtil.uploadFile( guid + "." + dbUpload.getFileExts(),
-							SystemConfig.getPathOfTemp() + "/" + guid + "_Desc" + ".tmp");
+					isOK=ftpUtil.uploadFile( guid + "." + dbUpload.getFileExts(),temp);
 
 					ftpUtil.releaseConnection();
 				}
@@ -672,8 +646,7 @@ public class AttachmentUploadController extends BaseController {
 					 
 					ftpUtil.changeWorkingDirectory(workDir,true);
 					// 把文件放在FTP服务器上去.
-					isOK=ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(),
-							SystemConfig.getPathOfTemp() + "/" + guid + "_Desc" + ".tmp");
+					isOK=ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(),temp);
 					ftpUtil.releaseConnection();
 				}
 
@@ -681,7 +654,6 @@ public class AttachmentUploadController extends BaseController {
 				tempFile.delete();
 				new File(SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp").delete();
 
-					
 				// 设置路径.
 				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
 				
@@ -702,11 +674,6 @@ public class AttachmentUploadController extends BaseController {
 		}
 		/// #endregion 保存到数据库.
 		return;
-	}
-
-	private char[] getPWorkID() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -17,6 +17,7 @@ import org.springframework.core.io.ResourceLoader;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.Tools.StringHelper;
 
 /**
@@ -51,6 +52,33 @@ public class SystemConfig {
 		return str;
 	}
 
+	 /// <summary>
+    /// 附件上传加密
+    /// </summary>
+    public static boolean getIsEnableAthEncrypt(){
+        String IsEnableAthEncrypt = SystemConfig.getAppSettings().get("IsEnableAthEncrypt").toString();
+
+        if (DataType.IsNullOrEmpty(IsEnableAthEncrypt) == true)
+            return false;
+
+        if (SystemConfig.getAppSettings().get("IsEnableAthEncrypt").toString().equals("1"))
+            return true;
+        return false;
+    
+    }
+    /// <summary>
+    /// 附件上传位置
+    /// </summary>
+    public static boolean getIsUploadFileToFTP(){
+        String IsUploadFileToFTP = SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString();
+
+        if (DataType.IsNullOrEmpty(IsUploadFileToFTP) == true)
+            return false;
+
+        if (SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString().equals("1"))
+            return true;
+        return false;
+    }
 	public static String getAttachWebSite() {
 		return SystemConfig.getAppSettings().get("AttachWebSite").toString();
 	}

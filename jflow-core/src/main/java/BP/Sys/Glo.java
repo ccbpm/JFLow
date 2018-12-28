@@ -386,10 +386,8 @@ public class Glo
 	 */
 	 ///#region 加密解密文件.
      public static void File_JiaMi(String fileFullPath,String toFileFullPath) throws Exception{
-         //南京宝旺达.
-         if (SystemConfig.getCustomerNo().equals("BWDA")) {
         	 AesEncodeUtil.encryptFile(fileFullPath,toFileFullPath);
-         }
+         
      }
      
      /**
@@ -398,10 +396,7 @@ public class Glo
       * @param toFileFullPath解密的文件
       */
      public static void File_JieMi(String fileFullPath,String toFileFullPath){
-         //南京宝旺达.
-         if (SystemConfig.getCustomerNo().equals( "BWDA")){
         	 AesEncodeUtil.decryptFile(fileFullPath,toFileFullPath);
-         }
      }
      /// <summary>
      /// 字符串的解密

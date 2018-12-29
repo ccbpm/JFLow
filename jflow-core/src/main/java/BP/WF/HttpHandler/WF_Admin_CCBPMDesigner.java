@@ -1563,8 +1563,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 	public final String EditFlowSort() throws Exception
 	{
-		FlowSort fs = new FlowSort(this.getNo()); //传入的编号多出F符号，需要替换掉
-		fs.setNo(this.getNo().replace("F", ""));
+		String flowNo = this.getNo().replace("F", "");
+		FlowSort fs = new FlowSort(flowNo); //传入的编号多出F符号，需要替换掉
+		fs.setNo(flowNo);
 		fs.RetrieveFromDBSources();
 		fs.setName(this.getName());
 		fs.Update();

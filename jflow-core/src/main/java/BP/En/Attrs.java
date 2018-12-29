@@ -850,9 +850,6 @@ public class Attrs extends ArrayList<Attr>
             if (item.getMyFieldType() == FieldType.RefText)
                 continue;
 
-         //   if (item.IsPK == true && item.UIVisible == false)
-           //     continue;
-
             BP.Sys.MapAttr mattr = new BP.Sys.MapAttr();
             mattr.setKeyOfEn(  item.getKey());
             mattr.setName( item.getDesc());
@@ -889,14 +886,10 @@ public class Attrs extends ArrayList<Attr>
                 mattr.setColSpan(3);
 
             //帮助url.
-            mattr.setUIRefKeyText(item.HelperUrl);
-
-            //if (item.UIIsReadonly == true && item.MyFieldType== FieldType.Normal)
-            //    mattr.UIIsEnable = !item.UIIsReadonly;
-            //else
-            //    mattr.UIIsEnable = item.UIIsReadonly;
-           // else
-             //   mattr.UIIsEnable = !item.UIIsReadonly;
+            mattr.SetPara("HelpUrl", item.HelperUrl);
+            
+            mattr.setUIRefKeyText(item.getUIRefKeyText());
+            mattr.setUIRefKey(item.getUIRefKeyValue());
 
 
 

@@ -966,21 +966,27 @@ public class WF_CCForm extends WebContralBase {
 
 	// //图片附件上传
 	public String FrmImgAthDB_Upload() throws Exception {
-		String ImgAthPK = this.GetRequestVal("ImgAth");
+		String CtrlID = this.GetRequestVal("CtrlID");
 		int zoomW = this.GetRequestValInt("zoomW");
 		int zoomH = this.GetRequestValInt("zoomH");
-
-		String myName = ImgAthPK + "_" + this.getMyPK();
-		// 生成新的图片路径,解决返回相同src后图片不切换的问题
-		String newName = ImgAthPK + "_" + this.getMyPK() + "_" + DateUtils.getCurrentDate("yyyyMMddHHmmss");
-		String webPath = "/DataUser/ImgAth/Data" + newName + ".png";
-		String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data";
-		saveToPath = saveToPath.replace("\\", "/");
-		String fileUploadPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/";
-		fileUploadPath = fileUploadPath.replace("\\", "/");
+		String myName = "";
+        String fk_mapData = this.getFK_MapData();
+         if (fk_mapData.contains("ND") == true)
+             myName = CtrlID + "_" + this.getRefPKVal();
+         else
+             myName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
+         
+         //生成新路径，解决返回相同src后图片不切换问题
+         //string newName = ImgAthPK + "_" + this.MyPK + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+         String webPath = "/DataUser/ImgAth/Data/" + myName + ".png";
+         String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data/";
+         saveToPath = saveToPath.replace("\\", "/");
+         String fileUPloadPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/";
+         fileUPloadPath = fileUPloadPath.replace("\\", "/");
+		
 		// 如果路径不存在就创建,否则拷贝文件报异常
 		File sPath = new File(saveToPath);
-		File uPath = new File(fileUploadPath);
+		File uPath = new File(fileUPloadPath);
 		if (!sPath.isDirectory()) {
 			sPath.mkdirs();
 		}
@@ -988,10 +994,10 @@ public class WF_CCForm extends WebContralBase {
 			uPath.mkdirs();
 		}
 
-		saveToPath = saveToPath + newName + ".png";
-		fileUploadPath = fileUploadPath + newName + ".png";
+		saveToPath = saveToPath + myName + ".png";
+		fileUPloadPath = fileUPloadPath + myName + ".png";
 		File sFile = new File(saveToPath);
-		File uFile = new File(fileUploadPath);
+		File uFile = new File(fileUPloadPath);
 
 		String contentType = getRequest().getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
@@ -1020,25 +1026,6 @@ public class WF_CCForm extends WebContralBase {
 		// 获取文件大小;
 		long fileSize = uFile.length();
 		if (fileSize > 0) {
-			// 对图片进行裁剪
-			// cutImage(saveToPath,0,0,zoomW,zoomH);
-
-			// 更新数据表
-			FrmImgAthDB imgAthDB = new FrmImgAthDB();
-			imgAthDB.setMyPK(myName);
-			imgAthDB.setFK_MapData(this.getFK_MapData());
-			imgAthDB.setFK_FrmImgAth(ImgAthPK);
-			imgAthDB.setRefPKVal(this.getMyPK());
-			imgAthDB.setFileFullName(webPath);
-			imgAthDB.setFileName(newName);
-			imgAthDB.setFileExts("png");
-			imgAthDB.setFileSize(fileSize);
-			imgAthDB.setRDT(DateUtils.getCurrentDate("yyyy-MM-dd HH:mm"));
-			imgAthDB.setRec(BP.Web.WebUser.getNo());
-			imgAthDB.setRecName(BP.Web.WebUser.getName());
-
-			imgAthDB.Save();
-
 			return "{SourceImage:\"" + webPath + "\"}";
 		}
 		return "@err没有选择文件";
@@ -1046,8 +1033,8 @@ public class WF_CCForm extends WebContralBase {
 	}
 
 	public String FrmImgAthDB_Cut() {
-		String ImgAthPK = this.GetRequestVal("ImgAth");
 
+		String CtrlID = this.GetRequestVal("CtrlID");
 		int zoomW = this.GetRequestValInt("ImgAth");
 		int zoomH = this.GetRequestValInt("zoomH");
 		int x = this.GetRequestValInt("cX");
@@ -1055,23 +1042,26 @@ public class WF_CCForm extends WebContralBase {
 		int w = this.GetRequestValInt("cW");
 		int h = this.GetRequestValInt("cH");
 
-		String myPK = ImgAthPK + "_" + this.getMyPK();
-		FrmImgAthDB imgAthDB = new FrmImgAthDB();
-
-		String newName = ImgAthPK + "_" + DateUtils.getCurrentDate("yyyyMMddHHmmss");
-		String webPath = BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data" + newName + ".png";
-		String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data";
-		saveToPath = saveToPath.replace("\\", "/");
-		// 获取上传的大图片
-		String strImgPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/" + imgAthDB.getFileName() + ".png";
-		strImgPath = strImgPath.replace("\\", "/");
+         String newName = "";
+         String fk_mapData = this.getFK_MapData();
+         if (fk_mapData.contains("ND") == true)
+             newName = CtrlID + "_" + this.getRefPKVal();
+         else
+             newName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
+         //string newName = ImgAthPK + "_" + this.MyPK + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+         String webPath =  BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data/" + newName + ".png";
+         String savePath = SystemConfig.getPathOfDataUser() + "ImgAth/Data/" + newName + ".png";
+         savePath = savePath.replace("\\", "/");
+         //获取上传的大图片
+         String strImgPath =SystemConfig.getPathOfDataUser() + "ImgAth/Upload/" + newName + ".png";
+         strImgPath = strImgPath.replace("\\", "/");
+		
 		File file = new File(strImgPath);
 		if (file.exists()) {
-			cutImage(strImgPath, saveToPath, x, y, w, h);
-			imgAthDB.setFileFullName(webPath);
+			cutImage(strImgPath, savePath, x, y, w, h);
 			return webPath;
 		}
-		return imgAthDB.getFileFullName();
+		return webPath;
 	}
 
 	// 剪裁图片元方法

@@ -101,9 +101,9 @@ public class AttrOfSearch
 		
 		if (_DefaultVal.contains("@"))
 		{
-			if (_DefaultVal.contains("WebUser.No"))
+			if (_DefaultVal.contains("@WebUser.No"))
 			{
-				return _DefaultVal.replace("WebUser.No", WebUser.getNo());
+				return _DefaultVal.replace("@WebUser.No", WebUser.getNo());
 			}
 			
 			if (_DefaultVal.contains("@WebUser.Name"))

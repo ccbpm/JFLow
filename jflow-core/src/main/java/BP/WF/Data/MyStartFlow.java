@@ -475,9 +475,9 @@ public class MyStartFlow extends Entity
 		map.Java_SetEnType(EnType.View);
 		
 		map.AddTBIntPK(MyStartFlowAttr.WorkID, 0, "WorkID", true, false);
-		map.AddTBString(MyStartFlowAttr.Title, null, "标题", true, false, 0, 100, 10, true);
+		map.AddTBString(MyStartFlowAttr.Title, null, "标题", true, false, 0, 100, 300, true);
 		map.AddDDLEntities(MyStartFlowAttr.FK_Flow, null, "流程", new Flows(), false);
-		map.AddTBString(MyStartFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 10);
+		map.AddTBString(MyStartFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 100);
 		 map.AddTBInt(MyStartFlowAttr.FK_Node, 0, "节点编号", false, false);
 
          map.AddDDLSysEnum(MyStartFlowAttr.WFSta, 0, "状态", true, true, MyStartFlowAttr.WFSta, "@0=运行中@1=已完成@2=其他");

@@ -1167,7 +1167,7 @@ public class WF_Comm extends WebContralBase {
             row.setValue("KeyOfEn",attr.getKeyOfEn());
             row.setValue("Name", attr.getName());
             row.setValue("Width", attr.getUIWidthInt());
-            row.setValue("UIContralType",  attr.getUIContralType());
+            row.setValue("UIContralType",  attr.getUIContralType().getValue());
 
             dtAttrs.Rows.add(row);
         }

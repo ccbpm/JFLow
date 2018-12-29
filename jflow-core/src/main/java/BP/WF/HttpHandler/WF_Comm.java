@@ -2249,6 +2249,7 @@ public class WF_Comm extends WebContralBase {
 	 */
 	public final String DBAccess_RunSQL() {
 		String sql = this.GetRequestVal("SQL");
+		sql = sql.replaceAll("~", "'");
 		return DBAccess.RunSQL(sql) + "";
 	}
 

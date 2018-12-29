@@ -304,15 +304,11 @@ public class CCMobile extends WebContralBase
 				///#endregion
 
 				///#region 2、处理流程类别列表.
-
-				if (tSpan == null)
-				{
-					sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE  Emps LIKE '%" + WebUser.getNo() + "%' AND FID=0 GROUP BY FK_Flow, FlowName";
-				}
-				else
-				{
-					sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE TSpan=" + tSpan + " AND Emps LIKE '%" + WebUser.getNo() + "%' AND FID=0 GROUP BY FK_Flow, FlowName";
-				}
+				
+				if (tSpan == null || tSpan.equals("-1"))
+	                sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.getNo() + "%' OR TodoEmps LIKE '%" + BP.Web.WebUser.getNo() + ",%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
+				else 
+	                sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE TSpan=" + tSpan + " AND (Emps LIKE '%" + WebUser.getNo() + "%' OR TodoEmps LIKE '%"+BP.Web.WebUser.getNo()+",%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
 
 
 				DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -337,7 +333,7 @@ public class CCMobile extends WebContralBase
 		        qo.AddWhere(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
 		        qo.addRightBracket();
 		        
-				if (tSpan != "-1")
+				if (tSpan.equals("-1") == false)
 				{
 					qo.addAnd();
 					qo.AddWhere(GenerWorkFlowAttr.TSpan, tSpan);

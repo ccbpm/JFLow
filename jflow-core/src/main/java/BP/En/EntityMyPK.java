@@ -47,4 +47,13 @@ public abstract class EntityMyPK extends Entity
 		this.setMyPK(_MyPK);
 		this.Retrieve();
 	}
+	
+	/**
+	 * 初始化MyPK
+	 * @return
+	 * @throws Exception
+	 */
+	public String InitMyPKVals() throws Exception {
+		return this.getMyPK();
+	}
 }

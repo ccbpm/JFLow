@@ -18,6 +18,7 @@ import BP.En.Attrs;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;
+import BP.En.EntityMyPK;
 import BP.En.EntityNoName;
 import BP.En.FieldType;
 import BP.Sys.DBSrcType;
@@ -581,7 +582,41 @@ public class WF_Comm_Sys extends WebContralBase
 	    return BP.Tools.Json.ToJson(dt);
 			
 	}
-		///#endregion
+	
+	  private String ImpData_DoneMyPK(Entities ens, DataTable dt) throws Exception
+      {
+          //错误信息
+          String errInfo = "";
+          Entity en = ens.getGetNewEntity();
+          //定义属性.
+          Attrs attrs = en.getEnMap().getAttrs();
+
+          int impWay = this.GetRequestValInt("ImpWay");
+
+          //清空方式导入.
+          int count = 0;//导入的行数
+          String successInfo = "";
+
+          ens.ClearTable();
+          for (DataRow dr : dt.Rows)
+          {
+              en = (EntityMyPK)ens.getGetNewEntity();
+              //给实体赋值
+              errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 0);
+              if (errInfo.indexOf("info@1") == -1)
+              {
+                  count++;
+                  successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
+              }
+              else
+              {
+                  errInfo = errInfo.replace("info@1", "");
+                  successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的更新成功</span><br/>";
+              }
+          }
+         
+          return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo;
+      }
 
 	/// <summary>
     /// 执行导入
@@ -634,6 +669,10 @@ public class WF_Comm_Sys extends WebContralBase
         //获得entity.
         Entities ens = ClassFactory.GetEns(this.getEnsName());
         Entity en =ens.getGetNewEntity();
+        
+        if(en.getPK().equals("MyPK") == true)
+            return this.ImpData_DoneMyPK(ens, dt);
+        
         if (en.getIsNoEntity()==false)
             return "err@必须是EntityNo是实体";
 
@@ -807,10 +846,26 @@ public class WF_Comm_Sys extends WebContralBase
             String myval = dr.getValue(item.getDesc()).toString();
             en.SetValByKey(item.getKey(), myval);
         }
-        if (saveType == 0)
-            en.Insert(); //执行插入.
+        if (en.getIsNoEntity() == true)
+        {
+            if (saveType == 0)
+                en.Insert();
+            else
+                en.Update();
+        }
         else
-            en.Update();
+        {
+            en.setPKVal(((EntityMyPK)en).InitMyPKVals());
+            if (en.RetrieveFromDBSources() == 0)
+                en.Insert(); //执行插入.
+            else
+            {
+                en.Update();
+                return "info@1";
+            }
+           
+        }
+       
         return errInfo;
     }
 }

@@ -7490,80 +7490,87 @@ public class WorkNode {
          //#endregion 复制主表数据.
 
          // 产生合流汇总明细表数据.
-       //  this.GenerHieLiuHuiZhongDtlData_2013(nd);
+          //  this.GenerHieLiuHuiZhongDtlData_2013(nd);
 
          //#endregion 处理合流节点表单数据
+         
+         //设置当前子线程已经通过.
+         ps = new Paras();
+         ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND IsPass=0";
+         ps.Add("WorkID", this.getWorkID());
+         ps.Add("FID", this.getHisWork().getFID());
+         DBAccess.RunSQL(ps);
 
          /* 合流点需要等待各个分流点全部处理完后才能看到它。*/
          String info = "";
          String sql1 = "";
-//#warning 对于多个分合流点可能会有问题。
+         //获取通过率
          ps = new Paras();
          ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr + "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
          ps.Add("FID", this.getHisWork().getFID());
-
-         java.math.BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-			java.math.BigDecimal passRate1 = numAll1.divide(numAll1, 2).multiply(new BigDecimal(100));
-			if (nd.getPassRate().compareTo(passRate1) <= 0) {
-				
+         BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
+         
+         String mysql = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE IsPass=1 AND FID=" + this.getHisWork().getFID() + " AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
+         BigDecimal numPassed = new BigDecimal(DBAccess.RunSQLReturnValInt(mysql));
+         
+		 BigDecimal passRate1 = numPassed.divide(numAll1, 2).multiply(new BigDecimal(100));
 		 
-             ps = new Paras();
-             ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
-             ps.Add("FK_Node", nd.getNodeID());
-             ps.Add("WorkID", this.getHisWork().getFID());
-             DBAccess.RunSQL(ps);
-
-             ps = new Paras();
-             ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
-             ps.Add("FK_Node", nd.getNodeID());
-             ps.Add("NodeName", nd.getName());
-             ps.Add("WorkID", this.getHisWork().getFID());
-             DBAccess.RunSQL(ps);
-
-             info = "@下一步合流点(" + nd.getName() + ")已经启动。";
-         }
-         else
-         {
-//#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
+		if (nd.getPassRate().compareTo(passRate1) <= 0) {
+	         ps = new Paras();
+	         ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
+	         ps.Add("FK_Node", nd.getNodeID());
+	         ps.Add("WorkID", this.getHisWork().getFID());
+	         DBAccess.RunSQL(ps);
+	
+	         ps = new Paras();
+	         ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
+	         ps.Add("FK_Node", nd.getNodeID());
+	         ps.Add("NodeName", nd.getName());
+	         ps.Add("WorkID", this.getHisWork().getFID());
+	         DBAccess.RunSQL(ps);
+	
+	         info = "@下一步合流点(" + nd.getName() + ")已经启动。";
+         }else{
+        	 //#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
              ps = new Paras();
              ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
              ps.Add("FK_Node", nd.getNodeID());
-             ps.Add("WorkID", this.getHisWork().getOID());
+             ps.Add("WorkID", this.getHisWork().getFID());
              DBAccess.RunSQL(ps);
          }
 			/// #region 求出日志类型，并加入变量中。
-			ActionType at = ActionType.Forward;
-			switch (town.getHisNode().getHisNodeWorkType()) {
-			case StartWork:
-			case StartWorkFL:
-				at = ActionType.Start;
-				break;
-			case Work:
-				if (this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFL
-						|| this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFHL) {
-					at = ActionType.ForwardFL;
-				} else {
-					at = ActionType.Forward;
-				}
-				break;
-			case WorkHL:
-				at = ActionType.ForwardHL;
-				break;
-			case SubThreadWork:
-				at = ActionType.SubThreadForward;
-				break;
-			default:
-				break;
+		ActionType at = ActionType.Forward;
+		switch (town.getHisNode().getHisNodeWorkType()) {
+		case StartWork:
+		case StartWorkFL:
+			at = ActionType.Start;
+			break;
+		case Work:
+			if (this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFL
+					|| this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFHL) {
+				at = ActionType.ForwardFL;
+			} else {
+				at = ActionType.Forward;
 			}
+			break;
+		case WorkHL:
+			at = ActionType.ForwardHL;
+			break;
+		case SubThreadWork:
+			at = ActionType.SubThreadForward;
+			break;
+		default:
+			break;
+		}
 		//  #region 如果是子线城前进.
-	          if (at == ActionType.SubThreadForward)
-	          {
-	              for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList())
-	              {
-	                  this.AddToTrack(at, wl, "子线程",this.town.getHisWork().getOID());
-	              }
-	              //写入到日志.
-	          }
+          if (at == ActionType.SubThreadForward)
+          {
+              for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList())
+              {
+                  this.AddToTrack(at, wl, "子线程",this.town.getHisWork().getOID());
+              }
+              //写入到日志.
+          }
 
          this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
          this.getHisGenerWorkFlow().setNodeName(nd.getName());

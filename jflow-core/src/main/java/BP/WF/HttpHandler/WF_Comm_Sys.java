@@ -595,27 +595,53 @@ public class WF_Comm_Sys extends WebContralBase
 
           //清空方式导入.
           int count = 0;//导入的行数
+          int changeCount = 0;
           String successInfo = "";
-
-          ens.ClearTable();
-          for (DataRow dr : dt.Rows)
+          if (impWay == 0)
           {
-              en = (EntityMyPK)ens.getGetNewEntity();
-              //给实体赋值
-              errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 0);
-              if (errInfo.indexOf("info@1") == -1)
+	          ens.ClearTable();
+	          for (DataRow dr : dt.Rows)
+	          {
+	              en = (EntityMyPK)ens.getGetNewEntity();
+	              //给实体赋值
+	              errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 0);
+	              //获取PKVal
+                  en.setPKVal(((EntityMyPK)en).InitMyPKVals());
+                  if (en.RetrieveFromDBSources() == 0)
+                  {
+                      en.Insert();
+                      count++;
+                      successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
+                  }
+	          }
+          }
+          //更新方式导入
+          if (impWay == 1 || impWay == 2)
+          {
+              for (DataRow dr : dt.Rows)
               {
-                  count++;
-                  successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
-              }
-              else
-              {
-                  errInfo = errInfo.replace("info@1", "");
-                  successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的更新成功</span><br/>";
+                  en = (EntityMyPK)ens.getGetNewEntity();
+                  //给实体赋值
+                  errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 1);
+                  
+                  //获取PKVal
+                  en.setPKVal(((EntityMyPK)en).InitMyPKVals());
+                  if (en.RetrieveFromDBSources() == 0)
+                  {
+                      en.Insert();
+                      count++;
+                      successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
+                  }
+                  else
+                  {
+                	  changeCount++;
+                      SetEntityAttrVal("", dr, attrs, en, dt, 1);
+                      successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的更新成功</span><br/>";
+                  }
               }
           }
          
-          return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo;
+          return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo+"@Split"+"changeCount="+changeCount;
       }
 
 	/// <summary>
@@ -694,6 +720,7 @@ public class WF_Comm_Sys extends WebContralBase
         ///#region 清空方式导入.
         //清空方式导入.
         int count =0;//导入的行数
+        int changeCount = 0;//更新的行数
         String successInfo="";
         if (impWay==0)
         {
@@ -748,8 +775,8 @@ public class WF_Comm_Sys extends WebContralBase
                 if (myen.getIsExits() == true)
                 {
                     //给实体赋值
-                    errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,1);
-                    count++;
+                    errInfo += SetEntityAttrVal(no,dr, attrs, myen, dt,1);
+                    changeCount++;
                     successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的更新成功</span><br/>";
                     continue;
                 }
@@ -763,7 +790,7 @@ public class WF_Comm_Sys extends WebContralBase
         }
        /// #endregion
 
-           return "errInfo="+errInfo+"@Split"+"count="+count+"@Split"+"successInfo="+successInfo;
+           return "errInfo="+errInfo+"@Split"+"count="+count+"@Split"+"successInfo="+successInfo+"@Split"+"changeCount="+changeCount;
 
     }
 
@@ -853,19 +880,6 @@ public class WF_Comm_Sys extends WebContralBase
             else
                 en.Update();
         }
-        else
-        {
-            en.setPKVal(((EntityMyPK)en).InitMyPKVals());
-            if (en.RetrieveFromDBSources() == 0)
-                en.Insert(); //执行插入.
-            else
-            {
-                en.Update();
-                return "info@1";
-            }
-           
-        }
-       
         return errInfo;
     }
 }

@@ -391,11 +391,11 @@ public class CCFormAPI extends Dev2Interface
         {
             MapAttr attrH = new MapAttr();
             attrH.Copy(attr);
-            attrH.setKeyOfEn(attr.getKeyOfEn() + "T");
+            attrH.setKeyOfEn(attr.getKeyOfEn() + "Text");
             attrH.setName(attr.getName());
             attrH.setUIContralType(BP.En.UIContralType.TB);
             attrH.setMinLen(0);
-            attrH.setMaxLen(60);
+            attrH.setMaxLen(500);
             attrH.setMyDataType(BP.DA.DataType.AppString);
             attrH.setUIVisible(false);
             attrH.setUIIsEnable(false);

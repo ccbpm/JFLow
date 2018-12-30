@@ -2249,7 +2249,7 @@ public class Map
         attr.setDefaultVal(defaultVal);
         attr.setMyDataType(DataType.AppString);
         attr.setMyFieldType(FieldType.Normal);
-        attr.setMaxLength(50);
+        attr.setMaxLength(500);
         attr.setDesc(desc);
         attr.setUIContralType(UIContralType.TB);
         attr.setUIBindKey(sql);

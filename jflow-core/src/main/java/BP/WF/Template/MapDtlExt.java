@@ -1279,6 +1279,91 @@ public class MapDtlExt extends EntityNoName
 	}
 
 		///#endregion 基本属性.
+	  /// <summary>
+    /// 初始化自定义字段属性
+    /// </summary>
+    /// <returns>返回执行结果</returns>
+    public String InitAttrsOfSelf() throws Exception
+    {
+        if (this.getFK_Node()==0)
+            return "err@该从表属性不是自定义属性.";
+
+        if (this.getNo().contains("_"+this.getFK_Node())==false)
+            return "err@该从表属性不是自定义属性.";
+
+        //求从表ID.
+        String refDtl = this.getNo().replace("_" + this.getFK_Node(), "");
+
+        //处理属性问题.
+        MapAttrs attrs = new MapAttrs();
+        attrs.Delete(MapAttrAttr.FK_MapData, this.getNo());
+        attrs.Retrieve(MapAttrAttr.FK_MapData, refDtl);
+        for(MapAttr attr : attrs.ToJavaList())
+        {
+            attr.setMyPK(this.getNo() + "_" + attr.getKeyOfEn());
+            attr.setFK_MapData(this.getNo());
+            attr.Insert();
+        }
+
+        //处理mapExt 的问题.
+        MapExts exts = new MapExts();
+        exts.Delete(MapAttrAttr.FK_MapData, this.getNo());//先删除，后查询.
+        exts.Retrieve(MapAttrAttr.FK_MapData, refDtl);
+        MapExt mapExt = null;
+        for(MapExt ext : exts.ToJavaList())
+        {
+            mapExt = new MapExt();
+            mapExt = ext;
+            mapExt.setMyPK(ext.getMyPK() + "_" + this.getFK_Node());
+            mapExt.setFK_MapData(this.getNo());
+            mapExt.Insert();
+        }
+
+        //处理附件问题
+        /* 如果启用了多附件*/
+        if (this.getIsEnableAthM() == true)
+        {
+            BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+            //获取原始附件的属性
+
+            athDesc.setMyPK(this.getNo() + "_AthMDtl");
+            if (athDesc.RetrieveFromDBSources() == 0)
+            {
+                //获取原来附件的属性
+                BP.Sys.FrmAttachment oldAthDesc = new BP.Sys.FrmAttachment();
+                oldAthDesc.setMyPK(refDtl + "_AthMDtl");
+                if (oldAthDesc.RetrieveFromDBSources() == 0)
+                    return "原始从表的附件属性不存在，请联系管理员";
+                athDesc = oldAthDesc;
+                athDesc.setMyPK(this.getNo() + "_AthMDtl");
+                athDesc.setFK_MapData(this.getNo());
+                athDesc.setNoOfObj("AthMDtl");
+                athDesc.setName(this.getName());
+                athDesc.DirectInsert();
+            }
+
+           //判断是否有隐藏的AthNum 字段
+            MapAttr attr = new MapAttr();
+            attr.setMyPK(this.getNo() + "_AthNum");
+            int count = attr.RetrieveFromDBSources();
+            if (count == 0)
+            {
+                attr.setFK_MapData(this.getNo());
+                attr.setKeyOfEn("AthNum");
+                attr.setName("附件数量");
+                attr.setDefVal("0");
+                attr.setUIContralType(UIContralType.TB);
+                attr.setMyDataType(DataType.AppInt);
+                attr.setUIVisible(false);
+                attr.setUIIsEnable(false);
+                attr.DirectInsert();
+            }
+
+
+        }
+
+        return "执行成功";
+    }
 
 	@Override
 	protected boolean beforeUpdate() throws Exception

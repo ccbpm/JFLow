@@ -1278,31 +1278,6 @@ public class WF extends WebContralBase {
 	public final String TodolistOfAuth_Init() {
 		return "err@尚未重构完成.";
 
-		// DataTable dt = null;
-		// foreach (BP.WF.Port.WFEmp item in ems)
-		// {
-		// if (dt == null)
-		// {
-		// dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(item.No, null);
-		// }
-		// else
-		// {
-		// }
-		// }
-
-		// return BP.Tools.Json.DataTableToJson(dt, false);
-
-		// string fk_emp = this.FK_Emp;
-		// if (fk_emp == null)
-		// {
-		// //移除不需要前台看到的数据.
-		// DataTable dt = ems.ToDataTableField();
-		// dt.Columns.Remove("SID");
-		// dt.Columns.Remove("Stas");
-		// dt.Columns.Remove("Depts");
-		// dt.Columns.Remove("Msg");
-		// return BP.Tools.Json.DataTableToJson(dt, false);
-		// }
 
 	}
 

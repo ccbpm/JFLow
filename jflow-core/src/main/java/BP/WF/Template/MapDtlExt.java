@@ -974,22 +974,6 @@ public class MapDtlExt extends EntityNoName
         
  
 		RefMethod rm = new RefMethod();
-//		rm.Title = "高级设置"; // "设计表单";
-//		rm.ClassMethodName = this.toString() + ".DoAdvSetting";
-//		rm.Icon = "/WF/Img/Setting.png";
-//		rm.Visable = true;
-//		rm.refMethodType = RefMethodType.RightFrameOpen;
-//		rm.Target = "_blank";
-//		map.AddRefMethod(rm);
- 
-//		rm = new RefMethod();
-//		rm.Title = "事件"; // "设计表单";
-//		rm.ClassMethodName = this.toString() + ".DoAction";
-//		rm.Icon = "/WF/Img/Setting.png";
-//		rm.Visable = true;
-//		rm.refMethodType = RefMethodType.RightFrameOpen;
-//		rm.Target = "_blank";
-//		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "隐藏字段"; // "设计表单";
@@ -1309,15 +1293,26 @@ public class MapDtlExt extends EntityNoName
         dtl.setLinkTarget( this.getLinkTarget());        
 		dtl.Update();
 		
-		/* 
-        //获得事件实体.
-        String febd = BP.Sys.Glo.GetFormDtlEventBaseByEnName(this.getNo());
-        if (febd == null)
-            this.setFEBD = "";
-        else
-            this.FEBD = febd.ToString();
-        */
-		
+		 //判断是否启用多附件
+        if (this.getIsEnableAthM() == true)
+        {
+            //判断是否有隐藏的AthNum 字段
+            MapAttr attr = new MapAttr();
+            attr.setMyPK(this.getNo() + "_AthNum");
+            int count = attr.RetrieveFromDBSources();
+            if (count == 0)
+            {
+                attr.setFK_MapData(this.getNo());
+                attr.setKeyOfEn("AthNum");
+                attr.setName("附件数量");
+                attr.setDefVal("0");
+                attr.setUIContralType(UIContralType.TB);
+                attr.setMyDataType(DataType.AppInt);
+                attr.setUIVisible(false);
+                attr.setUIIsEnable(false);
+                attr.DirectInsert();
+            }
+        }
         
 		
         //更新分组标签.

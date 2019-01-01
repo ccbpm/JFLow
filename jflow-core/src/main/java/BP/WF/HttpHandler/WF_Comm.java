@@ -835,6 +835,36 @@ public class WF_Comm extends WebContralBase {
 			return "err@" + ex.getMessage();
 		}
 	}
+	
+	/**
+	 * 直接插入
+	 * @return
+	 * @throws Exception
+	 */
+	public final String Entity_DirectInsert() throws Exception {
+		try {
+			Entity en = ClassFactory.GetEn(this.getEnName());
+			// en.setPKVal(this.getPKVal());
+			// en.RetrieveFromDBSources();
+
+			// 遍历属性，循环赋值.
+			for (Attr attr : en.getEnMap().getAttrs()) {
+				en.SetValByKey(attr.getKey(), this.GetValFromFrmByKey(attr.getKey()));
+			}
+
+			// 插入数据库.
+			int i = en.DirectInsert();
+			
+			// 执行查询.
+			if (i == 1)			
+			en.Retrieve();
+
+			// 返回数据.
+			return en.ToJson(false);
+		} catch (RuntimeException ex) {
+			return "err@" + ex.getMessage();
+		}
+	}
 
 	public final String Entity_DoMethodReturnString() throws Exception {
 		// 创建类实体.

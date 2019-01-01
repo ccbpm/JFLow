@@ -53,7 +53,6 @@ import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmEventList;
 import BP.Sys.FrmEventListDtl;
 import BP.Sys.FrmEvents;
-import BP.Sys.FrmImgAthDB;
 import BP.Sys.FrmImgAthDBAttr;
 import BP.Sys.FrmImgAthDBs;
 import BP.Sys.FrmSubFlowAttr;
@@ -78,7 +77,6 @@ import BP.Sys.PubClass;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
-import BP.Tools.DateUtils;
 import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
@@ -186,11 +184,9 @@ public class WF_CCForm extends WebContralBase {
 
 				try {
 					InputStream is = new FileInputStream(saveTo);
-					;
 					int buffer = 1024; // 定义缓冲区的大小
 					int length = 0;
 					byte[] b = new byte[buffer];
-					double percent = 0;
 					FileOutputStream fos = new FileOutputStream(fl);
 					while ((length = is.read(b)) != -1) {
 						// percent += length / (double) new
@@ -396,39 +392,41 @@ public class WF_CCForm extends WebContralBase {
 	}
 
 	public BP.Sys.FrmAttachment GenerAthDescOfFoolTruck() throws Exception {
+		
 		FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
+        String fromFrm = this.GetRequestVal("FromFrm");
+        sln.setMyPK(fromFrm+ "_" + this.getFK_Node() + "_" + this.getFK_Flow());
+        int result = sln.RetrieveFromDBSources();
+        BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+        athDesc.setMyPK(this.getFK_FrmAttachment());
+        athDesc.RetrieveFromDBSources();
 
-		sln.setMyPK(this.GetRequestVal("FromFrm") + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
-		int result = sln.RetrieveFromDBSources();
-
-		if (result == 0 || sln.getFrmSln() == 1 || sln.getFrmSln() == 0) {
-			/* 没有查询到解决方案, 就是只读方案 */
-			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-			athDesc.setMyPK(this.getFK_FrmAttachment());
-			athDesc.RetrieveFromDBSources();
-
-			athDesc.setIsUpload(false);
+        /*没有查询到解决方案, 就是只读方案 */
+        if (result == 0 ||sln.getFrmSln() == 1)
+        {
+        	athDesc.setIsUpload(false);
 			athDesc.setIsDownload(false);
 			athDesc.setHisDeleteWay(AthDeleteWay.None); // 删除模式.
-			return athDesc;
-		}
+            return athDesc;
+        }
+        //默认方案
+        if(sln.getFrmSln() == 0)
+             return athDesc;
 
-		// 如果是自定义方案,就查询自定义方案信息.
-		if (sln.getFrmSln() == 2) {
-			/* 没有查询到解决方案, 就是只读方案 */
-			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-			athDesc.setMyPK(this.getFK_Node() + "_Ath1");
-			if (athDesc.RetrieveFromDBSources() == 0) {
-				athDesc.setIsUpload(false);
-				athDesc.setHisDeleteWay(AthDeleteWay.None);
-				athDesc.setIsDownload(false);
-				athDesc.setHisCtrlWay(AthCtrlWay.WorkID); // 没有方案.
-				athDesc.Insert();
-			}
-			return athDesc;
-		}
+        //如果是自定义方案,就查询自定义方案信息.
+        if (sln.getFrmSln() == 2)
+        {
+            BP.Sys.FrmAttachment athDescNode = new BP.Sys.FrmAttachment();
+            athDescNode.setMyPK("ND" + this.getFK_Node() + "_" + athDesc.getNoOfObj() + "_" + this.getFK_Node());
+            if (athDescNode.RetrieveFromDBSources() == 0)
+            {
+               //没有设定附件权限，保持原来的附件权限模式
+                return athDesc;
+            }
+            return athDescNode;
+        }
 
-		return null;
+        return null;
 	}
 
 	// #region 附件组件.
@@ -1794,14 +1792,10 @@ public class WF_CCForm extends WebContralBase {
 		try {
 			MapData md = new MapData(this.getEnsName());
 			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), null);
-
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region 把主表数据放入.
 			String atParas = "";
 			// 主表实体.
 			GEEntity en = new GEEntity(this.getEnsName());
-
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			/// #region 求出 who is pk 值.
 			long pk = this.getRefOID();
 			if (pk == 0) {
@@ -1865,17 +1859,12 @@ public class WF_CCForm extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Dtl_Init() throws Exception {
-
+        
 		/// #region 检查是否是测试.
 		if (this.GetRequestVal("IsTest") != null) {
 			BP.Sys.GEDtl dtl = new GEDtl(this.getEnsName());
 			dtl.CheckPhysicsTable();
-
-			// MapDtl mdtl = new MapDtl(this.getEnsName());
-			// BP.Sys.CCFormAPI.RepareCCForm();
 		}
-
-		/// #endregion
 
 		/// #region 组织参数.
 		MapDtl mdtl = new MapDtl(this.getEnsName());
@@ -1891,24 +1880,29 @@ public class WF_CCForm extends WebContralBase {
 		if (this.getFK_Node() != 0 && !mdtl.getFK_MapData().equals("Temp")
 				&& this.getEnsName().contains("ND" + this.getFK_Node()) == false && this.getFK_Node() != 999999) {
 			Node nd = new BP.WF.Node(this.getFK_Node());
-			// 如果
-			// * 1,传来节点ID, 不等于0.
-			// * 2,不是节点表单. 就要判断是否是独立表单，如果是就要处理权限方案。
-
-			BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(),
-					frmID);
-
-			if (fn.getFrmSlnInt() > 1) {
-
-				mdtl.setNo(this.getEnsName() + "_" + this.getFK_Node());
-				mdtl.RetrieveFromDBSources();
-			}
-
-			if (fn.getFrmSlnInt() == 1) {
-				mdtl.setIsInsert(false);
-				mdtl.setIsDelete(false);
-				mdtl.setIsUpdate(false);
-			}
+			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree || nd.getHisFormType()== NodeFormType.FoolTruck)
+            {
+				// 如果
+				// * 1,传来节点ID, 不等于0.
+				// * 2,不是节点表单. 就要判断是否是独立表单，如果是就要处理权限方案。
+	
+				BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(),
+						frmID);
+	
+				if (fn.getFrmSln() == FrmSln.Readonly) {
+	
+					mdtl.setIsInsert(false);
+					mdtl.setIsDelete(false);
+					mdtl.setIsUpdate(false);
+				}
+	
+				//自定义权限.
+	            if (fn.getFrmSln() == FrmSln.Self)
+	            {
+	                mdtl.setNo(this.getEnsName() + "_" + this.getFK_Node());
+	                mdtl.RetrieveFromDBSources();
+	            }
+            }
 
 		}
 

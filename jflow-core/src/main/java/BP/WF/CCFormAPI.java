@@ -852,19 +852,14 @@ public class CCFormAPI extends Dev2Interface
 		{
 			AtPara ap = new AtPara(atParas);
 			
-//			for (String key : ap.getHisHT().keys() )
 			for (String key : ap.getHisHT().keySet() )
 			{
                 try
                 {
-
-//                    if (wk.getRow().ContainsKey(key) == true) //有就该变.
-//                        wk.getRow().get(key) = ap.GetValStrByKey(key);
                     if (wk.getRow().containsKey(key) == true) //有就该变.
                     	wk.getRow().SetValByKey_2017(key,ap.GetValStrByKey(key));
 
                     else
-//                        wk.getRow().dd(key, ap.GetValStrByKey(key)); //增加他
                     	wk.getRow().put(key, ap.GetValStrByKey(key));
                 }
                 catch(Exception ex)
@@ -931,7 +926,6 @@ public class CCFormAPI extends Dev2Interface
         	Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 			me = (MapExt)((tempVar instanceof MapExt) ? tempVar : null);
 			
-           // me = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn) as MapExt;
             if (me != null) //有范围限制时
             {
                 String fullSQL = (String)me.getDoc();
@@ -966,10 +960,6 @@ public class CCFormAPI extends Dev2Interface
 		if (BP.Sys.SystemConfig.getIsBSsystem())
 		{
 			// 处理传递过来的参数。
-//			for (String k : System.Web.HttpContext.Current.Request.QueryString.AllKeys)
-//			{
-//				wk.SetValByKey(k, System.Web.HttpContext.Current.Request.QueryString[k]);
-//			}
 			Enumeration enu  = ContextHolderUtils.getRequest().getParameterNames();
 			while(enu.hasMoreElements())
 			{

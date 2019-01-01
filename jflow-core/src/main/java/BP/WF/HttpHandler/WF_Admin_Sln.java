@@ -604,13 +604,14 @@ public class WF_Admin_Sln extends WebContralBase {
 					frmField.setFK_MapData(this.getFK_MapData());
 					frmField.setKeyOfEn(attr.getKeyOfEn());
 					frmField.setName(attr.getName());
-
+					 frmField.setEleType(FrmEleType.Field);
 					if (isExit)
 					{
 						frmField.Update();
 					}
 					else
 					{
+						frmField.InitMyPKVals();
 						frmField.Insert();
 					}
 				}

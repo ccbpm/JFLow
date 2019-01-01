@@ -1989,7 +1989,13 @@ public class WF_MyFlow extends WebContralBase {
 			 }
 			 for(DataRow dr : dt.Rows){
 				 message +="流程"+dr.getValue("FK_Flow").toString()+" "+dr.getValue("FlowName").toString()+"工作ID "+workId;
-				 //获取下一个节点和人员
+				 
+				 // 写入审核信息
+				 int Fk_Node = Integer.parseInt(dr.getValue("FK_Node").toString());
+				 FrmWorkCheck wcDesc = new FrmWorkCheck(Fk_Node);
+				 if(wcDesc.getHisFrmWorkCheckSta().getValue() == 1)
+					 Dev2Interface.WriteTrackWorkCheck(dr.getValue("FK_Flow").toString(), Fk_Node,Long.parseLong(workId), 0, "审核通过", wcDesc.getFWCOpLabel());
+				 
 				 SendReturnObjs returnObj =  BP.WF.Dev2Interface.Node_SendWork(dr.getValue("FK_Flow").toString(), Long.parseLong(workId), null, null);
 				 message += returnObj.ToMsgOfHtml();
 				 message +="<br/>"; 
@@ -2019,6 +2025,8 @@ public class WF_MyFlow extends WebContralBase {
 		}
 		BP.Port.Emp emp = new Emp();
 		emp.setNo(UserNo);
+		 // 调用登录接口,写入登录信息。
+        BP.WF.Dev2Interface.Port_Login(UserNo);
 		BP.WF.Dev2Interface.Port_Login(emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(),null,null);
 		return "登录成功.";
 	}

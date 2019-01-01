@@ -238,7 +238,8 @@ public class CCFormAPI
 
 		 //检查是否可以创建字段? 
         MapData md = new MapData(fk_mapdata);
-        md.CheckPTableSaveModel(fieldName);
+        if(md.RetrieveFromDBSources() == 1)
+          md.CheckPTableSaveModel(fieldName);
 
         //外键字段表.
         SFTable sf = new SFTable(fk_SFTable);
@@ -259,14 +260,19 @@ public class CCFormAPI
         attr.setUIBindKey( fk_SFTable); //绑定信息.
         attr.setX( x);
         attr.setY( y);
-
-		if (sf.getSrcType() == SrcType.CreateTable || sf.getSrcType() == SrcType.BPClass
-				|| sf.getSrcType() == SrcType.TableOrView )
+        
+        //根据外键表的类型不同，设置它的LGType.
+        switch (sf.getSrcType())
         {
-        	attr.setLGType(FieldTypeS.FK);
-        }else        	
-        {
-        	 attr.setLGType( FieldTypeS.Normal);
+            case CreateTable:
+            case TableOrView:
+            case BPClass:
+                attr.setLGType(FieldTypeS.FK);
+                break;
+            case SQL: //是sql模式.
+            default:
+                attr.setLGType(FieldTypeS.Normal);
+                break;
         }
         	
         //frmID设置字段所属的分组

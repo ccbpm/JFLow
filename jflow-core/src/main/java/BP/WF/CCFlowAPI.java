@@ -30,6 +30,7 @@ import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
+import BP.Sys.MapDtlAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtAttr;
@@ -42,7 +43,9 @@ import BP.Tools.ContextHolderUtils;
 import BP.WF.Data.GERpt;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.FTCAttr;
+import BP.WF.Template.FrmEleType;
 import BP.WF.Template.FrmField;
+import BP.WF.Template.FrmFieldAttr;
 import BP.WF.Template.FrmFields;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmNodeAttr;
@@ -103,21 +106,6 @@ public class CCFlowAPI {
 			wk.setOID(workID);
 			wk.RetrieveFromDBSources();
 			wk.ResetDefaultVal();
-			
-			
-			/*  @樊雷伟,  ba 
-			  System.Web.HttpContext.Current.Request.QueryString.AllKeys;			  
-			  // wk.SetValByKey(k,
-			  System.Web.HttpContext.Current.Request.QueryString[k]); // }
-			  Enumeration enu =
-			  ContextHolderUtils.getRequest().getParameterNames(); 
-			  while (enu.hasMoreElements())
-			  { String k = (String) enu.nextElement();
-			  wk.SetValByKey(k,ContextHolderUtils.getRequest().getParameter(k));
-			  
-			   }*/
-			  
-			  
 
 			// 第1.2: 调用,处理用户定义的业务逻辑.
 			String sendWhen = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.FrmLoadBefore, nd, wk, null);
@@ -335,12 +323,45 @@ public class CCFlowAPI {
 				qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
 				qo.addOrderBy(MapAttrAttr.Idx);
 				qo.DoQuery();
+				
+				 //获取累加表单的权限
+                FrmFields fls = new FrmFields();
+                qo = new QueryObject(fls);
+                qo.AddWhere(FrmFieldAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
+                qo.addAnd();
+                qo.AddWhere(FrmFieldAttr.EleType, FrmEleType.Field);
+                qo.DoQuery();
+                
+                for (MapAttr attr : attrsLeiJia.ToJavaList()) 
+                {
+                    if (attr.getKeyOfEn().equals("RDT") || attr.getKeyOfEn().equals("Rec"))
+                        continue;
 
-				// 把两个集合接起来.
-				for (MapAttr item : attrsLeiJia.ToJavaList()) {
-					item.setUIIsEnable(false); // 设置为只读的.
-					attrs.AddEntity(item);
-				}
+                    FrmField frmField = null;
+                    for(FrmField item : fls.ToJavaList())
+                    {
+                        if (attr.getKeyOfEn().equals(item.getKeyOfEn()))
+                        {
+                            frmField = item;
+                            break;
+                        }
+                    }
+                    if (frmField != null)
+                    {
+                        if (frmField.getIsSigan())
+                            attr.setUIIsEnable(false);
+
+                        attr.setUIIsEnable(frmField.getUIIsEnable());
+                        attr.setUIVisible(frmField.getUIVisible());
+                        attr.setIsSigan(frmField.getIsSigan());
+                        attr.setDefValReal(frmField.getDefVal());
+                    }
+                    else
+                    {
+                        attr.setUIIsEnable(false); //设置为只读的.
+                    }
+                    attrs.AddEntity(attr);
+                }
 
 				// 替换掉现有的.
 				Sys_MapAttr = myds.GetTableByName("Sys_MapAttr");
@@ -391,7 +412,9 @@ public class CCFlowAPI {
                 myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
                 BP.Sys.MapDtls dtls = new MapDtls();
                 qo = new QueryObject(dtls);
-                qo.AddWhere(MapExtAttr.FK_MapData, " IN ", "(" + myFrmIDs + ")");
+                qo.AddWhere(MapDtlAttr.FK_MapData, " IN ", "(" + myFrmIDs + ")");
+                qo.addAnd();
+                qo.AddWhere(MapDtlAttr.FK_Node, 0);
                 qo.DoQuery();
 
                 // 加入最新的MapDtl.
@@ -408,7 +431,9 @@ public class CCFlowAPI {
                 myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
                 BP.Sys.FrmAttachment frmAtchs = new FrmAttachment();
                 qo = new QueryObject(frmAtchs);
-                qo.AddWhere(MapExtAttr.FK_MapData, " IN ", "(" + myFrmIDs + ")");
+                qo.AddWhere(FrmAttachmentAttr.FK_MapData, " IN ", "(" + myFrmIDs + ")");
+                qo.addAnd();
+                qo.AddWhere(FrmAttachmentAttr.FK_Node, 0);
                 qo.DoQuery();
 
                 // 加入最新的Sys_FrmAttachment.

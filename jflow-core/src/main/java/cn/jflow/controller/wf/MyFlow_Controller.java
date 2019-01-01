@@ -3,6 +3,7 @@ package cn.jflow.controller.wf;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,5 +32,9 @@ public class MyFlow_Controller extends HttpHandlerBase{
     @Override
     public Class<WF_MyFlow> getCtrlType() {
     	return WF_MyFlow.class;
+    }
+    
+    public final void RequestBatchFile(HttpRequest request){
+    	
     }
 }

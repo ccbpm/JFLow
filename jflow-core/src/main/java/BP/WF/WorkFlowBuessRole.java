@@ -1686,7 +1686,8 @@ public class WorkFlowBuessRole
             if (node.getCCWriteTo() == CCWriteTo.All || node.getCCWriteTo() == CCWriteTo.Todolist)
             {
                 //如果为写入待办则抄送列表中置为已读，原因：只为不提示有未读抄送。
-                list.setHisSta(node.getCCWriteTo() == CCWriteTo.All ? CCSta.UnRead : CCSta.Read);
+                //list.setHisSta(node.getCCWriteTo() == CCWriteTo.All ? CCSta.UnRead : CCSta.Read);
+            	list.setHisSta(CCSta.UnRead);
             }
             //结束节点只写入抄送列表
             if (node.getIsEndNode() == true)

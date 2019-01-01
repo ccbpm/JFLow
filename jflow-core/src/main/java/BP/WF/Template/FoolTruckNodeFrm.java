@@ -1,5 +1,6 @@
 package BP.WF.Template;
 
+import BP.DA.DBAccess;
 import BP.En.EntityMyPK;
 import BP.En.Map;
 import BP.En.UAC;
@@ -93,6 +94,26 @@ public class FoolTruckNodeFrm  extends EntityMyPK{
  		return this.get_enMap();
 
      }
-     ///#endregion
+    
+
+     /// <summary>
+     /// 修改前的操作
+     /// </summary>
+     /// <returns></returns>
+     @Override
+     protected  boolean beforeUpdate() throws Exception
+     {
+         //表单方案如果是只读或者默认方案时，删除对应的设置的权限
+         if (this.getFrmSln() == 0 || this.getFrmSln() == 1)
+         {
+             String sql = "";
+             sql += "@DELETE FROM Sys_FrmSln WHERE FK_MapData='" + this.getFK_Frm() + "' AND FK_Node='"+this.getFK_Node()+"'";
+             sql += "@DELETE FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getFK_Frm() + "' AND FK_Node='" + this.getFK_Node() + "'";
+             sql += "@DELETE FROM Sys_MapDtl WHERE FK_MapData='" + this.getFK_Frm() + "' AND FK_Node='" + this.getFK_Node() + "'";
+             DBAccess.RunSQLs(sql);
+            
+         }
+         return super.beforeUpdate();
+     }
 
 }

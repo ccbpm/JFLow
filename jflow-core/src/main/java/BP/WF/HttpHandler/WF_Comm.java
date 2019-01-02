@@ -990,6 +990,62 @@ public class WF_Comm extends WebContralBase {
 	/// #endregion
 
 	/// #region 功能执行.
+	
+	
+	  /// <summary>
+    /// 获得实体集合s
+    /// </summary>
+    /// <returns></returns>
+    public String Entities_RetrieveCond()
+    {
+        try
+        {
+            Entities ens = ClassFactory.GetEns(this.getEnsName());
+            if (this.getParas() == null)
+                return "0";
+
+            QueryObject qo = new QueryObject(ens);
+            String[] myparas = this.getParas().split("[@]",-1);
+
+            int idx = 0;
+            for (int i = 0; i < myparas.length; i++)
+            {
+                String para = myparas[i];
+                if (DataType.IsNullOrEmpty(para))
+                    continue;
+
+                String[] strs = para.split("[|]",-1);
+                String key = strs[0];
+                String oper = strs[1];
+                String val = strs[2];
+
+                if (key.toLowerCase().equals("orderby") == true)
+                {
+                    qo.addOrderBy(val);
+                    continue;
+                }
+
+                if (idx == 0)
+                {
+                    qo.AddWhere(key,oper, val);
+                }
+                else
+                {
+                    qo.addAnd();
+                    qo.AddWhere(key, oper,val);
+                }
+                idx++;
+            }
+
+            qo.DoQuery();
+            return ens.ToJson();
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
+    
 	/**
 	 * 初始化.
 	 * 

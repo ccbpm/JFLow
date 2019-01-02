@@ -32,6 +32,8 @@
             for (var i = 0; i < dtls.length; i++) {
 
                 var dtl = dtls[i];
+                if (dtl.FK_Node != 0)
+                    continue;
 
                 html += "<tr >";
                 html += "<td>" + dtl.No + "</td>";

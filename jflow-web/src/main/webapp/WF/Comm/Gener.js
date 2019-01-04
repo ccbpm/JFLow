@@ -11,6 +11,19 @@ function CheckID(val) {
     return flag;
 }
 
+//去左空格;
+function ltrim(s) {
+    return s.replace(/(^\s*)/g, "");
+}
+//去右空格;
+function rtrim(s) {
+    return s.replace(/(\s*$)/g, "");
+}
+//去左右空格;
+function trim(s) {
+    return s.replace(/(^\s*)|(\s*$)/g, "");
+}
+
 //
 if (plant == "CCFlow") {
     // CCFlow
@@ -908,6 +921,7 @@ var Entity = (function () {
             });
             return result;
         },
+
         Update: function () {
             var self = this;
             var params = getParams(self);
@@ -1185,7 +1199,6 @@ var Entity = (function () {
         },
 
         DoMethodReturnString: function (methodName, myparams) {
-
             var params = [];
             $.each(arguments, function (i, o) {
                 if (i > 0)
@@ -1429,23 +1442,45 @@ var Entities = (function () {
         }
     };
 
-    function getParameters(args) {
+    function getParameters(args, divisor) {
         var params = "";
         var length;
         var orderBy;
-        if (args.length % 2 == 0) {
-            orderBy = args[args.length - 1];
-            length = args.length - 1;
-        } else {
-            length = args.length;
+        if (divisor == null || divisor == undefined)
+            divisor = 2;
+
+        if (divisor == 2) {
+            if (args.length % 2 == 0) {
+                orderBy = args[args.length - 1];
+                length = args.length - 1;
+            } else {
+                length = args.length;
+            }
+            for (var i = 1; i < length; i += 2) {
+                params += "@" + args[i] + "=" + args[i + 1];
+            }
+            if (typeof orderBy !== "undefined") {
+                params += "@OrderBy=" + orderBy;
+            }
+            return params;
         }
-        for (var i = 1; i < length; i += 2) {
-            params += "@" + args[i] + "=" + args[i + 1];
+
+        if (divisor == 3) {
+            if ( (args.length -1 ) % divisor != 0) {
+                orderBy = args[args.length - 1];
+                length = args.length - 1;
+            } else {
+                length = args.length;
+            }
+            for (var i = 1; i < length; i += 3) { //args[i+1]是操作符
+                params += "@" + args[i] + "|"+ args[i + 1] +"|"+ args[i + 2];
+            }
+            if (typeof orderBy !== "undefined") {
+                params += "@OrderBy||" + orderBy;
+            }
+            return params;
         }
-        if (typeof orderBy !== "undefined") {
-            params += "@OrderBy=" + orderBy;
-        }
-        return params;
+
     }
 
     Entities.prototype = {
@@ -1507,17 +1542,7 @@ var Entities = (function () {
                         return;
                     }
 
-                    //                    try {
-                    //                        jsonString = JSON.parse(data);
-                    //                        if ($.isArray(jsonString)) {
-                    //                            self.length = jsonString.length;
-                    //                            $.extend(self, jsonString);
-                    //                        } else {
-                    //                            alert("解析失败, 返回值不是集合");
-                    //                        }
-                    //                    } catch (e) {
-                    //                        alert("json解析错误: " + data);
-                    //                    }
+
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("Entities_Delte err@系统发生异常, status: " + XMLHttpRequest.status + " readyState: " + XMLHttpRequest.readyState);
@@ -1532,6 +1557,49 @@ var Entities = (function () {
             });
             this.Paras = getParameters(args);
             this.loadData();
+        },
+        RetrieveCond: function () {
+            var args = [""];
+            $.each(arguments, function (i, o) {
+                args.push(o);
+            });
+            this.Paras = getParameters(args,3);
+            var self = this;
+
+            if (self.ensName == null || self.ensName == "" || self.ensName == "") {
+                alert("在初始化实体期间EnsName没有赋值");
+                return;
+            }
+
+            $.ajax({
+                type: 'post',
+                async: false,
+                url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
+                dataType: 'html',
+                success: function (data) {
+
+                    if (data.indexOf("err@") != -1) {
+                        alert(data);
+                        return;
+                    }
+
+                    try {
+                        jsonString = JSON.parse(data);
+                        if ($.isArray(jsonString)) {
+                            self.length = jsonString.length;
+                            $.extend(self, jsonString);
+                        } else {
+                            alert("解析失败, 返回值不是集合");
+                        }
+                    } catch (e) {
+                        alert("json解析错误: " + data);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Entities_RetrieveCond err@系统发生异常, status: " + XMLHttpRequest.status + " readyState: " + XMLHttpRequest.readyState);
+                }
+            });
+
         },
         Delete: function () {
             var args = [""];
@@ -2176,7 +2244,6 @@ function DealExp(expStr, webUser) {
     return expStr;
 }
 
-
 //根据AtPara例如AtPara=@Helpurl=XXX@Count=XXX,获取HelpUrl的值
 function GetPara(atPara,key) {     
     if (typeof atPara != "string" || typeof key == "undefined" || key == "") {
@@ -2188,5 +2255,52 @@ function GetPara(atPara,key) {
         return unescape(results[2]);
     }
     return undefined;
-        
+
+}
+
+
+function SFTaleHandler(url) {
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
+    var curPath = window.document.location.href;
+    //获取主机地址之后的目录，如： jflow-web/index.jsp  
+    var pathName = window.document.location.pathname;
+    var pos = curPath.indexOf(pathName);
+    //获取主机地址，如： http://localhost:80  
+    var localhostPaht = curPath.substring(0, pos);
+    //获取带"/"的项目名，如：/jflow-web
+    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+
+    var localpath =  localhostPaht + projectName;
+    if (plant == "CCFlow") {
+        // CCFlow
+        dynamicHandler = localhostPaht + "/DataUser/SFTableHandler.ashx";
+    } else {
+        // JFlow
+        dynamicHandler = localpath + "/DataUser/SFTableHandler/";
+    }
+    var jsonString = "";
+
+    if (url.indexOf("?") == -1)
+        url = url + "?1=1";
+
+    url = dynamicHandler  + url + "&t=" + new Date().getTime();
+    $.ajax({
+        type: 'post',
+        async: false,
+        url: url,
+        dataType: 'html',
+        success: function (data) {
+            if (data.indexOf("err@") != -1) {
+                alert(data);
+                jsonString="false";
+            }
+
+            jsonString =  data;
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(URL+"err@系统发生异常, status: " + XMLHttpRequest.status + " readyState: " + XMLHttpRequest.readyState);
+        }
+    });
+
+    return jsonString;
 }

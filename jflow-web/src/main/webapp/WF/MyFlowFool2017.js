@@ -179,8 +179,13 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
         if (attr.ColSpan == 3 || (attr.ColSpan == 4 && attr.UIHeight < 40)) {
             isDropTR = true;
             html += "<tr>";
-            html += "<td  class='FDesc' style='width:120px;'>" + lab + "</td>";
-            html += "<td id='Td_" + attr.KeyOfEn + "' ColSpan=3 >";
+            if (attr.MyDataType != 4)
+                html += "<td  class='FDesc' style='width:120px;'>" + lab + "</td>";
+            if (attr.MyDataType != 4)
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3 >";
+            else
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4 >";
+
             html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
             html += "</td>";
             html += "</tr>";
@@ -373,7 +378,12 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
         checkedStr = ConvertDefVal(flowData, '', mapAttr.KeyOfEn);
 
-        return "<label ><input " + enableAttr + " " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label>";
+        var tip= "";
+        if (mapAttr.Tip != "" && mapAttr.Tip != null)
+            tip = "<span style='color: #C0C0C0;'>(" + mapAttr.Tip + ")</span>";
+
+
+        return "<label ><input " + enableAttr + " " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name +tip+"</label>";
     }
 
     //枚举类型.
@@ -807,11 +817,11 @@ function Ele_Attachment(flowData, gf, node) {
     var src = "";
 
     //这里的连接要取 FK_MapData的值.
-    src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=ND" + node.NodeID + "&FromFrm="+ gf.FrmID + "&FK_FrmAttachment=" + athPK + url;
+    src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=ND" + node.NodeID + "&FromFrm="+ gf.FrmID + "&FK_FrmAttachment=" + athPK + url+"&M="+Math.random();
 
     //自定义表单模式.
     if (ath.AthRunModel == 2) {
-        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url;
+        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
     }
 
     eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' id='Ath1' name='Ath1'  src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';

@@ -39,8 +39,6 @@
         var numOfAths = 0;    //附件数量.
         function CanEditor(fileType) {
 
-            //var fileTypes = BP.Sys.SystemConfig.AppSettings["OpenTypes"];
-
             var fileTypes = "";
             if (fileTypes == null || fileTypes == "")
                 fileTypes = "doc,docx,pdf,xls,xlsx,txt";
@@ -281,24 +279,18 @@
             //var html = "<table class='table' >";
             var html = "";
             html += "<thead>";
-            var colgroup = "<colgroup>";
             if (athDesc.IsShowTitle == 1) {
                 //background-color: #f9f9f9;
                 html += "<tr style='border:0px;'>";
-
                 html += "<th  style='width:50px; border: 1px solid #ddd' nowrap=true >序</td>";
-                colgroup += "<col width='50px'></col>";
                 if (athDesc.Sort != null && athDesc.Sort.indexOf(",") != -1) {
                     var sortColumn = athDesc.Sort.indexOf("@") != -1 ? athDesc.Sort.substring(0, athDesc.Sort.indexOf("@")) : "类别";
                     if (sortColumn == "")
                         sortColumn = "类别";
                     html += "<th style=' border-top: 1px solid #ddd;width:120px' nowrap=true >" + sortColumn + "</td>";
-                    colgroup += "<col width='120px'></col>";
+
                 }
-                colgroup += "<col width='200px'></col>";
-                colgroup += "<col width='50px'></col>";
-                colgroup += "<col width='120px'></col>";
-                colgroup += "<col width='80px'></col>";
+
                 //是否启用附件从表 0 禁用 1启用
                 if (athDesc.IsExpCol == 0) {
 
@@ -334,8 +326,7 @@
                     }
                     columnNum = columnNum + mapAttrs.length;
                 }
-                colgroup += "<col width='50px'></col>";
-                html += "<th  nowrap=true style=' border: 1px solid #ddd;width:50px' >";
+                html += "<th  nowrap=true style=' border: 1px solid #ddd;width:100px' >";
 
                 if (athDesc.IsDownload == 1 && dbs.length > 0)
                     html += "<a href='javascript:DownZip()' ><img src='../Img/FileType/zip.png' style='width:16px;height:16px;' alt='打包下载' /></a>";
@@ -455,7 +446,10 @@
                     html += "<td class='Idx' nowrap>" + i + "</td>";
                     if (fileSorts.length > 1)
                         html += "<td>" + sort + "</td>";
-                    html += "<td style='width:100px;color:red'>请上传附件..</td>";
+                   if (athDesc.IsUpload == true && IsReadonly != "1")
+                       html += "<td style='width:100px;color:red'>请上传附件..</td>";
+                   else
+                       html += "<td style='width:100px;color:red'></td>";
                     html += "<td>&nbsp&nbsp</td>";
                     html += "<td>&nbsp&nbsp</td>";
                     html += "<td>&nbsp&nbsp</td>";
@@ -474,8 +468,12 @@
                         var isIE = explorer.indexOf("compatible") > -1 && explorer.indexOf("MSIE") > -1; //判断是否IE<11浏览器
                         if (((explorer.indexOf('MSIE') >= 0) && (explorer.indexOf('Opera') < 0) || (explorer.indexOf('Trident') >= 0)))
                             html += "<td></td>";
-                        else
-                            html += "<td><a href='javaScript:void(0)' onclick='changeSort(\"" + sort + "\")'>上传</a></td>";
+                        else {
+                            if (athDesc.IsUpload == true && IsReadonly != "1")
+                                html += "<td><a href='javaScript:void(0)' onclick='changeSort(\"" + sort + "\")'>上传</a></td>";
+                            else
+                                html += "<td></td>";
+                        }
                     }
                     html += "</tr>";
                 }
@@ -532,28 +530,27 @@
                 else
                     html += "<td colspan=" + columnNum + ">";
 
+                if (athDesc.Exts != null && athDesc.Exts != "") {
+                    var fileExts = athDesc.Exts.replace(/,/g, ";");
+                    var fileExtData = fileExts.split(';');
+
+                    for (var i = 0; i < fileExtData.length; i++) {
+                        var ext = fileExtData[i]
+                        if (ext != null && ext != "") {
+                            if (ext.indexOf("*.") == 0)
+                                realFileExts += ext + ";";
+                            else
+                                realFileExts += "*" + ext + ";";
+                        }
+                    }
+                }
+
+                if (realFileExts == null || realFileExts == "")
+                    realFileExts = "*.*";
+
                 var explorer = window.navigator.userAgent;
                 var isIE = explorer.indexOf("compatible") > -1 && explorer.indexOf("MSIE") > -1; //判断是否IE<11浏览器
                 if (((explorer.indexOf('MSIE') >= 0) && (explorer.indexOf('Opera') < 0) || (explorer.indexOf('Trident') >= 0))) {
-
-                    if (athDesc.Exts != null && athDesc.Exts != "") {
-                        var fileExts = athDesc.Exts.replace(/,/g, ";");
-                        var fileExtData = fileExts.split(';');
-
-                        for (var i = 0; i < fileExtData.length; i++) {
-                            var ext = fileExtData[i]
-                            if (ext != null && ext != "") {
-                                if (ext.indexOf("*.") == 0)
-                                    realFileExts += ext + ";";
-                                else
-                                    realFileExts += "*." + ext + ";";
-                            }
-                        }
-                    }
-
-                    if (realFileExts == null || realFileExts == "")
-                        realFileExts = "*.*";
-
 
                     html += "<div id='file_upload-queue' class='uploadify-queue'></div>";
 
@@ -582,6 +579,8 @@
                         html += "<input type='text' id='TB_Note' style='width:90%;display:none;' size='30'/>";
 
                 } else {
+                    realFileExts = realFileExts.replace(/;/g,',');
+                    realFileExts =replaceAll(realFileExts,'[*]','');
                     html += "<div id='s' style='text-align:right;float:left;display:inline;' >";
                     // 让石家庄客户，来完善附件类别支持sql.
                     if (athDesc.Sort != null && athDesc.Sort.indexOf(",") != -1) {
@@ -601,9 +600,9 @@
                     }
                     html += "<div style='float:left;padding-top:7px;padding-right:2px'>";
                     if (athDesc.IsExpCol == 1)
-                        html += "<input type='file' name='file' id='file' style='display:inline'  >"
+                        html += "<input type='file' name='file' id='file' style='display:inline' accept='"+realFileExts+"' >"
                     else
-                        html += "<input type='file' name='file' id='file' style='display:inline' onclick='return Upload();' onchange='UploadChange();'>"
+                        html += "<input type='file' name='file' id='file' style='display:inline'  accept='" + realFileExts + "' onclick='return Upload();' onchange='UploadChange();'>"
                     if (athDesc.IsNote)
                         html += "<input type='text' id='TB_Note' style='width:90%;display:none;' size='30'/>";
                     html += "</div>";
@@ -667,6 +666,12 @@
                 alert("请选择上传的文件.");
                 return;
             }
+            var fileName = fileObj.name;
+            if (realFileExts != "*.*" && realFileExts.indexOf(fileName.substr(fileName.lastIndexOf('.'))) == -1) {
+                alert("上传附件类型不正确，只能上传" + realFileExts);
+                return;
+            }
+
             //form表单序列话
             var parasData = $("form").serialize();
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
@@ -762,12 +767,10 @@
             }
         }
 
-        function checkLeave() {
-            opener.location.reload(); 
-        }
+       
     </script>
 </head>
-<body onunload="checkLeave();">
+<body>
     <form id="Ath_Form">
     <div id="Msg">
     </div>

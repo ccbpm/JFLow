@@ -16,20 +16,22 @@ $(function () {
 
     webUser = new WebUser();
 
-    $("#CCForm").unbind().on('click', function () {
-        Change(frmData);
-    });
-
+    //设置不可以用.
+    var isReadonly = GetQueryString("IsReadonly");
+    if (isReadonly != 1) {
+        $("#CCForm").unbind().on('click', function () {
+            Change(frmData);
+        });
+        $("#CCForm").unbind().on('mousemove', function () {
+            Change(frmData);
+        });
+    }
     initPageParam(); //初始化参数.
 
     //构造表单.
     GenerFrm(); //表单数据.
 
-    //设置不可以用.
-    var isReadonly = GetQueryString("IsReadonly");
-    if (isReadonly == 1) {
-        SetReadonly();
-    }
+
 
     if (parent != null && parent.document.getElementById('MainFrames') != undefined) {
         //计算高度，展示滚动条
@@ -359,7 +361,6 @@ function GenerFrm() {
 
             //处理下拉框级联等扩展信息
             AfterBindEn_DealMapExt(frmData);
-          
 
             ShowNoticeInfo();
 
@@ -648,7 +649,7 @@ function InitDDLOperation(frmData, mapAttr, defVal) {
                 fn = eval(mapAttr.UIBindKey);
             }
         } catch (e) {
-            alert(e);
+            //alert(e);
         }
 
         if (typeof fn == "function") {
@@ -658,12 +659,47 @@ function InitDDLOperation(frmData, mapAttr, defVal) {
             return operations;
         }
 
-        if (typeof CommonHandler == "function") {
-            CommonHandler.call("", mapAttr.UIBindKey, function (data) {
-                GenerBindDDL("DDL_" + mapAttr.KeyOfEn, data, "No", "Name");
-            })
-            return "";
+        var data = frmData[mapAttr.KeyOfEn];
+        if (data == undefined)
+            data = frmData[mapAttr.UIBindKey];
+
+        if (data == undefined) {
+            var sfTable = new Entity("BP.Sys.SFTable", mapAttr.UIBindKey);
+            if (sfTable != null && sfTable != "") {
+                var selectStatement = sfTable.SelectStatement;
+                var srcType = sfTable.SrcType;
+                // SQL获取外部数据源
+                if (srcType == 3)
+                    data = DBAccess.RunDBSrc(selectStatement, 0);
+                //WebService 获取外部数据源
+                if (srcType == 5) {
+                    data = SFTaleHandler(selectStatement);
+                    if (data == "false") {
+                        alert(mapAttr.KeyOfEn+"外部数据源获取错误");
+                        return;
+                    }
+                      
+                    data = JSON.parse(data);
+                }
+                //JavaScript获取外部数据源
+                if (srcType == 6)
+                    data = DBAccess.RunDBSrc(sfTable.FK_Val, 2);
+                //JavaScript获取外部数据源
+                //if (srcType == 1)
+                //data = DBAccess.RunDBSrc(sfTable.No, 0);
+            }
         }
+        if (data == undefined) {
+            alert('没有获得约定的数据源..' + mapAttr.KeyOfEn + " " + mapAttr.UIBindKey);
+            return;
+        }
+
+        $.each(data, function (i, obj) {
+            operations += "<option " + (obj.No == defVal ? " selected='selected' " : "") + " value='" + obj.No + "'>" + obj.Name + "</option>";
+
+        });
+        operations += "<option value=''>- 请选择 -</option>";
+        return operations;
 
         if (mapAttr.UIIsEnable == 0) {
 
@@ -672,22 +708,7 @@ function InitDDLOperation(frmData, mapAttr, defVal) {
             return operations;
         }
 
-        if (flowData[mapAttr.KeyOfEn] != undefined) {
-            $.each(flowData[mapAttr.KeyOfEn], function (i, obj) {
-                operations += "<option " + (obj.No == defVal ? " selected='selected' " : "") + " value='" + obj.No + "'>" + obj.Name + "</option>";
-            });
-            return operations;
-        }
 
-        if (flowData[mapAttr.UIBindKey] != undefined) {
-
-            $.each(flowData[mapAttr.UIBindKey], function (i, obj) {
-                operations += "<option " + (obj.No == defVal ? " selected='selected' " : "") + " value='" + obj.No + "'>" + obj.Name + "</option>";
-            });
-            return operations;
-        }
-        //   alert('没有获得约定的数据源.');
-        alert('没有获得约定的数据源..' + mapAttr.KeyOfEn + " " + mapAttr.UIBindKey);
     }
 }
 

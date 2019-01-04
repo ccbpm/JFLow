@@ -1,6 +1,5 @@
 ﻿//点击右边的下载标签.
 function Down2018(fk_ath, pkVal, delPKVal) {
-	//点击右边的下载标签.
     if (plant == "CCFlow")
         window.location.href = 'DownFile.aspx?DoType=Down&DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + '&FK_Node='+FK_Node+'&FK_Flow='+FK_Flow+'&FK_MapData='+FK_MapData+'&Ath='+Ath;
     else {
@@ -9,6 +8,7 @@ function Down2018(fk_ath, pkVal, delPKVal) {
         Url = path + 'WF/Ath/downLoad.do?DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + '&FK_Node=' + FK_Node + '&FK_Flow=' + FK_Flow + '&FK_MapData=' + FK_MapData + '&Ath=' + Ath;
         window.location.href = Url;
     }
+
 }
 
 //点击文件名称执行的下载.

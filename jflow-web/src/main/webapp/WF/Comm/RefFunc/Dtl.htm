@@ -72,9 +72,9 @@
             var ensName = GetQueryString("EnsName");
             var enName = ensName.substring(0, ensName.length - 1);
 
-            var url = "EnOnly.htm?EnName=" + enName + "&PKVal=" + pkVal + "&RefVal=" + GetQueryString("RefVal") + "&RefKey=" + GetQueryString("RefKey");
+            var url = "En.htm?EnName=" + enName + "&PKVal=" + pkVal + "&RefVal=" + GetQueryString("RefVal") + "&RefKey=" + GetQueryString("RefKey");
 
-            OpenBootStrapModal(url, "eudlgframe", this.document.title + ' : 详细', 540, 450, "icon-edit", false, function () { }, null, function () {
+            OpenBootStrapModal(url, "eudlgframe", this.document.title + ' : 详细', 650, 600, "icon-edit", false, function () { }, null, function () {
 
                 window.location.href = window.location.href
 
@@ -135,9 +135,18 @@
             for (var i = 0; i < dtls.length; i++) {
 
                 var dtl = dtls[i];
-                dtl = new Entity("BP.Sys.GEDtl", dtl);
+                //dtl = new Entity("BP.Sys.GEDtl", dtl);
                 var pkval = dtl.OID;
-                html += "<tr>";
+                if (pkval == undefined)
+                    pkval = dtl.MyPK;
+                if (pkval == undefined)
+                    pkval = dtl.No;
+                if (pkval == dtl.NodeID)
+                    pkval = dtl.NodeID;
+                if (pkval == dtl.WorkID)
+                    pkval = dtl.WorkID;
+
+                html += "<tr ondblclick='OpenEn(\"" + pkval + "\")'>";
                 html += "<td class='Idx'>" + (i + 1) + "</td>";
                      
  

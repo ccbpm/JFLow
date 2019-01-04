@@ -1772,8 +1772,6 @@ public class WF_Comm extends WebContralBase {
 		String name = "数据导出";
 		String filename = name + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getName() + ".xls";
 		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name,null);
-		// DataTableToExcel(Search_Data(ens, en),en, filename, name,
-		// BP.Web.WebUser.Name, true, true, true);
 
 		return filePath;
 	}
@@ -1881,16 +1879,16 @@ public class WF_Comm extends WebContralBase {
 		Entities ens = BP.En.ClassFactory.GetEns(ensName);
 		Entity en = ens.getGetNewEntity();
 		BP.En.RefMethod rm = en.getEnMap().getHisRefMethods().get(index);
+		String pk = this.getRefEnKey();
+		if (pk == null) {
+			pk = this.GetRequestVal(en.getPK());
+		}
 
+		en.setPKVal(pk);
+		en.Retrieve();
+		
 		/// #region 处理无参数的方法.
 		if (rm.getHisAttrs() == null || rm.getHisAttrs().size() == 0) {
-			String pk = this.getRefEnKey();
-			if (pk == null) {
-				pk = this.GetRequestVal(en.getPK());
-			}
-
-			en.setPKVal(pk);
-			en.Retrieve();
 			rm.HisEn = en;
 
 			// 如果是link.
@@ -1925,7 +1923,7 @@ public class WF_Comm extends WebContralBase {
 		}
 
 		/// #endregion 处理无参数的方法.
-
+		
 		// 转化为json 返回到前台解析. 处理有参数的方法.
 		DataSet ds = new DataSet();
 		MapAttrs attrs = rm.getHisAttrs().ToMapAttrs();
@@ -1943,7 +1941,37 @@ public class WF_Comm extends WebContralBase {
 
 		DataRow mydrMain = dtMain.NewRow();
 		for (MapAttr item : attrs.ToJavaList()) {
+			String v = item.getDefValReal();
+			if (v.indexOf('@') == -1)
 			mydrMain.setValue(item.getKeyOfEn(), item.getDefValReal());
+			else{
+				if (v.equals("@WebUser.No"))
+					mydrMain.setValue(item.getKeyOfEn(), BP.Web.WebUser.getNo());
+                else if (v.equals("@WebUser.Name"))
+                	mydrMain.setValue(item.getKeyOfEn(), BP.Web.WebUser.getName());
+                else if (v.equals("@WebUser.FK_Dept"))
+                	mydrMain.setValue(item.getKeyOfEn(), BP.Web.WebUser.getFK_Dept());
+                else if (v.equals("@WebUser.FK_DeptName"))
+                	mydrMain.setValue(item.getKeyOfEn(), BP.Web.WebUser.getFK_DeptName());
+                else if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName"))
+                	mydrMain.setValue(item.getKeyOfEn(), BP.Web.WebUser.getFK_DeptNameOfFull());
+                else if (v.equals("@RDT"))
+                {
+                	en.ResetDefaultVal();
+                    if (item.getMyDataType() == DataType.AppDate)
+                    	mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+                    if (item.getMyDataType() == DataType.AppDateTime)
+                    	mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDataTime());
+                }
+                else
+                {
+                    //如果是EnsName中字段
+                    if (en.GetValByKey(v.replace("@", "")) != null)
+                    	mydrMain.setValue(item.getKeyOfEn(), en.GetValByKey(v.replace("@", "")).toString());
+                    
+                }
+			}
+			
 		}
 		dtMain.Rows.add(mydrMain);
 		ds.Tables.add(dtMain);

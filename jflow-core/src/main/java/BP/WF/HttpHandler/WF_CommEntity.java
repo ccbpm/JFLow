@@ -1147,6 +1147,26 @@ public class WF_CommEntity extends WebContralBase {
 
         return BP.Tools.Json.ToJson(ds);
     }
-     
+    
+    /**
+     * 从表导出
+     * @return
+     * @throws Exception 
+     */
+    public String Dtl_Exp() throws Exception
+    {
+        String refPKVal = this.GetRequestVal("RefVal");
+        Entities dtls = ClassFactory.GetEns(this.getEnsName());
+        dtls.Retrieve(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
+        Entity en = dtls.getGetNewEntity();
+        String name = "数据导出";
+        if (refPKVal.contains("/") == true)
+            refPKVal = refPKVal.replaceAll("/", "_");
+        String filename = refPKVal + "_" + en.toString() +"_"+BP.DA.DataType.getCurrentDataCNOfLong()+ "_" + name  +".xls";
+        String filePath = ExportDGToExcel(dtls.ToDataTableField(), en, name,null);
+       
+
+        return filePath;
+    }
    // #endregion 分组数据.
 }

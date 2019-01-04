@@ -98,12 +98,12 @@ private String getOID;
 	public final void ND101_SaveAfter() throws Exception
 	{
 
-		//求出明细表的合计.
-		float hj = BP.DA.DBAccess.RunSQLReturnValFloat("SELECT SUM(XiaoJi) as Num FROM ND101Dtl1 WHERE RefPK=" + this.getOID, 0);
-
-		//更新合计小写 , 把合计转化成大写.
-		String sql = "UPDATE ND101 SET DaXie='" + BP.DA.DataType.ParseFloatToCash(hj) + "',HeJi="+hj+"  WHERE OID=" + this.getOID;
-		BP.DA.DBAccess.RunSQL(sql);
+//		//求出明细表的合计.
+//		float hj = BP.DA.DBAccess.RunSQLReturnValFloat("SELECT SUM(XiaoJi) as Num FROM ND101Dtl1 WHERE RefPK=" + this.getOID, 0);
+//
+//		//更新合计小写 , 把合计转化成大写.
+//		String sql = "UPDATE ND101 SET DaXie='" + BP.DA.DataType.ParseFloatToCash(hj) + "',HeJi="+hj+"  WHERE OID=" + this.getOID;
+//		BP.DA.DBAccess.RunSQL(sql);
 
 		//if (1 == 2)
 		//    throw new Exception("@执行错误xxxxxx.");

@@ -1,5 +1,7 @@
 package BP.WF.HttpHandler;
 
+import java.util.Hashtable;
+
 import org.apache.http.protocol.HttpContext;
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
@@ -10,6 +12,7 @@ import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.En.QueryObject;
+import BP.Sys.SystemConfig;
 import BP.WF.ActionType;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.GenerWorkFlow;
@@ -24,6 +27,7 @@ import BP.WF.WorkFlow;
 import BP.WF.Data.BillAttr;
 import BP.WF.Data.Bills;
 import BP.WF.HttpHandler.Base.WebContralBase;
+import BP.WF.Template.BtnLab;
 import BP.WF.Template.FrmWorkCheck;
 import BP.WF.XML.OneWorkXml;
 import BP.WF.XML.OneWorkXmls;
@@ -134,24 +138,64 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	 @return 
 	 * @throws Exception 
 	*/
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String OP_GetStatus() throws Exception
 	{
-		int wfState = BP.DA.DBAccess.RunSQLReturnValInt("SELECT WFState FROM WF_GenerWorkFlow WHERE WorkID=" + this.getWorkID(), 1);
-		WFState wfstateEnum = WFState.forValue(wfState);
-		String json = "{";
-		boolean isCan;
+		 GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+         Hashtable ht = new Hashtable();
+         boolean isCan;
+		
+		//文件打印的权限判断，这里为天业集团做的特殊判断，现实的应用中，都可以打印.
+        boolean CanPackUp = false;
+        if (SystemConfig.getCustomerNo().equals("TianYe"))
+        {
+            boolean isFlowEnd = false;
+            //前提，流程结束后才可以看到打印权限
+            if (gwf.getWFState() == BP.WF.WFState.Complete)
+                isFlowEnd = true;
 
-		switch (wfstateEnum)
+            boolean isAdmin = false;
+            if (BP.Web.WebUser.getNo() == "admin")
+                isAdmin = true;
+
+            // 判断是否可以打印.
+            //string sql = "SELECT NDFrom,NDFromT,EmpFrom FROM ND" + int.Parse(this.FK_Flow) + "Track WHERE WorkID=" + this.WorkID + " AND (EmpFrom='" + BP.Web.WebUser.No + "' OR  EmpTo='" + BP.Web.WebUser.No + "')  ";
+            String sql = "SELECT Distinct NDFrom, EmpFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID();
+            DataTable dt = DBAccess.RunSQLReturnTable(sql);
+            for(DataRow dr : dt.Rows)
+            {
+                //判断节点是否启用了按钮?
+                int nodeid = Integer.parseInt(dr.get(0).toString());
+                BtnLab btn = new BtnLab(nodeid);
+                if (btn.getPrintPDFEnable() == true || btn.getPrintZipEnable() == true)
+                {
+                    String empFrom = dr.get(1).toString();
+                    if (isFlowEnd==true && (isAdmin == true || BP.Web.WebUser.getNo() == empFrom || gwf.getStarter() == WebUser.getNo()))
+                    {
+                        CanPackUp = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            CanPackUp = true;
+        }
+        // end 文件打印的权限判断，这里为天业集团做的特殊判断，现实的应用中，都可以打印.
+
+        ht.put("CanPackUp", String.valueOf(CanPackUp).toLowerCase());
+
+		switch (gwf.getWFState())
 		{
 			case Runing: // 运行时
 				//删除流程.
 				isCan = BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(), WebUser.getNo());
-				json += "\"CanFlowOverByCoercion\":" + (new Boolean(isCan)).toString().toLowerCase() + ",";
+				ht.put("CanFlowOverByCoercion", String.valueOf(isCan).toLowerCase());
 
 				//取回审批
 				isCan = false;
 				String para = "";
-				GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 				String sql = "SELECT NodeID FROM WF_Node WHERE CheckNodes LIKE '%" + gwf.getFK_Node() + "%'";
 				int myNode = DBAccess.RunSQLReturnValInt(sql, 0);
 
@@ -161,14 +205,13 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 					if (gt.Can_I_Do_It())
 					{
 						isCan = true;
-						para = "\"TackBackFromNode\": " + gwf.getFK_Node() + ",\"TackBackToNode\":" + myNode + ",";
+						 ht.put("TackBackFromNode", gwf.getFK_Node());
+                         ht.put("TackBackToNode", myNode);
+						
 					}
 				}
-
-				json += "\"CanTackBack\":" + (new Boolean(isCan)).toString().toLowerCase() + "," + para;
-
-				//催办
-				json += "\"CanHurry\":false,"; //原逻辑，不能催办
+				
+				ht.put("CanTackBack", new Boolean(isCan).toString().toLowerCase());
 
 				//撤销发送
 				GenerWorkerLists workerlists = new GenerWorkerLists();
@@ -181,24 +224,25 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				info.addAnd();
 				info.AddWhere(GenerWorkerListAttr.WorkID, this.getWorkID());
 				isCan = info.DoQuery() > 0;
-				json += "\"CanUnSend\":" + (new Boolean(isCan)).toString().toLowerCase();
+				ht.put("CanUnSend", new Boolean(isCan).toString().toLowerCase());
+				
 				break;
 			case Complete: // 完成.
 			case Delete: // 逻辑删除..
 				//恢复使用流程
 				isCan = WebUser.getNo().equals("admin");
-				json += "\"CanRollBack\":" + (new Boolean(isCan)).toString().toLowerCase();
+				ht.put("CanRollBack", new Boolean(isCan).toString().toLowerCase());
 				break;
 			case HungUp: // 挂起.
 				//撤销挂起
 				isCan = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), WebUser.getNo());
-				json += "\"CanUnHungUp\":" + (new Boolean(isCan)).toString().toLowerCase();
+				ht.put("CanUnHungUp", new Boolean(isCan).toString().toLowerCase());
 				break;
 			default:
 				break;
 		}
 
-		return json + "}";
+		  return BP.Tools.Json.ToJson(ht);
 	}
 
 	/** 

@@ -858,6 +858,16 @@ public class MapDtl extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.PTable, value);
 	}
+	
+	 public final EditModel getHisEditModel()
+     {
+         return EditModel.forValue(this.GetValIntByKey(MapDtlAttr.EditModel));
+     }
+	 public final void setHisEditModel(EditModel value){
+        this.SetValByKey(MapDtlAttr.EditModel, value.getValue());
+        
+     }
+	 
 	 /** 
 	 过滤的SQL表达式.
 	 

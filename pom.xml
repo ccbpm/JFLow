@@ -45,6 +45,9 @@
 		<morph.version>1.1.1</morph.version>
 		<com.jcraft.version>0.1.54</com.jcraft.version>
 		<com.google.auto.version>0.6</com.google.auto.version>
+		
+		<!-- Qrcode 二维码需要的jar包 -->
+		<com.google.zxing.version>2.2</com.google.zxing.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -108,11 +111,6 @@
 				<groupId>cglib</groupId>
 				<artifactId>cglib-nodep</artifactId>
 				<version>${cglib.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjweaver</artifactId>
-				<version>${org.aspectj.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.belerweb</groupId>
@@ -410,7 +408,18 @@
 			    <version>${com.google.auto.version}</version>
 			</dependency>
 			
-
+			<!-- 条形码、二维码生成 -->
+			<dependency>
+			    <groupId>com.google.zxing</groupId>
+			    <artifactId>core</artifactId>
+			    <version>${com.google.zxing.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>com.google.zxing</groupId>
+			    <artifactId>javase</artifactId>
+			    <version>${com.google.zxing.version}</version>
+			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 	
@@ -424,6 +433,7 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
+					 
 				</configuration>
 			</plugin>
 		</plugins>

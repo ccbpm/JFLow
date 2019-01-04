@@ -240,7 +240,6 @@
 		<dependency>
 				<groupId>javax.transaction</groupId>
     			<artifactId>jta</artifactId>
-				<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.livesense</groupId>
@@ -250,6 +249,17 @@
 			    <groupId>com.google.auto</groupId>
 			    <artifactId>auto-common</artifactId>
 	   </dependency>
+	   
+	  <!-- 条形码、二维码生成 -->
+	  <dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>core</artifactId>
+	  </dependency>
+	  <dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>javase</artifactId>
+	  </dependency>
+		
 		<!-- cxf -->
 		<!-- <dependency>
 			<groupId>org.apache.cxf</groupId>

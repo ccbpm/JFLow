@@ -55,6 +55,7 @@ import BP.WF.WFState;
 import BP.WF.Work;
 import BP.WF.WorkCheck;
 import BP.WF.HttpHandler.Base.WebContralBase;
+import BP.WF.Rpt.MakeForm2Html;
 import BP.WF.Template.BtnLab;
 import BP.WF.Template.CCSta;
 import BP.WF.Template.FWCOrderModel;
@@ -2030,8 +2031,7 @@ public class WF_WorkOpt extends WebContralBase {
 
 			Node nd = new Node(nodeID);
 			Work wk = nd.getHisWork();
-			return "err@暂未实现";//// MakeForm2Html.MakeHtmlDocument(wk.NodeFrmID,
-								//// this.WorkID, this.getFK_Flow(), null);
+			return MakeForm2Html.MakeHtmlDocument(wk.NodeFrmID,this.getWorkID(), this.getFK_Flow(), null,false);
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}
@@ -2108,5 +2108,30 @@ public class WF_WorkOpt extends WebContralBase {
 
 		return "保存成功.";
 	}
-	// #endregion
+	
+	
+	  /// <summary>
+    /// 扫描二维码获得文件.
+    /// </summary>
+    /// <returns></returns>
+    public String PrintDocQRGuide_Init()
+    {
+        try
+        {
+            int nodeID = this.getFK_Node();
+            if (this.getFK_Node() == 0)
+            {
+                GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+                nodeID = gwf.getFK_Node();
+            }
+
+            Node nd = new Node(nodeID);
+            Work wk = nd.getHisWork();
+            return BP.WF.Rpt.MakeForm2Html.MakeHtmlDocument(wk.NodeFrmID, this.getWorkID(), this.getFK_Flow(), null, true);
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
 }

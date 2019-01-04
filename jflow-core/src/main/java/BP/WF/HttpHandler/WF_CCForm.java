@@ -1678,7 +1678,16 @@ public class WF_CCForm extends WebContralBase {
 								}
 							}
 							continue;
-						} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
+						} else if (v.equals("@yyyy年MM月dd日")) {
+							if (attr.getUIIsReadonly()) {
+								en.SetValByKey(attr.getKey(), DataType.getCurrentDataCNOfLong());
+							} else {
+								if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+									en.SetValByKey(attr.getKey(), DataType.getCurrentDataCNOfLong());
+								}
+							}
+							continue;
+						}else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
 							if (attr.getUIIsReadonly()) {
 								en.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 							} else {

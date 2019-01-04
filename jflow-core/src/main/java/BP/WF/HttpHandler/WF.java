@@ -1,5 +1,6 @@
 package BP.WF.HttpHandler;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -86,7 +87,25 @@ public class WF extends WebContralBase {
 	 */
 	public WF() {
 	}
+	public String HasSealPic() throws Exception
+    {
+        String no = GetRequestVal("No");
+        if (DataType.IsNullOrEmpty(no))
+            return "";
 
+        String path = SystemConfig.getPathOfDataUser() + "Siganture/"+ no + ".jpg";
+        
+        File file = new File(path);
+        //如果文件存在
+        if (file.exists() == true)
+            return "";
+        else
+        {
+            //如果不存在，就返回名称
+            BP.Port.Emp emp = new BP.Port.Emp(no);
+            return emp.getName();
+        }
+    }
 	/**
 	 * 入口函数
 	 */

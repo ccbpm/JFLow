@@ -56,7 +56,12 @@ public class SystemConfig {
     /// 附件上传加密
     /// </summary>
     public static boolean getIsEnableAthEncrypt(){
-        String IsEnableAthEncrypt = SystemConfig.getAppSettings().get("IsEnableAthEncrypt").toString();
+    	Object isEnableAthEncryptObj=SystemConfig.getAppSettings().get("IsEnableAthEncrypt");
+    	if(isEnableAthEncryptObj==null){
+    		return false;
+    	}
+    	
+        String IsEnableAthEncrypt = isEnableAthEncryptObj.toString();
 
         if (DataType.IsNullOrEmpty(IsEnableAthEncrypt) == true)
             return false;

@@ -1,4 +1,4 @@
-package BP.Sys;
+﻿package BP.Sys;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -816,6 +816,7 @@ public class FrmAttachment extends EntityMyPK
 		  //  map.AddTBInt(FrmAttachmentAttr.RowIdx, 0, "RowIdx", false, false);
 		map.AddTBInt(FrmAttachmentAttr.GroupID, 0, "GroupID", false, false);
 		map.AddTBString(FrmAttachmentAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+              map.AddTBInt(FrmAttachmentAttr.ReadRole, 0, "ReadRole", false, false);
 
 		this.set_enMap(map);
 		return this.get_enMap();

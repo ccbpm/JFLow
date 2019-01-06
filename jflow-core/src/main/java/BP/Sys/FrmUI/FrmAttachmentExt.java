@@ -1,4 +1,4 @@
-package BP.Sys.FrmUI;
+﻿package BP.Sys.FrmUI;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -727,6 +727,9 @@ public class FrmAttachmentExt extends EntityMyPK {
 		map.AddBoolean(FrmAttachmentAttr.IsHeLiuHuiZong, true, "是否是合流节点的汇总附件组件？(对合流节点有效)", true, true, true);
 		map.AddTBString(FrmAttachmentAttr.DataRefNoOfObj, "AttachM1", "对应附件标识", true, false, 0, 150, 20);
 		map.SetHelperAlert("DataRefNoOfObj", "对WorkID权限模式有效,用于查询贯穿整个流程的附件标识,与从表的标识一样.");
+
+    map.AddDDLSysEnum(FrmAttachmentAttr.ReadRole, 0, "阅读规则", true, true, FrmAttachmentAttr.ReadRole,
+               "@0=不控制@1=未阅读阻止发送@2=未阅读做记录");
 
 		// #endregion 节点相关
 

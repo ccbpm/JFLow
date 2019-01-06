@@ -11,7 +11,8 @@
     <script src="../../Comm/Gener.js" type="text/javascript"></script>
     <base target="_self" />
     <style type="text/css">
-        th, td {
+        th, td
+        {
             text-align: center;
         }
     </style>
@@ -49,12 +50,12 @@
                 trStr += "<td>" + fieldsData[i].LGTypeT + "</td>";
                 trStr += "<td><input onkeydown='upischange(" + i + ");' id='" + i + "_" + fieldsData[i].KeyOfEn + "_RegularExp" + "' type='text' placeholder='输入有效的正则表达式' value='" + fieldsData[i].RegularExp + "'/></td>";
                 trStr += "<td><input onkeydown='upischange(" + i + ");' id='" + i + "_" + fieldsData[i].KeyOfEn + "_DefVal" + "' type='text' placeholder='请输入默认值…' value='" + fieldsData[i].DefVal + "'/></td>";
-                trStr += "<td><label class='checkbox'><input onclick='checkclick(this," + i + ");' class='UIVisible' id='" + i + "_" + fieldsData[i].KeyOfEn + "_UIVisible" + "' type='checkbox' " + (fieldsData[i].UIVisible ? "checked" : "") + ">可见</label></td>";
-                trStr += "<td><label class='checkbox'><input onclick='checkclick(this," + i + ");' class='UIIsEnable' id='" + i + "_" + fieldsData[i].KeyOfEn + "_UIIsEnable" + "' type='checkbox' " + (fieldsData[i].UIIsEnable ? "checked" : "") + ">可用</label></td>";
-                trStr += "<td><label class='checkbox'><input onclick='checkclick(this," + i + ");' class='IsSigan' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsSigan" + "' type='checkbox' " + (fieldsData[i].IsSigan ? "checked" : "") + ">签名</label></td>";
-                trStr += "<td><label class='checkbox'><input onclick='checkclick(this," + i + ");' class='IsNotNull' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsNotNull" + "' type='checkbox' " + (fieldsData[i].IsNotNull ? "checked" : "") + ">必填</label></td>";
-                trStr += "<td><label class='checkbox'><input onclick='checkclick(this," + i + ");' class='IsWriteToFlowTable' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsWriteToFlowTable" + "' type='checkbox' " + (fieldsData[i].IsWriteToFlowTable ? "checked" : "") + ">写入NDxxRpt</label></td>";
-                trStr += "<td><label class='checkbox'><input onclick='checkclick(this," + i + ");' class='IsWriteToGenerWorkFlow' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsWriteToGenerWorkFlow" + "' type='checkbox' " + (fieldsData[i].IsWriteToGenerWorkFlow ? "checked" : "") + ">写入WF_GernrWorkFlow</label></td>";
+                trStr += "<td><label ><input onclick='checkclick(this," + i + ");' class='UIVisible' id='" + i + "_" + fieldsData[i].KeyOfEn + "_UIVisible" + "' type='checkbox' " + (fieldsData[i].UIVisible ? "checked" : "") + ">可见</label></td>";
+                trStr += "<td><label ><input onclick='checkclick(this," + i + ");' class='UIIsEnable' id='" + i + "_" + fieldsData[i].KeyOfEn + "_UIIsEnable" + "' type='checkbox' " + (fieldsData[i].UIIsEnable ? "checked" : "") + ">可用</label></td>";
+                trStr += "<td><label ><input onclick='checkclick(this," + i + ");' class='IsSigan' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsSigan" + "' type='checkbox' " + (fieldsData[i].IsSigan ? "checked" : "") + ">签名</label></td>";
+                trStr += "<td><label ><input onclick='checkclick(this," + i + ");' class='IsNotNull' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsNotNull" + "' type='checkbox' " + (fieldsData[i].IsNotNull ? "checked" : "") + ">必填</label></td>";
+                trStr += "<td><label ><input onclick='checkclick(this," + i + ");' class='IsWriteToFlowTable' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsWriteToFlowTable" + "' type='checkbox' " + (fieldsData[i].IsWriteToFlowTable ? "checked" : "") + ">写入NDxxRpt</label></td>";
+                trStr += "<td><label ><input onclick='checkclick(this," + i + ");' class='IsWriteToGenerWorkFlow' id='" + i + "_" + fieldsData[i].KeyOfEn + "_IsWriteToGenerWorkFlow" + "' type='checkbox' " + (fieldsData[i].IsWriteToGenerWorkFlow ? "checked" : "") + ">写入WF_GernrWorkFlow</label></td>";
                 trStr += "</tr>";
 
                 if (!fieldsData[i].UIVisible) {
@@ -77,7 +78,7 @@
                 }
                 if (i == fieldsData.length - 1) {
                     trStr += "<tr >";
-                    trStr += "<td colspan=\"12\"> <button onclick='dosave();' class='btn btn-primary' type='button' >保存</button></td>";
+                    trStr += "<td colspan=\"12\"> <button onclick='dosave();'  type='button' >保存</button></td>";
                     trStr += "</tr>";
                 }
             }
@@ -159,6 +160,10 @@
             var nodeID = GetQueryString("FK_Node");
             var frmID = GetQueryString("FK_MapData");
 
+            //@秦发亮
+            //var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Sln");
+            //handler.AddUrlData();
+
             $.ajax({
                 type: 'post',
                 async: true,
@@ -224,22 +229,61 @@
         }
     </script>
 </head>
-<body >
-    <table id="Table1" >
-    <caption> 节点-表单-字段权限 </caption>
+<body>
+    <table id="Table1">
+        <caption>
+            节点-表单-字段权限
+        </caption>
         <tr>
-            <th>序</th>
-            <th>字段</th>
-            <th>名称</th>
-            <th>类型</th>
-            <th>正则表达式</th>
-            <th>默认值</th>
-            <th><input onclick="CheckAll('UIVisible');" id='KeyOfEn_UIVisible' type="checkbox" /> <label for="KeyOfEn_UIVisible"> 可见 </label></th>
-            <th><input onclick="CheckAll('UIIsEnable');" id='KeyOfEn_UIIsEnable' type='checkbox' /><label for="KeyOfEn_UIIsEnable"> 可用</label></th>
-            <th><input onclick="CheckAll('IsSigan');" id='KeyOfEn_IsSigan' type='checkbox' /><label for="KeyOfEn_IsSigan"> 签名</label></th>
-            <th><input onclick="CheckAll('IsNotNull');" id='KeyOfEn_IsNotNull' type='checkbox' /><label for="KeyOfEn_IsNotNull"> 必填</label></th>
-            <th><input onclick="CheckAll('IsWriteToFlowTable');" id='KeyOfEn_IsWriteToFlowTable' type='checkbox' /><label for="KeyOfEn_IsWriteToFlowTable"> 写入流程数据表</label></th>
-            <th><input onclick="CheckAll('IsWriteToGenerWorkFlow');" id='KeyOfEn_IsWriteToGenerWorkFlow' type='checkbox' /><label for="KeyOfEn_IsWriteToGenerWorkFlow"> 写入流程注册表</label></th>
+            <th>
+                序
+            </th>
+            <th>
+                字段
+            </th>
+            <th>
+                名称
+            </th>
+            <th>
+                类型
+            </th>
+            <th>
+                正则表达式
+            </th>
+            <th>
+                默认值
+            </th>
+            <th>
+                <input onclick="CheckAll('UIVisible');" id='KeyOfEn_UIVisible' type="checkbox" />
+                <label for="KeyOfEn_UIVisible">
+                    可见
+                </label>
+            </th>
+            <th>
+                <input onclick="CheckAll('UIIsEnable');" id='KeyOfEn_UIIsEnable' type='checkbox' /><label
+                    for="KeyOfEn_UIIsEnable">
+                    可用</label>
+            </th>
+            <th>
+                <input onclick="CheckAll('IsSigan');" id='KeyOfEn_IsSigan' type='checkbox' /><label
+                    for="KeyOfEn_IsSigan">
+                    签名</label>
+            </th>
+            <th>
+                <input onclick="CheckAll('IsNotNull');" id='KeyOfEn_IsNotNull' type='checkbox' /><label
+                    for="KeyOfEn_IsNotNull">
+                    必填</label>
+            </th>
+            <th>
+                <input onclick="CheckAll('IsWriteToFlowTable');" id='KeyOfEn_IsWriteToFlowTable'
+                    type='checkbox' /><label for="KeyOfEn_IsWriteToFlowTable">
+                        写入流程数据表</label>
+            </th>
+            <th>
+                <input onclick="CheckAll('IsWriteToGenerWorkFlow');" id='KeyOfEn_IsWriteToGenerWorkFlow'
+                    type='checkbox' /><label for="KeyOfEn_IsWriteToGenerWorkFlow">
+                        写入流程注册表</label>
+            </th>
         </tr>
     </table>
 </body>

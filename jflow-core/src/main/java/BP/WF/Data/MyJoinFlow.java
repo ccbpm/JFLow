@@ -584,7 +584,7 @@ public class MyJoinFlow extends Entity
 	{
 		Paras pss = new Paras();
 		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
-		pss.Add("ActionType", ActionType.Forward);
+		pss.Add("ActionType", ActionType.Forward.getValue());
 		pss.Add("WorkID", this.getWorkID());
 		DataTable dt = DBAccess.RunSQLReturnTable(pss);
 		if (dt != null && dt.Rows.size() > 0)

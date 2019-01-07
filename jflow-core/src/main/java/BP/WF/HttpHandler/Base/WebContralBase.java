@@ -931,9 +931,6 @@ public abstract class WebContralBase extends BaseController {
 	
 	protected String ExportDGToExcel(DataTable dt, Entity en, String title, Attrs mapAttrs) throws Exception {
 
-		for (DataRow dr : dt.Rows) {
-
-		}
 		String fileName = title + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getNo() + ".xls";
 		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
 		String filePth = BP.Sys.SystemConfig.getPathOfTemp();
@@ -1053,6 +1050,8 @@ public abstract class WebContralBase extends BaseController {
 					if(DataType.IsNullOrEmpty(text)==false && (text.contains("\n")==true ||text.contains("\r")==true)){
 						str =""+text.replaceAll("\n", "  ");
 					    str =""+text.replaceAll("\r", "  ");
+					}else{
+						str = text;
 					}
 				}
 				if (str == null || str.equals("") || str.equals("null")) {

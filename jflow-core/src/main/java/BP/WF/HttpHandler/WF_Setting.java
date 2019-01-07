@@ -114,11 +114,14 @@ public class WF_Setting extends WebContralBase
 	{
 		try
 		{
+			String empNo = this.GetRequestVal("EmpNo");
+	        if (DataType.IsNullOrEmpty(empNo) == true)
+	             empNo = WebUser.getNo();
 			String contentType = getRequest().getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
 				MultipartFile multipartFile = request.getFile("File_Upload");
 				
-				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + WebUser.getNo() + ".jpg";
+				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + empNo + ".jpg";
 				File tempFile = new File(tempFilePath);
 				if(tempFile.exists()){
 					tempFile.delete();

@@ -1,6 +1,11 @@
 package BP.WF;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -19,8 +24,12 @@ import BP.WF.Template.*;
 import BP.WF.Data.*;
 import BP.WF.Entity.FrmWorkCheck;
 import BP.Sys.*;
+import BP.Tools.AesEncodeUtil;
 import BP.Tools.ContextHolderUtils;
 import BP.Tools.DateUtils;
+import BP.Tools.FileAccess;
+import BP.Tools.FtpUtil;
+import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 
 /**
@@ -9852,6 +9861,310 @@ public class Dev2Interface {
 	}
 
 	/// #region 与工作处理器相关的接口
+	
+	 public static String CCForm_AddAth(int nodeid,String flowid, long workid, String athNo, String frmID, String filePath, String fileName,String sort,long fid,long pworkid) throws Exception{
+		File item = new File(filePath);
+		 //求主键. 如果该表单挂接到流程上.
+		String pkVal = String.valueOf(workid);
+		 // 多附件描述.
+        BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment(athNo);
+        MapData mapData = new MapData(frmID);
+        if (nodeid != 0 && nodeid!=999999)
+        {
+            //判断表单方案。
+            FrmNode fn = new FrmNode(flowid, nodeid,frmID);
+            if (fn.getFrmSln() == FrmSln.Readonly)
+                throw new Exception("err@不允许上传附件.");
+
+            //是默认的方案的时候.
+            if (fn.getFrmSln() == FrmSln.Default)
+            {
+                //判断当前方案设置的whoIsPk ，让附件集成 whoIsPK 的设置。
+                if (fn.getWhoIsPK() == WhoIsPK.FID)
+                    pkVal = Long.toString(fid);
+
+                if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
+                    pkVal = Long.toString(pworkid);
+            }
+
+            //自定义方案.
+            if (fn.getFrmSln() == FrmSln.Self)
+            {
+                athDesc = new FrmAttachment(athNo + "_" + nodeid);
+                if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+                	 pkVal = Long.toString(fid);
+
+                if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+                	 pkVal = Long.toString(pworkid);
+            }
+        }
+        //获取上传文件是否需要加密
+        boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+		if (athDesc.getAthSaveWay() == AthSaveWay.WebServer) {
+
+			String savePath = athDesc.getSaveTo();
+			if (savePath.contains("@") == true || savePath.contains("*") == true) {
+				/* 如果有变量 */
+				savePath = savePath.replace("*", "@");
+				savePath = BP.WF.Glo.DealExp(savePath, null, null);
+
+				if (savePath.contains("@") && nodeid != 0) {
+					/* 如果包含 @ */
+					BP.WF.Flow flow = new BP.WF.Flow(flowid);
+					BP.WF.Data.GERpt myen = flow.getHisGERpt();
+					myen.setOID(workid);
+					myen.RetrieveFromDBSources();
+					savePath = BP.WF.Glo.DealExp(savePath, myen, null);
+				}
+				if (savePath.contains("@") == true)
+					throw new Exception("@路径配置错误,变量没有被正确的替换下来." + savePath);
+				
+			} else {
+				savePath = athDesc.getSaveTo() + "\\" + pkVal;
+			}
+
+			// 替换关键的字串.
+			savePath = savePath.replace("\\\\", "\\");
+			try {
+				if (savePath.indexOf(":") == -1)
+					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
+
+				File fileInfo = new File(savePath);
+
+				if (fileInfo.exists() == false)
+					fileInfo.mkdirs();
+
+			} catch (Exception ex) {
+				throw new RuntimeException("@创建路径出现错误，可能是没有权限或者路径配置有问题:"
+						+ ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("~/" + savePath)
+						+ "===" + savePath + "@技术问题:" + ex.getMessage());
+
+			}
+
+			String guid = BP.DA.DBAccess.GenerGUID();
+			String ext = fileName.substring(fileName.lastIndexOf("."));
+			String realSaveTo = savePath + "\\" + guid + "." + fileName;
+
+			realSaveTo = realSaveTo.replace("~", "-");
+			realSaveTo = realSaveTo.replace("'", "-");
+			realSaveTo = realSaveTo.replace("*", "-");
+				
+			String saveTo = realSaveTo;
+			if (fileEncrypt == true)
+				saveTo = realSaveTo + ".tmp";
+			File file = new File(saveTo); // 获取根目录对应的真实物理路径
+			
+			try {
+				// 构造临时对象
+				InputStream is = new FileInputStream(item);
+				int buffer = 1024; // 定义缓冲区的大小
+				int length = 0;
+				byte[] b = new byte[buffer];
+				FileOutputStream fos = new FileOutputStream(file);
+				while ((length = is.read(b)) != -1) {
+					// 计算上传文件的百分比
+					fos.write(b, 0, length); // 向文件输出流写读取的数据
+				}
+				fos.close();
+			} catch (RuntimeException ex) {
+				
+				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
+			}
+			
+			 if (fileEncrypt == true)
+             {
+                 File fileT = new File(saveTo);
+                 AesEncodeUtil.encryptFile(saveTo, realSaveTo);
+                 fileT.delete();//删除临时文件
+             }
+	            
+			File info = new File(realSaveTo);
+			
+			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
+			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();			 
+			dbUpload.setFK_FrmAttachment(athNo);
+			dbUpload.setSort(sort);
+			dbUpload.setFK_MapData(athDesc.getFK_MapData());
+			dbUpload.setFileExts(ext);
+			dbUpload.setFID(fid);
+			dbUpload.setNodeID( nodeid);
+			if (fileEncrypt == true)
+             dbUpload.SetPara("IsEncrypt", 1);
+				 
+				
+				/// #region 处理文件路径，如果是保存到数据库，就存储pk.
+				if (athDesc.getAthSaveWay() == AthSaveWay.WebServer) {
+					// 文件方式保存
+					dbUpload.setFileFullName(realSaveTo);
+				}
+
+				if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+					// 保存到数据库
+					dbUpload.setFileFullName(dbUpload.getMyPK());
+				}
+				/// #endregion 处理文件路径，如果是保存到数据库，就存储pk.
+
+				dbUpload.setFileName(fileName);
+				dbUpload.setFileSize((float) info.length());
+				dbUpload.setRDT(DataType.getCurrentDataTimess());
+				dbUpload.setRec(BP.Web.WebUser.getNo());
+				dbUpload.setRecName(BP.Web.WebUser.getName());
+				dbUpload.setFID(fid);
+				dbUpload.setUploadGUID(guid);
+				dbUpload.setRefPKVal(pkVal);
+				
+				dbUpload.Insert();
+
+				if (athDesc.getAthSaveWay() == AthSaveWay.DB) {
+					// 执行文件保存.
+					BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.getEnMap().getPhysicsTable(), "MyPK",
+							dbUpload.getMyPK(), "FDB");
+				}
+
+				
+			}
+			/// #endregion 文件上传的iis服务器上 or db数据库里.
+
+			/// #region 保存到数据库 / FTP服务器上.
+			if (athDesc.getAthSaveWay() == AthSaveWay.DB || athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+				String guid = BP.DA.DBAccess.GenerGUID();
+
+				// 把文件临时保存到一个位置.
+				String temp = SystemConfig.getPathOfTemp() +"/"+ "" + guid + ".tmp";
+				
+				String tempD = temp;
+				if (fileEncrypt == true)
+					tempD = SystemConfig.getPathOfTemp()+"/"+ "" + guid + "_Desc" + ".tmp";
+				File tempFile = new File(tempD);
+				InputStream is = null;
+				try {
+					// 构造临时对象
+					is = new FileInputStream(item);
+					int buffer = 1024; // 定义缓冲区的大小
+					int length = 0;
+					byte[] b = new byte[buffer];
+					FileOutputStream fos = new FileOutputStream(tempFile);
+					while ((length = is.read(b)) != -1) {
+						fos.write(b, 0, length); // 向文件输出流写读取的数据
+					}
+					fos.close();
+					is.close();
+				} catch (Exception ex) {
+					tempFile.delete();
+					throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
+
+				}
+				 if (fileEncrypt == true)
+	             {
+	                 File fileTD =  new File(tempD);
+	                 AesEncodeUtil.encryptFile(tempD, temp);//加密
+	                 fileTD.delete();//删除临时文件
+	             }
+
+				
+				File info = new File(temp);
+				FrmAttachmentDB dbUpload = new FrmAttachmentDB();
+				dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
+				dbUpload.setNodeID( nodeid);
+				dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+				dbUpload.setSort(sort);
+				dbUpload.setFID(fid); // 流程id.
+				if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
+					/* 如果是继承，就让他保持本地的PK. */
+					dbUpload.setRefPKVal(pkVal);
+				}
+
+				if (athDesc.getAthUploadWay() == AthUploadWay.Interwork) {
+					/* 如果是协同，就让他是PWorkID. */
+					String pWorkID = String.valueOf(BP.DA.DBAccess
+							.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" +pkVal, 0));
+					if (pWorkID == null || pWorkID == "0")
+						pWorkID = pkVal;
+					dbUpload.setRefPKVal(pWorkID);
+				}
+				String exts = fileName.substring(fileName.lastIndexOf("."));
+				dbUpload.setFK_MapData(athDesc.getFK_MapData());
+				dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+				dbUpload.setFileName(fileName);
+				dbUpload.setFileExts(exts);
+				dbUpload.setFileSize((float) info.length());
+				dbUpload.setRDT(DataType.getCurrentDataTimess());
+				dbUpload.setRec(BP.Web.WebUser.getNo());
+				dbUpload.setRecName(BP.Web.WebUser.getName());
+				if (fileEncrypt == true)
+	                  dbUpload.SetPara("IsEncrypt", 1);
+				
+				dbUpload.setUploadGUID(guid);
+
+				if (athDesc.getAthSaveWay() == AthSaveWay.DB) {
+					dbUpload.Insert();
+					// 把文件保存到指定的字段里.
+					dbUpload.SaveFileToDB("FileDB", temp);
+				}
+				
+
+				if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
+					String ny = sdf.format(new Date());
+
+					String workDir = ny + "\\" + athDesc.getFK_MapData() + "\\";
+	  
+					//特殊处理文件路径.
+					if (SystemConfig.getCustomerNo().equals( "BWDA") ) {
+						
+						sdf = new SimpleDateFormat("yyyy_MM_dd");
+						ny = sdf.format(new Date());
+
+						ny = ny.replace("_", "/");
+						ny = ny.replace("_", "/");
+						
+						workDir =  ny+ "/" + WebUser.getNo()+"/";
+					}
+					
+					boolean  isOK=false;
+					
+					if (SystemConfig.getFTPServerType().equals("FTP") ) {
+
+						FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
+						
+						ftpUtil.changeWorkingDirectory(workDir,true);
+
+						// 把文件放在FTP服务器上去.
+						isOK=ftpUtil.uploadFile( guid + "." + dbUpload.getFileExts(),temp);
+
+						ftpUtil.releaseConnection();
+					}
+
+					if (SystemConfig.getFTPServerType().equals("SFTP") ) {
+
+						SftpUtil ftpUtil = BP.WF.Glo.getSftpUtil();
+						 
+						ftpUtil.changeWorkingDirectory(workDir,true);
+						// 把文件放在FTP服务器上去.
+						isOK=ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(),temp);
+						ftpUtil.releaseConnection();
+					}
+
+					// 删除临时文件
+					tempFile.delete();
+					new File(SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp").delete();
+
+					// 设置路径.
+					dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
+					
+					if (isOK==false)
+						throw new com.sun.star.uno.Exception("err文件上传失败，请检查ftp服务器配置信息");
+						
+					dbUpload.Insert();
+					
+				}
+			}
+			
+			return "附件添加成功";
+	 }
+	
+	
 	/**
 	 * 获得一个节点要转向的节点
 	 * 

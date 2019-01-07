@@ -22,6 +22,7 @@ import BP.DA.LogType;
 import BP.DA.Paras;
 import BP.Sys.EnVer;
 import BP.Sys.EnVerDtl;
+import BP.Sys.GloVar;
 import BP.Sys.MapAttr;
 import BP.Sys.MapData;
 import BP.Sys.MapDtl;
@@ -3283,6 +3284,17 @@ public abstract class Entity implements Serializable {
                      this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(v.replace("@", "")));
              }
              continue;
+		   }else{
+			   GloVar gloVar = new GloVar(v);
+               int count = gloVar.RetrieveFromDBSources();
+               if (count == 1)
+               {
+                   //执行SQL获取默认值
+                   String sql = gloVar.getVal();
+                   sql = BP.WF.Glo.DealExp(sql, null, null);
+                   this.SetValByKey(attr.getKey(), DBAccess.RunSQLReturnString(sql));
+               }
+               continue;
 		   }
 			
 		}

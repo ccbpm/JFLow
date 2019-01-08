@@ -23,17 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.*; 
 import javax.imageio.ImageIO;
 
-import com.google.zxing.*;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.apache.commons.io.IOUtils;
-import sun.misc.BASE64Encoder;
-
-
-import java.nio.file.Path;
 import java.util.Hashtable;
 
 /**
@@ -77,28 +66,12 @@ public class MakeForm2Html
         FrmEles eles = mapData.getFrmEles();
         if (eles.size()>= 1)
         {
-            FrmEleDBs dbs = new FrmEleDBs(frmID,String.valueOf(workid));
-           
             for( BP.Sys.FrmEle ele :eles.ToJavaList())
             {
             	  float y = ele.getY();
                   x = ele.getX() + wtX;
                   sb.append("<DIV id=" + ele.getMyPK() + " style='position:absolute;left:" + x + "px;top:" + y + "px;text-align:left;vertical-align:top' >");
-	          
-                  /***
-	            
-                  switch(ele.getEleType()){
-		             case FrmEle.HandSiganture:
-		            	  FrmEleDB db =(FrmEleDB)dbs.GetEntityByKey(FrmEleDBAttr.EleID, ele.getEleID());
-		                  String dbFile = appPath + "DataUser/BPPaint/Def.png";
-		                  if (db != null)
-		                      dbFile = db.getTag1();                  
-		                  break;             
-		              default:
-		            	  break;
-	             	}
-	             	 * 
-	             */
+
                   sb.append("\t\n</DIV>");
             }
         }
@@ -106,7 +79,6 @@ public class MakeForm2Html
         FrmLabs labs = mapData.getFrmLabs();
         for( FrmLab lab:labs.ToJavaList())
         {
-        	 java.awt.Color col =  Color.decode(lab.getFontColor()) ;//ColorTranslator.FromHtml(lab.getFontColor());
               x = lab.getX() + wtX;
               sb.append("\t\n<DIV id=u2 style='position:absolute;left:" + x + "px;top:" + lab.getY() + "px;text-align:left;' >");
               sb.append("\t\n<span style='color:" + lab.getFontColorHtml()+ ";font-family: " + lab.getFontName() + ";font-size: " + lab.getFontSize() + "px;' >" + lab.getTextHtml() + "</span>");
@@ -216,6 +188,7 @@ public class MakeForm2Html
          
 
            //  ////#region 二维码
+            
             if (img.getHisImgAppType() == ImgAppType.QRCode)
             {
                 x = img.getX() + wtX;
@@ -411,7 +384,6 @@ public class MakeForm2Html
         }
         ////#endregion 输出竖线与标签
          ////#region 输出数据控件.
-        int fSize = 0;
         for (MapAttr attr : attrs.ToJavaList())
         {
             //处理隐藏字段，如果是不可见并且是启用的就隐藏.
@@ -500,7 +472,6 @@ public class MakeForm2Html
 
        //  ////#region  输出 rb.
         BP.Sys.FrmRBs myrbs = mapData.getFrmRBs();
-        MapAttr attrRB = new MapAttr();
         for (BP.Sys.FrmRB rb : myrbs.ToJavaList())
         {
             x = rb.getX() + wtX;
@@ -520,14 +491,12 @@ public class MakeForm2Html
         ////#endregion 输出数据控件.
 
          ////#region 输出明细.
-        int dtlsCount = 0;
         MapDtls dtls = new MapDtls(frmID);
         for (MapDtl dtl :dtls.ToJavaList())
         {
             if (dtl.getIsView() == false)
                 continue;
 
-            dtlsCount++;
             x = dtl.getX() + wtX;
             float y = dtl.getY();
 
@@ -762,16 +731,6 @@ public class MakeForm2Html
         //字段集合.
         MapAttrs attrs = new MapAttrs(frmID);
 
-        String appPath = "";
-        float wtX =0;
-        try
-        {
-        	wtX = MapData.GenerSpanWeiYi(mapData, 1200);
-        }catch(Exception ex)
-        {}
-        //float wtX = 0;
-        float x = 0;
-
         //生成表头.
         String frmName = mapData.getName();
         if (SystemConfig.getCustomerNo() == "TianYe")
@@ -787,18 +746,37 @@ public class MakeForm2Html
         sb.append("<table border=0 style='width:950px;'>");
 
         sb.append("<tr  style='border:0px;' >");
-
-        sb.append("<td>");
-        sb.append("<img src='icon.png' style='height:100px;border:0px;' />");
-        sb.append("</td>");
-
-        sb.append("<td  colspan=4>");
+        
+        //二维码显示
+        boolean IsHaveQrcode = true;
+        if(SystemConfig.GetValByKeyBoolen("IsShowQrCode", false)==false)
+        	IsHaveQrcode = false;
+        
+        //判断当前文件是否存在图片
+        boolean IsHaveImg = false;
+        String IconPath = path+"/icon.png";
+        if(new File(IconPath).exists() == true)
+        	IsHaveImg = true;
+        if(IsHaveImg == true){
+	        sb.append("<td>");
+	        sb.append("<img src='icon.png' style='height:100px;border:0px;' />");
+	        sb.append("</td>");
+        }
+        if(IsHaveImg == false && IsHaveQrcode==false)
+        	sb.append("<td  colspan=6>");
+        else if((IsHaveImg == true && IsHaveQrcode==false) ||(IsHaveImg == false && IsHaveQrcode==true) )
+        	 sb.append("<td  colspan=5>");
+        else
+        	sb.append("<td  colspan=4>");
+        
         sb.append("<br><h2><b>" + frmName + "</b></h2>");
         sb.append("</td>");
-
-        sb.append("<td>");
-        sb.append(" <img src='QR.png' style='height:100px;'  />");
-        sb.append("</td>");
+        
+        if(IsHaveQrcode ==true){
+	        sb.append("<td>");
+	        sb.append(" <img src='QR.png' style='height:100px;'  />");
+	        sb.append("</td>");
+        }
 
         sb.append("</tr>");
         sb.append("</table>");
@@ -1106,14 +1084,8 @@ public class MakeForm2Html
             //#region 审核组件
             if (gf.getCtrlType().equals("FWC") && flowNo != null)
             {
-            	FrmWorkCheck fwc =null;
-            	try
-               {
-            fwc = new FrmWorkCheck(frmID);
-               }
-            		   catch(Exception ex){
-            			   
-            		   }
+            	FrmWorkCheck fwc =new FrmWorkCheck(frmID);
+            
                 String sql = "";
                 DataTable dtTrack = null;
                 Boolean bl = false;
@@ -1279,22 +1251,23 @@ public class MakeForm2Html
             {
                 return "err@读写文件出现权限问题，请联系管理员解决。" + ex.getMessage();
             }
-            // begin生成二维码.
-            /*说明是图片文件.*/
+            
             String hostURL = SystemConfig.GetValByKey("HostURL","");
-            String pathQR = path + "\\QR.png"; // key.Replace("OID.Img@AppPath", SystemConfig.PathOfWebApp);
             String billUrl = hostURL + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/index.htm";
-
-            String qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?FrmID=" + frmID + "&WorkID=" + workid + "&FlowNo=" + flowNo;
-            if (flowNo != null)
-            {
-                gwf = new GenerWorkFlow(workid);
-                qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getFK_Node() + "_" + gwf.getStarter() + "_" + gwf.getFK_Dept();
+            
+            // begin生成二维码.
+            if(SystemConfig.GetValByKeyBoolen("IsShowQrCode",false) == true){
+	            /*说明是图片文件.*/
+	            String qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?FrmID=" + frmID + "&WorkID=" + workid + "&FlowNo=" + flowNo;
+	            if (flowNo != null)
+	            {
+	                gwf = new GenerWorkFlow(workid);
+	                qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getFK_Node() + "_" + gwf.getStarter() + "_" + gwf.getFK_Dept();
+	            }
+	            
+	            //二维码的生成
+	            QrCodeUtil.createQrCode(qrUrl,path,"QR.png");
             }
-            
-            //二维码的生成
-            QrCodeUtil.createQrCode(qrUrl,path,"QR.png");
-            
             //end生成二维码.
             
             //#region 定义变量做准备.
@@ -1304,22 +1277,23 @@ public class MakeForm2Html
             MapData mapData = new MapData(frmID);
 
             //begin 生成水文.
-            String rdt = "";
-            if (en.getEnMap().getAttrs().contains("RDT"))
-            {
-                rdt = en.GetValStringByKey("RDT");
-                if (rdt.length() > 10)
-                    rdt = rdt.substring(0, 10);
+            if(SystemConfig.GetValByKeyBoolen("IsShowShuiYin",false) == true){
+	            String rdt = "";
+	            if (en.getEnMap().getAttrs().contains("RDT"))
+	            {
+	                rdt = en.GetValStringByKey("RDT");
+	                if (rdt.length() > 10)
+	                    rdt = rdt.substring(0, 10);
+	            }
+	            String words = SystemConfig.GetValByKey("PrintBackgroundWord","驰骋工作流引擎@开源驰骋 - ccflow@openc");
+	            words = words.replaceAll("@RDT", rdt);
+	
+	            if (words.contains("@") == true)
+	                words = BP.WF.Glo.DealExp(words, en, null);
+	
+	            String templateFilePathMy = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
+	            paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png",words,path + "\\ShuiYin.png");
             }
-            String words = SystemConfig.GetValByKey("PrintBackgroundWord","驰骋工作流引擎@开源驰骋 - ccflow@openc");
-            words = words.replaceAll("@RDT", rdt);
-
-            if (words.contains("@") == true)
-                words = BP.WF.Glo.DealExp(words, en, null);
-
-            String templateFilePathMy = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
-            paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png",words,path + "\\ShuiYin.png");
-          
             //end 水文结束
 
             //生成 表单的 html.

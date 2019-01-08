@@ -317,6 +317,7 @@ public class MapFrmFree extends EntityNoName {
 		rm = new RefMethod();
 		rm.Title = "导出XML表单模版"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoExp";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Export.png";
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "导出到xml";
@@ -675,7 +676,7 @@ public class MapFrmFree extends EntityNoName {
 	}
 
 	public final String DoPageLoadFull() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/PageLoadFull.jsp?s=34&FK_MapData="
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData="
 				+ this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 
@@ -703,15 +704,6 @@ public class MapFrmFree extends EntityNoName {
 		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 
-	/**
-	 * 导出
-	 * 
-	 * @return
-	 */
-	public final String DoMapExt() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/List.htm?FK_MapData=" + this.getNo()
-				+ "&T=sd";
-	}
 
 	/**
 	 * 导出表单
@@ -719,15 +711,8 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoExp() {
-		String urlExt = Glo.getCCFlowAppPath() + "WF/Admin/XAP/DoPort.jsp?DoType=DownFormTemplete&FK_MapData="
-				+ this.getNo();
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), urlExt, 900, 1000);
-		} catch (IOException e) {
-			Log.DebugWriteError("MapFrmFree DoExp()" + e);
-		}
-
-		return null;
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData="+ this.getNo();
+		
 	}
 
 	/// #endregion 方法.

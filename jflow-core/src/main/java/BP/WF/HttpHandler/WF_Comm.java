@@ -1879,50 +1879,68 @@ public class WF_Comm extends WebContralBase {
 		Entities ens = BP.En.ClassFactory.GetEns(ensName);
 		Entity en = ens.getGetNewEntity();
 		BP.En.RefMethod rm = en.getEnMap().getHisRefMethods().get(index);
-		String pk = this.getRefEnKey();
-		if (pk == null) {
-			pk = this.GetRequestVal(en.getPK());
-		}
-
-		en.setPKVal(pk);
-		en.Retrieve();
 		
 		/// #region 处理无参数的方法.
 		if (rm.getHisAttrs() == null || rm.getHisAttrs().size() == 0) {
-			rm.HisEn = en;
+			String pk = this.getPKVal();
+            if (pk == null)
+                pk = this.GetRequestVal(en.getPK());
 
-			// 如果是link.
-			if (rm.refMethodType == RefMethodType.LinkModel) {
-				Object tempVar = null;
-				try {
-					tempVar = rm.Do(null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				String url = (String) ((tempVar instanceof String) ? tempVar : null);
-				if (DotNetToJavaStringHelper.isNullOrEmpty(url)) {
-					return "err@应该返回的url.";
-				}
+            if (pk == null)
+                pk = this.getPKVal();
 
-				return "url@" + url;
-			}
+            if (pk == null)
+                return "err@错误pkval 没有值。";
 
-			Object obj = null;
-			try {
-				obj = rm.Do(null);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (obj == null) {
-				return "close@info";
-			}
+            String infos = "";
 
-			String info = obj.toString();
-			info = info.replace("@", "\t\n");
-			return "close@" + info;
+            String[] pks = pk.split(",");
+            
+            for(String mypk : pks)
+            {
+
+                en.setPKVal(mypk);
+                en.Retrieve();
+                rm.HisEn = en;
+
+                // 如果是link.
+                if (rm.refMethodType == RefMethodType.LinkModel
+                    || rm.refMethodType == RefMethodType.LinkeWinOpen
+                    || rm.refMethodType == RefMethodType.RightFrameOpen){
+                    String url = (String) rm.Do(null);
+                    if (DataType.IsNullOrEmpty(url))
+                    {
+                        infos += "err@应该返回的url.";
+                        break;
+                    }
+
+                    infos += "url@" + url;
+                    break;
+                }
+
+                Object obj = rm.Do(null);
+                if (obj == null)
+                {
+                    infos += "close@info";
+                    break;
+                }
+
+                String result = obj.toString();
+                if (result.indexOf("url@") != -1)
+                {
+                    infos += result;
+                    break;
+                }
+
+                result = result.replace("@", "\t\n");
+                infos += "close@" + result;
+            }
+
+            return infos;
 		}
-
 		/// #endregion 处理无参数的方法.
+	    en.setPKVal(this.getPKVal());
+        en.Retrieve();
 		
 		// 转化为json 返回到前台解析. 处理有参数的方法.
 		DataSet ds = new DataSet();
@@ -1993,16 +2011,12 @@ public class WF_Comm extends WebContralBase {
 			String uiBindKey = dr.getValue("UIBindKey").toString();
 			if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true) {
 				String myPK = dr.getValue("MyPK").toString();
-				// 如果是空的
-				// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
-				// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey
-				// IsNull ");
 			}
 
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.getValue("KeyOfEn").toString();
 			String fk_mapData = dr.getValue("FK_MapData").toString();
-
+			if (ds.Tables.contains(uiBindKey) == false)
 			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 		}
 

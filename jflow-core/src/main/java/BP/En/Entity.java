@@ -3111,7 +3111,9 @@ public abstract class Entity implements Serializable {
 		if (this.get_enMap() == null)
 			return;
 
-		for (Attr attr : this.get_enMap().getAttrs()) {
+		Attrs attrs = this.get_enMap().getAttrs();
+		
+		for (Attr attr : attrs) {
 
 			String key = attr.getKey();
 
@@ -3147,9 +3149,6 @@ public abstract class Entity implements Serializable {
 
 				continue;
 			} else if (v.equals("@RDT")) {
-
-				// Attr attr = this.getEnMap().GetAttrByKey(key);
-
 				if (attr.getMyDataType() == DataType.AppDate) {
 					this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
 				}
@@ -3285,7 +3284,8 @@ public abstract class Entity implements Serializable {
              }
              continue;
 		   }else{
-			   GloVar gloVar = new GloVar(v);
+			   GloVar gloVar = new GloVar();
+			   gloVar.setPKVal(v);
                int count = gloVar.RetrieveFromDBSources();
                if (count == 1)
                {

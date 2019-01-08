@@ -71,10 +71,7 @@ public enum DeliveryWay
 	 
 	*/
 	BySQLAsSubThreadEmpsAndData(12),
-	/*
-	 * 按照sql模版
-	 * */
-	BySQLTemplate(17),
+
 	/** 
 	 按明细表确定子线程接受人.
 	 
@@ -95,9 +92,20 @@ public enum DeliveryWay
 	 
 	*/
 	BySetDeptAsSubthread(16),
+	
+	/*
+	 * 按照sql模版
+	 * */
+	BySQLTemplate(17),
+	// 从人员到人员
+	ByFromEmpToEmp(18),
+	
+	//按照岗位计算-范围内的
+	 ByStationForPrj(20),
+	 //按照选择模式计算.
+	 BySelectedForPrj(21),
 	/** 
 	 按照ccflow的BPM模式处理
-	 
 	*/
 	ByCCFlowBPM(100);
 

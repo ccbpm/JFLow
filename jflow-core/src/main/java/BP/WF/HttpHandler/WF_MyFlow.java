@@ -370,6 +370,7 @@ public class WF_MyFlow extends WebContralBase {
 		}
 		// 找到父级目录添加到集合
 		for (BP.WF.Template.FlowFormTree folderapp : parentFolders.ToJavaList()) {
+			if(appFlowFormTree.contains(folderapp) == false)
 			appFlowFormTree.AddEntity(folderapp);
 		}
 		// 求出没有父节点的文件夹
@@ -636,67 +637,59 @@ public class WF_MyFlow extends WebContralBase {
 			}
 
 			 String toUrl = "";
-			 
-             if (this.getcurrND().getHisFormType() == NodeFormType.SheetTree || this.getcurrND().getHisFormType() == NodeFormType.SheetAutoTree)
+
+             //toUrl = "./FlowFormTree/Default.htm?WorkID=" + this.WorkID + "&FK_Flow=" + this.FK_Flow + "&UserNo=" + WebUser.No + "&FID=" + this.FID + "&SID=" + WebUser.SID + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+             if (this.getIsMobile() == true)
              {
-                 //toUrl = "./FlowFormTree/Default.htm?WorkID=" + this.WorkID + "&FK_Flow=" + this.FK_Flow + "&UserNo=" + WebUser.No + "&FID=" + this.FID + "&SID=" + WebUser.SID + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
-                 if (this.getIsMobile() == true)
-                 {
-                     if (gwf.getParas_Frms().equals("") == false)
-                         toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
-                     else
-                         toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
-                 }
+                 if (gwf.getParas_Frms().equals("") == false)
+                     toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
                  else
-                 {
-                     if (gwf.getParas_Frms().equals("")==false)
-                         toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
-                     else
-                         toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
-                 }
-
-                String[] strs = this.getRequestParas().split("&");
-                 for (String str : strs)
-                 {
-                     if (toUrl.contains(str) == true)
-                         continue;
-                     if (str.contains("DoType=") == true)
-                         continue;
-                     if (str.contains("DoMethod=") == true)
-                         continue;
-                     if (str.contains("HttpHandlerName=") == true)
-                         continue;
-                     if (str.contains("IsLoadData=") == true)
-                         continue;
-                     if (str.contains("IsCheckGuide=") == true)
-                         continue;                     
-
-                     toUrl += "&" + str;
-                     
-                 }
-               
-                 Enumeration enu = getRequest().getParameterNames();
-     			while (enu.hasMoreElements())
-     			{
-     				
-     				String key = (String) enu.nextElement();
-     				 if (toUrl.contains(key+"=") == true)
-                         continue;
-     				
-     				 toUrl += "&" + key + "=" + getRequest().getParameter(key);
-     			}
-
+                     toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
              }
              else
              {
-                 toUrl = "./WebOffice/Default.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+                 if (gwf.getParas_Frms().equals("")==false)
+                     toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
+                 else
+                     toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
              }
 
-			if (gwf == null) {
-				gwf = new GenerWorkFlow();
-				gwf.setWorkID(this.getWorkID());
-				gwf.RetrieveFromDBSources();
-			}
+            String[] strs = this.getRequestParas().split("&");
+             for (String str : strs)
+             {
+                 if (toUrl.contains(str) == true)
+                     continue;
+                 if (str.contains("DoType=") == true)
+                     continue;
+                 if (str.contains("DoMethod=") == true)
+                     continue;
+                 if (str.contains("HttpHandlerName=") == true)
+                     continue;
+                 if (str.contains("IsLoadData=") == true)
+                     continue;
+                 if (str.contains("IsCheckGuide=") == true)
+                     continue;                     
+
+                 toUrl += "&" + str;
+                 
+             }
+               
+             Enumeration enu = getRequest().getParameterNames();
+ 			while (enu.hasMoreElements())
+ 			{
+ 				
+ 				String key = (String) enu.nextElement();
+ 				 if (toUrl.contains(key+"=") == true)
+                     continue;
+ 				
+ 				 toUrl += "&" + key + "=" + getRequest().getParameter(key);
+ 			}
+
+            
+		
+			gwf.setWorkID(this.getWorkID());
+			gwf.RetrieveFromDBSources();
+			
 			// 设置url.
 			if (gwf.getWFState() == WFState.Runing || gwf.getWFState() == WFState.Blank
 					|| gwf.getWFState() == WFState.Draft) {
@@ -709,13 +702,18 @@ public class WF_MyFlow extends WebContralBase {
 			// SDK表单上服务器地址,应用到使用ccflow的时候使用的是sdk表单,该表单会存储在其他的服务器上,珠海高凌提出.
 			toUrl = toUrl.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 
-			// // 加入设置父子流程的参数.
-			// toUrl += "&DoFunc=" + this.DoFunc;
-			// toUrl += "&CFlowNo=" + this.CFlowNo;
-			// toUrl += "&Nos=" + this.Nos;
-
 			if (toUrl.indexOf("FK_Node=") == -1)
 				toUrl = toUrl + "&FK_Node=" + this.getcurrND().getNodeID();
+			
+			 //如果是开始节点.
+            if (this.getcurrND().getIsStartNode() == true)
+            {
+                if (toUrl.contains("PrjNo") == true && toUrl.contains("PrjName") == true)
+                {
+                    String sql = "UPDATE " + currWK.getEnMap().getPhysicsTable() + " SET PrjNo='" + this.GetRequestVal("PrjNo") + "', PrjName='" + this.GetRequestVal("PrjName") + "' WHERE OID=" + this.getWorkID();
+                    BP.DA.DBAccess.RunSQL(sql);
+                }
+            }
 
 			return "url@" + toUrl;
 		}
@@ -822,6 +820,15 @@ public class WF_MyFlow extends WebContralBase {
 		myurl = this.MyFlow_Init_DealUrl(this.getcurrND(), currWK, myurl);
 		myurl = myurl.replace("DoType=MyFlow_Init&", "");
 		myurl = myurl.replace("&DoWhat=StartClassic", "");
+		//如果是开始节点.
+        if (this.getcurrND().getIsStartNode() == true)
+        {
+            if (myurl.contains("PrjNo") == true && myurl.contains("PrjName") == true)
+            {
+                String sql = "UPDATE " + currWK.getEnMap().getPhysicsTable() + " SET PrjNo='" + this.GetRequestVal("PrjNo") + "', PrjName='" + this.GetRequestVal("PrjName") + "' WHERE OID=" + this.getWorkID();
+                BP.DA.DBAccess.RunSQL(sql);
+            }
+        }
 		return "url@" + myurl;
 	}
 

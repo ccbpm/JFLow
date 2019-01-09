@@ -17157,7 +17157,7 @@ CREATE TABLE `wf_workflowdeletelog` (
 -- View structure for v_flowstarter
 -- ----------------------------
 DROP VIEW IF EXISTS `v_flowstarter`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`admin`@`%`  VIEW `v_flowstarter` AS SELECT A.FK_Flow, a.FlowName, C.FK_Emp FROM WF_Node a, WF_NodeStation b, Port_DeptEmpStation c 
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `v_flowstarter` AS SELECT A.FK_Flow, a.FlowName, C.FK_Emp FROM WF_Node a, WF_NodeStation b, Port_DeptEmpStation c 
  WHERE a.NodePosType=0 AND ( a.WhoExeIt=0 OR a.WhoExeIt=2 ) 
 AND  a.NodeID=b.FK_Node AND B.FK_Station=C.FK_Station   AND  ( A.DeliveryWay=0 OR A.DeliveryWay=14 )
 UNION  
@@ -17176,7 +17176,7 @@ SELECT A.FK_Flow, a.FlowName, B.No AS FK_Emp FROM WF_Node A, Port_Emp B
 -- View structure for v_flowstarterbpm
 -- ----------------------------
 DROP VIEW IF EXISTS `v_flowstarterbpm`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`admin`@`%`  VIEW `v_flowstarterbpm` AS SELECT A.FK_Flow, a.FlowName, C.FK_Emp FROM WF_Node a, WF_NodeStation b, Port_DeptEmpStation c 
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `v_flowstarterbpm` AS SELECT A.FK_Flow, a.FlowName, C.FK_Emp FROM WF_Node a, WF_NodeStation b, Port_DeptEmpStation c 
  WHERE a.NodePosType=0 AND ( a.WhoExeIt=0 OR a.WhoExeIt=2 ) 
 AND  a.NodeID=b.FK_Node AND B.FK_Station=C.FK_Station   AND  ( A.DeliveryWay=0 OR A.DeliveryWay=14 )
 UNION  
@@ -17195,7 +17195,7 @@ SELECT A.FK_Flow, a.FlowName, B.No AS FK_Emp FROM WF_Node A, Port_Emp B
 -- View structure for v_totalch
 -- ----------------------------
 DROP VIEW IF EXISTS `v_totalch`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`admin`@`%`  VIEW `v_totalch` AS SELECT FK_Emp, (SELECT count(MyPK) AS Num FROM WF_CH A WHERE A.FK_Emp=WF_CH.FK_Emp) as  AllNum,
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `v_totalch` AS SELECT FK_Emp, (SELECT count(MyPK) AS Num FROM WF_CH A WHERE A.FK_Emp=WF_CH.FK_Emp) as  AllNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta <=1 AND A.FK_Emp=WF_CH.FK_Emp) as  ASNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta >=2 AND A.FK_Emp=WF_CH.FK_Emp) as  CSNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta =0 AND A.FK_Emp=WF_CH.FK_Emp) as  JiShi,
@@ -17210,7 +17210,7 @@ FROM WF_CH GROUP BY FK_Emp ;
 -- View structure for v_totalchweek
 -- ----------------------------
 DROP VIEW IF EXISTS `v_totalchweek`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`admin`@`%`  VIEW `v_totalchweek` AS SELECT FK_Emp,WeekNum,FK_NY, (SELECT count(MyPK) AS Num FROM WF_CH A WHERE A.FK_Emp=WF_CH.FK_Emp AND A.WeekNum=WF_CH.WeekNum) as  AllNum,
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `v_totalchweek` AS SELECT FK_Emp,WeekNum,FK_NY, (SELECT count(MyPK) AS Num FROM WF_CH A WHERE A.FK_Emp=WF_CH.FK_Emp AND A.WeekNum=WF_CH.WeekNum) as  AllNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta <=1 AND A.FK_Emp=WF_CH.FK_Emp AND A.WeekNum=WF_CH.WeekNum) as  ASNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta >=2 AND A.FK_Emp=WF_CH.FK_Emp AND A.WeekNum=WF_CH.WeekNum) as  CSNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta =0 AND A.FK_Emp=WF_CH.FK_Emp AND A.WeekNum=WF_CH.WeekNum) as  JiShi,
@@ -17225,7 +17225,7 @@ FROM WF_CH GROUP BY FK_Emp,WeekNum,FK_NY ;
 -- View structure for v_totalchyf
 -- ----------------------------
 DROP VIEW IF EXISTS `v_totalchyf`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`admin`@`%`  VIEW `v_totalchyf` AS SELECT FK_Emp,FK_NY, (SELECT count(MyPK) AS Num FROM WF_CH A WHERE A.FK_Emp=WF_CH.FK_Emp AND A.FK_NY=WF_CH.FK_NY) as  AllNum,
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `v_totalchyf` AS SELECT FK_Emp,FK_NY, (SELECT count(MyPK) AS Num FROM WF_CH A WHERE A.FK_Emp=WF_CH.FK_Emp AND A.FK_NY=WF_CH.FK_NY) as  AllNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta <=1 AND A.FK_Emp=WF_CH.FK_Emp AND A.FK_NY=WF_CH.FK_NY) as  ASNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta >=2 AND A.FK_Emp=WF_CH.FK_Emp AND A.FK_NY=WF_CH.FK_NY) as  CSNum,
 (SELECT count(MyPK) AS Num FROM WF_CH A WHERE CHSta =0 AND A.FK_Emp=WF_CH.FK_Emp AND A.FK_NY=WF_CH.FK_NY) as  JiShi,
@@ -17240,7 +17240,7 @@ FROM WF_CH GROUP BY FK_Emp,FK_NY ;
 -- View structure for wf_empworks
 -- ----------------------------
 DROP VIEW IF EXISTS `wf_empworks`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`admin`@`%`  VIEW `wf_empworks` AS SELECT A.PRI,A.WorkID,B.IsRead, A.Starter,A.StarterName,A.WFState,A.FK_Dept,A.DeptName, A.FK_Flow, A.FlowName,A.PWorkID,
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost`  VIEW `wf_empworks` AS SELECT A.PRI,A.WorkID,B.IsRead, A.Starter,A.StarterName,A.WFState,A.FK_Dept,A.DeptName, A.FK_Flow, A.FlowName,A.PWorkID,
 A.PFlowNo,B.FK_Node, B.FK_NodeText AS NodeName,B.FK_Dept as WorkerDept, A.Title, A.RDT, B.RDT AS ADT, 
 B.SDT, B.FK_Emp,B.FID ,A.FK_FlowSort,A.SysType,A.SDTOfNode,B.PressTimes,
 A.GuestNo,A.GuestName,A.BillNo,A.FlowNote,A.TodoEmps,A.TodoEmpsNum,A.TodoSta,A.TaskSta,0 as ListType,A.Sender,A.AtPara,

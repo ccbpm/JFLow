@@ -599,12 +599,17 @@ public class FindWorker
 			prjNo = "";
 			try
 			{
-				prjNo = this.currWn.getHisWork().GetValStrByKey("PrjNo");
+				prjNo = this.currWn.rptGe.GetValStrByKey("PrjNo");
 			}
 			catch (RuntimeException ex)
 			{
-				throw new RuntimeException("@当前流程是工程类流程，但是在节点表单中没有PrjNo字段(注意区分大小写)，请确认。@异常信息:" + ex.getMessage());
+				 if (this.currWn.rptGe.getEnMap().getAttrs().contains("PrjNo") == false)
+						throw new RuntimeException("@当前流程是工程类流程，但是在节点表单中没有PrjNo字段(注意区分大小写)，请确认。@异常信息:" + ex.getMessage());
+                 else
+                     throw ex;
 			}
+			 if (DataType.IsNullOrEmpty(prjNo) == true)
+                 throw new Exception("err@没有找到项目编号PrjNo.");
 		}
 
 			///#region 按部门与岗位的交集计算.

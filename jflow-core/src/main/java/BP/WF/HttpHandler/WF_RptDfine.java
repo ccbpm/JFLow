@@ -914,8 +914,6 @@ public class WF_RptDfine extends WebContralBase{
 		String dtFrom = GetRequestVal("dtFrom");
 		String dtTo = GetRequestVal("dtTo");
 		String mvals = GetRequestVal("mvals");
-		String pageSize = GetRequestVal("pageSize");
-		int pageIdx = Integer.parseInt(GetRequestVal("pageIdx"));
 
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 		UserRegedit ur = new UserRegedit();
@@ -929,22 +927,25 @@ public class WF_RptDfine extends WebContralBase{
 		ur.setMVals(mvals);
 		ur.Update();
 
-		DataSet ds = new DataSet();
 		MapData md = new MapData(rptNo);
 		MapAttrs attrs = new MapAttrs(rptNo);
 		GEEntitys ges = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ges);
-
+		
+		String title="数据导出";
 		if (this.getSearchType().equals("My")) //我发起的.
 		{
+				title = "我发起的流程";
 				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 		}
 		else if (this.getSearchType().equals("MyDept")) //我部门发起的.
 		{
+				title = "我部门发起的流程";
 				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
 		}
 		else if (this.getSearchType().equals("MyJoin")) //我参与的.
 		{
+				title = "我参与的流程";
 				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
 		}
 		else if (this.getSearchType().equals("Adminer"))
@@ -960,7 +961,7 @@ public class WF_RptDfine extends WebContralBase{
 		qo = InitQueryObject(qo, md,enAttrs , attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
-		String filePath = ExportDGToExcel(qo.DoQueryToTable(), entity, this.getSearchType(), enAttrs);
+		String filePath = ExportDGToExcel(qo.DoQueryToTable(), entity, title, enAttrs);
 		return filePath;
 	}
 	

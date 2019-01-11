@@ -623,8 +623,8 @@ public class WF_MyFlow extends WebContralBase {
 			} else {
 				gwf.setWorkID(this.getWorkID());
 				gwf.RetrieveFromDBSources();
-				pFlowNo = gwf.getPFlowNo();
-				pWorkID = gwf.getPWorkID() + "";
+				//pFlowNo = gwf.getPFlowNo();
+				//pWorkID = gwf.getPWorkID() + "";
 			}
 
 			if (this.getcurrND().getIsStartNode()) {

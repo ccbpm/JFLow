@@ -437,6 +437,19 @@ function figure_Template_Dtl(frmDtl, ext) {
 function figure_Template_IFrame(fram) {
 
     var eleHtml = $("<DIV id='Fd" + fram.MyPK + "' style='position:absolute; left:" + fram.X + "px; top:" + fram.Y + "px; width:" + fram.W + "px; height:" + fram.H + "px;text-align: left;' >");
+    
+    var url = fram.URL;
+    if(url.indexOf("@basePath")==0)
+    	url = url.replace("@basePath",basePath);
+    
+    if (url.indexOf('?') == -1)
+        url += "?1=2";
+    
+    if(url.indexOf("@basePath")==0)
+    	url = url.replace("@basePath",basePath);
+
+    //处理URL需要的参数
+    //1.拼接参数
     var paras = this.pageData;
     var strs = "";
     for (var str in paras) {
@@ -446,10 +459,17 @@ function figure_Template_IFrame(fram) {
             strs += "&" + str + "=" + paras[str];
     }
 
-    var src = dealWithUrl(fram.URL) + "&IsReadonly=0";
+    //2.替换@参数
+    var pageParams = getQueryString();
+    $.each(pageParams, function (i, pageParam) {
+        var pageParamArr = pageParam.split('=');
+        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
+    });
+
+    url = url + strs + "&IsReadonly=0";
 
     var eleIframe = '<iframe></iframe>';
-    eleIframe = $("<iframe ID='Fdg" + fram.MyPK + "' src='" + src +
+    eleIframe = $("<iframe ID='Fdg" + fram.MyPK + "' src='" + url +
                  "' frameborder=0  style='position:absolute;width:" + fram.W + "px; height:" + fram.H +
                  "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
 
@@ -707,7 +727,7 @@ function analysisFontStyle(ele, fontStyle, isBold, isItalic) {
     if (fontStyle != undefined && fontStyle.indexOf(':') > 0) {
         var fontStyleArr = fontStyle.split(';');
         $.each(fontStyleArr, function (i, fontStyleObj) {
-        	if (fontStyleObj.split(':')[0] == 'font-size')
+            if (fontStyleObj.split(':')[0] == 'font-size')
                 ele.css(fontStyleObj.split(':')[0], fontStyleObj.split(':')[1] + 'px');
             else if (fontStyleObj.split(':')[0] == 'color')
                 ele.css(fontStyleObj.split(':')[0], TranColorToHtmlColor(fontStyleObj.split(':')[1]));
@@ -734,12 +754,11 @@ function figure_Template_Label(frmLab) {
 //    eleHtml = $(eleHtml);
 //    return eleHtml;
 
-    eleHtml = '<label></label>'
+    eleHtml = "<label></label>";
     eleHtml = $(eleHtml);
     var text = frmLab.Text.replace(/@/g, "<br>");
     eleHtml.html(text);
-    eleHtml.css('position', 'absolute').css('top', frmLab.Y).css('left', frmLab.X).css('font-size', frmLab.FontSize)
-        .css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColor));
+    eleHtml.css('position', 'absolute').css('top', frmLab.Y).css('left', frmLab.X).css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColor));
     analysisFontStyle(eleHtml, frmLab.FontStyle, frmLab.isBold, frmLab.IsItalic);
     return eleHtml;
 }
@@ -751,8 +770,8 @@ function figure_Template_Label_old(frmLab) {
     eleHtml = $(eleHtml);
     var text = frmLab.Text.replace(/@/g, "<br>");
     eleHtml.html(text);
-    eleHtml.css('position', 'absolute').css('top', frmLab.Y).css('left', frmLab.X).css('font-size', frmLab.FontSize)
-        .css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColr));
+    eleHtml.css('position', 'absolute').css('top', frmLab.Y).css('left', frmLab.X).css('font-size', frmLab.FontSize+'px')
+        .css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColor));
     analysisFontStyle(eleHtml, frmLab.FontStyle, frmLab.isBold, frmLab.IsItalic);
     return eleHtml;
 }
@@ -953,13 +972,7 @@ function figure_Template_ImageAth(frmImageAth) {
         imgSrc = basePath + "/DataUser/ImgAth/Data/" + frmImageAth.CtrlID + "_" + refpkVal + ".png";
     else
         imgSrc = basePath + "/DataUser/ImgAth/Data/" + pageData.FK_MapData + "_" + frmImageAth.CtrlID + "_" + refpkVal + ".png";
-//    if (frmData.Sys_FrmImgAthDB) {
-//        $.each(frmData.Sys_FrmImgAthDB, function (i, obj) {
-//            if (obj.MyPK == (frmImageAth.MyPK + '_' + pageData.WorkID)) {
-//                
-//            }
-//        });
-//    }
+
     //设计属性
     img.attr('id', 'Img' + frmImageAth.MyPK).attr('name', 'Img' + frmImageAth.MyPK);
     img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Admin/CCFormDesigner/Controls/DataView/AthImg.png'");

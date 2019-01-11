@@ -29,12 +29,12 @@
             //获得字段集合.
             var mapAttrs = new Entities("BP.Sys.MapAttrs");
             mapAttrs.Retrieve("FK_MapData", frmID, "Y");
-
+            fieldsData = mapAttrs;
 
             for (var i = 0; i < mapAttrs.length; i++) {
                 var en = mapAttrs[i];
                 if (en.UIVisible == 0)
-                    continue;
+                   continue;
 
                 var html = "";
                 html += "<tr >";
@@ -133,7 +133,7 @@
 
             for (var i = 0; i < mapAttrs.length; i++) {
                 var en = mapAttrs[i];
-                if (en.UIVisible == 0)
+                 if (en.UIVisible == 0)
                     continue;
 
                 ff = new Entity("BP.WF.Template.FrmField");
@@ -180,6 +180,8 @@
                 else
                     ff.IsWriteToGenerWorkFlow = 0;
 
+
+
                 //判断变化的是否需要保存.
                 var isNeedSave = false;
                 if (ff.IsWriteToGenerWorkFlow == 1)
@@ -188,14 +190,22 @@
                 if (ff.IsWriteToFlowTable == 1)
                     isNeedSave = true;
 
-                if (aa.UIIsEnable != ff.UIIsEnable)
+                if (en.UIIsEnable != ff.UIIsEnable)
                     isNeedSave = true;
 
-                if (aa.UIIsEnable != ff.UIIsEnable)
+                if (en.UIIsEnable != ff.UIIsEnable)
+                    isNeedSave = true;
+
+                if (en.DefVal != ff.DefVal)
+                    isNeedSave = true;
+
+                if (en.RegularExp != ff.RegularExp)
                     isNeedSave = true;
 
                 if (isNeedSave == false)
                     continue;
+
+
 
                 ff.Insert();
 

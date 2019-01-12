@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Enumeration;
 
 import org.apache.http.protocol.HttpContext;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -339,15 +340,19 @@ public abstract class WebContralBase extends BaseController {
 
 			urlExt += "&" + para;
 		}
-
-
-        /*  @yuanlina
-        foreach (string key in this.context.Request.Form.Keys)
-        {
-            urlExt += "&" + key + "=" + this.context.Request.Form[key];
-        }
-        */
 		
+		 Enumeration enu = getRequest().getParameterNames();
+		while (enu.hasMoreElements())
+		{
+			
+			String key = (String) enu.nextElement();
+			 if (urlExt.contains(key+"=") == true)
+              continue;
+			
+			 urlExt += "&" + key + "=" + getRequest().getParameter(key);
+		}
+
+
 		return urlExt;
 	}
 

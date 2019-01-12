@@ -1011,6 +1011,8 @@ public class WF_CommEntity extends WebContralBase {
                     if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
                     {
                         val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.getKey());
+                        if(attr.getIsNum()== true && DataType.IsNullOrEmpty(val))
+                        	 val ="0";
                         dtl.SetValByKey(attr.getKey(), val);
                         continue;
                     }

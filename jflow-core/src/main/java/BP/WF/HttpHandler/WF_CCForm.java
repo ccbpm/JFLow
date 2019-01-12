@@ -922,7 +922,54 @@ public class WF_CCForm extends WebContralBase {
 		// 处理参数.
 		String paras = this.getRequestParas();
 		paras = paras.replace("&DoType=Frm_Init", "");
+		
+		 //非流程的独立运行的表单.
+         if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+         {
+             BP.WF.Template.FrmNode fn = new FrmNode();
+             fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
+             
+             if (fn !=null && fn.getWhoIsPK() != WhoIsPK.OID)
+             {
+                 if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
+                 {
+                     paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + this.getPWorkID());
+                     paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + this.getPWorkID());
+                     paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + this.getPWorkID());
+                 }
 
+                 if (fn.getWhoIsPK() == WhoIsPK.FID)
+                 {
+                     paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + this.getFID());
+                     paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + this.getFID());
+                     paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + this.getFID());
+                 }
+
+                 if (md.getHisFrmType() == FrmType.FreeFrm)
+                 {
+                     if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+                         return "url@FrmGener.htm?1=2" + paras;
+                     else
+                         return "url@FrmGener.htm?1=2" + paras;
+                 }
+
+                 if (md.getHisFrmType() == FrmType.VSTOForExcel || md.getHisFrmType() == FrmType.ExcelFrm)
+                 {
+                     if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+                         return "url@FrmVSTO.aspx?1=2" + paras;
+                     else
+                         return "url@FrmVSTO.aspx?1=2" + paras;
+                 }
+
+                 if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+                     return "url@FrmGener.htm?1=2" + paras;
+                 else
+                     return "url@FrmGener.htm?1=2" + paras;
+             }
+         }
+         //非流程的独立运行的表单.
+
+         //流程的独立运行的表单.
 		if (md.getHisFrmType() == FrmType.FreeFrm) {
 			if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
 				return "url@FrmGener.htm?1=2" + paras;
@@ -1334,11 +1381,17 @@ public class WF_CCForm extends WebContralBase {
 
          //定义节点变量.
          Node nd = null;
+         
+         //是否启用装载填充？
+         boolean isLoadData = true;
+         
          if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
          {
              nd = new Node(this.getFK_Node());
              nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
              fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
+             //对于一个表单绑定到一个表单树上，有的节点不需要装载填充的.
+             isLoadData = fn.getIsEnableLoadData();
          }
 		
 		
@@ -1377,34 +1430,6 @@ public class WF_CCForm extends WebContralBase {
 		if (pk == 0) {
 			BP.DA.Cash.ClearCash();
 		}
-
-		 //是否启用装载填充？
-        boolean isLoadData = true;
-
-        if (this.getFK_Node() != 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false)
-        {
-            /*说明是流程调用它， 就要判断谁是表单的PK.*/
-            switch (fn.getWhoIsPK())
-            {
-                case FID:
-                    pk = this.getFID();
-                    if (pk == 0)
-                        throw new Exception("@没有接收到参数FID");
-                    break;
-                case PWorkID: /*父流程ID*/
-                    pk = this.getPWorkID();
-                    if (pk == 0)
-                        throw new Exception("@没有接收到参数PWorkID");
-                    break;
-                case OID:
-                default:
-                    break;
-            }
-
-            //对于一个表单绑定到一个表单树上，有的节点不需要装载填充的.
-            isLoadData = fn.getIsEnableLoadData();
-        }
-		// /#region 求出 who is pk 值.
 
 		en.setOID(pk);
 

@@ -5103,7 +5103,7 @@ public class Glo {
 		case SubFlowGuide:
 		case BySQLOne:
 			String sql = "";
-			Object tempVar = fl.getStartGuidePara1();
+			Object tempVar = fl.getStartGuidePara3();
 			sql = (String) ((tempVar instanceof String) ? tempVar : null);
 			if (!StringUtils.isEmpty(sql)) {
 				sql = sql.replaceAll("@Key", sKey).replaceAll("@key", sKey);
@@ -5124,6 +5124,9 @@ public class Glo {
 			sql = sql.replaceAll("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+			  if (dt.Rows.size() == 0)
+                  throw new Exception("err@没有找到那一行数据." + sql);
+			  
 			java.util.Hashtable ht = new java.util.Hashtable();
 			// 转换成ht表
 			DataRow row = dt.Rows.get(0);

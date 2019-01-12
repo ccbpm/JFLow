@@ -449,7 +449,33 @@ function figure_Template_IFrame(fram) {
     	url = url.replace("@basePath",basePath);
 
     //处理URL需要的参数
-    //1.拼接参数
+
+    //1.替换@参数
+    var pageParams = getQueryString();
+    $.each(pageParams, function (i, pageParam) {
+        var pageParamArr = pageParam.split('=');
+        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
+    });
+
+    var src = url.replace(new RegExp(/(：)/g), ':');
+    if (src.indexOf("?") > 0) {
+        var params = getQueryStringFromUrl(src);
+        if (params != null && params.length > 0) {
+        	 $.each(params, function (i, param) {
+        		 if (param.indexOf('@') !=-1) {//是需要替换的参数
+                     paramArr = param.split('=');
+                     if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
+                    	 if (paramArr[1].indexOf('@WebUser.') == 0)
+                    		 url = url.replace(paramArr[1],frmData.MainTable[0][paramArr[1].substr('@WebUser.'.length)]);
+                         else
+                        	 url = url.replace(paramArr[1],frmData.MainTable[0][paramArr[1].substr(1)]);
+                     }
+        		 }
+        	 });
+        }
+    }
+    
+    //2.拼接参数
     var paras = this.pageData;
     var strs = "";
     for (var str in paras) {
@@ -458,13 +484,6 @@ function figure_Template_IFrame(fram) {
         else
             strs += "&" + str + "=" + paras[str];
     }
-
-    //2.替换@参数
-    var pageParams = getQueryString();
-    $.each(pageParams, function (i, pageParam) {
-        var pageParamArr = pageParam.split('=');
-        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
-    });
 
     url = url + strs + "&IsReadonly=0";
 

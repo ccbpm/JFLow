@@ -780,6 +780,32 @@ function Ele_Frame(flowData, gf) {
     
     if(url.indexOf("@basePath")==0)
     	url = url.replace("@basePath",basePath);
+    
+    //2.替换@参数
+    var pageParams = getQueryString();
+    $.each(pageParams, function (i, pageParam) {
+        var pageParamArr = pageParam.split('=');
+        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
+    });
+    
+    var src = url.replace(new RegExp(/(：)/g), ':');
+    if (src.indexOf("?") > 0) {
+        var params = getQueryStringFromUrl(src);
+        if (params != null && params.length > 0) {
+        	 $.each(params, function (i, param) {
+        		 if (param.indexOf('@') !=-1) {//是需要替换的参数
+                     paramArr = param.split('=');
+                     if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
+                    	 if (paramArr[1].indexOf('@WebUser.') == 0)
+                    		 url = url.replace(paramArr[1],flowData.MainTable[0][paramArr[1].substr('@WebUser.'.length)]);
+                         else
+                        	 url = url.replace(paramArr[1],flowData.MainTable[0][paramArr[1].substr(1)]);
+                     }
+        		 }
+        	 });
+        }
+    }
+
 
     //处理URL需要的参数
     //1.拼接参数
@@ -792,13 +818,7 @@ function Ele_Frame(flowData, gf) {
             strs += "&" + str + "=" + paras[str];
     }
    
-    //2.替换@参数
-    var pageParams = getQueryString();
-    $.each(pageParams, function (i, pageParam) {
-        var pageParamArr = pageParam.split('=');
-        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
-    });
-
+   
     url = url + strs + "&IsReadonly=0";
 
     eleHtml += "<iframe style='width:100%;height:" + frame.H + "px;' ID='" + frame.MyPK + "'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';

@@ -554,32 +554,29 @@ public class WF_MyFlow extends WebContralBase {
 			if (this.getPWorkID() != 0)
 				BP.WF.Dev2Interface.SetParentInfo(this.getFK_Flow(), workid, this.getPFlowNo(), this.getPWorkID(),
 						this.getPNodeID(), WebUser.getNo());
-
+			
 			switch (this.getcurrFlow().getStartGuideWay()) {
 			case None:
 				break;
 			case SubFlowGuide:
 			case SubFlowGuideEntity:
-				return "url@StartGuide.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid;
+				return "url@StartGuide.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid+this.getRequestParasOfAll();
 			case ByHistoryUrl: // 历史数据.
 				if (this.getcurrFlow().getIsLoadPriData() == true) {
 					return "err@流程配置错误，您不能同时启用前置导航，自动装载上一笔数据两个功能。";
 				}
-				return "url@StartGuide.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid;
 			case BySystemUrlOneEntity:
 				return "url@StartGuideEntities.htm?StartGuideWay=BySystemUrlOneEntity&FK_Flow="
-						+ this.getcurrFlow().getNo() + "&WorkID=" + workid;
-			// C# TO JAVA CONVERTER TODO TASK: The following line could not be
-			// converted:
+						+ this.getcurrFlow().getNo() + "&WorkID=" + workid+this.getRequestParasOfAll();
 			case BySQLMulti:
 				return "url@StartGuideEntities.htm?StartGuideWay=BySQLMulti&FK_Flow=" + this.getcurrFlow().getNo()
-						+ "&WorkID=" + workid;
+						+ "&WorkID=" + workid+this.getRequestParasOfAll();
 			case BySQLOne:
-				return "url@StartGuideEntities.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid;
+				return "url@StartGuideEntities.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid+this.getRequestParasOfAll();
 			case BySelfUrl: // 按照定义的url.
-				return "url@" + this.getcurrFlow().getStartGuidePara1() + this.getRequestParasOfAll() + "&WorkID=" + workid;
+				return "url@" + this.getcurrFlow().getStartGuidePara1() + this.getRequestParasOfAll() + "&WorkID=" + workid+this.getRequestParasOfAll();
 			case ByFrms: // 选择表单.
-				return "url@./WorkOpt/StartGuideFrms.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid;
+				return "url@./WorkOpt/StartGuideFrms.htm?FK_Flow=" + this.getcurrFlow().getNo() + "&WorkID=" + workid+this.getRequestParasOfAll();
 			default:
 				break;
 			}

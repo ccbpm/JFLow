@@ -2640,20 +2640,24 @@ public class Glo {
 					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
 				}
 				dt = DBAccess.RunSQLReturnTable(sql);
+				Attrs attrs  = en.getEnMap().getAttrs();
 				if (dt.Rows.size() == 1) {
 					DataRow dr = dt.Rows.get(0);
 					for (DataColumn dc : dt.Columns) {
 						// 去掉一些不需要copy的字段.
 						String columnName = dc.ColumnName;
+						if(attrs.Contains(columnName) == false)
+							continue;
 						if (columnName.equals(WorkAttr.OID) || columnName.equals(WorkAttr.FID)
 								|| columnName.equals(WorkAttr.Rec) || columnName.equals(WorkAttr.MD5)
 								|| columnName.equals(WorkAttr.MyNum) || columnName.equals(WorkAttr.RDT)
 								|| columnName.equals("RefPK") || columnName.equals(WorkAttr.RecText)) {
 							continue;
 						}
-
-						if (StringHelper.isNullOrEmpty(en.GetValStringByKey(dc.ColumnName))
-								|| en.GetValStringByKey(dc.ColumnName).equals("0")) {
+					   
+						if (DataType.IsNullOrEmpty(en.GetValStringByKey(dc.ColumnName))) {
+							en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+						}else if( en.GetValStringByKey(dc.ColumnName).equals("0") || en.GetValStringByKey(dc.ColumnName).equals("0.0")){
 							en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 						}
 					}

@@ -1943,6 +1943,18 @@ public class WF_MyFlow extends WebContralBase {
 			sql = sql.replaceAll("@WebUser.Name", WebUser.getName());
 			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sql = sql.replaceAll("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+			
+			Enumeration enu = getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				
+				String key = (String) enu.nextElement();
+				 if (sql.contains(key) == false)
+	              continue;
+				
+				 sql = sql.replaceAll("@"+key, getRequest().getParameter(key));
+			}
+
 
 			// 获取数据
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);

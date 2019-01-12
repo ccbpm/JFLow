@@ -2037,7 +2037,7 @@ public class MapData extends EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-						en.Insert();
+						en.DirectInsert();
 					}
 			}
 //ORIGINAL LINE: case "Sys_MapExt":

@@ -555,6 +555,7 @@ public class WF_MyFlow extends WebContralBase {
 				BP.WF.Dev2Interface.SetParentInfo(this.getFK_Flow(), workid, this.getPFlowNo(), this.getPWorkID(),
 						this.getPNodeID(), WebUser.getNo());
 			
+			
 			switch (this.getcurrFlow().getStartGuideWay()) {
 			case None:
 				break;
@@ -728,6 +729,16 @@ public class WF_MyFlow extends WebContralBase {
 
 			// 处理连接.
 			url = this.MyFlow_Init_DealUrl(getcurrND(), currWK, null);
+			
+			 //如果是开始节点.
+            if (this.getcurrND().getIsStartNode() == true)
+            {
+                if (url.contains("PrjNo") == true && url.contains("PrjName") == true)
+                {
+                    String sql = "UPDATE " + currWK.getEnMap().getPhysicsTable() + " SET PrjNo='" + this.GetRequestVal("PrjNo") + "', PrjName='" + this.GetRequestVal("PrjName") + "' WHERE OID=" + this.getWorkID();
+                    BP.DA.DBAccess.RunSQL(sql);
+                }
+            }
 
 			// sdk表单就让其跳转.
 			return "url@" + url;
@@ -771,6 +782,17 @@ public class WF_MyFlow extends WebContralBase {
 
 			// 处理连接.
 			url = this.MyFlow_Init_DealUrl(this.getcurrND(), currWK, url);
+			
+			 //如果是开始节点.
+            if (this.getcurrND().getIsStartNode() == true)
+            {
+                if (url.contains("PrjNo") == true && url.contains("PrjName") == true)
+                {
+                    String sql = "UPDATE " + currWK.getEnMap().getPhysicsTable() + " SET PrjNo='" + this.GetRequestVal("PrjNo") + "', PrjName='" + this.GetRequestVal("PrjName") + "' WHERE OID=" + this.getWorkID();
+                    BP.DA.DBAccess.RunSQL(sql);
+                }
+            }
+			
 			return "url@" + url;
 		}
 
@@ -790,6 +812,17 @@ public class WF_MyFlow extends WebContralBase {
 
 			url = url.replace("DoType=MyFlow_Init&", "");
 			url = url.replace("&DoWhat=StartClassic", "");
+			
+			 //如果是开始节点.
+            if (this.getcurrND().getIsStartNode() == true)
+            {
+                if (url.contains("PrjNo") == true && url.contains("PrjName") == true)
+                {
+                    String sql = "UPDATE " + currWK.getEnMap().getPhysicsTable() + " SET PrjNo='" + this.GetRequestVal("PrjNo") + "', PrjName='" + this.GetRequestVal("PrjName") + "' WHERE OID=" + this.getWorkID();
+                    BP.DA.DBAccess.RunSQL(sql);
+                }
+            }
+            
 			return "url@" + url;
 		}
 
@@ -807,6 +840,17 @@ public class WF_MyFlow extends WebContralBase {
 
 			url = url.replace("DoType=MyFlow_Init&", "");
 			url = url.replace("&DoWhat=StartClassic", "");
+			
+			 //如果是开始节点.
+            if (this.getcurrND().getIsStartNode() == true)
+            {
+                if (url.contains("PrjNo") == true && url.contains("PrjName") == true)
+                {
+                    String sql = "UPDATE " + currWK.getEnMap().getPhysicsTable() + " SET PrjNo='" + this.GetRequestVal("PrjNo") + "', PrjName='" + this.GetRequestVal("PrjName") + "' WHERE OID=" + this.getWorkID();
+                    BP.DA.DBAccess.RunSQL(sql);
+                }
+            }
+            
 			return "url@" + url;
 		}
 		// #endregion 内置表单类型的判断.

@@ -777,7 +777,7 @@ public class WebUser {
 		String val = GetValFromCookie("FK_DeptNameOfFull", null, true);
 		if (StringHelper.isNullOrEmpty(val)) {
 			try {
-				val = DBAccess.RunSQLReturnStringIsNull("SELECT NameOfPath FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'", null);
+				val = DBAccess.RunSQLReturnStringIsNull("SELECT NameOfPath FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'", "");
 				return val;
 			} catch (java.lang.Exception e) {
 				val = WebUser.getFK_DeptName();

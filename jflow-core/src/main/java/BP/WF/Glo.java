@@ -5117,6 +5117,8 @@ public class Glo {
 				sql = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
 
 			}
+			
+			//替换SQL
 
 			// sql = " SELECT * FROM (" + sql + ") T WHERE T.NO='" + sKey + "'
 			// ";
@@ -5126,6 +5128,8 @@ public class Glo {
 			sql = sql.replaceAll("@WebUser.Name", WebUser.getName());
 			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sql = sql.replaceAll("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+			
+			
 
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			  if (dt.Rows.size() == 0)

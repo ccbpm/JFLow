@@ -70,6 +70,7 @@ import BP.Sys.MapDtls;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtXmlList;
 import BP.Sys.MapExts;
+import BP.Sys.MapFrame;
 import BP.Sys.MapFrames;
 import BP.Sys.OSModel;
 import BP.Sys.PubClass;
@@ -145,6 +146,7 @@ import BP.WF.Template.NodeYGFlow;
 import BP.WF.Template.NodeYGFlows;
 import BP.WF.Template.Selector;
 import BP.WF.Template.SelectorModel;
+import BP.WF.Template.Selectors;
 import BP.WF.Template.StartGuideWay;
 import BP.WF.Template.TimelineRole;
 import BP.WF.Template.TurnTo;
@@ -2397,6 +2399,11 @@ public class Flow extends BP.En.EntityNoName {
 		Nodes nds = new Nodes(this.getNo());
 		DataTable dtNodes = nds.ToDataTableField("WF_Node");
 		ds.Tables.add(dtNodes);
+		
+		//接收人规则 //袁丽娜
+		Selectors selectors = new Selectors(this.getNo());
+		DataTable dtSelectors = selectors.ToDataTableField("WF_Selector");
+		ds.Tables.add(dtSelectors);
 
 		// 单据模版.
 		BillTemplates tmps = new BillTemplates(this.getNo());
@@ -5785,7 +5792,30 @@ public class Flow extends BP.En.EntityNoName {
 						nd.setFlowName(fl.getName());
 						nd.DirectUpdate();
 					}
-				} else if (dt.TableName.equals("WF_NodeStation")) // FAppSets.xml。
+				}else if(dt.TableName.equals("WF_Selector")){ //袁丽娜
+					for (DataRow dr : dt.Rows) {
+						Selector selector = new Selector();
+						for (DataColumn dc : dt.Columns) {
+							String val = (String) ((dr.getValue(dc.ColumnName) instanceof String)
+									? dr.getValue(dc.ColumnName) : null);
+							if (val == null) {
+								continue;
+							}
+							if (dc.ColumnName.toLowerCase().equals("nodeid")) {
+								if (val.length() < iOldFlowLength) {
+									// 节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+									throw new RuntimeException(
+											"@导入模板名称：" + oldFlowName + "；节点WF_Node下FK_Node值错误:" + val);
+								}
+							   val = flowID + val.substring(iOldFlowLength);
+						   }
+					       
+							selector.SetValByKey(dc.ColumnName, val);
+						}
+						selector.DirectUpdate();
+					}
+				}
+				else if (dt.TableName.equals("WF_NodeStation")) // FAppSets.xml。
 				{
 					DBAccess.RunSQL(
 							"DELETE FROM WF_NodeStation WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
@@ -5852,7 +5882,7 @@ public class Flow extends BP.En.EntityNoName {
 						}
 						sem.Insert();
 					}
-				} else if (dt.TableName.equals("Sys_MapAttr")) // RptEmps.xml。
+				} /*else if (dt.TableName.equals("Sys_MapAttr")) // RptEmps.xml。
 				{
 					for (DataRow dr : dt.Rows) {
 						MapAttr ma = new MapAttr();
@@ -5882,7 +5912,7 @@ public class Flow extends BP.En.EntityNoName {
 							ma.DirectInsert();
 						}
 					}
-				} else if (dt.TableName.equals("Sys_MapData")) // RptEmps.xml。
+				}*/ else if (dt.TableName.equals("Sys_MapData")) // RptEmps.xml。
 				{
 					for (DataRow dr : dt.Rows) {
 						MapData md = new MapData();
@@ -6100,7 +6130,29 @@ public class Flow extends BP.En.EntityNoName {
 						}
 						en.Insert();
 					}
-				} else if (dt.TableName.equals("WF_NodeEmp")) // FAppSets.xml。
+					
+				}
+				else if (dt.TableName.equals("Sys_MapFrame"))
+				{
+						for (DataRow dr : dt.Rows)
+						{
+							idx++;
+							MapFrame en = new MapFrame();
+							for (DataColumn dc : dt.Columns)
+							{
+								String val = (String)((dr.get(dc.ColumnName) instanceof String) ? dr.get(dc.ColumnName) : null);
+								if (val == null)
+								{
+									continue;
+								}
+
+								val = val.replace("ND" + oldFlowID, "ND" + flowID);
+								en.SetValByKey(dc.ColumnName,val );
+							}
+							en.DirectInsert();
+						}
+				}
+				else if (dt.TableName.equals("WF_NodeEmp")) // FAppSets.xml。
 				{
 					for (DataRow dr : dt.Rows) {
 						NodeEmp ne = new NodeEmp();
@@ -6126,6 +6178,38 @@ public class Flow extends BP.En.EntityNoName {
 						ne.Insert();
 					}
 				} else if (dt.TableName.equals("Sys_GroupField")) {
+					//获取Sys_MapAttr //袁丽娜
+					if(ds.hashTables.containsKey("Sys_MapAttr") == true){
+						DataTable MapAttrdt = ds.GetTableByName("Sys_MapAttr");
+						for (DataRow dr : MapAttrdt.Rows) {
+							MapAttr ma = new MapAttr();
+							for (DataColumn dc : MapAttrdt.Columns) {
+								String val = dr.getValue(dc.ColumnName) + "";
+	
+								// switch (dc.ColumnName.ToLower())
+								if (dc.ColumnName.toLowerCase().equals("fk_mapdata")
+										|| dc.ColumnName.toLowerCase().equals("keyofen")
+										|| dc.ColumnName.toLowerCase().equals("autofulldoc")) {
+									if (val == null) {
+										continue;
+									}
+	
+									val = val.replace("ND" + oldFlowID, "ND" + flowID);
+								} else {
+								}
+								ma.SetValByKey(dc.ColumnName, val);
+							}
+							boolean b = ma.IsExit(MapAttrAttr.FK_MapData, ma.getFK_MapData(), MapAttrAttr.KeyOfEn,
+									ma.getKeyOfEn());
+	
+							ma.setMyPK(ma.getFK_MapData() + "_" + ma.getKeyOfEn());
+							if (b == true) {
+								ma.DirectUpdate();
+							} else {
+								ma.DirectInsert();
+							}
+						}
+					}
 					for (DataRow dr : dt.Rows) {
 						GroupField gf = new GroupField();
 						for (DataColumn dc : dt.Columns) {
@@ -6159,9 +6243,11 @@ public class Flow extends BP.En.EntityNoName {
 						}
 						int oid = DBAccess.GenerOID();
 						DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID=" + oid + " WHERE FK_MapData='" + gf.getEnName()
-								+ "' AND GroupID=" + gf.getOID());
+								+ "' AND GroupID=" + dr.getValue("OID"));
 						gf.InsertAsOID(oid);
+						
 					}
+					
 				} else if (dt.TableName.equals("WF_CCEmp")) // 抄送.
 				{
 					for (DataRow dr : dt.Rows) {

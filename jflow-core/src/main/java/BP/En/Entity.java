@@ -523,6 +523,7 @@ public abstract class Entity implements Serializable {
 			 */
 			if (pkval.equals(myNo)) {
 				isMeet = true;
+				break;
 			}
 
 			if (!isMeet) {
@@ -560,6 +561,7 @@ public abstract class Entity implements Serializable {
 			 */
 			if (pkval.equals(myNo)) {
 				isMeet = true;
+				break;
 			}
 
 			if (!isMeet) {
@@ -3285,7 +3287,7 @@ public abstract class Entity implements Serializable {
              continue;
 		   }else{
 			   GloVar gloVar = new GloVar();
-			   gloVar.setPKVal(v);
+			   gloVar.setNo(v);
                int count = gloVar.RetrieveFromDBSources();
                if (count == 1)
                {

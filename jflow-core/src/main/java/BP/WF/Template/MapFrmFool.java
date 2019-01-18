@@ -432,15 +432,14 @@ public class MapFrmFool extends EntityNoName
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			GroupField gf = new GroupField();
-			if (gf.IsExit(GroupFieldAttr.CtrlID, dtl.getNo()) == true && !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
-			{
-				continue;
-			}
-
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.getNo(), GroupFieldAttr.FrmID, this.getNo());
+            if (i == 1)
+                continue;
+		
 			gf.setLab(dtl.getName());
 			gf.setCtrlID(dtl.getNo());
 			gf.setCtrlType("Dtl");
-			gf.setEnName(dtl.getFK_MapData());
+			gf.setFrmID(dtl.getFK_MapData());
 			gf.DirectSave();
 
 			str += "@为从表" + dtl.getName() + " 增加了分组.";
@@ -451,15 +450,15 @@ public class MapFrmFool extends EntityNoName
 		for (MapFrame fram : frams.ToJavaList())
 		{
 			GroupField gf = new GroupField();
-			if (gf.IsExit(GroupFieldAttr.CtrlID, fram.getMyPK()) == true && !DotNetToJavaStringHelper.isNullOrEmpty(gf.getCtrlType()))
-			{
-				continue;
-			}
+			 int i = gf.Retrieve(GroupFieldAttr.CtrlID, fram.getMyPK(), GroupFieldAttr.FrmID, this.getNo());
+             if (i == 1)
+                 continue;
+			
 
 			gf.setLab(fram.getName());
 			gf.setCtrlID(fram.getMyPK());
 			gf.setCtrlType("Frame");
-			gf.setEnName(fram.getFK_MapData());
+			gf.setFrmID(fram.getFK_MapData());
 			gf.Insert();
 
 			str += "@为框架 " + fram.getName() + " 增加了分组.";
@@ -471,15 +470,16 @@ public class MapFrmFool extends EntityNoName
 		for (FrmAttachment ath : aths.ToJavaList())
 		{
 			   GroupField gf = new GroupField();
-               int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.getMyPK(), GroupFieldAttr.FrmID, this.getNo());
+			   int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.getMyPK(), GroupFieldAttr.FrmID, this.getNo());
                if (i == 1)
                    continue;
                
+              
 
 			gf.setLab(ath.getName());
 			gf.setCtrlID(ath.getMyPK());
 			gf.setCtrlType("Ath");
-			gf.setEnName(ath.getFK_MapData());
+			gf.setFrmID(ath.getFK_MapData());
 			gf.Insert();
 
 			str += "@为附件 " + ath.getName() + " 增加了分组.";

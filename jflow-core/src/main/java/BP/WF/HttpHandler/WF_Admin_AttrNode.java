@@ -384,7 +384,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 				if (GetGroupID(mapDtl.getNo(), groups) == 0) {
 					group = new GroupField();
 					group.setLab(mapDtl.getName());
-					group.setEnName(mapDtl.getFK_MapData());
+					group.setFrmID(mapDtl.getFK_MapData());
 					group.setCtrlType(GroupCtrlType.Dtl);
 					group.setCtrlID(mapDtl.getNo());
 					group.Insert();
@@ -397,7 +397,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 				if (GetGroupID(athMent.getMyPK(), groups) == 0) {
 					group = new GroupField();
 					group.setLab(athMent.getName());
-					group.setEnName(athMent.getFK_MapData());
+					group.setFrmID(athMent.getFK_MapData());
 					group.setCtrlType(GroupCtrlType.Ath);
 					group.setCtrlID(athMent.getMyPK());
 					group.Insert();
@@ -414,7 +414,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 				if (GetGroupID(fbtn.getMyPK(), groups) == 0) {
 					group = new GroupField();
 					group.setLab(fbtn.getText());
-					group.setEnName(fbtn.getFK_MapData());
+					group.setFrmID(fbtn.getFK_MapData());
 					group.setCtrlType(GroupCtrlType.Btn);
 					group.setCtrlID(fbtn.getMyPK());
 					group.Insert();
@@ -1051,7 +1051,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 						if (tgrp == null) {
 							tgrp = new GroupField();
 							tgrp.setLab(group.getLab());
-							tgrp.setEnName(tmd);
+							tgrp.setFrmID(tmd);
 							tgrp.setIdx(group.getIdx());
 							tgrp.Insert();
 							tgroups.AddEntity(tgrp);
@@ -1109,7 +1109,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 					if (tgroup == null) {
 						group = new GroupField();
 						group.setLab(tdtl.getName());
-						group.setEnName(tdtl.getFK_MapData());
+						group.setFrmID(tdtl.getFK_MapData());
 						group.setCtrlType(GroupCtrlType.Dtl);
 						group.setCtrlID(tdtl.getNo());
 						group.setIdx(groupidx);
@@ -1228,7 +1228,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 							if (tgrp == null) {
 								tgrp = new GroupField();
 								tgrp.setLab(group.getLab());
-								tgrp.setEnName(tdtl.getNo());
+								tgrp.setFrmID(tdtl.getNo());
 								tgrp.setIdx(group.getIdx());
 								tgrp.Insert();
 								targroups.AddEntity(tgrp);
@@ -1271,7 +1271,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 					if (tgroup == null) {
 						tgroup = new GroupField();
 						tgroup.setLab(tdtl.getName());
-						tgroup.setEnName(tdtl.getFK_MapData());
+						tgroup.setFrmID(tdtl.getFK_MapData());
 						tgroup.setCtrlType(GroupCtrlType.Dtl);
 						tgroup.setCtrlID(tdtl.getNo());
 						tgroup.setIdx(maxDtlIdx);

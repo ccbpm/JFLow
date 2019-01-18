@@ -5129,6 +5129,17 @@ public class Glo {
 			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sql = sql.replaceAll("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 			
+			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				
+				String key = (String) enu.nextElement();
+				 if (sql.contains(key) == false)
+	              continue;
+				
+				 sql = sql.replaceAll("@"+key, ContextHolderUtils.getRequest().getParameter(key));
+			}
+
 			
 
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);

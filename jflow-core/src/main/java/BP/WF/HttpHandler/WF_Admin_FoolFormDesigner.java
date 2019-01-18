@@ -560,7 +560,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 								gf.setLab("默认分组");
 							}
 
-							gf.setEnName(dtl.getNo());
+							gf.setFrmID(dtl.getNo());
 							gf.InsertAsNew();
 
 							if (groupids.containsKey(item.getGroupID()) == false)
@@ -620,7 +620,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		return msg;
 	}
 
-	//ORIGINAL LINE: case "ParseStringToPinyin":
 	public final String ParseStringToPinyin() //转拼音方法.
 	{
 		String name = GetRequestVal("name");
@@ -629,28 +628,50 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	     return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, flag.equals("true"), true, 20);
 	 
 	}
-	//ORIGINAL LINE: case "DtlFieldUp":
+	
+	/**
+	 * 表单上移
+	 * @return
+	 * @throws Exception
+	 */
+	public String Designer_GFDoUp() throws Exception
+    {
+        String msg = "";
+        GroupField gf = new GroupField(this.getRefOID());
+        gf.DoUp();
+        return msg;
+    }
+	/**
+	 * 表单下移
+	 * @return
+	 * @throws Exception
+	 */
+    public String Designer_GFDoDown() throws Exception
+    {
+        String msg = "";
+        GroupField mygf = new GroupField(this.getRefOID());
+        mygf.DoDown();
+        return msg;
+    }
+    
 	public final String DtlFieldUp() throws Exception //字段上移
 	{
 			MapAttr attrU = new MapAttr(this.getMyPK());
 			attrU.DoUpForMapDtl();
 			return "";
 	}
-	//ORIGINAL LINE: case "DtlFieldDown":
 	public final String DtlFieldDown() throws Exception //字段下移.
 	{
 			MapAttr attrD = new MapAttr(this.getMyPK());
 			attrD.DoDownForMapDtl();
 			return "";
 	}
-	//ORIGINAL LINE: case "HidAttr":
 	public final String HidAttr() throws Exception //获得隐藏的字段.
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIVisible, 0);
 		return attrs.ToJson();
 	}
-	//ORIGINAL LINE: case "Up":
 	public final String Up() throws Exception //移动位置..
 	{
 		MapAttr attr = new MapAttr(this.getMyPK());
@@ -677,7 +698,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			int oidIdx = gf.getIdx();
 			gf.setIdx(gf.getIdx() - 1);
 			GroupField gfUp = new GroupField();
-			if (gfUp.Retrieve(GroupFieldAttr.EnName, gf.getEnName(), GroupFieldAttr.Idx, gf.getIdx()) == 1)
+			if (gfUp.Retrieve(GroupFieldAttr.FrmID, gf.getFrmID(), GroupFieldAttr.Idx, gf.getIdx()) == 1)
 			{
 				gfUp.setIdx(oidIdx);
 				gfUp.Update();
@@ -695,7 +716,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			int oidIdx1 = mygf.getIdx();
 			mygf.setIdx(mygf.getIdx() + 1);
 			GroupField gfDown = new GroupField();
-			if (gfDown.Retrieve(GroupFieldAttr.EnName, mygf.getEnName(), GroupFieldAttr.Idx, mygf.getIdx()) == 1)
+			if (gfDown.Retrieve(GroupFieldAttr.FrmID, mygf.getFrmID(), GroupFieldAttr.Idx, mygf.getIdx()) == 1)
 			{
 				gfDown.setIdx(oidIdx1);
 				gfDown.Update();
@@ -936,7 +957,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         BP.Sys.GroupField gf = new GroupField();
         gf.setFrmID( this.getFK_MapData());
         gf.setLab(  this.GetRequestVal("Lab"));
-        gf.setEnName( this.getFK_MapData());
         gf.Insert();
         return "创建成功..";
     }
@@ -973,7 +993,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		}
 
 		gf.setCtrlID(no);
-		gf.setEnName(this.getFK_MapData());
+		gf.setFrmID(this.getFK_MapData());
 		gf.setLab(name);
 		gf.Save();
 		return "保存成功.";

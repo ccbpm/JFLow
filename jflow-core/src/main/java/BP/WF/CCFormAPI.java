@@ -484,11 +484,11 @@ public class CCFormAPI extends Dev2Interface
         if (i > 0)
         {
         	return "error:前缀已经使用：" + gKey + " ， 请确认您是否增加了这个审核分组或者，请您更换其他的前缀。";
-        }
-
+        } 
+       
         GroupField gf = new GroupField();
         gf.setLab(gName);
-        gf.setEnName(frmID);
+        gf.setFrmID(frmID);
         gf.Insert();
 
         attrN = new MapAttr();

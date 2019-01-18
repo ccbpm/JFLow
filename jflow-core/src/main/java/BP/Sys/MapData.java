@@ -1707,8 +1707,6 @@ public class MapData extends EntityNoName
 		{
 			int idx = 0;
 
-//			switch (dt.TableName)
-//ORIGINAL LINE: case "Sys_MapDtl":
 			if (dt.TableName.equals("Sys_MapDtl"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -2144,7 +2142,7 @@ public class MapData extends EntityNoName
 						}
 						int beforeID = (int) en.getOID();
 						en.setOID(0);
-						en.Insert();
+						en.DirectInsert();
 						endDoSQL += "@UPDATE Sys_MapAttr SET GroupID=" + en.getOID() + " WHERE FK_MapData='" + fk_mapdata + "' AND GroupID=" + beforeID;
 					}
 			}
@@ -2236,7 +2234,7 @@ public class MapData extends EntityNoName
 		if (gfs.size() == 0)
 		{
 			GroupField gf = new GroupField();
-			gf.setEnName(this.getNo());
+			gf.setFrmID(this.getNo());
 			gf.setLab(this.getName());
 			gf.Insert();
 

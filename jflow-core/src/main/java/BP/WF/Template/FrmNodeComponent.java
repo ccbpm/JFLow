@@ -171,7 +171,7 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FWC" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setEnName("ND" + this.getNodeID());
+				gf.setFrmID("ND" + this.getNodeID());
 				gf.setCtrlID("FWC" + this.getNo());
 				gf.setCtrlType(GroupCtrlType.FWC);
 				gf.setLab("审核组件");
@@ -197,7 +197,7 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "SubFlow" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setEnName("ND" + this.getNodeID());
+				gf.setFrmID("ND" + this.getNodeID());
 				gf.setCtrlID("SubFlow" + this.getNo());
 				gf.setCtrlType(GroupCtrlType.SubFlow);
 				gf.setLab("父子流程组件"); 
@@ -222,7 +222,7 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmTrack" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setEnName("ND" + this.getNodeID());
+				gf.setFrmID("ND" + this.getNodeID());
 				gf.setCtrlID("FrmTrack" + this.getNo());
 				gf.setCtrlType(GroupCtrlType.Track);
 				gf.setLab("轨迹");
@@ -248,7 +248,7 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmThread" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setEnName("ND" + this.getNodeID());
+				gf.setFrmID("ND" + this.getNodeID());
 				gf.setCtrlID("FrmThread" + this.getNo());
 				gf.setCtrlType(GroupCtrlType.Thread);
 				gf.setLab("子线程");
@@ -273,7 +273,7 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmFTC" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setEnName("ND" + this.getNodeID());
+				gf.setFrmID("ND" + this.getNodeID());
 				gf.setCtrlID("FrmFTC" + this.getNo());
 				gf.setCtrlType(GroupCtrlType.FTC);
 				gf.setLab("流转自定义");

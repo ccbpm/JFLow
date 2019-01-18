@@ -3,6 +3,7 @@ package BP.Sys.FrmUI;
 import BP.DA.*;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Tools.StringHelper;
 
 /** 
  框架
@@ -40,6 +41,34 @@ public class MapFrameExt extends EntityMyPK
 		this.setMyPK( mypk);
 		this.Retrieve();
 	}
+	
+	/**
+	 * FK_MapData
+	 */
+	public final String getFK_MapData() {
+		return this.GetValStrByKey(FrmAttachmentAttr.FK_MapData);
+	}
+
+	public final void setFK_MapData(String value) {
+		this.SetValByKey(FrmAttachmentAttr.FK_MapData, value);
+	}
+	
+	/**
+	 * 附件名称
+	 */
+	public final String getName() {
+		String str = this.GetValStringByKey(FrmAttachmentAttr.Name);
+		if (StringHelper.isNullOrEmpty(str) == true) {
+			str = "我的框架";
+		}
+		return str;
+	}
+
+	public final void setName(String value) {
+		this.SetValByKey(FrmAttachmentAttr.Name, value);
+	}
+	
+	
 	/** 
 	 EnMap
 	 
@@ -99,6 +128,26 @@ public class MapFrameExt extends EntityMyPK
 
         super.afterDelete();
     }
+	
+	@Override
+	protected boolean beforeUpdateInsertAction() throws Exception {
+		// 更新相关的分组信息.
+			GroupField gf = new GroupField();
+			int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
+			if (i == 0) {
+				gf.setLab(this.getName());
+				gf.setFrmID(this.getFK_MapData());
+				gf.setCtrlType("Frame");
+				gf.Insert();
+			} else {
+				gf.setLab(this.getName());
+				gf.setFrmID(this.getFK_MapData());
+				gf.setCtrlType("Frame");
+				gf.Update();
+			}
+
+			return super.beforeUpdateInsertAction();
+	}
 
     
 

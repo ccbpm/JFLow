@@ -1,26 +1,15 @@
 package BP.WF.HttpHandler;
 
 import java.util.ArrayList;
-
 import javax.servlet.http.HttpSession;
 
 import BP.DA.DBAccess;
-import BP.DA.DBType;
 import BP.DA.DataRow;
-import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.En.Entities;
 import BP.En.EntityTree;
-import BP.En.FieldTypeS;
-import BP.En.QueryObject;
-import BP.Port.Depts;
 import BP.Port.Emp;
-import BP.Port.Station;
-import BP.Port.Stations;
-import BP.Sys.MapAttr;
 import BP.Sys.MapData;
-import BP.Sys.MapDataAttr;
-import BP.Sys.MapDatas;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.WF.DeliveryWay;
@@ -29,25 +18,15 @@ import BP.WF.Flow;
 import BP.WF.Node;
 import BP.WF.Nodes;
 import BP.WF.HttpHandler.Base.WebContralBase;
-import BP.WF.Template.Cond;
-import BP.WF.Template.CondAttr;
-import BP.WF.Template.CondOrAnd;
-import BP.WF.Template.CondType;
-import BP.WF.Template.Conds;
 import BP.WF.Template.ConnDataFrom;
-import BP.WF.Template.FlowFormTrees;
 import BP.WF.Template.FrmEnableRole;
 import BP.WF.Template.FrmNode;
-import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodeExt;
 import BP.WF.Template.FrmNodeExts;
 import BP.WF.Template.FrmNodes;
 import BP.WF.Template.SQLTemplate;
 import BP.WF.Template.SQLTemplates;
-import BP.WF.Template.SpecOperWay;
-import BP.WF.Template.SysFormTree;
-import BP.WF.Template.SysFormTreeAttr;
-import BP.WF.Template.SysFormTrees;
+
 
 /**
  * 页面功能实体
@@ -74,7 +53,8 @@ public class WF_Admin extends WebContralBase {
 	public final String getRefNo() {
 		return this.GetRequestVal("RefNo");
 	}
-
+	
+	
 	/**
 	 * 初始化界面.
 	 * 
@@ -326,9 +306,6 @@ public class WF_Admin extends WebContralBase {
 
 		String text = "";
 		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
-
-		// FrmNodeExt fns = new FrmNodeExt(this.getFK_Flow(),
-		// this.getFK_Node());
 
 		FrmNodes fns = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
 

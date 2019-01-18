@@ -27,15 +27,7 @@ public class GroupField extends EntityOID
 	}
  
 	public boolean IsUse = false;
-	public final String getEnName()
-	{
-		return this.GetValStrByKey(GroupFieldAttr.EnName);
-	}
-	public final void setEnName(String value)
-	{
-		this.SetValByKey(GroupFieldAttr.EnName, value);
-		this.SetValByKey(GroupFieldAttr.FrmID, value);
-	}
+
 	/** 
 	 标签
 	 
@@ -158,7 +150,7 @@ public class GroupField extends EntityOID
 	*/
 	public final String DoDelAllField()
 	{
-		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getEnName() + "' AND GroupID=" + this.getOID()+" AND KeyOfEn NOT IN ('OID','RDT','REC','RefPK','FID')";
+		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getFrmID() + "' AND GroupID=" + this.getOID()+" AND KeyOfEn NOT IN ('OID','RDT','REC','RefPK','FID')";
 		int i= BP.DA.DBAccess.RunSQL(sql);
 		return "删除字段{"+i+"}个，被删除成功, 执行的SQL:"+sql;
 	}
@@ -169,7 +161,7 @@ public class GroupField extends EntityOID
 	*/
 	public final String DoAddField()
 	{
-		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/FieldTypeList.htm?DoType=AddF&FK_MapData11=" + this.getEnName() + "&GroupField=" + this.getOID(); // DataType.getCurrentDataTime();
+		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/FieldTypeList.htm?DoType=AddF&FK_MapData11=" + this.getFrmID() + "&GroupField=" + this.getOID(); // DataType.getCurrentDataTime();
 	}
 
 	@Override
@@ -190,12 +182,12 @@ public class GroupField extends EntityOID
  
 	public final String DoDown()
 	{
-		this.DoOrderDown(GroupFieldAttr.EnName, this.getEnName(), GroupFieldAttr.Idx);
+		this.DoOrderDown(GroupFieldAttr.FrmID, this.getFrmID(), GroupFieldAttr.Idx);
 		return "执行成功";
 	}
 	public final String DoUp()
 	{
-		this.DoOrderUp(GroupFieldAttr.EnName, this.getEnName(), GroupFieldAttr.Idx);
+		this.DoOrderUp(GroupFieldAttr.FrmID, this.getFrmID(), GroupFieldAttr.Idx);
 		return "执行成功";
 	}
 	@Override
@@ -206,7 +198,7 @@ public class GroupField extends EntityOID
 		//    throw new Exception("@已经在("+this.EnName+")里存在("+this.Lab+")的分组了。");
 		try
 		{
-			String sql = "SELECT MAX(IDX) FROM Sys_GroupField WHERE FrmID='" + this.getEnName() + "'";
+			String sql = "SELECT MAX(IDX) FROM Sys_GroupField WHERE FrmID='" + this.getFrmID() + "'";
 			this.setIdx(DBAccess.RunSQLReturnValInt(sql, 0) + 1);
 		}
 		catch (java.lang.Exception e)

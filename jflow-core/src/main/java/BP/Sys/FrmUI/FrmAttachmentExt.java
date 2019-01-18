@@ -876,7 +876,6 @@ public class FrmAttachmentExt extends EntityMyPK {
 	protected void afterInsert() throws Exception {
 		GroupField gf = new GroupField();
 		if (gf.IsExit(GroupFieldAttr.CtrlID, this.getMyPK()) == false) {
-			gf.setEnName(this.getFK_MapData());
 			gf.setFrmID(this.getFK_MapData());
 			gf.setCtrlID(this.getMyPK());
 			gf.setCtrlType("Ath");

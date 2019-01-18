@@ -474,7 +474,7 @@ public class CCFormAPI
 
 		GroupField gf = new GroupField();
 		gf.setLab(gName);
-		gf.setEnName(frmID);
+		gf.setFrmID(frmID);
 		gf.Insert();
 
 		attrN = new MapAttr();
@@ -548,7 +548,7 @@ public class CCFormAPI
 	{
 		GroupField gf = new GroupField();
 		gf.setLab(groupName);
-		gf.setEnName(frmID);
+		gf.setFrmID(frmID);
 		gf.setFrmID(frmID);
 		
 		   int i=gf.Retrieve(GroupFieldAttr.Lab, groupName, GroupFieldAttr.FrmID, frmID);

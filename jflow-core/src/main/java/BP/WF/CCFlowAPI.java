@@ -573,6 +573,7 @@ public class CCFlowAPI {
 				rpt.RetrieveFromDBSources();
 				
 				rpt.ResetDefaultVal();
+
 				
 				DataTable dt=rpt.ToDataTableField("aaa");
 				

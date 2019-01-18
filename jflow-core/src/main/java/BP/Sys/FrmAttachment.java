@@ -883,7 +883,7 @@ public class FrmAttachment extends EntityMyPK
 		GroupField gf = new GroupField();
 		if (gf.IsExit(GroupFieldAttr.CtrlID, this.getMyPK()) == false)
 		{
-			gf.setEnName(this.getFK_MapData());
+			gf.setFrmID(this.getFK_MapData());
 			gf.setCtrlID(this.getMyPK());
 			gf.setCtrlType("Ath");
 			gf.setLab(this.getName());

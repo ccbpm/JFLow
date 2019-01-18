@@ -179,7 +179,7 @@ public class MapFrame extends EntityMyPK
 	protected void afterInsert() throws Exception
 	{
 		GroupField gf = new GroupField();
-		gf.setEnName(  this.getFK_MapData());
+		gf.setFrmID(  this.getFK_MapData());
 		gf.setCtrlID( this.getMyPK());
 		gf.setCtrlType("Frame");
 		gf.setLab(this.getName());

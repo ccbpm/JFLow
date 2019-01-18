@@ -28,11 +28,11 @@ public class GroupFields extends EntitiesOID
 	*/
 	public GroupFields(String enName) throws Exception
 	{
-		int i = this.Retrieve(GroupFieldAttr.EnName, enName, GroupFieldAttr.Idx);
+		int i = this.Retrieve(GroupFieldAttr.FrmID, enName, GroupFieldAttr.Idx);
 		if (i == 0)
 		{
 			GroupField gf = new GroupField();
-			gf.setEnName(enName);
+			gf.setFrmID(enName);
 			MapData md = new MapData();
 			md.setNo(enName);
 			if (md.RetrieveFromDBSources() == 0)
@@ -76,7 +76,7 @@ public class GroupFields extends EntitiesOID
 		if (num==0)
 		{
 			GroupField gf = new GroupField();
-			gf.setEnName(enName);
+			gf.setFrmID(enName);
 			MapData md = new MapData();
 			md.setNo(enName);
 			if (md.RetrieveFromDBSources() == 0)

@@ -1228,7 +1228,7 @@ public class MapAttr extends EntityMyPK {
 				this.setGroupID(this.getGroupID());
 				
 			} else {
-				group.setEnName(this.getFK_MapData());
+				group.setFrmID(this.getFK_MapData());
 				group.setLab(new MapData(this.getFK_MapData()).getName());
 				group.setIdx(1);
 				group.Insert();

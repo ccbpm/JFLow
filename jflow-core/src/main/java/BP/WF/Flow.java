@@ -3696,7 +3696,7 @@ public class Flow extends BP.En.EntityNoName {
 			if (num == 0) {
 				flowGF = new GroupField();
 				flowGF.setLab(flowInfo);
-				flowGF.setEnName(fk_mapData);
+				flowGF.setFrmID(fk_mapData);
 				flowGF.setIdx(-1);
 				flowGF.Insert();
 			}
@@ -6242,7 +6242,7 @@ public class Flow extends BP.En.EntityNoName {
 							gf.SetValByKey(dc.ColumnName, val);
 						}
 						int oid = DBAccess.GenerOID();
-						DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID=" + oid + " WHERE FK_MapData='" + gf.getEnName()
+						DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID=" + oid + " WHERE FK_MapData='" + gf.getFrmID()
 								+ "' AND GroupID=" + dr.getValue("OID"));
 						gf.InsertAsOID(oid);
 						

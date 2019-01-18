@@ -1276,7 +1276,7 @@ public class MapDtl extends EntityNoName
 		GroupField gf = new GroupField();
 		if (gf.IsExit(GroupFieldAttr.CtrlID, this.getNo()) == false)
 		{
-			gf.setEnName(this.getFK_MapData());
+			gf.setFrmID(this.getFK_MapData());
 			gf.setCtrlID(this.getNo());
 			gf.setCtrlType("Dtl");
 			gf.setLab(this.getName());

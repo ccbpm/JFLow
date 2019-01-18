@@ -439,43 +439,11 @@ function figure_Template_IFrame(fram) {
     var eleHtml = $("<DIV id='Fd" + fram.MyPK + "' style='position:absolute; left:" + fram.X + "px; top:" + fram.Y + "px; width:" + fram.W + "px; height:" + fram.H + "px;text-align: left;' >");
     
     var url = fram.URL;
-    if(url.indexOf("@basePath")==0)
-    	url = url.replace("@basePath",basePath);
-    
     if (url.indexOf('?') == -1)
         url += "?1=2";
-    
-    if(url.indexOf("@basePath")==0)
-    	url = url.replace("@basePath",basePath);
 
     //处理URL需要的参数
-
-    //1.替换@参数
-    var pageParams = getQueryString();
-    $.each(pageParams, function (i, pageParam) {
-        var pageParamArr = pageParam.split('=');
-        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
-    });
-
-    var src = url.replace(new RegExp(/(：)/g), ':');
-    if (src.indexOf("?") > 0) {
-        var params = getQueryStringFromUrl(src);
-        if (params != null && params.length > 0) {
-        	 $.each(params, function (i, param) {
-        		 if (param.indexOf('@') !=-1) {//是需要替换的参数
-                     paramArr = param.split('=');
-                     if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
-                    	 if (paramArr[1].indexOf('@WebUser.') == 0)
-                    		 url = url.replace(paramArr[1],frmData.MainTable[0][paramArr[1].substr('@WebUser.'.length)]);
-                         else
-                        	 url = url.replace(paramArr[1],frmData.MainTable[0][paramArr[1].substr(1)]);
-                     }
-        		 }
-        	 });
-        }
-    }
-    
-    //2.拼接参数
+    //1.拼接参数
     var paras = this.pageData;
     var strs = "";
     for (var str in paras) {
@@ -484,6 +452,13 @@ function figure_Template_IFrame(fram) {
         else
             strs += "&" + str + "=" + paras[str];
     }
+
+    //2.替换@参数
+    var pageParams = getQueryString();
+    $.each(pageParams, function (i, pageParam) {
+        var pageParamArr = pageParam.split('=');
+        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
+    });
 
     url = url + strs + "&IsReadonly=0";
 
@@ -512,7 +487,7 @@ function figure_MapAttr_Template(mapAttr) {
         if (W < 160) W = 160;
 
 
-    eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 12px");
+    eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 12px").css('display', 'inline');
 
 
     eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
@@ -991,7 +966,13 @@ function figure_Template_ImageAth(frmImageAth) {
         imgSrc = basePath + "/DataUser/ImgAth/Data/" + frmImageAth.CtrlID + "_" + refpkVal + ".png";
     else
         imgSrc = basePath + "/DataUser/ImgAth/Data/" + pageData.FK_MapData + "_" + frmImageAth.CtrlID + "_" + refpkVal + ".png";
-
+//    if (frmData.Sys_FrmImgAthDB) {
+//        $.each(frmData.Sys_FrmImgAthDB, function (i, obj) {
+//            if (obj.MyPK == (frmImageAth.MyPK + '_' + pageData.WorkID)) {
+//                
+//            }
+//        });
+//    }
     //设计属性
     img.attr('id', 'Img' + frmImageAth.MyPK).attr('name', 'Img' + frmImageAth.MyPK);
     img.attr("src", imgSrc).attr('onerror', "this.src='" + basePath + "/WF/Admin/CCFormDesigner/Controls/DataView/AthImg.png'");

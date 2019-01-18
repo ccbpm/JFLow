@@ -37,6 +37,7 @@ function FlowFormTree_Init() {
     }
 
     var pushData = eval('(' + data + ')');
+
       ////加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
     var enName = "ND"+GetQueryString("FK_Node");
     if(enName == null || enName == "")
@@ -529,22 +530,22 @@ var urlExtFrm = function () {
 }
 
 //公共方法
-function AjaxService(param, callback, scope, levPath) {
-    $.ajax({
-        type: "GET", //使用GET或POST方法访问后台
-        dataType: "text", //返回json格式的数据
-        contentType: "application/json; charset=utf-8",
-        url: MyFlow, //要访问的后台地址
-        data: param, //要发送的数据
-        async: true,
-        cache: false,
-        complete: function () { }, //AJAX请求完成时隐藏loading提示
-        error: function (XMLHttpRequest, errorThrown) {
-            callback(XMLHttpRequest);
-        },
-        success: function (msg) {//msg为返回的数据，在这里做数据绑定
-            var data = msg;
-            callback(data, scope);
-        }
-    });
-}
+//function AjaxService(param, callback, scope, levPath) {
+//    $.ajax({
+//        type: "GET", //使用GET或POST方法访问后台
+//        dataType: "text", //返回json格式的数据
+//        contentType: "application/json; charset=utf-8",
+//        url: MyFlow, //要访问的后台地址
+//        data: param, //要发送的数据
+//        async: true,
+//        cache: false,
+//        complete: function () { }, //AJAX请求完成时隐藏loading提示
+//        error: function (XMLHttpRequest, errorThrown) {
+//            callback(XMLHttpRequest);
+//        },
+//        success: function (msg) {//msg为返回的数据，在这里做数据绑定
+//            var data = msg;
+//            callback(data, scope);
+//        }
+//    });
+//}

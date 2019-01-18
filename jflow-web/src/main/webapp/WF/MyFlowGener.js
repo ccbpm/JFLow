@@ -688,14 +688,9 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
             var ctrlID = ele.split('=')[0];
 
-            var item = $("select[name='" + ctrlID + "'] option[selected]").text();
+            var item = $("#"+ctrlID).find("option:selected").text();
 
-            var mystr = '';
-
-            //mystr = ctrlID.substring(4) + 'T=' + item;
-            mystr = ctrlID + 'T=' + item;
-
-            //var mystr = ctrlID + 'T=' + item;
+            var mystr = "TB_"+ctrlID.substring(4) + 'T=' + item;
 
             formArrResult.push(mystr);
         }
@@ -1452,7 +1447,7 @@ function GenerWorkNode() {
             var h = flowData.Sys_MapData[0].FrmH;
             var w = flowData.Sys_MapData[0].FrmW;
 
-            // $('#topContentDiv').height(h);
+            $('#topContentDiv').height(h);
             $('#topContentDiv').width(w);
             $('.Bar').width(w + 15);
             $('#lastOptMsg').width(w + 15);

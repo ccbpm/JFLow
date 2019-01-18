@@ -770,9 +770,9 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
             var ctrlID = ele.split('=')[0];
 
-            var item = $("select[name='" + ctrlID + "'] option[selected]").text();
+            var item = $("#"+ctrlID).find("option:selected").text();
 
-            var mystr = ctrlID.substring(4) + 'T=' + item;
+            var mystr = "TB_"+ctrlID.substring(4) + 'T=' + item;
             formArrResult.push(mystr);
         }
 

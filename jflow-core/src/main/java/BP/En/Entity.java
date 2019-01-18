@@ -33,6 +33,8 @@ import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.Tools.StringUtils;
+import BP.WF.Template.FrmField;
+import BP.WF.Template.FrmFieldAttr;
 import BP.Web.WebUser;
 import BP.XML.XmlEn;
 
@@ -821,6 +823,19 @@ public abstract class Entity implements Serializable {
 		qo.AddWhere(key2, val2);
 		qo.addAnd();
 		qo.AddWhere(key3, val3);
+		return qo.DoQuery();
+	}
+	
+	public final int Retrieve(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4)
+			throws Exception {
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere(key1, val1);
+		qo.addAnd();
+		qo.AddWhere(key2, val2);
+		qo.addAnd();
+		qo.AddWhere(key3, val3);
+		qo.addAnd();
+		qo.AddWhere(key4, val4);
 		return qo.DoQuery();
 	}
 
@@ -3165,6 +3180,10 @@ public abstract class Entity implements Serializable {
 
 		}
 	}
+	
+	public final void ResetDefaultVal()throws Exception{
+		ResetDefaultVal(this.toString(),null,0);
+	}
 
 	// 方法
 	/**
@@ -3172,7 +3191,7 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @throws Exception
 	 */
-	public final void ResetDefaultVal() throws Exception {
+	public final void ResetDefaultVal(String fk_mapdata,String fk_flow,int fk_node) throws Exception {
 
 		ResetDefaultValRowValues();
 
@@ -3180,9 +3199,16 @@ public abstract class Entity implements Serializable {
 		for (Attr attr : attrs) {
 			if(attr.getIsRefAttr())
 				this.SetValRefTextByKey(attr.getKey(), "");
+			FrmField frmField = new FrmField();
+			int i = 0;
+			if(fk_node!=0 && fk_node!=999999)
+				i = frmField.Retrieve(FrmFieldAttr.FK_MapData,fk_mapdata,FrmFieldAttr.FK_Flow,Integer.parseInt(fk_flow),FrmFieldAttr.FK_Node,fk_node,FrmFieldAttr.KeyOfEn,attr.getKey());
 			
 			//获取默认值
 			String v = attr.getDefaultValOfReal();
+			if(i==1)
+				v = frmField.getDefVal();
+			
 			if (v== null ||( v != null && v.contains("@") == false))
 				continue;
 		  

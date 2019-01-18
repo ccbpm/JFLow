@@ -1475,7 +1475,7 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		// 重设默认值.
-		en.ResetDefaultVal();
+		en.ResetDefaultVal(this.getFK_MapData(),this.getFK_Flow(),this.getFK_Node());
 
 		// 执行装载填充.
 		 MapExt me = null;

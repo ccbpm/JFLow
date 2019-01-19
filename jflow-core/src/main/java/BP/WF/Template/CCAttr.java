@@ -36,6 +36,10 @@ public class CCAttr
     public static final String CCStaWay = "CCStaWay";
     
 	public static final String CCSQL = "CCSQL";
+	
+	public static final String CCIsAttr = "CCIsAttr";
+	public static final String CCFormAttr = "CCFormAttr";
+	
 
 	public static final String CCIsStations = "CCIsStations";
 	public static final String CCIsDepts = "CCIsDepts";

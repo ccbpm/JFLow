@@ -532,13 +532,8 @@ public class CCFlowAPI {
 					myds.Tables.add(dtToNDs);
 				}
 			}
-
-			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
-			while (enu.hasMoreElements()) {
-				String k = (String) enu.nextElement();
-				wk.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
-			}
-
+			
+			
 			// 执行表单事件..
 			String msg = md.getFrmEvents().DoEventNode(FrmEventList.FrmLoadBefore, wk);
 			if (DotNetToJavaStringHelper.isNullOrEmpty(msg) == false) {
@@ -549,6 +544,13 @@ public class CCFlowAPI {
 			String msgOfLoad = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.FrmLoadBefore, nd, wk, null);
 			if (msgOfLoad != null)
 				wk.RetrieveFromDBSources();
+			
+			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+			while (enu.hasMoreElements()) {
+				String k = (String) enu.nextElement();
+				wk.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
+			}
+
 
 			// 执行装载填充.
 			MapExt me = new MapExt();
@@ -643,7 +645,7 @@ public class CCFlowAPI {
 			/// #region 把外键表加入DataSet
 			// DataTable dtMapAttr = myds.Tables.;
 			DataTable dtMapAttr = null;
-			;
+			
 			for (DataTable dtb : myds.Tables) {
 				if ("Sys_MapAttr".equals(dtb.getTableName())) {
 					dtMapAttr = dtb;

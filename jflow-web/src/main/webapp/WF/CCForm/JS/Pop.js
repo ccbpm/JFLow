@@ -34,6 +34,11 @@ function SelfUrl_Done(mapExt) {
                  //
 
                  $("#TB_" + mapExt.AttrOfOper).val(val);
+                 
+                 //执行JS
+                 var backFunc = mapExt.Tag5;
+                 if (backFunc != null && backFunc != "" && backFunc != undefined)
+                     DBAccess.RunFunctionReturnStr(DealSQL(backFunc, val));
 
              }
 

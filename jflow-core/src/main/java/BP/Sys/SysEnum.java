@@ -164,4 +164,65 @@ public class SysEnum extends EntityMyPK
 		this.setMyPK(this.getEnumKey() + "_" + this.getLang() + "_" + this.getIntKey());
 		return super.beforeUpdateInsertAction();
 	}
+	
+	/// <summary>
+    /// 枚举类型新增保存后在Frm_RB中增加新的枚举值
+    /// </summary>
+	@Override
+    protected  void afterInsert() throws Exception
+    {
+        //获取引用枚举的表单
+        String sql =" select  distinct(FK_MapData)from Sys_FrmRB where EnumKey='"+this.getEnumKey()+"'";
+        String returnVals = DBAccess.RunSQLReturnString(sql);
+        if (DataType.IsNullOrEmpty(returnVals))
+        {
+            super.afterInsert();
+            return;
+        }
+
+        String[] fk_mapDatas = returnVals.split(",");
+
+        if (fk_mapDatas.length >0)
+         {
+             for(String fk_mapdata : fk_mapDatas)
+             {
+                 if (DataType.IsNullOrEmpty(fk_mapdata))
+                     continue;
+
+                 String mypk = fk_mapdata + "_" + this.getEnumKey() + "_" + this.getIntKey();
+                 FrmRB frmrb = new FrmRB();
+                 if (frmrb.IsExit("MyPK", mypk) == true)
+                 {
+                     frmrb.setLab(this.getLab());
+                     frmrb.Update();
+                     continue;
+                 }
+                 //获取mapAttr 
+                 MapAttr mapAttr = new MapAttr(fk_mapdata + "_" + this.getEnumKey());
+                 int RBShowModel = mapAttr.GetParaInt("RBShowModel");
+                 FrmRB frmrb1 = new FrmRB(fk_mapdata + "_" + this.getEnumKey() + "_0");
+
+
+                 frmrb.setFK_MapData (fk_mapdata);
+                 frmrb.setKeyOfEn (this.getEnumKey());
+                 frmrb.setEnumKey(this.getEnumKey());
+                 frmrb.setLab(this.getLab());
+                 frmrb.setIntKey(this.getIntKey());
+                 if (RBShowModel == 0)
+                 {
+                     frmrb.setX(frmrb1.getX());
+                     frmrb.setY(frmrb1.getY()+40);
+                 }
+                 if (RBShowModel == 3)
+                 {
+                     frmrb.setX(frmrb1.getX()+100);
+                     frmrb.setY(frmrb1.getY()) ;
+                 }
+                 frmrb.Insert();
+
+             }
+         }
+         super.afterInsert();
+    }
+
 }

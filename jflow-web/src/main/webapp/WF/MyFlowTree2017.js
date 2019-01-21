@@ -174,7 +174,7 @@ function addTab(id, title, url,IsCloseEtcFrm) {
         $('#tabs').tabs('select', title); //选中并刷新
         var currTab = $('#tabs').tabs('getSelected');
     } else {
-        var content = createFrame(url);
+    	 var content = createFrame(url,id);
         $('#tabs').tabs('add', {
             title: title,
             id: id,
@@ -431,7 +431,7 @@ function tabClose() {
 }
 
 function createFrame(url) {
-    var s = '<iframe scrolling="auto" frameborder="0"   src="' + url + '" style="width:100%;height:100%;"></iframe>';
+    var s = '<iframe scrolling="auto" frameborder="0" id="'+id+'"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
     return s;
 }
 

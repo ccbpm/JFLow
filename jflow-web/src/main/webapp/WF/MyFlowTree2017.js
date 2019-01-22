@@ -207,7 +207,7 @@ function tabCloseEven() {
             $('#tabs').tabs('update', {
                 tab: currTab,
                 options: {
-                    content: createFrame(url)
+                    content: createFrame(url,"")
                 }
             })
         }
@@ -430,7 +430,7 @@ function tabClose() {
     });
 }
 
-function createFrame(url) {
+function createFrame(url,id) {
     var s = '<iframe scrolling="auto" frameborder="0" id="'+id+'"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
     return s;
 }

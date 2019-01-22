@@ -2400,8 +2400,13 @@ public class Flow extends BP.En.EntityNoName {
 		DataTable dtNodes = nds.ToDataTableField("WF_Node");
 		ds.Tables.add(dtNodes);
 		
-		//接收人规则 //袁丽娜
-		Selectors selectors = new Selectors(this.getNo());
+		//节点属性
+        NodeExts ndexts = new NodeExts(this.getNo());
+        DataTable dtNodeExts = ndexts.ToDataTableField("WF_NodeExt");
+        ds.Tables.add(dtNodeExts);
+		
+		//接收人规则
+        Selectors selectors = new Selectors(this.getNo());
 		DataTable dtSelectors = selectors.ToDataTableField("WF_Selector");
 		ds.Tables.add(dtSelectors);
 
@@ -5216,65 +5221,20 @@ public class Flow extends BP.En.EntityNoName {
 					}
 				}
 
-				// switch (dt.TableName)
-				// ORIGINAL LINE: case "WF_Flow":
 				if (dt.TableName.equals("WF_Flow")) // 模版文件。
 				{
 					continue;
 				}
-				// ORIGINAL LINE: case "WF_FlowFormTree":
 				else if (dt.TableName.equals("WF_FlowFormTree")) // 独立表单目录 add
 																	// 2013-12-03
 				{
-					// foreach (DataRow dr in dt.Rows)
-					// {
-					// FlowForm cd = new FlowForm();
-					// foreach (DataColumn dc in dt.Columns)
-					// {
-					// string val = dr.getValue(dc.ColumnName) as string;
-					// if (val == null)
-					// continue;
-					// switch (dc.ColumnName.ToLower())
-					// {
-					// case "fk_flow":
-					// val = fl.getNo();
-					// break;
-					// default:
-					// val = val.replace("ND" + oldFlowID, "ND" + flowID);
-					// break;
-					// }
-					// cd.SetValByKey(dc.ColumnName, val);
-					// }
-					// cd.Insert();
-					// }
+					continue;
 				}
-				// ORIGINAL LINE: case "WF_FlowForm":
 				else if (dt.TableName.equals("WF_FlowForm")) // 独立表单。 add
 																// 2013-12-03
 				{
-					// foreach (DataRow dr in dt.Rows)
-					// {
-					// FlowForm cd = new FlowForm();
-					// foreach (DataColumn dc in dt.Columns)
-					// {
-					// string val = dr.getValue(dc.ColumnName) as string;
-					// if (val == null)
-					// continue;
-					// switch (dc.ColumnName.ToLower())
-					// {
-					// case "fk_flow":
-					// val = fl.getNo();
-					// break;
-					// default:
-					// val = val.replace("ND" + oldFlowID, "ND" + flowID);
-					// break;
-					// }
-					// cd.SetValByKey(dc.ColumnName, val);
-					// }
-					// cd.Insert();
-					// }
+					continue;
 				}
-				// ORIGINAL LINE: case "WF_NodeForm":
 				else if (dt.TableName.equals("WF_NodeForm")) // 节点表单权限。
 																// 2013-12-03
 				{
@@ -5373,33 +5333,7 @@ public class Flow extends BP.En.EntityNoName {
 					}
 				} else if (dt.TableName.equals("WF_BillTemplate")) {
 					continue; // 因为省掉了 打印模板的处理。
-					/*
-					 * for (DataRow dr : dt.Rows) { BillTemplate bt = new
-					 * BillTemplate(); for (DataColumn dc : dt.Columns) { String
-					 * val = (String)((dr.getValue(dc.ColumnName) instanceof
-					 * String) ? dr.getValue(dc.ColumnName) : null); if (val ==
-					 * null) { continue; }
-					 * 
-					 * // switch (dc.ColumnName.ToLower()) if
-					 * (dc.ColumnName.toLowerCase().equals("fk_flow")) { val =
-					 * (new Integer(flowID)).toString(); } else if
-					 * (dc.ColumnName.toLowerCase().equals("nodeid") ||
-					 * dc.ColumnName.toLowerCase().equals("fk_node")) { if
-					 * (val.length() == 3) { val = flowID + val.substring(1); }
-					 * else if (val.length() == 4) { val = flowID +
-					 * val.substring(2); } else if (val.length() == 5) { val =
-					 * flowID + val.substring(3); } } else { }
-					 * bt.SetValByKey(dc.ColumnName, val); } int i = 0; String
-					 * no = bt.getNo(); while (bt.getIsExits()) { bt.setNo(no +
-					 * (new Integer(i)).toString()); i++; }
-					 * 
-					 * try { File.Copy(info.getDirectoryName() + "\\" + no + "
-					 * .rtf", BP.Sys.SystemConfig.getPathOfWebApp() + "\\
-					 * DataUser\\CyclostyleFile\\" + bt.getNo() + ".rtf", true);
-					 * } catch (RuntimeException ex) { // infoErr +=
-					 * "@恢复单据模板时出现错误：" + ex.Message +
-					 * ",有可能是您在复制流程模板时没有复制同目录下的单据模板文件。"; } bt.Insert(); }
-					 */
+					
 				} else if (dt.TableName.equals("WF_FrmNode")) // Conds.xml。
 				{
 					DBAccess.RunSQL("DELETE FROM WF_FrmNode WHERE FK_Flow='" + fl.getNo() + "'");
@@ -5792,7 +5726,43 @@ public class Flow extends BP.En.EntityNoName {
 						nd.setFlowName(fl.getName());
 						nd.DirectUpdate();
 					}
-				}else if(dt.TableName.equals("WF_Selector")){ //袁丽娜
+				}else if(dt.TableName.equals("WF_NodeExt")){
+					for(DataRow dr : dt.Rows)
+                    {
+                        BP.WF.Template.NodeExt nd = new BP.WF.Template.NodeExt();
+                        nd.setNodeID (Integer.parseInt(flowID + dr.getValue(NodeAttr.NodeID).toString().substring(iOldFlowLength)));
+                        nd.RetrieveFromDBSources();
+                        for(DataColumn dc: dt.Columns)
+                        {
+                        	String val = (String) ((dr.getValue(dc.ColumnName) instanceof String)
+									? dr.getValue(dc.ColumnName) : null);
+                        	if (val == null) {
+								continue;
+							}
+							if (dc.ColumnName.toLowerCase().equals("nodeid")) {
+								if (val.length() < iOldFlowLength) {
+									// 节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+									throw new RuntimeException(
+											"@导入模板名称：" + oldFlowName + "；节点WF_Node下FK_Node值错误:" + val);
+								}
+								val = flowID + val.substring(iOldFlowLength);
+							} else if (dc.ColumnName.toLowerCase().equals("fk_flow")
+									|| dc.ColumnName.toLowerCase().equals("fk_flowsort")) {
+								continue;
+							} else if (dc.ColumnName.toLowerCase().equals("showsheets")
+									|| dc.ColumnName.toLowerCase().equals("histonds")
+									|| dc.ColumnName.toLowerCase().equals("groupstands")) {
+								String key = "@" + flowID;
+								val = val.replace(key, "@");
+							} else {
+							}
+                            nd.SetValByKey(dc.ColumnName, val);
+                        }
+
+                        nd.DirectUpdate();
+                    }
+				}
+				else if(dt.TableName.equals("WF_Selector")){ 
 					for (DataRow dr : dt.Rows) {
 						Selector selector = new Selector();
 						for (DataColumn dc : dt.Columns) {
@@ -5882,37 +5852,7 @@ public class Flow extends BP.En.EntityNoName {
 						}
 						sem.Insert();
 					}
-				} /*else if (dt.TableName.equals("Sys_MapAttr")) // RptEmps.xml。
-				{
-					for (DataRow dr : dt.Rows) {
-						MapAttr ma = new MapAttr();
-						for (DataColumn dc : dt.Columns) {
-							String val = dr.getValue(dc.ColumnName) + "";
-
-							// switch (dc.ColumnName.ToLower())
-							if (dc.ColumnName.toLowerCase().equals("fk_mapdata")
-									|| dc.ColumnName.toLowerCase().equals("keyofen")
-									|| dc.ColumnName.toLowerCase().equals("autofulldoc")) {
-								if (val == null) {
-									continue;
-								}
-
-								val = val.replace("ND" + oldFlowID, "ND" + flowID);
-							} else {
-							}
-							ma.SetValByKey(dc.ColumnName, val);
-						}
-						boolean b = ma.IsExit(MapAttrAttr.FK_MapData, ma.getFK_MapData(), MapAttrAttr.KeyOfEn,
-								ma.getKeyOfEn());
-
-						ma.setMyPK(ma.getFK_MapData() + "_" + ma.getKeyOfEn());
-						if (b == true) {
-							ma.DirectUpdate();
-						} else {
-							ma.DirectInsert();
-						}
-					}
-				}*/ else if (dt.TableName.equals("Sys_MapData")) // RptEmps.xml。
+				}  else if (dt.TableName.equals("Sys_MapData")) // RptEmps.xml。
 				{
 					for (DataRow dr : dt.Rows) {
 						MapData md = new MapData();
@@ -5981,10 +5921,7 @@ public class Flow extends BP.En.EntityNoName {
 						}
 
 						en.setMyPK(DBAccess.GenerGUID());
-						// DBAccess.GenerOIDByGUID(); "LIE" + timeKey + "_" +
-						// idx;
-						// if (en.IsExitGenerPK())
-						// continue;
+						
 						en.Insert();
 					}
 				} else if (dt.TableName.equals("Sys_FrmEle")) {

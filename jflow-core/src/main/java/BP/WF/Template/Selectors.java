@@ -17,9 +17,9 @@ public class Selectors extends Entities
 	{
 	}
 	//袁丽娜
-	public Selectors(String nodeId) throws Exception
+	public Selectors(String fk_flow) throws Exception
 	{
-		String sql = "select NodeId from WF_Node where FK_Flow='"+nodeId+"'";
+		String sql = "select NodeId from WF_Node where FK_Flow='"+fk_flow+"'";
 		this.RetrieveInSQL(sql);
 		
 		return;

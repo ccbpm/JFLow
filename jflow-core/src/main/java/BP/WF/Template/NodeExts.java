@@ -18,6 +18,13 @@ public class NodeExts extends Entities
 	public NodeExts()
 	{
 	}
+	
+	
+	 public NodeExts(String fk_flow) throws Exception
+     {
+         this.Retrieve(NodeAttr.FK_Flow, fk_flow, NodeAttr.Step);
+         return;
+     }
 
 		///#endregion
 	public final java.util.List<NodeExt> ToJavaList()

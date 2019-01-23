@@ -43,6 +43,37 @@ public class CCFormParse
 		en.setH(h);
 		en.Update();
 	}
+	
+	/** 
+	 保存元素
+	 
+	 @param fk_mapdata 表单ID
+	 @param eleType 元素类型
+	 @param ctrlID 控件ID
+	 @param x 位置
+	 @param y 位置
+	 @param h 高度
+	 @param w 宽度
+	 * @throws Exception 
+	*/
+	public static void SaveMapFrame(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w) throws Exception
+	{
+		MapFrame en = new MapFrame();
+		en.setMyPK(ctrlID);
+		en.RetrieveFromDBSources();
+
+		en.setEleType(eleType);
+		en.setFK_MapData(fk_mapdata);
+		en.setFrmID(ctrlID);
+
+		en.setX(x);
+		en.setY(y);
+		en.setW(w);
+		en.setH(h);
+		en.Update();
+		
+	}
+	
 	/** 
 	 保存一个rb
 	 

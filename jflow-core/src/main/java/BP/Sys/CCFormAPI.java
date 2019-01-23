@@ -790,13 +790,22 @@ public class CCFormAPI
 		//附加元素..
 		String eleIDs = "@";
 		FrmEles feles = new FrmEles();
-		;
 		feles.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata);
 		for (FrmEle item : feles.ToJavaList())
 		{
 			eleIDs += item.getEleID() + "@";
 		}
 		eleIDs += "@";
+		
+		//框架
+		String frameIDs = "@";
+		MapFrames frames = new MapFrames();
+		frames.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata);
+		for (MapFrame item : frames.ToJavaList())
+		{
+			frameIDs += item.getMyPK() + "@";
+		}
+		frameIDs += "@";
 		//#endregion 求PKs.
 
 		// 保存线.
@@ -824,6 +833,7 @@ public class CCFormAPI
 			delSqls += "@DELETE FROM Sys_FrmAttachment WHERE FK_MapData='" + fk_mapdata + "'";
 			delSqls += "@DELETE FROM Sys_FrmEle WHERE FK_MapData='" + fk_mapdata + "'";
 			delSqls += "@DELETE FROM Sys_FrmImgAth WHERE FK_MapData='" + fk_mapdata + "'";
+			delSqls += "@DELETE FROM Sys_MapFrame WHERE FK_MapData='" + fk_mapdata + "'";
 			
 			BP.DA.DBAccess.RunSQLs(delSqls);
 			return;
@@ -951,11 +961,19 @@ public class CCFormAPI
 				continue;
 			}
 
-			if (shape.equals("iFrame"))
+			/*if (shape.equals("iFrame"))
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveFrmEle(fk_mapdata, shape, ctrlID, x, y, height, width);
 				eleIDs = eleIDs.replace(ctrlID + "@", "@");
+				continue;
+			}*/
+			
+			if (shape.equals("iFrame"))
+			{
+				//记录已经存在的ID， 需要当时保存.
+				BP.Sys.CCFormParse.SaveMapFrame(fk_mapdata, shape, ctrlID, x, y, height, width);
+				frameIDs = frameIDs.replace(ctrlID + "@", "@");
 				continue;
 			}
 

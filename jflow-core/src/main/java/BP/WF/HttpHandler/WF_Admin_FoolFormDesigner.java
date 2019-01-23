@@ -1154,8 +1154,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		if (this.getMyPK() == null)
 		{
 			mf.setURL("http://ccflow.org");
-			mf.setW("100%");
-			mf.setH("300");
+			mf.setW(400);
+			mf.setH(300);
 			mf.setName("我的框架.");
 			mf.setFK_MapData(this.getFK_MapData());
 			mf.setMyPK(BP.DA.DBAccess.GenerGUID());

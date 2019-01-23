@@ -3786,6 +3786,14 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
+	 public float GetValFloatByKey(String key, int blNum)
+     {
+         String val = this.GetValStringByKey(key);
+         if (DataType.IsNullOrEmpty(val))                
+             return blNum;
+
+         return Float.parseFloat(val);
+     }
 	/**
 	 * 根据key 得到flaot val
 	 * 

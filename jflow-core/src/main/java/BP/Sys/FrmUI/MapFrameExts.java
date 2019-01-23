@@ -22,6 +22,16 @@ public class MapFrameExts extends EntitiesMyPK
 	public MapFrameExts()
 	{
 	}
+	
+	 /// <summary>
+    /// 框架s
+    /// </summary>
+    /// <param name="frmID">表单ID</param>
+    public MapFrameExts(String frmID) throws Exception
+    {
+        this.Retrieve(MapFrameAttr.FK_MapData, frmID);
+    }
+    
 	/** 
 	 得到它的 Entity
 	 

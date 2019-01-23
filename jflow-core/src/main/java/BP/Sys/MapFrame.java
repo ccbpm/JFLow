@@ -81,12 +81,12 @@ public class MapFrame extends EntityMyPK
 	 高度
 	 
 	*/
-	public final String getH()
+	public final float getH()
 	{
-		return this.GetValStrByKey(MapFrameAttr.H, "700px");
+		return this.GetValFloatByKey(MapFrameAttr.H, 700);
 
 	}
-	public final void setH(String value)
+	public final void setH(float value)
 	{
 		this.SetValByKey(MapFrameAttr.H, value);
 	}
@@ -94,14 +94,62 @@ public class MapFrame extends EntityMyPK
 	 宽度
 	 
 	*/
-	public final String getW()
+	public final float getW()
 	{
-		return this.GetValStrByKey(MapFrameAttr.W, "100%");
+		return this.GetValFloatByKey(MapFrameAttr.W);
 	}
-	public final void setW(String value)
+	public final void setW(float value)
 	{
 		this.SetValByKey(MapFrameAttr.W, value);
 	}
+	
+	/** 
+	 X
+	 
+	*/
+	public final float getX()
+	{
+		return this.GetValFloatByKey(MapFrameAttr.X);
+	}
+	public final void setX(float value)
+	{
+		this.SetValByKey(MapFrameAttr.X, value);
+	}
+	
+	
+	/** 
+	 Y
+	 
+	*/
+	public final float getY()
+	{
+		return this.GetValFloatByKey(MapFrameAttr.Y);
+	}
+	public final void setY(float value)
+	{
+		this.SetValByKey(MapFrameAttr.Y, value);
+	}
+	
+	
+	
+	public final String getEleType()
+	{
+		return this.GetValStrByKey(MapFrameAttr.EleType);
+	}
+	public final void setEleType(String value)
+	{
+		this.SetValByKey(MapFrameAttr.EleType, value);
+	}
+	
+	public final String getFrmID()
+	{
+		return this.GetValStrByKey(MapFrameAttr.FrmID);
+	}
+	public final void setFrmID(String value)
+	{
+		this.SetValByKey(MapFrameAttr.FrmID, value);
+	}
+	
 	public boolean IsUse = false;
 	public final String getFK_MapData()
 	{
@@ -152,11 +200,11 @@ public class MapFrame extends EntityMyPK
 		map.AddTBString(MapFrameAttr.Name, null, "名称", true, false, 0, 200, 20,true);
 		map.AddTBString(MapFrameAttr.URL, null, "URL", true, false, 0, 3000, 20, true);
 
-		map.AddTBString(FrmEleAttr.Y, null, "Y", true, false, 0, 20, 20);
-		map.AddTBString(FrmEleAttr.X, null, "x", true, false, 0, 20, 20);
+		map.AddTBFloat(FrmEleAttr.X, 5, "X", true, false);
+        map.AddTBFloat(FrmEleAttr.Y, 5, "Y", false, false);
 
-		map.AddTBString(FrmEleAttr.W, null, "宽度", true, false, 0, 20, 20);
-		map.AddTBString(FrmEleAttr.H, null, "高度", true, false, 0, 20, 20);
+        map.AddTBFloat(FrmEleAttr.H, 20, "H", true, false);
+        map.AddTBFloat(FrmEleAttr.W, 20, "W", false, false);
 
 		map.AddBoolean(MapFrameAttr.IsAutoSize, true, "是否自动设置大小", false, false);
 

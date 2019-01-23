@@ -423,6 +423,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 
               FrmLines lines = new FrmLines(this.getFK_MapData());
               ds.Tables.add(lines.ToDataTableField("Sys_FrmLine"));
+              
+              BP.Sys.FrmUI.MapFrameExts mapFrameExts = new BP.Sys.FrmUI.MapFrameExts(this.getFK_MapData());
+              ds.Tables.add(mapFrameExts.ToDataTableField("Sys_MapFrame"));
 
               //组织节点组件信息.
               if (this.getFK_Node() > 100)

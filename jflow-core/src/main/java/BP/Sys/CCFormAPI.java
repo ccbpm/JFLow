@@ -65,19 +65,33 @@ public class CCFormAPI
 				CreateOrSaveAthSingle(fk_mapdata, no, name, x, y);
 		}else if (ctrlType.equals("AthImg")){
 				CreateOrSaveAthImg(fk_mapdata, no, name, x, y);
-		}else if(ctrlType.equals("iFrame")){
+		}else if(ctrlType.equals("Fieldset")){//分组.
 			FrmEle fe = new FrmEle();
-             fe.setMyPK(fk_mapdata + "_" + no);
-             if (fe.RetrieveFromDBSources() != 0)
-                 throw new RuntimeException("@创建失败，已经有同名元素[" + no + "]的控件.");
-             fe.setFK_MapData(fk_mapdata);
-             fe.setEleType("iFrame");
-             fe.setEleName(name);
-             fe.setEleID(no);
-             fe.setTag1("http://ccflow.org");
-             fe.setX(x);
-             fe.setY(y);
-             fe.Insert();
+            fe.setMyPK (fk_mapdata + "_" + no);
+            if (fe.RetrieveFromDBSources() != 0)
+                throw new Exception("@创建失败，已经有同名元素[" + no + "]的控件.");
+            fe.setFK_MapData(fk_mapdata);
+            fe.setEleType("Fieldset");
+            fe.setEleName(name);
+            fe.setEleID ( no);
+            fe.setX( x);
+            fe.setY(y);
+            fe.Insert();
+		}else if(ctrlType.equals("iFrame")){
+			MapFrame mapFrame = new MapFrame();
+            mapFrame.setMyPK(fk_mapdata + "_" + no);
+            if (mapFrame.RetrieveFromDBSources() != 0)
+                throw new Exception("@创建失败，已经有同名元素[" + no + "]的控件.");
+            mapFrame.setFK_MapData(fk_mapdata);
+            mapFrame.setEleType("iFrame");
+            mapFrame.setName(name);
+            mapFrame.setFrmID(no);
+            mapFrame.setURL("http://ccflow.org");
+            mapFrame.setX(x);
+            mapFrame.setY(y);
+            mapFrame.setW(400);
+            mapFrame.setH(600);
+            mapFrame.Insert();
              //分组.
 		}else if (ctrlType.equals("Fieldset")){
 				FrmEle fe = new FrmEle();
@@ -96,6 +110,24 @@ public class CCFormAPI
 				fe.setW(400);
                 fe.setH(600);
 				fe.Insert();
+		}else if (ctrlType.equals("HandSiganture")){
+			 //检查是否可以创建字段? 
+            MapData md = new MapData(fk_mapdata);
+            md.CheckPTableSaveModel(no);
+
+            MapAttr ma = new MapAttr();
+            ma.setFK_MapData(fk_mapdata);
+            ma.setKeyOfEn(no);
+            ma.setName(name);
+            ma.setMyDataType(DataType.AppString);
+            ma.setUIContralType(UIContralType.HandWriting);
+            ma.setX(x);
+            ma.setY( y);
+            //frmID设置字段所属的分组
+            GroupField groupField = new GroupField();
+            groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+            ma.setGroupID((int) groupField.getOID());
+            ma.Insert();
 		}
 		else
 		{

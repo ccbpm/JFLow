@@ -36,7 +36,11 @@ public enum UIContralType
 	 /**
 	  * 拍照控件
 	  */
-	 Picture(7);
+	 Picture(7),
+	 /**
+	  * 手写签名版
+	  */
+	 HandWriting(8);
 	
 	private int intValue;
 	private static java.util.HashMap<Integer, UIContralType> mappings;

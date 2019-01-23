@@ -259,9 +259,14 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
             md.setPTable(DataType.ParseStringForNo(this.GetRequestVal("TB_PTable"), 100));
 		
 		md.SetValByKey(MapDataAttr.PTableModel, this.GetRequestVal("DDL_PTableModel"));
+		
+		String sort = this.GetRequestVal("FK_FrmSort");
+        if (DataType.IsNullOrEmpty(sort) == true)
+            sort = this.GetRequestVal("DDL_FrmTree");
 
-		md.setFK_FrmSort(this.GetRequestVal("DDL_FrmTree"));
-		md.setFK_FormTree(this.GetRequestVal("DDL_FrmTree"));
+		md.setFK_FrmSort(sort);
+		md.setFK_FormTree(sort);
+		
 		md.setAppType("0"); // 独立表单
 		md.setDBSrc(this.GetRequestVal("DDL_DBSrc"));
 		if (md.getIsExits() == true) {

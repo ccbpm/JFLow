@@ -1624,16 +1624,11 @@ public class WorkFlowBuessRole
 	 */
     public static String DoCCAuto(Node node, GERpt rpt, long workid, long fid) throws Exception
     {
-
-        if (node.getHisCCRole() == CCRole.AutoCC
-          || node.getHisCCRole() == CCRole.HandAndAuto)
-        {
-
-        }
-        else
-        {
-            return "";
-        }
+    	
+    	//抄送规则不为自动抄送或手动抄送就返回
+        if (node.getHisCCRole() != CCRole.AutoCC
+          && node.getHisCCRole() != CCRole.HandAndAuto)
+        	 return "";
 
         CC ccEn = new CC(node.getNodeID()); 
 

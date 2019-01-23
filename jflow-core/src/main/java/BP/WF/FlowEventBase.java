@@ -127,6 +127,15 @@ public abstract class FlowEventBase
 	{
 		return this.GetValInt64("FID");
 	}
+	
+	/**
+	 * 父流程ID
+	 */
+	public final long getPWorkID()
+	{
+		return this.GetValInt64("PWorkID");
+	}
+	
 	/** 
 	 传过来的WorkIDs集合，子流程.
 	 

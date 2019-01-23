@@ -5180,9 +5180,9 @@ public class Dev2Interface {
 			return true;
 		}
 
-		if (userNo.equals("admin")) {
+	/*	if (userNo.equals("admin")) {
 			return true;
-		}
+		}*/
 		// 判断是否是开始节点 .
 		String str = (new Integer(nodeID)).toString();
 		int len = str.length() - 2;

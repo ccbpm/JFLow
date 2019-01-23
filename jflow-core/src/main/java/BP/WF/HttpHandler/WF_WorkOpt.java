@@ -1367,10 +1367,12 @@ public class WF_WorkOpt extends WebContralBase {
 
 		try {
 
-			int toNodeID = Integer.parseInt(this.GetRequestVal("ReturnToNode").split("@")[0]);
+			String[] vals = this.GetRequestVal("ReturnToNode").split("@");
 
-			// int toNodeID =
-			// Integer.parseInt(this.GetRequestVal("ReturnToNode").split('@')[0]);
+			int toNodeID = Integer.parseInt(vals[0]);
+
+            String toEmp = vals[1];
+            
 			String reMesage = this.GetRequestVal("ReturnInfo");
 
 			boolean isBackBoolen = false;
@@ -1380,7 +1382,7 @@ public class WF_WorkOpt extends WebContralBase {
 			}
 
 			return BP.WF.Dev2Interface.Node_ReturnWork(this.getFK_Flow(), this.getWorkID(), this.getFID(),
-					this.getFK_Node(), toNodeID, reMesage, isBackBoolen);
+					this.getFK_Node(), toNodeID,toEmp, reMesage, isBackBoolen);
 		} catch (Exception ex) {
 			return "err@" + ex.getMessage();
 		}

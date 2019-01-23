@@ -1844,7 +1844,7 @@ var DBAccess = (function () {
             type: 'post',
             async: false,
             url: dynamicHandler + "?DoType=DBAccess_RunSQLReturnTable" + "&t=" + new Date().getTime(),
-            dataType: 'json',
+            dataType: 'html',
             data: {"SQL":sql},
             success: function (data) {
                 if (data.indexOf("err@") != -1) {

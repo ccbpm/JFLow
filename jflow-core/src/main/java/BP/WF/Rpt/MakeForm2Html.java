@@ -56,7 +56,8 @@ public class MakeForm2Html
         StringBuilder sb = new StringBuilder();//  
 
         //字段集合.
-        MapAttrs attrs = new MapAttrs(frmID);
+        MapAttrs mapAttrs = new MapAttrs(frmID);
+        Attrs attrs = en.getEnMap().getAttrs();
 
         String appPath = "";
         float wtX = MapData.GenerSpanWeiYi(mapData, 1200);
@@ -130,7 +131,7 @@ public class MakeForm2Html
         	  String url = link.getURL();
               if (url.contains("@"))
               {
-                  for (MapAttr attr : attrs.ToJavaList())
+                  for (MapAttr attr : mapAttrs.ToJavaList())
                   {
                       if (url.contains("@") == false)
                           break;
@@ -253,7 +254,7 @@ public class MakeForm2Html
                             if (sealType == "2" && !DataType.IsNullOrEmpty(sealField))
                             {
                                 //判断字段是否存在
-                                for (MapAttr attr: attrs.ToJavaList())
+                                for (MapAttr attr: mapAttrs.ToJavaList())
                                 {
                                     if (attr.getKeyOfEn() == sealField)
                                     {
@@ -384,7 +385,7 @@ public class MakeForm2Html
         }
         ////#endregion 输出竖线与标签
          ////#region 输出数据控件.
-        for (MapAttr attr : attrs.ToJavaList())
+        for (MapAttr attr : mapAttrs.ToJavaList())
         {
             //处理隐藏字段，如果是不可见并且是启用的就隐藏.
             if (attr.getUIVisible() == false && attr.getUIIsEnable())
@@ -421,10 +422,11 @@ public class MakeForm2Html
                 case Normal:  // 输出普通类型字段.
                    text = en.GetValStrByKey(attr.getKeyOfEn());
                    if(attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString){
-	                   if(en.GetValRefTextByKey(attr.getKeyOfEn()) == null)
-	                	   text = en.GetValStrByKey(attr.getKeyOfEn()+"T");
-	                   else
-	               		   text = en.GetValRefTextByKey(attr.getKeyOfEn());
+                	   if(attrs.Contains(attr.getKeyOfEn()+"Text") ==true)
+                   			text = en.GetValRefTextByKey(attr.getKeyOfEn());
+                   		if(DataType.IsNullOrEmpty(text))
+                   			if(attrs.Contains(attr.getKeyOfEn()+"T") ==true)
+                   				text = en.GetValStrByKey(attr.getKeyOfEn()+"T");	
                    }
                     break;
                 case Enum:

@@ -199,7 +199,9 @@ public class MapFrmFree extends EntityNoName {
 		map.AddTBString(MapFrmFreeAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
 		map.AddTBString(MapFrmFreeAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapFrmFreeAttr.Ver, null, "版本号", true, true, 0, 30, 20);
-		//map.AddTBString(MapFrmFreeAttr.DesignerTool, null, "表单设计器", true, true, 0, 30, 20);
+		//宽度高度.
+        map.AddTBInt(MapFrmFreeAttr.FrmW, 900, "自由表单-宽度", true, false);
+        map.AddTBInt(MapFrmFreeAttr.FrmH, 1200, "自由表单-高度", true, false);
 
 		map.AddTBStringDoc(MapFrmFreeAttr.Note, null, "备注", true, false, true);
 

@@ -701,121 +701,117 @@ public class WF_CCForm extends WebContralBase {
 			return JSONTODT(dt);
 		}
 
-		if (me.getExtType().equals(BP.Sys.MapExtXmlList.AutoFullDLL)
-				|| me.getExtType().equals(BP.Sys.MapExtXmlList.TBFullCtrl)
-				|| me.getExtType().equals(BP.Sys.MapExtXmlList.DDLFullCtrl)) { // 填充下拉框
-			// ORIGINAL LINE: case "ReqCtrl":
-			if (getRequest().getParameter("DoTypeExt") != null
-					&& StringUtils.isEmpty(getRequest().getParameter("DoTypeExt"))
-					&& getRequest().getParameter("DoTypeExt").equals("null")) {
-				if (getRequest().getParameter("DoTypeExt").equals("ReqCtrl")) {
-					// 获取填充 ctrl 值的信息.
-					sql = this.DealSQL(me.getDocOfSQLDeal(), key);
-					HttpSession session = getRequest().getSession();
-					session.setAttribute("DtlKey", key);
-					dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-
-					return JSONTODT(dt);
-				}
-				// ORIGINAL LINE: case "ReqM2MFullList":
-
-				// ORIGINAL LINE: case "ReqDtlFullList":
-
-				if (getRequest().getParameter("DoTypeExt").equals("ReqDtlFullList")) {
-					// 获取填充的从表集合.
-					DataTable dtDtl = new DataTable("Head");
-					dtDtl.Columns.Add("Dtl", String.class);
-					String[] strsDtl = me.getTag1().split("[$]", -1);
-					for (String str : strsDtl) {
-						if (DotNetToJavaStringHelper.isNullOrEmpty(str)) {
-							continue;
-						}
-
-						String[] ss = str.split("[:]", -1);
-						String fk_dtl = ss[0];
-						String dtlKey = (String) ((getRequest().getSession().getAttribute("DtlKey") instanceof String)
-								? getRequest().getSession().getAttribute("DtlKey") : null);
-						if (dtlKey == null) {
-							dtlKey = key;
-						}
-						String mysql = DealSQL(ss[1], dtlKey);
-
-						GEDtls dtls = new GEDtls(fk_dtl);
-						MapDtl dtl = new MapDtl(fk_dtl);
-
-						DataTable dtDtlFull = DBAccess.RunSQLReturnTable(mysql);
-						BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + oid);
-						for (DataRow dr : dtDtlFull.Rows) {
-							BP.Sys.GEDtl mydtl = new GEDtl(fk_dtl);
-							// mydtl.OID = dtls.Count + 1;
-							dtls.AddEntity(mydtl);
-							for (DataColumn dc : dtDtlFull.Columns) {
-								mydtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
-							}
-							mydtl.setRefPKInt(Integer.parseInt(oid));
-							if (mydtl.getOID() > 100) {
-								mydtl.InsertAsOID(mydtl.getOID());
-							} else {
-								mydtl.setOID(0);
-								mydtl.Insert();
-							}
-
-						}
-						DataRow drRe = dtDtl.NewRow();
-						drRe.setValue(0, fk_dtl);
-						dtDtl.Rows.add(drRe);
-					}
-					return JSONTODT(dtDtl);
-				}
-				// ORIGINAL LINE: case "ReqDDLFullList":
-
-				if (getRequest().getParameter("DoTypeExt").equals("ReqDDLFullList")) {
-					// 获取要个性化填充的下拉框.
-					DataTable dt1 = new DataTable("Head");
-					dt1.Columns.Add("DDL", String.class);
-					// dt1.Columns.Add("SQL", typeof(string));
-					String[] strs = me.getTag().split("[$]", -1);
-					for (String str : strs) {
-						if (str.equals("") || str == null) {
-							continue;
-						}
-
-						String[] ss = str.split("[:]", -1);
-						DataRow dr = dt1.NewRow();
-						dr.setValue(0, ss[0]);
-						// dr[1] = ss[1];
-						dt1.Rows.add(dr);
-					}
-					return JSONTODT(dt);
-				}
-				// ORIGINAL LINE: case "ReqDDLFullListDB":
-
-				if (getRequest().getParameter("DoTypeExt").equals("ReqDDLFullListDB")) {
-					// 获取要个性化填充的下拉框的值. 根据已经传递过来的 ddl id.
-					String myDDL = getRequest().getParameter("MyDDL");
-					sql = me.getDocOfSQLDeal();
-					String[] strs1 = me.getTag().split("[$]", -1);
-					for (String str : strs1) {
-						if (str.equals("") || str == null) {
-							continue;
-						}
-
-						String[] ss = str.split("[:]", -1);
-						if (myDDL.equals(ss[0]) && ss.length == 2) {
-							sql = ss[1];
-							sql = this.DealSQL(sql, key);
-							break;
-						}
-					}
-					dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-					return JSONTODT(dt);
-				}
-			} else {
+		if (me.getExtType().equals(BP.Sys.MapExtXmlList.AutoFullDLL)////填充下拉框
+				|| me.getExtType().equals(BP.Sys.MapExtXmlList.TBFullCtrl)//自动完成。
+				|| me.getExtType().equals(BP.Sys.MapExtXmlList.DDLFullCtrl)) { // 级连ddl.
+			String doTypeExt = this.GetRequestVal("DoTypeExt");
+			if(DataType.IsNullOrEmpty(doTypeExt) == true)
+				return "err@填充类型不能为空";
+			
+			if(doTypeExt.equals("ReqCtrl")){
+				// 获取填充 ctrl 值的信息.
 				sql = this.DealSQL(me.getDocOfSQLDeal(), key);
+				HttpSession session = getRequest().getSession();
+				session.setAttribute("DtlKey", key);
+				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+
+				return JSONTODT(dt);
+			}
+			
+			if (doTypeExt.equals("ReqDtlFullList")) {
+				// 获取填充的从表集合.
+				DataTable dtDtl = new DataTable("Head");
+				dtDtl.Columns.Add("Dtl", String.class);
+				String[] strsDtl = me.getTag1().split("[$]", -1);
+				for (String str : strsDtl) {
+					if (DataType.IsNullOrEmpty(str)) {
+						continue;
+					}
+
+					String[] ss = str.split("[:]", -1);
+					String fk_dtl = ss[0];
+					String dtlKey = (String) ((getRequest().getSession().getAttribute("DtlKey") instanceof String)
+							? getRequest().getSession().getAttribute("DtlKey") : null);
+					if (dtlKey == null) {
+						dtlKey = key;
+					}
+					String mysql = DealSQL(ss[1], dtlKey);
+
+					GEDtls dtls = new GEDtls(fk_dtl);
+					MapDtl dtl = new MapDtl(fk_dtl);
+
+					DataTable dtDtlFull = DBAccess.RunSQLReturnTable(mysql);
+					BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + oid);
+					for (DataRow dr : dtDtlFull.Rows) {
+						BP.Sys.GEDtl mydtl = new GEDtl(fk_dtl);
+						// mydtl.OID = dtls.Count + 1;
+						dtls.AddEntity(mydtl);
+						for (DataColumn dc : dtDtlFull.Columns) {
+							mydtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+						}
+						mydtl.setRefPKInt(Integer.parseInt(oid));
+						if (mydtl.getOID() > 100) {
+							mydtl.InsertAsOID(mydtl.getOID());
+						} else {
+							mydtl.setOID(0);
+							mydtl.Insert();
+						}
+
+					}
+					DataRow drRe = dtDtl.NewRow();
+					drRe.setValue(0, fk_dtl);
+					dtDtl.Rows.add(drRe);
+				}
+				return JSONTODT(dtDtl);
+			}
+			
+			if (doTypeExt.equals("ReqDDLFullList")) {
+				// 获取要个性化填充的下拉框.
+				DataTable dt1 = new DataTable("Head");
+				dt1.Columns.Add("DDL", String.class);
+				// dt1.Columns.Add("SQL", typeof(string));
+				String[] strs = me.getTag().split("[$]", -1);
+				for (String str : strs) {
+					if (str.equals("") || str == null) {
+						continue;
+					}
+
+					String[] ss = str.split("[:]", -1);
+					DataRow dr = dt1.NewRow();
+					dr.setValue(0, ss[0]);
+					// dr[1] = ss[1];
+					dt1.Rows.add(dr);
+				}
+				return JSONTODT(dt);
+			}
+
+			if (doTypeExt.equals("ReqDDLFullListDB")) {
+				// 获取要个性化填充的下拉框的值. 根据已经传递过来的 ddl id.
+				String myDDL = getRequest().getParameter("MyDDL");
+				sql = me.getDocOfSQLDeal();
+				String[] strs1 = me.getTag().split("[$]", -1);
+				for (String str : strs1) {
+					if (str.equals("") || str == null) {
+						continue;
+					}
+
+					String[] ss = str.split("[:]", -1);
+					if (myDDL.equals(ss[0]) && ss.length == 2) {
+						sql = ss[1];
+						sql = this.DealSQL(sql, key);
+						break;
+					}
+				}
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				return JSONTODT(dt);
 			}
-			return "";
+			
+			key = key.replace("'", "");
+
+			sql = this.DealSQL(me.getDocOfSQLDeal(), key);
+			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+            return JSONTODT(dt);
+
 		}
 
 		return "err@没有解析的标记" + me.getExtType();

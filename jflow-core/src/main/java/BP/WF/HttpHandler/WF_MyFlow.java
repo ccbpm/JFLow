@@ -550,11 +550,6 @@ public class WF_MyFlow extends WebContralBase {
 
 		if (this.getWorkID() == 0 && this.getcurrND().getIsStartNode() && this.GetRequestVal("IsCheckGuide") == null) {
 			long workid = BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow());
-
-			if (this.getPWorkID() != 0)
-				BP.WF.Dev2Interface.SetParentInfo(this.getFK_Flow(), workid, this.getPFlowNo(), this.getPWorkID(),
-						this.getPNodeID(), WebUser.getNo());
-			
 			
 			switch (this.getcurrFlow().getStartGuideWay()) {
 			case None:
@@ -583,36 +578,37 @@ public class WF_MyFlow extends WebContralBase {
 			}
 		}
 
-		// string appPath = BP.WF.Glo.CCFlowAppPath;
-		// //this.Request.ApplicationPath;
-		// this.Page.Title = "第" + this.currND.Step + "步:" +
-		// this.currND.Name;
-		// /#endregion 判断前置导航
+		//判断前置导航
 		if (this.getWorkID() != 0 && !StringUtils.isEmpty(this.GetRequestVal("IsCheckGuide"))) {
-			Glo.StartGuidEnties(this.getWorkID(), this.getFK_Flow(), this.getFK_Node(),
-					this.GetRequestVal("KeyNo") + "");
+			String key = this.GetRequestVal("KeyNo");
+			
+			 DataTable dt = BP.WF.Glo.StartGuidEnties(this.getWorkID(), this.getFK_Flow(), this.getFK_Node(), key);
+
+             /*如果父流程编号，就要设置父子关系。*/
+             if (dt != null && dt.Rows.size() > 0 && dt.Rows.contains("PFlowNo") == true)
+             {
+                 String pFlowNo = dt.Rows.get(0).getValue("PFlowNo").toString();
+                 int pNodeID = Integer.parseInt(dt.Rows.get(0).getValue("PNodeID").toString());
+                 long pWorkID = Long.parseLong(dt.Rows.get(0).getValue("PWorkID").toString());
+                 String pEmp = dt.Rows.get(0).getValue("PEmp").toString();
+                 if (DataType.IsNullOrEmpty(pEmp))
+                     pEmp = WebUser.getNo();
+
+                 //设置父子关系.
+                 BP.WF.Dev2Interface.SetParentInfo(this.getFK_Flow(), this.getWorkID(), pFlowNo,
+                     pWorkID, pNodeID, pEmp);
+             }
 		}
 
 		// /#region 处理表单类型.
 		if (this.getcurrND().getHisFormType() == NodeFormType.SheetTree
 				|| this.getcurrND().getHisFormType() == NodeFormType.SheetAutoTree) {
-			// 如果是多表单流程.
-			String pFlowNo = this.GetRequestVal("PFlowNo");
-			String pWorkID = this.GetRequestVal("PWorkID");
-			String pNodeID = this.GetRequestVal("PNodeID");
-			String pEmp = this.GetRequestVal("PEmp");
-			if (DotNetToJavaStringHelper.isNullOrEmpty(pEmp)) {
-				pEmp = WebUser.getNo();
-			}
+			
 
 			if (this.getWorkID() == 0) {
-				if (DotNetToJavaStringHelper.isNullOrEmpty(pFlowNo) == true) {
-					this.setWorkID(BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null,
-							WebUser.getNo(), null));
-				} else {
-					this.setWorkID(BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null,
-							WebUser.getNo(), null, Long.parseLong(pWorkID), 0, pFlowNo, Integer.parseInt(pNodeID)));
-				}
+				
+					this.setWorkID(BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null,WebUser.getNo(), null));
+				
 
 				currWK = getcurrND().getHisWork();
 				currWK.setOID(this.getWorkID());
@@ -621,8 +617,6 @@ public class WF_MyFlow extends WebContralBase {
 			} else {
 				gwf.setWorkID(this.getWorkID());
 				gwf.RetrieveFromDBSources();
-				//pFlowNo = gwf.getPFlowNo();
-				//pWorkID = gwf.getPWorkID() + "";
 			}
 
 			if (this.getcurrND().getIsStartNode()) {
@@ -640,16 +634,16 @@ public class WF_MyFlow extends WebContralBase {
              if (this.getIsMobile() == true)
              {
                  if (gwf.getParas_Frms().equals("") == false)
-                     toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
+                     toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
                  else
-                     toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+                     toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID();
              }
              else
              {
                  if (gwf.getParas_Frms().equals("")==false)
-                     toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID + "&Frms=" + gwf.getParas_Frms();
+                     toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
                  else
-                     toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + pFlowNo + "&PWorkID=" + pWorkID;
+                     toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo=" + gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID();
              }
 
             String[] strs = this.getRequestParas().split("&");

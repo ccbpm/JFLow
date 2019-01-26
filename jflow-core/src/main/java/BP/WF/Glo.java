@@ -4,15 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Scanner;
 
@@ -74,7 +71,6 @@ import BP.Sys.SystemConfig;
 import BP.Sys.ToolbarExcel;
 import BP.Tools.DateUtils;
 import BP.Tools.FtpUtil;
-import BP.Tools.SecurityDES;
 import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.WF.Data.CH;
@@ -174,7 +170,7 @@ public class Glo {
 		StringEntity reqEntity = null;
 		try {
 			reqEntity = new StringEntity(xmlStr, "UTF-8");
-		} catch (UnsupportedEncodingException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		httppost.setEntity(reqEntity);
@@ -5118,10 +5114,6 @@ public class Glo {
 
 			}
 			
-			//替换SQL
-
-			// sql = " SELECT * FROM (" + sql + ") T WHERE T.NO='" + sKey + "'
-			// ";
 
 			// 替换变量
 			sql = sql.replaceAll("@WebUser.No", WebUser.getNo());
@@ -5150,11 +5142,6 @@ public class Glo {
 			// 转换成ht表
 			DataRow row = dt.Rows.get(0);
 			for (int i = 0; i < row.getTable().Columns.size(); i++) {
-				// C# TO JAVA CONVERTER NOTE: The following 'switch' operated on
-				// a string member and was converted to Java 'if-else' logic:
-				// switch (row.Table.Columns[i].ColumnName.ToLower())
-				// 去除关键字
-				// ORIGINAL LINE: case "no":
 				if (row.getTable().Columns.get(i).ColumnName.toLowerCase().equals("no")
 						|| row.getTable().Columns.get(i).ColumnName.toLowerCase().equals("name")
 						|| row.getTable().Columns.get(i).ColumnName.toLowerCase().equals("workid")

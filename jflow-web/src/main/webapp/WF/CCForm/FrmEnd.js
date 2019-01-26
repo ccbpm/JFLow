@@ -580,16 +580,19 @@ function calculator(o) {
         if (c == "(") {
             index++;
         } else if (c == ")") {
-            targets.push(o.Doc.substring(index + 1, i));
+        	if(o.Doc.substring(index + 1, i).indexOf("@")!=-1)
+             targets.push(o.Doc.substring(index + 1, i));
             i++;
             index = i;
         } else if (/[\+\-|*\/]/.test(c)) {
-            targets.push(o.Doc.substring(index + 1, i));
+        	if(o.Doc.substring(index + 1, i).indexOf("@")!=-1)
+             targets.push(o.Doc.substring(index + 1, i));
             index = i;
         }
     }
     if (index + 1 < o.Doc.length) {
-        targets.push(o.Doc.substring(index + 1, o.Doc.length));
+    	if(o.Doc.substring(index + 1, i).indexOf("@")!=-1)
+         targets.push(o.Doc.substring(index + 1, o.Doc.length));
     }
     //
     var expression = {

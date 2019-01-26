@@ -5101,7 +5101,7 @@ public class Glo {
 	 *            选中的No
 	 * @throws Exception
 	 */
-	public static void StartGuidEnties(long WorkID, String FK_Flow, int FK_Node, String sKey) throws Exception {
+	public static DataTable StartGuidEnties(long WorkID, String FK_Flow, int FK_Node, String sKey) throws Exception {
 		Flow fl = new Flow(FK_Flow);
 		switch (fl.getStartGuideWay()) {
 		case SubFlowGuide:
@@ -5173,13 +5173,14 @@ public class Glo {
 			}
 			// 保存
 			BP.WF.Dev2Interface.Node_SaveWork(FK_Flow, FK_Node, WorkID, ht);
-			break;
+			return dt;
 		case SubFlowGuideEntity:
 		case BySystemUrlOneEntity:
 			break;
 		default:
 			break;
 		}
+		return null;
 
 	}
 

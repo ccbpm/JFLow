@@ -345,7 +345,10 @@ function AfterBindEn_DealMapExt(frmData) {
             case "BindFunction": //控件绑定函数
 
                 if ($('#TB_' + mapExt.AttrOfOper).length == 1) {
-                    $('#TB_' + mapExt.AttrOfOper).bind(DynamicBind(mapExt, "TB_"));
+                    $('#TB_' + mapExt.AttrOfOper).bind(mapExt.Tag,function(){
+                    	 DBAccess.RunFunctionReturnStr(mapExt.Doc);
+                    });
+                    $('#TB_' + mapExt.AttrOfOper).trigger(mapExt.Tag);
                     break;
                 }
                 if ($('#DDL_' + mapExt.AttrOfOper).length == 1) {
@@ -456,7 +459,10 @@ function AfterBindEn_DealMapExt(frmData) {
                         "AttrOfOper": mapExt.AttrOfOper,
                         "Doc": mapExt.Doc,
                         "DtlColumn": docs[1],
-                        "exp": docs[2]
+                        "exp": docs[2],
+                        "Tag":mapExt.Tag,
+                        "Tag1":mapExt.Tag1,
+                        "Tag2":mapExt.Tag2
                     };
                     if (!$.isArray(detailExt[ext.DtlNo])) {
                         detailExt[ext.DtlNo] = [];
@@ -470,6 +476,9 @@ function AfterBindEn_DealMapExt(frmData) {
                         }
                     });
                     $(":input[name=TB_" + ext.AttrOfOper + "]").attr("disabled", true);
+                    
+                    
+                 
                 }
                 break;
             case "DDLFullCtrl": // 自动填充其他的控件..
@@ -559,10 +568,11 @@ function clearContent(ctrl) {
     $("#" + ctrl).val("");
 }
 function DynamicBind(mapExt, ctrlType) {
-
+	
     $('#' + ctrlType + mapExt.AttrOfOper).on(mapExt.Tag, function () {
         DBAccess.RunFunctionReturnStr(mapExt.Doc);
     });
+   
 }
 
 /**

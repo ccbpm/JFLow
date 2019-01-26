@@ -1089,6 +1089,20 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 				me.setDoc(this.GetValFromFrmByKey("DDL_Dtl") + "." + this.GetValFromFrmByKey("DDL_Field") + "." + this.GetValFromFrmByKey("DDL_JSFS")); //要执行的表达式.
 
 				me.setExtType(MapExtXmlList.AutoFullDtlField);
+				
+				me.setTag1(this.GetValFromFrmByKey("TB_Tag1"));
+				me.setTag2(this.GetValFromFrmByKey("TB_Tag2"));
+				String Tag = "0";
+				try{
+					Tag = this.GetValFromFrmByKey("CB_Tag");
+					if(Tag =="on")
+						Tag="1";
+				}catch(Exception e){
+					Tag ="0";
+				}
+						
+		
+					me.setTag(Tag);
 
 				//执行保存.
 				me.setMyPK(MapExtXmlList.AutoFullDtlField + "_" + me.getFK_MapData() + "_" + me.getAttrOfOper());

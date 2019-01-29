@@ -359,6 +359,19 @@ public class WF extends WebContralBase {
 		AppACE page = new AppACE(context);
 		return page.Runing_Init();
 	}
+	
+	/**
+	 * 已完成
+	 * @return
+	 * @throws Exception 
+	 */
+	public String Complete_Init() throws Exception 
+    {
+	    DataTable dt=null;
+	    dt=BP.WF.Dev2Interface.DB_FlowComplete();
+	    return  BP.Tools.Json.ToJson(dt);
+    }
+	
 
 	/// <summary>
 	/// 打开表单

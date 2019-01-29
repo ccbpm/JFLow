@@ -226,4 +226,6 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 * */
 	public static final String FEBD = "FEBD";
 	public static final String RefPK = "RefPK";
+	/**使用的版本**/
+	public static final String DtlVer = "DtlVer";
 }

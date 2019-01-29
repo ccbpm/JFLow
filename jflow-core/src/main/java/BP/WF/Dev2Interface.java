@@ -27,7 +27,6 @@ import BP.Sys.*;
 import BP.Tools.AesEncodeUtil;
 import BP.Tools.ContextHolderUtils;
 import BP.Tools.DateUtils;
-import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
@@ -4506,8 +4505,13 @@ public class Dev2Interface {
 	public static void SetParentInfo(String subFlowNo, long subFlowWorkID, String parentFlowNo, long parentWorkID,
 			int parentNodeID, String parentEmpNo) throws Exception {
 		if (parentWorkID == 0) {
-			throw new RuntimeException("@设置的父流程的流程编号为 0 ，这是非法的。");
+			throw new RuntimeException("@设置的父流程的流程WorkID为 0 ，这是非法的。");
 		}
+		if (parentFlowNo==null)
+        throw new Exception("@设置的父流程的流程编号为 null ，这是非法的。");
+
+		if (parentNodeID == 0)
+        throw new Exception("@设置的父流程的节点编号为 0 ，这是非法的。");
 
 		if (StringHelper.isNullOrEmpty(parentEmpNo)) {
 			parentEmpNo = WebUser.getNo();
@@ -8417,8 +8421,10 @@ public class Dev2Interface {
 					gwl.setPRI(gwf.getPRI());
 					gwl.Insert();
 				} else {
-					gwf.setWFState(wfState);
-					gwf.DirectUpdate();
+					if (gwf.getWFState() != WFState.ReturnSta){
+						gwf.setWFState(wfState);
+						gwf.DirectUpdate();
+					}
 				}
 			}
 
@@ -8724,6 +8730,7 @@ public class Dev2Interface {
 				sa.setIdx(i);
 				sa.setFK_Node(toNodeID);
 				sa.setWorkID(workID);
+				sa.ResetPK();
 				if (sa.getIsExits() == false) {
 					sa.Insert();
 				}

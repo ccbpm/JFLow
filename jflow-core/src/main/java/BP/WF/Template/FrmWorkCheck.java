@@ -41,11 +41,11 @@ public class FrmWorkCheck extends Entity {
 	 * 状态
 	 * 
 	 */
-	public final FrmWorkCheckSta getHisFrmWorkCheckSta() {
+	public  FrmWorkCheckSta getHisFrmWorkCheckSta() {
 		return FrmWorkCheckSta.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCSta));
 	}
 
-	public final void setHisFrmWorkCheckSta(FrmWorkCheckSta value) {
+	public  void setHisFrmWorkCheckSta(FrmWorkCheckSta value) {
 		this.SetValByKey(FrmWorkCheckAttr.FWCSta, value.getValue());
 	}
 

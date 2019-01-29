@@ -3,9 +3,13 @@ package BP.WF;
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.DA.Log;
 import BP.Sys.EventListOfNode;
+import BP.Sys.FrmWorkCheckSta;
 import BP.WF.Port.WFEmp;
+import BP.WF.Template.FWCOrderModel;
+import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.NodeCancel;
 import BP.WF.Template.NodeCancelAttr;
 import BP.WF.Template.NodeCancels;
@@ -183,37 +187,20 @@ public class WorkUnSend
 			{
 				throw new RuntimeException("@流程设计错误, 您设置了当前节点(" + wn.getHisNode().getName() + ")可以让指定的节点人员撤销，但是您没有设置指定的节点.");
 			}
+			
+			 //获取Track表
+            String truckTable = "ND" + Integer.parseInt(wn.getHisNode().getFK_Flow()) + "Track";
+            
+            //获取到当前节点走过的节点 与 设定可撤销节点的交集
+            String sql="SELECT NDFrom FROM "+truckTable+" WHERE (ActionType=" + ActionType.ForwardFL.getValue() +" OR ActionType="+ActionType.SubThreadForward.getValue()+")";
+            sql +=" AND NDFROM IN(SELECT CancelTO FROM WF_NodeCancel WHERE FK_Node="+wn.getHisNode().getNodeID()+") AND EmpFrom='"+WebUser.getNo()+"' ORDER BY RDT DESC";
 
-			// 查询出来. 
-			String sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE FK_Emp='" + WebUser.getNo() + "' AND IsPass=1 AND IsEnable=1 AND WorkID=" + wn.getHisWork().getOID() + " ORDER BY RDT DESC ";
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size() == 0)
-			{
-				throw new RuntimeException("@撤销流程错误,您没有权限执行撤销发送.");
-			}
+            String nds = DBAccess.RunSQLReturnString(sql);
+            if(DataType.IsNullOrEmpty(nds))
+                throw new Exception("@您不能执行撤消发送，两种原因：1，你不具备撤销该节点的功能；2.流程设计错误，你指定的可以撤销的节点不在流程运转中走过的节点.");
 
-			// 找到将要撤销到的NodeID.
-			for (DataRow dr : dt.Rows)
-			{
-				for (NodeCancel nc : ncs.ToJavaList())
-				{
-					if (nc.getCancelTo() == Integer.parseInt(dr.getValue(0).toString()))
-					{
-						cancelToNodeID = nc.getCancelTo();
-						break;
-					}
-				}
-
-				if (cancelToNodeID != 0)
-				{
-					break;
-				}
-			}
-
-			if (cancelToNodeID == 0)
-			{
-				throw new RuntimeException("@撤销流程错误,您没有权限执行撤销发送,没有找到可以撤销的节点.");
-			}
+            //获取可以删除到的节点
+            cancelToNodeID =Integer.parseInt(nds.split(",")[0]);
 		}
 
 		if (nd.getHisCancelRole() == CancelRole.OnlyNextStep)
@@ -236,11 +223,27 @@ public class WorkUnSend
 		}
 		//********* 开始执行撤销. *********************
 		Node cancelToNode = new Node(cancelToNodeID);
+		 switch(cancelToNode.getHisNodeWorkType())
+         {
+             case StartWorkFL:
+             case WorkFHL:
+             case WorkFL:
+                // 调用撤消发送前事件。
+                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, wn.getHisWork(), null);
+                BP.WF.Dev2Interface.Node_FHL_KillSubFlow(cancelToNode.getFK_Flow(), this.FID, this.WorkID); //杀掉子线程.
+                // 调用撤消发送前事件。
+                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneAfter, nd, wn.getHisWork(), null);
+                return "KillSubThared@子线程撤销成功.";
+             default:
+                 break;
+
+         }
+		 
 		WorkNode wnOfCancelTo = new WorkNode(this.WorkID, cancelToNodeID);
 
 		// 调用撤消发送前事件。
 		String msg = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, wn.getHisWork(), null);
-			///#region 删除当前节点数据。
+			
 		// 删除产生的工作列表。
 		GenerWorkerLists wls = new GenerWorkerLists();
 		wls.Delete(GenerWorkerListAttr.WorkID, this.WorkID, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
@@ -257,18 +260,12 @@ public class WorkUnSend
 		gwf.setNodeName(cancelToNode.getName());
 		//如果不启动自动记忆，删除tonodes,用于 选择节点发送。撤消后，可重新选择节点发送
 		if (cancelToNode.getIsRememberMe() == false)
-		{
 			gwf.setParas_ToNodes("");
-		}
 
 		if (cancelToNode.getIsEnableTaskPool() && Glo.getIsEnableTaskPool())
-		{
 			gwf.setTaskSta(TaskSta.Takeback);
-		}
 		else
-		{
 			gwf.setTaskSta(TaskSta.None);
-		}
 
 		gwf.setTodoEmps(WebUser.getNo() + "," + WebUser.getName());
 		gwf.Update();
@@ -359,13 +356,10 @@ public class WorkUnSend
 		msg += nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneAfter, nd, wn.getHisWork(), null);
 
 		if (wnOfCancelTo.getHisNode().getIsStartNode())
-		{
 			return "@撤消执行成功." + msg;
-		}
 		else
-		{
 			return "@撤消执行成功." + msg;
-		}
+
 	}
 
 	/** 
@@ -376,10 +370,49 @@ public class WorkUnSend
 	public final String DoUnSend() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
-	    
+		 if (gwf.getWFState() == WFState.Complete)
+             return "err@该流程已经完成，您不能撤销。";
+		
 		//节点信息
 		Node nd = new Node(gwf.getFK_Node());
-		
+		 /*该节点不允许退回.*/
+        if (nd.getHisCancelRole() == CancelRole.None)
+            throw new Exception("当前节点，不允许撤销。");
+        
+        if (nd.getIsStartNode() && nd.getHisNodeWorkType() != NodeWorkType.StartWorkFL)
+			throw new RuntimeException("当前节点是开始节点，所以您不能撤销。");
+        
+        //如果当前节点是分流、分合流节点则可以撤销
+        if (nd.getHisNodeWorkType() == NodeWorkType.StartWorkFL
+            || nd.getHisNodeWorkType() == NodeWorkType.WorkFL
+            || nd.getHisNodeWorkType() == NodeWorkType.WorkFHL)
+        {
+            //获取当前节点的子线程
+            String truckTable = "ND" + Integer.parseInt(nd.getFK_Flow()) + "Track";
+            String threadSQL = "SELECT FK_Node,WorkID FROM WF_GenerWorkFlow  WHERE FID=" + this.WorkID + " AND FK_Node"
+                    + " IN(SELECT DISTINCT(NDTo) FROM " + truckTable + "  WHERE ActionType=" + ActionType.ForwardFL.getValue() + " AND WorkID=" + this.WorkID + " AND NDFrom='" + nd.getNodeID() + "'"
+                    + "  ) ";
+            DataTable dt = DBAccess.RunSQLReturnTable(threadSQL);
+            if(dt == null || dt.Rows.size() == 0 )
+                throw new Exception("err@流程运行错误：当不存在子线程时改过程应该处于待办状态");
+          
+
+            for(DataRow  dr : dt.Rows)
+            {
+                Node threadnd = new Node(dr.getValue("FK_Node").toString());
+                // 调用撤消发送前事件。
+                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, nd.getHisWork(), null);
+
+                BP.WF.Dev2Interface.Node_FHL_KillSubFlow(threadnd.getFK_Flow(), this.WorkID, Long.parseLong(dr.getValue("WorkID").toString())); //杀掉子线程.
+
+                // 调用撤消发送前事件。
+                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneAfter, nd, nd.getHisWork(), null);
+            }
+
+            return "撤销成功";
+
+        }
+    
 		//如果启用了对方打开不可以撤回的
 		if(nd.getCancelDisWhenRead() == true){
 			int i = DBAccess.RunSQLReturnValInt("SELECT SUM(IsRead) AS Num FROM WF_GenerWorkerList WHERE WorkID=" + this.WorkID + " AND FK_Node=" + gwf.getFK_Node() ,0);
@@ -387,7 +420,7 @@ public class WorkUnSend
                 return "err@当前待办已经有["+i+"]个工作人员打开了该工作,您不能执行撤销.";
 		}
 		
-		//如果是越轨流程状态@du.
+		//如果是越轨流程状态
         String sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerlist WHERE WorkID="+this.WorkID+" AND IsPass=80";
 
         if (DBAccess.RunSQLReturnValInt(sql, 0) != 0) {
@@ -442,59 +475,8 @@ public class WorkUnSend
 		}
 		// 判断是否是会签状态,是否是会签人做的撤销.
 		if (gwf.getFID() != 0)
-		{
 			//执行子线程的撤销.
 			return DoThreadUnSend();
-			
-		}
-
-		if (this.UnSendToNode != 0 && gwf.getFK_Node() != this.UnSendToNode)
-		{
-//                 要撤销的节点是分流节点，并且当前节点不在分流节点而是在合流节点的情况， for:华夏银行.
-//                 * 1, 分流节点发送给n个人.
-//                 * 2, 其中一个人发送到合流节点，另外一个人退回给分流节点。
-//                 * 3，现在分流节点的人接收到一个待办，并且需要撤销整个分流节点的发送.
-//                 * 4, UnSendToNode 这个时间没有值，并且当前干流节点的停留的节点与要撤销到的节点不一致。
-//                 
-
-		  return DoUnSendInFeiLiuHeiliu(gwf);
-
-		}
-
-		if (nd.getHisCancelRole() == CancelRole.None)
-        {
-            /*该节点不允许退回.*/
-            throw new Exception("当前节点，不允许撤销。");
-        }
-
-		switch (nd.getHisNodeWorkType())
-		{
-			case WorkFHL:
-				//throw new Exception("@分合流点不允许撤消。");
-				return this.DoUnSendFeiLiu(gwf);
-			case WorkFL:
-			case StartWorkFL:
-				return this.DoUnSendFeiLiu(gwf);
-			case WorkHL:
-				if (this.getIsMainFlow())
-				{
-					// 首先找到与他最近的一个分流点，并且判断当前的操作员是不是分流点上的工作人员。
-					return this.DoUnSendHeiLiu_Main(gwf);
-				}
-				else
-				{
-					return this.DoUnSendSubFlow(gwf); //是子流程时.
-				}
-			case SubThreadWork:
-				break;
-			default:
-				break;
-		}
-
-		if (nd.getIsStartNode())
-		{
-			throw new RuntimeException("当前节点是开始节点，所以您不能撤销。");
-		}
 
 		//定义当前的节点.
 		WorkNode wn = this.GetCurrentWorkNode();
@@ -562,17 +544,72 @@ public class WorkUnSend
 			throw new RuntimeException("@没有求出要撤销到的节点.");
 		}
 
-			///#endregion 求的撤销的节点.
+		if (this.UnSendToNode != 0 && gwf.getFK_Node() != this.UnSendToNode)
+			  return DoUnSendInFeiLiuHeiliu(gwf);
+
+			switch (nd.getHisNodeWorkType())
+			{
+				case WorkFHL:
+					return this.DoUnSendFeiLiu(gwf);
+				case WorkFL:
+				case StartWorkFL:
+					return this.DoUnSendFeiLiu(gwf);
+				case WorkHL:
+					if (this.getIsMainFlow())
+						// 首先找到与他最近的一个分流点，并且判断当前的操作员是不是分流点上的工作人员。
+						return this.DoUnSendHeiLiu_Main(gwf);
+					else
+						return this.DoUnSendSubFlow(gwf); //是子流程时.
+				case SubThreadWork:
+					break;
+				default:
+					break;
+			}
 
 		//********* 开始执行撤销. *********************
 		Node cancelToNode = new Node(cancelToNodeID);
+		
+
+        //如果撤销到的节点是普通的节点，并且当前的节点是分流(分流)节点，并且分流(分流)节点已经发送下去了,就不允许撤销了.
+        if (cancelToNode.getHisRunModel() == RunModel.Ordinary
+             && nd.getHisRunModel() == RunModel.HL
+             && nd.getHisRunModel() == RunModel.FHL
+             && nd.getHisRunModel() == RunModel.FL)
+        {
+            /* 检查一下是否还有没有完成的子线程，如果有就抛出不允许撤销的异常。 */
+              sql = "SELECT COUNT(*) as NUM FROM WF_GenerWorkerList WHERE FID="+this.WorkID+" AND IsPass=0";
+              if (BP.DA.DBAccess.RunSQLReturnValInt(sql) != 0)
+                  return "err@不允许撤销，因为有未完成的子线程.";
+
+            //  return this.DoUnSendHeiLiu_Main(gwf);
+        }
+        // 如果撤销到的节点是普通的节点，并且当前的节点是分流节点，并且分流节点已经发送下去了.
+		
+        //如果当前是协作组长模式,就要考虑当前是否是会签节点，如果是会签节点，就要处理。
+        if (cancelToNode.getTodolistModel() == TodolistModel.TeamupGroupLeader
+            || cancelToNode.getTodolistModel() == TodolistModel.Teamup)
+        {
+            sql = "SELECT ActionType FROM ND" + Integer.parseInt(this.FlowNo) + "Track WHERE NDFrom=" + cancelToNodeID + " AND EmpFrom='" + WebUser.getNo() + "' AND WorkID=" + this.WorkID;
+            DataTable dt = DBAccess.RunSQLReturnTable(sql);
+            for(DataRow dr : dt.Rows)
+            {
+                int ac = Integer.parseInt(dr.get(0).toString());
+                ActionType at = ActionType.forValue(ac);
+                if (at == ActionType.TeampUp)
+                {
+                    /*如果是写作人员，就不允许他撤销 */
+                    throw new Exception("@您是节点[" + cancelToNode.getName() + "]的会签人，您不能执行撤销。");
+                }
+            }
+        }
+        //如果当前是协作组长模式
+        
+		
 		WorkNode wnOfCancelTo = new WorkNode(this.WorkID, cancelToNodeID);
 
 		// 调用撤消发送前事件。
 		String msg = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, wn.getHisWork(), null);
 
-
-			///#region 删除当前节点数据。
 
 		// 删除产生的工作列表。
 		GenerWorkerLists wls = new GenerWorkerLists();
@@ -580,14 +617,11 @@ public class WorkUnSend
 
 		// 删除工作信息,如果是按照ccflow格式存储的。
 		if (this.getHisFlow().getHisDataStoreModel() == BP.WF.Template.DataStoreModel.ByCCFlow)
-		{
 			wn.getHisWork().Delete();
-		}
 
 		// 删除附件信息。
 		DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='ND" + gwf.getFK_Node() + "' AND RefPKVal='" + this.WorkID + "'");
 
-			///#endregion 删除当前节点数据。
 
 		// 更新.
 		gwf.setFK_Node(cancelToNode.getNodeID());
@@ -595,17 +629,12 @@ public class WorkUnSend
 		//恢复上一步发送人
         DataTable dtPrevTrack = Dev2Interface.Flow_GetPreviousNodeTrack(this.WorkID,cancelToNode.getNodeID());
         if(dtPrevTrack != null && dtPrevTrack.Rows.size() > 0)
-        {
         	gwf.setSender(dtPrevTrack.Rows.get(0).getValue("EmpFrom").toString());
-        }
-		if (cancelToNode.getIsEnableTaskPool() && Glo.getIsEnableTaskPool())
-		{
+		
+        if (cancelToNode.getIsEnableTaskPool() && Glo.getIsEnableTaskPool())
 			gwf.setTaskSta(TaskSta.Takeback);
-		}
 		else
-		{
 			gwf.setTaskSta(TaskSta.None);
-		}
 
 		gwf.setTodoEmps(WebUser.getNo() + "," + WebUser.getName());
 		gwf.Update();
@@ -629,6 +658,16 @@ public class WorkUnSend
 		// 记录日志..
 		wn.AddToTrack(ActionType.UnSend, WebUser.getNo(), WebUser.getName(), cancelToNode.getNodeID(), cancelToNode.getName(), "无");
 
+
+        //删除审核组件设置“协作模式下操作员显示顺序”为“按照接受人员列表先后顺序(官职大小)”，而生成的待审核轨迹信息
+        FrmWorkCheck fwc = new FrmWorkCheck(nd.getNodeID());
+        if (fwc.getHisFrmWorkCheckSta().getValue() == FrmWorkCheckSta.Enable.getValue() && fwc.getFWCOrderModel() == FWCOrderModel.SqlAccepter)
+        {
+            BP.DA.DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track WHERE WorkID = " + this.WorkID +
+                                  " AND ActionType = " + ActionType.WorkCheck.getValue() + " AND NDFrom = " + nd.getNodeID() +
+                                  " AND NDTo = " + nd.getNodeID() + " AND (Msg = '' OR Msg IS NULL)");
+        }
+        
 		// 删除数据.
 		if (wn.getHisNode().getIsStartNode())
 		{
@@ -636,6 +675,10 @@ public class WorkUnSend
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE WorkID=" + this.WorkID);
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + this.WorkID + " AND FK_Node=" + nd.getNodeID());
 		}
+		
+		//首先删除当前节点的，审核意见.
+        String delTrackSQl = "DELETE FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track WHERE WorkID=" + this.WorkID + " AND NDFrom=" + nd.getNodeID() + " AND ActionType =22 ";
+        DBAccess.RunSQL(delTrackSQl);
 
 		if (wn.getHisNode().getIsEval())
 		{

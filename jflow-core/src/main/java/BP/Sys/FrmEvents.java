@@ -95,7 +95,6 @@ public class FrmEvents extends EntitiesOID
 		if (nev.getHisDoType() == EventDoType.BuessUnit) {
 			/* 获得业务单元，开始执行他 */
 			try {
-//				BuessUnitBase enBuesss = (BuessUnitBase) BP.En.ClassFactory.GetObject_OK(nev.getDoDoc());
 				BuessUnitBase enBuesss = BP.Sys.Glo.GetBuessUnitEntityByEnName(nev.getDoDoc());
 				enBuesss.setWorkID(Integer.parseInt(en.getPKVal().toString()));
 				return enBuesss.DoIt();
@@ -111,39 +110,33 @@ public class FrmEvents extends EntitiesOID
 		}
 
 
-			///#region 处理执行内容
+		//处理执行内容
 		Attrs attrs = en.getEnMap().getAttrs();
-		String MsgOK = "";
-		String MsgErr = "";
 		for (Attr attr : attrs)
 		{
 			if (doc.contains("@" + attr.getKey()) == false)
-			{
 				continue;
-			}
-			if (attr.getMyDataType() == DataType.AppString || attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
-			{
+			if (attr.getMyDataType() == DataType.AppString 
+					|| attr.getMyDataType() == DataType.AppDateTime 
+					|| attr.getMyDataType() == DataType.AppDate)
 				doc = doc.replace("@" + attr.getKey(), "'" + en.GetValStrByKey(attr.getKey()) + "'");
-			}
 			else
-			{
 				doc = doc.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
-			}
 		}
 
-		doc = doc.replace("~", "'");
-		doc = doc.replace("WebUser.No", BP.Web.WebUser.getNo());
-		doc = doc.replace("@WebUser.Name", BP.Web.WebUser.getName());
-		doc = doc.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
-		doc = doc.replace("@FK_Node", nev.getFK_MapData().replace("ND", ""));
-		doc = doc.replace("@FK_MapData", nev.getFK_MapData());
-		doc = doc.replace("@WorkID", en.GetValStrByKey("OID", "@WorkID"));
+		doc = doc.replaceAll("~", "'");
+		doc = doc.replaceAll("WebUser.No", BP.Web.WebUser.getNo());
+		doc = doc.replaceAll("@WebUser.Name", BP.Web.WebUser.getName());
+		doc = doc.replaceAll("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+		doc = doc.replaceAll("@FK_Node", nev.getFK_MapData().replace("ND", ""));
+		doc = doc.replaceAll("@FK_MapData", nev.getFK_MapData());
+		doc = doc.replaceAll("@WorkID", en.GetValStrByKey("OID", "@WorkID"));
 
 		//SDK表单上服务器地址,应用到使用ccflow的时候使用的是sdk表单,该表单会存储在其他的服务器上. 
-//		doc = doc.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost"));
+       doc = doc.replaceAll("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost")==null?"":SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 
-//		if (System.Web.HttpContext.Current != null)
-//		{
+       	if (doc.contains("@") == true)
+ 		{
 			//如果是 bs 系统, 有可能参数来自于url ,就用url的参数替换它们 .
 			String url = Glo.getRequest().getRemoteAddr();
 			if (url.indexOf('?') != -1)
@@ -163,32 +156,29 @@ public class FrmEvents extends EntitiesOID
 
 				doc = doc.replace("@" + mys[0], mys[1]);
 			}
-//		}
+		}
 
 		if (nev.getHisDoType() == EventDoType.URLOfSelf)
 		{
 			if (doc.contains("?") == false)
-			{
 				doc += "?1=2";
-			}
-
+			
 			doc += "&UserNo=" + WebUser.getNo();
 			doc += "&SID=" + WebUser.getSID();
 			doc += "&FK_Dept=" + WebUser.getFK_Dept();
-			// doc += "&FK_Unit=" + WebUser.FK_Unit;
 			doc += "&OID=" + en.getPKVal();
 
 			if (SystemConfig.getIsBSsystem()&&BP.Sys.Glo.getRequest()!=null)
 			{
 				//是bs系统，并且是url参数执行类型.
-				 url = BP.Sys.Glo.getRequest().getRemoteAddr();
+				 String url = BP.Sys.Glo.getRequest().getRemoteAddr();
 
 				if (url.indexOf('?') != -1)
 				{
 					url = url.substring(url.indexOf('?'));//.TrimStart('?');
 				}
 
-				paras = url.split("[&]", -1);
+				String[] paras = url.split("[&]", -1);
 				for (String s : paras)
 				{
 					String[] mys = s.split("[=]", -1);
@@ -204,10 +194,7 @@ public class FrmEvents extends EntitiesOID
 				doc = doc.replace("&?", "&");
 			}
 
-			if (SystemConfig.getIsBSsystem() == false)
-			{
-				//非bs模式下调用,比如在cs模式下调用它,它就取不到参数. 
-			}
+
 
 //			if (doc.startsWith("http") == false)
 //			{
@@ -437,14 +424,14 @@ public class FrmEvents extends EntitiesOID
 				//break;
 			case WSOfSelf: //执行webservices.. 为石油修改.
 				String[] strs = doc.split("[@]", -1);
-				String url1 = "";
+
 				String method = "";
 				Hashtable paras1 = new java.util.Hashtable();
 				for (String str : strs)
 				{
 					if (str.contains("=") && str.contains("Url"))
 					{
-						url = str.split("[=]", -1)[2];
+						String url = str.split("[=]", -1)[2];
 						continue;
 					}
 

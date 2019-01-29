@@ -293,20 +293,7 @@ public class QueryObject {
 	 *            参数名称，可以为null, 如果查询中有多个参数中有相同属性名的需要，分别给他们起一个参数名。
 	 */
 	public final void AddWhere(String attr, String exp, String val, String paraName) {
-		// //oracel 增加空字符串判断
-		// if(val == null||val.equals(""))
-		// {
-		// switch(this.HisDBType)
-		// {
-		// case Oracle:
-		// exp = " ";
-		// val = " is null";
-		// break;
-		// default:
-		// val = "";
-		// break;
-		// }
-		// }
+
 		if (val == null)
 			val = "";
 
@@ -315,7 +302,7 @@ public class QueryObject {
 			return;
 		}
 
-		if (exp.toLowerCase().contains(" in")) {
+		if (exp.toLowerCase().contains("in")) {
 			this.setSQL("( " + attr2Field(attr) + " " + exp + "  " + val + " )");
 
 			// 暂时还原代码，测试发现有问题 by 于庆海

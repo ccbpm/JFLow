@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.sun.star.bridge.oleautomation.Decimal;
-
 import BP.En.*;
 import BP.DA.*;
 import BP.Port.*;
@@ -36,7 +34,7 @@ public class WorkNode {
 	 * 
 	 * @param empId
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private boolean IsCanOpenCurrentWorkNode(String empId) throws Exception {
 		WFState stat = this.getHisGenerWorkFlow().getWFState();
@@ -72,7 +70,8 @@ public class WorkNode {
 
 	/**
 	 * 实际执行人，执行工作发送时，有时候当前 WebUser.getNo() 并非实际的执行人。
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final String getExecer() throws Exception {
@@ -124,7 +123,8 @@ public class WorkNode {
 
 	/**
 	 * 实际执行人名称(请参考实际执行人)
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final String getExecerDeptNo() throws Exception {
@@ -170,9 +170,9 @@ public class WorkNode {
 			if (BP.Web.WebUser.getIsWap()) {
 				_AppType = "WF/WAP";
 			} else {
-				if(BP.Sys.Glo.getRequest() == null)
+				if (BP.Sys.Glo.getRequest() == null)
 					_AppType = "WF";
-				else{
+				else {
 					boolean b = BP.Sys.Glo.getRequest().getRequestURI().toLowerCase().contains("oneflow");
 					if (b) {
 						_AppType = "WF/OneFlow";
@@ -213,7 +213,7 @@ public class WorkNode {
 	 * @param town
 	 *            WorkNode
 	 * @return 产生的工作人员
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final GenerWorkerLists Func_GenerWorkerLists(WorkNode town) throws Exception {
 		this.town = town;
@@ -274,7 +274,8 @@ public class WorkNode {
 
 	/**
 	 * 生成一个 word
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public final void DoPrint() throws Exception {
 		try {
@@ -297,7 +298,7 @@ public class WorkNode {
 	 * 
 	 * @param nds
 	 *            到达的节点集合
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void DeleteToNodesData(Nodes nds) throws Exception {
 		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable) {
@@ -384,7 +385,7 @@ public class WorkNode {
 						this.getWorkID());
 				DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + dbStr + "WorkID", "WorkID",
 						this.getWorkID());
-				 
+
 			}
 			DeleteToNodesData(nd.getHisToNodes());
 		}
@@ -414,7 +415,7 @@ public class WorkNode {
 	 * @param fid
 	 *            FID
 	 * @return GenerWorkerLists
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private GenerWorkerLists InitWorkerLists(WorkNode town, DataTable dt, long fid) throws Exception {
 		if (dt.Rows.size() == 0) {
@@ -459,15 +460,6 @@ public class WorkNode {
 		this.HisWorkerLists = new GenerWorkerLists();
 		this.HisWorkerLists.clear();
 
-		/// #region 限期时间 town.HisNode.TSpan-1
-		// 2008-01-22 之前的东西。
-		// int i = town.HisNode.TSpan;
-		// dtOfShould = DataType.AddDays(dtOfShould, i);
-		// if (town.HisNode.WarningHour > 0)
-		// dtOfWarning = DataType.AddDays(dtOfWarning, i -
-		// town.HisNode.WarningHour);
-		// edit at 2008-01-22 , 处理预警日期的问题。
-
 		java.util.Date dtOfShould = new java.util.Date(0);
 		if (this.getHisFlow().getHisTimelineRole() == TimelineRole.ByFlow) {
 			// 如果整体流程是按流程设置计算。
@@ -477,21 +469,19 @@ public class WorkNode {
 			int hh = 0;
 
 			// 增加天数. 考虑到了节假日.
-			dtOfShould = Glo.AddDayHoursSpan(new Date(),
-					this.town.getHisNode().getTimeLimit(),
-					this.town.getHisNode().getTimeLimitHH(),
-					this.town.getHisNode().getTimeLimitMM());
+			dtOfShould = Glo.AddDayHoursSpan(new Date(), this.town.getHisNode().getTimeLimit(),
+					this.town.getHisNode().getTimeLimitHH(), this.town.getHisNode().getTimeLimitMM());
 		}
 
 		// 求警告日期.
 		java.util.Date dtOfWarning = new java.util.Date();
-		if (this.town.getHisNode().getWarningDay() == 0 ) {
+		if (this.town.getHisNode().getWarningDay() == 0) {
 			dtOfWarning = dtOfShould;
 		} else {
 			// 计算警告日期。
 			// 增加小时数. 考虑到了节假日.
 			dtOfWarning = Glo.AddDayHoursSpan(new Date(), this.town.getHisNode().getTimeLimit(),
-					this.town.getHisNode().getTimeLimitHH(),this.town.getHisNode().getTimeLimitMM() );
+					this.town.getHisNode().getTimeLimitHH(), this.town.getHisNode().getTimeLimitMM());
 		}
 
 		switch (this.getHisNode().getHisNodeWorkType()) {
@@ -717,7 +707,7 @@ public class WorkNode {
 
 				wl.setFK_EmpText(emp.getName());
 				wl.setFK_Dept(emp.getFK_Dept());
-				wl.setWarningHour( 0);
+				wl.setWarningHour(0);
 				wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
 				wl.setDTOfWarning(DateUtils.format(dtOfWarning, DataType.getSysDataTimeFormat()));
 				wl.setRDT(DataType.getCurrentDataTime());
@@ -846,49 +836,59 @@ public class WorkNode {
 			at = ActionType.ForwardHL;
 			break;
 		case SubThreadWork:
-			at = ActionType.SubThreadForward;
+			switch (this.getHisNode().getHisNodeWorkType()) {
+			case StartWorkFL:
+			case WorkFL:
+			case WorkFHL:
+				at = ActionType.ForwardFL;
+				break;
+			case WorkHL:
+				throw new Exception("err@流程设计错误，当前节点是合流节点，而到达的节点是子线程。");
+			case Work:
+				throw new Exception("err@流程设计错误，当前节点是普通节点，而到达的节点是子线程。");
+			default:
+				at = ActionType.Forward;
+				break;
+			}
+
 			break;
 		default:
 			break;
 		}
 
-		
-		//  #region 如果是子线城前进.
-          if (at == ActionType.SubThreadForward)
-          {
-              for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList())
-              {
-                  this.AddToTrack(at, wl, "子线程",this.town.getHisWork().getOID());
-              }
-              //写入到日志.
-          }
-          //#endregion 如果是子线城前进.
-          
-		// 把工作的当时信息存入数据库.
-		//String json = this.getHisWork().ToJson();
-          if (at != ActionType.SubThreadForward)
-          {
-		if (this.HisWorkerLists.size() == 1) {
-			GenerWorkerList wl = (GenerWorkerList) ((this.HisWorkerLists.get(0) instanceof GenerWorkerList)
-					? this.HisWorkerLists.get(0) : null);
-
-			this.AddToTrack(at, wl.getFK_Emp(), wl.getFK_EmpText(), wl.getFK_Node(), wl.getFK_NodeText(), null,
-					this.getndFrom());
-		} else {
-			String info = "共(" + this.HisWorkerLists.size() + ")人接收\t\n";
-
-			String emps = "";
+		// 如果是子线城前进.
+		if (at == ActionType.SubThreadForward) {
 			for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList()) {
-				info += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_DeptT(), wl.getFK_EmpText()) + "\t\n";
-
-				emps += wl.getFK_Emp() + "," + wl.getFK_EmpText() + ";";
+				this.AddToTrack(at, wl, "子线程", this.town.getHisWork().getOID());
 			}
-
 			// 写入到日志.
-			this.AddToTrack(at, this.getExecer(), "多人接受(见信息栏)", town.getHisNode().getNodeID(),
-					town.getHisNode().getName(), info, this.getndFrom(), null, emps);
 		}
-        }
+		// #endregion 如果是子线城前进.
+
+		// 把工作的当时信息存入数据库.
+		// String json = this.getHisWork().ToJson();
+		if (at != ActionType.SubThreadForward) {
+			if (this.HisWorkerLists.size() == 1) {
+				GenerWorkerList wl = (GenerWorkerList) ((this.HisWorkerLists.get(0) instanceof GenerWorkerList)
+						? this.HisWorkerLists.get(0) : null);
+
+				this.AddToTrack(at, wl.getFK_Emp(), wl.getFK_EmpText(), wl.getFK_Node(), wl.getFK_NodeText(), null,
+						this.getndFrom());
+			} else {
+				String info = "共(" + this.HisWorkerLists.size() + ")人接收\t\n";
+
+				String emps = "";
+				for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList()) {
+					info += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_DeptT(), wl.getFK_EmpText()) + "\t\n";
+
+					emps += wl.getFK_Emp() + "," + wl.getFK_EmpText() + ";";
+				}
+
+				// 写入到日志.
+				this.AddToTrack(at, this.getExecer(), "多人接受(见信息栏)", town.getHisNode().getNodeID(),
+						town.getHisNode().getName(), info, this.getndFrom(), null, emps);
+			}
+		}
 		/// #endregion
 
 		/// #region 把数据加入变量中.
@@ -935,7 +935,7 @@ public class WorkNode {
 	 * @param fid
 	 *            FID
 	 * @return GenerWorkerLists
-	 * @throws Exception 
+	 * @throws Exception
 	 * @throws ParseException
 	 */
 
@@ -961,7 +961,8 @@ public class WorkNode {
 
 	/**
 	 * 节点完成任务的条件 条件与条件之间是or 的关系, 就是说,如果任何一个条件满足,这个工作人员在这个节点上的任务就完成了.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final Conds getHisNodeCompleteConditions() throws Exception {
@@ -978,7 +979,8 @@ public class WorkNode {
 
 	/**
 	 * 他的完成任务的条件,此节点是完成任务的条件集合 条件与条件之间是or 的关系, 就是说,如果任何一个条件满足,这个任务就完成了.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final Conds getHisFlowCompleteConditions() throws Exception {
@@ -1028,7 +1030,7 @@ public class WorkNode {
 	 * 获得下一个节点.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final Node NodeSend_GenerNextStepNode() throws Exception {
 		// 如果要是跳转到的节点，自动跳转规则规则就会失效。
@@ -1039,7 +1041,7 @@ public class WorkNode {
 		// 判断是否有延续流程.
 		NodeYGFlows ygflows = new NodeYGFlows();
 		ygflows.Retrieve(NodeYGFlowAttr.FK_Node, this._HisNode.getNodeID());
-		if (ygflows.size() > 0 && 1==2) {
+		if (ygflows.size() > 0 && 1 == 2) {
 			for (NodeYGFlow item : ygflows.ToJavaList()) {
 				boolean isPass = false;
 
@@ -1101,7 +1103,7 @@ public class WorkNode {
 	 * 获取下一步骤的工作节点.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final Node NodeSend_GenerNextStepNode_Ext1() throws Exception {
 		// 如果要是跳转到的节点，自动跳转规则规则就会失效。
@@ -1112,7 +1114,7 @@ public class WorkNode {
 		Node mynd = this.getHisNode();
 		Work mywork = this.getHisWork();
 		int beforeSkipNodeID = 0; // added by liuxc,2015-7-13,标识自动跳转之前的节点ID
-	
+
 		this.setndFrom(this.getHisNode());
 		while (true) {
 			// 上一步的工作节点.
@@ -1127,8 +1129,8 @@ public class WorkNode {
 
 			// 获取它的下一步节点.
 			Node nd = this.NodeSend_GenerNextStepNode_Ext(mynd);
-			nd.WorkID=this.getWorkID(); // 未获得表单ID。
-		
+			nd.WorkID = this.getWorkID(); // 未获得表单ID。
+
 			mynd = nd;
 			Work skipWork = null;
 			if (!nd.getNodeFrmID().equals(mywork.NodeFrmID)) {
@@ -1155,7 +1157,7 @@ public class WorkNode {
 						skipWork.InsertAsOID(this.getWorkID());
 					}
 				}
- 
+
 				/// #endregion 初始化发起的工作节点.
 
 				IsSkip = true;
@@ -1235,10 +1237,11 @@ public class WorkNode {
 					// 如果发现了，当前人员包含处理人集合.
 					this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
 							nd.getName(), "自动跳转,(处理人就是提交人)", getndFrom());
-					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd,skipWork, null);
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd, skipWork, null);
 					setndFrom(nd);
-					//发送成功后事件.
-					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd,skipWork, null,this.HisMsgObjs);
+					// 发送成功后事件.
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd, skipWork, null,
+							this.HisMsgObjs);
 					continue;
 				}
 
@@ -1265,10 +1268,11 @@ public class WorkNode {
 				if (isHave == true) {
 					this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
 							nd.getName(), "自动跳转.(处理人已经出现过)", getndFrom());
-					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd,skipWork, null);
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd, skipWork, null);
 					setndFrom(nd);
 					// 执行发送.
-					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd,skipWork, null,this.HisMsgObjs);
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd, skipWork, null,
+							this.HisMsgObjs);
 					continue;
 				}
 
@@ -1282,8 +1286,8 @@ public class WorkNode {
 				// 处理人与上一步相同
 				boolean isHave = false;
 				for (DataRow dr : dt.Rows) {
-					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.getValue(0).toString() + "' AND WorkID="
-							+ this.getWorkID() + " AND FK_Node="
+					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.getValue(0).toString()
+							+ "' AND WorkID=" + this.getWorkID() + " AND FK_Node="
 							+ (beforeSkipNodeID > 0 ? beforeSkipNodeID : prvNodeID); // edited
 																						// by
 																						// liuxc,2015-7-13
@@ -1410,10 +1414,10 @@ public class WorkNode {
 
 					this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
 							nd.getName(), "自动跳转.(处理人与上一步相同)", getndFrom());
-					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd,wk, null);
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, nd, wk, null);
 					setndFrom(nd);
 					// 执行发送.
-					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd,wk, null,this.HisMsgObjs);
+					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd, wk, null, this.HisMsgObjs);
 					continue;
 				}
 
@@ -1428,7 +1432,8 @@ public class WorkNode {
 
 	/**
 	 * 处理OrderTeamup退回模式
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final void DealReturnOrderTeamup() throws Exception {
@@ -1476,7 +1481,7 @@ public class WorkNode {
 	 * 获取下一步骤的工作节点
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private Node NodeSend_GenerNextStepNode_Ext(Node currNode) throws Exception {
 		// 检查当前的状态是是否是退回，.
@@ -1504,9 +1509,9 @@ public class WorkNode {
 		Nodes myNodes = new Nodes();
 		int toNodeId = 0;
 		int numOfWay = 0;
-		
-		//this.rptGe.Retrieve();
-		
+
+		// this.rptGe.Retrieve();
+
 		for (Node nd : nds.ToJavaList()) {
 			Conds dcs = new Conds();
 			for (Cond dc : dcsAll.ToJavaList()) {
@@ -1521,7 +1526,6 @@ public class WorkNode {
 
 				dcs.AddEntity(dc);
 			}
- 
 
 			if (dcs.getIsPass()) // 如果通过了.
 			{
@@ -1558,8 +1562,8 @@ public class WorkNode {
 	 * 获取下一步骤的节点集合
 	 * 
 	 * @return
-	 * @throws Exception 
-	 * @throws NumberFormatException 
+	 * @throws Exception
+	 * @throws NumberFormatException
 	 */
 	public final Nodes Func_GenerNextStepNodes() throws NumberFormatException, Exception {
 		// 如果跳转节点已经有了变量.
@@ -1641,7 +1645,7 @@ public class WorkNode {
 	 * 检查一下流程完成条件.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void Func_CheckCompleteCondition() throws Exception {
 		if (this.getHisNode().getHisRunModel() == RunModel.SubThread) {
@@ -1693,7 +1697,7 @@ public class WorkNode {
 	 * 设置当前工作已经完成.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private String Func_DoSetThisWorkOver() throws Exception {
 		// 设置结束人.
@@ -1807,7 +1811,7 @@ public class WorkNode {
 	 * @param toND
 	 *            要到达的下一个节点
 	 * @return 执行消息
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void NodeSend_11(Node toND) throws Exception {
 		String sql = "";
@@ -1961,7 +1965,7 @@ public class WorkNode {
 		// string textInfo = string.Format("@任务自动发送给{0}如下处理人{1}.",
 		// this.nextStationName,this._RememberMe.ObjsExt);
 
-		if (1==2 && this.HisWorkerLists.size() >= 2 && this.getHisNode().getIsTask()) {
+		if (1 == 2 && this.HisWorkerLists.size() >= 2 && this.getHisNode().getIsTask()) {
 			if (WebUser.getIsWap()) {
 				this.addMsg(SendReturnMsgFlag.AllotTask, null,
 						"<a href=\"" + this.getVirPath() + "WF/WorkOpt/AllotTask.jsp?WorkID=" + this.getWorkID()
@@ -1984,7 +1988,7 @@ public class WorkNode {
 		// VirPath + "WF/Img/SMS.gif' border=0 />发手机短信提醒他(们)</a>",
 		// SendReturnMsgType.Info);
 
-		if ( 1==2 &&this.getHisNode().getHisFormType() != NodeFormType.SDKForm ) {
+		if (1 == 2 && this.getHisNode().getHisFormType() != NodeFormType.SDKForm) {
 			if (this.getHisNode().getIsStartNode()) {
 				if (WebUser.getIsWap()) {
 					this.addMsg(SendReturnMsgFlag.ToEmpExt, null,
@@ -2030,10 +2034,13 @@ public class WorkNode {
 		if (this.getHisNode().getHisFormType() == NodeFormType.SDKForm
 				|| this.getHisNode().getHisFormType() == NodeFormType.SelfForm) {
 		} else {
-			//this.addMsg(SendReturnMsgFlag.WorkRpt, null,
-			//		"@<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
-			//				+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
-			//				+ "&FK_Flow=" + toND.getFK_Flow() + "' target='_self' >工作轨迹</a>。");
+			// this.addMsg(SendReturnMsgFlag.WorkRpt, null,
+			// "@<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a
+			// href='" + getVirPath()
+			// + "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" +
+			// this.getHisWork().getFID()
+			// + "&FK_Flow=" + toND.getFK_Flow() + "' target='_self'
+			// >工作轨迹</a>。");
 		}
 		this.addMsg(SendReturnMsgFlag.WorkStartNode, "@下一步[" + toND.getName() + "]工作成功启动.",
 				"@下一步<font color=blue>[" + toND.getName() + "]</font>工作成功启动.");
@@ -2042,8 +2049,7 @@ public class WorkNode {
 
 		/// #region 初始化发起的工作节点。
 
-		
-		if (this.getHisWork().getEnMap().getPhysicsTable().equals(  toWK.getEnMap().getPhysicsTable()) ) {
+		if (this.getHisWork().getEnMap().getPhysicsTable().equals(toWK.getEnMap().getPhysicsTable())) {
 			// 这是数据合并模式, 就不执行copy
 			this.CopyData(toWK, toND, true);
 		} else {
@@ -2065,28 +2071,17 @@ public class WorkNode {
 		/// #endregion
 
 	}
- 
 
 	/**
 	 * 处理分流点向下发送 to 异表单.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void NodeSend_24_UnSameSheet(Nodes toNDs) throws Exception {
-		 
 
 		// 分别启动每个节点的信息.
 		String msg = "";
-
-		// #region 查询出来当前流程节点数据，为子线程的节点copy数据所用。
-		// 查询出来上一个节点的附件信息来。
-		FrmAttachmentDBs athDBs = new FrmAttachmentDBs("ND" + this.getHisNode().getNodeID(),
-				(new Long(this.getWorkID())).toString());
-		// 查询出来上一个Ele信息来。
-		FrmEleDBs eleDBs = new FrmEleDBs("ND" + this.getHisNode().getNodeID(), (new Long(this.getWorkID())).toString());
-
-		// #endregion
 
 		// 定义系统变量.
 		String workIDs = "";
@@ -2114,42 +2109,6 @@ public class WorkNode {
 				wk.Delete();
 				continue;
 			}
-
-			/// #region 执行数据copy.
-			if (athDBs.size() > 0) {
-				// 插入之前先删除.
-				FrmAttachmentDB mydb = new FrmAttachmentDB();
-				mydb.Delete(FrmAttachmentDBAttr.FK_MapData, "ND" + nd.getNodeID(), FrmAttachmentDBAttr.RefPKVal,
-						wk.getOID());
-
-				// 说明当前节点有附件数据
-				int idx = 0;
-				for (FrmAttachmentDB athDB : athDBs.ToJavaList()) {
-					idx++;
-					FrmAttachmentDB athDB_N = new FrmAttachmentDB();
-					athDB_N.Copy(athDB);
-					athDB_N.setFK_MapData("ND" + nd.getNodeID());
-					athDB_N.setMyPK(BP.DA.DBAccess.GenerGUID());
-					athDB_N.setFK_FrmAttachment(athDB_N.getFK_FrmAttachment()
-							.replace("ND" + this.getHisNode().getNodeID(), "ND" + nd.getNodeID()));
-					athDB_N.setRefPKVal(String.valueOf(wk.getOID()));
-					athDB_N.Insert();
-				}
-			}
-
-			if (eleDBs.size() > 0) {
-				// 说明当前节点有附件数据
-				int idx = 0;
-				for (FrmEleDB eleDB : eleDBs.ToJavaList()) {
-					idx++;
-					FrmEleDB eleDB_N = new FrmEleDB();
-					eleDB_N.Copy(eleDB);
-					eleDB_N.setFK_MapData("ND" + nd.getNodeID());
-					eleDB_N.Insert();
-				}
-			}
-
-			/// #endregion 执行数据copy.
 
 			for (GenerWorkerList wl : current_gwls.ToJavaList()) {
 				msg += wl.getFK_Emp() + "，" + wl.getFK_EmpText() + "、";
@@ -2203,8 +2162,18 @@ public class WorkNode {
 				// 更新工作信息.
 				wk.setRec(wl.getFK_Emp());
 				wk.setEmps("@" + wl.getFK_Emp());
-				// wk.RDT = DataType.getCurrentDataTimess();
 				wk.DirectUpdate();
+				
+				//为子线程产生分流节点的发送副本。
+                wl.setFID(this.getWorkID());
+                wl.setFK_Emp (WebUser.getNo());
+                wl.setFK_EmpText(WebUser.getName());
+                wl.setIsPassInt(1);
+                wl.setIsRead(true);
+                wl.setFK_Node( this.getHisNode().getNodeID());
+                wl.setFK_NodeText(this.getHisNode().getName());
+                if (wl.getIsExits()==false)
+                   wl.Insert();
 			}
 		}
 
@@ -2216,13 +2185,14 @@ public class WorkNode {
 		this.addMsg(SendReturnMsgFlag.VarAcceptersID, empIDs, empIDs, SendReturnMsgType.SystemMsg);
 		this.addMsg(SendReturnMsgFlag.VarAcceptersName, empNames, empNames, SendReturnMsgType.SystemMsg);
 		this.addMsg(SendReturnMsgFlag.VarToNodeIDs, toNodeIDs, toNodeIDs, SendReturnMsgType.SystemMsg);
-		
-		
-		  //写入日志.
-        if (this.getHisNode().getIsStartNode()==true)
-            this.AddToTrack(ActionType.Start, empIDs, empNames, this.getHisNode().getNodeID(), this.getHisNode().getName(), msg);
-        else
-            this.AddToTrack(ActionType.Forward, empIDs, empNames, this.getHisNode().getNodeID(), this.getHisNode().getName(), msg);
+
+		// 写入日志.
+		if (this.getHisNode().getIsStartNode() == true)
+			this.AddToTrack(ActionType.Start, empIDs, empNames, this.getHisNode().getNodeID(),
+					this.getHisNode().getName(), msg);
+		else
+			this.AddToTrack(ActionType.Forward, empIDs, empNames, this.getHisNode().getNodeID(),
+					this.getHisNode().getName(), msg);
 	}
 
 	/**
@@ -2246,7 +2216,7 @@ public class WorkNode {
 	 * 
 	 * @param toNode
 	 *            到达的分流节点
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void NodeSend_24_SameSheet(Node toNode) throws Exception {
 		if (this.getHisGenerWorkFlow().getTitle().equals("未生成")) {
@@ -2261,7 +2231,6 @@ public class WorkNode {
 		ps.Add("FK_Node", toNode.getNodeID());
 
 		/// #endregion 删除到达节点的子线程如果有，防止退回信息垃圾数据问题，如果退回处理了这个部分就不需要处理了.
-  
 
 		/// #endregion GenerFH
 
@@ -2431,13 +2400,11 @@ public class WorkNode {
 										|| key.equals(GEDtlAttr.RefPK)) {
 									continue;
 								}
-								
-								
-								  if (attr.getIsRefAttr() == true)
-                                      continue;
-                                  if (attr.getField() == null)
-                                      continue; //
-                                  
+
+								if (attr.getIsRefAttr() == true)
+									continue;
+								if (attr.getField() == null)
+									continue; //
 
 								if (myDT.Columns.contains(attr.getField()) == true) {
 									mywk.SetValByKey(attr.getKey(), myDT.Rows.get(0).getValue(attr.getField()));
@@ -2714,7 +2681,7 @@ public class WorkNode {
 										}
 									}
 								}
-								 
+
 								/// #endregion 复制从表单条 - 附件信息
 							}
 						}
@@ -2816,7 +2783,7 @@ public class WorkNode {
 		this.addMsg(SendReturnMsgFlag.VarTreadWorkIDs, workIDs, workIDs, SendReturnMsgType.SystemMsg);
 
 		// 如果是开始节点，就可以允许选择接受人。
-		if (1==2 && this.getHisNode().getIsStartNode()) {
+		if (1 == 2 && this.getHisNode().getIsStartNode()) {
 			if (current_gwls.size() >= 2 && this.getHisNode().getIsTask()) {
 				this.addMsg("AllotTask",
 						"@<img src='" + getVirPath() + "WF/Img/AllotTask.gif' border=0 /><a href=\"" + getVirPath()
@@ -2825,11 +2792,12 @@ public class WorkNode {
 			}
 		}
 
-		if ( 1==2 && this.getHisNode().getIsStartNode()) {
+		if (1 == 2 && this.getHisNode().getIsStartNode()) {
 			if (WebUser.getIsWap()) {
 				this.addMsg("UnDoNew",
 						"@<a href='" + getVirPath() + "WF/Wap/MyFlowInfo.jsp?DoType=UnSend&WorkID=" + this.getWorkID()
-								+ "&FK_Flow=" + toNode.getFK_Flow() + "'><img src='./Img/Action/UnSend.png' border=0/>撤销本次发送</a>， <a href='" + getVirPath()
+								+ "&FK_Flow=" + toNode.getFK_Flow()
+								+ "'><img src='./Img/Action/UnSend.png' border=0/>撤销本次发送</a>， <a href='" + getVirPath()
 								+ "WF/Wap/MyFlow.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node="
 								+ Integer.parseInt(toNode.getFK_Flow()) + "01' ><img src='" + getVirPath()
 								+ "WF/Img/New.gif' border=0/>新建流程</a>。");
@@ -2859,7 +2827,7 @@ public class WorkNode {
 	 * 合流点到普通点发送 1. 首先要检查完成率. 2, 按普通节点向普通节点发送.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void NodeSend_31(Node nd) throws Exception {
 		// 检查完成率.
@@ -2881,117 +2849,176 @@ public class WorkNode {
 	 * 子线程向合流点
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private void NodeSend_53_SameSheet_To_HeLiu(Node nd) throws Exception {
+	private void NodeSend_53_SameSheet_To_HeLiu(Node toNode) throws Exception {
+
+		Work toNodeWK = toNode.getHisWork();
+		toNodeWK.setOID(this.getHisWork().getFID());
+		if (toNodeWK.RetrieveFromDBSources() == 0) // 查询出来数据.
+			toNodeWK.DirectInsert();
+
+		toNodeWK.Copy(this.getHisWork()); // 执行copy.
+
+		toNodeWK.setOID(this.getHisWork().getFID());
+		toNodeWK.setFID(0);
+
+		this.town = new WorkNode(toNodeWK, toNode);
 		
-		
-		 Work heLiuWK = nd.getHisWork();
-         heLiuWK.setOID(this.getHisWork().getFID());
-         if (heLiuWK.RetrieveFromDBSources() == 0) //查询出来数据.
-             heLiuWK.DirectInsert();
-
-         heLiuWK.Copy(this.getHisWork()); // 执行copy.
-
-         heLiuWK.setOID(this.getHisWork().getFID());
-         heLiuWK.setFID( 0);
-
-         this.town = new WorkNode(heLiuWK, nd);
-
-
-
-         // 先查询一下是否有人员，在合流节点上，如果没有就让其初始化人员. 
-         current_gwls = new GenerWorkerLists();
-         current_gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getHisWork().getFID(),GenerWorkerListAttr.FK_Node, nd.getNodeID() );
-         if (current_gwls.size() == 0)
-             current_gwls = this.Func_GenerWorkerLists(this.town);// 初试化他们的工作人员．
-         
- 
-
-         String FK_Emp = "";
-         String toEmpsStr = "";
-         String emps = "";
-         for (GenerWorkerList wl : current_gwls.ToJavaList())
-         {
-             toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
-             if (current_gwls.size() == 1)
-                 emps = toEmpsStr;
-             else
-                 emps += "@" + toEmpsStr;
-         }
- 
-
-         //#region 复制主表数据. edit 2014-11-20 向合流点汇总数据.
-         //复制当前节点表单数据.
-         heLiuWK.setFID( 0);
-         heLiuWK.setRec( FK_Emp);
-         heLiuWK.setEmps(emps);
-         heLiuWK.setOID( this.getHisWork().getFID());
-         heLiuWK.DirectUpdate(); //在更新一次.
-
-         /* 把数据复制到rpt数据表里. */
-         this.rptGe.setOID(this.getHisWork().getFID());
-         this.rptGe.RetrieveFromDBSources();
-         this.rptGe.Copy(this.getHisWork());
-         this.rptGe.DirectUpdate();
-         //#endregion 复制主表数据.
-
-         // 产生合流汇总明细表数据.
-       //  this.GenerHieLiuHuiZhongDtlData_2013(nd);
-
-         //#endregion 处理合流节点表单数据
-
-         /* 合流点需要等待各个分流点全部处理完后才能看到它。*/
-         String info = "";
-//#warning 对于多个分合流点可能会有问题。
-         ps = new Paras();
-         ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr + "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
-         ps.Add("FID", this.getHisWork().getFID());
-         BigDecimal numAll = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-         
-         GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
-         //记录子线程到达合流节点数
-         int count = gwf.GetParaInt("ThreadCount");
-         gwf.SetPara("ThreadCount", count + 1);
-         gwf.Update();
-         BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
-         
-    	 BigDecimal passRate1 = numPassed.divide(numAll, 2).multiply(new BigDecimal(100));
-
-		if (nd.getPassRate().compareTo(passRate1) <= 0) {
-	         ps = new Paras();
-	         ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
-	         ps.Add("FK_Node", nd.getNodeID());
-	         ps.Add("WorkID", this.getHisWork().getFID());
-	         DBAccess.RunSQL(ps);
-	
-	         ps = new Paras();
-	         ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
-	         ps.Add("FK_Node", nd.getNodeID());
-	         ps.Add("NodeName", nd.getName());
-	         ps.Add("WorkID", this.getHisWork().getFID());
-	         DBAccess.RunSQL(ps);
-	         
-	         gwf.SetPara("ThreadCount", 0);
-             gwf.Update();
-	
-	         info = "@下一步合流点(" + nd.getName() + ")已经启动。";
-        } else
+		// 获取到达当前合流节点上 与上一个分流点之间的子线程节点的集合。
+        String spanNodes = this.SpanSubTheadNodes(toNode);
+        
+        //处理FID.
+        long fid = this.getHisWork().getFID();
+        if (fid == 0)
         {
-//#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
-             ps = new Paras();
-             ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
-             ps.Add("FK_Node", nd.getNodeID());
-             ps.Add("WorkID", this.getHisWork().getOID());
-             DBAccess.RunSQL(ps);
+            if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
+                throw new Exception("@当前节点非子线程节点.");
+
+            String strs = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT FID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getHisWork().getOID(), "0");
+            if (strs == "0")
+                throw new Exception("@丢失FID信息");
+            fid = Long.parseLong(strs);
+
+            this.getHisWork().setFID (fid);
+        }
+        
+
+		// 先查询一下是否有人员，在合流节点上，如果没有就让其初始化人员.
+		current_gwls = new GenerWorkerLists();
+		current_gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getHisWork().getFID(), GenerWorkerListAttr.FK_Node,
+				toNode.getNodeID());
+		if (current_gwls.size() == 0)
+			current_gwls = this.Func_GenerWorkerLists(this.town);// 初试化他们的工作人员．
+
+		String FK_Emp = "";
+		String toEmpsStr = "";
+		String emps = "";
+		for (GenerWorkerList wl : current_gwls.ToJavaList()) {
+			toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
+			if (current_gwls.size() == 1)
+				emps = toEmpsStr;
+			else
+				emps += "@" + toEmpsStr;
+		}
+		
+		 //增加变量.
+        this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps.replaceAll("@", ","), SendReturnMsgType.SystemMsg);
+        this.addMsg(SendReturnMsgFlag.VarAcceptersName, toEmpsStr, SendReturnMsgType.SystemMsg);
+
+
+        /* 
+        * 更新它的节点 worklist 信息, 说明当前节点已经完成了.
+        * 不让当前的操作员能看到自己的工作。
+        */
+
+        //设置父流程状态 设置当前的节点为:
+        Work mainWK = town.getHisWork();
+        mainWK.setOID(this.getHisWork().getFID());
+        mainWK.RetrieveFromDBSources();
+       
+        // 复制报表上面的数据到合流点上去。
+        DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + dbStr + "OID",
+            "OID", this.getHisWork().getFID());
+        for(DataColumn dc: dt.Columns)
+            mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).get(dc.ColumnName));
+        
+        mainWK.setRec(FK_Emp);
+        mainWK.setEmps(emps);
+        mainWK.setOID(this.getHisWork().getFID());
+        mainWK.Save();
+        
+        // 产生合流汇总从表数据.
+        this.GenerHieLiuHuiZhongDtlData_2013(toNode);
+        
+        //设置当前子线程已经通过.
+        ps = new Paras();
+        ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND IsPass=0";
+        ps.Add("WorkID", this.getWorkID());
+        ps.Add("FID", this.getHisWork().getFID());
+        DBAccess.RunSQL(ps);
+
+        //合流节点上的工作处理者。
+        GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), toNode.getNodeID());
+        current_gwls = gwls;
+        
+        int pass = 3;
+        if (gwls.size() > 0)
+            pass = gwls.get(0).GetValIntByKey("IsPass");
+        if(pass == 0){
+			/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
+			ps = new Paras();
+			ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
+					+ "FID AND FK_Node IN (" + spanNodes + ")";
+			ps.Add("FID", this.getHisWork().getFID());
+			BigDecimal numAll = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
+	
+			GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
+			// 记录子线程到达合流节点数
+			int count = gwf.GetParaInt("ThreadCount");
+			gwf.SetPara("ThreadCount", count + 1);
+			gwf.Update();
+			BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
+	
+			BigDecimal passRate1 = numPassed.divide(numAll, 2).multiply(new BigDecimal(100));
+	
+			if (toNode.getPassRate().compareTo(passRate1) <= 0) {
+				ps = new Paras();
+				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+						+ dbStr + "WorkID";
+				ps.Add("FK_Node", toNode.getNodeID());
+				ps.Add("WorkID", this.getHisWork().getFID());
+				DBAccess.RunSQL(ps);
+	
+				ps = new Paras();
+				ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr
+						+ "NodeName WHERE WorkID=" + dbStr + "WorkID";
+				ps.Add("FK_Node", toNode.getNodeID());
+				ps.Add("NodeName", toNode.getName());
+				ps.Add("WorkID", this.getHisWork().getFID());
+				int num = DBAccess.RunSQL(ps);
+				 if (num == 0)
+                     throw new Exception("@不应该更新不到它.");
+				gwf.SetPara("ThreadCount", 0);
+				gwf.Update();
+			} else {
+				// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
+				ps = new Paras();
+				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+						+ dbStr + "WorkID";
+				ps.Add("FK_Node", toNode.getNodeID());
+				ps.Add("WorkID", this.getHisWork().getOID());
+				int num = DBAccess.RunSQL(ps);
+				if (num == 0)
+                    throw new Exception("@不应该更新不到它.");
+			}
         }
 
-         this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
-         this.getHisGenerWorkFlow().setNodeName(nd.getName());
-  
-         this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps, SendReturnMsgType.SystemMsg);
-         this.addMsg("HeLiuInfo", "@下一步的工作处理人[" + emps + "]" + info, SendReturnMsgType.Info);
-           
+		this.getHisGenerWorkFlow().setFK_Node(toNode.getNodeID());
+		this.getHisGenerWorkFlow().setNodeName(toNode.getName());
+		
+		  //改变当前流程的当前节点.
+        ps = new Paras();
+        ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + WFState.Runing.getValue() + ",  FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
+        ps.Add("FK_Node", toNode.getNodeID());
+        ps.Add("NodeName", toNode.getName());
+        ps.Add("WorkID", this.getHisWork().getFID());
+        DBAccess.RunSQL(ps);
+
+
+        //设置父流程状态
+
+        this.addMsg("InfoToHeLiu", "@流程已经运行到合流节点[" + toNode.getName() + "]。@您的工作已经发送给如下人员[" + toEmpsStr + "]，@您是第一个到达此节点的处理人.");
+
+        //处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
+        Work towk = town.getHisWork();
+        towk.setOID(this.getHisWork().getFID());
+        towk.RetrieveFromDBSources();
+        towk.Copy(this.getHisWork());
+        towk.DirectUpdate();
+        // 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
+       
+
 	}
 
 	private String NodeSend_55(Node toNode) {
@@ -3000,7 +3027,8 @@ public class WorkNode {
 
 	/**
 	 * 节点向下运动
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	private void NodeSend_Send_5_5() throws Exception {
@@ -3286,7 +3314,7 @@ public class WorkNode {
 	/// #region 执行数据copy.
 	public final void CopyData(Work toWK, Node toND, boolean isSamePTable) throws Exception {
 		String errMsg = "如果两个数据源不想等，就执行 copy - 期间出现错误.";
-		
+
 		if (isSamePTable == true) {
 			return;
 		}
@@ -3448,8 +3476,6 @@ public class WorkNode {
 		}
 
 		/// #endregion 复制Ele
-
-		 
 
 		/// #endregion
 
@@ -3618,7 +3644,7 @@ public class WorkNode {
 							}
 						}
 					}
-				 
+
 					/// #endregion 复制明细表单条 - 附件信息
 
 				}
@@ -3701,7 +3727,8 @@ public class WorkNode {
 	/// #region 方法
 	/**
 	 * 发送失败是撤消数据。
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final void DealEvalUn() throws Exception {
@@ -3746,14 +3773,15 @@ public class WorkNode {
 
 	/**
 	 * 处理质量考核
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final void DealEval() throws Exception {
-		
-		if (1==1)
-	   	return ;
-		
+
+		if (1 == 1)
+			return;
+
 		if (this.getHisNode().getIsEval() == false) {
 			return;
 		}
@@ -3929,7 +3957,8 @@ public class WorkNode {
 
 	/**
 	 * 工作流发送业务处理
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final SendReturnObjs NodeSend() throws Exception {
@@ -3940,7 +3969,7 @@ public class WorkNode {
 	 * 1变N,用于分流节点，向子线程copy数据。
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void CheckFrm1ToN() throws Exception {
 		// 只有分流，合流才能执行1ToN.
@@ -4047,7 +4076,7 @@ public class WorkNode {
 	 * 汇总子线程的表单到合流节点上去
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void CheckFrmHuiZongToDtl() throws Exception {
 		// 只有分流，合流才能执行1ToN.
@@ -4123,12 +4152,12 @@ public class WorkNode {
 	 * 检查独立表单上必须填写的项目.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final boolean CheckFrmIsNotNull() throws Exception {
 		// if (this.HisNode.HisFormType != NodeFormType.SheetTree)
 		// return true;
-         
+
 		// 增加节点表单的必填项判断.
 		String err = "";
 		if (this.getHisNode().getHisFormType() == NodeFormType.FreeForm) {
@@ -4139,8 +4168,9 @@ public class WorkNode {
 					continue;
 				}
 
-				if((row.get(attr.getKeyOfEn()) instanceof String) == true ){
-					String str = (String) (DataType.IsNullOrEmpty(row.get(attr.getKeyOfEn()).toString())==true ?null: row.get(attr.getKeyOfEn()));
+				if ((row.get(attr.getKeyOfEn()) instanceof String) == true) {
+					String str = (String) (DataType.IsNullOrEmpty(row.get(attr.getKeyOfEn()).toString()) == true ? null
+							: row.get(attr.getKeyOfEn()));
 					// 如果是检查不能为空
 					if (str == null || DotNetToJavaStringHelper.isNullOrEmpty(str) == true || str.trim().equals("")) {
 						err += "@字段{" + attr.getKeyOfEn() + " ; " + attr.getName() + "}，不能为空。";
@@ -4150,60 +4180,59 @@ public class WorkNode {
 
 			/// #region 检查附件个数的完整性. - 该部分代码稳定后，移动到独立表单的检查上去。
 			for (FrmAttachment ath : this.getHisWork().getHisFrmAttachments().ToJavaList()) {
-				//region 增加阅读规则
-				if (ath.getReadRole() != 0)
-                {
-                    //查询出来当前的数据.
-                    GenerWorkerList gwl = new GenerWorkerList();
-                    gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),
-                        GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
+				// region 增加阅读规则
+				if (ath.getReadRole() != 0) {
+					// 查询出来当前的数据.
+					GenerWorkerList gwl = new GenerWorkerList();
+					gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Emp,
+							WebUser.getNo(), GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
 
-                    //获得已经下载或者读取的数据. 格式为: a2e06fbf-2bae-44fb-9176-9a0047751e83,a2e06fbf-we-44fb-9176-9a0047751e83
-                    String ids = gwl.GetParaString(ath.getNoOfObj());
-                    if (ids.equals("ALL")==false)
-                    {
-                        //获得当前节点的上传附件.
-                        String sql = "SELECT MyPK,FileName FROM Sys_FrmAttachmentDB WHERE RefPKVal=" + this.getWorkID() + " AND FK_FrmAttachment='" + ath.getMyPK() + "' AND Rec!='" + BP.Web.WebUser.getNo() + "'";
-                        DataTable dt = DBAccess.RunSQLReturnTable(sql);
-                        String errFileUnRead = "";
-                        for (DataRow dr : dt.Rows)
-                        {
-                            String guid = dr.getValue(0).toString();
-                            if (ids.equals(guid) == false)
-                                errFileUnRead += "@文件:" + dr.getValue(1).toString()+ "未阅读.";
-                        }
+					// 获得已经下载或者读取的数据. 格式为:
+					// a2e06fbf-2bae-44fb-9176-9a0047751e83,a2e06fbf-we-44fb-9176-9a0047751e83
+					String ids = gwl.GetParaString(ath.getNoOfObj());
+					if (ids.equals("ALL") == false) {
+						// 获得当前节点的上传附件.
+						String sql = "SELECT MyPK,FileName FROM Sys_FrmAttachmentDB WHERE RefPKVal=" + this.getWorkID()
+								+ " AND FK_FrmAttachment='" + ath.getMyPK() + "' AND Rec!='" + BP.Web.WebUser.getNo()
+								+ "'";
+						DataTable dt = DBAccess.RunSQLReturnTable(sql);
+						String errFileUnRead = "";
+						for (DataRow dr : dt.Rows) {
+							String guid = dr.getValue(0).toString();
+							if (ids.equals(guid) == false)
+								errFileUnRead += "@文件:" + dr.getValue(1).toString() + "未阅读.";
+						}
 
-                        //如果有未阅读的文件.
-                        if (DataType.IsNullOrEmpty(errFileUnRead) == false)
-                        {
-                            //未阅读不让其发送.
-                            if (ath.getReadRole() == 1)
-                                throw new Exception("err@您还有如下文件没有阅读," + errFileUnRead);
+						// 如果有未阅读的文件.
+						if (DataType.IsNullOrEmpty(errFileUnRead) == false) {
+							// 未阅读不让其发送.
+							if (ath.getReadRole() == 1)
+								throw new Exception("err@您还有如下文件没有阅读," + errFileUnRead);
 
-                            //未阅读记录日志并让其发送.
-                            if (ath.getReadRole() == 2)
-                            {
-                                AthUnReadLog log = new AthUnReadLog();
-                                log.setMyPK(this.getWorkID() + "_" + this.getHisNode().getNodeID() + "_" + WebUser.getNo());
-                                log.Delete();
+							// 未阅读记录日志并让其发送.
+							if (ath.getReadRole() == 2) {
+								AthUnReadLog log = new AthUnReadLog();
+								log.setMyPK(
+										this.getWorkID() + "_" + this.getHisNode().getNodeID() + "_" + WebUser.getNo());
+								log.Delete();
 
-                                log.setFK_Emp(WebUser.getNo());
-                                log.setFK_EmpDept(WebUser.getFK_Dept());
-                                log.setFK_EmpDeptName(WebUser.getFK_DeptName());
-                                log.setFK_Flow(this.getHisNode().getFK_Flow());
-                                log.setFlowName(this.getHisFlow().getName());
+								log.setFK_Emp(WebUser.getNo());
+								log.setFK_EmpDept(WebUser.getFK_Dept());
+								log.setFK_EmpDeptName(WebUser.getFK_DeptName());
+								log.setFK_Flow(this.getHisNode().getFK_Flow());
+								log.setFlowName(this.getHisFlow().getName());
 
-                                log.setFK_Node(this.getHisNode().getNodeID());
-                                log.setFlowName(this.getHisFlow().getName());
-                                log.setSendDT(DataType.getCurrentDataTime());
-                                log.setWorkID(this.getWorkID());
+								log.setFK_Node(this.getHisNode().getNodeID());
+								log.setFlowName(this.getHisFlow().getName());
+								log.setSendDT(DataType.getCurrentDataTime());
+								log.setWorkID(this.getWorkID());
 
-                                log.Insert(); //插入到数据库.
+								log.Insert(); // 插入到数据库.
 
-                            }
-                        }
-                    }
-                }
+							}
+						}
+					}
+				}
 				if (ath.getUploadFileNumCheck() == UploadFileNumCheck.None) {
 					continue;
 				}
@@ -4393,7 +4422,7 @@ public class WorkNode {
 	 * copy表单树的数据
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final Work CopySheetTree() throws Exception {
 		if (this.getHisNode().getHisFormType() != NodeFormType.SheetTree) {
@@ -4456,11 +4485,11 @@ public class WorkNode {
 			ps.SQL = "SELECT * FROM " + md.getPTable() + " WHERE OID=" + ps.getDBStr() + "OID";
 			ps.Add(WorkAttr.OID, pk);
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
-			
+
 			if (dt.Rows.size() == 0) {
 				err += "@表单{" + md.getName() + "}没有输入数据。";
 				continue;
-			} 
+			}
 
 			// 检查数据是否完整.
 			for (FrmField ff : ffs.ToJavaList()) {
@@ -4493,92 +4522,88 @@ public class WorkNode {
 
 	/*
 	 * zhoupeng 2018.4.25重构.
-	 * */
+	 */
 	public final boolean DealTeamUpNode() throws Exception {
-		
-		  
+
 		GenerWorkerLists gwls = new GenerWorkerLists();
-        gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),
-            GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
+		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
+				this.getHisNode().getNodeID());
 
-        if (gwls.size() == 1)
-            return false; /*让其向下执行,因为只有一个人,就没有顺序的问题.*/
+		if (gwls.size() == 1)
+			return false; /* 让其向下执行,因为只有一个人,就没有顺序的问题. */
 
-        //查看是否我是最后一个？
-        int num = 0;
-        String todoEmps = ""; //记录没有处理的人.
-        for (GenerWorkerList item : gwls.ToJavaList())
-        {
-            if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90)
-            {
-                if (item.getFK_Emp().equals(  WebUser.getNo()) ==false)
-                    todoEmps += BP.WF.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
-                num++;
-            }
-        }
+		// 查看是否我是最后一个？
+		int num = 0;
+		String todoEmps = ""; // 记录没有处理的人.
+		for (GenerWorkerList item : gwls.ToJavaList()) {
+			if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90) {
+				if (item.getFK_Emp().equals(WebUser.getNo()) == false)
+					todoEmps += BP.WF.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
+				num++;
+			}
+		}
 
-        if (num == 1)
-        {
-            if (this.getHisGenerWorkFlow().getHuiQianTaskSta() == HuiQianTaskSta.None)
-            {
-                this.getHisGenerWorkFlow().setSender( BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.getNo(), BP.Web.WebUser.getName()));
-                this.getHisGenerWorkFlow().setTodoEmpsNum(  1);
-                this.getHisGenerWorkFlow().setTodoEmps( WebUser.getName() + ";");
-            }
-            else
-            {
-                String huiqianNo = this.getHisGenerWorkFlow().getHuiQianZhuChiRen();
-                String huiqianName = this.getHisGenerWorkFlow().getHuiQianZhuChiRenName();
+		if (num == 1) {
+			if (this.getHisGenerWorkFlow().getHuiQianTaskSta() == HuiQianTaskSta.None) {
+				this.getHisGenerWorkFlow()
+						.setSender(BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.getNo(), BP.Web.WebUser.getName()));
+				this.getHisGenerWorkFlow().setTodoEmpsNum(1);
+				this.getHisGenerWorkFlow().setTodoEmps(WebUser.getName() + ";");
+			} else {
+				String huiqianNo = this.getHisGenerWorkFlow().getHuiQianZhuChiRen();
+				String huiqianName = this.getHisGenerWorkFlow().getHuiQianZhuChiRenName();
 
-                this.getHisGenerWorkFlow().setSender(BP.WF.Glo.DealUserInfoShowModel(huiqianNo, huiqianName));
-                this.getHisGenerWorkFlow().setTodoEmpsNum(  1);
-                this.getHisGenerWorkFlow().setTodoEmps( WebUser.getName() + ";");
+				this.getHisGenerWorkFlow().setSender(BP.WF.Glo.DealUserInfoShowModel(huiqianNo, huiqianName));
+				this.getHisGenerWorkFlow().setTodoEmpsNum(1);
+				this.getHisGenerWorkFlow().setTodoEmps(WebUser.getName() + ";");
 
+			}
+			return false; /* 只有一个待办,说明自己就是最后的一个人. */
+		}
 
-            }
-            return false; /*只有一个待办,说明自己就是最后的一个人.*/
-        }
+		// 把当前的待办设置已办，并且提示未处理的人。
+		for (GenerWorkerList gwl : gwls.ToJavaList()) {
+			if (gwl.getFK_Emp().equals(WebUser.getNo()) == false)
+				continue;
 
-        //把当前的待办设置已办，并且提示未处理的人。
-        for (GenerWorkerList gwl : gwls.ToJavaList())
-        {
-            if (gwl.getFK_Emp().equals(WebUser.getNo())==false)
-                continue;
+			// 设置当前不可以用.
+			gwl.setIsPassInt(1);
+			gwl.Update();
 
-            //设置当前不可以用.
-            gwl.setIsPassInt(1);
-            gwl.Update();
+			// 检查完成条件。
+			if (this.getHisNode().getIsEndNode() == false)
+				this.CheckCompleteCondition();
 
-            // 检查完成条件。
-            if (this.getHisNode().getIsEndNode() == false)
-                this.CheckCompleteCondition();
+			// 写入日志.
+			if (this.getHisGenerWorkFlow().getHuiQianTaskSta() != HuiQianTaskSta.None)
+				this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(),
+						this.getHisNode().getName(), "会签");
+			else
+				this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(),
+						this.getHisNode().getName(), "协作发送");
 
-            //写入日志.
-            if (this.getHisGenerWorkFlow().getHuiQianTaskSta() != HuiQianTaskSta.None)
-                this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(), this.getHisNode().getName(), "会签");
-            else
-                this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(), this.getHisNode().getName(), "协作发送");
+			// 替换人员信息.
+			String emps = this.getHisGenerWorkFlow().getTodoEmps();
+			emps = emps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
+			this.getHisGenerWorkFlow().setTodoEmps(emps);
 
-            //替换人员信息.
-            String emps = this.getHisGenerWorkFlow().getTodoEmps();
-            emps = emps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
-            this.getHisGenerWorkFlow().setTodoEmps( emps);
+			// 处理会签问题
+			this.addMsg(SendReturnMsgFlag.OverCurr, "@会签工作已完成@当前工作未处理的会签人有: " + todoEmps + " .", null,
+					SendReturnMsgType.Info);
+			return true;
+		}
 
-            //处理会签问题
-            this.addMsg(SendReturnMsgFlag.OverCurr, "@会签工作已完成@当前工作未处理的会签人有: " + todoEmps + " .", null, SendReturnMsgType.Info);
-            return true;
-        }
-
-        throw new Exception("@不应该运行到这里，DealTeamUpNode。");
+		throw new Exception("@不应该运行到这里，DealTeamUpNode。");
 	}
+
 	/**
 	 * 如果是协作.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final boolean DealTeamUpNode_bak() throws Exception {
-		
+
 		GenerWorkerLists gwls = new GenerWorkerLists();
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
 				this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass);
@@ -4650,10 +4675,10 @@ public class WorkNode {
 	 * 通知主持人
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DealAlertZhuChiRen() throws Exception {
-		
+
 		// 有两个待办，就说明当前人员是最后一个会签人，就要把主持人的状态设置为0
 		// 获得主持人信息.
 		String sql = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE IsPass=90 AND WorkID=" + this.getWorkID();
@@ -4684,7 +4709,8 @@ public class WorkNode {
 
 	/**
 	 * 如果是协作
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final boolean TeamupGroupLeader() throws Exception {
@@ -4760,7 +4786,7 @@ public class WorkNode {
 	 * 处理队列节点
 	 * 
 	 * @return 是否可以向下发送?
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final boolean DealOradeNode() throws Exception {
 		GenerWorkerLists gwls = new GenerWorkerLists();
@@ -4950,7 +4976,7 @@ public class WorkNode {
 	 * 检查阻塞模式
 	 * 
 	 * @return 返回是否可以向下发送.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private boolean CheckBlockModel() throws Exception {
 		if (this.getHisNode().getBlockModel() == BlockModel.None) {
@@ -5218,155 +5244,149 @@ public class WorkNode {
 	/// <param name="node"></param>
 	/// <param name="toEmps"></param>
 	/// <returns></returns>
-	private SendReturnObjs NodeSendToYGFlow(Node node, String toEmpIDs) throws Exception{		
-            String sql = "";
-            if (StringUtils.isBlank(toEmpIDs)) {
-                toEmpIDs = "";
+	private SendReturnObjs NodeSendToYGFlow(Node node, String toEmpIDs) throws Exception {
+		String sql = "";
+		if (StringUtils.isBlank(toEmpIDs)) {
+			toEmpIDs = "";
 
-                DataTable dt = null;
+			DataTable dt = null;
 
-            
-                //按照岗位与部门的交集.
-                if (node.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
-                {
-                    
-                        sql = "SELECT pdes.FK_Emp AS No"
-                              + " FROM   Port_DeptEmpStation pdes"
-                              + " INNER JOIN WF_NodeDept wnd ON wnd.FK_Dept = pdes.FK_Dept"
-                              + " AND wnd.FK_Node = " + node.getNodeID()
-                              + " INNER JOIN WF_NodeStation wns ON  wns.FK_Station = pdes.FK_Station"
-                              + " AND wns.FK_Node =" + node.getNodeID()
-                              + " ORDER BY pdes.FK_Emp";
+			// 按照岗位与部门的交集.
+			if (node.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation) {
 
-                        dt = DBAccess.RunSQLReturnTable(sql);
-                    
+				sql = "SELECT pdes.FK_Emp AS No" + " FROM   Port_DeptEmpStation pdes"
+						+ " INNER JOIN WF_NodeDept wnd ON wnd.FK_Dept = pdes.FK_Dept" + " AND wnd.FK_Node = "
+						+ node.getNodeID() + " INNER JOIN WF_NodeStation wns ON  wns.FK_Station = pdes.FK_Station"
+						+ " AND wns.FK_Node =" + node.getNodeID() + " ORDER BY pdes.FK_Emp";
 
-                    if (dt.Rows.size() == 0)
-						try {
-							throw new Exception("@节点访问规则(" + node.getHisDeliveryWay().toString() + ")错误:节点(" + node.getNodeID() + "," + node.getNodeID() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                }
+				dt = DBAccess.RunSQLReturnTable(sql);
 
-               //仅按岗位计算
-                if (node.getHisDeliveryWay() == DeliveryWay.ByStationOnly)
-                {
-                    sql = "SELECT A.FK_Emp No FROM " + BP.WF.Glo.getEmpStation() + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
-                    ps = new Paras();
-                    ps.Add("FK_Node", node.getNodeID());
-                    ps.SQL = sql;
-                    dt = DBAccess.RunSQLReturnTable(ps);
-                    if (dt.Rows.size() == 0)
-						try {
-							throw new Exception("@节点访问规则错误:节点(" + node.getNodeID() + "," + node.getName() + "), 仅按岗位计算，没有找到人员:SQL=" + ps.getSQLNoPara());
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                }
-                //按绑定的人计算
-                if (node.getHisDeliveryWay() == DeliveryWay.ByBindEmp)
-                {
-                    ps = new Paras();
-                    ps.Add("FK_Node", node.getNodeID());
-                    ps.SQL = "SELECT FK_Emp No FROM WF_NodeEmp WHERE FK_Node=" + dbStr + "FK_Node ORDER BY FK_Emp";
-                    dt = DBAccess.RunSQLReturnTable(ps);
-                    if (dt.Rows.size() == 0)
-						try {
-							throw new Exception("@流程设计错误:下一个节点(" + town._HisNode.getName() + ")没有绑定工作人员 . ");
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                }
-                
-                
-                //仅按照部门计算.
-                if (node.getHisDeliveryWay() == DeliveryWay.ByDept)
-        		{
-        			ps = new Paras();
-        			ps.Add("FK_Node", node.getNodeID());
-        			ps.Add("WorkID", this._WorkID);
-        			ps.SQL = "SELECT FK_Emp as No FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
-        			dt = DBAccess.RunSQLReturnTable(ps);
-        			if (dt.Rows.size() == 0)
-        			{
-        				  
-        				ps = new Paras();
-        				ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node=" + dbStr + "FK_Node";
-        				ps.Add("FK_Node", node.getNodeID());
-        				dt = DBAccess.RunSQLReturnTable(ps);
-        			}        				 
-        		}
-                
-                
-                //按照人员选择
-                if (node.getHisDeliveryWay() == DeliveryWay.BySelected || dt==null ){
-                    sql = "SELECT FK_Emp No, EmpName Name FROM WF_SelectAccper WHERE FK_Node=" + node.getNodeID() + " AND WorkID=" + this.getWorkID() + " AND AccType=0";
-                    dt = DBAccess.RunSQLReturnTable(sql);
-                    if (dt.Rows.size() == 0){
-                        try {
-							throw new Exception("@没有为延续子流程设置接受人.");
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                    }
-                    
-                }
+				if (dt.Rows.size() == 0)
+					try {
+						throw new Exception(
+								"@节点访问规则(" + node.getHisDeliveryWay().toString() + ")错误:节点(" + node.getNodeID() + ","
+										+ node.getNodeID() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
 
-                
-                //if (dt ==null)                 
-                	//return "err@流程设计错误,延续流程仅仅可以设置按照.";
-                
-                
-                //组装到达的人员.
-                for (DataRow dr : dt.Rows)
-                {
-                    toEmpIDs += dr.getValue("No").toString();
-                }
-            
+			// 仅按岗位计算
+			if (node.getHisDeliveryWay() == DeliveryWay.ByStationOnly) {
+				sql = "SELECT A.FK_Emp No FROM " + BP.WF.Glo.getEmpStation()
+						+ " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr
+						+ "FK_Node ORDER BY A.FK_Emp";
+				ps = new Paras();
+				ps.Add("FK_Node", node.getNodeID());
+				ps.SQL = sql;
+				dt = DBAccess.RunSQLReturnTable(ps);
+				if (dt.Rows.size() == 0)
+					try {
+						throw new Exception("@节点访问规则错误:节点(" + node.getNodeID() + "," + node.getName()
+								+ "), 仅按岗位计算，没有找到人员:SQL=" + ps.getSQLNoPara());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
+			// 按绑定的人计算
+			if (node.getHisDeliveryWay() == DeliveryWay.ByBindEmp) {
+				ps = new Paras();
+				ps.Add("FK_Node", node.getNodeID());
+				ps.SQL = "SELECT FK_Emp No FROM WF_NodeEmp WHERE FK_Node=" + dbStr + "FK_Node ORDER BY FK_Emp";
+				dt = DBAccess.RunSQLReturnTable(ps);
+				if (dt.Rows.size() == 0)
+					try {
+						throw new Exception("@流程设计错误:下一个节点(" + town._HisNode.getName() + ")没有绑定工作人员 . ");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
 
-            if (toEmpIDs == "")
+			// 仅按照部门计算.
+			if (node.getHisDeliveryWay() == DeliveryWay.ByDept) {
+				ps = new Paras();
+				ps.Add("FK_Node", node.getNodeID());
+				ps.Add("WorkID", this._WorkID);
+				ps.SQL = "SELECT FK_Emp as No FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+						+ dbStr + "WorkID AND AccType=0 ORDER BY IDX";
+				dt = DBAccess.RunSQLReturnTable(ps);
+				if (dt.Rows.size() == 0) {
+
+					ps = new Paras();
+					ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node="
+							+ dbStr + "FK_Node";
+					ps.Add("FK_Node", node.getNodeID());
+					dt = DBAccess.RunSQLReturnTable(ps);
+				}
+			}
+
+			// 按照人员选择
+			if (node.getHisDeliveryWay() == DeliveryWay.BySelected || dt == null) {
+				sql = "SELECT FK_Emp No, EmpName Name FROM WF_SelectAccper WHERE FK_Node=" + node.getNodeID()
+						+ " AND WorkID=" + this.getWorkID() + " AND AccType=0";
+				dt = DBAccess.RunSQLReturnTable(sql);
+				if (dt.Rows.size() == 0) {
+					try {
+						throw new Exception("@没有为延续子流程设置接受人.");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+
+			// if (dt ==null)
+			// return "err@流程设计错误,延续流程仅仅可以设置按照.";
+
+			// 组装到达的人员.
+			for (DataRow dr : dt.Rows) {
+				toEmpIDs += dr.getValue("No").toString();
+			}
+
+			if (toEmpIDs == "")
 				try {
 					throw new Exception("@延续子流程目前仅仅支持选择接受人方式");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-            }
-        long workid = BP.WF.Dev2Interface.Node_CreateBlankWork(node.getFK_Flow(), null, null,
-            toEmpIDs, null, this.getWorkID(), 0, this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID(), BP.Web.WebUser.getNo(), 0, null);
+		}
+		long workid = BP.WF.Dev2Interface.Node_CreateBlankWork(node.getFK_Flow(), null, null, toEmpIDs, null,
+				this.getWorkID(), 0, this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID(),
+				BP.Web.WebUser.getNo(), 0, null);
 
-        //复制当前信息.
-        Work wk = node.getHisWork();
-        wk.setOID(workid);
-        wk.RetrieveFromDBSources();
-        wk.Copy(this.getHisWork());
-        wk.Update();
+		// 复制当前信息.
+		Work wk = node.getHisWork();
+		wk.setOID(workid);
+		wk.RetrieveFromDBSources();
+		wk.Copy(this.getHisWork());
+		wk.Update();
 
-        //为接受人显示待办.
-        BP.WF.Dev2Interface.Node_SetDraft2Todolist(node.getFK_Flow()
-        		, workid);
+		// 为接受人显示待办.
+		BP.WF.Dev2Interface.Node_SetDraft2Todolist(node.getFK_Flow(), workid);
 
-        //设置变量.
-       // this.addMsg(SendReturnMsgFlag.VarToNodeID, node.getNodeID().toString(), workid.toString(), SendReturnMsgType.SystemMsg);
-        this.addMsg(SendReturnMsgFlag.VarAcceptersID, toEmpIDs, toEmpIDs, SendReturnMsgType.SystemMsg);
+		// 设置变量.
+		// this.addMsg(SendReturnMsgFlag.VarToNodeID,
+		// node.getNodeID().toString(), workid.toString(),
+		// SendReturnMsgType.SystemMsg);
+		this.addMsg(SendReturnMsgFlag.VarAcceptersID, toEmpIDs, toEmpIDs, SendReturnMsgType.SystemMsg);
 
-        //设置消息.
-        this.addMsg("Msg1", "子流程(" + node.getFlowName() + ")已经启动,发送给{" + toEmpIDs + "}处理人.");
-        //this.addMsg(SendReturnMsgFlag.MsgOfText, "需要等待子流程完成后，该流程才能向下运动。");
-        this.addMsg("Msg2", "当前您的待办已经消失,需要等待子流程完成后您的待办才能显示,您可以从在途里查看工作进度.");
+		// 设置消息.
+		this.addMsg("Msg1", "子流程(" + node.getFlowName() + ")已经启动,发送给{" + toEmpIDs + "}处理人.");
+		// this.addMsg(SendReturnMsgFlag.MsgOfText, "需要等待子流程完成后，该流程才能向下运动。");
+		this.addMsg("Msg2", "当前您的待办已经消失,需要等待子流程完成后您的待办才能显示,您可以从在途里查看工作进度.");
 
+		// 设置当前工作操作员不可见.
+		sql = "UPDATE WF_GenerWorkerList SET IsPass=80 WHERE WorkID=" + this.getWorkID() + " AND IsPass=0";
+		BP.DA.DBAccess.RunSQL(sql);
 
-        //设置当前工作操作员不可见.
-        sql = "UPDATE WF_GenerWorkerList SET IsPass=80 WHERE WorkID=" + this.getWorkID() + " AND IsPass=0";
-        BP.DA.DBAccess.RunSQL(sql);
+		return HisMsgObjs;
+	}
 
-        return HisMsgObjs;
-    }
 	/**
 	 * 工作流发送业务处理. 升级日期:2012-11-11. 升级原因:代码逻辑性不清晰,有遗漏的处理模式. 修改人:zhoupeng.
 	 * 修改地点:厦门. ----------------------------------- 说明
@@ -5378,12 +5398,10 @@ public class WorkNode {
 	 * @param jumpToEmp
 	 *            要跳转的人,可以为空.
 	 * @return 返回执行结果
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final SendReturnObjs NodeSend(Node jumpToNode, String jumpToEmp) throws Exception {
-		
-	 
-		
+
 		if (this.getHisNode().getIsGuestNode()) {
 			if (!this.getExecer().equals("Guest")) {
 				throw new RuntimeException(
@@ -5391,17 +5409,16 @@ public class WorkNode {
 			}
 		}
 
-		//第1: 安全性检查 检查是否可以处理当前的工作.
-		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getHisNode().getFK_Flow(),this.getHisNode().getNodeID(),
-		    this.getWorkID(), this.getExecer()) == false)
-		   throw new Exception("@当前工作您已经处理完成，或者您(" + this.getExecer() + " " +this.getExecerName() + ")没有处理当前工作的权限。");
+		// 第1: 安全性检查 检查是否可以处理当前的工作.
+		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID(),
+				this.getWorkID(), this.getExecer()) == false)
+			throw new Exception("@当前工作您已经处理完成，或者您(" + this.getExecer() + " " + this.getExecerName() + ")没有处理当前工作的权限。");
 
 		// 第1.2: 调用发起前的事件接口,处理用户定义的业务逻辑.
-		Work wk=this.getHisWork();
+		Work wk = this.getHisWork();
 		wk.setOID(this.getWorkID());
-		
-		String sendWhen = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, this.getHisNode(),
-				wk, null);
+
+		String sendWhen = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, this.getHisNode(), wk, null);
 
 		// 返回格式. @Info=xxxx@ToNodeID=xxxx@ToEmps=xxxx
 		if (sendWhen != null && sendWhen.indexOf("@") >= 0) {
@@ -5414,7 +5431,7 @@ public class WorkNode {
 			this.setIsStopFlow(ap.GetValBoolenByKey("IsStopFlow", false));
 
 			String toEmps = ap.GetValStrByKey("ToEmps");
-			if (StringHelper.isNullOrEmpty(toEmps) == true)
+			if (StringHelper.isNullOrEmpty(toEmps) == false)
 				jumpToEmp = toEmps;
 
 			// 处理str信息.
@@ -5422,6 +5439,7 @@ public class WorkNode {
 			sendWhen = sendWhen.replace("@IsStopFlow=1", "");
 			sendWhen = sendWhen.replace("@ToNodeID=" + nodeid, "");
 			sendWhen = sendWhen.replace("@ToEmps=" + toEmps, "");
+			
 		}
 		if (sendWhen != null) {
 			// 说明有事件要执行,把执行后的数据查询到实体里
@@ -5442,6 +5460,8 @@ public class WorkNode {
 			}
 
 			// 把发送sendWhen 消息提示给用户.
+			if(sendWhen.equals("null") == true)
+				sendWhen = "";
 			this.addMsg("SendWhen", sendWhen, sendWhen, SendReturnMsgType.Info);
 		}
 
@@ -5541,13 +5561,6 @@ public class WorkNode {
 					// 从临时变量里获取回复加签意见.
 					String replyInfo = this.getHisGenerWorkFlow().getParas_AskForReply();
 
-					//// 写入日志.
-					// this.AddToTrack(ActionType.ForwardAskfor, item.FK_Emp,
-					//// item.FK_EmpText,
-					// this.HisNode.NodeID, this.HisNode.Name,
-					// "加签后向下发送，并转向加签人发起人（" + item.FK_Emp + "，" +
-					//// item.FK_EmpText + "）。<br>意见:" + replyInfo);
-
 					// 写入日志.
 					this.AddToTrack(ActionType.ForwardAskfor, item.getFK_Emp(), item.getFK_EmpText(),
 							this.getHisNode().getNodeID(), this.getHisNode().getName(), "回复意见:" + replyInfo);
@@ -5645,13 +5658,12 @@ public class WorkNode {
 		// 处理自动运行 - 预先设置未来的运行节点.
 		this.DealAutoRunEnable();
 
-		// 把数据更新到数据库里.	 
-		if (this.getHisNode().getHisFormType()== NodeFormType.FoolTruck)
+		// 把数据更新到数据库里.
+		if (this.getHisNode().getHisFormType() == NodeFormType.FoolTruck)
 			this.getHisWork().setSQLCash(null);
-		
+
 		this.getHisWork().DirectUpdate();
-		 
-		
+
 		if (this.getHisWork().getEnMap().getPhysicsTable() != this.rptGe.getEnMap().getPhysicsTable()) {
 			// 有可能外部参数传递过来导致，rpt表数据没有发生变化。
 			this.rptGe.Copy(this.getHisWork());
@@ -5674,15 +5686,13 @@ public class WorkNode {
 
 		// 如果是协作模式节点, 就判断当前的队列人员是否走完.
 		if (this.getTodolistModel() == TodolistModel.Teamup) {
-			
-			
-			  // ,增加了此部分.
-            String todoEmps = this.getHisGenerWorkFlow().getTodoEmps();
-            todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
-            this.getHisGenerWorkFlow().setTodoEmps( todoEmps);
-            this.getHisGenerWorkFlow().Update(GenerWorkFlowAttr.TodoEmps, todoEmps);
 
-            
+			// ,增加了此部分.
+			String todoEmps = this.getHisGenerWorkFlow().getTodoEmps();
+			todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
+			this.getHisGenerWorkFlow().setTodoEmps(todoEmps);
+			this.getHisGenerWorkFlow().Update(GenerWorkFlowAttr.TodoEmps, todoEmps);
+
 			// 如果是协作.
 			if (this.DealTeamUpNode() == true) {
 				// if (this._transferCustom != null)
@@ -5697,30 +5707,16 @@ public class WorkNode {
 
 		// 如果是协作组长模式节点, 就判断当前的队列人员是否走完.
 		if (this.getTodolistModel() == TodolistModel.TeamupGroupLeader) {
-			// 如果是协作组长模式.
-			// if (this.DealTeamUpNode() == true)
-			// {
-			// //if (this._transferCustom != null)
-			// // _transferCustom.Delete();
-			//
-			// //执行时效考核.
-			// Glo.InitCH(this.getHisFlow(), this.getHisNode(),
-			// this.getWorkID(), this.rptGe.getFID(),
-			// this.rptGe.getTitle(),null);
-			// return this.HisMsgObjs;
-			// }
 
 			/* 如果是协作组长模式. */
 			if (this.DealTeamupGroupLeader() == true) {
 				// 执行时效考核.
-				// Glo.InitCH(this.HisFlow, this.HisNode, this.WorkID,
-				// this.rptGe.FID, this.rptGe.Title);
 				return this.HisMsgObjs;
 			}
 		}
 
 		// 启动事务, 这里没有实现.
-		//DBAccess.DoTransactionBegin(this.getWorkID().toString());
+		// DBAccess.DoTransactionBegin(this.getWorkID().toString());
 		try {
 			if (this.getHisNode().getIsStartNode()) {
 				InitStartWorkDataV2(); // 初始化开始节点数据, 如果当前节点是开始节点.
@@ -5826,20 +5822,9 @@ public class WorkNode {
 				this.addMsg(SendReturnMsgFlag.IsStopFlow, "0", "流程未结束", SendReturnMsgType.SystemMsg);
 			}
 
-			//String mymsgHtml = "@查看<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a href='" + getVirPath()
-			//		+ "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID()
-			//		+ "&NodeID=" + this.getHisNode().getNodeID()
-			//		+ "&FK_Flow=" + this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>";
-			//this.addMsg(SendReturnMsgFlag.MsgOfText, mymsgHtml);
 
 			if (this.getIsStopFlow() == true) {
 				// 在检查完后，反馈来的标志流程已经停止了。
-				// 这里应该去掉，不然事件就不起作用. @于庆海翻译.
-				// this.Func_DoSetThisWorkOver();
-				// this.rptGe.setWFState(WFState.Complete);
-				// this.rptGe.Update();
-
-				// this.getHisGenerWorkFlow().Update(); //added by
 				// liuxc,2016-10=24,最后节点更新Sender字段
 				this.Func_DoSetThisWorkOver();
 				this.rptGe.setWFState(WFState.Complete);
@@ -5851,10 +5836,10 @@ public class WorkNode {
 				 */
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
 						this.getHisGenerWorkFlow().getTitle(), null);
-				
-			    // 执行发送.
-                String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
-                        this.rptGe, null, this.HisMsgObjs);
+
+				// 执行发送.
+				String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+						this.rptGe, null, this.HisMsgObjs);
 
 				return HisMsgObjs;
 			}
@@ -5864,9 +5849,9 @@ public class WorkNode {
 				/* 判断是否是延续子流程. */
 				return NodeSendToYGFlow(jumpToNode, jumpToEmp);
 			}
-			
-			//设置会签模式为空.
-			this.getHisGenerWorkFlow().setHuiQianTaskSta( HuiQianTaskSta.None);
+
+			// 设置会签模式为空.
+			this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
 
 			/// #region 第二步: 进入核心的流程运转计算区域. 5*5 的方式处理不同的发送情况.
 			// 执行节点向下发送的25种情况的判断.
@@ -5893,7 +5878,6 @@ public class WorkNode {
 			}
 
 			// 计算从发送到现在的天数.
-			// this.rptGe.setFlowDaySpan(DataType.GeTimeLimits(this.getHisGenerWorkFlow().getRDT()));
 			this.rptGe.Update();
 
 			/// #region 第三步: 处理发送之后的业务逻辑.
@@ -5921,18 +5905,13 @@ public class WorkNode {
 
 				BillTemplates reffunc = this.getHisNode().getBillTemplates();
 
-				/// #region 生成单据信息
+				//生成单据信息
 				long workid = this.getHisWork().getOID();
-				int nodeId = this.getHisNode().getNodeID();
-				String flowNo = this.getHisNode().getFK_Flow();
 
-				/// #endregion
-
-				java.util.Date dtNow = new java.util.Date();
-				Flow fl = this.getHisNode().getHisFlow();
-				String year = String.valueOf(dt.getYear());
+				String year = DataType.getCurrentYear();
 				String billInfo = "";
 				for (BillTemplate func : reffunc.ToJavaList()) {
+					
 					if (func.getHisBillFileType() != BillFileType.RuiLang) {
 						String file = year + "_" + this.getExecerDeptNo() + "_" + func.getNo() + "_" + workid + ".doc";
 						BP.Pub.RTFEngine rtf = new BP.Pub.RTFEngine();
@@ -6061,7 +6040,7 @@ public class WorkNode {
 				}
 			}
 
-	//		DBAccess.DoTransactionCommit(); // 提交事务.
+			// DBAccess.DoTransactionCommit(); // 提交事务.
 			/// #endregion 处理主要业务逻辑.
 
 			/// #region 执行启动子流程.
@@ -6232,7 +6211,7 @@ public class WorkNode {
 							"<a href='/WF/WFRpt.jsp?FK_Flow=" + this.getHisFlow().getNo() + "&WorkID="
 									+ this.getWorkID() + "' target=_blank >打开子流程</a>",
 							paras);
-				} else if (SystemConfig.getIsBSsystem() == true && BP.Sys.Glo.getRequest()!=null) {
+				} else if (SystemConfig.getIsBSsystem() == true && BP.Sys.Glo.getRequest() != null) {
 					// 如果是BS系统
 					String pflowNo = BP.Sys.Glo.getRequest().getParameter("PFlowNo");
 					if (StringHelper.isNullOrEmpty(pflowNo) == false) {
@@ -6317,7 +6296,7 @@ public class WorkNode {
 
 				this.addMsg(SendReturnMsgFlag.MsgOfText, textInfo);
 			}
-			
+
 			try {
 				// 调起发送成功后的事件，把参数传入进去。
 				if (this.SendHTOfTemp != null) {
@@ -6329,75 +6308,71 @@ public class WorkNode {
 						}
 					}
 				}
- 
+
 			} catch (RuntimeException ex) {
 				this.addMsg(SendReturnMsgFlag.SendSuccessMsgErr, ex.getMessage());
 			}
 
 			/// #endregion 处理发送成功后事件.
-			
-			//处理事件.
-            this.Deal_Event();
-            
+
+			// 处理事件.
+			this.Deal_Event();
+
 			// 返回这个对象.
 			return this.HisMsgObjs;
 		} catch (RuntimeException ex) {
 			this.WhenTranscactionRollbackError(ex);
-		//	DBAccess.DoTransactionRollback();
+			// DBAccess.DoTransactionRollback();
 			throw new RuntimeException("Message:" + ex.getMessage());
 		}
 	}
-	
-    /// <summary>
-    /// 处理事件
-    /// </summary>
-    private void Deal_Event() throws Exception
-    {
-        ///#region 处理节点到达事件..
-        //执行发送到达事件.
-        if (this.town != null)
-        {
-        	//this.town
-            String toMsg = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive,
-                this.town.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-            
-            if (toMsg!=null)
-            	this.addMsg("WorkArrive", toMsg);
-            	
-        }
-        ///#endregion 处理节点到达事件.
 
-        ///#region 处理发送成功后事件.
-        try
-        {
-            //调起发送成功后的事件，把参数传入进去。
-            if (this.SendHTOfTemp != null)
-            {
-            	Enumeration<String> e = this.SendHTOfTemp.keys();
-            	while(e.hasMoreElements()){
-            		String key = e.nextElement();
-                    if (rptGe.getRow().containsKey(key) == true)
-                        this.rptGe.SetValByKey(key,this.SendHTOfTemp.get(key).toString());
-                    else
-                        this.rptGe.getRow().put(key, this.SendHTOfTemp.get(key).toString());
-                }
-            }
+	/// <summary>
+	/// 处理事件
+	/// </summary>
+	private void Deal_Event() throws Exception {
+		/// #region 处理节点到达事件..
+		// 执行发送到达事件.
+		if (this.town != null) {
+			// this.town
+			String toMsg = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive, this.town.getHisNode(),
+					this.rptGe, null, this.HisMsgObjs);
 
-            //执行发送.
-            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+			if (toMsg != null)
+				this.addMsg("WorkArrive", toMsg);
 
-            //string SendSuccess = this.HisNode.MapData.FrmEvents.DoEventNode(EventListOfNode.SendSuccess, this.HisWork);
-            if (sendSuccess != null)
-                this.addMsg(SendReturnMsgFlag.SendSuccessMsg, sendSuccess);
-        }
-        catch (Exception ex)
-        {
-            this.addMsg(SendReturnMsgFlag.SendSuccessMsgErr, ex.getMessage());
-        }
-        ///#endregion 处理发送成功后事件.
-    }
-    
+		}
+		/// #endregion 处理节点到达事件.
+
+		/// #region 处理发送成功后事件.
+		try {
+			// 调起发送成功后的事件，把参数传入进去。
+			if (this.SendHTOfTemp != null) {
+				Enumeration<String> e = this.SendHTOfTemp.keys();
+				while (e.hasMoreElements()) {
+					String key = e.nextElement();
+					if (rptGe.getRow().containsKey(key) == true)
+						this.rptGe.SetValByKey(key, this.SendHTOfTemp.get(key).toString());
+					else
+						this.rptGe.getRow().put(key, this.SendHTOfTemp.get(key).toString());
+				}
+			}
+
+			// 执行发送.
+			String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+					this.rptGe, null, this.HisMsgObjs);
+
+			// string SendSuccess =
+			// this.HisNode.MapData.FrmEvents.DoEventNode(EventListOfNode.SendSuccess,
+			// this.HisWork);
+			if (sendSuccess != null)
+				this.addMsg(SendReturnMsgFlag.SendSuccessMsg, sendSuccess);
+		} catch (Exception ex) {
+			this.addMsg(SendReturnMsgFlag.SendSuccessMsgErr, ex.getMessage());
+		}
+		/// #endregion 处理发送成功后事件.
+	}
+
 	/**
 	 * 执行业务表数据同步.
 	 */
@@ -6409,7 +6384,7 @@ public class WorkNode {
 	 * 手工的回滚提交失败信息，补偿没有事务的缺陷。
 	 * 
 	 * @param ex
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void WhenTranscactionRollbackError(RuntimeException ex) throws Exception {
 		// 在提交错误的情况下，回滚数据。
@@ -6420,14 +6395,14 @@ public class WorkNode {
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.getWorkID() + " AND FK_Node="
 					+ this.town.getHisNode().getNodeID());
 			// 删除子线程数据.
-            if (BP.DA.DBAccess.IsExitsObject(this.town.getHisWork().getEnMap().getPhysicsTable()) == true)
-      			DBAccess.RunSQL("DELETE FROM " + this.town.getHisWork().getEnMap().getPhysicsTable() + " WHERE FID="
-					+ this.getWorkID());
+			if (BP.DA.DBAccess.IsExitsObject(this.town.getHisWork().getEnMap().getPhysicsTable()) == true)
+				DBAccess.RunSQL("DELETE FROM " + this.town.getHisWork().getEnMap().getPhysicsTable() + " WHERE FID="
+						+ this.getWorkID());
 		}
 
 		/// #endregion 如果是分流点下同表单发送失败再次发送就出现错误
 		try {
-			
+
 			// 删除发生的日志.
 			DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Track WHERE WorkID="
 					+ this.getWorkID() + " AND NDFrom=" + this.getHisNode().getNodeID() + " AND ActionType="
@@ -6566,7 +6541,7 @@ public class WorkNode {
 
 	private void InitStartWorkDataV2() throws Exception {
 		// 如果是开始流程判断是不是被吊起的流程，如果是就要向父流程写日志。
-		if (SystemConfig.getIsBSsystem()&& BP.Sys.Glo.getRequest()!=null) {
+		if (SystemConfig.getIsBSsystem() && BP.Sys.Glo.getRequest() != null) {
 			String fk_nodeFrom = BP.Sys.Glo.getRequest().getParameter("FromNode");
 			if (DotNetToJavaStringHelper.isNullOrEmpty(fk_nodeFrom) == false) {
 				Node ndFrom = new Node(Integer.parseInt(fk_nodeFrom));
@@ -6747,7 +6722,8 @@ public class WorkNode {
 
 	/**
 	 * 执行将当前工作节点的数据copy到Rpt里面去.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public final void DoCopyCurrentWorkDataToRpt() throws Exception {
 		// 如果两个表一致就返回..
@@ -6818,106 +6794,81 @@ public class WorkNode {
 			this.rptGe.SetValByKey("Title", fromWK.GetValByKey("Title"));
 		}
 	}
-	
+
 	/// <summary>
-    /// 增加日志
-    /// </summary>
-    /// <param name="at"></param>
-    /// <param name="gwl"></param>
-    /// <param name="msg"></param>
-    public void AddToTrack(ActionType at, GenerWorkerList gwl, String msg, long subTreadWorkID) throws Exception
-    {
-        Track t = new Track();
+	/// 增加日志
+	/// </summary>
+	/// <param name="at"></param>
+	/// <param name="gwl"></param>
+	/// <param name="msg"></param>
+	public void AddToTrack(ActionType at, GenerWorkerList gwl, String msg, long subTreadWorkID) throws Exception {
+		Track t = new Track();
 
-        if (this.getHisGenerWorkFlow().getFID() == 0)
-        {
-            t.setWorkID(subTreadWorkID);
-            t.setFID( this.getHisWork().getOID());
-        }
-        else
-        {
-            t.setWorkID( this.getHisWork().getOID());
-            t.setFID( this.getHisGenerWorkFlow().getFID());
-        }
+		if (this.getHisGenerWorkFlow().getFID() == 0) {
+			t.setWorkID(subTreadWorkID);
+			t.setFID(this.getHisWork().getOID());
+		} else {
+			t.setWorkID(this.getHisWork().getOID());
+			t.setFID(this.getHisGenerWorkFlow().getFID());
+		}
 
-        t.setRDT( DataType.getCurrentDataTimess());
-        t.setHisActionType( at);
+		t.setRDT(DataType.getCurrentDataTimess());
+		t.setHisActionType(at);
 
-        t.setNDFrom( this.getndFrom().getNodeID());
-        t.setNDFromT(this.getndFrom().getName());
+		t.setNDFrom(this.getndFrom().getNodeID());
+		t.setNDFromT(this.getndFrom().getName());
 
-        t.setEmpFrom(this.getExecer());
-        t.setEmpFromT(this.getExecerName());
-        t.setFK_Flow( this.getHisNode().getFK_Flow());
+		t.setEmpFrom(this.getExecer());
+		t.setEmpFromT(this.getExecerName());
+		t.setFK_Flow(this.getHisNode().getFK_Flow());
 
-   //     t.Tag = tag + "@SendNode=" + this.HisNode.NodeID;
+		// t.Tag = tag + "@SendNode=" + this.HisNode.NodeID;
 
-        t.setNDTo( gwl.getFK_Node());
-        t.setNDToT( gwl.getFK_NodeText());
+		t.setNDTo(gwl.getFK_Node());
+		t.setNDToT(gwl.getFK_NodeText());
 
-        t.setEmpTo ( gwl.getFK_Emp());
-        t.setEmpToT ( gwl.getFK_EmpText());
-        t.setMsg ( msg);
-        //t.FrmDB = frmDBJson; //表单数据Json.
+		t.setEmpTo(gwl.getFK_Emp());
+		t.setEmpToT(gwl.getFK_EmpText());
+		t.setMsg(msg);
+		// t.FrmDB = frmDBJson; //表单数据Json.
 
-        /*
-        switch (at)
-        {
-            case ActionType.Forward:
-            case ActionType.ForwardAskfor:
-            case ActionType.Start:
-            case ActionType.UnSend:
-            case ActionType.ForwardFL:
-            case ActionType.ForwardHL:
-            case ActionType.TeampUp:
-                //判断是否有焦点字段，如果有就把它记录到日志里。
-                if (this.HisNode.FocusField.Length > 1)
-                {
-                    string exp = this.HisNode.FocusField;
-                    if (this.rptGe != null)
-                        exp = Glo.DealExp(exp, this.rptGe, null);
-                    else
-                        exp = Glo.DealExp(exp, this.HisWork, null);
+		/*
+		 * switch (at) { case ActionType.Forward: case ActionType.ForwardAskfor:
+		 * case ActionType.Start: case ActionType.UnSend: case
+		 * ActionType.ForwardFL: case ActionType.ForwardHL: case
+		 * ActionType.TeampUp: //判断是否有焦点字段，如果有就把它记录到日志里。 if
+		 * (this.HisNode.FocusField.Length > 1) { string exp =
+		 * this.HisNode.FocusField; if (this.rptGe != null) exp =
+		 * Glo.DealExp(exp, this.rptGe, null); else exp = Glo.DealExp(exp,
+		 * this.HisWork, null);
+		 * 
+		 * t.Msg += exp; if (t.Msg.Contains("@")) Log.DebugWriteError("@在节点(" +
+		 * this.HisNode.NodeID + " ， " + this.HisNode.Name + ")焦点字段被删除了,表达式为:" +
+		 * this.HisNode.FocusField + " 替换的结果为:" + t.Msg); } break; default:
+		 * break; }
+		 * 
+		 * 
+		 * if (at == ActionType.SubThreadForward || at ==
+		 * ActionType.StartChildenFlow || at == ActionType.Start || at ==
+		 * ActionType.Forward || at == ActionType.SubThreadForward || at ==
+		 * ActionType.ForwardHL || at == ActionType.FlowOver) { if
+		 * (this.HisNode.IsFL) at = ActionType.ForwardFL; t.FrmDB =
+		 * this.HisWork.ToJson(); }
+		 */
 
-                    t.Msg += exp;
-                    if (t.Msg.Contains("@"))
-                        Log.DebugWriteError("@在节点(" + this.HisNode.NodeID + " ， " + this.HisNode.Name + ")焦点字段被删除了,表达式为:" + this.HisNode.FocusField + " 替换的结果为:" + t.Msg);
-                }
-                break;
-            default:
-                break;
-        }
-
-
-        if (at == ActionType.SubThreadForward
-            || at == ActionType.StartChildenFlow
-            || at == ActionType.Start
-            || at == ActionType.Forward
-            || at == ActionType.SubThreadForward
-            || at == ActionType.ForwardHL
-            || at == ActionType.FlowOver)
-        {
-            if (this.HisNode.IsFL)
-                at = ActionType.ForwardFL;
-            t.FrmDB = this.HisWork.ToJson();
-        }*/
-
-       
-            // t.MyPK = t.WorkID + "_" + t.FID + "_"  + t.NDFrom + "_" + t.NDTo +"_"+t.EmpFrom+"_"+t.EmpTo+"_"+ DateTime.Now.ToString("yyMMddHHmmss");
-        t.Insert();
-       /*
-
-        if (at == ActionType.SubThreadForward
-          || at == ActionType.StartChildenFlow
-          || at == ActionType.Start
-          || at == ActionType.Forward
-          || at == ActionType.SubThreadForward
-          || at == ActionType.ForwardHL
-          || at == ActionType.FlowOver)
-        {
-            this.HisGenerWorkFlow.Paras_LastSendTruckID = t.MyPK;
-        }*/
-    }
+		// t.MyPK = t.WorkID + "_" + t.FID + "_" + t.NDFrom + "_" + t.NDTo
+		// +"_"+t.EmpFrom+"_"+t.EmpTo+"_"+
+		// DateTime.Now.ToString("yyMMddHHmmss");
+		t.Insert();
+		/*
+		 * 
+		 * if (at == ActionType.SubThreadForward || at ==
+		 * ActionType.StartChildenFlow || at == ActionType.Start || at ==
+		 * ActionType.Forward || at == ActionType.SubThreadForward || at ==
+		 * ActionType.ForwardHL || at == ActionType.FlowOver) {
+		 * this.HisGenerWorkFlow.Paras_LastSendTruckID = t.MyPK; }
+		 */
+	}
 
 	/**
 	 * 增加日志
@@ -6934,10 +6885,10 @@ public class WorkNode {
 	 *            到节点名称
 	 * @param msg
 	 *            消息
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName,
-			String msg) throws Exception {
+	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName, String msg)
+			throws Exception {
 		AddToTrack(at, toEmp, toEmpName, toNDid, toNDName, msg, this.getHisNode());
 	}
 
@@ -6956,7 +6907,7 @@ public class WorkNode {
 	 *            到节点名称
 	 * @param msg
 	 *            消息
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName, String msg,
 			Node ndFrom, String frmDBJson, String tag) throws Exception {
@@ -7045,7 +6996,7 @@ public class WorkNode {
 	 * 
 	 * @param gwls
 	 *            接受人
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void SendMsgToThem(GenerWorkerLists gwls) throws Exception {
 		if (BP.WF.Glo.getIsEnableSysMessage() == false) {
@@ -7146,7 +7097,7 @@ public class WorkNode {
 	 *            到节点名称
 	 * @param msg
 	 *            消息
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void AddToTrack(ActionType at, String toEmp, String toEmpName, int toNDid, String toNDName, String msg,
 			Node ndFrom) throws Exception {
@@ -7242,7 +7193,8 @@ public class WorkNode {
 
 	/**
 	 * 检查
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	private void CheckCompleteCondition_IntCompleteEmps() throws Exception {
 		String sql = "SELECT FK_Emp,FK_EmpText FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID()
@@ -7271,7 +7223,8 @@ public class WorkNode {
 
 	/**
 	 * 处理自动运行 - 预先设置未来的运行节点.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	private void DealAutoRunEnable() throws Exception {
 		// 检查当前节点是否是自动运行的.
@@ -7322,7 +7275,7 @@ public class WorkNode {
 	 * 检查流程、节点的完成条件
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void CheckCompleteCondition() throws Exception {
 		// 执行初始化人员.
@@ -7353,7 +7306,7 @@ public class WorkNode {
 		this.addMsg(SendReturnMsgFlag.OverCurr, String.format("当前工作[%1$s]已经完成", this.getHisNode().getName()));
 		/// #region 判断流程条件.
 		try {
-			
+
 			if (this.getHisNode().getHisToNodes().size() == 0 && this.getHisNode().getIsStartNode()) {
 
 				// 如果流程完成
@@ -7377,12 +7330,16 @@ public class WorkNode {
 				this.setIsStopFlow(true);
 
 				// string path = BP.Sys.Glo.Request.ApplicationPath;
-				this.addMsg(SendReturnMsgFlag.MacthFlowOver, "@符合工作流程完成条件" + stopMsg + "" + overMsg,
-						"@符合工作流程完成条件" + stopMsg + "" + overMsg /*+ " @查看<img src='" + getVirPath()
-								+ "WF/Img/Btn/PrintWorkRpt.gif' ><a href='WFRpt.jsp?WorkID="
-								+ this.getHisWork().getOID() + "&FID=" + this.getHisWork().getFID() + "&FK_Flow="
-								+ this.getHisNode().getFK_Flow() + "' target='_self' >工作轨迹</a>"*/,
-						SendReturnMsgType.Info);
+				this.addMsg(SendReturnMsgFlag.MacthFlowOver, "@符合工作流程完成条件" + stopMsg + "" + overMsg, "@符合工作流程完成条件"
+						+ stopMsg + ""
+						+ overMsg /*
+									 * + " @查看<img src='" + getVirPath() +
+									 * "WF/Img/Btn/PrintWorkRpt.gif' ><a href='WFRpt.jsp?WorkID="
+									 * + this.getHisWork().getOID() + "&FID=" +
+									 * this.getHisWork().getFID() + "&FK_Flow="
+									 * + this.getHisNode().getFK_Flow() +
+									 * "' target='_self' >工作轨迹</a>"
+									 */, SendReturnMsgType.Info);
 				return;
 			}
 		} catch (RuntimeException ex) {
@@ -7424,180 +7381,146 @@ public class WorkNode {
 	 * 异表单子线程向合流点运动
 	 * 
 	 * @param nd
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void NodeSend_53_UnSameSheet_To_HeLiu(Node nd) throws Exception {
 
+		Work heLiuWK = nd.getHisWork();
+		heLiuWK.setOID(this.getHisWork().getFID());
+		if (heLiuWK.RetrieveFromDBSources() == 0) // 查询出来数据.
+			heLiuWK.DirectInsert();
 
-		 Work heLiuWK = nd.getHisWork();
-         heLiuWK.setOID(this.getHisWork().getFID());
-         if (heLiuWK.RetrieveFromDBSources() == 0) //查询出来数据.
-             heLiuWK.DirectInsert();
+		heLiuWK.Copy(this.getHisWork()); // 执行copy.
 
-         heLiuWK.Copy(this.getHisWork()); // 执行copy.
+		heLiuWK.setOID(this.getHisWork().getFID());
+		heLiuWK.setFID(0);
 
-         heLiuWK.setOID(this.getHisWork().getFID());
-         heLiuWK.setFID( 0);
+		this.town = new WorkNode(heLiuWK, nd);
 
-         this.town = new WorkNode(heLiuWK, nd);
+		// 合流节点上的工作处理者。
+		GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), nd.getNodeID());
+		current_gwls = gwls;
 
-         //合流节点上的工作处理者。
-         GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), nd.getNodeID());
-         current_gwls = gwls;
-         
-         GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
-         //记录子线程到达合流节点数
-         int count = gwf.GetParaInt("ThreadCount");
-         gwf.SetPara("ThreadCount", count + 1);
-         gwf.Update();
-         
-         if (gwls.size() == 0)
-         {
-             // 说明第一次到达河流节点。
-             current_gwls = this.Func_GenerWorkerLists(this.town);
-             gwls = current_gwls;
+		GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
+		// 记录子线程到达合流节点数
+		int count = gwf.GetParaInt("ThreadCount");
+		gwf.SetPara("ThreadCount", count + 1);
+		gwf.Update();
 
-             gwf.setFK_Node(nd.getNodeID());
-             gwf.setNodeName(nd.getName());
-             gwf.setTodoEmpsNum( gwls.size()) ;
+		if (gwls.size() == 0) {
+			// 说明第一次到达河流节点。
+			current_gwls = this.Func_GenerWorkerLists(this.town);
+			gwls = current_gwls;
 
-             String todoEmps = "";
-             for (GenerWorkerList  item : gwls.ToJavaList())
-                 todoEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
+			gwf.setFK_Node(nd.getNodeID());
+			gwf.setNodeName(nd.getName());
+			gwf.setTodoEmpsNum(gwls.size());
 
-             gwf.setTodoEmps(todoEmps);
-             gwf.setWFState( WFState.Runing);
-             gwf.Update();
-         }
+			String todoEmps = "";
+			for (GenerWorkerList item : gwls.ToJavaList())
+				todoEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
 
-         String FK_Emp = "";
-         String toEmpsStr = "";
-         String emps = "";
-         for (GenerWorkerList wl : gwls.ToJavaList())
-         {
-             toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
-             if (gwls.size() == 1)
-                 emps = toEmpsStr;
-             else
-                 emps += "@" + toEmpsStr;
-         }
- 
-
-         //#region 复制主表数据. edit 2014-11-20 向合流点汇总数据.
-         //复制当前节点表单数据.
-         heLiuWK.setFID( 0);
-         heLiuWK.setRec( FK_Emp);
-         heLiuWK.setEmps(emps);
-         heLiuWK.setOID( this.getHisWork().getFID());
-         heLiuWK.DirectUpdate(); //在更新一次.
-
-         /* 把数据复制到rpt数据表里. */
-         this.rptGe.setOID(this.getHisWork().getFID());
-         this.rptGe.RetrieveFromDBSources();
-         this.rptGe.Copy(this.getHisWork());
-         this.rptGe.DirectUpdate();
-         //#endregion 复制主表数据.
-
-         // 产生合流汇总明细表数据.
-          //  this.GenerHieLiuHuiZhongDtlData_2013(nd);
-
-         //#endregion 处理合流节点表单数据
-         
-         //设置当前子线程已经通过.
-         ps = new Paras();
-         ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND IsPass=0";
-         ps.Add("WorkID", this.getWorkID());
-         ps.Add("FID", this.getHisWork().getFID());
-         DBAccess.RunSQL(ps);
-
-         /* 合流点需要等待各个分流点全部处理完后才能看到它。*/
-         String info = "";
-         String sql1 = "";
-         //获取通过率
-         ps = new Paras();
-         ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr + "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
-         ps.Add("FID", this.getHisWork().getFID());
-         BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-         
-         //String mysql = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE IsPass=1 AND FID=" + this.getHisWork().getFID() + " AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
-         //BigDecimal numPassed = new BigDecimal(DBAccess.RunSQLReturnValInt(mysql));
-         BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
-         
-		 BigDecimal passRate1 = numPassed.divide(numAll1, 2).multiply(new BigDecimal(100));
-		 
-		if (nd.getPassRate().compareTo(passRate1) <= 0) {
-	         ps = new Paras();
-	         ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
-	         ps.Add("FK_Node", nd.getNodeID());
-	         ps.Add("WorkID", this.getHisWork().getFID());
-	         DBAccess.RunSQL(ps);
-	
-	         ps = new Paras();
-	         ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
-	         ps.Add("FK_Node", nd.getNodeID());
-	         ps.Add("NodeName", nd.getName());
-	         ps.Add("WorkID", this.getHisWork().getFID());
-	         DBAccess.RunSQL(ps);
-
-             gwf.SetPara("ThreadCount", 0);
-             gwf.Update();
-             
-	         info = "@下一步合流点(" + nd.getName() + ")已经启动。";
-         }else{
-        	 //#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
-             ps = new Paras();
-             ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
-             ps.Add("FK_Node", nd.getNodeID());
-             ps.Add("WorkID", this.getHisWork().getFID());
-             DBAccess.RunSQL(ps);
-         }
-			/// #region 求出日志类型，并加入变量中。
-		ActionType at = ActionType.Forward;
-		switch (town.getHisNode().getHisNodeWorkType()) {
-		case StartWork:
-		case StartWorkFL:
-			at = ActionType.Start;
-			break;
-		case Work:
-			if (this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFL
-					|| this.getHisNode().getHisNodeWorkType() == NodeWorkType.WorkFHL) {
-				at = ActionType.ForwardFL;
-			} else {
-				at = ActionType.Forward;
-			}
-			break;
-		case WorkHL:
-			at = ActionType.ForwardHL;
-			break;
-		case SubThreadWork:
-			at = ActionType.SubThreadForward;
-			break;
-		default:
-			break;
+			gwf.setTodoEmps(todoEmps);
+			gwf.setWFState(WFState.Runing);
+			gwf.Update();
 		}
-		//  #region 如果是子线城前进.
-          if (at == ActionType.SubThreadForward)
-          {
-              for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList())
-              {
-                  this.AddToTrack(at, wl, "子线程",this.town.getHisWork().getOID());
-              }
-              //写入到日志.
-          }
 
-         this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
-         this.getHisGenerWorkFlow().setNodeName(nd.getName());
-  
-         this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps, SendReturnMsgType.SystemMsg);
-         this.addMsg("HeLiuInfo", "@下一步的工作处理人[" + emps + "]" + info, SendReturnMsgType.Info);
-		
+		String FK_Emp = "";
+		String toEmpsStr = "";
+		String emps = "";
+		for (GenerWorkerList wl : gwls.ToJavaList()) {
+			toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
+			if (gwls.size() == 1)
+				emps = toEmpsStr;
+			else
+				emps += "@" + toEmpsStr;
+		}
+
+		// #region 复制主表数据. edit 2014-11-20 向合流点汇总数据.
+		// 复制当前节点表单数据.
+		heLiuWK.setFID(0);
+		heLiuWK.setRec(FK_Emp);
+		heLiuWK.setEmps(emps);
+		heLiuWK.setOID(this.getHisWork().getFID());
+		heLiuWK.DirectUpdate(); // 在更新一次.
+
+		/* 把数据复制到rpt数据表里. */
+		this.rptGe.setOID(this.getHisWork().getFID());
+		this.rptGe.RetrieveFromDBSources();
+		this.rptGe.Copy(this.getHisWork());
+		this.rptGe.DirectUpdate();
+		// #endregion 复制主表数据.
+
+		// 设置当前子线程已经通过.
+		ps = new Paras();
+		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr
+				+ "FID AND IsPass=0";
+		ps.Add("WorkID", this.getWorkID());
+		ps.Add("FID", this.getHisWork().getFID());
+		DBAccess.RunSQL(ps);
+		 int pass = 3;
+         if (gwls.size() > 0)
+             pass = gwls.get(0).GetValIntByKey("IsPass");
+
+         String info = "";
+         if (pass != 0)
+         {
+			/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
+			String sql1 = "";
+			// 获取通过率
+			ps = new Paras();
+			ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
+					+ "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
+			ps.Add("FID", this.getHisWork().getFID());
+			BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
+			BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
+	
+			BigDecimal passRate1 = numPassed.divide(numAll1, 2).multiply(new BigDecimal(100));
+	
+			if (nd.getPassRate().compareTo(passRate1) <= 0) {
+				ps = new Paras();
+				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+						+ dbStr + "WorkID";
+				ps.Add("FK_Node", nd.getNodeID());
+				ps.Add("WorkID", this.getHisWork().getFID());
+				DBAccess.RunSQL(ps);
+	
+				ps = new Paras();
+				ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr
+						+ "NodeName WHERE WorkID=" + dbStr + "WorkID";
+				ps.Add("FK_Node", nd.getNodeID());
+				ps.Add("NodeName", nd.getName());
+				ps.Add("WorkID", this.getHisWork().getFID());
+				DBAccess.RunSQL(ps);
+	
+				gwf.SetPara("ThreadCount", 0);
+				gwf.Update();
+	
+				info = "@下一步合流点(" + nd.getName() + ")已经启动。";
+			} else {
+				// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
+				ps = new Paras();
+				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+						+ dbStr + "WorkID";
+				ps.Add("FK_Node", nd.getNodeID());
+				ps.Add("WorkID", this.getHisWork().getFID());
+				DBAccess.RunSQL(ps);
+			}
+         }
+
+		this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
+		this.getHisGenerWorkFlow().setNodeName(nd.getName());
+
+		this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps, SendReturnMsgType.SystemMsg);
+		this.addMsg("HeLiuInfo", "@下一步的工作处理人[" + emps + "]" + info, SendReturnMsgType.Info);
+
 	}
 
 	/**
 	 * 产生合流汇总数据 把子线程的子表主表数据放到合流点的从表上去
 	 * 
 	 * @param nd
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void GenerHieLiuHuiZhongDtlData_2013(Node ndOfHeLiu) throws Exception {
 
@@ -7805,7 +7728,7 @@ public class WorkNode {
 	 * 
 	 * @param toNode
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private String SpanSubTheadNodes(Node toHLNode) throws Exception {
 		_SpanSubTheadNodes = "";
@@ -7878,7 +7801,8 @@ public class WorkNode {
 
 	/**
 	 * 工作流程
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final WorkFlow getHisWorkFlow() throws Exception {
@@ -7891,7 +7815,8 @@ public class WorkNode {
 
 	/**
 	 * 当前节点的工作是不是完成。
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 * 
 	 */
 	public final boolean getIsComplete() throws Exception {
@@ -7921,7 +7846,7 @@ public class WorkNode {
 	 *            工作ID
 	 * @param nodeId
 	 *            节点ID
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public WorkNode(long workId, int nodeId) throws Exception {
 		this.setWorkID(workId);
@@ -8016,7 +7941,7 @@ public class WorkNode {
 	 * 得当他的上一步工作 1, 从当前的找到他的上一步工作的节点集合. 如果没有找到转向他的节点,就返回,当前的工作.
 	 * 
 	 * @return 得当他的上一步工作
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final WorkNode GetPreviousWorkNode() throws Exception {
 		// 如果没有找到转向他的节点,就返回,当前的工作.
@@ -8025,8 +7950,15 @@ public class WorkNode {
 		}
 
 		String sql = "";
-
+		String truckTable = "ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track";
 		// 根据当前节点获取上一个节点，不用管那个人发送的
+		 sql = "SELECT NDFrom,Tag FROM " + truckTable + " WHERE WorkID=" + this.getWorkID() + " AND NDTo='" + this.getHisNode().getNodeID() + "' AND ";
+         sql += " (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + "  OR ActionType=" + ActionType.ForwardFL.getValue()+" ";
+         sql += "  OR  ActionType=" + ActionType.ForwardHL.getValue() + " "; //合流.
+         sql += "  OR  ActionType=" + ActionType.ForwardAskfor.getValue() + " "; //会签.
+         sql += "   )";
+         sql += " ORDER BY RDT DESC";
+         
 		sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE WorkID="
 				+ this.getWorkID() + " AND NDTo='" + this.getHisNode().getNodeID()
 				+ "' AND ActionType=1 ORDER BY RDT DESC";
@@ -8053,8 +7985,63 @@ public class WorkNode {
 			default:
 				break;
 			}
-			nodeid = DBAccess.RunSQLReturnValInt(sql, 0);
+			
+			 //首先获取实际发送节点，不存在时再使用from节点.
+            DataTable dt = DBAccess.RunSQLReturnTable(sql);
+            if (dt != null && dt.Rows.size() > 0)
+            {
+                nodeid = Integer.parseInt(dt.Rows.get(0).getValue("NDFrom").toString());
+                if (dt.Rows.get(0).getValue("Tag") != null && dt.Rows.get(0).getValue("Tag").toString().contains("SendNode=") == true)
+                {
+                    String tag = dt.Rows.get(0).getValue("Tag").toString();
+                    String[] strs = tag.split("@");
+                    for (String str : strs)
+                    {
+                        if (str == null || str == "" || str.contains("SendNode=") == false)
+                            continue;
+                        String[] mystr = str.split("=");
+                        if (mystr.length == 2)
+                        {
+                            String sendNode = mystr[1];
+                            if (DataType.IsNullOrEmpty(sendNode) == false && sendNode.equals("0") == false)
+                            {
+                                nodeid = Integer.parseInt(sendNode);
+                            }
+                        }
+                    }
+                }
+            }
 		}
+		
+		 if (nodeid == 0)
+         {
+             switch (this.getHisNode().getHisRunModel())
+             {
+                 case HL:
+                 case FHL:
+                     
+						sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID()
+                                                                                    + " ORDER BY RDT DESC";
+                     break;
+                 case SubThread:
+                     sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID()
+                                                                                    + " AND NDTo=" + this.getHisNode().getNodeID() + " "
+                                                                                    + " AND ( ActionType=" + ActionType.SubThreadForward.getValue() + " OR  ActionType=" + ActionType.ForwardFL.getValue() + ")  ORDER BY RDT DESC";
+                     if (DBAccess.RunSQLReturnCOUNT(sql) == 0)
+                         sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getHisWork().getFID()
+                                                                                   + " AND NDTo=" + this.getHisNode().getNodeID() + " "
+                                                                                   + " AND (ActionType=" + ActionType.SubThreadForward.getValue() + " OR  ActionType=" + ActionType.ForwardFL.getValue() + ") ORDER BY RDT DESC";
+
+                     break;
+                 default:
+                     sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID() + " AND FK_Node!='" + this.getHisNode().getNodeID() + "' ORDER BY RDT,FK_Node ";
+                     //throw new Exception("err@没有判断的类型:"+this.HisNode.HisRunModel);
+                     //根据当前节点获取上一个节点，不用管那个人发送的
+                     break;
+             }
+             nodeid = DBAccess.RunSQLReturnValInt(sql, 0);
+         }
+		 
 		if (nodeid == 0) {
 			throw new RuntimeException("@错误，没有找到上一步节点。" + sql);
 		}
@@ -8067,74 +8054,7 @@ public class WorkNode {
 		WorkNode wn = new WorkNode(wk, nd);
 		return wn;
 
-		// WorkNodes wns = new WorkNodes();
-		// Nodes nds = this.HisNode.FromNodes;
-		// foreach (Node nd in nds)
-		// {
-		// switch (this.HisNode.HisNodeWorkType)
-		// {
-		// case NodeWorkType.WorkHL: /* 如果是合流 */
-		// if (this.IsSubFlowWorkNode == false)
-		// {
-		// /* 如果不是线程 */
-		// Node pnd = nd.HisPriFLNode;
-		// if (pnd == null)
-		// throw new Exception("@没有取道它的上一步骤的分流节点，请确认设计是否错误？");
-
-		// Work wk1 = (Work)pnd.HisWorks.GetNewEntity;
-		// wk1.OID = this.HisWork.OID;
-		// if (wk1.RetrieveFromDBSources() == 0)
-		// continue;
-		// WorkNode wn11 = new WorkNode(wk1, pnd);
-		// return wn11;
-		// break;
-		// }
-		// break;
-		// default:
-		// break;
-		// }
-
-		// Work wk = (Work)nd.HisWorks.GetNewEntity;
-		// wk.OID = this.HisWork.OID;
-		// if (wk.RetrieveFromDBSources() == 0)
-		// continue;
-
-		// string table = "ND" + int.Parse(this.HisNode.FK_Flow) + "Track";
-		// string actionSQL = "SELECT EmpFrom,EmpFromT,RDT FROM " + table + "
-		// WHERE WorkID=" + this.WorkID + " AND NDFrom=" + nd.NodeID + " AND
-		// ActionType=" + (int)ActionType.Forward;
-		// DataTable dt = DBAccess.RunSQLReturnTable(actionSQL);
-		// if (dt.Rows.Count == 0)
-		// continue;
-
-		// wk.Rec = dt.Rows[0]["EmpFrom"].ToString();
-		// wk.RecText = dt.Rows[0]["EmpFromT"].ToString();
-		// wk.SetValByKey("RDT", dt.Rows[0]["RDT"].ToString());
-
-		// WorkNode wn = new WorkNode(wk, nd);
-		// wns.Add(wn);
-		// }
-		// switch (wns.Count)
-		// {
-		// case 0:
-		// throw new
-		// Exception("没有找到他的上一步工作，系统错误，请通知管理员来处理，请上让上一步处理人撤消发送、或者用本区县管理员用户登陆=》待办工作=》流程查询=》在关键字中输入Workid其它条件选择全部，查询到该流程删除它。
-		// @WorkID=" + this.WorkID);
-		// case 1:
-		// return (WorkNode)wns[0];
-		// default:
-		// break;
-		// }
-		// Node nd1 = wns[0].HisNode;
-		// Node nd2 = wns[1].HisNode;
-		// if (nd1.FromNodes.Contains(NodeAttr.NodeID, nd2.NodeID))
-		// {
-		// return wns[0];
-		// }
-		// else
-		// {
-		// return wns[1];
-		// }
+		
 	}
 
 	/// #endregion

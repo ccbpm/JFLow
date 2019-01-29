@@ -4163,7 +4163,7 @@ public class Glo {
 		// return Glo.AddMinutes(mydt, minutes);
 	}
 
-	public static java.util.Date AddDayHoursSpan(String specDT, int day, int hh, int minutes, TWay tWay)
+	public static Date AddDayHoursSpan(String specDT, int day, int hh, int minutes, TWay tWay)
 			throws Exception {
 		if (specDT == null) {
 			return null;
@@ -5138,7 +5138,7 @@ public class Glo {
 			  if (dt.Rows.size() == 0)
                   throw new Exception("err@没有找到那一行数据." + sql);
 			  
-			java.util.Hashtable ht = new java.util.Hashtable();
+			Hashtable ht = new Hashtable();
 			// 转换成ht表
 			DataRow row = dt.Rows.get(0);
 			for (int i = 0; i < row.getTable().Columns.size(); i++) {

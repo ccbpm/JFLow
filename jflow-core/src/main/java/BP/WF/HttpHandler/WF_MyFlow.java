@@ -585,9 +585,12 @@ public class WF_MyFlow extends WebContralBase {
 			 DataTable dt = BP.WF.Glo.StartGuidEnties(this.getWorkID(), this.getFK_Flow(), this.getFK_Node(), key);
 
              /*如果父流程编号，就要设置父子关系。*/
-             if (dt != null && dt.Rows.size() > 0 && dt.Rows.contains("PFlowNo") == true)
+             if (dt != null && dt.Rows.size() > 0 && dt.Columns.contains("PFlowNo") == true)
              {
                  String pFlowNo = dt.Rows.get(0).getValue("PFlowNo").toString();
+                 if(dt.Rows.get(0).getValue("PNodeID") == null)
+                	 throw new Exception("@没有设置的父流程的节点编号 ，这是非法的。");
+                 
                  int pNodeID = Integer.parseInt(dt.Rows.get(0).getValue("PNodeID").toString());
                  long pWorkID = Long.parseLong(dt.Rows.get(0).getValue("PWorkID").toString());
                  String pEmp = dt.Rows.get(0).getValue("PEmp").toString();

@@ -1,6 +1,8 @@
 package BP.WF;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
 import BP.DA.*;
 import BP.En.*;
@@ -61,31 +63,35 @@ public abstract class FlowEventBase
 	{
 		_SysPara = value;
 	}
+	
 	/** 
-	 成功信息
-	 
-	*/
+	 *成功信息
+	 */
 	public String SucessInfo = null;
+	
+	/**
+	 *  是否停止流程？
+	 */
+    public boolean IsStopFlow = false;
+    
+	///#endregion 属性/内部变量(流程在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 
-		///#endregion 属性/内部变量(流程在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 
-
-		///#region 在发送前的事件里可以改变参数.
+	///#region 在发送前的事件里可以改变参数.
 	/** 
 	 要跳转的节点.(开发人员可以设置该参数,改变发送到的节点转向.)
 	 
 	*/
-	public Node JumpToNode = null;
+	public int JumpToNodeID = 0;
 	/** 
 	 接受人, (开发人员可以设置该参数,改变接受人的范围.)
 	 
 	*/
 	public String JumpToEmps = null;
+    ///#endregion 在发送前的事件里可以改变参数
 
-		///#endregion 在发送前的事件里可以改变参数
 
-
-		///#region 系统参数
+    ///#region 系统参数
 	/** 
 	 表单ID
 	 
@@ -95,10 +101,7 @@ public abstract class FlowEventBase
 		return this.GetValStr("FK_MapData");
 	}
 
-		///#endregion
 
-
-		///#region 常用属性.
 	/** 
 	 工作ID
 	 
@@ -152,18 +155,40 @@ public abstract class FlowEventBase
 	{
 		return this.GetValStr("Nos");
 	}
+	
+	/**
+	 * 项目编码
+	 * @return
+	 */
+	public final String getPrjNo(){
+		return this.GetValStr("PrjNo");
+	}
+	
+	/**
+	 * 项目名称
+	 * @return
+	 */
+	public final String getPrjName(){
+		return this.GetValStr("PrjName");
+	}
+	
+	/**
+	 * 流程标题
+	 * @return
+	 */
+	public final String getTitle(){
+		return this.GetValStr("Title");
+	}
 
-		///#endregion 常用属性.
 
-
-		///#region 获取参数方法
+	//获取参数方法
 	/** 
 	 事件参数
 	 
 	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final java.util.Date GetValDateTime(String key)
+	public final Date GetValDateTime(String key)
 	{
 		try
 		{
@@ -232,9 +257,9 @@ public abstract class FlowEventBase
 	 @param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final java.math.BigDecimal GetValDecimal(String key)
+	public final BigDecimal GetValDecimal(String key)
 	{
-		return new java.math.BigDecimal(this.GetValStr(key));
+		return new BigDecimal(this.GetValStr(key));
 	}
 
 		///#endregion 获取参数方法
@@ -249,10 +274,7 @@ public abstract class FlowEventBase
 	{
 	}
 
-		///#endregion 构造方法
-
-
-		///#region 节点表单事件
+	//节点表单事件	
 	public String FrmLoadAfter() throws Exception
 	{
 		return null;
@@ -465,10 +487,12 @@ public abstract class FlowEventBase
 
 		//用于代码改变跳转规则,方向条件规则.
 		this.JumpToEmps = jumpToEmps;
-		this.JumpToNode = jumpToNode;	
+		this.JumpToNodeID = 0;	
+		
+		 this.setSysPara(null);
+         this.IsStopFlow = false;
 
-
-			///#region 处理参数.
+		///#region 处理参数.
 		Row r = en.getRow();
 		try
 		{
@@ -502,9 +526,12 @@ public abstract class FlowEventBase
 			ArrayList<String> keys = BP.Sys.Glo.getQueryStringKeys();
 			for (String key : keys)
 			{
+				 if (key == "OID" ||key==null )
+                     continue;
 				r.put(key, BP.Sys.Glo.getRequest().getParameter(key));
 			}
 		}
+		
 		this.setSysPara(r);
 		if (eventType.equals(EventListOfNode.CreateWorkID)) // 节点表单事件。
 		{
@@ -528,7 +555,18 @@ public abstract class FlowEventBase
 		}
 		else if (eventType.equals(EventListOfNode.SendWhen)) // 节点事件 - 发送前。
 		{
-				return this.SendWhen();
+			this.IsStopFlow = false;
+
+           String str = this.SendWhen();
+
+            if (this.IsStopFlow == true)
+                return "@Info=" + str  + "@IsStopFlow=1";
+
+            if (this.JumpToNodeID == 0 && this.JumpToEmps == null)
+                return str;
+
+            //返回这个格式, NodeSend 来解析.
+                return "@Info=" + str + "@ToNodeID=" + this.JumpToNodeID + "@ToEmps=" + this.JumpToEmps;
 		}
 		else if (eventType.equals(EventListOfNode.SendSuccess)) // 节点事件 - 发送成功时。
 		{

@@ -1245,9 +1245,9 @@ public class WF_Comm extends WebContralBase {
         for (MapAttr attr : attrs.ToJavaList())
         {
             String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
-            if (searchVisable == "0")
+            if (searchVisable.equals("0"))
                 continue;
-            if (DataType.IsNullOrEmpty(searchVisable) && attr.getUIVisible() == false)
+            if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || attr.getUIVisible() == false)
                 continue;
             row = dtAttrs.NewRow();
             row.setValue("KeyOfEn",attr.getKeyOfEn());

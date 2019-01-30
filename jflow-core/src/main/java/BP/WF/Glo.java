@@ -2868,11 +2868,12 @@ public class Glo {
 	 * @throws Exception
 	 */
 	public static String DealExp(String exp, Entity en, String errInfo) throws Exception {
+		
+		exp = exp.replace("~", "'");
+		
 		if (exp.contains("@") == false) {
 			return exp;
 		}
-
-		exp = exp.replace("~", "'");
 
 		// 首先替换加; 的。
 		exp = exp.replace("@WebUser.No;", WebUser.getNo());
@@ -2886,21 +2887,12 @@ public class Glo {
 		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
-		if (exp.contains("@") == false) {
-			exp = exp.replace("~", "'");
+		if (exp.contains("@") == false) 
 			return exp;
-		}
+		
 
 		// 增加对新规则的支持. @MyField; 格式.
 		Row row = en.getRow();
-
-		for (String key : row.keySet()) {
-			if (exp.contains("@" + key + ";"))
-				exp = exp.replace("@" + key + ";", row.get(key).toString());
-		}
-
-		if (exp.contains("@") == false)
-			return exp;
 
 		// 特殊判断.
 		if (row.containsKey("OID") == true)
@@ -2908,15 +2900,18 @@ public class Glo {
 
 		if (exp.contains("@") == false)
 			return exp;
-
+				
 		for (String key : row.keySet()) {
-			if (exp.contains("@" + key))
-				exp = exp.replaceAll("@" + key, row.GetValByKey(key).toString());
-		}
-		if (exp.contains("@") == false) {
-			return exp;
+			if(row.get(key) == null || row.get(key).toString().equals("") == true)
+				continue;
+			if (exp.contains("@" + key + ";"))
+				exp = exp.replace("@" + key + ";", row.get(key).toString());
 		}
 
+		if (exp.contains("@") == false)
+			return exp;
+
+		
 		// 解决排序问题.
 		Attrs attrs = en.getEnMap().getAttrs();
 		String mystrs = "";
@@ -2939,21 +2934,18 @@ public class Glo {
 			dr.setValue(0, str);
 			dt.Rows.add(dr);
 		}
-		/*
-		 * DataView dv = dt.DefaultView; dv.Sort = "No DESC"; DataTable dtNew =
-		 * dv.Table;
-		 */
+		
 		// 解决排序问题.
 		// 替换变量.
 		for (DataRow dr : dt.Rows) {
 			String key = dr.getValue(0).toString();
 			boolean isStr = key.contains(",");
-			if (isStr == true) {
+			if (isStr == true)
 				key = key.replace(",", "");
-				exp = exp.replace("@" + key, en.GetValStrByKey(key));
-			} else {
-				exp = exp.replace("@" + key, en.GetValStrByKey(key));
-			}
+		    if(DataType.IsNullOrEmpty(en.GetValStrByKey(key)) == true)
+		    	continue;
+		    exp = exp.replace("@" + key, en.GetValStrByKey(key));
+			
 		}
 
 		// 处理Para的替换.
@@ -2962,20 +2954,18 @@ public class Glo {
 				exp = exp.replace("@" + key, Glo.getSendHTOfTemp().get(key).toString());
 			}
 		}
-
-		/*
-		 * if (exp.contains("@") && SystemConfig.getIsBSsystem() == true) {
-		 * //如果是bs for (String key :
-		 * System.Web.HttpContext.Current.Request.QueryString.keySet()) { exp =
-		 * exp.replace("@" + key,
-		 * System.Web.HttpContext.Current.Request.QueryString[key]); } }
-		 */
-
-		exp = exp.replace("~", "'");
-		// exp = exp.Replace("''", "'");
-		// exp = exp.Replace("''", "'");
-		// exp = exp.Replace("=' ", "=''");
-		// exp = exp.Replace("= ' ", "=''");
+		
+		Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+		while (enu.hasMoreElements())
+		{
+			
+			String key = (String) enu.nextElement();
+			 if (exp.contains(key) == false)
+              continue;
+			
+			 exp = exp.replaceAll("@"+key, ContextHolderUtils.getRequest().getParameter(key));
+		}
+		
 		return exp;
 	}
 
@@ -5000,40 +4990,7 @@ public class Glo {
 	public static void SendMessageToCCIM(String fromEmpNo, String sendToEmpNo, String msg, String now) {
 		// 周朋@于庆海.
 		return; // 暂停支持.
-		/*
-		 * if (fromEmpNo == null) { fromEmpNo = ""; }
-		 * 
-		 * if (sendToEmpNo == null || sendToEmpNo.equals("")) { return; }
-		 * 
-		 * // throw new Exception("@接受人不能为空");
-		 * 
-		 * String dbStr = SystemConfig.getAppCenterDBVarStr(); //保存系统通知消息
-		 * StringBuilder strHql1 = new StringBuilder(); //加密处理 msg =
-		 * SecurityDES.encrypt(msg); Paras ps = new Paras(); String sql =
-		 * "INSERT INTO CCIM_RecordMsg (OID,SendID,MsgDateTime,MsgContent,ImageInfo,FontName,FontSize,FontBold,FontColor,InfoClass,GroupID,SendUserID) VALUES ("
-		 * ; sql += dbStr + "OID,"; sql += "'SYSTEM',"; sql += dbStr +
-		 * "MsgDateTime,"; sql += dbStr + "MsgContent,"; sql += dbStr +
-		 * "ImageInfo,"; sql += dbStr + "FontName,"; sql += dbStr + "FontSize,";
-		 * sql += dbStr + "FontBold,"; sql += dbStr + "FontColor,"; sql += dbStr
-		 * + "InfoClass,"; sql += dbStr + "GroupID,"; sql += dbStr +
-		 * "SendUserID)"; ps.SQL = sql; long messgeID =
-		 * BP.DA.DBAccess.GenerOID("RecordMsgUser");
-		 * 
-		 * ps.Add("OID", messgeID); ps.Add("MsgDateTime", now);
-		 * ps.Add("MsgContent", msg); ps.Add("ImageInfo", "");
-		 * ps.Add("FontName", "宋体"); ps.Add("FontSize", 10); ps.Add("FontBold",
-		 * 0); ps.Add("FontColor", -16777216); ps.Add("InfoClass", 15);
-		 * ps.Add("GroupID", -1); ps.Add("SendUserID", fromEmpNo);
-		 * BP.DA.DBAccess.RunSQL(ps);
-		 * 
-		 * //保存消息发送对象,这个是消息的接收人表. ps = new Paras(); ps.SQL =
-		 * "INSERT INTO CCIM_RecordMsgUser (OID,MsgId,ReceiveID) VALUES ( ";
-		 * ps.SQL += dbStr + "OID,"; ps.SQL += dbStr + "MsgId,"; ps.SQL += dbStr
-		 * + "ReceiveID)";
-		 * 
-		 * ps.Add("OID", messgeID); ps.Add("MsgId", messgeID);
-		 * ps.Add("ReceiveID", sendToEmpNo); BP.DA.DBAccess.RunSQL(ps);
-		 */
+	
 	}
 
 	public static boolean getIsEnableTrackRec() {

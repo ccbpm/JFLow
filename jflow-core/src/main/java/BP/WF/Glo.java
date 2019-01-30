@@ -826,11 +826,13 @@ public class Glo {
 			isInstallFlowDemo = false;
 		}
  
-
-		java.util.ArrayList al = null;
+		ArrayList al = null;
 		String info = "BP.En.Entity";
 		al = BP.En.ClassFactory.GetObjects(info);
-
+		
+		FrmRB frmRb = new FrmRB();
+		frmRb.CheckPhysicsTable();
+		
 		BP.Sys.SysEnum se = new BP.Sys.SysEnum();
 		se.CheckPhysicsTable();
 
@@ -1015,24 +1017,8 @@ public class Glo {
 			}
 		}
 
-		// 生成简历数据.
-		int oid = 1000;
-		for (BP.Port.Emp emp : emps.ToJavaList()) {
-			// for (int myIdx = 0; myIdx < 6; myIdx++)
-			// {
-			// BP.WF.Demo.Resume re = new Demo.Resume();
-			// re.NianYue = "200" + myIdx + "年01月";
-			// re.FK_Emp = emp.getNo();
-			// re.GongZuoDanWei = "工作部门-" + myIdx;
-			// re.ZhengMingRen = "张" + myIdx;
-			// re.BeiZhu = emp.Name + "同志工作认真.";
-			// oid++;
-			// re.InsertAsOID(oid);
-			// }
-		}
 		// 生成年度月份数据.
 		String sqls = "";
-		java.util.Date dtNow = new java.util.Date();
 		for (int num = 0; num < 12; num++) {
 			sqls = "@ INSERT INTO Pub_NY (No,Name) VALUES ('" + DateUtils.format(new Date(), "yyyy-MM") + "','"
 					+ DateUtils.format(new Date(), "yyyy-MM") + "')  ";
@@ -1047,13 +1033,11 @@ public class Glo {
 			BP.Port.Emp emp = new BP.Port.Emp("admin");
 			BP.Web.WebUser.SignInOfGener(emp);
 			BP.Sys.Glo.WriteLineInfo("开始装载模板...");
-
-			String msg = "";
 			 
-				// 装载数据模版.
-				BP.WF.DTS.LoadTemplete l = new BP.WF.DTS.LoadTemplete();
-				Object tempVar = l.Do();
-				msg = (String) ((tempVar instanceof String) ? tempVar : null);
+			// 装载数据模版.
+			BP.WF.DTS.LoadTemplete l = new BP.WF.DTS.LoadTemplete();
+			Object tempVar = l.Do();
+			String msg = (String) ((tempVar instanceof String) ? tempVar : null);
 			 
 
 			BP.Sys.Glo.WriteLineInfo("装载模板完成......");
@@ -1090,21 +1074,15 @@ public class Glo {
 
 		// 增加图片签名
 		if (isInstallFlowDemo == true) {
-			try {
-				// 增加图片签名
-				BP.WF.DTS.GenerSiganture gs = new BP.WF.DTS.GenerSiganture();
-				gs.Do();
-			} catch (java.lang.Exception e4) {
-			}
+			// 增加图片签名
+			BP.WF.DTS.GenerSiganture gs = new BP.WF.DTS.GenerSiganture();
+			gs.Do();
+			
 		}
 		// 增加图片签名.
 		// 执行补充的sql, 让外键的字段长度都设置成100.
 		DBAccess.RunSQL("UPDATE Sys_MapAttr SET maxlen=100 WHERE LGType=2 AND MaxLen<100");
 		DBAccess.RunSQL("UPDATE Sys_MapAttr SET maxlen=100 WHERE KeyOfEn='FK_Dept'");
-		// Nodes nds = new Nodes();
-		// nds.RetrieveAll();
-		// foreach (Node nd in nds)
-		// nd.HisWork.CheckPhysicsTable();
 		// 执行补充的sql, 让外键的字段长度都设置成100.
 		// 如果是第一次运行，就执行检查。
 		if (isInstallFlowDemo == true) {

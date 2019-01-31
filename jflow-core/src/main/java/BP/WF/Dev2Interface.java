@@ -2890,18 +2890,34 @@ public class Dev2Interface {
 		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
+		 //获取用户当前所在的节点
+        String currNode = "";
+        switch (DBAccess.getAppCenterDBType()){
+        	case Oracle:
+        		currNode = "(SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC ) WHERE rownum=1)";
+        		break;
+        	case MySQL:
+        		currNode = "(SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC LIMIT 1)";
+        		break;
+        	case MSSQL:
+        		currNode = "(SELECT TOP 1 FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC)";
+        		break;
+        	default:break;
+        }
+        
+        
 		if (WebUser.getIsAuthorize()) {
 			WFEmp emp = new WFEmp(userNo);
 			if (StringHelper.isNullOrEmpty(fk_flow)) {
 				if (isMyStarter == true) {
-					ps.SQL = "SELECT DISTINCT a.*,B.FK_Node AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND A.Starter="
+					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND A.Starter="
 							+ dbStr + "Starter  AND B.FK_Emp=" + dbStr
 							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows();
 					ps.Add("Starter", userNo);
 					ps.Add("FK_Emp", userNo);
 				} else {
-					ps.SQL = "SELECT DISTINCT a.*,B.FK_Node AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
+					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
 							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows();
 					ps.Add("FK_Emp", userNo);
@@ -2928,19 +2944,19 @@ public class Dev2Interface {
 		} else {
 			if (StringHelper.isNullOrEmpty(fk_flow)) {
 				if (isMyStarter == true) {
-					ps.SQL = "SELECT DISTINCT a.*,B.FK_Node AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
+					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
 							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter="
 							+ dbStr + "Starter ";
 					ps.Add("FK_Emp", userNo);
 					ps.Add("Starter", userNo);
 				} else {
-					ps.SQL = "SELECT DISTINCT a.*,B.FK_Node AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
+					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
 							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) ";
 					ps.Add("FK_Emp", userNo);
 				}
 			} else {
 				if (isMyStarter == true) {
-					ps.SQL = "SELECT DISTINCT a.*,B.FK_Node AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
+					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
 							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 ) AND  A.Starter=" + dbStr
 							+ "Starter  ";
@@ -2948,7 +2964,7 @@ public class Dev2Interface {
 					ps.Add("FK_Emp", userNo);
 					ps.Add("Starter", userNo);
 				} else {
-					ps.SQL = "SELECT DISTINCT a.*,B.FK_Node AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
+					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
 							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 ) ";
 					ps.Add("FK_Flow", fk_flow);
@@ -5052,6 +5068,16 @@ public class Dev2Interface {
 				ps.Add("FK_Node", nd.getNodeID());
 				num = DBAccess.RunSQLReturnValInt(ps);
 				break;
+			 case ByDeptAndStation:
+
+                 String sql = "SELECT COUNT(A.FK_Node) as Num FROM WF_NodeDept A, Port_DeptEmp B, WF_NodeStation C, " + Glo.getEmpStation() + " D";
+                 sql += " WHERE A.FK_Dept= B.FK_Dept AND  A.FK_Node=" + dbstr + "FK_Node AND B.FK_Emp=" + dbstr + "FK_Emp AND  A.FK_Node=C.FK_Node AND C.FK_Station=D.FK_Station AND D.FK_Emp=" + dbstr + "FK_Emp";
+                 ps.SQL = sql;
+                 ps.Add("FK_Node", nd.getNodeID());
+                 ps.Add("FK_Emp", userNo);
+                 num = DBAccess.RunSQLReturnValInt(ps);
+                 
+                 break;
 			case BySelected:
 				num = 1;
 				break;
@@ -5061,29 +5087,8 @@ public class Dev2Interface {
 		} else {
 			switch (nd.getHisDeliveryWay()) {
 			case ByStation:
-				// var obj =
-				// BP.DA.DataType.GetPortalInterfaceSoapClientInstance();
-				// DataTable mydt =
-				// obj.GetEmpHisStations(BP.Web.WebUser.getNo());
-				// string mystas = BP.DA.DBAccess.GenerWhereInPKsString(mydt);
-				// ps.SQL = "SELECT COUNT(FK_Node) AS Num FROM WF_NodeStation
-				// WHERE FK_Node=" + dbstr + "FK_Node AND FK_Station IN(" +
-				// mystas + ")";
-				// ps.Add("FK_Node", nd.NodeID);
-				// num = DBAccess.RunSQLReturnValInt(ps);
 				break;
 			case ByDept:
-				// var objMy =
-				// BP.DA.DataType.GetPortalInterfaceSoapClientInstance();
-				// DataTable mydtDept =
-				// objMy.GetEmpHisDepts(BP.Web.WebUser.getNo());
-				// string dtps = BP.DA.DBAccess.GenerWhereInPKsString(mydtDept);
-
-				// ps.SQL = "SELECT COUNT(FK_Node) as Num FROM WF_NodeDept WHERE
-				// FK_Dept IN (" + dtps + ") B.FK_Dept AND A.FK_Node=" + dbstr +
-				// "FK_Node";
-				// ps.Add("FK_Node", nd.NodeID);
-				// num = DBAccess.RunSQLReturnValInt(ps);
 				throw new RuntimeException("@目前取消支持.");
 			case ByBindEmp:
 				ps.SQL = "SELECT COUNT(*) AS Num FROM WF_NodeEmp WHERE FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr

@@ -2075,6 +2075,11 @@ public class Flow extends BP.En.EntityNoName {
 
 			// 获得gerpt字段.
 			GERpt rpt = this.getHisGERpt();
+			for(Attr attr : rpt.getEnMap().getAttrs())
+            {
+                  rpt.SetValByKey(attr.getKey(), "0");
+            }
+			  
 			for (Node nd : nds.ToJavaList()) {
 				if (nd.getFocusField().trim().equals("")) {
 					Work wk = nd.getHisWork();

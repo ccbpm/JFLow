@@ -962,7 +962,9 @@ public class WF extends WebContralBase {
 	 */
 	public final String Runing_UnSend() throws Exception {
 		try {
-			return BP.WF.Dev2Interface.Flow_DoUnSend(this.getFK_Flow(), this.getWorkID());
+			 //获取撤销到的节点
+            int unSendToNode = this.GetRequestValInt("UnSendToNode");
+			return BP.WF.Dev2Interface.Flow_DoUnSend(this.getFK_Flow(), this.getWorkID(),unSendToNode);
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}

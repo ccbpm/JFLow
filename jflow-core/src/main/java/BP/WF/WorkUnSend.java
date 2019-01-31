@@ -381,36 +381,39 @@ public class WorkUnSend
         
         if (nd.getIsStartNode() && nd.getHisNodeWorkType() != NodeWorkType.StartWorkFL)
 			throw new RuntimeException("当前节点是开始节点，所以您不能撤销。");
-        
-        //如果当前节点是分流、分合流节点则可以撤销
-        if (nd.getHisNodeWorkType() == NodeWorkType.StartWorkFL
-            || nd.getHisNodeWorkType() == NodeWorkType.WorkFL
-            || nd.getHisNodeWorkType() == NodeWorkType.WorkFHL)
-        {
-            //获取当前节点的子线程
-            String truckTable = "ND" + Integer.parseInt(nd.getFK_Flow()) + "Track";
-            String threadSQL = "SELECT FK_Node,WorkID FROM WF_GenerWorkFlow  WHERE FID=" + this.WorkID + " AND FK_Node"
-                    + " IN(SELECT DISTINCT(NDTo) FROM " + truckTable + "  WHERE ActionType=" + ActionType.ForwardFL.getValue() + " AND WorkID=" + this.WorkID + " AND NDFrom='" + nd.getNodeID() + "'"
-                    + "  ) ";
-            DataTable dt = DBAccess.RunSQLReturnTable(threadSQL);
-            if(dt == null || dt.Rows.size() == 0 )
-                throw new Exception("err@流程运行错误：当不存在子线程时改过程应该处于待办状态");
-          
 
-            for(DataRow  dr : dt.Rows)
-            {
-                Node threadnd = new Node(dr.getValue("FK_Node").toString());
-                // 调用撤消发送前事件。
-                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, nd.getHisWork(), null);
-
-                BP.WF.Dev2Interface.Node_FHL_KillSubFlow(threadnd.getFK_Flow(), this.WorkID, Long.parseLong(dr.getValue("WorkID").toString())); //杀掉子线程.
-
-                // 调用撤消发送前事件。
-                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneAfter, nd, nd.getHisWork(), null);
-            }
-
-            return "撤销成功";
-
+        //如果撤销到的节点和当前流程运行到的节点相同，则是分流、或者分河流
+        if (this.UnSendToNode == nd.getNodeID()){
+	        //如果当前节点是分流、分合流节点则可以撤销
+	        if (nd.getHisNodeWorkType() == NodeWorkType.StartWorkFL
+	            || nd.getHisNodeWorkType() == NodeWorkType.WorkFL
+	            || nd.getHisNodeWorkType() == NodeWorkType.WorkFHL)
+	        {
+	            //获取当前节点的子线程
+	            String truckTable = "ND" + Integer.parseInt(nd.getFK_Flow()) + "Track";
+	            String threadSQL = "SELECT FK_Node,WorkID FROM WF_GenerWorkFlow  WHERE FID=" + this.WorkID + " AND FK_Node"
+	                    + " IN(SELECT DISTINCT(NDTo) FROM " + truckTable + "  WHERE ActionType=" + ActionType.ForwardFL.getValue() + " AND WorkID=" + this.WorkID + " AND NDFrom='" + nd.getNodeID() + "'"
+	                    + "  ) ";
+	            DataTable dt = DBAccess.RunSQLReturnTable(threadSQL);
+	            if(dt == null || dt.Rows.size() == 0 )
+	                throw new Exception("err@流程运行错误：当不存在子线程时改过程应该处于待办状态");
+	          
+	
+	            for(DataRow  dr : dt.Rows)
+	            {
+	                Node threadnd = new Node(dr.getValue("FK_Node").toString());
+	                // 调用撤消发送前事件。
+	                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, nd.getHisWork(), null);
+	
+	                BP.WF.Dev2Interface.Node_FHL_KillSubFlow(threadnd.getFK_Flow(), this.WorkID, Long.parseLong(dr.getValue("WorkID").toString())); //杀掉子线程.
+	
+	                // 调用撤消发送前事件。
+	                nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneAfter, nd, nd.getHisWork(), null);
+	            }
+	
+	            return "撤销成功";
+	
+	        }
         }
     
 		//如果启用了对方打开不可以撤回的

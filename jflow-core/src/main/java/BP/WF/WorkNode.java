@@ -2888,9 +2888,11 @@ public class WorkNode {
 		current_gwls = new GenerWorkerLists();
 		current_gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getHisWork().getFID(), GenerWorkerListAttr.FK_Node,
 				toNode.getNodeID());
-		if (current_gwls.size() == 0)
+		 boolean  isFirstHL = false;
+		if (current_gwls.size() == 0){
+			isFirstHL = true;
 			current_gwls = this.Func_GenerWorkerLists(this.town);// 初试化他们的工作人员．
-
+		}
 		String FK_Emp = "";
 		String toEmpsStr = "";
 		String emps = "";
@@ -2945,7 +2947,7 @@ public class WorkNode {
         int pass = 3;
         if (gwls.size() > 0)
             pass = gwls.get(0).GetValIntByKey("IsPass");
-        if(pass == 0){
+        if(isFirstHL==true || pass != 0){
 			/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
 			ps = new Paras();
 			ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
@@ -7406,8 +7408,9 @@ public class WorkNode {
 		int count = gwf.GetParaInt("ThreadCount");
 		gwf.SetPara("ThreadCount", count + 1);
 		gwf.Update();
-
+		boolean isFirstHL = false;
 		if (gwls.size() == 0) {
+			isFirstHL = true;
 			// 说明第一次到达河流节点。
 			current_gwls = this.Func_GenerWorkerLists(this.town);
 			gwls = current_gwls;
@@ -7463,10 +7466,9 @@ public class WorkNode {
              pass = gwls.get(0).GetValIntByKey("IsPass");
 
          String info = "";
-         if (pass != 0)
+         if (isFirstHL == true || pass != 0)
          {
 			/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
-			String sql1 = "";
 			// 获取通过率
 			ps = new Paras();
 			ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr

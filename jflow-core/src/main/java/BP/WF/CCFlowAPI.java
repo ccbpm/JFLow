@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import BP.DA.DBAccess;
 import BP.DA.DBType;
+import BP.DA.DataColumn;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -570,18 +571,21 @@ public class CCFlowAPI {
 			if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false
 					&& DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false) {
 
-				GERpt rpt = nd.getHisFlow().getHisGERpt();
-				rpt.setOID(workID);
-				rpt.RetrieveFromDBSources();
-				
-				rpt.ResetDefaultVal();
-
-				
-				DataTable dt=rpt.ToDataTableField("aaa");
-				
-				String json=BP.Tools.Json.ToJson(dt);
-
-				myds.Tables.add(rpt.ToDataTableField("MainTable"));
+				  GERpt rpt = new GERpt("ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt", workID); // nd.HisFlow.HisGERpt;
+				  DataTable dt = rpt.ToDataTableField("MainTable");
+                  DataTable wkdt = wk.ToDataTableField(md.getNo());
+                  //把当前节点的数据 覆盖rpt表中的数据
+                  for(DataColumn column : wkdt.Columns)
+                  {
+                       for(DataColumn column1 : dt.Columns){
+                           if(column.ColumnName.equals(column1.ColumnName)){
+                               dt.Rows.get(0).setValue(column1.ColumnName, wkdt.Rows.get(0).getValue(column.ColumnName));
+                               break;
+                           }
+                       }
+                  }
+                  
+				myds.Tables.add(dt);
 				
 
 			} else {

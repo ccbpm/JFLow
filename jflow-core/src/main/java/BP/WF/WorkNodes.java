@@ -102,8 +102,20 @@ public class WorkNodes extends ArrayList<WorkNode>
 	}
 	public final int GenerByWorkID(Flow flow, long oid) throws NumberFormatException, Exception
 	{
+		/*退回 ,需要判断跳转的情况，如果是跳转的需要退回到他开始执行的节点
+		* 跳转的节点在WF_GenerWorkerlist中不存在该信息
+		*/
 		String table = "ND" + Integer.parseInt(flow.getNo()) + "Track";
-		String actionSQL = "SELECT EmpFrom,EmpFromT,RDT,NDFrom FROM " + table + " WHERE WorkID=" + oid + " AND (ActionType=" + ActionType.Start.getValue() + " OR ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.ForwardHL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + " ) ORDER BY RDT";
+		String actionSQL = "SELECT EmpFrom,EmpFromT,RDT,NDFrom FROM " + table + " WHERE WorkID=" + oid
+						  +" AND (ActionType=" + ActionType.Start.getValue() 
+						  +" OR ActionType=" + ActionType.Forward.getValue() 
+						  +" OR ActionType=" + ActionType.ForwardFL.getValue() 
+						  +" OR ActionType=" + ActionType.ForwardHL.getValue() 
+						  + " OR ActionType=" + ActionType.SubThreadForward.getValue() 
+						  + " OR ActionType=" + ActionType.Skip.getValue() 
+						  + " )"
+						  +" AND NDFrom IN(SELECT FK_Node FROM WF_Generworkerlist WHERE WorkID=" + oid+")"
+						  + " ORDER BY RDT";
 		DataTable dt = DBAccess.RunSQLReturnTable(actionSQL);
 
 		String nds = "";

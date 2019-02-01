@@ -401,7 +401,7 @@ public class MakeForm2Html
             if (attr.getLGType() == FieldTypeS.Enum || attr.getLGType() == FieldTypeS.FK)
                 sb.append("<DIV id='F" + attr.getKeyOfEn() + "' style='position:absolute; left:" + x + "px; top:" + attr.getY() + "px;  height:16px;text-align: left;word-break: keep-all;' >");
             else
-                sb.append("<DIV id='F" + attr.getKeyOfEn() + "' style='position:absolute; left:" + x + "px; top:" + attr.getY() + "px; width:auto" + attr.getUIWidth() + "px; height:16px;text-align: left;word-break: keep-all;' >");
+                sb.append("<DIV id='F" + attr.getKeyOfEn() + "' style='position:absolute; left:" + x + "px; top:" + attr.getY() + "px; width:" + attr.getUIWidth() + "px; height:16px;text-align: left;word-break: keep-all;' >");
 
             sb.append("<span>");
 
@@ -504,18 +504,68 @@ public class MakeForm2Html
 
             sb.append("<DIV id='Fd" + dtl.getNo() + "' style='position:absolute; left:" + x + "px; top:" + y + "px; width:" + dtl.getW() + "px; height:" + dtl.getH() + "px;text-align: left;' >");
             sb.append("<span>");
+            MapAttrs attrsOfDtls = new MapAttrs(dtl.getNo());
+           
+            sb.append("<table style='wdith:100%' >");
+            sb.append("<tr>");
+            for (MapAttr item :attrsOfDtls.ToJavaList())
+            {
+                if (item.getKeyOfEn() == "OID")
+                    continue;
+                if (item.getUIVisible() == false)
+                    continue;
 
-            String src = "";
-            if (dtl.getHisEditModel() == EditModel.TableModel)
-            {
-                src = appPath + "WF/CCForm/dtl.Htm?EnsName=" + dtl.getNo() + "&RefPKVal=" + en.getPKVal() + "&IsReadonly=1";
+                sb.append("<th class='DtlTh'>" + item.getName() + "</th>");
             }
-            else
+            sb.append("</tr>");
+            //#endregion 输出标题.
+
+
+            //#region 输出数据.
+            GEDtls gedtls = new GEDtls(dtl.getNo());
+            gedtls.Retrieve(GEDtlAttr.RefPK, workid);
+            for (GEDtl gedtl :gedtls.ToJavaList())
             {
-                src = appPath + "WF/CCForm/DtlCard.htm?EnsName=" + dtl.getNo() + "&RefPKVal=" + en.getPKVal() + "&IsReadonly=1";
+                sb.append("<tr>");
+
+                for (MapAttr item :attrsOfDtls.ToJavaList())
+                {
+                    if (item.getKeyOfEn().equals("OID") || item.getUIVisible() == false)
+                        continue;
+
+                    if (item.getUIContralType() == UIContralType.DDL)
+                    {
+                        sb.append("<td class='DtlTd'>" + gedtl.GetValRefTextByKey(item.getKeyOfEn()) + "</td>");
+                        continue;
+                    }
+
+                    if (item.getIsNum())
+                    {
+                        sb.append("<td class='DtlTd' style='text-align:right' >" + gedtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
+                        continue;
+                    }
+
+                    sb.append("<td class='DtlTd'>" + gedtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
+                }
+                sb.append("</tr>");
             }
+            //#endregion 输出数据.
+
+
+            sb.append("</table>");
             
-            sb.append("<iframe ID='F" + dtl.getNo() + "' onload= 'F" + dtl.getNo() + "load();'  src='" + src + "' frameborder=0  style='position:absolute;width:" + dtl.getW() + "px; height:" + dtl.getH() + "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
+
+//            String src = "";
+//            if (dtl.getHisEditModel() == EditModel.TableModel)
+//            {
+//                src = appPath + "WF/CCForm/dtl.Htm?EnsName=" + dtl.getNo() + "&RefPKVal=" + en.getPKVal() + "&IsReadonly=1";
+//            }
+//            else
+//            {
+//                src = appPath + "WF/CCForm/DtlCard.htm?EnsName=" + dtl.getNo() + "&RefPKVal=" + en.getPKVal() + "&IsReadonly=1";
+//            }
+//            
+//            sb.append("<iframe ID='F" + dtl.getNo() + "' onload= 'F" + dtl.getNo() + "load();'  src='" + src + "' frameborder=0  style='position:absolute;width:" + dtl.getW() + "px; height:" + dtl.getH() + "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
 
             sb.append("</span>");
             sb.append("</DIV>");
@@ -571,7 +621,7 @@ public class MakeForm2Html
                         sb.append("<tr>");
                         sb.append("<td valign=middle style='border-style: solid;padding: 4px;text-align: left;color: #333333;font-size: 12px;border-width: 1px;border-color: #C2D5E3;' >" + dr.getValue("NDFromT").toString() + "</td>");
 
-                        sb.append("<br><br>");
+                        //sb.append("<br><br>");
 
                         String msg =dr.getValue("Msg") .toString();
 
@@ -620,14 +670,13 @@ public class MakeForm2Html
 
          ////#region 输出附件
         FrmAttachments aths = new FrmAttachments(frmID);
-        FrmAttachmentDBs athDBs = new FrmAttachmentDBs(frmID, en.getPKVal().toString());
-
         for(FrmAttachment ath : aths.ToJavaList())
         {
 
             if (ath.getUploadType() == AttachmentUploadType.Single)
             {
                 /* 单个文件 */
+            	FrmAttachmentDBs athDBs = BP.WF.Glo.GenerFrmAttachmentDBs(ath,String.valueOf(workid), ath.getMyPK());
                 FrmAttachmentDB athDB = (FrmAttachmentDB)athDBs.GetEntityByKey(FrmAttachmentDBAttr.FK_FrmAttachment, ath.getMyPK());
                 x = ath.getX() + wtX;
                 float y = ath.getY();
@@ -655,6 +704,8 @@ public class MakeForm2Html
 
                 //文件加密
                 boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+                FrmAttachmentDBs athDBs = BP.WF.Glo.GenerFrmAttachmentDBs(ath,String.valueOf(workid), ath.getMyPK());
+
                 
                 for (FrmAttachmentDB item :athDBs.ToJavaList())
                 {
@@ -986,14 +1037,8 @@ public class MakeForm2Html
                     if (!ath.getMyPK().equals(gf.getCtrlID()))
                         continue;
 
-                    BP.Sys.FrmAttachmentDBs athDBs = null;
-                    try
-                    {
-                    	athDBs = BP.WF.Glo.GenerFrmAttachmentDBs(ath,String.valueOf(workid), ath.getMyPK());
-                    }
-                    catch(Exception ex){
-                    	
-                    }
+                     FrmAttachmentDBs athDBs = BP.WF.Glo.GenerFrmAttachmentDBs(ath,String.valueOf(workid), ath.getMyPK());
+                  
 
                     if (ath.getUploadType() == AttachmentUploadType.Single)
                     {
@@ -1332,8 +1377,8 @@ public class MakeForm2Html
 
 
             docs = docs.replace("@Docs", sb.toString());
-            docs = docs.replace("@Width", String.valueOf(mapData.getFrmW()));
-            docs = docs.replace("@Height", String.valueOf(mapData.getFrmH()));
+            docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
+            docs = docs.replace("@Height", String.valueOf(mapData.getFrmH())+"px");
             
             Date date = new Date(); 
             SimpleDateFormat sy1=new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");

@@ -372,8 +372,12 @@ public class DataType {
 	 * @return
 	 */
 	public static String PraseAtToInSql(String strs, boolean isNumber) {
+		if(IsNullOrEmpty(strs)==true)
+			return "''";
+		
 		strs = strs.replace("@", "','");
 		strs = strs + "'";
+		if(strs.length()>2)
 		strs = strs.substring(2);
 		if (isNumber) {
 			strs = strs.replace("'", "");

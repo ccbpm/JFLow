@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" />
-    <title>驰骋工作流</title>
+    <title>单据打印样本</title>
     <!-- 于庆海 -->
     <script type="text/javascript" src="../../Scripts/bootstrap/js/jquery.min.js"></script>
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
@@ -26,7 +26,7 @@
 
             //设定枚举值下拉框.
             GenerBindEnumKey("DDL_BillFileType", "BillFileType", 0);
-            GenerBindEnumKey("DDL_BillOpenModel", "BillOpenModel", 0);
+          //  GenerBindEnumKey("DDL_BillOpenModel", "BillOpenModel", 0);
 
             var nodeID = GetQueryString("FK_Node");
             var ens = new Entities("BP.WF.Template.BillTemplates");
@@ -49,6 +49,7 @@
                 newRow = "<tr ><td class=Idx>" + i + "</td>";
                 newRow += "<td>" + en.No + "</td>";
                 newRow += "<td>" + en.Name + "</td>";
+                newRow += "<td>" + en.TemplateFileModelText + "</td>";
                 newRow += "<td>" + en.QRModelText + "</td>";
 
                 newRow += "<td><a href='" + Handler + "?DoType=Bill_Download&No=" + en.No + "'>" + en.TempFilePath + "</td>";
@@ -90,25 +91,52 @@
                 alert('请输入报表名称');
                 return;
             }
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrNode");
-            handler.AddUrlData();
-            handler.AddPara("FK_Node", GetQueryString("FK_Node"));
-            handler.AddFormData();
-            var data = handler.DoMethodReturnString("Bill_Save");
-            if (data.indexOf('err@') >= 0) {
-                alert(data);
-                return;
-            }
-            window.location.href = window.location.href;
-            return;
 
+            var doMethod = "Bill_Save";
+            var httpHandlerName = "BP.WF.HttpHandler.WF_Admin_AttrNode";
+            $.ajax({
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod="+ doMethod +"&HttpHandlerName=" + httpHandlerName +"&FK_Node=" + GetQueryString("FK_Node") + "&m=" + Math.random(),
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.indexOf('err@') >= 0) {
+                        alert(data);
+                        return;
+                    }
+                    window.location.href = window.location.href;
+                    return;
+                }
+            });
         }
 
         function Btn_New_Click() {
 
             document.getElementById("TB_No").value = "";
             document.getElementById("TB_Name").value = "";
-
+        }
+        //选择文件名自动填充模板名称和模板文件格式
+        function show() {
+        //上传文件名自动显示到模板名称中
+            var path = document.getElementById("bill").value;
+            var pos1 = path.lastIndexOf("\\");
+            var pos2 = path.lastIndexOf(".");
+            var TB_Name = path.substring(pos1 + 1, pos2);
+            document.getElementById("TB_Name").value = TB_Name;
+        //模板文件格式显示对应格式
+            var hz = path.substr(pos2 + 1, 4).toLowerCase();
+            if (hz == "rtf") {
+                $("#DDL_TemplateFileModel").val(0);
+            } else if (hz == "doc" || hz == "docx") {
+                $("#DDL_TemplateFileModel").val(1);
+            } else if (hz == "xls" || hz == "xlsx") {
+                $("#DDL_TemplateFileModel").val(2);
+            } else {
+                 alert("格式不正确！");
+            }
         }
     </script>
 </head>
@@ -119,57 +147,57 @@
             <caption>
                 单据模版</caption>
             <tr>
-                <td style="width: 15%;">
-                    编号(自动生成)
-                </td>
+              <td>模版文件: </td>
+                <td> <input id="bill" type="file" name="bill" style="width: 60%;" onchange="show()"/></td>
+                <td style="width: 15%;">模版名称 </td>
                 <td>
-                    <input type="text" id="TB_No" name="TB_No" readonly="1" style="width: 60%;" />
-                </td>
-                <td style="width: 15%;">
-                    模版名称
-                </td>
-                <td>
-                    <input type="text" id="TB_Name" name="TB_Name" style="width: 80%;" />
+                    <input type="text" id="TB_Name" name="TB_Name" style="width: 80%; " />
                 </td>
             </tr>
             <tr>
                 <td>
-                    生成模版类型
+                    生成的文件类型
                 </td>
                 <td>
                     <select id="DDL_BillFileType" name="DDL_BillFileType" style="width: 60%;" />
                 </td>
+                <td>打开方式</td>
                 <td>
-                    打开方式
-                </td>
-                <td>
-                    <select id="DDL_BillOpenModel" name="DDL_BillOpenModel" />
+                   <select id="DDL_BillOpenModel" name="DDL_BillOpenModel" style="width: 60%;" >
+                        <option value="0">下载到本地 </option>
+                        <option value="1">在线打开</option>
+                    </select>
+                     
                 </td>
             </tr>
             <tr>
-                <td>
-                    是否加载二维码
-                </td>
+                <td>是否加载二维码</td>
                 <td>
                     <select id="DDL_QRModel" name="DDL_QRModel" style="width: 60%;">
                         <option value="0">不加载二维码 </option>
                         <option value="1">加载二维码 </option>
                     </select>
                 </td>
-                <td>
-                    模版文件:<br>
-                    符合规范的rtf格式文件.
-                </td>
-                <td>
-                    <input id="bill" type="file" name="bill" style="width: 60%;" />
-                </td>
+
+                 <td>模版文件格式</td>
+             <td> 
+                <select id="DDL_TemplateFileModel" name="DDL_TemplateFileModel" style="width: 60%;" disabled="disabled">
+                        <option value="0">rtf格式的模版 </option>
+                        <option value="1">vsto格式word模版</option>
+                        <option value="2">vsto格式Excel模版</option>
+                    </select>
+             </td>
+              
             </tr>
+
+          
+
             <tr>
                 <td>
                 </td>
                 <td colspan="3">
                     <input type="button" id="Btn_Save" runat="server" value="保存" onclick="Btn_Save_Click()" />
-                    <input type="button" id="Btn_New" runat="server" value="新建" onclick="Btn_New_Click()" />
+                 <!--   <input type="button" id="Btn_New" runat="server" value="新建" onclick="Btn_New_Click()" />-->
                 </td>
             </tr>
         </table>
@@ -188,6 +216,7 @@
                 <th>
                     名称
                 </th>
+                   <th>模版类型</th>
                 <th>
                     二维码生成方式
                 </th>

@@ -76,10 +76,11 @@
             var name = $("input").val();
             formData.append("file", $("#fileImagAth")[0].files[0]);
             formData.append("name", name);
-          
 
+            var doMethod = "FrmImgAthDB_Upload";
+            var httpHandlerName = "BP.WF.HttpHandler.WF_CCForm";
             $.ajax({
-                url: Handler + '?DoType=FrmImgAthDB_Upload&FK_MapData=' + FK_MapData + '&CtrlID=' + CtrlID + '&RefPKVal=' + RefPKVal + '&zoomW=' + zoomW + '&zoomH=' + zoomH,
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod="+ doMethod +"&HttpHandlerName=" + httpHandlerName + "&FK_MapData=" + FK_MapData + "&CtrlID=" + CtrlID + "&RefPKVal=" + RefPKVal + "&zoomW=" + zoomW + "&zoomH=" + zoomH,
                 type: 'POST',
                 data: formData,
                 // 告诉jQuery不要去处理发送的数据

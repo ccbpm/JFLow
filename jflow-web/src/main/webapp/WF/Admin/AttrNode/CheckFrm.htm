@@ -11,53 +11,36 @@
     <script type="text/javascript" src="../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
     <script type="text/javascript">
-        var md = GetQueryString("FK_MapData");
+        var frmID = GetQueryString("FK_MapData");
 
         $(function () {
-            Init();
+            var mapData = new Entity("BP.Sys.MapData", frmID);
+            $("body").layout("panel", "center").panel("setTitle", mapData.Name + "[" + frmID + "] 表单检查");
         });
 
-        function Init() {
-            var param = {
-                DoType: "CheckFrm_Init",
-                FK_MapData: md
-            };
-
-            Handler_AjaxQueryData(param, function (data) {
-                if (typeof data == "String") {
-                    if (data.indexOf("err@") != -1) {
-                        $.messager.alert("错误", data, "error");
-                        return;
-                    }
-                }
-                else {
-
-                }
-
-                $("body").layout("panel", "center").panel("setTitle", data + "[" + md + "] 表单检查");
-            }, this);
-        }
 
         function DoCheckFrm() {
+
             var param = {
                 DoType: "CheckFrm_Check",
                 FK_MapData: md
             };
 
-            Handler_AjaxQueryData(param, function (data) {
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrNode");
+            handler.AddPara("FK_MapData", frmID);
+            var data = handler.DoMethodReturnString("CheckFrm_Check");
+//            Handler_AjaxQueryData(param, function (data) {
                 if (typeof data == "String") {
                     if (data.indexOf("err@") != -1) {
                         $.messager.alert("错误", data, "error");
                         return;
                     }
                 }
-                else {
 
-                }
 
                 $("#result").show();
                 $("#result").after(data);
-            }, this);
+//            }, this);
         }
     </script>
 </head>
@@ -73,7 +56,7 @@
             <a href="javascript:void(0)" onclick="DoCheckFrm()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">
                 执行检查</a>
         </p>
-        <p id="result" style="display:none;">
+        <p id="result" style="display: none;">
             检查结果：</p>
     </div>
 </body>

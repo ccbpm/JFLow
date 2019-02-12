@@ -335,7 +335,6 @@ function OnTabChange(scope) {
     }
     var lastChar = tabText.substring(tabText.length - 1, tabText.length);
     //参数是保存时，保存当前选择的tab标签
-    var IsSaveTrue = true;
     if (scope == "btnsave") {
     	 //保存tab标签中带有*的标签页
         var tabs = $('#tabs').tabs().tabs('tabs');
@@ -349,8 +348,9 @@ function OnTabChange(scope) {
                 var contentWidow = currScope.contentWindow;
                 if(contentWidow.SaveDtlData!= undefined && typeof(contentWidow.SaveDtlData) == "function"){
                     contentWidow.IsChange = true;
-                    IsSaveTrue = contentWidow.SaveDtlData("btnsave");
-                   
+                    var IsSave = contentWidow.SaveDtlData("btnsave");
+                    if(IsSave == false)
+                      return false;
                  }
                 if (lastChar == "*")
                 	$(selectSpan).text(tabText.substring(0, tabText.length - 1));
@@ -360,7 +360,7 @@ function OnTabChange(scope) {
            
         });
          $('#tabs').tabs('select', index);
-        return IsSaveTrue;
+        return true;
     }
     
     if(scope == "saveOther"){
@@ -528,3 +528,24 @@ var urlExtFrm = function () {
 
     return extUrl;
 }
+
+//公共方法
+//function AjaxService(param, callback, scope, levPath) {
+//    $.ajax({
+//        type: "GET", //使用GET或POST方法访问后台
+//        dataType: "text", //返回json格式的数据
+//        contentType: "application/json; charset=utf-8",
+//        url: MyFlow, //要访问的后台地址
+//        data: param, //要发送的数据
+//        async: true,
+//        cache: false,
+//        complete: function () { }, //AJAX请求完成时隐藏loading提示
+//        error: function (XMLHttpRequest, errorThrown) {
+//            callback(XMLHttpRequest);
+//        },
+//        success: function (msg) {//msg为返回的数据，在这里做数据绑定
+//            var data = msg;
+//            callback(data, scope);
+//        }
+//    });
+//}

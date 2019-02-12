@@ -947,11 +947,11 @@ function onKeyDown(ev) {
             }
             break;
 
-        //        case KEY.Y:    
-        //            if(CNTRL_PRESSED){    
-        //                action('redo');    
-        //            }    
-        //            break;    
+        //        case KEY.Y:     
+        //            if(CNTRL_PRESSED){     
+        //                action('redo');     
+        //            }     
+        //            break;     
 
         case KEY.G:
             if (CNTRL_PRESSED) {
@@ -2872,7 +2872,7 @@ function generateMoveMatrix(fig, x, y) {
         [0, 0, 1]
         ];
 
-        
+
         snapMonitor[0] += dx;
         snapMonitor[1] += dy;
         var jump = GRIDWIDTH / 2; //the figure will jump half of grid cell width
@@ -3205,23 +3205,30 @@ function Save(showInfo) {
     //save the URLs of figures as a CSV 
     var lMap = linkMap();
 
-    $.post( Handler, {
-        action: 'SaveForm',
-        diagram: serializedDiagram,
-        png: dataURL,
-        linkMap: lMap,
-        svg: "",
-        FK_MapData: CCForm_FK_MapData
-    }, function (data) {
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCFormDesigner");
+    handler.AddPara("diagram", serializedDiagram);
+    handler.AddPara("png", dataURL);
+    handler.AddPara("linkMap", lMap);
+    handler.AddPara("svg", "");
+    handler.AddPara("FK_MapData", CCForm_FK_MapData);
+    var data = handler.DoMethodReturnString("SaveForm");
+    //    $.post( Handler, {
+    //        action: 'SaveForm',
+    //        diagram: serializedDiagram,
+    //        png: dataURL,
+    //        linkMap: lMap,
+    //        svg: "",
+    //        FK_MapData: CCForm_FK_MapData
+    //    }, function (data) {
 
-        if (data.indexOf('err@') != -1) {
-            alert(data);
-            return;
-        }
+    if (data.indexOf('err@') != -1) {
+        alert(data);
+        return;
+    }
 
-        Designer_ShowMsg(data);
+    Designer_ShowMsg(data);
 
-    });
+    //    });
 }
 
 /** Print current diagram
@@ -3333,48 +3340,48 @@ function LoadTempDiagram(frmID) {
     /*
     $.post(Handler, { action: 'FormDesigner_Loadform', FK_MapData: frmID },
 
-        function (data) {
+    function (data) {
 
-            if (data.indexOf('err@') != -1) {
-                alert(data);
-                return;
-            }
+    if (data.indexOf('err@') != -1) {
+    alert(data);
+    return;
+    }
 
-            try {
+    try {
 
-                // 装载表单入口.
-                if (data == "" || data == "" || data == null) {
+    // 装载表单入口.
+    if (data == "" || data == "" || data == null) {
 
                     
-                    return;
-                }
+    return;
+    }
 
-                action(data);
+    action(data);
 
-                var obj = eval('(' + data + ')');
+    var obj = eval('(' + data + ')');
 
-                //alert(obj);
-                //console.log(obj);
+    //alert(obj);
+    //console.log(obj);
 
-                if (!('v' in obj) || obj.v != DIAGRAMO.fileVersion) {
-                    Importer.importDiagram(obj); //import 1st version of Diagramo files
-                }
+    if (!('v' in obj) || obj.v != DIAGRAMO.fileVersion) {
+    Importer.importDiagram(obj); //import 1st version of Diagramo files
+    }
 
-                STACK = Stack.load(obj['s']);
-                canvasProps = CanvasProps.load(obj['c']);
-                canvasProps.sync();
-                setUpEditPanel(canvasProps);
+    STACK = Stack.load(obj['s']);
+    canvasProps = CanvasProps.load(obj['c']);
+    canvasProps.sync();
+    setUpEditPanel(canvasProps);
 
-                CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
-                CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
+    CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
+    CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
 
-                draw();
+    draw();
 
-                //alert("loaded");
-            } catch (error) {
-                alert("main.js:load() 装载表单异常 Exception: " + error);
-            }
-        }
+    //alert("loaded");
+    } catch (error) {
+    alert("main.js:load() 装载表单异常 Exception: " + error);
+    }
+    }
     );
     */
 }
@@ -3478,7 +3485,7 @@ function Init_Panel(diagramId) {
     canvasProps.setWidth(canvasProps.getWidth());
     //  canvasProps.setHeight(canvasProps.getHeight());
 
-   // alert( canvasProps.getHeight() );
+    // alert( canvasProps.getHeight() );
 
     canvasProps.setHeight(2000);
 
@@ -3519,11 +3526,11 @@ function action(action) {
             redraw = true;
             break;
 
-        //        case 'redo':    
-        //            Log.info("main.js->action()->Redo. Nr of actions in the STACK: " + History.COMMANDS.length);    
-        //            History.redo();    
-        //            redraw = true;    
-        //            break;    
+        //        case 'redo':     
+        //            Log.info("main.js->action()->Redo. Nr of actions in the STACK: " + History.COMMANDS.length);     
+        //            History.redo();     
+        //            redraw = true;     
+        //            break;     
 
         case 'group':
             /*After we pressed Ctrl-G any temporary group will became permanent*/
@@ -3927,7 +3934,7 @@ function action(action) {
 
 /**Stores last mouse position. Null initially.*/
 var lastMousePosition = null;
- 
+
 function documentOnMouseDown(evt) {
     //Log.info("documentOnMouseDown");
     //evt.preventDefault();

@@ -95,31 +95,29 @@
         }
 
         // 撤销。
-        function UnSend(fk_flow, workid, fid) {
+        function UnSend(fk_flow, workid, fid, unSendToNode) {
 
             if (window.confirm('您确定要撤销本次发送吗？') == false)
                 return;
 
-            //执行撤销.
-            $.ajax({
-                type: 'post',
-                async: true,
-                url: Handler + "?DoType=Runing_UnSend&FK_Flow=" + fk_flow + "&WorkID=" + workid + "&FID=" + fid + "&m=" + Math.random(),
-                dataType: 'html',
-                success: function (data) {
-                    if (data.indexOf('err@') == 0) {
-                        alert(data);
-                        return;
-                    }
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+            handler.AddPara("FK_Flow", fk_flow);
+            handler.AddPara("WorkID", workid);
+            handler.AddPara("FID", fid);
+            handler.AddPara("UnSendToNode", unSendToNode);
+            var data = handler.DoMethodReturnString("Runing_UnSend");
 
-                    $("#Msg").html(data + " <br> @点击这里<a href='javascript:window.location.href = window.location.href;' >刷新</a>");
-                    alert(data);
-                    var url = 'MyFlow.htm?FK_Flow=' + fk_flow + '&WorkID=' + workid;
-                    window.open(url);
-                    window.location.href = window.location.href;
-                    return;
-                }
-            });
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+                return;
+            }
+
+            $("#Msg").html(data + " <br> @点击这里<a href='javascript:window.location.href = window.location.href;' >刷新</a>");
+            alert(data);
+            var url = 'MyFlow.htm?FK_Flow=' + fk_flow + '&WorkID=' + workid+'&FID='+fid;
+            window.open(url);
+            window.location.href = window.location.href;
+            return;
         }
 
         //催办.
@@ -129,22 +127,20 @@
             if (msg == null)
                 return;
 
-            //执行催办.
-            $.ajax({
-                type: 'post',
-                async: true,
-                url: Handler + "?DoType=Runing_Press&Msg=" + msg + "&FK_Flow=" + fk_flow + "&WorkID=" + workid + "&FID=" + fid + "&m=" + Math.random(),
-                dataType: 'html',
-                success: function (data) {
-                    if (data.indexOf('err@') == 0) {
-                        alert(data);
-                        return;
-                    }
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+            handler.AddPara("FK_Flow", fk_flow);
+            handler.AddPara("WorkID", workid);
+            handler.AddPara("FID", fid);
+            handler.AddPara("Msg", msg);
+            var data = handler.DoMethodReturnString("Runing_Press");
 
-                    alert(data);
-                    return;
-                }
-            });
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+                return;
+            }
+
+            alert(data);
+            return;
         }
 
         function WinOpenIt(url) {
@@ -237,6 +233,7 @@
             var num = 0;
             var is1 = false;
             var listbox = '';
+            var RunModel = { "Ordinary": 0, "HL": 1, "FL": 2, "FHL": 3, "SubThread": 4 };
             //循环数组.
             for (var idx = 0; idx < strs.length; idx++) {
 
@@ -271,19 +268,35 @@
                     var fid = work.FID;
                     var nodeID = work.FK_Node;
 
-                    //获取人员所处的流程节点
-                    var currNode = work.CurrNode;
-
-                    var node = new Entity("BP.WF.Node", currNode);
+                    //但前节点所处的位置
+                    var nowNode = new Entity("BP.WF.Node", nodeID);
+                    var currNodeId = work.CurrNode;
                     //如果是树形表单，则显示当前人所处节点的数据
-                    if (node.FormType == 5)
-                        nodeID = currNode; 
-                    ////获取节点子线程的类型
-                    //var subThreadType = node.SubThreadType;
-                    //if (subThreadType == 1)
-                    //    nodeID = currNode; 
-                  
+                    if (nowNode.FormType == 5) {
+                        //获取人员所处的流程节点
+                       
+                        var currNode = new Entity("BP.WF.Node", currNodeId);
+                        if (currNode.HisToNDs.indexOf(nodeID) == -1) {
+                            if ((currNode.RunModel == RunModel.HL || currNode.RunModel == RunModel.FHL || currNode.RunModel == RunModel.FL) && (fid != 0)) {
+                                workID = fid;
+                                fid = 0;
+                                nodeID = currNodeId;
+                            }
+                        } else {
+                            //判断当前节点的运行模式
+                            if ((currNode.RunModel == RunModel.HL || currNode.RunModel == RunModel.FHL || currNode.RunModel == RunModel.FL) && nowNode.RunModel == RunModel.SubThread) {
+                                workID = fid;
+                                fid = 0;
+                                nodeID = currNodeId;
+                            } else if (currNode.RunModel == RunModel.SubThread) {
+                                nodeID = currNodeId;
+                            }
+                        }
 
+
+                    }
+                   
+                   
 
                     listbox += "<td><a href=\"javascript:OpenFrm('" + workID + "','" + nodeID + "','" + work.FK_Flow + "','" + fid + "')\" >" + work.Title + "</a></td>";
                     //  newRow += "<td>" + work.FlowName + "</td>";
@@ -301,7 +314,7 @@
                     listbox += "<td>" + todoEmps + "</td>";
                     listbox += "<td>";
 
-                    listbox += "[<a href=\"javascript:WinOpenIt('WFRpt.htm?FK_Flow=" + work.FK_Flow + "&FID=0&WorkID=" + work.WorkID + "&FK_Node=" + nodeID + "&FID=" + work.FID + "&IsRead=0&T=" + timeKey + "');\" >轨迹</a>][<a href=\"javascript:UnSend('" + work.FK_Flow + "','" + work.WorkID + "','" + work.FID + "')\">撤销</a>]";
+                    listbox += "[<a href=\"javascript:WinOpenIt('WFRpt.htm?FK_Flow=" + work.FK_Flow + "&FID=0&WorkID=" + work.WorkID + "&FK_Node=" + nodeID + "&FID=" + work.FID + "&IsRead=0&T=" + timeKey + "');\" >轨迹</a>][<a href=\"javascript:UnSend('" + work.FK_Flow + "','" + work.WorkID + "','" + work.FID + "','"+currNodeId+"')\">撤销</a>]";
 
                     // newRow += "<a href=\"javascript:Press('" + work.FK_Flow + "','" + work.WorkID + "','" + work.FID + "')\"><img src='./Img/Action/Press.png' border=0 />催办</a>";
                     listbox += "</td>";

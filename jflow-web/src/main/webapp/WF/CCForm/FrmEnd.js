@@ -17,7 +17,7 @@
     for (var i = 0; i < mapAttrs.length; i++) {
         var mapAttr = mapAttrs[i];
         //设置文本框只读.
-        if (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0) {
+        if (mapAttr.UIVisible != 0 &&(mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0)) {
             var tb = $('#TB_' + mapAttr.KeyOfEn);
             $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
             $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
@@ -76,16 +76,14 @@
         //枚举下拉框.
         if (mapAttr.UIContralType == 1) {
 
-        	 // 判断下拉框是否有对应option, 若没有则追加
+            // 判断下拉框是否有对应option, 若没有则追加
             if ($("option[value='" + val + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
                 var mainTable = frmData.MainTable[0];
                 var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
                 if (selectText == null || selectText == undefined || selectText == "")
                     selectText = mainTable[mapAttr.KeyOfEn + "T"];
-                
                 $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + val + "'>" + selectText + "</option>");
             }
-            
             $('#DDL_' + mapAttr.KeyOfEn).val(val);
 
         }
@@ -345,10 +343,7 @@ function AfterBindEn_DealMapExt(frmData) {
             case "BindFunction": //控件绑定函数
 
                 if ($('#TB_' + mapExt.AttrOfOper).length == 1) {
-                    $('#TB_' + mapExt.AttrOfOper).bind(mapExt.Tag,function(){
-                    	 DBAccess.RunFunctionReturnStr(mapExt.Doc);
-                    });
-                    $('#TB_' + mapExt.AttrOfOper).trigger(mapExt.Tag);
+                    $('#TB_' + mapExt.AttrOfOper).bind(DynamicBind(mapExt, "TB_"));
                     break;
                 }
                 if ($('#DDL_' + mapExt.AttrOfOper).length == 1) {
@@ -459,10 +454,7 @@ function AfterBindEn_DealMapExt(frmData) {
                         "AttrOfOper": mapExt.AttrOfOper,
                         "Doc": mapExt.Doc,
                         "DtlColumn": docs[1],
-                        "exp": docs[2],
-                        "Tag":mapExt.Tag,
-                        "Tag1":mapExt.Tag1,
-                        "Tag2":mapExt.Tag2
+                        "exp": docs[2]
                     };
                     if (!$.isArray(detailExt[ext.DtlNo])) {
                         detailExt[ext.DtlNo] = [];
@@ -476,9 +468,6 @@ function AfterBindEn_DealMapExt(frmData) {
                         }
                     });
                     $(":input[name=TB_" + ext.AttrOfOper + "]").attr("disabled", true);
-                    
-                    
-                 
                 }
                 break;
             case "DDLFullCtrl": // 自动填充其他的控件..
@@ -568,11 +557,10 @@ function clearContent(ctrl) {
     $("#" + ctrl).val("");
 }
 function DynamicBind(mapExt, ctrlType) {
-	
+
     $('#' + ctrlType + mapExt.AttrOfOper).on(mapExt.Tag, function () {
         DBAccess.RunFunctionReturnStr(mapExt.Doc);
     });
-   
 }
 
 /**
@@ -590,19 +578,16 @@ function calculator(o) {
         if (c == "(") {
             index++;
         } else if (c == ")") {
-        	if(o.Doc.substring(index + 1, i).indexOf("@")!=-1)
-             targets.push(o.Doc.substring(index + 1, i));
+            targets.push(o.Doc.substring(index + 1, i));
             i++;
             index = i;
         } else if (/[\+\-|*\/]/.test(c)) {
-        	if(o.Doc.substring(index + 1, i).indexOf("@")!=-1)
-             targets.push(o.Doc.substring(index + 1, i));
+            targets.push(o.Doc.substring(index + 1, i));
             index = i;
         }
     }
     if (index + 1 < o.Doc.length) {
-    	if(o.Doc.substring(index + 1, i).indexOf("@")!=-1)
-         targets.push(o.Doc.substring(index + 1, o.Doc.length));
+        targets.push(o.Doc.substring(index + 1, o.Doc.length));
     }
     //
     var expression = {

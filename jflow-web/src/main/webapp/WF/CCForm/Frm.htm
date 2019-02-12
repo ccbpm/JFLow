@@ -25,6 +25,9 @@
             url = url.replace('&DoType=MyFlow_Init', '');
             url = url.replace('&DoType=View', '');
 
+//            var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+//            handler.AddUrlData();
+//            var data = handler.DoMethodReturnString("Frm_Init"); 
             $.ajax({
                 type: 'post',
                 async: true,

@@ -44,6 +44,9 @@ $(function () {
             window.parent.close();
     });
 
+//    setAttachDisabled();
+//    setToobarDisiable();
+//    setFormEleDisabled();
 
     $('#btnMsgModalOK1').bind('click', function () {
         window.close();
@@ -160,24 +163,11 @@ function CloseOKBtn() {
 }
 
 //双击签名
-function figure_Template_Siganture(SigantureID, val, type) {
-
-    //先判断，是否存在签名图片
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF");
-    handler.AddPara('no', val);
-    data = handler.DoMethodReturnString("HasSealPic");
-
-    //如果不存在，就显示当前人的姓名
-    if (data.length > 0 && type == 0) {
-        $("#TB_" + SigantureID).before(data);
-        var obj = document.getElementById("Img" + SigantureID);
-        var impParent = obj.parentNode; //获取img的父对象
-        impParent.removeChild(obj);
-    }
-    else {
-        var src = '../DataUser/Siganture/' + val + '.JPG';    //新图片地址
-        document.getElementById("Img" + SigantureID).src = src;
-    }
+function figure_Template_Siganture(SigantureID, val) {
+    if (val == "")
+        val = new WebUser().No;
+    var src = '../DataUser/Siganture/' + val + '.jpg'   //新图片地址
+    document.getElementById("Img" + SigantureID).src = src;
     isSigantureChecked = true;
 
     var sealData = new Entities("BP.Tools.WFSealDatas");
@@ -233,6 +223,9 @@ function OpenOfiice(fk_ath, pkVal, delPKVal, FK_MapData, NoOfObj, FK_Node) {
     var t = date.getFullYear() + "" + date.getMonth() + "" + date.getDay() + "" + date.getHours() + "" + date.getMinutes() + "" + date.getSeconds();
 
     var url = 'WebOffice/AttachOffice.htm?DoType=EditOffice&DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + "&FK_MapData=" + FK_MapData + "&NoOfObj=" + NoOfObj + "&FK_Node=" + FK_Node + "&T=" + t;
+    //var url = 'WebOffice.aspx?DoType=EditOffice&DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal;
+    // var str = window.showModalDialog(url, '', 'dialogHeight: 1250px; dialogWidth:900px; dialogTop: 100px; dialogLeft: 100px; center: no; help: no;resizable:yes');
+    //var str = window.open(url, '', 'dialogHeight: 1200px; dialogWidth:1110px; dialogTop: 100px; dialogLeft: 100px; center: no; help: no;resizable:yes');
     window.open(url, '_blank', 'height=600,width=850,top=50,left=50,toolbar=no,menubar=no,scrollbars=yes, resizable=yes,location=no, status=no');
 }
 
@@ -927,11 +920,7 @@ function execSend(toNodeID) {
     if (flowData) {
         var node = flowData.WF_Node[0];
         if (node && node.FormType == 5) {
-            var sendFlag = OnTabChange("btnsave");
-            if (sendFlag == false) {
-                setToobarEnable();
-                return;
-            }
+            OnTabChange("btnsave");
         }
     }
 

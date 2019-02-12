@@ -56,11 +56,11 @@
 			<div class="ibox-content">
                 <div class="row search-padding">
 			        <div class="col-md-4 col-sm-4 pull-left">
-				        <div class="form-inline">
+				        <div class="form-inline" style="width:600px;">
 					        <div class="form-group">
 						        <input type='text' placeholder="请输入关键词..." id='TB_Key' class="form-control" style="width:300px;" />
 					        </div>
-					        <button class="btn btn-success" type="button" onclick="javascript:SearchKey();"><i class="fa fa-search"></i> 查询</button>
+					        <button class="btn btn-success" type="button" onclick="javascript:SearchKey();"><i class="fa fa-search"></i>查询</button>
 				        </div>
 			        </div>
 		        </div>	
@@ -135,56 +135,56 @@
 			}
 
 			// 撤销。
-			function UnSend(fk_flow, workid, fid) {
+			function UnSend(fk_flow, workid, fid, unSendToNode) {
 
 				if(window.confirm('您确定要撤销本次发送吗？') == false)
+				    return;
+
+				var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+				handler.AddPara("FK_Flow", fk_flow);
+				handler.AddPara("WorkID", workid);
+				handler.AddPara("FID", fid);
+				handler.AddPara("UnSendToNode", unSendToNode);
+				var data = handler.DoMethodReturnString("Runing_UnSend");
+                 
+				if(data.indexOf('err@') == 0) {
+					alert(data);
 					return;
+				}
 
-				//执行撤销.
-				$.ajax({
-					type: 'post',
-					async: true,
-					url: Handler + "?DoType=Runing_UnSend&FK_Flow=" + fk_flow + "&WorkID=" + workid + "&FID=" + fid + "&m=" + Math.random(),
-					dataType: 'html',
-					success: function(data) {
-						if(data.indexOf('err@') == 0) {
-							alert(data);
-							return;
-						}
-
-						$("#Msg").html(data + " <br> @点击这里<a href='javascript:window.location.href = window.location.href;' >刷新</a>");
-						alert(data);
-						var url = 'MyFlow.htm?FK_Flow=' + fk_flow + '&WorkID=' + workid;
-						window.open(url);
-						window.location.href = window.location.href;
-						return;
-					}
-				});
+			    $("#Msg").html(data + " <br> @点击这里<a href='javascript:window.location.href = window.location.href;' >刷新</a>");
+			    if (data.indexOf("KillSubThared") == 0){
+			        alert(data.replace("KillSubThared@",""));
+                    return;
+                 }
+				alert(data);
+				var url = 'MyFlow.htm?FK_Flow=' + fk_flow + '&WorkID=' + workid+'&FID='+fid;
+				window.open(url);
+				window.location.href = window.location.href;
+				return;
 			}
 
 			//催办.
 			function Press(fk_flow, workid, fid) {
 
-				var msg = window.prompt('请输入催办信息', '该工作因为xxx原因，需要您优先处理.');
-				if(msg == null)
-					return;
+			    var msg = window.prompt('请输入催办信息', '该工作因为xxx原因，需要您优先处理.');
+			    if (msg == null)
+			        return;
 
-				//执行催办.
-				$.ajax({
-					type: 'post',
-					async: true,
-					url: Handler + "?DoType=Runing_Press&Msg=" + msg + "&FK_Flow=" + fk_flow + "&WorkID=" + workid + "&FID=" + fid + "&m=" + Math.random(),
-					dataType: 'html',
-					success: function(data) {
-						if(data.indexOf('err@') == 0) {
-							alert(data);
-							return;
-						}
+			    var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+			    handler.AddPara("FK_Flow", fk_flow);
+			    handler.AddPara("WorkID", workid);
+			    handler.AddPara("FID", fid);
+			    handler.AddPara("Msg", msg);
+			    var data = handler.DoMethodReturnString("Runing_Press");
 
-						alert(data);
-						return;
-					}
-				});
+			    if (data.indexOf('err@') == 0) {
+			        alert(data);
+			        return;
+			    }
+
+			    alert(data);
+			    return;
 			}
 
 			function WinOpenIt(url) {
@@ -360,6 +360,7 @@
             //随机串.
             var timeKey = Math.random();
             $('#Table1').html("");
+            var RunModel={"Ordinary":0,"HL":1,"FL":2,"FHL":3,"SubThread":4};
             for (var idx = 0; idx < groupNames.length; idx++) {
                 var showRealCount = 0;
                 var listbox = '';
@@ -387,20 +388,36 @@
 			        var workID = work.WorkID;
 			        var fid = work.FID;
 			        var nodeID = work.FK_Node;
-			      
-			        //获取人员所处的流程节点
-			        var currNode = work.CurrNode;
-			        var node = new Entity("BP.WF.Node", currNode);
+			        var currNodeId = work.CurrNode;
+
+			        //但前节点所处的位置
+			        var nowNode = new Entity("BP.WF.Node", nodeID);
 
 			        //如果是树形表单，则显示当前人所处节点的数据
-			        if (node.FormType == 5)
-			            nodeID = currNode; 
-			            //获取节点子线程的类型
-			           // var subThreadType = node.SubThreadType;
-			            //if (subThreadType == 1)
-			             //   nodeID = currNode;
-			        //}
+			        if (nowNode.FormType == 5) {
+			            //获取人员所处的流程节点
+			           
+			            var currNode = new Entity("BP.WF.Node", currNodeId);
+			            if (currNode.HisToNDs.indexOf(nodeID) == -1) {
+			                if ((currNode.RunModel == RunModel.HL || currNode.RunModel == RunModel.FHL || currNode.RunModel == RunModel.FL) && (fid != 0)) {
+			                    workID = fid;
+			                    fid = 0;
+			                    nodeID = currNodeId;
+			                }
+			            } else {
+			                //判断当前节点的运行模式
+			                if ((currNode.RunModel == RunModel.HL || currNode.RunModel == RunModel.FHL || currNode.RunModel == RunModel.FL) && nowNode.RunModel == RunModel.SubThread) {
+			                    workID = fid;
+			                    fid = 0;
+			                    nodeID = currNodeId;
+			                } else if (currNode.RunModel == RunModel.SubThread) {
+			                    nodeID = currNodeId;
+			                }
+			            }
+			                
 
+			        }
+                   
 			        listbox += "<td>" + num + "</td>";
 			        listbox += "<td><a href=\"javascript:OpenFrm('" + workID + "','" + nodeID + "','" + work.FK_Flow + "','" + fid + "')\" >" + work.Title + "</a></td>";
 			        listbox += "<td>" + work.StarterName + "</td>";
@@ -415,7 +432,7 @@
 
 			        listbox += "<td class='tdHidden'>" + todoEmps + "</td>";
 			        listbox += "<td>";
-			        listbox += "<a href=\"javascript:WinOpenIt('WFRpt.htm?FK_Flow=" + work.FK_Flow + "&WorkID=" + work.WorkID + "&FK_Node=" + nodeID +"&FID="+work.FID+ "&IsRead=0&T=" + timeKey + "');\" >轨迹</a>&nbsp &nbsp &nbsp<a href=\"javascript:UnSend('" + work.FK_Flow + "','" + work.WorkID + "','" + work.FID + "')\">撤销</a>";
+			        listbox += "<a href=\"javascript:WinOpenIt('WFRpt.htm?FK_Flow=" + work.FK_Flow + "&WorkID=" + work.WorkID + "&FK_Node=" + nodeID + "&FID=" + work.FID + "&IsRead=0&T=" + timeKey + "');\" >轨迹</a>&nbsp &nbsp &nbsp<a href=\"javascript:UnSend('" + work.FK_Flow + "','" + work.WorkID + "','" + work.FID + "','" + currNodeId + "')\">撤销</a>";
 			        listbox += "</td>";
 			        listbox += "</tr>";
 			    }

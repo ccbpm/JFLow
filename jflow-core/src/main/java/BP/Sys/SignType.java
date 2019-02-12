@@ -25,7 +25,11 @@ public enum SignType
 	 广东CA
 	 
 	*/
-	GDCA;
+	GDCA,
+    /// <summary>
+    /// 图片盖章
+    /// </summary>
+    GZCA;
 
 	public int getValue()
 	{

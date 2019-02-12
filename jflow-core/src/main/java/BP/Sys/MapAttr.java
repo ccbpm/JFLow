@@ -152,14 +152,11 @@ public class MapAttr extends EntityMyPK {
 		attr.setDesc(this.getName());
 
 		String s = this.getDefValReal();
-		if (StringHelper.isNullOrEmpty(s)) {
+		if (StringHelper.isNullOrEmpty(s))
 			attr.setDefaultValOfReal(null);
-		} else {
-			// attr.DefaultVal
+		else
 			attr.setDefaultValOfReal(this.getDefValReal());
-			// this.DefValReal;
-		}
-
+		
 		attr.setField(this.getField());
 		attr.setMaxLength(this.getMaxLen());
 		attr.setMinLength(this.getMinLen());
@@ -221,11 +218,7 @@ public class MapAttr extends EntityMyPK {
 			break;
 		}
 
-		// attr.AutoFullWay = this.HisAutoFull;
-		// attr.AutoFullDoc = this.AutoFullDoc;
-		// attr.MyFieldType = FieldType
-		// attr.UIDDLShowType= BP.Web.Controls.DDLShowType.Self
-
+	
 		return attr;
 	}
 

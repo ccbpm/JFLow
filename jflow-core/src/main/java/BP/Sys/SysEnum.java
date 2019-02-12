@@ -65,20 +65,7 @@ public class SysEnum extends EntityMyPK
 	{
 		this.SetValByKey(SysEnumAttr.EnumKey, value);
 	}
-	///// <summary>
-	///// 风格
-	///// </summary>
-	//public  string  Style
-	//{
-	//    get
-	//    {
-	//        return this.GetValStringByKey(SysEnumAttr.Style);
-	//    }
-	//    set
-	//    {
-	//        this.SetValByKey(SysEnumAttr.Style,value);
-	//    }
-	//}
+
 	/** 
 	 SysEnum
 	*/

@@ -2226,7 +2226,6 @@ public abstract class Entity implements Serializable {
 
 		Map map = this.getEnMap();
 
-		// string msg = "";
 		if (map.getEnType() == EnType.View || map.getEnType() == EnType.XML || map.getEnType() == EnType.ThirdPartApp
 				|| map.getEnType() == EnType.Ext) {
 			return;
@@ -3199,6 +3198,7 @@ public abstract class Entity implements Serializable {
 		for (Attr attr : attrs) {
 			if(attr.getIsRefAttr())
 				this.SetValRefTextByKey(attr.getKey(), "");
+			
 			FrmField frmField = new FrmField();
 			int i = 0;
 			if(fk_node!=0 && fk_node!=999999)
@@ -3320,7 +3320,8 @@ public abstract class Entity implements Serializable {
                    //执行SQL获取默认值
                    String sql = gloVar.getVal();
                    sql = BP.WF.Glo.DealExp(sql, null, null);
-                   this.SetValByKey(attr.getKey(), DBAccess.RunSQLReturnString(sql));
+                   if (DataType.IsNullOrEmpty(myval) || myval == v)
+                	   this.SetValByKey(attr.getKey(), DBAccess.RunSQLReturnString(sql));
                }
                continue;
 		   }

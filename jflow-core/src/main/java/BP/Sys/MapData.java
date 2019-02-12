@@ -1124,8 +1124,7 @@ public class MapData extends EntityNoName
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
-		Attrs attrs = new Attrs();
-		for (MapAttr mapAttr : MapAttrs.convertMapAttrs(mapAttrs))
+		for (MapAttr mapAttr : mapAttrs.ToJavaList())
 		{
 			map.AddAttr(mapAttr.getHisAttr());
 		}

@@ -3355,20 +3355,7 @@ public class Map
 	{
 		this.PKs = "MyPK";
 		this.AddTBStringPK("MyPK", null, "MyPK", true, true, 1, 100, 10);
-		
-		// Attr attr = new Attr();
-		// attr.Key = "MyPK";
-		// attr.Field = "MyPK";
-		// attr.DefaultVal = null;
-		// attr.MyDataType = DataType.AppString;
-		// attr.MyFieldType = FieldType.PK;
-		// attr.Desc = "MyPK";
-		// attr.UITBShowType = TBType.TB;
-		// attr.UIVisible = false;
-		// attr.UIIsReadonly = true;
-		// attr.MinLength = 1;
-		// attr.MaxLength = 100;
-		// this.Attrs.Add(attr);
+	
 	}
 	
 	public final void AddMyPKNoVisable()

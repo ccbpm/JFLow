@@ -170,7 +170,10 @@ function GenerFrm() {
     if (href.indexOf('&IsReadonly=1') > 1 || href.indexOf('&IsEdit=0') > 1) {
         $("#Btn").hide();
     }
-
+//    var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+//    handler.AddUrlData();
+//    handler.AddJson(pageData);
+//    var data = handler.DoMethodReturnString("FrmGener_Init");
     $.ajax({
         type: 'post',
         async: true,
@@ -339,10 +342,9 @@ function GenerFrm() {
                         var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
                         if (selectText == null || selectText == undefined || selectText == "")
                             selectText = mainTable[mapAttr.KeyOfEn + "T"];
-                        
                         $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
                     }
-                    
+
                     $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
                 }
 
@@ -378,25 +380,32 @@ function GenerFrm() {
             //            });
 
             //给富文本 创建编辑器
-            var editor = document.activeEditor = UM.getEditor('editor', {
-                'autoHeightEnabled': false,
-                'fontsize': [10, 12, 14, 16, 18, 20, 24, 36]
-            });
             if (document.BindEditorMapAttr) {
-                editor.MaxLen = document.BindEditorMapAttr.MaxLen;
-                editor.MinLen = document.BindEditorMapAttr.MinLen;
-                editor.BindField = document.BindEditorMapAttr.KeyOfEn;
-                editor.BindFieldName = document.BindEditorMapAttr.Name;
-            }
-            //调整样式,让必选的红色 * 随后垂直居中
-            editor.$container.css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
+                var editor = document.activeEditor = UM.getEditor('editor', {
+                    'autoHeightEnabled': false, //是否自动长高
+                    'fontsize': [10, 12, 14, 16, 18, 20, 24, 36],
+                    'initialFrameWidth': document.BindEditorMapAttr.UIWidth
 
-            $(".pimg").on("dblclick",function () {
-                var _this = $(this); //将当前的pimg元素作为_this传入函数  
-                imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
-            });  
-            if (typeof setContentHeight == "function") {
-                setContentHeight();
+                });
+                var height = document.BindEditorMapAttr.UIHeight;
+                $(".edui-container").css("height", height);
+
+                if (document.BindEditorMapAttr) {
+                    editor.MaxLen = document.BindEditorMapAttr.MaxLen;
+                    editor.MinLen = document.BindEditorMapAttr.MinLen;
+                    editor.BindField = document.BindEditorMapAttr.KeyOfEn;
+                    editor.BindFieldName = document.BindEditorMapAttr.Name;
+                }
+                //调整样式,让必选的红色 * 随后垂直居中
+                editor.$container.css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
+
+                $(".pimg").on("dblclick", function () {
+                    var _this = $(this); //将当前的pimg元素作为_this传入函数  
+                    imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
+                });
+                if (typeof setContentHeight == "function") {
+                    setContentHeight();
+                }
             }
         }
     })
@@ -434,39 +443,34 @@ function Save(scope) {
 
     //必填项和正则表达式检查
     var formCheckResult = true;
-    if (!CheckBlanks()) {
-        formCheckResult = false;
+    if (CheckBlanks() == false) {
+        alert("检查必填项出现错误，边框变红颜色的是否填写完整？");
+        return false;
+      
     }
-    if (!CheckReg()) {
-        formCheckResult = false;
-    }
-    if (!formCheckResult) {
-        //alert("请检查表单必填项和正则表达式");
-        return;
+    if (CheckReg() == false) {
+        alert("发送错误:请检查字段边框变红颜色的是否填写完整？");
+        return false;
     }
 
     // setToobarDisiable();
 
-    $.ajax({
-        type: 'post',
-        async: false,
-        data: getFormData(true, true),
-        url: Handler + "?DoType=FrmGener_Save&OID=" + pageData.OID,
-        dataType: 'html',
-        success: function (data) {
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+    handler.AddPara("OID", pageData.OID);
+    handler.AddFormData();
+    var data = handler.DoMethodReturnString("FrmGener_Save");
 
-            if (data.indexOf('err@') == 0) {
-                $('#Message').html(data.substring(4, data.length));
-                $('.Message').show();
-                return false;
-            }
+    if (data.indexOf('err@') == 0) {
+        $('#Message').html(data.substring(4, data.length));
+        $('.Message').show();
+        return false;
+    }
 
-            if (scope != "btnsave")
-                window.location.href = window.location.href;
-            return true;
+    if (scope != "btnsave")
+        window.location.href = window.location.href;
+    return true;
 
-        }
-    });
+
 }
 
 
@@ -773,9 +777,9 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
             var ctrlID = ele.split('=')[0];
 
-            var item = $("#"+ctrlID).find("option:selected").text();
+            var item = $("#" + ctrlID).find("option:selected").text();
 
-            var mystr = "TB_"+ctrlID.substring(4) + 'T=' + item;
+            var mystr = "TB_" + ctrlID.substring(4) + 'T=' + item;
             formArrResult.push(mystr);
         }
 
@@ -783,7 +787,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
         formArrResult.push(ele);
     });
 
-  
+   
 
     //获取树形结构的表单值
     var combotrees = $(".easyui-combotree");
@@ -1088,36 +1092,40 @@ function CheckBlanks() {
         if ($(obj).parent().css('display') != 'none' && $(obj).parent().next().css('display')) {
             var keyofen = $(obj).data().keyofen
             var ele = $('[id$=_' + keyofen + ']');
-            if (ele.length == 1) {
-                switch (ele[0].tagName.toUpperCase()) {
+            if (ele.length == 0)
+                return;
+
+            $.each(ele, function (i, obj) {
+                var eleM = $(obj);
+                switch (eleM[0].tagName.toUpperCase()) {
                     case "INPUT":
-                        if (ele.attr('type') == "text") {
-                            if (ele.val() == "") {
+                        if (eleM.attr('type') == "text") {
+                            if (eleM.val() == "") {
                                 checkBlankResult = false;
-                                ele.addClass('errorInput');
+                                eleM.addClass('errorInput');
                             } else {
-                                ele.removeClass('errorInput');
+                                eleM.removeClass('errorInput');
                             }
                         }
                         break;
                     case "SELECT":
-                        if (ele.val() == "" || ele.children('option:checked').text() == "*请选择") {
+                        if (eleM.val() == "" || eleM.children('option:checked').text() == "*请选择") {
                             checkBlankResult = false;
-                            ele.addClass('errorInput');
+                            eleM.addClass('errorInput');
                         } else {
-                            ele.removeClass('errorInput');
+                            eleM.removeClass('errorInput');
                         }
                         break;
                     case "TEXTAREA":
-                        if (ele.val() == "") {
+                        if (eleM.val() == "") {
                             checkBlankResult = false;
-                            ele.addClass('errorInput');
+                            eleM.addClass('errorInput');
                         } else {
-                            ele.removeClass('errorInput');
+                            eleM.removeClass('errorInput');
                         }
                         break;
                 }
-            }
+            });
         }
     });
 
@@ -1185,7 +1193,7 @@ function dealWithUrl(src) {
         var params = getQueryStringFromUrl(src);
         if (params != null && params.length > 0) {
             $.each(params, function (i, param) {
-                if (param.indexOf('@') == 0) {//是需要替换的参数
+                if (param.indexOf('@') >= 0) {//是需要替换的参数
                     paramArr = param.split('=');
                     if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
                         if (paramArr[1].indexOf('@WebUser.') == 0) {
@@ -1272,9 +1280,9 @@ function To(url) {
 
 function SaveDtlData(scope) {
     if (IsChange == false)
-        return;
+        return true;
 
-    Save(scope);
+    return Save(scope);
 }
 
 function Change(id) {
@@ -1308,11 +1316,23 @@ function ResizeWindow() {
 
 
 //双击签名
-function figure_Template_Siganture(SigantureID, val) {
-    if (val == "")
-        val = new WebUser().No;
-    var src = '../../DataUser/Siganture/' + val + '.jpg'   //新图片地址
-    document.getElementById("Img" + SigantureID).src = src;
+function figure_Template_Siganture(SigantureID, val, type) {
+    //先判断，是否存在签名图片
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+    handler.AddPara('no', val);
+    data = handler.DoMethodReturnString("HasSealPic");
+
+    //如果不存在，就显示当前人的姓名
+    if (data.length > 0 && type == 0) {
+        $("#TB_" + SigantureID).before(data);
+        var obj = document.getElementById("Img" + SigantureID);
+        var impParent = obj.parentNode; //获取img的父对象
+        impParent.removeChild(obj);
+    }
+    else {
+        var src = '/DataUser/Siganture/' + val + '.jpg';    //新图片地址
+        document.getElementById("Img" + SigantureID).src = src;
+    }
     isSigantureChecked = true;
 
     var sealData = new Entities("BP.Tools.WFSealDatas");

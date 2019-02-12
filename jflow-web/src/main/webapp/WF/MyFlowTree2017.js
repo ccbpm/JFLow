@@ -174,7 +174,7 @@ function addTab(id, title, url,IsCloseEtcFrm) {
         $('#tabs').tabs('select', title); //选中并刷新
         var currTab = $('#tabs').tabs('getSelected');
     } else {
-    	 var content = createFrame(url,id);
+        var content = createFrame(url,id);
         $('#tabs').tabs('add', {
             title: title,
             id: id,
@@ -207,7 +207,7 @@ function tabCloseEven() {
             $('#tabs').tabs('update', {
                 tab: currTab,
                 options: {
-                    content: createFrame(url,"")
+                    content: createFrame(url)
                 }
             })
         }
@@ -335,6 +335,7 @@ function OnTabChange(scope) {
     }
     var lastChar = tabText.substring(tabText.length - 1, tabText.length);
     //参数是保存时，保存当前选择的tab标签
+    var IsSaveTrue = true;
     if (scope == "btnsave") {
     	 //保存tab标签中带有*的标签页
         var tabs = $('#tabs').tabs().tabs('tabs');
@@ -348,9 +349,8 @@ function OnTabChange(scope) {
                 var contentWidow = currScope.contentWindow;
                 if(contentWidow.SaveDtlData!= undefined && typeof(contentWidow.SaveDtlData) == "function"){
                     contentWidow.IsChange = true;
-                    var IsSave = contentWidow.SaveDtlData("btnsave");
-                    if(IsSave == false)
-                      return false;
+                    IsSaveTrue = contentWidow.SaveDtlData("btnsave");
+                   
                  }
                 if (lastChar == "*")
                 	$(selectSpan).text(tabText.substring(0, tabText.length - 1));
@@ -360,7 +360,7 @@ function OnTabChange(scope) {
            
         });
          $('#tabs').tabs('select', index);
-        return true;
+        return IsSaveTrue;
     }
     
     if(scope == "saveOther"){
@@ -431,7 +431,7 @@ function tabClose() {
 }
 
 function createFrame(url,id) {
-    var s = '<iframe scrolling="auto" frameborder="0" id="'+id+'"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+    var s = '<iframe scrolling="auto" frameborder="0"  id="'+id+'"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
     return s;
 }
 
@@ -528,24 +528,3 @@ var urlExtFrm = function () {
 
     return extUrl;
 }
-
-//公共方法
-//function AjaxService(param, callback, scope, levPath) {
-//    $.ajax({
-//        type: "GET", //使用GET或POST方法访问后台
-//        dataType: "text", //返回json格式的数据
-//        contentType: "application/json; charset=utf-8",
-//        url: MyFlow, //要访问的后台地址
-//        data: param, //要发送的数据
-//        async: true,
-//        cache: false,
-//        complete: function () { }, //AJAX请求完成时隐藏loading提示
-//        error: function (XMLHttpRequest, errorThrown) {
-//            callback(XMLHttpRequest);
-//        },
-//        success: function (msg) {//msg为返回的数据，在这里做数据绑定
-//            var data = msg;
-//            callback(data, scope);
-//        }
-//    });
-//}

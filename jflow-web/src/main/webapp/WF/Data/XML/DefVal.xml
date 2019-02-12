@@ -12,6 +12,8 @@
   <Item No="CH_9" Lang="CH" Name="当前年度" Val="@FK_ND"  />
   <Item No="CH_10" Lang="CH" Name="当前月份" Val="@FK_YF"  />
   <Item No="CH_11" Lang="CH" Name="当前工作可处理人员" Val="@CurrWorker"  />
+  <Item No="CH_12" Lang="CH" Name="当前工作可处理人员" Val="@WebUser.CompanyName"  />
+  
     
   <Item No="EN_1" Lang="EN" Name="Select the system default values agreed" Val=""  />
   <Item No="EN_2" Lang="EN" Name="Operator number" Val="@WebUser.No"  />

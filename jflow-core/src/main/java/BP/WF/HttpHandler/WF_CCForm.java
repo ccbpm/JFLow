@@ -1716,10 +1716,9 @@ public class WF_CCForm extends WebContralBase {
 
 						dr.setValue(MapAttrAttr.UIIsEnable, ff.getUIIsEnable());// 是否只读?
 						dr.setValue(MapAttrAttr.UIVisible, ff.getUIVisible());// 是否只读?
-						if (DataType.IsNullOrEmpty(ff.getDefVal()) == true)
-							continue;
 
 						dr.setValue(MapAttrAttr.DefVal, ff.getDefVal());// 是否只读?
+						dr.setValue(MapAttrAttr.UIIsInput,ff.getIsNotNull());
 
 						Attr attr = new Attr();
 						attr.setMyDataType( Integer.parseInt(  dr.getValue(MapAttrAttr.MyDataType).toString())  );

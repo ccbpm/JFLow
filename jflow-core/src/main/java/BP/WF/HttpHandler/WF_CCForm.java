@@ -1568,8 +1568,8 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		// #region 加入组件的状态信息, 在解析表单的时候使用.
-		BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999 &&(fn.getIsEnableFWC() == true || nd.getFrmWorkCheckSta()!=FrmWorkCheckSta.Disable)) {
+			BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 			nd = new Node(this.getFK_Node());
 			nd.WorkID = this.getWorkID(); // 为求当前表单ID获得参数，而赋值.
 			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false && nd.getHisFormType() != NodeFormType.RefOneFrmTree) {
@@ -1636,51 +1636,50 @@ public class WF_CCForm extends WebContralBase {
 				}
 			}
 			
+			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == true && nd.getHisFormType() != NodeFormType.RefOneFrmTree)
+	        {
+	            //   Work wk1 = nd.HisWork;
+	
+	        	if (md.getHisFrmType() == FrmType.FoolForm) 
+	            {
+	                //判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
+	                DataTable gf = ds.GetTableByName("Sys_GroupField");
+	                boolean isHave = false;
+	                for(DataRow dr : gf.Rows)
+	                {
+	                	String cType = (String) dr.get("CtrlType");
+	                    if (cType == null)
+	                        continue;
+	
+	                    if (cType.equals("FWC") == true)
+	                        isHave = true;
+	                }
+	
+	                if (isHave == false)
+	                {
+	                    DataRow dr = gf.NewRow();
+	                    
+	                    dr.put(GroupFieldAttr.OID, 100);
+						dr.put(GroupFieldAttr.EnName, nd.getNodeFrmID());
+						dr.put(GroupFieldAttr.CtrlType, "FWC");
+						dr.put(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
+						dr.put(GroupFieldAttr.Idx, 100);
+						dr.put(GroupFieldAttr.Lab, "审核信息");
+						gf.Rows.add(dr);
+	
+	                    ds.Tables.remove("Sys_GroupField");
+	                    ds.Tables.add(gf);
+	
+	                    //更新,为了让其表单上自动增加审核分组.
+	                    BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(nd.getNodeID());
+	                    FrmWorkCheck fwc = new FrmWorkCheck(nd.getNodeID());
+	                    refFnc.Update();
+	
+	                }
+	            }
+	        }
+			ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
 		}
-		if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == true && nd.getHisFormType() != NodeFormType.RefOneFrmTree)
-        {
-            //   Work wk1 = nd.HisWork;
-
-        	if (md.getHisFrmType() == FrmType.FoolForm) 
-            {
-                //判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
-                DataTable gf = ds.GetTableByName("Sys_GroupField");
-                boolean isHave = false;
-                for(DataRow dr : gf.Rows)
-                {
-                	String cType = (String) dr.get("CtrlType");
-                    if (cType == null)
-                        continue;
-
-                    if (cType.equals("FWC") == true)
-                        isHave = true;
-                }
-
-                if (isHave == false)
-                {
-                    DataRow dr = gf.NewRow();
-                    
-                    dr.put(GroupFieldAttr.OID, 100);
-					dr.put(GroupFieldAttr.EnName, nd.getNodeFrmID());
-					dr.put(GroupFieldAttr.CtrlType, "FWC");
-					dr.put(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
-					dr.put(GroupFieldAttr.Idx, 100);
-					dr.put(GroupFieldAttr.Lab, "审核信息");
-					gf.Rows.add(dr);
-
-                    ds.Tables.remove("Sys_GroupField");
-                    ds.Tables.add(gf);
-
-                    //更新,为了让其表单上自动增加审核分组.
-                    BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(nd.getNodeID());
-                    FrmWorkCheck fwc = new FrmWorkCheck(nd.getNodeID());
-                    refFnc.Update();
-
-                }
-            }
-        }
-		ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
-		
 		 if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
               ds.Tables.add(nd.ToDataTableField("WF_Node"));
 		 if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)

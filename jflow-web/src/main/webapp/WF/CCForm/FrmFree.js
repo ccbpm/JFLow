@@ -1,5 +1,5 @@
 ﻿
-
+var isSigantureChecked = false;
 function GenerFreeFrm(mapData, frmData) {
 
     //循环FrmRB
@@ -122,7 +122,7 @@ function GenerFreeFrm(mapData, frmData) {
         if (wf_FrmNodeComponent != null) {
 
             $('#CCForm').append(figure_Template_FigureFlowChart(wf_FrmNodeComponent, mapData));
-            $('#CCForm').append(figure_Template_FigureFrmCheck(wf_FrmNodeComponent, mapData));
+            $('#CCForm').append(figure_Template_FigureFrmCheck(wf_FrmNodeComponent, mapData,frmData));
             $('#CCForm').append(figure_Template_FigureSubFlowDtl(wf_FrmNodeComponent, mapData));
             $('#CCForm').append(figure_Template_FigureThreadDtl(wf_FrmNodeComponent, mapData));
         }
@@ -157,12 +157,24 @@ function figure_Template_FigureFlowChart(wf_node, mapData) {
 }
 
 //审核组件
-function figure_Template_FigureFrmCheck(wf_node, mapData) {
+function figure_Template_FigureFrmCheck(wf_node, mapData,frmData) {
 
-    //审核组键FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node
+   
 
     var sta = wf_node.FWCSta;
     if (sta == 0 || sta == undefined)
+        return $('');
+
+    var node = frmData.WF_Node;
+    if (node != undefined)
+        node = node[0];
+
+    var frmNode = frmData.WF_FrmNode;
+    if (frmNode != undefined)
+        frmNode = frmNode[0];
+    if(node ==null ||frmNode == null  )
+    	 return $('');
+    if (node.FormType == 5 && frmNode.IsEnableFWC != 1)
         return $('');
 
     var pos = PreaseFlowCtrls(mapData.FlowCtrls, "FrmCheck");
@@ -208,8 +220,7 @@ function figure_Template_FigureFrmCheck(wf_node, mapData) {
     paras += "&WorkID=" + pageData["OID"];
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
-    paras += "&IsReadonly=" + isReadonly;
-
+   
     //  paras += '&WorkID=' + pageData.WorkID;
     if (sta == 2)//只读
     {
@@ -442,12 +453,40 @@ function figure_Template_Dtl(frmDtl, ext) {
 function figure_Template_IFrame(fram) {
 
     var eleHtml = $("<DIV id='Fd" + fram.MyPK + "' style='position:absolute; left:" + fram.X + "px; top:" + fram.Y + "px; width:" + fram.W + "px; height:" + fram.H + "px;text-align: left;' >");
-    
+
     var url = fram.URL;
     if (url.indexOf('?') == -1)
         url += "?1=2";
 
-    //处理URL需要的参数
+    if (url.indexOf("@basePath") == 0)
+        url = url.replace("@basePath", basePath);
+
+    //1.处理URL需要的参数
+    var pageParams = getQueryString();
+    $.each(pageParams, function (i, pageParam) {
+        var pageParamArr = pageParam.split('=');
+        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
+    });
+
+    var src = url.replace(new RegExp(/(：)/g), ':');
+    if (src.indexOf("?") > 0) {
+        var params = getQueryStringFromUrl(src);
+        if (params != null && params.length > 0) {
+            $.each(params, function (i, param) {
+                if (param.indexOf('@') != -1) {//是需要替换的参数
+                    paramArr = param.split('=');
+                    if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
+                        if (paramArr[1].indexOf('@WebUser.') == 0)
+                            url = url.replace(paramArr[1], frmData.MainTable[0][paramArr[1].substr('@WebUser.'.length)]);
+                        else
+                            url = url.replace(paramArr[1], frmData.MainTable[0][paramArr[1].substr(1)]);
+                    }
+                }
+            });
+        }
+    }
+
+
     //1.拼接参数
     var paras = this.pageData;
     var strs = "";
@@ -458,19 +497,15 @@ function figure_Template_IFrame(fram) {
             strs += "&" + str + "=" + paras[str];
     }
 
-    //2.替换@参数
-    var pageParams = getQueryString();
-    $.each(pageParams, function (i, pageParam) {
-        var pageParamArr = pageParam.split('=');
-        url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
-    });
+
+
 
     url = url + strs + "&IsReadonly=0";
 
     var eleIframe = '<iframe></iframe>';
     eleIframe = $("<iframe ID='Fdg" + fram.MyPK + "' src='" + url +
-                 "' frameborder=0  style='position:absolute;width:" + fram.W + "px; height:" + fram.H +
-                 "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
+	                 "' frameborder=0  style='position:absolute;width:" + fram.W + "px; height:" + fram.H +
+	                 "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
 
     eleHtml.append(eleIframe);
 
@@ -492,7 +527,14 @@ function figure_MapAttr_Template(mapAttr) {
         if (W < 160) W = 160;
 
 
-    eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 12px").css('display', 'inline');
+    if (mapAttr.IsSigan == "4") {
+        eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
+        eleHtml.css('z-index', '999');
+        return eleHtml;
+    }
+    if (mapAttr.MyDataType != 4) {
+        eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 12px");
+    }
 
 
     eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
@@ -588,29 +630,77 @@ function figure_MapAttr_TemplateEle(mapAttr) {
 
             //如果是图片签名，并且可以编辑
             if (mapAttr.IsSigan == "1" && mapAttr.UIIsEnable == 1) {
-                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn +"' value='" + defValue + "' type=hidden />";
+                //查找默认值
+                var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
                 //是否签过
                 var sealData = new Entities("BP.Tools.WFSealDatas");
                 sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", GetQueryString("UserNo"));
 
                 if (sealData.length > 0) {
-                    eleHtml += "<img src='../../DataUser/Siganture/" + defValue + ".jpg' onerror=\"this.src='../../DataUser/Siganture/UnName.jpg'\"  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+
+                    //先判断是否存在签名图片
+                    var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+                    handler.AddPara('no', GetQueryString("UserNo"));
+                    data = handler.DoMethodReturnString("HasSealPic");
+
+                    if (data.length > 0) {
+                        eleHtml += data + html;
+                    }
+                    else {
+                        eleHtml += "<img src='/DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\"  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    }
                     isSigantureChecked = true;
                 }
                 else {
-                    eleHtml += "<img src='../../DataUser/Siganture/siganture.jpg' onerror=\"this.src='../../DataUser/Siganture/UnName.jpg'\" ondblclick='figure_Template_Siganture(\"" + mapAttr.KeyOfEn + "\",\"" + defValue + "\")' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    eleHtml += "<img src='/DataUser/Siganture/siganture.jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\" ondblclick='figure_Template_Siganture(\"" + mapAttr.KeyOfEn + "\",\"" + val + "\",\"0\")' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 }
+                return eleHtml;
+            }
+            //如果是图片盖章，并且可编辑
+            if (mapAttr.IsSigan == "4" && mapAttr.UIIsEnable == 1) {
+                //查找默认值
+                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + mapAttr.DefVal + "' type=hidden />";
+                //是否签过
+                var sealData = new Entities("BP.Tools.WFSealDatas");
+                sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", mapAttr.DefVal);
+
+                if (sealData.length > 0) {
+                    eleHtml += "<img src='/DataUser/Siganture/" + mapAttr.DefVal + ".jpg' style='border:0px;'  id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    isSigantureChecked = true;
+                }
+                else {
+                    eleHtml += "<img src='/DataUser/Siganture/siganture.jpg'  ondblclick='figure_Template_Siganture(\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.DefVal + "\",\"1\")' style='border:0px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                }
+                //eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/UnName.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 return eleHtml;
             }
             //如果不可编辑，并且是图片名称
             if (mapAttr.IsSigan == "1") {
                 var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
-                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
-                eleHtml += "<img src='../../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../../DataUser/Siganture/siganture.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+                handler.AddPara('no', val);
+                data = handler.DoMethodReturnString("HasSealPic");
+                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
+                if (data.length > 0) {
+                    eleHtml += data + html;
+                }
+                else {
+                    eleHtml += "<img src='/DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+
+                }
+                return eleHtml;
+            }
+            if (mapAttr.IsSigan == "4") {
+                //var val = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + mapAttr.DefVal + "' type=hidden />";
+                eleHtml += "<img src='/DataUser/Siganture/" + mapAttr.DefVal + ".jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\"  style='border:0px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                //eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/UnName.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 return eleHtml;
             }
 
-            eleHtml += "<input class='form-control'  maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "' type='text' placeholder='" + (mapAttr.Tip || '') + "' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "/>";
+            eleHtml += "<input class='form-control' maxlength=" + mapAttr.MaxLen + " name='TB_" + mapAttr.KeyOfEn + "'  id='TB_" + mapAttr.KeyOfEn + "' type='text' placeholder='" + (mapAttr.Tip || '') + "' />";
+
             return eleHtml;
         }
 
@@ -705,7 +795,15 @@ function figure_MapAttr_TemplateEle(mapAttr) {
 
     // 金额类型. AppMoney  AppRate
     if (mapAttr.MyDataType == 8) {
-        eleHtml += "<input class='form-control ' style='text-align:right;'   onblur='valitationAfter(this, \"money\")' onkeydown='valitationBefore(this, \"money\")' onkeyup=" + '"' + "valitationAfter(this, 'money'); if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo');" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money'); if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' name='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+        //获取DefVal,根据默认的小数点位数来限制能输入的最多小数位数
+        var defVal = mapAttr.DefVal;
+        var bit;
+        if (defVal != null && defVal !== "" && defVal.indexOf(".") >= 0)
+            bit = defVal.substring(defVal.indexOf(".") + 1).length;
+        else
+            bit = 2;
+
+        eleHtml += "<input class='form-control ' style='text-align:right;'   onblur='valitationAfter(this, \"money\")' onkeydown='valitationBefore(this, \"money\")' onkeyup=" + '"' + "valitationAfter(this, 'money'); if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money'); if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' name='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return eleHtml;
     }
 

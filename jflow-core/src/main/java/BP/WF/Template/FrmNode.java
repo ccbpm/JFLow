@@ -83,6 +83,19 @@ public class FrmNode extends EntityMyPK
 	{
 		this.SetValByKey(FrmNodeAttr.IsEnableLoadData, value);
 	}
+	
+	/**
+	 *  是否启用节点组件?
+	 */
+	public final boolean getIsEnableFWC()
+	{
+		return this.GetValBooleanByKey(FrmNodeAttr.IsEnableFWC);
+	}
+	public final void setIsEnableFWC(boolean value)
+	{
+		this.SetValByKey(FrmNodeAttr.IsEnableFWC, value);
+	}
+	
 	/** 
 	 是否执行1变n
 	 
@@ -397,11 +410,10 @@ public class FrmNode extends EntityMyPK
 			//显示的
 		map.AddTBInt(FrmNodeAttr.Idx, 0, "顺序号", true, false);
 		map.AddTBInt(FrmNodeAttr.FrmSln, 0, "表单控制方案", true, false);
+		map.AddTBInt(FrmNodeAttr.IsEnableFWC, 0, "是否启用审核组件？", true, false);
 
-			// add 2014-01-26
 		map.AddTBInt(FrmNodeAttr.WhoIsPK, 0, "谁是主键？", true, false);
 
-			//add 2016.3.25.
 		map.AddTBInt(FrmNodeAttr.Is1ToN, 0, "是否1变N？", true, false);
 		map.AddTBString(FrmNodeAttr.HuiZong, null, "子线程要汇总的数据表", true, true, 0, 300, 20);
 		map.AddTBInt(FrmNodeAttr.FrmEnableRole, 0, "表单启用规则", true, false);

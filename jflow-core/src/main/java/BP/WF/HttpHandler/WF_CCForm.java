@@ -63,6 +63,7 @@ import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
 import BP.Sys.GENoNames;
+import BP.Sys.GroupFieldAttr;
 import BP.Sys.MapAttrAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
@@ -96,6 +97,8 @@ import BP.WF.Template.FrmNodeComponent;
 import BP.WF.Template.FrmSln;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
+import BP.WF.Template.FrmWorkCheck;
+import BP.WF.Template.FrmWorkCheckSta;
 import BP.WF.Template.WhoIsPK;
 import BP.WF.XML.EventListDtlList;
 import BP.Web.WebUser;
@@ -1565,12 +1568,11 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		// #region 加入组件的状态信息, 在解析表单的时候使用.
-		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
+		BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999 &&(fn.getIsEnableFWC() == true || nd.getFrmWorkCheckSta()!=FrmWorkCheckSta.Disable)) {
 			nd = new Node(this.getFK_Node());
 			nd.WorkID = this.getWorkID(); // 为求当前表单ID获得参数，而赋值.
-			BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
-			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false
-					&& nd.getHisFormType() != NodeFormType.RefOneFrmTree) {
+			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false && nd.getHisFormType() != NodeFormType.RefOneFrmTree) {
 
 				/* 说明这是引用到了其他节点的表单，就需要把一些位置元素修改掉. */
 				int refNodeID = Integer.parseInt(nd.getNodeFrmID().replace("ND", ""));
@@ -1601,12 +1603,88 @@ public class WF_CCForm extends WebContralBase {
 				fnc.SetValByKey(FTCAttr.FTC_W, refFnc.GetValFloatByKey(FTCAttr.FTC_W));
 				fnc.SetValByKey(FTCAttr.FTC_X, refFnc.GetValFloatByKey(FTCAttr.FTC_X));
 				fnc.SetValByKey(FTCAttr.FTC_Y, refFnc.GetValFloatByKey(FTCAttr.FTC_Y));
-			}
+				// #region 没有审核组件分组就增加上审核组件分组. @杜需要翻译&测试.
+				if (md.getHisFrmType() == FrmType.FoolForm) {
+					// 判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
+					DataTable gf = ds.GetTableByName("Sys_GroupField");
+					
+					boolean isHave = false;
+					for (DataRow dr : gf.Rows) {
+						String cType = (String) dr.get("CtrlType");
+						if (cType == null)
+							continue;
 
-			ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
+						if (cType.equals("FWC") == true)
+							isHave = true;
+					}
+
+					if (isHave == false) {
+
+						DataRow dr = gf.NewRow();
+
+						dr.put(GroupFieldAttr.OID, 100);
+						dr.put(GroupFieldAttr.EnName, nd.getNodeFrmID());
+						dr.put(GroupFieldAttr.CtrlType, "FWC");
+						dr.put(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
+						dr.put(GroupFieldAttr.Idx, 100);
+						dr.put(GroupFieldAttr.Lab, "审核信息");
+						gf.Rows.add(dr);
+
+						ds.Tables.remove("Sys_GroupField");
+						ds.Tables.add(gf);
+					}
+				}
+			}
+			
 		}
-		  if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+		if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == true && nd.getHisFormType() != NodeFormType.RefOneFrmTree)
+        {
+            //   Work wk1 = nd.HisWork;
+
+        	if (md.getHisFrmType() == FrmType.FoolForm) 
+            {
+                //判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
+                DataTable gf = ds.GetTableByName("Sys_GroupField");
+                boolean isHave = false;
+                for(DataRow dr : gf.Rows)
+                {
+                	String cType = (String) dr.get("CtrlType");
+                    if (cType == null)
+                        continue;
+
+                    if (cType.equals("FWC") == true)
+                        isHave = true;
+                }
+
+                if (isHave == false)
+                {
+                    DataRow dr = gf.NewRow();
+                    
+                    dr.put(GroupFieldAttr.OID, 100);
+					dr.put(GroupFieldAttr.EnName, nd.getNodeFrmID());
+					dr.put(GroupFieldAttr.CtrlType, "FWC");
+					dr.put(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
+					dr.put(GroupFieldAttr.Idx, 100);
+					dr.put(GroupFieldAttr.Lab, "审核信息");
+					gf.Rows.add(dr);
+
+                    ds.Tables.remove("Sys_GroupField");
+                    ds.Tables.add(gf);
+
+                    //更新,为了让其表单上自动增加审核分组.
+                    BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(nd.getNodeID());
+                    FrmWorkCheck fwc = new FrmWorkCheck(nd.getNodeID());
+                    refFnc.Update();
+
+                }
+            }
+        }
+		ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
+		
+		 if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
               ds.Tables.add(nd.ToDataTableField("WF_Node"));
+		 if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+             ds.Tables.add(fn.ToDataTableField("WF_FrmNode"));
 
 		// #region 处理权限方案
 		if (nd != null && nd.getFormType() == NodeFormType.SheetTree) {

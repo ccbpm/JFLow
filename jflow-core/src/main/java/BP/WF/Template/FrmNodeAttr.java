@@ -60,6 +60,12 @@ public class FrmNodeAttr
 	 
 	*/
 	public static final String FrmSln = "FrmSln";
+	
+	/**
+    *是否启用审核组件
+    */
+    public static final String IsEnableFWC = "IsEnableFWC";
+    
 	/** 
 	 谁是主键？
 	 

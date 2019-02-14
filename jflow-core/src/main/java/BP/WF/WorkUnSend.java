@@ -115,10 +115,11 @@ public class WorkUnSend
 		this.FlowNo = flowNo;
 		this.WorkID = workID;
 	}
-	public WorkUnSend(String flowNo, long workID, int unSendToNode)
+	public WorkUnSend(String flowNo, long workID, int unSendToNode,long fid)
 	{
 		this.FlowNo = flowNo;
 		this.WorkID = workID;
+		this.FID = fid;
 		this.UnSendToNode = UnSendToNode; //撤销到节点.
 	}
 	public int UnSendToNode = 0;
@@ -421,6 +422,13 @@ public class WorkUnSend
 			int i = DBAccess.RunSQLReturnValInt("SELECT SUM(IsRead) AS Num FROM WF_GenerWorkerList WHERE WorkID=" + this.WorkID + " AND FK_Node=" + gwf.getFK_Node() ,0);
             if (i >= 1)
                 return "err@当前待办已经有["+i+"]个工作人员打开了该工作,您不能执行撤销.";
+            else
+            {
+                //干流节点撤销到子线程
+                i = DBAccess.RunSQLReturnValInt("SELECT SUM(IsRead) AS Num FROM WF_GenerWorkerList WHERE WorkID=" + this.FID + " AND FK_Node=" + gwf.getFK_Node(), 0);
+                if(i>=1)
+                    return "err@当前待办已经有[" + i + "]个工作人员打开了该工作,您不能执行撤销.";
+            }
 		}
 		
 		//如果是越轨流程状态

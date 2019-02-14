@@ -1899,8 +1899,11 @@ public class Flow extends BP.En.EntityNoName {
 					if (nd.getDeliveryParas().trim().length() == 0) {
 						msg += "@错误:您设置了该节点的访问规则是按指定的岗位计算，但是您没有设置节点编号.</font>";
 					} else {
-						if (DataType.IsNumStr(nd.getDeliveryParas()) == false) {
-							msg += "@错误:您没有设置指定岗位的节点编号，目前设置的为{" + nd.getDeliveryParas() + "}";
+						String[] deliveryParas = nd.getDeliveryParas().split(",");
+						for(String str : deliveryParas){
+							if (DataType.IsNumStr(str) == false) {
+								msg += "@错误:您设置指定岗位的节点编号格式不正确，目前设置的为{" + nd.getDeliveryParas() + "}";
+							}
 						}
 					}
 					break;

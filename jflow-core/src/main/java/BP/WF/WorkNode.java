@@ -2888,11 +2888,9 @@ public class WorkNode {
 		current_gwls = new GenerWorkerLists();
 		current_gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getHisWork().getFID(), GenerWorkerListAttr.FK_Node,
 				toNode.getNodeID());
-		 boolean  isFirstHL = false;
-		if (current_gwls.size() == 0){
-			isFirstHL = true;
+		if (current_gwls.size() == 0)
 			current_gwls = this.Func_GenerWorkerLists(this.town);// 初试化他们的工作人员．
-		}
+		
 		String FK_Emp = "";
 		String toEmpsStr = "";
 		String emps = "";
@@ -2944,58 +2942,53 @@ public class WorkNode {
         GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), toNode.getNodeID());
         current_gwls = gwls;
         
-        int pass = 3;
-        if (gwls.size() > 0)
-            pass = gwls.get(0).GetValIntByKey("IsPass");
-        if(isFirstHL==true || pass != 0){
-			/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
-			ps = new Paras();
-			ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
-					+ "FID AND FK_Node IN (" + spanNodes + ")";
-			ps.Add("FID", this.getHisWork().getFID());
-			BigDecimal numAll = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-	
-			GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
-			// 记录子线程到达合流节点数
-			int count = gwf.GetParaInt("ThreadCount");
-			gwf.SetPara("ThreadCount", count + 1);
-			gwf.Update();
-			BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
-	
-			BigDecimal passRate1 = numPassed.divide(numAll, 2).multiply(new BigDecimal(100));
-	
-			if (toNode.getPassRate().compareTo(passRate1) <= 0) {
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-						+ dbStr + "WorkID";
-				ps.Add("FK_Node", toNode.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				DBAccess.RunSQL(ps);
-	
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr
-						+ "NodeName WHERE WorkID=" + dbStr + "WorkID";
-				ps.Add("FK_Node", toNode.getNodeID());
-				ps.Add("NodeName", toNode.getName());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				int num = DBAccess.RunSQL(ps);
-				 if (num == 0)
-                     throw new Exception("@不应该更新不到它.");
-				gwf.SetPara("ThreadCount", 0);
-				gwf.Update();
-			} else {
-				// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-						+ dbStr + "WorkID";
-				ps.Add("FK_Node", toNode.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getOID());
-				int num = DBAccess.RunSQL(ps);
-				if (num == 0)
-                    throw new Exception("@不应该更新不到它.");
-			}
-        }
+		/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
+		ps = new Paras();
+		ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
+				+ "FID AND FK_Node IN (" + spanNodes + ")";
+		ps.Add("FID", this.getHisWork().getFID());
+		BigDecimal numAll = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
 
+		GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
+		// 记录子线程到达合流节点数
+		int count = gwf.GetParaInt("ThreadCount");
+		gwf.SetPara("ThreadCount", count + 1);
+		gwf.Update();
+		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
+
+		BigDecimal passRate1 = numPassed.divide(numAll, 2).multiply(new BigDecimal(100));
+
+		if (toNode.getPassRate().compareTo(passRate1) <= 0) {
+			ps = new Paras();
+			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+					+ dbStr + "WorkID";
+			ps.Add("FK_Node", toNode.getNodeID());
+			ps.Add("WorkID", this.getHisWork().getFID());
+			DBAccess.RunSQL(ps);
+
+			ps = new Paras();
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr
+					+ "NodeName WHERE WorkID=" + dbStr + "WorkID";
+			ps.Add("FK_Node", toNode.getNodeID());
+			ps.Add("NodeName", toNode.getName());
+			ps.Add("WorkID", this.getHisWork().getFID());
+			int num = DBAccess.RunSQL(ps);
+			 if (num == 0)
+                 throw new Exception("@不应该更新不到它.");
+			gwf.SetPara("ThreadCount", 0);
+			gwf.Update();
+		} else {
+			// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
+			ps = new Paras();
+			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+					+ dbStr + "WorkID";
+			ps.Add("FK_Node", toNode.getNodeID());
+			ps.Add("WorkID", this.getHisWork().getOID());
+			int num = DBAccess.RunSQL(ps);
+			if (num == 0)
+                throw new Exception("@不应该更新不到它.");
+		}
+      
 		this.getHisGenerWorkFlow().setFK_Node(toNode.getNodeID());
 		this.getHisGenerWorkFlow().setNodeName(toNode.getName());
 		
@@ -7408,9 +7401,7 @@ public class WorkNode {
 		int count = gwf.GetParaInt("ThreadCount");
 		gwf.SetPara("ThreadCount", count + 1);
 		gwf.Update();
-		boolean isFirstHL = false;
 		if (gwls.size() == 0) {
-			isFirstHL = true;
 			// 说明第一次到达河流节点。
 			current_gwls = this.Func_GenerWorkerLists(this.town);
 			gwls = current_gwls;
@@ -7461,54 +7452,50 @@ public class WorkNode {
 		ps.Add("WorkID", this.getWorkID());
 		ps.Add("FID", this.getHisWork().getFID());
 		DBAccess.RunSQL(ps);
-		 int pass = 3;
-         if (gwls.size() > 0)
-             pass = gwls.get(0).GetValIntByKey("IsPass");
 
          String info = "";
-         if (isFirstHL == true || pass != 0)
-         {
-			/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
-			// 获取通过率
+
+		/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
+		// 获取通过率
+		ps = new Paras();
+		ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
+				+ "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
+		ps.Add("FID", this.getHisWork().getFID());
+		BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
+		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
+
+		BigDecimal passRate1 = numPassed.divide(numAll1, 2).multiply(new BigDecimal(100));
+
+		if (nd.getPassRate().compareTo(passRate1) <= 0) {
 			ps = new Paras();
-			ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
-					+ "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
-			ps.Add("FID", this.getHisWork().getFID());
-			BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
-			BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
-	
-			BigDecimal passRate1 = numPassed.divide(numAll1, 2).multiply(new BigDecimal(100));
-	
-			if (nd.getPassRate().compareTo(passRate1) <= 0) {
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-						+ dbStr + "WorkID";
-				ps.Add("FK_Node", nd.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				DBAccess.RunSQL(ps);
-	
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr
-						+ "NodeName WHERE WorkID=" + dbStr + "WorkID";
-				ps.Add("FK_Node", nd.getNodeID());
-				ps.Add("NodeName", nd.getName());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				DBAccess.RunSQL(ps);
-	
-				gwf.SetPara("ThreadCount", 0);
-				gwf.Update();
-	
-				info = "@下一步合流点(" + nd.getName() + ")已经启动。";
-			} else {
-				// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
-				ps = new Paras();
-				ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
-						+ dbStr + "WorkID";
-				ps.Add("FK_Node", nd.getNodeID());
-				ps.Add("WorkID", this.getHisWork().getFID());
-				DBAccess.RunSQL(ps);
-			}
-         }
+			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+					+ dbStr + "WorkID";
+			ps.Add("FK_Node", nd.getNodeID());
+			ps.Add("WorkID", this.getHisWork().getFID());
+			DBAccess.RunSQL(ps);
+
+			ps = new Paras();
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr
+					+ "NodeName WHERE WorkID=" + dbStr + "WorkID";
+			ps.Add("FK_Node", nd.getNodeID());
+			ps.Add("NodeName", nd.getName());
+			ps.Add("WorkID", this.getHisWork().getFID());
+			DBAccess.RunSQL(ps);
+
+			gwf.SetPara("ThreadCount", 0);
+			gwf.Update();
+
+			info = "@下一步合流点(" + nd.getName() + ")已经启动。";
+		} else {
+			// #warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
+			ps = new Paras();
+			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="
+					+ dbStr + "WorkID";
+			ps.Add("FK_Node", nd.getNodeID());
+			ps.Add("WorkID", this.getHisWork().getFID());
+			DBAccess.RunSQL(ps);
+		}
+        
 
 		this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
 		this.getHisGenerWorkFlow().setNodeName(nd.getName());

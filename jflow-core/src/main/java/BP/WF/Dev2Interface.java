@@ -4812,12 +4812,16 @@ public class Dev2Interface {
 		return unSend.DoUnSend();
 
 	}
-
+	
 	public static String Flow_DoUnSend(String flowNo, long workID, int unSendToNode) throws Exception {
+		return Flow_DoUnSend( flowNo,workID, unSendToNode,0);
+	}
+	
+	public static String Flow_DoUnSend(String flowNo, long workID, int unSendToNode,long fid) throws Exception {
 		// 转化成编号.
 		flowNo = TurnFlowMarkToFlowNo(flowNo);
 
-		WorkUnSend unSend = new WorkUnSend(flowNo, workID, unSendToNode);
+		WorkUnSend unSend = new WorkUnSend(flowNo, workID, unSendToNode,fid);
 		unSend.UnSendToNode = unSendToNode;
 
 		return unSend.DoUnSend();

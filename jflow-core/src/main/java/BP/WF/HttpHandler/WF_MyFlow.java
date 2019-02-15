@@ -1313,11 +1313,18 @@ public class WF_MyFlow extends WebContralBase {
 			java.util.Hashtable ht = this.GetMainTableHT();
 			SendReturnObjs objs = null;
 			String msg = "";
+			
+			 //判断当前流程工作的GenerWorkFlow是否存在
+            GenerWorkFlow gwf = new GenerWorkFlow();
+            gwf.setWorkID(this.getWorkID());
+            int i = gwf.RetrieveFromDBSources();
+            if (i==0)
+                return "该流程的工作已删除,请联系管理员";
 
 			objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID(), ht, null, this.getToNode(),
 					null);
 			msg = objs.ToMsgOfHtml();
-			// BP.WF.Glo.SessionMsg = msg;
+			
 
 			// 当前节点.
 			Node currNode = new Node(this.getFK_Node());

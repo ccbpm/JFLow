@@ -1,5 +1,7 @@
 package BP.WF;
 
+import java.math.BigDecimal;
+
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
@@ -351,7 +353,33 @@ public class WorkUnSend
 			}
 		}
 
-			///#endregion
+		 //#region 计算完成率。
+         boolean isSetEnable = false; //是否关闭合流节点待办.
+         String mysql = "SELECT COUNT(DISTINCT WorkID) FROM WF_GenerWorkerlist WHERE FID=" + this.FID + " AND IsPass=1 AND FK_Node IN (SELECT Node FROM WF_Direction WHERE ToNode=" + wn.getHisNode().getNodeID() + ")";
+         BigDecimal numOfPassed =DBAccess.RunSQLReturnValDecimal(mysql, new BigDecimal(0), 1);
+         
+         if (nd.getPassRate().intValue() == 100)
+         {
+             isSetEnable = true;
+         }
+         else
+         {
+             mysql = "SELECT COUNT(DISTINCT WorkID) FROM WF_GenerWorkFlow WHERE FID=" + this.FID;
+             BigDecimal numOfAll = DBAccess.RunSQLReturnValDecimal(mysql, new BigDecimal(0), 1);
+
+             BigDecimal rate = numOfPassed.divide(numOfAll, 2).multiply(new BigDecimal(100));
+             if (nd.getPassRate().intValue() > rate.intValue())
+                 isSetEnable = true;
+         }
+
+         GenerWorkFlow maingwf = new GenerWorkFlow(this.FID);
+         maingwf.SetPara("ThreadCount", numOfPassed.toString());
+         maingwf.Update();
+
+         //是否关闭合流节点待办.
+         if (isSetEnable == true)
+             DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=3 WHERE WorkID=" + this.FID + " AND  FK_Node=" + wn.getHisNode().getNodeID());
+         //#endregion
 
 		//调用撤消发送后事件。
 		msg += nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneAfter, nd, wn.getHisWork(), null);

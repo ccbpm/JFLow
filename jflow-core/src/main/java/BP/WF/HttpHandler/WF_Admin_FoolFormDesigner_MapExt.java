@@ -1102,7 +1102,23 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 				}
 						
 		
-					me.setTag(Tag);
+				me.setTag(Tag);
+				
+				String Tag3 = "0";
+	            try
+	            {
+	                Tag3 = this.GetValFromFrmByKey("CB_Tag3");
+	                if (Tag3 == "on")
+	                    Tag3 = "1";
+	            }
+	            catch (Exception e)
+	            {
+	                Tag3 = "0";
+	            }
+	            me.setTag3(Tag3);
+
+	            me.setTag4(this.GetValFromFrmByKey("DDL_Fileds"));
+
 
 				//执行保存.
 				me.setMyPK(MapExtXmlList.AutoFullDtlField + "_" + me.getFK_MapData() + "_" + me.getAttrOfOper());

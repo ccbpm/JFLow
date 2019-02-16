@@ -172,8 +172,9 @@ function figure_Template_FigureFrmCheck(wf_node, mapData,frmData) {
     var frmNode = frmData.WF_FrmNode;
     if (frmNode != undefined)
         frmNode = frmNode[0];
-    if(node ==null ||frmNode == null  )
-    	 return $('');
+
+    if (node == null || frmNode == null)
+        return $('');
     if (node.FormType == 5 && frmNode.IsEnableFWC != 1)
         return $('');
 
@@ -220,7 +221,7 @@ function figure_Template_FigureFrmCheck(wf_node, mapData,frmData) {
     paras += "&WorkID=" + pageData["OID"];
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
-   
+ 
     //  paras += '&WorkID=' + pageData.WorkID;
     if (sta == 2)//只读
     {

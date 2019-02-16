@@ -457,8 +457,8 @@ function Save(scope) {
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
     handler.AddPara("OID", pageData.OID);
-    handler.AddPara("FK_MapData",pageData.FK_MapData);
     handler.AddFormData();
+    handler.AddPara("FK_MapData", pageData.FK_MapData);
     var data = handler.DoMethodReturnString("FrmGener_Save");
 
     if (data.indexOf('err@') == 0) {
@@ -485,6 +485,7 @@ function initPageParam() {
 
     pageData.FK_Flow = GetQueryString("FK_Flow");
     pageData.FK_Node = GetQueryString("FK_Node");
+    //FK_Flow=004&FK_Node=402&FID=0&WorkID=232&IsRead=0&T=20160920223812&Paras=
     pageData.FID = GetQueryString("FID") == null ? 0 : GetQueryString("FID");
 
     var oid = GetQueryString("WorkID");

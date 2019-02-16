@@ -204,13 +204,9 @@ function Ele_FrmCheck(wf_node) {
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
     paras += '&WorkID=' + pageData.OID;
-    if (sta == 2)//只读
-    {
-        src += "&DoType=View";
-    }
+  
+
     src += "&r=q" + paras;
-    if (h == 0)
-        h = 400;
     var eleHtml = "<iframe width='100%' height='" + h + "' id='FWC' src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=no ></iframe>";
     return eleHtml;
 }

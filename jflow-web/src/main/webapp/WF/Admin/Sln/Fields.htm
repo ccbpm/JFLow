@@ -181,8 +181,8 @@
                     ff.IsWriteToGenerWorkFlow = 1;
                 else
                     ff.IsWriteToGenerWorkFlow = 0;
-                
-              
+
+
 
                 //判断变化的是否需要保存.
                 var isNeedSave = false;
@@ -201,12 +201,12 @@
 
                 if (en.DefVal != ff.DefVal)
                     isNeedSave = true;
-                
+
 
                 if (en.UIIsInput != ff.IsNotNull)
                     isNeedSave = true;
 
-                if (ff.RegularExp!="")
+                if (ff.RegularExp != "")
                     isNeedSave = true;
 
                 if (isNeedSave == false)

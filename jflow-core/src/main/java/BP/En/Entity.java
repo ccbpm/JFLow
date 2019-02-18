@@ -3718,7 +3718,10 @@ public abstract class Entity implements Serializable {
 	}
 
 	public long GetValInt64ByKey(String key) {
-		return Long.parseLong(this.GetValStringByKey(key, "0"));
+		String val = this.GetValStringByKey(key, "0");
+		if(DataType.IsNullOrEmpty(val))
+			val = "0";	
+		return Long.parseLong(val);
 	}
 
 	public final int GetValIntByKey(String key, int IsZeroAs) {

@@ -41,15 +41,12 @@ public abstract class WebContralBase extends BaseController {
 	 * @return 返回值
 	 */
 	public final String GetValFromFrmByKey(String key, String isNullAsVal) {
-		// String val = context.Request.Form[key];
 		String val = getRequest().getParameter(key);
 		if (val == null && key.contains("DDL_") == false) {
-			// val = context.Request.Form["DDL_" + key];
 			val = this.getRequest().getParameter("DDL_" + key);
 		}
 
 		if (val == null && key.contains("TB_") == false) {
-			// val = context.Request.Form["TB_" + key];
 			val = getRequest().getParameter("TB" + key);
 		}
 
@@ -76,15 +73,12 @@ public abstract class WebContralBase extends BaseController {
 	 * @return 返回值
 	 */
 	public final String GetValFromFrmByKey(String key) {
-		// String val = context.Request.Form[key];
 		String val = getRequest().getParameter(key);
 		if (val == null && key.contains("DDL_") == false) {
-			// val = context.Request.Form["DDL_" + key];
 			val = this.getRequest().getParameter("DDL_" + key);
 		}
 
 		if (val == null && key.contains("TB_") == false) {
-			// val = context.Request.Form["TB_" + key];
 			val = getRequest().getParameter("TB_" + key);
 		}
 
@@ -93,7 +87,8 @@ public abstract class WebContralBase extends BaseController {
 		}
 
 		if (val == null) {
-			throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
+			return "";
+			//throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
 		}
 
 		val = val.replace("'", "~");

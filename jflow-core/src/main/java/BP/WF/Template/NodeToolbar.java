@@ -128,7 +128,7 @@ public class NodeToolbar extends EntityOID
 
            map.AddTBInt(NodeToolbarAttr.Idx, 0, "显示顺序", true, false);
            map.AddTBInt(NodeToolbarAttr.FK_Node, 0, "节点", false,true);
-           map.AddMyFile("图标");
+          // map.AddMyFile("图标");
 
 
 		this.set_enMap(map);

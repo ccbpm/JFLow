@@ -444,16 +444,15 @@ function Save(scope) {
     //必填项和正则表达式检查
     var formCheckResult = true;
     if (CheckBlanks() == false) {
-        alert("检查必填项出现错误，边框变红颜色的是否填写完整？");
-        return false;
+        //alert("检查必填项出现错误，边框变红颜色的是否填写完整？");
+        //return false;
       
     }
     if (CheckReg() == false) {
-        alert("发送错误:请检查字段边框变红颜色的是否填写完整？");
+        //alert("发送错误:请检查字段边框变红颜色的是否填写完整？");
         return false;
     }
 
-    // setToobarDisiable();
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
     handler.AddPara("OID", pageData.OID);

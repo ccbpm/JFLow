@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import BP.DA.DBType;
 import BP.DA.DataRow;
@@ -671,11 +670,6 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		return "保存成功...";
 	}
 
-	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-		this.request = request;
-	}
-
-	private DefaultMultipartHttpServletRequest request;
 
 	// / <summary>
 	// / 流程模版导入.
@@ -692,7 +686,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		xmlFile.deleteOnExit();
 		String contentType = getRequest().getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			MultipartFile multipartFile = request.getFile("File_Upload");
+			MultipartFile multipartFile = BP.WF.Glo.request.getFile("File_Upload");
 			try {
 				multipartFile.transferTo(xmlFile);
 			} catch (Exception e) {

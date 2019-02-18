@@ -25,6 +25,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
@@ -5105,5 +5106,13 @@ public class Glo {
 		return null;
 
 	}
+	
+	
+	//附件上传Requsest
+	public static DefaultMultipartHttpServletRequest getMultipartRequest() {
+		return request;
+	}
+
+	public static DefaultMultipartHttpServletRequest request;
 
 }

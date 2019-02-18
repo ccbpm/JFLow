@@ -25,6 +25,7 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 		WF_Comm CommHandler = new WF_Comm();
 		if (request instanceof DefaultMultipartHttpServletRequest) {
 			CommHandler.setMultipartRequest((DefaultMultipartHttpServletRequest) request);
+			BP.WF.Glo.request = (DefaultMultipartHttpServletRequest) request;
 		}
 		super.ProcessRequest(CommHandler);
 	}

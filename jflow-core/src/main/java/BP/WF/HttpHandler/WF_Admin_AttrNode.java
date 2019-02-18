@@ -12,7 +12,6 @@ import java.util.Hashtable;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
@@ -44,6 +43,7 @@ import BP.Sys.SystemConfig;
 import BP.Tools.DealString;
 import BP.Tools.StringHelper;
 import BP.WF.DotNetToJavaStringHelper;
+import BP.WF.Glo;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
 import BP.WF.Nodes;
@@ -1867,11 +1867,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		return "保存成功...";
 	}
 
-	private DefaultMultipartHttpServletRequest request;
 
-	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-		this.request = request;
-	}
 
 	private HttpServletResponse response;
 
@@ -1889,7 +1885,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		String contentType = getRequest().getContentType();
 		MultipartFile multipartFile = null;
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			multipartFile = request.getFile("bill");
+			multipartFile = Glo.request.getFile("bill");
 			if (multipartFile.getSize() == 0) {
 				return "err@请选择要上传的模板文件";
 			}
@@ -1900,15 +1896,15 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		multipartFile.transferTo(new File(filepath));
 
 		bt.setNodeID(this.getFK_Node());
-		bt.setNo(request.getParameter("TB_No"));
+		bt.setNo(Glo.request.getParameter("TB_No"));
 		if (StringHelper.isNullOrEmpty(bt.getNo())) {
 			bt.setNo(Integer.toString(DBAccess.GenerOID()));
 		}
-		bt.setName(request.getParameter("TB_Name"));
+		bt.setName(Glo.request.getParameter("TB_Name"));
 		bt.setTempFilePath(filepath);
-		bt.setHisBillFileType(Integer.parseInt(request.getParameter("DDL_BillFileType")));
-		bt.setBillOpenModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
-		bt.setQRModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
+		bt.setHisBillFileType(Integer.parseInt(Glo.request.getParameter("DDL_BillFileType")));
+		bt.setBillOpenModel(Integer.parseInt(Glo.request.getParameter("DDL_BillOpenModel")));
+		bt.setQRModel(Integer.parseInt(Glo.request.getParameter("DDL_BillOpenModel")));
 
 		bt.Save();
 

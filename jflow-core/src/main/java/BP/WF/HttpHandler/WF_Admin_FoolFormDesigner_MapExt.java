@@ -1070,6 +1070,15 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 						mydt.TableName = dtl.getNo();
 						ds.Tables.add(mydt);
 					}
+					
+					//把主表的字段放入
+		             String mainsql = "SELECT KeyOfEn as \"No\",Name as \"Name\" FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "' AND MyDataType=1 AND UIIsEnable = 0 ";
+		             mainsql += " AND KeyOfEn !='OID' AND KeyOfEn!='FID' AND KeyOfEn!='WorkID' AND KeyOfEn!='NodeID' AND KeyOfEn!='RefPK'  AND KeyOfEn!='RDT' AND KeyOfEn!='Rec' ";
+
+		            //把从表增加里面去.
+		             DataTable maindt = DBAccess.RunSQLReturnTable(mainsql);
+		             maindt.TableName = "main_Attr";
+		             ds.Tables.add(maindt);
 
 					return BP.Tools.Json.ToJson(ds);
 				}

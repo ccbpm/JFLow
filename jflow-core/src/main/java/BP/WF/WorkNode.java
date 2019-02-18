@@ -19,6 +19,7 @@ import BP.Tools.StringHelper;
 import BP.WF.Template.*;
 import BP.WF.Template.Bill;
 import BP.WF.Template.BillFileType;
+import BP.WF.Template.FrmWorkCheckSta;
 import BP.WF.Glo;
 import BP.WF.Data.*;
 
@@ -4142,6 +4143,27 @@ public class WorkNode {
 
 		}
 	}
+	
+	 /// <summary>
+    /// 检查是否填写审核意见
+    /// </summary>
+    /// <returns></returns>
+    private boolean CheckFrmIsFullCheckNote() throws Exception
+    {
+        //检查是否写入了审核意见.
+        if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
+        {
+            /*检查审核意见 */
+            String sql = "SELECT Msg,EmpToT FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE  EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + this.getHisNode().getNodeID() + " AND WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.WorkCheck.getValue();
+            DataTable dt = DBAccess.RunSQLReturnTable(sql);
+            if (dt.Rows.size() == 0)
+                throw new Exception("err@请填写审核意见.");
+
+            if (dt.Rows.get(0).get(0).toString() == "")
+                throw new Exception("err@审核意见不能为空.");
+        }
+        return true;
+    }
 
 	/**
 	 * 检查独立表单上必须填写的项目.
@@ -4150,12 +4172,62 @@ public class WorkNode {
 	 * @throws Exception
 	 */
 	public final boolean CheckFrmIsNotNull() throws Exception {
-		// if (this.HisNode.HisFormType != NodeFormType.SheetTree)
-		// return true;
+
 
 		// 增加节点表单的必填项判断.
 		String err = "";
-		if (this.getHisNode().getHisFormType() == NodeFormType.FreeForm) {
+		//判断绑定的树形表单
+		if(this.getHisNode().getHisFormType() == NodeFormType.SheetTree){
+			//获取绑定的表单
+			 FrmNodes nds = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
+			 for(FrmNode item:nds.ToJavaList()){
+				MapData md = new MapData();
+				md.setNo(item.getFK_Frm());
+				md.Retrieve();
+				 MapAttrs mapAttrs = md.getMapAttrs();
+				 Row row = this.getHisWork().getRow();
+				 if (item.getFrmSln() == FrmSln.Self) {
+					// 查询出来自定义的数据.
+					FrmFields ffs = new FrmFields();
+					ffs.Retrieve(FrmFieldAttr.FK_Node, this.getHisNode().getNodeID(), FrmFieldAttr.FK_MapData, md.getNo());
+					//获取整合后的mapAttrs
+					for(FrmField frmField:ffs.ToJavaList()){
+						for (MapAttr mapAttr : mapAttrs.ToJavaList()) {
+							if(frmField.getKeyOfEn().equals(mapAttr.getKeyOfEn())){
+								mapAttr.setUIIsInput(frmField.getIsNotNull());
+								break;
+							}
+						}
+					}
+				 }
+				 for (MapAttr mapAttr : mapAttrs.ToJavaList()) {
+						if (mapAttr.getUIIsInput() == false) {
+							continue;
+						}
+						
+						if (row.get(mapAttr.getKeyOfEn()) == null) 
+							err += "@表单{"+item.getFK_Frm()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
+						
+						if((row.get(mapAttr.getKeyOfEn()) instanceof String) == true) {
+							String str = (String) (DataType.IsNullOrEmpty(row.get(mapAttr.getKeyOfEn()).toString()) == true ? null
+									: row.get(mapAttr.getKeyOfEn()));
+							// 如果是检查不能为空
+							if (str == null || DotNetToJavaStringHelper.isNullOrEmpty(str) == true || str.trim().equals("")) {
+								err += "@表单{"+item.getFK_Frm()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
+							}
+						}
+					}
+			 }
+			 
+			 if (!err.equals("")) {
+					throw new RuntimeException("@在提交前检查到如下必输字段填写不完整:" + err);
+				}
+			 
+			 return true;
+			
+		}
+			
+		if (this.getHisNode().getHisFormType() == NodeFormType.FreeForm || this.getHisNode().getHisFormType() == NodeFormType.FoolForm) {
 			MapAttrs attrs = this.getHisNode().getMapData().getMapAttrs();
 			Row row = this.getHisWork().getRow();
 			for (MapAttr attr : attrs.ToJavaList()) {
@@ -4299,7 +4371,7 @@ public class WorkNode {
 				}
 			}
 
-			/// #endregion 检查图片附件的必填，added by liuxc,2016-11-1
+			 CheckFrmIsFullCheckNote();
 
 			if (!err.equals("")) {
 				throw new RuntimeException("在提交前检查到如下必输字段填写不完整:" + err);

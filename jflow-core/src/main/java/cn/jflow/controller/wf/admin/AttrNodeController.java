@@ -26,9 +26,7 @@ public class AttrNodeController extends HttpHandlerBase{
 	{
 		WF_Admin_AttrNode  AttrHandler = new WF_Admin_AttrNode();
 		AttrHandler.setHttpServletResp(response);
-		if (request instanceof DefaultMultipartHttpServletRequest) {
-			AttrHandler.setMultipartRequest((DefaultMultipartHttpServletRequest) request);
-		}
+		
 		super.ProcessRequest(AttrHandler);
 	}
 	@Override

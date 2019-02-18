@@ -23,9 +23,7 @@ public class AttrFlowController extends HttpHandlerBase {
 	public final void ProcessRequestPost(HttpServletRequest request) 
 	{
 		WF_Admin_AttrFlow  AttrHandler = new WF_Admin_AttrFlow();
-		if (request instanceof DefaultMultipartHttpServletRequest) {
-			AttrHandler.setMultipartRequest((DefaultMultipartHttpServletRequest) request);
-		}
+		
 		super.ProcessRequest(AttrHandler);
 	}
 	@Override

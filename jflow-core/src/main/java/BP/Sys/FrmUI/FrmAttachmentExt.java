@@ -76,7 +76,7 @@ public class FrmAttachmentExt extends EntityMyPK {
 	 * 上传校验 0=不校验. 1=不能为空. 2=每个类别下不能为空.
 	 */
 	public final UploadFileNumCheck getUploadFileNumCheck() {
-		return UploadFileNumCheck.forValue(this.GetParaInt(FrmAttachmentAttr.UploadFileNumCheck));
+		return UploadFileNumCheck.forValue(this.GetValIntByKey(FrmAttachmentAttr.UploadFileNumCheck));
 	}
 
 	public final void setUploadFileNumCheck(UploadFileNumCheck value) {
@@ -650,7 +650,10 @@ public class FrmAttachmentExt extends EntityMyPK {
 
 		map.AddTBInt("NumOfUpload", 0, "最低上传数量", true, false);
 		map.SetHelperAlert("NumOfUpload", "如果为0则标识必须上传. \t\n用户上传的附件数量低于指定的数量就不让保存.");
-
+		
+		 map.AddDDLSysEnum(FrmAttachmentAttr.UploadFileNumCheck, 0, "上传校验方式", true, true, FrmAttachmentAttr.UploadFileNumCheck,
+                 "@0=不用校验@1=不能为空@2=每个类别下不能为空");
+		 
 		// for tianye group
 		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay,
 				"@0=保存到IIS服务器@1=保存到数据库@2=ftp服务器");

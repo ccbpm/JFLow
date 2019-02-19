@@ -4148,7 +4148,7 @@ public class WorkNode {
     /// 检查是否填写审核意见
     /// </summary>
     /// <returns></returns>
-    private boolean CheckFrmIsFullCheckNote() throws Exception
+    private String CheckFrmIsFullCheckNote() throws Exception
     {
         //检查是否写入了审核意见.
         if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
@@ -4157,12 +4157,12 @@ public class WorkNode {
             String sql = "SELECT Msg,EmpToT FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE  EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + this.getHisNode().getNodeID() + " AND WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.WorkCheck.getValue();
             DataTable dt = DBAccess.RunSQLReturnTable(sql);
             if (dt.Rows.size() == 0)
-                throw new Exception("err@请填写审核意见.");
+                return "@请填写审核意见.";
 
-            if (dt.Rows.get(0).get(0).toString() == "")
-                throw new Exception("err@审核意见不能为空.");
+            if (dt.Rows.get(0).get(0)== null || dt.Rows.get(0).get(0).toString() == "")
+                return "@审核意见不能为空.";
         }
-        return true;
+        return "";
     }
 
 	/**
@@ -4313,9 +4313,13 @@ public class WorkNode {
 					ps.Add("FK_MapData", "ND" + this.getHisNode().getNodeID());
 					ps.Add("FK_FrmAttachment", ath.getMyPK());
 					ps.Add("RefPKVal", this.getWorkID());
-					if (DBAccess.RunSQLReturnValInt(ps) == 0) {
+					int count = DBAccess.RunSQLReturnValInt(ps);
+					if (count == 0) {
 						err += "@您没有上传附件:" + ath.getName();
 					}
+					
+					if(ath.getNumOfUpload() > count )
+						 err += "@您上传的附件数量小于最低上传数量要求";
 				}
 
 				if (ath.getUploadFileNumCheck() == UploadFileNumCheck.EverySortNoteEmpty) {
@@ -4371,7 +4375,7 @@ public class WorkNode {
 				}
 			}
 
-			 CheckFrmIsFullCheckNote();
+			 err +=CheckFrmIsFullCheckNote();
 
 			if (!err.equals("")) {
 				throw new RuntimeException("在提交前检查到如下必输字段填写不完整:" + err);

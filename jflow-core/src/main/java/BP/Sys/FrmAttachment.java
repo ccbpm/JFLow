@@ -38,6 +38,19 @@ public class FrmAttachment extends EntityMyPK
 	{
 		this.SetPara(FrmAttachmentAttr.UploadCtrl, value);
 	}
+	
+	/** 
+	 最低上传数量
+	*/
+	public final int getNumOfUpload()
+	{
+		return this.GetValIntByKey(FrmAttachmentAttr.NumOfUpload);
+	}
+	public final void setNumOfUpload(int value)
+	{
+		this.SetPara(FrmAttachmentAttr.NumOfUpload, value);
+	}
+	
 	/** 
 	 上传校验
 	 0=不校验.
@@ -47,7 +60,7 @@ public class FrmAttachment extends EntityMyPK
 	*/
 	public final UploadFileNumCheck getUploadFileNumCheck()
 	{
-		return UploadFileNumCheck.forValue(this.GetParaInt(FrmAttachmentAttr.UploadFileNumCheck));
+		return UploadFileNumCheck.forValue(this.GetValIntByKey(FrmAttachmentAttr.UploadFileNumCheck));
 	}
 	public final void setUploadFileNumCheck(UploadFileNumCheck value)
 	{
@@ -760,6 +773,8 @@ public class FrmAttachment extends EntityMyPK
 		map.AddTBString(FrmAttachmentAttr.Name, null, "名称", true, false, 0, 50, 20);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "要求上传的格式", true, false, 0, 50, 20);
         map.AddTBInt("NumOfUpload", 0, "最低上传数量", true, false);
+        map.AddDDLSysEnum(FrmAttachmentAttr.UploadFileNumCheck, 0, "上传校验方式", true, true, FrmAttachmentAttr.UploadFileNumCheck,
+                "@0=不用校验@1=不能为空@2=每个类别下不能为空");
 
 //		map.AddTBInt(FrmAttachmentAttr., 5, "X", true, false);
 		

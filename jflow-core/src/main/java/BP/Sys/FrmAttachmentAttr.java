@@ -173,6 +173,10 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String UploadCtrl = "UploadCtrl";
+	
+	
+	public static final String NumOfUpload="NumOfUpload";
+	
 	/** 
 	 上传校验
 	 0=不校验.

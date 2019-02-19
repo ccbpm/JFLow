@@ -1,5 +1,7 @@
 package BP.WF.HttpHandler;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -1841,8 +1843,9 @@ public class WF_MyFlow extends WebContralBase {
 	 * 获取主表的方法.
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-	private java.util.Hashtable GetMainTableHT() {
+	private java.util.Hashtable GetMainTableHT() throws UnsupportedEncodingException {
 		java.util.Hashtable htMain = new java.util.Hashtable();
 		Enumeration enu = getRequest().getParameterNames();
 		while (enu.hasMoreElements()) {
@@ -1853,25 +1856,25 @@ public class WF_MyFlow extends WebContralBase {
 
 			if (key.contains("TB_")) {
 				if (htMain.containsKey(key.replace("TB_", "")) == false)
-					htMain.put(key.replace("TB_", ""), this.GetRequestVal(key));
+					htMain.put(key.replace("TB_", ""),URLDecoder.decode(this.GetRequestVal(key), "UTF-8") );
 				continue;
 			}
 
 			if (key.contains("DDL_")) {
 				if (htMain.containsKey(key.replace("DDL_", "")) == false)
-					htMain.put(key.replace("DDL_", ""), this.GetRequestVal(key));
+					htMain.put(key.replace("DDL_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
 				continue;
 			}
 
 			if (key.contains("CB_")) {
 				if (htMain.containsKey(key.replace("CB_", "")) == false)
-					htMain.put(key.replace("CB_", ""), this.GetRequestVal(key));
+					htMain.put(key.replace("CB_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
 				continue;
 			}
 
 			if (key.contains("RB_")) {
 				if (htMain.containsKey(key.replace("RB_", "")) == false)
-					htMain.put(key.replace("RB_", ""), this.GetRequestVal(key));
+					htMain.put(key.replace("RB_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
 				continue;
 			}
 		}

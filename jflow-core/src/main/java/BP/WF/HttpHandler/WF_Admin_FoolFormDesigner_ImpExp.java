@@ -22,6 +22,7 @@ import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
+import BP.WF.Glo;
 import BP.WF.Node;
 import BP.WF.HttpHandler.Base.WebContralBase;
 
@@ -123,11 +124,6 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
         return BP.Tools.Json.ToJson(ds);
     }
    
-	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-		this.request = request;
-	}
-
-	private DefaultMultipartHttpServletRequest request;
 
     /**
      * 从本机装载表单模版
@@ -149,7 +145,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 		xmlFile.deleteOnExit();
 		String contentType = getRequest().getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			MultipartFile multipartFile = request.getFile("file");
+			MultipartFile multipartFile = Glo.request.getFile("file");
 			try {
 				multipartFile.transferTo(xmlFile);
 			} catch (Exception e) {
@@ -157,13 +153,6 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 			}
 		}
 
-//    	MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) getRequest();
-//		CommonsMultipartFile file = (CommonsMultipartFile) multipartRequest.getFile("file");
-
-//    	if(getRequest().getParameter("file")==null || getRequest().getParameter("file").length()==0)
-//    	{
-//            return "请上传导入的模板文件.";
-//    	}
     	Object a  = getRequest().getParameter("file");
         String fk_mapData = this.getFK_MapData();
         //读取上传的XML 文件.

@@ -4206,14 +4206,14 @@ public class WorkNode {
 						}
 						
 						if (row.get(mapAttr.getKeyOfEn()) == null) 
-							err += "@表单{"+item.getFK_Frm()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
+							err += "@表单{"+md.getName()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
 						
 						if((row.get(mapAttr.getKeyOfEn()) instanceof String) == true) {
 							String str = (String) (DataType.IsNullOrEmpty(row.get(mapAttr.getKeyOfEn()).toString()) == true ? null
 									: row.get(mapAttr.getKeyOfEn()));
 							// 如果是检查不能为空
 							if (str == null || DotNetToJavaStringHelper.isNullOrEmpty(str) == true || str.trim().equals("")) {
-								err += "@表单{"+item.getFK_Frm()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
+								err += "@表单{"+md.getName()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
 							}
 						}
 					}

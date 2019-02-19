@@ -411,7 +411,7 @@ public class WorkFlowBuessRole
 
 			String sql = "";
 			int num = 0;
-			for (int i = 2; i < 7; i++)
+			for (int i = 2; i < 9; i++)
 			{
 				if (billNo.contains("{LSH" + i + "}") == false)
 				{
@@ -435,7 +435,7 @@ public class WorkFlowBuessRole
 			int lshIdx = -1; //流水号设置码所在位置
 
 			java.util.Map<Integer, Integer>  map = new HashMap<Integer, Integer>();
-			for (int i = 2; i < 7; i++)
+			for (int i = 2; i < 9; i++)
 			{
 				lsh = "{LSH" + i + "}";
 

@@ -159,11 +159,11 @@ public class MapAttrNum extends EntityMyPK
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-		 rm = new RefMethod();
-	        rm.Title = "事件绑函数";
-	        rm.ClassMethodName = this.toString() + ".BindFunction()";
-	        rm.refMethodType = RefMethodType.RightFrameOpen;
-	        map.AddRefMethod(rm);
+		rm = new RefMethod();
+        rm.Title = "事件绑函数";
+        rm.ClassMethodName = this.toString() + ".BindFunction()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        map.AddRefMethod(rm);
 
 		 
 
@@ -227,6 +227,16 @@ public class MapAttrNum extends EntityMyPK
 		return "/WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 		//return "/WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.FK_MapData + "&ExtType=AutoFull&KeyOfEn=" + this.KeyOfEn + "&RefNo=" + this.getMyPK();
 	}
+	
+	  /// <summary>
+    /// 正则表达式
+    /// </summary>
+    /// <returns></returns>
+    public final String DoRegularExpression()
+    {
+        return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
+    }
+    
 
 	/** 
 	 设置级联
@@ -235,11 +245,8 @@ public class MapAttrNum extends EntityMyPK
 	*/
 	public final String DoInputCheck()
 	{
-		//  InputCheck.aspx?FK_MapData=ND101Dtl1&ExtType=InputCheck&RefNo=ND101Dtl1_ZhouQi&OperAttrKey=ZhouQi&DoType=New
 		return Glo.getCCFlowAppPath()+"WF/Admin/FoolFormDesigner/MapExt/InputCheck.jsp?FK_MapData=" + this.getFK_MapData() + "&OperAttrKey=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK() + "&DoType=New&ExtType=InputCheck";
 
-		//  return "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData=" + this.FK_MapData + "&KeyOfEn=" + this.KeyOfEn +"&RefNo="+this.getMyPK();
-		//  return "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.aspx?FK_MapData=" + this.FK_MapData + "&ExtType=AutoFull&KeyOfEn=" + this.KeyOfEn + "&RefNo=" + this.getMyPK();
 	}
 	
 	 /// <summary>

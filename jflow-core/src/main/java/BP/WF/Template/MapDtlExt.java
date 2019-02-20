@@ -892,9 +892,6 @@ public class MapDtlExt extends EntityNoName
         map.AddDDLSysEnum(MapDtlAttr.Model, 0, "工作模式", true, true,MapDtlAttr.Model, "@0=普通@1=固定行");
         map.AddDDLSysEnum(MapDtlAttr.DtlVer, 0, "使用版本", true, true, MapDtlAttr.DtlVer, "@0=2017传统版@1=2019EasyUI版本");
 
-        //map.AddTBString(MapDtlAttr.ImpFixTreeSql, null, "固定列树形SQL", true, false, 0, 500, 20);
-        //map.AddTBString(MapDtlAttr.ImpFixDataSql, null, "固定列数据SQL", true, false, 0, 500, 20);
-
         map.AddTBInt(MapDtlAttr.RowsOfList, 6, "初始化行数", true, false);
         map.SetHelperAlert(MapDtlAttr.RowsOfList, "对第1个版本有效.");
 
@@ -919,7 +916,10 @@ public class MapDtlExt extends EntityNoName
         map.AddDDLSysEnum(MapDtlAttr.EditModel, 0, "编辑数据方式", true, true, MapDtlAttr.EditModel, "@0=表格模式@1=傻瓜表单@2=自由表单");
         map.SetHelperAlert(MapDtlAttr.EditModel, "格式为:第1种类型就要新建行,其他类型新建的时候弹出卡片.");
  
-
+        //用于控制傻瓜表单.
+        map.AddTBFloat(MapDtlAttr.H, 350, "高度", true, false);
+        map.SetHelperAlert(MapDtlAttr.H, "对傻瓜表单有效");
+        
         //对显示的结果要做一定的限制.
         map.AddTBString(MapDtlAttr.FilterSQLExp, null, "过滤数据SQL表达式", true, false, 0, 200, 20,true);
         map.SetHelperAlert(MapDtlAttr.FilterSQLExp, "格式为:WFState=1 过滤WFState=1的数据");
@@ -1048,6 +1048,17 @@ public class MapDtlExt extends EntityNoName
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.Target = "_blank";
         map.AddRefMethod(rm);
+        
+        
+        rm = new RefMethod();
+        rm.GroupName = "实验中的功能";
+        rm.Title = "数据导入v2019"; // "设计表单";
+        rm.ClassMethodName = this.toString() + ".DtlImpV2019";
+        rm.Icon = "../Img/Setting.png";
+        rm.Visable = true;
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.Target = "_blank";
+        map.AddRefMethod(rm);
 
 
 
@@ -1097,6 +1108,13 @@ public class MapDtlExt extends EntityNoName
 		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" + this.getNo() + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
+	
+	public final String DtlImpV2019() throws Exception
+	{
+		String url = "../../Admin/FoolFormDesigner/DtlSetting/Default.htm?FK_MapData=" + this.getNo() + "&FromDtl=1";
+		return url;
+	}
+	
 	 
     public String ColAutoExp() throws Exception
     {
@@ -1246,7 +1264,6 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DoAction()
 	{
-		//return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Action.jsp?DoType=Edit&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
 		return "../../Admin/FoolFormDesigner/ActionForDtl.htm?DoType=Edit&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
 	}
 	public final String HidAttr()

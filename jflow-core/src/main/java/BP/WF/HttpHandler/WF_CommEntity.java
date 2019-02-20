@@ -1117,6 +1117,43 @@ public class WF_CommEntity extends WebContralBase {
 
             ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
         }
+        
+        
+        for (Attr attr : dtl.getEnMap().getAttrs())
+        {
+            if (attr.getIsRefAttr() == true)
+                continue;
+
+            if (DataType.IsNullOrEmpty(attr.getUIBindKey()) || attr.getUIBindKey().length() <= 10)
+                continue;
+
+            if (attr.getUIIsReadonly() == true)
+                continue;
+
+            if (attr.getUIBindKey().contains("SELECT") == true || attr.getUIBindKey().contains("select") == true)
+            {
+                /*是一个sql*/
+                String sqlBindKey = attr.getUIBindKey();
+                
+                // 判断是否存在.
+                if (ds.Tables.contains(sqlBindKey) == true)
+                    continue;
+                
+                sqlBindKey = BP.WF.Glo.DealExp(sqlBindKey, null, null);
+
+                DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
+                dt.TableName = attr.getKey();
+
+                if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+                {
+                    dt.Columns.get("NO").ColumnName = "No";
+                    dt.Columns.get("NAME").ColumnName = "Name"; 
+                }
+
+                ds.Tables.add(dt);
+            }
+        }
+        
 
         String enumKeys = "";
         for (Attr attr : dtl.getEnMap().getAttrs())

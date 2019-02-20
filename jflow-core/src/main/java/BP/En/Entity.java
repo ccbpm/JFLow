@@ -3740,7 +3740,7 @@ public abstract class Entity implements Serializable {
 	 */
 	public int GetValIntByKey(String key) {
 		String val = this.GetValStringByKey(key);
-		if (val == null)
+		if (DataType.IsNullOrEmpty(val))
 			return 0;
 
 		if (val.endsWith(".0") == true)

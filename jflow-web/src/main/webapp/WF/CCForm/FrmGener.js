@@ -1374,14 +1374,3 @@ function setHandWriteSrc(HandWriteID, imagePath) {
     $("#TB_" + HandWriteID).val(imagePath);
     $('#eudlg').dialog('close');
 }
-
-function validate(s) {
-    if (s == null || typeof s === "undefined") {
-        return false;
-    }
-    s = s.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
-    if (s == "" || s == "null" || s == "undefined") {
-        return false;
-    }
-    return true;
-}

@@ -1783,12 +1783,13 @@ var DBAccess = (function () {
 
         //执行URL
         if (dbType == 1 || dbType == "1") {
+        	dbSrc = dbSrc.replace(/~/g, "'");
             return DBAccess.RunUrlReturnJSON(dbSrc);
         }
 
         //执行方法名称返回json.
         if (dbType == 2 || dbType == "2") {
-
+        	dbSrc = dbSrc.replace(/~/g, "'");
             var str = DBAccess.RunFunctionReturnStr(dbSrc);
             if (str == null || str == undefined)
                 return null;
@@ -1801,7 +1802,7 @@ var DBAccess = (function () {
 
     //执行方法名返回str.
     DBAccess.RunFunctionReturnStr = function (funcName) {
-
+    	
         try {
 
             if (funcName.indexOf('(') == -1)

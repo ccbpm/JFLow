@@ -4185,7 +4185,11 @@ public class WorkNode {
 				md.setNo(item.getFK_Frm());
 				md.Retrieve();
 				 MapAttrs mapAttrs = md.getMapAttrs();
-				 Row row = this.getHisWork().getRow();
+				//主表实体.
+		         GEEntity en = new GEEntity(item.getFK_Frm());
+		         en.setOID(this.getWorkID());
+		         en.RetrieveFromDBSources();
+				 Row row = en.getRow();
 				 if (item.getFrmSln() == FrmSln.Self) {
 					// 查询出来自定义的数据.
 					FrmFields ffs = new FrmFields();
@@ -7920,6 +7924,7 @@ public class WorkNode {
 		wk.setOID(workId);
 		int i = wk.RetrieveFromDBSources();
 		if (i == 0) {
+			
 			this.rptGe = nd.getHisFlow().getHisGERpt();
 			if (wk.getFID() != 0) {
 				this.rptGe.setOID(wk.getFID());

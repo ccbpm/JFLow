@@ -4184,7 +4184,9 @@ public class WorkNode {
 				MapData md = new MapData();
 				md.setNo(item.getFK_Frm());
 				md.Retrieve();
-				 MapAttrs mapAttrs = md.getMapAttrs();
+				if (md.getHisFrmType() != FrmType.FoolForm && md.getHisFrmType() != FrmType.FreeFrm)
+                     continue;
+				MapAttrs mapAttrs = md.getMapAttrs();
 				//主表实体.
 		         GEEntity en = new GEEntity(item.getFK_Frm());
 		         en.setOID(this.getWorkID());

@@ -773,9 +773,11 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
 	// 开始
 	public final String TBFullCtrlDDL_Init() throws Exception {
-		MapExt myme = new MapExt(this.getMyPK());
+		MapExt myme = new MapExt();
+		myme.setMyPK(this.getMyPK());
+		myme.RetrieveFromDBSources();
 		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.FK_MapData, myme.getFK_MapData(), MapAttrAttr.UIIsEnable, 1,
+		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIIsEnable, 1,
 				MapAttrAttr.UIContralType, 1);
 
 		String[] strs = myme.getTag().split("[$]", -1);

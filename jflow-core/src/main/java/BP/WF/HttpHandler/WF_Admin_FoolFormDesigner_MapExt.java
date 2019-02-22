@@ -820,6 +820,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		}
 		me.setTag(str);
 		me.Update();
+		me.setAttrOfOper(GetRequestVal("AttrOfOper"));
 
 		return "保存成功.";
 	}

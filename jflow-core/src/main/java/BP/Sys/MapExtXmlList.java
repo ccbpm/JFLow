@@ -1,11 +1,10 @@
 package BP.Sys;
 
-import BP.DA.*;
-import BP.En.*;
-import BP.Sys.XML.*;
-
 public class MapExtXmlList
 {
+	
+	/**填充其他控件**/
+	public static final String FullData="FullData";
 	/** 
 	 获取与设置外部数据
 	 

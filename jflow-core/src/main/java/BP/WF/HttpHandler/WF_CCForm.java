@@ -706,7 +706,8 @@ public class WF_CCForm extends WebContralBase {
 
 		if (me.getExtType().equals(BP.Sys.MapExtXmlList.AutoFullDLL)////填充下拉框
 				|| me.getExtType().equals(BP.Sys.MapExtXmlList.TBFullCtrl)//自动完成。
-				|| me.getExtType().equals(BP.Sys.MapExtXmlList.DDLFullCtrl)) { // 级连ddl.
+				|| me.getExtType().equals(BP.Sys.MapExtXmlList.DDLFullCtrl)
+				|| me.getExtType().equals(BP.Sys.MapExtXmlList.FullData)) { // 级连ddl.
 			String doTypeExt = this.GetRequestVal("DoTypeExt");
 			if(DataType.IsNullOrEmpty(doTypeExt) == true)
 				return "err@填充类型不能为空";

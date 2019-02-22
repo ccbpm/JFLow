@@ -695,51 +695,43 @@ public class MapExt extends EntityMyPK
 	*/
 	public final void InitPK()
 	{
-
-//		switch (this.ExtType)
-//ORIGINAL LINE: case MapExtXmlList.ActiveDDL:
-		if (this.getExtType().equals(MapExtXmlList.ActiveDDL))
-		{
+		String extType = this.getExtType();
+	    if(extType.equals(MapExtXmlList.FullData)){
+	    	//不做任何处理
+	    }
+	    else if (extType.equals(MapExtXmlList.ActiveDDL))
 				this.setMyPK(MapExtXmlList.ActiveDDL +"_"+this.getFK_MapData() + "_" + this.getAttrsOfActive());
-		}
-//ORIGINAL LINE: case MapExtXmlList.DDLFullCtrl:
-		else if (this.getExtType().equals(MapExtXmlList.DDLFullCtrl))
-		{
+		
+		else if (extType.equals(MapExtXmlList.DDLFullCtrl))
 				this.setMyPK(MapExtXmlList.DDLFullCtrl + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		}
-//ORIGINAL LINE: case MapExtXmlList.PopVal:
-		else if (this.getExtType().equals(MapExtXmlList.PopVal))
-		{
+		
+		else if (extType.equals(MapExtXmlList.PopVal))
 			this.setMyPK(MapExtXmlList.PopVal + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		}
-		else if(this.getExtType().equals(MapExtXmlList.TBFullCtrl))
-		{
+		
+		else if(extType.equals(MapExtXmlList.TBFullCtrl))
               this.setMyPK(MapExtXmlList.TBFullCtrl + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		}else if(this.getExtType().equals(MapExtXmlList.AutoFull))
-		{
+		
+		else if(extType.equals(MapExtXmlList.AutoFull))
 			  this.setMyPK(MapExtXmlList.AutoFull + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		}else if(this.getExtType().equals(MapExtXmlList.AutoFullDLL))
-		{
+		
+		else if(extType.equals(MapExtXmlList.AutoFullDLL))
             this.setMyPK(MapExtXmlList.AutoFullDLL + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		}else if(this.getExtType().equals(MapExtXmlList.InputCheck))
-		{
+		
+		else if(extType.equals(MapExtXmlList.InputCheck))
             this.setMyPK(MapExtXmlList.InputCheck + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		}else if(this.getExtType().equals(MapExtXmlList.PageLoadFull))
-		{
+		
+		else if(extType.equals(MapExtXmlList.PageLoadFull))
             this.setMyPK(MapExtXmlList.PageLoadFull + "_" + this.getFK_MapData());
-		}else if(this.getExtType().equals(MapExtXmlList.RegularExpression))
-		{
+		
+		else if(extType.equals(MapExtXmlList.RegularExpression))
             this.setMyPK(MapExtXmlList.RegularExpression + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper() + "_" + this.getTag());
-		}else if(this.getExtType().equals(MapExtXmlList.Link))
-		{
-            this.setMyPK(MapExtXmlList.Link + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-            
-		}else if(this.getExtType().equals(MapExtXmlList.BindFunction))
-		{
+		
+		else if(extType.equals(MapExtXmlList.Link))
+            this.setMyPK(MapExtXmlList.Link + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());  
+		
+		else if(extType.equals(MapExtXmlList.BindFunction))
 			this.setMyPK(MapExtXmlList.BindFunction + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper() + "_" + this.getTag());
-			// 这里要去掉。 让外部设置主键.
-           // this.setMyPK(this.getExtType() + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		}else
+		else
 		{
 			  //这里要去掉，不然组合组主键，会带来错误.
             if (DataType.IsNullOrEmpty(this.getAttrOfOper()) == true)
@@ -749,8 +741,6 @@ public class MapExt extends EntityMyPK
 		}
 	}
 	
-
-		///#endregion
 
 	/** 
 	 删除垃圾数据.

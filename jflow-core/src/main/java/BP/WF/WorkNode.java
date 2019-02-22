@@ -4159,7 +4159,7 @@ public class WorkNode {
             if (dt.Rows.size() == 0)
                 return "@请填写审核意见.";
 
-            if (dt.Rows.get(0).get(0)== null || dt.Rows.get(0).get(0).toString() == "")
+            if (dt.Rows.get(0).get("Msg")== null || dt.Rows.get(0).get("Msg").toString().equals("") )
                 return "@审核意见不能为空.";
         }
         return "";

@@ -129,14 +129,14 @@ public class MapAttrString extends EntityMyPK {
 
 		RefMethod rm = new RefMethod();
 
-		rm = new RefMethod();
+		/*rm = new RefMethod();
 		rm.Title = "文本框自动完成";
 		rm.ClassMethodName = this.toString() + ".DoTBFullCtrl()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		map.AddRefMethod(rm);*/
 
 		rm = new RefMethod();
-		rm.Title = "文本框自动完成2019";
+		rm.Title = "文本框自动完成";
 		rm.ClassMethodName = this.toString() + ".DoTBFullCtrl2019()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -172,7 +172,7 @@ public class MapAttrString extends EntityMyPK {
         map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "Pop返回值v2019";
+		rm.Title = "Pop返回值";
 		rm.ClassMethodName = this.toString() + ".DoPop2019()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -211,7 +211,7 @@ public class MapAttrString extends EntityMyPK {
 		map.AddRefMethod(rm);
 
 		/// #region Pop返回值.
-		rm = new RefMethod();
+		/*rm = new RefMethod();
 		rm.GroupName = "Pop返回值2018";
 		rm.Title = "枝干叶子模式";
 		rm.ClassMethodName = this.toString() + ".DoBranchesAndLeaf()";
@@ -265,7 +265,7 @@ public class MapAttrString extends EntityMyPK {
 		rm.Title = "自定义URL";
 		rm.ClassMethodName = this.toString() + ".DoSelfUrl()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		map.AddRefMethod(rm);*/
 
 		// 设置开窗返回值-正则表达式-文本框自动完成-脚本验证-扩展控件
 
@@ -562,83 +562,5 @@ public class MapAttrString extends EntityMyPK {
 		// this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 
-	/**
-	 * 自定义Url.
-	 * 
-	 * @return
-	 */
-	public final String DoSelfUrl() {
-		return "../../Admin/FoolFormDesigner/PopSetting/SelfUrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn="
-				+ this.getKeyOfEn();
-	}
-
-	/**
-	 * 实体列表模式
-	 * 
-	 * @return 返回url
-	 */
-	public final String DoTableList() {
-		return "../../Admin/FoolFormDesigner/PopSetting/TableList.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn="
-				+ this.getKeyOfEn();
-	}
-
-	/**
-	 * 枝干叶子模式
-	 * 
-	 * @return 返回url
-	 */
-	public final String DoBranchesAndLeaf() {
-		return "../../Admin/FoolFormDesigner/PopSetting/BranchesAndLeaf.htm?FK_MapData=" + this.getFK_MapData()
-				+ "&KeyOfEn=" + this.getKeyOfEn();
-	}
-
-	/**
-	 * 枝干叶子懒加载
-	 * 
-	 * @return
-	 */
-	public final String DoBranchesAndLeafLazyLoad() {
-		return "../../Admin/FoolFormDesigner/PopSetting/BranchesAndLeafLazyLoad.htm?FK_MapData=" + this.getFK_MapData()
-				+ "&KeyOfEn=" + this.getKeyOfEn() + "&IsLazyLoad=1";
-	}
-
-	/**
-	 * 枝干模式
-	 * 
-	 * @return 返回url
-	 */
-	public final String DoBranches() {
-		return "../../Admin/FoolFormDesigner/PopSetting/Branches.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn="
-				+ this.getKeyOfEn();
-	}
-
-	/**
-	 * 枝干模式懒加载
-	 * 
-	 * @return 返回url
-	 */
-	public final String DoBranchesLazyLoad() {
-		return "../../Admin/FoolFormDesigner/PopSetting/Branches.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn="
-				+ this.getKeyOfEn();
-	}
-
-	/**
-	 * 分组模式
-	 * 
-	 * @return
-	 */
-	public final String DoGroupList() {
-		return "../../Admin/FoolFormDesigner/PopSetting/GroupList.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn="
-				+ this.getKeyOfEn();
-	}
-
-	/**
-	 * 实体查询模式
-	 * 
-	 * @return
-	 */
-	public final String DoTableSearch() {
-		return "../../Admin/FoolFormDesigner/PopSetting/TableSearch.htm?FK_MapData=" + this.getFK_MapData()
-				+ "&KeyOfEn=" + this.getKeyOfEn();
-	}
+	
 }

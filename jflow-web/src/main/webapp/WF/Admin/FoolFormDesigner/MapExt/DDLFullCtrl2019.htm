@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>为下拉框设置联动填充其他控件</title>
+    <script language="JavaScript" src="../../../Comm/JScript.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../../Scripts/bootstrap/js/jquery.min.js"></script>
+    <script src="../../../../WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <link href="../../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
+    <!-- 引用通用的js文件. -->
+    <script type="text/javascript" src="../../../Scripts/config.js"></script>
+    <script type="text/javascript" src="../../../Comm/Gener.js"></script>
+    <script type="text/javascript" language="javascript">
+
+        //页面启动函数.
+        var mapExt;
+        $(function () {
+
+
+            var keyOfEn = GetQueryString("KeyOfEn");
+            var frmID = GetQueryString("FK_MapData");
+
+            var en = new Entity("BP.Sys.MapAttr", frmID + "_" + keyOfEn);
+
+            var isEnable = en.GetPara("IsFullData");
+
+            if (isEnable == "" || isEnable == 0 || isEnable == undefined) {
+                $("#Btn_FullData").attr("disabled", true);
+                $("#RB_IsEnableJS_0").attr("checked", true);
+            } else {
+
+                $("#Btn_FullData").removeAttr("disabled");
+                $("#RB_IsEnableJS_1").attr("checked", true);
+            }
+            //设置那个单选按钮可以被选择。
+
+            return;
+
+        });
+  
+    </script>
+</head>
+<body>
+    <form id="cc">
+
+<table style="width:99%;">
+<caption> 设置下拉框在值变化后，填充其他控件与从表 </caption>
+<tr>
+<td>
+
+  <fieldset>
+        <legend><input type="radio" value="0" id="RB_IsEnableJS_0"  name="RB_IsEnableJS"  checked="checked"/>
+        <label for="RB_IsEnableJS_0">不启用</label>
+        </legend>ssss
+    </fieldset>
+
+    <fieldset>
+        <legend><input type="radio" value="1" id="RB_IsEnableJS_1"  name="RB_IsEnableJS" />
+        <label for="RB_IsEnableJS_1">启用 </label>
+        </legend>
+        <ul>
+            <li>xxxxxx</li>
+            <li>xxxxxx</li>
+            <li>xxxxxx</li>
+        </ul>
+    </fieldset>
+</td>
+</tr>
+
+<tr>
+<td>
+
+
+    <input type="button" value="保存" onclick="Save();" />
+    <input type="button" value="设置填充" id="Btn_FullData"  onclick="Set();" />
+
+</td>
+</tr>
+</table>
+  
+
+
+    <div id="Msg">
+    </div>
+    <script type="text/javascript">
+
+
+        function Save() {
+
+            var keyOfEn = GetQueryString("KeyOfEn");
+            var frmID = GetQueryString("FK_MapData");
+
+            var en = new Entity("BP.Sys.MapAttr", frmID + "_" + keyOfEn);
+
+            var isEnable = $("input[name='RB_IsEnableJS']:checked").val();
+            if (isEnable == "1") {
+                en.SetPara("IsFullData", 1);
+                $("#Btn_FullData").removeAttr("disabled");
+            } else {
+                en.SetPara("IsFullData", 0);
+                $("#Btn_FullData").attr("disabled", true);
+            }
+            en.Update();
+            window.location.href = window.location.href;
+            return;
+        }
+
+        function Set() {
+            var keyOfEn = GetQueryString("KeyOfEn");
+            var frmID = GetQueryString("FK_MapData");
+            var extType = GetQueryString("ExtType");
+            var myPK = "DDLFullCtrl_" + frmID + "_" + keyOfEn;
+            var url = "../FullData/Main.htm?FK_MapData=" + frmID + "&RefPK=" + myPK + "&KeyOfEn=" + keyOfEn + "&ExtType=" + extType;
+
+            window.location.href = url;
+            return;
+        }
+    </script>
+    </form>
+</body>
+</html>

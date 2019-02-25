@@ -9,11 +9,14 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -3592,7 +3595,47 @@ public class WF_Comm extends WebContralBase {
 	*/
 	public final String Entities_Delete()
 	{
-		return "err@该方法没有完成，请使用Entiy_Delete. 可以按照条件删除.";
+		try
+        {
+            Entities ens = ClassFactory.GetEns(this.getEnsName());
+            if (this.getParas() == null)
+                return "err@删除实体，参数不能为空";
+
+            String[] myparas = this.getParas().split("@");
+
+            List<String[]> paras = new ArrayList<String[]>();
+            int idx = 0;
+            for (int i = 0; i < myparas.length; i++)
+            {
+                String para = myparas[i];
+                if (DataType.IsNullOrEmpty(para) || para.contains("=") == false)
+                    continue;
+
+                String[] strs = para.split("=");
+                paras.add(strs);
+            }
+
+            if (paras.size() == 1)
+                ens.Delete(paras.get(0)[0], paras.get(0)[1]);
+
+            if (paras.size() == 2)
+                ens.Delete(paras.get(0)[0], paras.get(0)[1],paras.get(1)[0],paras.get(1)[1]);
+            
+            if (paras.size() == 3)
+                ens.Delete(paras.get(0)[0], paras.get(0)[1],paras.get(1)[0],paras.get(1)[1], paras.get(2)[0], paras.get(2)[1]);
+            
+            if (paras.size() == 4)
+                ens.Delete(paras.get(0)[0], paras.get(0)[1],paras.get(1)[0],paras.get(1)[1], paras.get(2)[0], paras.get(2)[1], paras.get(3)[0], paras.get(3)[1]);
+
+            if (paras.size() > 4)
+                return "err@实体类的删除，条件不能大于4个";
+
+            return "删除成功";
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
 	}
 	/** 
 	 初始化

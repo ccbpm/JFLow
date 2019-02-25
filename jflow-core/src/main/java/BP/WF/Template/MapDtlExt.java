@@ -979,7 +979,7 @@ public class MapDtlExt extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "隐藏字段"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".HidAttr";
-		rm.Icon = "/WF/Img/Setting.png";
+		rm.Icon = "../Img/Setting.png";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
@@ -1002,7 +1002,7 @@ public class MapDtlExt extends EntityNoName
         rm = new RefMethod();
         rm.Title = "设计傻瓜表单"; // "设计表单";
         rm.ClassMethodName = this.toString() + ".DFoolFrm";
-        rm.Icon = "/WF/Img/Setting.png";
+        rm.Icon = "../Img/Setting.png";
         rm.Visable = true;
         rm.refMethodType = RefMethodType.LinkeWinOpen;
         rm.Target = "_blank";
@@ -1011,7 +1011,7 @@ public class MapDtlExt extends EntityNoName
         rm = new RefMethod();
         rm.Title = "设计自由表单"; // "设计表单";
         rm.ClassMethodName = this.toString() + ".DFreeFrm";
-        rm.Icon = "/WF/Img/Setting.png";
+        rm.Icon = "../Img/Setting.png";
         rm.Visable = true;
         rm.refMethodType = RefMethodType.LinkeWinOpen;
         rm.Target = "_blank";
@@ -1032,7 +1032,7 @@ public class MapDtlExt extends EntityNoName
         rm.GroupName = "实验中的功能";
         rm.Title = "列自动计算"; // "设计表单";
         rm.ClassMethodName = this.toString() + ".ColAutoExp";
-        rm.Icon = "/WF/Img/Setting.png";
+        rm.Icon = "../Img/Setting.png";
         rm.Visable = true;
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.Target = "_blank";
@@ -1043,7 +1043,7 @@ public class MapDtlExt extends EntityNoName
         rm.GroupName = "实验中的功能";
         rm.Title = "数据导入"; // "设计表单";
         rm.ClassMethodName = this.toString() + ".DtlImp";
-        rm.Icon = "/WF/Img/Setting.png";
+        rm.Icon = "../Img/Setting.png";
         rm.Visable = true;
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.Target = "_blank";
@@ -1066,7 +1066,7 @@ public class MapDtlExt extends EntityNoName
         rm.GroupName = "实验中的功能";
         rm.Title = "事件"; // "设计表单";
         rm.ClassMethodName = this.toString() + ".DoAction";
-        rm.Icon = "/WF/Img/Setting.png";
+        rm.Icon = "../Img/Setting.png";
         rm.Visable = true;
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.Target = "_blank";
@@ -1076,7 +1076,7 @@ public class MapDtlExt extends EntityNoName
         rm.GroupName = "实验中的功能";
         rm.Title = "高级设置";
         rm.ClassMethodName = this.toString() + ".DoAdvSetting";
-        rm.Icon = "/WF/Img/Setting.png";
+        rm.Icon = "../Img/Setting.png";
         rm.Visable = true;
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.Target = "_blank";

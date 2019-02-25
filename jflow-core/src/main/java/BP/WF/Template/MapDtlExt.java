@@ -1111,7 +1111,7 @@ public class MapDtlExt extends EntityNoName
 	
 	public final String DtlImpV2019() throws Exception
 	{
-		String url = "../../Admin/FoolFormDesigner/DtlSetting/Default.htm?FK_MapData=" + this.getNo() + "&FromDtl=1";
+		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapData=" + this.getNo() + "&FromDtl=1";
 		return url;
 	}
 	

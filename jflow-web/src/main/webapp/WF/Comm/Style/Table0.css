@@ -1,11 +1,10 @@
-/*  Table é£æ ¼  */
+/*  Table ·ç¸ñ  */
 body
 {
   font-size: 12px;
 }
 
-
-/*  table ç±»å‹é£æ ¼ */
+/*  table ÀàĞÍ·ç¸ñ */
 table
 {
     border: 0px outset #CCCCCC;
@@ -18,9 +17,9 @@ table
 {
     border: 1px solid #CCC;
 }
-/*  æ—¶å­¦ä¸šæ·»åŠ  å¼€å§‹ä½ç½® */
+/*  Ê±Ñ§ÒµÌí¼Ó ¿ªÊ¼Î»ÖÃ */
 
- /*æ‰©å±•åº”ç”¨æ˜ç»†è¡¨ä¸å¤šé™„ä»¶.*/
+ /*À©Õ¹Ó¦ÓÃÃ÷Ï¸±íÓë¶à¸½¼ş.*/
 .TitleExt
 {
     background-color: #f4f4f4;
@@ -41,7 +40,7 @@ table
 }
 
 
-/*  æ—¶å­¦ä¸šæ·»åŠ  ç»“æŸä½ç½® */
+/*  Ê±Ñ§ÒµÌí¼Ó ½áÊøÎ»ÖÃ */
 th, .Title
 {
     padding: 4px;
@@ -115,10 +114,10 @@ td input[type="textbox"]
 }
 
 
-/* åªè¯»æ–‡æœ¬æ¡† */
+/* Ö»¶ÁÎÄ±¾¿ò */
  .TBDate
 {
-    font-family: å®‹ä½“, Arial, Helvetica, sans-serif;
+    font-family: ËÎÌå, Arial, Helvetica, sans-serif;
 }
 
 td
@@ -126,8 +125,6 @@ td
     border-right-style: none;
     border-left-style: none;
 }
-
- 
 
 
 .TDNum
@@ -142,16 +139,18 @@ td input
     word-break: keep-all;
 }
 
-/*  input ç±»å‹é£æ ¼ */
+/*  input ÀàĞÍ·ç¸ñ */
 input[type="button"], .Btn, input[type="submit"]
 {
-    border: 0;
+    border-style: none;
+    border-color: inherit;
+    border-width: 0;
     background: #4D77A7;
     color: #FFF;
     font-size: 12px;
     padding: 4px 6px 4px 6px;
     margin: 3px 2px 3px 2px;
-}
+    }
 
 .TBcalendar
 {
@@ -181,18 +180,7 @@ input[type="button"], .Btn, input[type="submit"]
  
 caption
 {
-    vertical-align: top;
-    text-align: left;
-    height: 32px;
-    line-height: 32px;
-    font-size: 14px;
-    background: url('../../Comm/Style/BG_Title.png') repeat-x;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 10px;
-    font-family: é»‘ä½“;
-    font-weight: bolder;
-    color: #333333;
+    background: url('/WF/Comm/Style/BG_Title.png') repeat-x;
 }
  
 .TBDoc
@@ -217,10 +205,10 @@ caption
 }
 
 
-/*  input ç±»å‹é£æ ¼ */
+/*  input ÀàĞÍ·ç¸ñ */
 
 
-/** å…¶å®ƒ  */
+/** ÆäËü  */
 .ToolBar
 {
     background-color: #d8edff;
@@ -257,7 +245,7 @@ caption
     font-weight: bold;
 }
  
-/* åœ¨è¾“å…¥ä¿¡æ¯å­—æ®µåç§°ï¼Œå•å…ƒæ ¼å¼çš„é£æ ¼ */
+/* ÔÚÊäÈëĞÅÏ¢×Ö¶ÎÃû³Æ£¬µ¥Ôª¸ñÊ½µÄ·ç¸ñ */
 .FDesc
 {
     padding: 4px;
@@ -293,7 +281,7 @@ caption
     clear: left;
     width: 100%;
     border-width: 0px 0px 1px 0px;
-    background-color: #FAFAFA;
+    background-color: #F5FFCE;
     word-break: keep-all;
     border-style: dotted none;
 }
@@ -301,7 +289,7 @@ caption
 .TBNumReadonly
 {
     font-size: 12px;
-    background-color: infobackground;
+    background-color: #F5FFCE;
     border-right: black thin;
     border-top: black thin;
     border-left: black thin;
@@ -329,7 +317,7 @@ caption
   
 }
 
-/* å†…éƒ¨æ ‡ç­¾é£æ ¼ */
+/* ÄÚ²¿±êÇ©·ç¸ñ */
 fieldset
 {
     margin: 5px;
@@ -355,7 +343,7 @@ Img
     background-color:#FFFFFF;
 }
 
-/*é¼ æ ‡ç§»åŠ¨åˆ°è¡Œä¸Šï¼Œè¡ŒèƒŒæ™¯è‰²å˜åŒ–*/
+/*Êó±êÒÆ¶¯µ½ĞĞÉÏ£¬ĞĞ±³¾°É«±ä»¯*/
 .tr_hover
 {
     background: none repeat scroll 0 0 #e0ecff;

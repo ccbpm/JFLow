@@ -337,15 +337,15 @@ function GenerFrm() {
 
                 if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
                     // 判断下拉框是否有对应option, 若没有则追加
-                    if ($("option[value='" + defValue + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
+                    if (defValue!="" && $("option[value='" + defValue + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
                         var mainTable = frmData.MainTable[0];
                         var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
                         if (selectText == null || selectText == undefined || selectText == "")
                             selectText = mainTable[mapAttr.KeyOfEn + "T"];
                         $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
                     }
-
-                    $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
+                    if(defValue!="")
+                        $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
                 }
 
                 if ($('#CB_' + mapAttr.KeyOfEn).length == 1) {
@@ -449,10 +449,9 @@ function Save(scope) {
       
     }
     if (CheckReg() == false) {
-        //alert("发送错误:请检查字段边框变红颜色的是否填写完整？");
+        alert("发送错误:请检查字段边框变红颜色的是否填写完整？");
         return false;
     }
-
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
     handler.AddPara("OID", pageData.OID);
@@ -460,12 +459,11 @@ function Save(scope) {
     $.each(params.split("&"), function (i, o) {
         var param = o.split("=");
         if (param.length == 2 && validate(param[1])) {
-        	handler.AddPara(param[0], decodeURIComponent(param[1], true));
-        }else{
-        	handler.AddPara(param[0],"");
+            handler.AddPara(param[0], decodeURIComponent(param[1], true));
+        } else {
+            handler.AddPara(param[0], "");
         }
     });
-    handler.AddUrlData();
     handler.AddPara("FK_MapData", pageData.FK_MapData);
     var data = handler.DoMethodReturnString("FrmGener_Save");
 

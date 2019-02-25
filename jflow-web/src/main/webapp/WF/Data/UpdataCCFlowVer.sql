@@ -43,10 +43,10 @@ INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.Name','登陆人员�
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.FK_Dept','登陆人员部门编号','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.FK_DeptName','登陆人员部门名称','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.FK_DeptFullName','登陆人员部门全称','DefVal');
-INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yyyy年MM月dd日','当前日期(yyyy年MM月dd日)','DefVal');
-INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yyyy年MM月dd日HH时mm分','当前日期(yyyy年MM月dd日HH时mm分)','DefVal');
-INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yy年MM月dd日','当前日期(yy年MM月dd日)','DefVal');
-INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yy年MM月dd日HH时mm分','当前日期(yy年MM月dd日HH时mm分)','DefVal');
+INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yyyy年mm月dd日','当前日期(yyyy年MM月dd日)','DefVal');
+INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yyyy年mm月dd日HH时mm分','当前日期(yyyy年MM月dd日HH时mm分)','DefVal');
+INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yy年mm月dd日','当前日期(yy年MM月dd日)','DefVal');
+INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@yy年mm月dd日HH时mm分','当前日期(yy年MM月dd日HH时mm分)','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@FK_ND','当前年度','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@FK_YF','当前月份','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@CurrWorker','当前工作可处理人员','DefVal');
@@ -58,10 +58,6 @@ UPDATE Sys_SFTable SET SrcType=1 WHERE No NOT LIKE '%.%' AND SrcType=0;
 --更新日期长度.
 UPDATE SYS_MAPATTR SET UIWidth=125 WHERE MYDATATYPE=6
 UPDATE SYS_MAPATTR SET UIWidth=145 WHERE MYDATATYPE=7
-
--- 2018.07.24 ; 
-DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.FlowExt';
-INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.WF.Template.FlowExt','@No=基础信息,基础信息权限信息.@IsBatchStart=数据&表单,数据导入导出.@DesignerNo=设计者,流程开发设计者信息');
 
 
 -- 2016.11.18 升级维护附件属性.;
@@ -82,6 +78,12 @@ INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.WF.Template.FrmNodeComponent','
 -- 傻瓜表单属性; 
 DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.MapFrmFool';
 INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.WF.Template.MapFrmFool','@No=基础属性,基础属性.@Designer=设计者信息,设计者的单位信息，人员信息，可以上传到表单云.');
+
+
+-- 2018.07.24 ; 
+DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.FlowExt';
+INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.WF.Template.FlowExt','@No=基础信息,基础信息权限信息.@IsBatchStart=数据&表单,数据导入导出.@DesignerNo=设计者,流程开发设计者信息');
+
 
 --新版本的流程属性,节点属性;
 DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.NodeExt';

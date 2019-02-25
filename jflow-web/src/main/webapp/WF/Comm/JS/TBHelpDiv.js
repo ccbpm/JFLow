@@ -66,6 +66,7 @@ function ShowHelpDiv(inputid, appPath, attrKey, enName, doType) {//显示层
             getobj(inputid + "li" + i)[0].onmouseout = function () { this.style.background = "#fff" }
         }
     }
+
     var newdiv = getobj(inputid + "mydiv")[0];
     newdiv.onclick = function () { HelpTBHiddiv(event, inputid); }
     newdiv.onmouseout = function () { HelpTBMout(inputid + "mydiv") }

@@ -426,17 +426,18 @@ function Save() {
     }
 
     var params = getFormData(true, true);
- 
+
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
     $.each(params.split("&"), function (i, o) {
         var param = o.split("=");
         if (param.length == 2 && validate(param[1])) {
-        	handler.AddPara(param[0], decodeURIComponent(param[1], true));
-        }else{
-        	handler.AddPara(param[0],"");
+            handler.AddPara(param[0], decodeURIComponent(param[1], true));
+        } else {
+            handler.AddPara(param[0], "");
         }
     });
     var data = handler.DoMethodReturnString("Save"); //执行保存方法.
+
     setToobarEnable();
     //刷新 从表的IFRAME
     var dtls = $('.Fdtl');
@@ -448,6 +449,8 @@ function Save() {
         $('#Message').html(data.substring(4, data.length));
         $('#MessageDiv').modal().show();
     }
+
+    
 }
 
 //调用后，就关闭刷新按钮.

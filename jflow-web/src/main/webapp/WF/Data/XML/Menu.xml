@@ -25,7 +25,8 @@
     <Item No="0204" Name="按岗位分配权限" Url="StationForMenus.aspx" Img="/Images/Btn/Users.gif" />
     <Item No="0205" Name="按权限组分配权限" Url="EmpGroupForMenus.aspx" Img="/Images/Btn/Users.gif" />
     
-     
+    <!--<Item No="0101" Name="菜单权限" Url="/Comm/RefFunc/EntitiesTree.aspx?EnsName=BP.GPM.Menus" Img="/GPM/Images/Menu/desktop_2.png" />
+    <Item No="0101" Name="菜单权限123" Url="/Comm/RefFunc/EntityTree.aspx?EnsName=BP.GPM.Menus" Img="/GPM/Images/Menu/credit_card.png" />-->
     
   </Item>
     <!-- 日志管理  -->

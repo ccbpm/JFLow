@@ -55,7 +55,7 @@
         var STYLE_NODE_BORDER_COLOR_TRACK = 'green';  //走过的节点边框颜色
         var STYLE_NODE_BORDER_COLOR = 'black';  //节点边框颜色
         var STYLE_NODE_BORDER_COLOR_HOVER = 'blue'; //节点边框鼠标悬停时颜色
-        
+
         var STYLE_NODE_BORDER_WIDTH_NORMAL = 1; //节点边框宽度
         var STYLE_NODE_BORDER_WIDTH_HOVER = 3;  //节点边框鼠标悬停时的宽度
 
@@ -213,7 +213,7 @@
                 var TextColor = STYLE_NODE_COLOR_FORE;
 
                 if (rNode.currTrack != null)
-                    if (this.ID == currNode && rNode.currTrack.track.ActionType!=8) {
+                    if (this.ID == currNode && rNode.currTrack.track.ActionType != 8) {
                         borderColor = STYLE_CURRENT_NODE_BORDER_COLOR;
                         TextColor = STYLE_CURRENT_NODE_COLOR_FORE;
                     } else {
@@ -242,10 +242,10 @@
                     if (rNode.rPossible) {
                         rNode.rPossibleText = r.text(rNode.x + STYLE_NODE_WIDTH + 5, rNode.y + 25, "处理人：" + rNode.rPossible.EmpName + (rNode.rPossible.ADT && rNode.rPossible.ADT.length >= 16 ? ('\n到达：' + rNode.rPossible.ADT) : ''));
                         rNode.rPossibleText.attr({ "stroke": TextColor, "fill": getFillTextColor(TextColor), "font-size": STYLE_NODE_TRACK_FONT_SIZE, "text-anchor": "start" });
-                        rNode.rPossibleText.toFront(); 
+                        rNode.rPossibleText.toFront();
                     }
                 }
-               
+
 
                 rNode.rBorder.attr({ "stroke": borderColor, "stroke-width": STYLE_NODE_BORDER_WIDTH_NORMAL });
                 rNode.rText.attr({ "stroke": TextColor, "fill": getFillTextColor(TextColor), "font-size": STYLE_FONT_SIZE_NODE });
@@ -265,7 +265,7 @@
                         node.rText.attr({ "stroke": STYLE_NODE_COLOR_FORE_HOVER, "fill": getFillTextColor(STYLE_NODE_COLOR_FORE_HOVER) });
 
                         var tablehtml = "";
-                       
+
                         //增加到达时间,应完成时间.
                         var generWorkerLists = jdata.WF_GenerWorkerList;
 
@@ -591,14 +591,14 @@
                         var borderColor = nodeBorderColor;
                         var TextColor = STYLE_NODE_COLOR_FORE;
                         if (node.currTrack != null)
-	                        if (node.id == currNode && node.currTrack.track.ActionType!=8) {
-	                            borderColor = STYLE_CURRENT_NODE_BORDER_COLOR;
-	                            TextColor = STYLE_CURRENT_NODE_COLOR_FORE;
-	                        } else {
-	                            TextColor = STYLE_NODE_COLOR_FORE_TRACK;
-	                            borderColor = STYLE_NODE_BORDER_COLOR_TRACK;
-	                        }
-                       
+                            if (node.id == currNode && node.currTrack.track.ActionType != 8) {
+                                borderColor = STYLE_CURRENT_NODE_BORDER_COLOR;
+                                TextColor = STYLE_CURRENT_NODE_COLOR_FORE;
+                            } else {
+                                TextColor = STYLE_NODE_COLOR_FORE_TRACK;
+                                borderColor = STYLE_NODE_BORDER_COLOR_TRACK;
+                            }
+
                         node.rBorder.attr({ "stroke": borderColor, "stroke-width": STYLE_NODE_BORDER_WIDTH_NORMAL });
                         node.rText.attr({ "stroke": TextColor, "fill": getFillTextColor(TextColor) });
 

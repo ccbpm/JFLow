@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -40,6 +39,7 @@ import BP.DA.TWay;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entity;
+import BP.En.QueryObject;
 import BP.En.Row;
 import BP.Port.Emp;
 import BP.Sys.AthCtrlWay;
@@ -63,6 +63,7 @@ import BP.Sys.MapDatas;
 import BP.Sys.MapDtl;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExt;
+import BP.Sys.MapExtAttr;
 import BP.Sys.MapExtXmlList;
 import BP.Sys.MapExts;
 import BP.Sys.OSModel;
@@ -70,6 +71,7 @@ import BP.Sys.SFDBSrc;
 import BP.Sys.SFTable;
 import BP.Sys.SystemConfig;
 import BP.Sys.ToolbarExcel;
+import BP.Tools.ContextHolderUtils;
 import BP.Tools.DateUtils;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
@@ -101,7 +103,6 @@ import BP.WF.Template.SysForm;
 import BP.WF.Template.SysFormTree;
 import BP.WF.Template.SysFormTrees;
 import BP.Web.WebUser;
-import BP.Tools.ContextHolderUtils;
 
 /**
  * 全局(方法处理)
@@ -234,7 +235,141 @@ public class Glo {
 
 		if (Ver <= currVer)
 			return null; // 不需要升级.
+		
+		// #region 升级填充事件.
+		//pop自动填充
+        MapExts exts = new MapExts();
+        QueryObject qo = new QueryObject(exts);
+        qo.AddWhere(MapExtAttr.ExtType, " LIKE ", "Pop%");
+        qo.DoQuery();
+        for (MapExt ext : exts.ToJavaList())
+        {
+            String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
+            MapAttr ma = new MapAttr();
+            ma.setMyPK(mypk);
+            if (ma.RetrieveFromDBSources() == 0)
+            {
+                ext.Delete();
+                continue;
+            }
 
+            if (ma.GetParaString("PopModel") == ext.getExtType())
+                continue; //已经修复了，或者配置了.
+
+            ma.SetPara("PopModel", ext.getExtType());
+            ma.Update();
+
+            if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
+                continue;
+
+            MapExt extP = new MapExt();
+//            extP.MyPK =  ext.MyPK + "_FullData";
+            extP.setMyPK(ext.getMyPK() + "_FullData");
+            int i = extP.RetrieveFromDBSources();
+            if (i == 1)
+                continue;
+            extP.setExtType("FullData");
+            extP.setFK_MapData(ext.getFK_MapData());
+            extP.setAttrOfOper(ext.getAttrOfOper());
+            extP.setDBType(ext.getDBType());
+            extP.setDoc(ext.getTag4());
+            extP.Insert(); //执行插入.
+        }
+
+
+        //文本自动填充
+        exts = new MapExts();
+        exts.Retrieve(MapExtAttr.ExtType,MapExtXmlList.TBFullCtrl);
+        for (MapExt ext : exts.ToJavaList())
+        {
+            String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
+            MapAttr ma = new MapAttr();
+            ma.setMyPK(mypk);
+            if (ma.RetrieveFromDBSources() == 0)
+            {
+                ext.Delete();
+                continue;
+            }
+            String modal = ma.GetParaString("TBFullCtrl");
+            if (DataType.IsNullOrEmpty(modal) == false)
+                continue; //已经修复了，或者配置了.
+
+            if (DataType.IsNullOrEmpty(ext.getTag3()) == false)
+                ma.SetPara("TBFullCtrl","Simple");
+            else
+                ma.SetPara("TBFullCtrl","Table");
+
+            ma.Update();
+
+            if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
+                continue;
+
+            MapExt extP = new MapExt();
+            extP.setMyPK(ext.getMyPK() + "_FullData");
+            int i = extP.RetrieveFromDBSources();
+            if (i == 1)
+                continue;
+            extP.setExtType("FullData");
+            extP.setFK_MapData(ext.getFK_MapData());
+            extP.setAttrOfOper(ext.getAttrOfOper());
+            extP.setDBType(ext.getDBType());
+            extP.setDoc(ext.getTag4());
+            
+
+            //填充从表
+            extP.setTag1(ext.getTag1());
+            //填充下拉框
+            extP.setTag(ext.getTag());
+
+            extP.Insert(); //执行插入.
+        }
+
+        //下拉框填充其他控件
+        //文本自动填充
+        exts = new MapExts();
+        exts.Retrieve(MapExtAttr.ExtType, MapExtXmlList.DDLFullCtrl);
+        for (MapExt ext : exts.ToJavaList())
+        {
+            String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
+            MapAttr ma = new MapAttr();
+            ma.setMyPK(mypk);
+            if (ma.RetrieveFromDBSources() == 0)
+            {
+                ext.Delete();
+                continue;
+            }
+            String modal = ma.GetParaString("IsFullData");
+            if (DataType.IsNullOrEmpty(modal) == false)
+                continue; //已经修复了，或者配置了.
+
+            //启用填充其他控件
+            ma.SetPara("IsFullData", 1);
+            ma.Update();
+
+           
+            MapExt extP = new MapExt();
+            extP.setMyPK(ext.getMyPK() + "_FullData");
+            int i = extP.RetrieveFromDBSources();
+            if (i == 1)
+                continue;
+
+            extP.setExtType("FullData");
+            extP.setFK_MapData(ext.getFK_MapData());
+            extP.setAttrOfOper(ext.getAttrOfOper());
+            extP.setDBType(ext.getDBType());
+            extP.setDoc(ext.getDoc());
+
+
+            //填充从表
+            extP.setTag1(ext.getTag1());
+            //填充下拉框
+            extP.setTag(ext.getTag());
+
+            extP.Insert(); //执行插入.
+            
+        }
+        // #region 升级填充事件.
+        
 		String msg = "";
 		try {
 			

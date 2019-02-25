@@ -735,6 +735,7 @@ public class GenerWorkFlow extends Entity
 
 
 		map.AddTBDateTime(GenerWorkFlowAttr.RDT, "记录日期", true, true);
+		map.AddTBDateTime(GenerWorkFlowAttr.SendDT, "记录日期", true, true);
 		map.AddTBInt(GenerWorkFlowAttr.FK_Node, 0, "节点", true, false);
 		map.AddTBString(GenerWorkFlowAttr.NodeName, null, "节点名称", true, false, 0, 100, 10);
 

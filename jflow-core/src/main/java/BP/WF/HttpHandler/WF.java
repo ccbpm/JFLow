@@ -1025,7 +1025,7 @@ public class WF extends WebContralBase {
 		// int allNum = qo.GetCount();
 		// qo.DoQuery(BP.WF.SMSAttr.MyPK, pageSize, pageIdx);
 
-		return BP.Tools.Json.DataTableToJson(dt, false);
+		return BP.Tools.Json.ToJson(dt);
 	}
 
 	/**

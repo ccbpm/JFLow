@@ -1115,13 +1115,13 @@ public class WorkFlow
 		//调用结束前事件.
 		this.getHisFlow().DoFlowEventEntity(EventListOfNode.FlowOverBefore, currNode, rpt, null);
 
-		if (DotNetToJavaStringHelper.isNullOrEmpty(stopMsg))
+		if (DataType.IsNullOrEmpty(stopMsg))
 		{
 			stopMsg += "流程结束";
 		}
 
 		String exp = currNode.getFocusField();
-		if (DotNetToJavaStringHelper.isNullOrEmpty(exp) == false && exp.length() > 1)
+		if (DataType.IsNullOrEmpty(exp) == false && exp.length() > 1)
 		{
 			if (rpt != null)
 			{
@@ -1129,11 +1129,10 @@ public class WorkFlow
 			}
 		}
 
-		String msg = "";
 		if (this.getIsMainFlow() == false)
 		{
 			// 处理子流程完成
-			return this.DoFlowSubOver();
+			stopMsg += this.DoFlowSubOver();
 		}
 
 
@@ -1170,48 +1169,7 @@ public class WorkFlow
 		Paras ps = new Paras();
 	 
 
-		if (Glo.getIsDeleteGenerWorkFlow() == true)
-		{
-			// 是否删除流程注册表的数据？
-			ps = new Paras();
-			ps.SQL = "DELETE FROM WF_GenerWorkFlow WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2 ";
-			ps.Add("WorkID1", this.getWorkID());
-			ps.Add("WorkID2", this.getWorkID());
-			DBAccess.RunSQL(ps);
-		}
-		else
-		{
-			//求出参与人,以方便已经完成的工作查询.
-			ps = new Paras();
-			ps.SQL = "SELECT EmpFrom FROM ND" + Integer.parseInt(this._HisFlow.getNo()) + "Track WHERE WorkID=" + dbstr + "WorkID OR FID=" + dbstr + "FID ";
-			ps.Add("WorkID", this.getWorkID());
-			ps.Add("FID", this.getWorkID());
-			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-			String emps = "@";
-			for (DataRow dr : dt.Rows)
-			{
-				if (emps.contains("@" + dr.getValue(0).toString() + "@") == true)
-				{
-					continue;
-				}
-				emps += dr.getValue(0).toString() + "@";
-			}
-			//追加当前操作人
-			if (emps.contains("@" + WebUser.getNo() + "@") == false)
-			{
-				emps += WebUser.getNo() + "@";
-			}
-
-			//更新流程注册信息.
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta,Emps=" + dbstr + "Emps,MyNum=1 WHERE WorkID=" + dbstr + "WorkID ";
-			ps.Add("WFState", WFState.Complete.getValue());
-			ps.Add("WFSta", WFSta.Complete.getValue());
-			ps.Add("Emps", emps);
-			ps.Add("WorkID", this.getWorkID());
-			DBAccess.RunSQL(ps);
-		}
-
+		
 		// 删除子线程产生的 流程注册信息.
 		if (this.getFID() == 0)
 		{
@@ -1227,10 +1185,19 @@ public class WorkFlow
 		ps.Add("WorkID1", this.getWorkID());
 		ps.Add("WorkID2", this.getWorkID());
 		DBAccess.RunSQL(ps);
+		
+		//把当前的人员字符串加入到参与人里面去,以方便查询.
+        String emps = WebUser.getNo() + "@";
 
 		// 设置流程完成状态.
 		ps = new Paras();
-		ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+            ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET  FlowEmps= FlowEmps ||'" + emps + "', WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";
+        else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+            ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= CONCAT(FlowEmps ,'" + emps + "'), WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";
+        else
+            ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= FlowEmps + '" + emps + "', WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";
+		
 		ps.Add("WFState", WFState.Complete.getValue());
 		ps.Add("WFSta", WFSta.Complete.getValue());
 		ps.Add("OID", this.getWorkID());
@@ -1241,17 +1208,15 @@ public class WorkFlow
 		wn.AddToTrack(at, WebUser.getNo(), WebUser.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), stopMsg);
 
 		//调用结束后事件.
-	   msg+= this.getHisFlow().DoFlowEventEntity(EventListOfNode.FlowOverAfter, currNode, rpt, null);
+		stopMsg+= this.getHisFlow().DoFlowEventEntity(EventListOfNode.FlowOverAfter, currNode, rpt, null);
 
 			///#endregion 处理后续的业务.
 
 		//执行最后一个子流程发送后的检查，不管是否成功，都要结束该流程。
-		msg += this.LetParentFlowAutoSendNextSetp();
-
-		//string dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+	   stopMsg += this.LetParentFlowAutoSendNextSetp();
 
 
-			///#region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
+		///#region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
 		ps = new Paras();
 		ps.SQL = "UPDATE ND" + Integer.parseInt(currNode.getFK_Flow()) + "Track SET NDTo=" + dbstr + "NDTo,NDToT=" + dbstr + "NDToT,EmpTo=" + dbstr + "EmpTo,EmpToT=" + dbstr + "EmpToT WHERE NDFrom=" + dbstr + "NDFrom AND EmpFrom=" + dbstr + "EmpFrom AND WorkID=" + dbstr + "WorkID AND ActionType=" + ActionType.WorkCheck.getValue();
 		ps.Add(TrackAttr.NDTo, currNode.getNodeID());
@@ -1264,11 +1229,13 @@ public class WorkFlow
 		ps.Add(TrackAttr.WorkID, this.getWorkID());
 		BP.DA.DBAccess.RunSQL(ps);
 
-			///#endregion 处理审核问题.
-
-		//if (string.IsNullOrEmpty(msg) == true)
-		//    msg = "流程成功结束.";
-		return msg;
+		 //执行流程结束.
+        GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+        gwf.setEmps(gwf.getEmps()+emps);
+        gwf.setWFState(WFState.Complete);
+        gwf.Update();
+        
+		return stopMsg;
 	}
 	 
 	public final int getStartNodeID()

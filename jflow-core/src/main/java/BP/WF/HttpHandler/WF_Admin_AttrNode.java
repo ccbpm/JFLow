@@ -42,6 +42,7 @@ import BP.Sys.MapDtls;
 import BP.Sys.SystemConfig;
 import BP.Tools.DealString;
 import BP.Tools.StringHelper;
+import BP.WF.BatchRole;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Glo;
 import BP.WF.Node;
@@ -1656,8 +1657,16 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		BP.WF.Node nd = new BP.WF.Node(nodeID);
 
 		BP.Sys.SysEnums ses = new BP.Sys.SysEnums(BP.WF.Template.NodeAttr.BatchRole);
-
-		return "{\"nd\":" + nd.ToJson() + ",\"ses\":" + ses.ToJson() + ",\"attrs\":" + attrs.ToJson() + "}";
+		//获取当前节点设置的批处理规则
+        String srole = "";
+        if (nd.getHisBatchRole() == BatchRole.None)
+            srole = "0";
+        else if (nd.getHisBatchRole() == BatchRole.Ordinary)
+            srole = "1";
+        else
+            srole = "2";
+        
+        return "{\"nd\":" + nd.ToJson() + ",\"ses\":" + ses.ToJson() + ",\"attrs\":" + attrs.ToJson() + ",\"BatchRole\":" + srole + "}";
 	}
 
 	/**
@@ -1690,8 +1699,8 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		nd.setBatchListCount(Integer.parseInt(this.GetRequestVal("TB_BatchListCount")));
 		// 批处理的参数
 		String sbatchparas = "";
-		if (this.GetRequestVal("CB_Node") != null) {
-			sbatchparas = this.GetRequestVal("CB_Node");
+		if (this.GetRequestVal("CheckBoxIDs") != null) {
+			sbatchparas = this.GetRequestVal("CheckBoxIDs");
 		}
 		nd.setBatchParas(sbatchparas);
 		nd.Update();

@@ -32,6 +32,8 @@ import BP.Sys.FrmType;
 import BP.Sys.FrmWorkCheckAttr;
 import BP.Sys.GEDtl;
 import BP.Sys.GEDtls;
+import BP.Sys.MapAttr;
+import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapExt;
 import BP.Sys.MapExtAttr;
@@ -57,11 +59,13 @@ import BP.WF.Track;
 import BP.WF.WFSta;
 import BP.WF.Work;
 import BP.WF.WorkFlow;
+import BP.WF.Works;
 import BP.WF.Data.Bill;
 import BP.WF.Data.GERpt;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Port.WFEmp;
 import BP.WF.Port.WFEmpAttr;
+import BP.WF.Template.BtnLab;
 import BP.WF.Template.CCList;
 import BP.WF.Template.CCSta;
 import BP.WF.Template.FTCAttr;
@@ -1493,7 +1497,269 @@ public class WF extends WebContralBase {
 
 		return "err@没有约定的标记:DoWhat=" + this.getDoWhat();
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion 处理page接口.
+	
+	/**
+	 * 批处理审批
+	 * @return
+	 * @throws Exception 
+	 */
+    public String Batch_Init() throws Exception
+    {
+        String fk_node = GetRequestVal("FK_Node");
+
+        //没有传FK_Node
+        if (DataType.IsNullOrEmpty(fk_node))
+        {
+            String sql = "SELECT a.NodeID, a.Name,a.FlowName, COUNT(WorkID) AS NUM  FROM WF_Node a, WF_EmpWorks b WHERE A.NodeID=b.FK_Node AND B.FK_Emp='" + WebUser.getNo() + "' AND b.WFState NOT IN (7) AND a.BatchRole!=0 GROUP BY A.NodeID, a.Name,a.FlowName ";
+            DataTable dt = DBAccess.RunSQLReturnTable(sql);
+            return BP.Tools.Json.ToJson(dt);
+        }
+
+
+        return "";
+    }
+
+    public String BatchList_Init() throws Exception
+    {
+        DataSet ds = new DataSet();
+
+        String FK_Node = GetRequestVal("FK_Node");
+
+        //获取节点信息
+        BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
+        Flow fl = nd.getHisFlow();
+        ds.Tables.add(nd.ToDataTableField("WF_Node"));
+        
+        String sql = "";
+
+        if (nd.getHisRunModel() == RunModel.SubThread)
+        {
+            sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable()
+                      + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID()
+                      + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+        }
+        else
+        {
+            sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable()
+                    + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID()
+                    + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+        }
+
+        //获取待审批的流程信息集合
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        dt.TableName = "Batch_List";
+        ds.Tables.add(dt);
+
+        //获取按钮权限
+        BtnLab btnLab = new BtnLab(this.getFK_Node());
+
+        ds.Tables.add(btnLab.ToDataTableField("Sys_BtnLab"));
+
+        //获取报表数据
+        String inSQL = "SELECT WorkID FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo() + "' AND WFState!=7 AND FK_Node=" + this.getFK_Node();
+        Works wks = nd.getHisWorks();
+        wks.RetrieveInSQL(inSQL);
+
+        ds.Tables.add(wks.ToDataTableField("WF_Work"));
+
+        //获取字段属性
+        MapAttrs attrs = new MapAttrs("ND"+this.getFK_Node());
+
+        //获取实际中需要展示的列
+        String batchParas = nd.getBatchParas();
+        MapAttrs realAttr = new MapAttrs();
+        if (DataType.IsNullOrEmpty(batchParas) == false)
+        {
+            String[] strs = batchParas.split(",");
+            for(String str : strs)
+            {
+                if (DataType.IsNullOrEmpty(str)
+                    || str.contains("@PFlowNo") == true)
+                    continue;
+
+                for(MapAttr attr : attrs.ToJavaList())
+                {
+                    if (str != attr.getKeyOfEn())
+                        continue;
+                    realAttr.AddEntity(attr);
+                }
+            }
+        }
+
+        ds.Tables.add(realAttr.ToDataTableField("Sys_MapAttr"));
+
+        return BP.Tools.Json.ToJson(ds);
+    }
+
+    /**
+     *  批量发送
+     * @return
+     * @throws Exception 
+     */
+   
+    public String Batch_Send() throws Exception
+    {
+        BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
+        String[] strs = nd.getBatchParas().split(",");
+
+        MapAttrs attrs = new MapAttrs("ND"+this.getFK_Node());
+
+        //获取数据
+        String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='"+WebUser.getNo()+"' and FK_Node='"+this.getFK_Node()+"'";
+
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        int idx = -1;
+        String msg = "";
+        for(DataRow dr : dt.Rows)
+        {
+            idx++;
+            if (idx == nd.getBatchListCount())
+                break;
+            long workid = Long.parseLong(dr.getValue("WorkID").toString());
+            String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
+            if (cb.equals("on"))
+                cb = "1";
+            else cb = "0";
+            if (cb.equals("0")) //没有选中
+                continue;
+            //#region 给字段赋值
+            Hashtable ht = new Hashtable();
+            for(String str : strs)
+            {
+                if (DataType.IsNullOrEmpty(str))
+                    continue;
+                for(MapAttr attr : attrs.ToJavaList())
+                {
+                    if (str != attr.getKeyOfEn())
+                        continue;
+                   
+
+                    if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+                    {
+
+                        String val = this.GetValFromFrmByKey("TB_" + workid + "_" + attr.getKeyOfEn(), null);
+                        ht.put(str, val);
+                        continue;
+                    }
+
+
+                    if (attr.getUIContralType() == BP.En.UIContralType.TB && attr.getUIIsEnable() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("TB_" + workid + "_" + attr.getKeyOfEn(), null);
+                        ht.put(str, val);
+                        continue;
+                    }
+
+                    if (attr.getUIContralType() == BP.En.UIContralType.DDL && attr.getUIIsEnable() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("DDL_" + workid + "_" + attr.getKeyOfEn());
+                        ht.put(str, val);
+                        continue;
+                    }
+
+                    if (attr.getUIContralType() == BP.En.UIContralType.CheckBok && attr.getUIIsEnable() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("CB_" + +workid + "_" + attr.getKeyOfEn(), "-1");
+                        if (val == "-1")
+                            ht.put(str, 0);
+                        else
+                            ht.put(str, 1);
+                        continue;
+                    }
+                }
+            }
+            //给字段赋值
+            //获取审核意见的值
+            String checkNote = this.GetValFromFrmByKey("TB_" + workid + "_WorkCheck_Doc", null);
+            if (DataType.IsNullOrEmpty(checkNote) == false)
+                BP.WF.Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid, Long.parseLong(dr.getValue("FID").toString()), checkNote, WebUser.getName());
+            
+            msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下";
+            BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, ht);
+            msg += objs.ToMsgOfHtml();
+            msg += "<br/>";
+        }
+
+        if (msg == "")
+            msg = "没有选择需要处理的工作";
+        return msg;
+    }
+
+    /// <summary>
+    /// 批量退回 待定
+    /// </summary>
+    /// <returns></returns>
+    public String Batch_Return() throws Exception
+    {
+        BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
+        //获取数据
+        String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='"+WebUser.getNo()+"' and FK_Node='"+this.getFK_Node()+"'";
+
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        int idx = -1;
+        String msg = "";
+        for (DataRow dr : dt.Rows)
+        {
+            idx++;
+            if (idx == nd.getBatchListCount())
+                break;
+            long workid = Long.parseLong(dr.getValue("WorkID").toString());
+            String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
+            if (cb.equals("on"))
+                cb = "1";
+            else cb = "0";
+            if (cb.equals("0")) //没有选中
+                continue;
+
+            msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下。<br>";
+            BP.WF.SendReturnObjs objs = null;// BP.WF.Dev2Interface.Node_ReturnWork(nd.FK_Flow, workid,fid,this.FK_Node,"批量退回");
+            msg += objs.ToMsgOfHtml();
+            msg += "<hr>";
+
+        }
+        return "工作在完善中";
+    }
+
+
+
+    /// <summary>
+    /// 批量删除
+    /// </summary>
+    /// <returns></returns>
+    public String Batch_Delete() throws Exception
+    {
+    	BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
+
+        //获取数据
+        String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='"+WebUser.getNo()+"' and FK_Node='"+this.getFK_Node()+"'";
+
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        int idx = -1;
+        String msg = "";
+        for (DataRow dr : dt.Rows)
+        {
+            idx++;
+            if (idx == nd.getBatchListCount())
+                break;
+            long workid = Long.parseLong(dr.getValue("WorkID").toString());
+            String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
+            if (cb.equals("on"))
+                cb = "1";
+            else cb = "0";
+            if (cb.equals("0")) //没有选中
+                continue;
+
+            msg += "@对工作(" + dr.getValue("Title")+ ")处理情况如下。<br>";
+            String mes = BP.WF.Dev2Interface.Flow_DoDeleteFlowByFlag(nd.getFK_Flow(), workid, "批量退回", true);
+            msg += mes;
+            msg += "<hr>";
+
+        }
+        if (msg == "")
+            msg = "没有选择需要处理的工作";
+
+        return "批量删除成功" + msg;
+    }
+
 
 }

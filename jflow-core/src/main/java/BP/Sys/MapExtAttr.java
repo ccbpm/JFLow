@@ -84,6 +84,11 @@ public class MapExtAttr extends EntityNoNameAttr
 	*/
 	public static final String Tag4 = "Tag4";
 	/** 
+	 tag5
+	 
+	*/
+	public static final String Tag5 = "Tag5";
+	/** 
 	 数据源
 	 
 	*/

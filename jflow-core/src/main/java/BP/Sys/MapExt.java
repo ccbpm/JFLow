@@ -587,7 +587,14 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey("Tag4", value);
 	}
-
+	public final String getTag5()
+	{
+		return this.GetValStrByKey("Tag5").replace("~", "'");
+	}
+	public final void setTag5(String value)
+	{
+		this.SetValByKey("Tag5", value);
+	}
 	public final String getDBSrc()
 	{
 		return this.GetValStrByKey("DBSrc");
@@ -666,7 +673,8 @@ public class MapExt extends EntityMyPK
 		map.AddTBString(MapExtAttr.Tag2, null, "Tag2", true, false, 0, 2000, 20);
 		map.AddTBString(MapExtAttr.Tag3, null, "Tag3", true, false, 0, 2000, 20);
 		map.AddTBString(MapExtAttr.Tag4, null, "Tag4", true, false, 0, 2000, 20);
-
+		map.AddTBString(MapExtAttr.Tag5, null, "Tag5", true, false, 0, 2000, 20);
+		
 		map.AddTBString(MapExtAttr.AtPara, null, "参数", true, false, 0, 2000, 20);
 		
 

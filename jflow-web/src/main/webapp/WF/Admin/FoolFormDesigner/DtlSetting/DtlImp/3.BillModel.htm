@@ -50,7 +50,7 @@
             mapExt.CopyForm(); //从from里面copy数据.
             mapExt.ExtType = "DtlImp";
             mapExt.AttrOfOper = "BillModel"; //后台有默认设置，要使主键区分开，所以设置此值 
-            var val = mapExt.Update();
+            var val = mapExt.Save();
             window.location.href = window.location.href;
         }
         function Delete() {

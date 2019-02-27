@@ -884,7 +884,7 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		if (md.getHisFrmType() == FrmType.VSTOForExcel && this.GetRequestVal("IsFreeFrm") == null) {
-			String url = "FrmVSTO.jsp?1=1&" + this.getRequestParas();
+			String url = "FrmVSTO.jsp?1=1&" + this.getRequestParasOfAll();
 			return "url@" + url;
 		}
 
@@ -895,8 +895,8 @@ public class WF_CCForm extends WebContralBase {
 					+ this.getFK_MapData() + "&OIDPKVal=" + this.getOID() + "&FID=" + this.getFID() + "&FK_Flow="
 					+ this.getFK_Flow();
 			// 如果是URL.
-			String requestParas = this.getRequestParas();
-			String[] parasArrary = this.getRequestParas().split("[&]", -1);
+			String requestParas = this.getRequestParasOfAll();
+			String[] parasArrary = this.getRequestParasOfAll().split("[&]", -1);
 			for (String str : parasArrary) {
 				if (DotNetToJavaStringHelper.isNullOrEmpty(str) || str.contains("=") == false) {
 					continue;
@@ -915,12 +915,12 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		if (md.getHisFrmType() == FrmType.ExcelFrm) {
-			return "url@FrmExcel.jsp?1=2" + this.getRequestParas();
+			return "url@FrmExcel.jsp?1=2" + this.getRequestParasOfAll();
 		}
 		// /#endregion 判断是否是返回的URL.
 
 		// 处理参数.
-		String paras = this.getRequestParas();
+		String paras = this.getRequestParasOfAll();
 		paras = paras.replace("&DoType=Frm_Init", "");
 		
 		 //非流程的独立运行的表单.

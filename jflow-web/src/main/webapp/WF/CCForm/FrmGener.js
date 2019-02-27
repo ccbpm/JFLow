@@ -61,8 +61,8 @@ $(function () {
         $('.Message').hide();
     });
 
-    setAttachDisabled();
-    setFormEleDisabled();
+//    setAttachDisabled();
+//    setFormEleDisabled();
 
     SetHegiht();
     //打开表单检查正则表达式
@@ -170,17 +170,17 @@ function GenerFrm() {
     if (href.indexOf('&IsReadonly=1') > 1 || href.indexOf('&IsEdit=0') > 1) {
         $("#Btn").hide();
     }
-//    var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
-//    handler.AddUrlData();
-//    handler.AddJson(pageData);
-//    var data = handler.DoMethodReturnString("FrmGener_Init");
-    $.ajax({
-        type: 'post',
-        async: true,
-        data: pageData,
-        url: Handler + "?DoType=FrmGener_Init&m=" + Math.random() + "&" + urlParam,
-        dataType: 'html',
-        success: function (data) {
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+    handler.AddUrlData(urlParam);
+    handler.AddJson(pageData);
+    var data = handler.DoMethodReturnString("FrmGener_Init");
+//    $.ajax({
+//        type: 'post',
+//        async: true,
+//        data: pageData,
+//        url: Handler + "?DoType=FrmGener_Init&m=" + Math.random() + "&" + urlParam,
+//        dataType: 'html',
+//        success: function (data) {
 
             if (data.indexOf('err@') == 0) {
                 alert('装载表单出错,请查看控制台console,或者反馈给管理员.');
@@ -342,6 +342,8 @@ function GenerFrm() {
                         var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
                         if (selectText == null || selectText == undefined || selectText == "")
                             selectText = mainTable[mapAttr.KeyOfEn + "T"];
+
+                        if (selectText != null && selectText != undefined && selectText != "")
                         $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
                     }
                     if(defValue!="")
@@ -407,8 +409,8 @@ function GenerFrm() {
                     setContentHeight();
                 }
             }
-        }
-    })
+//        }
+//    })
 }
 
 // V

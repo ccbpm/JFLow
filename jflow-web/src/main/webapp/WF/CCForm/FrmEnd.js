@@ -17,7 +17,7 @@
     for (var i = 0; i < mapAttrs.length; i++) {
         var mapAttr = mapAttrs[i];
         //设置文本框只读.
-        if (mapAttr.UIVisible != 0 &&(mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0)) {
+        if (mapAttr.UIVisible != 0 &&(mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0)){
             var tb = $('#TB_' + mapAttr.KeyOfEn);
             $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
             $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
@@ -61,8 +61,9 @@
                 }
             }
         }
+
        
-        $('#TB_' + mapAttr.KeyOfEn).val(val);
+            $('#TB_' + mapAttr.KeyOfEn).val(val);
 
         //文本框.
         if (mapAttr.UIContralType == 0) {
@@ -82,6 +83,7 @@
                 var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
                 if (selectText == null || selectText == undefined || selectText == "")
                     selectText = mainTable[mapAttr.KeyOfEn + "T"];
+                if(selectText != null && selectText != undefined && selectText != "")
                 $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + val + "'>" + selectText + "</option>");
             }
             $('#DDL_' + mapAttr.KeyOfEn).val(val);
@@ -243,21 +245,9 @@ function AfterBindEn_DealMapExt(frmData) {
 
         //一起转成entity.
         var mapExt = new Entity("BP.Sys.MapExt", mapExt);
-        var en = null;
-        for (var j = 0; j < mapAttrs.length; j++) {
-            if (mapAttrs[j].FK_MapData == mapExt.FK_MapData && mapAttrs[j].KeyOfEn == mapExt.AttrOfOper) {
-                en = mapAttrs[j];
-                break;
-            }
-        }
-
-        //MapAttr属性不存在删除他的扩张
-        if (en == null) {
-            mapExt.Delete();
-            continue;
-        }
+       
         var mapAttr = new Entity("BP.Sys.MapAttr");
-        mapAttr.SetPKVal(en.MyPK);
+        mapAttr.SetPKVal(mapExt.FK_MapData + "_" + mapExt.AttrOfOper);
         var count = mapAttr.RetrieveFromDBSources();
 
         //MapAttr属性不存在删除他的扩张
@@ -270,7 +260,7 @@ function AfterBindEn_DealMapExt(frmData) {
         var PopModel = mapAttr.GetPara("PopModel");
 
         if (PopModel!="" && (mapExt.ExtType == mapAttr.GetPara("PopModel"))) {
-            PopMapExt(mapAttr, mapExt);
+            PopMapExt(mapAttr, mapExt, frmData);
             continue;
         }
 
@@ -440,7 +430,7 @@ function AfterBindEn_DealMapExt(frmData) {
 }
 
 /**Pop弹出框的处理**/
-function PopMapExt(mapAttr, mapExt) {
+function PopMapExt(mapAttr, mapExt, frmData) {
     switch (mapAttr.GetPara("PopModel")) {
         case "PopBranchesAndLeaf": //树干叶子模式.
             var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);

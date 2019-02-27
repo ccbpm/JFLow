@@ -3027,7 +3027,7 @@ public class WF_CCForm extends WebContralBase {
 	}
 	
 	//#region SQL从表导入.
-    public String DtlImpBySQL_Delete()
+    public String DtlImpBySQL_Delete() throws Exception
     {
         MapDtl dtl = new MapDtl(this.getEnsName());
         BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + this.getRefPKVal() + "'");

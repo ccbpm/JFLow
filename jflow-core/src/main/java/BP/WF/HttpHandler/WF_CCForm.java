@@ -3026,6 +3026,14 @@ public class WF_CCForm extends WebContralBase {
 		return BP.Tools.Json.ToJson(dt);
 	}
 	
+	//#region SQL从表导入.
+    public String DtlImpBySQL_Delete()
+    {
+        MapDtl dtl = new MapDtl(this.getEnsName());
+        BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + this.getRefPKVal() + "'");
+        return "";
+    }
+	
 	/**
 	 * 从不SQL导入
 	 * @return

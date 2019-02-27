@@ -40,7 +40,7 @@ public class CCFlowPage
 	/**
 	 * _HisEns
 	 */
-	public Entities _HisEns = null;
+	private Entities _HisEns = null;
 	
 	/**
 	 * 他的相关功能

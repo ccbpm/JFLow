@@ -400,7 +400,7 @@ public class MapRptExt extends EntityNoName
 	{
 		this.SetValByKey(MapRptExtAttr.Note, value);
 	}
-	public Entities _HisEns = null;
+	private Entities _HisEns = null;
 	public final Entities getHisEns()
 	{
 		if (_HisEns == null)

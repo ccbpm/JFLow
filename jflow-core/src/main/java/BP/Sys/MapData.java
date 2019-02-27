@@ -987,7 +987,7 @@ public class MapData extends EntityNoName
 	{
 		this.SetValByKey(MapDataAttr.EnPK, value);
 	}
-	public Entities _HisEns = null;
+	private Entities _HisEns = null;
 	public final Entities getHisEns()
 	{
 		if (_HisEns == null)

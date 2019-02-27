@@ -4593,7 +4593,7 @@ public class Flow extends BP.En.EntityNoName {
 	 * 鑺傜偣
 	 * 
 	 */
-	public Nodes _HisNodes = null;
+	private Nodes _HisNodes = null;
 
 	/**
 	 * 浠栫殑鑺傜偣闆嗗悎.

@@ -327,8 +327,6 @@ public class MakeForm2Html
                                     single.setFK_MapData(img.getEnPK());
                                     single.setMyPK(img.getEnPK() + "_" + en.GetValStrByKey("OID") + "_" + img.getEnPK());
                                     single.setRefPKVal( img.getEnPK());
-                                    //  single.DirectInsert();
-                                    //  realDB = single; cut by zhoupeng .没有看明白.
                                     break;
                                 }
                             }
@@ -438,8 +436,7 @@ public class MakeForm2Html
             }
             ////#endregion 通过逻辑类型，输出相关的控件.
 
-            ////#endregion add contrals.
-
+          
 
             if (attr.getIsBigDoc())
             {
@@ -460,10 +457,10 @@ public class MakeForm2Html
 
             if (attr.getMyDataType() == DataType.AppBoolean)
             {
-                if (text == "0")
-                    text = "[&#10005]";
+            	if (DataType.IsNullOrEmpty(text) == true || text.equals("0"))
+                    text = "[&#10005]"+attr.getName();
                 else
-                    text = "[&#10004]";
+                    text = "[&#10004]"+attr.getName();
             }
 
              sb.append(text);
@@ -554,19 +551,6 @@ public class MakeForm2Html
 
             sb.append("</table>");
             
-
-//            String src = "";
-//            if (dtl.getHisEditModel() == EditModel.TableModel)
-//            {
-//                src = appPath + "WF/CCForm/dtl.Htm?EnsName=" + dtl.getNo() + "&RefPKVal=" + en.getPKVal() + "&IsReadonly=1";
-//            }
-//            else
-//            {
-//                src = appPath + "WF/CCForm/DtlCard.htm?EnsName=" + dtl.getNo() + "&RefPKVal=" + en.getPKVal() + "&IsReadonly=1";
-//            }
-//            
-//            sb.append("<iframe ID='F" + dtl.getNo() + "' onload= 'F" + dtl.getNo() + "load();'  src='" + src + "' frameborder=0  style='position:absolute;width:" + dtl.getW() + "px; height:" + dtl.getH() + "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
-
             sb.append("</span>");
             sb.append("</DIV>");
         }
@@ -681,7 +665,6 @@ public class MakeForm2Html
                 x = ath.getX() + wtX;
                 float y = ath.getY();
                 sb.append("<DIV id='Fa" + ath.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + y + "px; text-align: left;float:left' >");
-                //  sb.append("<span>");
                 sb.append("<DIV>");
 
                 sb.append("附件没有转化:" + athDB.getFileName());
@@ -692,7 +675,7 @@ public class MakeForm2Html
             if (ath.getUploadType() == AttachmentUploadType.Multi)
             {
                 x = ath.getX() + wtX;
-                sb.append("<DIV id='Fd" + ath.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + ath.getY()+ "px; width:" + ath.getW() + "px; height:" + ath.getH() + "px;text-align: left;' >");
+                sb.append("<DIV id='Fd" + ath.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + ath.getY()+ "px; width:" + ath.getW() + "px; height:auto;text-align: left;' >");
                 sb.append("<span>");
                 sb.append("<ul>");
 
@@ -903,10 +886,10 @@ public class MakeForm2Html
 
                     if (attr.getMyDataType() == DataType.AppBoolean)
                     {
-                        if (text == "0")
-                            text = "[&#10005]";
+                        if (DataType.IsNullOrEmpty(text) == true || text.equals("0"))
+                            text = "[&#10005]"+attr.getName();
                         else
-                            text = "[&#10004]";
+                            text = "[&#10004]"+attr.getName();
                     }
 
                     //线性展示并且colspan=3

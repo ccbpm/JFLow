@@ -3320,8 +3320,16 @@ public abstract class Entity implements Serializable {
                    //执行SQL获取默认值
                    String sql = gloVar.getVal();
                    sql = BP.WF.Glo.DealExp(sql, null, null);
-                   if (DataType.IsNullOrEmpty(myval) || myval == v)
-                	   this.SetValByKey(attr.getKey(), DBAccess.RunSQLReturnString(sql));
+                   if (DataType.IsNullOrEmpty(myval) || myval == v){
+                	   try{
+                		  v =  DBAccess.RunSQLReturnString(sql); 
+                		  this.SetValByKey(attr.getKey(),v);
+                	   }catch(Exception e){
+                		   this.SetValByKey(attr.getKey(),e.getMessage()+sql);
+                		   
+                	   }
+                	   
+                   }
                }
                continue;
 		   }

@@ -179,6 +179,11 @@
 			<artifactId>ant</artifactId>			
 		</dependency>
 		<dependency>
+		 	<groupId>org.apache.pdfbox</groupId>
+		 	<artifactId>pdfbox</artifactId>
+		 	<version>2.0.8</version>
+	 	</dependency>
+		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 		</dependency>

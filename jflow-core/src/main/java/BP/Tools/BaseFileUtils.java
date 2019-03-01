@@ -1116,4 +1116,26 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
         return filePath;
     }
     
+    /**
+    * 获取指定文件夹下的所有文件列表
+    * @param folder
+    * @return
+    * @throws IOException
+    */
+    public static String[] getFiles(String folder) throws IOException {        
+         File _folder=new File(folder);
+         String[] filesInFolder;
+         if(_folder.isDirectory()){
+             filesInFolder=_folder.list();
+             String[] retS=new String[filesInFolder.length];
+             for(int i=0;i<filesInFolder.length;i++){
+                 retS[i]=folder+File.separator+filesInFolder[i];
+             }
+             return retS;
+         }else{
+             throw new IOException("路径不是文件夹！");
+         }
+     }
+   
+   
 }

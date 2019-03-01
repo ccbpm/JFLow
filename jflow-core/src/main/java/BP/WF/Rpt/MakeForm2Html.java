@@ -7,6 +7,8 @@ import BP.DA.DataType;
 import BP.En.*;
 import BP.Sys.*;
 import BP.Tools.AesEncodeUtil;
+import BP.Tools.BaseFileUtils;
+import BP.Tools.ContextHolderUtils;
 import BP.Tools.QrCodeUtil;
 import BP.Tools.ZipCompress;
 import BP.WF.ActionType;
@@ -14,6 +16,10 @@ import BP.WF.GenerWorkFlow;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
 import BP.WF.WFState;
+import BP.WF.Template.FrmEnableRole;
+import BP.WF.Template.FrmNode;
+import BP.WF.Template.FrmNodes;
+import BP.WF.Template.WhoIsPK;
 import BP.Web.WebUser;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,6 +28,8 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*; 
 import javax.imageio.ImageIO;
+
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
 import java.util.Hashtable;
 
@@ -51,7 +59,7 @@ public class MakeForm2Html
     /// <param name="flowNo"></param>
     /// <returns></returns>
     public static StringBuilder GenerHtmlOfFree(MapData mapData, String frmID, long workid, Entity en, String path
-    		, String flowNo )throws Exception {
+    		, String flowNo ,String FK_Node,String basePath)throws Exception {
     
         StringBuilder sb = new StringBuilder();//  
 
@@ -714,7 +722,7 @@ public class MakeForm2Html
                                 Files.copy(new File(fileTempDecryPath).toPath(), new File(toFile).toPath());
                             }
 
-                            sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+frmID+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName()  + "</a></li>");
+                            sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+FK_Node+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName()  + "</a></li>");
                         }
                         catch (Exception ex)
                         {
@@ -760,7 +768,7 @@ public class MakeForm2Html
 }
         
     private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en
-    		, String path, String flowNo) throws Exception
+    		, String path, String flowNo,String FK_Node,String basePath) throws Exception
     {
         StringBuilder sb =new StringBuilder();
 
@@ -965,7 +973,7 @@ public class MakeForm2Html
                     if (item.getUIVisible() == false)
                         continue;
 
-                    sb.append("<th>" + item.getName() + "</th>");
+                    sb.append("<th stylle='width:"+item.getUIWidthInt()+"px;'>" + item.getName() + "</th>");
                 }
                 sb.append("</tr>");
                 //#endregion 输出标题.
@@ -1068,7 +1076,7 @@ public class MakeForm2Html
                                         
                                         Files.copy(new File(fileTempDecryPath).toPath(),pathfileTo.toPath());
 
-                                    sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+frmID+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName() + "</a></li>");
+                                    sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+FK_Node+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName() + "</a></li>");
                                 }
                              catch(Exception ex )
                                 {
@@ -1112,6 +1120,46 @@ public class MakeForm2Html
                 }
             }
             //#endregion 如果是附件.
+            
+            //如果是IFrame页面
+            if(gf.getCtrlType().equals("Frame") && flowNo != null ){
+            	sb.append("<tr>");
+            	sb.append("  <td colspan='4' >");
+            	
+            	//根据GroupID获取对应的
+            	MapFrame frame = new MapFrame(gf.getCtrlID());
+            	//获取URL
+            	String url = frame.getURL();
+            	
+            	//替换URL的
+            	url = url.replace("@basePath", basePath);
+            	//替换系统参数
+            	url = url.replaceAll("@WebUser.No", WebUser.getNo());
+            	url = url.replaceAll("@WebUser.Name;", WebUser.getName());
+            	url = url.replaceAll("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+            	url = url.replaceAll("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
+            	//替换参数
+            	if (url.indexOf("?") > 0){
+            		//获取url中的参数
+            		url = url.substring(url.indexOf('?'));
+            		String[] params = url.split("&");
+            		for(String param : params){
+            			if(DataType.IsNullOrEmpty(param) || param.indexOf("@") == -1)
+            				continue;
+            			String[] paramArr = param.split("=");
+                        if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
+                            if (paramArr[1].indexOf("@WebUser.") == 0)
+                            	continue;
+                            url = url.replace(paramArr[1], en.GetValStrByKey(paramArr[1].substring(1)));
+                        }
+            		}
+            		
+            	}
+                sb.append("<iframe style='width:100%;height:auto;' ID='" + frame.getMyPK() + "'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe></div>");
+                sb.append("</td>");
+                sb.append("</tr>");
+            }
+            
 
             //#region 审核组件
             if (gf.getCtrlType().equals("FWC") && flowNo != null)
@@ -1225,88 +1273,334 @@ public class MakeForm2Html
         sb.append("</table>");
         return sb;
     }
+    
+    /**
+     * 树形表单转成PDF
+     * @return
+     * @throws Exception 
+     */
+    public static String MakeCCFormToPDF(Node node, long workid,String flowNo,String fileNameFormat,boolean urlIsHostUrl,String basePath) throws Exception{
+    	//根据节点信息获取表单方案
+    	MapData md = new MapData("ND"+node.getNodeID());
+    	String resultMsg ="";
+    	GenerWorkFlow gwf = null;
+    	
+    	//获取主干流程信息
+    	if(flowNo!=null)
+    		gwf = new GenerWorkFlow(workid);
+    	
+    	//存放信息地址
+    	String hostURL = SystemConfig.GetValByKey("HostURL","");
+		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid;
+		String frmID = "ND"+node.getNodeID();
+		
+		 //处理正确的文件名.
+         if (fileNameFormat == null)
+         {
+             if (flowNo != null)
+                 fileNameFormat = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + workid, "" + String.valueOf(workid));
+             else
+                 fileNameFormat = String.valueOf(workid);
+         }
+
+         if (DataType.IsNullOrEmpty(fileNameFormat) == true)
+             fileNameFormat = String.valueOf(workid);
+
+         fileNameFormat = BP.DA.DataType.PraseStringToFileName(fileNameFormat);
+        
+         Hashtable ht = new Hashtable();
+		
+    	if(node.getHisFormType().getValue() == NodeFormType.FoolForm.getValue() || node.getHisFormType().getValue() == NodeFormType.FreeForm.getValue()){
+    		resultMsg = setPDFPath(frmID,workid,flowNo,gwf );
+    		if(resultMsg.indexOf("err@")!=-1)
+    			return resultMsg;
+    		
+    		String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\index.htm";
+    			
+    		resultMsg = MakeHtmlDocument(frmID,  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,frmID,basePath);
+    		
+    		if(resultMsg.indexOf("err@")!=-1)
+    			return resultMsg;
+    		
+    		ht.put("htm",SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "/InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/index.htm");
+
+            //#region 把所有的文件做成一个zip文件.
+            //生成pdf文件
+            String pdfPath = path + "\\pdf";
+            
+            if (new File(pdfPath).exists() == false)
+            	new File(pdfPath).mkdirs();
+
+            fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
+            String pdfFile = pdfPath + "\\" + fileNameFormat + ".pdf";       
+            String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
+            try
+            {
+                if(Html2Pdf(pdfFileExe, billUrl, pdfFile)== true)
+	                if (urlIsHostUrl == false)
+	                	ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
+	                else
+	                	ht.put("pdf", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
+
+            }catch (Exception ex){
+                /*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
+                fileNameFormat = DBAccess.GenerGUID();
+                pdfFile = pdfPath + "\\" + fileNameFormat + ".pdf";
+                
+                Html2Pdf(pdfFileExe, billUrl, pdfFile);
+                ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","") + "/InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + fileNameFormat + ".pdf");
+            }
+            
+            //生成压缩文件
+            String zipFile = path + "/" + fileNameFormat + ".zip";
+
+            File finfo = new File(zipFile);
+            ZipFilePath =finfo.getName();
+            
+            File zipFileFile = new File(zipFile);
+    		try {
+    			while (zipFileFile.exists() == true) {
+    				zipFileFile.delete();
+    			}
+    			// 执行压缩.
+    			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
+    			fz.zip();
+    			ht.put("zip", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid +"/"+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
+    		} catch (Exception ex) {
+    			ht.put("zip","err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + pdfPath + ",zipFile=" + finfo.getName());
+    		}
+
+    		if (zipFileFile.exists() == false)
+    			ht.put("zip","err@压缩文件未生成成功,请在点击一次.");
+
+            
+            //把所有的文件做成一个zip文件.
+            
+            return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
+    	}
+    	
+    	if(node.getHisFormType().getValue() == NodeFormType.SheetTree.getValue()){
+    		
+    		 //生成pdf文件
+            String pdfPath = path + "\\pdf";
+            String pdfTempPath = path+"\\pdfTemp";
+           
+            DataRow dr =  null ;
+    		resultMsg = setPDFPath("ND"+node.getNodeID(),workid,flowNo,gwf );
+    		if(resultMsg.indexOf("err@")!=-1)
+    			return resultMsg;
+    		
+    		//获取绑定的表单
+    		 FrmNodes nds = new FrmNodes(node.getFK_Flow(), node.getNodeID());
+    		 for(FrmNode item : nds.ToJavaList()){
+    			 //判断当前绑定的表单是否启用
+    			 if(item.getFrmEnableRoleInt() == FrmEnableRole.Disable.getValue())
+    				 continue;
+
+    			 //判断 who is pk
+    			 if(flowNo!=null && item.getWhoIsPK() == WhoIsPK.PWorkID) //如果是父子流程
+    				 workid = gwf.getPWorkID();
+    			 //获取表单的信息执行打印
+    			 String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\"+item.getFK_Frm()+"index.htm";
+    			 resultMsg= MakeHtmlDocument(item.getFK_Frm(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,"ND"+node.getNodeID(),basePath);
+    			
+    			 if(resultMsg.indexOf("err@")!=-1)
+    	    			return resultMsg;
+
+    			 ht.put("htm_"+item.getFK_Frm(),SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "/InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/"+item.getFK_Frm()+"index.htm");
+
+    	         //#region 把所有的文件做成一个zip文件.
+    	         if (new File(pdfTempPath).exists() == false)
+    	        	 new File(pdfTempPath).mkdirs();
+
+    	         fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
+    	         String pdfFormFile = pdfTempPath + "\\" + item.getFK_Frm() + ".pdf";     
+    	         String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
+    	         try
+    	         {
+	                Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
+		           
+    	         }catch (Exception ex){
+	                /*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
+	                Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
+	            }
+    	         
+    			
+    		 }
+    		 
+    		 //pdf合并
+    		 String pdfFile = pdfPath + "\\" + fileNameFormat + ".pdf"; 
+    		//开始合并处理
+    		 if (new File(pdfPath).exists() == false)
+	        	 new File(pdfPath).mkdirs();
+    		 
+    		 PDFMergerUtility merger=new PDFMergerUtility();
+    		 String[] fileInFolder=BaseFileUtils.getFiles(pdfTempPath);
+    		 for(int i=0;i<fileInFolder.length;i++){
+    			merger.addSource(fileInFolder[i]);
+    		  }
+    		 merger.setDestinationFileName(pdfFile);
+    		 merger.mergeDocuments();
+    		 
+    		 //合并完删除文件夹
+    		 BaseFileUtils.deleteDirectory(pdfTempPath);
+    		 if (urlIsHostUrl == false)
+    			 ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
+             else
+            	 ht.put("pdf", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
+    		
+    		//生成压缩文件
+             String zipFile = path + "/" + fileNameFormat + ".zip";
+
+             File finfo = new File(zipFile);
+             ZipFilePath =finfo.getName();
+             
+             File zipFileFile = new File(zipFile);
+     		try {
+     			while (zipFileFile.exists() == true) {
+     				zipFileFile.delete();
+     			}
+     			// 执行压缩.
+     			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
+     			fz.zip();
+     			ht.put("zip", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid +"/"+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
+     		} catch (Exception ex) {
+     			ht.put("zip","err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + pdfPath + ",zipFile=" + finfo.getName());
+     		}
+
+     		if (zipFileFile.exists() == false)
+     			ht.put("zip","err@压缩文件未生成成功,请在点击一次.");
+     		
+     		
+     		return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
+    	}
+    	
+    	return "info@不存在需要打印的表单";
+    	
+    }
+    
+    
+    //前期文件的准备
+    private static String setPDFPath(String frmID,long workid,String flowNo,GenerWorkFlow gwf ) throws Exception{
+    	 //准备目录文件.
+        String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\";
+        try
+        {
+            path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\";
+            File pathFile =new File(path);
+            if (pathFile.exists()== false)
+            	pathFile.mkdirs();
+            
+            path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\" + workid;
+            if (new File(path).exists() == false)
+            	new File(path).mkdirs();
+
+            //把模版文件copy过去.
+            String templateFilePath = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\Template\\";
+            //判断模板文件临时目录是否存在
+            File baseFile = new File(templateFilePath);
+            if(baseFile.isDirectory() == false)
+            	return "err@不存在模板文件夹";
+            //获取模板文件列表
+            File[]  finfos = baseFile.listFiles();
+            if(finfos.length ==0)
+            	return "err@不存在模板文件";
+            for (File fl:finfos)
+            {
+                //if (fl.getName().contains("ShuiYin"))
+                 //   continue;
+
+                if (fl.getName().contains("htm"))
+                    continue;
+
+                //判断之前是否存在该文件 就删除掉
+                if(new File(path + "\\" + fl.getName()).exists())
+                	new File(path + "\\" + fl.getName()).delete();
+                
+                Files.copy( fl.getAbsoluteFile().toPath()
+                		, new File(path + "\\" + fl.getName()).toPath());
+            }
+
+        }
+        catch (Exception ex)
+        {
+            return "err@读写文件出现权限问题，请联系管理员解决。" + ex.getMessage();
+        }
+        
+        String hostURL = SystemConfig.GetValByKey("HostURL","");
+        String billUrl = hostURL + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/index.htm";
+        
+        // begin生成二维码.
+        if(SystemConfig.GetValByKeyBoolen("IsShowQrCode",false) == true){
+            /*说明是图片文件.*/
+            String qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?FrmID=" + frmID + "&WorkID=" + workid + "&FlowNo=" + flowNo;
+            if (flowNo != null)
+            {
+                gwf = new GenerWorkFlow(workid);
+                qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getFK_Node() + "_" + gwf.getStarter() + "_" + gwf.getFK_Dept();
+            }
+            
+            //二维码的生成
+            QrCodeUtil.createQrCode(qrUrl,path,"QR.png");
+        }
+        //end生成二维码.
+        return "";
+    }
     /***
-     * zip文件路径.
+     * 把文件生成Html
      */
     public static String ZipFilePath = "";
 
     public static String CCFlowAppPath = "/";
-    public static String MakeHtmlDocument(String frmID, long workid, String flowNo , String fileNameFormat , boolean urlIsHostUrl)
-    {
+    public static String MakeHtmlDocument(String frmID, long workid, String flowNo , String fileNameFormat , 
+    		boolean urlIsHostUrl,String path,String indexFile,String nodeID,String basePath){
         try
         {
             GenerWorkFlow gwf = null;
             if(flowNo!=null)
             gwf = new GenerWorkFlow(workid);
 
-            //准备目录文件.
-            String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\";
-            try
-            {
-                path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\";
-                File pathFile =new File(path);
-                if (pathFile.exists()== false)
-                	pathFile.mkdirs();
-                
-                path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\" + workid;
-                if (new File(path).exists() == false)
-                	new File(path).mkdirs();
-
-                //把模版文件copy过去.
-                String templateFilePath = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\Template\\";
-                //判断模板文件临时目录是否存在
-                File baseFile = new File(templateFilePath);
-                if(baseFile.isDirectory() == false)
-                	return "err@不存在模板文件夹";
-                //获取模板文件列表
-                File[]  finfos = baseFile.listFiles();
-                if(finfos.length ==0)
-                	return "err@不存在模板文件";
-                for (File fl:finfos)
-                {
-                    //if (fl.getName().contains("ShuiYin"))
-                     //   continue;
-
-                    if (fl.getName().contains("htm"))
-                        continue;
-
-                    //判断之前是否存在该文件 就删除掉
-                    if(new File(path + "\\" + fl.getName()).exists())
-                    	new File(path + "\\" + fl.getName()).delete();
-                    
-                    Files.copy( fl.getAbsoluteFile().toPath()
-                    		, new File(path + "\\" + fl.getName()).toPath());
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return "err@读写文件出现权限问题，请联系管理员解决。" + ex.getMessage();
-            }
-            
-            String hostURL = SystemConfig.GetValByKey("HostURL","");
-            String billUrl = hostURL + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/index.htm";
-            
-            // begin生成二维码.
-            if(SystemConfig.GetValByKeyBoolen("IsShowQrCode",false) == true){
-	            /*说明是图片文件.*/
-	            String qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?FrmID=" + frmID + "&WorkID=" + workid + "&FlowNo=" + flowNo;
-	            if (flowNo != null)
-	            {
-	                gwf = new GenerWorkFlow(workid);
-	                qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getFK_Node() + "_" + gwf.getStarter() + "_" + gwf.getFK_Dept();
-	            }
-	            
-	            //二维码的生成
-	            QrCodeUtil.createQrCode(qrUrl,path,"QR.png");
-            }
-            //end生成二维码.
-            
             //#region 定义变量做准备.
             //生成表单信息.
+            MapData mapData = new MapData(frmID);
+            
+           if(mapData.getHisFrmType() == FrmType.Url){
+            	String url = mapData.getUrl();
+            	//替换系统参数
+            	url = url.replaceAll("@WebUser.No", WebUser.getNo());
+            	url = url.replaceAll("@WebUser.Name;", WebUser.getName());
+            	url = url.replaceAll("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+            	url = url.replaceAll("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
+            	//替换参数
+            	if (url.indexOf("?") > 0){
+            		//获取url中的参数
+            		url = url.substring(url.indexOf('?'));
+            		String[] params = url.split("&");
+            		for(String param : params){
+            			if(DataType.IsNullOrEmpty(param) || param.indexOf("@") == -1)
+            				continue;
+            			String[] paramArr = param.split("=");
+                        if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
+                            if (paramArr[1].indexOf("@WebUser.") == 0)
+                            	continue;
+                            url = url.replace(paramArr[1], gwf.GetValStrByKey(paramArr[1].substring(1)));
+                        }
+            		}
+            		
+            	}
+            	String sb="<iframe style='width:100%;height:auto;' ID='" + mapData.getNo() + "'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe></div>";
+            	String  docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexUrl.htm");
+            	docs = docs.replace("@Docs", sb.toString());
+            	docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
+            	docs = docs.replace("@Height", String.valueOf(mapData.getFrmH())+"px");
+            	if(gwf!=null)
+            		docs = docs.replace("@Title", gwf.getTitle());
+            	 BP.DA.DataType.WriteFile(indexFile, docs);
+            	return indexFile;
+            }
             GEEntity en = new GEEntity(frmID, workid);
 
-            MapData mapData = new MapData(frmID);
+            
 
             //begin 生成水文.
             if(SystemConfig.GetValByKeyBoolen("IsShowShuiYin",false) == true){
@@ -1342,19 +1636,21 @@ public class MakeForm2Html
 
                     if (nd.getHisFormType() == NodeFormType.FreeForm)
                         mapData.setHisFrmType(FrmType.FreeFrm);
-                    else
+                    else if(nd.getHisFormType() == NodeFormType.FoolForm)
                         mapData.setHisFrmType( FrmType.FoolForm);
+                    else if(nd.getHisFormType() == NodeFormType.SelfForm)
+                        mapData.setHisFrmType( FrmType.Url);
                 }
 
                 if (mapData.getHisFrmType() == FrmType.FoolForm)
                 {
                     docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFool.htm");
-                    sb =GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo);
+                    sb =GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
                 }
-                else
+                else if(mapData.getHisFrmType() == FrmType.FreeFrm)
                 {
                     docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFree.htm");
-                    sb = GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo);
+                    sb = GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
                 }
             }
 
@@ -1397,86 +1693,18 @@ public class MakeForm2Html
                 docs = docs.replace("@EndInfo", DataType.ReadTextFile(pathInfo));
             }
 
-            String indexFile = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + frmID + "\\" + workid + "\\index.htm";
+            //indexFile = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + frmID + "\\" + workid + "\\index.htm";
             BP.DA.DataType.WriteFile(indexFile, docs);
-            //#endregion 替换模版文件..
-
-            //#region 处理正确的文件名.
-            if (fileNameFormat == null)
-            {
-                if (flowNo != null)
-                    fileNameFormat = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + workid, "" +String.valueOf(workid));
-                else
-                    fileNameFormat =String.valueOf(workid);
-            }
-
-            if (DataType.IsNullOrEmpty(fileNameFormat) == true)
-                fileNameFormat = String.valueOf(workid);
-
-            fileNameFormat = BP.DA.DataType.PraseStringToFileName(fileNameFormat);
-
             
-            Hashtable ht = new Hashtable();
-            ht.put("htm", billUrl);
-
-            //#region 把所有的文件做成一个zip文件.
-            //生成pdf文件
-            String pdfPath = path + "\\pdf";
-            if (new File(pdfPath).exists() == false)
-            	new File(pdfPath).mkdirs();
-
-            fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
-            String pdfFile = pdfPath + "\\" + fileNameFormat + ".pdf";       
-            String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
-            try
-            {
-                if(Html2Pdf(pdfFileExe, billUrl, pdfFile)== true)
-	                if (urlIsHostUrl == false)
-	                    ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
-	                else
-	                	 ht.put("pdf", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
-
-            }catch (Exception ex){
-                /*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
-                fileNameFormat = DBAccess.GenerGUID();
-                pdfFile = pdfPath + "\\" + fileNameFormat + ".pdf";
-                
-                Html2Pdf(pdfFileExe, billUrl, pdfFile);
-                ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","") + "/InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + fileNameFormat + ".pdf");
-            }
-            
-            //生成压缩文件
-            String zipFile = path + "/" + fileNameFormat + ".zip";
-
-            File finfo = new File(zipFile);
-            ZipFilePath =finfo.getName();
-            
-            File zipFileFile = new File(zipFile);
-    		try {
-    			while (zipFileFile.exists() == true) {
-    				zipFileFile.delete();
-    			}
-    			// 执行压缩.
-    			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
-    			fz.zip();
-    			ht.put("zip", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid +"/"+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
-    		} catch (Exception ex) {
-    			ht.put("zip","err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + pdfPath + ",zipFile=" + finfo.getName());
-    		}
-
-    		if (zipFileFile.exists() == false)
-    			ht.put("zip","err@压缩文件未生成成功,请在点击一次.");
-
-            
-            //把所有的文件做成一个zip文件.
-            
-            return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
+            return indexFile;
         }
         catch (Exception ex)
         {
             return "err@报表生成错误:" + ex.getMessage();
         }
     }
+    
+    
     private static boolean Html2Pdf(String pdfFileExe, String htmFile, String pdf) throws Exception
     {
         BP.DA.Log.DebugWriteInfo("@开始生成PDF:" + pdfFileExe + "@pdf=" + pdf + "@htmFile=" + htmFile);
@@ -1513,6 +1741,8 @@ public class MakeForm2Html
         }
         return result;
     }
+    
+   
     
     private static void paintWaterMarkPhoto(String targerImagePath,String words,String srcImagePath) {
         Integer degree = -15;

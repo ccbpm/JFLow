@@ -2032,8 +2032,7 @@ public class WF_WorkOpt extends WebContralBase {
 			}
 
 			Node nd = new Node(nodeID);
-			Work wk = nd.getHisWork();
-			return MakeForm2Html.MakeHtmlDocument(wk.NodeFrmID,this.getWorkID(), this.getFK_Flow(), null,false);
+			return MakeForm2Html.MakeCCFormToPDF(nd,this.getWorkID(), this.getFK_Flow(),null,false,this.GetRequestVal("BasePath"));
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}
@@ -2128,8 +2127,7 @@ public class WF_WorkOpt extends WebContralBase {
             }
 
             Node nd = new Node(nodeID);
-            Work wk = nd.getHisWork();
-            return BP.WF.Rpt.MakeForm2Html.MakeHtmlDocument(wk.NodeFrmID, this.getWorkID(), this.getFK_Flow(), null, true);
+            return MakeForm2Html.MakeCCFormToPDF(nd,this.getWorkID(), this.getFK_Flow(),null,false,this.GetRequestVal("BasePath"));
         }
         catch (Exception ex)
         {

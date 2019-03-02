@@ -113,7 +113,7 @@ public class MapAttrEnum extends EntityMyPK {
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑", true, true);
 
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
-		map.AddBoolean("IsEnableJS", false, "是否启用JS高级设置？", true, true); // 参数字段.
+		map.AddBoolean("IsEnableJS", false, "是否启用JS高级设置？", false, true); // 参数字段.
 
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@3=跨3个单元格");
 

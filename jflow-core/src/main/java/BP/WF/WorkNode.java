@@ -2169,7 +2169,7 @@ public class WorkNode {
                 wl.setFID(this.getWorkID());
                 wl.setFK_Emp (WebUser.getNo());
                 wl.setFK_EmpText(WebUser.getName());
-                wl.setIsPassInt(1);
+                wl.setIsPassInt(-2);
                 wl.setIsRead(true);
                 wl.setFK_Node( this.getHisNode().getNodeID());
                 wl.setFK_NodeText(this.getHisNode().getName());
@@ -2891,7 +2891,13 @@ public class WorkNode {
 				toNode.getNodeID());
 		if (current_gwls.size() == 0)
 			current_gwls = this.Func_GenerWorkerLists(this.town);// 初试化他们的工作人员．
-		
+		else
+        {
+            GenerWorkerList  gwl = new GenerWorkerList(this.getHisWork().getFID(),toNode.getNodeID(),WebUser.getNo());
+            ActionType at = ActionType.SubThreadForward;
+            this.AddToTrack(at, gwl, "子线程", this.town.getHisWork().getOID());
+        }
+
 		String FK_Emp = "";
 		String toEmpsStr = "";
 		String emps = "";
@@ -6899,52 +6905,18 @@ public class WorkNode {
 		t.setEmpFromT(this.getExecerName());
 		t.setFK_Flow(this.getHisNode().getFK_Flow());
 
-		// t.Tag = tag + "@SendNode=" + this.HisNode.NodeID;
-
+	
 		t.setNDTo(gwl.getFK_Node());
 		t.setNDToT(gwl.getFK_NodeText());
 
 		t.setEmpTo(gwl.getFK_Emp());
 		t.setEmpToT(gwl.getFK_EmpText());
 		t.setMsg(msg);
-		// t.FrmDB = frmDBJson; //表单数据Json.
+		
 
-		/*
-		 * switch (at) { case ActionType.Forward: case ActionType.ForwardAskfor:
-		 * case ActionType.Start: case ActionType.UnSend: case
-		 * ActionType.ForwardFL: case ActionType.ForwardHL: case
-		 * ActionType.TeampUp: //判断是否有焦点字段，如果有就把它记录到日志里。 if
-		 * (this.HisNode.FocusField.Length > 1) { string exp =
-		 * this.HisNode.FocusField; if (this.rptGe != null) exp =
-		 * Glo.DealExp(exp, this.rptGe, null); else exp = Glo.DealExp(exp,
-		 * this.HisWork, null);
-		 * 
-		 * t.Msg += exp; if (t.Msg.Contains("@")) Log.DebugWriteError("@在节点(" +
-		 * this.HisNode.NodeID + " ， " + this.HisNode.Name + ")焦点字段被删除了,表达式为:" +
-		 * this.HisNode.FocusField + " 替换的结果为:" + t.Msg); } break; default:
-		 * break; }
-		 * 
-		 * 
-		 * if (at == ActionType.SubThreadForward || at ==
-		 * ActionType.StartChildenFlow || at == ActionType.Start || at ==
-		 * ActionType.Forward || at == ActionType.SubThreadForward || at ==
-		 * ActionType.ForwardHL || at == ActionType.FlowOver) { if
-		 * (this.HisNode.IsFL) at = ActionType.ForwardFL; t.FrmDB =
-		 * this.HisWork.ToJson(); }
-		 */
-
-		// t.MyPK = t.WorkID + "_" + t.FID + "_" + t.NDFrom + "_" + t.NDTo
-		// +"_"+t.EmpFrom+"_"+t.EmpTo+"_"+
-		// DateTime.Now.ToString("yyMMddHHmmss");
+		
 		t.Insert();
-		/*
-		 * 
-		 * if (at == ActionType.SubThreadForward || at ==
-		 * ActionType.StartChildenFlow || at == ActionType.Start || at ==
-		 * ActionType.Forward || at == ActionType.SubThreadForward || at ==
-		 * ActionType.ForwardHL || at == ActionType.FlowOver) {
-		 * this.HisGenerWorkFlow.Paras_LastSendTruckID = t.MyPK; }
-		 */
+		
 	}
 
 	/**
@@ -7052,9 +7024,7 @@ public class WorkNode {
 		}
 
 		try {
-			// t.MyPK = t.WorkID + "_" + t.FID + "_" + t.NDFrom + "_" + t.NDTo
-			// +"_"+t.EmpFrom+"_"+t.EmpTo+"_"+
-			// DateTime.Now.ToString("yyMMddHHmmss");
+			
 			t.Insert();
 		} catch (java.lang.Exception e) {
 			t.CheckPhysicsTable();
@@ -7065,6 +7035,18 @@ public class WorkNode {
 				|| at == ActionType.FlowOver) {
 			this.getHisGenerWorkFlow().setParas_LastSendTruckID(t.getMyPK());
 		}
+		
+		 this.getHisGenerWorkFlow().setSendDT(DataType.getCurrentDataTimess());
+         this.getHisGenerWorkFlow().Update();
+
+         GenerWorkerList gwl = new GenerWorkerList();
+         int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),
+             GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID(), GenerWorkerListAttr.FK_Emp,WebUser.getNo());
+         if (i != 0)
+         {
+             gwl.setCDT(DataType.getCurrentDataTimess());
+             gwl.Update();
+         }
 
 	}
 
@@ -7499,7 +7481,12 @@ public class WorkNode {
 			gwf.setTodoEmps(todoEmps);
 			gwf.setWFState(WFState.Runing);
 			gwf.Update();
-		}
+		}else
+        {//新增轨迹
+            GenerWorkerList gwl = new GenerWorkerList(this.getHisWork().getFID(), nd.getNodeID(), WebUser.getNo());
+            ActionType at = ActionType.SubThreadForward;
+            this.AddToTrack(at, gwl, "子线程", this.town.getHisWork().getOID());
+        }
 
 		String FK_Emp = "";
 		String toEmpsStr = "";

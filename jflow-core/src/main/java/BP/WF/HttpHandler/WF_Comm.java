@@ -2391,9 +2391,9 @@ public class WF_Comm extends WebContralBase {
 	 */
 	public final String DBAccess_RunSQLReturnTable() {
 		String sql = this.GetRequestVal("SQL");
-		sql = sql.replaceAll("~", "'");
-		sql = sql.replaceAll("/#", "+"); //为什么？
-        sql = sql.replaceAll("/$", "-"); //为什么？
+		sql = sql.replace("~", "'");
+		sql = sql.replace("/#", "+"); //为什么？
+        sql = sql.replace("/$", "-"); //为什么？
 		if (null == sql || StringUtils.isEmpty(sql)) {
 			return "err@查询sql为空";
 		}

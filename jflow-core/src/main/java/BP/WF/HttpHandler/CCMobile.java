@@ -58,8 +58,42 @@ public class CCMobile extends WebContralBase
 
 	public final String Login_Submit() throws Exception
 	{
-		AppACE ace = new AppACE();
-		return ace.Login_Submit();
+		String userNo = this.GetRequestVal("TB_No");
+        String pass = this.GetRequestVal("TB_PW");
+
+        BP.Port.Emp emp = new Emp();
+        emp.setNo(userNo);
+        if (emp.RetrieveFromDBSources() == 0)
+        {
+            if (DBAccess.IsExitsTableCol("Port_Emp", "NikeName") == true)
+            {
+                /*如果包含昵称列,就检查昵称是否存在.*/
+                Paras ps = new Paras();
+                ps.SQL = "SELECT No FROM Port_Emp WHERE NikeName=" + SystemConfig.getAppCenterDBVarStr() +"userNo";
+                ps.Add("userNo", userNo);
+                //String sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
+                String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
+                if (no == null)
+                    return "err@用户名或者密码错误.";
+
+                emp.setNo(no);
+                int i = emp.RetrieveFromDBSources();
+                if (i == 0)
+                    return "err@用户名或者密码错误.";
+            }
+            else
+            {
+                return "err@用户名或者密码错误.";
+            }
+        }
+
+        if (emp.CheckPass(pass) == false)
+            return "err@用户名或者密码错误.";
+
+        //调用登录方法.
+        BP.WF.Dev2Interface.Port_Login(emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(),null,null);
+
+        return "登录成功.";
 	}
 	/** 
 	 会签列表

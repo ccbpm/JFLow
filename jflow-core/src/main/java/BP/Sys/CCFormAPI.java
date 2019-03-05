@@ -1757,7 +1757,7 @@ public class CCFormAPI
 		//创建实体对象.
 		MapData md = new MapData(fk_mapdata);
 		
-		if (frmName!=null)
+		if(DataType.IsNullOrEmpty(md.getName()) == true && frmName != null)
 			md.setName(frmName);
 		 
 		//加入主表信息.

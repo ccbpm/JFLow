@@ -633,7 +633,7 @@
                     return false;
                 }
                 var html = $("#ShowMsg").html();
-                $("#ShowMsg").html(html + "正在创建流程请稍后....");
+                $("#ShowMsg").html(html + " ccbpm 正在创建流程请稍后....");
                 $("#ShowMsg").css({ "width": "320px" });
                 $(".mymask").show();
                 //传入参数
@@ -931,34 +931,25 @@
             if (currFlow == null || currFlow.attributes.ISPARENT != '0')
                 return;
 
-            OpenEasyUiConfirm("你确定要删除名称为“" + currFlow.text + "”的流程吗？", function () {
-                var params = {
-                    DoType: "DelFlow",
-                    FK_Flow: currFlow.id
-                };
-                ajaxService(params, function (data) {
+            if (window.confirm("你确定要删除名称为“" + currFlow.text + "”的流程吗？") == false)
+                return;
 
-                    alert(data);
+            //执行删除流程.
+            var en = new Entity("BP.WF.Flow", currFlow.id);
+            var data = en.DoMethodReturnString("DoDelete");
+            alert(data);
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+                return;
+            }
 
-
-                    if (data.indexOf('err@') == 0) {
-                        alert(data);
-                        return;
-                    }
-
-                    //如果右侧有打开该流程，则关闭
-                    var currFlowTab = $('#tabs').tabs('getTab', currFlow.text);
-                    if (currFlowTab) {
-                        //todo:此处因为有关闭前事件，直接这样用会弹出提示关闭框，怎么解决有待进一步确认
-                        $('#tabs').tabs('close', currFlow.text);
-                    }
-                    $('#flowTree').tree('remove', currFlow.target);
-
-
-                    //alert(data);
-
-                }, this);
-            });
+            //如果右侧有打开该流程，则关闭
+            var currFlowTab = $('#tabs').tabs('getTab', currFlow.text);
+            if (currFlowTab) {
+                //todo:此处因为有关闭前事件，直接这样用会弹出提示关闭框，怎么解决有待进一步确认
+                $('#tabs').tabs('close', currFlow.text);
+            }
+            $('#flowTree').tree('remove', currFlow.target);
         }
 
 
@@ -1227,7 +1218,16 @@
             var url = '../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=' + node.id;
             OpenEasyUiDialog(url, "CCForm_Attr", '表单属性', 900, 560, "icon-window");
         }
-
+        //单据属性
+        function CCForm_Bill() {
+            var node = $('#formTree').tree('getSelected');
+            if (!node) {
+                alert('请选择一个表单.');
+                return;
+            }
+            var url = '../../Comm/En.htm?EnName=BP.WF.CCBill.FrmBill&PKVal=' + node.id;
+            OpenEasyUiDialog(url, "CCForm_Attr", '单据属性', 900, 560, "icon-window");
+        }
         //设计自由表单
         function designFreeFrm() {
             var node = $('#formTree').tree('getSelected');
@@ -1503,6 +1503,8 @@
                 WebUser.SID = jdata.SID;
             }, this);
         }
+
+
 
         function GenerStructureTree(parentrootid, pnodeid, treeid) {
 
@@ -1837,6 +1839,8 @@
     <div id="mForm" class="easyui-menu" style="width: 120px;">
         <div onclick="CCForm_Attr()" data-options="iconCls:'icon-property'">
             表单属性</div>
+             <div onclick="CCForm_Bill()" data-options="iconCls:'icon-property'">
+            单据属性</div>
         <div class="menu-sep">
         </div>
         <div onclick="designFoolFrm()" data-options="iconCls:'icon-sheet'">

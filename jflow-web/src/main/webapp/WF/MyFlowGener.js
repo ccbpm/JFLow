@@ -39,14 +39,36 @@ $(function () {
                 //window.opener.location.href = window.opener.location.href;
             }
         }
-        window.close();
-        if (window.parent != null && window.parent != undefined)
+
+        //提示消息有错误，页面不跳转
+        var msg = $("#msgModalContent").html();
+        if (msg.indexOf("err@") == -1)
+            window.close();
+        else {
+            setToobarEnable();
+            $("#msgModal").modal("hidden");
+
+        }
+
+        if (window.parent != null && window.parent != undefined) {
+           
             window.parent.close();
+        }
     });
 
 
     $('#btnMsgModalOK1').bind('click', function () {
-        window.close();
+
+        //提示消息有错误，页面不跳转
+        var msg = $("#msgModalContent").html();
+        if (msg.indexOf("err@") == -1)
+            window.close();
+        else {
+            setToobarEnable();
+            $("#msgModal").modal("hidden");
+
+        }
+
         if (window.parent != null && window.parent != undefined)
             window.parent.close();
         opener.window.focus();
@@ -675,6 +697,14 @@ function ConvertDefVal(flowData, defVal, keyOfEn) {
     return result;
 }
 
+function isExistArray(arrys, no) {
+    for (var i = 0; i < arrys.length;i++){
+        if (arrys[i].indexOf(no) != -1)
+            return i;
+    }
+    return -1;
+}
+
 //获取表单数据
 function getFormData(isCotainTextArea, isCotainUrlParam) {
 
@@ -683,33 +713,37 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
     var formArr = formss.split('&');
     var formArrResult = [];
 
-    //获取CHECKBOX的值
     $.each(formArr, function (i, ele) {
-
         if (ele.split('=')[0].indexOf('CB_') == 0) {
             if ($('#' + ele.split('=')[0] + ':checked').length == 1) {
                 ele = ele.split('=')[0] + '=1';
             } else {
                 ele = ele.split('=')[0] + '=0';
             }
-        }
 
-        if (ele.split('=')[0].indexOf('DDL_') == 0) {
+            formArrResult.push(ele);
+        }
+         if (ele.split('=')[0].indexOf('DDL_') == 0) {
 
             var ctrlID = ele.split('=')[0];
 
-            var item =$("#"+ctrlID).children('option:checked').text();
+            var item = $("#" + ctrlID).children('option:checked').text();
 
             var mystr = '';
-
-         
-            mystr = ctrlID.replace("DDL_","TB_")+ 'T=' + item;
-
-           
+            mystr = ctrlID.replace("DDL_", "TB_") + 'T=' + item;
             formArrResult.push(mystr);
+            formArrResult.push(ele);
         }
+        
+    });
+   
 
-        formArrResult.push(ele);
+    $.each(formArr, function (i, ele) {
+        if (ele.split('=')[0].indexOf('TB_') == 0) {
+            var index = isExistArray(formArrResult, ele.split('=')[0]);
+            if (index == -1)
+                formArrResult.push(ele);
+        }
     });
 
 
@@ -742,7 +776,12 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
             //下拉框       
             case "SELECT":
                 formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());
-                formArrResult.push(name + 'T=' + $(disabledEle).children('option:checked').text());
+                var tbID = name.replace("DDL_", "TB_") + 'T';
+                if($("#"+tbID).length  == 1){
+                    var index = isExistArray(formArrResult, tbID);
+                    if (index == -1)
+                        formArrResult.push(tbID + '=' + $(disabledEle).children('option:checked').text());
+                 }
                 break;
 
             //文本区域               
@@ -869,12 +908,12 @@ function Send(isHuiQian) {
     //必填项和正则表达式检查.
     if (checkBlanks() == false) {
         alert("检查必填项出现错误，边框变红颜色的是否填写完整？");
-        return;
+       // return;
     }
 
     if (checkReg() == false) {
         alert("发送错误:请检查字段边框变红颜色的是否填写完整？");
-        return;
+        //return;
     }
 
     window.hasClickSend = true; //标志用来刷新待办.

@@ -395,7 +395,7 @@ function InitMapAttrOfCtrl(mapAttr) {
             if (mapAttr.UIIsEnable == 0)
                 enableAttr = "disabled='disabled'";
 
-            return "<input maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "' style='width:100%;height:23px;' type='text'  " + enableAttr + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
+            return "<input maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "' style='width:100%;height:28px;' type='text'  " + enableAttr + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
         }
 
         if (mapAttr.AtPara && mapAttr.AtPara.indexOf("@IsRichText=1") >= 0) {
@@ -936,6 +936,12 @@ function Ele_Dtl(frmDtl) {
     var dtlUrl = "Dtl2017";
     if (frmDtl.DtlVer == 1)
         dtlUrl = "Dtl2019";
+
+    var local = window.location.href;
+    if (local.indexOf('CCBill') != -1) {
+        dtlUrl = '../CCForm/' + dtlUrl;
+    }
+     
 
     if (frmDtl.ListShowModel == "0") {
         src = dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + refPK + "&IsReadonly=" + isReadonly + "&FK_MapData=" + frmDtl.FK_MapData + "&" + urlParam + "&Version=1";

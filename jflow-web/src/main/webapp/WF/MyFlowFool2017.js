@@ -480,10 +480,14 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
     var pkval = FK_MapData + "_" + KeyOfEn + "_" + selectVal;
     var frmRB = new Entity("BP.Sys.FrmRB", pkval);
 
-
+    var Script = frmRB.Script;
+    //解析执行js脚本
+    if(Script!=null && Script!="" && Script!=undefined)
+    	DBAccess.RunDBSrc(Script,2);
     //解决字段隐藏显示.
     var cfgs = frmRB.FieldsCfg;
-
+    
+    
     //解决为其他字段设置值.
     var setVal = frmRB.SetVal;
     if (setVal) {

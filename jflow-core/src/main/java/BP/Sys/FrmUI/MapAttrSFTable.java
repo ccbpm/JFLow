@@ -131,12 +131,6 @@ public class MapAttrSFTable extends EntityMyPK
 
          rm = new RefMethod();
          rm.Title = "填充其他控件";
-         rm.ClassMethodName = this.toString() + ".DoDDLFullCtrl()";
-         rm.refMethodType= RefMethodType.RightFrameOpen;
-         map.AddRefMethod(rm);
-         
-         rm = new RefMethod();
-         rm.Title = "填充其他控件v2019";
          rm.ClassMethodName = this.toString() + ".DoDDLFullCtrl2019()";
          rm.refMethodType= RefMethodType.RightFrameOpen;
          map.AddRefMethod(rm);
@@ -196,10 +190,6 @@ public class MapAttrSFTable extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoDDLFullCtrl()
-	{
-		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=DDLFullCtrl_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
-	}
 	
 	 public final String DoDDLFullCtrl2019()
      {

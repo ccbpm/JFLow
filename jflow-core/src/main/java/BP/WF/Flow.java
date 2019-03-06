@@ -1979,18 +1979,9 @@ public class Flow extends BP.En.EntityNoName {
 						// 检查节点字段是否有FK_Emp字段
 						msg += "@错误:您设置了该节点的访问规则是[06.按上一节点表单指定的字段值作为本步骤的接受人]，但是您没有在节点属性的[访问规则设置内容]里设置指定的表单字段，详细参考开发手册.";
 					}
-					// if (mattrs.Contains(BP.Sys.MapAttrAttr.KeyOfEn, "FK_Emp")
-					// == false)
-					// {
-					// /*检查节点字段是否有FK_Emp字段*/
-					// msg +=
-					// "@错误:您设置了该节点的访问规则是按指定节点表单人员，但是您没有在节点表单中增加FK_Emp字段，详细参考开发手册
-					// .";
-					// }
 					break;
 				case BySelected: // 由上一步发送人员选择
 					if (nd.getIsStartNode()) {
-						// msg += "@错误:开始节点不能设置指定的选择人员访问规则。";
 						break;
 					}
 					break;
@@ -2107,8 +2098,11 @@ public class Flow extends BP.En.EntityNoName {
 				String strs = (String) ((tempVar instanceof String) ? tempVar : null);
 				strs = BP.WF.Glo.DealExp(strs, rpt, "err");
 				if (strs.contains("@") == true) {
-					msg += "@错误:焦点字段（" + nd.getFocusField() + "）在节点(step:" + nd.getStep() + " 名称:" + nd.getName()
-							+ ")属性里的设置已无效，表单里不存在该字段.";
+					//msg += "@错误:焦点字段（" + nd.getFocusField() + "）在节点(step:" + nd.getStep() + " 名称:" + nd.getName()
+					//		+ ")属性里的设置已无效，表单里不存在该字段.";
+					//删除节点属性中的焦点字段
+                    nd.setFocusField("");
+                    nd.Update();
 				} else {
 					msg += "@提示:节点的(" + nd.getNodeID() + "," + nd.getName() + ")焦点字段（" + nd.getFocusField()
 							+ "）设置完整检查通过.";

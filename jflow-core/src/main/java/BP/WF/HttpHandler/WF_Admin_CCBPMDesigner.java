@@ -98,7 +98,61 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		ds.Tables.add(dt);
 		return BP.Tools.Json.ToJson(ds);
 	}
- 
+	 /// <summary>
+    /// 执行流程设计图的保存.
+    /// </summary>
+    /// <returns></returns>
+    public String Designer_Save()
+    {
+        String sql = "";
+        try
+        {
+            //保存节点位置. @101,2,30@102,3,1
+            String[] nodes = this.GetRequestVal("Nodes").split("@");
+            for (String item : nodes)
+            {
+            	if(item==null||item.length() ==0)
+                	continue;
+                String[] strs = item.split(",");
+                
+                sql = "UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0];
+                DBAccess.RunSQL(sql);
+            }
+
+            //保存方向.
+            String[] dirs = this.GetRequestVal("Dirs").split("@");
+            for (String item : dirs)
+            {
+            	if(item==null||item.length() ==0)
+                	continue;
+                String[] strs = item.split(",");
+                String sql1="delete from WF_Direction where MyPK='"+strs[0]+"'";
+                DBAccess.RunSQL(sql1);
+                sql = "insert into WF_Direction(MyPK,FK_Flow,Node,ToNode,IsCanBack) values('" + strs[0] + "','" + strs[1] + "','" + strs[2] + "','" + strs[3] + "',"+"0)";
+                DBAccess.RunSQL(sql);
+            }
+
+            //保存label位置.
+            String[] labs = this.GetRequestVal("Labs").split("@");
+            for (String item : labs)
+            {
+            	if(item==null||item.length() ==0)
+                	continue;
+                String[] strs = item.split(",");
+                sql = "UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0];
+                DBAccess.RunSQL(sql);
+            }
+
+            Flow fl = new Flow(this.getFK_Flow());
+            fl.DoCheck();
+
+            return "保存成功.";
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法

@@ -1107,7 +1107,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 				String Tag = "0";
 				try{
 					Tag = this.GetValFromFrmByKey("CB_Tag");
-					if(Tag =="on")
+					if(Tag.equals("on"))
 						Tag="1";
 				}catch(Exception e){
 					Tag ="0";
@@ -1120,7 +1120,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 	            try
 	            {
 	                Tag3 = this.GetValFromFrmByKey("CB_Tag3");
-	                if (Tag3 == "on")
+	                if (Tag3.equals("on"))
 	                    Tag3 = "1";
 	            }
 	            catch (Exception e)

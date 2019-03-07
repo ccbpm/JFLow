@@ -722,22 +722,21 @@
             });
 
         });
+        ///保存方法2019
         function SaveFlow(_canvas) {
-
 
             //获取所有节点信息.
             try {
 
-
-
                 var nodes = new Entities("BP.WF.Template.NodeSimples");
                 nodes.Retrieve("FK_Flow", flowNo);
-
 
                 // 保存x,y位置.
                 var processInfo = _canvas.getProcessInfo(); //连接信息.
                 processInfo = JSON.parse(processInfo);
 
+                //定义要生成的字符串.
+                var nodePos = "";
                 for (var nodeID in processInfo) {
 
                     var nodeIDStr = JSON.stringify(nodeID);
@@ -751,19 +750,13 @@
                         if (myID != nodeIDStr)
                             continue;
 
-                        node = new Entity("BP.WF.Template.NodeSimple", node);
-                        node.Y = nodeJSON.top;
-                        node.X = nodeJSON.left;
-                        node.Update();
+                        nodePos += "@" + node.NodeID + "," + nodeJSON.left + "," + nodeJSON.top;
                         break;
                     }
                 }
 
-                //删除原来的连接线.
-                DBAccess.RunSQL("DELETE FROM WF_Direction WHERE FK_Flow='" + flowNo + "' ");
-
-                //创建一个实体.
-                var dir = new Entity("BP.WF.Template.Direction");
+                //方向的字符串.
+                var myDirs = "";
 
                 //保存方向.
                 for (var nodeID in processInfo) {
@@ -799,40 +792,34 @@
                             $("#Btn_Save").html("保存");
                             continue;
                         }
-
-                        dir.FK_Flow = flowNo;
-                        dir.Node = nodeID;
-                        dir.ToNode = toNodeID;
-                        dir.MyPK = dir.FK_Flow + "_" + dir.Node + "_" + dir.ToNode;
-                        dir.DirType = 2;
-
-                        try {
-                            dir.Insert();
-                        } catch (e) {
-                        }
-
+                        var MyPK = flowNo + "_" + nodeID + "_" + toNodeID;
+                        myDirs += "@" + MyPK + "," + flowNo + "," + nodeID + "," + toNodeID;
                     }
-
                 }
 
-                //标签
+
+                var labs = "";
+                //标签.
                 var labNoteInfo = _canvas.getLabNoteInfo(); //标签信息.
                 labNoteInfo = JSON.parse(labNoteInfo);
-
                 for (var lab in labNoteInfo) {
 
                     var labJSON = labNoteInfo[lab];
 
-                    var lb = new Entity("BP.WF.Template.LabNote", lab);
-                    lb.Y = labJSON.top;
-                    lb.X = labJSON.left;
-                    lb.Update();
+                    labs += "@" + lab + "," + labJSON.left + "," + labJSON.top;
                 }
 
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
+                handler.AddPara("Nodes", nodePos);
+                handler.AddPara("Dirs", myDirs);
+                handler.AddPara("Labs", labs);
+                handler.AddPara("FK_Flow", flowNo);
+                var data = handler.DoMethodReturnString("Designer_Save");
 
-                // 清除流程缓存，并修复数据.
-                var flow = new Entity("BP.WF.Flow", flowNo);
-                flow.DoMethodReturnString("DoCheck");
+                if (data.indexOf('err@') != 0) {
+                    alert(data);
+                }
+
 
             }
             catch (e) {

@@ -4,17 +4,14 @@ import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-
 import BP.DA.DBAccess;
+import BP.DA.DataType;
 import BP.En.EntityMyPK;
 import BP.En.Map;
 import BP.En.UAC;
@@ -377,10 +374,13 @@ public class SMS extends EntityMyPK
 	 @param mailTitle
 	 @param mailDoc
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean SendEmailNow(String mail, String mailTitle, String mailDoc)
+	public static boolean SendEmailNow(String mail, String mailTitle, String mailDoc) throws Exception
 	{
-		  //邮件地址.
+		 if(DataType.IsNullOrEmpty(mail) == true) 
+			 throw new Exception("err@收件箱不能为空");
+		//邮件地址.
         final String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
        
 
@@ -398,35 +398,28 @@ public class SMS extends EntityMyPK
 		};
 
 		Session mailSession = Session.getInstance(props,auth);
-	       
-		   try {
-			InternetAddress fromAddress = new InternetAddress(emailAddr);
-	        InternetAddress toAddress = new InternetAddress(mail);
-	
-			// 3. 创建一封邮件
-	        MimeMessage message = new MimeMessage(mailSession);
-	        
-	        message.setFrom(fromAddress);
-	        message.addRecipient(RecipientType.TO, toAddress);
-	        
-	        message.setSentDate(BP.Tools.DateUtils.currentDate());
-	        message.setSubject(mailTitle);
-	        message.setText(mailDoc);
-	        
-	        //4.发送Email,
-	        Transport transport = mailSession.getTransport("smtp");//定义发送协议
-       
-			//transport.connect(SystemConfig.GetValByKey("SendEmailHost", "smtp.gmail.com"),emailAddr, emailPassword);
-			//登录邮箱
-	        transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
-	        
-	        return true;
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		
+	       		 
+		InternetAddress fromAddress = new InternetAddress(emailAddr);
+        InternetAddress toAddress = new InternetAddress(mail);
+
+		// 3. 创建一封邮件
+        MimeMessage message = new MimeMessage(mailSession);
+        
+        message.setFrom(fromAddress);
+        message.addRecipient(RecipientType.TO, toAddress);
+        
+        message.setSentDate(BP.Tools.DateUtils.currentDate());
+        message.setSubject(mailTitle);
+        message.setText(mailDoc);
+        
+        //4.发送Email,
+        Transport transport = mailSession.getTransport("smtp");//定义发送协议
+   
+		//transport.connect(SystemConfig.GetValByKey("SendEmailHost", "smtp.gmail.com"),emailAddr, emailPassword);
+		//登录邮箱
+        transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
+        
+        return true;
 		
 		
 	}

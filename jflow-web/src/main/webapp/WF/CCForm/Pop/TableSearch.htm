@@ -352,8 +352,8 @@
                         searchPanel.append(select);
 
                        var  dbSrc = condtion.Val.replace(/~/g, "'");
-                        var reg = new RegExp("@Key", "g");
-                        dbSrc = dbSrc.replace(reg, keyWord);
+//                         var reg = new RegExp("@Key", "g");
+//                         dbSrc = dbSrc.replace(reg, keyWord);
                         dbSrc = DealExp(dbSrc);
 
                         var ifcData = DBAccess.RunDBSrc(dbSrc);

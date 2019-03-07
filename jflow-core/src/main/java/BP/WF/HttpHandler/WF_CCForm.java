@@ -734,6 +734,9 @@ public class WF_CCForm extends WebContralBase {
 
 					String[] ss = str.split("[:]", -1);
 					String fk_dtl = ss[0];
+					if(ss[1]==null||"".equals(ss[1])){
+						continue;
+					}
 					String dtlKey = (String) ((getRequest().getSession().getAttribute("DtlKey") instanceof String)
 							? getRequest().getSession().getAttribute("DtlKey") : null);
 					if (dtlKey == null) {

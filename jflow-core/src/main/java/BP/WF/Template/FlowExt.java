@@ -1305,7 +1305,8 @@ public class FlowExt extends EntityNoName
 				{
 					gwl.setIsPass(false);
 					currWl = gwl;
-				}
+				}else
+					gwl.setIsPass(true);
 
 				gwl.setFK_Emp(EmpFrom);
 				gwl.setFK_EmpText(EmpFromT);

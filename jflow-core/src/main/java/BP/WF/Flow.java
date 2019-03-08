@@ -732,7 +732,7 @@ public class Flow extends BP.En.EntityNoName {
 			// 启用草稿或空白就创建WorkID
 			if (wk.getOID() == 0) {
 				// 说明没有空白,就创建一个空白..
-				wk.ResetDefaultVal();
+				//wk.ResetDefaultVal();
 				wk.setRec(WebUser.getNo());
 
 				wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
@@ -755,7 +755,7 @@ public class Flow extends BP.En.EntityNoName {
 				} catch (Exception ex) {
 					wk.CheckPhysicsTable();
 
-					// wk.DirectInsert();
+					
 				}
 
 				// 设置参数.
@@ -771,8 +771,6 @@ public class Flow extends BP.En.EntityNoName {
 					rpt.setFlowStartRDT(BP.DA.DataType.getCurrentDataTime());
 					rpt.setMyNum(0);
 					rpt.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this, wk));
-					// WebUser.getNo() + "," + BP.Web.WebUser.Name + "在" +
-					// DataType.CurrentDataCNOfShort + "发起.";
 					rpt.setWFState(WFState.Blank);
 					rpt.setFlowStarter(emp.getNo());
 					rpt.setFK_NY(DataType.getCurrentYearMonth());
@@ -802,9 +800,7 @@ public class Flow extends BP.En.EntityNoName {
 					rpt.setFlowEnderRDT(BP.DA.DataType.getCurrentDataTime());
 					rpt.setMyNum(0);
 
-					rpt.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this, wk));
-					// rpt.Title = WebUser.getNo() + "," + BP.Web.WebUser.Name +
-					// "在" + DataType.CurrentDataCNOfShort + "发起.";
+					rpt.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this, wk));;
 
 					rpt.setWFState(WFState.Blank);
 					rpt.setFlowStarter(emp.getNo());
@@ -3140,7 +3136,6 @@ public class Flow extends BP.En.EntityNoName {
 
 		// 处理track表.
 		Track.CreateOrRepairTrackTable(flowId);
-
 		/// #region 插入字段。
 		String sql = "";
 		switch (SystemConfig.getAppCenterDBType()) {
@@ -3151,32 +3146,20 @@ public class Flow extends BP.En.EntityNoName {
 					+ "' AND Sys_MapAttr.FK_MapData = 'ND' || CAST(WF_Node.NodeID AS VARCHAR(20)))";
 			break;
 		case MSSQL:
-
 			sql = "SELECT distinct  KeyOfEn FROM Sys_MapAttr WHERE EXISTS ( SELECT 'ND' + cast(NodeID as varchar(20)) FROM WF_Node WHERE FK_Flow='"
 					+ this.getNo() + "' AND Sys_MapAttr.FK_MapData = 'ND' + CAST(WF_Node.NodeID AS VARCHAR(20)))";
 			break;
 		case Informix:
-			// sql = "SELECT distinct KeyOfEn FROM Sys_MapAttr WHERE FK_MapData
-			// IN ( SELECT 'ND' " + SystemConfig.getAppCenterDBAddStringStr() +
-			// " cast(NodeID as varchar(20)) FROM WF_Node WHERE FK_Flow='" +
-			// this.getNo() + "')";
 			sql = "SELECT distinct KeyOfEn FROM Sys_MapAttr WHERE EXISTS ( SELECT 'ND' "
 					+ SystemConfig.getAppCenterDBAddStringStr()
 					+ " cast(NodeID as varchar(20)) FROM WF_Node WHERE FK_Flow='" + this.getNo()
 					+ "' AND Sys_MapAttr.FK_MapData = 'ND' || CAST(WF_Node.NodeID AS VARCHAR(20)))";
 			break;
 		case MySQL:
-			// sql = "SELECT DISTINCT KeyOfEn FROM Sys_MapAttr WHERE FK_MapData
-			// IN (SELECT X.No FROM ( SELECT CONCAT('ND',NodeID) AS No FROM
-			// WF_Node WHERE FK_Flow='" + this.getNo() + "') AS X )";
 			sql = "SELECT DISTINCT KeyOfEn FROM Sys_MapAttr  WHERE  exists  (SELECT X.No FROM ( SELECT CONCAT('ND',NodeID) AS No FROM WF_Node WHERE FK_Flow='"
 					+ this.getNo() + "') AS X where sys_mapattr.fk_mapdata=x.no)";
 			break;
 		default:
-			// sql = "SELECT distinct KeyOfEn FROM Sys_MapAttr WHERE FK_MapData
-			// IN ( SELECT 'ND' " + SystemConfig.getAppCenterDBAddStringStr() +
-			// " cast(NodeID as varchar(20)) FROM WF_Node WHERE FK_Flow='" +
-			// this.getNo() + "')";
 			sql = "SELECT distinct KeyOfEn FROM Sys_MapAttr WHERE EXISTS ( SELECT 'ND' "
 					+ SystemConfig.getAppCenterDBAddStringStr()
 					+ " cast(NodeID as varchar(20)) FROM WF_Node WHERE FK_Flow='" + this.getNo()
@@ -3225,13 +3208,22 @@ public class Flow extends BP.En.EntityNoName {
 
 		for (DataRow dr : dt.Rows) {
 			String mypk = dr.getValue("MyPK").toString();
+			BP.Sys.MapAttr ma = new BP.Sys.MapAttr(mypk);
 			if (pks.contains("@" + dr.getValue("KeyOfEn").toString() + "@")) {
+				
+				BP.Sys.MapAttr rptma = new BP.Sys.MapAttr("ND" + flowId + "Rpt_" + dr.getValue("KeyOfEn").toString());
+				if (ma.getDefValReal().contains("@")) {
+					// 如果是一个有变量的参数.
+					rptma.setDefVal("");
+				}else
+					rptma.setDefVal(ma.getDefValReal());
+				
+				rptma.Update();
 				continue;
 			}
 
 			pks += dr.getValue("KeyOfEn").toString() + "@";
 
-			BP.Sys.MapAttr ma = new BP.Sys.MapAttr(mypk);
 			ma.setMyPK("ND" + flowId + "Rpt_" + ma.getKeyOfEn());
 			ma.setFK_MapData("ND" + flowId + "Rpt");
 			ma.setUIIsEnable(false);
@@ -3265,7 +3257,6 @@ public class Flow extends BP.En.EntityNoName {
 		for (MapAttr attr : attrs.ToJavaList()) {
 			String keyOfEn = attr.getKeyOfEn();
 			if (keyOfEn.equals(StartWorkAttr.FK_Dept)) {
-				// attr.UIBindKey = "BP.Port.Depts";
 				attr.setUIContralType(UIContralType.TB);
 				attr.setLGType(FieldTypeS.Normal);
 				attr.setUIVisible(true);
@@ -3275,7 +3266,6 @@ public class Flow extends BP.En.EntityNoName {
 				attr.setMaxLen(100);
 				attr.Update();
 			} else if (keyOfEn.equals("FK_NY")) {
-				// attr.UIBindKey = "BP.Pub.NYs";
 				attr.setUIContralType(UIContralType.TB);
 				attr.setLGType(FieldTypeS.Normal);
 				attr.setUIVisible(true);

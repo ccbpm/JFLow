@@ -2025,6 +2025,42 @@ public class WF_Comm extends WebContralBase {
 			if (ds.Tables.contains(uiBindKey) == false)
 			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 		}
+		
+		 //加入sql模式的外键.
+        for(Attr attr : rm.getHisAttrs())
+        {
+            if (attr.getIsRefAttr() == true)
+                continue;
+
+            if (DataType.IsNullOrEmpty(attr.getUIBindKey()) || attr.getUIBindKey().length() <= 10)
+                continue;
+
+            if (attr.getUIIsReadonly() == true)
+                continue;
+
+            if (attr.getUIBindKey().contains("SELECT") == true || attr.getUIBindKey().contains("select") == true)
+            {
+                /*是一个sql*/
+                String sqlBindKey = attr.getUIBindKey();
+                sqlBindKey = BP.WF.Glo.DealExp(sqlBindKey, en, null);
+
+                DataTable dt1 = DBAccess.RunSQLReturnTable(sqlBindKey);
+                dt1.TableName = attr.getKey();
+
+                //@杜. 翻译当前部分.
+                if (SystemConfig.getAppCenterDBType() == DBType.Oracle )
+                {
+                	 dt1.Columns.get("NO").ColumnName = "No";
+                     dt1.Columns.get("NAME").ColumnName = "Name"; 
+                }
+                if (ds.Tables.contains(attr.getKey()) == false)
+                {
+                    ds.Tables.add(dt1);
+                }
+               
+            }
+        }
+		
 
 		/// #endregion 加入该方法的外键.
 

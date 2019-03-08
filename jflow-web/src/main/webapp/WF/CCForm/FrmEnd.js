@@ -283,13 +283,33 @@ function AfterBindEn_DealMapExt(frmData) {
         //下拉框填充其他控件
         var DDLFull = mapAttr.GetPara("IsFullData");
         if (DDLFull != "" && DDLFull == "1" && (mapExt.MyPK.indexOf("DDLFullCtrl")!=-1)) {
+        	//枚举类型
+        	 if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1){
+        		 var ddlOper = $('input:radio[name="RB_'+mapExt.AttrOfOper+'"]');
+        		 if(ddlOper.length == 0)
+        			 continue; 
+        		 var enName = frmData.Sys_MapData[0].No;
+
+                 ddlOper.attr("onchange", "Change('" + enName + "');DDLFullCtrl(this.value,\'" + "DDL_" + mapExt.AttrOfOper + "\', \'" + mapExt.MyPK + "\')");
+        		 
+                 //初始化填充数据
+                 var val=$('input:radio[name="RB_'+mapExt.AttrOfOper+'"]:checked').val();
+                 DDLFullCtrl(val,"DDL_" + mapExt.AttrOfOper ,  mapExt.MyPK );
+                 continue; 
+        	 }
+        	 
+        	 //外键类型
             var ddlOper = $("#DDL_" + mapExt.AttrOfOper);
             if (ddlOper.length == 0)
-                continue;
+               continue;
 
             var enName = frmData.Sys_MapData[0].No;
 
             ddlOper.attr("onchange", "Change('" + enName + "');DDLFullCtrl(this.value,\'" + "DDL_" + mapExt.AttrOfOper + "\', \'" + mapExt.MyPK + "\')");
+            //初始化填充数据
+            var val=ddlOper.val();
+            if(val!="" && val!=undefined)
+            DDLFullCtrl(val,"DDL_" + mapExt.AttrOfOper ,  mapExt.MyPK );
             continue;
         }
 

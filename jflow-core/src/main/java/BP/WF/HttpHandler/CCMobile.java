@@ -165,7 +165,11 @@ public class CCMobile extends WebContralBase
 
 		return BP.Tools.Json.ToJson(dt);
 	}
-
+	 public String MyFlow_Init() throws Exception
+     {
+         BP.WF.HttpHandler.WF_MyFlow wfPage = new WF_MyFlow(this.context);
+         return wfPage.MyFlow_Init();
+     }
 	public final String Runing_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF wfPage = new WF();
@@ -241,7 +245,7 @@ public class CCMobile extends WebContralBase
 	*/
 	public final String FrmView_Init() throws Exception
 	{
-		BP.WF.HttpHandler.WF wf = new WF();
+		BP.WF.HttpHandler.WF wf = new WF(this.context);
 		return wf.FrmView_Init();
 	}
 

@@ -10,7 +10,6 @@
 	<groupId>jflow-web</groupId>
 	<artifactId>jflow-web</artifactId> 
 	<packaging>war</packaging>
-	
 	<properties>
 	    
 		<webserver.port>8080</webserver.port>

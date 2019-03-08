@@ -19,13 +19,11 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HttpContext;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
@@ -86,6 +84,7 @@ import BP.Tools.ZipCompress;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
+import BP.WF.HttpHandler.Base.CommonFileUtils;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Template.FTCAttr;
 import BP.WF.Template.FoolTruckNodeFrm;
@@ -1047,19 +1046,27 @@ public class WF_CCForm extends WebContralBase {
 		File sFile = new File(saveToPath);
 		File uFile = new File(fileUPloadPath);
 
-		String contentType = getRequest().getContentType();
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 
-			MultipartFile multipartFile = request.getFile("file");
-			// 获取文件名,并取其后缀;
-			String fileName = multipartFile.getOriginalFilename();
+//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("file");
+//			// 获取文件名,并取其后缀;
+//			String fileName = multipartFile.getOriginalFilename();
+			String fileName = CommonFileUtils.getOriginalFilename(request, "file");
 			String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
-			try {
-				multipartFile.transferTo(sFile);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-				return "err@上传图片保存失败";
-			} catch (IOException e) {
+//			try {
+//				multipartFile.transferTo(sFile);
+//			} catch (IllegalStateException e) {
+//				e.printStackTrace();
+//				return "err@上传图片保存失败";
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				return "err@上传图片保存失败";
+//			}
+			try{
+				CommonFileUtils.upload(request, "file", sFile);
+			}catch(Exception e){
 				e.printStackTrace();
 				return "err@上传图片保存失败";
 			}
@@ -3155,8 +3162,7 @@ public class WF_CCForm extends WebContralBase {
         return "";
 
     }
-    
-  
+
 	/**
 	 * Excel 导入
 	 */
@@ -3164,13 +3170,17 @@ public class WF_CCForm extends WebContralBase {
 		String tempPath = SystemConfig.getPathOfTemp();
 		try {
 			MapDtl dtl = new MapDtl("this.getFK_MapDtl()");
-
-			MultipartFile multipartFile = request.getFile("file");
-			if (multipartFile.getSize() == 0) {
+			HttpServletRequest request = getRequest();
+//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("file");
+//			if (multipartFile.getSize() == 0) {
+//				return "err@请选择要上传的从表模板.";
+//			}
+			if(CommonFileUtils.getFilesSize(request, "file") == 0){
 				return "err@请选择要上传的从表模板.";
 			}
 			// 获取文件名,并取其后缀.
-			String fileName = multipartFile.getOriginalFilename();
+//			String fileName = multipartFile.getOriginalFilename();
+			String fileName = CommonFileUtils.getOriginalFilename(request, "file");
 			String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
 			if (!prefix.equals("xls") && !prefix.equals("xlsx")) {
 
@@ -3193,14 +3203,20 @@ public class WF_CCForm extends WebContralBase {
 			}
 			// 执行保存附件
 			File file = new File(tempPath + "/" + userNo + prefix);
-			try {
-				multipartFile.transferTo(file);
-			} catch (IllegalStateException e) {
+//			try {
+//				multipartFile.transferTo(file);
+//			} catch (IllegalStateException e) {
+//				e.printStackTrace();
+//				return "err@文件上传失败.";
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				return "err@文件上传失败.";
+//			}
+			try{
+				CommonFileUtils.upload(request, "file", file);
+			}catch(Exception e){
 				e.printStackTrace();
-				return "err@文件上传失败.";
-			} catch (IOException e) {
-				e.printStackTrace();
-				return "err@文件上传失败.";
+				return "err@文件上传失败.";	
 			}
 			GEDtls dtls = new GEDtls(this.getFK_MapDtl());
 			DataTable dt = BP.DA.DBLoad.GetTableByExt(tempPath + "/" + userNo + prefix);
@@ -3339,12 +3355,6 @@ public class WF_CCForm extends WebContralBase {
 			return "err@" + msg;
 		}
 
-	}
-
-	private DefaultMultipartHttpServletRequest request;
-
-	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-		this.request = request;
 	}
 
 	/**

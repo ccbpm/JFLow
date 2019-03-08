@@ -4,9 +4,11 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+//import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
@@ -33,6 +35,7 @@ import BP.Sys.SysEnums;
 import BP.Sys.FrmUI.SFTables;
 import BP.Tools.DealString;
 import BP.Tools.StringHelper;
+import BP.WF.HttpHandler.Base.CommonFileUtils;
 import BP.WF.HttpHandler.Base.WebContralBase;
 /** 
  页面功能实体
@@ -499,28 +502,38 @@ public class WF_Comm_Sys extends WebContralBase
 	}
 	
 	
-	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-		this.request = request;
-	}
-
-	private DefaultMultipartHttpServletRequest request;
+//	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
+//		this.request = request;
+//	}
+//
+//	private DefaultMultipartHttpServletRequest request;
 	
 	//javaScript 脚本上传
 	public final String javaScriptImp_Done(){
 		File xmlFile = null;
 		String fileName="";
-		String contentType = getRequest().getContentType();
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
-			MultipartFile multipartFile = request.getFile("File_Upload");
+//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");
+//			fileName = multipartFile.getOriginalFilename();
 			
-			fileName = multipartFile.getOriginalFilename();
+			fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
+			
 			String savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"JSLibData"+"/"+fileName;
 			xmlFile = new File(savePath);
 			if(xmlFile.exists()){
 				xmlFile.delete();
 			}
+//			try {
+//				multipartFile.transferTo(xmlFile);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return "err@执行失败";
+//			}
+			
 			try {
-				multipartFile.transferTo(xmlFile);
+				CommonFileUtils.upload(request, "File_Upload", xmlFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "err@执行失败";
@@ -534,12 +547,13 @@ public class WF_Comm_Sys extends WebContralBase
 		 File xmlFile = null;
 		String fileName="";
 		String savePath="";
-		String contentType = getRequest().getContentType();
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
-			MultipartFile multipartFile = request.getFile("upfile");
-			
-			fileName = multipartFile.getOriginalFilename();
-			 savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"RichTextFile";
+//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("upfile");
+//			fileName = multipartFile.getOriginalFilename();
+			fileName = CommonFileUtils.getOriginalFilename(request, "upfile");
+			savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"RichTextFile";
 			if(new File(savePath).exists()==false)
 				new File(savePath).mkdirs();
 			savePath = savePath+"/"+fileName;
@@ -547,8 +561,14 @@ public class WF_Comm_Sys extends WebContralBase
 			if(xmlFile.exists()){
 				xmlFile.delete();
 			}
+//			try {
+//				multipartFile.transferTo(xmlFile);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return "err@执行失败";
+//			}
 			try {
-				multipartFile.transferTo(xmlFile);
+				CommonFileUtils.upload(request, "upfile", xmlFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "err@执行失败";
@@ -650,16 +670,20 @@ public class WF_Comm_Sys extends WebContralBase
     /// <returns></returns>
     public String ImpData_Done() throws Exception
     {
-
-    	MultipartFile multiFile =  request.getFile("File_Upload");
-    	
-        if (multiFile==null)
-            return "err@请选择要导入的数据信息。";
+    	HttpServletRequest request = getRequest();
+//    	MultipartFile multiFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");  	
+//        if (multiFile==null)
+//            return "err@请选择要导入的数据信息。";
+    	long filesSize = CommonFileUtils.getFilesSize(request, "File_Upload");
+    	if(filesSize == 0){
+    		return "err@请选择要导入的数据信息。";
+    	}
 
         String errInfo="";
 
         String ext = ".xls";
-        String fileName = multiFile.getOriginalFilename();
+//        String fileName = multiFile.getOriginalFilename();
+        String fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
         if (fileName.contains(".xlsx"))
             ext = ".xlsx";
 
@@ -676,7 +700,8 @@ public class WF_Comm_Sys extends WebContralBase
         	tempFile.delete();
 		}
 		try {
-			multiFile.transferTo(tempFile);
+			//multiFile.transferTo(tempFile);
+			CommonFileUtils.upload(request, "File_Upload", tempFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "err@执行失败";

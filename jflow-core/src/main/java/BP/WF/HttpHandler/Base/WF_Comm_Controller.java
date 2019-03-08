@@ -22,10 +22,18 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 	 */
 	@RequestMapping(value = "/ProcessRequest")
 	public final void ProcessRequestPost(HttpServletRequest request) {
+//		WF_Comm CommHandler = new WF_Comm();
+//		if (request instanceof DefaultMultipartHttpServletRequest) {
+//			CommHandler.setMultipartRequest((DefaultMultipartHttpServletRequest) request);
+//			BP.WF.Glo.request = (DefaultMultipartHttpServletRequest) request;
+//		}
+//		super.ProcessRequest(CommHandler);
+		
 		WF_Comm CommHandler = new WF_Comm();
 		if (request instanceof DefaultMultipartHttpServletRequest) {
-			CommHandler.setMultipartRequest((DefaultMultipartHttpServletRequest) request);
-			BP.WF.Glo.request = (DefaultMultipartHttpServletRequest) request;
+			//如果是附件上传Request，则将该Request放入全局Request。为了解决springmvc中全局Request无法转化为附件Request
+			HttpServletRequest request1 = CommonUtils.getRequest();
+			request1.setAttribute("multipartRequest", request);
 		}
 		super.ProcessRequest(CommHandler);
 	}

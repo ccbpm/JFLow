@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-
+import javax.servlet.http.HttpServletRequest;
 import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
@@ -22,8 +20,8 @@ import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
-import BP.WF.Glo;
 import BP.WF.Node;
+import BP.WF.HttpHandler.Base.CommonFileUtils;
 import BP.WF.HttpHandler.Base.WebContralBase;
 
 public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
@@ -143,14 +141,23 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 			xmlFile = new File(System.getProperty("java.io.tmpdir"), fileName + ".xml");
 		}
 		xmlFile.deleteOnExit();
-		String contentType = getRequest().getContentType();
-		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			MultipartFile multipartFile = Glo.request.getFile("file");
-			try {
-				multipartFile.transferTo(xmlFile);
-			} catch (Exception e) {
-				return "执行失败";
-			}
+		HttpServletRequest request = getRequest();
+//		String contentType = request.getContentType();
+//		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+//			DefaultMultipartHttpServletRequest mrequest = (DefaultMultipartHttpServletRequest)request;
+//			MultipartFile multipartFile = mrequest.getFile("File_Upload");
+//			try {
+//				multipartFile.transferTo(xmlFile);
+//			} catch (Exception e) {
+//				return "执行失败";
+//			}
+//		}
+		
+		try{
+			CommonFileUtils.upload(request,"File_Upload", xmlFile);
+		}catch(Exception e){
+			e.printStackTrace();
+			return "err@执行失败";		
 		}
 
     	Object a  = getRequest().getParameter("file");

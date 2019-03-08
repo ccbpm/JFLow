@@ -17,11 +17,13 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+//import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.web.multipart.MultipartHttpServletRequest;
+//import org.springframework.web.multipart.commons.CommonsMultipartFile;
+//import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import com.sun.star.bridge.oleautomation.Decimal;
 
@@ -79,6 +81,7 @@ import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Glo;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
+import BP.WF.HttpHandler.Base.CommonFileUtils;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
@@ -2391,9 +2394,9 @@ public class WF_Comm extends WebContralBase {
 	 */
 	public final String DBAccess_RunSQLReturnTable() {
 		String sql = this.GetRequestVal("SQL");
-		sql = sql.replace("~", "'");
-		sql = sql.replace("/#", "+"); //为什么？
-        sql = sql.replace("/$", "-"); //为什么？
+		sql = sql.replaceAll("~", "'");
+		sql = sql.replaceAll("/#", "+"); //为什么？
+        sql = sql.replaceAll("/$", "-"); //为什么？
 		if (null == sql || StringUtils.isEmpty(sql)) {
 			return "err@查询sql为空";
 		}
@@ -2512,10 +2515,10 @@ public class WF_Comm extends WebContralBase {
 	}
 	
 	
-	private DefaultMultipartHttpServletRequest request;
-	public void setMultipartRequest(DefaultMultipartHttpServletRequest request){
-		this.request = request;
-	}
+//	private DefaultMultipartHttpServletRequest request;
+//	public void setMultipartRequest(DefaultMultipartHttpServletRequest request){
+//		this.request = request;
+//	}
 	
 	/// <summary>
     /// 实体Entity 文件上传
@@ -2524,10 +2527,16 @@ public class WF_Comm extends WebContralBase {
 
     public String EntityAth_Upload() throws Exception
     {
-    	MultipartFile multiFile =  request.getFile("file");
+    	HttpServletRequest request = getRequest();
+//    	MultipartFile multiFile =  ((DefaultMultipartHttpServletRequest)request).getFile("file");
+//    	
+//        if (multiFile==null)
+//            return "err@请选择要上传的文件。";
+    	long filesSize = CommonFileUtils.getFilesSize(request, "file");
+    	if(filesSize == 0){
+    		return "err@请选择要导入的数据信息。";
+    	}
     	
-        if (multiFile==null)
-            return "err@请选择要上传的文件。";
         //获取保存文件信息的实体
 
         String enName = this.getEnName();
@@ -2548,13 +2557,14 @@ public class WF_Comm extends WebContralBase {
             return "err@数据[" + this.getEnName() + "]主键为[" + en.getPKVal() + "]不存在，或者没有保存。";
 
         //获取文件的名称
-        String fileName = multiFile.getOriginalFilename();
+//        String fileName = multiFile.getOriginalFilename();
+        String fileName = CommonFileUtils.getOriginalFilename(request, "file");
        
         //文件后缀
         String ext = FileAccess.getExtensionName(fileName).toLowerCase().replace(".", "");
 
         //文件大小
-        float size = multiFile.getSize()/1024;
+        float size = CommonFileUtils.getFilesSize(request, "file") /1024;
 
         //保存位置
         String filepath = "";
@@ -2572,7 +2582,8 @@ public class WF_Comm extends WebContralBase {
 			InputStream is = null;
 			try {
 				// 构造临时对象
-				is = multiFile.getInputStream();
+//				is = multiFile.getInputStream();
+				is = CommonFileUtils.getInputStream(request, "file");
 				int buffer = 1024; // 定义缓冲区的大小
 				int length = 0;
 				byte[] b = new byte[buffer];
@@ -2632,7 +2643,7 @@ public class WF_Comm extends WebContralBase {
 			try {
 				// 构造临时对象
 
-				InputStream is = multiFile.getInputStream();
+				InputStream is = CommonFileUtils.getInputStream(request, "file");//multiFile.getInputStream();
 				int buffer = 1024; // 定义缓冲区的大小
 				int length = 0;
 				byte[] b = new byte[buffer];

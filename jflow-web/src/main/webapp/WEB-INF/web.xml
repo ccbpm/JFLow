@@ -47,7 +47,7 @@
 		<filter-name>requestContextFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
+	
 	<!-- Spring MVC Servlet -->
 	<servlet>
 		<servlet-name>springServlet</servlet-name>

@@ -1,11 +1,10 @@
-package cn.jflow.controller.wf.admin;
+package BP.WF.HttpHandler.Base;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import BP.WF.HttpHandler.WF_Admin_CCBPMDesigner;
-import BP.WF.HttpHandler.Base.HttpHandlerBase;
 
 @Controller
 @RequestMapping("/WF/Admin/CCBPMDesigner")

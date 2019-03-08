@@ -1,19 +1,14 @@
 package BP.WF.HttpHandler;
 
 import java.io.File;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-
+import javax.servlet.http.HttpServletRequest;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
+import BP.WF.HttpHandler.Base.CommonFileUtils;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Template.*;
 
@@ -104,11 +99,11 @@ public class WF_Setting extends WebContralBase
         return BP.Tools.Json.ToJson(ht);
 	}
 	
-	private DefaultMultipartHttpServletRequest request;
-	
-	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-		this.request = request;
-	}
+//	private DefaultMultipartHttpServletRequest request;
+//	
+//	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
+//		this.request = request;
+//	}
 
 	public final String Siganture_Save()
 	{
@@ -117,16 +112,17 @@ public class WF_Setting extends WebContralBase
 			String empNo = this.GetRequestVal("EmpNo");
 	        if (DataType.IsNullOrEmpty(empNo) == true)
 	             empNo = WebUser.getNo();
-			String contentType = getRequest().getContentType();
-			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
-				MultipartFile multipartFile = request.getFile("File_Upload");
-				
+	        HttpServletRequest request = getRequest();
+			String contentType = request.getContentType();
+			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 				
 				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + empNo + ".jpg";
 				File tempFile = new File(tempFilePath);
 				if(tempFile.exists()){
 					tempFile.delete();
 				}
-				multipartFile.transferTo(tempFile);
+//				MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");
+//				multipartFile.transferTo(tempFile);
+				CommonFileUtils.upload(request, "File_Upload", tempFile);
 			 }
 		} catch (Exception e) {
 			e.printStackTrace();

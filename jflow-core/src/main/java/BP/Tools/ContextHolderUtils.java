@@ -14,6 +14,8 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import BP.WF.HttpHandler.Base.CommonUtils;
+
 /**
  * JFlow上下文工具类
  * @version 2016-5-9
@@ -42,33 +44,11 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	 * @return
 	 */
 	public static HttpServletRequest getRequest() {
-		try {
-			RequestAttributes ra = RequestContextHolder.currentRequestAttributes();
-			if (ra instanceof ServletRequestAttributes){
-				return ((ServletRequestAttributes) ra).getRequest();
-			}
-			else if (ra instanceof cn.jflow.common.context.ServletRequestAttributes){
-				return ((cn.jflow.common.context.ServletRequestAttributes)ra).getRequest(); 
-			}
-			return null;
-		} catch (Exception e) {
-			return null;
-		}
+		return CommonUtils.getRequest();
 	}
 
 	public static HttpServletResponse getResponse() {
-		try {
-			RequestAttributes ra = RequestContextHolder.currentRequestAttributes();
-			if (ra instanceof ServletRequestAttributes){
-				return (HttpServletResponse)ra.getClass().getMethod("getResponse").invoke(ra);
-			}
-			else if (ra instanceof cn.jflow.common.context.ServletRequestAttributes){
-				return ((cn.jflow.common.context.ServletRequestAttributes)ra).getResponse(); 
-			}
-			return null;
-		} catch (Exception e) {
-			return null;
-		}
+        return CommonUtils.getResponse();
 	}
 
 	/**

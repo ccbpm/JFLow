@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataRowCollection;
@@ -50,6 +48,7 @@ import BP.WF.NodeFormType;
 import BP.WF.Nodes;
 import BP.WF.TeamLeaderConfirmRole;
 import BP.WF.TodolistModel;
+import BP.WF.HttpHandler.Base.CommonFileUtils;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Template.BillTemplate;
 import BP.WF.Template.BtnLab;
@@ -1888,32 +1887,30 @@ public class WF_Admin_AttrNode extends WebContralBase {
 	// 单据模板维护
 	public String Bill_Save() throws IllegalStateException, IOException {
 		BillTemplate bt = new BillTemplate();
-
+		HttpServletRequest request = getRequest();
 		// 上传附件
 		String filpath = "";
-		String contentType = getRequest().getContentType();
-		MultipartFile multipartFile = null;
-		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			multipartFile = Glo.request.getFile("bill");
-			if (multipartFile.getSize() == 0) {
-				return "err@请选择要上传的模板文件";
-			}
-		}
-		String fileName = multipartFile.getOriginalFilename();
+		String fileName = CommonFileUtils.getOriginalFilename(request,"bill");
 		String filepath = SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + fileName;
 		filepath = filepath.replace("\\", "/");
-		multipartFile.transferTo(new File(filepath));
+		
+		try{
+			CommonFileUtils.upload(request, "bill",new File(filepath));
+		}catch(Exception e){
+			e.printStackTrace();
+			return "err@执行失败";		
+		}
 
 		bt.setNodeID(this.getFK_Node());
-		bt.setNo(Glo.request.getParameter("TB_No"));
+		bt.setNo(request.getParameter("TB_No"));
 		if (StringHelper.isNullOrEmpty(bt.getNo())) {
 			bt.setNo(Integer.toString(DBAccess.GenerOID()));
 		}
-		bt.setName(Glo.request.getParameter("TB_Name"));
+		bt.setName(request.getParameter("TB_Name"));
 		bt.setTempFilePath(filepath);
-		bt.setHisBillFileType(Integer.parseInt(Glo.request.getParameter("DDL_BillFileType")));
-		bt.setBillOpenModel(Integer.parseInt(Glo.request.getParameter("DDL_BillOpenModel")));
-		bt.setQRModel(Integer.parseInt(Glo.request.getParameter("DDL_BillOpenModel")));
+		bt.setHisBillFileType(Integer.parseInt(request.getParameter("DDL_BillFileType")));
+		bt.setBillOpenModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
+		bt.setQRModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
 
 		bt.Save();
 

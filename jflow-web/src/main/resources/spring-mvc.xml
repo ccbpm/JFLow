@@ -43,7 +43,7 @@
 	<!-- 设置默认上传文件编码 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="utf-8"/>
-	</bean>
+	</bean>  
 	
 	<!-- JFlow Spring MVC 配置 -->
 	<import resource="classpath*:/spring-mvc-jflow.xml"/>

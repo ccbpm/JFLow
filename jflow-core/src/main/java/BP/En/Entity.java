@@ -894,9 +894,10 @@ public abstract class Entity implements Serializable {
 
 		}
 
-		throw new RuntimeException("@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
-				+ ", 类[" + this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。PK = "
-				+ this.GetValByKey(this.getPK()));
+//		throw new RuntimeException("@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
+//				+ ", 类[" + this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。PK = "
+//				+ this.GetValByKey(this.getPK()));
+		return 0;
 
 	}
 
@@ -2470,6 +2471,10 @@ public abstract class Entity implements Serializable {
 					String name = dr.getValue("column_Name").toString();
 					if (name.equals(attr.getKey()) == false)
 						continue;
+					
+					if(dr.getValue("Len") == null || dr.getValue("Len").toString().length() == 0){
+						continue;
+					}
 
 					String len = dr.getValue("Len").toString();
 					int lenInt = Integer.parseInt(len);

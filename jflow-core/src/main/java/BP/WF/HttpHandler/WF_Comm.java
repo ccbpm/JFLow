@@ -2205,7 +2205,7 @@ public class WF_Comm extends WebContralBase {
 				break;
 			case DDL:
 				try {
-					if (attr.getMyFieldType() == FieldType.FK) {
+					if (attr.getMyDataType() == BP.DA.DataType.AppString) {
 						String str = this.GetValFromFrmByKey(attr.getKey());
 						objs[idx] = str;
 						attr.setDefaultVal(str);

@@ -423,6 +423,46 @@ public class Attrs extends ArrayList<Attr>
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, key);
 	}
 	
+	
+	 //#region DDLSQL
+     public void AddDDLSQL(String key, String defaultVal, String desc, String sql, boolean uiIsEnable)
+     {
+         Attr attr = new Attr();
+         attr.setKey(key);
+         attr.setField(key);
+         attr.setDefaultVal(defaultVal);
+         attr.setMyDataType(DataType.AppString);
+         attr.setMyFieldType(FieldType.Normal);
+         attr.setMaxLength(50);
+
+         attr.setDesc(desc);
+         attr.setUIContralType(UIContralType.DDL);
+
+         attr.setUIDDLShowType(DDLShowType.BindSQL);
+
+         attr.setUIBindKey(sql);
+         attr.setHisFKEns(null);
+         attr.setUIIsReadonly(!uiIsEnable);
+         this.Add(attr);
+
+
+         //他的名称列.
+         attr = new Attr();
+         attr.setKey(key + "Text");
+         attr.setField(key + "Text");
+         attr.setDefaultVal(defaultVal);
+         attr.setMyDataType(DataType.AppString);
+         attr.setMyFieldType(FieldType.RefText);
+         attr.setMaxLength(200); //最大长度 @李国文
+         attr.setDesc(desc);
+         attr.setUIContralType(UIContralType.TB);
+         //	attr.UIBindKey = sql;
+         attr.setUIIsReadonly(true);
+         attr.setUIVisible(false);
+         this.Add(attr);
+     }
+     //#endregion DDLSQL
+	
 	/**
 	 * 于实体有关系的操作。
 	 * @param key 健值

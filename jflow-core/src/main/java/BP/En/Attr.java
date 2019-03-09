@@ -795,14 +795,8 @@ public class Attr
 	
 	public final Entity getHisFKEn()
 	{
-		// 20150427 xiao_zhoupeng 修改 原因：分组分析查询时，查询数据出现重复问题---START
 		_HisFKEn = this.getHisFKEns().getGetNewEntity();
 		
-		// if (_HisFKEn == null)
-		// {
-		// _HisFKEn = this.getHisFKEns().getGetNewEntity();
-		// }
-		// 20150427 xiao_zhoupeng 修改 原因：分组分析查询时，查询数据出现重复问题---END
 		return _HisFKEn;
 	}
 	
@@ -856,6 +850,22 @@ public class Attr
 	public final void set_UIRefParentKeyValue(String value)
 	{
 		this._UIRefParentKey = value;
+	}
+	
+	private  DDLShowType _UIDDLShowType =DDLShowType.None;
+	/// <summary>
+	/// 要现实的控件类型。
+	/// </summary>
+	public DDLShowType getUIDDLShowType()
+	{
+		if (this.getMyDataType() == DataType.AppBoolean)
+			return DDLShowType.Boolean ;
+		else 
+		    return this._UIDDLShowType ;
+	}
+	
+	public final void setUIDDLShowType(DDLShowType value){
+			this._UIDDLShowType=value;
 	}
 	
 	private String _UIRefKey = null;

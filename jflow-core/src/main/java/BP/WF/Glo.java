@@ -1028,6 +1028,7 @@ public class Glo {
                 case "BP.En.GENoName":
                 case "BP.En.GETree":
                 case "BP.WF.Data.GERpt":
+                case "BP.WF.GEWork":
                     continue;
                 default:
                     break;

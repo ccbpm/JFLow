@@ -39,14 +39,14 @@ import BP.Web.WebUser;
 import BP.XML.XmlEn;
 
 /**
- * Entity 的摘要说明。
+ * Entity 鐨勬憳瑕佽鏄庛��
  */
 public abstract class Entity implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	// 与缓存有关的操作
+	// 涓庣紦瀛樻湁鍏崇殑鎿嶄綔
 	private Entities _GetNewEntities = null;
 
 	@SuppressWarnings("rawtypes")
@@ -81,14 +81,14 @@ public abstract class Entity implements Serializable {
 		return this.toString();
 	}
 
-	// 检查一个属性值是否存在于实体集合中
+	// 妫�鏌ヤ竴涓睘鎬у�兼槸鍚﹀瓨鍦ㄤ簬瀹炰綋闆嗗悎涓�
 	/**
-	 * 检查一个属性值是否存在于实体集合中 这个方法经常用到在beforeinsert中。
+	 * 妫�鏌ヤ竴涓睘鎬у�兼槸鍚﹀瓨鍦ㄤ簬瀹炰綋闆嗗悎涓� 杩欎釜鏂规硶缁忓父鐢ㄥ埌鍦╞eforeinsert涓��
 	 * 
 	 * @param key
-	 *            要检查的key.
+	 *            瑕佹鏌ョ殑key.
 	 * @param val
-	 *            要检查的key.对应的val
+	 *            瑕佹鏌ョ殑key.瀵瑰簲鐨剉al
 	 * @return
 	 * @throws Exception
 	 * @throws NumberFormatException
@@ -103,7 +103,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 取出他的明细集合。
+	 * 鍙栧嚭浠栫殑鏄庣粏闆嗗悎銆�
 	 * 
 	 * @return
 	 * @throws Exception
@@ -125,12 +125,12 @@ public abstract class Entity implements Serializable {
 		return al;
 	}
 
-	// 关于明细的操作
+	// 鍏充簬鏄庣粏鐨勬搷浣�
 	/**
-	 * 得到他的数据实体
+	 * 寰楀埌浠栫殑鏁版嵁瀹炰綋
 	 * 
 	 * @param EnsName
-	 *            类名称
+	 *            绫诲悕绉�
 	 * @return
 	 * @throws Exception
 	 */
@@ -147,16 +147,16 @@ public abstract class Entity implements Serializable {
 			qo.DoQuery();
 			return dtl.getEns();
 		} catch (RuntimeException e) {
-			throw new RuntimeException("@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + dtl.getDesc() + "],不在他的集合内。");
+			throw new RuntimeException("@鍦ㄥ彇[" + this.getEnDesc() + "]鐨勬槑缁嗘椂鍑虹幇閿欒銆俒" + dtl.getDesc() + "],涓嶅湪浠栫殑闆嗗悎鍐呫��");
 		}
 	}
 
 	/**
-	 * 取出他的数据实体
+	 * 鍙栧嚭浠栫殑鏁版嵁瀹炰綋
 	 * 
 	 * @param ens
-	 *            集合
-	 * @return 执行后的实体信息
+	 *            闆嗗悎
+	 * @return 鎵ц鍚庣殑瀹炰綋淇℃伅
 	 * @throws Exception
 	 */
 	public final Entities GetDtlEnsDa(Entities ens) throws Exception {
@@ -169,11 +169,11 @@ public abstract class Entity implements Serializable {
 			}
 		}
 		throw new RuntimeException(
-				"@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + ens.getGetNewEntity().getEnDesc() + "],不在他的集合内。");
+				"@鍦ㄥ彇[" + this.getEnDesc() + "]鐨勬槑缁嗘椂鍑虹幇閿欒銆俒" + ens.getGetNewEntity().getEnDesc() + "],涓嶅湪浠栫殑闆嗗悎鍐呫��");
 	}
 
 	/**
-	 * 转化成
+	 * 杞寲鎴�
 	 * 
 	 * @return
 	 */
@@ -224,14 +224,14 @@ public abstract class Entity implements Serializable {
 				dt.Columns.Add(new DataColumn(attr.getKey(), String.class, true));
 				break;
 			default:
-				throw new RuntimeException("@bulider insert sql error: 没有这个数据类型");
+				throw new RuntimeException("@bulider insert sql error: 娌℃湁杩欎釜鏁版嵁绫诲瀷");
 			}
 		}
 		return dt;
 	}
 
 	/**
-	 * 区分大小写
+	 * 鍖哄垎澶у皬鍐�
 	 * 
 	 * @param tableName
 	 * @return
@@ -241,9 +241,9 @@ public abstract class Entity implements Serializable {
 		DataTable dt = this.ToEmptyTableField();
 		dt.TableName = tableName;
 
-		// 增加参数列.
+		// 澧炲姞鍙傛暟鍒�.
 		if (this.getRow().containsKey("AtPara") == true) {
-			/* 如果包含这个字段,就说明他有参数,把参数也要弄成一个列. */
+			/* 濡傛灉鍖呭惈杩欎釜瀛楁,灏辫鏄庝粬鏈夊弬鏁�,鎶婂弬鏁颁篃瑕佸紕鎴愪竴涓垪. */
 			AtPara ap = this.getatPara();
 			for (String key : ap.getHisHT().keySet()) {
 				if (dt.Columns.contains(key) == true)
@@ -264,7 +264,7 @@ public abstract class Entity implements Serializable {
 			}
 
 			/*
-			 * 如果是外键 就要去掉左右空格。
+			 * 濡傛灉鏄閿� 灏辫鍘绘帀宸﹀彸绌烘牸銆�
 			 */
 			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 				dr.setValue(attr.getKey(), this.GetValByKey(attr.getKey()).toString().trim());
@@ -279,7 +279,7 @@ public abstract class Entity implements Serializable {
 
 		}
 
-		/* 如果包含这个字段 */
+		/* 濡傛灉鍖呭惈杩欎釜瀛楁 */
 		if (this.getRow().containsKey("AtPara") == true) {
 
 			AtPara ap = this.getatPara();
@@ -292,7 +292,7 @@ public abstract class Entity implements Serializable {
 
 	}
 
-	// 关于database 操作
+	// 鍏充簬database 鎿嶄綔
 	public int RunSQL(String sql) {
 		Paras ps = new Paras();
 		ps.SQL = sql;
@@ -300,11 +300,11 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 在此实体是运行sql 返回结果集合
+	 * 鍦ㄦ瀹炰綋鏄繍琛宻ql 杩斿洖缁撴灉闆嗗悎
 	 * 
 	 * @param sql
-	 *            要运行的sql
-	 * @return 执行的结果
+	 *            瑕佽繍琛岀殑sql
+	 * @return 鎵ц鐨勭粨鏋�
 	 * @throws Exception
 	 */
 	public final int RunSQL(Paras ps) {
@@ -316,11 +316,11 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 在此实体是运行sql 返回结果集合
+	 * 鍦ㄦ瀹炰綋鏄繍琛宻ql 杩斿洖缁撴灉闆嗗悎
 	 * 
 	 * @param sql
-	 *            要运行的 select sql
-	 * @return 执行的查询结果
+	 *            瑕佽繍琛岀殑 select sql
+	 * @return 鎵ц鐨勬煡璇㈢粨鏋�
 	 * @throws Exception
 	 */
 	public DataTable RunSQLReturnTable(String sql) {
@@ -328,13 +328,13 @@ public abstract class Entity implements Serializable {
 
 	}
 
-	// 于编号有关系的处理。
+	// 浜庣紪鍙锋湁鍏崇郴鐨勫鐞嗐��
 	/**
-	 * 这个方法是为不分级字典，生成一个编号。根据制订的 属性.
+	 * 杩欎釜鏂规硶鏄负涓嶅垎绾у瓧鍏革紝鐢熸垚涓�涓紪鍙枫�傛牴鎹埗璁㈢殑 灞炴��.
 	 * 
 	 * @param attrKey
-	 *            属性
-	 * @return 产生的序号
+	 *            灞炴��
+	 * @return 浜х敓鐨勫簭鍙�
 	 * @throws Exception
 	 */
 	public final String GenerNewNoByKey(String attrKey) throws Exception {
@@ -344,7 +344,7 @@ public abstract class Entity implements Serializable {
 
 			Attr attr = map.GetAttrByKey(attrKey);
 			if (!attr.getUIIsReadonly()) {
-				throw new RuntimeException("@需要自动生成编号的列(" + attr.getKey() + ")必须为只读。");
+				throw new RuntimeException("@闇�瑕佽嚜鍔ㄧ敓鎴愮紪鍙风殑鍒�(" + attr.getKey() + ")蹇呴』涓哄彧璇汇��");
 			}
 
 			String field = map.GetFieldByKey(attrKey);
@@ -381,21 +381,21 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 按照一列产生顺序号码。
+	 * 鎸夌収涓�鍒椾骇鐢熼『搴忓彿鐮併��
 	 * 
 	 * @param attrKey
-	 *            要产生的列
+	 *            瑕佷骇鐢熺殑鍒�
 	 * @param attrGroupKey
-	 *            分组的列名
+	 *            鍒嗙粍鐨勫垪鍚�
 	 * @param FKVal
-	 *            分组的主键
+	 *            鍒嗙粍鐨勪富閿�
 	 * @return
 	 * @throws Exception
 	 */
 	public final String GenerNewNoByKey(int nolength, String attrKey, String attrGroupKey, String attrGroupVal)
 			throws Exception {
 		if (attrGroupKey == null || attrGroupVal == null) {
-			throw new RuntimeException("@分组字段attrGroupKey attrGroupVal 不能为空");
+			throw new RuntimeException("@鍒嗙粍瀛楁attrGroupKey attrGroupVal 涓嶈兘涓虹┖");
 		}
 
 		Map map = this.getEnMap();
@@ -452,7 +452,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 按照两列查生顺序号码。
+	 * 鎸夌収涓ゅ垪鏌ョ敓椤哄簭鍙风爜銆�
 	 * 
 	 * @param attrKey
 	 * @param attrGroupKey1
@@ -498,11 +498,11 @@ public abstract class Entity implements Serializable {
 		return StringUtils.leftPad(str, Integer.parseInt(this.getEnMap().getCodeStruct()), '0');
 	}
 
-	// 构造方法
+	// 鏋勯�犳柟娉�
 	public Entity() {
 	}
 
-	// 排序操作
+	// 鎺掑簭鎿嶄綔
 	protected final void DoOrderUp(String groupKeyAttr, String groupKeyVal, String idxAttr) {
 		// string pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
@@ -650,9 +650,9 @@ public abstract class Entity implements Serializable {
 				+ "' AND (" + groupKeyAttr + "='" + groupKeyVal + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "' )");
 	}
 
-	// 直接操作
+	// 鐩存帴鎿嶄綔
 	/**
-	 * 直接更新
+	 * 鐩存帴鏇存柊
 	 * 
 	 * @throws Exception
 	 */
@@ -661,7 +661,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 直接的Insert
+	 * 鐩存帴鐨処nsert
 	 * 
 	 * @throws Exception
 	 */
@@ -686,7 +686,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 直接的Delete
+	 * 鐩存帴鐨凞elete
 	 * 
 	 * @throws Exception
 	 */
@@ -704,13 +704,13 @@ public abstract class Entity implements Serializable {
 
 	// Retrieve
 	/**
-	 * 按照属性查询
+	 * 鎸夌収灞炴�ф煡璇�
 	 * 
 	 * @param attr
-	 *            属性名称
+	 *            灞炴�у悕绉�
 	 * @param val
-	 *            值
-	 * @return 是否查询到
+	 *            鍊�
+	 * @return 鏄惁鏌ヨ鍒�
 	 * @throws Exception
 	 */
 	public final boolean RetrieveByAttrAnd(String attr1, Object val1, String attr2, Object val2) throws Exception {
@@ -727,13 +727,13 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 按照属性查询
+	 * 鎸夌収灞炴�ф煡璇�
 	 * 
 	 * @param attr
-	 *            属性名称
+	 *            灞炴�у悕绉�
 	 * @param val
-	 *            值
-	 * @return 是否查询到
+	 *            鍊�
+	 * @return 鏄惁鏌ヨ鍒�
 	 * @throws Exception
 	 */
 	public final boolean RetrieveByAttrOr(String attr1, Object val1, String attr2, Object val2) throws Exception {
@@ -750,13 +750,13 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 按照属性查询
+	 * 鎸夌収灞炴�ф煡璇�
 	 * 
 	 * @param attr
-	 *            属性名称
+	 *            灞炴�у悕绉�
 	 * @param val
-	 *            值
-	 * @return 是否查询到
+	 *            鍊�
+	 * @return 鏄惁鏌ヨ鍒�
 	 * @throws Exception
 	 */
 	public final boolean RetrieveByAttr(String attr, Object val) throws Exception {
@@ -770,9 +770,9 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 从DBSources直接查询
+	 * 浠嶥BSources鐩存帴鏌ヨ
 	 * 
-	 * @return 查询的个数
+	 * @return 鏌ヨ鐨勪釜鏁�
 	 * @throws Exception
 	 */
 	public int RetrieveFromDBSources() throws Exception {
@@ -794,7 +794,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 查询
+	 * 鏌ヨ
 	 * 
 	 * @param key
 	 * @param val
@@ -842,7 +842,7 @@ public abstract class Entity implements Serializable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int Retrieve() throws Exception {
 
-		// 如果是没有放入缓存的实体.
+		// 濡傛灉鏄病鏈夋斁鍏ョ紦瀛樼殑瀹炰綋.
 		try {
 
 			int i = DBAccess.RunSQLReturnResultSet(this.getSQLCash().getSelect(), SqlBuilder.GenerParasPK(this), this,
@@ -853,7 +853,7 @@ public abstract class Entity implements Serializable {
 		} catch (RuntimeException ex) {
 
 			String msg = ex.getMessage() == null ? "" : ex.getMessage();
-			if (msg.contains("无效") || msg.contains("field list")) {
+			if (msg.contains("鏃犳晥") || msg.contains("field list")) {
 				try {
 
 					this.CheckPhysicsTable();
@@ -864,53 +864,53 @@ public abstract class Entity implements Serializable {
 					e.printStackTrace();
 				}
 			}
-			throw new RuntimeException(msg + "@在Entity(" + this.toString() + ")查询期间出现错误@" + ex.getStackTrace());
+			throw new RuntimeException(msg + "@鍦‥ntity(" + this.toString() + ")鏌ヨ鏈熼棿鍑虹幇閿欒@" + ex.getStackTrace());
 		}
 
 		String msg = "";
 		String pk = this.getPK();
 
 		if (pk.equals("OID")) {
-			msg += "[ 主键=OID 值=" + this.GetValStrByKey("OID") + " ]";
+			msg += "[ 涓婚敭=OID 鍊�=" + this.GetValStrByKey("OID") + " ]";
 		} else if (pk.equals("No")) {
-			msg += "[ 主键=No 值=" + this.GetValStrByKey("No") + " ]";
+			msg += "[ 涓婚敭=No 鍊�=" + this.GetValStrByKey("No") + " ]";
 		} else if (pk.equals("MyPK")) {
-			msg += "[ 主键=MyPK 值=" + this.GetValStrByKey("MyPK") + " ]";
+			msg += "[ 涓婚敭=MyPK 鍊�=" + this.GetValStrByKey("MyPK") + " ]";
 		} else if (pk.equals("NodeID")) {
-			msg += "[ 主键=NodeID 值=" + this.GetValStrByKey("NodeID") + " ]";
+			msg += "[ 涓婚敭=NodeID 鍊�=" + this.GetValStrByKey("NodeID") + " ]";
 		} else if (pk.equals("WorkID")) {
-			msg += "[ 主键=WorkID 值=" + this.GetValStrByKey("WorkID") + " ]";
+			msg += "[ 涓婚敭=WorkID 鍊�=" + this.GetValStrByKey("WorkID") + " ]";
 		} else {
 			Hashtable ht = this.getPKVals(); /*
 									 * warning for (String key : ht.keySet())
 									 */
 			Set<String> keys = ht.keySet();
 			for (String key : keys) {
-				msg += "[ 主键=" + key + " 值=" + ht.get(key) + " ]";
+				msg += "[ 涓婚敭=" + key + " 鍊�=" + ht.get(key) + " ]";
 			}
 
-			throw new RuntimeException("@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
-					+ ", 类[" + this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。" + msg);
+			throw new RuntimeException("@娌℃湁[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
+					+ ", 绫籟" + this.toString() + "], 鐗╃悊琛╗" + this.getEnMap().getPhysicsTable() + "] 瀹炰緥銆�" + msg);
 
 		}
 
-//		throw new RuntimeException("@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
-//				+ ", 类[" + this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。PK = "
+//		throw new RuntimeException("@娌℃湁[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable()
+//				+ ", 绫籟" + this.toString() + "], 鐗╃悊琛╗" + this.getEnMap().getPhysicsTable() + "] 瀹炰緥銆侾K = "
 //				+ this.GetValByKey(this.getPK()));
 		return 0;
 
 	}
 
 	/**
-	 * 按主键查询，返回查询出来的个数。 如果查询出来的是多个实体，那把第一个实体给值。
+	 * 鎸変富閿煡璇紝杩斿洖鏌ヨ鍑烘潵鐨勪釜鏁般�� 濡傛灉鏌ヨ鍑烘潵鐨勬槸澶氫釜瀹炰綋锛岄偅鎶婄涓�涓疄浣撶粰鍊笺��
 	 * 
-	 * @return 查询出来的个数
+	 * @return 鏌ヨ鍑烘潵鐨勪釜鏁�
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int Retrieve_Old() throws Exception {
 
-		// 如果是没有放入缓存的实体.
+		// 濡傛灉鏄病鏈夋斁鍏ョ紦瀛樼殑瀹炰綋.
 		try {
 
 			int num = EntityDBAccess.Retrieve(this, this.getSQLCash().getSelect(), SqlBuilder.GenerParasPK(this));
@@ -918,29 +918,29 @@ public abstract class Entity implements Serializable {
 			if (num <= 0) {
 				String msg="";
 				if (this.getPK().equals("OID")) {
-					msg += "[ 主键=OID 值=" + this.GetValStrByKey("OID") + " ]";
+					msg += "[ 涓婚敭=OID 鍊�=" + this.GetValStrByKey("OID") + " ]";
 				} else if (this.getPK().equals("No")) {
-					msg += "[ 主键=No 值=" + this.GetValStrByKey("No") + " ]";
+					msg += "[ 涓婚敭=No 鍊�=" + this.GetValStrByKey("No") + " ]";
 				} else if (this.getPK().equals("MyPK")) {
-					msg += "[ 主键=MyPK 值=" + this.GetValStrByKey("MyPK") + " ]";
+					msg += "[ 涓婚敭=MyPK 鍊�=" + this.GetValStrByKey("MyPK") + " ]";
 				} else if (this.getPK().equals("ID")) {
-					msg += "[ 主键=ID 值=" + this.GetValStrByKey("ID") + " ]";
+					msg += "[ 涓婚敭=ID 鍊�=" + this.GetValStrByKey("ID") + " ]";
 				} else {
 					Hashtable ht = this.getPKVals();
 					Set<String> keys = ht.keySet();
 					for (String key : keys) {
-						msg += "[ 主键=" + key + " 值=" + ht.get(key) + " ]";
+						msg += "[ 涓婚敭=" + key + " 鍊�=" + ht.get(key) + " ]";
 					}
 				}
 				Log.DefaultLogWriteLine(LogType.Error,
-						"@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable() + ", 类["
-								+ this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。PK = "
+						"@娌℃湁[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable() + ", 绫籟"
+								+ this.toString() + "], 鐗╃悊琛╗" + this.getEnMap().getPhysicsTable() + "] 瀹炰緥銆侾K = "
 								+ this.GetValByKey(this.getPK())+msg);
 			}
 			return 1;
 		} catch (RuntimeException ex) {
 			String msg = ex.getMessage() == null ? "" : ex.getMessage();
-			if (msg.contains("无效") || msg.contains("field list")) {
+			if (msg.contains("鏃犳晥") || msg.contains("field list")) {
 				try {
 
 					this.CheckPhysicsTable();
@@ -952,12 +952,12 @@ public abstract class Entity implements Serializable {
 					e.printStackTrace();
 				}
 			}
-			throw new RuntimeException(msg + "@在Entity(" + this.toString() + ")查询期间出现错误@" + ex.getStackTrace());
+			throw new RuntimeException(msg + "@鍦‥ntity(" + this.toString() + ")鏌ヨ鏈熼棿鍑虹幇閿欒@" + ex.getStackTrace());
 		}
 	}
 
 	/**
-	 * 判断是不是存在的方法.
+	 * 鍒ゆ柇鏄笉鏄瓨鍦ㄧ殑鏂规硶.
 	 * 
 	 * @return
 	 * @throws Exception
@@ -969,7 +969,7 @@ public abstract class Entity implements Serializable {
 			if (this.getPK().contains(",")) {
 				Attrs attrs = this.getEnMap().getAttrs();
 
-				// 说明多个主键
+				// 璇存槑澶氫釜涓婚敭
 				QueryObject qo = new QueryObject(this);
 				String[] pks = this.getPK().split("[,]", -1);
 
@@ -1021,7 +1021,7 @@ public abstract class Entity implements Serializable {
 				}
 			}
 
-			// 生成数据库判断语句。
+			// 鐢熸垚鏁版嵁搴撳垽鏂鍙ャ��
 			String selectSQL = "SELECT count( " + this.getPK() + ") as Num FROM " + this.getEnMap().getPhysicsTable()
 					+ " WHERE ";
 			switch (SystemConfig.getAppCenterDBType()) {
@@ -1041,7 +1041,7 @@ public abstract class Entity implements Serializable {
 				selectSQL += SqlBuilder.GetKeyConditionOfOLE(this);
 				break;
 			default:
-				throw new RuntimeException("@没有设计到。" + this.getEnMap().getEnDBUrl().getDBUrlType());
+				throw new RuntimeException("@娌℃湁璁捐鍒般��" + this.getEnMap().getEnDBUrl().getDBUrlType());
 			}
 
 			Paras ps = SqlBuilder.GenerParasPK(this);
@@ -1060,9 +1060,9 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 按照主键查询，查询出来的结果不赋给当前的实体。
+	 * 鎸夌収涓婚敭鏌ヨ锛屾煡璇㈠嚭鏉ョ殑缁撴灉涓嶈祴缁欏綋鍓嶇殑瀹炰綋銆�
 	 * 
-	 * @return 查询出来的个数
+	 * @return 鏌ヨ鍑烘潵鐨勪釜鏁�
 	 * @throws Exception
 	 */
 	public final DataTable RetrieveNotSetValues() throws Exception {
@@ -1070,7 +1070,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 这个表里是否存在
+	 * 杩欎釜琛ㄩ噷鏄惁瀛樺湪
 	 * 
 	 * @param pk
 	 * @param val
@@ -1131,7 +1131,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 删除之前要做的工作
+	 * 鍒犻櫎涔嬪墠瑕佸仛鐨勫伐浣�
 	 * 
 	 * @return
 	 * @throws Exception
@@ -1141,7 +1141,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 把缓存删除
+	 * 鎶婄紦瀛樺垹闄�
 	 * 
 	 * @throws Exception
 	 */
@@ -1151,9 +1151,9 @@ public abstract class Entity implements Serializable {
 	}
 
 	public final void DeleteFromCash() throws Exception {
-		// 删除缓存.
+		// 鍒犻櫎缂撳瓨.
 		CashEntity.Delete(this.toString(), this.getPKVal().toString());
-		// 删除数据.
+		// 鍒犻櫎鏁版嵁.
 		this.getRow().clear();
 	}
 
@@ -1176,7 +1176,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 删除指定的数据
+	 * 鍒犻櫎鎸囧畾鐨勬暟鎹�
 	 * 
 	 * @param attr
 	 * @param val
@@ -1233,7 +1233,7 @@ public abstract class Entity implements Serializable {
 		return;
 	}
 
-	// 参数字段
+	// 鍙傛暟瀛楁
 	private AtPara getAtPara() {
 
 		Object tempVar = this.getRow().GetValByKey("_ATObj_");
@@ -1244,10 +1244,10 @@ public abstract class Entity implements Serializable {
 		try {
 			String atParaStr = this.GetValStringByKey("AtPara");
 			if (StringHelper.isNullOrEmpty(atParaStr)) {
-				// 没有发现数据，就执行初始化.
+				// 娌℃湁鍙戠幇鏁版嵁锛屽氨鎵ц鍒濆鍖�.
 				this.InitParaFields();
 
-				// 重新获取一次。
+				// 閲嶆柊鑾峰彇涓�娆°��
 				atParaStr = this.GetValStringByKey("AtPara");
 				if (StringHelper.isNullOrEmpty(atParaStr)) {
 					atParaStr = "";
@@ -1262,12 +1262,12 @@ public abstract class Entity implements Serializable {
 			return at;
 		} catch (RuntimeException ex) {
 			throw new RuntimeException(
-					"@获取参数AtPara时出现异常" + ex.getMessage() + "，可能是您没有加入约定的参数字段AtPara. " + ex.getMessage());
+					"@鑾峰彇鍙傛暟AtPara鏃跺嚭鐜板紓甯�" + ex.getMessage() + "锛屽彲鑳芥槸鎮ㄦ病鏈夊姞鍏ョ害瀹氱殑鍙傛暟瀛楁AtPara. " + ex.getMessage());
 		}
 	}
 
 	/**
-	 * 初始化参数字段(需要子类重写)
+	 * 鍒濆鍖栧弬鏁板瓧娈�(闇�瑕佸瓙绫婚噸鍐�)
 	 * 
 	 * @return
 	 */
@@ -1275,7 +1275,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 获取参数
+	 * 鑾峰彇鍙傛暟
 	 * 
 	 * @param key
 	 * @return
@@ -1285,7 +1285,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 获取参数
+	 * 鑾峰彇鍙傛暟
 	 * 
 	 * @param key
 	 * @param isNullAsVal
@@ -1300,7 +1300,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 获取参数Init值
+	 * 鑾峰彇鍙傛暟Init鍊�
 	 * 
 	 * @param key
 	 * @return
@@ -1318,7 +1318,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 获取参数boolen值
+	 * 鑾峰彇鍙傛暟boolen鍊�
 	 * 
 	 * @param key
 	 * @return
@@ -1328,7 +1328,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 获取参数boolen值
+	 * 鑾峰彇鍙傛暟boolen鍊�
 	 * 
 	 * @param key
 	 * @param IsNullAsVal
@@ -1339,7 +1339,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 设置参数
+	 * 璁剧疆鍙傛暟
 	 * 
 	 * @param key
 	 * @param obj
@@ -1378,9 +1378,9 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
-	// 通用方法
+	// 閫氱敤鏂规硶
 	/**
-	 * 获取实体
+	 * 鑾峰彇瀹炰綋
 	 * 
 	 * @param key
 	 */
@@ -1390,7 +1390,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 设置实体
+	 * 璁剧疆瀹炰綋
 	 * 
 	 * @param key
 	 * @param obj
@@ -1405,7 +1405,7 @@ public abstract class Entity implements Serializable {
 
 	// insert
 	/**
-	 * 在插入之前要做的工作。
+	 * 鍦ㄦ彃鍏ヤ箣鍓嶈鍋氱殑宸ヤ綔銆�
 	 * 
 	 * @return
 	 * @throws Exception
@@ -1449,16 +1449,16 @@ public abstract class Entity implements Serializable {
 
 	protected void afterInsert() throws Exception {
 
-		// added by liuxc,2016-02-19,新建时，新增一个版本记录
+		// added by liuxc,2016-02-19,鏂板缓鏃讹紝鏂板涓�涓増鏈褰�
 		if (this.getEnMap().IsEnableVer == false)
 			return;
 
-		// 增加版本为1的版本历史记录
+		// 澧炲姞鐗堟湰涓�1鐨勭増鏈巻鍙茶褰�
 		String enName = this.toString();
 		String rdt = BP.DA.DataType.getCurrentDataTime();
 
 		// edited by
-		// liuxc,2017-03-24,增加判断，如果相同主键的数据曾被删除掉，再次被增加时，会延续被删除时的版本，原有逻辑报错
+		// liuxc,2017-03-24,澧炲姞鍒ゆ柇锛屽鏋滅浉鍚屼富閿殑鏁版嵁鏇捐鍒犻櫎鎺夛紝鍐嶆琚鍔犳椂锛屼細寤剁画琚垹闄ゆ椂鐨勭増鏈紝鍘熸湁閫昏緫鎶ラ敊
 		EnVer ver = new EnVer();
 		ver.setMyPK(enName + "_" + this.getPKVal());
 
@@ -1474,7 +1474,7 @@ public abstract class Entity implements Serializable {
 		ver.setRec(BP.Web.WebUser.getName());
 		ver.Save();
 
-		// 保存字段数据.
+		// 淇濆瓨瀛楁鏁版嵁.
 		Attrs attrs = this.getEnMap().getAttrs();
 		for (Attr attr : attrs.ToJavaList()) {
 			if (attr.getIsRefAttr()) {
@@ -1487,7 +1487,7 @@ public abstract class Entity implements Serializable {
 			dtl.setEnName(ver.getNo());
 			dtl.setAttrKey(attr.getKey());
 			dtl.setAttrName(attr.getDesc());
-			// dtl.OldVal = this.GetValStrByKey(attr.Key); //第一个版本时，旧值没有
+			// dtl.OldVal = this.GetValStrByKey(attr.Key); //绗竴涓増鏈椂锛屾棫鍊兼病鏈�
 			dtl.setRDT(rdt);
 			dtl.setRec(BP.Web.WebUser.getName());
 			dtl.setNewVal(this.GetValStrByKey(attr.getKey()));
@@ -1498,7 +1498,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 在更新与插入之后要做的工作.
+	 * 鍦ㄦ洿鏂颁笌鎻掑叆涔嬪悗瑕佸仛鐨勫伐浣�.
 	 * 
 	 * @throws Exception
 	 */
@@ -1507,7 +1507,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 从一个副本上copy. 用于两个数性基本相近的 实体 copy.
+	 * 浠庝竴涓壇鏈笂copy. 鐢ㄤ簬涓や釜鏁版�у熀鏈浉杩戠殑 瀹炰綋 copy.
 	 * 
 	 * @param fromEn
 	 */
@@ -1526,7 +1526,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 从一个副本上
+	 * 浠庝竴涓壇鏈笂
 	 * 
 	 * @param fromRow
 	 */
@@ -1558,7 +1558,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 复制 Hashtable
+	 * 澶嶅埗 Hashtable
 	 * 
 	 * @param ht
 	 */
@@ -1623,7 +1623,7 @@ public abstract class Entity implements Serializable {
 
 	// verify
 	/**
-	 * 校验数据
+	 * 鏍￠獙鏁版嵁
 	 * 
 	 * @return
 	 */
@@ -1631,7 +1631,7 @@ public abstract class Entity implements Serializable {
 		return true;
 	}
 
-	// 更新，插入之前的工作。
+	// 鏇存柊锛屾彃鍏ヤ箣鍓嶇殑宸ヤ綔銆�
 	protected boolean beforeUpdateInsertAction() throws Exception {
 		switch (this.getEnMap().getEnType()) {
 		case View:
@@ -1646,11 +1646,11 @@ public abstract class Entity implements Serializable {
 		return true;
 	}
 
-	// 更新，插入之前的工作。
+	// 鏇存柊锛屾彃鍏ヤ箣鍓嶇殑宸ヤ綔銆�
 
-	// 更新操作
+	// 鏇存柊鎿嶄綔
 	/**
-	 * 更新
+	 * 鏇存柊
 	 * 
 	 * @return
 	 * @throws Exception
@@ -1660,13 +1660,13 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 仅仅更新一个属性
+	 * 浠呬粎鏇存柊涓�涓睘鎬�
 	 * 
 	 * @param key1
 	 *            key1
 	 * @param val1
 	 *            val1
-	 * @return 更新的个数
+	 * @return 鏇存柊鐨勪釜鏁�
 	 * @throws Exception
 	 */
 	public final int Update(String key1, Object val1) throws Exception {
@@ -1731,42 +1731,42 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 更新实体
+	 * 鏇存柊瀹炰綋
 	 * 
 	 * @throws Exception
 	 */
 	public final int Update(String[] keys) throws Exception {
 		String str = "";
 		try {
-			str = "@更新之前出现错误 ";
+			str = "@鏇存柊涔嬪墠鍑虹幇閿欒 ";
 			if (!this.beforeUpdate()) {
 				return 0;
 			}
 
-			str = "@更新插入之前出现错误";
+			str = "@鏇存柊鎻掑叆涔嬪墠鍑虹幇閿欒";
 			if (!this.beforeUpdateInsertAction()) {
 				return 0;
 			}
 
-			str = "@更新时出现错误";
+			str = "@鏇存柊鏃跺嚭鐜伴敊璇�";
 			int i = EntityDBAccess.Update(this, keys);
-			str = "@更新之后出现错误";
+			str = "@鏇存柊涔嬪悗鍑虹幇閿欒";
 
 			this.afterUpdate();
-			str = "@更新插入之后出现错误";
+			str = "@鏇存柊鎻掑叆涔嬪悗鍑虹幇閿欒";
 			this.afterInsertUpdateAction();
 			return i;
 		} catch (RuntimeException ex) {
 
-			if (ex.getMessage().contains("将截断字符串") && ex.getMessage().contains("缺少")) {
-				// 说明字符串长度有问题.
+			if (ex.getMessage().contains("灏嗘埅鏂瓧绗︿覆") && ex.getMessage().contains("缂哄皯")) {
+				// 璇存槑瀛楃涓查暱搴︽湁闂.
 				try {
 					this.CheckPhysicsTable();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
-				// 比较参数那个字段长度有问题
+				// 姣旇緝鍙傛暟閭ｄ釜瀛楁闀垮害鏈夐棶棰�
 				String errs = "";
 				for (Attr attr : this.getEnMap().getAttrs()) {
 					if (attr.getMyDataType() != BP.DA.DataType.AppString) {
@@ -1774,14 +1774,14 @@ public abstract class Entity implements Serializable {
 					}
 
 					if (attr.getMaxLength() < this.GetValStrByKey(attr.getKey()).length()) {
-						errs += "@映射里面的" + attr.getKey() + "," + attr.getDesc() + ", 相对于输入的数据:{"
-								+ this.GetValStrByKey(attr.getKey()) + "}, 太长。";
+						errs += "@鏄犲皠閲岄潰鐨�" + attr.getKey() + "," + attr.getDesc() + ", 鐩稿浜庤緭鍏ョ殑鏁版嵁:{"
+								+ this.GetValStrByKey(attr.getKey()) + "}, 澶暱銆�";
 					}
 				}
 
 				if (!errs.equals("")) {
 					throw new RuntimeException(
-							"@执行更新[" + this.toString() + "]出现错误@错误字段:" + errs + " <br>清你在提交一次。" + ex.getMessage());
+							"@鎵ц鏇存柊[" + this.toString() + "]鍑虹幇閿欒@閿欒瀛楁:" + errs + " <br>娓呬綘鍦ㄦ彁浜や竴娆°��" + ex.getMessage());
 				} else {
 					throw ex;
 				}
@@ -1789,7 +1789,7 @@ public abstract class Entity implements Serializable {
 
 			Log.DefaultLogWriteLine(LogType.Error, ex.getMessage());
 			if (SystemConfig.getIsDebug()) {
-				throw new RuntimeException("@[" + this.getEnDesc() + "]更新期间出现错误:" + str + ex.getMessage());
+				throw new RuntimeException("@[" + this.getEnDesc() + "]鏇存柊鏈熼棿鍑虹幇閿欒:" + str + ex.getMessage());
 			} else {
 				throw ex;
 			}
@@ -1800,23 +1800,23 @@ public abstract class Entity implements Serializable {
 		return;
 	}
 
-	// 对文件的处理. add by qin 15/10/31
+	// 瀵规枃浠剁殑澶勭悊. add by qin 15/10/31
 	public final void SaveBigTxtToDB(String saveToField, String bigTxt) throws Exception {
 		String temp = BP.Sys.SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable() + this.getPKVal()
 				+ ".tmp";
 		DataType.WriteFile(temp, bigTxt);
 
-		// 写入数据库.
+		// 鍐欏叆鏁版嵁搴�.
 		SaveFileToDB(saveToField, temp);
 	}
 
 	/**
-	 * 保存文件到数据库
+	 * 淇濆瓨鏂囦欢鍒版暟鎹簱
 	 * 
 	 * @param saveToField
-	 *            要保存的字段
+	 *            瑕佷繚瀛樼殑瀛楁
 	 * @param filefullName
-	 *            文件路径
+	 *            鏂囦欢璺緞
 	 * @throws Exception
 	 */
 	public final void SaveFileToDB(String saveToField, String filefullName) throws Exception {
@@ -1824,7 +1824,7 @@ public abstract class Entity implements Serializable {
 			BP.DA.DBAccess.SaveFileToDB(filefullName, this.getEnMap().getPhysicsTable(), this.getPK(),
 					this.getPKVal().toString(), saveToField);
 		} catch (RuntimeException ex) {
-			// 为了防止任何可能出现的数据丢失问题，您应该先仔细检查此脚本，然后再在数据库设计器的上下文之外运行此脚本。
+			// 涓轰簡闃叉浠讳綍鍙兘鍑虹幇鐨勬暟鎹涪澶遍棶棰橈紝鎮ㄥ簲璇ュ厛浠旂粏妫�鏌ユ鑴氭湰锛岀劧鍚庡啀鍦ㄦ暟鎹簱璁捐鍣ㄧ殑涓婁笅鏂囦箣澶栬繍琛屾鑴氭湰銆�
 			String sql = "";
 			if (BP.DA.DBAccess.getAppCenterDBType().equals(DBType.MSSQL)) {
 				sql = "ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + saveToField + " Image NULL ";
@@ -1840,18 +1840,18 @@ public abstract class Entity implements Serializable {
 
 			BP.DA.DBAccess.RunSQL(sql);
 
-			throw new RuntimeException("@保存文件期间出现错误，有可能该字段没有被自动创建，现在已经执行创建修复数据表，请重新执行一次." + ex.getMessage());
+			throw new RuntimeException("@淇濆瓨鏂囦欢鏈熼棿鍑虹幇閿欒锛屾湁鍙兘璇ュ瓧娈垫病鏈夎鑷姩鍒涘缓锛岀幇鍦ㄥ凡缁忔墽琛屽垱寤轰慨澶嶆暟鎹〃锛岃閲嶆柊鎵ц涓�娆�." + ex.getMessage());
 		}
 	}
 
 	/**
-	 * 从表的字段里读取文件
+	 * 浠庤〃鐨勫瓧娈甸噷璇诲彇鏂囦欢
 	 * 
 	 * @param saveToField
-	 *            字段
+	 *            瀛楁
 	 * @param filefullName
-	 *            文件路径,如果为空怎不保存直接返回文件流，如果不为空则创建文件。
-	 * @return 返回文件流
+	 *            鏂囦欢璺緞,濡傛灉涓虹┖鎬庝笉淇濆瓨鐩存帴杩斿洖鏂囦欢娴侊紝濡傛灉涓嶄负绌哄垯鍒涘缓鏂囦欢銆�
+	 * @return 杩斿洖鏂囦欢娴�
 	 * @throws IOException
 	 */
 	public final byte[] GetFileFromDB(String saveToField, String filefullName) throws IOException {
@@ -1861,11 +1861,11 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 从表的字段里读取string
+	 * 浠庤〃鐨勫瓧娈甸噷璇诲彇string
 	 * 
 	 * @param imgFieldName
-	 *            字段名
-	 * @return 大文本数据
+	 *            瀛楁鍚�
+	 * @return 澶ф枃鏈暟鎹�
 	 * @throws IOException
 	 */
 	public final String GetBigTextFromDB(String imgFieldName) throws IOException {
@@ -1893,11 +1893,11 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 从表的字段里读取string
+	 * 浠庤〃鐨勫瓧娈甸噷璇诲彇string
 	 * 
 	 * @param imgFieldName
-	 *            字段名
-	 * @return 大文本数据
+	 *            瀛楁鍚�
+	 * @return 澶ф枃鏈暟鎹�
 	 * @throws IOException
 	 */
 	public final String GetBigTextFromDB(String imgFieldName, String codeType) throws IOException {
@@ -1924,7 +1924,7 @@ public abstract class Entity implements Serializable {
 				this.getPKVal().toString(), imgFieldName, codeType);
 	}
 
-	// 对文件的处理. add by qin 15/10/31
+	// 瀵规枃浠剁殑澶勭悊. add by qin 15/10/31
 
 	public int Save() throws Exception {
 
@@ -1940,7 +1940,7 @@ public abstract class Entity implements Serializable {
 		}
 		if (this.getPK().equals("MyPK") || this.getPK().equals("No") || this.getPK().equals("WorkID")
 				|| this.getPK().equals("NodeID")) {
-			// 自动生成的MYPK，插入前获取主键
+			// 鑷姩鐢熸垚鐨凪YPK锛屾彃鍏ュ墠鑾峰彇涓婚敭
 			String pk = this.GetValStrByKey(this.getPK());
 			if (pk.equals("") || pk == null) {
 				this.Insert();
@@ -1964,7 +1964,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 建立物理表
+	 * 寤虹珛鐗╃悊琛�
 	 */
 	protected final void CreatePhysicsTable() {
 
@@ -1979,14 +1979,14 @@ public abstract class Entity implements Serializable {
 			DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfMySQL(this));
 			break;
 		default:
-			throw new RuntimeException("@未判断的数据库类型。");
+			throw new RuntimeException("@鏈垽鏂殑鏁版嵁搴撶被鍨嬨��");
 		}
 		this.CreateIndexAndPK();
 	}
 
 	private void CreateIndexAndPK() {
 
-		// 建立主键.
+		// 寤虹珛涓婚敭.
 		int pkconut = this.getPKCount();
 
 		if (pkconut == 1) {
@@ -2027,7 +2027,7 @@ public abstract class Entity implements Serializable {
 		DataTable dtAttr = DBAccess.RunSQLReturnTable(sqlFields);
 		DataTable dtYueShu = DBAccess.RunSQLReturnTable(sqlYueShu);
 
-		// 修复表字段。
+		// 淇琛ㄥ瓧娈点��
 		Attrs attrs = this.get_enMap().getAttrs();
 
 		for (Attr attr : attrs) {
@@ -2038,7 +2038,7 @@ public abstract class Entity implements Serializable {
 			String FType = "";
 			String Flen = "";
 
-			// 判断是否存在.
+			// 鍒ゆ柇鏄惁瀛樺湪.
 			boolean isHave = false;
 			for (DataRow dr : dtAttr.Rows) {
 				if (dr.getValue("FName").toString().toLowerCase().equals(attr.getField().toLowerCase())) {
@@ -2051,7 +2051,7 @@ public abstract class Entity implements Serializable {
 			}
 
 			if (isHave == false) {
-				// 不存在此列 , 就增加此列。
+				// 涓嶅瓨鍦ㄦ鍒� , 灏卞鍔犳鍒椼��
 				switch (attr.getMyDataType()) {
 				case DataType.AppString:
 				case DataType.AppDate:
@@ -2060,7 +2060,7 @@ public abstract class Entity implements Serializable {
 					if (len == 0) {
 						len = 200;
 					}
-					// throw new Exception("属性的最小长度不能为0。");
+					// throw new Exception("灞炴�х殑鏈�灏忛暱搴︿笉鑳戒负0銆�");
 					if (dbtype == DBType.Access && len >= 254) {
 
 						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
@@ -2107,7 +2107,7 @@ public abstract class Entity implements Serializable {
 			if (isHave == false)
 				continue;
 
-			// 检查类型是否匹配.
+			// 妫�鏌ョ被鍨嬫槸鍚﹀尮閰�.
 			switch (attr.getMyDataType()) {
 			case DataType.AppString:
 			case DataType.AppDate:
@@ -2116,7 +2116,7 @@ public abstract class Entity implements Serializable {
 					if (attr.getIsPK())
 						continue;
 
-					// 类型正确，检查长度
+					// 绫诲瀷姝ｇ‘锛屾鏌ラ暱搴�
 					if (Flen == null) {
 						throw new RuntimeException("" + attr.getKey() + " -" + sqlFields);
 					}
@@ -2132,7 +2132,7 @@ public abstract class Entity implements Serializable {
 							}
 						} catch (java.lang.Exception e) {
 
-							// 如果类型不匹配，就删除它在重新建, 先删除约束，在删除列，在重建。
+							// 濡傛灉绫诲瀷涓嶅尮閰嶏紝灏卞垹闄ゅ畠鍦ㄩ噸鏂板缓, 鍏堝垹闄ょ害鏉燂紝鍦ㄥ垹闄ゅ垪锛屽湪閲嶅缓銆�
 							for (DataRow dr : dtYueShu.Rows) {
 								if (dr.getValue("FName").toString().toLowerCase().equals(attr.getKey().toLowerCase())) {
 
@@ -2141,7 +2141,7 @@ public abstract class Entity implements Serializable {
 								}
 							}
 
-							// 在执行一遍.
+							// 鍦ㄦ墽琛屼竴閬�.
 							if (attr.getMaxLength() >= 4000) {
 								DBAccess.RunSQL("alter table " + this.getEnMap().getPhysicsTable() + " ALTER column "
 										+ attr.getKey() + " NVARCHAR(4000)");
@@ -2152,7 +2152,7 @@ public abstract class Entity implements Serializable {
 						}
 					}
 				} else {
-					// 如果类型不匹配，就删除它在重新建, 先删除约束，在删除列，在重建。
+					// 濡傛灉绫诲瀷涓嶅尮閰嶏紝灏卞垹闄ゅ畠鍦ㄩ噸鏂板缓, 鍏堝垹闄ょ害鏉燂紝鍦ㄥ垹闄ゅ垪锛屽湪閲嶅缓銆�
 					for (DataRow dr : dtYueShu.Rows) {
 						if (dr.getValue("FName").toString().toLowerCase().equals(attr.getKey().toLowerCase())) {
 							DBAccess.RunSQL("alter table " + table + " drop constraint " + dr.getValue(0).toString());
@@ -2170,7 +2170,7 @@ public abstract class Entity implements Serializable {
 			case DataType.AppInt:
 			case DataType.AppBoolean:
 				if (!FType.equals("int")) {
-					// 如果类型不匹配，就删除它在重新建, 先删除约束，在删除列，在重建。
+					// 濡傛灉绫诲瀷涓嶅尮閰嶏紝灏卞垹闄ゅ畠鍦ㄩ噸鏂板缓, 鍏堝垹闄ょ害鏉燂紝鍦ㄥ垹闄ゅ垪锛屽湪閲嶅缓銆�
 					for (DataRow dr : dtYueShu.Rows) {
 						if (dr.getValue("FName").toString().toLowerCase().equals(attr.getKey().toLowerCase())) {
 							DBAccess.RunSQL("alter table " + table + " drop constraint " + dr.getValue(0).toString());
@@ -2195,7 +2195,7 @@ public abstract class Entity implements Serializable {
 			case DataType.AppRate:
 			case DataType.AppDouble:
 				if (!FType.equals("float")) {
-					// 如果类型不匹配，就删除它在重新建, 先删除约束，在删除列，在重建。
+					// 濡傛灉绫诲瀷涓嶅尮閰嶏紝灏卞垹闄ゅ畠鍦ㄩ噸鏂板缓, 鍏堝垹闄ょ害鏉燂紝鍦ㄥ垹闄ゅ垪锛屽湪閲嶅缓銆�
 					for (DataRow dr : dtYueShu.Rows) {
 						if (dr.getValue("FName").toString().toLowerCase().equals(attr.getKey().toLowerCase())) {
 							DBAccess.RunSQL("alter table " + table + " drop constraint " + dr.getValue(0).toString());
@@ -2217,7 +2217,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 检查物理表
+	 * 妫�鏌ョ墿鐞嗚〃
 	 * 
 	 * @throws Exception
 	 */
@@ -2233,7 +2233,7 @@ public abstract class Entity implements Serializable {
 		}
 
 		if (DBAccess.IsExitsObject(this.get_enMap().getPhysicsTable()) == false) {
-			// 如果物理表不存在就新建立一个物理表。
+			// 濡傛灉鐗╃悊琛ㄤ笉瀛樺湪灏辨柊寤虹珛涓�涓墿鐞嗚〃銆�
 			this.CreatePhysicsTable();
 			return;
 		}
@@ -2260,11 +2260,11 @@ public abstract class Entity implements Serializable {
 	}
 
 	private void CheckPhysicsTable_Informix() throws Exception {
-		// 检查字段是否存在
+		// 妫�鏌ュ瓧娈垫槸鍚﹀瓨鍦�
 		String sql = "SELECT *  FROM " + this.getEnMap().getPhysicsTable() + " WHERE 1=2";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
-		// 如果不存在.
+		// 濡傛灉涓嶅瓨鍦�.
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
@@ -2279,13 +2279,13 @@ public abstract class Entity implements Serializable {
 			}
 
 			if (attr.getKey().equals("AID")) {
-				// 自动增长列
+				// 鑷姩澧為暱鍒�
 				DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
 						+ " INT  Identity(1,1)");
 				continue;
 			}
 
-			// 不存在此列 , 就增加此列。
+			// 涓嶅瓨鍦ㄦ鍒� , 灏卞鍔犳鍒椼��
 			switch (attr.getMyDataType()) {
 			case DataType.AppString:
 			case DataType.AppDate:
@@ -2320,7 +2320,7 @@ public abstract class Entity implements Serializable {
 			}
 		}
 
-		// 检查字段长度是否符合最低要求
+		// 妫�鏌ュ瓧娈甸暱搴︽槸鍚︾鍚堟渶浣庤姹�
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
@@ -2366,7 +2366,7 @@ public abstract class Entity implements Serializable {
 			}
 		}
 
-		// 检查枚举类型字段是否是INT 类型
+		// 妫�鏌ユ灇涓剧被鍨嬪瓧娈垫槸鍚︽槸INT 绫诲瀷
 		Attrs attrs = this.get_enMap().getHisEnumAttrs();
 		for (Attr attr : attrs) {
 			if (attr.getMyDataType() != DataType.AppInt) {
@@ -2374,23 +2374,23 @@ public abstract class Entity implements Serializable {
 			}
 
 			// SUNXD 20170714
-			// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
-			// 增加查询条件owner = 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+			// 鐢变簬ALL_TAB_COLUMNS琛ㄤ腑鏈夊彲鑳戒細鍑虹幇鐢ㄦ埛鍚�(owner)涓嶄竴鏍凤紝琛ㄥ悕(table_name)涓�鏍风殑鏁版嵁锛屽鑷充細鍘讳慨鏀瑰叾瀹冪敤鎴蜂笅鐨勮〃
+			// 澧炲姞鏌ヨ鏉′欢owner = 褰撳墠绯荤粺閰嶇疆鐨勮繛鎺ョ敤鎴�(SystemConfig.getUser().toUpperCase())
 
 			sql = "SELECT DATA_TYPE FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
 					+ "' AND TABLE_NAME='" + this.getEnMap().getPhysicsTableExt().toLowerCase() + "' AND COLUMN_NAME='"
 					+ attr.getField().toLowerCase() + "'";
 			String val = DBAccess.RunSQLReturnString(sql);
 			if (val == null) {
-				Log.DefaultLogWriteLineError("@没有检测到字段:" + attr.getKey());
+				Log.DefaultLogWriteLineError("@娌℃湁妫�娴嬪埌瀛楁:" + attr.getKey());
 			}
 
 			if (val.indexOf("CHAR") != -1) {
-				// 如果它是 varchar 字段
+				// 濡傛灉瀹冩槸 varchar 瀛楁
 				// SUNXD 20170714
-				// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
-				// 增加查询条件owner =
-				// 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+				// 鐢变簬ALL_TAB_COLUMNS琛ㄤ腑鏈夊彲鑳戒細鍑虹幇鐢ㄦ埛鍚�(owner)涓嶄竴鏍凤紝琛ㄥ悕(table_name)涓�鏍风殑鏁版嵁锛屽鑷充細鍘讳慨鏀瑰叾瀹冪敤鎴蜂笅鐨勮〃
+				// 澧炲姞鏌ヨ鏉′欢owner =
+				// 褰撳墠绯荤粺閰嶇疆鐨勮繛鎺ョ敤鎴�(SystemConfig.getUser().toUpperCase())
 //				sql = "SELECT OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
 //						+ "' AND  upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
 //						+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
@@ -2399,13 +2399,13 @@ public abstract class Entity implements Serializable {
 					this.RunSQL("alter table  " + this.getEnMap().getPhysicsTableExt() + " modify " + attr.getField()
 							+ " NUMBER ");
 				} catch (RuntimeException ex) {
-					Log.DefaultLogWriteLineError("运行sql 失败:alter table  " + this.getEnMap().getPhysicsTableExt()
+					Log.DefaultLogWriteLineError("杩愯sql 澶辫触:alter table  " + this.getEnMap().getPhysicsTableExt()
 							+ " modify " + attr.getField() + " NUMBER " + ex.getMessage());
 				}
 			}
 		}
 
-		// 检查枚举类型是否存在.
+		// 妫�鏌ユ灇涓剧被鍨嬫槸鍚﹀瓨鍦�.
 		attrs = this.get_enMap().getHisEnumAttrs();
 		for (Attr attr : attrs) {
 			if (attr.getMyDataType() != DataType.AppInt) {
@@ -2437,7 +2437,7 @@ public abstract class Entity implements Serializable {
 
 	private void CheckPhysicsTable_MySQL() throws Exception {
 
-		// 检查字段是否存在
+		// 妫�鏌ュ瓧娈垫槸鍚﹀瓨鍦�
 		String sql = "SELECT *  FROM " + this.get_enMap().getPhysicsTable() + " WHERE 1=2";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
@@ -2447,7 +2447,7 @@ public abstract class Entity implements Serializable {
 
 		DataTable dtScheam = this.RunSQLReturnTable(sql);
 
-		// 如果不存在.
+		// 濡傛灉涓嶅瓨鍦�.
 		for (Attr attr : map.getAttrs()) {
 			if (attr.getMyFieldType() == FieldType.RefText)
 				continue;
@@ -2455,7 +2455,7 @@ public abstract class Entity implements Serializable {
 			if (attr.getIsPK())
 				continue;
 
-			// 已经包含此列.
+			// 宸茬粡鍖呭惈姝ゅ垪.
 			if (dt.Columns.get(attr.getKey().toLowerCase()) != null) {
 
 				if (attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat
@@ -2464,7 +2464,7 @@ public abstract class Entity implements Serializable {
 					continue;
 				}
 
-				// 最大长度.
+				// 鏈�澶ч暱搴�.
 				int maxLen = attr.getMaxLength();
 				for (DataRow dr : dtScheam.Rows) {
 
@@ -2477,17 +2477,22 @@ public abstract class Entity implements Serializable {
 					}
 
 					String len = dr.getValue("Len").toString();
+					
+					if (len.equals("") || len==null)
+						continue;
+					
+					
 					int lenInt = Integer.parseInt(len);
 					if (lenInt >= maxLen)
 						continue;
-					// 需要修改.
+					// 闇�瑕佷慨鏀�.
 					this.RunSQL("alter table " + dr.getValue("OWNER") + "." + this.get_enMap().getPhysicsTableExt()
 							+ " modify " + attr.getField() + " NVARCHAR(" + attr.getMaxLength() + ")");
 				}
 				continue;
 			}
 
-			// 不存在此列 , 就增加此列。
+			// 涓嶅瓨鍦ㄦ鍒� , 灏卞鍔犳鍒椼��
 			switch (attr.getMyDataType()) {
 			case DataType.AppString:
 				int len = attr.getMaxLength();
@@ -2528,11 +2533,11 @@ public abstract class Entity implements Serializable {
 	}
 
 	private void CheckPhysicsTable_Ora() throws Exception {
-		// 检查字段是否存在
+		// 妫�鏌ュ瓧娈垫槸鍚﹀瓨鍦�
 		String sql = "SELECT *  FROM " + this.getEnMap().getPhysicsTable() + " WHERE 1=2";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
-		// 如果不存在.
+		// 濡傛灉涓嶅瓨鍦�.
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
@@ -2547,13 +2552,13 @@ public abstract class Entity implements Serializable {
 			}
 
 			if (attr.getKey().equals("AID")) {
-				// 自动增长列
+				// 鑷姩澧為暱鍒�
 				DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
 						+ " INT  Identity(1,1)");
 				continue;
 			}
 
-			// 不存在此列 , 就增加此列。
+			// 涓嶅瓨鍦ㄦ鍒� , 灏卞鍔犳鍒椼��
 			switch (attr.getMyDataType()) {
 			case DataType.AppString:
 			case DataType.AppDate:
@@ -2582,7 +2587,7 @@ public abstract class Entity implements Serializable {
 			}
 		}
 
-		// 检查字段长度是否符合最低要求
+		// 妫�鏌ュ瓧娈甸暱搴︽槸鍚︾鍚堟渶浣庤姹�
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
@@ -2596,8 +2601,8 @@ public abstract class Entity implements Serializable {
 			
 			dt = new DataTable();
 			// SUNXD 20170714
-			// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
-			// 增加查询条件owner = 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+			// 鐢变簬ALL_TAB_COLUMNS琛ㄤ腑鏈夊彲鑳戒細鍑虹幇鐢ㄦ埛鍚�(owner)涓嶄竴鏍凤紝琛ㄥ悕(table_name)涓�鏍风殑鏁版嵁锛屽鑷充細鍘讳慨鏀瑰叾瀹冪敤鎴蜂笅鐨勮〃
+			// 澧炲姞鏌ヨ鏉′欢owner = 褰撳墠绯荤粺閰嶇疆鐨勮繛鎺ョ敤鎴�(SystemConfig.getUser().toUpperCase())
 			sql = "SELECT DATA_LENGTH AS LEN, OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '"
 					+ SystemConfig.getUser().toUpperCase() + "' AND upper(TABLE_NAME)='"
 					+ this.getEnMap().getPhysicsTableExt().toUpperCase() + "' AND UPPER(COLUMN_NAME)='"
@@ -2622,30 +2627,30 @@ public abstract class Entity implements Serializable {
 			}
 		}
 
-		// 检查枚举类型字段是否是INT 类型
+		// 妫�鏌ユ灇涓剧被鍨嬪瓧娈垫槸鍚︽槸INT 绫诲瀷
 		Attrs attrs = this.get_enMap().getHisEnumAttrs();
 		for (Attr attr : attrs) {
 			if (attr.getMyDataType() != DataType.AppInt) {
 				continue;
 			}
 			// SUNXD 20170714
-			// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
-			// 增加查询条件owner = 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+			// 鐢变簬ALL_TAB_COLUMNS琛ㄤ腑鏈夊彲鑳戒細鍑虹幇鐢ㄦ埛鍚�(owner)涓嶄竴鏍凤紝琛ㄥ悕(table_name)涓�鏍风殑鏁版嵁锛屽鑷充細鍘讳慨鏀瑰叾瀹冪敤鎴蜂笅鐨勮〃
+			// 澧炲姞鏌ヨ鏉′欢owner = 褰撳墠绯荤粺閰嶇疆鐨勮繛鎺ョ敤鎴�(SystemConfig.getUser().toUpperCase())
 
 			sql = "SELECT DATA_TYPE FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
 					+ "' AND upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
 					+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
 			String val = DBAccess.RunSQLReturnString(sql);
 			if (val == null) {
-				Log.DefaultLogWriteLineError("@没有检测到字段eunm" + attr.getKey());
+				Log.DefaultLogWriteLineError("@娌℃湁妫�娴嬪埌瀛楁eunm" + attr.getKey());
 			}
 			if (val.indexOf("CHAR") != -1) {
-				// 如果它是 varchar 字段
+				// 濡傛灉瀹冩槸 varchar 瀛楁
 
 				// SUNXD 20170714
-				// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
-				// 增加查询条件owner =
-				// 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+				// 鐢变簬ALL_TAB_COLUMNS琛ㄤ腑鏈夊彲鑳戒細鍑虹幇鐢ㄦ埛鍚�(owner)涓嶄竴鏍凤紝琛ㄥ悕(table_name)涓�鏍风殑鏁版嵁锛屽鑷充細鍘讳慨鏀瑰叾瀹冪敤鎴蜂笅鐨勮〃
+				// 澧炲姞鏌ヨ鏉′欢owner =
+				// 褰撳墠绯荤粺閰嶇疆鐨勮繛鎺ョ敤鎴�(SystemConfig.getUser().toUpperCase())
 				/*sql = "SELECT A.OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
 						+ "' AND upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
 						+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
@@ -2654,13 +2659,13 @@ public abstract class Entity implements Serializable {
 					this.RunSQL("alter table  " + this.getEnMap().getPhysicsTableExt() + " modify " + attr.getField()
 							+ " NUMBER ");
 				} catch (RuntimeException ex) {
-					Log.DefaultLogWriteLineError("运行sql 失败:alter table  " + this.getEnMap().getPhysicsTableExt()
+					Log.DefaultLogWriteLineError("杩愯sql 澶辫触:alter table  " + this.getEnMap().getPhysicsTableExt()
 							+ " modify " + attr.getField() + " NUMBER " + ex.getMessage());
 				}
 			}
 		}
 
-		// 检查枚举类型是否存在.
+		// 妫�鏌ユ灇涓剧被鍨嬫槸鍚﹀瓨鍦�.
 		attrs = this.get_enMap().getHisEnumAttrs();
 		for (Attr attr : attrs) {
 			if (attr.getMyDataType() != DataType.AppInt) {
@@ -2706,7 +2711,7 @@ public abstract class Entity implements Serializable {
 				continue;
 			}
 
-			// 这个代码需要提纯到基类中去。
+			// 杩欎釜浠ｇ爜闇�瑕佹彁绾埌鍩虹被涓幓銆�
 			switch (attr.autoFullWay) {
 			case Way0:
 				continue;
@@ -2745,14 +2750,14 @@ public abstract class Entity implements Serializable {
 				try {
 					val = DBAccess.RunSQLReturnString(sql);
 				} catch (RuntimeException ex) {
-					throw new RuntimeException("@字段(" + attr.getKey() + "," + attr.getDesc()
-							+ ")自动获取数据期间错误(有可能是您写的sql语句会返回多列多行的table,现在只要一列一行的table才能填充，请检查sql.):"
-							+ sql.replace("'", "“") + " @Tech Info:" + ex.getMessage().replace("'", "“") + "@执行的sql:"
+					throw new RuntimeException("@瀛楁(" + attr.getKey() + "," + attr.getDesc()
+							+ ")鑷姩鑾峰彇鏁版嵁鏈熼棿閿欒(鏈夊彲鑳芥槸鎮ㄥ啓鐨剆ql璇彞浼氳繑鍥炲鍒楀琛岀殑table,鐜板湪鍙涓�鍒椾竴琛岀殑table鎵嶈兘濉厖锛岃妫�鏌ql.):"
+							+ sql.replace("'", "鈥�") + " @Tech Info:" + ex.getMessage().replace("'", "鈥�") + "@鎵ц鐨剆ql:"
 							+ sql);
 				}
 
 				if (attr.getIsNum()) {
-					// 如果是数值类型的就尝试着转换数值，转换不了就跑出异常信息。
+					// 濡傛灉鏄暟鍊肩被鍨嬬殑灏卞皾璇曠潃杞崲鏁板�硷紝杞崲涓嶄簡灏辫窇鍑哄紓甯镐俊鎭��
 					try {
 						java.math.BigDecimal d = new java.math.BigDecimal(val);
 						/*
@@ -2779,15 +2784,15 @@ public abstract class Entity implements Serializable {
 							String tempV = this.GetValStringByKey(ss[1]);
 							if (tempV.equals("") || tempV == null) {
 								if (!this.getEnMap().getAttrs().Contains(ss[1])) {
-									throw new RuntimeException("@自动获取值信息不完整,Map 中已经不包含Key=" + ss[1] + "的属性。");
+									throw new RuntimeException("@鑷姩鑾峰彇鍊间俊鎭笉瀹屾暣,Map 涓凡缁忎笉鍖呭惈Key=" + ss[1] + "鐨勫睘鎬с��");
 								}
 
 								// throw new
-								// Exception("@自动获取值信息不完整,Map 中已经不包含Key=" +
-								// ss[1] + "的属性。");
+								// Exception("@鑷姩鑾峰彇鍊间俊鎭笉瀹屾暣,Map 涓凡缁忎笉鍖呭惈Key=" +
+								// ss[1] + "鐨勫睘鎬с��");
 								sqlfk = sqlfk.replace('@' + ss[0], "'@xxx'");
 								Log.DefaultLogWriteLineWarning(
-										"@在自动取值期间出现错误:" + this.toString() + " , " + this.getPKVal() + "没有自动获取到信息。");
+										"@鍦ㄨ嚜鍔ㄥ彇鍊兼湡闂村嚭鐜伴敊璇�:" + this.toString() + " , " + this.getPKVal() + "娌℃湁鑷姩鑾峰彇鍒颁俊鎭��");
 							} else {
 								sqlfk = sqlfk.replace('@' + ss[0], "'" + this.GetValStringByKey(ss[1]) + "'");
 							}
@@ -2800,7 +2805,7 @@ public abstract class Entity implements Serializable {
 					this.SetValByKey(attr.getKey(), DBAccess.RunSQLReturnStringIsNull(sqlfk, null));
 				} catch (RuntimeException ex) {
 					throw new RuntimeException(
-							"@在处理自动完成：外键[" + attr.getKey() + ";" + attr.getDesc() + "],时出现错误。异常信息：" + ex.getMessage());
+							"@鍦ㄥ鐞嗚嚜鍔ㄥ畬鎴愶細澶栭敭[" + attr.getKey() + ";" + attr.getDesc() + "],鏃跺嚭鐜伴敊璇�傚紓甯镐俊鎭細" + ex.getMessage());
 				}
 				break;
 			case Way4_Dtl:
@@ -2831,11 +2836,11 @@ public abstract class Entity implements Serializable {
 
 				break;
 			default:
-				throw new RuntimeException("未涉及到的类型。");
+				throw new RuntimeException("鏈秹鍙婂埌鐨勭被鍨嬨��");
 			}
 		}
 
-		// 处理JS的计算。
+		// 澶勭悊JS鐨勮绠椼��
 		for (Attr attr : al) {
 			/*
 			 * warning String doc = attr.AutoFullDoc.clone().toString();
@@ -2854,11 +2859,11 @@ public abstract class Entity implements Serializable {
 				java.math.BigDecimal d = DataType.ParseExpToDecimal(doc);
 				this.SetValByKey(attr.getKey(), d);
 			} catch (RuntimeException ex) {
-				Log.DefaultLogWriteLineError("@(" + this.toString() + ")在处理自动计算{" + this.getEnDesc() + "}："
-						+ this.getPK() + "=" + this.getPKVal() + "时，属性[" + attr.getKey() + "]，计算内容[" + doc + "]，出现错误："
+				Log.DefaultLogWriteLineError("@(" + this.toString() + ")鍦ㄥ鐞嗚嚜鍔ㄨ绠梴" + this.getEnDesc() + "}锛�"
+						+ this.getPK() + "=" + this.getPKVal() + "鏃讹紝灞炴�" + attr.getKey() + "]锛岃绠楀唴瀹筟" + doc + "]锛屽嚭鐜伴敊璇細"
 						+ ex.getMessage());
-				throw new RuntimeException("@(" + this.toString() + ")在处理自动计算{" + this.getEnDesc() + "}：" + this.getPK()
-						+ "=" + this.getPKVal() + "时，属性[" + attr.getKey() + "]，计算内容[" + doc + "]，出现错误："
+				throw new RuntimeException("@(" + this.toString() + ")鍦ㄥ鐞嗚嚜鍔ㄨ绠梴" + this.getEnDesc() + "}锛�" + this.getPK()
+						+ "=" + this.getPKVal() + "鏃讹紝灞炴�" + attr.getKey() + "]锛岃绠楀唴瀹筟" + doc + "]锛屽嚭鐜伴敊璇細"
 						+ ex.getMessage());
 			}
 		}
@@ -2870,27 +2875,27 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 把一个实体转化成Json.
+	 * 鎶婁竴涓疄浣撹浆鍖栨垚Json.
 	 * 
-	 * @return 返回一个string json串.
+	 * @return 杩斿洖涓�涓猻tring json涓�.
 	 */
 	public final String ToJson(Boolean isInParaFields) {
 		Hashtable<String, Object> ht = getRow();
 
-		// 如果不包含参数字段.
+		// 濡傛灉涓嶅寘鍚弬鏁板瓧娈�.
 		if (isInParaFields == false) {
 			ht.put("EnName", this.toString());
 			return BP.Tools.Json.ToJsonEntityModel(ht);
 		}
 
 		if (ht.containsKey("AtPara") == true) {
-			/* 如果包含这个字段 */
+			/* 濡傛灉鍖呭惈杩欎釜瀛楁 */
 			AtPara ap = getAtPara();
 			for (String key : ap.getHisHT().keySet()) {
 				ht.put(key, ap.getHisHT().get(key));
 			}
 
-			// 把参数属性移除.
+			// 鎶婂弬鏁板睘鎬хЩ闄�.
 			ht.remove("_ATObj_");
 		}
 		return BP.Tools.Json.ToJson(ht, false);
@@ -2906,10 +2911,10 @@ public abstract class Entity implements Serializable {
 		try {
 			String atParaStr = this.GetValStringByKey("AtPara");
 			if (DataType.IsNullOrEmpty(atParaStr)) {
-				// 没有发现数据，就执行初始化.
+				// 娌℃湁鍙戠幇鏁版嵁锛屽氨鎵ц鍒濆鍖�.
 				this.InitParaFields();
 
-				// 重新获取一次。
+				// 閲嶆柊鑾峰彇涓�娆°��
 				atParaStr = this.GetValStringByKey("AtPara");
 				if (DataType.IsNullOrEmpty(atParaStr)) {
 					atParaStr = "";
@@ -2924,12 +2929,12 @@ public abstract class Entity implements Serializable {
 			return at;
 		} catch (RuntimeException ex) {
 			throw new RuntimeException(
-					"@获取参数AtPara时出现异常" + ex.getMessage() + "，可能是您没有加入约定的参数字段AtPara. " + ex.getMessage());
+					"@鑾峰彇鍙傛暟AtPara鏃跺嚭鐜板紓甯�" + ex.getMessage() + "锛屽彲鑳芥槸鎮ㄦ病鏈夊姞鍏ョ害瀹氱殑鍙傛暟瀛楁AtPara. " + ex.getMessage());
 		}
 	}
 
 	/**
-	 * 把entity的实体属性调度到en里面去.
+	 * 鎶奺ntity鐨勫疄浣撳睘鎬ц皟搴﹀埌en閲岄潰鍘�.
 	 * 
 	 * @param fk_mapdata
 	 * @return
@@ -2942,8 +2947,8 @@ public abstract class Entity implements Serializable {
 
 		Map map = this.getEnMap();
 
-		// 获得短的类名称.
-		// region 更新主表信息.
+		// 鑾峰緱鐭殑绫诲悕绉�.
+		// region 鏇存柊涓昏〃淇℃伅.
 		MapData md = new MapData();
 
 		try {
@@ -2956,12 +2961,12 @@ public abstract class Entity implements Serializable {
 			md.setName(map.getEnDesc());
 			md.setPTable(map.getPhysicsTable());
 			md.Update();
-			// endregion 更新主表信息.
+			// endregion 鏇存柊涓昏〃淇℃伅.
 
-			// 同步属性 mapattr.
+			// 鍚屾灞炴�� mapattr.
 			DTSMapToSys_MapData_InitMapAttr(map.getAttrs(), fk_mapdata);
 
-			// region 同步从表.
+			// region 鍚屾浠庤〃.
 			EnDtls dtls = map.getDtls();
 			for (EnDtl dtl : dtls.ToJavaList()) {
 				MapDtl mdtl = new MapDtl();
@@ -2975,12 +2980,12 @@ public abstract class Entity implements Serializable {
 				mdtl.setName(enDtl.getEnDesc());
 				mdtl.setFK_MapData(fk_mapdata);
 				mdtl.setPTable(enDtl.getEnMap().getPhysicsTable());
-				mdtl.setRefPK(dtl.getRefKey()); // 关联的主键.
+				mdtl.setRefPK(dtl.getRefKey()); // 鍏宠仈鐨勪富閿�.
 				mdtl.Update();
 
-				// 同步字段.
+				// 鍚屾瀛楁.
 				DTSMapToSys_MapData_InitMapAttr(enDtl.getEnMap().getAttrs(), enDtl.getClassIDOfShort());
-				// endregion 同步从表.
+				// endregion 鍚屾浠庤〃.
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3075,12 +3080,12 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 他的访问控制.
+	 * 浠栫殑璁块棶鎺у埗.
 	 */
 	protected UAC _HisUAC = null;
 
 	/**
-	 * 得到 uac 控制.
+	 * 寰楀埌 uac 鎺у埗.
 	 * 
 	 * @return
 	 * @throws Exception
@@ -3108,9 +3113,9 @@ public abstract class Entity implements Serializable {
 
 	// CreateInstance
 	/**
-	 * 创建一个实例
+	 * 鍒涘缓涓�涓疄渚�
 	 * 
-	 * @return 自身的实例
+	 * @return 鑷韩鐨勫疄渚�
 	 */
 	public final Entity CreateInstance() {
 		/*
@@ -3143,7 +3148,7 @@ public abstract class Entity implements Serializable {
 			if (v == null || v.indexOf('@') == -1)
 				continue;
 
-			// 设置默认值.
+			// 璁剧疆榛樿鍊�.
 			if (v.equals("@WebUser.No")) {
 
 				this.SetValByKey(key, WebUser.getNo());
@@ -3189,9 +3194,9 @@ public abstract class Entity implements Serializable {
 		ResetDefaultVal(this.toString(),null,0);
 	}
 
-	// 方法
+	// 鏂规硶
 	/**
-	 * 重新设置默信息.
+	 * 閲嶆柊璁剧疆榛樹俊鎭�.
 	 * 
 	 * @throws Exception
 	 */
@@ -3209,7 +3214,7 @@ public abstract class Entity implements Serializable {
 			if(fk_node!=0 && fk_node!=999999)
 				i = frmField.Retrieve(FrmFieldAttr.FK_MapData,fk_mapdata,FrmFieldAttr.FK_Flow,Integer.parseInt(fk_flow),FrmFieldAttr.FK_Node,fk_node,FrmFieldAttr.KeyOfEn,attr.getKey());
 			
-			//获取默认值
+			//鑾峰彇榛樿鍊�
 			String v = attr.getDefaultValOfReal();
 			if(i==1)
 				v = frmField.getDefVal();
@@ -3217,10 +3222,10 @@ public abstract class Entity implements Serializable {
 			if (v== null ||( v != null && v.contains("@") == false))
 				continue;
 		  
-			// 含有特定值时取消重新设定默认值
+			// 鍚湁鐗瑰畾鍊兼椂鍙栨秷閲嶆柊璁惧畾榛樿鍊�
 			String myval = this.GetValStringByKey(attr.getKey()); 
 
-			// 设置默认值.
+			// 璁剧疆榛樿鍊�.
 			if (v.equals("@WebUser.No")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getNo());
@@ -3303,8 +3308,8 @@ public abstract class Entity implements Serializable {
 	             }
 	             continue;
 			}
-		   if(v.equals("@yyyy年mm月dd日") ||v.equals("@yyyy年mm月dd日HH时mm分")
-				   || v.equals("@yy年mm月dd日")||v.equals("@yy年mm月dd日HH时mm分") ){
+		   if(v.equals("@yyyy骞磎m鏈坉d鏃�") ||v.equals("@yyyy骞磎m鏈坉d鏃H鏃秏m鍒�")
+				   || v.equals("@yy骞磎m鏈坉d鏃�")||v.equals("@yy骞磎m鏈坉d鏃H鏃秏m鍒�") ){
 
              if (attr.getUIIsReadonly() == true)
              {
@@ -3322,7 +3327,7 @@ public abstract class Entity implements Serializable {
                int count = gloVar.RetrieveFromDBSources();
                if (count == 1)
                {
-                   //执行SQL获取默认值
+                   //鎵цSQL鑾峰彇榛樿鍊�
                    String sql = gloVar.getVal();
                    sql = BP.WF.Glo.DealExp(sql, null, null);
                    if (DataType.IsNullOrEmpty(myval) || myval == v){
@@ -3343,7 +3348,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 把所有的值都设置成默认值，但是主键除外。
+	 * 鎶婃墍鏈夌殑鍊奸兘璁剧疆鎴愰粯璁ゅ�硷紝浣嗘槸涓婚敭闄ゅ銆�
 	 * 
 	 * @throws Exception
 	 */
@@ -3370,7 +3375,7 @@ public abstract class Entity implements Serializable {
 				continue;
 			}
 
-			// 设置默认值.
+			// 璁剧疆榛樿鍊�.
 			if (v.equals("WebUser.No")) {
 				this.SetValByKey(attr.getKey(), WebUser.getNo());
 				continue;
@@ -3443,12 +3448,12 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 子类需要继承
+	 * 瀛愮被闇�瑕佺户鎵�
 	 */
 	public abstract Map getEnMap();
 
 	/**
-	 * 动态的获取map
+	 * 鍔ㄦ�佺殑鑾峰彇map
 	 */
 	public Map getEnMapInTime() {
 		_tmpEnMap = null;
@@ -3457,7 +3462,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 实体的 map 信息。
+	 * 瀹炰綋鐨� map 淇℃伅銆�
 	 * 
 	 * //public abstract void EnMap();
 	 */
@@ -3485,7 +3490,7 @@ public abstract class Entity implements Serializable {
 		this._row = value;
 	}
 
-	// 与sql操作有关
+	// 涓巗ql鎿嶄綔鏈夊叧
 	protected SQLCash _SQLCash = null;
 
 	public SQLCash getSQLCash() throws Exception {
@@ -3503,15 +3508,15 @@ public abstract class Entity implements Serializable {
 		_SQLCash = value;
 	}
 
-	// 清除缓存SQLCase.
+	// 娓呴櫎缂撳瓨SQLCase.
 	public void clearSQLCash() {
 		BP.DA.Cash.getSQL_Cash().remove(this.toString());
 		_SQLCash = null;
 	}
 
-	// 关于属性的操作。
+	// 鍏充簬灞炴�х殑鎿嶄綔銆�
 	/**
-	 * 设置object类型的值
+	 * 璁剧疆object绫诲瀷鐨勫��
 	 * 
 	 * @param attrKey
 	 *            attrKey
@@ -3548,13 +3553,13 @@ public abstract class Entity implements Serializable {
 
 	public final void SetValByDesc(String attrDesc, Object val) {
 		if (val == null) {
-			throw new RuntimeException("@不能设置属性[" + attrDesc + "]null 值。");
+			throw new RuntimeException("@涓嶈兘璁剧疆灞炴�" + attrDesc + "]null 鍊笺��");
 		}
 		this.getRow().SetValByKey(this.getEnMap().GetAttrByDesc(attrDesc).getKey(), val);
 	}
 
 	/**
-	 * 设置关联类型的值
+	 * 璁剧疆鍏宠仈绫诲瀷鐨勫��
 	 * 
 	 * @param attrKey
 	 *            attrKey
@@ -3566,7 +3571,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 设置bool类型的值
+	 * 璁剧疆bool绫诲瀷鐨勫��
 	 * 
 	 * @param attrKey
 	 *            attrKey
@@ -3582,7 +3587,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 设置默认值
+	 * 璁剧疆榛樿鍊�
 	 */
 	public final void SetDefaultVals() {
 		for (Attr attr : this.getEnMap().getAttrs()) {
@@ -3591,7 +3596,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 设置日期类型的值
+	 * 璁剧疆鏃ユ湡绫诲瀷鐨勫��
 	 * 
 	 * @param attrKey
 	 *            attrKey
@@ -3602,13 +3607,13 @@ public abstract class Entity implements Serializable {
 		try {
 			this.SetValByKey(attrKey, DataType.StringToDateStr(val));
 		} catch (RuntimeException ex) {
-			throw new RuntimeException("@不合法的日期数据格式:key=[" + attrKey + "],value=" + val + " " + ex.getMessage());
+			throw new RuntimeException("@涓嶅悎娉曠殑鏃ユ湡鏁版嵁鏍煎紡:key=[" + attrKey + "],value=" + val + " " + ex.getMessage());
 		}
 	}
 
-	// 取值方法
+	// 鍙栧�兼柟娉�
 	/**
-	 * 取得Object
+	 * 鍙栧緱Object
 	 * 
 	 * @param attrKey
 	 * @return
@@ -3629,7 +3634,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 在确定 attrKey 存在 map 的情况下才能使用它
+	 * 鍦ㄧ‘瀹� attrKey 瀛樺湪 map 鐨勬儏鍐典笅鎵嶈兘浣跨敤瀹�
 	 * 
 	 * @param attrKey
 	 * @return
@@ -3653,7 +3658,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 取得String
+	 * 鍙栧緱String
 	 * 
 	 * @param attrKey
 	 * @return
@@ -3662,7 +3667,7 @@ public abstract class Entity implements Serializable {
 
 		String val = GetValStrByKey(attrKey, null);
 		if (val == null)
-			throw new RuntimeException("@获取值期间出现如下异常：  " + attrKey + " 您没有在类增加这个属性，EnName=" + this.toString());
+			throw new RuntimeException("@鑾峰彇鍊兼湡闂村嚭鐜板涓嬪紓甯革細  " + attrKey + " 鎮ㄦ病鏈夊湪绫诲鍔犺繖涓睘鎬э紝EnName=" + this.toString());
 
 		return val;
 	}
@@ -3676,7 +3681,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 取出大块文本
+	 * 鍙栧嚭澶у潡鏂囨湰
 	 * 
 	 * @return
 	 */
@@ -3704,7 +3709,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 取到Html 信息。
+	 * 鍙栧埌Html 淇℃伅銆�
 	 * 
 	 * @param attrKey
 	 *            attr
@@ -3719,7 +3724,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 取得枚举或者外键的标签 如果是枚举就获取枚举标签. 如果是外键就获取为外键的名称.
+	 * 鍙栧緱鏋氫妇鎴栬�呭閿殑鏍囩 濡傛灉鏄灇涓惧氨鑾峰彇鏋氫妇鏍囩. 濡傛灉鏄閿氨鑾峰彇涓哄閿殑鍚嶇О.
 	 * 
 	 * @param attrKey
 	 * @return
@@ -3746,7 +3751,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 根据key 得到int val
+	 * 鏍规嵁key 寰楀埌int val
 	 * 
 	 * @param key
 	 * @return
@@ -3763,7 +3768,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 根据key 得到 bool val
+	 * 鏍规嵁key 寰楀埌 bool val
 	 * 
 	 * @param key
 	 * @return
@@ -3797,9 +3802,9 @@ public abstract class Entity implements Serializable {
 
 	public final String GetValBoolStrByKey(String key) {
 		if (GetValBooleanByKey(key) == false) {
-			return "否";
+			return "鍚�";
 		} else {
-			return "是";
+			return "鏄�";
 		}
 	}
 
@@ -3812,7 +3817,7 @@ public abstract class Entity implements Serializable {
          return Float.parseFloat(val);
      }
 	/**
-	 * 根据key 得到flaot val
+	 * 鏍规嵁key 寰楀埌flaot val
 	 * 
 	 * @param key
 	 * @return
@@ -3826,7 +3831,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 根据key 得到flaot val
+	 * 鏍规嵁key 寰楀埌flaot val
 	 * 
 	 * @param key
 	 * @return
@@ -3918,7 +3923,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 获取或者设置 是不是空的实体.
+	 * 鑾峰彇鎴栬�呰缃� 鏄笉鏄┖鐨勫疄浣�.
 	 */
 	public final boolean getIsEmpty() {
 		if (this._row == null)
@@ -3937,14 +3942,14 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 对这个实体的描述
+	 * 瀵硅繖涓疄浣撶殑鎻忚堪
 	 */
 	public final String getEnDesc() {
 		return this.getEnMap().getEnDesc();
 	}
 
 	/**
-	 * 取到主健值。如果它的主健不唯一，就返回第一个值。 获取或设置
+	 * 鍙栧埌涓诲仴鍊笺�傚鏋滃畠鐨勪富鍋ヤ笉鍞竴锛屽氨杩斿洖绗竴涓�笺�� 鑾峰彇鎴栬缃�
 	 */
 	public final Object getPKVal() {
 		return this.GetValByKey(this.getPK());
@@ -3955,7 +3960,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 * 濡傛灉鍙湁涓�涓富閿�,灏辫繑鍥濸K,濡傛灉鏈夊涓氨杩斿洖绗竴涓�.PK
 	 */
 	public final int getPKCount() {
 		if (this.getPK().equals("OID") || this.getPK().equals("No") || this.getPK().equals("MyPK")
@@ -3971,14 +3976,14 @@ public abstract class Entity implements Serializable {
 			}
 		}
 		if (i == 0) {
-			throw new RuntimeException("@没有给【" + this.getEnDesc() + "，" + this.getEnMap().getPhysicsTable() + "】定义主键。");
+			throw new RuntimeException("@娌℃湁缁欍��" + this.getEnDesc() + "锛�" + this.getEnMap().getPhysicsTable() + "銆戝畾涔変富閿��");
 		} else {
 			return i;
 		}
 	}
 
 	/**
-	 * 是不是OIDEntity
+	 * 鏄笉鏄疧IDEntity
 	 */
 	public final boolean getIsOIDEntity() {
 		if (this.getPK().equals("OID")) {
@@ -3988,7 +3993,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 是不是OIDEntity
+	 * 鏄笉鏄疧IDEntity
 	 */
 	public final boolean getIsNoEntity() {
 		if (this.getPK().equals("No")) {
@@ -3998,7 +4003,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 是否是TreeEntity
+	 * 鏄惁鏄疶reeEntity
 	 */
 	public final boolean getIsTreeEntity() {
 		return this.getEnMap().getAttrs().Contains("ParentNo");
@@ -4006,7 +4011,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 * 濡傛灉鍙湁涓�涓富閿�,灏辫繑鍥濸K,濡傛灉鏈夊涓氨杩斿洖绗竴涓�.PK
 	 */
 	public String getPK() {
 
@@ -4023,14 +4028,14 @@ public abstract class Entity implements Serializable {
 			}
 		}
 		if (pks.equals("")) {
-			throw new RuntimeException("@没有给【" + this.getEnDesc() + "，" + this.getEnMap().getPhysicsTable() + "】定义主键。");
+			throw new RuntimeException("@娌℃湁缁欍��" + this.getEnDesc() + "锛�" + this.getEnMap().getPhysicsTable() + "銆戝畾涔変富閿��");
 		}
 		pks = pks.substring(0, pks.length() - 1);
 		return pks;
 	}
 
 	/**
-	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 * 濡傛灉鍙湁涓�涓富閿�,灏辫繑鍥濸K,濡傛灉鏈夊涓氨杩斿洖绗竴涓�.PK
 	 */
 	public final String[] getPKs() {
 		String[] strs1 = new String[this.getPKCount()];
@@ -4046,7 +4051,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	/**
-	 * 取到主健值。
+	 * 鍙栧埌涓诲仴鍊笺��
 	 */
 	public final java.util.Hashtable getPKVals() {
 		java.util.Hashtable ht = new java.util.Hashtable();

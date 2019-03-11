@@ -7027,7 +7027,7 @@ public class Dev2Interface {
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, int toNodeID, String toEmps)
 			throws Exception {
 		// 转化成编号.
-		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
+//		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
 		return Node_SendWork(fk_flow, workID, null, null, toNodeID, toEmps);
 	}
 
@@ -7121,7 +7121,7 @@ public class Dev2Interface {
 
 		// 变量.
 		Node nd = new Node(currNodeId);
-		nd.WorkID = workID;
+//		nd.WorkID = workID;
 		Work sw = nd.getHisWork();
 		sw.setOID(workID);
 		sw.RetrieveFromDBSources();
@@ -7187,7 +7187,7 @@ public class Dev2Interface {
 				}
 			}
 
-			if (StringHelper.isNullOrEmpty(paras) == false) {
+			if (StringHelper.isNullOrEmpty(paras) == false &&  Glo.getIsEnableTrackRec() == true) {
 				ps = new Paras();
 				ps.SQL = "UPDATE WF_GenerWorkerlist SET AtPara=" + dbstr + "Paras WHERE WorkID=" + dbstr
 						+ "WorkID AND FK_Node=" + dbstr + "FK_Node";
@@ -8958,15 +8958,16 @@ public class Dev2Interface {
 				ActionType.AskforHelp, "", null, null, emp.getNo(), emp.getName());
 
 		Flow fl = new Flow(gwf.getFK_Flow());
-		BP.WF.Dev2Interface.Port_SendMsg(askForEmp, gwf.getTitle(), askForNote,
-				"AK" + gwf.getFK_Node() + "_" + gwf.getWorkID(), SMSMsgType.AskFor, gwf.getFK_Flow(), gwf.getFK_Node(),
-				workid, gwf.getFID());
+		//暂时住掉
+//		BP.WF.Dev2Interface.Port_SendMsg(askForEmp, gwf.getTitle(), askForNote,
+//				"AK" + gwf.getFK_Node() + "_" + gwf.getWorkID(), SMSMsgType.AskFor, gwf.getFK_Flow(), gwf.getFK_Node(),
+//				workid, gwf.getFID());
 		// 更新状态.
 		DBAccess.RunSQL(
 				"UPDATE " + fl.getPTable() + " SET WFState=" + WFState.Askfor.getValue() + " WHERE OID=" + workid);
 
 		// 设置成工作未读。
-		BP.WF.Dev2Interface.Node_SetWorkUnRead(workid);
+		BP.WF.Dev2Interface.Node_SetWorkUnRead(workid,askForEmp);
 
 		String msg = "您的工作已经提交给(" + askForEmp + " " + emp.getName() + ")加签了。";
 
@@ -9005,10 +9006,31 @@ public class Dev2Interface {
 		gwf.setParas_AskForReply(replyNote);
 		gwf.Update();
 
-		// 执行发送, 在发送的方法里面已经做了判断了,并且把 回复的信息写入了日志.
-		String info = BP.WF.Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfHtml();
+		Node nd = new Node(gwf.getFK_Node());
+        String info = "";
+        try
+        {
+            //执行发送, 在发送的方法里面已经做了判断了,并且把 回复的信息写入了日志.
+             info = BP.WF.Dev2Interface.Node_SendWork(gwf.getFK_Flow(), workid,null,null,0,null).ToMsgOfHtml();
+        }
+        catch (Exception ex)
+        {
+            if (ex.getMessage().contains("请选择下一步骤工作") == true || ex.getMessage().contains("用户没有选择发送到的节点") == true)
+            {
+                if (nd.getCondModel() == CondModel.ByUserSelected)
+                {
+                    /*如果抛出异常，我们就让其转入选择到达的节点里, 在节点里处理选择人员. */
+                    return "SelectNodeUrl@./WorkOpt/ToNodes.htm?FK_Flow=" + gwf.getFK_Flow() + "&FK_Node=" + gwf.getFK_Node() + "&WorkID=" + gwf.getWorkID() + "&FID=" + gwf.getFID();
 
-		Node node = new Node(fk_node);
+                }
+                return "err@下一个节点的接收人规则是，当前节点选择来选择，在当前节点属性里您没有启动接受人按钮，系统自动帮助您启动了，请关闭窗口重新打开。" + ex.getMessage();
+            }
+            return ex.getMessage();
+        }
+		Node node = new Node(gwf.getFK_Node());
+        Work wk = node.getHisWork();
+        wk.setOID(workid);
+        wk.RetrieveFromDBSources();
 		// 恢复加签后执行事件
 		info += node.getHisFlow().DoFlowEventEntity(EventListOfNode.AskerReAfter, node, node.getHisWork(), null);
 		return info;

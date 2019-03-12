@@ -78,13 +78,6 @@
                     return true;
                 }
 
-                //                    if (wcDesc.FWCShowModel == 0) {
-                //                        //表格模式
-                //                        html += '<tr style="background-color: #E2F6FB">';
-                //                        html += '<td>' + this.NodeName + '</td>';
-                //                        html += '</tr>';
-                //                        html += '<tr>';
-                //                    }
 
                 //自由模式
                 html += "<tr>";
@@ -105,10 +98,6 @@
 
                     html += "<td>";
 
-                    //html += "<div style='float:left'>" + wcDesc.FWCOpLabel + "</div>";
-                    //html += "<div style='float:left'><a href=\"javascript:TBHelp('ND" + nodeid + "')\"><img src='../Img/Emps.gif' width='23px' align='middle' border=0 />选择词汇</a></div>";
-                    //html += "<div style='float:left'></div>";
-
                     if (wcDesc.FWCAth == 1) {
                         html += "<div style='float:right' id='uploaddiv' onmouseover='UploadFileChange(this)'></div>";
                     }
@@ -127,7 +116,6 @@
                     html += msg;
                     html += "</textarea>";
 
-                    //   var ss = "CheckItems";
 
                     //加入常用短语.
                     html += "<br>";
@@ -266,7 +254,7 @@
             $("#tbTracks").append(html);
 
             if ($("#WorkCheck_Doc").length > 0) {
-                if (wcDesc.FWCDefInfo && wcDesc.FWCDefInfo.length > 0) {
+                if (wcDesc.FWCIsFullInfo==1 &&  wcDesc.FWCDefInfo && wcDesc.FWCDefInfo.length > 0) {
                     SaveWorkCheck();
                 }
             }

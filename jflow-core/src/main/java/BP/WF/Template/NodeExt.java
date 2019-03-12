@@ -579,7 +579,7 @@ public class NodeExt extends Entity
  
 			///#region 基础功能.
 		RefMethod rm = null;
-
+        
 		rm = new RefMethod();
 		rm.Title = "接收人规则";
 		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/Menu/Sender.png";
@@ -935,7 +935,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoAccepterRoleNew()
 	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeAccepterRole.htm?FK_Node=" + this.getNodeID();
+		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/AccepterRole/Default.htm?FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 发送阻塞规则

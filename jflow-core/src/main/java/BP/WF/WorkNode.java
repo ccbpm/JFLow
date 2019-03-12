@@ -6403,10 +6403,10 @@ public class WorkNode {
 
 			// 返回这个对象.
 			return this.HisMsgObjs;
-		} catch (RuntimeException ex) {
+		} catch (Exception ex) {
 			this.WhenTranscactionRollbackError(ex);
 			// DBAccess.DoTransactionRollback();
-			throw new RuntimeException("Message:" + ex.getMessage());
+			throw new Exception(ex.getMessage());
 		}
 	}
 
@@ -6469,7 +6469,7 @@ public class WorkNode {
 	 * @param ex
 	 * @throws Exception
 	 */
-	private void WhenTranscactionRollbackError(RuntimeException ex) throws Exception {
+	private void WhenTranscactionRollbackError(Exception ex) throws Exception {
 		// 在提交错误的情况下，回滚数据。
 		/// #region 如果是分流点下同表单发送失败再次发送就出现错误
 		if (this.town != null && this.town.getHisNode().getHisNodeWorkType() == NodeWorkType.SubThreadWork

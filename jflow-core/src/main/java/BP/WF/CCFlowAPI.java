@@ -745,10 +745,8 @@ public class CCFlowAPI {
 
 					DataRow drMsg = dtAlert.NewRow();
 					drMsg.put("Title", worker + "," + workerName + "请求加签:");
-					drMsg.put("Msg",
-							DataType.ParseText2Html(msgAskFor) + "<br>" + rdt
-									+ "<a href='./WorkOpt/AskForRe.htm?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node
-									+ "&WorkID=" + workID + "&FID=" + fid + "' >回复加签意见</a> --");
+					drMsg.put("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "<a href='#' onclick='AskForRe("+fk_flow+","+fk_node+","+workID+","+fid+")' >回复加签意见</a>");
+					
 					dtAlert.Rows.add(drMsg);
 
 

@@ -2435,8 +2435,22 @@ public class Node extends Entity
 	@Override
 	protected boolean beforeDelete() throws Exception
 	{
+		
+		int num = 0;
+        //如果是结束节点，则自动结束流程
+        if (this.getNodePosType() == NodePosType.End)
+        {
+            GenerWorkFlows gwfs = new GenerWorkFlows();
+            gwfs.Retrieve("FK_Flow", this.getFK_Flow());
+            for(GenerWorkFlow gwf : gwfs.ToJavaList())
+            {
+                BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getFK_Flow(), gwf.getWorkID(), "流程成功结束");
+            }
+
+            
+        }
 		//判断是否可以被删除. 
-		int num = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE FK_Node=" + this.getNodeID());
+		 num = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE FK_Node=" + this.getNodeID());
 		if (num != 0)
 		{
 			throw new RuntimeException("@该节点[" + this.getNodeID() + "," + this.getName() + "]有待办工作存在，您不能删除它.");

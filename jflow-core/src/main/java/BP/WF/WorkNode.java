@@ -5667,13 +5667,13 @@ public class WorkNode {
 							this.getWorkID(), GenerWorkerListAttr.FK_Emp, this.getExecer());
 
 					// 执行时效考核.
-					if (this.rptGe == null) {
-						Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
-								this.rptGe.getTitle(), null);
-					} else {
+//					if (this.rptGe == null) {
+//						Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
+//								this.rptGe.getTitle(), null);
+//					} else {
 						Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
 								this.getHisGenerWorkFlow().getTitle(), null);
-					}
+//					}
 
 					// 返回发送对象.
 					return this.HisMsgObjs;

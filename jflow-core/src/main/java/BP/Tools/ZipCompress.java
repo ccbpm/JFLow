@@ -9,73 +9,105 @@ public final class ZipCompress {
 	private String zipFileName;      // 目的地Zip文件
     private String sourceFileName;   //源文件（带压缩的文件或文件夹）
     
-    public ZipCompress(String zipFileName,String sourceFileName)
+    public ZipCompress(String sourceFileName,String zipFileName)
     {
         this.zipFileName=zipFileName;
         this.sourceFileName=sourceFileName;
     }
     
-    public void zip() throws Exception
-    {
-        //File zipFile = new File(zipFileName);
-        System.out.println("压缩中...");
-        
-        //创建zip输出流
-        ZipOutputStream out = new ZipOutputStream( new FileOutputStream(zipFileName));
-        
-        //创建缓冲输出流
-        BufferedOutputStream bos = new BufferedOutputStream(out);
-        
-        File sourceFile = new File(sourceFileName);
-        
-        //调用函数
-        compress(out,bos,sourceFile,sourceFile.getName());
-        
-        bos.close();
-        out.close();
-        System.out.println("压缩完成");
-        
+    /**s
+     * 压缩文件
+     * @param srcFilePath 压缩源路径
+     * @param destFilePath 压缩目的路径
+     */
+    public  void zip() {
+        //
+        File src = new File(zipFileName);
+ 
+        if (!src.exists()) {
+            throw new RuntimeException(zipFileName + "不存在");
+        }
+        File zipFile = new File(sourceFileName);
+ 
+        try {
+ 
+            FileOutputStream fos = new FileOutputStream(zipFile);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            String baseDir = "";
+            compressbyType(src, zos, baseDir);
+            zos.close();
+ 
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+ 
+        }
     }
-    
-    public void compress(ZipOutputStream out,BufferedOutputStream bos,File sourceFile,String base) throws Exception
-    {
-        //如果路径为目录（文件夹）
-        if(sourceFile.isDirectory())
-        {
-        
-            //取出文件夹中的文件（或子文件夹）
-            File[] flist = sourceFile.listFiles();
-            
-            if(flist.length==0)//如果文件夹为空，则只需在目的地zip文件中写入一个目录进入点
-            {
-                System.out.println(base+"/");
-                out.putNextEntry(  new ZipEntry(base+"/") );
+    /**
+     * 按照原路径的类型就行压缩。文件路径直接把文件压缩，
+     * @param src
+     * @param zos
+     * @param baseDir
+     */
+     private static void compressbyType(File src, ZipOutputStream zos,String baseDir) {
+ 
+            if (!src.exists())
+                return;
+            System.out.println("压缩路径" + baseDir + src.getName());
+            //判断文件是否是文件，如果是文件调用compressFile方法,如果是路径，则调用compressDir方法；
+            if (src.isFile()) {
+                //src是文件，调用此方法
+                compressFile(src, zos, baseDir);
+                 
+            } else if (src.isDirectory()) {
+                //src是文件夹，调用此方法
+                compressDir(src, zos, baseDir);
+ 
             }
-            else//如果文件夹不为空，则递归调用compress，文件夹中的每一个文件（或文件夹）进行压缩
-            {
-                for(int i=0;i<flist.length;i++)
-                {
-                    compress(out,bos,flist[i],base+"/"+flist[i].getName());
+ 
+        }
+      
+        /**
+         * 压缩文件
+        */
+        private static void compressFile(File file, ZipOutputStream zos,String baseDir) {
+            if (!file.exists())
+                return;
+            try {
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                ZipEntry entry = new ZipEntry(baseDir + file.getName());
+                zos.putNextEntry(entry);
+                int count;
+                byte[] buf = new byte[1024];
+                while ((count = bis.read(buf)) != -1) {
+                    zos.write(buf, 0, count);
+                }
+                bis.close();
+ 
+            } catch (Exception e) {
+              // TODO: handle exception
+ 
+            }
+        }
+         
+        /**
+         * 压缩文件夹
+         */
+        private static void compressDir(File dir, ZipOutputStream zos,String baseDir) {
+            if (!dir.exists())
+                return;
+            File[] files = dir.listFiles();
+            if(files.length == 0){
+                try {
+                    zos.putNextEntry(new ZipEntry(baseDir + dir.getName()+File.separator));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        }
-        else//如果不是目录（文件夹），即为文件，则先写入目录进入点，之后将文件写入zip文件中
-        {
-            out.putNextEntry( new ZipEntry(base) );
-            FileInputStream fos = new FileInputStream(sourceFile);
-            BufferedInputStream bis = new BufferedInputStream(fos);
-            
-            int tag;
-            System.out.println(base);
-            //将源文件写入到zip文件中
-            while((tag=bis.read())!=-1)
-            {
-                bos.write(tag);
+            for (File file : files) {
+                compressbyType(file, zos, baseDir + dir.getName() + File.separator);
             }
-            bis.close();
-            fos.close();
-            
-        }
     }
-
+    
+  
 }

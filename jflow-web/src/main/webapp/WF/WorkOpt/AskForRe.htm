@@ -131,34 +131,7 @@
 
         });
 
-       
-        function DeleteIt(empNo, row) {
 
-            //            if (window.confirm('您确定要移除[' + empNo + ']') == false)
-            //                return;
-
-            //执行数据初始化工作.
-            var hand = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
-            hand.AddUrlData();
-            hand.AddPara("FK_Emp", empNo);
-            var data = hand.DoMethodReturnString("HuiQian_Delete");
-
-            if (data.indexOf('err@') == 0 || data.indexOf('info@') == 0) {
-                alert(data);
-                return;
-            }
-
-            //delRow(row); //清空单个table tbody
-            ClearTable();
-
-            // 把返回的结果，重新绑定.
-            var sas = JSON.parse(data);
-            BindTable(sas);
-            return;
-        }
-
-
-        
 
         //确定后，就弹出选择到达节点，选择接受人，填写审核意见窗口.
         function SaveAndClose() {
@@ -166,18 +139,14 @@
             var note = $("#TB_Tag2").val();
 
             $("#Btn_JiaQianRe").attr("disabled", "disabled");
-            $("#Btn_SelectEmps").attr("disabled", "disabled");
-
 
             //执行数据初始化工作.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
             handler.AddUrlData();
             handler.AddPara("Note", note);
-            //            handler.AddPara("IsMobile", 1);
             var data = handler.DoMethodReturnString("AskForRe");
             if (data.indexOf('err@') == 0) {
                 alert(data);
-               
                 return;
             }
             if (data.indexOf('url@') == 0) {
@@ -186,46 +155,14 @@
                 return;
             }
 
-            
-            $(".Msg").css("color", "");
-            data = data.replace("'MyFlowInfo", "'../MyFlowInfo");
-            data = data.replace("'MyFlow.htm", "'../MyFlow.htm");
-            data = data.replace("'MyFlow.htm", "'../MyFlow.htm");
+           
+            alert(data);
+            window.parent.close();
 
-            data = data.replace("'WFRpt", "'../WFRpt");
-            data = data.replace("'WFRpt", "'../WFRpt");
-
-            data = data.replace("'./Img", "'../Img");
-            data = data.replace("'./Img", "'../Img");
-            data = data.replace("'./Img", "'../Img");
-            data = data.replace("'./Img", "'../Img");
-            data = data.replace("'./Img", "'../Img");
-
-            data = data.replace("'./WorkOpt/", "");
-            data = data.replace("'./WorkOpt/", "");
-            data = data.replace("'./WorkOpt/", "");
-            data = data.replace("'./WorkOpt/", "");
-
-
-            data = data.replace('@', '<br/>@');
-            data = data.replace(/@/g, '<br/>&nbsp;@');
-
-
-            data = data.replace('@', '<br/>@');
-            data += " <center><input type='button' value='    关    闭    ' onclick='CloseAll();'  /></center>";
-            $(".Msg").show();
-            $(".Msg").html(data);
-            window.close();
-            $("#Btn_JiaQianRe").val("提交");
             return;
         }
 
        
-
-        
-
-        
-        
         function Help() {
             $("#HelpInfo").toggle();
         }

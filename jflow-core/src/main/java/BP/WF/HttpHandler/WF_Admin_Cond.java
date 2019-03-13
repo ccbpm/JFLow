@@ -49,21 +49,18 @@ import BP.WF.Template.SysFormTrees;
  * 页面功能实体
  */
 public class WF_Admin_Cond extends WebContralBase {
-	
-	
+
 	/**
 	 * 构造函数
 	 */
-	public WF_Admin_Cond()
-	{
-	
+	public WF_Admin_Cond() {
+
 	}
-	
-	
+
 	public final String getRefNo() {
 		return this.GetRequestVal("RefNo");
 	}
-  
+
 	/**
 	 * 将实体转为树形
 	 * 
@@ -74,11 +71,9 @@ public class WF_Admin_Cond extends WebContralBase {
 	private StringBuilder appendMenus = new StringBuilder();
 	private StringBuilder appendMenuSb = new StringBuilder();
 
-	public final void TansEntitiesToGenerTree(Entities ens, String rootNo,
-			String checkIds) {
+	public final void TansEntitiesToGenerTree(Entities ens, String rootNo, String checkIds) {
 		Object tempVar = ens.GetEntityByKey(rootNo);
-		EntityTree root = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar
-				: null);
+		EntityTree root = (EntityTree) ((tempVar instanceof EntityTree) ? tempVar : null);
 		if (root == null) {
 			throw new RuntimeException("@没有找到rootNo=" + rootNo + "的entity.");
 		}
@@ -88,13 +83,12 @@ public class WF_Admin_Cond extends WebContralBase {
 		appendMenus.append(",\"state\":\"open\"");
 
 		// attributes
-		BP.WF.Template.FlowFormTree formTree = (BP.WF.Template.FlowFormTree) ((root instanceof BP.WF.Template.FlowFormTree) ? root
-				: null);
+		BP.WF.Template.FlowFormTree formTree = (BP.WF.Template.FlowFormTree) ((root instanceof BP.WF.Template.FlowFormTree)
+				? root : null);
 		if (formTree != null) {
 			String url = formTree.getUrl() == null ? "" : formTree.getUrl();
 			url = url.replace("/", "|");
-			appendMenus.append(",\"attributes\":{\"NodeType\":\""
-					+ formTree.getNodeType() + "\",\"IsEdit\":\""
+			appendMenus.append(",\"attributes\":{\"NodeType\":\"" + formTree.getNodeType() + "\",\"IsEdit\":\""
 					+ formTree.getIsEdit() + "\",\"Url\":\"" + url + "\"}");
 		}
 		// 增加它的子级.
@@ -104,38 +98,33 @@ public class WF_Admin_Cond extends WebContralBase {
 		appendMenus.append("}]");
 	}
 
-	public final void AddChildren(EntityTree parentEn, Entities ens,
-			String checkIds) {
+	public final void AddChildren(EntityTree parentEn, Entities ens, String checkIds) {
 		appendMenus.append(appendMenuSb);
 		appendMenuSb.delete(0, appendMenuSb.length());
 
 		appendMenuSb.append("[");
 		for (EntityTree item : convertEntityMultiTree(ens)) {
-			if (item.getParentNo() != null
-					&& !item.getParentNo().equals(parentEn.getNo())) {
+			if (item.getParentNo() != null && !item.getParentNo().equals(parentEn.getNo())) {
 				continue;
 			}
 
 			if (checkIds.contains("," + item.getNo() + ",")) {
-				appendMenuSb.append("{\"id\":\"" + item.getNo()
-						+ "\",\"text\":\"" + item.getName()
-						+ "\",\"checked\":true");
+				appendMenuSb.append(
+						"{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":true");
 			} else {
-				appendMenuSb.append("{\"id\":\"" + item.getNo()
-						+ "\",\"text\":\"" + item.getName()
-						+ "\",\"checked\":false");
+				appendMenuSb.append(
+						"{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":false");
 			}
 
 			// attributes
-			BP.WF.Template.FlowFormTree formTree = (BP.WF.Template.FlowFormTree) ((item instanceof BP.WF.Template.FlowFormTree) ? item
-					: null);
+			BP.WF.Template.FlowFormTree formTree = (BP.WF.Template.FlowFormTree) ((item instanceof BP.WF.Template.FlowFormTree)
+					? item : null);
 			if (formTree != null) {
 				String url = formTree.getUrl() == null ? "" : formTree.getUrl();
 				String ico = "icon-tree_folder";
 				String treeState = "closed";
 				url = url.replace("/", "|");
-				appendMenuSb.append(",\"attributes\":{\"NodeType\":\""
-						+ formTree.getNodeType() + "\",\"IsEdit\":\""
+				appendMenuSb.append(",\"attributes\":{\"NodeType\":\"" + formTree.getNodeType() + "\",\"IsEdit\":\""
 						+ formTree.getIsEdit() + "\",\"Url\":\"" + url + "\"}");
 				// 图标
 				if (formTree.getNodeType().equals("form")) {
@@ -184,13 +173,12 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化Init.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String Condition_Init() throws Exception {
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		Cond cond = new Cond();
-		cond.Retrieve(CondAttr.NodeID, this.getFK_Node(), CondAttr.ToNodeID,
-				toNodeID);
+		cond.Retrieve(CondAttr.NodeID, this.getFK_Node(), CondAttr.ToNodeID, toNodeID);
 		cond.getRow().put("HisDataFrom", cond.getHisDataFrom().toString());
 
 		// cond.HisDataFrom
@@ -203,7 +191,7 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondByFrm_Init() throws Exception {
 		DataSet ds = new DataSet();
@@ -213,19 +201,17 @@ public class WF_Admin_Cond extends WebContralBase {
 
 		Node nd = new Node(Integer.parseInt(fk_mainNode));
 
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		// string mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
 		// + ConnDataFrom.SQLTemplate.ToString();
 
 		// 增加条件集合.
 		Conds conds = new Conds();
-		conds.Retrieve(CondAttr.FK_Node, fk_mainNode, CondAttr.ToNodeID,
-				toNodeID);
+		conds.Retrieve(CondAttr.FK_Node, fk_mainNode, CondAttr.ToNodeID, toNodeID);
 		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
-		
-		//字段集合
+
+		// 字段集合
 		String noteIn = "'FID','PRI','PNodeID','PrjNo', 'PrjName', 'FK_NY','FlowDaySpan', 'MyNum','Rec','CDT','RDT','AtPara','WFSta','FlowNote','FlowStartRDT','FlowEnderRDT','FlowEnder','FlowSpanDays','WFState','OID','PWorkID','PFlowNo','PEmp','FlowEndNode','GUID'";
 
 		// 增加字段集合.
@@ -266,7 +252,7 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondByStation_Init() throws Exception {
 		DataSet ds = new DataSet();
@@ -285,8 +271,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		Cond cond = new Cond();
-		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_"
-				+ ConnDataFrom.Stas.toString();
+		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
 		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
@@ -300,8 +285,7 @@ public class WF_Admin_Cond extends WebContralBase {
 
 		// 字段属性.
 		MapAttr attr = new MapAttr();
-		attr.setMyPK("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_"
-				+ this.getKeyOfEn());
+		attr.setMyPK("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + this.getKeyOfEn());
 		attr.Retrieve();
 
 		ds.Tables.add(attr.ToDataTableField("Sys_MapAttr"));
@@ -382,7 +366,7 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 按照部门条件计算.
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondByDept_Init() throws Exception {
 		DataSet ds = new DataSet();
@@ -391,18 +375,9 @@ public class WF_Admin_Cond extends WebContralBase {
 		Depts depts = new Depts();
 		depts.RetrieveAllFromDBSource();
 		ds.Tables.add(depts.ToDataTableField("Depts"));
-
-		// 取有可能存盘的数据.
-		// int FK_MainNode = this.GetRequestValInt("FK_MainNode");
-		// int ToNodeID = this.GetRequestValInt("ToNodeID");
 		Cond cond = new Cond();
-		// CondType condType =
-		// CondType.forValue(this.GetRequestValInt("CondType"));
-		// string mypk = this.GetRequestValInt("FK_MainNode") + "_" +
-		// this.GetRequestValInt("ToNodeID") + "_" + condType.ToString() + "_" +
-		// ConnDataFrom.Depts.ToString();
 		cond.setMyPK(this.GetRequestVal("MyPK"));
-		;
+
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 
@@ -413,17 +388,15 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondBySQL_Init() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQL.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQL.toString();
 
 		Cond cond = new Cond();
 		cond.setMyPK(mypk);
@@ -436,17 +409,15 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondBySQLTemplate_Init() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQLTemplate.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQLTemplate.toString();
 
 		Cond cond = new Cond();
 		cond.setMyPK(mypk);
@@ -460,17 +431,15 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 初始化
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondByPara_Init() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.Paras.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Paras.toString();
 
 		Cond cond = new Cond();
 		cond.setMyPK(mypk);
@@ -479,84 +448,28 @@ public class WF_Admin_Cond extends WebContralBase {
 		return cond.ToJson();
 	}
 
-	public final String CondStation_Save() throws Exception {
-		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
-		int ToNodeID = this.GetRequestValInt("ToNodeID");
-		CondType HisCondType = CondType.Dir;
-
-		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, FK_MainNode, CondAttr.ToNodeID, ToNodeID,
-				CondAttr.CondType, HisCondType.getValue());
-
-		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_"
-				+ ConnDataFrom.Stas.toString();
-
-		// 删除岗位条件.
-		cond.setMyPK(mypk);
-		if (cond.RetrieveFromDBSources() == 0) {
-			cond.setHisDataFrom(ConnDataFrom.Stas);
-			cond.setNodeID(FK_MainNode);
-			cond.setFK_Flow(this.getFK_Flow());
-			cond.setToNodeID(ToNodeID);
-			cond.Insert();
-		}
-
-		String val = "";
-		Stations sts = new Stations();
-		sts.RetrieveAllFromDBSource();
-		for (Station st : sts.ToJavaList()) {
-			if (!this.GetRequestVal("CB_" + st.getNo()).equals("1")) {
-				continue;
-			}
-			val += "@" + st.getNo();
-		}
-
-		val += "@";
-		cond.setOperatorValue(val);
-		cond.setHisDataFrom(ConnDataFrom.Stas);
-		cond.setFK_Flow(this.getFK_Flow());
-		cond.setHisCondType(CondType.Dir);
-		cond.setFK_Node(FK_MainNode);
-
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		// /#region //获取"指定的操作员"设置，added by liuxc,2015-10-7
-		cond.setSpecOperWay(SpecOperWay.forValue(this.GetRequestValInt("DDL_"
-				+ CondAttr.SpecOperWay)));
-
-		if (cond.getSpecOperWay() != SpecOperWay.CurrOper) {
-			cond.setSpecOperPara(this.GetRequestVal("TB_"
-					+ CondAttr.SpecOperPara));
-		} else {
-			cond.setSpecOperPara("");
-		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		// /#endregion
-
-		cond.setToNodeID(ToNodeID);
-		cond.Update();
-
-		return "保存成功..";
-	}
-
 	/**
 	 * 保存
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondByUrl_Save() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.Url.toString();
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Url.toString();
 
 		String sql = this.GetRequestVal("TB_Docs");
 
 		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID,
-				CondAttr.CondType, condTypeEnum.getValue());
+
+		// 把其他的条件都删除掉.
+		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID="
+				+ this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.Url.getValue());
+
+		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+				condTypeEnum.getValue());
 
 		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.Url);
@@ -580,7 +493,7 @@ public class WF_Admin_Cond extends WebContralBase {
 	 * 保存
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String CondByFrm_Save() throws Exception {
 		// 定义变量.
@@ -594,13 +507,12 @@ public class WF_Admin_Cond extends WebContralBase {
 		String operVal = this.GetRequestVal("OperVal");
 
 		String saveType = this.GetRequestVal("SaveType"); // 保存类型.
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		// 把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE ( NodeID="
-				+ this.getFK_Node() + " AND ToNodeID=" + toNodeID
-				+ ") AND DataFrom!=" + ConnDataFrom.NodeForm.getValue());
+		DBAccess.RunSQL(
+				"DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND NodeID=" + this.getFK_Node()
+						+ " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.NodeForm.getValue());
 
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.NodeForm);
@@ -623,7 +535,6 @@ public class WF_Admin_Cond extends WebContralBase {
 			cond.setCondOrAnd(CondOrAnd.ByOr);
 		}
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		// /#region 方向条件，全部更新.
 		Conds conds = new Conds();
 		QueryObject qo = new QueryObject(conds);
@@ -641,52 +552,33 @@ public class WF_Admin_Cond extends WebContralBase {
 			item.setCondOrAnd(cond.getCondOrAnd());
 			item.Update();
 		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		// /#endregion
 
 		// 执行同步
 		String sqls = "UPDATE WF_Node SET IsCCFlow=0";
 		sqls += "@UPDATE WF_Node  SET IsCCFlow=1 WHERE NodeID IN (SELECT NODEID FROM WF_Cond a WHERE a.NodeID= NodeID AND CondType=1 )";
 		BP.DA.DBAccess.RunSQLs(sqls);
 
-		String sql = "UPDATE WF_Cond SET DataFrom="
-				+ ConnDataFrom.NodeForm.getValue() + " WHERE NodeID="
-				+ cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node()
-				+ " AND ToNodeID=" + toNodeID;
+		String sql = "UPDATE WF_Cond SET DataFrom=" + ConnDataFrom.NodeForm.getValue() + " WHERE NodeID="
+				+ cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node() + " AND ToNodeID=" + toNodeID;
 		switch (condTypeEnum) {
 		case Flow:
 		case Node:
-			cond.setMyPK(BP.DA.DBAccess.GenerOID() + ""); // cond.getNodeID() +
-															// "_" +
-															// cond.FK_Node +
-															// "_" +
-															// cond.FK_Attr +
-															// "_" +
-															// cond.OperatorValue;
+			cond.setMyPK(BP.DA.DBAccess.GenerOID() + "");
+
 			cond.Insert();
 			BP.DA.DBAccess.RunSQL(sql);
 			break;
 		case Dir:
-			// cond.setMyPK( cond.NodeID +"_"+
-			// this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" +
-			// cond.FK_Attr + "_" + cond.OperatorValue;
-			cond.setMyPK(BP.DA.DBAccess.GenerOID() + ""); // cond.NodeID + "_" +
-															// cond.FK_Node +
-															// "_" +
-															// cond.FK_Attr +
-															// "_" +
-															// cond.OperatorValue;
+
+			cond.setMyPK(BP.DA.DBAccess.GenerOID() + "");
+
 			cond.setToNodeID(toNodeID);
 			cond.Insert();
 			BP.DA.DBAccess.RunSQL(sql);
 			break;
 		case SubFlow: // 启动子流程.
-			cond.setMyPK(BP.DA.DBAccess.GenerOID() + ""); // cond.NodeID + "_" +
-															// cond.FK_Node +
-															// "_" +
-															// cond.FK_Attr +
-															// "_" +
-															// cond.OperatorValue;
+			cond.setMyPK(BP.DA.DBAccess.GenerOID() + "");
+
 			cond.setToNodeID(toNodeID);
 			cond.Insert();
 			BP.DA.DBAccess.RunSQL(sql);
@@ -702,16 +594,20 @@ public class WF_Admin_Cond extends WebContralBase {
 
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQLTemplate.toString();
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQLTemplate.toString();
 
 		String sql = this.GetRequestVal("TB_Docs");
 
 		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID,
-				CondAttr.CondType, condTypeEnum.getValue());
+
+		// 把其他的条件都删除掉.
+		DBAccess.RunSQL(
+				"DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node()
+						+ " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.SQLTemplate.getValue());
+
+		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+				condTypeEnum.getValue());
 
 		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.SQLTemplate);
@@ -735,16 +631,19 @@ public class WF_Admin_Cond extends WebContralBase {
 
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQL.toString();
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQL.toString();
 
 		String sql = this.GetRequestVal("TB_Docs");
 
 		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID,
-				CondAttr.CondType, condTypeEnum.getValue());
+
+		// 把其他的条件都删除掉.
+		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND NodeID="
+				+ this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.SQL.getValue());
+
+		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+				condTypeEnum.getValue());
 
 		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.SQL);
@@ -771,11 +670,15 @@ public class WF_Admin_Cond extends WebContralBase {
 		CondType HisCondType = CondType.Dir;
 
 		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, FK_MainNode, CondAttr.ToNodeID, ToNodeID,
-				CondAttr.CondType, HisCondType.getValue());
 
-		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_"
-				+ ConnDataFrom.Stas.toString();
+		// 把其他的条件都删除掉.
+		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + HisCondType.getValue() + " AND  NodeID="
+				+ this.getFK_Node() + " AND ToNodeID=" + ToNodeID + ") AND DataFrom!=" + ConnDataFrom.Stas.getValue());
+
+		cond.Delete(CondAttr.NodeID, FK_MainNode, CondAttr.ToNodeID, ToNodeID, CondAttr.CondType,
+				HisCondType.getValue());
+
+		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
 
 		// 删除岗位条件.
 		cond.setMyPK(mypk);
@@ -789,8 +692,7 @@ public class WF_Admin_Cond extends WebContralBase {
 
 		String val = this.GetRequestVal("emps").replace(",", "@");
 		cond.setOperatorValue(val);
-		cond.setSpecOperWay(SpecOperWay.forValue(this
-				.GetRequestValInt("DDL_SpecOperWay")));
+		cond.setSpecOperWay(SpecOperWay.forValue(this.GetRequestValInt("DDL_SpecOperWay")));
 		if (cond.getSpecOperWay() != SpecOperWay.CurrOper) {
 			cond.setSpecOperPara(this.GetRequestVal("TB_SpecOperPara"));
 		} else {
@@ -810,17 +712,20 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final String CondByDept_Save() throws Exception {
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
-		CondType condType = CondType
-				.forValue(this.GetRequestValInt("CondType"));
+		CondType condType = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, this.GetRequestValInt("FK_MainNode"),
-				CondAttr.ToNodeID, this.GetRequestValInt("ToNodeID"),
-				CondAttr.CondType, condType.getValue());
 
-		String mypk = this.GetRequestValInt("FK_MainNode") + "_"
-				+ this.GetRequestValInt("ToNodeID") + "_" + condType.toString()
-				+ "_" + ConnDataFrom.Depts.toString();
+		// 把其他的条件都删除掉.
+		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condType.getValue() + " AND  NodeID="
+				+ this.getFK_Node() + " AND ToNodeID=" + this.GetRequestValInt("ToNodeID") + ") AND DataFrom!="
+				+ ConnDataFrom.Depts.getValue());
+
+		cond.Delete(CondAttr.NodeID, this.GetRequestValInt("FK_MainNode"), CondAttr.ToNodeID,
+				this.GetRequestValInt("ToNodeID"), CondAttr.CondType, condType.getValue());
+
+		String mypk = this.GetRequestValInt("FK_MainNode") + "_" + this.GetRequestValInt("ToNodeID") + "_"
+				+ condType.toString() + "_" + ConnDataFrom.Depts.toString();
 		cond.setMyPK(mypk);
 
 		if (cond.RetrieveFromDBSources() == 0) {
@@ -833,8 +738,7 @@ public class WF_Admin_Cond extends WebContralBase {
 
 		String val = this.GetRequestVal("depts").replace(",", "@");
 		cond.setOperatorValue(val);
-		cond.setSpecOperWay(SpecOperWay.forValue(this
-				.GetRequestValInt("DDL_SpecOperWay")));
+		cond.setSpecOperWay(SpecOperWay.forValue(this.GetRequestValInt("DDL_SpecOperWay")));
 		if (cond.getSpecOperWay() != SpecOperWay.CurrOper) {
 			cond.setSpecOperPara(this.GetRequestVal("TB_SpecOperPara"));
 		} else {
@@ -848,40 +752,24 @@ public class WF_Admin_Cond extends WebContralBase {
 		cond.setToNodeID(ToNodeID);
 		cond.Update();
 
-		// switch (condType)
-		// {
-		// case CondType.Flow:
-		// case CondType.Node:
-		// cond.Update();
-		// break;
-		// case CondType.Dir:
-		// cond.setToNodeID(this.GetRequestValInt("ToNodeID");
-		// cond.Update();
-		// break;
-		// case CondType.SubFlow:
-		// cond.setToNodeID(this.GetRequestValInt("ToNodeID");
-		// cond.Update();
-		// break;
-		// default:
-		// throw new Exception("未设计的情况。");
-		// }
-
 		return "保存成功!!";
 	}
 
 	public final String CondByPara_Save() throws Exception {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.Paras.toString();
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Paras.toString();
 
 		String sql = this.GetRequestVal("TB_Docs");
 
 		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID,
-				CondAttr.CondType, condTypeEnum.getValue());
+		// 把其他的条件都删除掉.
+		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND   NodeID="
+				+ this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.Paras.getValue());
+
+		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+				condTypeEnum.getValue());
 
 		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.Paras);
@@ -903,8 +791,7 @@ public class WF_Admin_Cond extends WebContralBase {
 
 	public final String CondPRI_Init() throws Exception {
 		Conds cds = new Conds();
-		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2,
-				CondAttr.PRI);
+		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2, CondAttr.PRI);
 
 		for (Cond item : cds.ToJavaList()) {
 			Node nd = new Node(item.getToNodeID());
@@ -931,8 +818,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		Cond cond = new Cond();
-		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_"
-				+ ConnDataFrom.Stas.toString();
+		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
 		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
@@ -945,11 +831,9 @@ public class WF_Admin_Cond extends WebContralBase {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.Url.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Url.toString();
 
 		Cond cond = new Cond();
 		cond.setMyPK(mypk);
@@ -961,15 +845,12 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final String CondByUrl_Delete() {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.Url.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Url.toString();
 
 		Cond deleteCond = new Cond();
-		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode,
-				CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
 				condTypeEnum.getValue());
 
 		if (i == 1) {
@@ -994,15 +875,12 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final String CondBySQLTemplate_Delete() {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQLTemplate.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQLTemplate.toString();
 
 		Cond deleteCond = new Cond();
-		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode,
-				CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
 				condTypeEnum.getValue());
 
 		if (i == 1) {
@@ -1016,15 +894,12 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final String CondBySQL_Delete() {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQL.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQL.toString();
 
 		Cond deleteCond = new Cond();
-		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode,
-				CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
 				condTypeEnum.getValue());
 
 		if (i == 1) {
@@ -1038,15 +913,12 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final String CondByStation_Delete() {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQL.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQL.toString();
 
 		Cond deleteCond = new Cond();
-		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode,
-				CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
 				condTypeEnum.getValue());
 
 		if (i == 1) {
@@ -1059,15 +931,12 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final String CondByDept_Delete() {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.SQL.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQL.toString();
 
 		Cond deleteCond = new Cond();
-		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode,
-				CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
 				condTypeEnum.getValue());
 
 		if (i == 1) {
@@ -1081,15 +950,12 @@ public class WF_Admin_Cond extends WebContralBase {
 	public final String CondByPara_Delete() {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
-		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_"
-				+ ConnDataFrom.Paras.toString();
+		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Paras.toString();
 
 		Cond deleteCond = new Cond();
-		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode,
-				CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
+		int i = deleteCond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType,
 				condTypeEnum.getValue());
 
 		if (i == 1) {
@@ -1100,30 +966,21 @@ public class WF_Admin_Cond extends WebContralBase {
 	}
 
 	public final String CondPRI_Move() throws Exception {
-		// C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a
-		// string member and was converted to Java 'if-else' logic:
-		// switch (this.GetRequestVal("MoveType"))
-		// ORIGINAL LINE: case "Up":
 		if (this.GetRequestVal("MoveType").equals("Up")) {
 			Cond up = new Cond(this.getMyPK());
 			up.DoUp(this.getFK_Node());
 			up.RetrieveFromDBSources();
-			DBAccess.RunSQL("UPDATE WF_Cond SET PRI=" + up.getPRI()
-					+ " WHERE ToNodeID=" + up.getToNodeID());
-		}
-		// ORIGINAL LINE: case "Down":
-		else if (this.GetRequestVal("MoveType").equals("Down")) {
+			DBAccess.RunSQL("UPDATE WF_Cond SET PRI=" + up.getPRI() + " WHERE ToNodeID=" + up.getToNodeID());
+		} else if (this.GetRequestVal("MoveType").equals("Down")) {
 			Cond down = new Cond(this.getMyPK());
 			down.DoDown(this.getFK_Node());
 			down.RetrieveFromDBSources();
-			DBAccess.RunSQL("UPDATE WF_Cond SET PRI=" + down.getPRI()
-					+ " WHERE ToNodeID=" + down.getToNodeID());
+			DBAccess.RunSQL("UPDATE WF_Cond SET PRI=" + down.getPRI() + " WHERE ToNodeID=" + down.getToNodeID());
 		} else {
 		}
 
 		Conds cds = new Conds();
-		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2,
-				CondAttr.PRI);
+		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2, CondAttr.PRI);
 		return cds.ToJson();
 	}
 
@@ -1152,8 +1009,7 @@ public class WF_Admin_Cond extends WebContralBase {
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		Conds conds = new Conds();
-		conds.Retrieve(CondAttr.FK_Node, fk_mainNode, CondAttr.ToNodeID,
-				toNodeID);
+		conds.Retrieve(CondAttr.FK_Node, fk_mainNode, CondAttr.ToNodeID, toNodeID);
 		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
 
 		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
@@ -1183,12 +1039,10 @@ public class WF_Admin_Cond extends WebContralBase {
 		String operVal = this.GetRequestVal("OperVal");
 
 		// 节点,子线城,还是其他
-		CondType condTypeEnum = CondType.forValue(this
-				.GetRequestValInt("CondType"));
+		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		// 把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE ( NodeID="
-				+ this.getFK_Node() + " AND ToNodeID=" + toNodeID
+		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE ( NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID
 				+ ") AND DataFrom!=" + ConnDataFrom.StandAloneFrm.getValue());
 
 		Cond cond = new Cond();
@@ -1236,45 +1090,24 @@ public class WF_Admin_Cond extends WebContralBase {
 		sqls += "@UPDATE WF_Node  SET IsCCFlow=1 WHERE NodeID IN (SELECT NODEID FROM WF_Cond a WHERE a.NodeID= NodeID AND CondType=1 )";
 		BP.DA.DBAccess.RunSQLs(sqls);
 
-		String sql = "UPDATE WF_Cond SET DataFrom="
-				+ ConnDataFrom.StandAloneFrm.getValue() + " WHERE NodeID="
-				+ cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node()
-				+ " AND ToNodeID=" + toNodeID;
+		String sql = "UPDATE WF_Cond SET DataFrom=" + ConnDataFrom.StandAloneFrm.getValue() + " WHERE NodeID="
+				+ cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node() + " AND ToNodeID=" + toNodeID;
 
 		switch (condTypeEnum) {
 		case Flow:
 		case Node:
-			cond.setMyPK(BP.DA.DBAccess.GenerOID() + ""); // cond.getNodeID() +
-															// "_" +
-															// cond.FK_Node +
-															// "_" +
-															// cond.FK_Attr +
-															// "_" +
-															// cond.OperatorValue;
+			cond.setMyPK(BP.DA.DBAccess.GenerOID() + "");
 			cond.Insert();
 			BP.DA.DBAccess.RunSQL(sql);
 			break;
 		case Dir:
-			// cond.setMyPK( cond.NodeID +"_"+
-			// this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" +
-			// cond.FK_Attr + "_" + cond.OperatorValue;
-			cond.setMyPK(BP.DA.DBAccess.GenerOID() + ""); // cond.NodeID + "_" +
-															// cond.FK_Node +
-															// "_" +
-															// cond.FK_Attr +
-															// "_" +
-															// cond.OperatorValue;
+			cond.setMyPK(BP.DA.DBAccess.GenerOID() + "");
 			cond.setToNodeID(toNodeID);
 			cond.Insert();
 			BP.DA.DBAccess.RunSQL(sql);
 			break;
 		case SubFlow: // 启动子流程.
-			cond.setMyPK(BP.DA.DBAccess.GenerOID() + ""); // cond.NodeID + "_" +
-															// cond.FK_Node +
-															// "_" +
-															// cond.FK_Attr +
-															// "_" +
-															// cond.OperatorValue;
+			cond.setMyPK(BP.DA.DBAccess.GenerOID() + "");
 			cond.setToNodeID(toNodeID);
 			cond.Insert();
 			BP.DA.DBAccess.RunSQL(sql);

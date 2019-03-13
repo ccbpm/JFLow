@@ -819,6 +819,7 @@ public class FrmAttachmentExt extends EntityMyPK {
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
+		
 		if (this.getFK_Node() == 0) {
 			// 适应设计器新的规则 by dgq
 			if (!StringHelper.isNullOrEmpty(this.getNoOfObj()) && this.getNoOfObj().contains(this.getFK_MapData())) {

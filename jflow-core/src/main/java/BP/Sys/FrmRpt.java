@@ -4,15 +4,15 @@ import BP.DA.*;
 import BP.En.*;
 
 /** 
- 纬度报表
+ 绾害鎶ヨ〃
  
 */
 public class FrmRpt extends EntityNoName
 {
 
-		///#region 外键属性
+		///#region 澶栭敭灞炴��
 	/** 
-	 框架
+	 妗嗘灦
 	 * @throws Exception 
 	 
 	*/
@@ -29,7 +29,7 @@ public class FrmRpt extends EntityNoName
 	}
 	 
 	/** 
-	 逻辑扩展
+	 閫昏緫鎵╁睍
 	 * @throws Exception 
 	 
 	*/
@@ -45,7 +45,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 事件
+	 浜嬩欢
 	 * @throws Exception 
 	 
 	*/
@@ -62,7 +62,7 @@ public class FrmRpt extends EntityNoName
 	}
 	 
 	/** 
-	 从表
+	 浠庤〃
 	 * @throws Exception 
 	 
 	*/
@@ -78,7 +78,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 超连接
+	 瓒呰繛鎺�
 	 * @throws Exception 
 	 
 	*/
@@ -94,7 +94,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 按钮
+	 鎸夐挳
 	 * @throws Exception 
 	 
 	*/
@@ -110,7 +110,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 元素
+	 鍏冪礌
 	 * @throws Exception 
 	 
 	*/
@@ -126,7 +126,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 线
+	 绾�
 	 * @throws Exception 
 	 
 	*/
@@ -142,7 +142,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 标签
+	 鏍囩
 	 * @throws Exception 
 	 
 	*/
@@ -158,7 +158,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 图片
+	 鍥剧墖
 	 * @throws Exception 
 	 
 	*/
@@ -174,7 +174,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 附件
+	 闄勪欢
 	 * @throws Exception 
 	 
 	*/
@@ -190,7 +190,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 图片附件
+	 鍥剧墖闄勪欢
 	 * @throws Exception 
 	 
 	*/
@@ -206,7 +206,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 单选按钮
+	 鍗曢�夋寜閽�
 	 * @throws Exception 
 	 
 	*/
@@ -222,7 +222,7 @@ public class FrmRpt extends EntityNoName
 		return obj;
 	}
 	/** 
-	 属性
+	 灞炴��
 	 * @throws Exception 
 	 
 	*/
@@ -328,7 +328,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.IsShowTitle, value);
 	}
 	/** 
-	 是否是合流汇总数据
+	 鏄惁鏄悎娴佹眹鎬绘暟鎹�
 	 
 	*/
 	public final boolean getIsHLDtl()
@@ -379,7 +379,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.IsInsert, value);
 	}
 	/** 
-	 是否可见
+	 鏄惁鍙
 	 
 	*/
 	public final boolean getIsView()
@@ -399,7 +399,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.IsUpdate, value);
 	}
 	/** 
-	 是否启用多附件
+	 鏄惁鍚敤澶氶檮浠�
 	 
 	*/
 	public final boolean getIsEnableAthM()
@@ -411,7 +411,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.IsEnableAthM, value);
 	}
 	/** 
-	 是否启用分组字段
+	 鏄惁鍚敤鍒嗙粍瀛楁
 	 
 	*/
 	public final boolean getIsEnableGroupField()
@@ -423,7 +423,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.IsEnableGroupField, value);
 	}
 	/** 
-	 是否起用审核连接
+	 鏄惁璧风敤瀹℃牳杩炴帴
 	 
 	*/
 	public final boolean getIsEnablePass()
@@ -443,7 +443,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.IsCopyNDData, value);
 	}
 	/** 
-	 是否启用一对多
+	 鏄惁鍚敤涓�瀵瑰
 	 
 	*/
 	public final boolean getIsEnableM2M()
@@ -455,7 +455,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.IsEnableM2M, value);
 	}
 	/** 
-	 是否启用一对多多
+	 鏄惁鍚敤涓�瀵瑰澶�
 	 
 	*/
 	public final boolean getIsEnableM2MM()
@@ -469,7 +469,7 @@ public class FrmRpt extends EntityNoName
 
 	public boolean IsUse = false;
 	/** 
-	 是否检查人员的权限
+	 鏄惁妫�鏌ヤ汉鍛樼殑鏉冮檺
 	 
 	*/
 	public final DtlOpenType getDtlOpenType()
@@ -481,7 +481,7 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.DtlOpenType, value.getValue());
 	}
 	/** 
-	 分组字段
+	 鍒嗙粍瀛楁
 	 
 	*/
 	public final String getGroupField()
@@ -556,23 +556,23 @@ public class FrmRpt extends EntityNoName
 		this.SetValByKey(FrmRptAttr.PTable, value);
 	}
 	/** 
-	 多表头
+	 澶氳〃澶�
 	 
 	*/
 	public final String getMTR()
 	{
 		String s= this.GetValStrByKey(FrmRptAttr.MTR);
-		s = s.replace("《","<");
-		s = s.replace("》",">");
-		s = s.replace("‘","'");
+		s = s.replace("銆�","<");
+		s = s.replace("銆�",">");
+		s = s.replace("鈥�","'");
 		return s;
 	}
 	public final void setMTR(String value)
 	{
 		String s = value;
-		s = s.replace("<","《");
-		s = s.replace(">", "》");
-		s = s.replace("'", "‘");
+		s = s.replace("<","銆�");
+		s = s.replace(">", "銆�");
+		s = s.replace("'", "鈥�");
 		this.SetValByKey(FrmRptAttr.MTR, value);
 	}
 
@@ -619,7 +619,7 @@ public class FrmRpt extends EntityNoName
 		return en;
 	}
 	/** 
-	 纬度报表
+	 绾害鎶ヨ〃
 	 
 	*/
 	public FrmRpt()
@@ -642,30 +642,30 @@ public class FrmRpt extends EntityNoName
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("Sys_FrmRpt", "纬度报表");
+		Map map = new Map("Sys_FrmRpt", "绾害鎶ヨ〃");
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 
-		map.AddTBStringPK(FrmRptAttr.No, null, "编号", true, false, 1, 20, 20);
-		map.AddTBString(FrmRptAttr.Name, null, "描述", true, false, 1, 50, 20);
-		map.AddTBString(FrmRptAttr.FK_MapData, null, "主表", true, false, 0, 100, 20);
-		map.AddTBString(FrmRptAttr.PTable, null, "物理表", true, false, 0, 30, 20);
+		map.AddTBStringPK(FrmRptAttr.No, null, "缂栧彿", true, false, 1, 20, 20);
+		map.AddTBString(FrmRptAttr.Name, null, "鎻忚堪", true, false, 1, 50, 20);
+		map.AddTBString(FrmRptAttr.FK_MapData, null, "涓昏〃", true, false, 0, 100, 20);
+		map.AddTBString(FrmRptAttr.PTable, null, "鐗╃悊琛�", true, false, 0, 30, 20);
 
-		map.AddTBString(FrmRptAttr.SQLOfColumn, null, "列的数据源", true, false, 0, 300, 20);
-		map.AddTBString(FrmRptAttr.SQLOfRow, null, "行数据源", true, false, 0, 300, 20);
+		map.AddTBString(FrmRptAttr.SQLOfColumn, null, "鍒楃殑鏁版嵁婧�", true, false, 0, 300, 20);
+		map.AddTBString(FrmRptAttr.SQLOfRow, null, "琛屾暟鎹簮", true, false, 0, 300, 20);
 
-		map.AddTBInt(FrmRptAttr.RowIdx, 99, "位置", false, false);
+		map.AddTBInt(FrmRptAttr.RowIdx, 99, "浣嶇疆", false, false);
 		map.AddTBInt(FrmRptAttr.GroupID, 0, "GroupID", false, false);
 
 		map.AddBoolean(FrmRptAttr.IsShowSum, true, "IsShowSum", false, false);
 		map.AddBoolean(FrmRptAttr.IsShowIdx, true, "IsShowIdx", false, false);
 		map.AddBoolean(FrmRptAttr.IsCopyNDData, true, "IsCopyNDData", false, false);
-		map.AddBoolean(FrmRptAttr.IsHLDtl, false, "是否是合流汇总", false, false);
+		map.AddBoolean(FrmRptAttr.IsHLDtl, false, "鏄惁鏄悎娴佹眹鎬�", false, false);
 
 		map.AddBoolean(FrmRptAttr.IsReadonly, false, "IsReadonly", false, false);
 		map.AddBoolean(FrmRptAttr.IsShowTitle, true, "IsShowTitle", false, false);
-		map.AddBoolean(FrmRptAttr.IsView, true, "是否可见", false, false);
+		map.AddBoolean(FrmRptAttr.IsView, true, "鏄惁鍙", false, false);
 
 		map.AddBoolean(FrmRptAttr.IsExp, true, "IsExp", false, false);
 		map.AddBoolean(FrmRptAttr.IsImp, true, "IsImp", false, false);
@@ -674,17 +674,17 @@ public class FrmRpt extends EntityNoName
 		map.AddBoolean(FrmRptAttr.IsDelete, true, "IsDelete", false, false);
 		map.AddBoolean(FrmRptAttr.IsUpdate, true, "IsUpdate", false, false);
 
-		map.AddBoolean(FrmRptAttr.IsEnablePass, false, "是否启用通过审核功能?", false, false);
-		map.AddBoolean(FrmRptAttr.IsEnableAthM, false, "是否启用多附件", false, false);
+		map.AddBoolean(FrmRptAttr.IsEnablePass, false, "鏄惁鍚敤閫氳繃瀹℃牳鍔熻兘?", false, false);
+		map.AddBoolean(FrmRptAttr.IsEnableAthM, false, "鏄惁鍚敤澶氶檮浠�", false, false);
 
-		map.AddBoolean(FrmRptAttr.IsEnableM2M, false, "是否启用M2M", false, false);
-		map.AddBoolean(FrmRptAttr.IsEnableM2MM, false, "是否启用M2M", false, false);
+		map.AddBoolean(FrmRptAttr.IsEnableM2M, false, "鏄惁鍚敤M2M", false, false);
+		map.AddBoolean(FrmRptAttr.IsEnableM2MM, false, "鏄惁鍚敤M2M", false, false);
 
-		map.AddDDLSysEnum(FrmRptAttr.WhenOverSize, 0, "WhenOverSize", true, true, FrmRptAttr.WhenOverSize, "@0=不处理@1=向下顺增行@2=次页显示");
+		map.AddDDLSysEnum(FrmRptAttr.WhenOverSize, 0, "WhenOverSize", true, true, FrmRptAttr.WhenOverSize, "@0=涓嶅鐞咢1=鍚戜笅椤哄琛孈2=娆￠〉鏄剧ず");
 
-		map.AddDDLSysEnum(FrmRptAttr.DtlOpenType, 1, "数据开放类型", true, true, FrmRptAttr.DtlOpenType, "@0=操作员@1=工作ID@2=流程ID");
+		map.AddDDLSysEnum(FrmRptAttr.DtlOpenType, 1, "鏁版嵁寮�鏀剧被鍨�", true, true, FrmRptAttr.DtlOpenType, "@0=鎿嶄綔鍛楡1=宸ヤ綔ID@2=娴佺▼ID");
 
-		map.AddDDLSysEnum(FrmRptAttr.DtlShowModel, 0, "显示格式", true, true, FrmRptAttr.DtlShowModel, "@0=表格@1=卡片");
+		map.AddDDLSysEnum(FrmRptAttr.DtlShowModel, 0, "鏄剧ず鏍煎紡", true, true, FrmRptAttr.DtlShowModel, "@0=琛ㄦ牸@1=鍗＄墖");
 
 		map.AddTBFloat(FrmRptAttr.X, 5, "X", true, false);
 		map.AddTBFloat(FrmRptAttr.Y, 5, "Y", false, false);
@@ -695,8 +695,8 @@ public class FrmRpt extends EntityNoName
 		map.AddTBFloat(FrmRptAttr.FrmW, 900, "FrmW", true, true);
 		map.AddTBFloat(FrmRptAttr.FrmH, 1200, "FrmH", true, true);
 
-			//MTR 多表头列.
-		map.AddTBString(FrmRptAttr.MTR, null, "多表头列", true, false, 0, 3000, 20);
+			//MTR 澶氳〃澶村垪.
+		map.AddTBString(FrmRptAttr.MTR, null, "澶氳〃澶村垪", true, false, 0, 3000, 20);
 		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 
 
@@ -728,7 +728,7 @@ public class FrmRpt extends EntityNoName
 		return this.GetValFloatByKey(FrmRptAttr.FrmH);
 	}
 	/** 
-	 获取个数
+	 鑾峰彇涓暟
 	 
 	 @param fk_val
 	 @return 
@@ -772,7 +772,7 @@ public class FrmRpt extends EntityNoName
 			attr.setHisEditType(EditType.Readonly);
 
 			attr.setKeyOfEn("OID");
-			attr.setName("主键");
+			attr.setName("涓婚敭");
 			attr.setMyDataType(BP.DA.DataType.AppInt);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
@@ -789,7 +789,7 @@ public class FrmRpt extends EntityNoName
 			attr.setHisEditType(EditType.Readonly);
 
 			attr.setKeyOfEn("RefPK");
-			attr.setName("关联ID");
+			attr.setName("鍏宠仈ID");
 			attr.setMyDataType(BP.DA.DataType.AppString);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
@@ -824,7 +824,7 @@ public class FrmRpt extends EntityNoName
 			attr.setHisEditType(EditType.UnDel);
 
 			attr.setKeyOfEn("RDT");
-			attr.setName("记录时间");
+			attr.setName("璁板綍鏃堕棿");
 			attr.setMyDataType(BP.DA.DataType.AppDateTime);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
@@ -841,7 +841,7 @@ public class FrmRpt extends EntityNoName
 			attr.setHisEditType(EditType.Readonly);
 
 			attr.setKeyOfEn("Rec");
-			attr.setName("记录人");
+			attr.setName("璁板綍浜�");
 			attr.setMyDataType(BP.DA.DataType.AppString);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
@@ -856,7 +856,7 @@ public class FrmRpt extends EntityNoName
 	}
 	private void InitExtMembers() throws Exception
 	{
-		// 如果启用了多附件
+		// 濡傛灉鍚敤浜嗗闄勪欢
 		if (this.getIsEnableAthM())
 		{
 			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
@@ -881,15 +881,16 @@ public class FrmRpt extends EntityNoName
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
+		/*
 		if (this.getIsEnablePass())
 		{
-			//判断是否有IsPass 字段。
+			//鍒ゆ柇鏄惁鏈塈sPass 瀛楁銆�
 			MapAttrs attrs = new MapAttrs(this.getNo());
 			if (attrs.Contains(MapAttrAttr.KeyOfEn, "IsPass") == false)
 			{
-				throw new RuntimeException("您启用了从表单(" + this.getName() + ")条数据审核选项，但是该从表里没IsPass字段，请参考帮助文档。");
+				throw new RuntimeException("鎮ㄥ惎鐢ㄤ簡浠庤〃鍗�(" + this.getName() + ")鏉℃暟鎹鏍搁�夐」锛屼絾鏄浠庤〃閲屾病IsPass瀛楁锛岃鍙傝�冨府鍔╂枃妗ｃ��");
 			}
-		}
+		} */
 		return super.beforeUpdateInsertAction();
 	}
 	@Override

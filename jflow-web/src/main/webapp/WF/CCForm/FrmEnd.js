@@ -352,8 +352,8 @@ function AfterBindEn_DealMapExt(frmData) {
                     $('#CB_' + mapExt.AttrOfOper).bind(DynamicBind(mapExt, "CB_"));
                     break;
                 }
-                if ($('#RB_' + mapExt.AttrOfOper).length == 1) {
-                    $('#RB_' + mapExt.AttrOfOper).bind(DynamicBind(mapExt, "RB_"));
+                if ($('input[name="RB_' + mapExt.AttrOfOper + '"]').length > 0) {
+                    $('input[name="RB_' + mapExt.AttrOfOper + '"]').bind(DynamicBind(mapExt, "RB_"));
                     break;
                 }
                 break;
@@ -579,10 +579,17 @@ function clearContent(ctrl) {
     $("#" + ctrl).val("");
 }
 function DynamicBind(mapExt, ctrlType) {
+	
+	if (ctrlType == "RB_") {
+        $('input[name="' + ctrlType + mapExt.AttrOfOper + '"]').on(mapExt.Tag, function () {
+            DBAccess.RunFunctionReturnStr(mapExt.Doc);
+        });
+    } else {
+        $('#' + ctrlType + mapExt.AttrOfOper).on(mapExt.Tag, function () {
+            DBAccess.RunFunctionReturnStr(mapExt.Doc);
+        });
+    }
 
-    $('#' + ctrlType + mapExt.AttrOfOper).on(mapExt.Tag, function () {
-        DBAccess.RunFunctionReturnStr(mapExt.Doc);
-    });
 }
 
 /**

@@ -891,6 +891,7 @@ public class FindWorker {
 		// 递归出来子部门下有该岗位的人员
 		DataTable mydt = Func_GenerWorkerList_DiGui_ByDepts(subDepts, empNo);
 		if(mydt == null || mydt.Rows.size()  == 0){
+			//如果递归没有找到人,就全局搜索岗位
 			 sql = "SELECT A.FK_Emp FROM " + BP.WF.Glo.getEmpStation() + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
              ps = new Paras();
              ps.Add("FK_Node", town.getHisNode().getNodeID());

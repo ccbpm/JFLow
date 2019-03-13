@@ -643,8 +643,13 @@ public class MapDtl extends EntityNoName
 			_IsReadonly = 0;
 			return false;
 		}
-		_IsReadonly = 1;
-		return true;
+		_IsReadonly = this.GetValIntByKey(MapDtlAttr.IsReadonly);
+		
+		 return this.GetValBooleanByKey(MapDtlAttr.IsReadonly);
+	}
+	
+	public final void setIsReadonly(boolean value){
+		this.SetValByKey(MapDtlAttr.IsReadonly, value);
 	}
 	/** 
 	 是否可以删除？

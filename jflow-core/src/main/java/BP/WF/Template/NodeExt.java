@@ -582,7 +582,7 @@ public class NodeExt extends Entity
         
 		rm = new RefMethod();
 		rm.Title = "接收人规则";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/Menu/Sender.png";
+		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Img/Sender.png";
 		rm.ClassMethodName = this.toString() + ".DoAccepterRoleNew";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -612,7 +612,7 @@ public class NodeExt extends Entity
 
 		rm = new RefMethod();
 		rm.Title = "父子流程";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Menu/SubFlows.png";
+		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Img/SubFlows.png";
 		rm.ClassMethodName = this.toString() + ".DoSubFlow";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -621,7 +621,7 @@ public class NodeExt extends Entity
 		rm = new RefMethod();
 		rm.Title = "流程完成条件"; // "流程完成条件";
 		rm.ClassMethodName = this.toString() + ".DoCond";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Menu/Cond.png";
+		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Img/Cond.png";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 

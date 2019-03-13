@@ -2011,6 +2011,7 @@ public class WF_CCForm extends WebContralBase {
 					mdtl.setIsInsert(false);
 					mdtl.setIsDelete(false);
 					mdtl.setIsUpdate(false);
+					mdtl.setIsReadonly(true);
 				}
 	
 				//自定义权限.

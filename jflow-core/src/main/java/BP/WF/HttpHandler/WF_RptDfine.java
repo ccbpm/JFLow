@@ -311,37 +311,7 @@ public class WF_RptDfine extends WebContralBase{
 
 					switch (ar.getLGType())
 					{
-						//case DDLShowType.BindSQL:
-						//    string sql = ar.UIBindKey;
-
-						//    if (sql.Contains("@Web"))
-						//    {
-						//        sql = sql.Replace("@WebUser.getNo()", WebUser.getNo());
-						//        sql = sql.Replace("@WebUser.Name", WebUser.Name);
-						//        sql = sql.Replace("@WebUser.FK_Dept", WebUser.FK_Dept);
-						//        sql = sql.Replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-						//    }
-
-						//    if (sql.Contains("@"))
-						//        throw new Exception("不允许使用除@WebUser之外的变量");
-
-						//    dtNoName = DBAccess.RunSQLReturnTable(sql);
-						//    dtNoName.TableName = ar.getKeyOfEn();
-						//    ds.Tables.add(dtNoName);
-
-						//    row["ValueField"] = "No";
-						//    row["TextField"] = "Name";
-						//    break;
-						//case DDLShowType.Boolean:
-						//    dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-						//    dtNoName.Rows.add("all", "全部");
-						//    dtNoName.Rows.add("1", "是");
-						//    dtNoName.Rows.add("0", "否");
-						//    ds.Tables.add(dtNoName);
-
-						//    row["ValueField"] = "No";
-						//    row["TextField"] = "Name";
-						//    break;
+						
 						case FK:
 							Entities ens = ar.getHisAttr().getHisFKEns();
 							ens.RetrieveAll();
@@ -390,16 +360,7 @@ public class WF_RptDfine extends WebContralBase{
 								}
 							}
 							break;
-						//case DDLShowType.Gender:
-						//    dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-						//    dtNoName.Rows.add("all", "全部");
-						//    dtNoName.Rows.add("1", "男");
-						//    dtNoName.Rows.add("0", "女");
-						//    ds.Tables.add(dtNoName);
-
-						//    row["ValueField"] = "No";
-						//    row["TextField"] = "Name";
-						//    break;
+						
 						case Enum:
 							dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
 							dtNoName.Rows.AddDatas("all", "全部");
@@ -420,13 +381,7 @@ public class WF_RptDfine extends WebContralBase{
 							break;
 					}
 					break;
-				//case UIContralType.CheckBok:
-				//    row["Type"] = "checkbox";
-				//    fcid = "CB_" + ar.getKeyOfEn();
-
-				//    if (vals.ContainsKey(fcid))
-				//        row["DefaultValue"] = Convert.ToBoolean(int.Parse(vals[fcid]));
-				//    break;
+			
 				default:
 					break;
 			}
@@ -443,9 +398,6 @@ public class WF_RptDfine extends WebContralBase{
 		GEEntitys ges = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ges);
 
-//C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a string member and was converted to Java 'if-else' logic:
-//		switch (this.getSearchType())
-//ORIGINAL LINE: case "My":
 		if (this.getSearchType().equals("My")) //我发起的.
 		{
 				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());

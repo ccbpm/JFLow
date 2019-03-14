@@ -54,7 +54,7 @@ public class SMS extends EntityMyPK
 		sms.setMsgType(msgType); // 消息类型.'
 
 		sms.setAtPara(paras);
-
+//		sms.afterInsert();
 		sms.Insert();
 	}
 	/** 
@@ -379,8 +379,8 @@ public class SMS extends EntityMyPK
 	public static boolean SendEmailNow(String mail, String mailTitle, String mailDoc) throws Exception
 	{
 		 if(DataType.IsNullOrEmpty(mail) == true) 
-			 throw new Exception("err@收件箱不能为空");
-		//邮件地址.
+			 return false;
+		//邮件地址.return
         final String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
        
 

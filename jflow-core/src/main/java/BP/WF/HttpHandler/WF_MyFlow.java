@@ -872,6 +872,16 @@ public class WF_MyFlow extends WebContralBase {
 		return "url@" + myurl;
 	}
 
+	 /// <summary>
+    /// 保存发送参数.
+    /// </summary>
+    /// <returns></returns>
+    public String SaveParas() throws Exception
+    {
+        BP.WF.Dev2Interface.Flow_SaveParas(this.getWorkID(), this.GetRequestVal("Paras"));
+        return "保存成功";
+    }
+    
 	public String InitToolBar() throws Exception {
 
 		// #region 处理是否是加签，或者是否是会签模式，.
@@ -903,10 +913,6 @@ public class WF_MyFlow extends WebContralBase {
 			if (isAskForOrHuiQian == true) {
 				toolbar += "<input name='Send' type=button value='执行会签' enable=true onclick=\" " + btnLab.getSendJS()
 						+ " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(); \" />";
-				// toolbar += "<input name='Send' type=button value='" +
-				// btnLab.getSendLab() + "' enable=true onclick=\"" +
-				// btnLab.getSendJS() + " if ( SendSelfFrom()==false) return
-				// false; Send(); this.disabled=true;\" />";
 				if (btnLab.getPrintZipEnable() == true) {
 					String packUrl = "./WorkOpt/Packup.htm?FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID()
 							+ "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
@@ -963,13 +969,13 @@ public class WF_MyFlow extends WebContralBase {
 						/* 如果启用了发送按钮. */
 						toolbar += "<input name='Send' type=button value='" + btnLab.getSendLab()
 								+ "' enable=true onclick=\"" + btnLab.getSendJS()
-								+ " if (SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
+								+ " if (SendSelfFrom()==false) return false; this.disabled=true;\" />";
 					}
 				} else {
 					if (btnLab.getSendEnable() && this.getcurrND().getHisBatchRole() != BatchRole.Group) {
 						toolbar += "<input name='Send' type=button  value='" + btnLab.getSendLab()
 								+ "' enable=true onclick=\"" + btnLab.getSendJS()
-								+ " if ( SendSelfFrom()==false) return false; Send(); this.disabled=true;\" />";
+								+ " if ( SendSelfFrom()==false) return false; this.disabled=true;\" />";
 					}
 				}
 

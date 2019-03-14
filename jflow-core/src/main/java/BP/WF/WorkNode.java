@@ -1047,10 +1047,10 @@ public class WorkNode {
 				boolean isPass = false;
 
 				if (item.getExpType() == ConnDataFrom.Paras)
-					isPass = BP.WF.Glo.CondExpPara(item.getCondExp(), this.rptGe.getRow());
+					isPass = BP.WF.Glo.CondExpPara(item.getCondExp(), this.rptGe.getRow(),this.getWorkID());
 
 				if (item.getExpType() == ConnDataFrom.SQL)
-					isPass = BP.WF.Glo.CondExpSQL(item.getCondExp(), this.rptGe.getRow());
+					isPass = BP.WF.Glo.CondExpSQL(item.getCondExp(), this.rptGe.getRow(),this.getWorkID());
 
 				if (isPass == true)
 					return new Node(Integer.parseInt(item.getFK_Flow() + "01"));

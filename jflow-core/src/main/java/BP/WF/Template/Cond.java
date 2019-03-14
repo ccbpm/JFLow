@@ -1,5 +1,7 @@
 package BP.WF.Template;
 
+import java.util.Hashtable;
+
 import BP.DA.DBAccess;
 import BP.DA.DataType;
 import BP.DA.Log;
@@ -472,9 +474,7 @@ public class Cond extends EntityMyPK
 			}
 			catch (RuntimeException ex)
 			{
-					//this.Delete();
 				return false;
-					//throw new Exception("@在取得判断条件实体[" + nd.EnDesc + "], 出现错误:" + ex.Message + "@错误原因是定义流程的判断条件出现错误,可能是你选择的判断条件工作类是当前工作节点的下一步工作造成,取不到该实体的实例.");
 			}
 		}
 
@@ -550,7 +550,6 @@ public class Cond extends EntityMyPK
 
 		if (this.getHisDataFrom() == ConnDataFrom.SQL)
 		{
-				//this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.AttrKey + " (" + en.GetValStringByKey(this.AttrKey) + ") 操作符:(" + this.FK_Operator + ") 判断值:(" + this.OperatorValue.ToString() + ")";
 			String sql = this.getOperatorValueStr();
 			sql = sql.replace("~", "'");
 			sql = sql.replace("WebUser.No", BP.Web.WebUser.getNo());
@@ -621,12 +620,6 @@ public class Cond extends EntityMyPK
 				url += "&UserNo=" + BP.Web.WebUser.getNo();
 			}
 
-
-
-				///#endregion 加入必要的参数.
-
-
-				///#region 对url进行处理.
 			if (SystemConfig.getIsBSsystem() && BP.Sys.Glo.getRequest()!=null)
 			{
 					//是bs系统，并且是url参数执行类型.
@@ -703,26 +696,19 @@ public class Cond extends EntityMyPK
 				///#region 求url的值
 			try
 			{
-				url = url.replace("'", "");
-					// url = url.replace("//", "/");
-					// url = url.replace("//", "/");
-				//System.Text.Encoding encode = System.Text.Encoding.GetEncoding("gb2312");
-     			//String text = DataType.ReadURLContext(url, 8000, encode);
+
 				String text = DataType.ReadURLContext(url, 8000);
 				if (text == null)
-						//throw new Exception("@流程设计的方向条件错误，执行的URL错误:" + url + ", 返回为null, 请检查设置是否正确。");
 				{
 					return false;
 				}
 
 				if (StringHelper.isNullOrEmpty(text) == true)
-						// throw new Exception("@错误，没有接收到返回值.");
 				{
 					return false;
 				}
 
 				if (DataType.IsNumStr(text) == false)
-						//throw new Exception("@错误，不符合约定的格式，必须是数字类型。");
 				{
 					return false;
 				}
@@ -753,128 +739,9 @@ public class Cond extends EntityMyPK
 
 		if (this.getHisDataFrom() == ConnDataFrom.Paras)
 		{
-				//this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.AttrKey + " (" + en.GetValStringByKey(this.AttrKey) + ") 操作符:(" + this.FK_Operator + ") 判断值:(" + this.OperatorValue.ToString() + ")";
-			String exp = this.getOperatorValueStr();
-			String[] strs = exp.trim().split("[ ]", -1);
-
-			String key = strs[0].trim();
-			String oper = strs[1].trim();
-			String val = strs[2].trim();
-			val = val.replace("'", "");
-			val = val.replace("%", "");
-			val = val.replace("~", "");
-
-			BP.En.Row row = this.en.getRow();
-
-			String valPara = null;
-			if (row.containsKey(key) == false)
-			{
-				try
-				{
-						//如果不包含指定的关键的key, 就到公共变量里去找. 
-					if (BP.WF.Glo.getSendHTOfTemp().containsKey(key) == false)
-					{
-						throw new RuntimeException("@判断条件时错误,请确认参数是否拼写错误,没有找到对应的表达式:" + exp + " Key=(" + key + ") oper=(" + oper + ")Val=(" + val + ")");
-					}
-					valPara = BP.WF.Glo.getSendHTOfTemp().get(key).toString().trim();
-				}
-				catch (java.lang.Exception e)
-				{
-						//有可能是常量. 
-					valPara = key;
-				}
-			}
-			else
-			{
-				valPara = row.get(key).toString().trim();
-			}
-
-
-				///#region 开始执行判断.
-			if (oper.equals("=") || oper.equals("dengyu"))
-			{
-				if (val.equals(valPara))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			if (oper.toUpperCase().equals("LIKE"))
-			{
-				if (valPara.contains(val))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			if (oper.equals(">") || oper.equals("dayu"))
-			{
-				if (Float.parseFloat(valPara) > Float.parseFloat(val))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			if (oper.equals(">=") || oper.equals("dayudengyu"))
-			{
-				if (Float.parseFloat(valPara) >= Float.parseFloat(val))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			if (oper.equals("<") || oper.contains("xiaoyu"))
-			{
-				if (Float.parseFloat(valPara) < Float.parseFloat(val))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			if (oper.equals("<=") || oper.contains("xiaoyudengyu"))
-			{
-				if (Float.parseFloat(valPara) <= Float.parseFloat(val))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			if (oper.equals("!=") || oper.contains("budengyu"))
-			{
-				if (Float.parseFloat(valPara) != Float.parseFloat(val))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			throw new RuntimeException("@参数格式错误:" + exp + " Key=" + key + " oper=" + oper + " Val=" + val);
-
-				///#endregion 开始执行判断.
-				// throw new Exception("@判断条件时错误,没有找到对应的表达式:" + exp + " Key=(" + key + ") oper=(" + oper + ")Val=(" + val+")");
+			Hashtable ht = en.getRow();
+			return BP.WF.Glo.CondExpPara(this.getOperatorValueStr(), ht, en.getOID());
+			
 		} //参数.
 		
 
@@ -973,17 +840,7 @@ public class Cond extends EntityMyPK
 						return false;
 					}
 			}
-			/*else if (oper.equals("!=") || oper.equals("budengyu"))
-			{
-					if (en.GetValDoubleByKey(this.getAttrKey()) != Double.parseDouble(this.getOperatorValue().toString()))
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-			}*/
+			
 			else if (oper.equals("like"))
 			{
 					if (en.GetValStringByKey(this.getAttrKey()).indexOf(this.getOperatorValue().toString()) == -1)

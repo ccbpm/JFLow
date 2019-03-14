@@ -235,156 +235,143 @@ public class Glo {
 
 		if (Ver <= currVer)
 			return null; // 不需要升级.
-		
+
 		// #region 升级填充事件.
-		//pop自动填充
-        MapExts exts = new MapExts();
-        QueryObject qo = new QueryObject(exts);
-        qo.AddWhere(MapExtAttr.ExtType, " LIKE ", "Pop%");
-        qo.DoQuery();
-        for (MapExt ext : exts.ToJavaList())
-        {
-            String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
-            MapAttr ma = new MapAttr();
-            ma.setMyPK(mypk);
-            if (ma.RetrieveFromDBSources() == 0)
-            {
-                ext.Delete();
-                continue;
-            }
+		// pop自动填充
+		MapExts exts = new MapExts();
+		QueryObject qo = new QueryObject(exts);
+		qo.AddWhere(MapExtAttr.ExtType, " LIKE ", "Pop%");
+		qo.DoQuery();
+		for (MapExt ext : exts.ToJavaList()) {
+			String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
+			MapAttr ma = new MapAttr();
+			ma.setMyPK(mypk);
+			if (ma.RetrieveFromDBSources() == 0) {
+				ext.Delete();
+				continue;
+			}
 
-            if (ma.GetParaString("PopModel") == ext.getExtType())
-                continue; //已经修复了，或者配置了.
+			if (ma.GetParaString("PopModel") == ext.getExtType())
+				continue; // 已经修复了，或者配置了.
 
-            ma.SetPara("PopModel", ext.getExtType());
-            ma.Update();
+			ma.SetPara("PopModel", ext.getExtType());
+			ma.Update();
 
-            if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
-                continue;
+			if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
+				continue;
 
-            MapExt extP = new MapExt();
-//            extP.MyPK =  ext.MyPK + "_FullData";
-            extP.setMyPK(ext.getMyPK() + "_FullData");
-            int i = extP.RetrieveFromDBSources();
-            if (i == 1)
-                continue;
-            extP.setExtType("FullData");
-            extP.setFK_MapData(ext.getFK_MapData());
-            extP.setAttrOfOper(ext.getAttrOfOper());
-            extP.setDBType(ext.getDBType());
-            extP.setDoc(ext.getTag4());
-            extP.Insert(); //执行插入.
-        }
+			MapExt extP = new MapExt();
+			// extP.MyPK = ext.MyPK + "_FullData";
+			extP.setMyPK(ext.getMyPK() + "_FullData");
+			int i = extP.RetrieveFromDBSources();
+			if (i == 1)
+				continue;
+			extP.setExtType("FullData");
+			extP.setFK_MapData(ext.getFK_MapData());
+			extP.setAttrOfOper(ext.getAttrOfOper());
+			extP.setDBType(ext.getDBType());
+			extP.setDoc(ext.getTag4());
+			extP.Insert(); // 执行插入.
+		}
 
+		// 文本自动填充
+		exts = new MapExts();
+		exts.Retrieve(MapExtAttr.ExtType, MapExtXmlList.TBFullCtrl);
+		for (MapExt ext : exts.ToJavaList()) {
+			String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
+			MapAttr ma = new MapAttr();
+			ma.setMyPK(mypk);
+			if (ma.RetrieveFromDBSources() == 0) {
+				ext.Delete();
+				continue;
+			}
+			String modal = ma.GetParaString("TBFullCtrl");
+			if (DataType.IsNullOrEmpty(modal) == false)
+				continue; // 已经修复了，或者配置了.
 
-        //文本自动填充
-        exts = new MapExts();
-        exts.Retrieve(MapExtAttr.ExtType,MapExtXmlList.TBFullCtrl);
-        for (MapExt ext : exts.ToJavaList())
-        {
-            String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
-            MapAttr ma = new MapAttr();
-            ma.setMyPK(mypk);
-            if (ma.RetrieveFromDBSources() == 0)
-            {
-                ext.Delete();
-                continue;
-            }
-            String modal = ma.GetParaString("TBFullCtrl");
-            if (DataType.IsNullOrEmpty(modal) == false)
-                continue; //已经修复了，或者配置了.
+			if (DataType.IsNullOrEmpty(ext.getTag3()) == false)
+				ma.SetPara("TBFullCtrl", "Simple");
+			else
+				ma.SetPara("TBFullCtrl", "Table");
 
-            if (DataType.IsNullOrEmpty(ext.getTag3()) == false)
-                ma.SetPara("TBFullCtrl","Simple");
-            else
-                ma.SetPara("TBFullCtrl","Table");
+			ma.Update();
 
-            ma.Update();
+			if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
+				continue;
 
-            if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
-                continue;
+			MapExt extP = new MapExt();
+			extP.setMyPK(ext.getMyPK() + "_FullData");
+			int i = extP.RetrieveFromDBSources();
+			if (i == 1)
+				continue;
+			extP.setExtType("FullData");
+			extP.setFK_MapData(ext.getFK_MapData());
+			extP.setAttrOfOper(ext.getAttrOfOper());
+			extP.setDBType(ext.getDBType());
+			extP.setDoc(ext.getTag4());
 
-            MapExt extP = new MapExt();
-            extP.setMyPK(ext.getMyPK() + "_FullData");
-            int i = extP.RetrieveFromDBSources();
-            if (i == 1)
-                continue;
-            extP.setExtType("FullData");
-            extP.setFK_MapData(ext.getFK_MapData());
-            extP.setAttrOfOper(ext.getAttrOfOper());
-            extP.setDBType(ext.getDBType());
-            extP.setDoc(ext.getTag4());
-            
+			// 填充从表
+			extP.setTag1(ext.getTag1());
+			// 填充下拉框
+			extP.setTag(ext.getTag());
 
-            //填充从表
-            extP.setTag1(ext.getTag1());
-            //填充下拉框
-            extP.setTag(ext.getTag());
+			extP.Insert(); // 执行插入.
+		}
 
-            extP.Insert(); //执行插入.
-        }
+		// 下拉框填充其他控件
+		// 文本自动填充
+		exts = new MapExts();
+		exts.Retrieve(MapExtAttr.ExtType, MapExtXmlList.DDLFullCtrl);
+		for (MapExt ext : exts.ToJavaList()) {
+			String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
+			MapAttr ma = new MapAttr();
+			ma.setMyPK(mypk);
+			if (ma.RetrieveFromDBSources() == 0) {
+				ext.Delete();
+				continue;
+			}
+			String modal = ma.GetParaString("IsFullData");
+			if (DataType.IsNullOrEmpty(modal) == false)
+				continue; // 已经修复了，或者配置了.
 
-        //下拉框填充其他控件
-        //文本自动填充
-        exts = new MapExts();
-        exts.Retrieve(MapExtAttr.ExtType, MapExtXmlList.DDLFullCtrl);
-        for (MapExt ext : exts.ToJavaList())
-        {
-            String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
-            MapAttr ma = new MapAttr();
-            ma.setMyPK(mypk);
-            if (ma.RetrieveFromDBSources() == 0)
-            {
-                ext.Delete();
-                continue;
-            }
-            String modal = ma.GetParaString("IsFullData");
-            if (DataType.IsNullOrEmpty(modal) == false)
-                continue; //已经修复了，或者配置了.
+			// 启用填充其他控件
+			ma.SetPara("IsFullData", 1);
+			ma.Update();
 
-            //启用填充其他控件
-            ma.SetPara("IsFullData", 1);
-            ma.Update();
+			MapExt extP = new MapExt();
+			extP.setMyPK(ext.getMyPK() + "_FullData");
+			int i = extP.RetrieveFromDBSources();
+			if (i == 1)
+				continue;
 
-           
-            MapExt extP = new MapExt();
-            extP.setMyPK(ext.getMyPK() + "_FullData");
-            int i = extP.RetrieveFromDBSources();
-            if (i == 1)
-                continue;
+			extP.setExtType("FullData");
+			extP.setFK_MapData(ext.getFK_MapData());
+			extP.setAttrOfOper(ext.getAttrOfOper());
+			extP.setDBType(ext.getDBType());
+			extP.setDoc(ext.getDoc());
 
-            extP.setExtType("FullData");
-            extP.setFK_MapData(ext.getFK_MapData());
-            extP.setAttrOfOper(ext.getAttrOfOper());
-            extP.setDBType(ext.getDBType());
-            extP.setDoc(ext.getDoc());
+			// 填充从表
+			extP.setTag1(ext.getTag1());
+			// 填充下拉框
+			extP.setTag(ext.getTag());
 
+			extP.Insert(); // 执行插入.
 
-            //填充从表
-            extP.setTag1(ext.getTag1());
-            //填充下拉框
-            extP.setTag(ext.getTag());
+		}
+		// #region 升级填充事件.
 
-            extP.Insert(); //执行插入.
-            
-        }
-        // #region 升级填充事件.
-        
 		String msg = "";
 		try {
-			
-			
-			 // #region 升级事件.
-              if (DBAccess.IsExitsTableCol("Sys_FrmEvent", "DoType") == true)
-              {
-                  BP.Sys.FrmEvent fe = new FrmEvent();
-                  fe.CheckPhysicsTable();
 
-                  DBAccess.RunSQL("UPDATE Sys_FrmEvent SET EventDoType=DoType  ");
-                  DBAccess.RunSQL("ALTER TABLE Sys_FrmEvent   DROP COLUMN	DoType  ");
-              }
-              //#endregion
-              
+			// #region 升级事件.
+			if (DBAccess.IsExitsTableCol("Sys_FrmEvent", "DoType") == true) {
+				BP.Sys.FrmEvent fe = new FrmEvent();
+				fe.CheckPhysicsTable();
+
+				DBAccess.RunSQL("UPDATE Sys_FrmEvent SET EventDoType=DoType  ");
+				DBAccess.RunSQL("ALTER TABLE Sys_FrmEvent   DROP COLUMN	DoType  ");
+			}
+			// #endregion
 
 			/*
 			 * 升级版本记录: 20150330: 优化发起列表的效率, by:zhoupeng. 2, 升级表单树,支持动态表单树. 1,
@@ -396,8 +383,6 @@ public class Glo {
 			// 序列号.
 			BP.Sys.Serial se = new BP.Sys.Serial();
 			se.CheckPhysicsTable();
-
-		 
 
 			BP.WF.Template.NodeExt ext = new BP.WF.Template.NodeExt();
 			ext.CheckPhysicsTable();
@@ -489,7 +474,6 @@ public class Glo {
 			// 查询.
 			BP.WF.Data.CH ch = new CH();
 			ch.CheckPhysicsTable();
- 
 
 			// /#region 检查数据源.
 			SFDBSrc src = new SFDBSrc();
@@ -574,7 +558,7 @@ public class Glo {
 			// 增加部门字段。
 			CCList cc = new CCList();
 			cc.CheckPhysicsTable();
- 
+
 			// /#region 升级sys_sftable
 			// 升级
 			BP.Sys.SFTable tab = new SFTable();
@@ -591,7 +575,7 @@ public class Glo {
 
 			BP.WF.Template.NodeSheet nodeSheet = new BP.WF.Template.NodeSheet();
 			nodeSheet.CheckPhysicsTable();
-			 
+
 			// /#region 把节点的toolbarExcel, word 信息放入mapdata
 			BP.WF.Template.NodeSheets nss = new BP.WF.Template.NodeSheets();
 			nss.RetrieveAll();
@@ -653,7 +637,6 @@ public class Glo {
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm+'_'+convert(varchar,FK_Node )+'_'+FK_Flow");
 
 			// /#region 检查必要的升级。
-		 
 
 			FrmWorkCheck fwc = new FrmWorkCheck();
 			fwc.CheckPhysicsTable();
@@ -961,14 +944,14 @@ public class Glo {
 		if (demoType == 2) {
 			isInstallFlowDemo = false;
 		}
- 
+
 		ArrayList al = null;
 		String info = "BP.En.Entity";
 		al = BP.En.ClassFactory.GetObjects(info);
-		
+
 		FrmRB frmRb = new FrmRB();
 		frmRb.CheckPhysicsTable();
-		
+
 		BP.Sys.SysEnum se = new BP.Sys.SysEnum();
 		se.CheckPhysicsTable();
 
@@ -981,12 +964,12 @@ public class Glo {
 
 		NodeExt ne = new NodeExt();
 		ne.CheckPhysicsTable();
- 
+
 		// 先创建表，否则列的顺序就会变化.
 
 		// 1, 创建or修复表
 		for (Object obj : al) {
-			
+
 			Entity en = null;
 			en = (Entity) ((obj instanceof Entity) ? obj : null);
 			if (en == null) {
@@ -995,45 +978,42 @@ public class Glo {
 
 			// 获得类名.
 			String clsName = en.toString();
-			
-			if (clsName==null)
+
+			if (clsName == null)
 				continue;
- 
+
 			// 不安装CCIM的表.
 			if (clsName != null && clsName.contains("BP.CCIM")) {
 				continue;
 			}
-			
+
 			// 不安装CCIM的表.
-						if (clsName != null && clsName.contains("StartWork")) {
-							continue;
-						}
-			 
-			
+			if (clsName != null && clsName.contains("StartWork")) {
+				continue;
+			}
+
 			// 不安装Work的表.
 			if (clsName != null && clsName.equals("BP.WF.Work")) {
-			    continue;
+				continue;
 			}
-						
+
 			if (clsName != null && clsName.equals("BP.WF.GEWork")) {
 				continue;
 			}
-			
-			   //抽象的类不允许创建表.
-            switch(clsName)
-            {
-                case "BP.WF.StartWork":
-                case "BP.WF.Work":
-                case "BP.WF.GEStartWork":
-                case "BP.En.GENoName":
-                case "BP.En.GETree":
-                case "BP.WF.Data.GERpt":
-                case "BP.WF.GEWork":
-                    continue;
-                default:
-                    break;
-            }
-            
+
+			// 抽象的类不允许创建表.
+			switch (clsName) {
+			case "BP.WF.StartWork":
+			case "BP.WF.Work":
+			case "BP.WF.GEStartWork":
+			case "BP.En.GENoName":
+			case "BP.En.GETree":
+			case "BP.WF.Data.GERpt":
+			case "BP.WF.GEWork":
+				continue;
+			default:
+				break;
+			}
 
 			if (isInstallFlowDemo == false) {
 				// 如果不安装demo.
@@ -1063,7 +1043,7 @@ public class Glo {
 					|| table.equals("V_FlowData")) {
 				continue;
 			}
-			 
+
 			en.CheckPhysicsTable();
 
 		}
@@ -1092,10 +1072,10 @@ public class Glo {
 		BP.DA.DBAccess.RunSQL("DELETE FROM Port_DeptStation");
 
 		String sqlscript = "";
-		  
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\Port_Inc_CH_BPM.sql";
-			BP.DA.DBAccess.RunSQLScript(sqlscript);
-		
+
+		sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\Port_Inc_CH_BPM.sql";
+		BP.DA.DBAccess.RunSQLScript(sqlscript);
+
 		// 修复
 		// 4, 创建视图与数据.
 		// 执行必须的sql.
@@ -1166,16 +1146,15 @@ public class Glo {
 		// 初始化数据
 		// 装载 demo.flow
 		if (isInstallFlowDemo == true) {
-			
+
 			BP.Port.Emp emp = new BP.Port.Emp("admin");
 			BP.Web.WebUser.SignInOfGener(emp);
 			BP.Sys.Glo.WriteLineInfo("开始装载模板...");
-			 
+
 			// 装载数据模版.
 			BP.WF.DTS.LoadTemplete l = new BP.WF.DTS.LoadTemplete();
 			Object tempVar = l.Do();
 			String msg = (String) ((tempVar instanceof String) ? tempVar : null);
-			 
 
 			BP.Sys.Glo.WriteLineInfo("装载模板完成......");
 
@@ -1190,7 +1169,7 @@ public class Glo {
 			FlowSort fs = new FlowSort();
 			fs.setName("流程树");
 			fs.setNo("1");
-		 
+
 			fs.setParentNo("0");
 			fs.Insert();
 
@@ -1214,7 +1193,7 @@ public class Glo {
 			// 增加图片签名
 			BP.WF.DTS.GenerSiganture gs = new BP.WF.DTS.GenerSiganture();
 			gs.Do();
-			
+
 		}
 		// 增加图片签名.
 		// 执行补充的sql, 让外键的字段长度都设置成100.
@@ -1301,10 +1280,10 @@ public class Glo {
 			}
 
 		}
-		
-		BP.GPM.Emp empP=new BP.GPM.Emp();
+
+		BP.GPM.Emp empP = new BP.GPM.Emp();
 		empP.CheckPhysicsTable();
-		 
+
 		// /#endregion 修复
 
 		// /#region 2, 注册枚举类型 SQL
@@ -1338,7 +1317,7 @@ public class Glo {
 			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
 		}
-		
+
 		// /#endregion 修复
 
 		// /#region 4, 创建视图与数据.
@@ -1462,7 +1441,7 @@ public class Glo {
 			FlowSort fs = new FlowSort();
 			fs.setName("流程树");
 			fs.setNo("01");
-		 
+
 			fs.setParentNo("0");
 			fs.Insert();
 
@@ -1640,8 +1619,8 @@ public class Glo {
 		/*
 		 * BP.WF.Glo.KillProcess("WINWORD.EXE"); String enName =
 		 * wk.getEnMap().getPhysicsTable(); try { RegistryKey delKey =
-		 * Registry.LocalMachine.
-		 * OpenSubKey("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Shared Tools\\Text Converters\\Import\\"
+		 * Registry.LocalMachine. OpenSubKey(
+		 * "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Shared Tools\\Text Converters\\Import\\"
 		 * , true); delKey.DeleteValue("MSWord6.wpc"); delKey.Close(); } catch
 		 * (java.lang.Exception e) { }
 		 * 
@@ -2246,11 +2225,9 @@ public class Glo {
 		for (Object key : Htable_FlowFEE.keySet()) {
 			FlowEventBase fee = (FlowEventBase) ((Htable_FlowFEE.get(key) instanceof FlowEventBase)
 					? Htable_FlowFEE.get(key) : null);
-			if (fee.getFlowMark().equals(flowMark) 
-					|| fee.getFlowMark().equals(flowNo)
-					|| fee.getFlowMark().indexOf(flowNo+",")==0
-					|| fee.getFlowMark().contains("," + flowNo + ",") == true)
-			{
+			if (fee.getFlowMark().equals(flowMark) || fee.getFlowMark().equals(flowNo)
+					|| fee.getFlowMark().indexOf(flowNo + ",") == 0
+					|| fee.getFlowMark().contains("," + flowNo + ",") == true) {
 				return fee;
 			}
 		}
@@ -2330,9 +2307,9 @@ public class Glo {
 	 * 根据配置的信息不同，从不同的表里获取人员岗位信息。
 	 */
 	public static String getEmpStation() {
-		 
-			return "Port_DeptEmpStation";
-		 
+
+		return "Port_DeptEmpStation";
+
 	}
 
 	public static String getEmpDept() {
@@ -2712,9 +2689,10 @@ public class Glo {
 
 		return false;
 	}
-	
+
 	/**
 	 * 装载填充
+	 * 
 	 * @param en
 	 * @param item
 	 * @param mattrs
@@ -2722,9 +2700,10 @@ public class Glo {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls) throws Exception{
-		return DealPageLoadFull(en,item,mattrs,dtls,false,0,0);
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls) throws Exception {
+		return DealPageLoadFull(en, item, mattrs, dtls, false, 0, 0);
 	}
+
 	/**
 	 * 执行PageLoad装载数据
 	 * 
@@ -2735,7 +2714,8 @@ public class Glo {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls, boolean isSelf,int nodeID,long workID) throws Exception {
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls, boolean isSelf,
+			int nodeID, long workID) throws Exception {
 		if (item == null) {
 			return en;
 		}
@@ -2751,13 +2731,13 @@ public class Glo {
 					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
 				}
 				dt = DBAccess.RunSQLReturnTable(sql);
-				Attrs attrs  = en.getEnMap().getAttrs();
+				Attrs attrs = en.getEnMap().getAttrs();
 				if (dt.Rows.size() == 1) {
 					DataRow dr = dt.Rows.get(0);
 					for (DataColumn dc : dt.Columns) {
 						// 去掉一些不需要copy的字段.
 						String columnName = dc.ColumnName;
-						if(attrs.Contains(columnName) == false)
+						if (attrs.Contains(columnName) == false)
 							continue;
 						if (columnName.equals(WorkAttr.OID) || columnName.equals(WorkAttr.FID)
 								|| columnName.equals(WorkAttr.Rec) || columnName.equals(WorkAttr.MD5)
@@ -2765,10 +2745,11 @@ public class Glo {
 								|| columnName.equals("RefPK") || columnName.equals(WorkAttr.RecText)) {
 							continue;
 						}
-					   
+
 						if (DataType.IsNullOrEmpty(en.GetValStringByKey(dc.ColumnName))) {
 							en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
-						}else if( en.GetValStringByKey(dc.ColumnName).equals("0") || en.GetValStringByKey(dc.ColumnName).equals("0.0")){
+						} else if (en.GetValStringByKey(dc.ColumnName).equals("0")
+								|| en.GetValStringByKey(dc.ColumnName).equals("0.0")) {
 							en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 						}
 					}
@@ -2794,7 +2775,7 @@ public class Glo {
 					continue;
 				}
 
-				//处理sql.
+				// 处理sql.
 				sql = Glo.DealExp(mysql, en, null);
 
 				if (StringHelper.isNullOrEmpty(sql)) {
@@ -2804,32 +2785,27 @@ public class Glo {
 				if (sql.contains("@")) {
 					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
 				}
-				if (isSelf == true)
-                {
-                    MapDtl mdtlSln = new MapDtl();
-                    mdtlSln.setNo(dtl.getNo()+"_" +nodeID);
-                    int result = mdtlSln.RetrieveFromDBSources();
-                    if (result != 0)
-                    {
-                        //dtl.No = mdtlSln.No;
-                        dtl.setDtlOpenType( mdtlSln.getDtlOpenType());
-                    }
-                }
+				if (isSelf == true) {
+					MapDtl mdtlSln = new MapDtl();
+					mdtlSln.setNo(dtl.getNo() + "_" + nodeID);
+					int result = mdtlSln.RetrieveFromDBSources();
+					if (result != 0) {
+						// dtl.No = mdtlSln.No;
+						dtl.setDtlOpenType(mdtlSln.getDtlOpenType());
+					}
+				}
 
 				GEDtls gedtls = null;
 
 				try {
 					gedtls = new GEDtls(dtl.getNo());
-					if (dtl.getDtlOpenType() == DtlOpenType.ForFID)
-                    {
-                        if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, workID) > 0)
-                            continue;
-                    }
-                    else
-                    {
-                        if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, en.getPKVal()) > 0)
-                            continue;
-                    }
+					if (dtl.getDtlOpenType() == DtlOpenType.ForFID) {
+						if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, workID) > 0)
+							continue;
+					} else {
+						if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, en.getPKVal()) > 0)
+							continue;
+					}
 				} catch (RuntimeException ex) {
 					((GEDtl) ((gedtls.getGetNewEntity() instanceof GEDtl) ? gedtls.getGetNewEntity() : null))
 							.CheckPhysicsTable();
@@ -2844,21 +2820,20 @@ public class Glo {
 						gedtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 					}
 
-					switch (dtl.getDtlOpenType())
-                    {
-                        case ForEmp:  // 按人员来控制.
-                            gedtl.setRefPK(en.getPKVal().toString());
-                            gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
-                            break;
-                        case ForWorkID: // 按工作ID来控制
-                        	 gedtl.setRefPK(en.getPKVal().toString());
-                        	 gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
-                            break;
-                        case ForFID: // 按流程ID来控制.
-                        	 gedtl.setRefPK(String.valueOf(workID));
-                        	 gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
-                            break;
-                    }
+					switch (dtl.getDtlOpenType()) {
+					case ForEmp: // 按人员来控制.
+						gedtl.setRefPK(en.getPKVal().toString());
+						gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+						break;
+					case ForWorkID: // 按工作ID来控制
+						gedtl.setRefPK(en.getPKVal().toString());
+						gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+						break;
+					case ForFID: // 按流程ID来控制.
+						gedtl.setRefPK(String.valueOf(workID));
+						gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+						break;
+					}
 					gedtl.setRDT(DataType.getCurrentDataTime());
 					gedtl.setRec(WebUser.getNo());
 					gedtl.Insert();
@@ -2867,14 +2842,16 @@ public class Glo {
 		}
 		return en;
 	}
-
+	public static boolean CondExpSQL(String sqlExp, Hashtable ht) throws Exception{
+		return CondExpSQL(sqlExp, ht,0);
+	}
 	/// <summary>
 	/// SQL表达式是否正确
 	/// </summary>
 	/// <param name="sqlExp"></param>
 	/// <param name="ht"></param>
 	/// <returns></returns>
-	public static boolean CondExpSQL(String sqlExp, Hashtable ht) throws Exception {
+	public static boolean CondExpSQL(String sqlExp, Hashtable ht,long myWorkID) throws Exception {
 		String sql = sqlExp;
 		sql = sql.replace("~", "'");
 		sql = sql.replace("@WebUser.No", BP.Web.WebUser.getNo());
@@ -2892,6 +2869,18 @@ public class Glo {
 			}
 			sql = sql.replace("@" + key, ht.get(key).toString());
 		}
+		
+		 //从工作流参数里面替换 
+        if (sql.contains("@") == true && myWorkID != 0)
+        {
+            GenerWorkFlow gwf = new GenerWorkFlow(myWorkID);
+            AtPara ap = gwf.getatPara();
+            for(String str : ap.getHisHT().keySet())
+            {
+                sql = sql.replace("@" + str, ap.GetValStrByKey(str));
+            }
+        }
+
 
 		int result = DBAccess.RunSQLReturnValInt(sql, -1);
 		if (result <= 0)
@@ -2900,13 +2889,25 @@ public class Glo {
 		return true;
 	}
 
+	/**
+	 * 判断表达式是否成立
+	 * 
+	 * @param exp
+	 * @param ht
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean CondExpPara(String exp, Hashtable ht) throws Exception {
+		return CondExpPara(exp, ht, 0);
+	}
+
 	/// <summary>
 	/// 判断表达式是否成立
 	/// </summary>
 	/// <param name="exp">表达式</param>
 	/// <param name="en">变量</param>
 	/// <returns>是否成立</returns>
-	public static boolean CondExpPara(String exp, Hashtable ht) throws Exception {
+	public static boolean CondExpPara(String exp, Hashtable ht, long myWorkID) throws Exception {
 		String[] strs = exp.trim().split(" ");
 
 		String key = strs[0].trim();
@@ -2919,64 +2920,82 @@ public class Glo {
 		String valPara = null;
 		if (ht.containsKey(key) == false) {
 			/* 如果不包含指定的关键的key, 就到公共变量里去找. */
+			boolean isHave = false;
+			if (myWorkID != 0) {
+				// 把外部传来的参数传入到 rptGE 让其做方向条件的判断.
+				GenerWorkFlow gwf = new GenerWorkFlow(myWorkID);
+				AtPara at = gwf.getatPara();
+				for (String str : at.getHisHT().keySet()) {
+					if (key.equals(str) == false)
+						continue;
 
-			if (BP.WF.Glo.getSendHTOfTemp().containsKey(key) == false)
-				try {
-					throw new Exception("@判断条件时错误,请确认参数是否拼写错误,没有找到对应的表达式:" + exp + " Key=(" + key + ") oper=(" + oper
-							+ ")Val=(" + val + ")");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					valPara = at.GetValStrByKey(key);
+					isHave = true;
+					break;
 				}
-			valPara = BP.WF.Glo.getSendHTOfTemp().get(key).toString().trim();
-			// 有可能是常量.
-			valPara = key;
+			}
+			if (isHave == false) {
+				if (BP.WF.Glo.getSendHTOfTemp().containsKey(key) == false) {
+					try {
+						throw new Exception("@判断条件时错误,请确认参数是否拼写错误,没有找到对应的表达式:" + exp + " Key=(" + key + ") oper=("
+								+ oper + ")Val=(" + val + ")");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					// 有可能是常量.
+					valPara = key;
+				}else
+				valPara = BP.WF.Glo.getSendHTOfTemp().get(key).toString().trim();
+			}
 
 		} else {
 			valPara = ht.get(key).toString().trim();
 		}
 
 		// 开始执行判断
-		if (oper == "=") {
+		if (oper.equals("=")) {
 			if (valPara == val)
 				return true;
 			else
 				return false;
 		}
 
-		if (oper.toUpperCase() == "LIKE") {
+		if (oper.toUpperCase().equals("LIKE")) {
 			if (valPara.contains(val))
 				return true;
 			else
 				return false;
 		}
+		
+		if (DataType.IsNumStr(valPara) == false)
+            throw new Exception("err@表达式错误:["+exp+"]没有找到参数["+valPara+"]的值，导致无法计算。");
 
-		if (oper == ">") {
+		if (oper.equals(">")) {
 			if (Float.parseFloat(valPara) > Float.parseFloat(val))
 				return true;
 			else
 				return false;
 		}
-		if (oper == ">=") {
+		if (oper.equals(">=")) {
 			if (Float.parseFloat(valPara) >= Float.parseFloat(val))
 				return true;
 			else
 				return false;
 		}
-		if (oper == "<") {
+		if (oper.equals("<")) {
 			if (Float.parseFloat(valPara) < Float.parseFloat(val))
 				return true;
 			else
 				return false;
 		}
-		if (oper == "<=") {
+		if (oper.equals("<=")) {
 			if (Float.parseFloat(valPara) <= Float.parseFloat(val))
 				return true;
 			else
 				return false;
 		}
 
-		if (oper == "!=") {
+		if (oper.equals("!=")) {
 			if (Float.parseFloat(valPara) != Float.parseFloat(val))
 				return true;
 			else
@@ -3005,9 +3024,9 @@ public class Glo {
 	 * @throws Exception
 	 */
 	public static String DealExp(String exp, Entity en, String errInfo) throws Exception {
-		
+
 		exp = exp.replace("~", "'");
-		
+
 		if (exp.contains("@") == false) {
 			return exp;
 		}
@@ -3024,9 +3043,8 @@ public class Glo {
 		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
-		if (exp.contains("@") == false) 
+		if (exp.contains("@") == false)
 			return exp;
-		
 
 		// 增加对新规则的支持. @MyField; 格式.
 		Row row = en.getRow();
@@ -3037,9 +3055,9 @@ public class Glo {
 
 		if (exp.contains("@") == false)
 			return exp;
-				
+
 		for (String key : row.keySet()) {
-			if(row.get(key) == null || row.get(key).toString().equals("") == true)
+			if (row.get(key) == null || row.get(key).toString().equals("") == true)
 				continue;
 			if (exp.contains("@" + key + ";"))
 				exp = exp.replace("@" + key + ";", row.get(key).toString());
@@ -3048,7 +3066,6 @@ public class Glo {
 		if (exp.contains("@") == false)
 			return exp;
 
-		
 		// 解决排序问题.
 		Attrs attrs = en.getEnMap().getAttrs();
 		String mystrs = "";
@@ -3071,7 +3088,7 @@ public class Glo {
 			dr.setValue(0, str);
 			dt.Rows.add(dr);
 		}
-		
+
 		// 解决排序问题.
 		// 替换变量.
 		for (DataRow dr : dt.Rows) {
@@ -3079,10 +3096,10 @@ public class Glo {
 			boolean isStr = key.contains(",");
 			if (isStr == true)
 				key = key.replace(",", "");
-		    if(DataType.IsNullOrEmpty(en.GetValStrByKey(key)) == true)
-		    	continue;
-		    exp = exp.replace("@" + key, en.GetValStrByKey(key));
-			
+			if (DataType.IsNullOrEmpty(en.GetValStrByKey(key)) == true)
+				continue;
+			exp = exp.replace("@" + key, en.GetValStrByKey(key));
+
 		}
 
 		// 处理Para的替换.
@@ -3091,18 +3108,17 @@ public class Glo {
 				exp = exp.replace("@" + key, Glo.getSendHTOfTemp().get(key).toString());
 			}
 		}
-		
+
 		Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
-		while (enu.hasMoreElements())
-		{
-			
+		while (enu.hasMoreElements()) {
+
 			String key = (String) enu.nextElement();
-			 if (exp.contains(key) == false)
-              continue;
-			
-			 exp = exp.replaceAll("@"+key, ContextHolderUtils.getRequest().getParameter(key));
+			if (exp.contains(key) == false)
+				continue;
+
+			exp = exp.replaceAll("@" + key, ContextHolderUtils.getRequest().getParameter(key));
 		}
-		
+
 		return exp;
 	}
 
@@ -3916,10 +3932,11 @@ public class Glo {
 	 * 运行模式
 	 */
 	public static OSModel getOSModel() {
-		/* 取消一对一模式，默认一对多模式
-		 OSModel os = OSModel.forValue(BP.Sys.SystemConfig.GetValByKeyInt("OSModel", 0));
-		return os;
-		 * */
+		/*
+		 * 取消一对一模式，默认一对多模式 OSModel os =
+		 * OSModel.forValue(BP.Sys.SystemConfig.GetValByKeyInt("OSModel", 0));
+		 * return os;
+		 */
 		return OSModel.OneMore;
 	}
 
@@ -4208,8 +4225,11 @@ public class Glo {
 					int leftMin = minutes - (int) ts / (60 * 1000);
 
 					// 否则要计算到第2天上去了， 计算时间要从下一个有效的工作日上班时间开始.
-					dt = DataType.AddDays(DataType.ParseSysDateTime2DateTime(
-							DateUtils.format(dt, "yyyy-MM-dd") + " " + Glo.getAMFrom()), 1, TWay.Holiday);
+					dt = DataType
+							.AddDays(
+									DataType.ParseSysDateTime2DateTime(
+											DateUtils.format(dt, "yyyy-MM-dd") + " " + Glo.getAMFrom()),
+									1, TWay.Holiday);
 					// 递归调用,让其在次日的上班时间在增加，分钟数。
 					return Glo.AddMinutes(dt, 0, leftMin);
 				}
@@ -4268,8 +4288,7 @@ public class Glo {
 		// return Glo.AddMinutes(mydt, minutes);
 	}
 
-	public static Date AddDayHoursSpan(String specDT, int day, int hh, int minutes, TWay tWay)
-			throws Exception {
+	public static Date AddDayHoursSpan(String specDT, int day, int hh, int minutes, TWay tWay) throws Exception {
 		if (specDT == null) {
 			return null;
 		}
@@ -4475,8 +4494,8 @@ public class Glo {
 		java.util.Date dtTo = DataType.ParseSysDate2DateTime(ch.getDTTo());
 
 		long ts = dtTo.getTime() - dtFrom.getTime();
-		ch.setUseDays(ts /1000/ 60 / 60 / 24); // 用时，天数
-		ch.setUseMinutes(ts /1000 / 60); // 用时，分钟
+		ch.setUseDays(ts / 1000 / 60 / 60 / 24); // 用时，天数
+		ch.setUseMinutes(ts / 1000 / 60); // 用时，分钟
 		// ch.setUseDays(ts.Days); //用时，天数
 		// ch.setUseMinutes(ts.Minutes); //用时，分钟
 		// int hour = ts.Hours;
@@ -4486,8 +4505,8 @@ public class Glo {
 		java.util.Date sdtOfDT = DataType.ParseSysDate2DateTime(ch.getSDT());
 
 		long myts = dtTo.getTime() - sdtOfDT.getTime();
-		ch.setOverDays(myts/1000 / 60 / 60 / 24); // 逾期的天数.
-		ch.setOverMinutes(myts/1000 / 60); // 逾期的分钟数
+		ch.setOverDays(myts / 1000 / 60 / 60 / 24); // 逾期的天数.
+		ch.setOverMinutes(myts / 1000 / 60); // 逾期的分钟数
 		// TimeSpan myts = dtTo - sdtOfDT;
 		// ch.setOverDays(myts.getDays()); //逾期的天数.
 		// ch.setOverMinutes(myts.getMinutes()); //逾期的分钟数
@@ -4625,7 +4644,7 @@ public class Glo {
 			return dbs;
 		}
 
-		if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID ) {
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID) {
 			/* 继承模式 */
 			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 			qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
@@ -4640,18 +4659,18 @@ public class Glo {
 			qo.DoQuery();
 			return dbs;
 		}
-		
-		if (athDesc.getHisCtrlWay() == AthCtrlWay.FID ) {
+
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.FID) {
 			/* 继承模式 */
 			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 			qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK());
 			qo.addAnd();
 			qo.addLeftBracket();
-			qo.AddWhere(FrmAttachmentDBAttr.FID, Integer.parseInt(pkval));			 
+			qo.AddWhere(FrmAttachmentDBAttr.FID, Integer.parseInt(pkval));
 			qo.addOr();
 			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, Integer.parseInt(pkval));
 			qo.addRightBracket();
-			 
+
 			qo.addOrderBy("RDT");
 			qo.DoQuery();
 			return dbs;
@@ -5127,7 +5146,7 @@ public class Glo {
 	public static void SendMessageToCCIM(String fromEmpNo, String sendToEmpNo, String msg, String now) {
 		// 周朋@于庆海.
 		return; // 暂停支持.
-	
+
 	}
 
 	public static boolean getIsEnableTrackRec() {
@@ -5185,31 +5204,27 @@ public class Glo {
 				sql = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
 
 			}
-			
 
 			// 替换变量
 			sql = sql.replaceAll("@WebUser.No", WebUser.getNo());
 			sql = sql.replaceAll("@WebUser.Name", WebUser.getName());
 			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sql = sql.replaceAll("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
-			
+
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
-			while (enu.hasMoreElements())
-			{
-				
+			while (enu.hasMoreElements()) {
+
 				String key = (String) enu.nextElement();
-				 if (sql.contains(key) == false)
-	              continue;
-				
-				 sql = sql.replaceAll("@"+key, ContextHolderUtils.getRequest().getParameter(key));
+				if (sql.contains(key) == false)
+					continue;
+
+				sql = sql.replaceAll("@" + key, ContextHolderUtils.getRequest().getParameter(key));
 			}
 
-			
-
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			  if (dt.Rows.size() == 0)
-                  throw new Exception("err@没有找到那一行数据." + sql);
-			  
+			if (dt.Rows.size() == 0)
+				throw new Exception("err@没有找到那一行数据." + sql);
+
 			Hashtable ht = new Hashtable();
 			// 转换成ht表
 			DataRow row = dt.Rows.get(0);
@@ -5242,13 +5257,12 @@ public class Glo {
 		return null;
 
 	}
-	
-	
-//	//附件上传Requsest
-//	public static DefaultMultipartHttpServletRequest getMultipartRequest() {
-//		return request;
-//	}
-//
-//	public static DefaultMultipartHttpServletRequest request;
+
+	// //附件上传Requsest
+	// public static DefaultMultipartHttpServletRequest getMultipartRequest() {
+	// return request;
+	// }
+	//
+	// public static DefaultMultipartHttpServletRequest request;
 
 }

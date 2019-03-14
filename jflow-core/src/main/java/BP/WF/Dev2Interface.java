@@ -8122,6 +8122,26 @@ public class Dev2Interface {
 	}
 
 	/**
+	 * 保存参数，向工作流引擎传入的参数变量.
+	 * @param workID 工作ID
+	 * @param paras 参数
+	 * @return
+	 * @throws Exception 
+	 */
+
+    public static boolean Flow_SaveParas(long workID, String paras) throws Exception
+    {
+        AtPara ap = new AtPara(paras);
+        GenerWorkFlow gwf = new GenerWorkFlow(workID);
+        for(String key : ap.getHisHT().keySet())
+        {
+            gwf.SetPara(key, ap.GetValStrByKey(key));
+        }
+        gwf.Update();
+        return true;
+    }
+    
+	/**
 	 * 保存
 	 * 
 	 * @param nodeID

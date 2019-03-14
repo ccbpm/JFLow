@@ -21,6 +21,12 @@ public class CommonFileUtils {
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 			DefaultMultipartHttpServletRequest mrequest = (DefaultMultipartHttpServletRequest)request;
+			
+		    Iterator ifiles =  mrequest.getFileNames();
+		    while(ifiles.hasNext()){
+		    	System.out.println(ifiles.next());
+		    }
+			
 			MultipartFile multipartFile = mrequest.getFile(fileName);
 			try {
 				multipartFile.transferTo(targetFile);

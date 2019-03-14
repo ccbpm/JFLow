@@ -154,7 +154,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 //		}
 		
 		try{
-			CommonFileUtils.upload(request,"File_Upload", xmlFile);
+			CommonFileUtils.upload(request,"file", xmlFile);
 		}catch(Exception e){
 			e.printStackTrace();
 			return "err@执行失败";		

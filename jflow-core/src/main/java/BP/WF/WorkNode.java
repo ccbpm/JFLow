@@ -1177,24 +1177,31 @@ public class WorkNode {
 			if (skipWork == null) {
 				skipWork = toWn.getHisWork();
 			}
-
-			dt = fw.DoIt(this.getHisFlow(), this, toWn); // 找到下一步骤的接受人.
-			if (dt == null || dt.Rows.size() == 0) {
-				if (nd.getHisWhenNoWorker() == true) {
-					this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
-							nd.getName(), "自动跳转.(当没有找到处理人时)", getndFrom());
-					setndFrom(nd);
-					continue;
-				} else {
-					// 抛出异常.
-					throw new RuntimeException("@没有找到节点[" + nd.getName() + "]的工作处理人.");
+			if(DataType.IsNullOrEmpty(this.JumpToEmp) == false){
+				String[] emps = JumpToEmp.split("[,]", -1);
+				for (String emp : emps) {
+					if (StringHelper.isNullOrEmpty(emp)) {
+						continue;
+					}
+					DataRow dr = dt.NewRow();
+					dr.setValue(0, emp);
+					dt.Rows.add(dr);
 				}
-			}
+			}else{
+				dt = fw.DoIt(this.getHisFlow(), this, toWn); // 找到下一步骤的接受人.
+				if (dt == null || dt.Rows.size() == 0) {
+					if (nd.getHisWhenNoWorker() == true) {
+						this.AddToTrack(ActionType.Skip, this.getExecer(), this.getExecerName(), nd.getNodeID(),
+								nd.getName(), "自动跳转.(当没有找到处理人时)", getndFrom());
+						setndFrom(nd);
+						continue;
+					} else {
+						// 抛出异常.
+						throw new RuntimeException("@没有找到节点[" + nd.getName() + "]的工作处理人.");
+					}
+				}
 
-			if (dt.Rows.size() == 0) {
-				throw new RuntimeException("@没有找到下一个节点(" + nd.getName() + ")的处理人");
 			}
-
 			if (nd.getAutoJumpRole0()) {
 				// 处理人就是发起人
 				boolean isHave = false;
@@ -4166,7 +4173,7 @@ public class WorkNode {
                 return "@请填写审核意见.";
 
             if (dt.Rows.get(0).get("Msg")== null || dt.Rows.get(0).get("Msg").toString().equals("") )
-                return "@审核意见不能为空.";
+                return "err@审核意见不能为空.";
         }
         return "";
     }
@@ -4232,7 +4239,7 @@ public class WorkNode {
 			 }
 			 
 			 if (!err.equals("")) {
-					throw new RuntimeException("@在提交前检查到如下必输字段填写不完整:" + err);
+					throw new RuntimeException("err@在提交前检查到如下必输字段填写不完整:" + err);
 				}
 			 
 			 return true;
@@ -4390,7 +4397,7 @@ public class WorkNode {
 			 err +=CheckFrmIsFullCheckNote();
 
 			if (!err.equals("")) {
-				throw new RuntimeException("在提交前检查到如下必输字段填写不完整:" + err);
+				throw new RuntimeException("err@在提交前检查到如下必输字段填写不完整:" + err);
 			}
 		}
 
@@ -4495,7 +4502,7 @@ public class WorkNode {
 			}
 		}
 		if (!err.equals("")) {
-			throw new RuntimeException("@在提交前检查到如下必输字段填写不完整:" + err);
+			throw new RuntimeException("err@在提交前检查到如下必输字段填写不完整:" + err);
 		}
 
 		return true;
@@ -6257,12 +6264,7 @@ public class WorkNode {
 					this.addMsg(SendReturnMsgFlag.VarToNodeName, town.getHisNode().getName(),
 							town.getHisNode().getName(), SendReturnMsgType.SystemMsg);
 				}
-				// if (town.HisNode.HisDeliveryWay ==
-				// DeliveryWay.ByPreviousOperSkip)
-				// {
-				// town.NodeSend();
-				// this.HisMsgObjs = town.HisMsgObjs;
-				// }
+
 			}
 			/// #region 删除已经发送的消息，那些消息已经成为了垃圾信息.
 			if (Glo.getIsEnableSysMessage() == true) {
@@ -6373,7 +6375,6 @@ public class WorkNode {
 				String url = Glo.getHostURL() + "/WF/MyFlow.htm?FK_Flow=" + this.getHisFlow().getNo() + "&WorkID="
 						+ this.getWorkID() + "&FK_Node=" + town.getHisNode().getNodeID() + "&FID="
 						+ this.rptGe.getFID();
-				// String htmlInfo = "@<a href='" + url + "'
 				// >下一步工作您仍然可以处理，点击这里现在处理。</a>.";
 				String textInfo = "@下一步工作您仍然可以处理。";
 
@@ -6405,7 +6406,6 @@ public class WorkNode {
 			return this.HisMsgObjs;
 		} catch (Exception ex) {
 			this.WhenTranscactionRollbackError(ex);
-			// DBAccess.DoTransactionRollback();
 			throw new Exception(ex.getMessage());
 		}
 	}
@@ -6445,9 +6445,6 @@ public class WorkNode {
 			String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
 					this.rptGe, null, this.HisMsgObjs);
 
-			// string SendSuccess =
-			// this.HisNode.MapData.FrmEvents.DoEventNode(EventListOfNode.SendSuccess,
-			// this.HisWork);
 			if (sendSuccess != null)
 				this.addMsg(SendReturnMsgFlag.SendSuccessMsg, sendSuccess);
 		} catch (Exception ex) {

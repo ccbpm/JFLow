@@ -1180,6 +1180,7 @@ public class WorkNode {
 			if(DataType.IsNullOrEmpty(this.JumpToEmp) == false){
 				String[] emps = JumpToEmp.split("[,]", -1);
 				dt = new DataTable();
+				dt.Columns.Add("No", String.class);
 				for (String emp : emps) {
 					if (StringHelper.isNullOrEmpty(emp)) {
 						continue;

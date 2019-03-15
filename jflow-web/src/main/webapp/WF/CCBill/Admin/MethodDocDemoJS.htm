@@ -20,6 +20,10 @@
         //页面启动函数.
         $(function () {
 
+
+            var handler = new HttpHandler();
+
+
             var myPK = GetQueryString("MyPK");
 
             var en = new Entity("BP.WF.CCBill.FrmMethod", myPK);

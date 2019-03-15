@@ -1014,12 +1014,13 @@ function GenerWorkNode() {
     if (url == "")
         url = "../DataUser/DefaultSelfFormUrl.htm";
     else
-    	url = basePath+url;
+        url = basePath + url;
+
     if (url.indexOf('?') == -1) {
         url = url + "?1=2";
     }
     url += "&WorkID=" + GetPageParas("WorkID") + "&FK_Flow=" + GetPageParas("FK_Flow") + "&FK_Node=" + GetPageParas("FK_Node");
-    
+
     var html = "<iframe ID='SelfForm' src='" + url + "' frameborder=0  style='width:100%; height:" + mapData.FrmH + "px' leftMargin='0' topMargin='0' />";
 
     $('#CCForm').html("").append(html);

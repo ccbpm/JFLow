@@ -96,6 +96,7 @@
                     return value.ParentNo == parentNo;
                 })
 
+                //if (instance.)
                 //子部门
                 var childDepts = $.grep(data.Depts, function (value) {
                     return value.ParentNo == fk_dept;
@@ -205,7 +206,8 @@
             }).on('changed.jstree', function (node, cb) {
                 GetSelectedEmpsReturnVal();
             }).bind("loaded.jstree", function (event, data) {
-                //data.instance.open_all();
+                data.instance.open_node();
+               
             });
         }
         //弹出树

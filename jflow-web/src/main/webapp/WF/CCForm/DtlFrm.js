@@ -10,7 +10,7 @@
 var colVisibleJsonStr = ''
 var jsonStr = '';
 var IsChange = false;
-var IsSave = GetQueryString("IsSave")=="true"? true:false;
+var IsSave = GetQueryString("IsSave") == "true" ? true : false;
 //初始化函数
 $(function () {
 
@@ -33,15 +33,15 @@ $(function () {
         });
     }
     /*else {
-        //新加
-        //计算高度，展示滚动条
-        var height = $(window).height() - 150;
-        $("#CCForm").height(height + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff");
-        $('#topContentDiv').height(height);
+    //新加
+    //计算高度，展示滚动条
+    var height = $(window).height() - 150;
+    $("#CCForm").height(height + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff");
+    $('#topContentDiv').height(height);
 
-        $(window).resize(function () {
-            $("#CCForm").height(height + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff"); ;
-        });
+    $(window).resize(function () {
+    $("#CCForm").height(height + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff"); ;
+    });
     }*/
     function movetb() {
         var move;
@@ -277,71 +277,71 @@ function GenerFrm() {
             if (mapAttr.MyDataType == 8)
                 if (!/\./.test(defValue))
                     defValue += '.00';
-            $('#TB_' + mapAttr.KeyOfEn).val(defValue);
-        }
-
-        if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
-            // 判断下拉框是否有对应option, 若没有则追加
-            if ($("option[value='" + defValue + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
-                var mainTable = frmData.MainTable[0];
-                var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
-                $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
-            }
-
-            $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
-        }
-
-        if ($('#CB_' + mapAttr.KeyOfEn).length == 1) {
-            if (defValue == "1")
-                $('#CB_' + mapAttr.KeyOfEn).attr("checked", true);
-            else
-                $('#CB_' + mapAttr.KeyOfEn).attr("checked", false);
-        }
-
-        //只读或者属性为不可编辑时设置
-        if (mapAttr.UIIsEnable == "0" || pageData.IsReadonly == "1") {
-
-            $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
-            $('#DDL_' + mapAttr.KeyOfEn).attr('disabled', true);
-            $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
-        }
-
-
+        $('#TB_' + mapAttr.KeyOfEn).val(defValue);
     }
 
-    //处理下拉框级联等扩展信息
-    AfterBindEn_DealMapExt(frmData);
+    if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
+        // 判断下拉框是否有对应option, 若没有则追加
+        if ($("option[value='" + defValue + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
+            var mainTable = frmData.MainTable[0];
+            var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
+            $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
+        }
 
-    ShowNoticeInfo();
-
-    ShowTextBoxNoticeInfo();
-
-    //初始化复选下拉框 
-    var selectPicker = $('.selectpicker');
-    $.each(selectPicker, function (i, selectObj) {
-        var defVal = $(selectObj).attr('data-val');
-        var defValArr = defVal.split(',');
-        $(selectObj).selectpicker('val', defValArr);
-    });
-
-    //给富文本 创建编辑器
-    var editor = document.activeEditor = UM.getEditor('editor', {
-        'autoHeightEnabled': false,
-        'fontsize': [10, 12, 14, 16, 18, 20, 24, 36]
-    });
-    if (document.BindEditorMapAttr) {
-        editor.MaxLen = document.BindEditorMapAttr.MaxLen;
-        editor.MinLen = document.BindEditorMapAttr.MinLen;
-        editor.BindField = document.BindEditorMapAttr.KeyOfEn;
-        editor.BindFieldName = document.BindEditorMapAttr.Name;
+        $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
     }
-    //调整样式,让必选的红色 * 随后垂直居中
-    editor.$container.css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
 
-    // 表单计算 /WF/CCForm/FrmFree.js
-    if (typeof calculator === "function") {
-        calculator(frmData.Sys_MapExt);
+    if ($('#CB_' + mapAttr.KeyOfEn).length == 1) {
+        if (defValue == "1")
+            $('#CB_' + mapAttr.KeyOfEn).attr("checked", true);
+        else
+            $('#CB_' + mapAttr.KeyOfEn).attr("checked", false);
     }
+
+    //只读或者属性为不可编辑时设置
+    if (mapAttr.UIIsEnable == "0" || pageData.IsReadonly == "1") {
+
+        $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
+        $('#DDL_' + mapAttr.KeyOfEn).attr('disabled', true);
+        $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
+    }
+
+
+}
+
+//处理下拉框级联等扩展信息
+AfterBindEn_DealMapExt(frmData);
+
+ShowNoticeInfo();
+
+ShowTextBoxNoticeInfo();
+
+//初始化复选下拉框 
+var selectPicker = $('.selectpicker');
+$.each(selectPicker, function (i, selectObj) {
+    var defVal = $(selectObj).attr('data-val');
+    var defValArr = defVal.split(',');
+    $(selectObj).selectpicker('val', defValArr);
+});
+
+//给富文本 创建编辑器
+var editor = document.activeEditor = UM.getEditor('editor', {
+    'autoHeightEnabled': false,
+    'fontsize': [10, 12, 14, 16, 18, 20, 24, 36]
+});
+if (document.BindEditorMapAttr) {
+    editor.MaxLen = document.BindEditorMapAttr.MaxLen;
+    editor.MinLen = document.BindEditorMapAttr.MinLen;
+    editor.BindField = document.BindEditorMapAttr.KeyOfEn;
+    editor.BindFieldName = document.BindEditorMapAttr.Name;
+}
+//调整样式,让必选的红色 * 随后垂直居中
+editor.$container.css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
+
+// 表单计算 /WF/CCForm/FrmFree.js
+if (typeof calculator === "function") {
+    calculator(frmData.Sys_MapExt);
+}
 
 }
 
@@ -381,7 +381,7 @@ function Save(isSaveAndNew) {
     handler.AddPara("EnsName", GetQueryString("EnsName"));
     handler.AddPara("RefPKVal", GetQueryString("RefPKVal"));
     handler.AddPara("OID", GetQueryString("OID"));
-    var params = getFormData(true,true);
+    var params = getFormData(true, true);
 
     $.each(params.split("&"), function (i, o) {
         var param = o.split("=");
@@ -391,7 +391,7 @@ function Save(isSaveAndNew) {
             handler.AddPara(param[0], "");
         }
     });
-    var data = handler.DoMethodReturnString("FrmGener_Save"); 
+    var data = handler.DoMethodReturnString("FrmGener_Save");
     if (data.indexOf('err@') == 0) {
         $('#Message').html(data.substring(4, data.length));
         $('.Message').show();
@@ -399,7 +399,7 @@ function Save(isSaveAndNew) {
     }
 
     if (isSaveAndNew == false) {
-        window.location.href = window.location.href+"&IsSave=true";
+        window.location.href = window.location.href + "&IsSave=true";
         IsSave = true;
         return;
     }
@@ -542,45 +542,45 @@ function AfterBindEn_DealMapExt(frmData) {
                     popWorkModelStr = mapExt.AtPara.substring(popWorkModelIndex, popWorkModelIndex + 1);
                 }
                 switch (popWorkModelStr) {
-                    /// <summary>  
-                    /// 自定义URL  
-                    /// </summary>  
-                    //SelfUrl =1,  
+                    /// <summary>   
+                    /// 自定义URL   
+                    /// </summary>   
+                    //SelfUrl =1,   
                     case "1":
                         icon = "glyphicon glyphicon-th";
                         break;
-                    /// <summary>  
-                    /// 表格模式  
-                    /// </summary>  
-                    // TableOnly,  
+                    /// <summary>   
+                    /// 表格模式   
+                    /// </summary>   
+                    // TableOnly,   
                     case "2":
                         icon = "glyphicon glyphicon-list";
                         break;
-                    /// <summary>  
-                    /// 表格分页模式  
-                    /// </summary>  
-                    //TablePage,  
+                    /// <summary>   
+                    /// 表格分页模式   
+                    /// </summary>   
+                    //TablePage,   
                     case "3":
                         icon = "glyphicon glyphicon-list-alt";
                         break;
-                    /// <summary>  
-                    /// 分组模式  
-                    /// </summary>  
-                    // Group,  
+                    /// <summary>   
+                    /// 分组模式   
+                    /// </summary>   
+                    // Group,   
                     case "4":
                         icon = "glyphicon glyphicon-list-alt";
                         break;
-                    /// <summary>  
-                    /// 树展现模式  
-                    /// </summary>  
-                    // Tree,  
+                    /// <summary>   
+                    /// 树展现模式   
+                    /// </summary>   
+                    // Tree,   
                     case "5":
                         icon = "glyphicon glyphicon-tree-deciduous";
                         break;
-                    /// <summary>  
-                    /// 双实体树  
-                    /// </summary>  
-                    // TreeDouble  
+                    /// <summary>   
+                    /// 双实体树   
+                    /// </summary>   
+                    // TreeDouble   
                     case "6":
                         icon = "glyphicon glyphicon-tree-deciduous";
                         break;
@@ -923,20 +923,20 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                         break;
                 }
                 break;
-            //下拉框   
+            //下拉框    
             case "SELECT":
                 formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());
                 break;
 
-            //对于复选下拉框获取值得方法   
-            //                if ($('[data-id=' + name + ']').length > 0) {  
-            //                    var val = $(disabledEle).val().join(',');  
-            //                    formArrResult.push(name + '=' + val);  
-            //                } else {  
-            //                    formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());  
-            //                }  
-            //                break;  
-            //文本区域   
+            //对于复选下拉框获取值得方法    
+            //                if ($('[data-id=' + name + ']').length > 0) {   
+            //                    var val = $(disabledEle).val().join(',');   
+            //                    formArrResult.push(name + '=' + val);   
+            //                } else {   
+            //                    formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());   
+            //                }   
+            //                break;   
+            //文本区域    
             case "TEXTAREA":
                 formArrResult.push(name + '=' + $(disabledEle).val());
                 break;
@@ -1370,7 +1370,7 @@ function GetPageParas(sArgName) {
     }
     return retval;
 }
- 
+
 // 获取TB值
 function ReqTB(tbID) {
     var v = document.getElementById('TB_' + tbID).value;
@@ -1489,5 +1489,5 @@ function DeleteDtlFrm() {
     alert(data);
     closeIt();
     return;
-  
+
 }

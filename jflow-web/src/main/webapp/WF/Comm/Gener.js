@@ -168,7 +168,7 @@ function GenerCheckIDs() {
 }
 
 //填充下拉框.
-function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal) {
+function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal, filterKey1, filterVal1) {
 
     if (noCol == null)
         noCol = "No";
@@ -201,6 +201,11 @@ function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal) {
     }
 
     for (var i = 0; i < json.length; i++) {
+
+        if (filterKey1 != undefined) {
+            if (json[i][filterKey1] != filterVal1)
+                continue;
+        }
 
         if (json[i][noCol] == undefined)
             $("#" + ddlCtrlID).append("<option value='" + json[i][0] + "'>" + json[i][1] + "</option>");
@@ -783,7 +788,7 @@ var Entity = (function () {
 
             if (typeof self[n] !== "function" && (self[n] != o || true)) {
 
-                if (self[n] !=undefined &&self[n].toString().indexOf('<script') != -1)
+                if (self[n] !=undefined && self[n].toString().indexOf('<script') != -1)
                     params.push(n + "=aa");
                 else
                     params.push(n + "=" + self[n]);
@@ -1607,6 +1612,7 @@ var Entities = (function () {
                 args.push(o);
             });
             this.Paras = getParameters(args);
+
             this.deleteIt();
         },
         DoMethodReturnString: function (methodName) {
@@ -1803,7 +1809,7 @@ var DBAccess = (function () {
     DBAccess.RunFunctionReturnStr = function (funcName) {
 
         try {
-
+            funcName = funcName.replace(/~/g, "'");
             if (funcName.indexOf('(') == -1)
                 return eval(funcName + "()");
             else
@@ -1962,7 +1968,6 @@ var HttpHandler = (function () {
             var queryString = url;
             if (url == null || url == undefined || url == "")
                 queryString = document.location.search.substr(1);
-
             queryString = decodeURI(queryString);
             var self = this;
             $.each(queryString.split("&"), function (i, o) {

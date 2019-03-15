@@ -220,13 +220,7 @@ public class NodeExt extends Entity
 		uac.IsUpdate=true;
 		return uac;
 		
-		/*
-		if (BP.Web.WebUser.getNo().equals("admin"))
-		{
-			uac.IsUpdate = true;
-		}
-		return uac;
-		*/
+	 
 	}
 	/** 
 	 节点
@@ -283,19 +277,19 @@ public class NodeExt extends Entity
         //true, true, NodeAttr.TurnToDeal, "@0=提示ccflow默认信息@1=提示指定信息@2=转向指定的url@3=按照条件转向");
         //map.SetHelperUrl(NodeAttr.TurnToDeal, "http://ccbpm.mydoc.io/?v=5404&t=17914");
         //map.AddTBString(NodeAttr.TurnToDealDoc, null, "转向处理内容", true, false, 0, 1000, 10, true, "http://ccbpm.mydoc.io/?v=5404&t=17914");
-        //map.AddDDLSysEnum(NodeAttr.ReadReceipts, 0, "已读回执", true, true, NodeAttr.ReadReceipts,
-        // "@0=不回执@1=自动回执@2=由上一节点表单字段决定@3=由SDK开发者参数决定");
-        //map.SetHelperUrl(NodeAttr.ReadReceipts, "http://ccbpm.mydoc.io/?v=5404&t=17915");
+
+        map.AddDDLSysEnum(NodeAttr.ReadReceipts, 0, "已读回执", true, true, NodeAttr.ReadReceipts,
+        "@0=不回执@1=自动回执@2=由上一节点表单字段决定@3=由SDK开发者参数决定");
+        map.SetHelperUrl(NodeAttr.ReadReceipts, "http://ccbpm.mydoc.io/?v=5404&t=17915");
 
         //map.AddDDLSysEnum(NodeAttr.CondModel, 0, "方向条件控制规则", true, true, NodeAttr.CondModel,
-        // "@0=由连接线条件控制@1=让用户手工选择@2=发送按钮旁下拉框选择");
-        map.AddDDLSysEnum(NodeAttr.CondModel, 0, "方向条件控制规则", true, true, NodeAttr.CondModel,
-       "@0=由连接线条件控制@2=发送按钮旁下拉框选择");
+        //"@0=由连接线条件控制@1=让用户手工选择@2=发送按钮旁下拉框选择");
 
+        map.AddDDLSysEnum(NodeAttr.CondModel, 0, "方向条件控制规则", true, true, NodeAttr.CondModel, "@0=由连接线条件控制@1=按照用户选择计算@2=发送按钮旁下拉框选择");
         map.SetHelperUrl(NodeAttr.CondModel, "http://ccbpm.mydoc.io/?v=5404&t=17917"); //增加帮助
 
         // 撤销规则.
-        map.AddDDLSysEnum(NodeAttr.CancelRole, CancelRole.OnlyNextStep.getValue(), "撤销规则", true, true,
+        map.AddDDLSysEnum(NodeAttr.CancelRole,0, "撤销规则", true, true,
             NodeAttr.CancelRole, "@0=上一步可以撤销@1=不能撤销@2=上一步与开始节点可以撤销@3=指定的节点可以撤销");
         map.SetHelperUrl(NodeAttr.CancelRole, "http://ccbpm.mydoc.io/?v=5404&t=17919");
 
@@ -320,8 +314,10 @@ public class NodeExt extends Entity
         map.AddBoolean(NodeAttr.IsBUnit, false, "是否是节点模版（业务单元）?", true, true, true, "http://ccbpm.mydoc.io/?v=5404&t=17904");
 
         map.AddTBString(NodeAttr.FocusField, null, "焦点字段", true, false, 0, 50, 10, true, "http://ccbpm.mydoc.io/?v=5404&t=17932");
-        map.AddDDLSysEnum(NodeAttr.SaveModel, 0, "保存方式", true, true);
-        map.SetHelperUrl(NodeAttr.SaveModel, "http://ccbpm.mydoc.io/?v=5404&t=17934");
+
+        //map.AddDDLSysEnum(NodeAttr.SaveModel, 0, "保存方式", true, true);
+        //map.SetHelperUrl(NodeAttr.SaveModel, "http://ccbpm.mydoc.io/?v=5404&t=17934");
+
         map.AddBoolean(NodeAttr.IsGuestNode, false, "是否是外部用户执行的节点(非组织结构人员参与处理工作的节点)?", true, true, true);
 
         //节点业务类型.
@@ -343,23 +339,23 @@ public class NodeExt extends Entity
         //    // map.AddTBString("NodeAppType", null, "业务类型枚举", true, false, 0, 50, 10, true);
         //}
         map.AddTBString(NodeAttr.SelfParas, null, "自定义参数", true, false, 0, 500, 10, true);
-     //   #endregion  基础属性
+      //  #endregion  基础属性
 
-      //  #region 分合流子线程属性
+       // #region 分合流子线程属性
         map.AddDDLSysEnum(NodeAttr.RunModel, 0, "节点类型",
-            true, true, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=子线程");
+            true, false, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=子线程");
 
         map.SetHelperUrl(NodeAttr.RunModel, "http://ccbpm.mydoc.io/?v=5404&t=17940"); //增加帮助.
 
         //子线程类型.
-        map.AddDDLSysEnum(NodeAttr.SubThreadType, 0, "子线程类型", true, true, NodeAttr.SubThreadType, "@0=同表单@1=异表单");
+        map.AddDDLSysEnum(NodeAttr.SubThreadType, 0, "子线程类型", true, false, NodeAttr.SubThreadType, "@0=同表单@1=异表单");
         map.SetHelperUrl(NodeAttr.SubThreadType, "http://ccbpm.mydoc.io/?v=5404&t=17944"); //增加帮助
 
         map.AddTBDecimal(NodeAttr.PassRate, 100, "完成通过率", true, false);
         map.SetHelperUrl(NodeAttr.PassRate, "http://ccbpm.mydoc.io/?v=5404&t=17945"); //增加帮助.
 
         // 启动子线程参数 2013-01-04
-        map.AddDDLSysEnum(NodeAttr.SubFlowStartWay, SubFlowStartWay.None.getValue(), "子线程启动方式", true, true,
+        map.AddDDLSysEnum(NodeAttr.SubFlowStartWay, 0, "子线程启动方式", true, true,
             NodeAttr.SubFlowStartWay, "@0=不启动@1=指定的字段启动@2=按明细表启动");
         map.AddTBString(NodeAttr.SubFlowStartParas, null, "启动参数", true, false, 0, 100, 10, true);
         map.SetHelperUrl(NodeAttr.SubFlowStartWay, "http://ccbpm.mydoc.io/?v=5404&t=17946"); //增加帮助
@@ -388,7 +384,7 @@ public class NodeExt extends Entity
 
         map.AddBoolean(NodeAttr.AutoRunEnable, false, "是否启用自动运行？(仅当分流点向子线程发送时有效)", true, true, true);
         map.AddTBString(NodeAttr.AutoRunParas, null, "自动运行SQL", true, false, 0, 100, 10, true);
-       // #endregion 分合流子线程属性
+     //   #endregion 分合流子线程属性
 
        // #region 自动跳转规则
         map.AddBoolean(NodeAttr.AutoJumpRole0, false, "处理人就是发起人", true, true, true);
@@ -399,9 +395,9 @@ public class NodeExt extends Entity
         map.AddBoolean(NodeAttr.WhenNoWorker, false, "(是)找不到人就跳转,(否)提示错误.", true, true, true);
         //         map.AddDDLSysEnum(NodeAttr.WhenNoWorker, 0, "找不到处理人处理规则",
         //true, true, NodeAttr.WhenNoWorker, "@0=提示错误@1=自动转到下一步");
-       // #endregion
+     //   #endregion
 
-       // #region  功能按钮状态
+      //  #region  功能按钮状态
         map.AddTBString(BtnAttr.SendLab, "发送", "发送按钮标签", true, false, 0, 50, 10);
         map.SetHelperUrl(BtnAttr.SendLab, "http://ccbpm.mydoc.io/?v=5404&t=16219");
         map.AddTBString(BtnAttr.SendJS, "", "按钮JS函数", true, false, 0, 999, 10);
@@ -416,15 +412,15 @@ public class NodeExt extends Entity
         map.AddBoolean(BtnAttr.ThreadEnable, false, "是否启用", true, true);
         map.SetHelperUrl(BtnAttr.ThreadLab, "http://ccbpm.mydoc.io/?v=5404&t=16263"); //增加帮助
 
-        map.AddDDLSysEnum(NodeAttr.ThreadKillRole,ThreadKillRole.None.getValue(), "子线程删除方式", true, true,
+        map.AddDDLSysEnum(NodeAttr.ThreadKillRole,0, "子线程删除方式", true, true,
    NodeAttr.ThreadKillRole, "@0=不能删除@1=手工删除@2=自动删除", true);
 
         //map.SetHelperUrl(NodeAttr.ThreadKillRole, ""); //增加帮助
 
         //功能和子流程组件重复，屏蔽 hzm
-      //  map.AddTBString(BtnAttr.SubFlowLab, "子流程", "子流程按钮标签", true, false, 0, 50, 10);
-      //  map.SetHelperUrl(BtnAttr.SubFlowLab, "http://ccbpm.mydoc.io/?v=5404&t=16262");
-     //   map.AddBoolean(BtnAttr.SubFlowEnable, false, "是否启用", true, true);
+        //  map.AddTBString(BtnAttr.SubFlowLab, "子流程", "子流程按钮标签", true, false, 0, 50, 10);
+        //  map.SetHelperUrl(BtnAttr.SubFlowLab, "http://ccbpm.mydoc.io/?v=5404&t=16262");
+        //   map.AddBoolean(BtnAttr.SubFlowEnable, false, "是否启用", true, true);
 
         //map.AddDDLSysEnum(BtnAttr.SubFlowCtrlRole, 0, "控制规则", true, true, BtnAttr.SubFlowCtrlRole, "@0=无@1=不可以删除子流程@2=可以删除子流程");
 
@@ -441,7 +437,7 @@ public class NodeExt extends Entity
         map.AddTBString(NodeAttr.ReturnAlert, null, "被退回后信息提示", true, false, 0, 999, 10, true);
 
 
-        map.AddBoolean(NodeAttr.IsBackTracking, false, "是否可以原路返回(启用退回功能才有效)", true, true, false);
+        map.AddBoolean(NodeAttr.IsBackTracking, true, "是否可以原路返回(启用退回功能才有效)", true, true, false);
         map.AddTBString(BtnAttr.ReturnField, "", "退回信息填写字段", true, false, 0, 50, 10);
         map.SetHelperUrl(NodeAttr.IsBackTracking, "http://ccbpm.mydoc.io/?v=5404&t=16255"); //增加帮助.
 
@@ -468,6 +464,11 @@ public class NodeExt extends Entity
         map.AddTBString(BtnAttr.EndFlowLab, "结束流程", "结束流程按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.EndFlowEnable, false, "是否启用", true, true);
         map.SetHelperUrl(BtnAttr.EndFlowLab, "http://ccbpm.mydoc.io/?v=5404&t=17989"); //增加帮助
+
+        // add 2019.1.9 for 东孚.
+        map.AddTBString(BtnAttr.OfficeBtnLab, "打开公文", "公文按钮标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.OfficeBtnEnable, false, "是否启用", true, true);
+
 
         // add 2017.9.1 for 天业集团.
         map.AddTBString(BtnAttr.PrintHtmlLab, "打印Html", "打印Html标签", true, false, 0, 50, 10);
@@ -551,8 +552,8 @@ public class NodeExt extends Entity
         map.AddBoolean(BtnAttr.PRIEnable, false, "是否启用", true, true);
 
         // add by 周朋 2015-08-06. 节点时限.
-//        map.AddTBString(BtnAttr.CHLab, "节点时限", "节点时限", true, false, 0, 50, 10);
-//        map.AddBoolean(BtnAttr.CHEnable, false, "是否启用", true, true);
+        //map.AddTBString(BtnAttr.CHLab, "节点时限", "节点时限", true, false, 0, 50, 10);
+        //map.AddBoolean(BtnAttr.CHEnable, false, "是否启用", true, true);
 
         // add 2017.5.4  邀请其他人参与当前的工作.
         map.AddTBString(BtnAttr.AllotLab, "分配", "分配按钮标签", true, false, 0, 50, 10);
@@ -566,293 +567,262 @@ public class NodeExt extends Entity
         map.AddTBString(BtnAttr.ConfirmLab, "确认", "确认按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.ConfirmEnable, false, "是否启用", true, true);
 
+        // add 2019.3.10 增加List.
+        map.AddTBString(BtnAttr.ListLab, "列表", "列表按钮标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.ListEnable, true, "是否启用", true, true);
+
+        // 批量审核
+        map.AddTBString(BtnAttr.BatchLab, "批量审核", "批量审核标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.BatchEnable, false, "是否启用", true, true);
+
         //map.AddBoolean(BtnAttr.SelectAccepterEnable, false, "是否启用", true, true);
        // #endregion  功能按钮状态
-       
-		
-		
-    	//节点工具栏, 主从表映射.
-		map.AddDtl(new NodeToolbars(), NodeToolbarAttr.FK_Node);
-		
-	    //越轨流程
-        //map.AddDtl(new NodeYGFlows(), NodeToolbarAttr.FK_Node);
- 
-			///#region 基础功能.
-		RefMethod rm = null;
-        
-		rm = new RefMethod();
-		rm.Title = "接收人规则";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Img/Sender.png";
-		rm.ClassMethodName = this.toString() + ".DoAccepterRoleNew";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "抄送人规则";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/Menu/CC.png";
-		rm.ClassMethodName = this.toString() + ".DoCCer";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		//map.AddRefMethod(rm);
+        //节点工具栏,主从表映射.
+        map.AddDtl(new NodeToolbars(), NodeToolbarAttr.FK_Node);
+
+       // #region 基础功能.
+        RefMethod rm = null;
+
+        rm = new RefMethod();
+        rm.Title = "接收人规则";
+        rm.Icon = "../../WF/Admin/AttrNode/Img/Sender.png";
+        rm.ClassMethodName = this.toString() + ".DoAccepterRoleNew";
+        rm.refMethodType=  RefMethodType.RightFrameOpen ;
+        map.AddRefMethod(rm);
 
 
-		 rm = new RefMethod();
-		rm.Title = "节点事件"; // "调用事件接口";
-		rm.ClassMethodName = this.toString() + ".DoAction";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Event.png";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+        rm = new RefMethod();
+        rm.Title = "节点事件"; // "调用事件接口";
+        rm.ClassMethodName = this.toString() + ".DoAction";
+        rm.Icon = "../../WF/Img/Event.png";
+        rm.refMethodType= RefMethodType.RightFrameOpen;
+        map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "节点消息"; // "调用事件接口";
-		rm.ClassMethodName = this.toString() + ".DoMessage";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Message24.png";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-
-		rm = new RefMethod();
-		rm.Title = "父子流程";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Img/SubFlows.png";
-		rm.ClassMethodName = this.toString() + ".DoSubFlow";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-
-		rm = new RefMethod();
-		rm.Title = "流程完成条件"; // "流程完成条件";
-		rm.ClassMethodName = this.toString() + ".DoCond";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Img/Cond.png";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "发送后转向"; // "调用事件接口";
-		rm.ClassMethodName = this.toString() + ".DoTurnToDeal";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Msg.gif";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Turnto.png";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "发送阻塞规则"; // "调用事件接口";
-		rm.ClassMethodName = this.toString() + ".DoBlockModel";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/BlockModel.png";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-        rm.Title = "多人处理规则";
-        rm.ClassMethodName = this.toString() + ".DoTodolistModel";
-        rm.Icon = BP.WF.Glo.getCCFlowAppPath() +"WF/Img/Multiplayer.png";
+        rm = new RefMethod();
+        rm.Title = "节点消息"; // "调用事件接口";
+        rm.ClassMethodName = this.toString() + ".DoMessage";
+        rm.Icon = "../../WF/Img/Message24.png";
         rm.refMethodType = RefMethodType.RightFrameOpen;
         map.AddRefMethod(rm);
 
-        //延续子流程添加 ddl
+
+
+        rm = new RefMethod();
+        rm.Title = "流程完成条件"; // "流程完成条件";
+        rm.ClassMethodName = this.toString() + ".DoCond";
+        rm.Icon = "../../WF/Admin/AttrNode/Img/Cond.png";
+        //rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Menu/Cond.png";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        map.AddRefMethod(rm);
+
+        rm = new RefMethod();
+        rm.Title = "发送后转向"; // "调用事件接口";
+        rm.ClassMethodName = this.toString() + ".DoTurnToDeal";
+        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Turnto.png";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        map.AddRefMethod(rm);
+
+        rm = new RefMethod();
+        rm.Title = "发送阻塞规则";
+        rm.ClassMethodName = this.toString() + ".DoBlockModel";
+        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/BlockModel.png";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        map.AddRefMethod(rm);
+
+        rm = new RefMethod();
+        rm.Title = "多人处理规则";
+        rm.ClassMethodName = this.toString() + ".DoTodolistModel";
+        rm.Icon = "../../WF/Img/Multiplayer.png";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        map.AddRefMethod(rm);
+
+
+      //  #endregion 基础功能.
+
+       // #region 字段相关功能（不显示在菜单里）
+        rm = new RefMethod();
+        rm.Title = "可退回的节点(当退回规则设置可退回指定的节点时,该设置有效.)"; // "设计表单";
+        rm.ClassMethodName = this.toString() + ".DoCanReturnNodes";
+        rm.Icon = "../../WF/Img/Btn/DTS.gif";
+        rm.Visable = true;
+        rm.refMethodType = RefMethodType.LinkModel;
+        //设置相关字段.
+        rm.RefAttrKey = NodeAttr.ReturnRole;
+        rm.RefAttrLinkLabel = "设置可退回的节点";
+        rm.Target = "_blank";
+        map.AddRefMethod(rm);
+
+        rm = new RefMethod();
+        rm.Title = "可撤销的节点"; // "可撤销发送的节点";
+        rm.ClassMethodName = this.toString() + ".DoCanCancelNodes";
+        rm.Icon = "../../WF/Img/Btn/DTS.gif";
+        rm.Visable = true;
+        rm.refMethodType = RefMethodType.LinkeWinOpen;
+
+        //设置相关字段.
+        rm.RefAttrKey = NodeAttr.CancelRole;
+        rm.RefAttrLinkLabel = "";
+        rm.Target = "_blank";
+        map.AddRefMethod(rm);
+
+
+        rm = new RefMethod();
+        rm.Title = "绑定打印格式模版(当打印方式为打印RTF格式模版时,该设置有效)";
+        rm.ClassMethodName = this.toString() + ".DoBill";
+        rm.Icon = "../../WF/Img/FileType/doc.gif";
+        rm.refMethodType = RefMethodType.LinkeWinOpen;
+
+        //设置相关字段.
+        rm.RefAttrKey = NodeAttr.PrintDocEnable;
+        rm.RefAttrLinkLabel = "";
+        rm.Target = "_blank";
+        map.AddRefMethod(rm);
+        
+
+        rm = new RefMethod();
+        rm.Title = "设置自动抄送规则(当节点为自动抄送时,该设置有效.)"; // "抄送规则";
+        rm.ClassMethodName = this.toString() + ".DoCCRole";
+        rm.Icon = "../../WF/Img/Btn/DTS.gif";
+        //设置相关字段.
+        rm.RefAttrKey = NodeAttr.CCRole;
+        rm.RefAttrLinkLabel = "自动抄送设置";
+        rm.refMethodType = RefMethodType.LinkeWinOpen;
+        rm.Target = "_blank";
+        map.AddRefMethod(rm);
+       // #endregion 字段相关功能（不显示在菜单里）
+
+       // #region 表单设置.
+        rm = new RefMethod();
+        rm.Title = "表单方案";
+        rm.Icon = "../../WF/Admin/CCFormDesigner/Img/Form.png";
+        rm.ClassMethodName = this.toString() + ".DoSheet";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "表单设置";
+        map.AddRefMethod(rm);
+
+        rm = new RefMethod();
+        rm.Title = "手机表单字段顺序";
+        rm.Icon = "../../WF/Admin/CCFormDesigner/Img/telephone.png";
+        //rm.Icon = ../../Img/Mobile.png";
+        rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "表单设置";
+        map.AddRefMethod(rm);
+
+        rm = new RefMethod();
+        rm.Title = "节点组件";
+        rm.Icon = "../../WF/Img/Components.png";
+        //rm.Icon = ../../Img/Mobile.png";
+        rm.ClassMethodName = this.toString() + ".DoFrmNodeComponent";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "表单设置";
+        map.AddRefMethod(rm);
+
+
+        rm = new RefMethod();
+        rm.Title = "特别控件特别用户权限";
+        rm.Icon = "../../WF/Admin/CCFormDesigner/Img/SpecUserSpecFields.png";
+        rm.ClassMethodName = this.toString() + ".DoSpecFieldsSpecUsers()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "表单设置";
+        map.AddRefMethod(rm);
+      //  #endregion 表单设置.
+
+       // #region 父子流程.
+
+        rm = new RefMethod();
+        rm.Title = "父子流程";
+        rm.Icon = "../../WF/Admin/AttrNode/Img/SubFlows.png";
+        rm.ClassMethodName = this.toString() + ".DoSubFlow";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "父子流程";
+        map.AddRefMethod(rm);
+
         rm = new RefMethod();
         rm.Title = "延续子流程"; // "调用事件接口";
         rm.ClassMethodName = this.toString() + ".DoYGFlows";
-                //  rm.Icon = "../../WF/Img/Event.png";
+        //  rm.Icon = "../../WF/Img/Event.png";
         rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "父子流程";
+        map.AddRefMethod(rm);
+       // #endregion 父子流程.
+
+       // #region 考核.
+
+        rm = new RefMethod();
+        rm.Title = "设置考核规则";
+        rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
+        rm.ClassMethodName = this.toString() + ".DoCHRole";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "考核规则";
         map.AddRefMethod(rm);
 
-		if (BP.WF.Glo.getIsEnableZhiDu())
-		{
-			rm = new RefMethod();
-			rm.Title = "对应制度章节"; // "个性化接受人窗口";
-			rm.ClassMethodName = this.toString() + ".DoZhiDu";
-			rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-			map.AddRefMethod(rm);
+        rm = new RefMethod();
+        rm.Title = "超时处理规则";
+        rm.Icon = "../../WF/Admin/CCFormDesigner/Img/OvertimeRole.png";
+        rm.ClassMethodName = this.toString() + ".DoCHOvertimeRole";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "考核规则";
+        map.AddRefMethod(rm);
+       // #endregion 考核.
 
-			rm = new RefMethod();
-			rm.Title = "风险点"; // "个性化接受人窗口";
-			rm.ClassMethodName = this.toString() + ".DoFengXianDian";
-			rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-			map.AddRefMethod(rm);
+       // #region 实验中的功能
+        rm = new RefMethod();
+        rm.Title = "自定义参数";
+        rm.ClassMethodName = this.toString() + ".DoSelfParas()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "实验中的功能";
+        rm.Visable = false;
+        map.AddRefMethod(rm);
 
-			rm = new RefMethod();
-			rm.Title = "岗位职责"; // "个性化接受人窗口";
-			rm.ClassMethodName = this.toString() + ".DoGangWeiZhiZe";
-			rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-			map.AddRefMethod(rm);
-		}
-		rm = new RefMethod();
-		rm.Title = "可退回的节点(当退回规则设置可退回指定的节点时,该设置有效.)"; // "设计表单";
-		rm.ClassMethodName = this.toString() + ".DoCanReturnNodes";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-		rm.Visable = true;
-		rm.refMethodType = RefMethodType.LinkModel;
-			//设置相关字段.
-		rm.RefAttrKey = NodeAttr.ReturnRole;
-		rm.RefAttrLinkLabel = "设置可退回的节点";
-		rm.Target = "_blank";
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "可撤销的节点"; // "可撤销发送的节点";
-		rm.ClassMethodName = this.toString() + ".DoCanCancelNodes";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-		rm.Visable = true;
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
-
-			//设置相关字段.
-		rm.RefAttrKey = NodeAttr.CancelRole;
-		rm.RefAttrLinkLabel = "";
-		rm.Target = "_blank";
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "发送成功转向条件"; // "转向条件";
-		rm.ClassMethodName = this.toString() + ".DoTurn";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Menu/Cond.png";
-
-			//设置相关字段.
-		rm.RefAttrKey = NodeAttr.TurnToDealDoc;
-		rm.RefAttrLinkLabel = "";
-		rm.Target = "_blank";
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "绑定rtf打印格式模版(当打印方式为打印RTF格式模版时,该设置有效)"; //"单据&单据";
-		rm.ClassMethodName = this.toString() + ".DoBill";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
-
-			//设置相关字段.
-		rm.RefAttrKey = NodeAttr.PrintDocEnable;
-		rm.RefAttrLinkLabel = "";
-		rm.Target = "_blank";
-		map.AddRefMethod(rm);
-		if (BP.Sys.SystemConfig.getCustomerNo().equals("HCBD"))
-		{
-				// 为海成邦达设置的个性化需求. 
-			rm = new RefMethod();
-			rm.Title = "DXReport设置";
-			rm.ClassMethodName = this.toString() + ".DXReport";
-			rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
-			map.AddRefMethod(rm);
-		}
-
-		rm = new RefMethod();
-		rm.Title = "设置自动抄送规则(当节点为自动抄送时,该设置有效.)"; // "抄送规则";
-		rm.ClassMethodName = this.toString() + ".DoCCRole";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-			//设置相关字段.
-		rm.RefAttrKey = NodeAttr.CCRole;
-		rm.RefAttrLinkLabel = "自动抄送设置";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.Target = "_blank";
-		map.AddRefMethod(rm);
-
-			///#endregion 字段相关功能（不显示在菜单里）
+        rm = new RefMethod();
+        rm.Title = "设置节点类型";
+        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+        rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "实验中的功能";
+        rm.Visable = false;
+        map.AddRefMethod(rm);
 
 
-			///#region 表单设置.
-		rm = new RefMethod();
-		rm.Title = "表单方案";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/Form.png";
-		rm.ClassMethodName = this.toString() + ".DoSheet";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
-		map.AddRefMethod(rm);
+        rm = new RefMethod();
+        rm.Title = "批量设置节点属性";
+        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+        rm.ClassMethodName = this.toString() + ".DoNodeAttrs()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "实验中的功能";
+        rm.Visable = false;
+        map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "手机表单字段顺序";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/telephone.png";
-			//rm.Icon = BP.WF.Glo.CCFlowAppPath + "WF/Img/Mobile.png";
-		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "节点组件";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/components.png";
-			//rm.Icon = BP.WF.Glo.CCFlowAppPath + "WF/Img/Mobile.png";
-		rm.ClassMethodName = this.toString() + ".DoFrmNodeComponent";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
-		map.AddRefMethod(rm);
+        //rm = new RefMethod();
+        //rm.Title = "设置独立表单树权限";
+        //rm.Icon = ../../Img/Btn/DTS.gif";
+        //rm.ClassMethodName = this.ToString() + ".DoNodeFormTree";
+        //rm.RefMethodType = RefMethodType.RightFrameOpen;
+        //rm.GroupName = "实验中的功能";
+        //map.AddRefMethod(rm);
 
 
-		rm = new RefMethod();
-		rm.Title = "特别控件特别用户权限";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/SpecUserSpecFields.png";
-		rm.ClassMethodName = this.toString() + ".DoSpecFieldsSpecUsers()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
-		//map.AddRefMethod(rm);
-
-			///#endregion 表单设置.
+        rm = new RefMethod();
+        rm.Title = "工作批处理规则";
+        rm.Icon = "../../WF/Img/Btn/DTS.gif";
+        rm.ClassMethodName = this.toString() + ".DoBatchStartFields()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "实验中的功能";
+        map.AddRefMethod(rm);
 
 
-			///#region 考核.
+        rm = new RefMethod();
+        rm.Title = "抄送人规则";
+        rm.GroupName = "实验中的功能";
+        rm.Icon = "../../WF/Admin/AttrNode/Img/CC.png";
+        rm.ClassMethodName = this.toString() + ".DoCCer";  //要执行的方法名.
+        rm.refMethodType = RefMethodType.RightFrameOpen; // 功能类型
+        map.AddRefMethod(rm);
 
-			rm = new RefMethod();
-			rm.Title = "设置考核规则";
-			rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/CH.png";
-			rm.ClassMethodName = this.toString() + ".DoCHRole";
-			rm.refMethodType = RefMethodType.RightFrameOpen;
-			rm.GroupName = "考核规则";
-			map.AddRefMethod(rm);
+        //#endregion 实验中的功能
 
-		rm = new RefMethod();
-		rm.Title = "超时处理规则";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/OvertimeRole.png";
-		rm.ClassMethodName = this.toString() + ".DoCHOvertimeRole";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "考核规则";
-		map.AddRefMethod(rm);
-
-			///#endregion 考核.
-
-
-//			///#region 实验中的功能
-//		rm = new RefMethod();
-//		rm.Title = "批量设置节点属性";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/Node.png";
-//		rm.ClassMethodName = this.toString() + ".DoNodeAttrs()";
-//		rm.refMethodType = RefMethodType.RightFrameOpen;
-//		rm.GroupName = "实验中的功能";
-//		map.AddRefMethod(rm);
-
-		/*rm = new RefMethod();
-		rm.Title = "设置独立表单树权限";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-		rm.ClassMethodName = this.toString() + ".DoNodeFormTree";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "实验中的功能";
-		map.AddRefMethod(rm);*/
-
-		
-		 rm = new RefMethod();
-         rm.Title = "设置节点类型";
-         rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
-         rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
-         rm.refMethodType = RefMethodType.RightFrameOpen;
-         rm.GroupName = "实验中的功能";
-         rm.Visable = true;
-         map.AddRefMethod(rm);
-         
-          
-
-		rm = new RefMethod();
-		rm.Title = "工作批处理规则";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-		rm.ClassMethodName = this.toString() + ".DoBatchStartFields()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "实验中的功能";
-		//map.AddRefMethod(rm);
-
-//		rm = new RefMethod();
-//		rm.Title = "节点运行模式(开发中)"; // "调用事件接口";
-//		rm.ClassMethodName = this.toString() + ".DoRunModel";
-//		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-//		rm.refMethodType = RefMethodType.RightFrameOpen;
-//		rm.GroupName = "实验中的功能";
-//		map.AddRefMethod(rm);
- 
-			///#endregion 实验中的功能
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -998,28 +968,16 @@ public class NodeExt extends Entity
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeRunModel.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
 
- 
-	/** 
-	 设置独立表单树权限
-	 @return 
-	*//*
-	public final String DoNodeFormTree()
-	{
-		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FlowFormTree.jsp?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&RefNo=" + DataType.getCurrentDataTime();
-	}*/
-	/** 
-	 制度
-	 @return 
-	*/
-	public final String DoZhiDu()
-	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), Glo.getCCFlowAppPath() + "ZhiDu/NodeZhiDuDtl.htm?FK_Node=" + this.getNodeID()+ "&FK_Flow=" + this.getFK_Flow(), "制度", "Bill", 700, 400, 200, 300);
-		} catch (IOException e) {
-			Log.DebugWriteError("NodeExt DoZhiDu()" + e.getMessage());
-		}
-		return null;
-	}
+	/*
+	/// <summary>
+    /// 自定义参数
+    /// </summary>
+    /// <returns></returns> */
+    public String DoSelfParas()
+    {
+        return "../../Admin/AttrNode/SelfParas.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() ;
+    }
+   
 	/** 
 	 风险点
 	 @return 

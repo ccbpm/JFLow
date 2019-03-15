@@ -1100,19 +1100,19 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoDTSBTable()
 	{
-		return "../../WF/Admin/AttrFlow/DTSBTable.htm?FK_Flow=" + this.getNo();
+		return "../../Admin/AttrFlow/DTSBTable.htm?FK_Flow=" + this.getNo();
 	}
 	public final String DoAPI()
 	{
-		return "../../WF/Admin/AttrFlow/API.htm?FK_Flow=" + this.getNo();
+		return "../../Admin/AttrFlow/API.htm?FK_Flow=" + this.getNo();
 	}
 	public final String DoAPICode()
 	{
-		return "../../WF/Admin/AttrFlow/APICode.htm?FK_Flow=" + this.getNo();
+		return "../../Admin/AttrFlow/APICode.htm?FK_Flow=" + this.getNo();
 	}
 	public final String DoAPICodeFEE()
 	{
-		return "../../WF/Admin/AttrFlow/APICodeFEE.htm?FK_Flow=" + this.getNo();
+		return "../../Admin/AttrFlow/APICodeFEE.htm?FK_Flow=" + this.getNo();
 	}
 
 		///#endregion 开发接口

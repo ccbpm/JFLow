@@ -2409,6 +2409,7 @@ public class Node extends Entity
         // 启动自动运行. 2013-01-04
         map.AddTBInt(NodeAttr.AutoRunEnable, 0, "是否启动自动运行？", true, false);
         map.AddTBString(NodeAttr.AutoRunParas, null, "自动运行参数", true, false, 0, 100, 10);
+        map.AddTBString(NodeAttr.SelfParas, null, "启动参数", true, false, 0, 500, 10);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

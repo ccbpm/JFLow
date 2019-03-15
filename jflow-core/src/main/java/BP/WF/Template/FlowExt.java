@@ -383,7 +383,8 @@ public class FlowExt extends EntityNoName
         // add 2014-10-19.
         map.AddDDLSysEnum(FlowAttr.ChartType, FlowChartType.Icon.getValue(), "节点图形类型", true, true,
             "ChartType", "@0=几何图形@1=肖像图片");
-
+   	 //运行主机. 这个流程运行在那个子系统的主机上.
+        map.AddTBString("HostRun", null, "运行主机(IP+端口)", true, false, 0, 40, 10, true);
       //  #endregion 基本属性。
 
        // #region 表单数据.

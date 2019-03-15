@@ -4816,6 +4816,9 @@ public class Flow extends BP.En.EntityNoName {
 		// map.AddTBInt(FlowAttr.DTSField, getDTSField().SameNames.getValue(),
 		// "要同步的字段计算方式", true, true);
 		map.AddTBInt(FlowAttr.DTSField, 0, "要同步的字段计算方式", true, true);
+		 //运行主机. 这个流程运行在那个子系统的主机上.
+        map.AddTBString("HostRun", null, "运行主机(IP+端口)", true, false, 0, 40, 10, true);
+
 
 		// map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false,
 		// false, 0, 2000, 100, false);

@@ -247,14 +247,14 @@ public class WF_CCForm extends WebContralBase {
 		// 处理权限问题, 有可能当前节点是可以上传或者删除，但是当前节点上不能让此人执行工作。
 		boolean isDel = athDesc.getHisDeleteWay() == AthDeleteWay.None ? false : true;
 		boolean isUpdate = athDesc.getIsUpload();
-		if (isDel == true || isUpdate == true) {
-			if (this.getWorkID() != 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false && this.getFK_Node() != 0) {
-				isDel = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(),
-						this.getWorkID(), WebUser.getNo());
-				if (isDel == false)
-					isUpdate = false;
-			}
-		}
+//		if (isDel == true || isUpdate == true) {
+//			if (this.getWorkID() != 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false && this.getFK_Node() != 0) {
+//				isDel = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(),
+//						this.getWorkID(), WebUser.getNo());
+//				if (isDel == false)
+//					isUpdate = false;
+//			}
+//		}
 		athDesc.setIsUpload(isUpdate);
 
 		// 增加附件描述.

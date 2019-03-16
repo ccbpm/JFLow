@@ -122,8 +122,10 @@ public class FrmAttachmentDB extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FK_FrmAttachment, value);
 		//给标记赋值.
-        String[] val = value.split("_");
-        this.SetValByKey(FrmAttachmentDBAttr.NoOfObj, val[1]);
+		//获取最后"_"的位置
+        int idx = value.lastIndexOf('_');
+        String val = value.substring(idx+1);
+        this.SetValByKey(FrmAttachmentDBAttr.NoOfObj, val);
 	}
 	/** 
 	 主键值

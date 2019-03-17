@@ -10,4 +10,6 @@ public class FlowSortAttr extends EntityTreeAttr
 {
 
 	public static final String OrgNo = "OrgNo";
+	public static final String Domain = "Domain";
+	
 }

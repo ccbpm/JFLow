@@ -17,9 +17,9 @@
             var workID = GetQueryString("WorkID");
             var FK_Node = GetQueryString("FK_Node");
             var CurrTab = GetQueryString("CurrTab");
-            if(CurrTab == null || CurrTab == undefined || CurrTab =="")
-            	CurrTab="Truck";
-            
+            if (CurrTab == null || CurrTab == undefined || CurrTab == "")
+                CurrTab = "Truck";
+
             var webUser = new WebUser();
             en.SetPKVal(workID + "_" + FK_Node + "_" + webUser.No);
             var count = en.RetrieveFromDBSources();

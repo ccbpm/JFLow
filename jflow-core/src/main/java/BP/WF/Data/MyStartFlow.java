@@ -541,7 +541,7 @@ public class MyStartFlow extends Entity
 		///#region 执行诊断
 	public final String DoTrack()
 	{ 
-		return Glo.getCCFlowAppPath() + "/WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow()+"&FK_Node="+this.getFK_Node();
+		return Glo.getCCFlowAppPath() + "/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow()+"&FK_Node="+this.getFK_Node();
 	}
 	
 	 /// <summary>
@@ -557,7 +557,7 @@ public class MyStartFlow extends Entity
         if (dt != null && dt.Rows.size() > 0)
         {
             String myPk = dt.Rows.get(0).getValue(0).toString();
-            return Glo.getCCFlowAppPath() + "WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
+            return Glo.getCCFlowAppPath() + "WF/WFRpt.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
         }
 
         Node nd = new Node(this.getFK_Node());

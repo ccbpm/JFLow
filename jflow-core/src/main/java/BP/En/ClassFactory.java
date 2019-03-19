@@ -141,7 +141,13 @@ public class ClassFactory {
 			}
 		}
 		Object tmp = Htable_En.get(className);
-		return ((Entity) ((tmp instanceof Entity) ? tmp : null));
+		
+		if (tmp==null)
+			return null;
+		 
+		 Entity en= (Entity)tmp; 
+		 en.setRow(null); //把值设置为空.
+		 return en;		  
 	}
 
 	private static Hashtable<String, Object> Htable_Method;

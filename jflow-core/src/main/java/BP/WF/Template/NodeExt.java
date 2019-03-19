@@ -14,6 +14,10 @@ import BP.En.Map;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
+import BP.Sys.FrmAttachment;
+import BP.Sys.GroupCtrlType;
+import BP.Sys.GroupField;
+import BP.Sys.GroupFieldAttr;
 import BP.Sys.PubClass;
 import BP.Sys.ToolbarExcel;
 import BP.Tools.StringHelper;
@@ -199,6 +203,16 @@ public class NodeExt extends Entity
 	{
 		return this.GetValBooleanByKey(BtnAttr.ReturnRole);
 	}
+	
+	/**
+	 * 审核组件状态
+	 * @return
+	 */
+    public FrmWorkCheckSta getHisFrmWorkCheckSta()
+    {
+        return FrmWorkCheckSta.forValue(this.GetValIntByKey(NodeAttr.FWCSta));
+    }
+    
 	/** 
 	 主键
 	*/
@@ -214,9 +228,6 @@ public class NodeExt extends Entity
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		//Flow fl = new Flow(this.getFK_Flow());
-		
-		//UAC uac = new UAC();
 		uac.IsUpdate=true;
 		return uac;
 		
@@ -262,8 +273,6 @@ public class NodeExt extends Entity
 
         map.AddTBInt(NodeAttr.Step, 0, "步骤(无计算意义)", true, false);
         map.SetHelperUrl(NodeAttr.Step, "http://ccbpm.mydoc.io/?v=5404&t=17902");
-
-        //map.SetHelperAlert(NodeAttr.Step, "它用于节点的排序，正确的设置步骤可以让流程容易读写."); //使用alert的方式显示帮助信息.
         map.AddTBString(NodeAttr.FK_Flow, null, "流程编号", false, false, 3, 3, 10, false, "http://ccbpm.mydoc.io/?v=5404&t=17023");
 
         map.AddTBString(NodeAttr.Name, null, "名称", true, true, 0, 100, 10, false, "http://ccbpm.mydoc.io/?v=5404&t=17903");
@@ -273,17 +282,9 @@ public class NodeExt extends Entity
             "@0=操作员执行@1=机器执行@2=混合执行");
         map.SetHelperUrl(NodeAttr.WhoExeIt, "http://ccbpm.mydoc.io/?v=5404&t=17913");
 
-        //map.AddDDLSysEnum(NodeAttr.TurnToDeal, 0, "发送后转向",
-        //true, true, NodeAttr.TurnToDeal, "@0=提示ccflow默认信息@1=提示指定信息@2=转向指定的url@3=按照条件转向");
-        //map.SetHelperUrl(NodeAttr.TurnToDeal, "http://ccbpm.mydoc.io/?v=5404&t=17914");
-        //map.AddTBString(NodeAttr.TurnToDealDoc, null, "转向处理内容", true, false, 0, 1000, 10, true, "http://ccbpm.mydoc.io/?v=5404&t=17914");
-
         map.AddDDLSysEnum(NodeAttr.ReadReceipts, 0, "已读回执", true, true, NodeAttr.ReadReceipts,
         "@0=不回执@1=自动回执@2=由上一节点表单字段决定@3=由SDK开发者参数决定");
         map.SetHelperUrl(NodeAttr.ReadReceipts, "http://ccbpm.mydoc.io/?v=5404&t=17915");
-
-        //map.AddDDLSysEnum(NodeAttr.CondModel, 0, "方向条件控制规则", true, true, NodeAttr.CondModel,
-        //"@0=由连接线条件控制@1=让用户手工选择@2=发送按钮旁下拉框选择");
 
         map.AddDDLSysEnum(NodeAttr.CondModel, 0, "方向条件控制规则", true, true, NodeAttr.CondModel, "@0=由连接线条件控制@1=按照用户选择计算@2=发送按钮旁下拉框选择");
         map.SetHelperUrl(NodeAttr.CondModel, "http://ccbpm.mydoc.io/?v=5404&t=17917"); //增加帮助
@@ -294,15 +295,6 @@ public class NodeExt extends Entity
         map.SetHelperUrl(NodeAttr.CancelRole, "http://ccbpm.mydoc.io/?v=5404&t=17919");
 
         map.AddBoolean(NodeAttr.CancelDisWhenRead, false, "对方已经打开就不能撤销", true, true);
-
-        // 节点工作批处理. edit by peng, 2014-01-24.    by huangzhimin 采用功能专题方式，移至左侧列表
-        //map.AddDDLSysEnum(NodeAttr.BatchRole, (int)BatchRole.None, "工作批处理", true, true, NodeAttr.BatchRole, "@0=不可以批处理@1=批量审核@2=分组批量审核");
-        //map.AddTBInt(NodeAttr.BatchListCount, 12, "批处理数量", true, false);
-        ////map.SetHelperUrl(NodeAttr.BatchRole, this[SYS_CCFLOW, "节点工作批处理"]); //增加帮助
-        //map.SetHelperUrl(NodeAttr.BatchRole, "http://ccbpm.mydoc.io/?v=5404&t=17920");
-        //map.SetHelperUrl(NodeAttr.BatchListCount, "http://ccbpm.mydoc.io/?v=5404&t=17920");
-        //map.AddTBString(NodeAttr.BatchParas, null, "批处理参数", true, false, 0, 300, 10, true);
-        //map.SetHelperUrl(NodeAttr.BatchParas, "http://ccbpm.mydoc.io/?v=5404&t=17920");
 
 
         map.AddBoolean(NodeAttr.IsTask, true, "允许分配工作否?", true, true, false, "http://ccbpm.mydoc.io/?v=5404&t=17904");
@@ -315,8 +307,6 @@ public class NodeExt extends Entity
 
         map.AddTBString(NodeAttr.FocusField, null, "焦点字段", true, false, 0, 50, 10, true, "http://ccbpm.mydoc.io/?v=5404&t=17932");
 
-        //map.AddDDLSysEnum(NodeAttr.SaveModel, 0, "保存方式", true, true);
-        //map.SetHelperUrl(NodeAttr.SaveModel, "http://ccbpm.mydoc.io/?v=5404&t=17934");
 
         map.AddBoolean(NodeAttr.IsGuestNode, false, "是否是外部用户执行的节点(非组织结构人员参与处理工作的节点)?", true, true, true);
 
@@ -324,20 +314,6 @@ public class NodeExt extends Entity
         map.AddTBInt("NodeAppType", 0, "节点业务类型", false, false);
         map.AddTBInt("FWCSta", 0, "节点状态", false, false);
 
-        ////为宝旺达，增加业务类型.
-        //if ( this.PKVal!=null )
-        //{
-        //    int nodeid = int.Parse(this.PKVal.ToString());
-        //    if (nodeid != 0)
-        //    {
-        //        Node nd = new Node(nodeid);
-        //        Flow fl = new Flow(nd.FK_Flow);
-
-        //        string nodeAppType = fl.GetValStrByKey("NodeAppType");
-        //        map.AddDDLSysEnum("NodeAppType", 0, "节点业务类型", true, true, nodeAppType);
-        //    }
-        //    // map.AddTBString("NodeAppType", null, "业务类型枚举", true, false, 0, 50, 10, true);
-        //}
         map.AddTBString(NodeAttr.SelfParas, null, "自定义参数", true, false, 0, 500, 10, true);
       //  #endregion  基础属性
 
@@ -364,21 +340,6 @@ public class NodeExt extends Entity
         map.AddBoolean(BtnAttr.ThreadIsCanDel, false, "是否可以删除子线程(当前节点已经发送出去的线程，并且当前节点是分流，或者分合流有效，在子线程退回后的操作)？", true, true, true);
         map.AddBoolean(BtnAttr.ThreadIsCanShift, false, "是否可以移交子线程(当前节点已经发送出去的线程，并且当前节点是分流，或者分合流有效，在子线程退回后的操作)？", true, true, true);
 
-        ////待办处理模式.
-        //map.AddDDLSysEnum(NodeAttr.TodolistModel, (int)TodolistModel.QiangBan, "多人待办处理模式", true, true, NodeAttr.TodolistModel,
-        //    "@0=抢办模式@1=协作模式@2=队列模式@3=共享模式@4=协作组长模式");
-        //map.SetHelperUrl(NodeAttr.TodolistModel, "http://ccbpm.mydoc.io/?v=5404&t=17947"); //增加帮助.
-
-        //发送阻塞模式.
-        //map.AddDDLSysEnum(NodeAttr.BlockModel, (int)BlockModel.None, "发送阻塞模式", true, true, NodeAttr.BlockModel,
-        //    "@0=不阻塞@1=当前节点有未完成的子流程时@2=按约定格式阻塞未完成子流程@3=按照SQL阻塞@4=按照表达式阻塞");
-        //map.SetHelperUrl(NodeAttr.BlockModel, "http://ccbpm.mydoc.io/?v=5404&t=17948"); //增加帮助.
-
-        //map.AddTBString(NodeAttr.BlockExp, null, "阻塞表达式", true, false, 0, 700, 10,true);
-        //map.SetHelperUrl(NodeAttr.BlockExp, "http://ccbpm.mydoc.io/?v=5404&t=17948");
-
-        //map.AddTBString(NodeAttr.BlockAlert, null, "被阻塞时提示信息", true, false, 0, 700, 10, true);
-        //map.SetHelperUrl(NodeAttr.BlockAlert, "http://ccbpm.mydoc.io/?v=5404&t=17948");
 
         map.AddBoolean(NodeAttr.IsAllowRepeatEmps, false, "是否允许子线程接受人员重复(仅当分流点向子线程发送时有效)?", true, true, true);
 
@@ -393,15 +354,11 @@ public class NodeExt extends Entity
         map.AddBoolean(NodeAttr.AutoJumpRole1, false, "处理人已经出现过", true, true, true);
         map.AddBoolean(NodeAttr.AutoJumpRole2, false, "处理人与上一步相同", true, true, true);
         map.AddBoolean(NodeAttr.WhenNoWorker, false, "(是)找不到人就跳转,(否)提示错误.", true, true, true);
-        //         map.AddDDLSysEnum(NodeAttr.WhenNoWorker, 0, "找不到处理人处理规则",
-        //true, true, NodeAttr.WhenNoWorker, "@0=提示错误@1=自动转到下一步");
-     //   #endregion
 
       //  #region  功能按钮状态
         map.AddTBString(BtnAttr.SendLab, "发送", "发送按钮标签", true, false, 0, 50, 10);
         map.SetHelperUrl(BtnAttr.SendLab, "http://ccbpm.mydoc.io/?v=5404&t=16219");
         map.AddTBString(BtnAttr.SendJS, "", "按钮JS函数", true, false, 0, 999, 10);
-        //map.SetHelperBaidu(BtnAttr.SendJS, "ccflow 发送前数据完整性判断"); //增加帮助.
         map.SetHelperUrl(BtnAttr.SendJS, "http://ccbpm.mydoc.io/?v=5404&t=17967");
 
         map.AddTBString(BtnAttr.SaveLab, "保存", "保存按钮标签", true, false, 0, 50, 10);
@@ -415,15 +372,6 @@ public class NodeExt extends Entity
         map.AddDDLSysEnum(NodeAttr.ThreadKillRole,0, "子线程删除方式", true, true,
    NodeAttr.ThreadKillRole, "@0=不能删除@1=手工删除@2=自动删除", true);
 
-        //map.SetHelperUrl(NodeAttr.ThreadKillRole, ""); //增加帮助
-
-        //功能和子流程组件重复，屏蔽 hzm
-        //  map.AddTBString(BtnAttr.SubFlowLab, "子流程", "子流程按钮标签", true, false, 0, 50, 10);
-        //  map.SetHelperUrl(BtnAttr.SubFlowLab, "http://ccbpm.mydoc.io/?v=5404&t=16262");
-        //   map.AddBoolean(BtnAttr.SubFlowEnable, false, "是否启用", true, true);
-
-        //map.AddDDLSysEnum(BtnAttr.SubFlowCtrlRole, 0, "控制规则", true, true, BtnAttr.SubFlowCtrlRole, "@0=无@1=不可以删除子流程@2=可以删除子流程");
-
         map.AddTBString(BtnAttr.JumpWayLab, "跳转", "跳转按钮标签", true, false, 0, 50, 10);
         map.AddDDLSysEnum(NodeAttr.JumpWay, 0, "跳转规则", true, true, NodeAttr.JumpWay);
         map.AddTBString(NodeAttr.JumpToNodes, null, "可跳转的节点", true, false, 0, 200, 10, true);
@@ -431,7 +379,6 @@ public class NodeExt extends Entity
 
         map.AddTBString(BtnAttr.ReturnLab, "退回", "退回按钮标签", true, false, 0, 50, 10);
         map.AddDDLSysEnum(NodeAttr.ReturnRole, 0, "退回规则", true, true, NodeAttr.ReturnRole);
-        //  map.AddTBString(NodeAttr.ReturnToNodes, null, "可退回节点", true, false, 0, 200, 10, true);
         map.SetHelperUrl(NodeAttr.ReturnRole, "http://ccbpm.mydoc.io/?v=5404&t=16255"); //增加帮助.
 
         map.AddTBString(NodeAttr.ReturnAlert, null, "被退回后信息提示", true, false, 0, 999, 10, true);
@@ -484,38 +431,22 @@ public class NodeExt extends Entity
         map.AddDDLSysEnum(BtnAttr.PrintDocEnable, 0, "打印方式", true,
             true, BtnAttr.PrintDocEnable, "@0=不打印@1=打印网页@2=打印RTF模板@3=打印Word模版");
         map.SetHelperUrl(BtnAttr.PrintDocEnable, "http://ccbpm.mydoc.io/?v=5404&t=17979"); //增加帮助
-
-        // map.AddBoolean(BtnAttr.PrintDocEnable, false, "是否启用", true, true);
-        //map.AddTBString(BtnAttr.AthLab, "附件", "附件按钮标签", true, false, 0, 50, 10);
-        //map.AddDDLSysEnum(NodeAttr.FJOpen, 0, this.ToE("FJOpen", "附件权限"), true, true, 
-        //    NodeAttr.FJOpen, "@0=关闭附件@1=操作员@2=工作ID@3=流程ID");
-
         map.AddTBString(BtnAttr.TrackLab, "轨迹", "轨迹按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.TrackEnable, true, "是否启用", true, true);
-        //map.SetHelperUrl(BtnAttr.TrackLab, this[SYS_CCFLOW, "轨迹"]); //增加帮助
         map.SetHelperUrl(BtnAttr.TrackLab, "http://ccbpm.mydoc.io/?v=5404&t=24369");
 
         map.AddTBString(BtnAttr.HungLab, "挂起", "挂起按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.HungEnable, false, "是否启用", true, true);
         map.SetHelperUrl(BtnAttr.HungLab, "http://ccbpm.mydoc.io/?v=5404&t=16267"); //增加帮助.
 
-        //      map.AddTBString(BtnAttr.SelectAccepterLab, "接受人", "接受人按钮标签", true, false, 0, 50, 10);
-        //      map.AddDDLSysEnum(BtnAttr.SelectAccepterEnable, 0, "工作方式",
-        //true, true, BtnAttr.SelectAccepterEnable);
-        //      map.SetHelperUrl(BtnAttr.SelectAccepterLab, "http://ccbpm.mydoc.io/?v=5404&t=16256"); //增加帮助
-
 
         map.AddTBString(BtnAttr.SearchLab, "查询", "查询按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.SearchEnable, false, "是否启用", true, true);
-        //map.SetHelperUrl(BtnAttr.SearchLab, this[SYS_CCFLOW, "查询"]); //增加帮助
+
         map.SetHelperUrl(BtnAttr.SearchLab, "http://ccbpm.mydoc.io/?v=5404&t=24373");
 
         map.AddTBString(BtnAttr.WorkCheckLab, "审核", "审核按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.WorkCheckEnable, false, "是否启用", true, true);
-
-        //map.AddTBString(BtnAttr.BatchLab, "批处理", "批处理按钮标签", true, false, 0, 50, 10);
-        //map.AddBoolean(BtnAttr.BatchEnable, false, "是否启用", true, true);
-        //map.SetHelperUrl(BtnAttr.BatchLab, "http://ccbpm.mydoc.io/?v=5404&t=17920"); //增加帮助
 
         map.AddTBString(BtnAttr.AskforLab, "加签", "加签按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.AskforEnable, false, "是否启用", true, true);
@@ -531,29 +462,14 @@ public class NodeExt extends Entity
         map.AddBoolean(BtnAttr.TCEnable, false, "是否启用", true, true);
         map.SetHelperUrl(BtnAttr.TCEnable, "http://ccbpm.mydoc.io/?v=5404&t=17978");
 
-        //map.AddTBString(BtnAttr.AskforLabRe, "执行", "加签按钮标签", true, false, 0, 50, 10);
-        //map.AddBoolean(BtnAttr.AskforEnable, false, "是否启用", true, true);
-
-        // map.SetHelperUrl(BtnAttr.AskforLab, this[SYS_CCFLOW, "加签"]); //增加帮助
-
-
         // 删除了这个模式,让表单方案进行控制了,保留这两个字段以兼容.
         map.AddTBString(BtnAttr.WebOfficeLab, "公文", "文档按钮标签", false, false, 0, 50, 10);
         map.AddTBInt(BtnAttr.WebOfficeEnable, 0, "文档启用方式", false, false);
-
-        //cut bye zhoupeng.
-        //map.AddTBString(BtnAttr.WebOfficeLab, "公文", "文档按钮标签", true, false, 0, 50, 10);
-        //map.AddDDLSysEnum(BtnAttr.WebOfficeEnable, 0, "文档启用方式", true, true, BtnAttr.WebOfficeEnable,
-        //  "@0=不启用@1=按钮方式@2=标签页置后方式@3=标签页置前方式");//edited by liuxc,2016-01-18,from xc
-        //map.SetHelperUrl(BtnAttr.WebOfficeLab, "http://ccbpm.mydoc.io/?v=5404&t=17993");
 
         // add by 周朋 2015-08-06. 重要性.
         map.AddTBString(BtnAttr.PRILab, "重要性", "重要性", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.PRIEnable, false, "是否启用", true, true);
 
-        // add by 周朋 2015-08-06. 节点时限.
-        //map.AddTBString(BtnAttr.CHLab, "节点时限", "节点时限", true, false, 0, 50, 10);
-        //map.AddBoolean(BtnAttr.CHEnable, false, "是否启用", true, true);
 
         // add 2017.5.4  邀请其他人参与当前的工作.
         map.AddTBString(BtnAttr.AllotLab, "分配", "分配按钮标签", true, false, 0, 50, 10);
@@ -575,7 +491,6 @@ public class NodeExt extends Entity
         map.AddTBString(BtnAttr.BatchLab, "批量审核", "批量审核标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.BatchEnable, false, "是否启用", true, true);
 
-        //map.AddBoolean(BtnAttr.SelectAccepterEnable, false, "是否启用", true, true);
        // #endregion  功能按钮状态
 
         //节点工具栏,主从表映射.
@@ -612,7 +527,6 @@ public class NodeExt extends Entity
         rm.Title = "流程完成条件"; // "流程完成条件";
         rm.ClassMethodName = this.toString() + ".DoCond";
         rm.Icon = "../../WF/Admin/AttrNode/Img/Cond.png";
-        //rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Menu/Cond.png";
         rm.refMethodType = RefMethodType.RightFrameOpen;
         map.AddRefMethod(rm);
 
@@ -704,7 +618,6 @@ public class NodeExt extends Entity
         rm = new RefMethod();
         rm.Title = "手机表单字段顺序";
         rm.Icon = "../../WF/Admin/CCFormDesigner/Img/telephone.png";
-        //rm.Icon = ../../Img/Mobile.png";
         rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.GroupName = "表单设置";
@@ -713,7 +626,6 @@ public class NodeExt extends Entity
         rm = new RefMethod();
         rm.Title = "节点组件";
         rm.Icon = "../../WF/Img/Components.png";
-        //rm.Icon = ../../Img/Mobile.png";
         rm.ClassMethodName = this.toString() + ".DoFrmNodeComponent";
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.GroupName = "表单设置";
@@ -742,7 +654,6 @@ public class NodeExt extends Entity
         rm = new RefMethod();
         rm.Title = "延续子流程"; // "调用事件接口";
         rm.ClassMethodName = this.toString() + ".DoYGFlows";
-        //  rm.Icon = "../../WF/Img/Event.png";
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.GroupName = "父子流程";
         map.AddRefMethod(rm);
@@ -794,15 +705,6 @@ public class NodeExt extends Entity
         rm.GroupName = "实验中的功能";
         rm.Visable = false;
         map.AddRefMethod(rm);
-
-        //rm = new RefMethod();
-        //rm.Title = "设置独立表单树权限";
-        //rm.Icon = ../../Img/Btn/DTS.gif";
-        //rm.ClassMethodName = this.ToString() + ".DoNodeFormTree";
-        //rm.RefMethodType = RefMethodType.RightFrameOpen;
-        //rm.GroupName = "实验中的功能";
-        //map.AddRefMethod(rm);
-
 
         rm = new RefMethod();
         rm.Title = "工作批处理规则";
@@ -888,7 +790,6 @@ public class NodeExt extends Entity
 	{
         return "../../Admin/AttrNode/FrmSln/Default.htm?FK_Node=" + this.getNodeID();
 
-	//	return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/NodeFromWorkModel.htm?FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 父子流程
@@ -896,7 +797,6 @@ public class NodeExt extends Entity
 	*/
 	public final String DoSubFlow()
 	{
-		//return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/SubFlows.jsp?FK_Node=" + this.getNodeID();
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FrmSubFlow&PKVal=" + this.getNodeID();
 	}
 	/** 
@@ -939,7 +839,6 @@ public class NodeExt extends Entity
 	*/
 	public final String DoFrmNodeComponent()
 	{
-		//return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/RefFunc/UIEn.jsp?EnName=BP.WF.Template.FrmNodeComponent&PK="+this.getNodeID()+"&t=" + DataType.getCurrentDataTime();
 		return BP.WF.Glo.getCCFlowAppPath() +"WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PKVal="+this.getNodeID()+"&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
@@ -1017,17 +916,14 @@ public class NodeExt extends Entity
 		{
 			return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 		}
-		//    return "节点访问规则您没有设置按照bpm模式，所以您能执行该操作。要想执行该操作请选择节点属性中节点规则访问然后选择按照bpm模式计算，点保存按钮。";
 
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FindWorker/List.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
-	 //   return null;
+
 	}
 	public final String DoTurn()
 	{
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/TurnTo.htm?FK_Node=" + this.getNodeID();
-		//, "节点完成转向处理", "FrmTurn", 800, 500, 200, 300);
-		//BP.WF.Node nd = new BP.WF.Node(this.NodeID);
-		//return nd.DoTurn();
+
 	}
 	/** 
 	 抄送规则
@@ -1035,10 +931,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoCCRole()
 	{
-		//return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/RefFunc/UIEn.jsp?EnName=BP.WF.Template.CC&PK=" + this.getNodeID();
 		return BP.WF.Glo.getCCFlowAppPath()+"WF/Comm/En.htm?EnName=BP.WF.Template.CC&PK=" + this.getNodeID(); 
-		//PubClass.WinOpen("./RefFunc/UIEn.jsp?EnName=BP.WF.CC&PK=" + this.NodeID, "抄送规则", "Bill", 800, 500, 200, 300);
-		//return null;
 	}
 	/** 
 	 个性化接受人窗口
@@ -1046,7 +939,6 @@ public class NodeExt extends Entity
 	*/
 	public final String DoAccepter()
 	{
-		//return BP.WF.Glo.getCCFlowAppPath() + "WF/Comm/RefFunc/UIEn.jsp?EnName=BP.WF.Template.Selector&PK=" + this.getNodeID();
 		return BP.WF.Glo.getCCFlowAppPath() +"WF/Comm/En.htm?EnName=BP.WF.Template.Selector&PK=" + this.getNodeID();
 	}
 	/** 
@@ -1203,25 +1095,12 @@ public class NodeExt extends Entity
 		//更新流程版本
 		Flow.UpdateVer(this.getFK_Flow());
 
-		//把工具栏的配置放入 sys_mapdata里.
-		ToolbarExcel te = new ToolbarExcel("ND" + this.getNodeID());
-		te.Copy(this);
-		
-		try
-		{
-			te.Update();
-		}
-		catch (java.lang.Exception e)
-		{
-			
-		}
-		
+		//处理节点数据
 		 Node nd = new Node(this.getNodeID());
          if (nd.getIsStartNode() == true)
          {
              /*处理按钮的问题*/
              //不能退回, 加签，移交，退回, 子线程.
-           //  this.SetValByKey(BtnAttr.ReturnRole,ReturnRole.CanNotReturn.getValue());
              this.SetValByKey(BtnAttr.HungEnable, false);
              this.SetValByKey(BtnAttr.ThreadEnable, false); //子线程.
          }
@@ -1240,17 +1119,17 @@ public class NodeExt extends Entity
 			//如果启动了会签,并且是抢办模式,强制设置为队列模式.
 		    int roleInt= this.GetValIntByKey(BtnAttr.HuiQianRole);
 		    String sql="";
-				if (roleInt == HuiQianRole.Teamup.getValue())
-					sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.Teamup.getValue() + "  WHERE NodeID=" + this.getNodeID();
-				
-				if (roleInt== HuiQianRole.TeamupGroupLeader.getValue())
-                    sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.TeamupGroupLeader.getValue() + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID();
-                
-                DBAccess.RunSQL(sql);
+			if (roleInt == HuiQianRole.Teamup.getValue())
+				sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.Teamup.getValue() + "  WHERE NodeID=" + this.getNodeID();
+			
+			if (roleInt== HuiQianRole.TeamupGroupLeader.getValue())
+                sql="UPDATE WF_Node SET TodolistModel=" + TodolistModel.TeamupGroupLeader.getValue() + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID();
+            
+            DBAccess.RunSQL(sql);
                 
 			
             // @杜. 翻译&测试.
-            if (1==2 && nd.getCondModel() == CondModel.ByLineCond)
+            if (nd.getCondModel() == CondModel.ByLineCond)
             {
                 /* 如果当前节点方向条件控制规则是按照连接线决定的, 
                  * 那就判断到达的节点的接受人规则，是否是按照上一步来选择，如果是就抛出异常.*/
@@ -1281,86 +1160,64 @@ public class NodeExt extends Entity
 				{
 					if (mynd.getHisDeliveryWay() == DeliveryWay.BySelected)
 					{
-						isHaveBySeleced = true;
-						break;
+						 //强制设置安装人员选择器来选择.
+                        this.SetValByKey(NodeAttr.CondModel, CondModel.SendButtonSileSelect.getValue());
+                        break;
 					}
 				}
 
-				// 如果没有选择人接收器.
-				if (isHaveBySeleced == true)
-				{
-					this.SetValByKey(NodeAttr.CondModel, CondModel.SendButtonSileSelect.getValue()); //禁用他.
-				}
 			}
 			
- 
-		if (nd.getIsStartNode() == true)
-		{
-			//处理按钮的问题
-			//不能退回, 加签，移交，退回, 子线程.
-			//this.SetValByKey(BtnAttr.ReturnRole,ReturnRole.CanNotReturn.getValue());
-			this.SetValByKey(BtnAttr.HungEnable, false);
-			this.SetValByKey(BtnAttr.ThreadEnable, false); //子线程.
-		}
+			//创建审核组件附件
+            FrmAttachment workCheckAth = new FrmAttachment();
+            workCheckAth.setMyPK(this.getNodeID() + "_FrmWorkCheck");
+            //不包含审核组件
+            if (workCheckAth.RetrieveFromDBSources() == 0)
+            {
+                workCheckAth = new FrmAttachment();
+                /*如果没有查询到它,就有可能是没有创建.*/
+                workCheckAth.setMyPK(this.getNodeID() + "_FrmWorkCheck");
+                workCheckAth.setFK_MapData(String.valueOf(this.getNodeID()));
+                workCheckAth.setNoOfObj(this.getNodeID()+ "_FrmWorkCheck");
+                workCheckAth.setExts("*.*");
 
-		if (nd.getHisRunModel() == RunModel.HL || nd.getHisRunModel() == RunModel.FHL)
-		{
-			//如果是合流点
-		}
-		else
-		{
-			this.SetValByKey(BtnAttr.ThreadEnable, false); //子线程.
-		}
+                //存储路径.
 
-			///#endregion 处理节点数据.
+                workCheckAth.setIsNote(false); //不显示note字段.
+                workCheckAth.setIsVisable(false); // 让其在form 上不可见.
 
+                //位置.
+                workCheckAth.setX((float)94.09);
+                workCheckAth.setY((float)333.18);
+                workCheckAth.setW((float)626.36);
+                workCheckAth.setH((float)150);
 
-			///#region 处理消息参数字段.
-		//this.SetPara(NodeAttr.MsgCtrl, this.GetValIntByKey(NodeAttr.MsgCtrl));
-		//this.SetPara(NodeAttr.MsgIsSend, this.GetValIntByKey(NodeAttr.MsgIsSend));
-		//this.SetPara(NodeAttr.MsgIsReturn, this.GetValIntByKey(NodeAttr.MsgIsReturn));
-		//this.SetPara(NodeAttr.MsgIsShift, this.GetValIntByKey(NodeAttr.MsgIsShift));
-		//this.SetPara(NodeAttr.MsgIsCC, this.GetValIntByKey(NodeAttr.MsgIsCC));
+                //多附件.
+                workCheckAth.setUploadType(BP.Sys.AttachmentUploadType.Multi);
+                workCheckAth.setName("审核组件");
+                workCheckAth.SetValByKey("AtPara", "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=@IsWoEnableTemplete=1");
+                workCheckAth.Insert();
+            }
+            // 创建审核组件附件
 
-		//this.SetPara(NodeAttr.MailEnable, this.GetValIntByKey(NodeAttr.MailEnable));
-		//this.SetPara(NodeAttr.MsgMailTitle, this.GetValStrByKey(NodeAttr.MsgMailTitle));
-		//this.SetPara(NodeAttr.MsgMailDoc, this.GetValStrByKey(NodeAttr.MsgMailDoc));
-
-		//this.SetPara(NodeAttr.MsgSMSEnable, this.GetValIntByKey(NodeAttr.MsgSMSEnable));
-		//this.SetPara(NodeAttr.MsgSMSDoc, this.GetValStrByKey(NodeAttr.MsgSMSDoc));
-
-			///#endregion
-
-		////创建审核组件附件
-		//FrmAttachment workCheckAth = new FrmAttachment();
-		//bool isHave = workCheckAth.RetrieveByAttr(FrmAttachmentAttr.MyPK, this.NodeID + "_FrmWorkCheck");
-		////不包含审核组件
-		//if (isHave == false)
-		//{
-		//    workCheckAth = new FrmAttachment();
-		//    /*如果没有查询到它,就有可能是没有创建.*/
-		//    workCheckAth.MyPK = this.NodeID + "_FrmWorkCheck";
-		//    workCheckAth.FK_MapData = this.NodeID.ToString();
-		//    workCheckAth.NoOfObj = this.NodeID + "_FrmWorkCheck";
-		//    workCheckAth.Exts = "*.*";
-
-		//    //存储路径.
-		//    workCheckAth.SaveTo = "/DataUser/UploadFile/";
-		//    workCheckAth.IsNote = false; //不显示note字段.
-		//    workCheckAth.IsVisable = false; // 让其在form 上不可见.
-
-		//    //位置.
-		//    workCheckAth.X = (float)94.09;
-		//    workCheckAth.Y = (float)333.18;
-		//    workCheckAth.W = (float)626.36;
-		//    workCheckAth.H = (float)150;
-
-		//    //多附件.
-		//    workCheckAth.UploadType = AttachmentUploadType.Multi;
-		//    workCheckAth.Name = "审核组件";
-		//    workCheckAth.SetValByKey("AtPara", "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=@IsWoEnableTemplete=1");
-		//    workCheckAth.Insert();
-		//}   
+            //审核组件.
+            GroupField gf = new GroupField();
+            if (this.getHisFrmWorkCheckSta() == FrmWorkCheckSta.Disable)
+            {
+                gf.Delete(GroupFieldAttr.FrmID, "ND" + this.getNodeID(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC);
+            }
+            else
+            {
+                if (gf.IsExit(GroupFieldAttr.CtrlType, GroupCtrlType.FWC, GroupFieldAttr.FrmID, "ND" + this.getNodeID()) == false)
+                {
+                    gf = new GroupField();
+                    gf.setFrmID("ND" + this.getNodeID());
+                    gf.setCtrlType(GroupCtrlType.FWC);
+                    gf.setLab("审核信息");
+                    gf.setIdx(0);
+                    gf.Insert(); //插入.
+                }
+            }
 
 		//清除所有的缓存.
 		BP.DA.CashEntity.getDCash().clear();

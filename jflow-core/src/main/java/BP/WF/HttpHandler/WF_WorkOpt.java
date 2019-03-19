@@ -257,10 +257,12 @@ public class WF_WorkOpt extends WebContralBase {
 				}
 
 				// wanning 这个地方没有翻译.
-				// tk.getRow().add("T_NodeIndex", idx);
+				tk.getRow().put("T_NodeIndex", idx);
 
 				nd = (Node) nds.GetEntityByKey(tk.getNDFrom());
-
+				if (nd == null)
+                    continue;
+				
 				fwc = (FrmWorkCheck) fwcs.GetEntityByKey(tk.getNDFrom());
 				// 求出主键
 				long pkVal = this.getWorkID();
@@ -269,14 +271,17 @@ public class WF_WorkOpt extends WebContralBase {
 
 				// 排序，结合人员表Idx进行排序
 				if (fwc.getFWCOrderModel() == FWCOrderModel.SqlAccepter) {
-					/*
-					 * tk.Row["T_CheckIndex"] = DBAccess.RunSQLReturnValInt(
-					 * string.Format("SELECT Idx FROM Port_Emp WHERE No='{0}'",
-					 * tk.EmpFrom), 0);
-					 */
+					
+					 tk.getRow().put("T_CheckIndex", DBAccess.RunSQLReturnValInt(
+					 String.format("SELECT Idx FROM Port_Emp WHERE No='{0}'",
+					 tk.getEmpFrom()), 0));
+//					 ["T_CheckIndex"] = DBAccess.RunSQLReturnValInt(
+//					 String.format("SELECT Idx FROM Port_Emp WHERE No='{0}'",
+//					 tk.getEmpFrom()), 0);
+					 
 					noneEmpIdx++;
 				} else {
-					// tk.Row["T_CheckIndex"] = noneEmpIdx++;
+					tk.getRow().put("T_CheckIndex",noneEmpIdx++) ;
 				}
 
 				if (tk.getHisActionType() == ActionType.WorkCheck
@@ -382,16 +387,17 @@ public class WF_WorkOpt extends WebContralBase {
 
 				for (FrmAttachmentDB athDB : athDBs.ToJavaList()) {
 					row = athDt.NewRow();
-					/*
-					 * row.setValue("NodeID",tk.getNDFrom());
-					 * row.setValue("MyPK",athDB.MyPK;
-					 * row.setValue("Href",GetFileAction(athDB);
-					 * row.setValue("FileName",athDB.FileName;
-					 * row.setValue("FileExts",athDB.FileExts;
-					 * row.setValue("CanDelete", athDB.FK_MapData ==
-					 * this.FK_Node.ToString() && athDB.Rec == WebUser.No &&
-					 * isReadonly == false; athDt.Rows.Add(row);
-					 */
+					
+					 row.setValue("NodeID",tk.getNDFrom());
+					 row.setValue("MyPK",athDB.getMyPK());
+					 row.setValue("Href",GetFileAction(athDB));
+					 row.setValue("FileName",athDB.getFileName());
+					 row.setValue("FileExts",athDB.getFileExts());
+					 row.setValue("CanDelete", athDB.getFK_MapData() ==
+					 String.valueOf(this.getFK_Node()) && athDB.getRec() == WebUser.getNo() &&
+					 isReadonly == false);
+					 athDt.Rows.add(row);
+					 
 
 				}
 				// #endregion
@@ -481,6 +487,7 @@ public class WF_WorkOpt extends WebContralBase {
 					String mymsg = Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node());
 					if (mymsg == null)
 						mymsg = "";
+					//ccflow没有这段
 					row.setValue("Msg", mymsg);
 					if (mymsg == "")
 						row.setValue("RDT", "");
@@ -521,54 +528,132 @@ public class WF_WorkOpt extends WebContralBase {
 				tkDt.Rows.add(row);
 			}
 		}
-		
-		if (gwf.getWFState() == WFState.Complete)
-        {
-                tkDt.ClearRow();
-                isDoc = false;
-                tks = wc.getHisWorkChecks();
-                for (BP.WF.Track tk : tks.ToJavaList())
-                {
-                    if (tk.getHisActionType() != ActionType.WorkCheck && tk.getHisActionType() != ActionType.StartChildenFlow)
-                        continue;
-                    row = tkDt.NewRow();
-                    row.setValue("NodeID",tk.getNDFrom());
+		 // 显示有审核组件，但还未审核的节点.  包括退回后的.
+         if (tks == null)
+             tks = wc.getHisWorkChecks();
 
-                    row.setValue("NodeName",tk.getNDFromT());
+         for (FrmWorkCheck item : fwcs.ToJavaList())
+         {
+             if (item.getFWCIsShowTruck() == false)
+                 continue;  //不需要显示历史记录.
 
-                    // zhoupeng 增加了判断，在会签的时候最后会签人发送前不能填写意见.
-                    if (tk.getNDFrom() == this.getFK_Node() && tk.getEmpFrom() == BP.Web.WebUser.getNo() && isCanDo && isDoc == false)
-                    {
-                        isDoc = true;
-                        row.setValue("IsDoc",true);
-                    }
-                    else
-                    	row.setValue("IsDoc",false);
+             //是否已审核.
+             Boolean isHave = false;
+             for (BP.WF.Track tk : tks.ToJavaList())
+             {
+                 //翻译.
+                 if (tk.getNDFrom() == this.getFK_Node() && tk.getHisActionType() == ActionType.WorkCheck)
+                 {
+                     isHave = true; //已经有了
+                     break;
+                 }
+             }
 
+             if (isHave == true)
+                 continue;
 
-                	row.setValue("ParentNode",0);
-                	row.setValue("RDT",DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
-                	row.setValue("T_NodeIndex","");
-                	row.setValue("T_CheckIndex","");
+             row = tkDt.NewRow();
+             
+             row.setValue("NodeID", item.getNodeID());
+             Node mynd = (Node)nds.GetEntityByKey(item.getNodeID());
+             row.setValue("NodeName", mynd.getFWCNodeName());
+             row.setValue("IsDoc", false);
+             row.setValue("ParentNode", 0);
+             row.setValue("RDT", "");
+             row.setValue("Msg", "&nbsp;");
+             row.setValue("EmpFrom", "");
+             row.setValue("EmpFromT", "");
+             row.setValue("T_NodeIndex", ++idx);
+             row.setValue("T_CheckIndex", ++noneEmpIdx);
+//             row["ParentNode"] = 0;
+//             row["RDT"] = "";
+//             row["Msg"] = "&nbsp;";
+//             row["EmpFrom"] = "";
+//             row["EmpFromT"] = "";
+//             row["T_NodeIndex"] = ++idx;
+//             row["T_CheckIndex"] = ++noneEmpIdx;
 
-                
-                	row.setValue("Msg",tk.getMsgHtml());
-                    
+             tkDt.Rows.add(row);
+         }
+        // 增加空白.
 
-                    row.setValue("EmpFrom",tk.getEmpFrom());
-                    row.setValue("EmpFromT",tk.getEmpFromT());
+         ds.Tables.add(tkDt);
 
-                    tkDt.Rows.add(row);
-                }
-            
+         /*
+         DataView dv = tkDt.DefaultView;
+         dv.Sort = "T_NodeIndex ASC,T_CheckIndex ASC";
+         DataTable sortedTKs = dv.ToTable("Tracks");
+         ds.Tables.Remove("Tracks");
+         ds.Tables.Add(sortedTKs);
+          * */
 
-        }
+         //如果有 SignType 列就获得签名信息.
+         if (SystemConfig.getCustomerNo() == "TianYe")
+         {
+             String tTable = "ND" + Integer.valueOf(this.getFK_Flow()) + "Track";
+             String sql = "SELECT distinct a.No, a.SignType, a.EleID FROM Port_Emp a, " + tTable + " b WHERE (A.No='" + WebUser.getNo() + "') OR B.ActionType=22 AND a.No=b.EmpFrom AND B.WorkID=" + this.getWorkID();
 
-		ds.Tables.add(tkDt);
+             DataTable dtTrack = DBAccess.RunSQLReturnTable(sql);
+             dtTrack.TableName = "SignType";
 
-		String str = BP.Tools.Json.ToJson(ds);
-		DataType.WriteFile("c:\\WorkCheck_Init_JFlow.txt", str);
-		return str;
+             dtTrack.Columns.get("NO").ColumnName = "No";
+             dtTrack.Columns.get("SIGNTYPE").ColumnName = "SignType";
+             dtTrack.Columns.get("ELEID").ColumnName = "EleID";
+
+             ds.Tables.add(dtTrack);
+         }
+
+         String str = BP.Tools.Json.ToJson(ds);
+         //用于jflow数据输出格式对比.
+         //  DataType.WriteFile("c:\\WorkCheck_Init_ccflow.txt", str);
+         return str;
+//		if (gwf.getWFState() == WFState.Complete)
+//        {
+//                tkDt.ClearRow();
+//                isDoc = false;
+//                tks = wc.getHisWorkChecks();
+//                for (BP.WF.Track tk : tks.ToJavaList())
+//                {
+//                    if (tk.getHisActionType() != ActionType.WorkCheck && tk.getHisActionType() != ActionType.StartChildenFlow)
+//                        continue;
+//                    row = tkDt.NewRow();
+//                    row.setValue("NodeID",tk.getNDFrom());
+//
+//                    row.setValue("NodeName",tk.getNDFromT());
+//
+//                    // zhoupeng 增加了判断，在会签的时候最后会签人发送前不能填写意见.
+//                    if (tk.getNDFrom() == this.getFK_Node() && tk.getEmpFrom() == BP.Web.WebUser.getNo() && isCanDo && isDoc == false)
+//                    {
+//                        isDoc = true;
+//                        row.setValue("IsDoc",true);
+//                    }
+//                    else
+//                    	row.setValue("IsDoc",false);
+//
+//
+//                	row.setValue("ParentNode",0);
+//                	row.setValue("RDT",DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
+//                	row.setValue("T_NodeIndex","");
+//                	row.setValue("T_CheckIndex","");
+//
+//                
+//                	row.setValue("Msg",tk.getMsgHtml());
+//                    
+//
+//                    row.setValue("EmpFrom",tk.getEmpFrom());
+//                    row.setValue("EmpFromT",tk.getEmpFromT());
+//
+//                    tkDt.Rows.add(row);
+//                }
+//            
+//
+//        }
+//
+//		ds.Tables.add(tkDt);
+//
+//		String str = BP.Tools.Json.ToJson(ds);
+//		DataType.WriteFile("c:\\WorkCheck_Init_JFlow.txt", str);
+//		return str;
 	}
 
 	/**

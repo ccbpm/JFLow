@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.Set;
 import BP.DA.AtPara;
 import BP.DA.Cash;
+import BP.DA.Cash2019;
 import BP.DA.CashEntity;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
@@ -842,13 +843,30 @@ public abstract class Entity implements Serializable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int Retrieve() throws Exception {
 
+        /*如果是没有放入缓存的实体. @wangyanyan */
+        if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
+        {
+        	Row row = BP.DA.Cash2019.GetRow(this.toString(), this.getPKVal().toString());
+            if (row != null)
+            {
+                this.setRow(row);
+                return 1;
+            }
+        }
+		
 		// 如果是没有放入缓存的实体.
 		try {
 
 			int i = DBAccess.RunSQLReturnResultSet(this.getSQLCash().getSelect(), SqlBuilder.GenerParasPK(this), this,
 					this.getEnMap().getAttrs());
-			if (i > 0)
+			if (i > 0){
+                //@wangyanyan 放入缓存.
+                if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
+                {
+                    BP.DA.Cash2019.PutRow(this.toString(), this.getPKVal().toString(), this.getRow());
+                }
 				return i;
+			}
 
 		} catch (RuntimeException ex) {
 
@@ -1169,6 +1187,10 @@ public abstract class Entity implements Serializable {
 			Log.DebugWriteInfo(ex.getMessage());
 			throw ex;
 		}
+		
+        //更新缓存.  @wangyanyan
+        if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
+            Cash2019.DeleteRow(this.toString(), this.getPKVal().toString());
 
 		this.afterDelete();
 
@@ -1443,6 +1465,10 @@ public abstract class Entity implements Serializable {
 
 		this.afterInsert();
 		this.afterInsertUpdateAction();
+		
+        // 开始更新内存数据。 @wangyanyan
+        if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
+            Cash2019.PutRow(this.toString(), this.getPKVal().toString(), this.getRow());
 
 		return i;
 	}
@@ -1751,6 +1777,12 @@ public abstract class Entity implements Serializable {
 			str = "@更新时出现错误";
 			int i = EntityDBAccess.Update(this, keys);
 			str = "@更新之后出现错误";
+			
+            //更新缓存. @wangyanyan
+            if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
+            {
+                Cash2019.UpdateRow(this.toString(), this.getPKVal().toString(), this.getRow());
+            }
 
 			this.afterUpdate();
 			str = "@更新插入之后出现错误";

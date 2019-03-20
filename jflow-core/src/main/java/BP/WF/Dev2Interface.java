@@ -9509,10 +9509,7 @@ public class Dev2Interface {
 	 */
 	public static void Node_SetWorkRead(int nodeID, long workid, String empNo) throws Exception {
 		Node nd = new Node(nodeID);
-		if (nd.getIsStartNode()) {
-			return;
-		}
-
+		
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET IsRead=1 WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr

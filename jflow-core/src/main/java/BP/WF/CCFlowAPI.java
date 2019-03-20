@@ -440,10 +440,14 @@ public class CCFlowAPI {
 
 			}
 
-
 			// #region 流程设置信息.
-			if (nd.getIsStartNode() == false) {
-				BP.WF.Dev2Interface.Node_SetWorkRead(fk_node, workID);
+			BP.WF.Dev2Interface.Node_SetWorkRead(fk_node, workID);
+			if(nd.getIsStartNode() == false){
+				if (gwf.getTodoEmps().contains(BP.Web.WebUser.getName() + ";") == false)
+                {
+                    gwf.setTodoEmps(gwf.getTodoEmps() +BP.Web.WebUser.getNo() + "," + BP.Web.WebUser.getName());
+                    gwf.Update();
+                }
 			}
 
 			// 增加转向下拉框数据.

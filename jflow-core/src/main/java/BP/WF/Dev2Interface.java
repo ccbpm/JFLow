@@ -2913,13 +2913,13 @@ public class Dev2Interface {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND A.Starter="
 							+ dbStr + "Starter  AND B.FK_Emp=" + dbStr
 							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
-							+ emp.getAuthorFlows();
+							+ emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("Starter", userNo);
 					ps.Add("FK_Emp", userNo);
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
 							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
-							+ emp.getAuthorFlows();
+							+ emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("FK_Emp", userNo);
 				}
 			} else {
@@ -2927,7 +2927,7 @@ public class Dev2Interface {
 					ps.SQL = "SELECT DISTINCT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
 							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter=" + dbStr
-							+ "Starter AND A.FK_Flow IN " + emp.getAuthorFlows();
+							+ "Starter AND A.FK_Flow IN " + emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
 					ps.Add("Starter", userNo);
@@ -2935,7 +2935,7 @@ public class Dev2Interface {
 					ps.SQL = "SELECT DISTINCT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
 							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
-							+ emp.getAuthorFlows();
+							+ emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
 				}
@@ -2946,12 +2946,12 @@ public class Dev2Interface {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
 							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter="
-							+ dbStr + "Starter ";
+							+ dbStr + "Starter  Order by RDT DESC";
 					ps.Add("FK_Emp", userNo);
 					ps.Add("Starter", userNo);
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) ";
+							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0)  Order by RDT DESC";
 					ps.Add("FK_Emp", userNo);
 				}
 			} else {
@@ -2959,14 +2959,14 @@ public class Dev2Interface {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
 							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 ) AND  A.Starter=" + dbStr
-							+ "Starter  ";
+							+ "Starter   Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
 					ps.Add("Starter", userNo);
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 ) ";
+							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 )  Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
 				}

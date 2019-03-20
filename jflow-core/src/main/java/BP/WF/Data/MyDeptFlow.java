@@ -9,6 +9,7 @@ import BP.En.Entity;
 import BP.En.Map;
 import BP.En.QueryObject;
 import BP.En.RefMethod;
+import BP.En.RefMethodType;
 import BP.En.UAC;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
@@ -498,6 +499,7 @@ public class MyDeptFlow extends Entity
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "流程轨迹";
+		rm.refMethodType= RefMethodType.LinkeWinOpen;
 		rm.ClassMethodName = this.toString() + ".DoTrack";
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
 		map.AddRefMethod(rm);
@@ -507,11 +509,8 @@ public class MyDeptFlow extends Entity
 	}
 	public final String DoTrack()
 	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() + "WF/WFRpt.jsp?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow(), 900, 800);
-		} catch (IOException e) {
-			Log.DebugWriteError("MyDeptFlow DoTrack()"+e);
-		}
-		return null;
+
+		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
+		
 	}
 }

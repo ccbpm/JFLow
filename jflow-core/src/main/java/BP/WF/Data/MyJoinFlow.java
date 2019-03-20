@@ -521,7 +521,7 @@ public class MyJoinFlow extends Entity
 		map.AddTBInt(MyJoinFlowAttr.PWorkID, 0, "PWorkID", false, false);
 		map.AddTBString(MyJoinFlowAttr.Title, null, "流程标题", true, false, 0, 100, 150, true);
 		try {
-			map.AddDDLSQL(MyJoinFlowAttr.FK_Flow, null,  "流程名称", "Select A.FK_Flow AS No,A.FlowName As Name FROM WF_GenerWorkFlow A WHERE  A.Emps like '%"+WebUser.getNo()+"%' ", false,false);
+			map.AddDDLSQL(MyJoinFlowAttr.FK_Flow, null,  "流程名称", "Select  DISTINCT(A.FK_Flow) AS No,A.FlowName As Name FROM WF_GenerWorkFlow A WHERE  A.Emps like '%"+WebUser.getNo()+"%' ", false,false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

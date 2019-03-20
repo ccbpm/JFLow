@@ -510,7 +510,7 @@ public class MyDeptFlow extends Entity
 	public final String DoTrack()
 	{
 
-		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
+		return Glo.getCCFlowAppPath() + "/WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
 		
 	}
 }

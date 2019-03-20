@@ -1666,16 +1666,7 @@ public class Map
 	public final String getPhysicsTable()
 	{
 		return this._PhysicsTable;
-		//
-		// if (DBAccess.AppCenterDBType==DBType.Oracle)
-		// {
-		// return ""+this._PhysicsTable+"";
-		// }
-		// else
-		// {
-		// return this._PhysicsTable;
-		// }
-		//
+
 	}
 	
 	public final void setPhysicsTable(String value)
@@ -2224,8 +2215,10 @@ public class Map
 		AddDDLEntities(key, field, defaultVal, dataType, FieldType.PKFK, desc,
 				ens, refKey, refText, uiIsEnable);
 	}
-	
-	public void AddDDLSQL(String key, String defaultVal, String desc, String sql, boolean uiIsEnable)
+	public void AddDDLSQL(String key, String defaultVal, String desc, String sql, boolean uiIsEnable){
+		AddDDLSQL(key, defaultVal, desc,sql, uiIsEnable,true);
+	}
+	public void AddDDLSQL(String key, String defaultVal, String desc, String sql, boolean uiIsEnable,boolean uiVisible)
     {
         Attr attr = new Attr();
         attr.setKey(key);
@@ -2238,11 +2231,13 @@ public class Map
         attr.setDesc(desc);
         attr.setUIContralType(UIContralType.DDL);
         attr.setUIDDLShowType(DDLShowType.BindSQL);
-    
+        attr.setUIVisible(uiVisible);
         attr.setUIBindKey(sql);
         attr.setHisFKEns(null);
         attr.setUIIsReadonly(!uiIsEnable);
         this.getAttrs().Add(attr);
+        
+        if(!(this.getPhysicsTable().equals("WF_GenerWorkFlow") && key.equals("FK_Flow"))){
         //他的名称列.
         attr = new Attr();
         attr.setKey(key + "Text");
@@ -2256,6 +2251,7 @@ public class Map
         attr.setUIIsReadonly(true);
         attr.setUIVisible(false);
         this.getAttrs().Add(attr);
+        }
     }
 	/**
 	 * 关于EntitiesNoName 有关系的操作

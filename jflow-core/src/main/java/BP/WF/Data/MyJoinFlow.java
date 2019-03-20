@@ -17,6 +17,7 @@ import BP.WF.Node;
 import BP.WF.TaskSta;
 import BP.WF.WFSta;
 import BP.WF.WFState;
+import BP.Web.WebUser;
 
 public class MyJoinFlow extends Entity
 {
@@ -500,6 +501,7 @@ public class MyJoinFlow extends Entity
 	}
 	/** 
 	 重写基类方法
+	 * @throws Exception 
 	 
 	*/
 	@Override
@@ -518,14 +520,15 @@ public class MyJoinFlow extends Entity
 		map.AddTBInt(MyJoinFlowAttr.FID, 0, "FID", false, false);
 		map.AddTBInt(MyJoinFlowAttr.PWorkID, 0, "PWorkID", false, false);
 		map.AddTBString(MyJoinFlowAttr.Title, null, "流程标题", true, false, 0, 100, 150, true);
-		map.AddDDLEntities(MyJoinFlowAttr.FK_Flow, null, "流程名称", new Flows(), false);
+		try {
+			map.AddDDLSQL(MyJoinFlowAttr.FK_Flow, null,  "流程名称", "Select A.FK_Flow AS No,A.FlowName As Name FROM WF_GenerWorkFlow A WHERE  A.Emps like '%"+WebUser.getNo()+"%' ", false,false);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		map.AddTBString(MyJoinFlowAttr.FlowName, null, "流程名称", true, false, 0, 100, 100, true);
 		map.AddTBString(MyJoinFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 50);
 		map.AddTBString(MyJoinFlowAttr.StarterName, null, "发起人", true, false, 0, 30, 40);
-
-			//map.AddDDLEntities(MyJoinFlowAttr.FK_Dept, null, "发起人部门", new BP.Port.Depts(), false);
-			//map.AddTBString(MyJoinFlowAttr.Starter, null, "发起人编号", true, false, 0, 30, 10);
-			//map.AddTBString(MyJoinFlowAttr.StarterName, null, "发起人名称", true, false, 0, 30, 10);
-			//map.AddTBString(MyJoinFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 10);
 
 		map.AddTBDateTime(MyJoinFlowAttr.RDT, "发起日期", true, true);
 		map.AddDDLSysEnum(MyJoinFlowAttr.WFSta, 0, "状态", true, false, MyJoinFlowAttr.WFSta, "@0=运行中@1=已完成@2=其他");
@@ -540,6 +543,7 @@ public class MyJoinFlow extends Entity
 		map.AddTBInt(MyJoinFlowAttr.FK_Node, 0, "FK_Node", false, false);
 
 		map.AddTBMyNum();
+		
 
 		map.AddSearchAttr(MyJoinFlowAttr.FK_Flow);
 		map.AddSearchAttr(MyJoinFlowAttr.WFSta);

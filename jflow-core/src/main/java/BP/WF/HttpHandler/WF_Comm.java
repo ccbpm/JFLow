@@ -43,6 +43,7 @@ import BP.En.AttrSearch;
 import BP.En.AttrSearchs;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
+import BP.En.DDLShowType;
 import BP.En.Entities;
 import BP.En.EntitiesTree;
 import BP.En.Entity;
@@ -1195,16 +1196,17 @@ public class WF_Comm extends WebContralBase {
 
 		// 把外键枚举增加到里面.
 		for (AttrSearch item : attrs) {
-			if (item.HisAttr.getIsEnum() == true) {
-				SysEnums ses = new SysEnums(item.HisAttr.getUIBindKey());
+			Attr attr = item.HisAttr;
+			if (attr.getIsEnum() == true) {
+				SysEnums ses = new SysEnums(attr.getUIBindKey());
 				DataTable dtEnum = ses.ToDataTableField();
 				dtEnum.TableName = item.Key;
 				ds.Tables.add(dtEnum);
 				continue;
 			}
 
-			if (item.HisAttr.getIsFK() == true) {
-				Entities ensFK = item.HisAttr.getHisFKEns();
+			if (attr.getIsFK() == true) {
+				Entities ensFK = attr.getHisFKEns();
 				ensFK.RetrieveAll();
 
 				DataTable dtEn = ensFK.ToDataTableField();
@@ -1212,6 +1214,30 @@ public class WF_Comm extends WebContralBase {
 
 				ds.Tables.add(dtEn);
 			}
+			
+			//绑定SQL的外键
+            if (attr.getUIDDLShowType()== DDLShowType.BindSQL)
+            {
+                //获取SQl
+                String sql = attr.getUIBindKey();
+                sql = BP.WF.Glo.DealExp(sql,null,null);
+                DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
+                for(DataColumn col : dtSQl.Columns)
+                {
+                    String colName = col.ColumnName.toLowerCase();
+                    if(colName.equals("no"))
+                    	 col.ColumnName = "No";
+                    if(colName.equals("name"))
+                   	 col.ColumnName = "Name";
+                    if(colName.equals("parentno"))
+                   	 col.ColumnName = "ParentNo";
+                   
+                }
+                dtSQl.TableName = item.Key;
+                if (ds.Tables.contains(item.Key) == false)
+                    ds.Tables.add(dtSQl);
+            }
+
 		}
 
 		return BP.Tools.Json.ToJson(ds);

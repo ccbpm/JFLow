@@ -17,10 +17,6 @@ function GenerFoolFrm(mapData, frmData) {
     var html = "<table style='width:" + tableWidth + "px;' >";
     var frmName = mapData.Name;
 
-    //html += "<tr>";
-    //html += "<td colspan=4 ><div style='float:left' ><img src='../../DataUser/ICON/LogBiger.png'  style='height:50px;' /></div><div style='float:right;padding:10px;bordder:none;width:70%;' ><center><h4><b>" + frmName + "</b></h4></center></div></td>";
-    //html += "</tr>";
-
     //遍历循环生成 listview
     for (var i = 0; i < Sys_GroupFields.length; i++) {
 
@@ -126,10 +122,12 @@ function GenerFoolFrm(mapData, frmData) {
     html += "</table>";
 
     //加入隐藏控件.
-    for (var attr in frmData.Sys_MapAttr) {
-        if (attr.UIVisable == 0) {
-            var defval = ConvertDefVal(frmData, attr.DefVal, attr.KeyOfEn);
-            html += "<input type='hidden' id='TB_" + attr.KeyOfEn + "' name='TB_" + attr.KeyOfEn + "' value='" + defval + "' />";
+    var mapAttrs = frmData.Sys_MapAttr;
+    for (var i =0; i<mapAttrs.length;i++) {
+    	var attr = mapAttrs[i];
+        if (attr["UIVisible"] == 0) {
+            var defval = ConvertDefVal(frmData, attr["DefVal"], attr["KeyOfEn"]);
+            html += "<input type='hidden' id='TB_" + attr["KeyOfEn"] + "' name='TB_" + attr["KeyOfEn"] + "' value='" + defval + "' />";
         }
     }
 

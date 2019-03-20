@@ -2186,12 +2186,8 @@ public class Flow extends BP.En.EntityNoName {
 				String myNum = row.getValue("MYNUM").toString();
 				int iMyNum = 0;
 
-				// cn.jflow.common.tangible.RefObject<Integer> tempRef_iMyNum =
-				// new cn.jflow.common.tangible.RefObject<Integer>(iMyNum);
-				// cn.jflow.common.tangible.TryParseHelper.tryParseInt(myNum,
-				// tempRef_iMyNum);
-
-				iMyNum = 0;// tempRef_iMyNum.argValue;
+			
+			
 
 				// 存在2种以上数据类型，有手动进行调整
 				if (iMyNum > 2) {

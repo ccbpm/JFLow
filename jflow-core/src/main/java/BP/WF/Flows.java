@@ -103,6 +103,8 @@ public class Flows extends EntitiesNoName
 	{
 		this.Retrieve(FlowAttr.FK_FlowSort, fk_sort);
 	}
+	
+	
 	/** 
 	 得到它的 Entity 
 	*/

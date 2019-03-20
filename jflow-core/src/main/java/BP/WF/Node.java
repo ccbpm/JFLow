@@ -2878,48 +2878,6 @@ public class Node extends Entity
 				attr.Insert();
 			}
 
-			//if (attr.IsExit(MapAttrAttr.KeyOfEn, "faqiren", MapAttrAttr.FK_MapData, md.getNo()) == false)
-			//{
-			//    attr = new BP.Sys.MapAttr();
-			//    attr.FK_MapData = md.getNo();
-			//    attr.HisEditType = BP.En.EditType.Edit;
-			//    attr.KeyOfEn = "faqiren";
-			//    attr.Name = "发起人"; // "发起人";
-			//    attr.MyDataType = BP.DA.DataType.AppString;
-			//    attr.UIContralType = UIContralType.TB;
-			//    attr.LGType = FieldTypeS.Normal;
-			//    attr.UIVisible = true;
-			//    attr.UIIsEnable = false;
-			//    attr.UIIsLine = false;
-			//    attr.MinLen = 0;
-			//    attr.MaxLen = 200;
-			//    attr.Idx = -100;
-			//    attr.DefVal = "WebUser.No";
-			//    attr.X = (float)159.2;
-			//    attr.Y = (float)102.8;
-			//    attr.Insert();
-			//}
-
-			//if (attr.IsExit(MapAttrAttr.KeyOfEn, "faqishijian", MapAttrAttr.FK_MapData, md.getNo()) == false)
-			//{
-			//    attr = new BP.Sys.MapAttr();
-			//    attr.FK_MapData = md.getNo();
-			//    attr.HisEditType = BP.En.EditType.Edit;
-			//    attr.KeyOfEn = "faqishijian";
-			//    attr.Name = "发起时间"; //"发起时间";
-			//    attr.MyDataType = BP.DA.DataType.AppDateTime;
-			//    attr.UIContralType = UIContralType.TB;
-			//    attr.LGType = FieldTypeS.Normal;
-			//    attr.UIVisible = true;
-			//    attr.UIIsEnable = false;
-			//    attr.DefVal = "@RDT";
-			//    attr.Tag = "1";
-			//    attr.X = (float)324;
-			//    attr.Y = (float)102.8;
-			//    attr.Insert();
-			//}
-
-
 			if (attr.IsExit(MapAttrAttr.KeyOfEn, "FK_NY", MapAttrAttr.FK_MapData, md.getNo()) == false)
 			{
 				attr = new MapAttr();
@@ -2932,7 +2890,6 @@ public class Node extends Entity
 				attr.setUIVisible(false);
 				attr.setUIIsEnable(false);
 				attr.setLGType(FieldTypeS.Normal);
-				// attr.setUIBindKey("BP.Pub.NYs";
 				attr.setUIVisible(false);
 				attr.setUIIsEnable(false);
 				attr.setMinLen(0);
@@ -2965,8 +2922,6 @@ public class Node extends Entity
 			if (attr.IsExit(MapAttrAttr.KeyOfEn, this.getFocusField(), MapAttrAttr.FK_MapData, md.getNo()) == false)
 			{
 				msg += "@焦点字段 " + this.getFocusField() + " 被非法删除了.";
-				//this.FocusField = "";
-				//this.DirectUpdate();
 			}
 		}
 		return msg;

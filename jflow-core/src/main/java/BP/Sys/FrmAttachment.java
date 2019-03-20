@@ -318,12 +318,7 @@ public class FrmAttachment extends EntityMyPK
 	}
 	public final String getSaveTo()
 	{
-	//	String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
-		//if (s.equals("") || s == null)
-	//	{
-			return SystemConfig.getPathOfDataUser() + "UploadFile/" + this.getFK_MapData() + "/";
-		//}
-		//return s;
+		return SystemConfig.getPathOfDataUser() + "UploadFile/" + this.getFK_MapData() + "/";
 	}
 	 public final int getReadRole() {
 		 return this.GetValIntByKey(FrmAttachmentAttr.ReadRole);

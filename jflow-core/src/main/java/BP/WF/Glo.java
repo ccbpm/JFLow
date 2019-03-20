@@ -4111,7 +4111,7 @@ public class Glo {
 	 * @return
 	 * @throws Exception
 	 */
-	private static java.util.Date AddMinutes(java.util.Date dt, int hh, int minutes) throws Exception {
+	private static Date AddMinutes(Date dt, int hh, int minutes) throws Exception {
 
 		if (1 == 1) {
 			Calendar c = Calendar.getInstance();
@@ -4120,9 +4120,7 @@ public class Glo {
 			c.add(Calendar.MINUTE, minutes);
 			return c.getTime();
 
-			// dt = dt.a(hh);
-			// dt = dt.addMinutes(minutes);
-			// return dt;
+			
 		}
 
 		// 如果没有设置,就返回.
@@ -4279,13 +4277,6 @@ public class Glo {
 		cal.add(Calendar.MINUTE, minutes);
 
 		return cal.getTime();
-
-		/*
-		 * 
-		 * java.util.Date mydt = BP.DA.DataType.AddDays(specDT, day); mydt.
-		 * return mydt;
-		 */
-		// return Glo.AddMinutes(mydt, minutes);
 	}
 
 	public static Date AddDayHoursSpan(String specDT, int day, int hh, int minutes, TWay tWay) throws Exception {
@@ -4296,21 +4287,7 @@ public class Glo {
 		return Glo.AddMinutes(mydt, hh, minutes);
 	}
 
-	// /**
-	// 在指定的日期上增加n天n小时，并考虑节假日
-	// @param sysdt 指定的日期
-	// @param day 天数
-	// @param minutes 分钟数
-	// @return 返回计算后的日期
-	// */
-	// public static java.util.Date AddDayHoursSpan(java.util.Date specDT, int
-	// day, int minutes)
-	// {
-	// java.util.Date mydt = BP.DA.DataType.AddDays(specDT, day);
-	// return mydt;
-	// //return Glo.AddMinutes(mydt, minutes);
-	// }
-	//
+
 	// 与考核相关.
 	/**
 	 * 当流程发送下去以后，就开始执行考核。
@@ -4407,9 +4384,9 @@ public class Glo {
 						GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 			}
 
-			prvRDT = gwl.getRDT(); // dt.Rows[0]["RDT"].ToString();
-									// //上一个时间点的记录日期.
-			sdt = gwl.getSDT(); // dt.Rows[0]["SDT"].ToString(); //应完成日期.
+			prvRDT = gwl.getRDT();//上一个时间点的记录日期. 
+									
+			sdt = gwl.getSDT(); //应完成日期.
 			todoEmps = WebUser.getNo() + "," + WebUser.getName() + ";";
 		}
 		// 求参与人员，应完成日期，与工作派发日期.
@@ -4477,14 +4454,6 @@ public class Glo {
 		// mypk.
 		ch.setMyPK(nd.getNodeID() + "_" + workid + "_" + fid + "_" + WebUser.getNo());
 
-		// 初始化基础数据.
-		// 求计算属性.
-		// 求出是第几个周.
-		// System.Globalization.CultureInfo myCI = new
-		// System.Globalization.CultureInfo("zh-CN");
-		// ch.setWeekNum(myCI.Calendar.GetWeekOfYear(dtNow,
-		// System.Globalization.CalendarWeekRule.FirstDay,
-		// System.DayOfWeek.Monday));
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dtNow);
 		ch.setWeekNum(cal.get(Calendar.WEEK_OF_YEAR));
@@ -4496,10 +4465,6 @@ public class Glo {
 		long ts = dtTo.getTime() - dtFrom.getTime();
 		ch.setUseDays(ts / 1000 / 60 / 60 / 24); // 用时，天数
 		ch.setUseMinutes(ts / 1000 / 60); // 用时，分钟
-		// ch.setUseDays(ts.Days); //用时，天数
-		// ch.setUseMinutes(ts.Minutes); //用时，分钟
-		// int hour = ts.Hours;
-		// ch.UseDays += ts.Hours / 8; //使用的天数.
 
 		// OverDays . 求出 逾期天 数.
 		java.util.Date sdtOfDT = DataType.ParseSysDate2DateTime(ch.getSDT());
@@ -4507,9 +4472,6 @@ public class Glo {
 		long myts = dtTo.getTime() - sdtOfDT.getTime();
 		ch.setOverDays(myts / 1000 / 60 / 60 / 24); // 逾期的天数.
 		ch.setOverMinutes(myts / 1000 / 60); // 逾期的分钟数
-		// TimeSpan myts = dtTo - sdtOfDT;
-		// ch.setOverDays(myts.getDays()); //逾期的天数.
-		// ch.setOverMinutes(myts.getMinutes()); //逾期的分钟数
 		if (sdtOfDT.compareTo(dtTo) >= 0) {
 			// 正常完成
 			ch.setCHSta(CHSta.AnQi); // 按期完成.

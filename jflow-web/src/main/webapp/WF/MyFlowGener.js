@@ -740,6 +740,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
             if (index == -1)
                 formArrResult.push(ele);
         }
+
     });
 
 

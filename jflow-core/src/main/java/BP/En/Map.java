@@ -2237,6 +2237,7 @@ public class Map
 
         attr.setDesc(desc);
         attr.setUIContralType(UIContralType.DDL);
+        attr.setUIDDLShowType(DDLShowType.BindSQL);
     
         attr.setUIBindKey(sql);
         attr.setHisFKEns(null);
@@ -2252,7 +2253,6 @@ public class Map
         attr.setMaxLength(500);
         attr.setDesc(desc);
         attr.setUIContralType(UIContralType.TB);
-        attr.setUIBindKey(sql);
         attr.setUIIsReadonly(true);
         attr.setUIVisible(false);
         this.getAttrs().Add(attr);

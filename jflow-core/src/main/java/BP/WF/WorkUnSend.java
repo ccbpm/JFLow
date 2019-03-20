@@ -632,7 +632,7 @@ public class WorkUnSend
             DataTable dt = DBAccess.RunSQLReturnTable(sql);
             for(DataRow dr : dt.Rows)
             {
-                int ac = Integer.parseInt(dr.get(0).toString());
+                int ac = Integer.parseInt(dr.getValue(0).toString());
                 ActionType at = ActionType.forValue(ac);
                 if (at == ActionType.TeampUp)
                 {

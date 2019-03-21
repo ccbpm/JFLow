@@ -664,16 +664,19 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                 String trackTable = "ND" + Integer.parseInt(fk_flow) + "Track";
                 sql = "SELECT FID \"FID\",NDFrom \"NDFrom\",NDFromT \"NDFromT\",NDTo  \"NDTo\", NDToT \"NDToT\", ActionType \"ActionType\",ActionTypeText \"ActionTypeText\",Msg \"Msg\",RDT \"RDT\",EmpFrom \"EmpFrom\",EmpFromT \"EmpFromT\", EmpToT \"EmpToT\",EmpTo \"EmpTo\" FROM " + trackTable +
                       " WHERE WorkID=" +
-                      workid + (fid == 0 ? (" OR FID=" + workid) : (" OR WorkID=" + fid + " OR FID=" + fid)) + " ORDER BY RDT ASC";
+                      workid + (fid == 0 ? (" OR FID=" + workid) : (" OR WorkID=" + fid + " OR FID=" + fid)) + " ORDER BY RDT DESC,NDTo DESC";
 
                 dt = DBAccess.RunSQLReturnTable(sql);
-
+                
+                DataTable newdt = new DataTable();
+                newdt = dt.copy();
+                
                 //判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
                 if (dt.Rows.size() > 0)
                 {                
                 	String  acType=dt.Rows.get(0).getValue("ActionType").toString();                	
                 	int acTypeInt= Integer.parseInt(acType );                	 
-                    if ( acTypeInt== ActionType.UnSend.getValue())
+                    if ( acTypeInt== ActionType.UnSend.getValue() || acTypeInt== ActionType.Return.getValue())
                     {
                         if (dt.Rows.size() > 1)
                         {
@@ -683,6 +686,39 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                         else
                         {
                             dt.Rows.remove(0);
+                        }
+                        
+                        newdt = dt; 
+                    }else{
+                    	acType=dt.Rows.get(1).getValue("ActionType").toString();                	
+                    	acTypeInt= Integer.parseInt(acType ); 
+                    	if ( acTypeInt== ActionType.UnSend.getValue() || acTypeInt== ActionType.Return.getValue())
+                        {
+                            if (dt.Rows.size() > 1)
+                            {
+                                dt.Rows.remove(0);
+                                dt.Rows.remove(0);
+                            }
+                            else
+                            {
+                                dt.Rows.remove(0);
+                            }
+                            
+                            String fk_node = "";
+                            if (dt.Rows.get(0).getValue("NDFrom").equals(dt.Rows.get(0).getValue("NDTo")))
+                                fk_node = dt.Rows.get(0).getValue("NDFrom").toString();
+                            if (DataType.IsNullOrEmpty(fk_node) == false)
+                            {
+                                //如果是跳转页面，则需要删除中间跳转的节点
+                                for(DataRow dr : dt.Rows)
+                                {
+                                    if (acTypeInt == ActionType.Skip.getValue() && dr.getValue("NDFrom").toString().equals(fk_node))
+                                        continue;
+                                    DataRow newdr = newdt.NewRow();
+                                    newdr.ItemArray = dr.ItemArray;
+                                    newdt.Rows.add(newdr);
+                                }
+                            }; 
                         }
                     }
                 }

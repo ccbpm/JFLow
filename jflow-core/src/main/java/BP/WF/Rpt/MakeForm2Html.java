@@ -1646,17 +1646,19 @@ public class MakeForm2Html
                 {
                     docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFool.htm");
                     sb =GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
+                    docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
                 }
                 else if(mapData.getHisFrmType() == FrmType.FreeFrm)
                 {
                     docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFree.htm");
                     sb = GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
+                    docs = docs.replace("@Width", String.valueOf(mapData.getFrmW()+288)+"px");
                 }
             }
 
 
             docs = docs.replace("@Docs", sb.toString());
-            docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
+           
             docs = docs.replace("@Height", String.valueOf(mapData.getFrmH())+"px");
             
             Date date = new Date(); 

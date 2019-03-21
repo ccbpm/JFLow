@@ -610,9 +610,6 @@ public class WorkNode {
 								+ "]是中间节点，并且是外部用户处理节点，您需要正确的设置，这个外部用户接受人规则。");
 					}
 				}
-
-				// wl.FK_Emp = wl.GuestNo;
-				// wl.GuestName = wl.GuestName;
 			}
 
 			wl.DirectInsert();
@@ -712,6 +709,7 @@ public class WorkNode {
 				wl.setDTOfWarning(DateUtils.format(dtOfWarning, DataType.getSysDataTimeFormat()));
 				wl.setRDT(DataType.getCurrentDataTime());
 				wl.setCDT(DataType.getCurrentDataTime());
+				wl.setSender(WebUser.getNo() + "," + WebUser.getName());
 
 				wl.setFK_Flow(town.getHisNode().getFK_Flow());
 				if (this.IsHaveSubThreadGroupMark == true) {

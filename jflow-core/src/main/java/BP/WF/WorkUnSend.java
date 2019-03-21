@@ -404,6 +404,7 @@ public class WorkUnSend
 		
 		//节点信息
 		Node nd = new Node(gwf.getFK_Node());
+		
 		 /*该节点不允许退回.*/
         if (nd.getHisCancelRole() == CancelRole.None)
             throw new Exception("当前节点，不允许撤销。");
@@ -584,7 +585,19 @@ public class WorkUnSend
 		}
 
 		if (this.UnSendToNode != 0 && gwf.getFK_Node() != this.UnSendToNode)
-			  return DoUnSendInFeiLiuHeiliu(gwf);
+         {
+             Node toNode = new Node(this.UnSendToNode);
+             /* 要撤销的节点是分流节点，并且当前节点不在分流节点而是在合流节点的情况， for:华夏银行.
+             * 1, 分流节点发送给n个人.
+             * 2, 其中一个人发送到合流节点，另外一个人退回给分流节点。
+             * 3，现在分流节点的人接收到一个待办，并且需要撤销整个分流节点的发送.
+             * 4, UnSendToNode 这个时间没有值，并且当前干流节点的停留的节点与要撤销到的节点不一致。
+             */
+             if(toNode.getHisNodeWorkType() == NodeWorkType.WorkFL && nd.getHisNodeWorkType() == NodeWorkType.WorkHL)
+                 return DoUnSendInFeiLiuHeiliu(gwf);
+         }
+		 
+	
 
 			switch (nd.getHisNodeWorkType())
 			{

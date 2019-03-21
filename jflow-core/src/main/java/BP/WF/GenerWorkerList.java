@@ -1,5 +1,6 @@
 package BP.WF;
 
+import BP.DA.DataType;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.Port.Dept;
@@ -503,7 +504,9 @@ public class GenerWorkerList extends Entity
 			this.setGuestName(this.getFK_EmpText());
 			this.setGuestNo(BP.Web.GuestUser.getNo());
 		}
-		//this.Sender = BP.Web.WebUser.getNo();
+		
+		//增加记录日期.
+        this.SetValByKey(GenerWorkerListAttr.RDT,  DataType.getCurrentDataTimess());
 		return super.beforeInsert();
 	}
 

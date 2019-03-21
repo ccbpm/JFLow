@@ -551,7 +551,7 @@ public class Track extends BP.En.Entity
 			this.SetValByKey(TrackAttr.MyPK, mypk);
 		}
 
-		this.setRDT(DataType.getCurrentDataTime());
+		this.setRDT(DataType.getCurrentDataTimess());
 
 			///#region 执行保存
 		try
@@ -620,7 +620,7 @@ public class Track extends BP.En.Entity
 			}
 		}
 
-		this.setRDT(BP.DA.DataType.getCurrentDataTime());//getCurrentDataTimess
+		this.setRDT(BP.DA.DataType.getCurrentDataTimess());//getCurrentDataTimess
 
 		this.DoInsert(0);
 		return false;

@@ -547,10 +547,10 @@ public class WorkNode {
 			wl.setFK_EmpText(emp.getName());
 			wl.setFK_Dept(emp.getFK_Dept());
 			wl.setWarningHour(0);
-			wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
+			wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDataTimessFormat()));
 
 			wl.setDTOfWarning(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
-			wl.setRDT(DateUtils.format(new Date(), DataType.getSysDataTimeFormat()));
+			wl.setRDT(DateUtils.format(new Date(), DataType.getSysDataTimessFormat()));
 			wl.setFK_Flow(town.getHisNode().getFK_Flow());
 			// wl.Sender = this.Execer;
 
@@ -707,8 +707,8 @@ public class WorkNode {
 				wl.setWarningHour(0);
 				wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
 				wl.setDTOfWarning(DateUtils.format(dtOfWarning, DataType.getSysDataTimeFormat()));
-				wl.setRDT(DataType.getCurrentDataTime());
-				wl.setCDT(DataType.getCurrentDataTime());
+				wl.setRDT(DataType.getCurrentDataTimess());
+				wl.setCDT(DataType.getCurrentDataTimess());
 				wl.setSender(WebUser.getNo() + "," + WebUser.getName());
 
 				wl.setFK_Flow(town.getHisNode().getFK_Flow());
@@ -1988,12 +1988,6 @@ public class WorkNode {
 			}
 		}
 
-		// if (WebUser.IsWap == false)
-		// this.addMsg(SendReturnMsgFlag.ToEmpExt, null, "@<a
-		// href=\"javascript:WinOpen('" + VirPath + "WF/Msg/SMS.jsp?WorkID=" +
-		// this.WorkID + "&FK_Node=" + toND.NodeID + "');\" ><img src='" +
-		// VirPath + "WF/Img/SMS.gif' border=0 />发手机短信提醒他(们)</a>",
-		// SendReturnMsgType.Info);
 
 		if (1 == 2 && this.getHisNode().getHisFormType() != NodeFormType.SDKForm) {
 			if (this.getHisNode().getIsStartNode()) {
@@ -2028,26 +2022,9 @@ public class WorkNode {
 
 		this.getHisGenerWorkFlow().setFK_Node(toND.getNodeID());
 		this.getHisGenerWorkFlow().setNodeName(toND.getName());
-
-		// ps = new Paras();
-		// ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + (int)WFState.Runing
-		// + ", FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName
-		// WHERE WorkID=" + dbStr + "WorkID";
-		// ps.Add("FK_Node", toND.NodeID);
-		// ps.Add("NodeName", toND.Name);
-		// ps.Add("WorkID", this.HisWork.OID);
-		// DBAccess.RunSQL(ps);
-
 		if (this.getHisNode().getHisFormType() == NodeFormType.SDKForm
 				|| this.getHisNode().getHisFormType() == NodeFormType.SelfForm) {
 		} else {
-			// this.addMsg(SendReturnMsgFlag.WorkRpt, null,
-			// "@<img src='" + getVirPath() + "WF/Img/Btn/PrintWorkRpt.gif' ><a
-			// href='" + getVirPath()
-			// + "WF/WFRpt.jsp?WorkID=" + this.getHisWork().getOID() + "&FID=" +
-			// this.getHisWork().getFID()
-			// + "&FK_Flow=" + toND.getFK_Flow() + "' target='_self'
-			// >工作轨迹</a>。");
 		}
 		this.addMsg(SendReturnMsgFlag.WorkStartNode, "@下一步[" + toND.getName() + "]工作成功启动.",
 				"@下一步<font color=blue>[" + toND.getName() + "]</font>工作成功启动.");
@@ -2125,12 +2102,9 @@ public class WorkNode {
 				if (gwf.getIsExits() == false) {
 					gwf.setFID(this.getWorkID());
 
-					/// #warning 需要修改成标题生成规则。
-					/// #warning 让子流程的Titlte与父流程的一样.
-
 					gwf.setTitle(this.getHisGenerWorkFlow().getTitle()); // WorkNode.GenerTitle(this.rptGe);
 					gwf.setWFState(WFState.Runing);
-					gwf.setRDT(DataType.getCurrentDataTime());
+					gwf.setRDT(DataType.getCurrentDataTimess());
 					gwf.setStarter(this.getExecer());
 					gwf.setStarterName(this.getExecerName());
 					gwf.setFK_Flow(nd.getFK_Flow());
@@ -2715,7 +2689,7 @@ public class WorkNode {
 				}
 
 				gwf.setWFState(WFState.Runing);
-				gwf.setRDT(DataType.getCurrentDataTime());
+				gwf.setRDT(DataType.getCurrentDataTimess());
 				gwf.setStarter(this.getExecer());
 				gwf.setStarterName(this.getExecerName());
 				gwf.setFK_Flow(toNode.getFK_Flow());
@@ -3092,14 +3066,12 @@ public class WorkNode {
 				break;
 			case HL: // 1-3 普通节to合流点
 				this.NodeSend_11(toND);
-				// throw new Exception("@流程设计错误:请检查流程获取详细信息, 普通节点下面不能连接合流节点(" +
-				// toND.Name + ").");
+
 				break;
 			case FHL: // 1-4 普通节点to分合流点
 				this.NodeSend_11(toND);
 				break;
-			// throw new Exception("@流程设计错误:请检查流程获取详细信息, 普通节点下面不能连接分合流节点(" +
-			// toND.Name + ").");
+
 			case SubThread: // 1-5 普通节to子线程点
 				throw new RuntimeException("@流程设计错误:请检查流程获取详细信息, 普通节点下面不能连接子线程节点(" + toND.getName() + ").");
 			default:
@@ -3121,14 +3093,12 @@ public class WorkNode {
 					this.NodeSend_11(toND2); // 按普通节点到普通节点处理.
 					break;
 				case FL: // 2.2 分流点to分流点
-					// throw new Exception("@流程设计错误:请检查流程获取详细信息, 分流点(" +
-					// this.HisNode.Name + ")下面不能连接分流节点(" + toND2.Name + ").");
+
 				case HL: // 2.3 分流点to合流点,分合流点.
 				case FHL:
 					this.NodeSend_11(toND2); // 按普通节点到普通节点处理.
 					break;
-				// throw new Exception("@流程设计错误:请检查流程获取详细信息, 分流点(" +
-				// this.HisNode.Name + ")下面不能连接合流节点(" + toND2.Name + ").");
+
 				case SubThread: // 2.4 分流点to子线程点
 					if (toND2.getHisSubThreadType() == SubThreadType.SameSheet) {
 						NodeSend_24_SameSheet(toND2);
@@ -3153,14 +3123,7 @@ public class WorkNode {
 					case HL:
 						NodeSend_11(nd); // 按普通节点到普通节点处理.
 						break;
-					// throw new Exception("@流程设计错误:请检查流程获取详细信息, 分流点(" +
-					// this.HisNode.Name + ")下面不能连接分流节点(" + nd.Name + ").");
-					// case RunModel.FHL:
-					// throw new Exception("@流程设计错误:请检查流程获取详细信息, 分流点(" +
-					// this.HisNode.Name + ")下面不能连接分合流节点(" + nd.Name + ").");
-					// case RunModel.HL:
-					// throw new Exception("@流程设计错误:请检查流程获取详细信息, 分流点(" +
-					// this.HisNode.Name + ")下面不能连接合流节点(" + nd.Name + ").");
+
 					default:
 						break;
 					}
@@ -3203,14 +3166,12 @@ public class WorkNode {
 			case FL: // 3.2 分流点
 				this.NodeSend_31(toND3); // 让它与普通点点普通点一样的逻辑.
 				break;
-			// throw new Exception("@流程设计错误:请检查流程获取详细信息, 合流点(" +
-			// this.HisNode.Name + ")下面不能连接分流节点(" + toND3.Name + ").");
+
 			case HL: // 3.3 合流点
 			case FHL:
 				this.NodeSend_31(toND3); // 让它与普通点点普通点一样的逻辑.
 				break;
-			// throw new Exception("@流程设计错误:请检查流程获取详细信息, 合流点(" +
-			// this.HisNode.Name + ")下面不能连接合流节点(" + toND3.Name + ").");
+
 			case SubThread: // 3.4 子线程
 				throw new RuntimeException("@流程设计错误:请检查流程获取详细信息, 合流点(" + this.getHisNode().getName() + ")下面不能连接子线程节点("
 						+ toND3.getName() + ").");
@@ -3240,8 +3201,6 @@ public class WorkNode {
 			case FHL:
 				this.NodeSend_11(toND4); // 让它与普通点点普通点一样的逻辑.
 				break;
-			// throw new Exception("@流程设计错误:请检查流程获取详细信息, 合流点(" +
-			// this.HisNode.Name + ")下面不能连接合流节点(" + toND4.Name + ").");
 			case SubThread: // 4.5 子线程
 				if (toND4.getHisSubThreadType() == SubThreadType.SameSheet) {
 					NodeSend_24_SameSheet(toND4);
@@ -3250,13 +3209,10 @@ public class WorkNode {
 					NodeSend_24_UnSameSheet(toNDs4); // 可能是只发送1个异表单
 				}
 				break;
-			// throw new Exception("@流程设计错误:请检查流程获取详细信息, 合流点(" +
-			// this.HisNode.Name + ")下面不能连接子线程节点(" + toND4.Name + ").");
 			default:
 				throw new RuntimeException("@没有判断的节点类型(" + toND4.getName() + ")");
 			}
 			break;
-		// throw new Exception("@没有判断的类型:" + this.HisNode.HisNodeWorkTypeT);
 		case SubThread: // 5: 子线程节点向下发送的
 			Node toND5 = this.NodeSend_GenerNextStepNode();
 			if (this.getIsStopFlow()) {
@@ -6621,12 +6577,6 @@ public class WorkNode {
 						"SELECT Title FROM  ND" + Integer.parseInt(ndFrom.getFK_Flow()) + "01 WHERE OID=" + PWorkID,
 						"");
 
-				//// 记录当前流程被调起。
-				// this.AddToTrack(ActionType.StartSubFlow, WebUser.getNo(),
-				// WebUser.Name, ndFrom.NodeID, ndFrom.FlowName + "\t\n" +
-				//// ndFrom.FlowName, "被父流程(" + ndFrom.FlowName + ":" + pTitle +
-				//// ")调起.");
-
 				// 记录父流程被调起。
 				BP.WF.Dev2Interface.WriteTrack(this.getHisFlow().getNo(), this.getHisNode().getNodeID(),
 						this.getWorkID(), 0, "被{" + ndFrom.getFlowName() + "}发起,发起人:" + this.getExecerName(),
@@ -6775,10 +6725,8 @@ public class WorkNode {
 		wl.setFK_Flow(this.getHisNode().getFK_Flow());
 		wl.setFK_Dept(this.getExecerDeptNo());
 		wl.setWarningHour(0);
-		wl.setSDT(DataType.getCurrentDataTime());
+		wl.setSDT(DataType.getCurrentDataTimess());
 		wl.setDTOfWarning(DataType.getCurrentData());
-		wl.setRDT(DataType.getCurrentDataTime());
-
 		try {
 			wl.Save();
 		} catch (java.lang.Exception e) {
@@ -7061,68 +7009,7 @@ public class WorkNode {
 
 			String msg = pm.DoSendMessage(this.town.getHisNode(), this.town.getHisWork(), null, null, null, toEmps);
 			this.addMsg("alert" + pm.getMyPK(), msg, msg, SendReturnMsgType.Info);
-			// this.addMsg(SendReturnMsgFlag.SendSuccessMsg, "已经转给，加签的发起人(" +
-			// item.FK_Emp + "," + item.FK_EmpText + ")",
-			// SendReturnMsgType.Info);
 		}
-		/*
-		 * //#region 判断是否可以发送. boolean isSendEmail = false; boolean isSendSMS =
-		 * false; FrmEvent fEvent = this.getHisNode().getSendSuccess_FrmEvent();
-		 * switch (fEvent.getMsgCtrl()) { case BySet: //是否启动消息? isSendEmail =
-		 * fEvent.getMailEnable(); isSendSMS = fEvent.getSMSEnable();
-		 * 
-		 * if (isSendEmail == false && isSendSMS == false) { return; } break;
-		 * case ByFrmIsSendMsg: try { //从表单字段里取参数. if
-		 * (this.getHisWork().getRow().containsKey("IsSendEmail") == true) {
-		 * isSendEmail = this.getHisWork().GetValBooleanByKey("IsSendEmail"); }
-		 * if (this.getHisWork().getRow().containsKey("IsSendSMS") == true) {
-		 * isSendSMS = this.getHisWork().GetValBooleanByKey("IsSendSMS"); }
-		 * 
-		 * if (isSendEmail == false && isSendSMS == false) { return; } } catch
-		 * (java.lang.Exception e) { if
-		 * (this.getHisWork().getRow().containsKey("IsSendEmail") == false ||
-		 * this.getHisWork().getRow().containsKey("IsSendSMS") == false) { throw
-		 * new RuntimeException("没有在ccform里接收到IsSendEmail， IsSendSMS 参数."); } }
-		 * break; case BySDK: try { if
-		 * (this.getHisWork().GetValBooleanByKey("IsSendMsg") == false) {
-		 * return; } } catch (java.lang.Exception e2) { if
-		 * (this.getHisWork().getRow().containsKey("IsSendMsg") == false) {
-		 * throw new RuntimeException("没有接收到IsSendMsg参数."); } } break; default:
-		 * break; } // 取出模版文件. String hostUrl = Glo.getHostURL();
-		 * 
-		 * //邮件标题. String mailTitle = fEvent.getMailTitle();
-		 * 
-		 * //邮件内容. String mailDoc = fEvent.getMailDoc(); String mailEnd =
-		 * "<a href='{0}'>用计算机打开工作</a>,地址:{0}.";
-		 * 
-		 * //短消息内容. String msgTemp = fEvent.getSMSDoc(); for (GenerWorkerList wl
-		 * : gwls.ToJavaList()) { if (wl.getIsEnable() == false) { continue; }
-		 * 
-		 * // 邮件标题. String title = ""; if
-		 * (DotNetToJavaStringHelper.isNullOrEmpty(mailTitle)) { title =
-		 * String.format("流程:%1$s.工作:%2$s,发送人:%3$s,标题:%4$s,需您处理.",
-		 * this.getHisNode().getFlowName(), wl.getFK_NodeText(),
-		 * this.getExecerName(), this.rptGe.getTitle()); } else { title =
-		 * Glo.DealExp(mailTitle, this.getHisWork(), null); }
-		 * 
-		 * //邮件内容. String sid = wl.getFK_Emp() + "_" + wl.getWorkID() + "_" +
-		 * wl.getFK_Node() + "_" + wl.getRDT(); String url = hostUrl +
-		 * "WF/Do.jsp?DoType=OF&SID=" + sid; url = url.replace("//", "/"); url =
-		 * url.replace("//", "/"); mailDoc = Glo.DealExp(mailDoc,
-		 * this.getHisWork(), null); mailDoc += "\t\n " + String.format(mailEnd,
-		 * url); mailDoc = mailDoc.replace("{Url}", url);
-		 * 
-		 * // 短信信息. if (DotNetToJavaStringHelper.isNullOrEmpty(msgTemp) == true)
-		 * { msgTemp = "新工作:" + this.rptGe.getTitle() +
-		 * "发送人:"+Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName())+
-		 * ",流程:" + this.getHisFlow().getName(); } else { msgTemp =
-		 * Glo.DealExp(msgTemp, this.getHisWork(), null); }
-		 * 
-		 * BP.WF.Dev2Interface.Port_SendMsg(wl.getFK_Emp(), title, mailDoc,
-		 * "WKAlt" + wl.getFK_Node() + "_" + wl.getWorkID(),
-		 * BP.WF.SMSMsgType.SendSuccess, wl.getFK_Flow(), wl.getFK_Node(),
-		 * wl.getWorkID(), wl.getFID()); }
-		 */
 	}
 
 	/**
@@ -7147,7 +7034,7 @@ public class WorkNode {
 		Track t = new Track();
 		t.setWorkID(this.getHisWork().getOID());
 		t.setFID(this.getHisWork().getFID());
-		t.setRDT(DataType.getCurrentDataTime());
+		t.setRDT(DataType.getCurrentDataTimess());
 		t.setHisActionType(at);
 
 		t.setNDFrom(ndFrom.getNodeID());
@@ -7202,9 +7089,6 @@ public class WorkNode {
 		}
 
 		try {
-			// t.MyPK(t.WorkID + "_" + t.FID + "_" + t.NDFrom + "_" + t.NDTo
-			// +"_"+t.EmpFrom+"_"+t.EmpTo+"_"+
-			// DateTime.Now.ToString("yyMMddHHmmss"));
 			t.Insert();
 		} catch (java.lang.Exception e) {
 			t.CheckPhysicsTable();

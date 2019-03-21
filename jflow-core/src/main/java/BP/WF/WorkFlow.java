@@ -80,7 +80,7 @@ public class WorkFlow
 		// 更新当前流程管理表的设置当前的节点。
 		DBAccess.RunSQL("UPDATE WF_GenerWorkFlow SET FK_Node=" + fk_node + ", NodeName='" + nd.getName() + "' WHERE WorkID=" + this.getWorkID());
 
-		wl.setRDT(DataType.getCurrentDataTime());
+		wl.setRDT(DataType.getCurrentDataTimess());
 		wl.setIsPass(false);
 		wl.Update();
 
@@ -595,8 +595,8 @@ public class WorkFlow
 						{
 							item.setIsRead(false);
 							item.setIsPassInt(0);
-							item.setRDT(BP.DA.DataType.getCurrentDataTime());
-							item.setSDT(BP.DA.DataType.getCurrentDataTime());
+							item.setRDT(BP.DA.DataType.getCurrentDataTimess());
+							item.setSDT(BP.DA.DataType.getCurrentDataTimess());
 							item.Update();
 						}
 					}
@@ -606,8 +606,8 @@ public class WorkFlow
 			{
 				gwl.setIsRead(false);
 				gwl.setIsPassInt(0);
-				gwl.setRDT(BP.DA.DataType.getCurrentDataTime());
-				gwl.setSDT(BP.DA.DataType.getCurrentDataTime());
+				gwl.setRDT(BP.DA.DataType.getCurrentDataTimess());
+				gwl.setSDT(BP.DA.DataType.getCurrentDataTimess());
 				gwl.Update();
 				return "子线程被删除成功,这是最后一个删除的子线程已经为您在{" + gwfMain.getNodeName() + "}产生了待办,<a href='/WF/MyFlow.htm?WorkID=" + gwfMain.getWorkID() + "&FK_Flow=" + gwfMain.getFK_Flow() + "'>点击处理工作</a>.";
 

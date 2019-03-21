@@ -696,12 +696,12 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                         {
                             if (dt.Rows.size() > 1)
                             {
-                                dt.Rows.remove(0);
-                                dt.Rows.remove(0);
+                                dt.Rows.remove(1);
+                                dt.Rows.remove(1);
                             }
                             else
                             {
-                                dt.Rows.remove(0);
+                                dt.Rows.remove(1);
                             }
                             
                             String fk_node = "";
@@ -712,10 +712,10 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                                 //如果是跳转页面，则需要删除中间跳转的节点
                                 for(DataRow dr : dt.Rows)
                                 {
-                                    if (acTypeInt == ActionType.Skip.getValue() && dr.getValue("NDFrom").toString().equals(fk_node))
+                                    if (Integer.parseInt(dr.getValue("ActionType").toString() ) == ActionType.Skip.getValue() && dr.getValue("NDFrom").toString().equals(fk_node))
                                         continue;
                                     DataRow newdr = newdt.NewRow();
-                                    newdr.ItemArray = dr.ItemArray;
+                                    newdr = dr;
                                     newdt.Rows.add(newdr);
                                 }
                             }; 
@@ -723,8 +723,8 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                     }
                 }
 
-                dt.TableName = "Track";
-                ds.Tables.add(dt);
+                newdt.TableName = "Track";
+                ds.Tables.add(newdt);
 
                 //获取预先计算的节点处理人，以及处理时间,added by liuxc,2016-4-15
                 sql = "SELECT wsa.FK_Node as \"FK_Node\",wsa.FK_Emp as \"FK_Emp\",wsa.EmpName as \"EmpName\",wsa.TimeLimit as \"TimeLimit\",wsa.TSpanHour as \"TSpanHour\",wsa.ADT as \"ADT\",wsa.SDT as \"SDT\" FROM WF_SelectAccper wsa WHERE wsa.WorkID = " + workid;

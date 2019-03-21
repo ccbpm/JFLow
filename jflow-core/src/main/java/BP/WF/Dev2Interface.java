@@ -5668,7 +5668,7 @@ public class Dev2Interface {
 
 		gwf.setStarter(emp.getNo());
 		gwf.setStarterName(emp.getName());
-		gwf.setRDT(DataType.getCurrentDataTime());
+		gwf.setRDT(DataType.getCurrentDataTimess());
 
 		gwf.setPWorkID(0);
 		gwf.setPFlowNo(null);
@@ -5695,9 +5695,9 @@ public class Dev2Interface {
 				gwl.setFK_Flow(fl.getNo());
 				gwl.setFK_Dept(emp.getFK_Dept());
 
-				gwl.setSDT(DataType.getCurrentDataTime());
+				gwl.setSDT(DataType.getCurrentDataTimess());
 				gwl.setDTOfWarning(DataType.getCurrentDataTime());
-				gwl.setRDT(DataType.getCurrentDataTime());
+				gwl.setRDT(DataType.getCurrentDataTimess());
 				gwl.setIsEnable(true);
 				gwl.setIsRead(true);
 				gwl.setIsPass(false);
@@ -5771,7 +5771,7 @@ public class Dev2Interface {
 		GenerWorkerLists gwls = new GenerWorkerLists(workid);
 		GenerWorkerList gwl = (GenerWorkerList) ((gwls.get(gwls.size() - 1) instanceof GenerWorkerList)
 				? gwls.get(gwls.size() - 1) : null); // 获得最后一个。
-		gwl.setRDT(DataType.getCurrentDataTime());
+		gwl.setRDT(DataType.getCurrentDataTimess());
 		gwl.setWorkID(workid);
 		gwl.setFK_Node(toNodeID);
 		gwl.setFK_NodeText(nd.getName());
@@ -6661,13 +6661,6 @@ public class Dev2Interface {
 		gwf.setFK_Node(fl.getStartNodeID());
 		gwf.setNodeName(nd.getName());
 		gwf.setWFState(WFState.Blank);
-
-		// 默认启用草稿,如果写入待办则状态为运行, zhoupeng 去掉. 2017.1.23
-		// if(fl.DraftRole == DraftRole.SaveToTodolist)
-		// gwf.WFState = WFState.Runing;
-		// if (fl.DraftRole == DraftRole.SaveToDraftList)
-		// gwf.WFState = WFState.Draft;
-
 		if (StringHelper.isNullOrEmpty(title)) {
 			gwf.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(fl, wk));
 		} else {
@@ -6675,7 +6668,7 @@ public class Dev2Interface {
 		}
 		gwf.setStarter(empStarter.getNo());
 		gwf.setStarterName(empStarter.getName());
-		gwf.setRDT(DataType.getCurrentDataTime());
+		gwf.setRDT(DataType.getCurrentDataTimess());
 		gwf.setPWorkID(parentWorkID);
 		gwf.setPFID(parentFID);
 		gwf.setPFlowNo(parentFlowNo);
@@ -6696,9 +6689,9 @@ public class Dev2Interface {
 		gwl.setFID(0);
 		gwl.setFK_Flow(fl.getNo());
 		gwl.setFK_Dept(empStarter.getFK_Dept());
-		gwl.setSDT(DataType.getCurrentDataTime());
+		gwl.setSDT(DataType.getCurrentDataTimess());
 		gwl.setDTOfWarning(DataType.getCurrentDataTime());
-		gwl.setRDT(DataType.getCurrentDataTime());
+		gwl.setRDT(DataType.getCurrentDataTimess());
 		gwl.setIsEnable(true);
 		gwl.setIsPass(false);
 		gwl.setPRI(gwf.getPRI());
@@ -6915,9 +6908,9 @@ public class Dev2Interface {
 			gwl.setFK_Flow(fl.getNo());
 			gwl.setFK_Dept(emp.getFK_Dept());
 
-			gwl.setSDT(DataType.getCurrentDataTime());
+			gwl.setSDT(DataType.getCurrentDataTimess());
 			gwl.setDTOfWarning(DataType.getCurrentDataTime());
-			gwl.setRDT(DataType.getCurrentDataTime());
+			gwl.setRDT(DataType.getCurrentDataTimess());
 			gwl.setIsEnable(true);
 
 			gwl.setIsPass(false);
@@ -8110,9 +8103,9 @@ public class Dev2Interface {
 			if (gwl.RetrieveFromDBSources() == 0) {
 				gwl.setFK_EmpText(WebUser.getName());
 				gwl.setIsPassInt(0);
-				gwl.setSDT(DataType.getCurrentDataTime());
+				gwl.setSDT(DataType.getCurrentDataTimess());
 				gwl.setDTOfWarning(DataType.getCurrentDataTime());
-				gwl.setRDT(DataType.getCurrentDataTime());
+				gwl.setRDT(DataType.getCurrentDataTimess());
 				gwl.setIsEnable(true);
 				gwl.setIsRead(true);
 				gwl.setIsPass(false);
@@ -8426,7 +8419,7 @@ public class Dev2Interface {
 					gwf.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(fl, wk));
 					gwf.setStarter(WebUser.getNo());
 					gwf.setStarterName(WebUser.getName());
-					gwf.setRDT(DataType.getCurrentDataTime());
+					gwf.setRDT(DataType.getCurrentDataTimess());
 					gwf.Insert();
 					// 产生工作列表.
 					GenerWorkerList gwl = new GenerWorkerList();
@@ -8440,9 +8433,9 @@ public class Dev2Interface {
 
 					gwl.setFK_Flow(fk_flow);
 					gwl.setFK_Dept(WebUser.getFK_Dept());
-					gwl.setSDT(DataType.getCurrentDataTime());
+					gwl.setSDT(DataType.getCurrentDataTimess());
 					gwl.setDTOfWarning(DataType.getCurrentDataTime());
-					gwl.setRDT(DataType.getCurrentDataTime());
+					gwl.setRDT(DataType.getCurrentDataTimess());
 					gwl.setIsEnable(true);
 
 					gwl.setIsPass(false);
@@ -9155,7 +9148,7 @@ public class Dev2Interface {
 			gwf.setWFState(WFState.Shift);
 			gwf.setTodoEmps(toEmp);
 			gwf.setTodoEmpsNum(1);
-			gwf.setRDT(DataType.getCurrentDataTime());
+			gwf.setRDT(DataType.getCurrentDataTimess());
 			gwf.setNodeName("");
 			gwf.setFlowName(fl.getName());
 			gwf.setEmps(toEmp);
@@ -9229,7 +9222,7 @@ public class Dev2Interface {
 					wl.setFK_Node(nodeID);
 					wl.setFK_NodeText(nd.getName());
 					wl.setSender(BP.Web.WebUser.getNo());
-					wl.setRDT(BP.DA.DataType.getCurrentDataTime());
+					wl.setRDT(BP.DA.DataType.getCurrentDataTimess());
 					wl.setIsPass(false);
 					wl.setIsRead(false);
 					wl.setIsEnable(true);

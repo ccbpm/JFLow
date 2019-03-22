@@ -272,19 +272,7 @@ public class DataType {
 		jsonString += "{\"" + jsonName + "\":" + Json.ToJson(dt) + "}";
 		return jsonString;
 
-		/*
-		 * warning StringBuilder Json = new StringBuilder(); if
-		 * (StringHelper.isNullOrEmpty(jsonName)) { jsonName = dt.TableName; }
-		 * Json.append("{\"" + jsonName + "\":["); if (dt.Rows.size() > 0) { for
-		 * (int i = 0; i < dt.Rows.size(); i++) { Json.append("{"); for (int j =
-		 * 0; j < dt.Columns.size(); j++) { java.lang.Class type =
-		 * dt.Rows[i][j].getClass(); Json.append("\"" +
-		 * dt.Columns[j].ColumnName.toString() + "\":" +
-		 * String.format(dt.Rows[i][j].toString(), type)); if (j <
-		 * dt.Columns.size() - 1) { Json.append(","); } } Json.append("}"); if
-		 * (i < dt.Rows.size() - 1) { Json.append(","); } } } Json.append("]}");
-		 * return Json.toString();
-		 */
+
 	}
 
 	/**
@@ -428,15 +416,6 @@ public class DataType {
 		return nowByte;
 	}
 
-	/*
-	 * public static byte[] ConvertFileToByte(String fileName) { byte[] nowByte
-	 * = new byte[(int) fileName.length()]; try { InputStream fs = new
-	 * FileInputStream(fileName); ByteArrayOutputStream bytestream = new
-	 * ByteArrayOutputStream(); byte[] bb = new byte[10240]; int ch; ch =
-	 * fs.read(bb); while (ch != -1) { bytestream.write(bb, 0, ch); ch =
-	 * fs.read(bb); } nowByte = bytestream.toByteArray(); } catch (Exception ex)
-	 * { ex.printStackTrace(); } return nowByte; }
-	 */
 	/**
 	 * 写文件
 	 * 
@@ -561,11 +540,7 @@ public class DataType {
 			e.printStackTrace();
 		}
 		return true;
-		/*
-		 * warning System.IO.StreamWriter sw = new
-		 * System.IO.StreamWriter(filePath, false); sw.Write(doc); sw.Close();
-		 * return true;
-		 */
+
 	}
 
 	public static String ReadTextFile2Html(String file) {
@@ -625,10 +600,7 @@ public class DataType {
 		java.math.BigDecimal p = a.divide(b);
 		DecimalFormat df = new DecimalFormat("0.00%");
 		return df.format(p);
-		/*
-		 * warning java.math.BigDecimal p = a.divide(b); return
-		 * p.ToString("0.00%");
-		 */
+
 	}
 
 	public static String GetWeek(int weekidx) {
@@ -688,14 +660,6 @@ public class DataType {
 		}
 	}
 
-	/*
-	 * warning public static String GetBig5_Del(String text) {
-	 * System.Text.Encoding e2312 = System.Text.Encoding.GetEncoding("GB2312");
-	 * byte[] bs = e2312.GetBytes(text); System.Text.Encoding e5 =
-	 * System.Text.Encoding.GetEncoding("Big5"); byte[] bs5 =
-	 * System.Text.Encoding.Convert(e2312, e5, bs); return e5.GetString(bs5); }
-	 */
-
 	/**
 	 * 返回 data1 - data2 的天数.
 	 * 
@@ -745,9 +709,6 @@ public class DataType {
 			cd.setTime(fromdate);
 			cd.add(Calendar.MONTH, +1);
 			fromdate = cd.getTime();
-			/*
-			 * warningfromdate = fromdate.AddMonths(1);
-			 */
 		}
 
 		int j = (i + 2) / 3;
@@ -891,13 +852,9 @@ public class DataType {
 			return fileName;
 		}
 
-		// HttpUtility.HtmlEncode(fileName);
-
 		String filePath = fileName.substring(0, fileName.lastIndexOf('\\'));
 		String fName = fileName.substring(fileName.lastIndexOf('\\'));
-		// fName = HttpUtility.HtmlEncode(fName);
-		// if (1 == 2)
-		// {
+
 		fName = PraseStringToUrlFileNameExt(fName, "%", "%25");
 		fName = PraseStringToUrlFileNameExt(fName, "+", "%2B");
 		fName = PraseStringToUrlFileNameExt(fName, " ", "%20");
@@ -907,8 +864,6 @@ public class DataType {
 		fName = PraseStringToUrlFileNameExt(fName, "&", "%26");
 		fName = PraseStringToUrlFileNameExt(fName, "=", "%3D");
 		fName = PraseStringToUrlFileNameExt(fName, " ", "%20");
-
-		// }
 		return filePath + fName;
 	}
 
@@ -1001,7 +956,6 @@ public class DataType {
 
 		exp = exp.replace("+-", "-");
 		exp = exp.replace("￥", "");
-		// exp=exp.replace(" ",""); 不能替换，因为有sql表达公式时间，会出现错误。
 		exp = exp.replace("\n", "");
 		exp = exp.replace("\t", "");
 
@@ -1024,9 +978,6 @@ public class DataType {
 		if (val.equals("-")) {
 			exp = exp.substring(1);
 		}
-
-		// exp = exp.replace("*100%", "*100");
-
 		exp = exp.replace("*100%", "*1");
 
 		try {
@@ -1051,14 +1002,8 @@ public class DataType {
 				}
 			}
 
-			/*
-			 * warning switch (SystemConfig.getAppCenterDBType()) { case
-			 * DBType.MSSQL: case Oracle: sql = "SELECT  " + exp +
-			 * " NUM from DUAL "; return DBAccess.RunSQLReturnValDecimal(sql, 0,
-			 * 2); default: break; }
-			 */
+
 		} catch (RuntimeException ex) {
-			// Log.DefaultLogWriteLineInfo(ex.getMessage());
 			return bigDecimal;
 		}
 
@@ -1218,9 +1163,7 @@ public class DataType {
 		Date dt = new Date();
 		String date = String.format("%d", dt);
 		return date;
-		/*
-		 * warning return new String.format("%d", java.util.Date());
-		 */
+
 	}
 
 	/**
@@ -1306,14 +1249,6 @@ public class DataType {
 		return date + "-" + date2;
 	}
 
-	/**
-	 * yyyy-JD
-	 */
-	/*
-	 * warning public static String getCurrentAPOfPrevious() { int m =
-	 * Integer.parseInt(new java.util.Date().ToString("MM")); return new
-	 * java.util.Date().ToString("yyyy-MM"); }
-	 */
 
 	/**
 	 * 取出当前月份的上一个月份
@@ -1331,7 +1266,7 @@ public class DataType {
 	 */
 	public static String getCurrentDataTime() {
 		Date dt = new Date();
-		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String date = matter.format(dt);
 		return date;
 	}
@@ -1528,6 +1463,13 @@ public class DataType {
 	 */
 	public static String getSysDataTimeFormat() {
 		return "yyyy-MM-dd HH:mm";
+	}
+	
+	/**
+	 * 系统定义日期时间格式 yyyy-MM-dd hh:mm
+	 */
+	public static String getSysDataTimessFormat() {
+		return "yyyy-MM-dd HH:mm:ss";
 	}
 
 	public static String getSysDataFormatCN() {

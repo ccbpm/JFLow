@@ -689,37 +689,35 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                         }
                         
                         newdt = dt; 
-                    }else{
-                    	acType=dt.Rows.get(1).getValue("ActionType").toString();                	
-                    	acTypeInt= Integer.parseInt(acType ); 
-                    	if ( acTypeInt== ActionType.UnSend.getValue() || acTypeInt== ActionType.Return.getValue())
+                    }else if(dt.Rows.size() >1 &&(Integer.parseInt(dt.Rows.get(1).getValue("ActionType").toString())== ActionType.UnSend.getValue()
+                    								||Integer.parseInt(dt.Rows.get(1).getValue("ActionType").toString())== ActionType.Return.getValue() )){
+                        if (dt.Rows.size() > 1)
                         {
-                            if (dt.Rows.size() > 1)
-                            {
-                                dt.Rows.remove(1);
-                                dt.Rows.remove(1);
-                            }
-                            else
-                            {
-                                dt.Rows.remove(1);
-                            }
-                            
-                            String fk_node = "";
-                            if (dt.Rows.get(0).getValue("NDFrom").equals(dt.Rows.get(0).getValue("NDTo")))
-                                fk_node = dt.Rows.get(0).getValue("NDFrom").toString();
-                            if (DataType.IsNullOrEmpty(fk_node) == false)
-                            {
-                                //如果是跳转页面，则需要删除中间跳转的节点
-                                for(DataRow dr : dt.Rows)
-                                {
-                                    if (Integer.parseInt(dr.getValue("ActionType").toString() ) == ActionType.Skip.getValue() && dr.getValue("NDFrom").toString().equals(fk_node))
-                                        continue;
-                                    DataRow newdr = newdt.NewRow();
-                                    newdr = dr;
-                                    newdt.Rows.add(newdr);
-                                }
-                            }; 
+                            dt.Rows.remove(1);
+                            dt.Rows.remove(1);
                         }
+                        else
+                        {
+                            dt.Rows.remove(1);
+                        }
+                            
+                        String fk_node = "";
+                        if (dt.Rows.get(0).getValue("NDFrom").equals(dt.Rows.get(0).getValue("NDTo")))
+                            fk_node = dt.Rows.get(0).getValue("NDFrom").toString();
+                        if (DataType.IsNullOrEmpty(fk_node) == false)
+                        {
+                            //如果是跳转页面，则需要删除中间跳转的节点
+                            for(DataRow dr : dt.Rows)
+                            {
+                                if (Integer.parseInt(dr.getValue("ActionType").toString() ) == ActionType.Skip.getValue() && dr.getValue("NDFrom").toString().equals(fk_node))
+                                    continue;
+                                DataRow newdr = newdt.NewRow();
+                                newdr = dr;
+                                newdt.Rows.add(newdr);
+                            }
+                        }
+                    }else{
+                    	newdt = dt;
                     }
                 }
 

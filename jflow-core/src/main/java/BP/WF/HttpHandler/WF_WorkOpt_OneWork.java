@@ -691,7 +691,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                         newdt = dt; 
                     }else if(dt.Rows.size() >1 &&(Integer.parseInt(dt.Rows.get(1).getValue("ActionType").toString())== ActionType.UnSend.getValue()
                     								||Integer.parseInt(dt.Rows.get(1).getValue("ActionType").toString())== ActionType.Return.getValue() )){
-                        if (dt.Rows.size() > 1)
+                        if (dt.Rows.size() > 3)
                         {
                             dt.Rows.remove(1);
                             dt.Rows.remove(1);
@@ -715,6 +715,8 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
                                 newdr = dr;
                                 newdt.Rows.add(newdr);
                             }
+                        }else{
+                        	newdt = dt;
                         }
                     }else{
                     	newdt = dt;

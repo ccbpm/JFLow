@@ -1044,10 +1044,10 @@ public class WorkNode {
 				boolean isPass = false;
 
 				if (item.getExpType() == ConnDataFrom.Paras)
-					isPass = BP.WF.Glo.CondExpPara(item.getCondExp(), this.rptGe.getRow(),this.getWorkID());
+					isPass = BP.WF.Glo.CondExpPara(item.getCondExp(), this.rptGe.getRow(), this.getWorkID());
 
 				if (item.getExpType() == ConnDataFrom.SQL)
-					isPass = BP.WF.Glo.CondExpSQL(item.getCondExp(), this.rptGe.getRow(),this.getWorkID());
+					isPass = BP.WF.Glo.CondExpSQL(item.getCondExp(), this.rptGe.getRow(), this.getWorkID());
 
 				if (isPass == true)
 					return new Node(Integer.parseInt(item.getFK_Flow() + "01"));
@@ -1174,7 +1174,7 @@ public class WorkNode {
 			if (skipWork == null) {
 				skipWork = toWn.getHisWork();
 			}
-			if(DataType.IsNullOrEmpty(this.JumpToEmp) == false){
+			if (DataType.IsNullOrEmpty(this.JumpToEmp) == false) {
 				String[] emps = JumpToEmp.split("[,]", -1);
 				dt = new DataTable();
 				dt.Columns.Add("No", String.class);
@@ -1186,7 +1186,7 @@ public class WorkNode {
 					dr.setValue(0, emp);
 					dt.Rows.add(dr);
 				}
-			}else{
+			} else {
 				dt = fw.DoIt(this.getHisFlow(), this, toWn); // 找到下一步骤的接受人.
 				if (dt == null || dt.Rows.size() == 0) {
 					if (nd.getHisWhenNoWorker() == true) {
@@ -1988,7 +1988,6 @@ public class WorkNode {
 			}
 		}
 
-
 		if (1 == 2 && this.getHisNode().getHisFormType() != NodeFormType.SDKForm) {
 			if (this.getHisNode().getIsStartNode()) {
 				if (WebUser.getIsWap()) {
@@ -2144,17 +2143,17 @@ public class WorkNode {
 				wk.setRec(wl.getFK_Emp());
 				wk.setEmps("@" + wl.getFK_Emp());
 				wk.DirectUpdate();
-				
-				//为子线程产生分流节点的发送副本。
-                wl.setFID(this.getWorkID());
-                wl.setFK_Emp (WebUser.getNo());
-                wl.setFK_EmpText(WebUser.getName());
-                wl.setIsPassInt(-2);
-                wl.setIsRead(true);
-                wl.setFK_Node( this.getHisNode().getNodeID());
-                wl.setFK_NodeText(this.getHisNode().getName());
-                if (wl.getIsExits()==false)
-                   wl.Insert();
+
+				// 为子线程产生分流节点的发送副本。
+				wl.setFID(this.getWorkID());
+				wl.setFK_Emp(WebUser.getNo());
+				wl.setFK_EmpText(WebUser.getName());
+				wl.setIsPassInt(-2);
+				wl.setIsRead(true);
+				wl.setFK_Node(this.getHisNode().getNodeID());
+				wl.setFK_NodeText(this.getHisNode().getName());
+				if (wl.getIsExits() == false)
+					wl.Insert();
 			}
 		}
 
@@ -2845,25 +2844,24 @@ public class WorkNode {
 		toNodeWK.setFID(0);
 
 		this.town = new WorkNode(toNodeWK, toNode);
-		
+
 		// 获取到达当前合流节点上 与上一个分流点之间的子线程节点的集合。
-        String spanNodes = this.SpanSubTheadNodes(toNode);
-        
-        //处理FID.
-        long fid = this.getHisWork().getFID();
-        if (fid == 0)
-        {
-            if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
-                throw new Exception("@当前节点非子线程节点.");
+		String spanNodes = this.SpanSubTheadNodes(toNode);
 
-            String strs = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT FID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getHisWork().getOID(), "0");
-            if (strs == "0")
-                throw new Exception("@丢失FID信息");
-            fid = Long.parseLong(strs);
+		// 处理FID.
+		long fid = this.getHisWork().getFID();
+		if (fid == 0) {
+			if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
+				throw new Exception("@当前节点非子线程节点.");
 
-            this.getHisWork().setFID (fid);
-        }
-        
+			String strs = BP.DA.DBAccess.RunSQLReturnStringIsNull(
+					"SELECT FID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getHisWork().getOID(), "0");
+			if (strs == "0")
+				throw new Exception("@丢失FID信息");
+			fid = Long.parseLong(strs);
+
+			this.getHisWork().setFID(fid);
+		}
 
 		// 先查询一下是否有人员，在合流节点上，如果没有就让其初始化人员.
 		current_gwls = new GenerWorkerLists();
@@ -2871,12 +2869,11 @@ public class WorkNode {
 				toNode.getNodeID());
 		if (current_gwls.size() == 0)
 			current_gwls = this.Func_GenerWorkerLists(this.town);// 初试化他们的工作人员．
-		else
-        {
-            GenerWorkerList  gwl = new GenerWorkerList(this.getHisWork().getFID(),toNode.getNodeID(),WebUser.getNo());
-            ActionType at = ActionType.SubThreadForward;
-            this.AddToTrack(at, gwl, "子线程", this.town.getHisWork().getOID());
-        }
+		else {
+			GenerWorkerList gwl = new GenerWorkerList(this.getHisWork().getFID(), toNode.getNodeID(), WebUser.getNo());
+			ActionType at = ActionType.SubThreadForward;
+			this.AddToTrack(at, gwl, "子线程", this.town.getHisWork().getOID());
+		}
 
 		String FK_Emp = "";
 		String toEmpsStr = "";
@@ -2888,47 +2885,47 @@ public class WorkNode {
 			else
 				emps += "@" + toEmpsStr;
 		}
-		
-		 //增加变量.
-        this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps.replaceAll("@", ","), SendReturnMsgType.SystemMsg);
-        this.addMsg(SendReturnMsgFlag.VarAcceptersName, toEmpsStr, SendReturnMsgType.SystemMsg);
 
+		// 增加变量.
+		this.addMsg(SendReturnMsgFlag.VarAcceptersID, emps.replaceAll("@", ","), SendReturnMsgType.SystemMsg);
+		this.addMsg(SendReturnMsgFlag.VarAcceptersName, toEmpsStr, SendReturnMsgType.SystemMsg);
 
-        /* 
-        * 更新它的节点 worklist 信息, 说明当前节点已经完成了.
-        * 不让当前的操作员能看到自己的工作。
-        */
+		/*
+		 * 更新它的节点 worklist 信息, 说明当前节点已经完成了. 不让当前的操作员能看到自己的工作。
+		 */
 
-        //设置父流程状态 设置当前的节点为:
-        Work mainWK = town.getHisWork();
-        mainWK.setOID(this.getHisWork().getFID());
-        mainWK.RetrieveFromDBSources();
-       
-        // 复制报表上面的数据到合流点上去。
-        DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + dbStr + "OID",
-            "OID", this.getHisWork().getFID());
-        for(DataColumn dc: dt.Columns)
-            mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).get(dc.ColumnName));
-        
-        mainWK.setRec(FK_Emp);
-        mainWK.setEmps(emps);
-        mainWK.setOID(this.getHisWork().getFID());
-        mainWK.Save();
-        
-        // 产生合流汇总从表数据.
-        this.GenerHieLiuHuiZhongDtlData_2013(toNode);
-        
-        //设置当前子线程已经通过.
-        ps = new Paras();
-        ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND IsPass=0";
-        ps.Add("WorkID", this.getWorkID());
-        ps.Add("FID", this.getHisWork().getFID());
-        DBAccess.RunSQL(ps);
+		// 设置父流程状态 设置当前的节点为:
+		Work mainWK = town.getHisWork();
+		mainWK.setOID(this.getHisWork().getFID());
+		mainWK.RetrieveFromDBSources();
 
-        //合流节点上的工作处理者。
-        GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), toNode.getNodeID());
-        current_gwls = gwls;
-        
+		// 复制报表上面的数据到合流点上去。
+		DataTable dt = DBAccess.RunSQLReturnTable(
+				"SELECT * FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + dbStr + "OID", "OID",
+				this.getHisWork().getFID());
+		for (DataColumn dc : dt.Columns)
+			mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).get(dc.ColumnName));
+
+		mainWK.setRec(FK_Emp);
+		mainWK.setEmps(emps);
+		mainWK.setOID(this.getHisWork().getFID());
+		mainWK.Save();
+
+		// 产生合流汇总从表数据.
+		this.GenerHieLiuHuiZhongDtlData_2013(toNode);
+
+		// 设置当前子线程已经通过.
+		ps = new Paras();
+		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsPass=1  WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr
+				+ "FID AND IsPass=0";
+		ps.Add("WorkID", this.getWorkID());
+		ps.Add("FID", this.getHisWork().getFID());
+		DBAccess.RunSQL(ps);
+
+		// 合流节点上的工作处理者。
+		GenerWorkerLists gwls = new GenerWorkerLists(this.getHisWork().getFID(), toNode.getNodeID());
+		current_gwls = gwls;
+
 		/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
 		ps = new Paras();
 		ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr
@@ -2960,8 +2957,8 @@ public class WorkNode {
 			ps.Add("NodeName", toNode.getName());
 			ps.Add("WorkID", this.getHisWork().getFID());
 			int num = DBAccess.RunSQL(ps);
-			 if (num == 0)
-                 throw new Exception("@不应该更新不到它.");
+			if (num == 0)
+				throw new Exception("@不应该更新不到它.");
 			gwf.SetPara("ThreadCount", 0);
 			gwf.Update();
 		} else {
@@ -2973,33 +2970,33 @@ public class WorkNode {
 			ps.Add("WorkID", this.getHisWork().getOID());
 			int num = DBAccess.RunSQL(ps);
 			if (num == 0)
-                throw new Exception("@不应该更新不到它.");
+				throw new Exception("@不应该更新不到它.");
 		}
-      
+
 		this.getHisGenerWorkFlow().setFK_Node(toNode.getNodeID());
 		this.getHisGenerWorkFlow().setNodeName(toNode.getName());
-		
-		  //改变当前流程的当前节点.
-        ps = new Paras();
-        ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + WFState.Runing.getValue() + ",  FK_Node=" + dbStr + "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
-        ps.Add("FK_Node", toNode.getNodeID());
-        ps.Add("NodeName", toNode.getName());
-        ps.Add("WorkID", this.getHisWork().getFID());
-        DBAccess.RunSQL(ps);
 
+		// 改变当前流程的当前节点.
+		ps = new Paras();
+		ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + WFState.Runing.getValue() + ",  FK_Node=" + dbStr
+				+ "FK_Node,NodeName=" + dbStr + "NodeName WHERE WorkID=" + dbStr + "WorkID";
+		ps.Add("FK_Node", toNode.getNodeID());
+		ps.Add("NodeName", toNode.getName());
+		ps.Add("WorkID", this.getHisWork().getFID());
+		DBAccess.RunSQL(ps);
 
-        //设置父流程状态
+		// 设置父流程状态
 
-        this.addMsg("InfoToHeLiu", "@流程已经运行到合流节点[" + toNode.getName() + "]。@您的工作已经发送给如下人员[" + toEmpsStr + "]，@您是第一个到达此节点的处理人.");
+		this.addMsg("InfoToHeLiu",
+				"@流程已经运行到合流节点[" + toNode.getName() + "]。@您的工作已经发送给如下人员[" + toEmpsStr + "]，@您是第一个到达此节点的处理人.");
 
-        //处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
-        Work towk = town.getHisWork();
-        towk.setOID(this.getHisWork().getFID());
-        towk.RetrieveFromDBSources();
-        towk.Copy(this.getHisWork());
-        towk.DirectUpdate();
-        // 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
-       
+		// 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
+		Work towk = town.getHisWork();
+		towk.setOID(this.getHisWork().getFID());
+		towk.RetrieveFromDBSources();
+		towk.Copy(this.getHisWork());
+		towk.DirectUpdate();
+		// 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
 
 	}
 
@@ -4111,27 +4108,27 @@ public class WorkNode {
 
 		}
 	}
-	
-	 /// <summary>
-    /// 检查是否填写审核意见
-    /// </summary>
-    /// <returns></returns>
-    private String CheckFrmIsFullCheckNote() throws Exception
-    {
-        //检查是否写入了审核意见.
-        if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
-        {
-            /*检查审核意见 */
-            String sql = "SELECT Msg,EmpToT FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE  EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + this.getHisNode().getNodeID() + " AND WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.WorkCheck.getValue();
-            DataTable dt = DBAccess.RunSQLReturnTable(sql);
-            if (dt.Rows.size() == 0)
-                return "@请填写审核意见.";
 
-            if (dt.Rows.get(0).get("Msg")== null || dt.Rows.get(0).get("Msg").toString().equals("") )
-                return "err@审核意见不能为空.";
-        }
-        return "";
-    }
+	/// <summary>
+	/// 检查是否填写审核意见
+	/// </summary>
+	/// <returns></returns>
+	private String CheckFrmIsFullCheckNote() throws Exception {
+		// 检查是否写入了审核意见.
+		if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable) {
+			/* 检查审核意见 */
+			String sql = "SELECT Msg,EmpToT FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow())
+					+ "Track WHERE  EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + this.getHisNode().getNodeID()
+					+ " AND WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.WorkCheck.getValue();
+			DataTable dt = DBAccess.RunSQLReturnTable(sql);
+			if (dt.Rows.size() == 0)
+				return "@请填写审核意见.";
+
+			if (dt.Rows.get(0).get("Msg") == null || dt.Rows.get(0).get("Msg").toString().equals(""))
+				return "err@审核意见不能为空.";
+		}
+		return "";
+	}
 
 	/**
 	 * 检查独立表单上必须填写的项目.
@@ -4141,67 +4138,71 @@ public class WorkNode {
 	 */
 	public final boolean CheckFrmIsNotNull() throws Exception {
 
-
 		// 增加节点表单的必填项判断.
 		String err = "";
-		//判断绑定的树形表单
-		if(this.getHisNode().getHisFormType() == NodeFormType.SheetTree){
-			//获取绑定的表单
-			 FrmNodes nds = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
-			 for(FrmNode item:nds.ToJavaList()){
+		// 判断绑定的树形表单
+		if (this.getHisNode().getHisFormType() == NodeFormType.SheetTree) {
+			// 获取绑定的表单
+			FrmNodes nds = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
+			for (FrmNode item : nds.ToJavaList()) {
 				MapData md = new MapData();
 				md.setNo(item.getFK_Frm());
 				md.Retrieve();
 				if (md.getHisFrmType() != FrmType.FoolForm && md.getHisFrmType() != FrmType.FreeFrm)
-                     continue;
+					continue;
 				MapAttrs mapAttrs = md.getMapAttrs();
-				//主表实体.
-		         GEEntity en = new GEEntity(item.getFK_Frm());
-		         en.setOID(this.getWorkID());
-		         en.RetrieveFromDBSources();
-				 Row row = en.getRow();
-				 if (item.getFrmSln() == FrmSln.Self) {
+				// 主表实体.
+				GEEntity en = new GEEntity(item.getFK_Frm());
+				en.setOID(this.getWorkID());
+				en.RetrieveFromDBSources();
+				Row row = en.getRow();
+				if (item.getFrmSln() == FrmSln.Self) {
 					// 查询出来自定义的数据.
 					FrmFields ffs = new FrmFields();
-					ffs.Retrieve(FrmFieldAttr.FK_Node, this.getHisNode().getNodeID(), FrmFieldAttr.FK_MapData, md.getNo());
-					//获取整合后的mapAttrs
-					for(FrmField frmField:ffs.ToJavaList()){
+					ffs.Retrieve(FrmFieldAttr.FK_Node, this.getHisNode().getNodeID(), FrmFieldAttr.FK_MapData,
+							md.getNo());
+					// 获取整合后的mapAttrs
+					for (FrmField frmField : ffs.ToJavaList()) {
 						for (MapAttr mapAttr : mapAttrs.ToJavaList()) {
-							if(frmField.getKeyOfEn().equals(mapAttr.getKeyOfEn())){
+							if (frmField.getKeyOfEn().equals(mapAttr.getKeyOfEn())) {
 								mapAttr.setUIIsInput(frmField.getIsNotNull());
 								break;
 							}
 						}
 					}
-				 }
-				 for (MapAttr mapAttr : mapAttrs.ToJavaList()) {
-						if (mapAttr.getUIIsInput() == false) {
-							continue;
-						}
-						
-						if (row.get(mapAttr.getKeyOfEn()) == null) 
-							err += "@表单{"+md.getName()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
-						
-						if((row.get(mapAttr.getKeyOfEn()) instanceof String) == true) {
-							String str = (String) (DataType.IsNullOrEmpty(row.get(mapAttr.getKeyOfEn()).toString()) == true ? null
-									: row.get(mapAttr.getKeyOfEn()));
-							// 如果是检查不能为空
-							if (str == null || DotNetToJavaStringHelper.isNullOrEmpty(str) == true || str.trim().equals("")) {
-								err += "@表单{"+md.getName()+"; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName() + "}，不能为空。";
-							}
+				}
+				for (MapAttr mapAttr : mapAttrs.ToJavaList()) {
+					if (mapAttr.getUIIsInput() == false) {
+						continue;
+					}
+
+					if (row.get(mapAttr.getKeyOfEn()) == null)
+						err += "@表单{" + md.getName() + "; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName()
+								+ "}，不能为空。";
+
+					if ((row.get(mapAttr.getKeyOfEn()) instanceof String) == true) {
+						String str = (String) (DataType.IsNullOrEmpty(row.get(mapAttr.getKeyOfEn()).toString()) == true
+								? null : row.get(mapAttr.getKeyOfEn()));
+						// 如果是检查不能为空
+						if (str == null || DotNetToJavaStringHelper.isNullOrEmpty(str) == true
+								|| str.trim().equals("")) {
+							err += "@表单{" + md.getName() + "; 字段" + mapAttr.getKeyOfEn() + " ; " + mapAttr.getName()
+									+ "}，不能为空。";
 						}
 					}
-			 }
-			 
-			 if (!err.equals("")) {
-					throw new RuntimeException("err@在提交前检查到如下必输字段填写不完整:" + err);
 				}
-			 
-			 return true;
-			
+			}
+
+			if (!err.equals("")) {
+				throw new RuntimeException("err@在提交前检查到如下必输字段填写不完整:" + err);
+			}
+
+			return true;
+
 		}
-			
-		if (this.getHisNode().getHisFormType() == NodeFormType.FreeForm || this.getHisNode().getHisFormType() == NodeFormType.FoolForm) {
+
+		if (this.getHisNode().getHisFormType() == NodeFormType.FreeForm
+				|| this.getHisNode().getHisFormType() == NodeFormType.FoolForm) {
 			MapAttrs attrs = this.getHisNode().getMapData().getMapAttrs();
 			Row row = this.getHisWork().getRow();
 			for (MapAttr attr : attrs.ToJavaList()) {
@@ -4291,9 +4292,9 @@ public class WorkNode {
 					if (count == 0) {
 						err += "@您没有上传附件:" + ath.getName();
 					}
-					
-					if(ath.getNumOfUpload() > count )
-						 err += "@您上传的附件数量小于最低上传数量要求";
+
+					if (ath.getNumOfUpload() > count)
+						err += "@您上传的附件数量小于最低上传数量要求";
 				}
 
 				if (ath.getUploadFileNumCheck() == UploadFileNumCheck.EverySortNoteEmpty) {
@@ -4349,7 +4350,7 @@ public class WorkNode {
 				}
 			}
 
-			 err +=CheckFrmIsFullCheckNote();
+			err += CheckFrmIsFullCheckNote();
 
 			if (!err.equals("")) {
 				throw new RuntimeException("err@在提交前检查到如下必输字段填写不完整:" + err);
@@ -4723,33 +4724,32 @@ public class WorkNode {
 	 * @throws Exception
 	 */
 	public final String DealAlertZhuChiRen() throws Exception {
-		 /*有两个待办，就说明当前人员是最后一个会签人，就要把主持人的状态设置为 0 */
-        //获得主持人信息.
-        GenerWorkerList gwl = new GenerWorkerList();
-        int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.IsPass, 90);
-        if (i != 1)
-            return "@您已经会签完毕.";
+		/* 有两个待办，就说明当前人员是最后一个会签人，就要把主持人的状态设置为 0 */
+		// 获得主持人信息.
+		GenerWorkerList gwl = new GenerWorkerList();
+		int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.IsPass, 90);
+		if (i != 1)
+			return "@您已经会签完毕.";
 
-        gwl.setIsPassInt(0); //从会签列表里移动到待办.
-        gwl.setIsRead(false); //设置为未读.
+		gwl.setIsPassInt(0); // 从会签列表里移动到待办.
+		gwl.setIsRead(false); // 设置为未读.
 
-        BP.WF.Dev2Interface.Port_SendMsg(gwl.getFK_Emp(),
-            "工作会签完毕", this.getHisGenerWorkFlow().getTitle() + " 工作会签完毕,请到待办查看.",
-            "HuiQian" + this.getWorkID() + "_" + WebUser.getNo(), "HuiQian", this.getHisGenerWorkFlow().getFK_Flow(), this.getHisGenerWorkFlow().getFK_Node(), this.getWorkID(), 0);
+		BP.WF.Dev2Interface.Port_SendMsg(gwl.getFK_Emp(), "工作会签完毕",
+				this.getHisGenerWorkFlow().getTitle() + " 工作会签完毕,请到待办查看.",
+				"HuiQian" + this.getWorkID() + "_" + WebUser.getNo(), "HuiQian",
+				this.getHisGenerWorkFlow().getFK_Flow(), this.getHisGenerWorkFlow().getFK_Node(), this.getWorkID(), 0);
 
-        //设置为未读.
-        BP.WF.Dev2Interface.Node_SetWorkUnRead(this.getHisGenerWorkFlow().getWorkID());
+		// 设置为未读.
+		BP.WF.Dev2Interface.Node_SetWorkUnRead(this.getHisGenerWorkFlow().getWorkID());
 
+		// 设置最后处理人.
+		this.getHisGenerWorkFlow().setTodoEmps(gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ";");
+		this.getHisGenerWorkFlow().Update();
 
-        //设置最后处理人.
-        this.getHisGenerWorkFlow().setTodoEmps(gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ";");
-        this.getHisGenerWorkFlow().Update();
+		gwl.Update();
 
+		return "您是最后一个会签该工作的处理人，已经提醒主持人(" + gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ")处理当前工作。";
 
-        gwl.Update();
-
-        return "您是最后一个会签该工作的处理人，已经提醒主持人(" + gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ")处理当前工作。";
-		
 	}
 
 	/**
@@ -5484,7 +5484,7 @@ public class WorkNode {
 			sendWhen = sendWhen.replace("@IsStopFlow=1", "");
 			sendWhen = sendWhen.replace("@ToNodeID=" + nodeid, "");
 			sendWhen = sendWhen.replace("@ToEmps=" + toEmps, "");
-			
+
 		}
 		if (sendWhen != null) {
 			// 说明有事件要执行,把执行后的数据查询到实体里
@@ -5504,7 +5504,7 @@ public class WorkNode {
 			}
 
 			// 把发送sendWhen 消息提示给用户.
-			if(sendWhen.equals("null") == true)
+			if (sendWhen.equals("null") == true)
 				sendWhen = "";
 			this.addMsg("SendWhen", sendWhen, sendWhen, SendReturnMsgType.Info);
 		}
@@ -5530,8 +5530,8 @@ public class WorkNode {
 			this.Func_DoSetThisWorkOver();
 			this.rptGe.setWFState(WFState.Complete);
 			this.rptGe.Update();
-			this.getHisGenerWorkFlow().Update(); 
-													
+			this.getHisGenerWorkFlow().Update();
+
 			// 执行考核
 			Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0, this.getHisGenerWorkFlow().getTitle(),
 					null);
@@ -5629,7 +5629,6 @@ public class WorkNode {
 
 					Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
 							this.getHisGenerWorkFlow().getTitle(), null);
-
 
 					// 返回发送对象.
 					return this.HisMsgObjs;
@@ -5855,7 +5854,6 @@ public class WorkNode {
 				this.addMsg(SendReturnMsgFlag.IsStopFlow, "0", "流程未结束", SendReturnMsgType.SystemMsg);
 			}
 
-
 			if (this.getIsStopFlow() == true) {
 				// 在检查完后，反馈来的标志流程已经停止了。
 				// liuxc,2016-10=24,最后节点更新Sender字段
@@ -5938,13 +5936,13 @@ public class WorkNode {
 
 				BillTemplates reffunc = this.getHisNode().getBillTemplates();
 
-				//生成单据信息
+				// 生成单据信息
 				long workid = this.getHisWork().getOID();
 
 				String year = DataType.getCurrentYear();
 				String billInfo = "";
 				for (BillTemplate func : reffunc.ToJavaList()) {
-					
+
 					if (func.getHisBillFileType() != BillFileType.RuiLang) {
 						String file = year + "_" + this.getExecerDeptNo() + "_" + func.getNo() + "_" + workid + ".doc";
 						BP.Pub.RTFEngine rtf = new BP.Pub.RTFEngine();
@@ -6837,18 +6835,15 @@ public class WorkNode {
 		t.setEmpFromT(this.getExecerName());
 		t.setFK_Flow(this.getHisNode().getFK_Flow());
 
-	
 		t.setNDTo(gwl.getFK_Node());
 		t.setNDToT(gwl.getFK_NodeText());
 
 		t.setEmpTo(gwl.getFK_Emp());
 		t.setEmpToT(gwl.getFK_EmpText());
 		t.setMsg(msg);
-		
 
-		
 		t.Insert();
-		
+
 	}
 
 	/**
@@ -6904,7 +6899,7 @@ public class WorkNode {
 		t.setEmpFrom(this.getExecer());
 		t.setEmpFromT(this.getExecerName());
 		t.FK_Flow = this.getHisNode().getFK_Flow();
-		t.setTag(tag);
+		t.setTag(tag+ "@SendNode=" + this.getHisNode().getNodeID());
 
 		if (toNDid == 0) {
 			toNDid = this.getHisNode().getNodeID();
@@ -6956,7 +6951,7 @@ public class WorkNode {
 		}
 
 		try {
-			
+
 			t.Insert();
 		} catch (java.lang.Exception e) {
 			t.CheckPhysicsTable();
@@ -6967,18 +6962,17 @@ public class WorkNode {
 				|| at == ActionType.FlowOver) {
 			this.getHisGenerWorkFlow().setParas_LastSendTruckID(t.getMyPK());
 		}
-		
-		 this.getHisGenerWorkFlow().setSendDT(DataType.getCurrentDataTimess());
-         this.getHisGenerWorkFlow().Update();
 
-         GenerWorkerList gwl = new GenerWorkerList();
-         int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),
-             GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID(), GenerWorkerListAttr.FK_Emp,WebUser.getNo());
-         if (i != 0)
-         {
-             gwl.setCDT(DataType.getCurrentDataTimess());
-             gwl.Update();
-         }
+		this.getHisGenerWorkFlow().setSendDT(DataType.getCurrentDataTimess());
+		this.getHisGenerWorkFlow().Update();
+
+		GenerWorkerList gwl = new GenerWorkerList();
+		int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
+				this.getHisNode().getNodeID(), GenerWorkerListAttr.FK_Emp, WebUser.getNo());
+		if (i != 0) {
+			gwl.setCDT(DataType.getCurrentDataTimess());
+			gwl.Update();
+		}
 
 	}
 
@@ -7012,6 +7006,7 @@ public class WorkNode {
 		}
 	}
 
+	
 	/**
 	 * 增加日志
 	 * 
@@ -7043,7 +7038,7 @@ public class WorkNode {
 		t.setEmpFrom(this.getExecer());
 		t.setEmpFromT(this.getExecerName());
 		t.FK_Flow = this.getHisNode().getFK_Flow();
-
+		t.setTag("@SendNode=" + this.getHisNode().getNodeID());
 		if (toNDid == 0) {
 			toNDid = this.getHisNode().getNodeID();
 			toNDName = this.getHisNode().getName();
@@ -7349,12 +7344,11 @@ public class WorkNode {
 			gwf.setTodoEmps(todoEmps);
 			gwf.setWFState(WFState.Runing);
 			gwf.Update();
-		}else
-        {//新增轨迹
-            GenerWorkerList gwl = new GenerWorkerList(this.getHisWork().getFID(), nd.getNodeID(), WebUser.getNo());
-            ActionType at = ActionType.SubThreadForward;
-            this.AddToTrack(at, gwl, "子线程", this.town.getHisWork().getOID());
-        }
+		} else {// 新增轨迹
+			GenerWorkerList gwl = new GenerWorkerList(this.getHisWork().getFID(), nd.getNodeID(), WebUser.getNo());
+			ActionType at = ActionType.SubThreadForward;
+			this.AddToTrack(at, gwl, "子线程", this.town.getHisWork().getOID());
+		}
 
 		String FK_Emp = "";
 		String toEmpsStr = "";
@@ -7390,7 +7384,7 @@ public class WorkNode {
 		ps.Add("FID", this.getHisWork().getFID());
 		DBAccess.RunSQL(ps);
 
-         String info = "";
+		String info = "";
 
 		/* 合流点需要等待各个分流点全部处理完后才能看到它。 */
 		// 获取通过率
@@ -7432,7 +7426,6 @@ public class WorkNode {
 			ps.Add("WorkID", this.getHisWork().getFID());
 			DBAccess.RunSQL(ps);
 		}
-        
 
 		this.getHisGenerWorkFlow().setFK_Node(nd.getNodeID());
 		this.getHisGenerWorkFlow().setNodeName(nd.getName());
@@ -7781,7 +7774,7 @@ public class WorkNode {
 		wk.setOID(workId);
 		int i = wk.RetrieveFromDBSources();
 		if (i == 0) {
-			
+
 			this.rptGe = nd.getHisFlow().getHisGERpt();
 			if (wk.getFID() != 0) {
 				this.rptGe.setOID(wk.getFID());
@@ -7877,98 +7870,69 @@ public class WorkNode {
 		}
 
 		String sql = "";
+		int nodeid = 0;
 		String truckTable = "ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track";
 		// 根据当前节点获取上一个节点，不用管那个人发送的
-		 sql = "SELECT NDFrom,Tag FROM " + truckTable + " WHERE WorkID=" + this.getWorkID() + " AND NDTo='" + this.getHisNode().getNodeID() + "' AND ";
-         sql += " (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + "  OR ActionType=" + ActionType.ForwardFL.getValue()+" ";
-         sql += "  OR  ActionType=" + ActionType.ForwardHL.getValue() + " "; //合流.
-         sql += "  OR  ActionType=" + ActionType.ForwardAskfor.getValue() + " "; //会签.
-         sql += "   )";
-         sql += " ORDER BY RDT DESC";
-         
-		sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE WorkID="
-				+ this.getWorkID() + " AND NDTo='" + this.getHisNode().getNodeID()
-				+ "' AND ActionType=1 ORDER BY RDT DESC";
-		int nodeid = DBAccess.RunSQLReturnValInt(sql, 0);
+		sql = "SELECT NDFrom,Tag FROM " + truckTable + " WHERE WorkID=" + this.getWorkID() + " AND NDTo='"
+				+ this.getHisNode().getNodeID() + "' AND ";
+		sql += " (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + "  OR ActionType="
+				+ ActionType.ForwardFL.getValue() + " ";
+		sql += "  OR  ActionType=" + ActionType.ForwardHL.getValue() + " "; // 合流.
+		sql += "  OR  ActionType=" + ActionType.ForwardAskfor.getValue() + " "; // 会签.
+		sql += "   )";
+		sql += " ORDER BY RDT DESC";
+
+		// 首先获取实际发送节点，不存在时再使用from节点.
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (dt != null && dt.Rows.size() > 0) {
+			nodeid = Integer.parseInt(dt.Rows.get(0).getValue("NDFrom").toString());
+			if (dt.Rows.get(0).getValue("Tag") != null
+					&& dt.Rows.get(0).getValue("Tag").toString().contains("SendNode=") == true) {
+				String tag = dt.Rows.get(0).getValue("Tag").toString();
+				String[] strs = tag.split("@");
+				for (String str : strs) {
+					if (str == null || str == "" || str.contains("SendNode=") == false)
+						continue;
+					String[] mystr = str.split("=");
+					if (mystr.length == 2) {
+						String sendNode = mystr[1];
+						if (DataType.IsNullOrEmpty(sendNode) == false && sendNode.equals("0") == false) {
+							nodeid = Integer.parseInt(sendNode);
+						}
+					}
+				}
+			}
+		}
+
 		if (nodeid == 0) {
 			switch (this.getHisNode().getHisRunModel()) {
 			case HL:
 			case FHL:
-				sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE WorkID="
-						+ this.getWorkID() + " ORDER BY RDT DESC";
+
+				sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID() + " ORDER BY RDT DESC";
 				break;
 			case SubThread:
-				sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track WHERE WorkID="
-						+ this.getWorkID() + " AND NDTo=" + this.getHisNode().getNodeID() + " " + " AND ActionType="
-						+ ActionType.SubThreadForward.getValue() + " ORDER BY RDT DESC";
-				if (DBAccess.RunSQLReturnCOUNT(sql) == 0) {
-					sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow())
-							+ "Track WHERE FID=" + this.getHisWork().getFID() + " AND NDTo="
-							+ this.getHisNode().getNodeID() + " " + " AND ActionType="
-							+ ActionType.SubThreadForward.getValue() + " ORDER BY RDT DESC";
-				}
+				sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID() + " AND NDTo="
+						+ this.getHisNode().getNodeID() + " " + " AND ( ActionType="
+						+ ActionType.SubThreadForward.getValue() + " OR  ActionType=" + ActionType.ForwardFL.getValue()
+						+ ")  ORDER BY RDT DESC";
+				if (DBAccess.RunSQLReturnCOUNT(sql) == 0)
+					sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getHisWork().getFID()
+							+ " AND NDTo=" + this.getHisNode().getNodeID() + " " + " AND (ActionType="
+							+ ActionType.SubThreadForward.getValue() + " OR  ActionType="
+							+ ActionType.ForwardFL.getValue() + ") ORDER BY RDT DESC";
 
 				break;
 			default:
+				sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID() + " AND FK_Node!='"
+						+ this.getHisNode().getNodeID() + "' ORDER BY RDT,FK_Node ";
+				// throw new Exception("err@没有判断的类型:"+this.HisNode.HisRunModel);
+				// 根据当前节点获取上一个节点，不用管那个人发送的
 				break;
 			}
-			
-			 //首先获取实际发送节点，不存在时再使用from节点.
-            DataTable dt = DBAccess.RunSQLReturnTable(sql);
-            if (dt != null && dt.Rows.size() > 0)
-            {
-                nodeid = Integer.parseInt(dt.Rows.get(0).getValue("NDFrom").toString());
-                if (dt.Rows.get(0).getValue("Tag") != null && dt.Rows.get(0).getValue("Tag").toString().contains("SendNode=") == true)
-                {
-                    String tag = dt.Rows.get(0).getValue("Tag").toString();
-                    String[] strs = tag.split("@");
-                    for (String str : strs)
-                    {
-                        if (str == null || str == "" || str.contains("SendNode=") == false)
-                            continue;
-                        String[] mystr = str.split("=");
-                        if (mystr.length == 2)
-                        {
-                            String sendNode = mystr[1];
-                            if (DataType.IsNullOrEmpty(sendNode) == false && sendNode.equals("0") == false)
-                            {
-                                nodeid = Integer.parseInt(sendNode);
-                            }
-                        }
-                    }
-                }
-            }
+			nodeid = DBAccess.RunSQLReturnValInt(sql, 0);
 		}
-		
-		 if (nodeid == 0)
-         {
-             switch (this.getHisNode().getHisRunModel())
-             {
-                 case HL:
-                 case FHL:
-                     
-						sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID()
-                                                                                    + " ORDER BY RDT DESC";
-                     break;
-                 case SubThread:
-                     sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID()
-                                                                                    + " AND NDTo=" + this.getHisNode().getNodeID() + " "
-                                                                                    + " AND ( ActionType=" + ActionType.SubThreadForward.getValue() + " OR  ActionType=" + ActionType.ForwardFL.getValue() + ")  ORDER BY RDT DESC";
-                     if (DBAccess.RunSQLReturnCOUNT(sql) == 0)
-                         sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getHisWork().getFID()
-                                                                                   + " AND NDTo=" + this.getHisNode().getNodeID() + " "
-                                                                                   + " AND (ActionType=" + ActionType.SubThreadForward.getValue() + " OR  ActionType=" + ActionType.ForwardFL.getValue() + ") ORDER BY RDT DESC";
 
-                     break;
-                 default:
-                     sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID() + " AND FK_Node!='" + this.getHisNode().getNodeID() + "' ORDER BY RDT,FK_Node ";
-                     //throw new Exception("err@没有判断的类型:"+this.HisNode.HisRunModel);
-                     //根据当前节点获取上一个节点，不用管那个人发送的
-                     break;
-             }
-             nodeid = DBAccess.RunSQLReturnValInt(sql, 0);
-         }
-		 
 		if (nodeid == 0) {
 			throw new RuntimeException("@错误，没有找到上一步节点。" + sql);
 		}
@@ -7981,7 +7945,6 @@ public class WorkNode {
 		WorkNode wn = new WorkNode(wk, nd);
 		return wn;
 
-		
 	}
 
 	/// #endregion

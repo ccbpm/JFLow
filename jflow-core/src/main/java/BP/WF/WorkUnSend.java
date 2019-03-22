@@ -688,7 +688,7 @@ public class WorkUnSend
 		else
 			gwf.setTaskSta(TaskSta.None);
 
-		gwf.setTodoEmps(WebUser.getNo() + "," + WebUser.getName());
+		gwf.setTodoEmps(WebUser.getNo() + "," + WebUser.getName()+";");
 		gwf.Update();
 
 		if (cancelToNode.getIsEnableTaskPool() && Glo.getIsEnableTaskPool())

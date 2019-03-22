@@ -571,7 +571,7 @@ public class WorkUnSend
 			WorkNode wnPri = wn.GetPreviousWorkNode();
 
 			GenerWorkerList wl = new GenerWorkerList();
-			int num = wl.Retrieve(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.getNo(), GenerWorkerListAttr.FK_Node, wnPri.getHisNode().getNodeID());
+			int num = wl.Retrieve(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.getNo(), GenerWorkerListAttr.FK_Node, wnPri.getHisNode().getNodeID(),GenerWorkerListAttr.WorkID,this.WorkID);
 			if (num == 0)
 			{
 				throw new RuntimeException("@您不能执行撤消发送，因为当前工作不是您发送的或下一步工作已处理。");

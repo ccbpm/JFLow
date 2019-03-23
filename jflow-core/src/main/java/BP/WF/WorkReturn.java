@@ -935,7 +935,8 @@ public class WorkReturn
             item.setIsPassInt(0);
             item.setIsRead(false);
             item.setSDT(sdt);
-            item.setRDT(DataType.getCurrentDataTime());
+            item.setRDT(DataType.getCurrentDataTimess());
+            item.setSender(WebUser.getName() + "," + WebUser.getNo());
             item.Update();
         }
 

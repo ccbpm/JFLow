@@ -1241,7 +1241,7 @@
             var currDate = new Date();
             if (currDate > date2)
                 return "0天";
-            return GetSpanTime(date1, date2);
+            return GetSpanTime(currDate, date2);
 
         }
         function GetSpanTime(date1, date2) {

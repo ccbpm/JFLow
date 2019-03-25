@@ -386,9 +386,12 @@ public class CCFlowAPI {
                      //获取累加表单的权限
                     FrmFields fls = new FrmFields();
                     qo = new QueryObject(fls);
-                    qo.AddWhere(FrmFieldAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
+                    qo.AddWhere(FrmFieldAttr.FK_MapData, " IN ", "(" + nodes + ")");
                     qo.addAnd();
                     qo.AddWhere(FrmFieldAttr.EleType, FrmEleType.Field);
+                    qo.addAnd();
+                    qo.AddWhere(FrmFieldAttr.FK_Node, nd.getNodeID());
+                    
                     qo.DoQuery();
 
                     for(MapAttr attr : attrsLeiJia.ToJavaList())

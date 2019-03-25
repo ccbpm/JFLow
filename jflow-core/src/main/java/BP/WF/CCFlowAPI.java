@@ -51,6 +51,7 @@ import BP.WF.Template.FrmFields;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmNodeAttr;
 import BP.WF.Template.FrmNodeComponent;
+import BP.WF.Template.FrmSln;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
 import BP.WF.Template.NodeYGFlow;
@@ -315,52 +316,111 @@ public class CCFlowAPI {
 				qo.addOrderBy(MapAttrAttr.Idx);
 				qo.DoQuery();
 
-				// 计算累加的字段集合.
-				MapAttrs attrsLeiJia = new MapAttrs();
-				qo = new QueryObject(attrsLeiJia);
-				qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
-				qo.addOrderBy(MapAttrAttr.Idx);
-				qo.DoQuery();
-				
-				 //获取累加表单的权限
-                FrmFields fls = new FrmFields();
-                qo = new QueryObject(fls);
-                qo.AddWhere(FrmFieldAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
-                qo.addAnd();
-                qo.AddWhere(FrmFieldAttr.EleType, FrmEleType.Field);
-                qo.DoQuery();
-                
-                for (MapAttr attr : attrsLeiJia.ToJavaList()) 
-                {
-                    if (attr.getKeyOfEn().equals("RDT") || attr.getKeyOfEn().equals("Rec"))
-                        continue;
+				 //获取走过节点的表单方案
+                MapAttrs attrsLeiJia = new MapAttrs();
 
-                    FrmField frmField = null;
-                    for(FrmField item : fls.ToJavaList())
-                    {
-                        if (attr.getKeyOfEn().equals(item.getKeyOfEn()))
-                        {
-                            frmField = item;
-                            break;
-                        }
-                    }
-                    if (frmField != null)
-                    {
-                        if (frmField.getIsSigan())
-                            attr.setUIIsEnable(false);
+                //存在表单方案只读
+                String sql1 = "Select FK_Frm From WF_FrmNode Where FK_Frm In("+wk.HisPassedFrmIDs+") And FrmSln="+FrmSln.Readonly.getValue() +" And FK_Node="+nd.getNodeID();
+                DataTable dt1 = DBAccess.RunSQLReturnTable(sql1);
+                if(dt1.Rows.size() > 0){
+                    //获取节点
+                    String nodes ="";
+                    for(DataRow dr : dt1.Rows)
+                        nodes+="'"+dr.get(0).toString()+"',";
 
-                        attr.setUIIsEnable(frmField.getUIIsEnable());
-                        attr.setUIVisible(frmField.getUIVisible());
-                        attr.setIsSigan(frmField.getIsSigan());
-                        attr.setDefValReal(frmField.getDefVal());
+                    nodes = nodes.substring(0,nodes.length()-1);
+                    qo = new QueryObject(attrsLeiJia);
+                    qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" +nodes + ")");
+                    qo.addOrderBy(MapAttrAttr.Idx);
+                    qo.DoQuery();
+
+                    for(MapAttr item : attrsLeiJia.ToJavaList()){
+                        if (item.getKeyOfEn().equals("RDT") || item.getKeyOfEn().equals("Rec"))
+                            continue;
+                        item.setUIIsEnable(false); //设置为只读的.
+                        attrs.AddEntity(item);
                     }
-                    else
-                    {
-                        attr.setUIIsEnable(false); //设置为只读的.
-                    }
-                    attrs.AddEntity(attr);
+
                 }
 
+                //存在表单方案默认
+                sql1 = "Select FK_Frm From WF_FrmNode Where FK_Frm In(" + wk.HisPassedFrmIDs + ") And FrmSln=" + FrmSln.Default.getValue() + " And FK_Node=" + nd.getNodeID();
+                dt1 = DBAccess.RunSQLReturnTable(sql1);
+                 if(dt1.Rows.size() > 0){
+                     //获取节点
+                    String nodes ="";
+                    for(DataRow dr : dt1.Rows)
+                        nodes+="'"+dr.get(0).toString()+"',";
+
+                    nodes = nodes.substring(0,nodes.length()-1);
+                    qo = new QueryObject(attrsLeiJia);
+                    qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" +nodes + ")");
+                    qo.addOrderBy(MapAttrAttr.Idx);
+                    qo.DoQuery();
+
+                    for(MapAttr item : attrsLeiJia.ToJavaList())
+                    {
+                        if (item.getKeyOfEn().equals("RDT") || item.getKeyOfEn().equals("Rec"))
+                            continue;
+                        attrs.AddEntity(item);
+                    }
+
+                }
+
+                //存在表单方案自定义
+                 sql1 = "Select FK_Frm From WF_FrmNode Where FK_Frm In(" + wk.HisPassedFrmIDs + ") And FrmSln=" + FrmSln.Self.getValue() + " And FK_Node=" + nd.getNodeID();
+                dt1 = DBAccess.RunSQLReturnTable(sql1);
+
+                 if(dt1.Rows.size() > 0){
+                     //获取节点
+                    String nodes ="";
+                    for(DataRow dr : dt1.Rows)
+                        nodes+="'"+dr.get(0).toString()+"',";
+
+                    nodes = nodes.substring(0,nodes.length()-1);
+                    qo = new QueryObject(attrsLeiJia);
+                    qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" +nodes + ")");
+                    qo.addOrderBy(MapAttrAttr.Idx);
+                    qo.DoQuery();
+
+                     //获取累加表单的权限
+                    FrmFields fls = new FrmFields();
+                    qo = new QueryObject(fls);
+                    qo.AddWhere(FrmFieldAttr.FK_MapData, " IN ", "(" + wk.HisPassedFrmIDs + ")");
+                    qo.addAnd();
+                    qo.AddWhere(FrmFieldAttr.EleType, FrmEleType.Field);
+                    qo.DoQuery();
+
+                    for(MapAttr attr : attrsLeiJia.ToJavaList())
+                    {
+                        if (attr.getKeyOfEn().equals("RDT") || attr.getKeyOfEn().equals("Rec"))
+                            continue;
+
+                        FrmField frmField = null;
+                        for(FrmField item : fls.ToJavaList())
+                        {
+                            if (attr.getKeyOfEn() == item.getKeyOfEn())
+                            {
+                                frmField = item;
+                                break;
+                            }
+                        }
+                        if (frmField != null)
+                        {
+                            if (frmField.getIsSigan())
+                                attr.setUIIsEnable(false);
+
+                            attr.setUIIsEnable(frmField.getUIIsEnable());
+                            attr.setUIVisible(frmField.getUIVisible());
+                            attr.setIsSigan(frmField.getIsSigan());
+                            attr.setDefValReal(frmField.getDefVal());
+                        }
+                        attrs.AddEntity(attr);
+                    }
+
+                }
+			
+            
 				// 替换掉现有的.
 				Sys_MapAttr = myds.GetTableByName("Sys_MapAttr");
 				myds.Tables.remove("Sys_MapAttr");

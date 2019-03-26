@@ -33,17 +33,17 @@
 
             //要执行script.  wangyanyan完成.
             if (func.MethodDocTypeOfFunc == 1) {
-                //var script = func.DoMethodReturnString("Gener_MethodDoc_JavaScript");
                 var script = func.DoMethodReturnString("Gener_MethodDoc_JavaScript");
+
                 //获得单据的数据.
                 // var geEn = new Entity(func.FrmID, workID);
                 //替换script的变量.
 
                 //执行这个script.
                 try {
-                    console.info(script);
+
                     eval(script);
-                    //该实体有如下字段. @fieldsddd
+
                 } catch (e) {
                     alert(e);
                     window.close();

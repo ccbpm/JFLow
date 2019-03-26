@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>金义发起流程</title>
+ <script type="text/javascript" src="Scripts/bootstrap/js/jquery.min.js"></script>
+ <script type="text/javascript" src="Scripts/bootstrap/js/bootstrap.min.js"></script>
+ <script type="text/javascript" src="Style/skin/js/mp.mansory.min.js"></script>   
+ <script src="Style/skin/layui/layer.js" type="text/javascript"></script>
+ <script src="Scripts/QueryString.js" type="text/javascript"></script>
+ <script src="Scripts/config.js" type="text/javascript"></script>
+ <script src="Comm/Gener.js" type="text/javascript"></script>
+ <script language="javascript" type="text/javascript" >
+    
+   //加载页面
+   $(function(){
+	   //1.标志 SSO = 1 单点登录
+	   var sso = GetQueryString("SSO");
+	   if(sso != null && sso=="1"){
+		   //单点登录
+		   var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+		   handler.AddPara("UserNo",GetQueryString("UserNo"));
+		   var data = handler.DoMethodReturnString("SingleSignOn");
+		   if(data.indexOf("err@")!=-1){
+			   alert(data.replace("err@",""));
+			   return;
+		   }
+		   //页面跳转
+		   StartFlow();
+	   }else{
+		   var html ="<a onclick='StartFlow()'>请假流程</a>";
+		   $("#Content").html(html);
+	   }
+	   
+   })
+    //根据不同的岗位人发起不同的流程 
+    function StartFlow()
+     {
+    	 var fk_station="";
+   		 var fk_flow="210";//流程编号，默认为210
+    	 //获取当前登录人员的岗位属性
+    	  var webUser = null;
+    	  webUser = new WebUser();
+          if (webUser.No == null)
+              return;
+    	 var dess = new Entities("BP.GPM.DeptEmpStations");
+    	 dess.Retrieve("FK_Emp",  webUser.No, "FK_Dept", webUser.FK_Dept);
+    	
+    	 for (var i = 0; i < dess.length; i++) {
+              var en = dess[i];
+              fk_station= en.MyPK;
+
+        if(fk_station.indexOf('_FH_PTYG')>0)// 分行普通员工
+     		fk_flow="210";
+        else if(fk_station.indexOf('_FH_ZZ')>0)//分行正职
+    		fk_flow ="212";
+    	else if(fk_station.indexOf('_FH_FZ')>0)//分行副职
+    		fk_flow="213";
+    	else if(fk_station.indexOf('_ZH_ZZ')>0)//支行正职
+    		fk_flow="214";
+    	else if(fk_station.indexOf('_ZH_FZ')>0)//支行副职
+    		fk_flow="215";
+    	else if(fk_station.indexOf('_Z_ZH_ZZ')>0)//子支行正职
+    		fk_flow="216";    	
+    	 
+    	 //发起流程的链接
+    	  window.location.href ="MyFlow.htm?FK_Flow="+fk_flow;
+    	 return;
+    	 }
+     }
+    </script>
+</head>
+<body>
+
+</body>
+</html> 

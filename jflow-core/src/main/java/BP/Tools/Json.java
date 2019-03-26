@@ -341,7 +341,13 @@ public class Json
 					if(obj.equals(""))
 						jsonString += "\"\","; 
 					else
-						jsonString += "" + obj.toString() + ",";
+						
+						//Long型测试 问题待定
+						if( column.DataType == Long.class
+							|| column.DataType == long.class)
+							jsonString += "\"" + obj.toString() + "\",";
+						else
+							jsonString += "" + obj.toString() + ",";
 					continue;
 				} 				
 				

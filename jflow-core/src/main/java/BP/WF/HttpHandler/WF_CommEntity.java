@@ -637,6 +637,7 @@ public class WF_CommEntity extends WebContralBase {
             RefMethods rms = map.getHisRefMethods();
             for (RefMethod item : rms)
             {
+            	item.HisEn = en;
                 String myurl = "";
                 if (item.refMethodType != RefMethodType.Func)
                 {

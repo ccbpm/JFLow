@@ -40,7 +40,11 @@ public enum UIContralType
 	 /**
 	  * 手写签名版
 	  */
-	 HandWriting(8);
+	 HandWriting(8),
+	/**
+	 * 超链接
+	 */
+     HyperLink(9);
 	
 	private int intValue;
 	private static java.util.HashMap<Integer, UIContralType> mappings;

@@ -257,15 +257,7 @@ function AfterBindEn_DealMapExt(frmData) {
 
         mapAttr = new Entity("BP.Sys.MapAttr", mapAttr);
 
-//        mapAttr.SetPKVal(mapExt.FK_MapData + "_" + mapExt.AttrOfOper);
 
-//        var count = mapAttr.RetrieveFromDBSources();
-
-//        //MapAttr属性不存在删除他的扩张
-//        if (count == 0) {
-//            mapExt.Delete();
-//            continue;
-//        }
 
         //判断MapAttr属性是否可编辑不可以编辑返回
         if (mapAttr.UIVisible == 0)
@@ -465,13 +457,6 @@ function AfterBindEn_DealMapExt(frmData) {
                         detailExt[ext.DtlNo] = [];
                     }
                     detailExt[ext.DtlNo].push(ext);
-                    var iframeDtl = $("#F" + ext.DtlNo);
-                    iframeDtl.load(function () {
-                        $(this).contents().find(":input[id=formExt]").val(JSON.stringify(detailExt[ext.DtlNo]));
-                        if (this.contentWindow && typeof this.contentWindow.parentStatistics === "function") {
-                            this.contentWindow.parentStatistics(detailExt[ext.DtlNo]);
-                        }
-                    });
                     $(":input[name=TB_" + ext.AttrOfOper + "]").attr("disabled", true);
                 }
                 break;
@@ -498,6 +483,18 @@ function AfterBindEn_DealMapExt(frmData) {
 
         }
     }
+    	 $.each(detailExt, function (idx, obj) {
+             var iframeDtl = $("#F" + obj[0].DtlNo);
+             iframeDtl.load(function () {
+                 $(this).contents().find(":input[id=formExt]").val(JSON.stringify(detailExt[obj[0].DtlNo]));
+                 if (this.contentWindow && typeof this.contentWindow.parentStatistics === "function") {
+                     this.contentWindow.parentStatistics(detailExt[obj[0].DtlNo]);
+                 }
+             });
+           
+         });
+
+  
 }
 
 /**Pop弹出框的处理**/

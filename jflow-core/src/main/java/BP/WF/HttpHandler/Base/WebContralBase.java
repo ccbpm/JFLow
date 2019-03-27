@@ -1043,9 +1043,17 @@ public abstract class WebContralBase extends BaseController {
 				} else {
 					String text ="";
 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle){
-						text =  dr.get((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase()).toString();
+						Object obj = dr.get((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
+						if(obj == null)
+							text = "";
+						else
+							text =  obj.toString();
 					}else{
-						text =  dr.get(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toString();
+						Object obj = dr.get(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
+						if(obj == null)
+							text = "";
+						else
+							text =  obj.toString();
 					}
 					
 					if(DataType.IsNullOrEmpty(text)==false && (text.contains("\n")==true ||text.contains("\r")==true)){

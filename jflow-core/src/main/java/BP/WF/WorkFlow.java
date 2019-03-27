@@ -370,17 +370,6 @@ public class WorkFlow
 					case WorkHL: //主流程运行到合流点上了
 						break;
 					default:
-						/*** 解决删除最后一个子流程时要把干流程也要删除。*/
-						//sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" +this.HisGenerWorkFlow +" AND FID=" + this.FID;
-						//int num = DBAccess.RunSQLReturnValInt(sql);
-						//if (num == 0)
-						//{
-						//    /*说明没有子进程，就要把这个流程执行完成。*/
-						//    WorkFlow wf = new WorkFlow(this.HisFlow, this.FID);
-						//    info += "@所有的子线程已经结束。";
-						//    info += "@结束主流程信息。";
-						//    info += "@" + wf.DoFlowOver(ActionType.FlowOver, "主流程结束");
-						//}
 					
 						break;
 				}
@@ -1206,7 +1195,13 @@ public class WorkFlow
 		//加入轨迹.
 		WorkNode wn = new WorkNode(getWorkID(), this.getHisGenerWorkFlow().getFK_Node());
 		wn.AddToTrack(at, WebUser.getNo(), WebUser.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), stopMsg);
-
+		
+		 //执行流程结束.
+        GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+        gwf.setEmps(gwf.getEmps()+emps);
+        gwf.setWFState(WFState.Complete);
+        gwf.Update();
+        
 		//调用结束后事件.
 		stopMsg+= this.getHisFlow().DoFlowEventEntity(EventListOfNode.FlowOverAfter, currNode, rpt, null);
 
@@ -1229,11 +1224,7 @@ public class WorkFlow
 		ps.Add(TrackAttr.WorkID, this.getWorkID());
 		BP.DA.DBAccess.RunSQL(ps);
 
-		 //执行流程结束.
-        GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-        gwf.setEmps(gwf.getEmps()+emps);
-        gwf.setWFState(WFState.Complete);
-        gwf.Update();
+		
         
 		return stopMsg;
 	}

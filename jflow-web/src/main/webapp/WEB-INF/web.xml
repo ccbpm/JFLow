@@ -17,9 +17,9 @@
     	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   	</listener>
   	
-  	<listener>
+ <!--  	<listener>
     	<listener-class>WebServiceListener.WebServicePublishListener</listener-class>
-  	</listener>
+  	</listener> -->
 
 	<!-- Encoding Filter -->
 	<filter>

@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 
@@ -93,6 +94,17 @@ public class RTFEngine
 		return _EnsDataDtls;
 	}
 	
+	 //多附件数据
+    private Hashtable _EnsDataAths = null;
+    public Hashtable getEnsDataAths()
+    {
+       
+        if (_EnsDataAths == null)
+            _EnsDataAths = new Hashtable();
+        return _EnsDataAths;
+        
+    }
+	
 	// 数据明细实体
 	
 	/**
@@ -123,17 +135,6 @@ public class RTFEngine
 	{
 		for (Object en : this.getHisEns())
 		{
-			// if (en.ToString()=="BP.WF.NumCheck" ||
-			// en.ToString()=="BP.WF.GECheckStand" ||
-			// en.ToString()=="BP.WF.NoteWork" )
-			// {
-			// if (en.GetValStringByKey("NodeID")!=strs[1])
-			// continue;
-			// }
-			// else
-			// {
-			// continue;
-			// }
 			
 			String val = ((Entity) en).GetValStringByKey(strs[2]);
 			switch (strs.length)
@@ -867,6 +868,11 @@ public class RTFEngine
 	public String ensStrs = "";
 	
 	/**
+	 * 轨迹表（用于输出打印审核轨迹,审核信息.）
+	 */
+	public DataTable dtTrack = null;
+	
+	/**
 	 * 单据生成
 	 * 
 	 * @param cfile
@@ -881,6 +887,11 @@ public class RTFEngine
 	public final void MakeDoc(String cfile, String path, String file,
 			String replaceVals, boolean isOpen)
 	{
+		cfile = cfile.replace(".rtf.rtf", ".rtf");
+        
+        if (new File(path).exists() == false)
+        	new File(path).mkdirs();
+        
 		StringBuilder str = new StringBuilder(Cash.GetBillStr(cfile, false)
 				.substring(0));
 		if (this.getHisEns().size() == 0)

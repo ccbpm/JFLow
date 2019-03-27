@@ -1129,10 +1129,10 @@ public class WF_MyFlow extends WebContralBase {
 				}
 
 				if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintWord) {
-					String urlr = "./Rpt/RptDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID="
-							+ this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&IsPrint=1&s=" + tKey;
-					toolbar += "<input type=button name='PrintDoc'  value='" + btnLab.getPrintDocLab()
-							+ "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
+					 String urlr = "./WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+	                 toolbar += "<input type=button name='PrintDoc' value='" + btnLab.getPrintDocLab() + "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";
+					
+					
 				}
 
 				if (this.getcurrND().getHisPrintDocEnable() == PrintDocEnable.PrintHtml) {

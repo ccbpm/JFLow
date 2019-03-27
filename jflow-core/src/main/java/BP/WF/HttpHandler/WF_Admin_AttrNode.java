@@ -57,6 +57,7 @@ import BP.WF.Template.NodeCancel;
 import BP.WF.Template.NodeCancelAttr;
 import BP.WF.Template.NodeReturn;
 import BP.WF.Template.NodeReturnAttr;
+import BP.WF.Template.TemplateFileModel;
 import BP.WF.Template.WebOfficeWorkModel;
 import BP.WF.XML.EventLists;
 
@@ -1885,11 +1886,10 @@ public class WF_Admin_AttrNode extends WebContralBase {
 	}
 
 	// 单据模板维护
-	public String Bill_Save() throws IllegalStateException, IOException {
+	public String Bill_Save() throws Exception {
 		BillTemplate bt = new BillTemplate();
 		HttpServletRequest request = getRequest();
 		// 上传附件
-		String filpath = "";
 		String fileName = CommonFileUtils.getOriginalFilename(request,"bill");
 		String filepath = SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + fileName;
 		filepath = filepath.replace("\\", "/");
@@ -1904,15 +1904,28 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		bt.setNodeID(this.getFK_Node());
 		bt.setNo(request.getParameter("TB_No"));
 		if (StringHelper.isNullOrEmpty(bt.getNo())) {
-			bt.setNo(Integer.toString(DBAccess.GenerOID()));
+			bt.setNo(String.valueOf(DBAccess.GenerOID("Template")));
 		}
 		bt.setName(request.getParameter("TB_Name"));
-		bt.setTempFilePath(filepath);
+		bt.setTempFilePath(fileName);
+		
 		bt.setHisBillFileType(Integer.parseInt(request.getParameter("DDL_BillFileType")));
 		bt.setBillOpenModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
 		bt.setQRModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
+		
+		//模版类型.rtf / VSTOForWord / VSTOForExcel .
+        if (fileName.contains(".doc"))
+            bt.setTemplateFileModel(TemplateFileModel.VSTOForWord);
 
-		bt.Save();
+        if (fileName.contains(".xls"))
+            bt.setTemplateFileModel(TemplateFileModel.VSTOForExcel);
+
+        if (fileName.contains(".rtf"))
+            bt.setTemplateFileModel(TemplateFileModel.RTF);
+
+        bt.Save();
+
+        bt.SaveFileToDB("DBFile", filepath); //把文件保存到数据库里. 
 
 		return "保存成功";
 

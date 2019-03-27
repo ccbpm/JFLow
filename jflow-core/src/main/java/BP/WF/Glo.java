@@ -3678,7 +3678,7 @@ public class Glo {
 	public static String getIntallPath() {
 		if (_IntallPath == null) {
 			if (SystemConfig.getIsBSsystem() == true) {
-				_IntallPath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("/");
+				_IntallPath = BP.WF.Glo.getCCFlowAppPath();
 			}
 		}
 

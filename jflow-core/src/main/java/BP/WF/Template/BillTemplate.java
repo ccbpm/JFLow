@@ -1,5 +1,7 @@
 package BP.WF.Template;
 
+import java.io.File;
+
 import BP.En.EntityNoName;
 import BP.En.Map;
 import BP.En.UAC;
@@ -69,6 +71,15 @@ public class BillTemplate extends EntityNoName
 	{
 		this.SetValByKey(BillTemplateAttr.BillFileType, (int)value);
 	}
+	
+	 public TemplateFileModel getTemplateFileModel()
+     {
+             return TemplateFileModel.forValue(this.GetValIntByKey(BillTemplateAttr.TemplateFileModel));
+     }
+     public void setTemplateFileModel(TemplateFileModel value){
+         this.SetValByKey(BillTemplateAttr.TemplateFileModel, value.getValue());
+     }
+	 
     /// <summary>
     /// 生成的单据打开方式
     /// </summary>
@@ -142,6 +153,27 @@ public class BillTemplate extends EntityNoName
 	{
 		super(no.replace("\n","").trim());
 	}
+	
+	/// <summary>
+    /// 获得Excel文件流
+    /// </summary>
+    /// <param name="oid"></param>
+    /// <returns></returns>
+    public byte[]  GenerTemplateFile()
+    {
+    	 byte[] bytes = BP.DA.DBAccess.GetByteFromDB(this.getEnMap().getPhysicsTable(), "No", this.getNo(), "DBFile");
+         if (bytes != null)
+             return bytes;
+
+         //如果没有找到，就看看默认的文件是否有.
+         String tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "CyclostyleFile\\" + this.getNo() + ".rtf";
+         if (new File(tempExcel).exists() == false)
+             tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "CyclostyleFile\\Word单据模版定义演示.docx";
+
+         bytes = BP.DA.DataType.ConvertFileToByte(tempExcel);
+         return bytes;
+    }
+    
 	/** 
 	 重写基类方法
 	*/
@@ -168,6 +200,9 @@ public class BillTemplate extends EntityNoName
 
         map.AddDDLSysEnum(BillTemplateAttr.QRModel, 0, "二维码生成方式", true, false,
                BillTemplateAttr.QRModel, "@0=不生成@1=生成二维码");
+        
+        map.AddDDLSysEnum(BillTemplateAttr.TemplateFileModel, 0, "模版模式", true, false,
+                BillTemplateAttr.TemplateFileModel, "@0=rtf模版@1=vsto模式的word模版@2=vsto模式的excel模版");
         
 		map.AddTBString(BillTemplateAttr.FK_BillType, null, "单据类型", true, false, 0, 4, 4);
 

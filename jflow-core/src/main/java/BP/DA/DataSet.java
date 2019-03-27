@@ -287,7 +287,7 @@ public class DataSet {
 		Tables = tables;
 	}
 
-	public Hashtable<String, DataTable> getHashTables() {
+	public Hashtable<String, DataTable> getHashTabless() {
 		return hashTables;
 	}
 

@@ -5022,7 +5022,7 @@ public class Flow extends BP.En.EntityNoName {
 				throw new RuntimeException("导入错误，非流程模版文件。");
 			}
 
-			DataTable dtFlow = ds.getHashTables().get("WF_Flow");
+			DataTable dtFlow = ds.getHashTabless().get("WF_Flow");
 			Flow fl = new Flow();
 			String oldFlowNo = dtFlow.Rows.get(0).getValue("No").toString();
 			String oldFlowName = dtFlow.Rows.get(0).getValue("Name").toString();
@@ -5101,11 +5101,11 @@ public class Flow extends BP.En.EntityNoName {
 			/// #endregion 处理流程表数据
 
 			/// #region 处理OID 插入重复的问题 Sys_GroupField, Sys_MapAttr.
-			DataTable mydtGF = ds.getHashTables().get("Sys_GroupField");
-			DataTable myDTAttr = ds.getHashTables().get("Sys_MapAttr");
-			DataTable myDTAth = ds.getHashTables().get("Sys_FrmAttachment");
-			DataTable myDTDtl = ds.getHashTables().get("Sys_MapDtl");
-			DataTable myDFrm = ds.getHashTables().get("Sys_MapFrame");
+			DataTable mydtGF = ds.getHashTabless().get("Sys_GroupField");
+			DataTable myDTAttr = ds.getHashTabless().get("Sys_MapAttr");
+			DataTable myDTAth = ds.getHashTabless().get("Sys_FrmAttachment");
+			DataTable myDTDtl = ds.getHashTabless().get("Sys_MapDtl");
+			DataTable myDFrm = ds.getHashTabless().get("Sys_MapFrame");
 			// DataTable myDM2M = ds.getHashTables().get("Sys_MapM2M");
 			if (mydtGF != null) {
 				for (DataRow dr : mydtGF.Rows) {

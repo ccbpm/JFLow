@@ -912,7 +912,17 @@ public class MapDtl extends EntityNoName
 		this.SetValByKey(MapDtlAttr.MTR, value);
 	}
 
-		///#endregion
+	 /// <summary>
+    /// 别名
+    /// </summary>
+    public String getAlias()
+    {
+        return this.GetValStrByKey(MapDtlAttr.Alias);
+    }
+    public void setAlias(String value)
+    {
+        this.SetValByKey(MapDtlAttr.Alias, value);
+    }
 
 
 		
@@ -1388,15 +1398,8 @@ public class MapDtl extends EntityNoName
 			}
 		}
 
-		//if (DBAccess.IsExitsObject(this.PTable))
-		//    DBAccess.RunSQL("DROP TABLE " + this.PTable);
 
 		return super.beforeDelete();
 	}
-	public void setAlias(String val) {
-		 
-		
-		this.SetValByKey(MapDtlAttr.Alias, val);
-		
-	}
+
 }

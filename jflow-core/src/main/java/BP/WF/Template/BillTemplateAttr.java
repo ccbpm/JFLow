@@ -19,6 +19,11 @@ public class BillTemplateAttr extends BP.En.EntityNoNameAttr
 	 为生成单据使用
 	*/
 	public static final String IDX = "IDX";
+	
+	/**
+	 * 单据类型
+	 */
+	public static final String TemplateFileModel = "TemplateFileModel";
 	/** 
 	 要排除的字段
 	*/

@@ -6434,6 +6434,18 @@ public class Dev2Interface {
 	}
 
 	/**
+	 * 创建一个空白的WorkID
+	 * @param flowNo 流程编号
+	 * @param userNo 用户编号
+	 * @return
+	 * @throws Exception
+	 */
+    public static long Node_CreateBlankWork(String flowNo, String userNo) throws Exception
+    {
+        return Node_CreateBlankWork(flowNo, null, null, userNo);
+    }
+
+	/**
 	 * 创建WorkID
 	 * 
 	 * @param flowNo

@@ -430,13 +430,12 @@ public class RptDfine extends EntityNoName {
 		md.setRptDTSearchKey("");
 
 		//设置查询条件.
-//		switch (rptMark)
-//ORIGINAL LINE: case "My":
+
 		if (rptMark.equals("My") || rptMark.equals("MyJoin") || rptMark.equals("MyDept"))
 		{
 				md.setRptSearchKeys("*WFSta*FK_NY*"); //查询条件.
 		}
-//ORIGINAL LINE: case "Adminer":
+
 		else if (rptMark.equals("Adminer"))
 		{
 				md.setRptSearchKeys("*WFSta*FK_NY*"); //查询条件.
@@ -486,23 +485,16 @@ public class RptDfine extends EntityNoName {
 				}
 			else if (attr.getKeyOfEn()==GERptAttr.FlowStarter){
 				attr.setUIIsEnable(false);
-				//attr.setLGType(FieldTypeS.FK;
-				//attr.setUIBindKey("BP.Port.Emps";
-				//attr.setUIContralType(UIContralType.DDL;
-				//attr.setUIWidth(120;
-				//break;
+
 			}
 			else if(attr.getKeyOfEn()==GERptAttr.FlowEndNode){
-				//attr.setLGType(FieldTypeS.FK;
-				//attr.setUIBindKey("BP.WF.Template.NodeExts";
-				//attr.setUIContralType(UIContralType.DDL;
-				//break;
+
 			}
 			else if("FK_Emp".equals(attr.getKeyOfEn())){
-				//break;
+
 			}
 			else{
-				//break;
+			
 			}
 			///#endregion
 
@@ -568,7 +560,7 @@ public class RptDfine extends EntityNoName {
 	 * @return
 	 */
 	public final String DoSearch_MyStartFlow() {
-		return "../../RptDfine/FlowSearch.htm?SearchType=My&FK_Flow=" + this.getNo();
+		return "../../RptDfine/Search.htm?SearchType=My&FK_Flow=" + this.getNo();
 	}
 	
 	/**
@@ -635,7 +627,7 @@ public class RptDfine extends EntityNoName {
 	 * @return
 	 */
 	public final String DoSearch_MyJoinFlow() {
-		return "../../RptDfine/FlowSearch.htm?SearchType=MyJoin&FK_Flow=" + this.getNo();
+		return "../../RptDfine/Search.htm?SearchType=MyJoin&FK_Flow=" + this.getNo();
 	}
 	
 	/**
@@ -702,7 +694,7 @@ public class RptDfine extends EntityNoName {
 	 * @return
 	 */
 	public final String DoSearch_MyDeptFlow() {
-		return "../../RptDfine/FlowSearch.htm?SearchType=MyDept&FK_Flow=" + this.getNo();
+		return "../../RptDfine/Search.htm?SearchType=MyDept&FK_Flow=" + this.getNo();
 	}
 	
 	/**
@@ -770,7 +762,7 @@ public class RptDfine extends EntityNoName {
 	 * @return
 	 */
 	public final String DoSearch_AdminerFlow() {
-		return "../../RptDfine/FlowSearch.htm?SearchType=Adminer&FK_Flow=" + this.getNo();
+		return "../../RptDfine/Search.htm?SearchType=Adminer&FK_Flow=" + this.getNo();
 	}
 	
 	/**

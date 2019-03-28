@@ -1,5 +1,6 @@
 package BP.Tools;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +11,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -33,6 +35,11 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 
 	public synchronized static ContextHolderUtils getInstance() {
 		if (contextHolder == null) {
+			if(springContext == null){
+				ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:spring-context.xml");
+				springContext = ctx;
+			}
+				
 			contextHolder = springContext.getBean(ContextHolderUtils.class);
 		}
 		return contextHolder;

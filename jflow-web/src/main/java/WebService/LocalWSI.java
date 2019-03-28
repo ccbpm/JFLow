@@ -10,7 +10,7 @@ import javax.jws.WebService;
  * @author Administrator
  *
  */
-@WebService
+
 public interface LocalWSI {
 	/**
 	 * 待办
@@ -18,7 +18,7 @@ public interface LocalWSI {
 	 * @param sysNo 系统编号,为空时返回平台所有数据
 	 * @return
 	 */
-	@WebMethod
+
 	public String DB_Todolist(String userNo, String sysNo);
 	
 	/**
@@ -28,7 +28,7 @@ public interface LocalWSI {
 	 * @return
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String DB_Runing(String userNo, String sysNo) throws Exception;
 	
 	/**
@@ -38,7 +38,7 @@ public interface LocalWSI {
 	 * @return 返回我可以发起的流程列表.
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String DB_StarFlows(String userNo, String sysNo) throws Exception;
 	
 	/**
@@ -49,7 +49,7 @@ public interface LocalWSI {
 	 * @param pageIdx
 	 * @return
 	 */
-	@WebMethod
+
 	public String DB_MyStartFlowInstance(String userNo, String sysNo, int pageSize, int pageIdx);
 	/**
 	 * 创建WorkID
@@ -58,7 +58,7 @@ public interface LocalWSI {
 	 * @return 一个长整型的工作流程实例
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public long CreateWorkID(String flowNo, String userNo) throws Exception;
 	
 	/**
@@ -71,7 +71,7 @@ public interface LocalWSI {
 	 * @return 发送的结果信息.
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps) throws Exception;
 	
 	/**
@@ -80,7 +80,7 @@ public interface LocalWSI {
 	 * @param paras 用于控制流程运转的参数，比如方向条件. 格式为:@JinE=1000@QingJaiTianShu=100
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public void SaveParas(long workid, String paras) throws Exception;
 	
 	/**
@@ -91,7 +91,7 @@ public interface LocalWSI {
 	 * @return 下一个节点的JSON.
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String GenerNextStepNode(String flowNo, long workid, String paras) throws Exception;
 	
 	/**
@@ -102,7 +102,7 @@ public interface LocalWSI {
 	 * @return 返回两个结果集一个是分组的Depts(No,Name)，另外一个是人员的Emps(No, Name, FK_Dept),接受后，用于构造人员选择器.
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid) throws Exception;
 	
 	/**
@@ -111,7 +111,7 @@ public interface LocalWSI {
 	 * @return 返回节点集合的json.
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String WillToNodes(int currNodeID) throws Exception;
 	
 	/**
@@ -120,7 +120,7 @@ public interface LocalWSI {
 	 * @return
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String CurrNodeInfo(int currNodeID) throws Exception;
 	
 	/**
@@ -129,7 +129,7 @@ public interface LocalWSI {
 	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String CurrFlowInfo(String flowNo) throws Exception;
 	
 	/**
@@ -138,6 +138,6 @@ public interface LocalWSI {
 	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
-	@WebMethod
+
 	public String CurrGenerWorkFlowInfo(long workID) throws Exception;
 }

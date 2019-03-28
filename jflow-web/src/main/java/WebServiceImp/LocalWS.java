@@ -17,7 +17,6 @@ import BP.WF.Template.Directions;
 import BP.WF.Template.Selector;
 import WebService.LocalWSI;
 
-@WebService
 public class LocalWS implements LocalWSI{
 	
 	/**

@@ -317,7 +317,7 @@ public class WF_WorkOpt extends WebContralBase {
 
 				// 如果是当前的节点. 当前人员可以处理, 已经审批通过的人员.
 				if (tk.getNDFrom() == this.getFK_Node() && isCanDo == true && tk.getEmpFrom() != WebUser.getNo()
-						&& checkerPassed.contains("," + tk.getEmpFrom() + ",") == false)
+						&& checkerPassed.contains("," + tk.getEmpFrom() + ",") == false )
 					continue;
 
 				if (tk.getNDFrom() == this.getFK_Node() && gwf.getHuiQianTaskSta() != HuiQianTaskSta.None) {
@@ -327,7 +327,7 @@ public class WF_WorkOpt extends WebContralBase {
 				}
 
 				// 如果是多人处理，就让其显示已经审核过的意见.
-				if (tk.getNDFrom() == this.getFK_Node() && checkerPassed.indexOf("," + tk.getEmpFrom() + ",") < 0) {
+				if (tk.getNDFrom() == this.getFK_Node() && checkerPassed.indexOf("," + tk.getEmpFrom() + ",") < 0 && gwf.getWFState() != WFState.Complete) {
 					continue;
 					// 如果当前人，没有审核完成,就不显示.
 					// 判断会签, 去掉正在审批的节点.
@@ -338,8 +338,7 @@ public class WF_WorkOpt extends WebContralBase {
 				row = tkDt.NewRow();
 				row.setValue("NodeID", tk.getNDFrom());
 
-				// row["NodeName"] = (nds.GetEntityByKey(tk.NDFrom) as
-				// Node).FWCNodeName;
+
 
 				row.setValue("NodeName", tk.getNDFromT());
 				isDoc = false;
@@ -367,7 +366,7 @@ public class WF_WorkOpt extends WebContralBase {
 						}
 					}
 
-					if (isLast && isDoc == false) {
+					if (isLast && isDoc == false && gwf.getWFState() != WFState.Complete) {
 						isExitTb_doc = false;
 						row.setValue("IsDoc", true);
 						isDoc = true;

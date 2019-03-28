@@ -238,5 +238,7 @@ public class GenerWorkFlowAttr
 	/// 会签状态
     /// </summary>
     public static final String HuiQianTaskSta = "HuiQianTaskSta";
+    
+    public static final String Domain = "Domain";
 		///#endregion
 }

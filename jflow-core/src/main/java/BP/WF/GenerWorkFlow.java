@@ -12,6 +12,7 @@ import BP.En.QueryObject;
 import BP.En.RefMethod;
 import BP.Sys.PubClass;
 import BP.Tools.ContextHolderUtils;
+import BP.WF.Template.FlowSortAttr;
 
 /** 
  流程实例
@@ -772,7 +773,9 @@ public class GenerWorkFlow extends Entity
 		map.AddTBString(GenerWorkFlowAttr.FK_NY, null, "年月", false, false, 0, 7, 7);
 		map.AddTBInt(GenerWorkFlowAttr.WeekNum, 0, "周次", true, true);
 		map.AddTBInt(GenerWorkFlowAttr.TSpan, 0, "时间间隔", true, true);
-
+		
+		map.AddTBString(GenerWorkFlowAttr.Domain, null, "域/系统编号", true, false, 0, 100, 30);
+        map.SetHelperAlert(GenerWorkFlowAttr.Domain, "用于区分不同系统的流程,比如:一个集团有多个子系统每个子系统都有自己的流程,就需要标记那些流程是那个子系统的.");
 
 			//待办状态(0=待办中,1=预警中,2=逾期中,3=按期完成,4=逾期完成) 
 		map.AddTBInt(GenerWorkFlowAttr.TodoSta, 0, "待办状态", true, true);

@@ -75,20 +75,30 @@ function GenerFreeFrm(mapData, frmData) {
         if (o.ExtType == "AutoFullDtlField") {	// 明细统计公式
             // 从表id.列.[Sum|Avg|Max|Min] -> CCFrm_CongBiaoCeShiDtl1.ShanJia.Avg
             var docs = o.Doc.split("\.");
-            if (docs.length == 3) {
-                var ext = {
-                    "DtlNo": docs[0],
-                    "FK_MapData": o.FK_MapData,
-                    "AttrOfOper": o.AttrOfOper,
-                    "Doc": o.Doc,
-                    "DtlColumn": docs[1],
-                    "exp": docs[2]
-                };
+            //判断是否显示大写
+                var tag3 = o.Tag3;
+                var DaXieAttrOfOper = "";
+                if (tag3 == 1)
+                    DaXieAttrOfOper = o.Tag4;
+
+                if (docs.length == 3) {
+                    var ext = {
+                        "DtlNo": docs[0],
+                        "FK_MapData": o.FK_MapData,
+                        "AttrOfOper": o.AttrOfOper,
+                        "DaXieAttrOfOper": DaXieAttrOfOper,
+                        "Doc": o.Doc,
+                        "DtlColumn": docs[1],
+                        "exp": docs[2],
+                        "Tag":o.Tag,
+                        "Tag1":o.Tag1
+                    };
+           
                 if (!$.isArray(detailExt[ext.DtlNo])) {
                     detailExt[ext.DtlNo] = [];
                 }
                 detailExt[ext.DtlNo].push(ext);
-                $(":input[name=TB_" + ext.AttrOfOper + "]").attr("disabled", true);
+                $(":input[name=TB_" + ext.AttrOfOper + "]").attr("readonly", true);
             }
         }
     });

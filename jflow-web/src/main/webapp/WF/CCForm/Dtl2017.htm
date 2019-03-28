@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../Scripts/config.js"></script>
     <script src="../Comm/Gener.js" type="text/javascript"></script>
     <script src="../Data/JSLibData/CovertMoneyToDaXie.js" type="text/javascript"></script>
-
+    <script src="../../DataUser/JSLibData/CCFormRef.js" type="text/javascript"></script>
     <script language="javascript" type="text/javascript" >
 
         var hjl = new Array(); //合计列名称集合
@@ -859,6 +859,9 @@
                     $(":input[name=" + columnsName + "]").each(function (i, e) {
                         $(e).bind("change", function (o) {
                             doStatistics(extObj.exp, columnsName, $("#TB_" + extObj.AttrOfOper, parent.document), $("#TB_" + extObj.DaXieAttrOfOper, parent.document));
+                            //是否使用合计计算其他值
+                            if (extObj.Tag == "1")
+                                DBAccess.RunFunctionReturnStr(extObj.Tag1);
                         });
                         if (i == 0) {
                             $(e).trigger("change");

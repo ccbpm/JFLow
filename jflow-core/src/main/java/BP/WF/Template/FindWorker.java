@@ -1,26 +1,19 @@
 package BP.WF.Template;
 
-import javax.servlet.http.HttpServletRequest;
-
 import BP.DA.DBAccess;
 import BP.DA.DataColumn;
 import BP.DA.DataRow;
-import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
-import BP.En.Attrs;
 import BP.Sys.OSDBSrc;
 import BP.Sys.OSModel;
-import BP.Tools.ContextHolderUtils;
-import BP.Tools.StringHelper;
 import BP.WF.ActionType;
 import BP.WF.DeliveryWay;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Flow;
 import BP.WF.FlowAppType;
 import BP.WF.GenerWorkFlow;
-import BP.WF.Glo;
 import BP.WF.Node;
 import BP.WF.PortalInterface;
 import BP.WF.RunModel;
@@ -28,9 +21,6 @@ import BP.WF.TrackAttr;
 import BP.WF.WorkNode;
 import BP.Web.GuestUser;
 import BP.Web.WebUser;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 /**
  * 找人规则
  * 
@@ -63,8 +53,6 @@ public class FindWorker {
 		DataTable dt = new DataTable();
 		dt.Columns.Add("No", String.class);
 		String sql;
-		String FK_Emp;
-
 		// 如果执行了两次发送，那前一次的轨迹就需要被删除,这里是为了避免错误。
 		ps = new Paras();
 		ps.Add("WorkID", this.WorkID);
@@ -470,6 +458,11 @@ public class FindWorker {
 				if (DotNetToJavaStringHelper.isNullOrEmpty(s)) {
 					continue;
 				}
+
+				// if (BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(NO) AS
+				// NUM FROM Port_Emp WHERE NO='" + s + "' or name='"+s+"'", 0)
+				// == 0)
+				// continue;
 
 				DataRow dr = dt.NewRow();
 				dr.setValue(0, s);
@@ -890,28 +883,19 @@ public class FindWorker {
 
 		// 递归出来子部门下有该岗位的人员
 		DataTable mydt = Func_GenerWorkerList_DiGui_ByDepts(subDepts, empNo);
-		if(mydt == null || mydt.Rows.size()  == 0){
-			//如果递归没有找到人,就全局搜索岗位
-			 sql = "SELECT A.FK_Emp FROM " + BP.WF.Glo.getEmpStation() + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
-             ps = new Paras();
-             ps.Add("FK_Node", town.getHisNode().getNodeID());
-             ps.SQL = sql;
-             dt = DBAccess.RunSQLReturnTable(ps);
-             if (dt.Rows.size() > 0)
-                 return dt;
-             if (this.town.getHisNode().getHisWhenNoWorker() == false)
-            	 throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo()
+		if (mydt == null && this.town.getHisNode().getHisWhenNoWorker() == false) {
+			throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo()
 					+ ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称："
 					+ WebUser.getFK_DeptName());
-             
-             if (dt.Rows.size() == 0){
-	            mydt = new DataTable();
-	 			mydt.Columns.Add(new DataColumn("No", String.class));
-	 			mydt.Columns.Add(new DataColumn("Name", String.class));
-             }
 		}
-		
-		
+
+		// add by zhoupeng 考虑到自动跳转，在没有接受人的情况下.
+		if (mydt == null) {
+			mydt = new DataTable();
+			mydt.Columns.Add(new DataColumn("No", String.class));
+			mydt.Columns.Add(new DataColumn("Name", String.class));
+		}
+
 		return mydt;
 
 		/// #endregion 按照岗位来执行。

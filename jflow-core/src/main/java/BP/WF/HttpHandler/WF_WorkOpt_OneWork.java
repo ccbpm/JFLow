@@ -19,6 +19,8 @@ import BP.WF.GenerWorkFlow;
 import BP.WF.GenerWorkerListAttr;
 import BP.WF.GenerWorkerLists;
 import BP.WF.GetTask;
+import BP.WF.Node;
+import BP.WF.NodeFormType;
 import BP.WF.SMS;
 import BP.WF.SMSAttr;
 import BP.WF.TrackAttr;
@@ -292,7 +294,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		OneWorkXmls xmls = new OneWorkXmls();
 		xmls.RetrieveAll();		
 		
-
+		
 		for (OneWorkXml item : xmls.ToJavaListXmlEnss())
 		{
 			String url = "";
@@ -304,18 +306,32 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 
 		return DotNetToJavaStringHelper.trimEnd(re, ',') + "]";
 	}
-	public String OneWork_GetTabs()
+	public String OneWork_GetTabs() throws Exception
 	{
 		String re = "[";
 		OneWorkXmls xmls = new OneWorkXmls();
 		xmls.RetrieveAll();		
-		 
+		
+		int nodeID = this.getFK_Node();
+        if (nodeID == 0)
+        {
+            GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+            nodeID = this.getFK_Node();
+        }
+
+        Node nd = new Node(nodeID);
 
 		for (OneWorkXml item : xmls.ToJavaListXmlEnss())
 		{
 			String url = "";
 			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), this.getFK_Node(), this.getWorkID(), this.getFK_Flow(), this.getFID());
+			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
+            {
+                if (nd.getFormUrl().contains("?"))
+                    url = "@url=&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
 
+                url = "@url="+nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow()+ "&FID=" + this.getFID() + "&FromWorkOpt=1";
+            }
 			String strx = String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\"", item.getNo(), item.getName(), url);
 			re += "{" + strx + "},";
 		}

@@ -438,10 +438,10 @@ public class WF extends WebContralBase {
 		if (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm) {
 			// added by liuxc,2016-01-25.
 			if (nd.getFormUrl().contains("?"))
-				return "url@" + nd.getFormUrl() + "&IsReadonly=1&WorkID=" + workid + "&FK_Node=" + nd.getNodeID()
+				return "urlForm@" + nd.getFormUrl() + "&IsReadonly=1&WorkID=" + workid + "&FK_Node=" + nd.getNodeID()
 						+ "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt;
 
-			return "url@" + nd.getFormUrl() + "?IsReadonly=1&WorkID=" + workid + "&FK_Node=" + nd.getNodeID()
+			return "urlForm@" + nd.getFormUrl() + "?IsReadonly=1&WorkID=" + workid + "&FK_Node=" + nd.getNodeID()
 					+ "&FK_Flow=" + nd.getFK_Flow() + "&FID=" + fid + urlExt;
 		}
 

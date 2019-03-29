@@ -153,6 +153,7 @@ public class CCFlowAPI {
 			GenerWorkFlow gwf = new GenerWorkFlow();
 			gwf.setWorkID(workID);
 			gwf.RetrieveFromDBSources();
+            myds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
 			// 加入WF_Node.
 			DataTable WF_Node = nd.ToDataTableField("WF_Node");

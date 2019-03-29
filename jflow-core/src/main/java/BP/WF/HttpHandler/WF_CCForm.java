@@ -82,6 +82,7 @@ import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.Tools.ZipCompress;
 import BP.WF.DotNetToJavaStringHelper;
+import BP.WF.GenerWorkFlow;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
 import BP.WF.HttpHandler.Base.CommonFileUtils;
@@ -1452,6 +1453,12 @@ public class WF_CCForm extends WebContralBase {
 			en.CheckPhysicsTable();
 			en.ResetDefaultVal();
 		}
+		
+		//把流程信息表发送过去.
+        GenerWorkFlow gwf = new GenerWorkFlow();
+        gwf.setWorkID( pk);
+        gwf.RetrieveFromDBSources();
+        ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
 		// 把参数放入到 En 的 Row 里面。
 		if (DotNetToJavaStringHelper.isNullOrEmpty(atParas) == false) {

@@ -578,6 +578,16 @@ public class WorkReturn
 		//更新运动到节点,但是仍然是退回状态.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 		gwf.setFK_Node(this.ReturnToNode.getNodeID());
+		 //增加参与的人员
+        String emps = gwf.getEmps();
+        if (emps.contains("@" + WebUser.getNo()) == false){
+        	if(DataType.IsNullOrEmpty(emps))
+        		emps ="@"+WebUser.getNo() + "@";
+        	else
+        		emps += WebUser.getNo() + "@";
+        }
+            
+        gwf.setEmps(emps);
 		gwf.Update();
 
 		//更新退回到的人员信息可见.
@@ -712,6 +722,15 @@ public class WorkReturn
 		gwf.setStarter(toEmp);
 		gwf.setStarterName(toEmpName);
 		gwf.setSender(WebUser.getNo());
+		 //增加参与的人员
+        String emps = gwf.getEmps();
+        if (emps.contains("@" + WebUser.getNo()) == false){
+        	if(DataType.IsNullOrEmpty(emps))
+        		emps ="@"+WebUser.getNo() + "@";
+        	else
+        		emps += WebUser.getNo() + "@";
+        }
+        gwf.setEmps(emps);
 		gwf.Update();
 
 		//找到当前的工作数据.
@@ -787,6 +806,15 @@ public class WorkReturn
 
 		gwf.setWFState(WFState.ReturnSta);
 		gwf.setSender(WebUser.getNo());
+		 //增加参与的人员
+        String emps = gwf.getEmps();
+        if (emps.contains("@" + WebUser.getNo()) == false){
+        	if(DataType.IsNullOrEmpty(emps))
+        		emps ="@"+WebUser.getNo() + "@";
+        	else
+        		emps += WebUser.getNo() + "@";
+        }
+        gwf.setEmps(emps);
 		gwf.Update();
 
 		// 返回退回信息.
@@ -925,6 +953,13 @@ public class WorkReturn
         {
             toDoEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
         }
+        
+        //增加参与的人员
+        String emps = gwf.getEmps();
+        if (emps.contains("@" + WebUser.getNo()) == false)
+            emps += WebUser.getNo() + "@";
+        gwf.setEmps(emps);
+        
         gwf.setTodoEmps(toDoEmps);
         gwf.setTodoEmpsNum( gwls.size());
         gwf.Update();

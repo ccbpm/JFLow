@@ -94,9 +94,10 @@ function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage) {
     if (projectName == "WF") {
         projectName = "";
     }
+    //@yuanlina
     if (plant == "JFlow")
         projectName = basePath;
-    var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal;
+    var url = basePath + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal;
 
     if (typeof ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal) === "function") {
         ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal)(url, "editSubGrid", '编辑', wWidth, wHeight, "icon-property", false, function () { }, null, function () {
@@ -733,9 +734,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
             formArrResult.push(ele);
         }
         if (ele.split('=')[0].indexOf('RB_') == 0) {
-            var index = isExistArray(formArrResult, ele.split('=')[0]);
-            if (index == -1)
-                formArrResult.push(ele);
+            formArrResult.push(ele);
         }
 
     });
@@ -981,7 +980,16 @@ function execSend(toNodeID) {
     var dataStrs = getFormData(true, true) + "&ToNode=" + toNodeID;
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
-    handler.AddUrlData(dataStrs);
+    $.each(dataStrs.split("&"), function (i, o) {
+        var param = o.split("=");
+        if (param.length == 2 && validate(param[1])) {
+            handler.AddPara(param[0], param[1]);
+        } else {
+            handler.AddPara(param[0], "");
+        }
+    });
+    //handler.AddUrlData(dataStrs);
+
     var data = handler.DoMethodReturnString("Send"); //执行保存方法.
 
     if (data.indexOf('err@') == 0) { //发送时发生错误
@@ -1503,10 +1511,7 @@ function GenerWorkNode() {
     var local = window.location.href;
 
     var frm = document.forms["divCCForm"];
-    if (plant == "CCFlow")
-        frm.action = "MyFlow.ashx?method=login";
-    else
-        frm.action = MyFlow + "?method=login";
+
 
     //单表单加载后执行.
     CCFormLoaded();
@@ -1564,9 +1569,18 @@ function GenerWorkNode() {
     var enName = flowData.Sys_MapData[0].No;
     try {
         ////加载JS文件
-        //jsSrc = "<script language='JavaScript' src='/DataUser/JSLibData/" + enName + "_Self.js' ></script>";
-        //$('body').append($('<div>' + jsSrc + '</div>'));
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = "../DataUser/JSLibData/" + pageData.FK_Flow + ".js";
+        var tmp = document.getElementsByTagName('script')[0];
+        tmp.parentNode.insertBefore(s, tmp);
+    }
+    catch (err) {
 
+    }
+
+    try {
+        ////加载JS文件
         var s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = "../DataUser/JSLibData/" + enName + "_Self.js";
@@ -1579,8 +1593,7 @@ function GenerWorkNode() {
 
     var jsSrc = '';
     try {
-        //jsSrc = "<script language='JavaScript' src='/DataUser/JSLibData/" + enName + ".js' ></script>";
-        //$('body').append($('<div>' + jsSrc + '</div>'));
+       
 
         var s = document.createElement('script');
         s.type = 'text/javascript';

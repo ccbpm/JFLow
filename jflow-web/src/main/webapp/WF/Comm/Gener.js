@@ -1,5 +1,20 @@
-﻿//定义语言.
-var CurrentLang = "CN";
+﻿////定义语言.
+//$(".lang").each(function (index, item) {
+//    var key = $(item).attr("data-key");
+//    var val = "";
+//    $.each(window.lang, function (i, n) {
+//        if (i == key) {
+//            val = n;
+//            return false;
+//        }
+
+//    });
+
+//    if (val.length > 0) {
+//        $(item).text(val);
+//    }
+
+//});
 
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
@@ -30,7 +45,7 @@ function trim(s) {
 //
 if (plant == "CCFlow") {
     // CCFlow
-    dynamicHandler = "/WF/Comm/Handler.ashx";
+    dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
 } else {
     // JFlow
     dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -240,6 +255,10 @@ function GenerBindEnumKey(ctrlDDLId, enumKey, selectVal) {
 
         type: 'post',
         async: false,
+        xhrFields:{
+            withCredentials:true
+        },
+        crossDomain:true,
         url: dynamicHandler + "?DoType=EnumList&EnumKey=" + enumKey + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -268,15 +287,13 @@ function GenerBindEntities(ctrlDDLId, ensName, selectVal, filter) {
     $.ajax({
         type: 'post',
         async: true,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
         url: dynamicHandler + "?DoType=EnsData&EnsName=" + ensName + "&Filter=" + filter + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
-
-            //            if (data.indexof('err@') ==0 )
-            //            {
-            //               alert(data);
-            //               return ;
-            //            }
 
             data = JSON.parse(data);
             //绑定枚举值.
@@ -299,6 +316,10 @@ function GenerBindSFTable(ctrlDDLId, sfTable, selectVal) {
     $.ajax({
         type: 'post',
         async: true,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
         url: dynamicHandler + "?DoType=SFTable&SFTable=" + sfTable + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -328,6 +349,10 @@ function GenerBindSQL(ctrlDDLId, sqlKey, paras, colNo, colName, selectVal) {
     $.ajax({
         type: 'post',
         async: true,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
         url: dynamicHandler + "?DoType=SQLList&SQLKey=" + sqlKey + "&Paras=" + paras + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -650,11 +675,15 @@ function AjaxServiceGener(param, myUrl, callback, scope) {
     $.ajax({
         type: "GET", //使用GET或POST方法访问后台
         dataType: "html", //返回json格式的数据
-        contentType: "application/json; charset=utf-8",
+        contentType: "text/plain; charset=utf-8",
         url: Handler + myUrl, //要访问的后台地址
         data: param, //要发送的数据
         async: true,
         cache: false,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
         complete: function () { }, //AJAX请求完成时隐藏loading提示
         error: function (XMLHttpRequest, errorThrown) {
             callback(XMLHttpRequest);
@@ -719,10 +748,14 @@ function DBAccess() {
     $.ajax({
         type: "GET", //使用GET或POST方法访问后台
         dataType: "json", //返回json格式的数据
-        contentType: "application/json; charset=utf-8",
+        contentType: "text/plain; charset=utf-8",
         url: url, //要访问的后台地址
         async: true,
         cache: false,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
         complete: function () { }, //AJAX请求完成时隐藏loading提示
         error: function (XMLHttpRequest, errorThrown) {
             callback(XMLHttpRequest);
@@ -805,7 +838,7 @@ var Entity = (function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler = "/WF/Comm/Handler.ashx";
+        dynamicHandler =basePath+ "/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -820,6 +853,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + self.pkval + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -862,6 +899,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Insert&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -902,6 +943,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_DirectInsert&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -939,6 +984,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Update&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -968,6 +1017,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Save&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -998,6 +1051,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Delete&EnName=" + self.enName + "&PKVal=" + this.GetPKVal() + "&Key1=" + key1 + "&Val1=" + val1 + "&Key2=" + key2 + "&Val2=" + val2 + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -1026,6 +1083,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Retrieve&EnName=" + self.enName + "&" + params,
                 dataType: 'html',
                 success: function (data) {
@@ -1145,6 +1206,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl,
                 dataType: 'html',
                 success: function (data) {
@@ -1187,6 +1252,10 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_IsExits&EnName=" + self.enName + "&" + getParams1(self),
                 dataType: 'html',
                 success: function (data) {
@@ -1228,6 +1297,10 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 data: arguments,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + pkavl + "&MethodName=" + methodName + "&paras=" + params + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1509,6 +1582,10 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_Init&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1546,6 +1623,10 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_Delete&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1586,6 +1667,10 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1635,6 +1720,10 @@ var Entities = (function () {
                 type: 'post',
                 async: false,
                 data: arguments,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1679,6 +1768,10 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: pathRe + dynamicHandler + "?DoType=Entities_RetrieveAll&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1732,7 +1825,7 @@ var DBAccess = (function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler = "/WF/Comm/Handler.ashx";
+        dynamicHandler = basePath+"/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -1744,6 +1837,10 @@ var DBAccess = (function () {
         $.ajax({
             type: 'post',
             async: false,
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQL&t=" + new Date().getTime(),
             dataType: 'html',
             data: { "SQL": sql },
@@ -1856,6 +1953,10 @@ var DBAccess = (function () {
         $.ajax({
             type: 'post',
             async: false,
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQLReturnTable" + "&t=" + new Date().getTime(),
             dataType: 'html',
             data: { "SQL": sql },
@@ -1895,6 +1996,10 @@ var DBAccess = (function () {
             async: false,
             url: url,
             dataType: 'html',
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
             success: function (data) {
                 if (data.indexOf("err@") != -1) {
                     alert(data);
@@ -1962,7 +2067,7 @@ var HttpHandler = (function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler = "/WF/Comm/Handler.ashx";
+        dynamicHandler =basePath+ "/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -2048,6 +2153,10 @@ var HttpHandler = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
                 data: parameters,
                 dataType: 'html',
@@ -2097,7 +2206,7 @@ var WebUser = function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler = "/WF/Comm/Handler.ashx";
+        dynamicHandler = basePath+"/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -2108,6 +2217,10 @@ var WebUser = function () {
     $.ajax({
         type: 'post',
         async: false,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
         url: dynamicHandler + "?DoType=WebUser_Init&t=" + new Date().getTime(),
         dataType: 'html',
         success: function (data) {
@@ -2297,6 +2410,10 @@ function SFTaleHandler(url) {
         type: 'post',
         async: false,
         url: url,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
         dataType: 'html',
         success: function (data) {
             if (data.indexOf("err@") != -1) {

@@ -25,11 +25,12 @@
         menuStyle: {
             border: '1px solid #5a6377',
             minWidth: '150px',
-            padding: '5px 0'
+            padding: '5px 10'
         },
         itemStyle: {
-            fontFamily: 'verdana',
-            color: '#333',
+			fontFamily: 'verdana, helvetica, arial, sans-serif',
+			color: '#333',
+			fontSize: '12px',
             border: '0',
             /*borderLeft:'5px solid #fff',*/
             padding: '5px 40px 5px 20px'
@@ -38,7 +39,7 @@
             border: '0',
             /*borderLeft:'5px solid #49afcd',*/
             color: '#fff',
-            backgroundColor: '#5a6377'
+			backgroundColor: '#2980b9'
         },
         mtAfterDrop: function (params) {
           
@@ -58,7 +59,6 @@
         }
 
     }; /*defaults end*/
-
     var initEndPoints = function () {
         $(".process-flag").each(function (i, e) {
             var p = $(e).parent();
@@ -171,27 +171,32 @@
             .addClass("process-step btn btn-small")//给节点名称添加一个span元素
             .html('<span class="process-flag badge ' + badge + '"><i class="' + icon + ' icon-white"></i></span>&nbsp;<span id="span_' + row.id + '">' + row.process_name + '</span>')
             .mousedown(function (e) {
-                if (e.which == 3) { //右键绑定
-                    _canvas.find('#leipi_active_id').val(row.id);
-                    contextmenu.bindings = defaults.processMenus;
-                    var nodeID = document.getElementById("leipi_active_id");
-                    var node = new Entity("BP.WF.Node", nodeID.value);
-                    if (node.RunModel == 0) {
-                        $('#pmfun span').text("普通");
-                    }
-                    else if (node.RunModel == 1) {
-                        $('#pmfun span').text("合流");
-                    }
-                    else if (node.RunModel == 2) {
-                        $('#pmfun span').text("分流");
-                    }
-                    else if (node.RunModel == 3) {
-                        $('#pmfun span').text("分合流");
-                    }
-                    else if (node.RunModel == 4) {
-                        $('#pmfun span').text("子线程");
-                    }
-                    $(this).contextMenu('processMenu', contextmenu);
+				if (e.which == 3) { //右键绑定
+					_canvas.find('#leipi_active_id').val(row.id);
+					contextmenu.bindings = defaults.processMenus;
+					var nodeID = document.getElementById("leipi_active_id");
+					var node = new Entity("BP.WF.Node", nodeID.value);
+
+					if (node.RunModel == 0) {
+						$('#pmfun span').text("普通");
+					}
+					else if (node.RunModel == 1) {
+						$('#pmfun span').text("合流");
+					}
+					else if (node.RunModel == 2) {
+						$('#pmfun span').text("分流");
+					}
+					else if (node.RunModel == 3) {
+						$('#pmfun span').text("分合流");
+					}
+					else if (node.RunModel == 4) {
+						$('#pmfun span').text("子线程");
+					}
+					$(this).contextMenu('processMenu', contextmenu);
+					////$(this).contextMenu('processMenu3', contextmenu);
+					//$(this).mouseenter(function () {
+					//	$(this).contextMenu('processMenu3', contextmenu);
+					//});
                 }
             });
                 _canvas.append(nodeDiv);
@@ -429,7 +434,7 @@
                         else if (node.RunModel == 4) {
                             $('#pmfun span').text("子线程");
                         }
-                        $(this).contextMenu('processMenu', contextmenu);
+						$(this).contextMenu('processMenu', contextmenu);
                     }
                 });
 

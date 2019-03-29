@@ -1,6 +1,6 @@
-    
+ï»¿    
 
-/*  Table ·ç¸ñ  */
+/*  Table é£æ ¼  */
 table
 {
     font-family: verdana,arial,sans-serif;
@@ -13,10 +13,14 @@ table
 table th
 {
     border: 1px solid #D0D0D0;
-    padding: 1px 3px;
+    padding: 1px 4.9px;
     background-color: #F9F9F9;
     font-weight: normal;
     font-style: normal;
+}
+.thStyle
+{
+   padding: 1px 3.9px;  
 }
 table td
 {
@@ -39,7 +43,7 @@ select {
 }
 
 
-/*ÎÄ±¾¿òÖ»¶Á·ç¸ñ.*/
+/*æ–‡æœ¬æ¡†åªè¯»é£æ ¼.*/
 textarea[disabled], input:disabled,select[disabled]
 {
     border: 1px solid #DDD;

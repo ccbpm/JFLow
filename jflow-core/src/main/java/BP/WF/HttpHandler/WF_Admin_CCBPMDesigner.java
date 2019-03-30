@@ -139,7 +139,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
             	if(item==null||item.length() ==0)
                 	continue;
                 String[] strs = item.split(",");
-                sql = "UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0];
+                sql = "UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK='" + strs[0]+"'";
                 DBAccess.RunSQL(sql);
             }
 

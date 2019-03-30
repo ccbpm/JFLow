@@ -121,20 +121,20 @@ public class MapAttrDT extends EntityMyPK
 		rm.Title = "自动计算";
 		rm.ClassMethodName = this.toString() + ".DoAutoFull()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "正则表达式";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpression()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
 		rm.Title = "脚本验证";
 		rm.ClassMethodName = this.toString() + ".DoInputCheck()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+	//	map.AddRefMethod(rm);
 
 		 rm = new RefMethod();
 	        rm.Title = "事件绑函数";
@@ -142,12 +142,13 @@ public class MapAttrDT extends EntityMyPK
 	        rm.refMethodType = RefMethodType.RightFrameOpen;
 	        map.AddRefMethod(rm);
 	        
-		rm = new RefMethod();
-		rm.Title = "旧版本设置";
-		rm.ClassMethodName = this.toString() + ".DoOldVer()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		 
+	        rm = new RefMethod();
+            rm.Title = "日期输入限制";
+            rm.ClassMethodName = this.toString() + ".DataFieldInputRole()";
+            rm.refMethodType = RefMethodType.RightFrameOpen;
+            map.AddRefMethod(rm);
+            
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -165,7 +166,7 @@ public class MapAttrDT extends EntityMyPK
 	*/
 	public final String DoOldVer()
 	{
-		return Glo.getCCFlowAppPath() + "/WF/Admin/FoolFormDesigner/EditF.htm?KeyOfEn=" + this.getKeyOfEn() + "&FType=" + this.getMyDataType() + "&MyPK=" + this.getMyPK() + "&FK_MapData=" + this.getFK_MapData();
+		return  "../../Admin/FoolFormDesigner/EditF.htm?KeyOfEn=" + this.getKeyOfEn() + "&FType=" + this.getMyDataType() + "&MyPK=" + this.getMyPK() + "&FK_MapData=" + this.getFK_MapData();
 	}
 
 	/** 
@@ -175,7 +176,7 @@ public class MapAttrDT extends EntityMyPK
 	*/
 	public final String DoAutoFull()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn();
+		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn();
 		//return "/WF/Admin/FoolFormDesigner/MapExt/AutoFull.aspx?FK_MapData=" + this.FK_MapData + "&KeyOfEn=" + this.KeyOfEn + "&MyPK=" + this.MyPK;
 	}
 	 /// <summary>
@@ -187,7 +188,11 @@ public class MapAttrDT extends EntityMyPK
         return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
     }
 	 
- 
+    public final String DataFieldInputRole()
+    {
+        return "../../Admin/FoolFormDesigner/MapExt/DataFieldInputRole.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
+    }
+	 
 	/** 
 	 文本框自动完成
 	 
@@ -195,7 +200,7 @@ public class MapAttrDT extends EntityMyPK
 	*/
 	public final String DoTBFullCtrl()
 	{
-		return Glo.getCCFlowAppPath() + "/WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
+		return "../../Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 		//return "/WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.FK_MapData + "&ExtType=AutoFull&KeyOfEn=" + this.KeyOfEn + "&RefNo=" + this.MyPK;
 	}
 

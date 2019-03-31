@@ -4592,9 +4592,9 @@ public class Glo {
 			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
 				/* 继承模式 */
 				BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
-				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pWorkID);
-				qo.addOr();
-				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, Integer.parseInt(pkval));
+				
+                qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, "("+pWorkID + "," + pkval+")");
+ 
 				qo.addOrderBy("RDT");
 				qo.DoQuery();
 			}

@@ -2,6 +2,7 @@ package BP.GPM;
 
 import BP.En.EntitiesTree;
 import BP.En.Entity;
+import BP.En.QueryObject;
 
 /** 
 得到集合
@@ -23,6 +24,17 @@ public class Depts extends EntitiesTree
 	{
 
 	}
+	
+	@Override
+	public int RetrieveAll() throws Exception
+	{
+		//  QueryObject qo = new QueryObject(this);
+       //   qo.addOrderBy(DeptAttr.Idx);
+        //  return qo.DoQuery();          
+		return super.RetrieveAll("Idx");
+	}
+	
+	   
 	/** 
 	 部门集合
 	 @param parentNo 父部门No

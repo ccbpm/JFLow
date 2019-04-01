@@ -1,6 +1,14 @@
 package BP.WF.HttpHandler;
 
 
+import java.util.Map;
+
+import BP.DA.DataType;
+import BP.En.Attr;
+import BP.En.Entity;
+import BP.En.UIContralType;
+import BP.Sys.GEDtl;
+import BP.Sys.GEDtls;
 import BP.WF.HttpHandler.Base.WebContralBase;
 
 /** 
@@ -58,11 +66,11 @@ public class CCMobile_CCForm extends WebContralBase
         GEDtls dtls = new GEDtls(this.getEnsName());
         GEDtl dtl = (GEDtl) dtls.getGetNewEntity();
         dtls.Retrieve("RefPK", this.GetRequestVal("RefPKVal"));
-        Map map = dtl.getEnMap();
+        Map map = (Map) dtl.getEnMap();
         for (Entity item : dtls)
         {
             String pkval = item.GetValStringByKey(dtl.getPK());
-            for (Attr attr : map.getAttrs())
+            for (Attr attr : ((BP.En.Map) map).getAttrs())
             {
                 if (attr.getIsRefAttr() == true)
                     continue;
@@ -110,7 +118,7 @@ public class CCMobile_CCForm extends WebContralBase
         //#region 保存新加行.
       
         String keyVal = "";
-        for (Attr attr : map.getAttrs())
+        for (Attr attr : ((BP.En.Map) map).getAttrs())
         {
 
             if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)

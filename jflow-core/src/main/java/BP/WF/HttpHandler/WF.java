@@ -727,117 +727,24 @@ public class WF extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Start_Init() throws Exception {
-		// 通用的处理器.
-		if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe") == false)
-			return Start_Init2016();
+		//定义容器.
+        DataSet ds = new DataSet();
 
-		// 如果请求了刷新.
-		if (this.GetRequestVal("IsRef") != null) {
-			// 清除权限.
-			DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows='' WHERE No='" + BP.Web.WebUser.getNo() + "' ");
+        //流程类别.
+        FlowSorts fss = new FlowSorts();
+        fss.RetrieveAll();
 
-			// 处理权限,为了防止未知的错误.
-			DBAccess.RunSQL("UPDATE WF_FLOWSORT SET ORGNO='0' WHERE ORGNO='' OR ORGNO IS NULL OR ORGNO='101'");
-		}
-		// 周朋@于庆海需要翻译.
+        DataTable dtSort = fss.ToDataTableField("Sort");
+        dtSort.TableName = "Sort";
+        ds.Tables.add(dtSort);
 
-		BP.WF.Port.WFEmp em = new WFEmp();
-		em.setNo(BP.Web.WebUser.getNo());
-		if (em.RetrieveFromDBSources() == 0) {
-			em.setFK_Dept(BP.Web.WebUser.getFK_Dept());
-			em.setName(WebUser.getName());
-			em.Insert();
-		}
-		String json = em.getStartFlows();
-		if (!StringUtils.isEmpty(json)) {
-			return json;
-		}
+        //获得能否发起的流程.
+        DataTable dtStart = Dev2Interface.DB_StarFlows(WebUser.getNo());
+        dtStart.TableName = "Start";
+        ds.Tables.add(dtStart);
 
-		// 获得当前人员的部门,根据部门获得该人员的组织集合.
-		Paras ps = new Paras();
-		ps.SQL = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
-		ps.AddFK_Emp();
-		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-
-		// 为当前的人员找组织编号集合.
-		String orgNos = "'0'";
-		for (DataRow dr : dt.Rows) {
-			String deptNo = dr.getValue(0).toString();
-			orgNos += ",'" + deptNo + "'";
-		}
-
-		/// #region 获取类别列表(根据当前人员所在组织结构进行过滤类别.)
-		FlowSorts fss = new FlowSorts();
-		QueryObject qo = new QueryObject(fss);
-		if (orgNos.contains(",") == false) {
-			qo.AddWhere(FlowSortAttr.OrgNo, "0"); // ..
-			qo.addOr();
-			qo.AddWhere(FlowSortAttr.OrgNo, ""); // ..
-		} else {
-			qo.AddWhereIn(FlowSortAttr.OrgNo, "(" + orgNos + ")"); // 指定的类别.
-		}
-
-		// 排序.
-		qo.addOrderBy(FlowSortAttr.No, FlowSortAttr.Idx);
-
-		DataTable dtSort = qo.DoQueryToTable();
-		dtSort.TableName = "Sort";
-
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-			dtSort.Columns.get("NO").ColumnName = "No";
-			dtSort.Columns.get("NAME").ColumnName = "Name";
-			dtSort.Columns.get("PARENTNO").ColumnName = "ParentNo";
-			dtSort.Columns.get("ORGNO").ColumnName = "OrgNo";
-		}
-
-		// 定义容器.
-		DataSet ds = new DataSet();
-		ds.Tables.add(dtSort); // 增加到里面去.
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 获取类别列表.
-
-		// 构造流程实例数据容器。
-		DataTable dtStart = new DataTable();
-		dtStart.TableName = "Start";
-		dtStart.Columns.Add("No", String.class);
-		dtStart.Columns.Add("Name", String.class);
-		dtStart.Columns.Add("FK_FlowSort", String.class);
-		dtStart.Columns.Add("IsBatchStart", Integer.class);
-		dtStart.Columns.Add("IsStartInMobile", Integer.class);
-
-		// 获得所有的流程（包含了所有子公司与集团的可以发起的流程但是没有根据组织结构进行过滤.）
-		DataTable dtAllFlows = Dev2Interface.DB_StarFlows(WebUser.getNo());
-		// 按照当前用户的流程类别权限进行过滤.
-		for (DataRow drSort : dtSort.Rows) {
-			for (DataRow drFlow : dtAllFlows.Rows) {
-				if (!drSort.getValue("No").toString().equals(drFlow.getValue("FK_FlowSort").toString())) {
-					continue;
-				}
-
-				DataRow drNew = dtStart.NewRow();
-
-				drNew.setValue("No", drFlow.getValue("No"));
-				drNew.setValue("Name", drFlow.getValue("Name"));
-				drNew.setValue("FK_FlowSort", drFlow.getValue("FK_FlowSort"));
-				drNew.setValue("IsBatchStart", drFlow.getValue("IsBatchStart"));
-				drNew.setValue("IsStartInMobile", drFlow.getValue("IsStartInMobile"));
-				dtStart.Rows.add(drNew); // 增加到里里面去.
-			}
-		}
-
-		// 把经过权限过滤的流程实体放入到集合里.
-		ds.Tables.add(dtStart); // 增加到里面去.
-
-		// 返回组合
-		json = BP.Tools.Json.ToJson(ds);
-
-		// 把json存入数据表，避免下一次再取.
-		if (json.length() > 40) {
-			em.setStartFlows(json);
-			em.Update();
-		}
-
-		return json;
+        //返回组合
+        return BP.Tools.Json.ToJson(ds);
 	}
 
 	/**

@@ -393,6 +393,7 @@
                         var Tracks = jdata.Track;
                         var nextTracks = Tracks;
                         var NDTo = "";
+                        var IsExist = false;
 
                         for (var i = 0; i < Tracks.length; i++) {
                             var track = Tracks[i];
@@ -414,11 +415,15 @@
                                 continue;
 
                             //不是多人接受，并且EmpTo不相同。
-                            if (track.EmpToT.indexOf("多人接受") == -1 && track.EmpTo != node.currTrack.track.EmpTo)
-                                continue;
-
+                            if (track.EmpToT.indexOf("多人接受") == -1) {
+                                if (track.EmpTo != node.currTrack.track.EmpTo)
+                                    continue;
+                                else if (IsExist == true)
+                                    continue;
+                            }
+                           
                             if (track.NDFrom == nodeId || track.NDTo == nodeId) {
-
+								
                                 NDTo = track.NDTo;
                                 //node的最后两位判断是否为开始节点
                                 var lastTwoBit = nodeId.toString().substring(nodeId.toString().length - 2);
@@ -519,6 +524,7 @@
                                         }
                                     }
                                 }
+                                IsExist = true;
                                 trackhtml += "</tr></table>";
                                 tablehtml += trackhtml;
                             }

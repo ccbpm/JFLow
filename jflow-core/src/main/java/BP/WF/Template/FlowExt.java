@@ -1841,7 +1841,12 @@ public class FlowExt extends EntityNoName
 	{
 		//同步流程数据表.
 		String ndxxRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
-		Flow fl = new Flow(this.getNo());
+		 
+        
+		Flow fl = new Flow();
+		fl.setNo(this.getNo());
+		fl.RetrieveFromDBSources();
+		
 		if (!fl.getPTable().equals("ND" + Integer.parseInt(this.getNo()) + "Rpt"))
 		{
 			BP.Sys.MapData md = new MapData(ndxxRpt);
@@ -1871,7 +1876,9 @@ public class FlowExt extends EntityNoName
 				this.setSysType(fsPP.getNo());
 			}
 		}
-
+		
+		 fl.Update();
+		
 		super.afterInsertUpdateAction();
 	}
 	 /** 

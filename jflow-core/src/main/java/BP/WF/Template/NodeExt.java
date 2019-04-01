@@ -1088,6 +1088,17 @@ public class NodeExt extends Entity
 	{
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FAppSet.jsp?NodeID=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
+	
+	  @Override
+	  protected   void afterInsertUpdateAction() throws Exception
+      {
+          Node fl = new Node();
+          fl.setNodeID( this.getNodeID());
+          fl.RetrieveFromDBSources();
+          fl.Update();     
+         
+      }
+
 
 	@Override
 	protected boolean beforeUpdate() throws Exception

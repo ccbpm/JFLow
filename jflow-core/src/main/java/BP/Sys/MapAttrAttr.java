@@ -164,6 +164,17 @@ public class MapAttrAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String ColSpan = "ColSpan";
+	
+	/**
+	 * 文本合并单元格数
+	 */
+    public static final String TextColSpan = "TextColSpan";
+
+    /**
+     * 合并行数
+     */
+    public static final String RowSpan = "RowSpan";
+    
 	/** 
 	 签名字段
 	 

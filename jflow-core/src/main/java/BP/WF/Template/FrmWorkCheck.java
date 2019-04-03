@@ -9,6 +9,7 @@ import BP.Sys.AttachmentUploadType;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
 import BP.Tools.StringHelper;
+import BP.WF.Node;
 
 /**
  * 审核组件
@@ -210,7 +211,18 @@ public class FrmWorkCheck extends Entity {
 	public final void setFWCIsShowTruck(boolean value) {
 		this.SetValByKey(FrmWorkCheckAttr.FWCIsShowTruck, value);
 	}
-
+	
+	/**
+	 * 是否显示退回信息？
+	 * @return
+	 */
+	public final boolean getFWCIsShowReturnMsg(){
+		 return this.GetValBooleanByKey(FrmWorkCheckAttr.FWCIsShowReturnMsg);
+	}
+	
+	public final void setFWCIsShowReturnMsg(boolean value){
+		this.SetValByKey(FrmWorkCheckAttr.FWCIsShowReturnMsg, value);
+	}
 	/**
 	 * 如果用户未审核是否按照默认意见填充?
 	 * 
@@ -469,6 +481,17 @@ public class FrmWorkCheck extends Entity {
 		}
 		return super.beforeUpdateInsertAction();
 	}
+	
+	@Override
+	 protected  void afterInsertUpdateAction() throws Exception
+     {
+         Node fl = new Node();
+         fl.setNodeID(this.getNodeID());
+         fl.RetrieveFromDBSources();
+         fl.Update();
+
+         super.afterInsertUpdateAction();
+     }
 
 	/**
 	 * 协作模式下操作员显示顺序

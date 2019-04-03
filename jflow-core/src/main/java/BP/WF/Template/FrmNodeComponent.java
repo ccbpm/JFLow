@@ -8,6 +8,7 @@ import BP.En.UAC;
 import BP.Sys.GroupCtrlType;
 import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
+import BP.WF.Node;
 
 /** 
  节点表单组件
@@ -180,11 +181,7 @@ public class FrmNodeComponent extends Entity
 			}
 		}
 
-			///#endregion 审核组件.
 
-
-
-			///#region 父子流程组件.
 		FrmSubFlow subflow = new FrmSubFlow(this.getNodeID());
 		subflow.Copy(this);
 
@@ -206,11 +203,6 @@ public class FrmNodeComponent extends Entity
 			}
 		}
 
-			///#endregion 父子流程组件.
-
-
-
-			///#region 处理轨迹组件.
 		FrmTrack track = new FrmTrack(this.getNodeID());
 		track.Copy(this);
 		if (track.getFrmTrackSta() == FrmTrackSta.Disable)
@@ -231,11 +223,6 @@ public class FrmNodeComponent extends Entity
 			}
 		}
 
-			///#endregion 处理轨迹组件.
-
-
-
-			///#region 子线程组件.
 		FrmThread thread = new FrmThread(this.getNodeID());
 		thread.Copy(this);
 
@@ -257,10 +244,6 @@ public class FrmNodeComponent extends Entity
 			}
 		}
 
-			///#endregion 子线程组件.
-
-
-			///#region 子线程组件.
 		FrmTransferCustom ftc = new FrmTransferCustom(this.getNodeID());
 		ftc.Copy(this);
 
@@ -282,10 +265,18 @@ public class FrmNodeComponent extends Entity
 			}
 		}
 
-			///#endregion 子线程组件.
-
 		return super.beforeUpdate();
 	}
+	
+	@Override
+	 protected  void afterInsertUpdateAction() throws Exception
+    {
+        Node fl = new Node();
+        fl.setNodeID(this.getNodeID());
+        fl.RetrieveFromDBSources();
+        fl.Update();
 
-		///#endregion
+        super.afterInsertUpdateAction();
+    }
+
 }

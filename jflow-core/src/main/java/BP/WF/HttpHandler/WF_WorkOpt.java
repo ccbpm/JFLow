@@ -197,7 +197,8 @@ public class WF_WorkOpt extends WebContralBase {
 		tkDt.Columns.Add("ParentNode", Integer.class);
 		tkDt.Columns.Add("T_NodeIndex", Integer.class); // 节点排列顺序，用于后面的排序
 		tkDt.Columns.Add("T_CheckIndex", Integer.class); // 审核人显示顺序，用于后面的排序
-
+		tkDt.Columns.Add("ActionType", Integer.class);
+		
 		// 流程附件.
 		DataTable athDt = new DataTable("Aths");
 		athDt.Columns.Add("NodeID", Integer.class);
@@ -298,9 +299,17 @@ public class WF_WorkOpt extends WebContralBase {
 						|| tk.getHisActionType() == ActionType.StartChildenFlow) {
 					if (nodes.contains(tk.getNDFrom() + ",") == false)
 						nodes += tk.getNDFrom() + ",";
-				} else {
+				} else if(tk.getHisActionType() == ActionType.Return 
+						|| tk.getHisActionType() == ActionType.ReturnAndBackWay) {
+					if (fwc.getFWCIsShowReturnMsg() == true)
+                    {
+                        if (nodes.contains(tk.getNDFrom() + ",") == false)
+                            nodes += tk.getNDFrom() + ",";
+                    }
 					continue;
 				}
+				continue;
+				
 
 			}
 
@@ -309,7 +318,9 @@ public class WF_WorkOpt extends WebContralBase {
 					continue;
 
 				if (tk.getHisActionType() != ActionType.WorkCheck
-						&& tk.getHisActionType() != ActionType.StartChildenFlow)
+						&& tk.getHisActionType() != ActionType.StartChildenFlow 
+						&& tk.getHisActionType()!=ActionType.Return
+						&& tk.getHisActionType()!=ActionType.ReturnAndBackWay)
 					continue;
 
 				// 如果是当前的节点. 当前人员可以处理, 已经审批通过的人员.
@@ -382,6 +393,7 @@ public class WF_WorkOpt extends WebContralBase {
 
 				row.setValue("EmpFrom", tk.getEmpFrom());
 				row.setValue("EmpFromT", tk.getEmpFromT());
+				row.setValue("ActionType",tk.getHisActionType().getValue());
 
 				tkDt.Rows.add(row);
 
@@ -451,6 +463,7 @@ public class WF_WorkOpt extends WebContralBase {
 								row.setValue("ParentNode", tk.getNDFrom());
 								row.setValue("T_NodeIndex", idx++);
 								row.setValue("T_CheckIndex", noneEmpIdx++);
+								row.setValue("ActionType",mysubtk.getHisActionType().getValue());
 								tkDt.Rows.add(row);
 
 								if (mysubtk.getNDFrom() == Integer.parseInt(fk_flow + "01")) {
@@ -519,6 +532,7 @@ public class WF_WorkOpt extends WebContralBase {
 					row.setValue("EmpFromT", WebUser.getName());
 					row.setValue("T_NodeIndex", ++idx);
 					row.setValue("T_CheckIndex", ++noneEmpIdx);
+					row.setValue("ActionType",ActionType.Forward.getValue());
 					tkDt.Rows.add(row);
 				}
 			} else {
@@ -533,7 +547,7 @@ public class WF_WorkOpt extends WebContralBase {
 				row.setValue("EmpFromT", WebUser.getName());
 				row.setValue("T_NodeIndex", ++idx);
 				row.setValue("T_CheckIndex", ++noneEmpIdx);
-
+				row.setValue("ActionType",ActionType.Forward.getValue());
 				tkDt.Rows.add(row);
 			}
 		}

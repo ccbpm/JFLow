@@ -612,17 +612,24 @@ public class WF_MyFlow extends WebContralBase {
 
 			if (this.getWorkID() == 0) {
 				
-					this.setWorkID(BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null,WebUser.getNo(), null));
-				
-
+				this.setWorkID(BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null,WebUser.getNo(), null));
 				currWK = getcurrND().getHisWork();
 				currWK.setOID(this.getWorkID());
 				currWK.Retrieve();
-				this.setWorkID(currWK.getOID());
 			} else {
 				gwf.setWorkID(this.getWorkID());
 				gwf.RetrieveFromDBSources();
 			}
+			
+			if (gwf.getPWorkID() == 0 && this.getPWorkID()!=0)
+            {
+                gwf.setWorkID(this.getWorkID());
+                gwf.setPWorkID(this.getPWorkID());
+                if (DataType.IsNullOrEmpty(gwf.getPFlowNo()) == true)
+                    gwf.setPFlowNo(this.getPFlowNo());
+                gwf.Update();
+            }
+			
 
 			if (this.getcurrND().getIsStartNode()) {
 				// 如果是开始节点, 先检查是否启用了流程限制。

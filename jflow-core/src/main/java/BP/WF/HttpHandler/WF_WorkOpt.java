@@ -288,9 +288,6 @@ public class WF_WorkOpt extends WebContralBase {
 					 tk.getRow().put("T_CheckIndex", DBAccess.RunSQLReturnValInt(
 					 String.format("SELECT Idx FROM Port_Emp WHERE No='{0}'",
 					 tk.getEmpFrom()), 0));
-//					 ["T_CheckIndex"] = DBAccess.RunSQLReturnValInt(
-//					 String.format("SELECT Idx FROM Port_Emp WHERE No='{0}'",
-//					 tk.getEmpFrom()), 0);
 					 
 					noneEmpIdx++;
 				} else {

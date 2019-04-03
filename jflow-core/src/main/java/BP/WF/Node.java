@@ -168,17 +168,6 @@ public class Node extends Entity
          sql += "  AND B.FormType=" + NodeFormType.FoolTruck.getValue() + " "; // 仅仅找累加表单.
          sql += "  AND NDFrom!=" + this.getNodeID() + " "; //排除当前的表单.
 
-         /*
-         if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
-             sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
-
-         if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
-             sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+cast(B.NodeID as varchar(10)) ) ";
-
-         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-             sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
-             */
-
          sql += "  AND (A.WorkID=" + this.WorkID + ") ";
          sql += " ORDER BY A.RDT ";
 
@@ -215,9 +204,7 @@ public class Node extends Entity
  
          obj.setHisNode(this);
          obj.setNodeID(this.getNodeID());
-         
-     //    obj.HisNode = this;
-       //  obj.NodeID = this.NodeID;
+
          obj.clearSQLCash(); 
          BP.DA.Cash.getSQL_Cash().remove( "ND"+this.getNodeID());
           
@@ -231,12 +218,7 @@ public class Node extends Entity
 	{
 		Works obj = (Works)((this.getHisWork().getGetNewEntities() instanceof Works) ? this.getHisWork().getGetNewEntities() : null);
 		return obj;
-			////Works obj = this.GetRefObject("HisWorks") as Works;
-			////if (obj == null)
-			////{
-			//    this.SetRefObject("HisWorks",obj);
-			//}
-			//return obj;
+
 	}
 	/** 
 	 流程

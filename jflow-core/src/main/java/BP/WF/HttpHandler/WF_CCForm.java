@@ -934,6 +934,38 @@ public class WF_CCForm extends WebContralBase {
              
              if (fn !=null && fn.getWhoIsPK() != WhoIsPK.OID)
              {
+            	 //太爷孙关系
+                 if (fn.getWhoIsPK() == WhoIsPK.PPPWorkID)
+                 {
+                     //根据PWorkID 获取PPPWorkID
+                     String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID="+this.getPWorkID()+")";
+                     String pppworkID = DBAccess.RunSQLReturnString(sql);
+                     if (DataType.IsNullOrEmpty(pppworkID) == true || pppworkID=="0")
+                         throw new Exception("err@不存在太爷孙流程关系，请联系管理员检查流程设计是否正确");
+
+                     long PPPWorkID = Long.parseLong(pppworkID);
+                     paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + PPPWorkID);
+                     paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + PPPWorkID);
+                     paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + PPPWorkID);
+                 }
+                      
+
+                 if (fn.getWhoIsPK() == WhoIsPK.PPWorkID)
+                 {
+                     //根据PWorkID 获取PPWorkID
+                     GenerWorkFlow gwf = new GenerWorkFlow(this.getPWorkID());
+                     if (gwf != null && gwf.getPWorkID() != 0)
+                     {
+                         paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + gwf.getPWorkID());
+                         paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + gwf.getPWorkID());
+                         paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + gwf.getPWorkID());
+                     }
+                     else
+                     {
+                         throw new Exception("err@不存在爷孙流程关系，请联系管理员检查流程设计是否正确");
+                     }
+                 }
+                 
                  if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
                  {
                      paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + this.getPWorkID());

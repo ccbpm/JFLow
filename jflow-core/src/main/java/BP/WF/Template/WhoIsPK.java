@@ -26,7 +26,15 @@ public enum WhoIsPK
 	 延续流程ID是主键
 	 
 	*/
-	CWorkID;
+	CWorkID,
+	/**
+	 * 爷爷流程ID是主键
+	 */
+	PPWorkID,
+	/**
+	 * 太爷爷流程ID是主键
+	 */
+	PPPWorkID;
 
 	public int getValue()
 	{

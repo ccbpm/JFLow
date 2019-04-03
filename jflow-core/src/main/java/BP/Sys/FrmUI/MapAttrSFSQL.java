@@ -234,4 +234,15 @@ public class MapAttrSFSQL extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
+	
+	@Override
+	protected  void afterInsertUpdateAction() throws Exception
+    {
+        MapAttr mapAttr = new MapAttr();
+        mapAttr.setMyPK(this.getMyPK());
+        mapAttr.RetrieveFromDBSources();
+        mapAttr.Update();
+
+        super.afterInsertUpdateAction();
+    }
 }

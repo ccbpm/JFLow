@@ -7,6 +7,7 @@ import BP.En.Map;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
+import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 
 
@@ -221,4 +222,15 @@ public class MapAttrSFTable extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
+	
+	@Override
+	protected  void afterInsertUpdateAction() throws Exception
+    {
+        MapAttr mapAttr = new MapAttr();
+        mapAttr.setMyPK(this.getMyPK());
+        mapAttr.RetrieveFromDBSources();
+        mapAttr.Update();
+
+        super.afterInsertUpdateAction();
+    }
 }

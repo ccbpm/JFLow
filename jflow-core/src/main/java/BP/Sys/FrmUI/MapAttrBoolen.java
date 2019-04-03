@@ -7,6 +7,7 @@ import BP.En.Map;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
+import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 import BP.WF.Glo;
 
@@ -161,5 +162,14 @@ public class MapAttrBoolen extends EntityMyPK
 	{
 		return Glo.getCCFlowAppPath() + "/WF/Admin/FoolFormDesigner/EditF.htm?KeyOfEn=" + this.getKeyOfEn() + "&FType=" + this.getMyDataType() + "&MyPK=" + this.getMyPK() + "&FK_MapData=" + this.getFK_MapData();
 	}
-		///#endregion 方法执行.
+	@Override
+	protected  void afterInsertUpdateAction() throws Exception
+    {
+        MapAttr mapAttr = new MapAttr();
+        mapAttr.setMyPK(this.getMyPK());
+        mapAttr.RetrieveFromDBSources();
+        mapAttr.Update();
+
+        super.afterInsertUpdateAction();
+    }
 }

@@ -149,7 +149,14 @@ public class MapFrameExt extends EntityMyPK
 			return super.beforeUpdateInsertAction();
 	}
 
-    
+	@Override
+	 protected void afterInsertUpdateAction() throws Exception
+     {
+         MapFrame mapframe = new MapFrame();
+         mapframe.setMyPK(this.getMyPK());
+         mapframe.RetrieveFromDBSources();
+         mapframe.Update();
 
-		///#endregion
+         super.afterInsertUpdateAction();
+     }
 }

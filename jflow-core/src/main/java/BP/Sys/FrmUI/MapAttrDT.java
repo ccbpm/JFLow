@@ -7,6 +7,7 @@ import BP.En.Map;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
+import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
 import BP.WF.Glo;
 
@@ -220,9 +221,6 @@ public class MapAttrDT extends EntityMyPK
 	public final String DoInputCheck()
 	{
 		return Glo.getCCFlowAppPath() + "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.jsp?FK_MapData=" + this.getFK_MapData() + "&OperAttrKey=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK() + "&DoType=New&ExtType=InputCheck";
-
-	   // return "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData=" + this.FK_MapData + "&KeyOfEn=" + this.KeyOfEn +  "&RefNo="+this.MyPK;
-	  //  return "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.aspx?FK_MapData=" + this.FK_MapData + "&ExtType=AutoFull&KeyOfEn=" + this.KeyOfEn + "&RefNo=" + this.MyPK;
 	}
 	/** 
 	 扩展控件
@@ -232,7 +230,17 @@ public class MapAttrDT extends EntityMyPK
 	public final String DoEditFExtContral()
 	{
 		return Glo.getCCFlowAppPath() + "/WF/Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
-		//  return "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.aspx?FK_MapData=" + this.FK_MapData + "&ExtType=AutoFull&KeyOfEn=" + this.KeyOfEn + "&RefNo=" + this.MyPK;
 	}
+	
+	@Override
+	protected  void afterInsertUpdateAction() throws Exception
+    {
+        MapAttr mapAttr = new MapAttr();
+        mapAttr.setMyPK(this.getMyPK());
+        mapAttr.RetrieveFromDBSources();
+        mapAttr.Update();
+
+        super.afterInsertUpdateAction();
+    }
 }
 

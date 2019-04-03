@@ -262,4 +262,15 @@ public class MapAttrEnum extends EntityMyPK {
 		return Glo.getCCFlowAppPath() + "/WF/Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData="
 				+ this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
+	
+	@Override
+	protected  void afterInsertUpdateAction() throws Exception
+    {
+        MapAttr mapAttr = new MapAttr();
+        mapAttr.setMyPK(this.getMyPK());
+        mapAttr.RetrieveFromDBSources();
+        mapAttr.Update();
+
+        super.afterInsertUpdateAction();
+    }
 }

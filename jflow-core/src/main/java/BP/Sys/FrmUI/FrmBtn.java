@@ -69,6 +69,15 @@ public class FrmBtn extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	//#endregion
+	@Override
+	 protected final  void afterInsertUpdateAction() throws Exception
+     {
+         BP.Sys.FrmBtn frmBtn = new BP.Sys.FrmBtn();
+         frmBtn.setMyPK(this.getMyPK());
+         frmBtn.RetrieveFromDBSources();
+         frmBtn.Update();
+
+         super.afterInsertUpdateAction();
+     }
 }
 

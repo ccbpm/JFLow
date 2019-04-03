@@ -195,5 +195,17 @@ public class FrmImgAth extends EntityMyPK
 		
 		return super.beforeUpdateInsertAction();
 	}
+	
+	@Override
+	 protected void afterInsertUpdateAction() throws Exception
+     {
+         BP.Sys.FrmImgAth imgAth = new BP.Sys.FrmImgAth();
+         imgAth.setMyPK(this.getMyPK());
+         imgAth.RetrieveFromDBSources();
+         imgAth.Update();
+
+         super.afterInsertUpdateAction();
+     }
+	 
 }
 

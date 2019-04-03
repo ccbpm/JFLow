@@ -207,4 +207,13 @@ public class FrmLink extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	@Override
+	 protected  void afterInsertUpdateAction() throws Exception
+     {
+         BP.Sys.FrmLink frmLink = new BP.Sys.FrmLink();
+         frmLink.setMyPK(this.getMyPK());
+         frmLink.RetrieveFromDBSources();
+         frmLink.Update();
+         super.afterInsertUpdateAction();
+     }
 }

@@ -511,9 +511,6 @@ public class MapAttrString extends EntityMyPK {
 	public final String DoTBFullCtrl() {
 		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData="
 				+ this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
-		// return "/WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData="
-		// + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" +
-		// this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 
 	public String DoTBFullCtrl2019() {
@@ -535,7 +532,7 @@ public class MapAttrString extends EntityMyPK {
 		return "../../Admin/FoolFormDesigner/MapExt/PopFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn="
 				+ this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
 	}
-	/// #endregion 方法执行 Pop填充自动完成.
+
 
 	/**
 	 * 设置级联
@@ -547,13 +544,6 @@ public class MapAttrString extends EntityMyPK {
 				+ this.getFK_MapData() + "&OperAttrKey=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK()
 				+ "&DoType=New&ExtType=InputCheck";
 
-		// return "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData="
-		// + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn()
-		// +"&RefNo="+this.getMyPK();
-		// return
-		// "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.aspx?FK_MapData=" +
-		// this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" +
-		// this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 
 	/**
@@ -564,11 +554,18 @@ public class MapAttrString extends EntityMyPK {
 	public final String DoEditFExtContral() {
 		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData="
 				+ this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
-		// return
-		// "/WF/Admin/FoolFormDesigner/MapExt/InputCheck.aspx?FK_MapData=" +
-		// this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" +
-		// this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
+
 	}
 
+	@Override
+	protected  void afterInsertUpdateAction() throws Exception
+    {
+        MapAttr mapAttr = new MapAttr();
+        mapAttr.setMyPK(this.getMyPK());
+        mapAttr.RetrieveFromDBSources();
+        mapAttr.Update();
+
+        super.afterInsertUpdateAction();
+    }
 	
 }

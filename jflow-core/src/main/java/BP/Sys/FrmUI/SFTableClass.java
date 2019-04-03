@@ -109,4 +109,16 @@ public class SFTableClass extends EntityNoName
 		this.SetValByKey("RDT", DataType.getCurrentDataTime());
 		return super.beforeInsert();
 	}
+	
+	@Override
+	 protected  void afterInsertUpdateAction() throws Exception
+     {
+         SFTable sftable = new SFTable();
+         sftable.setNo(this.getNo());
+         sftable.RetrieveFromDBSources();
+         sftable.Update();
+
+         super.afterInsertUpdateAction();
+     }
+
 }

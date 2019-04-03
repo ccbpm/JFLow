@@ -19,6 +19,7 @@ import BP.Sys.AthDeleteWay;
 import BP.Sys.AthUploadWay;
 import BP.Sys.AttachmentUploadType;
 import BP.Sys.FileShowWay;
+import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentAttr;
 import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
@@ -890,6 +891,17 @@ public class FrmAttachmentExt extends EntityMyPK {
 		}
 		super.afterInsert();
 	}
+	
+	@Override
+	 protected void afterInsertUpdateAction() throws Exception
+     {
+         FrmAttachment ath = new FrmAttachment();
+         ath.setMyPK(this.getMyPK());
+         ath.RetrieveFromDBSources();
+         ath.Update();
+
+         super.afterInsertUpdateAction();
+     }
 
 	/**
 	 * 删除之后.

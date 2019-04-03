@@ -21,11 +21,11 @@
     	<listener-class>WebServiceListener.WebServicePublishListener</listener-class>
   	</listener> -->
 
-<servlet>
+	<servlet>
     <servlet-name>AxisServlet</servlet-name>
     <servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
   </servlet>
-  <!-- 这里是访问服务的路径 -->
+  <!--  这里是访问服务的路径-->
   <servlet-mapping>
     <servlet-name>AxisServlet</servlet-name>
     <url-pattern>/services/*</url-pattern>

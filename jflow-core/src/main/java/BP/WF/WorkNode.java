@@ -5725,16 +5725,55 @@ public class WorkNode {
 			// ,增加了此部分.
 			String todoEmps = this.getHisGenerWorkFlow().getTodoEmps();
 			todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
+			todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName(), "");
 			this.getHisGenerWorkFlow().setTodoEmps(todoEmps);
 			this.getHisGenerWorkFlow().Update(GenerWorkFlowAttr.TodoEmps, todoEmps);
 
 			// 如果是协作.
 			if (this.DealTeamUpNode() == true) {
+				/*
+                 * 1. 判断是否传递过来到达节点，到达人员信息，如果传递过来，就可能是主持人在会签之后执行的发送.
+                 * 2. 会签之后执行的发送，就要把到达节点，到达人员存储到数据表里.
+                 */
+
+                if (jumpToNode != null)
+                {
+                    /*如果是就记录下来发送到达的节点ID,到达的人员ID.*/
+                    this.getHisGenerWorkFlow().setHuiQianSendToNodeIDStr(this.getHisNode().getNodeID() + "," + jumpToNode.getNodeID());
+                    if (jumpToEmp == null)
+                        this.getHisGenerWorkFlow().setHuiQianSendToEmps("");
+                    else
+                        this.getHisGenerWorkFlow().setHuiQianSendToEmps(jumpToEmp);
+
+                    this.getHisGenerWorkFlow().Update();
+                }
 				// 执行时效考核.
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 						this.rptGe.getTitle(), null);
 				return this.HisMsgObjs;
 			}
+			
+
+            //取出来已经存储的到达节点，节点人员信息. 在tempUp模式的会签时，主持人发送会把发送到节点，发送给人员的信息
+            // 存储到wf_generworkflow里面.
+            if (this.JumpToNode == null)
+            {
+                /*如果是就记录下来发送到达的节点ID,到达的人员ID.*/
+                String strs = this.getHisGenerWorkFlow().getHuiQianSendToNodeIDStr();
+
+                if (strs.contains(",") == true)
+                {
+                    String[] nds = strs.split(",");
+                    int fromNodeID = Integer.parseInt(nds[0]);
+                    int toNodeID = Integer.parseInt(nds[1]);
+                    if (fromNodeID == this.getHisNode().getNodeID())
+                    {
+                        JumpToNode = new Node(toNodeID);
+                        JumpToEmp = this.getHisGenerWorkFlow().getHuiQianSendToEmps();
+                    }
+                }
+
+            }
 		}
 
 		// 如果是协作组长模式节点, 就判断当前的队列人员是否走完.

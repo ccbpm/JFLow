@@ -50,7 +50,6 @@
             }
 
             data = eval('(' + data + ')');
-
             var IsDefaultTab = null;
             $.each(data, function (index, obj) {
                 if (this.IsDefault == "1")
@@ -97,7 +96,8 @@
 
             if (url.indexOf("@url=") == 0) {
                 url = url.replace("@url=", "");
-                url = basePath + url;
+                if(url.indexOf("http")==-1)
+                	url = basePath + url;
             }
 
 

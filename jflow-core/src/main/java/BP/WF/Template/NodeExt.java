@@ -19,9 +19,7 @@ import BP.Sys.GroupCtrlType;
 import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
 import BP.Sys.PubClass;
-import BP.Sys.ToolbarExcel;
 import BP.Tools.StringHelper;
-import BP.WF.CancelRole;
 import BP.WF.DeliveryWay;
 import BP.WF.Flow;
 import BP.WF.Glo;
@@ -31,14 +29,9 @@ import BP.WF.NodeFormType;
 import BP.WF.Nodes;
 import BP.WF.ReturnRole;
 import BP.WF.RunModel;
-import BP.WF.SubFlowStartWay;
 import BP.WF.TeamLeaderConfirmRole;
-import BP.WF.ThreadKillRole;
 import BP.WF.TodolistModel;
 import BP.Tools.ContextHolderUtils;
-
-
-//import com.microsoft.schemas.office.x2006.encryption.CTKeyEncryptor.Uri;
 
 /** 
  节点属性.
@@ -389,6 +382,9 @@ public class NodeExt extends Entity
         map.SetHelperUrl(NodeAttr.IsBackTracking, "http://ccbpm.mydoc.io/?v=5404&t=16255"); //增加帮助.
 
         map.AddTBString(NodeAttr.ReturnReasonsItems, null, "退回原因", true, false, 0, 999, 10, true);
+        map.AddDDLSysEnum(NodeAttr.ReturnOneNodeRole, 0, "单节点退回规则", true, true, NodeAttr.ReturnOneNodeRole,
+                "@@0=不启用@1=按照[退回信息填写字段]作为退回意见直接退回@2=按照[审核组件]填写的信息作为退回意见直接退回",true);
+
 
         map.AddTBString(BtnAttr.CCLab, "抄送", "抄送按钮标签", true, false, 0, 50, 10);
         map.AddDDLSysEnum(NodeAttr.CCRole, 0, "抄送规则", true, true, NodeAttr.CCRole,

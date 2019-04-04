@@ -85,7 +85,15 @@ public class FrmImg extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	@Override
+	  protected  void afterInsertUpdateAction() throws Exception
+      {
+          BP.Sys.FrmImg imgAth = new BP.Sys.FrmImg();
+          imgAth.setMyPK(this.getMyPK());
+          imgAth.RetrieveFromDBSources();
+          imgAth.Update();
 
-		///#endregion
+          super.afterInsertUpdateAction();
+      }
 }
 

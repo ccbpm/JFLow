@@ -92,9 +92,14 @@ public class NodeAttr
 	 
 	*/
 	public static final String ReturnReasonsItems = "ReturnReasonsItems";
+	
+	/**
+	 * 单节点退回规则
+	 */
+	public static final String ReturnOneNodeRole="ReturnOneNodeRole";
+	
 	/** 
 	 退回提示
-	 
 	*/
 	public static final String ReturnAlert = "ReturnAlert";
 	/** 

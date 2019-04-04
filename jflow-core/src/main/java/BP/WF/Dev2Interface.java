@@ -1105,9 +1105,7 @@ public class Dev2Interface {
 				dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
 			}
 
-			// String json=BP.Tools.Json.ToJson(dt);
-			// system.prt
-
+			
 			return dt;
 		}
 
@@ -11073,10 +11071,6 @@ public class Dev2Interface {
 	 */
 	public static DataTable DB_StarFlows(String userNo) throws Exception {
 		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo);
-		// DataView dv = new DataView(dt);
-		// dv.Sort = "Idx";
-		// return dv.Table;
-		//// 暂时翻译
 		return dt;
 	}
 

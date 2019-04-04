@@ -995,7 +995,7 @@ public class WorkReturn
         rw.setReturnNodeName( this.HisNode.getName());
 
         rw.setReturnNode(this.HisNode.getNodeID()); // 当前退回节点.
-        rw.setReturnToEmp(this.ReturnToEmp); //退回给。
+        rw.setReturnToEmp(gwl.getFK_Emp()); //退回给。
         rw.setBeiZhu(Msg);
         
         

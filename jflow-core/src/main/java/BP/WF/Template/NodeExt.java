@@ -1091,7 +1091,12 @@ public class NodeExt extends Entity
           Node fl = new Node();
           fl.setNodeID( this.getNodeID());
           fl.RetrieveFromDBSources();
-          fl.Update();     
+          fl.Update(); 
+          
+          BtnLab btnLab = new BtnLab();
+          btnLab.setNodeID( this.getNodeID());
+          btnLab.RetrieveFromDBSources();
+          btnLab.Update();
          
       }
 

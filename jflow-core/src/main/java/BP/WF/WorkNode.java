@@ -696,6 +696,8 @@ public class WorkNode {
 				wl.setFK_Node(toNodeId);
 				wl.setFK_NodeText(town.getHisNode().getName());
 				wl.setFK_Emp(dr.getValue(0).toString());
+                wl.setWhoExeIt(town.getHisNode().getWhoExeIt()); //设置谁执行它.
+
 				try {
 					emp = new Emp(wl.getFK_Emp());
 				} catch (RuntimeException ex) {
@@ -6309,8 +6311,10 @@ public class WorkNode {
 			Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 					this.rptGe.getTitle(), null);
 
-			/// #region 触发下一个节点的自动发送, 处理国机的需求.
-			if (this.HisMsgObjs.getVarToNodeID() != WFState.Blank.getValue() && this.town != null
+			/// #region 触发下一个节点的自动发送, 处理国机的需求. (（去掉:2019-05-05）)
+			if (this.HisMsgObjs.getVarToNodeID() != WFState.Blank.getValue() 
+					&& this.town != null
+				    && 1==2
 					&& this.town.getHisNode().getWhoExeIt() != 0) {
 				String currUser = BP.Web.WebUser.getNo();
 				String[] emps = this.HisMsgObjs.getVarAcceptersID().split("[,]", -1);

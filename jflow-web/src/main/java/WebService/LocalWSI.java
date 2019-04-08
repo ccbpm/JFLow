@@ -140,4 +140,22 @@ public interface LocalWSI {
 	 */
 
 	public String CurrGenerWorkFlowInfo(long workID) throws Exception;
+	
+	/**
+	 * 用户登陆
+	 * @param UserNo
+	 * @throws Exception
+	 */
+	public void Port_Login(String UserNo) throws Exception;
+	
+	/**
+	 * 执行撤销
+	 * @param flowNo 流程编码
+	 * @param workID 工作ID
+	 * @param unSendToNode 撤销到的节点
+	 * @param fid 
+	 * @return
+	 * @throws Exception
+	 */
+	public String Runing_UnSend(String userNo,String flowNo, long workID, int unSendToNode,long fid) throws Exception;
 }

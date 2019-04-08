@@ -107,9 +107,11 @@ public class LocalWS implements LocalWSI{
 	 */
 	@Override
 	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps) throws Exception {
+		BP.WF.Dev2Interface.Port_Login("zhangyifan");
 		BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
 
         String msg = objs.ToMsgOfText();
+        
 
         Hashtable myht = new Hashtable();
         myht.put("Message", msg);
@@ -225,6 +227,23 @@ public class LocalWS implements LocalWSI{
 	public String CurrGenerWorkFlowInfo(long workID) throws Exception {
 		 GenerWorkFlow gwf = new GenerWorkFlow(workID);
          return gwf.ToJson();
+	}
+	
+	@Override
+	public void Port_Login(String userNo) throws Exception{
+		
+		BP.WF.Dev2Interface.Port_Login(userNo);
+	}
+	
+	/**
+	 * 执行撤销操作
+	 * @return
+	 * @throws Exception 
+	 */
+	public String Runing_UnSend(String userNo,String flowNo, long workID, int unSendToNode,long fid) throws Exception{
+		//需要先登陆
+		BP.WF.Dev2Interface.Port_Login(userNo);
+		return BP.WF.Dev2Interface.Flow_DoUnSend(flowNo, workID,unSendToNode,fid);
 	}
 
 }

@@ -7,10 +7,13 @@ import javax.jws.WebService;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.GPM.Dev2Interface;
+import BP.WF.ActionType;
 import BP.WF.Flow;
 import BP.WF.GenerWorkFlow;
 import BP.WF.Node;
 import BP.WF.Nodes;
+import BP.WF.WorkFlow;
 import BP.WF.Data.GERpt;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.Directions;
@@ -228,7 +231,43 @@ public class LocalWS implements LocalWSI{
 		 GenerWorkFlow gwf = new GenerWorkFlow(workID);
          return gwf.ToJson();
 	}
+
 	
+	/**
+	 * 退回.
+	 * @param workID 流程ID
+	 * @param retunrnToNodeID 流程退回的节点ID
+	 * @param returnMsg 退回信息
+	 * @return 当前节点信息
+	 * @throws Exception 
+	 */
+  @Override
+   public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg) throws Exception {
+	  GenerWorkFlow gwf=new GenerWorkFlow(workID);
+      return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), gwf.getPWorkID(), gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg);
+	  
+	
+   }
+  
+  /**
+	 * 执行流程结束 说明:强制流程结束.
+	 * 
+	 * @param flowNo
+	 *            流程编号
+	 * @param workID
+	 *            工作ID
+	 * @param msg
+	 *            流程结束原因
+	 * @return 返回成功执行信息
+	 * @throws Exception
+	 */
+  @Override
+	public  String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg) throws Exception {
+		
+		return BP.WF.Dev2Interface.Flow_DoFlowOver(flowNo, workID, msg);
+		
+  }
+
 	@Override
 	public void Port_Login(String userNo) throws Exception{
 		
@@ -244,6 +283,7 @@ public class LocalWS implements LocalWSI{
 		//需要先登陆
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		return BP.WF.Dev2Interface.Flow_DoUnSend(flowNo, workID,unSendToNode,fid);
-	}
 
+
+	}
 }

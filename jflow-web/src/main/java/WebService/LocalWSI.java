@@ -140,6 +140,34 @@ public interface LocalWSI {
 	 */
 
 	public String CurrGenerWorkFlowInfo(long workID) throws Exception;
+
+	
+
+	/**
+	 * 退回.
+	 * @param workID 流程ID
+	 * @param retunrnToNodeID 流程退回的节点ID
+	 * @param returnMsg 退回信息
+	 * @return 当前节点信息
+	 * @throws Exception 
+	 */
+	public String Node_ReturnWork(long workID,int returnToNodeID,String returnMsg) throws Exception;
+	
+	/**
+	 * 执行流程结束 说明:强制流程结束.
+	 * 
+	 * @param flowNo
+	 *            流程编号
+	 * @param workID
+	 *            工作ID
+	 * @param msg
+	 *            流程结束原因
+	 * @return 返回成功执行信息
+	 * @throws Exception
+	 */
+
+	public  String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg) throws Exception;
+
 	
 	/**
 	 * 用户登陆
@@ -158,4 +186,5 @@ public interface LocalWSI {
 	 * @throws Exception
 	 */
 	public String Runing_UnSend(String userNo,String flowNo, long workID, int unSendToNode,long fid) throws Exception;
+
 }

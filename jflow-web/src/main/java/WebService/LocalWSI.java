@@ -186,5 +186,16 @@ public interface LocalWSI {
 	 * @throws Exception
 	 */
 	public String Runing_UnSend(String userNo,String flowNo, long workID, int unSendToNode,long fid) throws Exception;
+	
+	/**
+	 * 流程结束后回滚
+	 * @param flowNo 流程编码
+	 * @param workId 工作ID
+	 * @param backToNodeID 回滚到的节点ID
+	 * @param backMsg 回滚原因
+	 * @return 回滚信息
+	 * @throws Exception 
+	 */
+	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg) throws Exception;
 
 }

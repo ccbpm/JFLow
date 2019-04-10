@@ -17,6 +17,7 @@ import BP.WF.WorkFlow;
 import BP.WF.Data.GERpt;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.Directions;
+import BP.WF.Template.FlowExt;
 import BP.WF.Template.Selector;
 import WebService.LocalWSI;
 
@@ -244,7 +245,7 @@ public class LocalWS implements LocalWSI{
   @Override
    public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg) throws Exception {
 	  GenerWorkFlow gwf=new GenerWorkFlow(workID);
-      return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), gwf.getWorkID(), gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg);
+      return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg);
 	  
 	
    }
@@ -283,7 +284,19 @@ public class LocalWS implements LocalWSI{
 		//需要先登陆
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		return BP.WF.Dev2Interface.Flow_DoUnSend(flowNo, workID,unSendToNode,fid);
-
-
+	}
+	
+	/**
+	 * 流程结束后回滚
+	 * @param flowNo 流程编码
+	 * @param workId 工作ID
+	 * @param backToNodeID 回滚到的节点ID
+	 * @param backMsg 回滚原因
+	 * @return 回滚信息
+	 * @throws Exception 
+	 */
+	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg) throws Exception{
+		FlowExt flow = new FlowExt(flowNo);
+		return flow.DoRebackFlowData(workId, backToNodeID, backMsg);
 	}
 }

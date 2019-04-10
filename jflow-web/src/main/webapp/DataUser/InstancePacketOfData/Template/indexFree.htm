@@ -5,21 +5,17 @@
     <meta charset="UTF-8"/>
     <link href="ccbpm.css" rel="stylesheet" type="text/css" />
 </head>
-<body style="width:@Width; height:@Height" >
-
-    <div align="center">
-    <table>
-    <tr>
-    <td valign=top>
-
-     @Docs
-
-     </td>
-     </tr>
-    </table>
-
-    </div>
- 
-
+<body style="height:@Height;zoom: 1.5" >
+	  <div id="topContentDiv" class="row" style="padding: 20px 5px; margin: 0px auto;height:@Height;width:@Width">
+            <i class="topContentDiv-i" style="display: none;"></i>
+            <div id="contentDiv" style="height:@Height">
+            	<div id="divCCForm" style="height:@Height">
+            		<div id="CCForm">
+            			@Docs
+            		</div>
+            	</div>
+            </div>
+      </div>
+   
 </body>
 </html>

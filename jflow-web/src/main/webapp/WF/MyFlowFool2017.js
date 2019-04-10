@@ -19,7 +19,7 @@ function GenerFoolFrm(wn) {
     var Sys_GroupFields = flowData.Sys_GroupField;
 
     html += "<tr>";
-    html += "<td colspan=4 class='FDesc'><div style='float:left' ><img src='../DataUser/ICON/LogBiger.png'  style='height:50px;' /></div><div class='form-unit' style='float:right;padding:10px;width:70%;font-size: 18px;'  ><center><h4><b>" + frmName + "</b></h4></center></div></td>";
+    html += "<td colspan=4 class='FDesc'><div style='float:left' ><img src='../DataUser/ICON/LogBiger.png'  style='height:50px;' /></div><div class='form-unit-title' style='float:right;padding:10px;width:70%;font-size: 18px;'  ><center><h4><b>" + frmName + "</b></h4></center></div></td>";
     html += "</tr>";
 
     //遍历循环生成 listview
@@ -171,7 +171,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
         var defval = ConvertDefVal(flowData, attr.DefVal, attr.KeyOfEn);
 
         var lab = "";
-        if (attr.UIContralType == 0 || attr.UIContralType == 8)
+        if (attr.UIContralType == 0 || attr.UIContralType == 8 || attr.UIContralType == 10)
             lab = "<label id='Lab_" + attr.KeyOfEn + "' for='TB_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'>" + attr.Name + "</label>";
 
         if (attr.UIContralType == 1)
@@ -193,7 +193,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             }
             isDropTR = true;
             html += "<tr>";
-            html += "<td  id='Td_" + attr.KeyOfEn + "' ColSpan='4' rowSpan=" + rowSpan + " class='FDesc'>" + lab + "</br>";
+            html += "<td  id='Td_" + attr.KeyOfEn + "' ColSpan='4' rowSpan=" + rowSpan + " class='FDesc' style='text-align:left'>" + lab + "</br>";
             html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
             html += "</td>";
             html += "</tr>";
@@ -208,16 +208,21 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             }
             isDropTR = true;
             html += "<tr >";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3  rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4 rowSpan=" + rowSpan + " style='text-align:left;padding-left: 15% '>";
+            else if (attr.UIContralType == "10")
+                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
 
-            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-            html += "</td>";
-            html += "</tr>";
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3  rowSpan=" + rowSpan + " style='text-align:left;'>";
+            else if (attr.MyDataType == 4 || attr.UIContralType == "9")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4 rowSpan=" + rowSpan + " class='tdSpan'>";
+
+            if (attr.UIContralType != "10") {
+                html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
+                html += "</td>";
+                html += "</tr>";
+            }
             continue;
         }
 
@@ -229,17 +234,20 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             }
             isDropTR = true;
             html += "<tr>";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' style='width:15%;' ColSpan=2  rowSpan=" + rowSpan + ">" + lab + "</td>";
+            else if (attr.UIContralType == "10")
+                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
 
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=2   rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " style='text-align:left;padding-left: 15% '>";
-
-            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-            html += "</td>";
-            html += "</tr>";
+            else if (attr.MyDataType != 4 ||  attr.UIContralType != "9")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
+            if (attr.UIContralType != "10") {
+                html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
+                html += "</td>";
+                html += "</tr>";
+            }
             continue; 
         }
 
@@ -251,17 +259,21 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             }
             isDropTR = true;
             html += "<tr >";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' style='width:15%;' ColSpan=3  rowSpan=" + rowSpan + ">" + lab + "</td>";
+            else if (attr.UIContralType == "10")
+                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
 
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=1  rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " style='text-align:left;padding-left: 15% '>";
+            else if (attr.MyDataType != 4 || attr.UIContralType != "9")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
 
-            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-            html += "</td>";
-            html += "</tr>";
+            if (attr.UIContralType != "10") {
+                html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
+                html += "</td>";
+                html += "</tr>";
+            }
             continue;
         }
 
@@ -271,14 +283,18 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             if (isShowTdLeft == true) {
                 recordRowLeft = rowSpan;
                 haveDropRowLeft = 0;
-                if (attr.UIContralType != "9") {
+                if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
                     html += "<td class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
                     html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
+                } else if (attr.UIContralType == "10") {
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
                 } else {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc' ColSpan=2 rowSpan=" + rowSpan + " style='text-align:left;padding-left: 15%'>";
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
                 }
-                html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-                html += "</td>";
+                if (attr.UIContralType != "10") {
+                    html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
+                    html += "</td>";
+                }
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdLeft = false;
             }
@@ -304,15 +320,19 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             if (isShowTdRight == true) {
                 recordRowRight = rowSpan;
                 haveDropRowRight = 0;
-                if (attr.UIContralType != "9") {
+                if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
                     html += "<td class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
                     html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
+                } else if (attr.UIContralType == "10") {
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
                 } else {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc' ColSpan=2 rowSpan=" + rowSpan + " style='text-align:left;padding-left: 15%'>";
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
                 }
                 isDropTR = !isDropTR;
-                html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-                html += "</td>";
+                if (attr.UIContralType != "10") {
+                    html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
+                    html += "</td>";
+                }
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdRight = false;
             }
@@ -585,7 +605,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
         else
             bit = 2;
-        return "<input  value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');;limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+        return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     alert(mapAttr.Name + "的类型没有判断.");
@@ -1070,17 +1090,17 @@ function Ele_Dtl(frmDtl) {
 
         //表格模式
         if (pageData.IsReadonly) {
-            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&IsReadonly=1&" + urlParam + "&Version=1";
+            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=1&" + urlParam + "&Version=1";
         } else {
-            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&IsReadonly=0&" + urlParam + "&Version=1";
+            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=0&" + urlParam + "&Version=1";
         }
     }
     else if (frmDtl.ListShowModel == "1") {
         //卡片模式
         if (pageData.IsReadonly) {
-            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&IsReadonly=1&" + urlParam + "&Version=1";
+            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=1&" + urlParam + "&Version=1";
         } else {
-            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&IsReadonly=0&" + urlParam + "&Version=1";
+            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=0&" + urlParam + "&Version=1";
         }
     }
     return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='F" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';

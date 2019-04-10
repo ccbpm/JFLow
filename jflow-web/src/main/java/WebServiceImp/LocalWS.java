@@ -245,7 +245,7 @@ public class LocalWS implements LocalWSI{
   @Override
    public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg) throws Exception {
 	  GenerWorkFlow gwf=new GenerWorkFlow(workID);
-      return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg);
+      return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), returnToNodeID,null, returnMsg,false);
 	  
 	
    }

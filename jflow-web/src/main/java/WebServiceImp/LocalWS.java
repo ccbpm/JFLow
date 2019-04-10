@@ -237,14 +237,14 @@ public class LocalWS implements LocalWSI{
 	 * 退回.
 	 * @param workID 流程ID
 	 * @param retunrnToNodeID 流程退回的节点ID
-	 * @param returnMsg 退回信息
-	 * @return 当前节点信息
+	 * @param returnMsg 退回原因
+	 * @return 退回结果信息
 	 * @throws Exception 
 	 */
   @Override
    public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg) throws Exception {
 	  GenerWorkFlow gwf=new GenerWorkFlow(workID);
-      return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), gwf.getPWorkID(), gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg);
+      return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), gwf.getWorkID(), gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg);
 	  
 	
    }

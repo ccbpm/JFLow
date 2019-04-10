@@ -147,8 +147,8 @@ public interface LocalWSI {
 	 * 退回.
 	 * @param workID 流程ID
 	 * @param retunrnToNodeID 流程退回的节点ID
-	 * @param returnMsg 退回信息
-	 * @return 当前节点信息
+	 * @param returnMsg 退回原因
+	 * @return 退回结果信息
 	 * @throws Exception 
 	 */
 	public String Node_ReturnWork(long workID,int returnToNodeID,String returnMsg) throws Exception;

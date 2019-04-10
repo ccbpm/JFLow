@@ -65,7 +65,7 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
             "editable": false,
             "valueField": valueField,
             "textField": textField,
-            "width": w,
+
             "multiple": true,
             "onSelect": function (p) {
                 $("#TB_" + AttrOfOper).val(cbx.combobox("getValues"));
@@ -91,6 +91,7 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
 
 
         cbx.combobox("loadData", data);
+        $(".textbox-text").css("width","100%");
         if (mapAttr != null && mapAttr.UIIsEnable != 1) {
             cbx.combobox('disable');
         }

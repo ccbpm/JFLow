@@ -72,7 +72,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps) throws Exception;
+	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps, String userNo) throws Exception;
 	
 	/**
 	 * 保存参数
@@ -81,7 +81,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public void SaveParas(long workid, String paras) throws Exception;
+	public void SaveParas(long workid, String paras, String userNo) throws Exception;
 	
 	/**
 	 * 获得下一个节点信息
@@ -92,7 +92,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String GenerNextStepNode(String flowNo, long workid, String paras) throws Exception;
+	public String GenerNextStepNode(String flowNo, long workid, String paras, String userNo) throws Exception;
 	
 	/**
 	 * 获得下一步节点的接收人
@@ -103,7 +103,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid) throws Exception;
+	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception;
 	
 	/**
 	 * 将要达到的节点
@@ -112,7 +112,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String WillToNodes(int currNodeID) throws Exception;
+	public String WillToNodes(int currNodeID, String userNo) throws Exception;
 	
 	/**
 	 * 获得当前节点信息.
@@ -121,7 +121,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String CurrNodeInfo(int currNodeID) throws Exception;
+	public String CurrNodeInfo(int currNodeID, String userNo) throws Exception;
 	
 	/**
 	 * 获得当前流程信息.
@@ -130,7 +130,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String CurrFlowInfo(String flowNo) throws Exception;
+	public String CurrFlowInfo(String flowNo, String userNo) throws Exception;
 	
 	/**
 	 * 获得当前流程信息.
@@ -139,7 +139,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String CurrGenerWorkFlowInfo(long workID) throws Exception;
+	public String CurrGenerWorkFlowInfo(long workID, String userNo) throws Exception;
 
 	
 
@@ -151,7 +151,7 @@ public interface LocalWSI {
 	 * @return 退回结果信息
 	 * @throws Exception 
 	 */
-	public String Node_ReturnWork(long workID,int returnToNodeID,String returnMsg) throws Exception;
+	public String Node_ReturnWork(long workID,int returnToNodeID,String returnMsg, String userNo) throws Exception;
 	
 	/**
 	 * 执行流程结束 说明:强制流程结束.
@@ -166,7 +166,7 @@ public interface LocalWSI {
 	 * @throws Exception
 	 */
 
-	public  String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg) throws Exception;
+	public  String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg, String userNo) throws Exception;
 
 	
 	/**
@@ -196,6 +196,6 @@ public interface LocalWSI {
 	 * @return 回滚信息
 	 * @throws Exception 
 	 */
-	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg) throws Exception;
+	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg, String userNo) throws Exception;
 
 }

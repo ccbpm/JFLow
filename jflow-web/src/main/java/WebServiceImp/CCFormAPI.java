@@ -36,7 +36,7 @@ public class CCFormAPI implements CCFormAPII{
 	@WebMethod
 	public void GenerBillTemplate(String userNo, String sid, long workID, String billTemplateNo, DataSet ds,
 			byte[] bytes) throws Exception {
-		
+		BP.WF.Dev2Interface.Port_Login(userNo);
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
 			userNo = WebUser.getNo();
@@ -110,6 +110,7 @@ public class CCFormAPI implements CCFormAPII{
 	*/
 	@Override
 	public void WordFileGener(String userNo, String sid, long workID, byte[] bytes) throws Exception {
+		BP.WF.Dev2Interface.Port_Login(userNo);
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
 			userNo = WebUser.getNo();

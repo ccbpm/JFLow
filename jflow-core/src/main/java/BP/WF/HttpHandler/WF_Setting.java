@@ -105,11 +105,6 @@ public class WF_Setting extends WebContralBase
         return BP.Tools.Json.ToJson(ht);
 	}
 	
-//	private DefaultMultipartHttpServletRequest request;
-//	
-//	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-//		this.request = request;
-//	}
 
 	public final String Siganture_Save()
 	{

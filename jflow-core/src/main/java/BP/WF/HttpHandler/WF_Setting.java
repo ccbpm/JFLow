@@ -64,12 +64,18 @@ public class WF_Setting extends WebContralBase
 			for (BP.GPM.DeptEmpStation item : des.ToJavaList()
 					)
 			{
-				BP.Port.Dept dept = new Dept(item.getFK_Dept());
-				depts += dept.getName() + "、";
+				BP.Port.Dept dept = new Dept();
+				dept.setNo(item.getFK_Dept());
+				int count = dept.RetrieveFromDBSources();
+				if(count !=0)
+					depts += dept.getName() + "、";
 
 
-				BP.Port.Station sta = new Station(item.getFK_Station());
-				stas += sta.getName() + "、";
+				BP.Port.Station sta = new Station();
+				sta.setNo(item.getFK_Station());
+				count = sta.RetrieveFromDBSources();
+				if(count!=0)
+					stas += sta.getName() + "、";
 			}
 
 			ht.put("Depts", depts);

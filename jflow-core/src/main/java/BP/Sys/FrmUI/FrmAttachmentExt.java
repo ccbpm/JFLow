@@ -839,11 +839,13 @@ public class FrmAttachmentExt extends EntityMyPK {
 			gf.setLab(this.getName());
 			gf.setFrmID(this.getFK_MapData());
 			gf.setCtrlType("Ath");
+			gf.setCtrlID(this.getMyPK());
 			gf.Insert();
 		} else {
 			gf.setLab(this.getName());
 			gf.setFrmID(this.getFK_MapData());
 			gf.setCtrlType("Ath");
+			gf.setCtrlID(this.getMyPK());
 			gf.Update();
 		}
 

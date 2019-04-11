@@ -345,12 +345,16 @@ public class AttachmentUploadController extends BaseController {
             //自定义方案.
             if (fn.getFrmSln() == FrmSln.Self)
             {
-                athDesc = new FrmAttachment(attachPk + "_" + this.getFK_Node());
-                if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
-                    pkVal =Long.toString(this.getFID());
-
-                if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
-                    pkVal = this.getPWorkID();
+                athDesc = new FrmAttachment();
+                athDesc.setMyPK(attachPk + "_" + this.getFK_Node());
+                int count = athDesc.RetrieveFromDBSources();
+                if(count !=0){
+	                if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+	                    pkVal =Long.toString(this.getFID());
+	
+	                if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+	                    pkVal = this.getPWorkID();
+                }
             }
         }
         //获取上传文件是否需要加密

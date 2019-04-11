@@ -58,8 +58,10 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
         cbx.attr("name", AttrOfOper + "_combobox");
         tb.before(cbx);
         var w = tb.outerWidth() - 120;
+        var h = tb.outerHeight()+5;
         cbx.attr("class", "easyui-combobox");
         cbx.css("width", w);
+        cbx.css("height", h);
 
         cbx.combobox({
             "editable": false,
@@ -92,6 +94,7 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
 
         cbx.combobox("loadData", data);
         $(".textbox-text").css("width","100%");
+
         if (mapAttr != null && mapAttr.UIIsEnable != 1) {
             cbx.combobox('disable');
         }

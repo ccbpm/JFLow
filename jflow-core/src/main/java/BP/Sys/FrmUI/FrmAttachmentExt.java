@@ -672,6 +672,10 @@ public class FrmAttachmentExt extends EntityMyPK {
 
 		map.AddTBFloat(FrmAttachmentAttr.W, 40, "宽度", true, false);
 		map.AddTBFloat(FrmAttachmentAttr.H, 150, "高度", true, false);
+		
+		//附件是否显示
+        map.AddBoolean(FrmAttachmentAttr.IsVisable, true, "是否显示附件分组", true, true, true);
+        
 		// #endregion 基本属性。
 
 		// #region 权限控制。

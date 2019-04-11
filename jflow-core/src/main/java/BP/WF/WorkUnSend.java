@@ -605,7 +605,7 @@ public class WorkUnSend
 					return this.DoUnSendFeiLiu(gwf);
 				case WorkFL:
 				case StartWorkFL:
-					return this.DoUnSendFeiLiu(gwf);
+					break;
 				case WorkHL:
 					if (this.getIsMainFlow())
 						// 首先找到与他最近的一个分流点，并且判断当前的操作员是不是分流点上的工作人员。

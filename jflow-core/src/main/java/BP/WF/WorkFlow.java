@@ -1052,14 +1052,21 @@ public class WorkFlow
 			//改变当前节点的状态，不然父流程如果做了让所有的子流程发送完成后才能运行的设置后，不能不能让其发送了.
 			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
 			this.getHisGenerWorkFlow().DirectUpdate();
- 
-			GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
- 
-            //让父流程的userNo登录.
+			
+			 //让父流程的userNo登录.
             BP.WF.Dev2Interface.Port_Login(emp.getNo());
+ 
+			//GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
+ 
+			  //@袁丽娜.
+            if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getFK_Node(), pGWF.getWorkID(), WebUser.getNo()) == false)
+            {
+                /*没有权限的情况下，就移交给当前人员，让其在发送. */
+                BP.WF.Dev2Interface.Node_Shift(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getFK_Node(), pGWF.getWorkID(), 0, WebUser.getNo(), "工作自动移交，让其运行到下一步。");
+            }
 
 			// 让当前人员向下发送，但是这种发送一定不要检查发送权限，否则的话就出错误，不能发送下去.
-			SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getWorkID(), rpt.getRow(), null, 0, null, emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(), null);
+			SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getWorkID(),null, null, 0, null, emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(), null);
 
 			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
 			this.getHisGenerWorkFlow().DirectUpdate();

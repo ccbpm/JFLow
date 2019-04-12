@@ -875,11 +875,11 @@ public class WorkNode {
 				this.AddToTrack(at, wl.getFK_Emp(), wl.getFK_EmpText(), wl.getFK_Node(), wl.getFK_NodeText(), null,
 						this.getndFrom());
 			} else {
-				String info = "共(" + this.HisWorkerLists.size() + ")人接收\t\n";
+				String info = "共(" + this.HisWorkerLists.size() + ")人接收:";
 
 				String emps = "";
 				for (GenerWorkerList wl : this.HisWorkerLists.ToJavaList()) {
-					info += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_DeptT(), wl.getFK_EmpText()) + "\t\n";
+					info += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_DeptT(), wl.getFK_EmpText()) + ",";
 
 					emps += wl.getFK_Emp() + "," + wl.getFK_EmpText() + ";";
 				}

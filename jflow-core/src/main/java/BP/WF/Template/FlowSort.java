@@ -15,6 +15,10 @@ import BP.WF.Flows;
 public class FlowSort extends EntityTree
 {
 
+	public final String getDomain()
+	{
+		return this.GetValStringByKey(FlowSortAttr.Domain);		 
+	}
 		
 	/** 
 	 流程类别
@@ -72,78 +76,7 @@ public class FlowSort extends EntityTree
 	{
 		return;
 
-		/*if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneOne)
-		{
-			return;
-		}
-
-		String pMenuNo = "";
-
-
-			///#region 检查系统是否存在，并返回系统菜单编号
-		String sql = "SELECT * FROM GPM_App where No='" + SystemConfig.getSysNo() + "'";
-
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt != null && dt.Rows.size() == 0)
-		{
-			//系统类别
-			sql = "SELECT No FROM GPM_Menu WHERE ParentNo=0";
-			String sysRootNo = DBAccess.RunSQLReturnStringIsNull(sql, "0");
-			// 取得该功能菜单的主键编号.
-			pMenuNo = DBAccess.GenerOID("BP.GPM.Menu")+"";
-			String url = BP.WF.Glo.getHostURL();
-			//如果没有系统，就插入该系统菜单.
-			sql = "INSERT INTO GPM_Menu(No,Name,ParentNo,IsDir,MenuType,FK_App,IsEnable,Flag)";
-			sql += " VALUES('{0}','{1}','{2}',1,2,'{3}',1,'{4}')";
-			sql = String.format(sql, pMenuNo, SystemConfig.getSysName(), sysRootNo, SystemConfig.getSysNo(), "FlowSort" + SystemConfig.getSysNo());
-			DBAccess.RunSQL(sql);
-			//如果没有系统，就插入该系统.
-			sql = "INSERT INTO GPM_App(No,Name,AppModel,FK_AppSort,Url,RefMenuNo,MyFileName)";
-			sql += " VALUES('{0}','{1}',0,'01','{2}','{3}','admin.gif')";
-
-			sql = String.format(sql, SystemConfig.getSysNo(), SystemConfig.getSysName(), url, pMenuNo);
-			sql = sql.replace("//", "/");
-			DBAccess.RunSQL(sql);
-		}
-		else
-		{
-			pMenuNo = dt.Rows.get(0).getValue("RefMenuNo").toString();
-		}
-
-			///#endregion
-
-		try
-		{
-			sql = "SELECT * FROM GPM_Menu WHERE Flag='FlowSort" + this.getNo() + "'";
-			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size() >= 1)
-			{
-				DBAccess.RunSQL("DELETE FROM GPM_Menu WHERE Flag='FlowSort" + this.getNo() + "' AND FK_App='" + SystemConfig.getSysNo() + "' ");
-			}
-		}
-		catch (java.lang.Exception e)
-		{
-		}
-
-		// 组织数据。
-		// 获取他的ParentNo
-		String parentNo = ""; //this.ParentNo
-		if (!StringHelper.isNullOrEmpty(this.getParentNo()))
-		{
-			sql = "SELECT * FROM GPM_Menu WHERE Flag='FlowSort" + this.getParentNo() + "'";
-			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size() >= 1)
-			{
-				pMenuNo = dt.Rows.get(0).getValue("No").toString();
-			}
-		}
-
-		String menuNo = DBAccess.GenerOID("BP.GPM.Menu")+"";
-		// 执行插入.
-		sql = "INSERT INTO GPM_Menu(No,Name,ParentNo,IsDir,MenuType,FK_App,IsEnable,Flag)";
-		sql += " VALUES('{0}','{1}','{2}',{3},{4},'{5}',{6},'{7}')";
-		sql = String.format(sql, menuNo, this.getName(), pMenuNo, 1, 3, SystemConfig.getSysNo(), 1, "FlowSort" + this.getNo());
-		DBAccess.RunSQL(sql);*/
+	 
 	}
 
 	@Override
@@ -178,6 +111,10 @@ public class FlowSort extends EntityTree
 		{
 		  //  DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.Name + "' WHERE Flag='FlowSort" + this.getNo() + "' AND FK_App='" + SystemConfig.getSysNo() + "'");
 		}
+		
+		 String sql = "UPDATE WF_GenerWorkFlow SET Domain='" + this.getDomain() + "' WHERE FK_FlowSort='" + this.getNo() + "'";
+         DBAccess.RunSQL(sql);
+         
 		return super.beforeUpdate();
 	}
 

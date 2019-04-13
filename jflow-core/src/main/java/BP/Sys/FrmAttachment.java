@@ -1,4 +1,4 @@
-﻿package BP.Sys;
+package BP.Sys;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -17,6 +17,7 @@ public class FrmAttachment extends EntityMyPK
 	/** 
 	 是否可见？
 	*/
+	
 	public final boolean getIsVisable()
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsVisable, true);

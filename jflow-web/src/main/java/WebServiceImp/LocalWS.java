@@ -126,7 +126,7 @@ public class LocalWS implements LocalWSI{
 	 */
 	@Override
 	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login("userNo");
+		BP.WF.Dev2Interface.Port_Login(userNo);
 		BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
 
         String msg = objs.ToMsgOfText();

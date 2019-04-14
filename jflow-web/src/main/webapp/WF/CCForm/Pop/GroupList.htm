@@ -60,6 +60,10 @@
             var mypk = GetQueryString("FK_MapExt");
             mapExt = new Entity("BP.Sys.MapExt", mypk);
 
+            //获取设置显示的列数
+            var showSpan = mapExt.GetPara("ShowCol");
+            if (showSpan == null || showSpan == undefined || showSpan == "")
+                showSpan = 3;
 
             var srcOfGroup = mapExt.Tag1; //分组.
             var srcOfEntitis = mapExt.Tag2; //实体.
@@ -149,7 +153,8 @@
                     else
                         html += "<td><input type='checkbox' name='" + group.No + "' id='CB_" + en.No + "' value='" + en.No + "' " + checked + " /><label for='CB_" + en.No + "'>" + lab + "</label></td>";
 
-                    if (myNum == 2) {
+                    if (myNum == showSpan - 1) {
+
                         html += "</tr>";
                         myNum = -1;
                     }
@@ -164,7 +169,7 @@
                     html += "<td></td>";
                     html += "</tr>";
                 }
-               
+
             }
             html += "</table>";
 

@@ -58,7 +58,12 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
         cbx.attr("name", AttrOfOper + "_combobox");
         tb.before(cbx);
         var w = tb.outerWidth() - 120;
+<<<<<<< .mine
+        var h = tb.outerHeight() + 5;
+||||||| .r1534
+=======
         var h = tb.outerHeight()+5;
+>>>>>>> .r1591
         cbx.attr("class", "easyui-combobox");
         cbx.css("width", w);
         cbx.css("height", h);
@@ -74,11 +79,11 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
                 //保存选择的值.
                 SaveVal(FK_MapData, AttrOfOper, p.No, p.Name);
 
-//                (function sel(n, KeyOfEn, FK_MapData) {
-//                    //保存选择的值.
-//                    SaveVal(FK_MapData, KeyOfEn, n);
+                //                (function sel(n, KeyOfEn, FK_MapData) {
+                //                    //保存选择的值.
+                //                    SaveVal(FK_MapData, KeyOfEn, n);
 
-//                })(p[valueField], AttrOfOper, FK_MapData);
+                //                })(p[valueField], AttrOfOper, FK_MapData);
             },
             "onUnselect": function (p) {
                 $("#TB_" + AttrOfOper).val(cbx.combobox("getValues"));
@@ -93,8 +98,14 @@ function MultipleChoiceSmall(mapExt, mapAttr) {
 
 
         cbx.combobox("loadData", data);
+<<<<<<< .mine
+        $(".textbox-text").css("width", "100%");
+
+||||||| .r1534
+=======
         $(".textbox-text").css("width","100%");
 
+>>>>>>> .r1591
         if (mapAttr != null && mapAttr.UIIsEnable != 1) {
             cbx.combobox('disable');
         }
@@ -187,7 +198,7 @@ function Delete(keyOfEn, val) {
 }
 
 //设置值.
-function SaveVal(fk_mapdata, keyOfEn, val,name) {
+function SaveVal(fk_mapdata, keyOfEn, val, name) {
 
     var oid = (pageData.WorkID || pageData.OID || "");
 

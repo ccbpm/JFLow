@@ -58,6 +58,18 @@ function GenerFoolFrm(mapData, frmData) {
         //附件类的控件.
         if (gf.CtrlType == 'Ath') {
 
+            //获取附件的主键
+            var MyPK = gf.CtrlID;
+            if (MyPK == "")
+                continue;
+            //创建附件描述信息.
+            var ath = new Entity("BP.Sys.FrmAttachment");
+            ath.MyPK = gf.CtrlID;
+            if (ath.RetrieveFromDBSources() == 0)
+                continue;
+            if (ath.IsVisable == "0")
+                continue;
+
             html += "<tr>";
             html += "  <th colspan=4 class='form-unit'>" + gf.Lab + "</th>";
             html += "</tr>";
@@ -137,9 +149,9 @@ function GenerFoolFrm(mapData, frmData) {
 
     $('#CCForm').html("").append(html);
 
-
+    if (pageData.IsReadonly == "0")
     //表单联动设置
-    Set_Frm_Enable(frmData);
+        Set_Frm_Enable(frmData);
 
 }
 
@@ -172,7 +184,8 @@ function Set_Frm_Enable(frmData) {
                     /*启用了显示与隐藏.*/
                     var rb = $("#RB_" + mapAttr.KeyOfEn);
                     var nowKey = $('input[name="RB_' + mapAttr.KeyOfEn + '"]:checked').val();
-                    setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey);
+                    if (nowKey != null || nowKey != undefined)
+                        setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey);
 
                 }
             }
@@ -247,6 +260,51 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
         if (attr.UIContralType == 1)
             lab = "<label id=Lab_" + attr.KeyOfEn + "' for='DDL_" + attr.KeyOfEn + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'>" + attr.Name + "</label>";
 
+        //附件的信息
+        if (attr.UIContralType == 6) {
+            //创建附件描述信息.
+            var mypk = GetPara(attr.AtPara, "AthRefObj");
+
+            var ath = new Entity("BP.Sys.FrmAttachment");
+            ath.MyPK = mypk;
+            if (ath.RetrieveFromDBSources() == 0) {
+                alert("没有找到附件属性,请联系管理员");
+                return;
+            }
+
+            //附件的url
+            var eleHtml = '';
+            var nodeID = pageData.FK_Node;
+            var url = "";
+            url += "&WorkID=" + pageData.OID;
+            url += "&FK_Node=" + nodeID;
+            url += "&FK_Flow=" + pageData.FK_Flow;
+            //url += "&FormType=" + node.FormType; //表单类型，累加表单，傻瓜表单，自由表单.
+            var no = nodeID.toString().substring(nodeID.toString().length - 2);
+            var IsStartNode = 0;
+            if (no == "01")
+                url += "&IsStartNode=" + 1; //是否是开始节点
+
+            var isReadonly = false;
+            if (attr.FK_MapData.indexOf(nodeID) == -1)
+                isReadonly = true;
+
+
+            var noOfObj = mypk.replace(attr.FK_MapData + "_", "");
+
+            var src = "";
+
+            //这里的连接要取 FK_MapData的值.
+            src = "./Ath.htm?PKVal=" + pageData.OID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=" + attr.FK_MapData + "&FromFrm=" + attr.FK_MapData + "&FK_FrmAttachment=" + mypk + url + "&M=" + Math.random();
+            //自定义表单模式.
+            if (ath.AthRunModel == 2) {
+                src = "../../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.OID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=" + attr.FK_MapData + "&FK_FrmAttachment=" + mypk + url + "&M=" + Math.random();
+            }
+
+
+            lab = "<label id='Lab_" + attr.KeyOfEn + "' for='DDL_" + attr.KeyOfEn + "'><div style='text-align:left'><a href='javaScript:void(0)' onclick='OpenAth(\"" + src + "\",\"" + attr.Name + "\",\"" + attr.KeyOfEn + "\")' style='text-align:left'>" + attr.Name + "</a></div></label>";
+        }
+
         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {
             lab += " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
         }
@@ -263,6 +321,33 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
             }
             isDropTR = true;
             html += "<tr>";
+<<<<<<< .mine
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
+                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
+            else if (attr.UIContralType == "10")
+                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
+
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3  rowSpan=" + rowSpan + " style='text-align:left;'>";
+            else if (attr.MyDataType == 4 || attr.UIContralType == "9")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4 rowSpan=" + rowSpan + " class='tdSpan'>";
+
+            if (attr.UIContralType != "10") {
+                html += InitMapAttrOfCtrl(attr, enable, defval);
+                html += "</td>";
+                html += "</tr>";
+            }
+||||||| .r1534
+            if (attr.MyDataType != 4 && attr.UIContralType != "9")
+                html += "<td  class='FDesc' style='width:15%;'>" + lab + "</td>";
+            if (attr.MyDataType != 4 && attr.UIContralType != "9")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3  style='text-align:left;'>";
+            else
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4 style='text-align:left;padding-left: 15% '>";
+            html += InitMapAttrOfCtrl(attr, enable, defval);
+            html += "</td>";
+            html += "</tr>";
+=======
            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
             else if (attr.UIContralType == "10")
@@ -278,6 +363,7 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
                 html += "</td>";
                 html += "</tr>";
             }
+>>>>>>> .r1591
             continue;
         }
 
@@ -296,6 +382,61 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
             continue;
         }
 
+<<<<<<< .mine
+
+        //线性展示并且colspan=2, 则文本也占据2行
+        if (attr.ColSpan == 2 && attr.TextColSpan == 2) {
+            if (isDropTR == false) {
+                html += "<td class='FDesc' ColSpan='2'></td>";
+                html += "</tr>";
+            }
+            isDropTR = true;
+            html += "<tr>";
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
+                html += "<td  class='FDesc' style='width:15%;' ColSpan=2  rowSpan=" + rowSpan + ">" + lab + "</td>";
+            else if (attr.UIContralType == "10")
+                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
+
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=2   rowSpan=" + rowSpan + " style='text-align:left;'>";
+            else if (attr.MyDataType != 4 || attr.UIContralType != "9")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
+            if (attr.UIContralType != "10") {
+                html += InitMapAttrOfCtrl(attr, enable, defval);
+                html += "</td>";
+                html += "</tr>";
+            }
+            continue;
+        }
+
+        //线性展示并且colspan=1,则需要判断文本跨的单元格数
+        if (attr.ColSpan == 1 && attr.TextColSpan == 3) {
+            if (isDropTR == false) {
+                html += "<td class='FDesc' ColSpan='2'></td>";
+                html += "</tr>";
+            }
+            isDropTR = true;
+            html += "<tr >";
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
+                html += "<td  class='FDesc' style='width:15%;' ColSpan=3  rowSpan=" + rowSpan + ">" + lab + "</td>";
+            else if (attr.UIContralType == "10")
+                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
+
+            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=1  rowSpan=" + rowSpan + " style='text-align:left;'>";
+            else if (attr.MyDataType != 4 || attr.UIContralType != "9")
+                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
+
+            if (attr.UIContralType != "10") {
+                html += InitMapAttrOfCtrl(attr, enable, defval);
+                html += "</td>";
+                html += "</tr>";
+            }
+            continue;
+        }
+
+||||||| .r1534
+=======
 
         //线性展示并且colspan=2, 则文本也占据2行
         if (attr.ColSpan == 2 && attr.TextColSpan == 2) {
@@ -348,8 +489,34 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
             continue;
         }
 
+>>>>>>> .r1591
         if (isDropTR == true) {
             html += "<tr>";
+<<<<<<< .mine
+            if (isShowTdLeft == true) {
+                recordRowLeft = rowSpan;
+                haveDropRowLeft = 0;
+                if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
+                    html += "<td class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
+                } else if (attr.UIContralType == "10") {
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
+                } else {
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
+                }
+                if (attr.UIContralType != "10") {
+                    html += InitMapAttrOfCtrl(attr, enable, defval);
+                    html += "</td>";
+                }
+                if (rowSpan == 2 || rowSpan == 3)
+                    isShowTdLeft = false;
+||||||| .r1534
+            if (attr.UIContralType != "9") {
+                html += "<td class='FDesc' style='width:15%;'>" + lab + "</td>";
+                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;'>";
+            } else {
+                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc' ColSpan=2 style='text-align:left;padding-left: 15%'>";
+=======
             if (isShowTdLeft == true) {
                 recordRowLeft = rowSpan;
                 haveDropRowLeft = 0;
@@ -367,6 +534,7 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
                 }
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdLeft = false;
+>>>>>>> .r1591
             }
             isDropTR = !isDropTR;
             haveDropRowRight++;
@@ -385,6 +553,33 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
         }
 
         if (isDropTR == false) {
+<<<<<<< .mine
+            if (isShowTdRight == true) {
+                recordRowRight = rowSpan;
+                haveDropRowRight = 0;
+                if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
+                    html += "<td class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
+                } else if (attr.UIContralType == "10") {
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
+                } else {
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
+                }
+                isDropTR = !isDropTR;
+                if (attr.UIContralType != "10") {
+                    html += InitMapAttrOfCtrl(attr, enable, defval);
+                    html += "</td>";
+                    html += "</tr>";
+                }
+                if (rowSpan == 2 || rowSpan == 3)
+                    isShowTdRight = false;
+||||||| .r1534
+            if (attr.UIContralType != "9") {
+                html += "<td class='FDesc' style='width:15%;'>" + lab + "</td>";
+                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;'>";
+            } else {
+                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc' ColSpan=2 style='text-align:left;padding-left: 15%'>";
+=======
             if (isShowTdRight == true) {
                 recordRowRight = rowSpan;
                 haveDropRowRight = 0;
@@ -404,6 +599,7 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
                 }
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdRight = false;
+>>>>>>> .r1591
             }
             html += "</tr>";
             haveDropRowLeft++;
@@ -497,6 +693,70 @@ function InitMapAttrOfCtrl(mapAttr) {
     }
 
     if (mapAttr.MyDataType == "1") {
+
+        //附件
+        if (mapAttr.UIContralType == "6") {
+
+            //获取上传附件列表的信息及权限信息
+            var nodeID = pageData.FK_Node;
+            var no = nodeID.toString().substring(nodeID.toString().length - 2);
+            var IsStartNode = 0;
+            if (no == "01")
+                IsStartNode = 1;
+
+            //创建附件描述信息.
+            var mypk = GetPara(mapAttr.AtPara, "AthRefObj");
+
+            //获取附件显示的格式
+            var athShowModel = GetPara(mapAttr.AtPara, "AthShowModel");
+
+            var ath = new Entity("BP.Sys.FrmAttachment");
+            ath.MyPK = mypk;
+            if (ath.RetrieveFromDBSources() == 0) {
+                alert("没有找到附件属性,请联系管理员");
+                return;
+            }
+            var noOfObj = mypk.replace(mapAttr.FK_MapData + "_", "");
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+            handler.AddPara("WorkID", pageData.OID);
+            handler.AddPara("FID", pageData.FID);
+            handler.AddPara("FK_Node", nodeID);
+            handler.AddPara("FK_Flow", pageData.FK_Flow);
+            handler.AddPara("IsStartNode", IsStartNode);
+            handler.AddPara("PKVal", pageData.OID);
+            handler.AddPara("Ath", noOfObj);
+            handler.AddPara("FK_MapData", mapAttr.FK_MapData);
+            handler.AddPara("FromFrm", mapAttr.FK_MapData);
+            handler.AddPara("FK_FrmAttachment", mypk);
+            data = handler.DoMethodReturnString("Ath_Init");
+
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+                return;
+            }
+
+            if (data.indexOf('url@') == 0) {
+                var url = data.replace('url@', '');
+                window.location.href = url;
+                return;
+            }
+            data = JSON.parse(data);
+            var dbs = data["DBAths"];
+            if (dbs.length == 0)
+                return "<div style='text-align:left;padding-left:10px'><label>请点击[" + mapAttr.Name + "]执行上传</label></div>";
+
+            var eleHtml = "";
+            if (athShowModel == "" || athShowModel == 0)
+                return "<div style='text-align:left;padding-left:10px' id='athModel_" + mapAttr.KeyOfEn + "' data-type='0'><label >附件(" + dbs.length + ")</label></div>";
+
+            eleHtml = "<div style='text-align:left;padding-left:10px' id='athModel_" + mapAttr.KeyOfEn + "' data-type='1'>";
+            for (var i = 0; i < dbs.length; i++) {
+                var db = dbs[i];
+                eleHtml += "<label><a href=\"javascript:Down2018('" + mypk + "','" + pageData.WorkID + "','" + db.MyPK + "','" + pageData.FK_Flow + "','" + pageData.FK_Node + "','" + mapAttr.FK_MapData + "','" + mypk + "')\">" + db.FileName + "</a></label>&nbsp;&nbsp;&nbsp;"
+            }
+            eleHtml += "</div>";
+            return eleHtml;
+        }
         //超链接
         if (mapAttr.UIContralType == "9") {
             //URL @ 变量替换
@@ -561,7 +821,7 @@ function InitMapAttrOfCtrl(mapAttr) {
                 return eleHtml;
             }
 
-           
+
 
             var enableAttr = '';
             if (mapAttr.UIIsEnable == 0)
@@ -670,13 +930,6 @@ function InitMapAttrOfCtrl(mapAttr) {
             return InitRBShowContent(frmData, mapAttr, defValue, RBShowModel, enableAttr);
         }
 
-        /*if (mapAttr.UIIsEnable == 1)
-        enableAttr = "";
-        else
-        enableAttr = "disabled='disabled'";
-
-        return "<select name='DDL_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable == 1 ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
-        */
     }
 
     // AppDouble  AppFloat
@@ -828,16 +1081,19 @@ function SetCtrlEnable(key) {
     var ctrl = $("#TB_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
+        ctrl.addClass("form-control");
     }
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
+        ctrl.addClass("form-control");
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
+        ctrl.addClass("form-control");
     }
 
     ctr = document.getElementsByName('RB_' + key);
@@ -853,23 +1109,26 @@ function SetCtrlUnEnable(key) {
     var ctrl = $("#TB_" + key);
     if (ctrl.length > 0) {
         ctrl.attr("disabled", "true");
+        ctrl.removeClass("form-control");
     }
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
         ctrl.attr("disabled", "disabled");
+        ctrl.removeClass("form-control");
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
 
         ctrl.attr("disabled", "disabled");
+        ctrl.removeClass("form-control");
     }
 
     ctrl = $("#RB_" + key);
     if (ctrl != null) {
         $('input[name=RB_' + key + ']').attr("disabled", "disabled");
-        //ctrl.attr("disabled", "disabled");
+      
     }
 }
 //设置隐藏?
@@ -1064,7 +1323,36 @@ function Ele_Attachment(workNode, gf) {
     eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + gf.CtrlID + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     return eleHtml;
 
+<<<<<<< .mine
+
+||||||| .r1534
+    /*
+
+    var ath = workNode.Sys_FrmAttachment[0];
+    if (ath == null)
+    return "没有找到附件定义，请与管理员联系。";
+
+    var eleHtml = '';
+    //    if (ath.UploadType == 0) { //单附件上传 L4204
+    //        return '';
+    //    }
+
+    var pkval = GetQueryString("WorkID");
+    if (pkval == undefined)
+    pkval = GetQueryString("OID");
+
+    var src = "";
+    if (pageData.IsReadonly)
+    src = "Ath.htm?PKVal=" + pkval + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1";
+    else
+    src = "Ath.htm?PKVal=" + pkval + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK;
+
+    eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+
+    return eleHtml; */
+=======
    
+>>>>>>> .r1591
 }
 
 
@@ -1127,5 +1415,30 @@ function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr)
             rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "'  />&nbsp;" + obj.Lab + "</label><br/>";
     });
     return rbHtml;
+}
+
+//弹出附件
+function OpenAth(url, title, keyOfEn) {
+    var H = document.body.clientHeight - 60;
+
+    OpenBootStrapModal(url, "eudlgframe", title, frmData.Sys_MapData[0].FrmW, H, "icon-property", null, null, null, function () {
+        Save();
+        window.location.href = window.location.href;
+
+    }, null, "black", true);
+
+}
+
+var webUser = new WebUser();
+function Down2018(fk_ath, pkVal, delPKVal, FK_Flow, FK_Node, FK_MapData, Ath) {
+    if (plant == "CCFlow")
+        window.location.href = basePath + '/WF/CCForm/DownFile.aspx?DoType=Down&DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + '&FK_Node=' + FK_Node + '&FK_Flow=' + FK_Flow + '&FK_MapData=' + FK_MapData + '&Ath=' + Ath;
+    else {
+        var currentPath = window.document.location.href;
+        var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
+        Url = path + 'WF/Ath/downLoad.do?DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + '&FK_Node=' + FK_Node + '&FK_Flow=' + FK_Flow + '&FK_MapData=' + FK_MapData + '&Ath=' + Ath;
+        window.location.href = Url;
+    }
+
 }
 

@@ -803,6 +803,120 @@ function limitLength(obj, length) {
                 obj.value= obj.value.substr(1,obj.value.length);      
             }  
         }      
+<<<<<<< .mine
+    }
+    function FormatMoney(obj, precision, separator) {
+        if (precision == undefined || precision == null || precision == "")
+            precision = 2;
+        if (precision != 2)
+            return;
+        var val = formatNumber(obj.value, precision, separator);
+        if (val != NaN)
+            obj.value = val;
+
+    }
+
+    /** 
+    * 将数值格式化成金额形式 
+    * 
+    * @param num 数值(Number或者String) 
+    * @param precision 精度，默认不变
+    * @param separator 分隔符，默认为逗号
+    * @return 金额格式的字符串,如'1,234,567'，默认返回NaN
+    * @type String 
+    */
+    function formatNumber(num, precision, separator) {
+        if (precision != 2)
+            return num;
+        var parts;
+        // 判断是否为数字
+        if (!isNaN(parseFloat(num)) && isFinite(num)) {
+            // 把类似 .5, 5. 之类的数据转化成0.5, 5, 为数据精度处理做准, 至于为什么
+            // 不在判断中直接写 if (!isNaN(num = parseFloat(num)) && isFinite(num))
+            // 是因为parseFloat有一个奇怪的精度问题, 比如 parseFloat(12312312.1234567119)
+            // 的值变成了 12312312.123456713
+            num = Number(num);
+            // 处理小数点位数
+            num = (typeof precision !== 'undefined' ? (Math.round(num * Math.pow(10, precision)) / Math.pow(10, precision)).toFixed(precision) : num).toString();
+            // 分离数字的小数部分和整数部分
+            parts = num.split('.');
+            // 整数部分加[separator]分隔, 借用一个著名的正则表达式
+            parts[0] = parts[0].toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + (separator || ','));
+
+            return parts.join('.');
+        }
+        return 0;
+    }
+/* 文本框根据输入内容自适应高度
+* @param                {HTMLElement}        输入框元素
+* @param                {Number}                设置光标与输入框保持的距离(默认0)
+* @param                {Number}                设置最大高度(可选)
+*/
+var autoTextarea = function (elem, extra, maxHeight) {
+    extra = extra || 0;
+    var isFirefox = !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
+    isOpera = !!window.opera && !!window.opera.toString().indexOf('Opera'),
+            addEvent = function (type, callback) {
+                    elem.addEventListener ?
+                            elem.addEventListener(type, callback, false) :
+                            elem.attachEvent('on' + type, callback);
+            },
+            getStyle = elem.currentStyle ? function (name) {
+                    var val = elem.currentStyle[name];
+ 
+                    if (name === 'height' && val.search(/px/i) !== 1) {
+                            var rect = elem.getBoundingClientRect();
+                            return rect.bottom - rect.top -
+                                    parseFloat(getStyle('paddingTop')) -
+                                    parseFloat(getStyle('paddingBottom')) + 'px';        
+                    };
+ 
+                    return val;
+            } : function (name) {
+                            return getComputedStyle(elem, null)[name];
+            },
+            minHeight = parseFloat(getStyle('height'));
+ 
+    elem.style.resize = 'none';
+ 
+    var change = function () {
+            var scrollTop, height,
+                    padding = 0,
+                    style = elem.style;
+ 
+            if (elem._length === elem.value.length) return;
+            elem._length = elem.value.length;
+ 
+            if (!isFirefox && !isOpera) {
+                    padding = parseInt(getStyle('paddingTop')) + parseInt(getStyle('paddingBottom'));
+            };
+            scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+ 
+            elem.style.height = minHeight + 'px';
+            if (elem.scrollHeight > minHeight) {
+                    if (maxHeight && elem.scrollHeight > maxHeight) {
+                            height = maxHeight - padding+10;
+                            style.overflowY = 'auto';
+                    } else {
+                            height = elem.scrollHeight - padding+10;
+                            style.overflowY = 'hidden';
+                    };
+                    style.height = height + extra + 'px';
+                    scrollTop += parseInt(style.height) - elem.currHeight;
+                    document.body.scrollTop = scrollTop;
+                    document.documentElement.scrollTop = scrollTop;
+                    elem.currHeight = parseInt(style.height);
+            };
+    };
+ 
+    addEvent('propertychange', change);
+    addEvent('input', change);
+    addEvent('focus', change);
+    change();
+};
+    ||||||| .r1534
+    }      
+=======
     }
     function FormatMoney(obj, precision, separator) {
         if (precision == undefined || precision == null || precision == "")
@@ -847,3 +961,4 @@ function limitLength(obj, length) {
         return 0;
     }
 
+>>>>>>> .r1591

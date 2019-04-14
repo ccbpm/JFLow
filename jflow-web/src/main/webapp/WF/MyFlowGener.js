@@ -17,6 +17,7 @@ $(function () {
 
     GenerWorkNode(); //表单数据.ajax
 
+
     if ($("#Message").html() == "") {
         $(".Message").hide();
     }
@@ -26,32 +27,7 @@ $(function () {
     });
 
     $('#btnMsgModalOK').bind('click', function () {
-        if (window.opener) {
-
-            if (window.opener.name && window.opener.name == "main") {
-                window.opener.location.href = window.opener.location.href;
-                if (window.opener.top && window.opener.top.leftFrame) {
-                    window.opener.top.leftFrame.location.href = window.opener.top.leftFrame.location.href;
-                }
-            } else if (window.opener.name && window.opener.name == "运行流程") {
-                //测试运行流程，不进行刷新
-            } else {
-                //window.opener.location.href = window.opener.location.href;
-            }
-        }
-
-        //提示消息有错误，页面不跳转
-        var msg = $("#msgModalContent").html();
-        if (msg.indexOf("err@") == -1)
-            window.close();
-        else {
-            setToobarEnable();
-            $("#msgModal").modal("hidden");
-        }
-
-        if (window.parent != null && window.parent != undefined) {
-            window.parent.close();
-        }
+        closeWindow();
     });
 
 
@@ -74,6 +50,34 @@ $(function () {
 })
 
 
+function closeWindow() {
+    if (window.opener) {
+
+        if (window.opener.name && window.opener.name == "main") {
+            window.opener.location.href = window.opener.location.href;
+            if (window.opener.top && window.opener.top.leftFrame) {
+                window.opener.top.leftFrame.location.href = window.opener.top.leftFrame.location.href;
+            }
+        } else if (window.opener.name && window.opener.name == "运行流程") {
+            //测试运行流程，不进行刷新
+        } else {
+            //window.opener.location.href = window.opener.location.href;
+        }
+    }
+
+    //提示消息有错误，页面不跳转
+    var msg = $("#msgModalContent").html();
+    if (msg.indexOf("err@") == -1)
+        window.close();
+    else {
+        setToobarEnable();
+        $("#msgModal").modal("hidden");
+    }
+
+    if (window.parent != null && window.parent != undefined) {
+        window.parent.close();
+    }
+}
 //从表在新建或者在打开行的时候，如果 EditModel 配置了使用卡片的模式显示一行数据的时候，就调用此方法.
 function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage) {
     // model=1 自由表单, model=2傻瓜表单.
@@ -910,12 +914,12 @@ function Send(isHuiQian) {
     //必填项和正则表达式检查.
     if (checkBlanks() == false) {
         alert("检查必填项出现错误，边框变红颜色的是否填写完整？");
-        // return;
+        return false ;
     }
 
     if (checkReg() == false) {
         alert("发送错误:请检查字段边框变红颜色的是否填写完整？");
-        //return;
+        return false; 
     }
 
     window.hasClickSend = true; //标志用来刷新待办.
@@ -925,7 +929,7 @@ function Send(isHuiQian) {
     //含有发送节点 且接收
     if ($('#DDL_ToNode').length > 0) {
 
-        var selectToNode = $('#DDL_ToNode  option:selected').data();
+       var selectToNode = $('#DDL_ToNode  option:selected').data();
         toNodeID = selectToNode.No;
 
         if (selectToNode.IsSelectEmps == "1") { //跳到选择接收人窗口
@@ -1062,7 +1066,18 @@ function OptSuc(msg) {
     trackImg.remove();
 
     $("#msgModal").modal().show();
+
+    var int = setInterval("clock()", 1000);
 }
+
+var num = 5;
+function clock() {
+    num >= 0 ? num-- : clearInterval(int);
+    $("#btnMsgModalOK").html("确定(" + num + "秒)");
+    if (num == 0)
+        closeWindow();
+}
+
 
 //初始化发送节点下拉框
 function InitToNodeDDL(flowData) {
@@ -1559,6 +1574,12 @@ function GenerWorkNode() {
     $('#topContentDiv i').css('left', marginLeft.toString() + 'px');
     //原有的
 
+    //textarea的高度自适应的设置
+    var textareas = $("textarea");
+    $.each(textareas, function (idex, item) {
+        autoTextarea(item);
+    });
+
     //为 DISABLED 的 TEXTAREA 加TITLE 
     var disabledTextAreas = $('#divCCForm textarea:disabled');
     $.each(disabledTextAreas, function (i, obj) {
@@ -1790,7 +1811,7 @@ function InitToolBar() {
     if ($('[name=Return]').length > 0) {
         $('[name=Return]').attr('onclick', '');
         $('[name=Return]').unbind('click');
-        $('[name=Return]').bind('click', function () { initModal("returnBack"); $('#returnWorkModal').modal().show(); });
+        $('[name=Return]').bind('click', function () { if (Save()==false) return; initModal("returnBack"); $('#returnWorkModal').modal().show(); });
     }
 
     if ($('[name=Shift]').length > 0) {
@@ -2100,10 +2121,12 @@ function SetHegiht() {
 
     var messageHeight = $('#Message').height();
     var topBarHeight = 40;
-    var childHeight = $('#childThread').height();
+    //var childHeight = $('#childThread').height();
     var infoHeight = $('#flowInfo').height();
 
-    var allHeight = messageHeight + topBarHeight + childHeight + childHeight + infoHeight;
+    //var allHeight = messageHeight + topBarHeight + childHeight + childHeight + infoHeight;
+
+    var allHeight = messageHeight + topBarHeight + infoHeight;
     try {
 
         var BtnWord = $("#BtnWord").val();

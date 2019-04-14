@@ -170,6 +170,18 @@
                     var mapAttr = mapAttrs[j];
                     if (mapAttr.UIVisible == 0)
                         continue;
+<<<<<<< .mine
+
+                    if (mapAttr.TextColSpan == undefined)
+                        mapAttr.TextColSpan = 1;
+
+||||||| .r1534
+
+                    if (mapAttr.ColSpan <= 1 && mapAttr.UIContralType == "1") { //外键.
+
+=======
+                    if (mapAttr.UIContralType == "1") {
+>>>>>>> .r1591
                     if (mapAttr.UIContralType == "1") {
                         var ses = new Entities("BP.Sys.SysEnums");
                         ses.Retrieve("EnumKey", mapAttr.UIBindKey)
@@ -278,7 +290,7 @@
                             continue;
                         }
 
-                        alert('没有判断的string类型:' + mapAttr.KeyOfEn + ' - ' + mapAttr.Name + ' ColSpan=' + mapAttr.ColSpan);
+                        alert('*没有判断的string类型:' + mapAttr.KeyOfEn + ' - ' + mapAttr.Name + ' ColSpan=' + mapAttr.ColSpan);
                     }
 
 
@@ -625,7 +637,7 @@
 
                     }
 
-                    alert('没有判断的string类型:' + mapAttr.KeyOfEn + ' - ' + mapAttr.Name + ' ' + mapAttr.ColSpan);
+                    alert('没有判断的string类型:' + mapAttr.KeyOfEn + ' - ' + mapAttr.Name + ' ColSpan=' + mapAttr.ColSpan + ' TextColSpan=' + mapAttr.TextColSpan);
                     continue;
 
                     if (mapAttr.LGType == 2) {
@@ -904,7 +916,8 @@
             switch (groupEn.CtrlType) {
 
                 case "Ath":
-
+                    if (groupEn.CtrlID == "")
+                        return "";
                     var athEn = new Entity("BP.Sys.FrmAttachment", groupEn.CtrlID);
                     var src = "../../CCForm/Ath.htm?PKVal=0&FK_MapData=" + pageParam.fk_mapdata + "&FK_FrmAttachment=" + athEn.MyPK + "&IsReadonly=1";
 

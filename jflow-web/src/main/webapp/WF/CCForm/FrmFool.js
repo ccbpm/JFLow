@@ -321,7 +321,6 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
             }
             isDropTR = true;
             html += "<tr>";
-<<<<<<< .mine
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
             else if (attr.UIContralType == "10")
@@ -337,33 +336,6 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
                 html += "</td>";
                 html += "</tr>";
             }
-||||||| .r1534
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
-                html += "<td  class='FDesc' style='width:15%;'>" + lab + "</td>";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3  style='text-align:left;'>";
-            else
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4 style='text-align:left;padding-left: 15% '>";
-            html += InitMapAttrOfCtrl(attr, enable, defval);
-            html += "</td>";
-            html += "</tr>";
-=======
-           if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
-            else if (attr.UIContralType == "10")
-                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
-
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3  rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else if (attr.MyDataType == 4 || attr.UIContralType == "9")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4 rowSpan=" + rowSpan + " class='tdSpan'>";
-
-            if (attr.UIContralType != "10") {
-                html += InitMapAttrOfCtrl(attr, enable, defval);
-                html += "</td>";
-                html += "</tr>";
-            }
->>>>>>> .r1591
             continue;
         }
 
@@ -382,7 +354,6 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
             continue;
         }
 
-<<<<<<< .mine
 
         //线性展示并且colspan=2, 则文本也占据2行
         if (attr.ColSpan == 2 && attr.TextColSpan == 2) {
@@ -435,64 +406,8 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
             continue;
         }
 
-||||||| .r1534
-=======
-
-        //线性展示并且colspan=2, 则文本也占据2行
-        if (attr.ColSpan == 2 && attr.TextColSpan == 2) {
-            if (isDropTR == false) {
-                html += "<td class='FDesc' ColSpan='2'></td>";
-                html += "</tr>";
-            }
-            isDropTR = true;
-            html += "<tr>";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' style='width:15%;' ColSpan=2  rowSpan=" + rowSpan + ">" + lab + "</td>";
-            else if (attr.UIContralType == "10")
-                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
-
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=2   rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else if (attr.MyDataType != 4 ||  attr.UIContralType != "9")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
-            if (attr.UIContralType != "10") {
-                html += InitMapAttrOfCtrl(attr, enable, defval);
-                html += "</td>";
-                html += "</tr>";
-            }
-            continue;
-        }
-
-        //线性展示并且colspan=1,则需要判断文本跨的单元格数
-        if (attr.ColSpan == 1 && attr.TextColSpan == 3) {
-            if (isDropTR == false) {
-                html += "<td class='FDesc' ColSpan='2'></td>";
-                html += "</tr>";
-            }
-            isDropTR = true;
-            html += "<tr >";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' style='width:15%;' ColSpan=3  rowSpan=" + rowSpan + ">" + lab + "</td>";
-            else if (attr.UIContralType == "10")
-                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
-
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=1  rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else if (attr.MyDataType != 4 || attr.UIContralType != "9")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
-
-            if (attr.UIContralType != "10") {
-                html += InitMapAttrOfCtrl(attr, enable, defval);
-                html += "</td>";
-                html += "</tr>";
-            }
-            continue;
-        }
-
->>>>>>> .r1591
         if (isDropTR == true) {
             html += "<tr>";
-<<<<<<< .mine
             if (isShowTdLeft == true) {
                 recordRowLeft = rowSpan;
                 haveDropRowLeft = 0;
@@ -510,31 +425,6 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
                 }
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdLeft = false;
-||||||| .r1534
-            if (attr.UIContralType != "9") {
-                html += "<td class='FDesc' style='width:15%;'>" + lab + "</td>";
-                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;'>";
-            } else {
-                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc' ColSpan=2 style='text-align:left;padding-left: 15%'>";
-=======
-            if (isShowTdLeft == true) {
-                recordRowLeft = rowSpan;
-                haveDropRowLeft = 0;
-               if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
-                    html += "<td class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
-                } else if (attr.UIContralType == "10") {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
-                } else {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
-                }
-                if (attr.UIContralType != "10") {
-                    html += InitMapAttrOfCtrl(attr, enable, defval);
-                    html += "</td>";
-                }
-                if (rowSpan == 2 || rowSpan == 3)
-                    isShowTdLeft = false;
->>>>>>> .r1591
             }
             isDropTR = !isDropTR;
             haveDropRowRight++;
@@ -553,7 +443,6 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
         }
 
         if (isDropTR == false) {
-<<<<<<< .mine
             if (isShowTdRight == true) {
                 recordRowRight = rowSpan;
                 haveDropRowRight = 0;
@@ -573,33 +462,6 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
                 }
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdRight = false;
-||||||| .r1534
-            if (attr.UIContralType != "9") {
-                html += "<td class='FDesc' style='width:15%;'>" + lab + "</td>";
-                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;'>";
-            } else {
-                html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc' ColSpan=2 style='text-align:left;padding-left: 15%'>";
-=======
-            if (isShowTdRight == true) {
-                recordRowRight = rowSpan;
-                haveDropRowRight = 0;
-                 if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
-                    html += "<td class='FDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
-                } else if (attr.UIContralType == "10") {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
-                } else {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
-                }
-                isDropTR = !isDropTR;
-                if (attr.UIContralType != "10") {
-                    html += InitMapAttrOfCtrl(attr, enable, defval);
-                    html += "</td>";
-                    html += "</tr>";
-                }
-                if (rowSpan == 2 || rowSpan == 3)
-                    isShowTdRight = false;
->>>>>>> .r1591
             }
             html += "</tr>";
             haveDropRowLeft++;
@@ -975,7 +837,7 @@ function InitMapAttrOfCtrl(mapAttr) {
         else
             bit = 2;
 
-        return "<input style='text-align:right;width:100%' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',');" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+        return "<input style='text-align:right;width:100%' onkeyup=" + '"' + "if(isNaN(value))execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     alert(mapAttr.Name + "的类型没有判断.");
@@ -1323,36 +1185,7 @@ function Ele_Attachment(workNode, gf) {
     eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + gf.CtrlID + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     return eleHtml;
 
-<<<<<<< .mine
 
-||||||| .r1534
-    /*
-
-    var ath = workNode.Sys_FrmAttachment[0];
-    if (ath == null)
-    return "没有找到附件定义，请与管理员联系。";
-
-    var eleHtml = '';
-    //    if (ath.UploadType == 0) { //单附件上传 L4204
-    //        return '';
-    //    }
-
-    var pkval = GetQueryString("WorkID");
-    if (pkval == undefined)
-    pkval = GetQueryString("OID");
-
-    var src = "";
-    if (pageData.IsReadonly)
-    src = "Ath.htm?PKVal=" + pkval + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1";
-    else
-    src = "Ath.htm?PKVal=" + pkval + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK;
-
-    eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
-
-    return eleHtml; */
-=======
-   
->>>>>>> .r1591
 }
 
 

@@ -116,6 +116,7 @@
 		        }
 		        $('#selectGrid').bootstrapTable("load", json);
 		    }
+
 		    function findChildren(jsonArray, parentNo) {
 		        var appendToTree = function (treeToAppend, o) {
 		            $.each(treeToAppend, function (i, child) {
@@ -152,7 +153,6 @@
 		            });
 
 		        }
-		        
 		        function _(treeArray) {
 		            $.each(treeArray, function (i, o) {
 		                if ($.isArray(o.nodes)) {

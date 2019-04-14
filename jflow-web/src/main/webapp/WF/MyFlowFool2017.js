@@ -290,7 +290,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             }
             isDropTR = true;
             html += "<tr>";
-<<<<<<< .mine
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' style='width:15%;' ColSpan=2  rowSpan=" + rowSpan + ">" + lab + "</td>";
             else if (attr.UIContralType == "10")
@@ -305,57 +304,9 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
                 html += "</td>";
                 html += "</tr>";
             }
-||||||| .r1534
-            html += "<td  id='Td_" + attr.KeyOfEn + "' ColSpan='4' class='FDesc'>" + lab + "</br>";
-            html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-            html += "</td>";
-            html += "</tr>";
-=======
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' style='width:15%;' ColSpan=2  rowSpan=" + rowSpan + ">" + lab + "</td>";
-            else if (attr.UIContralType == "10")
-                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
-
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=2   rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else if (attr.MyDataType != 4 ||  attr.UIContralType != "9")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
-            if (attr.UIContralType != "10") {
-                html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-                html += "</td>";
-                html += "</tr>";
-            }
-            continue; 
-        }
-
-        //线性展示并且colspan=1,则需要判断文本跨的单元格数
-        if (attr.ColSpan == 1 && attr.TextColSpan == 3) {
-            if (isDropTR == false) {
-                html += "<td class='FDesc' ColSpan='2'></td>";
-                html += "</tr>";
-            }
-            isDropTR = true;
-            html += "<tr >";
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' style='width:15%;' ColSpan=3  rowSpan=" + rowSpan + ">" + lab + "</td>";
-            else if (attr.UIContralType == "10")
-                html += "<td  class='FDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
-
-            if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=1  rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else if (attr.MyDataType != 4 || attr.UIContralType != "9")
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
-
-            if (attr.UIContralType != "10") {
-                html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-                html += "</td>";
-                html += "</tr>";
-            }
->>>>>>> .r1591
             continue;
         }
 
-<<<<<<< .mine
         //线性展示并且colspan=1,则需要判断文本跨的单元格数
         if (attr.ColSpan == 1 && attr.TextColSpan == 3) {
             if (isDropTR == false) {
@@ -383,10 +334,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
         }
 
         //线性展示都跨一个单元格
-||||||| .r1534
-=======
-        //线性展示都跨一个单元格
->>>>>>> .r1591
         if (isDropTR == true) {
             html += "<tr >";
             if (isShowTdLeft == true) {
@@ -409,7 +356,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             }
 
             isDropTR = !isDropTR;
-<<<<<<< .mine
 
             haveDropRowRight++;
             if (haveDropRowRight == recordRowRight) {
@@ -423,22 +369,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
                 isDropTR = true;
             }
 
-||||||| .r1534
-=======
-           
-            haveDropRowRight++;
-             if (haveDropRowRight == recordRowRight) {
-                haveDropRowRight = 0;
-                recordRowRight = 1;
-                isShowTdRight = true;
-            }
-
-            if (isShowTdRight == false) {
-                html += "</tr>";
-                isDropTR = true;
-            }
-           
->>>>>>> .r1591
             continue;
         }
 
@@ -463,7 +393,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
                     isShowTdRight = false;
             }
             html += "</tr>";
-<<<<<<< .mine
             haveDropRowLeft++;
 
             if (haveDropRowLeft == recordRowLeft) {
@@ -479,25 +408,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
 
 
 
-||||||| .r1534
-            isDropTR = !isDropTR;
-=======
-             haveDropRowLeft++;
-
-            if (haveDropRowLeft == recordRowLeft) {
-                haveDropRowLeft = 0;
-                recordRowLeft = 1;
-                isShowTdLeft = true;
-            }
-
-            if (isShowTdLeft == false) {
-                html += "<tr>";
-                isDropTR = false;
-            }
-
-
-           
->>>>>>> .r1591
             continue;
         }
     }

@@ -78,9 +78,9 @@ public class LocalWS implements LocalWSI{
 	/**
 	 * 我发起的流程实例
 	 * @param userNo 用户编号
-	 * @param sysNo 统编号,为空时返回平台所有数据
-	 * @param pageSize
-	 * @param pageIdx
+	 * @param sysNo 系统编号,为空时返回平台所有数据
+	 * @param pageSize 每页的长度
+	 * @param pageIdx  第几页
 	 * @return
 	 */
 	@Override
@@ -121,6 +121,7 @@ public class LocalWS implements LocalWSI{
 	 * @param ht 参数，或者表单字段.
 	 * @param toNodeID 到达的节点ID.如果让系统自动计算就传入0
 	 * @param toEmps 到达的人员IDs,比如:zhangsan,lisi,wangwu. 如果为Null就标识让系统自动计算
+	 *  @param userNo 用户的登录名，此参数用于登录
 	 * @return 发送的结果信息.
 	 * @throws Exception 
 	 */
@@ -147,6 +148,7 @@ public class LocalWS implements LocalWSI{
 	 * 保存参数
 	 * @param workid 工作ID
 	 * @param paras 用于控制流程运转的参数，比如方向条件. 格式为:@JinE=1000@QingJaiTianShu=100
+	 *  @param userNo 用户的登录名，此参数用于登录
 	 * @throws Exception 
 	 */
 	@Override
@@ -161,6 +163,7 @@ public class LocalWS implements LocalWSI{
 	 * @param flowNo 流程编号
 	 * @param workid 流程实例
 	 * @param paras 方向条件所需要的参数，可以为空。
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 下一个节点的JSON.
 	 * @throws Exception 
 	 */
@@ -180,11 +183,12 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 获得下一步节点的接收人
-	 * @param flowNo 流程ID
+	 * 获得下一步节点信息
+	 * @param flowNo 流程ID，即流程编号
 	 * @param toNodeID 节点ID
-	 * @param workid 工作事例ID
+	 * @param workid 流程实例ID，如果传入0，或者传入不存在的workid就返回第一个节点
 	 * @return 返回两个结果集一个是分组的Depts(No,Name)，另外一个是人员的Emps(No, Name, FK_Dept),接受后，用于构造人员选择器.
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @throws Exception 
 	 */
 	@Override
@@ -199,8 +203,9 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 将要达到的节点
+	 * 可退回的节点集合
 	 * @param currNodeID 当前节点ID
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 返回节点集合的json.
 	 * @throws Exception 
 	 */
@@ -219,6 +224,7 @@ public class LocalWS implements LocalWSI{
 	/**
 	 * 获得当前节点信息.
 	 * @param currNodeID  当前节点ID
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return
 	 * @throws Exception 
 	 */
@@ -231,7 +237,8 @@ public class LocalWS implements LocalWSI{
 
 	/**
 	 * 获得当前流程信息.
-	 * @param flowNo 流程ID
+	 * @param flowNo 流程ID，即流程编号
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
@@ -245,6 +252,7 @@ public class LocalWS implements LocalWSI{
 	/**
 	 * 获得当前流程信息.
 	 * @param workID 流程ID
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
@@ -261,6 +269,7 @@ public class LocalWS implements LocalWSI{
 	 * @param workID 流程ID
 	 * @param retunrnToNodeID 流程退回的节点ID
 	 * @param returnMsg 退回原因
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 退回结果信息
 	 * @throws Exception 
 	 */
@@ -282,6 +291,7 @@ public class LocalWS implements LocalWSI{
 	 *            工作ID
 	 * @param msg
 	 *            流程结束原因
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 返回成功执行信息
 	 * @throws Exception
 	 */
@@ -300,6 +310,11 @@ public class LocalWS implements LocalWSI{
 	
 	/**
 	 * 执行撤销操作
+	 * @param userNo 用户的登录名，此参数用于登录
+	 * @param flowNo 流程编号
+	 * @param workID 工作ID
+	 * @param unSendToNode 撤销的节点 ，可以为0
+	 * @param fid  默认是0
 	 * @return
 	 * @throws Exception 
 	 */
@@ -316,6 +331,7 @@ public class LocalWS implements LocalWSI{
 	 * @param workId 工作ID
 	 * @param backToNodeID 回滚到的节点ID
 	 * @param backMsg 回滚原因
+	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 回滚信息
 	 * @throws Exception 
 	 */

@@ -194,6 +194,7 @@ public class LocalWS implements LocalWSI{
 	@Override
 	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
+		
 		Selector select = new Selector(toNodeID);
         Node nd = new Node(toNodeID);
 
@@ -337,6 +338,7 @@ public class LocalWS implements LocalWSI{
 	 */
 	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg, String userNo) throws Exception{
 		BP.WF.Dev2Interface.Port_Login(userNo);
+		
 		FlowExt flow = new FlowExt(flowNo);
 		return flow.DoRebackFlowData(workId, backToNodeID, backMsg);
 	}

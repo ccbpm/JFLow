@@ -15,7 +15,7 @@ import BP.Tools.StringHelper;
 public class SqlBuilder {
 
 	/**
-	 * 寰楀埌涓诲仴
+	 * 得到主健
 	 * 
 	 * @param en
 	 * @return
@@ -48,18 +48,18 @@ public class SqlBuilder {
 				if (attr.getMyDataType() == DataType.AppString) {
 					String val = en.GetValByKey(attr.getKey()).toString();
 					if (val == null || val.equals("")) {
-						throw new RuntimeException("@鍦ㄦ墽琛孾" + en.getEnMap().getEnDesc() + " " + physicsTable
-								+ "]娌℃湁缁橮K " + attr.getKey() + " 璧嬪��,涓嶈兘杩涜鏌ヨ鎿嶄綔銆�");
+						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " "
+								+ physicsTable + "]没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
-					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=:" + attr.getKey();
+					sql = sql + " AND " +physicsTable+ "." + attr.getField() + "=:" + attr.getKey();
 					continue;
 				}
 				if (attr.getMyDataType() == DataType.AppInt) {
 					if (en.GetValIntByKey(attr.getKey()) == 0 && attr.getKey().equals("OID")) {
-						throw new RuntimeException("@鍦ㄦ墽琛孾" + en.getEnMap().getEnDesc() + " " + physicsTable
-								+ "]锛屾病鏈夌粰PK " + attr.getKey() + " 璧嬪��,涓嶈兘杩涜鏌ヨ鎿嶄綔銆�");
+						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " "
+								+ physicsTable + "]，没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
-					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=:" + attr.getKey();
+					sql = sql + " AND " + physicsTable + "." +attr.getField() + "=:" + attr.getKey();
 					continue;
 				}
 			}
@@ -68,20 +68,19 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 寰楀埌涓诲仴
+	 * 得到主健
 	 * 
 	 * @param en
 	 * @return
 	 */
 	public static String GetKeyConditionOfOLE(Entity en) {
-		// 鍒ゆ柇鐗规畩鎯呭喌銆�
+		// 判断特殊情况。
 		Map enMap = en.getEnMap();
 		Attrs attrs = enMap.getAttrs();
 		if (attrs.Contains("OID")) {
 			int key = en.GetValIntByKey("OID");
 			if (key == 0) {
-				throw new RuntimeException("@鍦ㄦ墽琛孾" + enMap.getEnDesc() + " " + enMap.getPhysicsTable()
-						+ "]锛屾病鏈夌粰PK OID 璧嬪��,涓嶈兘杩涜鏌ヨ鎿嶄綔銆�");
+				throw new RuntimeException("@在执行[" + enMap.getEnDesc() + " " + enMap.getPhysicsTable()+ "]，没有给PK OID 赋值,不能进行查询操作。");
 			}
 
 			if (en.getPKs().length == 1) {
@@ -97,8 +96,8 @@ public class SqlBuilder {
 				if (attr.getMyDataType() == DataType.AppString) {
 					String val = en.GetValByKey(attr.getKey()).toString();
 					if (val == null || val.equals("")) {
-						throw new RuntimeException("@鍦ㄦ墽琛孾" + enMap.getEnDesc() + " " + physicsTable + "]娌℃湁缁橮K "
-								+ attr.getKey() + " 璧嬪��,涓嶈兘杩涜鏌ヨ鎿嶄綔銆�");
+						throw new RuntimeException("@在执行[" + enMap.getEnDesc() + " "
+								+ physicsTable + "]没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
 					sql = sql + " AND " + physicsTable + ".[" + attr.getField() + "]='"
 							+ en.GetValByKey(attr.getKey()).toString() + "'";
@@ -107,8 +106,8 @@ public class SqlBuilder {
 
 				if (attr.getMyDataType() == DataType.AppInt) {
 					if (en.GetValIntByKey(attr.getKey()) == 0 && attr.getKey().equals("OID")) {
-						throw new RuntimeException("@鍦ㄦ墽琛孾" + enMap.getEnDesc() + " " + physicsTable + "]锛屾病鏈夌粰PK "
-								+ attr.getKey() + " 璧嬪��,涓嶈兘杩涜鏌ヨ鎿嶄綔銆�");
+						throw new RuntimeException("@在执行[" + enMap.getEnDesc() + " "
+								+ physicsTable + "]，没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
 					sql = sql + " AND " + physicsTable + ".[" + attr.getField() + "]="
 							+ en.GetValStringByKey(attr.getKey());
@@ -120,7 +119,7 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 寰楀埌涓诲仴
+	 * 得到主健
 	 * 
 	 * @param en
 	 * @return
@@ -137,7 +136,7 @@ public class SqlBuilder {
 
 		String sql = " (1=1) ";
 		Attrs attrs = en.getEnMap().getAttrs();
-		for (Attr attr : attrs) {
+		for (Attr attr :attrs ) {
 			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
 					|| attr.getMyFieldType() == FieldType.PKEnum) {
 				if (dbStr.equals("?")) {
@@ -182,7 +181,7 @@ public class SqlBuilder {
 			paras.Add("WorkID", en.GetValIntByKey("WorkID"));
 			return paras;
 		}
-
+		
 		Attrs attrs = en.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
 			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
@@ -243,7 +242,7 @@ public class SqlBuilder {
 	}
 
 	public static String GetKeyConditionOfInformixForPara(Entity en) {
-		// 涓嶈兘鍒犻櫎鐗╃悊琛ㄥ悕绉帮紝浼氬紩璧锋湭瀹氫箟鍒椼��
+		// 不能删除物理表名称，会引起未定义列。
 		String pk = en.getPK();
 		if (pk.equals("OID"))
 			return en.getEnMap().getPhysicsTable() + ".OID=:OID";
@@ -281,7 +280,7 @@ public class SqlBuilder {
 	}
 
 	public static String GetKeyConditionOfMySQL(Entity en) {
-		// 涓嶈兘鍒犻櫎鐗╃悊琛ㄥ悕绉帮紝浼氬紩璧锋湭瀹氫箟鍒椼��
+		// 不能删除物理表名称，会引起未定义列。
 		String pk = en.getPK();
 
 		if (pk.equals("OID"))
@@ -320,10 +319,10 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 鏌ヨ鍏ㄩ儴淇℃伅
+	 * 查询全部信息
 	 * 
 	 * @param en
-	 *            瀹炰綋
+	 *            实体
 	 * @return sql
 	 * @throws Exception
 	 */
@@ -332,10 +331,10 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 鏌ヨ
+	 * 查询
 	 * 
 	 * @param en
-	 *            瀹炰綋
+	 *            实体
 	 * @return string
 	 * @throws Exception
 	 */
@@ -354,9 +353,9 @@ public class SqlBuilder {
 			sql = SqlBuilder.SelectSQLOfOra(en, 1) + "  AND ( " + SqlBuilder.GenerWhereByPK(en, ":") + " )";
 			break;
 		case DB2:
-			throw new RuntimeException("杩樻病鏈夊疄鐜般��");
+			throw new RuntimeException("还没有实现。");
 		default:
-			throw new RuntimeException("杩樻病鏈夊疄鐜般��");
+			throw new RuntimeException("还没有实现。");
 		}
 		sql = sql.replace("WHERE   AND", " WHERE ");
 		sql = sql.replace("WHERE  AND", " WHERE ");
@@ -384,7 +383,7 @@ public class SqlBuilder {
 			break;
 		case DB2:
 		default:
-			throw new RuntimeException("杩樻病鏈夊疄鐜般��");
+			throw new RuntimeException("还没有实现。");
 		}
 		sql = sql.replace("WHERE  AND", "WHERE");
 		sql = sql.replace("WHERE AND", "WHERE");
@@ -401,7 +400,7 @@ public class SqlBuilder {
 
 		String mytable = enMap.getPhysicsTable();
 		from += ",";
-		// 浜х敓澶栭敭琛ㄥ垪琛ㄣ��
+		// 产生外键表列表。
 		Attrs fkAttrs = enMap.getHisFKAttrs();
 		for (Attr attr : fkAttrs) {
 			if (attr == null || attr.getMyFieldType() == FieldType.RefText) {
@@ -419,7 +418,7 @@ public class SqlBuilder {
 		String where = " WHERE ";
 		boolean isAddAnd = true;
 
-		// 寮�濮嬪舰鎴� 澶栭敭 where.
+		// 开始形成 外键 where.
 		for (Attr attr : fkAttrs) {
 			if (attr == null || attr.getMyFieldType() == FieldType.RefText) {
 				continue;
@@ -461,7 +460,7 @@ public class SqlBuilder {
 		Attrs fkAttrs = enMap.getHisFKAttrs();
 		String where = "";
 		MapAttr mapAttr = null;
-		// 寮�濮嬪舰鎴� 澶栭敭 where.
+		// 开始形成 外键 where.
 		for (Attr attr : fkAttrs) {
 			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
@@ -470,7 +469,7 @@ public class SqlBuilder {
 				continue;
 			mapAttr = attr.getToMapAttr();
 
-			// 鍘婚櫎webservice濉厖DDL鏁版嵁鐨勭被鍨�
+			// 去除webservice填充DDL数据的类型
 			if (mapAttr.getLGType() == FieldTypeS.Normal && mapAttr.getUIContralType() == UIContralType.DDL)
 				continue;
 
@@ -493,7 +492,7 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 鐢熸垚sql.
+	 * 生成sql.
 	 * 
 	 * @param en
 	 * @return
@@ -502,13 +501,13 @@ public class SqlBuilder {
 		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null) {
 			return "DELETE FROM Sys_enum where enumkey='sdsf44a23'";
 		}
-
+		
 		Map enMap = en.getEnMap();
 		Attrs attrs = enMap.getAttrs();
 		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " ( ";
 
 		if (attrs.size() == 0) {
-			throw new RuntimeException("@" + en.getEnDesc() + " , 娌℃湁灞炴�ч泦鍚� attrs.Count = 0 ,鑳芥墽琛屾暟鎹〃鐨勫垱寤�.");
+			throw new RuntimeException("@" + en.getEnDesc() + " , 没有属性集合 attrs.Count = 0 ,能执行数据表的创建.");
 		}
 
 		for (Attr attr : attrs) {
@@ -534,7 +533,7 @@ public class SqlBuilder {
 			case DataType.AppInt:
 				if (attr.getIsPK()) {
 					try {
-						// 璇存槑杩欎釜鏄嚜鍔ㄥ闀跨殑鍒�.
+						// 说明这个是自动增长的列.
 						if (attr.getUIBindKey().equals("1")) {
 							sql += "[" + attr.getField() + "] INT  primary key identity(1,1),";
 						} else {
@@ -558,6 +557,8 @@ public class SqlBuilder {
 		sql += ")";
 		return sql;
 	}
+
+	
 
 	public static String GenerCreateTableSQL(Entity en) {
 		switch (DBAccess.getAppCenterDBType()) {
@@ -589,26 +590,25 @@ public class SqlBuilder {
 		}
 		return null;
 	}
-
+	
 	/*
-	 * 鐢熸垚sql.
+	 * 生成sql.
 	 * 
 	 * @param en
-	 * 
 	 * @return
 	 */
 	public static String GenerCreateTableSQLOfOra_OK(Entity en) {
 		if (en.getEnMap().getPhysicsTable() == null) {
-			throw new RuntimeException("鎮ㄦ病鏈変负[" + en.getEnDesc() + "],璁剧疆鐗╃悊琛ㄣ��");
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
 
 		if (en.getEnMap().getPhysicsTable().trim().length() == 0) {
-			throw new RuntimeException("鎮ㄦ病鏈変负[" + en.getEnDesc() + "],璁剧疆鐗╃悊琛ㄣ��");
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
-
+		
 		Map enMap = en.getEnMap();
 		Attrs attrs = enMap.getAttrs();
-
+		
 		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " (";
 		for (Attr attr : attrs) {
 			if (attr.getMyFieldType() == FieldType.RefText) {
@@ -656,11 +656,11 @@ public class SqlBuilder {
 
 	public static String GenerCreateTableSQLOfInfoMix(Entity en) {
 		if (en.getEnMap().getPhysicsTable() == null) {
-			throw new RuntimeException("鎮ㄦ病鏈変负[" + en.getEnDesc() + "],璁剧疆鐗╃悊琛ㄣ��");
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
 
 		if (en.getEnMap().getPhysicsTable().trim().length() == 0) {
-			throw new RuntimeException("鎮ㄦ病鏈変负[" + en.getEnDesc() + "],璁剧疆鐗╃悊琛ㄣ��");
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
 
 		Map enMap = en.getEnMap();
@@ -698,7 +698,7 @@ public class SqlBuilder {
 				break;
 			case DataType.AppBoolean:
 			case DataType.AppInt:
-				// 璇存槑杩欎釜鏄嚜鍔ㄥ闀跨殑鍒�.
+				// 说明这个是自动增长的列.
 				if (attr.getIsPK()) {
 					if (attr.getUIBindKey().equals("1")) {
 						sql += attr.getField() + "  Serial not null,";
@@ -721,20 +721,20 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 鐢熸垚sql.
+	 * 生成sql.
 	 * 
 	 * @param en
 	 * @return
 	 */
 	public static String GenerCreateTableSQLOfMySQL(Entity en) {
 		if (en.getEnMap().getPhysicsTable() == null) {
-			throw new RuntimeException("鎮ㄦ病鏈変负[" + en.getEnDesc() + "],璁剧疆鐗╃悊琛ㄣ��");
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
 
 		if (en.getEnMap().getPhysicsTable().trim().length() == 0) {
-			throw new RuntimeException("鎮ㄦ病鏈変负[" + en.getEnDesc() + ", " + en.toString() + "],璁剧疆鐗╃悊琛ㄣ��");
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + ", " + en.toString() + "],设置物理表。");
 		}
-
+		
 		Map enMap = en.getEnMap();
 		Attrs attrs = enMap.getAttrs();
 		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " (";
@@ -840,7 +840,7 @@ public class SqlBuilder {
 
 			mapAttr = attr.getToMapAttr();
 
-			// 鍘婚櫎webservice濉厖DDL鏁版嵁鐨勭被鍨�
+			// 去除webservice填充DDL数据的类型
 			if (mapAttr.getLGType() == FieldTypeS.Normal && mapAttr.getUIContralType() == UIContralType.DDL)
 				continue;
 
@@ -853,6 +853,7 @@ public class SqlBuilder {
 		}
 		return from + " WHERE (1=1) ";
 
+		
 	}
 
 	/**
@@ -955,13 +956,13 @@ public class SqlBuilder {
 	protected static String SelectSQLOfOra(Entity en, int topNum) throws Exception {
 		String val = ""; // key = null;
 		String mainTable = "";
-
+		
 		Map enMap = en.getEnMap();
-
+		
 		if (enMap.getHisFKAttrs().size() != 0) {
 			mainTable = enMap.getPhysicsTable() + ".";
 		}
-
+		
 		Attrs attrs = enMap.getAttrs();
 		for (Attr attr : attrs) {
 			if (attr.getMyFieldType() == FieldType.RefText) {
@@ -970,7 +971,7 @@ public class SqlBuilder {
 			switch (attr.getMyDataType()) {
 			case DataType.AppString:
 				Object tempVar = attr.getDefaultVal();
-				if (tempVar == null || tempVar.equals("")) {
+				if ( tempVar == null || tempVar.equals("")) {
 					if (attr.getIsKeyEqualField()) {
 						val = val + "," + mainTable + attr.getField();
 					} else {
@@ -1013,7 +1014,7 @@ public class SqlBuilder {
 				break;
 			default:
 				throw new RuntimeException(
-						"@娌℃湁瀹氫箟鐨勬暟鎹被鍨�! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 
@@ -1111,7 +1112,7 @@ public class SqlBuilder {
 				break;
 			default:
 				throw new RuntimeException(
-						"@娌℃湁瀹氫箟鐨勬暟鎹被鍨�! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 		return " SELECT  " + val.substring(1) + SqlBuilder.GenerFormWhereOfInformix(en);
@@ -1130,15 +1131,15 @@ public class SqlBuilder {
 		case Informix:
 			return SqlBuilder.SelectSQLOfInformix(en, topNum);
 		default:
-			throw new RuntimeException("娌℃湁鍒ゆ柇鐨勬儏鍐�");
+			throw new RuntimeException("没有判断的情况");
 		}
 	}
 
 	/**
-	 * 寰楀埌sql of select
+	 * 得到sql of select
 	 * 
 	 * @param en
-	 *            瀹炰綋
+	 *            实体
 	 * @param top
 	 *            top
 	 * @return sql
@@ -1159,13 +1160,13 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 寤虹珛SelectSQLOfOLE
+	 * 建立SelectSQLOfOLE
 	 * 
 	 * @param en
-	 *            瑕佹墽琛岀殑en
+	 *            要执行的en
 	 * @param topNum
-	 *            鏈�楂樻煡璇釜鏁�
-	 * @return 杩斿洖鏌ヨsql
+	 *            最高查询个数
+	 * @return 返回查询sql
 	 */
 	public static String SelectSQLOfOLE(Entity en, int topNum) {
 		String val = "";
@@ -1237,7 +1238,7 @@ public class SqlBuilder {
 				break;
 			default:
 				throw new RuntimeException(
-						"@娌℃湁瀹氫箟鐨勬暟鎹被鍨�! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 		if (topNum == -1 || topNum == 0) {
@@ -1296,9 +1297,9 @@ public class SqlBuilder {
 
 				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 					if (attr.getHisFKEns() == null)
-						throw new Exception("@鐢熸垚SQL閿欒 Entity=" + en.toString() + " 澶栭敭瀛楁锝�" + attr.getKey() + "."
-								+ attr.getDesc() + ", UIBindKey=" + attr.getUIBindKey()
-								+ "锝濆凡缁忔棤鏁�, 涔熻璇ョ被鎴栬�呭閿瓧娈佃绉婚櫎锛岃閫氱煡绠＄悊鍛樿В鍐炽��");
+						throw new Exception(
+								"@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc()
+										+ ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
 
 					Map map = attr.getHisFKEn().getEnMap();
 					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
@@ -1320,7 +1321,7 @@ public class SqlBuilder {
 				break;
 			default:
 				throw new RuntimeException(
-						"@娌℃湁瀹氫箟鐨勬暟鎹被鍨�! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 
@@ -1367,7 +1368,7 @@ public class SqlBuilder {
 				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 					Map map = attr.getHisFKEn().getEnMap();
 
-					// @xu 鍒犻櫎浜嗕竴娈典唬鐮�.
+					// @xu 删除了一段代码.
 					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
 							+ map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
 
@@ -1390,9 +1391,9 @@ public class SqlBuilder {
 				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 
 					if (attr.getHisFKEns() == null)
-						throw new Exception("@鐢熸垚SQL閿欒 Entity=" + en.toString() + " 澶栭敭瀛楁锝�" + attr.getKey() + "."
-								+ attr.getDesc() + ", UIBindKey=" + attr.getUIBindKey()
-								+ "锝濆凡缁忔棤鏁�, 涔熻璇ョ被鎴栬�呭閿瓧娈佃绉婚櫎锛岃閫氱煡绠＄悊鍛樿В鍐炽��");
+						throw new Exception(
+								"@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc()
+										+ ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
 
 					Map map = attr.getHisFKEn().getEnMap();
 					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
@@ -1413,24 +1414,25 @@ public class SqlBuilder {
 				break;
 			default:
 				throw new RuntimeException(
-						"@娌℃湁瀹氫箟鐨勬暟鎹被鍨�! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 
 		return " SELECT   " + val.substring(1) + SqlBuilder.GenerFormWhereOfMS(en);
 	}
 
+
 	/**
-	 * 寤虹珛selectSQL
+	 * 建立selectSQL
 	 * 
 	 * @param en
-	 *            瑕佹墽琛岀殑en
+	 *            要执行的en
 	 * @param topNum
-	 *            鏈�楂樻煡璇釜鏁�
-	 * @return 杩斿洖鏌ヨsql
+	 *            最高查询个数
+	 * @return 返回查询sql
 	 */
 	public static String SelectCountSQLOfMS(Entity en) {
-		// 鍒ゆ柇鍐呭瓨閲岄潰鏄惁鏈� 姝ql.
+		// 判断内存里面是否有 此sql.
 		String sql = "SELECT COUNT(*) ";
 		return sql + SqlBuilder.GenerFormWhereOfMS(en, en.getEnMap());
 	}
@@ -1486,14 +1488,14 @@ public class SqlBuilder {
 				break;
 			default:
 				throw new RuntimeException(
-						"@娌℃湁瀹氫箟鐨勬暟鎹被鍨�! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 		return "SELECT " + val.substring(1);
 	}
 
 	/**
-	 * 浜х敓sql
+	 * 产生sql
 	 * 
 	 * @return
 	 */
@@ -1521,7 +1523,7 @@ public class SqlBuilder {
 				break;
 			case DataType.AppInt:
 				if (attr.getIsNull()) {
-					// 濡傛灉鍏佽涓虹┖
+					// 如果允许为空
 					val = val + ", " + mainTable + attr.getField() + " AS [" + attr.getKey() + "]";
 				} else {
 					val = val + ", ISNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal().toString()
@@ -1551,7 +1553,7 @@ public class SqlBuilder {
 					break;
 				} else {
 					throw new RuntimeException(
-							"@娌℃湁瀹氫箟鐨勬暟鎹被鍨�! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+							"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 				}
 			}
 		}
@@ -1567,7 +1569,7 @@ public class SqlBuilder {
 				boolean isHave = false;
 				for (String s : keys) {
 					if (attr.getKey().equals(s)) {
-						// 濡傛灉鎵惧埌浜嗚鏇存柊鐨刱ey
+						// 如果找到了要更新的key
 						isHave = true;
 						break;
 					}
@@ -1593,14 +1595,14 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 			case DataType.AppMoney:
 				String str = en.GetValStringByKey(attr.getKey()).toString();
-				str = str.replace("锟�", "");
+				str = str.replace("￥", "");
 				str = str.replace(",", "");
 				val = val + ",[" + attr.getField() + "]=" + str;
 				break;
 			case DataType.AppBoolean:
 				val = val + ",[" + attr.getField() + "]=" + en.GetValStringByKey(attr.getKey());
 				break;
-			case DataType.AppDate: // 濡傛灉鏄棩鏈熺被鍨嬨��
+			case DataType.AppDate: // 如果是日期类型。
 			case DataType.AppDateTime:
 				String da = en.GetValStringByKey(attr.getKey());
 				if (da.indexOf("_DATE") == -1) {
@@ -1610,20 +1612,20 @@ public class SqlBuilder {
 				}
 				break;
 			default:
-				throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
 		}
 
 		String sql = "";
 
 		if (val.equals("")) {
-			// 濡傛灉娌℃湁鍑虹幇瑕佹洿鏂�.
+			// 如果没有出现要更新.
 			for (Attr attr : attrs) {
 				if (keys != null) {
 					boolean isHave = false;
 					for (String s : keys) {
 						if (attr.getKey().equals(s)) {
-							// 濡傛灉鎵惧埌浜嗚鏇存柊鐨刱ey
+							// 如果找到了要更新的key
 							isHave = true;
 							break;
 						}
@@ -1643,14 +1645,14 @@ public class SqlBuilder {
 				case DataType.AppDouble:
 				case DataType.AppMoney:
 					String str = en.GetValStringByKey(attr.getKey()).toString();
-					str = str.replace("锟�", "");
+					str = str.replace("￥", "");
 					str = str.replace(",", "");
 					val = val + ",[" + attr.getField() + "]=" + str;
 					break;
 				case DataType.AppBoolean:
 					val = val + ",[" + attr.getField() + "]=" + en.GetValStringByKey(attr.getKey());
 					break;
-				case DataType.AppDate: // 濡傛灉鏄棩鏈熺被鍨嬨��
+				case DataType.AppDate: // 如果是日期类型。
 				case DataType.AppDateTime:
 					String da = en.GetValStringByKey(attr.getKey());
 					if (da.indexOf("_DATE") == -1) {
@@ -1660,11 +1662,11 @@ public class SqlBuilder {
 					}
 					break;
 				default:
-					throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 				}
 			}
 			// return null;
-			// throw new Exception("鍑虹幇浜嗕竴涓笉鍚堢悊鐨勬洿鏂帮細娌℃湁瑕佹洿鏂扮殑鏁版嵁銆�");
+			// throw new Exception("出现了一个不合理的更新：没有要更新的数据。");
 		}
 
 		if (val.equals("")) {
@@ -1672,7 +1674,7 @@ public class SqlBuilder {
 			for (String str : keys) {
 				ms += str;
 			}
-			throw new RuntimeException(en.getEnDesc() + "鎵ц鏇存柊閿欒锛氭棤鏁堢殑灞炴�" + ms + "]瀵逛簬鏈疄浣撴潵璇淬��");
+			throw new RuntimeException(en.getEnDesc() + "执行更新错误：无效的属性[" + ms + "]对于本实体来说。");
 		}
 		sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
 				+ SqlBuilder.GetKeyConditionOfOLE(en);
@@ -1680,18 +1682,18 @@ public class SqlBuilder {
 	}
 
 	/**
-	 * 浜х敓瑕佹洿鏂扮殑sql 璇彞
+	 * 产生要更新的sql 语句
 	 * 
 	 * @param en
-	 *            瑕佹洿鏂扮殑entity
+	 *            要更新的entity
 	 * @param keys
-	 *            瑕佹洿鏂扮殑keys
+	 *            要更新的keys
 	 * @return sql
 	 */
 	public static String Update(Entity en, String[] keys) {
 		Map map = en.getEnMap();
 		if (map.getAttrs().size() == 0) {
-			throw new RuntimeException("@瀹炰綋锛�" + en.toString() + " ,Attrs灞炴�ч泦鍚堜俊鎭涪澶憋紝瀵艰嚧鏃犳硶鐢熸垚SQL銆�");
+			throw new RuntimeException("@实体：" + en.toString() + " ,Attrs属性集合信息丢失，导致无法生成SQL。");
 		}
 
 		String val = "";
@@ -1700,7 +1702,7 @@ public class SqlBuilder {
 				boolean isHave = false;
 				for (String s : keys) {
 					if (attr.getKey().equals(s)) {
-						// 濡傛灉鎵惧埌浜嗚鏇存柊鐨刱ey
+						// 如果找到了要更新的key
 						isHave = true;
 						break;
 					}
@@ -1714,7 +1716,7 @@ public class SqlBuilder {
 				continue;
 			}
 
-			// 鏈夊彲鑳芥槸涓や釜涓婚敭鐨勬儏鍐点��
+			// 有可能是两个主键的情况。
 			// if (attr.IsPK)
 			// continue;
 
@@ -1751,14 +1753,14 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 			case DataType.AppMoney:
 				String str = en.GetValStringByKey(attr.getKey()).toString();
-				str = str.replace("锟�", "");
+				str = str.replace("￥", "");
 				str = str.replace(",", "");
 				val = val + "," + attr.getField() + "=" + str;
 				break;
 			case DataType.AppBoolean:
 				val = val + "," + attr.getField() + "=" + en.GetValStringByKey(attr.getKey());
 				break;
-			case DataType.AppDate: // 濡傛灉鏄棩鏈熺被鍨嬨��
+			case DataType.AppDate: // 如果是日期类型。
 			case DataType.AppDateTime:
 				String da = en.GetValStringByKey(attr.getKey());
 				if (da.indexOf("_DATE") == -1) {
@@ -1768,20 +1770,20 @@ public class SqlBuilder {
 				}
 				break;
 			default:
-				throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
 		}
 
 		String sql = "";
 
 		if (val.equals("")) {
-			// 濡傛灉娌℃湁鍑虹幇瑕佹洿鏂�.
+			// 如果没有出现要更新.
 			for (Attr attr : map.getAttrs()) {
 				if (keys != null) {
 					boolean isHave = false;
 					for (String s : keys) {
 						if (attr.getKey().equals(s)) {
-							// 濡傛灉鎵惧埌浜嗚鏇存柊鐨刱ey
+							// 如果找到了要更新的key
 							isHave = true;
 							break;
 						}
@@ -1791,7 +1793,7 @@ public class SqlBuilder {
 					}
 				}
 
-				// 涓や釜PK 鐨勬儏鍐点��
+				// 两个PK 的情况。
 				// if (attr.IsPK)
 				// continue;
 
@@ -1806,14 +1808,14 @@ public class SqlBuilder {
 				case DataType.AppDouble:
 				case DataType.AppMoney:
 					String str = en.GetValStringByKey(attr.getKey()).toString();
-					str = str.replace("锟�", "");
+					str = str.replace("￥", "");
 					str = str.replace(",", "");
 					val = val + "," + attr.getField() + "=" + str;
 					break;
 				case DataType.AppBoolean:
 					val = val + "," + attr.getField() + "=" + en.GetValStringByKey(attr.getKey());
 					break;
-				case DataType.AppDate: // 濡傛灉鏄棩鏈熺被鍨嬨��
+				case DataType.AppDate: // 如果是日期类型。
 				case DataType.AppDateTime:
 					String da = en.GetValStringByKey(attr.getKey());
 					if (da.indexOf("_DATE") == -1) {
@@ -1823,11 +1825,11 @@ public class SqlBuilder {
 					}
 					break;
 				default:
-					throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 				}
 			}
 			// return null;
-			// throw new Exception("鍑虹幇浜嗕竴涓笉鍚堢悊鐨勬洿鏂帮細娌℃湁瑕佹洿鏂扮殑鏁版嵁銆�");
+			// throw new Exception("出现了一个不合理的更新：没有要更新的数据。");
 		}
 
 		if (val.equals("")) {
@@ -1835,7 +1837,7 @@ public class SqlBuilder {
 			for (String str : keys) {
 				ms += str;
 			}
-			throw new RuntimeException(en.getEnDesc() + "鎵ц鏇存柊閿欒锛氭棤鏁堢殑灞炴�" + ms + "]瀵逛簬鏈疄浣撴潵璇淬��");
+			throw new RuntimeException(en.getEnDesc() + "执行更新错误：无效的属性[" + ms + "]对于本实体来说。");
 		}
 
 		switch (SystemConfig.getAppCenterDBType()) {
@@ -1914,7 +1916,7 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 			case DataType.AppMoney:
 				String str = en.GetValStrByKey(attr.getKey()).toString();
-				str = str.replace("锟�", "");
+				str = str.replace("￥", "");
 				str = str.replace(",", "");
 				if (StringHelper.isNullOrEmpty(str)) {
 					ps.Add(attr.getKey(), 0);
@@ -1922,13 +1924,13 @@ public class SqlBuilder {
 					ps.Add(attr.getKey(), new java.math.BigDecimal(str));
 				}
 				break;
-			case DataType.AppDate: // 濡傛灉鏄棩鏈熺被鍨嬨��
+			case DataType.AppDate: // 如果是日期类型。
 			case DataType.AppDateTime:
 				String da = en.GetValStringByKey(attr.getKey());
 				ps.Add(attr.getKey(), da);
 				break;
 			default:
-				throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
 		}
 
@@ -1979,7 +1981,7 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 			case DataType.AppMoney:
 				String str = en.GetValStrByKey(attr.getKey()).toString();
-				str = str.replace("锟�", "");
+				str = str.replace("￥", "");
 				str = str.replace(",", "");
 				if (StringHelper.isNullOrEmpty(str)) {
 					ps.Add(attr.getKey(), 0);
@@ -1987,13 +1989,13 @@ public class SqlBuilder {
 					ps.Add(attr.getKey(), new java.math.BigDecimal(str));
 				}
 				break;
-			case DataType.AppDate: // 濡傛灉鏄棩鏈熺被鍨嬨��
+			case DataType.AppDate: // 如果是日期类型。
 			case DataType.AppDateTime:
 				String da = en.GetValStringByKey(attr.getKey());
 				ps.Add(attr.getKey(), da);
 				break;
 			default:
-				throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
 		}
 
@@ -2016,7 +2018,7 @@ public class SqlBuilder {
 					ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
 					break;
 				default:
-					throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷...");
+					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型...");
 				}
 			}
 		}
@@ -2059,8 +2061,8 @@ public class SqlBuilder {
 				ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
 				break;
 			case DataType.AppInt:
-				if (attr.getKey().equals("MyPK")) // 鐗规畩鍒ゆ柇瑙ｅ喅truck
-													// 鏄�64浣嶇殑int绫诲瀷鐨勬暟鍊奸棶棰�.
+				if (attr.getKey().equals("MyPK")) // 特殊判断解决truck
+													// 是64位的int类型的数值问题.
 				{
 					ps.Add(attr.getKey(), en.GetValInt64ByKey(attr.getKey()));
 				} else {
@@ -2080,7 +2082,7 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 			case DataType.AppMoney:
 				String str = en.GetValStrByKey(attr.getKey()).toString();
-				str = str.replace("锟�", "");
+				str = str.replace("￥", "");
 				str = str.replace(",", "");
 				if (StringHelper.isNullOrEmpty(str)) {
 					if (IsEnableNull) {
@@ -2093,13 +2095,13 @@ public class SqlBuilder {
 					ps.Add(attr.getKey(), new BigDecimal(str));
 				}
 				break;
-			case DataType.AppDate: // 濡傛灉鏄棩鏈熺被鍨嬨��
+			case DataType.AppDate: // 如果是日期类型。
 			case DataType.AppDateTime:
 				String da = en.GetValStringByKey(attr.getKey());
 				ps.Add(attr.getKey(), da);
 				break;
 			default:
-				throw new RuntimeException("@SqlBulider.update, 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
 		}
 
@@ -2239,9 +2241,9 @@ public class SqlBuilder {
 	public static String Insert(Entity en) {
 		String key = "", field = "", val = "";
 		Attrs attrs = en.getEnMap().getAttrs();
-		if (attrs.size() == 0)
-			throw new RuntimeException("@瀹炰綋锛�" + en.toString() + " ,Attrs灞炴�ч泦鍚堜俊鎭涪澶憋紝瀵艰嚧鏃犳硶鐢熸垚SQL銆�");
-
+		if (attrs.size() == 0) 
+			throw new RuntimeException("@实体：" + en.toString() + " ,Attrs属性集合信息丢失，导致无法生成SQL。");
+		
 		for (Attr attr : attrs) {
 			if (attr.getMyFieldType() == FieldType.RefText)
 				continue;
@@ -2283,7 +2285,7 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 			case DataType.AppMoney:
 				String strNum = en.GetValStringByKey(key).toString();
-				strNum = strNum.replace("锟�", "");
+				strNum = strNum.replace("￥", "");
 				strNum = strNum.replace(",", "");
 				if (strNum.equals("")) {
 					strNum = "0";
@@ -2300,7 +2302,7 @@ public class SqlBuilder {
 				}
 				break;
 			default:
-				throw new RuntimeException("@bulider insert sql error: 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+				throw new RuntimeException("@bulider insert sql error: 没有这个数据类型");
 			}
 		}
 		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( "
@@ -2328,7 +2330,7 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 			case DataType.AppMoney:
 				String str = en.GetValStringByKey(key).toString();
-				str = str.replace("锟�", "");
+				str = str.replace("￥", "");
 				str = str.replace(",", "");
 				if (str.equals("")) {
 					str = "0";
@@ -2345,7 +2347,7 @@ public class SqlBuilder {
 				}
 				break;
 			default:
-				throw new RuntimeException("@bulider insert sql error: 娌℃湁杩欎釜鏁版嵁绫诲瀷");
+				throw new RuntimeException("@bulider insert sql error: 没有这个数据类型");
 			}
 		}
 		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( "

@@ -266,7 +266,9 @@ public class GEDtl extends EntityOID
 								((MapAttr) mattr).getDefVal());
 						s = ((MapAttr) mattr).getDefVal().toString();
 					}
-					
+					s = s.replace("￥","");
+					s = s.replace(",", "");
+							
 					if (((MapAttr) mattr).getDefValDecimal().equals(
 							Double.parseDouble((s))))
 					{

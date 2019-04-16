@@ -96,12 +96,7 @@ public class MapFrmFool extends EntityNoName
 	public final int getTableCol()
 	{
 		return 4;
-		/*int i = this.GetValIntByKey(MapDataAttr.TableCol);
-		if (i == 0 || i == 1)
-		{
-			return 4;
-		}
-		return i;*/
+
 	}
 	public final void setTableCol(int value)
 	{
@@ -720,7 +715,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoEvent()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
+		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 	/** 
 	 导出

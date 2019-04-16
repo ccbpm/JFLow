@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.Cookie;
+import javax.sound.sampled.Port;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -557,11 +558,18 @@ public class WebUser {
 
 	/**
 	 * 当前登录人员的父节点编号
+	 * @throws Exception 
 	 */
-	public static String getDeptParentNo() {
+	public static String getDeptParentNo() throws Exception {
 		String val = GetValFromCookie("DeptParentNo", null, false);
 		if (val == null) {
-			throw new RuntimeException("@err-001 DeptParentNo 登录信息丢失。");
+			
+			if (WebUser.getFK_Dept()==null)			
+			throw new RuntimeException("@err-001 DeptParentNo, FK_Dept 登录信息丢失。");
+			
+			   BP.Port.Dept dept = new BP.Port.Dept( WebUser.getFK_Dept());
+               BP.Web.WebUser.setDeptParentNo(  dept.getParentNo());
+               return val;
 		}
 		return val;
 	}

@@ -4815,6 +4815,76 @@ public class Dev2Interface {
 		return Flow_DoUnSend( flowNo,workID, unSendToNode,0);
 	}
 	
+	 public static String Flow_ReSend(long workid, int toNodeID, String toEmpIDs, String note) throws Exception
+     {
+		 GenerWorkFlow gwf = new GenerWorkFlow(workid);
+		 if (gwf.getWFState() == WFState.Complete)
+		 {
+			 return "err@该流程已经运行完成您不能执行调整,可以执行回滚.";
+		 }
+
+		 Node nd = new Node(toNodeID);
+
+		 Emps emps = new Emps();
+
+		 String[] strs = toEmpIDs.split("[,]", -1);
+
+		 String todoEmps = "";
+//C# TO JAVA CONVERTER TODO TASK: The following line could not be converted:
+		 for (String empID : strs)
+		 {
+			 if (DataType.IsNullOrEmpty(empID) == true)
+			 	 continue;
+			 
+			 BP.Port.Emp emp = new Emp(empID);
+			 todoEmps += emp.getNo() + "," + emp.getName();
+
+			 emps.AddEntity(emp);
+		 }
+
+
+		 gwf.setTodoEmps( todoEmps);
+		 gwf.setHuiQianTaskSta(HuiQianTaskSta.None);
+		 gwf.setWFState(WFState.Runing);
+
+		 //给当前人员产生待办.
+		 GenerWorkerList gwl = new GenerWorkerList();
+		 int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.IsPass, 0);
+		 if (i == 0)
+		 {
+			 return "err@没有找到当前的待办人员.";
+		 }
+
+		 //删除当前节点人员信息.
+		 gwl.Delete(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
+
+		 for (Emp item : emps.ToJavaList())
+		 {
+			 //插入一条信息，让调整的人员显示待办.
+			 gwl.setFK_Emp(item.getNo());
+			 gwl.setFK_EmpText(item.getName());
+			 gwl.setFK_Node( toNodeID);
+			 gwl.setIsPassInt( 0);
+			 gwl.setIsRead( false);
+			 gwl.setWhoExeIt( 0);
+			 try
+			 {
+				 gwl.Insert();
+			 }
+			 catch (java.lang.Exception e)
+			 {
+				 gwl.Update();
+			 }
+		 }
+
+		 //更新当前节点状态.
+		 gwf.setFK_Node( toNodeID);
+		 gwf.setNodeName(nd.getName());
+		 gwf.Update();
+
+		 return "调整成功,调整到:" + gwf.getNodeName() + " , 调整给:" +todoEmps;
+     }
+	
 	public static String Flow_DoUnSend(String flowNo, long workID, int unSendToNode,long fid) throws Exception {
 		// 转化成编号.
 		flowNo = TurnFlowMarkToFlowNo(flowNo);

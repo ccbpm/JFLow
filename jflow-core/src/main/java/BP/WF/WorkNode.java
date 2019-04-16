@@ -4989,6 +4989,12 @@ public class WorkNode {
 			if (this.getHisNode().getIsEndNode() == false)
 				this.CheckCompleteCondition();
 
+	         //调用发送成功事件.
+            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
+            
 			// 执行时效考核.
 			if (this.rptGe == null)
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
@@ -5464,8 +5470,10 @@ public class WorkNode {
 		// 第1.2: 调用发起前的事件接口,处理用户定义的业务逻辑.
 		Work wk = this.getHisWork();
 		wk.setOID(this.getWorkID());
+		
+		 
 
-		String sendWhen = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, this.getHisNode(), wk, null);
+		String sendWhen = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, this.getHisNode(), wk, null, jumpToNode,jumpToEmp);
 
 		// 返回格式. @Info=xxxx@ToNodeID=xxxx@ToEmps=xxxx
 		if (sendWhen != null && sendWhen.indexOf("@") >= 0) {
@@ -5714,6 +5722,12 @@ public class WorkNode {
 		// 如果是队列节点, 就判断当前的队列人员是否走完。
 		if (this.getTodolistModel() == TodolistModel.Order) {
 			if (this.DealOradeNode() == true) {
+				
+				  //调用发送成功事件.
+	            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+	                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+	            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+	            
 				// 执行时效考核.
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 						this.rptGe.getTitle(), null);
@@ -5749,6 +5763,12 @@ public class WorkNode {
 
                     this.getHisGenerWorkFlow().Update();
                 }
+                
+                //调用发送成功事件.
+                String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+                    this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+                this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+                
 				// 执行时效考核.
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 						this.rptGe.getTitle(), null);
@@ -5783,6 +5803,12 @@ public class WorkNode {
 
 			/* 如果是协作组长模式. */
 			if (this.DealTeamupGroupLeader() == true) {
+				
+				  //调用发送成功事件.
+	            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+	                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+	            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+				
 				// 执行时效考核.
 				return this.HisMsgObjs;
 			}
@@ -5822,6 +5848,11 @@ public class WorkNode {
 								|| this.JumpToNode.getTodolistModel() == TodolistModel.Teamup) {
 							// 如果是多人处理节点.
 							this.DealReturnOrderTeamup();
+							
+							  //调用发送成功事件.
+				            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+				                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+				            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
 
 							// 执行时效考核.
 							Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
@@ -5837,6 +5868,11 @@ public class WorkNode {
 								|| this.getHisGenerWorkFlow().getTodolistModel() == TodolistModel.Teamup) {
 							// 如果是多人处理节点.
 							this.DealReturnOrderTeamup();
+							
+							  //调用发送成功事件.
+				            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+				                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+				            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
 
 							// 执行时效考核.
 							Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
@@ -5898,20 +5934,19 @@ public class WorkNode {
 			if (this.getIsStopFlow() == true) {
 				// 在检查完后，反馈来的标志流程已经停止了。
 				// liuxc,2016-10=24,最后节点更新Sender字段
-				this.Func_DoSetThisWorkOver();
-				this.rptGe.setWFState(WFState.Complete);
-				this.rptGe.Update();
-				this.getHisGenerWorkFlow().Update(); // added by
-														// liuxc,2016-10=24,最后节点更新Sender字段
+				
+			 
+				  //调用发送成功事件.
+                String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+                    this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+                this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+                
 				/**
 				 * 执行考核
 				 */
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
 						this.getHisGenerWorkFlow().getTitle(), null);
-
-				// 执行发送.
-				String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
-						this.rptGe, null, this.HisMsgObjs);
+ 
 
 				return HisMsgObjs;
 			}
@@ -6307,6 +6342,7 @@ public class WorkNode {
 					}
 				}
 			}
+			
 			// 执行时效考核.
 			Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 					this.rptGe.getTitle(), null);

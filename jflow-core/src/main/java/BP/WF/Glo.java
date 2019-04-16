@@ -1600,7 +1600,6 @@ public class Glo {
 
 	/** 
 	 
-	 
 	*/
 	public static boolean getIsShowFlowNum() {
 		if (SystemConfig.getAppSettings().get("IsShowFlowNum").toString().equals("1")) {
@@ -4593,8 +4592,12 @@ public class Glo {
 				/* 继承模式 */
 				BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 				
-                qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, "("+pWorkID + "," + pkval+")");
- 
+				   if (pWorkID.equals(pkval) == true)
+                       qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
+                   else
+                       qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, "('" + pWorkID + "','" + pkval + "')");
+				   
+				
 				qo.addOrderBy("RDT");
 				qo.DoQuery();
 			}
@@ -4611,7 +4614,7 @@ public class Glo {
 			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 			qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
 			qo.addAnd();
-			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, Integer.parseInt(pkval));
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal,  pkval);
 
 			// qo.addAnd();
 			// qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment,
@@ -4630,7 +4633,7 @@ public class Glo {
 			qo.addLeftBracket();
 			qo.AddWhere(FrmAttachmentDBAttr.FID, Integer.parseInt(pkval));
 			qo.addOr();
-			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, Integer.parseInt(pkval));
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
 			qo.addRightBracket();
 
 			qo.addOrderBy("RDT");

@@ -474,12 +474,13 @@ public class PushMsg extends EntityMyPK
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public string DoSendMessage(Node currNode, Entity en, string atPara, SendReturnObjs objs, Node jumpToNode = null, string jumpToEmps = null)
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, 
+			Node jumpToNode, String jumpToEmps) throws Exception
 	{
 		if(!StringHelper.isNullOrEmpty(generAlertMessage))
 		{
 			generAlertMessage="";
-		}
+		}		
 		if (en == null)
 		{
 			return "";

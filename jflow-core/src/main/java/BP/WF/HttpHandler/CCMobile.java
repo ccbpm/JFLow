@@ -386,7 +386,7 @@ public class CCMobile extends WebContralBase
 	            qo.AddWhere(GenerWorkFlowAttr.WFState, " > ", 1);
 
 	            qo.addOrderByDesc("RDT");
-				qo.setTop(50);
+				qo.setTop(500);
 
 
 				DataTable mydt = null;

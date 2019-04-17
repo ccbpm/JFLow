@@ -219,8 +219,12 @@ public class WorkReturn
 	{
 		//退回前事件
 		String atPara = "@ToNode=" + this.ReturnToNode.getNodeID();
+		
+        //如果事件返回的信息不是null，就终止执行。
 		String msg = this.HisNode.getHisFlow().DoFlowEventEntity(EventListOfNode.ReturnBefore, this.HisNode, this.HisWork, atPara);
-
+		 if (msg != null)
+             return msg; 
+		 
 		if (!this.HisNode.getFocusField().equals(""))
 		{
 			try
@@ -895,7 +899,11 @@ public class WorkReturn
 
 		//退回前事件
 		String atPara = "@ToNode=" + this.ReturnToNode.getNodeID();
+		
+	   //如果事件返回的信息不是null，就终止执行。
 		String msg = this.HisNode.getHisFlow().DoFlowEventEntity(EventListOfNode.ReturnBefore, this.HisNode, rpt, atPara);
+		if (msg != null)
+              return msg; 
 
 		if (!this.HisNode.getFocusField().equals(""))
 		{

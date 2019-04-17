@@ -117,6 +117,12 @@ public class AttrOfSearch
 						WebUser.getFK_Dept());
 			}
 			
+			if (_DefaultVal.contains("@WebUser.DeptParentNo"))
+			{
+				return _DefaultVal.replace("@WebUser.DeptParentNo",
+						WebUser.getDeptParentNo());
+			}
+			
 			if (_DefaultVal.contains("@WebUser.FK_DeptName"))
 			{
 				return _DefaultVal.replace("@WebUser.FK_DeptName",

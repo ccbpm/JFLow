@@ -117,7 +117,7 @@ public class MapAttrString extends EntityMyPK {
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 500, 20, true);
 
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrString",
-				"@1=跨1个单元格@3=跨3个单元格@4=跨4个单元格");
+				"@0=跨0个单元格@1=跨1个单元格@3=跨3个单元格@4=跨4个单元格");
 
 		 //文本占单元格数量
         map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString",

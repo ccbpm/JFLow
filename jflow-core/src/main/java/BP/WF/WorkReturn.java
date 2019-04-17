@@ -80,6 +80,19 @@ public class WorkReturn
 	public WorkReturn(String fk_flow, long workID, long fid, int currNodeID, int ReturnToNodeID, String reutrnToEmp, boolean isBackTrack, String returnInfo) throws Exception
 	{
 		this.HisNode = new Node(currNodeID);
+		//如果退回的节点为0,就求出可以退回的唯一节点.
+        if (ReturnToNodeID == 0)
+        {
+            DataTable dt = BP.WF.Dev2Interface.DB_GenerWillReturnNodes(currNodeID, workID, fid);
+            if (dt.Rows.size()==0)
+                throw new Exception("err@当前节点不允许退回，系统根据退回规则没有找到可以退回的到的节点。");
+
+            if (dt.Rows.size()!=1)
+                throw new Exception("err@当前节点可以退回的节点有["+dt.Rows.size()+"]个，您需要指定要退回的节点才能退回。");
+
+            ReturnToNodeID = Integer.parseInt( dt.Rows.get(0).getValue(0).toString());
+        }
+		
 		this.ReturnToNode = new Node(ReturnToNodeID);
 		this.WorkID = workID;
 		this.FID = fid;

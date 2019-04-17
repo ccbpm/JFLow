@@ -350,14 +350,25 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             if (isShowTdLeft == true) {
                 recordRowLeft = rowSpan;
                 haveDropRowLeft = 0;
-                if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
-                    html += "<td class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
-                } else if (attr.UIContralType == "10") {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
-                } else {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
+
+                if (attr.ColSpan == 0 && attr.TextColSpan == 1) {
+                    html += "<td class='LabelFDesc' style='width:15%;' ColSpan=1 rowSpan=" + rowSpan + ">" + lab + "</td>"; 
                 }
+                if (attr.ColSpan == 1 && attr.TextColSpan == 1 || attr.ColSpan == 2 && attr.TextColSpan == 1) {
+                    if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
+                        html += "<td class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
+                        html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;'ColSpan="+attr.ColSpan+" rowSpan=" + rowSpan + ">";
+                    } else if (attr.UIContralType == "10") {
+                        var colSpan = attr.ColSpan + attr.TextColSpan;
+                        html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan="+colSpan+" rowSpan=" + rowSpan + ">" + lab + "</td>";
+                    } else {
+                        var colSpan = attr.ColSpan + attr.TextColSpan;
+                        html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' CColSpan=" + colSpan + "  rowSpan=" + rowSpan + " >";
+                    }
+                }
+
+
+
                 if (attr.UIContralType != "10") {
                     html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
                     html += "</td>";
@@ -387,13 +398,21 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             if (isShowTdRight == true) {
                 recordRowRight = rowSpan;
                 haveDropRowRight = 0;
-                if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
+
+                if (attr.ColSpan == 0 && attr.TextColSpan == 1) {
                     html += "<td class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' rowSpan=" + rowSpan + ">";
-                } else if (attr.UIContralType == "10") {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + ">" + lab + "</td>";
-                } else {
-                    html += "<td id='Td_" + attr.KeyOfEn + "' class=FDesc tdSpan' ColSpan=2 rowSpan=" + rowSpan + " >";
+                }
+                if (attr.ColSpan == 1 && attr.TextColSpan == 1 || attr.ColSpan == 2 && attr.TextColSpan == 1) {
+                    if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
+                        html += "<td class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
+                        html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc'  style='width:35%;' ColSpan=" + attr.ColSpan + "  rowSpan=" + rowSpan + ">";
+                    } else if (attr.UIContralType == "10") {
+                        var colSpan = attr.ColSpan + attr.TextColSpan;
+                        html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' ColSpan=" + colSpan + " rowSpan=" + rowSpan + ">" + lab + "</td>";
+                    } else {
+                        var colSpan = attr.ColSpan + attr.TextColSpan;
+                        html += "<td id='Td_" + attr.KeyOfEn + "' class=FDesc tdSpan' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " >";
+                    }
                 }
                 isDropTR = !isDropTR;
                 if (attr.UIContralType != "10") {

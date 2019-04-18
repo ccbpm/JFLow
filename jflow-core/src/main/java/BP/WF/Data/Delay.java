@@ -423,7 +423,7 @@ import BP.WF.WFState;
 
 		public final String DoOpenTrack()
 		{
-			return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
+			return "../WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
 		}
 
 	}

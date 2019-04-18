@@ -308,7 +308,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
 
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=2   rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else if (attr.MyDataType != 4 ||  attr.UIContralType != "9")
+            else if (attr.MyDataType == 4 ||  attr.UIContralType == "9")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
             if (attr.UIContralType != "10") {
                 html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
@@ -333,7 +333,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
 
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=1  rowSpan=" + rowSpan + " style='text-align:left;'>";
-            else if (attr.MyDataType != 4 || attr.UIContralType != "9")
+            else if (attr.MyDataType == 4 || attr.UIContralType == "9")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=4  rowSpan=" + rowSpan + " class='tdSpan'>";
 
             if (attr.UIContralType != "10") {

@@ -278,7 +278,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
             else if (attr.UIContralType == "10")
-                html += "<td  class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
+                html += "<td  id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
 
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=3  rowSpan=" + rowSpan + " style='text-align:left;'>";
@@ -304,7 +304,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='LabelFDesc' style='width:15%;' ColSpan=2  rowSpan=" + rowSpan + ">" + lab + "</td>";
             else if (attr.UIContralType == "10")
-                html += "<td  class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
+                html += "<td  id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
 
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=2   rowSpan=" + rowSpan + " style='text-align:left;'>";
@@ -329,7 +329,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='LabelFDesc' style='width:15%;' ColSpan=3  rowSpan=" + rowSpan + ">" + lab + "</td>";
             else if (attr.UIContralType == "10")
-                html += "<td  class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
+                html += "<td  id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + " ColSpan=4 class='tdSpan'>" + lab + "</td>";
 
             if (attr.MyDataType != 4 && attr.UIContralType != "9" && attr.UIContralType != "10")
                 html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "' ColSpan=1  rowSpan=" + rowSpan + " style='text-align:left;'>";
@@ -352,7 +352,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
                 haveDropRowLeft = 0;
 
                 if (attr.ColSpan == 0 && attr.TextColSpan == 1) {
-                    html += "<td class='LabelFDesc' style='width:15%;' ColSpan=1 rowSpan=" + rowSpan + ">" + lab + "</td>"; 
+                    html += "<td id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:15%;' ColSpan=1 rowSpan=" + rowSpan + ">" + lab + "</td>"; 
                 }
                 if (attr.ColSpan == 1 && attr.TextColSpan == 1 || attr.ColSpan == 2 && attr.TextColSpan == 1) {
                     if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {
@@ -402,7 +402,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
                 haveDropRowRight = 0;
 
                 if (attr.ColSpan == 0 && attr.TextColSpan == 1) {
-                    html += "<td class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
+                    html += "<td  id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:15%;' rowSpan=" + rowSpan + ">" + lab + "</td>";
                 }
                 if (attr.ColSpan == 1 && attr.TextColSpan == 1 || attr.ColSpan == 2 && attr.TextColSpan == 1) {
                     if (attr.UIContralType != "9" && attr.MyDataType != 4 && attr.UIContralType != "10") {

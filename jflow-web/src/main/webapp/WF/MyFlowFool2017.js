@@ -365,14 +365,16 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
                         var colSpan = attr.ColSpan + attr.TextColSpan;
                         html += "<td id='Td_" + attr.KeyOfEn + "' class='FDesc tdSpan' CColSpan=" + colSpan + "  rowSpan=" + rowSpan + " >";
                     }
+
+
+                    if (attr.UIContralType != "10") {
+                        html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
+                        html += "</td>";
+                    }
                 }
 
 
 
-                if (attr.UIContralType != "10") {
-                    html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-                    html += "</td>";
-                }
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdLeft = false;
             }
@@ -413,12 +415,14 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
                         var colSpan = attr.ColSpan + attr.TextColSpan;
                         html += "<td id='Td_" + attr.KeyOfEn + "' class=FDesc tdSpan' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " >";
                     }
+
+                    if (attr.UIContralType != "10") {
+                        html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
+                        html += "</td>";
+                    }
                 }
                 isDropTR = !isDropTR;
-                if (attr.UIContralType != "10") {
-                    html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
-                    html += "</td>";
-                }
+               
                 if (rowSpan == 2 || rowSpan == 3)
                     isShowTdRight = false;
             }

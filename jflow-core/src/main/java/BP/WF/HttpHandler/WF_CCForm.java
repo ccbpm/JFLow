@@ -2094,8 +2094,6 @@ public class WF_CCForm extends WebContralBase {
 		FrmEvents fes = new FrmEvents(this.getEnsName()); // 获得事件.
 		GEEntity mainEn = null;
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 从表保存前处理事件.
 		if (fes.size() > 0) {
 			mainEn = mdtl.GenerGEMainEntity(this.getRefPKVal());
 			String msg = fes.DoEventNode(EventListDtlList.DtlSaveBefore, mainEn);
@@ -2103,14 +2101,7 @@ public class WF_CCForm extends WebContralBase {
 				return "err@" + msg;
 
 		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 从表保存前处理事件.
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 保存的业务逻辑.
-
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 保存的业务逻辑.
 
 		return "保存成功";
 	}
@@ -3209,18 +3200,14 @@ public class WF_CCForm extends WebContralBase {
 	public String DtlImpByExcel_Imp() {
 		String tempPath = SystemConfig.getPathOfTemp();
 		try {
-			MapDtl dtl = new MapDtl("this.getFK_MapDtl()");
+			MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 			HttpServletRequest request = getRequest();
-//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("file");
-//			if (multipartFile.getSize() == 0) {
-//				return "err@请选择要上传的从表模板.";
-//			}
-			if(CommonFileUtils.getFilesSize(request, "file") == 0){
+
+			if(CommonFileUtils.getFilesSize(request, "File_Upload") == 0){
 				return "err@请选择要上传的从表模板.";
 			}
 			// 获取文件名,并取其后缀.
-//			String fileName = multipartFile.getOriginalFilename();
-			String fileName = CommonFileUtils.getOriginalFilename(request, "file");
+			String fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
 			String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
 			if (!prefix.equals("xls") && !prefix.equals("xlsx")) {
 
@@ -3233,7 +3220,6 @@ public class WF_CCForm extends WebContralBase {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			// String file = tempPath + "/" + userNo + prefix;
 
 			// 判断路径是否存在
 			tempPath = tempPath.replace("\\", "/");
@@ -3243,17 +3229,9 @@ public class WF_CCForm extends WebContralBase {
 			}
 			// 执行保存附件
 			File file = new File(tempPath + "/" + userNo + prefix);
-//			try {
-//				multipartFile.transferTo(file);
-//			} catch (IllegalStateException e) {
-//				e.printStackTrace();
-//				return "err@文件上传失败.";
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				return "err@文件上传失败.";
-//			}
+
 			try{
-				CommonFileUtils.upload(request, "file", file);
+				CommonFileUtils.upload(request, "File_Upload", file);
 			}catch(Exception e){
 				e.printStackTrace();
 				return "err@文件上传失败.";	
@@ -3268,13 +3246,13 @@ public class WF_CCForm extends WebContralBase {
 			boolean isHave = false;
 			for (DataColumn dc : dt.Columns) {
 				for (Attr attr : attrs) {
-					if (dc.ColumnName == attr.getDesc()) {
+					if (dc.ColumnName.equals(attr.getDesc())) {
 						isHave = true;
 						attrsExp.Add(attr);
 						continue;
 					}
 
-					if (dc.ColumnName.toLowerCase() == attr.getKey().toLowerCase()) {
+					if (dc.ColumnName.toLowerCase().equals(attr.getKey().toLowerCase())) {
 						isHave = true;
 						attrsExp.Add(attr);
 						dc.ColumnName = attr.getDesc();

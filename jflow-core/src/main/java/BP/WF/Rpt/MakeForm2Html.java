@@ -426,13 +426,15 @@ public class MakeForm2Html
             switch (attr.getLGType())
             {
                 case Normal:  // 输出普通类型字段.
-                   text = en.GetValStrByKey(attr.getKeyOfEn());
+                   
                    if(attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString){
                 	   if(attrs.Contains(attr.getKeyOfEn()+"Text") ==true)
                    			text = en.GetValRefTextByKey(attr.getKeyOfEn());
                    		if(DataType.IsNullOrEmpty(text))
                    			if(attrs.Contains(attr.getKeyOfEn()+"T") ==true)
                    				text = en.GetValStrByKey(attr.getKeyOfEn()+"T");	
+                   }else{
+                	   text = en.GetValStrByKey(attr.getKeyOfEn());
                    }
                     break;
                 case Enum:

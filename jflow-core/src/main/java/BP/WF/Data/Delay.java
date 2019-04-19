@@ -1,27 +1,18 @@
 package BP.WF.Data;
 
-import java.io.IOException;
-
-import org.apache.commons.net.ftp.parser.ParserInitializationException;
-
-import BP.DA.Depositary;
 import BP.En.EntityMyPK;
 import BP.En.Map;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
-import BP.Port.Emps;
-import BP.Sys.PubClass;
 import BP.WF.Flows;
-import BP.WF.Node;
-import BP.WF.WFState;
+
   /** 
 	 逾期流程
 	  
   */
 	public class Delay extends EntityMyPK
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
 		/** 
 		 workid
@@ -314,11 +305,7 @@ import BP.WF.WFState;
 		{
 			this.SetValByKey(DelayAttr.Sender, value);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
 		/** 
 		 UI界面上的访问控制
 		 
@@ -350,11 +337,7 @@ import BP.WF.WFState;
 		{
 			super(pk);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region Map
 		/** 
 		 EnMap
 		 
@@ -394,7 +377,6 @@ import BP.WF.WFState;
 			map.AddTBInt(DelayAttr.FID, 0, "FID", false, false);
 			map.AddTBInt(DelayAttr.FK_FlowSort, 0, "流程类别", false, true);
 			map.AddTBString(DelayAttr.SysType, null, "SysType", false, true, 0, 50, 5);
-			   // map.AddTBString(DelayAttr.SDTOfNode, null, "节点应完成日期", true, true, 0, 50, 70);
 			map.AddTBString(DelayAttr.PressTimes, null, "催办次数", false, true, 0, 50, 5);
 			map.AddTBString(DelayAttr.BillNo, null, "单据号", true, true, 0, 50, 5);
 			map.AddTBString(DelayAttr.FlowNote, null, "FlowNote", false, true, 0, 50, 5);
@@ -418,8 +400,7 @@ import BP.WF.WFState;
 			return this.get_enMap();
 			
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+
 
 		public final String DoOpenTrack()
 		{

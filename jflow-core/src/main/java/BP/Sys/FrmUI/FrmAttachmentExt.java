@@ -1,12 +1,5 @@
-﻿package BP.Sys.FrmUI;
+package BP.Sys.FrmUI;
 
-import java.io.IOException; 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.SocketException;
-
-import org.apache.commons.net.ftp.FTPClient;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;

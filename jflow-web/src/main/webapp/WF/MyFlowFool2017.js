@@ -260,7 +260,10 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID) {
             }
             isDropTR = true;
             html += "<tr>";
-            html += "<td  id='Td_" + attr.KeyOfEn + "' ColSpan='4' rowSpan=" + rowSpan + " class='FDesc' style='text-align:left'>" + lab + "</br>";
+            html += "<td  ColSpan='4' rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + lab + "</br>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td  id='Td_" + attr.KeyOfEn + "' ColSpan='4' rowSpan=" + rowSpan + " class='FDesc' style='text-align:left'>";
             html += InitMapAttrOfCtrlFool(flowData, attr, enable, defval);
             html += "</td>";
             html += "</tr>";

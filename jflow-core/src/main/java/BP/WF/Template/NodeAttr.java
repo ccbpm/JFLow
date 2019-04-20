@@ -150,19 +150,7 @@ public class NodeAttr
 	 
 	*/
 	public static final String WorkloadDel = "Workload";
-	/** 
-	 公文左边词语
-	 
-	*/
-	public static final String DocLeftWord = "DocLeftWord";
-	/** 
-	 公文右边词语
-	 
-	*/
-	public static final String DocRightWord = "DocRightWord";
-
-		///#endregion
-
+	  
 
 		
 	/** 
@@ -295,11 +283,7 @@ public class NodeAttr
 	 
 	*/
 	public static final String SignType = "SignType";
-	/** 
-	 显示的表单
 	 
-	*/
-	public static final String ShowSheets = "ShowSheets";
 	/** 
 	 运行模式
 	 

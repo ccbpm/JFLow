@@ -1269,21 +1269,7 @@ public class Node extends Entity {
 	public final void setPTable(String value) {
 		SetValByKey(NodeAttr.PTable, value);
 	}
-
-	/**
-	 * 要显示在后面的表单
-	 */
-	public final String getShowSheets() {
-		String s = this.GetValStrByKey(NodeAttr.ShowSheets);
-		if (s.equals("")) {
-			return "@";
-		}
-		return s;
-	}
-
-	public final void setShowSheets(String value) {
-		SetValByKey(NodeAttr.ShowSheets, value);
-	}
+ 
 
 	/**
 	 * Doc
@@ -1343,30 +1329,7 @@ public class Node extends Entity {
 	public final void setHisBillIDs(String value) {
 		this.SetValByKey(NodeAttr.HisBillIDs, value);
 	}
-
-	/**
-	 * 公文左边词语
-	 * 
-	 */
-	public final String getDocLeftWord() {
-		return this.GetValStrByKey(NodeAttr.DocLeftWord);
-	}
-
-	public final void setDocLeftWord(String value) {
-		this.SetValByKey(NodeAttr.DocLeftWord, value);
-	}
-
-	/**
-	 * 公文右边词语
-	 * 
-	 */
-	public final String getDocRightWord() {
-		return this.GetValStrByKey(NodeAttr.DocRightWord);
-	}
-
-	public final void setDocRightWord(String value) {
-		this.SetValByKey(NodeAttr.DocRightWord, value);
-	}
+ 
 
 	/**
 	 * 退回信息.
@@ -1992,6 +1955,7 @@ public class Node extends Entity {
 	 * 
 	 */
 	public Node() {
+		
 	}
 
 	/**
@@ -2140,7 +2104,7 @@ public class Node extends Entity {
 		map.AddTBInt(NodeAttr.CancelDisWhenRead, 0, "撤销规则", true, true);
 
 		map.AddTBInt(NodeAttr.WhenNoWorker, 0, "未找到处理人时", true, true);
-		map.AddTBString(NodeAttr.DeliveryParas, null, "访问规则设置", true, false, 0, 600, 10);
+	 
 		map.AddTBString(NodeAttr.NodeFrmID, null, "节点表单ID", true, false, 0, 50, 10);
 
 		map.AddTBInt(NodeAttr.CCRole, 0, "抄送规则", true, true);
@@ -2197,13 +2161,13 @@ public class Node extends Entity {
 		// 表单相关.
 		map.AddTBInt(NodeAttr.FormType, 1, "表单类型", false, false);
 		map.AddTBString(NodeAttr.FormUrl, "http://", "表单URL", true, false, 0, 150, 10);
-		map.AddTBString(NodeAttr.DeliveryParas, null, "接受人SQL", true, false, 0, 300, 10, true);
+		map.AddTBString(NodeAttr.DeliveryParas, null, "接受人SQL", true, false, 0, 400, 10, true);
 		map.AddTBInt(NodeAttr.TurnToDeal, 0, "转向处理", false, false);
 		map.AddTBString(NodeAttr.TurnToDealDoc, null, "发送后提示信息", true, false, 0, 200, 10, true);
 		map.AddTBInt(NodeAttr.NodePosType, 0, "位置", false, false);
 		map.AddTBInt(NodeAttr.IsCCFlow, 0, "是否有流程完成条件", false, false);
-		map.AddTBString(NodeAttr.HisStas, null, "岗位", false, false, 0, 3000, 10);
-		map.AddTBString(NodeAttr.HisDeptStrs, null, "部门", false, false, 0, 3000, 10);
+		map.AddTBString(NodeAttr.HisStas, null, "岗位", false, false, 0, 300, 10);
+		map.AddTBString(NodeAttr.HisDeptStrs, null, "部门", false, false, 0, 300, 10);
 		map.AddTBString(NodeAttr.HisToNDs, null, "转到的节点", false, false, 0, 50, 10);
 		map.AddTBString(NodeAttr.HisBillIDs, null, "单据IDs", false, false, 0, 50, 10);
 		// map.AddTBString(NodeAttr.HisEmps, null, "HisEmps", false, false, 0,
@@ -2211,8 +2175,8 @@ public class Node extends Entity {
 		map.AddTBString(NodeAttr.HisSubFlows, null, "HisSubFlows", false, false, 0, 30, 10);
 		map.AddTBString(NodeAttr.PTable, null, "物理表", false, false, 0, 100, 10);
 
-		map.AddTBString(NodeAttr.ShowSheets, null, "显示的表单", false, false, 0, 100, 10);
-		map.AddTBString(NodeAttr.GroupStaNDs, null, "岗位分组节点", false, false, 0, 500, 10);
+		 
+		map.AddTBString(NodeAttr.GroupStaNDs, null, "岗位分组节点", false, false, 0, 100, 10);
 		map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
 		map.AddTBInt(NodeAttr.Y, 0, "Y坐标", false, false);
 

@@ -239,9 +239,7 @@ public class WorkReturn
 				{
 					focusField = focusFields[0];
 				}
-
-
-
+ 
 				// 把数据更新它。
 				this.HisWork.Update(focusField, "");
 			}

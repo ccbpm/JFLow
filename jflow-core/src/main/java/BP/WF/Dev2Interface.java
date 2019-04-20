@@ -7054,6 +7054,62 @@ public class Dev2Interface {
 		return Node_CreateStartNodeWork(flowNo, htWork, workDtls, flowStarter, title, 0, null, 0);
 	}
 
+	 /// <summary>
+    /// 增加待办人员
+    /// </summary>
+    /// <param name="workid">工作ID</param>
+    /// <param name="todoEmps">要增加的处理人员,多个人员用逗号分开.</param>
+    public static void Node_AddTodolist(long workid, String todoEmps) throws Exception
+    {
+        GenerWorkFlow gwf = new GenerWorkFlow(workid);
+        if (gwf.getWFState() == WFState.Complete)
+            throw new Exception("流程："+gwf.getTitle()+"已经完成,您不能增加接受人.");
+
+      //  #region 增加待办人员.
+
+        GenerWorkerList  gwl = new GenerWorkerList();
+        gwl.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
+
+       // String[] emps = todoEmps.split(, ','); //分开字符串.
+        
+        String[] emps = todoEmps.split("[;]", -1);
+        String tempStrs = ""; //临时变量，防止重复插入.
+        for (String emp : emps)
+        {
+            if (DataType.IsNullOrEmpty(emp) == true)
+                continue;
+            if (tempStrs.contains("," + emp+",") == true)
+                continue;
+
+            //插入待办.
+            gwl = new GenerWorkerList();
+            gwl.setWorkID(workid);
+            gwl.setFK_Node( gwf.getFK_Node());
+            gwl.setFK_Emp(emp);
+            int  i = gwl.RetrieveFromDBSources();
+            if (i==1)
+                continue;
+
+            Emp empEn = new Emp(emp);
+
+            gwl.setFK_EmpText(empEn.getName());
+            gwl.setFK_NodeText( gwf.getNodeName());
+            //gwl.FID = 0;
+            gwl.setFK_Flow(gwf.getFK_Flow());
+            gwl.setFK_Dept(empEn.getFK_Dept());
+            gwl.setFK_DeptT( empEn.getFK_DeptText());
+
+          //  gwl.SDT = "无";
+            //gwl.DTOfWarning = DataType.CurrentDataTime;
+            gwl.setIsEnable( true);
+            gwl.setIsPass( false);
+            //gwl.setPRI(gwf.PRI;
+            gwl.Insert();
+
+            tempStrs += "," + emp + ",";
+        }
+      //  #endregion 增加待办人员.
+    }
 	/**
 	 * 执行工作发送
 	 * 

@@ -407,7 +407,7 @@ public class WF_Comm extends WebContralBase {
             return "err@该实体["+this.getEnsName()+"]不是一个树形实体.";
         
         ens.RetrieveAll(EntityTreeAttr.Idx);
-        return ens.ToJsonOfTree("0");  
+        return BP.Tools.Json.ToJson(ens.ToDataTableField("TreeTable"));  
     }
     //#endregion 树的实体
     

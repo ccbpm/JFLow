@@ -310,8 +310,7 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID) {
                 src = "../../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.OID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=" + attr.FK_MapData + "&FK_FrmAttachment=" + mypk + url + "&M=" + Math.random();
             }
 
-
-            lab = "<label id='Lab_" + attr.KeyOfEn + "' for='DDL_" + attr.KeyOfEn + "'><div style='text-align:left'><a href='javaScript:void(0)' onclick='OpenAth(\"" + src + "\",\"" + attr.Name + "\",\"" + attr.KeyOfEn + "\",\"" + attr.AtPara + "\",\"" + attr.FK_MapData + "\")' style='text-align:left'>" + attr.Name + "<image src='../img/Tree/dir.gif'></image></a></div></label>";
+            lab = "<label id='Lab_" + attr.KeyOfEn + "' for='DDL_" + attr.KeyOfEn + "'><div style='text-align:left'><a href='javaScript:void(0)' onclick='OpenAth(\"" + src + "\",\"" + attr.Name + "\",\"" + attr.KeyOfEn + "\",\"" + attr.AtPara + "\",\"" + attr.FK_MapData + "\")' style='text-align:left'>" + attr.Name + "<image src='../Img/Tree/Dir.gif'></image></a></div></label>";
         }
 
         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {

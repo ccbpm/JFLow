@@ -945,5 +945,13 @@ public class Json
             strs = strs.replace("\t", "   ");
             return strs;
         }
+
+		public static DataSet ToDataSet(String json) {
+			
+			// TODO Auto-generated method stub
+			
+			
+			return null;
+		}
  
 }

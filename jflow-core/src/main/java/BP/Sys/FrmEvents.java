@@ -50,7 +50,7 @@ public class FrmEvents extends EntitiesOID
 	{
 		if (this.size() == 0)
 		{
-			return "";
+			return null;
 		}
 		String val = _DoEventNode(dotype, en, atPara);
 		if (val != null)

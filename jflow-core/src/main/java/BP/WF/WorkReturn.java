@@ -1076,7 +1076,8 @@ public class WorkReturn
 
 		//把退回原因加入特殊变量里. 为软通小杨处理rpt变量不能替换的问题.
 		String text = this.HisNode.getHisFlow().DoFlowEventEntity(EventListOfNode.ReturnAfter, this.HisNode, rpt, atPara, null, gwl.getFK_Emp());
-
+		if(text == null)
+			text = "";
 		if (text != null && text.length() > 1000)
 		{
 			text = "退回事件:无返回信息.";

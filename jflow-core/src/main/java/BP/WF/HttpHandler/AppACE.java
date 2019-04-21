@@ -282,9 +282,24 @@ public class AppACE extends WebContralBase{
 		emp.setNo(userNo);
 		if (emp.RetrieveFromDBSources() ==0)
 		{
-            if (DBAccess.IsExitsTableCol("Port_Emp", "Name") == true)
+			
+			if (DBAccess.IsExitsTableCol("Port_Emp", "NikeName") == true)
             {
                 /*如果包含昵称列,就检查昵称是否存在.*/
+                Paras ps = new Paras();
+                ps.SQL = "SELECT No FROM Port_Emp WHERE NikeName=" + SystemConfig.getAppCenterDBVarStr() + "NikeName";
+                ps.Add("NikeName", userNo);
+                String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
+                if (no == null)
+                    return "err@用户名或者密码错误.";
+                emp.setNo(no);
+                int i = emp.RetrieveFromDBSources();
+                if (i == 0)
+                    return "err@用户名或者密码错误.";
+            }
+			else if (DBAccess.IsExitsTableCol("Port_Emp", "Name") == true)
+            {
+                /*如果包含Name列,就检查Name是否存在.*/
                 Paras ps = new Paras();
                 ps.SQL = "SELECT No FROM Port_Emp WHERE Name=" + SystemConfig.getAppCenterDBVarStr() + "Name";
                 ps.Add("Name", userNo);

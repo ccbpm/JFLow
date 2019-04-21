@@ -1752,6 +1752,12 @@ public class CCFormAPI
 
 	public static DataSet GenerHisDataSet(String fk_mapdata, String frmName) throws Exception {
 		
+		
+		  DataSet dsFrm = BP.DA.CashFrmTemplate.GetFrmDataSetModel(fk_mapdata);
+          if (dsFrm != null)
+              return dsFrm;
+		
+		
 		DataSet ds = new DataSet();
 
 		//创建实体对象.
@@ -1832,6 +1838,8 @@ public class CCFormAPI
 		DataTable Sys_FrmImgAthDB = md.getFrmImgAthDBs().ToDataTableField("Sys_FrmImgAthDB");
 		ds.Tables.add(Sys_FrmImgAthDB);
 		
+		//放入缓存.
+		BP.DA.CashFrmTemplate.Put(fk_mapdata, ds);
 		return ds;
 	}
  

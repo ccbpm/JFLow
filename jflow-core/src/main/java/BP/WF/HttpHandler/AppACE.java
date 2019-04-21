@@ -7,11 +7,13 @@ import java.util.Hashtable;
 import org.apache.http.protocol.HttpContext;
 
 import BP.BPMN.Glo;
+import BP.DA.DBAccess;
 import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.Log;
+import BP.DA.Paras;
 import BP.En.QueryObject;
 import BP.Port.Emp;
 import BP.Sys.SysEnum;
@@ -279,7 +281,27 @@ public class AppACE extends WebContralBase{
 		BP.Port.Emp emp = new Emp();
 		emp.setNo(userNo);
 		if (emp.RetrieveFromDBSources() ==0)
-			return "err@用户名或者密码错误.";
+		{
+            if (DBAccess.IsExitsTableCol("Port_Emp", "Name") == true)
+            {
+                /*如果包含昵称列,就检查昵称是否存在.*/
+                Paras ps = new Paras();
+                ps.SQL = "SELECT No FROM Port_Emp WHERE Name=" + SystemConfig.getAppCenterDBVarStr() + "Name";
+                ps.Add("Name", userNo);
+                String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
+                if (no == null)
+                    return "err@用户名或者密码错误.";
+                emp.setNo(no);
+                int i = emp.RetrieveFromDBSources();
+                if (i == 0)
+                    return "err@用户名或者密码错误.";
+            }
+            else
+            {
+                return "err@用户名或者密码错误.";
+            }
+        }
+	
 	
 
 		if (emp.CheckPass(pass)==false)		

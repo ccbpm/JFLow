@@ -274,7 +274,8 @@ public class Emp extends EntityNoName
          map.getAttrsOfOneVSM().AddBranches(new DeptEmps(), new BP.GPM.Depts(),
             BP.GPM.DeptEmpAttr.FK_Emp,
             BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
-
+        
+        rm = new RefMethod();
 		rm.Title = "修改密码";
 		rm.ClassMethodName = this.toString() + ".DoResetpassword";
 		rm.getHisAttrs().AddTBString("pass1", null, "输入密码", true, false, 0, 100, 100);

@@ -285,6 +285,13 @@ public class MapAttrString extends EntityMyPK {
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
+		
+		rm = new RefMethod();
+        rm.Title = "扩展控件2019";
+        rm.ClassMethodName = this.toString() + ".DoEditFExtContral2019()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "高级设置";
+        map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批处理";
@@ -553,6 +560,17 @@ public class MapAttrString extends EntityMyPK {
 	 */
 	public final String DoEditFExtContral() {
 		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData="
+				+ this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
+
+	}
+	
+	/**
+	 * 扩展控件2019
+	 * 
+	 * @return
+	 */
+	public final String DoEditFExtContral2019() {
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/EditFExtContral/Default.htm?FK_MapData="
 				+ this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 
 	}

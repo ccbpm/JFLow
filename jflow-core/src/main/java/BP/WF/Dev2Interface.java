@@ -7072,7 +7072,7 @@ public class Dev2Interface {
 
        // String[] emps = todoEmps.split(, ','); //分开字符串.
         
-        String[] emps = todoEmps.split("[;]", -1);
+        String[] emps = todoEmps.split("[,]", -1);
         String tempStrs = ""; //临时变量，防止重复插入.
         for (String emp : emps)
         {
@@ -7104,7 +7104,7 @@ public class Dev2Interface {
             gwl.setIsEnable( true);
             gwl.setIsPass( false);
             //gwl.setPRI(gwf.PRI;
-            gwl.Insert();
+            gwl.Save();
 
             tempStrs += "," + emp + ",";
         }

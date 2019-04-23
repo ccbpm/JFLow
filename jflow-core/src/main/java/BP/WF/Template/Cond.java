@@ -577,7 +577,47 @@ public class Cond extends EntityMyPK
 
 			throw new RuntimeException("@您设置的sql返回值，不符合ccflow的要求，必须是0或大于等于1。");
 		}
+		
+		if (this.getHisDataFrom() == ConnDataFrom.SQLTemplate)
+        {
+            //按SQLTemplate 计算
+            String fk_sqlTemplate = this.getOperatorValueStr();
+            SQLTemplate sqltemplate = new SQLTemplate();
+            sqltemplate.setNo(fk_sqlTemplate);
+            if (sqltemplate.RetrieveFromDBSources() == 0)
+                throw new Exception("@配置的SQLTemplate编号为[" + sqltemplate + "]被删除了,判断条件丢失.");
 
+            String sql = sqltemplate.getDocs();
+            sql = sql.replace("~", "'");
+            sql = sql.replace("@WebUser.No", BP.Web.WebUser.getNo());
+            sql = sql.replace("@WebUser.Name", BP.Web.WebUser.getName());
+            sql = sql.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+
+            if (en.getIsOIDEntity() == true)
+            {
+                sql = sql.replace("@WorkID", en.GetValStrByKey("OID"));
+                sql = sql.replace("@OID", en.GetValStrByKey("OID"));
+            }
+            
+            if (sql.contains("@") == true)
+			{
+					// 如果包含 @ 
+				for (Attr attr : this.en.getEnMap().getAttrs())
+				{
+					sql = sql.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
+				}
+			}
+
+            int result = DBAccess.RunSQLReturnValInt(sql, -1);
+            if (result <= 0)
+                return false;
+
+            if (result >= 1)
+                return true;
+
+            throw new Exception("@您设置的sql返回值，不符合ccflow的要求，必须是0或大于等于1。");
+                    }
+		
 		if (this.getHisDataFrom() == ConnDataFrom.Url)
 		{
 			String url = this.getOperatorValueStr();
@@ -590,7 +630,7 @@ public class Cond extends EntityMyPK
 			url = BP.WF.Glo.DealExp(url, this.en, "");
 
 
-				///#region 加入必要的参数.
+			///#region 加入必要的参数.
 			if (url.contains("&FK_Flow") == false)
 			{
 				url += "&FK_Flow=" + this.getFK_Flow();

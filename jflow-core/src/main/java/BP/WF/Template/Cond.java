@@ -552,7 +552,7 @@ public class Cond extends EntityMyPK
 		{
 			String sql = this.getOperatorValueStr();
 			sql = sql.replace("~", "'");
-			sql = sql.replace("WebUser.No", BP.Web.WebUser.getNo());
+			sql = sql.replace("@WebUser.No", BP.Web.WebUser.getNo());
 			sql = sql.replace("@WebUser.Name", BP.Web.WebUser.getName());
 			sql = sql.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
 			if (sql.contains("@") == true)

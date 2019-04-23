@@ -5949,38 +5949,37 @@ public class WorkNode {
 				/**
 				 * 执行抄送
 				 */
-				// 执行抄送.
-				if (this.getHisNode().getIsEndNode() == false) {
-					// 执行自动抄送.
-					String ccMsg1 = WorkFlowBuessRole.DoCCAuto(this.getHisNode(), this.rptGe, this.getWorkID(),
-							this.getHisWork().getFID());
-					// 按照指定的字段抄送.
-					String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(this.getHisNode(), this.rptGe, this.getWorkID(),
-							this.getHisWork().getFID());
-					//手工抄送
-	                if (this.getHisNode().getHisCCRole() == CCRole.HandCC)
-	                {
-	                    //获取抄送人员列表
-	                    CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(),this.getWorkID(), this.getHisWork().getFID());
-	                    if (cclist.size() == 0)
-	                        ccMsg1 = "@没有选择抄送人。";
-	                    if (cclist.size() > 0)
-	                    {
-	                        ccMsg1 = "@消息自动抄送给";
-	                        for(CCList cc : cclist.ToJavaList())
-	                        {
-	                            ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
-	                        }
-	                    }
-	                }
-					String ccMsg = ccMsg1 + ccMsg2;
 
-					if (StringHelper.isNullOrEmpty(ccMsg) == false) {
-						this.addMsg("CC", "@自动抄送给:" + ccMsg);
-						this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(), this.getHisNode().getNodeID(),
-								this.getHisNode().getName(), ccMsg1 + ccMsg2, this.getHisNode());
-					}
+				// 执行自动抄送.
+				String ccMsg1 = WorkFlowBuessRole.DoCCAuto(this.getHisNode(), this.rptGe, this.getWorkID(),
+						this.getHisWork().getFID());
+				// 按照指定的字段抄送.
+				String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(this.getHisNode(), this.rptGe, this.getWorkID(),
+						this.getHisWork().getFID());
+				//手工抄送
+                if (this.getHisNode().getHisCCRole() == CCRole.HandCC)
+                {
+                    //获取抄送人员列表
+                    CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(),this.getWorkID(), this.getHisWork().getFID());
+                    if (cclist.size() == 0)
+                        ccMsg1 = "@没有选择抄送人。";
+                    if (cclist.size() > 0)
+                    {
+                        ccMsg1 = "@消息自动抄送给";
+                        for(CCList cc : cclist.ToJavaList())
+                        {
+                            ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
+                        }
+                    }
+                }
+				String ccMsg = ccMsg1 + ccMsg2;
+
+				if (StringHelper.isNullOrEmpty(ccMsg) == false) {
+					this.addMsg("CC", "@自动抄送给:" + ccMsg);
+					this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(), this.getHisNode().getNodeID(),
+							this.getHisNode().getName(), ccMsg1 + ccMsg2, this.getHisNode());
 				}
+			
 
 				return HisMsgObjs;
 			}

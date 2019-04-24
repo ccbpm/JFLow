@@ -234,6 +234,12 @@ public class BtnAttr extends BP.Sys.ToolbarExcelAttr
     /// 打印pdf
     /// </summary>
     public static final String PrintPDFEnable = "PrintPDFEnable";
+    
+   /// <summary>
+    /// 打印pdf
+    /// </summary>
+    public static final String PrintPDFModle = "PrintPDFModle";
+    
     /// <summary>
     /// 打包下载
     /// </summary>

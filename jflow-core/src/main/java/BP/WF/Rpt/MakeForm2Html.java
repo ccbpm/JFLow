@@ -1478,10 +1478,103 @@ public class MakeForm2Html
      		return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
     	}
     	
-    	return "info@不存在需要打印的表单";
+    	return "warning@不存在需要打印的表单";
     	
     }
     
+    /**
+     * 独立表单的打印
+     * @param frmId
+     * @param frmName
+     * @param node
+     * @param workid
+     * @param flowNo
+     * @param fileNameFormat
+     * @param urlIsHostUrl
+     * @param basePath
+     * @return
+     * @throws Exception
+     */
+    public static String MakeFormToPDF(String frmId,String frmName,Node node, long workid,String flowNo,String fileNameFormat,boolean urlIsHostUrl,String basePath) throws Exception{
+    	
+    	GenerWorkFlow gwf = null;
+    	//获取主干流程信息
+    	if(flowNo!=null)
+    		gwf = new GenerWorkFlow(workid);
+    	//存放信息地址
+    	String hostURL = SystemConfig.GetValByKey("HostURL","");
+		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid;
+    	//生成pdf文件
+        String pdfPath = path + "\\pdf";
+
+       
+        DataRow dr =  null ;
+		String resultMsg = setPDFPath("ND"+node.getNodeID(),workid,flowNo,gwf );
+		if(resultMsg.indexOf("err@")!=-1)
+			return resultMsg;
+		
+		 Hashtable ht = new Hashtable();
+		//获取绑定的表单
+		 FrmNode frmNode = new FrmNode();
+		 frmNode.Retrieve("FK_Frm",frmId);
+		
+			 //判断当前绑定的表单是否启用
+			 if(frmNode.getFrmEnableRoleInt() == FrmEnableRole.Disable.getValue())
+				return "warning@"+frmName+"没有被启用";
+
+			//处理正确的文件名.
+	         if (fileNameFormat == null)
+	         {
+	             if (flowNo != null)
+	                 fileNameFormat = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + workid, "" + String.valueOf(workid));
+	             else
+	                 fileNameFormat = String.valueOf(workid);
+	         }
+
+	         if (DataType.IsNullOrEmpty(fileNameFormat) == true)
+	             fileNameFormat = String.valueOf(workid);
+
+	         fileNameFormat = BP.DA.DataType.PraseStringToFileName(fileNameFormat);
+	         
+			 //判断 who is pk
+			 if(flowNo!=null && frmNode.getWhoIsPK() == WhoIsPK.PWorkID) //如果是父子流程
+				 workid = gwf.getPWorkID();
+			 //获取表单的信息执行打印
+			 String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\"+frmNode.getFK_Frm()+"index.htm";
+			 resultMsg= MakeHtmlDocument(frmNode.getFK_Frm(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,"ND"+node.getNodeID(),basePath);
+			
+			 if(resultMsg.indexOf("err@")!=-1)
+	    			return resultMsg;
+
+			 //ht.put("htm",SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "/InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/"+frmNode.getFK_Frm()+"index.htm");
+
+	         //#region 把所有的文件做成一个zip文件.
+	         if (new File(pdfPath).exists() == false)
+	        	 new File(pdfPath).mkdirs();
+
+	         fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
+	         String pdfFormFile = pdfPath + "\\" + frmNode.getFK_Frm() + ".pdf";     
+	         String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
+	       
+	         try
+	            {
+	                if(Html2Pdf(pdfFileExe, resultMsg, pdfFormFile)== true)
+		                if (urlIsHostUrl == false)
+		                	ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/pdf/"  + frmNode.getFK_Frm()+ ".pdf");
+		                else
+		                	ht.put("pdf", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/pdf/" + frmNode.getFK_Frm() + ".pdf");
+
+	            }catch (Exception ex){
+	                /*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
+	                fileNameFormat = DBAccess.GenerGUID();
+	                pdfFormFile = pdfPath + "\\" + fileNameFormat + ".pdf";
+	                
+	                Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
+	                ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","") + "/InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/pdf/"+ frmNode.getFK_Frm() + ".pdf");
+	            }
+	        
+	        return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);    
+    }
     
     //前期文件的准备
     private static String setPDFPath(String frmID,long workid,String flowNo,GenerWorkFlow gwf ) throws Exception{
@@ -1656,6 +1749,7 @@ public class MakeForm2Html
                     docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFree.htm");
                     sb = GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
                     docs = docs.replace("@Width", String.valueOf(mapData.getFrmW()+288)+"px");
+                    
                 }
             }
 
@@ -1729,6 +1823,7 @@ public class MakeForm2Html
        // cmd.append(" --footer-html file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("\\style\\pdf\\foter.html"));// (添加一个HTML页脚,后面是网址)
         cmd.append(" --footer-line");//* 显示一条线在页脚内容上)
         cmd.append(" --footer-spacing 5 ");// (设置页脚和内容的距离)
+
         cmd.append(htmFile);
         cmd.append(" ");
         cmd.append(pdf);     

@@ -32,10 +32,13 @@ import BP.Sys.FrmAttachments;
 import BP.Sys.FrmRB;
 import BP.Sys.FrmRBAttr;
 import BP.Sys.FrmRBs;
+import BP.Sys.FrmType;
 import BP.Sys.GEEntity;
 import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
+import BP.Sys.MapData;
+import BP.Sys.MapDatas;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
@@ -2174,7 +2177,35 @@ public class WF_WorkOpt extends WebContralBase {
 			}
 
 			Node nd = new Node(nodeID);
-			return MakeForm2Html.MakeCCFormToPDF(nd,this.getWorkID(), this.getFK_Flow(),null,false,this.GetRequestVal("BasePath"));
+			//树形表单方案单独打印
+			if((nd.getHisFormType() == NodeFormType.SheetTree && nd.getHisPrintPDFModle() == 1) == false)
+				return MakeForm2Html.MakeCCFormToPDF(nd,this.getWorkID(), this.getFK_Flow(),null,false,this.GetRequestVal("BasePath"));
+			else{
+				//获取该节点绑定的表单
+				// 所有表单集合.
+				MapDatas mds = new MapDatas();
+				mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node());
+				return "info@"+BP.Tools.Json.ToJson(mds.ToDataTableField());
+			}
+		} catch (RuntimeException ex) {
+			return "err@" + ex.getMessage();
+		}
+	}
+	
+	/**
+	 * 独立表单PDF打印
+	 * @return
+	 * @throws Exception 
+	 */
+	public String Packup_FromInit() throws Exception{
+		try {
+			int nodeID = this.getFK_Node();
+			if (this.getFK_Node() == 0) {
+				GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+				nodeID = gwf.getFK_Node();
+			}
+			Node nd = new Node(nodeID);
+			return MakeForm2Html.MakeFormToPDF(this.GetRequestVal("FrmID"),this.GetRequestVal("FrmName"),nd,this.getWorkID(), this.getFK_Flow(),null,false,this.GetRequestVal("BasePath"));
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}

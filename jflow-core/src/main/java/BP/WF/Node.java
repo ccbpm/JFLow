@@ -1211,6 +1211,17 @@ public class Node extends Entity {
 	}
 
 	/**
+	 * 打印方式
+	 */
+	public final int getHisPrintPDFModle() {
+		return this.GetValIntByKey(BtnAttr.PrintPDFModle);
+	}
+
+	public final void setHisPrintPDFModle(int value) {
+		this.SetValByKey(BtnAttr.PrintPDFModle, value);
+	}
+	
+	/**
 	 * 批处理规则
 	 * 
 	 */
@@ -2150,7 +2161,9 @@ public class Node extends Entity {
 		map.AddTBInt(NodeAttr.BatchListCount, 12, "批处理数量", true, true);
 		map.AddTBString(NodeAttr.BatchParas, null, "参数", true, false, 0, 500, 10);
 		map.AddTBInt(NodeAttr.PrintDocEnable, 0, "打印方式", true, true);
-
+		
+		//打印PDF的处理
+		map.AddTBInt(BtnAttr.PrintPDFModle, 0, "PDF打印规则", true, true);
 		// 与未来处理人有关系.
 		// map.AddTBInt(NodeAttr.IsFullSA, 1, "是否计算未来处理人?", false, false);
 		// map.AddTBInt(NodeAttr.IsFullSATime, 0, "是否计算未来接受与处理时间?", false,

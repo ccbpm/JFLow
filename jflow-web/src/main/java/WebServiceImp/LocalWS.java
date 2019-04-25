@@ -192,7 +192,7 @@ public class LocalWS implements LocalWSI{
 	 * @throws Exception 
 	 */
 	@Override
-	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception {
+	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, long workid, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		
 		Selector select = new Selector(toNodeID);

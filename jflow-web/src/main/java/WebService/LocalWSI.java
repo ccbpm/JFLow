@@ -103,7 +103,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception;
+	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, long workid, String userNo) throws Exception;
 	
 	/**
 	 * 将要达到的节点

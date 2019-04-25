@@ -272,17 +272,19 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 				continue;
 			}
 
+			if (item.MsgOfText == null || item.MsgOfText.equals("null")==true )
+				continue;
+			
 
-			if (item.MsgOfText != null)
-			{
+			 
 				if (item.MsgOfText.contains("<"))
 				{
 				  //  BP.DA.Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
 					continue;
 				}
 				msg += "@" + item.MsgOfText;
-				continue;
-			}
+				 
+			 
 
 		}
 		msg.replace("@@", "@");
@@ -312,12 +314,13 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 				msg += "@" + item.MsgOfHtml;
 				continue;
 			}
-
-			if (item.MsgOfText != null)
-			{
-				msg += "@" + item.MsgOfText;
+			
+			if (item.MsgOfText == null || item.MsgOfText.equals("null")==true )
 				continue;
-			}
+
+		 
+				msg += "@" + item.MsgOfText;
+				 
 		}
 		msg = msg.replace("@@", "@");
 		msg = msg.replace("@@", "@");

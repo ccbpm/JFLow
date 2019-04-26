@@ -3669,7 +3669,7 @@ public class Glo {
 	public static String OEM_Flag = "CCS";
 
 	public static String getFlowFileBill() {
-		return Glo.getIntallPath() + "DataUser/Bill/";
+		return BP.Sys.SystemConfig.getPathOfDataUser()  + "/Bill/";
 	}
 
 	private static String _IntallPath = null;

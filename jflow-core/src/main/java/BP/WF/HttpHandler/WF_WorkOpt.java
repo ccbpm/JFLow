@@ -2373,7 +2373,7 @@ public class WF_WorkOpt extends WebContralBase {
                 tempFile = tempFile + ".rtf";
 
             //用于扫描打印.
-            String qrUrl = SystemConfig.getAppSettings().get("HostURL").toString() + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.getMyPK();
+            String qrUrl = SystemConfig.getAppSettings().get("HostURL").toString() + "/WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.getMyPK();
             rtf.MakeDoc(tempFile,path, file, qrUrl,false);
             //#endregion
 

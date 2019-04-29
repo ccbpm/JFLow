@@ -115,7 +115,7 @@ public class MapAttrEnum extends EntityMyPK {
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 		map.AddBoolean("IsEnableJS", false, "是否启用JS高级设置？", false, true); // 参数字段.
 
-		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
 		 //文本占单元格数量
         map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString",

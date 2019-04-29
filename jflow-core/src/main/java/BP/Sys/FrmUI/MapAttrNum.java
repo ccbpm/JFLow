@@ -128,11 +128,11 @@ public class MapAttrNum extends EntityMyPK
 
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 4000, 20, true);
 
-		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@3=跨3个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@3=跨3个单元格@4=跨4个单元格");
 		
 		 //文本占单元格数量
         map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString",
-            "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+        		"@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
         //文本跨行
         map.AddDDLSysEnum(MapAttrAttr.RowSpan, 1, "行数", true, true, "RowSpanAttrString",

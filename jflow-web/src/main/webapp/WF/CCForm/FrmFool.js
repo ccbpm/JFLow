@@ -612,8 +612,9 @@ function InitMapAttrOfCtrl(mapAttr) {
             }
             data = JSON.parse(data);
             var dbs = data["DBAths"];
+            var athDesc = data["AthDesc"][0];
             if (dbs.length == 0) {
-                if (mapAttr.UIIsEnable == 1 || pageData.IsReadOnly == 0)
+                if (athDesc.IsUpload == 1 || pageData.IsReadOnly == 0)
                     return "<div style='text-align:left;padding-left:10px' id='athModel_" + mapAttr.KeyOfEn + "'><label>请点击[" + mapAttr.Name + "]执行上传</label></div>";
                 else
                     return "<div style='text-align:left;padding-left:10px' id='athModel_" + mapAttr.KeyOfEn + "' class='athModel'><label>附件(0)</label></div>";
@@ -1243,7 +1244,7 @@ function Ele_Dtl(frmDtl) {
         src = "DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + refPK + "&IsReadonly=" + isReadonly + "&FK_MapData=" + frmDtl.FK_MapData + "&" + urlParam + "&Version=1";
     }
 
-    return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='Dtl_" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
 }
 
 function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr) {

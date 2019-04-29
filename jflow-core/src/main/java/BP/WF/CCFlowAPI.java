@@ -131,12 +131,13 @@ public class CCFlowAPI {
                     {
                         for (MapAttr attr : mattrs.ToJavaList())
                         {
-                            if (attr.getKeyOfEn() != item.getKeyOfEn())
+                            if (attr.getKeyOfEn().equals(item.getKeyOfEn()) == false)
                                 continue;
 
                             if (item.getIsSigan())
                                 item.setUIIsEnable(false);
-
+                           
+                            attr.setUIIsInput(item.getIsNotNull());
                             attr.setUIIsEnable(item.getUIIsEnable());
                             attr.setUIVisible(item.getUIVisible());
                             attr.setIsSigan(item.getIsSigan());

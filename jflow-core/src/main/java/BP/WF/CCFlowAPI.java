@@ -327,7 +327,7 @@ public class CCFlowAPI {
                     //获取节点
                     String nodes ="";
                     for(DataRow dr : dt1.Rows)
-                        nodes+="'"+dr.get(0).toString()+"',";
+                        nodes+="'"+dr.getValue(0).toString()+"',";
 
                     nodes = nodes.substring(0,nodes.length()-1);
                     qo = new QueryObject(attrsLeiJia);

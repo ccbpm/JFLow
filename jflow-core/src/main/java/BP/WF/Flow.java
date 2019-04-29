@@ -4233,6 +4233,9 @@ public class Flow extends BP.En.EntityNoName {
 		if (!(doType.equals(EventListOfNode.WorkArrive) || doType.equals(EventListOfNode.SendSuccess)
 				|| doType.equals(EventListOfNode.ShitAfter) || doType.equals(EventListOfNode.ReturnAfter)
 				|| doType.equals(EventListOfNode.UndoneAfter) || doType.equals(EventListOfNode.AskerReAfter))) {
+			
+			if (str!=null && str.equals("null"))
+				str=null;
 			return str;
 		}
 
@@ -4254,7 +4257,12 @@ public class Flow extends BP.En.EntityNoName {
 				msgAlert += item.DoSendMessage(currNode, en, atPara, objs, jumpToNode, jumpToEmps);
 
 		}
-		return str + msgAlert;
+		
+		String mystr= str + msgAlert;
+		
+		if (mystr!=null && mystr.equals("null"))
+			mystr=null;
+		return mystr;
 	}
 
 	public final String DoFlowEventEntity(String doType, Node currNode, Entity en, String atPara, Node jumpToNode,

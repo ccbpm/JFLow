@@ -142,6 +142,10 @@ public class CCFlowAPI {
                             attr.setUIVisible(item.getUIVisible());
                             attr.setIsSigan(item.getIsSigan());
                             attr.setDefValReal(item.getDefVal());
+                            String myval = wk.GetValStringByKey(attr.getKeyOfEn()); 
+                            if(DataType.IsNullOrEmpty(item.getDefVal()) == false  && item.getDefVal().indexOf("@")!=0
+                            		&& DataType.IsNullOrEmpty(myval) == true)
+                            	wk.SetValByKey(attr.getKeyOfEn(),item.getDefVal());
                         }
                     }
                 }
@@ -654,6 +658,7 @@ public class CCFlowAPI {
 				
 
 			} else {
+				
 				DataTable mainTable = wk.ToDataTableField(md.getNo());
 				mainTable.TableName = "MainTable";
 				myds.Tables.add(mainTable);

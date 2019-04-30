@@ -142,10 +142,9 @@ public class CCFlowAPI {
                             attr.setUIVisible(item.getUIVisible());
                             attr.setIsSigan(item.getIsSigan());
                             attr.setDefValReal(item.getDefVal());
-                            String myval = wk.GetValStringByKey(attr.getKeyOfEn()); 
-                            if(DataType.IsNullOrEmpty(item.getDefVal()) == false  && item.getDefVal().indexOf("@")!=0
-                            		&& DataType.IsNullOrEmpty(myval) == true)
-                            	wk.SetValByKey(attr.getKeyOfEn(),item.getDefVal());
+                            String myval = wk.GetValStringByKey(attr.getKeyOfEn());
+                            if(DataType.IsNullOrEmpty(item.getDefVal()) == false && DataType.IsNullOrEmpty(myval) == true && item.getDefVal().indexOf("@")!=0)
+                            		wk.SetValByKey(attr.getKeyOfEn(),item.getDefVal());
                         }
                     }
                 }
@@ -634,7 +633,10 @@ public class CCFlowAPI {
 			}
 
 			// 需要放到这里，不然无法转换出去.
-			wk.ResetDefaultVal();
+			if( nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+				wk.ResetDefaultVal(md.getNo(),nd.getFK_Flow(),nd.getNodeID());
+			else
+				wk.ResetDefaultVal();
 
 			// 如果是累加表单，就把整个rpt数据都放入里面去.
 			if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false

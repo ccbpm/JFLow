@@ -50,6 +50,8 @@ public class MenuAttr extends EntityTreeAttr
 	 
 	*/
 	public static final String Flag = "Flag";
+	public static final String MenuCtrlWay = "MenuCtrlWay";
+	
 	/** 
 	 扩展1
 	 

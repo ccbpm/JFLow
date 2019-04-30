@@ -634,7 +634,7 @@ public class CCFlowAPI {
 
 			// 需要放到这里，不然无法转换出去.
 			if( nd.getHisFormType() == NodeFormType.RefOneFrmTree)
-				wk.ResetDefaultVal(md.getNo(),nd.getFK_Flow(),nd.getNodeID());
+				wk.ResetDefaultVal(md.getNo(),nd.getFK_Flow(),nd.getNodeID(),mattrs);
 			else
 				wk.ResetDefaultVal();
 

@@ -25,6 +25,7 @@ import BP.Sys.EnVer;
 import BP.Sys.EnVerDtl;
 import BP.Sys.GloVar;
 import BP.Sys.MapAttr;
+import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapDtl;
 import BP.Sys.SysDocFile;
@@ -3228,6 +3229,150 @@ public abstract class Entity implements Serializable {
 	public final void ResetDefaultVal()throws Exception{
 		ResetDefaultVal(this.toString(),null,0);
 	}
+	
+	public final void ResetDefaultVal(String fk_mapdata,String fk_flow,int fk_node,MapAttrs attrs) throws Exception{
+		for (MapAttr attr : attrs.ToJavaList()) {
+			if(attr.getLGType()== BP.En.FieldTypeS.FK) 
+				this.SetValRefTextByKey(attr.getKeyOfEn(), "");
+			
+			FrmField frmField = new FrmField();
+			
+			//获取默认值
+			String v = attr.getDefValReal();
+			
+			if (v== null ||( v != null && v.contains("@") == false))
+				continue;
+		  
+			// 含有特定值时取消重新设定默认值
+			String myval = this.GetValStringByKey(attr.getKeyOfEn()); 
+			
+			if(v.indexOf('@')!=0){
+				if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+					this.SetValByKey(attr.getKeyOfEn(), WebUser.getNo());
+				}
+			}
+
+			// 设置默认值.
+			if (v.equals("@WebUser.No")) {
+				if (attr.getUIIsEnable()) {
+					this.SetValByKey(attr.getKeyOfEn(), WebUser.getNo());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), WebUser.getNo());
+					}
+				}
+				continue;
+			}
+			if (v.equals("@WebUser.Name")) {
+				if (attr.getUIIsEnable()) {
+					this.SetValByKey(attr.getKeyOfEn(), WebUser.getName());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), WebUser.getName());
+					}
+				}
+				continue;
+			} 
+			if (v.equals("@WebUser.FK_Dept")) {
+				if (attr.getUIIsEnable()) {
+					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_Dept());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_Dept());
+					}
+				}
+				continue;
+			} 
+			if (v.equals("@WebUser.FK_DeptName")) {
+				if (attr.getUIIsEnable()) {
+					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptName());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptName());
+					}
+				}
+				continue;
+			} 
+			if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName")) {
+				if (attr.getUIIsEnable()) {
+					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
+					}
+				}
+				continue;
+			}
+			if (v.equals("@RDT")) {
+				if (attr.getUIIsEnable()) {
+					if (attr.getMyDataType() == DataType.AppDate || v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+					}
+
+					if (attr.getMyDataType() == DataType.AppDateTime || v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDataTime());
+					}
+				} else {
+					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+						if (attr.getMyDataType() == DataType.AppDate) {
+							this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+						} else {
+							this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDataTime());
+						}
+					}
+				}
+				continue;
+			}
+			if (v.equals("@FK_ND")){
+	             if (attr.getUIIsEnable() == true)
+	             {
+	                 this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentYear());
+	             }
+	             else
+	             {
+	                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+	                     this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentYear());
+	             }
+	             continue;
+			}
+		   if(v.equals("@yyyy年mm月dd日") ||v.equals("@yyyy年mm月dd日HH时mm分")
+				   || v.equals("@yy年mm月dd日")||v.equals("@yy年mm月dd日HH时mm分") ){
+
+             if (attr.getUIIsEnable() == true)
+             {
+                 this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart(v.replace("@", "")));
+             }
+             else
+             {
+                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+                     this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart(v.replace("@", "")));
+             }
+             continue;
+		   }else{
+			   GloVar gloVar = new GloVar();
+			   gloVar.setNo(v);
+               int count = gloVar.RetrieveFromDBSources();
+               if (count == 1)
+               {
+                   //执行SQL获取默认值
+                   String sql = gloVar.getVal();
+                   sql = BP.WF.Glo.DealExp(sql, null, null);
+                   if (DataType.IsNullOrEmpty(myval) || myval == v){
+                	   try{
+                		  v =  DBAccess.RunSQLReturnString(sql); 
+                		  this.SetValByKey(attr.getKeyOfEn(),v);
+                	   }catch(Exception e){
+                		   this.SetValByKey(attr.getKeyOfEn(),e.getMessage()+sql);
+                		   
+                	   }
+                	   
+                   }
+               }
+               continue;
+		   }
+			
+		}
+	}
 
 	// 方法
 	/**
@@ -3259,6 +3404,12 @@ public abstract class Entity implements Serializable {
 		  
 			// 含有特定值时取消重新设定默认值
 			String myval = this.GetValStringByKey(attr.getKey()); 
+			
+			if(v.indexOf('@')!=0){
+				if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
+					this.SetValByKey(attr.getKey(), WebUser.getNo());
+				}
+			}
 
 			// 设置默认值.
 			if (v.equals("@WebUser.No")) {

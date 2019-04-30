@@ -19,6 +19,7 @@ import BP.WF.Template.CondModel;
 import BP.WF.Template.Directions;
 import BP.WF.Template.FlowExt;
 import BP.WF.Template.Selector;
+import BP.WF.XML.Tools;
 import WebService.LocalWSI;
 
 public class LocalWS implements LocalWSI{
@@ -78,9 +79,9 @@ public class LocalWS implements LocalWSI{
 	/**
 	 * 我发起的流程实例
 	 * @param userNo 用户编号
-	 * @param sysNo 系统编号,为空时返回平台所有数据
-	 * @param pageSize 每页的长度
-	 * @param pageIdx  第几页
+	 * @param sysNo 统编号,为空时返回平台所有数据
+	 * @param pageSize
+	 * @param pageIdx
 	 * @return
 	 */
 	@Override
@@ -121,13 +122,12 @@ public class LocalWS implements LocalWSI{
 	 * @param ht 参数，或者表单字段.
 	 * @param toNodeID 到达的节点ID.如果让系统自动计算就传入0
 	 * @param toEmps 到达的人员IDs,比如:zhangsan,lisi,wangwu. 如果为Null就标识让系统自动计算
-	 *  @param userNo 用户的登录名，此参数用于登录
 	 * @return 发送的结果信息.
 	 * @throws Exception 
 	 */
 	@Override
 	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		BP.WF.Dev2Interface.Port_Login("userNo");
 		BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
 
         String msg = objs.ToMsgOfText();
@@ -148,7 +148,6 @@ public class LocalWS implements LocalWSI{
 	 * 保存参数
 	 * @param workid 工作ID
 	 * @param paras 用于控制流程运转的参数，比如方向条件. 格式为:@JinE=1000@QingJaiTianShu=100
-	 *  @param userNo 用户的登录名，此参数用于登录
 	 * @throws Exception 
 	 */
 	@Override
@@ -163,7 +162,6 @@ public class LocalWS implements LocalWSI{
 	 * @param flowNo 流程编号
 	 * @param workid 流程实例
 	 * @param paras 方向条件所需要的参数，可以为空。
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 下一个节点的JSON.
 	 * @throws Exception 
 	 */
@@ -183,18 +181,16 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 获得下一步节点信息
-	 * @param flowNo 流程ID，即流程编号
+	 * 获得下一步节点的接收人
+	 * @param flowNo 流程ID
 	 * @param toNodeID 节点ID
-	 * @param workid 流程实例ID，如果传入0，或者传入不存在的workid就返回第一个节点
+	 * @param workid 工作事例ID
 	 * @return 返回两个结果集一个是分组的Depts(No,Name)，另外一个是人员的Emps(No, Name, FK_Dept),接受后，用于构造人员选择器.
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @throws Exception 
 	 */
 	@Override
-	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, long workid, String userNo) throws Exception {
+	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
-		
 		Selector select = new Selector(toNodeID);
         Node nd = new Node(toNodeID);
 
@@ -202,30 +198,60 @@ public class LocalWS implements LocalWSI{
         DataSet ds = select.GenerDataSet(toNodeID, rpt);
         return BP.Tools.Json.ToJson(ds);
 	}
+	
+	/**
+	 * 将要达到的节点
+	 * @param workID 当前节点ID
+	 * @return 返回节点集合的json.
+	 * @throws Exception 
+	 */
+	@Override
+	public String WillReturnToNodes(int workID, String userNo) throws Exception {
+		
+		try
+		{
+			
+		BP.WF.Dev2Interface.Port_Login(userNo);
+		
+		GenerWorkFlow gwf=new GenerWorkFlow(workID);
+		
+		DataTable dt=BP.WF.Dev2Interface.DB_GenerWillReturnNodes(gwf.getFK_Node(), workID, gwf.getFID()); 
+        return BP.Tools.Json.ToJson(dt);
+		}catch(Exception ex)
+		{
+		  return "err@"+ex.getMessage();
+		}
+	}
 
 	/**
-	 * 可退回的节点集合
+	 * 将要达到的节点
 	 * @param currNodeID 当前节点ID
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 返回节点集合的json.
 	 * @throws Exception 
 	 */
 	@Override
 	public String WillToNodes(int currNodeID, String userNo) throws Exception {
+		
+		try
+		{
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		Node nd = new Node(currNodeID);
-        if (nd.getCondModel() != CondModel.SendButtonSileSelect)
-            return "err@";
+		
+      //  if (nd.getCondModel() != CondModel.SendButtonSileSelect)
+         //   return "err@当前节点不是由上一步操作员选择的";
 
         Directions dirs = new Directions();
         Nodes nds = dirs.GetHisToNodes(currNodeID, false);
         return nds.ToJson();
+		}catch(Exception ex)
+		{
+		  return "err@"+ex.getMessage();
+		}
 	}
 
 	/**
 	 * 获得当前节点信息.
 	 * @param currNodeID  当前节点ID
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return
 	 * @throws Exception 
 	 */
@@ -238,8 +264,7 @@ public class LocalWS implements LocalWSI{
 
 	/**
 	 * 获得当前流程信息.
-	 * @param flowNo 流程ID，即流程编号
-	 * @param userNo 用户的登录名，此参数用于登录
+	 * @param flowNo 流程ID
 	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
@@ -253,7 +278,6 @@ public class LocalWS implements LocalWSI{
 	/**
 	 * 获得当前流程信息.
 	 * @param workID 流程ID
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
@@ -270,7 +294,6 @@ public class LocalWS implements LocalWSI{
 	 * @param workID 流程ID
 	 * @param retunrnToNodeID 流程退回的节点ID
 	 * @param returnMsg 退回原因
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 退回结果信息
 	 * @throws Exception 
 	 */
@@ -292,7 +315,6 @@ public class LocalWS implements LocalWSI{
 	 *            工作ID
 	 * @param msg
 	 *            流程结束原因
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 返回成功执行信息
 	 * @throws Exception
 	 */
@@ -311,11 +333,6 @@ public class LocalWS implements LocalWSI{
 	
 	/**
 	 * 执行撤销操作
-	 * @param userNo 用户的登录名，此参数用于登录
-	 * @param flowNo 流程编号
-	 * @param workID 工作ID
-	 * @param unSendToNode 撤销的节点 ，可以为0
-	 * @param fid  默认是0
 	 * @return
 	 * @throws Exception 
 	 */
@@ -332,13 +349,11 @@ public class LocalWS implements LocalWSI{
 	 * @param workId 工作ID
 	 * @param backToNodeID 回滚到的节点ID
 	 * @param backMsg 回滚原因
-	 * @param userNo 用户的登录名，此参数用于登录
 	 * @return 回滚信息
 	 * @throws Exception 
 	 */
 	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg, String userNo) throws Exception{
 		BP.WF.Dev2Interface.Port_Login(userNo);
-		
 		FlowExt flow = new FlowExt(flowNo);
 		return flow.DoRebackFlowData(workId, backToNodeID, backMsg);
 	}

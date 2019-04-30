@@ -103,7 +103,7 @@ public interface LocalWSI {
 	 * @throws Exception 
 	 */
 
-	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, long workid, String userNo) throws Exception;
+	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception;
 	
 	/**
 	 * 将要达到的节点
@@ -113,6 +113,15 @@ public interface LocalWSI {
 	 */
 
 	public String WillToNodes(int currNodeID, String userNo) throws Exception;
+	
+	/**
+	 * 将要退回到的节点
+	 * @param workID
+	 * @return 返回节点集合的json.
+	 * @throws Exception 
+	 */
+
+	public String WillReturnToNodes(int workID, String userNo) throws Exception;
 	
 	/**
 	 * 获得当前节点信息.

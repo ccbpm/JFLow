@@ -236,6 +236,10 @@ public class Menu extends EntityTree
 		map.AddDDLSysEnum(MenuAttr.OpenWay, 0, "打开方式", true, true, MenuAttr.OpenWay, "@0=新窗口@1=本窗口@2=覆盖新窗口");
 		map.AddTBString(MenuAttr.Flag, null, "标记", true, false, 0, 500, 20, true);
 
+		    map.AddDDLSysEnum(MenuAttr.MenuCtrlWay, 0, "控制方式", true, true, MenuAttr.MenuCtrlWay,
+                    "@0=按照设置的控制@1=任何人都可以使用@2=Admin用户可以使用");
+
+
 		map.AddTBString(MenuAttr.Tag1, null, "Tag1", true, false, 0, 500, 20, true);
 		map.AddTBString(MenuAttr.Tag2, null, "Tag2", true, false, 0, 500, 20, true);
 		map.AddTBString(MenuAttr.Tag3, null, "Tag3", true, false, 0, 500, 20, true);

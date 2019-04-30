@@ -15,12 +15,6 @@ public class EmpMenu extends EntityMM
 	{
 		this.SetValByKey(EmpMenuAttr.FK_Emp, value);
 	}
-	
-//	 public final String getFK_Emp()
-//		{
-//			return this.GetValStringByKey(EmpMenuAttr.FK_Emp);
-//		}
-	 
 	public final String getFK_Menu()
 	{
 		return this.GetValStringByKey(EmpMenuAttr.FK_Menu);
@@ -83,11 +77,14 @@ public class EmpMenu extends EntityMM
 		map.setEnType( EnType.App);
 
 
+		   map.AddTBStringPK(EmpMenuAttr.FK_Menu, null, "菜单", false, false, 0, 50, 20);
+           map.AddDDLEntitiesPK(EmpMenuAttr.FK_Emp, null, "菜单功能", new BP.Port.Emps(), true);
+           map.AddBoolean(EmpMenuAttr.IsChecked, true, "是否选中", true, true);
+           
 		//map.AddTBStringPK(EmpMenuAttr.FK_Emp, null, "操作员", true, false, 0, 30, 20);
-	map.AddTBStringPK(EmpMenuAttr.FK_Menu, null, "菜单功能", true, false, 0, 50, 20);
-		map.AddBoolean(EmpMenuAttr.IsChecked, true, "是否选中", true, true);
-		 map.AddDDLEntitiesPK(EmpMenuAttr.FK_Emp, null, "菜单功能", new BP.Port.Emps(), true);
-
+		//map.AddTBStringPK(EmpMenuAttr.FK_Menu, null, "菜单功能", true, false, 0, 50, 20);
+		//map.AddBoolean(EmpMenuAttr.IsChecked, true, "是否选中", true, true);
+		
 
 		this.set_enMap(map);
 		return this.get_enMap();

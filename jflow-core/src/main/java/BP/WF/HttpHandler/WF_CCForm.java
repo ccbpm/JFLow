@@ -3183,7 +3183,7 @@ public class WF_CCForm extends WebContralBase {
                     dtlEn.SetValByKey("FID", fid);
                     break;
             }
-            dtlEn.SetValByKey("RDT", BP.DA.DataType.getCurrentData());
+            dtlEn.SetValByKey("RDT", BP.DA.DataType.getCurrentDate());
             dtlEn.SetValByKey("Rec", this.GetRequestVal("UserNo"));
 
             dtlEn.InsertAsOID((int)DBAccess.GenerOID(ensName));
@@ -3270,7 +3270,7 @@ public class WF_CCForm extends WebContralBase {
 
 			int i = 0;
 			int oid = (int) BP.DA.DBAccess.GenerOID("Dtl", dt.Rows.size());
-			String rdt = BP.DA.DataType.getCurrentData();
+			String rdt = BP.DA.DataType.getCurrentDate();
 
 			String errMsg = "";
 			for (DataRow dr : dt.Rows) {

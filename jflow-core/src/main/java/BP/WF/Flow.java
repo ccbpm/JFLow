@@ -832,8 +832,8 @@ public class Flow extends BP.En.EntityNoName {
 				rpt.RetrieveFromDBSources();
 
 				rpt.setFID(0);
-				rpt.setFlowStartRDT(BP.DA.DataType.getCurrentData());
-				rpt.setFlowEnderRDT(BP.DA.DataType.getCurrentData());
+				rpt.setFlowStartRDT(BP.DA.DataType.getCurrentDate());
+				rpt.setFlowEnderRDT(BP.DA.DataType.getCurrentDate());
 				rpt.setMyNum(1);
 			}
 		} catch (RuntimeException ex) {

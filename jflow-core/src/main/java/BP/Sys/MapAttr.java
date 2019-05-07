@@ -203,12 +203,12 @@ public class MapAttr extends EntityMyPK {
 				break;
 			case DataType.AppDate:
 				if (this.getTag().equals("1")) {
-					attr.setDefaultVal(DataType.getCurrentData());
+					attr.setDefaultVal(DataType.getCurrentDate());
 				}
 				break;
 			case DataType.AppDateTime:
 				if (this.getTag().equals("1")) {
-					attr.setDefaultVal(DataType.getCurrentData());
+					attr.setDefaultVal(DataType.getCurrentDate());
 				}
 				break;
 			default:
@@ -358,7 +358,7 @@ public class MapAttr extends EntityMyPK {
 		switch (this.getMyDataType()) {
 		case BP.DA.DataType.AppDate:
 			if (this.getTag().equals("1") || s.equals("@RDT")) {
-				return DataType.getCurrentData();
+				return DataType.getCurrentDate();
 			} else {
 				return "          ";
 			}
@@ -396,13 +396,13 @@ public class MapAttr extends EntityMyPK {
 			return DataType.getCurrentMonth();
 		} else if (s.toLowerCase().equals("@rdt")) {
 			if (this.getMyDataType() == DataType.AppDate) {
-				return DataType.getCurrentData();
+				return DataType.getCurrentDate();
 			} else {
 				return DataType.getCurrentDataTime();
 			}
 		} else if (s.toLowerCase().equals("@rd")) {
 			if (this.getMyDataType() == DataType.AppDate) {
-				return DataType.getCurrentData();
+				return DataType.getCurrentDate();
 			} else {
 				return DataType.getCurrentDataTime();
 			}
@@ -1045,28 +1045,7 @@ public class MapAttr extends EntityMyPK {
 
 	@Override
 	protected void afterInsert() throws Exception {
-		// switch (map.EnDBUrl.DBUrlType)
-		// {
-		// case DBUrlType.AppCenterDSN:
-		// switch (map.EnDBUrl.DBType)
-		// {
-		// case MSSQL:
-		// BP.DA.DBAccess.RunSQL("ALERT ");
-		// break;
-		// case Oracle:
-		// break;
-		// case Informix:
-		// break;
-		// case MSSQL:
-		// BP.DA.DBAccess.RunSQL("ALERT ");
-		// break;
-		// default:
-		// break;
-		// }
-		// break;
-		// default:
-		// break;
-		// }
+
 		super.afterInsert();
 	}
 

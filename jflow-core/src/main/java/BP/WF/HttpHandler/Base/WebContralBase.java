@@ -222,18 +222,6 @@ public abstract class WebContralBase extends BaseController {
 
 		return val;
 
-		/*
-		 * try {
-		 * 
-		 * return URLEncoder.encode(val, "UTF-8");
-		 * 
-		 * } catch (UnsupportedEncodingException e) {
-		 * 
-		 * e.printStackTrace(); return val;
-		 * 
-		 * }
-		 */
-
 	}
 
 	public Boolean GetRequestValBoolen(String key) {

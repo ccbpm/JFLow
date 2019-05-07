@@ -3,6 +3,8 @@ package BP.DA;
 import BP.En.*;
 import BP.Pub.*;
 import BP.Sys.*;
+
+import java.io.IOException;
 import java.util.Hashtable;
 
 public class CashFrmTemplate
@@ -66,8 +68,10 @@ public class CashFrmTemplate
 	 
 	 @param frmID ��ID
 	 @return ��ģ��
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	*/
-	public static DataSet GetFrmDataSetModel(String frmID)
+	public static DataSet GetFrmDataSetModel(String frmID) throws ClassNotFoundException, IOException
 	{
 		synchronized (lockObj)
 		{

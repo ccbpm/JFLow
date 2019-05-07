@@ -85,7 +85,7 @@ public class DataType {
 		return spanStr;
 	}
 
-	public static java.util.Date WeekOfMonday(java.util.Date dt) {
+	public static Date WeekOfMonday(java.util.Date dt) {
 		Calendar monday = Calendar.getInstance();
 		monday.setTime(dt);
 		int FIRST_DAY_OF_WEEK = Calendar.MONDAY;
@@ -94,7 +94,7 @@ public class DataType {
 		return monday.getTime();
 	}
 
-	public static java.util.Date WeekOfSunday(java.util.Date dt) {
+	public static Date WeekOfSunday(java.util.Date dt) {
 		Calendar cal = Calendar.getInstance();
 		int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
 		if (1 == dayWeek) {
@@ -114,7 +114,7 @@ public class DataType {
 	 * @param days
 	 * @return
 	 */
-	public static java.util.Date AddDays(java.util.Date dt, int days) {
+	public static Date AddDays(java.util.Date dt, int days) {
 		if (dt == null) {
 			return null;
 		}
@@ -152,7 +152,7 @@ public class DataType {
 		return AddDays(BP.DA.DataType.ParseSysDate2DateTime(dt), days, tway);
 	}
 
-	public static java.util.Date AddDays(java.util.Date dt, int days, TWay tway) {
+	public static Date AddDays(java.util.Date dt, int days, TWay tway) {
 		if (dt == null) {
 			return null;
 		}
@@ -180,7 +180,7 @@ public class DataType {
 		return cal.getTime();
 	}
 
-	public static java.util.Date AddDays(String sysdt, int days) {
+	public static Date AddDays(String sysdt, int days) {
 		Date dt = DataType.ParseSysDate2DateTime(sysdt);
 		return AddDays(dt, days);
 	}
@@ -1047,8 +1047,8 @@ public class DataType {
 	 * @param dataStr
 	 * @return
 	 */
-	public final java.util.Date Parse(String dataStr) {
-		return new java.util.Date(java.util.Date.parse(dataStr));
+	public final Date Parse(String dataStr) {
+		return new Date(java.util.Date.parse(dataStr));
 	}
 
 	/**
@@ -1077,12 +1077,24 @@ public class DataType {
 	/**
 	 * 当前的日期
 	 */
-	public static String getCurrentData() {
+	public static String getCurrentDate() {
+		Date dt = new Date();
+		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd");
+		String date = matter.format(dt);
+		return date;
+	}
+	
+	/**
+	 * 获取当前时间
+	 * @return
+	 */
+	public static String getCurrentDateTime() {
 		Date dt = new Date();
 		SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String date = matter.format(dt);
 		return date;
 	}
+
 
 	public static Date getDate() {
 		return new Date();

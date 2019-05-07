@@ -939,7 +939,7 @@ public class WorkReturn
         else
         {
             //增加天数. 考虑到了节假日.             
-            dtOfShould = Glo.AddDayHoursSpan(DataType.getCurrentData(), this.ReturnToNode.getTimeLimit(),
+            dtOfShould = Glo.AddDayHoursSpan(DataType.getCurrentDate(), this.ReturnToNode.getTimeLimit(),
                 this.ReturnToNode.getTimeLimitHH(), this.ReturnToNode.getTimeLimitMM(), this.ReturnToNode.getTWay());
         }
         // 应完成日期.

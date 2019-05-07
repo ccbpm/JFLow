@@ -6852,7 +6852,7 @@ public class WorkNode {
 		wl.setFK_Dept(this.getExecerDeptNo());
 		wl.setWarningHour(0);
 		wl.setSDT(DataType.getCurrentDataTimess());
-		wl.setDTOfWarning(DataType.getCurrentData());
+		wl.setDTOfWarning(DataType.getCurrentDate());
 		try {
 			wl.Save();
 		} catch (java.lang.Exception e) {

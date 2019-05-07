@@ -4188,7 +4188,7 @@ public class Dev2Interface {
 	public static void WriteTrackDailyLog(String flowNo, int nodeFrom, long workid, long fid, String msg,
 			String optionName) throws Exception {
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-		String today = BP.DA.DataType.getCurrentData();
+		String today = BP.DA.DataType.getCurrentDate();
 
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET Msg=" + dbStr + "Msg WHERE  RDT LIKE '" + today
@@ -6232,7 +6232,7 @@ public class Dev2Interface {
 		WFEmp emp = new WFEmp(WebUser.getNo());
 		emp.setAuthor(Author);
 		emp.setAuthorWay(AuthorWay);
-		emp.setAuthorDate(BP.DA.DataType.getCurrentData());
+		emp.setAuthorDate(BP.DA.DataType.getCurrentDate());
 
 		if (!StringHelper.isNullOrEmpty(AuthorFlows)) {
 			emp.setAuthorFlows(AuthorFlows);

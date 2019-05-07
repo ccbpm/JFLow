@@ -228,7 +228,7 @@ public class DataApply extends Entity
 		this.setChecker(checker);
 		this.setApplyNote1(note1);
 		this.setApplyNote2(note2);
-		this.setApplyData(DataType.getCurrentData());
+		this.setApplyData(DataType.getCurrentDate());
 		
 		this.setRunState(1); // 进入提交审核状态
 		this.Update();

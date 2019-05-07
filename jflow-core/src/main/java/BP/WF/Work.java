@@ -173,7 +173,7 @@ public abstract class Work extends Entity
 		}
 		catch (java.lang.Exception e)
 		{
-			return DataType.getCurrentData();
+			return DataType.getCurrentDate();
 		}
 	}
 	public final java.util.Date getRDT_DateTime()

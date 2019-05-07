@@ -298,7 +298,7 @@ public class WF extends WebContralBase {
                     BP.WF.Port.WFEmp au = new BP.WF.Port.WFEmp();
                     au.setNo(WebUser.getNo());
                     au.RetrieveFromDBSources();
-                    au.setAuthorDate(BP.DA.DataType.getCurrentData());
+                    au.setAuthorDate(BP.DA.DataType.getCurrentDate());
                     au.setAuthor(this.getFK_Emp());
                     au.setAuthorWay(1);
                     au.Save();

@@ -4831,7 +4831,7 @@ public class Glo {
 		java.util.Date dtNow = new java.util.Date();
 		if (role == StartLimitRole.Day) {
 			// 仅允许一天发起一次
-			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT LIKE '" + DataType.getCurrentData()
+			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT LIKE '" + DataType.getCurrentDate()
 					+ "%' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0) {
 				if (flow.getStartLimitPara().equals("")) {

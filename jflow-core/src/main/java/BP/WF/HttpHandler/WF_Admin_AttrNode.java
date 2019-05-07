@@ -16,6 +16,7 @@ import BP.DA.DataRow;
 import BP.DA.DataRowCollection;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.DA.DataType;
 import BP.En.QueryObject;
 import BP.Sys.BuessUnitBase;
 import BP.Sys.FrmAttachment;
@@ -456,23 +457,29 @@ public class WF_Admin_AttrNode extends WebContralBase {
             
 
             isDtl.Rows.add(tddr);
+            
+            //节点表单获取他的节点信息
+            if(DataType.IsNullOrEmpty(this.getFK_Flow())==false){
 
-            nodes = new Nodes();
-            nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, getFK_Flow(), BP.WF.Template.NodeAttr.Step);
-
-            if (nodes.size() == 0)
-            {
-                String nodeid = getFK_MapData().replace("ND", "");
-                String flowno = "";
-
-                if (nodeid.length() > 2)
-                {
-                    flowno = nodeid.substring(0, nodeid.length() - 2);
-                    flowno = DealString.padLeft(flowno,3,'0');
-                    nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, flowno, BP.WF.Template.NodeAttr.Step);
-                }
+	            nodes = new Nodes();
+	            nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, getFK_Flow(), BP.WF.Template.NodeAttr.Step);
+	
+	            if (nodes.size() == 0)
+	            {
+	                String nodeid = getFK_MapData().replace("ND", "");
+	                String flowno = "";
+	
+	                if (nodeid.length() > 2)
+	                {
+	                    flowno = nodeid.substring(0, nodeid.length() - 2);
+	                    flowno = DealString.padLeft(flowno,3,'0');
+	                    nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, flowno, BP.WF.Template.NodeAttr.Step);
+	                }
+	            }
+	            DataTable dtNodes = nodes.ToDataTableField("dtNodes");
+	            dtNodes.TableName = "dtNodes";
+	            ds.Tables.add(dtNodes);
             }
-            DataTable dtNodes = nodes.ToDataTableField("dtNodes");
             ///#endregion
 
 			ds.Tables.add(mapdatas.ToDataTableField("mapdatas"));
@@ -487,8 +494,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 			ds.Tables.add(athMents.ToDataTableField("athMents"));
 			ds.Tables.add(btns.ToDataTableField("btns"));
 			ds.Tables.add(isDtl);
-            dtNodes.TableName = "dtNodes";
-            ds.Tables.add(dtNodes);
+            
 		}
 	}
 

@@ -218,13 +218,13 @@ public class Dev2Interface {
 			// 如果是授权状态.
 			WFEmp emp = new WFEmp(WebUser.getNo());
 			sql = "SELECT count( distinct a.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='"
-					+ WebUser.getNo() + "' AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) AND A.FK_Flow IN "
+					+ WebUser.getNo() + "' AND A.WFState!=3 AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) AND A.FK_Flow IN "
 					+ emp.getAuthorFlows();
 			return BP.DA.DBAccess.RunSQLReturnValInt(sql);
 		} else {
 			Paras ps = new Paras();
 			ps.SQL = "SELECT count( distinct a.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-					+ SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) ";
+					+ SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.IsEnable=1 AND A.WFState!=3 AND (B.IsPass=1 OR B.IsPass<0) ";
 			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 		}
@@ -2910,13 +2910,13 @@ public class Dev2Interface {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND A.Starter="
 							+ dbStr + "Starter  AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
+							+ "FK_Emp AND B.IsEnable=1 AND A.WFState !=3 AND (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("Starter", userNo);
 					ps.Add("FK_Emp", userNo);
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
+							+ dbStr + "FK_Emp AND B.IsEnable=1 AND A.WFState !=3  AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("FK_Emp", userNo);
 				}
@@ -2924,7 +2924,7 @@ public class Dev2Interface {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter=" + dbStr
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter=" + dbStr
 							+ "Starter AND A.FK_Flow IN " + emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
@@ -2932,7 +2932,7 @@ public class Dev2Interface {
 				} else {
 					ps.SQL = "SELECT DISTINCT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows()+" Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
@@ -2943,20 +2943,20 @@ public class Dev2Interface {
 			if (StringHelper.isNullOrEmpty(fk_flow)) {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter="
+							+ dbStr + "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter="
 							+ dbStr + "Starter  Order by RDT DESC";
 					ps.Add("FK_Emp", userNo);
 					ps.Add("Starter", userNo);
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0)  Order by RDT DESC";
+							+ dbStr + "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0)  Order by RDT DESC";
 					ps.Add("FK_Emp", userNo);
 				}
 			} else {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 ) AND  A.Starter=" + dbStr
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND (B.IsPass=1 or B.IsPass < 0 ) AND  A.Starter=" + dbStr
 							+ "Starter   Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
@@ -2964,7 +2964,7 @@ public class Dev2Interface {
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 )  Order by RDT DESC";
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND (B.IsPass=1 or B.IsPass < 0 )  Order by RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
 				}
@@ -3014,8 +3014,7 @@ public class Dev2Interface {
 			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
 			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
 			dt.Columns.get("CURRNODE").ColumnName = "CurrNode";
-			// dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
-			// dt.Columns.get("CWORKID").ColumnName = "CWorkID";
+
 
 		}
 		return dt;

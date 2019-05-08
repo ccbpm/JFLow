@@ -1251,6 +1251,7 @@ public class WorkNode {
 					// 发送成功后事件.
 					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd, skipWork, null,
 							this.HisMsgObjs);
+					CC(nd);
 					continue;
 				}
 
@@ -1282,6 +1283,7 @@ public class WorkNode {
 					// 执行发送.
 					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd, skipWork, null,
 							this.HisMsgObjs);
+					CC(nd);
 					continue;
 				}
 
@@ -1427,6 +1429,7 @@ public class WorkNode {
 					setndFrom(nd);
 					// 执行发送.
 					this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, nd, wk, null, this.HisMsgObjs);
+					CC(nd);
 					continue;
 				}
 
@@ -1439,6 +1442,38 @@ public class WorkNode {
 		} // 结束循环。
 	}
 
+	private void CC(Node node ) throws Exception
+    {
+        //执行自动抄送
+        String ccMsg1 = WorkFlowBuessRole.DoCCAuto(node, this.rptGe, this.getWorkID(), this.getHisWork().getFID());
+        //按照指定的字段抄送.
+        String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(node, this.rptGe, this.getWorkID(), this.getHisWork().getFID());
+        //手工抄送
+        if (this.getHisNode().getHisCCRole() == CCRole.HandCC)
+        {
+            //获取抄送人员列表
+            CCLists cclist = new CCLists(node.getFK_Flow(), this.getWorkID(), this.getHisWork().getFID());
+            if (cclist.size() == 0)
+                ccMsg1 = "@没有选择抄送人。";
+            if (cclist.size() > 0)
+            {
+                ccMsg1 = "@消息自动抄送给";
+                for(CCList cc : cclist.ToJavaList())
+                {
+                    ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
+                }
+            }
+        }
+        String ccMsg = ccMsg1 + ccMsg2;
+
+        if (DataType.IsNullOrEmpty(ccMsg) == false)
+        {
+        	this.addMsg("CC", "@自动抄送给:" + ccMsg);
+			this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(),node.getNodeID(),
+					node.getName(), ccMsg1 + ccMsg2, node);
+        }
+    }
+	
 	/**
 	 * 处理OrderTeamup退回模式
 	 * 

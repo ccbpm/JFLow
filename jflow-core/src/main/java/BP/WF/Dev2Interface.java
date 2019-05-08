@@ -1,4 +1,4 @@
-package BP.WF;
+﻿package BP.WF;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9454,6 +9454,11 @@ public class Dev2Interface {
 	 */
 	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID,
 			String returnToEmp, String msg, boolean isBackToThisNode) throws Exception {
+
+
+		if (DataType.IsNullOrEmpty(msg)==true)
+			throw new com.sun.star.uno.Exception("请输入退回意见.");
+		
 		// 转化成编号.
 		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
 		WorkReturn wr = new WorkReturn(fk_flow, workID, fid, currentNodeID, returnToNodeID, returnToEmp,

@@ -1210,7 +1210,9 @@ public class WorkFlow
         gwf.Update();
         
 		//调用结束后事件.
-		stopMsg+= this.getHisFlow().DoFlowEventEntity(EventListOfNode.FlowOverAfter, currNode, rpt, null);
+        String msg = this.getHisFlow().DoFlowEventEntity(EventListOfNode.FlowOverAfter, currNode, rpt, "");
+        if(msg!=null)
+		stopMsg+= msg;
 
 			///#endregion 处理后续的业务.
 

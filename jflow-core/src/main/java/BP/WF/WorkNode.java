@@ -1123,6 +1123,17 @@ public class WorkNode {
 				// 如果是最后一个节点了,仍然找不到下一步节点...
 				if (this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByCCBPMDefine) {
 					this.setIsStopFlow(true);
+					this.getHisWorkFlow().getHisGenerWorkFlow().setFK_Node(mynd.getNodeID());
+					this.getHisWorkFlow().getHisGenerWorkFlow().setNodeName(mynd.getName());
+					this.getHisGenerWorkFlow().setFK_Node(mynd.getNodeID());
+					this.getHisGenerWorkFlow().setNodeName(mynd.getName());
+					this.getHisGenerWorkFlow().Update();
+					
+					String msg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经走到最后一个节点，流程成功结束。",
+							mynd, this.rptGe);
+					if(DataType.IsNullOrEmpty(msg) == true)
+						msg = "";
+					this.addMsg(SendReturnMsgFlag.End, msg);
 				}
 				return mynd;
 			}
@@ -6036,7 +6047,7 @@ public class WorkNode {
 			if (this.getIsStopFlow()) {
 				this.rptGe.setWFState(WFState.Complete);
 				this.Func_DoSetThisWorkOver();
-
+				
 				this.getHisGenerWorkFlow().Update(); // added by
 														// liuxc,2016-10=24,最后节点更新Sender字段
 			} else {

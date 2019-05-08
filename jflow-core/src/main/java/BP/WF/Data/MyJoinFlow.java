@@ -550,10 +550,13 @@ public class MyJoinFlow extends Entity
 		map.AddSearchAttr(MyJoinFlowAttr.WFSta);
 		map.AddSearchAttr(MyJoinFlowAttr.TSpan);
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
+		//map.AddHidden(MyStartFlowAttr.FK_Node, "not like", "%01");
 
 			//增加隐藏的查询条件.
 		AttrOfSearch search = new AttrOfSearch(MyJoinFlowAttr.Emps, "人员", MyJoinFlowAttr.Emps, " LIKE ", "%@WebUser.No%", 0, true);
 		map.getAttrsOfSearch().Add(search);
+		
+		
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "流程轨迹";
@@ -600,7 +603,7 @@ public class MyJoinFlow extends Entity
 		BP.WF.Node nd = new Node(this.getFK_Node());
 		nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 
-		return Glo.getCCFlowAppPath() + "/CCForm/FrmFreeReadonly.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
+		return Glo.getCCFlowAppPath() + "/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}
 
 	///#endregion

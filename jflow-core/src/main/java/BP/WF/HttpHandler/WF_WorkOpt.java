@@ -1485,7 +1485,7 @@ public class WF_WorkOpt extends WebContralBase {
                    if (nd.getReturnOneNodeRole() == 2)
                    {
                        /*从审核组件里取意见.*/
-                       String sql = "SELECT Msg FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID() + " NDFrom=" + this.getFK_Node() + " AND EmpFrom='" + WebUser.getNo() + "' AND ActionType=" + ActionType.WorkCheck.getValue();
+                       String sql = "SELECT Msg FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID() + " AND NDFrom=" + this.getFK_Node() + " AND EmpFrom='" + WebUser.getNo() + "' AND ActionType=" + ActionType.WorkCheck.getValue();
                        returnMsg = DBAccess.RunSQLReturnStringIsNull(sql, "未填写意见");
                    }
 

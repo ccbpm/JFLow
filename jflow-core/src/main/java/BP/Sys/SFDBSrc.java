@@ -1051,6 +1051,26 @@ public class SFDBSrc extends EntityNoName
 		if (this.getNo().equals("local"))
 		{
 			allTables = DBAccess.RunSQLReturnTable(sql.toString());
+            //把tables 的英文名称替换为中文.
+            String mapDT = "SELECT PTable,Name FROM Sys_MapData ";
+            DataTable myDT = DBAccess.RunSQLReturnTable(mapDT);
+            for (DataRow myDR : allTables.Rows)
+            {
+            	String no = myDR.getValue("No").toString();
+
+            	String name = null;
+                for (DataRow dr : myDT.Rows)
+                {
+                	String pTable = dr.getValue("PTable").toString();
+                    if (pTable.equals(no) == false)
+                        continue;
+
+                    name = dr.getValue("Name").toString();
+                    break;
+                }
+                if (name != null)
+                    myDR.setValue("Name", myDR.getValue("Name").toString() + "-" + name);
+            }
 		}
 		else
 		{

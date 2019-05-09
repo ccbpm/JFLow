@@ -135,7 +135,35 @@ public class WF_Setting extends WebContralBase
 	}
 
 		///#endregion 图片签名.
-
+	//	 头像.
+    public String HeadPic_Save()
+    {
+    	
+    	try
+		{
+			String empNo = this.GetRequestVal("EmpNo");
+	        if (DataType.IsNullOrEmpty(empNo) == true)
+	             empNo = WebUser.getNo();
+	        HttpServletRequest request = getRequest();
+			String contentType = request.getContentType();
+			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 				
+				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/UserIcon/" + empNo + ".png";
+				File tempFile = new File(tempFilePath);
+				if(tempFile.exists()){
+					tempFile.delete();
+				}
+//				MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");
+//				multipartFile.transferTo(tempFile);
+				CommonFileUtils.upload(request, "File_Upload", tempFile);
+			 }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@执行失败";
+		}
+		
+		return "文件上传成功";
+    }
+    
 	public final String UserIcon_Init()
 	{
 		return "";

@@ -5560,7 +5560,7 @@ public class WorkNode {
 			}
 
 			// 把发送sendWhen 消息提示给用户.
-			if (sendWhen.equals("null") == true)
+			if (sendWhen.equals(null) == true)
 				sendWhen = "";
 			this.addMsg("SendWhen", sendWhen, sendWhen, SendReturnMsgType.Info);
 		}

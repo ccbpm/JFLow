@@ -76,6 +76,7 @@ import BP.WF.Template.BtnLab;
 import BP.WF.Template.CCSta;
 import BP.WF.Template.FWCOrderModel;
 import BP.WF.Template.FWCType;
+import BP.WF.Template.FlowExt;
 import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.FrmWorkCheckSta;
 import BP.WF.Template.FrmWorkChecks;
@@ -1459,6 +1460,45 @@ public class WF_WorkOpt extends WebContralBase {
 		}
 	}
 
+	/**
+	 * 回滚页面初始化数据
+	 * @return
+	 */
+	 public String Rollback_Init()
+     {
+         String andsql = " ";
+         andsql += "  ActionType=" + ActionType.Start.getValue();
+         andsql += " OR ActionType=" + ActionType.TeampUp.getValue();
+         andsql += " OR ActionType=" + ActionType.Forward.getValue();
+         andsql += " OR ActionType=" + ActionType.HuiQian.getValue();
+
+         String sql = "SELECT RDT,NDFrom, NDFromT,EmpFrom,EmpFromT  FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID() + " AND("+andsql +") Order By RDT DESC";
+         DataTable dt = DBAccess.RunSQLReturnTable(sql);
+
+         if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+         {
+             dt.Columns.get(0).ColumnName = "RDT";
+             dt.Columns.get(1).ColumnName = "NDFrom";
+             dt.Columns.get(2).ColumnName = "NDFromT";
+             dt.Columns.get(3).ColumnName = "EmpFrom";
+             dt.Columns.get(4).ColumnName = "EmpFromT";
+         }
+
+
+         return BP.Tools.Json.ToJson(dt);
+     }
+
+     /**
+      * 执行回滚操作
+      * @return
+     * @throws Exception 
+      */
+     public String Rollback_Done() throws Exception
+     {
+         FlowExt flow = new FlowExt(this.getFK_Flow());
+         return flow.DoRebackFlowData(this.getWorkID(), this.getFK_Node(), this.GetRequestVal("Msg"));
+     }
+     
 	public String Return_Init() {
 
 		try {

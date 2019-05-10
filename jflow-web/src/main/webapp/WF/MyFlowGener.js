@@ -1089,18 +1089,18 @@ function OptSuc(msg) {
     var trackImg = $('#msgModalContent img[src*="PrintWorkRpt.gif"]');
     trackA.remove();
     trackImg.remove();
-    debugger;
+
     $("#msgModal").modal().show();
 
-//    var int = setInterval("clock()", 1000);
+    var int = setInterval("clock()", 1000);
 }
 
 var num = 5;
 function clock() {
     num >= 0 ? num-- : clearInterval(int);
     $("#btnMsgModalOK").html("确定(" + num + "秒)");
-    //if (num == 0)
-        //closeWindow();
+    if (num == 0)
+        closeWindow();
 }
 
 

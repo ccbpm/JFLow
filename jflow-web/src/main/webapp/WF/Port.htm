@@ -14,33 +14,30 @@
         $(function () {
 
             $("#Msg").html("<img src=./Img/loading.gif />&nbsp;正在加载,请稍后......");
-
+            
+            //执行登录操作
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+         	var userNo = GetQueryString("UserNo");
+        	handler.AddPara("UserNo",userNo);
+            var data1 = handler.DoMethodReturnString("SingleLogin");
+            
             InitPage();
-
+            
+            
+            
             $("#Msg").html("");
         });
 
         //初始化数据.
         function InitPage() {
-
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF");
-            handler.AddUrlData();
-
-            var data = handler.DoMethodReturnString("Port_Init");
-
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-                return;
+        	var DoWhat = GetQueryString("DoWhat");
+            var FK_Flow=GetQueryString("FK_Flow");
+            var FK_Node=GetQueryString("FK_Node");
+            if(DoWhat=="Table"){
+            window.location.href ="WorkOpt/OneWork/Table.htm?FK_Flow="+FK_Flow+"&FK_Node="+FK_Node;
             }
-
-            if (data.indexOf('url@') == 0) {
-                var url = data.replace('url@', '');
-                window.location.href = url;
-                return;
-            }
-
-            alert(data);
-
+            
+            
         }
      </script>
 

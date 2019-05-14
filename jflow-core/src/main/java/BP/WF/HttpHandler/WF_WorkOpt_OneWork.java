@@ -234,6 +234,10 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				//恢复使用流程
 				isCan = WebUser.getNo().equals("admin");
 				ht.put("CanRollBack", new Boolean(isCan).toString().toLowerCase());
+				 //获取流程运行完时的节点
+                Node node = new Node(gwf.getFK_Node());
+                ht.put("PrintType", node.getHisPrintDocEnable());
+                
 				break;
 			case HungUp: // 挂起.
 				//撤销挂起

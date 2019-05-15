@@ -1885,7 +1885,7 @@ var DBAccess = (function () {
             var str = DBAccess.RunFunctionReturnStr(dbSrc);
             if (str == null || str == undefined || str == "")
                 return null;
-
+ 
             return JSON.parse(str);
         }
         //@谢 如何执行一个方法,
@@ -2209,7 +2209,7 @@ var WebUser = function () {
         success: function (data) {
 
             if (data.indexOf("err@") != -1) {
-                if (data.indexOf('登陆信息丢失') != -1) {
+                if (data.indexOf('登录信息丢失') != -1) {
                     alert("登录信息丢失，请重新登录。");
                 } else {
                     alert(data);

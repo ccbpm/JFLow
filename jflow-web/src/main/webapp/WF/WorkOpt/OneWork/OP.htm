@@ -30,7 +30,7 @@
             //html += addRollBack(data.CanRollBack);
             //html += addUnHungUp(data.CanUnHungUp);
 
-            html += addPackUp(data.CanPackUp,data.PrintType);
+            html += addPackUp(data.CanPackUp, data.PrintType);
 
             html += addFlowOverByCoercion(data.CanFlowOverByCoercion);
 
@@ -184,25 +184,26 @@
             if (typeof isCan == "undefined") {
                 return "";
             }
-
+            
             if (isCan == false || isCan == "false")
                 return "";
 
             var fk_node = GetQueryString("FK_Node");
             if (fk_node == null)
                 fk_node = GetQueryString("NodeID");
-			if(printType == null || printType == undefined){
-				var html = addBlockBegin("打印/打包下载");
-				
-	            if (isCan) {
-	                html += "功能执行:<a href='../Packup.htm?FileType=zip,pdf&WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + GetQueryString("FK_Node") + "&FK_Node=" + GetQueryString("FK_Node") + "' >执行打印</a>。";
-	                html += "<br />说明：把表单输出到html,pdf,zip文件里，执行下载或打印.";
-	            }
-	            else {
-	                html += "您没有此权限。";
-	            }
-			}else{
-				var html = addBlockBegin("RTF/Word下载");
+
+            //如果printType是undefined或者null 就执行打包下载
+            if (printType == null || printType == undefined) {
+                var html = addBlockBegin("打印/打包下载");
+                if (isCan) {
+                    html += "功能执行:<a href='../Packup.htm?FileType=zip,pdf&WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + GetQueryString("FK_Node") + "&FK_Node=" + GetQueryString("FK_Node") + "' >执行打印</a>。";
+                    html += "<br />说明：把表单输出到html,pdf,zip文件里，执行下载或打印.";
+                }
+                else {
+                    html += "您没有此权限。";
+                }
+            } else {
+                var html = addBlockBegin("RTF/Word下载");
                 if (isCan) {
                     html += "功能执行:<a href='javaScript:void(0)' onclick='WinOpen(\"../PrintDoc.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + GetQueryString("FK_Node") + "&FK_Node=" + GetQueryString("FK_Node") + "\")' >执行打印</a>。";
                     html += "<br />说明：把表单输出到Word文件里，执行下载或打印.";
@@ -210,8 +211,7 @@
                 else {
                     html += "您没有此权限。";
                 }
-			}
-            
+            }
 
             html += addBlockEnd();
 

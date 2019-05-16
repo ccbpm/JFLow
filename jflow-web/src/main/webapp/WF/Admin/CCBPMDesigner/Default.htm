@@ -1140,13 +1140,14 @@
         }
 
         //新建表单
-        function newFrm() {
+        function newFrm( frmType ) {
+
             var node = $('#formTree').tree('getSelected');
             if (!node) {
                 return;
             }
 
-            var url = "../CCFormDesigner/NewFrmGuide.htm?Step=0";
+            var url = "../CCFormDesigner/NewFrmGuide.htm?Step=0&EntityType="+frmType;
             if (node.attributes) {
                 if (node.attributes.TType == "SRC") {
                     url += "&Src=" + node.id;
@@ -1220,8 +1221,26 @@
                 alert('请选择一个表单.');
                 return;
             }
-            var url = '../../Comm/En.htm?EnName=BP.WF.CCBill.FrmBill&PKVal=' + node.id;
-            OpenEasyUiDialog(url, "CCForm_Attr", '单据属性', 900, 560, "icon-window");
+
+           // alert('sss');
+
+            var en = new Entity("BP.WF.CCBill.FrmBill", node.id);
+
+            //流程单据.
+            if (en.EntityType == 0)
+                url = '../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=' + node.id;
+
+            if (en.EntityType==1)
+                url = '../../Comm/En.htm?EnName=BP.WF.CCBill.FrmBill&PKVal=' + node.id;
+
+            if (en.EntityType == 2)
+                url = '../../Comm/En.htm?EnName=BP.WF.CCBill.FrmDict&PKVal=' + node.id;
+
+            alert(en.EntityType);
+
+           // http: //localhost:2207/WF/Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=CCFrm_GDZC&s=0.635120123659069
+
+            OpenEasyUiDialog(url, "CCForm_Attr", '表单属性', 900, 560, "icon-window");
         }
         //打开单据
         function Bill_Open() {
@@ -1236,6 +1255,12 @@
                 alert('请选择一个表单.');
                 return;
             }
+            var en = new Entity("BP.WF.CCBill.FrmBill", node.id);
+            if (en.EntityType == 0) {
+                alert('独立表单暂不支持列表打开...');
+                return;
+            }
+
             var url = '../../CCBill/Search.htm?FrmID=' + node.id;
             OpenEasyUiDialog(url, "CCForm_Attr", '我的单据', 1100, 560, "icon-window");
         }
@@ -1788,8 +1813,16 @@
         <!--<div onclick="newSrc()" data-options="iconCls:'icon-add'">新建数据源</div>-->
     </div>
     <div id="mFormSort" class="easyui-menu" style="width: 120px;">
-        <div onclick="newFrm()" data-options="iconCls:'icon-add'">
-            新建/导入表单</div>
+        <div onclick="newFrm(0)" data-options="iconCls:'icon-add'">
+            新建独立表单</div>
+
+             <div onclick="newFrm(1)" data-options="iconCls:'icon-add'">
+            新建单据表单</div>
+
+            <div onclick="newFrm(2)" data-options="iconCls:'icon-add'">
+            新建实体表单</div>
+             
+
         <div class="menu-sep">
         </div>
         <div onclick="newCCFormSort(false)" data-options="iconCls:'icon-new'">
@@ -1815,13 +1848,13 @@
     </div>
     <div id="mForm" class="easyui-menu" style="width: 120px;">
         <div onclick="Bill_CCForm()" data-options="iconCls:'icon-property'">
-            单据属性</div>
+            表单属性</div>
         <div onclick="Bill_Open()" data-options="iconCls:'icon-property'">
-            打开单据</div>
+            数据列表</div>
         <div class="menu-sep">
         </div>
-        <div onclick="CCForm_Attr()" data-options="iconCls:'icon-property'">
-            表单属性</div>
+      <!--  <div onclick="CCForm_Attr()" data-options="iconCls:'icon-property'">
+            表单属性</div>-->
         <div onclick="designFoolFrm()" data-options="iconCls:'icon-sheet'">
             设计傻瓜表单</div>
         <div onclick="designFreeFrm()" data-options="iconCls:'icon-library'">

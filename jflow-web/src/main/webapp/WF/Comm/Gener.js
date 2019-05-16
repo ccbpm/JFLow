@@ -1885,7 +1885,7 @@ var DBAccess = (function () {
             var str = DBAccess.RunFunctionReturnStr(dbSrc);
             if (str == null || str == undefined || str == "")
                 return null;
- 
+
             return JSON.parse(str);
         }
         //@谢 如何执行一个方法,

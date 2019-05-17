@@ -1130,7 +1130,7 @@
             }
 
             if (attr.LGType == 0) {
-                return tdUp + "<a href=\"javascript:Edit('" + attr.MyPK + "','" + attr.MyDataType + "','" + attr.GroupID + "','" + attr.LGType + "');\" > " + attr.Name + "</a>" + tdDown;
+                return tdUp + "<a href=\"javascript:Edit('" + attr.MyPK + "','" + attr.MyDataType + "','" + attr.GroupID + "','" + attr.LGType + "','" + attr.UIContralType + "');\" > " + attr.Name + "</a>" + tdDown;
             }
 
             if (attr.LGType == 1)
@@ -1329,13 +1329,21 @@
             });
         }
 
-        function Edit(mypk, ftype, gf, fk_mapdtl) {
+        function Edit(mypk, ftype, gf, fk_mapdtl, uiContralType) {
 
             var url = 'EditF.htm?DoType=Edit&MyPK=' + mypk + '&FType=' + ftype + '&FK_MapData=' + pageParam.fk_mapdata + '&GroupField=' + gf;
             var title = '';
             if (ftype == 1) {
-                title = '字段String属性';
-                url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=' + mypk + '&s=' + Math.random();
+
+                if (uiContralType == 0) {
+                    title = '字段String属性';
+                    url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=' + mypk + '&s=' + Math.random();
+                }
+
+                if (uiContralType == 11) {
+                    title = '装饰类图片属性';
+                    url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.FrmImg&PKVal=' + mypk + '&s=' + Math.random();
+                }
             }
 
             if (ftype == 2 || ftype == 3 || ftype == 5 || ftype == 8) {
@@ -1573,7 +1581,10 @@
 
             var url = '../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFool&PKVal=' + GetQueryString("FK_MapData");
 
-            OpenEasyUiDialog(url, "eudlgframe", '属性', 800, 450, "icon-property", true, null, null, null, function () {
+            //获取页面的大小
+            var W = document.body.clientWidth - 80;
+            var H = document.body.clientHeight - 80;
+            OpenEasyUiDialog(url, "eudlgframe", '属性', W, H, "icon-property", true, null, null, null, function () {
                 window.location.href = window.location.href;
             });
         }

@@ -207,4 +207,24 @@ public interface LocalWSI {
 	 */
 	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg, String userNo) throws Exception;
 
+	/// <summary>
+    /// 获得当前流程信息.
+    /// </summary>
+    /// <param name="flowNo">流程ID.</param>
+    /// <returns>当前节点信息</returns>
+    public String CurrFlowInfo(String flowNo)throws Exception;
+  /// <summary>
+    /// 获得当前流程信息.
+    /// </summary>
+    /// <param name="flowNo">流程ID.</param>
+    /// <returns>当前节点信息</returns>
+    public String CurrGenerWorkFlowInfo(long workID)throws Exception;
+    /** 
+	 获得工作进度-用于展示流程的进度图
+	 
+	 @param workID workID
+	 @param userNo 用户编号
+	 @return 返回待办
+	*/
+   public String WorkProgressBar(long  workID, String userNo) throws Exception;
 }

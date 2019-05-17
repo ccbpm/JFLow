@@ -4,17 +4,23 @@ import java.util.Hashtable;
 
 import javax.jws.WebService;
 
+import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.En.Entity;
 import BP.GPM.Dev2Interface;
 import BP.WF.ActionType;
 import BP.WF.Flow;
 import BP.WF.GenerWorkFlow;
+import BP.WF.GenerWorkerList;
+import BP.WF.GenerWorkerLists;
 import BP.WF.Node;
 import BP.WF.Nodes;
+import BP.WF.WFState;
 import BP.WF.WorkFlow;
 import BP.WF.Data.GERpt;
+
 import BP.WF.Template.CondModel;
 import BP.WF.Template.Directions;
 import BP.WF.Template.FlowExt;
@@ -136,8 +142,10 @@ public class LocalWS implements LocalWSI{
         Hashtable myht = new Hashtable();
         myht.put("Message", msg);
         myht.put("IsStopFlow", objs.getIsStopFlow());
+
         if (objs.getIsStopFlow()==false)
         {
+>
         myht.put("VarAcceptersID", objs.getVarAcceptersID());
         myht.put("VarAcceptersName", objs.getVarAcceptersName());
         myht.put("VarToNodeID", objs.getVarToNodeID());
@@ -359,4 +367,108 @@ public class LocalWS implements LocalWSI{
 		FlowExt flow = new FlowExt(flowNo);
 		return flow.DoRebackFlowData(workId, backToNodeID, backMsg);
 	}
+	/** 
+	 获得当前流程信息.
+	 
+	 @param flowNo 流程ID.
+	 @return 当前节点信息
+	*/
+    public String CurrFlowInfo(String flowNo) throws Exception
+    {
+        Flow fl = new Flow(flowNo);
+        return fl.ToJson();
+    }
+    /** 
+	 获得当前流程信息.
+	 
+	 @param flowNo 流程ID.
+	 @return 当前节点信息
+	*/
+    public String CurrGenerWorkFlowInfo(long workID) throws Exception
+    {
+        GenerWorkFlow gwf = new GenerWorkFlow(workID);
+        return gwf.ToJson();
+    }
+    
+	/** 
+	 获得工作进度-用于展示流程的进度图
+	 
+	 @param workID workID
+	 @param userNo 用户编号
+	 @return 返回待办
+	*/
+    public String WorkProgressBar(long  workID, String userNo) throws Exception
+    {
+    	String sql = "";
+		DataSet ds = new DataSet();
+
+		//流程控制主表, 可以得到流程状态，停留节点，当前的执行人.
+		GenerWorkFlow gwf = new GenerWorkFlow(workID);
+		
+		DataTable dt1 = gwf.ToDataTableField("WF_GenerWorkFlow");
+		dt1.TableName = "WF_GenerWorkFlow";
+		ds.Tables.add(dt1);
+
+		//节点信息.
+		Nodes nds = new Nodes(gwf.getFK_Flow());
+		DataTable dt2 = nds.ToDataTableField("WF_Node");
+		ds.Tables.add(dt2);
+
+		//方向。
+		Directions dirs = new Directions(gwf.getFK_Flow());
+		ds.Tables.add(dirs.ToDataTableField("WF_Direction"));
+
+
+		DataTable dtHistory = new DataTable();
+		dtHistory.TableName = "Track";
+		dtHistory.Columns.Add("FK_Node");
+		dtHistory.Columns.Add("NodeName");
+		dtHistory.Columns.Add("EmpNo");
+		dtHistory.Columns.Add("EmpName");
+		dtHistory.Columns.Add("RDT"); //记录日期.
+		dtHistory.Columns.Add("SDT"); //应完成日期.
+
+		//执行人.
+		if (gwf.getWFState() == WFState.Complete)
+		{
+			//历史执行人. 
+			sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workID + " AND (ActionType=1 OR ActionType=0)  ORDER BY RDT DESC";
+			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
+
+			for (DataRow drTrack : dtTrack.Rows)
+			{
+				DataRow dr = dtHistory.NewRow();
+				dr.setValue("FK_Node", drTrack.getValue("NDFrom"));
+			   // dr["ActionType"] = drTrack["NDFrom"];
+				dr.setValue("NodeName", drTrack.getValue("NDFromT"));
+				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
+				dr.setValue("EmpName", drTrack.getValue("EmpFromT"));
+				dr.setValue("RDT", drTrack.getValue("RDT"));
+				dr.setValue("SDT", drTrack.getValue(""));
+				dtHistory.Rows.add(dr);
+			}
+		}
+		else
+		{
+			GenerWorkerLists gwls = new GenerWorkerLists(workID);
+			for (GenerWorkerList gwl : gwls.ToJavaList())
+			{
+				DataRow dr = dtHistory.NewRow();
+				    dr.setValue("FK_Node", gwl.getFK_Node());
+					dr.setValue("NodeName",gwl.getFK_NodeText());
+					dr.setValue("EmpNo",gwl.getFK_Emp());
+					dr.setValue("EmpName",gwl.getFK_EmpText());
+					dr.setValue("RDT",gwl.getRDT());
+					dr.setValue("SDT",gwl.getSDT());
+				
+			}
+		}
+
+		ds.Tables.add(dtHistory);
+
+		return BP.Tools.Json.ToJson(ds);
+
+    }
+
+	
 }

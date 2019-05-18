@@ -10,12 +10,15 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import BP.DA.Cash;
 import BP.DA.DBAccess;
+import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
@@ -25,6 +28,8 @@ import BP.En.Entities;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.Port.Emps;
+import BP.Sys.FrmAttachmentDB;
+import BP.Sys.FrmAttachmentDBs;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.Tools.ConvertTools;
@@ -1034,17 +1039,21 @@ public class RTFEngine
 				}
 				
 				int pos_rowKey = str.indexOf(shortName);
+				int  end_rowKey = str.lastIndexOf(shortName);
 				int row_start = -1, row_end = -1;
 				if (pos_rowKey != -1)
 				{
 					row_start = str.substring(0, pos_rowKey).lastIndexOf(
 							"\\row");
-					row_end = str.substring(pos_rowKey).indexOf("\\row");
+					//获取从表表名出现的最后的位置
+					//int end_rowKey = str.lastIndexOf(shortName);
+					//获取row的位置 
+					row_end = str.substring(end_rowKey).indexOf("\\row");
 				}
 				
 				if (row_start != -1 && row_end != -1)
 				{
-					String row = str.substring(row_start, (pos_rowKey)
+					String row = str.substring(row_start, (end_rowKey)
 							+ row_end);
 					str = new StringBuilder(str.toString().replace(row, ""));
 					
@@ -1113,9 +1122,7 @@ public class RTFEngine
 																	+ "."
 																	+ attr.getKey()
 																	+ "Text>",
-															GetCode(dtl
-																	.GetValRefTextByKey(attr
-																			.getKey())));
+															dtl.GetValRefTextByKey(attr.getKey()));
 										} else
 										{
 											rowData = rowData.replace(
@@ -1130,8 +1137,8 @@ public class RTFEngine
 								default:
 									rowData = rowData.replace("<" + shortName
 											+ "." + attr.getKey() + ">",
-											GetCode(dtl.GetValStrByKey(attr
-													.getKey())));
+											dtl.GetValStrByKey(attr
+													.getKey()));
 									break;
 							}
 						}
@@ -1216,7 +1223,55 @@ public class RTFEngine
 				}
 			}
 			// 从表合计
+			//审核组件组合信息
 			
+			//根据track表获取审核的节点
+			List<String> nodes = new ArrayList<String>();
+			int i = 0;
+			int node = 0;
+			//节点单个审核人
+		   if (dtTrack != null && str.toString().contains("<WorkCheckBegin>")== false && str.toString().contains("<WorkCheckEnd>") ==false){
+				for(DataRow row : dtTrack.Rows) //此处的22是ActionType.WorkCheck的值，此枚举位于BP.WF项目中，此处暂写死此值
+	            {
+	                int acType = Integer.parseInt(row.getValue("ActionType").toString());
+	                if (acType != 22)
+	                    continue;
+	                str = new StringBuilder(str.toString().replace(
+							"<WorkCheck.Msg." + row.getValue("NDFrom") + ">", this.GetValueCheckWorkByKey(row, "Msg")));
+	                str = new StringBuilder(str.toString().replace(
+							"<WorkCheck.Rec." + row.getValue("NDFrom") + ">", this.GetValueCheckWorkByKey(row, "EmpFromT")));
+	                str = new StringBuilder(str.toString().replace(
+							"<WorkCheck.RDT." + row.getValue("NDFrom") + ">",this.GetValueCheckWorkByKey(row, "RDT")));
+	                
+	                
+	            }
+		   }
+
+            
+             //多附件
+           
+             for(Object athObjEnsName : this.getEnsDataAths().keySet())
+             {
+                 String athName = "Ath." + athObjEnsName.toString();
+                 String athFilesName = "";
+                 if (str.indexOf(athName) == -1)
+                     continue;
+
+                 FrmAttachmentDBs athDbs = (FrmAttachmentDBs) this.getEnsDataAths().get(athObjEnsName);
+                 if (athDbs == null)
+                     continue;
+                 for(FrmAttachmentDB athDb : athDbs.ToJavaList())
+                 {
+                     if (athFilesName.length() > 0)
+                         athFilesName += " ， ";
+
+                     athFilesName += athDb.getFileName();
+                 }
+                 str =new StringBuilder(str.toString().replace(
+                		 "<" + athName + ">",
+                		 this.GetCode(athFilesName))); 
+             }
+             
 			// 要替换的字段
 			if (replaceVals != null && replaceVals.contains("@"))
 			{
@@ -1258,13 +1313,7 @@ public class RTFEngine
 			
 			
 			
-			//
-			// StreamWriter wr = new StreamWriter(this.TempFilePath, false,
-			// Encoding.ASCII);
-			// str = new StringBuilder(str.toString().replace("<", ""));
-			// str = new StringBuilder(str.toString().replace(">", ""));
-			// wr.Write(str);
-			// wr.Close();
+		
 		} catch (RuntimeException ex)
 		{
 			String msg = "";
@@ -1294,6 +1343,29 @@ public class RTFEngine
 		}
 	}
 	
+	 private String GetValueCheckWorkByKey(DataRow row, String key)
+     {
+         key = key.replace(" ", "");
+         key = key.replace("\r\n", "");
+
+         switch (key)
+         {
+             case "RDT":
+                 return row.getValue("RDT").toString(); //审核日期.
+             case "RDT-NYR":
+                 String rdt = row.getValue("RDT").toString(); //审核日期.
+                 return BP.DA.DataType.ParseSysDate2DateTimeFriendly(rdt);
+             case "Rec":
+                 return row.getValue("EmpFrom").toString(); //记录人.
+             case "RecName":
+                 return row.getValue("EmpFromT").toString(); //审核人.
+             case "Msg":
+             case "Note":
+                 return row.getValue("Msg").toString();
+             default:
+                 return row.getValue(key).toString();
+         }
+     }
 	// 生成单据
 	/**
 	 * 生成单据根据
@@ -1308,31 +1380,7 @@ public class RTFEngine
 	public final void MakeDocByDataSet(String templeteFile, String saveToPath,
 			String saveToFileName, DataTable mainDT, DataSet dtlsDS)
 	{
-		// String valMain =
-		// DBAccess.RunSQLReturnString("SELECT NO FROM SYS_MapData");
-		// this.HisGEEntity = new GEEntity(valMain);
-		// this.HisGEEntity.getRow().LoadDataTable(mainDT, mainDT.Rows[0]);
-		// this.AddEn(this.HisGEEntity); //增加一个主表。
-		// if (dtlsDS != null)
-		// {
-		// for (DataTable dt : dtlsDS.Tables)
-		// {
-		// String dtlID =
-		// DBAccess.RunSQLReturnString("SELECT NO FROM SYS_MapDtl ");
-		// BP.Sys.GEDtls dtls = new BP.Sys.GEDtls(dtlID);
-		// for (DataRow dr : dt.Rows)
-		// {
-		// Entity tempVar = dtls.getGetNewEntity();
-		// BP.Sys.GEDtl dtl = (BP.Sys.GEDtl)((tempVar instanceof BP.Sys.GEDtl) ?
-		// tempVar : null);
-		// dtl.getRow().LoadDataTable(dt, dr);
-		// dtls.AddEntity(dtl);
-		// }
-		// this.AddDtlEns(dtls); //增加一个明晰。
-		// }
-		// }
-		//
-		// this.MakeDoc(templeteFile, saveToPath, saveToFileName, "", false);
+		
 	}
 	
 	// 方法

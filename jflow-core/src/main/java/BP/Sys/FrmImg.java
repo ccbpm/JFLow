@@ -222,35 +222,44 @@ public class FrmImg extends EntityMyPK
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("Sys_FrmImg", "图片");
-		map.Java_SetDepositaryOfEntity(Depositary.None);
-		map.Java_SetDepositaryOfMap(Depositary.Application);
-		map.Java_SetEnType(EnType.Sys);
-		map.AddMyPK();
 
-		map.AddTBString(FrmImgAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
-		map.AddTBInt(FrmImgAttr.ImgAppType, 0, "应用类型", false, false);
+		   Map map = new Map("Sys_FrmImg", "图片");
+           map.Java_SetDepositaryOfEntity(Depositary.None);
+           map.Java_SetDepositaryOfMap( Depositary.Application);
+           map.Java_SetEnType(EnType.Sys);
+           map.AddMyPK();
 
-		map.AddTBFloat(FrmImgAttr.X, 5, "X", true, false);
-		map.AddTBFloat(FrmImgAttr.Y, 5, "Y", false, false);
+           map.AddTBString(FrmImgAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
+           map.AddTBString(MapAttrAttr.KeyOfEn, null, "对应字段", true, false, 1, 100, 20);
 
-		map.AddTBFloat(FrmImgAttr.H, 200, "H", true, false);
-		map.AddTBFloat(FrmImgAttr.W, 160, "W", false, false);
+           map.AddTBInt(FrmImgAttr.ImgAppType, 0, "应用类型", false, false);
+           
+           map.AddTBFloat(FrmImgAttr.X, 5, "X", true, false);
+           map.AddTBFloat(FrmImgAttr.Y, 5, "Y", false, false);
 
-		map.AddTBString(FrmImgAttr.ImgURL, null, "ImgURL", true, false, 0, 200, 20);
-		map.AddTBString(FrmImgAttr.ImgPath, null, "ImgPath", true, false, 0, 200, 20);
+           map.AddTBFloat(FrmImgAttr.H, 200, "H", true, false);
+           map.AddTBFloat(FrmImgAttr.W, 160, "W", false, false);
 
-		map.AddTBString(FrmImgAttr.LinkURL, null, "LinkURL", true, false, 0, 200, 20);
-		map.AddTBString(FrmImgAttr.LinkTarget, "_blank", "LinkTarget", true, false, 0, 200, 20);
+           map.AddTBString(FrmImgAttr.ImgURL, null, "ImgURL", true, false, 0, 200, 20);
+           map.AddTBString(FrmImgAttr.ImgPath, null, "ImgPath", true, false, 0, 200, 20);
+           
+           map.AddTBString(FrmImgAttr.LinkURL, null, "LinkURL", true, false, 0, 200, 20);
+           map.AddTBString(FrmImgAttr.LinkTarget, "_blank", "LinkTarget", true, false, 0, 200, 20);
 
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+           map.AddTBString(FrmImgAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 
-			//如果是 seal 就是岗位集合。
-		map.AddTBString(FrmImgAttr.Tag0, null, "参数", true, false, 0, 500, 20);
-		map.AddTBInt(FrmImgAttr.ImgSrcType, 0, "图片来源0=本地,1=URL", true, false);
-		map.AddTBInt(FrmImgAttr.IsEdit, 0, "是否可以编辑", true, false);
-		map.AddTBString(FrmImgAttr.Name, null, "中文名称", true, false, 0, 500, 20);
-		map.AddTBString(FrmImgAttr.EnPK, null, "英文名称", true, false, 0, 500, 20);
+           //如果是 seal 就是岗位集合。
+           map.AddTBString(FrmImgAttr.Tag0, null, "参数", true, false, 0, 500, 20);
+           map.AddTBInt(FrmImgAttr.ImgSrcType, 0, "图片来源0=本地,1=URL", true, false);
+           map.AddTBInt(FrmImgAttr.IsEdit, 0, "是否可以编辑", true, false);
+           map.AddTBString(FrmImgAttr.Name, null, "中文名称", true, false, 0, 500, 20);
+           map.AddTBString(FrmImgAttr.EnPK, null, "英文名称", true, false, 0, 500, 20);
+           map.AddTBInt(MapAttrAttr.ColSpan, 0, "单元格数量", false, true);
+           map.AddTBInt(MapAttrAttr.TextColSpan, 1, "文本单元格数量", false, true);
+           map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", false, true);
+
+           //显示的分组.
+           map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组",BP.Sys.FrmUI.MapAttrString.SQLOfGroupAttr(), true);
 
 
 		this.set_enMap(map);

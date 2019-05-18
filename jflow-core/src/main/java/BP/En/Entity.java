@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
+
 import BP.DA.AtPara;
 import BP.DA.Cash;
 import BP.DA.Cash2019;
@@ -1694,8 +1695,19 @@ public abstract class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	public final int Update(String key1, Object val1) throws Exception {
-		this.SetValByKey(key1, val1);
-		return this.Update(key1.split("[,]", -1));
+		 this.SetValByKey(key1, val1);
+
+         String sql = "";
+
+         if ((val1 instanceof Integer)
+             || (val1 instanceof Float)
+             || (val1 instanceof Long)
+             || (val1 instanceof BigDecimal))
+             sql = "UPDATE " + this.getEnMap().getPhysicsTable() + " SET " + key1 + " =" + val1 + " WHERE " + this.getPK() + "='" + this.getPKVal() + "'";
+         if (val1 instanceof String)
+             sql = "UPDATE " + this.getEnMap().getPhysicsTable() + " SET " + key1 + " ='" + val1 + "' WHERE " + this.getPK() + "='" + this.getPKVal() + "'";
+
+         return this.RunSQL(sql);
 	}
 
 	public final int Update(String key1, Object val1, String key2, Object val2) throws Exception {

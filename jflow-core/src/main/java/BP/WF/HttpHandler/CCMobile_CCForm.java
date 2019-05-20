@@ -1,11 +1,11 @@
 package BP.WF.HttpHandler;
 
 
-import java.util.Map;
 
 import BP.DA.DataType;
 import BP.En.Attr;
 import BP.En.Entity;
+import BP.En.Map;
 import BP.En.UIContralType;
 import BP.Sys.GEDtl;
 import BP.Sys.GEDtls;

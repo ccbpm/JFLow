@@ -35,7 +35,8 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 			   }
 		   }
 	   }
-	   throw new RuntimeException("@没有找到系统变量IsStopFlow");
+	   return false;
+	   //throw new RuntimeException("@没有找到系统变量IsStopFlow");
    }
 
 	/** 

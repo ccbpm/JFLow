@@ -31,11 +31,12 @@ import WebService.LocalWSI;
 public class LocalWS implements LocalWSI{
 	
 	/**
-	 * 寰呭姙
-	 * @param userNo 鐢ㄦ埛缂栧彿
-	 * @param sysNo 绯荤粺缂栧彿,涓虹┖鏃惰繑鍥炲钩鍙版墍鏈夋暟鎹�
+	 * 待办
+	 * @param userNo 用户编号
+	 * @param sysNo 系统编号,为空时返回平台所有数据
 	 * @return
 	 */
+
 	@Override
 	public String DB_Todolist(String userNo, String sysNo) {
 		try {
@@ -55,9 +56,9 @@ public class LocalWS implements LocalWSI{
 	}
 	
 	/**
-	 * 鑾峰緱鍦ㄩ��
-	 * @param userNo 鐢ㄦ埛缂栧彿
-	 * @param sysNo 绯荤粺缂栧彿,涓虹┖鏃惰繑鍥炲钩鍙版墍鏈夋暟鎹�
+	 * 获得在途
+	 * @param userNo 用户编号
+	 * @param sysNo 系统编号,为空时返回平台所有数据
 	 * @return
 	 * @throws Exception 
 	 */
@@ -69,12 +70,13 @@ public class LocalWS implements LocalWSI{
 	}
 	
 	/**
-	 * 鎴戝彲浠ュ彂璧风殑娴佺▼
-	 * @param userNo 鐢ㄦ埛缂栧彿
-	 * @param sysNo  绯荤粺缂栧彿,涓虹┖鏃惰繑鍥炲钩鍙版墍鏈夋暟鎹�
-	 * @return 杩斿洖鎴戝彲浠ュ彂璧风殑娴佺▼鍒楄〃.
+	 * 我可以发起的流程
+	 * @param userNo 用户编号
+	 * @param sysNo  系统编号,为空时返回平台所有数据
+	 * @return 返回我可以发起的流程列表.
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String DB_StarFlows(String userNo, String sysNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -83,9 +85,9 @@ public class LocalWS implements LocalWSI{
 	}
 	
 	/**
-	 * 鎴戝彂璧风殑娴佺▼瀹炰緥
-	 * @param userNo 鐢ㄦ埛缂栧彿
-	 * @param sysNo 缁熺紪鍙�,涓虹┖鏃惰繑鍥炲钩鍙版墍鏈夋暟鎹�
+	 * 我发起的流程实例
+	 * @param userNo 用户编号
+	 * @param sysNo 统编号,为空时返回平台所有数据
 	 * @param pageSize
 	 * @param pageIdx
 	 * @return
@@ -108,13 +110,14 @@ public class LocalWS implements LocalWSI{
         return BP.Tools.Json.ToJson(dt);
 	}
 
-	/**
-	 * 鍒涘缓WorkID
-	 * @param flowNo 娴佺▼缂栧彿
-	 * @param userNo 宸ヤ綔浜哄憳缂栧彿
-	 * @return 涓�涓暱鏁村瀷鐨勫伐浣滄祦绋嬪疄渚�
+/**
+	 * 创建WorkID
+	 * @param flowNo 流程编号
+	 * @param userNo 工作人员编号
+	 * @return 一个长整型的工作流程实例
 	 * @throws Exception 
 	 */
+
 	@Override
 	public long CreateWorkID(String flowNo, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -122,15 +125,16 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 鎵ц鍙戦��
-	 * @param flowNo 娴佺殑绋嬫ā鐗圛D
-	 * @param workid 宸ヤ綔ID
-	 * @param ht 鍙傛暟锛屾垨鑰呰〃鍗曞瓧娈�.
-	 * @param toNodeID 鍒拌揪鐨勮妭鐐笽D.濡傛灉璁╃郴缁熻嚜鍔ㄨ绠楀氨浼犲叆0
-	 * @param toEmps 鍒拌揪鐨勪汉鍛業Ds,姣斿:zhangsan,lisi,wangwu. 濡傛灉涓篘ull灏辨爣璇嗚绯荤粺鑷姩璁＄畻
-	 * @return 鍙戦�佺殑缁撴灉淇℃伅.
+	 * 执行发送
+	 * @param flowNo 流的程模版ID
+	 * @param workid 工作ID
+	 * @param ht 参数，或者表单字段.
+	 * @param toNodeID 到达的节点ID.如果让系统自动计算就传入0
+	 * @param toEmps 到达的人员IDs,比如:zhangsan,lisi,wangwu. 如果为Null就标识让系统自动计算
+	 * @return 发送的结果信息.
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -145,7 +149,7 @@ public class LocalWS implements LocalWSI{
 
         if (objs.getIsStopFlow()==false)
         {
->
+
         myht.put("VarAcceptersID", objs.getVarAcceptersID());
         myht.put("VarAcceptersName", objs.getVarAcceptersName());
         myht.put("VarToNodeID", objs.getVarToNodeID());
@@ -155,11 +159,12 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 淇濆瓨鍙傛暟
-	 * @param workid 宸ヤ綔ID
-	 * @param paras 鐢ㄤ簬鎺у埗娴佺▼杩愯浆鐨勫弬鏁帮紝姣斿鏂瑰悜鏉′欢. 鏍煎紡涓�:@JinE=1000@QingJaiTianShu=100
+	 * 保存参数
+	 * @param workid 工作ID
+	 * @param paras 用于控制流程运转的参数，比如方向条件. 格式为:@JinE=1000@QingJaiTianShu=100
 	 * @throws Exception 
 	 */
+
 	@Override
 	public void SaveParas(long workid, String paras, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -168,13 +173,14 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 鑾峰緱涓嬩竴涓妭鐐逛俊鎭�
-	 * @param flowNo 娴佺▼缂栧彿
-	 * @param workid 娴佺▼瀹炰緥
-	 * @param paras 鏂瑰悜鏉′欢鎵�闇�瑕佺殑鍙傛暟锛屽彲浠ヤ负绌恒��
-	 * @return 涓嬩竴涓妭鐐圭殑JSON.
+	 * 获得下一个节点信息
+	 * @param flowNo 流程编号
+	 * @param workid 流程实例
+	 * @param paras 方向条件所需要的参数，可以为空。
+	 * @return 下一个节点的JSON.
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String GenerNextStepNode(String flowNo, long workid, String paras, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -184,20 +190,21 @@ public class LocalWS implements LocalWSI{
         int nodeID = BP.WF.Dev2Interface.Node_GetNextStepNode(flowNo, workid);
         BP.WF.Node nd = new BP.WF.Node(nodeID);
 
-        //濡傛灉瀛楁 DeliveryWay = 4 灏辫〃绀哄埌杈剧殑鎺ョ偣鏄敱褰撳墠鑺傜偣鍙戦�佷汉閫夋嫨鎺ユ敹浜�.
-        //鑷畾涔夊弬鏁扮殑瀛楁鏄� SelfParas, DeliveryWay 
-        // CondModel = 鏂瑰悜鏉′欢璁＄畻瑙勫垯.
+       //如果字段 DeliveryWay = 4 就表示到达的接点是由当前节点发送人选择接收人.
+		//自定义参数的字段是 SelfParas, DeliveryWay 
+		// CondModel = 方向条件计算规则.
         return nd.ToJson();
 	}
 
 	/**
-	 * 鑾峰緱涓嬩竴姝ヨ妭鐐圭殑鎺ユ敹浜�
-	 * @param flowNo 娴佺▼ID
-	 * @param toNodeID 鑺傜偣ID
-	 * @param workid 宸ヤ綔浜嬩緥ID
-	 * @return 杩斿洖涓や釜缁撴灉闆嗕竴涓槸鍒嗙粍鐨凞epts(No,Name)锛屽彟澶栦竴涓槸浜哄憳鐨凟mps(No, Name, FK_Dept),鎺ュ彈鍚庯紝鐢ㄤ簬鏋勯�犱汉鍛橀�夋嫨鍣�.
+	 * 获得下一步节点的接收人
+	 * @param flowNo 流程ID
+	 * @param toNodeID 节点ID
+	 * @param workid 工作事例ID
+	 * @return 返回两个结果集一个是分组的Depts(No,Name)，另外一个是人员的Emps(No, Name, FK_Dept),接受后，用于构造人员选择器.
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -210,11 +217,12 @@ public class LocalWS implements LocalWSI{
 	}
 	
 	/**
-	 * 灏嗚杈惧埌鐨勮妭鐐�
-	 * @param workID 褰撳墠鑺傜偣ID
-	 * @return 杩斿洖鑺傜偣闆嗗悎鐨刯son.
+	 * 将要退回到的节点
+	 * @param workID
+	 * @return 返回节点集合的json.
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String WillReturnToNodes(int workID, String userNo) throws Exception {
 		
@@ -234,11 +242,12 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 灏嗚杈惧埌鐨勮妭鐐�
-	 * @param currNodeID 褰撳墠鑺傜偣ID
-	 * @return 杩斿洖鑺傜偣闆嗗悎鐨刯son.
+	 * 将要达到的节点
+	 * @param currNodeID 当前节点ID
+	 * @return 返回节点集合的json.
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String WillToNodes(int currNodeID, String userNo) throws Exception {
 		
@@ -247,9 +256,6 @@ public class LocalWS implements LocalWSI{
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		Node nd = new Node(currNodeID);
 		
-      //  if (nd.getCondModel() != CondModel.SendButtonSileSelect)
-         //   return "err@褰撳墠鑺傜偣涓嶆槸鐢变笂涓�姝ユ搷浣滃憳閫夋嫨鐨�";
-
         Directions dirs = new Directions();
         Nodes nds = dirs.GetHisToNodes(currNodeID, false);
         return nds.ToJson();
@@ -260,11 +266,12 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 鑾峰緱褰撳墠鑺傜偣淇℃伅.
-	 * @param currNodeID  褰撳墠鑺傜偣ID
+	 * 获得当前节点信息.
+	 * @param currNodeID  当前节点ID
 	 * @return
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String CurrNodeInfo(int currNodeID, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -273,11 +280,12 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 鑾峰緱褰撳墠娴佺▼淇℃伅.
-	 * @param flowNo 娴佺▼ID
-	 * @return 褰撳墠鑺傜偣淇℃伅
+	 * 获得当前流程信息.
+	 * @param flowNo 流程ID
+	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
+
 	@Override
 	public String CurrFlowInfo(String flowNo, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -286,9 +294,9 @@ public class LocalWS implements LocalWSI{
 	}
 
 	/**
-	 * 鑾峰緱褰撳墠娴佺▼淇℃伅.
-	 * @param workID 娴佺▼ID
-	 * @return 褰撳墠鑺傜偣淇℃伅
+	 * 获得当前流程信息.
+	 * @param workID 流程ID
+	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
 	@Override
@@ -300,11 +308,11 @@ public class LocalWS implements LocalWSI{
 
 	
 	/**
-	 * 閫�鍥�.
-	 * @param workID 娴佺▼ID
-	 * @param retunrnToNodeID 娴佺▼閫�鍥炵殑鑺傜偣ID
-	 * @param returnMsg 閫�鍥炲師鍥�
-	 * @return 閫�鍥炵粨鏋滀俊鎭�
+	 * 退回.
+	 * @param workID 流程ID
+	 * @param retunrnToNodeID 流程退回的节点ID
+	 * @param returnMsg 退回原因
+	 * @return 退回结果信息
 	 * @throws Exception 
 	 */
   @Override
@@ -316,18 +324,19 @@ public class LocalWS implements LocalWSI{
 	
    }
   
-  /**
-	 * 鎵ц娴佺▼缁撴潫 璇存槑:寮哄埗娴佺▼缁撴潫.
+/**
+	 * 执行流程结束 说明:强制流程结束.
 	 * 
 	 * @param flowNo
-	 *            娴佺▼缂栧彿
+	 *            流程编号
 	 * @param workID
-	 *            宸ヤ綔ID
+	 *            工作ID
 	 * @param msg
-	 *            娴佺▼缁撴潫鍘熷洜
-	 * @return 杩斿洖鎴愬姛鎵ц淇℃伅
+	 *            流程结束原因
+	 * @return 返回成功执行信息
 	 * @throws Exception
 	 */
+
   @Override
 	public  String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg, String userNo) throws Exception {
 	  BP.WF.Dev2Interface.Port_Login(userNo);
@@ -342,24 +351,28 @@ public class LocalWS implements LocalWSI{
 	}
 	
 	/**
-	 * 鎵ц鎾ら攢鎿嶄綔
+	 * 执行撤销
+	 * @param flowNo 流程编码
+	 * @param workID 工作ID
+	 * @param unSendToNode 撤销到的节点
+	 * @param fid 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public String Runing_UnSend(String userNo,String flowNo, long workID, int unSendToNode,long fid) throws Exception{
-		//闇�瑕佸厛鐧婚檰
+		
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		
 		return BP.WF.Dev2Interface.Flow_DoUnSend(flowNo, workID,unSendToNode,fid);
 	}
 	
 	/**
-	 * 娴佺▼缁撴潫鍚庡洖婊�
-	 * @param flowNo 娴佺▼缂栫爜
-	 * @param workId 宸ヤ綔ID
-	 * @param backToNodeID 鍥炴粴鍒扮殑鑺傜偣ID
-	 * @param backMsg 鍥炴粴鍘熷洜
-	 * @return 鍥炴粴淇℃伅
+	 * 流程结束后回滚
+	 * @param flowNo 流程编码
+	 * @param workId 工作ID
+	 * @param backToNodeID 回滚到的节点ID
+	 * @param backMsg 回滚原因
+	 * @return 回滚信息
 	 * @throws Exception 
 	 */
 	public String DoRebackFlowData(String flowNo,long workId,int backToNodeID,String backMsg, String userNo) throws Exception{

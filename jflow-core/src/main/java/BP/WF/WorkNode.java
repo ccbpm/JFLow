@@ -4314,7 +4314,7 @@ public class WorkNode {
 
 								log.setFK_Node(this.getHisNode().getNodeID());
 								log.setFlowName(this.getHisFlow().getName());
-								log.setSendDT(DataType.getCurrentDataTime());
+								log.setSendDT(DataType.getCurrentDataTimess());
 								log.setWorkID(this.getWorkID());
 
 								log.Insert(); // 插入到数据库.
@@ -7379,7 +7379,7 @@ public class WorkNode {
 
 		// 如果结束流程，就增加如下信息 @于庆海翻译.
 		this.getHisGenerWorkFlow().setSender(BP.Web.WebUser.getNo());
-		this.getHisGenerWorkFlow().setSendDT(DataType.getCurrentDataTime());
+		this.getHisGenerWorkFlow().setSendDT(DataType.getCurrentDataTimess());
 
 		this.rptGe.setFlowEnder(BP.Web.WebUser.getNo());
 		this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTime());

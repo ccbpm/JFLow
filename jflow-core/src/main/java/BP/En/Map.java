@@ -79,12 +79,12 @@ public class Map
 	 */
 	public final void SetHelperAlert(String key, String context)
 	{
+        context = context.replace("@", "＠");
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "javascript:alert('" + context + "')";
 	}
 	
-	// 帮助.
-	
+	// 帮助.	
 	// 与xml 文件操作有关系
 	/**
 	 * xml 文件的位置

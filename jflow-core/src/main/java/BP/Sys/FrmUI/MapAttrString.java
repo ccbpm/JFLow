@@ -21,6 +21,7 @@ import BP.WF.Glo;
  * 实体属性
  */
 public class MapAttrString extends EntityMyPK {
+	 
 	/**
 	 * 表单ID
 	 */

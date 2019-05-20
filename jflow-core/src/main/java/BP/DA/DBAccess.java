@@ -3014,7 +3014,7 @@ public class DBAccess {
 			if (oradt.Rows.size() == 0) {
 				throw new RuntimeException("@表不存在[" + tabelOrViewName + "]");
 			}
-			if (oradt.Rows.get(0).getValue(0).toString().toUpperCase().trim().equals("V")) {
+			if (oradt.Rows.get(0).getValue(0).toString().toUpperCase().trim().equals("VIEW")) {
 				return true;
 			} else {
 				return false;

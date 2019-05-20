@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.*; 
 import javax.imageio.ImageIO;
 
-import org.apache.pdfbox.multipdf.PDFMergerUtility;
+//import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
 import java.util.Hashtable;
 
@@ -1437,13 +1437,13 @@ public class MakeForm2Html
     		 if (new File(pdfPath).exists() == false)
 	        	 new File(pdfPath).mkdirs();
     		 
-    		 PDFMergerUtility merger=new PDFMergerUtility();
+    	//	 PDFMergerUtility merger=new PDFMergerUtility();
     		 String[] fileInFolder=BaseFileUtils.getFiles(pdfTempPath);
     		 for(int i=0;i<fileInFolder.length;i++){
-    			merger.addSource(fileInFolder[i]);
+    		//	merger.addSource(fileInF/]);
     		  }
-    		 merger.setDestinationFileName(pdfFile);
-    		 merger.mergeDocuments();
+    		// merger.setDestinationFileName(pdfFile);
+    		// merger.mergeDocuments();
     		 
     		 //合并完删除文件夹
     		 BaseFileUtils.deleteDirectory(pdfTempPath);

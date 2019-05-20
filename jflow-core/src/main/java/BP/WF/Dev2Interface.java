@@ -218,13 +218,13 @@ public class Dev2Interface {
 			// 如果是授权状态.
 			WFEmp emp = new WFEmp(WebUser.getNo());
 			sql = "SELECT count( distinct a.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='"
-					+ WebUser.getNo() + "' AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) AND A.FK_Flow IN "
+					+ WebUser.getNo() + "' AND A.WFState!=3 AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) AND A.FK_Flow IN "
 					+ emp.getAuthorFlows();
 			return BP.DA.DBAccess.RunSQLReturnValInt(sql);
 		} else {
 			Paras ps = new Paras();
 			ps.SQL = "SELECT count( distinct a.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-					+ SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) ";
+					+ SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.IsEnable=1 AND A.WFState!=3 AND (B.IsPass=1 OR B.IsPass<0) ";
 			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 		}
@@ -2910,13 +2910,13 @@ public class Dev2Interface {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND A.Starter="
 							+ dbStr + "Starter  AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
+							+ "FK_Emp AND B.IsEnable=1 AND A.WFState !=3 AND (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows()+" Order by A.RDT DESC";
 					ps.Add("Starter", userNo);
 					ps.Add("FK_Emp", userNo);
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
+							+ dbStr + "FK_Emp AND B.IsEnable=1 AND A.WFState !=3  AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows()+" Order by A.RDT DESC";
 					ps.Add("FK_Emp", userNo);
 				}
@@ -2924,7 +2924,7 @@ public class Dev2Interface {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter=" + dbStr
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter=" + dbStr
 							+ "Starter AND A.FK_Flow IN " + emp.getAuthorFlows()+" Order by A.RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
@@ -2932,7 +2932,7 @@ public class Dev2Interface {
 				} else {
 					ps.SQL = "SELECT DISTINCT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN "
 							+ emp.getAuthorFlows()+" Order by A.RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
@@ -2943,20 +2943,20 @@ public class Dev2Interface {
 			if (StringHelper.isNullOrEmpty(fk_flow)) {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter="
+							+ dbStr + "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0) AND  A.Starter="
 							+ dbStr + "Starter  Order by A.RDT DESC";
 					ps.Add("FK_Emp", userNo);
 					ps.Add("Starter", userNo);
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp="
-							+ dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0)  Order by A.RDT DESC";
+							+ dbStr + "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND  (B.IsPass=1 or B.IsPass < 0)  Order by A.RDT DESC";
 					ps.Add("FK_Emp", userNo);
 				}
 			} else {
 				if (isMyStarter == true) {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 ) AND  A.Starter=" + dbStr
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND (B.IsPass=1 or B.IsPass < 0 ) AND  A.Starter=" + dbStr
 							+ "Starter   Order by A.RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
@@ -2964,7 +2964,7 @@ public class Dev2Interface {
 				} else {
 					ps.SQL = "SELECT DISTINCT a.*,"+currNode+"  AS CurrNode FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow="
 							+ dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr
-							+ "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 or B.IsPass < 0 )  Order by A.RDT DESC";
+							+ "FK_Emp AND B.IsEnable=1  AND A.WFState !=3 AND (B.IsPass=1 or B.IsPass < 0 )  Order by A.RDT DESC";
 					ps.Add("FK_Flow", fk_flow);
 					ps.Add("FK_Emp", userNo);
 				}
@@ -3014,72 +3014,11 @@ public class Dev2Interface {
 			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
 			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
 			dt.Columns.get("CURRNODE").ColumnName = "CurrNode";
-			// dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
-			// dt.Columns.get("CWORKID").ColumnName = "CWorkID";
+
 
 		}
 		return dt;
 	}
-	
-	 /// <summary>
-    /// 获取全部流程实例
-    /// </summary>
-    /// <returns></returns>
-    public static DataTable DB_AllFlowData()
-    {
-        String dbStr = SystemConfig.getAppCenterDBVarStr();
-        Paras ps = new Paras();
-
-        ps.SQL = "SELECT * FROM WF_GenerWorkFlow Where WFSTATE=3";
-        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-        {
-            dt.Columns.get("WORKID").ColumnName = "WorkID";
-            dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
-            dt.Columns.get("TITLE").ColumnName = "Title";
-            dt.Columns.get("WFSTA").ColumnName = "WFSta";
-            dt.Columns.get("NODENAME").ColumnName = "NodeName";
-            dt.Columns.get("RDT").ColumnName = "RDT";
-            dt.Columns.get("BILLNO").ColumnName = "BillNo";
-            dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
-            dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
-            dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
-            dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
-            dt.Columns.get("FID").ColumnName = "FID";
-            dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
-            dt.Columns.get("WFSTATE").ColumnName = "WFState";
-            dt.Columns.get("FK_NY").ColumnName = "FK_NY";
-            dt.Columns.get("MYNUM").ColumnName = "MyNum";
-            dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
-            dt.Columns.get("STARTER").ColumnName = "Starter";
-            dt.Columns.get("SENDER").ColumnName = "Sender";
-            dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
-            dt.Columns.get("PRI").ColumnName = "PRI";
-            dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
-            dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
-            dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
-            dt.Columns.get("PWORKID").ColumnName = "PWorkID";
-            dt.Columns.get("PNODEID").ColumnName = "PNodeID";
-            dt.Columns.get("PFID").ColumnName = "PFID";
-            dt.Columns.get("PEMP").ColumnName = "PEmp";
-            dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
-            dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
-            dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
-            dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
-            dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
-            dt.Columns.get("ATPARA").ColumnName = "AtPara";
-            dt.Columns.get("EMPS").ColumnName = "Emps";
-            dt.Columns.get("GUID").ColumnName = "GUID";
-            dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
-            dt.Columns.get("TSPAN").ColumnName = "TSpan";
-            dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
-            dt.Columns.get("SYSTYPE").ColumnName = "SysType";
-            dt.Columns.get("CURRNODE").ColumnName = "CurrNode";
-        }
-        return dt;
-
-    }
-    
 
 	/**
 	 * 在途统计:用于流程查询
@@ -3417,19 +3356,6 @@ public class Dev2Interface {
 		return Port_GetSID(userNo);
 	}
 
-	public static void Port_Login(String userNo, String sid,boolean isToken) throws Exception{
-		if(isToken == true){
-			if (userNo.equals(WebUser.getNo())) {
-				return;
-			}
-			BP.Port.Emp emp = new BP.Port.Emp(userNo);
-			WebUser.SignInOfGener(emp);
-			WebUser.setIsWap(false);
-		}else{
-			Port_Login(userNo,sid);
-		}
-
-	}
 	/**
 	 * 用户登陆,此方法是在开发者校验好用户名与密码后执行
 	 * 
@@ -4261,7 +4187,7 @@ public class Dev2Interface {
 	public static void WriteTrackDailyLog(String flowNo, int nodeFrom, long workid, long fid, String msg,
 			String optionName) throws Exception {
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-		String today = BP.DA.DataType.getCurrentData();
+		String today = BP.DA.DataType.getCurrentDate();
 
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET Msg=" + dbStr + "Msg WHERE  RDT LIKE '" + today
@@ -6305,7 +6231,7 @@ public class Dev2Interface {
 		WFEmp emp = new WFEmp(WebUser.getNo());
 		emp.setAuthor(Author);
 		emp.setAuthorWay(AuthorWay);
-		emp.setAuthorDate(BP.DA.DataType.getCurrentData());
+		emp.setAuthorDate(BP.DA.DataType.getCurrentDate());
 
 		if (!StringHelper.isNullOrEmpty(AuthorFlows)) {
 			emp.setAuthorFlows(AuthorFlows);
@@ -8928,7 +8854,7 @@ public class Dev2Interface {
 
 		emps = emps.replace(" ", "");
 		emps = emps.replace(";", ",");
-		//emps = emps.replace("@", ",");
+		emps = emps.replace("@", ",");
 		String[] strs = emps.split("[,]", -1);
 
 		boolean isPinYin = DBAccess.IsExitsTableCol("Port_Emp", "PinYin");
@@ -9528,6 +9454,11 @@ public class Dev2Interface {
 	 */
 	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID,
 			String returnToEmp, String msg, boolean isBackToThisNode) throws Exception {
+
+
+		if (DataType.IsNullOrEmpty(msg)==true)
+			throw new com.sun.star.uno.Exception("请输入退回意见.");
+		
 		// 转化成编号.
 		fk_flow = TurnFlowMarkToFlowNo(fk_flow);
 		WorkReturn wr = new WorkReturn(fk_flow, workID, fid, currentNodeID, returnToNodeID, returnToEmp,

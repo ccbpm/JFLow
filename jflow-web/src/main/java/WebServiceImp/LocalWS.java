@@ -149,11 +149,10 @@ public class LocalWS implements LocalWSI{
 
         if (objs.getIsStopFlow()==false)
         {
-
-        myht.put("VarAcceptersID", objs.getVarAcceptersID());
-        myht.put("VarAcceptersName", objs.getVarAcceptersName());
-        myht.put("VarToNodeID", objs.getVarToNodeID());
-        myht.put("VarToNodeName", objs.getVarToNodeName());
+        	myht.put("VarAcceptersID", objs.getVarAcceptersID()==null?"":objs.getVarAcceptersID());
+	        myht.put("VarAcceptersName", objs.getVarAcceptersName() == null ?"":objs.getVarAcceptersName());
+	        myht.put("VarToNodeID", objs.getVarToNodeID());
+	        myht.put("VarToNodeName", objs.getVarToNodeName()==null?"":objs.getVarToNodeName());
         }
         return BP.Tools.Json.ToJson(myht);
 	}

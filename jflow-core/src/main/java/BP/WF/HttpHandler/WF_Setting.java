@@ -200,6 +200,48 @@ public class WF_Setting extends WebContralBase
 
 		return "密码修改成功...";
 	}
+	/** 切换部门.
+	 
+	 @return 
+	 * @throws Exception 
+	 */
+   public  String ChangeDept_Submit() throws Exception
+	
+    {
+		
+		
+        String deptNo = this.GetRequestVal("DeptNo");
+        BP.GPM.Dept dept = new BP.GPM.Dept(deptNo);
+
+        BP.Web.WebUser.setFK_Dept(dept.getNo());//FK_Dept = dept.No;
+        BP.Web.WebUser.setFK_DeptName(dept.getName());//FK_DeptName = dept.Name;
+        BP.Web.WebUser.setFK_DeptNameOfFull(dept.getNameOfPath());//FK_DeptNameOfFull = dept.NameOfPath;
+
+        //重新设置cookies.
+        String strs = "";
+        strs += "@No=" + WebUser.getNo();
+        strs += "@Name=" + WebUser.getName();
+        strs += "@FK_Dept=" + WebUser.getFK_Dept();
+        strs += "@FK_DeptName=" + WebUser.getFK_DeptName();
+        strs += "@FK_DeptNameOfFull=" + WebUser.getFK_DeptNameOfFull();
+        //BP.Web.WebUser.setSetValToCookie(strs);
+        BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.getNo());
+        emp.setStartFlows(""); 
+        emp.Update();
+
+        try
+        {
+            String sql = "UPDATE Port_Emp Set fk_dept='"+deptNo+"' WHERE no='"+WebUser.getNo()+"'";
+            DBAccess.RunSQL(sql);
+            BP.WF.Dev2Interface.Port_Login(WebUser.getNo());
+        }
+        catch (Exception ex)
+        {
+
+        }
+		//ChangeDept_Init();
+        return "@执行成功,已经切换到｛" + BP.Web.WebUser.getFK_DeptName() + "｝部门上。";
+    }
 	
 	/** 初始化切换部门.
 	 

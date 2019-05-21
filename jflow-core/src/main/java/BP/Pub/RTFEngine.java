@@ -1084,7 +1084,7 @@ public class RTFEngine
 								case DataType.AppMoney:
 									rowData = rowData.replace("<" + shortName
 											+ "." + attr.getKey() + ">", dtl
-											.GetValDecimalByKey(attr.getKey())
+											.GetValDecimalByKey(attr.getKey(),2)
 											.toString());
 									break;
 								case DataType.AppInt:

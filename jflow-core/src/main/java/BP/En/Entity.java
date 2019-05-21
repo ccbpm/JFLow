@@ -4034,12 +4034,20 @@ public abstract class Entity implements Serializable {
 	 * @param key
 	 * @return
 	 */
-	public final java.math.BigDecimal GetValDecimalByKey(String key) {
+	public final BigDecimal GetValDecimalByKey(String key) {
 
 		BigDecimal bd = new BigDecimal(this.GetValStrByKey(key));
 		return bd.setScale(4, BigDecimal.ROUND_HALF_UP);
 
 	}
+	
+	public final BigDecimal GetValDecimalByKey(String key,int scale) {
+
+		BigDecimal bd = new BigDecimal(this.GetValStrByKey(key));
+		return bd.setScale(scale, BigDecimal.ROUND_HALF_UP);
+
+	}
+	
 
 	public final double GetValDoubleByKey(String key) {
 

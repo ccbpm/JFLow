@@ -1908,6 +1908,7 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		}
 
 		bt.setNodeID(this.getFK_Node());
+		bt.setFK_MapData(this.getFK_MapData());
 		bt.setNo(request.getParameter("TB_No"));
 		if (StringHelper.isNullOrEmpty(bt.getNo())) {
 			bt.setNo(String.valueOf(DBAccess.GenerOID("Template")));

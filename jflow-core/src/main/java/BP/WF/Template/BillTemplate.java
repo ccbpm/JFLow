@@ -91,6 +91,19 @@ public class BillTemplate extends EntityNoName
     {
     	 this.SetValByKey(BillTemplateAttr.BillOpenModel, (int)value);
     }
+    /// <summary>
+    /// 表单的ID
+    /// </summary>
+    public final String getFK_MapData()
+    
+    {
+         return this.GetValStringByKey(BillTemplateAttr.FK_MapData);
+    }
+    public final void setFK_MapData(String value)
+    {
+    	 this.SetValByKey(BillTemplateAttr.FK_MapData, value);
+    }
+   
     //是否生成二维码
     public final QRModel getQRModel(){
     	
@@ -197,7 +210,9 @@ public class BillTemplate extends EntityNoName
 
         map.AddDDLSysEnum(BillTemplateAttr.BillOpenModel, 0, "生成的文件打开方式", true, false,
                 "BillOpenModel", "@0=下载本地@1=在线WebOffice打开");
-
+        
+        map.AddTBString(BillTemplateAttr.FK_MapData, null, "表单编号", false, false,0,300,300);
+        
         map.AddDDLSysEnum(BillTemplateAttr.QRModel, 0, "二维码生成方式", true, false,
                BillTemplateAttr.QRModel, "@0=不生成@1=生成二维码");
         

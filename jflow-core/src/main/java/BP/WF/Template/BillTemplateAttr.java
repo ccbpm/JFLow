@@ -44,6 +44,10 @@ public class BillTemplateAttr extends BP.En.EntityNoNameAttr
     /// 文件打开方式
     /// </summary>
     public static final String BillOpenModel = "BillOpenModel";
+  /// <summary>
+    /// 表单的ID
+    /// </summary>
+    public static final String FK_MapData = "FK_MapData";
     /// <summary>
     /// 是否生成二维码
     /// </summary>

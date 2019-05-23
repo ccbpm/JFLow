@@ -296,6 +296,13 @@ public class MapFrmFool extends EntityNoName
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/check.png";
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
+		
+		rm = new RefMethod();
+        rm.Title = "模板打印";
+        rm.ClassMethodName = this.toString() + ".DoBill";
+        rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
 
 
 			///#endregion 方法 - 基本功能.
@@ -350,7 +357,14 @@ public class MapFrmFool extends EntityNoName
 	}
 
 		///#region 节点表单方法.
-
+	/** 
+	 单据打印
+	 @return 
+	*/
+    public String DoBill()
+    {
+        return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+    }
 	/** 
 	 傻瓜表单设计器
 	 

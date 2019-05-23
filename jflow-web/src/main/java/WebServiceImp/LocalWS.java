@@ -482,5 +482,19 @@ public class LocalWS implements LocalWSI{
 
     }
 
+    /** 
+	 查询数据	 
+	 @param sqlOfSelect 要查询的sql
+	 @param password 用户密码
+	 @return 返回查询数据
+	*/
+    public String DB_RunSQLReturnJSON(String sqlOfSelect, String password)
+    {
+        if ( password.equals(password) == false)
+            return "err@密码错误";
+
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlOfSelect);
+        return BP.Tools.Json.ToJson(dt);
+    }
 	
 }

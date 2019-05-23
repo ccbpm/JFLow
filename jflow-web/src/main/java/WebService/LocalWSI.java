@@ -227,4 +227,11 @@ public interface LocalWSI {
 	 @return 返回待办
 	*/
    public String WorkProgressBar(long  workID, String userNo) throws Exception;
+   /** 
+	 查询数据	 
+	 @param sqlOfSelect 要查询的sql
+	 @param password 用户密码
+	 @return 返回查询数据
+	*/
+   public String DB_RunSQLReturnJSON(String sqlOfSelect, String password) throws Exception;
 }

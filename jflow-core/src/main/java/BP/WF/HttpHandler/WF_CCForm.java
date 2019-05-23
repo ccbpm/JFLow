@@ -369,6 +369,7 @@ public class WF_CCForm extends WebContralBase {
 
 					athDesc.setHisDeleteWay(AthDeleteWay.None);
 					athDesc.setIsUpload(false);
+					athDesc.setIsDownload(true);
 					athDesc.setMyPK(this.getFK_FrmAttachment());
 					return athDesc;
 				}
@@ -408,7 +409,7 @@ public class WF_CCForm extends WebContralBase {
         if (result == 0 ||sln.getFrmSln() == 1)
         {
         	athDesc.setIsUpload(false);
-			athDesc.setIsDownload(false);
+			athDesc.setIsDownload(true);			
 			athDesc.setHisDeleteWay(AthDeleteWay.None); // 删除模式.
             return athDesc;
         }

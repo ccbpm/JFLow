@@ -66,20 +66,17 @@ public class CCMobile_CCForm extends WebContralBase
         GEDtls dtls = new GEDtls(this.getEnsName());
         GEDtl dtl = (GEDtl) dtls.getGetNewEntity();
         dtls.Retrieve("RefPK", this.GetRequestVal("RefPKVal"));
-        Map map = (Map) dtl.getEnMap();
-        for (Entity item : dtls)
+        BP.En.Map map = dtl.getEnMap();
+        for (GEDtl item : dtls.ToJavaList())
         {
             String pkval = item.GetValStringByKey(dtl.getPK());
             for (Attr attr : ((BP.En.Map) map).getAttrs())
             {
-                if (attr.getIsRefAttr() == true)
+                if (attr.getUIVisible() == false )
                     continue;
 
                 if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
                 {
-                    if (attr.getUIIsReadonly() == true)
-                        continue;
-
                     String val = this.GetValFromFrmByKey("TB_" + attr.getKey() + "_" + pkval, null);
                     item.SetValByKey(attr.getKey(), val);
                     continue;
@@ -110,12 +107,12 @@ public class CCMobile_CCForm extends WebContralBase
                     continue;
                 }
             }
-
+            item.SetValByKey("OID",pkval);
             item.Update(); //执行更新.
         }
         //#endregion  查询出来从表数据.
-
-        //#region 保存新加行.
+        return "保存成功.";
+       /* //#region 保存新加行.
       
         String keyVal = "";
         for (Attr attr : ((BP.En.Map) map).getAttrs())
@@ -167,7 +164,7 @@ public class CCMobile_CCForm extends WebContralBase
         
         //#endregion 保存新加行.
 
-        return "保存成功.";
+        return "保存成功.";*/
     }
 
 

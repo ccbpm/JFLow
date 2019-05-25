@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>有参数的方法</title>
+    <meta charset="utf-8" />
     <link href="../../Scripts/easyUI145/themes/icon.css" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
@@ -24,19 +25,20 @@
             var myPK = GetQueryString("MyPK");
             var frmID = GetQueryString("FrmID");
             var workID = GetQueryString("WorkID");
-            func = new Entity("BP.WF.CCBill.FrmMethodFunc", myPK);
+            func = new Entity("BP.Frm.MethodFunc", myPK);
             attrs = new Entities("BP.Sys.MapAttrs", "FK_MapData", myPK);
             frmData = new Entity(func.FrmID, workID);
 
             document.title = func.MethodName;
 
-            var html = "<table>";
+            var html = "<table style='width:95%;'>";
             html += "<caption>" + func.MethodName + "</caption>";
 
             html += InitMapAttr(attrs, frmData);
+
             html += "</table>";
-            html += "<input type='button' value='执行' onclick=\"javascript:DoIt();\" />";
-            html += "<input type='button' value='关闭' onclick=\"javascript:window.close();\" />";
+            html += "<input type='button' value='Done' onclick=\"javascript:DoIt();\" />";
+            html += "<input type='button' value='Close' onclick=\"javascript:window.close();\" />";
 
             $("#docs").html(html);
         });
@@ -45,30 +47,37 @@
         function DoIt() {
 
             var myPK = GetQueryString("MyPK");
-            func = new Entity("BP.WF.CCBill.FrmMethodFunc", myPK);
+            func = new Entity("BP.Frm.MethodFunc", myPK);
 
-            if (func.WarningMsg == "")
-                func.WarningMsg = "您确定要执行吗？";
-
-            if (confirm(func.WarningMsg) == false)
-                return;
+            if (func.WarningMsg != "") {
+                if (confirm(func.WarningMsg) == false)
+                    return;
+            }
+           
 
             var doc = func.MethodDoc;
 
             //如果是执行的SQL . 
             if (func.MethodDocTypeOfFunc == 0) {
-                var handler = new HttpHandler("BP.WF.CCBill.WF_CCBill");
+                var handler = new HttpHandler("BP.Frm.WF_CCBill");
                 handler.AddUrlData();
                 handler.AddFormData();
                 var data = handler.DoMethodReturnString("DoMethodPara_ExeSQL");
-                alert(data);
-                window.close();
+
+                if (data.indexOf('err@') == -1) {
+
+                    $("#Msg").html(data);
+
+
+                } else {
+                    $("#Msg").html('系统错误:'+data);
+                }
                 return;
             }
 
             //执行Script.
             if (func.MethodDocTypeOfFunc == 1) {
-                 
+
                 var scriptFunc = func.DoMethodReturnString("Gener_MethodDoc_JavaScript_function");
 
                 //生成参数.
@@ -86,7 +95,7 @@
                     if (attr.UIContralType == 2)
                         val = $("#CB_" + attr.KeyOfEn).val();
 
-                    if (i == attrs.length-1)
+                    if (i == attrs.length - 1) {
                         if (attr.MyDataType == 2 || attr.MyDataType == 3 || attr.MyDataType == 4 || attr.MyDataType == 5 || attr.MyDataType == 8) {
                             if (val == "" || val == undefined)
                                 val = 0;
@@ -94,38 +103,40 @@
                         }
                         else
                             paras += "'" + val + "'";
-                    else
+                    }
+                    else {
                         if (attr.MyDataType == 2 || attr.MyDataType == 3 || attr.MyDataType == 4 || attr.MyDataType == 5 || attr.MyDataType == 8) {
                             if (val == "" || val == undefined)
                                 val = 0;
-                            paras += val+",";
+                            paras += val + ",";
                         }
                         else
                             paras += "'" + val + "',";
-
-                  
+                    }
                 }
 
                 //执行这个 script.
                 try {
 
                     addDynamicJS(scriptFunc);
+
+                  //  alert(paras);
                     eval(func.MethodID + "(" + paras + ")");
                     return;
                 } catch (e) {
                     alert(e);
-                    window.close();
+
+                    $("#Msg").html(e);
                     return;
                 }
 
 
 
-                var handler = new HttpHandler("BP.WF.CCBill.WF_CCBill");
+                var handler = new HttpHandler("BP.Frm.WF_CCBill");
                 handler.AddUrlData();
                 handler.AddFormData();
                 var data = handler.DoMethodReturnString("DoMethodPara_ExeSQL");
-                alert(data);
-                window.close();
+                $("#Msg").html(data);
 
                 return;
             }
@@ -145,7 +156,7 @@
                 script.text = src;
             }
             document.body.appendChild(script);
-          
+
         }
 
         //解析表单字段 MapAttr.
@@ -268,6 +279,8 @@
 <body>
     <form name="cc" id="cc">
     <div id="docs">
+    </div>
+    <div id="Msg">
     </div>
     </form>
 </body>

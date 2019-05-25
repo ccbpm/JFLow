@@ -421,6 +421,10 @@ function CheckMinMaxLength() {
 
 //保存
 function Save() {
+    //保存前事件
+    if (typeof beforeSave != 'undefined' && beforeSave instanceof Function)
+        if (beforeSave() == false)
+            return false;
 
     //判断是否有保存按钮，如果有就需要安全性检查，否则就不执行，这种情况在会签下，发送的时候不做检查。
     var btn = document.getElementById('Btn_Save');
@@ -924,6 +928,11 @@ function GenerCheckIDs() {
 //发送
 function Send(isHuiQian) {
 
+    //保存前事件
+    if (typeof beforeSend != 'undefined' && beforeSend instanceof Function)
+        if (beforeSend() == false)
+            return false;
+
     if (CheckFWC() == false)
         return false;
 
@@ -1022,7 +1031,11 @@ function execSend(toNodeID) {
     var data = handler.DoMethodReturnString("Send"); //执行保存方法.
 
     if (data.indexOf('err@') == 0) { //发送时发生错误
-        $('#Message').html(data.substring(4, data.length));
+
+        var reg = new RegExp('err@', "g")
+        var data = data.replace(reg, '');
+
+        $('#Message').html(data );
         $('#MessageDiv').modal().show();
         setToobarEnable();
         return;
@@ -1353,7 +1366,7 @@ function checkBlanks() {
 
     $.each(lbs, function (i, obj) {
 
-        if ($(obj).parent().css('display') != 'none' && (($(obj).parent().next().css('display'))!='none' || ($(obj).siblings("textarea").css('display'))!='none')) {
+        if ($(obj).parent().css('display') != 'none' && (($(obj).parent().next().css('display')) != 'none' || ($(obj).siblings("textarea").css('display')) != 'none')) {
         } else {
             return;
         }
@@ -1667,7 +1680,7 @@ function GenerWorkNode() {
         var editor = document.activeEditor = UM.getEditor('editor', {
             'autoHeightEnabled': false,
             'fontsize': [10, 12, 14, 16, 18, 20, 24, 36],
-            'initialFrameWidth': document.BindEditorMapAttr.UIWidth
+            'initialFrameWidth': '100%'
         });
         var height = document.BindEditorMapAttr.UIHeight;
         $(".edui-container").css("height", height);
@@ -1840,7 +1853,16 @@ function InitToolBar() {
     if ($('[name=Return]').length > 0) {
         $('[name=Return]').attr('onclick', '');
         $('[name=Return]').unbind('click');
-        $('[name=Return]').bind('click', function () { if (Save() == false) return; initModal("returnBack"); $('#returnWorkModal').modal().show(); });
+        $('[name=Return]').bind('click', function () {
+            //增加退回前的事件
+            if (typeof beforeReturn != 'undefined' && beforeReturn instanceof Function)
+                if (beforeReturn() == false) 
+                    return false;
+
+            if (Save() == false) return;
+            initModal("returnBack");
+            $('#returnWorkModal').modal().show();
+        });
     }
 
     if ($('[name=Shift]').length > 0) {
@@ -1921,6 +1943,10 @@ function InitToolBar() {
         $('[name=Delete]').attr('onclick', '');
         $('[name=Delete]').unbind('click');
         $('[name=Delete]').bind('click', function () {
+            //增加删除前事件
+            if (typeof beforeDelete != 'undefined' && beforeDelete instanceof Function)
+                if (beforeDelete() == false)
+                    return false;
 
             DeleteFlow();
         });
@@ -1966,7 +1992,7 @@ function initModal(modalType, toNode) {
               + '<div class="modal-header">'
               + '<button type="button" style="color:#0000007a;float: right;background: transparent;border: none;" data-dismiss="modal" aria-hidden="true">&times;</button>'
                   + '<button id="MaxSizeBtn" type="button" style="color:#0000007a;float: right;background: transparent;border: none;" aria-hidden="true" >□</button>'
-                   + '<h4 class="modal-title" id="modalHeader">工作退回</h4>'
+                   + '<h4 class="modal-title" id="modalHeader">提示信息</h4>'
                + '</div>'
                + '<div class="modal-body" style="margin:0px;padding:0px;height:450px">'
                    + '<iframe style="width:100%;border:0px;height:100%;" id="iframeReturnWorkForm" name="iframeReturnWorkForm"></iframe>'
@@ -1996,7 +2022,7 @@ function initModal(modalType, toNode) {
     if (modalType != undefined) {
         switch (modalType) {
             case "returnBack":
-                $('#modalHeader').text("工作退回");
+                $('#modalHeader').text("提示信息");
                 modalIframeSrc = "./WorkOpt/ReturnWork.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random()
                 break;
             case "accpter":
@@ -2081,7 +2107,8 @@ function DoStop(msg, flowNo, workid) {
         return;
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
-    handler.AddUrlData();
+    handler.AddPara("FK_Flow", flowNo);
+    handler.AddPara("WorkID", workid);
     var data = handler.DoMethodReturnString("MyFlow_StopFlow");
     alert(msg);
 

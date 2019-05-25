@@ -120,7 +120,7 @@
 
             pageIdx = GetQueryString("PageIdx");//当前页
 
-            frmBill = new Entity("BP.WF.CCBill.FrmBill", frmID);
+            frmBill = new Entity("BP.Frm.FrmBill", frmID);
             document.title = frmBill.Name;
 
             //当前用户查询信息.
@@ -157,7 +157,7 @@
 
         function Init_ToolBar() {
 
-            var handler = new HttpHandler("BP.WF.CCBill.WF_CCBill");
+            var handler = new HttpHandler("BP.Frm.WF_CCBill");
             handler.AddPara("FrmID", frmID);
             var data = handler.DoMethodReturnString("Search_ToolBar");
             if (data.indexOf('err@') == 0) {
@@ -221,7 +221,7 @@
                     html += "<tr>";
                     W = 130;
                 }
-
+                debugger;
                 html += "<td align='right'><label style='text-align: right; margin-top:5px;margin-left:5px;' for='DDL_" + attr.Field + "'>" + attr.Name + ":</label></td>";
                 html += "<td align='left'><select class='form-control' style='margin-top:5px;width:100%;' name='DDL_" + attr.Field + "' ID='DDL_" + attr.Field + "'>" + InitDDLOperation(data, attr, "all") + "</select></td>";
             }
@@ -230,7 +230,7 @@
             html += '<td align="left" colspan=2 ><a href="#"class="btn btn-primary btn-sm" style="margin-left:20px" id="Btn_Search" onclick="Search()">查询</a>  ';
 
             //获得配置的按钮.
-            var fb=new Entity("BP.WF.CCBill.FrmBill", frmID);
+            var fb=new Entity("BP.Frm.FrmBill", frmID);
 
             if (fb.BtnNewLable=="") fb.BtnNewLable="新建";
             if (fb.BtnDelLable=="") fb.BtnDelLable="删除";
@@ -257,7 +257,7 @@
 
             //增加方法.
                //获得当前的集合.
-            var fms = new Entities("BP.WF.CCBill.FrmMethods", "FrmID", frmID);
+            var fms = new Entities("BP.Frm.Methods", "FrmID", frmID);
             for (var i = 0; i < fms.length; i++) {
                 var fm = fms[i];
 
@@ -348,7 +348,7 @@
     
         function SearchData() {
             //创建处理器.
-            var handler = new HttpHandler("BP.WF.CCBill.WF_CCBill");
+            var handler = new HttpHandler("BP.Frm.WF_CCBill");
             handler.AddUrlData()
             handler.AddPara("PageIdx", pageIdx);
             handler.AddPara("PageSize", pageSize);
@@ -454,16 +454,20 @@
                         fixed: false,
                         formatter: function (value, row, index) {
                             var icon = GenerICON(false, row.BillState);
-                            return "<a href=\"javascript:OpenIt('" + row.BillState + "','" + row.OID + "','" + frmID + "','" + 0 + "',' ','" + webUser.No + "')\"><img src=" + icon + " border=0 width='14px;' >" +value + "</a>";
+                            return "<a href=\"javascript:OpenIt('" + row.BillState + "','" + row.OID + "','" + frmID + "','" + 0 + "',' ','" + webUser.No + "')\"><img src=" + icon + " border=0 width='14px;' />" +value + "</a>";
                         }
                     });
                     continue;
                 }
 
-                if (attr.UIContralType == 1){
+                if (attr.UIContralType == 1 || attr.UIContralType == 3){
                     if(width==null || width==""|| width==undefined)
                         width = 180;
-                    field = field + "Text";
+                    if(attr.LGType == 0)
+                        field = field +"T";
+                    else
+                        field = field + "Text";
+
                      columns.push({
                         field: field,
                         title: title,
@@ -488,6 +492,8 @@
                     });
                     continue;
                 }
+
+              
                 if(width==null || width==""|| width==undefined)
                     width = 100;
                 columns.push({
@@ -507,6 +513,8 @@
                 striped: true,
                 height:tableH,
                 singleSelect: true,
+                clickToSelect:true,
+                maintainSelected:true,
                 sidePagination: "server",
                 pageNumber: 1,
                 strictSearch: true,
@@ -619,9 +627,9 @@
         }
 
         function New(workid) {
-
             var frmID = GetQueryString("FrmID");
-            var handler = new HttpHandler("BP.WF.CCBill.WF_CCBill");
+           
+            var handler = new HttpHandler("BP.Frm.WF_CCBill");
             handler.AddUrlData();
             var workID = handler.DoMethodReturnString("MyBill_CreateBlankWorkID");
 
@@ -629,20 +637,22 @@
             window.location.href=url;
             return;
 
-            var loop = setInterval(function () {
-			    if (self.closed) {
-			        clearInterval(loop);
-                    InitPage();
-			    }
-			}, 1);   
         }
 
-        function Delete(workid) {
+        function Delete() {
 
             if (confirm("您确定要删除吗？") == false)
                 return;
+            //删除选中的行
+            var selectRow = $('#dg').bootstrapTable('getSelections');
 
-            var handler = new HttpHandler("BP.WF.CCBill.WF_CCBill");
+            if(selectRow.length ==0){
+                alert("没有选择行，不能删除");
+                return ;
+            }
+            var workid = selectRow["WorkID"];
+
+            var handler = new HttpHandler("BP.Frm.WF_CCBill");
             handler.AddPara("FrmID", GetQueryString("FrmID"));
             handler.AddPara("WorkID", workid);
             var data = handler.DoMethodReturnString("MyBill_Delete");
@@ -698,24 +708,32 @@
         }
 
         function OpenIt(BillState, workid, frmID, nodeID, emps, userNo) {
+
+            //RowOpenModel  0=新窗口打开 1=在本窗口打开 2=弹出窗口打开,关闭后不刷新列表 3=弹出窗口打开,关闭
+            var rowOpenModel = parseInt(frmBill.RowOpenMode);
             var url = "";
             url = "MyBill.htm?WorkID=" + workid + "&FrmID=" + frmID + "&FK_MapData=" + frmID;
-             var self = window.open(url);
-			var loop = setInterval(function () {
-			    if (self.closed) {
-			        clearInterval(loop);
-			    }
-			}, 1);   
+            if(rowOpenModel == 0)
+                window.open(url);
+			if(rowOpenModel == 1)
+                window.location.href = url;
+            if(rowOpenModel == 2){
+                var W = document.body.clientWidth-40;
+                var H = document.body.clientHeight-40;
+
+                OpenBootStrapModal(url,"eudlgframe",frmBill.Name,W,H,"icon-property", null, null, null, null, null, "black"); 
+            }
+            if(rowOpenModel == 3){
+                var W = document.body.clientWidth-40;
+                var H = document.body.clientHeight-40;
+                OpenBootStrapModal(url,"eudlgframe",frmBill.Name,W,H,"icon-property", null, null, null, function(){
+                    window.location.href = window.location.href;
+                }, null, "black"); 
+            }
            
             return;
 
-            layer.open({
-                skin: 'layer-class',
-                type: 2,
-                title: '我的流程',
-                area: ['96%', '90%'],
-                content: url
-            });
+           
         }
 
         function SearchKey() {
@@ -726,7 +744,7 @@
                 return;
             }
 
-            var handler = new HttpHandler("BP.WF.CCBill.WF_CCBill");
+            var handler = new HttpHandler("BP.Frm.WF_CCBill");
             handler.AddPara("TB_KWds", val);
 
             var data = handler.DoMethodReturnString("Search_Init");

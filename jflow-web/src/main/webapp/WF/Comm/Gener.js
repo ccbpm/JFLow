@@ -204,7 +204,7 @@ function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal, filterKey1, fi
     for (var i = 0; i < json.length; i++) {
 
         if (filterKey1 != undefined) {
-            if (json[i][filterKey1] != filterVal1 )
+            if (json[i][filterKey1] != filterVal1)
                 continue;
         }
 
@@ -238,10 +238,10 @@ function GenerBindEnumKey(ctrlDDLId, enumKey, selectVal) {
 
         type: 'post',
         async: false,
-        xhrFields:{
-            withCredentials:true
+        xhrFields: {
+            withCredentials: true
         },
-        crossDomain:true,
+        crossDomain: true,
         url: dynamicHandler + "?DoType=EnumList&EnumKey=" + enumKey + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -768,6 +768,18 @@ var Entity = (function () {
 
     var Entity = function (enName, pkval) {
 
+//        if (pkval == null || pkval == "" || pkval == undefined) {
+//            var str = '在给[' + enName + ']查询的时候，主键不能为空';
+//            alert(str);
+//            throw Error(str);
+//            return;
+//        }
+        if (enName == null || enName == "" || enName == undefined) {
+            alert('enName不能为空');
+            throw Error('enName不能为空');
+            return;
+        }
+
         this.enName = enName;
 
         if (pkval != null && typeof pkval === "object") {
@@ -777,6 +789,11 @@ var Entity = (function () {
             this.pkval = pkval || "";
             this.loadData();
         }
+
+      //  this.enName = enName;
+       // this.pkval = pkval;
+       // this.loadData();
+
     };
 
     function setData(self) {
@@ -821,7 +838,7 @@ var Entity = (function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler =basePath+ "/WF/Comm/Handler.ashx";
+        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -845,11 +862,15 @@ var Entity = (function () {
                 success: function (data) {
 
                     if (data.indexOf("err@") != -1) {
+                        data = data.replace('@@', '@');
                         alert(data);
+                        throw new Error(data);
                         return;
                     }
+
                     if (data == "")
                         return;
+
                     try {
                         jsonString = JSON.parse(data);
                         setData(self);
@@ -1462,6 +1483,10 @@ var Entity = (function () {
                 var self = this;
                 $.each(json, function (n, o) {
                     if (typeof self[n] !== "function") {
+
+                        if (n == 'enName' || n == 'MyPK')
+                            return;
+
                         self[n] = o;
                         jsonString[n] = o;
                         count++;
@@ -1808,7 +1833,7 @@ var DBAccess = (function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler = basePath+"/WF/Comm/Handler.ashx";
+        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -2050,7 +2075,7 @@ var HttpHandler = (function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler =basePath+ "/WF/Comm/Handler.ashx";
+        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -2189,7 +2214,7 @@ var WebUser = function () {
 
     if (plant == "CCFlow") {
         // CCFlow
-        dynamicHandler = basePath+"/WF/Comm/Handler.ashx";
+        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
     } else {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
@@ -2312,9 +2337,13 @@ function DealExp(expStr, webUser) {
     var length1;
     for (var i = 0; i < objs.length; i++) {
 
+        if (expStr.indexOf('@') == -1)
+            return expStr;
+
         var obj = objs[i].tagName;
         if (obj == null)
             continue;
+
 
         //把标签名转换为小写
         obj = obj.toLowerCase();
@@ -2343,9 +2372,30 @@ function DealExp(expStr, webUser) {
             NodeValue = decodeURI(objs[i].value);
         }
         expStr = expStr.replace("@" + NodeID.substring(NodeID.indexOf("_") + 1), NodeValue);
-
-
     }
+
+    return expStr;
+}
+
+function DealJsonExp(json, expStr, webUser) {
+    if (webUser == null || webUser == undefined)
+        webUser = new WebUser();
+
+    //替换表达式常用的用户信息
+    expStr = expStr.replace('@WebUser.No', webUser.No);
+    expStr = expStr.replace('@WebUser.Name', webUser.Name);
+    expStr = expStr.replace('@WebUser.FK_Dept', webUser.FK_Dept);
+    expStr = expStr.replace('@WebUser.DeptName', webUser.DeptName);
+    expStr = expStr.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
+
+    if (expStr.indexOf('@') == -1)
+        return expStr;
+
+    $.each(json, function (n, val) {
+        if (expStr.indexOf("@") == -1)
+            return;
+        expStr = expStr.replace("@" + n, val);
+    });
     return expStr;
 }
 

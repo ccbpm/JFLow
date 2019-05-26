@@ -1703,37 +1703,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				return "F" + fsSub.getNo();
 			}
 	  
-	   /** 
-			 表单树 - 创建表单同级类别
-			 
-			 @return 
-	 * @throws Exception 
-	   */
-			public final String CCForm_NewSameLevelSort() throws Exception
-			{
-				SysFormTree formTree = new SysFormTree(this.getNo());
-				String sameLevelNo = formTree.DoCreateSameLevelNode().getNo();
-				SysFormTree sameLevelFormTree = new SysFormTree(sameLevelNo);
-				sameLevelFormTree.setName(this.getName());
-				sameLevelFormTree.Update();
-				return sameLevelFormTree.getNo();
-			}
-
-			/** 
-			 表单树 - 创建表单子类别
-			 
-			 @return 
-			 * @throws Exception 
-			*/
-			public final String CCForm_NewSubSort() throws Exception
-			{
-				SysFormTree formTree = new SysFormTree(this.getNo());
-				String subNo = formTree.DoCreateSubNode().getNo();
-				SysFormTree subFormTree = new SysFormTree(subNo);
-				subFormTree.setName(this.getName());
-				subFormTree.Update();
-				return subFormTree.getNo();
-			}
+	  
 			/** 
 			 表单树 - 编辑表单类别
 			 

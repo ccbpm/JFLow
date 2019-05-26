@@ -179,24 +179,24 @@ public class SysFormTree extends EntitySimpleTree
 			DeleteChild(item.getNo());
 		}
 	}
-	public final SysFormTree DoCreateSameLevelNode() throws Exception
+	public final String DoCreateSameLevelNodeIt(String name) throws Exception
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
 		en.setNo(BP.DA.DBAccess.GenerOID()+"");
-		en.setName("新建节点");
+		en.setName(name);
 		en.Insert();
-		return en;
+		return en.getNo();
 	}
-	public final SysFormTree DoCreateSubNode() throws Exception
+	public final String DoCreateSubNodeIt(String name) throws Exception
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
 		en.setNo(BP.DA.DBAccess.GenerOID()+"");
 		en.setParentNo(this.getNo());
-		en.setName("新建节点");
+		en.setName(name);
 		en.Insert();
-		return en;
+		return en.getNo();
 	}
 	public final void DoUp()
 	{

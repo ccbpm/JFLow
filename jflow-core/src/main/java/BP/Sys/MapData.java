@@ -2718,6 +2718,19 @@ public class MapData extends EntityNoName
 		{
 			((Entity) dtl).Delete();
 		}
+		
+		
+		 //  #region 删除注册到的外检表.
+           SFTables sfs = new SFTables();
+           sfs.Retrieve(SFTableAttr.SrcTable, this.getPTable());
+           
+           for (SFTable item : sfs.ToJavaList())
+           {
+               if (item.IsCanDelete() == null)
+                   item.Delete();
+           }
+            //#endregion 删除注册到的外检表.
+           
 		return super.beforeDelete();
 	}
 

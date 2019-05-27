@@ -1276,7 +1276,9 @@ public class WF extends WebContralBase {
 				}
 			}
 		}
-
+        if(this.getDoWhat().equals("PortLogin") == true){
+            return "登陆成功";
+        }
 		/// #endregion 安全性校验.
 
 		/// #region 生成参数串.
@@ -1668,5 +1670,11 @@ public class WF extends WebContralBase {
         return "批量删除成功" + msg;
     }
 
+    public String PCAndMobileUrl(){
+        Hashtable ht = new Hashtable();
+        ht.put("PCUrl", SystemConfig.getAppSettings().get("HostURL").toString());
+        ht.put("MobileUrl", SystemConfig.getAppSettings().get("MobileURL").toString());
+        return BP.Tools.Json.ToJson(ht);
+    }
 
 }

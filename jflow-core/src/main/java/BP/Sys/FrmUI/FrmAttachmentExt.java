@@ -644,10 +644,10 @@ public class FrmAttachmentExt extends EntityMyPK {
 
 		map.AddTBInt("NumOfUpload", 0, "最低上传数量", true, false);
 		map.SetHelperAlert("NumOfUpload", "如果为0则标识必须上传. \t\n用户上传的附件数量低于指定的数量就不让保存.");
-		
-		 map.AddDDLSysEnum(FrmAttachmentAttr.UploadFileNumCheck, 0, "上传校验方式", true, true, FrmAttachmentAttr.UploadFileNumCheck,
-                 "@0=不用校验@1=不能为空@2=每个类别下不能为空");
-		 
+
+		map.AddDDLSysEnum(FrmAttachmentAttr.UploadFileNumCheck, 0, "上传校验方式", true, true,
+				FrmAttachmentAttr.UploadFileNumCheck, "@0=不用校验@1=不能为空@2=每个类别下不能为空");
+
 		// for tianye group
 		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay,
 				"@0=保存到IIS服务器@1=保存到数据库@2=ftp服务器");
@@ -665,10 +665,10 @@ public class FrmAttachmentExt extends EntityMyPK {
 
 		map.AddTBFloat(FrmAttachmentAttr.W, 40, "宽度", true, false);
 		map.AddTBFloat(FrmAttachmentAttr.H, 150, "高度", true, false);
-		
-		//附件是否显示
-        map.AddBoolean(FrmAttachmentAttr.IsVisable, true, "是否显示附件分组", true, true, true);
-        
+
+		// 附件是否显示
+		map.AddBoolean(FrmAttachmentAttr.IsVisable, true, "是否显示附件分组", true, true, true);
+
 		// #endregion 基本属性。
 
 		// #region 权限控制。
@@ -729,8 +729,8 @@ public class FrmAttachmentExt extends EntityMyPK {
 		map.AddTBString(FrmAttachmentAttr.DataRefNoOfObj, "AttachM1", "对应附件标识", true, false, 0, 150, 20);
 		map.SetHelperAlert("DataRefNoOfObj", "对WorkID权限模式有效,用于查询贯穿整个流程的附件标识,与从表的标识一样.");
 
-    map.AddDDLSysEnum(FrmAttachmentAttr.ReadRole, 0, "阅读规则", true, true, FrmAttachmentAttr.ReadRole,
-               "@0=不控制@1=未阅读阻止发送@2=未阅读做记录");
+		map.AddDDLSysEnum(FrmAttachmentAttr.ReadRole, 0, "阅读规则", true, true, FrmAttachmentAttr.ReadRole,
+				"@0=不控制@1=未阅读阻止发送@2=未阅读做记录");
 
 		// #endregion 节点相关
 
@@ -740,11 +740,11 @@ public class FrmAttachmentExt extends EntityMyPK {
 		// #endregion 其他属性。
 
 		RefMethod rm = new RefMethod();
-		//rm.Title = "高级配置";
+		// rm.Title = "高级配置";
 		// rm.Icon = "/WF/Admin/CCFormDesigner/Img/Menu/CC.png";
-		//rm.ClassMethodName = this.toString() + ".DoAdv";
-		//rm.refMethodType = RefMethodType.RightFrameOpen;
-		//map.AddRefMethod(rm);
+		// rm.ClassMethodName = this.toString() + ".DoAdv";
+		// rm.refMethodType = RefMethodType.RightFrameOpen;
+		// map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "类别设置";
@@ -779,17 +779,16 @@ public class FrmAttachmentExt extends EntityMyPK {
 	/// 测试连接
 	/// </summary>
 	/// <returns></returns>
-	public String DoTestFTPHost(){
+	public String DoTestFTPHost() {
 		FtpUtil ftpUtil;
 		try {
 			ftpUtil = BP.WF.Glo.getFtpUtil();
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
-			return "err@"+e.getMessage();
+			return "err@" + e.getMessage();
 		}
 		return ftpUtil.openConnection();
-	
 
 	}
 
@@ -817,7 +816,7 @@ public class FrmAttachmentExt extends EntityMyPK {
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
-		
+
 		if (this.getFK_Node() == 0) {
 			// 适应设计器新的规则 by dgq
 			if (!StringHelper.isNullOrEmpty(this.getNoOfObj()) && this.getNoOfObj().contains(this.getFK_MapData())) {
@@ -829,21 +828,29 @@ public class FrmAttachmentExt extends EntityMyPK {
 			this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
 		}
 
-		// 更新相关的分组信息.
-		GroupField gf = new GroupField();
-		int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
-		if (i == 0) {
-			gf.setLab(this.getName());
-			gf.setFrmID(this.getFK_MapData());
-			gf.setCtrlType("Ath");
-			gf.setCtrlID(this.getMyPK());
-			gf.Insert();
-		} else {
-			gf.setLab(this.getName());
-			gf.setFrmID(this.getFK_MapData());
-			gf.setCtrlType("Ath");
-			gf.setCtrlID(this.getMyPK());
-			gf.Update();
+		
+		if (this.getIsVisable() == true) {
+			// 更新相关的分组信息.
+			GroupField gf = new GroupField();
+			int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
+			if (i == 0) {
+				gf.setLab(this.getName());
+				gf.setFrmID(this.getFK_MapData());
+				gf.setCtrlType("Ath");
+				gf.setCtrlID(this.getMyPK());
+				gf.Insert();
+			} else {
+				gf.setLab(this.getName());
+				gf.setFrmID(this.getFK_MapData());
+				gf.setCtrlType("Ath");
+				gf.setCtrlID(this.getMyPK());
+				gf.Update();
+			}
+		}
+		
+		if (this.getIsVisable() == false) {
+			GroupField gf = new GroupField();
+			gf.Delete(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
 		}
 
 		return super.beforeUpdateInsertAction();
@@ -890,17 +897,16 @@ public class FrmAttachmentExt extends EntityMyPK {
 		}
 		super.afterInsert();
 	}
-	
-	@Override
-	 protected void afterInsertUpdateAction() throws Exception
-     {
-         FrmAttachment ath = new FrmAttachment();
-         ath.setMyPK(this.getMyPK());
-         ath.RetrieveFromDBSources();
-         ath.Update();
 
-         super.afterInsertUpdateAction();
-     }
+	@Override
+	protected void afterInsertUpdateAction() throws Exception {
+		FrmAttachment ath = new FrmAttachment();
+		ath.setMyPK(this.getMyPK());
+		ath.RetrieveFromDBSources();
+		ath.Update();
+
+		super.afterInsertUpdateAction();
+	}
 
 	/**
 	 * 删除之后.

@@ -94,8 +94,7 @@ public class BillTemplate extends EntityNoName
     /// <summary>
     /// 表单的ID
     /// </summary>
-    public final String getFK_MapData()
-    
+    public final String getFK_MapData()    
     {
          return this.GetValStringByKey(BillTemplateAttr.FK_MapData);
     }

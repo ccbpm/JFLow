@@ -398,6 +398,10 @@ public abstract class WebContralBase extends BaseController {
 		if (str == null || str.equals("") || str.equals("null")) {
 			str = this.GetRequestVal("FK_MapData");
 		}
+		
+		if (str == null || str.equals("") || str.equals("null")) {
+			str = this.GetRequestVal("FrmID");
+		}
 
 		if (str == null || str.equals("") || str.equals("null")) {
 			if (this.getEnName() == null)

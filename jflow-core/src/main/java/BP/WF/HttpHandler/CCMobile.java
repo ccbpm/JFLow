@@ -126,6 +126,7 @@ public class CCMobile extends WebContralBase
 
 		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks());
 		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing());
+		ht.put("Todolist_Complete", BP.WF.Dev2Interface.getTodolist_Complete());
 		ht.put("Todolist_Sharing", BP.WF.Dev2Interface.getTodolist_Sharing());
 		ht.put("Todolist_CCWorks", BP.WF.Dev2Interface.getTodolist_CCWorks());
 		ht.put("Todolist_Apply", BP.WF.Dev2Interface.getTodolist_Apply()); //申请下来的任务个数.
@@ -196,6 +197,18 @@ public class CCMobile extends WebContralBase
 		String fk_node = this.GetRequestVal("FK_Node");
 		DataTable dt = BP.WF.Dev2Interface.DB_Todolist(WebUser.getNo(), this.getFK_Node());
 		return BP.Tools.Json.DataTableToJson(dt, false);
+	}
+
+	/**
+	 * 查询已完成
+	 * @return
+	 * @throws Exception
+	 */
+	public final String Complete_Init() throws Exception
+	{
+		DataTable dt=null;
+		dt=BP.WF.Dev2Interface.DB_FlowComplete();
+		return  BP.Tools.Json.ToJson(dt);
 	}
 	public final String DB_GenerReturnWorks() throws Exception
 	{

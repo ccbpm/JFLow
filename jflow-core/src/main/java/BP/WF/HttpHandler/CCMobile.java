@@ -196,7 +196,7 @@ public class CCMobile extends WebContralBase
 	{
 		String fk_node = this.GetRequestVal("FK_Node");
 		DataTable dt = BP.WF.Dev2Interface.DB_Todolist(WebUser.getNo(), this.getFK_Node());
-		return BP.Tools.Json.DataTableToJson(dt, false);
+		return BP.Tools.Json.ToJson(dt);
 	}
 
 	/**

@@ -237,11 +237,11 @@ public class Node extends Entity {
 			boolean isHaveSend = false;
 			boolean isHaveReturn = false;
 			for (PushMsg item : obj.ToJavaList()) {
-				if (item.getFK_Event() == EventListOfNode.SendSuccess) {
+				if (item.getFK_Event().equals(EventListOfNode.SendSuccess)) {
 					isHaveSend = true;
 				}
 
-				if (item.getFK_Event() == EventListOfNode.ReturnAfter) {
+				if (item.getFK_Event().equals( EventListOfNode.ReturnAfter)) {
 					isHaveReturn = true;
 				}
 			}

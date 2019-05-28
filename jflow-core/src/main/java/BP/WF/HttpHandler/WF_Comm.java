@@ -2562,6 +2562,7 @@ public class WF_Comm extends WebContralBase {
         ht.put("CustomerName", BP.Sys.SystemConfig.getCustomerName());
 		
 		ht.put("GroupNo", "0");
+		ht.put("Token", WebUser.getToken() == null ? "" : WebUser.getToken());
 		//ht.put("orgNo", WebUser.getFK_Dept() == null ? "" : WebUser.getFK_Dept());
 		return BP.Tools.Json.ToJson(ht);
 	}

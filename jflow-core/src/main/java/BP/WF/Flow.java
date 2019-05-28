@@ -4232,7 +4232,8 @@ public class Flow extends BP.En.EntityNoName {
 
 		if (!(doType.equals(EventListOfNode.WorkArrive) || doType.equals(EventListOfNode.SendSuccess)
 				|| doType.equals(EventListOfNode.ShitAfter) || doType.equals(EventListOfNode.ReturnAfter)
-				|| doType.equals(EventListOfNode.UndoneAfter) || doType.equals(EventListOfNode.AskerReAfter))) {
+				|| doType.equals(EventListOfNode.UndoneAfter) || doType.equals(EventListOfNode.AskerReAfter)
+				|| doType.equals(EventListOfNode.FlowOverAfter))) {
 			
 			if (str!=null && str.equals("null"))
 				str=null;
@@ -4246,7 +4247,7 @@ public class Flow extends BP.En.EntityNoName {
 			if (!item.getFK_Event().equals(doType))
 				continue;
 
-			if (item.getSMSPushWay() == 0 || item.getMailPushWay() == 0)
+			if (item.getSMSPushWay() == 0 && item.getMailPushWay() == 0)
 				continue; // 如果都没有消息设置，就放过.
 
 			// 执行发送消息.

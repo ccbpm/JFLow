@@ -1799,11 +1799,26 @@ public class WF_Comm extends WebContralBase {
 	/// <returns></returns>
 	public String Search_Exp() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		;
+		
 		Entity en = ens.getGetNewEntity();
+		// 属性集合.
+		MapAttrs mapAttrs =  new MapAttrs();
+		Attrs attrs = new Attrs();
+		MapData md = new MapData();
+        md.setNo(this.getEnsName());
+        int count = md.RetrieveFromDBSources();
+        if(count==0)
+        	attrs = en.getEnMap().getAttrs();
+        else{
+        	mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
+        	
+        	for(MapAttr attr :mapAttrs.ToJavaList())
+        		attrs.Add(attr.getHisAttr());
+        }
+						
 		String name = "数据导出";
 		String filename = name + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getName() + ".xls";
-		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name,null);
+		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name,attrs);
 
 		return filePath;
 	}

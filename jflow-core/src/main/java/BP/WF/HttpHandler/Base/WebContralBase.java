@@ -1020,12 +1020,22 @@ public abstract class WebContralBase extends BaseController {
 			index = 0;
 			for (int j = 0; j < selectedAttrs.size(); j++) {
 				Attr attr = selectedAttrs.get(j);
-
-				if (attr.getUIVisible() == false)
+				if (attr.getKey().equals("MyNum"))
 					continue;
-
-				if (attr.getKey() == "MyNum")
+				if (attr.getKey().equals("OID"))
 					continue;
+				 if (attr.getIsFKorEnum())
+                     continue;
+				
+				if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
+					continue;
+				
+	             if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt") 
+	                 || attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
+	                 || attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
+	                 continue;
+	             
+				
 				String str = "";
 				if (attr.getMyDataType() == DataType.AppBoolean) {
 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)

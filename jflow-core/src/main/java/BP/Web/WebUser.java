@@ -354,6 +354,9 @@ public class WebUser {
 
 		try
 		{
+			if (sql.contains("UPDATE Port_Emp SET FK_Dept=") == true)
+				if (BP.DA.DBAccess.IsView("Port_Emp") == true)
+                    return;
 			BP.DA.DBAccess.RunSQL(sql);
 		}
 		catch (RuntimeException ex)
@@ -569,7 +572,7 @@ public class WebUser {
 			
 			   BP.Port.Dept dept = new BP.Port.Dept( WebUser.getFK_Dept());
                BP.Web.WebUser.setDeptParentNo(  dept.getParentNo());
-               return val;
+               return dept.getParentNo();
 		}
 		return val;
 	}

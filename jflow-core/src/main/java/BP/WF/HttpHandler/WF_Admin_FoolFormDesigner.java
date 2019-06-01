@@ -41,6 +41,7 @@ import BP.Sys.MapData;
 import BP.Sys.MapDataAttr;
 import BP.Sys.MapDtl;
 import BP.Sys.MapDtls;
+import BP.Sys.MapExts;
 import BP.Sys.MapFrame;
 import BP.Sys.MapFrames;
 import BP.Sys.SFDBSrc;
@@ -385,16 +386,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		return msg;
 	}
 
-//	public String ImpTableFieldSelectBindKey_Init() {
-//		BP.Sys.SysEnumMains ens = new BP.Sys.SysEnumMains();
-//		ens.RetrieveAll();
-//		BP.Sys.SFTables tabs = new BP.Sys.SFTables();
-//		tabs.RetrieveAll();
-//		DataSet ds = new DataSet();
-//		ds.Tables.add(ens.ToDataTableField("SysEnumMains"));
-//		ds.Tables.add(tabs.ToDataTableField("SFTables"));
-//		return BP.Tools.Json.ToJson(ds);
-//	}
 
 	/** 
 	  设计器初始化.
@@ -458,27 +449,30 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		FrmAttachments aths = new FrmAttachments(this.getFK_MapData());
 		ds.Tables.add(aths.ToDataTableField("Sys_FrmAttachment"));
 
-		// 检查组件的分组是否完整?
-//		for (GroupField item : gfs.ToJavaList())
-//		{
-//				boolean isHave=false;
-//			if (item.getCtrlType().equals("Dtl"))
-//			{
-//				for (MapDtl dtl : dtls.ToJavaList())
-//				{
-//					if (dtl.getNo() == item.getCtrlID())
-//					{
-//						isHave = true;
-//						break;
-//					}
-//				}
-//				//分组不存在了，就删除掉他.
-//				if (isHave == false)
-//				{
-//					item.Delete();
-//				}
-//			}
-//		}
+
+        //加入扩展属性.
+        MapExts  MapExts = new MapExts(this.getFK_MapData());
+        ds.Tables.add(MapExts.ToDataTableField("Sys_MapExt"));
+
+        // 检查从表组件的分组是否完整?
+        for(GroupField item : gfs.ToJavaList())
+        {
+            boolean isHave=false;
+            if (item.getCtrlType().equals("Dtl"))
+            {
+                for(MapDtl dtl : dtls.ToJavaList())
+                {
+                    if (dtl.getNo().equals(item.getCtrlID()))
+                    {
+                        isHave = true;
+                        break;
+                    }
+                }
+                //分组不存在了，就删除掉他.
+                if (isHave == false)
+                    item.Delete();
+            }
+        }
 		
 		if (this.getFK_MapData().indexOf("ND") == 0)
 		{
@@ -486,7 +480,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			if (DataType.IsNumStr(nodeStr) == true)
 			{
 				FrmNodeComponent fnc = new FrmNodeComponent(Integer.parseInt(nodeStr));
-				//   var f = fnc.GetValFloatByKey("FWC_H");
 				ds.Tables.add(fnc.ToDataTableField("WF_Node"));
 			}
 		}

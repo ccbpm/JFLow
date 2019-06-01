@@ -164,7 +164,8 @@ public class MapFrmFool extends EntityNoName
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", true, false, 0, 100, 20);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20, true);
 
-		map.AddTBInt(MapDataAttr.TableCol, 4, "表单显示列数", true, true);
+		 map.AddDDLSysEnum(MapDataAttr.TableCol, 0, "表单显示列数", true, true, MapDataAttr.TableCol,
+                 "@0=4列@1=6列@2=3列");
 		map.AddTBInt(MapDataAttr.TableWidth, 900, "傻瓜表单宽度", true, false);
 		map.AddTBInt(MapDataAttr.TableHeight, 900, "傻瓜表单高度", true, false);
 
@@ -183,7 +184,6 @@ public class MapFrmFool extends EntityNoName
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
 		map.AddTBString(MapDataAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapDataAttr.Ver, null, "版本号", true, true, 0, 30, 20);
-		//map.AddTBString(MapFrmFreeAttr.DesignerTool, null, "表单设计器", true, true, 0, 30, 20);
 
 		map.AddTBStringDoc(MapDataAttr.Note, null, "备注", true, false, true);
 			//增加参数字段.
@@ -231,7 +231,6 @@ public class MapFrmFool extends EntityNoName
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpressionBatch";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批量修改字段"; // "设计表单";
@@ -240,7 +239,6 @@ public class MapFrmFool extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		//map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
@@ -407,7 +405,7 @@ public class MapFrmFool extends EntityNoName
   
         //一直遇到遇到自动变长的问题, 强制其修复过来.
         DBAccess.RunSQL("UPDATE Sys_Mapattr SET colspan=3 WHERE UIHeight<=38 AND colspan=4");
- 
+
          // 处理失去分组的字段. 
         String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
         MapAttrs attrs = new MapAttrs();

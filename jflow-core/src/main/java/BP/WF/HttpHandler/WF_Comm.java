@@ -882,18 +882,16 @@ public class WF_Comm extends WebContralBase {
 		en.RetrieveFromDBSources();
 
 		String methodName = this.GetRequestVal("MethodName");
-
+		
 		java.lang.Class tp = en.getClass();
 		java.lang.reflect.Method mp = null;
-		try {
-			mp = tp.getMethod(methodName);
-		} catch (NoSuchMethodException e1) {
-			e1.printStackTrace();
-			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
-		} catch (SecurityException e1) {
-			e1.printStackTrace();
-			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
+		for(java.lang.reflect.Method m:tp.getMethods()){
+			if(m.getName().indexOf(methodName) !=-1){
+				mp = m;
+				break;
+			}
 		}
+		
 		if (mp == null) {
 			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
 		}
@@ -1074,24 +1072,13 @@ public class WF_Comm extends WebContralBase {
 			return BP.Tools.Json.ToJson(ht);
 		}
 
-		DataTable dt = new DataTable();
-
-		// 转化为集合.
-		MapAttrs attrs = rm.getHisAttrs().ToMapAttrs();
-
+		
 		return "";
 	}
 
 	public final String MethodLink_Init() throws Exception {
-		java.util.ArrayList al = BP.En.ClassFactory.GetObjects("BP.En.Method");
-		int i = 1;
+		ArrayList al = BP.En.ClassFactory.GetObjects("BP.En.Method");
 		String html = "";
-
-		// DataTable dt = new DataTable();
-		// dt.Columns.Add("No", typeof(string));
-		// dt.Columns.Add("Name", typeof(string));
-		// dt.Columns.Add("Icon", typeof(string));
-		// dt.Columns.Add("Note", typeof(string));
 		Iterator it1 = al.iterator();
 		while (it1.hasNext()) {
 
@@ -1100,7 +1087,6 @@ public class WF_Comm extends WebContralBase {
 				continue;
 			}
 
-			// DataRow dr = dt.NewRow();
 			String str = en.toString();
 
 			str = str.substring(0, str.indexOf('@'));
@@ -1596,7 +1582,6 @@ public class WF_Comm extends WebContralBase {
 	private DataTable Search_Data(Entities ens, Entity en) throws Exception {
 		Map map = en.getEnMapInTime();
 
-		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 		// 取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
 		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
@@ -1674,8 +1659,6 @@ public class WF_Comm extends WebContralBase {
 		} else {
 			qo.AddHD();
 		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion
 
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false) {
 			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().Replace("/",
@@ -1777,8 +1760,6 @@ public class WF_Comm extends WebContralBase {
 			}
 			qo.addRightBracket();
 		}
-		/// #endregion
-
 		/// #region 获得查询数据.
 		for (String str : ap.getHisHT().keySet()) {
 			Object val = ap.GetValStrByKey(str);
@@ -3627,8 +3608,7 @@ public class WF_Comm extends WebContralBase {
 			if (DataType.IsNullOrEmpty(uiBindKey) == true)
 			{
 				String myPK =  dr.getValue("MyPK").toString();
-				//如果是空的
-				//   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
+				
 			}
 
 			// 检查是否有下拉框自动填充。

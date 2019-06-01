@@ -569,7 +569,7 @@ public class MapAttr extends EntityMyPK {
 		return this.GetValIntByKey(MapAttrAttr.GroupID);
 	}
 
-	public final void setGroupID(int value) {
+	public final void setGroupID(long value) {
 		this.SetValByKey(MapAttrAttr.GroupID, value);
 	}
 
@@ -637,22 +637,6 @@ public class MapAttr extends EntityMyPK {
 	 * 
 	 */
 	public final float getUIWidth() {
-		// switch (this.MyDataType)
-		// {
-		// case DataType.AppString:
-		// return this.GetValFloatByKey(MapAttrAttr.UIWidth);
-		// case DataType.AppFloat:
-		// case DataType.AppInt:
-		// case DataType.AppMoney:
-		// case DataType.AppRate:
-		// case DataType.AppDouble:
-		// return 80;
-		// case DataType.AppDate:
-		// return 75;
-		// case DataType.AppDateTime:
-		// return 112;
-		// default:
-		// return 70;
 		return this.GetValFloatByKey(MapAttrAttr.UIWidth);
 	}
 
@@ -971,7 +955,6 @@ public class MapAttr extends EntityMyPK {
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 
-	//	map.AddMyPK();
 		
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "实体标识", true, true, 1, 200, 20);
 		 
@@ -1016,13 +999,18 @@ public class MapAttr extends EntityMyPK {
          map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
          map.AddTBString(MapAttrAttr.Tag, null, "标识（存放临时数据）", true, false, 0, 100, 20);
          map.AddTBInt(MapAttrAttr.EditType, 0, "编辑类型", true, false);
+         
+         map.AddTBString(MapAttrAttr.Tag, null, "标识", true, false, 0, 100, 20);
+         map.AddTBString(MapAttrAttr.Tag1, null, "标识1", true, false, 0, 100, 20);
+         map.AddTBString(MapAttrAttr.Tag2, null, "标识2", true, false, 0, 100, 20);
+         map.AddTBString(MapAttrAttr.Tag3, null, "标识3", true, false, 0, 100, 20);
+
 
          map.AddTBString(MapAttrAttr.Tip, null, "激活提示", false, true, 0, 200, 20);
 
          //单元格数量。2013-07-24 增加。
-       //  map.AddTBString(MapAttrAttr.ColSpan, "1", "单元格数量", true, false, 0, 3, 3);
          map.AddTBInt(MapAttrAttr.ColSpan, 1, "单元格数量", true, false);
-       //文本占单元格数量
+         //文本占单元格数量
          map.AddTBInt(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true,false);
 
          //文本跨行
@@ -1201,9 +1189,9 @@ public class MapAttr extends EntityMyPK {
 		if (this.getGroupID() == 0) {
 			// 查找分组，查找到的第一个分组，关联当前属性
 			GroupField group = new GroupField();
-			if (group.Retrieve(GroupFieldAttr.EnName, this.getFK_MapData()) > 0) {
+			if (group.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData()) > 0) {
 				
-				this.setGroupID(this.getGroupID());
+				this.setGroupID(group.getOID());
 				
 			} else {
 				group.setFrmID(this.getFK_MapData());

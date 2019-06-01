@@ -3,6 +3,7 @@ package BP.WF.HttpHandler;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,6 +23,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.axis.encoding.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HttpContext;
 import BP.DA.AtPara;
@@ -3504,5 +3506,62 @@ public class WF_CCForm extends WebContralBase {
 	public String getFK_FrmAttachment() {
 		return GetRequestVal("FK_FrmAttachment");
 	}
+	
+	  /// <summary>
+    /// 保存手写签名图片
+    /// </summary>
+    /// <returns>返回保存结果</returns>
+    public String HandWriting_Save()
+    {
+        try
+        {
+        	String basePath = SystemConfig.getPathOfDataUser() + "HandWritingImg";
+        	String ny = DataType.getCurrentDateByFormart("yyyy_MM");
+        	String tempPath = basePath + "\\" + ny + "\\" + this.getFK_Node()+ "\\";
+        	String tempName = this.getWorkID() + "_" + this.getKeyOfEn() + "_" +DataType.getCurrentDateByFormart("HHmmss") + ".png";
+        	File file = new File(tempPath);
+            if (file.exists() == false)
+                file.mkdirs();
+            //删除改目录下WORKID的文件
+            String[] files =file.list();
+            for(String f : files)
+            {
+                if (f.contains(this.getWorkID() + "_" + this.getKeyOfEn()) == true)
+                    new File(f).delete();
+            }
+
+
+
+            String pic_Path = tempPath + tempName;
+
+            String imgData = this.GetValFromFrmByKey("imageData");
+            Base64 decoder = new Base64();
+
+            byte[] imgByte = Base64.decode(imgData);
+    		InputStream in = new ByteArrayInputStream( imgByte );
+    		byte[] b = new byte[1024];
+    		int nRead = 0;
+    		
+    		OutputStream o = new FileOutputStream(pic_Path);
+    		
+    		while( ( nRead = in.read(b) ) != -1 ){
+    			o.write( b, 0, nRead );
+    		}
+    		
+    		o.flush();
+    		o.close();
+    		
+    		in.close();
+
+            return "info@" + pic_Path.replace("\\", "/"); 
+        }
+        catch (Exception e)
+        {
+            return "err@" + e.getMessage();
+        }
+    }
+    
+   
+
 
 }

@@ -1032,12 +1032,8 @@ public class MapData extends EntityNoName
 	}
 	public final int getTableCol()
 	{
-		int i = this.GetValIntByKey(MapDataAttr.TableCol);
-		if (i == 0 || i == 1)
-		{
-			return 4;
-		}
-		return i;
+		return this.GetValIntByKey(MapDataAttr.TableCol);
+		
 	}
 
 	/** 
@@ -1328,7 +1324,7 @@ public class MapData extends EntityNoName
 		map.AddTBInt(MapDataAttr.FrmW, 900, "FrmW", true, true);
 		map.AddTBInt(MapDataAttr.FrmH, 1200, "FrmH", true, true);
 
-		map.AddTBInt(MapDataAttr.TableCol, 4, "傻瓜表单显示的列", true, true);
+		map.AddTBInt(MapDataAttr.TableCol, 0, "傻瓜表单显示的列", true, true);
 		map.AddTBInt(MapDataAttr.TableWidth, 800, "表格宽度", true, true);
 
 			//Tag

@@ -72,7 +72,16 @@ public class MapAttrString extends EntityMyPK {
 	 */
 	public MapAttrString() {
 	}
+	
+	  /// <summary>
+    /// 实体属性
+    /// </summary>
+    public MapAttrString(String myPK) throws Exception
+    {
+        this.setMyPK(myPK);
+        this.Retrieve();
 
+    }
 	/**
 	 * EnMap
 	 */
@@ -128,9 +137,7 @@ public class MapAttrString extends EntityMyPK {
         map.AddDDLSysEnum(MapAttrAttr.RowSpan, 1, "行数", true, true, "RowSpanAttrString",
            "@1=跨1行@2=跨2行@3=跨3行");
         
-		// 显示的分组.
-		// sunxd 解决ORACLE数据为自动转大写问题
-		//
+		
 		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.SQLOfGroupAttr(), true);
 
 		map.AddDDLSysEnum(MapAttrAttr.IsSigan, 0, "签名模式", true, true, MapAttrAttr.IsSigan,

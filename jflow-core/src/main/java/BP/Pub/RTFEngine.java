@@ -1226,9 +1226,6 @@ public class RTFEngine
 			//审核组件组合信息
 			
 			//根据track表获取审核的节点
-			List<String> nodes = new ArrayList<String>();
-			int i = 0;
-			int node = 0;
 			//节点单个审核人
 		   if (dtTrack != null && str.toString().contains("<WorkCheckBegin>")== false && str.toString().contains("<WorkCheckEnd>") ==false){
 				for(DataRow row : dtTrack.Rows) //此处的22是ActionType.WorkCheck的值，此枚举位于BP.WF项目中，此处暂写死此值

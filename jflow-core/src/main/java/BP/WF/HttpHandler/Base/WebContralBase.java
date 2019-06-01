@@ -974,7 +974,7 @@ public abstract class WebContralBase extends BaseController {
 				boolean contain = false;
 
 				for (String col : cfg.getShowColumns()) {
-					if (col == attr.getKey()) {
+					if (col.equals(attr.getKey())) {
 						contain = true;
 						break;
 					}

@@ -99,6 +99,18 @@ public class MapAttrAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String Tag = "Tag";
+	/**
+	 * 扩展字段1
+	 */
+	public static final String Tag1 = "Tag1";
+	/**
+	 * 扩展字段2
+	 */
+	public static final String Tag2= "Tag2";
+	/**
+	 * 扩展字段3
+	 */
+	public static final String Tag3 = "Tag3";
 	/** 
 	 MyDataType
 	 

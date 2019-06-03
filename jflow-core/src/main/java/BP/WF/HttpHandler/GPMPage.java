@@ -54,11 +54,8 @@ public class GPMPage extends WebContralBase{
     /// <returns></returns>
     public String Organization_Init() throws Exception
     {
-        //根据用户判断当前人员是否为二级管理员
-        BP.WF.Port.AdminEmp emp = new BP.WF.Port.AdminEmp(WebUser.getNo());
-        //二级管理员
         BP.GPM.Depts depts = new BP.GPM.Depts();
-        if (emp.getNo().equals("admin")==false && emp.getUserType() == 1)
+        if (WebUser.getNo().equals("admin")==false )
         {
             depts.Retrieve("ParentNo",WebUser.getFK_Dept());
             depts.AddEntity(new Dept(WebUser.getFK_Dept()));

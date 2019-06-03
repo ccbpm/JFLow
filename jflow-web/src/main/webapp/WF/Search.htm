@@ -182,11 +182,23 @@
                     }
                 }
 
-                todoEmpsName = en.TodoEmps;
 
-                if (todoEmpsName != null)
-                    todoEmpsName = en.TodoEmps.substr(todoEmpsName.indexOf(',') + 1);
+                var todoEmps = en.TodoEmps;
+                var todoEmpsName = "";
+                var todoEmp = todoEmps.split(";");
+                for (j = 0; j < todoEmp.length; j++) {
+                    if (todoEmp[j] == '' || todoEmp[j] == null || todoEmp[j] == undefined)
+                        continue;
+                    if (todoEmp[j].indexOf(',') != -1) {
+                        var aa = todoEmp[j].split(",")[1] + "、";
+                        todoEmpsName += aa;
 
+                    } else {
+                        todoEmpsName += todoEmp[j]+"、";
+                    }
+
+                }
+                todoEmpsName = todoEmpsName.substring(0,todoEmpsName.lastIndexOf("、"));
                 //是否可以执行当前工作?
                 var isCanDo = false;
                 if (en.TodoEmps != null) {

@@ -89,6 +89,17 @@ import BP.WF.Template.TemplateFileModel;
 import BP.Web.WebUser;
 
 public class WF_WorkOpt extends WebContralBase {
+	
+	 /// <summary>
+    /// 进度图.
+    /// </summary>
+    /// <returns></returns>
+    public String JobSchedule_Init() throws Exception
+    {
+        DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(this.getWorkID());
+        return BP.Tools.Json.ToJson(ds);
+    }
+    
 
 	/**
 	 * 构造函数

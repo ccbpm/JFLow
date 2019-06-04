@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>分组列表平铺</title>
+    <title>绑定外键表</title>
     <script type="text/javascript" src="../../../Scripts/bootstrap/js/jquery.min.js"></script>
     <script src="../../../Scripts/QueryString.js" type="text/javascript"></script>
     <link href="../../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
@@ -14,12 +14,11 @@
         //页面启动函数.
         $(function () {
 
-            InitBar("PopTableList");
+            InitBar("PopBindSFTable");
             var html = "";
             var mapExt = new Entity("BP.Sys.MapExt");
-            mapExt.MyPK = "PopTableList_" + GetQueryString("FK_MapData") + "_" + GetQueryString("KeyOfEn");
+            mapExt.MyPK = "PopBindSFTable_" + GetQueryString("FK_MapData") + "_" + GetQueryString("KeyOfEn");
             var i = mapExt.RetrieveFromDBSources(); //从数据库来查询.
-
             if (i == 0) {
                 mapExt.H = 300;
                 mapExt.W = 600;
@@ -31,6 +30,9 @@
 
             //批量为赋值.
             GenerFullAllCtrlsVal(mapExt);
+
+            GenerBindEntities("DDL_SFTable", "BP.Sys.SFTables", mapExt.Tag2);
+
 
             //设置按钮是否可以用?
             if (i == 0) {
@@ -48,17 +50,20 @@
             var keyOfEn = GetQueryString("KeyOfEn");
 
             var en = new Entity("BP.Sys.MapAttr", frmID + "_" + keyOfEn);
-            en.SetPara("PopModel", "PopTableList");
+            en.SetPara("PopModel", "PopBindSFTable");
             en.Update();
             var mapExt = new Entity("BP.Sys.MapExt");
-            mapExt.MyPK = "PopTableList_" + GetQueryString("FK_MapData") + "_" + GetQueryString("KeyOfEn");
+            mapExt.MyPK = "PopBindSFTable_" + GetQueryString("FK_MapData") + "_" + GetQueryString("KeyOfEn");
             mapExt.RetrieveFromDBSources(); //从数据库来查询.
 
             mapExt.CopyURL();  //从url里面copy数据.
             mapExt.CopyForm(); //从from里面copy数据.
 
-            mapExt.ExtType = "PopTableList";
+            mapExt.ExtType = "PopBindSFTable";
             mapExt.AttrOfOper = GetQueryString("KeyOfEn");
+            mapExt.Tag2 = $("#DDL_SFTable").val();
+
+            // alert(mapExt.Tag2);
 
             var err = "";
             if (mapExt.GetPara("Title") == "")
@@ -79,7 +84,7 @@
                 return;
 
             var mapExt = new Entity("BP.Sys.MapExt");
-            mapExt.MyPK = "PopTableList_" + GetQueryString("FK_MapData") + "_" + GetQueryString("KeyOfEn");
+            mapExt.MyPK = "PopBindSFTable_" + GetQueryString("FK_MapData") + "_" + GetQueryString("KeyOfEn");
             mapExt.RetrieveFromDBSources(); //从数据库来查询.
             mapExt.Delete();
             window.location.href = window.location.href;
@@ -117,12 +122,12 @@
             <td>
                 弹窗属性
             </td>
-            <td >
-                高度:<input type="text" id="TB_H" name="TB_H" style="width: 80px; text-align: right" />
+            <td>
+                高度:<input type="text" id="TB_H" name="TB_H"  style="width: 80px; text-align: right" />
                 宽度:<input type="text" id="TB_W" name="TB_W" style="width: 80px; text-align: right" />
-                 <font color="gray">用于控制弹出窗口的大小</font>
+                <font color="gray">用于控制弹出窗口的大小</font>
             </td>
-           <td>
+            <td>
                 设置显示列数
             </td>
             <td>
@@ -134,11 +139,7 @@
                 数据源类型
             </td>
             <td>
-                <select id="DDL_DBType" name="DDL_DBType">
-                    <option value="0">执行SQL</option>
-                    <option value="1">执行url返回JSON</option>
-                    <option value="2">执行CCFromRef.js返回JSON</option>
-                </select>
+                无
             </td>
             <td>
                 选择类型
@@ -152,10 +153,9 @@
                     多选</label>
             </td>
         </tr>
-        
         <tr>
-            <th colspan="4">
-                <a href="javascript:ShowHidden('entity')">实体数据源</a>
+            <td colspan="1">
+                <a href="javascript:ShowHidden('entity')">选择一个外键、外部数据源</a>
                 <div id="entity" style="color: Gray; display: none">
                     <ul>
                         <li>设置一个可以返回json的数据源该数据源有No,Name, 关联外键列 三个约定的列. </li>
@@ -163,15 +163,12 @@
                         <li>SQL事例: SELECT No,Name,FK_BanJi FROM Demo_Student</li>
                     </ul>
                 </div>
-            </th>
-        </tr>
-        <tr>
-            <td colspan="4">
-                <textarea id="TB_Tag2" name="TB_Tag2" style="width: 98%; height: 23px;">
-</textarea>
+            </td>
+            <td colspan="3">
+                <select id="DDL_SFTable" name="DDL_SFTable">
+                </select>
             </td>
         </tr>
-        
         <tr>
             <th colspan="4">
                 <a href="javascript:ShowHidden('backFunction')">确定后执行的JS</a>

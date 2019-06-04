@@ -185,10 +185,10 @@
         var runOnPlant = "BP";
         var initData = null;
         $(function () {
-            if(plant=="CCFlow")
+            if (plant == "CCFlow")
                 Handler = basePath + "/WF/Admin/CCBPMDesigner/Handler.ashx";
             else
-                Handler = basePath+"/WF/Admin/CCBPMDesigner/ProcessRequest.do";
+                Handler = basePath + "/WF/Admin/CCBPMDesigner/ProcessRequest.do";
 
             //定义等待界面的位置
             $(".mymaskContainer").offset({ left: ($(document).innerWidth() - 120) / 2, top: ($(document).innerHeight() - 50) / 2 });
@@ -1007,41 +1007,36 @@
                 return;
 
             var propName = (isSub ? '子级' : '同级') + '表单类别';
+            var val = window.prompt(propName, "我的目录");
+            if (val == null || val == undefined)
+                return;
 
-            OpenEasyUiSampleEditDialog(propName, '新建', null, function (val) {
-                if (val == null || val.length == 0) {
-                    $.messager.alert('错误', '请输入' + propName + '！', 'error');
-                    return false;
-                }
+            var en = new Entity("BP.WF.Template.SysFormTree", currCCFormSort.id);
+            var data = "";
+            if (isSub)
+                data = en.DoMethodReturnString("DoCreateSubNodeIt", val);
+            else
+                data = en.DoMethodReturnString("DoCreateSameLevelNodeIt", val);
 
-                //传入参数
-                var doWhat = isSub ? 'CCForm_NewSubSort' : 'CCForm_NewSameLevelSort';
-                var params = {
-                    action: doWhat,
-                    No: currCCFormSort.id,
-                    Name: val
-                };
+           // alert(data);
 
-                ajaxService(params, function (data) {
-                    var parentNode = isSub ? currCCFormSort : $('#formTree').tree('getParent', currCCFormSort.target);
+            var parentNode = isSub ? currCCFormSort : $('#formTree').tree('getParent', currCCFormSort.target);
 
-                    $('#formTree').tree('append', {
-                        parent: parentNode.target,
-                        data: [{
-                            id: data,
-                            text: val,
-                            attributes: { MenuId: "mFormSort", TType: "FORMTYPE" },
-                            checked: false,
-                            iconCls: 'icon-tree_folder',
-                            state: 'open',
-                            children: []
-                        }]
-                    });
+            $('#formTree').tree('append', {
+                parent: parentNode.target,
+                data: [{
+                    id: data,
+                    text: val,
+                    attributes: { MenuId: "mFormSort", TType: "FORMTYPE" },
+                    checked: false,
+                    iconCls: 'icon-tree_folder',
+                    state: 'open',
+                    children: []
+                }]
+            });
 
-                    $('#formTree').tree('select', $('#formTree').tree('find', data).target);
+            $('#formTree').tree('select', $('#formTree').tree('find', data).target);
 
-                }, this);
-            }, null, false, 'icon-new');
         }
 
         //编辑表单树类别
@@ -1140,14 +1135,14 @@
         }
 
         //新建表单
-        function newFrm( frmType ) {
+        function newFrm(frmType) {
 
             var node = $('#formTree').tree('getSelected');
             if (!node) {
                 return;
             }
 
-            var url = "../CCFormDesigner/NewFrmGuide.htm?Step=0&EntityType="+frmType;
+            var url = "../CCFormDesigner/NewFrmGuide.htm?Step=0&EntityType=" + frmType;
             if (node.attributes) {
                 if (node.attributes.TType == "SRC") {
                     url += "&Src=" + node.id;
@@ -1222,7 +1217,7 @@
                 return;
             }
 
-           // alert('sss');
+            // alert('sss');
 
             var en = new Entity("BP.Frm.FrmBill", node.id);
 
@@ -1230,14 +1225,14 @@
             if (en.EntityType == 0)
                 url = '../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=' + node.id;
 
-            if (en.EntityType==1)
+            if (en.EntityType == 1)
                 url = '../../Comm/En.htm?EnName=BP.Frm.FrmBill&PKVal=' + node.id;
 
             if (en.EntityType == 2)
                 url = '../../Comm/En.htm?EnName=BP.Frm.FrmDict&PKVal=' + node.id;
 
-         //   alert(en.EntityType);
-           // http: //localhost:2207/WF/Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=CCFrm_GDZC&s=0.635120123659069
+            //   alert(en.EntityType);
+            // http: //localhost:2207/WF/Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=CCFrm_GDZC&s=0.635120123659069
 
             OpenEasyUiDialog(url, "CCForm_Attr", '表单属性', 900, 560, "icon-window");
         }
@@ -1254,13 +1249,27 @@
                 alert('请选择一个表单.');
                 return;
             }
-            var en = new Entity("BP.Frm.FrmBill", node.id);
+
+            var en = new Entity("BP.Frm.FrmTemplate", node.id);
             if (en.EntityType == 0) {
                 alert('独立表单暂不支持列表打开...');
                 return;
             }
 
-            var url = '../../CCBill/Search.htm?FrmID=' + node.id;
+            var url = "";
+
+            //单据模式.
+            if (en.EntityType == 1)
+                url = '../../CCBill/SearchBill.htm?FrmID=' + node.id;
+
+            //如果是实体就判断他的编辑模式.
+            if (en.EntityType == 2) {
+                if (en.EntityEditModel == 0)
+                    url = '../../CCBill/SearchDict.htm?FrmID=' + node.id;
+                else
+                    url = '../../CCBill/SearchEditer.htm?FrmID=' + node.id;
+            }
+
             OpenEasyUiDialog(url, "CCForm_Attr", '我的单据', 1100, 560, "icon-window");
         }
         //设计自由表单
@@ -1330,23 +1339,27 @@
             if (currForm == null)
                 return;
 
-            OpenEasyUiConfirm("你确定要删除名称为“" + currForm.text + "”的表单吗？", function () {
-                //传入后台参数
-                var params = {
-                    DoType: "CCForm_DeleteCCFormMapData",
-                    FK_MapData: currForm.id
-                };
-                ajaxService(params, function (data) {
-                    alert("删除成功！");
-                    //如果右侧有打开该表单，则关闭
-                    var currTab = $('#tabs').tabs('getTab', currForm.text);
-                    if (currTab) {
-                        $('#tabs').tabs('close', currForm.text);
-                    }
-                    //删除节点
-                    $('#formTree').tree('remove', currForm.target);
-                });
-            });
+            if (confirm('您确认要删除吗？') == false)
+                return;
+
+            var en = new Entity("BP.Sys.MapData", currForm.id);
+            en.Delete();
+
+            //            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
+            //            handler.AddPara("FK_MapData", currForm.id);
+            //            var data = handler.DoMethodReturnString("CCForm_DeleteCCFormMapData");
+            //            if (data.indexOf('err@') != -1) {
+            //                alert(data);
+            //                return;
+            //            }
+
+            //如果右侧有打开该表单，则关闭
+            var currTab = $('#tabs').tabs('getTab', currForm.text);
+            if (currTab) {
+                $('#tabs').tabs('close', currForm.text);
+            }
+            //删除节点
+            $('#formTree').tree('remove', currForm.target);
         }
 
         function CopyFrm() {
@@ -1812,27 +1825,23 @@
         <!--<div onclick="newSrc()" data-options="iconCls:'icon-add'">新建数据源</div>-->
     </div>
     <div id="mFormSort" class="easyui-menu" style="width: 120px;">
-        <div onclick="newFrm(0)" data-options="iconCls:'icon-add'">
+        <div onclick="newFrm(0)" data-options="iconCls:'icon-excel'">
             新建独立表单</div>
-
-             <div onclick="newFrm(1)" data-options="iconCls:'icon-add'">
+        <div onclick="newFrm(1)" data-options="iconCls:'icon-sheet'">
             新建单据表单</div>
-
-            <div onclick="newFrm(2)" data-options="iconCls:'icon-add'">
+        <div onclick="newFrm(2)" data-options="iconCls:'icon-add'">
             新建实体表单</div>
-             
-
         <div class="menu-sep">
         </div>
-        <div onclick="newCCFormSort(false)" data-options="iconCls:'icon-new'">
+        <div onclick="newCCFormSort(false)" data-options="iconCls:'icon-tree_folder'">
             新建同级类别</div>
-        <div onclick="newCCFormSort(true)" data-options="iconCls:'icon-new'">
+        <div onclick="newCCFormSort(true)" data-options="iconCls:'icon-tree_folder'">
             新建子级类别</div>
         <div class="menu-sep">
         </div>
         <div onclick="EditCCFormSort()" data-options="iconCls:'icon-edit'">
             编辑</div>
-        <div onclick="DeleteCCFormSort()" data-options="iconCls:'icon-delete'">
+        <div onclick="DeleteCCFormSort()" data-options="iconCls:'icon-cancel'">
             删除</div>
         <div class="menu-sep">
         </div>
@@ -1852,7 +1861,7 @@
             数据查询</div>
         <div class="menu-sep">
         </div>
-      <!--  <div onclick="CCForm_Attr()" data-options="iconCls:'icon-property'">
+        <!--  <div onclick="CCForm_Attr()" data-options="iconCls:'icon-property'">
             表单属性</div>-->
         <div onclick="designFoolFrm()" data-options="iconCls:'icon-sheet'">
             设计傻瓜表单</div>

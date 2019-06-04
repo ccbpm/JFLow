@@ -768,12 +768,6 @@ var Entity = (function () {
 
     var Entity = function (enName, pkval) {
 
-//        if (pkval == null || pkval == "" || pkval == undefined) {
-//            var str = '在给[' + enName + ']查询的时候，主键不能为空';
-//            alert(str);
-//            throw Error(str);
-//            return;
-//        }
         if (enName == null || enName == "" || enName == undefined) {
             alert('enName不能为空');
             throw Error('enName不能为空');
@@ -789,10 +783,6 @@ var Entity = (function () {
             this.pkval = pkval || "";
             this.loadData();
         }
-
-      //  this.enName = enName;
-       // this.pkval = pkval;
-       // this.loadData();
 
     };
 
@@ -1283,11 +1273,16 @@ var Entity = (function () {
         },
 
         DoMethodReturnString: function (methodName, myparams) {
-            var params = [];
-            $.each(arguments, function (i, o) {
-                if (i > 0)
-                    params.push(o);
-            });
+            var params = {};
+            if (myparams == null || myparams == undefined)
+                myparams = "";
+            arguments["paras"] = myparams;
+
+            /*$.each(arguments, function (i, o) {
+            if (i > 0)
+            params.push(o);
+            });*/
+
 
             var pkavl = this.GetPKVal();
             if (pkavl == null || pkavl == "") {
@@ -1300,13 +1295,13 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                data: arguments,
                 xhrFields: {
                     withCredentials: true
                 },
                 crossDomain: true,
-                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + pkavl + "&MethodName=" + methodName + "&paras=" + params + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + pkavl + "&MethodName=" + methodName +  "&t=" + new Date().getTime(),
                 dataType: 'html',
+                data: arguments,
                 success: function (data) {
                     string = data;
                 },
@@ -2185,7 +2180,6 @@ var HttpHandler = (function () {
 
             var jsonString = this.DoMethodReturnString(methodName);
 
-
             if (jsonString.indexOf("err@") == 0) {
                 alert(jsonString);
 
@@ -2195,6 +2189,7 @@ var HttpHandler = (function () {
             }
 
             try {
+
                 jsonString = ToJson(jsonString);
 
                 //jsonString = JSON.parse(jsonString);

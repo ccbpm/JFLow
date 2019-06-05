@@ -887,7 +887,9 @@ public class CCFormAPI extends Dev2Interface
 		//#region 把从表的- 外键表/枚举 加入 DataSet.
         MapExts mes = dtl.getMapExts();
         MapExt me = null;
-
+        
+        DataTable ddlTable = new DataTable();
+        ddlTable.Columns.Add("No");
         for (DataRow dr : Sys_MapAttr.Rows)
         {
             String lgType = dr.getValue("LGType").toString();
@@ -947,10 +949,23 @@ public class CCFormAPI extends Dev2Interface
             // 判断是否存在.
             if (myds.Tables.contains(uiBindKey) == true)
                 continue;
+            
+         // 获得数据.
+            DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 
-            myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
-            //#endregion 外键字段
+            if (mydt == null)
+            {
+                DataRow ddldr = ddlTable.NewRow();
+                ddldr.setValue("No", uiBindKey);
+                ddlTable.Rows.add(ddldr);
+            }
+            else
+            {
+                myds.Tables.add(mydt);
+            }
         }
+        ddlTable.TableName = "UIBindKey";
+        myds.Tables.add(ddlTable);
 		//#endregion 把从表的- 外键表/枚举 加入 DataSet.
 
 

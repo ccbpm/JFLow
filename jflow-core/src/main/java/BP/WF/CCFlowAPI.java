@@ -271,9 +271,6 @@ public class CCFlowAPI {
                 {
                     myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
                 }
-                
-				
-				
 				
 				GroupFields gfs = new GroupFields();
 				gfs.RetrieveIn(GroupFieldAttr.FrmID, "(" + myFrmIDs + ")");
@@ -728,7 +725,9 @@ public class CCFlowAPI {
 			}
 
 			MapExts mes = md.getMapExts();
-
+			DataTable ddlTable = new DataTable();
+            ddlTable.Columns.Add("No");
+            
 			for (DataRow dr : dtMapAttr.Rows) {
 
 				String lgType = dr.getValue("LGType").toString();
@@ -771,10 +770,19 @@ public class CCFlowAPI {
 				if (myds.Tables.contains(uiBindKey) == true) {
 					continue;
 				}
-				if(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey)!=null)
-				myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+				
+			    DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+				
+				if(mydt!=null)
+					myds.Tables.add(mydt);
+				else{
+					 DataRow ddldr = ddlTable.NewRow();
+                     ddldr.setValue("No",uiBindKey);
+                     ddlTable.Rows.add(ddldr);
+				}
 			}
-
+			 ddlTable.TableName = "UIBindKey";
+             myds.Tables.add(ddlTable);
 			/// #endregion End把外键表加入DataSet
 
 			/// #region 处理流程-消息提示.

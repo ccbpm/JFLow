@@ -1359,7 +1359,8 @@ public class WF_CCForm extends WebContralBase {
     		}
 
             MapExts mes = md.getMapExts();
-
+            DataTable ddlTable = new DataTable();
+            ddlTable.Columns.Add("No");
             for(DataRow dr : dtMapAttr.Rows)
             {
                 String lgType = dr.getValue("LGType").toString();
@@ -1402,7 +1403,14 @@ public class WF_CCForm extends WebContralBase {
                 DataTable dataTable = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
                 if (dataTable != null)
                     ds.Tables.add(dataTable);
+                else{
+                	 DataRow ddldr = ddlTable.NewRow();
+                     ddldr.setValue("No", uiBindKey);
+                     ddlTable.Rows.add(ddldr);
+                }
             }
+            ddlTable.TableName = "UIBindKey";
+            ds.Tables.add(ddlTable);
             //End把外键表加入DataSet
 
             return BP.Tools.Json.ToJson(ds);
@@ -1573,7 +1581,8 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		MapExts mes = md.getMapExts();
-
+		DataTable ddlTable = new DataTable();
+        ddlTable.Columns.Add("No");
 		for (DataRow dr : dtMapAttr.Rows) {
 			String lgType = dr.getValue("LGType").toString();
 			if (!lgType.equals("2")) {
@@ -1618,7 +1627,15 @@ public class WF_CCForm extends WebContralBase {
 			DataTable dt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 			if (dt != null)
 				ds.Tables.add(dt);
+			else{
+				 DataRow ddldr = ddlTable.NewRow();
+                 ddldr.setValue("No", uiBindKey);
+                 ddlTable.Rows.add(ddldr);
+			}
+				
 		}
+		 ddlTable.TableName = "UIBindKey";
+         ds.Tables.add(ddlTable);
 
 		// #region 加入组件的状态信息, 在解析表单的时候使用.
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999 &&(fn.getIsEnableFWC() == true || nd.getFrmWorkCheckSta()!=FrmWorkCheckSta.Disable)) {

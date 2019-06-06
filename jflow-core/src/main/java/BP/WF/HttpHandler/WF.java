@@ -57,6 +57,7 @@ import BP.WF.SMS;
 import BP.WF.SMSMsgType;
 import BP.WF.Track;
 import BP.WF.WFSta;
+import BP.WF.WFState;
 import BP.WF.Work;
 import BP.WF.WorkFlow;
 import BP.WF.Works;
@@ -371,9 +372,56 @@ public class WF extends WebContralBase {
 	 */
 	public String Complete_Init() throws Exception 
     {
-	    DataTable dt=null;
-	    dt=BP.WF.Dev2Interface.DB_FlowComplete();
-	    return  BP.Tools.Json.ToJson(dt);
+		/* 如果不是删除流程注册表. */
+        Paras ps = new Paras();
+        ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' and WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
+        DataTable dt= BP.DA.DBAccess.RunSQLReturnTable(ps);
+        //添加oracle的处理
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+        {
+            dt.Columns.get("PRI").ColumnName = "PRI";
+            dt.Columns.get("WORKID").ColumnName = "WorkID";
+            dt.Columns.get("FID").ColumnName = "FID";
+            dt.Columns.get("WFSTATE").ColumnName = "WFState";
+            dt.Columns.get("WFSTA").ColumnName = "WFSta";
+            dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
+            dt.Columns.get("TSPAN").ColumnName = "TSpan";
+            dt.Columns.get("TOTOSTA").ColumnName = "TodoSta";
+            dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+            dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+            dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+            dt.Columns.get("TITLE").ColumnName = "Title";
+            dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+            dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+            dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+            dt.Columns.get("STARTER").ColumnName = "Starter";
+            dt.Columns.get("SENDER").ColumnName = "Sender";
+            dt.Columns.get("SENDDT").ColumnName = "SendDT";
+            dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+            dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
+            dt.Columns.get("RDT").ColumnName = "RDT";
+            dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+            dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+            dt.Columns.get("PFID").ColumnName = "PFID";
+            dt.Columns.get("PEMP").ColumnName = "PEmp";
+            dt.Columns.get("NODENAME").ColumnName = "NodeName";
+            dt.Columns.get("MYNUM").ColumnName = "MyNum";
+            dt.Columns.get("GUID").ColumnName = "Guid";
+            dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+            dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+            dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+            dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+            dt.Columns.get("FK_NY").ColumnName = "FK_NY";
+            dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+            dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+            dt.Columns.get("FK_FKLOW").ColumnName = "FK_Flow";
+            dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+            dt.Columns.get("EMPS").ColumnName = "Emps";
+            dt.Columns.get("DOMAIN").ColumnName = "Domain";
+            dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+            dt.Columns.get("BILLNO").ColumnName = "BillNo";
+        }
+        return BP.Tools.Json.ToJson(dt);
     }
 	
 
@@ -599,12 +647,6 @@ public class WF extends WebContralBase {
 
 		return BP.Tools.Json.DataTableToJson(dt, false, false, true);
 	}
-
-	// public final String Todolist_Init()
-	// {
-	// AppACE en = new AppACE(context);
-	// return en.Todolist_Init();
-	// }
 
 	/**
 	 * 返回当前会话信息.

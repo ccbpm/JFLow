@@ -1924,6 +1924,9 @@ public class FlowExt extends EntityNoName
 				nd.setNodeFrmID("ND" + Integer.parseInt(this.getNo()) + "02");
 				nd.Update();
 
+				 fnd.SetValByKey(NodeAttr.NodeFrmID, nd.getNodeFrmID());
+                 fnd.SetValByKey(NodeAttr.FWCSta, 2);
+                 
 				fnd.Update();
 				continue;
 			}

@@ -696,7 +696,7 @@ public class WorkNode {
 				wl.setFK_Node(toNodeId);
 				wl.setFK_NodeText(town.getHisNode().getName());
 				wl.setFK_Emp(dr.getValue(0).toString());
-                wl.setWhoExeIt(town.getHisNode().getWhoExeIt()); //设置谁执行它.
+				wl.setWhoExeIt(town.getHisNode().getWhoExeIt()); // 设置谁执行它.
 
 				try {
 					emp = new Emp(wl.getFK_Emp());
@@ -1128,10 +1128,10 @@ public class WorkNode {
 					this.getHisGenerWorkFlow().setFK_Node(mynd.getNodeID());
 					this.getHisGenerWorkFlow().setNodeName(mynd.getName());
 					this.getHisGenerWorkFlow().Update();
-					
-					String msg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经走到最后一个节点，流程成功结束。",
-							mynd, this.rptGe);
-					if(DataType.IsNullOrEmpty(msg) == true)
+
+					String msg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经走到最后一个节点，流程成功结束。", mynd,
+							this.rptGe);
+					if (DataType.IsNullOrEmpty(msg) == true)
 						msg = "";
 					this.addMsg(SendReturnMsgFlag.End, msg);
 				}
@@ -1453,38 +1453,33 @@ public class WorkNode {
 		} // 结束循环。
 	}
 
-	private void CC(Node node ) throws Exception
-    {
-        //执行自动抄送
-        String ccMsg1 = WorkFlowBuessRole.DoCCAuto(node, this.rptGe, this.getWorkID(), this.getHisWork().getFID());
-        //按照指定的字段抄送.
-        String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(node, this.rptGe, this.getWorkID(), this.getHisWork().getFID());
-        //手工抄送
-        if (this.getHisNode().getHisCCRole() == CCRole.HandCC)
-        {
-            //获取抄送人员列表
-            CCLists cclist = new CCLists(node.getFK_Flow(), this.getWorkID(), this.getHisWork().getFID());
-            if (cclist.size() == 0)
-                ccMsg1 = "@没有选择抄送人。";
-            if (cclist.size() > 0)
-            {
-                ccMsg1 = "@消息自动抄送给";
-                for(CCList cc : cclist.ToJavaList())
-                {
-                    ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
-                }
-            }
-        }
-        String ccMsg = ccMsg1 + ccMsg2;
+	private void CC(Node node) throws Exception {
+		// 执行自动抄送
+		String ccMsg1 = WorkFlowBuessRole.DoCCAuto(node, this.rptGe, this.getWorkID(), this.getHisWork().getFID());
+		// 按照指定的字段抄送.
+		String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(node, this.rptGe, this.getWorkID(), this.getHisWork().getFID());
+		// 手工抄送
+		if (this.getHisNode().getHisCCRole() == CCRole.HandCC) {
+			// 获取抄送人员列表
+			CCLists cclist = new CCLists(node.getFK_Flow(), this.getWorkID(), this.getHisWork().getFID());
+			if (cclist.size() == 0)
+				ccMsg1 = "@没有选择抄送人。";
+			if (cclist.size() > 0) {
+				ccMsg1 = "@消息自动抄送给";
+				for (CCList cc : cclist.ToJavaList()) {
+					ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
+				}
+			}
+		}
+		String ccMsg = ccMsg1 + ccMsg2;
 
-        if (DataType.IsNullOrEmpty(ccMsg) == false)
-        {
-        	this.addMsg("CC", "@自动抄送给:" + ccMsg);
-			this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(),node.getNodeID(),
-					node.getName(), ccMsg1 + ccMsg2, node);
-        }
-    }
-	
+		if (DataType.IsNullOrEmpty(ccMsg) == false) {
+			this.addMsg("CC", "@自动抄送给:" + ccMsg);
+			this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(), node.getNodeID(), node.getName(),
+					ccMsg1 + ccMsg2, node);
+		}
+	}
+
 	/**
 	 * 处理OrderTeamup退回模式
 	 * 
@@ -4193,6 +4188,15 @@ public class WorkNode {
 			// 获取绑定的表单
 			FrmNodes nds = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
 			for (FrmNode item : nds.ToJavaList()) {
+				
+				  if (item.getFrmEnableRole() == FrmEnableRole.Disable)
+                      continue;
+				  
+				   if (item.getHisFrmType() != FrmType.FoolForm && item.getHisFrmType() != FrmType.FreeFrm)
+                       continue;
+
+				
+				
 				MapData md = new MapData();
 				md.setNo(item.getFK_Frm());
 				md.Retrieve();
@@ -5035,12 +5039,11 @@ public class WorkNode {
 			if (this.getHisNode().getIsEndNode() == false)
 				this.CheckCompleteCondition();
 
-	         //调用发送成功事件.
-            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+			// 调用发送成功事件.
+			String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+					this.rptGe, null, this.HisMsgObjs);
+			this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
 
-            
 			// 执行时效考核.
 			if (this.rptGe == null)
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
@@ -5516,10 +5519,9 @@ public class WorkNode {
 		// 第1.2: 调用发起前的事件接口,处理用户定义的业务逻辑.
 		Work wk = this.getHisWork();
 		wk.setOID(this.getWorkID());
-		
-		 
 
-		String sendWhen = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, this.getHisNode(), wk, null, jumpToNode,jumpToEmp);
+		String sendWhen = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendWhen, this.getHisNode(), wk, null,
+				jumpToNode, jumpToEmp);
 
 		// 返回格式. @Info=xxxx@ToNodeID=xxxx@ToEmps=xxxx
 		if (sendWhen != null && sendWhen.indexOf("@") >= 0) {
@@ -5768,12 +5770,12 @@ public class WorkNode {
 		// 如果是队列节点, 就判断当前的队列人员是否走完。
 		if (this.getTodolistModel() == TodolistModel.Order) {
 			if (this.DealOradeNode() == true) {
-				
-				  //调用发送成功事件.
-	            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-	                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-	            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
-	            
+
+				// 调用发送成功事件.
+				String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+						this.rptGe, null, this.HisMsgObjs);
+				this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
 				// 执行时效考核.
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 						this.rptGe.getTitle(), null);
@@ -5794,54 +5796,50 @@ public class WorkNode {
 			// 如果是协作.
 			if (this.DealTeamUpNode() == true) {
 				/*
-                 * 1. 判断是否传递过来到达节点，到达人员信息，如果传递过来，就可能是主持人在会签之后执行的发送.
-                 * 2. 会签之后执行的发送，就要把到达节点，到达人员存储到数据表里.
-                 */
+				 * 1. 判断是否传递过来到达节点，到达人员信息，如果传递过来，就可能是主持人在会签之后执行的发送. 2.
+				 * 会签之后执行的发送，就要把到达节点，到达人员存储到数据表里.
+				 */
 
-                if (jumpToNode != null)
-                {
-                    /*如果是就记录下来发送到达的节点ID,到达的人员ID.*/
-                    this.getHisGenerWorkFlow().setHuiQianSendToNodeIDStr(this.getHisNode().getNodeID() + "," + jumpToNode.getNodeID());
-                    if (jumpToEmp == null)
-                        this.getHisGenerWorkFlow().setHuiQianSendToEmps("");
-                    else
-                        this.getHisGenerWorkFlow().setHuiQianSendToEmps(jumpToEmp);
+				if (jumpToNode != null) {
+					/* 如果是就记录下来发送到达的节点ID,到达的人员ID. */
+					this.getHisGenerWorkFlow()
+							.setHuiQianSendToNodeIDStr(this.getHisNode().getNodeID() + "," + jumpToNode.getNodeID());
+					if (jumpToEmp == null)
+						this.getHisGenerWorkFlow().setHuiQianSendToEmps("");
+					else
+						this.getHisGenerWorkFlow().setHuiQianSendToEmps(jumpToEmp);
 
-                    this.getHisGenerWorkFlow().Update();
-                }
-                
-                //调用发送成功事件.
-                String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-                    this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-                this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
-                
+					this.getHisGenerWorkFlow().Update();
+				}
+
+				// 调用发送成功事件.
+				String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+						this.rptGe, null, this.HisMsgObjs);
+				this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
 				// 执行时效考核.
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 						this.rptGe.getTitle(), null);
 				return this.HisMsgObjs;
 			}
-			
 
-            //取出来已经存储的到达节点，节点人员信息. 在tempUp模式的会签时，主持人发送会把发送到节点，发送给人员的信息
-            // 存储到wf_generworkflow里面.
-            if (this.JumpToNode == null)
-            {
-                /*如果是就记录下来发送到达的节点ID,到达的人员ID.*/
-                String strs = this.getHisGenerWorkFlow().getHuiQianSendToNodeIDStr();
+			// 取出来已经存储的到达节点，节点人员信息. 在tempUp模式的会签时，主持人发送会把发送到节点，发送给人员的信息
+			// 存储到wf_generworkflow里面.
+			if (this.JumpToNode == null) {
+				/* 如果是就记录下来发送到达的节点ID,到达的人员ID. */
+				String strs = this.getHisGenerWorkFlow().getHuiQianSendToNodeIDStr();
 
-                if (strs.contains(",") == true)
-                {
-                    String[] nds = strs.split(",");
-                    int fromNodeID = Integer.parseInt(nds[0]);
-                    int toNodeID = Integer.parseInt(nds[1]);
-                    if (fromNodeID == this.getHisNode().getNodeID())
-                    {
-                        JumpToNode = new Node(toNodeID);
-                        JumpToEmp = this.getHisGenerWorkFlow().getHuiQianSendToEmps();
-                    }
-                }
+				if (strs.contains(",") == true) {
+					String[] nds = strs.split(",");
+					int fromNodeID = Integer.parseInt(nds[0]);
+					int toNodeID = Integer.parseInt(nds[1]);
+					if (fromNodeID == this.getHisNode().getNodeID()) {
+						JumpToNode = new Node(toNodeID);
+						JumpToEmp = this.getHisGenerWorkFlow().getHuiQianSendToEmps();
+					}
+				}
 
-            }
+			}
 		}
 
 		// 如果是协作组长模式节点, 就判断当前的队列人员是否走完.
@@ -5849,12 +5847,12 @@ public class WorkNode {
 
 			/* 如果是协作组长模式. */
 			if (this.DealTeamupGroupLeader() == true) {
-				
-				  //调用发送成功事件.
-	            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-	                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-	            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
-				
+
+				// 调用发送成功事件.
+				String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+						this.rptGe, null, this.HisMsgObjs);
+				this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
 				// 执行时效考核.
 				return this.HisMsgObjs;
 			}
@@ -5894,11 +5892,11 @@ public class WorkNode {
 								|| this.JumpToNode.getTodolistModel() == TodolistModel.Teamup) {
 							// 如果是多人处理节点.
 							this.DealReturnOrderTeamup();
-							
-							  //调用发送成功事件.
-				            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-				                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-				            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
+							// 调用发送成功事件.
+							String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+									this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+							this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
 
 							// 执行时效考核.
 							Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
@@ -5914,11 +5912,11 @@ public class WorkNode {
 								|| this.getHisGenerWorkFlow().getTodolistModel() == TodolistModel.Teamup) {
 							// 如果是多人处理节点.
 							this.DealReturnOrderTeamup();
-							
-							  //调用发送成功事件.
-				            String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-				                this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-				            this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
+							// 调用发送成功事件.
+							String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+									this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+							this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
 
 							// 执行时效考核.
 							Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
@@ -5980,13 +5978,12 @@ public class WorkNode {
 			if (this.getIsStopFlow() == true) {
 				// 在检查完后，反馈来的标志流程已经停止了。
 				// liuxc,2016-10=24,最后节点更新Sender字段
-				
-			 
-				  //调用发送成功事件.
-                String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-                    this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-                this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
-                
+
+				// 调用发送成功事件.
+				String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess, this.getHisNode(),
+						this.rptGe, null, this.HisMsgObjs);
+				this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
 				/**
 				 * 执行考核
 				 */
@@ -6002,22 +5999,20 @@ public class WorkNode {
 				// 按照指定的字段抄送.
 				String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(this.getHisNode(), this.rptGe, this.getWorkID(),
 						this.getHisWork().getFID());
-				//手工抄送
-                if (this.getHisNode().getHisCCRole() == CCRole.HandCC)
-                {
-                    //获取抄送人员列表
-                    CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(),this.getWorkID(), this.getHisWork().getFID());
-                    if (cclist.size() == 0)
-                        ccMsg1 = "@没有选择抄送人。";
-                    if (cclist.size() > 0)
-                    {
-                        ccMsg1 = "@消息自动抄送给";
-                        for(CCList cc : cclist.ToJavaList())
-                        {
-                            ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
-                        }
-                    }
-                }
+				// 手工抄送
+				if (this.getHisNode().getHisCCRole() == CCRole.HandCC) {
+					// 获取抄送人员列表
+					CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(), this.getWorkID(),
+							this.getHisWork().getFID());
+					if (cclist.size() == 0)
+						ccMsg1 = "@没有选择抄送人。";
+					if (cclist.size() > 0) {
+						ccMsg1 = "@消息自动抄送给";
+						for (CCList cc : cclist.ToJavaList()) {
+							ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
+						}
+					}
+				}
 				String ccMsg = ccMsg1 + ccMsg2;
 
 				if (StringHelper.isNullOrEmpty(ccMsg) == false) {
@@ -6025,7 +6020,6 @@ public class WorkNode {
 					this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(), this.getHisNode().getNodeID(),
 							this.getHisNode().getName(), ccMsg1 + ccMsg2, this.getHisNode());
 				}
-			
 
 				return HisMsgObjs;
 			}
@@ -6047,7 +6041,7 @@ public class WorkNode {
 			if (this.getIsStopFlow()) {
 				this.rptGe.setWFState(WFState.Complete);
 				this.Func_DoSetThisWorkOver();
-				
+
 				this.getHisGenerWorkFlow().Update(); // added by
 														// liuxc,2016-10=24,最后节点更新Sender字段
 			} else {
@@ -6217,22 +6211,20 @@ public class WorkNode {
 				// 按照指定的字段抄送.
 				String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(this.getHisNode(), this.rptGe, this.getWorkID(),
 						this.getHisWork().getFID());
-				//手工抄送
-                if (this.getHisNode().getHisCCRole() == CCRole.HandCC)
-                {
-                    //获取抄送人员列表
-                    CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(),this.getWorkID(), this.getHisWork().getFID());
-                    if (cclist.size() == 0)
-                        ccMsg1 = "@没有选择抄送人。";
-                    if (cclist.size() > 0)
-                    {
-                        ccMsg1 = "@消息自动抄送给";
-                        for(CCList cc : cclist.ToJavaList())
-                        {
-                            ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
-                        }
-                    }
-                }
+				// 手工抄送
+				if (this.getHisNode().getHisCCRole() == CCRole.HandCC) {
+					// 获取抄送人员列表
+					CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(), this.getWorkID(),
+							this.getHisWork().getFID());
+					if (cclist.size() == 0)
+						ccMsg1 = "@没有选择抄送人。";
+					if (cclist.size() > 0) {
+						ccMsg1 = "@消息自动抄送给";
+						for (CCList cc : cclist.ToJavaList()) {
+							ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
+						}
+					}
+				}
 				String ccMsg = ccMsg1 + ccMsg2;
 
 				if (StringHelper.isNullOrEmpty(ccMsg) == false) {
@@ -6437,15 +6429,13 @@ public class WorkNode {
 					}
 				}
 			}
-			
+
 			// 执行时效考核.
 			Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 					this.rptGe.getTitle(), null);
 
 			/// #region 触发下一个节点的自动发送, 处理国机的需求. (（去掉:2019-05-05）)
-			if (this.HisMsgObjs.getVarToNodeID() != WFState.Blank.getValue() 
-					&& this.town != null
-				    && 1==2
+			if (this.HisMsgObjs.getVarToNodeID() != WFState.Blank.getValue() && this.town != null && 1 == 2
 					&& this.town.getHisNode().getWhoExeIt() != 0) {
 				String currUser = BP.Web.WebUser.getNo();
 				String[] emps = this.HisMsgObjs.getVarAcceptersID().split("[,]", -1);
@@ -7073,7 +7063,7 @@ public class WorkNode {
 		t.setEmpFrom(this.getExecer());
 		t.setEmpFromT(this.getExecerName());
 		t.FK_Flow = this.getHisNode().getFK_Flow();
-		t.setTag(tag+ "@SendNode=" + this.getHisNode().getNodeID());
+		t.setTag(tag + "@SendNode=" + this.getHisNode().getNodeID());
 
 		if (toNDid == 0) {
 			toNDid = this.getHisNode().getNodeID();
@@ -7180,7 +7170,6 @@ public class WorkNode {
 		}
 	}
 
-	
 	/**
 	 * 增加日志
 	 * 

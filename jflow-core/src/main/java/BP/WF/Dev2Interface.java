@@ -2132,13 +2132,98 @@ public class Dev2Interface {
 			String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 			ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo()
 					+ "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
-			return BP.DA.DBAccess.RunSQLReturnTable(ps);
+			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+			//
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+				dt.Columns.get("TYPE").setColumnName("Type");
+				dt.Columns.get("WORKID").setColumnName("WorkID");
+				dt.Columns.get("FK_FLOWSORT").setColumnName("FK_FlowSort");
+				dt.Columns.get("SYSTYPE").setColumnName("SysType");
+				dt.Columns.get("FK_FLOW").setColumnName("FK_Flow");
+				dt.Columns.get("FLOWNAME").setColumnName("FlowName");
+
+				dt.Columns.get("TITLE").setColumnName("Title");
+				dt.Columns.get("WFSTA").setColumnName("WFSta");
+				dt.Columns.get("WFSTATE").setColumnName("WFState");
+				dt.Columns.get("STARTER").setColumnName("Starter");
+				dt.Columns.get("STARTERNAME").setColumnName("StarterName");
+				dt.Columns.get("SENDER").setColumnName("Sender");
+				dt.Columns.get("FK_NODE").setColumnName("FK_Node");
+				dt.Columns.get("NODENAME").setColumnName("NodeName");
+
+				dt.Columns.get("FK_DEPT").setColumnName("FK_Dept");
+				dt.Columns.get("DEPTNAME").setColumnName("DeptName");
+				dt.Columns.get("SDTOFNODE").setColumnName("SDTOfNode");
+				dt.Columns.get("SDTOFFLOW").setColumnName("SDTOfFlow");
+				dt.Columns.get("PFLOWNO").setColumnName("PflowNo");
+				dt.Columns.get("PWORKID").setColumnName("PWorkID");
+
+
+				dt.Columns.get("PNODEID").setColumnName("PNodeID");
+				dt.Columns.get("PEMP").setColumnName("PEmp");
+				dt.Columns.get("GUESTNO").setColumnName("GuestNo");
+				dt.Columns.get("GUESTNAME").setColumnName("GuestName");
+				dt.Columns.get("BILLNO").setColumnName("BillNo");
+				dt.Columns.get("FLOWNOTE").setColumnName("FlowNote");
+
+				dt.Columns.get("TODOEMPS").setColumnName("TodoEmps");
+				dt.Columns.get("TODOEMPSNUM").setColumnName("TodoEmpsNum");
+				dt.Columns.get("TASKSTA").setColumnName("TaskSta");
+				dt.Columns.get("ATPARA").setColumnName("AtPara");
+				dt.Columns.get("EMPS").setColumnName("Emps");
+				dt.Columns.get("DOMAIN").setColumnName("Domain");
+				dt.Columns.get("SENDDT").setColumnName("SendDT");
+				dt.Columns.get("WEEKNUM").setColumnName("WeekNum");
+			}
+				return dt;
 		} else {
 			Paras ps = new Paras();
 			String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 			ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM V_FlowData T WHERE T.FlowEmps LIKE '%@" + WebUser.getNo()
 					+ "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY RDT DESC";
-			return BP.DA.DBAccess.RunSQLReturnTable(ps);
+			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+				dt.Columns.get("TYPE").setColumnName("Type");
+				dt.Columns.get("WORKID").setColumnName("WorkID");
+				dt.Columns.get("FK_FLOWSORT").setColumnName("FK_FlowSort");
+				dt.Columns.get("SYSTYPE").setColumnName("SysType");
+				dt.Columns.get("FK_FLOW").setColumnName("FK_Flow");
+				dt.Columns.get("FLOWNAME").setColumnName("FlowName");
+
+				dt.Columns.get("TITLE").setColumnName("Title");
+				dt.Columns.get("WFSTA").setColumnName("WFSta");
+				dt.Columns.get("WFSTATE").setColumnName("WFState");
+				dt.Columns.get("STARTER").setColumnName("Starter");
+				dt.Columns.get("STARTERNAME").setColumnName("StarterName");
+				dt.Columns.get("SENDER").setColumnName("Sender");
+				dt.Columns.get("FK_NODE").setColumnName("FK_Node");
+				dt.Columns.get("NODENAME").setColumnName("NodeName");
+
+				dt.Columns.get("FK_DEPT").setColumnName("FK_Dept");
+				dt.Columns.get("DEPTNAME").setColumnName("DeptName");
+				dt.Columns.get("SDTOFNODE").setColumnName("SDTOfNode");
+				dt.Columns.get("SDTOFFLOW").setColumnName("SDTOfFlow");
+				dt.Columns.get("PFLOWNO").setColumnName("PflowNo");
+				dt.Columns.get("PWORKID").setColumnName("PWorkID");
+
+
+				dt.Columns.get("PNODEID").setColumnName("PNodeID");
+				dt.Columns.get("PEMP").setColumnName("PEmp");
+				dt.Columns.get("GUESTNO").setColumnName("GuestNo");
+				dt.Columns.get("GUESTNAME").setColumnName("GuestName");
+				dt.Columns.get("BILLNO").setColumnName("BillNo");
+				dt.Columns.get("FLOWNOTE").setColumnName("FlowNote");
+
+				dt.Columns.get("TODOEMPS").setColumnName("TodoEmps");
+				dt.Columns.get("TODOEMPSNUM").setColumnName("TodoEmpsNum");
+				dt.Columns.get("TASKSTA").setColumnName("TaskSta");
+				dt.Columns.get("ATPARA").setColumnName("AtPara");
+				dt.Columns.get("EMPS").setColumnName("Emps");
+				dt.Columns.get("DOMAIN").setColumnName("Domain");
+				dt.Columns.get("SENDDT").setColumnName("SendDT");
+				dt.Columns.get("WEEKNUM").setColumnName("WeekNum");
+			}
+			return dt;
 		}
 	}
 
@@ -8998,11 +9083,16 @@ public class Dev2Interface {
 	 * @throws Exception
 	 */
 	public static void Node_AddNextStepAccepter(long workID, int formNodeID, String emp, String tag) throws Exception {
+		if (DataType.IsNullOrEmpty(emp)==true)
+			return;
 		SelectAccper sa = new SelectAccper();
 		sa.Delete(SelectAccperAttr.FK_Node, formNodeID, SelectAccperAttr.WorkID, workID, SelectAccperAttr.FK_Emp, emp,
 				SelectAccperAttr.Tag, tag);
 
 		Emp empEn = new Emp();
+		empEn.setNo(emp);
+		if (empEn.RetrieveFromDBSources() == 0)
+			return;
 		sa.setMyPK(formNodeID + "_" + workID + "_" + emp + "_" + tag);
 		empEn.setNo(emp);
 		sa.setTag(tag);

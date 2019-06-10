@@ -333,14 +333,47 @@ public class MapAttr extends EntityMyPK {
 		if (this.getUIIsLine() && i == 1) {
 			return 3;
 		}
-		if (i == 0) {
-			return 1;
-		}
+		
 		return i;
 	}
 
 	public final void setColSpan(int value) {
 		this.SetValByKey(MapAttrAttr.ColSpan, value);
+	}
+	
+	/**
+	 * 合并单元格数
+	 * 
+	 */
+	public final int getTextColSpan() {
+		int i = this.GetValIntByKey(MapAttrAttr.TextColSpan);
+		if (this.getUIIsLine() && i == 1) {
+			return 3;
+		}
+		
+		return i;
+	}
+
+	public final void setTextColSpan(int value) {
+		this.SetValByKey(MapAttrAttr.TextColSpan, value);
+	}
+	
+	
+	/**
+	 * 跨行
+	 * 
+	 */
+	public final int getRowSpan() {
+		int i = this.GetValIntByKey(MapAttrAttr.RowSpan);
+		if (this.getUIIsLine() && i == 1) {
+			return 3;
+		}
+		
+		return i;
+	}
+
+	public final void setRowSpan(int value) {
+		this.SetValByKey(MapAttrAttr.RowSpan, value);
 	}
 
 	/**

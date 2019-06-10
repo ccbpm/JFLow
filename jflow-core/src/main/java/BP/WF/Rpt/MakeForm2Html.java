@@ -782,13 +782,22 @@ public class MakeForm2Html
         String frmName = mapData.getName();
         if (SystemConfig.getCustomerNo() == "TianYe")
             frmName = "";
-
+        
+        int tableCol = mapData.getTableCol();
+        if(tableCol == 0)
+        	tableCol = 4;
+        else if(tableCol == 1)
+        	tableCol = 6;
+        else if(tableCol == 3)
+        	tableCol = 3;
+        else
+        	tableCol = 4;
         sb.append(" <table style='width:950px;height:auto;' >");
 
         //#region 生成头部信息.
         sb.append("<tr>");
 
-        sb.append("<td colspan=4 >");
+        sb.append("<td colspan="+tableCol+" >");
 
         sb.append("<table border=0 style='width:950px;'>");
 
@@ -836,13 +845,35 @@ public class MakeForm2Html
         {
             //输出标题.
             sb.append(" <tr>");
-            sb.append("  <th colspan=4><b>" + gf.getLab() + "</b></th>");
+            sb.append("  <th colspan="+tableCol+" ><b>" + gf.getLab() + "</b></th>");
             sb.append(" </tr>");
 
             //#region 输出字段.
             if (gf.getCtrlID().equals("") && gf.getCtrlType().equals(""))
             {
-                Boolean isDropTR = true;
+            	boolean isDropTR = true;
+            	//右侧跨行
+                boolean IsShowRight = true; // 是否显示右侧列
+                int rRowSpan = 0; //跨的行数
+                int ruRowSpan = 0; //已近解析的行数
+                int ruColSpan = 0; //该跨行总共跨的列数
+
+                //左侧跨行
+                boolean IsShowLeft = true; // 是否显示左侧列
+                int lRowSpan = 0; //跨的行数
+                int luRowSpan = 0; //已近解析的行数
+                int luColSpan = 0; //该跨行总共跨的列数
+
+                //记录一行已占用的列输
+                int UseColSpan = 0;
+
+                //跨列的字段
+                int colSpan = 1;
+                int rowSpan = 1;
+                int textColSpan = 2;
+                String textWidth = "15%";
+                String colWidth = "35%";
+                
                 String html = "";
                 for (MapAttr attr : mapAttrs.ToJavaList())
                 {
@@ -902,8 +933,222 @@ public class MakeForm2Html
                         else
                             text = "[&#10004]"+attr.getName();
                     }
+                    
+                    //赋值
+                    rowSpan = attr.getRowSpan();
+                    colSpan = attr.getColSpan();
+                    textColSpan = attr.getTextColSpan();
+                    if (tableCol == 4) {
+                        colWidth = 35 *colSpan + "%";
+                        textWidth = 15 * textColSpan + "%";
+                    } else {
+                        colWidth = 23 * colSpan + "%";
+                        textWidth = 10 * textColSpan + "%";
+                    }
+                    
+                    
+                    if (colSpan == 0) {
+                        //占一行
+                        if (textColSpan == tableCol) {
+                            isDropTR = true;
 
-                    //线性展示并且colspan=3
+                            html += "<tr>";
+                            html += "<td  colSpan=" + textColSpan + " rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + attr.getName() + "</br>";
+                            html += "</tr>";
+                            continue;
+
+                        }
+                        //线性展示都跨一个单元格
+                        if (isDropTR == true) {
+                            html += "<tr >";
+                            UseColSpan = 0;
+                            if (IsShowLeft == true) {
+                                UseColSpan += colSpan + textColSpan;
+                                lRowSpan = rowSpan;
+                                luColSpan += colSpan + textColSpan;
+                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + attr.getName() + "</td>";
+                                if (rowSpan != 1) {
+                                    IsShowLeft = false;
+                                }
+
+                            }
+                            if (UseColSpan == tableCol) {
+                                ruRowSpan++;
+                                isDropTR = true;
+                            } else {
+                                isDropTR = false;
+                            }
+
+                            //复位右侧信息
+                            if (ruRowSpan == rRowSpan) {
+                                ruRowSpan = 0;
+                                rRowSpan = 0;
+                                IsShowRight = true;
+                            }
+
+
+                            if (IsShowRight == false && (UseColSpan == tableCol)) {
+                                html += "</tr>";
+                                isDropTR = true;
+                                UseColSpan = ruColSpan;
+
+                            }
+
+                            continue;
+                        }
+
+                        if (isDropTR == false) {
+                            if (IsShowRight == true) {
+                                UseColSpan += colSpan + textColSpan;
+                                rRowSpan = rowSpan;
+                                ruColSpan += colSpan + textColSpan;
+                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + attr.getName() + "</td>";
+                                if (UseColSpan == tableCol)
+                                    isDropTR = true;
+                                if (rowSpan != 1) {
+                                    IsShowRight = false;
+                                }
+                            }
+
+                            if (UseColSpan == tableCol) {
+                                luRowSpan++;
+                                html += "</tr>";
+                            }
+
+                            //复位左侧信息
+                            if (luRowSpan == lRowSpan) {
+                                luRowSpan = 0;
+                                lRowSpan = 0;
+                                IsShowLeft = true;
+
+                            }
+
+                            if (IsShowLeft == false && (UseColSpan == tableCol)) {
+                                html += "<tr>";
+                                UseColSpan = 0;
+                                isDropTR = false;
+                                UseColSpan = luColSpan;
+                            }
+                            continue;
+                        }
+
+                    }
+
+                    //线性展示并且colspan=4
+                    if (colSpan == tableCol) {
+                        isDropTR = true;
+                        html += "<tr>";
+                        html += " <td ColSpan="+tableCol+" style='width:100%' >" + attr.getName() + "</br>";
+                        html += text;
+                        html += "</td>";
+                        html += "</tr>";
+                        continue;
+                    }
+                    int sumColSpan = colSpan + textColSpan;
+                    if (sumColSpan == tableCol) {
+
+                        isDropTR = true;
+                        html += "<tr >";
+                        html += " <td  class='FDesc' ColSpan="+textColSpan+" style='width:" + textWidth + ";' >" + attr.getName() + "</td>";
+                        html += " <td ColSpan="+colSpan+">";
+                        html += text;
+                        html += " </td>";
+                        html += "</tr>";
+                        isDropTR = true;
+                        continue;
+                    }
+
+                    //换行的情况
+                    if (isDropTR == true) {
+                        html += "<tr >";
+                        UseColSpan = 0;
+                        if (IsShowLeft == true) {
+                            UseColSpan += colSpan + textColSpan;
+                            lRowSpan = rowSpan;
+                            luColSpan += colSpan + textColSpan;
+                            if (attr.getMyDataType() == 4) {
+                                colSpan = colSpan + textColSpan;
+                                colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
+                            } else {
+                            	 html += " <td  class='LabelFDesc'  >" + attr.getName() + "</td>";
+                            }
+                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' >";
+                            html += text;
+                            html += " </td>";
+                            if (rowSpan != 1) {
+                                IsShowLeft = false;
+                            }
+
+                        }
+                        if (UseColSpan == tableCol) {
+                            ruRowSpan++;
+                            isDropTR = true;
+                        } else {
+                            isDropTR = false;
+                        }
+
+                        //复位右侧信息
+                        if (ruRowSpan == rRowSpan) {
+                            ruRowSpan = 0;
+                            rRowSpan = 0;
+                            IsShowRight = true;
+                        }
+
+
+                        if (IsShowRight == false && (UseColSpan == tableCol)) {
+                            html += "</tr>";
+                            isDropTR = true;
+                            UseColSpan = ruColSpan;
+
+                        }
+
+                        continue;
+                    }
+
+                    if (isDropTR == false) {
+                        if (IsShowRight == true) {
+                            UseColSpan += colSpan + textColSpan;
+                            rRowSpan = rowSpan;
+                            ruColSpan += colSpan + textColSpan;
+                            if (attr.getMyDataType() == 4) {
+                                colSpan = colSpan + textColSpan;
+                                colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
+                            } else {
+                            	 html += " <td  class='LabelFDesc'  >" + attr.getName() + "</td>";
+                            }
+                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' >";
+                            html += text;
+                            html += " </td>";
+                            if (UseColSpan == tableCol)
+                                isDropTR = true;
+                            if (rowSpan != 1) {
+                                IsShowRight = false;
+                            }
+                        }
+
+                        if (UseColSpan == tableCol) {
+                            luRowSpan++;
+                            html += "</tr>";
+                        }
+
+                        //复位左侧信息
+                        if (luRowSpan == lRowSpan) {
+                            luRowSpan = 0;
+                            lRowSpan = 0;
+                            IsShowLeft = true;
+
+                        }
+
+                        if (IsShowLeft == false && (UseColSpan == tableCol)) {
+                            html += "<tr>";
+                            UseColSpan = 0;
+                            isDropTR = false;
+                            UseColSpan = luColSpan;
+                        }
+                        continue;
+                    }
+
+                   /* //线性展示并且colspan=3
                     if (attr.getColSpan() == 3 || (attr.getColSpan()==4 && attr.getUIHeightInt() < 30))
                     {
                         isDropTR = true;
@@ -948,7 +1193,7 @@ public class MakeForm2Html
                         html += " </tr>";
                         isDropTR = !isDropTR;
                         continue;
-                    }
+                    }*/
                 }
                 sb.append(html); //增加到里面.
                 continue;
@@ -965,7 +1210,7 @@ public class MakeForm2Html
                 }catch(Exception ex){}
 
                 //#region 输出标题.
-                sb.append("<tr><td valign=top colspan=4 >");
+                sb.append("<tr><td valign=top colspan="+tableCol+" >");
 
                 sb.append("<table style='wdith:100%' >");
                 sb.append("<tr>");
@@ -1037,13 +1282,13 @@ public class MakeForm2Html
                     if (ath.getUploadType() == AttachmentUploadType.Single)
                     {
                         /* 单个文件 */
-                        sb.append("<tr><td colspan=4>单附件没有转化:" + ath.getMyPK() + "</td></td>");
+                        sb.append("<tr><td colspan="+tableCol+" >单附件没有转化:" + ath.getMyPK() + "</td></td>");
                         continue;
                     }
 
                     if (ath.getUploadType() == AttachmentUploadType.Multi)
                     {
-                        sb.append("<tr><td valign=top colspan=4 >");
+                        sb.append("<tr><td valign=top colspan="+tableCol+"  >");
                         sb.append("<ul>");
 
                         //判断是否有这个目录.
@@ -1127,7 +1372,7 @@ public class MakeForm2Html
             //如果是IFrame页面
             if(gf.getCtrlType().equals("Frame") && flowNo != null ){
             	sb.append("<tr>");
-            	sb.append("  <td colspan='4' >");
+            	sb.append("  <td colspan="+tableCol+"  >");
             	
             	//根据GroupID获取对应的
             	MapFrame frame = new MapFrame(gf.getCtrlID());

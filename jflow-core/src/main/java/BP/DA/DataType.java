@@ -1173,7 +1173,8 @@ public class DataType {
 
 	public static String getCurrentDay() {
 		Date dt = new Date();
-		String date = String.format("%d", dt);
+		SimpleDateFormat matter = new SimpleDateFormat("dd");
+		String date = matter.format(dt);
 		return date;
 
 	}

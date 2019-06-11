@@ -6,6 +6,7 @@ import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Sys.FrmUI.ExtImg;
 import BP.Tools.AesEncodeUtil;
 import BP.Tools.BaseFileUtils;
 import BP.Tools.ContextHolderUtils;
@@ -873,6 +874,7 @@ public class MakeForm2Html
                 int textColSpan = 2;
                 String textWidth = "15%";
                 String colWidth = "35%";
+                String lab="";
                 
                 String html = "";
                 for (MapAttr attr : mapAttrs.ToJavaList())
@@ -885,11 +887,80 @@ public class MakeForm2Html
                     //处理分组数据，非当前分组的数据不输出
                     if (attr.getGroupID() != gf.getOID())
                         continue;
+                    
+                    lab = attr.getName();
+                  //附件
+                	if(attr.getUIContralType() == UIContralType.AthShow){
+                		
+                	}
+                	//手写签名版
+                	else if(attr.getUIContralType() == UIContralType.HandWriting){
+                		
+                	}
+                	//超链接
+                	else if(attr.getUIContralType() == UIContralType.HandWriting){
+                		
+                	}
+                	//图片
+                	else if(attr.getUIContralType() == UIContralType.FrmImg){
+                		FrmImg frmImg = new FrmImg(attr.getMyPK());
+                		 //解析图片
+                        if (frmImg.getHisImgAppType().getValue() == 0) { //图片类型
+                            //数据来源为本地.
+                            String  imgSrc = "";
+                            if (frmImg.getImgSrcType() == 0) {
+                                //替换参数
+                                String frmPath = frmImg.getImgPath();
+                                frmPath = frmPath.replace("＠", "@");
+                                frmPath = frmPath.replace("@basePath", basePath);
+                                //替换值
+                                imgSrc = DealEnExp(en, frmPath);
+                            }
 
+                            //数据来源为指定路径.
+                            if (frmImg.getImgSrcType() == 1) {
+                                String url = frmImg.getImgURL();
+                                url = url.replace("＠", "@");
+                                url = url.replace("@basePath", basePath);
+                                imgSrc = DealEnExp(en, url);
+                            }
+                            // 由于火狐 不支持onerror 所以 判断图片是否存在放到服务器端
+                            if (imgSrc == "" || imgSrc == null)
+                                imgSrc = "../DataUser/ICON/CCFlow/LogBig.png";
+
+                            //＠basePath
+                            //alert(imgSrc);
+
+                            String style = "text-align:center;";
+                            if (attr.getUIWidth() == 0)
+                                style += "width:100%;";
+                            else
+                                style += "width:" + attr.getUIWidth() + "px;";
+
+                            if (attr.getUIHeight() == 0)
+                                style += "Height:100%;";
+                            else
+                                style += "Height:" + attr.getUIHeight() + "px;";
+                            lab = "<img src='" + imgSrc + "' style='" + style + "'  />";
+
+                        }
+                	}
+                	//流程进度图
+                	else if(attr.getUIContralType() == UIContralType.JobSchedule){
+                		
+                	}
+                    
                     String text = "";
                     switch (attr.getLGType())
                     {
                         case Normal:  // 输出普通类型字段.
+                        	if(attr.getUIContralType() == UIContralType.AthShow || attr.getUIContralType() == UIContralType.HandWriting
+                        	||attr.getUIContralType() == UIContralType.HandWriting||attr.getUIContralType() == UIContralType.FrmImg 
+                        	||attr.getUIContralType() == UIContralType.JobSchedule){
+                        		text="";
+                        		break;
+                        	}
+                        		
                         	if(attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString){
                          	   if(attrs.Contains(attr.getKeyOfEn()+"Text") ==true)
                             			text = en.GetValRefTextByKey(attr.getKeyOfEn());
@@ -897,7 +968,7 @@ public class MakeForm2Html
                             			if(attrs.Contains(attr.getKeyOfEn()+"T") ==true)
                             				text = en.GetValStrByKey(attr.getKeyOfEn()+"T");	
                             }else{
-                         	   text = en.GetValStrByKey(attr.getKeyOfEn());
+                            	text = en.GetValStrByKey(attr.getKeyOfEn());
                             }
                             	
                             break;
@@ -953,7 +1024,7 @@ public class MakeForm2Html
                             isDropTR = true;
 
                             html += "<tr>";
-                            html += "<td  colSpan=" + textColSpan + " rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + attr.getName() + "</br>";
+                            html += "<td  colSpan=" + textColSpan + " rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + lab + "</br>";
                             html += "</tr>";
                             continue;
 
@@ -963,10 +1034,10 @@ public class MakeForm2Html
                             html += "<tr >";
                             UseColSpan = 0;
                             if (IsShowLeft == true) {
-                                UseColSpan += colSpan + textColSpan;
+                            	UseColSpan += colSpan + textColSpan+ruColSpan;
                                 lRowSpan = rowSpan;
                                 luColSpan += colSpan + textColSpan;
-                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + attr.getName() + "</td>";
+                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                                 if (rowSpan != 1) {
                                     IsShowLeft = false;
                                 }
@@ -1002,7 +1073,7 @@ public class MakeForm2Html
                                 UseColSpan += colSpan + textColSpan;
                                 rRowSpan = rowSpan;
                                 ruColSpan += colSpan + textColSpan;
-                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + attr.getName() + "</td>";
+                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                                 if (UseColSpan == tableCol)
                                     isDropTR = true;
                                 if (rowSpan != 1) {
@@ -1038,7 +1109,7 @@ public class MakeForm2Html
                     if (colSpan == tableCol) {
                         isDropTR = true;
                         html += "<tr>";
-                        html += " <td ColSpan="+tableCol+" style='width:100%' >" + attr.getName() + "</br>";
+                        html += " <td ColSpan="+tableCol+" style='width:100%' >" + lab + "</br>";
                         html += text;
                         html += "</td>";
                         html += "</tr>";
@@ -1049,7 +1120,7 @@ public class MakeForm2Html
 
                         isDropTR = true;
                         html += "<tr >";
-                        html += " <td  class='FDesc' ColSpan="+textColSpan+" style='width:" + textWidth + ";' >" + attr.getName() + "</td>";
+                        html += " <td  class='FDesc' ColSpan="+textColSpan+" style='width:" + textWidth + ";' >" + lab + "</td>";
                         html += " <td ColSpan="+colSpan+">";
                         html += text;
                         html += " </td>";
@@ -1063,16 +1134,16 @@ public class MakeForm2Html
                         html += "<tr >";
                         UseColSpan = 0;
                         if (IsShowLeft == true) {
-                            UseColSpan += colSpan + textColSpan;
+                        	UseColSpan += colSpan + textColSpan+ruColSpan;
                             lRowSpan = rowSpan;
                             luColSpan += colSpan + textColSpan;
                             if (attr.getMyDataType() == 4) {
                                 colSpan = colSpan + textColSpan;
                                 colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
                             } else {
-                            	 html += " <td  class='LabelFDesc'  >" + attr.getName() + "</td>";
+                            	 html += " <td  class='LabelFDesc' style='width:" + textWidth + ";'  rowSpan=" + rowSpan + " >" + lab + "</td>";
                             }
-                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' >";
+                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' rowSpan=" + rowSpan + " >";
                             html += text;
                             html += " </td>";
                             if (rowSpan != 1) {
@@ -1114,9 +1185,9 @@ public class MakeForm2Html
                                 colSpan = colSpan + textColSpan;
                                 colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
                             } else {
-                            	 html += " <td  class='LabelFDesc'  >" + attr.getName() + "</td>";
+                            	 html += " <td  class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " >" + lab + "</td>";
                             }
-                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' >";
+                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' rowSpan=" + rowSpan + " >";
                             html += text;
                             html += " </td>";
                             if (UseColSpan == tableCol)
@@ -1148,52 +1219,6 @@ public class MakeForm2Html
                         continue;
                     }
 
-                   /* //线性展示并且colspan=3
-                    if (attr.getColSpan() == 3 || (attr.getColSpan()==4 && attr.getUIHeightInt() < 30))
-                    {
-                        isDropTR = true;
-                        html += " <tr>";
-                        html += " <td  class='FDesc'  >" + attr.getName() + "</td>";
-                        html += " <td ColSpan=3>";
-                        html += text;
-                        html += " </td>";
-                        html += " </tr>";
-                        continue;
-                    }
-
-                    //线性展示并且colspan=4
-                    if (attr.getColSpan() == 4)
-                    {
-                        isDropTR = true;
-                        html += " <tr>";
-                        html += " <td ColSpan=4 style='width:100%' >" + attr.getName() + "</br>";
-                        html += text;
-                        html += " </td>";
-                        html += " </tr>";
-                        continue;
-                    }
-
-                    if (isDropTR == true)
-                    {
-                        html += " <tr>";
-                        html += " <td class='FDesc' >" + attr.getName() + "</td>";
-                        html += " <td class='FContext'  >";
-                        html += text;
-                        html += " </td>";
-                        isDropTR = !isDropTR;
-                        continue;
-                    }
-
-                    if (isDropTR == false)
-                    {
-                        html += " <td  class='FDesc'>" + attr.getName() + "</td>";
-                        html += " <td class='FContext'  >";
-                        html += text;
-                        html += " </td>";
-                        html += " </tr>";
-                        isDropTR = !isDropTR;
-                        continue;
-                    }*/
                 }
                 sb.append(html); //增加到里面.
                 continue;
@@ -2140,5 +2165,28 @@ public class MakeForm2Html
             }
         }
     }
- 
+    
+    /**
+     * 根据En.getRow()替换exp中的参数
+     * @param en
+     * @param exp
+     * @return
+     * @throws Exception 
+     */
+    private static String DealEnExp(Entity en,String exp) throws Exception{
+    	exp = exp.replace("@WebUser.No", WebUser.getNo());
+    	exp = exp.replace("@WebUser.Name", WebUser.getName());
+    	exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+    	exp = exp.replace("@WebUser.DeptName", WebUser.getFK_DeptName());
+    	exp = exp.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+    	if(exp.contains("@") == false)
+    		return exp;
+    	Row row = en.getRow();
+    	for (String item : row.keySet()) {
+    		exp = exp.replace("@"+item, row.get(item).toString());
+    		if(exp.contains("@")==false)
+    			return exp;
+    	}
+    	return exp;
+    }
 }

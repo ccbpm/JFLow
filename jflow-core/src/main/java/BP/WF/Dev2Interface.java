@@ -901,7 +901,9 @@ public class Dev2Interface {
 		if (FK_Emp == null) {
 			ps.SQL = "SELECT * FROM WF_CCList WHERE 1=1";
 		} else {
-			ps.SQL = "SELECT * FROM WF_CCList WHERE CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+            ps.SQL = "SELECT a.MyPK,A.Title,A.FK_Flow,A.FlowName,A.WorkID,A.Doc,A.Rec,A.RDT,A.FID,B.FK_Node,B.NodeName FROM WF_CCList A, WF_GenerWorkFlow B WHERE A.CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.WorkID=A.WorkID";
+
+			//ps.SQL = "SELECT * FROM WF_CCList WHERE CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 			ps.Add("FK_Emp", FK_Emp);
 		}
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);

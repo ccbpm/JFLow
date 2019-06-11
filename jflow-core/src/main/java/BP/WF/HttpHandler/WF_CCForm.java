@@ -106,7 +106,6 @@ import BP.WF.XML.EventListDtlList;
 import BP.Web.WebUser;
 import BP.Tools.ContextHolderUtils;
 
-
 public class WF_CCForm extends WebContralBase {
 
 	// private static final String WhoIsPK = null;
@@ -250,14 +249,18 @@ public class WF_CCForm extends WebContralBase {
 		// 处理权限问题, 有可能当前节点是可以上传或者删除，但是当前节点上不能让此人执行工作。
 		boolean isDel = athDesc.getHisDeleteWay() == AthDeleteWay.None ? false : true;
 		boolean isUpdate = athDesc.getIsUpload();
-//		if (isDel == true || isUpdate == true) {
-//			if (this.getWorkID() != 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false && this.getFK_Node() != 0) {
-//				isDel = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(),
-//						this.getWorkID(), WebUser.getNo());
-//				if (isDel == false)
-//					isUpdate = false;
-//			}
-//		}
+		// if (isDel == true || isUpdate == true) {
+		// if (this.getWorkID() != 0 &&
+		// DataType.IsNullOrEmpty(this.getFK_Flow()) == false &&
+		// this.getFK_Node() != 0) {
+		// isDel =
+		// BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(),
+		// this.getFK_Node(),
+		// this.getWorkID(), WebUser.getNo());
+		// if (isDel == false)
+		// isUpdate = false;
+		// }
+		// }
 		athDesc.setIsUpload(isUpdate);
 
 		// 增加附件描述.
@@ -377,14 +380,13 @@ public class WF_CCForm extends WebContralBase {
 				}
 
 				if (fn.getFrmSln() == FrmSln.Self) {
-					 if (this.getFK_FrmAttachment().contains("AthMDtl") == true)
-                     {
-                         athDesc.setMyPK(this.getFK_MapData() + "_" + nd.getNodeID() + "_AthMDtl");
-                         athDesc.RetrieveFromDBSources();
-                     }else{
-                    	 athDesc.setMyPK(this.getFK_FrmAttachment() + "_" + nd.getNodeID());
-     					athDesc.RetrieveFromDBSources(); 
-                     }
+					if (this.getFK_FrmAttachment().contains("AthMDtl") == true) {
+						athDesc.setMyPK(this.getFK_MapData() + "_" + nd.getNodeID() + "_AthMDtl");
+						athDesc.RetrieveFromDBSources();
+					} else {
+						athDesc.setMyPK(this.getFK_FrmAttachment() + "_" + nd.getNodeID());
+						athDesc.RetrieveFromDBSources();
+					}
 					athDesc.setMyPK(this.getFK_FrmAttachment());
 					return athDesc;
 				}
@@ -398,41 +400,38 @@ public class WF_CCForm extends WebContralBase {
 	}
 
 	public BP.Sys.FrmAttachment GenerAthDescOfFoolTruck() throws Exception {
-		
+
 		FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
-        String fromFrm = this.GetRequestVal("FromFrm");
-        sln.setMyPK(fromFrm+ "_" + this.getFK_Node() + "_" + this.getFK_Flow());
-        int result = sln.RetrieveFromDBSources();
-        BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-        athDesc.setMyPK(this.getFK_FrmAttachment());
-        athDesc.RetrieveFromDBSources();
+		String fromFrm = this.GetRequestVal("FromFrm");
+		sln.setMyPK(fromFrm + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
+		int result = sln.RetrieveFromDBSources();
+		BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
+		athDesc.setMyPK(this.getFK_FrmAttachment());
+		athDesc.RetrieveFromDBSources();
 
-        /*没有查询到解决方案, 就是只读方案 */
-        if (result == 0 ||sln.getFrmSln() == 1)
-        {
-        	athDesc.setIsUpload(false);
-			athDesc.setIsDownload(true);			
+		/* 没有查询到解决方案, 就是只读方案 */
+		if (result == 0 || sln.getFrmSln() == 1) {
+			athDesc.setIsUpload(false);
+			athDesc.setIsDownload(true);
 			athDesc.setHisDeleteWay(AthDeleteWay.None); // 删除模式.
-            return athDesc;
-        }
-        //默认方案
-        if(sln.getFrmSln() == 0)
-             return athDesc;
+			return athDesc;
+		}
+		// 默认方案
+		if (sln.getFrmSln() == 0)
+			return athDesc;
 
-        //如果是自定义方案,就查询自定义方案信息.
-        if (sln.getFrmSln() == 2)
-        {
-            BP.Sys.FrmAttachment athDescNode = new BP.Sys.FrmAttachment();
-            athDescNode.setMyPK("ND" + this.getFK_Node() + "_" + athDesc.getNoOfObj() + "_" + this.getFK_Node());
-            if (athDescNode.RetrieveFromDBSources() == 0)
-            {
-               //没有设定附件权限，保持原来的附件权限模式
-                return athDesc;
-            }
-            return athDescNode;
-        }
+		// 如果是自定义方案,就查询自定义方案信息.
+		if (sln.getFrmSln() == 2) {
+			BP.Sys.FrmAttachment athDescNode = new BP.Sys.FrmAttachment();
+			athDescNode.setMyPK("ND" + this.getFK_Node() + "_" + athDesc.getNoOfObj() + "_" + this.getFK_Node());
+			if (athDescNode.RetrieveFromDBSources() == 0) {
+				// 没有设定附件权限，保持原来的附件权限模式
+				return athDesc;
+			}
+			return athDescNode;
+		}
 
-        return null;
+		return null;
 	}
 
 	// #region 附件组件.
@@ -707,15 +706,15 @@ public class WF_CCForm extends WebContralBase {
 			return JSONTODT(dt);
 		}
 
-		if (me.getExtType().equals(BP.Sys.MapExtXmlList.AutoFullDLL)////填充下拉框
-				|| me.getExtType().equals(BP.Sys.MapExtXmlList.TBFullCtrl)//自动完成。
+		if (me.getExtType().equals(BP.Sys.MapExtXmlList.AutoFullDLL)//// 填充下拉框
+				|| me.getExtType().equals(BP.Sys.MapExtXmlList.TBFullCtrl)// 自动完成。
 				|| me.getExtType().equals(BP.Sys.MapExtXmlList.DDLFullCtrl)
 				|| me.getExtType().equals(BP.Sys.MapExtXmlList.FullData)) { // 级连ddl.
 			String doTypeExt = this.GetRequestVal("DoTypeExt");
-			if(DataType.IsNullOrEmpty(doTypeExt) == true)
+			if (DataType.IsNullOrEmpty(doTypeExt) == true)
 				return "err@填充类型不能为空";
-			
-			if(doTypeExt.equals("ReqCtrl")){
+
+			if (doTypeExt.equals("ReqCtrl")) {
 				// 获取填充 ctrl 值的信息.
 				sql = this.DealSQL(me.getDocOfSQLDeal(), key);
 				HttpSession session = getRequest().getSession();
@@ -724,7 +723,7 @@ public class WF_CCForm extends WebContralBase {
 
 				return JSONTODT(dt);
 			}
-			
+
 			if (doTypeExt.equals("ReqDtlFullList")) {
 				// 获取填充的从表集合.
 				DataTable dtDtl = new DataTable("Head");
@@ -737,7 +736,7 @@ public class WF_CCForm extends WebContralBase {
 
 					String[] ss = str.split("[:]", -1);
 					String fk_dtl = ss[0];
-					if(ss[1]==null||"".equals(ss[1])){
+					if (ss[1] == null || "".equals(ss[1])) {
 						continue;
 					}
 					String dtlKey = (String) ((getRequest().getSession().getAttribute("DtlKey") instanceof String)
@@ -774,7 +773,7 @@ public class WF_CCForm extends WebContralBase {
 				}
 				return JSONTODT(dtDtl);
 			}
-			
+
 			if (doTypeExt.equals("ReqDDLFullList")) {
 				// 获取要个性化填充的下拉框.
 				DataTable dt1 = new DataTable("Head");
@@ -815,12 +814,12 @@ public class WF_CCForm extends WebContralBase {
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				return JSONTODT(dt);
 			}
-			
+
 			key = key.replace("'", "");
 
 			sql = this.DealSQL(me.getDocOfSQLDeal(), key);
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-            return JSONTODT(dt);
+			return JSONTODT(dt);
 
 		}
 
@@ -928,86 +927,75 @@ public class WF_CCForm extends WebContralBase {
 		// 处理参数.
 		String paras = this.getRequestParasOfAll();
 		paras = paras.replace("&DoType=Frm_Init", "");
-		
-		 //非流程的独立运行的表单.
-         if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
-         {
-             BP.WF.Template.FrmNode fn = new FrmNode();
-             fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
-             
-             if (fn !=null && fn.getWhoIsPK() != WhoIsPK.OID)
-             {
-            	 //太爷孙关系
-                 if (fn.getWhoIsPK() == WhoIsPK.PPPWorkID)
-                 {
-                     //根据PWorkID 获取PPPWorkID
-                     String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID="+this.getPWorkID()+")";
-                     String pppworkID = DBAccess.RunSQLReturnString(sql);
-                     if (DataType.IsNullOrEmpty(pppworkID) == true || pppworkID=="0")
-                         throw new Exception("err@不存在太爷孙流程关系，请联系管理员检查流程设计是否正确");
 
-                     long PPPWorkID = Long.parseLong(pppworkID);
-                     paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + PPPWorkID);
-                     paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + PPPWorkID);
-                     paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + PPPWorkID);
-                 }
-                      
+		// 非流程的独立运行的表单.
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
+			BP.WF.Template.FrmNode fn = new FrmNode();
+			fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
 
-                 if (fn.getWhoIsPK() == WhoIsPK.PPWorkID)
-                 {
-                     //根据PWorkID 获取PPWorkID
-                     GenerWorkFlow gwf = new GenerWorkFlow(this.getPWorkID());
-                     if (gwf != null && gwf.getPWorkID() != 0)
-                     {
-                         paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + gwf.getPWorkID());
-                         paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + gwf.getPWorkID());
-                         paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + gwf.getPWorkID());
-                     }
-                     else
-                     {
-                         throw new Exception("err@不存在爷孙流程关系，请联系管理员检查流程设计是否正确");
-                     }
-                 }
-                 
-                 if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
-                 {
-                     paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + this.getPWorkID());
-                     paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + this.getPWorkID());
-                     paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + this.getPWorkID());
-                 }
+			if (fn != null && fn.getWhoIsPK() != WhoIsPK.OID) {
+				// 太爷孙关系
+				if (fn.getWhoIsPK() == WhoIsPK.PPPWorkID) {
+					// 根据PWorkID 获取PPPWorkID
+					String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID="
+							+ this.getPWorkID() + ")";
+					String pppworkID = DBAccess.RunSQLReturnString(sql);
+					if (DataType.IsNullOrEmpty(pppworkID) == true || pppworkID == "0")
+						throw new Exception("err@不存在太爷孙流程关系，请联系管理员检查流程设计是否正确");
 
-                 if (fn.getWhoIsPK() == WhoIsPK.FID)
-                 {
-                     paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + this.getFID());
-                     paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + this.getFID());
-                     paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + this.getFID());
-                 }
+					long PPPWorkID = Long.parseLong(pppworkID);
+					paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + PPPWorkID);
+					paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + PPPWorkID);
+					paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + PPPWorkID);
+				}
 
-                 if (md.getHisFrmType() == FrmType.FreeFrm)
-                 {
-                     if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
-                         return "url@FrmGener.htm?1=2" + paras;
-                     else
-                         return "url@FrmGener.htm?1=2" + paras;
-                 }
+				if (fn.getWhoIsPK() == WhoIsPK.PPWorkID) {
+					// 根据PWorkID 获取PPWorkID
+					GenerWorkFlow gwf = new GenerWorkFlow(this.getPWorkID());
+					if (gwf != null && gwf.getPWorkID() != 0) {
+						paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + gwf.getPWorkID());
+						paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + gwf.getPWorkID());
+						paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + gwf.getPWorkID());
+					} else {
+						throw new Exception("err@不存在爷孙流程关系，请联系管理员检查流程设计是否正确");
+					}
+				}
 
-                 if (md.getHisFrmType() == FrmType.VSTOForExcel || md.getHisFrmType() == FrmType.ExcelFrm)
-                 {
-                     if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
-                         return "url@FrmVSTO.aspx?1=2" + paras;
-                     else
-                         return "url@FrmVSTO.aspx?1=2" + paras;
-                 }
+				if (fn.getWhoIsPK() == WhoIsPK.PWorkID) {
+					paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + this.getPWorkID());
+					paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + this.getPWorkID());
+					paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + this.getPWorkID());
+				}
 
-                 if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
-                     return "url@FrmGener.htm?1=2" + paras;
-                 else
-                     return "url@FrmGener.htm?1=2" + paras;
-             }
-         }
-         //非流程的独立运行的表单.
+				if (fn.getWhoIsPK() == WhoIsPK.FID) {
+					paras = paras.replace("&OID=" + this.getWorkID(), "&OID=" + this.getFID());
+					paras = paras.replace("&WorkID=" + this.getWorkID(), "&WorkID=" + this.getFID());
+					paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + this.getFID());
+				}
 
-         //流程的独立运行的表单.
+				if (md.getHisFrmType() == FrmType.FreeFrm) {
+					if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+						return "url@FrmGener.htm?1=2" + paras;
+					else
+						return "url@FrmGener.htm?1=2" + paras;
+				}
+
+				if (md.getHisFrmType() == FrmType.VSTOForExcel || md.getHisFrmType() == FrmType.ExcelFrm) {
+					if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+						return "url@FrmVSTO.aspx?1=2" + paras;
+					else
+						return "url@FrmVSTO.aspx?1=2" + paras;
+				}
+
+				if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+					return "url@FrmGener.htm?1=2" + paras;
+				else
+					return "url@FrmGener.htm?1=2" + paras;
+			}
+		}
+		// 非流程的独立运行的表单.
+
+		// 流程的独立运行的表单.
 		if (md.getHisFrmType() == FrmType.FreeFrm) {
 			if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
 				return "url@FrmGener.htm?1=2" + paras;
@@ -1053,20 +1041,21 @@ public class WF_CCForm extends WebContralBase {
 		int zoomW = this.GetRequestValInt("zoomW");
 		int zoomH = this.GetRequestValInt("zoomH");
 		String myName = "";
-        String fk_mapData = this.getFK_MapData();
-         if (fk_mapData.contains("ND") == true)
-             myName = CtrlID + "_" + this.getRefPKVal();
-         else
-             myName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
-         
-         //生成新路径，解决返回相同src后图片不切换问题
-         //string newName = ImgAthPK + "_" + this.MyPK + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
-         String webPath = "/DataUser/ImgAth/Data/" + myName + ".png";
-         String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data/";
-         saveToPath = saveToPath.replace("\\", "/");
-         String fileUPloadPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/";
-         fileUPloadPath = fileUPloadPath.replace("\\", "/");
-		
+		String fk_mapData = this.getFK_MapData();
+		if (fk_mapData.contains("ND") == true)
+			myName = CtrlID + "_" + this.getRefPKVal();
+		else
+			myName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
+
+		// 生成新路径，解决返回相同src后图片不切换问题
+		// string newName = ImgAthPK + "_" + this.MyPK + "_" +
+		// DateTime.Now.ToString("yyyyMMddHHmmss");
+		String webPath = "/DataUser/ImgAth/Data/" + myName + ".png";
+		String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data/";
+		saveToPath = saveToPath.replace("\\", "/");
+		String fileUPloadPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/";
+		fileUPloadPath = fileUPloadPath.replace("\\", "/");
+
 		// 如果路径不存在就创建,否则拷贝文件报异常
 		File sPath = new File(saveToPath);
 		File uPath = new File(fileUPloadPath);
@@ -1086,23 +1075,24 @@ public class WF_CCForm extends WebContralBase {
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 
-//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("file");
-//			// 获取文件名,并取其后缀;
-//			String fileName = multipartFile.getOriginalFilename();
+			// MultipartFile multipartFile =
+			// ((DefaultMultipartHttpServletRequest)request).getFile("file");
+			// // 获取文件名,并取其后缀;
+			// String fileName = multipartFile.getOriginalFilename();
 			String fileName = CommonFileUtils.getOriginalFilename(request, "file");
 			String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
-//			try {
-//				multipartFile.transferTo(sFile);
-//			} catch (IllegalStateException e) {
-//				e.printStackTrace();
-//				return "err@上传图片保存失败";
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				return "err@上传图片保存失败";
-//			}
-			try{
+			// try {
+			// multipartFile.transferTo(sFile);
+			// } catch (IllegalStateException e) {
+			// e.printStackTrace();
+			// return "err@上传图片保存失败";
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// return "err@上传图片保存失败";
+			// }
+			try {
 				CommonFileUtils.upload(request, "file", sFile);
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return "err@上传图片保存失败";
 			}
@@ -1133,20 +1123,21 @@ public class WF_CCForm extends WebContralBase {
 		int w = this.GetRequestValInt("cW");
 		int h = this.GetRequestValInt("cH");
 
-         String newName = "";
-         String fk_mapData = this.getFK_MapData();
-         if (fk_mapData.contains("ND") == true)
-             newName = CtrlID + "_" + this.getRefPKVal();
-         else
-             newName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
-         //string newName = ImgAthPK + "_" + this.MyPK + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
-         String webPath =  BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data/" + newName + ".png";
-         String savePath = SystemConfig.getPathOfDataUser() + "ImgAth/Data/" + newName + ".png";
-         savePath = savePath.replace("\\", "/");
-         //获取上传的大图片
-         String strImgPath =SystemConfig.getPathOfDataUser() + "ImgAth/Upload/" + newName + ".png";
-         strImgPath = strImgPath.replace("\\", "/");
-		
+		String newName = "";
+		String fk_mapData = this.getFK_MapData();
+		if (fk_mapData.contains("ND") == true)
+			newName = CtrlID + "_" + this.getRefPKVal();
+		else
+			newName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
+		// string newName = ImgAthPK + "_" + this.MyPK + "_" +
+		// DateTime.Now.ToString("yyyyMMddHHmmss");
+		String webPath = BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data/" + newName + ".png";
+		String savePath = SystemConfig.getPathOfDataUser() + "ImgAth/Data/" + newName + ".png";
+		savePath = savePath.replace("\\", "/");
+		// 获取上传的大图片
+		String strImgPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/" + newName + ".png";
+		strImgPath = strImgPath.replace("\\", "/");
+
 		File file = new File(strImgPath);
 		if (file.exists()) {
 			cutImage(strImgPath, savePath, x, y, w, h);
@@ -1207,7 +1198,7 @@ public class WF_CCForm extends WebContralBase {
 		if (pk != 0) {
 			return FrmGener_Init();
 		}
-		
+
 		MapDtl dtl = new MapDtl(this.getEnsName());
 		GEEntity en = new GEEntity(this.getEnsName());
 		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
@@ -1220,40 +1211,36 @@ public class WF_CCForm extends WebContralBase {
 
 		// 设置主键.
 		en.setOID(DBAccess.GenerOID(this.getEnsName()));
-	    //处理权限方案。
-         if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
-         {
-             Node nd = new Node(this.getFK_Node());
-             if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
-             {
-                 FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
-                 if (fn.getFrmSln() == FrmSln.Self)
-                 {
-                     MapDtl mdtlSln = new MapDtl();
-                     mdtlSln.setNo(this.getEnsName() + "_" + nd.getNodeID());
-                     int result = mdtlSln.RetrieveFromDBSources();
-                     if (result != 0)
-                         dtl = mdtlSln;
-                 }
-             }
-         }
-         //给从表赋值.
-         switch (dtl.getDtlOpenType())
-         {
-             case ForEmp:  // 按人员来控制.
+		// 处理权限方案。
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
+			Node nd = new Node(this.getFK_Node());
+			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree) {
+				FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
+				if (fn.getFrmSln() == FrmSln.Self) {
+					MapDtl mdtlSln = new MapDtl();
+					mdtlSln.setNo(this.getEnsName() + "_" + nd.getNodeID());
+					int result = mdtlSln.RetrieveFromDBSources();
+					if (result != 0)
+						dtl = mdtlSln;
+				}
+			}
+		}
+		// 给从表赋值.
+		switch (dtl.getDtlOpenType()) {
+		case ForEmp: // 按人员来控制.
 
-                 en.SetValByKey("RefPK", this.getRefPKVal());
-                 en.SetValByKey("FID", this.getRefPKVal());
-                 break;
-             case ForWorkID: // 按工作ID来控制
-                 en.SetValByKey("RefPK", this.getRefPKVal());
-                 en.SetValByKey("FID", this.getRefPKVal());
-                 break;
-             case ForFID: // 按流程ID来控制.
-                 en.SetValByKey("RefPK", this.getRefPKVal());
-                 en.SetValByKey("FID", this.getFID());
-                 break;
-         }
+			en.SetValByKey("RefPK", this.getRefPKVal());
+			en.SetValByKey("FID", this.getRefPKVal());
+			break;
+		case ForWorkID: // 按工作ID来控制
+			en.SetValByKey("RefPK", this.getRefPKVal());
+			en.SetValByKey("FID", this.getRefPKVal());
+			break;
+		case ForFID: // 按流程ID来控制.
+			en.SetValByKey("RefPK", this.getRefPKVal());
+			en.SetValByKey("FID", this.getFID());
+			break;
+		}
 		en.Insert();
 
 		return "url@DtlFrm.htm?EnsName=" + this.getEnsName() + "&RefPKVal=" + this.getRefPKVal() + "&OID="
@@ -1272,183 +1259,172 @@ public class WF_CCForm extends WebContralBase {
 			return "err@删除错误:" + ex.getMessage();
 		}
 	}
+
 	/// <summary>
-    /// 实体类的初始化
-    /// </summary>
-    /// <returns></returns>
-    public String FrmGener_Init_ForBPClass() throws Exception
-    {
-        try
-        {
+	/// 实体类的初始化
+	/// </summary>
+	/// <returns></returns>
+	public String FrmGener_Init_ForBPClass() throws Exception {
+		try {
 
+			MapData md = new MapData(this.getEnsName());
+			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
 
-            MapData md = new MapData(this.getEnsName());
-            DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+			// 把主表数据放入.
+			String atParas = "";
+			Entities ens = ClassFactory.GetEns(this.getEnsName());
+			Entity en = ens.getGetNewEntity();
+			en.setPKVal(this.getPKVal());
 
+			if (en.RetrieveFromDBSources() == 0)
+				en.Insert();
 
-            //把主表数据放入.
-            String atParas = "";
-            Entities ens = ClassFactory.GetEns(this.getEnsName());
-            Entity en = ens.getGetNewEntity();
-            en.setPKVal(this.getPKVal());
+			// 把参数放入到 En 的 Row 里面。
+			if (DataType.IsNullOrEmpty(atParas) == false) {
+				AtPara ap = new AtPara(atParas);
+				for (String key : ap.getHisHT().keySet()) {
+					if (en.getRow().containsKey(key) == true) // 有就该变.
+						en.getRow().SetValByKey(key, ap.GetValStrByKey(key));
+					else
+						en.getRow().put(key, ap.GetValStrByKey(key)); // 增加他.
+				}
+			}
 
-            if (en.RetrieveFromDBSources() == 0)
-                en.Insert();
+			if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+				// 处理传递过来的参数。
+				Enumeration<?> keys = this.getRequest().getParameterNames();
+				while (keys.hasMoreElements()) {
+					String key = keys.nextElement().toString();
 
-            //把参数放入到 En 的 Row 里面。
-            if (DataType.IsNullOrEmpty(atParas) == false)
-            {
-                AtPara ap = new AtPara(atParas);
-                for (String key : ap.getHisHT().keySet())
-                {
-                    if (en.getRow().containsKey(key) == true) //有就该变.
-                        en.getRow().SetValByKey(key, ap.GetValStrByKey(key));
-                    else
-                        en.getRow().put(key, ap.GetValStrByKey(key)); //增加他.
-                }
-            }
+					en.SetValByKey(key, this.getRequest().getParameter(key));
+				}
 
-            if (BP.Sys.SystemConfig.getIsBSsystem() == true)
-            {
-            	// 处理传递过来的参数。
-    			Enumeration<?> keys = this.getRequest().getParameterNames();
-    			while (keys.hasMoreElements()) {
-    				String key = keys.nextElement().toString();
+			}
 
-    				en.SetValByKey(key, this.getRequest().getParameter(key));
-    			}
-            	
-            }
+			// 执行表单事件. FrmLoadBefore .
+			String msg = md.getFrmEvents().DoEventNode(FrmEventList.FrmLoadBefore, en);
+			if (DataType.IsNullOrEmpty(msg) == false)
+				return "err@错误:" + msg;
 
-            // 执行表单事件. FrmLoadBefore .
-            String msg = md.getFrmEvents().DoEventNode(FrmEventList.FrmLoadBefore, en);
-            if (DataType.IsNullOrEmpty(msg) == false)
-                return "err@错误:" + msg;
+			// 重设默认值.
+			en.ResetDefaultVal();
 
+			// 执行装载填充.
+			MapExt me = new MapExt();
+			if (me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.PageLoadFull, MapExtAttr.FK_MapData,
+					this.getEnsName()) == 1) {
+				// 执行通用的装载方法.
+				MapAttrs attrs = new MapAttrs(this.getEnsName());
+				MapDtls dtls = new MapDtls(this.getEnsName());
+				en = BP.WF.Glo.DealPageLoadFull(en, me, attrs, dtls);
+			}
 
-            //重设默认值.
-            en.ResetDefaultVal();
+			// 执行事件
+			md.DoEvent(FrmEventList.SaveBefore, en, null);
 
-            //执行装载填充.
-            MapExt me = new MapExt();
-            if (me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.PageLoadFull, MapExtAttr.FK_MapData, this.getEnsName()) == 1)
-            {
-                //执行通用的装载方法.
-                MapAttrs attrs = new MapAttrs(this.getEnsName());
-                MapDtls dtls = new MapDtls(this.getEnsName());
-                en = BP.WF.Glo.DealPageLoadFull(en, me, attrs, dtls);
-            }
+			// 增加主表数据.
+			DataTable mainTable = en.ToDataTableField(md.getNo());
+			mainTable.TableName = "MainTable";
 
-            //执行事件
-            md.DoEvent(FrmEventList.SaveBefore, en, null);
+			ds.Tables.add(mainTable);
+			// 把主表数据放入.
 
+			// 把外键表加入DataSet
+			DataTable dtMapAttr = null;
+			for (int i = 0; i < ds.Tables.size(); i++) {
+				if (ds.Tables.get(i).TableName.equals("Sys_MapAttr")) {
+					dtMapAttr = ds.Tables.get(i);
+				}
+			}
 
-            //增加主表数据.
-            DataTable mainTable = en.ToDataTableField(md.getNo());
-            mainTable.TableName = "MainTable";
+			MapExts mes = md.getMapExts();
+			DataTable ddlTable = new DataTable();
+			ddlTable.Columns.Add("No");
+			for (DataRow dr : dtMapAttr.Rows) {
+				String lgType = dr.getValue("LGType").toString();
+				if (lgType.equals("2") == false)
+					continue;
 
-            ds.Tables.add(mainTable);
-            //把主表数据放入.
+				String UIIsEnable = dr.getValue("UIVisible").toString();
+				if (UIIsEnable == "0")
+					continue;
+				String uiBindKey = dr.getValue("UIBindKey").toString();
+				if (DataType.IsNullOrEmpty(uiBindKey) == true) {
+					String myPK = dr.getValue("MyPK").toString();
+					/* 如果是空的 */
+					// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
+					// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK +
+					// ",的UIBindKey IsNull ");
+				}
 
-           //把外键表加入DataSet
-            DataTable dtMapAttr = null;
-    		for (int i = 0; i < ds.Tables.size(); i++) {
-    			if (ds.Tables.get(i).TableName.equals("Sys_MapAttr")) {
-    				dtMapAttr = ds.Tables.get(i);
-    			}
-    		}
+				// 检查是否有下拉框自动填充。
+				String keyOfEn = dr.getValue("KeyOfEn").toString();
+				String fk_mapData = dr.getValue("FK_MapData").toString();
 
-            MapExts mes = md.getMapExts();
-            DataTable ddlTable = new DataTable();
-            ddlTable.Columns.Add("No");
-            for(DataRow dr : dtMapAttr.Rows)
-            {
-                String lgType = dr.getValue("LGType").toString();
-                if (lgType.equals("2") == false)
-                    continue;
+				// 处理下拉框数据范围. for 小杨.
+				me = (MapExt) mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
+						keyOfEn);
+				if (me != null) {
+					String fullSQL = me.getDoc();
+					fullSQL = fullSQL.replace("~", ",");
+					fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
+					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
+					dt.TableName = keyOfEn; // 可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
+					ds.Tables.add(dt);
+					continue;
+				}
+				// 处理下拉框数据范围.
 
-               String UIIsEnable = dr.getValue("UIVisible").toString();
-                if (UIIsEnable == "0")
-                    continue;
-                String uiBindKey = dr.getValue("UIBindKey").toString();
-                if (DataType.IsNullOrEmpty(uiBindKey) == true)
-                {
-                    String myPK = dr.getValue("MyPK").toString();
-                    /*如果是空的*/
-                    //   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
-                }
+				// 判断是否存在.
+				if (ds.Tables.contains(uiBindKey) == true)
+					continue;
 
-                // 检查是否有下拉框自动填充。
-                String keyOfEn = dr.getValue("KeyOfEn").toString();
-                String fk_mapData = dr.getValue("FK_MapData").toString();
+				DataTable dataTable = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+				if (dataTable != null)
+					ds.Tables.add(dataTable);
+				else {
+					DataRow ddldr = ddlTable.NewRow();
+					ddldr.setValue("No", uiBindKey);
+					ddlTable.Rows.add(ddldr);
+				}
+			}
+			ddlTable.TableName = "UIBindKey";
+			ds.Tables.add(ddlTable);
+			// End把外键表加入DataSet
 
-                // 处理下拉框数据范围. for 小杨.
-                me = (MapExt) mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
-                if (me != null)
-                {
-                    String fullSQL = me.getDoc();
-                    fullSQL = fullSQL.replace("~", ",");
-                    fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
-                    DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
-                    dt.TableName = keyOfEn; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
-                    ds.Tables.add(dt);
-                    continue;
-                }
-                //处理下拉框数据范围.
+			return BP.Tools.Json.ToJson(ds);
+		} catch (Exception ex) {
+			GEEntity myen = new GEEntity(this.getEnsName());
+			myen.CheckPhysicsTable();
 
-                // 判断是否存在.
-                if (ds.Tables.contains(uiBindKey) == true)
-                    continue;
+			BP.Sys.CCFormAPI.RepareCCForm(this.getEnsName());
+			return "err@装载表单期间出现如下错误,ccform有自动诊断修复功能请在刷新一次，如果仍然存在请联系管理员. @" + ex.getMessage();
+		}
+	}
 
-                DataTable dataTable = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
-                if (dataTable != null)
-                    ds.Tables.add(dataTable);
-                else{
-                	 DataRow ddldr = ddlTable.NewRow();
-                     ddldr.setValue("No", uiBindKey);
-                     ddlTable.Rows.add(ddldr);
-                }
-            }
-            ddlTable.TableName = "UIBindKey";
-            ds.Tables.add(ddlTable);
-            //End把外键表加入DataSet
-
-            return BP.Tools.Json.ToJson(ds);
-        }
-        catch (Exception ex)
-        {
-            GEEntity myen = new GEEntity(this.getEnsName());
-            myen.CheckPhysicsTable();
-
-            BP.Sys.CCFormAPI.RepareCCForm(this.getEnsName());
-            return "err@装载表单期间出现如下错误,ccform有自动诊断修复功能请在刷新一次，如果仍然存在请联系管理员. @" + ex.getMessage();
-        }
-    }
 	public String FrmGener_Init() throws Exception {
 
 		if (this.getFK_MapData() != null && this.getFK_MapData().contains("BP.") == true)
-            return FrmGener_Init_ForBPClass();
-		
-		 //定义流程信息的所用的 配置entity.
-         //节点与表单的权限控制.
-         FrmNode fn = null;
+			return FrmGener_Init_ForBPClass();
 
-         //定义节点变量.
-         Node nd = null;
-         
-         //是否启用装载填充？
-         boolean isLoadData = true;
-         
-         if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
-         {
-             nd = new Node(this.getFK_Node());
-             nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
-             fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
-             //对于一个表单绑定到一个表单树上，有的节点不需要装载填充的.
-             isLoadData = fn.getIsEnableLoadData();
-         }
-		
-		
+		// 定义流程信息的所用的 配置entity.
+		// 节点与表单的权限控制.
+		FrmNode fn = null;
+
+		// 定义节点变量.
+		Node nd = null;
+
+		// 是否启用装载填充？
+		boolean isLoadData = true;
+
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
+			nd = new Node(this.getFK_Node());
+			nd.WorkID = this.getWorkID(); // 为获取表单ID ( NodeFrmID )提供参数.
+			fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
+			// 对于一个表单绑定到一个表单树上，有的节点不需要装载填充的.
+			isLoadData = fn.getIsEnableLoadData();
+		}
+
 		// #region 特殊判断 适应累加表单.
 		String fromWhere = this.GetRequestVal("FromWorkOpt");
 		if (fromWhere != null && fromWhere.equals("1") && this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
@@ -1465,11 +1441,11 @@ public class WF_CCForm extends WebContralBase {
 			}
 		}
 		// #endregion 特殊判断.适应累加表单
-		 MapData md = new MapData(this.getEnsName());
-         DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
-         String atParas = "";
-         //主表实体.
-         GEEntity en = new GEEntity(this.getEnsName());
+		MapData md = new MapData(this.getEnsName());
+		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+		String atParas = "";
+		// 主表实体.
+		GEEntity en = new GEEntity(this.getEnsName());
 
 		long pk = this.getRefOID();
 		if (pk == 0) {
@@ -1496,12 +1472,12 @@ public class WF_CCForm extends WebContralBase {
 			en.CheckPhysicsTable();
 			en.ResetDefaultVal();
 		}
-		
-		//把流程信息表发送过去.
-        GenerWorkFlow gwf = new GenerWorkFlow();
-        gwf.setWorkID( pk);
-        gwf.RetrieveFromDBSources();
-        ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+
+		// 把流程信息表发送过去.
+		GenerWorkFlow gwf = new GenerWorkFlow();
+		gwf.setWorkID(pk);
+		gwf.RetrieveFromDBSources();
+		ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
 		// 把参数放入到 En 的 Row 里面。
 		if (DotNetToJavaStringHelper.isNullOrEmpty(atParas) == false) {
@@ -1535,42 +1511,38 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		// 重设默认值.
-		en.ResetDefaultVal(this.getFK_MapData(),this.getFK_Flow(),this.getFK_Node());
+		en.ResetDefaultVal(this.getFK_MapData(), this.getFK_Flow(), this.getFK_Node());
 
 		// 执行装载填充.
-		 MapExt me = null;
-         if (isLoadData == true)
-         {
-             me = new MapExt();
-             if (me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.PageLoadFull, MapExtAttr.FK_MapData, this.getEnsName()) == 1)
-             {
-                 //执行通用的装载方法.
-                 MapAttrs attrs = new MapAttrs(this.getEnsName());
-                 MapDtls dtls = new MapDtls(this.getEnsName());
+		MapExt me = null;
+		if (isLoadData == true) {
+			me = new MapExt();
+			if (me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.PageLoadFull, MapExtAttr.FK_MapData,
+					this.getEnsName()) == 1) {
+				// 执行通用的装载方法.
+				MapAttrs attrs = new MapAttrs(this.getEnsName());
+				MapDtls dtls = new MapDtls(this.getEnsName());
 
-                 if (GetRequestValInt("IsTest") != 1)
-                 {
-                     try
-                     {
-                         //判断是否自定义权限
-                         boolean IsSelf = false;
-                         if ((nd.getHisFormType() == NodeFormType.SheetTree
-                              || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
-                              && (fn.getFrmSln() == FrmSln.Self))
-                             IsSelf = true;
+				if (GetRequestValInt("IsTest") != 1) {
+					try {
+						// 判断是否自定义权限
+						boolean IsSelf = false;
+						if ((nd.getHisFormType() == NodeFormType.SheetTree
+								|| nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+								&& (fn.getFrmSln() == FrmSln.Self))
+							IsSelf = true;
 
-                         en =(GEEntity) BP.WF.Glo.DealPageLoadFull(en, me, attrs, dtls, IsSelf, nd.getNodeID(), this.getWorkID());
-                     }
-                     catch (Exception ex)
-                     {
-                     }
-                 }
+						en = (GEEntity) BP.WF.Glo.DealPageLoadFull(en, me, attrs, dtls, IsSelf, nd.getNodeID(),
+								this.getWorkID());
+					} catch (Exception ex) {
+					}
+				}
 
-             }
-         }
-        
-         md.DoEvent(FrmEventList.SaveBefore, en, null);
-         // end执行装载填充.与相关的事件.
+			}
+		}
+
+		md.DoEvent(FrmEventList.SaveBefore, en, null);
+		// end执行装载填充.与相关的事件.
 
 		/// #region 把外键表加入DataSet
 		DataTable dtMapAttr = null;
@@ -1582,21 +1554,21 @@ public class WF_CCForm extends WebContralBase {
 
 		MapExts mes = md.getMapExts();
 		DataTable ddlTable = new DataTable();
-        ddlTable.Columns.Add("No");
+		ddlTable.Columns.Add("No");
 		for (DataRow dr : dtMapAttr.Rows) {
+
+			String uiVisible = dr.getValue("UIVisible").toString();
+			if (uiVisible.equals("0") == true)
+				continue;
+
 			String lgType = dr.getValue("LGType").toString();
-			if (!lgType.equals("2")) {
-				continue;
-			}
-
-			String UIIsEnable = dr.getValue("UIVisible").toString();
-			if (UIIsEnable.equals("0")) {
-				continue;
-			}
-
 			String uiBindKey = dr.getValue("UIBindKey").toString();
-			if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true) {
-				String myPK = dr.getValue("MyPK").toString();
+			String ctrlType = dr.getValue("UIContralType").toString();
+
+			if (DataType.IsNullOrEmpty(uiBindKey) == false && ctrlType.equals("1") == true) {
+				/* 如果是外部数据源的情况. */
+			} else if (lgType.equals("2") == false) {
+				continue;
 			}
 
 			// 检查是否有下拉框自动填充。
@@ -1627,22 +1599,24 @@ public class WF_CCForm extends WebContralBase {
 			DataTable dt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 			if (dt != null)
 				ds.Tables.add(dt);
-			else{
-				 DataRow ddldr = ddlTable.NewRow();
-                 ddldr.setValue("No", uiBindKey);
-                 ddlTable.Rows.add(ddldr);
+			else {
+				DataRow ddldr = ddlTable.NewRow();
+				ddldr.setValue("No", uiBindKey);
+				ddlTable.Rows.add(ddldr);
 			}
-				
+
 		}
-		 ddlTable.TableName = "UIBindKey";
-         ds.Tables.add(ddlTable);
+		ddlTable.TableName = "UIBindKey";
+		ds.Tables.add(ddlTable);
 
 		// #region 加入组件的状态信息, 在解析表单的时候使用.
-		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999 &&(fn.getIsEnableFWC() == true || nd.getFrmWorkCheckSta()!=FrmWorkCheckSta.Disable)) {
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999
+				&& (fn.getIsEnableFWC() == true || nd.getFrmWorkCheckSta() != FrmWorkCheckSta.Disable)) {
 			BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 			nd = new Node(this.getFK_Node());
 			nd.WorkID = this.getWorkID(); // 为求当前表单ID获得参数，而赋值.
-			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false && nd.getHisFormType() != NodeFormType.RefOneFrmTree) {
+			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == false
+					&& nd.getHisFormType() != NodeFormType.RefOneFrmTree) {
 
 				/* 说明这是引用到了其他节点的表单，就需要把一些位置元素修改掉. */
 				int refNodeID = Integer.parseInt(nd.getNodeFrmID().replace("ND", ""));
@@ -1677,7 +1651,7 @@ public class WF_CCForm extends WebContralBase {
 				if (md.getHisFrmType() == FrmType.FoolForm) {
 					// 判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
 					DataTable gf = ds.GetTableByName("Sys_GroupField");
-					
+
 					boolean isHave = false;
 					for (DataRow dr : gf.Rows) {
 						String cType = (String) dr.get("CtrlType");
@@ -1705,55 +1679,52 @@ public class WF_CCForm extends WebContralBase {
 					}
 				}
 			}
-			
-			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == true && nd.getHisFormType() != NodeFormType.RefOneFrmTree)
-	        {
-	            //   Work wk1 = nd.HisWork;
-	
-	        	if (md.getHisFrmType() == FrmType.FoolForm) 
-	            {
-	                //判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
-	                DataTable gf = ds.GetTableByName("Sys_GroupField");
-	                boolean isHave = false;
-	                for(DataRow dr : gf.Rows)
-	                {
-	                	String cType = (String) dr.get("CtrlType");
-	                    if (cType == null)
-	                        continue;
-	
-	                    if (cType.equals("FWC") == true)
-	                        isHave = true;
-	                }
-	
-	                if (isHave == false)
-	                {
-	                    DataRow dr = gf.NewRow();
-	                    
-	                    dr.put(GroupFieldAttr.OID, 100);
+
+			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) == true
+					&& nd.getHisFormType() != NodeFormType.RefOneFrmTree) {
+				// Work wk1 = nd.HisWork;
+
+				if (md.getHisFrmType() == FrmType.FoolForm) {
+					// 判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
+					DataTable gf = ds.GetTableByName("Sys_GroupField");
+					boolean isHave = false;
+					for (DataRow dr : gf.Rows) {
+						String cType = (String) dr.get("CtrlType");
+						if (cType == null)
+							continue;
+
+						if (cType.equals("FWC") == true)
+							isHave = true;
+					}
+
+					if (isHave == false) {
+						DataRow dr = gf.NewRow();
+
+						dr.put(GroupFieldAttr.OID, 100);
 						dr.put(GroupFieldAttr.EnName, nd.getNodeFrmID());
 						dr.put(GroupFieldAttr.CtrlType, "FWC");
 						dr.put(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
 						dr.put(GroupFieldAttr.Idx, 100);
 						dr.put(GroupFieldAttr.Lab, "审核信息");
 						gf.Rows.add(dr);
-	
-	                    ds.Tables.remove("Sys_GroupField");
-	                    ds.Tables.add(gf);
-	
-	                    //更新,为了让其表单上自动增加审核分组.
-	                    BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(nd.getNodeID());
-	                    FrmWorkCheck fwc = new FrmWorkCheck(nd.getNodeID());
-	                    refFnc.Update();
-	
-	                }
-	            }
-	        }
+
+						ds.Tables.remove("Sys_GroupField");
+						ds.Tables.add(gf);
+
+						// 更新,为了让其表单上自动增加审核分组.
+						BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(nd.getNodeID());
+						FrmWorkCheck fwc = new FrmWorkCheck(nd.getNodeID());
+						refFnc.Update();
+
+					}
+				}
+			}
 			ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
 		}
-		 if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
-              ds.Tables.add(nd.ToDataTableField("WF_Node"));
-		 if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
-             ds.Tables.add(fn.ToDataTableField("WF_FrmNode"));
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+			ds.Tables.add(nd.ToDataTableField("WF_Node"));
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+			ds.Tables.add(fn.ToDataTableField("WF_FrmNode"));
 
 		// #region 处理权限方案
 		if (nd != null && nd.getFormType() == NodeFormType.SheetTree) {
@@ -1788,13 +1759,12 @@ public class WF_CCForm extends WebContralBase {
 						dr.setValue(MapAttrAttr.UIVisible, ff.getUIVisible());// 是否只读?
 
 						dr.setValue(MapAttrAttr.DefVal, ff.getDefVal());// 是否只读?
-						dr.setValue(MapAttrAttr.UIIsInput,ff.getIsNotNull());
+						dr.setValue(MapAttrAttr.UIIsInput, ff.getIsNotNull());
 
 						Attr attr = new Attr();
-						attr.setMyDataType( Integer.parseInt(  dr.getValue(MapAttrAttr.MyDataType).toString())  );
+						attr.setMyDataType(Integer.parseInt(dr.getValue(MapAttrAttr.MyDataType).toString()));
 						attr.setDefaultValOfReal(ff.getDefVal());
-						
-						 
+
 						attr.setKey(ff.getKeyOfEn());
 						if (dr.getValue(MapAttrAttr.UIIsEnable).toString().equals("0"))
 							attr.setUIIsReadonly(true);
@@ -1854,7 +1824,7 @@ public class WF_CCForm extends WebContralBase {
 								}
 							}
 							continue;
-						}else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
+						} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
 							if (attr.getUIIsReadonly()) {
 								en.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 							} else {
@@ -2035,7 +2005,7 @@ public class WF_CCForm extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Dtl_Init() throws Exception {
-        
+
 		/// #region 检查是否是测试.
 		if (this.GetRequestVal("IsTest") != null) {
 			BP.Sys.GEDtl dtl = new GEDtl(this.getEnsName());
@@ -2046,40 +2016,36 @@ public class WF_CCForm extends WebContralBase {
 		MapDtl mdtl = new MapDtl(this.getEnsName());
 		mdtl.setNo(this.getEnsName());
 		mdtl.RetrieveFromDBSources();
-		
-		
-	    String frmID = mdtl.getFK_MapData();
-        if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
-            frmID = frmID.replace("_" + this.getFK_Node(), "");
-        
+
+		String frmID = mdtl.getFK_MapData();
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
+			frmID = frmID.replace("_" + this.getFK_Node(), "");
 
 		if (this.getFK_Node() != 0 && !mdtl.getFK_MapData().equals("Temp")
 				&& this.getEnsName().contains("ND" + this.getFK_Node()) == false && this.getFK_Node() != 999999) {
 			Node nd = new BP.WF.Node(this.getFK_Node());
-			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree || nd.getHisFormType()== NodeFormType.FoolTruck)
-            {
+			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree
+					|| nd.getHisFormType() == NodeFormType.FoolTruck) {
 				// 如果
 				// * 1,传来节点ID, 不等于0.
 				// * 2,不是节点表单. 就要判断是否是独立表单，如果是就要处理权限方案。
-	
-				BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(),
-						frmID);
-	
+
+				BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(), frmID);
+
 				if (fn.getFrmSln() == FrmSln.Readonly) {
-	
+
 					mdtl.setIsInsert(false);
 					mdtl.setIsDelete(false);
 					mdtl.setIsUpdate(false);
 					mdtl.setIsReadonly(true);
 				}
-	
-				//自定义权限.
-	            if (fn.getFrmSln() == FrmSln.Self)
-	            {
-	                mdtl.setNo(this.getEnsName() + "_" + this.getFK_Node());
-	                mdtl.RetrieveFromDBSources();
-	            }
-            }
+
+				// 自定义权限.
+				if (fn.getFrmSln() == FrmSln.Self) {
+					mdtl.setNo(this.getEnsName() + "_" + this.getFK_Node());
+					mdtl.RetrieveFromDBSources();
+				}
+			}
 
 		}
 
@@ -2096,8 +2062,8 @@ public class WF_CCForm extends WebContralBase {
 		/// #endregion 组织参数.
 
 		// 获得他的描述,与数据.
-		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(frmID, mdtl,
-				Integer.parseInt(this.getRefPKVal()), strs,this.getFID());
+		DataSet ds = BP.WF.CCFormAPI.GenerDBForCCFormDtl(frmID, mdtl, Integer.parseInt(this.getRefPKVal()), strs,
+				this.getFID());
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -2122,7 +2088,6 @@ public class WF_CCForm extends WebContralBase {
 
 		}
 
-
 		return "保存成功";
 	}
 
@@ -2136,28 +2101,25 @@ public class WF_CCForm extends WebContralBase {
 			// 从表.
 			String fk_mapDtl = this.getFK_MapDtl();
 			MapDtl mdtl = new MapDtl(this.getFK_MapDtl());
-			
-			//处理权限方案。
-            if (this.getFK_Node() != 0 && this.getFK_Node()!=999999)
-            {
-                Node nd = new Node(this.getFK_Node());
-                if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
-                {
-                    FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
-                    if (fn.getFrmSln() == FrmSln.Self)
-                    {
-                        MapDtl mdtlSln = new MapDtl();
-                        mdtlSln.setNo(fk_mapDtl + "_" + nd.getNodeID());
-                        int result = mdtlSln.RetrieveFromDBSources();
-                        if (result != 0)
-                        {
-                            mdtl = mdtlSln;
-                            fk_mapDtl = fk_mapDtl + "_" + nd.getNodeID();
-                        }
-                    }
-                }
-            }
-			
+
+			// 处理权限方案。
+			if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
+				Node nd = new Node(this.getFK_Node());
+				if (nd.getHisFormType() == NodeFormType.SheetTree
+						|| nd.getHisFormType() == NodeFormType.RefOneFrmTree) {
+					FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
+					if (fn.getFrmSln() == FrmSln.Self) {
+						MapDtl mdtlSln = new MapDtl();
+						mdtlSln.setNo(fk_mapDtl + "_" + nd.getNodeID());
+						int result = mdtlSln.RetrieveFromDBSources();
+						if (result != 0) {
+							mdtl = mdtlSln;
+							fk_mapDtl = fk_mapDtl + "_" + nd.getNodeID();
+						}
+					}
+				}
+			}
+
 			// 从表实体.
 			GEDtl dtl = new GEDtl(this.getFK_MapDtl());
 			int oid = this.getRefOID();
@@ -2173,20 +2135,19 @@ public class WF_CCForm extends WebContralBase {
 
 			// 关联主赋值.
 			dtl.setRefPK(this.getRefPKVal());
-			switch (mdtl.getDtlOpenType())
-	        {
-	                case ForEmp:  // 按人员来控制.
-	                    dtl.setRefPK(this.getRefPKVal());
-	                    break;
-	                case ForWorkID: // 按工作ID来控制
-	                	dtl.setRefPK(this.getRefPKVal());
-	                    dtl.setFID(Long.parseLong(this.getRefPKVal()));
-	                    break;
-	                case ForFID: // 按流程ID来控制.
-	                	dtl.setRefPK(this.getRefPKVal());
-	                    dtl.setFID(this.getFID());
-	                    break;
-	        }
+			switch (mdtl.getDtlOpenType()) {
+			case ForEmp: // 按人员来控制.
+				dtl.setRefPK(this.getRefPKVal());
+				break;
+			case ForWorkID: // 按工作ID来控制
+				dtl.setRefPK(this.getRefPKVal());
+				dtl.setFID(Long.parseLong(this.getRefPKVal()));
+				break;
+			case ForFID: // 按流程ID来控制.
+				dtl.setRefPK(this.getRefPKVal());
+				dtl.setFID(this.getFID());
+				break;
+			}
 
 			/// #region 从表保存前处理事件.
 			// 获得主表事件.
@@ -2214,7 +2175,7 @@ public class WF_CCForm extends WebContralBase {
 			} else {
 				dtl.Update();
 			}
-			///给实体循环赋值/并保存.
+			/// 给实体循环赋值/并保存.
 
 			/// 从表保存后处理事件。
 			if (fes.size() > 0) {
@@ -3086,133 +3047,121 @@ public class WF_CCForm extends WebContralBase {
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return BP.Tools.Json.ToJson(dt);
 	}
-	
-	//#region SQL从表导入.
-    public String DtlImpBySQL_Delete() throws Exception
-    {
-        MapDtl dtl = new MapDtl(this.getEnsName());
-        BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + this.getRefPKVal() + "'");
-        return "";
-    }
-	
+
+	// #region SQL从表导入.
+	public String DtlImpBySQL_Delete() throws Exception {
+		MapDtl dtl = new MapDtl(this.getEnsName());
+		BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + this.getRefPKVal() + "'");
+		return "";
+	}
+
 	/**
 	 * 从不SQL导入
+	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-    public String DtlImpBySQl_Imp() throws Exception
-    {
-        //获取参数
-        String ensName = this.getEnsName();
-        String refpk = this.getRefPKVal();
-        long fid = this.getFID();
-        String pk = this.GetRequestVal("PKs");
-        GEDtls dtls = new GEDtls(ensName);
-        QueryObject qo = new QueryObject(dtls);
-        //获取从表权限
-        MapDtl dtl = new MapDtl(ensName);
-        //处理权限方案
-        if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
-        {
-            Node nd = new Node(this.getFK_Node());
-            if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
-            {
-                FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), dtl.getFK_MapData());
-                if (fn.getFrmSln() == FrmSln.Self)
-                {
-                    String no = dtl.getNo() + "_" + nd.getNodeID();
-                    MapDtl mdtlSln = new MapDtl();
-                    mdtlSln.setNo(no);
-                    int result = mdtlSln.RetrieveFromDBSources();
-                    if (result != 0)
-                    {
-                        dtl = mdtlSln;
+	public String DtlImpBySQl_Imp() throws Exception {
+		// 获取参数
+		String ensName = this.getEnsName();
+		String refpk = this.getRefPKVal();
+		long fid = this.getFID();
+		String pk = this.GetRequestVal("PKs");
+		GEDtls dtls = new GEDtls(ensName);
+		QueryObject qo = new QueryObject(dtls);
+		// 获取从表权限
+		MapDtl dtl = new MapDtl(ensName);
+		// 处理权限方案
+		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999) {
+			Node nd = new Node(this.getFK_Node());
+			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree) {
+				FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), dtl.getFK_MapData());
+				if (fn.getFrmSln() == FrmSln.Self) {
+					String no = dtl.getNo() + "_" + nd.getNodeID();
+					MapDtl mdtlSln = new MapDtl();
+					mdtlSln.setNo(no);
+					int result = mdtlSln.RetrieveFromDBSources();
+					if (result != 0) {
+						dtl = mdtlSln;
 
-                    }
-                }
-            }
-        }
-        
+					}
+				}
+			}
+		}
 
-        //判断是否重复导入
-        boolean isInsert = true;
-        if (DataType.IsNullOrEmpty(pk) == false){
-            String[] pks = pk.split("@");
-            int idx = 0;
-            for (String k : pks)
-            {
-                if (DataType.IsNullOrEmpty(k))
-                    continue;
-                if (idx == 0)
-                    qo.AddWhere(k, this.GetRequestVal(k));
-                else
-                {
-                    qo.addAnd();
-                    qo.AddWhere(k, this.GetRequestVal(k));
-                }
-                idx++;
-            }
-            switch (dtl.getDtlOpenType())
-            {
-                case ForEmp:  // 按人员来控制.
-                    qo.addAnd();
-                    qo.AddWhere("RefPk", refpk);
-                    qo.addAnd();
-                    qo.AddWhere("Rec", this.GetRequestVal("UserNo"));
-                    break;
-                case ForWorkID: // 按工作ID来控制
-                    qo.addAnd();
-                    qo.addLeftBracket();
-                    qo.AddWhere("RefPk", refpk);
-                    qo.addOr();
-                    qo.AddWhere("FID", fid);
-                    qo.addRightBracket();
-                    break;
-                case ForFID: // 按流程ID来控制.
-                    qo.addAnd();
-                    qo.AddWhere("FID", fid);
-                    break;
-            }
-            
-            int count = qo.GetCount();
-            if (count > 0)
-                isInsert = false;
-        }
-        //导入数据
-        if (isInsert == true)
-        {
-           
-            GEDtl dtlEn = (GEDtl)dtls.getGetNewEntity();
-            //遍历属性，循环赋值.
-            for (Attr attr : dtlEn.getEnMap().getAttrs())
-            {
-                dtlEn.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
+		// 判断是否重复导入
+		boolean isInsert = true;
+		if (DataType.IsNullOrEmpty(pk) == false) {
+			String[] pks = pk.split("@");
+			int idx = 0;
+			for (String k : pks) {
+				if (DataType.IsNullOrEmpty(k))
+					continue;
+				if (idx == 0)
+					qo.AddWhere(k, this.GetRequestVal(k));
+				else {
+					qo.addAnd();
+					qo.AddWhere(k, this.GetRequestVal(k));
+				}
+				idx++;
+			}
+			switch (dtl.getDtlOpenType()) {
+			case ForEmp: // 按人员来控制.
+				qo.addAnd();
+				qo.AddWhere("RefPk", refpk);
+				qo.addAnd();
+				qo.AddWhere("Rec", this.GetRequestVal("UserNo"));
+				break;
+			case ForWorkID: // 按工作ID来控制
+				qo.addAnd();
+				qo.addLeftBracket();
+				qo.AddWhere("RefPk", refpk);
+				qo.addOr();
+				qo.AddWhere("FID", fid);
+				qo.addRightBracket();
+				break;
+			case ForFID: // 按流程ID来控制.
+				qo.addAnd();
+				qo.AddWhere("FID", fid);
+				break;
+			}
 
-            }
-            switch (dtl.getDtlOpenType())
-            {
-                case ForEmp:  // 按人员来控制.
-                    dtlEn.setRefPKInt(Integer.parseInt(refpk));
-                    break;
-                case ForWorkID: // 按工作ID来控制
-                	dtlEn.setRefPKInt(Integer.parseInt(refpk));
-                    dtlEn.SetValByKey("FID", Integer.parseInt(refpk));
-                    break;
-                case ForFID: // 按流程ID来控制.
-                	dtlEn.setRefPKInt(Integer.parseInt(refpk));
-                    dtlEn.SetValByKey("FID", fid);
-                    break;
-            }
-            dtlEn.SetValByKey("RDT", BP.DA.DataType.getCurrentDate());
-            dtlEn.SetValByKey("Rec", this.GetRequestVal("UserNo"));
+			int count = qo.GetCount();
+			if (count > 0)
+				isInsert = false;
+		}
+		// 导入数据
+		if (isInsert == true) {
 
-            dtlEn.InsertAsOID((int)DBAccess.GenerOID(ensName));
-            return Long.toString(dtlEn.getOID());
-        }
+			GEDtl dtlEn = (GEDtl) dtls.getGetNewEntity();
+			// 遍历属性，循环赋值.
+			for (Attr attr : dtlEn.getEnMap().getAttrs()) {
+				dtlEn.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 
-        return "";
+			}
+			switch (dtl.getDtlOpenType()) {
+			case ForEmp: // 按人员来控制.
+				dtlEn.setRefPKInt(Integer.parseInt(refpk));
+				break;
+			case ForWorkID: // 按工作ID来控制
+				dtlEn.setRefPKInt(Integer.parseInt(refpk));
+				dtlEn.SetValByKey("FID", Integer.parseInt(refpk));
+				break;
+			case ForFID: // 按流程ID来控制.
+				dtlEn.setRefPKInt(Integer.parseInt(refpk));
+				dtlEn.SetValByKey("FID", fid);
+				break;
+			}
+			dtlEn.SetValByKey("RDT", BP.DA.DataType.getCurrentDate());
+			dtlEn.SetValByKey("Rec", this.GetRequestVal("UserNo"));
 
-    }
+			dtlEn.InsertAsOID((int) DBAccess.GenerOID(ensName));
+			return Long.toString(dtlEn.getOID());
+		}
+
+		return "";
+
+	}
 
 	/**
 	 * Excel 导入
@@ -3223,7 +3172,7 @@ public class WF_CCForm extends WebContralBase {
 			MapDtl dtl = new MapDtl(this.getFK_MapDtl());
 			HttpServletRequest request = getRequest();
 
-			if(CommonFileUtils.getFilesSize(request, "File_Upload") == 0){
+			if (CommonFileUtils.getFilesSize(request, "File_Upload") == 0) {
 				return "err@请选择要上传的从表模板.";
 			}
 			// 获取文件名,并取其后缀.
@@ -3250,11 +3199,11 @@ public class WF_CCForm extends WebContralBase {
 			// 执行保存附件
 			File file = new File(tempPath + "/" + userNo + prefix);
 
-			try{
+			try {
 				CommonFileUtils.upload(request, "File_Upload", file);
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
-				return "err@文件上传失败.";	
+				return "err@文件上传失败.";
 			}
 			GEDtls dtls = new GEDtls(this.getFK_MapDtl());
 			DataTable dt = BP.DA.DBLoad.GetTableByExt(tempPath + "/" + userNo + prefix);
@@ -3357,23 +3306,22 @@ public class WF_CCForm extends WebContralBase {
 
 					dtlEn.SetValByKey(attr.getKey(), val);
 				}
-				 //dtlEn.RefPKInt = (int)this.WorkID;
-                //关联主赋值. 
-                switch (dtl.getDtlOpenType())
-                {
-                    case ForEmp:  // 按人员来控制.
-                    	dtlEn.setRefPKInt((int) this.getWorkID());
-                        break;
-                    case ForWorkID: // 按工作ID来控制
-                    	dtlEn.setRefPKInt((int) this.getWorkID());
-                        dtl.SetValByKey("FID", this.getWorkID());
-                        break;
-                    case ForFID: // 按流程ID来控制.
-                    	dtlEn.setRefPKInt((int) this.getWorkID());
-                        dtl.SetValByKey("FID", this.getFID());
-                        break;
-                }
-				
+				// dtlEn.RefPKInt = (int)this.WorkID;
+				// 关联主赋值.
+				switch (dtl.getDtlOpenType()) {
+				case ForEmp: // 按人员来控制.
+					dtlEn.setRefPKInt((int) this.getWorkID());
+					break;
+				case ForWorkID: // 按工作ID来控制
+					dtlEn.setRefPKInt((int) this.getWorkID());
+					dtl.SetValByKey("FID", this.getWorkID());
+					break;
+				case ForFID: // 按流程ID来控制.
+					dtlEn.setRefPKInt((int) this.getWorkID());
+					dtl.SetValByKey("FID", this.getFID());
+					break;
+				}
+
 				dtlEn.SetValByKey("RDT", rdt);
 				dtlEn.SetValByKey("Rec", WebUser.getNo());
 				i++;
@@ -3402,95 +3350,86 @@ public class WF_CCForm extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String DtlCard_Init() throws Exception {
-        DataSet ds = new DataSet();
+		DataSet ds = new DataSet();
 
-        MapDtl md = new MapDtl(this.getEnsName());
-        if (this.getFK_Node() != 0 && md.getFK_MapData() != "Temp"
-           && this.getEnsName().contains("ND" + this.getFK_Node()) == false
-           && this.getFK_Node() != 999999)
-        {
-            Node nd = new BP.WF.Node(this.getFK_Node());
+		MapDtl md = new MapDtl(this.getEnsName());
+		if (this.getFK_Node() != 0 && md.getFK_MapData() != "Temp"
+				&& this.getEnsName().contains("ND" + this.getFK_Node()) == false && this.getFK_Node() != 999999) {
+			Node nd = new BP.WF.Node(this.getFK_Node());
 
-            if (nd.getHisFormType() == NodeFormType.SheetTree)
-            {
-                /*如果
-                 * 1,传来节点ID, 不等于0.
-                 * 2,不是节点表单.  就要判断是否是独立表单，如果是就要处理权限方案。*/
-                BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(), this.getFK_MapData());
-                ///自定义权限.
-                if (fn.getFrmSln() == FrmSln.Self)
-                {
-                    md.setNo(this.getEnsName() + "_" + this.getFK_Node());
-                    if (md.RetrieveFromDBSources() == 0)
-                        md = new MapDtl(this.getEnsName());
-                }
-            }
-        }
+			if (nd.getHisFormType() == NodeFormType.SheetTree) {
+				/*
+				 * 如果 1,传来节点ID, 不等于0. 2,不是节点表单. 就要判断是否是独立表单，如果是就要处理权限方案。
+				 */
+				BP.WF.Template.FrmNode fn = new BP.WF.Template.FrmNode(nd.getFK_Flow(), nd.getNodeID(),
+						this.getFK_MapData());
+				/// 自定义权限.
+				if (fn.getFrmSln() == FrmSln.Self) {
+					md.setNo(this.getEnsName() + "_" + this.getFK_Node());
+					if (md.RetrieveFromDBSources() == 0)
+						md = new MapDtl(this.getEnsName());
+				}
+			}
+		}
 
-        //主表数据.
-        DataTable dt = md.ToDataTableField("Main");
-        ds.Tables.add(dt);
+		// 主表数据.
+		DataTable dt = md.ToDataTableField("Main");
+		ds.Tables.add(dt);
 
-        //主表字段.
-        MapAttrs attrs = md.getMapAttrs();
-        ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
+		// 主表字段.
+		MapAttrs attrs = md.getMapAttrs();
+		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
-        //从表.
-        MapDtls dtls = md.getMapDtls();
-        ds.Tables.add(dtls.ToDataTableField("MapDtls"));
+		// 从表.
+		MapDtls dtls = md.getMapDtls();
+		ds.Tables.add(dtls.ToDataTableField("MapDtls"));
 
-        //从表的从表.
-        for(MapDtl dtl : dtls.ToJavaList())
-        {
-            MapAttrs subAttrs = new MapAttrs(dtl.getNo());
-            ds.Tables.add(subAttrs.ToDataTableField(dtl.getNo()));
-        }
-       //把从表的数据放入.
-        GEDtls enDtls = new GEDtls(md.getNo());
-        QueryObject qo = null;
-        try
-        {
-            qo = new QueryObject(enDtls);
-            switch (md.getDtlOpenType())
-            {
-                case ForEmp:  // 按人员来控制.
-                    qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
-                    qo.addAnd();
-                    qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
-                    break;
-                case ForWorkID: // 按工作ID来控制
-                    qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
-                    break;
-                case ForFID: // 按流程ID来控制.
-                    if (this.getFID() == 0)
-                        qo.AddWhere(GEDtlAttr.FID, this.getRefPKVal());
-                    else
-                        qo.AddWhere(GEDtlAttr.FID, this.getFID());
-                    break;
-            }
-        }
-        catch (Exception ex)
-        {
-            dtls.getGetNewEntity().CheckPhysicsTable();
-            throw ex;
-        }
+		// 从表的从表.
+		for (MapDtl dtl : dtls.ToJavaList()) {
+			MapAttrs subAttrs = new MapAttrs(dtl.getNo());
+			ds.Tables.add(subAttrs.ToDataTableField(dtl.getNo()));
+		}
+		// 把从表的数据放入.
+		GEDtls enDtls = new GEDtls(md.getNo());
+		QueryObject qo = null;
+		try {
+			qo = new QueryObject(enDtls);
+			switch (md.getDtlOpenType()) {
+			case ForEmp: // 按人员来控制.
+				qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
+				qo.addAnd();
+				qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
+				break;
+			case ForWorkID: // 按工作ID来控制
+				qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
+				break;
+			case ForFID: // 按流程ID来控制.
+				if (this.getFID() == 0)
+					qo.AddWhere(GEDtlAttr.FID, this.getRefPKVal());
+				else
+					qo.AddWhere(GEDtlAttr.FID, this.getFID());
+				break;
+			}
+		} catch (Exception ex) {
+			dtls.getGetNewEntity().CheckPhysicsTable();
+			throw ex;
+		}
 
-        //条件过滤.
-        if (md.getFilterSQLExp() != "")
-        {
-            String[] strs = md.getFilterSQLExp().split("=");
-            qo.addAnd();
-            qo.AddWhere(strs[0], strs[1]);
-        }
+		// 条件过滤.
+		if (md.getFilterSQLExp() != "") {
+			String[] strs = md.getFilterSQLExp().split("=");
+			qo.addAnd();
+			qo.AddWhere(strs[0], strs[1]);
+		}
 
-        //增加排序.
-        qo.addOrderBy(enDtls.getGetNewEntity().getPK());
+		// 增加排序.
+		qo.addOrderBy(enDtls.getGetNewEntity().getPK());
 
-        //从表
-        DataTable dtDtl = qo.DoQueryToTable();
-        dtDtl.TableName = "DTDtls";
-        ds.Tables.add(dtDtl);
-        return BP.Tools.Json.ToJson(ds);
+		// 从表
+		DataTable dtDtl = qo.DoQueryToTable();
+		dtDtl.TableName = "DTDtls";
+		ds.Tables.add(dtDtl);
+		return BP.Tools.Json.ToJson(ds);
 
 	}
 
@@ -3523,62 +3462,53 @@ public class WF_CCForm extends WebContralBase {
 	public String getFK_FrmAttachment() {
 		return GetRequestVal("FK_FrmAttachment");
 	}
-	
-	  /// <summary>
-    /// 保存手写签名图片
-    /// </summary>
-    /// <returns>返回保存结果</returns>
-    public String HandWriting_Save()
-    {
-        try
-        {
-        	String basePath = SystemConfig.getPathOfDataUser() + "HandWritingImg";
-        	String ny = DataType.getCurrentDateByFormart("yyyy_MM");
-        	String tempPath = basePath + "\\" + ny + "\\" + this.getFK_Node()+ "\\";
-        	String tempName = this.getWorkID() + "_" + this.getKeyOfEn() + "_" +DataType.getCurrentDateByFormart("HHmmss") + ".png";
-        	File file = new File(tempPath);
-            if (file.exists() == false)
-                file.mkdirs();
-            //删除改目录下WORKID的文件
-            String[] files =file.list();
-            for(String f : files)
-            {
-                if (f.contains(this.getWorkID() + "_" + this.getKeyOfEn()) == true)
-                    new File(f).delete();
-            }
 
+	/// <summary>
+	/// 保存手写签名图片
+	/// </summary>
+	/// <returns>返回保存结果</returns>
+	public String HandWriting_Save() {
+		try {
+			String basePath = SystemConfig.getPathOfDataUser() + "HandWritingImg";
+			String ny = DataType.getCurrentDateByFormart("yyyy_MM");
+			String tempPath = basePath + "\\" + ny + "\\" + this.getFK_Node() + "\\";
+			String tempName = this.getWorkID() + "_" + this.getKeyOfEn() + "_"
+					+ DataType.getCurrentDateByFormart("HHmmss") + ".png";
+			File file = new File(tempPath);
+			if (file.exists() == false)
+				file.mkdirs();
+			// 删除改目录下WORKID的文件
+			String[] files = file.list();
+			for (String f : files) {
+				if (f.contains(this.getWorkID() + "_" + this.getKeyOfEn()) == true)
+					new File(f).delete();
+			}
 
+			String pic_Path = tempPath + tempName;
 
-            String pic_Path = tempPath + tempName;
+			String imgData = this.GetValFromFrmByKey("imageData");
+			Base64 decoder = new Base64();
 
-            String imgData = this.GetValFromFrmByKey("imageData");
-            Base64 decoder = new Base64();
+			byte[] imgByte = Base64.decode(imgData);
+			InputStream in = new ByteArrayInputStream(imgByte);
+			byte[] b = new byte[1024];
+			int nRead = 0;
 
-            byte[] imgByte = Base64.decode(imgData);
-    		InputStream in = new ByteArrayInputStream( imgByte );
-    		byte[] b = new byte[1024];
-    		int nRead = 0;
-    		
-    		OutputStream o = new FileOutputStream(pic_Path);
-    		
-    		while( ( nRead = in.read(b) ) != -1 ){
-    			o.write( b, 0, nRead );
-    		}
-    		
-    		o.flush();
-    		o.close();
-    		
-    		in.close();
+			OutputStream o = new FileOutputStream(pic_Path);
 
-            return "info@" + pic_Path.replace("\\", "/"); 
-        }
-        catch (Exception e)
-        {
-            return "err@" + e.getMessage();
-        }
-    }
-    
-   
+			while ((nRead = in.read(b)) != -1) {
+				o.write(b, 0, nRead);
+			}
 
+			o.flush();
+			o.close();
+
+			in.close();
+
+			return "info@" + pic_Path.replace("\\", "/");
+		} catch (Exception e) {
+			return "err@" + e.getMessage();
+		}
+	}
 
 }

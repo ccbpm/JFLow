@@ -44,7 +44,19 @@ public enum UIContralType
 	/**
 	 * 超链接
 	 */
-     HyperLink(9);
+     HyperLink(9),
+     /**
+      * 文本
+      */
+     Lab(10),
+     /**
+      * 图片;
+      */
+     FrmImg(11),
+     /**
+      * 流程进度图
+      */
+     JobSchedule(50);
 	
 	private int intValue;
 	private static java.util.HashMap<Integer, UIContralType> mappings;

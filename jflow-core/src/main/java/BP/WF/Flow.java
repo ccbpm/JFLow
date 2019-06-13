@@ -32,6 +32,7 @@ import BP.Sys.AttachmentUploadType;
 import BP.Sys.EventListOfNode;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
+import BP.Sys.FrmAttachmentDBAttr;
 import BP.Sys.FrmAttachmentDBs;
 import BP.Sys.FrmAttachments;
 import BP.Sys.FrmEle;
@@ -1059,12 +1060,7 @@ public class Flow extends BP.En.EntityNoName {
 
 						// new 一个实例.
 						GEDtl dtlData = new GEDtl(dtl.getNo());
-
-						// 检查该明细表是否有数据，如果没有数据，就copy过来，如果有，就说明已经copy过了。
-						// sql = "SELECT COUNT(OID) FROM
-						// "+dtlData.getEnMap().getPhysicsTable()+" WHERE
-						// RefPK="+wk.OID;
-
+						
 						// 删除以前的数据.
 						sql = "DELETE FROM " + dtlData.getEnMap().getPhysicsTable() + " WHERE RefPK=" + wk.getOID();
 						DBAccess.RunSQL(sql);
@@ -1073,17 +1069,32 @@ public class Flow extends BP.En.EntityNoName {
 
 						GEDtls dtlsFromData = new GEDtls(dtlFrom.getNo());
 						dtlsFromData.Retrieve(GEDtlAttr.RefPK, PWorkID);
+						
 						for (GEDtl geDtlFromData : dtlsFromData.ToJavaList()) {
+							//是否启用多附件
+							FrmAttachmentDBs  dbs = null;
+							if(dtl.getIsEnableAthM() == true){
+								//根据从表的OID 获取附件信息
+								dbs = new FrmAttachmentDBs();
+								dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, geDtlFromData.getOID());
+							}
 							dtlData.Copy(geDtlFromData);
-							// dtlsFromData.Retrieve(GEDtlAttr.RefPK, PWorkID);
 							dtlData.setRefPK(wk.getOID() + "");
-							if (PFlowNo.equals(this.getNo())) {
+							dtlData.setFID(wk.getOID());
+							if(PFlowNo.equals(this.getNo()) == false &&(this.getStartLimitRole() == BP.WF.StartLimitRole.OnlyOneSubFlow) ){
+								dtlData.SaveAsOID((int) geDtlFromData.getOID()); // 为子流程的时候，仅仅允许被调用1次.
+							}else{
 								dtlData.InsertAsNew();
-							} else {
-								if (this.getStartLimitRole() == BP.WF.StartLimitRole.OnlyOneSubFlow) {
-									dtlData.SaveAsOID((int) geDtlFromData.getOID()); // 为子流程的时候，仅仅允许被调用1次.
-								} else {
-									dtlData.InsertAsNew();
+								if(dbs!=null && dbs.size()!=0){
+									//复制附件信息
+									FrmAttachmentDB newDB = new FrmAttachmentDB();
+									for(FrmAttachmentDB db:dbs.ToJavaList() ){
+										newDB.Copy(db);
+										newDB.setRefPKVal(String.valueOf(dtlData.getOID()));
+										newDB.setFID(dtlData.getOID());
+										newDB.setMyPK(BP.DA.DBAccess.GenerGUID());
+										newDB.Insert();
+									}
 								}
 							}
 						}
@@ -1764,8 +1775,16 @@ public class Flow extends BP.En.EntityNoName {
 	
 	}
 
-	public final String ClearCash() {
+	public final String ClearCash() throws Exception {
 		BP.DA.Cash.ClearCash();
+		 //清空流程中的缓存
+        //获取改流程中的节点数据
+        Nodes nds = new Nodes(this.getNo());
+        for(Node nd : nds.ToJavaList()){
+            //判断表单的类型
+            if(nd.getHisFormType()  == NodeFormType.FoolForm || nd.getHisFormType()  == NodeFormType.FreeForm)
+                BP.Sys.CCFormAPI.AfterFrmEditAction("ND"+nd.getNodeID());
+        }
 		return "清除成功.";
 	}
 

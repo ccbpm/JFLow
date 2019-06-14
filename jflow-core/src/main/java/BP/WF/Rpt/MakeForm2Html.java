@@ -30,6 +30,8 @@ import java.text.SimpleDateFormat;
 import java.util.*; 
 import javax.imageio.ImageIO;
 
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+
 //import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
 import java.util.Hashtable;
@@ -1066,7 +1068,9 @@ public class MakeForm2Html
                                 ruRowSpan = 0;
                                 rRowSpan = 0;
                                 IsShowRight = true;
-                                luColSpan = 0;
+                                if (rowSpan == 1)
+                                    luColSpan = 0;
+                                ruColSpan = 0;
                             }
 
 
@@ -1087,10 +1091,15 @@ public class MakeForm2Html
                                 rRowSpan = rowSpan;
                                 ruColSpan += colSpan + textColSpan;
                                 html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
-                                if (UseColSpan == tableCol)
+                                if (UseColSpan == tableCol) {
                                     isDropTR = true;
+                                    if (rowSpan != 1) {
+                                        ruRowSpan++;
+                                    }
+                                }
                                 if (rowSpan != 1) {
                                     IsShowRight = false;
+                                    lRowSpan = rowSpan;
                                 }
                             }
 
@@ -1178,7 +1187,9 @@ public class MakeForm2Html
                             ruRowSpan = 0;
                             rRowSpan = 0;
                             IsShowRight = true;
-                            luColSpan =0;
+                            if (rowSpan == 1)
+                                luColSpan = 0;
+                            ruColSpan = 0;
                         }
 
 
@@ -1207,10 +1218,15 @@ public class MakeForm2Html
                             html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' rowSpan=" + rowSpan + " >";
                             html += text;
                             html += " </td>";
-                            if (UseColSpan == tableCol)
+                            if (UseColSpan == tableCol) {
                                 isDropTR = true;
+                                if (rowSpan != 1) {
+                                    ruRowSpan++;
+                                }
+                            }
                             if (rowSpan != 1) {
                                 IsShowRight = false;
+                                lRowSpan = rowSpan;
                             }
                         }
 
@@ -1737,13 +1753,13 @@ public class MakeForm2Html
     		 if (new File(pdfPath).exists() == false)
 	        	 new File(pdfPath).mkdirs();
     		 
-    	//	 PDFMergerUtility merger=new PDFMergerUtility();
+    		 PDFMergerUtility merger=new PDFMergerUtility();
     		 String[] fileInFolder=BaseFileUtils.getFiles(pdfTempPath);
     		 for(int i=0;i<fileInFolder.length;i++){
-    		//	merger.addSource(fileInF/]);
+    			merger.addSource(fileInFolder[i]);
     		  }
-    		// merger.setDestinationFileName(pdfFile);
-    		// merger.mergeDocuments();
+    		 merger.setDestinationFileName(pdfFile);
+    		 merger.mergeDocuments();
     		 
     		 //合并完删除文件夹
     		 BaseFileUtils.deleteDirectory(pdfTempPath);

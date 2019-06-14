@@ -1,5 +1,6 @@
 package BP.Sys.FrmUI;
 
+import BP.DA.DBAccess;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -168,15 +169,7 @@ public class MapAttrSFSQL extends EntityMyPK
 	}
 
 
-	@Override
-	protected void afterDelete() throws Exception
-    {
-        MapAttr attr = new MapAttr();
-        attr.setMyPK( attr.getFK_MapData() + "_" + this.getKeyOfEn() + "T");
-        attr.Delete();
-         
-         super.afterDelete();
-    }
+	
 	/** 
 	 旧版本设置
 	 
@@ -235,6 +228,29 @@ public class MapAttrSFSQL extends EntityMyPK
 		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	
+	/// <summary>
+    /// 删除，把影子字段也要删除.
+    /// </summary>
+	@Override
+    protected  void afterDelete() throws Exception
+    {
+        MapAttr attr = new MapAttr();
+        attr.setMyPK(attr.getFK_MapData()+ "_" + this.getKeyOfEn() + "T");
+        attr.Delete();
+
+        //删除相对应的rpt表中的字段
+        if (this.getFK_MapData().contains("ND") == true)
+        {
+            String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+            String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() + "T' OR KeyOfEn='" + this.getKeyOfEn() + "')";
+            DBAccess.RunSQL(sql);
+        }
+
+        //调用frmEditAction, 完成其他的操作.
+        BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+        super.afterDelete();
+    }
+    
 	@Override
 	protected  void afterInsertUpdateAction() throws Exception
     {
@@ -242,7 +258,8 @@ public class MapAttrSFSQL extends EntityMyPK
         mapAttr.setMyPK(this.getMyPK());
         mapAttr.RetrieveFromDBSources();
         mapAttr.Update();
-
+        //调用frmEditAction, 完成其他的操作.
+        BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
         super.afterInsertUpdateAction();
     }
 }

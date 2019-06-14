@@ -1,5 +1,6 @@
 package BP.Sys.FrmUI;
 
+import BP.DA.DBAccess;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -32,6 +33,15 @@ public class ExtHandWriting extends EntityMyPK
 		public final void setURL(String value)
 		{
 			this.SetValByKey(MapAttrAttr.Tag2, value);
+		}
+		
+		public final String getKeyOfEn()
+		{
+			return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
+		}
+		public final void setKeyOfEn(String value)
+		{
+			this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 		}
 		/** 
 		 FK_MapData
@@ -120,5 +130,20 @@ public class ExtHandWriting extends EntityMyPK
 			this.set_enMap(map);
 			return this.get_enMap();
 		}
+		
+		@Override
+		protected  void afterDelete() throws Exception
+        {
+            //删除相对应的rpt表中的字段
+            if (this.getFK_MapData().contains("ND") == true)
+            {
+                String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+                String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND KeyOfEn='" + this.getKeyOfEn() + "'";
+                DBAccess.RunSQL(sql);
+            }
+            //调用frmEditAction, 完成其他的操作.
+            BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+            super.afterDelete();
+        }
 
 	}

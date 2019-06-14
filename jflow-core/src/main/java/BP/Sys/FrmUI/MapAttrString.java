@@ -127,11 +127,11 @@ public class MapAttrString extends EntityMyPK {
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 500, 20, true);
 
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrString",
-				"@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+				"@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨4个单元格@6=跨4个单元格");
 
 		 //文本占单元格数量
         map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString",
-            "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+            "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨4个单元格@6=跨4个单元格");
 
         //文本跨行
         map.AddDDLSysEnum(MapAttrAttr.RowSpan, 1, "行数", true, true, "RowSpanAttrString",
@@ -145,11 +145,6 @@ public class MapAttrString extends EntityMyPK {
 
 		RefMethod rm = new RefMethod();
 
-		/*rm = new RefMethod();
-		rm.Title = "文本框自动完成";
-		rm.ClassMethodName = this.toString() + ".DoTBFullCtrl()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);*/
 
 		rm = new RefMethod();
 		rm.Title = "文本框自动完成";
@@ -226,66 +221,6 @@ public class MapAttrString extends EntityMyPK {
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-		/// #region Pop返回值.
-		/*rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "枝干叶子模式";
-		rm.ClassMethodName = this.toString() + ".DoBranchesAndLeaf()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "枝干叶子模式-懒加载";
-		rm.ClassMethodName = this.toString() + ".DoBranchesAndLeafLazyLoad()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "枝干模式(简单)";
-		rm.ClassMethodName = this.toString() + ".DoBranches()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "枝干模式(简单)-懒加载";
-		rm.ClassMethodName = this.toString() + ".DoBranchesLazyLoad()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "分组列表平铺";
-		rm.ClassMethodName = this.toString() + ".DoGroupList()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "单实体平铺";
-		rm.ClassMethodName = this.toString() + ".DoTableList()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "表格条件查询";
-		rm.ClassMethodName = this.toString() + ".DoTableSearch()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.GroupName = "Pop返回值2018";
-		rm.Title = "自定义URL";
-		rm.ClassMethodName = this.toString() + ".DoSelfUrl()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);*/
-
-		// 设置开窗返回值-正则表达式-文本框自动完成-脚本验证-扩展控件
-
-		/// #endregion
 
 		rm = new RefMethod();
 		rm.Title = "扩展控件";
@@ -390,6 +325,22 @@ public class MapAttrString extends EntityMyPK {
 		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "' AND KeyOfEn='"
 				+ this.getKeyOfEn() + "T'";
 		DBAccess.RunSQL(sql);
+		
+		  //删除相关的图片信息.
+        if (DBAccess.IsExitsTableCol("Sys_FrmImg", "KeyOfEn") == true)
+            sql = "DELETE FROM Sys_FrmImg WHERE FK_MapData='" + this.getFK_MapData() + "' AND KeyOfEn='" + this.getKeyOfEn() + "T'";
+        DBAccess.RunSQL(sql);
+
+        //删除相对应的rpt表中的字段
+        if (this.getFK_MapData().contains("ND") == true)
+        {
+            String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+            sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() + "T' OR KeyOfEn='" + this.getKeyOfEn()+"')";
+            DBAccess.RunSQL(sql);
+        }
+
+        //调用frmEditAction, 完成其他的操作.
+        BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 
 		super.afterDelete();
 	}
@@ -590,7 +541,8 @@ public class MapAttrString extends EntityMyPK {
         mapAttr.setMyPK(this.getMyPK());
         mapAttr.RetrieveFromDBSources();
         mapAttr.Update();
-
+        //调用frmEditAction, 完成其他的操作.
+        BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
         super.afterInsertUpdateAction();
     }
 	

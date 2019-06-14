@@ -1,5 +1,6 @@
 package BP.Sys.FrmUI;
 
+import BP.DA.DBAccess;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -169,6 +170,14 @@ public class MapAttrBoolen extends EntityMyPK
         mapAttr.setMyPK(this.getMyPK());
         mapAttr.RetrieveFromDBSources();
         mapAttr.Update();
+        
+        //删除相对应的rpt表中的字段
+        if (this.getFK_MapData().contains("ND") == true)
+        {
+            String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+            String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND KeyOfEn='" + this.getKeyOfEn() + "'";
+            DBAccess.RunSQL(sql);
+        }
 
         super.afterInsertUpdateAction();
     }

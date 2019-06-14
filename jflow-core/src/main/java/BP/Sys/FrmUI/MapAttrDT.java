@@ -1,5 +1,6 @@
 package BP.Sys.FrmUI;
 
+import BP.DA.DBAccess;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -186,7 +187,6 @@ public class MapAttrDT extends EntityMyPK
 	public final String DoAutoFull()
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn();
-		//return "/WF/Admin/FoolFormDesigner/MapExt/AutoFull.aspx?FK_MapData=" + this.FK_MapData + "&KeyOfEn=" + this.KeyOfEn + "&MyPK=" + this.MyPK;
 	}
 	 /// <summary>
     /// 绑定函数
@@ -210,7 +210,6 @@ public class MapAttrDT extends EntityMyPK
 	public final String DoTBFullCtrl()
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
-		//return "/WF/Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.FK_MapData + "&ExtType=AutoFull&KeyOfEn=" + this.KeyOfEn + "&RefNo=" + this.MyPK;
 	}
 
 	/** 
@@ -239,7 +238,13 @@ public class MapAttrDT extends EntityMyPK
         mapAttr.setMyPK(this.getMyPK());
         mapAttr.RetrieveFromDBSources();
         mapAttr.Update();
-
+        //删除相对应的rpt表中的字段
+        if (this.getFK_MapData().contains("ND") == true)
+        {
+            String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+            String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND KeyOfEn='" + this.getKeyOfEn() + "'";
+            DBAccess.RunSQL(sql);
+        }
         super.afterInsertUpdateAction();
     }
 }

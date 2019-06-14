@@ -1647,7 +1647,18 @@ public class CCFormAPI
 
 		return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(mapAttrs);
 	}
-	
+	/**
+	 * 清缓存
+	 * @param frmID
+	 * @throws Exception 
+	 */
+	 public static void AfterFrmEditAction(String frmID) throws Exception
+     {
+         BP.DA.CashFrmTemplate.Remove(frmID);
+         MapData mapdata = new MapData(frmID);
+         mapdata.CleanObject();
+         return ;
+     }
 	  /// <summary>
     /// 获得表单模版dataSet格式.
     /// </summary>

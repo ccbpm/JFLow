@@ -66,7 +66,6 @@ public class MapData extends EntityNoName
         
     }
 	
-    //region entity 相关属性(参数属性)
     /**
      * 属性ens
      * @return
@@ -80,7 +79,6 @@ public class MapData extends EntityNoName
     {
     	this.SetPara(MapDataAttr.EnsName, value);
     }
-    //endregion entity 相关操作.
     
 	 /// <summary>
    /// 执行事件.
@@ -129,8 +127,7 @@ public class MapData extends EntityNoName
 				BP.Sys.FrmEle ele = new FrmEle();
 				ele.Copy(dr);
 				ele.setEleType(BP.Sys.FrmEle.Line);
-				//ele.BorderColor = dr["BorderColor"].ToString();
-				//ele.BorderWidth = int.Parse(dr["BorderWidth"].ToString());
+
 				if (ele.getIsExits() == true)
 				{
 					ele.setMyPK(BP.DA.DBAccess.GenerGUID());
@@ -155,10 +152,6 @@ public class MapData extends EntityNoName
 
 				ele.setEleName(dr.get(FrmLabAttr.Text).toString());
 
-				//ele.FontColor = dr[FrmLabAttr.FontColor].ToString();
-				//ele.FontName = dr[FrmLabAttr.FontName].ToString();
-				//ele.FontSize = int.Parse(dr[FrmLabAttr.FontSize].ToString());
-				//ele.BorderWidth = int.Parse(dr["BorderWidth"].ToString());
 
 				if (ele.getIsExits() == true)
 				{
@@ -181,8 +174,7 @@ public class MapData extends EntityNoName
 				BP.Sys.FrmEle ele = new FrmEle();
 				ele.Copy(dr);
 				ele.setEleType(BP.Sys.FrmEle.Line);
-				//ele.BorderColor = dr["BorderColor"].ToString();
-				//ele.BorderWidth = int.Parse(dr["BorderWidth"].ToString());
+
 				if (ele.getIsExits() == true)
 				{
 					ele.setMyPK(BP.DA.DBAccess.GenerGUID());
@@ -191,7 +183,6 @@ public class MapData extends EntityNoName
 			}
 		}
 
-			///#endregion 升级ccform控件.
 	}
 
 	/** 
@@ -208,7 +199,6 @@ public class MapData extends EntityNoName
 	}
 
 
-		///#region weboffice文档属性(参数属性)
 	/** 
 	 是否启用锁定行
 	 
@@ -807,9 +797,43 @@ public class MapData extends EntityNoName
 		}
 		return obj;
 	}
+	
+	/**
+	 * 清楚mapData中的缓存
+	 */
+	public void CleanObject()
+    {
+        this.getRow().SetValByKey("FrmEles", null);
+        this.getRow().SetValByKey("MapFrames", null);
+        this.getRow().SetValByKey("GroupFields", null);
+        this.getRow().SetValByKey("MapExts", null);
+        this.getRow().SetValByKey("FrmEvents", null);
+        this.getRow().SetValByKey("MapDtls", null);
+        this.getRow().SetValByKey("SysEnums", null);
+        this.getRow().SetValByKey("FrmRpts", null);
+        this.getRow().SetValByKey("FrmLinks", null);
+        this.getRow().SetValByKey("FrmBtns", null);
+        this.getRow().SetValByKey("FrmEles", null);
+        this.getRow().SetValByKey("FrmLines", null);
+        this.getRow().SetValByKey("FrmLabs", null);
+        this.getRow().SetValByKey("FrmAttachments", null);
+        this.getRow().SetValByKey("FrmImgAthDBs", null);
+        this.getRow().SetValByKey("FrmRBs", null);
+        this.getRow().SetValByKey("MapAttrs", null);
+        return;
+        
 
-		///#endregion
+    }
+	
 
+    /// <summary>
+    /// 清空缓存
+    /// </summary>
+    public void ClearCash()
+    {
+        BP.DA.CashFrmTemplate.Remove(this.getNo());
+        CleanObject();
+    }
 	public static boolean getIsEditDtlModel()
 	{
 		String s = BP.Web.WebUser.GetSessionByKey("IsEditDtlModel", "0");

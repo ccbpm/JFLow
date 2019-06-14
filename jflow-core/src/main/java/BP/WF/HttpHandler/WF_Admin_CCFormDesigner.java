@@ -468,6 +468,10 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 	 * @throws Exception 
 	 */
 	public final String SaveForm() throws Exception {
+		
+		  //清缓存
+        BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+        
 		BP.Sys.CCFormAPI.SaveFrm(this.getFK_MapData(), this.GetRequestVal("diagram"));
 
 		// 一直没有找到设置3列，自动回到四列的情况.

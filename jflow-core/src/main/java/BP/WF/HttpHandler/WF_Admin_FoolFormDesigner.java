@@ -422,6 +422,12 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			return "url@Designer.htm?FK_MapData=" + this.getFK_MapData() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 		}
 
+		 //把表单属性放入里面去.
+        MapData md = new MapData(this.getFK_MapData());
+        //清缓存
+        md.ClearCash();
+        ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+        
 		// 字段属性.
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
 		for (MapAttr item : attrs.ToJavaList())
@@ -439,11 +445,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		MapFrames frms = new MapFrames(this.getFK_MapData());
 		ds.Tables.add(frms.ToDataTableField("Sys_MapFrame"));
-
-		//把表单属性放入里面去.
-		MapData md = new MapData(this.getFK_MapData());
-		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
-
 
 		//附件表.
 		FrmAttachments aths = new FrmAttachments(this.getFK_MapData());

@@ -3669,8 +3669,7 @@ public abstract class Entity implements Serializable {
 	public final Row getRow() {
 		if (this._row == null) {
 
-			// this._row.LoadAttrs(this.getEnMap().getAttrs());
-
+		
 			try {
 				this._row = this.getSQLCash().getRow();
 			} catch (Exception e) {

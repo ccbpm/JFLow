@@ -1010,8 +1010,18 @@ public class MakeForm2Html
                     colSpan = attr.getColSpan();
                     textColSpan = attr.getTextColSpan();
                     if (tableCol == 4) {
-                        colWidth = 35 *colSpan + "%";
-                        textWidth = 15 * textColSpan + "%";
+                    	if(colSpan ==1)
+                    		colWidth = 35 +"%";
+                    	if(colSpan ==2)
+                    		colWidth = 50 + "%";
+                    	if(colSpan ==3)
+                    		colWidth =85 + "%";
+                    	if(textColSpan == 1)
+                    		textWidth = 15 + "%";
+                    	if(textColSpan == 2)
+                    		textWidth = 50 + "%";
+                    	if(textColSpan == 3)
+                    		textWidth = 65 + "%";
                     } else {
                         colWidth = 23 * colSpan + "%";
                         textWidth = 10 * textColSpan + "%";
@@ -1033,6 +1043,7 @@ public class MakeForm2Html
                         if (isDropTR == true) {
                             html += "<tr >";
                             UseColSpan = 0;
+                            luColSpan = 0;
                             if (IsShowLeft == true) {
                             	UseColSpan += colSpan + textColSpan+ruColSpan;
                                 lRowSpan = rowSpan;
@@ -1055,6 +1066,7 @@ public class MakeForm2Html
                                 ruRowSpan = 0;
                                 rRowSpan = 0;
                                 IsShowRight = true;
+                                luColSpan = 0;
                             }
 
 
@@ -1069,6 +1081,7 @@ public class MakeForm2Html
                         }
 
                         if (isDropTR == false) {
+                        	ruColSpan = 0;
                             if (IsShowRight == true) {
                                 UseColSpan += colSpan + textColSpan;
                                 rRowSpan = rowSpan;
@@ -1091,6 +1104,7 @@ public class MakeForm2Html
                                 luRowSpan = 0;
                                 lRowSpan = 0;
                                 IsShowLeft = true;
+                                ruColSpan =0;
 
                             }
 
@@ -1120,8 +1134,8 @@ public class MakeForm2Html
 
                         isDropTR = true;
                         html += "<tr >";
-                        html += " <td  class='FDesc' ColSpan="+textColSpan+" style='width:" + textWidth + ";' >" + lab + "</td>";
-                        html += " <td ColSpan="+colSpan+">";
+                        html += " <td  class='LabelFDesc' ColSpan="+textColSpan+" style='width:" + textWidth + ";' >" + lab + "</td>";
+                        html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' >";
                         html += text;
                         html += " </td>";
                         html += "</tr>";
@@ -1133,6 +1147,7 @@ public class MakeForm2Html
                     if (isDropTR == true) {
                         html += "<tr >";
                         UseColSpan = 0;
+                        luColSpan = 0;
                         if (IsShowLeft == true) {
                         	UseColSpan += colSpan + textColSpan+ruColSpan;
                             lRowSpan = rowSpan;
@@ -1163,6 +1178,7 @@ public class MakeForm2Html
                             ruRowSpan = 0;
                             rRowSpan = 0;
                             IsShowRight = true;
+                            luColSpan =0;
                         }
 
 
@@ -1177,6 +1193,7 @@ public class MakeForm2Html
                     }
 
                     if (isDropTR == false) {
+                    	ruColSpan = 0;
                         if (IsShowRight == true) {
                             UseColSpan += colSpan + textColSpan;
                             rRowSpan = rowSpan;
@@ -1207,6 +1224,7 @@ public class MakeForm2Html
                             luRowSpan = 0;
                             lRowSpan = 0;
                             IsShowLeft = true;
+                            ruColSpan = 0;
 
                         }
 
@@ -1219,6 +1237,11 @@ public class MakeForm2Html
                         continue;
                     }
 
+                }
+                if(isDropTR = false){
+                	int unUseColSpan = tableCol-UseColSpan;
+                	html +="<td colspan="+unUseColSpan+"></td>";
+                	html +="</tr>";
                 }
                 sb.append(html); //增加到里面.
                 continue;
@@ -1650,6 +1673,13 @@ public class MakeForm2Html
             //把所有的文件做成一个zip文件.
             
             return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
+    	}
+    	
+    	//绑定表单库中的表单
+    	if(node.getHisFormType().getValue() == NodeFormType.RefOneFrmTree.getValue()){
+    		//获取绑定的表单
+    		MapData mapData = new MapData(node.getNodeFrmID());
+    		return MakeFormToPDF(node.getNodeFrmID(),mapData.getName(),node, workid,flowNo,fileNameFormat,urlIsHostUrl,basePath);
     	}
     	
     	if(node.getHisFormType().getValue() == NodeFormType.SheetTree.getValue()){

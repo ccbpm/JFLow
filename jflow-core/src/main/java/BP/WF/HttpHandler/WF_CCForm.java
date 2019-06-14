@@ -1244,7 +1244,7 @@ public class WF_CCForm extends WebContralBase {
 		en.Insert();
 
 		return "url@DtlFrm.htm?EnsName=" + this.getEnsName() + "&RefPKVal=" + this.getRefPKVal() + "&OID="
-				+ en.getOID();
+				+ en.getOID() +"&FrmType=" +dtl.getHisEditModel().getValue();
 	}
 
 	public final String DtlFrm_Delete() throws Exception {

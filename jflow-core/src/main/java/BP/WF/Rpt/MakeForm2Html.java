@@ -795,14 +795,14 @@ public class MakeForm2Html
         	tableCol = 3;
         else
         	tableCol = 4;
-        sb.append(" <table style='width:950px;height:auto;' >");
+        sb.append(" <table style='width:1200px;height:auto;' >");
 
         //#region 生成头部信息.
         sb.append("<tr>");
 
         sb.append("<td colspan="+tableCol+" >");
 
-        sb.append("<table border=0 style='width:950px;'>");
+        sb.append("<table border=0 style='width:1200px;'>");
 
         sb.append("<tr  style='border:0px;' >");
         
@@ -1013,13 +1013,13 @@ public class MakeForm2Html
                     textColSpan = attr.getTextColSpan();
                     if (tableCol == 4) {
                     	if(colSpan ==1)
-                    		colWidth = 35 +"%";
+                    		colWidth = 40 +"%";
                     	if(colSpan ==2)
                     		colWidth = 50 + "%";
                     	if(colSpan ==3)
-                    		colWidth =85 + "%";
+                    		colWidth =90 + "%";
                     	if(textColSpan == 1)
-                    		textWidth = 15 + "%";
+                    		textWidth = 10 + "%";
                     	if(textColSpan == 2)
                     		textWidth = 50 + "%";
                     	if(textColSpan == 3)
@@ -1031,12 +1031,13 @@ public class MakeForm2Html
                     
                     
                     if (colSpan == 0) {
+                    	
                         //占一行
                         if (textColSpan == tableCol) {
                             isDropTR = true;
 
                             html += "<tr>";
-                            html += "<td  colSpan=" + textColSpan + " rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + lab + "</br>";
+                            html += "<td  colSpan=" + textColSpan + " rowSpan=" + rowSpan + " class='FDesc' style='text-align:left'>" + lab + "</br>";
                             html += "</tr>";
                             continue;
 
@@ -1050,7 +1051,7 @@ public class MakeForm2Html
                             	UseColSpan += colSpan + textColSpan+ruColSpan;
                                 lRowSpan = rowSpan;
                                 luColSpan += colSpan + textColSpan;
-                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                                html += "<td class='FDesc'  rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                                 if (rowSpan != 1) {
                                     IsShowLeft = false;
                                 }
@@ -1066,6 +1067,7 @@ public class MakeForm2Html
                             //复位右侧信息
                             if (ruRowSpan == rRowSpan) {
                                 ruRowSpan = 0;
+                                luRowSpan = 0;
                                 rRowSpan = 0;
                                 IsShowRight = true;
                                 if (rowSpan == 1)
@@ -1090,7 +1092,7 @@ public class MakeForm2Html
                                 UseColSpan += colSpan + textColSpan;
                                 rRowSpan = rowSpan;
                                 ruColSpan += colSpan + textColSpan;
-                                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                                html += "<td class='FDesc'  rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                                 if (UseColSpan == tableCol) {
                                     isDropTR = true;
                                     if (rowSpan != 1) {
@@ -1111,6 +1113,7 @@ public class MakeForm2Html
                             //复位左侧信息
                             if (luRowSpan == lRowSpan) {
                                 luRowSpan = 0;
+                                ruRowSpan = 0;
                                 lRowSpan = 0;
                                 IsShowLeft = true;
                                 ruColSpan =0;
@@ -1143,8 +1146,8 @@ public class MakeForm2Html
 
                         isDropTR = true;
                         html += "<tr >";
-                        html += " <td  class='LabelFDesc' ColSpan="+textColSpan+" style='width:" + textWidth + ";' >" + lab + "</td>";
-                        html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' >";
+                        html += " <td  class='FDesc' ColSpan="+textColSpan+" >" + lab + "</td>";
+                        html += " <td class='FContext' ColSpan="+colSpan+"  >";
                         html += text;
                         html += " </td>";
                         html += "</tr>";
@@ -1165,9 +1168,9 @@ public class MakeForm2Html
                                 colSpan = colSpan + textColSpan;
                                 colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
                             } else {
-                            	 html += " <td  class='LabelFDesc' style='width:" + textWidth + ";'  rowSpan=" + rowSpan + " >" + lab + "</td>";
+                            	 html += " <td  class='FDesc' colSpan="+colSpan+"   rowSpan=" + rowSpan + " >" + lab + "</td>";
                             }
-                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' rowSpan=" + rowSpan + " >";
+                            html += " <td class='FContext' colSpan="+colSpan+"  rowSpan=" + rowSpan + " >";
                             html += text;
                             html += " </td>";
                             if (rowSpan != 1) {
@@ -1185,6 +1188,7 @@ public class MakeForm2Html
                         //复位右侧信息
                         if (ruRowSpan == rRowSpan) {
                             ruRowSpan = 0;
+                            luRowSpan = 0;
                             rRowSpan = 0;
                             IsShowRight = true;
                             if (rowSpan == 1)
@@ -1213,9 +1217,9 @@ public class MakeForm2Html
                                 colSpan = colSpan + textColSpan;
                                 colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
                             } else {
-                            	 html += " <td  class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " >" + lab + "</td>";
+                            	 html += " <td  class='FDesc' colSpan="+colSpan+"  rowSpan=" + rowSpan + " >" + lab + "</td>";
                             }
-                            html += " <td ColSpan="+colSpan+" style='width:" + colWidth + ";' rowSpan=" + rowSpan + " >";
+                            html += " <td class='FContext' ColSpan="+colSpan+"  rowSpan=" + rowSpan + " >";
                             html += text;
                             html += " </td>";
                             if (UseColSpan == tableCol) {
@@ -1238,6 +1242,7 @@ public class MakeForm2Html
                         //复位左侧信息
                         if (luRowSpan == lRowSpan) {
                             luRowSpan = 0;
+                            ruRowSpan = 0;
                             lRowSpan = 0;
                             IsShowLeft = true;
                             ruColSpan = 0;
@@ -1254,7 +1259,7 @@ public class MakeForm2Html
                     }
 
                 }
-                if(isDropTR = false){
+                if(isDropTR == false){
                 	int unUseColSpan = tableCol-UseColSpan;
                 	html +="<td colspan="+unUseColSpan+"></td>";
                 	html +="</tr>";

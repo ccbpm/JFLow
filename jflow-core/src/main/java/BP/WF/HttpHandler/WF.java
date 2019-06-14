@@ -1064,8 +1064,7 @@ public class WF extends WebContralBase {
 		// 获得表单模版.
 		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), null);
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 把主从表数据放入里面.
+		///把主从表数据放入里面.
 		// .工作数据放里面去, 放进去前执行一次装载前填充事件.
 		BP.WF.Work wk = nd.getHisWork();
 		wk.setOID(this.getWorkID());
@@ -1077,15 +1076,12 @@ public class WF extends WebContralBase {
 		DataTable mainTable = wk.ToDataTableField("MainTable");
 		mainTable.TableName = "MainTable";
 		myds.Tables.add(mainTable);
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion
 
 		// 加入WF_Node.
 		DataTable WF_Node = nd.ToDataTableField("WF_Node");
 		myds.Tables.add(WF_Node);
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 加入组件的状态信息, 在解析表单的时候使用.
+		//加入组件的状态信息, 在解析表单的时候使用.
 		BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 		if (!nd.getNodeFrmID().equals("ND" + nd.getNodeID())) {
 			// 说明这是引用到了其他节点的表单，就需要把一些位置元素修改掉.
@@ -1120,11 +1116,9 @@ public class WF extends WebContralBase {
 		}
 
 		myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 加入组件的状态信息, 在解析表单的时候使用.
+		//加入组件的状态信息, 在解析表单的时候使用.
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 增加附件信息.
+		//增加附件信息.
 		BP.Sys.FrmAttachments athDescs = new FrmAttachments();
 		athDescs.Retrieve(FrmAttachmentAttr.FK_MapData, nd.getNodeFrmID());
 		if (athDescs.size() != 0) {
@@ -1166,12 +1160,9 @@ public class WF extends WebContralBase {
 
 			// 增加一个数据源.
 			myds.Tables.add(dbs.ToDataTableField("Sys_FrmAttachmentDB"));
-		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion
+		}	
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 把外键表加入DataSet
+		//把外键表加入DataSet
 		List<DataTable> dtMapAttrList = myds.getTables();
 		DataTable dtMapAttr = null;
 		for (DataTable dt : dtMapAttrList) {
@@ -1180,33 +1171,31 @@ public class WF extends WebContralBase {
 		}
 		MapExts mes = md.getMapExts();
 		MapExt me = new MapExt();
-		DataTable dt = new DataTable();
+		
+		DataTable ddlTable = new DataTable();
+        ddlTable.Columns.Add("No");
+        
 		for (DataRow dr : dtMapAttr.Rows) {
 			String lgType = dr.getValue("LGType").toString();
-			if (!lgType.equals("2")) {
-				continue;
-			}
-
-			String UIIsEnable = dr.getValue("UIVisible").toString();
-			if (UIIsEnable.equals("0")) {
-				continue;
-			}
-
 			String uiBindKey = dr.getValue("UIBindKey").toString();
-			if (DotNetToJavaStringHelper.isNullOrEmpty(uiBindKey) == true) {
-				String myPK = dr.getValue("MyPK").toString();
-				// 如果是空的
-				// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
-				// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey
-				// IsNull ");
-			}
+			if (DataType.IsNullOrEmpty(uiBindKey) == true)
+				continue; // 为空就continue.
 
+			if (lgType.equals("1") == true)
+				continue; // 枚举值就continue;
+
+			String uiIsEnable = dr.getValue("UIIsEnable").toString();
+			if (uiIsEnable.equals("0") == true && lgType.equals("1") == true)
+				continue; // 如果是外键，并且是不可以编辑的状态.
+
+			if (uiIsEnable.equals("0") == true && lgType.equals("0") == true)
+				continue; // 如果是外部数据源，并且是不可以编辑的状态.
+
+			
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.getValue("KeyOfEn").toString();
-			String fk_mapData = dr.getValue("FK_MapData").toString();
 
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			/// #region 处理下拉框数据范围. for 小杨.
+			//处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
 					keyOfEn);
 			me = (MapExt) ((tempVar instanceof MapExt) ? tempVar : null);
@@ -1215,7 +1204,7 @@ public class WF extends WebContralBase {
 				String fullSQL = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
 				fullSQL = fullSQL.replace("~", ",");
 				fullSQL = BP.WF.Glo.DealExp(fullSQL, wk, null);
-				dt = DBAccess.RunSQLReturnTable(fullSQL);
+				DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
 				// 重构新表
 				DataTable dt_FK_Dll = new DataTable();
 				dt_FK_Dll.TableName = keyOfEn; // 可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
@@ -1230,29 +1219,36 @@ public class WF extends WebContralBase {
 				myds.Tables.add(dt_FK_Dll);
 				continue;
 			}
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			/// #endregion 处理下拉框数据范围.
+			//处理下拉框数据范围.
 
 			// 判断是否存在.
 			if (myds.Tables.contains(uiBindKey) == true) {
 				continue;
 			}
+			
+			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+			
+			if(mydt!=null)
+				myds.Tables.add(mydt);
+			else{
+				 DataRow ddldr = ddlTable.NewRow();
+                 ddldr.setValue("No",uiBindKey);
+                 ddlTable.Rows.add(ddldr);
+			}
 
-			myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+			
 		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion End把外键表加入DataSet
+		 ddlTable.TableName = "UIBindKey";
+         myds.Tables.add(ddlTable);
+		//把外键表加入DataSet
 
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 图片附件
+		// 图片附件
 		nd.WorkID = this.getWorkID(); // 为求当前表单ID获得参数，而赋值.
 		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), this.getWorkID() + "");
 		if (imgAthDBs != null && imgAthDBs.size() > 0) {
 			DataTable dt_ImgAth = imgAthDBs.ToDataTableField("Sys_FrmImgAthDB");
 			myds.Tables.add(dt_ImgAth);
 		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion
 
 		return BP.Tools.Json.ToJson(myds);
 	}

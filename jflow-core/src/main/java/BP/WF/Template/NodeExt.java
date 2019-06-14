@@ -446,11 +446,12 @@ public class NodeExt extends Entity
 
         map.AddTBString(BtnAttr.WorkCheckLab, "审核", "审核按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.WorkCheckEnable, false, "是否启用", true, true);
-
-        map.AddTBString(BtnAttr.AskforLab, "加签", "加签按钮标签", true, false, 0, 50, 10);
+        
+        //取消加签和会签功能重复
+       /* map.AddTBString(BtnAttr.AskforLab, "加签", "加签按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.AskforEnable, false, "是否启用", true, true);
         map.SetHelperUrl(BtnAttr.AskforLab, "http://ccbpm.mydoc.io/?v=5404&t=16258");
-
+        */
 
         map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);
         map.AddDDLSysEnum(BtnAttr.HuiQianRole, 0, "会签模式", true, true, BtnAttr.HuiQianRole, "@0=不启用@1=协作(同事)模式@4=组长(领导)模式");

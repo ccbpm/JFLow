@@ -18,6 +18,7 @@ import BP.En.UAC;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
+import BP.ZTZB.Service_ZTZB;
 
 /** 
  消息
@@ -478,29 +479,34 @@ public class SMS extends EntityMyPK
 					case ToSMSTable: //写入消息表。
 						break;
 					case ToWebservices: // 写入webservices.
-						xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-						+"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.jflow.cn/\">"
-					    +"   <soapenv:Header/>"
-						+"   <soapenv:Body>"
-						+"      <ws:SendToWebServices>"
-						+"         <!--Optional:-->"
-						+"         <arg0>"+this.getMyPK()+"</arg0>"
-						+"         <!--Optional:-->"
-						+"         <arg1>"+WebUser.getNo()+"</arg1>"
-						+"         <!--Optional:-->"
-						+"         <arg2>"+this.getSendToEmpNo()+"</arg2>"
-						+"         <!--Optional:-->"
-						+"         <arg3>"+this.getMobile()+"</arg3>"
-						+"         <!--Optional:-->"
-						+"         <arg4>"+this.getMobileInfo()+"</arg4>"
-						+"         <!--Optional:-->"
-						+"         <arg5>"+tag+"</arg5>"
-						+"      </ws:SendToWebServices>"
-						+"   </soapenv:Body>"
-						+"</soapenv:Envelope>";
-						BP.WF.Glo.GetPortalInterfaceSoapClient("SendToWebServices",xmlStr);
-						//soap.SendToWebServices(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(),tag);
+						//获取消息类型
+						 Service_ZTZB message = new Service_ZTZB();
+						String result = message.Message_Send(this.getSender(),this.getSendToEmpNo(),this.getTitle(),this.getMobileInfo(),this.getMsgType())  ;
 						break;
+
+					/*	xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"*/
+					/*	+"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.jflow.cn/\">"*/
+					   /* +"   <soapenv:Header/>"*/
+					/*	+"   <soapenv:Body>"*/
+					/*	+"      <ws:SendToWebServices>"*/
+					/*	+"         <!--Optional:-->"*/
+					/*	+"         <arg0>"+this.getMyPK()+"</arg0>"*/
+					/*	+"         <!--Optional:-->"*/
+					/*	+"         <arg1>"+WebUser.getNo()+"</arg1>"*/
+					/*	+"         <!--Optional:-->"*/
+					/*	+"         <arg2>"+this.getSendToEmpNo()+"</arg2>"*/
+					/*	+"         <!--Optional:-->"*/
+					/*	+"         <arg3>"+this.getMobile()+"</arg3>"*/
+					/*	+"         <!--Optional:-->"*/
+					/*	+"         <arg4>"+this.getMobileInfo()+"</arg4>"*/
+					/*	+"         <!--Optional:-->"*/
+					/*	+"         <arg5>"+tag+"</arg5>"*/
+					/*	+"      </ws:SendToWebServices>"*/
+					/*	+"   </soapenv:Body>"*/
+					/*	+"</soapenv:Envelope>";*/
+					/*	BP.WF.Glo.GetPortalInterfaceSoapClient("SendToWebServices",xmlStr);
+						//soap.SendToWebServices(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(),tag);
+						break; */
 					case ToDingDing: // 写入dingding.
 						xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 						+"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.jflow.cn/\">"

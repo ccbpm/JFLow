@@ -11,22 +11,23 @@ public enum ShortMessageWriteTo
 	 
 	*/
 	ToSMSTable(0),
-	/** 
-	 写入WebServices.
-	 WS地址: \DataUser\PortalInterface.asmx 的 WriteShortMessage
-	 
-	*/
-	ToWebservices(1),
+
 	/** 
 	 写入丁丁
 	 
 	*/
-	ToDingDing(2),
+	ToDingDing(1),
 	/** 
 	 写入微信.
 	 
 	*/
-	ToWeiXin(3),
+	ToWeiXin(2),
+	/**
+	 写入WebServices.
+	 WS地址: \DataUser\PortalInterface.asmx 的 WriteShortMessage
+
+	 */
+	ToWebservices(3),
 	/** 
 	 写入CCIM
 	 

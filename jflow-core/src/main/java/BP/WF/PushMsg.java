@@ -618,7 +618,7 @@ public class PushMsg extends EntityMyPK
 
 		//生成URL.
 		String hostUrl = BP.WF.Glo.getHostURL();
-		String sid = "{EmpStr}_" + workid + "_" + currNode.getNodeID() + "_" + DataType.getCurrentDataTime();
+		String sid = "{EmpStr}_" + workid + "_" + currNode.getNodeID() + "_" + DataType.getCurrentDate();
 		String openWorkURl = hostUrl + "WF/Do.htm?DoType=OF&SID=" + sid;
 		openWorkURl = openWorkURl.replace("//", "/");
 		openWorkURl = openWorkURl.replace("//", "/");

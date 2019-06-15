@@ -134,14 +134,20 @@ public class DBAccess {
 	 *            主键值
 	 * @param saveFileField
 	 *            保存到字段
+	 * @throws Exception
 	 */
 	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
-			String saveToFileField) {
+			String saveToFileField) throws Exception {
+
 		try {
+
 			SaveFileToDB(docs, tableName, tablePK, pkVal, saveToFileField);
+
 		} catch (Exception e) {
-			Log.DebugWriteError("DBAccess SaveBigTextDB " + e.getMessage());
+			Log.DebugWriteError(
+					"DBAccess SaveBigTextDB tableName；" + tableName + ", tablePK:" + tablePK + "" + e.getMessage());
 		}
+
 	}
 
 	/**
@@ -1257,7 +1263,7 @@ public class DBAccess {
 		} catch (RuntimeException ex) {
 			throw ex;
 		}
-		
+
 	}
 
 	public static DataTable RunSQLReturnTable(String sql, Paras paras) {
@@ -1385,7 +1391,7 @@ public class DBAccess {
 			}
 		}
 	}
-	
+
 	public static int RunSQLReturnResultSet_201809_SQL(String sql, Paras paras, Entity en, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1450,7 +1456,7 @@ public class DBAccess {
 			}
 		}
 	}
-	
+
 	private static int RunSQLReturnResultSet_201809_SQL(String sql, Paras paras, Entities ens, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1523,7 +1529,7 @@ public class DBAccess {
 			}
 		}
 	}
-	
+
 	private static DataTable RunSQLReturnTable_200705_Ora(String sql, Paras paras) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1615,7 +1621,7 @@ public class DBAccess {
 			}
 		}
 	}
-	
+
 	private static int RunSQLReturnResultSet_201809_Ora(String sql, Paras paras, Entity en, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1679,7 +1685,7 @@ public class DBAccess {
 			}
 		}
 	}
-	
+
 	private static int RunSQLReturnResultSet_201809_Ora(String sql, Paras paras, Entities ens, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1751,6 +1757,7 @@ public class DBAccess {
 			}
 		}
 	}
+
 	/**
 	 * RunSQLReturnTable_200705_MySQL
 	 * 
@@ -2358,7 +2365,7 @@ public class DBAccess {
 		}
 		if (dt.Rows.size() == 0)
 			return null;
-		
+
 		return dt.Rows.get(0).getValue(0);
 	}
 

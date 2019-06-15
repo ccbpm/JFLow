@@ -56,21 +56,21 @@ public class Dev2Interface {
 	 */
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender,
 			String msgPK, String sendEmpNo) throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, sendEmpNo, null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, sendEmpNo, null,null);
 	}
 
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender,
 			String msgPK) throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, null, null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, null, null,null);
 	}
 
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender)
 			throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, null, null, null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, null, null, null,null);
 	}
 
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag) throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, null, null, null, null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, null, null, null, null,null);
 	}
 
 	public static boolean WriteToSMS(String sendToUserNo, String sendDT, String title, String doc, String msgFlag)
@@ -3815,7 +3815,7 @@ public class Dev2Interface {
 	 * @throws Exception
 	 */
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender,
-			String msgPK, String sendToEmpNo, String atParas) throws Exception {
+			String msgPK, String sendToEmpNo, String atParas,String openUrl) throws Exception {
 		// if (string.IsNullOrEmpty(tel))
 		// return;
 
@@ -3852,6 +3852,7 @@ public class Dev2Interface {
 		sms.setMsgFlag(msgGroupFlag); // 消息分组标志,用于批量删除.
 
 		sms.setAtPara(atParas);
+		sms.SetPara("OpenUrl", openUrl);
 
 		// 先保留本机一份.
 		sms.Insert();

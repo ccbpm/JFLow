@@ -1009,7 +1009,7 @@ public class PushMsg extends EntityMyPK
 					String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node();
 
 					//发送邮件.
-					BP.WF.Dev2Interface.Port_SendSMS(tel, mailDocReal, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), null, empNo, paras);
+					BP.WF.Dev2Interface.Port_SendSMS(tel, mailDocReal, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), null, empNo, paras,openWorkURl);
 
 					//处理短消息.
 					toEmpIDs += empName + ",";
@@ -1062,7 +1062,7 @@ public class PushMsg extends EntityMyPK
 						String paras = "@FK_Flow=" + currNode.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + currNode.getNodeID();
 
 						//发送短信.
-						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null);
+						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, emp, null,openWorkURl);
 					}
 					//return "@已向:{" + toEmpIDs + "}发送提醒手机短信，由 " + this.FK_Event + " 发出.";
 					return "@已向:{" + toEmpIDs + "}发送提醒消息.";
@@ -1112,7 +1112,7 @@ public class PushMsg extends EntityMyPK
 						String paras = "@FK_Flow=" + currNode.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + currNode.getNodeID();
 
 						//发送短信.
-						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, this.getFK_Event(), "WKAlt" + objs.getVarToNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, empID, paras);
+						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, this.getFK_Event(), "WKAlt" + objs.getVarToNodeID() + "_" + workid, BP.Web.WebUser.getNo(), null, empID, paras,openWorkURl);
 					}
 					return "@已向:{" + toEmpIDs + "}发送提醒消息.";
 				}
@@ -1167,7 +1167,7 @@ public class PushMsg extends EntityMyPK
 						String paras = "@FK_Flow=" + currNode.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + currNode.getNodeID();
 
 						//发送短信.
-						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, this.getFK_Event(), "FlowOver" + workid, BP.Web.WebUser.getNo(), null, empID, paras);
+						Dev2Interface.Port_SendSMS(empEn.getTel(), smsDocTmpReal, this.getFK_Event(), "FlowOver" + workid, BP.Web.WebUser.getNo(), null, empID, paras,openWorkURl);
 					}
 					return "@已向:{" + toEmpIDs + "}发送提醒消息.";
 				}
@@ -1181,7 +1181,7 @@ public class PushMsg extends EntityMyPK
 				{
 					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + currNode.getNodeID();
 					//发送短信.
-					BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.getFK_Event(), "FlowOver" + workid, BP.Web.WebUser.getNo(), null, paras, title);
+					BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.getFK_Event(), "FlowOver" + workid, BP.Web.WebUser.getNo(), null, paras, title,openWorkURl);
 					return "@已向:{" + tel + "}发送提醒消息.";
 				}
 			}
@@ -1192,7 +1192,7 @@ public class PushMsg extends EntityMyPK
 					BP.GPM.Emp enEmp = new BP.GPM.Emp(gwf.getStarter());
 					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + currNode.getNodeID();
 					//发送短信.
-					BP.WF.Dev2Interface.Port_SendSMS(enEmp.getTel(), smsDocTmp, this.getFK_Event(), "FlowOver" + workid, BP.Web.WebUser.getNo(),null, enEmp.getNo(), paras);
+					BP.WF.Dev2Interface.Port_SendSMS(enEmp.getTel(), smsDocTmp, this.getFK_Event(), "FlowOver" + workid, BP.Web.WebUser.getNo(),null, enEmp.getNo(), paras,openWorkURl);
 					return "@已向:{" + enEmp.getTel() + "}发送提醒消息.";
 				}
 			}

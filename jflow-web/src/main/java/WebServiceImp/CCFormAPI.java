@@ -46,7 +46,7 @@ public class CCFormAPI implements CCFormAPII{
 		BP.WF.GenerWorkFlow gwf = new BP.WF.GenerWorkFlow(workID);
 
 		//是否可以查看该工作.
-		boolean b = BP.WF.Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(), gwf.getFID());
+		boolean b = BP.WF.Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(), userNo);
 		if (b == false)
 		{
 			throw new RuntimeException("err@无权查看该流程.");
@@ -120,7 +120,7 @@ public class CCFormAPI implements CCFormAPII{
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		BP.WF.GenerWorkFlow gwf = new BP.WF.GenerWorkFlow(workID);
 
-		boolean b = BP.WF.Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(), gwf.getFID());
+		boolean b = BP.WF.Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(),userNo);
 		if (b == false)
 		{
 			throw new RuntimeException("err@无权查看该流程.");

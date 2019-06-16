@@ -496,5 +496,29 @@ public class LocalWS implements LocalWSI{
         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlOfSelect);
         return BP.Tools.Json.ToJson(dt);
     }
-	
+    
+    /** 
+  	 查询数据	 
+  	 @param sqlOfSelect 要查询的sql
+  	 @param password 用户密码
+  	 @return 返回查询数据
+     * @throws Exception 
+  	*/
+    public Boolean Flow_IsCanView(String flowNo, long workid, String userNo) throws Exception
+    {
+        return BP.WF.Dev2Interface.Flow_IsCanViewTruck(flowNo, workid,userNo);
+    }
+    
+    /** 
+  	 查询数据	 
+  	 @param sqlOfSelect 要查询的sql
+  	 @param password 用户密码
+  	 @return 返回查询数据
+     * @throws Exception 
+  	*/
+    public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception
+    {
+        return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workid, userNo);
+    }
+    
 }

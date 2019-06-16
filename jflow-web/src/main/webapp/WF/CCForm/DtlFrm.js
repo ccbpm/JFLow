@@ -135,8 +135,8 @@ function GenerFrm() {
         console.log(data);
         return;
     }
-    
-  //获取没有解析的外部数据源
+
+    //获取没有解析的外部数据源
     var uiBindKeys = frmData["UIBindKey"];
     if (uiBindKeys.length != 0) {
         //获取外部数据源 handler/JavaScript
@@ -148,10 +148,10 @@ function GenerFrm() {
                 //Handler 获取外部数据源
                 if (srcType == 5) {
                     var selectStatement = sfTable.SelectStatement;
-                    if(plant=="CCFlow")
-                    	selectStatement = basePath + "/DataUser/SFTableHandler.ashx" + selectStatement;
+                    if (plant == "CCFlow")
+                        selectStatement = basePath + "/DataUser/SFTableHandler.ashx" + selectStatement;
                     else
-                    	selectStatement = basePath + "/DataUser/SFTableHandler" + selectStatement;
+                        selectStatement = basePath + "/DataUser/SFTableHandler" + selectStatement;
                     operdata = DBAccess.RunDBSrc(selectStatement, 1);
                 }
                 //JavaScript获取外部数据源
@@ -163,7 +163,7 @@ function GenerFrm() {
         }
 
     }
-    
+
 
     //获得sys_mapdata.
     var mapData = frmData["Sys_MapData"][0];
@@ -296,71 +296,71 @@ function GenerFrm() {
             if (mapAttr.MyDataType == 8)
                 if (!/\./.test(defValue))
                     defValue += '.00';
-        $('#TB_' + mapAttr.KeyOfEn).val(defValue);
-    }
-
-    if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
-        // 判断下拉框是否有对应option, 若没有则追加
-        if ($("option[value='" + defValue + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
-            var mainTable = frmData.MainTable[0];
-            var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
-            $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
+            $('#TB_' + mapAttr.KeyOfEn).val(defValue);
         }
 
-        $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
+        if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
+            // 判断下拉框是否有对应option, 若没有则追加
+            if ($("option[value='" + defValue + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
+                var mainTable = frmData.MainTable[0];
+                var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
+                $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
+            }
+
+            $('#DDL_' + mapAttr.KeyOfEn).val(defValue);
+        }
+
+        if ($('#CB_' + mapAttr.KeyOfEn).length == 1) {
+            if (defValue == "1")
+                $('#CB_' + mapAttr.KeyOfEn).attr("checked", true);
+            else
+                $('#CB_' + mapAttr.KeyOfEn).attr("checked", false);
+        }
+
+        //只读或者属性为不可编辑时设置
+        if (mapAttr.UIIsEnable == "0" || pageData.IsReadonly == "1") {
+
+            $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
+            $('#DDL_' + mapAttr.KeyOfEn).attr('disabled', true);
+            $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
+        }
+
+
     }
 
-    if ($('#CB_' + mapAttr.KeyOfEn).length == 1) {
-        if (defValue == "1")
-            $('#CB_' + mapAttr.KeyOfEn).attr("checked", true);
-        else
-            $('#CB_' + mapAttr.KeyOfEn).attr("checked", false);
+    //处理下拉框级联等扩展信息
+    AfterBindEn_DealMapExt(frmData);
+
+    ShowNoticeInfo();
+
+    ShowTextBoxNoticeInfo();
+
+    //初始化复选下拉框 
+    var selectPicker = $('.selectpicker');
+    $.each(selectPicker, function (i, selectObj) {
+        var defVal = $(selectObj).attr('data-val');
+        var defValArr = defVal.split(',');
+        $(selectObj).selectpicker('val', defValArr);
+    });
+
+    //给富文本 创建编辑器
+    var editor = document.activeEditor = UM.getEditor('editor', {
+        'autoHeightEnabled': false,
+        'fontsize': [10, 12, 14, 16, 18, 20, 24, 36]
+    });
+    if (document.BindEditorMapAttr) {
+        editor.MaxLen = document.BindEditorMapAttr.MaxLen;
+        editor.MinLen = document.BindEditorMapAttr.MinLen;
+        editor.BindField = document.BindEditorMapAttr.KeyOfEn;
+        editor.BindFieldName = document.BindEditorMapAttr.Name;
     }
+    //调整样式,让必选的红色 * 随后垂直居中
+    editor.$container.css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
 
-    //只读或者属性为不可编辑时设置
-    if (mapAttr.UIIsEnable == "0" || pageData.IsReadonly == "1") {
-
-        $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
-        $('#DDL_' + mapAttr.KeyOfEn).attr('disabled', true);
-        $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
+    // 表单计算 /WF/CCForm/FrmFree.js
+    if (typeof calculator === "function") {
+        calculator(frmData.Sys_MapExt);
     }
-
-
-}
-
-//处理下拉框级联等扩展信息
-AfterBindEn_DealMapExt(frmData);
-
-ShowNoticeInfo();
-
-ShowTextBoxNoticeInfo();
-
-//初始化复选下拉框 
-var selectPicker = $('.selectpicker');
-$.each(selectPicker, function (i, selectObj) {
-    var defVal = $(selectObj).attr('data-val');
-    var defValArr = defVal.split(',');
-    $(selectObj).selectpicker('val', defValArr);
-});
-
-//给富文本 创建编辑器
-var editor = document.activeEditor = UM.getEditor('editor', {
-    'autoHeightEnabled': false,
-    'fontsize': [10, 12, 14, 16, 18, 20, 24, 36]
-});
-if (document.BindEditorMapAttr) {
-    editor.MaxLen = document.BindEditorMapAttr.MaxLen;
-    editor.MinLen = document.BindEditorMapAttr.MinLen;
-    editor.BindField = document.BindEditorMapAttr.KeyOfEn;
-    editor.BindFieldName = document.BindEditorMapAttr.Name;
-}
-//调整样式,让必选的红色 * 随后垂直居中
-editor.$container.css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
-
-// 表单计算 /WF/CCForm/FrmFree.js
-if (typeof calculator === "function") {
-    calculator(frmData.Sys_MapExt);
-}
 
 }
 
@@ -549,7 +549,7 @@ function GepParaByName(name, atPara) {
 
 //初始化下拉列表框的OPERATION
 function InitDDLOperation(frmData, mapAttr, defVal) {
- 	var operations = '';
+    var operations = '';
     var data = frmData[mapAttr.KeyOfEn];
     if (data == undefined)
         data = frmData[mapAttr.UIBindKey];
@@ -664,20 +664,20 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                         break;
                 }
                 break;
-            //下拉框    
+            //下拉框     
             case "SELECT":
                 formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());
                 break;
 
-            //对于复选下拉框获取值得方法    
-            //                if ($('[data-id=' + name + ']').length > 0) {   
-            //                    var val = $(disabledEle).val().join(',');   
-            //                    formArrResult.push(name + '=' + val);   
-            //                } else {   
-            //                    formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());   
-            //                }   
-            //                break;   
-            //文本区域    
+            //对于复选下拉框获取值得方法     
+            //                if ($('[data-id=' + name + ']').length > 0) {    
+            //                    var val = $(disabledEle).val().join(',');    
+            //                    formArrResult.push(name + '=' + val);    
+            //                } else {    
+            //                    formArrResult.push(name + '=' + $(disabledEle).children('option:checked').val());    
+            //                }    
+            //                break;    
+            //文本区域     
             case "TEXTAREA":
                 formArrResult.push(name + '=' + $(disabledEle).val());
                 break;

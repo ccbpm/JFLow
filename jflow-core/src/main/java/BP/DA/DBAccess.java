@@ -34,46 +34,11 @@ import BP.Web.WebUser;
  * 数据库访问。 这个类负责处理了 实体信息
  */
 public class DBAccess {
-
-	/**
-	 * 保存文件到数据库
-	 * 
-	 * @param fullFileName
-	 *            完成的文件路径
-	 * @param tableName
-	 *            表名称
-	 * @param tablePK
-	 *            表主键
-	 * @param pkVal
-	 *            主键值
-	 * @param saveFileField
-	 *            保存到字段
-	 * @throws Exception
-	 */
-	public static void SaveFileToDB(String fullFileName, String tableName, String tablePK, String pkVal,
+	
+	
+	public static void SaveBytesToDB(byte[] bytes, String line, String tableName, String tablePK, String pkVal,
 			String saveToFileField) throws Exception {
-
-		// 读取文件内容
-		FileInputStream fs = null;
-		byte[] bytes = null;
-		String line = "";
-		try {
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
-				line = DataType.ReadTextFile(fullFileName);
-			} else {
-				fs = new FileInputStream(fullFileName);
-				int len = fs.available();
-				bytes = new byte[len];
-				fs.read(bytes);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			if (fs != null) {
-				fs.close();
-			}
-		}
-
+		 
 		// 更新文件数据到库
 		ResultSet rs = null;
 		Connection conn = null;
@@ -118,7 +83,51 @@ public class DBAccess {
 				ex.printStackTrace();
 			}
 		}
-		return;
+		
+		SaveBytesToDB(bytes,   line,   tableName,   tablePK,   pkVal,
+			  saveToFileField);
+		return; 
+	}
+
+	/**
+	 * 保存文件到数据库
+	 * 
+	 * @param fullFileName
+	 *            完成的文件路径
+	 * @param tableName
+	 *            表名称
+	 * @param tablePK
+	 *            表主键
+	 * @param pkVal
+	 *            主键值
+	 * @param saveFileField
+	 *            保存到字段
+	 * @throws Exception
+	 */
+	public static void SaveFileToDB(String fullFileName, String tableName, String tablePK, String pkVal,
+			String saveToFileField) throws Exception {
+
+		// 读取文件内容
+		FileInputStream fs = null;
+		byte[] bytes = null;
+		String line = "";
+		try {
+			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+				line = DataType.ReadTextFile(fullFileName);
+			} else {
+				fs = new FileInputStream(fullFileName);
+				int len = fs.available();
+				bytes = new byte[len];
+				fs.read(bytes);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (fs != null) {
+				fs.close();
+			}
+		}
+
 	}
 
 	/**
@@ -138,15 +147,16 @@ public class DBAccess {
 	 */
 	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
 			String saveToFileField) throws Exception {
-
-		try {
-
-			SaveFileToDB(docs, tableName, tablePK, pkVal, saveToFileField);
-
-		} catch (Exception e) {
-			Log.DebugWriteError(
-					"DBAccess SaveBigTextDB tableName；" + tableName + ", tablePK:" + tablePK + "" + e.getMessage());
+		
+		if (SystemConfig.getAppCenterDBType()== DBType.MySQL)
+		{
+			SaveBytesToDB(null, docs, tableName, tablePK, pkVal, saveToFileField);
+			return;
 		}
+		
+		SaveBytesToDB(docs.getBytes(), docs, tableName, tablePK, pkVal, saveToFileField);
+		return;
+		 
 
 	}
 

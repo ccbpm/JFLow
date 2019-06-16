@@ -140,7 +140,7 @@ public class WF_WorkOpt extends WebContralBase {
 
 		// sql = "SELECT No,Name, FK_Dept FROM Port_Emp WHERE FK_Dept='" +
 		// fk_dept + "' ";
-		sql = "SELECT distinct A.No,A.Name, '" + fk_dept
+		sql = "SELECT A.No,A.Name, '" + fk_dept
 				+ "' as FK_Dept FROM Port_Emp A LEFT JOIN Port_DeptEmp B  ON A.No=B.FK_Emp WHERE A.FK_Dept='" + fk_dept
 				+ "' OR B.FK_Dept='" + fk_dept + "'";
 		
@@ -228,8 +228,7 @@ public class WF_WorkOpt extends WebContralBase {
 		if (isReadonly == true)
 			isCanDo = false;
 		else
-			isCanDo = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(),
-					this.getWorkID(), WebUser.getNo());
+			isCanDo = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
 
 		// 如果是查看状态, 为了屏蔽掉正在审批的节点, 在查看审批意见中.
 		Boolean isShowCurrNodeInfo = true;

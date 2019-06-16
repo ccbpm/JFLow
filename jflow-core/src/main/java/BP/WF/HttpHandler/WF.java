@@ -1428,8 +1428,7 @@ public class WF extends WebContralBase {
 			BP.DA.AtPara ap = new AtPara(sms.getAtPara());
 			if (sms.getMsgType() == SMSMsgType.SendSuccess) { // 发送成功的提示.
 
-				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(ap.GetValStrByKey("FK_Flow"),
-						ap.GetValIntByKey("FK_Node"), ap.GetValInt64ByKey("WorkID"), BP.Web.WebUser.getNo()) == true) {
+				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork( ap.GetValInt64ByKey("WorkID"), BP.Web.WebUser.getNo()) == true) {
 					return "url@MyFlow.htm?FK_Flow=" + ap.GetValStrByKey("FK_Flow") + "&WorkID="
 							+ ap.GetValStrByKey("WorkID") + "&o2=1" + paras;
 				} else {

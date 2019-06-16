@@ -252,7 +252,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				break;
 			case HungUp: // 挂起.
 				//撤销挂起
-				isCan = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), WebUser.getNo());
+				isCan = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork( this.getWorkID(), WebUser.getNo());
 				ht.put("CanUnHungUp", new Boolean(isCan).toString().toLowerCase());
 				break;
 			default:

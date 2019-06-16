@@ -1826,8 +1826,7 @@ public class Glo {
 						gwfParent.getWorkID(), gwfParent.getFK_Node(), WebUser.getNo());
 
 				// 是否可以执行？
-				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(gwfSubFlow.getFK_Flow(), gwfSubFlow.getFK_Node(),
-						workidC, WebUser.getNo()) == true) {
+				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workidC, WebUser.getNo()) == true) {
 					// 执行向下发送.
 					try {
 						BP.WF.Dev2Interface.Node_SendWork(gwfSubFlow.getFK_Flow(), workidC);

@@ -56,21 +56,21 @@ public class Dev2Interface {
 	 */
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender,
 			String msgPK, String sendEmpNo) throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, sendEmpNo, null,null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, sendEmpNo, null, null);
 	}
 
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender,
 			String msgPK) throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, null, null,null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, msgPK, null, null, null);
 	}
 
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender)
 			throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, null, null, null,null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, sender, null, null, null, null);
 	}
 
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag) throws Exception {
-		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, null, null, null, null,null);
+		Port_SendSMS(tel, smsDoc, msgType, msgGroupFlag, null, null, null, null, null);
 	}
 
 	public static boolean WriteToSMS(String sendToUserNo, String sendDT, String title, String doc, String msgFlag)
@@ -901,9 +901,11 @@ public class Dev2Interface {
 		if (FK_Emp == null) {
 			ps.SQL = "SELECT * FROM WF_CCList WHERE 1=1";
 		} else {
-            ps.SQL = "SELECT a.MyPK,A.Title,A.FK_Flow,A.FlowName,A.WorkID,A.Doc,A.Rec,A.RDT,A.FID,B.FK_Node,B.NodeName FROM WF_CCList A, WF_GenerWorkFlow B WHERE A.CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.WorkID=A.WorkID";
+			ps.SQL = "SELECT a.MyPK,A.Title,A.FK_Flow,A.FlowName,A.WorkID,A.Doc,A.Rec,A.RDT,A.FID,B.FK_Node,B.NodeName FROM WF_CCList A, WF_GenerWorkFlow B WHERE A.CCTo="
+					+ SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.WorkID=A.WorkID";
 
-			//ps.SQL = "SELECT * FROM WF_CCList WHERE CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+			// ps.SQL = "SELECT * FROM WF_CCList WHERE CCTo=" +
+			// SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 			ps.Add("FK_Emp", FK_Emp);
 		}
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
@@ -2160,7 +2162,6 @@ public class Dev2Interface {
 				dt.Columns.get("PFLOWNO").setColumnName("PflowNo");
 				dt.Columns.get("PWORKID").setColumnName("PWorkID");
 
-
 				dt.Columns.get("PNODEID").setColumnName("PNodeID");
 				dt.Columns.get("PEMP").setColumnName("PEmp");
 				dt.Columns.get("GUESTNO").setColumnName("GuestNo");
@@ -2177,7 +2178,7 @@ public class Dev2Interface {
 				dt.Columns.get("SENDDT").setColumnName("SendDT");
 				dt.Columns.get("WEEKNUM").setColumnName("WeekNum");
 			}
-				return dt;
+			return dt;
 		} else {
 			Paras ps = new Paras();
 			String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -2207,7 +2208,6 @@ public class Dev2Interface {
 				dt.Columns.get("SDTOFFLOW").setColumnName("SDTOfFlow");
 				dt.Columns.get("PFLOWNO").setColumnName("PflowNo");
 				dt.Columns.get("PWORKID").setColumnName("PWorkID");
-
 
 				dt.Columns.get("PNODEID").setColumnName("PNodeID");
 				dt.Columns.get("PEMP").setColumnName("PEmp");
@@ -3815,7 +3815,7 @@ public class Dev2Interface {
 	 * @throws Exception
 	 */
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender,
-			String msgPK, String sendToEmpNo, String atParas,String openUrl) throws Exception {
+			String msgPK, String sendToEmpNo, String atParas, String openUrl) throws Exception {
 		// if (string.IsNullOrEmpty(tel))
 		// return;
 
@@ -5433,27 +5433,43 @@ public class Dev2Interface {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean Flow_IsCanDoCurrentWork(String flowNo, int nodeID, long workID, String userNo)
+	public static boolean Flow_IsCanDoCurrentWork(long workID, String userNo)
 			throws Exception {
+		
 		if (workID == 0) {
 			return true;
 		}
+		
+		GenerWorkFlow gwf = new GenerWorkFlow();
+		gwf.setWorkID(workID);
+		if (gwf.RetrieveFromDBSources() == 0) {
+			return true;
+		}
+		
+		   if (gwf.getTodoEmps().indexOf(userNo + ",") >= 0)
+           {
+               GenerWorkerList gwl = new GenerWorkerList();
+               int inum = gwl.Retrieve(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Emp, userNo,
+                  GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
+               if (inum == 1 && gwl.getIsPassInt() == 0)
+               {
+                   return true;
+               }
+           }
+		   
 
 		/*
 		 * if (userNo.equals("admin")) { return true; }
 		 */
 		// 判断是否是开始节点 .
-		String str = (new Integer(nodeID)).toString();
+		String str = (new Integer(gwf.getFK_Node())).toString();		
+		
 		int len = str.length() - 2;
 		if (str.substring(len, len + 2).equals("01")) {
 			// 如果是开始节点，如何去判断是否可以处理当前节点的权限.
-			GenerWorkFlow gwf = new GenerWorkFlow();
-			gwf.setWorkID(workID);
-			if (gwf.RetrieveFromDBSources() == 0) {
-				return true;
-			}
+			
 			String mysql = "SELECT FK_Emp,  IsPass FROM WF_GenerWorkerList WHERE WorkID=" + workID + " AND FK_Node="
-					+ nodeID;
+					+ str;
 			DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
 			if (mydt.Rows.size() == 0) {
 				return true;
@@ -5612,10 +5628,15 @@ public class Dev2Interface {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean Flow_IsCanViewTruck(String flowNo, long workid, long fid) throws Exception {
-		if (WebUser.getNo().equals("admin")) {
+	public static boolean Flow_IsCanViewTruck(String flowNo, long workid, String userNo) throws Exception {
+
+		if (userNo == null)
+			userNo = WebUser.getNo();
+
+		if (userNo.equals("admin")) {
 			return true;
 		}
+		
 
 		// 先从轨迹里判断.
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -5624,8 +5645,8 @@ public class Dev2Interface {
 				+ "WorkID OR FID=" + dbStr + "FID) AND (EmpFrom=" + dbStr + "Emp1 OR EmpTo=" + dbStr + "Emp2)";
 		ps.Add(BP.WF.TrackAttr.WorkID, workid);
 		ps.Add(BP.WF.TrackAttr.FID, workid);
-		ps.Add("Emp1", WebUser.getNo());
-		ps.Add("Emp2", WebUser.getNo());
+		ps.Add("Emp1", userNo);
+		ps.Add("Emp2", userNo);
 
 		if (BP.DA.DBAccess.RunSQLReturnValInt(ps) > 1) {
 			return true;
@@ -9086,7 +9107,7 @@ public class Dev2Interface {
 	 * @throws Exception
 	 */
 	public static void Node_AddNextStepAccepter(long workID, int formNodeID, String emp, String tag) throws Exception {
-		if (DataType.IsNullOrEmpty(emp)==true)
+		if (DataType.IsNullOrEmpty(emp) == true)
 			return;
 		SelectAccper sa = new SelectAccper();
 		sa.Delete(SelectAccperAttr.FK_Node, formNodeID, SelectAccperAttr.WorkID, workID, SelectAccperAttr.FK_Emp, emp,
@@ -9218,7 +9239,7 @@ public class Dev2Interface {
 		BP.WF.GenerWorkFlow gwf = new GenerWorkFlow(workid);
 
 		// 检查当前人员是否开可以执行当前的工作?
-		if (Flow_IsCanDoCurrentWork(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), WebUser.getNo()) == false) {
+		if (Flow_IsCanDoCurrentWork( gwf.getWorkID(), WebUser.getNo()) == false) {
 			throw new RuntimeException("@当前的工作已经被别人处理或者您没有处理该工作的权限.");
 		}
 

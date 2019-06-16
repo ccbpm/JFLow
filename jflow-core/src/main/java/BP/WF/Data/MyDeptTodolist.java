@@ -524,7 +524,7 @@ public class MyDeptTodolist extends Entity
 	public final String DoShift(String ToEmp, String Note) throws Exception
 	{
 		try {
-			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), this.getFID()) == false)
+			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), null) == false)
 			{
 				return "您没有操作该流程数据的权限.";
 			}
@@ -551,7 +551,7 @@ public class MyDeptTodolist extends Entity
 	public final String DoDelete() throws Exception
 	{
 		try {
-			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), this.getFID()) == false)
+			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(),null) == false)
 			{
 				return "您没有操作该流程数据的权限.";
 			}

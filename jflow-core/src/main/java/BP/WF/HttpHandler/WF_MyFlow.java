@@ -524,8 +524,7 @@ public class WF_MyFlow extends WebContralBase {
 
 		if (this.getWorkID() != 0) {
 			// 判断是否有执行该工作的权限.
-			boolean isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getFK_Flow(), this.getFK_Node(),
-					this.getWorkID(), userNo);
+			boolean isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), userNo);
 			if (isCanDo == false) {
 				return "err@您不能执行当前工作.";
 			}

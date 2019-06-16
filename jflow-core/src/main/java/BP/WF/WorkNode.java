@@ -5512,7 +5512,7 @@ public class WorkNode {
 		}
 
 		// 第1: 安全性检查 检查是否可以处理当前的工作.
-		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID(),
+		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(
 				this.getWorkID(), this.getExecer()) == false)
 			throw new Exception("@当前工作您已经处理完成，或者您(" + this.getExecer() + " " + this.getExecerName() + ")没有处理当前工作的权限。");
 

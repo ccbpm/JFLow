@@ -55,7 +55,7 @@ public class WorkFlow
 	public final boolean IsCanDoCurrentWork(String empId) throws Exception
 	{
 		WorkNode wn = this.GetCurrentWorkNode();
-		return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(wn.getHisNode().getFK_Flow(), wn.getHisNode().getNodeID(), wn.getWorkID(), empId);
+		return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork( wn.getWorkID(), empId);
 	}
 	/** 
 	 执行驳回
@@ -1059,7 +1059,7 @@ public class WorkFlow
 			//GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
  
 			  //@袁丽娜.
-            if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getFK_Node(), pGWF.getWorkID(), WebUser.getNo()) == false)
+            if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork( pGWF.getWorkID(), WebUser.getNo()) == false)
             {
                 /*没有权限的情况下，就移交给当前人员，让其在发送. */
                 BP.WF.Dev2Interface.Node_Shift(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getFK_Node(), pGWF.getWorkID(), 0, WebUser.getNo(), "工作自动移交，让其运行到下一步。");

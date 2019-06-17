@@ -308,7 +308,7 @@ public class WFEmp extends EntityNoName
 		map.AddTBString(WFEmpAttr.Author, null, "授权人", true, true, 0, 50, 20);
 		map.AddTBString(WFEmpAttr.AuthorDate, null, "授权日期", true, true, 0, 50, 20);
 
-			//0不授权， 1完全授权，2，指定流程范围授权. 
+	    //0不授权， 1完全授权，2，指定流程范围授权. 
 		map.AddTBInt(WFEmpAttr.AuthorWay, 0, "授权方式", true, true);
 		map.AddTBDate(WFEmpAttr.AuthorToDate, null, "授权到日期", true, true);
 		map.AddTBString(WFEmpAttr.AuthorFlows, null, "可以执行的授权流程", true, true, 0, 1000, 20);
@@ -322,6 +322,10 @@ public class WFEmp extends EntityNoName
 		map.AddTBString(WFEmpAttr.StartFlows, null, "可以发起的流程", true, true, 0, 4000, 20);
 		
 		map.AddTBInt(WFEmpAttr.Idx, 0, "Idx", false, false);
+		
+        map.AddTBAtParas(3500); //增加字段.
+        
+		
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

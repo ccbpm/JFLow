@@ -17,7 +17,7 @@ import BP.En.Map;
 import BP.En.UAC;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
-import BP.WF.HttpHandler.Base.PortalInterfaceWS;
+import BP.WF.HttpHandler.Base.PortalWebService;
 import BP.Web.WebUser;
 
 /** 
@@ -479,8 +479,8 @@ public class SMS extends EntityMyPK
 					case ToSMSTable: //写入消息表。
 						break;
 					case ToWebservices: // 写入webservices.
-						PortalInterfaceWS service = new PortalInterfaceWS();
-						service.Message_Send(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
+						PortalWebService service = new PortalWebService();
+						service.SendToWebServices(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
 						//soap.SendToWebServices(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(),tag);
 						break;
 					case ToDingDing: // 写入dingding.

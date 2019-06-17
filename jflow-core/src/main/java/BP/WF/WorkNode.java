@@ -1916,7 +1916,7 @@ public class WorkNode {
 				if (this.IsSkip == true) {
 					toWK.DirectUpdate(); // 如果执行了跳转.
 				} else {
-					toWK.DirectInsert();
+					toWK.DirectSave();
 				}
 			} catch (RuntimeException ex) {
 				Log.DefaultLogWriteLineInfo("@出现SQL异常有可能是没有修复表，或者重复发送. Ext=" + ex.getMessage());

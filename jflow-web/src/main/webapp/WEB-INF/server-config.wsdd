@@ -61,4 +61,9 @@
        <parameter name="allowedMethods" value="*" />
  </service>
  
+  <service name="PortalInterfaceWS" provider="java:RPC">
+       <parameter name="className" value="WebServiceImp.PortalInterfaceWS" />
+       <parameter name="allowedMethods" value="*" />
+ </service>
+ 
 </deployment>

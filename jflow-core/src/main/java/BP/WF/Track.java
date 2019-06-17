@@ -588,10 +588,9 @@ public class Track extends BP.En.Entity
 		//把frm日志写入到数据里.
 		if (this.FrmDB != null) 
 		{
-			BP.DA.DBAccess.SaveBigTextToDB(this.FrmDB, ptable, "MyPK", this.getMyPK(), "FrmDB");
+		//	BP.DA.DBAccess.SaveBigTextToDB(this.FrmDB, ptable, "MyPK", this.getMyPK(), "FrmDB");
 		}
-
-
+ 
 			///#endregion 执行保存
 	}
 

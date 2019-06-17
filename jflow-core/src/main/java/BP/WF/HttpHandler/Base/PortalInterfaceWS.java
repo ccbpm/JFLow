@@ -21,6 +21,11 @@ public class PortalInterfaceWS {
 	 * @throws Exception
 	 */
 	public String Message_Send(String sender, String sendToEmpNo, String title,String msgInfo, String OpenUrl, String msgType) throws Exception {
+		
+		if (1==1)
+		   return "" ;
+
+	 
 		Emp emp = new Emp(sender);
 		String webPath = "http://192.168.43.48:8084/personal_center/message/getProcessMessage";
 		Emp toemp = new Emp(sendToEmpNo);

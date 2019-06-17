@@ -2469,6 +2469,7 @@ public class WF_Comm extends WebContralBase {
 
 		String userNo = WebUser.getNo();
 		if (DataType.IsNullOrEmpty(userNo) == true) {
+			
 			ht.put("No", "");
 			ht.put("Name", "");
 			ht.put("FK_Dept", "");
@@ -2477,6 +2478,7 @@ public class WF_Comm extends WebContralBase {
 
 			ht.put("CustomerNo", BP.Sys.SystemConfig.getCustomerNo());
 			ht.put("CustomerName", BP.Sys.SystemConfig.getCustomerName());
+			ht.put("IsAuthorize", "0");			 
 			return BP.Tools.Json.ToJson(ht);
 		}
 
@@ -2504,7 +2506,13 @@ public class WF_Comm extends WebContralBase {
 		// WebUser.getFK_Dept());
 		return BP.Tools.Json.ToJson(ht);
 	}
-
+	
+    public String WebUser_BackToAuthorize() throws Exception
+    {
+        BP.WF.Dev2Interface.Port_Login(WebUser.getAuth());
+        return "登录成功";
+    }
+    
 	/// 运行Url返回string.
 	/// </summary>
 	/// <param name="url"></param>
@@ -2515,17 +2523,11 @@ public class WF_Comm extends WebContralBase {
 		return strs;
 	}
 
-	// private DefaultMultipartHttpServletRequest request;
-	// public void setMultipartRequest(DefaultMultipartHttpServletRequest
-	// request){
-	// this.request = request;
-	// }
-
+	
 	/// <summary>
 	/// 实体Entity 文件上传
 	/// </summary>
 	/// <returns></returns>
-
 	public String EntityAth_Upload() throws Exception {
 		HttpServletRequest request = getRequest();
 		// MultipartFile multiFile =

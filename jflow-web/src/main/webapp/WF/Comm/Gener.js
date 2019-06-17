@@ -2207,6 +2207,9 @@ var HttpHandler = (function () {
 
 var WebUser = function () {
 
+  //if (webUser != undefined)
+  //this.self
+
     if (plant == "CCFlow") {
         // CCFlow
         dynamicHandler = basePath + "/WF/Comm/Handler.ashx";

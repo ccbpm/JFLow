@@ -496,7 +496,33 @@ public class LocalWS implements LocalWSI{
         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlOfSelect);
         return BP.Tools.Json.ToJson(dt);
     }
+
     
+    /**
+	 * 执行抄送
+	 * 
+	 * @param flowNo
+	 *            流程编号
+	 * @param workID
+	 *            工作ID
+	 * @param toEmpNo
+	 *            抄送人员编号
+	 * @param toEmpName
+	 *            抄送人员人员名称
+	 * @param msgTitle
+	 *            标题
+	 * @param msgDoc
+	 *            内容
+	 * @return 执行信息
+	 * @throws Exception
+	 */
+	public String Node_CC_WriteTo_CClist(int fk_node, long workID, String toEmpNo, String toEmpName,
+			String msgTitle, String msgDoc,String userNo) throws Exception {
+		BP.WF.Dev2Interface.Port_Login(userNo);
+		return BP.WF.Dev2Interface.Node_CC_WriteTo_CClist(fk_node, workID,toEmpNo,toEmpName,msgTitle,msgDoc);
+	}
+	
+
     /** 
   	 查询数据	 
   	 @param sqlOfSelect 要查询的sql
@@ -520,5 +546,19 @@ public class LocalWS implements LocalWSI{
     {
         return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workid, userNo);
     }
-    
+
+	/**
+	 * 获取指定人员的抄送列表 说明:可以根据这个列表生成指定用户的抄送数据.
+	 * 
+	 * @param FK_Emp
+	 *            人员编号,如果是null,则返回所有的.
+	 * @return 返回该人员的所有抄送列表,结构同表WF_CCList.
+	 */
+	public String DB_CCList(String userNo) throws Exception{
+		BP.WF.Dev2Interface.Port_Login(userNo);
+		
+		DataTable dt = BP.WF.Dev2Interface.DB_CCList(userNo);
+		return BP.Tools.Json.ToJson(dt);
+	}
+	
 }

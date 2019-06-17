@@ -236,6 +236,37 @@ public interface LocalWSI {
    public String DB_RunSQLReturnJSON(String sqlOfSelect, String password) throws Exception;
 
 
+   /**
+	 * 执行抄送
+	 * 
+	 * @param flowNo
+	 *            流程编号
+	 * @param workID
+	 *            工作ID
+	 * @param toEmpNo
+	 *            抄送人员编号
+	 * @param toEmpName
+	 *            抄送人员人员名称
+	 * @param msgTitle
+	 *            标题
+	 * @param msgDoc
+	 *            内容
+	 * @return 执行信息
+	 * @throws Exception
+	 */
+	public String Node_CC_WriteTo_CClist(int fk_node, long workID, String toEmpNo, String toEmpName,
+			String msgTitle, String msgDoc,String userNo) throws Exception;
+	/**
+	 * 获取指定人员的抄送列表 说明:可以根据这个列表生成指定用户的抄送数据.
+	 * 
+	 * @param FK_Emp
+	 *            人员编号,如果是null,则返回所有的.
+	 * @return 返回该人员的所有抄送列表,结构同表WF_CCList.
+	 */
+	public String DB_CCList(String userNo) throws Exception;
+
+
+
    /** 
  	 是否可以查看该流程	 
  	 @param flowNo 流程编号
@@ -253,6 +284,5 @@ public interface LocalWSI {
  * @throws Exception 
 	*/
    public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception;
-    
-   
+
 }

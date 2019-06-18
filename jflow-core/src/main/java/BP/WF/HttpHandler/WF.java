@@ -738,10 +738,26 @@ public class WF extends WebContralBase {
 	 * @return
 	 * @throws Exception
 	 */
-	public String Load_Author() throws Exception {
+	public String AuthorList_Init() throws Exception {
+		
+		/*
 		DataTable dt = BP.DA.DBAccess
 				.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + BP.Web.WebUser.getNo() + "'");
-		return BP.Tools.FormatToJson.ToJson(dt);
+		return BP.Tools.FormatToJson.ToJson(dt); */
+		
+		  Paras ps = new Paras();
+          ps.SQL = "SELECT No,Name FROM WF_Emp WHERE AUTHOR=" + SystemConfig.getAppCenterDBVarStr() + "AUTHOR";
+          ps.Add("AUTHOR", BP.Web.WebUser.getNo());
+          DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+
+          if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+          {
+              dt.Columns.get("NO").setColumnName("No");
+              dt.Columns.get("NAME").setColumnName("Name");
+             // dt.Columns["NAME"].ColumnName = "Name";
+          }
+          return BP.Tools.Json.ToJson(dt); 
+		
 	}
 
 	/**

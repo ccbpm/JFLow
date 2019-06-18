@@ -33,10 +33,14 @@ public enum DBType
 	 * Informix
 	 */
 	Informix, 
+	
 	/**
 	 * WebServices
 	 */
-	WebServices;
+	WebServices,
+	
+	
+	PostgreSQL;
 	
 	public int getValue()
 	{

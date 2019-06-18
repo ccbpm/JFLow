@@ -18,9 +18,9 @@ public enum DBType
 	 */
 	Access,
 	/**
-	 * Sybase
+	 * PostgreSQL
 	 */
-	Sybase,
+	PostgreSQL,
 	/**
 	 * DB2
 	 */
@@ -37,10 +37,8 @@ public enum DBType
 	/**
 	 * WebServices
 	 */
-	WebServices,
-	
-	
-	PostgreSQL;
+	WebServices;
+	 
 	
 	public int getValue()
 	{

@@ -1113,7 +1113,7 @@ public class WF extends WebContralBase {
 		wk.RetrieveFromDBSources();
 
 		// 重设默认值.
-		wk.ResetDefaultVal();
+		//wk.ResetDefaultVal();
 
 		DataTable mainTable = wk.ToDataTableField("MainTable");
 		mainTable.TableName = "MainTable";

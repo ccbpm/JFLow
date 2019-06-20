@@ -6837,22 +6837,10 @@ public class Flow extends BP.En.EntityNoName {
 
 		// 执行录制的sql scripts.
 		DBAccess.RunSQLs(sql);
+		//清空WF_Emp中的StartFlow 
+        DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
+        
 		this.Delete(); // 删除需要移除缓存.
-
-		// Flow.RepareV_FlowData_View();
-
-		//// 删除权限管理
-		// if (BP.WF.Glo.OSModel == OSModel.OneMore)
-		// {
-		// try
-		// {
-		// DBAccess.RunSQL("DELETE FROM GPM_Menu WHERE Flag='Flow" +
-		//// this.getNo() + "' AND FK_App='" + SystemConfig.getSysNo() + "'");
-		// }
-		// catch
-		// {
-		// }
-		// }
 
 		return "info@删除成功.";
 	}

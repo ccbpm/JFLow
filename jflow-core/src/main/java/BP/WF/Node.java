@@ -2880,4 +2880,14 @@ public class Node extends Entity {
 			attr.Insert();
 		}
 	}
+	
+	@Override
+	public void afterInsertUpdateAction() throws Exception
+    {
+        if (this.getIsStartNode() == true)
+        {
+        	DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
+        }
+        super.afterInsertUpdateAction();
+    }
 }

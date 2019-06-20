@@ -785,6 +785,22 @@ public class WF extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Start_Init() throws Exception {
+		
+		BP.WF.Port.WFEmp em = new WFEmp();
+        em.setNo(BP.Web.WebUser.getNo());
+        if (em.RetrieveFromDBSources() == 0)
+        {
+            em.setFK_Dept(BP.Web.WebUser.getFK_Dept());
+            em.setName(BP.Web.WebUser.getName());
+            em.Insert();
+        }
+        String json = em.getStartFlows();
+        if (DataType.IsNullOrEmpty(json) == false)
+        {
+            return json;
+        }
+
+        
 		//定义容器.
         DataSet ds = new DataSet();
 
@@ -800,6 +816,16 @@ public class WF extends WebContralBase {
         DataTable dtStart = Dev2Interface.DB_StarFlows(WebUser.getNo());
         dtStart.TableName = "Start";
         ds.Tables.add(dtStart);
+        
+        //返回组合
+        json = BP.Tools.Json.ToJson(ds);
+
+        //把json存入数据表，避免下一次再取.
+        if (json.length()> 40)
+        {
+            em.setStartFlows(json);
+            em.Update();
+        }
 
         //返回组合
         return BP.Tools.Json.ToJson(ds);

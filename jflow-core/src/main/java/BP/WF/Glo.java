@@ -414,9 +414,12 @@ public class Glo {
                 DBAccess.RunSQL("ALTER TABLE WF_Emp modify StartFlows longtext ");
             if (dbType == DBType.MSSQL)
             {
-                DBAccess.RunSQL(" ALTER TABLE WF_Emp ALTER column StartFlows text");
-            }
+                DataTable dtYueSu = DBAccess.RunSQLReturnTable("SELECT b.name, a.name FName from sysobjects b join syscolumns a on b.id = a.cdefault where a.id = object_id('WF_Emp') and a.Name='StartFlows' ");
+                if (dtYueSu.Rows.size() != 0)
+                    DBAccess.RunSQL(" ALTER TABLE WF_Emp drop  constraint " + dtYueSu.Rows.get(0).getValue(0));
 
+                DBAccess.RunSQL(" ALTER TABLE WF_Emp ALTER column  StartFlows text");
+            }
            
             //#endregion 更新wf_emp 的字段类型.
 

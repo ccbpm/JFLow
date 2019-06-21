@@ -1660,6 +1660,9 @@ public class Glo {
 		list.add(GERptAttr.Title);
 		list.add(GERptAttr.WFSta);
 		list.add(GERptAttr.WFState);
+		list.add("Rec");
+		list.add("RDT");
+		 
 		return list;
 		// String str = "";
 		// str += GERptAttr.OID + ",";

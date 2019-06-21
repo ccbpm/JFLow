@@ -628,7 +628,7 @@ public class SFDBSrc extends EntityNoName
 			case Informix:
 				return String.format("SELECT (CASE s.tabtype WHEN 'T' THEN 'TABLE' WHEN 'V' THEN 'VIEW' ELSE 'OTHER' END) OTYPE FROM systables s WHERE s.tabname = '%1$s'", objName);
 			case PostgreSQL:
-				return String.format("");
+				return String.format("XXXSDSDSDSDSD"); //需要补充.
 			case DB2:
 				return String.format("");
 			case Access:

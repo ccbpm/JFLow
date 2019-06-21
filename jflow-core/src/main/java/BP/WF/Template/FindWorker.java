@@ -21,6 +21,7 @@ import BP.WF.TrackAttr;
 import BP.WF.WorkNode;
 import BP.Web.GuestUser;
 import BP.Web.WebUser;
+
 /**
  * 找人规则
  * 
@@ -48,6 +49,7 @@ public class FindWorker {
 	}
 
 	public final DataTable FindByWorkFlowModel() throws Exception {
+
 		this.town = town;
 
 		DataTable dt = new DataTable();
@@ -854,26 +856,32 @@ public class FindWorker {
 
 			// 检查指定的部门下面是否有该人员.
 			DataTable mydtTemp = this.Func_GenerWorkerList_DiGui(nowDeptID, empNo);
-			if (mydtTemp == null) {
-				// 如果父亲级没有，就找父级的平级.
-				BP.Port.Depts myDepts = new BP.Port.Depts();
-				myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.getParentNo());
-				for (BP.Port.Dept item : myDepts.ToJavaList()) {
-					if (nowDeptID.equals(item.getNo())) {
-						continue;
-					}
-					mydtTemp = this.Func_GenerWorkerList_DiGui(item.getNo(), empNo);
-					if (mydtTemp == null) {
-						continue;
-					} else {
-						return mydtTemp;
-					}
-				}
-
-				continue; // 如果平级也没有，就continue.
-			} else {
+			if (mydtTemp != null)
 				return mydtTemp;
+			
+			//该部门下的所有子部门是否有人员.
+            mydtTemp = Func_GenerWorkerList_DiGui_SameLevel(nowDeptID, empNo);
+            if (mydtTemp != null)
+                return mydtTemp;
+			
+
+			// 如果父亲级没有，就找父级的平级.
+			BP.Port.Depts myDepts = new BP.Port.Depts();
+			myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.getParentNo());
+			for (BP.Port.Dept item : myDepts.ToJavaList()) {
+				if (nowDeptID.equals(item.getNo())) {
+					continue;
+				}
+				mydtTemp = this.Func_GenerWorkerList_DiGui(item.getNo(), empNo);
+				if (mydtTemp == null) {
+					continue;
+				} else {
+					return mydtTemp;
+				}
 			}
+
+			continue; // 如果平级也没有，就continue.
+
 		}
 
 		// 如果向上找没有找到，就考虑从本级部门上向下找。
@@ -994,7 +1002,68 @@ public class FindWorker {
 			return dt;
 		}
 	}
+	public final DataTable Func_GenerWorkerList_DiGui_SameLevel(String deptNo, String empNo) throws Exception {
+		String sql;
 
+		Paras ps = new Paras();
+
+		if (this.town.getHisNode().getIsExpSender() == true) {
+
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B, Port_Dept C  WHERE A.FK_Dept=C.No AND A.FK_Station=B.FK_Station AND B.FK_Node="
+					+ dbStr + "FK_Node AND C.ParentNo=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
+
+			ps.SQL = sql;
+			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.Add("FK_Dept", deptNo);
+			ps.Add("FK_Emp", empNo);
+
+		} else {
+
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B, Port_Dept C  WHERE A.FK_Dept=C.No AND A.FK_Station=B.FK_Station AND B.FK_Node="
+					+ dbStr + "FK_Node AND C.ParentNo=" + dbStr + "FK_Dept ";
+
+			ps.SQL = sql;
+			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.Add("FK_Dept", deptNo);
+
+		}
+
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+		if (dt.Rows.size() == 0) {
+			NodeStations nextStations = town.getHisNode().getNodeStations();
+			if (nextStations.size() == 0) {
+				throw new RuntimeException(
+						"@节点没有岗位:" + town.getHisNode().getNodeID() + "  " + town.getHisNode().getName());
+			}
+
+			sql = "SELECT No FROM Port_Emp WHERE No IN ";
+			sql += "(SELECT  FK_Emp  FROM " + BP.WF.Glo.getEmpStation()
+					+ " WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr
+					+ "FK_Node ) )";
+			sql += " AND No IN ";
+
+			if (deptNo.equals("1")) {
+				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp ) ";
+			} else {
+				BP.Port.Dept deptP = new BP.Port.Dept(deptNo);
+				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp AND FK_Dept = '"
+						+ deptP.getParentNo() + "')";
+			}
+
+			ps = new Paras();
+			ps.SQL = sql;
+			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.Add("FK_Emp", empNo);
+			dt = DBAccess.RunSQLReturnTable(ps);
+
+			if (dt.Rows.size() == 0) {
+				return null;
+			}
+			return dt;
+		} else {
+			return dt;
+		}
+	}
 	/**
 	 * 执行找人
 	 * 

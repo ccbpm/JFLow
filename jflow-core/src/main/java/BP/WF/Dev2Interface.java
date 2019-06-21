@@ -5277,7 +5277,7 @@ public class Dev2Interface {
 	 * @return 是否可以发起当前流程
 	 * @throws Exception
 	 */
-	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo) throws Exception {
+	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID, long pworkID ) throws Exception {
 		Node nd = new Node(Integer.parseInt(flowNo + "01"));
 		if (nd.getIsGuestNode() == true) {
 			if (!BP.Web.WebUser.getNo().equals("Guest")) {
@@ -5357,7 +5357,31 @@ public class Dev2Interface {
 		if (num == 0) {
 			return false;
 		}
-		return true;
+		
+		// 增加发起流程判断.		
+		if (pFlowNo == null)
+              return true;
+		
+		 Flow fl = new Flow(flowNo);
+         if (fl.getStartLimitRole() == StartLimitRole.None)
+             return true;
+
+         //只有一个子流程,才能发起.
+         if (fl.getStartLimitRole() == StartLimitRole.OnlyOneSubFlow)
+         {
+             if (pworkID == 0)
+                 return true;
+
+             String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + fl.getNo() + "' AND WFState >=2 ";
+             DataTable dt = DBAccess.RunSQLReturnTable(sql);
+             if (dt.Rows.size()== 0)
+                 return true;
+
+             throw new Exception("该流程只能允许发起一个子流程.");
+         }
+         
+         return true;
+		   
 	}
 
 	/**

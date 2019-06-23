@@ -1071,6 +1071,11 @@ public class Dev2Interface {
 		}
 		throw new RuntimeException("@未判断的类型。");
 	}
+	
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo) throws Exception
+	{
+	 return DB_GenerCanStartFlowsOfDataTable(userNo,null);
+	}
 
 	/**
 	 * 获取指定人员能够发起流程的集合 说明:利用此接口可以生成用户的发起的流程列表.
@@ -1081,80 +1086,46 @@ public class Dev2Interface {
 	 *         如何使用该方法形成发起工作列表,请参考:\WF\UC\Start.ascx
 	 * @throws Exception
 	 */
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo) throws Exception {
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
-			String sql = "";
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo,String domain) throws Exception {
 
-			sql = "SELECT FK_Flow FROM V_FlowStarterBPM WHERE FK_Emp='" + userNo + "'";
+		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,A.IsStartInMobile, A.Idx";
+		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
+		sql += " WHERE A.No=B.FK_Flow AND A.FK_FlowSort=C.No  AND FK_Emp='" + WebUser.getNo() + "' ";
+		if (DataType.IsNullOrEmpty( domain)==false)
+			sql+=" c.Domain='"+domain+"'";
+		
+		sql += " ORDER BY C.Idx, A.Idx";
 
-			Flows fls = new Flows();
-			BP.En.QueryObject qo = new BP.En.QueryObject(fls);
-			qo.AddWhereInSQL("No", sql);
-			qo.addAnd();
-			qo.AddWhere(FlowAttr.IsCanStart, true);
-			if (WebUser.getIsAuthorize()) {
-				// 如果是授权状态
-				qo.addAnd();
-				WFEmp wfEmp = new WFEmp(userNo);
-				qo.AddWhereIn("No", wfEmp.getAuthorFlows());
-			}
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-			qo.addOrderBy("FK_FlowSort", FlowAttr.Idx);
-			DataTable dt = qo.DoQueryToTable();
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("ISBATCHSTART").ColumnName = "IsBatchStart";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
+			dt.Columns.get("IDX").ColumnName = "Idx";
+			dt.Columns.get("ISSTARTINMOBILE").ColumnName = "IsStartInMobile";
+			// dt.Columns["IDX"].ColumnName = "Idx";
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-				dt.Columns.get("NO").ColumnName = "No";
-				dt.Columns.get("NAME").ColumnName = "Name";
-				dt.Columns.get("ISBATCHSTART").ColumnName = "IsBatchStart";
-				dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
-				dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
-			}
-
-			return dt;
 		}
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+			dt.Columns.get("no").ColumnName = "No";
+			dt.Columns.get("name").ColumnName = "Name";
+			dt.Columns.get("isbatchstart").ColumnName = "IsBatchStart";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+			dt.Columns.get("fk_flowsorttext").ColumnName = "FK_FlowSortText";
+			dt.Columns.get("isstartinmobile").ColumnName = "IsStartInMobile";
 
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices) {
-			String sql = "";
-			// 按岗位计算.
-			sql += "SELECT A.FK_Flow FROM WF_Node A,WF_NodeStation B WHERE A.NodePosType=0 AND ( A.WhoExeIt=0 OR A.WhoExeIt=2 ) AND  A.NodeID=B.FK_Node AND B.FK_Station IN ("
-					+ BP.Web.WebUser.getHisStationsStr() + ")";
-			sql += " UNION  "; // 按指定的人员计算.
-			sql += "SELECT FK_Flow FROM WF_Node WHERE NodePosType=0 AND ( WhoExeIt=0 OR WhoExeIt=2 ) AND NodeID IN ( SELECT FK_Node FROM WF_NodeEmp WHERE FK_Emp='"
-					+ userNo + "' ) ";
-			sql += " UNION  "; // 按部门计算.
-			sql += "SELECT A.FK_Flow FROM WF_Node A,WF_NodeDept B WHERE A.NodePosType=0 AND ( A.WhoExeIt=0 OR A.WhoExeIt=2 ) AND  A.NodeID=B.FK_Node AND B.FK_Dept IN ("
-					+ BP.Web.WebUser.getHisDeptsStr() + ") ";
-
-			//// 采用新算法.
-			// if (BP.WF.Glo.OSModel == BP.Sys.OSModel.OneOne)
-			// sql = "SELECT FK_Flow FROM V_FlowStarter WHERE FK_Emp='" + userNo
-			//// + "'";
-			// else
-			// sql = "SELECT FK_Flow FROM V_FlowStarterBPM WHERE FK_Emp='" +
-			//// userNo + "'";
-
-			Flows fls = new Flows();
-			BP.En.QueryObject qo = new BP.En.QueryObject(fls);
-			qo.AddWhereInSQL("No", sql);
-			qo.addAnd();
-			qo.AddWhere(FlowAttr.IsCanStart, true);
-			if (WebUser.getIsAuthorize()) {
-				// 如果是授权状态
-				qo.addAnd();
-				WFEmp wfEmp = new WFEmp(userNo);
-				qo.AddWhereIn("No", wfEmp.getAuthorFlows());
-			}
-			qo.addOrderBy("FK_FlowSort", FlowAttr.Idx);
-			return qo.DoQueryToTable();
+			dt.Columns.get("IDX").ColumnName = "Idx";
 		}
-
-		throw new RuntimeException("@未判断的类型。");
+		return dt;
 
 	}
 
 	public static DataTable DB_GenerCanStartFlowsTree(String userNo) throws Exception {
 		// 发起.
-		DataTable table = DB_GenerCanStartFlowsOfDataTable(userNo);
+		DataTable table = DB_GenerCanStartFlowsOfDataTable(userNo,null);
 		table.Columns.Add("ParentNo");
 		table.Columns.Add("ICON");
 		String flowSort = String.format("select No,Name,ParentNo from WF_FlowSort");
@@ -4967,7 +4938,9 @@ public class Dev2Interface {
 				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
 				dr.setValue("EmpName", drTrack.getValue("EmpFromT"));
 				dr.setValue("RDT", drTrack.getValue("RDT"));
-				dr.setValue("SDT", drTrack.getValue("NDFrom"));
+				// dr.setValue("SDT", drTrack.getValue("NDFrom"));
+
+				dr.setValue("SDT", "");
 
 				// dr["ActionType"] = drTrack["NDFrom"];
 				// dr["NodeName"] = drTrack["NDFromT"];
@@ -5277,7 +5250,8 @@ public class Dev2Interface {
 	 * @return 是否可以发起当前流程
 	 * @throws Exception
 	 */
-	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID, long pworkID ) throws Exception {
+	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID,
+			long pworkID) throws Exception {
 		Node nd = new Node(Integer.parseInt(flowNo + "01"));
 		if (nd.getIsGuestNode() == true) {
 			if (!BP.Web.WebUser.getNo().equals("Guest")) {
@@ -5357,31 +5331,31 @@ public class Dev2Interface {
 		if (num == 0) {
 			return false;
 		}
-		
-		// 增加发起流程判断.		
+
+		// 增加发起流程判断.
 		if (pFlowNo == null)
-              return true;
-		
-		 Flow fl = new Flow(flowNo);
-         if (fl.getStartLimitRole() == StartLimitRole.None)
-             return true;
+			return true;
 
-         //只有一个子流程,才能发起.
-         if (fl.getStartLimitRole() == StartLimitRole.OnlyOneSubFlow)
-         {
-             if (pworkID == 0)
-                 return true;
+		Flow fl = new Flow(flowNo);
+		if (fl.getStartLimitRole() == StartLimitRole.None)
+			return true;
 
-             String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + fl.getNo() + "' AND WFState >=2 ";
-             DataTable dt = DBAccess.RunSQLReturnTable(sql);
-             if (dt.Rows.size()== 0)
-                 return true;
+		// 只有一个子流程,才能发起.
+		if (fl.getStartLimitRole() == StartLimitRole.OnlyOneSubFlow) {
+			if (pworkID == 0)
+				return true;
 
-             throw new Exception("该流程只能允许发起一个子流程.");
-         }
-         
-         return true;
-		   
+			String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='"
+					+ fl.getNo() + "' AND WFState >=2 ";
+			DataTable dt = DBAccess.RunSQLReturnTable(sql);
+			if (dt.Rows.size() == 0)
+				return true;
+
+			throw new Exception("该流程只能允许发起一个子流程.");
+		}
+
+		return true;
+
 	}
 
 	/**
@@ -5457,41 +5431,37 @@ public class Dev2Interface {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean Flow_IsCanDoCurrentWork(long workID, String userNo)
-			throws Exception {
-		
+	public static boolean Flow_IsCanDoCurrentWork(long workID, String userNo) throws Exception {
+
 		if (workID == 0) {
 			return true;
 		}
-		
+
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workID);
 		if (gwf.RetrieveFromDBSources() == 0) {
 			return true;
 		}
-		
-		   if (gwf.getTodoEmps().indexOf(userNo + ",") >= 0)
-           {
-               GenerWorkerList gwl = new GenerWorkerList();
-               int inum = gwl.Retrieve(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Emp, userNo,
-                  GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
-               if (inum == 1 && gwl.getIsPassInt() == 0)
-               {
-                   return true;
-               }
-           }
-		   
+
+		if (gwf.getTodoEmps().indexOf(userNo + ",") >= 0) {
+			GenerWorkerList gwl = new GenerWorkerList();
+			int inum = gwl.Retrieve(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Emp, userNo,
+					GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
+			if (inum == 1 && gwl.getIsPassInt() == 0) {
+				return true;
+			}
+		}
 
 		/*
 		 * if (userNo.equals("admin")) { return true; }
 		 */
 		// 判断是否是开始节点 .
-		String str = (new Integer(gwf.getFK_Node())).toString();		
-		
+		String str = (new Integer(gwf.getFK_Node())).toString();
+
 		int len = str.length() - 2;
 		if (str.substring(len, len + 2).equals("01")) {
 			// 如果是开始节点，如何去判断是否可以处理当前节点的权限.
-			
+
 			String mysql = "SELECT FK_Emp,  IsPass FROM WF_GenerWorkerList WHERE WorkID=" + workID + " AND FK_Node="
 					+ str;
 			DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
@@ -5660,7 +5630,6 @@ public class Dev2Interface {
 		if (userNo.equals("admin")) {
 			return true;
 		}
-		
 
 		// 先从轨迹里判断.
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -9263,7 +9232,7 @@ public class Dev2Interface {
 		BP.WF.GenerWorkFlow gwf = new GenerWorkFlow(workid);
 
 		// 检查当前人员是否开可以执行当前的工作?
-		if (Flow_IsCanDoCurrentWork( gwf.getWorkID(), WebUser.getNo()) == false) {
+		if (Flow_IsCanDoCurrentWork(gwf.getWorkID(), WebUser.getNo()) == false) {
 			throw new RuntimeException("@当前的工作已经被别人处理或者您没有处理该工作的权限.");
 		}
 
@@ -11408,8 +11377,19 @@ public class Dev2Interface {
 	 * @return
 	 * @throws Exception
 	 */
-	public static DataTable DB_StarFlows(String userNo) throws Exception {
-		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo);
+	public static DataTable DB_StarFlows(String userNo) throws Exception {		
+		return DB_StarFlows(userNo,null);
+	}
+	/**
+	 * 获得指定人的流程发起列表
+	 * 
+	 * @param userNo
+	 *            发起人编号
+	 * @return
+	 * @throws Exception
+	 */
+	public static DataTable DB_StarFlows(String userNo, String domain) throws Exception {
+		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo,domain);
 		return dt;
 	}
 

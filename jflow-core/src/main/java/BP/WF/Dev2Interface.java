@@ -1090,7 +1090,7 @@ public class Dev2Interface {
 
 		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,A.IsStartInMobile, A.Idx";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
-		sql += " WHERE A.No=B.FK_Flow AND A.FK_FlowSort=C.No  AND FK_Emp='" + WebUser.getNo() + "' ";
+		sql += " WHERE A.No=B.FK_Flow AND A.FK_FlowSort=C.No  AND FK_Emp='" + userNo + "' ";
 		if (DataType.IsNullOrEmpty(domain)==false)
 			sql+=" AND C.Domain='"+domain+"'";
 		
@@ -1106,7 +1106,8 @@ public class Dev2Interface {
 			dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
 			dt.Columns.get("IDX").ColumnName = "Idx";
 			dt.Columns.get("ISSTARTINMOBILE").ColumnName = "IsStartInMobile";
-			// dt.Columns["IDX"].ColumnName = "Idx";
+			dt.Columns.get("IDX").ColumnName = "IsStartInMobile";
+			 
 
 		}
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
@@ -1117,7 +1118,7 @@ public class Dev2Interface {
 			dt.Columns.get("fk_flowsorttext").ColumnName = "FK_FlowSortText";
 			dt.Columns.get("isstartinmobile").ColumnName = "IsStartInMobile";
 
-			dt.Columns.get("IDX").ColumnName = "Idx";
+			dt.Columns.get("idx").ColumnName = "Idx";
 		}
 		return dt;
 

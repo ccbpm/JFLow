@@ -93,7 +93,7 @@ public class LocalWS implements LocalWSI{
 	 * @return
 	 */
 	@Override
-	public String DB_MyStartFlowInstance(String userNo, String sysNo, int pageSize, int pageIdx) {
+	public String DB_MyStartFlowInstance(String userNo, String domain, int pageSize, int pageIdx) {
 		try {
 			BP.WF.Dev2Interface.Port_Login(userNo);
 		} catch (Exception e) {
@@ -101,10 +101,10 @@ public class LocalWS implements LocalWSI{
 			e.printStackTrace();
 		}
 		String sql = "";
-        if (sysNo == null)
+        if (domain == null)
             sql = "SELECT * FROM WF_GenerWorkFlow WHERE Starter='" + userNo + "'";
         else
-            sql = "SELECT * FROM WF_GenerWorkFlow WHERE Domain='" + sysNo + "' AND Starter='" + userNo + "'";
+            sql = "SELECT * FROM WF_GenerWorkFlow WHERE Domain='" + domain + "' AND Starter='" + userNo + "'";
 
         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
         return BP.Tools.Json.ToJson(dt);

@@ -411,75 +411,8 @@ public class LocalWS implements LocalWSI{
 	*/
     public String WorkProgressBar(long  workID, String userNo) throws Exception
     {
-    	String sql = "";
-		DataSet ds = new DataSet();
-
-		//流程控制主表, 可以得到流程状态，停留节点，当前的执行人.
-		GenerWorkFlow gwf = new GenerWorkFlow(workID);
-		
-		DataTable dt1 = gwf.ToDataTableField("WF_GenerWorkFlow");
-		dt1.TableName = "WF_GenerWorkFlow";
-		ds.Tables.add(dt1);
-
-		//节点信息.
-		Nodes nds = new Nodes(gwf.getFK_Flow());
-		DataTable dt2 = nds.ToDataTableField("WF_Node");
-		ds.Tables.add(dt2);
-
-		//方向。
-		Directions dirs = new Directions(gwf.getFK_Flow());
-		ds.Tables.add(dirs.ToDataTableField("WF_Direction"));
-
-
-		DataTable dtHistory = new DataTable();
-		dtHistory.TableName = "Track";
-		dtHistory.Columns.Add("FK_Node");
-		dtHistory.Columns.Add("NodeName");
-		dtHistory.Columns.Add("EmpNo");
-		dtHistory.Columns.Add("EmpName");
-		dtHistory.Columns.Add("RDT"); //记录日期.
-		dtHistory.Columns.Add("SDT"); //应完成日期.
-
-		//执行人.
-		if (gwf.getWFState() == WFState.Complete)
-		{
-			//历史执行人. 
-			sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workID + " AND (ActionType=1 OR ActionType=0)  ORDER BY RDT DESC";
-			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
-
-			for (DataRow drTrack : dtTrack.Rows)
-			{
-				DataRow dr = dtHistory.NewRow();
-				dr.setValue("FK_Node", drTrack.getValue("NDFrom"));
-			   // dr["ActionType"] = drTrack["NDFrom"];
-				dr.setValue("NodeName", drTrack.getValue("NDFromT"));
-				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
-				dr.setValue("EmpName", drTrack.getValue("EmpFromT"));
-				dr.setValue("RDT", drTrack.getValue("RDT"));
-				dr.setValue("SDT", drTrack.getValue(""));
-				dtHistory.Rows.add(dr);
-			}
-		}
-		else
-		{
-			GenerWorkerLists gwls = new GenerWorkerLists(workID);
-			for (GenerWorkerList gwl : gwls.ToJavaList())
-			{
-				DataRow dr = dtHistory.NewRow();
-				    dr.setValue("FK_Node", gwl.getFK_Node());
-					dr.setValue("NodeName",gwl.getFK_NodeText());
-					dr.setValue("EmpNo",gwl.getFK_Emp());
-					dr.setValue("EmpName",gwl.getFK_EmpText());
-					dr.setValue("RDT",gwl.getRDT());
-					dr.setValue("SDT",gwl.getSDT());
-				
-			}
-		}
-
-		ds.Tables.add(dtHistory);
-
-		return BP.Tools.Json.ToJson(ds);
-
+        DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workID);
+        return BP.Tools.Json.ToJson(ds);
     }
 
     /** 

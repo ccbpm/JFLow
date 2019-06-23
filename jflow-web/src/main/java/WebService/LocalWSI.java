@@ -34,12 +34,12 @@ public interface LocalWSI {
 	/**
 	 * 我可以发起的流程
 	 * @param userNo 用户编号
-	 * @param sysNo  系统编号,为空时返回平台所有数据
+	 * @param domain  系统编号,为空时返回平台所有数据
 	 * @return 返回我可以发起的流程列表.
 	 * @throws Exception 
 	 */
 
-	public String DB_StarFlows(String userNo, String sysNo) throws Exception;
+	public String DB_StarFlows(String userNo, String domain) throws Exception;
 	
 	/**
 	 * 我发起的流程实例
@@ -271,16 +271,17 @@ public interface LocalWSI {
  	 是否可以查看该流程	 
  	 @param flowNo 流程编号
  	 @param workid 工作ID
+ 	 @param userNo 操作员ID
  	 @return 是否可以查看该工作.
  * @throws Exception 
  	*/
    public Boolean Flow_IsCanView(String flowNo, long workid, String userNo) throws Exception;
    
    /** 
-	 是否可以查看该流程	 
-	 @param flowNo 要查询的 sql
-	 @param workid 用户密码
-	 @return 是否可以查看该工作.
+	 是否可以查看该流程	 	 
+	 @param workid 工作ID
+	 @param userNo 操作员ID
+	 @return 是否可以执行当前工作.
  * @throws Exception 
 	*/
    public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception;

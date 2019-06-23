@@ -78,9 +78,9 @@ public class LocalWS implements LocalWSI{
 	 */
 
 	@Override
-	public String DB_StarFlows(String userNo, String sysNo) throws Exception {
+	public String DB_StarFlows(String userNo, String domain) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
-		DataTable dt= BP.WF.Dev2Interface.DB_StarFlows(userNo);
+		DataTable dt= BP.WF.Dev2Interface.DB_StarFlows(userNo,domain);
         return BP.Tools.Json.ToJson(dt);
 	}
 	

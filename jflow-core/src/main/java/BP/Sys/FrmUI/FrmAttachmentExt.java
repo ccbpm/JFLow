@@ -824,10 +824,18 @@ public class FrmAttachmentExt extends EntityMyPK {
 			} else {
 				this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj());
 			}
-		} else {
-			this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
-		}
+		}  
+		
+	    if (this.getFK_Node() != 0)
+        {
+            /*工作流程模式.*/
+            if (this.getHisCtrlWay() == AthCtrlWay.PK)
+                this.setHisCtrlWay ( AthCtrlWay.WorkID);
 
+            this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
+           // this.MyPK = this.FK_MapData + "_" + this.NoOfObj + "_" + this.FK_Node;
+        }
+	     
 		
 		if (this.getIsVisable() == true) {
 			// 更新相关的分组信息.

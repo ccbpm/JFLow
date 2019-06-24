@@ -4916,7 +4916,7 @@ public class Dev2Interface {
 		 * 节点信息: 节点信息表,存储每个环节的节点信息数据. NodeID 节点ID. Name 名称. X,Y
 		 * 节点图形位置，如果使用进度图就不需要了.
 		 */
-		Nodes nds = new Nodes(gwf.getFK_Flow());
+		NodeSimples nds = new NodeSimples(gwf.getFK_Flow());
 		ds.Tables.add(nds.ToDataTableField("WF_Node"));
 
 		/*

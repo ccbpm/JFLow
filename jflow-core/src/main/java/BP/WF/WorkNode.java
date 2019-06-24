@@ -755,7 +755,7 @@ public class WorkNode {
 				}
 
 				try {
-					wl.DirectInsert();
+					wl.DirectSave();
 					this.HisWorkerLists.AddEntity(wl);
 				} catch (RuntimeException ex) {
 					Log.DefaultLogWriteLineError("不应该出现的异常信息：" + ex.getMessage());

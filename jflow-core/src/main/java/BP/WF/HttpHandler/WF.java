@@ -637,9 +637,9 @@ public class WF extends WebContralBase {
 	 */
 	public String Todolist_Init() {
 		DataTable dt = null;
-
+		String showWhat = this.GetRequestVal("ShowWhat");
 		try {
-			dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(BP.Web.WebUser.getNo(), this.getFK_Node());
+			dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(BP.Web.WebUser.getNo(), this.getFK_Node(),showWhat);
 		} catch (Exception e) {
 			Log.DebugWriteError("WF Todolist_Init():" + e.getMessage());
 			e.printStackTrace();

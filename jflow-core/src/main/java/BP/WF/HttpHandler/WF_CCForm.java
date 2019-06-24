@@ -1510,8 +1510,10 @@ public class WF_CCForm extends WebContralBase {
 			throw new RuntimeException("err@错误:" + msg);
 		}
 
-		// 重设默认值.
-		en.ResetDefaultVal(this.getFK_MapData(), this.getFK_Flow(), this.getFK_Node());
+		if(this.GetRequestValBoolen("IsReadonly")==false) {
+			// 重设默认值.
+			en.ResetDefaultVal(this.getFK_MapData(), this.getFK_Flow(), this.getFK_Node());
+		}
 
 		// 执行装载填充.
 		MapExt me = null;

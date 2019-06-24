@@ -1335,6 +1335,17 @@ public class Dev2Interface {
 	public static DataTable DB_Focus(String flowNo, String userNo) throws Exception {
 		return DB_Focus(flowNo, userNo, null);
 	}
+	
+	/**
+	 * 获取当前人员所有待办
+	 * @param userNo
+	 * @param fk_node
+	 * @return
+	 * @throws Exception
+	 */
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node) throws Exception{
+		return  DB_GenerEmpWorksOfDataTable(userNo, fk_node,null);
+	}
 
 	/**
 	 * 获取当前人员待处理的工作
@@ -1344,10 +1355,16 @@ public class Dev2Interface {
 	 * @return 共享工作列表
 	 * @throws Exception
 	 */
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node) throws Exception {
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node,String showWhat) throws Exception {
 		// 执行 todolist 调度.
 		DTS_GenerWorkFlowTodoSta();
-
+		
+		 String wfStateSql ="";
+         if (DataType.IsNullOrEmpty(showWhat) == true)
+             wfStateSql = " WFState!=" + WFState.Batch.getValue();
+         else
+             wfStateSql = " WFState=" + showWhat;
+         
 		Paras ps = new Paras();
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql;
@@ -1355,21 +1372,19 @@ public class Dev2Interface {
 			// 不是授权状态
 			if (fk_node == 0) {
 				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
-					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND WFState!="
-							+ WFState.Batch.getValue() + " ORDER BY FK_Flow,ADT DESC ";
+					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND "+wfStateSql + " ORDER BY FK_Flow,ADT DESC ";
 				} else {
-					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp  AND WFState!="
-							+ WFState.Batch.getValue() + " ORDER BY FK_Flow,ADT DESC ";
+					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp  AND "+wfStateSql + " ORDER BY FK_Flow,ADT DESC ";
 				}
 
 				ps.Add("FK_Emp", userNo);
 			} else {
 				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
-					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND FK_Node="
-							+ dbstr + "FK_Node  AND WFState!=" + WFState.Batch.getValue() + " ORDER BY  ADT DESC ";
+					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND FK_Node="
+							+ dbstr + "FK_Node  AND "+wfStateSql + " ORDER BY  ADT DESC ";
 				} else {
 					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr
-							+ "FK_Node  AND WFState!=" + WFState.Batch.getValue() + " ORDER BY  ADT DESC ";
+							+ "FK_Node  AND "+wfStateSql + " ORDER BY  ADT DESC ";
 				}
 
 				ps.Add("FK_Node", fk_node);
@@ -9839,10 +9854,8 @@ public class Dev2Interface {
 		ps.Add("WorkID", workid);
 		ps.Add("FK_Node", nodeID);
 		ps.Add("FK_Emp", empNo);
-		if (DBAccess.RunSQL(ps) == 0) {
-			// throw new RuntimeException("@设置的工作不存在，或者当前的登陆人员已经改变。");
-		}
-
+		DBAccess.RunSQL(ps);
+		
 		// 判断当前节点的已读回执.
 		if (nd.getReadReceipts() == ReadReceipts.None) {
 			return;

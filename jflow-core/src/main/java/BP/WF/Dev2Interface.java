@@ -4938,6 +4938,7 @@ public class Dev2Interface {
 		dtHistory.Columns.Add("EmpName"); // 名称
 		dtHistory.Columns.Add("RDT"); // 记录日期.
 		dtHistory.Columns.Add("SDT"); // 应完成日期(可以不用.)
+		dtHistory.Columns.Add("IsPass"); // 应完成日期(可以不用.)
 
 		// 执行人.
 		if (gwf.getWFState() == WFState.Complete) {
@@ -4957,13 +4958,9 @@ public class Dev2Interface {
 				// dr.setValue("SDT", drTrack.getValue("NDFrom"));
 
 				dr.setValue("SDT", "");
-
-				// dr["ActionType"] = drTrack["NDFrom"];
-				// dr["NodeName"] = drTrack["NDFromT"];
-				// dr["EmpNo"] = drTrack["EmpFrom"];
-				// dr["EmpName"] = drTrack["EmpFromT"];
-				// dr["RDT"] = drTrack["RDT"];
-				// dr["SDT"] = drTrack[""];
+				
+				dr.setValue("IsPass", 1);
+ 
 				dtHistory.Rows.add(dr);
 			}
 		} else {
@@ -4977,7 +4974,9 @@ public class Dev2Interface {
 				dr.setValue("EmpName", gwl.getFK_EmpText());
 				dr.setValue("RDT", gwl.getRDT());
 				dr.setValue("SDT", gwl.getSDT());
-
+				
+				dr.setValue("IsPass", gwl.getIsPassInt());
+			  
 				dtHistory.Rows.add(dr);
 
 			}

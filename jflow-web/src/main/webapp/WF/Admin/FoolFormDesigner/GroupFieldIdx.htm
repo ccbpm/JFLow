@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>设置tab键顺序</title>
+    <title>字段顺序</title>
     <link href="../../Scripts/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="../../Scripts/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
     <script src="../../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
@@ -31,7 +31,11 @@
         var ens = null;
         $(function () {
 
-              ens = new Entities("BP.Sys.MapAttrs", "FK_MapData", GetQueryString("FK_MapData"), "UIVisible", "1", "Idx");
+            var frmID = GetQueryString("FrmID");
+            ens = new Entities("BP.Sys.MapAttrs", "FK_MapData", frmID, "GroupID", GetQueryString("GroupField"), "UIVisible", "1", "Idx");
+
+            //alert(ens.length);
+
             for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
                 var addRow = "";
@@ -39,8 +43,8 @@
 
                 addRow = "<tr class=" + rowNo + "><td>" + rowNo + "</td>";
                 addRow += "<td>" + en.KeyOfEn + "</td>";
-                addRow += "<td>" + en.Name + "</td>";
-                addRow += "<td><input type=text value='"+en.Idx+"'id='TB_"+en.KeyOfEn+"' /></td>";
+                addRow += "<td><input type=text value='" + en.Name + "'id='TBN_" + en.KeyOfEn + "' /></td>";
+                addRow += "<td><input type=text value='" + en.Idx + "'id='TB_" + en.KeyOfEn + "' /></td>";
                 addRow += "<td><a href='javascript:void(0);' onclick='doUp(parseInt(this.id))' id='" + rowNo + "'><img src='../../Img/Btn/Up.GIF' border=0></a></td>";
                 addRow += "<td><a href='javascript:void(0);' onclick = 'doDown(parseInt(this.id))'  id='" + rowNo + "'><img src='../../Img/Btn/Down.gif' border=0></a></td>";
 
@@ -106,22 +110,29 @@
 
         //保存.
         function Save() {
+            $("#Msg").html("正在保存请稍后....");
             for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
 
                 var idx = $("#TB_" + en.KeyOfEn).val();
-                en = new Entity("BP.Sys.MapAttr", en.MyPK);
+                en = new Entity("BP.Sys.MapAttr", en);
                 en.Idx = idx;
+
+                var name = $("#TBN_" + en.KeyOfEn).val();
+                en.Name = name;
+
                 en.Update();
             }
 
-            ens = new Entities("BP.Sys.MapAttrs", "FK_MapData", GetQueryString("FK_MapData"), "UIVisible", "1", "Idx");
+            var frmID = GetQueryString("FrmID");
+            ens = new Entities("BP.Sys.MapAttrs", "FK_MapData", frmID, "GroupID", GetQueryString("GroupField"), "UIVisible", "1", "Idx");
+
 
             //重新排序.
             for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
-                en = new Entity("BP.Sys.MapAttr", en.MyPK);
-                en.Idx = i*10;
+                en = new Entity("BP.Sys.MapAttr", en);
+                en.Idx = i * 10;
                 en.Update();
             }
 
@@ -133,7 +144,7 @@
     <form method="post" action="" id="form1">
     <table id="Table1" width='100%'>
         <caption>
-            正确的调整好Tab键的顺序,可以方便用户数据录入.</caption>
+            分组内的字段顺序.</caption>
         <tr>
             <th>
                 Idx
@@ -155,7 +166,10 @@
             </th>
         </tr>
     </table>
-     <center><input type="button" value=" 保 存 "  onclick="Save();" /></center>
+    <center>
+        <input type="button" value=" 保 存 " onclick="Save();" /></center>
+    <div id="Msg" name="Msg">
+    </div>
     </form>
 </body>
 </html>

@@ -783,10 +783,10 @@ public class WF extends WebContralBase {
 			em.setName(BP.Web.WebUser.getName());
 			em.Insert();
 		}
-		String json = em.getStartFlows();
-		if (DataType.IsNullOrEmpty(json) == false) {
-			return json;
-		}
+//		String json = em.getStartFlows();
+//		if (DataType.IsNullOrEmpty(json) == false) {
+//			return json;
+//		}
 
 		// 定义容器.
 		DataSet ds = new DataSet();
@@ -805,13 +805,13 @@ public class WF extends WebContralBase {
 		ds.Tables.add(dtStart);
 
 		// 返回组合
-		json = BP.Tools.Json.ToJson(ds);
-
-		// 把json存入数据表，避免下一次再取.
-		if (json.length() > 40) {
-			em.setStartFlows(json);
-			em.Update();
-		}
+//		json = BP.Tools.Json.ToJson(ds);
+//
+//		// 把json存入数据表，避免下一次再取.
+//		if (json.length() > 40) {
+//			em.setStartFlows(json);
+//			em.Update();
+//		}
 
 		// 返回组合
 		return BP.Tools.Json.ToJson(ds);

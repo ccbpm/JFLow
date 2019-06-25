@@ -6,8 +6,7 @@ package BP.WF.Port;
 */
 public class WFEmpAttr
 {
-
-		
+ 
 	/** 
 	 No
 	*/
@@ -40,10 +39,10 @@ public class WFEmpAttr
 	public static final String Depts = "Depts";
 	public static final String FK_Dept = "FK_Dept";
 	public static final String Idx = "Idx";
-	public static final String FtpUrl = "FtpUrl";
+ 
 	public static final String Style = "Style";
 	public static final String Msg = "Msg";
-	public static final String TM = "TM";
+ 
 	public static final String UseSta = "UseSta";
 	/** 
 	 授权的人员

@@ -873,6 +873,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		{
 			en.setName("我的从表" + en.getNo());
 			en.setPTable(en.getNo());
+			
+			en.setH(300);
 			en.Insert();
 			en.IntMapAttrs();
 		}

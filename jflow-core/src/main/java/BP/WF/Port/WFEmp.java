@@ -53,25 +53,8 @@ public class WFEmp extends EntityNoName
 	{
 		this.SetValByKey(WFEmpAttr.Style, value);
 	}
-	public final String getTM()
-	{
-		return this.GetValStringByKey(WFEmpAttr.TM);
-	}
-	public final void setTM(String value)
-	{
-		this.SetValByKey(WFEmpAttr.TM, value);
-	}
-	/** 
-	 微信号的OpenID.
-	*/
-	public final String getOpenID()
-	{
-		return this.GetValStringByKey(WFEmpAttr.TM);
-	}
-	public final void setOpenID(String value)
-	{
-		this.SetValByKey(WFEmpAttr.TM, value);
-	}
+ 
+	 
 	public final String getTel()
 	{
 		return this.GetValStringByKey(WFEmpAttr.Tel);
@@ -163,14 +146,7 @@ public class WFEmp extends EntityNoName
 			SetValByKey(WFEmpAttr.AuthorFlows, "");
 		}
 	}
-	public final String getFtpUrl()
-	{
-		return this.GetValStringByKey(WFEmpAttr.FtpUrl);
-	}
-	public final void setFtpUrl(String value)
-	{
-		SetValByKey(WFEmpAttr.FtpUrl, value);
-	}
+	 
 	public final String getStas() throws Exception
 	{
 		String s= this.GetValStringByKey(WFEmpAttr.Stas);
@@ -302,7 +278,7 @@ public class WFEmp extends EntityNoName
 		map.AddTBString(WFEmpAttr.Tel, null, "Tel", true, true, 0, 50, 20);
 		map.AddTBString(WFEmpAttr.FK_Dept, null, "FK_Dept", true, true, 0, 100, 36);
 		map.AddTBString(WFEmpAttr.Email, null, "Email", true, true, 0, 50, 20);
-		map.AddTBString(WFEmpAttr.TM, null, "即时通讯号", true, true, 0, 50, 20);
+	 
 
 		map.AddDDLSysEnum(WFEmpAttr.AlertWay, 3, "收听方式", true, true, WFEmpAttr.AlertWay);
 		map.AddTBString(WFEmpAttr.Author, null, "授权人", true, true, 0, 50, 20);
@@ -316,7 +292,7 @@ public class WFEmp extends EntityNoName
 		map.AddTBString(WFEmpAttr.Stas, null, "岗位s", true, true, 0, 3000, 20);
 		map.AddTBString(WFEmpAttr.Depts, null, "Deptss", true, true, 0, 100, 36);
 
-		map.AddTBString(WFEmpAttr.FtpUrl, null, "FtpUrl", true, true, 0, 50, 20);
+		 
 		map.AddTBString(WFEmpAttr.Msg, null, "Msg", true, true, 0, 4000, 20);
 		map.AddTBString(WFEmpAttr.Style, null, "Style", true, true, 0, 4000, 20);
 		map.AddTBString(WFEmpAttr.StartFlows, null, "可以发起的流程", true, true, 0, 4000, 20);

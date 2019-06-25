@@ -1,6 +1,8 @@
 package BP.WF.HttpHandler;
 
 import java.io.File;
+import java.util.Hashtable;
+
 import javax.servlet.http.HttpServletRequest;
 import BP.DA.*;
 import BP.Sys.*;
@@ -10,6 +12,7 @@ import BP.En.*;
 import BP.WF.*;
 import BP.WF.HttpHandler.Base.CommonFileUtils;
 import BP.WF.HttpHandler.Base.WebContralBase;
+import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
 
 /** 
@@ -163,6 +166,28 @@ public class WF_Setting extends WebContralBase
 		
 		return "文件上传成功";
     }
+    
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    /// <returns>json数据</returns>
+    public String Author_Init() throws Exception
+    {
+        BP.WF.Port.WFEmp emp = new WFEmp(BP.Web.WebUser.getNo());
+        Hashtable ht = emp.getRow();
+        ht.remove(BP.WF.Port.WFEmpAttr.StartFlows); //移除这一列不然无法形成json.
+        return emp.ToJson();
+    }
+    public String Author_Save() throws Exception
+    {
+    	 BP.WF.Port.WFEmp emp = new WFEmp(BP.Web.WebUser.getNo());
+        emp.setAuthor(this.GetRequestVal("Author"));
+        emp.setAuthorDate(this.GetRequestVal("AuthorDate"));
+        emp.setAuthorWay(this.GetRequestValInt("AuthorWay"));
+        emp.Update();
+        return "保存成功";
+    }
+    
     
 	public final String UserIcon_Init()
 	{

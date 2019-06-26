@@ -88,18 +88,15 @@ public class Dev2Interface {
 	public static int getTodolist_EmpWorks() throws Exception {
 		Paras ps = new Paras();
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-		String wfSql = "  WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue()
-				+ "  OR WFState=" + WFState.AskForReplay.getValue() + " OR WFState=" + WFState.Shift.getValue()
-				+ " OR WFState=" + WFState.ReturnSta.getValue() + " OR WFState=" + WFState.Fix.getValue();
 		String sql;
 
 		if (WebUser.getIsAuthorize() == false) {
 			// 不是授权状态
 			if (BP.WF.Glo.getIsEnableTaskPool() == true) {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND TaskSta!=1 ";
 			} else {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr
 						+ "FK_Emp ";
 			}
 
@@ -115,20 +112,20 @@ public class Dev2Interface {
 		switch (emp.getHisAuthorWay()) {
 		case All:
 			if (BP.WF.Glo.getIsEnableTaskPool() == true) {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND TaskSta!=1  ";
 			} else {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp ";
 			}
 			ps.Add("FK_Emp", BP.Web.WebUser.getNo());
 			break;
 		case SpecFlows:
 			if (BP.WF.Glo.getIsEnableTaskPool() == true) {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows() + " AND TaskSta!=0   ";
 			} else {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows();
 			}
 
@@ -137,10 +134,10 @@ public class Dev2Interface {
 		case None:
 			// 不是授权状态
 			if (BP.WF.Glo.getIsEnableTaskPool() == true) {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND TaskSta!=1 ";
 			} else {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp ";
 			}
 

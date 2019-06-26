@@ -127,10 +127,10 @@ public class CCMobile extends WebContralBase
 		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks());
 		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing());
 		ht.put("Todolist_Complete", BP.WF.Dev2Interface.getTodolist_Complete());
-		ht.put("Todolist_Sharing", BP.WF.Dev2Interface.getTodolist_Sharing());
+//		ht.put("Todolist_Sharing", BP.WF.Dev2Interface.getTodolist_Sharing());
 		ht.put("Todolist_CCWorks", BP.WF.Dev2Interface.getTodolist_CCWorks());
-		ht.put("Todolist_Apply", BP.WF.Dev2Interface.getTodolist_Apply()); //申请下来的任务个数.
-		ht.put("Todolist_Draft", BP.WF.Dev2Interface.getTodolist_Draft()); //草稿数量.
+//		ht.put("Todolist_Apply", BP.WF.Dev2Interface.getTodolist_Apply()); //申请下来的任务个数.
+//		ht.put("Todolist_Draft", BP.WF.Dev2Interface.getTodolist_Draft()); //草稿数量.
 
 		ht.put("Todolist_HuiQian", BP.WF.Dev2Interface.getTodolist_HuiQian()); //会签数量.
 

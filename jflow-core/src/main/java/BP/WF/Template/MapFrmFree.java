@@ -27,10 +27,6 @@ public class MapFrmFree extends EntityNoName {
 		this.SetValByKey(MapFrmFreeAttr.TemplaterVer, value);
 	}
 
-	/// #endregion 文件模版属性.
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region 属性
 	/**
 	 * 表单事件实体
 	 * 
@@ -62,27 +58,30 @@ public class MapFrmFree extends EntityNoName {
 
 		return false;
 	}
-	/** 
-	物理存储表.
-	 
-	*/
-    public final String getPTable()
-    {
-    	return this.GetValStrByKey(MapDataAttr.PTable);
-    }
-	/** 
-	物理存储表.
-	 
-	*/
-    public final void setPTable(String value)
-    {
-    	this.SetValByKey(MapDataAttr.PTable, value);
-    }
+
+	/**
+	 * 物理存储表.
+	 * 
+	 */
+	public final String getPTable() {
+		return this.GetValStrByKey(MapDataAttr.PTable);
+	}
+
+	/**
+	 * 物理存储表.
+	 * 
+	 */
+	public final void setPTable(String value) {
+		this.SetValByKey(MapDataAttr.PTable, value);
+	}
+
 	/**
 	 * 节点ID.
 	 * 
 	 */
 	public final int getNodeID() {
+		 if (this.getNo().indexOf("ND") != 0)
+             return 0;
 		return Integer.parseInt(this.getNo().replace("ND", ""));
 	}
 
@@ -116,10 +115,6 @@ public class MapFrmFree extends EntityNoName {
 	 */
 	public final int getTableCol() {
 		return 4;
-		/*
-		 * int i = this.GetValIntByKey(MapFrmFreeAttr.TableCol); if (i == 0 || i
-		 * == 1) { return 4; } return i;
-		 */
 	}
 
 	public final void setTableCol(int value) {
@@ -155,7 +150,7 @@ public class MapFrmFree extends EntityNoName {
 	 * 
 	 * @param no
 	 *            表单ID
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public MapFrmFree(String no) throws Exception {
 		super(no);
@@ -199,9 +194,9 @@ public class MapFrmFree extends EntityNoName {
 		map.AddTBString(MapFrmFreeAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
 		map.AddTBString(MapFrmFreeAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapFrmFreeAttr.Ver, null, "版本号", true, true, 0, 30, 20);
-		//宽度高度.
-        map.AddTBInt(MapFrmFreeAttr.FrmW, 900, "自由表单-宽度", true, false);
-        map.AddTBInt(MapFrmFreeAttr.FrmH, 1200, "自由表单-高度", true, false);
+		// 宽度高度.
+		map.AddTBInt(MapFrmFreeAttr.FrmW, 900, "自由表单-宽度", true, false);
+		map.AddTBInt(MapFrmFreeAttr.FrmH, 1200, "自由表单-高度", true, false);
 
 		map.AddTBStringDoc(MapFrmFreeAttr.Note, null, "备注", true, false, true);
 
@@ -219,24 +214,6 @@ public class MapFrmFree extends EntityNoName {
 		/// #region 方法 - 基本功能.
 		RefMethod rm = new RefMethod();
 
-		// rm = new RefMethod();
-		// rm.Title = "启动自由表单设计器(SL)";
-		// rm.ClassMethodName = this.ToString() + ".DoDesignerSL";
-		//// rm.Icon = SystemConfig.getSysNo() + "WF/Img/FileType/xlsx.gif";
-		// rm.Visable = true;
-		// rm.Target = "_blank";
-		// rm.refMethodType = RefMethodType.LinkeWinOpen;
-		// map.AddRefMethod(rm);
-
-		// rm = new RefMethod();
-		// rm.Title = "启动自由表单设计器(H5)";
-		// rm.ClassMethodName = this.ToString() + ".DoDesignerH5";
-		// // rm.Icon = SystemConfig.getSysNo() + "WF/Img/FileType/xlsx.gif";
-		// rm.Visable = true;
-		// rm.Target = "_blank";
-		// rm.refMethodType = RefMethodType.LinkeWinOpen;
-		// map.AddRefMethod(rm);
-
 		rm = new RefMethod();
 		rm.Title = "启动傻瓜表单设计器";
 		rm.ClassMethodName = this.toString() + ".DoDesignerFool";
@@ -253,7 +230,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Visable = true;
 		rm.Target = "_blank";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-	    //map.AddRefMethod(rm); //不要了.
+		// map.AddRefMethod(rm); //不要了.
 
 		rm = new RefMethod();
 		rm.Title = "批量修改字段"; // "设计表单";
@@ -262,7 +239,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		//map.AddRefMethod(rm);
+		// map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
@@ -287,7 +264,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpressionBatch";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		//map.AddRefMethod(rm);
+		// map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "JS编程"; // "设计表单";
@@ -325,25 +302,20 @@ public class MapFrmFree extends EntityNoName {
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-          
-          rm = new RefMethod();
-          rm.Title = "Tab顺序键"; // "设计表单";
-          rm.ClassMethodName = this.toString() + ".DoTabIdx";
-          rm.Visable = true;
-          rm.refMethodType = RefMethodType.RightFrameOpen;
-          map.AddRefMethod(rm);
-          
-          
 
-		// rm = new RefMethod();
-		// rm.Title = "节点表单组件"; // "设计表单";
-		// rm.ClassMethodName = this.ToString() + ".DoNodeFrmCompent";
-		// rm.Visable = true;
-		// rm.RefAttrLinkLabel = "节点表单组件";
-		// rm.refMethodType = RefMethodType.RightFrameOpen;
-		// rm.Target = "_blank";
-		// rm.Icon = SystemConfig.getSysNo() + "WF/Img/Components.png";
-		// map.AddRefMethod(rm);
+		rm = new RefMethod();
+		rm.Title = "Tab顺序键"; // "设计表单";
+		rm.ClassMethodName = this.toString() + ".DoTabIdx";
+		rm.Visable = true;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "模板打印";
+		rm.ClassMethodName = this.toString() + ".DoBill";
+		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
 
 		/// #endregion 方法 - 基本功能.
 
@@ -358,7 +330,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.getHisAttrs().AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoChangeFieldName";
 		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/ReName.png";
-		//map.AddRefMethod(rm);
+		// map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "重命表单ID";
@@ -368,7 +340,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.ClassMethodName = this.toString() + ".DoChangeFrmID";
 		rm.Icon = "../../WF/Img/ReName.png";
 		rm.GroupName = "高级设置";
-		//map.AddRefMethod(rm);
+		// map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "复制表单";
@@ -380,7 +352,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.ClassMethodName = this.toString() + ".DoCopyFrm";
 		rm.Icon = "../../WF/Img/Btn/Copy.GIF";
 		rm.GroupName = "高级设置";
-		//map.AddRefMethod(rm);
+		// map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "手机端表单";
@@ -388,7 +360,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/telephone.png";
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		//map.AddRefMethod(rm);
+		// map.AddRefMethod(rm);
 
 		/// #endregion 高级设置.
 
@@ -401,7 +373,7 @@ public class MapFrmFree extends EntityNoName {
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		//map.AddRefMethod(rm);
+		// map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "调用分析API"; // "设计表单";
@@ -435,26 +407,25 @@ public class MapFrmFree extends EntityNoName {
 
 		return super.beforeUpdate();
 	}
-	
+
 	@Override
 	protected void afterInsertUpdateAction() throws Exception {
-		//修改关联明细表
-        MapDtl dtl = new MapDtl();
-        dtl.setNo(this.getNo());
-        if (dtl.RetrieveFromDBSources() == 1)
-        {
-        	dtl.setName(this.getName());
-        	dtl.setPTable(this.getPTable());
-        	dtl.DirectUpdate();
+		// 修改关联明细表
+		MapDtl dtl = new MapDtl();
+		dtl.setNo(this.getNo());
+		if (dtl.RetrieveFromDBSources() == 1) {
+			dtl.setName(this.getName());
+			dtl.setPTable(this.getPTable());
+			dtl.DirectUpdate();
 
-            MapData map = new MapData(this.getNo());
-            //避免显示在表单库中
-            map.setFK_FrmSort("");
-            map.setFK_FormTree("");
-            map.DirectUpdate();
-        }	
+			MapData map = new MapData(this.getNo());
+			// 避免显示在表单库中
+			map.setFK_FrmSort("");
+			map.setFK_FormTree("");
+			map.DirectUpdate();
+		}
 	}
-	
+
 	public final String DoTabIdx() {
 		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/TabIdx.htm?FK_MapData=" + this.getNo();
 	}
@@ -463,7 +434,7 @@ public class MapFrmFree extends EntityNoName {
 	 * 复制表单
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DoCopyFrm(String frmID, String frmName, String fk_frmTree) throws Exception {
 		return BP.Sys.CCFormAPI.CopyFrm(this.getNo(), frmID, frmName, fk_frmTree);
@@ -475,8 +446,18 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoDesignerFool() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&IsFirst=1&MyPK="
-				+ this.getNo() + "&IsEditMapData=True";
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()
+				+ "&IsFirst=1&MyPK=" + this.getNo() + "&IsEditMapData=True";
+	}
+
+	/**
+	 * 单据打印
+	 * 
+	 * @return
+	 */
+	public String DoBill() {
+		return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node="
+				+ this.getNodeID();
 	}
 
 	/**
@@ -498,8 +479,6 @@ public class MapFrmFree extends EntityNoName {
 		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/FiledsList.htm?FK_MapData=" + this.getNo();
 	}
 
-	 
-
 	/// #region 通用方法.
 	/**
 	 * 替换名称
@@ -511,7 +490,7 @@ public class MapFrmFree extends EntityNoName {
 	 * @param newFieldName
 	 *            新字段名称(可以为空)
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) throws Exception {
 		MapAttr attrOld = new MapAttr();
@@ -605,7 +584,7 @@ public class MapFrmFree extends EntityNoName {
 	 * 设计表单
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DoDFrom() throws Exception {
 		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/CCForm/Frm.jsp?FK_MapData=" + this.getNo()
@@ -623,12 +602,13 @@ public class MapFrmFree extends EntityNoName {
 	 * 设计傻瓜表单
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String DoDFromCol4() throws Exception {
 		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()
-				+ "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&IsFirst=1&AppCenterDBType="
-				+ BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+				+ "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID()
+				+ "&IsFirst=1&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo="
+				+ BP.Sys.SystemConfig.getCustomerNo();
 		try {
 			PubClass.WinOpen(ContextHolderUtils.getResponse(), url, 800, 650);
 		} catch (IOException e) {
@@ -703,9 +683,9 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoEvent() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
+		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo()
+				+ "&T=sd&FK_Node=0";
 	}
-
 
 	/**
 	 * 导出表单
@@ -713,8 +693,8 @@ public class MapFrmFree extends EntityNoName {
 	 * @return
 	 */
 	public final String DoExp() {
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData="+ this.getNo();
-		
+		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData=" + this.getNo();
+
 	}
 
 	/// #endregion 方法.

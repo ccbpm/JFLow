@@ -5,6 +5,7 @@ import java.io.IOException;
 import BP.DA.*;
 import BP.En.*;
 import BP.Tools.ContextHolderUtils;
+import BP.WF.Glo;
 import BP.Sys.*;
 
 /** 
@@ -285,6 +286,12 @@ public class MapFrmNode extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
+		rm = new RefMethod();
+        rm.Title = "模板打印";
+        rm.ClassMethodName = this.toString() + ".DoBill";
+        rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
 
 
 			///#region 高级设置.
@@ -420,6 +427,15 @@ public class MapFrmNode extends EntityNoName
 		// WF/Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=ND102&UserNo=admin&SID=44a42h5gcbxnwjof2hv2pw5e
 		return "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID();
 	}
+	
+	/** 
+	 单据打印
+	 @return 
+	*/
+   public String DoBill()
+   {
+       return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+   }
 	/** 
 	 傻瓜表单设计器
 	 

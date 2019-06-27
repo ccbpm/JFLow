@@ -12,7 +12,6 @@ import BP.En.*;
 public class MapDtls extends EntitiesNoName
 {
 
-		
 	/** 
 	 明细s
 	 
@@ -28,7 +27,9 @@ public class MapDtls extends EntitiesNoName
 	*/
 	public MapDtls(String fk_mapdata) throws Exception
 	{
-		this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.No);
+		//被周朋去掉. 为什么要过滤 = 0的数据.
+		//this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.No);
+		this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata);
 	}
 	/** 
 	 得到它的 Entity

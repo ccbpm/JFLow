@@ -332,11 +332,11 @@ public class CCMobile extends WebContralBase
 
 				if (this.getFK_Flow() == null)
 				{
-					sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + WebUser.getNo() + "%' AND WFState > 1 AND FID = 0 GROUP BY TSpan";
+					sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.getNo() + "%' OR TodoEmps LIKE '%"+BP.Web.WebUser.getNo()+",%' OR Starter='" + WebUser.getNo() + "') AND WFState > 1 AND FID = 0 GROUP BY TSpan";
 				}
 				else
 				{
-					sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow() + "' AND WFState > 1 AND FID = 0 AND Emps LIKE '%" + WebUser.getNo() + "%'  GROUP BY TSpan";
+					sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow() + "' AND WFState > 1 AND FID = 0 AND (Emps LIKE '%" + WebUser.getNo() + "%' OR TodoEmps LIKE '%"+BP.Web.WebUser.getNo()+",%' OR Starter='" + WebUser.getNo() + "')  GROUP BY TSpan";
 				}
 
 				DataTable dtTSpanNum = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -382,6 +382,8 @@ public class CCMobile extends WebContralBase
 				qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", "%" + BP.Web.WebUser.getNo() + "%");
 				qo.addOr();
 		        qo.AddWhere(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
+		        qo.addOr();
+		        qo.AddWhere(GenerWorkFlowAttr.TodoEmps," LIKE ","%" + BP.Web.WebUser.getNo()+ ",%");
 		        qo.addRightBracket();
 		        
 				if (tSpan.equals("-1") == false)

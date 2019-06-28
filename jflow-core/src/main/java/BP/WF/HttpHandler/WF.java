@@ -373,7 +373,7 @@ public class WF extends WebContralBase {
 			dt.Columns.get("WFSTA").ColumnName = "WFSta";
 			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
 			dt.Columns.get("TSPAN").ColumnName = "TSpan";
-			dt.Columns.get("TOTOSTA").ColumnName = "TodoSta";
+			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
 			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
 			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
 			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
@@ -401,7 +401,7 @@ public class WF extends WebContralBase {
 			dt.Columns.get("FK_NY").ColumnName = "FK_NY";
 			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
 			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
-			dt.Columns.get("FK_FKLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
 			dt.Columns.get("EMPS").ColumnName = "Emps";
 			dt.Columns.get("DOMAIN").ColumnName = "Domain";

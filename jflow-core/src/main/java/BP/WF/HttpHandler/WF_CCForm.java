@@ -1565,13 +1565,18 @@ public class WF_CCForm extends WebContralBase {
 
 			String lgType = dr.getValue("LGType").toString();
 			String uiBindKey = dr.getValue("UIBindKey").toString();
-			String ctrlType = dr.getValue("UIContralType").toString();
+			 if (DataType.IsNullOrEmpty(uiBindKey) == true)
+                 continue; //为空就continue.
 
-			if (DataType.IsNullOrEmpty(uiBindKey) == false && ctrlType.equals("1") == true) {
-				/* 如果是外部数据源的情况. */
-			} else if (lgType.equals("2") == false) {
-				continue;
-			}
+             if (lgType.equals("1") == true)
+                 continue; //枚举值就continue;
+
+             String uiIsEnable = dr.getValue("UIIsEnable").toString();
+             if (uiIsEnable.equals("0") == true && lgType.equals("1") == true)
+                 continue; //如果是外键，并且是不可以编辑的状态.
+
+             if (uiIsEnable.equals("1") == true && lgType.equals("0") == true)
+                 continue; //如果是外部数据源，并且是不可以编辑的状态.
 
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.getValue("KeyOfEn").toString();

@@ -227,6 +227,8 @@ public interface LocalWSI {
 	 @return 返回待办
 	*/
    public String WorkProgressBar(long  workID, String userNo) throws Exception;
+   public String WorkProgressBar20(long  workID, String userNo) throws Exception;
+   
    /** 
 	 查询数据	 
 	 @param sqlOfSelect 要查询的sql

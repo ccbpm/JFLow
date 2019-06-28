@@ -490,7 +490,8 @@ public class LocalWS implements LocalWSI {
 
         //状态,
         int wfState = Integer.parseInt(gwf.Rows.get(0).getValue("WFState").toString());
-        String currNode = gwf.Rows.get(0).getValue("FK_Node").toString(); //停留节点.
+        int currNode = Integer.parseInt(gwf.Rows.get(0).getValue("FK_Node").toString());
+       // String currNode = gwf.Rows.get(0).getValue("FK_Node").toString(); //停留节点.
         if (wfState == 3)
             return BP.Tools.Json.ToJson(tracks); //如果流程结束了，所有的数据都在tracks里面.
  
@@ -507,12 +508,15 @@ public class LocalWS implements LocalWSI {
                 {
                     DataRow mydr = tracks.NewRow();
                     mydr.setValue("NodeName", nd.getValue("Name").toString());
-                    mydr.setValue("FK_Node", nd.getValue("NodeID").toString());      
+                    mydr.setValue("FK_Node", nd.getValue("NodeID").toString());     
                     
                     tracks.Rows.add(mydr);
                     break;
                 }
             }
+        	
+            currNode = nextNode;
+
         }
         	
         return BP.Tools.Json.ToJson(tracks);
@@ -520,12 +524,12 @@ public class LocalWS implements LocalWSI {
     }
 
 	// 根据当前节点获得下一个节点.
-	public int GetNextNodeID(String nodeID, DataTable dirs)
+	public int GetNextNodeID(int nodeID, DataTable dirs)
     {
         int toNodeID = 0;
         for (DataRow dir : dirs.Rows)        
         {
-            if (dir.getValue("Node").toString().equals( nodeID))
+            if ( Integer.parseInt(dir.getValue("Node").toString()) == nodeID)
             {
                 toNodeID = Integer.parseInt( dir.getValue("ToNode").toString());
                 break;
@@ -536,7 +540,7 @@ public class LocalWS implements LocalWSI {
         
         for (DataRow dir11 : dirs.Rows)
         {
-            if (dir11.getValue("Node").toString().equals(nodeID))
+            if (Integer.parseInt(dir11.getValue("Node").toString()) ==nodeID )
             {
                 toNodeID2 = Integer.parseInt(dir11.getValue("ToNode").toString());
             }
@@ -544,12 +548,10 @@ public class LocalWS implements LocalWSI {
 
         //两次去的不一致，就有分支，有分支就reutrn 0 .
         if (toNodeID2 == toNodeID)       
-            return toNodeID;
-         
-        return  0 ;
-         
+            return toNodeID; 
+        return  0 ; 
     }
-
+ 
 	/**
 	 * 查询数据
 	 * 

@@ -1634,8 +1634,6 @@ public class MapData extends EntityNoName
 
 	    ///#region 检查导入的数据是否完整.
 		String errMsg = "";
-		//if (ds.Tables[0].TableName != "Sys_MapData")
-		//    errMsg += "@非表单模板。";
 		
 		List<DataTable> listD = ds.getTables();
 		ArrayList<String> arr = new ArrayList<String>();
@@ -1711,9 +1709,7 @@ public class MapData extends EntityNoName
 			if (StringHelper.isNullOrEmpty(oldMapID) == true)
 			{
 				oldMapID = dtMap.Rows.get(0).getValue("No").toString();
-				//oldMapID = fk_mapdata.substring(2, fk_mapdata.length());
 			}
-			//  throw new Exception("@没有找到 oldMapID ");
 		}
 
 		String timeKey = new java.util.Date().toString();
@@ -1746,7 +1742,6 @@ public class MapData extends EntityNoName
 						dtl.Insert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_MapData":
 			else if (dt.TableName.equals("Sys_MapData"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -1799,7 +1794,6 @@ public class MapData extends EntityNoName
 						md.DirectInsert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_FrmBtn":
 			else if (dt.TableName.equals("Sys_FrmBtn"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -1818,17 +1812,11 @@ public class MapData extends EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-//						if (isSetReadonly == true)
-//						{
-//							en.setIsEnable(false);
-//						}
-
 
 						en.setMyPK(DBAccess.GenerGUID());
 						en.Insert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_FrmLine":
 			else if (dt.TableName.equals("Sys_FrmLine"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -1851,7 +1839,6 @@ public class MapData extends EntityNoName
 						en.Insert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_FrmLab":
 			else if (dt.TableName.equals("Sys_FrmLab"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -1869,12 +1856,10 @@ public class MapData extends EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-						//  en.FK_MapData = fk_mapdata; 删除此行解决从表lab的问题。
 						en.setMyPK("LB_" + idx + "_" + fk_mapdata);
 						en.Insert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_FrmLink":
 			else if (dt.TableName.equals("Sys_FrmLink"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -1897,7 +1882,6 @@ public class MapData extends EntityNoName
 						en.Insert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_FrmEle":
 			else if (dt.TableName.equals("Sys_FrmEle"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -1916,15 +1900,10 @@ public class MapData extends EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-//						if (isSetReadonly == true)
-//						{
-//							en.setIsEnable(false);
-//						}
 
 						en.Insert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_FrmImg":
 			else if (dt.TableName.equals("Sys_FrmImg"))
 			{
 					for (DataRow dr : dt.Rows)
@@ -1943,11 +1922,11 @@ public class MapData extends EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-						en.setMyPK("Img_" + idx + "_" + fk_mapdata);
+						  if(DataType.IsNullOrEmpty(en.getKeyOfEn()) == true)
+							  en.setMyPK("Img_" + idx + "_" + fk_mapdata);
 						en.Insert();
 					}
 			}
-//ORIGINAL LINE: case "Sys_FrmImgAth":
 			else if (dt.TableName.equals("Sys_FrmImgAth"))
 			{
 					for (DataRow dr : dt.Rows)

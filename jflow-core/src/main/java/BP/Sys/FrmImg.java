@@ -23,6 +23,18 @@ public class FrmImg extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAttr.Name, value);
 	}
+	/**
+	 * 中文对应的字段
+	 * @return
+	 */
+	public final String getKeyOfEn()
+	{
+		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
+	}
+	public final void setKeyOfEn(String value)
+	{
+		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
+	}
 	/** 
 	 英文名称
 	 
@@ -105,7 +117,6 @@ public class FrmImg extends EntityMyPK
 		String src = this.GetValStringByKey(FrmImgAttr.ImgPath);
 		if (StringHelper.isNullOrEmpty(src))
 		{
-			//String appPath = BP.Sys.Glo.getRequest().getApplicationPath();
 			src =  "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
 		}
 		return src;
@@ -119,7 +130,6 @@ public class FrmImg extends EntityMyPK
 		String src = this.GetValStringByKey(FrmImgAttr.ImgURL);
 		if (StringHelper.isNullOrEmpty(src) || src.contains("component/Img"))
 		{
-			//String appPath = BP.Sys.Glo.getRequest().ApplicationPath;
 			src =  "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
 		}
 		return src;
@@ -265,8 +275,18 @@ public class FrmImg extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
-		///#endregion
+	
+	/**
+	 * 生成MyPK
+	 */
+	@Override
+	 protected  boolean beforeInsert() throws Exception
+     {
+         if(DataType.IsNullOrEmpty(this.getKeyOfEn()) == false)
+             this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn()) ;
+         return super.beforeInsert();
+     }
+	
 
 	/** 
 	 是否存在相同的数据?

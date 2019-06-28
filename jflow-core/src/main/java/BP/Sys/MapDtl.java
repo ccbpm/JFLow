@@ -1258,7 +1258,7 @@ public class MapDtl extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setMaxLen(20);
+			attr.setMaxLen(50);
 			attr.setMinLen(0);
 			attr.setDefVal("WebUser.No");
 			attr.setTag("WebUser.No");

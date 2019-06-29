@@ -722,6 +722,32 @@ public class NodeExt extends Entity
         rm.ClassMethodName = this.toString() + ".DoCCer";  //要执行的方法名.
         rm.refMethodType = RefMethodType.RightFrameOpen; // 功能类型
         map.AddRefMethod(rm);
+        
+        
+        
+        rm = new RefMethod();
+        rm.Title = "自定义属性(通用)";
+        rm.ClassMethodName = this.toString() + ".DoSelfParas()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "实验中的功能";
+        rm.Visable = false;
+        map.AddRefMethod(rm);
+        rm = new RefMethod();
+        rm.Title = "自定义属性(自定义)";
+        rm.ClassMethodName = this.toString() + ".DoNodeAttrExt()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "实验中的功能";
+        rm.Visable = false;
+        map.AddRefMethod(rm);
+
+        rm = new RefMethod();
+        rm.Title = "设置节点类型";
+        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+        rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
+        rm.refMethodType = RefMethodType.RightFrameOpen;
+        rm.GroupName = "实验中的功能";
+        rm.Visable = false;
+        map.AddRefMethod(rm);
 
         //#endregion 实验中的功能
 
@@ -729,6 +755,16 @@ public class NodeExt extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	
+	  
+    /// <summary>
+    /// 自定义参数（自定义）
+    /// </summary>
+    /// <returns></returns>
+    public String DoNodeAttrExt()
+    {
+        return "../../../DataUser/OverrideFiles/NodeAttrExt.htm?FK_Node=" + this.getNodeID();
+    }
 
 	  public final String DoNodeAppType()
       {

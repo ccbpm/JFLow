@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>节点属性自定义</title>
+    <script src="../../WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../WF/Scripts/config.js"></script>
+    <script src="../../WF/Comm/Gener.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //页面启动函数.
+        $(function () {
+
+            /** 如果您要把该页面转入其他页面，请按照如下方式处理.
+            var url = window.location.href;
+            url = url.replace('AthSelf.htm', 'XXXX.jsp');
+            window.location.href = url;
+            return;
+            */
+
+            var flowNo = GetQueryString("FK_Flow");
+            var url = window.location.href;
+            $("#url").html(url);
+
+        });
+
+    </script>
+</head>
+<body>
+    <h5> 自定义流程属性</h5>
+    <ul>
+        <li>在您开发的时候，会遇到一些特定的流程属性在ccbpm中是没有的。</li>
+        <li>如果您要为每个节点定义这些属性，请重写这个页面。</li>
+        <li>该页面的url为:/DataUser/OverrideFiles/FlowAttrExt.htm?FK_Flow=xxx</li>
+        <li>我们建议您把定义该节点的特定属性放入到 WF_Flow 表里。</li>
+        <li>这个表的字段您可以自己扩展，自己获取，自己解析这些属性。</li>
+    </ul>
+</body>
+</html>

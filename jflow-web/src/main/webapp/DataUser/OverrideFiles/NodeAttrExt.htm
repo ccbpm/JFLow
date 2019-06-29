@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>节点属性自定义</title>
+    <script src="../../WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../WF/Scripts/config.js"></script>
+    <script src="../../WF/Comm/Gener.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //页面启动函数.
+        $(function () {
+
+            /** 如果您要把该页面转入其他页面，请按照如下方式处理.
+            var url = window.location.href;
+            url = url.replace('AthSelf.htm', 'XXXX.jsp');
+            window.location.href = url;
+            return;
+            */
+
+            var nodeID = GetQueryString("FK_Node");
+            var flowNo = GetQueryString("FK_Flow");
+
+            var url = window.location.href;
+            $("#url").html(url);
+
+        });
+        function Save() {
+
+            var doc = $("#TB_Doc").val();
+            doc = doc.replace(/"/g, "^");
+            doc = doc.replace(/'/g, "~");
+
+            node.SelfParas = doc;
+            node.Update();
+            window.location.href = window.location.href;
+            return;
+        }
+    </script>
+</head>
+<body>
+ <!--<form id="cc">
+    <table style="width: 95%;" >
+        <caption>节点自定义参数</caption>
+        <tr>
+            <td>
+                <textarea type="text" name='TB_Doc' id="TB_Doc" rows="30" style=" width:95%;" />
+                </textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" value="保存" onclick="Save()" />
+            </td>
+        </tr>
+    </table>
+    </form>
+<hr>-->
+
+    <h5> 自定义节点属性</h5>
+    <ul>
+        <li>在您开发的时候，会遇到一些特定的节点属性在ccbpm中是没有的。</li>
+        <li>如果您要为每个节点定义这些属性，请重写这个页面。</li>
+        <li>该页面的位置为:/DataUser/OverrideFiles/NodeAttrExt.htm?FK_Node=xxx</li>
+        <li>我们建议您把定义该节点的特定属性放入到 WF_Node 表的 SelfParas 字段里，这个表的字段您可以自己扩展。</li>
+    </ul>
+</body>
+</html>

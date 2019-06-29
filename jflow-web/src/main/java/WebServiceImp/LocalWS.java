@@ -480,6 +480,7 @@ public class LocalWS implements LocalWSI {
 	 */
 	public String WorkProgressBar20(long  workID, String userNo) throws Exception
     {
+		BP.WF.Dev2Interface.Port_Login(userNo);
    
         DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workID);
 
@@ -519,8 +520,13 @@ public class LocalWS implements LocalWSI {
 
         }
         	
-        return BP.Tools.Json.ToJson(tracks);
-        
+        return BP.Tools.Json.ToJson(tracks); 
+    }
+	
+	public String SDK_Page_Init(long  workID, String userNo) throws Exception
+    {
+		BP.WF.Dev2Interface.Port_Login(userNo);
+		return  BP.WF.Dev2Interface.SDK_Page_Init(workID);
     }
 
 	// 根据当前节点获得下一个节点.

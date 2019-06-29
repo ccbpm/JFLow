@@ -677,35 +677,8 @@ public class NodeExt extends Entity
         rm.GroupName = "考核规则";
         map.AddRefMethod(rm);
        // #endregion 考核.
-
-       // #region 实验中的功能
-        rm = new RefMethod();
-        rm.Title = "自定义参数";
-        rm.ClassMethodName = this.toString() + ".DoSelfParas()";
-        rm.refMethodType = RefMethodType.RightFrameOpen;
-        rm.GroupName = "实验中的功能";
-        rm.Visable = false;
-        map.AddRefMethod(rm);
-
-        rm = new RefMethod();
-        rm.Title = "设置节点类型";
-        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
-        rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
-        rm.refMethodType = RefMethodType.RightFrameOpen;
-        rm.GroupName = "实验中的功能";
-        rm.Visable = false;
-        map.AddRefMethod(rm);
-
-
-        rm = new RefMethod();
-        rm.Title = "批量设置节点属性";
-        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
-        rm.ClassMethodName = this.toString() + ".DoNodeAttrs()";
-        rm.refMethodType = RefMethodType.RightFrameOpen;
-        rm.GroupName = "实验中的功能";
-        rm.Visable = false;
-        map.AddRefMethod(rm);
-
+ 
+        //高级功能.
         rm = new RefMethod();
         rm.Title = "工作批处理规则";
         rm.Icon = "../../WF/Img/Btn/DTS.gif";
@@ -723,33 +696,24 @@ public class NodeExt extends Entity
         rm.refMethodType = RefMethodType.RightFrameOpen; // 功能类型
         map.AddRefMethod(rm);
         
-        
-        
+         
         rm = new RefMethod();
         rm.Title = "自定义属性(通用)";
         rm.ClassMethodName = this.toString() + ".DoSelfParas()";
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.GroupName = "实验中的功能";
-        rm.Visable = false;
+       // rm.Visable = false;
         map.AddRefMethod(rm);
+        
         rm = new RefMethod();
         rm.Title = "自定义属性(自定义)";
         rm.ClassMethodName = this.toString() + ".DoNodeAttrExt()";
         rm.refMethodType = RefMethodType.RightFrameOpen;
         rm.GroupName = "实验中的功能";
-        rm.Visable = false;
+        //rm.Visable = false;
         map.AddRefMethod(rm);
 
-        rm = new RefMethod();
-        rm.Title = "设置节点类型";
-        rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
-        rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
-        rm.refMethodType = RefMethodType.RightFrameOpen;
-        rm.GroupName = "实验中的功能";
-        rm.Visable = false;
-        map.AddRefMethod(rm);
-
-        //#endregion 实验中的功能
+       
 
 
 		this.set_enMap(map);

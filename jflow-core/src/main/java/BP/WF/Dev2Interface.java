@@ -4933,6 +4933,7 @@ public class Dev2Interface {
 		dtHistory.Columns.Add("NodeName"); // 名称.
 		dtHistory.Columns.Add("EmpNo"); // 人员编号.
 		dtHistory.Columns.Add("EmpName"); // 名称
+		dtHistory.Columns.Add("DeptName"); // 部门名称 
 		dtHistory.Columns.Add("RDT"); // 记录日期.
 		dtHistory.Columns.Add("SDT"); // 应完成日期(可以不用.)
 		dtHistory.Columns.Add("IsPass"); // 应完成日期(可以不用.)
@@ -4940,8 +4941,11 @@ public class Dev2Interface {
 		// 执行人.
 		if (gwf.getWFState() == WFState.Complete) {
 			// 历史执行人.
-			sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workID
-					+ " AND (ActionType=1 OR ActionType=0)  ORDER BY RDT DESC";
+			//sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workID
+				//	+ " AND (ActionType=1 OR ActionType=0)  ORDER BY RDT DESC";
+			
+            sql = "SELECT C.Name AS DeptName,  A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workID + " AND (A.ActionType=1 OR A.ActionType=0) AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
+
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
 			for (DataRow drTrack : dtTrack.Rows) {
@@ -4951,6 +4955,10 @@ public class Dev2Interface {
 				dr.setValue("NodeName", drTrack.getValue("NDFromT"));
 				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
 				dr.setValue("EmpName", drTrack.getValue("EmpFromT"));
+				dr.setValue("DeptName", drTrack.getValue("DeptName"));
+				
+              //  dr["DeptName"] = drTrack["DeptName"]; //部门名称.
+
 				dr.setValue("RDT", drTrack.getValue("RDT"));
 				// dr.setValue("SDT", drTrack.getValue("NDFrom"));
 
@@ -4969,6 +4977,7 @@ public class Dev2Interface {
 				dr.setValue("NodeName", gwl.getFK_NodeText());
 				dr.setValue("EmpNo", gwl.getFK_Emp());
 				dr.setValue("EmpName", gwl.getFK_EmpText());
+				dr.setValue("DeptName", gwl.getFK_DeptT());
 				dr.setValue("RDT", gwl.getRDT());
 				dr.setValue("SDT", gwl.getSDT());
 				

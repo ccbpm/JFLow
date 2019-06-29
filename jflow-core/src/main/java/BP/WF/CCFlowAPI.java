@@ -75,7 +75,8 @@ public class CCFlowAPI {
 	 * @return 返回dataset
 	 * @throws Exception
 	 */
-	public static DataSet GenerWorkNode(String fk_flow, int fk_node, long workID, long fid, String userNo, String fromWorkOpt)
+	public static DataSet GenerWorkNode(String fk_flow, int fk_node, long workID, 
+			long fid, String userNo, String fromWorkOpt)
 			throws Exception {
 
 		// 让其登录. 

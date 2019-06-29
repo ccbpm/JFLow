@@ -96,8 +96,7 @@ public class Dev2Interface {
 				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND TaskSta!=1 ";
 			} else {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr
-						+ "FK_Emp ";
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp ";
 			}
 
 			ps.Add("FK_Emp", BP.Web.WebUser.getNo());
@@ -115,8 +114,7 @@ public class Dev2Interface {
 				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND TaskSta!=1  ";
 			} else {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
-						+ "FK_Emp ";
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp ";
 			}
 			ps.Add("FK_Emp", BP.Web.WebUser.getNo());
 			break;
@@ -137,8 +135,7 @@ public class Dev2Interface {
 				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
 						+ "FK_Emp AND TaskSta!=1 ";
 			} else {
-				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr
-						+ "FK_Emp ";
+				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp ";
 			}
 
 			ps.Add("FK_Emp", BP.Web.WebUser.getNo());
@@ -1068,10 +1065,9 @@ public class Dev2Interface {
 		}
 		throw new RuntimeException("@未判断的类型。");
 	}
-	
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo) throws Exception
-	{
-	 return DB_GenerCanStartFlowsOfDataTable(userNo,null);
+
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo) throws Exception {
+		return DB_GenerCanStartFlowsOfDataTable(userNo, null);
 	}
 
 	/**
@@ -1083,14 +1079,14 @@ public class Dev2Interface {
 	 *         如何使用该方法形成发起工作列表,请参考:\WF\UC\Start.ascx
 	 * @throws Exception
 	 */
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo,String domain) throws Exception {
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String domain) throws Exception {
 
 		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,A.IsStartInMobile, A.Idx";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
 		sql += " WHERE A.No=B.FK_Flow AND A.FK_FlowSort=C.No  AND FK_Emp='" + userNo + "' ";
-		if (DataType.IsNullOrEmpty(domain)==false)
-			sql+=" AND C.Domain='"+domain+"'";
-		
+		if (DataType.IsNullOrEmpty(domain) == false)
+			sql += " AND C.Domain='" + domain + "'";
+
 		sql += " ORDER BY C.Idx, A.Idx";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -1104,7 +1100,6 @@ public class Dev2Interface {
 			dt.Columns.get("IDX").ColumnName = "Idx";
 			dt.Columns.get("ISSTARTINMOBILE").ColumnName = "IsStartInMobile";
 			dt.Columns.get("IDX").ColumnName = "IsStartInMobile";
-			 
 
 		}
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
@@ -1123,7 +1118,7 @@ public class Dev2Interface {
 
 	public static DataTable DB_GenerCanStartFlowsTree(String userNo) throws Exception {
 		// 发起.
-		DataTable table = DB_GenerCanStartFlowsOfDataTable(userNo,null);
+		DataTable table = DB_GenerCanStartFlowsOfDataTable(userNo, null);
 		table.Columns.Add("ParentNo");
 		table.Columns.Add("ICON");
 		String flowSort = String.format("select No,Name,ParentNo from WF_FlowSort");
@@ -1332,16 +1327,17 @@ public class Dev2Interface {
 	public static DataTable DB_Focus(String flowNo, String userNo) throws Exception {
 		return DB_Focus(flowNo, userNo, null);
 	}
-	
+
 	/**
 	 * 获取当前人员所有待办
+	 * 
 	 * @param userNo
 	 * @param fk_node
 	 * @return
 	 * @throws Exception
 	 */
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node) throws Exception{
-		return  DB_GenerEmpWorksOfDataTable(userNo, fk_node,null);
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node) throws Exception {
+		return DB_GenerEmpWorksOfDataTable(userNo, fk_node, null);
 	}
 
 	/**
@@ -1352,16 +1348,16 @@ public class Dev2Interface {
 	 * @return 共享工作列表
 	 * @throws Exception
 	 */
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node,String showWhat) throws Exception {
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node, String showWhat) throws Exception {
 		// 执行 todolist 调度.
 		DTS_GenerWorkFlowTodoSta();
-		
-		 String wfStateSql ="";
-         if (DataType.IsNullOrEmpty(showWhat) == true)
-             wfStateSql = " WFState!=" + WFState.Batch.getValue();
-         else
-             wfStateSql = " WFState=" + showWhat;
-         
+
+		String wfStateSql = "";
+		if (DataType.IsNullOrEmpty(showWhat) == true)
+			wfStateSql = " WFState!=" + WFState.Batch.getValue();
+		else
+			wfStateSql = " WFState=" + showWhat;
+
 		Paras ps = new Paras();
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql;
@@ -1369,19 +1365,21 @@ public class Dev2Interface {
 			// 不是授权状态
 			if (fk_node == 0) {
 				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
-					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND "+wfStateSql + " ORDER BY FK_Flow,ADT DESC ";
+					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND "
+							+ wfStateSql + " ORDER BY FK_Flow,ADT DESC ";
 				} else {
-					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp  AND "+wfStateSql + " ORDER BY FK_Flow,ADT DESC ";
+					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp  AND " + wfStateSql
+							+ " ORDER BY FK_Flow,ADT DESC ";
 				}
 
 				ps.Add("FK_Emp", userNo);
 			} else {
 				if (BP.WF.Glo.getIsEnableTaskPool() == true) {
 					ps.SQL = "SELECT * FROM WF_EmpWorks  WHERE FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0 AND FK_Node="
-							+ dbstr + "FK_Node  AND "+wfStateSql + " ORDER BY  ADT DESC ";
+							+ dbstr + "FK_Node  AND " + wfStateSql + " ORDER BY  ADT DESC ";
 				} else {
 					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr
-							+ "FK_Node  AND "+wfStateSql + " ORDER BY  ADT DESC ";
+							+ "FK_Node  AND " + wfStateSql + " ORDER BY  ADT DESC ";
 				}
 
 				ps.Add("FK_Node", fk_node);
@@ -4933,7 +4931,7 @@ public class Dev2Interface {
 		dtHistory.Columns.Add("NodeName"); // 名称.
 		dtHistory.Columns.Add("EmpNo"); // 人员编号.
 		dtHistory.Columns.Add("EmpName"); // 名称
-		dtHistory.Columns.Add("DeptName"); // 部门名称 
+		dtHistory.Columns.Add("DeptName"); // 部门名称
 		dtHistory.Columns.Add("RDT"); // 记录日期.
 		dtHistory.Columns.Add("SDT"); // 应完成日期(可以不用.)
 		dtHistory.Columns.Add("IsPass"); // 应完成日期(可以不用.)
@@ -4941,10 +4939,13 @@ public class Dev2Interface {
 		// 执行人.
 		if (gwf.getWFState() == WFState.Complete) {
 			// 历史执行人.
-			//sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workID
-				//	+ " AND (ActionType=1 OR ActionType=0)  ORDER BY RDT DESC";
-			
-            sql = "SELECT C.Name AS DeptName,  A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workID + " AND (A.ActionType=1 OR A.ActionType=0) AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
+			// sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) +
+			// "Track WHERE WorkID=" + workID
+			// + " AND (ActionType=1 OR ActionType=0) ORDER BY RDT DESC";
+
+			sql = "SELECT C.Name AS DeptName,  A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow())
+					+ "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workID
+					+ " AND (A.ActionType=1 OR A.ActionType=0) AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
 
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
@@ -4956,16 +4957,16 @@ public class Dev2Interface {
 				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
 				dr.setValue("EmpName", drTrack.getValue("EmpFromT"));
 				dr.setValue("DeptName", drTrack.getValue("DeptName"));
-				
-              //  dr["DeptName"] = drTrack["DeptName"]; //部门名称.
+
+				// dr["DeptName"] = drTrack["DeptName"]; //部门名称.
 
 				dr.setValue("RDT", drTrack.getValue("RDT"));
 				// dr.setValue("SDT", drTrack.getValue("NDFrom"));
 
 				dr.setValue("SDT", "");
-				
+
 				dr.setValue("IsPass", 1);
- 
+
 				dtHistory.Rows.add(dr);
 			}
 		} else {
@@ -4980,9 +4981,9 @@ public class Dev2Interface {
 				dr.setValue("DeptName", gwl.getFK_DeptT());
 				dr.setValue("RDT", gwl.getRDT());
 				dr.setValue("SDT", gwl.getSDT());
-				
+
 				dr.setValue("IsPass", gwl.getIsPassInt());
-			  
+
 				dtHistory.Rows.add(dr);
 
 			}
@@ -9860,7 +9861,7 @@ public class Dev2Interface {
 		ps.Add("FK_Node", nodeID);
 		ps.Add("FK_Emp", empNo);
 		DBAccess.RunSQL(ps);
-		
+
 		// 判断当前节点的已读回执.
 		if (nd.getReadReceipts() == ReadReceipts.None) {
 			return;
@@ -10565,6 +10566,18 @@ public class Dev2Interface {
 		}
 
 		return "附件添加成功";
+	}
+
+	/**
+	 * sdk表单加载初始化信息
+	 * 
+	 * @param workid
+	 *            工作ID
+	 * @return 请参考相关的文档,或者baidu ccbpm sdk表单 SDK_Page_Init
+	 * @throws Exception
+	 */
+	public static String SDK_Page_Init(long workid) throws Exception {
+		return BP.WF.AppClass.SDK_Page_Init(workid);
 	}
 
 	/**
@@ -11396,9 +11409,10 @@ public class Dev2Interface {
 	 * @return
 	 * @throws Exception
 	 */
-	public static DataTable DB_StarFlows(String userNo) throws Exception {		
-		return DB_StarFlows(userNo,null);
+	public static DataTable DB_StarFlows(String userNo) throws Exception {
+		return DB_StarFlows(userNo, null);
 	}
+
 	/**
 	 * 获得指定人的流程发起列表
 	 * 
@@ -11408,7 +11422,7 @@ public class Dev2Interface {
 	 * @throws Exception
 	 */
 	public static DataTable DB_StarFlows(String userNo, String domain) throws Exception {
-		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo,domain);
+		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo, domain);
 		return dt;
 	}
 

@@ -81,10 +81,9 @@ public class NodeSimple extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
-		{
+		if (this.get_enMap() != null)		
 			return this.get_enMap();
-		}
+		
 
 		Map map = new Map("WF_Node", "节点");
 

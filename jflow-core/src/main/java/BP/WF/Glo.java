@@ -1812,6 +1812,8 @@ public class Glo {
 		for (Object key : Htable_FlowFEE.keySet()) {
 			FlowEventBase fee = (FlowEventBase) ((Htable_FlowFEE.get(key) instanceof FlowEventBase)
 					? Htable_FlowFEE.get(key) : null);
+			if(fee == null || fee.getFlowMark() == null)
+				continue;
 			if (fee.getFlowMark().equals(flowMark) || fee.getFlowMark().equals(flowNo)
 					|| fee.getFlowMark().indexOf(flowNo + ",") == 0
 					|| fee.getFlowMark().contains("," + flowNo + ",") == true) {

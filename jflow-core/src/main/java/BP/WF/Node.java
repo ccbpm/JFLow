@@ -150,7 +150,7 @@ public class Node extends Entity {
 		/* 求出来走过的表单集合 */
 		String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A, WF_Node B ";
 		sql += " WHERE A.NDFrom=B.NodeID  ";
-		sql += "  AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue()
+		sql += "  AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue()+ "  OR ActionType=" + ActionType.Skip.getValue() 
 				+ ")  ";
 		sql += "  AND B.FormType=" + NodeFormType.FoolTruck.getValue() + " "; // 仅仅找累加表单.
 		sql += "  AND NDFrom!=" + this.getNodeID() + " "; // 排除当前的表单.

@@ -1834,6 +1834,9 @@ public class FlowExt extends EntityNoName
 				}
 			}
 		}
+          //清空WF_Emp 的StartFlows
+          DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
+          
 		return super.beforeUpdate();
 	}
 	@Override

@@ -161,9 +161,9 @@ public class LocalWS implements LocalWSI {
 			throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
-
+        
 		String msg = objs.ToMsgOfText();
-
+        System.out.println(msg);
 		Hashtable myht = new Hashtable();
 		myht.put("Message", msg);
 		myht.put("IsStopFlow", objs.getIsStopFlow());
@@ -402,6 +402,7 @@ public class LocalWS implements LocalWSI {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public String Runing_UnSend(String userNo, String flowNo, long workID, int unSendToNode, long fid)
 			throws Exception {
 
@@ -424,6 +425,7 @@ public class LocalWS implements LocalWSI {
 	 * @return 回滚信息
 	 * @throws Exception
 	 */
+	@Override
 	public String DoRebackFlowData(String flowNo, long workId, int backToNodeID, String backMsg, String userNo)
 			throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -438,6 +440,7 @@ public class LocalWS implements LocalWSI {
 	 *            流程ID.
 	 * @return 当前节点信息
 	 */
+	@Override
 	public String CurrFlowInfo(String flowNo) throws Exception {
 		Flow fl = new Flow(flowNo);
 		return fl.ToJson();
@@ -450,6 +453,7 @@ public class LocalWS implements LocalWSI {
 	 *            流程ID.
 	 * @return 当前节点信息
 	 */
+	@Override
 	public String CurrGenerWorkFlowInfo(long workID) throws Exception {
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 		return gwf.ToJson();
@@ -464,6 +468,7 @@ public class LocalWS implements LocalWSI {
 	 *            用户编号
 	 * @return 返回待办
 	 */
+	@Override
 	public String WorkProgressBar(long workID, String userNo) throws Exception {
 		DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workID);
 		return BP.Tools.Json.ToJson(ds);
@@ -478,6 +483,7 @@ public class LocalWS implements LocalWSI {
 	 *            用户编号
 	 * @return 返回待办
 	 */
+	@Override
 	public String WorkProgressBar20(long  workID, String userNo) throws Exception
     {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -522,7 +528,8 @@ public class LocalWS implements LocalWSI {
         	
         return BP.Tools.Json.ToJson(tracks); 
     }
-	
+
+	@Override
 	public String SDK_Page_Init(long  workID, String userNo) throws Exception
     {
 		BP.WF.Dev2Interface.Port_Login(userNo);
@@ -530,6 +537,7 @@ public class LocalWS implements LocalWSI {
     }
 
 	// 根据当前节点获得下一个节点.
+	@Override
 	public int GetNextNodeID(int nodeID, DataTable dirs)
     {
         int toNodeID = 0;
@@ -567,6 +575,7 @@ public class LocalWS implements LocalWSI {
 	 *            用户密码
 	 * @return 返回查询数据
 	 */
+	@Override
 	public String DB_RunSQLReturnJSON(String sqlOfSelect, String password) {
 		if (password.equals(password) == false)
 			return "err@密码错误";
@@ -593,39 +602,41 @@ public class LocalWS implements LocalWSI {
 	 * @return 执行信息
 	 * @throws Exception
 	 */
+	@Override
 	public String Node_CC_WriteTo_CClist(int fk_node, long workID, String toEmpNo, String toEmpName, String msgTitle,
 			String msgDoc, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
 		return BP.WF.Dev2Interface.Node_CC_WriteTo_CClist(fk_node, workID, toEmpNo, toEmpName, msgTitle, msgDoc);
 	}
 
-	/**
-	 * 查询数据
-	 * 
-	 * @param sqlOfSelect
-	 *            要查询的sql
-	 * @param password
-	 *            用户密码
-	 * @return 返回查询数据
-	 * @throws Exception
-	 */
-	public Boolean Flow_IsCanView(String flowNo, long workid, String userNo) throws Exception {
-		return BP.WF.Dev2Interface.Flow_IsCanViewTruck(flowNo, workid, userNo);
-	}
 
-	/**
-	 * 查询数据
-	 * 
-	 * @param sqlOfSelect
-	 *            要查询的sql
-	 * @param password
-	 *            用户密码
-	 * @return 返回查询数据
-	 * @throws Exception
-	 */
-	public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception {
-		return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workid, userNo);
-	}
+	   /** 
+	 	 是否可以查看该流程	 
+	 	 @param flowNo 流程编号
+	 	 @param workid 工作ID
+	 	 @return 是否可以查看该工作.
+	 * @throws Exception 
+	 	*/
+	@Override
+    public Boolean Flow_IsCanView(String flowNo, long workid, String userNo) throws Exception
+    {
+        return BP.WF.Dev2Interface.Flow_IsCanViewTruck(flowNo, workid,userNo);
+    }
+    
+    /** 
+	 是否可以查看该流程	 
+	 @param flowNo 要查询的 sql
+	 @param workid 用户密码
+	 @return 是否可以查看该工作.
+* @throws Exception 
+	*/
+	@Override
+    public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception
+    {
+        return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workid, userNo);
+    }
+
+    
 
 	/**
 	 * 获取指定人员的抄送列表 说明:可以根据这个列表生成指定用户的抄送数据.
@@ -634,11 +645,27 @@ public class LocalWS implements LocalWSI {
 	 *            人员编号,如果是null,则返回所有的.
 	 * @return 返回该人员的所有抄送列表,结构同表WF_CCList.
 	 */
+	@Override
 	public String DB_CCList(String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
 
 		DataTable dt = BP.WF.Dev2Interface.DB_CCList(userNo);
 		return BP.Tools.Json.ToJson(dt);
 	}
+	
+	/** 
+                    写入审核信息
+     
+     <param name="workid">workID</param>
+     <param name="msg">审核信息</param>
+     * 
+     */
+	@Override
+    public void Node_WriteWorkCheck(long workid, String msg) throws Exception
+    {
+        GenerWorkFlow gwf = new GenerWorkFlow(workid);
+          BP.WF.Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), msg,"审核");
+    }
+
 
 }

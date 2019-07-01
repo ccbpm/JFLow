@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
+import BP.DA.DataTable;
+
 /**
  * 外部接口
  * @author Administrator
@@ -287,5 +289,17 @@ public interface LocalWSI {
  * @throws Exception 
 	*/
    public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception;
+   
+   public int GetNextNodeID(int nodeID, DataTable dirs) throws Exception;
+   public String SDK_Page_Init(long  workID, String userNo) throws Exception;
+
+	/** 
+                   写入审核信息
+    
+    <param name="workid">workID</param>
+    <param name="msg">审核信息</param>
+    * 
+    */
+   public void Node_WriteWorkCheck(long workid, String msg) throws Exception;
 
 }

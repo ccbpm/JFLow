@@ -60,7 +60,7 @@ public class FrmNode extends EntityMyPK
 	}
 	public final void setHisFrmType(BP.Sys.FrmType value)
 	{
-		this.SetValByKey(FrmNodeAttr.FrmType, value);
+		this.SetValByKey(FrmNodeAttr.FrmType, value.getValue());
 	}
 	  /** 
 	 表单类型

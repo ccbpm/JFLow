@@ -1544,7 +1544,7 @@ public class WF extends WebContralBase {
 					continue;
 
 				for (MapAttr attr : attrs.ToJavaList()) {
-					if (str != attr.getKeyOfEn())
+					if (!str.equals(attr.getKeyOfEn()))
 						continue;
 					realAttr.AddEntity(attr);
 				}

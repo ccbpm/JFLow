@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.En.EntityMyPK;
 import BP.En.Map;
 import BP.En.UAC;
+import BP.Sys.MapData;
 import BP.Sys.SysEnum;
 import BP.Tools.StringHelper;
 
@@ -447,6 +448,9 @@ public class FrmNode extends EntityMyPK
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_Frm() + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
+		 //获取表单的类型
+        MapData mapData = new MapData(this.getFK_Frm());
+        this.setHisFrmType(mapData.getHisFrmType());
 		return super.beforeUpdateInsertAction();
 	}
 

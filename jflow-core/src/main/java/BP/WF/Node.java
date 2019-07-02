@@ -2708,6 +2708,12 @@ public class Node extends Entity {
 		md.Delete();
 
 		md.setName(this.getName());
+		 if (this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.FoolTruck)
+             md.setHisFrmType(FrmType.FoolForm);
+
+        if (this.getHisFormType() == NodeFormType.FreeForm)
+            md.setHisFrmType(FrmType.FreeFrm);
+        
 		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable) {
 			md.setPTable(this.getHisFlow().getPTable());
 		}

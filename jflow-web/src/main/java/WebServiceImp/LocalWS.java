@@ -486,47 +486,11 @@ public class LocalWS implements LocalWSI {
 	@Override
 	public String WorkProgressBar20(long  workID, String userNo) throws Exception
     {
+		
 		BP.WF.Dev2Interface.Port_Login(userNo);
-   
-        DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workID);
-
-        DataTable gwf = ds.GetTableByName("WF_GenerWorkFlow"); //工作记录.
-        DataTable nodes = ds.GetTableByName("WF_Node"); //节点.
-        DataTable dirs = ds.GetTableByName("WF_Direction"); //连接线.
-        DataTable tracks = ds.GetTableByName("Track"); //历史记录.
-
-        //状态,
-        int wfState = Integer.parseInt(gwf.Rows.get(0).getValue("WFState").toString());
-        int currNode = Integer.parseInt(gwf.Rows.get(0).getValue("FK_Node").toString());
-       // String currNode = gwf.Rows.get(0).getValue("FK_Node").toString(); //停留节点.
-        if (wfState == 3)
-            return BP.Tools.Json.ToJson(tracks); //如果流程结束了，所有的数据都在tracks里面.
- 
-        //把以后的为未完成的节点放入到track里面.
-        for (int i = 0; i < 100; i++)
-        {
-            int nextNode = GetNextNodeID(currNode, dirs);
-            if (nextNode == 0)
-                break;
-
-        	for (DataRow nd : nodes.Rows)           
-            {
-                if (Integer.parseInt(nd.getValue("NodeID").toString()) == nextNode)
-                {
-                    DataRow mydr = tracks.NewRow();
-                    mydr.setValue("NodeName", nd.getValue("Name").toString());
-                    mydr.setValue("FK_Node", nd.getValue("NodeID").toString());     
-                    
-                    tracks.Rows.add(mydr);
-                    break;
-                }
-            }
-        	
-            currNode = nextNode;
-
-        }
-        	
-        return BP.Tools.Json.ToJson(tracks); 
+		
+		return BP.WF.AppClass.JobSchedule(workID);
+		 
     }
 
 	@Override

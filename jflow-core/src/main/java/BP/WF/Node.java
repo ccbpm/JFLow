@@ -1222,6 +1222,18 @@ public class Node extends Entity {
 	}
 	
 	/**
+	 * 打印水印规则
+	 * @return
+	 */
+	public final String getShuiYinModle() {
+		return this.GetValStringByKey(BtnAttr.ShuiYinModle);
+	}
+
+	public final void setShuiYinModle(String value) {
+		this.SetValByKey(BtnAttr.ShuiYinModle, value);
+	}
+	
+	/**
 	 * 批处理规则
 	 * 
 	 */
@@ -2164,6 +2176,7 @@ public class Node extends Entity {
 		
 		//打印PDF的处理
 		map.AddTBInt(BtnAttr.PrintPDFModle, 0, "PDF打印规则", true, true);
+		 map.AddTBString(BtnAttr.ShuiYinModle, null, "打印水印规则", true, false, 20, 100, 100, true);
 		// 与未来处理人有关系.
 		// map.AddTBInt(NodeAttr.IsFullSA, 1, "是否计算未来处理人?", false, false);
 		// map.AddTBInt(NodeAttr.IsFullSATime, 0, "是否计算未来接受与处理时间?", false,

@@ -39,8 +39,10 @@ import BP.DA.TWay;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entity;
+import BP.En.FieldType;
 import BP.En.QueryObject;
 import BP.En.Row;
+import BP.En.UIContralType;
 import BP.Port.Emp;
 import BP.Sys.AthCtrlWay;
 import BP.Sys.AthUploadWay;
@@ -2598,6 +2600,93 @@ public class Glo {
 		// 执行判断结束.
 		return false;
 	}
+	
+	 /// <summary>
+    /// 表达式替换/枚举下拉框替换成文本值
+    /// </summary>
+    /// <param name="exp"></param>
+    /// <param name="en"></param>
+    /// <returns></returns>
+    public static String DealExp(String exp, Entity en) throws Exception
+    {
+        //替换字符
+        exp = exp.replace("~", "'");
+
+        if (exp.contains("@") == false)
+            return exp;
+
+        //首先替换加; 的。
+        // 首先替换加; 的。
+ 		exp = exp.replace("@WebUser.No;", WebUser.getNo());
+ 		exp = exp.replace("@WebUser.Name;", WebUser.getName());
+ 		exp = exp.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+ 		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
+
+ 		// 替换没有 ; 的 .
+ 		exp = exp.replace("@WebUser.No", WebUser.getNo());
+ 		exp = exp.replace("@WebUser.Name", WebUser.getName());
+ 		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+ 		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+
+        if (exp.contains("@") == false)
+            return exp;
+
+        //增加对新规则的支持. @MyField; 格式.
+        if (en != null)
+        {
+            Attrs attrs = en.getEnMap().getAttrs();
+            Row row = en.getRow();
+            //特殊判断.
+            if (row.containsKey("OID") == true)
+            	exp = exp.replaceAll("@WorkID", row.GetValByKey("OID").toString());
+
+            if (exp.contains("@") == false)
+                return exp;
+
+            for (String key : row.keySet()) {
+    			if (row.get(key) == null || row.get(key).toString().equals("") == true)
+    				continue;
+
+                if (exp.contains("@" + key))
+                {
+                    Attr attr = attrs.GetAttrByKey(key);
+                    //是枚举或者外键替换成文本
+                    if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum
+                        || attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
+                    {
+                        exp = exp.replace("@" + key, row.get(key+"Text").toString());
+                    }
+                    else
+                    {
+                        if(attr.getMyDataType() == DataType.AppString  && attr.getUIContralType() ==  UIContralType.DDL && attr.getMyFieldType() ==FieldType.Normal)
+                             exp = exp.replace("@" + key, row.get(key+"T").toString());
+                        else
+                            exp = exp.replace("@" + key, row.get(key).toString());
+;
+                    }
+
+                    
+                }
+
+                //不包含@则返回SQL语句
+                if (exp.contains("@") == false)
+                    return exp;
+            }
+
+        }
+      
+        Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+		while (enu.hasMoreElements()) {
+
+			String key = (String) enu.nextElement();
+			if (exp.contains(key) == false)
+				continue;
+
+			exp = exp.replaceAll("@" + key, ContextHolderUtils.getRequest().getParameter(key));
+		}
+
+		return exp;
+    }
 
 	/**
 	 * 处理表达式

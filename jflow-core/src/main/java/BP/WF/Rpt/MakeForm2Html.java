@@ -2016,7 +2016,10 @@ public class MakeForm2Html
             	return indexFile;
             }
             GEEntity en = new GEEntity(frmID, workid);
-
+            Node nd = null;
+            if(gwf!=null){
+            	nd = new Node(gwf.getFK_Node());
+            }
             
 
             //begin 生成水文.
@@ -2028,11 +2031,15 @@ public class MakeForm2Html
 	                if (rdt.length() > 10)
 	                    rdt = rdt.substring(0, 10);
 	            }
-	            String words = SystemConfig.GetValByKey("PrintBackgroundWord","驰骋工作流引擎@开源驰骋 - ccflow@openc");
+	            String words="";
+	            if(nd.getNodeID()!=0 && nd.getNodeID()!=9999)
+	            	words = nd.getShuiYinModle();
+	            if(DataType.IsNullOrEmpty(words) == true)
+	            	words = SystemConfig.GetValByKey("PrintBackgroundWord","驰骋工作流引擎@开源驰骋 - ccflow@openc");
+	            
 	            words = words.replaceAll("@RDT", rdt);
-	
 	            if (words.contains("@") == true)
-	                words = BP.WF.Glo.DealExp(words, en, null);
+	                words = BP.WF.Glo.DealExp(words, en);
 	
 	            String templateFilePathMy = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
 	            paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png",words,path + "\\ShuiYin.png");
@@ -2049,8 +2056,6 @@ public class MakeForm2Html
             if (new File(tempFile).exists() == false){
                 if (gwf != null)
                 {
-                    Node nd = new Node(gwf.getFK_Node());
-
                     if (nd.getHisFormType() == NodeFormType.FreeForm)
                         mapData.setHisFrmType(FrmType.FreeFrm);
                     else if(nd.getHisFormType() == NodeFormType.FoolForm)
@@ -2096,7 +2101,7 @@ public class MakeForm2Html
                 {
                     if ( SystemConfig.getCustomerNo()=="TianYe" && gwf.getNodeName().contains("反馈") == true)
                     {
-                        Node nd = new Node(gwf.getFK_Node());
+                        nd = new Node(gwf.getFK_Node());
                         if (nd.getIsEndNode() == true)
                         {
                             //让流程自动结束.

@@ -47,6 +47,7 @@ import BP.WF.CancelRole;
 import BP.WF.DeliveryWay;
 import BP.WF.Dev2Interface;
 import BP.WF.Flow;
+import BP.WF.FullSA;
 import BP.WF.GenerWorkFlow;
 import BP.WF.GenerWorkerList;
 import BP.WF.GenerWorkerListAttr;
@@ -61,9 +62,13 @@ import BP.WF.TodolistModel;
 import BP.WF.Track;
 import BP.WF.TrackAttr;
 import BP.WF.Tracks;
+import BP.WF.TransferCustom;
+import BP.WF.TransferCustomType;
+import BP.WF.TransferCustoms;
 import BP.WF.WFState;
 import BP.WF.Work;
 import BP.WF.WorkCheck;
+import BP.WF.WorkNode;
 import BP.WF.Data.Bill;
 import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Rpt.MakeForm2Html;
@@ -81,6 +86,7 @@ import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.FrmWorkCheckSta;
 import BP.WF.Template.FrmWorkChecks;
 import BP.WF.Template.NodeAttr;
+import BP.WF.Template.SelectAccper;
 import BP.WF.Template.SelectAccperAttr;
 import BP.WF.Template.SelectAccpers;
 import BP.WF.Template.Selector;
@@ -2574,4 +2580,84 @@ public class WF_WorkOpt extends WebContralBase {
             return "err@" + ex.getMessage();
         }
     }
+    /**
+     * 流程流转自定义的设置初始化
+     * @return
+     * @throws Exception 
+     */
+   public String TransferCustom_Init() throws Exception{
+	   DataSet ds = new DataSet();
+
+       GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+       if (gwf.getTransferCustomType() != TransferCustomType.ByWorkerSet)
+       {
+           gwf.setTransferCustomType(TransferCustomType.ByWorkerSet);
+           gwf.Update();
+       }
+
+       ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+
+       //当前运行到的节点
+       Node currNode = new Node(gwf.getFK_Node());
+
+       //所有的节点s.
+       Nodes nds = new Nodes(this.getFK_Flow());
+
+       //工作人员列表.已经走完的节点与人员.
+       GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID());
+       ds.Tables.add(gwls.ToDataTableField("WF_GenerWorkerList"));
+
+       //设置的手工运行的流转信息.
+       TransferCustoms tcs = new TransferCustoms(this.getWorkID());
+       if (tcs.size() == 0)
+       {
+           // begin执行计算未来处理人.
+
+           Work wk = currNode.getHisWork();
+           wk.setOID(this.getWorkID());
+           wk.Retrieve();
+           WorkNode wn = new WorkNode(wk, currNode);
+           wn.getHisFlow().setIsFullSA(true);
+           //执行计算未来处理人.
+           FullSA fsa = new FullSA(wn);
+           // end 执行计算未来处理人.
+
+           for(Node nd : nds.ToJavaList())
+           {
+        	   GenerWorkerList gwl = (GenerWorkerList) gwls.GetEntityByKey(GenerWorkerListAttr.FK_Node, nd.getNodeID());
+               if (gwl == null)
+               {
+                   /*说明没有 */
+                   TransferCustom tc = new TransferCustom();
+                   tc.setWorkID(this.getWorkID());
+                   tc.setFK_Node(nd.getNodeID());
+                   tc.setNodeName(nd.getName());
+
+                   //begin计算出来当前节点的工作人员.
+                   SelectAccpers sas = new SelectAccpers();
+                   sas.Retrieve(SelectAccperAttr.WorkID, this.getWorkID(), SelectAccperAttr.FK_Node, nd.getNodeID());
+
+                   String workerID = "";
+                   String workerName = "";
+                   for(SelectAccper sa : sas.ToJavaList())
+                   {
+                       workerID += sa.getFK_Emp() + ",";
+                       workerName += sa.getEmpName() + ",";
+                   }
+                   //end 计算出来当前节点的工作人员.
+
+                   tc.setWorker(workerID);
+                   tc.setWorkerName(workerName);
+                   tc.setIdx(nd.getStep());
+                   tc.setIsEnable(true);
+                   tc.Insert();
+               }
+           }
+           tcs = new TransferCustoms(this.getWorkID());
+       }
+
+       ds.Tables.add(tcs.ToDataTableField("WF_TransferCustoms"));
+
+       return BP.Tools.Json.ToJson(ds);
+   }
 }

@@ -564,7 +564,7 @@ public class CCFlowAPI {
 					// #region 到达其他节点.
 
 					// 上一次选择的节点.
-					int defalutSelectedNodeID = 0;
+					//int defalutSelectedNodeID = 0;
 					if (nds.size() > 1) {
 						String mysql = "";
 						// 找出来上次发送选择的节点.
@@ -581,19 +581,10 @@ public class CCFlowAPI {
 									+ " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1";
 
 						// 获得上一次发送到的节点.
-						defalutSelectedNodeID = DBAccess.RunSQLReturnValInt(mysql, 0);
+						//defalutSelectedNodeID = DBAccess.RunSQLReturnValInt(mysql, 0);
 					}
 
-					// #region 为天业集团做一个特殊的判断.
-					if (SystemConfig.getCustomerNo() == "TianYe" && nd.getName().contains("董事长") == true) {
-						/* 如果是董事长节点, 如果是下一个节点默认的是备案. */
-						for (Node item : nds.ToJavaList()) {
-							if (item.getName().contains("备案") == true && item.getName().contains("待") == false) {
-								defalutSelectedNodeID = item.getNodeID();
-								break;
-							}
-						}
-					}
+					
 
 					// 增加一个下拉框, 对方判断是否有这个数据.
 					myds.Tables.add(dtToNDs);
@@ -664,9 +655,9 @@ public class CCFlowAPI {
 				myds.Tables.add(mainTable);
 			}
 
-			String sql = "";
-			DataTable dt = null;
+			//String sql = "";
 
+/*
 			// #region 图片附件
 			FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), String.valueOf(workID));
 			if (imgAthDBs != null && imgAthDBs.size() > 0) {
@@ -689,7 +680,7 @@ public class CCFlowAPI {
 						pWorkID = String.valueOf(workID);
 
 					if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
-						/* 继承模式 */
+						 继承模式 
 						BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 						qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pWorkID);
 						qo.addOr();
@@ -699,11 +690,11 @@ public class CCFlowAPI {
 					}
 
 					if (athDesc.getAthUploadWay() == AthUploadWay.Interwork) {
-						/* 共享模式 */
+						 共享模式 
 						dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, pWorkID);
 					}
 				} else if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID) {
-					/* 继承模式 */
+					 继承模式 
 					BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
 					qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
 					qo.addAnd();
@@ -715,7 +706,7 @@ public class CCFlowAPI {
 				// 增加一个数据源.
 				myds.Tables.add(dbs.ToDataTableField("Sys_FrmAttachmentDB"));
 			}
-
+*/
 
 			DataTable dtMapAttr = null;
 			
@@ -750,7 +741,7 @@ public class CCFlowAPI {
 				// 检查是否有下拉框自动填充。
 				String keyOfEn = dr.getValue("KeyOfEn").toString();
 				
-				/// #region 处理下拉框数据范围. for 小杨.
+				//处理下拉框数据范围. for 小杨.
 				Object tempVar2 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL,
 						MapExtAttr.AttrOfOper, keyOfEn);
 				me = (MapExt) ((tempVar2 instanceof MapExt) ? tempVar2 : null);
@@ -759,13 +750,13 @@ public class CCFlowAPI {
 					String fullSQL = (String) ((tempVar3 instanceof String) ? tempVar3 : null);
 					fullSQL = fullSQL.replace("~", ",");
 					fullSQL = BP.WF.Glo.DealExp(fullSQL, wk, null);
-					dt = DBAccess.RunSQLReturnTable(fullSQL);
+					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
 					dt.TableName = keyOfEn; // 可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
 					myds.Tables.add(dt);
 					continue;
 				}
 
-				/// #endregion 处理下拉框数据范围.
+				///处理下拉框数据范围.
 
 				// 判断是否存在.
 				if (myds.Tables.contains(uiBindKey) == true) {
@@ -784,16 +775,15 @@ public class CCFlowAPI {
 			}
 			 ddlTable.TableName = "UIBindKey";
              myds.Tables.add(ddlTable);
-			/// #endregion End把外键表加入DataSet
+			//把外键表加入DataSet
 
-			/// #region 处理流程-消息提示.
+			//处理流程-消息提示.
 			DataTable dtAlert = new DataTable();
 			dtAlert.TableName = "AlertMsg";
 			dtAlert.Columns.Add("Title", String.class);
 			dtAlert.Columns.Add("Msg", String.class);
 			dtAlert.Columns.Add("URL", String.class);
 
-			// string msg = "";
 			switch (gwf.getWFState()) {
 			case AskForReplay: // 返回加签的信息.
 				String mysql = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + workID + " AND "
@@ -813,9 +803,9 @@ public class CCFlowAPI {
 				break;
 			case Askfor: // 加签.
 
-				sql = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + workID + " AND "
+				String sql = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + workID + " AND "
 						+ TrackAttr.ActionType + "=" + ActionType.AskforHelp.getValue();
-				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				for (DataRow dr : dt.Rows) {
 					String msgAskFor = dr.getValue(TrackAttr.Msg).toString();
 					String worker = dr.getValue(TrackAttr.EmpFrom).toString();
@@ -837,7 +827,7 @@ public class CCFlowAPI {
 				ReturnWorks rws = new ReturnWorks();
 				rws.Retrieve(ReturnWorkAttr.ReturnToNode, fk_node, ReturnWorkAttr.WorkID, workID, ReturnWorkAttr.RDT);
 				if (rws.size() != 0) {
-					String msgInfo = "";
+					//String msgInfo = "";
 					for (BP.WF.ReturnWork rw : rws.ToJavaList()) {
 						DataRow drMsg = dtAlert.NewRow();
 
@@ -899,8 +889,6 @@ public class CCFlowAPI {
 			default:
 				break;
 			}
-
-			/// #endregion
 
 			// #region 增加流程节点表单绑定信息.
 			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree) {

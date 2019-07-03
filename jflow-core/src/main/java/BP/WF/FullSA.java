@@ -82,31 +82,90 @@ public class FullSA
 			{
 				String sql = "SELECT No, Name FROM Port_Emp WHERE No IN (SELECT A.FK_Emp FROM " + BP.WF.Glo.getEmpStation() + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + item.getNodeID() + ")";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.size() != 1)
-				{
+				if (dt.Rows.size() ==0)
 					continue;
-				}
-
-				String no = dt.Rows.get(0).getValue(0).toString();
-				String name = dt.Rows.get(0).getValue(1).toString();
-				sa.setFK_Emp(no);
-				sa.setEmpName(name);
-				sa.setFK_Node(item.getNodeID());
-				sa.setWorkID(workid);
-				sa.setInfo("无");
-				sa.setAccType(0);
-				sa.ResetPK();
-				if (sa.getIsExits())
-				{
-					continue;
-				}
-
-				//计算接受任务时间与应该完成任务时间.
-				InitDT(sa, item);
-
-				sa.Insert();
+				for(DataRow dr : dt.Rows)
+                {
+					String no = dr.getValue(0).toString();
+					String name = dr.getValue(1).toString();
+					sa.setFK_Emp(no);
+					sa.setEmpName(name);
+					sa.setFK_Node(item.getNodeID());
+					sa.setWorkID(workid);
+					sa.setInfo("无");
+					sa.setAccType(0);
+					sa.ResetPK();
+					if (sa.getIsExits())
+					{
+						continue;
+					}
+	
+					//计算接受任务时间与应该完成任务时间.
+					InitDT(sa, item);
+	
+					sa.Insert();
+                }
 				continue;
 			}
+			
+			 //按照绑定的部门计算
+            if (item.getHisDeliveryWay() == DeliveryWay.ByDept)
+            {
+                String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+                Paras ps = new Paras();
+                ps.Add("FK_Node", item.getNodeID());
+                ps.Add("WorkID", currWorkNode.getHisWork().getOID());
+                ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
+                dt = DBAccess.RunSQLReturnTable(ps);
+                if (dt.Rows.size() == 0)
+                {
+                    if (item.getHisFlow().getHisFlowAppType() == FlowAppType.Normal)
+                    {
+                        ps = new Paras();
+                        if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
+                        {
+                            ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node=" + dbStr + "FK_Node";
+                        }
+                        else if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
+                        {
+                            ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B, Port_DeptEmp C  WHERE  A.No = C.FK_Emp AND C.FK_Dept=B.FK_Dept AND B.FK_Node=" + dbStr + "FK_Node";
+                        }
+
+                        ps.Add("FK_Node", item.getNodeID());
+                        dt = DBAccess.RunSQLReturnTable(ps);
+                        if (dt.Rows.size() == 0)
+                            continue;
+                        for(DataRow dr : dt.Rows)
+                        {
+                            String no = dr.getValue(0).toString();
+                            String name = dr.getValue(1).toString();
+                            sa = new SelectAccper();
+                            sa.setFK_Emp(no);
+                            sa.setEmpName(name);
+                            sa.setFK_Node(item.getNodeID());
+
+                            sa.setWorkID(workid);
+                            sa.setInfo("无");
+                            sa.setAccType(0);
+                            sa.ResetPK();
+                            if (sa.getIsExits()==true)
+                                continue;
+
+                            //计算接受任务时间与应该完成任务时间.
+                            InitDT(sa, item);
+
+                            sa.Insert();
+                        }
+
+                    }
+
+                    continue;
+                }
+
+                continue;
+               
+            }
+
 
 			//处理与指定节点相同的人员.
 			if (item.getHisDeliveryWay() == DeliveryWay.BySpecNodeEmp && (new Integer(currND.getNodeID())).toString().equals(item.getDeliveryParas()))

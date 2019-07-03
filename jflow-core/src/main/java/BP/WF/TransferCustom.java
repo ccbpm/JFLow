@@ -22,6 +22,14 @@ public class TransferCustom extends EntityMyPK
 	{
 		this.SetValByKey(TransferCustomAttr.FK_Node, value);
 	}
+	public final String getNodeName()
+	{
+		return this.GetValStringByKey(TransferCustomAttr.NodeName);
+	}
+	public final void setNodeName(String value)
+	{
+		this.SetValByKey(TransferCustomAttr.NodeName, value);
+	}
 	public final long getWorkID()
 	{
 		return this.GetValInt64ByKey(TransferCustomAttr.WorkID);
@@ -97,6 +105,15 @@ public class TransferCustom extends EntityMyPK
 	{
 		this.SetValByKey(TransferCustomAttr.StartDT, value);
 	}
+	
+	public final boolean getIsEnable()
+	{
+		return this.GetValBooleanByKey(TransferCustomAttr.IsEnable);
+	}
+	public final void setIsEnable(boolean value)
+	{
+		this.SetValByKey(TransferCustomAttr.IsEnable, value);
+	}
 	/** 
 	 顺序
 	 
@@ -140,12 +157,14 @@ public class TransferCustom extends EntityMyPK
 			//主键.
 		map.AddTBInt(TransferCustomAttr.WorkID, 0, "WorkID", true, false);
 		map.AddTBInt(TransferCustomAttr.FK_Node, 0, "节点ID", true, false);
+		map.AddTBString(TransferCustomAttr.NodeName, null, "节点名称", true, false, 0, 200, 10);
 		map.AddTBString(TransferCustomAttr.Worker, null, "处理人(多个人用逗号分开)", true, false, 0, 200, 10);
 		map.AddTBString(TransferCustomAttr.WorkerName, null, "处理人(多个人用逗号分开)", true, false, 0, 200, 10);
 
 		map.AddTBString(TransferCustomAttr.SubFlowNo, null, "要经过的子流程编号", true, false, 0, 3, 10);
 		map.AddTBDateTime(TransferCustomAttr.PlanDT, null, "计划完成日期", true, false);
 		map.AddTBInt(TransferCustomAttr.TodolistModel, 0, "多人工作处理模式", true, false);
+		map.AddTBInt(TransferCustomAttr.IsEnable, 0, "是否启用", true, false);
 		map.AddTBInt(TransferCustomAttr.Idx, 0, "顺序号", true, false);
 
 			//map.AddTBString(TransferCustomAttr.StartDT, null, "发起时间", true, false, 0, 20, 10);
@@ -202,7 +221,12 @@ public class TransferCustom extends EntityMyPK
 
 		if ((new Integer(currNodeID)).toString().endsWith("01") == true)
 		{
-			return (TransferCustom)ens.get(0);
+			for(TransferCustom item : ens.ToJavaList())
+            {
+                if(item.getIsEnable() == true)
+                    return (TransferCustom)item;
+            }
+
 		}
 		return null;
 		// return null;

@@ -323,7 +323,11 @@ public class Flow extends BP.En.EntityNoName {
 	public final void setSta2(String value) {
 		this.SetValByKey(FlowAttr.Sta2, value);
 	}
-
+    
+	
+	public final boolean getIsStartInMobile(){
+		return this.GetValBooleanByKey(FlowAttr.IsStartInMobile);
+	}
 	/**************************************************************************/
 	/**
 	 * 设计类型
@@ -6607,6 +6611,12 @@ public class Flow extends BP.En.EntityNoName {
 	protected boolean beforeUpdate() throws Exception {
 		this.setVer(BP.DA.DataType.getCurrentDataTimess());
 		Node.CheckFlow(this);
+		 Flow fl = new Flow(this.getNo());
+         fl.RetrieveFromDBSources();
+		 if(fl.getIsStartInMobile() != this.getIsStartInMobile() || fl.getIsCanStart() != this.getIsCanStart()){
+             //清空WF_Emp 的StartFlows
+             DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
+         }
 		return super.beforeUpdate();
 	}
 

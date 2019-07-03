@@ -20,6 +20,10 @@ public class TransferCustomAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String FK_Node = "FK_Node";
+	/**
+	 * 节点名称
+	 */
+	public static final String NodeName = "NodeName";
 	/** 
 	 处理人编号（多个人用逗号分开）
 	 
@@ -55,6 +59,10 @@ public class TransferCustomAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String TodolistModel = "TodolistModel";
+	/**
+	 * 是否启用
+	 */
+	public static final String IsEnable = "IsEnable";
 
 		///#endregion
 }

@@ -161,7 +161,7 @@ function figure_Template_FigureFlowChart(wf_node, mapData) {
     src += '&FID=' + pageData.FID;
     var eleHtml = '<div id="divtrack' + wf_node.NodeID + '">' + "<iframe id='track" + wf_node.NodeID + "' style='width:" + w + "px;height=" + h + "px;'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     eleHtml = $(eleHtml);
-    eleHtml.css('position', 'absolute').css('top', y).css('left', x).css('width', w).css('height', h);
+    eleHtml.css('position', 'absolute').css('top', y+'px').css('left', x+'px').css('width', w+'px').css('height', h+'px');
 
     return eleHtml;
 }
@@ -246,7 +246,7 @@ function figure_Template_FigureFrmCheck(wf_node, mapData,frmData) {
     var eleHtml = '<div >' + "<iframe style='width:100%' height=" + h + 800 + "' id='FWC' src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto ></iframe>" + '</div>';
 
     eleHtml = $(eleHtml);
-    eleHtml.css('position', 'absolute').css('top', y).css('left', x).css('width', w).css('height', h);
+    eleHtml.css('position', 'absolute').css('top', y+'px').css('left', x+'px').css('width', w+'px').css('height', h+'px');
     return eleHtml;
 }
 
@@ -566,16 +566,16 @@ function figure_MapAttr_Template(mapAttr) {
 
 
     if (mapAttr.IsSigan == "4") {
-        eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
+        eleHtml.css('position', 'absolute').css('top', mapAttr.Y+'px').css('left', mapAttr.X+'px');
         eleHtml.css('z-index', '999');
         return eleHtml;
     }
     if (mapAttr.MyDataType != 4) {
-        eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 6px");
+        eleHtml.children(0).css('width', W).css('height', mapAttr.UIHeight).css("padding", "0px 6px").css("display", "inline");
     }
 
 
-    eleHtml.css('position', 'absolute').css('top', mapAttr.Y).css('left', mapAttr.X);
+    eleHtml.css('position', 'absolute').css('top', mapAttr.Y+'px').css('left', mapAttr.X+'px');
 
     return eleHtml;
 }
@@ -883,17 +883,13 @@ function analysisFontStyle(ele, fontStyle, isBold, isItalic) {
 //升级表单元素 初始化Label
 function figure_Template_Label(frmLab) {
 
-//    var eleHtml = "<div id=u2 style='position:absolute;left:" + frmLab.X + "px;top:" + frmLab.Y + "px;text-align:left;' >";
-//    eleHtml += "<span style='color:" + frmLab.FontColorHtml + ";font-family: " + frmLab.FontName + ";font-size: " + frmLab.FontSize + "px;' >" + frmLab.Text + "</span>";
-//    eleHtml += "</div>";
-//    eleHtml = $(eleHtml);
-//    return eleHtml;
-
-    eleHtml = "<label></label>";
+    var eleHtml = "<label></label>";
     eleHtml = $(eleHtml);
     var text = frmLab.Text.replace(/@/g, "<br>");
     eleHtml.html(text);
-    eleHtml.css('position', 'absolute').css('top', frmLab.Y).css('left', frmLab.X).css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColor));
+    eleHtml.css('position', 'absolute').css('top', frmLab.Y+'px').css('left', frmLab.X+'px').css('font-size', frmLab.FontSize)
+        .css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColor));
+   // eleHtml.css('position', 'absolute').css('top', frmLab.Y).css('left', frmLab.X).css('padding-top', '5px').css('color', TranColorToHtmlColor(frmLab.FontColor));
     analysisFontStyle(eleHtml, frmLab.FontStyle, frmLab.isBold, frmLab.IsItalic);
     return eleHtml;
 }
@@ -956,7 +952,7 @@ function figure_Template_Btn(frmBtn) {
     }
     eleHtml.append(btnHtml);
     //别的一些属性先不加
-    eleHtml.css('position', 'absolute').css('top', frmBtn.Y).css('left', frmBtn.X).width(frmBtn.W).height(frmBtn.H);
+    eleHtml.css('position', 'absolute').css('top', frmBtn.Y+'px').css('left', frmBtn.X+'px').width(frmBtn.W).height(frmBtn.H);
     return eleHtml;
 }
 
@@ -978,7 +974,7 @@ function figure_Template_Rb(frmRb) {
     }
 
     eleHtml.append(childRbEle).append(childLabEle);
-    eleHtml.css('position', 'absolute').css('top', frmRb.Y).css('left', frmRb.X);
+    eleHtml.css('position', 'absolute').css('top', frmRb.Y+'px').css('left', frmRb.X+'px');
     return eleHtml;
 }
 
@@ -1016,8 +1012,8 @@ function figure_Template_HyperLink(frmLin) {
     a.attr('href', url).attr('target', frmLin.Target).html(frmLin.Text);
     eleHtml.append(a);
     eleHtml.css('position', 'absolute')
-        .css('top', frmLin.Y)
-        .css('left', frmLin.X)
+        .css('top', frmLin.Y+'px')
+        .css('left', frmLin.X+'px')
         .css('color', frmLin.FontColr)
         .css('fontsize', frmLin.FontSize)
         .css('font-family', frmLin.FontName);
@@ -1062,7 +1058,7 @@ function figure_Template_Image(frmImage) {
         }
 
         eleHtml.attr("id", frmImage.MyPK);
-        eleHtml.css('position', 'absolute').css('top', frmImage.Y).css('left', frmImage.X).css('width', frmImage.W).css('height', frmImage.H); ;
+        eleHtml.css('position', 'absolute').css('top', frmImage.Y+'px').css('left', frmImage.X+'px').css('width', frmImage.W).css('height', frmImage.H); ;
     } else if (frmImage.ImgAppType == 3)//二维码  手机
     {
 
@@ -1135,7 +1131,7 @@ function figure_Template_ImageAth(frmImageAth) {
     } else {
         eleHtml.append(img);
     }
-    eleHtml.css('position', 'absolute').css('top', frmImageAth.Y).css('left', frmImageAth.X);
+    eleHtml.css('position', 'absolute').css('top', frmImageAth.Y+'px').css('left', frmImageAth.X+'px');
     return eleHtml;
 }
 
@@ -1182,7 +1178,7 @@ function figure_Template_Attachment(frmAttachment) {
 
     eleHtml += '<div>' + "<iframe style='width:" + ath.W + "px;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     eleHtml = $(eleHtml);
-    eleHtml.css('position', 'absolute').css('top', ath.Y).css('left', ath.X).css('width', ath.W).css('height', ath.H);
+    eleHtml.css('position', 'absolute').css('top', ath.Y+'px').css('left', ath.X+'px').css('width', ath.W).css('height', ath.H);
 
     return eleHtml;
 }
@@ -1190,7 +1186,7 @@ function figure_Template_Attachment(frmAttachment) {
 function connector_Template_Line(frmLine) {
     var eleHtml = '';
     eleHtml = '<table><tr><td></td></tr></table>';
-    eleHtml = $(eleHtml).css('position', 'absolute').css('top', frmLine.Y1).css('left', frmLine.X1);
+    eleHtml = $(eleHtml).css('position', 'absolute').css('top', frmLine.Y1+'px').css('left', frmLine.X1+'px');
     eleHtml.find('td').css('padding', '0px')
     if (navigator.userAgent.indexOf('Firefox') >= 0) {
         eleHtml.find('td').css('padding', '0px')

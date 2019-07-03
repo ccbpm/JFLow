@@ -456,8 +456,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	*/
 	public final String Default_Init() throws Exception
 	{
+		
+	
+		
+		
 		//让admin登录
-		if (DotNetToJavaStringHelper.isNullOrEmpty(BP.Web.WebUser.getNoOfRel())==true)
+		if (DataType.IsNullOrEmpty(BP.Web.WebUser.getNoOfRel())==true)
 		{
 			 
 			 String userNo = this.GetRequestVal("UserNo");            
@@ -534,6 +538,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	public final String Login_Init() throws Exception
 	{
  
+  
 		 if (DBAccess.TestIsConnection() == false)
              return "err@数据库连接配置错误 ";
 
@@ -1805,8 +1810,10 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			return mapData.getNo();
 		}
 		
-		public String Login_InitInfo()
+		public String Login_InitInfo() throws Exception
         {
+			 
+			
             Hashtable ht = new Hashtable();
             ht.put("SysNo", SystemConfig.getSysNo()==null?"":SystemConfig.getSysNo());
             ht.put("SysName", SystemConfig.getSysName()==null?"":SystemConfig.getSysName());

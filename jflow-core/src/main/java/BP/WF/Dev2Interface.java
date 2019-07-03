@@ -4896,6 +4896,7 @@ public class Dev2Interface {
 	}
 
 	public static DataSet DB_JobSchedule(long workID) throws Exception {
+		
 		String sql = "";
 		DataSet ds = new DataSet();
 
@@ -4928,6 +4929,7 @@ public class Dev2Interface {
 		DataTable dtHistory = new DataTable();
 		dtHistory.TableName = "Track";
 		dtHistory.Columns.Add("FK_Node"); // 节点ID.
+		dtHistory.Columns.Add("RunModel"); // 运行类型.
 		dtHistory.Columns.Add("NodeName"); // 名称.
 		dtHistory.Columns.Add("EmpNo"); // 人员编号.
 		dtHistory.Columns.Add("EmpName"); // 名称
@@ -4935,6 +4937,7 @@ public class Dev2Interface {
 		dtHistory.Columns.Add("RDT"); // 记录日期.
 		dtHistory.Columns.Add("SDT"); // 应完成日期(可以不用.)
 		dtHistory.Columns.Add("IsPass"); // 应完成日期(可以不用.)
+		
 
 		// 执行人.
 		if (gwf.getWFState() == WFState.Complete) {

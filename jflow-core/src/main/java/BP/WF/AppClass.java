@@ -16,7 +16,7 @@ public class AppClass {
 	 * 
 	 * @param workid
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static String JobSchedule(long workid) throws Exception {
 
@@ -37,15 +37,51 @@ public class AppClass {
 
 		// 把以后的为未完成的节点放入到track里面.
 		for (int i = 0; i < 100; i++) {
+
+			// #region 判断当前节点的类型.
+			// 如果是 =0 就说明有分支，有分支就判断当前节点是否是分河流。
+			RunModel model = RunModel.Ordinary;
+			for (DataRow dr : nodes.Rows) {
+				if (Integer.parseInt(dr.getValue("NodeID").toString()) == currNode) {
+					model = RunModel.forValue(Integer.parseInt(dr.getValue("RunModel").toString()));
+				}
+			}
+
+			// 分合流.
+			if (model == RunModel.FL || model == RunModel.FHL) {
+
+				Node nd = new Node(currNode);
+				Nodes tonds = nd.getHisToNodes();
+
+				for (Node tond : tonds.ToJavaList()) {
+					DataRow mydr = tracks.NewRow();
+					mydr.setValue("NodeName", tond.getName());
+					mydr.setValue("FK_Node", tond.getNodeID());
+					mydr.setValue("RunModel", tond.getHisRunModel().getValue());
+					// mydr["NodeName"] = tond.Name;
+					// mydr["FK_Node"] = tond.NodeID; //
+					// nd["NodeID"].ToString();
+					// mydr["RunModel"] = (int)tond.HisRunModel;
+					tracks.Rows.add(mydr);
+
+					// 设置当前节点.
+					// currNode = tond.HisToNodes[0].GetValIntByKey("NodeID");
+					currNode = tond.getNodeID();
+				}
+			}
+			// #endregion 判断当前节点的类型.
+
 			int nextNode = GetNextNodeID(currNode, dirs);
 			if (nextNode == 0)
 				break;
 
 			for (DataRow nd : nodes.Rows) {
 				if (Integer.parseInt(nd.getValue("NodeID").toString()) == nextNode) {
+
 					DataRow mydr = tracks.NewRow();
 					mydr.setValue("NodeName", nd.getValue("Name").toString());
 					mydr.setValue("FK_Node", nd.getValue("NodeID").toString());
+					mydr.setValue("RunModel", nd.getValue("RunModel").toString());
 
 					tracks.Rows.add(mydr);
 					break;
@@ -85,27 +121,27 @@ public class AppClass {
 	}
 
 	/**
-	 *  sdk表单加载的时候，要返回的数据.
-	 * 1. 系统会处理一些业务,设置当前工作已经读取等等.
-	 * 2. 会判断权限，当前人员是否可以打开当前的工作.
-	 * 3. 增加了一些审核组件的数据信息.
-	 * 4. WF_Node的 FWCSta 是审核组件的状态  0=禁用,1=启用,2=只读.
+	 * sdk表单加载的时候，要返回的数据. 1. 系统会处理一些业务,设置当前工作已经读取等等. 2. 会判断权限，当前人员是否可以打开当前的工作.
+	 * 3. 增加了一些审核组件的数据信息. 4. WF_Node的 FWCSta 是审核组件的状态 0=禁用,1=启用,2=只读.
+	 * 
 	 * @param workid
-	 *          工作ID
-	 * @return  初始化的sdk表单页面信息
+	 *            工作ID
+	 * @return 初始化的sdk表单页面信息
 	 * @throws Exception
 	 */
 	public static String SDK_Page_Init(long workid) throws Exception {
+		
 		try {
+			
 			GenerWorkFlow gwf = new GenerWorkFlow(workid);
 
-			 //加载接口.
+			// 加载接口.
 			DataSet ds = new DataSet();
 			ds = BP.WF.CCFlowAPI.GenerWorkNode(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(),
 					BP.Web.WebUser.getNo(), "");
 
-			//要保留的tables.
-			//String tables = ",WF_GenerWorkFlow,WF_Node,AlertMsg,Track,";
+			// 要保留的tables.
+			// String tables = ",WF_GenerWorkFlow,WF_Node,AlertMsg,Track,";
 
 			// 移除不要的数据.
 			ds.Tables.remove("Sys_MapData");
@@ -133,9 +169,9 @@ public class AppClass {
 				ds.Tables.remove("BP.Port.Depts");
 			}
 
-			   //获得审核信息.
+			// 获得审核信息.
 
-            //历史执行人. 
+			// 历史执行人.
 			String sql = "SELECT C.Name AS DeptName, A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow())
 					+ "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workid
 					+ " AND (A.ActionType=22) AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";

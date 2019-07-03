@@ -428,9 +428,12 @@ public class NodeExt extends Entity
         map.AddBoolean(BtnAttr.PrintZipEnable, false, "是否启用", true, true);
 
         map.AddTBString(BtnAttr.PrintDocLab, "打印单据", "打印单据按钮标签", true, false, 0, 50, 10);
-        map.AddDDLSysEnum(BtnAttr.PrintDocEnable, 0, "打印方式", true,
+        map.AddBoolean(BtnAttr.PrintDocEnable, false, "是否启用", true, true);
+        
+       /* map.AddDDLSysEnum(BtnAttr.PrintDocEnable, 0, "打印方式", true,
             true, BtnAttr.PrintDocEnable, "@0=不打印@1=打印网页@2=打印RTF模板@3=打印Word模版");
         map.SetHelperUrl(BtnAttr.PrintDocEnable, "http://ccbpm.mydoc.io/?v=5404&t=17979"); //增加帮助
+        */        
         map.AddTBString(BtnAttr.TrackLab, "轨迹", "轨迹按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.TrackEnable, true, "是否启用", true, true);
         map.SetHelperUrl(BtnAttr.TrackLab, "http://ccbpm.mydoc.io/?v=5404&t=24369");
@@ -592,7 +595,7 @@ public class NodeExt extends Entity
         rm.RefAttrKey = NodeAttr.PrintDocEnable;
         rm.RefAttrLinkLabel = "";
         rm.Target = "_blank";
-        map.AddRefMethod(rm);
+        //map.AddRefMethod(rm);
         
 
         rm = new RefMethod();

@@ -2472,6 +2472,10 @@ public class WF_WorkOpt extends WebContralBase {
             //在线WebOffice打开
             if (func.getBillOpenModel() == BillOpenModel.WebOffice)
                 return "url@../WebOffice/PrintOffice.htm?MyPK=" + bill.getMyPK();
+            if(func.getTemplateFileModel() ==TemplateFileModel.RTF)
+            	return billUrl.replace("url@", "url@rtf@");
+            if(func.getTemplateFileModel() ==TemplateFileModel.RTF)
+            	return billUrl.replace("url@", "url@word@");
             return billUrl;
         }
         catch (Exception ex)

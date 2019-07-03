@@ -763,14 +763,25 @@ public class FindWorker {
 			// 没有查询到的情况下, 先按照本部门计算。
 			if (flowAppType == FlowAppType.Normal) {
 				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
+					if (this.town.getHisNode().getIsExpSender() == true){
+						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B  WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
+								+ dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp !=" + dbStr + "FK_Emp";
+	
+						ps = new Paras();
+						ps.SQL = sql;
+						ps.Add("FK_Node", town.getHisNode().getNodeID());
+						ps.Add("FK_Dept", empDept);
+						ps.Add("FK_Emp", empNo);
+					}else{
 
-					sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B         WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
-							+ dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
-
-					ps = new Paras();
-					ps.SQL = sql;
-					ps.Add("FK_Node", town.getHisNode().getNodeID());
-					ps.Add("FK_Dept", empDept);
+						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
+								+ dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
+	
+						ps = new Paras();
+						ps.SQL = sql;
+						ps.Add("FK_Node", town.getHisNode().getNodeID());
+						ps.Add("FK_Dept", empDept);
+					}
 				}
 
 				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices) {

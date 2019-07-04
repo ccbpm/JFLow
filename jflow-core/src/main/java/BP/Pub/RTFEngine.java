@@ -815,7 +815,19 @@ public class RTFEngine
 					return pict.toString();
 					// 替换rtf模板文件中的签名图片标识为图片字符串
 					// str = str.replace(imgMark, pict.ToString());
-				} else if (strs[1].trim().equals("YesNo"))
+				}else if (strs[1].trim().equals("BoolenText")){
+					 if (val == "0")
+                         return "否";
+                     else
+                         return "是";
+					
+				}else if (strs[1].trim().equals("Boolen")){
+					 if (val == "1")
+                         return "[√]";
+                     else
+                         return "[×]";
+				}
+				else if (strs[1].trim().equals("YesNo"))
 				{
 					if (val.equals("1"))
 					{

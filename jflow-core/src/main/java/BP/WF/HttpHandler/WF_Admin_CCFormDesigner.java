@@ -366,7 +366,37 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
 			return "err@" + ex.getMessage();
 		}
 	}
+	
+	/**
+	 * 创建图片
+	 * @return
+	 */
+	 public String NewImage()
+     {
 
+         try
+         {
+             BP.Sys.CCFormAPI.NewImage(this.GetRequestVal("FrmID"),
+                 this.GetRequestVal("KeyOfEn"), this.GetRequestVal("Name"),
+                
+                 Float.parseFloat(this.GetRequestVal("x")),
+                 Float.parseFloat(this.GetRequestVal("y"))
+                );
+             return "true";
+         }
+         catch (Exception ex)
+         {
+             return "err@" + ex.getMessage();
+         }
+
+
+     }
+	
+	/**
+	 * 创建字段
+	 * @return
+	 * @throws Exception
+	 */
 	public String NewField() throws Exception {
 		try {
 			BP.Sys.CCFormAPI.NewField(this.GetRequestVal("FrmID"), this.GetRequestVal("KeyOfEn"),

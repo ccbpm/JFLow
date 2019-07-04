@@ -400,6 +400,30 @@ public class CCFormAPI
         
 		ma.Save();
 	}
+	
+	/**
+	 * 创建图片
+	 * @param frmID
+	 * @param keyOfEn
+	 * @param name
+	 * @param x
+	 * @param y
+	 * @throws Exception 
+	 */
+	public static void NewImage(String frmID, String keyOfEn, String name, float x, float y) throws Exception
+    {
+        FrmImg img = new FrmImg();
+        img.setMyPK(keyOfEn);
+        img.setFK_MapData(frmID);
+        img.setName(name);
+        img.setIsEdit(1);
+        img.setHisImgAppType(ImgAppType.Img);
+        img.setX(x);
+        img.setY(y);
+
+        img.Insert();
+
+    }
 	/** 
 	 创建字段
 	 

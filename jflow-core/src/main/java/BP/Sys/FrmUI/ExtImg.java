@@ -1,5 +1,6 @@
 package BP.Sys.FrmUI;
 
+import BP.DA.DataType;
 import BP.DA.Depositary;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
@@ -40,6 +41,17 @@ public class ExtImg extends EntityMyPK
 		{
 			this.setMyPK(mypk);
 			this.Retrieve();
+		}
+		
+		/**
+		 * 图片对应的字段
+		 * @return
+		 */
+		public String getKeyOfEn(){
+			return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
+		}
+		public void setKeyOfEN(String val){
+			this.SetValByKey(MapAttrAttr.KeyOfEn, val);
 		}
 		/** 
 		 EnMap
@@ -103,18 +115,20 @@ public class ExtImg extends EntityMyPK
 			imgAth.setMyPK(this.getMyPK());
 			imgAth.RetrieveFromDBSources();
 			imgAth.Update();
-
+			
 			//同步更新MapAttr 
-			MapAttrString attr = new MapAttrString(this.getMyPK());
-			attr.SetValByKey(MapAttrAttr.ColSpan, this.GetValStrByKey(MapAttrAttr.ColSpan));
-			attr.SetValByKey(MapAttrAttr.TextColSpan, this.GetValStrByKey(MapAttrAttr.TextColSpan));
-			attr.SetValByKey(MapAttrAttr.RowSpan, this.GetValStrByKey(MapAttrAttr.RowSpan));
-
-			attr.SetValByKey(MapAttrAttr.Name, this.GetValStrByKey(FrmImgAttr.Name)); //名称.
-
-			attr.SetValByKey(MapAttrAttr.X, this.GetValStrByKey(FrmImgAttr.X)); //名称.
-			attr.SetValByKey(MapAttrAttr.Y, this.GetValStrByKey(FrmImgAttr.Y)); //名称.
-			attr.Update();
+			if(DataType.IsNullOrEmpty(this.getKeyOfEn())==false){
+				MapAttrString attr = new MapAttrString(this.getMyPK());
+				attr.SetValByKey(MapAttrAttr.ColSpan, this.GetValStrByKey(MapAttrAttr.ColSpan));
+				attr.SetValByKey(MapAttrAttr.TextColSpan, this.GetValStrByKey(MapAttrAttr.TextColSpan));
+				attr.SetValByKey(MapAttrAttr.RowSpan, this.GetValStrByKey(MapAttrAttr.RowSpan));
+	
+				attr.SetValByKey(MapAttrAttr.Name, this.GetValStrByKey(FrmImgAttr.Name)); //名称.
+	
+				attr.SetValByKey(MapAttrAttr.X, this.GetValStrByKey(FrmImgAttr.X)); //名称.
+				attr.SetValByKey(MapAttrAttr.Y, this.GetValStrByKey(FrmImgAttr.Y)); //名称.
+				attr.Update();
+			}
 
 			super.afterInsertUpdateAction();
 		}

@@ -666,6 +666,7 @@ public class CCFormParse
 	{
 		FrmImg img = new FrmImg();
 		img.setMyPK(ctrlID);
+		int count = img.RetrieveFromDBSources();
 		img.setFK_MapData(fk_mapdata);
 		img.setIsEdit(1);
 		img.setHisImgAppType(ImgAppType.Img);
@@ -679,13 +680,7 @@ public class CCFormParse
 		java.math.BigDecimal minY = new java.math.BigDecimal(vector.get(1).toString());
 		java.math.BigDecimal maxX = new java.math.BigDecimal(vector.get(2).toString());
 		java.math.BigDecimal maxY = new java.math.BigDecimal(vector.get(3).toString());
-		/*
-		java.math.BigDecimal imgWidth = minX.negate();
-		java.math.BigDecimal imgHeight = minY.negate();
-
-		img.setW(Float.parseFloat(String.format("0.00", imgWidth)));
-		img.setH(Float.parseFloat(String.format("0.00", imgHeight)));
-		 */
+		
 		java.math.BigDecimal imgWidth = new java.math.BigDecimal(maxX.intValue() - minX.intValue());
 		java.math.BigDecimal imgHeight =new java.math.BigDecimal(maxY.intValue() - minY.intValue());
 		img.setW(Float.parseFloat(String.format("%.2f",imgWidth)));
@@ -715,7 +710,7 @@ public class CCFormParse
 				//应用类型：0本地图片，1指定路径
 				img.setSrcType(StringHelper.isNullOrEmpty(property.optString("PropertyValue"))? 0 : Integer.parseInt(property.optString("PropertyValue")));
 			}
-			else if (property.optString("property").equals("ImgPath"))
+			else if (property.optString("property").equals("ImgPath") && count ==0)
 			{
 				//指定图片路径
 				img.setImgURL(property.optString("PropertyValue") == null ? "" : property.optString("PropertyValue"));
@@ -732,24 +727,12 @@ public class CCFormParse
 			{
 				continue;
 			}
-			if (primitive.optString("oType").equals("ImageFrame"))
+			if (primitive.optString("oType").equals("ImageFrame")  && count ==0)
 			{
 				img.setImgPath(primitive == null ? "" : primitive.optString("url"));
 			}
 		}
-		for (Object primitive1 : primitives)
-		{
-			primitive = (JSONObject)primitive1;
-			if (((JSONObject) primitive).optString("oType") == null)
-			{
-				continue;
-			}
-			if (primitive.optString("oType").equals("ImageFrame"))
-			{
-				img.setImgPath(primitive == null ? "" : primitive.optString("url"));
-			}
-			
-		}
+		
 		//执行保存.
 		if (pks.contains(img.getMyPK() + "@") == true)
 		{

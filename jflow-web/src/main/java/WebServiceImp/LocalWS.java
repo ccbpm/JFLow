@@ -379,7 +379,7 @@ public class LocalWS implements LocalWSI {
 	@Override
 	public String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg, String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
-		return BP.WF.Dev2Interface.Flow_DoFlowOver(flowNo, workID, msg);
+		return BP.WF.Dev2Interface.Flow_DoFlowOver(flowNo, workID, msg,1);
 
 	}
 

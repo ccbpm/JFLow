@@ -24,6 +24,7 @@ import BP.DA.LogType;
 import BP.DA.Paras;
 import BP.Sys.EnVer;
 import BP.Sys.EnVerDtl;
+import BP.Sys.GEDtlAttr;
 import BP.Sys.GloVar;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
@@ -127,6 +128,14 @@ public abstract class Entity implements Serializable {
 		}
 		return al;
 	}
+	
+	public final ArrayList<Entities> GetDtlsDatasOfList(String pkval) throws Exception {
+		ArrayList<Entities> al = new ArrayList<Entities>();
+		for (EnDtl dtl : this.getEnMap().getDtls()) {
+			al.add(this.GetDtlEnsDa(dtl,pkval));
+		}
+		return al;
+	}
 
 	// 关于明细的操作
 	/**
@@ -141,6 +150,62 @@ public abstract class Entity implements Serializable {
 		Entities ens = ClassFactory.GetEns(EnsName);
 		return GetDtlEnsDa(ens);
 	}
+	
+	/**
+	 * 取明细
+	 * @param dtl
+	 * @param pkval
+	 * @return
+	 * @throws Exception 
+	 */
+	 public Entities GetDtlEnsDa(EnDtl dtl, String pkval) throws Exception
+     {
+         try
+         {
+             if (pkval == null)
+                 pkval = this.getPKVal().toString();
+             QueryObject qo = new QueryObject(dtl.getEns());
+             MapDtl md = new MapDtl();
+             md.setNo(dtl.getEns().getGetNewEntity().toString());
+             if (md.RetrieveFromDBSources() == 0)
+             {
+                 qo.AddWhere(dtl.getRefKey(), pkval);
+                 qo.DoQuery();
+                 return dtl.getEns();
+             }
+
+             //如果是freefrm 就考虑他的权限控制问题. 
+             switch (md.getDtlOpenType())
+             {
+                 case ForEmp:  // 按人员来控制.
+                     qo.AddWhere(GEDtlAttr.RefPK, pkval);
+                     qo.addAnd();
+                     qo.AddWhere(GEDtlAttr.Rec, BP.Web.WebUser.getNo());
+                     break;
+                 case ForWorkID: // 按工作ID来控制
+                     qo.AddWhere(GEDtlAttr.RefPK, pkval);
+                     break;
+                 case ForFID: // 按流程ID来控制.这里不允许修改，如需修改则加新case.
+                   
+                     qo.AddWhere(GEDtlAttr.FID, pkval);
+                     break;
+             }
+
+             if (md.getFilterSQLExp() != "")
+             {
+                 String[] strs = md.getFilterSQLExp().split("=");
+                 qo.addAnd();
+                 qo.AddWhere(strs[0], strs[1]);
+             }
+
+             qo.DoQuery();
+             return dtl.getEns();
+         }
+         catch (Exception e)
+         {
+             throw new Exception("@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + dtl.getDesc() + "],不在他的集合内。");
+         }
+     }
 
 	public final Entities GetDtlEnsDa(EnDtl dtl) throws Exception {
 

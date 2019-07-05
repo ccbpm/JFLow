@@ -550,6 +550,7 @@ public class WF_MyFlow extends WebContralBase {
 
 		if (this.getWorkID() == 0 && this.getcurrND().getIsStartNode() && this.GetRequestVal("IsCheckGuide") == null) {
 			long workid = BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow());
+			this.setWorkID(workid);
 
 			switch (this.getcurrFlow().getStartGuideWay()) {
 			case None:
@@ -640,10 +641,6 @@ public class WF_MyFlow extends WebContralBase {
 
 			String toUrl = "";
 
-			// toUrl = "./FlowFormTree/Default.htm?WorkID=" + this.WorkID +
-			// "&FK_Flow=" + this.FK_Flow + "&UserNo=" + WebUser.No + "&FID=" +
-			// this.FID + "&SID=" + WebUser.SID + "&PFlowNo=" + pFlowNo +
-			// "&PWorkID=" + pWorkID;
 			if (this.getIsMobile() == true) {
 				if (gwf.getParas_Frms().equals("") == false)
 					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="

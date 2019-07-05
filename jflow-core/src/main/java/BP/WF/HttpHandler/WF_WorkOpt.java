@@ -33,12 +33,15 @@ import BP.Sys.FrmRB;
 import BP.Sys.FrmRBAttr;
 import BP.Sys.FrmRBs;
 import BP.Sys.FrmType;
+import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
 import BP.Sys.GroupFields;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.MapDatas;
+import BP.Sys.MapDtl;
+import BP.Sys.MapDtls;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
@@ -82,6 +85,7 @@ import BP.WF.Template.CCSta;
 import BP.WF.Template.FWCOrderModel;
 import BP.WF.Template.FWCType;
 import BP.WF.Template.FlowExt;
+import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.FrmWorkCheckSta;
 import BP.WF.Template.FrmWorkChecks;
@@ -92,6 +96,7 @@ import BP.WF.Template.SelectAccpers;
 import BP.WF.Template.Selector;
 import BP.WF.Template.SelectorModel;
 import BP.WF.Template.TemplateFileModel;
+import BP.WF.Template.WhoIsPK;
 import BP.Web.WebUser;
 
 public class WF_WorkOpt extends WebContralBase {
@@ -2267,22 +2272,59 @@ public class WF_WorkOpt extends WebContralBase {
     /// <returns></returns>
     public String PrintDoc_Init() throws Exception
     {
-        BillTemplates templetes = new BillTemplates();
-        String billNo = this.GetRequestVal("FK_Bill");
-        if (billNo == null)
-            templetes.Retrieve(BillTemplateAttr.NodeID, this.getFK_Node());
-        else
-            templetes.Retrieve(BillTemplateAttr.NodeID, this.getFK_Node(), BillTemplateAttr.No, billNo);
+    	 String sourceType = this.GetRequestVal("SourceType");
+         String FK_MapData = "";
+         Node nd =null;
+         if (this.getFK_Node() != 0 && this.getFK_Node() != 9999)
+         {
+             nd = new Node(this.getFK_Node());
 
-        if (templetes.size() == 0)
-            return "err@当前节点上没有绑定单据模板。";
+             if (nd.getHisFormType() == NodeFormType.SheetTree)
+             {
+                 //获取该节点绑定的表单
+                 // 所有表单集合.
+                 MapDatas mds = new MapDatas();
+                 mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node() + " AND FrmEnableRole !=5");
+                 return "info@" + BP.Tools.Json.ToJson(mds.ToDataTableField());
+             }
 
-        if (templetes.size() == 1)
-        {
-            BillTemplate templete = (BillTemplate) templetes.get(0);
-            return PrintDoc_DoneIt(templete.getNo());
-        }
-        return templetes.ToJson();
+             FK_MapData = "ND" + this.getFK_Node();
+
+             if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+                 FK_MapData = nd.getNodeFrmID();
+
+             if (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm)
+             {
+                 return "err@SDK表单、嵌入式表单暂时不支持打印功能";
+             }
+         }
+         if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
+             FK_MapData = this.GetRequestVal("FrmID");
+
+         BillTemplates templetes = new BillTemplates();
+         String billNo = this.GetRequestVal("FK_Bill");
+         if (billNo == null)
+             templetes.Retrieve(BillTemplateAttr.FK_MapData, FK_MapData);
+         else
+             templetes.Retrieve(BillTemplateAttr.FK_MapData, this.getFK_MapData(), BillTemplateAttr.No, billNo);
+
+         if (templetes.size() == 0)
+             return "err@当前节点上没有绑定单据模板。";
+
+         if (templetes.size() == 1)
+         {
+             BillTemplate templete = (BillTemplate) templetes.get(0);
+
+             //单据的打印
+             if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
+                 return PrintDoc_FormDoneIt(null, this.getWorkID(), this.getFID(), FK_MapData, templete);
+             
+             if (nd!=null && nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+            	 return PrintDoc_FormDoneIt(null, this.getWorkID(), this.getFID(), FK_MapData, templete);
+
+             return PrintDoc_DoneIt(templete.getNo());
+         }
+         return templetes.ToJson();
     }
     /// <summary>
     /// 执行打印
@@ -2485,6 +2527,238 @@ public class WF_WorkOpt extends WebContralBase {
             path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
             String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
             return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
+        }
+    }
+    
+    /**
+     * 表单打印单据
+     * @param nd
+     * @param workID
+     * @param fid
+     * @param formID
+     * @param func
+     * @return
+     * @throws Exception 
+     */
+    public String PrintDoc_FormDoneIt(Node nd, long workID, long fid, String formID, BillTemplate func) throws Exception
+    {
+        long pkval = workID;
+        Work wk = null;
+        String billInfo = "";
+        if (nd != null)
+        {
+            FrmNode fn = new FrmNode();
+            fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), formID);
+            //先判断解决方案
+            if (fn != null && fn.getWhoIsPK() != WhoIsPK.OID)
+            {
+                if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
+                    pkval = this.getPWorkID();
+                if (fn.getWhoIsPK() == WhoIsPK.FID)
+                    pkval = fid;
+            }
+            wk = nd.getHisWork();
+            wk.setOID(this.getWorkID());
+            wk.RetrieveFromDBSources();
+        }
+
+        MapData mapData = new MapData(formID);
+
+        String file = DataType.getCurrentYear() + "_" + WebUser.getFK_Dept() + "_" + func.getNo() + "_" + this.getWorkID() + ".doc";
+        BP.Pub.RTFEngine rtf = new BP.Pub.RTFEngine();
+
+        String[] paths;
+        String path;
+        long newWorkID = 0;
+        try
+        {
+            //单据变量.
+            Bill bill = new Bill();
+            if (nd != null)
+                bill.setMyPK(wk.getFID() + "_" + wk.getOID() + "_" + nd.getNodeID() + "_" + func.getNo());
+            else
+                bill.setMyPK(fid + "_" + workID + "_0_" + func.getNo());
+           
+            //生成单据
+            rtf.getHisEns().clear();
+            rtf.getEnsDataDtls().clear();
+            if (DataType.IsNullOrEmpty(func.getFK_MapData()) == false)
+            {
+                //把流程主表数据放入里面去.
+                GEEntity ndxxRpt = new GEEntity(formID);
+                try
+                {
+                    ndxxRpt.setPKVal(pkval);
+                    ndxxRpt.Retrieve();
+
+                    newWorkID = pkval;
+                }
+                catch (Exception ex)
+                {
+                    if (this.getFID() > 0)
+                    {
+                        ndxxRpt.setPKVal(this.getFID());
+                        ndxxRpt.Retrieve();
+
+                        newWorkID=this.getFID();
+
+                        wk = null;
+                        wk = nd.getHisWork();
+                        wk.setOID(this.getWorkID());
+                        wk.RetrieveFromDBSources();
+                    }
+                    else
+                    {
+                        BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
+                        dir.Do();
+                        path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+                        String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
+                        billInfo += "@<font color=red>" + msgErr + "</font>";
+                       
+                        throw new Exception(msgErr + "@其它信息:" + ex.getMessage());
+                    }
+                }
+                //ndxxRpt.Copy(wk);
+
+                //把数据赋值给wk. 有可能用户还没有执行流程检查，字段没有同步到 NDxxxRpt.
+                //if (ndxxRpt.Row.Count > wk.Row.Count)
+                //   wk.Row = ndxxRpt.Row;
+
+                rtf.HisGEEntity = ndxxRpt;
+
+                //加入他的明细表.
+                List<Entities> al = mapData.GetDtlsDatasOfList(String.valueOf(pkval));
+                if (al.size() == 0)
+                {
+                    MapDtls mapdtls = mapData.getMapDtls();
+                    for(MapDtl dtl : mapdtls.ToJavaList())
+                    {
+                        GEDtls dtls1 = new GEDtls(dtl.getNo());
+                        mapData.getEnMap().AddDtl(dtls1, "RefPK");
+
+                    }
+                    al = mapData.GetDtlsDatasOfList(String.valueOf(pkval));
+                }
+                for(Entities ens : al)
+                    rtf.AddDtlEns(ens);
+
+                //增加多附件数据
+                FrmAttachments aths = mapData.getFrmAttachments();
+                for(FrmAttachment athDesc : aths.ToJavaList())
+                {
+                    FrmAttachmentDBs athDBs = new FrmAttachmentDBs();
+                    if (athDBs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK(), FrmAttachmentDBAttr.RefPKVal, newWorkID, "RDT") == 0)
+                        continue;
+
+                    rtf.getEnsDataAths().put(athDesc.getNoOfObj(), athDBs);
+                }
+
+                if (nd != null)
+                {
+                    //把审核日志表加入里面去.
+                    Paras ps = new BP.DA.Paras();
+                    ps.SQL = "SELECT * FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
+                    ps.Add(TrackAttr.ActionType, ActionType.WorkCheck.getValue());
+                    ps.Add(TrackAttr.WorkID, newWorkID);
+
+                    rtf.dtTrack = BP.DA.DBAccess.RunSQLReturnTable(ps);
+                }
+            }
+
+            paths = file.split("_");
+            path = paths[0] + "/" + paths[1] + "/" + paths[2] + "/";
+
+            String fileModelT = "rtf";
+            if (func.getTemplateFileModel().getValue() == 1)
+                fileModelT = "word";
+            
+            String billUrl = "url@" + fileModelT + "@" + BP.WF.Glo.getCCFlowAppPath() + "DataUser/Bill/" + path + file;
+            
+            if (func.getHisBillFileType() == BillFileType.PDF)
+                billUrl = billUrl.replace(".doc", ".pdf");
+
+            path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+            File filepath = new File(path);
+            if (filepath.exists() == false)
+            	filepath.mkdirs();
+
+            String tempFile = func.getTempFilePath();
+            if (tempFile.contains(".rtf") == false)
+                tempFile = tempFile + ".rtf";
+
+            //用于扫描打印.
+            String qrUrl = SystemConfig.getAppSettings().get("HostURL").toString() + "/WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.getMyPK();
+            rtf.MakeDoc(tempFile,path, file, qrUrl,false);
+            
+            //转化成pdf.
+            if (func.getHisBillFileType() == BillFileType.PDF)
+            {
+                String rtfPath = path + file;
+                String pdfPath = rtfPath.replace(".doc", ".pdf");
+                try
+                {
+                    BP.WF.Glo.Rtf2PDF(rtfPath, pdfPath);
+                }
+                catch (Exception ex)
+                {
+                    return "err@" + ex.getMessage();
+                }
+            }
+           
+
+            //保存单据.
+            if (nd != null)
+            {
+                bill.setFID(wk.getFID());
+                bill.setWorkID(wk.getOID());
+                bill.setFK_Node(wk.getNodeID());
+                bill.setFK_Flow(nd.getFK_Flow());
+            }
+            else
+            {
+                bill.setFID(fid);
+                bill.setWorkID(workID);
+                bill.setFK_Node(0);
+                bill.setFK_Flow("0");
+            }
+            bill.setFK_Dept(WebUser.getFK_Dept());
+            bill.setFK_Emp(WebUser.getNo());
+            bill.setUrl(billUrl);
+            bill.setRDT(DataType.getCurrentDataTime());
+            bill.setFullPath( path + file);
+            bill.setFK_NY(DataType.getCurrentYearMonth());
+           
+            bill.setEmps(rtf.HisGEEntity.GetValStrByKey("Emps"));
+            bill.setFK_Starter(rtf.HisGEEntity.GetValStrByKey("Rec"));
+            bill.setStartDT(rtf.HisGEEntity.GetValStrByKey("RDT"));
+            bill.setTitle(rtf.HisGEEntity.GetValStrByKey("Title"));
+            bill.setFK_Dept(rtf.HisGEEntity.GetValStrByKey("FK_Dept"));
+
+
+            try
+            {
+                bill.Save();
+            }
+            catch(Exception e)
+            {
+                bill.Update();
+            }
+           
+
+            //在线WebOffice打开
+            if (func.getBillOpenModel() == BillOpenModel.WebOffice)
+            {
+                return "err@【/WF/WebOffice/PrintOffice.aspx】该文件没有重构好,您可以找到旧版本解决，或者自己开发。";
+            }
+            return billUrl;
+        }
+        catch (Exception ex)
+        {
+        	 BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
+             dir.Do();
+             path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+             String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
+             return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
         }
     }
 

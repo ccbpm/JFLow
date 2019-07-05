@@ -367,14 +367,20 @@ public class RestFulController {
 	 *            工作ID
 	 * @param msg
 	 *            流程结束原因
+	 
 	 * @return 返回成功执行信息
 	 * @throws Exception
 	 */
 
     @RequestMapping(value = "/Flow_DoFlowOverQiangZhi")
-	public  String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg, String userNo) throws Exception {
+	public  String Flow_DoFlowOverQiangZhi(long workID, String msg, String userNo) throws Exception {
 	  BP.WF.Dev2Interface.Port_Login(userNo);
-		return BP.WF.Dev2Interface.Flow_DoFlowOver(flowNo, workID, msg);
+	  LocalWS localWS = new LocalWS();
+	  String sql="select FK_Flow from wf_generworkflow where workid="+workID;
+		String flowNo=BP.DA.DBAccess.RunSQLReturnString(sql);
+		return localWS.Flow_DoFlowOverQiangZhi(flowNo,workID,msg, userNo);
+				
+				
 		
   }
 

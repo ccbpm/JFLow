@@ -32,7 +32,7 @@ public class AppClass {
 		int currNode = Integer.parseInt(gwf.Rows.get(0).getValue("FK_Node").toString());
 		// String currNode = gwf.Rows.get(0).getValue("FK_Node").toString();
 		// //停留节点.
-		if (wfState == 3)
+		if (wfState == 3 && 1==2)
 		{
 			 
 			DataSet myds1=new DataSet();

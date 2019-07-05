@@ -2105,7 +2105,7 @@ public class MakeForm2Html
                         if (nd.getIsEndNode() == true)
                         {
                             //让流程自动结束.
-                            BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getFK_Flow(), workid, "打印并自动结束");
+                            BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getFK_Flow(), workid, "打印并自动结束",0);
                         }
                     }
                 }

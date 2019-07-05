@@ -2253,7 +2253,7 @@ public class Node extends Entity {
 			GenerWorkFlows gwfs = new GenerWorkFlows();
 			gwfs.Retrieve("FK_Flow", this.getFK_Flow());
 			for (GenerWorkFlow gwf : gwfs.ToJavaList()) {
-				BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getFK_Flow(), gwf.getWorkID(), "流程成功结束");
+				BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getFK_Flow(), gwf.getWorkID(), "流程成功结束",1);
 			}
 
 		}

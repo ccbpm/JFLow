@@ -349,7 +349,7 @@ public class WorkFlow
 						WorkFlow wf = new WorkFlow(this.getHisFlow(), this.getFID());
 						info += "@所有的子线程已经结束。";
 						info += "@结束主流程信息。";
-						info += "@" + wf.DoFlowOver(ActionType.FlowOver, "合流点流程结束", null, null);
+						info += "@" + wf.DoFlowOver(ActionType.FlowOver, "合流点流程结束", null, null,1);
 					}
 					java.math.BigDecimal passRate = ok.divide(all).multiply(
 							new BigDecimal(100));
@@ -754,7 +754,7 @@ public class WorkFlow
 						WorkFlow wf = new WorkFlow(this.getHisFlow(), this.getFID());
 						info += "@所有的子线程已经结束。";
 						info += "@结束主流程信息。";
-						info += "@" + wf.DoFlowOver(ActionType.FlowOver, "合流点流程结束", null, null);
+						info += "@" + wf.DoFlowOver(ActionType.FlowOver, "合流点流程结束", null, null,0);
 					}
 
 					java.math.BigDecimal passRate = ok.divide(all).multiply(new BigDecimal(100));					
@@ -785,7 +785,7 @@ public class WorkFlow
 							WorkFlow wf = new WorkFlow(this.getHisFlow(), this.getFID());
 							info += "@所有的子线程已经结束。";
 							info += "@结束主流程信息。";
-							info += "@" + wf.DoFlowOver(ActionType.FlowOver, "主流程结束", null, null);
+							info += "@" + wf.DoFlowOver(ActionType.FlowOver, "主流程结束", null, null,1);
 						}
 						break;
 				}
@@ -888,7 +888,7 @@ public class WorkFlow
 		gwf.setWorkID(this.getWorkID());
 		if (gwf.RetrieveFromDBSources() == 0)
 		{
-			this.DoFlowOver(ActionType.FlowOver, "非正常结束，没有找到当前的流程记录。", null, null);
+			this.DoFlowOver(ActionType.FlowOver, "非正常结束，没有找到当前的流程记录。", null, null,1);
 			throw new RuntimeException("@" + String.format("工作流程%1$s已经完成。", this.getHisStartWork().getTitle()));
 		}
 
@@ -965,7 +965,7 @@ public class WorkFlow
 		{
 			//说明这是最后一个
 			WorkFlow wf = new WorkFlow(gwf.getFK_Flow(), this.getFID());
-			wf.DoFlowOver(ActionType.FlowOver, "子流程结束", null, null);
+			wf.DoFlowOver(ActionType.FlowOver, "子流程结束", null, null,1);
 			return "@当前子流程已完成，主流程已完成。";
 		}
 		else
@@ -994,7 +994,8 @@ public class WorkFlow
 	    //如果是结束子流程.
         if (this.getHisFlow().getSubFlowOver() == SubFlowOver.OverParentFlow)
         {
-            BP.WF.Dev2Interface.Flow_DoFlowOver(this.getHisGenerWorkFlow().getPFlowNo(), this.getHisGenerWorkFlow().getPWorkID(), "子流程完成自动结束父流程.");
+            BP.WF.Dev2Interface.Flow_DoFlowOver(this.getHisGenerWorkFlow().getPFlowNo(), 
+            		this.getHisGenerWorkFlow().getPWorkID(), "子流程完成自动结束父流程.",1);
             return "";
         }
         
@@ -1101,7 +1102,7 @@ public class WorkFlow
 	 @return 
 	 * @throws Exception 
 	*/
-	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, GERpt rpt) throws Exception
+	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, GERpt rpt, int stopFlowType) throws Exception
 	{
 		if (null == currNode)
 		{
@@ -1207,6 +1208,7 @@ public class WorkFlow
         GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
         gwf.setEmps(gwf.getEmps()+emps);
         gwf.setWFState(WFState.Complete);
+        gwf.SetPara("StopFlowType", stopFlowType); //设置结束流程类型.
         gwf.Update();
         
 		//调用结束后事件.

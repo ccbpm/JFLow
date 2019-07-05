@@ -91,8 +91,12 @@ public class AppClass {
 			currNode = nextNode;
 
 		}
-
-		return BP.Tools.Json.ToJson(tracks);
+		
+		DataSet myds=new DataSet();
+		myds.Tables.add(gwf);
+		myds.Tables.add(tracks);
+		
+		return BP.Tools.Json.ToJson( myds);
 
 	}
 

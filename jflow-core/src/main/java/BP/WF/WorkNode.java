@@ -1130,7 +1130,7 @@ public class WorkNode {
 					this.getHisGenerWorkFlow().Update();
 
 					String msg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经走到最后一个节点，流程成功结束。", mynd,
-							this.rptGe);
+							this.rptGe,0);
 					if (DataType.IsNullOrEmpty(msg) == true)
 						msg = "";
 					this.addMsg(SendReturnMsgFlag.End, msg);
@@ -1710,7 +1710,7 @@ public class WorkNode {
 			if (this.getHisNode().getHisToNodes().size() == 0 && this.getHisNode().getIsStartNode()) {
 				// 如果流程完成
 				String overMsg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "符合流程完成条件", this.getHisNode(),
-						this.rptGe);
+						this.rptGe,0);
 
 				if (this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByCCBPMDefine) {
 					this.setIsStopFlow(true);
@@ -1723,7 +1723,7 @@ public class WorkNode {
 				String stopMsg = this.getHisFlowCompleteConditions().getConditionDesc();
 				// 如果流程完成
 				String overMsg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "符合流程完成条件:" + stopMsg,
-						this.getHisNode(), this.rptGe);
+						this.getHisNode(), this.rptGe,0);
 				this.setIsStopFlow(true);
 
 				// string path = BP.Sys.Glo.Request.ApplicationPath;
@@ -5956,7 +5956,7 @@ public class WorkNode {
 					this.getHisGenerWorkFlow().setWFState(WFState.Complete);
 					this.rptGe.setWFState(WFState.Complete);
 					String msg1 = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经按照设置的步骤成功结束。",
-							this.getHisNode(), this.rptGe);
+							this.getHisNode(), this.rptGe,0);
 					this.addMsg(SendReturnMsgFlag.End, msg1);
 				} else {
 					this.JumpToNode = new Node(_transferCustom.getFK_Node());
@@ -7382,7 +7382,7 @@ public class WorkNode {
 				this.rptGe.setWFState(WFState.Complete);
 
 				String msg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经走到最后一个节点，流程成功结束。",
-						this.getHisNode(), this.rptGe);
+						this.getHisNode(), this.rptGe,0);
 				this.addMsg(SendReturnMsgFlag.End, msg);
 			}
 
@@ -7395,7 +7395,7 @@ public class WorkNode {
 			if (this.getHisNode().getHisToNodes().size() == 0 && this.getHisNode().getIsStartNode()) {
 
 				// 如果流程完成
-				this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "符合流程完成条件", this.getHisNode(), this.rptGe);
+				this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "符合流程完成条件", this.getHisNode(), this.rptGe,0);
 				this.setIsStopFlow(true);
 				this.addMsg(SendReturnMsgFlag.OneNodeSheetver, "工作已经成功处理(一个流程的工作)。",
 						"工作已经成功处理(一个流程的工作)。 @查看<img src='" + getVirPath()
@@ -7411,7 +7411,7 @@ public class WorkNode {
 				String stopMsg = this.getHisFlowCompleteConditions().getConditionDesc();
 				// 如果流程完成
 				String overMsg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "符合流程完成条件:" + stopMsg,
-						this.getHisNode(), this.rptGe);
+						this.getHisNode(), this.rptGe,0);
 				this.setIsStopFlow(true);
 
 				// string path = BP.Sys.Glo.Request.ApplicationPath;

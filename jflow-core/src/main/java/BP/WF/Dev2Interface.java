@@ -5120,7 +5120,7 @@ public class Dev2Interface {
 	 * @return 返回成功执行信息
 	 * @throws Exception
 	 */
-	public static String Flow_DoFlowOver(String flowNo, long workID, String msg) throws Exception {
+	public static String Flow_DoFlowOver(String flowNo, long workID, String msg, int stopFlowType) throws Exception {
 		// 转化成编号.
 		flowNo = TurnFlowMarkToFlowNo(flowNo);
 
@@ -5129,45 +5129,10 @@ public class Dev2Interface {
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(flowNo) + "Rpt");
 		rpt.setOID(workID);
 		rpt.RetrieveFromDBSources();
-		return wf.DoFlowOver(ActionType.FlowOver, msg, nd, rpt);
+		
+		return wf.DoFlowOver(ActionType.FlowOver, msg, nd, rpt,stopFlowType);
 	}
-
-	/**
-	 * 执行流程结束:强制的流程结束.
-	 * 
-	 * @param flowNo
-	 *            流程编号
-	 * @param flowNo
-	 *            当前节点编号
-	 * @param workID
-	 *            工作ID
-	 * @param fid
-	 *            工作ID
-	 * @param msg
-	 *            强制流程结束的原因
-	 * @return 执行强制结束流程
-	 * @throws Exception
-	 */
-	public static String Flow_DoFlowOverByCoercion(String flowNo, int nodeid, long workID, long fid, String msg)
-			throws Exception {
-		// 转化成编号.
-		flowNo = TurnFlowMarkToFlowNo(flowNo);
-		WorkFlow wf = new WorkFlow(flowNo, workID);
-
-		Node currND = new Node(nodeid);
-
-		Flow fl = new Flow(flowNo);
-		GERpt rpt = fl.getHisGERpt();
-		rpt.setOID(workID);
-		rpt.RetrieveFromDBSources();
-
-		String s = wf.DoFlowOver(ActionType.FlowOverByCoercion, msg, currND, rpt);
-		if (StringHelper.isNullOrEmpty(s)) {
-			s = "流程已经成功结束.";
-		}
-		return s;
-	}
-
+ 
 	/**
 	 * 获得执行下一步骤的节点ID，这个功能是在流程未发送前可以预先知道 它就要到达那一个节点上去,以方便在当前节点发送前处理业务逻辑.
 	 * 1,首先保证当前人员是可以执行当前节点的工作. 2,其次保证获取下一个节点只有一个.

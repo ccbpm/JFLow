@@ -80,6 +80,11 @@ function InitPage() {
             return true;
         }
 
+        var fwcs = new Entities("BP.WF.Template.FrmWorkChecks");
+        fwcs.Retrieve("NodeID", this.NodeID);
+
+        if(fwcs[0].FWCSta==2)
+            return true;
 
         //自由模式
         html += "<tr>";
@@ -380,7 +385,19 @@ function UploadFileChange(ctrl) {
 
 function GetUserSiganture(userNo, userName) {
     var func = " oncontextmenu='return false;' ondragstart='return false;'  onselectstart='return false;' onselect='document.selection.empty();'";
-    return "<img src='../../DataUser/Siganture/" + userNo + ".jpg?m=" + Math.random() + "' title='" + userName + "' " + func + " style='height:40px;' border=0 onerror=\"src='../../DataUser/Siganture/UnName.JPG'\" />";
+    //先判断，是否存在签名图片
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+    handler.AddPara('No', userNo);
+    data = handler.DoMethodReturnString("HasSealPic");
+
+    //如果不存在，就显示当前人的姓名
+    if (data.length > 0 ) {
+        return userName;
+    }
+    else {
+        return "<img src='../../DataUser/Siganture/" + userNo + ".png?m=" + Math.random() + "' title='" + userName + "' " + func + " style='height:40px;' border=0 onerror=\"src='../../DataUser/Siganture/Templete.png'\" />";
+    }
+
 }
 
 function GetUserSmallIcon(userNo, userName) {

@@ -566,7 +566,7 @@ public abstract class FlowEventBase
                 return str;
 
             //返回这个格式, NodeSend 来解析.
-                return "@Info=" + str + "@ToNodeID=" + this.JumpToNodeID + "@ToEmps=" + this.JumpToEmps;
+                return str;
 		}
 		else if (eventType.equals(EventListOfNode.SendSuccess)) // 节点事件 - 发送成功时。
 		{

@@ -43,7 +43,7 @@ public class CC extends Entity
              if (Glo.getOSModel() == BP.Sys.OSModel.OneOne)
                  sql = "SELECT A.No, A.Name FROM Port_Emp A, WF_CCDept B WHERE  A.FK_Dept=B.FK_Dept AND B.FK_Node=" + this.getNodeID();
              else
-                 sql = "SELECT A.No, A.Name FROM Port_Emp A, WF_CCDept B WHERE  A.No=C.No AND B.FK_Node=" + this.getNodeID();
+                 sql = "SELECT C.No,C.Name FROM PORT_DEPTEMP A LEFT JOIN WF_CCDEPT B ON A.FK_Dept=B.FK_DEPT LEFT JOIN PORT_EMP C ON A.FK_EMP=C.NO WHERE B.FK_Node=" + this.getNodeID();
 
              //
 

@@ -92,25 +92,25 @@ public class WF extends WebContralBase {
 	 */
 	public WF() {
 	}
+	public String HasSealPic() throws Exception
+    {
+        String no = GetRequestVal("No");
+        if (DataType.IsNullOrEmpty(no))
+            return "";
 
-	public String HasSealPic() throws Exception {
-		String no = GetRequestVal("No");
-		if (DataType.IsNullOrEmpty(no))
-			return "";
-
-		String path = SystemConfig.getPathOfDataUser() + "Siganture/" + no + ".jpg";
-
-		File file = new File(path);
-		// 如果文件存在
-		if (file.exists() == true)
-			return "";
-		else {
-			// 如果不存在，就返回名称
-			BP.Port.Emp emp = new BP.Port.Emp(no);
-			return emp.getName();
-		}
-	}
-
+        String path = SystemConfig.getPathOfDataUser() + "Siganture/"+ no + ".png";
+        
+        File file = new File(path);
+        //如果文件存在
+        if (file.exists() == true)
+            return "";
+        else
+        {
+            //如果不存在，就返回名称
+            BP.Port.Emp emp = new BP.Port.Emp(no);
+            return emp.getName();
+        }
+    }
 	/**
 	 * 入口函数
 	 */
@@ -134,212 +134,228 @@ public class WF extends WebContralBase {
 	public boolean getIsReusable() {
 		return false;
 	}
-
+	
 	/// <summary>
-	/// 执行的方法.
-	/// </summary>
-	/// <returns></returns>
-	public String Do_Init() {
-		String at = this.GetRequestVal("ActionType");
-		if (DataType.IsNullOrEmpty(at))
-			at = this.GetRequestVal("DoType");
-		if (DataType.IsNullOrEmpty(at) && this.getSID() != null)
-			at = "Track";
-		try {
-			switch (at) {
+    /// 执行的方法.
+    /// </summary>
+    /// <returns></returns>
+    public String Do_Init()
+    {
+        String at = this.GetRequestVal("ActionType");
+        if (DataType.IsNullOrEmpty(at))
+            at = this.GetRequestVal("DoType");
+        if (DataType.IsNullOrEmpty(at) && this.getSID() != null)
+            at = "Track";
+        try
+        {
+            switch (at)
+            {
 
-			case "Focus": // 把任务放入任务池.
-				BP.WF.Dev2Interface.Flow_Focus(this.getWorkID());
-				return "info@Close";
-			case "PutOne": // 把任务放入任务池.
-				BP.WF.Dev2Interface.Node_TaskPoolPutOne(this.getWorkID());
-				return "info@Close";
-			case "DoAppTask": // 申请任务.
-				BP.WF.Dev2Interface.Node_TaskPoolTakebackOne(this.getWorkID());
-				return "info@Close";
-			case "DoOpenCC":
+                case "Focus": //把任务放入任务池.
+                    BP.WF.Dev2Interface.Flow_Focus(this.getWorkID());
+                    return "info@Close";
+                case "PutOne": //把任务放入任务池.
+                    BP.WF.Dev2Interface.Node_TaskPoolPutOne(this.getWorkID());
+                    return "info@Close";
+                case "DoAppTask": // 申请任务.
+                    BP.WF.Dev2Interface.Node_TaskPoolTakebackOne(this.getWorkID());
+                    return "info@Close";
+                case "DoOpenCC":
 
-				String Sta = this.GetRequestVal("Sta");
-				if (Sta == "0") {
-					BP.WF.Template.CCList cc1 = new BP.WF.Template.CCList();
-					cc1.setMyPK(this.getMyPK());
-					cc1.Retrieve();
-					cc1.setHisSta(CCSta.Read);
-					cc1.Update();
-				}
-				return "url@./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.getFK_Flow() + "&FK_Node="
-						+ this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID();
-			case "DelCC": // 删除抄送.
-				CCList cc = new CCList();
-				cc.setMyPK(this.getMyPK());
-				cc.Retrieve();
-				cc.setHisSta(CCSta.Del);
-				cc.Update();
-				return "info@Close";
-			case "DelSubFlow": // 删除进程。
-				try {
-					BP.WF.Dev2Interface.Flow_DeleteSubThread(this.getFK_Flow(), this.getWorkID(), "手工删除");
-					return "info@Close";
-				} catch (Exception ex) {
-					return "err@" + ex.getMessage();
-				}
-			case "DownBill":
-				Bill b = new Bill(this.getMyPK());
-				b.DoOpen();
-				break;
-			case "DelDtl":
-				GEDtls dtls = new GEDtls(this.getEnsName());
-				GEDtl dtl = (GEDtl) dtls.getGetNewEntity();
-				dtl.setOID(this.getRefOID());
-				if (dtl.RetrieveFromDBSources() == 0) {
-					return "info@Close";
-				}
-				FrmEvents fes = new FrmEvents(this.getEnsName()); // 获得事件.
+                    String Sta = this.GetRequestVal("Sta");
+                    if (Sta == "0")
+                    {
+                        BP.WF.Template.CCList cc1 = new BP.WF.Template.CCList();
+                        cc1.setMyPK(this.getMyPK());
+                        cc1.Retrieve();
+                        cc1.setHisSta(CCSta.Read);
+                        cc1.Update();
+                    }
+                    return "url@./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID();
+                case "DelCC": //删除抄送.
+                    CCList cc = new CCList();
+                    cc.setMyPK(this.getMyPK());
+                    cc.Retrieve();
+                    cc.setHisSta(CCSta.Del);
+                    cc.Update();
+                    return "info@Close";
+                case "DelSubFlow": //删除进程。
+                    try
+                    {
+                        BP.WF.Dev2Interface.Flow_DeleteSubThread(this.getFK_Flow(), this.getWorkID(), "手工删除");
+                        return "info@Close";
+                    }
+                    catch (Exception ex)
+                    {
+                        return "err@" + ex.getMessage();
+                    }
+                case "DownBill":
+                    Bill b = new Bill(this.getMyPK());
+                    b.DoOpen();
+                    break;
+                case "DelDtl":
+                    GEDtls dtls = new GEDtls(this.getEnsName());
+                    GEDtl dtl = (GEDtl)dtls.getGetNewEntity();
+                    dtl.setOID(this.getRefOID());
+                    if (dtl.RetrieveFromDBSources() == 0)
+                    {
+                        return "info@Close";
+                    }
+                    FrmEvents fes = new FrmEvents(this.getEnsName()); //获得事件.
 
-				// 处理删除前事件.
-				try {
-					fes.DoEventNode(BP.WF.XML.EventListDtlList.DtlItemDelBefore, dtl);
-				} catch (Exception ex) {
-					return "err@" + ex.getMessage();
-				}
-				dtl.Delete();
+                    // 处理删除前事件.
+                    try
+                    {
+                        fes.DoEventNode(BP.WF.XML.EventListDtlList.DtlItemDelBefore, dtl);
+                    }
+                    catch (Exception ex)
+                    {
+                        return "err@" + ex.getMessage();
+                    }
+                    dtl.Delete();
 
-				// 处理删除后事件.
-				try {
-					fes.DoEventNode(BP.WF.XML.EventListDtlList.DtlItemDelAfter, dtl);
-				} catch (Exception ex) {
-					return "err@" + ex.getMessage();
-				}
-				return "info@Close";
-			case "EmpDoUp":
-				BP.WF.Port.WFEmp ep = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
-				ep.DoUp();
+                    // 处理删除后事件.
+                    try
+                    {
+                        fes.DoEventNode(BP.WF.XML.EventListDtlList.DtlItemDelAfter, dtl);
+                    }
+                    catch (Exception ex)
+                    {
+                        return "err@" + ex.getMessage();
+                    }
+                    return "info@Close";
+                case "EmpDoUp":
+                    BP.WF.Port.WFEmp ep = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
+                    ep.DoUp();
 
-				BP.WF.Port.WFEmps emps111 = new BP.WF.Port.WFEmps();
-				// emps111.RemoveCash();
-				emps111.RetrieveAll();
-				return "info@Close";
-			case "EmpDoDown":
-				BP.WF.Port.WFEmp ep1 = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
-				ep1.DoDown();
+                    BP.WF.Port.WFEmps emps111 = new BP.WF.Port.WFEmps();
+                    //  emps111.RemoveCash();
+                    emps111.RetrieveAll();
+                    return "info@Close";
+                case "EmpDoDown":
+                    BP.WF.Port.WFEmp ep1 = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
+                    ep1.DoDown();
 
-				BP.WF.Port.WFEmps emps11441 = new BP.WF.Port.WFEmps();
-				// emps11441.RemoveCash();
-				emps11441.RetrieveAll();
-				return "info@Close";
-			case "Track": // 通过一个串来打开一个工作.
-				String mySid = this.getSID(); // this.Request.QueryString["SID"];
-				String[] mystrs = mySid.split("_");
+                    BP.WF.Port.WFEmps emps11441 = new BP.WF.Port.WFEmps();
+                    //  emps11441.RemoveCash();
+                    emps11441.RetrieveAll();
+                    return "info@Close";
+                case "Track": //通过一个串来打开一个工作.
+                    String mySid = this.getSID(); // this.Request.QueryString["SID"];
+                    String[] mystrs = mySid.split("_");
 
-				int myWorkID = Integer.parseInt(mystrs[1]);
-				String fk_emp = mystrs[0];
-				int fk_node = Integer.parseInt(mystrs[2]);
-				Node mynd = new Node();
-				mynd.setNodeID(fk_node);
-				mynd.RetrieveFromDBSources();
+                    int myWorkID = Integer.parseInt(mystrs[1]);
+                    String fk_emp = mystrs[0];
+                    int fk_node = Integer.parseInt(mystrs[2]);
+                    Node mynd = new Node();
+                    mynd.setNodeID(fk_node);
+                    mynd.RetrieveFromDBSources();
 
-				String fk_flow = mynd.getFK_Flow();
-				String myurl = "./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Node=" + mynd.getNodeID() + "&WorkID="
-						+ myWorkID + "&FK_Flow=" + fk_flow;
-				BP.Web.WebUser.SignInOfGener(new BP.Port.Emp(fk_emp));
+                    String fk_flow = mynd.getFK_Flow();
+                    String myurl = "./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Node=" + mynd.getNodeID() + "&WorkID=" + myWorkID + "&FK_Flow=" + fk_flow;
+                    BP.Web.WebUser.SignInOfGener(new BP.Port.Emp(fk_emp));
 
-				return "url@" + myurl;
-			case "OF": // 通过一个串来打开一个工作.
-				String sid = this.getSID();
-				String[] strs = sid.split("_");
-				GenerWorkerList wl = new GenerWorkerList();
-				int i = wl.Retrieve(GenerWorkerListAttr.FK_Emp, strs[0], GenerWorkerListAttr.WorkID, strs[1],
-						GenerWorkerListAttr.IsPass, 0);
+                    return "url@" + myurl;
+                case "OF": //通过一个串来打开一个工作.
+                    String sid = this.getSID();
+                    String[] strs = sid.split("_");
+                    GenerWorkerList wl = new GenerWorkerList();
+                    int i = wl.Retrieve(GenerWorkerListAttr.FK_Emp, strs[0],
+                        GenerWorkerListAttr.WorkID, strs[1],
+                        GenerWorkerListAttr.IsPass, 0);
 
-				if (i == 0) {
-					return "info@此工作已经被别人处理或者此流程已删除";
-				}
+                    if (i == 0)
+                    {
+                        return "info@此工作已经被别人处理或者此流程已删除";
+                    }
 
-				BP.Port.Emp empOF = new BP.Port.Emp(wl.getFK_Emp());
-				BP.Web.WebUser.SignInOfGener(empOF);
-				String u = "MyFlow.htm?FK_Flow=" + wl.getFK_Flow() + "&WorkID=" + wl.getWorkID() + "&FK_Node="
-						+ wl.getFK_Node() + "&FID=" + wl.getFID();
-				return "url@" + u;
-			case "ExitAuth":
-				BP.Port.Emp emp = new BP.Port.Emp(this.getFK_Emp());
-				// 首先退出，再进行登录
-				BP.Web.WebUser.Exit();
-				BP.Web.WebUser.SignInOfGener(emp, WebUser.getSysLang());
-				return "info@Close";
-			case "LogAs":
-				BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(this.getFK_Emp());
-				if (wfemp.getAuthorIsOK() == false) {
-					return "err@授权失败";
-				}
-				BP.Port.Emp emp1 = new BP.Port.Emp(this.getFK_Emp());
-				BP.Web.WebUser.SignInOfGener(emp1, "CH", false, false, wfemp.getAuthor(), WebUser.getName());
-				return "info@Close";
-			case "TakeBack": // 取消授权。
-				BP.WF.Port.WFEmp myau = new BP.WF.Port.WFEmp(WebUser.getNo());
-				BP.DA.Log.DefaultLogWriteLineInfo("取消授权:" + WebUser.getNo() + "取消了对(" + myau.getAuthor() + ")的授权。");
-				myau.setAuthor("");
-				myau.setAuthorWay(0);
-				myau.Update();
-				return "info@Close";
-			case "AutoTo": // 执行授权。
-				BP.WF.Port.WFEmp au = new BP.WF.Port.WFEmp();
-				au.setNo(WebUser.getNo());
-				au.RetrieveFromDBSources();
-				au.setAuthorDate(BP.DA.DataType.getCurrentDate());
-				au.setAuthor(this.getFK_Emp());
-				au.setAuthorWay(1);
-				au.Save();
-				BP.DA.Log.DefaultLogWriteLineInfo("执行授权:" + WebUser.getNo() + "执行了对(" + au.getAuthor() + ")的授权。");
-				return "info@Close";
-			case "UnSend": // 执行撤消发送。
-				String url = "./WorkOpt/UnSend.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
-				return "url@" + url;
-			case "SetBillState":
-				break;
-			case "WorkRpt":
-				// Bill bk1 = new Bill(this.OID);
-				// Node nd = new Node(bk1.FK_Node);
-				// this.Response.Redirect("WFRpt.htm?WorkID=" + bk1.WorkID +
-				// "&FID=" + bk1.FID + "&FK_Flow=" + nd.FK_Flow + "&NodeId=" +
-				// bk1.FK_Node, false);
-				// this.WinOpen();
-				// this.WinClose();
-				break;
-			case "PrintBill":
-				// Bill bk2 = new Bill(this.Request.QueryString["OID"]);
-				// Node nd2 = new Node(bk2.FK_Node);
-				// this.Response.Redirect("NodeRefFunc.aspx?NodeId=" +
-				// bk2.FK_Node + "&FlowNo=" + nd2.FK_Flow + "&NodeRefFuncOID=" +
-				// bk2.FK_NodeRefFunc + "&WorkFlowID=" + bk2.WorkID);
-				//// this.WinClose();
-				break;
-			// 删除流程中第一个节点的数据，包括待办工作
-			case "DeleteFlow":
-				// 调用DoDeleteWorkFlowByReal方法
-				WorkFlow wf = new WorkFlow(new Flow(this.getFK_Flow()), this.getWorkID());
-				wf.DoDeleteWorkFlowByReal(true);
-				return BP.WF.Glo.getCCFlowAppPath() + "WF/MyFlowInfo.htm?Msg=流程删除成功";
-			case "DownFlowSearchExcel": // 下载流程查询结果，转到下面的逻辑，不放在此try..catch..中
-				break;
-			case "DownFlowSearchToTmpExcel": // 导出到模板
-				break;
-			default:
-				throw new Exception("没有判断的at标记:" + at);
-			}
-		} catch (Exception ex) {
-			return "err@" + ex.getMessage();
-		}
-		// 此处之所以再加一个switch，是因为在下载文件逻辑中，调用Response.End()方法，如果此方法放在try..catch..中，会报线程中止异常
-		switch (at) {
-		case "DownFlowSearchExcel":
-			// DownMyStartFlowExcel();
-			break;
-		case "DownFlowSearchToTmpExcel": // 导出到模板
-			// DownMyStartFlowToTmpExcel();
-			break;
-		}
-		return "";
-	}
+                    BP.Port.Emp empOF = new BP.Port.Emp(wl.getFK_Emp());
+                    BP.Web.WebUser.SignInOfGener(empOF);
+                    String u = "MyFlow.htm?FK_Flow=" + wl.getFK_Flow() + "&WorkID=" + wl.getWorkID() + "&FK_Node=" + wl.getFK_Node() + "&FID=" + wl.getFID();
+                    return "url@" + u;
+                case "ExitAuth":
+                    BP.Port.Emp emp = new BP.Port.Emp(this.getFK_Emp());
+                    //首先退出，再进行登录
+                    BP.Web.WebUser.Exit();
+                    BP.Web.WebUser.SignInOfGener(emp, WebUser.getSysLang());
+                    return "info@Close";
+                case "LogAs":
+                    BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(this.getFK_Emp());
+                    if (wfemp.getAuthorIsOK() == false)
+                    {
+                        return "err@授权失败";
+                    }
+                    BP.Port.Emp emp1 = new BP.Port.Emp(this.getFK_Emp());
+                    BP.Web.WebUser.SignInOfGener(emp1, "CH", false, false, wfemp.getAuthor(), WebUser.getName());
+                    return "info@Close";
+                case "TakeBack": // 取消授权。
+                    BP.WF.Port.WFEmp myau = new BP.WF.Port.WFEmp(WebUser.getNo());
+                    BP.DA.Log.DefaultLogWriteLineInfo("取消授权:" + WebUser.getNo() + "取消了对(" + myau.getAuthor() + ")的授权。");
+                    myau.setAuthor("");
+                    myau.setAuthorWay(0);
+                    myau.Update();
+                    return "info@Close";
+                case "AutoTo": // 执行授权。
+                    BP.WF.Port.WFEmp au = new BP.WF.Port.WFEmp();
+                    au.setNo(WebUser.getNo());
+                    au.RetrieveFromDBSources();
+                    au.setAuthorDate(BP.DA.DataType.getCurrentDate());
+                    au.setAuthor(this.getFK_Emp());
+                    au.setAuthorWay(1);
+                    au.Save();
+                    BP.DA.Log.DefaultLogWriteLineInfo("执行授权:" + WebUser.getNo() + "执行了对(" + au.getAuthor() + ")的授权。");
+                    return "info@Close";
+                case "UnSend": //执行撤消发送。
+                    String url = "./WorkOpt/UnSend.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
+                    return "url@" + url;
+                case "SetBillState":
+                    break;
+                case "WorkRpt":
+                    //  Bill bk1 = new Bill(this.OID);
+                    //  Node nd = new Node(bk1.FK_Node);
+                    // this.Response.Redirect("WFRpt.htm?WorkID=" + bk1.WorkID + "&FID=" + bk1.FID + "&FK_Flow=" + nd.FK_Flow + "&NodeId=" + bk1.FK_Node, false);
+                    //this.WinOpen();
+                    //this.WinClose();
+                    break;
+                case "PrintBill":
+                    //Bill bk2 = new Bill(this.Request.QueryString["OID"]);
+                    //Node nd2 = new Node(bk2.FK_Node);
+                    //this.Response.Redirect("NodeRefFunc.aspx?NodeId=" + bk2.FK_Node + "&FlowNo=" + nd2.FK_Flow + "&NodeRefFuncOID=" + bk2.FK_NodeRefFunc + "&WorkFlowID=" + bk2.WorkID);
+                    ////this.WinClose();
+                    break;
+                //删除流程中第一个节点的数据，包括待办工作
+                case "DeleteFlow":
+                    //调用DoDeleteWorkFlowByReal方法
+                    WorkFlow wf = new WorkFlow(new Flow(this.getFK_Flow()), this.getWorkID());
+                    wf.DoDeleteWorkFlowByReal(true);
+                    return BP.WF.Glo.getCCFlowAppPath() + "WF/MyFlowInfo.htm?Msg=流程删除成功";
+                case "DownFlowSearchExcel":    //下载流程查询结果，转到下面的逻辑，不放在此try..catch..中
+                    break;
+                case "DownFlowSearchToTmpExcel":    //导出到模板
+                    break;
+                case "ToDoList"://跳转到待办
+                     url = "./Todolist.htm";
+                    return "url@" + url;
+                default:
+                    throw new Exception("没有判断的at标记:" + at);
+            }
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+        //此处之所以再加一个switch，是因为在下载文件逻辑中，调用Response.End()方法，如果此方法放在try..catch..中，会报线程中止异常
+        switch (at)
+        {
+            case "DownFlowSearchExcel":
+                //  DownMyStartFlowExcel();
+                break;
+            case "DownFlowSearchToTmpExcel":    //导出到模板
+                // DownMyStartFlowToTmpExcel();
+                break;
+        }
+        return "";
+    }
 
 	/**
 	 * 运行 <param name="UserNo">人员编号</param> <param name="fk_flow">流程编号</param>
@@ -351,65 +367,66 @@ public class WF extends WebContralBase {
 		AppACE page = new AppACE(context);
 		return page.Runing_Init();
 	}
-
+	
 	/**
 	 * 已完成
-	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws Exception 
 	 */
-	public String Complete_Init() throws Exception {
+	public String Complete_Init() throws Exception 
+    {
 		/* 如果不是删除流程注册表. */
-		Paras ps = new Paras();
-		ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' and WFState="
-				+ WFState.Complete.getValue() + " ORDER BY  RDT DESC";
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		// 添加oracle的处理
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-			dt.Columns.get("PRI").ColumnName = "PRI";
-			dt.Columns.get("WORKID").ColumnName = "WorkID";
-			dt.Columns.get("FID").ColumnName = "FID";
-			dt.Columns.get("WFSTATE").ColumnName = "WFState";
-			dt.Columns.get("WFSTA").ColumnName = "WFSta";
-			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
-			dt.Columns.get("TSPAN").ColumnName = "TSpan";
-			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
-			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
-			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
-			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
-			dt.Columns.get("TITLE").ColumnName = "Title";
-			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
-			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
-			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
-			dt.Columns.get("STARTER").ColumnName = "Starter";
-			dt.Columns.get("SENDER").ColumnName = "Sender";
-			dt.Columns.get("SENDDT").ColumnName = "SendDT";
-			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
-			dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
-			dt.Columns.get("RDT").ColumnName = "RDT";
-			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
-			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
-			dt.Columns.get("PFID").ColumnName = "PFID";
-			dt.Columns.get("PEMP").ColumnName = "PEmp";
-			dt.Columns.get("NODENAME").ColumnName = "NodeName";
-			dt.Columns.get("MYNUM").ColumnName = "MyNum";
-			dt.Columns.get("GUID").ColumnName = "Guid";
-			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
-			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
-			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
-			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
-			dt.Columns.get("FK_NY").ColumnName = "FK_NY";
-			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
-			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
-			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
-			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
-			dt.Columns.get("EMPS").ColumnName = "Emps";
-			dt.Columns.get("DOMAIN").ColumnName = "Domain";
-			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
-			dt.Columns.get("BILLNO").ColumnName = "BillNo";
-		}
-		return BP.Tools.Json.ToJson(dt);
-	}
+        Paras ps = new Paras();
+        ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' and WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
+        DataTable dt= BP.DA.DBAccess.RunSQLReturnTable(ps);
+        //添加oracle的处理
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+        {
+            dt.Columns.get("PRI").ColumnName = "PRI";
+            dt.Columns.get("WORKID").ColumnName = "WorkID";
+            dt.Columns.get("FID").ColumnName = "FID";
+            dt.Columns.get("WFSTATE").ColumnName = "WFState";
+            dt.Columns.get("WFSTA").ColumnName = "WFSta";
+            dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
+            dt.Columns.get("TSPAN").ColumnName = "TSpan";
+            dt.Columns.get("TOTOSTA").ColumnName = "TodoSta";
+            dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+            dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+            dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+            dt.Columns.get("TITLE").ColumnName = "Title";
+            dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+            dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+            dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+            dt.Columns.get("STARTER").ColumnName = "Starter";
+            dt.Columns.get("SENDER").ColumnName = "Sender";
+            dt.Columns.get("SENDDT").ColumnName = "SendDT";
+            dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+            dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
+            dt.Columns.get("RDT").ColumnName = "RDT";
+            dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+            dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+            dt.Columns.get("PFID").ColumnName = "PFID";
+            dt.Columns.get("PEMP").ColumnName = "PEmp";
+            dt.Columns.get("NODENAME").ColumnName = "NodeName";
+            dt.Columns.get("MYNUM").ColumnName = "MyNum";
+            dt.Columns.get("GUID").ColumnName = "Guid";
+            dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+            dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+            dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+            dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+            dt.Columns.get("FK_NY").ColumnName = "FK_NY";
+            dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+            dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+            dt.Columns.get("FK_FKLOW").ColumnName = "FK_Flow";
+            dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+            dt.Columns.get("EMPS").ColumnName = "Emps";
+            dt.Columns.get("DOMAIN").ColumnName = "Domain";
+            dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+            dt.Columns.get("BILLNO").ColumnName = "BillNo";
+        }
+        return BP.Tools.Json.ToJson(dt);
+    }
+	
 
 	/// <summary>
 	/// 打开表单
@@ -522,7 +539,7 @@ public class WF extends WebContralBase {
 				md.setHisFrmType(FrmType.FreeFrm);
 				md.Update();
 			}
-		} else if (nd.getHisFormType() == NodeFormType.FoolForm){
+		} else {
 			MapData md = new MapData(nd.getNodeFrmID());
 			if (md.getHisFrmType() != FrmType.FoolForm) {
 				md.setHisFrmType(FrmType.FoolForm);
@@ -623,9 +640,9 @@ public class WF extends WebContralBase {
 	 */
 	public String Todolist_Init() {
 		DataTable dt = null;
-		String showWhat = this.GetRequestVal("ShowWhat");
+
 		try {
-			dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(BP.Web.WebUser.getNo(), this.getFK_Node(), showWhat);
+			dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(BP.Web.WebUser.getNo(), this.getFK_Node());
 		} catch (Exception e) {
 			Log.DebugWriteError("WF Todolist_Init():" + e.getMessage());
 			e.printStackTrace();
@@ -724,30 +741,10 @@ public class WF extends WebContralBase {
 	 * @return
 	 * @throws Exception
 	 */
-	public String AuthorList_Init() throws Exception {
-
-		/*
-		 * DataTable dt = BP.DA.DBAccess
-		 * .RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" +
-		 * BP.Web.WebUser.getNo() + "'"); return
-		 * BP.Tools.FormatToJson.ToJson(dt);
-		 */
-
-		Paras ps = new Paras();
-		ps.SQL = "SELECT No,Name,AuthorDate FROM WF_Emp WHERE AUTHOR=" + SystemConfig.getAppCenterDBVarStr() + "AUTHOR";
-		ps.Add("AUTHOR", BP.Web.WebUser.getNo());
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
-			dt.Columns.get("NO").setColumnName("No");
-			dt.Columns.get("NAME").setColumnName("Name");
-			dt.Columns.get("AUTHORDATE").setColumnName("AuthorDate");
-			// dt.Columns["AUTHORDATE"].ColumnName = "AuthorDate";
-			// dt.Columns["NAME"].ColumnName = "Name";
-		}
-		return BP.Tools.Json.ToJson(dt);
-
+	public String Load_Author() throws Exception {
+		DataTable dt = BP.DA.DBAccess
+				.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + BP.Web.WebUser.getNo() + "'");
+		return BP.Tools.FormatToJson.ToJson(dt);
 	}
 
 	/**
@@ -775,46 +772,24 @@ public class WF extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Start_Init() throws Exception {
+		//定义容器.
+        DataSet ds = new DataSet();
 
-		BP.WF.Port.WFEmp em = new WFEmp();
-		em.setNo(BP.Web.WebUser.getNo());
-		if (em.RetrieveFromDBSources() == 0) {
-			em.setFK_Dept(BP.Web.WebUser.getFK_Dept());
-			em.setName(BP.Web.WebUser.getName());
-			em.Insert();
-		}
-//		String json = em.getStartFlows();
-//		if (DataType.IsNullOrEmpty(json) == false) {
-//			return json;
-//		}
+        //流程类别.
+        FlowSorts fss = new FlowSorts();
+        fss.RetrieveAll();
 
-		// 定义容器.
-		DataSet ds = new DataSet();
+        DataTable dtSort = fss.ToDataTableField("Sort");
+        dtSort.TableName = "Sort";
+        ds.Tables.add(dtSort);
 
-		// 流程类别.
-		FlowSorts fss = new FlowSorts();
-		fss.RetrieveAll();
+        //获得能否发起的流程.
+        DataTable dtStart = Dev2Interface.DB_StarFlows(WebUser.getNo());
+        dtStart.TableName = "Start";
+        ds.Tables.add(dtStart);
 
-		DataTable dtSort = fss.ToDataTableField("Sort");
-		dtSort.TableName = "Sort";
-		ds.Tables.add(dtSort);
-
-		// 获得能否发起的流程.
-		DataTable dtStart = Dev2Interface.DB_StarFlows(WebUser.getNo());
-		dtStart.TableName = "Start";
-		ds.Tables.add(dtStart);
-
-		// 返回组合
-//		json = BP.Tools.Json.ToJson(ds);
-//
-//		// 把json存入数据表，避免下一次再取.
-//		if (json.length() > 40) {
-//			em.setStartFlows(json);
-//			em.Update();
-//		}
-
-		// 返回组合
-		return BP.Tools.Json.ToJson(ds);
+        //返回组合
+        return BP.Tools.Json.ToJson(ds);
 	}
 
 	/**
@@ -943,9 +918,9 @@ public class WF extends WebContralBase {
 	 */
 	public final String Runing_UnSend() throws Exception {
 		try {
-			// 获取撤销到的节点
-			int unSendToNode = this.GetRequestValInt("UnSendToNode");
-			return BP.WF.Dev2Interface.Flow_DoUnSend(this.getFK_Flow(), this.getWorkID(), unSendToNode, this.getFID());
+			 //获取撤销到的节点
+            int unSendToNode = this.GetRequestValInt("UnSendToNode");
+			return BP.WF.Dev2Interface.Flow_DoUnSend(this.getFK_Flow(), this.getWorkID(),unSendToNode,this.getFID());
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}
@@ -1092,14 +1067,14 @@ public class WF extends WebContralBase {
 		// 获得表单模版.
 		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), null);
 
-		/// 把主从表数据放入里面.
+		///把主从表数据放入里面.
 		// .工作数据放里面去, 放进去前执行一次装载前填充事件.
 		BP.WF.Work wk = nd.getHisWork();
 		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
 
 		// 重设默认值.
-		// wk.ResetDefaultVal();
+//		wk.ResetDefaultVal();
 
 		DataTable mainTable = wk.ToDataTableField("MainTable");
 		mainTable.TableName = "MainTable";
@@ -1109,7 +1084,7 @@ public class WF extends WebContralBase {
 		DataTable WF_Node = nd.ToDataTableField("WF_Node");
 		myds.Tables.add(WF_Node);
 
-		// 加入组件的状态信息, 在解析表单的时候使用.
+		//加入组件的状态信息, 在解析表单的时候使用.
 		BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 		if (!nd.getNodeFrmID().equals("ND" + nd.getNodeID())) {
 			// 说明这是引用到了其他节点的表单，就需要把一些位置元素修改掉.
@@ -1144,9 +1119,9 @@ public class WF extends WebContralBase {
 		}
 
 		myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
-		// 加入组件的状态信息, 在解析表单的时候使用.
+		//加入组件的状态信息, 在解析表单的时候使用.
 
-		// 增加附件信息.
+		//增加附件信息.
 		BP.Sys.FrmAttachments athDescs = new FrmAttachments();
 		athDescs.Retrieve(FrmAttachmentAttr.FK_MapData, nd.getNodeFrmID());
 		if (athDescs.size() != 0) {
@@ -1188,9 +1163,9 @@ public class WF extends WebContralBase {
 
 			// 增加一个数据源.
 			myds.Tables.add(dbs.ToDataTableField("Sys_FrmAttachmentDB"));
-		}
+		}	
 
-		// 把外键表加入DataSet
+		//把外键表加入DataSet
 		List<DataTable> dtMapAttrList = myds.getTables();
 		DataTable dtMapAttr = null;
 		for (DataTable dt : dtMapAttrList) {
@@ -1199,10 +1174,10 @@ public class WF extends WebContralBase {
 		}
 		MapExts mes = md.getMapExts();
 		MapExt me = new MapExt();
-
+		
 		DataTable ddlTable = new DataTable();
-		ddlTable.Columns.Add("No");
-
+        ddlTable.Columns.Add("No");
+        
 		for (DataRow dr : dtMapAttr.Rows) {
 			String lgType = dr.getValue("LGType").toString();
 			String uiBindKey = dr.getValue("UIBindKey").toString();
@@ -1219,10 +1194,11 @@ public class WF extends WebContralBase {
 			if (uiIsEnable.equals("0") == true && lgType.equals("0") == true)
 				continue; // 如果是外部数据源，并且是不可以编辑的状态.
 
+			
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.getValue("KeyOfEn").toString();
 
-			// 处理下拉框数据范围. for 小杨.
+			//处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
 					keyOfEn);
 			me = (MapExt) ((tempVar instanceof MapExt) ? tempVar : null);
@@ -1246,27 +1222,28 @@ public class WF extends WebContralBase {
 				myds.Tables.add(dt_FK_Dll);
 				continue;
 			}
-			// 处理下拉框数据范围.
+			//处理下拉框数据范围.
 
 			// 判断是否存在.
 			if (myds.Tables.contains(uiBindKey) == true) {
 				continue;
 			}
-
+			
 			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
-
-			if (mydt != null)
+			
+			if(mydt!=null)
 				myds.Tables.add(mydt);
-			else {
-				DataRow ddldr = ddlTable.NewRow();
-				ddldr.setValue("No", uiBindKey);
-				ddlTable.Rows.add(ddldr);
+			else{
+				 DataRow ddldr = ddlTable.NewRow();
+                 ddldr.setValue("No",uiBindKey);
+                 ddlTable.Rows.add(ddldr);
 			}
 
+			
 		}
-		ddlTable.TableName = "UIBindKey";
-		myds.Tables.add(ddlTable);
-		// 把外键表加入DataSet
+		 ddlTable.TableName = "UIBindKey";
+         myds.Tables.add(ddlTable);
+		//把外键表加入DataSet
 
 		// 图片附件
 		nd.WorkID = this.getWorkID(); // 为求当前表单ID获得参数，而赋值.
@@ -1286,6 +1263,7 @@ public class WF extends WebContralBase {
 	 */
 	public final String TodolistOfAuth_Init() {
 		return "err@尚未重构完成.";
+
 
 	}
 
@@ -1316,12 +1294,12 @@ public class WF extends WebContralBase {
 
 	public final String Port_Init() throws Exception {
 
-		// 登录校验.
+		
+		//登录校验.
 		if (BP.Web.WebUser.getNo().equals(this.getUserNo()) == false) {
 
-			// if (this.getUserNo() == null || this.getSID() == null ||
-			// this.getDoWhat() == null) {
-			if (this.getUserNo() == null || this.getDoWhat() == null) {
+			//if (this.getUserNo() == null || this.getSID() == null || this.getDoWhat() == null) {
+				if (this.getUserNo() == null  || this.getDoWhat() == null) {
 				/// #region 安全性校验.
 				return "err@必要的参数没有传入，请参考接口规则。";
 			}
@@ -1339,9 +1317,9 @@ public class WF extends WebContralBase {
 				}
 			}
 		}
-		if (this.getDoWhat().equals("PortLogin") == true) {
-			return "登陆成功";
-		}
+        if(this.getDoWhat().equals("PortLogin") == true){
+            return "登陆成功";
+        }
 		/// #endregion 安全性校验.
 
 		/// #region 生成参数串.
@@ -1453,8 +1431,7 @@ public class WF extends WebContralBase {
 			BP.DA.AtPara ap = new AtPara(sms.getAtPara());
 			if (sms.getMsgType() == SMSMsgType.SendSuccess) { // 发送成功的提示.
 
-				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(ap.GetValInt64ByKey("WorkID"),
-						BP.Web.WebUser.getNo()) == true) {
+				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork( ap.GetValInt64ByKey("WorkID"), BP.Web.WebUser.getNo()) == true) {
 					return "url@MyFlow.htm?FK_Flow=" + ap.GetValStrByKey("FK_Flow") + "&WorkID="
 							+ ap.GetValStrByKey("WorkID") + "&o2=1" + paras;
 				} else {
@@ -1469,261 +1446,275 @@ public class WF extends WebContralBase {
 
 		return "err@没有约定的标记:DoWhat=" + this.getDoWhat();
 	}
-
+	
 	/**
 	 * 批处理审批
-	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws Exception 
 	 */
-	public String Batch_Init() throws Exception {
-		String fk_node = GetRequestVal("FK_Node");
+    public String Batch_Init() throws Exception
+    {
+        String fk_node = GetRequestVal("FK_Node");
 
-		// 没有传FK_Node
-		if (DataType.IsNullOrEmpty(fk_node)) {
-			String sql = "SELECT a.NodeID, a.Name,a.FlowName, COUNT(WorkID) AS NUM  FROM WF_Node a, WF_EmpWorks b WHERE A.NodeID=b.FK_Node AND B.FK_Emp='"
-					+ WebUser.getNo()
-					+ "' AND b.WFState NOT IN (7) AND a.BatchRole!=0 GROUP BY A.NodeID, a.Name,a.FlowName ";
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			return BP.Tools.Json.ToJson(dt);
-		}
+        //没有传FK_Node
+        if (DataType.IsNullOrEmpty(fk_node))
+        {
+            String sql = "SELECT a.NodeID, a.Name,a.FlowName, COUNT(WorkID) AS NUM  FROM WF_Node a, WF_EmpWorks b WHERE A.NodeID=b.FK_Node AND B.FK_Emp='" + WebUser.getNo() + "' AND b.WFState NOT IN (7) AND a.BatchRole!=0 GROUP BY A.NodeID, a.Name,a.FlowName ";
+            DataTable dt = DBAccess.RunSQLReturnTable(sql);
+            return BP.Tools.Json.ToJson(dt);
+        }
 
-		return "";
-	}
 
-	public String BatchList_Init() throws Exception {
-		DataSet ds = new DataSet();
+        return "";
+    }
 
-		String FK_Node = GetRequestVal("FK_Node");
+    public String BatchList_Init() throws Exception
+    {
+        DataSet ds = new DataSet();
 
-		// 获取节点信息
-		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
-		Flow fl = nd.getHisFlow();
-		ds.Tables.add(nd.ToDataTableField("WF_Node"));
+        String FK_Node = GetRequestVal("FK_Node");
 
-		String sql = "";
+        //获取节点信息
+        BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
+        Flow fl = nd.getHisFlow();
+        ds.Tables.add(nd.ToDataTableField("WF_Node"));
+        
+        String sql = "";
 
-		if (nd.getHisRunModel() == RunModel.SubThread) {
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable()
-					+ " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID()
-					+ " AND b.FK_Emp='" + WebUser.getNo() + "'";
-		} else {
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable()
-					+ " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID()
-					+ " AND b.FK_Emp='" + WebUser.getNo() + "'";
-		}
+        if (nd.getHisRunModel() == RunModel.SubThread)
+        {
+            sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable()
+                      + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID()
+                      + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+        }
+        else
+        {
+            sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable()
+                    + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID()
+                    + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+        }
 
-		// 获取待审批的流程信息集合
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Batch_List";
-		ds.Tables.add(dt);
+        //获取待审批的流程信息集合
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        dt.TableName = "Batch_List";
+        ds.Tables.add(dt);
 
-		// 获取按钮权限
-		BtnLab btnLab = new BtnLab(this.getFK_Node());
+        //获取按钮权限
+        BtnLab btnLab = new BtnLab(this.getFK_Node());
 
-		ds.Tables.add(btnLab.ToDataTableField("Sys_BtnLab"));
+        ds.Tables.add(btnLab.ToDataTableField("Sys_BtnLab"));
 
-		// 获取报表数据
-		String inSQL = "SELECT WorkID FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo()
-				+ "' AND WFState!=7 AND FK_Node=" + this.getFK_Node();
-		Works wks = nd.getHisWorks();
-		wks.RetrieveInSQL(inSQL);
+        //获取报表数据
+        String inSQL = "SELECT WorkID FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo() + "' AND WFState!=7 AND FK_Node=" + this.getFK_Node();
+        Works wks = nd.getHisWorks();
+        wks.RetrieveInSQL(inSQL);
 
-		ds.Tables.add(wks.ToDataTableField("WF_Work"));
+        ds.Tables.add(wks.ToDataTableField("WF_Work"));
 
-		// 获取字段属性
-		MapAttrs attrs = new MapAttrs("ND" + this.getFK_Node());
+        //获取字段属性
+        MapAttrs attrs = new MapAttrs("ND"+this.getFK_Node());
 
-		// 获取实际中需要展示的列
-		String batchParas = nd.getBatchParas();
-		MapAttrs realAttr = new MapAttrs();
-		if (DataType.IsNullOrEmpty(batchParas) == false) {
-			String[] strs = batchParas.split(",");
-			for (String str : strs) {
-				if (DataType.IsNullOrEmpty(str) || str.contains("@PFlowNo") == true)
-					continue;
+        //获取实际中需要展示的列
+        String batchParas = nd.getBatchParas();
+        MapAttrs realAttr = new MapAttrs();
+        if (DataType.IsNullOrEmpty(batchParas) == false)
+        {
+            String[] strs = batchParas.split(",");
+            for(String str : strs)
+            {
+                if (DataType.IsNullOrEmpty(str)
+                    || str.contains("@PFlowNo") == true)
+                    continue;
 
-				for (MapAttr attr : attrs.ToJavaList()) {
-					if (!str.equals(attr.getKeyOfEn()))
-						continue;
-					realAttr.AddEntity(attr);
-				}
-			}
-		}
+                for(MapAttr attr : attrs.ToJavaList())
+                {
+                    if (str != attr.getKeyOfEn())
+                        continue;
+                    realAttr.AddEntity(attr);
+                }
+            }
+        }
 
-		ds.Tables.add(realAttr.ToDataTableField("Sys_MapAttr"));
+        ds.Tables.add(realAttr.ToDataTableField("Sys_MapAttr"));
 
-		return BP.Tools.Json.ToJson(ds);
-	}
+        return BP.Tools.Json.ToJson(ds);
+    }
 
-	/**
-	 * 批量发送
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
+    /**
+     *  批量发送
+     * @return
+     * @throws Exception 
+     */
+   
+    public String Batch_Send() throws Exception
+    {
+        BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
+        String[] strs = nd.getBatchParas().split(",");
 
-	public String Batch_Send() throws Exception {
-		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
-		String[] strs = nd.getBatchParas().split(",");
+        MapAttrs attrs = new MapAttrs("ND"+this.getFK_Node());
 
-		MapAttrs attrs = new MapAttrs("ND" + this.getFK_Node());
+        //获取数据
+        String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='"+WebUser.getNo()+"' and FK_Node='"+this.getFK_Node()+"'";
 
-		// 获取数据
-		String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo()
-				+ "' and FK_Node='" + this.getFK_Node() + "'";
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        int idx = -1;
+        String msg = "";
+        for(DataRow dr : dt.Rows)
+        {
+            idx++;
+            if (idx == nd.getBatchListCount())
+                break;
+            long workid = Long.parseLong(dr.getValue("WorkID").toString());
+            String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
+            if (cb.equals("on"))
+                cb = "1";
+            else cb = "0";
+            if (cb.equals("0")) //没有选中
+                continue;
+            //#region 给字段赋值
+            Hashtable ht = new Hashtable();
+            for(String str : strs)
+            {
+                if (DataType.IsNullOrEmpty(str))
+                    continue;
+                for(MapAttr attr : attrs.ToJavaList())
+                {
+                    if (str != attr.getKeyOfEn())
+                        continue;
+                   
 
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		int idx = -1;
-		String msg = "";
-		for (DataRow dr : dt.Rows) {
-			idx++;
-			if (idx == nd.getBatchListCount())
-				break;
-			long workid = Long.parseLong(dr.getValue("WorkID").toString());
-			String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
-			if (cb.equals("on"))
-				cb = "1";
-			else
-				cb = "0";
-			if (cb.equals("0")) // 没有选中
-				continue;
-			// #region 给字段赋值
-			Hashtable ht = new Hashtable();
-			for (String str : strs) {
-				if (DataType.IsNullOrEmpty(str))
-					continue;
-				for (MapAttr attr : attrs.ToJavaList()) {
-					if (str != attr.getKeyOfEn())
-						continue;
+                    if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+                    {
 
-					if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate) {
+                        String val = this.GetValFromFrmByKey("TB_" + workid + "_" + attr.getKeyOfEn(), null);
+                        ht.put(str, val);
+                        continue;
+                    }
 
-						String val = this.GetValFromFrmByKey("TB_" + workid + "_" + attr.getKeyOfEn(), null);
-						ht.put(str, val);
-						continue;
-					}
 
-					if (attr.getUIContralType() == BP.En.UIContralType.TB && attr.getUIIsEnable() == true) {
-						String val = this.GetValFromFrmByKey("TB_" + workid + "_" + attr.getKeyOfEn(), null);
-						ht.put(str, val);
-						continue;
-					}
+                    if (attr.getUIContralType() == BP.En.UIContralType.TB && attr.getUIIsEnable() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("TB_" + workid + "_" + attr.getKeyOfEn(), null);
+                        ht.put(str, val);
+                        continue;
+                    }
 
-					if (attr.getUIContralType() == BP.En.UIContralType.DDL && attr.getUIIsEnable() == true) {
-						String val = this.GetValFromFrmByKey("DDL_" + workid + "_" + attr.getKeyOfEn());
-						ht.put(str, val);
-						continue;
-					}
+                    if (attr.getUIContralType() == BP.En.UIContralType.DDL && attr.getUIIsEnable() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("DDL_" + workid + "_" + attr.getKeyOfEn());
+                        ht.put(str, val);
+                        continue;
+                    }
 
-					if (attr.getUIContralType() == BP.En.UIContralType.CheckBok && attr.getUIIsEnable() == true) {
-						String val = this.GetValFromFrmByKey("CB_" + +workid + "_" + attr.getKeyOfEn(), "-1");
-						if (val == "-1")
-							ht.put(str, 0);
-						else
-							ht.put(str, 1);
-						continue;
-					}
-				}
-			}
-			// 给字段赋值
-			// 获取审核意见的值
-			String checkNote = this.GetValFromFrmByKey("TB_" + workid + "_WorkCheck_Doc", null);
-			if (DataType.IsNullOrEmpty(checkNote) == false)
-				BP.WF.Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid,
-						Long.parseLong(dr.getValue("FID").toString()), checkNote, WebUser.getName());
+                    if (attr.getUIContralType() == BP.En.UIContralType.CheckBok && attr.getUIIsEnable() == true)
+                    {
+                        String val = this.GetValFromFrmByKey("CB_" + +workid + "_" + attr.getKeyOfEn(), "-1");
+                        if (val == "-1")
+                            ht.put(str, 0);
+                        else
+                            ht.put(str, 1);
+                        continue;
+                    }
+                }
+            }
+            //给字段赋值
+            //获取审核意见的值
+            String checkNote = this.GetValFromFrmByKey("TB_" + workid + "_WorkCheck_Doc", null);
+            if (DataType.IsNullOrEmpty(checkNote) == false)
+                BP.WF.Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid, Long.parseLong(dr.getValue("FID").toString()), checkNote, WebUser.getName());
+            
+            msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下";
+            BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, ht);
+            msg += objs.ToMsgOfHtml();
+            msg += "<br/>";
+        }
 
-			msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下";
-			BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, ht);
-			msg += objs.ToMsgOfHtml();
-			msg += "<br/>";
-		}
+        if (msg == "")
+            msg = "没有选择需要处理的工作";
+        return msg;
+    }
 
-		if (msg == "")
-			msg = "没有选择需要处理的工作";
-		return msg;
-	}
+    /// <summary>
+    /// 批量退回 待定
+    /// </summary>
+    /// <returns></returns>
+    public String Batch_Return() throws Exception
+    {
+        BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
+        //获取数据
+        String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='"+WebUser.getNo()+"' and FK_Node='"+this.getFK_Node()+"'";
 
-	/// <summary>
-	/// 批量退回 待定
-	/// </summary>
-	/// <returns></returns>
-	public String Batch_Return() throws Exception {
-		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
-		// 获取数据
-		String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo()
-				+ "' and FK_Node='" + this.getFK_Node() + "'";
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        int idx = -1;
+        String msg = "";
+        for (DataRow dr : dt.Rows)
+        {
+            idx++;
+            if (idx == nd.getBatchListCount())
+                break;
+            long workid = Long.parseLong(dr.getValue("WorkID").toString());
+            String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
+            if (cb.equals("on"))
+                cb = "1";
+            else cb = "0";
+            if (cb.equals("0")) //没有选中
+                continue;
 
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		int idx = -1;
-		String msg = "";
-		for (DataRow dr : dt.Rows) {
-			idx++;
-			if (idx == nd.getBatchListCount())
-				break;
-			long workid = Long.parseLong(dr.getValue("WorkID").toString());
-			String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
-			if (cb.equals("on"))
-				cb = "1";
-			else
-				cb = "0";
-			if (cb.equals("0")) // 没有选中
-				continue;
+            msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下。<br>";
+            BP.WF.SendReturnObjs objs = null;// BP.WF.Dev2Interface.Node_ReturnWork(nd.FK_Flow, workid,fid,this.FK_Node,"批量退回");
+            msg += objs.ToMsgOfHtml();
+            msg += "<hr>";
 
-			msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下。<br>";
-			BP.WF.SendReturnObjs objs = null;// BP.WF.Dev2Interface.Node_ReturnWork(nd.FK_Flow,
-												// workid,fid,this.FK_Node,"批量退回");
-			msg += objs.ToMsgOfHtml();
-			msg += "<hr>";
+        }
+        return "工作在完善中";
+    }
 
-		}
-		return "工作在完善中";
-	}
 
-	/// <summary>
-	/// 批量删除
-	/// </summary>
-	/// <returns></returns>
-	public String Batch_Delete() throws Exception {
-		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
 
-		// 获取数据
-		String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo()
-				+ "' and FK_Node='" + this.getFK_Node() + "'";
+    /// <summary>
+    /// 批量删除
+    /// </summary>
+    /// <returns></returns>
+    public String Batch_Delete() throws Exception
+    {
+    	BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
 
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		int idx = -1;
-		String msg = "";
-		for (DataRow dr : dt.Rows) {
-			idx++;
-			if (idx == nd.getBatchListCount())
-				break;
-			long workid = Long.parseLong(dr.getValue("WorkID").toString());
-			String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
-			if (cb.equals("on"))
-				cb = "1";
-			else
-				cb = "0";
-			if (cb.equals("0")) // 没有选中
-				continue;
+        //获取数据
+        String sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='"+WebUser.getNo()+"' and FK_Node='"+this.getFK_Node()+"'";
 
-			msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下。<br>";
-			String mes = BP.WF.Dev2Interface.Flow_DoDeleteFlowByFlag(nd.getFK_Flow(), workid, "批量退回", true);
-			msg += mes;
-			msg += "<hr>";
+        DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+        int idx = -1;
+        String msg = "";
+        for (DataRow dr : dt.Rows)
+        {
+            idx++;
+            if (idx == nd.getBatchListCount())
+                break;
+            long workid = Long.parseLong(dr.getValue("WorkID").toString());
+            String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
+            if (cb.equals("on"))
+                cb = "1";
+            else cb = "0";
+            if (cb.equals("0")) //没有选中
+                continue;
 
-		}
-		if (msg == "")
-			msg = "没有选择需要处理的工作";
+            msg += "@对工作(" + dr.getValue("Title")+ ")处理情况如下。<br>";
+            String mes = BP.WF.Dev2Interface.Flow_DoDeleteFlowByFlag(nd.getFK_Flow(), workid, "批量退回", true);
+            msg += mes;
+            msg += "<hr>";
 
-		return "批量删除成功" + msg;
-	}
+        }
+        if (msg == "")
+            msg = "没有选择需要处理的工作";
 
-	public String PCAndMobileUrl() {
-		Hashtable ht = new Hashtable();
-		ht.put("PCUrl", SystemConfig.getAppSettings().get("HostURL").toString());
-		ht.put("MobileUrl", SystemConfig.getAppSettings().get("MobileURL").toString());
-		return BP.Tools.Json.ToJson(ht);
-	}
+        return "批量删除成功" + msg;
+    }
+
+    public String PCAndMobileUrl(){
+        Hashtable ht = new Hashtable();
+        ht.put("PCUrl", SystemConfig.getAppSettings().get("HostURL").toString());
+        ht.put("MobileUrl", SystemConfig.getAppSettings().get("MobileURL").toString());
+        return BP.Tools.Json.ToJson(ht);
+    }
 
 }

@@ -223,13 +223,14 @@ function figure_Template_Siganture(SigantureID, val, type) {
         impParent.removeChild(obj);
     }
     else {
-        var src = '../DataUser/Siganture/' + val + '.JPG';    //新图片地址
+        var src = '../DataUser/Siganture/' + val + '.png';    //新图片地址
         document.getElementById("Img" + SigantureID).src = src;
+        document.getElementById("TB_" + SigantureID).value=val;
     }
     isSigantureChecked = true;
 
     var sealData = new Entities("BP.Tools.WFSealDatas");
-    sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", GetQueryString("UserNo"));
+    sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"));
     if (sealData.length > 0) {
         return;
     }
@@ -1932,7 +1933,7 @@ function initModal(modalType, toNode) {
     var html = '<div class="modal fade" id="returnWorkModal" data-backdrop="static">' +
        '<div class="modal-dialog">'
            + '<div class="modal-content" style="border-radius:0px;width:900px;height:450px;text-align:left;">'
-              + '<div class="modal-header">'
+              + '<div class="modal-header" style="background: #43a1ed">'
               + '<button type="button" style="color:#0000007a;float: right;background: transparent;border: none;" data-dismiss="modal" aria-hidden="true">&times;</button>'
                   + '<button id="MaxSizeBtn" type="button" style="color:#0000007a;float: right;background: transparent;border: none;" aria-hidden="true" >□</button>'
                    + '<h4 class="modal-title" id="modalHeader">提示信息</h4>'

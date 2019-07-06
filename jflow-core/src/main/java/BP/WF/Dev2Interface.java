@@ -7290,6 +7290,12 @@ public class Dev2Interface {
 			tempStrs += "," + emp + ",";
 		}
 		// #endregion 增加待办人员.
+		
+		 if (gwf.getWFState() == WFState.Blank)
+         {
+             gwf.setWFState(WFState.Runing);
+             gwf.Update();
+         }
 	}
 
 	/**

@@ -33,7 +33,7 @@ public class GenerWorkerLists extends Entities
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
-		qo.addOrderBy(GenerWorkerListAttr.RDT);
+		qo.addOrderBy(GenerWorkerListAttr.RDT,GenerWorkerListAttr.FK_Node);
 		qo.DoQuery();
 		return;
 	}

@@ -345,14 +345,11 @@ public class QueryObject {
 					this.getMyParas().Add("FK_Dept", val);
 					break;
 				default:
-					// this.SQL = "( " + attr2Field(attr) + " " + exp +
-					// " '" + this.HisVarStr + "FK_Dept%' )";
 					this.setSQL("( " + attr2Field(attr) + " " + exp + "  '" + val + "%' )");
-					// this.MyParas.Add("FK_Dept", val);
 					break;
 				}
 			} else {
-				if (val.contains(":") || val.contains("@")) {
+				if (val.indexOf(":")==0 || val.indexOf("@")==0) {
 					this.setSQL("( " + attr2Field(attr) + " " + exp + "  " + val + " )");
 				} else {
 					if (!val.contains("'")) {

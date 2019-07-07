@@ -2749,63 +2749,64 @@ public class Glo {
 
 		if (exp.contains("@") == false)
 			return exp;
-
-		// 增加对新规则的支持. @MyField; 格式.
-		Row row = en.getRow();
-
-		// 特殊判断.
-		if (row.containsKey("OID") == true)
-			exp = exp.replaceAll("@WorkID", row.GetValByKey("OID").toString());
-
-		if (exp.contains("@") == false)
-			return exp;
-
-		for (String key : row.keySet()) {
-			if (row.get(key) == null || row.get(key).toString().equals("") == true)
-				continue;
-			if (exp.contains("@" + key + ";"))
-				exp = exp.replace("@" + key + ";", row.get(key).toString());
-		}
-
-		if (exp.contains("@") == false)
-			return exp;
-
-		// 解决排序问题.
-		Attrs attrs = en.getEnMap().getAttrs();
-		String mystrs = "";
-		for (Attr attr : attrs) {
-			if (attr.getMyDataType() == DataType.AppString) {
-				mystrs += "@" + attr.getKey() + ",";
-			} else {
-				mystrs += "@" + attr.getKey();
+		
+		if(en!=null){
+			// 增加对新规则的支持. @MyField; 格式.
+			Row row = en.getRow();
+	
+			// 特殊判断.
+			if (row.containsKey("OID") == true)
+				exp = exp.replaceAll("@WorkID", row.GetValByKey("OID").toString());
+	
+			if (exp.contains("@") == false)
+				return exp;
+	
+			for (String key : row.keySet()) {
+				if (row.get(key) == null || row.get(key).toString().equals("") == true)
+					continue;
+				if (exp.contains("@" + key + ";"))
+					exp = exp.replace("@" + key + ";", row.get(key).toString());
+			}
+	
+			if (exp.contains("@") == false)
+				return exp;
+	
+			// 解决排序问题.
+			Attrs attrs = en.getEnMap().getAttrs();
+			String mystrs = "";
+			for (Attr attr : attrs) {
+				if (attr.getMyDataType() == DataType.AppString) {
+					mystrs += "@" + attr.getKey() + ",";
+				} else {
+					mystrs += "@" + attr.getKey();
+				}
+			}
+			String[] strs = mystrs.split("[@]", -1);
+			DataTable dt = new DataTable();
+			dt.Columns.Add(new DataColumn("No", String.class));
+			for (String str : strs) {
+				if (StringHelper.isNullOrEmpty(str)) {
+					continue;
+				}
+	
+				DataRow dr = dt.NewRow();
+				dr.setValue(0, str);
+				dt.Rows.add(dr);
+			}
+	
+			// 解决排序问题.
+			// 替换变量.
+			for (DataRow dr : dt.Rows) {
+				String key = dr.getValue(0).toString();
+				boolean isStr = key.contains(",");
+				if (isStr == true)
+					key = key.replace(",", "");
+				if (DataType.IsNullOrEmpty(en.GetValStrByKey(key)) == true)
+					continue;
+				exp = exp.replace("@" + key, en.GetValStrByKey(key));
+	
 			}
 		}
-		String[] strs = mystrs.split("[@]", -1);
-		DataTable dt = new DataTable();
-		dt.Columns.Add(new DataColumn("No", String.class));
-		for (String str : strs) {
-			if (StringHelper.isNullOrEmpty(str)) {
-				continue;
-			}
-
-			DataRow dr = dt.NewRow();
-			dr.setValue(0, str);
-			dt.Rows.add(dr);
-		}
-
-		// 解决排序问题.
-		// 替换变量.
-		for (DataRow dr : dt.Rows) {
-			String key = dr.getValue(0).toString();
-			boolean isStr = key.contains(",");
-			if (isStr == true)
-				key = key.replace(",", "");
-			if (DataType.IsNullOrEmpty(en.GetValStrByKey(key)) == true)
-				continue;
-			exp = exp.replace("@" + key, en.GetValStrByKey(key));
-
-		}
-
 		// 处理Para的替换.
 		if (exp.contains("@") && Glo.getSendHTOfTemp() != null) {
 			for (Object key : Glo.getSendHTOfTemp().keySet()) {

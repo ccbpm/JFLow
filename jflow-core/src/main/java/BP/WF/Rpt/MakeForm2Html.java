@@ -2074,7 +2074,7 @@ public class MakeForm2Html
                 {
                     docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFree.htm");
                     sb = GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
-                    docs = docs.replace("@Width", String.valueOf(mapData.getFrmW()+288)+"px");
+                    docs = docs.replace("@Width", String.valueOf(mapData.getFrmW()*1.5)+"px");
                     
                 }
             }

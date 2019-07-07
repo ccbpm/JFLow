@@ -1120,7 +1120,7 @@ public class MapData extends EntityNoName
               }
               else
               {
-                  obj.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' AND LGType=1  ");
+                  obj.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' AND LGType=1  ", SysEnumAttr.IntKey);
               }
               
 			this.SetRefObject("SysEnums", obj);

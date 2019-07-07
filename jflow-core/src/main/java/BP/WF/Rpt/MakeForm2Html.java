@@ -429,7 +429,11 @@ public class MakeForm2Html
             switch (attr.getLGType())
             {
                 case Normal:  // 输出普通类型字段.
-                   
+                   if(attr.getIsSigan()==true){
+                	   text = en.GetValStrByKey(attr.getKeyOfEn());
+                	   text = SignPic(text);
+                	   break;
+                   }
                    if(attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString){
                 	   if(attrs.Contains(attr.getKeyOfEn()+"Text") ==true)
                    			text = en.GetValRefTextByKey(attr.getKeyOfEn());
@@ -2244,5 +2248,30 @@ public class MakeForm2Html
     			return exp;
     	}
     	return exp;
+    }
+    
+    /**
+     * 图片签名
+     * @param userNo
+     * @return
+     */
+    private static String SignPic(String userNo){
+        if (DataType.IsNullOrEmpty(userNo))
+            return userNo;
+
+        String path = SystemConfig.getPathOfDataUser() + "Siganture/"+ userNo + ".jpg";
+        File file = new File(path);
+        //如果文件不存在
+        if (file.exists() == false)
+        {
+            path = SystemConfig.getPathOfDataUser() + "Siganture/"+ userNo  + ".JPG";
+            if (new File(path).exists() == true)
+                return "<img src='"+path+"' style='border:0px;width:100px;height:30px;'/>";
+            else 
+            	return userNo; 
+        }else{
+        	return "<img src='"+path+"' style='border:0px;width:100px;height:30px;'/>";
+        }
+   
     }
 }

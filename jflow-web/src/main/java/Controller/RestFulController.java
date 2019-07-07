@@ -67,6 +67,16 @@ public class RestFulController {
              sql = "SELECT * FROM WF_EmpWorks WHERE Domain='" + sysNo + "' AND FK_Emp='" + userNo + "'";
 
          DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+         //南京公安局workid、fid互换
+		for(int i=0;i<dt.Rows.size();i++){
+			String fid = dt.Rows.get(i).get("FID").toString();
+			if("0".equals(fid)){
+				continue;
+			};
+			String flag = fid;
+			dt.Rows.get(i).put("FID",dt.Rows.get(i).get("WORKID"));
+			dt.Rows.get(i).put("WORKID",flag);
+		}
          return BP.Tools.Json.ToJson(dt);
 	}
 	

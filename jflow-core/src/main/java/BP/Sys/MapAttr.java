@@ -1333,16 +1333,17 @@ public class MapAttr extends EntityMyPK {
 		sqls += "@DELETE FROM Sys_FrmSln WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='"
 				+ this.getFK_MapData() + "'";
 
-		// 如果外部数据，或者ws数据，就删除其影子字段.
-		// if (this.getUIContralType()== En.UIContralType.DDL &&
-		// this.getLGType() == FieldTypeS.Normal)
-		// {
-		// sqls += "@DELETE FROM Sys_MapAttr WHERE KeyOfEn='" +
-		// this.getKeyOfEn() + "T' AND FK_MapData='" + this.getFK_MapData() +
-		// "'";
-		// }
-
 		BP.DA.DBAccess.RunSQLs(sqls);
 		return super.beforeDelete();
 	}
+	
+	 /// <summary>
+    /// 生成他的外键字典数据,转化为json.
+    /// </summary>
+    /// <returns></returns>
+    public String GenerHisFKData() throws Exception
+    {
+        SFTable sf = new SFTable(this.getUIBindKey());
+        return BP.Tools.Json.ToJson(sf.getGenerHisDataTable());
+    }
 }

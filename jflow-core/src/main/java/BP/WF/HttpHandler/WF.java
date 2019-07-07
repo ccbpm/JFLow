@@ -98,18 +98,24 @@ public class WF extends WebContralBase {
         if (DataType.IsNullOrEmpty(no))
             return "";
 
-        String path = SystemConfig.getPathOfDataUser() + "Siganture/"+ no + ".png";
-        
+        String path = SystemConfig.getPathOfDataUser() + "Siganture/"+ no + ".jpg";
         File file = new File(path);
-        //如果文件存在
-        if (file.exists() == true)
-            return "";
-        else
+        //如果文件不存在
+        if (file.exists() == false)
         {
+        	//
+            path = "/DataUser/Siganture/" + no + ".JPG";
+            if (new File(path).exists() == true)
+            {
+                return "";
+            }
+
             //如果不存在，就返回名称
             BP.Port.Emp emp = new BP.Port.Emp(no);
             return emp.getName();
         }
+       
+        return "";
     }
 	/**
 	 * 入口函数

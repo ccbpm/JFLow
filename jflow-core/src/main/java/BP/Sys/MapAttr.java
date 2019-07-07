@@ -722,9 +722,6 @@ public class MapAttr extends EntityMyPK {
 	 * 
 	 */
 	public final boolean getIsSigan() {
-		if (this.getUIIsEnable()) {
-			return false;
-		}
 		return this.GetValBooleanByKey(MapAttrAttr.IsSigan);
 	}
 

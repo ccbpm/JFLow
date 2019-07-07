@@ -33,7 +33,7 @@ function InitThreeColMapAttr(Sys_MapAttr, tableCol) {
                 isDropTR = true;
                 continue;
             }
-            //线性展示都跨一个单元格
+            //线性展示都跨一个单元格InitMapAttrOfCtrlFool
             //换行的情况
             if (isDropTR == true) {
                 html += "<tr >";
@@ -382,7 +382,7 @@ function InitMapAttrOfCtrlFool(mapAttr) {
     var elemHtml = "";
     if (mapAttr.UIContralType == "1") {
         var ses = new Entities("BP.Sys.SysEnums");
-        ses.Retrieve("EnumKey", mapAttr.UIBindKey)
+        ses.Retrieve("EnumKey", mapAttr.UIBindKey, "IntKey")
         var operations = '';
         $.each(ses, function (i, obj) {
             operations += "<option  value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
@@ -466,7 +466,7 @@ function InitMapAttrOfCtrlFool(mapAttr) {
     if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {
         if (mapAttr.UIContralType == 2) {
             var ses = new Entities("BP.Sys.SysEnums");
-            ses.Retrieve("EnumKey", mapAttr.UIBindKey)
+            ses.Retrieve("EnumKey", mapAttr.UIBindKey, "IntKey")
             var operations = "";
             $.each(ses, function (i, obj) {
                 operations += "<option  value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
@@ -478,7 +478,7 @@ function InitMapAttrOfCtrlFool(mapAttr) {
 
             var rbHtmls = "";
             var ses = new Entities("BP.Sys.SysEnums");
-            ses.Retrieve("EnumKey", mapAttr.UIBindKey);
+            ses.Retrieve("EnumKey", mapAttr.UIBindKey, "IntKey");
 
             //显示方式,默认为横向展示.
             var RBShowModel = 0;

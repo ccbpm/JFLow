@@ -1,4 +1,4 @@
-﻿package BP.WF;
+package BP.WF;
 
 import BP.DA.DataRow;
 import BP.DA.DataSet;

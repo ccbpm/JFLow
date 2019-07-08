@@ -5,6 +5,7 @@ import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.En.*;
+import BP.Port.Emp;
 import BP.Sys.*;
 import BP.Sys.FrmUI.ExtImg;
 import BP.Tools.AesEncodeUtil;
@@ -621,8 +622,6 @@ public class MakeForm2Html
 
                         sb.append("<tr>");
                         sb.append("<td valign=middle style='border-style: solid;padding: 4px;text-align: left;color: #333333;font-size: 12px;border-width: 1px;border-color: #C2D5E3;' >" + dr.getValue("NDFromT").toString() + "</td>");
-
-                        //sb.append("<br><br>");
 
                         String msg =dr.getValue("Msg") .toString();
 
@@ -2254,10 +2253,11 @@ public class MakeForm2Html
      * 图片签名
      * @param userNo
      * @return
+     * @throws Exception 
      */
-    private static String SignPic(String userNo){
+    private static String SignPic(String userNo) throws Exception{
         if (DataType.IsNullOrEmpty(userNo))
-            return userNo;
+            return "";
 
         String path = SystemConfig.getPathOfDataUser() + "Siganture/"+ userNo + ".jpg";
         File file = new File(path);
@@ -2267,8 +2267,11 @@ public class MakeForm2Html
             path = SystemConfig.getPathOfDataUser() + "Siganture/"+ userNo  + ".JPG";
             if (new File(path).exists() == true)
                 return "<img src='"+path+"' style='border:0px;width:100px;height:30px;'/>";
-            else 
-            	return userNo; 
+            else {
+            	Emp emp = new Emp(userNo);
+            	return emp.getName(); 
+            }
+            	
         }else{
         	return "<img src='"+path+"' style='border:0px;width:100px;height:30px;'/>";
         }

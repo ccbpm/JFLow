@@ -202,38 +202,30 @@ public class PushMsg extends EntityMyPK
 			return str;
 		}
 
-//		switch (this.FK_Event)
-//ORIGINAL LINE: case EventListOfNode.WorkArrive:
 		if (this.getFK_Event().equals(EventListOfNode.WorkArrive))
 		{
 				return "新工作{{Title}},发送人WebUser.No,@WebUser.Name";
 		}
-//ORIGINAL LINE: case EventListOfNode.SendSuccess:
 		else if (this.getFK_Event().equals(EventListOfNode.SendSuccess))
 		{
 				return "新工作{{Title}},发送人WebUser.No,@WebUser.Name";
 		}
-//ORIGINAL LINE: case EventListOfNode.ShitAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.ShitAfter))
 		{
 				return "移交来的新工作{{Title}},移交人WebUser.No,@WebUser.Name";
 		}
-//ORIGINAL LINE: case EventListOfNode.ReturnAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.ReturnAfter))
 		{
 				return "被退回来{{Title}},退回人WebUser.No,@WebUser.Name";
 		}
-//ORIGINAL LINE: case EventListOfNode.UndoneAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.UndoneAfter))
 		{
 				return "工作被撤销{{Title}},发送人WebUser.No,@WebUser.Name";
 		}
-//ORIGINAL LINE: case EventListOfNode.AskerReAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.AskerReAfter))
 		{
 				return "加签新工作{{Title}},发送人WebUser.No,@WebUser.Name";
 		}
-//ORIGINAL LINE: case EventListOfNode.FlowOverAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.FlowOverAfter))
 		{
 				return "流程{{Title}}已经结束,处理人WebUser.No,@WebUser.Name";
@@ -242,7 +234,6 @@ public class PushMsg extends EntityMyPK
 		{
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
 		}
-		//return str;
 	}
 	/** 
 	 Email节点s
@@ -289,8 +280,6 @@ public class PushMsg extends EntityMyPK
 			return str;
 		}
 
-//		switch (this.FK_Event)
-//ORIGINAL LINE: case EventListOfNode.WorkArrive:
 		if (this.getFK_Event().equals(EventListOfNode.WorkArrive))
 		{
 				str += "\t\n您好:";
@@ -299,7 +288,6 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n    WebUser.No, @WebUser.Name";
 				str += "\t\n    @RDT";
 		}
-//ORIGINAL LINE: case EventListOfNode.SendSuccess:
 		else if (this.getFK_Event().equals(EventListOfNode.SendSuccess))
 		{
 				str += "\t\n您好:";
@@ -308,7 +296,6 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n    WebUser.No, @WebUser.Name";
 				str += "\t\n    @RDT";
 		}
-//ORIGINAL LINE: case EventListOfNode.ReturnAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.ReturnAfter))
 		{
 				str += "\t\n您好:";
@@ -319,7 +306,6 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n    WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 		}
-//ORIGINAL LINE: case EventListOfNode.ShitAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.ShitAfter))
 		{
 				str += "\t\n您好:";
@@ -328,7 +314,6 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n    WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 		}
-//ORIGINAL LINE: case EventListOfNode.UndoneAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.UndoneAfter))
 		{
 				str += "\t\n您好:";
@@ -337,7 +322,6 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n    WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 		}
-//ORIGINAL LINE: case EventListOfNode.AskerReAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.AskerReAfter)) //加签.
 		{
 				str += "\t\n您好:";
@@ -346,7 +330,6 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n    WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 		}
-//ORIGINAL LINE: case EventListOfNode.FlowOverAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.FlowOverAfter)) //流程结束后.
 		{
 				str += "\t\n您好:";
@@ -498,34 +481,26 @@ public class PushMsg extends EntityMyPK
 			return str;
 		}
 
-
-//		switch (this.FK_Event)
-//ORIGINAL LINE: case EventListOfNode.WorkArrive:
 		if (this.getFK_Event().equals(EventListOfNode.WorkArrive) || this.getFK_Event().equals(EventListOfNode.SendSuccess))
 		{
 				str = "有新工作{{Title}}需要您处理, 发送人:WebUser.No, @WebUser.Name,打开{Url} .";
 		}
-//ORIGINAL LINE: case EventListOfNode.ReturnAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.ReturnAfter))
 		{
 				str = "工作{{Title}}被退回,退回人:WebUser.No, @WebUser.Name,打开{Url} .";
 		}
-//ORIGINAL LINE: case EventListOfNode.ShitAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.ShitAfter))
 		{
 				str = "移交工作{{Title}},移交人:WebUser.No, @WebUser.Name,打开{Url} .";
 		}
-//ORIGINAL LINE: case EventListOfNode.UndoneAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.UndoneAfter))
 		{
 				str = "工作撤销{{Title}},撤销人:WebUser.No, @WebUser.Name,打开{Url}.";
 		}
-//ORIGINAL LINE: case EventListOfNode.AskerReAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.AskerReAfter)) //加签.
 		{
 				str = "工作加签{{Title}},加签人:WebUser.No, @WebUser.Name,打开{Url}.";
 		}
-//ORIGINAL LINE: case EventListOfNode.FlowOverAfter:
 		else if (this.getFK_Event().equals(EventListOfNode.FlowOverAfter)) //加签.
 		{
 				str = "流程{{Title}}已经结束,最后处理人:WebUser.No, @WebUser.Name,打开{Url}.";
@@ -627,8 +602,6 @@ public class PushMsg extends EntityMyPK
 	 @return 执行成功的消息
 	 * @throws Exception 
 	*/
-
-//ORIGINAL LINE: public string DoSendMessage(Node currNode, Entity en, string atPara, SendReturnObjs objs, Node jumpToNode = null, string jumpToEmps = null)
 	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
 	{
 		if (en == null)
@@ -796,15 +769,6 @@ public class PushMsg extends EntityMyPK
 			}
 			return "@已向:{" + msg + "}发送提醒邮件.";
 
-			//    // 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-			//    string mailDocReal = mailDocTmp as string;
-			//    mailDocReal = mailDocReal.replace("{EmpStr}", gwl.FK_Emp);
-			//    //获得当前人的邮件.
-			//    BP.WF.Port.WFEmp empEn = new WFEmp(gwl.FK_Emp);
-			//    //发送邮件.
-			//    BP.WF.Dev2Interface.Port_SendEmail(empEn.Email, mailTitleTmp, mailDocReal, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid);
-			//}
-			//return "@已向:{" + toEmpIDs + "}发送提醒邮件.";
 		}
 
 			///#endregion 如果发送给指定的节点处理人, 就计算出来直接退回, 任何方式的处理人都是一致的.

@@ -54,8 +54,8 @@ import BP.WF.Template.FrmNodeComponent;
 import BP.WF.Template.FrmSln;
 import BP.WF.Template.FrmThreadAttr;
 import BP.WF.Template.FrmTrackAttr;
-import BP.WF.Template.NodeYGFlow;
-import BP.WF.Template.NodeYGFlows;
+import BP.WF.Template.SubFlowYanXu;
+import BP.WF.Template.SubFlowYanXus;
 import BP.Web.WebUser;
 
 public class CCFlowAPI {
@@ -544,12 +544,12 @@ public class CCFlowAPI {
 					}
 
 					// 增加到达延续子流程节点.
-					NodeYGFlows ygflows = new NodeYGFlows(String.valueOf(fk_node));
+					SubFlowYanXus ygflows = new SubFlowYanXus(String.valueOf(fk_node));
 
 					if (ygflows.size() > 1)
 						dtToNDs.Rows.clear(); // 为浙商银行做的特殊判断，如果配置了延续流程，就不让其走分支节点.
 
-					for (NodeYGFlow item : ygflows.ToJavaList()) {
+					for (SubFlowYanXu item : ygflows.ToJavaList()) {
 						DataRow dr = dtToNDs.NewRow();
 
 						dr.setValue("No", item.getFK_Flow() + "01");

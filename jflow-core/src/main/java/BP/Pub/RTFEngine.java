@@ -1001,9 +1001,6 @@ public class RTFEngine {
 				Entity dtl = dtls.getGetNewEntity();
 				String dtlEnName = dtl.toString();
 				shortName = dtlEnName.substring(dtlEnName.lastIndexOf(".") + 1);
-				// shortName =
-				// dtls.ToString().substing(dtls.ToString().LastIndexOf(".") +
-				// 1);
 				Map map = dtl.getEnMap();
 				for (Attr attr : map.getAttrs()) {
 					switch (attr.getMyDataType()) {

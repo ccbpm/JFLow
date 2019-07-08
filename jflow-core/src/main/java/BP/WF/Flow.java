@@ -142,8 +142,8 @@ import BP.WF.Template.NodeStations;
 import BP.WF.Template.NodeToolbar;
 import BP.WF.Template.NodeToolbarAttr;
 import BP.WF.Template.NodeToolbars;
-import BP.WF.Template.NodeYGFlow;
-import BP.WF.Template.NodeYGFlows;
+import BP.WF.Template.SubFlowYanXu;
+import BP.WF.Template.SubFlowYanXus;
 import BP.WF.Template.Selector;
 import BP.WF.Template.SelectorModel;
 import BP.WF.Template.Selectors;
@@ -2509,7 +2509,7 @@ public class Flow extends BP.En.EntityNoName {
 		ds.Tables.add(cdds.ToDataTableField("WF_CCDept"));
 
 		// 延续子流程。
-		NodeYGFlows fls = new NodeYGFlows();
+		SubFlowYanXus fls = new SubFlowYanXus();
 		fls.RetrieveInSQL(CCDeptAttr.FK_Node, sqlin);
 		ds.Tables.add(fls.ToDataTableField("WF_NodeSubFlow"));
 
@@ -5217,7 +5217,7 @@ public class Flow extends BP.En.EntityNoName {
 
 				if (dt.TableName.equals("WF_FlowForm") == true) {
 					for (DataRow dr : dt.Rows) {
-						NodeYGFlow yg = new NodeYGFlow();
+						SubFlowYanXu yg = new SubFlowYanXu();
 						for (DataColumn dc : dt.Columns) {
 							String val = (String) dr.getValue(dc.ColumnName);
 							if (val == null)

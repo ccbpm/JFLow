@@ -1039,10 +1039,10 @@ public class WorkNode {
 		}
 
 		// 判断是否有延续流程.
-		NodeYGFlows ygflows = new NodeYGFlows();
-		ygflows.Retrieve(NodeYGFlowAttr.FK_Node, this._HisNode.getNodeID());
+		SubFlowYanXus ygflows = new SubFlowYanXus();
+		ygflows.Retrieve(SubFlowYanXuAttr.FK_Node, this._HisNode.getNodeID());
 		if (ygflows.size() > 0 && 1 == 2) {
-			for (NodeYGFlow item : ygflows.ToJavaList()) {
+			for (SubFlowYanXu item : ygflows.ToJavaList()) {
 				boolean isPass = false;
 
 				if (item.getExpType() == ConnDataFrom.Paras)
@@ -2982,8 +2982,10 @@ public class WorkNode {
 		gwf.SetPara("ThreadCount", count + 1);
 		gwf.Update();
 		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
-
-		BigDecimal passRate1 = numPassed.divide(numAll, 2).multiply(new BigDecimal(100));
+		
+		float value = numPassed.floatValue()/numAll.floatValue()*100;
+		
+		BigDecimal passRate1 = new BigDecimal(value);
 
 		if (toNode.getPassRate().compareTo(passRate1) <= 0) {
 			ps = new Paras();
@@ -7557,8 +7559,9 @@ public class WorkNode {
 		ps.Add("FID", this.getHisWork().getFID());
 		BigDecimal numAll1 = new BigDecimal(DBAccess.RunSQLReturnValInt(ps));
 		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
-
-		BigDecimal passRate1 = numPassed.divide(numAll1, 2).multiply(new BigDecimal(100));
+		
+		float value = numPassed.floatValue()/numAll1.floatValue()*100;
+		BigDecimal passRate1 = new BigDecimal(value);
 
 		if (nd.getPassRate().compareTo(passRate1) <= 0) {
 			ps = new Paras();

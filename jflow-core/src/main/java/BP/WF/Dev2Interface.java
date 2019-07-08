@@ -4974,7 +4974,15 @@ public class Dev2Interface {
 				dtHistory.Rows.add(dr);
 			}
 		} else {
-			GenerWorkerLists gwls = new GenerWorkerLists(workID);
+			GenerWorkerLists gwls = new GenerWorkerLists();
+			QueryObject qo = new BP.En.QueryObject(gwls);
+			qo.addLeftBracket();
+			qo.AddWhere(GenerWorkerListAttr.WorkID,workID);
+			qo.addOr();
+			qo.AddWhere(GenerWorkerListAttr.FID,workID);
+			qo.addRightBracket();
+			qo.addOrderByDesc(GenerWorkerListAttr.RDT);
+			qo.DoQuery();
 			for (GenerWorkerList gwl : gwls.ToJavaList()) {
 				DataRow dr = dtHistory.NewRow();
 

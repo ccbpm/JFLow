@@ -103,6 +103,7 @@ import BP.WF.Template.MapDataExt;
 import BP.WF.Template.NodeExt;
 import BP.WF.Template.NodeToolbar;
 import BP.WF.Template.SelectAccper;
+import BP.WF.Template.SubFlowYanXu;
 import BP.WF.Template.SysForm;
 import BP.WF.Template.SysFormTree;
 import BP.WF.Template.SysFormTrees;
@@ -221,7 +222,7 @@ public class Glo {
 	/**
 	 * 当前版本号-为了升级使用.
 	 */
-	public static int Ver = 20190620;
+	public static int Ver = 20190621;
 
 	/**
 	 * 执行升级
@@ -233,6 +234,17 @@ public class Glo {
 
 		String sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey='Ver'";
 		int currVer = DBAccess.RunSQLReturnValInt(sql, 0);
+		
+		 //检查子流程表.
+        if (BP.DA.DBAccess.IsExitsObject("WF_NodeSubFlow") == true)
+        {
+            if (BP.DA.DBAccess.IsExitsTableCol("WF_NodeSubFlow", "OID") == true)
+            {
+                DBAccess.RunSQL("DROP TABLE WF_NodeSubFlow");
+                SubFlowYanXu sub = new SubFlowYanXu();
+                sub.CheckPhysicsTable();
+            }
+        }
 
 		// 执行sql文件升级.
 		UpdataCCFlowVerSQLScript();

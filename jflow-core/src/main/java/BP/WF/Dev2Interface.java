@@ -4947,8 +4947,9 @@ public class Dev2Interface {
 			// + " AND (ActionType=1 OR ActionType=0) ORDER BY RDT DESC";
 
 			sql = "SELECT C.Name AS DeptName,  A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow())
-					+ "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workID
-					+ " AND (A.ActionType=1 OR A.ActionType=0) AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
+					+ "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workID + "OR A.FID="+workID
+					+ " AND (A.ActionType=1 OR A.ActionType=0 OR A.ActionType=6 OR A.ActionType=7 OR A.SubThreadForward=11)"
+					+ " AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
 
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 

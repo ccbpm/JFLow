@@ -1211,6 +1211,28 @@ public abstract class Entities extends ArrayList<Entity>
 		qo.AddWhere(this.getGetNewEntity().getPK(), " in ", pks);
 		return qo.DoQuery();
 	}
+	
+	/**
+	 * 按照IDs查询并且排序
+	 * @param key
+	 * @param vals
+	 * @param orderByKey
+	 * @return
+	 * @throws Exception
+	 */
+	public int RetrieveInOrderBy(String key, String vals,String orderByKey) throws Exception{
+		QueryObject qo = new QueryObject(this);
+
+        if (vals.contains("(") == false)
+            qo.AddWhere(key, " IN ", "(" + vals + ")");
+        else
+            qo.AddWhere(key, " IN ", vals);
+        
+        if(DataType.IsNullOrEmpty(orderByKey) == false)
+        	qo.addOrderBy(orderByKey);
+
+        return qo.DoQuery();
+	}
 	 /// <summary>
     /// 按照IDs查询
     /// 比如: FrmID  IN  '001','002' 

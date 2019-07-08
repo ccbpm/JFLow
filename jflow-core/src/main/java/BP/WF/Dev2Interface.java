@@ -4988,6 +4988,9 @@ public class Dev2Interface {
 			qo.addOr();
 			qo.AddWhere(GenerWorkerListAttr.FID,workID);
 			qo.addRightBracket();
+			qo.addAnd();
+			qo.AddWhere(GenerWorkerListAttr.IsPass, "!=", -2);
+			
 			qo.addOrderByDesc(GenerWorkerListAttr.RDT);
 			qo.DoQuery();
 			for (GenerWorkerList gwl : gwls.ToJavaList()) {

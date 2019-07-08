@@ -1095,12 +1095,17 @@ public class PushMsg extends EntityMyPK
 				if (DataType.IsNullOrEmpty(toEmpIDs) == false)
 				{
 					String[] emps = toEmpIDs.split("[,]", -1);
+					String hasSendEmps = ",";
+
 					for (String empID : emps)
 					{
-						if (DataType.IsNullOrEmpty(empID))
-						{
+						if (DataType.IsNullOrEmpty(empID))						
 							continue;
-						}
+						
+                        if (hasSendEmps.contains("," + empID + ",") == true)
+                            continue;
+                        hasSendEmps += empID + ",";
+						
 
 						Object tempVar4 = smsDocTmp;
 						String smsDocTmpReal = (String)((tempVar4 instanceof String) ? tempVar4 : null);

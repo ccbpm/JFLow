@@ -56,10 +56,7 @@ public class Tester extends WebContralBase{
     {
     	
     	return BP.WF.AppClass.JobSchedule(532);
-    	
-    	//return "sss";
-       
-         
+    	  
     }
 
 	

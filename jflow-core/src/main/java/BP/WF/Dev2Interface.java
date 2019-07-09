@@ -52,7 +52,7 @@ public class Dev2Interface {
 	 * @param msgFlag
 	 *            消息标记
 	 * @return 写入成功或者失败.
-	 * @throws Exception
+	 * @throws ExceptionNode_AddNextStepAccepters
 	 */
 	public static void Port_SendSMS(String tel, String smsDoc, String msgType, String msgGroupFlag, String sender,
 			String msgPK, String sendEmpNo) throws Exception {
@@ -4991,7 +4991,7 @@ public class Dev2Interface {
 			qo.addAnd();
 			qo.AddWhere(GenerWorkerListAttr.IsPass, "!=", -2);
 			
-			qo.addOrderByDesc(GenerWorkerListAttr.RDT);
+			qo.addOrderByDesc(GenerWorkerListAttr.RDT,GenerWorkerListAttr.FK_Node);
 			qo.DoQuery();
 			for (GenerWorkerList gwl : gwls.ToJavaList()) {
 				DataRow dr = dtHistory.NewRow();

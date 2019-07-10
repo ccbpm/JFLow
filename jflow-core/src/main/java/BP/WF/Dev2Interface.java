@@ -4956,13 +4956,19 @@ public class Dev2Interface {
 			sql = "SELECT C.Name AS DeptName,  A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow())
 					+ "Track A, Port_Emp B, Port_Dept C WHERE (A.WorkID=" + workID + "OR A.FID="+workID +")"
 					+ " AND (A.ActionType=1 OR A.ActionType=0 OR A.ActionType=7 OR A.ActionType=11)"
-					+ " AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
+					+ " AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT,A.NDFrom";
 
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
 			for (DataRow drTrack : dtTrack.Rows) {
 				DataRow dr = dtHistory.NewRow();
 				dr.setValue("FK_Node", drTrack.getValue("NDFrom"));
+				if(Integer.parseInt(drTrack.getValue("ActionType").toString())  == 7){
+
+					dr.setValue("RunModel", "4");
+				}else{
+					dr.setValue("RunModel", "0");
+				}
 
 				dr.setValue("NodeName", drTrack.getValue("NDFromT"));
 				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
@@ -4991,22 +4997,37 @@ public class Dev2Interface {
 			qo.addAnd();
 			qo.AddWhere(GenerWorkerListAttr.IsPass, "!=", -2);
 			
-			qo.addOrderByDesc(GenerWorkerListAttr.RDT,GenerWorkerListAttr.FK_Node);
+			qo.addOrderBy(GenerWorkerListAttr.RDT,GenerWorkerListAttr.FK_Node);
 			qo.DoQuery();
 			for (GenerWorkerList gwl : gwls.ToJavaList()) {
 				DataRow dr = dtHistory.NewRow();
+				boolean flag = true;//将重复的节点去掉
+				for(int k=0;k<dtHistory.Rows.size();k++){
+					if(gwl.getFK_NodeText().equals(dtHistory.Rows.get(k).get("NodeName"))){
+						flag = false;
+						break;
+					}
+				}
+				if(flag){
+					dr.setValue("FK_Node", gwl.getFK_Node());
 
-				dr.setValue("FK_Node", gwl.getFK_Node());
-				dr.setValue("NodeName", gwl.getFK_NodeText());
-				dr.setValue("EmpNo", gwl.getFK_Emp());
-				dr.setValue("EmpName", gwl.getFK_EmpText());
-				dr.setValue("DeptName", gwl.getFK_DeptT());
-				dr.setValue("RDT", gwl.getRDT());
-				dr.setValue("SDT", gwl.getSDT());
+					if(gwl.getFID()!=0){
 
-				dr.setValue("IsPass", gwl.getIsPassInt());
+						dr.setValue("RunModel", "4");
+					}else{
+						dr.setValue("RunModel", "0");
+					}
+					dr.setValue("NodeName", gwl.getFK_NodeText());
+					dr.setValue("EmpNo", gwl.getFK_Emp());
+					dr.setValue("EmpName", gwl.getFK_EmpText());
+					dr.setValue("DeptName", gwl.getFK_DeptT());
+					dr.setValue("RDT", gwl.getRDT());
+					dr.setValue("SDT", gwl.getSDT());
 
-				dtHistory.Rows.add(dr);
+					dr.setValue("IsPass", gwl.getIsPassInt());
+
+					dtHistory.Rows.add(dr);
+				}
 
 			}
 		}

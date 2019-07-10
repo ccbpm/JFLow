@@ -30,19 +30,7 @@ public class AppClass {
 		// 状态,
 		int wfState = Integer.parseInt(gwf.Rows.get(0).getValue("WFState").toString());
 		int currNode = Integer.parseInt(gwf.Rows.get(0).getValue("FK_Node").toString());
-		// String currNode = gwf.Rows.get(0).getValue("FK_Node").toString();
-		// //停留节点.
-		if (wfState == 3 && 1==2)
-		{
-			 
-			DataSet myds1=new DataSet();
-			myds1.Tables.add(gwf);
-			myds1.Tables.add(tracks);
-			
-			return BP.Tools.Json.ToJson( myds1);
-			
-			//return BP.Tools.Json.ToJson(tracks); // 如果流程结束了，所有的数据都在tracks里面.
-		}
+		 
 
 		// 把以后的为未完成的节点放入到track里面.
 		for (int i = 0; i < 100; i++) {

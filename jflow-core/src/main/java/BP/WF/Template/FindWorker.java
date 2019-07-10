@@ -529,22 +529,23 @@ public class FindWorker {
 			}
 
 			if (flowAppType == FlowAppType.Normal) {
+
 				ps = new Paras();
-				if (BP.WF.Glo.getOSModel() == OSModel.OneOne) {
-					ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node="
-							+ dbStr + "FK_Node";
-				} else if (BP.WF.Glo.getOSModel() == OSModel.OneMore) {
-					ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B, Port_DeptEmp C  WHERE  A.No = C.FK_Emp AND C.FK_Dept=B.FK_Dept AND B.FK_Node="
-							+ dbStr + "FK_Node";
-				}
+
+				String mysql = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B, Port_DeptEmp C  WHERE  A.No = C.FK_Emp AND C.FK_Dept=B.FK_Dept AND B.FK_Node="
+						+ dbStr + "FK_Node";
+				mysql += " UNION ";
+				mysql += "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node="
+						+ dbStr + "FK_Node";
+				ps.SQL = mysql;
 
 				ps.Add("FK_Node", town.getHisNode().getNodeID());
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.size() > 0 && town.getHisNode().getHisWhenNoWorker() == false) {
+				if (dt.Rows.size() > 0 && town.getHisNode().getHisWhenNoWorker() == false)
 					return dt;
-				} else {
-					throw new RuntimeException("@按部门确定接受人的范围,没有找到人员.");
-				}
+
+				throw new RuntimeException("@按部门确定接受人的范围,没有找到人员.");
+
 			}
 
 			if (flowAppType == FlowAppType.PRJ) {
@@ -763,20 +764,21 @@ public class FindWorker {
 			// 没有查询到的情况下, 先按照本部门计算。
 			if (flowAppType == FlowAppType.Normal) {
 				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
-					if (this.town.getHisNode().getIsExpSender() == true){
+					if (this.town.getHisNode().getIsExpSender() == true) {
 						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B  WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
-								+ dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp !=" + dbStr + "FK_Emp";
-	
+								+ dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp !=" + dbStr
+								+ "FK_Emp";
+
 						ps = new Paras();
 						ps.SQL = sql;
 						ps.Add("FK_Node", town.getHisNode().getNodeID());
 						ps.Add("FK_Dept", empDept);
 						ps.Add("FK_Emp", empNo);
-					}else{
+					} else {
 
 						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
 								+ dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
-	
+
 						ps = new Paras();
 						ps.SQL = sql;
 						ps.Add("FK_Node", town.getHisNode().getNodeID());
@@ -869,12 +871,11 @@ public class FindWorker {
 			DataTable mydtTemp = this.Func_GenerWorkerList_DiGui(nowDeptID, empNo);
 			if (mydtTemp != null)
 				return mydtTemp;
-			
-			//该部门下的所有子部门是否有人员.
-            mydtTemp = Func_GenerWorkerList_DiGui_SameLevel(nowDeptID, empNo);
-            if (mydtTemp != null)
-                return mydtTemp;
-			
+
+			// 该部门下的所有子部门是否有人员.
+			mydtTemp = Func_GenerWorkerList_DiGui_SameLevel(nowDeptID, empNo);
+			if (mydtTemp != null)
+				return mydtTemp;
 
 			// 如果父亲级没有，就找父级的平级.
 			BP.Port.Depts myDepts = new BP.Port.Depts();
@@ -1013,6 +1014,7 @@ public class FindWorker {
 			return dt;
 		}
 	}
+
 	public final DataTable Func_GenerWorkerList_DiGui_SameLevel(String deptNo, String empNo) throws Exception {
 		String sql;
 
@@ -1075,6 +1077,7 @@ public class FindWorker {
 			return dt;
 		}
 	}
+
 	/**
 	 * 执行找人
 	 * 

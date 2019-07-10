@@ -244,6 +244,9 @@ public class Glo {
                 SubFlowYanXu sub = new SubFlowYanXu();
                 sub.CheckPhysicsTable();
             }
+        }else{
+        	 SubFlowYanXu sub = new SubFlowYanXu();
+             sub.CheckPhysicsTable();
         }
 
 		// 执行sql文件升级.

@@ -31,7 +31,7 @@ function SelfUrl_Done(mapExt) {
              var iframe = document.getElementById("eudlgframe");
              if (iframe) {
                  var val = iframe.contentWindow.Btn_OK();
-                 $("#TB _" + mapExt.AttrOfOper).val(val);
+                 $("#TB_" + mapExt.AttrOfOper).val(val);
                  FullIt(val, mapExt.MyPK, "TB_" + mapExt.AttrOfOper);
              }
 

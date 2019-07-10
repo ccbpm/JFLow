@@ -780,15 +780,15 @@ public class Flow extends BP.En.EntityNoName {
 					rpt.setFlowStarter(emp.getNo());
 					rpt.setFK_NY(DataType.getCurrentYearMonth());
 					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
-						rpt.setFlowEmps("@" + emp.getName());
+						rpt.setFlowEmps("@" + emp.getName()+"@");
+					}
+
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
+						rpt.setFlowEmps("@" + emp.getNo()+"@");
 					}
 
 					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-						rpt.setFlowEmps("@" + emp.getNo());
-					}
-
-					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName());
+						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName()+"@");
 					}
 
 					rpt.setFlowEnderRDT(BP.DA.DataType.getCurrentDataTime());
@@ -812,15 +812,15 @@ public class Flow extends BP.En.EntityNoName {
 
 					rpt.setFlowEndNode(this.getStartNodeID());
 					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
-						rpt.setFlowEmps("@" + emp.getName());
+						rpt.setFlowEmps("@" + emp.getName()+"@");
+					}
+
+					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
+						rpt.setFlowEmps("@" + emp.getNo()+"@");
 					}
 
 					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-						rpt.setFlowEmps("@" + emp.getNo());
-					}
-
-					if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName());
+						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName()+"@");
 					}
 
 					rpt.setFK_NY(DataType.getCurrentYearMonth());
@@ -1030,15 +1030,15 @@ public class Flow extends BP.En.EntityNoName {
 				rpt.SetValByKey(GERptAttr.FK_NY, DataType.getCurrentYearMonth());
 
 				if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
-					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getName());
+					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getName()+"@");
+				}
+
+				if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
+					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo()+"@");
 				}
 
 				if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo());
-				}
-
-				if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo() + "," + emp.getName());
+					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo() + "," + emp.getName()+"@");
 				}
 
 			}
@@ -2870,12 +2870,6 @@ public class Flow extends BP.En.EntityNoName {
 		dt.TableName = "Sys_MapFrame";
 		ds.Tables.add(dt);
 
-		// Sys_MapM2M
-		// sql = "SELECT * FROM Sys_MapM2M WHERE " +
-		// Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
-		// dt = DBAccess.RunSQLReturnTable(sql);
-		// dt.TableName = "Sys_MapM2M";
-		// ds.Tables.add(dt);
 
 		// Sys_FrmLine.
 		sql = "SELECT * FROM Sys_FrmLine WHERE " + BP.WF.Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
@@ -2994,7 +2988,7 @@ public class Flow extends BP.En.EntityNoName {
 			rpt.SetValByKey("OID", oid);
 			Work startWork = null;
 			Work endWK = null;
-			String flowEmps = "";
+			String flowEmps = "@";
 			for (Node nd : nds.ToJavaList()) {
 				try {
 					Work wk = nd.getHisWork();
@@ -3009,11 +3003,24 @@ public class Flow extends BP.En.EntityNoName {
 					}
 
 					try {
-						if (flowEmps.contains("@" + wk.getRec() + ",")) {
-							continue;
+						if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
+							if (flowEmps.contains("@" + wk.getRecOfEmp().getName()+"@")) 
+								continue;
+							flowEmps +=  wk.getRecOfEmp().getName()+"@";
 						}
 
-						flowEmps += "@" + wk.getRec() + "," + wk.getRecOfEmp().getName();
+						if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
+							if (flowEmps.contains("@" + wk.getRec()+"@")) 
+								continue;
+							flowEmps +=  wk.getRec()+"@";
+						}
+
+						if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
+							if (flowEmps.contains("@" + wk.getRec() + ","))
+								continue;
+							flowEmps +=  wk.getRec() + "," + wk.getRecOfEmp().getName()+"@";
+						}
+						
 					} catch (java.lang.Exception e) {
 					}
 					endWK = wk;
@@ -6656,17 +6663,28 @@ public class Flow extends BP.En.EntityNoName {
 	 * 设置当前的版本为新版本
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String VerSetCurrentVer() {
-		String sql = "SELECT FK_FlowSort FROM WF_Flow WHERE PTable='" + this.getPTable() + "' AND FK_FlowSort!='' ";
-		String flowSort = DBAccess.RunSQLReturnStringIsNull(sql, "");
-		if (DataType.IsNullOrEmpty(flowSort))
+	public String VerSetCurrentVer() throws Exception {
+		String sql = "SELECT FK_FlowSort,No FROM WF_Flow WHERE PTable='" + this.getPTable() + "' AND FK_FlowSort!='' ";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (dt.Rows.size() == 0)
 			return "err@没有找到主版本,请联系管理员.";
+		String oldFlowNo = dt.Rows.get(0).get("No").toString();
+		String flowSort = dt.Rows.get(0).get("FK_FlowSort").toString();
+		
 		sql = "UPDATE WF_Flow SET FK_FlowSort ='',IsCanStart=0 WHERE PTable='" + this.getPTable() + "' ";
 		DBAccess.RunSQL(sql);
-
 		sql = "UPDATE WF_Flow SET FK_FlowSort ='" + flowSort + "',IsCanStart=1 WHERE No='" + this.getNo() + "' ";
 		DBAccess.RunSQL(sql);
+		
+		//清空缓存数据
+		BP.DA.Cash2019.DeleteRow("BP.WF.Flow",oldFlowNo);
+		BP.DA.Cash2019.DeleteRow("BP.WF.Flow",this.getNo());
+		Flow flow = new Flow(oldFlowNo);
+		flow = new Flow(this.getNo());
+		
+		
 		return "info@设置成功";
 	}
 

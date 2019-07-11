@@ -1571,7 +1571,7 @@ public class Flow extends BP.En.EntityNoName {
 		if (dt.Rows.size() > 0) {
 
 			sql = "UPDATE " + this.getDTSBTable().toUpperCase() + " SET " + upVal + " WHERE " + getDTSBTablePK() + "='"
-					+ lcDt.Rows.get(0).getValue(lcArr[0].toString()) + "'";
+					+ lcDt.Rows.get(0).getValue(getDTSBTablePK()) + "'";
 		} else {
 			sql = "INSERT INTO " + this.getDTSBTable().toUpperCase() + "(" + dtsArray[1] + ") VALUES(" + values + ")";
 		}

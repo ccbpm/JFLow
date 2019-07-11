@@ -314,7 +314,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 
 		// 把流程信息放入.
 		BP.WF.Flow fl = new BP.WF.Flow(this.getFK_Flow());
-		DataTable dtFlow = fl.ToDataTableField(this.getFK_Flow());
+		DataTable dtFlow = fl.ToDataTableField("Flow");
 		ds.Tables.add(dtFlow);
 
 		return BP.Tools.Json.ToJson(ds);
@@ -355,7 +355,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 			String ywStr = "";
 			for (DataRow ywDr : ywDt.Rows) {
 				for (DataRow dr : dt.Rows) {
-					if (ywDr.getValue("No").toString().toUpperCase() == dr.getValue("No").toString().toUpperCase()) {
+					if (ywDr.getValue("No").toString().toUpperCase().equals(dr.getValue("No").toString().toUpperCase()) == true) {
 						if (dr.getValue("No").toString().toUpperCase().equals("OID")) {
 							flow.setDTSBTablePK("OID");
 						}
@@ -366,7 +366,7 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 			}
 
 			if (!StringHelper.isNullOrEmpty(str))
-				flow.setDTSFields(str.substring(str.length() - 1) + "@" + ywStr.substring(ywStr.length() - 1));
+				flow.setDTSFields(str.substring(0,str.length() - 1) + "@" + ywStr.substring(0,ywStr.length() - 1));
 			else {
 				Log.DebugWriteError("未检测到业务主表【" + flow.getPTable() + "】与表【" + flow.getDTSBTable() + "】有相同的字段名.");
 				return "";// 不执行保存

@@ -1490,7 +1490,8 @@ public class Flow extends BP.En.EntityNoName {
 		/// #region qinfaliang, 编写同步的业务逻辑,执行错误就抛出异常.
 
 		String[] dtsArray = this.getDTSFields().split("[@]", -1);
-
+		if(dtsArray.length<2)
+			throw new Exception("数据同步中不存在需要同步字段或者同步字段不匹配");
 		String[] lcArr = dtsArray[0].split("[,]", -1); // 取出对应的主表字段
 		String[] ywArr = dtsArray[1].split("[,]", -1); // 取出对应的业务表字段
 
@@ -1564,7 +1565,7 @@ public class Flow extends BP.En.EntityNoName {
 
 		// 查询对应的业务表中是否存在这条记录
 		sql = "SELECT * FROM " + this.getDTSBTable().toUpperCase() + " WHERE " + getDTSBTablePK() + "='"
-				+ lcDt.Rows.get(0).getValue(lcArr[0].toString()) + "'";
+				+ lcDt.Rows.get(0).getValue(getDTSBTablePK()) + "'";
 		DataTable dt = src.RunSQLReturnTable(sql);
 		// 如果存在，执行更新，如果不存在，执行插入
 		if (dt.Rows.size() > 0) {
@@ -4856,8 +4857,8 @@ public class Flow extends BP.En.EntityNoName {
         map.AddTBString("HostRun", null, "运行主机(IP+端口)", true, false, 0, 40, 10, true);
 
 
-		// map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false,
-		// false, 0, 2000, 100, false);
+		map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false,
+		 false, 0, 2000, 100, false);
 
 		/// #endregion 数据同步方案
 

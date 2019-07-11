@@ -5578,15 +5578,14 @@ public class WorkNode {
 				SendReturnMsgType.SystemMsg);
 		this.addMsg(SendReturnMsgFlag.VarWorkID, (new Long(this.getWorkID())).toString(),
 				(new Long(this.getWorkID())).toString(), SendReturnMsgType.SystemMsg);
-
+		
+		
 		if (this.getIsStopFlow() == true) {
-			// 在检查完后，反馈来的标志流程已经停止了。
-
 			// 查询出来当前节点的工作报表.
 			this.rptGe = this.getHisFlow().getHisGERpt();
 			this.rptGe.SetValByKey("OID", this.getWorkID());
 			this.rptGe.RetrieveFromDBSources();
-
+			// 在检查完后，反馈来的标志流程已经停止了。
 			this.Func_DoSetThisWorkOver();
 			this.rptGe.setWFState(WFState.Complete);
 			this.rptGe.Update();
@@ -5747,7 +5746,7 @@ public class WorkNode {
 		this.rptGe.SetValByKey("OID", this.getWorkID());
 		this.rptGe.RetrieveFromDBSources();
 
-		// 检查是否有子流程存在, 如果有就让子流程发送下去. and 2015-01-23. for gaoling.
+		// 检查是否有子流程存在, 如果有就让子流程发送下去
 		this.CheckBlockModel();
 
 		// 检查FormTree必填项目,如果有一些项目没有填写就抛出异常.
@@ -5762,7 +5761,7 @@ public class WorkNode {
 
 		this.getHisWork().DirectUpdate();
 
-		if (this.getHisWork().getEnMap().getPhysicsTable() != this.rptGe.getEnMap().getPhysicsTable()) {
+		if (this.getHisWork().getEnMap().getPhysicsTable().equals(this.rptGe.getEnMap().getPhysicsTable()) == false) {
 			// 有可能外部参数传递过来导致，rpt表数据没有发生变化。
 			this.rptGe.Copy(this.getHisWork());
 			// 首先执行保存，不然会影响条件的判断 by dgq 2016-1-14
@@ -6908,21 +6907,23 @@ public class WorkNode {
 		// 如果两个表一致就返回..
 		// 把当前的工作人员增加里面去.
 		String str = rptGe.GetValStrByKey(GERptAttr.FlowEmps);
+		if(DataType.IsNullOrEmpty(str) == true)
+			str ="@";
 		if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
-			if (str.contains("@" + this.getExecer()) == false) {
-				rptGe.SetValByKey(GERptAttr.FlowEmps, str + "@" + this.getExecer());
+			if (str.contains("@" + this.getExecer()+ "@") == false) {
+				rptGe.SetValByKey(GERptAttr.FlowEmps, str  + this.getExecer()+ "@");
 			}
 		}
 
 		if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
-			if (str.contains("@" + WebUser.getName()) == false) {
-				rptGe.SetValByKey(GERptAttr.FlowEmps, str + "@" + this.getExecerName());
+			if (str.contains("@" + WebUser.getName()+ "@") == false) {
+				rptGe.SetValByKey(GERptAttr.FlowEmps, str  + this.getExecerName()+ "@");
 			}
 		}
 
 		if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-			if (str.contains("@" + this.getExecer() + "," + this.getExecerName()) == false) {
-				rptGe.SetValByKey(GERptAttr.FlowEmps, str + "@" + this.getExecer() + "," + this.getExecerName());
+			if (str.contains("@" + this.getExecer() + "," + this.getExecerName()+ "@") == false) {
+				rptGe.SetValByKey(GERptAttr.FlowEmps, str + this.getExecer() + "," + this.getExecerName()+ "@");
 			}
 		}
 		rptGe.setFlowEnder(this.getExecer());
@@ -7296,12 +7297,34 @@ public class WorkNode {
 			}
 
 			emps = emps + dr.getValue(0).toString() + "@";
-			flowEmps = flowEmps + dr.getValue(1) + "," + dr.getValue(0).toString() + "@";
+			if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
+				flowEmps = flowEmps + dr.getValue(1)+"@";
+			}
+
+			if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
+				flowEmps = flowEmps + dr.getValue(0)+"@";
+			}
+
+			if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
+				flowEmps = flowEmps + dr.getValue(0) + "," + dr.getValue(1).toString() + "@";
+			}
+			
 		}
 		// 追加当前操作人
 		if (emps.contains("@" + WebUser.getNo() + "@") == false) {
 			emps = emps + WebUser.getNo() + "@";
-			flowEmps = flowEmps + WebUser.getName() + "," + WebUser.getNo() + "@";
+			if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
+				flowEmps = flowEmps + WebUser.getName()+"@";
+			}
+
+			if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
+				flowEmps = flowEmps + WebUser.getNo()+"@";
+			}
+
+			if (BP.WF.Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
+				flowEmps = flowEmps +  WebUser.getNo()  + "," +WebUser.getName()+ "@";
+			}
+			
 		}
 		// 给他们赋值.
 		this.rptGe.setFlowEmps(flowEmps);

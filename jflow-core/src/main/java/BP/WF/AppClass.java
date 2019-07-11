@@ -51,16 +51,35 @@ public class AppClass {
 				Nodes tonds = nd.getHisToNodes();
 
 				for (Node tond : tonds.ToJavaList()) {
-					DataRow mydr = tracks.NewRow();
-					mydr.setValue("NodeName", tond.getName());
-					mydr.setValue("FK_Node", tond.getNodeID());
-					mydr.setValue("RunModel", tond.getHisRunModel().getValue());
-					// mydr["NodeName"] = tond.Name;
-					// mydr["FK_Node"] = tond.NodeID; //
-					// nd["NodeID"].ToString();
-					// mydr["RunModel"] = (int)tond.HisRunModel;
-					tracks.Rows.add(mydr);
+					boolean flag = true;
 
+					for(int k = 0;k<tracks.Rows.size();k++){
+						//分流有重复，为去重复加的判断
+						int ss = 0;
+						if(!"".equals(tracks.Rows.get(k).getValue("IsPass").toString())){
+							ss = Integer.parseInt(tracks.Rows.get(k).getValue("IsPass").toString());
+						}else{
+							ss = 999;//不是0的随意数字
+						}
+
+						if((Integer.parseInt(tracks.Rows.get(k).getValue("RunModel").toString())==4)&&(ss==0)){
+							flag = false;
+							break;
+						}
+
+					}
+					if(flag){
+						DataRow mydr = tracks.NewRow();
+						mydr.setValue("NodeName", tond.getName());
+						mydr.setValue("FK_Node", tond.getNodeID());
+						mydr.setValue("RunModel", tond.getHisRunModel().getValue());
+						// mydr["NodeName"] = tond.Name;
+						// mydr["FK_Node"] = tond.NodeID; //
+						// nd["NodeID"].ToString();
+						// mydr["RunModel"] = (int)tond.HisRunModel;
+						tracks.Rows.add(mydr);
+
+					}
 					// 设置当前节点.
 					// currNode = tond.HisToNodes[0].GetValIntByKey("NodeID");
 					currNode = tond.getNodeID();

@@ -209,6 +209,7 @@ public class MapFrame extends EntityMyPK
 		map.AddBoolean(MapFrameAttr.IsAutoSize, true, "是否自动设置大小", false, false);
 
 		map.AddTBString(FrmEleAttr.EleType, null, "类型", false, false, 0, 50, 20, true);
+		map.AddTBInt(MapFrameAttr.UrlSrcType, 0, "URL来源", true, false);
 
 		   // map.AddTBInt(MapFrameAttr.RowIdx, 99, "位置", false, false);
 		   // map.AddTBInt(MapFrameAttr.GroupID, 0, "GroupID", false, false);

@@ -343,7 +343,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
             {
                 if (nd.getFormUrl().contains("?"))
-                    url = "@url=&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
+                    url = "@url="+nd.getFormUrl() +"&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
                 else
                 url = "@url="+nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow()+ "&FID=" + this.getFID() + "&FromWorkOpt=1";
             }

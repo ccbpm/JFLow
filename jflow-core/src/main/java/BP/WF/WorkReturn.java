@@ -643,13 +643,13 @@ public class WorkReturn
 	*/
 	private String ExeReturn5_2() throws Exception
 	{
-		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
+		GenerWorkFlow gwf = new GenerWorkFlow(this.FID);
 		gwf.setFK_Node(this.ReturnToNode.getNodeID());
 		String info = "@工作已经成功的退回到（" + ReturnToNode.getName() + "）退回给：";
 
 		//查询退回到的工作人员列表.
 		GenerWorkerLists gwls = new GenerWorkerLists();
-		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.WorkID, GenerWorkerListAttr.FK_Node, this.ReturnToNode.getNodeID());
+		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.FID, GenerWorkerListAttr.FK_Node, this.ReturnToNode.getNodeID());
 
 		String toEmp = "";
 		String toEmpName = "";

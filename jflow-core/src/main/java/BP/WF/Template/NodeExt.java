@@ -242,6 +242,15 @@ public class NodeExt extends Entity
 		this.setNodeID(nodeid);
 		this.Retrieve();
 	}
+	
+	public final CondModel getCondModel() {
+		return CondModel.forValue(this.GetValIntByKey(NodeAttr.CondModel));
+	}
+
+	public final void setCondModel(CondModel value) {
+		this.SetValByKey(NodeAttr.CondModel, value.getValue());
+	}
+	
 	/** 
 	 重写基类方法
 	*/
@@ -1149,7 +1158,7 @@ public class NodeExt extends Entity
                 
 			
             // @杜. 翻译&测试.
-            if (nd.getCondModel() == CondModel.ByLineCond)
+            if (this.getCondModel() == CondModel.ByLineCond)
             {
                 /* 如果当前节点方向条件控制规则是按照连接线决定的, 
                  * 那就判断到达的节点的接受人规则，是否是按照上一步来选择，如果是就抛出异常.*/

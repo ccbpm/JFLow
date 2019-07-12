@@ -185,10 +185,6 @@ public class GroupField extends EntityOID {
 
 	@Override
 	protected boolean beforeInsert() throws Exception {
-
-		// if (this.IsExit(GroupFieldAttr.EnName, this.EnName,
-		// GroupFieldAttr.Lab, this.Lab) == true)
-		// throw new Exception("@已经在("+this.EnName+")里存在("+this.Lab+")的分组了。");
 		try {
 			String sql = "SELECT MAX(IDX) FROM Sys_GroupField WHERE FrmID='" + this.getFrmID() + "'";
 			this.setIdx(DBAccess.RunSQLReturnValInt(sql, 0) + 1);

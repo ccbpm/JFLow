@@ -1922,8 +1922,9 @@ public class WF_MyFlow extends WebContralBase {
 			// 替换约定参数
 			sql = sql.replaceAll("@WebUser.No", WebUser.getNo());
 			sql = sql.replaceAll("@WebUser.Name", WebUser.getName());
-			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sql = sql.replaceAll("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
+			
 
 			Enumeration enu = getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {

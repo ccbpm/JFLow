@@ -6303,11 +6303,7 @@ public class WorkNode {
 				/// #region 判断当前处理人员，可否处理下一步工作.
 				if (this.town != null && this.HisRememberMe != null
 						&& this.HisRememberMe.getEmps().contains("@" + WebUser.getNo() + "@") == true) {
-					String url = Glo.getHostURL() + "/WF/MyFlow.htm?FK_Flow=" + this.getHisFlow().getNo() + "&WorkID="
-							+ this.getWorkID() + "&FK_Node=" + town.getHisNode().getNodeID() + "&FID="
-							+ this.rptGe.getFID();
-					// htmlInfo = "@<a href='" + url + "'
-					// >下一步工作您仍然可以处理，点击这里现在处理。</a>.";
+				
 					textInfo = "@下一步工作您仍然可以处理。";
 					this.addMsg(SendReturnMsgFlag.MsgOfText, textInfo);
 				}
@@ -6435,40 +6431,7 @@ public class WorkNode {
 			Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 					this.rptGe.getTitle(), null);
 
-			/// #region 触发下一个节点的自动发送, 处理国机的需求. (（去掉:2019-05-05）)
-			if (this.HisMsgObjs.getVarToNodeID() != WFState.Blank.getValue() && this.town != null && 1 == 2
-					&& this.town.getHisNode().getWhoExeIt() != 0) {
-				String currUser = BP.Web.WebUser.getNo();
-				String[] emps = this.HisMsgObjs.getVarAcceptersID().split("[,]", -1);
-				for (String emp : emps) {
-					if (DotNetToJavaStringHelper.isNullOrEmpty(emp)) {
-						continue;
-					}
-
-					try {
-						// 让这个人登录.
-						BP.Port.Emp empEn = new Emp(emp);
-						BP.WF.Dev2Interface.Port_Login(emp);
-						if (this.getHisNode().getHisRunModel() == RunModel.SubThread
-								&& this.town.getHisNode().getHisRunModel() != RunModel.SubThread) {
-							// 如果当前的节点是子线程，并且发送到的节点非子线程。
-							// * 就是子线程发送到非子线程的情况。
-							//
-							this.HisMsgObjs = BP.WF.Dev2Interface.Node_SendWork(this.getHisNode().getFK_Flow(),
-									this.getHisWork().getFID());
-						} else {
-							this.HisMsgObjs = BP.WF.Dev2Interface.Node_SendWork(this.getHisNode().getFK_Flow(),
-									this.getHisWork().getOID());
-						}
-					} catch (java.lang.Exception e2) {
-						// 可能是正常的阻挡发送，操作不必提示。
-						// this.HisMsgObjs.AddMsg("Auto"
-					}
-					BP.WF.Dev2Interface.Port_Login(currUser);
-					// 使用一个人处理就可以了.
-					break;
-				}
-			}
+			
 			/// #region 计算未来处理人.
 			if (this.town == null) {
 				FullSA fsa1 = new FullSA(this);
@@ -6478,9 +6441,7 @@ public class WorkNode {
 			/// #region 判断当前处理人员，可否处理下一步工作.
 			if (this.town != null && this.HisRememberMe != null
 					&& this.HisRememberMe.getEmps().contains("@" + WebUser.getNo() + "@") == true) {
-				String url = Glo.getHostURL() + "/WF/MyFlow.htm?FK_Flow=" + this.getHisFlow().getNo() + "&WorkID="
-						+ this.getWorkID() + "&FK_Node=" + town.getHisNode().getNodeID() + "&FID="
-						+ this.rptGe.getFID();
+				
 				// >下一步工作您仍然可以处理，点击这里现在处理。</a>.";
 				String textInfo = "@下一步工作您仍然可以处理。";
 
@@ -7357,9 +7318,10 @@ public class WorkNode {
 
 		exp = exp.replace("WebUser.No", BP.Web.WebUser.getNo());
 		exp = exp.replace("@WebUser.Name", BP.Web.WebUser.getName());
-		exp = exp.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
 		exp = exp.replace("@WebUser.FK_DeptName", BP.Web.WebUser.getFK_DeptName());
 
+		exp = exp.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+		
 		if (exp.contains("@") == true) {
 			exp = Glo.DealExp(exp, this.getHisWork(), null);
 		}

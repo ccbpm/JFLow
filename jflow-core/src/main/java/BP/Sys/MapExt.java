@@ -468,8 +468,8 @@ public class MapExt extends EntityMyPK
 	{
 		String fullSQL = this.getDoc().replace("WebUser.No", WebUser.getNo());
 		fullSQL = fullSQL.replace("@WebUser.Name", WebUser.getName());
-		fullSQL = fullSQL.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		fullSQL = fullSQL.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		fullSQL = fullSQL.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		if (fullSQL.contains("@"))
 		{

@@ -8657,15 +8657,15 @@ public class Dev2Interface {
 					wn.DoCopyRptWork(wk);
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName) {
-						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getNo() + "," + WebUser.getName());
+						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getNo() + "," + WebUser.getName()+"@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly) {
-						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getNo());
+						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getNo()+"@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly) {
-						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getName());
+						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getName()+"@");
 					}
 
 					rptGe.SetValByKey(GERptAttr.FlowStarter, WebUser.getNo());

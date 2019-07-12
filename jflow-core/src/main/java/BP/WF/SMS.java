@@ -443,110 +443,35 @@ public class SMS extends EntityMyPK
 			String xmlStr = "";
 			if (this.getHisEmailSta() == MsgSta.UnRun)
 			{
-				xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-				+"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.jflow.cn/\">"
-				   +"<soapenv:Header/>"
-				   +"<soapenv:Body>"
-				   +" <ws:SendToEmail>"
-				   +"      <!--Optional:-->"
-				   +"      <arg0>"+this.getMyPK()+"</arg0>"
-				   +"      <!--Optional:-->"
-				   +"      <arg1>"+WebUser.getNo()+"</arg1>"
-				   +"      <!--Optional:-->"
-				   +"      <arg2>"+this.getSendToEmpNo()+"</arg2>"
-				   +"      <!--Optional:-->"
-				   +"      <arg3>"+this.getEmail()+"</arg3>"
-				   +"      <!--Optional:-->"
-				   +"      <arg4>"+this.getTitle()+"</arg4>"
-				   +"      <!--Optional:-->"
-				   +"      <arg5>"+this.getDocOfEmail()+"</arg5>"
-				   +"   </ws:SendToEmail>"
-				   +"</soapenv:Body>"
-				+"</soapenv:Envelope>";
 				//发送邮件
-				
 				SendEmailNow(this.getEmail(), this.getTitle(), this.getDocOfEmail());
-				//BP.WF.Glo.GetPortalInterfaceSoapClient("SendToEmail",xmlStr);
-				//soap.SendToEmail(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getEmail(), this.getTitle(), this.getDocOfEmail());
 				return;
 			}
 
 			if (this.getHisMobileSta() == MsgSta.UnRun)
 			{
 				String tag = "@MsgFlag=" + this.getMsgFlag() + "@MsgType=" + this.getMsgType() + this.getatPara() + "@Sender=" + this.getSender() + "@SenderName=" + BP.Web.WebUser.getName();
+				PortalWebService service = new PortalWebService();
 				switch (BP.WF.Glo.getShortMessageWriteTo())
 				{
 					case ToSMSTable: //写入消息表。
 						break;
 					case ToWebservices: // 写入webservices.
-						PortalWebService service = new PortalWebService();
+						
 						service.SendToWebServices(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
 						//soap.SendToWebServices(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(),tag);
 						break;
 					case ToDingDing: // 写入dingding.
-						xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-						+"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.jflow.cn/\">"
-					    +"	 <soapenv:Header/>"
-						+"   <soapenv:Body>"
-						+"      <ws:SendToDingDing>"
-						+"         <!--Optional:-->"
-						+"         <arg0>"+this.getMyPK()+"</arg0>"
-						+"         <!--Optional:-->"
-						+"         <arg1>"+WebUser.getNo()+"</arg1>"
-						+"         <!--Optional:-->"
-						+"         <arg2>"+this.getSendToEmpNo()+"</arg2>"
-						+"         <!--Optional:-->"
-						+"         <arg3>"+this.getMobile()+"</arg3>"
-						+"         <!--Optional:-->"
-						+"         <arg4>"+this.getMobileInfo()+"</arg4>"
-						+"      </ws:SendToDingDing>"
-						+"   </soapenv:Body>"
-						+"</soapenv:Envelope>";
-						BP.WF.Glo.GetPortalInterfaceSoapClient("SendToDingDing",xmlStr);
-						//soap.SendToDingDing(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo());
+						service.SendToDingDing(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
+						
 						break;
 					case ToWeiXin: // 写入微信.
-						xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-						+"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.jflow.cn/\">"
-						+"   <soapenv:Header/>"
-						+"   <soapenv:Body>"
-						+"      <ws:SendToWeiXin>"
-						+"         <!--Optional:-->"
-						+"         <arg0>"+this.getMyPK()+"</arg0>"
-						+"         <!--Optional:-->"
-						+"         <arg1>"+WebUser.getNo()+"</arg1>"
-						+"         <!--Optional:-->"
-						+"         <arg2>"+this.getSendToEmpNo()+"</arg2>"
-						+"         <!--Optional:-->"
-						+"         <arg3>"+this.getMobile()+"</arg3>"
-						+"         <!--Optional:-->"
-						+"         <arg4>"+this.getMobileInfo()+"</arg4>"
-						+"      </ws:SendToWeiXin>"
-						+"   </soapenv:Body>"
-						+"</soapenv:Envelope>";
-						BP.WF.Glo.GetPortalInterfaceSoapClient("SendToWeiXin",xmlStr);
+						service.SendToWeiXin(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
 						//soap.SendToWeiXin(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo());
 						break;
 					case CCIM: // 写入即时通讯系统.
-						xmlStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-						+"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.jflow.cn/\">"
-						+"   <soapenv:Header/>"
-						+"   <soapenv:Body>"
-						+"      <ws:SendToCCIM>"
-						+"         <!--Optional:-->"
-						+"         <arg0>"+this.getMyPK()+"</arg0>"
-						+"         <!--Optional:-->"
-						+"         <arg1>"+WebUser.getNo()+"</arg1>"
-						+"         <!--Optional:-->"
-						+"         <arg2>"+this.getSendToEmpNo()+"</arg2>"
-						+"         <!--Optional:-->"
-						+"         <arg3>"+this.getMobileInfo()+"</arg3>"
-						+"         <!--Optional:-->"
-						+"         <arg4>"+tag+"</arg4>"
-						+"      </ws:SendToCCIM>"
-						+"   </soapenv:Body>"
-						+"</soapenv:Envelope>";
-						BP.WF.Glo.GetPortalInterfaceSoapClient("SendToCCIM",xmlStr);
+						service.SendToCCIM(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
+						
 						//soap.SendToCCIM(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobileInfo(),tag);
 						break;
 					default:

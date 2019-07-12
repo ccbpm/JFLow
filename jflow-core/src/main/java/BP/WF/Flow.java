@@ -1966,8 +1966,9 @@ public class Flow extends BP.En.EntityNoName {
 
 							sql = sql.replace("WebUser.No", "'ss'");
 							sql = sql.replace("@WebUser.Name", "'ss'");
-							sql = sql.replace("@WebUser.FK_Dept", "'ss'");
 							sql = sql.replace("@WebUser.FK_DeptName", "'ss'");
+							sql = sql.replace("@WebUser.FK_Dept", "'ss'");
+							
 
 							sql = sql.replace("''''", "''"); // 出现双引号的问题.
 
@@ -4666,7 +4667,8 @@ public class Flow extends BP.En.EntityNoName {
 	 */
 	public final BP.WF.Data.GERpt getHisGERpt() throws Exception {
 		try {
-			BP.WF.Data.GERpt wk = new BP.WF.Data.GERpt("ND" + Integer.parseInt(this.getNo()) + "Rpt");
+			
+			GERpt wk = new GERpt("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 			return wk;
 		} catch (java.lang.Exception e) {
 			this.DoCheck();

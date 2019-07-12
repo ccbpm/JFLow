@@ -4894,8 +4894,9 @@ public class Glo {
 			// 替换变量
 			sql = sql.replaceAll("@WebUser.No", WebUser.getNo());
 			sql = sql.replaceAll("@WebUser.Name", WebUser.getName());
-			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sql = sql.replaceAll("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+			sql = sql.replaceAll("@WebUser.FK_Dept", WebUser.getFK_Dept());
+			
 
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {

@@ -50,12 +50,13 @@ public class SFTable<CodeCompileUnit> extends EntityNoName {
 					if (pa[1].contains("@WebUser.Name")) {
 						pa[1] = pa[1].replace("@WebUser.Name", BP.Web.WebUser.getName());
 					}
-					if (pa[1].contains("@WebUser.FK_Dept")) {
-						pa[1] = pa[1].replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
-					}
 					if (pa[1].contains("@WebUser.FK_DeptName")) {
 						pa[1] = pa[1].replace("@WebUser.FK_DeptName", BP.Web.WebUser.getFK_DeptName());
 					}
+					if (pa[1].contains("@WebUser.FK_Dept")) {
+						pa[1] = pa[1].replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+					}
+					
 				} catch (java.lang.Exception e) {
 				}
 

@@ -1456,8 +1456,9 @@ public class MakeForm2Html
             	//替换系统参数
             	url = url.replaceAll("@WebUser.No", WebUser.getNo());
             	url = url.replaceAll("@WebUser.Name;", WebUser.getName());
-            	url = url.replaceAll("@WebUser.FK_Dept;", WebUser.getFK_Dept());
             	url = url.replaceAll("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
+            	url = url.replaceAll("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+            	
             	//替换参数
             	if (url.indexOf("?") > 0){
             		//获取url中的参数
@@ -1611,7 +1612,7 @@ public class MakeForm2Html
     	
     	//存放信息地址
     	String hostURL = SystemConfig.GetValByKey("HostURL","");
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid;
+		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid;
 		String frmID = "ND"+node.getNodeID();
 		
 		 //处理正确的文件名.
@@ -1827,9 +1828,9 @@ public class MakeForm2Html
     		gwf = new GenerWorkFlow(workid);
     	//存放信息地址
     	String hostURL = SystemConfig.GetValByKey("HostURL","");
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid;
+		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid;
     	//生成pdf文件
-        String pdfPath = path + "\\pdf";
+        String pdfPath = path + "/pdf";
 
        
         DataRow dr =  null ;
@@ -1864,7 +1865,7 @@ public class MakeForm2Html
 			 if(flowNo!=null && frmNode.getWhoIsPK() == WhoIsPK.PWorkID) //如果是父子流程
 				 workid = gwf.getPWorkID();
 			 //获取表单的信息执行打印
-			 String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\"+frmNode.getFK_Frm()+"index.htm";
+			 String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/"+frmNode.getFK_Frm()+"index.htm";
 			 resultMsg= MakeHtmlDocument(frmNode.getFK_Frm(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,"ND"+node.getNodeID(),basePath);
 			
 			 if(resultMsg.indexOf("err@")!=-1)
@@ -1877,8 +1878,8 @@ public class MakeForm2Html
 	        	 new File(pdfPath).mkdirs();
 
 	         fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
-	         String pdfFormFile = pdfPath + "\\" + frmNode.getFK_Frm() + ".pdf";     
-	         String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
+	         String pdfFormFile = pdfPath + "/" + frmNode.getFK_Frm() + ".pdf";     
+	         String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
 	       
 	         try
 	            {
@@ -1903,20 +1904,20 @@ public class MakeForm2Html
     //前期文件的准备
     private static String setPDFPath(String frmID,long workid,String flowNo,GenerWorkFlow gwf ) throws Exception{
     	 //准备目录文件.
-        String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\";
+        String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
         try
         {
-            path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\";
+            path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
             File pathFile =new File(path);
             if (pathFile.exists()== false)
             	pathFile.mkdirs();
             
-            path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + frmID + "\\" + workid;
+            path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/" + workid;
             if (new File(path).exists() == false)
             	new File(path).mkdirs();
 
             //把模版文件copy过去.
-            String templateFilePath = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\Template\\";
+            String templateFilePath = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
             //判断模板文件临时目录是否存在
             File baseFile = new File(templateFilePath);
             if(baseFile.isDirectory() == false)
@@ -1934,11 +1935,11 @@ public class MakeForm2Html
                     continue;
 
                 //判断之前是否存在该文件 就删除掉
-                if(new File(path + "\\" + fl.getName()).exists())
-                	new File(path + "\\" + fl.getName()).delete();
+                if(new File(path + "/" + fl.getName()).exists())
+                	new File(path + "/" + fl.getName()).delete();
                 
                 Files.copy( fl.getAbsoluteFile().toPath()
-                		, new File(path + "\\" + fl.getName()).toPath());
+                		, new File(path + "/" + fl.getName()).toPath());
             }
 
         }
@@ -2009,7 +2010,7 @@ public class MakeForm2Html
             		
             	}
             	String sb="<iframe style='width:100%;height:auto;' ID='" + mapData.getNo() + "'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe></div>";
-            	String  docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexUrl.htm");
+            	String  docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexUrl.htm");
             	docs = docs.replace("@Docs", sb.toString());
             	docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
             	docs = docs.replace("@Height", String.valueOf(mapData.getFrmH())+"px");
@@ -2045,7 +2046,7 @@ public class MakeForm2Html
 	                words = BP.WF.Glo.DealExp(words, en);
 	
 	            String templateFilePathMy = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
-	            paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png",words,path + "\\ShuiYin.png");
+	            paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png",words,path + "/ShuiYin.png");
             }
             //end 水文结束
 
@@ -2055,7 +2056,7 @@ public class MakeForm2Html
 
             //首先判断是否有约定的文件.
             String docs = "";
-            String tempFile = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\" + mapData.getNo() + ".htm";
+            String tempFile = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/" + mapData.getNo() + ".htm";
             if (new File(tempFile).exists() == false){
                 if (gwf != null)
                 {
@@ -2069,13 +2070,13 @@ public class MakeForm2Html
 
                 if (mapData.getHisFrmType() == FrmType.FoolForm)
                 {
-                    docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFool.htm");
+                    docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexFool.htm");
                     sb =GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
                     docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
                 }
                 else if(mapData.getHisFrmType() == FrmType.FreeFrm)
                 {
-                    docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\indexFree.htm");
+                    docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexFree.htm");
                     sb = GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo,nodeID,basePath);
                     docs = docs.replace("@Width", String.valueOf(mapData.getFrmW()*1.5)+"px");
                     
@@ -2114,9 +2115,9 @@ public class MakeForm2Html
                 }
 
                 //替换模版尾部的打印说明信息.
-                String pathInfo = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\EndInfo\\" + flowNo + ".txt";
+                String pathInfo = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/" + flowNo + ".txt";
                 if (new File(pathInfo).exists() == false)
-                    pathInfo = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\Template\\EndInfo\\Default.txt";
+                    pathInfo = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/Default.txt";
 
                 docs = docs.replace("@EndInfo", DataType.ReadTextFile(pathInfo));
             }
@@ -2138,8 +2139,8 @@ public class MakeForm2Html
         BP.DA.Log.DebugWriteInfo("@开始生成PDF:" + pdfFileExe + "@pdf=" + pdf + "@htmFile=" + htmFile);
         StringBuilder cmd = new StringBuilder();
         if(System.getProperty("os.name").indexOf("Windows") == -1){
-        //非windows 系统
-        	//pdfFileExe = FileUtil.convertSystemFilePath("/home/ubuntu/wkhtmltox/bin/wkhtmltopdf");
+        	//非windows 系统
+        	pdfFileExe = "/home/ubuntu/wkhtmltox/bin/wkhtmltopdf";
         }
         cmd.append(pdfFileExe);
         cmd.append(" ");
@@ -2235,9 +2236,10 @@ public class MakeForm2Html
     private static String DealEnExp(Entity en,String exp) throws Exception{
     	exp = exp.replace("@WebUser.No", WebUser.getNo());
     	exp = exp.replace("@WebUser.Name", WebUser.getName());
-    	exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
-    	exp = exp.replace("@WebUser.DeptName", WebUser.getFK_DeptName());
     	exp = exp.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+    	exp = exp.replace("@WebUser.DeptName", WebUser.getFK_DeptName());
+    	exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+
     	if(exp.contains("@") == false)
     		return exp;
     	Row row = en.getRow();

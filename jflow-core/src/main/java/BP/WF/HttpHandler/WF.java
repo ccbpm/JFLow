@@ -545,7 +545,7 @@ public class WF extends WebContralBase {
 				md.setHisFrmType(FrmType.FreeFrm);
 				md.Update();
 			}
-		} else {
+		} else if (nd.getHisFormType() == NodeFormType.FoolForm){
 			MapData md = new MapData(nd.getNodeFrmID());
 			if (md.getHisFrmType() != FrmType.FoolForm) {
 				md.setHisFrmType(FrmType.FoolForm);

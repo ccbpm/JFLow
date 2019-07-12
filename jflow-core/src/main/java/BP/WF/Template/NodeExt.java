@@ -1199,15 +1199,15 @@ public class NodeExt extends Entity
 			
 			//创建审核组件附件
             FrmAttachment workCheckAth = new FrmAttachment();
-            workCheckAth.setMyPK(this.getNodeID() + "_FrmWorkCheck");
+            workCheckAth.setMyPK("ND"+this.getNodeID() + "_FrmWorkCheck");
             //不包含审核组件
             if (workCheckAth.RetrieveFromDBSources() == 0)
             {
                 workCheckAth = new FrmAttachment();
                 /*如果没有查询到它,就有可能是没有创建.*/
-                workCheckAth.setMyPK(this.getNodeID() + "_FrmWorkCheck");
-                workCheckAth.setFK_MapData(String.valueOf(this.getNodeID()));
-                workCheckAth.setNoOfObj(this.getNodeID()+ "_FrmWorkCheck");
+                workCheckAth.setMyPK("ND"+this.getNodeID() + "_FrmWorkCheck");
+                workCheckAth.setFK_MapData("ND"+this.getNodeID());
+                workCheckAth.setNoOfObj("FrmWorkCheck");
                 workCheckAth.setExts("*.*");
 
                 //存储路径.

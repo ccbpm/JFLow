@@ -224,10 +224,26 @@ public class WF_WorkOpt extends WebContralBase {
 		DataTable athDt = new DataTable("Aths");
 		athDt.Columns.Add("NodeID", Integer.class);
 		athDt.Columns.Add("MyPK", String.class);
-		athDt.Columns.Add("Href", String.class);
+		athDt.Columns.Add("FK_FrmAttachment", String.class);
+		athDt.Columns.Add("FK_MapData", String.class);
 		athDt.Columns.Add("FileName", String.class);
 		athDt.Columns.Add("FileExts", String.class);
 		athDt.Columns.Add("CanDelete", Boolean.class);
+		 //当前节点的流程数据
+        FrmAttachmentDBs frmathdbs = new FrmAttachmentDBs();
+        frmathdbs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, "ND" + this.getFK_Node() + "_FrmWorkCheck", FrmAttachmentDBAttr.RefPKVal, this.getWorkID(), FrmAttachmentDBAttr.RDT);
+        for(FrmAttachmentDB athDB : frmathdbs.ToJavaList())
+        {	
+        	 row = athDt.NewRow();
+        	 row.setValue("NodeID",this.getFK_MapData());
+			 row.setValue("MyPK",athDB.getMyPK());
+			 row.setValue("FK_FrmAttachment",athDB.getFK_FrmAttachment());
+			 row.setValue("FK_MapData",athDB.getFK_MapData());
+			 row.setValue("FileName",athDB.getFileName());
+			 row.setValue("FileExts",athDB.getFileExts());
+			 row.setValue("CanDelete",  athDB.getRec().equals(WebUser.getNo()));
+			 athDt.Rows.add(row);
+        }
 		ds.Tables.add(athDt);
 
 		if (this.getFID() != 0)
@@ -420,7 +436,7 @@ public class WF_WorkOpt extends WebContralBase {
 				// #region //审核组件附件数据
 				athDBs = new FrmAttachmentDBs();
 				QueryObject obj_Ath = new QueryObject(athDBs);
-				obj_Ath.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, tk.getNDFrom() + "_FrmWorkCheck");
+				obj_Ath.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment,"ND"+ tk.getNDFrom() + "_FrmWorkCheck");
 				obj_Ath.addAnd();
 				obj_Ath.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.getWorkID());
 				obj_Ath.addOrderBy(FrmAttachmentDBAttr.RDT);
@@ -431,11 +447,12 @@ public class WF_WorkOpt extends WebContralBase {
 					
 					 row.setValue("NodeID",tk.getNDFrom());
 					 row.setValue("MyPK",athDB.getMyPK());
-					 row.setValue("Href",GetFileAction(athDB));
+					 row.setValue("FK_FrmAttachment",athDB.getFK_FrmAttachment());
+					 row.setValue("FK_MapData",athDB.getFK_MapData());
 					 row.setValue("FileName",athDB.getFileName());
 					 row.setValue("FileExts",athDB.getFileExts());
 					 row.setValue("CanDelete", athDB.getFK_MapData() ==
-					 String.valueOf(this.getFK_Node()) && athDB.getRec() == WebUser.getNo() &&
+					 String.valueOf(this.getFK_Node()) && athDB.getRec().equals(WebUser.getNo()) &&
 					 isReadonly == false);
 					 athDt.Rows.add(row);
 					 
@@ -713,14 +730,15 @@ public class WF_WorkOpt extends WebContralBase {
 		DataTable athDt = new DataTable("Aths");
 		athDt.Columns.Add("NodeID", Integer.class);
 		athDt.Columns.Add("MyPK", String.class);
-		athDt.Columns.Add("Href", String.class);
+		athDt.Columns.Add("FK_FrmAttachment", String.class);
+		athDt.Columns.Add("FK_MapData", String.class);
 		athDt.Columns.Add("FileName", String.class);
 		athDt.Columns.Add("FileExts", String.class);
 		athDt.Columns.Add("CanDelete", String.class);
 
 		FrmAttachmentDBs athDBs = new FrmAttachmentDBs();
 		QueryObject obj_Ath = new QueryObject(athDBs);
-		obj_Ath.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, this.getFK_Node() + "_FrmWorkCheck");
+		obj_Ath.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, "ND"+this.getFK_Node() + "_FrmWorkCheck");
 		obj_Ath.addAnd();
 		obj_Ath.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.getWorkID());
 		obj_Ath.addOrderBy(FrmAttachmentDBAttr.RDT);
@@ -735,10 +753,11 @@ public class WF_WorkOpt extends WebContralBase {
 
 			row.setValue("NodeID", this.getFK_Node());
 			row.setValue("MyPK", athDB.getMyPK());
-			row.setValue("Href", GetFileAction(athDB));
+			row.setValue("FK_FrmAttachment", athDB.getFK_FrmAttachment());
+			row.setValue("FK_MapData", athDB.getFK_MapData());
 			row.setValue("FileName", athDB.getFileName());
 			row.setValue("FileExts", athDB.getFileExts());
-			row.setValue("CanDelete", athDB.getRec() == WebUser.getNo());
+			row.setValue("CanDelete", athDB.getRec().equals(WebUser.getNo()));
 
 			athDt.Rows.add(row);
 		}

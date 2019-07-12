@@ -19,11 +19,11 @@ public class FrmAttachment extends EntityMyPK
 	
 	public final boolean getIsVisable()
 	{
-		return this.GetParaBoolen(FrmAttachmentAttr.IsVisable, true);
+		return this.GetValBooleanByKey(FrmAttachmentAttr.IsVisable);
 	}
 	public final void setIsVisable(boolean value)
 	{
-		this.SetPara(FrmAttachmentAttr.IsVisable, value);
+		this.SetValByKey(FrmAttachmentAttr.IsVisable, value);
 	}
 	/** 
 	 使用上传附件的 - 控件类型

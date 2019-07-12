@@ -450,18 +450,15 @@ public class FrmWorkCheck extends Entity {
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
 		FrmAttachment workCheckAth = new FrmAttachment();
-		boolean isHave = workCheckAth.RetrieveByAttr(FrmAttachmentAttr.MyPK, this.getNodeID() + "_FrmWorkCheck");
+		boolean isHave = workCheckAth.RetrieveByAttr(FrmAttachmentAttr.MyPK, "ND"+this.getNodeID() + "_FrmWorkCheck");
 		// 不包含审核组件
 		if (isHave == false) {
 			workCheckAth = new FrmAttachment();
 			// 如果没有查询到它,就有可能是没有创建.
-			workCheckAth.setMyPK(this.getNodeID() + "_FrmWorkCheck");
-			workCheckAth.setFK_MapData((new Integer(this.getNodeID())).toString());
-			workCheckAth.setNoOfObj(this.getNodeID() + "_FrmWorkCheck");
+			workCheckAth.setMyPK("ND"+this.getNodeID() + "_FrmWorkCheck");
+			workCheckAth.setFK_MapData("ND"+this.getNodeID());
+			workCheckAth.setNoOfObj("FrmWorkCheck");
 			workCheckAth.setExts("*.*");
-
-			// 存储路径.
-			// workCheckAth.setSaveTo("/DataUser/UploadFile/");
 
 			workCheckAth.setIsNote(false); // 不显示note字段.
 			workCheckAth.setIsVisable(false); // 让其在form 上不可见.

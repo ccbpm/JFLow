@@ -193,16 +193,18 @@ public class RestFulController {
         Hashtable myht = new Hashtable();
         myht.put("Message", msg);
         myht.put("IsStopFlow", objs.getIsStopFlow());
-
-
+		Hashtable xy = new Hashtable();
         if (objs.getIsStopFlow()==false)
         {
         	myht.put("VarAcceptersID", objs.getVarAcceptersID()==null?"":objs.getVarAcceptersID());
 	        myht.put("VarAcceptersName", objs.getVarAcceptersName() == null ?"":objs.getVarAcceptersName());
-			myht.put("VarTreadWorkIDs", objs.getVarTreadWorkIDs()== null ?"":objs.getVarTreadWorkIDs());
 	        myht.put("VarToNodeID", objs.getVarToNodeID());
 	        myht.put("VarToNodeName", objs.getVarToNodeName()==null?"":objs.getVarToNodeName());
         }
+        //返回子线程的workid
+		String sql2 = "SELECT workid,fid,fk_node,fk_emp FROM WF_EmpWorks WHERE starter='" + userNo + "' and fid='" + workid + "'";
+		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql2);
+		myht.put("VarToDoList", dt.Rows);
         return BP.Tools.Json.ToJson(myht);
 	}
 	/**

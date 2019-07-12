@@ -68,6 +68,7 @@ public class RestFulController {
 
          DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
          //南京公安局workid、fid互换
+
 		for(int i=0;i<dt.Rows.size();i++){
 			String fid = dt.Rows.get(i).get("FID").toString();
 			if("0".equals(fid)){
@@ -188,15 +189,17 @@ public class RestFulController {
 		BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(flowNo, workid, null, toNodeID, toEmps);
 
         String msg = objs.ToMsgOfText();
-        
+
         Hashtable myht = new Hashtable();
         myht.put("Message", msg);
         myht.put("IsStopFlow", objs.getIsStopFlow());
+
 
         if (objs.getIsStopFlow()==false)
         {
         	myht.put("VarAcceptersID", objs.getVarAcceptersID()==null?"":objs.getVarAcceptersID());
 	        myht.put("VarAcceptersName", objs.getVarAcceptersName() == null ?"":objs.getVarAcceptersName());
+			myht.put("VarTreadWorkIDs", objs.getVarTreadWorkIDs()== null ?"":objs.getVarAcceptersName());
 	        myht.put("VarToNodeID", objs.getVarToNodeID());
 	        myht.put("VarToNodeName", objs.getVarToNodeName()==null?"":objs.getVarToNodeName());
         }
@@ -603,4 +606,5 @@ public class RestFulController {
         GenerWorkFlow gwf = new GenerWorkFlow(workid);
         BP.WF.Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), msg,"审核");
    }
+
 }

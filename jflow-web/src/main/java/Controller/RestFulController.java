@@ -199,7 +199,7 @@ public class RestFulController {
         {
         	myht.put("VarAcceptersID", objs.getVarAcceptersID()==null?"":objs.getVarAcceptersID());
 	        myht.put("VarAcceptersName", objs.getVarAcceptersName() == null ?"":objs.getVarAcceptersName());
-			myht.put("VarTreadWorkIDs", objs.getVarTreadWorkIDs()== null ?"":objs.getVarAcceptersName());
+			myht.put("VarTreadWorkIDs", objs.getVarTreadWorkIDs()== null ?"":objs.getVarTreadWorkIDs());
 	        myht.put("VarToNodeID", objs.getVarToNodeID());
 	        myht.put("VarToNodeName", objs.getVarToNodeName()==null?"":objs.getVarToNodeName());
         }

@@ -313,7 +313,7 @@ public class FindWorker {
 						+ "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr
 						+ "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr
 						+ "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr
-						+ "NDFrom AND WorkID=" + dbStr + "WorkID";
+						+ "NDFrom AND (WorkID=" + dbStr + "WorkID OR Fid="+ dbStr + "WorkID)";
 				ps.Add("ActionType1", ActionType.Skip.getValue());
 				ps.Add("ActionType2", ActionType.Forward.getValue());
 				ps.Add("ActionType3", ActionType.ForwardFL.getValue());
@@ -321,6 +321,7 @@ public class FindWorker {
 				ps.Add("ActionType5", ActionType.Start.getValue());
 
 				ps.Add("NDFrom", Integer.parseInt(nd));
+				ps.Add("WorkID", this.WorkID);
 				ps.Add("WorkID", this.WorkID);
 				dt_ND = DBAccess.RunSQLReturnTable(ps);
 				if (dt_ND.Rows.size() != 0) {
@@ -382,9 +383,9 @@ public class FindWorker {
 					ps.Add("NDFrom", nd.getNodeID());
 
 					if (this.currWn.getHisNode().getHisRunModel() == RunModel.SubThread) {
-						ps.Add("OID", gwf.getPFID());
+						ps.Add("WorkID", gwf.getPFID());
 					} else {
-						ps.Add("OID", gwf.getPWorkID());
+						ps.Add("WorkID", gwf.getPWorkID());
 					}
 
 					dt_PWork = DBAccess.RunSQLReturnTable(ps);

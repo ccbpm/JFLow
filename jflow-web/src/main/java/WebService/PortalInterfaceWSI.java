@@ -23,5 +23,43 @@ public interface PortalInterfaceWSI {
 	 */
 	@WebMethod
 	public boolean SendToWebServices(String sender, String sendToEmpNo, String title,String msgInfo, String OpenUrl, String msgType)throws Exception;
-
+	/**
+	 * 发送到钉钉
+	 * @param sender
+	 * @param sendToEmpNo
+	 * @param title
+	 * @param msgInfo
+	 * @param OpenUrl
+	 * @param msgType
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean SendToDingDing(String sender, String sendToEmpNo, String title,String msgInfo, String OpenUrl, String msgType)throws Exception;
+	
+	/**
+	 * 发送到微信
+	 * @param sender
+	 * @param sendToEmpNo
+	 * @param title
+	 * @param msgInfo
+	 * @param OpenUrl
+	 * @param msgType
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean SendToWeiXin(String sender, String sendToEmpNo, String title,String msgInfo, String OpenUrl, String msgType)throws Exception;
+	
+	/**
+	 * 发送到即时通
+	 * @param sender
+	 * @param sendToEmpNo
+	 * @param title
+	 * @param msgInfo
+	 * @param OpenUrl
+	 * @param msgType
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean SendToCCIM(String sender, String sendToEmpNo, String title,String msgInfo, String OpenUrl, String msgType)throws Exception;
+	
 }

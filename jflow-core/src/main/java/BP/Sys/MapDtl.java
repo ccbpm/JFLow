@@ -220,17 +220,14 @@ public class MapDtl extends EntityNoName
 	}
 	public final String getLinkUrl()
 	{
-		String s = this.GetParaString(MapDtlAttr.LinkUrl);
+		String s = this.GetValStringByKey(MapDtlAttr.LinkUrl);
 		if (StringHelper.isNullOrEmpty(s))
-		{
 			return "http://ccport.org";
-		}
-
-		s = s.replace("*", "@");
 		return s;
 	}
 	public final void setLinkUrl(String value)
 	{
+		this.SetValByKey(MapDtlAttr.LinkUrl, value);
 		String val = value;
 		val = val.replace("@", "*");
 		this.SetPara(MapDtlAttr.LinkUrl, val);
@@ -1056,6 +1053,12 @@ public class MapDtl extends EntityNoName
 
           //MTR 多表头列.
           map.AddTBString(MapDtlAttr.MTR, null, "多表头列", true, false, 0, 3000, 20);
+          
+          //超链接
+          map.AddBoolean(MapDtlAttr.IsEnableLink, false, "是否启用超链接", true, true);
+          map.AddTBString(MapDtlAttr.LinkLabel, "", "超连接标签", true, false, 0, 50, 100);
+          map.AddTBString(MapDtlAttr.LinkTarget, null, "连接目标", true, false, 0, 10, 100);
+          map.AddTBString(MapDtlAttr.LinkUrl, null, "连接URL", true, false, 0, 200, 200, true);
 
           map.AddTBString(MapDtlAttr.FilterSQLExp, null, "过滤SQL表达式", true, false, 0, 200, 20, true);
           map.AddTBString(FrmBtnAttr.GUID, null, "GUID", false, false, 0, 128, 20);

@@ -301,5 +301,14 @@ public interface LocalWSI {
     * 
     */
    public void Node_WriteWorkCheck(long workid, String msg) throws Exception;
+   
+   /**
+    * 获取流程时间轴数据
+    * @param workid
+    * @param fid
+    * @param fk_flow
+    * @throws Exception
+    */
+   public String Flow_TimeBase(long workid,long fid,String fk_flow) throws Exception;
 
 }

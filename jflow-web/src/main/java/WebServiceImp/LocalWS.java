@@ -14,6 +14,7 @@ import BP.WF.ActionType;
 import BP.WF.Flow;
 import BP.WF.GenerWorkFlow;
 import BP.WF.GenerWorkerList;
+import BP.WF.GenerWorkerListAttr;
 import BP.WF.GenerWorkerLists;
 import BP.WF.Node;
 import BP.WF.Nodes;
@@ -24,6 +25,7 @@ import BP.WF.Data.GERpt;
 import BP.WF.Template.CondModel;
 import BP.WF.Template.Directions;
 import BP.WF.Template.FlowExt;
+import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.Selector;
 import BP.WF.XML.Tools;
 import WebService.LocalWSI;
@@ -630,6 +632,43 @@ public class LocalWS implements LocalWSI {
         GenerWorkFlow gwf = new GenerWorkFlow(workid);
           BP.WF.Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), msg,"审核");
     }
+	
+	/**
+    * 获取流程时间轴数据
+    * @param workid
+    * @param fid
+    * @param fk_flow
+    * @throws Exception
+    */
+	@Override
+	public String Flow_TimeBase(long workid, long fid, String fk_flow) throws Exception {
+		DataSet ds = new DataSet();
+
+		//获取track.
+		DataTable dt = BP.WF.Dev2Interface.DB_GenerTrackTable(fk_flow, workid, fid);
+		ds.Tables.add(dt);
+		//获取 WF_GenerWorkFlow
+		GenerWorkFlow gwf = new GenerWorkFlow();
+		gwf.setWorkID( workid) ;
+		gwf.RetrieveFromDBSources();
+		ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+
+		if (gwf.getWFState() != WFState.Complete)
+		{
+			GenerWorkerLists gwls = new GenerWorkerLists();
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid);
+
+			ds.Tables.add(gwls.ToDataTableField("WF_GenerWorkerList"));
+		}
+		
+	    //把节点审核配置信息.
+		FrmWorkCheck fwc = new FrmWorkCheck(gwf.getFK_Node());
+		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
+
+		//返回结果.
+		return BP.Tools.Json.ToJson(ds);
+		
+	}
 
 
 }

@@ -201,8 +201,8 @@ public class RestFulController {
 	        myht.put("VarToNodeID", objs.getVarToNodeID());
 	        myht.put("VarToNodeName", objs.getVarToNodeName()==null?"":objs.getVarToNodeName());
         }
-        //返回子线程的workid
-		String sql2 = "SELECT workid,fid,fk_node,fk_emp FROM WF_EmpWorks WHERE starter='" + userNo + "' and fid='" + workid + "'";
+        //返回待办信息
+		String sql2 = "SELECT workid,fid,fk_node,fk_emp FROM WF_EmpWorks WHERE starter='" + userNo + "' and (workid='" + workid + "' or fid='" + workid + "')";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql2);
 		myht.put("VarToDoList", dt.Rows);
         return BP.Tools.Json.ToJson(myht);

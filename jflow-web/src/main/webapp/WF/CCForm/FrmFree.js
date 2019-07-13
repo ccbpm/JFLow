@@ -64,6 +64,8 @@ function GenerFreeFrm(mapData, frmData) {
     //循环 附件
     for (var i in frmData.Sys_FrmAttachment) {
         var frmAttachment = frmData.Sys_FrmAttachment[i];
+        if (frmAttachment.IsVisable == 0)
+            continue;
         var createdFigure = figure_Template_Attachment(frmAttachment);
         $('#CCForm').append(createdFigure);
     }
@@ -157,7 +159,7 @@ function figure_Template_FigureFlowChart(wf_node, mapData) {
     var src = "./WorkOpt/OneWork/OneWork.htm?CurrTab=Track";
     src += '&FK_Flow=' + pageData.FK_Flow;
     src += '&FK_Node=' + pageData.FK_Node;
-    src += '&WorkID=' + pageData.WorkID;
+    src += '&WorkID=' + pageData.OID;
     src += '&FID=' + pageData.FID;
     var eleHtml = '<div id="divtrack' + wf_node.NodeID + '">' + "<iframe id='track" + wf_node.NodeID + "' style='width:" + w + "px;height=" + h + "px;'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     eleHtml = $(eleHtml);
@@ -304,10 +306,10 @@ function figure_Template_FigureThreadDtl(wf_node, mapData) {
     var paras = '';
 
     paras += "&FID=" + pageData["FID"];
-    paras += "&OID=" + pageData["WorkID"];
+    paras += "&OID=" + pageData.OID;
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
-    paras += '&WorkID=' + pageData.WorkID;
+    paras += '&WorkID=' + pageData.OID;
 
     if (sta == 2) //只读
     {
@@ -345,10 +347,10 @@ function figure_Template_FigureSubFlowDtl(wf_node, mapData) {
     var paras = '';
 
     paras += "&FID=" + pageData["FID"];
-    paras += "&OID=" + pageData["WorkID"];
+    paras += "&OID=" + pageData.OID;
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
-    paras += '&WorkID=' + pageData.WorkID;
+    paras += '&WorkID=' + pageData.OID;
     if (sta == 2)//只读
     {
         src += "&DoType=View";
@@ -673,7 +675,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                 var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
                 //是否签过
                 var sealData = new Entities("BP.Tools.WFSealDatas");
-                sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", GetQueryString("UserNo"));
+                sealData.Retrieve("OID", GetQueryString("OID"), "FK_Node", GetQueryString("FK_Node"), "SealData", GetQueryString("UserNo"));
 
                 if (sealData.length > 0) {
 
@@ -701,7 +703,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                 var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + mapAttr.DefVal + "' type=hidden />";
                 //是否签过
                 var sealData = new Entities("BP.Tools.WFSealDatas");
-                sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", mapAttr.DefVal);
+                sealData.Retrieve("OID", GetQueryString("OID"), "FK_Node", GetQueryString("FK_Node"), "SealData", mapAttr.DefVal);
 
                 if (sealData.length > 0) {
                     eleHtml += "<img src='/DataUser/Siganture/" + mapAttr.DefVal + ".jpg' style='border:0px;'  id='Img" + mapAttr.KeyOfEn + "' />" + html;
@@ -931,7 +933,7 @@ function figure_Template_Btn(frmBtn) {
         });
         var OID = GetQueryString("OID");
         if (OID == undefined || OID == "");
-        OID = GetQueryString("WorkID");
+        OID = GetQueryString("OID");
         var FK_Node = GetQueryString("FK_Node");
         var FK_Flow = GetQueryString("FK_Flow");
         var webUser = new WebUser();
@@ -993,7 +995,7 @@ function figure_Template_HyperLink(frmLin) {
 
     var OID = GetQueryString("OID");
     if (OID == undefined || OID == "");
-    OID = GetQueryString("WorkID");
+    OID = GetQueryString("OID");
     var FK_Node = GetQueryString("FK_Node");
     var FK_Flow = GetQueryString("FK_Flow");
     var webUser = new WebUser();

@@ -311,18 +311,19 @@ public class FindWorker {
 				ps = new Paras();
 				ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.getNo())
 						+ "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr
-						+ "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr
-						+ "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr
+						+ "ActionType2 OR ActionType=" + dbStr + "ActionType3  OR ActionType=" + dbStr
+						+ "ActionType4 OR ActionType=" + dbStr + "ActionType5 OR ActionType=" + dbStr + "ActionType6) AND NDFrom=" + dbStr
 						+ "NDFrom AND (WorkID=" + dbStr + "WorkID OR Fid="+ dbStr + "WorkID)";
 				ps.Add("ActionType1", ActionType.Skip.getValue());
 				ps.Add("ActionType2", ActionType.Forward.getValue());
 				ps.Add("ActionType3", ActionType.ForwardFL.getValue());
 				ps.Add("ActionType4", ActionType.ForwardHL.getValue());
 				ps.Add("ActionType5", ActionType.Start.getValue());
+				ps.Add("ActionType6", ActionType.SubThreadForward.getValue());
 
 				ps.Add("NDFrom", Integer.parseInt(nd));
-				ps.Add("WorkID", this.WorkID);
-				ps.Add("WorkID", this.WorkID);
+				ps.Add("WorkID", this.WorkID);//workid的值
+				ps.Add("WorkID", this.WorkID);//fid的值
 				dt_ND = DBAccess.RunSQLReturnTable(ps);
 				if (dt_ND.Rows.size() != 0) {
 					for (DataRow row : dt_ND.Rows) {

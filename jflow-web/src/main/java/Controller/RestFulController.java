@@ -202,7 +202,9 @@ public class RestFulController {
 	        myht.put("VarToNodeName", objs.getVarToNodeName()==null?"":objs.getVarToNodeName());
         }
         //返回待办信息
-		String sql2 = "SELECT workid,fid,fk_node,fk_emp FROM WF_EmpWorks WHERE starter='" + userNo + "' and (workid='" + workid + "' or fid='" + workid + "')";
+		GenerWorkFlow gwf=new GenerWorkFlow(workid);
+		String	sql2 = "SELECT workid,fid,fk_node,fk_emp FROM WF_EmpWorks WHERE workid='" + workid + "' or fid='" + workid + "' or (workid='" + gwf.getFID() + "' and fid = 0)" ;
+
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql2);
 		myht.put("VarToDoList", dt.Rows);
         return BP.Tools.Json.ToJson(myht);

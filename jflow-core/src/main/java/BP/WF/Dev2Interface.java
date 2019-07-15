@@ -4963,7 +4963,7 @@ public class Dev2Interface {
 			for (DataRow drTrack : dtTrack.Rows) {
 				DataRow dr = dtHistory.NewRow();
 				dr.setValue("FK_Node", drTrack.getValue("NDFrom"));
-				if(Integer.parseInt(drTrack.getValue("ActionType").toString())  == 7){
+				if(Integer.parseInt(drTrack.getValue("ActionType").toString())  == 7 || Integer.parseInt(drTrack.getValue("ActionType").toString())  == 11){
 
 					dr.setValue("RunModel", "4");
 				}else{

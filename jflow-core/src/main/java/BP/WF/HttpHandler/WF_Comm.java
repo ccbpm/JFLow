@@ -2365,8 +2365,9 @@ public class WF_Comm extends WebContralBase {
 	 * 运行SQL返回DataTable
 	 * 
 	 * @return DataTable转换的json
+	 * @throws Exception 
 	 */
-	public final String DBAccess_RunSQLReturnTable() {
+	public final String DBAccess_RunSQLReturnTable() throws Exception {
 		String sql = this.GetRequestVal("SQL");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("/#", "+"); // 为什么？
@@ -2374,6 +2375,11 @@ public class WF_Comm extends WebContralBase {
 		if (null == sql || StringUtils.isEmpty(sql)) {
 			return "err@查询sql为空";
 		}
+	   sql = sql.replace("@WebUser.No", WebUser.getNo());  //替换变量.
+       sql = sql.replace("@WebUser.Name", WebUser.getName());  //替换变量.
+       sql = sql.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+       sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());  //替换变量.
+       sql = sql.replace("@WebUser.DeptParentNo)", WebUser.getDeptParentNo());
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return BP.Tools.Json.ToJson(dt);
 	}

@@ -596,9 +596,9 @@ public class WF_Comm extends WebContralBase {
 			String val1 = this.GetRequestVal("Val1");
 			String val2 = this.GetRequestVal("Val2");
 
-			if (key1.equals("undefined") == false) {
+			if (DataType.IsNullOrEmpty(key1) == false && key1.equals("undefined") == false) {
 				int num = 0;
-				if (key2.equals("undefined") == false) {
+				if (DataType.IsNullOrEmpty(key2) == false && key2.equals("undefined") == false) {
 					num = en.Delete(key1, val1, key2, val2);
 				} else {
 					num = en.Delete(key1, val1);

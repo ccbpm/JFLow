@@ -34,6 +34,11 @@
             var nodeID = GetQueryString("FK_Node");
             var ens = new Entities("BP.WF.Template.SubFlowHands");
             ens.Retrieve("FK_Node", nodeID, "SubFlowType", 0, "Idx");
+
+            var node = new Entity("BP.WF.Node", nodeID);
+            node.SetPara("SubFlowHandNum", ens.length);
+            node.Update();
+
             //console.log(ens);
 
             var html = "";
@@ -43,7 +48,8 @@
                 html += "<td class=Idx>" + (i + 1) + "</td>";
                 html += "<td>" + en.FK_Flow + "</td>";
                 html += "<td>" + en.FlowName + "</td>";
-                //  html += "<td>" + en.YGWorkWayText + "</td>";
+                html += "<td>" + en.SubFlowModelText + "</td>";
+
                 html += "<td><a href=\"javascript:Edit('" + en.MyPK + "');\" >编辑</a></td>";
                 html += "<td><a href=\"javascript:Delete('" + en.MyPK + "');\" >删除</a></td>";
                 html += "<td>";
@@ -99,7 +105,7 @@
 
             var url = "../../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.SubFlowHand&PKVal=" + pk;
 
-            OpenEasyUiDialogExt(url, '编辑', 500, 400, true);
+            OpenEasyUiDialogExt(url, '编辑', 600, 400, true);
             //window.location.href = url;
 
         }
@@ -123,9 +129,13 @@
             <th>
                 流程名称
             </th>
+              <th>
+                模式
+            </th>
             <th>
                 编辑
             </th>
+           
             <th>
                 删除
             </th>

@@ -216,7 +216,7 @@
 
             $("#Msg").html("");
             ResizeWindow();
-            // AfterBindEn_DealMapExt(data);
+//            AfterBindEn_DealMapExt(data);
 
         });
 
@@ -452,7 +452,7 @@
                     var flowNo = GetQueryString("FK_Flow");
                     var nodeID = GetQueryString("FK_Node");
 
-                    var src = "../../WorkOpt/SubFlow.htm?WorkID=0@FK_Flow=" + flowNo + "&FK_Node=" + nodeID;
+                    var src = "../../WorkOpt/SubFlow.htm?WorkID=0&FK_Flow=" + flowNo + "&FK_Node=" + nodeID;
 
                     var compent = new Entity("BP.WF.Template.FrmSubFlow", nodeID);
 
@@ -1041,7 +1041,7 @@
             // var url = '../Comm/En.htm?EnName=BP.WF.Template.FrmSubFlow&PK=' + mypk
             var url = '../../Comm/En.htm?EnName=BP.WF.Template.FrmSubFlow&PKVal=' + mypk + '&tab=父子流程组件';
 
-            OpenEasyUiDialog(url, "eudlgframe", '组件', 800, 500, "icon-property", true, null, null, null, function () {
+            OpenEasyUiDialog(url, "eudlgframe", '组件', 900, 500, "icon-property", true, null, null, null, function () {
                 window.location.href = window.location.href;
             });
         }

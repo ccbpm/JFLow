@@ -75,7 +75,7 @@ function GenerFoolFrm(wn) {
             ath.MyPK = gf.CtrlID;
             if (ath.RetrieveFromDBSources() == 0)
                 continue;
-            if (ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck")
+            if (ath.IsVisable == "0")
                 continue;
             html += "<tr>";
             html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
@@ -376,7 +376,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
                 //复位右侧信息
                 if (ruRowSpan == rRowSpan) {
                     ruRowSpan = 0;
-                    luRowSpan = 0;
                     rRowSpan = 0;
                     IsShowRight = true;
                     if (rowSpan == 1)
@@ -422,7 +421,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
                 //复位左侧信息
                 if (luRowSpan == lRowSpan) {
                     luRowSpan = 0;
-                    ruRowSpan = 0;
                     lRowSpan = 0;
                     IsShowLeft = true;
                     ruColSpan = 0;
@@ -503,7 +501,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             //复位右侧信息
             if (ruRowSpan == rRowSpan) {
                 ruRowSpan = 0;
-                luRowSpan = 0;
                 rRowSpan = 0;
                 IsShowRight = true;
                 if (rowSpan == 1)
@@ -557,7 +554,6 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             //复位左侧信息
             if (luRowSpan == lRowSpan) {
                 luRowSpan = 0;
-                ruRowSpan = 0;
                 lRowSpan = 0;
                 IsShowLeft = true;
                 ruColSpan = 0;
@@ -1509,7 +1505,7 @@ function GetLab(flowData, attr) {
         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {
             lab = " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
         }
-        lab += "<label id='Lab_" + attr.KeyOfEn + "' for='" + forID + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "' >" + attr.Name + "</label>";
+        lab += "<label id='Lab_" + attr.KeyOfEn + "' for='" + forID + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "' style='padding-bottom: 10px;'>" + attr.Name + "</label>";
 
         return lab;
     }

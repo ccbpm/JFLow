@@ -223,14 +223,13 @@ function figure_Template_Siganture(SigantureID, val, type) {
         impParent.removeChild(obj);
     }
     else {
-        var src = '../DataUser/Siganture/' + val + '.png';    //新图片地址
+        var src = '../DataUser/Siganture/' + val + '.JPG';    //新图片地址
         document.getElementById("Img" + SigantureID).src = src;
-        document.getElementById("TB_" + SigantureID).value=val;
     }
     isSigantureChecked = true;
 
     var sealData = new Entities("BP.Tools.WFSealDatas");
-    sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"));
+    sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", GetQueryString("UserNo"));
     if (sealData.length > 0) {
         return;
     }
@@ -1896,6 +1895,20 @@ function InitToolBar() {
         });
     }
 
+    if ($('[name=CH]').length > 0) {
+
+        $('[name=CH]').attr('onclick', '');
+        $('[name=CH]').unbind('click');
+        $('[name=CH]').bind('click', function () { initModal("CH"); $('#returnWorkModal').modal().show(); });
+    }
+
+    if ($('[name=Note]').length > 0) {
+
+        $('[name=Note]').attr('onclick', '');
+        $('[name=Note]').unbind('click');
+        $('[name=Note').bind('click', function () { initModal("Note"); $('#returnWorkModal').modal().show(); });
+    }
+
 
 }
 
@@ -1933,7 +1946,7 @@ function initModal(modalType, toNode) {
     var html = '<div class="modal fade" id="returnWorkModal" data-backdrop="static">' +
        '<div class="modal-dialog">'
            + '<div class="modal-content" style="border-radius:0px;width:900px;height:450px;text-align:left;">'
-              + '<div class="modal-header" style="background: #43a1ed">'
+              + '<div class="modal-header">'
               + '<button type="button" style="color:#0000007a;float: right;background: transparent;border: none;" data-dismiss="modal" aria-hidden="true">&times;</button>'
                   + '<button id="MaxSizeBtn" type="button" style="color:#0000007a;float: right;background: transparent;border: none;" aria-hidden="true" >□</button>'
                    + '<h4 class="modal-title" id="modalHeader">提示信息</h4>'
@@ -2039,6 +2052,13 @@ function initModal(modalType, toNode) {
                 $('#modalHeader').text("历史发起记录&模版");
                 modalIframeSrc = "./WorkOpt/DBTemplate.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random()
                 break;
+            case "CH":
+                $('#modalHeader').text("节点时限");
+                modalIframeSrc = "./WorkOpt/CH.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
+            case "Note":
+                $('#modalHeader').text("备注");
+                modalIframeSrc = "./WorkOpt/Note.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
+            
             default:
                 break;
         }

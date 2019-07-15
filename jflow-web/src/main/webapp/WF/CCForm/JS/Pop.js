@@ -26,6 +26,7 @@ function SelfUrl_Done(mapExt) {
     if (url.indexOf('?') == -1)
         url = url + "?PKVal=" + pkval + "&UserNo=" + webUser.No;
     var title = mapExt.GetPara("Title");
+    
         OpenBootStrapModal(url, "eudlgframe", title, mapExt.H, mapExt.W,
          "icon-edit", true, function () {
              var iframe = document.getElementById("eudlgframe");
@@ -36,9 +37,9 @@ function SelfUrl_Done(mapExt) {
              }
 
          }, null, function () {
-            
+
          });
-      
+    
 }
 //***************************************树干叶子模式*****************************************************************
 function PopBranchesAndLeaf(mapExt, val) {

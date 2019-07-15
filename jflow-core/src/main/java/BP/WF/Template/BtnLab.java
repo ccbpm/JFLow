@@ -867,6 +867,24 @@ public class BtnLab extends Entity
 	{
 		return this.GetValStringByKey(BtnAttr.PrintHtmlLab);
 	}
+	
+	/** 
+	 备注是否可用
+	 
+	*/
+	public final boolean getNoteEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.NoteEnable);
+	}
+	/** 
+	 备注 标签
+	 
+	*/
+	public final String getNoteLab()
+	{
+		return this.GetValStringByKey(BtnAttr.NoteLab);
+	}
+	
 	/** 
 	 重写基类方法
 	 
@@ -1007,7 +1025,9 @@ public class BtnLab extends Entity
         map.AddTBString(BtnAttr.PrintZipLab, "打包下载", "打包下载zip按钮标签", true, false, 0, 50, 10);
         map.AddBoolean(BtnAttr.PrintZipEnable, false, "是否启用", true, true);
 
-
+        //备注 流程不流转，设置备注信息提醒已处理人员当前流程运行情况
+        map.AddTBString(BtnAttr.NoteLab, "备注", "备注标签", true, false, 0, 50, 10);
+        map.AddBoolean(BtnAttr.NoteEnable, false, "是否启用", true, true);
 
 			///#region 公文按钮
 		map.AddTBString(BtnAttr.OfficeOpenLab, "打开本地", "打开本地标签", true, false, 0, 50, 10);

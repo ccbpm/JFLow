@@ -1175,6 +1175,12 @@ public class WF_MyFlow extends WebContralBase {
 				toolbar += "<input type=button name='CH'  value='" + btnLab.getCHLab()
 						+ "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
 			}
+			
+			 if (btnLab.getNoteEnable() == true)
+             {
+                 /* 备注设置 */
+                 toolbar += "<input type=button name='Note'  value='" + btnLab.getNoteLab() + "' enable=true  />";
+             }
 
 			if (btnLab.getPRIEnable() == true) {
 				/* 优先级设置 */

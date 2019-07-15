@@ -2957,4 +2957,52 @@ public class WF_WorkOpt extends WebContralBase {
 
        return BP.Tools.Json.ToJson(ds);
    }
+   
+   /**
+    * 节点备注初始化
+    * @return
+    */
+   public String Note_Init()
+   {
+       Paras ps = new Paras();
+       ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+       ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
+       ps.Add("WorkID", this.getWorkID());
+
+       //转化成json
+       return BP.Tools.Json.ToJson(BP.DA.DBAccess.RunSQLReturnTable(ps));
+   }
+
+   /// <summary>
+   /// 保存备注.
+   /// </summary>
+   /// <returns></returns>
+   public String Note_Save() throws Exception
+   {
+       String msg = this.GetRequestVal("Msg");
+       //增加track
+       Node nd = new Node(this.getFK_Node());
+       BP.WF.Glo.AddToTrack(ActionType.FlowBBS, this.getFK_Flow(), this.getWorkID(), this.getFID(), nd.getNodeID(), nd.getName(),  WebUser.getNo(), WebUser.getName(),nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), msg, null);
+      
+       //发送消息
+       String empsStrs = DBAccess.RunSQLReturnStringIsNull("SELECT Emps FROM WF_GenerWorkFlow WHERE WorkID=" + this.getWorkID(), "");
+       String[] emps = empsStrs.split("@");
+       //标题
+       GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+       String title = "流程名称为"+gwf.getFlowName()+"标题为"+gwf.getTitle()+"在节点增加备注说明"+msg;
+      
+       for(String emp : emps)
+       {
+           if (DataType.IsNullOrEmpty(emp))
+               continue;
+           //获得当前人的邮件.
+           BP.WF.Port.WFEmp empEn = new BP.WF.Port.WFEmp(emp);
+
+           BP.WF.Dev2Interface.Port_SendMsg(empEn.getNo(), title,msg, null,"NoteMessage",this.getFK_Flow(),this.getFK_Node(),this.getWorkID(),this.getFID());
+
+       }
+       return "保存成功";
+   }
+
+   //节点备注的设置
 }

@@ -302,4 +302,13 @@ public class BtnAttr extends BP.Sys.ToolbarExcelAttr
     /// 是否启用-列表
     /// </summary>
     public static final String ListEnable = "ListEnable";
+    
+    /// <summary>
+    /// 备注
+    /// </summary>
+    public static final String NoteLab = "NoteLab";
+    /// <summary>
+    //备注是否可用
+    /// </summary>
+    public static final String NoteEnable = "NoteEnable";
 }

@@ -9056,68 +9056,48 @@ public class Dev2Interface {
 	 */
 	public static void Node_AddNextStepAccepters(long workID, int toNodeID, String emps, boolean del_Selected)
 			throws Exception {
-		if (emps.contains(";") == true) {
-			// 类似与这样的格式. "00000054,严冬梅;00000649,张磊;
-			String[] mystrs = emps.split("[;]", -1);
-			String result = "";
-			for (String str : mystrs) {
-				if (str.contains(",") == true) {
-					result += str.substring(0, str.indexOf(',') + 1);
-				} else {
-					result += str;
-				}
-			}
-			emps = result;
-		}
+		
+		
+		 if (DataType.IsNullOrEmpty(emps) == true)
+             return;
 
-		SelectAccper sa = new SelectAccper();
-		// 删除历史选择
-		if (del_Selected == true) {
-			sa.Delete(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, workID);
-		}
+         SelectAccper sa = new SelectAccper();
+         //删除历史选择
+         if (del_Selected == true)
+         {
+             sa.Delete(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, workID);
+         }
 
-		emps = emps.replace(" ", "");
-		emps = emps.replace(";", ",");
-		emps = emps.replace("@", ",");
-		String[] strs = emps.split("[,]", -1);
+         //检查是否是单选？
+         BP.WF.Template.Selector st = new Selector(toNodeID);
+         if (st.getIsSimpleSelector() == true)
+         {
+             sa.Delete(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, workID);
+         }
 
-		boolean isPinYin = DBAccess.IsExitsTableCol("Port_Emp", "PinYin");
-		String sql = "";
-		for (String emp : strs) {
-			if (DotNetToJavaStringHelper.isNullOrEmpty(emp)) {
-				continue;
-			}
 
-			if (isPinYin == true) {
-				sql = "SELECT No,Name FROM Port_Emp WHERE No='" + emp + "' OR NAME ='" + emp + "'  OR PinYin LIKE '%,"
-						+ emp.toLowerCase() + ",%'";
-			} else {
-				sql = "SELECT No,Name FROM Port_Emp WHERE No='" + emp + "' OR NAME ='" + emp + "'";
-			}
+         String[] empArr = emps.split(",");
+         for(String empNo : empArr)
+         {
+             if (DataType.IsNullOrEmpty(empNo) == true)
+                 continue;
+             Emp emp = new Emp();
+             emp.setNo(empNo);
+             if (emp.RetrieveFromDBSources() == 0)
+                 return;
 
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size() > 12 || dt.Rows.size() == 0) {
-				continue;
-			}
-			int i = 0;
-			for (DataRow dr : dt.Rows) {
-				String empNo = dr.getValue(0).toString();
-				String empName = dr.getValue(1).toString();
-				sa.setDeptName("");
-				sa.setIdx(i);
-				sa.ResetPK();
-				sa.setFK_Emp(empNo);
-				sa.setEmpName(empName);
-				sa.setIdx(i);
-				sa.setFK_Node(toNodeID);
-				sa.setWorkID(workID);
-				sa.ResetPK();
-				if (sa.getIsExits() == false) {
-					sa.Insert();
-				}
-				i++;
-			}
-		}
+             
+             sa.setFK_Emp(emp.getNo());
+             sa.setEmpName(emp.getName());
+             sa.setDeptName(emp.getFK_DeptText());
+             sa.setFK_Node(toNodeID);
+             sa.setWorkID(workID);
+             sa.ResetPK();
+             if (sa.getIsExits()== false)
+             {
+                 sa.Insert();
+             }
+         }
 	}
 
 	/**

@@ -464,7 +464,7 @@ public class CCFormParse
 			}
 			else if (type.equals("TextFontSize"))
 			{
-					lab.setFontSize(StringHelper.isNullOrEmpty(val) ? 14 : Integer.parseInt(val.toString()));
+					lab.setFontSize(StringHelper.isNullOrEmpty(val) ? 14 : Integer.parseInt(val.toString().replace("px", "")));
 					fontStyle.append(String.format("font-size:%1$s;", lab.getFontSize()));
 			}
 			else if (type.equals("FontWeight"))

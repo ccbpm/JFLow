@@ -662,10 +662,8 @@ function Conver_CCForm_V1ToV2() {
         var frmLab = flow_Data.Sys_FrmLab[i];
 
         var createdFigure = figure_Template_Label(frmLab);
-        //move it into position
-        //createdFigure.transform(Matrix.translationMatrix(frmLab.X - createdFigure.rotationCoords[0].x, frmLab.Y - createdFigure.rotationCoords[0].y))
+     
         createdFigure.style.lineWidth = defaultLineWidth;
-        //add to STACK
         STACK.figureAdd(createdFigure);
     }
 
@@ -913,7 +911,7 @@ function figure_Template_Label(frmLab) {
     f.properties.push(new BuilderProperty('基本属性', 'group', BuilderProperty.TYPE_GROUP_LABEL));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('文本', 'primitives.0.str', BuilderProperty.TYPE_SINGLE_TEXT, frmLab.Text));
-    f.properties.push(new BuilderProperty('字体大小', 'primitives.0.size', BuilderProperty.TYPE_TEXT_FONT_SIZE, frmLab.FontSize));
+    f.properties.push(new BuilderProperty('字体大小', 'primitives.0.size', BuilderProperty.TYPE_TEXT_FONT_SIZE, frmLab.FontSize+"px"));
     f.properties.push(new BuilderProperty('字体', 'primitives.0.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY, frmLab.FontName));
     f.properties.push(new BuilderProperty('对齐', 'primitives.0.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('下划线', 'primitives.0.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));

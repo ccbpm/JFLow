@@ -21,6 +21,8 @@ import BP.WF.Port.WFEmp;
 import BP.WF.Port.WFEmpAttr;
 import BP.WF.Port.WFEmps;
 import BP.WF.Template.*;
+import BP.WF.Template.FrmWorkCheckSta;
+import BP.WF.Template.FrmWorkChecks;
 import BP.WF.Data.*;
 import BP.WF.Entity.FrmWorkCheck;
 import BP.Sys.*;
@@ -11476,5 +11478,686 @@ public class Dev2Interface {
 		pas.Add("NDTo", FK_Node);
 		return BP.DA.DBAccess.RunSQLReturnTable(pas);
 	}
+	
+	/**
+	 * 审核组件查询
+	 * @param fk_flow
+	 * @param fk_node
+	 * @param workId
+	 * @param fid
+	 * @param isReadonly
+	 * @return
+	 * @throws Exception
+	 */
+	public static DataSet DB_WorkCheck(String fk_flow, int fk_node, long workId, long fid,boolean isReadonly) throws Exception{
+		DataSet ds = new DataSet();
+		if (WebUser.getNo() == null)
+			throw new Exception( "err@登录信息丢失,请重新登录.");
 
+		// #region 定义变量.
+		BP.WF.Template.FrmWorkCheck wcDesc = new BP.WF.Template.FrmWorkCheck(fk_node);
+		FrmWorkCheck frmWorkCheck = null;
+		FrmAttachmentDBs athDBs = null;
+		Nodes nds = new Nodes(fk_flow);
+		FrmWorkChecks fwcs = new FrmWorkChecks();
+		Node nd = null;
+		WorkCheck wc = null;
+		Tracks tks = null;
+		Track tkDoc = null;
+		String nodes = ""; // 可以审核的节点.
+		Boolean isCanDo = false;
+		Boolean isExitTb_doc = true;
+		DataRow row = null;
+
+		
+		DataTable nodeEmps = new DataTable();
+		BP.WF.Template.FrmWorkCheck fwc = null;
+		DataTable dt = null;
+		int idx = 0;
+		int noneEmpIdx = 0;
+
+		fwcs.Retrieve(NodeAttr.FK_Flow, fk_flow, NodeAttr.Step);
+		ds.Tables.add(wcDesc.ToDataTableField("wcDesc")); // 当前的节点审核组件定义，放入ds.
+
+		DataTable tkDt = new DataTable("Tracks");
+		tkDt.Columns.Add("NodeID", Integer.class);
+		tkDt.Columns.Add("NodeName", String.class);
+		tkDt.Columns.Add("Msg", String.class);
+		tkDt.Columns.Add("EmpFrom", String.class);
+		tkDt.Columns.Add("EmpFromT", String.class);
+		tkDt.Columns.Add("RDT", String.class);
+		tkDt.Columns.Add("IsDoc", Boolean.class);
+		tkDt.Columns.Add("ParentNode", Integer.class);
+		tkDt.Columns.Add("T_NodeIndex", Integer.class); // 节点排列顺序，用于后面的排序
+		tkDt.Columns.Add("T_CheckIndex", Integer.class); // 审核人显示顺序，用于后面的排序
+		tkDt.Columns.Add("ActionType", Integer.class);
+		
+		// 流程附件.
+		DataTable athDt = new DataTable("Aths");
+		athDt.Columns.Add("NodeID", Integer.class);
+		athDt.Columns.Add("MyPK", String.class);
+		athDt.Columns.Add("FK_FrmAttachment", String.class);
+		athDt.Columns.Add("FK_MapData", String.class);
+		athDt.Columns.Add("FileName", String.class);
+		athDt.Columns.Add("FileExts", String.class);
+		athDt.Columns.Add("CanDelete", Boolean.class);
+		 //当前节点的流程数据
+        FrmAttachmentDBs frmathdbs = new FrmAttachmentDBs();
+        frmathdbs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, "ND" + fk_node + "_FrmWorkCheck", FrmAttachmentDBAttr.RefPKVal, workId, FrmAttachmentDBAttr.RDT);
+        for(FrmAttachmentDB athDB : frmathdbs.ToJavaList())
+        {	
+        	 row = athDt.NewRow();
+        	 row.setValue("NodeID",fk_node);
+			 row.setValue("MyPK",athDB.getMyPK());
+			 row.setValue("FK_FrmAttachment",athDB.getFK_FrmAttachment());
+			 row.setValue("FK_MapData",athDB.getFK_MapData());
+			 row.setValue("FileName",athDB.getFileName());
+			 row.setValue("FileExts",athDB.getFileExts());
+			 row.setValue("CanDelete",  athDB.getRec().equals(WebUser.getNo()));
+			 athDt.Rows.add(row);
+        }
+		ds.Tables.add(athDt);
+
+		if (fid != 0)
+			wc = new WorkCheck(fk_flow, fk_node, fid, 0);
+		else
+			wc = new WorkCheck(fk_flow, fk_node, workId, fid);
+
+		// 是否只读？
+		if (isReadonly == true)
+			isCanDo = false;
+		else
+			isCanDo = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workId, WebUser.getNo());
+
+		// 如果是查看状态, 为了屏蔽掉正在审批的节点, 在查看审批意见中.
+		Boolean isShowCurrNodeInfo = true;
+		GenerWorkFlow gwf = new GenerWorkFlow();
+		if (workId != 0) {
+			gwf.setWorkID(workId);
+			gwf.Retrieve();
+		}
+
+		if (isCanDo == false && isReadonly == true) {
+			if (gwf.getWFState() == WFState.Runing && gwf.getFK_Node() == fk_node)
+				isShowCurrNodeInfo = false;
+		}
+
+		/*
+		 * 获得当前节点已经审核通过的人员. 比如：多人处理规则中的已经审核同意的人员，会签人员,组合成成一个字符串。 格式为:
+		 * ,zhangsan,lisi, 用于处理在审核列表中屏蔽临时的保存的审核信息.
+		 */
+		String checkerPassed = ",";
+		if (gwf.getWFState() != WFState.Complete) {
+			String sql = "SELECT FK_Emp FROM WF_Generworkerlist where workid=" + workId
+					+ " AND IsPass=1 AND FK_Node=" + fk_node;
+			DataTable checkerPassedDt = DBAccess.RunSQLReturnTable(sql);
+			for (DataRow dr : checkerPassedDt.Rows) {
+				checkerPassed += dr.getValue("FK_Emp") + ",";
+			}
+		}
+
+		// #endregion 定义变量.
+
+		// #region 判断是否显示 - 历史审核信息显示
+		Boolean isDoc = false;
+		if (wcDesc.getFWCListEnable() == true) {
+			tks = wc.getHisWorkChecks();
+
+			// 已走过节点
+			int empIdx = 0;
+			int lastNodeId = 0;
+			for (BP.WF.Track tk : tks.ToJavaList()) {
+				if (tk.getHisActionType() == ActionType.FlowBBS)
+					continue;
+
+				if (lastNodeId == 0)
+					lastNodeId = tk.getNDFrom();
+
+				if (lastNodeId != tk.getNDFrom()) {
+					idx++;
+					lastNodeId = tk.getNDFrom();
+				}
+
+				// wanning 这个地方没有翻译.
+				tk.getRow().put("T_NodeIndex", idx);
+
+				nd = (Node) nds.GetEntityByKey(tk.getNDFrom());
+				if (nd == null)
+                    continue;
+				
+				fwc = (BP.WF.Template.FrmWorkCheck) fwcs.GetEntityByKey(tk.getNDFrom());
+				// 求出主键
+				long pkVal = workId;
+				if (nd.getHisRunModel() == RunModel.SubThread)
+					pkVal = fid;
+
+				// 排序，结合人员表Idx进行排序
+				if (fwc.getFWCOrderModel() == FWCOrderModel.SqlAccepter) {
+					
+					 tk.getRow().put("T_CheckIndex", DBAccess.RunSQLReturnValInt(
+					 String.format("SELECT Idx FROM Port_Emp WHERE No='{0}'",
+					 tk.getEmpFrom()), 0));
+					 
+					noneEmpIdx++;
+				} else {
+					tk.getRow().put("T_CheckIndex",noneEmpIdx++) ;
+				}
+
+				if (tk.getHisActionType() == ActionType.WorkCheck
+						|| tk.getHisActionType() == ActionType.StartChildenFlow) {
+					if (nodes.contains(tk.getNDFrom() + ",") == false)
+						nodes += tk.getNDFrom() + ",";
+				} else if(tk.getHisActionType() == ActionType.Return 
+						|| tk.getHisActionType() == ActionType.ReturnAndBackWay) {
+					if (fwc.getFWCIsShowReturnMsg() == true)
+                    {
+                        if (nodes.contains(tk.getNDFrom() + ",") == false)
+                            nodes += tk.getNDFrom() + ",";
+                    }
+					continue;
+				}
+				continue;
+				
+
+			}
+
+			for (Track tk : tks.ToJavaList()) {
+				if (nodes.contains(tk.getNDFrom() + ",") == false)
+					continue;
+
+				if (tk.getHisActionType() != ActionType.WorkCheck
+						&& tk.getHisActionType() != ActionType.StartChildenFlow 
+						&& tk.getHisActionType()!=ActionType.Return
+						&& tk.getHisActionType()!=ActionType.ReturnAndBackWay)
+					continue;
+
+				// 如果是当前的节点. 当前人员可以处理, 已经审批通过的人员.
+				if (tk.getNDFrom() == fk_node && isCanDo == true && tk.getEmpFrom() != WebUser.getNo()
+						&& checkerPassed.contains("," + tk.getEmpFrom() + ",") == false )
+					continue;
+
+				if (tk.getNDFrom() == fk_node && gwf.getHuiQianTaskSta() != HuiQianTaskSta.None) {
+					// 判断会签, 去掉正在审批的节点.
+					if (tk.getNDFrom() == fk_node && isShowCurrNodeInfo == false)
+						continue;
+				}
+
+				// 如果是多人处理，就让其显示已经审核过的意见.
+				if (tk.getNDFrom() == fk_node && checkerPassed.indexOf("," + tk.getEmpFrom() + ",") < 0 && gwf.getWFState() != WFState.Complete) {
+					continue;
+					// 如果当前人，没有审核完成,就不显示.
+					// 判断会签, 去掉正在审批的节点.
+					// if (tk.NDFrom == this.FK_Node)
+					// continue;
+				}
+
+				row = tkDt.NewRow();
+				row.setValue("NodeID", tk.getNDFrom());
+
+
+
+				row.setValue("NodeName", tk.getNDFromT());
+				isDoc = false;
+				// zhoupeng 增加了判断，在会签的时候最后会签人发送前不能填写意见.
+				if (tk.getNDFrom() == fk_node && tk.getEmpFrom() == BP.Web.WebUser.getNo() && isCanDo
+						&& isDoc == false)
+					isDoc = true;
+
+				row.setValue("IsDoc", isDoc);
+				row.setValue("ParentNode", 0);
+
+				row.setValue("RDT", tk.getRDT());
+
+				row.setValue("T_NodeIndex", 0);
+				row.setValue("T_CheckIndex", 0);
+
+				if (isReadonly == false && tk.getEmpFrom() == WebUser.getNo() && fk_node == tk.getNDFrom()
+						&& isExitTb_doc) {
+					Boolean isLast = true;
+					for (Track tk1 : tks.ToJavaList()) {
+						if (tk1.getHisActionType() == tk.getHisActionType() && tk1.getNDFrom() == tk.getNDFrom()
+								&& tk1.getRDT().compareTo(tk.getRDT()) > 0) {
+							isLast = false;
+							break;
+						}
+					}
+
+					if (isLast && isDoc == false && gwf.getWFState() != WFState.Complete) {
+						isExitTb_doc = false;
+						row.setValue("IsDoc", true);
+						isDoc = true;
+
+						row.setValue("Msg", GetCheckInfo(fk_flow, workId,fk_node, wcDesc.getFWCDefInfo()));
+
+						tkDoc = tk;
+
+					} else {
+						row.setValue("Msg", tk.getMsgHtml());
+					}
+				} else {
+					row.setValue("Msg", tk.getMsgHtml());
+				}
+
+				row.setValue("EmpFrom", tk.getEmpFrom());
+				row.setValue("EmpFromT", tk.getEmpFromT());
+				row.setValue("ActionType",tk.getHisActionType().getValue());
+
+				tkDt.Rows.add(row);
+
+				// #region //审核组件附件数据
+				athDBs = new FrmAttachmentDBs();
+				QueryObject obj_Ath = new QueryObject(athDBs);
+				obj_Ath.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment,"ND"+ tk.getNDFrom() + "_FrmWorkCheck");
+				obj_Ath.addAnd();
+				obj_Ath.AddWhere(FrmAttachmentDBAttr.RefPKVal, workId);
+				obj_Ath.addOrderBy(FrmAttachmentDBAttr.RDT);
+				obj_Ath.DoQuery();
+
+				for (FrmAttachmentDB athDB : athDBs.ToJavaList()) {
+					row = athDt.NewRow();
+					
+					 row.setValue("NodeID",tk.getNDFrom());
+					 row.setValue("MyPK",athDB.getMyPK());
+					 row.setValue("FK_FrmAttachment",athDB.getFK_FrmAttachment());
+					 row.setValue("FK_MapData",athDB.getFK_MapData());
+					 row.setValue("FileName",athDB.getFileName());
+					 row.setValue("FileExts",athDB.getFileExts());
+					 row.setValue("CanDelete", athDB.getFK_MapData() ==
+					 String.valueOf(fk_node) && athDB.getRec().equals(WebUser.getNo()) &&
+					 isReadonly == false);
+					 athDt.Rows.add(row);
+					 
+
+				}
+				// #region //子流程的审核组件数据
+				if (tk.getFID() != 0 && tk.getHisActionType() == ActionType.StartChildenFlow
+						&& tkDt.Select("ParentNode=" + tk.getNDFrom()).length == 0) {
+					String[] paras = tk.getTag().split("@");
+					String[] p1 = paras[1].split("=");
+					String subFlowNo = p1[1]; // 子流程编号
+
+					String[] p2 = paras[2].split("=");
+					String subWorkId = p2[1]; // 子流程ID.
+					int biaoji = 0;
+
+					WorkCheck subwc = new WorkCheck(subFlowNo, Integer.parseInt(subFlowNo + "01"), Long.parseLong(subWorkId),
+							0);
+
+					Tracks subtks = subwc.getHisWorkChecks();
+					// 取出来子流程的所有的节点。
+					Nodes subNds = new Nodes(subFlowNo);
+					for (Node item : subNds.ToJavaList()) // 主要按顺序显示
+					{
+						for (Track mysubtk : subtks.ToJavaList()) {
+							if (item.getNodeID() != mysubtk.getNDFrom())
+								continue;
+
+							/* 输出该子流程的审核信息，应该考虑子流程的子流程信息, 就不考虑那样复杂了. */
+							if (mysubtk.getHisActionType() == ActionType.WorkCheck) {
+								// 发起多个子流程时，发起人只显示一次
+								if (mysubtk.getNDFrom() == Integer.parseInt(subFlowNo + "01") && biaoji == 1)
+									continue;
+
+								row = tkDt.NewRow();
+								row.setValue("NodeID", mysubtk.getNDFrom());
+								row.setValue("NodeName", String.format("(子流程){0}", mysubtk.getNDFromT()));
+								row.setValue("Msg", mysubtk.getMsgHtml());
+								row.setValue("EmpFrom", mysubtk.getEmpFrom());
+								row.setValue("EmpFromT", mysubtk.getEmpFromT());
+								row.setValue("RDT", mysubtk.getRDT());
+								row.setValue("IsDoc", false);
+								row.setValue("ParentNode", tk.getNDFrom());
+								row.setValue("T_NodeIndex", idx++);
+								row.setValue("T_CheckIndex", noneEmpIdx++);
+								row.setValue("ActionType",mysubtk.getHisActionType().getValue());
+								tkDt.Rows.add(row);
+
+								if (mysubtk.getNDFrom() == Integer.parseInt(subFlowNo + "01")) {
+									biaoji = 1;
+								}
+							}
+						}
+					}
+				}
+
+			}
+
+		}
+		// #endregion 判断是否显示 - 历史审核信息显示
+
+		// #region 审核意见默认填写
+
+		// 首先判断当前是否有此意见? 如果是退回的该信息已经存在了.
+		Boolean isHaveMyInfo = false;
+		for (DataRow dr : tkDt.Rows) {
+			String fk_node1 = dr.getValue("NodeID").toString();
+			String empFrom = dr.getValue("EmpFrom").toString();
+			if (Integer.parseInt(fk_node1) == fk_node && empFrom == WebUser.getNo())
+				isHaveMyInfo = true;
+		}
+
+		// 增加默认的审核意见.
+		if (isExitTb_doc && wcDesc.getHisFrmWorkCheckSta() == FrmWorkCheckSta.Enable && isCanDo && isReadonly == false
+				&& isHaveMyInfo == false) {
+			DataRow[] rows = null;
+			nd = (Node) nds.GetEntityByKey(fk_node);
+			if (wcDesc.getFWCOrderModel() == FWCOrderModel.SqlAccepter) {
+				rows = tkDt.Select("NodeID=" + fk_node + " AND Msg='' AND EmpFrom='" + WebUser.getNo() + "'");
+
+				if (rows.length == 0)
+					rows = tkDt.Select("NodeID=" + fk_node + " AND EmpFrom='" + WebUser.getNo() + "'");
+
+				if (rows.length > 0) {
+					row = rows[0];
+					row.setValue("IsDoc", true);
+
+					String mymsg = Dev2Interface.GetCheckInfo(fk_flow, workId, fk_node);
+					if (mymsg == null)
+						mymsg = "";
+
+					row.setValue("Msg", mymsg);
+					if (mymsg == "")
+						row.setValue("RDT", "");
+
+					// 增加默认审核意见
+					if (DataType.IsNullOrEmpty(mymsg) && wcDesc.getFWCIsFullInfo())
+						row.setValue("Msg", wcDesc.getFWCDefInfo());
+				} else {
+					row = tkDt.NewRow();
+					row.setValue("NodeID", fk_node);
+					row.setValue("NodeName", nd.getFWCNodeName());
+					row.setValue("IsDoc", true);
+					row.setValue("ParentNode", "0");
+					row.setValue("RDT", "");
+
+					row.setValue("Msg",
+							Dev2Interface.GetCheckInfo(fk_flow, workId, fk_node));
+
+					row.setValue("EmpFrom", WebUser.getNo());
+					row.setValue("EmpFromT", WebUser.getName());
+					row.setValue("T_NodeIndex", ++idx);
+					row.setValue("T_CheckIndex", ++noneEmpIdx);
+					row.setValue("ActionType",ActionType.Forward.getValue());
+					tkDt.Rows.add(row);
+				}
+			} else {
+				row = tkDt.NewRow();
+				row.setValue("NodeID", fk_node);
+				row.setValue("NodeName", nd.getFWCNodeName());
+				row.setValue("IsDoc", true);
+				row.setValue("ParentNode", 0);
+				row.setValue("RDT", "");
+				row.setValue("Msg", Dev2Interface.GetCheckInfo(fk_flow, workId, fk_node));
+				row.setValue("EmpFrom", WebUser.getNo());
+				row.setValue("EmpFromT", WebUser.getName());
+				row.setValue("T_NodeIndex", ++idx);
+				row.setValue("T_CheckIndex", ++noneEmpIdx);
+				row.setValue("ActionType",ActionType.Forward.getValue());
+				tkDt.Rows.add(row);
+			}
+		}
+		 // 显示有审核组件，但还未审核的节点.  包括退回后的.
+         if (tks == null)
+             tks = wc.getHisWorkChecks();
+
+         for (BP.WF.Template.FrmWorkCheck item : fwcs.ToJavaList())
+         {
+             if (item.getFWCIsShowTruck() == false)
+                 continue;  //不需要显示历史记录.
+
+             //是否已审核.
+             Boolean isHave = false;
+             for (BP.WF.Track tk : tks.ToJavaList())
+             {
+                 //翻译.
+                 if (tk.getNDFrom() == fk_node && tk.getHisActionType() == ActionType.WorkCheck)
+                 {
+                     isHave = true; //已经有了
+                     break;
+                 }
+             }
+
+             if (isHave == true)
+                 continue;
+
+             row = tkDt.NewRow();
+             
+             row.setValue("NodeID", item.getNodeID());
+             Node mynd = (Node)nds.GetEntityByKey(item.getNodeID());
+             row.setValue("NodeName", mynd.getFWCNodeName());
+             row.setValue("IsDoc", false);
+             row.setValue("ParentNode", 0);
+             row.setValue("RDT", "");
+             row.setValue("Msg", "&nbsp;");
+             row.setValue("EmpFrom", "");
+             row.setValue("EmpFromT", "");
+             row.setValue("T_NodeIndex", ++idx);
+             row.setValue("T_CheckIndex", ++noneEmpIdx);
+             tkDt.Rows.add(row);
+         }
+
+         ds.Tables.add(tkDt);
+		return ds;
+	}
+	
+	/**
+	 * 根据EnsName获取查询数据
+	 * @param ensName
+	 * @return
+	 * @throws Exception
+	 */
+	public static DataSet DB_CommSearch(String ensName) throws Exception{
+		// 获得.
+		Entities ens = ClassFactory.GetEns(ensName);
+		Entity en = ens.getGetNewEntity();
+		Map map = en.getEnMapInTime();
+
+		// 属性集合.
+		MapAttrs attrs = new MapAttrs();
+
+		MapData md = new MapData();
+		md.setNo(ensName);
+		int count = md.RetrieveFromDBSources();
+		if (count == 0)
+			attrs = map.getAttrs().ToMapAttrs();
+		else
+			attrs.Retrieve(MapAttrAttr.FK_MapData, ensName, MapAttrAttr.Idx);
+
+		// 根据设置的显示列显示字段
+		DataRow row = null;
+		DataTable dtAttrs = new DataTable("Attrs");
+		dtAttrs.Columns.Add("KeyOfEn", String.class);
+		dtAttrs.Columns.Add("Name", String.class);
+		dtAttrs.Columns.Add("Width", int.class);
+		dtAttrs.Columns.Add("UIContralType", int.class);
+		for (MapAttr attr : attrs.ToJavaList()) {
+			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
+			if (searchVisable.equals("0"))
+				continue;
+			if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || attr.getUIVisible() == false)
+				continue;
+			row = dtAttrs.NewRow();
+			row.setValue("KeyOfEn", attr.getKeyOfEn());
+			row.setValue("Name", attr.getName());
+			row.setValue("Width", attr.getUIWidthInt());
+			row.setValue("UIContralType", attr.getUIContralType().getValue());
+
+			dtAttrs.Rows.add(row);
+		}
+
+		DataSet ds = new DataSet();
+		ds.Tables.add(dtAttrs); // 把描述加入.
+
+		// 定义Sys_MapData.
+
+		md.setName(map.getEnDesc());
+
+		// 附件类型.
+		md.SetPara("BPEntityAthType", String.valueOf(map.HisBPEntityAthType.ordinal()));
+
+		// 获取实体类的主键
+		md.SetPara("PK", en.getPK());
+
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+
+		// 取出来查询条件.
+		BP.Sys.UserRegedit ur = new UserRegedit();
+		ur.setMyPK(WebUser.getNo() + "_" + ensName + "_SearchAttrs");
+		ur.RetrieveFromDBSources();
+
+		// 获得关键字.
+		AtPara ap = new AtPara(ur.getVals());
+
+		// 关键字.
+		String keyWord = ur.getSearchKey();
+		QueryObject qo = new QueryObject(ens);
+		qo.AddHD();
+		
+		/// #region 普通属性
+		String opkey = ""; // 操作符号。
+		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch()) {
+			if (attr.getIsHidden()) {
+				qo.addAnd();
+				qo.addLeftBracket();
+				qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
+				qo.addRightBracket();
+				continue;
+			}
+
+			if (attr.getSymbolEnable() == true) {
+				opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
+				if (opkey.equals("all")) {
+					continue;
+				}
+			} else {
+				opkey = attr.getDefaultSymbol();
+			}
+
+			qo.addAnd();
+			qo.addLeftBracket();
+
+			if (attr.getDefaultVal().length() >= 8) {
+				String date = "2005-09-01";
+				try {
+					// 就可能是年月日。
+					String y = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Year");
+					String m = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Month");
+					String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
+					date = y + "-" + m + "-" + d;
+
+					if (opkey.equals("<=")) {
+						Date dBefore = new Date();
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(new Date());
+						calendar.add(Calendar.DAY_OF_MONTH, 1);
+						dBefore = calendar.getTime(); // 得到后一天的时间
+
+						SimpleDateFormat sdf = new SimpleDateFormat(DataType.getSysDataFormat());
+						date = sdf.format(dBefore);
+					}
+				} catch (java.lang.Exception e) {
+				}
+
+				qo.AddWhere(attr.getRefAttrKey(), opkey, date);
+			} else {
+				qo.AddWhere(attr.getRefAttrKey(), opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
+			}
+			qo.addRightBracket();
+		}
+		
+		for (String str : ap.getHisHT().keySet()) {
+			Object val = ap.GetValStrByKey(str);
+			if (val.equals("all")) {
+				continue;
+			}
+			qo.addAnd();
+			qo.addLeftBracket();
+			qo.AddWhere(str, ap.GetValStrByKey(str));
+			qo.addRightBracket();
+		}
+
+		// 获得行数.
+		ur.SetPara("RecCount", qo.GetCount());
+		ur.Save();
+
+		// 获取配置信息
+		EnCfg encfg = new EnCfg(ensName);
+		// 增加排序
+		if (encfg != null) {
+			String orderBy = encfg.GetParaString("OrderBy");
+			boolean isDesc = encfg.GetParaBoolen("IsDeSc");
+
+			if (DataType.IsNullOrEmpty(orderBy) == false) {
+				if (isDesc)
+					qo.addOrderByDesc(encfg.GetParaString("OrderBy"));
+				else
+					qo.addOrderBy(encfg.GetParaString("OrderBy"));
+			}
+
+		}
+
+	
+			qo.DoQuery();
+		/// #endregion 获得查询数据.
+
+		DataTable mydt = ens.ToDataTableField();
+		mydt.TableName = "DT";
+
+		// region 获得方法的集合
+		DataTable dtM = new DataTable("dtM");
+		dtM.Columns.Add("No");
+		dtM.Columns.Add("Title");
+		dtM.Columns.Add("Tip");
+		dtM.Columns.Add("Visable");
+
+		dtM.Columns.Add("Url");
+		dtM.Columns.Add("Target");
+		dtM.Columns.Add("Warning");
+		dtM.Columns.Add("RefMethodType");
+		dtM.Columns.Add("GroupName");
+		dtM.Columns.Add("W");
+		dtM.Columns.Add("H");
+		dtM.Columns.Add("Icon");
+		dtM.Columns.Add("IsCanBatch");
+		dtM.Columns.Add("RefAttrKey");
+		dtM.Columns.Add("ClassMethodName");
+
+		RefMethods rms = map.getHisRefMethods();
+		for (RefMethod item : rms.ToJavaList()) {
+			if (item.IsForEns == false)
+				continue;
+
+			if (item.Visable == false)
+				continue;
+
+			String myurl = "";
+
+			myurl = "RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName="
+					+ en.getGetNewEntities().toString() + "&PKVal=";
+
+			DataRow dr = dtM.NewRow();
+
+			dr.put("No", item.Index);
+			dr.put("Title", item.Title);
+			dr.put("Tip", item.ToolTip);
+			dr.put("Visable", item.Visable);
+			dr.put("Warning", item.Warning);
+			dr.put("RefMethodType", item.refMethodType.ordinal());
+			dr.put("RefAttrKey", item.RefAttrKey);
+			dr.put("URL", myurl);
+			dr.put("W", item.Width);
+			dr.put("H", item.Height);
+			dr.put("Icon", item.Icon);
+			dr.put("IsCanBatch", item.IsCanBatch);
+			dr.put("GroupName", item.GroupName);
+			dr.put("ClassMethodName", item.ClassMethodName);
+
+			dtM.Rows.add(dr); // 增加到rows.
+		}
+		ds.Tables.add(dtM); // 把数据加入里面.
+		ds.Tables.add(mydt); // 把数据加入里面.
+
+		return ds;
+
+	}
 }

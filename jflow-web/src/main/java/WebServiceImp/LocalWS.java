@@ -1,15 +1,37 @@
 package WebServiceImp;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Hashtable;
 
 import javax.jws.WebService;
 
+import BP.DA.AtPara;
+import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.En.Attr;
+import BP.En.AttrOfSearch;
+import BP.En.ClassFactory;
+import BP.En.Entities;
 import BP.En.Entity;
+import BP.En.FieldType;
+import BP.En.Map;
+import BP.En.QueryObject;
+import BP.En.RefMethod;
+import BP.En.RefMethods;
 import BP.GPM.Dev2Interface;
+import BP.Sys.DTSearchWay;
+import BP.Sys.EnCfg;
+import BP.Sys.MapAttr;
+import BP.Sys.MapAttrAttr;
+import BP.Sys.MapAttrs;
+import BP.Sys.MapData;
+import BP.Sys.SystemConfig;
+import BP.Sys.UserRegedit;
 import BP.WF.ActionType;
 import BP.WF.Flow;
 import BP.WF.GenerWorkFlow;
@@ -28,6 +50,7 @@ import BP.WF.Template.FlowExt;
 import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.Selector;
 import BP.WF.XML.Tools;
+import BP.Web.WebUser;
 import WebService.LocalWSI;
 
 public class LocalWS implements LocalWSI {
@@ -634,6 +657,22 @@ public class LocalWS implements LocalWSI {
     }
 	
 	/**
+    * 获取审核信息
+    * @param FK_Flow 流程编号
+    * @param FK_Node 节点编号
+    * @param workId 流程ID
+    * @param fid 干流程ID（针对子线程）
+    * * @param isReadonly是否只读
+    * @return
+    * @throws Exception
+    */
+	@Override
+	public String DB_WorkCheck(String FK_Flow, int FK_Node, long workId, long fid,boolean isReadonly) throws Exception {
+		DataSet ds =BP.WF.Dev2Interface.DB_WorkCheck(FK_Flow,FK_Node,workId,fid,isReadonly);
+		return BP.Tools.Json.ToJson(ds);
+	}
+
+	/**
     * 获取流程时间轴数据
     * @param workid
     * @param fid
@@ -668,6 +707,17 @@ public class LocalWS implements LocalWSI {
 		//返回结果.
 		return BP.Tools.Json.ToJson(ds);
 		
+	}
+	
+	/**
+	 * 我参与的
+	 */
+	@Override
+	public String DB_MyJoinFlows(String userNo) throws Exception {
+		BP.WF.Dev2Interface.Port_Login(userNo);
+		
+		DataSet ds = BP.WF.Dev2Interface.DB_CommSearch("BP.WF.Data.MyJoinFlows");
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 

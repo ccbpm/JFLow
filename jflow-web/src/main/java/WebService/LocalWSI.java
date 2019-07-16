@@ -302,6 +302,20 @@ public interface LocalWSI {
     */
    public void Node_WriteWorkCheck(long workid, String msg) throws Exception;
    
+   
+   /**
+    * 获取审核信息
+    * @param FK_Flow 流程编号
+    * @param FK_Node 节点编号
+    * @param workId 流程ID
+    * @param fid 干流程ID（针对子线程）
+    * @param isReadonly是否只读
+    * @return
+    * @throws Exception
+    */
+   public String DB_WorkCheck(String FK_Flow, int FK_Node,long workId,long fid,boolean isReadonly) throws Exception;
+
+   
    /**
     * 获取流程时间轴数据
     * @param workid
@@ -310,5 +324,13 @@ public interface LocalWSI {
     * @throws Exception
     */
    public String Flow_TimeBase(long workid,long fid,String fk_flow) throws Exception;
+   
+   /**
+    * 我参与的
+    * @param userNo
+    * @return
+    * @throws Exception
+    */
+   public String DB_MyJoinFlows(String userNo) throws Exception;
 
 }

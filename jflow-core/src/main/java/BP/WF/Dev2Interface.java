@@ -4998,19 +4998,13 @@ public class Dev2Interface {
 			qo.addRightBracket();
 			qo.addAnd();
 			qo.AddWhere(GenerWorkerListAttr.IsPass, "!=", -2);
-			
+
 			qo.addOrderBy(GenerWorkerListAttr.RDT,GenerWorkerListAttr.FK_Node);
 			qo.DoQuery();
 			for (GenerWorkerList gwl : gwls.ToJavaList()) {
 				DataRow dr = dtHistory.NewRow();
-				boolean flag = true;//将重复的节点去掉
-				for(int k=0;k<dtHistory.Rows.size();k++){
-					if(gwl.getFK_NodeText().equals(dtHistory.Rows.get(k).get("NodeName"))){
-						flag = false;
-						break;
-					}
-				}
-				if(flag){
+
+
 					dr.setValue("FK_Node", gwl.getFK_Node());
 
 					if(gwl.getFID()!=0){
@@ -5031,7 +5025,7 @@ public class Dev2Interface {
 					dtHistory.Rows.add(dr);
 				}
 
-			}
+
 		}
 		ds.Tables.add(dtHistory);
 		// #endregion 运动轨迹

@@ -936,7 +936,7 @@ public class CCFormAPI
 			if (shape.contains("TextBox") == true || shape.contains("DropDownList") == true)
 			{
 				BP.Sys.CCFormParse.SaveMapAttr(fk_mapdata, ctrlID, shape, control, properties, attrPKs);
-				attrPKs = attrPKs.replace(ctrlID + "@", "@");
+				attrPKs = attrPKs.replace("@"+ctrlID + "@", "@");
 				continue;
 			}
 
@@ -954,7 +954,7 @@ public class CCFormAPI
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveDtl(fk_mapdata, ctrlID, x, y, height, width);
-				dtlPKs = dtlPKs.replace(ctrlID + "@", "@");
+				dtlPKs = dtlPKs.replace("@"+ctrlID + "@", "@");
 				continue;
 			}
 
@@ -966,14 +966,14 @@ public class CCFormAPI
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveAthMulti(fk_mapdata, ctrlID, x, y, height, width);
-				athMultis = athMultis.replace(ctrlID + "@", "@");
+				athMultis = athMultis.replace("@"+ctrlID + "@", "@");
 				continue;
 			}
 			if (shape.equals("AthImg"))
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveAthImg(fk_mapdata, ctrlID, x, y, height, width);
-				athImgs = athImgs.replace(ctrlID + "@", "@");
+				athImgs = athImgs.replace("@"+ctrlID + "@", "@");
 				continue;
 			}
 
@@ -981,7 +981,7 @@ public class CCFormAPI
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveFrmEle(fk_mapdata, shape, ctrlID, x, y, height, width);
-				eleIDs = eleIDs.replace(ctrlID + "@", "@");
+				eleIDs = eleIDs.replace("@"+ctrlID + "@", "@");
 				continue;
 			}
 
@@ -997,7 +997,7 @@ public class CCFormAPI
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveMapFrame(fk_mapdata, shape, ctrlID, x, y, height, width);
-				frameIDs = frameIDs.replace(ctrlID + "@", "@");
+				frameIDs = frameIDs.replace("@"+ctrlID + "@", "@");
 				continue;
 			}
 
@@ -1020,7 +1020,7 @@ public class CCFormAPI
 					continue;
 				}
 
-				attrPKs = attrPKs.replace(str + "@", "@");
+				attrPKs = attrPKs.replace("@"+str + "@", "@");
 				continue;
 			}
 

@@ -286,16 +286,28 @@ public class FindWorker {
 				}
 
 				ps = new Paras();
-				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE  (WorkID=" + dbStr + "OID OR WorkID="+dbStr+"FID)  AND FK_Node=" + dbStr
+				ps.SQL = "SELECT DISTINCT(FK_Emp) FROM WF_GenerWorkerList WHERE (WorkID=" + dbStr + "WorkID OR FID="+dbStr+"FID)  AND FK_Node=" + dbStr
 						+ "FK_Node AND IsEnable=1 ";
 				ps.Add("FK_Node", Integer.parseInt(nd));
 				
-				if (this.currWn.getHisNode().getHisRunModel() == RunModel.SubThread)
-					ps.Add("FID", this.currWn.getHisWork().getFID());
-				else
-                   ps.Add("FID", this.WorkID); 
-				
-				ps.Add("OID", this.WorkID);
+				Node specNode = new Node(nd);
+				if(this.currWn.getHisNode().getHisRunModel()== RunModel.SubThread){
+					if(specNode.getHisRunModel() == RunModel.SubThread){
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", this.currWn.getHisWork().getFID());
+					}else{
+						ps.Add("WorkID", this.currWn.getHisWork().getFID());
+						ps.Add("FID", 0);
+					}
+				}else{
+					if(specNode.getHisRunModel() == RunModel.SubThread){
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", this.WorkID);
+					}else{
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", 0);
+					}
+				}
 				
 				DataTable dt_ND = DBAccess.RunSQLReturnTable(ps);
 				// 添加到结果表
@@ -311,12 +323,12 @@ public class FindWorker {
 
 				// 就要到轨迹表里查,因为有可能是跳过的节点.
 				ps = new Paras();
-				ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.getNo())
+				ps.SQL = "SELECT DISTINCT(" + TrackAttr.EmpFrom + ") FROM ND" + Integer.parseInt(fl.getNo())
 						+ "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr
 						+ "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr
 						+ "ActionType4 OR ActionType=" + dbStr + "ActionType5 OR ActionType=" + dbStr 
 						+ "ActionType6) AND NDFrom=" + dbStr
-						+ "NDFrom AND (WorkID=" + dbStr + "WorkID OR WorkID="+dbStr+"FID)";
+						+ "NDFrom AND  (WorkID=" + dbStr + "WorkID OR FID="+dbStr+"FID)";
 				ps.Add("ActionType1", ActionType.Skip.getValue());
 				ps.Add("ActionType2", ActionType.Forward.getValue());
 				ps.Add("ActionType3", ActionType.ForwardFL.getValue());
@@ -325,12 +337,25 @@ public class FindWorker {
 				ps.Add("ActionType6", ActionType.Start.getValue());
 
 				ps.Add("NDFrom", Integer.parseInt(nd));
-				 if (this.currWn.getHisNode().getHisRunModel() == RunModel.SubThread)
-                     ps.Add("FID", this.currWn.getHisWork().getFID());
-                 else
-                     ps.Add("FID", this.WorkID);
-				 
-                 ps.Add("WorkID", this.WorkID);
+
+				if(this.currWn.getHisNode().getHisRunModel()== RunModel.SubThread){
+					if(specNode.getHisRunModel() == RunModel.SubThread){
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", this.currWn.getHisWork().getFID());
+					}else{
+						ps.Add("WorkID", this.currWn.getHisWork().getFID());
+						ps.Add("FID", 0);
+					}
+				}else{
+					if(specNode.getHisRunModel() == RunModel.SubThread){
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", this.WorkID);
+					}else{
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", 0);
+					}
+				}
+				
 				dt_ND = DBAccess.RunSQLReturnTable(ps);
 				if (dt_ND.Rows.size() != 0) {
 					for (DataRow row : dt_ND.Rows) {
@@ -342,13 +367,26 @@ public class FindWorker {
 				}
 				 //从Selector中查找
                 ps = new Paras();
-                ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND (WorkID=" + dbStr + "WorkID OR WorkID="+dbStr+"FID)";
+                ps.SQL = "SELECT DISTINCT(FK_Emp) FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND (WorkID=" + dbStr + "WorkID OR FID="+dbStr+"FID)";
                 ps.Add("FK_Node", Integer.parseInt(nd));
-                ps.Add("WorkID", this.WorkID);
-                if (this.currWn.getHisNode().getHisRunModel() == RunModel.SubThread)
-                    ps.Add("FID", this.currWn.getHisWork().getFID());
-                else
-                    ps.Add("FID", this.WorkID);
+                
+                if(this.currWn.getHisNode().getHisRunModel()== RunModel.SubThread){
+					if(specNode.getHisRunModel() == RunModel.SubThread){
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", this.currWn.getHisWork().getFID());
+					}else{
+						ps.Add("WorkID", this.currWn.getHisWork().getFID());
+						ps.Add("FID", 0);
+					}
+				}else{
+					if(specNode.getHisRunModel() == RunModel.SubThread){
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", this.WorkID);
+					}else{
+						ps.Add("WorkID", this.WorkID);
+						ps.Add("FID", 0);
+					}
+				}
                
 
                 dt_ND = DBAccess.RunSQLReturnTable(ps);

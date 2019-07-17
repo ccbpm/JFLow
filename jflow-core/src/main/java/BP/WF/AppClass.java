@@ -27,6 +27,8 @@ public class AppClass {
 		DataTable dirs = ds.GetTableByName("WF_Direction"); // 连接线.
 		DataTable tracks = ds.GetTableByName("Track"); // 历史记录.
 
+
+
 		// 状态,
 		int wfState = Integer.parseInt(gwf.Rows.get(0).getValue("WFState").toString());
 		int currNode = Integer.parseInt(gwf.Rows.get(0).getValue("FK_Node").toString());
@@ -110,9 +112,49 @@ public class AppClass {
 		
 		
 		DataSet myds=new DataSet();
+
 		myds.Tables.add(gwf);
-		myds.Tables.add(tracks);
-		
+
+		//去掉重复的》
+		DataTable dtNew = new DataTable();
+		dtNew.TableName = "Track";
+		dtNew.Columns.Add("FK_Node"); // 节点ID.
+		dtNew.Columns.Add("RunModel"); // 运行类型.
+		dtNew.Columns.Add("NodeName"); // 名称.
+		dtNew.Columns.Add("EmpNo"); // 人员编号.
+		dtNew.Columns.Add("EmpName"); // 名称
+		dtNew.Columns.Add("DeptName"); // 部门名称
+		dtNew.Columns.Add("RDT"); // 记录日期.
+		dtNew.Columns.Add("SDT"); // 应完成日期(可以不用.)
+		dtNew.Columns.Add("IsPass"); // 应完成日期(可以不用.)
+
+		String strs = "";
+		for (DataRow dr : tracks.Rows)
+		{
+			String nodeID = dr.getValue("FK_Node").toString();
+			String isPass = dr.getValue("IsPass").toString();
+			if (strs.contains("," + nodeID) == true )
+				continue;
+
+			strs += "," + nodeID + ",";
+
+			DataRow drNew = dtNew.NewRow();
+ 			drNew.setValue("FK_Node",dr.getValue("FK_Node"));
+			drNew.setValue("NodeName",dr.getValue("NodeName"));
+			drNew.setValue("RunModel",dr.getValue("RunModel"));
+			drNew.setValue("EmpNo",dr.getValue("EmpNo"));
+			drNew.setValue("EmpName",dr.getValue("EmpName"));
+			drNew.setValue("DeptName",dr.getValue("DeptName"));
+			drNew.setValue("RDT",dr.getValue("RDT"));
+			drNew.setValue("SDT",dr.getValue("SDT"));
+			drNew.setValue("IsPass",dr.getValue("IsPass"));
+
+			dtNew.Rows.add(drNew);
+		}
+
+		myds.Tables.add(dtNew);
+
+
 		return BP.Tools.Json.ToJson( myds);
 
 	}

@@ -316,7 +316,7 @@ public class FindWorker {
 						+ "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr
 						+ "ActionType4 OR ActionType=" + dbStr + "ActionType5 OR ActionType=" + dbStr 
 						+ "ActionType6) AND NDFrom=" + dbStr
-						+ "NDFrom AND AND (WorkID=" + dbStr + "WorkID OR WorkID="+dbStr+"FID)";
+						+ "NDFrom AND (WorkID=" + dbStr + "WorkID OR WorkID="+dbStr+"FID)";
 				ps.Add("ActionType1", ActionType.Skip.getValue());
 				ps.Add("ActionType2", ActionType.Forward.getValue());
 				ps.Add("ActionType3", ActionType.ForwardFL.getValue());

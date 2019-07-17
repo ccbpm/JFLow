@@ -1478,20 +1478,26 @@ public class PubClass {
 		return s;
 	}
 
-	public static void DownloadFile(String filepath, String tempName) throws IOException {
+	public static void DownloadFile(String filepath, String tempName) throws Exception {
 
 		// 设置文件MIME类型
 		HttpServletResponse response = ContextHolderUtils.getResponse();
 		HttpServletRequest request = ContextHolderUtils.getRequest();
 
 		tempName = toUtf8String(request, tempName);
+		
+		 File myfile=new File(filepath);
+		 if (myfile.exists()==false)
+			 throw new Exception("err@文件名不存在:"+filepath );
+		 
+		
 		response.reset();
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment;filename=" + tempName);
 		response.setHeader("Connection", "close");
 		// 读取目标文件，通过response将目标文件写到客户端
 		// 读取文件
-		InputStream in = new FileInputStream(new File(filepath));
+		InputStream in = new FileInputStream(myfile);
 		OutputStream out = response.getOutputStream();
 		// 写文件
 		int b;

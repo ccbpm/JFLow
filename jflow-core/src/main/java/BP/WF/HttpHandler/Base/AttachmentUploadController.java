@@ -146,6 +146,7 @@ public class AttachmentUploadController extends BaseController {
 		FrmAttachmentDB downDB = new FrmAttachmentDB();
 
 		try {
+			
 			downDB.setMyPK(this.getDelPKVal() == null ? this.getMyPK() : this.getDelPKVal());
 			downDB.Retrieve();
 			FrmAttachment dbAtt = new FrmAttachment();
@@ -156,15 +157,22 @@ public class AttachmentUploadController extends BaseController {
             boolean isEncrypt = downDB.GetParaBoolen("IsEncrypt");
             
 			if (dbAtt.getAthSaveWay() == AthSaveWay.WebServer) {
+				
 				String filepath = downDB.getFileFullName();
+				
 				 if (fileEncrypt == true && isEncrypt == true)
                  {
 					 filepath = downDB.getFileFullName() + ".tmp";
                      if (new File(filepath).exists() == true)
                     	 new File(filepath).delete();
+                     
                      AesEncodeUtil.decryptFile(downDB.getFileFullName(), filepath);
                     
                  }
+				 
+				
+				   
+				 
 				PubClass.DownloadFile(filepath, downDB.getFileName());
 
 			}

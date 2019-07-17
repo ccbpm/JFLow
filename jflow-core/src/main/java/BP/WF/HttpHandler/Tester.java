@@ -54,9 +54,7 @@ public class Tester extends WebContralBase{
     /// <returns></returns>
     public String Tester_Init() throws Exception
     {
-    	
-    	return BP.WF.AppClass.JobSchedule(232);
-    	  
+    	return BP.WF.AppClass.JobSchedule(233);
     }
 
 	

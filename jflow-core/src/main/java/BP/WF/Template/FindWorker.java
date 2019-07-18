@@ -27,12 +27,13 @@ import BP.Web.WebUser;
  * 
  */
 public class FindWorker {
+	
 	/// #region 变量
 	public WorkNode town = null;
 	public WorkNode currWn = null;
 	public Flow fl = null;
 	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-	public  static String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+
 	public Paras ps = null;
 	private String JumpToEmp = null;
 	private int JumpToNode = 0;
@@ -951,7 +952,7 @@ public class FindWorker {
 				return mydtTemp;
 
 			// 如果父亲级没有，就找父级的平级.
-			mydtTemp = this.Func_GenerWorkerList_DiGui_ParentNo(myDept.getParentNo(), empNo);
+			mydtTemp = this.Func_GenerWorkerList_DiGui_ParentNo(myDept.getParentNo(), empNo,town.getHisNode() );
 			
 			/*BP.Port.Depts myDepts = new BP.Port.Depts();
 			myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.getParentNo());
@@ -1091,21 +1092,23 @@ public class FindWorker {
 	}
 	
 	
-	public static final DataTable Func_GenerWorkerList_DiGui_ParentNo(String parentDeptNo, String empNo) throws Exception {
+	public static final DataTable Func_GenerWorkerList_DiGui_ParentNo(String parentDeptNo, String empNo, 
+			Node toNode) throws Exception {
 		
 		String sql;
+		 String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		
 	//	String dbStr=Systemconfig
 
 		Paras ps = new Paras();
 
-		if (this.town.getHisNode().getIsExpSender() == true) {
+		if (toNode.getIsExpSender() == true) {
 
 			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B,Port_Dept C WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
 					+ dbStr + "FK_Node AND A.FK_Dept=C.No AND C.ParentNo=" + dbStr + "ParentNo AND A.FK_Emp!=" + dbStr + "FK_Emp";
 
 			ps.SQL = sql;
-			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.Add("FK_Node", toNode.getNodeID());
 			ps.Add("ParentNo", parentDeptNo);
 			ps.Add("FK_Emp", empNo);
 
@@ -1115,7 +1118,7 @@ public class FindWorker {
 					+ dbStr + "FK_Node AND A.FK_Dept=C.NO AND  C.ParentNo=" + dbStr + "ParentNo ";
 
 			ps.SQL = sql;
-			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.Add("FK_Node", toNode.getNodeID());
 			ps.Add("ParentNo", parentDeptNo);
 
 		}

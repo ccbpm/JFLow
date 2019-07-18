@@ -747,10 +747,21 @@ public class WF extends WebContralBase {
 	 * @return
 	 * @throws Exception
 	 */
-	public String Load_Author() throws Exception {
-		DataTable dt = BP.DA.DBAccess
-				.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + BP.Web.WebUser.getNo() + "'");
-		return BP.Tools.FormatToJson.ToJson(dt);
+	public String AuthorList_Init() throws Exception {
+		 Paras ps = new Paras();
+         ps.SQL = "SELECT No,Name,AuthorDate FROM WF_Emp WHERE AUTHOR=" + SystemConfig.getAppCenterDBVarStr() + "AUTHOR";
+         ps.Add("AUTHOR", BP.Web.WebUser.getNo());
+         DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+
+         if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+         {
+             dt.Columns.get("NO").ColumnName = "No";
+             dt.Columns.get("NAME").ColumnName = "Name";
+             dt.Columns.get("AUTHORDATE").ColumnName = "AuthorDate";
+         }
+         return BP.Tools.Json.ToJson(dt);
+         
+	
 	}
 
 	/**
@@ -770,6 +781,19 @@ public class WF extends WebContralBase {
 		else
 			return "err@没有授权";
 	}
+	
+	/**
+	 * 执行授权登录
+	 * @return
+	 * @throws Exception
+	 */
+    public String AuthorList_LoginAs() throws Exception
+    {
+        BP.Port.Emp emp1 = new BP.Port.Emp(this.getNo());
+        BP.Web.WebUser.SignInOfGener(emp1, "CH", false, false, BP.Web.WebUser.getNo(), BP.Web.WebUser.getName());
+
+        return "授权登录成功！";
+    }
 
 	/**
 	 * 获得发起列表 yqh add

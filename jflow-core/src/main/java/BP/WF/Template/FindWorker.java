@@ -1090,7 +1090,7 @@ public class FindWorker {
 	}
 	
 	
-	public final DataTable Func_GenerWorkerList_DiGui_ParentNo(String parentDeptNo, String empNo) throws Exception {
+	public static final DataTable Func_GenerWorkerList_DiGui_ParentNo(String parentDeptNo, String empNo) throws Exception {
 		String sql;
 
 		Paras ps = new Paras();

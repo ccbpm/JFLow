@@ -1315,7 +1315,7 @@ public class WorkFlowBuessRole
 			}
 		}
 
-			///#endregion 按指定的节点人员，做为下一步骤的流程接受人。
+	    ///#endregion 按指定的节点人员，做为下一步骤的流程接受人。
 
 
 			///#region 最后判断 - 按照岗位来执行。
@@ -1425,19 +1425,11 @@ public class WorkFlowBuessRole
 				dt = DBAccess.RunSQLReturnTable(ps);
 				if (dt.Rows.size() == 0)
 				{
-					// 如果项目组里没有工作人员就提交到公共部门里去找。 
-
-					if (Glo.getOSModel() == OSModel.OneMore)
-					{
+					// 如果项目组里没有工作人员就提交到公共部门里去找。  
+					 
 						sql = "SELECT No FROM Port_Emp WHERE NO IN " + "(SELECT  FK_Emp  FROM " + BP.WF.Glo.getEmpStation() + " WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr + "FK_Node))" + " AND  NO IN " + "(SELECT FK_Emp FROM Port_DeptEmp WHERE FK_Dept =" + dbStr + "FK_Dept)";
 						sql += " ORDER BY No ";
-					}
-					else
-					{
-						sql = "SELECT No FROM Port_Emp WHERE NO IN " + "(SELECT  FK_Emp  FROM " + BP.WF.Glo.getEmpStation() + " WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr + "FK_Node))" + " AND  NO IN " + "(SELECT No FK_Emp FROM Port_Emp WHERE FK_Dept =" + dbStr + "FK_Dept)";
-						sql += " ORDER BY No ";
-					}
-
+				 
 
 					ps = new Paras();
 					ps.SQL = sql;
@@ -1496,26 +1488,9 @@ public class WorkFlowBuessRole
 			if (mydtTemp == null)
 			{
 				//如果父亲级没有，就找父级的平级. 
-				BP.Port.Depts myDepts = new BP.Port.Depts();
-				myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.getParentNo());
-				for (BP.Port.Dept item : myDepts.ToJavaList())
-				{
-					if (nowDeptID.equals(item.getNo()))
-					{
-						continue;
-					}
-					mydtTemp = RequetNextNodeWorkers_DiGui(item.getNo(), empNo, toNode);
-					if (mydtTemp == null)
-					{
-						continue;
-					}
-					else
-					{
-						return mydtTemp;
-					}
-				}
-
-				continue; //如果平级也没有，就continue.
+				return FindWorker.Func_GenerWorkerList_DiGui_ParentNo(myDept.getParentNo(), empNo);
+				  
+				//continue; //如果平级也没有，就continue.
 			}
 			else
 			{

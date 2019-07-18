@@ -950,19 +950,21 @@ public class FindWorker {
 				return mydtTemp;
 
 			// 如果父亲级没有，就找父级的平级.
-			BP.Port.Depts myDepts = new BP.Port.Depts();
+			mydtTemp = this.Func_GenerWorkerList_DiGui_ParentNo(myDept.getParentNo(), empNo);
+			
+			/*BP.Port.Depts myDepts = new BP.Port.Depts();
 			myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.getParentNo());
 			for (BP.Port.Dept item : myDepts.ToJavaList()) {
 				if (nowDeptID.equals(item.getNo())) {
 					continue;
 				}
-				mydtTemp = this.Func_GenerWorkerList_DiGui(item.getNo(), empNo);
+				
 				if (mydtTemp == null) {
 					continue;
 				} else {
 					return mydtTemp;
 				}
-			}
+			}*/
 
 			continue; // 如果平级也没有，就continue.
 
@@ -1086,6 +1088,39 @@ public class FindWorker {
 			return dt;
 		}
 	}
+	
+	
+	public final DataTable Func_GenerWorkerList_DiGui_ParentNo(String parentDeptNo, String empNo) throws Exception {
+		String sql;
+
+		Paras ps = new Paras();
+
+		if (this.town.getHisNode().getIsExpSender() == true) {
+
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B,Port_Dept C WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
+					+ dbStr + "FK_Node AND A.FK_Dept=C.No AND C.ParentNo=" + dbStr + "ParentNo AND A.FK_Emp!=" + dbStr + "FK_Emp";
+
+			ps.SQL = sql;
+			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.Add("ParentNo", parentDeptNo);
+			ps.Add("FK_Emp", empNo);
+
+		} else {
+
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B,Port_Dept C WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
+					+ dbStr + "FK_Node AND A.FK_Dept=C.NO AND  C.ParentNo=" + dbStr + "ParentNo ";
+
+			ps.SQL = sql;
+			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.Add("ParentNo", parentDeptNo);
+
+		}
+
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+		
+		return dt;
+	}
+
 
 	public final DataTable Func_GenerWorkerList_DiGui_SameLevel(String deptNo, String empNo) throws Exception {
 		String sql;

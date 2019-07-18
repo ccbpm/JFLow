@@ -32,6 +32,7 @@ public class FindWorker {
 	public WorkNode currWn = null;
 	public Flow fl = null;
 	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+	public  static String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 	public Paras ps = null;
 	private String JumpToEmp = null;
 	private int JumpToNode = 0;
@@ -1091,7 +1092,10 @@ public class FindWorker {
 	
 	
 	public static final DataTable Func_GenerWorkerList_DiGui_ParentNo(String parentDeptNo, String empNo) throws Exception {
+		
 		String sql;
+		
+	//	String dbStr=Systemconfig
 
 		Paras ps = new Paras();
 

@@ -112,7 +112,17 @@ public class CCFlowAPI {
 			String sendWhen = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.FrmLoadBefore, nd, wk, null);
 
 			// 获得表单模版.
+			
 			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), nd.getName());
+			
+			if(DataType.IsNullOrEmpty(nd.getNodeFrmID()) == false 
+					&& (nd.getHisFormType() == NodeFormType.FoolForm ||nd.getHisFormType() == NodeFormType.FreeForm)){
+				String name = new MapData("ND"+fk_node).getName();
+				if(DataType.IsNullOrEmpty(name) == true)
+					name = nd.getName();
+				myds.GetTableByName("Sys_MapData").Rows.get(0).setValue("Name",name );
+			}
+					
 			
 			 //获取表单的mapAttr
             //求出集合.

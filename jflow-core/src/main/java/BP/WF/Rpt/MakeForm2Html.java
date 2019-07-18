@@ -850,9 +850,11 @@ public class MakeForm2Html
         for (GroupField gf : gfs.ToJavaList())
         {
             //输出标题.
-            sb.append(" <tr>");
-            sb.append("  <th colspan="+tableCol+" ><b>" + gf.getLab() + "</b></th>");
-            sb.append(" </tr>");
+        	if(gf.getCtrlType().equals("Ath")==false){
+	            sb.append(" <tr>");
+	            sb.append("  <th colspan="+tableCol+" ><b>" + gf.getLab() + "</b></th>");
+	            sb.append(" </tr>");
+        	}
 
             //#region 输出字段.
             if (gf.getCtrlID().equals("") && gf.getCtrlType().equals(""))
@@ -1138,7 +1140,10 @@ public class MakeForm2Html
                     if (colSpan == tableCol) {
                         isDropTR = true;
                         html += "<tr>";
-                        html += " <td ColSpan="+tableCol+" style='width:100%' >" + lab + "</br>";
+                        html += " <td ColSpan="+tableCol+" style='width:100%' class='FDesc' >" + lab + "</td>";
+                        html+="</tr>";
+                        html +="<tr>";
+                        html +="<td ColSpan="+tableCol+">";
                         html += text;
                         html += "</td>";
                         html += "</tr>";
@@ -1340,104 +1345,106 @@ public class MakeForm2Html
             //#region 如果是附件.
             if (gf.getCtrlType().equals("Ath"))
             {
-                FrmAttachments aths = new FrmAttachments(frmID);
-           
+                FrmAttachment ath = new FrmAttachment(gf.getCtrlID());
+                if(ath.getIsVisable() == false)
+                	continue;
+                sb.append(" <tr>");
+	            sb.append("  <th colspan="+tableCol+" ><b>" + gf.getLab() + "</b></th>");
+	            sb.append(" </tr>");
 
-                for (FrmAttachment ath : aths.ToJavaList())
+                if (!ath.getMyPK().equals(gf.getCtrlID()))
+                    continue;
+
+                 FrmAttachmentDBs athDBs = BP.WF.Glo.GenerFrmAttachmentDBs(ath,String.valueOf(workid), ath.getMyPK());
+              
+
+                if (ath.getUploadType() == AttachmentUploadType.Single)
                 {
-                    if (!ath.getMyPK().equals(gf.getCtrlID()))
-                        continue;
-
-                     FrmAttachmentDBs athDBs = BP.WF.Glo.GenerFrmAttachmentDBs(ath,String.valueOf(workid), ath.getMyPK());
-                  
-
-                    if (ath.getUploadType() == AttachmentUploadType.Single)
-                    {
-                        /* 单个文件 */
-                        sb.append("<tr><td colspan="+tableCol+" >单附件没有转化:" + ath.getMyPK() + "</td></td>");
-                        continue;
-                    }
-
-                    if (ath.getUploadType() == AttachmentUploadType.Multi)
-                    {
-                        sb.append("<tr><td valign=top colspan="+tableCol+"  >");
-                        sb.append("<ul>");
-
-                        //判断是否有这个目录.
-                        File pathfile = new  File(path + "\\pdf\\");
-                        if (pathfile.exists() == false)
-                            pathfile.mkdirs();
-
-                        for (FrmAttachmentDB item : athDBs.ToJavaList())
-                        {
-                            String fileTo = path + "\\pdf\\" + item.getFileName();
-                            //加密信息
-                            boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
-                            boolean isEncrypt = item.GetParaBoolen("IsEncrypt");
-                            //#region 从ftp服务器上下载.
-                            if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
-                            {
-                                try
-                                {
-                                	File pathfileTo = new  File(fileTo);
-                                    if (pathfileTo.exists() == true)
-                                    	pathfileTo.delete();//rn "err@删除已经存在的文件错误,请检查iis的权限:" + ex.getMessage();
-
-                                    	//把文件copy到,                                  
-                                        String file = item.GenerTempFile(ath.getAthSaveWay());
-                                       
-                                        String fileTempDecryPath = file;
-                                        if (fileEncrypt == true && isEncrypt == true)
-                                        {
-                                            fileTempDecryPath = file + ".tmp";
-                                            AesEncodeUtil.decryptFile(file, fileTempDecryPath);
-
-                                        }
-                                        
-                                        Files.copy(new File(fileTempDecryPath).toPath(),pathfileTo.toPath());
-
-                                    sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+FK_Node+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName() + "</a></li>");
-                                }
-                             catch(Exception ex )
-                                {
-                                    sb.append("<li>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</li>");
-                                }
-                            }
-                            //#endregion 从ftp服务器上下载.
-
-
-                            //#region 从iis服务器上下载.
-                            if (ath.getAthSaveWay() == AthSaveWay.WebServer)
-                            {
-                                try
-                                {
-                                
-                                	 String fileTempDecryPath = item.getFileFullName();
-                                     if (fileEncrypt == true && isEncrypt == true)
-                                     {
-                                         fileTempDecryPath = item.getFileFullName() + ".tmp";
-                                         AesEncodeUtil.decryptFile(item.getFileFullName(), fileTempDecryPath);
-
-                                     }
-                                     
-                                    //把文件copy到,
-                                	File pathfileTo = new File(fileTo);
-                                    if (pathfileTo.exists()== false)
-                                    	Files.copy(new File(fileTempDecryPath).toPath(),pathfileTo.toPath());
-
-                                    sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+frmID+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName() + "</a></li>");
-                                }
-                                catch (Exception ex)
-                                {
-                                    sb.append("<li>" + item.getFileName() + "(<font color=red>文件未从web下载成功{" + ex.getMessage() + "}</font>)</li>");
-                                }
-                            }
-                           
-                        }
-                        sb.append("</ul>");
-                        sb.append("</td></tr>");
-                    }
+                    /* 单个文件 */
+                    sb.append("<tr><td colspan="+tableCol+" >单附件没有转化:" + ath.getMyPK() + "</td></td>");
+                    continue;
                 }
+
+                if (ath.getUploadType() == AttachmentUploadType.Multi)
+                {
+                    sb.append("<tr><td valign=top colspan="+tableCol+"  >");
+                    sb.append("<ul>");
+
+                    //判断是否有这个目录.
+                    File pathfile = new  File(path + "\\pdf\\");
+                    if (pathfile.exists() == false)
+                        pathfile.mkdirs();
+
+                    for (FrmAttachmentDB item : athDBs.ToJavaList())
+                    {
+                        String fileTo = path + "\\pdf\\" + item.getFileName();
+                        //加密信息
+                        boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+                        boolean isEncrypt = item.GetParaBoolen("IsEncrypt");
+                        //#region 从ftp服务器上下载.
+                        if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
+                        {
+                            try
+                            {
+                            	File pathfileTo = new  File(fileTo);
+                                if (pathfileTo.exists() == true)
+                                	pathfileTo.delete();//rn "err@删除已经存在的文件错误,请检查iis的权限:" + ex.getMessage();
+
+                                	//把文件copy到,                                  
+                                    String file = item.GenerTempFile(ath.getAthSaveWay());
+                                   
+                                    String fileTempDecryPath = file;
+                                    if (fileEncrypt == true && isEncrypt == true)
+                                    {
+                                        fileTempDecryPath = file + ".tmp";
+                                        AesEncodeUtil.decryptFile(file, fileTempDecryPath);
+
+                                    }
+                                    
+                                    Files.copy(new File(fileTempDecryPath).toPath(),pathfileTo.toPath());
+
+                                sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+FK_Node+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName() + "</a></li>");
+                            }
+                         catch(Exception ex )
+                            {
+                                sb.append("<li>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</li>");
+                            }
+                        }
+                        //#endregion 从ftp服务器上下载.
+
+
+                        //#region 从iis服务器上下载.
+                        if (ath.getAthSaveWay() == AthSaveWay.WebServer)
+                        {
+                            try
+                            {
+                            
+                            	 String fileTempDecryPath = item.getFileFullName();
+                                 if (fileEncrypt == true && isEncrypt == true)
+                                 {
+                                     fileTempDecryPath = item.getFileFullName() + ".tmp";
+                                     AesEncodeUtil.decryptFile(item.getFileFullName(), fileTempDecryPath);
+
+                                 }
+                                 
+                                //把文件copy到,
+                            	File pathfileTo = new File(fileTo);
+                                if (pathfileTo.exists()== false)
+                                	Files.copy(new File(fileTempDecryPath).toPath(),pathfileTo.toPath());
+
+                                sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/"+frmID+"/"+workid+"/"+"pdf/"+item.getFileName() + "'>" + item.getFileName() + "</a></li>");
+                            }
+                            catch (Exception ex)
+                            {
+                                sb.append("<li>" + item.getFileName() + "(<font color=red>文件未从web下载成功{" + ex.getMessage() + "}</font>)</li>");
+                            }
+                        }
+                       
+                    }
+                    sb.append("</ul>");
+                    sb.append("</td></tr>");
+                }
+               
             }
             //#endregion 如果是附件.
             
@@ -1638,7 +1645,7 @@ public class MakeForm2Html
     		
     		String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\index.htm";
     			
-    		resultMsg = MakeHtmlDocument(frmID,  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,frmID,basePath);
+    		resultMsg = MakeHtmlDocument(node.getNodeFrmID(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,frmID,basePath);
     		
     		if(resultMsg.indexOf("err@")!=-1)
     			return resultMsg;

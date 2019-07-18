@@ -1488,7 +1488,7 @@ public class WorkFlowBuessRole
 			if (mydtTemp == null)
 			{
 				//如果父亲级没有，就找父级的平级. 
-				return FindWorker.Func_GenerWorkerList_DiGui_ParentNo(myDept.getParentNo(), empNo);
+				return FindWorker.Func_GenerWorkerList_DiGui_ParentNo(myDept.getParentNo(), empNo,toNode);
 				  
 				//continue; //如果平级也没有，就continue.
 			}

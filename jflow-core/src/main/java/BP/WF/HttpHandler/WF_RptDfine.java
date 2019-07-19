@@ -202,6 +202,11 @@ public class WF_RptDfine extends WebContralBase{
 		}
 
 		vals = ur.GetVals();
+
+		md.SetPara("RptDTSearchWay",md.getRptDTSearchWay().getValue());
+		md.SetPara("RptDTSearchKey",md.getRptDTSearchKey());
+		md.SetPara("RptIsSearchKey",md.getRptIsSearchKey());
+
 		md.SetPara("T_SearchKey", ur.getSearchKey());
 
 		if (md.getRptDTSearchWay() != DTSearchWay.None)
@@ -1001,6 +1006,9 @@ public class WF_RptDfine extends WebContralBase{
 
 
 		vals = ur.GetVals();
+		md.SetPara("RptDTSearchWay",md.getRptDTSearchWay().getValue());
+		md.SetPara("RptDTSearchKey",md.getRptDTSearchKey());
+		md.SetPara("RptIsSearchKey",md.getRptIsSearchKey());
 		md.SetPara("T_SearchKey", ur.getSearchKey());
 
 		if (md.getRptDTSearchWay() != DTSearchWay.None)
@@ -1384,7 +1392,7 @@ public class WF_RptDfine extends WebContralBase{
 
 			if (paras[0].equals("Group_Number"))
 			{
-				groupKey += " count(*) " + paras[0] + ",";
+				groupKey += " count(*) \"" + paras[0] + "\",";
 			}
 			else
 			{
@@ -1392,26 +1400,26 @@ public class WF_RptDfine extends WebContralBase{
 				{
 						if (dataType == 2)
 						{
-							groupKey += " SUM(" + paras[0] + ")" + paras[0] + ",";
+							groupKey += " SUM(" + paras[0] + ") \"" + paras[0] + "\",";
 						}
 						else
 						{
-							groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+							groupKey += " round ( SUM(" + paras[0] + "), 4) \"" + paras[0] + "\",";
 						}
 				}
 				else if (paras[1].equals("AVG"))
 				{
-						groupKey += " round (AVG(" + paras[0] + "), 4)  " + paras[0] + ",";
+						groupKey += " round (AVG(" + paras[0] + "), 4)  \"" + paras[0] + "\",";
 				}
 				else if (paras[1].equals("AMOUNT"))
 				{
 						if (dataType == 2)
 						{
-							groupKey += " SUM(" + paras[0] + ")" + paras[0] + ",";
+							groupKey += " SUM(" + paras[0] + ") \"" + paras[0] + "\",";
 						}
 						else
 						{
-							groupKey += " round ( SUM(" + paras[0] + "), 4) " + paras[0] + ",";
+							groupKey += " round ( SUM(" + paras[0] + "), 4) \"" + paras[0] + "\",";
 						}
 				}
 				else
@@ -1452,7 +1460,7 @@ public class WF_RptDfine extends WebContralBase{
 				{
 					continue;
 				}
-				selectSQL += key + ",";
+				selectSQL += key + " \"" + key + "\",";
 				groupBy += key + ",";
 				// 加入组里面。
 				AttrsOfGroup.Add(GetAttrByKey(attrs, key), false, false);

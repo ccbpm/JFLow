@@ -934,51 +934,50 @@ public class FindWorker {
 		// 因为:以上已经做的岗位的判断，就没有必要在判断其它类型的节点处理了。
 		Object tempVar = empDept;
 		String nowDeptID = (String) ((tempVar instanceof String) ? tempVar : null);
+
+		DataTable mydtTemp = new DataTable();
+
+		//找本部门的上级
 		while (true) {
 			BP.Port.Dept myDept = new BP.Port.Dept(nowDeptID);
 			nowDeptID = myDept.getParentNo();
+
+			// 一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
 			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0")) {
-				break; // 一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
+				break;
 			}
 
 			// 检查指定的部门下面是否有该人员.
-			DataTable mydtTemp = this.Func_GenerWorkerList_DiGui(nowDeptID, empNo);
+			mydtTemp = this.Func_GenerWorkerList_DiGui(nowDeptID, empNo);
 			if (mydtTemp != null)
 				return mydtTemp;
+			continue;
+		}
 
+		//找父级的子级
+		while (true) {
+			BP.Port.Dept myDept = new BP.Port.Dept(nowDeptID);
+			nowDeptID = myDept.getParentNo();
+			// 一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
+			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0")) {
+				break;
+			}
 			// 该部门下的所有子部门是否有人员.
 			mydtTemp = Func_GenerWorkerList_DiGui_SameLevel(nowDeptID, empNo);
 			if (mydtTemp != null)
 				return mydtTemp;
 
-			// 如果父亲级没有，就找父级的平级.
-			mydtTemp = this.Func_GenerWorkerList_DiGui_ParentNo(myDept.getParentNo(), empNo,town.getHisNode() );
-			
-			/*BP.Port.Depts myDepts = new BP.Port.Depts();
-			myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.getParentNo());
-			for (BP.Port.Dept item : myDepts.ToJavaList()) {
-				if (nowDeptID.equals(item.getNo())) {
-					continue;
-				}
-				
-				if (mydtTemp == null) {
-					continue;
-				} else {
-					return mydtTemp;
-				}
-			}*/
-
 			continue; // 如果平级也没有，就continue.
 
 		}
 
-		// 如果向上找没有找到，就考虑从本级部门上向下找。
+		// 如果向上找没有找到，就考虑本级部门的下级平级找。
 		Object tempVar2 = empDept;
-		nowDeptID = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
-		BP.Port.Depts subDepts = new BP.Port.Depts(nowDeptID);
 
+		nowDeptID = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
+		BP.Port.Dept subDept = new BP.Port.Dept(nowDeptID);
 		// 递归出来子部门下有该岗位的人员
-		DataTable mydt = Func_GenerWorkerList_DiGui_ByDepts(subDepts, empNo);
+		DataTable mydt = Func_GenerWorkerList_DiGui_ByDepts(subDept, empNo);
 		if (mydt == null && this.town.getHisNode().getHisWhenNoWorker() == false) {
 			throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo()
 					+ ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称："
@@ -1000,31 +999,25 @@ public class FindWorker {
 	/**
 	 * 递归出来子部门下有该岗位的人员
 	 * 
-	 * @param subDepts
+	 * @param subDept
 	 * @param empNo
 	 * @return
 	 * @throws Exception
 	 */
-	public final DataTable Func_GenerWorkerList_DiGui_ByDepts(BP.Port.Depts subDepts, String empNo) throws Exception {
-		for (BP.Port.Dept item : subDepts.ToJavaList()) {
-			DataTable dt = Func_GenerWorkerList_DiGui(item.getNo(), empNo);
-			if (dt != null) {
-				return dt;
-			}
+	public final DataTable Func_GenerWorkerList_DiGui_ByDepts(BP.Port.Dept subDept, String empNo) throws Exception {
 
-			dt = Func_GenerWorkerList_DiGui_ByDepts(item.getHisSubDepts(), empNo);
+			DataTable dt = Func_GenerWorkerList_DiGui_SameLevel(subDept.getNo(), empNo);
 			if (dt != null) {
 				return dt;
 			}
-		}
-		return null;
+		return dt;
 	}
 
 	/**
 	 * 根据部门获取下一步的操作员
 	 * 
 	 * @param deptNo
-	 * @param emp1
+	 * @param empNo
 	 * @return
 	 * @throws Exception
 	 */
@@ -1055,40 +1048,7 @@ public class FindWorker {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (dt.Rows.size() == 0) {
-			NodeStations nextStations = town.getHisNode().getNodeStations();
-			if (nextStations.size() == 0) {
-				throw new RuntimeException(
-						"@节点没有岗位:" + town.getHisNode().getNodeID() + "  " + town.getHisNode().getName());
-			}
-
-			sql = "SELECT No FROM Port_Emp WHERE No IN ";
-			sql += "(SELECT  FK_Emp  FROM " + BP.WF.Glo.getEmpStation()
-					+ " WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr
-					+ "FK_Node ) )";
-			sql += " AND No IN ";
-
-			if (deptNo.equals("1")) {
-				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp ) ";
-			} else {
-				BP.Port.Dept deptP = new BP.Port.Dept(deptNo);
-				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp AND FK_Dept = '"
-						+ deptP.getParentNo() + "')";
-			}
-
-			ps = new Paras();
-			ps.SQL = sql;
-			ps.Add("FK_Node", town.getHisNode().getNodeID());
-			ps.Add("FK_Emp", empNo);
-			dt = DBAccess.RunSQLReturnTable(ps);
-
-			if (dt.Rows.size() == 0) {
-				return null;
-			}
-			return dt;
-		} else {
-			return dt;
-		}
+		return dt;
 	}
 	
 	
@@ -1097,8 +1057,6 @@ public class FindWorker {
 		
 		String sql;
 		 String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-		
-	//	String dbStr=Systemconfig
 
 		Paras ps = new Paras();
 
@@ -1129,6 +1087,13 @@ public class FindWorker {
 	}
 
 
+	/**
+	 * 找父级的子级
+	 * @param deptNo
+	 * @param empNo
+	 * @return
+	 * @throws Exception
+	 */
 	public final DataTable Func_GenerWorkerList_DiGui_SameLevel(String deptNo, String empNo) throws Exception {
 		String sql;
 
@@ -1156,40 +1121,8 @@ public class FindWorker {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (dt.Rows.size() == 0) {
-			NodeStations nextStations = town.getHisNode().getNodeStations();
-			if (nextStations.size() == 0) {
-				throw new RuntimeException(
-						"@节点没有岗位:" + town.getHisNode().getNodeID() + "  " + town.getHisNode().getName());
-			}
+		return dt;
 
-			sql = "SELECT No FROM Port_Emp WHERE No IN ";
-			sql += "(SELECT  FK_Emp  FROM " + BP.WF.Glo.getEmpStation()
-					+ " WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr
-					+ "FK_Node ) )";
-			sql += " AND No IN ";
-
-			if (deptNo.equals("1")) {
-				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp ) ";
-			} else {
-				BP.Port.Dept deptP = new BP.Port.Dept(deptNo);
-				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp AND FK_Dept = '"
-						+ deptP.getParentNo() + "')";
-			}
-
-			ps = new Paras();
-			ps.SQL = sql;
-			ps.Add("FK_Node", town.getHisNode().getNodeID());
-			ps.Add("FK_Emp", empNo);
-			dt = DBAccess.RunSQLReturnTable(ps);
-
-			if (dt.Rows.size() == 0) {
-				return null;
-			}
-			return dt;
-		} else {
-			return dt;
-		}
 	}
 
 	/**

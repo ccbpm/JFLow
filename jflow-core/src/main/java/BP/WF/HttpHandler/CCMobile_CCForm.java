@@ -97,10 +97,10 @@ public class CCMobile_CCForm extends WebContralBase
                     continue;
                 }
 
-                if (attr.getUIContralType().equals(UIContralType.CheckBok) && attr.getUIIsReadonly() == true)
+                if (attr.getUIContralType().equals(UIContralType.CheckBok) && attr.getUIIsReadonly() == false)
                 {
                     String val = this.GetValFromFrmByKey("CB_" + attr.getKey() + "_" + pkval, "-1");
-                    if (val == "-1")
+                    if ("0".equals(val))
                         item.SetValByKey(attr.getKey(), 0);
                     else
                         item.SetValByKey(attr.getKey(), 1);

@@ -489,6 +489,7 @@ public class WF extends WebContralBase {
 		else
 			urlExt = "&PFlowNo=" + ndrpt.Rows.get(0).getValue("PFlowNo") + "&PWorkID="
 					+ ndrpt.Rows.get(0).getValue("PWorkID") + "&IsToobar=0&IsHidden=true";
+
 		urlExt += "&From=CCFlow&TruckKey=" + tk.GetValStrByKey("MyPK") + "&DoType=" + this.getDoType() + "&UserNo="
 				+ WebUser.getNo() + "&SID=" + WebUser.getSID();
 
@@ -505,14 +506,8 @@ public class WF extends WebContralBase {
 		if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.SheetAutoTree)
 			return "url@./MyFlowTreeReadonly.htm?3=4&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&OID="
 					+ this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + nd.getNodeID()
-					+ "&PK=OID&PKVal=" + this.getWorkID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
+					+ "&PK=OID&PKVal=" + this.getWorkID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1"+urlExt;
 
-		// if (nd.getHisFormType() == NodeFormType.SheetTree ||
-		// nd.getHisFormType() == NodeFormType.SheetAutoTree)
-		// return "url@../../../MyFlowTreeReadonly.htm?3=4&FK_MapData=" +
-		// nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow=" +
-		// this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" +
-		// wk.getOID() + "&IsEdit=0&IsLoadData=0&IsReadonly=1";
 
 		Work wk = nd.getHisWork();
 		wk.setOID(workid);

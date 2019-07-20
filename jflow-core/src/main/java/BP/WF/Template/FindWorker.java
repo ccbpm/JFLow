@@ -287,30 +287,30 @@ public class FindWorker {
 							"流程设计错误:您设置的节点(" + town.getHisNode().getName() + ")的接收方式为按指定的节点岗位投递，但是您没有在访问规则设置中设置节点编号。");
 				}
 
+				String workSQL = "";
+				//获取指定节点的信息
+				Node specNode = new Node(nd);
+				//指定节点是子线程
+				if(specNode.getHisRunModel() == RunModel.SubThread)
+				{
+					if (this.currWn.getHisNode().getHisRunModel() == RunModel.SubThread)
+						workSQL = "FID="+ this.currWn.getHisWork().getFID() ;
+					else
+						workSQL = "FID=" + this.WorkID;
+				}
+				else
+				{
+					if (this.currWn.getHisNode().getHisRunModel() == RunModel.SubThread)
+						workSQL = "WorkID=" + this.currWn.getHisWork().getFID();
+					else
+						workSQL = "WorkID=" + this.WorkID;
+
+				}
 				ps = new Paras();
-				ps.SQL = "SELECT DISTINCT(FK_Emp) FROM WF_GenerWorkerList WHERE (WorkID=" + dbStr + "WorkID OR FID="+dbStr+"FID)  AND FK_Node=" + dbStr
+				ps.SQL = "SELECT DISTINCT(FK_Emp) FROM WF_GenerWorkerList WHERE "+workSQL+"  AND FK_Node=" + dbStr
 						+ "FK_Node AND IsEnable=1 ";
 				ps.Add("FK_Node", Integer.parseInt(nd));
-				
-				Node specNode = new Node(nd);
-				if(this.currWn.getHisNode().getHisRunModel()== RunModel.SubThread){
-					if(specNode.getHisRunModel() == RunModel.SubThread){
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", this.currWn.getHisWork().getFID());
-					}else{
-						ps.Add("WorkID", this.currWn.getHisWork().getFID());
-						ps.Add("FID", 0);
-					}
-				}else{
-					if(specNode.getHisRunModel() == RunModel.SubThread){
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", this.WorkID);
-					}else{
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", 0);
-					}
-				}
-				
+
 				DataTable dt_ND = DBAccess.RunSQLReturnTable(ps);
 				// 添加到结果表
 				if (dt_ND.Rows.size() != 0) {
@@ -330,7 +330,7 @@ public class FindWorker {
 						+ "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr
 						+ "ActionType4 OR ActionType=" + dbStr + "ActionType5 OR ActionType=" + dbStr 
 						+ "ActionType6) AND NDFrom=" + dbStr
-						+ "NDFrom AND  (WorkID=" + dbStr + "WorkID OR FID="+dbStr+"FID)";
+						+ "NDFrom AND  "+workSQL;
 				ps.Add("ActionType1", ActionType.Skip.getValue());
 				ps.Add("ActionType2", ActionType.Forward.getValue());
 				ps.Add("ActionType3", ActionType.ForwardFL.getValue());
@@ -340,24 +340,6 @@ public class FindWorker {
 
 				ps.Add("NDFrom", Integer.parseInt(nd));
 
-				if(this.currWn.getHisNode().getHisRunModel()== RunModel.SubThread){
-					if(specNode.getHisRunModel() == RunModel.SubThread){
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", this.currWn.getHisWork().getFID());
-					}else{
-						ps.Add("WorkID", this.currWn.getHisWork().getFID());
-						ps.Add("FID", 0);
-					}
-				}else{
-					if(specNode.getHisRunModel() == RunModel.SubThread){
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", this.WorkID);
-					}else{
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", 0);
-					}
-				}
-				
 				dt_ND = DBAccess.RunSQLReturnTable(ps);
 				if (dt_ND.Rows.size() != 0) {
 					for (DataRow row : dt_ND.Rows) {
@@ -369,28 +351,8 @@ public class FindWorker {
 				}
 				 //从Selector中查找
                 ps = new Paras();
-                ps.SQL = "SELECT DISTINCT(FK_Emp) FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND (WorkID=" + dbStr + "WorkID OR FID="+dbStr+"FID)";
+                ps.SQL = "SELECT DISTINCT(FK_Emp) FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND "+workSQL;
                 ps.Add("FK_Node", Integer.parseInt(nd));
-                
-                if(this.currWn.getHisNode().getHisRunModel()== RunModel.SubThread){
-					if(specNode.getHisRunModel() == RunModel.SubThread){
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", this.currWn.getHisWork().getFID());
-					}else{
-						ps.Add("WorkID", this.currWn.getHisWork().getFID());
-						ps.Add("FID", 0);
-					}
-				}else{
-					if(specNode.getHisRunModel() == RunModel.SubThread){
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", this.WorkID);
-					}else{
-						ps.Add("WorkID", this.WorkID);
-						ps.Add("FID", 0);
-					}
-				}
-               
-
                 dt_ND = DBAccess.RunSQLReturnTable(ps);
                 //添加到结果表
                 if (dt_ND.Rows.size() != 0) 

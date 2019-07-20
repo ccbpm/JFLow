@@ -948,8 +948,8 @@ public class FindWorker {
 			}
 
 			// 检查指定的部门下面是否有该人员.
-			mydtTemp = this.Func_GenerWorkerList_DiGui(nowDeptID, empNo);
-			if (mydtTemp != null)
+			mydtTemp = this.Func_GenerWorkerList_SpecDept(nowDeptID, empNo);
+			if (mydtTemp.Rows.size()!=0)
 				return mydtTemp;
 			continue;
 		}
@@ -964,8 +964,8 @@ public class FindWorker {
 				break;
 			}
 			// 该部门下的所有子部门是否有人员.
-			mydtTemp = Func_GenerWorkerList_DiGui_SameLevel(nowDeptID, empNo);
-			if (mydtTemp != null)
+			mydtTemp = Func_GenerWorkerList_SpecDept_SameLevel(nowDeptID, empNo);
+			if (mydtTemp.Rows.size()!=0)
 				return mydtTemp;
 
 			continue; // 如果平级也没有，就continue.
@@ -976,15 +976,22 @@ public class FindWorker {
 		Object tempVar2 = empDept;
 
 		nowDeptID = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
-		BP.Port.Dept subDept = new BP.Port.Dept(nowDeptID);
-		// 递归出来子部门下有该岗位的人员
-		DataTable mydt = Func_GenerWorkerList_DiGui_ByDepts(subDept, empNo);
+		DataTable mydt = Func_GenerWorkerList_SpecDept_SameLevel(nowDeptID, empNo);
+
 		if ((mydt == null|| mydt.Rows.size() ==0) && this.town.getHisNode().getHisWhenNoWorker() == false) {
+			//如果递归没有找到人,就全局搜索岗位.
+			sql = "SELECT A.FK_Emp FROM  Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
+			ps = new Paras();
+			ps.Add("FK_Node", town.getHisNode().getNodeID());
+			ps.SQL = sql;
+			dt = DBAccess.RunSQLReturnTable(ps);
+			if (dt.Rows.size() > 0)
+				return dt;
+
 			throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo()
 					+ ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称："
 					+ WebUser.getFK_DeptName());
 		}
-
 		// add by zhoupeng 考虑到自动跳转，在没有接受人的情况下.
 		if (mydt == null) {
 			mydt = new DataTable();
@@ -998,23 +1005,6 @@ public class FindWorker {
 	}
 
 	/**
-	 * 递归出来子部门下有该岗位的人员
-	 * 
-	 * @param subDept
-	 * @param empNo
-	 * @return
-	 * @throws Exception
-	 */
-	public final DataTable Func_GenerWorkerList_DiGui_ByDepts(BP.Port.Dept subDept, String empNo) throws Exception {
-
-			DataTable dt = Func_GenerWorkerList_DiGui_SameLevel(subDept.getNo(), empNo);
-			if (dt != null) {
-				return dt;
-			}
-		return dt;
-	}
-
-	/**
 	 * 根据部门获取下一步的操作员
 	 * 
 	 * @param deptNo
@@ -1022,7 +1012,7 @@ public class FindWorker {
 	 * @return
 	 * @throws Exception
 	 */
-	public final DataTable Func_GenerWorkerList_DiGui(String deptNo, String empNo) throws Exception {
+	public final DataTable Func_GenerWorkerList_SpecDept(String deptNo, String empNo) throws Exception {
 		String sql;
 
 		Paras ps = new Paras();
@@ -1051,41 +1041,6 @@ public class FindWorker {
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		return dt;
 	}
-	
-	
-	public static final DataTable Func_GenerWorkerList_DiGui_ParentNo(String parentDeptNo, String empNo, 
-			Node toNode) throws Exception {
-		
-		String sql;
-		 String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-
-		Paras ps = new Paras();
-
-		if (toNode.getIsExpSender() == true) {
-
-			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B,Port_Dept C WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
-					+ dbStr + "FK_Node AND A.FK_Dept=C.No AND C.ParentNo=" + dbStr + "ParentNo AND A.FK_Emp!=" + dbStr + "FK_Emp";
-
-			ps.SQL = sql;
-			ps.Add("FK_Node", toNode.getNodeID());
-			ps.Add("ParentNo", parentDeptNo);
-			ps.Add("FK_Emp", empNo);
-
-		} else {
-
-			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B,Port_Dept C WHERE A.FK_Station=B.FK_Station AND B.FK_Node="
-					+ dbStr + "FK_Node AND A.FK_Dept=C.NO AND  C.ParentNo=" + dbStr + "ParentNo ";
-
-			ps.SQL = sql;
-			ps.Add("FK_Node", toNode.getNodeID());
-			ps.Add("ParentNo", parentDeptNo);
-
-		}
-
-		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		
-		return dt;
-	}
 
 
 	/**
@@ -1095,7 +1050,7 @@ public class FindWorker {
 	 * @return
 	 * @throws Exception
 	 */
-	public final DataTable Func_GenerWorkerList_DiGui_SameLevel(String deptNo, String empNo) throws Exception {
+	public final DataTable Func_GenerWorkerList_SpecDept_SameLevel(String deptNo, String empNo) throws Exception {
 		String sql;
 
 		Paras ps = new Paras();

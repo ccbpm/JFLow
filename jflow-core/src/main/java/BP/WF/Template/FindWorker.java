@@ -953,7 +953,8 @@ public class FindWorker {
 				return mydtTemp;
 			continue;
 		}
-
+		tempVar = empDept;
+		nowDeptID = (String) ((tempVar instanceof String) ? tempVar : null);
 		//找父级的子级
 		while (true) {
 			BP.Port.Dept myDept = new BP.Port.Dept(nowDeptID);
@@ -978,7 +979,7 @@ public class FindWorker {
 		BP.Port.Dept subDept = new BP.Port.Dept(nowDeptID);
 		// 递归出来子部门下有该岗位的人员
 		DataTable mydt = Func_GenerWorkerList_DiGui_ByDepts(subDept, empNo);
-		if (mydt == null && this.town.getHisNode().getHisWhenNoWorker() == false) {
+		if ((mydt == null|| mydt.Rows.size() ==0) && this.town.getHisNode().getHisWhenNoWorker() == false) {
 			throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo()
 					+ ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称："
 					+ WebUser.getFK_DeptName());

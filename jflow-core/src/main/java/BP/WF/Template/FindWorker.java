@@ -1004,7 +1004,36 @@ public class FindWorker {
 		return dt;
 	}
 
+	public static final DataTable Func_GenerWorkerList_SpecDept_SameLevel(String deptNo, String empNo, Node node) {
+		String sql;
 
+		Paras ps = new Paras();
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		if (node.getIsExpSender() == true) {
+
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B, Port_Dept C  WHERE A.FK_Dept=C.No AND A.FK_Station=B.FK_Station AND B.FK_Node="
+					+ dbStr + "FK_Node AND C.ParentNo=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
+
+			ps.SQL = sql;
+			ps.Add("FK_Node", node.getNodeID());
+			ps.Add("FK_Dept", deptNo);
+			ps.Add("FK_Emp", empNo);
+
+		} else {
+
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B, Port_Dept C  WHERE A.FK_Dept=C.No AND A.FK_Station=B.FK_Station AND B.FK_Node="
+					+ dbStr + "FK_Node AND C.ParentNo=" + dbStr + "FK_Dept ";
+
+			ps.SQL = sql;
+			ps.Add("FK_Node",node.getNodeID());
+			ps.Add("FK_Dept", deptNo);
+
+		}
+
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+		return dt;
+
+	}
 	/**
 	 * 找父级的子级
 	 * @param deptNo

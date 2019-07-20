@@ -53,24 +53,7 @@ public class AppClass {
 				Nodes tonds = nd.getHisToNodes();
 
 				for (Node tond : tonds.ToJavaList()) {
-					boolean flag = true;
 
-					for(int k = 0;k<tracks.Rows.size();k++){
-						//分流有重复，为去重复加的判断
-						int ss = 0;
-						if(!"".equals(tracks.Rows.get(k).getValue("IsPass").toString())){
-							ss = Integer.parseInt(tracks.Rows.get(k).getValue("IsPass").toString());
-						}else{
-							ss = 999;//不是0的随意数字
-						}
-
-						if((Integer.parseInt(tracks.Rows.get(k).getValue("RunModel").toString())==4)&&(ss==0)){
-							flag = false;
-							break;
-						}
-
-					}
-					if(flag){
 						DataRow mydr = tracks.NewRow();
 						mydr.setValue("NodeName", tond.getName());
 						mydr.setValue("FK_Node", tond.getNodeID());
@@ -81,11 +64,34 @@ public class AppClass {
 						// mydr["RunModel"] = (int)tond.HisRunModel;
 						tracks.Rows.add(mydr);
 
-					}
 					// 设置当前节点.
 					// currNode = tond.HisToNodes[0].GetValIntByKey("NodeID");
 					currNode = tond.getNodeID();
+
+					Node myCurrND=new Node(currNode);
+
+					Node subND=GetNextSubThreadNode(myCurrND,tracks);
+					if (subND==null)
+						continue;
+
+					subND=GetNextSubThreadNode(subND,tracks);
+					if (subND==null)
+						continue;
+
+					subND=GetNextSubThreadNode(subND,tracks);
+					if (subND==null)
+						continue;
+
+					subND=GetNextSubThreadNode(subND,tracks);
+					if (subND==null)
+						continue;
+
+					subND=GetNextSubThreadNode(subND,tracks);
+					if (subND==null)
+						continue;
+
 				}
+
 			}
 			// #endregion 判断当前节点的类型.
 
@@ -156,6 +162,31 @@ public class AppClass {
 
 
 		return BP.Tools.Json.ToJson( myds);
+
+	}
+	//获得当前节点的子线程节点.
+	public static Node GetNextSubThreadNode(Node nd, DataTable tracks)  throws Exception
+	{
+		 Nodes nds= nd.getHisToNodes();
+
+		 Node mynd =(Node)nds.get(0);
+
+		 if (mynd.getHisRunModel()!= RunModel.SubThread)
+		 	return null;
+
+
+
+		DataRow mydr = tracks.NewRow();
+		mydr.setValue("NodeName", mynd.getName());
+		mydr.setValue("FK_Node", mynd.getNodeID());
+		mydr.setValue("RunModel", mynd.getHisRunModel().getValue());
+		// mydr["NodeName"] = tond.Name;
+		// mydr["FK_Node"] = tond.NodeID; //
+		// nd["NodeID"].ToString();
+		// mydr["RunModel"] = (int)tond.HisRunModel;
+		tracks.Rows.add(mydr);
+
+		 return mynd;
 
 	}
 

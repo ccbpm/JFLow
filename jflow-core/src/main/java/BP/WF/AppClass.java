@@ -121,7 +121,7 @@ public class AppClass {
 
 		myds.Tables.add(gwf);
 
-		//去掉重复的》
+		//去掉重复的节点。
 		DataTable dtNew = new DataTable();
 		dtNew.TableName = "Track";
 		dtNew.Columns.Add("FK_Node"); // 节点ID.

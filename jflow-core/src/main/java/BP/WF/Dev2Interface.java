@@ -4912,8 +4912,7 @@ public class Dev2Interface {
 		{
 			workID=gwf.getFID();
 			gwf.setWorkID(workID);
-			gwf.Retrieve();
-			
+			gwf.Retrieve();			
 		}
 		ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
@@ -4949,7 +4948,7 @@ public class Dev2Interface {
 		
 
 		// 执行人.
-		if (gwf.getWFState() == WFState.Complete) {
+		if (gwf.getWFState() == WFState.Complete || 1==1 ) {
 			// 历史执行人.
 			// sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) +
 			// "Track WHERE WorkID=" + workID
@@ -4958,7 +4957,7 @@ public class Dev2Interface {
 			sql = "SELECT C.Name AS DeptName,  A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow())
 					+ "Track A, Port_Emp B, Port_Dept C WHERE (A.WorkID=" + workID + "OR A.FID="+workID +")"
 					+ " AND (A.ActionType=1 OR A.ActionType=0 OR A.ActionType=7 OR A.ActionType=8 OR A.ActionType=11)"
-					+ " AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT,A.NDFrom";
+					+ " AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT, A.NDFrom";
 
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
@@ -4989,6 +4988,7 @@ public class Dev2Interface {
 				dtHistory.Rows.add(dr);
 			}
 		} else {
+			
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			QueryObject qo = new BP.En.QueryObject(gwls);
 			qo.addLeftBracket();

@@ -1,5 +1,6 @@
 package BP.WF;
 
+import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
@@ -22,17 +23,38 @@ public class AppClass {
 
 		DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workid);
 
-		DataTable gwf = ds.GetTableByName("WF_GenerWorkFlow"); // 工作记录.
-		DataTable nodes = ds.GetTableByName("WF_Node"); // 节点.
-		DataTable dirs = ds.GetTableByName("WF_Direction"); // 连接线.
-		DataTable tracks = ds.GetTableByName("Track"); // 历史记录.
-
-
-
+		DataTable gwf = ds.GetTableByName("WF_GenerWorkFlow"); //工作记录.
+		DataTable nodes = ds.GetTableByName("WF_Node"); //节点.
+		DataTable dirs = ds.GetTableByName("WF_Direction"); //连接线.
+		DataTable tracks = ds.GetTableByName("Track"); //历史记录.
+ 
 		// 状态,
 		int wfState = Integer.parseInt(gwf.Rows.get(0).getValue("WFState").toString());
 		int currNode = Integer.parseInt(gwf.Rows.get(0).getValue("FK_Node").toString());
-		 
+		
+		
+		//判断当前节点是否是分河流. 判断到合流节点的情况. 有一些异表单的子线程节点没有到达到合流节点，就不能显示.
+		Node myCurrNode = new Node(currNode);
+		if (myCurrNode.getHisRunModel()== RunModel.FL || myCurrNode.getHisRunModel()== RunModel.FHL)
+		{
+			
+			String mysql="SELECT DISTINCT FK_Node FROM WF_GenerWorkerlist WHERE FID="+workid;
+			DataTable dtGenerList=DBAccess.RunSQLReturnTable(mysql);
+			
+			for (DataRow dr : dtGenerList.Rows) {
+				
+				int fk_node=Integer.parseInt(dr.getValue("FK_Node").toString());
+				
+				Node subND=new Node(fk_node);				
+				subND=GetNextSubThreadNode(subND,tracks);
+				if (subND==null)
+					continue;
+				
+				subND=GetNextSubThreadNode(subND,tracks);
+				if (subND==null)
+					continue;				  
+			}
+		}
 
 		// 把以后的为未完成的节点放入到track里面.
 		for (int i = 0; i < 100; i++) {
@@ -111,14 +133,11 @@ public class AppClass {
 					break;
 				}
 			}
-
 			currNode = nextNode;
-
 		}
 		
 		
 		DataSet myds=new DataSet();
-
 		myds.Tables.add(gwf);
 
 		//去掉重复的节点。
@@ -159,8 +178,6 @@ public class AppClass {
 		}
 
 		myds.Tables.add(dtNew);
-
-
 		return BP.Tools.Json.ToJson( myds);
 
 	}
@@ -173,8 +190,7 @@ public class AppClass {
 
 		 if (mynd.getHisRunModel()!= RunModel.SubThread)
 		 	return null;
-
-
+ 
 
 		DataRow mydr = tracks.NewRow();
 		mydr.setValue("NodeName", mynd.getName());

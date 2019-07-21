@@ -7537,7 +7537,8 @@ public class WorkNode {
 		 if (this.getHisNode().getTodolistModel() == TodolistModel.QiangBan)
          {
              ps = new Paras();
-             ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND FK_Emp!="+dbStr+"FK_Emp ";
+             ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND FK_Emp!="+dbStr+"FK_Emp ";
+			 ps.Add("FK_Node", nd.getNodeID());
              ps.Add("WorkID", this.getWorkID());
              ps.Add("FID", this.getHisWork().getFID());
              ps.Add("FK_Emp", WebUser.getNo());

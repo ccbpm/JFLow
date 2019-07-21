@@ -35,7 +35,7 @@ public class AppClass {
 		
 		//判断当前节点是否是分河流. 判断到合流节点的情况. 有一些异表单的子线程节点没有到达到合流节点，就不能显示.
 		Node myCurrNode = new Node(currNode);
-		if (myCurrNode.getHisRunModel()== RunModel.FL || myCurrNode.getHisRunModel()== RunModel.FHL)
+		if (myCurrNode.getHisRunModel()== RunModel.HL || myCurrNode.getHisRunModel()== RunModel.FHL)
 		{
 			
 			String mysql="SELECT DISTINCT FK_Node FROM WF_GenerWorkerlist WHERE FID="+workid;

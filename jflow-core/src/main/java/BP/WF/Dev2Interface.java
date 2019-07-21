@@ -5029,7 +5029,7 @@ public class Dev2Interface {
 		 
 		 
 
-        if (dtHistory.Rows.size() == 0)
+        if (dtHistory.Rows.size() == 0 || 1==1)
         {
             DataRow dr = dtHistory.NewRow();
             dr.setValue("FK_Node",gwf.getFK_Node());

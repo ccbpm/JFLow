@@ -5024,10 +5024,38 @@ public class Dev2Interface {
 
 					dtHistory.Rows.add(dr);
 				}
-
-
+ 
 		}
-		ds.Tables.add(dtHistory);
+		 
+		 
+
+        if (dtHistory.Rows.size() == 0)
+        {
+            DataRow dr = dtHistory.NewRow();
+            dr.setValue("FK_Node",gwf.getFK_Node());
+            dr.setValue("NodeName",gwf.getNodeName());
+            dr.setValue("EmpNo",gwf.getStarter());
+            dr.setValue("EmpName",gwf.getStarterName());
+            dr.setValue("RDT",gwf.getRDT());
+            dr.setValue("SDT",gwf.getSDTOfNode());
+            dtHistory.Rows.add(dr);
+        }
+
+        // 给 dtHistory runModel 赋值.
+        for (NodeSimple nd : nds.ToJavaList())
+        {
+
+            int runMode = nd.GetValIntByKey(NodeAttr.RunModel);
+
+            for (DataRow dr : dtHistory.Rows)
+            {
+                if (Integer.parseInt(dr.getValue("FK_Node").toString()) == nd.getNodeID())
+                    dr.setValue("RunModel",runMode);
+            }
+        }
+        
+        ds.Tables.add(dtHistory);
+        
 		// #endregion 运动轨迹
 
 		return ds;

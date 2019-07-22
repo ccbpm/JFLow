@@ -590,7 +590,8 @@ public abstract class Work extends Entity
 		this.AutoFull();
 		// 执行保存前的事件。
 
-		this.getHisNode().getHisFlow().DoFlowEventEntity(EventListOfNode.SaveBefore, this.getHisNode(), this.getHisNode().getHisWork(), null);
+		this.getHisNode().getHisFlow().DoFlowEventEntity(EventListOfNode.SaveBefore, 
+				this.getHisNode(), this.getHisNode().getHisWork(), "@WorkID="+this.getOID()+"@FID="+this.getFID());
 	}
 	/** 
 	 直接的保存

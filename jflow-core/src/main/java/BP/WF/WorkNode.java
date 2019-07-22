@@ -1932,6 +1932,17 @@ public class WorkNode {
 
 		/// #endregion 保存目标节点数据.
 
+		if (this.getHisNode().getTodolistModel() == TodolistModel.QiangBan)
+		{
+			ps = new Paras();
+			ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND FK_Emp!="+dbStr+"FK_Emp ";
+			ps.Add("FK_Node", this.getHisNode().getNodeID());
+			ps.Add("WorkID", this.getWorkID());
+			ps.Add("FID", this.getHisWork().getFID());
+			ps.Add("FK_Emp", WebUser.getNo());
+			DBAccess.RunSQL(ps);
+		}
+
 		// @加入消息集合里。
 		this.SendMsgToThem(current_gwls);
 

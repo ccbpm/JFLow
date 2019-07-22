@@ -1936,7 +1936,7 @@ public class WorkNode {
 		{
 			ps = new Paras();
 			ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND FK_Emp!="+dbStr+"FK_Emp ";
-			ps.Add("FK_Node", this.getHisNode().getNodeID());
+			ps.Add("FK_Node", this.getHisNode().getNodeID());//获取的自己的节点
 			ps.Add("WorkID", this.getWorkID());
 			ps.Add("FID", this.getHisWork().getFID());
 			ps.Add("FK_Emp", WebUser.getNo());
@@ -7549,7 +7549,7 @@ public class WorkNode {
          {
              ps = new Paras();
              ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND FID=" + dbStr + "FID AND FK_Emp!="+dbStr+"FK_Emp ";
-			 ps.Add("FK_Node", nd.getNodeID());
+			 ps.Add("FK_Node", this.getHisNode().getNodeID());
              ps.Add("WorkID", this.getWorkID());
              ps.Add("FID", this.getHisWork().getFID());
              ps.Add("FK_Emp", WebUser.getNo());

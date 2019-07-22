@@ -4948,7 +4948,7 @@ public class Dev2Interface {
 		
 
 		// 执行人.
-		if (gwf.getWFState() == WFState.Complete || 1==1 ) {
+		if (gwf.getWFState() == WFState.Complete  ) {
 			// 历史执行人.
 			// sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) +
 			// "Track WHERE WorkID=" + workID
@@ -5029,17 +5029,17 @@ public class Dev2Interface {
 		 
 		 
 
-        if (dtHistory.Rows.size() == 0 || 1==1)
-        {
-            DataRow dr = dtHistory.NewRow();
-            dr.setValue("FK_Node",gwf.getFK_Node());
-            dr.setValue("NodeName",gwf.getNodeName());
-            dr.setValue("EmpNo",gwf.getStarter());
-            dr.setValue("EmpName",gwf.getStarterName());
-            dr.setValue("RDT",gwf.getRDT());
-            dr.setValue("SDT",gwf.getSDTOfNode());
-            dtHistory.Rows.add(dr);
-        }
+//        if (dtHistory.Rows.size() == 0 || 1==1)
+//        {
+//            DataRow dr = dtHistory.NewRow();
+//            dr.setValue("FK_Node",gwf.getFK_Node());
+//            dr.setValue("NodeName",gwf.getNodeName());
+//            dr.setValue("EmpNo",gwf.getStarter());
+//            dr.setValue("EmpName",gwf.getStarterName());
+//            dr.setValue("RDT",gwf.getRDT());
+//            dr.setValue("SDT",gwf.getSDTOfNode());
+//            dtHistory.Rows.add(dr);
+//        }
 
         // 给 dtHistory runModel 赋值.
         for (NodeSimple nd : nds.ToJavaList())

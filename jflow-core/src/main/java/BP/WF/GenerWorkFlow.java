@@ -159,6 +159,11 @@ public class GenerWorkFlow extends Entity
             return;
 		SetValByKey(GenerWorkFlowAttr.TodoEmps, value);
 	}
+	public final void setTodoEmpsV2(String value)
+	{
+
+		SetValByKey(GenerWorkFlowAttr.TodoEmps, value);
+	}
 	/** 
 	 参与人
 	*/

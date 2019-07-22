@@ -5085,7 +5085,8 @@ public class Dev2Interface {
 			emps.AddEntity(emp);
 		}
 
-		gwf.setTodoEmps(todoEmps);
+//		gwf.setTodoEmps(todoEmps);
+		gwf.setTodoEmpsV2(todoEmps);
 		gwf.setHuiQianTaskSta(HuiQianTaskSta.None);
 		gwf.setWFState(WFState.Runing);
 
@@ -6059,7 +6060,8 @@ public class Dev2Interface {
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
 		gwf.setWFState(WFState.Runing);
 		gwf.setTaskSta(TaskSta.None);
-		gwf.setTodoEmps(toEmper);
+//		gwf.setTodoEmps(toEmper);
+		gwf.setTodoEmpsV2(toEmper);
 		gwf.setFK_Node(toNodeID);
 		gwf.setNodeName(nd.getName());
 		// gwf.StarterName =emp.Name;

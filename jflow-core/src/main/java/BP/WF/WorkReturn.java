@@ -382,7 +382,8 @@ public class WorkReturn
             
             toEmps += item.getFK_Emp() + "," + item.getFK_EmpText() + ",";
         }
-        gwfP.setTodoEmps(toEmps);
+//        gwfP.setTodoEmps(toEmps);
+		gwfP.setTodoEmpsV2(toEmps);
         gwfP.Update();
         
        // #region 写入退回提示.
@@ -979,7 +980,8 @@ public class WorkReturn
             emps += WebUser.getNo() + "@";
         gwf.setEmps(emps);
         
-        gwf.setTodoEmps(toDoEmps);
+//        gwf.setTodoEmps(toDoEmps);
+		gwf.setTodoEmpsV2(toDoEmps);
         gwf.setTodoEmpsNum( gwls.size());
         gwf.Update();
         

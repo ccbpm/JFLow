@@ -1,12 +1,12 @@
 package BP.Sys;
 
-import BP.En.EntitiesOID;
+import BP.En.EntitiesMyPK;
 import BP.En.Entity;
 
 /**
  * 默认值s
  */
-public class DefVals extends EntitiesOID {
+public class DefVals extends EntitiesMyPK {
 	/** 
 	 默认值
 	 

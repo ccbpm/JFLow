@@ -1,11 +1,11 @@
 package BP.Sys;
 
-import BP.En.EntityOIDAttr;
+import BP.En.EntityMyPKAttr;
 
 /**
  * 属性
  */
-public class DefValAttr extends EntityOIDAttr
+public class DefValAttr extends EntityMyPKAttr
 {
 	/** 
 	 父节点编号

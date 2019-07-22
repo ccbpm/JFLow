@@ -1,14 +1,9 @@
 package BP.Sys;
-
-import BP.DA.Depositary;
 import BP.En.EnType;
-import BP.En.EntitiesOID;
-import BP.En.Entity;
-import BP.En.EntityOID;
-import BP.En.EntityTree;
+import BP.En.EntityMyPK;
 import BP.En.Map;
 
-public class DefVal extends EntityOID {
+public class DefVal extends EntityMyPK {
 		
 	    /**
 	     * @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
@@ -116,7 +111,8 @@ public class DefVal extends EntityOID {
 			map.setEnType( EnType.Sys);
 			map.setEnDesc("选择词汇");
 			map.setCodeStruct( "2");
-			map.AddTBIntPKOID();
+			//设置PK.
+			map.AddMyPK();
 
 				//秦2015-1-10   根据公司需求改动   以下是源码
 				//map.AddTBStringPK(DefValAttr.No, null, "编号", true, true, 1, 50, 20);

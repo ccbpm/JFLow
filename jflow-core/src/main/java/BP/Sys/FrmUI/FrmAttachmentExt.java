@@ -20,6 +20,7 @@ import BP.Sys.SystemConfig;
 import BP.Sys.UploadFileNumCheck;
 import BP.Tools.FtpUtil;
 import BP.Tools.StringHelper;
+import BP.Sys.MapAttrAttr;
 
 /**
  * 附件
@@ -925,6 +926,13 @@ public class FrmAttachmentExt extends EntityMyPK {
 	protected void afterDelete() throws Exception {
 		GroupField gf = new GroupField();
 		gf.Delete(GroupFieldAttr.CtrlID, this.getMyPK());
+
+		//把相关的字段也要删除.
+		MapAttrString attr = new MapAttrString(this.getMyPK());
+		attr.Delete(MapAttrAttr.MyPK,this.getMyPK());
+
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 
 		super.afterDelete();
 	}

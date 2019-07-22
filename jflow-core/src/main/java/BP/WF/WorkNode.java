@@ -6,11 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
-
-import com.sun.star.util.DateTime;
-
 import BP.En.*;
 import BP.DA.*;
 import BP.Port.*;
@@ -22,7 +18,6 @@ import BP.WF.Template.*;
 import BP.WF.Template.Bill;
 import BP.WF.Template.BillFileType;
 import BP.WF.Template.FrmWorkCheckSta;
-import BP.WF.Glo;
 import BP.WF.Data.*;
 
 /**
@@ -991,27 +986,6 @@ public class WorkNode {
 		return _HisFlowCompleteConditions;
 	}
 
-	/// #endregion
-
-	/// #region 关于质量考核
-	///// <summary>
-	///// 得到以前的已经完成的工作节点.
-	///// </summary>
-	///// <returns></returns>
-	// public WorkNodes GetHadCompleteWorkNodes()
-	// {
-	// WorkNodes mywns = new WorkNodes();
-	// WorkNodes wns = new WorkNodes(this.HisNode.HisFlow, this.HisWork.OID);
-	// foreach (WorkNode wn in wns)
-	// {
-	// if (wn.IsComplete)
-	// mywns.Add(wn);
-	// }
-	// return mywns;
-	// }
-
-	/// #endregion
-
 	/// #region 流程公共方法
 	private Flow _HisFlow = null;
 
@@ -1084,12 +1058,6 @@ public class WorkNode {
 
 		Node nd = NodeSend_GenerNextStepNode_Ext1();
 
-		// 写入到达信息.
-		// this.addMsg(SendReturnMsgFlag.VarToNodeID, (new
-		// Integer(nd.getNodeID())).toString(), (new
-		// Integer(nd.getNodeID())).toString(), SendReturnMsgType.SystemMsg);
-		// this.addMsg(SendReturnMsgFlag.VarToNodeName, nd.getName(),
-		// nd.getName(), SendReturnMsgType.SystemMsg);
 		return nd;
 	}
 
@@ -2153,7 +2121,17 @@ public class WorkNode {
 				GenerWorkFlow gwf = new GenerWorkFlow();
 				gwf.setWorkID(wk.getOID());
 				if (gwf.getIsExits() == false) {
-					gwf.setFID(this.getWorkID());
+                    //干流、子线程关联字段
+                    gwf.setFID(this.getWorkID());
+
+                    //父流程关联字段
+                    gwf.setPWorkID(this.getHisGenerWorkFlow().getPWorkID());
+                    gwf.setPFlowNo(this.getHisGenerWorkFlow().getPFlowNo());
+                    gwf.setPNodeID(this.getHisGenerWorkFlow().getPNodeID());
+
+                    //工程类项目关联字段
+                    gwf.setPrjNo(this.getHisGenerWorkFlow().getPrjNo());
+                    gwf.setPrjName(this.getHisGenerWorkFlow().getPrjName());
 
 					gwf.setTitle(this.getHisGenerWorkFlow().getTitle()); // WorkNode.GenerTitle(this.rptGe);
 					gwf.setWFState(WFState.Runing);
@@ -2240,6 +2218,7 @@ public class WorkNode {
 	}
 
 	/**
+     *
 	 * 当前产生的接受人员列表.
 	 * 
 	 */
@@ -2265,8 +2244,6 @@ public class WorkNode {
 		ps.Add("FK_Node", toNode.getNodeID());
 
 		/// #endregion 删除到达节点的子线程如果有，防止退回信息垃圾数据问题，如果退回处理了这个部分就不需要处理了.
-
-		/// #endregion GenerFH
 
 		/// #region 产生下一步骤的工作人员
 		// 发起.
@@ -2747,8 +2724,18 @@ public class WorkNode {
 				gwf.setStarterName(this.getExecerName());
 				gwf.setFK_Flow(toNode.getFK_Flow());
 				gwf.setFlowName(toNode.getFlowName());
-
+                //干流、子线程关联字段
 				gwf.setFID(this.getWorkID());
+
+                //父流程关联字段
+                gwf.setPWorkID(this.getHisGenerWorkFlow().getPWorkID());
+                gwf.setPFlowNo(this.getHisGenerWorkFlow().getPFlowNo());
+                gwf.setPNodeID(this.getHisGenerWorkFlow().getPNodeID());
+
+                //工程类项目关联字段
+                gwf.setPrjNo(this.getHisGenerWorkFlow().getPrjNo());
+                gwf.setPrjName(this.getHisGenerWorkFlow().getPrjName());
+
 				gwf.setFK_FlowSort(toNode.getHisFlow().getFK_FlowSort());
 				gwf.setNodeName(toNode.getName());
 				gwf.setFK_Dept(wl.getFK_Dept());
@@ -4173,7 +4160,7 @@ public class WorkNode {
 		// 检查是否写入了审核意见.
 		if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable) {
 			/* 检查审核意见 */
-			String sql = "SELECT Msg,EmpToT FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow())
+			String sql = "SELECT Msg \"Msg\",EmpToT \"EmpToT\" FROM ND" + Integer.parseInt(this.getHisNode().getFK_Flow())
 					+ "Track WHERE  EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + this.getHisNode().getNodeID()
 					+ " AND WorkID=" + this.getWorkID() + " AND ActionType=" + ActionType.WorkCheck.getValue();
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -4205,9 +4192,10 @@ public class WorkNode {
 				  if (item.getFrmEnableRole() == FrmEnableRole.Disable)
                       continue;
 				  
-				   if (item.getHisFrmType() != FrmType.FoolForm && item.getHisFrmType() != FrmType.FreeFrm)
+				  if (item.getHisFrmType() != FrmType.FoolForm && item.getHisFrmType() != FrmType.FreeFrm)
                        continue;
-
+                  if (item.getFrmSln() == FrmSln.Readonly)
+                       continue;
 				
 				
 				MapData md = new MapData();
@@ -4215,10 +4203,22 @@ public class WorkNode {
 				md.Retrieve();
 				if (md.getHisFrmType() != FrmType.FoolForm && md.getHisFrmType() != FrmType.FreeFrm)
 					continue;
+                //判断WhoIsPK
+                long pkVal = this.getWorkID();
+                if (item.getWhoIsPK() == WhoIsPK.FID)
+                    pkVal = this.getHisGenerWorkFlow().getFID();
+                if (item.getWhoIsPK() == WhoIsPK.PWorkID)
+                    pkVal = this.getHisGenerWorkFlow().getPWorkID();
+                if(item.getWhoIsPK() == WhoIsPK.PPWorkID)
+                {
+                    GenerWorkFlow gwf = new GenerWorkFlow(this.getHisGenerWorkFlow().getPWorkID());
+                    if(gwf!=null && gwf.getPWorkID()!=0)
+                        pkVal = gwf.getPWorkID();
+                }
 				MapAttrs mapAttrs = md.getMapAttrs();
 				// 主表实体.
 				GEEntity en = new GEEntity(item.getFK_Frm());
-				en.setOID(this.getWorkID());
+				en.setOID(pkVal);
 				en.RetrieveFromDBSources();
 				Row row = en.getRow();
 				if (item.getFrmSln() == FrmSln.Self) {
@@ -7611,7 +7611,7 @@ public class WorkNode {
 	/**
 	 * 产生合流汇总数据 把子线程的子表主表数据放到合流点的从表上去
 	 * 
-	 * @param nd
+	 * @param ndOfHeLiu
 	 * @throws Exception
 	 */
 	private void GenerHieLiuHuiZhongDtlData_2013(Node ndOfHeLiu) throws Exception {
@@ -7818,7 +7818,7 @@ public class WorkNode {
 	/**
 	 * 获取分流与合流之间的子线程节点集合.
 	 * 
-	 * @param toNode
+	 * @param toHLNode
 	 * @return
 	 * @throws Exception
 	 */

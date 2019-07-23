@@ -2,7 +2,6 @@ package BP.WF.HttpHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -20,10 +19,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-//import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.multipart.MultipartHttpServletRequest;
-//import org.springframework.web.multipart.commons.CommonsMultipartFile;
-//import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import com.sun.star.bridge.oleautomation.Decimal;
 
@@ -830,7 +825,7 @@ public class WF_Comm extends WebContralBase {
 		java.lang.Class tp = en.getClass();
 		java.lang.reflect.Method mp = null;
 		for (java.lang.reflect.Method m : tp.getMethods()) {
-			if (m.getName().indexOf(methodName) != -1) {
+			if (m.getName().equals(methodName)==true) {
 				mp = m;
 				break;
 			}
@@ -2212,17 +2207,13 @@ public class WF_Comm extends WebContralBase {
 	 * 
 	 * @param clsName
 	 *            类名称
-	 * @param monthodName
+	 * @param methodName
 	 *            方法名称
 	 * @param paras
 	 *            参数，可以为空.
 	 * @return 执行结果
 	 * @throws Exception
 	 */
-	// C# TO JAVA CONVERTER TODO TASK: C# optional parameters are not converted
-	// to Java:
-	// ORIGINAL LINE: public string Exec(string clsName, string methodName,
-	// string paras=null)
 	public final String Exec(String clsName, String methodName, String paras) throws Exception {
 
 		/// #region 处理 HttpHandler 类.

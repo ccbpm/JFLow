@@ -681,12 +681,30 @@ public class GenerWorkFlow extends Entity
 	 
 	
     public void setHuiQianSendToNodeIDStr(String name) {
-		
 		this.SetPara("HuiQianSendToNodeID", name);
-		
 	}
-	   
-	
+
+	/**
+	 * 工程项目编号
+	 * @return
+	 */
+	public String getPrjNo(){
+		return this.GetValStringByKey(GenerWorkFlowAttr.PrjNo);
+	}
+	public void setPrjNo(String value){
+		this.SetValByKey(GenerWorkFlowAttr.PrjNo,value);
+	}
+
+	/**
+	 * 工程项目名称
+	 * @return
+	 */
+	public String getPrjName(){
+		return this.GetValStringByKey(GenerWorkFlowAttr.PrjName);
+	}
+	public void setPrjName(String value){
+		this.SetValByKey(GenerWorkFlowAttr.PrjName,value);
+	}
 	/** 
 	 产生的工作流程
 	*/
@@ -784,6 +802,9 @@ public class GenerWorkFlow extends Entity
 
 			//待办状态(0=待办中,1=预警中,2=逾期中,3=按期完成,4=逾期完成) 
 		map.AddTBInt(GenerWorkFlowAttr.TodoSta, 0, "待办状态", true, true);
+
+		map.AddTBString(GenerWorkFlowAttr.PrjNo, null, "PrjNo", true, false, 0, 100, 10);
+		map.AddTBString(GenerWorkFlowAttr.PrjName, null, "PrjNo", true, false, 0, 100, 10);
 
 		map.AddTBMyNum();
 

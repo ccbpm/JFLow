@@ -240,5 +240,7 @@ public class GenerWorkFlowAttr
     public static final String HuiQianTaskSta = "HuiQianTaskSta";
     
     public static final String Domain = "Domain";
-		///#endregion
+
+    public static final String PrjNo="PrjNo";
+    public static final String PrjName="PrjName";
 }

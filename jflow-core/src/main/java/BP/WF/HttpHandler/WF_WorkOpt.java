@@ -235,7 +235,7 @@ public class WF_WorkOpt extends WebContralBase {
         for(FrmAttachmentDB athDB : frmathdbs.ToJavaList())
         {	
         	 row = athDt.NewRow();
-        	 row.setValue("NodeID",this.getFK_MapData());
+        	 row.setValue("NodeID",this.getFK_Node());
 			 row.setValue("MyPK",athDB.getMyPK());
 			 row.setValue("FK_FrmAttachment",athDB.getFK_FrmAttachment());
 			 row.setValue("FK_MapData",athDB.getFK_MapData());

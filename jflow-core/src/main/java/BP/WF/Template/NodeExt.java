@@ -1112,7 +1112,15 @@ public class NodeExt extends Entity
           Node fl = new Node();
           fl.setNodeID( this.getNodeID());
           fl.RetrieveFromDBSources();
-          fl.Update(); 
+          fl.Update();
+          //如果是组长会签模式，通用选择器只能单项选择
+          if(this.GetValIntByKey(BtnAttr.HuiQianRole) == HuiQianRole.TeamupGroupLeader.getValue())
+          {
+              Selector selector = new Selector(this.getNodeID());
+              selector.setIsSimpleSelector(true);
+              selector.Update();
+
+          }
           
           BtnLab btnLab = new BtnLab();
           btnLab.setNodeID( this.getNodeID());
@@ -1169,16 +1177,16 @@ public class NodeExt extends Entity
 
                 //获得到达的节点.
                 List<Node> nds = nd.getHisToNodes().ToJavaList();
-                for(Node mynd : nds)
-                {
-                    if (mynd.getHisDeliveryWay() == DeliveryWay.BySelected)
-                    {
-                        String errInfo = "设置矛盾:";
-                        errInfo += "@当前节点您设置的访问规则是按照方向条件控制的";
-                        errInfo += "但是到达的节点["+mynd.getName()+"]的接收人规则是按照上一步选择的,设置矛盾.";                        
-                      
-							throw new Exception(errInfo);
-						 
+                if(nds.size()>1) {
+                    for (Node mynd : nds) {
+                        if (mynd.getHisDeliveryWay() == DeliveryWay.BySelected) {
+                            String errInfo = "设置矛盾:";
+                            errInfo += "@当前节点您设置的访问规则是按照方向条件控制的";
+                            errInfo += "但是到达的节点[" + mynd.getName() + "]的接收人规则是按照上一步选择的,设置矛盾.";
+
+                            throw new Exception(errInfo);
+
+                        }
                     }
                 }
             }

@@ -2,7 +2,6 @@ package BP.GPM;
 
 import BP.En.EntitiesTree;
 import BP.En.Entity;
-import BP.En.QueryObject;
 
 /** 
 得到集合

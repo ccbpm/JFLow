@@ -119,7 +119,7 @@ public class PortalWebService {
 	 */
 	private boolean HttpRequest(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
 			String msgType, String method) throws Exception {
-		String webPath = SystemConfig.getPathOfWebApp()+"services/PortalInterfaceWS";
+		String webPath = SystemConfig.getAppSettings().get("HostURL")+"/services/PortalInterfaceWS";
 		Service service = new Service();
 		Call call = (Call) service.createCall();
 		call.setTargetEndpointAddress(webPath);

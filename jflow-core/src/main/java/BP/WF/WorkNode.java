@@ -1851,6 +1851,11 @@ public class WorkNode {
 
 		// 初试化他们的工作人员．
 		current_gwls = this.Func_GenerWorkerLists(town);
+		if(town.getHisNode().getTodolistModel() == TodolistModel.TeamupGroupLeader && current_gwls.size() > 1)
+		{
+			throw new Exception("@接收人出错! 详情:{节点" + town.getHisNode().getNodeID() + "是组长会签模式，接受人只能选择一人}");
+
+		}
 		if (town.getHisNode().getTodolistModel() == TodolistModel.Order && current_gwls.size() > 1) {
 			// 如果到达的节点是队列流程节点，就要设置他们的队列顺序.
 			int idx = 0;

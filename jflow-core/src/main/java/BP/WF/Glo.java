@@ -256,7 +256,7 @@ public class Glo {
 			return null; // 不需要升级.
 
 		// #region 升级填充事件.
-		// pop自动填充
+		/*// pop自动填充
 		MapExts exts = new MapExts();
 		QueryObject qo = new QueryObject(exts);
 		qo.AddWhere(MapExtAttr.ExtType, " LIKE ", "Pop%");
@@ -270,7 +270,7 @@ public class Glo {
 				continue;
 			}
 
-			if (ma.GetParaString("PopModel") == ext.getExtType())
+			if (ma.GetParaString("PopModel").equals(ext.getExtType()) == true)
 				continue; // 已经修复了，或者配置了.
 
 			ma.SetPara("PopModel", ext.getExtType());
@@ -376,7 +376,7 @@ public class Glo {
 
 			extP.Insert(); // 执行插入.
 
-		}
+		}*/
 		// #region 升级填充事件.
 
 		String msg = "";
@@ -2136,7 +2136,8 @@ public class Glo {
 	/**
 	 * 产生单据编号
 	 * 
-	 * @param billFormat
+	 * @param billNo
+	 * @param workid
 	 * @param en
 	 * @return
 	 * @throws Exception

@@ -765,10 +765,11 @@ function valitationAfter(o, validateType) {
         if (!flag) {
             o.value = 0;
         }
-    } else {
-        if (isNaN(value)) execCommand('undo');
-       
     }
+    // else {
+    //     if (isNaN(value)) execCommand('undo');
+    //
+    // }
 }
 
 /**

@@ -433,8 +433,7 @@ public class FrmNode extends EntityMyPK {
 	protected boolean beforeUpdateInsertAction() throws Exception {
 		this.setMyPK(this.getFK_Frm() + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
 		// 获取表单的类型
-		MapData mapData = new MapData(this.getFK_Frm());
-
+		MapData mapData = new MapData();
 		mapData.setNo(this.getFK_Frm());
 		if (mapData.RetrieveFromDBSources() == 1)
 			this.setHisFrmType(mapData.getHisFrmType());

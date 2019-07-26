@@ -3338,7 +3338,7 @@ public class WF_WorkOpt extends WebContralBase {
 
        //工作人员列表.已经走完的节点与人员.
        GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID());
-	   GenerWorkerList gwln = (GenerWorkerList) gwls.GetEntityByKey(GenerWorkerListAttr.FK_Node, nd.getNodeID());
+	   GenerWorkerList gwln = (GenerWorkerList) gwls.GetEntityByKey(GenerWorkerListAttr.FK_Node, this.getFK_Node());
 	   if (gwln == null){
 		   gwln = new GenerWorkerList();
 		   gwln.setFK_Node(currNode.getNodeID());

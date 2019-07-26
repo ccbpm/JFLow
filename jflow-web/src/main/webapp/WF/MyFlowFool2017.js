@@ -1163,7 +1163,11 @@ function Ele_FrmCheck(wf_node) {
     var sta = wf_node.FWCSta;
 
     var h = wf_node.FWC_H + 1300;
-    var src = "./WorkOpt/WorkCheck.htm?s=2";
+    var src="";
+    if(wf_node.FWCVer ==0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
+        src = "./WorkOpt/WorkCheck.htm?s=2";
+    else
+        src = "./WorkOpt/WorkCheck2019.htm?s=2";
     var fwcOnload = "";
     var paras = '';
 

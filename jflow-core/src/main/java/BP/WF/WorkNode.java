@@ -7085,7 +7085,7 @@ public class WorkNode {
 				if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
 				{
 					//获取审核组件信息
-					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom="+WebUser.getNo();
+					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom='"+WebUser.getNo()+"'";
 					if(at != ActionType.TeampUp)
 						t.setMsg(t.getMsg()+DBAccess.RunSQLReturnStringIsNull(sql, ""));
 					else
@@ -7233,7 +7233,7 @@ public class WorkNode {
 				if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
 				{
 					//获取审核组件信息
-					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom="+WebUser.getNo();
+					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom='"+WebUser.getNo()+"'";
 					if(at != ActionType.TeampUp)
 						t.setMsg(t.getMsg()+DBAccess.RunSQLReturnStringIsNull(sql, ""));
 					else

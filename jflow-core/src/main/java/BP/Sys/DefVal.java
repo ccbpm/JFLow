@@ -107,7 +107,7 @@ public class DefVal extends EntityMyPK {
 			{
 				return this.get_enMap();
 			}
-			Map map = new Map("Sys_DefVal");
+			Map map = new Map("Sys_UserRegedit");
 			map.setEnType( EnType.Sys);
 			map.setEnDesc("选择词汇");
 			map.setCodeStruct( "2");

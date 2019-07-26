@@ -1349,6 +1349,19 @@ public abstract class Entities extends ArrayList<Entity>
 		qo.AddWhere(key3, val3);
 		return qo.DoQuery();
 	}
+
+	public final int Retrieve(String key, Object val, String key2, Object val2,
+							  String key3, Object val3,String ordery) throws Exception
+	{
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere(key, val);
+		qo.addAnd();
+		qo.AddWhere(key2, val2);
+		qo.addAnd();
+		qo.AddWhere(key3, val3);
+		qo.addOrderBy(ordery);
+		return qo.DoQuery();
+	}
 	
 	public final int Retrieve(String key, Object val, String key2, Object val2,
 			String key3, Object val3, String key4, Object val4) throws Exception

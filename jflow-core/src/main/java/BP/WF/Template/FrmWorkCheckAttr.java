@@ -109,6 +109,7 @@ public class FrmWorkCheckAttr extends EntityNoAttr
 	public static final String FWCIsShowReturnMsg = "FWCIsShowReturnMsg";
 	
 	public static final String FWCMsgShow = "FWCMsgShow";
+	public static final String FWCVer = "FWCVer";//审核组件版本号
 	
 	
 	

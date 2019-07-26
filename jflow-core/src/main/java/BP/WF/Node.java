@@ -651,6 +651,16 @@ public class Node extends Entity {
 	}
 
 	/**
+	 * 版本控制
+	 */
+	public final int getFWCVer(){
+		return this.GetValIntByKey(FrmWorkCheckAttr.FWCVer);
+	}
+	public final void setFWCVer(int value){
+		this.SetValByKey(FrmWorkCheckAttr.FWCVer,value);
+	}
+
+	/**
 	 * 内部编号
 	 */
 	public final String getNo() {
@@ -2078,6 +2088,7 @@ public class Node extends Entity {
 		// #region 审核组件.
 		map.AddTBInt(NodeAttr.FWCSta, 0, "审核组件", false, false);
 		map.AddTBFloat(FrmWorkCheckAttr.FWC_H, 0, "审核组件高度", false, true);
+		map.AddTBInt(FrmWorkCheckAttr.FWCVer, 0, "审核组件版本号", false, true);
 		map.AddTBInt(FrmWorkCheckAttr.FWCOrderModel, 0, "协作模式下操作员显示顺序", false, false);
 		// #endregion 审核组件.
 
@@ -2090,10 +2101,6 @@ public class Node extends Entity {
 		map.AddTBInt(NodeAttr.TAlertWay, 0, "逾期提醒方式", false, false); // "限期(天)"
 
 		map.AddTBFloat(NodeAttr.WarningDay, 1, "工作预警(天)", true, false); // "警告期限(0不警告)"
-		// map.AddTBFloat(NodeAttr.WarningHour, 0, "工作预警(小时)", true, false); //
-		// "警告期限(0不警告)"
-		// map.SetHelperUrl(NodeAttr.WarningHour,
-		// "http://ccbpm.mydoc.io/?v=5404&t=17999");
 
 		map.AddTBInt(NodeAttr.WAlertRole, 0, "预警提醒规则", false, false); // "限期(天)"
 		map.AddTBInt(NodeAttr.WAlertWay, 0, "预警提醒方式", false, false); // "限期(天)"

@@ -303,7 +303,15 @@ public class FrmWorkCheck extends Entity {
 		this.SetValByKey(FrmWorkCheckAttr.SigantureEnabel, value);
 	}
 
-	/// #endregion
+	/**
+	 * 版本控制
+	 */
+	public final int getFWCVer(){
+		return this.GetValIntByKey(FrmWorkCheckAttr.FWCVer);
+	}
+	public final void setFWCVer(int value){
+		this.SetValByKey(FrmWorkCheckAttr.FWCVer,value);
+	}
 
 	/**
 	 * 控制
@@ -440,6 +448,9 @@ public class FrmWorkCheck extends Entity {
 		// for tianye , 多人审核的时候，不让其看到其他人的意见.
 		map.AddDDLSysEnum(FrmWorkCheckAttr.FWCMsgShow, 0, "审核意见显示方式", true, true, FrmWorkCheckAttr.FWCMsgShow,
 				"@0=都显示@1=仅显示自己的意见");
+		//版本号
+		map.AddDDLSysEnum(FrmWorkCheckAttr.FWCVer, 0, "审核意见版本号", true, true, FrmWorkCheckAttr.FWCVer,
+				"@0=2018@1=2019");
 
 		this.set_enMap(map);
 		return this.get_enMap();

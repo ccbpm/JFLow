@@ -5695,6 +5695,7 @@ public class Flow extends BP.En.EntityNoName {
 
 							// 把抄送的信息也导入里面去.
 							cc.DirectUpdate();
+							fwc.setFWCVer(1);//版本改成1
 							fwc.DirectUpdate();
 							DBAccess.RunSQL("DELETE FROM Sys_MapAttr WHERE FK_MapData='ND" + nd.getNodeID() + "'");
 						} catch (RuntimeException ex) {
@@ -6348,7 +6349,7 @@ public class Flow extends BP.En.EntityNoName {
 				nd.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
 			}
 		}
-
+		nd.setFWCVer(1);
 		nd.Insert();
 		nd.CreateMap();
 

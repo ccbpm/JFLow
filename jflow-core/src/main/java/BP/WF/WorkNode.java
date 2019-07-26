@@ -7065,6 +7065,7 @@ public class WorkNode {
 		case UnSend:
 		case ForwardFL:
 		case ForwardHL:
+		case TeampUp:
 			// 判断是否有焦点字段，如果有就把它记录到日志里。
 			if (this.getHisNode().getFocusField().length() > 1) {
 				String exp = this.getHisNode().getFocusField();
@@ -7078,6 +7079,17 @@ public class WorkNode {
 				if (t.getMsg().contains("@")) {
 					Log.DebugWriteError("@在节点(" + this.getHisNode().getNodeID() + " ， " + this.getHisNode().getName()
 							+ ")焦点字段被删除了,表达式为:" + this.getHisNode().getFocusField() + " 替换的结果为:" + t.getMsg());
+				}
+			}else{
+				//判断是否有审核组件，把审核信息存储在Msg中 @yuan
+				if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
+				{
+					//获取审核组件信息
+					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom="+WebUser.getNo();
+					if(at != ActionType.TeampUp)
+						t.setMsg(t.getMsg()+DBAccess.RunSQLReturnStringIsNull(sql, ""));
+					else
+						t.setMsg(t.getMsg()+"WorkCheck@"+DBAccess.RunSQLReturnStringIsNull(sql, ""));
 				}
 			}
 			break;
@@ -7196,10 +7208,12 @@ public class WorkNode {
 
 		switch (at) {
 		case Forward:
+		case ForwardAskfor:
 		case Start:
 		case UnSend:
 		case ForwardFL:
 		case ForwardHL:
+		case TeampUp:
 			// 判断是否有焦点字段，如果有就把它记录到日志里。
 			if (this.getHisNode().getFocusField().length() > 1) {
 				String exp = this.getHisNode().getFocusField();
@@ -7213,6 +7227,17 @@ public class WorkNode {
 				if (t.getMsg().contains("@")) {
 					Log.DebugWriteError("@在节点(" + this.getHisNode().getNodeID() + " ， " + this.getHisNode().getName()
 							+ ")焦点字段被删除了,表达式为:" + this.getHisNode().getFocusField() + " 替换的结果为:" + t.getMsg());
+				}
+			}else{
+				//判断是否有审核组件，把审核信息存储在Msg中 @yuan
+				if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
+				{
+					//获取审核组件信息
+					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom="+WebUser.getNo();
+					if(at != ActionType.TeampUp)
+						t.setMsg(t.getMsg()+DBAccess.RunSQLReturnStringIsNull(sql, ""));
+					else
+						t.setMsg(t.getMsg()+"WorkCheck@"+DBAccess.RunSQLReturnStringIsNull(sql, ""));
 				}
 			}
 			break;

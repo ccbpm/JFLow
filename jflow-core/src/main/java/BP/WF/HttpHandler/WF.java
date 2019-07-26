@@ -799,7 +799,20 @@ public class WF extends WebContralBase {
 	public final String Start_Init() throws Exception {
 		//定义容器.
         DataSet ds = new DataSet();
+        BP.WF.Port.WFEmp em = new WFEmp();
+        em.setNo(BP.Web.WebUser.getNo());
+        if (em.RetrieveFromDBSources() == 0)
+        {
+            em.setFK_Dept(BP.Web.WebUser.getFK_Dept());
+            em.setName(WebUser.getName());
+            em.Insert();
+        }
 
+        //获取存取在WF_Emp中的StartFlows的数据
+        String sql = "SELECT StartFlows From WF_Emp WHERE No='" + WebUser.getNo() + "'";
+        String json = DBAccess.RunSQLReturnString(sql);
+        if (DataType.IsNullOrEmpty(json) == false)
+            return json;
         //流程类别.
         FlowSorts fss = new FlowSorts();
         fss.RetrieveAll();
@@ -812,9 +825,19 @@ public class WF extends WebContralBase {
         DataTable dtStart = Dev2Interface.DB_StarFlows(WebUser.getNo());
         dtStart.TableName = "Start";
         ds.Tables.add(dtStart);
+        json = BP.Tools.Json.ToJson(ds);
+        //把json存入数据表，避免下一次再取.
+        if (json.length() > 40)
+        {
+            Paras ps = new Paras();
+            ps.SQL = "UPDATE WF_Emp SET StartFlows=" + ps.getDBStr() + "StartFlows WHERE No=" + ps.getDBStr() + "No";
+            ps.Add("StartFlows", json);
+            ps.Add("No", WebUser.getNo());
+            DBAccess.RunSQL(ps);
+        }
 
         //返回组合
-        return BP.Tools.Json.ToJson(ds);
+        return json;
 	}
 
 	/**

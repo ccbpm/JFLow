@@ -295,7 +295,7 @@ public class WFEmp extends EntityNoName
 		 
 		map.AddTBString(WFEmpAttr.Msg, null, "Msg", true, true, 0, 4000, 20);
 		map.AddTBString(WFEmpAttr.Style, null, "Style", true, true, 0, 4000, 20);
-		map.AddTBString(WFEmpAttr.StartFlows, null, "可以发起的流程", true, true, 0, 4000, 20);
+		//map.AddTBString(WFEmpAttr.StartFlows, null, "可以发起的流程", true, true, 0, 4000, 20);
 		
 		map.AddTBInt(WFEmpAttr.Idx, 0, "Idx", false, false);
 		

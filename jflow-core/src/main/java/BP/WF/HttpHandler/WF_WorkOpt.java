@@ -3338,6 +3338,15 @@ public class WF_WorkOpt extends WebContralBase {
 
        //工作人员列表.已经走完的节点与人员.
        GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID());
+	   GenerWorkerList gwln = (GenerWorkerList) gwls.GetEntityByKey(GenerWorkerListAttr.FK_Node, nd.getNodeID());
+	   if (gwln == null){
+		   gwln = new GenerWorkerList();
+		   gwln.setFK_Node(currNode.getNodeID());
+		   gwln.setFK_NodeText(currNode.getName());
+		   gwln.setFK_Emp(WebUser.getNo());
+		   gwln.setFK_EmpText(WebUser.getName());
+		   gwls.AddEntity(gwln);
+	   }
        ds.Tables.add(gwls.ToDataTableField("WF_GenerWorkerList"));
 
        //设置的手工运行的流转信息.
@@ -3357,6 +3366,8 @@ public class WF_WorkOpt extends WebContralBase {
 
            for(Node nd : nds.ToJavaList())
            {
+           		if(nd.getNodeID() == this.getFK_Node())
+           			continue;
         	   GenerWorkerList gwl = (GenerWorkerList) gwls.GetEntityByKey(GenerWorkerListAttr.FK_Node, nd.getNodeID());
                if (gwl == null)
                {

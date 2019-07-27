@@ -208,7 +208,7 @@ function Ele_SubFlow(wf_node) {
     var paras = '';
 
     paras += "&FID=" + GetQueryString("FID");
-    paras += "&OID=" + GetQueryString("OID"); 
+    paras += "&OID=" + GetQueryString("OID");
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
     paras += '&WorkID=' + GetQueryString("OID"); ;
@@ -279,12 +279,13 @@ function Ele_FrmCheck(wf_node) {
     if (sta == 2)//只读
         isReadonly = "1";
 
+    var src = "";
 
-    var src="";
-    if(wf_node.FWCVer ==0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
-        src = "../WorkOpt/WorkCheck.htm?s=2";
+    if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
+        src = "../WorkOpt/WorkCheck.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
     else
-        src = "../WorkOpt/WorkCheck2019.htm?s=2";
+        src = "../WorkOpt/WorkCheck2019.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
+
     var fwcOnload = "";
     var paras = '';
 
@@ -1456,7 +1457,7 @@ function Ele_Dtl(frmDtl) {
 
     var refPK = GetQueryString('OID');
     if (refPK == null)
-        refPK = GetQueryString('OID');
+        refPK = GetQueryString('WorkID');
 
     var isReadonly = GetQueryString("IsReadonly");
     if (isReadonly == "null" || isReadonly == "0" || isReadonly == null || isReadonly == undefined)
@@ -1635,7 +1636,7 @@ function GetLab(frmData, attr) {
             if (no == "01")
                 url += "&IsStartNode=" + 1; //是否是开始节点
 
-           
+
             if (attr.FK_MapData.indexOf(nodeID) == -1)
                 isReadonly = true;
         }

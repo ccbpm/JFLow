@@ -136,6 +136,11 @@ public class DefVal extends EntityMyPK {
 			this.set_enMap(map);
 			return this.get_enMap();
 		}
-
-
+		@Override
+		protected  boolean beforeInsert() throws Exception
+		{
+			//设置主键.
+			this.setMyPK(BP.DA.DBAccess.GenerGUID());
+			return super.beforeInsert();
+		}
 }

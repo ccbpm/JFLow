@@ -3311,15 +3311,11 @@ public abstract class Entity implements Serializable {
 		for (MapAttr attr : attrs.ToJavaList()) {
 			if(attr.getLGType()== BP.En.FieldTypeS.FK) 
 				this.SetValRefTextByKey(attr.getKeyOfEn(), "");
-			
-			FrmField frmField = new FrmField();
-			
-			//获取默认值
+
 			String v = attr.getDefValReal();
-			
 			if (v== null ||( v != null && v.contains("@") == false))
 				continue;
-		  
+
 			// 含有特定值时取消重新设定默认值
 			String myval = this.GetValStringByKey(attr.getKeyOfEn()); 
 			
@@ -3475,10 +3471,12 @@ public abstract class Entity implements Serializable {
 			String v = attr.getDefaultValOfReal();
 			if(i==1)
 				v = frmField.getDefVal();
-			
-			if (v== null ||( v != null && v.contains("@") == false))
+			if (v== null)
 				continue;
-		  
+			if( v != null && v.contains("@") == false) {
+				this.SetValByKey(attr.getKey(), v);
+				continue;
+			}
 			// 含有特定值时取消重新设定默认值
 			String myval = this.GetValStringByKey(attr.getKey()); 
 			

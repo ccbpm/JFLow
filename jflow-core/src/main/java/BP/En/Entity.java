@@ -3469,16 +3469,18 @@ public abstract class Entity implements Serializable {
 			
 			//获取默认值
 			String v = attr.getDefaultValOfReal();
-			if(i==1)
+			if(i==1) {
 				v = frmField.getDefVal();
-			if (DataType.IsNullOrEmpty(v)){
-				v = attr.getDefaultValOfReal();
-			}else{
-				if(v.contains("@") == false) {
-					this.SetValByKey(attr.getKey(), v);
-					continue;
+				if (DataType.IsNullOrEmpty(v)){
+					v = attr.getDefaultValOfReal();
+				}else{
+					if(v.contains("@") == false) {
+							this.SetValByKey(attr.getKey(), v);
+						continue;
+					}
 				}
 			}
+
 			if (DataType.IsNullOrEmpty(v) == true || ( v != null && v.contains("@") == false))
 					continue;
 

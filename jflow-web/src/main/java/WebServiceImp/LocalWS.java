@@ -720,5 +720,19 @@ public class LocalWS implements LocalWSI {
 		return BP.Tools.Json.ToJson(ds);
 	}
 
+	/***
+	 * 根据流程WorkID、FK_Flow删除流程
+	 * @param userNo
+	 * @param workid
+	 * @param fk_flow
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String DeleteFlow(String userNo,long workid,String fk_flow) throws Exception{
+		BP.WF.Dev2Interface.Port_Login(userNo);
+		return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(fk_flow, workid, true);
+	}
+
 
 }

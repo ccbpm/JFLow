@@ -333,4 +333,14 @@ public interface LocalWSI {
     */
    public String DB_MyJoinFlows(String userNo) throws Exception;
 
+	/***
+	 * 根据流程WorkID、FK_Flow删除流程
+	 * @param userNo
+	 * @param workid
+	 * @param fk_flow
+	 * @return
+	 * @throws Exception
+	 */
+   public String DeleteFlow(String userNo,long workid,String fk_flow) throws Exception;
+
 }

@@ -2771,8 +2771,14 @@ public class Glo {
 			Row row = en.getRow();
 	
 			// 特殊判断.
-			if (row.containsKey("OID") == true)
-				exp = exp.replaceAll("@WorkID", row.GetValByKey("OID").toString());
+			if (row.containsKey("OID") == true){
+				if(row.GetValByKey("OID").toString().equals("0") == true){
+					if (row.containsKey("WorkID") == true)
+						exp = exp.replaceAll("@WorkID", row.GetValByKey("WorkID").toString());
+				}else
+					exp = exp.replaceAll("@WorkID", row.GetValByKey("OID").toString());
+			}
+
 	
 			if (exp.contains("@") == false)
 				return exp;

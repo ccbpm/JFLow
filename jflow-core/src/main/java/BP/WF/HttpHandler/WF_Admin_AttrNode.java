@@ -2041,24 +2041,22 @@ public class WF_Admin_AttrNode extends WebContralBase {
 		msg.setSMSPushWay(Integer.parseInt(this.GetRequestVal("RB_SMS").replace("RB_SMS_", "")));
 
 		// 短信手机字段.
-		msg.setSMSField(this.GetRequestVal("DDL_SMS_Fields").toString());
+		msg.setSMSField(this.GetRequestVal("DDL_SMS_Fields"));
 		// 替换变量
-		String smsstr = this.GetRequestVal("TB_SMS").toString();
-
-		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable();
+		String smsstr = this.GetRequestVal("TB_SMS");
 
 		// 短信内容模版.
 		msg.setSMSDoc_Real(smsstr);
 
 		// 邮件.
-		msg.setMailPushWay(Integer.parseInt(this.GetRequestVal("RB_Email").toString().replace("RB_Email_", "")));
+		msg.setMailPushWay(Integer.parseInt(this.GetRequestVal("RB_Email").replace("RB_Email_", "")));
 
 		// 邮件标题与内容.
-		msg.setMailTitle_Real(this.GetRequestVal("TB_Email_Title").toString());
-		msg.setMailDoc_Real(this.GetRequestVal("TB_Email_Doc").toString());
+		msg.setMailTitle_Real(this.GetRequestVal("TB_Email_Title"));
+		msg.setMailDoc_Real(this.GetRequestVal("TB_Email_Doc"));
 
 		// 邮件地址.
-		msg.setMailAddress(this.GetRequestVal("DDL_Email_Fields").toString());
+		msg.setMailAddress(this.GetRequestVal("DDL_Email_Fields"));
 
 
 		// 保存.

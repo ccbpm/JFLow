@@ -875,6 +875,7 @@ public class WF_WorkOpt extends WebContralBase {
 					case TeampUp:
 					case Return:
 					case StartChildenFlow:
+					case ActionType.FlowOver:
 						row = tkDt.NewRow();
 						row.setValue("NodeID", tk.getNDFrom());
 						row.setValue("NodeName", tk.getNDFromT());
@@ -892,7 +893,7 @@ public class WF_WorkOpt extends WebContralBase {
 						row.setValue("T_NodeIndex", 0);
 						row.setValue("T_CheckIndex", 0);
 
-						if (isReadonly == false && tk.getEmpFrom() == WebUser.getNo() && this.getFK_Node() == tk.getNDFrom()
+						/*if (isReadonly == false && tk.getEmpFrom() == WebUser.getNo() && this.getFK_Node() == tk.getNDFrom()
 								&& isExitTb_doc) {
 							Boolean isLast = true;
 							for (Track tk1 : tks.ToJavaList()) {
@@ -918,8 +919,17 @@ public class WF_WorkOpt extends WebContralBase {
 							}
 						} else {
 							row.setValue("Msg", tk.getMsgHtml());
-						}
+						}*/
 
+						if(gwf.getWFState() == WFState.Complete)
+						{
+							row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(),
+									this.getFK_Node(), wcDesc.getFWCDefInfo()));
+						}
+						else
+						{
+							row.setValue("Msg", tk.getMsgHtml());
+						}
 						row.setValue("EmpFrom", tk.getEmpFrom());
 						row.setValue("EmpFromT", tk.getEmpFromT());
 						row.setValue("ActionType", tk.getHisActionType().getValue());

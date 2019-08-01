@@ -875,7 +875,7 @@ public class WF_WorkOpt extends WebContralBase {
 					case TeampUp:
 					case Return:
 					case StartChildenFlow:
-					case ActionType.FlowOver:
+					case FlowOver:
 						row = tkDt.NewRow();
 						row.setValue("NodeID", tk.getNDFrom());
 						row.setValue("NodeName", tk.getNDFromT());

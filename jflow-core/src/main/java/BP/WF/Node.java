@@ -587,7 +587,7 @@ public class Node extends Entity {
 		FrmAttachment workCheckAth = new FrmAttachment();
 		boolean isHave = workCheckAth.RetrieveByAttr(FrmAttachmentAttr.MyPK, "ND"+this.getNodeID() + "_FrmWorkCheck");
 		// 不包含审核组件
-		if (isHave == false) {
+		if (isHave == false && this.getFWCAth() == FWCAth.MinAth) {
 			workCheckAth = new FrmAttachment();
 			// 如果没有查询到它,就有可能是没有创建.
 			workCheckAth.setMyPK("ND"+this.getNodeID() + "_FrmWorkCheck");
@@ -611,7 +611,7 @@ public class Node extends Entity {
 			workCheckAth.setUploadType(AttachmentUploadType.Multi);
 			workCheckAth.setName("审核组件");
 			workCheckAth.SetValByKey("AtPara",
-					"@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=@IsWoEnableTemplete=1");
+					"@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=");
 			workCheckAth.Insert();
 		}
 		return super.beforeUpdate();
@@ -2032,6 +2032,9 @@ public class Node extends Entity {
 	public final String getEnsName() {
 		return "ND" + this.getNodeID() + "s";
 	}
+	public final FWCAth getFWCAth() {
+		return FWCAth.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCAth));
+	}
 
 	/**
 	 * 节点意见名称，如果为空则取节点名称.
@@ -2090,6 +2093,7 @@ public class Node extends Entity {
 		map.AddTBFloat(FrmWorkCheckAttr.FWC_H, 0, "审核组件高度", false, true);
 		map.AddTBInt(FrmWorkCheckAttr.FWCVer, 0, "审核组件版本号", false, true);
 		map.AddTBInt(FrmWorkCheckAttr.FWCOrderModel, 0, "协作模式下操作员显示顺序", false, false);
+		map.AddTBInt("FWCAth", 0, "审核附件是否启用", false, false);
 		// #endregion 审核组件.
 
 		// #region 考核属性.

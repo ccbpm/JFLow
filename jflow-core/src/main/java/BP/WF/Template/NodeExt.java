@@ -250,8 +250,11 @@ public class NodeExt extends Entity
 	public final void setCondModel(CondModel value) {
 		this.SetValByKey(NodeAttr.CondModel, value.getValue());
 	}
-	
-	/** 
+    public final FWCAth getFWCAth() {
+        return FWCAth.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCAth));
+    }
+
+    /**
 	 重写基类方法
 	*/
 	@Override
@@ -316,7 +319,7 @@ public class NodeExt extends Entity
         //节点业务类型.
         map.AddTBInt("NodeAppType", 0, "节点业务类型", false, false);
         map.AddTBInt("FWCSta", 0, "节点状态", false, false);
-
+        map.AddTBInt("FWCAth", 0, "审核附件是否启用", false, false);
         map.AddTBString(NodeAttr.SelfParas, null, "自定义参数", true, false, 0, 500, 10, true);
       //  #endregion  基础属性
 
@@ -1210,34 +1213,35 @@ public class NodeExt extends Entity
 			}
 			
 			//创建审核组件附件
-            FrmAttachment workCheckAth = new FrmAttachment();
-            workCheckAth.setMyPK("ND"+this.getNodeID() + "_FrmWorkCheck");
-            //不包含审核组件
-            if (workCheckAth.RetrieveFromDBSources() == 0)
-            {
-                workCheckAth = new FrmAttachment();
-                /*如果没有查询到它,就有可能是没有创建.*/
-                workCheckAth.setMyPK("ND"+this.getNodeID() + "_FrmWorkCheck");
-                workCheckAth.setFK_MapData("ND"+this.getNodeID());
-                workCheckAth.setNoOfObj("FrmWorkCheck");
-                workCheckAth.setExts("*.*");
+            if(this.getFWCAth() == FWCAth.MinAth) {
+                FrmAttachment workCheckAth = new FrmAttachment();
+                workCheckAth.setMyPK("ND" + this.getNodeID() + "_FrmWorkCheck");
+                //不包含审核组件
+                if (workCheckAth.RetrieveFromDBSources() == 0) {
+                    workCheckAth = new FrmAttachment();
+                    /*如果没有查询到它,就有可能是没有创建.*/
+                    workCheckAth.setMyPK("ND" + this.getNodeID() + "_FrmWorkCheck");
+                    workCheckAth.setFK_MapData("ND" + this.getNodeID());
+                    workCheckAth.setNoOfObj("FrmWorkCheck");
+                    workCheckAth.setExts("*.*");
 
-                //存储路径.
+                    //存储路径.
 
-                workCheckAth.setIsNote(false); //不显示note字段.
-                workCheckAth.setIsVisable(false); // 让其在form 上不可见.
+                    workCheckAth.setIsNote(false); //不显示note字段.
+                    workCheckAth.setIsVisable(false); // 让其在form 上不可见.
 
-                //位置.
-                workCheckAth.setX((float)94.09);
-                workCheckAth.setY((float)333.18);
-                workCheckAth.setW((float)626.36);
-                workCheckAth.setH((float)150);
+                    //位置.
+                    workCheckAth.setX((float) 94.09);
+                    workCheckAth.setY((float) 333.18);
+                    workCheckAth.setW((float) 626.36);
+                    workCheckAth.setH((float) 150);
 
-                //多附件.
-                workCheckAth.setUploadType(BP.Sys.AttachmentUploadType.Multi);
-                workCheckAth.setName("审核组件");
-                workCheckAth.SetValByKey("AtPara", "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=@IsWoEnableTemplete=1");
-                workCheckAth.Insert();
+                    //多附件.
+                    workCheckAth.setUploadType(BP.Sys.AttachmentUploadType.Multi);
+                    workCheckAth.setName("审核组件");
+                    workCheckAth.SetValByKey("AtPara", "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=");
+                    workCheckAth.Insert();
+                }
             }
             // 创建审核组件附件
 

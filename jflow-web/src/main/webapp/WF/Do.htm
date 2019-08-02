@@ -25,10 +25,15 @@
             params = params.replace("DoType", "ActionType");
             var handler = new HttpHandler("BP.WF.HttpHandler.WF");
             var data = handler.DoMethodReturnJSON("PCAndMobileUrl")
-            
-            if (IsPC() == false) 
-            {
-                window.location.href = data["MobileUrl"].substring(0, data["MobileUrl"].length - 1) + window.document.location.pathname.replace("WF", "CCMobile") + "?" + params;
+
+            if (IsPC() == false) {
+                if (plant == "CCFLow")
+                    window.location.href = data["MobileUrl"].substring(0, data["MobileUrl"].length - 1) + window.document.location.pathname.replace("WF", "CCMobile") + "?" + params;
+                else {
+                    var pathName = window.document.location.pathname;
+                    var prjName = pathName.substring(pathName.substr(1).indexOf('/') + 1);
+                    window.location.href = data["MobileUrl"].substring(0, data["MobileUrl"].length - 1) + prjName.replace("WF", "CCMobile") + "?" + params;
+                }
                 return;
             }
 

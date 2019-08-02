@@ -46,8 +46,8 @@
                 var en = ens[i];
                 html += "<tr>";
                 html += "<td class=Idx>" + (i + 1) + "</td>";
-                html += "<td>" + en.FK_Flow + "</td>";
-                html += "<td>" + en.FlowName + "</td>";
+                html += "<td>" + en.SubFlowNo + "</td>";
+                html += "<td>" + en.SubFlowName + "</td>";
                 html += "<td>" + en.SubFlowModelText + "</td>";
 
                 html += "<td><a href=\"javascript:Edit('" + en.MyPK + "');\" >编辑</a></td>";
@@ -150,13 +150,6 @@
     <input type="button" value="我需要帮助" onclick="Help()" />
     <div id="Msg">
     </div>
-    <!--
-    <fieldset>
-					<legend>填写帮助</legend>
-					<ul>
-						<li>延续流程就是当前的子流程.</li>
-						<li>延续流程是子流程的一种,该子流程只能被发起一次.</li>
-					</ul>
-				</fieldset>-->
+  
 </body>
 </html>

@@ -35,6 +35,9 @@
         ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
         ur.RetrieveFromDBSources();
         var count = ur.GetPara("RecCount");
+
+        //获取Url传的查询Key值
+        var key = GetQueryString("Key");
         var mapBase;
 
         //页面启动函数.

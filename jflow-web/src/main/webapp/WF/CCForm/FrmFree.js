@@ -425,8 +425,8 @@ function figure_Template_Dtl(frmDtl, ext) {
 
     var eleIframe = '<iframe></iframe>';
     eleIframe = $("<iframe ID='Dtl_" + frmDtl.No + "' src='" + src +
-        "' frameborder=0  style='position:absolute;width:" + frmDtl.W + "px; height:" + frmDtl.H +
-        "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling='atuo' /></iframe>");
+                 "' frameborder=0  style='position:absolute;width:" + frmDtl.W + "px; height:" + frmDtl.H +
+                 "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling='atuo' /></iframe>");
     if (pageData.IsReadonly) {
 
     } else {
@@ -548,8 +548,8 @@ function figure_Template_IFrame(fram) {
 
     var eleIframe = '<iframe></iframe>';
     eleIframe = $("<iframe ID='Fdg" + fram.MyPK + "' src='" + url +
-        "' frameborder=0  style='position:absolute;width:" + fram.W + "px; height:" + fram.H +
-        "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
+	                 "' frameborder=0  style='position:absolute;width:" + fram.W + "px; height:" + fram.H +
+	                 "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
 
     eleHtml.append(eleIframe);
 
@@ -1199,14 +1199,14 @@ function connector_Template_Line(frmLine) {
     eleHtml.find('td').css('padding', '0px')
     if (navigator.userAgent.indexOf('Firefox') >= 0) {
         eleHtml.find('td').css('padding', '0px')
-            .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 1 : Math.abs(frmLine.X1 - frmLine.X2))
-            .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 2 : Math.abs(frmLine.Y1 - frmLine.Y2))
-            .css("background", frmLine.BorderColor);
+        .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 1 : Math.abs(frmLine.X1 - frmLine.X2))
+    .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 2 : Math.abs(frmLine.Y1 - frmLine.Y2))
+        .css("background", frmLine.BorderColor);
     } else {
         eleHtml.find('td').css('padding', '0px')
-            .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 0 : Math.abs(frmLine.X1 - frmLine.X2))
-            .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 1 : Math.abs(frmLine.Y1 - frmLine.Y2))
-            .css("background", frmLine.BorderColor);
+        .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 0 : Math.abs(frmLine.X1 - frmLine.X2))
+    .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 1 : Math.abs(frmLine.Y1 - frmLine.Y2))
+        .css("background", frmLine.BorderColor);
     }
 
     return eleHtml;

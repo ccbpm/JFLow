@@ -907,7 +907,7 @@ function figure_Template_Label(frmLab) {
     } else {
         frmLab.FontWeight = "normal";
     }
-  
+
     f.properties.push(new BuilderProperty('基本属性', 'group', BuilderProperty.TYPE_GROUP_LABEL));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('文本', 'primitives.0.str', BuilderProperty.TYPE_SINGLE_TEXT, frmLab.Text));

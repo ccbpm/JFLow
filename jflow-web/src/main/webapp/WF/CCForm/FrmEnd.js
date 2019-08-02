@@ -303,14 +303,14 @@ function AfterBindEn_DealMapExt(frmData) {
         //处理Pop弹出框
         var PopModel = mapAttr.GetPara("PopModel");
 
-        if (PopModel != undefined &&PopModel != "" && mapExt.ExtType == mapAttr.GetPara("PopModel") && mapAttr.GetPara("PopModel") != "None") {
+        if (PopModel != undefined && PopModel != "" && mapExt.ExtType == mapAttr.GetPara("PopModel") && mapAttr.GetPara("PopModel") != "None") {
             PopMapExt(mapAttr, mapExt, frmData);
             continue;
         }
 
         //处理文本自动填充
         var TBModel = mapAttr.GetPara("TBFullCtrl");
-        if (TBModel != undefined && TBModel != "" && TBModel != "None" && (mapExt.ExtType == "TBFullCtrl")) {
+        if (TBModel != undefined && TBModel != "" && TBModel != "None" && (mapExt.ExtType == "FullData")) {
             var tbAuto = $("#TB_" + mapExt.AttrOfOper);
             if (tbAuto == null)
                 continue;
@@ -324,7 +324,7 @@ function AfterBindEn_DealMapExt(frmData) {
         var DDLFull = mapAttr.GetPara("IsFullData");
         if (DDLFull != undefined && DDLFull != "" && DDLFull == "1" && (mapExt.MyPK.indexOf("DDLFullCtrl") != -1)) {
             //枚举类型
-            if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {
+            if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1 && mapAttr.UIContralType == 3) {
                 var ddlOper = $('input:radio[name="RB_' + mapExt.AttrOfOper + '"]');
                 if (ddlOper.length == 0)
                     continue;

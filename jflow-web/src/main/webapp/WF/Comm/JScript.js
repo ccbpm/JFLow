@@ -745,7 +745,7 @@ function valitationAfter(o, validateType) {
     idx = getCursortPosition(o);
     oldCount = getStrCount(o.value.toString().substr(0, idx), ',');
     var value = o.value;
-    // value =   value.replace(/[^\d.-]/g, "");
+//    value =   value.replace(/[^\d.-]/g, "");
 
     if (isFF()) {
         var flag = false;
@@ -765,11 +765,26 @@ function valitationAfter(o, validateType) {
         if (!flag) {
             o.value = 0;
         }
+<<<<<<< .mine
+    } else {
+        var flag = false;
+        if (validateType == "int")
+            o.value = value.replace(/[^\d-]/g, ""); 
+        if (isNaN(value)) execCommand('undo');
+       
     }
-    // else {
-    //     if (isNaN(value)) execCommand('undo');
-    //
-    // }
+||||||| .r9458
+    } else {
+        if (isNaN(value)) execCommand('undo');
+       
+    }
+=======
+    } 
+//    else {
+//        if (isNaN(value)) execCommand('undo');
+//       
+//    }
+>>>>>>> .r9496
 }
 
 /**

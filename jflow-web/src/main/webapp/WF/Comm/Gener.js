@@ -1435,7 +1435,6 @@ var Entity = (function () {
                     }
                 }
             });
-
             //获取树形结构的表单值
             var combotrees = $(".easyui-combotree");
             $.each(combotrees, function (i, combotree) {
@@ -1444,8 +1443,8 @@ var Entity = (function () {
                 //获取当前选中的节点
                 var data = tree.tree('getSelected');
                 if (data != null) {
-                    self[name.replace("DDL_","")] = data.id;
-                    self[name.replace("DDL_","")+"T"] = data.text;
+                    self[name.replace("DDL_", "")] = data.id;
+                    self[name.replace("DDL_", "") + "T"] = data.text;
                 }
             });
             // 参数属性

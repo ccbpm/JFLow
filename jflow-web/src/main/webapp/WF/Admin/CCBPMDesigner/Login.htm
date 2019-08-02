@@ -24,6 +24,7 @@
      
         //初始化页面函数.....
         $(function () {
+            
 
             if (! +[1, ]) {
                 //  alert("这是ie浏览器，您只能使用sliverlight版本浏览器。");
@@ -34,7 +35,7 @@
             $("#Msg").html("<img src='../../Img/loading.gif' /><font color=blue>ccbpm 正在为登录/自动升级做准备.</font>");
 
             document.getElementById("Btn_Login").disabled = 'disabled';
-         
+
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
             var data = handler.DoMethodReturnJSON("Login_InitInfo");
@@ -105,7 +106,10 @@
         }
     </script>
 
-       <script type="text/javascript" language="javascript">    
+       <script type="text/javascript" language="javascript"> 
+       
+           
+
        </script>
 
 </head>

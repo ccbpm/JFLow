@@ -208,7 +208,7 @@ function Ele_SubFlow(wf_node) {
     var paras = '';
 
     paras += "&FID=" + GetQueryString("FID");
-    paras += "&OID=" + GetQueryString("OID");
+    paras += "&OID=" + GetQueryString("OID"); 
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
     paras += '&WorkID=' + GetQueryString("OID"); ;
@@ -1636,7 +1636,7 @@ function GetLab(frmData, attr) {
             if (no == "01")
                 url += "&IsStartNode=" + 1; //是否是开始节点
 
-
+           
             if (attr.FK_MapData.indexOf(nodeID) == -1)
                 isReadonly = true;
         }

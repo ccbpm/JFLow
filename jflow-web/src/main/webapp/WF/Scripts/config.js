@@ -3,31 +3,31 @@ var basePath = basePath();
 
 function basePath()
 {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
-    var curPath=window.document.location.href;
-    //获取主机地址之后的目录，如： jflow-web/index.jsp  
-    var pathName=window.document.location.pathname;
-    var pos=curPath.indexOf(pathName);
-    //获取主机地址，如： http://localhost:80  
-    var localhostPaht=curPath.substring(0,pos);
-    //获取带"/"的项目名，如：/jflow-web
-    var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
-
-    return localhostPaht+projectName;
-
-
-
-
-    var curWwwPath = window.document.location.href;
-    var pathName =  window.document.location.pathname;
-    var pos = curWwwPath.indexOf(pathName);
-    var localhostPaht = curWwwPath.substring(0,pos);
-    var projectName = pathName.substring(0,pathName.substr(1).indexOf('/WF')+1);
-
-    var path= localhostPaht + projectName ;
-
-
-
+	 //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
+	 var curPath=window.document.location.href;  
+	 //获取主机地址之后的目录，如： jflow-web/index.jsp  
+	 var pathName=window.document.location.pathname;  
+	 var pos=curPath.indexOf(pathName);  
+	 //获取主机地址，如： http://localhost:80  
+	 var localhostPaht=curPath.substring(0,pos);  
+	//获取带"/"的项目名，如：/jflow-web
+	var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);  
+	
+	return localhostPaht+projectName;
+	
+	
+	
+	
+	var curWwwPath = window.document.location.href;		
+	var pathName =  window.document.location.pathname;
+	var pos = curWwwPath.indexOf(pathName);
+	var localhostPaht = curWwwPath.substring(0,pos);
+	var projectName = pathName.substring(0,pathName.substr(1).indexOf('/WF')+1);
+	
+	var path= localhostPaht + projectName ;
+	
+	
+	
 }
 
 

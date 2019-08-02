@@ -4,7 +4,7 @@ var oid;
 var highlightindex = -1;
 function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt,TBModel) {
     openDiv(sender, tbid);
-
+    var mapExt = new Entity("BP.Sys.MapExt", fk_mapExt);
     var myEvent = window.event || arguments[0];
     var myKeyCode = myEvent.keyCode;
     // 获得ID为divinfo里面的DIV对象 .  
@@ -64,7 +64,7 @@ function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt,TBModel) {
         if (selectVal != oldValue) {
             $("#divinfo").empty();
             //获得对象.
-            var mapExt = new Entity("BP.Sys.MapExt", fk_mapExt);
+           
             var dataObj = GenerDB(mapExt.Doc, selectVal, mapExt.DBType);
             if ($.isEmptyObject(dataObj)) {
                 $("#divinfo").hide();
@@ -1045,7 +1045,7 @@ function DealSQL(dbSrc, key, kvs) {
 
     dbSrc = dbSrc.replace(/@Key/g, key);
     dbSrc = dbSrc.replace(/@Val/g, key);
-
+    dbSrc = dbSrc.replace(/\n/g, "");
     var oid = GetQueryString("OID");
     if (oid != null) {
         dbSrc = dbSrc.replace("@OID", oid);

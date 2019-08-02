@@ -58,7 +58,7 @@
             handler.AddUrlData();
             var ens = handler.DoMethodReturnJSON("Rollback_Init");
 
-            for (var i = 0; i < length; i++) {
+            for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
 
                 html += "<tr>";
@@ -87,9 +87,13 @@
             if (msg == null || msg == undefined)
                 return;
 
-            var flow = new Entity("BP.WF.Template.FlowExt", flowNo);
-            var data = flow.DoMethodReturnString("DoRebackFlowData", workID, nodeID, msg);
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
+            handler.AddPara("FK_Flow", flowNo);
+            handler.AddPara("WorkID", workID);
+            handler.AddPara("FK_Node", nodeID);
+            handler.AddPara("Msg", msg);
 
+            var data = handler.DoMethodReturnString("Rollback_Done");
             alert(data);
             window.close();
 
@@ -97,7 +101,7 @@
     </script>
 </head>
 <body>
-    <div id="dosc">
+    <div id="docs">
     </div>
 </body>
 </html>

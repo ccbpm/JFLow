@@ -121,7 +121,6 @@ function GenerMNode(tracks, nodeID, gwf) {
 
         if (tk.FK_Node != nodeID)
             continue;
-        debugger
         if (tk.IsPass == 1) {
             var emp = new Entity("BP.Port.Emp", tk.EmpNo);
             info += "<ol><font color=blue><b>" + emp.FK_DeptText + " " + tk.EmpName + "</b></font> " + tk.RDT.substring(5, 16) + "</ol>";
@@ -173,9 +172,6 @@ function GenerSingerNode(tracks, nodeID, gwf) {
 function GenerIcon(icon, step, docs, isEndNode, nodeName) {
 
     var url = basePath + "/WF/WorkOpt/OneWork/Img/" + icon + "-" + step + ".png";
-
-
-    debugger;
 
     var barUrlLeft = "";
     var barUrlRight = "";

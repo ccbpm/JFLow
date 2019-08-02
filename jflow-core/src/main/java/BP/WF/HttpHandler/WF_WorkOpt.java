@@ -352,6 +352,10 @@ public class WF_WorkOpt extends WebContralBase {
 			for (Track tk : tks.ToJavaList()) {
 				if (nodes.contains(tk.getNDFrom() + ",") == false)
 					continue;
+				if (tk.getHisActionType() != ActionType.WorkCheck
+						&& tk.getHisActionType() != ActionType.StartChildenFlow
+						&& tk.getHisActionType() != ActionType.Return)
+					continue;
 				//退回
 				if(tk.getHisActionType() == ActionType.Return){
 					//1.不显示退回意见 2.显示退回意见但是不是退回给本节点的意见

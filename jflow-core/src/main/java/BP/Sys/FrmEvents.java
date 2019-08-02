@@ -1,10 +1,5 @@
 package BP.Sys;
-
-import java.io.File;
-import java.lang.reflect.Modifier;
 import java.util.Hashtable;
-
-import org.omg.IOP.Encoding;
 
 import BP.DA.AtPara;
 import BP.DA.DBAccess;
@@ -168,23 +163,19 @@ public class FrmEvents extends EntitiesOID
 			doc += "&FK_Dept=" + WebUser.getFK_Dept();
 			doc += "&OID=" + en.getPKVal();
 
-			if (SystemConfig.getIsBSsystem()&&BP.Sys.Glo.getRequest()!=null)
-			{
+			if (SystemConfig.getIsBSsystem()&&BP.Sys.Glo.getRequest()!=null) {
 				//是bs系统，并且是url参数执行类型.
-				 String url = BP.Sys.Glo.getRequest().getRemoteAddr();
+				String url = BP.Sys.Glo.getRequest().getRemoteAddr();
 
-				if (url.indexOf('?') != -1)
-				{
+				if (url.indexOf('?') != -1) {
 					url = url.substring(url.indexOf('?'));//.TrimStart('?');
 				}
 
 				String[] paras = url.split("[&]", -1);
-				for (String s : paras)
-				{
+				for (String s : paras) {
 					String[] mys = s.split("[=]", -1);
 
-					if (doc.contains(mys[0] + "="))
-					{
+					if (doc.contains(mys[0] + "=")) {
 						continue;
 					}
 
@@ -193,39 +184,6 @@ public class FrmEvents extends EntitiesOID
 
 				doc = doc.replace("&?", "&");
 			}
-
-
-
-//			if (doc.startsWith("http") == false)
-//			{
-//				//如果没有绝对路径 
-//				if (SystemConfig.getIsBSsystem())
-//				{
-//					//在cs模式下自动获取
-//					String host = BP.Sys.Glo.getRequest().Url.Host;
-//					if (doc.contains("@AppPath"))
-//					{
-//						doc = doc.replace("@AppPath", "http://" + host + BP.Sys.Glo.getRequest().ApplicationPath);
-//					}
-//					else
-//					{
-//						doc = "http://" + BP.Sys.Glo.getRequest().Url.Authority + doc;
-//					}
-//				}
-//
-//				if (SystemConfig.getIsBSsystem() == false)
-//				{
-//					//在cs模式下它的baseurl 从web.config中获取.
-//					String cfgBaseUrl = SystemConfig.getAppSettings()["HostURL"];
-//					if (StringHelper.isNullOrEmpty(cfgBaseUrl))
-//					{
-//						String err = "调用url失败:没有在web.config中配置BaseUrl,导致url事件不能被执行.";
-//						Log.DefaultLogWriteLineError(err);
-//						throw new RuntimeException(err);
-//					}
-//					doc = cfgBaseUrl + doc;
-//				}
-//			}
 
 			//增加上系统约定的参数.
 			doc += "&EntityName=" + en.toString() + "&EntityPK=" + en.getPK() + "&EntityPKVal=" + en.getPKVal() + "&FK_Event=" + nev.getMyPK();
@@ -268,15 +226,6 @@ public class FrmEvents extends EntitiesOID
 				{
 					if (SystemConfig.getIsBSsystem())
 					{
-//						String host = BP.Sys.Glo.getRequest().Url.Host;
-//						if (myURL.contains("@AppPath"))
-//						{
-//							myURL = myURL.replace("@AppPath", "http://" + host + BP.Sys.Glo.getRequest().ApplicationPath);
-//						}
-//						else
-//						{
-//							myURL = "http://" + BP.Sys.Glo.getRequest().Url.Authority + myURL;
-//						}
 					}
 					else
 					{
@@ -465,211 +414,6 @@ public class FrmEvents extends EntitiesOID
 					}
 				}
 				return null;
-				//开始执行webserives.
-				//break;
-				/*
-			case SpecClass:
-				//#region //执行dll文件中指定类的指定方法，added by liuxc,2016-01-16
-				String evdll = nev.getMonthedDLL();
-				String evclass = nev.getMonthedClass();
-				String evmethod = nev.getMonthedName();
-				String evparams = nev.getMonthedParas();
-				File file = new File(evdll);
-				if (StringHelper.isNullOrWhiteSpace(evdll) || !file.exists())
-				{
-					throw new RuntimeException("@DLL文件【MonthedDLL】“" + ((evdll != null) ? evdll : "") + "”设置不正确，请重新设置！");
-				}
-
-//				Assembly abl = Assembly.LoadFrom(evdll);
-//
-//				//判断类是否是静态类
-//				java.lang.Class type = abl.GetType(evclass, false);
-//
-//				if (type == null)
-//				{
-//					throw new RuntimeException("@DLL文件【MonthedDLL】“" + evdll + "”中的类名【MonthedClass】“" + ((evclass != null) ? evclass : "") + "”设置不正确，未检索到此类，请重新设置！");
-//				}
-
-				//方法
-				if (StringHelper.isNullOrWhiteSpace(evmethod))
-				{
-					throw new RuntimeException("@DLL文件【MonthedDLL】“" + evdll + "”中类【MonthedClass】“" + evclass + "”的方法名【MonthedName】不能为空，请重新设置！");
-				}
-
-				java.lang.reflect.Method md = null; //当前方法
-				ParameterInfo[] pis = null; //方法的参数集合
-				java.util.HashMap<String, String> pss = new java.util.HashMap<String, String>(); //参数名，参数值类型名称字典，如：Name,String
-				String mdName = evmethod.split("[(]", -1)[0]; //方法名称
-
-				//获取method对象
-				if (mdName.length() == evmethod.length() - 2)
-				{
-					md = type.getMethod(mdName);
-				}
-				else
-				{
-					String[] pssArr = null;
-
-					//获取设置里的参数信息
-					for (String pstr : evmethod.substring(mdName.length() + 1, mdName.length() + 1 + evmethod.length() - mdName.length() - 2).split("[,]", -1))
-					{
-						pssArr = pstr.split("[ ]", -1);
-						pss.put(pssArr[1], pssArr[0]);
-					}
-
-					//与设置里的参数信息对比，取得MethodInfo对象
-					for (java.lang.reflect.Method m : type.getMethods())
-					{
-						if (!mdName.equals(m.getName()))
-						{
-							continue;
-						}
-
-						pis = m.getParameterTypes();
-						boolean isOK = true;
-						int idx = 0;
-
-						for (java.util.Map.Entry<String, String> ps : pss.entrySet())
-						{
-							if (pis[idx].getName() != ps.getKey() || pis[idx].ParameterType.toString().replace("System.IO.", "").replace("System.", "").replace("System.Collections.Generic.", "").replace("System.Collections.", "") != ps.getValue())
-							{
-								isOK = false;
-								break;
-							}
-
-							idx++;
-						}
-
-						if (isOK)
-						{
-							md = m;
-							break;
-						}
-					}
-				}
-
-				if (md == null)
-				{
-					throw new RuntimeException("@DLL文件【MonthedDLL】“" + evdll + "”中类【MonthedClass】“" + evclass + "”的方法名【MonthedName】“" + evmethod + "”设置不正确，未检索到此方法，请重新设置！");
-				}
-
-				//处理参数
-				Object[] pvs = new Object[pss.size()]; //invoke，传递的paramaters参数，数组中的项顺序与方法参数顺序一致
-
-				if (pss.size() > 0)
-				{
-					if (StringHelper.isNullOrWhiteSpace(evparams))
-					{
-						throw new RuntimeException("@DLL文件【MonthedDLL】“" + evdll + "”中类【MonthedClass】“" + evclass + "”的方法【MonthedName】“" + evmethod + "”的参数【MonthedParas】不能为空，请重新设置！");
-					}
-
-					java.util.HashMap<String, String> pds = new java.util.HashMap<String, String>(); //MonthedParas中保存的参数信息集合，格式如：title,@Title
-					int idx = 0;
-					int pidx = -1;
-					String[] pdsArr = evparams.split("[;]", -1);
-					String val;
-
-					//将参数中的名称与值分开
-					for(String p : pdsArr)
-					{
-						pidx = p.indexOf('=');
-						if(pidx==-1)
-						{
-							continue;
-						}
-
-						pds.put(p.substring(0, pidx), p.substring(pidx + 1));
-					}
-
-					for (java.util.Map.Entry<String, String> ps : pss.entrySet())
-					{
-						if (!pds.containsKey(ps.getKey()))
-						{
-							//设置中没有此参数的值信息，则将值赋为null
-							pvs[idx] = null;
-						}
-						else
-						{
-							val = pds.get(ps.getKey());
-
-							for (BP.En.Attr attr : en.getEnMap().getAttrs())
-							{
-								if (pds.get(ps.getKey()).equals("`" + attr.getKey() + "`"))
-								{
-									//表示此参数与该attr的值一致，类型也一致
-									pvs[idx] = en.getRow().get(attr.getKey());
-									break;
-								}
-
-								//替换@属性
-								val = val.replace("`" + attr.getKey() + "`", (((en.getRow().get(attr.getKey())) != null) ? en.getRow().get(attr.getKey()) : "").toString());
-							}
-
-							//转换参数类型，从字符串转换到参数的实际类型，NOTE:此处只列出了简单类型的转换，其他类型暂未考虑
-
-//							switch (ps.Value)
-							if (ps.getValue().equals("String"))
-							{
-									pvs[idx] = val;
-							}
-							else if (ps.getValue().equals("Int32"))
-							{
-									pvs[idx] = Integer.parseInt(val);
-							}
-							else if (ps.getValue().equals("Int64"))
-							{
-									pvs[idx] = Long.parseLong(val);
-							}
-							else if (ps.getValue().equals("Double"))
-							{
-									pvs[idx] = Double.parseDouble(val);
-							}
-							else if (ps.getValue().equals("Single"))
-							{
-									pvs[idx] = Float.parseFloat(val);
-							}
-							else if (ps.getValue().equals("Decimal"))
-							{
-									pvs[idx] =new java.math.BigDecimal(val);
-							}
-							else if (ps.getValue().equals("DateTime"))
-							{
-									pvs[idx] = new java.util.Date(java.util.Date.parse(val));
-							}
-							else
-							{
-									pvs[idx] = val;
-							}
-						}
-
-						idx++;
-					}
-				}
-
-				if (type.IsSealed && Modifier.isAbstract(type.getModifiers()))
-				{
-					//静态类
-					return (((md.invoke(null, pvs)) != null) ? md.invoke(null, pvs) : "").toString();
-				}
-
-				//非静态类
-				//虚类必须被重写，不能直接使用
-				if (type.IsAbstract)
-				{
-					return null;
-				}
-
-				//静态方法
-				if (md.isSynthetic())
-				{
-					return (((md.invoke(null, pvs)) != null) ? md.invoke(null, pvs) : "").toString();
-				}
-
-				//非静态方法
-				return (((md.invoke(abl.CreateInstance(evclass), pvs)) != null) ? md.invoke(abl.CreateInstance(evclass), pvs) : "").toString();
-
-					///#endregion
-				*/
 			default:
 				throw new RuntimeException("@no such way." + nev.getHisDoType().toString());
 		}
@@ -684,7 +428,7 @@ public class FrmEvents extends EntitiesOID
 	/** 
 	 事件
 	 
-	 @param FK_MapData FK_MapData
+	 @param fk_MapData FK_MapData
 	 * @throws Exception 
 	*/
 	public FrmEvents(String fk_MapData) throws Exception

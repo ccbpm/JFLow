@@ -577,12 +577,22 @@ public class WF_Admin_AttrNode extends WebContralBase {
 				Object tempVar = attrs.GetEntityByKey(MapAttrAttr.FK_MapData, getFK_MapData(), MapAttrAttr.KeyOfEn,
 						attr.getKeyOfEn());
 				att = (MapAttr) ((tempVar instanceof MapAttr) ? tempVar : null);
-				if (atts.contains(attr.getKeyOfEn())) {
+				if (atts.contains(","+attr.getKeyOfEn()+","))
+				{
 					att.setIsEnableInAPP(true);
-				} else {
-					att.setIsEnableInAPP(false);
 				}
+				else
+					att.setIsEnableInAPP(false);
 				att.Update();
+
+				if (atts.contains("," + getFK_MapData() + "_" + attr.getKeyOfEn() + ",") == true)
+				{
+					FrmAttachment ath = new FrmAttachment(getFK_MapData() + "_" + attr.getKeyOfEn());
+					ath.SetPara("IsShowMobile", 1);
+					ath.Update();
+
+				}
+
 			}
 			return "保存成功！";
 		} catch (RuntimeException ex) {

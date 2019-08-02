@@ -55,7 +55,7 @@
 		<!--过滤器 spring4.1.9以上版本支持
 		<filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>-->
 		<!-- 通用 Filter-->
-		<filter-class>cn.jflow.common.context.RequestResponseFilter</filter-class>
+		<filter-class>BP.Difference.Context.RequestResponseFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>requestContextFilter</filter-name>

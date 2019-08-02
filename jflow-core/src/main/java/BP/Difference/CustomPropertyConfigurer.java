@@ -1,4 +1,4 @@
-package BP.Sys;
+package BP.Difference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.util.PropertyPlaceholderHelper;
-
+/**
+ * 没有使用，添加@Deprecated,后期可以删除
+ * @author 韩世强
+ */
+@Deprecated
 public class CustomPropertyConfigurer extends PropertyPlaceholderConfigurer
 {
 	private static Map<String, String> properties = new HashMap<String, String>();

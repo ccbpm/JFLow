@@ -3,6 +3,7 @@ package BP.WF.Data;
 import java.io.IOException;
 
 import BP.DA.Log;
+import BP.Difference.ContextHolderUtils;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.QueryObject;
@@ -17,7 +18,6 @@ import BP.WF.WFSta;
 import BP.WF.WFState;
 import BP.WF.Template.FlowSorts;
 import BP.Web.WebUser;
-import BP.Tools.ContextHolderUtils;
 
 /**
  * 流程实例

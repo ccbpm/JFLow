@@ -35,6 +35,7 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
+import BP.Difference.ContextHolderUtils;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
@@ -104,7 +105,6 @@ import BP.WF.Template.FrmWorkCheckSta;
 import BP.WF.Template.WhoIsPK;
 import BP.WF.XML.EventListDtlList;
 import BP.Web.WebUser;
-import BP.Tools.ContextHolderUtils;
 
 public class WF_CCForm extends WebContralBase {
 

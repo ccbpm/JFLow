@@ -19,7 +19,7 @@
 	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
 	
 	<bean id="propertyConfigurer"  
-        class="BP.Tools.GvtvPropertyPlaceholderConfigurer">  
+        class="BP.Difference.GvtvPropertyPlaceholderConfigurer">  
         <property name="locations">  
             <list>  
                 <value>classpath:jflow.properties</value>  

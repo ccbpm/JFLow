@@ -30,6 +30,7 @@ import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
+import BP.Difference.ContextHolderUtils;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
@@ -46,7 +47,6 @@ import BP.Sys.MapData;
 import BP.Sys.MapDatas;
 import BP.Sys.MapDtl;
 import BP.Sys.MapDtls;
-import BP.Tools.ContextHolderUtils;
 
 /**
  * PageBase 的摘要说明。

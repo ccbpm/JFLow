@@ -5,6 +5,7 @@ import java.io.IOException;
 import BP.DA.DBUrlType;
 import BP.DA.DataType;
 import BP.DA.Log;
+import BP.Difference.ContextHolderUtils;
 import BP.En.EnType;
 import BP.En.Entities;
 import BP.En.Entity;
@@ -38,7 +39,6 @@ import BP.Sys.MapFrames;
 import BP.Sys.PubClass;
 import BP.Tools.StringHelper;
 import BP.WF.Glo;
-import BP.Tools.ContextHolderUtils;
 
 
 /** 

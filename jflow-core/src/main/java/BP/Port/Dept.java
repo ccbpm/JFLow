@@ -3,6 +3,7 @@ package BP.Port;
 import BP.DA.DBUrl;
 import BP.DA.DBUrlType;
 import BP.DA.Depositary;
+import BP.Difference.ContextHolderUtils;
 import BP.En.EnType;
 import BP.En.EntityNoName;
 import BP.En.Map;
@@ -10,7 +11,6 @@ import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
 import BP.Sys.PubClass;
-import BP.Tools.ContextHolderUtils;
 
 /**
  * 部门

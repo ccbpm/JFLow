@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import BP.DA.DBUrlType;
 import BP.DA.Depositary;
+import BP.Difference.ContextHolderUtils;
 import BP.En.EnType;
 import BP.En.Entities;
 import BP.En.Entity;
@@ -32,7 +33,6 @@ import BP.Sys.MapDataAttr;
 import BP.Sys.MapDtls;
 import BP.Sys.MapExts;
 import BP.Sys.MapFrames;
-import BP.Tools.ContextHolderUtils;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
 

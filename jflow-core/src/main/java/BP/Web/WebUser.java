@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 
 import BP.DA.DBAccess;
 import BP.DA.Paras;
+import BP.Difference.ContextHolderUtils;
 import BP.En.QueryObject;
 import BP.Port.Current;
 import BP.Port.Emp;
@@ -21,7 +22,6 @@ import BP.Port.Stations;
 import BP.Sys.OSDBSrc;
 import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
-import BP.Tools.ContextHolderUtils;
 import BP.Tools.StringHelper;
 import BP.WF.Dev2Interface;
 import BP.WF.DotNetToJavaStringHelper;

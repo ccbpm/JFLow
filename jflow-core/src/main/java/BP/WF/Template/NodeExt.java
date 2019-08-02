@@ -9,6 +9,7 @@ import BP.DA.DBAccess;
 import BP.DA.DataType;
 import BP.DA.Depositary;
 import BP.DA.Log;
+import BP.Difference.ContextHolderUtils;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.RefMethod;
@@ -31,7 +32,6 @@ import BP.WF.ReturnRole;
 import BP.WF.RunModel;
 import BP.WF.TeamLeaderConfirmRole;
 import BP.WF.TodolistModel;
-import BP.Tools.ContextHolderUtils;
 
 /** 
  节点属性.

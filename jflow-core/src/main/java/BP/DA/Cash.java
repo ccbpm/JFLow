@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import BP.Difference.ContextHolderUtils;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
@@ -17,7 +18,6 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
-import BP.Tools.ContextHolderUtils;
 import BP.Tools.ConvertTools;
 import BP.Tools.StringHelper;
 

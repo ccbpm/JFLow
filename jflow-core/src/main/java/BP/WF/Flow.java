@@ -19,6 +19,7 @@ import BP.DA.Depositary;
 import BP.DA.Log;
 import BP.DA.Paras;
 import BP.DA.XmlWriteMode;
+import BP.Difference.ContextHolderUtils;
 import BP.En.Attr;
 import BP.En.EditType;
 import BP.En.Entity;
@@ -152,7 +153,6 @@ import BP.WF.Template.TimelineRole;
 import BP.WF.Template.TurnTo;
 import BP.Web.GuestUser;
 import BP.Web.WebUser;
-import BP.Tools.ContextHolderUtils;
 
 /**
  * 流程 记录了流程的信息． 流程的编号，名称，建立时间．

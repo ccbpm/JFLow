@@ -10,9 +10,6 @@ import java.util.Hashtable;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 
 import BP.DA.DataRow;
 import BP.DA.DataSet;
@@ -246,19 +243,11 @@ public class SystemConfig {
 		if (_CS_AppSettings == null || _CS_AppSettings.size() == 0) {
 			try {
 				_CS_AppSettings = new java.util.Hashtable<String, Object>();
-				// Map<String, String> properties =
-				// CustomPropertyConfigurer.getProperties();
-				// for (String s : properties.keySet()) {
-				// _CS_AppSettings.put(s, String.valueOf(properties.get(s)));
-				// // new String(String.valueOf(properties.get(s))
-				// // .getBytes("ISO8859-1"), "UTF-8"));
-				// }
+				
 				Properties props = new Properties();
 				InputStream is = null;
 				try {
-					ResourceLoader loader = new DefaultResourceLoader();
-					Resource resource = loader.getResource("jflow.properties");
-					is = resource.getInputStream();
+					is = BP.Difference.Helper.loadResource();
 					BufferedReader bf = new BufferedReader(new InputStreamReader(is, "UTF-8"));// 解决读取properties文件中产生中文乱码的问题
 					props.load(bf);
 				} finally {
@@ -271,6 +260,8 @@ public class SystemConfig {
 		}
 		return _CS_AppSettings;
 	}
+
+
 
 	/**
 	 * 封装了AppSettings

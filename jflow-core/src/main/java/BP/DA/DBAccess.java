@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
+import BP.Difference.ContextHolderUtils;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entities;
@@ -26,7 +27,6 @@ import BP.En.Entity;
 import BP.En.SQLCash;
 import BP.Sys.SystemConfig;
 import BP.Tools.CRC32Helper;
-import BP.Tools.ContextHolderUtils;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
 

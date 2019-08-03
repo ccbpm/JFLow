@@ -1009,6 +1009,36 @@ public class Glo {
 		NodeExt ne = new NodeExt();
 		ne.CheckPhysicsTable();
 
+		BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp();
+		wfemp.CheckPhysicsTable();
+
+		if (BP.DA.DBAccess.IsExitsTableCol("WF_Emp", "StartFlows") == false)
+		{
+			String sql = "";
+			//增加StartFlows这个字段
+			switch (SystemConfig.getAppCenterDBType())
+			{
+				case MSSQL:
+					sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
+					break;
+				case Oracle:
+					sql = "ALTER TABLE  WF_EMP add StartFlows BLOB";
+					break;
+				case MySQL:
+					sql = "ALTER TABLE WF_Emp ADD StartFlows TEXT COMMENT '可以发起的流程'";
+					break;
+				case Informix:
+					sql = "ALTER TABLE WF_Emp ADD StartFlows VARCHAR(4000) DEFAULT  NULL";
+					break;
+				case PostgreSQL:
+					sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
+					break;
+				default:
+					throw new Exception("@没有涉及到的数据库类型");
+			}
+			DBAccess.RunSQL(sql);
+
+		}
 		// 先创建表，否则列的顺序就会变化.
 
 		// 1, 创建or修复表

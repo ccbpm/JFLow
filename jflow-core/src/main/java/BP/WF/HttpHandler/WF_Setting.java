@@ -5,13 +5,13 @@ import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletRequest;
 import BP.DA.*;
+import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
-import BP.WF.HttpHandler.Base.CommonFileUtils;
-import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
 

@@ -9,6 +9,8 @@ import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
+import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.FrmLab;
 import BP.Sys.MapAttr;
 import BP.Sys.MapAttrAttr;
@@ -21,8 +23,6 @@ import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Node;
-import BP.WF.HttpHandler.Base.CommonFileUtils;
-import BP.WF.HttpHandler.Base.WebContralBase;
 
 public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 	

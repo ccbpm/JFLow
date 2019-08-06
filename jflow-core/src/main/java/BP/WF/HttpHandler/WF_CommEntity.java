@@ -7,6 +7,7 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.Attr;
 import BP.En.AttrOfOneVSM;
 import BP.En.Attrs;
@@ -33,7 +34,6 @@ import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
-import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
 public class WF_CommEntity extends WebContralBase {

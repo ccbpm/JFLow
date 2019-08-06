@@ -14,6 +14,7 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entities;
@@ -36,7 +37,6 @@ import BP.Sys.UserRegedit;
 import BP.Sys.UserRegeditAttr;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Flow;
-import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Rpt.RptDfine;
 import BP.Web.WebUser;
 

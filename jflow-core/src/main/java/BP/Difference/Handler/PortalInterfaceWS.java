@@ -1,4 +1,4 @@
-package BP.WF.HttpHandler.Base;
+package BP.Difference.Handler;
 
 import java.util.Hashtable;
 

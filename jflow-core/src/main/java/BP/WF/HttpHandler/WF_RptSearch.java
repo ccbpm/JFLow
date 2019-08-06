@@ -6,8 +6,8 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.SystemConfig;
-import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
 public class WF_RptSearch extends WebContralBase{

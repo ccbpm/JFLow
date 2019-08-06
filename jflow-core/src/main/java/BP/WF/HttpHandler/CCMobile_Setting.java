@@ -1,6 +1,6 @@
 package BP.WF.HttpHandler;
 
-import BP.WF.HttpHandler.Base.WebContralBase;
+import BP.Difference.Handler.WebContralBase;
 
 /** 
  页面功能实体

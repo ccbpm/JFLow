@@ -32,6 +32,8 @@ import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
 import BP.DA.Paras;
+import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.Attr;
 import BP.En.AttrOfSearch;
 import BP.En.AttrSearch;
@@ -77,8 +79,6 @@ import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.Glo;
 import BP.WF.Node;
 import BP.WF.NodeFormType;
-import BP.WF.HttpHandler.Base.CommonFileUtils;
-import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
 public class WF_Comm extends WebContralBase {

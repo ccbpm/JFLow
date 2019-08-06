@@ -3,13 +3,13 @@ package BP.WF.HttpHandler;
 
 
 import BP.DA.DataType;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.Attr;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.UIContralType;
 import BP.Sys.GEDtl;
 import BP.Sys.GEDtls;
-import BP.WF.HttpHandler.Base.WebContralBase;
 
 /** 
  页面功能实体

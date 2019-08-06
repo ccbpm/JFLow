@@ -1,12 +1,12 @@
 package BP.WF.HttpHandler;
 
-import BP.WF.HttpHandler.Base.WebContralBase;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
 
 import BP.DA.DataRow;
 import BP.DA.DataTable;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;

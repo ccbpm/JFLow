@@ -12,12 +12,12 @@ import javax.mail.internet.MimeMessage;
 
 import BP.DA.DBAccess;
 import BP.DA.DataType;
+import BP.Difference.Handler.PortalWebService;
 import BP.En.EntityMyPK;
 import BP.En.Map;
 import BP.En.UAC;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
-import BP.WF.HttpHandler.Base.PortalWebService;
 import BP.Web.WebUser;
 
 /** 

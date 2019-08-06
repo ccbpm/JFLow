@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import BP.DA.DataTable;
-import BP.WF.HttpHandler.Base.WebContralBase;
+import BP.Difference.Handler.WebContralBase;
 
 public class WF_Comm_DataUser_Test extends WebContralBase {
 	

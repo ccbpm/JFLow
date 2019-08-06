@@ -1,4 +1,4 @@
-package BP.WF.HttpHandler.Base;
+package BP.Difference.Handler;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import BP.WF.HttpHandler.WF_Comm;
-import BP.WF.HttpHandler.Base.HttpHandlerBase;
 
 @Controller
 @RequestMapping("/WF/Comm")

@@ -15,6 +15,7 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.Log;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.EditType;
 import BP.En.FieldTypeS;
 import BP.En.UIContralType;
@@ -24,7 +25,6 @@ import BP.Sys.MapAttrs;
 import BP.Sys.MapData;
 import BP.Sys.SysEnumMain;
 import BP.Sys.SystemConfig;
-import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.Web.WebUser;
 
 public class WF_AppClassic extends WebContralBase {

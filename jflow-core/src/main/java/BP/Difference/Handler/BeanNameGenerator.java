@@ -1,4 +1,4 @@
-package BP.WF.HttpHandler.Base;
+package BP.Difference.Handler;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;

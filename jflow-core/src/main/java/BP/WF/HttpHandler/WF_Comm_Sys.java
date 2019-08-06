@@ -15,6 +15,8 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
@@ -35,8 +37,6 @@ import BP.Sys.SysEnums;
 import BP.Sys.FrmUI.SFTables;
 import BP.Tools.DealString;
 import BP.Tools.StringHelper;
-import BP.WF.HttpHandler.Base.CommonFileUtils;
-import BP.WF.HttpHandler.Base.WebContralBase;
 /** 
  页面功能实体
  

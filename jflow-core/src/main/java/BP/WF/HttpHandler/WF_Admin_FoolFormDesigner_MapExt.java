@@ -8,6 +8,7 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.UIContralType;
 import BP.Sys.FrmRB;
 import BP.Sys.FrmRBAttr;
@@ -29,7 +30,6 @@ import BP.Sys.SFDBSrcs;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Tools.StringHelper;
-import BP.WF.HttpHandler.Base.WebContralBase;
 
 
 public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {

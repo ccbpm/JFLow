@@ -1,4 +1,4 @@
-package BP.WF.HttpHandler.Base;
+package BP.Difference.Handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;

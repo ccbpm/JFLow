@@ -7,12 +7,12 @@ import org.apache.http.protocol.HttpContext;
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.UIContralType;
 import BP.Sys.MapData;
 import BP.Sys.SFTable;
 import BP.Sys.SysEnumMain;
 import BP.Tools.StringHelper;
-import BP.WF.HttpHandler.Base.WebContralBase;
 /** 
  初始化函数
 */

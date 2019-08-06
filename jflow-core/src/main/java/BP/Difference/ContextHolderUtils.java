@@ -16,7 +16,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import BP.WF.HttpHandler.Base.CommonUtils;
+import BP.Difference.Handler.CommonUtils;
 
 /**
  * JFlow上下文工具类

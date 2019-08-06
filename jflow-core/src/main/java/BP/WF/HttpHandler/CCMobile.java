@@ -3,12 +3,12 @@ package BP.WF.HttpHandler;
 import java.io.UnsupportedEncodingException;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
-import BP.WF.HttpHandler.Base.WebContralBase;
 import BP.WF.Template.*;
 
 /** 

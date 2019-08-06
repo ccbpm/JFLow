@@ -13,14 +13,14 @@
  	<!-- <task:annotation-driven /> --> <!-- 定时器开关,按规则自动处理逾期流程-->  
  	
  	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
-	<context:component-scan base-package="cn.jflow,BP.WF.HttpHandler.Base" use-default-filters="false" name-generator="BP.WF.HttpHandler.Base.BeanNameGenerator"><!-- base-package 如果多个，用“,”分隔 -->
+	<context:component-scan base-package="BP.Difference.Context,BP.Difference.Handler" use-default-filters="false" name-generator="BP.Difference.Handler.BeanNameGenerator"><!-- base-package 如果多个，用“,”分隔 -->
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
 	</context:component-scan>
  	
     <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
     <bean id="jflowViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass" value="BP.WF.HttpHandler.Base.JFlowJstlView" />
+		<property name="viewClass" value="BP.Difference.Handler.JFlowJstlView" />
 		<property name="prefix" value="/WF/"/>
 		<property name="suffix" value=".jsp"/>
 		<property name="order" value="100"/> <!-- 越小优先级越高 -->

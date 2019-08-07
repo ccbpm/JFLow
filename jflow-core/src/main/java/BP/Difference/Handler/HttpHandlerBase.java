@@ -22,7 +22,7 @@ public abstract class HttpHandlerBase
 		return false;
 	}
 	
-	public void ProcessRequest(Object mycontext)
+	public void ProcessRequestPost(Object mycontext)
 	{	
 		PrintWriter out =null;
 		//创建 ctrl 对象.

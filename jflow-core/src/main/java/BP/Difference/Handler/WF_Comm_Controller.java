@@ -20,7 +20,7 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 	 * @return
 	 */
 	@RequestMapping(value = "/ProcessRequest")
-	public final void ProcessRequestPost(HttpServletRequest request) {
+	public final void ProcessRequest(HttpServletRequest request) {
 //		WF_Comm CommHandler = new WF_Comm();
 //		if (request instanceof DefaultMultipartHttpServletRequest) {
 //			CommHandler.setMultipartRequest((DefaultMultipartHttpServletRequest) request);
@@ -34,7 +34,7 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 			HttpServletRequest request1 = CommonUtils.getRequest();
 			request1.setAttribute("multipartRequest", request);
 		}
-		super.ProcessRequest(CommHandler);
+		super.ProcessRequestPost(CommHandler);
 	}
 
 	@Override

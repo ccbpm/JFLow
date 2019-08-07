@@ -16,10 +16,10 @@ public class CCBPMDesignerController extends HttpHandlerBase {
 	 * @return
 	 */
 	@RequestMapping(value = "/ProcessRequest")
-	public final void ProcessRequestPost() 
+	public final void ProcessRequest()
 	{
 		WF_Admin_CCBPMDesigner  CCBPMDHandler = new WF_Admin_CCBPMDesigner();
-		super.ProcessRequest(CCBPMDHandler);
+		super.ProcessRequestPost(CCBPMDHandler);
 	}
 	@Override
 	public Class <WF_Admin_CCBPMDesigner>getCtrlType() {

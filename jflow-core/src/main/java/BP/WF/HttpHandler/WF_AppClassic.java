@@ -81,8 +81,6 @@ public class WF_AppClassic extends WebContralBase {
 		AppACE page = new AppACE(context);
 		return page.Index_Init();
 	}
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	// /#region 登录界面.
 	public final String Login_Init() throws Exception {
 		AppACE page = new AppACE(context);

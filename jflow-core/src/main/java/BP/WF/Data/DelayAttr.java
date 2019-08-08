@@ -5,7 +5,6 @@ package BP.WF.Data;
  */
 	public class DelayAttr
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 		public static final String MyPK = "MyPK";
 		/** 
@@ -128,6 +127,4 @@ package BP.WF.Data;
 		 
 		*/
 		public static final String Sender = "Sender";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 	}

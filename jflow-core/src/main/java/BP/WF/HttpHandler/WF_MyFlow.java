@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import BP.Sys.*;
+import BP.WF.*;
+import BP.WF.Data.GERptAttr;
+import BP.WF.Template.*;
+import BP.WF.Template.FrmWorkCheck;
+import BP.WF.Template.FrmWorkCheckSta;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.protocol.HttpContext;
 
@@ -21,49 +27,8 @@ import BP.En.Entities;
 import BP.En.EntityTree;
 import BP.En.QueryObject;
 import BP.Port.Emp;
-import BP.Sys.MapData;
-import BP.Sys.MapDatas;
-import BP.Sys.MapDtl;
-import BP.Sys.SystemConfig;
-import BP.WF.BatchRole;
-import BP.WF.CCRole;
-import BP.WF.Dev2Interface;
-import BP.WF.DotNetToJavaStringHelper;
-import BP.WF.Flow;
-import BP.WF.GenerWorkFlow;
-import BP.WF.Glo;
-import BP.WF.HuiQianRole;
-import BP.WF.HuiQianTaskSta;
-import BP.WF.Node;
-import BP.WF.NodeFormType;
-import BP.WF.PrintDocEnable;
-import BP.WF.SMSMsgType;
-import BP.WF.SendReturnObjs;
-import BP.WF.WFState;
-import BP.WF.Work;
-import BP.WF.Template.BtnLab;
-import BP.WF.Template.CondModel;
-import BP.WF.Template.FlowFormTrees;
-import BP.WF.Template.FrmEnableRole;
-import BP.WF.Template.FrmFieldAttr;
-import BP.WF.Template.FrmFields;
-import BP.WF.Template.FrmNode;
-import BP.WF.Template.FrmNodeAttr;
-import BP.WF.Template.FrmNodes;
-import BP.WF.Template.FrmWorkCheck;
-import BP.WF.Template.FrmWorkCheckSta;
-import BP.WF.Template.NodeToolbar;
-import BP.WF.Template.NodeToolbarAttr;
-import BP.WF.Template.NodeToolbars;
-import BP.WF.Template.ShowWhere;
-import BP.WF.Template.SysFormTree;
-import BP.WF.Template.SysFormTreeAttr;
-import BP.WF.Template.SysFormTrees;
-import BP.WF.Template.TurnTo;
-import BP.WF.Template.TurnTos;
 import BP.Web.WebUser;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+
 
 public class WF_MyFlow extends WebContralBase {
 
@@ -94,6 +59,148 @@ public class WF_MyFlow extends WebContralBase {
 		return this.GenerWorkNode();
 	}
 
+	/**
+	 * 表单树保存到待办
+	 * @return
+	 */
+	public String SaveFlow_ToDraftRole() throws Exception
+	{
+
+		Node nd = new Node(this.getFK_Node());
+		Work wk = nd.getHisWork();
+		if (this.getWorkID() != 0)
+		{
+			wk.setOID(this.getWorkID());
+			wk.RetrieveFromDBSources();
+		}
+
+		//获取该节点是是否是绑定表单方案, 如果流程节点中的字段与绑定表单的字段相同时赋值
+		if (nd.getFormType() == NodeFormType.SheetTree)
+		{
+			FrmNodes nds = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
+			for(FrmNode item : nds.ToJavaList())
+			{
+				GEEntity en = null;
+				try
+				{
+					en = new GEEntity(item.getFK_Frm());
+					en.setPKVal(this.getWorkID());
+					if (en.RetrieveFromDBSources() == 0)
+					{
+						continue;
+					}
+				}
+				catch (Exception ex)
+				{
+					continue;
+				}
+
+				Attrs frmAttrs = en.getEnMap().getAttrs();
+				Attrs wkAttrs = wk.getEnMap().getAttrs();
+				for(Attr wkattr : wkAttrs.ToJavaList())
+				{
+					if (wkattr.getKey().equals(StartWorkAttr.OID) || wkattr.getKey().equals(StartWorkAttr.FID) || wkattr.getKey().equals(StartWorkAttr.CDT)
+							|| wkattr.getKey().equals(StartWorkAttr.RDT) || wkattr.getKey().equals(StartWorkAttr.MD5) || wkattr.getKey().equals(StartWorkAttr.Emps)
+							|| wkattr.getKey().equals(StartWorkAttr.FK_Dept) || wkattr.getKey().equals(StartWorkAttr.PRI) || wkattr.getKey().equals(StartWorkAttr.Rec)
+							|| wkattr.getKey().equals(StartWorkAttr.Title) ||wkattr.getKey().equals(GERptAttr.FK_NY) || wkattr.getKey().equals(GERptAttr.FlowEmps)
+							|| wkattr.getKey().equals(GERptAttr.FlowStarter) || wkattr.getKey().equals(GERptAttr.FlowStartRDT) || wkattr.getKey().equals(GERptAttr.WFState))
+					{
+						continue;
+					}
+
+					for(Attr attr : frmAttrs)
+					{
+						if (wkattr.getKey().equals(attr.getKey()))
+						{
+							wk.SetValByKey(wkattr.getKey(), en.GetValStrByKey(attr.getKey()));
+							break;
+						}
+
+					}
+
+				}
+
+			}
+			wk.Update();
+		}
+
+         // 为开始工作创建待办.
+		if (nd.getIsStartNode() == true)
+		{
+			GenerWorkFlow gwf = new GenerWorkFlow();
+			Flow fl = new Flow(this.getFK_Flow());
+			if (fl.getDraftRole() == DraftRole.None)
+				return "保存成功";
+
+			//规则设置为写入待办，将状态置为运行中，其他设置为草稿.
+			WFState wfState = WFState.Blank;
+			if (fl.getDraftRole() == DraftRole.SaveToDraftList)
+				wfState = WFState.Draft;
+			if (fl.getDraftRole() == DraftRole.SaveToTodolist)
+				wfState = WFState.Runing;
+
+			//设置标题.
+			String title = BP.WF.WorkFlowBuessRole.GenerTitle(fl, wk);
+
+			//修改RPT表的标题
+			wk.SetValByKey(BP.WF.Data.GERptAttr.Title, title);
+			wk.Update();
+
+			gwf.setWorkID(this.getWorkID());
+			int count = gwf.RetrieveFromDBSources();
+
+			gwf.setTitle(title); //标题.
+			if (count == 0)
+			{
+				gwf.setFlowName(fl.getName());
+				gwf.setFK_Flow(this.getFK_Flow());
+				gwf.setFK_FlowSort(fl.getFK_FlowSort());
+				gwf.setSysType(fl.getSysType());
+
+				gwf.setFK_Node(this.getFK_Node());
+				gwf.setNodeName(nd.getName());
+				gwf.setWFState(wfState);
+
+				gwf.setFK_Dept(WebUser.getFK_Dept());
+				gwf.setDeptName(WebUser.getFK_DeptName());
+				gwf.setStarter(WebUser.getNo());
+				gwf.setStarterName(WebUser.getName());
+				gwf.setRDT(DataType.getCurrentDataTimess());
+				gwf.Insert();
+
+				// 产生工作列表.
+				GenerWorkerList gwl = new GenerWorkerList();
+				gwl.setWorkID(this.getWorkID());
+				gwl.setFK_Emp(WebUser.getNo());
+				gwl.setFK_EmpText(WebUser.getName());
+
+				gwl.setFK_Node(gwf.getFK_Node());
+				gwl.setFK_NodeText(nd.getName());
+				gwl.setFID(0);
+
+				gwl.setFK_Flow(gwf.getFK_Flow());
+				gwl.setFK_Dept(WebUser.getFK_Dept());
+				gwl.setFK_DeptT(WebUser.getFK_DeptName());
+
+				gwl.setSDT("无");
+				gwl.setDTOfWarning(DataType.getCurrentDataTimess());
+				gwl.setIsEnable(true);
+
+				gwl.setIsPass(false);
+				//  gwl.Sender = WebUser.No;
+				gwl.setPRI(gwf.getPRI());
+				gwl.Insert();
+			}
+			else
+			{
+				gwf.setWFState(wfState);
+				gwf.DirectUpdate();
+			}
+
+		}
+        // 为开始工作创建待办
+		return "保存到待办";
+	}
 	// #region 表单树操作
 	/**
 	 * 获取表单树数据

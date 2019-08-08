@@ -338,11 +338,6 @@ public class WF_Admin_Sln extends WebContralBase {
 		appendMenus.append(appendMenuSb);
 		appendMenuSb = new StringBuilder();
 	}
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	// /#endregion
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	// /#region 表单方案.
 	/**
 	 * 表单方案
@@ -379,7 +374,6 @@ public class WF_Admin_Sln extends WebContralBase {
  
 			fns.AddEntity(fn);
 		}
-		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		// /#endregion 如果没有ndFrm 就增加上.
 
 		// 组合这个实体才有外键信息.
@@ -682,10 +676,6 @@ public class WF_Admin_Sln extends WebContralBase {
 	public final String Aths_Save() {
 		return "";
 	}
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	// /#endregion 附件权限.
-	
 	  ///#region 从表权限.
 			public class DtlsAttrs
 			{
@@ -742,7 +732,6 @@ public class WF_Admin_Sln extends WebContralBase {
 	public final String Dtls_Save() {
 		return "";
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	// /#endregion 从表权限.
 
 }

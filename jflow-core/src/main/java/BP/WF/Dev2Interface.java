@@ -10274,7 +10274,7 @@ public class Dev2Interface {
 
 			String sealimg = BP.WF.Glo.getCCFlowAppPath() + "DataUser/Seal/" + deptno + "_" + stationno + ".jpg";
 
-			if ((new java.io.File(BP.Sys.Glo.getRequest().getRealPath(sealimg))).isFile() == false) {
+			if (new File(sealimg).exists() == false) {
 				return "签章文件：" + sealimg + "不存在，请联系管理员！";
 			}
 
@@ -11315,7 +11315,6 @@ public class Dev2Interface {
 		}
 
 		// 结束日期为当前.
-		// java.util.Date dtEnd = dtBegin.plusDays(7);
 		Date dtEnd = new Date(DateUtils.addDayFromCurrentDate(-7));
 
 		// 设置为上周.

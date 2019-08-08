@@ -2952,8 +2952,6 @@ public class WF_CCForm extends WebContralBase {
 			return null;
 		}
 	}
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	// /#endregion dtl.htm 从表.
 	/**
 	 * 处理SQL的表达式.
@@ -2979,9 +2977,6 @@ public class WF_CCForm extends WebContralBase {
 	public final long getPWorkID() {
 		return this.GetRequestValInt("PWorkID");
 	}
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region 从表的选项.
 	/**
 	 * 初始化数据
 	 * 

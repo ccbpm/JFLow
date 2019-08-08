@@ -124,8 +124,6 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		return nums.substring(nums.length() - 1);
 		// return nums.TrimEnd(',');
 	}
-
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #region 发起限制.
 	public final String Limit_Init() throws Exception {
 		
@@ -144,7 +142,6 @@ public class WF_Admin_AttrFlow extends WebContralBase {
 		fl.Update();
 		return "保存成功.";
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #endregion 发起限制.
 
 	/**

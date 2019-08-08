@@ -69,7 +69,7 @@ import BP.Web.WebUser;
 
 /** 
  处理页面的业务逻辑
- * @param <WSMethod>
+ *
  
 */
 public class WF_Admin_FoolFormDesigner extends WebContralBase
@@ -1599,8 +1599,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		{
 			attr.setColSpan(1);
 		}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
 		int model = attr.getRBShowModel();
 		attr.setRBShowModel(model);
 
@@ -2449,11 +2447,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		SFDBSrc sr = new SFDBSrc(src);
 		DataTable dt = sr.GetTables();
-
-		//for (DataColumn col : dt.Columns)
-		//{
-		//	col.ColumnName = col.ColumnName.toUpperCase();
-		//}
 		return BP.Tools.Json.ToJsonUpper(dt);
 	}
 	/** 
@@ -2519,9 +2512,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 				{
 					continue;
 				}
-
-//C# TO JAVA CONVERTER TODO TASK: The '\' format specifier is not converted to Java:
-//ORIGINAL LINE: s.Append(string.Format("{{\"NO\":\"{0}\",\"NAME\":\"{0}[{1}]\",\"DESC\":\"{1}\"}},", ens, en.EnDesc));
 				s.append(String.format("%s},", ens, ((Entity)en).getEnDesc()));
 			}
 			catch (java.lang.Exception e)
@@ -2597,101 +2587,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	*/
 	public final java.util.ArrayList<WSMethod> GetWebServiceMethods(SFDBSrc dbsrc)
 	{
-		/*////
-		if (dbsrc == null || StringUtils.isEmpty(dbsrc.getIP()))
-		{
-			return new java.util.ArrayList<WSMethod>();
-		}
 
-		String wsurl = dbsrc.getIP().toLowerCase();
-		if (!wsurl.endsWith(".asmx") && !wsurl.endsWith(".svc"))
-		{
-			throw new RuntimeException("@失败:" + dbsrc.getNo() + " 中WebService地址不正确。");
-		}
-
-		wsurl += wsurl.endsWith(".asmx") ? "?wsdl" : "?singleWsdl";
-
-
-			///#region //解析WebService所有方法列表
-		//var methods = new Dictionary<string, string>(); //名称Name，全称Text
-		java.util.ArrayList<WSMethod> mtds = new java.util.ArrayList<WSMethod>();
-		WSMethod mtd = null;
-		WebClient wc = new WebClient();
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
-		var stream = wc.OpenRead(wsurl);
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
-		var sd = ServiceDescription.Read(stream);
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
-		var eles = sd.Types.Schemas[0].Elements.Values.<XmlSchemaElement>Cast();
-		StringBuilder s = new StringBuilder();
-		XmlSchemaComplexType ctype = null;
-		XmlSchemaSequence seq = null;
-		XmlSchemaElement res = null;
-
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
-		for (var ele : eles)
-		{
-			if (ele == null)
-			{
-				continue;
-			}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
-			var resType = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
-			var mparams = "";
-
-			//获取接口返回元素
-//C# TO JAVA CONVERTER TODO TASK: Lambda expressions and anonymous methods are not converted by C# to Java Converter:
-			res = eles.FirstOrDefault(o => o.getName() == (ele.getName() + "Response"));
-
-			if (res != null)
-			{
-				mtd = new WSMethod();
-				//1.接口名称 ele.Name
-				mtd.setNO(ele.getName());
-				mtd.setPARAMS(new java.util.HashMap<String, String>());
-				//2.接口返回值类型
-				ctype = (XmlSchemaComplexType)((res.SchemaType instanceof XmlSchemaComplexType) ? res.SchemaType : null);
-				seq = (XmlSchemaSequence)((ctype.Particle instanceof XmlSchemaSequence) ? ctype.Particle : null);
-
-				if (seq != null && seq.Items.size() > 0)
-				{
-					mtd.setRETURN(resType = ((XmlSchemaElement)((seq.Items[0] instanceof XmlSchemaElement) ? seq.Items[0] : null)).SchemaTypeName.getName());
-				}
-				else
-				{
-					continue; // resType = "void"; //去除不返回结果的接口
-				}
-
-				//3.接口参数
-				ctype = (XmlSchemaComplexType)((ele.SchemaType instanceof XmlSchemaComplexType) ? ele.SchemaType : null);
-				seq = (XmlSchemaSequence)((ctype.Particle instanceof XmlSchemaSequence) ? ctype.Particle : null);
-
-				if (seq != null && seq.Items.size() > 0)
-				{
-					for (XmlSchemaElement pe : seq.Items)
-					{
-						mparams += pe.SchemaTypeName.getName() + " " + pe.getName() + ", ";
-						mtd.getPARAMS().put(pe.getName(), pe.SchemaTypeName.getName());
-					}
-
-					mparams = mparams.TrimEnd((new String(", ")).toCharArray());
-				}
-
-				mtd.setNAME(String.format("%1$s %2$s(%3$s)", resType, ele.getName(), mparams));
-				mtds.add(mtd);
-				//methods.Add(ele.Name, string.Format("{0} {1}({2})", resType, ele.Name, mparams));
-			}
-		}
-
-		stream.Close();
-		stream.dispose();
-		wc.dispose();
-
-			///#endregion
-
-		return mtds;*/
 		return null;
 	}
 

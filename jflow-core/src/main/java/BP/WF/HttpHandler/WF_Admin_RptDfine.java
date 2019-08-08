@@ -129,7 +129,6 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 		//系统字段.
 		MapAttrs mattrsOfSystem = new MapAttrs();
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
 		ArrayList<String> sysFields = BP.WF.Glo.getFlowFields();
 		for (MapAttr item : mattrs.ToJavaList())
 		{

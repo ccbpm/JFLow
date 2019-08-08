@@ -1157,7 +1157,7 @@ public class WF_MyFlow extends WebContralBase {
 				/* 流转自定义.. */
 				String ur3 = "./WorkOpt/TransferCustom.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID()
 						+ "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
-				toolbar += "<input type=button  value='" + btnLab.getTCLab() + "' enable=true onclick=\"To('" + ur3
+				toolbar += "<input type=button  name='TransferCustom' value='" + btnLab.getTCLab() + "' enable=true onclick=\"To('" + ur3
 						+ "'); \" />";
 			}
 

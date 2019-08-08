@@ -7086,10 +7086,7 @@ public class WorkNode {
 				{
 					//获取审核组件信息
 					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom='"+WebUser.getNo()+"'";
-					if(at != ActionType.TeampUp)
-						t.setMsg(t.getMsg()+DBAccess.RunSQLReturnStringIsNull(sql, ""));
-					else
-						t.setMsg(t.getMsg()+"WorkCheck@"+DBAccess.RunSQLReturnStringIsNull(sql, ""));
+					t.setMsg(t.getMsg()+"WorkCheck@"+DBAccess.RunSQLReturnStringIsNull(sql, ""));
 				}
 			}
 			break;
@@ -7234,10 +7231,7 @@ public class WorkNode {
 				{
 					//获取审核组件信息
 					String sql = "SELECT Msg From ND" + Integer.parseInt(this.getHisNode().getFK_Flow()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID()+" AND EmpFrom='"+WebUser.getNo()+"'";
-					if(at != ActionType.TeampUp)
-						t.setMsg(t.getMsg()+DBAccess.RunSQLReturnStringIsNull(sql, ""));
-					else
-						t.setMsg(t.getMsg()+"WorkCheck@"+DBAccess.RunSQLReturnStringIsNull(sql, ""));
+					t.setMsg(t.getMsg()+"WorkCheck@"+DBAccess.RunSQLReturnStringIsNull(sql, ""));
 				}
 			}
 			break;

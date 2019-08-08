@@ -1669,7 +1669,7 @@ public class WF extends WebContralBase {
             //获取审核意见的值
             String checkNote = this.GetValFromFrmByKey("TB_" + workid + "_WorkCheck_Doc", null);
             if (DataType.IsNullOrEmpty(checkNote) == false)
-                BP.WF.Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid, Long.parseLong(dr.getValue("FID").toString()), checkNote, WebUser.getName());
+                BP.WF.Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid, Long.parseLong(dr.getValue("FID").toString()), checkNote,null);
             
             msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下";
             BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, ht);

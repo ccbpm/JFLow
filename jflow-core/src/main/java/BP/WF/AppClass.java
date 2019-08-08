@@ -6,12 +6,10 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 
 /**
- * ������Ӧ�ÿ�����Ӧ��,�Ǳ�׼Ӧ��.
+ * 页面功能实体
  * 
  */
 public class AppClass {
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region ������.
 	/**
 	 * 进度条 - for 为中科曙光.
 	 * 
@@ -294,6 +292,4 @@ public class AppClass {
 			return "err@" + ex.getMessage();
 		}
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion sdk��װ�ص�ʱ�򷵻ص�����.
 }

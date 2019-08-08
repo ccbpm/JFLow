@@ -8,6 +8,9 @@ function GenerFoolFrm(wn) {
     //初始化Sys_MapData
     var h = flowData.Sys_MapData[0].FrmH;
     var w = flowData.Sys_MapData[0].FrmW;
+    var frmShowType = flowData.Sys_MapData[0].FrmShowType; //0 普通方式 1 页签方式
+    if (frmShowType == null || frmShowType == undefined || frmShowType == "")
+        frmShowType = 0;
     var node = flowData.WF_Node[0];
     var tableCol = flowData.Sys_MapData[0].TableCol;
     if (tableCol == 0)
@@ -30,127 +33,266 @@ function GenerFoolFrm(wn) {
     html += "<tr>";
     html += "<td colspan='" + tableCol + "' class='TitleFDesc'><div style='float:left' ><img src='../DataUser/ICON/LogBiger.png'  style='height:50px;' /></div><div class='form-unit-title' style='float:right;padding:10px;width:70%;font-size: 18px;'  ><center><h4><b>" + frmName + "</b></h4></center></div></td>";
     html += "</tr>";
+    if (frmShowType == 1) {
+        html += "</table>";
+         html += "<div class='tabbable' ><ul class='nav nav-tabs' id='tabDiv'>";
 
-    //遍历循环生成 listview
-    for (var i = 0; i < Sys_GroupFields.length; i++) {
+        for (var i = 0; i < Sys_GroupFields.length; i++) {
+            var gf = Sys_GroupFields[i];
+            if (i == 0) 
+                html += "<li class='active'><a data-toggle='tab' href='#" + gf.OID + "'>" + gf.Lab + "</a></li>";
+            else
+                html += "<li><a data-toggle='tab' href='#" + gf.OID + "'>" + gf.Lab + "</a></li>";
+        }
 
-        var gf = Sys_GroupFields[i];
+        html += "</ul>";
 
-        //从表..
-        if (gf.CtrlType == 'Dtl') {
+        //增加表情中的内容
+        html += "<div class='tab-content'>";
+        for (var i = 0; i < Sys_GroupFields.length; i++) {
+            var gf = Sys_GroupFields[i];
+            if (i == 0)
+                html += "<div id='" + gf.OID + "' class='tab-pane fade active in'>";
+            else
+                html += "<div id='" + gf.OID + "' class='tab-pane fade'>";
+            html += '<form class="form-horizontal" role="form">';
+            html += "<table style='width:100%;' >";
+            //从表..
+            if (gf.CtrlType == 'Dtl') {
+                var dtls = flowData.Sys_MapDtl;
 
-            html += "<tr>";
-            html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
-            html += "</tr>";
+                for (var k = 0; k < dtls.length; k++) {
 
-            var dtls = flowData.Sys_MapDtl;
+                    var dtl = dtls[k];
+                    if (dtl.No != gf.CtrlID)
+                        continue;
 
-            for (var k = 0; k < dtls.length; k++) {
+                    html += "<tr>";
+                    html += "  <td colspan='" + tableCol + "'  >";
 
-                var dtl = dtls[k];
-                if (dtl.No != gf.CtrlID)
+                    html += Ele_Dtl(dtl);
+
+                    html += "  </td>";
+                    html += "</tr>";
+                }
+                html += "</table>";
+                html += "</form>";
+                html += "</div>";
+                continue;
+            }
+
+
+            //附件类的控件.
+            if (gf.CtrlType == 'Ath') {
+
+                //获取附件的主键
+                var MyPK = gf.CtrlID;
+                if (MyPK == "")
                     continue;
+                //创建附件描述信息.
+                var ath = new Entity("BP.Sys.FrmAttachment");
+                ath.MyPK = gf.CtrlID;
+                if (ath.RetrieveFromDBSources() == 0)
+                    continue;
+                if (ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck")
+                    continue;
+                html += "<tr>";
+                html += "  <td colspan='" + tableCol + "' >";
+                html += Ele_Attachment(flowData, gf, node, ath);
+                html += "  </td>";
+                html += "</tr>";
+                html += "</table>";
+                html += "</form>";
+                html += "</div>";
+                continue;
+            }
+
+
+            //框架类的控件.
+            if (gf.CtrlType == 'Frame') {
+                html += "<tr>";
+                html += "  <td colspan='" + tableCol + "' >";
+                html += Ele_Frame(flowData, gf);
+                html += "  </td>";
+                html += "</tr>";
+                html += "</table>";
+                html += "</form>";
+                html += "</div>";
+                continue;
+            }
+
+            //审核组件..
+            if (gf.CtrlType == 'FWC' && node.FWCSta != 0) {
 
                 html += "<tr>";
-                html += "  <td colspan='" + tableCol + "' class='FDesc' >";
+                html += "  <td colspan='" + tableCol + "'>";
 
-                html += Ele_Dtl(dtl);
+                html += Ele_FrmCheck(node);
 
                 html += "  </td>";
                 html += "</tr>";
+                html += "</table>";
+                html += "</form>";
+                html += "</div>";
+                continue;
             }
-            continue;
-        }
 
 
-        //附件类的控件.
-        if (gf.CtrlType == 'Ath') {
-
-            //获取附件的主键
-            var MyPK = gf.CtrlID;
-            if (MyPK == "")
+            //字段类的控件.
+            if (gf.CtrlType == '' || gf.CtrlType == null) {
+                if (tableCol == 4 || tableCol == 6)
+                    html += InitMapAttr(flowData.Sys_MapAttr, flowData, gf.OID, tableCol);
+                else if (tableCol == 3)
+                    html += InitThreeColMapAttr(flowData.Sys_MapAttr, flowData, gf.OID, tableCol);
+                html += "</table>";
+                html += "</form>";
+                html += "</div>";
                 continue;
-            //创建附件描述信息.
-            var ath = new Entity("BP.Sys.FrmAttachment");
-            ath.MyPK = gf.CtrlID;
-            if (ath.RetrieveFromDBSources() == 0)
+            }
+
+            //父子流程
+            if (gf.CtrlType == 'SubFlow') {
+
+                html += "<tr>";
+                html += "  <td colspan='" + tableCol + "'>";
+
+                html += Ele_SubFlow(node);
+
+                html += "  </td>";
+                html += "</tr>";
+                html += "</table>";
+                html += "</form>";
+                html += "</div>";
+
                 continue;
-            if (ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck")
+            }
+
+        }
+
+        html += "</div>";
+    }
+    if (frmShowType == 0) {
+        //遍历循环生成 listview
+        for (var i = 0; i < Sys_GroupFields.length; i++) {
+
+            var gf = Sys_GroupFields[i];
+
+            //从表..
+            if (gf.CtrlType == 'Dtl') {
+
+                html += "<tr>";
+                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "</tr>";
+
+                var dtls = flowData.Sys_MapDtl;
+
+                for (var k = 0; k < dtls.length; k++) {
+
+                    var dtl = dtls[k];
+                    if (dtl.No != gf.CtrlID)
+                        continue;
+
+                    html += "<tr>";
+                    html += "  <td colspan='" + tableCol + "' class='FDesc' >";
+
+                    html += Ele_Dtl(dtl);
+
+                    html += "  </td>";
+                    html += "</tr>";
+                }
                 continue;
-            html += "<tr>";
-            html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "  <td colspan='" + tableCol + "' class='FDesc'>";
-            html += Ele_Attachment(flowData, gf, node, ath);
-            html += "  </td>";
-            html += "</tr>";
-            continue;
-        }
+            }
 
 
-        //框架类的控件.
-        if (gf.CtrlType == 'Frame') {
+            //附件类的控件.
+            if (gf.CtrlType == 'Ath') {
 
-            html += "<tr>";
-            html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "  <td colspan='" + tableCol + "' class='FDesc'>";
-            html += Ele_Frame(flowData, gf);
-            html += "  </td>";
-            html += "</tr>";
-
-            continue;
-        }
-
-        //审核组件..
-        if (gf.CtrlType == 'FWC' && node.FWCSta != 0) {
-
-            html += "<tr>";
-            html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
-            html += "</tr>";
-
-            html += "<tr>";
-            html += "  <td colspan='" + tableCol + "' class='FDesc'>";
-
-            html += Ele_FrmCheck(node);
-
-            html += "  </td>";
-            html += "</tr>";
-
-            continue;
-        }
+                //获取附件的主键
+                var MyPK = gf.CtrlID;
+                if (MyPK == "")
+                    continue;
+                //创建附件描述信息.
+                var ath = new Entity("BP.Sys.FrmAttachment");
+                ath.MyPK = gf.CtrlID;
+                if (ath.RetrieveFromDBSources() == 0)
+                    continue;
+                if (ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck")
+                    continue;
+                html += "<tr>";
+                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "  <td colspan='" + tableCol + "' class='FDesc'>";
+                html += Ele_Attachment(flowData, gf, node, ath);
+                html += "  </td>";
+                html += "</tr>";
+                continue;
+            }
 
 
-        //字段类的控件.
-        if (gf.CtrlType == '' || gf.CtrlType == null) {
+            //框架类的控件.
+            if (gf.CtrlType == 'Frame') {
 
-            html += "<tr>";
-            html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
-            html += "</tr>";
-            if (tableCol == 4 || tableCol == 6)
-                html += InitMapAttr(flowData.Sys_MapAttr, flowData, gf.OID, tableCol);
-            else if (tableCol == 3)
-                html += InitThreeColMapAttr(flowData.Sys_MapAttr, flowData, gf.OID, tableCol);
-            continue;
-        }
+                html += "<tr>";
+                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "  <td colspan='" + tableCol + "' class='FDesc'>";
+                html += Ele_Frame(flowData, gf);
+                html += "  </td>";
+                html += "</tr>";
 
-        //父子流程
-        if (gf.CtrlType == 'SubFlow') {
-            html += "<tr>";
-            html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
-            html += "</tr>";
+                continue;
+            }
 
-            html += "<tr>";
-            html += "  <td colspan='" + tableCol + "' class='FDesc'>";
+            //审核组件..
+            if (gf.CtrlType == 'FWC' && node.FWCSta != 0) {
 
-            html += Ele_SubFlow(node);
+                html += "<tr>";
+                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "</tr>";
 
-            html += "  </td>";
-            html += "</tr>";
+                html += "<tr>";
+                html += "  <td colspan='" + tableCol + "' class='FDesc'>";
 
-            continue;
+                html += Ele_FrmCheck(node);
+
+                html += "  </td>";
+                html += "</tr>";
+
+                continue;
+            }
+
+
+            //字段类的控件.
+            if (gf.CtrlType == '' || gf.CtrlType == null) {
+
+                html += "<tr>";
+                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "</tr>";
+                if (tableCol == 4 || tableCol == 6)
+                    html += InitMapAttr(flowData.Sys_MapAttr, flowData, gf.OID, tableCol);
+                else if (tableCol == 3)
+                    html += InitThreeColMapAttr(flowData.Sys_MapAttr, flowData, gf.OID, tableCol);
+                continue;
+            }
+
+            //父子流程
+            if (gf.CtrlType == 'SubFlow') {
+                html += "<tr>";
+                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "</tr>";
+
+                html += "<tr>";
+                html += "  <td colspan='" + tableCol + "' class='FDesc'>";
+
+                html += Ele_SubFlow(node);
+
+                html += "  </td>";
+                html += "</tr>";
+
+                continue;
+            }
         }
     }
 
@@ -779,8 +921,16 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     //日期类型.
     if (mapAttr.MyDataType == 6) {
         var enableAttr = '';
+        var frmDate = mapAttr.IsSupperText;//获取日期格式
+        var dateFmt = '';
+        if (frmDate == 0) {
+            dateFmt = "yyyy-MM-dd";
+        } else if (frmDate == 3) {
+            dateFmt = "yyyy-MM";
+        }
+
         if (mapAttr.UIIsEnable == 1)
-            enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'yyyy-MM-dd'})" + '";';
+            enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'" + dateFmt + "'})" + '";';
         else
             enableAttr = "disabled='disabled'";
 
@@ -791,8 +941,19 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     if (mapAttr.MyDataType == 7) {
 
         var enableAttr = '';
+        var frmDate = mapAttr.IsSupperText; //获取日期格式
+        var dateFmt = '';
+        if (frmDate == 1) {
+            dateFmt = "yyyy-MM-dd HH:mm";
+        } else if (frmDate == 2) {
+            dateFmt = "yyyy-MM-dd HH:mm:ss";
+        } else if (frmDate == 4) {
+            dateFmt = "HH:mm";
+        } else if (frmDate == 5) {
+            dateFmt = "HH:mm:ss";
+        }
         if (mapAttr.UIIsEnable == 1)
-            enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'yyyy-MM-dd HH:mm'})" + '";';
+            enableAttr = 'onfocus="WdatePicker({dateFmt:' + "'" + dateFmt + "'})" + '";';
         else
             enableAttr = "disabled='disabled'";
 
@@ -850,7 +1011,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         if (attrdefVal != null && attrdefVal !== "" && attrdefVal.indexOf(".") >= 0)
             bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
 
-        return "<input  value='" + defValue + "' style='text-align:right;'class='form-control'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
+		return "<input onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");' value='" + defValue + "' style='text-align:right;'class='form-control'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     if ((mapAttr.MyDataType == 2)) { //AppInt
@@ -861,7 +1022,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 
         //alert(defValue);
 
-        return "<input  value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
+        return "<input  onfocus='removeplaceholder(this,0);' onblur='addplaceholder(this,0);' value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "limitLength(this," + bit + ");valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     //AppMoney  AppRate
@@ -873,7 +1034,13 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
         else
             bit = 2;
-        return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+
+        return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");numberFormat (this, " + bit + ") ' onkeyup=" + '"' +
+			"limitLength(this," + bit + ");" + '"' +
+			" onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' +
+			" maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+
+		//return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     alert(mapAttr.Name + "的类型没有判断.");

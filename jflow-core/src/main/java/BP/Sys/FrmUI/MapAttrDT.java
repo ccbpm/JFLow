@@ -61,6 +61,17 @@ public class MapAttrDT extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
+	/**
+	 日期格式化
+	 */
+	public final int getFormat()
+	{
+		return this.GetValIntByKey(MapAttrAttr.IsSupperText);
+	}
+	public final void setFormat(int value)
+	{
+		this.SetValByKey(MapAttrAttr.IsSupperText, value);
+	}
 	/** 
 	 控制权限
 	*/
@@ -108,7 +119,8 @@ public class MapAttrDT extends EntityMyPK
 		map.AddBoolean(MapAttrAttr.UIVisible, true, "是否可见？", true, true);
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
-
+		map.AddDDLSysEnum(MapAttrAttr.IsSupperText, 2, "格式", true, true, MapAttrAttr.IsSupperText,
+				"@0=yyyy-MM-dd@1=yyyy-MM-dd HH:mm@2=yyyy-MM-dd HH:mm:ss@3=yyyy-MM@4=HH:mm@5=HH:mm:ss");
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 4000, 20, true);
 
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
@@ -167,6 +179,13 @@ public class MapAttrDT extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
+		//设置时间类型.
+		int format =  this.getFormat();
+		if (format == 0 || format == 3)
+			this.setMyDataType(6);
+		else
+			this.setMyDataType(7);
+
 		return super.beforeUpdateInsertAction();
 	}
 	/** 

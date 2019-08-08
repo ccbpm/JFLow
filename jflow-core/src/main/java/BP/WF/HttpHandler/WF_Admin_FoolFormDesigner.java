@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import BP.Sys.FrmUI.MapAttrDT;
 import org.apache.commons.lang3.StringUtils;
 
 import BP.DA.Cash;
@@ -1475,6 +1476,12 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppDate);
 			attr.Insert();
 
+			MapAttrDT dt = new MapAttrDT();
+			dt.setMyPK(attr.getMyPK());
+			dt.RetrieveFromDBSources();
+			dt.setFormat(0);
+			dt.Update();
+
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + DataType.AppDate + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
@@ -1492,6 +1499,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppDateTime);
 			attr.Insert();
 
+			MapAttrDT dt = new MapAttrDT();
+			dt.setMyPK(attr.getMyPK());
+			dt.RetrieveFromDBSources();
+			dt.setFormat(1);
+			dt.Update();
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + DataType.AppDateTime + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}

@@ -387,10 +387,24 @@ function AfterBindEn_DealMapExt(frmData) {
                             minDate = '%y-%M-#{%d}';
 
                         $('#TB_' + mapExt.AttrOfOper).removeAttr("onfocus");
-                        var dateFmt = 'yyyy-MM-dd';
-                        if (mapAttr.MyDataType == 7)
-                            dateFmt = 'yyyy-MM-dd HH:mm';
-
+//                        var dateFmt = 'yyyy-MM-dd';
+//                        if (mapAttr.MyDataType == 7)
+//                            dateFmt = 'yyyy-MM-dd HH:mm';
+                        var frmDate = mapAttr.IsSupperText; //获取日期格式
+                        var dateFmt = '';
+                        if (frmDate == 0) {
+                            dateFmt = "yyyy-MM-dd";
+                        } else if (frmDate == 1) {
+                            dateFmt = "yyyy-MM-dd HH:mm";
+                        } else if (frmDate == 2) {
+                            dateFmt = "yyyy-MM-dd HH:mm:ss";
+                        } else if (frmDate == 3) {
+                            dateFmt = "yyyy-MM";
+                        } else if (frmDate == 4) {
+                            dateFmt = "HH:mm";
+                        } else if (frmDate == 5) {
+                            dateFmt = "HH:mm:ss";
+                        }
 
                         var mapextDoc = mapExt.Doc;
                         $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
@@ -439,7 +453,7 @@ function AfterBindEn_DealMapExt(frmData) {
                 } else {
                     tb.addClass("CheckRegInput");
                     tb.data(mapExt)
-                    tb.attr(mapExt.Tag, "CheckRegInput('" + tb.attr('name') + "'," + mapExt.Doc.replace(/【/g, '[').replace(/】/g, ']').replace(/（/g, '(').replace(/）/g, ')').replace(/｛/g, '{').replace(/｝/g, '}') + ",'" + mapExt.Tag1 + "')");
+                    tb.attr(mapExt.Tag, "CheckRegInput('" + tb.attr('name') + "','" + mapExt.Doc.replace(/【/g, '[').replace(/】/g, ']').replace(/（/g, '(').replace(/）/g, ')').replace(/｛/g, '{').replace(/｝/g, '}') + "','" + mapExt.Tag1 + "')");
 
                 }
                 break;

@@ -230,7 +230,7 @@ public class MapAttrNum extends EntityMyPK {
 	/// </summary>
 	/// <returns></returns>
 	public final String DoRegularExpression() {
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData()
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionNum.htm?FK_MapData=" + this.getFK_MapData()
 				+ "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 

@@ -594,8 +594,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 		ds.Tables.add(dt);
 
 		BP.Sys.XML.RegularExpressions res = new BP.Sys.XML.RegularExpressions();
-		res.RetrieveAll();
-
+		res.Retrieve("ForCtrl", "TB");
 		DataTable myDT = res.ToDataTable();
 		myDT.TableName = "RE";
 		ds.Tables.add(myDT);
@@ -608,7 +607,29 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase {
 
 		return BP.Tools.Json.ToJson(ds);
 	}
+	public String RegularExpressionNum_Init()
+	{
+		DataSet ds = new DataSet();
+		String sql = "SELECT * FROM Sys_MapExt WHERE AttrOfOper='" + this.getKeyOfEn() + "' AND FK_MapData='"
+				+ this.getFK_MapData() + "'";
+		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+		dt.TableName = "Sys_MapExt";
+		ds.Tables.add(dt);
 
+		BP.Sys.XML.RegularExpressions res = new BP.Sys.XML.RegularExpressions();
+		res.Retrieve("ForCtrl", "TBNum");
+		DataTable myDT = res.ToDataTable();
+		myDT.TableName = "RE";
+		ds.Tables.add(myDT);
+
+		BP.Sys.XML.RegularExpressionDtls dtls = new BP.Sys.XML.RegularExpressionDtls();
+		dtls.RetrieveAll();
+		DataTable myDTDtls = dtls.ToDataTable();
+		myDTDtls.TableName = "REDtl";
+		ds.Tables.add(myDTDtls);
+
+		return BP.Tools.Json.ToJson(ds);
+	}
 	/**
 	 * 执行 保存.
 	 * 

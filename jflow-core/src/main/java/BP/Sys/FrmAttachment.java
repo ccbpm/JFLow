@@ -50,8 +50,29 @@ public class FrmAttachment extends EntityMyPK
 	{
 		this.SetPara(FrmAttachmentAttr.NumOfUpload, value);
 	}
-	
-	/** 
+	/**
+	 最大上传数量
+	 */
+	public final int getTopNumOfUpload()
+	{
+		return this.GetValIntByKey(FrmAttachmentAttr.TopNumOfUpload);
+	}
+	public final void setTopNumOfUpload(int value)
+	{
+		this.SetPara(FrmAttachmentAttr.TopNumOfUpload, value);
+	}
+	/**
+	 附件最大限制
+	 */
+	public final int getFileMaxSize()
+	{
+		return this.GetValIntByKey(FrmAttachmentAttr.FileMaxSize);
+	}
+	public final void setFileMaxSize(int value)
+	{
+		this.SetPara(FrmAttachmentAttr.FileMaxSize, value);
+	}
+	/**
 	 上传校验
 	 0=不校验.
 	 1=不能为空.
@@ -767,10 +788,11 @@ public class FrmAttachment extends EntityMyPK
 
 		map.AddTBString(FrmAttachmentAttr.Name, null, "名称", true, false, 0, 50, 20);
 		map.AddTBString(FrmAttachmentAttr.Exts, null, "要求上传的格式", true, false, 0, 50, 20);
-        map.AddTBInt("NumOfUpload", 0, "最低上传数量", true, false);
+        map.AddTBInt("NumOfUpload", 0, "最小上传数量", true, false);
         map.AddDDLSysEnum(FrmAttachmentAttr.UploadFileNumCheck, 0, "上传校验方式", true, true, FrmAttachmentAttr.UploadFileNumCheck,
                 "@0=不用校验@1=不能为空@2=每个类别下不能为空");
-
+		map.AddTBInt("TopNumOfUpload", 99, "最大上传数量", true, false);
+		map.AddTBInt("FileMaxSize", 10240, "附件最大限制(KB)", true, false);
 //		map.AddTBInt(FrmAttachmentAttr., 5, "X", true, false);
 		
 		map.AddTBString(FrmAttachmentAttr.SaveTo, null, "保存到", true, false, 0, 150, 20);

@@ -173,10 +173,19 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String UploadCtrl = "UploadCtrl";
-	
-	
+
+	/**
+	 *上传最小数量
+	 */
 	public static final String NumOfUpload="NumOfUpload";
-	
+	/**
+	 *上传最大数量
+	 */
+	public static final String TopNumOfUpload = "TopNumOfUpload";
+	/**
+	 *附件最大限制
+	 */
+	public static final String FileMaxSize = "FileMaxSize";
 	/** 
 	 上传校验
 	 0=不校验.

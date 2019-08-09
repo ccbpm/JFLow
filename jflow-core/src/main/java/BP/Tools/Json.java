@@ -2,6 +2,7 @@ package BP.Tools;
 
 import java.awt.geom.Arc2D.Float;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -23,6 +24,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import org.apache.axis2.databinding.types.soapencoding.Decimal;
+
 
 public class Json
 {
@@ -31,10 +34,6 @@ public class Json
 	 */
 	public static String ToJson(Object jsonObject)
 	{
-//		JSONObject object = JSONObject.fromObject(jsonObject);
-//		System.out.println(object.toString());
-//		return object.toString();
-
 		Gson gson = new GsonBuilder().registerTypeAdapterFactory(new TypeAdapterFactory() {
 
 			public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typetoken) {
@@ -68,9 +67,6 @@ public class Json
 
 		}).create();
 
-//		Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls().create();
-//		System.err.println(gson.toJson(jsonObject));
-		
 		return gson.toJson(jsonObject);
 	}
 	
@@ -79,10 +75,7 @@ public class Json
 	 */
 	@SuppressWarnings("rawtypes")
 	public static String ToJson(Iterable array)
-	{
-//		JSONArray jsonArray = JSONArray.fromObject(array);
-//		return jsonArray.toString();
-		Gson gson = new GsonBuilder().registerTypeAdapterFactory(new TypeAdapterFactory() {
+	{ Gson gson = new GsonBuilder().registerTypeAdapterFactory(new TypeAdapterFactory() {
 
 			public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typetoken) {
 				Class<T> rawType = (Class<T>) typetoken.getRawType();
@@ -187,7 +180,7 @@ public class Json
 			return null;
 		}
 	}
-	
+
 	*//**
 	 * 对象集合转换Json
 	 * @param <E>
@@ -212,12 +205,12 @@ public class Json
 				build.append(ToJson(item.toString()));
 				separate = ",";
 			}
-			
+
 		}
 		build.append("]");
 		return build.toString();
 	}
-	
+
 	*//**
 	 * 普通集合转换Json
 	 *//*
@@ -262,10 +255,26 @@ public class Json
     public static String ToJsonEntityModel(Hashtable ht)
     {
         String strs = "{";
-        for(Object key : ht.keySet())
-        {
-            strs += "\"" + key + "\":\"" + ToJsonStr ( ht.get(key).toString() ) + "\",";
-        }
+		Enumeration enm = ht.keys();
+		while(enm.hasMoreElements())
+		{
+			String key = (String)enm.nextElement();
+			Object val = (Object)ht.get(key);
+			if(val == null){
+				strs += "\"" + key + "\":\"\",";
+				continue;
+			}
+			if(val.getClass().equals(Integer.class)
+				|| val.getClass().equals(Float.class)
+			|| val.getClass().equals(Double.class)
+			|| val.getClass().equals(Decimal.class)){
+				strs += "\"" + key + "\":" + ht.get(key) + ",";
+			}else{
+				strs += "\"" + key + "\":\"" + ToJsonStr ( ht.get(key).toString() ) + "\",";
+			}
+
+		}
+
         strs += "\"OutEnd\":\"无效参数请忽略\"";
         strs += "}";
         
@@ -293,7 +302,7 @@ public class Json
 	/**
 	 * Datatable转换为Json
 	 * 
-	 * @param Datatable对象
+	 * @param table DataTable对象
 	 */
 	public static String ToJson(DataTable table)
 	{
@@ -365,7 +374,6 @@ public class Json
 				
 				
 			}
-			//jsonString = TranJsonStr(jsonString);
 			jsonString = DeleteLast(jsonString) + "},";
 		}		 
 		
@@ -376,7 +384,7 @@ public class Json
 	/**
 	 * Datatable转换为Json  upper
 	 * 
-	 * @param Datatable对象
+	 * @param table Datatable对象
 	 */
 	public static String ToJsonUpper(DataTable table)
 	{
@@ -418,7 +426,7 @@ public class Json
 	/**
 	 * DataSet转换为Json
 	 * 
-	 * @param DataSet对象
+	 * @param dataSet DataSet对象
 	 */
 	public static String ToJson(DataSet dataSet)
 	{
@@ -429,12 +437,9 @@ public class Json
 				continue;
 			jsonString += "\"" + table.TableName + "\":"
 					+ ToJson(table) + ",";
-			
-			//+ ToJson(table.Rows) + ",";					
-		//	BP.Tools.Json.ToJson(table);
 		}
 		  
-		return jsonString = DeleteLast(jsonString) + "}";
+		return DeleteLast(jsonString) + "}";
 	}
 	 
 	/**
@@ -446,8 +451,7 @@ public class Json
 	 */
 	public static String ToJsonStr(String value)
 	{
-		   
-		if (StringHelper.isNullOrEmpty(value))
+		if (DataType.IsNullOrEmpty(value))
 			return "";
  
 		StringBuffer sb = new StringBuffer();         
@@ -489,7 +493,7 @@ public class Json
 	 /** 
 	  * 把一个json转化一个datatable
 	  * 
-	  * @param json 一个json字符串
+	  * @param strJson 一个json字符串
 	  * @return 序列化的datatable
 	  */
 	public static DataTable ToDataTable(String strJson)
@@ -784,7 +788,6 @@ public class Json
 			{
 				strJson = "[" + strJson + "]";
 			}
-			//DataTable dtt = (DataTable)JsonConvert.<DataTable>DeserializeObject(strJson);
 			DataTable dtt = ToDataTable(strJson);
 
 			return dtt;
@@ -796,7 +799,6 @@ public class Json
 		 @param table Datatable对象 
 		 @return Json字符串 
 	*/
-	//ORIGINAL LINE: public static string DataTableToJson(DataTable dt, bool isUpperColumn = true)
 		public static String DataTableToJson(DataTable dt, boolean isUpperColumn, boolean isRowUper)
 		{
 			StringBuilder jsonString = new StringBuilder();
@@ -946,12 +948,13 @@ public class Json
             return strs;
         }
 
-		public static DataSet ToDataSet(String json) {
-			
-			// TODO Auto-generated method stub
-			
-			
+	/**
+	 * Json转DataSet
+	 * @param json
+	 * @return
+	 */
+	public static DataSet ToDataSet(String json) {
 			return null;
-		}
+	}
  
 }

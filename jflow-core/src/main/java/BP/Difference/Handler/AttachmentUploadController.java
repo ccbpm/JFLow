@@ -97,7 +97,7 @@ public class AttachmentUploadController extends BaseController {
 	}
 
 	@RequestMapping(value = "/AttachmentUpload.do")
-	public void upload(@RequestParam("Filedata") MultipartFile multiFile, HttpServletRequest request,
+	public void AttachmentUpload(@RequestParam("Filedata") MultipartFile multiFile, HttpServletRequest request,
 			HttpServletResponse response, BindException errors) throws Exception {
 	
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -122,7 +122,7 @@ public class AttachmentUploadController extends BaseController {
 	}
 
 	@RequestMapping(value = "/AttachmentUploadS.do", method = RequestMethod.POST)
-	public void execute(HttpServletRequest request, HttpServletResponse response, BindException errors)
+	public void AttachmentUploadS(HttpServletRequest request, HttpServletResponse response, BindException errors)
 			throws Exception {
 		String error = "";
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;

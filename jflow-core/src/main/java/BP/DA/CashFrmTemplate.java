@@ -1,28 +1,16 @@
 package BP.DA;
-
-import BP.En.*;
-import BP.Pub.*;
-import BP.Sys.*;
-
 import java.io.IOException;
-import java.util.Hashtable;
 
 public class CashFrmTemplate
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region ����ht
+	//缓存
 	private static java.util.Hashtable _hts;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region ��ʵ��Ĳ���.
-	/** 
-	 �����
-	 
-	 @param frmID ��ID
-	 @param ds ��ģ��
-	*/
+	/**
+	 * 放入表单
+	 * @param frmID
+	 * @param ds
+	 */
 	public static void Put(String frmID, DataSet ds)
 	{
 		String json = BP.Tools.Json.ToJson(ds);
@@ -45,11 +33,10 @@ public class CashFrmTemplate
 		}
 	}
 
-	/** 
-	 �Ƴ�
-	 
-	 @param frmID ��ID
-	*/
+	/**
+	 *  移除
+	 * @param frmID
+	 */
 	public static void Remove(String frmID)
 	{
 		synchronized (lockObj)
@@ -63,14 +50,14 @@ public class CashFrmTemplate
 		}
 	}
 	private static Object lockObj = new Object();
-	/** 
-	 ��ñ�DataSetģʽ��ģ������
-	 
-	 @param frmID ��ID
-	 @return ��ģ��
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	*/
+
+	/**
+	 * 获得表单DataSet模式的模版数据
+	 * @param frmID
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public static DataSet GetFrmDataSetModel(String frmID) throws ClassNotFoundException, IOException
 	{
 		synchronized (lockObj)
@@ -90,12 +77,12 @@ public class CashFrmTemplate
 			return null;
 		}
 	}
-	/** 
-	 ��ñ�jsonģʽ��ģ������
-	 
-	 @param frmID ��ID
-	 @return json
-	*/
+
+	/**
+	 * 获得表单json模式的模版数据
+	 * @param frmID
+	 * @return
+	 */
 	public static String GetFrmJsonModel(String frmID)
 	{
 		synchronized (lockObj)
@@ -113,7 +100,4 @@ public class CashFrmTemplate
 			return null;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion ��ʵ��Ĳ���.
-
 }

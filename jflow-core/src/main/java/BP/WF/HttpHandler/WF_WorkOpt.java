@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import BP.Tools.DateUtils;
+import BP.WF.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HttpContext;
 import BP.DA.AtPara;
@@ -46,33 +48,6 @@ import BP.Sys.MapDtls;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnums;
 import BP.Sys.SystemConfig;
-import BP.WF.ActionType;
-import BP.WF.CancelRole;
-import BP.WF.DeliveryWay;
-import BP.WF.Dev2Interface;
-import BP.WF.Flow;
-import BP.WF.FullSA;
-import BP.WF.GenerWorkFlow;
-import BP.WF.GenerWorkerList;
-import BP.WF.GenerWorkerListAttr;
-import BP.WF.GenerWorkerLists;
-import BP.WF.HuiQianTaskSta;
-import BP.WF.Node;
-import BP.WF.NodeFormType;
-import BP.WF.Nodes;
-import BP.WF.RunModel;
-import BP.WF.SendReturnObjs;
-import BP.WF.TodolistModel;
-import BP.WF.Track;
-import BP.WF.TrackAttr;
-import BP.WF.Tracks;
-import BP.WF.TransferCustom;
-import BP.WF.TransferCustomType;
-import BP.WF.TransferCustoms;
-import BP.WF.WFState;
-import BP.WF.Work;
-import BP.WF.WorkCheck;
-import BP.WF.WorkNode;
 import BP.WF.Data.Bill;
 import BP.WF.Rpt.MakeForm2Html;
 import BP.WF.Template.BillFileType;
@@ -3382,6 +3357,8 @@ public class WF_WorkOpt extends WebContralBase {
            {
            		if(nd.getNodeID() == this.getFK_Node())
            			continue;
+			   if (nd.GetParaBoolen(NodeAttr.IsYouLiTai) == false)
+				   continue;
         	   GenerWorkerList gwl = (GenerWorkerList) gwls.GetEntityByKey(GenerWorkerListAttr.FK_Node, nd.getNodeID());
                if (gwl == null)
                {
@@ -3408,6 +3385,10 @@ public class WF_WorkOpt extends WebContralBase {
                    tc.setWorkerName(workerName);
                    tc.setIdx(nd.getStep());
                    tc.setIsEnable(true);
+				   if (nd.getHisCHWay() == CHWay.ByTime && nd.GetParaInt("CHWayOfTimeRole") == 2)
+				   {
+					   tc.setPlanDT(DataType.getDateByFormart(DateUtils.addDay(new Date(), 1),DataType.getSysDataTimeFormat()));
+				   }
                    tc.Insert();
                }
            }

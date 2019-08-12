@@ -522,13 +522,14 @@ public class MyJoinFlow extends Entity
 		map.AddTBInt(MyJoinFlowAttr.PWorkID, 0, "PWorkID", false, false);
 		map.AddTBString(MyJoinFlowAttr.Title, null, "流程标题", true, false, 0, 100, 150, true);
 		try {
-			map.AddDDLSQL(MyJoinFlowAttr.FK_Flow, null,  "流程名称", "Select  DISTINCT(A.FK_Flow) AS No,A.FlowName As Name FROM WF_GenerWorkFlow A WHERE  A.Emps like '%"+WebUser.getNo()+"%' ", false,false);
+			map.AddDDLSQL(MyJoinFlowAttr.FK_Flow, null,  "流程名称", "Select  DISTINCT(A.FK_Flow) AS No,A.FlowName As Name FROM WF_GenerWorkFlow A WHERE  FIND_IN_SET('"+WebUser.getNo()+"',replace(A.Emps, '@', ',')) > 0", false,false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		map.AddTBString(MyJoinFlowAttr.FlowName, null, "流程名称", true, false, 0, 100, 100, true);
 		map.AddTBString(MyJoinFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 50);
+		map.AddTBString(MyJoinFlowAttr.Starter, null, "发起人", true, false, 0, 30, 40);
 		map.AddTBString(MyJoinFlowAttr.StarterName, null, "发起人", true, false, 0, 30, 40);
 
 		map.AddTBDateTime(MyJoinFlowAttr.RDT, "发起日期", true, true);
@@ -550,11 +551,15 @@ public class MyJoinFlow extends Entity
 		map.AddSearchAttr(MyJoinFlowAttr.WFSta);
 		map.AddSearchAttr(MyJoinFlowAttr.TSpan);
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
-		//map.AddHidden(MyStartFlowAttr.FK_Node, "not like", "%01");
 
 			//增加隐藏的查询条件.
-		AttrOfSearch search = new AttrOfSearch(MyJoinFlowAttr.Emps, "人员", MyJoinFlowAttr.Emps, " LIKE ", "%@WebUser.No%", 0, true);
-		map.getAttrsOfSearch().Add(search);
+		try {
+			AttrOfSearch search = new AttrOfSearch(MyJoinFlowAttr.Emps, "人员", MyJoinFlowAttr.Emps, " LIKE ", "%@"+WebUser.getNo()+"@%", 0, true);
+			map.getAttrsOfSearch().Add(search);
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 

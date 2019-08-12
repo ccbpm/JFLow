@@ -3747,8 +3747,6 @@ public abstract class Entity implements Serializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			// this._row.LoadAttrs(this.getEnMap().getAttrs());
 		}
 		return this._row;
 	}

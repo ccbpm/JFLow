@@ -109,6 +109,7 @@ public class NodeAttr
 	public static final String IsRM = "IsRM";
 	public static final String FormType = "FormType";
 	public static final String FormUrl = "FormUrl";
+	public static final String IsYouLiTai="IsYouLiTai";
 	 
 	/** 
 	 发送之前的信息提示

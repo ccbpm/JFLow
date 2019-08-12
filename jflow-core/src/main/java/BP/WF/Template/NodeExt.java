@@ -306,6 +306,10 @@ public class NodeExt extends Entity
         map.AddBoolean(NodeAttr.IsExpSender, true, "本节点接收人不允许包含上一步发送人", true, true,false);
         map.AddBoolean(NodeAttr.IsRM, true, "是否启用投递路径自动记忆功能?", true, true, true, "http://ccbpm.mydoc.io/?v=5404&t=17905");
 
+       // map.AddBoolean(NodeAttr.IsToParentNextNode, false, "子流程运行到该节点时，让父流程自动运行到下一步", true, true);
+        map.AddBoolean(NodeAttr.IsYouLiTai, false, "该节点是否是游离态", true, true);
+        map.SetHelperUrl(NodeAttr.IsYouLiTai, "当节点为游离状态的时候，只有连接的节点是固定节点才可以往下运行，否则流程结束");
+
         map.AddTBDateTime("DTFrom", "生命周期从", true, true);
         map.AddTBDateTime("DTTo", "生命周期到", true, true);
 

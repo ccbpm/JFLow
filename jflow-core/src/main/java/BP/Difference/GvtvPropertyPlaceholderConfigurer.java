@@ -23,7 +23,6 @@ public class GvtvPropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 				try {
 					value = Glo.String_JieMi(value.trim());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				props.setProperty(key, value);

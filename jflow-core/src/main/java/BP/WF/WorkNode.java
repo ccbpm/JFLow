@@ -460,12 +460,39 @@ public class WorkNode {
 			// 如果整体流程是按流程设置计算。
 			dtOfShould = DataType.ParseSysDateTime2DateTime(this.getHisGenerWorkFlow().getSDTOfFlow());
 		} else {
-			int day = 0;
-			int hh = 0;
+			if (town.getHisNode().getHisCHWay() == CHWay.ByTime) {
+				//按天、小时考核
+				if (town.getHisNode().GetParaInt("CHWayOfTimeRole") == 0) {
 
-			// 增加天数. 考虑到了节假日.
-			dtOfShould = Glo.AddDayHoursSpan(new Date(), this.town.getHisNode().getTimeLimit(),
-					this.town.getHisNode().getTimeLimitHH(), this.town.getHisNode().getTimeLimitMM());
+					// 增加天数. 考虑到了节假日.
+					dtOfShould = Glo.AddDayHoursSpan(new Date(), this.town.getHisNode().getTimeLimit(),
+							this.town.getHisNode().getTimeLimitHH(), this.town.getHisNode().getTimeLimitMM());
+				}
+
+				//按照节点字段设置
+				if(town.getHisNode().GetParaInt("CHWayOfTimeRole") == 1)
+				{
+					//获取设置的字段、
+					String keyOfEn = town.getHisNode().GetParaString("CHWayOfTimeRoleField");
+					if (DataType.IsNullOrEmpty(keyOfEn) == true)
+						town.getHisNode().setHisCHWay(CHWay.None);
+					else
+						dtOfShould = DataType.ParseSysDateTime2DateTime(this.getHisWork().GetValByKey(keyOfEn).toString());
+
+				}
+
+				//流转自定义的流程并且考核规则按照流转自定义设置
+				if(this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByWorkerSet && town.getHisNode().GetParaInt("CHWayOfTimeRole") == 2)
+				{
+					//获取当前节点的流转自定义时间
+					TransferCustom tf = new TransferCustom();
+					tf.setMyPK(town.getHisNode().getNodeID() + "_" + this.getWorkID());
+					if (tf.RetrieveFromDBSources() != 0)
+					{
+						dtOfShould = DataType.ParseSysDateTime2DateTime(tf.getPlanDT());
+					}
+				}
+			}
 		}
 
 		// 求警告日期.

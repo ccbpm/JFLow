@@ -3,6 +3,7 @@ package BP.WF;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
 import BP.En.Map;
+import BP.WF.Template.NodeAttr;
 
 /** 
  自定义运行路径
@@ -213,7 +214,7 @@ public class TransferCustom extends EntityMyPK
 				continue;
 			}
 
-			if (isMeet == true)
+			if (isMeet == true && item.getIsEnable() == true)
 			{
 				return item;
 			}
@@ -226,6 +227,28 @@ public class TransferCustom extends EntityMyPK
                 if(item.getIsEnable() == true)
                     return (TransferCustom)item;
             }
+
+		}
+		//如果当前节点是最后一个自定义节点，且有连接线连到固定节点
+		if(isMeet == true)
+		{
+			//判断当前节点是否连接到固定节点
+			String sql = "SELECT AtPara FROM WF_Node WHERE NodeID In(SELECT ToNode FROM WF_Direction WHERE Node=" + currNodeID + ")";
+			Nodes nds = new Nodes();
+			nds.RetrieveInSQL(NodeAttr.NodeID,"SELECT ToNode FROM WF_Direction WHERE Node = " + currNodeID);
+			for(Node nd : nds.ToJavaList())
+			{
+				if (nd.GetParaBoolen(NodeAttr.IsYouLiTai) == true)
+					continue;
+
+				TransferCustom en = new TransferCustom();
+				en.setFK_Node(nd.getNodeID());
+				//更改流程的运行状态@yuan
+				GenerWorkFlow gwf = new GenerWorkFlow(workid);
+				gwf.setTransferCustomType(TransferCustomType.ByCCBPMDefine);
+				gwf.Update();
+				return en;
+			}
 
 		}
 		return null;

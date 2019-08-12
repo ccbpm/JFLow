@@ -2531,10 +2531,6 @@ public class DBAccess {
 	 * @param tableName
 	 *            表名
 	 */
-	// C# TO JAVA CONVERTER TODO TASK: C# optional parameters are not converted
-	// to Java:
-	// ORIGINAL LINE: public static DataTable GetTableSchema(string tableName,
-	// bool isUpper = true)
 	public static DataTable GetTableSchema(String tableName) {
 		String sql = "";
 		switch (SystemConfig.getAppCenterDBType()) {
@@ -2912,17 +2908,6 @@ public class DBAccess {
 			sqlstr = "SELECT TOP " + pageSize + " * FROM (" + sql + ") T1" + (StringUtils.isEmpty(orderKey) ? ""
 					: String.format(" ORDER BY T1.%1$s %2$s", orderKey, orderType));
 		} else {
-			// C# TO JAVA CONVERTER TODO TASK: C# to Java Converter could not
-			// resolve the named parameters in the following line:
-			// ORIGINAL LINE: sqlstr = "SELECT TOP " + pageSize + " * FROM (" +
-			// sql + ") T1" + " WHERE T1." + key + (orderType == "ASC" ? " > " :
-			// " < ") + "(" + " SELECT " + (orderType == "ASC" ? "MAX(T3." :
-			// "MIN(T3.") + key + ") FROM (" + " SELECT TOP ((" + pageIdx + " -
-			// 1) * 10) T2." + key + "FROM (" + sql + ") T2" +
-			// (StringUtils.isEmpty(orderKey) ? string.Empty : string.Format("
-			// ORDER BY T2.{0} {1}", orderKey, orderType)) + " ) T3)" +
-			// (StringUtils.isEmpty(orderKey) ? string.Empty : string.Format("
-			// ORDER BY T.{0} {1}", orderKey, orderType));
 			sqlstr = "SELECT TOP " + pageSize + " * FROM (" + sql + ") T1" + " WHERE T1." + key
 					+ (orderType.equals("ASC") ? " > " : " < ") + "(" + " SELECT "
 					+ (orderType.equals("ASC") ? "MAX(T3." : "MIN(T3.") + key + ") FROM (" + " SELECT TOP ((" + pageIdx

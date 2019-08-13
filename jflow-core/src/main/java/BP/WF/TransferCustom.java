@@ -220,15 +220,15 @@ public class TransferCustom extends EntityMyPK
 			}
 		}
 
-		if ((new Integer(currNodeID)).toString().endsWith("01") == true)
+		//if ((new Integer(currNodeID)).toString().endsWith("01") == true)
+		//{
+		for(TransferCustom item : ens.ToJavaList())
 		{
-			for(TransferCustom item : ens.ToJavaList())
-            {
-                if(item.getIsEnable() == true)
-                    return (TransferCustom)item;
-            }
-
+			if(item.getIsEnable() == true)
+				return (TransferCustom)item;
 		}
+
+		//}
 		//如果当前节点是最后一个自定义节点，且有连接线连到固定节点
 		if(isMeet == true)
 		{

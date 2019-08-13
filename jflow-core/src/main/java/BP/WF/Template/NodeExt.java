@@ -1041,6 +1041,10 @@ public class NodeExt extends Entity
 	{
 		return BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=ND" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
+    public final boolean getIsYouLiTai()
+    {
+        return this.GetValBooleanByKey(NodeAttr.IsYouLiTai);
+    }
 	/** 
 	 绑定独立表单
 	 @return 
@@ -1119,6 +1123,10 @@ public class NodeExt extends Entity
           Node fl = new Node();
           fl.setNodeID( this.getNodeID());
           fl.RetrieveFromDBSources();
+          if (this.getIsYouLiTai() == true)
+              fl.SetPara("IsYouLiTai", 1);
+          else
+              fl.SetPara("IsYouLiTai", 0);
           fl.Update();
           //如果是组长会签模式，通用选择器只能单项选择
           if(this.GetValIntByKey(BtnAttr.HuiQianRole) == HuiQianRole.TeamupGroupLeader.getValue())

@@ -176,6 +176,18 @@ public class TransferCustom extends EntityMyPK
 
 		///#endregion
 
+	public String DoUp()
+	{
+		this.DoOrderUp(TransferCustomAttr.WorkID, String.valueOf(this.getWorkID()), TransferCustomAttr.Idx);
+		return "执行成功";
+	}
+
+	public String DoDown()
+	{
+		this.DoOrderDown(TransferCustomAttr.WorkID, String.valueOf(this.getWorkID()), TransferCustomAttr.Idx);
+		return "执行成功";
+	}
+
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{

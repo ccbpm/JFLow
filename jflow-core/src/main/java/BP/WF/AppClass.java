@@ -148,12 +148,22 @@ public class AppClass {
 		dtNew.Columns.Add("EmpName"); // 名称
 		dtNew.Columns.Add("DeptName"); // 部门名称
 		dtNew.Columns.Add("RDT"); // 记录日期.
-		dtNew.Columns.Add("SDT"); // 应完成日期(可以不用.)
+		dtNew.Columns.Add("SDT"); // 应完成日期(可以不用.)		 
+		dtNew.Columns.Add("CDT"); // 实际完成日期(可以不用.)		
 		dtNew.Columns.Add("IsPass"); // 应完成日期(可以不用.)
 
 		String strs = "";
-		for (DataRow dr : tracks.Rows)
+		
+		int idx=0;
+		while(true)
 		{
+			if (idx==tracks.Rows.size())
+				break;
+			
+			
+			DataRow dr =tracks.Rows.get(idx); 
+			
+			
 			String nodeID = dr.getValue("FK_Node").toString();
 			String isPass = dr.getValue("IsPass").toString();
 			if (strs.contains("," + nodeID) == true )
@@ -171,11 +181,30 @@ public class AppClass {
 			drNew.setValue("RDT",dr.getValue("RDT"));
 			drNew.setValue("SDT",dr.getValue("SDT"));
 			drNew.setValue("IsPass",dr.getValue("IsPass"));
-
-			dtNew.Rows.add(drNew);
+			
+			if (tracks.Rows.size() > idx )
+			{
+		     	DataRow drNext =tracks.Rows.get(idx+1);  
+		     //	if (drNext.getValue("EmpNo").equals( dr.getValue("EmpNo"))
+			   drNew.setValue("CDT", drNext.getValue("RDT"));
+			}else
+			{
+				 drNew.setValue("CDT","");	
+			}
+			
+			 
+			dtNew.Rows.add(drNew);			
+			idx++;
 		}
+		
+		 
+		 
+		
 
 		myds.Tables.add(dtNew);
+		
+		
+		
 		return BP.Tools.Json.ToJson( myds);
 
 	}

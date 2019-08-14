@@ -884,7 +884,12 @@ public class QueryObject {
 					pks += SystemConfig.getAppCenterDBVarStr() + "R" + paraI + ",";
 				}
 
-				this.getMyParasR().Add("R" + paraI, dr.getValue(0).toString());
+				if (pk.equals("OID") || pk.equals("WorkID") || pk.equals("NodeID"))
+					this.getMyParasR().Add("R" + paraI, Integer.parseInt( dr.getValue(0).toString()));
+				else
+					this.getMyParasR().Add("R" + paraI, dr.getValue(0).toString());
+
+//				this.getMyParasR().Add("R" + paraI, dr.getValue(0).toString());
 				/*
 				 * warning this.getMyParasR().Add("R" + paraI,
 				 * dr.getValue(0).toString());

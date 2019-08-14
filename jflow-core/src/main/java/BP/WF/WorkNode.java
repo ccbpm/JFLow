@@ -5987,45 +5987,62 @@ public class WorkNode {
 			}
 
 			// 处理自由流程. add by stone. 2014-11-23.
-			if (jumpToNode == null
-					&& this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByWorkerSet) {
-				//当前为自由流程，需要先判断它的下一个节点是否为固定节点，为固定节点需要发送给固定节点，为游离态则运行自定义的节点
-				Nodes nds = new Directions().GetHisToNodes(this.getHisNode().getNodeID(),false);
-				if(nds.size() == 0){
-					// 表示执行到这里结束流程.
-					this.setIsStopFlow(true);
+			if (jumpToNode == null && this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByWorkerSet) {
+				if(this.getHisNode().GetParaBoolen(NodeAttr.IsYouLiTai) == true){
+					_transferCustom = TransferCustom.GetNextTransferCustom(this.getWorkID(), this.getHisNode().getNodeID());
+					if(_transferCustom == null){
+						// 表示执行到这里结束流程.
+						this.setIsStopFlow(true);
 
-					this.getHisGenerWorkFlow().setWFState(WFState.Complete);
-					this.rptGe.setWFState(WFState.Complete);
-					String msg1 = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经按照设置的步骤成功结束。",
-							this.getHisNode(), this.rptGe,0);
-					this.addMsg(SendReturnMsgFlag.End, msg1);
-				}
-				if(nds.size() == 1){
-					Node toND = (Node)nds.get(0);
-					if (toND.GetParaBoolen(NodeAttr.IsYouLiTai) == true){
+						this.getHisGenerWorkFlow().setWFState(WFState.Complete);
+						this.rptGe.setWFState(WFState.Complete);
+						String msg1 = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经按照设置的步骤成功结束。",
+								this.getHisNode(), this.rptGe, 0);
+						this.addMsg(SendReturnMsgFlag.End, msg1);
+					}else{
+						this.JumpToNode = new Node(_transferCustom.getFK_Node());
+						this.JumpToEmp = _transferCustom.getWorker();
+						this.getHisGenerWorkFlow().setTodolistModel(_transferCustom.getTodolistModel());
+					}
+				}else {
+					//当前为自由流程，需要先判断它的下一个节点是否为固定节点，为固定节点需要发送给固定节点，为游离态则运行自定义的节点
+					Nodes nds = new Directions().GetHisToNodes(this.getHisNode().getNodeID(), false);
+					if (nds.size() == 0) {
+						// 表示执行到这里结束流程.
+						this.setIsStopFlow(true);
+
+						this.getHisGenerWorkFlow().setWFState(WFState.Complete);
+						this.rptGe.setWFState(WFState.Complete);
+						String msg1 = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, "流程已经按照设置的步骤成功结束。",
+								this.getHisNode(), this.rptGe, 0);
+						this.addMsg(SendReturnMsgFlag.End, msg1);
+					}
+					if (nds.size() == 1) {
+						Node toND = (Node) nds.get(0);
+						if (toND.GetParaBoolen(NodeAttr.IsYouLiTai) == true) {
+							// 如果没有指定要跳转到的节点，并且当前处理手工干预的运行状态.
+							_transferCustom = TransferCustom.GetNextTransferCustom(this.getWorkID(), this.getHisNode().getNodeID());
+
+							this.JumpToNode = new Node(_transferCustom.getFK_Node());
+							this.JumpToEmp = _transferCustom.getWorker();
+							this.getHisGenerWorkFlow().setTodolistModel(_transferCustom.getTodolistModel());
+						} else {
+							this.JumpToNode = toND;
+						}
+					}
+					if (nds.size() > 1) {
+						//如果都是游离态就按照自由流程运行，否则抛异常
+						for (Node nd : nds.ToJavaList()) {
+							if (nd.GetParaBoolen(NodeAttr.IsYouLiTai) == false)
+								throw new Exception("err@该流程运行是自由流程，" + this.getHisNode().getName() + "需要设置方向条件，或者把此节点转向的所有节点设置为游离态");
+						}
 						// 如果没有指定要跳转到的节点，并且当前处理手工干预的运行状态.
 						_transferCustom = TransferCustom.GetNextTransferCustom(this.getWorkID(), this.getHisNode().getNodeID());
 						this.JumpToNode = new Node(_transferCustom.getFK_Node());
 						this.JumpToEmp = _transferCustom.getWorker();
 						this.getHisGenerWorkFlow().setTodolistModel(_transferCustom.getTodolistModel());
-					}else{
-						this.JumpToNode = toND;
 					}
 				}
-				if(nds.size()>1){
-					//如果都是游离态就按照自由流程运行，否则抛异常
-					for(Node nd:nds.ToJavaList()){
-						if(nd.GetParaBoolen(NodeAttr.IsYouLiTai) == false)
-							throw new Exception("err@该流程运行是自由流程，"+this.getHisNode().getName()+"需要设置方向条件，或者把此节点转向的所有节点设置为游离态");
-					}
-					// 如果没有指定要跳转到的节点，并且当前处理手工干预的运行状态.
-					_transferCustom = TransferCustom.GetNextTransferCustom(this.getWorkID(), this.getHisNode().getNodeID());
-					this.JumpToNode = new Node(_transferCustom.getFK_Node());
-					this.JumpToEmp = _transferCustom.getWorker();
-					this.getHisGenerWorkFlow().setTodolistModel(_transferCustom.getTodolistModel());
-				}
-
 
 			}
 

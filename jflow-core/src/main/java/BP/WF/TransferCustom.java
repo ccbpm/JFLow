@@ -3,6 +3,7 @@ package BP.WF;
 import BP.En.EnType;
 import BP.En.EntityMyPK;
 import BP.En.Map;
+import BP.En.QueryObject;
 import BP.WF.Template.NodeAttr;
 
 /** 
@@ -236,7 +237,7 @@ public class TransferCustom extends EntityMyPK
 		//{
 		for(TransferCustom item : ens.ToJavaList())
 		{
-			if(item.getIsEnable() == true)
+			if(item.getIsEnable() == true && item.getFK_Node() != currNodeID)
 				return (TransferCustom)item;
 		}
 

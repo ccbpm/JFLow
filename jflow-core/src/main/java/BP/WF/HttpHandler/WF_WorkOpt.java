@@ -3352,7 +3352,7 @@ public class WF_WorkOpt extends WebContralBase {
            //执行计算未来处理人.
            FullSA fsa = new FullSA(wn);
            // end 执行计算未来处理人.
-
+			int idx = 0;
            for(Node nd : nds.ToJavaList())
            {
            		if(nd.getNodeID() == this.getFK_Node())
@@ -3383,13 +3383,14 @@ public class WF_WorkOpt extends WebContralBase {
 
                    tc.setWorker(workerID);
                    tc.setWorkerName(workerName);
-                   tc.setIdx(nd.getStep());
+                   tc.setIdx(idx);
                    tc.setIsEnable(true);
 				   if (nd.getHisCHWay() == CHWay.ByTime && nd.GetParaInt("CHWayOfTimeRole") == 2)
 				   {
 					   tc.setPlanDT(DataType.getDateByFormart(DateUtils.addDay(new Date(), 1),DataType.getSysDataTimeFormat()));
 				   }
                    tc.Insert();
+				   idx++;
                }
            }
            tcs = new TransferCustoms(this.getWorkID());

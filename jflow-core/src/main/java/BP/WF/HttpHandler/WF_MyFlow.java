@@ -752,20 +752,20 @@ public class WF_MyFlow extends WebContralBase {
 				if (gwf.getParas_Frms().equals("") == false)
 					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="
 							+ WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo="
-							+ gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
+							+ gwf.getPFlowNo()+"&PNodeID="+gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
 				else
 					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="
 							+ WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo="
-							+ gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID();
+							+ gwf.getPFlowNo() +"&PNodeID="+gwf.getPNodeID()+ "&PWorkID=" + gwf.getPWorkID();
 			} else {
 				if (gwf.getParas_Frms().equals("") == false)
 					toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="
 							+ WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo="
-							+ gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
+							+ gwf.getPFlowNo() +"&PNodeID="+gwf.getPNodeID()+ "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
 				else
 					toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo="
 							+ WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.getSID() + "&PFlowNo="
-							+ gwf.getPFlowNo() + "&PWorkID=" + gwf.getPWorkID();
+							+ gwf.getPFlowNo() +"&PNodeID="+gwf.getPNodeID()+ "&PWorkID=" + gwf.getPWorkID();
 			}
 
 			String[] strs = this.getRequestParas().split("&");

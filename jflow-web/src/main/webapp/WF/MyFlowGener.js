@@ -421,8 +421,8 @@ function CheckMinMaxLength() {
     return true;
 }
 
-//保存
-function Save() {
+//保存 0单保存 1发送的保存
+function Save(saveType) {
     //保存前事件
     if (typeof beforeSave != 'undefined' && beforeSave instanceof Function)
         if (beforeSave() == false)
@@ -475,6 +475,7 @@ if (flowData) {
             handler.AddPara("FK_Flow", pageData.FK_Flow);
             handler.AddPara("FK_Node", pageData.FK_Node);
             handler.AddPara("WorkID", pageData.WorkID);
+            handler.AddPara("SaveType", saveType);
             handler.DoMethodReturnString("SaveFlow_ToDraftRole");
         }
         setToobarEnable();
@@ -701,6 +702,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                         formArrResult.push(name + '=' + encodeURIComponent(($(disabledEle).is(':checked') ? 1 : 0)));
                         break;
                     case "TEXT": //文本框
+                    case "HIDDEN":
                         formArrResult.push(name + '=' + encodeURIComponent($(disabledEle).val()));
                         break;
                     case "RADIO": //单选钮
@@ -872,7 +874,7 @@ function Send(isHuiQian) {
 
         if (selectToNode.IsSelectEmps == "1") { //跳到选择接收人窗口
 
-            Save(); //执行保存.
+            Save(1); //执行保存.
 
             if (isHuiQian == true) {
                 initModal("HuiQian", toNodeID);
@@ -888,7 +890,7 @@ function Send(isHuiQian) {
 
             if (isHuiQian == true) {
 
-                Save(); //执行保存.
+                Save(1); //执行保存.
                 initModal("HuiQian", toNodeID);
                 $('#returnWorkModal').modal().show();
                 return false;
@@ -932,12 +934,12 @@ function execSend(toNodeID) {
         } else {
             handler.AddPara(objectKey, "");
         }
-        // var param = o.split("=");
-        // if (param.length == 2 && validate(param[1])) {
-        //     handler.AddPara(param[0], param[1]);
-        // } else {
-        //     handler.AddPara(param[0], "");
-        // }
+//        var param = o.split("=");
+//        if (param.length == 2 && validate(param[1])) {
+//            handler.AddPara(param[0], param[1]);
+//        } else {
+//            handler.AddPara(param[0], "");
+//        }
     });
     //handler.AddUrlData(dataStrs);
 
@@ -2064,6 +2066,7 @@ function initModal(modalType, toNode) {
             case "CH":
                 $('#modalHeader').text("节点时限");
                 modalIframeSrc = "./WorkOpt/CH.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
+                break;
             case "Note":
                 $('#modalHeader').text("备注");
                 modalIframeSrc = "./WorkOpt/Note.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();

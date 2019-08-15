@@ -270,18 +270,22 @@ function GenerFrm() {
     //根据表单类型不同生成表单.
 
     var isTest = GetQueryString("IsTest");
-
+    var isFloolFrm = false;
     if (isTest == "1") {
 
         var frmType = GetQueryString("FrmType");
         if (frmType == 'FreeFrm')
             GenerFreeFrm(mapData, frmData); //自由表单.
-        else
+        else {
             GenerFoolFrm(mapData, frmData); //生成傻瓜表单.
+            isFloolFrm = true;
+        }
 
     } else {
-        if (mapData.FrmType == 0)
+        if (mapData.FrmType == 0) {
             GenerFoolFrm(mapData, frmData); //生成傻瓜表单.
+            isFloolFrm = true;
+        }
         else
             GenerFreeFrm(mapData, frmData); //自由表单.
     }
@@ -397,15 +401,20 @@ function GenerFrm() {
     if (pageData.IsReadonly != "1")
         AfterBindEn_DealMapExt(frmData);
 
-    //ShowNoticeInfo();
+    if (isFloolFrm == true)
+        //表单联动设置
+        Set_Frm_Enable(frmData);
+
 
     ShowTextBoxNoticeInfo();
 
     //textarea的高度自适应的设置
-    var textareas = $("textarea");
-    $.each(textareas, function (idex, item) {
-        autoTextarea(item);
-    });
+    if (isFloolFrm == true) {
+        var textareas = $("textarea");
+        $.each(textareas, function (idex, item) {
+            autoTextarea(item);
+        });
+    }
     //给富文本 创建编辑器
     if (document.BindEditorMapAttr) {
         var editor = document.activeEditor = UM.getEditor('editor', {
@@ -737,6 +746,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                         formArrResult.push(name + '=' + ($(disabledEle).is(':checked') ? 1 : 0));
                         break;
                     case "TEXT": //文本框
+                    case "HIDDEN":
                         formArrResult.push(name + '=' + $(disabledEle).val());
                         break;
                     case "RADIO": //单选钮

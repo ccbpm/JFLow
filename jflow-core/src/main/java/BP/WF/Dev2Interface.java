@@ -4945,14 +4945,8 @@ public class Dev2Interface {
 		dtHistory.Columns.Add("RDT"); // 记录日期.
 		dtHistory.Columns.Add("SDT"); // 应完成日期(可以不用.)
 		dtHistory.Columns.Add("IsPass"); // 应完成日期(可以不用.)
-		
-
-		// 执行人.
-		if (gwf.getWFState() == WFState.Complete  ) {
-			// 历史执行人.
-			// sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) +
-			// "Track WHERE WorkID=" + workID
-			// + " AND (ActionType=1 OR ActionType=0) ORDER BY RDT DESC";
+		 
+			 
 
 			sql = "SELECT C.Name AS DeptName,  A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow())
 					+ "Track A, Port_Emp B, Port_Dept C WHERE (A.WorkID=" + workID + "OR A.FID="+workID +")"
@@ -4962,14 +4956,17 @@ public class Dev2Interface {
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
 			for (DataRow drTrack : dtTrack.Rows) {
+				
 				DataRow dr = dtHistory.NewRow();
 				dr.setValue("FK_Node", drTrack.getValue("NDFrom"));
-				if(Integer.parseInt(drTrack.getValue("ActionType").toString())  == 7 || Integer.parseInt(drTrack.getValue("ActionType").toString())  == 11){
+				if(Integer.parseInt(drTrack.getValue("ActionType").toString())  == 7 
+						|| Integer.parseInt(drTrack.getValue("ActionType").toString())  == 11){
 
 					dr.setValue("RunModel", "4");
 				}else{
 					dr.setValue("RunModel", "0");
 				}
+				
 
 				dr.setValue("NodeName", drTrack.getValue("NDFromT"));
 				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
@@ -4979,7 +4976,8 @@ public class Dev2Interface {
 				// dr["DeptName"] = drTrack["DeptName"]; //部门名称.
 
 				dr.setValue("RDT", drTrack.getValue("RDT"));
-				// dr.setValue("SDT", drTrack.getValue("NDFrom"));
+				
+				//dr.setValue("SDT", drTrack.getValue("NDFrom"));
 
 				dr.setValue("SDT", "");
 
@@ -4987,7 +4985,10 @@ public class Dev2Interface {
 
 				dtHistory.Rows.add(dr);
 			}
-		} else {
+
+
+			// 如果流程没有完成，就把当前的待办的人员信息发给他。
+			if (gwf.getWFState() != WFState.Complete  ) {
 			
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			QueryObject qo = new BP.En.QueryObject(gwls);
@@ -4997,10 +4998,11 @@ public class Dev2Interface {
 			qo.AddWhere(GenerWorkerListAttr.FID,workID);
 			qo.addRightBracket();
 			qo.addAnd();
-			qo.AddWhere(GenerWorkerListAttr.IsPass, "!=", -2);
+			qo.AddWhere(GenerWorkerListAttr.IsPass, "=", 0);
 
 			qo.addOrderBy(GenerWorkerListAttr.RDT,GenerWorkerListAttr.FK_Node);
 			qo.DoQuery();
+			
 			for (GenerWorkerList gwl : gwls.ToJavaList()) {
 				DataRow dr = dtHistory.NewRow();
 
@@ -5025,22 +5027,10 @@ public class Dev2Interface {
 					dtHistory.Rows.add(dr);
 				}
  
-		}
+			}
+	 
 		 
-		 
-
-//        if (dtHistory.Rows.size() == 0 || 1==1)
-//        {
-//            DataRow dr = dtHistory.NewRow();
-//            dr.setValue("FK_Node",gwf.getFK_Node());
-//            dr.setValue("NodeName",gwf.getNodeName());
-//            dr.setValue("EmpNo",gwf.getStarter());
-//            dr.setValue("EmpName",gwf.getStarterName());
-//            dr.setValue("RDT",gwf.getRDT());
-//            dr.setValue("SDT",gwf.getSDTOfNode());
-//            dtHistory.Rows.add(dr);
-//        }
-
+		  
         // 给 dtHistory runModel 赋值.
         for (NodeSimple nd : nds.ToJavaList())
         {

@@ -887,7 +887,33 @@ public class DataType {
 	 */
 	public static String ParseStringToPinyin(String exp) {
 		// exp = exp.trim();
-		exp = exp.replaceAll(" ", "");
+		switch (exp)
+		{
+			case "电话":
+				return "Tel";
+			case "地址":
+				return "Addr";
+			case "年龄":
+				return "Age";
+			case "邮件":
+				return "Email";
+			case "单价":
+				return "DanJia";
+			case "金额":
+				return "JinE";
+			case "单据编号":
+				return "BillNo";
+			default:
+				break;
+		}
+
+		//特殊处理.
+		exp = exp.replace("单价", "DanJia");
+		exp = exp.replace("单件", "DanJian");
+		exp = exp.replace("单个", "DanGe");
+
+		exp = exp.trim();
+//		exp = exp.replaceAll(" ", "");
 		String pinYin = "", str = null;
 		char[] chars = exp.toCharArray();
 		for (char c : chars) {

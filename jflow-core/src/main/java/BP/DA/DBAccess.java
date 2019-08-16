@@ -3003,13 +3003,23 @@ public class DBAccess {
 	// }
 	/**
 	 * 是否是view
+	 *
+	 * @param tabelOrViewName
+	 * @return
+	 */
+	public static boolean IsView(String tabelOrViewName)
+	{
+		return IsView(tabelOrViewName, SystemConfig.getAppCenterDBType());
+	}
+	/**
+	 * 是否是view
 	 * 
 	 * @param tabelOrViewName
 	 * @return
 	 */
-	public static boolean IsView(String tabelOrViewName) {
+	public static boolean IsView(String tabelOrViewName,DBType dbType) {
 		String sql = "";
-		switch (SystemConfig.getAppCenterDBType()) {
+		switch (dbType) {
 		case Oracle:
 			sql = "SELECT TABTYPE  FROM TAB WHERE UPPER(TNAME)=:v";
 			DataTable oradt = DBAccess.RunSQLReturnTable(sql, "v", tabelOrViewName.toUpperCase());

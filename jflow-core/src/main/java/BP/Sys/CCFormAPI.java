@@ -1812,7 +1812,7 @@ public class CCFormAPI
 
 
 		//加入明细表.
-		DataTable Sys_MapDtl = md.getMapDtls().ToDataTableField("Sys_MapDtl");
+		DataTable Sys_MapDtl = md.getOrigMapDtls().ToDataTableField("Sys_MapDtl");
 		ds.Tables.add(Sys_MapDtl);
 
 

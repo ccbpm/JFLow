@@ -586,9 +586,26 @@ public class MapData extends EntityNoName
 		}
 		return obj;
 	}
-	 
+
+	/**
+	 * 获取从表原始属性数据
+	 * @return
+	 * @throws Exception
+	 */
+	public final MapDtls getOrigMapDtls() throws Exception
+	{
+		Object tempVar = this.GetRefObject("MapDtls");
+		MapDtls obj = (MapDtls)((tempVar instanceof MapDtls) ? tempVar : null);
+		if (obj == null)
+		{
+			obj = new MapDtls();
+			obj.Retrieve(MapDtlAttr.FK_MapData,this.getNo(),MapDtlAttr.FK_Node,0);
+			this.SetRefObject("MapDtls", obj);
+		}
+		return obj;
+	}
 	/** 
-	 从表
+	 从表所有数据
 	 * @throws Exception 
 	 
 	*/

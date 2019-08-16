@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import BP.Sys.FrmUI.MapAttrDT;
+import BP.Sys.*;
 import org.apache.commons.lang3.StringUtils;
 
 import BP.DA.Cash;
@@ -25,40 +25,6 @@ import BP.En.EntityMyPKAttr;
 import BP.En.EntityNoNameAttr;
 import BP.En.FieldTypeS;
 import BP.En.UIContralType;
-import BP.Sys.AthShowModel;
-import BP.Sys.CodeStruct;
-import BP.Sys.DBSrcType;
-import BP.Sys.FrmAttachment;
-import BP.Sys.FrmAttachmentAttr;
-import BP.Sys.FrmAttachments;
-import BP.Sys.FrmLab;
-import BP.Sys.FrmType;
-import BP.Sys.GroupField;
-import BP.Sys.GroupFieldAttr;
-import BP.Sys.GroupFields;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapAttrs;
-import BP.Sys.MapData;
-import BP.Sys.MapDataAttr;
-import BP.Sys.MapDtl;
-import BP.Sys.MapDtls;
-import BP.Sys.MapExts;
-import BP.Sys.MapFrame;
-import BP.Sys.MapFrames;
-import BP.Sys.SFDBSrc;
-import BP.Sys.SFDBSrcAttr;
-import BP.Sys.SFDBSrcs;
-import BP.Sys.SFTable;
-import BP.Sys.SFTableAttr;
-import BP.Sys.SFTables;
-import BP.Sys.SrcType;
-import BP.Sys.SysEnum;
-import BP.Sys.SysEnumAttr;
-import BP.Sys.SysEnumMain;
-import BP.Sys.SysEnumMains;
-import BP.Sys.SysEnums;
-import BP.Sys.SystemConfig;
 import BP.Tools.chs2py;
 import BP.WF.DotNetToJavaStringHelper;
 import BP.WF.ExtContral;
@@ -68,22 +34,22 @@ import BP.WF.Template.FrmNodeComponent;
 import BP.WF.Template.MapFrmFool;
 import BP.Web.WebUser;
 
-/** 
+/**
  处理页面的业务逻辑
  *
- 
+
 */
 public class WF_Admin_FoolFormDesigner extends WebContralBase
 {
-	
+
 	/**
 	 * 构造函数
 	 */
 	public WF_Admin_FoolFormDesigner()
 	{
-	
+
 	}
-	
+
 	  /// <summary>
     /// 获得表单对应的物理表特定的数据类型字段
     /// </summary>
@@ -132,11 +98,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         return BP.Tools.Json.ToJson(ds);
     }
 
-    
+
 		///#region 表单设计器.
-	/** 
+	/**
 	 是不是第一次进来.
-	 
+
 	*/
 	public final boolean getIsFirst()
 	{
@@ -149,9 +115,9 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 	/**
 	 * 初始化编辑枚举
-	 * 
+	 *
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public String SysEnum_Init() throws Exception {
 		SysEnumMain main = new SysEnumMain();
@@ -388,11 +354,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	}
 
 
-	/** 
+	/**
 	  设计器初始化.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String Designer_Init() throws Exception
 	{
@@ -428,7 +394,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         //清缓存
         md.ClearCash();
         ds.Tables.add(md.ToDataTableField("Sys_MapData"));
-        
+
 		// 字段属性.
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
 		for (MapAttr item : attrs.ToJavaList())
@@ -441,7 +407,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
 		ds.Tables.add(gfs.ToDataTableField("Sys_GroupField"));
 
-		MapDtls dtls = new MapDtls(this.getFK_MapData());
+		MapDtls dtls = new MapDtls();
+		dtls.Retrieve(MapDtlAttr.FK_MapData,this.getFK_MapData(),MapDtlAttr.FK_Node,0);
 		ds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
 
 		MapFrames frms = new MapFrames(this.getFK_MapData());
@@ -475,7 +442,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
                     item.Delete();
             }
         }
-		
+
 		if (this.getFK_MapData().indexOf("ND") == 0)
 		{
 			String nodeStr = this.getFK_MapData().replace("ND", "");
@@ -493,18 +460,18 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		///#endregion
 
-	/** 
+	/**
 	 初始化
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String MapDefDtlFreeFrm_Init() throws Exception
 	{
 		 String isFor = this.GetRequestVal("For");
          if (isFor != "")
              return "sln@" + isFor;
-         
+
 		MapDtl dtl = new MapDtl();
 
 		//如果传递来了节点信息, 就是说明了独立表单的节点方案处理, 现在就要做如下判断
@@ -599,10 +566,10 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		return "创建成功.";
 	}
-	/** 
+	/**
 	 执行默认的方法
-	 
-	 @return 
+
+	 @return
 	*/
 	@Override
 	protected String DoDefaultMethod()
@@ -611,19 +578,19 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		//通用局部变量定义
 		String resultString = "";
- 
+
 		return msg;
 	}
 
 	public final String ParseStringToPinyin() //转拼音方法.
 	{
 		String name = GetRequestVal("name");
-		String flag = GetRequestVal("flag"); 
-	     //此处为字段中文转拼音，设置为最大20个字符，edited by liuxc,2017-9-25			
+		String flag = GetRequestVal("flag");
+	     //此处为字段中文转拼音，设置为最大20个字符，edited by liuxc,2017-9-25
 	     return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, flag.equals("true"), true, 20);
-	 
+
 	}
-	
+
 	/**
 	 * 表单上移
 	 * @return
@@ -648,7 +615,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         mygf.DoDown();
         return msg;
     }
-    
+
 	public final String DtlFieldUp() throws Exception //字段上移
 	{
 			MapAttr attrU = new MapAttr(this.getMyPK());
@@ -719,8 +686,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			mygf.Update();
 			return "";
 	}
- 
-	 
+
+
 	//ORIGINAL LINE: case "FrameDoUp":
 	public final String FrameDoUp()
 	{
@@ -743,19 +710,19 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			//}
 		return "";
 	}
-	
-	
-	/** 
+
+
+	/**
 	 字典表列表.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 */
 	public final String SFList_Init() throws Exception
 	{
-		
+
 		DataSet ds = new DataSet();
-        
+
         SFTables ens = new SFTables();
         ens.RetrieveAll();
 
@@ -790,9 +757,9 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         }*/
 
         return BP.Tools.Json.ToJson(ds);
-         
+
 	}
-	
+
 	public final String SFList_SaveSFField() throws Exception
 	{
 		  MapAttr attr = new MapAttr();
@@ -810,20 +777,20 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
           SFTable sf = new SFTable(attr.getUIBindKey());
 
-          if (sf.getSrcType() == SrcType.TableOrView || sf.getSrcType() == SrcType.BPClass 
+          if (sf.getSrcType() == SrcType.TableOrView || sf.getSrcType() == SrcType.BPClass
         		  || sf.getSrcType() == SrcType.CreateTable)
               return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFTable&PKVal=" + attr.getMyPK();
           else
               return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFSQL&PKVal=" + attr.getMyPK();
 	}
-	
-	
-	 
-	/** 
+
+
+
+	/**
 	 增加一个枚举类型
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String SysEnumList_SaveEnumField() throws Exception
 	{
@@ -851,7 +818,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setName(sem.getName());
 		else
 			attr.setName("枚举"+attr.getUIBindKey());
-		
+
 		  //String sql = "SELECT OID FROM Sys_GroupField A WHERE A.EnName='" + this.getFK_MapData() + "' AND CtrlType='' OR CtrlType= NULL";
 		  String sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.getFK_MapData() + "' AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
           attr.setGroupID(  DBAccess.RunSQLReturnValInt(sql, 0));
@@ -874,7 +841,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		{
 			en.setName("我的从表" + en.getNo());
 			en.setPTable(en.getNo());
-			
+
 			en.setH(300);
 			en.Insert();
 			en.IntMapAttrs();
@@ -883,11 +850,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		//返回字串.
 		return en.getNo();
 	}
-	/** 
+	/**
 	 新建框架
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String Designer_NewFrame() throws Exception
 	{
@@ -908,11 +875,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		//BP.Sys.CCFormAPI.CreateOrSaveAthMulti(this.getFK_MapData(), this.GetRequestVal("FrameNo"), "我的附件", 100, 200);
 		return frm.getMyPK();
 	}
-	/** 
+	/**
 	 创建一个多附件
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String Designer_AthNew() throws Exception
 	{
@@ -927,11 +894,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		BP.Sys.CCFormAPI.CreateOrSaveAthMulti(this.getFK_MapData(), this.GetRequestVal("AthNo"), "我的附件", 100, 200);
 		return ath.getMyPK();
 	}
-	/** 
+	/**
 	 返回信息.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String GroupField_Init() throws Exception
 	{
@@ -944,7 +911,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		return gf.ToJson();
 	}
-	
+
 	  /// <summary>
     /// 创建审核分组
     /// </summary>
@@ -957,7 +924,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         gf.Insert();
         return "创建成功..";
     }
-    
+
     /// <summary>
     /// 保存分组
     /// </summary>
@@ -969,13 +936,13 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
         BP.Sys.CCFormAPI.CreateCheckGroup(this.getFK_MapData(), lab, prx);
         return "创建成功...";
     }
-    
 
-	/** 
+
+	/**
 	 保存空白的分组.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String GroupField_SaveBlank() throws Exception
 	{
@@ -996,11 +963,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		return "保存成功.";
 	}
 
-	/** 
+	/**
 	 审核分组保存
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String GroupField_Save() throws Exception
 	{
@@ -1030,13 +997,13 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		return "保存成功";
 	}
-	 
-	/** 
-	 
+
+	/**
+
 	 删除分组
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String GroupField_DeleteCheck() throws Exception
 	{
@@ -1050,12 +1017,12 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		return "删除成功...";
 	}
 
-	/** 
-	 
+	/**
+
 	 删除并删除该分组下的字段
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String GroupField_DeleteAllCheck() throws Exception
 	{
@@ -1082,11 +1049,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		return "删除并删除该分组下的字段成功...";
 	}
 
-	/** 
-	 
-	 
-	 @return 
-	 * @throws Exception 
+	/**
+
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String EditFExtContral_Init() throws Exception
 	{
@@ -1137,11 +1104,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		return "保存成功.";
 	}
-	/** 
+	/**
 	 框架信息.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String MapFrame_Init() throws Exception
 	{
@@ -1164,11 +1131,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		}
 		return mf.ToJson();
 	}
-	/** 
+	/**
 	 框架信息保存.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String MapFrame_Save() throws Exception
 	{
@@ -1180,11 +1147,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		mf.Save(); //执行保存.
 		return "保存成功..";
 	}
-	/** 
+	/**
 	 框架信息删除.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String MapFrame_Delete() throws Exception
 	{
@@ -1193,11 +1160,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		dtl.Delete();
 		return "操作成功..." + this.getMyPK();
 	}
-	/** 
+	/**
 	 枚举值列表
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String EnumList() throws Exception
 	{
@@ -1205,11 +1172,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		ses.RetrieveAll();
 		return ses.ToJson();
 	}
-	/** 
+	/**
 	 删除
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String SFTable_Delete() throws Exception
 	{
@@ -1217,11 +1184,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		sf.Delete();
 		return "删除成功...";
 	}
-	/** 
+	/**
 	 字典表列表.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String SFTable_List() throws Exception
 	{
@@ -1229,11 +1196,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		ens.RetrieveAll();
 		return ens.ToJson();
 	}
-	/** 
+	/**
 	 初始化表.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String EditTableField_Init() throws Exception
 	{
@@ -1273,7 +1240,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		return attr.ToJson();
 	}
-	
+
 	public String FieldTypeListChoseOneField_Save() throws Exception
       {
           int dataType = this.GetRequestValInt("DataType");
@@ -1295,10 +1262,10 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
               attr.setUIContralType(UIContralType.CheckBok);
           else
               attr.setUIContralType(UIContralType.TB);
-          
+
           String sql="SELECT OID FROM Sys_GroupField A WHERE A.FrmID='"+this.getFK_MapData()+"' AND CtrlType='' OR CtrlType= NULL";
           int groupID=DBAccess.RunSQLReturnValInt(sql,0) ;
-          
+
           attr.setGroupID(groupID);
 
           attr.Insert();
@@ -1306,17 +1273,17 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
           return "保存成功.";
       }
-	
-	
-	/** 
+
+
+	/**
 	 字段选择.
-	 
-	 @return 
-	 * @throws Exception 
+
+	 @return
+	 * @throws Exception
 	*/
 	public final String FieldTypeSelect_Create() throws Exception
 	{
-		
+
 		String no = this.GetRequestVal("KeyOfEn");
 		//系统判定特殊字段
 		if("BILLNO".equals(no))
@@ -1326,14 +1293,14 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		String name = this.GetRequestVal("name");
 		String newNo = DataType.ParseStringForNo(no, 20);
 		String newName = DataType.ParseStringForName(name, 20);
-		int fType = Integer.parseInt(this.getRequest().getParameter("FType")); 
+		int fType = Integer.parseInt(this.getRequest().getParameter("FType"));
 		MapAttrs attrs = new MapAttrs();
 		int i = attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.KeyOfEn, newNo);
 		if (i != 0)
 		{
 			return "err@字段名：" + newNo + "已经存在.";
 		}
-		
+
 		///#region 计算GroupID @于庆海 需要翻译
 		int iGroupID =0;// this.getg();
 		try
@@ -1348,7 +1315,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		{
 
 		}
-		
+
 		 try
          {
              MapData md = new MapData();
@@ -1360,7 +1327,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
          {
              return "err@" + ex.getMessage();
          }
-		 
+
 		//求出选择的字段类型.
 		MapAttr attr = new MapAttr();
 		attr.setName(newName);
@@ -1476,12 +1443,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppDate);
 			attr.Insert();
 
-			MapAttrDT dt = new MapAttrDT();
-			dt.setMyPK(attr.getMyPK());
-			dt.RetrieveFromDBSources();
-			dt.setFormat(0);
-			dt.Update();
-
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + DataType.AppDate + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
@@ -1499,11 +1460,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppDateTime);
 			attr.Insert();
 
-			MapAttrDT dt = new MapAttrDT();
-			dt.setMyPK(attr.getMyPK());
-			dt.RetrieveFromDBSources();
-			dt.setFormat(1);
-			dt.Update();
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 			//return "url@EditF.htm?MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + no + "&FType=" + DataType.AppDateTime + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}

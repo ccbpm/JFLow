@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import BP.Sys.*;
 import org.apache.http.protocol.HttpContext;
 
 import BP.DA.DBAccess;
@@ -21,25 +22,6 @@ import BP.Difference.Handler.WebContralBase;
 import BP.En.EditType;
 import BP.En.FieldTypeS;
 import BP.En.UIContralType;
-import BP.Sys.FrmAttachments;
-import BP.Sys.FrmBtns;
-import BP.Sys.FrmImgAths;
-import BP.Sys.FrmImgs;
-import BP.Sys.FrmLabs;
-import BP.Sys.FrmLines;
-import BP.Sys.FrmLinks;
-import BP.Sys.FrmRBs;
-import BP.Sys.GEDtl;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapAttrs;
-import BP.Sys.MapData;
-import BP.Sys.MapDataAttr;
-import BP.Sys.MapDtl;
-import BP.Sys.MapDtls;
-import BP.Sys.SFDBSrc;
-import BP.Sys.SysEnumMain;
-import BP.Sys.SystemConfig;
 import BP.Web.WebUser;
 
 public class WF_Admin_CCFormDesigner extends WebContralBase {
@@ -448,7 +430,8 @@ public class WF_Admin_CCFormDesigner extends WebContralBase {
               FrmAttachments aths = new FrmAttachments(this.getFK_MapData());
               ds.Tables.add(aths.ToDataTableField("Sys_FrmAttachment"));
 
-              MapDtls dtls = new MapDtls(this.getFK_MapData());
+			  MapDtls dtls = new MapDtls();
+			  dtls.Retrieve(MapDtlAttr.FK_MapData,this.getFK_MapData(),MapDtlAttr.FK_Node,0);
               ds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
 
               FrmLines lines = new FrmLines(this.getFK_MapData());

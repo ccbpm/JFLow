@@ -479,7 +479,7 @@ public class WF_MyFlow extends WebContralBase {
 		}
 		// 找到父级目录添加到集合
 		for (BP.WF.Template.FlowFormTree folderapp : parentFolders.ToJavaList()) {
-			if (appFlowFormTree.contains(folderapp) == false)
+			if (appFlowFormTree.Contains("No",folderapp.getNo()) == false)
 				appFlowFormTree.AddEntity(folderapp);
 		}
 		// 求出没有父节点的文件夹
@@ -800,7 +800,7 @@ public class WF_MyFlow extends WebContralBase {
 			gwf.setWorkID(this.getWorkID());
 			gwf.RetrieveFromDBSources();
 
-			// 设置url.
+			// 设置url.FlowFormTree_Init
 			if (gwf.getWFState() == WFState.Runing || gwf.getWFState() == WFState.Blank
 					|| gwf.getWFState() == WFState.Draft) {
 				if (toUrl.contains("IsLoadData") == false) {

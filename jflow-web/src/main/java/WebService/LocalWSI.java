@@ -343,4 +343,22 @@ public interface LocalWSI {
 	 */
    public String DeleteFlow(String userNo,long workid,String fk_flow) throws Exception;
 
+	/**
+	 * 上传附件
+	 * @param fk_node 节点编号
+	 * @param fk_flow 流程编号
+	 * @param workid 流程WorkID
+	 * @param athNo 附件属性编号
+	 * @param fk_mapData 表单属性编号
+	 * @param filePath 附件路径
+	 * @param fileName 附件名称
+	 * @param sort 附件分类
+	 * @param fid 干流程ID
+	 * @param pworkid 父流程ID
+	 * @return
+	 * @throws Exception
+	 */
+   public String CCForm_AddAth(int fk_node, String fk_flow, long workid, String athNo, String fk_mapData,
+							   String filePath, String fileName, String sort, long fid, long pworkid) throws  Exception;
+
 }

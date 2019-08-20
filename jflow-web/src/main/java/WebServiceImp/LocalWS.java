@@ -734,5 +734,25 @@ public class LocalWS implements LocalWSI {
 		return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(fk_flow, workid, true);
 	}
 
-
+	/**
+	 * 附件上传
+	 * @param fk_node 节点编号
+	 * @param fk_flow 流程编号
+	 * @param workid 流程WorkID
+	 * @param athNo 附件属性编号
+	 * @param fk_mapData 表单属性编号
+	 * @param filePath 附件路径
+	 * @param fileName 附件名称
+	 * @param sort 附件分类
+	 * @param fid 干流程ID
+	 * @param pworkid 父流程ID
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String CCForm_AddAth(int fk_node, String fk_flow, long workid, String athNo, String fk_mapData,
+								String filePath, String fileName, String sort, long fid, long pworkid) throws Exception{
+		BP.WF.Dev2Interface.CCForm_AddAth(fk_node,fk_flow,workid,athNo,fk_mapData,filePath,fileName,sort,fid,pworkid);
+		return "附件传递成功";
+	}
 }

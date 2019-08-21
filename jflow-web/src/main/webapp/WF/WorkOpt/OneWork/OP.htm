@@ -9,218 +9,217 @@
     <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        $(function () {
+    $(function () {
 
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
 
-            handler.AddUrlData();
-            var data = handler.DoMethodReturnString("OP_GetStatus");
-            data = JSON.parse(data);
+        handler.AddUrlData();
+        var data = handler.DoMethodReturnString("OP_GetStatus");
+        data = JSON.parse(data);
 
-            var html = "";
+        var html = "";
 
-            //打包下载.
-            if (data.CanPackUp == 1) 
-                html += PackUp();
+        //打包下载.
+        if (data.CanPackUp == 1)
+            html += PackUp(data.PrintType);
 
-           //是否可以删除流程.
-           if (data.IsCanDelete==1) 
-               html += DeleteFlow();
- 
-            //增加回滚.
-            if (data.Rollback == "1")
-                html += Rollback();
+        //是否可以删除流程.
+        if (data.IsCanDelete==1)
+            html += DeleteFlow();
 
-            //增加撤销.
-            if (data.CanUnSend == "1")
-                html += addUnSend();
+        //增加回滚.
+        if (data.Rollback == "1")
+            html += Rollback();
 
-            $("#ccop").append(html);
+        //增加撤销.
+        if (data.CanUnSend == "1")
+            html += addUnSend();
 
-        });
+        $("#ccop").append(html);
 
-        function RollbackIt() {
-            window.location.href = "../Rollback.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow");
+    });
+
+    function RollbackIt() {
+        window.location.href = "../Rollback.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow");
+    }
+
+    //回滚流程
+    function Rollback() {
+
+        var html = addBlockBegin("回滚流程");
+
+        html += "回滚流程:<a href=\"javascript:RollbackIt();\" >执行回滚</a>。";
+        html += "<br />说明：从指定的节点上从新审批.";
+
+        html += addBlockEnd();
+
+        return html;
+    }
+
+    //删除流程
+    function DeleteFlow(isCan) {
+
+        if (typeof isCan == "undefined") {
+            return "";
         }
 
-        //回滚流程
-        function Rollback() {
+        var html = addBlockBegin("删除流程");
 
-            var html = addBlockBegin("回滚流程");
-
-            html += "回滚流程:<a href=\"javascript:RollbackIt();\" >执行回滚</a>。";
-            html += "<br />说明：从指定的节点上从新审批.";
-
-            html += addBlockEnd();
-
-            return html;
+        if (isCan == "true") {
+            html += "功能执行:<a href=\"javascript:DeleteFlowInstance('" + GetQueryString("fk_flow") + "','" + GetQueryString("WorkID") + "')\" >点击执行删除流程</a>。";
+            html += "<br />说明：如果执行流程将会被彻底的删除。";
+        }
+        else {
+            html += "您没有删除该流程的权限。";
         }
 
-        //删除流程
-        function DeleteFlow(isCan) {
+        html += addBlockEnd();
+        return html;
+    }
 
-            if (typeof isCan == "undefined") {
-                return "";
-            }
+    //取回审批
+    function TackBack(isCan, fromNode, toNode) {
 
-            var html = addBlockBegin("删除流程");
-
-            if (isCan == "true") {
-                html += "功能执行:<a href=\"javascript:DeleteFlowInstance('" + GetQueryString("fk_flow") + "','" + GetQueryString("WorkID") + "')\" >点击执行删除流程</a>。";
-                html += "<br />说明：如果执行流程将会被彻底的删除。";
-            }
-            else {
-                html += "您没有删除该流程的权限。";
-            }
-
-            html += addBlockEnd();
-            return html;
+        if (typeof isCan == "undefined") {
+            return "";
         }
 
-        //取回审批
-        function TackBack(isCan, fromNode, toNode) {
+        var html = addBlockBegin("取回审批");
 
-            if (typeof isCan == "undefined") {
-                return "";
-            }
-
-            var html = addBlockBegin("取回审批");
-
-            if (isCan) {
-                html += "功能执行:<a href=\"javascript:Takeback('" + workid + "','" + fk_flow + "','" + fromNode + "','" + toNode + "')\" >点击执行取回审批流程</a>。";
-                html += "<br />说明：如果被成功取回，ccflow就会把停留在别人工作节点上的工作发送到您的待办列表里。";
-            }
-            else {
-                html += "您没有此权限。";
-            }
-
-            html += addBlockEnd();
-            return html;
+        if (isCan) {
+            html += "功能执行:<a href=\"javascript:Takeback('" + workid + "','" + fk_flow + "','" + fromNode + "','" + toNode + "')\" >点击执行取回审批流程</a>。";
+            html += "<br />说明：如果被成功取回，ccflow就会把停留在别人工作节点上的工作发送到您的待办列表里。";
         }
-
-        //催办
-        function addHurry() {
-
-            var html = addBlockBegin("工作催办");
+        else {
             html += "您没有此权限。";
-            html += addBlockEnd();
-            return html;
         }
 
-        //撤销发送
-        function addUnSend() {
+        html += addBlockEnd();
+        return html;
+    }
 
-            var html = addBlockBegin("撤销发送");
-            html += "功能执行:<a href =\"javascript:UnSend('" + fk_flow + "','" + workid + "','" + fid + "')\" >撤销发送</a>。";
-            html += addBlockEnd();
-            return html;
+    //催办
+    function addHurry() {
+
+        var html = addBlockBegin("工作催办");
+        html += "您没有此权限。";
+        html += addBlockEnd();
+        return html;
+    }
+
+    //撤销发送
+    function addUnSend() {
+
+        var html = addBlockBegin("撤销发送");
+        html += "功能执行:<a href =\"javascript:UnSend('" + fk_flow + "','" + workid + "','" + fid + "')\" >撤销发送</a>。";
+        html += addBlockEnd();
+        return html;
+    }
+
+    //恢复使用流程.
+    function addRollBack() {
+
+        var html = addBlockBegin("恢复启用流程数据到结束节点");
+        html += "功能执行:<a href=\"javascript:DoFunc('OP_ComeBack','" + workid + "','" + fk_flow + "','" + fk_node + "')\" >点击执行恢复流程</a>。";
+        html += "<br />说明：如果被成功恢复，ccflow就会把待办工作发送给最后一个结束流程的工作人员。";
+        html += addBlockEnd();
+
+        return html;
+    }
+
+
+    //撤销挂起
+    function addUnHungUp() {
+
+        var html = addBlockBegin("取消挂起");
+
+        html += "功能执行:<a href=\"javascript:DoFunc('OP_UnHungUp','" + workid + "','" + fk_flow + "','" + fk_node + "')\" >点击执行取消挂起流程</a>。";
+        html += "<br />说明：解除流程挂起的状态。";
+
+        html += addBlockEnd();
+
+        return html;
+    }
+
+    ///增加打印.
+    function PackUp(printType) {
+
+        var fk_node = GetQueryString("FK_Node");
+        if (fk_node == null)
+            fk_node = GetQueryString("NodeID");
+
+        //如果printType是undefined或者null 就执行打包下载
+        if (printType == null || printType == undefined || printType==0) {
+            var html = addBlockBegin("打印/打包下载");
+            html += "功能执行:<a href='../Packup.htm?FileType=zip,pdf&WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + GetQueryString("FK_Node") + "&FK_Node=" + GetQueryString("FK_Node") + "' >执行打印</a>。";
+            html += "<br />说明：把表单输出到html,pdf,zip文件里，执行下载或打印.";
+        } else {
+            var html = addBlockBegin("RTF/Word下载");
+            html += "功能执行:<a href='javaScript:void(0)' onclick='WinOpen(\"../PrintDoc.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + GetQueryString("FK_Node") + "&FK_Node=" + GetQueryString("FK_Node") + "\")' >执行打印</a>。";
+            html += "<br />说明：把表单输出到Word文件里，执行下载或打印.";
         }
 
-        //恢复使用流程.
-        function addRollBack() {
-
-            var html = addBlockBegin("恢复启用流程数据到结束节点");
-            html += "功能执行:<a href=\"javascript:DoFunc('OP_ComeBack','" + workid + "','" + fk_flow + "','" + fk_node + "')\" >点击执行恢复流程</a>。";
-            html += "<br />说明：如果被成功恢复，ccflow就会把待办工作发送给最后一个结束流程的工作人员。";
-            html += addBlockEnd();
-
-            return html;
-        }
+        html += addBlockEnd();
+        return html;
+    }
 
 
-        //撤销挂起
-        function addUnHungUp() {
+    //删除流程.
+    function DeleteFlowInstance(flowNo, workid) {
+        var url = '../DeleteFlowInstance.htm?FK_Flow=' + flowNo + '&WorkID=' + workid;
+        WinOpen(url);
+    }
 
-            var html = addBlockBegin("取消挂起");
+    function DoFunc(doType, workid, fk_flow, fk_node) {
 
-            html += "功能执行:<a href=\"javascript:DoFunc('OP_UnHungUp','" + workid + "','" + fk_flow + "','" + fk_node + "')\" >点击执行取消挂起流程</a>。";
-            html += "<br />说明：解除流程挂起的状态。";
-
-            html += addBlockEnd();
-
-            return html;
-        }
-
-        ///增加打印.
-        function PackUp() {
-
-            var fk_node = GetQueryString("FK_Node");
-            if (fk_node == null)
-                fk_node = GetQueryString("NodeID");
-
-            //如果printType是undefined或者null 就执行打包下载
-            var printType;
-            if (printType == null || printType == undefined) {
-                var html = addBlockBegin("打印/打包下载");
-                html += "功能执行:<a href='../Packup.htm?FileType=zip,pdf&WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + GetQueryString("FK_Node") + "&FK_Node=" + GetQueryString("FK_Node") + "' >执行打印</a>。";
-                html += "<br />说明：把表单输出到html,pdf,zip文件里，执行下载或打印.";
-            } else {
-                var html = addBlockBegin("RTF/Word下载");
-                html += "功能执行:<a href='javaScript:void(0)' onclick='WinOpen(\"../PrintDoc.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + GetQueryString("FK_Node") + "&FK_Node=" + GetQueryString("FK_Node") + "\")' >执行打印</a>。";
-                html += "<br />说明：把表单输出到Word文件里，执行下载或打印.";
-            }
-
-            html += addBlockEnd();
-            return html;
-        }
-
-
-        //删除流程.
-        function DeleteFlowInstance(flowNo, workid) {
-            var url = '../DeleteFlowInstance.htm?FK_Flow=' + flowNo + '&WorkID=' + workid;
-            WinOpen(url);
-        }
-
-        function DoFunc(doType, workid, fk_flow, fk_node) {
-
-            if (doType == 'OP_DelFlow' || doType == 'Reset') {
-                if (confirm('您确定要执行吗？') == false)
-                    return;
-            }
-
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
-            handler.AddPara("WorkID", workid);
-            handler.AddPara("FK_Flow", fk_flow);
-            handler.AddPara("FK_Node", fk_node);
-            var data = handler.DoMethodReturnString(doType);
-            $("#opmsg").empty().append(data);
-        }
-
-        function Takeback(workid, fk_flow, fk_node, toNode) {
+        if (doType == 'OP_DelFlow' || doType == 'Reset') {
             if (confirm('您确定要执行吗？') == false)
                 return;
-            var url = '../../GetTask.aspx?DoType=Tackback&FK_Flow=' + fk_flow + '&FK_Node=' + fk_node + '&ToNode=' + toNode + '&WorkID=' + workid;
-            window.location.href = url;
         }
 
-        function UnSend(fk_flow, workID, fid) {
-            if (confirm('您确定要执行撤销吗?') == false)
-                return;
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
+        handler.AddPara("WorkID", workid);
+        handler.AddPara("FK_Flow", fk_flow);
+        handler.AddPara("FK_Node", fk_node);
+        var data = handler.DoMethodReturnString(doType);
+        $("#opmsg").empty().append(data);
+    }
 
-            var url = Handler + "?DoType=OP_UnSend&FK_Node=<%=FK_Node %>&FK_Flow=" + fk_flow + "&WorkID=" + workID;
+    function Takeback(workid, fk_flow, fk_node, toNode) {
+        if (confirm('您确定要执行吗？') == false)
+            return;
+        var url = '../../GetTask.aspx?DoType=Tackback&FK_Flow=' + fk_flow + '&FK_Node=' + fk_node + '&ToNode=' + toNode + '&WorkID=' + workid;
+        window.location.href = url;
+    }
 
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
-            handler.AddUrlData();
-            var data = handler.DoMethodReturnString("OP_UnSend");
-            $("#opmsg").empty().append(data);
-        }
+    function UnSend(fk_flow, workID, fid) {
+        if (confirm('您确定要执行撤销吗?') == false)
+            return;
 
-        function addBlockBegin(title) {
-            var html = "<table class='Table' cellspacing='0' cellpadding='0' border='0' style='width:100%;margin-bottom:5px;'>";
-            html += "<tr><td class='GroupTitle'>" + title + "</td></tr>";
-            html += "<tr><td style='padding:10px'>";
-            return html;
-        }
+        var url = Handler + "?DoType=OP_UnSend&FK_Node=<%=FK_Node %>&FK_Flow=" + fk_flow + "&WorkID=" + workID;
 
-        function addBlockEnd() {
-            return "</td></tr></table>";
-        }
-    </script>
-    <div id="ccop" style="width: 100%; height: auto">
-    </div>
-    <div id="opmsg" style="width: 100%; height: auto">
-    </div>
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
+        handler.AddUrlData();
+        var data = handler.DoMethodReturnString("OP_UnSend");
+        $("#opmsg").empty().append(data);
+    }
+
+    function addBlockBegin(title) {
+        var html = "<table class='Table' cellspacing='0' cellpadding='0' border='0' style='width:100%;margin-bottom:5px;'>";
+        html += "<tr><td class='GroupTitle'>" + title + "</td></tr>";
+        html += "<tr><td style='padding:10px'>";
+        return html;
+    }
+
+    function addBlockEnd() {
+        return "</td></tr></table>";
+    }
+</script>
+<div id="ccop" style="width: 100%; height: auto">
+</div>
+<div id="opmsg" style="width: 100%; height: auto">
+</div>
 </body>
 </html>

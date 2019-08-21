@@ -6161,7 +6161,7 @@ public class WorkNode {
 			/// #endregion 处理子流程
 
 			/// #region 生成单据
-			if (this.getHisNode().getHisPrintDocEnable() == PrintDocEnable.PrintRTF
+			if (this.getHisNode().getHisPrintDocEnable() == true
 					&& this.getHisNode().getBillTemplates().size() > 0) {
 
 				BillTemplates reffunc = this.getHisNode().getBillTemplates();

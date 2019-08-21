@@ -1212,12 +1212,12 @@ public class Node extends Entity {
 	/**
 	 * 打印方式
 	 */
-	public final PrintDocEnable getHisPrintDocEnable() {
-		return PrintDocEnable.forValue(this.GetValIntByKey(NodeAttr.PrintDocEnable));
+	public final boolean getHisPrintDocEnable() {
+		 return this.GetValBooleanByKey(NodeAttr.PrintDocEnable);
 	}
 
-	public final void setHisPrintDocEnable(PrintDocEnable value) {
-		this.SetValByKey(NodeAttr.PrintDocEnable, value.getValue());
+	public final void setHisPrintDocEnable(boolean value) {
+		this.SetValByKey(NodeAttr.PrintDocEnable, value);
 	}
 
 	/**

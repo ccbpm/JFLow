@@ -201,6 +201,14 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		else
 			ht.put("CanPackUp", 0);
 
+		//获取打印的方式PDF/RDF,节点打印方式
+		Node nd = new Node(this.getFK_Node());
+		if (nd.getHisPrintDocEnable() == true)
+			ht.put("PrintType", 1);
+		else
+			ht.put("PrintType", 0);
+
+
 		switch (gwf.getWFState())
 		{
 			case Runing: // 运行时

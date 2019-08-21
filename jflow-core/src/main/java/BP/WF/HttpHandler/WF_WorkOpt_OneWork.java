@@ -196,37 +196,36 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
             CanPackUp = true;
         }
         // end 文件打印的权限判断，这里为天业集团做的特殊判断，现实的应用中，都可以打印.
-
-        ht.put("CanPackUp", String.valueOf(CanPackUp).toLowerCase());
+		if (CanPackUp == true)
+			ht.put("CanPackUp", 1);
+		else
+			ht.put("CanPackUp", 0);
 
 		switch (gwf.getWFState())
 		{
 			case Runing: // 运行时
-				//删除流程.
-				isCan = BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(), WebUser.getNo());
-				ht.put("CanFlowOverByCoercion", String.valueOf(isCan).toLowerCase());
+				/*删除流程.*/
+				if (BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(), WebUser.getNo()) == true)
+					ht.put("IsCanDelete", 1);
+				else
+					ht.put("IsCanDelete", 0);
 
-				//取回审批
-				isCan = false;
+				/*取回审批*/
 				String para = "";
 				String sql = "SELECT NodeID FROM WF_Node WHERE CheckNodes LIKE '%" + gwf.getFK_Node() + "%'";
 				int myNode = DBAccess.RunSQLReturnValInt(sql, 0);
-
 				if (myNode != 0)
 				{
 					GetTask gt = new GetTask(myNode);
 					if (gt.Can_I_Do_It())
 					{
-						isCan = true;
-						 ht.put("TackBackFromNode", gwf.getFK_Node());
-                         ht.put("TackBackToNode", myNode);
-						
+						ht.put("TackBackFromNode", gwf.getFK_Node());
+						ht.put("TackBackToNode", myNode);
+						ht.put("CanTackBack", 1);
 					}
 				}
-				
-				ht.put("CanTackBack", new Boolean(isCan).toString().toLowerCase());
 
-				//撤销发送
+				/*撤销发送*/
 				GenerWorkerLists workerlists = new GenerWorkerLists();
 				QueryObject info = new QueryObject(workerlists);
 				info.AddWhere(GenerWorkerListAttr.FK_Emp, WebUser.getNo());
@@ -236,24 +235,29 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				info.AddWhere(GenerWorkerListAttr.IsEnable, "1");
 				info.addAnd();
 				info.AddWhere(GenerWorkerListAttr.WorkID, this.getWorkID());
-				isCan = info.DoQuery() > 0;
-				ht.put("CanUnSend", new Boolean(isCan).toString().toLowerCase());
-				
+
+				if (info.DoQuery() > 0)
+					ht.put("CanUnSend", 1);
+				else
+					ht.put("CanUnSend", 0);
+
 				break;
 			case Complete: // 完成.
-			case Delete: // 逻辑删除..
-				//恢复使用流程
-				isCan = WebUser.getNo().equals("admin");
-				ht.put("CanRollBack", new Boolean(isCan).toString().toLowerCase());
-				 //获取流程运行完时的节点
-                Node node = new Node(gwf.getFK_Node());
-                ht.put("PrintType", node.getHisPrintDocEnable());
-                
+			case Delete:   // 逻辑删除..
+				/*恢复使用流程*/
+				if (WebUser.getNo().equals("admin"))
+					ht.put("CanRollBack", 1);
+				else
+					ht.put("CanRollBack", 0);
+
+				//判断是否可以打印.
 				break;
 			case HungUp: // 挂起.
-				//撤销挂起
-				isCan = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork( this.getWorkID(), WebUser.getNo());
-				ht.put("CanUnHungUp", new Boolean(isCan).toString().toLowerCase());
+				/*撤销挂起*/
+				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo()) == false)
+					ht.put("CanUnHungUp", 0);
+				else
+					ht.put("CanUnHungUp", 1);
 				break;
 			default:
 				break;
@@ -355,10 +359,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	}
 	/** 
 	 获取流程的JSON数据，以供显示工作轨迹/流程设计
-	 
-	 @param fk_flow 流程编号
-	 @param workid 工作编号
-	 @param fid 父流程编号
 	 @return 
 	*/
 	public String GetFlowTrackJsonData()

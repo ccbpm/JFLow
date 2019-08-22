@@ -221,9 +221,7 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 取出他的数据实体
-	 * 
-	 * @param ens
-	 *            集合
+	 * @param ens 集合
 	 * @return 执行后的实体信息
 	 * @throws Exception
 	 */
@@ -369,9 +367,7 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 在此实体是运行sql 返回结果集合
-	 * 
-	 * @param sql
-	 *            要运行的sql
+	 * @param ps 要运行的sql
 	 * @return 执行的结果
 	 * @throws Exception
 	 */
@@ -385,9 +381,7 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 在此实体是运行sql 返回结果集合
-	 * 
-	 * @param sql
-	 *            要运行的 select sql
+	 * @param sql 要运行的 select sql
 	 * @return 执行的查询结果
 	 * @throws Exception
 	 */
@@ -399,9 +393,7 @@ public abstract class Entity implements Serializable {
 	// 于编号有关系的处理。
 	/**
 	 * 这个方法是为不分级字典，生成一个编号。根据制订的 属性.
-	 * 
-	 * @param attrKey
-	 *            属性
+	 * @param attrKey 属性
 	 * @return 产生的序号
 	 * @throws Exception
 	 */
@@ -450,13 +442,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 按照一列产生顺序号码。
-	 * 
-	 * @param attrKey
-	 *            要产生的列
-	 * @param attrGroupKey
-	 *            分组的列名
-	 * @param FKVal
-	 *            分组的主键
+	 * @param attrKey 要产生的列
+	 * @param attrGroupKey 分组的列名
+	 * @param attrGroupVal 分组的主键
 	 * @return
 	 * @throws Exception
 	 */
@@ -774,10 +762,10 @@ public abstract class Entity implements Serializable {
 	/**
 	 * 按照属性查询
 	 * 
-	 * @param attr
-	 *            属性名称
-	 * @param val
-	 *            值
+	 * @param attr1 属性名称
+	 * @param val1 值
+	 * @param attr2 属性名称
+	 * @param val2 值
 	 * @return 是否查询到
 	 * @throws Exception
 	 */
@@ -797,10 +785,10 @@ public abstract class Entity implements Serializable {
 	/**
 	 * 按照属性查询
 	 * 
-	 * @param attr
-	 *            属性名称
-	 * @param val
-	 *            值
+	 * @param attr1 属性名称
+	 * @param val1  值
+	 * @param attr2 属性名称
+	 * @param val2  值
 	 * @return 是否查询到
 	 * @throws Exception
 	 */
@@ -1856,7 +1844,7 @@ public abstract class Entity implements Serializable {
             //更新缓存. @wangyanyan
             if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
             {
-                Cash2019.UpdateRow(this.toString(), this.getPKVal().toString(), this.getRow());
+                Cash2019.UpdateRow(this.toString(), String.valueOf(this.getPKVal()), this.getRow());
             }
 
 			this.afterUpdate();
@@ -3901,7 +3889,7 @@ public abstract class Entity implements Serializable {
 	/**
 	 * 在确定 attrKey 存在 map 的情况下才能使用它
 	 * 
-	 * @param attrKey
+	 * @param key
 	 * @return
 	 */
 	public final String GetValStrByKey(String key) {

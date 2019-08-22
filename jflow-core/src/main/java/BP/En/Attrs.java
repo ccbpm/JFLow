@@ -427,6 +427,9 @@ public class Attrs extends ArrayList<Attr>
 	 //#region DDLSQL
      public void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable)
      {
+     	if(defaultVal == null){
+			defaultVal = "";
+		}
          Attr attr = new Attr();
          attr.setKey(key);
          attr.setField(key);

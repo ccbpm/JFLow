@@ -2220,6 +2220,9 @@ public class Map
 	}
 	public void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable,boolean uiVisible)
     {
+		if(defaultVal == null){
+			defaultVal = "";
+		}
         Attr attr = new Attr();
         attr.setKey(key);
         attr.setField(key);

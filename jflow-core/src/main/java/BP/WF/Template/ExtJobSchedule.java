@@ -108,7 +108,7 @@ public class ExtJobSchedule extends EntityMyPK
 			map.AddMyPK();
 			map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
 			map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段", true, true, 1, 100, 20);
-			map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.SQLOfGroupAttr(), true);
+			map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.SQLOfGroupAttr(), true);
 
 			map.AddTBInt(MapAttrAttr.UIHeight, 1, "高度", true, false);
 			map.AddTBInt(MapAttrAttr.UIWidth, 1, "宽度", true, false);

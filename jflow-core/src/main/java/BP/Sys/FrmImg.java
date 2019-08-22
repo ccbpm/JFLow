@@ -269,7 +269,7 @@ public class FrmImg extends EntityMyPK
            map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", false, true);
 
            //显示的分组.
-           map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组",BP.Sys.FrmUI.MapAttrString.SQLOfGroupAttr(), true);
+           map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组",BP.Sys.FrmUI.MapAttrString.SQLOfGroupAttr(), true);
 
 
 		this.set_enMap(map);

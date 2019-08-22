@@ -126,7 +126,7 @@ public class MapAttrBoolen extends EntityMyPK
            "@1=跨1行@2=跨2行@3=跨3行");
         
 		//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", 
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组",
 				MapAttrString.SQLOfGroupAttr(), true);
 		RefMethod rm = new RefMethod();
 

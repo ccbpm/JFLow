@@ -136,7 +136,7 @@ public class MapAttrNum extends EntityMyPK {
 		map.AddDDLSysEnum(MapAttrAttr.RowSpan, 1, "行数", true, true, "RowSpanAttrString", "@1=跨1行@2=跨2行@3=跨3行");
 
 		// 显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.SQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.SQLOfGroupAttr(), true);
 
 		RefMethod rm = new RefMethod();
 

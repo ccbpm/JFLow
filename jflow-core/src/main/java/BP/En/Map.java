@@ -2215,16 +2215,24 @@ public class Map
 		AddDDLEntities(key, field, defaultVal, dataType, FieldType.PKFK, desc,
 				ens, refKey, refText, uiIsEnable);
 	}
-	public void AddDDLSQL(String key, String defaultVal, String desc, String sql, boolean uiIsEnable){
+	public void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable){
 		AddDDLSQL(key, defaultVal, desc,sql, uiIsEnable,true);
 	}
-	public void AddDDLSQL(String key, String defaultVal, String desc, String sql, boolean uiIsEnable,boolean uiVisible)
+	public void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable,boolean uiVisible)
     {
         Attr attr = new Attr();
         attr.setKey(key);
         attr.setField(key);
-        attr.setDefaultVal(defaultVal);
-        attr.setMyDataType(DataType.AppString);
+		if (defaultVal instanceof Integer)
+		{
+			attr.setDefaultVal(defaultVal);
+			attr.setMyDataType(DataType.AppInt);
+		}
+		else
+		{
+			attr.setDefaultVal(defaultVal);
+			attr.setMyDataType(DataType.AppString);
+		}
         attr.setMyFieldType(FieldType.Normal);
         attr.setMaxLength(50);
 

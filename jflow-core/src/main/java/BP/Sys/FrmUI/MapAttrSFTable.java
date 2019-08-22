@@ -119,7 +119,7 @@ public class MapAttrSFTable extends EntityMyPK
             "@1=跨1行@2=跨2行@3=跨3行");
          
          //显示的分组.
-         map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组",MapAttrString.SQLOfGroupAttr(), true);
+         map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组",MapAttrString.SQLOfGroupAttr(), true);
          //#endregion 傻瓜表单。
 
         // #region 执行的方法.

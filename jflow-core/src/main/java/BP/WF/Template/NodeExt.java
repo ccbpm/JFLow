@@ -3,12 +3,9 @@ package BP.WF.Template;
 import java.io.IOException;
 import java.util.List;
 
+import BP.DA.*;
 import org.apache.commons.lang.StringEscapeUtils;
 
-import BP.DA.DBAccess;
-import BP.DA.DataType;
-import BP.DA.Depositary;
-import BP.DA.Log;
 import BP.Difference.ContextHolderUtils;
 import BP.En.Entity;
 import BP.En.Map;
@@ -1128,6 +1125,11 @@ public class NodeExt extends Entity
           else
               fl.SetPara("IsYouLiTai", 0);
           fl.Update();
+
+          //修改按钮权限的缓存
+          BtnLab btnLab = new BtnLab(this.getNodeID());
+          btnLab.RetrieveFromDBSources();
+          Cash2019.PutRow(btnLab.toString(),String.valueOf(this.getNodeID()), btnLab.getRow());
           //如果是组长会签模式，通用选择器只能单项选择
           if(this.GetValIntByKey(BtnAttr.HuiQianRole) == HuiQianRole.TeamupGroupLeader.getValue())
           {
@@ -1136,12 +1138,6 @@ public class NodeExt extends Entity
               selector.Update();
 
           }
-          
-          BtnLab btnLab = new BtnLab();
-          btnLab.setNodeID( this.getNodeID());
-          btnLab.RetrieveFromDBSources();
-          btnLab.Update();
-         
       }
 
 

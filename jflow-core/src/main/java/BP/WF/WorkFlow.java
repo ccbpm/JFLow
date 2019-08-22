@@ -1136,7 +1136,7 @@ public class WorkFlow
 			///#region 处理明细表的汇总.
 		Node currND = new Node(this.getHisGenerWorkFlow().getFK_Node());
 
-		//处理明细数据的copy问题。 首先检查：当前节点（最后节点）是否有明细表。
+		/*//处理明细数据的copy问题。 首先检查：当前节点（最后节点）是否有明细表。
 		MapDtls dtls = currND.getMapData().getMapDtls(); // new MapDtls("ND" + nd.NodeID);
 		int i = 0;
 		for (MapDtl dtl : dtls.ToJavaList())
@@ -1144,7 +1144,7 @@ public class WorkFlow
 			i++;
 			// 查询出该明细表中的数据。
 			GEDtls dtlDatas = new GEDtls(dtl.getNo());
-			dtlDatas.Retrieve(GEDtlAttr.RefPK, this.getWorkID());
+			dtlDatas.Retrieve(GEDtlAttr.RefPK, String.valueOf(this.getWorkID()));
 
 			GEDtl geDtl = null;
 			try
@@ -1157,7 +1157,7 @@ public class WorkFlow
 			{
 				continue;
 			}
-		}
+		}*/
 		this._IsComplete = 1;
 
 			///#region 处理后续的业务.
@@ -1301,7 +1301,7 @@ public class WorkFlow
 	/** 
 	 执行冻结
 	 
-	 @param msg 冻结原因
+	 @param fixMsg 冻结原因
 	 * @throws Exception 
 	*/
 	public final String DoFix(String fixMsg) throws Exception
@@ -1361,7 +1361,7 @@ public class WorkFlow
 	/** 
 	 执行解除冻结
 	 
-	 @param msg 冻结原因
+	 @param unFixMsg 冻结原因
 	 * @throws Exception 
 	*/
 	public final String DoUnFix(String unFixMsg) throws Exception

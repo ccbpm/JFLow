@@ -27,7 +27,7 @@ public class Map
 {
 	public static final String AttrsOfOneVSM = null;
 
-	public static final Object DTSearchLable = "日期从:";
+	public static  Object DTSearchLable = "日期从:";
 
 	// /#region 帮助.
 	/**
@@ -528,7 +528,7 @@ public class Map
 	/**
 	 * 通过一个key 得到它的属性值。
 	 * 
-	 * @param key
+	 * @param desc
 	 *            key
 	 * @return attr
 	 */
@@ -870,7 +870,7 @@ public class Map
 	/**
 	 * 增加
 	 * 
-	 * @param func
+	 * @param rm
 	 */
 	public final void AddRefMethod(RefMethod rm)
 	{
@@ -988,7 +988,7 @@ public class Map
 	/**
 	 * 构造涵数
 	 * 
-	 * @param DBUrlKeyList
+	 * @param dburltype
 	 *            连接的Key 你可以用 DBUrlKeyList 得到
 	 * @param physicsTable
 	 *            物理表
@@ -1755,8 +1755,6 @@ public class Map
 	 * 
 	 * @param key
 	 *            key
-	 * @param field
-	 *            field
 	 * @param defaultVal
 	 *            defaultVal
 	 * @param desc
@@ -1777,8 +1775,6 @@ public class Map
 	 * 
 	 * @param key
 	 *            key
-	 * @param field
-	 *            field
 	 * @param defaultVal
 	 *            defaultVal
 	 * @param desc
@@ -2170,8 +2166,6 @@ public class Map
 	 * 
 	 * @param key
 	 *            健值
-	 * @param field
-	 *            字段
 	 * @param defaultVal
 	 *            默认值
 	 * @param dataType
@@ -2433,12 +2427,8 @@ public class Map
 	 * 
 	 * @param key
 	 *            健值
-	 * @param field
-	 *            字段值
 	 * @param defaultVal
 	 *            默认值
-	 * @param _FieldType
-	 *            字段类型
 	 * @param desc
 	 *            描述
 	 * @param uiVisable
@@ -3295,16 +3285,10 @@ public class Map
 	/**
 	 * 增加一个PK的类型。字段值与属性相同。
 	 * 
-	 * @param key
-	 *            键
-	 * @param defaultVal
-	 *            默认值
+	 * @param _field
+	 *            字段
 	 * @param desc
 	 *            描述
-	 * @param uiVisable
-	 *            是不是可见
-	 * @param isReadonly
-	 *            是不是只读
 	 */
 	public final void AddTBIntPKOID(String _field, String desc)
 	{

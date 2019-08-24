@@ -11,6 +11,7 @@ import BP.En.QueryObject;
 import BP.En.RefMethod;
 import BP.En.RefMethodType;
 import BP.En.UAC;
+import BP.Sys.DTSearchWay;
 import BP.WF.ActionType;
 import BP.WF.Flows;
 import BP.WF.Glo;
@@ -23,7 +24,6 @@ import BP.Web.WebUser;
 public class MyJoinFlow extends Entity
 {
 
-	///#region 基本属性
 	@Override
 	public UAC getHisUAC()
 	{
@@ -31,19 +31,17 @@ public class MyJoinFlow extends Entity
 		uac.Readonly();
 		return uac;
 	}
-	/** 
+	/**
 	 主键
-	 
-	*/
+	 */
 	@Override
 	public String getPK()
 	{
 		return MyJoinFlowAttr.WorkID;
 	}
-	/** 
+	/**
 	 备注
-	 
-	*/
+	 */
 	public final String getFlowNote()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.FlowNote);
@@ -52,10 +50,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.FlowNote, value);
 	}
-	/** 
+	/**
 	 工作流程编号
-	 
-	*/
+	 */
 	public final String getFK_Flow()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.FK_Flow);
@@ -64,10 +61,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.FK_Flow,value);
 	}
-	/** 
+	/**
 	 BillNo
-	 
-	*/
+	 */
 	public final String getBillNo()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.BillNo);
@@ -76,10 +72,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.BillNo, value);
 	}
-	/** 
+	/**
 	 流程名称
-	 
-	*/
+	 */
 	public final String getFlowName()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.FlowName);
@@ -88,10 +83,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.FlowName, value);
 	}
-	/** 
+	/**
 	 优先级
-	 
-	*/
+	 */
 	public final int getPRI()
 	{
 		return this.GetValIntByKey(MyJoinFlowAttr.PRI);
@@ -100,10 +94,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.PRI, value);
 	}
-	/** 
+	/**
 	 待办人员数量
-	 
-	*/
+	 */
 	public final int getTodoEmpsNum()
 	{
 		return this.GetValIntByKey(MyJoinFlowAttr.TodoEmpsNum);
@@ -112,10 +105,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.TodoEmpsNum, value);
 	}
-	/** 
+	/**
 	 待办人员列表
-	 
-	*/
+	 */
 	public final String getTodoEmps()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.TodoEmps);
@@ -124,10 +116,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.TodoEmps, value);
 	}
-	/** 
+	/**
 	 参与人
-	 
-	*/
+	 */
 	public final String getEmps()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.Emps);
@@ -136,22 +127,20 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.Emps, value);
 	}
-	/** 
+	/**
 	 状态
-	 
-	*/
+	 */
 	public final TaskSta getTaskSta()
 	{
 		return TaskSta.forValue(this.GetValIntByKey(MyJoinFlowAttr.TaskSta));
 	}
 	public final void setTaskSta(TaskSta value)
 	{
-		SetValByKey(MyJoinFlowAttr.TaskSta,value);
+		SetValByKey(MyJoinFlowAttr.TaskSta, value.getValue());
 	}
-	/** 
+	/**
 	 类别编号
-	 
-	*/
+	 */
 	public final String getFK_FlowSort()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.FK_FlowSort);
@@ -160,10 +149,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.FK_FlowSort, value);
 	}
-	/** 
+	/**
 	 部门编号
-	 
-	*/
+	 */
 	public final String getFK_Dept()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.FK_Dept);
@@ -172,10 +160,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.FK_Dept,value);
 	}
-	/** 
+	/**
 	 标题
-	 
-	*/
+	 */
 	public final String getTitle()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.Title);
@@ -184,10 +171,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.Title,value);
 	}
-	/** 
+	/**
 	 客户编号
-	 
-	*/
+	 */
 	public final String getGuestNo()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.GuestNo);
@@ -196,10 +182,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.GuestNo, value);
 	}
-	/** 
+	/**
 	 客户名称
-	 
-	*/
+	 */
 	public final String getGuestName()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.GuestName);
@@ -208,10 +193,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.GuestName, value);
 	}
-	/** 
+	/**
 	 产生时间
-	 
-	*/
+	 */
 	public final String getRDT()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.RDT);
@@ -220,10 +204,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.RDT,value);
 	}
-	/** 
+	/**
 	 节点应完成时间
-	 
-	*/
+	 */
 	public final String getSDTOfNode()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.SDTOfNode);
@@ -232,10 +215,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.SDTOfNode, value);
 	}
-	/** 
+	/**
 	 流程应完成时间
-	 
-	*/
+	 */
 	public final String getSDTOfFlow()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.SDTOfFlow);
@@ -244,10 +226,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.SDTOfFlow, value);
 	}
-	/** 
+	/**
 	 流程ID
-	 
-	*/
+	 */
 	public final long getWorkID()
 	{
 		return this.GetValInt64ByKey(MyJoinFlowAttr.WorkID);
@@ -256,10 +237,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.WorkID,value);
 	}
-	/** 
+	/**
 	 主线程ID
-	 
-	*/
+	 */
 	public final long getFID()
 	{
 		return this.GetValInt64ByKey(MyJoinFlowAttr.FID);
@@ -268,10 +248,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.FID, value);
 	}
-	/** 
+	/**
 	 父节点流程编号.
-	 
-	*/
+	 */
 	public final long getPWorkID()
 	{
 		return this.GetValInt64ByKey(MyJoinFlowAttr.PWorkID);
@@ -280,10 +259,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.PWorkID, value);
 	}
-	/** 
+	/**
 	 父流程调用的节点
-	 
-	*/
+	 */
 	public final int getPNodeID()
 	{
 		return this.GetValIntByKey(MyJoinFlowAttr.PNodeID);
@@ -292,10 +270,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.PNodeID, value);
 	}
-	/** 
+	/**
 	 PFlowNo
-	 
-	*/
+	 */
 	public final String getPFlowNo()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.PFlowNo);
@@ -304,10 +281,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.PFlowNo, value);
 	}
-	/** 
+	/**
 	 吊起子流程的人员
-	 
-	*/
+	 */
 	public final String getPEmp()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.PEmp);
@@ -316,10 +292,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.PEmp, value);
 	}
-	/** 
+	/**
 	 发起人
-	 
-	*/
+	 */
 	public final String getStarter()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.Starter);
@@ -328,10 +303,9 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.Starter, value);
 	}
-	/** 
+	/**
 	 发起人名称
-	 
-	*/
+	 */
 	public final String getStarterName()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.StarterName);
@@ -340,10 +314,9 @@ public class MyJoinFlow extends Entity
 	{
 		this.SetValByKey(MyJoinFlowAttr.StarterName, value);
 	}
-	/** 
+	/**
 	 发起人部门名称
-	 
-	*/
+	 */
 	public final String getDeptName()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.DeptName);
@@ -352,10 +325,9 @@ public class MyJoinFlow extends Entity
 	{
 		this.SetValByKey(MyJoinFlowAttr.DeptName, value);
 	}
-	/** 
+	/**
 	 当前节点名称
-	 
-	*/
+	 */
 	public final String getNodeName()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.NodeName);
@@ -364,10 +336,9 @@ public class MyJoinFlow extends Entity
 	{
 		this.SetValByKey(MyJoinFlowAttr.NodeName, value);
 	}
-	/** 
+	/**
 	 当前工作到的节点
-	 
-	*/
+	 */
 	public final int getFK_Node()
 	{
 		return this.GetValIntByKey(MyJoinFlowAttr.FK_Node);
@@ -376,43 +347,41 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.FK_Node, value);
 	}
-	/** 
+	/**
 	 工作流程状态
-	 
-	*/
+	 */
 	public final WFState getWFState()
 	{
 		return WFState.forValue(this.GetValIntByKey(MyJoinFlowAttr.WFState));
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == BP.WF.WFState.Complete)
+		if (value == WFState.Complete)
 		{
 			SetValByKey(MyJoinFlowAttr.WFSta, WFSta.Complete);
 		}
 		else if (value == WFState.Delete)
 		{
-			SetValByKey(MyJoinFlowAttr.WFSta, WFSta.Etc);
+			SetValByKey(MyJoinFlowAttr.WFSta , WFSta.Etc);
 		}
 		else
 		{
-			SetValByKey(MyJoinFlowAttr.WFSta, WFSta.Runing);
+			SetValByKey(MyJoinFlowAttr.WFSta,  WFSta.Runing);
 		}
 
-		SetValByKey(MyJoinFlowAttr.WFState, (int)value.getValue()
-				);
+		SetValByKey(MyJoinFlowAttr.WFState, value.getValue());
 	}
-	/** 
+	/**
 	 状态(简单)
-	 
-	*/
+
+	 */
 	public final WFSta getWFSta()
 	{
 		return WFSta.forValue(this.GetValIntByKey(MyJoinFlowAttr.WFSta));
 	}
 	public final void setWFSta(WFSta value)
 	{
-		SetValByKey(MyJoinFlowAttr.WFSta, (int)value.getValue());
+		SetValByKey(MyJoinFlowAttr.WFSta, value.getValue());
 	}
 	public final String getWFStateText()
 	{
@@ -431,10 +400,10 @@ public class MyJoinFlow extends Entity
 				return "未判断";
 		}
 	}
-	/** 
+	/**
 	 GUID
-	 
-	*/
+
+	 */
 	public final String getGUID()
 	{
 		return this.GetValStrByKey(MyJoinFlowAttr.GUID);
@@ -443,11 +412,6 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyJoinFlowAttr.GUID, value);
 	}
-
-	///#endregion
-
-
-	///#region 参数属性.
 
 	public final String getParas_ToNodes()
 	{
@@ -458,10 +422,10 @@ public class MyJoinFlow extends Entity
 	{
 		this.SetPara("ToNodes", value);
 	}
-	/** 
+	/**
 	 加签信息
-	 
-	*/
+
+	 */
 
 	public final String getParas_AskForReply()
 	{
@@ -473,18 +437,13 @@ public class MyJoinFlow extends Entity
 		this.SetPara("AskForReply", value);
 	}
 
-	///#endregion 参数属性.
-
-
-	///#region 构造函数
-	/** 
+	/**
 	 产生的工作流程
-	 
-	*/
+	 */
 	public MyJoinFlow()
 	{
 	}
-	public MyJoinFlow(long workId) throws Exception
+	public MyJoinFlow(long workId)throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyJoinFlowAttr.WorkID, workId);
@@ -493,18 +452,17 @@ public class MyJoinFlow extends Entity
 			throw new RuntimeException("工作 MyFlow [" + workId + "]不存在。");
 		}
 	}
-	/** 
+	/**
 	 执行修复
-	 
-	*/
+
+	 */
 	public final void DoRepair()
 	{
 	}
-	/** 
+	/**
 	 重写基类方法
-	 * @throws Exception 
-	 
-	*/
+
+	 */
 	@Override
 	public Map getEnMap()
 	{
@@ -520,17 +478,11 @@ public class MyJoinFlow extends Entity
 		map.AddTBIntPK(MyJoinFlowAttr.WorkID, 0, "WorkID", false, false);
 		map.AddTBInt(MyJoinFlowAttr.FID, 0, "FID", false, false);
 		map.AddTBInt(MyJoinFlowAttr.PWorkID, 0, "PWorkID", false, false);
-		map.AddTBString(MyJoinFlowAttr.Title, null, "流程标题", true, false, 0, 100, 150, true);
-		try {
-			map.AddDDLSQL(MyJoinFlowAttr.FK_Flow, null,  "流程名称", "Select  DISTINCT(A.FK_Flow) AS No,A.FlowName As Name FROM WF_GenerWorkFlow A WHERE  FIND_IN_SET('"+WebUser.getNo()+"',replace(A.Emps, '@', ',')) > 0", false,false);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		map.AddTBString(MyJoinFlowAttr.FlowName, null, "流程名称", true, false, 0, 100, 100, true);
+		map.AddTBString(MyFlowAttr.Title, null, "流程标题", true, false, 0, 100, 150, true);
+		map.AddDDLEntities(MyJoinFlowAttr.FK_Flow, null, "流程名称", new Flows(), false);
 		map.AddTBString(MyJoinFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 50);
-		map.AddTBString(MyJoinFlowAttr.Starter, null, "发起人", true, false, 0, 30, 40);
 		map.AddTBString(MyJoinFlowAttr.StarterName, null, "发起人", true, false, 0, 30, 40);
+
 
 		map.AddTBDateTime(MyJoinFlowAttr.RDT, "发起日期", true, true);
 		map.AddDDLSysEnum(MyJoinFlowAttr.WFSta, 0, "状态", true, false, MyJoinFlowAttr.WFSta, "@0=运行中@1=已完成@2=其他");
@@ -540,17 +492,22 @@ public class MyJoinFlow extends Entity
 
 		map.AddTBString(MyJoinFlowAttr.Emps, null, "参与人", false, false, 0, 4000, 10, true);
 		map.AddTBStringDoc(MyJoinFlowAttr.FlowNote, null, "备注", true, false, true);
+		//map.AddTBDateTime(GenerWorkFlowAttr.SDTOfNode, "节点应完成时间", true, true);
 
-			//隐藏字段.
+		//隐藏字段.
 		map.AddTBInt(MyJoinFlowAttr.FK_Node, 0, "FK_Node", false, false);
 
-		map.AddTBMyNum();
-		
 
-		map.AddSearchAttr(MyJoinFlowAttr.FK_Flow);
+		map.AddTBMyNum();
+
+		map.DTSearchKey = MyJoinFlowAttr.RDT;
+		map.DTSearchLable = "发起日期";
+		map.DTSearchWay = DTSearchWay.ByDate;
+
 		map.AddSearchAttr(MyJoinFlowAttr.WFSta);
 		map.AddSearchAttr(MyJoinFlowAttr.TSpan);
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
+		//map.IsShowSearchKey = false;
 
 			//增加隐藏的查询条件.
 		try {
@@ -560,21 +517,22 @@ public class MyJoinFlow extends Entity
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 
 		RefMethod rm = new RefMethod();
-		rm.Title = "流程轨迹";
+		rm.Title = "轨迹";
 		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.Icon = "../../WF/Img/Track.png";
+		rm.IsForEns = true;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "打开表单";
+		rm.Title = "表单";
 		rm.ClassMethodName = this.toString() + ".DoOpenLastForm";
-		rm.Icon = "../../WF/Img/FileType/doc.gif";
+		rm.Icon = "../../WF/Img/Form.png";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.IsForEns = true;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -584,16 +542,16 @@ public class MyJoinFlow extends Entity
 	///#region 执行诊断
 	public final String DoTrack()
 	{
-		return Glo.getCCFlowAppPath() + "/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow()+"&FK_Node="+this.getFK_Node();
+		return Glo.getCCFlowAppPath() + "/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
-	/** 
+	/**
 	 打开最后一个节点表单
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	 */
 	public final String DoOpenLastForm() throws Exception
 	{
+
 		Paras pss = new Paras();
 		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
 		pss.Add("ActionType", ActionType.Forward.getValue());
@@ -608,8 +566,7 @@ public class MyJoinFlow extends Entity
 		BP.WF.Node nd = new Node(this.getFK_Node());
 		nd.WorkID = this.getWorkID(); //为求当前表单ID获得参数，而赋值.
 
-		return Glo.getCCFlowAppPath() + "/WF/WorkOpt/OneWork/FrmGuide.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
+		return Glo.getCCFlowAppPath() + "/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}
 
-	///#endregion
 }

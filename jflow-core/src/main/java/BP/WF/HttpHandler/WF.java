@@ -797,6 +797,10 @@ public class WF extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Start_Init() throws Exception {
+		
+		if (DataType.IsNullOrEmpty(  WebUser.getNo() )==true)
+			return "err@登录信息丢失,请重新登录.";		
+		
 		//定义容器.
         DataSet ds = new DataSet();
         BP.WF.Port.WFEmp em = new WFEmp();

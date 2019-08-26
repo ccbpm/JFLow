@@ -758,6 +758,9 @@ public class Glo {
 			default:
 				break;
 			}
+			
+			 
+		
 
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
 			// /#region 更新表单的边界.2014-10-18
@@ -1343,7 +1346,7 @@ public class Glo {
 			if ("".equals(table) || table == null)
 				continue;
 
-			if (table.equals("WF_EmpWorks") || table.equals("WF_GenerEmpWorkDtls") || table.equals("WF_GenerEmpWorks")
+			if (table.equals("WF_EmpWorks") || table.equals("V_WF_Delay") || table.equals("WF_GenerEmpWorkDtls") || table.equals("WF_GenerEmpWorks")
 					|| table.equals("WF_FlowFormTree") || table.equals("V_FlowData")) {
 				continue;
 			} else if (table.equals("Sys_Enum")) {
@@ -1378,18 +1381,11 @@ public class Glo {
 			frmSort.Insert();
 		}
 
-		String sqlscript = "";
-		if (Glo.getOSModel() == BP.Sys.OSModel.OneOne) {
-			/* 如果是WorkFlow模式 */
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_WorkFlow.sql";
-			BP.DA.DBAccess.RunSQLScript(sqlscript);
-		}
-
-		if (Glo.getOSModel() == BP.Sys.OSModel.OneMore) {
+		String sqlscript = "";		  
 			/* 如果是BPM模式 */
 			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
-		}
+		 
 
 		// /#endregion 修复
 
@@ -1412,6 +1408,7 @@ public class Glo {
 		default:
 			break;
 		}
+		 
 
 		BP.DA.DBAccess.RunSQLScript(sqlscript);
 		// /#endregion 创建视图与数据.

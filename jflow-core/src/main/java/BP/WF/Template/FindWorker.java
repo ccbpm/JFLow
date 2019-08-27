@@ -28,8 +28,9 @@ import BP.Web.WebUser;
  */
 public class FindWorker {
 	
-	/// #region 变量
+	//下一个节点工作流信息
 	public WorkNode town = null;
+	//当前节点工作流信息
 	public WorkNode currWn = null;
 	public Flow fl = null;
 	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -42,10 +43,6 @@ public class FindWorker {
 
 	/**
 	 * 找人
-	 * 
-	 * @param fl
-	 * @param currWn
-	 * @param toWn
 	 */
 	public FindWorker() {
 	}
@@ -109,6 +106,8 @@ public class FindWorker {
 			// 特殊的变量.
 			sql = sql.replace("@FK_Node", this.town.getHisNode().getNodeID() + "");
 			sql = sql.replace("@NodeID", this.town.getHisNode().getNodeID() + "");
+			sql = sql.replace("@WorkID", String.valueOf(this.currWn.getHisWork().getOID()));
+			sql = sql.replace("@FID", String.valueOf(this.currWn.getHisWork().getFID()));
 
 			sql = BP.WF.Glo.DealExp(sql, this.currWn.rptGe, null);
 			if (sql.contains("@")) {

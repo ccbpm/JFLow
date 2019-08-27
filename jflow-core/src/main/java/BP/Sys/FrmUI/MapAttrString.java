@@ -158,11 +158,11 @@ public class MapAttrString extends EntityMyPK {
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "脚本验证";
-		rm.ClassMethodName = this.toString() + ".DoInputCheck()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+//		rm = new RefMethod();
+//		rm.Title = "脚本验证";
+//		rm.ClassMethodName = this.toString() + ".DoInputCheck()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";

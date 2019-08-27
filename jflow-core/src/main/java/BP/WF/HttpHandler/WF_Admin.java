@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 
 import BP.DA.DBAccess;
+import BP.DA.DBType;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.Difference.Handler.WebContralBase;
@@ -261,6 +262,22 @@ public class WF_Admin extends WebContralBase {
 		if (BP.DA.DBAccess.IsExitsObject("WF_Flow") == true) {
 			return "err@info数据库已经安装上了，您不必在执行安装. 点击:<a href='./CCBPMDesigner/Login.htm' >这里直接登录流程设计器</a>";
 		}
+		//检查是否区分大小写
+        if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+        {
+            String mysql = "CREATE TABLE TEST(OID int NOT NULL )";
+            DBAccess.RunSQL(mysql);
+            if (DBAccess.IsExitsObject("test") == false)
+            {
+                DBAccess.RunSQL("DROP TABLE TEST ");
+                return "err@ccbpm不支持,mysql数据库区分大小写，请修改mysql数据库的设置,让其不区分大小写. 请参考设置:https://blog.csdn.net/ccflow/article/details/100079825";
+            }
+            if (DBAccess.IsExitsTableCol("test", "oid") == false)
+            {
+                DBAccess.RunSQL("DROP TABLE TEST ");
+                return "err@ccbpm不支持,mysql数据库区分大小写，请修改mysql数据库的设置,让其不区分大小写. 请参考设置:https://blog.csdn.net/ccflow/article/details/100079825";
+            }
+        }
 
 		java.util.Hashtable ht = new java.util.Hashtable();
 		ht.put("OSModel", BP.WF.Glo.getOSModel().getValue()); // 组织结构类型.

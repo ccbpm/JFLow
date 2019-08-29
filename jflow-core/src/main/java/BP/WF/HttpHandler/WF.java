@@ -152,6 +152,7 @@ public class WF extends WebContralBase {
             at = this.GetRequestVal("DoType");
         if (DataType.IsNullOrEmpty(at) && this.getSID() != null)
             at = "Track";
+
         try
         {
             switch (at)
@@ -395,7 +396,7 @@ public class WF extends WebContralBase {
             dt.Columns.get("WFSTA").ColumnName = "WFSta";
             dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
             dt.Columns.get("TSPAN").ColumnName = "TSpan";
-            dt.Columns.get("TOTOSTA").ColumnName = "TodoSta";
+            dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
             dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
             dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
             dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
@@ -423,7 +424,7 @@ public class WF extends WebContralBase {
             dt.Columns.get("FK_NY").ColumnName = "FK_NY";
             dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
             dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
-            dt.Columns.get("FK_FKLOW").ColumnName = "FK_Flow";
+            dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
             dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
             dt.Columns.get("EMPS").ColumnName = "Emps";
             dt.Columns.get("DOMAIN").ColumnName = "Domain";
@@ -811,12 +812,12 @@ public class WF extends WebContralBase {
             em.setName(WebUser.getName());
             em.Insert();
         }
-
+        String json="";
         //获取存取在WF_Emp中的StartFlows的数据
-        String sql = "SELECT StartFlows From WF_Emp WHERE No='" + WebUser.getNo() + "'";
+       /* String sql = "SELECT StartFlows From WF_Emp WHERE No='" + WebUser.getNo() + "'";
         String json = DBAccess.RunSQLReturnString(sql);
         if (DataType.IsNullOrEmpty(json) == false)
-            return json;
+            return json;*/
         //流程类别.
         FlowSorts fss = new FlowSorts();
         fss.RetrieveAll();
@@ -830,19 +831,22 @@ public class WF extends WebContralBase {
         dtStart.TableName = "Start";
         ds.Tables.add(dtStart);
         json = BP.Tools.Json.ToJson(ds);
-        //把json存入数据表，避免下一次再取.
+        /*//把json存入数据表，避免下一次再取.
         if (json.length() > 40)
         {
+            //byte[] bigTextByte = json.getBytes("UTF-8");
+
             Paras ps = new Paras();
             ps.SQL = "UPDATE WF_Emp SET StartFlows=" + ps.getDBStr() + "StartFlows WHERE No=" + ps.getDBStr() + "No";
             ps.Add("StartFlows", json);
             ps.Add("No", WebUser.getNo());
             DBAccess.RunSQL(ps);
-        }
+        }*/
 
         //返回组合
         return json;
 	}
+
 
 	/**
 	 * 获得发起列表 yqh add

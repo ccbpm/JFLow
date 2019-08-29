@@ -106,7 +106,7 @@ public class LoadTemplete extends Method
 			fs.setName(item.getName().substring(3));
 			fs.setParentNo("1");
 			fs.setIdx(i++);
-			fs.Insert();
+			fs.Save();
 
 			for (File f : fls)
 			{
@@ -125,7 +125,10 @@ public class LoadTemplete extends Method
 					md.setFK_FrmSort( fs.getNo());
 					md.setFK_FormTree(fs.getNo());
 					md.setAppType ("0");
-					md.Update();
+					if(md.RetrieveFromDBSources() == 0)
+						md.Insert();
+					else
+						md.Update();
 				}
 				catch(RuntimeException ex)
 				{

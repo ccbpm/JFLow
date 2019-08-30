@@ -546,8 +546,10 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
              return "url@../DBInstall.htm"; 
          
           
-         if (DBAccess.IsCaseSensitive() ==true )       		 
-             return "err@ccbpm不支持数据区分大小写。"; 
+         if (DBAccess.IsCaseSensitive() ==true )     
+             return "err@ccbpm不支持,数据库区分大小写，请修改数据库的设置,让其不区分大小写. mysql数据库请参考设置:https://blog.csdn.net/ccflow/article/details/100079825";
+
+             //return "err@ccbpm不支持数据区分大小写。"; 
           
 
          try

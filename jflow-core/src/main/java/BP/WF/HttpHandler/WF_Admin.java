@@ -262,7 +262,7 @@ public class WF_Admin extends WebContralBase {
 		if (BP.DA.DBAccess.IsExitsObject("WF_Flow") == true) {
 			return "err@info数据库已经安装上了，您不必在执行安装. 点击:<a href='./CCBPMDesigner/Login.htm' >这里直接登录流程设计器</a>";
 		}
-		//检查是否区分大小写
+		//检查是否区分大小写  @LQ
         if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
         {
             String mysql = "CREATE TABLE TEST(OID int NOT NULL )";

@@ -4972,7 +4972,7 @@ public class Dev2Interface {
 				dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
 				dr.setValue("EmpName", drTrack.getValue("EmpFromT"));
 				dr.setValue("DeptName", drTrack.getValue("DeptName"));
-
+				
 				// dr["DeptName"] = drTrack["DeptName"]; //部门名称.
 
 				dr.setValue("RDT", drTrack.getValue("RDT"));

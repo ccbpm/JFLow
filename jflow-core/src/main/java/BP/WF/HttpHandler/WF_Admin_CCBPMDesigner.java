@@ -545,6 +545,10 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
          if (DBAccess.IsExitsObject("Port_Emp") == false )       		 
              return "url@../DBInstall.htm"; 
          
+          
+         if (DBAccess.IsCaseSensitive() ==true )       		 
+             return "err@ccbpm不支持数据区分大小写。"; 
+          
 
          try
          {

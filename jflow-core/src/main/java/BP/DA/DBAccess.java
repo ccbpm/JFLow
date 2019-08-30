@@ -36,6 +36,30 @@ import BP.Web.WebUser;
 public class DBAccess {
 	
 	
+	 /// <summary>
+    /// 是否大小写敏感
+    /// </summary>
+    public static Boolean IsCaseSensitive() throws Exception
+    {
+        
+            String mysql = "CREATE TABLE TEST(OID int NOT NULL )";
+            DBAccess.RunSQL(mysql);
+            if (DBAccess.IsExitsObject("test") == false)
+            {
+                DBAccess.RunSQL("DROP TABLE TEST ");
+                return true;
+            }
+            if (DBAccess.IsExitsTableCol("test", "oid") == false)
+            {
+                DBAccess.RunSQL("DROP TABLE TEST ");
+                return true;
+            }
+
+            return false;
+
+        
+    }
+	
 	public static void SaveBytesToDB(byte[] bytes, String line, String tableName, String tablePK, String pkVal,
 			String saveToFileField) throws Exception {
 		 

@@ -352,6 +352,7 @@
                                 formArrResult.push(name + '=' + ($(disabledEle).is(':checked') ? 1 : 0));
                                 break;
                             case "TEXT": //文本框
+                            case "HIDDEN":
                                 formArrResult.push(name + '=' + $(disabledEle).val());
                                 break;
                             case "RADIO": //单选钮
@@ -361,6 +362,7 @@
                                     formArrResult.push(eleResult);
                                 }
                                 break;
+
                         }
                         break;
                     //下拉框                  
@@ -488,7 +490,7 @@
 
             var handler = new HttpHandler("BP.Frm.WF_CCBill");
             handler.AddUrlData();
-            var data = handler.DoMethodReturnString("MyBill_CreateBlankWorkID");
+            var data = handler.DoMethodReturnString("MyBill_CreateBlankBillID");
             window.location.href = 'MyBill.htm?FrmID=' + GetQueryString("FrmID") + "&WorkID=" + data;
 
         }

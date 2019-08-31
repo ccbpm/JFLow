@@ -87,13 +87,9 @@
             if (msg == null || msg == undefined)
                 return;
 
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
-            handler.AddPara("FK_Flow", flowNo);
-            handler.AddPara("WorkID", workID);
-            handler.AddPara("FK_Node", nodeID);
-            handler.AddPara("Msg", msg);
+            var flow = new Entity("BP.WF.Template.FlowExt", flowNo);
+            var data = flow.DoMethodReturnString("DoRebackFlowData", workID, nodeID, msg);
 
-            var data = handler.DoMethodReturnString("Rollback_Done");
             alert(data);
             window.close();
 

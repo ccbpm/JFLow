@@ -58,6 +58,11 @@
 
             var fk_flow = GetQueryString("FK_Flow");
 
+            //            var dtsWay = GetRadioValue("RB_DTSWay");
+            //            var dbsrc = $("DDL_DBSrc").val();
+            //            var table = $("DDL_Table").val();
+            //            var table = $("DDL_Table").val();
+
             var checkBoxIDs = GenerCheckIDs(); //获得所有的 checkBox ID传入到后台去,用于解决checkbox控件，在没有被选择的时候，没有值的问题。
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrFlow");

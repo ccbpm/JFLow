@@ -85,24 +85,10 @@ function InitPage() {
         html += "</td>";
         html += '<td style="word-wrap: break-word;line-height:30px;margin:5px; padding:5px;font-color:green;" >';
 
-        //显示历史信息
-        // if (wcDesc.FWCListEnable == true) {
-
-
-
-
-        //}
 
         //当前节点审核意见可编辑
         if (this.IsDoc == "1" && isReadonly == false) {
-            //html += "<tr>";
-            //html += "<td " + (this.IsDoc ? ("id='tdnode_" + this.NodeID + "'") : "") + " rowspan='" + (subaths.length > 0 ? 3 : 2) + "' style='width:" + tdWidth + ";border:1px solid #D6DDE6;'>";
 
-            //var nodeName = this.NodeName;
-            //nodeName = nodeName.replace('(会签)', '<br>(<font color=Gray>会签</font>)');
-            //html += nodeName;
-            //html += "</td>";
-            //html += '<td style="word-wrap: break-word;line-height:30px;margin:5px; padding:5px;font-color:green;" >';
 
             if (wcDesc.FWCAth == 1) {
                 html += "<div style='float:right' id='uploaddiv' onmouseover='UploadFileChange(this)'></div>";
@@ -132,17 +118,81 @@ function InitPage() {
             html += "<option value='不同意'>不同意</option>";
             html += "</select><font color=Gray>内容不要超过2000字</font>";
             html += "</div>";
+            
+            //加入立场判断
+            if (wcDesc.FWCView != null && wcDesc.FWCView != "" && wcDesc.FWCView != undefined) {
+                var fwcView = "";
+                if (this.Tag.indexOf("@FWCView") != -1) {
+                    var arr = this.Tag.split("@");
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i].indexOf("FWCView") == -1)
+                            continue;
+                        else {
+                            fwcView = arr[i].replace("FWCView=", "");
+                            break;
+                        }
+                    }
+                }
+
+                var str = wcDesc.FWCView.split(",");
+                html +="<br>";
+                html += "立场:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                var idx = 0;
+                for (var i = 0; i < str.length; i++) {
+                    if (str[i] == "")
+                        continue;
+                    var check = "";
+                    if (fwcView != "" && idx == parseInt(fwcView))
+                        check = "checked = checked";
+                    else if (fwcView == "" && idx == 0)
+                        check = "checked = checked";
+                    html += "<input type='radio' id='RB_FWCView_" + idx + "' name ='RB_FWCView' " + check +" onclick='SaveWorkCheck()' value='"+idx+"'/>" + str[i] +"&nbsp;&nbsp;&nbsp;";
+                    idx++;
+                }
+               
+            }
             html += "</td>";
             html += '</tr>';
 
         } else {
             var returnMsg = this.ActionType == 2 ? "退回原因：" : "";
-            if(this.ActionType ==28){
-                var val = this.Msg.split("WorkCheck@");
-                if(val.length==2)
-                    this.Msg = val[1];
-            }
+            var val = this.Msg.split("WorkCheck@");
+            if(val.length==2)
+                this.Msg = val[1];
+
+           
             html += '<font color=green>' + returnMsg + this.Msg + '</font>';
+            //加入立场判断
+            if (this.FWCView != null && this.FWCView != "" && this.FWCView != undefined) {
+                var fwcView = "";
+                if (this.Tag.indexOf("@FWCView") != -1) {
+                    var arr = this.Tag.split("@");
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i].indexOf("FWCView") == -1)
+                            continue;
+                        else {
+                            fwcView = arr[i].replace("FWCView=", "");
+                            break;
+                        }
+                    }
+                }
+
+                var str = this.FWCView.split(",");
+                html += "<br>";
+                html += "立场:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                var idx = 0;
+                for (var i = 0; i < str.length; i++) {
+                    if (str[i] == "")
+                        continue;
+                    var check = "";
+                    if (fwcView != "" && idx == parseInt(fwcView))
+                        check = "checked = checked";
+                    else if (fwcView == "" && idx == 0)
+                        check = "checked = checked";
+                    html += "<input type='radio' id='RB_FWCView_" + idx + "' name ='RB_FWCView' " + check + " onclick='SaveWorkCheck()' value='" + idx + "' disabled/>" + str[i] + "&nbsp;&nbsp;&nbsp;";
+                    idx++;
+                }
+            }
             html += '</td>';
             html += '</tr>';
         }
@@ -394,12 +444,13 @@ function SetDocVal() {
 
 }
 function setIframeHeight() {
-    $("#" + window.frameElement.getAttribute("id"), parent.document).height($("body").height());
+    $("#" + window.frameElement.getAttribute("id"), parent.document).height($("body").height()+40);
 }
 
 function SaveWorkCheck() {
 
     var doc = $("#WorkCheck_Doc").val();
+    var fwcView = $('input:radio[name="RB_FWCView"]:checked').val();
 
     if (isReadonly == true)
         return;
@@ -410,7 +461,8 @@ function SaveWorkCheck() {
         WorkID: workid,
         FID: fid,
         Doc: doc,
-        IsCC: GetQueryString("IsCC")
+        IsCC: GetQueryString("IsCC"),
+        FWCView: fwcView
     };
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");

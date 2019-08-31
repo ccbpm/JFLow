@@ -198,10 +198,48 @@ window.onload = function () {
 };
 
 $(function () {
-    $('#MessageDiv').on('hide.bs.modal', function () {
-        // alert('嘿，我听说您喜欢模态框...');
+    $('#HelpAlterDiv').on('hide.bs.modal', function () {
+      
+        //保存用户的帮助指引信息操作
+        var mypk = webUser.No +"_ND"+ pageData.FK_Node +"_HelpAlert"
+        var userRegedit = new Entity("BP.Sys.UserRegedit");
+        userRegedit.SetPKVal(mypk);
+        var count = userRegedit.RetrieveFromDBSources();
+        if (count == 0) {
+            //保存数据
+            userRegedit.FK_Emp = webUser.No;
+            userRegedit.FK_MapData = "ND" + pageData.FK_Node;
+            userRegedit.Insert();
+        }
     })
 });
+
+function HelpAlter() {
+    var node = flowData.WF_Node[0];
+    //判断该节点是否启用了帮助提示 0 禁用 1 启用 2 强制提示 3 选择性提示
+    var btnLab = new Entity("BP.WF.Template.BtnLab", node.NodeID);
+    if (btnLab.HelpRole != 0) {
+        var count = 0;
+        if (btnLab.HelpRole == 3) {
+            var mypk = webUser.No + "_ND" + node.NodeID + "_HelpAlert";
+            var userRegedit = new Entity("BP.Sys.UserRegedit");
+            userRegedit.SetPKVal(mypk);
+            count = userRegedit.RetrieveFromDBSources();
+        }
+
+        if (btnLab.HelpRole == 2 || (count == 0 && btnLab.HelpRole == 3)) {
+            var filename = basePath + "/DataUser/CCForm/HelpAlert/" + node.NodeID + ".htm";
+            var htmlobj = $.ajax({ url: filename, async: false });
+            if (htmlobj.status == 404)
+                return;
+            var str = htmlobj.responseText;
+            if (str != null && str != "" && str != undefined) {
+                $('#HelpAlter').html("").append(str);
+                $('#HelpAlterDiv').modal().show();
+            }
+        }
+    }
+}
 
 function CloseOKBtn() {
     //   alert('嘿，我听说您喜欢模态框...');
@@ -249,7 +287,39 @@ function figure_Template_HandWrite(HandWriteID, val) {
     var url = "CCForm/HandWriting.htm?WorkID=" + pageData.WorkID + "&FK_Node=" + pageData.FK_Node + "&KeyOfEn=" + HandWriteID;
     OpenEasyUiDialogExt(url, '签字板', 400, 300, false);
 }
+//地图
+function figure_Template_Map(MapID, UIIsEnable) {
+    //var mainTable = flowData.mainTable[0];
+    var mainTable = flowData.MainTable[0];
+    var AtPara = "";
+    //通过MAINTABLE返回的参数
+    for (var ele in mainTable) {
+        if ( ele=="AtPara" && mainTable != '') {
+            AtPara = mainTable[ele];
+            break;
+        }
+    }
+    
+    var url = "CCForm/Map.htm?WorkID=" + pageData.WorkID + "&FK_Node=" + pageData.FK_Node + "&KeyOfEn=" + MapID + "&UIIsEnable=" + UIIsEnable + "&Paras=" + AtPara;
+    OpenBootStrapModal(url, "eudlgframe", "地图", 800, 500, null, false, function () { }, null, function () {
+        //afterOper=0 关闭提示窗口，不做任何操作
 
+        //afterOper=1 关闭提示窗口刷新页面
+        //if (afterOper == 1)
+            //window.location.href = window.location.href;
+
+        ////afterOper=2 关闭提示窗口跳转到Search.htm
+        //if (afterOper == 2) {
+
+        //    if (window.parent.location.href.indexOf("SearchBill.htm") != -1) {
+        //        window.close();
+        //    }
+        //    else
+        //        window.location.href = "./SearchBill.htm?FrmID=" + GetQueryString("FrmID");
+        //}
+    });
+    //OpenBootStrapModal(url, '地图', 800, 600, false);
+}
 function setHandWriteSrc(HandWriteID, imagePath) {
     imagePath = "../" + imagePath.substring(imagePath.indexOf("DataUser"));
     document.getElementById("Img" + HandWriteID).src = "";
@@ -862,6 +932,15 @@ function Send(isHuiQian) {
         return false;
     }
 
+    //如果启用了流程流转自定义，必须设置选择的游离态节点
+    if ($('[name=TransferCustom]').length > 0) {
+        var ens = new Entities("BP.WF.TransferCustoms");
+        ens.Retrieve("WorkID",  pageData.WorkID, "IsEnable", 1);
+        if (ens.length == 0) {
+            alert("该节点启用了流程流转自定义，但是没有设置流程流转的方向，请点击流转自定义按钮进行设置");
+            return false;
+        }
+    }
     window.hasClickSend = true; //标志用来刷新待办.
 
     var toNodeID = 0;
@@ -1456,6 +1535,8 @@ function GenerWorkNode() {
         $('#MessageDiv').modal().show();
     }
 
+    //帮助提醒
+    HelpAlter();
     ShowNoticeInfo();
 
     ShowTextBoxNoticeInfo();

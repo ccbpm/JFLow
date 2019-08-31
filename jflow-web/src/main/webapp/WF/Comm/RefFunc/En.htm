@@ -64,6 +64,7 @@
             var isReadonly = GetQueryString("isReadonly");
             httpHandler.AddPara("EnName", enName);
 
+
             //获取URL的参数问题
             var param = document.location.search.substr(1);
 
@@ -94,7 +95,12 @@
 
             if (dtM.length == 0) 
                 return;
-           
+            //用户设置
+            var mypk = new WebUser().No + "_Funcs_HS_" + GetQueryString("EnName");
+            var userRegedit = new Entity("BP.Sys.UserRegedit");
+            userRegedit.SetPKVal(mypk);
+            userRegedit.RetrieveFromDBSources();
+
             //求出所有的分组名称.
             var groupName = "@基本信息";
             for (var i = 0; i < dtM.length; i++) {
@@ -118,6 +124,8 @@
             for (var i = 0; i < gNames.length; i++) {
                 var gName = gNames[i];
                 if (gName == "")
+                    continue;
+                if (userRegedit!=null && userRegedit!=undefined && userRegedit.MVals.indexOf(",dtM_" + gName + ",") != -1)
                     continue;
                 if (gNames.length == 2 && gName.indexOf('基本信息') != -1)
                     html += "";
@@ -147,7 +155,8 @@
                     if ((en.RefAttrKey != null && en.RefAttrKey != "") || en.IsCanBatch == "1" || en.Visable == "0")
                         continue;
 
-
+                    if (userRegedit!=null && userRegedit!=undefined &&userRegedit.Vals.indexOf("," + en.No + ",") != -1)
+                        continue;
 
                     html += "<li>" + GenerRM(en) + "</li>";
                 }
@@ -191,8 +200,15 @@
             return html;
         }
         function OPenFun(url, warning, title, w, h, FunPara) {
+            if (title == "轨迹")
+                url = url + "&title=轨迹";
+
+            if (w == null || w == undefined)
+                w = document.body.clientWidth - 200;
+            if (h == null || h == undefined)
+                h = document.body.clientHeight-140;
             if (FunPara == true || FunPara == "true")
-                OpenEasyUiDialogExt(url, title, 540, 450, false);
+                OpenEasyUiDialogExt(url, title, w, h, false);
             else {
                 if (warning == "null" || warning == "")
                     warning = "确定要执行吗？";
@@ -201,7 +217,7 @@
                     warning = warning.replace(/\s+/g, "\r\n");
                 }
                 if (confirm("\"" + warning + "\"")) {
-                    OpenEasyUiDialogExt(url, title, 540, 450, false);
+                    OpenEasyUiDialogExt(url, title, w, h, false);
                 }
             }
             

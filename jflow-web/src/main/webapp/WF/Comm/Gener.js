@@ -1,5 +1,4 @@
-﻿
-//检查字段,从表名,附件ID,输入是否合法.
+﻿//检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
     //首位可以是字母以及下划线。 
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
@@ -101,7 +100,7 @@ function DearUrlParas(urlParam) {
                     var key = param[0];
                     var value = param[1];
 
-                    if (key == "DoType")
+                    if (key == "DoType" || key == "DoMethod" || key == "HttpHandlerName" )
                         return true;
 
                     if (value == "null" || typeof value == "undefined")
@@ -1270,19 +1269,18 @@ var Entity = (function () {
                 }
             });
             return result;
-        },
-
+        },   //一个参数直接传递,  多个参数，参数之间使用 ~隔开， 比如: zhangsna~123~1~山东济南.
         DoMethodReturnString: function (methodName, myparams) {
+
             var params = {};
             if (myparams == null || myparams == undefined)
                 myparams = "";
-            arguments["paras"] = myparams;
 
+            arguments["paras"] = myparams;
             /*$.each(arguments, function (i, o) {
             if (i > 0)
             params.push(o);
             });*/
-
 
             var pkavl = this.GetPKVal();
             if (pkavl == null || pkavl == "") {
@@ -2100,8 +2098,14 @@ var HttpHandler = (function () {
             $.each(queryString.split("&"), function (i, o) {
                 var param = o.split("=");
                 if (param.length == 2 && validate(param[1])) {
+
                     (function (key, value) {
-                        self.AddPara(key, value);
+
+                        if (key == "DoType" || key == "DoMethod" || key == "HttpHandlerName")
+                            return;
+
+                            self.AddPara(key, value);
+
                     })(param[0], param[1]);
                 }
             });
@@ -2423,8 +2427,8 @@ function DealJsonExp(json, expStr, webUser) {
     expStr = expStr.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
     expStr = expStr.replace('@WebUser.FK_DeptName', webUser.FK_DeptName);
     expStr = expStr.replace('@WebUser.FK_Dept', webUser.FK_Dept);
-   
-   
+
+
     if (expStr.indexOf('@') == -1)
         return expStr;
 

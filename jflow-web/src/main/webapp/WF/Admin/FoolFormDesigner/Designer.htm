@@ -108,6 +108,8 @@
 
             $("#Msg").html("<img src=../../Img/loading.gif />&nbsp;正在加载,请稍后......");
 
+            if (GetQueryString("FK_Node") == "0")
+                $("#FrmNodeComponent").hide();
             //初始化groupID.
             var fk_mapData = GetQueryString("FK_MapData");
             var isF = GetQueryString("IsFirst"); //是否第一次加载?
@@ -853,7 +855,10 @@
                     title = '书写签字版';
                     url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.ExtHandWriting&PKVal=' + mypk + '&s=' + Math.random();
                 }
-
+                if (uiContralType == 4) {
+                    title = '地图';
+                    url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.ExtMap&PKVal=' + mypk + '&s=' + Math.random();
+                }
                 if (uiContralType == 50) {
                     title = '流程进度图';
                     url = '../../Comm/EnOnly.htm?EnName=BP.WF.Template.ExtJobSchedule&PKVal=' + mypk + '&s=' + Math.random();
@@ -1161,7 +1166,7 @@
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
             handler.AddPara("FK_MapData", pageParam.fk_mapdata);
             handler.AddPara("DtlNo", val);
-            handler.AddPara("FK_Node", GetQueryString("FK_Node")); //为流程用的节点ID.
+           // handler.AddPara("FK_Node", GetQueryString("FK_Node")); //从表为原始属性的时候FK_Node=0,设置从表权限的时候FK_Node为该节点的值
 
             var data = handler.DoMethodReturnString("Designer_NewMapDtl");
 

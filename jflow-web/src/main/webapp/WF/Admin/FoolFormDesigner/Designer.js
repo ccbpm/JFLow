@@ -25,6 +25,21 @@ function InitThreeColMapAttr(Sys_MapAttr, tableCol) {
         colWidth = 33 * parseInt(colSpan) + "%";
         textWidth = 33 * parseInt(textColSpan) + "%";
 
+        //大文本备注信息 独占一行
+        if (attr.UIContralType == 60) {
+            //获取文本信息
+            var filename = basePath + "/DataUser/CCForm/BigNoteHtmlText/" + attr.FK_MapData + ".htm";
+            var htmlobj = $.ajax({ url: filename, async: false });
+            var str = htmlobj.responseText;
+            if (htmlobj.status == 404)
+                str = filename + "这个文件不存在，请联系管理员";
+            html += "<tr>";
+            html += "<td  ColSpan='" + tableCol + "' class='FDesc' style='text-align:left:height:auto'>" + str + "</td>";
+            html += "</tr>";
+            isDropTR = true;
+            UseColSpan = 0;
+            continue;
+        }
         //跨列设置(显示的是文本)
         if (colSpan == 0) {
 
@@ -158,6 +173,21 @@ function InitMapAttr(Sys_MapAttr, tableCol) {
         } else {
             colWidth = 25 * parseInt(colSpan) + "%";
             textWidth = 8 * parseInt(textColSpan) + "%";
+        }
+        //大文本备注信息 独占一行
+        if (attr.UIContralType == 60) {
+            //获取文本信息
+            var filename = basePath + "/DataUser/CCForm/BigNoteHtmlText/" + attr.FK_MapData + ".htm";
+            var htmlobj = $.ajax({ url: filename, async: false });
+            var str = htmlobj.responseText;
+            if (htmlobj.status == 404)
+                str = filename + "这个文件不存在，请联系管理员";
+            html += "<tr>";
+            html += "<td  ColSpan='" + tableCol + "' class='FDesc' style='text-align:left:height:auto'>" + str + "</td>";
+            html += "</tr>";
+            isDropTR = true;
+            UseColSpan = 0;
+            continue;
         }
         //跨列设置(显示的是文本)
         if (colSpan == 0) {
@@ -397,6 +427,13 @@ function InitMapAttrOfCtrlFool(mapAttr) {
         }
         if (mapAttr.UIContralType == 8) {
             return "<img  src='../../../DataUser/Siganture/admin.jpg' onerror=\"this.src='../../../DataUser/Siganture/UnName.jpg'\"  style='border:0px;height:" + mapAttr.UIHeight + "px;' id='Img" + mapAttr.KeyOfEn + "' />";
+        }
+        if (mapAttr.UIContralType == 4) {
+            var eleHtml = "<div style='text-align:left;padding-left:0px' id='athModel_" + mapAttr.KeyOfEn + "' data-type='1'>";
+            eleHtml += "<input type='button' name='select' value='选择' />";
+            eleHtml += "<input type = text style='width:75%' maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' />";
+            eleHtml += "</div>";
+            return eleHtml;
         }
 
         //工作进度图

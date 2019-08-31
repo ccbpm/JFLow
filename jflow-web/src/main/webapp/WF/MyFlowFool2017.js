@@ -333,8 +333,7 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
-        //解析Lab 1、文本类型、DDL类型、RB类型、扩张（图片、附件、超链接）
-        lab = GetLab(flowData, attr);
+       
 
         rowSpan = attr.RowSpan;
         colSpan = attr.ColSpan;
@@ -343,6 +342,25 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         colWidth = 33 * parseInt(colSpan) + "%";
         textWidth = 33 * parseInt(textColSpan) + "%";
+
+        //大文本备注信息 独占一行
+        if (attr.UIContralType == 60) {
+            //获取文本信息
+            var filename = basePath + "/DataUser/CCForm/BigNoteHtmlText/" + attr.FK_MapData + ".htm";
+            var htmlobj = $.ajax({ url: filename, async: false });
+            var str = htmlobj.responseText;
+            if (htmlobj.status == 404)
+                str = filename + "这个文件不存在，请联系管理员";
+            html += "<tr>";
+            html += "<td  ColSpan='" + tableCol + "' class='FDesc' style='text-align:left:height:auto'>" + str + "</td>";
+            html += "</tr>";
+            isDropTR = true;
+            UseColSpan = 0;
+            continue;
+        }
+
+        //解析Lab 1、文本类型、DDL类型、RB类型、扩张（图片、附件、超链接）
+        lab = GetLab(flowData, attr);
 
         //跨列设置(显示的是文本)
         if (colSpan == 0) {
@@ -467,9 +485,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
-        //解析Lab 1、文本类型、DDL类型、RB类型、扩张（图片、附件、超链接）
-        lab = GetLab(flowData, attr);
-
+       
         //赋值
         rowSpan = parseInt(attr.RowSpan);
         colSpan = parseInt(attr.ColSpan);
@@ -481,6 +497,26 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             colWidth = 23 * parseInt(colSpan) + "%";
             textWidth = 10 * parseInt(textColSpan) + "%";
         }
+
+        //大文本备注信息 独占一行
+        if (attr.UIContralType == 60) {
+            //获取文本信息
+            var filename = basePath + "/DataUser/CCForm/BigNoteHtmlText/" + attr.FK_MapData + ".htm";
+            var htmlobj = $.ajax({ url: filename, async: false });
+            var str = htmlobj.responseText;
+            if (htmlobj.status == 404)
+                str = filename + "这个文件不存在，请联系管理员";
+            html += "<tr>";
+            html += "<td  ColSpan='" + tableCol + "' class='FDesc' style='text-align:left:height:auto'>" + str + "</td>";
+            html += "</tr>";
+            isDropTR = true;
+            UseColSpan = 0;
+            continue;
+        }
+
+        //解析Lab 1、文本类型、DDL类型、RB类型、扩张（图片、附件、超链接）
+        lab = GetLab(flowData, attr);
+
 
         if (colSpan == 0) {
             //占一行
@@ -862,6 +898,23 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             return eleHtml;
         }
 
+        //地图
+        if (mapAttr.UIContralType == "4") {
+            //查找默认值
+            var val = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
+            //如果是地图，并且可以编辑
+            var eleHtml = "<div style='text-align:left;padding-left:0px' id='athModel_" + mapAttr.KeyOfEn + "' data-type='1'>";
+            if (mapAttr.UIIsEnable == 1) {
+                eleHtml += "<input type='button' name='select' value='选择' onclick='figure_Template_Map(\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.UIIsEnable + "\")'/>";
+                eleHtml += "<input type = text style='width:75%' maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' />";
+            } else {
+                eleHtml += "<input type='button' name='select' value='选择' onclick='figure_Template_Map(\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.UIIsEnable + "\")'/>";
+                eleHtml += "<input type = text style='width:75%' readonly='readonly' maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' />";
+            }
+            eleHtml += "</div>";
+            return eleHtml;
+        }
+
         //进度条
         if (mapAttr.UIContralType == "50") {
 
@@ -927,6 +980,8 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             dateFmt = "yyyy-MM-dd";
         } else if (frmDate == 3) {
             dateFmt = "yyyy-MM";
+        } else if (frmDate == 6){
+            dateFmt = "MM-dd";
         }
 
         if (mapAttr.UIIsEnable == 1)
@@ -1363,9 +1418,8 @@ function Ele_FrmCheck(wf_node) {
 
 //子流程
 function Ele_SubFlow(wf_node) {
-    //SFSta Sta,SF_X X,SF_Y Y,SF_H H, SF_W W
     var sta = wf_node.SFSta;
-    var h = wf_node.SF_H + 1300;
+    var h = wf_node.SF_H + 100;
 
     if (sta == 0)
         return $('');
@@ -1379,14 +1433,14 @@ function Ele_SubFlow(wf_node) {
     paras += '&FK_Flow=' + pageData.FK_Flow;
     paras += '&FK_Node=' + pageData.FK_Node;
     paras += '&WorkID=' + pageData.WorkID;
-    if (sta == 2)//只读
+    if (sta == 2 || pageData.IsReadonly == 1)//只读
     {
         src += "&DoType=View";
     }
     src += "&r=q" + paras;
     if (h == 0)
         h = 400;
-    var eleHtml = "<iframe id=FSF" + wf_node.NodeID + " style='width:100%;height:" + h + "px'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>";
+    var eleHtml = "<iframe id=FSF" + wf_node.NodeID + " style='width:100%;height:" + h + "px'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=no></iframe>";
 
     return eleHtml;
 }
@@ -1676,7 +1730,7 @@ function GetLab(flowData, attr) {
         forID = "RB_" + attr.KeyOfEn;
     }
     //文本框，下拉框，单选按钮
-    if (contralType == 0 || contralType == 1 || contralType == 3 || contralType == 8 || contralType == 50) {
+    if (contralType == 0 || contralType == 1 || contralType == 3 || contralType == 4 || contralType == 8 || contralType == 50) {
         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {
             lab = " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
         }
@@ -1734,7 +1788,16 @@ function GetLab(flowData, attr) {
     //超链接
     if (contralType == 9) {
         //URL @ 变量替换
-        var url = attr.Tag2;
+		var url = attr.Tag2;
+
+        //替换URL中的参数
+        var pageParams = getQueryString();
+        $.each(pageParams, function (i, pageParam) {
+            var pageParamArr = pageParam.split('=');
+            url = url.replace("@" + pageParamArr[0], pageParamArr[1]);
+        });
+
+        //替换表单中的参数
         $.each(flowData.Sys_MapAttr, function (i, obj) {
             if (url != null && url.indexOf('@' + obj.KeyOfEn) > 0) {
                 url = url.replace('@' + obj.KeyOfEn, flowData.MainTable[0][obj.KeyOfEn]);
@@ -1756,7 +1819,7 @@ function GetLab(flowData, attr) {
         if (url.indexOf("SearchBS.htm") != -1)
             url = url + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
         else
-            url = url + "&OID=" + OID + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
+            url = url + "&UserNo=" + userNo + "&SID=" + SID;
 
         eleHtml = '<span ><a href="' + url + '" target="_blank">' + attr.Name + '</a></span>';
 

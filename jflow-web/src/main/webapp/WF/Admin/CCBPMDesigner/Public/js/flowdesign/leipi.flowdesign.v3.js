@@ -257,8 +257,6 @@
         //绑定删除connection事件
         jsPlumb.bind("jsPlumbConnectionDetached", function (info) {
             setConnections(info.connection, true);
-
-
         });
 
         //绑定删除确认操作
@@ -275,9 +273,8 @@
 
                 //获取流程编号
                 var flowNo = GetQueryString("FK_Flow");
-                if (window.confirm("您确定要删除从节点[" + fromNodeID + "]，到节点[" + toNodeID + "]吗？") == false) {
+                if (window.confirm("您确定要删除从节点[" + fromNodeID + "]，到节点[" + toNodeID + "]吗？") == false)
                     return;
-                }
 
                 var hander = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner2018");
                 hander.AddPara("FK_Node", fromNodeID);

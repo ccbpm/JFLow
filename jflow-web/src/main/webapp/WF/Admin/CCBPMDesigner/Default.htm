@@ -1228,7 +1228,7 @@
             if (en.EntityType == 1)
                 url = '../../Comm/En.htm?EnName=BP.Frm.FrmBill&PKVal=' + node.id;
 
-            if (en.EntityType == 2)
+            if (en.EntityType == 2 || en.EntityType == 3)
                 url = '../../Comm/En.htm?EnName=BP.Frm.FrmDict&PKVal=' + node.id;
 
             //   alert(en.EntityType);
@@ -1265,15 +1265,31 @@
             
 
             //单据模式.
-            if (en.EntityType == 1)
-                url = '../../CCBill/SearchBill.htm?FrmID=' + node.id;
+            if (en.EntityType == 1) {
+                 url = '../../CCBill/SearchBill.htm?FrmID=' + node.id;
+                if (en.EntityShowModel == 1)
+                     url = '../../CCBill/BillTree.htm?FrmID=' + node.id;
+            }
+               
 
             //如果是实体就判断他的编辑模式.
             if (en.EntityType == 2) {
-                if (en.EntityEditModel == 0)
-                    url = '../../CCBill/SearchDict.htm?FrmID=' + node.id;
-                else
-                    url = '../../CCBill/SearchEditer.htm?FrmID=' + node.id;
+                if (en.EntityShowModel == 0) {
+                    if (en.EntityEditModel == 0)
+                        url = '../../CCBill/SearchDict.htm?FrmID=' + node.id;
+                    else
+                        url = '../../CCBill/SearchEditer.htm?FrmID=' + node.id;
+                }
+
+                if (en.EntityShowModel == 1) {
+                    url = '../../CCBill/DictTree.htm?FrmID=' + node.id;
+                }
+                    
+                
+            }
+            //树状结构
+            if (en.EntityType == 3) {
+                 url = '../../CCBill/MyEntityTree.htm?FrmID=' + node.id;
             }
 
             OpenEasyUiDialog(url, "CCForm_Attr", '我的单据', 1100, 560, "icon-window");
@@ -1338,6 +1354,7 @@
                 $(currForm.target).parent().insertAfter(next);
             });
         }
+       
 
         //删除流程树表单
         function deleteCCFormTreeMapData() {
@@ -1376,9 +1393,29 @@
                 return;
             }
 
-            // window.p
-            //   if ( window.config()
-            // addTab("DesignerFrm" + node.id, "设计表单-" + node.text, "../CCFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + node.id);
+            var frmID = window.prompt('新的表单ID', node.id);
+            var frmName = window.prompt('新的表单名称', node.text);
+            if (frmID == null || frmID == "") {
+                alert("表单ID不能为空");
+                return;
+            }
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCFormDesigner");
+            handler.AddPara("FromFrmID", node.id);
+            handler.AddPara("ToFrmID", frmID)
+            handler.AddPara("ToFrmName", frmName)
+            var data = handler.DoMethodReturnString("DoCopyFrm", frmID, frmName);
+
+            if (data.indexOf('err@') != -1) {
+                alert(data);
+                return;
+            }
+
+             //表单库增加表单节点
+             AppendFrmToFormTree(node.attributes.Node.ParentId, frmID, frmName);
+            
+            //设计表单.
+            addTab("DesignerFrm" + frmID, "设计表单-" + frmName, "../CCFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frmID);
+
         }
 
 
@@ -1880,8 +1917,11 @@
             上移</div>
         <div onclick="moveDownCCFormTree()" data-options="iconCls:'icon-down'">
             下移</div>
-        <div onclick="deleteCCFormTreeMapData()" data-options="iconCls:'icon-delete'">
+        <div onclick="deleteCCFormTreeMapData()" data-options="iconCls:'icon-Delete'">
             删除</div>
+
+              <div onclick="CopyFrm()" data-options="iconCls:'icon-Copy'">
+            复制</div>
         <!--<div class="menu-sep"></div>
         <div onclick="RefreshNode('formTree', '1')" data-options="iconCls:'icon-reload'">刷新</div>-->
     </div>

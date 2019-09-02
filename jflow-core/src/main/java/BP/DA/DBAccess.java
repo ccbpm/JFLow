@@ -1853,7 +1853,13 @@ public class DBAccess {
 					oratb.Rows.add(dr);// DataTable加入此DataRow
 				}
 			} else {
-				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				
+				if("BP".equals(SystemConfig.getRunOnPlant())) {
+					stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				}else { // jeesite平台时
+					stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				}
+				
 				rs = stmt.executeQuery(sql);
 				ResultSetMetaData rsmd = rs.getMetaData();
 				int size = rsmd.getColumnCount();

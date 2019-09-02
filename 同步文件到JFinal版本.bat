@@ -1,10 +1,10 @@
-ï»¿@echo off
-echo æ›´æ–°è¯´æ˜ï¼š
-echo 1.ä»JFlowæ›´æ–°åå°æ–‡ä»¶åˆ°JFinalç‰ˆæœ¬. BP
-echo 2.ä»JFlowæ›´æ–°å‰å°æ–‡ä»¶åˆ°JFinalç‰ˆæœ¬.
+@echo off
+echo ¸üĞÂËµÃ÷£º
+echo 1.´ÓJFlow¸üĞÂºóÌ¨ÎÄ¼şµ½JFinal°æ±¾. BP
+echo 2.´ÓJFlow¸üĞÂÇ°Ì¨ÎÄ¼şµ½JFinal°æ±¾.
 pause
 
-rem æ›´æ–°åå°æ–‡ä»¶. BP
+rem ¸üĞÂºóÌ¨ÎÄ¼ş. BP
 
 rd /S/Q D:\jfinal-jflow\docs
 rd /S/Q D:\jfinal-jflow\jflow-core\src\main\java\BP\BPMN
@@ -43,7 +43,7 @@ xcopy D:\JFlow\jflow-core\src\main\java\BP\WF  D:\jfinal-jflow\jflow-core\src\ma
 xcopy D:\JFlow\jflow-core\src\main\java\BP\XML  D:\jfinal-jflow\jflow-core\src\main\java\BP\XML /e /k /y
  
 
-rem æ›´æ–° å‰å°.
+rem ¸üĞÂ Ç°Ì¨.
 
 rd /S/Q D:\jfinal-jflow\jflow-web\src\main\resources\cn
 rd /S/Q D:\jfinal-jflow\jflow-web\src\main\webapp\DataUser 

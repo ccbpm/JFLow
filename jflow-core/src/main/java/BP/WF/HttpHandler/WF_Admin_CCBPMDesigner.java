@@ -456,9 +456,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	*/
 	public final String Default_Init() throws Exception
 	{
-		
-	
-		
+		if(!"BP".equals(SystemConfig.getRunOnPlant())) {
+			BP.Web.WebUser.getNo(); //启动设计器，先SSO登录，防止初次访问报错
+		}
 		
 		//让admin登录
 		if (DataType.IsNullOrEmpty(BP.Web.WebUser.getNoOfRel())==true)

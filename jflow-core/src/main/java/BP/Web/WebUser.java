@@ -114,7 +114,10 @@ public class WebUser {
 	 */
 	public static String SignInOfGener(Emp em, String lang, String auth, boolean isRememberMe, boolean IsRecSID) throws Exception {
 		if (SystemConfig.getIsBSsystem()) {
-			BP.Sys.Glo.WriteUserLog("SignIn", em.getNo(), "登录");
+			if("BP".equals(SystemConfig.getRunOnPlant())) {
+				//嵌入jeesite4 后写登录日志会造成死循环。
+				BP.Sys.Glo.WriteUserLog("SignIn", em.getNo(), "登录");
+			}			
 		}
 		if (auth == null) {
 			auth = "";

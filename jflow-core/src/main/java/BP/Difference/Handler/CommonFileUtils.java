@@ -7,11 +7,10 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 public class CommonFileUtils {
 	/**
 	 * 上传
@@ -20,7 +19,7 @@ public class CommonFileUtils {
 	public static void upload(HttpServletRequest request,String fileName,File targetFile) throws Exception{
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			DefaultMultipartHttpServletRequest mrequest = (DefaultMultipartHttpServletRequest)request;
+			MultipartHttpServletRequest mrequest = getMultipartHttpServletRequest(request);
 			
 		    Iterator ifiles =  mrequest.getFileNames();
 		    while(ifiles.hasNext()){
@@ -44,7 +43,7 @@ public class CommonFileUtils {
 	public static String getOriginalFilename(HttpServletRequest request,String fileName){
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			DefaultMultipartHttpServletRequest mrequest = (DefaultMultipartHttpServletRequest)request;
+			MultipartHttpServletRequest mrequest = getMultipartHttpServletRequest(request);
 			MultipartFile multipartFile = mrequest.getFile(fileName);
 			return multipartFile.getOriginalFilename();
 		}else{
@@ -60,7 +59,7 @@ public class CommonFileUtils {
 	public static long getFilesSize(HttpServletRequest request,String fileName){
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			DefaultMultipartHttpServletRequest mrequest = (DefaultMultipartHttpServletRequest)request;
+			MultipartHttpServletRequest mrequest = getMultipartHttpServletRequest(request);
 			MultipartFile multipartFile = mrequest.getFile(fileName);
 			return multipartFile.getSize();
 		}else{
@@ -78,11 +77,29 @@ public class CommonFileUtils {
 	public static InputStream getInputStream(HttpServletRequest request,String fileName) throws IOException{
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			DefaultMultipartHttpServletRequest mrequest = (DefaultMultipartHttpServletRequest)request;
+			MultipartHttpServletRequest mrequest = getMultipartHttpServletRequest(request);
 			MultipartFile multipartFile = mrequest.getFile(fileName);
 			return multipartFile.getInputStream();
 		}else{
 			return null;
 		}		
+	}
+	
+	/**
+	 * 根据httpServletRequest获取MultipartHttpServletRequest
+	 * @param request
+	 * @return 
+	 */
+	public static MultipartHttpServletRequest getMultipartHttpServletRequest(HttpServletRequest request) {
+		MultipartHttpServletRequest mrequest = null;
+		if(ServletFileUpload.isMultipartContent(request)) {
+			if(request instanceof MultipartHttpServletRequest) {
+				mrequest = (StandardMultipartHttpServletRequest) request;
+			}else{
+				mrequest = new StandardMultipartHttpServletRequest(request);
+			}
+		}
+		
+		return mrequest;
 	}
 }

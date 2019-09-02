@@ -41,6 +41,12 @@ public class DBAccess {
     /// </summary>
     public static Boolean IsCaseSensitive() throws Exception
     {
+    	if (DBAccess.IsExitsObject("TEST") == true)
+            DBAccess.RunSQL("DROP TABLE TEST ");
+        
+   	 
+   		if (DBAccess.IsExitsObject("test") == true)
+            DBAccess.RunSQL("DROP TABLE test ");
         
             String mysql = "CREATE TABLE TEST(OID int NOT NULL )";
             DBAccess.RunSQL(mysql);

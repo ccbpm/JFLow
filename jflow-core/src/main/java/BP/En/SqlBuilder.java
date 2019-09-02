@@ -780,7 +780,7 @@ public class SqlBuilder {
 			}
 		}
 		sql = sql.substring(0, sql.length() - 1);
-		sql += ")";
+		sql += ") default charset=utf8 ";
 
 		return sql;
 	}

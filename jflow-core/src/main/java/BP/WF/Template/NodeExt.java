@@ -461,8 +461,8 @@ public class NodeExt extends Entity
 
         map.SetHelperUrl(BtnAttr.SearchLab, "http://ccbpm.mydoc.io/?v=5404&t=24373");
 
-        map.AddTBString(BtnAttr.WorkCheckLab, "审核", "审核按钮标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.WorkCheckEnable, false, "是否启用", true, true);
+//        map.AddTBString(BtnAttr.WorkCheckLab, "审核", "审核按钮标签", true, false, 0, 50, 10);
+//        map.AddBoolean(BtnAttr.WorkCheckEnable, false, "是否启用", true, true);
         
         //取消加签和会签功能重复
        /* map.AddTBString(BtnAttr.AskforLab, "加签", "加签按钮标签", true, false, 0, 50, 10);

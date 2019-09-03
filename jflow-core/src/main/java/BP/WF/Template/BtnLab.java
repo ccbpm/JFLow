@@ -975,8 +975,8 @@ public class BtnLab extends Entity
 		map.AddBoolean(BtnAttr.SearchEnable, true, "是否启用", true, true);
 
 			// 
-		map.AddTBString(BtnAttr.WorkCheckLab, "审核", "审核按钮标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.WorkCheckEnable, false, "是否启用", true, true);
+//		map.AddTBString(BtnAttr.WorkCheckLab, "审核", "审核按钮标签", true, false, 0, 50, 10);
+//		map.AddBoolean(BtnAttr.WorkCheckEnable, false, "是否启用", true, true);
 
 			// 
 		map.AddTBString(BtnAttr.BatchLab, "批量审核", "批量审核标签", true, false, 0, 50, 10);

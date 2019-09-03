@@ -3391,7 +3391,7 @@ public abstract class Entity implements Serializable {
 	             }
 	             else
 	             {
-	                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+	                 if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 	                     this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentYear());
 	             }
 	             continue;
@@ -3405,7 +3405,7 @@ public abstract class Entity implements Serializable {
              }
              else
              {
-                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+                 if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
                      this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart(v.replace("@", "")));
              }
              continue;
@@ -3418,7 +3418,7 @@ public abstract class Entity implements Serializable {
                    //执行SQL获取默认值
                    String sql = gloVar.getVal();
                    sql = BP.WF.Glo.DealExp(sql, null, null);
-                   if (DataType.IsNullOrEmpty(myval) || myval == v){
+                   if (DataType.IsNullOrEmpty(myval) || myval.equals(v)){
                 	   try{
                 		  v =  DBAccess.RunSQLReturnString(sql); 
                 		  this.SetValByKey(attr.getKeyOfEn(),v);
@@ -3559,7 +3559,7 @@ public abstract class Entity implements Serializable {
 	             }
 	             else
 	             {
-	                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+	                 if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 	                     this.SetValByKey(attr.getKey(), DataType.getCurrentYear());
 	             }
 	             continue;
@@ -3573,7 +3573,7 @@ public abstract class Entity implements Serializable {
              }
              else
              {
-                 if (DataType.IsNullOrEmpty(myval) || myval == v)
+                 if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
                      this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(v.replace("@", "")));
              }
              continue;

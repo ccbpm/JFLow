@@ -55,7 +55,6 @@ import BP.Sys.GEDtl;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.GEEntity;
-import BP.Sys.Glo;
 import BP.Sys.GroupField;
 import BP.Sys.GroupFieldAttr;
 import BP.Sys.GroupFields;
@@ -1066,7 +1065,7 @@ public class Flow extends BP.En.EntityNoName {
 						GEDtl dtlData = new GEDtl(dtl.getNo());
 						
 						// 删除以前的数据.
-						sql = "DELETE FROM " + dtlData.getEnMap().getPhysicsTable() + " WHERE RefPK=" + wk.getOID();
+						sql = "DELETE FROM " + dtlData.getEnMap().getPhysicsTable() + " WHERE RefPK='" + wk.getOID()+"'";
 						DBAccess.RunSQL(sql);
 
 						MapDtl dtlFrom = (MapDtl) ((dtlsFrom.get(idx) instanceof MapDtl) ? dtlsFrom.get(idx) : null);
@@ -3184,8 +3183,8 @@ public class Flow extends BP.En.EntityNoName {
 					+ "' AND Sys_MapAttr.FK_MapData = 'ND' || CAST(WF_Node.NodeID AS VARCHAR(20)))";
 			break;
 		case MySQL:
-			sql = "SELECT DISTINCT KeyOfEn FROM Sys_MapAttr  WHERE  exists  (SELECT X.No FROM ( SELECT CONCAT('ND',NodeID) AS No FROM WF_Node WHERE FK_Flow='"
-					+ this.getNo() + "') AS X where sys_mapattr.fk_mapdata=x.no)";
+			//sql = "SELECT DISTINCT KeyOfEn FROM Sys_MapAttr WHERE FK_MapData like 'ND"+Integer.parseInt(this.getNo())+"%' AND FK_MapData !='ND"+Integer.parseInt(this.getNo())+"rpt'";
+			sql = "SELECT DISTINCT KeyOfEn FROM ( SELECT NodeID AS No FROM WF_Node WHERE FK_Flow='"+this.getNo()+"') t1 LEFT JOIN Sys_MapAttr ma on ma.FK_MapData=CONCAT('ND',t1.No)";
 			break;
 		default:
 			sql = "SELECT distinct KeyOfEn FROM Sys_MapAttr WHERE EXISTS ( SELECT 'ND' "
@@ -4224,8 +4223,6 @@ public class Flow extends BP.En.EntityNoName {
 	 *            实体
 	 * @param atPara
 	 *            参数
-	 * @param objs
-	 *            发送对象，可选
 	 * @return 执行结果
 	 * @throws Exception
 	 */

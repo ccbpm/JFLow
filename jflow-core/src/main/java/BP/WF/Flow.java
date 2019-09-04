@@ -3215,8 +3215,9 @@ public class Flow extends BP.En.EntityNoName {
 					+ "' AND Sys_MapAttr.FK_MapData = 'ND' || CAST(WF_Node.NodeID AS VARCHAR(20)))";
 			break;
 		case MySQL:
-			sql = "SELECT MyPK, KeyOfEn FROM Sys_MapAttr WHERE EXISTS (SELECT X.No FROM ( SELECT CONCAT('ND',NodeID) AS No FROM WF_Node WHERE FK_Flow='"
-					+ this.getNo() + "') AS X where Sys_MapAttr.FK_MapData = X.No)";
+			sql ="SELECT MyPK, KeyOfEn FROM (SELECT NodeID AS No FROM WF_Node WHERE FK_Flow='" +this.getNo()+"') t1 LEFT JOIN Sys_MapAttr ma ON ma.FK_MapData=CONCAT('ND',t1.No)";
+			//sql = "SELECT MyPK, KeyOfEn FROM Sys_MapAttr WHERE EXISTS (SELECT X.No FROM ( SELECT CONCAT('ND',NodeID) AS No FROM WF_Node WHERE FK_Flow='"
+			//		+ this.getNo() + "') AS X where Sys_MapAttr.FK_MapData = X.No)";
 			break;
 		default:
 			sql = "SELECT MyPK, KeyOfEn FROM Sys_MapAttr WHERE EXISTS ( SELECT 'ND'+cast(NodeID as varchar(20)) FROM WF_Node WHERE FK_Flow='"

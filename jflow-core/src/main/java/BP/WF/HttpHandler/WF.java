@@ -586,6 +586,76 @@ public class WF extends WebContralBase {
 		// 转化大写.
 		return BP.Tools.Json.DataTableToJson(dt, false);
 	}
+	 
+    /// <summary>
+    /// 协作模式待办
+    /// </summary>
+    /// <returns></returns>
+    public String TeamupList_Init() throws Exception
+    {
+    	String sql = "SELECT A.WorkID, A.Title,A.FK_Flow, A.FlowName, A.Starter, A.StarterName, A.Sender, A.Sender,A.FK_Node,A.NodeName,A.SDTOfNode,A.TodoEmps";
+        sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B,WF_Node C ";
+        sql += " WHERE A.WorkID=B.WorkID and a.FK_Node=b.FK_Node AND A.FK_Node=C.NodeID AND C.TodolistModel=1 ";
+        sql += " AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+
+        Paras ps = new Paras();
+        ps.Add("FK_Emp", WebUser.getNo());
+        ps.SQL = sql;
+        DataTable dt = DBAccess.RunSQLReturnTable(ps);
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+        		|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+        {
+            dt.Columns.get("WORKID").ColumnName = "WorkID";
+            dt.Columns.get("TITLE").ColumnName = "Title";
+            dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+            dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+
+            dt.Columns.get("STARTER").ColumnName = "Starter";
+            dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+
+            dt.Columns.get("SENDER").ColumnName = "Sender";
+            dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+            dt.Columns.get("NODENAME").ColumnName = "NodeName";
+            dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+            dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+        }
+        return BP.Tools.Json.ToJson(dt);
+    }
+
+    /// <summary>
+    /// 获得加签人的待办
+    /// @LQ 
+    /// </summary>
+    /// <returns></returns>
+    public String HuiQianAdderList_Init() throws Exception
+    {
+    	String sql = "SELECT A.WorkID, A.Title,A.FK_Flow, A.FlowName, A.Starter, A.StarterName, A.Sender, A.Sender,A.FK_Node,A.NodeName,A.SDTOfNode,A.TodoEmps";
+        sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID and a.FK_Node=b.FK_Node AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+        sql += " AND B.AtPara LIKE '%IsHuiQian=1%' ";
+
+        Paras ps = new Paras();
+        ps.Add("FK_Emp", WebUser.getNo());
+        ps.SQL = sql;
+        DataTable dt = DBAccess.RunSQLReturnTable(ps);
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+        		|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+        {
+        	dt.Columns.get("WORKID").ColumnName   = "WorkID";
+            dt.Columns.get("TITLE").ColumnName = "Title";
+            dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+            dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+
+            dt.Columns.get("STARTER").ColumnName = "Starter";
+            dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+
+            dt.Columns.get("SENDER").ColumnName = "Sender";
+            dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+            dt.Columns.get("NODENAME").ColumnName = "NodeName";
+            dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+            dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+        }
+        return BP.Tools.Json.ToJson(dt);
+    }
 
 	/**
 	 * 获得会签列表

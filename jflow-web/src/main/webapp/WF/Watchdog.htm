@@ -80,7 +80,8 @@
             html += "<th>发起日期</th>";
             html += "<th>停留节点</th>";
             html += "<th>处理人</th>";
-            html += "<th>节点应完成日期</th>";
+            html += "<th>应完成日期</th>";
+            html += "<th>状态</th>";
             html += "</tr></thead>";
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF");
@@ -94,12 +95,13 @@
                 html += "<tr>";
                 html += "<td>" + (i + 1) + "</td>";
                 html += "<td><a href=\"javascript:OpenIt('" + dt.WorkID + "','" + dt.FK_Flow + "','" + dt.FK_Node + "')\" >" + dt.Title + "</td>";
-                html += "<td>" + GetStateText(dt.WFState) + "</td>";
+                html += "<td>" + GenerFlowState(dt.WFState) + "</td>";
                 html += "<td>" + dt.StarterName + "</td>";
                 html += "<td>" + dt.RDT + "</td>";
                 html += "<td>" + dt.NodeName + "</td>";
                 html += "<td>" + dt.TodoEmps + "</td>";
                 html += "<td>" + dt.SDTOfNode + "</td>";
+                html += "<td>" + GenerNodeTimeState(dt) + "</td>";
                 html += "</tr>";
             }
             html += "</table>";
@@ -107,17 +109,44 @@
 
             $('#docs').html(html);
         }
-        function GetStateText(sta) {
+        function GenerFlowState(sta) {
 
-            if (sta == 2)
-                return "运行中";
-
-            if (sta == 3)
-                return "已完成";
-            if (sta == 5)
-                return "退回";
+            if (sta == 2) return "运行中";
+            if (sta == 3) return "已完成";
+            if (sta == 5) return "退回";
+            if (sta == 7) return "删除";
+            if (sta == 8) return "加签";
+            if (sta == 9) return "冻结";
+            if (sta == 4) return "挂起";
 
             return "其他" + sta;
+        }
+        function GenerNodeTimeState(dt) {
+            var nodeID = dt.FK_Node;
+            //获取当前时间
+            var cdt = getNowFormatDate();
+            //开始节点撤销回来后，就是逾期状态.
+            var len = nodeID.toString().length;
+            var entStr = nodeID.toString().substr(len - 2);
+
+            //判断期限是否少于三天，加警告颜色
+            var date = new Date();
+            var edt = dt.SDTOfNode.replace(/\-/g, "/");
+            edt = new Date(Date.parse(edt.replace(/-/g, "/")));
+            passTime = GetSpanTime(date, edt);
+            //判断流程是否逾期
+            if (cdt > dt.SDTOfNode && dt.WFState == 2 && entStr != "01" && dt.RDT != dt.SDTOfNode) {
+                return "<font color=red>逾期</font>";
+            }
+            else {
+                if (passTime >= 0 && passTime < 2 * 24 * 3600 * 1000 && dt.WFState!=3) {
+                    return "<font color='#ffac38'>预警</font>";
+                } else {
+                    return "<font color=green>正常</font>";
+                }
+
+            }
+
         }
 
         function OpenIt(workID, flowNo, nodeID) {
@@ -126,6 +155,31 @@
             WinOpenFull(url);
 
             //window.location.href = 'Watchdog.htm?IsRef=1';
+        }
+        //获取当前时间
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            //当前时间=年份-月份-日 小时：分钟
+            var cdt = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes();
+
+            return cdt;
+        }
+        function GetSpanTime(date1, date2) {
+            ///<summary>计算date2-date1的时间差，返回使用“x天x小时x分x秒”形式的字符串表示</summary>
+            var date3 = date2.getTime() - date1.getTime();  //时间差秒
+
+            return date3;
         }
     </script>
 </head>
@@ -170,7 +224,7 @@
                         <li>1. 该功能是流程监控，就是非流程的参与人可以对指定的流程进行，查看、删除、移交、回滚、调整等操作。 </li>
                         <li>2. 您所看到的流程，就是系统管理员分配给您可以监控的流程. </li>
                         <li>3. 如果你可不到您需要的流程，请与管理员联系设置,设置路径：流程属性-》基本信息=》权限控制 </li>
-                        <li>4. 当您打开一个工作的时候，在右边tab标签页里可以对该流程进行，相关的权限操作。 </li>
+                        <li>4. 当您打开一个工作的时候，在右边tab标签页的【操作】里可以对该流程进行，相关的权限操作。 </li>
                     </ul>
                 </fieldset>
             </div>

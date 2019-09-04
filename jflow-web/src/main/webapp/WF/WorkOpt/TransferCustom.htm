@@ -50,7 +50,7 @@
             html += "<th width='5%'>步骤</th>";
             html += "<th width='*'>节点</th>";
             html += "<th width='50%'>处理人</th>";
-            html += "<th width='15%'>应完成时间</th>";
+            //html += "<th width='15%'>应完成时间</th>";
             html += "<th width='100px'>操作</th>";
             html += "</tr>";
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
@@ -70,7 +70,6 @@
                 html += "<td>" + gwl.FK_Node + " </td>";
                 html += "<td>" + gwl.FK_NodeText + " </td>";
                 html += "<td>" + gwl.FK_EmpText + " </td>";
-                html += "<td></td>";
                 html += "<td>无</td>";
                 html += "</tr>";
             }
@@ -90,12 +89,12 @@
                 //处理接收人的事件
                 html += "<div id='" + tc.FK_Node + "_mtags' style='width:99%'  class='mtags'></div>";
                 html += " </td>";
-                if (tc.PlanDT != null && tc.PlanDT != "") {
-                    IsShowSave = true;
-                    html += "<td><input type='text' id='"+tc.MyPK+"' name='CHTime' value='" + tc.PlanDT + "' onfocus='WdatePicker({dateFmt:\"yyyy-MM-dd HH:mm\"})'  class='form-control Wdate' style='width:150px;display:inline'/></td>";
-                } else {
-                    html += "<td></td>";
-                }
+                //if (tc.PlanDT != null && tc.PlanDT != "") {
+                //    IsShowSave = true;
+                //    html += "<td><input type='text' id='"+tc.MyPK+"' name='CHTime' value='" + tc.PlanDT + "' onfocus='WdatePicker({dateFmt:\"yyyy-MM-dd HH:mm\"})'  class='form-control Wdate' style='width:150px;display:inline'/></td>";
+                //} else {
+                //    html += "<td></td>";
+                //}
                 html += "<td>[<a href=\"javascript:DoUp('" + tc.MyPK + "');\">上移</a>][<a href=\"javascript:DoDown('" + tc.MyPK + "');\">下移</a>][<a href=\"javascript:Remove('" + tc.MyPK + "');\">排除</a>]</td>";
                 html += "</tr>";
             }
@@ -111,7 +110,6 @@
                 html += "<td>" + tc.FK_Node + " </td>";
                 html += "<td>" + tc.NodeName + " </td>";
                 html += "<td>" + tc.WorkerName + " </td>";
-                html += "<td></td>";
 
                 html += "<td>[<a href=\"javascript:Add('" + tc.MyPK + "');\">增加</a>]</td>";
                 html += "</tr>";
@@ -288,12 +286,12 @@
                     </div>
                 </td>
             </tr>
-            <tr id="IsShowSave" style="display:none">
+            <!--<tr id="IsShowSave" style="display:none">
                 <td colspan="4">
                     <input type="button" value="保存" onclick="Save()" />
                     
                 </td>
-            </tr>
+            </tr>-->
 
         </table>
     </center>

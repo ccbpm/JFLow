@@ -120,7 +120,7 @@ public class FrmEvents extends EntitiesOID
 		}
 
 		doc = doc.replaceAll("~", "'");
-		doc = doc.replaceAll("WebUser.No", BP.Web.WebUser.getNo());
+		doc = doc.replaceAll("@WebUser.No", BP.Web.WebUser.getNo());
 		doc = doc.replaceAll("@WebUser.Name", BP.Web.WebUser.getName());
 		doc = doc.replaceAll("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
 		doc = doc.replaceAll("@FK_Node", nev.getFK_MapData().replace("ND", ""));

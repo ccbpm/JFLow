@@ -303,6 +303,7 @@
            var emps = new Entities("BP.GPM.Emps");
            emps.Retrieve("FK_Dept", dept.No, "Idx");
 
+
            var empNos = ",";
            html += "<tbody>";
            for (var i = 0; i < emps.length; i++) {
@@ -344,7 +345,36 @@
                html += "<td><img src='../WF/Img/Btn/Up.GIF' onclick=\"Up('" + emp.No + "')\" alt='上移' />-<img src='../WF/Img/Btn/Down.gif' onclick=\"Down('" + emp.No + "')\" alt='下移' /> </td>";
                html += "</tr>";
                num++;
+
+               empNos += emp.No + ',';
            }
+
+
+
+           //找一下 Port_DeptEmpStation 里面有的数据，但是在 Port_DeptEmp没有的就，插入进去.
+                
+           var deptEmpStations = new Entities("BP.GPM.DeptEmpStations");
+           deptEmpStations.Retrieve("FK_Dept", deptNo);
+           var isHave = false;
+           for (var i = 0; i < deptEmpStations.length; i++) {
+
+               var en = deptEmpStations[i];
+
+               if (empNos.indexOf(',' + en.FK_Emp + ',') == -1) {
+               /*插入里面去.*/
+
+                   var deptEmp = new Entity("BP.GPM.DeptEmp");
+                   deptEmp.SetPKVal(en.FK_Dept + "_" + en.FK_Emp);
+                   deptEmp.FK_Emp = en.FK_Emp;
+                   deptEmp.FK_Dept = en.FK_Dept;
+                   deptEmp.Insert();
+                   isHave = true;
+               }
+           }
+
+           if (isHave)
+               BindEmps();
+
            html += "</tbody>";
            html += "</table>";
            html += "</div>";

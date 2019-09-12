@@ -42,13 +42,11 @@ xcopy /e /k /y D:\JFlow\jflow-core\src\main\java\BP\WF  D:\jeesite4-jflow\JFlow\
 xcopy /e /k /y D:\JFlow\jflow-core\src\main\java\BP\XML  D:\jeesite4-jflow\JFlow\jflow-core\src\main\java\BP\XML\
 
 rem 更新 前台.
-
-rd /S/Q D:\jeesite4-jflow\web\src\main\webapp\DataUser 
+ 
 rd /S/Q D:\jeesite4-jflow\web\src\main\webapp\GPM 
 rd /S/Q D:\jeesite4-jflow\web\src\main\webapp\SDKFlowDemo 
 rd /S/Q D:\jeesite4-jflow\web\src\main\webapp\WF
-
-xcopy /e /k /y D:\JFlow\jflow-web\src\main\webapp\DataUser	D:\jeesite4-jflow\web\src\main\webapp\DataUser\
+ 
 xcopy /e /k /y D:\JFlow\jflow-web\src\main\webapp\GPM		D:\jeesite4-jflow\web\src\main\webapp\GPM\
 xcopy /e /k /y D:\JFlow\jflow-web\src\main\webapp\SDKFlowDemo	D:\jeesite4-jflow\web\src\main\webapp\SDKFlowDemo\
 xcopy /e /k /y D:\JFlow\jflow-web\src\main\webapp\WF			D:\jeesite4-jflow\web\src\main\webapp\WF\

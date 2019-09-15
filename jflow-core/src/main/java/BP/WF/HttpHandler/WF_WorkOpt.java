@@ -2563,7 +2563,7 @@ public class WF_WorkOpt extends WebContralBase {
 
 		// 获取模版.
 		String sql = "SELECT WorkID,Title,AtPara FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow()
-				+ "' AND WFState=3 AND Starter='" + WebUser.getNo() + "' AND ATPARA LIKE '%@DBTemplate=1%'";
+				+ "' AND WFState >=2  AND Starter='" + WebUser.getNo() + "' AND ATPARA LIKE '%@DBTemplate=1%'";
 		DataTable dtTemplate = DBAccess.RunSQLReturnTable(sql);
 		dtTemplate.TableName = "DBTemplate";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
@@ -2585,19 +2585,19 @@ public class WF_WorkOpt extends WebContralBase {
 		// 获取历史发起数据.
 		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
 			sql = "SELECT TOP 30 WorkID,Title FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow()
-					+ "' AND WFState=3 AND Starter='" + WebUser.getNo()
+					+ "' AND WFState >=2 AND Starter='" + WebUser.getNo()
 					+ "' AND ATPARA NOT LIKE '%@DBTemplate=1%' ORDER BY RDT ";
 		}
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 			sql = "SELECT WorkID,Title FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow()
-					+ "' AND WFState=3 AND Starter='" + WebUser.getNo()
+					+ "' AND WFState >=2 AND Starter='" + WebUser.getNo()
 					+ "' AND ATPARA NOT LIKE '%@DBTemplate=1%' AND rownum<=30 ORDER BY RDT ";
 		}
 
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			sql = "SELECT WorkID,Title FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow()
-					+ "' AND WFState=3 AND Starter='" + WebUser.getNo()
+					+ "' AND WFState >=2 AND Starter='" + WebUser.getNo()
 					+ "' AND ATPARA NOT LIKE '%@DBTemplate=1%' ORDER BY RDT LIMIT 30 ";
 		}
 

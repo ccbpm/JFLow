@@ -1140,8 +1140,11 @@ public class WorkNode {
 			if (!nd.getNodeFrmID().equals(mywork.NodeFrmID)) {
 				// 跳过去的节点也要写入数据，不然会造成签名错误。
 				skipWork = nd.getHisWork();
+				
+				//if (this.rptGe==null)
+					 
 
-				if (!skipWork.getEnMap().getPhysicsTable().equals(this.rptGe.getEnMap().getPhysicsTable())) {
+				if ( this.rptGe!=null && !skipWork.getEnMap().getPhysicsTable().equals(this.rptGe.getEnMap().getPhysicsTable())) {
 					skipWork.Copy(this.rptGe);
 					skipWork.Copy(mywork);
 

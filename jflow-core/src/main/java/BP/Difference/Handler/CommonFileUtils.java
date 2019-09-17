@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 public class CommonFileUtils {
 	/**
@@ -94,12 +95,11 @@ public class CommonFileUtils {
 		MultipartHttpServletRequest mrequest = null;
 		if(ServletFileUpload.isMultipartContent(request)) {
 			if(request instanceof MultipartHttpServletRequest) {
-				mrequest = (StandardMultipartHttpServletRequest) request;
+				mrequest = (DefaultMultipartHttpServletRequest) request;
 			}else{
 				mrequest = new StandardMultipartHttpServletRequest(request);
 			}
 		}
-		
 		return mrequest;
 	}
 }

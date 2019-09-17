@@ -65,7 +65,8 @@ public class ExtLink extends EntityMyPK
 			uac.Readonly();
 			if (BP.Web.WebUser.getNo().equals("admin"))
 			{
-				uac.IsUpdate = true;
+				uac.IsUpdate = true;			
+                uac.IsDelete = true;
 			}
 			return uac;
 		}

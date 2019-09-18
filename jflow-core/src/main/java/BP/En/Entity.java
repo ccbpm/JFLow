@@ -2619,12 +2619,21 @@ public abstract class Entity implements Serializable {
 						+ " INT DEFAULT " + attr.getDefaultVal() + " NULL");
 				break;
 			case DataType.AppFloat:
-			case DataType.AppMoney:
-			case DataType.AppRate:
-			case DataType.AppDouble:
-				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField()
-						+ " FLOAT (50,2)  DEFAULT " + attr.getDefaultVal());
+				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField() + " FLOAT (11,2) DEFAULT '" + attr.getDefaultVal() + "' NULL COMMENT '" + attr.getDesc() + "'");
 				break;
+			case DataType.AppMoney:
+				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField() + " DECIMAL (20,4) DEFAULT '" + attr.getDefaultVal() + "' NULL COMMENT '" + attr.getDesc() + "'");
+				break;
+			case DataType.AppDouble:
+				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField() + " DOUBLE DEFAULT '" + attr.getDefaultVal() + "' NULL COMMENT '" + attr.getDesc() + "'");
+				break;
+//			case DataType.AppFloat:
+//			case DataType.AppMoney:
+//			case DataType.AppRate:
+//			case DataType.AppDouble:
+//				DBAccess.RunSQL("ALTER TABLE " + this.get_enMap().getPhysicsTable() + " ADD " + attr.getField()
+//						+ " FLOAT (50,2)  DEFAULT " + attr.getDefaultVal());
+//				break;
 			default:
 				throw new RuntimeException("error MyFieldType= " + attr.getMyFieldType() + " key=" + attr.getKey());
 			}

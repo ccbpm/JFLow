@@ -759,10 +759,19 @@ public class SqlBuilder {
 				break;
 			case DataType.AppRate:
 			case DataType.AppFloat:
-			case DataType.AppMoney:
-			case DataType.AppDouble:
-				sql += attr.getField() + " float  NULL,";
+				sql += attr.getField() + " float  NULL COMMENT '" + attr.getDesc() + "',";
 				break;
+			case DataType.AppMoney:
+				sql += attr.getField() + " decimal(20,4)  NULL COMMENT '" + attr.getDesc() + "',";
+				break;
+			case DataType.AppDouble:
+				sql += attr.getField() + " double  NULL COMMENT '" + attr.getDesc() + "',";
+				break;
+//			case DataType.AppFloat:
+//			case DataType.AppMoney:
+//			case DataType.AppDouble:
+//				sql += attr.getField() + " float  NULL,";
+//				break;
 			case DataType.AppBoolean:
 			case DataType.AppInt:
 				if (attr.getIsPK()) {
@@ -1140,8 +1149,6 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 *            实体
-	 * @param top
-	 *            top
 	 * @return sql
 	 * @throws Exception
 	 */
@@ -1427,8 +1434,6 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 *            要执行的en
-	 * @param topNum
-	 *            最高查询个数
 	 * @return 返回查询sql
 	 */
 	public static String SelectCountSQLOfMS(Entity en) {

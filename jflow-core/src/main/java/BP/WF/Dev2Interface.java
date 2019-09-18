@@ -8492,6 +8492,10 @@ public class Dev2Interface {
 				gwl.Insert();
 			}
 		}
+		Flow fl = new Flow(fk_flow);
+		//string sql = "UPDATE "+fl.PTable+" SET WFStarter=1, FlowStater='"+WebUser.No+"' WHERE OID="+workID;
+		String sql = "UPDATE " + fl.getPTable() + " SET  FlowStarter='" + WebUser.getNo() + "' WHERE OID=" + workID;
+		DBAccess.RunSQL(sql);
 	}
 
 	/**

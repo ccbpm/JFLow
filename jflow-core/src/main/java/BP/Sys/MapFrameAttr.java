@@ -19,6 +19,7 @@ public class MapFrameAttr extends EntityMyPKAttr
 	 
 	*/
 	public static final String URL = "URL";
+	public static final String FrameURL = "FrameURL";
 	public static final String UrlSrcType = "UrlSrcType";
 	public static final String FrmID = "FrmID";
 	public static final String EleType = "EleType";

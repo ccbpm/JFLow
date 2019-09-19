@@ -91,8 +91,8 @@ public class MapFrameExt extends EntityMyPK
         map.AddMyPK();
         map.AddTBString(MapFrameAttr.FK_MapData, null, "表单ID", true, true, 0, 100, 20);
         map.AddTBString(MapFrameAttr.Name, null, "名称", true, false, 0, 200, 20, true);
-
-        map.AddTBString(MapFrameAttr.URL, null, "URL", true, false, 0, 3000, 20, true);
+		map.AddTBString(MapFrameAttr.FrameURL, null, "URL", true, false, 0, 3000, 20, true);
+        map.AddTBString(MapFrameAttr.URL, null, "URL", false, false, 0, 3000, 20, true);
 
         map.AddDDLSysEnum(MapFrameAttr.UrlSrcType, 0, "URL来源", true, true, MapFrameAttr.UrlSrcType, "@0=自定义@1=表单库");
         //显示的分组.
@@ -131,7 +131,19 @@ public class MapFrameExt extends EntityMyPK
 	
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
-		// 更新相关的分组信息.
+			int val = this.GetValIntByKey(MapFrameAttr.UrlSrcType, 0);
+			if (val == 1)
+			{
+				String sql = "SELECT Url FROM Sys_MapData WHERE No='" + this.GetValStrByKey(MapFrameAttr.FrmID) + "'";
+				String url = DBAccess.RunSQLReturnStringIsNull(sql, "");
+				this.SetValByKey(MapFrameAttr.FrameURL, url);
+				this.SetValByKey(MapFrameAttr.URL, url);
+			}
+			else
+			{
+				this.SetValByKey(MapFrameAttr.URL, this.GetValByKey(MapFrameAttr.FrameURL));
+			}
+			// 更新相关的分组信息.
 			GroupField gf = new GroupField();
 			int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
 			if (i == 0) {

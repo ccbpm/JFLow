@@ -1642,7 +1642,6 @@ public class MapData extends EntityNoName
 	 
 	 @param fk_mapdata 表单ID
 	 @param ds 表单数据
-	 @param isSetReadonly 是否设置只读？
 	 @return 
 	 * @throws Exception 
 	*/

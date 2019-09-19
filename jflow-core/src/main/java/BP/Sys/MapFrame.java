@@ -199,6 +199,7 @@ public class MapFrame extends EntityMyPK
 		map.AddTBString(MapFrameAttr.FK_MapData, null, "表单ID", true, true, 0, 100, 20);
 		map.AddTBString(MapFrameAttr.Name, null, "名称", true, false, 0, 200, 20,true);
 		map.AddTBString(MapFrameAttr.URL, null, "URL", true, false, 0, 3000, 20, true);
+		map.AddTBString(MapFrameAttr.FrameURL, null, "URL", true, false, 0, 3000, 20, true);
 
 		map.AddTBFloat(FrmEleAttr.X, 5, "X", true, false);
         map.AddTBFloat(FrmEleAttr.Y, 5, "Y", false, false);

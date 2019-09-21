@@ -4,11 +4,7 @@ import java.io.IOException;
 
 import BP.DA.Log;
 import BP.Difference.ContextHolderUtils;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.QueryObject;
-import BP.En.RefMethod;
-import BP.En.UAC;
+import BP.En.*;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
 import BP.WF.Flows;
@@ -507,10 +503,12 @@ public class GenerWorkFlowView extends Entity {
 		map.AddHidden(GenerWorkFlowViewAttr.WFState, "!=", "0");
 
 		RefMethod rm = new RefMethod();
-		// rm.Title = "轨迹";
-		// rm.ClassMethodName = this.toString() + ".DoTrack";
-		// rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Track.png";
-		// map.AddRefMethod(rm);
+		 rm.Title = "轨迹";
+		 rm.ClassMethodName = this.toString() + ".DoTrack";
+		 rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Track.png";
+		 rm.IsForEns=true;
+		 rm.refMethodType = RefMethodType.LinkeWinOpen;
+		 map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "删除";
@@ -528,27 +526,14 @@ public class GenerWorkFlowView extends Entity {
 		rm.getHisAttrs().AddTBString("ToEmp", null, "移交给", true, false, 0, 300, 100);
 		rm.getHisAttrs().AddTBString("Note", null, "移交原因", true, false, 0, 300, 100);
 		map.AddRefMethod(rm);
-		//
-		// rm = new RefMethod();
-		// rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/Back.png";
-		// rm.Title = "回滚";
-		// rm.ClassMethodName = this.toString() + ".DoRollback";
-		// rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
-		// rm.getHisAttrs().AddTBString("Note", null, "回滚原因", true, false, 0,
-		// 300, 100); map.AddRefMethod(rm);
+
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
 	public final String DoTrack() {
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), SystemConfig.getCCFlowWebPath() + "WF/WFRpt.jsp?WorkID="
-					+ this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow(), 900, 800);
-		} catch (IOException e) {
-			Log.DebugWriteError("GenerWorkFlowView DoTrack() " + e);
-		}
-		return null;
+		return "../../WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 
 	/**

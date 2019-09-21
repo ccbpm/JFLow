@@ -8,15 +8,10 @@ import java.io.OutputStream;
 import java.net.BindException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import BP.DA.DataType;
 import BP.Difference.ContextHolderUtils;
-import BP.Difference.Handler.BaseController;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;
@@ -37,20 +30,19 @@ import BP.Sys.AthSaveWay;
 import BP.Sys.AthUploadWay;
 import BP.Sys.FrmAttachment;
 import BP.Sys.FrmAttachmentDB;
+import BP.Sys.FrmEventList;
 import BP.Sys.GEEntity;
 import BP.Sys.MapData;
 import BP.Sys.PubClass;
 import BP.Sys.SystemConfig;
-import BP.Sys.FrmEventList;
+import BP.Tools.AesEncodeUtil;
 import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;
 import BP.Tools.SftpUtil;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmSln;
 import BP.WF.Template.WhoIsPK;
-import BP.Sys.Glo;
 import BP.Web.WebUser;
-import BP.Tools.AesEncodeUtil;
 
 
 @Controller
@@ -100,11 +92,11 @@ public class AttachmentUploadController extends BaseController {
 	public void AttachmentUpload(@RequestParam("Filedata") MultipartFile multiFile, HttpServletRequest request,
 			HttpServletResponse response, BindException errors) throws Exception {
 	
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		MultipartHttpServletRequest multipartRequest = CommonFileUtils.getMultipartHttpServletRequest(request);
 		String parasData = multipartRequest.getParameter("parasData");
-		CommonsMultipartFile item = (CommonsMultipartFile) multipartRequest.getFile("file");
+		MultipartFile item = multipartRequest.getFile("file");
 		if (item == null)
-			item = (CommonsMultipartFile) multiFile;
+			item = multiFile;
 		int maxSize = 50 * 1024 * 1024; // 单个上传文件大小的上限
 
 		// 获取初始化信息
@@ -125,8 +117,8 @@ public class AttachmentUploadController extends BaseController {
 	public void AttachmentUploadS(HttpServletRequest request, HttpServletResponse response, BindException errors)
 			throws Exception {
 		String error = "";
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-		CommonsMultipartFile item = (CommonsMultipartFile) multipartRequest.getFile("file");
+		MultipartHttpServletRequest multipartRequest = CommonFileUtils.getMultipartHttpServletRequest(request);
+		MultipartFile item = multipartRequest.getFile("file");
 		int maxSize = 50 * 1024 * 1024; // 单个上传文件大小的上限
 
 		// 获取初始化信息
@@ -314,7 +306,7 @@ public class AttachmentUploadController extends BaseController {
 		return downpath;
 	}
 
-	private void uploadFile(CommonsMultipartFile item, FrmAttachment athDesc, GEEntity en, String msg, MapData mapData,
+	private void uploadFile(MultipartFile item, FrmAttachment athDesc, GEEntity en, String msg, MapData mapData,
 			String attachPk, String parasData) throws Exception {
 		String pkVal = this.getPKVal();
 		//获取sort\

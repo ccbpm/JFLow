@@ -13,14 +13,12 @@ xcopy D:\JFlow\jflow-core\src\main\java\BP  D:\JFlowSpringBoot\jflow-core\src\ma
 
 rem 更新 前台.
 rd /S/Q D:\JFlowSpringBoot\jflow-web\src\main\resources\cn
-rd /S/Q D:\JFlowSpringBoot\jflow-web\src\main\webapp\DataUser 
 rd /S/Q D:\JFlowSpringBoot\jflow-web\src\main\webapp\GPM 
 rd /S/Q D:\JFlowSpringBoot\jflow-web\src\main\webapp\SDKFlowDemo 
 rd /S/Q D:\JFlowSpringBoot\jflow-web\src\main\webapp\WF
 del /f/q D:\JFlowSpringBoot\jflow-web\src\main\webapp\index.htm 
 
 xcopy D:\JFlow\jflow-web\src\main\resources\cn		D:\JFlowSpringBoot\jflow-web\src\main\resources\cn\  /e /k /y
-xcopy D:\JFlow\jflow-web\src\main\webapp\DataUser	D:\JFlowSpringBoot\jflow-web\src\main\webapp\DataUser\  /e /k /y
 xcopy D:\JFlow\jflow-web\src\main\webapp\GPM		D:\JFlowSpringBoot\jflow-web\src\main\webapp\GPM\  /e /k /y
 xcopy D:\JFlow\jflow-web\src\main\webapp\SDKFlowDemo	D:\JFlowSpringBoot\jflow-web\src\main\webapp\SDKFlowDemo\  /e /k /y
 xcopy D:\JFlow\jflow-web\src\main\webapp\WF			D:\JFlowSpringBoot\jflow-web\src\main\webapp\WF\ /e /k /y

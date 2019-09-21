@@ -46,7 +46,6 @@ xcopy D:\JFlow\jflow-core\src\main\java\BP\XML  D:\jfinal-jflow\jflow-core\src\m
 rem 更新 前台.
 
 rd /S/Q D:\jfinal-jflow\jflow-web\src\main\resources\cn
-rd /S/Q D:\jfinal-jflow\jflow-web\src\main\webapp\DataUser 
 rd /S/Q D:\jfinal-jflow\jflow-web\src\main\webapp\GPM 
 rd /S/Q D:\jfinal-jflow\jflow-web\src\main\webapp\SDKFlowDemo 
 rd /S/Q D:\jfinal-jflow\jflow-web\src\main\webapp\WF
@@ -54,7 +53,6 @@ del /f/q D:\jfinal-jflow\jflow-web\src\main\webapp\index.htm
 
 
 xcopy D:\JFlow\jflow-web\src\main\resources\cn		D:\jfinal-jflow\jflow-web\src\main\resources\cn /e /k /y
-xcopy D:\JFlow\jflow-web\src\main\webapp\DataUser	D:\jfinal-jflow\jflow-web\src\main\webapp\DataUser /e /k /y
 xcopy D:\JFlow\jflow-web\src\main\webapp\GPM		D:\jfinal-jflow\jflow-web\src\main\webapp\GPM /e /k /y
 xcopy D:\JFlow\jflow-web\src\main\webapp\SDKFlowDemo	D:\jfinal-jflow\jflow-web\src\main\webapp\SDKFlowDemo /e /k /y
 xcopy D:\JFlow\jflow-web\src\main\webapp\WF			D:\jfinal-jflow\jflow-web\src\main\webapp\WF /e /k /y

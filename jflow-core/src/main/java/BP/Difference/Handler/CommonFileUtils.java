@@ -95,7 +95,7 @@ public class CommonFileUtils {
 		MultipartHttpServletRequest mrequest = null;
 		if(ServletFileUpload.isMultipartContent(request)) {
 			if(request instanceof MultipartHttpServletRequest) {
-				mrequest = (DefaultMultipartHttpServletRequest) request;
+				mrequest = (MultipartHttpServletRequest) request;
 			}else{
 				mrequest = new StandardMultipartHttpServletRequest(request);
 			}

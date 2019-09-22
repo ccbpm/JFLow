@@ -44,7 +44,7 @@ public class EmpCreates extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new EmpCreate();
 	}

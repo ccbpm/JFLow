@@ -119,7 +119,7 @@ public class FrmTemplate extends EntityNoName
 		String str = this.GetValStrByKey(FrmTemplateAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
-			str = "@WebUser.getFK_Dept()Name @WebUser.getName() @RDT";
+			str = "@WebUser.getFK_DeptName @WebUser.getName() @RDT";
 		}
 		return str;
 	}

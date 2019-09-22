@@ -383,7 +383,7 @@ public class MapExt extends EntityMyPK
 		String fullSQL = this.getDoc().replace("@WebUser.getNo()", WebUser.getNo());
 		fullSQL = fullSQL.replace("@WebUser.getName()", WebUser.getName());
 		fullSQL = fullSQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
-		fullSQL = fullSQL.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_DeptName());
+		fullSQL = fullSQL.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
 
 		if (fullSQL.contains("@"))
 		{
@@ -438,8 +438,8 @@ public class MapExt extends EntityMyPK
 		String sql = this.getTag();
 		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
 		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_DeptNameOfFull());
-		sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_DeptName());
+		sql = sql.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
 		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		return sql;
 	}
@@ -449,8 +449,8 @@ public class MapExt extends EntityMyPK
 		String sql = this.getDoc();
 		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
 		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_DeptNameOfFull());
-		sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_DeptName());
+		sql = sql.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
 		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		return sql;
 	}

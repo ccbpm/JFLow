@@ -470,7 +470,7 @@ public class GenerWorkerList extends Entity
 		//this.Sender = WebUser.getNo();
 
 		//增加记录日期.
-		this.SetValByKey(GenerWorkerListAttr.RDT, DataType.getCurrentDataTime()ss);
+		this.SetValByKey(GenerWorkerListAttr.RDT, DataType.getCurrentDataTime());
 
 		return super.beforeInsert();
 	}

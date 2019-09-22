@@ -53,7 +53,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		 */
 		for (DataRow dr : dt.Rows)
 		{
-			XmlEn en = this.getGetNewEntity();
+			XmlEn en = this.getNewEntity();
 			en.setRow(new Row());
 			en.getRow().LoadDataTable(dt, dr);
 			this.Add(en);
@@ -429,7 +429,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		DataTable dt = this.GetTable();
 		for (DataRow dr : dt.Rows)
 		{
-			XmlEn en = this.getGetNewEntity();
+			XmlEn en = this.getNewEntity();
 			en.setRow(new Row());
 			en.getRow().LoadDataTable(dt, dr);
 			this.Add(en);
@@ -443,7 +443,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 	public final void FullEnToCash(String pk)
 	{
 		this.RetrieveAll();
-		XmlEn myen = this.getGetNewEntity();
+		XmlEn myen = this.getNewEntity();
 		for (XmlEn en : this)
 		{
 			Cash.AddObj(myen.toString() + en.GetValByKey(pk),
@@ -463,7 +463,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 			 * warning if (dr[key].toString().length() == len)
 			 */
 			{
-				XmlEn en = this.getGetNewEntity();
+				XmlEn en = this.getNewEntity();
 				en.setRow(new Row());
 				en.getRow().LoadDataTable(dt, dr);
 				this.Add(en);
@@ -485,7 +485,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		if (dt == null)
 		{
 			throw new RuntimeException("@错误：类"
-					+ this.getGetNewEntity().toString() + " File= "
+					+ this.getNewEntity().toString() + " File= "
 					+ this.getFile() + " Table=" + this.getTableName()
 					+ " ，没有取到数据。");
 		}
@@ -502,7 +502,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 				 * dr[key1].toString().equals(val1))
 				 */
 				{
-					XmlEn en = this.getGetNewEntity();
+					XmlEn en = this.getNewEntity();
 					en.setRow(new Row());
 					en.getRow().LoadDataTable(dt, dr);
 					this.Add(en);
@@ -538,7 +538,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		if (dt == null)
 		{
 			throw new RuntimeException("@错误：类"
-					+ this.getGetNewEntity().toString() + " File= "
+					+ this.getNewEntity().toString() + " File= "
 					+ this.getFile() + " Table=" + this.getTableName()
 					+ " ，没有取到数据。");
 		}
@@ -551,7 +551,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 			 * warning if (dr[key].toString().equals(val.toString()))
 			 */
 			{
-				XmlEn en = this.getGetNewEntity();
+				XmlEn en = this.getNewEntity();
 				en.setRow(new Row());
 				en.getRow().LoadDataTable(dt, dr);
 				this.Add(en);
@@ -577,7 +577,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 			 * warning if (dr[key].toString().equals(val.toString()))
 			 */
 			{
-				XmlEn en = this.getGetNewEntity();
+				XmlEn en = this.getNewEntity();
 				en.setRow(new Row());
 				en.getRow().LoadDataTable(dt, dr);
 				this.Add(en);
@@ -706,13 +706,13 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 	public final void FillXmlDataIntoEntities(Entities ens) throws Exception
 	{
 		this.RetrieveAll(); // 查询出来全部的数据。
-		Entity en1 = ens.getGetNewEntity();
+		Entity en1 = ens.getNewEntity();
 		
 		String[] pks = en1.getPKs();
 		for (XmlEn xmlen : this)
 		{
 			
-			Entity en = ens.getGetNewEntity();
+			Entity en = ens.getNewEntity();
 			for (String pk : pks)
 			{
 				Object obj = xmlen.GetValByKey(pk);
@@ -773,7 +773,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 	
 	
 	// /#region 子类实现xml 信息的描述.
-	public abstract XmlEn getGetNewEntity();
+	public abstract XmlEn getNewEntity();
 	
 	/**
 	 * 获取它所在的xml file 位置.

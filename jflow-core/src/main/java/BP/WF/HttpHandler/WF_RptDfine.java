@@ -501,7 +501,7 @@ public class WF_RptDfine extends DirectoryPageBase
 				return "err@" + this.getSearchType() + "标记错误.";
 		}
 
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
 
 		qo.AddWhere(" AND  WFState > 1 ");
 		qo.AddWhere(" AND FID = 0 ");
@@ -563,7 +563,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		}
 
 
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
 
@@ -632,7 +632,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		}
 
 
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 		qo.addOrderByDesc("OID");
 		Attrs attrsa = new Attrs();
@@ -1255,7 +1255,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		UserRegedit ur = new UserRegedit();
 		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
 		DataTable dt2 = qo.DoGroupQueryToTable(selectSQL + groupKey, groupBy, orderby);
@@ -1361,20 +1361,20 @@ public class WF_RptDfine extends DirectoryPageBase
 
 					for (Attr attr1 : AttrsOfGroup)
 					{
-						switch (attr1.Key)
+						switch (attr1.getKey())
 						{
 							case "FK_NY":
 								sql += " FK_NY <= '" + dr.get("FK_NY") + "' AND FK_ND='" + dr.get("FK_NY").toString().substring(0, 4) + "' AND ";
 								break;
 							case "FK_Dept":
-								sql += attr1.Key + "='" + dr.get(attr1.Key) + "' AND ";
+								sql += attr1.Key + "='" + dr.get(attr1.getKey()) + "' AND ";
 								break;
 							case "FK_SJ":
 							case "FK_XJ":
-								sql += attr1.Key + " LIKE '" + dr.get(attr1.Key) + "%' AND ";
+								sql += attr1.Key + " LIKE '" + dr.get(attr1.getKey()) + "%' AND ";
 								break;
 							default:
-								sql += attr1.Key + "='" + dr.get(attr1.Key) + "' AND ";
+								sql += attr1.Key + "='" + dr.get(attr1.getKey()) + "' AND ";
 								break;
 						}
 					}
@@ -1408,7 +1408,7 @@ public class WF_RptDfine extends DirectoryPageBase
 					int val = 0;
 					try
 					{
-						val = Integer.parseInt(dr.get(attr.Key).toString());
+						val = Integer.parseInt(dr.get(attr.getKey()).toString());
 					}
 					catch (java.lang.Exception e)
 					{
@@ -1429,7 +1429,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			for (DataRow dr : dt.Rows)
 			{
 				Entity myen = attr.HisFKEn;
-				String val = dr.get(attr.Key).toString();
+				String val = dr.get(attr.getKey()).toString();
 				myen.SetValByKey(attr.UIRefKeyValue, val);
 				try
 				{
@@ -1952,7 +1952,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			///#region Url传参条件
 		for (Attr attr : attrs)
 		{
-			if (DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(attr.Key)))
+			if (DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(attr.getKey())))
 			{
 				continue;
 			}
@@ -1960,7 +1960,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			qo.addAnd();
 			qo.addLeftBracket();
 
-			val = HttpContextHelper.RequestParams(attr.Key);
+			val = HttpContextHelper.RequestParams(attr.getKey());
 
 			switch (attr.MyDataType)
 			{
@@ -1986,9 +1986,9 @@ public class WF_RptDfine extends DirectoryPageBase
 
 			qo.addRightBracket();
 
-			if (keys.contains(attr.Key) == false)
+			if (keys.contains(attr.getKey()) == false)
 			{
-				keys.add(attr.Key);
+				keys.add(attr.getKey());
 			}
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2000,7 +2000,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		{
 			Attr attr = attr1.HisAttr;
 			//此处做判断，如果在URL中已经传了参数，则不算SearchAttrs中的设置
-			if (keys.contains(attr.Key))
+			if (keys.contains(attr.getKey()))
 			{
 				continue;
 			}
@@ -2069,7 +2069,7 @@ public class WF_RptDfine extends DirectoryPageBase
 					{
 						/* 如果是多选值 */
 						AtPara ap = new AtPara(ur.MVals);
-						String instr = ap.GetValStrByKey(attr.Key);
+						String instr = ap.GetValStrByKey(attr.getKey());
 
 						if (DataType.IsNullOrEmpty(instr))
 						{

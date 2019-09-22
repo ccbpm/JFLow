@@ -34,7 +34,7 @@ public class GPMPage extends DirectoryPageBase
 		ht.put("No", WebUser.getNo());
 		ht.put("Name",WebUser.getName());
 		ht.put("FK_Dept", WebUser.getFK_Dept());
-		ht.put("FK_DeptName", WebUser.getFK_Dept()Name);
+		ht.put("FK_DeptName", WebUser.getFK_DeptName);
 		return BP.Tools.Json.ToJson(ht);
 	}
 

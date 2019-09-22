@@ -556,7 +556,7 @@ public class FindWorker
 
 			if (DataType.IsNullOrEmpty(emps))
 			{
-				throw new RuntimeException("@没有在字段[" + this.currWn.getHisWork().EnMap.Attrs.GetAttrByKey(specEmpFields).Desc + "]中指定接受人，工作无法向下发送。");
+				throw new RuntimeException("@没有在字段[" + this.currWn.getHisWork().getEnMap().getAttrs().GetAttrByKey(specEmpFields).Desc + "]中指定接受人，工作无法向下发送。");
 			}
 
 			// 把它加入接受人员列表中.
@@ -1211,7 +1211,7 @@ public class FindWorker
 			}
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
 			{
-				throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo() + ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称：" + WebUser.getFK_Dept()Name);
+				throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo() + ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称：" + WebUser.getFK_DeptName);
 			}
 
 			if (dt.Rows.size() == 0)

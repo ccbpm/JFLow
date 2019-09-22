@@ -22,7 +22,7 @@ public class Tracks extends BP.En.EntitiesMyPK
 	{
 	}
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Track();
 	}

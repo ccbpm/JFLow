@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -1386,7 +1387,7 @@ public class DataType {
 	 *            yyyy-MM-dd
 	 * @return DateTime
 	 */
-	public static java.util.Date ParseSysDate2DateTime(String sysDateformat) {
+	public static LocalDateTime ParseSysDate2DateTime(String sysDateformat) {
 		if (sysDateformat == null || sysDateformat.trim().length() == 0) {
 			return new java.util.Date();
 		}

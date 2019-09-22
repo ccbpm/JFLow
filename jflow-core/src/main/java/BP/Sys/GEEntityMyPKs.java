@@ -31,7 +31,7 @@ public class GEEntityMyPKs extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		if (this.FK_MapData == null)
 		{

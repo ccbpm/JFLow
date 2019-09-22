@@ -89,7 +89,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		String errInfo = "";
 		EntityMyPK en = (EntityMyPK)ens.GetNewEntity;
 		//定义属性.
-		Attrs attrs = en.EnMap.Attrs;
+		Attrs attrs = en.getEnMap().getAttrs();
 
 		int impWay = this.GetRequestValInt("ImpWay");
 
@@ -221,7 +221,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		nameColName = attr.Desc;
 
 		//定义属性.
-		Attrs attrs = en.EnMap.Attrs;
+		Attrs attrs = en.getEnMap().getAttrs();
 
 		int impWay = this.GetRequestValInt("ImpWay");
 
@@ -538,7 +538,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 					}
 					else
 					{
-						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.Desc + " sql= " + sql;
+						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.getDesc() + " sql= " + sql;
 					}
 				}
 				if (attr.MyFieldType == FieldType.PKEnum || attr.MyFieldType == FieldType.Enum)
@@ -551,7 +551,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 					}
 					else
 					{
-						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.Desc + " sql= " + sql;
+						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.getDesc() + " sql= " + sql;
 					}
 				}
 			}
@@ -620,7 +620,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			i++;
 			html += "<tr>";
 			html += "<td>" + i + "</td>";
-			html += "<td>" + attr.Desc + "</td>";
+			html += "<td>" + attr.getDesc() + "</td>";
 			html += "<td>" + attr.Key + "</td>";
 			html += "<td>" + attr.Field + "</td>";
 			html += "<td>" + attr.MyDataTypeStr + "</td>";

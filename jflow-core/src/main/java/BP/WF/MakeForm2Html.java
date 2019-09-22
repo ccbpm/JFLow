@@ -55,7 +55,7 @@ public class MakeForm2Html
 		//字段集合.
 		MapAttrs mapAttrs = new MapAttrs(frmID);
 
-		Attrs attrs = en.EnMap.Attrs;
+		Attrs attrs = en.getEnMap().getAttrs();
 
 		String appPath = "";
 		float wtX = MapData.GenerSpanWeiYi(mapData, 1200);
@@ -953,7 +953,7 @@ public class MakeForm2Html
 		else
 		{
 			gfs = new GroupFields(frmID);
-			attrs = en.EnMap.Attrs;
+			attrs = en.getEnMap().getAttrs();
 		}
 
 		//生成表头.
@@ -1386,7 +1386,7 @@ public class MakeForm2Html
 				//替换系统参数
 				url = url.replace("@WebUser.getNo()", WebUser.getNo());
 				url = url.replace("@WebUser.getName();", WebUser.getName());
-				url = url.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+				url = url.replace("@WebUser.getFK_DeptName;", WebUser.getFK_DeptName);
 				url = url.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 				//替换参数
@@ -2198,7 +2198,7 @@ public class MakeForm2Html
 				//替换系统参数
 				url = url.replace("@WebUser.getNo()", WebUser.getNo());
 				url = url.replace("@WebUser.getName();", WebUser.getName());
-				url = url.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+				url = url.replace("@WebUser.getFK_DeptName;", WebUser.getFK_DeptName);
 				url = url.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 				//替换参数
@@ -2268,7 +2268,7 @@ public class MakeForm2Html
 				///#region 生成水文.
 
 			String rdt = "";
-			if (en.EnMap.Attrs.Contains("RDT"))
+			if (en.getEnMap().getAttrs().Contains("RDT"))
 			{
 				rdt = en.GetValStringByKey("RDT");
 				if (rdt.length() > 10)

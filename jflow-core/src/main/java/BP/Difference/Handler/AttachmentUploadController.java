@@ -245,7 +245,7 @@ public class AttachmentUploadController extends BaseController {
 		
 		 //根据EnsName获取Entity
         Entities ens = ClassFactory.GetEns(this.getEnsName());
-        Entity en = ens.getGetNewEntity();
+        Entity en = ens.getNewEntity();
         en.setPKVal(this.getDelPKVal());
         int i = en.RetrieveFromDBSources();
         if (i == 0)

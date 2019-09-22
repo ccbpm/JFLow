@@ -1105,7 +1105,7 @@ public abstract class DirectoryPageBase
 			}
 			else
 			{
-				attrs = en.EnMap.Attrs;
+				attrs = en.getEnMap().getAttrs();
 			}
 
 			Attrs selectedAttrs = null;
@@ -1125,7 +1125,7 @@ public abstract class DirectoryPageBase
 
 					for (String col : cfg.ShowColumns)
 					{
-						if (col.equals(attr.Key))
+						if (col.equals(attr.getKey()))
 						{
 							contain = true;
 							break;
@@ -1183,7 +1183,7 @@ public abstract class DirectoryPageBase
 				}
 				else
 				{
-					strLine = strLine + attr.Desc + (char)9;
+					strLine = strLine + attr.getDesc() + (char)9;
 				}
 			}
 
@@ -1229,14 +1229,14 @@ public abstract class DirectoryPageBase
 
 					if (attr.MyDataType == DataType.AppBoolean)
 					{
-						strLine = strLine + (dr.get(attr.Key).equals(1) ? "是" : "否") + (char)9;
+						strLine = strLine + (dr.get(attr.getKey()).equals(1) ? "是" : "否") + (char)9;
 					}
 					else
 					{
-						String text = dr.get(attr.IsFKorEnum ? (attr.Key + "Text") : attr.Key).toString();
+						String text = dr.get(attr.IsFKorEnum ? (attr.Key + "Text") : attr.getKey()).toString();
 						if (attr.Key.equals("FK_NY") && DataType.IsNullOrEmpty(text) == true)
 						{
-						   text = dr.get(attr.Key).toString();
+						   text = dr.get(attr.getKey()).toString();
 						}
 						if (DataType.IsNullOrEmpty(text) == false && (text.contains("\n") == true || text.contains("\r") == true))
 						{

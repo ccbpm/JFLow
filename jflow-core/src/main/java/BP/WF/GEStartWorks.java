@@ -24,7 +24,7 @@ public class GEStartWorks extends Works
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		if (this.NodeID == 0)
 		{

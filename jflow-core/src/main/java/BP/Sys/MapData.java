@@ -935,7 +935,7 @@ public class MapData extends EntityNoName
 	}
 	public final Entity getHisEn()
 	{
-		return this.getHisEns().getGetNewEntity();
+		return this.getHisEns().getNewEntity();
 	}
 	public final float getFrmW()
 	{
@@ -1090,7 +1090,7 @@ public class MapData extends EntityNoName
 			for (DataRow dr : dtDtls.Rows)
 			{
 				// 产生它的Entity data.
-				GEDtl dtl = (GEDtl)dtlsEn.getGetNewEntity();
+				GEDtl dtl = (GEDtl)dtlsEn.getNewEntity();
 				dtl.getRow().LoadDataTable(dtDtls, dr);
 
 				//加入这个集合.

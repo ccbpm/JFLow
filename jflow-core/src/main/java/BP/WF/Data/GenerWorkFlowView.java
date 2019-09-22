@@ -617,12 +617,12 @@ public class GenerWorkFlowView extends Entity
 
 		DataRow mydr = dtVal.Rows[0];
 
-		Attrs attrs = wk.EnMap.Attrs;
+		Attrs attrs = wk.getEnMap().getAttrs();
 		boolean isHave = false;
 		for (Attr attr : attrs)
 		{
-			String jsonVal = mydr.get(attr.Key).toString();
-			String enVal = wk.GetValStringByKey(attr.Key);
+			String jsonVal = mydr.get(attr.getKey()).toString();
+			String enVal = wk.GetValStringByKey(attr.getKey());
 			if (DataType.IsNullOrEmpty(enVal) == true)
 			{
 				wk.SetValByKey(attr.Key, jsonVal);
@@ -686,12 +686,12 @@ public class GenerWorkFlowView extends Entity
 
 				DataRow mydr = dtVal.Rows[0];
 
-				Attrs attrs = wk.EnMap.Attrs;
+				Attrs attrs = wk.getEnMap().getAttrs();
 				boolean isHave = false;
 				for (Attr attr : attrs)
 				{
-					String jsonVal = mydr.get(attr.Key).toString();
-					String enVal = wk.GetValStringByKey(attr.Key);
+					String jsonVal = mydr.get(attr.getKey()).toString();
+					String enVal = wk.GetValStringByKey(attr.getKey());
 					if (DataType.IsNullOrEmpty(enVal) == true)
 					{
 						wk.SetValByKey(attr.Key, jsonVal);

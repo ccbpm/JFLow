@@ -74,7 +74,7 @@ public class WF_CommEntity extends DirectoryPageBase
 
 					if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
 					{
-						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.Key);
+						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
 						item.SetValByKey(attr.Key, val);
 						continue;
 					}
@@ -123,7 +123,7 @@ public class WF_CommEntity extends DirectoryPageBase
 
 					if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
 					{
-						val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.Key);
+						val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.getKey());
 						if (attr.IsNum && val.equals(""))
 						{
 							val = "0";
@@ -134,7 +134,7 @@ public class WF_CommEntity extends DirectoryPageBase
 
 					if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
 					{
-						val = this.GetValFromFrmByKey("DDL_" + i + "_" + attr.Key);
+						val = this.GetValFromFrmByKey("DDL_" + i + "_" + attr.getKey());
 						dtl.SetValByKey(attr.Key, val);
 						continue;
 					}
@@ -216,7 +216,7 @@ public class WF_CommEntity extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 字段属性.
-		MapAttrs attrs = dtl.EnMap.Attrs.ToMapAttrs;
+		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs;
 		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
 		ds.Tables.add(sys_MapAttrs);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -260,7 +260,7 @@ public class WF_CommEntity extends DirectoryPageBase
 			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 		}
 
-		for (Attr attr : dtl.EnMap.Attrs)
+		for (Attr attr : dtl.getEnMap().getAttrs())
 		{
 			if (attr.IsRefAttr == true)
 			{
@@ -306,7 +306,7 @@ public class WF_CommEntity extends DirectoryPageBase
 		}
 
 		String enumKeys = "";
-		for (Attr attr : dtl.EnMap.Attrs)
+		for (Attr attr : dtl.getEnMap().getAttrs())
 		{
 			if (attr.MyFieldType == FieldType.Enum)
 			{
@@ -447,7 +447,7 @@ public class WF_CommEntity extends DirectoryPageBase
 			}
 			else
 			{
-				for (Attr attr : en.EnMap.Attrs)
+				for (Attr attr : en.getEnMap().getAttrs())
 				{
 					en.SetValByKey(attr.Key, attr.DefaultVal);
 				}
@@ -585,7 +585,7 @@ public class WF_CommEntity extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 字段属性.
-			MapAttrs attrs = en.EnMap.Attrs.ToMapAttrs;
+			MapAttrs attrs = en.getEnMap().getAttrs().ToMapAttrs;
 			DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
 			sys_MapAttrs.Columns.Remove(MapAttrAttr.GroupID);
 			sys_MapAttrs.Columns.Add("GroupID");
@@ -669,7 +669,7 @@ public class WF_CommEntity extends DirectoryPageBase
 			}
 
 			//加入sql模式的外键.
-			for (Attr attr : en.EnMap.Attrs)
+			for (Attr attr : en.getEnMap().getAttrs())
 			{
 				if (attr.IsRefAttr == true)
 				{
@@ -763,7 +763,7 @@ public class WF_CommEntity extends DirectoryPageBase
 			for (RefMethod item : rms)
 			{
 				item.HisEn = en;
-				//item.HisAttrs = en.EnMap.Attrs;B
+				//item.HisAttrs = en.getEnMap().getAttrs();B
 				String myurl = "";
 				if (item.RefMethodType != RefMethodType.Func)
 				{
@@ -984,7 +984,7 @@ public class WF_CommEntity extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 加入一对多的实体编辑
-			AttrsOfOneVSM oneVsM = en.EnMap.AttrsOfOneVSM;
+			AttrsOfOneVSM oneVsM = en.getEnMap().getAttrs()OfOneVSM;
 			String sql = "";
 			int i = 0;
 			if (oneVsM.size() > 0)
@@ -1204,7 +1204,7 @@ public class WF_CommEntity extends DirectoryPageBase
 		en.Retrieve();
 
 		//找到映射.
-		AttrsOfOneVSM oneVsM = en.EnMap.AttrsOfOneVSM;
+		AttrsOfOneVSM oneVsM = en.getEnMap().getAttrs()OfOneVSM;
 		AttrOfOneVSM vsM = null;
 		for (AttrOfOneVSM item : oneVsM)
 		{
@@ -1346,7 +1346,7 @@ public class WF_CommEntity extends DirectoryPageBase
 		Entities ens = ClassFactory.GetEns(ensName);
 		Entity en = ens.GetNewEntity;
 
-		Attrs attrs = en.EnMap.Attrs;
+		Attrs attrs = en.getEnMap().getAttrs();
 		Attr attr = attrs.GetAttrByKey(key);
 
 		if (attr == null)

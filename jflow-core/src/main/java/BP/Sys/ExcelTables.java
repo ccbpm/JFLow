@@ -13,7 +13,7 @@ public class ExcelTables extends EntitiesNoName
 	 生成Excel数据表实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new ExcelTable();
 	}

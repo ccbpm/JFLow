@@ -16,7 +16,7 @@ public class SMSs extends Entities
 	 获得实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new SMS();
 	}

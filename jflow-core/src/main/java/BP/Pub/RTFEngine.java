@@ -913,7 +913,7 @@ public class RTFEngine {
 			String shortName = "";
 			ArrayList<Entities> al = this.getEnsDataDtls();
 			for (Entities dtls : al) {
-				Entity dtl = dtls.getGetNewEntity();
+				Entity dtl = dtls.getNewEntity();
 				String dtlEnName = dtl.toString();
 				shortName = dtlEnName.substring(dtlEnName.lastIndexOf(".") + 1);
 
@@ -936,7 +936,7 @@ public class RTFEngine {
 					String row = str.substring(row_start, (end_rowKey) + row_end);
 					str = new StringBuilder(str.toString().replace(row, ""));
 
-					Map map = dtls.getGetNewEntity().getEnMap();
+					Map map = dtls.getNewEntity().getEnMap();
 					int i = dtls.size();
 					while (i > 0) {
 						i--;
@@ -998,7 +998,7 @@ public class RTFEngine {
 			// 明细 合计信息。
 			al = this.getEnsDataDtls();
 			for (Entities dtls : al) {
-				Entity dtl = dtls.getGetNewEntity();
+				Entity dtl = dtls.getNewEntity();
 				String dtlEnName = dtl.toString();
 				shortName = dtlEnName.substring(dtlEnName.lastIndexOf(".") + 1);
 				Map map = dtl.getEnMap();

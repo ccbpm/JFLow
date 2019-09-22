@@ -231,7 +231,7 @@ public class WorkFlow
 			log.Copy(rpt);
 			log.setDeleteDT(DataType.getCurrentDataTime());
 			log.setOperDept(WebUser.getFK_Dept());
-			log.setOperDeptName(WebUser.getFK_Dept()Name);
+			log.setOperDeptName(WebUser.getFK_DeptName);
 			log.setOper(WebUser.getNo());
 			log.setDeleteNote(note);
 			log.setOID(workID);
@@ -1052,7 +1052,7 @@ public class WorkFlow
 			log.Copy(rpt);
 			log.setDeleteDT(DataType.getCurrentDataTime());
 			log.setOperDept(WebUser.getFK_Dept());
-			log.setOperDeptName(WebUser.getFK_Dept()Name);
+			log.setOperDeptName(WebUser.getFK_DeptName);
 			log.setOper(WebUser.getNo());
 			log.setDeleteNote(info);
 			log.setOID(this.getWorkID());

@@ -31,7 +31,7 @@ public class FrmLinks extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new FrmLink();
 	}

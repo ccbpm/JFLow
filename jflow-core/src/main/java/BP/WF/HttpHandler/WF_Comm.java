@@ -223,7 +223,7 @@ public class WF_Comm extends DirectoryPageBase
 			boolean IsDouble = false;
 			boolean IsFloat = false;
 			boolean IsMoney = false;
-			for (Attr attr : en.EnMap.Attrs)
+			for (Attr attr : en.getEnMap().getAttrs())
 			{
 				if (attr.Key.equals(key))
 				{
@@ -386,7 +386,7 @@ public class WF_Comm extends DirectoryPageBase
 			boolean IsDouble = false;
 			boolean IsFloat = false;
 			boolean IsMoney = false;
-			for (Attr attr : en.EnMap.Attrs)
+			for (Attr attr : en.getEnMap().getAttrs())
 			{
 				if (attr.Key.equals(key))
 				{
@@ -536,7 +536,7 @@ public class WF_Comm extends DirectoryPageBase
 			if (pkval.equals("0") || pkval.equals("") || pkval == null || pkval.equals("undefined"))
 			{
 				Map map = en.EnMap;
-				for (Attr attr : en.EnMap.Attrs)
+				for (Attr attr : en.getEnMap().getAttrs())
 				{
 					en.SetValByKey(attr.Key, attr.DefaultVal);
 				}
@@ -598,9 +598,9 @@ public class WF_Comm extends DirectoryPageBase
 			if (en.PKCount != 1)
 			{
 				/*多个主键的情况. 遍历属性，循环赋值.*/
-				for (Attr attr : en.EnMap.Attrs)
+				for (Attr attr : en.getEnMap().getAttrs())
 				{
-					en.SetValByKey(attr.Key, this.GetRequestVal(attr.Key));
+					en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 				}
 			}
 			else
@@ -626,13 +626,13 @@ public class WF_Comm extends DirectoryPageBase
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
-			en.PKVal = this.getPKVal();
+			en.setPKVal( this.getPKVal());
 			en.RetrieveFromDBSources();
 
 			//遍历属性，循环赋值.
-			for (Attr attr : en.EnMap.Attrs)
+			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				en.SetValByKey(attr.Key, this.GetRequestVal(attr.Key));
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 			}
 
 			//返回数据.
@@ -655,7 +655,7 @@ public class WF_Comm extends DirectoryPageBase
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
-			en.PKVal = this.getPKVal();
+			en.setPKVal(this.getPKVal());
 			int i = en.RetrieveFromDBSources();
 
 			if (i == 0)
@@ -752,9 +752,9 @@ public class WF_Comm extends DirectoryPageBase
 			en.RetrieveFromDBSources();
 
 			//遍历属性，循环赋值.
-			for (Attr attr : en.EnMap.Attrs)
+			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				en.SetValByKey(attr.Key, this.GetValFromFrmByKey(attr.Key));
+				en.SetValByKey(attr.getKey(), this.GetValFromFrmByKey(attr.getKey()));
 			}
 
 			//保存参数属性.
@@ -787,9 +787,9 @@ public class WF_Comm extends DirectoryPageBase
 			Entity en = ClassFactory.GetEn(this.getEnName());
 
 			//遍历属性，循环赋值.
-			for (Attr attr : en.EnMap.Attrs)
+			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				en.SetValByKey(attr.Key, this.GetRequestVal(attr.Key));
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 			}
 
 			//插入数据库.
@@ -820,9 +820,9 @@ public class WF_Comm extends DirectoryPageBase
 			Entity en = ClassFactory.GetEn(this.getEnName());
 
 			//遍历属性，循环赋值.
-			for (Attr attr : en.EnMap.Attrs)
+			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				en.SetValByKey(attr.Key, this.GetRequestVal(attr.Key));
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 			}
 
 			//插入数据库.
@@ -891,8 +891,9 @@ public class WF_Comm extends DirectoryPageBase
 	 查询全部
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entities_RetrieveAll()
+	public final String Entities_RetrieveAll() throws Exception
 	{
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		ens.RetrieveAll();
@@ -913,7 +914,7 @@ public class WF_Comm extends DirectoryPageBase
 				return "0";
 			}
 
-			Entity en = ens.GetNewEntity;
+			Entity en = ens.getNewEntity();
 
 			QueryObject qo = new QueryObject(ens);
 			String[] myparas = this.getParas().split("[@]", -1);
@@ -976,7 +977,7 @@ public class WF_Comm extends DirectoryPageBase
 
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
-					valObj = BP.Sys.Glo.GenerRealType(en.EnMap.Attrs, key, val);
+					valObj = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), key, val);
 				}
 
 				if (idx == 0)
@@ -1018,7 +1019,7 @@ public class WF_Comm extends DirectoryPageBase
 			QueryObject qo = new QueryObject(ens);
 			String[] myparas = this.getParas().split("[@]", -1);
 
-			Attrs attrs = ens.GetNewEntity.EnMap.Attrs;
+			Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 
 			int idx = 0;
 			for (int i = 0; i < myparas.length; i++)
@@ -1175,25 +1176,25 @@ public class WF_Comm extends DirectoryPageBase
 							case BP.DA.DataType.AppString:
 							case BP.DA.DataType.AppDate:
 							case BP.DA.DataType.AppDateTime:
-								String str1 = this.GetValFromFrmByKey(attr.Key);
+								String str1 = this.GetValFromFrmByKey(attr.getKey());
 								rm.SetValByKey(attr.Key, str1);
 								break;
 							case BP.DA.DataType.AppInt:
-								int myInt = this.GetValIntFromFrmByKey(attr.Key); //int.Parse(this.UCEn1.GetTBByID("TB_" + attr.Key).Text);
+								int myInt = this.GetValIntFromFrmByKey(attr.getKey()); //int.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.Row[idx] = myInt;
 								rm.SetValByKey(attr.Key, myInt);
 								break;
 							case BP.DA.DataType.AppFloat:
-								float myFloat = this.GetValFloatFromFrmByKey(attr.Key); // float.Parse(this.UCEn1.GetTBByID("TB_" + attr.Key).Text);
+								float myFloat = this.GetValFloatFromFrmByKey(attr.getKey()); // float.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.SetValByKey(attr.Key, myFloat);
 								break;
 							case BP.DA.DataType.AppDouble:
 							case BP.DA.DataType.AppMoney:
-								BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.Key); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.Key).Text);
+								BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.SetValByKey(attr.Key, myDoub);
 								break;
 							case BP.DA.DataType.AppBoolean:
-								boolean myBool = this.GetValBoolenFromFrmByKey(attr.Key); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.Key).Text);
+								boolean myBool = this.GetValBoolenFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.SetValByKey(attr.Key, myBool);
 								break;
 							default:
@@ -1203,8 +1204,8 @@ public class WF_Comm extends DirectoryPageBase
 					case UIContralType.DDL:
 						try
 						{
-							String str = this.GetValFromFrmByKey(attr.Key); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.Key).Text);
-							// string str = this.UCEn1.GetDDLByKey("DDL_" + attr.Key).SelectedItemStringVal;
+							String str = this.GetValFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
+							// string str = this.UCEn1.GetDDLByKey("DDL_" + attr.getKey()).SelectedItemStringVal;
 							rm.SetValByKey(attr.Key, str);
 						}
 						catch (java.lang.Exception e)
@@ -1213,7 +1214,7 @@ public class WF_Comm extends DirectoryPageBase
 						}
 						break;
 					case UIContralType.CheckBok:
-						boolean myBoolval = this.GetValBoolenFromFrmByKey(attr.Key); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.Key).Text);
+						boolean myBoolval = this.GetValBoolenFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 						rm.SetValByKey(attr.Key, myBoolval);
 						break;
 					default:
@@ -1343,7 +1344,7 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 		Map map = ens.GetNewEntity.EnMapInTime;
 
 		DataSet ds = new DataSet();
@@ -1360,7 +1361,7 @@ public class WF_Comm extends DirectoryPageBase
 		for (AttrSearch item : attrs)
 		{
 			DataRow dr = dt.NewRow();
-			dr.set("Field", item.Key);
+			dr.set("Field", item.getKey());
 			dr.set("Name", item.HisAttr.Desc);
 			dr.set("Width", item.Width); //下拉框显示的宽度.
 			dr.set("UIContralType", item.HisAttr.UIContralType);
@@ -1416,7 +1417,7 @@ public class WF_Comm extends DirectoryPageBase
 					}
 				}
 				dtSQl.TableName = item.Key;
-				if (ds.Tables.Contains(item.Key) == false)
+				if (ds.Tables.Contains(item.getKey()) == false)
 				{
 					ds.Tables.add(dtSQl);
 				}
@@ -1652,7 +1653,7 @@ public class WF_Comm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 普通属性
 		String opkey = ""; // 操作符号。
-		for (AttrOfSearch attr : en.EnMap.AttrsOfSearch)
+		for (AttrOfSearch attr : en.getEnMap().getAttrs()OfSearch)
 		{
 			if (attr.IsHidden)
 			{
@@ -1663,7 +1664,7 @@ public class WF_Comm extends DirectoryPageBase
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-					var valType = BP.Sys.Glo.GenerRealType(en.EnMap.Attrs, attr.RefAttrKey, attr.DefaultValRun);
+					var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.RefAttrKey, attr.DefaultValRun);
 					qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, valType);
 				}
 				else
@@ -1676,7 +1677,7 @@ public class WF_Comm extends DirectoryPageBase
 
 			if (attr.SymbolEnable == true)
 			{
-				opkey = ap.GetValStrByKey("DDL_" + attr.Key);
+				opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
 				if (opkey.equals("all"))
 				{
 					continue;
@@ -1715,7 +1716,7 @@ public class WF_Comm extends DirectoryPageBase
 			}
 			else
 			{
-				qo.AddWhere(attr.RefAttrKey, opkey, ap.GetValStrByKey("TB_" + attr.Key));
+				qo.AddWhere(attr.RefAttrKey, opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
 			}
 			qo.addRightBracket();
 		}
@@ -1737,7 +1738,7 @@ public class WF_Comm extends DirectoryPageBase
 
 			//获得真实的数据类型.
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-			var valType = BP.Sys.Glo.GenerRealType(en.EnMap.Attrs, str, ap.GetValStrByKey(str));
+			var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
 
 			qo.AddWhere(str, valType);
 			qo.addRightBracket();
@@ -1997,7 +1998,7 @@ public class WF_Comm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 普通属性
 		String opkey = ""; // 操作符号。
-		for (AttrOfSearch attr : en.EnMap.AttrsOfSearch)
+		for (AttrOfSearch attr : en.getEnMap().getAttrs()OfSearch)
 		{
 			if (attr.IsHidden)
 			{
@@ -2010,7 +2011,7 @@ public class WF_Comm extends DirectoryPageBase
 
 			if (attr.SymbolEnable == true)
 			{
-				opkey = ap.GetValStrByKey("DDL_" + attr.Key);
+				opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
 				if (opkey.equals("all"))
 				{
 					continue;
@@ -2049,7 +2050,7 @@ public class WF_Comm extends DirectoryPageBase
 			}
 			else
 			{
-				qo.AddWhere(attr.RefAttrKey, opkey, ap.GetValStrByKey("TB_" + attr.Key));
+				qo.AddWhere(attr.RefAttrKey, opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
 			}
 			qo.addRightBracket();
 		}
@@ -2167,9 +2168,9 @@ public class WF_Comm extends DirectoryPageBase
 	public final String Search_Exp()
 	{
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 		String name = "数据导出";
-		String filename = name + "_" + BP.DA.DataType.getCurrentDataTime()CNOfLong + "_" + WebUser.getName() + ".xls";
+		String filename = name + "_" + BP.DA.DataType.getCurrentDataTime() + "_" + WebUser.getName() + ".xls";
 		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name);
 		//DataTableToExcel(Search_Data(ens, en),en, filename, name,
 		//                                                  WebUser.getName(), true, true, true);
@@ -2303,13 +2304,13 @@ public class WF_Comm extends DirectoryPageBase
 				{
 					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_Dept());
 				}
-				else if (v.equals("@WebUser.getFK_Dept()Name"))
+				else if (v.equals("@WebUser.getFK_DeptName"))
 				{
-					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_Dept()Name);
+					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_DeptName);
 				}
-				else if (v.equals("@WebUser.getFK_Dept()NameOfFull") || v.equals("@WebUser.getFK_Dept()FullName"))
+				else if (v.equals("@WebUser.getFK_DeptNameOfFull") || v.equals("@WebUser.getFK_DeptFullName"))
 				{
-					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_Dept()NameOfFull);
+					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_DeptNameOfFull);
 				}
 				else if (v.equals("@RDT"))
 				{
@@ -2409,7 +2410,7 @@ public class WF_Comm extends DirectoryPageBase
 					dt1.Columns.get("NO").ColumnName = "No";
 					dt1.Columns.get("NAME").ColumnName = "Name";
 				}
-				if (ds.Tables.Contains(attr.Key) == false)
+				if (ds.Tables.Contains(attr.getKey()) == false)
 				{
 					ds.Tables.add(dt1);
 				}
@@ -2533,7 +2534,7 @@ public class WF_Comm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 字段属性.
-		MapAttrs attrs = dtl.EnMap.Attrs.ToMapAttrs;
+		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs;
 		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
 		ds.Tables.add(sys_MapAttrs);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2578,7 +2579,7 @@ public class WF_Comm extends DirectoryPageBase
 		}
 
 		String enumKeys = "";
-		for (Attr attr : dtl.EnMap.Attrs)
+		for (Attr attr : dtl.getEnMap().getAttrs())
 		{
 			if (attr.MyFieldType == FieldType.Enum)
 			{
@@ -2728,7 +2729,7 @@ public class WF_Comm extends DirectoryPageBase
 
 					if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
 					{
-						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.Key);
+						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
 						item.SetValByKey(attr.Key, val);
 						continue;
 					}
@@ -2781,14 +2782,14 @@ public class WF_Comm extends DirectoryPageBase
 
 				if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
 				{
-					valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.Key);
+					valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.getKey());
 					en.SetValByKey(attr.Key, valValue);
 					continue;
 				}
 
 				if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
 				{
-					valValue = this.GetValFromFrmByKey("DDL_" + 0 + "_" + attr.Key);
+					valValue = this.GetValFromFrmByKey("DDL_" + 0 + "_" + attr.getKey());
 					en.SetValByKey(attr.Key, valValue);
 					continue;
 				}
@@ -2973,7 +2974,7 @@ public class WF_Comm extends DirectoryPageBase
 	}
 	public final String DoOneEntity(Entity en, int rmIdx)
 	{
-		BP.En.RefMethod rm = en.EnMap.HisRefMethods[rmIdx];
+		BP.En.RefMethod rm = en.getEnMap().HisRefMethods[rmIdx];
 		rm.HisEn = en;
 		int mynum = 0;
 		for (Attr attr : rm.HisAttrs)
@@ -3003,28 +3004,28 @@ public class WF_Comm extends DirectoryPageBase
 						case BP.DA.DataType.AppString:
 						case BP.DA.DataType.AppDate:
 						case BP.DA.DataType.AppDateTime:
-							String str1 = this.GetValFromFrmByKey(attr.Key);
+							String str1 = this.GetValFromFrmByKey(attr.getKey());
 							objs[idx] = str1;
 							//attr.DefaultVal=str1;
 							break;
 						case BP.DA.DataType.AppInt:
-							int myInt = this.GetValIntFromFrmByKey(attr.Key);
+							int myInt = this.GetValIntFromFrmByKey(attr.getKey());
 							objs[idx] = myInt;
 							//attr.DefaultVal=myInt;
 							break;
 						case BP.DA.DataType.AppFloat:
-							float myFloat = this.GetValFloatFromFrmByKey(attr.Key);
+							float myFloat = this.GetValFloatFromFrmByKey(attr.getKey());
 							objs[idx] = myFloat;
 							//attr.DefaultVal=myFloat;
 							break;
 						case BP.DA.DataType.AppDouble:
 						case BP.DA.DataType.AppMoney:
-							BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.Key);
+							BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.getKey());
 							objs[idx] = myDoub;
 							//attr.DefaultVal=myDoub;
 							break;
 						case BP.DA.DataType.AppBoolean:
-							objs[idx] = this.GetValBoolenFromFrmByKey(attr.Key);
+							objs[idx] = this.GetValBoolenFromFrmByKey(attr.getKey());
 							attr.DefaultVal = false;
 							break;
 						default:
@@ -3037,13 +3038,13 @@ public class WF_Comm extends DirectoryPageBase
 					{
 						if (attr.MyDataType == DataType.AppString)
 						{
-							String str = this.GetValFromFrmByKey(attr.Key);
+							String str = this.GetValFromFrmByKey(attr.getKey());
 							objs[idx] = str;
 							attr.DefaultVal = str;
 						}
 						else
 						{
-							int enumVal = this.GetValIntFromFrmByKey(attr.Key);
+							int enumVal = this.GetValIntFromFrmByKey(attr.getKey());
 							objs[idx] = enumVal;
 							attr.DefaultVal = enumVal;
 						}
@@ -3055,7 +3056,7 @@ public class WF_Comm extends DirectoryPageBase
 					}
 					break;
 				case UIContralType.CheckBok:
-					objs[idx] = this.GetValBoolenFromFrmByKey(attr.Key);
+					objs[idx] = this.GetValBoolenFromFrmByKey(attr.getKey());
 
 					attr.DefaultVal = objs[idx].toString();
 
@@ -3382,8 +3383,8 @@ public class WF_Comm extends DirectoryPageBase
 		ht.put("No", WebUser.getNo());
 		ht.put("Name", WebUser.getName());
 		ht.put("FK_Dept", WebUser.getFK_Dept());
-		ht.put("FK_DeptName", WebUser.getFK_Dept()Name);
-		ht.put("FK_DeptNameOfFull", WebUser.getFK_Dept()NameOfFull);
+		ht.put("FK_DeptName", WebUser.getFK_DeptName);
+		ht.put("FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
 		ht.put("CustomerNo", BP.Sys.SystemConfig.getCustomerNo());
 		ht.put("CustomerName", BP.Sys.SystemConfig.CustomerName);
 		ht.put("SID", WebUser.SID);
@@ -3821,7 +3822,7 @@ public class WF_Comm extends DirectoryPageBase
 		for (AttrSearch item : attrs)
 		{
 			DataRow dr = dt.NewRow();
-			dr.set("Field", item.Key);
+			dr.set("Field", item.getKey());
 			dr.set("Name", item.HisAttr.Desc);
 			dr.set("MyFieldType", item.HisAttr.MyFieldType);
 			dt.Rows.add(dr);
@@ -3889,11 +3890,11 @@ public class WF_Comm extends DirectoryPageBase
 			if (attr.UIContralType == UIContralType.DDL)
 			{
 				DataRow dr = dt.NewRow();
-				dr.set("Field", attr.Key);
+				dr.set("Field", attr.getKey());
 				dr.set("Name", attr.Desc);
 
 				// 根据状态 设置信息.
-				if (ur.Vals.indexOf(attr.Key) != -1)
+				if (ur.Vals.indexOf(attr.getKey()) != -1)
 				{
 					dr.set("Checked", "true");
 					contentFlag = true;
@@ -3988,14 +3989,14 @@ public class WF_Comm extends DirectoryPageBase
 			//// 有没有配置抵消它的属性。
 			//foreach (ActiveAttr aa in aas)
 			//{
-			//    if (aa.AttrKey != attr.Key)
+			//    if (aa.AttrKey != attr.getKey())
 			//        continue;
 			//    DataRow dr = dt.NewRow();
 			//    dr["Field"] = attr.Key;
 			//    dr["Name"] = attr.Desc;
 
 			//    // 根据状态 设置信息.
-			//    if (ur.Vals.IndexOf(attr.Key) != -1)
+			//    if (ur.Vals.IndexOf(attr.getKey()) != -1)
 			//        dr["Checked"] = "true";
 
 			//    dt.Rows.add(dr);
@@ -4008,12 +4009,12 @@ public class WF_Comm extends DirectoryPageBase
 
 
 			dtr = dt.NewRow();
-			dtr.set("Field", attr.Key);
+			dtr.set("Field", attr.getKey());
 			dtr.set("Name", attr.Desc);
 
 
 			// 根据状态 设置信息.
-			if (ur.Vals.indexOf(attr.Key) != -1)
+			if (ur.Vals.indexOf(attr.getKey()) != -1)
 			{
 				dtr.set("Checked", "true");
 			}
@@ -4517,20 +4518,20 @@ public class WF_Comm extends DirectoryPageBase
 
 					for (Attr attr1 : AttrsOfGroup)
 					{
-						switch (attr1.Key)
+						switch (attr1.getKey())
 						{
 							case "FK_NY":
 								sql += " FK_NY <= '" + dr.get("FK_NY") + "' AND FK_ND='" + dr.get("FK_NY").toString().substring(0, 4) + "' AND ";
 								break;
 							case "FK_Dept":
-								sql += attr1.Key + "='" + dr.get(attr1.Key) + "' AND ";
+								sql += attr1.Key + "='" + dr.get(attr1.getKey()) + "' AND ";
 								break;
 							case "FK_SJ":
 							case "FK_XJ":
-								sql += attr1.Key + " LIKE '" + dr.get(attr1.Key) + "%' AND ";
+								sql += attr1.Key + " LIKE '" + dr.get(attr1.getKey()) + "%' AND ";
 								break;
 							default:
-								sql += attr1.Key + "='" + dr.get(attr1.Key) + "' AND ";
+								sql += attr1.Key + "='" + dr.get(attr1.getKey()) + "' AND ";
 								break;
 						}
 					}
@@ -4564,7 +4565,7 @@ public class WF_Comm extends DirectoryPageBase
 					int val = 0;
 					try
 					{
-						val = Integer.parseInt(dr.get(attr.Key).toString());
+						val = Integer.parseInt(dr.get(attr.getKey()).toString());
 					}
 					catch (java.lang.Exception e)
 					{
@@ -4585,7 +4586,7 @@ public class WF_Comm extends DirectoryPageBase
 			for (DataRow dr : dt.Rows)
 			{
 				Entity myen = attr.HisFKEn;
-				String val = dr.get(attr.Key).toString();
+				String val = dr.get(attr.getKey()).toString();
 				myen.SetValByKey(attr.UIRefKeyValue, val);
 				try
 				{

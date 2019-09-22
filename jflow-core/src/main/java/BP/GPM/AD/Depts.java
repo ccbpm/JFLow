@@ -15,7 +15,7 @@ public class Depts extends EntitiesTree
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Dept();
 	}

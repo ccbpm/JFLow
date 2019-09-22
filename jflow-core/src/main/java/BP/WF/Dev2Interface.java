@@ -4321,7 +4321,7 @@ public class Dev2Interface
 		LocalDateTime d = LocalDateTime.MIN;
 		if (DataType.IsNullOrEmpty(rdt))
 		{
-			t.setRDT(DataType.getCurrentDataTime()ss);
+			t.setRDT(DataType.getCurrentDataTime());
 		}
 		else
 		{
@@ -4490,7 +4490,7 @@ public class Dev2Interface
 		ps.Add(TrackAttr.NDFromT, nodeName);
 		ps.Add(TrackAttr.Msg, msg);
 		ps.Add(TrackAttr.Tag, tag);
-		ps.Add(TrackAttr.RDT, DataType.getCurrentDataTime()ss);
+		ps.Add(TrackAttr.RDT, DataType.getCurrentDataTime());
 		int num = DBAccess.RunSQL(ps);
 
 		if (num > 1)
@@ -4552,7 +4552,7 @@ public class Dev2Interface
 			ps.Add(TrackAttr.NDFromT, nodeName);
 			ps.Add(TrackAttr.Msg, msg);
 			ps.Add(TrackAttr.Tag, tag);
-			ps.Add(TrackAttr.RDT, DataType.getCurrentDataTime()ss);
+			ps.Add(TrackAttr.RDT, DataType.getCurrentDataTime());
 			if (DBAccess.RunSQL(ps) == 0)
 			{
 				//如果没有更新到，就写入.
@@ -6919,7 +6919,7 @@ public class Dev2Interface
 			dr.set("NodeName", gwf.getNodeName());
 			dr.set("EmpNo", WebUser.getNo());
 			dr.set("EmpName", WebUser.getName());
-			dr.set("DeptName", WebUser.getFK_Dept()Name); //部门名称.
+			dr.set("DeptName", WebUser.getFK_DeptName); //部门名称.
 			dr.set("RDT", DataType.CurrentData);
 			dr.set("SDT", "");
 			dr.set("IsPass", 0); // gwl.IsPassInt; //是否通过.
@@ -8176,7 +8176,7 @@ public class Dev2Interface
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, int toNodeID, String nextWorkers)
 	{
 
-		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_Dept()Name, null);
+		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName, null);
 	}
 	/** 
 	 发送工作
@@ -8192,7 +8192,7 @@ public class Dev2Interface
 	*/
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String nextWorkers)
 	{
-		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_Dept()Name, null);
+		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName, null);
 	}
 	/** 
 	 发送工作
@@ -8349,8 +8349,8 @@ public class Dev2Interface
 					String dbstr = SystemConfig.getAppCenterDBVarStr();
 					Paras ps = new Paras();
 					ps.SQL = "UPDATE WF_GenerWorkFlow SET SDTOfFlow=" + dbstr + "SDTOfFlow,SDTOfFlowWarning=" + dbstr + "SDTOfFlowWarning WHERE WorkID=" + dbstr + "WorkID";
-					ps.Add(GenerWorkFlowAttr.SDTOfFlow, dtOfFlow.toString(DataType.SysDataTimeFormat));
-					ps.Add(GenerWorkFlowAttr.SDTOfFlowWarning, dtOfFlowWarning.toString(DataType.SysDataTimeFormat));
+					ps.Add(GenerWorkFlowAttr.SDTOfFlow, dtOfFlow.toString(DataType.getSysDataTimeFormat()));
+					ps.Add(GenerWorkFlowAttr.SDTOfFlowWarning, dtOfFlowWarning.toString(DataType.getSysDataTimeFormat()));
 					ps.Add(GenerWorkerListAttr.WorkID, workID);
 					DBAccess.RunSQL(ps);
 
@@ -9196,7 +9196,7 @@ public class Dev2Interface
 			{
 				gwl.setFK_EmpText(WebUser.getName());
 				gwl.setIsPassInt(0);
-				gwl.setSDT(DataType.getCurrentDataTime()ss);
+				gwl.setSDT(DataType.getCurrentDataTime());
 				gwl.setDTOfWarning(DataType.getCurrentDataTime());
 				gwl.setIsEnable(true);
 				gwl.setIsRead(true);
@@ -9459,8 +9459,8 @@ public class Dev2Interface
 			//            continue;
 			//        }
 
-			//        Attrs frmAttrs = en.EnMap.Attrs;
-			//        Attrs wkAttrs = wk.EnMap.Attrs;
+			//        Attrs frmAttrs = en.getEnMap().getAttrs();
+			//        Attrs wkAttrs = wk.getEnMap().getAttrs();
 			//        foreach (Attr wkattr in wkAttrs)
 			//        {
 			//            if (wkattr.Key.Equals(StartWorkAttr.OID) || wkattr.Key.Equals(StartWorkAttr.FID) || wkattr.Key.Equals(StartWorkAttr.CDT)
@@ -9474,9 +9474,9 @@ public class Dev2Interface
 
 			//            foreach (Attr attr in frmAttrs)
 			//            {
-			//                if (wkattr.Key.Equals(attr.Key))
+			//                if (wkattr.Key.Equals(attr.getKey()))
 			//                {
-			//                    wk.SetValByKey(wkattr.Key, en.GetValStrByKey(attr.Key));
+			//                    wk.SetValByKey(wkattr.Key, en.GetValStrByKey(attr.getKey()));
 			//                    break;
 			//                }
 
@@ -9560,7 +9560,7 @@ public class Dev2Interface
 					gwf.setWFState(wfState);
 
 					gwf.setFK_Dept(WebUser.getFK_Dept());
-					gwf.setDeptName(WebUser.getFK_Dept()Name);
+					gwf.setDeptName(WebUser.getFK_DeptName);
 					gwf.setStarter(WebUser.getNo());
 					gwf.setStarterName(WebUser.getName());
 					gwf.setRDT(DataType.getCurrentDataTime());
@@ -9590,7 +9590,7 @@ public class Dev2Interface
 
 				gwl.setFK_Flow(fk_flow);
 				gwl.setFK_Dept(WebUser.getFK_Dept());
-				gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
+				gwl.setFK_DeptT(WebUser.getFK_DeptName);
 
 				gwl.setSDT("无");
 				gwl.setDTOfWarning(DataType.getCurrentDataTime());
@@ -10046,7 +10046,7 @@ public class Dev2Interface
 			gwl.setFK_Emp(WebUser.getNo());
 			gwl.setFK_EmpText(WebUser.getName());
 			gwl.setFK_Dept(WebUser.getFK_Dept());
-			gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
+			gwl.setFK_DeptT(WebUser.getFK_DeptName);
 
 			gwl.setIsPassInt(askforSta.getValue());
 			gwl.Insert();

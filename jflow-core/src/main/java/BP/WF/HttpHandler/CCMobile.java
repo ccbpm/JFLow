@@ -130,7 +130,7 @@ public class CCMobile extends DirectoryPageBase
 			append.append("UserIcon:'DefaultBiger.png'");
 		}
 		append.append(",UserName:'" + WebUser.getName() + "'");
-		append.append(",UserDeptName:'" + WebUser.getFK_Dept()Name + "'");
+		append.append(",UserDeptName:'" + WebUser.getFK_DeptName + "'");
 		append.append("}");
 		return append.toString();
 	}

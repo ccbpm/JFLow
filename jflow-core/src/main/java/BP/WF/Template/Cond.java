@@ -597,7 +597,7 @@ public class Cond extends EntityMyPK
 					/* 如果包含 @ */
 				for (Attr attr : this.en.getEnMap().getAttrs())
 				{
-					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.Key));
+					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
 				}
 			}
 
@@ -643,7 +643,7 @@ public class Cond extends EntityMyPK
 					/* 如果包含 @ */
 				for (Attr attr : this.en.getEnMap().getAttrs())
 				{
-					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.Key));
+					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
 				}
 			}
 

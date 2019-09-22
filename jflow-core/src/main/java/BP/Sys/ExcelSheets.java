@@ -14,7 +14,7 @@ public class ExcelSheets extends EntitiesNoName
 	 生成ExcelSheet实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new ExcelSheet();
 	}

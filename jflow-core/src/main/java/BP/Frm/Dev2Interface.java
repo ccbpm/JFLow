@@ -441,10 +441,10 @@ public class Dev2Interface
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
 			// 为了保持与ccflow4.5的兼容,从开始节点属性里获取.
-			Attr myattr = wk.EnMap.Attrs.GetAttrByKey("Title");
+			Attr myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			if (myattr == null)
 			{
-				myattr = wk.EnMap.Attrs.GetAttrByKey("Title");
+				myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			}
 
 			if (myattr != null)
@@ -454,25 +454,25 @@ public class Dev2Interface
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+			titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 		}
 
 
 		titleRole = titleRole.replace("@WebUser.getNo()", WebUser.getNo());
 		titleRole = titleRole.replace("@WebUser.getName()", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 		titleRole = titleRole.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", LocalDateTime.now().toString("yy年MM月dd日HH时mm分"));
 		if (titleRole.contains("@"))
 		{
-			Attrs attrs = wk.EnMap.Attrs;
+			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换,因为外键文本的字段的长度相对较长。
 			for (Attr attr : attrs)
@@ -485,7 +485,7 @@ public class Dev2Interface
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -500,7 +500,7 @@ public class Dev2Interface
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 			}
 		}
 		titleRole = titleRole.replace('~', '-');

@@ -30,7 +30,7 @@ public class WorkNodes extends ArrayList<Object>
 		}
 
 		Works ens = this.get(0).getHisNode().getHisWorks();
-		ens.Clear();
+		ens.clear();
 
 		for (WorkNode wn : this.ToJavaList())
 		{
@@ -38,6 +38,10 @@ public class WorkNodes extends ArrayList<Object>
 		}
 		return ens;
 	}
+	private Object ToJavaList() {
+	// TODO Auto-generated method stub
+	return null;
+}
 	/** 
 	 工作节点集合
 	*/

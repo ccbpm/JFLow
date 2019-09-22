@@ -48,7 +48,7 @@ public class GroupFields extends EntitiesOID
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GroupField();
 	}

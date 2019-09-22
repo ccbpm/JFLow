@@ -23,7 +23,7 @@ public class ReturnWorks extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new ReturnWork();
 	}

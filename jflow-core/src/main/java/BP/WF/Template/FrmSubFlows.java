@@ -37,7 +37,7 @@ public class FrmSubFlows extends Entities {
 	 * 得到它的 Entity
 	 */
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity() {
 		return new FrmSubFlow();
 	}
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

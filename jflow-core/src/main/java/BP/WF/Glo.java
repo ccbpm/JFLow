@@ -2376,7 +2376,7 @@ public class Glo
 		for (BP.Sys.XML.EnumInfoXml xml : xmls)
 		{
 			BP.Sys.SysEnums ses = new BP.Sys.SysEnums();
-			int count = ses.RetrieveByAttr(SysEnumAttr.EnumKey, xml.Key);
+			int count = ses.RetrieveByAttr(SysEnumAttr.EnumKey, xml.getKey());
 			if (count > 0)
 			{
 				continue;
@@ -2984,13 +2984,13 @@ public class Glo
 		//                        columIdx++;
 
 		//                        if (attrDtl.IsFKorEnum)
-		//                            newTableDtl.Cell(idxRow, columIdx).Range.Text = item.GetValRefTextByKey(attrDtl.Key);
+		//                            newTableDtl.Cell(idxRow, columIdx).Range.Text = item.GetValRefTextByKey(attrDtl.getKey());
 		//                        else
 		//                        {
 		//                            if (attrDtl.MyDataType == DataType.AppMoney)
-		//                                newTableDtl.Cell(idxRow, columIdx).Range.Text = item.GetValMoneyByKey(attrDtl.Key).ToString("0.00");
+		//                                newTableDtl.Cell(idxRow, columIdx).Range.Text = item.GetValMoneyByKey(attrDtl.getKey()).ToString("0.00");
 		//                            else
-		//                                newTableDtl.Cell(idxRow, columIdx).Range.Text = item.GetValStrByKey(attrDtl.Key);
+		//                                newTableDtl.Cell(idxRow, columIdx).Range.Text = item.GetValStrByKey(attrDtl.getKey());
 
 		//                            if (attrDtl.IsNum)
 		//                                newTableDtl.Cell(idxRow, columIdx).Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphRight;
@@ -3633,7 +3633,7 @@ public class Glo
 		Track t = new Track();
 		t.setWorkID(workID);
 		t.setFID(fid);
-		t.setRDT(DataType.getCurrentDataTime()ss);
+		t.setRDT(DataType.getCurrentDataTime());
 		t.setHisActionType(at);
 
 		t.setNDFrom(fromNodeID);
@@ -3678,8 +3678,8 @@ public class Glo
 	{
 		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
 		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
-		exp = exp.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
+		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		String[] strs = exp.split("[ ]", -1);
@@ -3793,7 +3793,7 @@ public class Glo
 				//替换变量
 				sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
 				sql = sql.replace("@WebUser.getName()", WebUser.getName());
-				sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+				sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 				sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 
@@ -4271,14 +4271,14 @@ public class Glo
 		//首先替换加; 的。
 		exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
 		exp = exp.replace("@WebUser.getName();", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_DeptName;", WebUser.getFK_DeptName);
 		exp = exp.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 
 		// 替换没有 ; 的 .
 		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
 		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		if (exp.contains("@") == false)
@@ -4289,7 +4289,7 @@ public class Glo
 		//增加对新规则的支持. @MyField; 格式.
 		if (en != null)
 		{
-			Attrs attrs = en.EnMap.Attrs;
+			Attrs attrs = en.getEnMap().getAttrs();
 			Row row = en.Row;
 			//特殊判断.
 			if (row.ContainsKey("OID") == true)
@@ -4389,14 +4389,14 @@ public class Glo
 		//首先替换加; 的。
 		exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
 		exp = exp.replace("@WebUser.getName();", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_DeptName;", WebUser.getFK_DeptName);
 		exp = exp.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 
 		// 替换没有 ; 的 .
 		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
 		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		if (exp.contains("@") == false)
@@ -4442,7 +4442,7 @@ public class Glo
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 解决排序问题.
-			Attrs attrs = en.EnMap.Attrs;
+			Attrs attrs = en.getEnMap().getAttrs();
 			String mystrs = "";
 			for (Attr attr : attrs)
 			{
@@ -4544,9 +4544,9 @@ public class Glo
 	public static String GenerMD5(BP.WF.Work wk)
 	{
 		String s = null;
-		for (Attr attr : wk.EnMap.Attrs)
+		for (Attr attr : wk.getEnMap().getAttrs())
 		{
-			switch (attr.Key)
+			switch (attr.getKey())
 			{
 				case WorkAttr.MD5:
 				case WorkAttr.RDT:
@@ -4570,7 +4570,7 @@ public class Glo
 				continue;
 			}
 
-			s += wk.GetValStrByKey(attr.Key);
+			s += wk.GetValStrByKey(attr.getKey());
 		}
 		s += "ccflow";
 
@@ -4665,8 +4665,8 @@ public class Glo
 			Flow fl = nd.getHisFlow();
 			Work wk = fl.NewWork();
 
-			Attrs attrs = wk.EnMap.Attrs;
-			//foreach (Attr attr in wk.EnMap.Attrs)
+			Attrs attrs = wk.getEnMap().getAttrs();
+			//foreach (Attr attr in wk.getEnMap().getAttrs())
 			//{
 			//}
 
@@ -4726,7 +4726,7 @@ public class Glo
 			Work wkNext = nd.getHisWork();
 			wkNext.setOID(wk.getOID());
 			wkNext.RetrieveFromDBSources();
-			attrs = wkNext.EnMap.Attrs;
+			attrs = wkNext.getEnMap().getAttrs();
 			for (DataColumn dc : dt.Columns)
 			{
 				Attr attr = attrs.GetAttrByKey(dc.ColumnName.trim());
@@ -5956,7 +5956,7 @@ public class Glo
 		ch.setFK_NodeT(nd.getName());
 
 		ch.setFK_Dept(WebUser.getFK_Dept()); //部门.
-		ch.setFK_DeptT(WebUser.getFK_Dept()Name);
+		ch.setFK_DeptT(WebUser.getFK_DeptName);
 
 		ch.setFK_Emp(WebUser.getNo()); //当事人.
 		ch.setFK_EmpT(WebUser.getName());

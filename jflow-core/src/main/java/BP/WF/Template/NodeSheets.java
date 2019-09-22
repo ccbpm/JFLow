@@ -24,7 +24,7 @@ public class NodeSheets extends Entities
 		///#endregion
 
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new NodeSheet();
 	}

@@ -514,7 +514,7 @@ public class PubClass
 
 			try
 			{
-				Entity en = ens.getGetNewEntity();
+				Entity en = ens.getNewEntity();
 				en.CheckPhysicsTable();
 			}
 			catch (java.lang.Exception e)
@@ -774,7 +774,7 @@ public class PubClass
 			try
 			{
 				ens = (Entities)obj;
-				en = ens.getGetNewEntity();
+				en = ens.getNewEntity();
 				if (en.getEnMap().getEnType() == EnType.View || en.getEnMap().getEnType() == EnType.ThirdPartApp)
 				{
 					continue;
@@ -1043,7 +1043,7 @@ public class PubClass
 	*/
 	public static String DBRpt1(DBCheckLevel level, Entities ens)
 	{
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		if (en.getEnMap().getEnDBUrl().getDBUrlType() != DBUrlType.AppCenterDSN)
 		{
 			return null;
@@ -1107,7 +1107,7 @@ public class PubClass
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#region 处理关联表的情况.
 				Entities refEns = attr.getHisFKEns(); // ClassFactory.GetEns(attr.UIBindKey);
-				Entity refEn = refEns.getGetNewEntity();
+				Entity refEn = refEns.getNewEntity();
 
 				//取出关联的表。
 				String reftable = refEn.getEnMap().getPhysicsTable();

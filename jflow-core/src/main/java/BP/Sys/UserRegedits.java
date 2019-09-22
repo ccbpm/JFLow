@@ -21,8 +21,9 @@ public class UserRegedits extends EntitiesMyPK
 	 
 	 
 	 @param emp
+	 * @throws Exception 
 	*/
-	public UserRegedits(String emp)
+	public UserRegedits(String emp) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(UserRegeditAttr.FK_Emp, emp);

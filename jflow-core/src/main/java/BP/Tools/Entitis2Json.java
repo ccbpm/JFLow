@@ -200,7 +200,7 @@ public class Entitis2Json
 	public final String TranslateEntitiesToListJson(BP.En.Entities ens,
 			String hidenKeys)
 	{
-		Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
+		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
 		append.append("[");
 		
@@ -245,7 +245,7 @@ public class Entitis2Json
 	public final String TranslateEntitiesToGridJsonOnlyData(BP.En.Entities ens,
 			int totalRows, String hidenKeys)
 	{
-		Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
+		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
 		append.append("{rows:[");
 		
@@ -300,7 +300,7 @@ public class Entitis2Json
 	public final String TranslateEntitiesToGridJsonColAndData(Entities ens,
 			int totalRows, String hidenKeys)
 	{
-		Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
+		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
 		append.append("{");
 		// 整理列名

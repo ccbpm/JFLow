@@ -740,7 +740,7 @@ public class Attr
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#warning new a entity.
 
-	   return this.getHisFKEns().getGetNewEntity();
+	   return this.getHisFKEns().getNewEntity();
 
 	 
 	}

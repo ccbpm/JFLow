@@ -72,7 +72,7 @@ public abstract class Entity implements Serializable {
 				if (ens == null) {
 					continue;
 				}
-				if (ens.getGetNewEntity().toString() != null && ens.getGetNewEntity().toString().equals(str)) {
+				if (ens.getNewEntity().toString() != null && ens.getNewEntity().toString().equals(str)) {
 					_GetNewEntities = ens;
 					return _GetNewEntities;
 				}
@@ -192,7 +192,7 @@ public abstract class Entity implements Serializable {
                  pkval = this.getPKVal().toString();
              QueryObject qo = new QueryObject(dtl.getEns());
              MapDtl md = new MapDtl();
-             md.setNo(dtl.getEns().getGetNewEntity().toString());
+             md.setNo(dtl.getEns().getNewEntity().toString());
              if (md.RetrieveFromDBSources() == 0)
              {
                  qo.AddWhere(dtl.getRefKey(), pkval);
@@ -261,7 +261,7 @@ public abstract class Entity implements Serializable {
 			}
 		}
 		throw new RuntimeException(
-				"@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + ens.getGetNewEntity().getEnDesc() + "],不在他的集合内。");
+				"@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + ens.getNewEntity().getEnDesc() + "],不在他的集合内。");
 	}
 
 	/**
@@ -1592,7 +1592,7 @@ public abstract class Entity implements Serializable {
 			dtl.setEnName(ver.getNo());
 			dtl.setAttrKey(attr.getKey());
 			dtl.setAttrName(attr.getDesc());
-			// dtl.OldVal = this.GetValStrByKey(attr.Key); //第一个版本时，旧值没有
+			// dtl.OldVal = this.GetValStrByKey(attr.getKey()); //第一个版本时，旧值没有
 			dtl.setRDT(rdt);
 			dtl.setRec(WebUser.getName());
 			dtl.setNewVal(this.GetValStrByKey(attr.getKey()));
@@ -2934,7 +2934,7 @@ public abstract class Entity implements Serializable {
 			for (EnDtl dtl : dtls.ToJavaList()) {
 				MapDtl mdtl = new MapDtl();
 
-				Entity enDtl = dtl.getEns().getGetNewEntity();
+				Entity enDtl = dtl.getEns().getNewEntity();
 
 				mdtl.setNo(enDtl.getClassIDOfShort());
 				if (mdtl.RetrieveFromDBSources() == 0)
@@ -3127,12 +3127,12 @@ public abstract class Entity implements Serializable {
 				this.SetValByKey(key, WebUser.getFK_Dept());
 
 				continue;
-			} else if (v.equals("@WebUser.getFK_Dept()Name")) {
+			} else if (v.equals("@WebUser.getFK_DeptName")) {
 
 				this.SetValByKey(key, WebUser.getFK_DeptName());
 
 				continue;
-			} else if (v.equals("@WebUser.getFK_Dept()NameOfFull")) {
+			} else if (v.equals("@WebUser.getFK_DeptNameOfFull")) {
 
 				this.SetValByKey(key, WebUser.getFK_DeptNameOfFull());
 
@@ -3206,7 +3206,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_Dept()Name")) {
+			if (v.equals("@WebUser.getFK_DeptName")) {
 				if (attr.getUIIsEnable()) {
 					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptName());
 				} else {
@@ -3216,7 +3216,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_Dept()NameOfFull") || v.equals("@WebUser.getFK_Dept()FullName")) {
+			if (v.equals("@WebUser.getFK_DeptNameOfFull") || v.equals("@WebUser.getFK_DeptFullName")) {
 				if (attr.getUIIsEnable()) {
 					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
 				} else {
@@ -3374,7 +3374,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_Dept()Name")) {
+			if (v.equals("@WebUser.getFK_DeptName")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
 				} else {
@@ -3384,7 +3384,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_Dept()NameOfFull") || v.equals("@WebUser.getFK_Dept()FullName")) {
+			if (v.equals("@WebUser.getFK_DeptNameOfFull") || v.equals("@WebUser.getFK_DeptFullName")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 				} else {
@@ -3503,10 +3503,10 @@ public abstract class Entity implements Serializable {
 			} else if (v.equals("@WebUser.getFK_Dept()")) {
 				this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
 				continue;
-			} else if (v.equals("@WebUser.getFK_Dept()Name")) {
+			} else if (v.equals("@WebUser.getFK_DeptName")) {
 				this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
 				continue;
-			} else if (v.equals("@WebUser.getFK_Dept()NameOfFull")) {
+			} else if (v.equals("@WebUser.getFK_DeptNameOfFull")) {
 				this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 				continue;
 			} else if (v.equals("@RDT")) {

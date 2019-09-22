@@ -14,7 +14,7 @@ public class ExcelFiles extends EntitiesNoName
 	 生成Excel模板实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new ExcelFile();
 	}

@@ -72,7 +72,7 @@ public class EnDtl
 	{
 		if (this._Desc == null)
 		{
-			this._Desc = this.getEns().getGetNewEntity().getEnDesc();
+			this._Desc = this.getEns().getNewEntity().getEnDesc();
 		}
 		return _Desc;
 	}

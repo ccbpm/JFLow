@@ -30,7 +30,7 @@ public class CHs extends Entities
 	 时效考核
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new CH();
 	}

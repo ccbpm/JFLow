@@ -19,8 +19,9 @@ public class GroupEnsTemplates extends EntitiesOID
 	 
 	 
 	 @param emp
+	 * @throws Exception 
 	*/
-	public GroupEnsTemplates(String emp)
+	public GroupEnsTemplates(String emp) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GroupEnsTemplateAttr.Rec, emp);

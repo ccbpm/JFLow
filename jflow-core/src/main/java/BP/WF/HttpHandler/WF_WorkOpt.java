@@ -1281,7 +1281,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				//给会签人设置应该完成日期. 考虑到了节假日.                
 				LocalDateTime dtOfShould = Glo.AddDayHoursSpan(LocalDateTime.now(), nd.getTimeLimit(), nd.getTimeLimitHH(), nd.getTimeLimitMM(), nd.getTWay());
 				//应完成日期.
-				gwlOfMe.setSDT(dtOfShould.toString(DataType.SysDataTimeFormat + ":ss"));
+				gwlOfMe.setSDT(dtOfShould.toString(DataType.getSysDataTimeFormat() + ":ss"));
 			}
 
 			//求警告日期.
@@ -1296,7 +1296,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				// 增加小时数. 考虑到了节假日.
 				dtOfWarning = Glo.AddDayHoursSpan(LocalDateTime.now(), nd.getWarningDay(), 0, 0, nd.getTWay());
 			}
-			gwlOfMe.setDTOfWarning(dtOfWarning.toString(DataType.SysDataTimeFormat));
+			gwlOfMe.setDTOfWarning(dtOfWarning.toString(DataType.getSysDataTimeFormat()));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 计算会签时间.
 
@@ -2830,19 +2830,19 @@ public class WF_WorkOpt extends DirectoryPageBase
 			{
 				if (attr.UIContralType == UIContralType.TB)
 				{
-					val = GetRequestVal("TB_" + attr.Key);
+					val = GetRequestVal("TB_" + attr.getKey());
 
 					msg += attr.Key + "=" + val + ";";
 				}
 				else if (attr.UIContralType == UIContralType.CheckBok)
 				{
-					val = GetRequestVal("CB_" + attr.Key);
+					val = GetRequestVal("CB_" + attr.getKey());
 
 					msg += attr.Key + "=" + Integer.parseInt(val) + ";";
 				}
 				else if (attr.UIContralType == UIContralType.DDL)
 				{
-					val = GetRequestVal("DDL_" + attr.Key);
+					val = GetRequestVal("DDL_" + attr.getKey());
 
 					msg += attr.Key + "=" + val + ";";
 				}
@@ -2973,13 +2973,13 @@ public class WF_WorkOpt extends DirectoryPageBase
 					Work wk = nd.getHisWork();
 					wk.setOID(this.getWorkID());
 					wk.RetrieveFromDBSources();
-					for (Attr attr : wk.EnMap.Attrs)
+					for (Attr attr : wk.getEnMap().getAttrs())
 					{
 						if (sql.contains("@") == false)
 						{
 							break;
 						}
-						sql = sql.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+						sql = sql.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 					}
 				}
 				break;
@@ -4208,7 +4208,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 					{
 						myurl += "?1=1";
 					}
-					Attrs myattrs = currNode.getHisWork().EnMap.Attrs;
+					Attrs myattrs = currNode.getHisWork().getEnMap().getAttrs();
 					Work hisWK = currNode.getHisWork();
 					for (Attr attr : myattrs)
 					{
@@ -4216,7 +4216,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 						{
 							break;
 						}
-						myurl = myurl.replace("@" + attr.Key, hisWK.GetValStrByKey(attr.Key));
+						myurl = myurl.replace("@" + attr.Key, hisWK.GetValStrByKey(attr.getKey()));
 					}
 					myurl = myurl.replace("@WebUser.getNo()", WebUser.getNo());
 					myurl = myurl.replace("@WebUser.getName()", WebUser.getName());
@@ -4417,7 +4417,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 					tc.setIsEnable(true);
 					if (nd.getHisCHWay() == CHWay.ByTime && nd.GetParaInt("CHWayOfTimeRole") == 2)
 					{
-						tc.setPlanDT(LocalDateTime.now().plusDays(1).toString(DataType.SysDataTimeFormat));
+						tc.setPlanDT(LocalDateTime.now().plusDays(1).toString(DataType.getSysDataTimeFormat()));
 					}
 					tc.Insert();
 
@@ -4665,7 +4665,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			}
 
 		}
-		return SDTOfNode.toString(DataType.SysDataTimeFormat);
+		return SDTOfNode.toString(DataType.getSysDataTimeFormat());
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 时限初始化数据

@@ -187,7 +187,7 @@ public class Dev2InterfaceGuest
 		gwf.setFK_FlowSort(fl.getFK_FlowSort());
 		gwf.setSysType(fl.getSysType());
 		gwf.setFK_Dept(WebUser.getFK_Dept());
-		gwf.setDeptName(WebUser.getFK_Dept()Name);
+		gwf.setDeptName(WebUser.getFK_DeptName);
 		gwf.setFK_Node(fl.getStartNodeID());
 		gwf.setNodeName(nd.getName());
 		gwf.setWFState(WFState.Runing);
@@ -201,7 +201,7 @@ public class Dev2InterfaceGuest
 		}
 		gwf.setStarter(WebUser.getNo());
 		gwf.setStarterName(WebUser.getName());
-		gwf.setRDT(DataType.getCurrentDataTime()ss);
+		gwf.setRDT(DataType.getCurrentDataTime());
 		gwf.setPWorkID(parentWorkID);
 	   // gwf.PFID = parentFID;
 		gwf.setPFlowNo(parentFlowNo);
@@ -227,7 +227,7 @@ public class Dev2InterfaceGuest
 		gwl.setFID(0);
 		gwl.setFK_Flow(fl.No);
 		gwl.setFK_Dept(WebUser.getFK_Dept());
-		gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
+		gwl.setFK_DeptT(WebUser.getFK_DeptName);
 
 		gwl.setSDT("无");
 		gwl.setDTOfWarning(DataType.getCurrentDataTime());

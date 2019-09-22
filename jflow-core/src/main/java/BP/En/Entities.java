@@ -124,8 +124,8 @@ public abstract class Entities extends ArrayList<Entity>
 		try
 		{
 			Attr attr = null;
-			attr = this.getGetNewEntity().getEnMap().GetAttrByKey("Grade");
-			attr = this.getGetNewEntity().getEnMap().GetAttrByKey("IsDtl");
+			attr = this.getNewEntity().getEnMap().GetAttrByKey("Grade");
+			attr = this.getNewEntity().getEnMap().GetAttrByKey("IsDtl");
 			return true;
 		} catch (java.lang.Exception e)
 		{
@@ -180,11 +180,11 @@ public abstract class Entities extends ArrayList<Entity>
 	 */
 	public final void InitCollectionByTable(DataTable dt, String fieldName) throws Exception
 	{
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		String pk = en.getPK();
 		for (DataRow dr : dt.Rows)
 		{
-			Entity en1 = this.getGetNewEntity();
+			Entity en1 = this.getNewEntity();
 			en1.SetValByKey(pk, dr.getValue(fieldName));
 			/*
 			 * warning en1.SetValByKey(pk, dr[fieldName]);
@@ -206,7 +206,7 @@ public abstract class Entities extends ArrayList<Entity>
 		{
 			for (DataRow dr : dt.Rows)
 			{
-				Entity en = this.getGetNewEntity();
+				Entity en = this.getNewEntity();
 				for (Attr attr : en.getEnMap().getAttrs())
 				{
 					if (attr.getMyFieldType() == FieldType.RefText)
@@ -318,7 +318,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @return
 	 */
-	public abstract Entity getGetNewEntity();
+	public abstract Entity getNewEntity();
 	
 	/**
 	 * 根据位置取得数据
@@ -384,7 +384,7 @@ public abstract class Entities extends ArrayList<Entity>
 				continue;
 			}
 			
-			Entity en = this.getGetNewEntity();
+			Entity en = this.getNewEntity();
 			en.setPKVal(str);
 			if (en.RetrieveFromDBSources() == 0)
 			{
@@ -419,7 +419,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 */
 	public final boolean Contains(Entities ens)
 	{
-		return this.Contains(ens, ens.getGetNewEntity().getPK());
+		return this.Contains(ens, ens.getNewEntity().getPK());
 	}
 	
 	public final boolean Contains(Entities ens, String key)
@@ -463,7 +463,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 */
 	public final boolean Contains(Object pkVal)
 	{
-		String pk = this.getGetNewEntity().getPK();
+		String pk = this.getNewEntity().getPK();
 		return this.Contains(pk, pkVal);
 	}
 	
@@ -530,7 +530,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final Entities GainIntersection(Entities ens)
 	{
 		Entities myens = this.CreateInstance();
-		String pk = this.getGetNewEntity().getPK();
+		String pk = this.getNewEntity().getPK();
 		for (Entity en : convertEntities(this))
 		{
 			for (Entity hisen : convertEntities(ens))
@@ -564,7 +564,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 */
 	public final Entity GetEntityByKey(Object val)
 	{
-		String pk = this.getGetNewEntity().getPK();
+		String pk = this.getNewEntity().getPK();
 		for (Entity en : convertEntities(this))
 		{
 			if (val.toString().equals(en.GetValStrByKey(pk)))
@@ -794,7 +794,7 @@ public abstract class Entities extends ArrayList<Entity>
 		// qo.Top = 2000;
 		int num = qo.DoQuery();
 		// 把查询个数加入内存
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		CashEntity.PubEns(en.toString(), this, en.getPK());
 		BP.DA.Log.DefaultLogWriteLineInfo("成功[" + en.toString() + "-" + num
 				+ "]放入缓存。");
@@ -820,7 +820,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 */
 	public void RemoveEn(String pk)
 	{
-		String key = this.getGetNewEntity().getPK();
+		String key = this.getNewEntity().getPK();
 		RemoveEn(key, pk);
 	}
 	
@@ -839,7 +839,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public void remove(String pks)
 	{
 		String[] mypks = pks.split("[@]", -1);
-		String pkAttr = this.getGetNewEntity().getPK();
+		String pkAttr = this.getNewEntity().getPK();
 		
 		for (String pk : mypks)
 		{
@@ -860,7 +860,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 */
 	public final int ClearTable() throws Exception
 	{
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		return en.RunSQL("DELETE FROM " + en.getEnMap().getPhysicsTable());
 	}
 	
@@ -883,12 +883,12 @@ public abstract class Entities extends ArrayList<Entity>
 	
 	public final int RunSQL(String sql) throws Exception
 	{
-		return this.getGetNewEntity().RunSQL(sql);
+		return this.getNewEntity().RunSQL(sql);
 	}
 	
 	public int Delete(String key, Object val)
 	{
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		Paras ps = new Paras();
 		ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE "
 				+ key + "=" + en.getHisDBVarStr() + "p";
@@ -913,7 +913,7 @@ public abstract class Entities extends ArrayList<Entity>
 	
 	public final int Delete(String key1, Object val1, String key2, Object val2)
 	{
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		Paras ps = new Paras();
 		ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE "
 				+ key1 + "=" + en.getHisDBVarStr() + "p1 AND " + key2 + "="
@@ -954,7 +954,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final int Delete(String key1, Object val1, String key2, Object val2,
 			String key3, Object val3) throws Exception
 	{
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		Paras ps = new Paras();
 		ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE "
 				+ key1 + "=" + en.getHisDBVarStr() + "p1 AND " + key2 + "="
@@ -1012,7 +1012,7 @@ public abstract class Entities extends ArrayList<Entity>
 			String key3, Object val3, String key4, Object val4)
 			throws Exception
 	{
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		Paras ps = new Paras();
 		ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE "
 				+ key1 + "=" + en.getHisDBVarStr() + "p1 AND " + key2 + "="
@@ -1123,12 +1123,12 @@ public abstract class Entities extends ArrayList<Entity>
 	// 查询方法
 	/*
 	 * warning public final int RetrieveByKeyNoConnection(String attr, Object
-	 * val) { Entity en = this.getGetNewEntity(); String pk = en.getPK();
+	 * val) { Entity en = this.getNewEntity(); String pk = en.getPK();
 	 * 
 	 * DataTable dt = DBAccess.RunSQLReturnTable("SELECT " + pk + " FROM " +
-	 * this.getGetNewEntity().getEnMap().getPhysicsTable() + " WHERE " + attr +
+	 * this.getNewEntity().getEnMap().getPhysicsTable() + " WHERE " + attr +
 	 * "=" + en.getHisDBVarStr() + "v", "v", val); for (DataRow dr : dt.Rows) {
-	 * Entity en1 = this.getGetNewEntity(); en1.SetValByKey(pk, dr.getValue(0));
+	 * Entity en1 = this.getNewEntity(); en1.SetValByKey(pk, dr.getValue(0));
 	 * en1.Retrieve(); this.AddEntity(en1); } return dt.Rows.size(); }
 	 */
 	/**
@@ -1144,7 +1144,7 @@ public abstract class Entities extends ArrayList<Entity>
 	 * warning public final DataTable RetrieveByKeyReturnTable(String key, Attrs
 	 * attrs) { QueryObject qo = new QueryObject(this);
 	 * 
-	 * // 在 Normal 属性里面增加，查询条件。 Map map = this.getGetNewEntity().getEnMap();
+	 * // 在 Normal 属性里面增加，查询条件。 Map map = this.getNewEntity().getEnMap();
 	 * qo.addLeftBracket(); for (Attr en : map.getAttrs()) { if
 	 * (en.getUIContralType() == UIContralType.DDL || en.getUIContralType() ==
 	 * UIContralType.CheckBok) { continue; } qo.addOr();
@@ -1165,9 +1165,9 @@ public abstract class Entities extends ArrayList<Entity>
 	/*
 	 * warning public final int RetrieveByKey(String keyVal) { keyVal = "%" +
 	 * keyVal.trim() + "%"; QueryObject qo = new QueryObject(this); Attrs attrs
-	 * = this.getGetNewEntity().getEnMap().getAttrs(); //qo.addLeftBracket();
-	 * String pk = this.getGetNewEntity().getPK(); if (!pk.equals("OID")) {
-	 * qo.AddWhere(this.getGetNewEntity().getPK(), " LIKE ", keyVal); } for
+	 * = this.getNewEntity().getEnMap().getAttrs(); //qo.addLeftBracket();
+	 * String pk = this.getNewEntity().getPK(); if (!pk.equals("OID")) {
+	 * qo.AddWhere(this.getNewEntity().getPK(), " LIKE ", keyVal); } for
 	 * (Attr en : attrs) {
 	 * 
 	 * if (en.getUIContralType() == UIContralType.DDL || en.getUIContralType()
@@ -1208,7 +1208,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public int Retrieve(String pks) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(this.getGetNewEntity().getPK(), " in ", pks);
+		qo.AddWhere(this.getNewEntity().getPK(), " in ", pks);
 		return qo.DoQuery();
 	}
 	
@@ -1270,21 +1270,21 @@ public abstract class Entities extends ArrayList<Entity>
 	public final int RetrieveInSQL(String sql) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhereInSQL(this.getGetNewEntity().getPK(), sql);
+		qo.AddWhereInSQL(this.getNewEntity().getPK(), sql);
 		return qo.DoQuery();
 	}
 	
 	public final int RetrieveExistsSQL(String sql) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhereExistsSQL(this.getGetNewEntity().getPK(), sql);
+		qo.AddWhereExistsSQL(this.getNewEntity().getPK(), sql);
 		return qo.DoQuery();
 	}
 	
 	public final int RetrieveInSQL_Order(String sql, String orderby) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhereInSQL(this.getGetNewEntity().getPK(), sql);
+		qo.AddWhereInSQL(this.getNewEntity().getPK(), sql);
 		qo.addOrderBy(orderby);
 		return qo.DoQuery();
 	}
@@ -1546,7 +1546,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToDataTableStringField(String tableName)
 	{
 		DataTable dt = this.ToEmptyTableStringField();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		
 		dt.TableName = tableName;
 		for (Entity myen : convertEntities(this))
@@ -1609,7 +1609,7 @@ public abstract class Entities extends ArrayList<Entity>
 	{
 		DataTable dt = this.ToEmptyTableField();
 		
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		Attrs attrs = en.getEnMap().getAttrs();
 		
 		dt.TableName = tableName;
@@ -1667,7 +1667,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToDataTableDesc()
 	{
 		DataTable dt = this.ToEmptyTableDesc();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		
 		dt.TableName = en.getEnMap().getPhysicsTable();
 		for (Entity myen : convertEntities(this))
@@ -1709,7 +1709,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToEmptyTableDescField()
 	{
 		DataTable dt = new DataTable();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		try
 		{
 			
@@ -1773,7 +1773,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToDataTableDescField()
 	{
 		DataTable dt = this.ToEmptyTableDescField();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		
 		dt.TableName = en.getEnMap().getPhysicsTable();
 		for (Entity myen : convertEntities(this))
@@ -1889,7 +1889,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToEmptyTableField_old()
 	{
 		DataTable dt = new DataTable();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		dt.TableName = en.getEnMap().getPhysicsTable();
 		
 		for (Attr attr : en.getEnMap().getAttrs())
@@ -1937,7 +1937,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToEmptyTableField()
 	{
 		DataTable dt = new DataTable();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		dt.TableName = en.getEnMap().getPhysicsTable();
 		
 		for (Attr attr : en.getEnMap().getAttrs())
@@ -1979,7 +1979,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToEmptyTableStringField()
 	{
 		DataTable dt = new DataTable();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		dt.TableName = en.getEnMap().getPhysicsTable();
 		
 		for (Attr attr : en.getEnMap().getAttrs())
@@ -1992,7 +1992,7 @@ public abstract class Entities extends ArrayList<Entity>
 	public final DataTable ToEmptyTableDesc()
 	{
 		DataTable dt = new DataTable();
-		Entity en = this.getGetNewEntity();
+		Entity en = this.getNewEntity();
 		try
 		{
 			
@@ -2067,7 +2067,7 @@ public abstract class Entities extends ArrayList<Entity>
 		if (ens == null)
 		{
 			QueryObject qo = new QueryObject(this);
-			qo.AddWhereInSQL(this.getGetNewEntity().getPK(), inSQL);
+			qo.AddWhereInSQL(this.getNewEntity().getPK(), inSQL);
 			qo.DoQuery();
 			Cash.SetEnsDataExt(cashKey, this);
 		} else

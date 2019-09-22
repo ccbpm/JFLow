@@ -19,7 +19,7 @@ public class Conds extends Entities
 	 获得Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Cond();
 	}

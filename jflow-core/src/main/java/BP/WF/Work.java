@@ -6,6 +6,8 @@ import BP.Sys.*;
 import BP.Port.*;
 import BP.WF.XML.*;
 import BP.WF.Template.*;
+
+import java.text.ParseException;
 import java.time.*;
 
 /**
@@ -165,7 +167,7 @@ public abstract class Work extends Entity {
 	 */
 	public final String getRecText() {
 		try {
-			return this.getHisRec().Name;
+			return this.getHisRec().getName();
 		} catch (java.lang.Exception e) {
 			return this.getRec();
 		}
@@ -195,14 +197,14 @@ public abstract class Work extends Entity {
 	 * 从表.
 	 */
 	public final MapDtls getHisMapDtls() {
-		return this.getHisNode().getMapData().MapDtls;
+		return this.getHisNode().getMapData().getMapDtls();
 	}
 
 	/**
 	 * 从表.
 	 */
 	public final FrmAttachments getHisFrmAttachments() {
-		return this.getHisNode().getMapData().FrmAttachments;
+		return this.getHisNode().getMapData().getFrmAttachments();
 	}
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #endregion
@@ -211,8 +213,9 @@ public abstract class Work extends Entity {
 	/// #region 扩展属性
 	/**
 	 * 跨度天数
+	 * @throws ParseException 
 	 */
-	public final int getSpanDays() {
+	public final int getSpanDays() throws ParseException {
 		if (this.getCDT().equals(this.getRDT())) {
 			return 0;
 		}
@@ -223,8 +226,9 @@ public abstract class Work extends Entity {
 	 * 得到从工作完成到现在的日期
 	 * 
 	 * @return
+	 * @throws ParseException 
 	 */
-	public final int GetCDTimeLimits(String todata) {
+	public final int GetCDTimeLimits(String todata) throws ParseException {
 		return DataType.SpanDays(this.getCDT(), todata);
 	}
 
@@ -257,8 +261,9 @@ public abstract class Work extends Entity {
 	 * 
 	 * @param oid
 	 *            WFOID
+	 * @throws Exception 
 	 */
-	protected Work(long oid) {
+	protected Work(long oid) throws Exception {
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
 	}
@@ -279,8 +284,9 @@ public abstract class Work extends Entity {
 	 * 按照指定的OID 保存
 	 * 
 	 * @param oid
+	 * @throws Exception 
 	 */
-	public final void SaveAsOID(long oid) {
+	public final void SaveAsOID(long oid) throws Exception {
 		this.SetValByKey("OID", oid);
 		if (this.RetrieveNotSetValues().Rows.size() == 0) {
 			this.InsertAsOID(oid);
@@ -290,11 +296,12 @@ public abstract class Work extends Entity {
 
 	/**
 	 * 保存实体信息
+	 * @throws Exception 
 	 */
 	// C# TO JAVA CONVERTER WARNING: There is no Java equivalent to C#'s
 	// shadowing via the 'new' keyword:
 	// ORIGINAL LINE: public new int Save()
-	public final int Save() {
+	public final int Save() throws Exception {
 		if (this.getOID() <= 10) {
 			throw new RuntimeException("@没有给WorkID赋值,不能保存.");
 		}
@@ -307,15 +314,15 @@ public abstract class Work extends Entity {
 
 	@Override
 	public void Copy(DataRow dr) {
-		for (Attr attr : this.EnMap.Attrs) {
-			if (WorkAttr.CDT.equals(attr.Key) || WorkAttr.RDT.equals(attr.Key) || WorkAttr.Rec.equals(attr.Key)
-					|| WorkAttr.FID.equals(attr.Key) || WorkAttr.OID.equals(attr.Key) || attr.Key.equals("No")
-					|| attr.Key.equals("Name")) {
+		for (Attr attr : this.getEnMap().getAttrs()) {
+			if (WorkAttr.CDT.equals(attr.getKey()) || WorkAttr.RDT.equals(attr.getKey()) || WorkAttr.Rec.equals(attr.getKey())
+					|| WorkAttr.FID.equals(attr.getKey()) || WorkAttr.OID.equals(attr.getKey()) || attr.getKey().equals("No")
+					|| attr.getKey().equals("Name")) {
 				continue;
 			}
 
 			try {
-				this.SetValByKey(attr.Key, dr.get(attr.Key));
+				this.SetValByKey(attr.getKey(), dr.get(attr.getKey()));
 			} catch (java.lang.Exception e) {
 			}
 		}
@@ -326,22 +333,23 @@ public abstract class Work extends Entity {
 		if (fromEn == null) {
 			return;
 		}
-		Attrs attrs = fromEn.EnMap.Attrs;
+		Attrs attrs = fromEn.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
-			if (WorkAttr.CDT.equals(attr.Key) || WorkAttr.RDT.equals(attr.Key) || WorkAttr.Rec.equals(attr.Key)
-					|| WorkAttr.FID.equals(attr.Key) || WorkAttr.OID.equals(attr.Key) || WorkAttr.Emps.equals(attr.Key)
-					|| attr.Key.equals("No") || attr.Key.equals("Name")) {
+			if (WorkAttr.CDT.equals(attr.getKey()) || WorkAttr.RDT.equals(attr.getKey()) || WorkAttr.Rec.equals(attr.getKey())
+					|| WorkAttr.FID.equals(attr.getKey()) || WorkAttr.OID.equals(attr.getKey()) || WorkAttr.Emps.equals(attr.getKey())
+					|| attr.getKey().equals("No") || attr.getKey().equals("Name")) {
 				continue;
 			}
-			this.SetValByKey(attr.Key, fromEn.GetValByKey(attr.Key));
+			this.SetValByKey(attr.getKey(), fromEn.GetValByKey(attr.getKey()));
 		}
 	}
 
 	/**
 	 * 删除主表数据也要删除它的明细数据
+	 * @throws Exception 
 	 */
 	@Override
-	protected void afterDelete() {
+	protected void afterDelete() throws Exception {
 		// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		/// #warning 删除了明细，有可能造成其他的影响.
 		// MapDtls dtls = this.HisNode.MapData.MapDtls;
@@ -359,9 +367,10 @@ public abstract class Work extends Entity {
 	 * 更新之前
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	@Override
-	protected boolean beforeUpdate() {
+	protected boolean beforeUpdate() throws Exception {
 		return super.beforeUpdate();
 	}
 
@@ -369,8 +378,7 @@ public abstract class Work extends Entity {
 	 * 直接的保存前要做的工作
 	 */
 	public void BeforeSave() {
-		// 执行自动计算.
-		this.AutoFull();
+	 
 
 		// 执行保存前的事件。
 		this.getHisNode().getHisFlow().DoFlowEventEntity(EventListOfNode.SaveBefore, this.getHisNode(),
@@ -404,7 +412,7 @@ public abstract class Work extends Entity {
 	public final void setNodeID(int value) {
 		if (this._nodeID != value) {
 			this._nodeID = value;
-			this._enMap = null;
+			this.set_enMap( null);
 		}
 		this._nodeID = value;
 	}

@@ -251,7 +251,7 @@ public class SysEnums extends Entities
 	{
 		try
 		{
-			Entity en = this.getGetNewEntity();
+			Entity en = this.getNewEntity();
 			Paras ps = new Paras();
 
 			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
@@ -260,7 +260,7 @@ public class SysEnums extends Entities
 		}
 		catch (java.lang.Exception e)
 		{
-			Entity en = this.getGetNewEntity();
+			Entity en = this.getNewEntity();
 			en.CheckPhysicsTable();
 
 			Paras ps = new Paras();
@@ -279,7 +279,7 @@ public class SysEnums extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new SysEnum();
 	}

@@ -384,7 +384,7 @@ public class Track extends BP.En.EntityMyPK
 		if (DataType.IsNullOrEmpty(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
 		{
 		d = tempOut_d.argValue;
-			this.setRDT(BP.DA.DataType.getCurrentDataTime()ss);
+			this.setRDT(BP.DA.DataType.getCurrentDataTime());
 		}
 	else
 	{

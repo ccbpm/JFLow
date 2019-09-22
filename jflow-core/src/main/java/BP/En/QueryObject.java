@@ -24,7 +24,7 @@ public class QueryObject {
 
 	private Entity getEn() {
 		if (this._en == null) {
-			return this.getEns().getGetNewEntity();
+			return this.getEns().getNewEntity();
 		} else {
 			return this._en;
 		}
@@ -149,7 +149,7 @@ public class QueryObject {
 		this.getMyParas().clear();
 		ens.clear();
 		this._ens = ens;
-		Entity en = this._ens.getGetNewEntity();
+		Entity en = this._ens.getNewEntity();
 		this.HisDBType = SystemConfig.getAppCenterDBType();
 		this.HisDBUrlType = en.getEnMap().getEnDBUrl().getDBUrlType();
 	}
@@ -834,7 +834,7 @@ public class QueryObject {
 		} catch (RuntimeException ex) {
 			if (this._en == null) {
 				try {
-					this._ens.getGetNewEntity().CheckPhysicsTable();
+					this._ens.getNewEntity().CheckPhysicsTable();
 					return this.doEntitiesQuery();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1054,7 +1054,7 @@ public class QueryObject {
 				int top = pageSize * (pageIdx - 1);
 
 				String sql = "";
-				Entity en = this._ens.getGetNewEntity();
+				Entity en = this._ens.getNewEntity();
 				Map map = en.getEnMap();
 				int toIdx = 0;
 				String pks = "";
@@ -1206,7 +1206,7 @@ public class QueryObject {
 		} catch (RuntimeException ex) {
 			try {
 				if (this._en == null) {
-					this.getEns().getGetNewEntity().CheckPhysicsTable();
+					this.getEns().getNewEntity().CheckPhysicsTable();
 				} else {
 					this._en.CheckPhysicsTable();
 				}
@@ -1230,7 +1230,7 @@ public class QueryObject {
 		} catch (RuntimeException ex) {
 			if (this._en == null) {
 				try {
-					this.getEns().getGetNewEntity().CheckPhysicsTable();
+					this.getEns().getNewEntity().CheckPhysicsTable();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -1379,12 +1379,12 @@ public class QueryObject {
 			isUpper = true;
 
 		if (fullAttrs == null) {
-			Map enMap = ens.getGetNewEntity().getEnMap();
+			Map enMap = ens.getNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
 			try {
 
 				for (DataRow dr : dt.Rows) {
-					Entity en = ens.getGetNewEntity();
+					Entity en = ens.getNewEntity();
 					for (Attr attr : attrs) {
 						if (isUpper == true)
 							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
@@ -1406,7 +1406,7 @@ public class QueryObject {
 		}
 
 		for (DataRow dr : dt.Rows) {
-			Entity en = ens.getGetNewEntity();
+			Entity en = ens.getNewEntity();
 			for (String str : fullAttrs) {
 				if (isUpper == true)
 					en.SetValByKey(str, dr.getValue(str.toUpperCase()));

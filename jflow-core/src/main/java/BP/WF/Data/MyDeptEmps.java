@@ -18,7 +18,7 @@ public class MyDeptEmps extends BP.En.EntitiesNoName
 	}
 
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new MyDeptEmp();
 	}

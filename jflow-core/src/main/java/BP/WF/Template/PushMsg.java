@@ -849,8 +849,8 @@ public class PushMsg extends EntityMyPK
 			//替换SQL中的参数
 			bySQL = bySQL.replace("@WebUser.getNo()", WebUser.getNo());
 			bySQL = bySQL.replace("@WebUser.getName()", WebUser.getName());
-			bySQL = bySQL.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
-			bySQL = bySQL.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+			bySQL = bySQL.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
+			bySQL = bySQL.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 			bySQL = bySQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			/*如果仍然有没有替换下来的变量.*/
 			if (bySQL.contains("@") == true)

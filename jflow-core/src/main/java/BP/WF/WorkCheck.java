@@ -111,13 +111,13 @@ public class WorkCheck
 
 			dt.DefaultView.Sort = "RDT desc";
 
-			BP.En.Attrs attrs = _HisWorkChecks.getGetNewEntity().EnMap.Attrs;
+			BP.En.Attrs attrs = _HisWorkChecks.getNewEntity().getEnMap().getAttrs();
 			for (DataRow dr : dt.Rows)
 			{
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
 				{
-					en.Row.SetValByKey(attr.Key, dr.get(attr.Key));
+					en.Row.SetValByKey(attr.Key, dr.get(attr.getKey()));
 				}
 
 				_HisWorkChecks.AddEntity(en);
@@ -159,13 +159,13 @@ public class WorkCheck
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 				//获得Attrs
-			BP.En.Attrs attrs = _HisWorkChecks.getGetNewEntity().EnMap.Attrs;
+			BP.En.Attrs attrs = _HisWorkChecks.getNewEntity().getEnMap().getAttrs();
 			 for (DataRow dr : dt.Rows)
 			 {
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
 				{
-					en.Row.SetValByKey(attr.Key, dr.get(attr.Key));
+					en.Row.SetValByKey(attr.Key, dr.get(attr.getKey()));
 				}
 
 				_HisWorkChecks.AddEntity(en);

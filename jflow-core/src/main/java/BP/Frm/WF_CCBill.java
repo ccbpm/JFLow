@@ -430,7 +430,7 @@ public class WF_CCBill extends DirectoryPageBase
 					}
 				}
 				dtSQl.TableName = attr.Key;
-				if (ds.Tables.Contains(attr.Key) == false)
+				if (ds.Tables.Contains(attr.getKey()) == false)
 				{
 					ds.Tables.add(dtSQl);
 				}
@@ -504,7 +504,7 @@ public class WF_CCBill extends DirectoryPageBase
 
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
-		Attrs attrs = rpts.GetNewEntity.EnMap.Attrs;
+		Attrs attrs = rpts.GetNewEntity.getEnMap().getAttrs();
 
 		QueryObject qo = new QueryObject(rpts);
 
@@ -879,7 +879,7 @@ public class WF_CCBill extends DirectoryPageBase
 
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
-		Attrs attrs = rpts.GetNewEntity.EnMap.Attrs;
+		Attrs attrs = rpts.GetNewEntity.getEnMap().getAttrs();
 
 		QueryObject qo = new QueryObject(rpts);
 

@@ -27,7 +27,7 @@ public class GENoNames extends EntitiesNoName
 		this.Desc = tableDesc;
 	}
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GENoName(this.SFTable, this.Desc);
 	}

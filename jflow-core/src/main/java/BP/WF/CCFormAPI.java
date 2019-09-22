@@ -115,7 +115,7 @@ public class CCFormAPI extends Dev2Interface
 		for (Attr attr : map.Attrs)
 		{
 			dr = dt.NewRow();
-			dr.set(MapAttrAttr.MyPK, enName + "_" + attr.Key);
+			dr.set(MapAttrAttr.MyPK, enName + "_" + attr.getKey());
 			dr.set(MapAttrAttr.Name, attr.Desc);
 
 			dr.set(MapAttrAttr.MyDataType, attr.MyDataType); //数据类型.
@@ -234,7 +234,7 @@ public class CCFormAPI extends Dev2Interface
 			for (Attr attr : map.Attrs)
 			{
 				dr = dt.NewRow();
-				dr.set(MapAttrAttr.MyPK, enName + "_" + attr.Key);
+				dr.set(MapAttrAttr.MyPK, enName + "_" + attr.getKey());
 				dr.set(MapAttrAttr.Name, attr.Desc);
 
 				dr.set(MapAttrAttr.MyDataType, attr.MyDataType); //数据类型.

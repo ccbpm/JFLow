@@ -27,7 +27,7 @@ public class GETrees extends EntitiesNoName
 		this.Desc = tableDesc;
 	}
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GETree(this.SFTable, this.Desc);
 	}

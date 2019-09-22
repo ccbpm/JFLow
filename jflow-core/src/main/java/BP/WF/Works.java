@@ -26,10 +26,10 @@ public abstract class Works extends EntitiesOID
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 查询方法
-	public final int Retrieve(String fromDataTime, String toDataTime)
+	public final int Retrieve(String fromDataTime, String toDataTime) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.Top = 90000;
+		qo.setTop( 90000);
 		qo.AddWhere(WorkAttr.RDT, " >=", fromDataTime);
 		qo.addAnd();
 		qo.AddWhere(WorkAttr.RDT, " <= ", toDataTime);

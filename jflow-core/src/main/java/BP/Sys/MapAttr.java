@@ -148,7 +148,7 @@ public class MapAttr extends EntityMyPK
 					EntityNoName enn = null;
 					for (DataRow row : dt.Rows)
 					{
-						BP.En.Entity tempVar = myens.getGetNewEntity();
+						BP.En.Entity tempVar = myens.getNewEntity();
 						enn = tempVar instanceof EntityNoName ? (EntityNoName)tempVar : null;
 						enn.setNo(row.get("No") instanceof String ? (String)row.get("No") : null);
 						enn.setName(row.get("Name") instanceof String ? (String)row.get("Name") : null);

@@ -223,7 +223,7 @@ public class GEEntity extends Entity
 
 			GEDtls ensDtl = new GEDtls(dtl.getNo());
 
-		 //   var typeVal = BP.Sys.Glo.GenerRealType( ensDtl.GetNewEntity.EnMap.Attrs, GEDtlAttr.RefPK, this.OID);
+		 //   var typeVal = BP.Sys.Glo.GenerRealType( ensDtl.GetNewEntity.getEnMap().getAttrs(), GEDtlAttr.RefPK, this.OID);
 
 			ensDtl.Retrieve(GEDtlAttr.RefPK, String.valueOf(this.getOID()));
 

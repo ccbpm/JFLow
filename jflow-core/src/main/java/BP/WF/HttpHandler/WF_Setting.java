@@ -148,7 +148,7 @@ public class WF_Setting extends DirectoryPageBase
 		ht.put("No", WebUser.getNo());
 		ht.put("Name", WebUser.getName());
 		ht.put("FK_Dept", WebUser.getFK_Dept());
-		ht.put("FK_DeptName", WebUser.getFK_Dept()Name);
+		ht.put("FK_DeptName", WebUser.getFK_DeptName);
 		return BP.Tools.Json.ToJson(ht);
 	}
 	public final String Siganture_Save()
@@ -273,16 +273,16 @@ public class WF_Setting extends DirectoryPageBase
 		BP.GPM.Dept dept = new GPM.Dept(deptNo);
 
 		WebUser.getFK_Dept() = dept.No;
-		WebUser.getFK_Dept()Name = dept.Name;
-		WebUser.getFK_Dept()NameOfFull = dept.NameOfPath;
+		WebUser.getFK_DeptName = dept.Name;
+		WebUser.getFK_DeptNameOfFull = dept.NameOfPath;
 
 		////重新设置cookies.
 		//string strs = "";
 		//strs += "@No=" + WebUser.getNo();
 		//strs += "@Name=" + WebUser.getName();
 		//strs += "@FK_Dept=" + WebUser.getFK_Dept();
-		//strs += "@FK_DeptName=" + WebUser.getFK_Dept()Name;
-		//strs += "@FK_DeptNameOfFull=" + WebUser.getFK_Dept()NameOfFull;
+		//strs += "@FK_DeptName=" + WebUser.getFK_DeptName;
+		//strs += "@FK_DeptNameOfFull=" + WebUser.getFK_DeptNameOfFull;
 		//WebUser.SetValToCookie(strs);
 
 		WFEmp emp = new Port.WFEmp(WebUser.getNo());
@@ -300,7 +300,7 @@ public class WF_Setting extends DirectoryPageBase
 
 		}
 
-		return "@执行成功,已经切换到｛" + WebUser.getFK_Dept()Name + "｝部门上。";
+		return "@执行成功,已经切换到｛" + WebUser.getFK_DeptName + "｝部门上。";
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

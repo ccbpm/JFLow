@@ -300,12 +300,12 @@ public class GERpt extends BP.En.EntityOID
 	{
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
-			if (WorkAttr.CDT.equals(attr.Key) || WorkAttr.RDT.equals(attr.Key) || WorkAttr.Rec.equals(attr.Key) || WorkAttr.FID.equals(attr.Key) || WorkAttr.OID.equals(attr.Key) || WorkAttr.Emps.equals(attr.Key) || GERptAttr.AtPara.equals(attr.Key) || GERptAttr.BillNo.equals(attr.Key) || GERptAttr.FID.equals(attr.Key) || GERptAttr.FK_Dept.equals(attr.Key) || GERptAttr.FK_NY.equals(attr.Key) || GERptAttr.FlowDaySpan.equals(attr.Key) || GERptAttr.FlowEmps.equals(attr.Key) || GERptAttr.FlowEnder.equals(attr.Key) || GERptAttr.FlowEnderRDT.equals(attr.Key) || GERptAttr.FlowEndNode.equals(attr.Key) || GERptAttr.FlowNote.equals(attr.Key) || GERptAttr.FlowStarter.equals(attr.Key) || GERptAttr.GuestName.equals(attr.Key) || GERptAttr.GuestNo.equals(attr.Key) || GERptAttr.GUID.equals(attr.Key) || GERptAttr.PEmp.equals(attr.Key) || GERptAttr.PFlowNo.equals(attr.Key) || GERptAttr.PNodeID.equals(attr.Key) || GERptAttr.PWorkID.equals(attr.Key) || GERptAttr.Title.equals(attr.Key) || GERptAttr.PrjNo.equals(attr.Key) || GERptAttr.PrjName.equals(attr.Key) || attr.Key.equals("No") || attr.Key.equals("Name"))
+			if (WorkAttr.CDT.equals(attr.getKey()) || WorkAttr.RDT.equals(attr.getKey()) || WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey()) || WorkAttr.OID.equals(attr.getKey()) || WorkAttr.Emps.equals(attr.getKey()) || GERptAttr.AtPara.equals(attr.getKey()) || GERptAttr.BillNo.equals(attr.getKey()) || GERptAttr.FID.equals(attr.getKey()) || GERptAttr.FK_Dept.equals(attr.getKey()) || GERptAttr.FK_NY.equals(attr.getKey()) || GERptAttr.FlowDaySpan.equals(attr.getKey()) || GERptAttr.FlowEmps.equals(attr.getKey()) || GERptAttr.FlowEnder.equals(attr.getKey()) || GERptAttr.FlowEnderRDT.equals(attr.getKey()) || GERptAttr.FlowEndNode.equals(attr.getKey()) || GERptAttr.FlowNote.equals(attr.getKey()) || GERptAttr.FlowStarter.equals(attr.getKey()) || GERptAttr.GuestName.equals(attr.getKey()) || GERptAttr.GuestNo.equals(attr.getKey()) || GERptAttr.GUID.equals(attr.getKey()) || GERptAttr.PEmp.equals(attr.getKey()) || GERptAttr.PFlowNo.equals(attr.getKey()) || GERptAttr.PNodeID.equals(attr.getKey()) || GERptAttr.PWorkID.equals(attr.getKey()) || GERptAttr.Title.equals(attr.getKey()) || GERptAttr.PrjNo.equals(attr.getKey()) || GERptAttr.PrjName.equals(attr.getKey()) || attr.Key.equals("No") || attr.Key.equals("Name"))
 			{
 				continue;
 			}
 
-			if (GERptAttr.MyNum.equals(attr.Key))
+			if (GERptAttr.MyNum.equals(attr.getKey()))
 			{
 				this.SetValByKey(attr.Key, 1);
 				continue;
@@ -313,7 +313,7 @@ public class GERpt extends BP.En.EntityOID
 
 			try
 			{
-				this.SetValByKey(attr.Key, dr.get(attr.Key));
+				this.SetValByKey(attr.Key, dr.get(attr.getKey()));
 			}
 			catch (java.lang.Exception e)
 			{
@@ -328,21 +328,21 @@ public class GERpt extends BP.En.EntityOID
 			return;
 		}
 
-		Attrs attrs = fromEn.EnMap.Attrs;
+		Attrs attrs = fromEn.getEnMap().getAttrs();
 		for (Attr attr : attrs)
 		{
-			if (WorkAttr.CDT.equals(attr.Key) || WorkAttr.RDT.equals(attr.Key) || WorkAttr.Rec.equals(attr.Key) || WorkAttr.FID.equals(attr.Key) || WorkAttr.OID.equals(attr.Key) || WorkAttr.Emps.equals(attr.Key) || GERptAttr.AtPara.equals(attr.Key) || GERptAttr.BillNo.equals(attr.Key) || GERptAttr.FID.equals(attr.Key) || GERptAttr.FK_Dept.equals(attr.Key) || GERptAttr.FK_NY.equals(attr.Key) || GERptAttr.FlowDaySpan.equals(attr.Key) || GERptAttr.FlowEmps.equals(attr.Key) || GERptAttr.FlowEnder.equals(attr.Key) || GERptAttr.FlowEnderRDT.equals(attr.Key) || GERptAttr.FlowEndNode.equals(attr.Key) || GERptAttr.FlowNote.equals(attr.Key) || GERptAttr.FlowStarter.equals(attr.Key) || GERptAttr.GuestName.equals(attr.Key) || GERptAttr.GuestNo.equals(attr.Key) || GERptAttr.GUID.equals(attr.Key) || GERptAttr.PEmp.equals(attr.Key) || GERptAttr.PFlowNo.equals(attr.Key) || GERptAttr.PNodeID.equals(attr.Key) || GERptAttr.PWorkID.equals(attr.Key) || GERptAttr.Title.equals(attr.Key) || GERptAttr.PrjNo.equals(attr.Key) || GERptAttr.PrjName.equals(attr.Key) || attr.Key.equals("No") || attr.Key.equals("Name"))
+			if (WorkAttr.CDT.equals(attr.getKey()) || WorkAttr.RDT.equals(attr.getKey()) || WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey()) || WorkAttr.OID.equals(attr.getKey()) || WorkAttr.Emps.equals(attr.getKey()) || GERptAttr.AtPara.equals(attr.getKey()) || GERptAttr.BillNo.equals(attr.getKey()) || GERptAttr.FID.equals(attr.getKey()) || GERptAttr.FK_Dept.equals(attr.getKey()) || GERptAttr.FK_NY.equals(attr.getKey()) || GERptAttr.FlowDaySpan.equals(attr.getKey()) || GERptAttr.FlowEmps.equals(attr.getKey()) || GERptAttr.FlowEnder.equals(attr.getKey()) || GERptAttr.FlowEnderRDT.equals(attr.getKey()) || GERptAttr.FlowEndNode.equals(attr.getKey()) || GERptAttr.FlowNote.equals(attr.getKey()) || GERptAttr.FlowStarter.equals(attr.getKey()) || GERptAttr.GuestName.equals(attr.getKey()) || GERptAttr.GuestNo.equals(attr.getKey()) || GERptAttr.GUID.equals(attr.getKey()) || GERptAttr.PEmp.equals(attr.getKey()) || GERptAttr.PFlowNo.equals(attr.getKey()) || GERptAttr.PNodeID.equals(attr.getKey()) || GERptAttr.PWorkID.equals(attr.getKey()) || GERptAttr.Title.equals(attr.getKey()) || GERptAttr.PrjNo.equals(attr.getKey()) || GERptAttr.PrjName.equals(attr.getKey()) || attr.Key.equals("No") || attr.Key.equals("Name"))
 			{
 				continue;
 			}
 
 
-			if (GERptAttr.MyNum.equals(attr.Key))
+			if (GERptAttr.MyNum.equals(attr.getKey()))
 			{
 				this.SetValByKey(attr.Key, 1);
 				continue;
 			}
-			this.SetValByKey(attr.Key, fromEn.GetValByKey(attr.Key));
+			this.SetValByKey(attr.Key, fromEn.GetValByKey(attr.getKey()));
 		}
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

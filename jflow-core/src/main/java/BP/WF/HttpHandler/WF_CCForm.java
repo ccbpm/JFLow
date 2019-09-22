@@ -1867,30 +1867,30 @@ public class WF_CCForm extends DirectoryPageBase
 										}
 									}
 									continue;
-								case "@WebUser.getFK_Dept()Name":
+								case "@WebUser.getFK_DeptName":
 									if (attr.UIIsReadonly == true)
 									{
-										en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()Name);
+										en.SetValByKey(attr.Key, Web.WebUser.getFK_DeptName);
 									}
 									else
 									{
 										if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()Name);
+											en.SetValByKey(attr.Key, Web.WebUser.getFK_DeptName);
 										}
 									}
 									continue;
-								case "@WebUser.getFK_Dept()NameOfFull":
-								case "@WebUser.getFK_Dept()FullName":
+								case "@WebUser.getFK_DeptNameOfFull":
+								case "@WebUser.getFK_DeptFullName":
 									if (attr.UIIsReadonly == true)
 									{
-										en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()NameOfFull);
+										en.SetValByKey(attr.Key, Web.WebUser.getFK_DeptNameOfFull);
 									}
 									else
 									{
 										if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()NameOfFull);
+											en.SetValByKey(attr.Key, Web.WebUser.getFK_DeptNameOfFull);
 										}
 									}
 									continue;
@@ -2406,10 +2406,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 给实体循环赋值/并保存.
-		BP.En.Attrs attrs = dtl.EnMap.Attrs;
+		BP.En.Attrs attrs = dtl.getEnMap().getAttrs();
 		for (BP.En.Attr attr : attrs)
 		{
-			dtl.SetValByKey(attr.Key, this.GetRequestVal(attr.Key));
+			dtl.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 		}
 
 		//关联主赋值.
@@ -4324,9 +4324,9 @@ public class WF_CCForm extends DirectoryPageBase
 
 			GEDtl dtlEn = dtls.GetNewEntity instanceof GEDtl ? (GEDtl)dtls.GetNewEntity : null;
 			//遍历属性，循环赋值.
-			for (Attr attr : dtlEn.EnMap.Attrs)
+			for (Attr attr : dtlEn.getEnMap().getAttrs())
 			{
-				dtlEn.SetValByKey(attr.Key, this.GetRequestVal(attr.Key));
+				dtlEn.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 
 			}
 			switch (dtl.DtlOpenType)
@@ -4438,7 +4438,7 @@ public class WF_CCForm extends DirectoryPageBase
 			GEDtls dtls = new GEDtls(this.getFK_MapDtl());
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 检查两个文件是否一致。 生成要导入的属性
-			BP.En.Attrs attrs = dtls.GetNewEntity.EnMap.Attrs;
+			BP.En.Attrs attrs = dtls.GetNewEntity.getEnMap().getAttrs();
 			BP.En.Attrs attrsExp = new BP.En.Attrs();
 
 			boolean isHave = false;
@@ -4515,7 +4515,7 @@ public class WF_CCForm extends DirectoryPageBase
 							}
 							if (isHavel == false)
 							{
-								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.Desc + ")，数据(" + val + ")不符合格式,改值没有在枚举列表里.";
+								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.getDesc() + ")，数据(" + val + ")不符合格式,改值没有在枚举列表里.";
 								val = attr.DefaultVal.toString();
 							}
 							break;
@@ -4544,7 +4544,7 @@ public class WF_CCForm extends DirectoryPageBase
 							}
 							if (isHavelIt == false)
 							{
-								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.Desc + ")，数据(" + val + ")不符合格式,改值没有在外键数据列表里.";
+								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.getDesc() + ")，数据(" + val + ")不符合格式,改值没有在外键数据列表里.";
 							}
 							break;
 						default:
@@ -4623,7 +4623,7 @@ public class WF_CCForm extends DirectoryPageBase
 				///#region 检查两个文件是否一致。 生成要导入的属性
 			Entities dtls = ClassFactory.GetEns(this.getFK_MapDtl());
 			EntityOID dtlEn = dtls.GetNewEntity instanceof EntityOID ? (EntityOID)dtls.GetNewEntity : null;
-			BP.En.Attrs attrs = dtlEn.EnMap.Attrs;
+			BP.En.Attrs attrs = dtlEn.getEnMap().getAttrs();
 			BP.En.Attrs attrsExp = new BP.En.Attrs();
 
 			boolean isHave = false;
@@ -4700,7 +4700,7 @@ public class WF_CCForm extends DirectoryPageBase
 							}
 							if (isHavel == false)
 							{
-								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.Desc + ")，数据(" + val + ")不符合格式,改值没有在枚举列表里.";
+								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.getDesc() + ")，数据(" + val + ")不符合格式,改值没有在枚举列表里.";
 								val = attr.DefaultVal.toString();
 							}
 							break;
@@ -4729,7 +4729,7 @@ public class WF_CCForm extends DirectoryPageBase
 							}
 							if (isHavelIt == false)
 							{
-								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.Desc + ")，数据(" + val + ")不符合格式,改值没有在外键数据列表里.";
+								errMsg += "@数据格式不规范,第(" + i + ")行，列(" + attr.getDesc() + ")，数据(" + val + ")不符合格式,改值没有在外键数据列表里.";
 							}
 							break;
 						default:

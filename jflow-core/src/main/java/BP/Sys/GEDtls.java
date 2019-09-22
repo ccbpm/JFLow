@@ -25,7 +25,7 @@ public class GEDtls extends EntitiesOID
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		if (this.FK_MapDtl == null)
 		{

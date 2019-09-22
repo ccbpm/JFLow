@@ -29,7 +29,7 @@ public class Bills extends EntitiesMyPK
 	 单据
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Bill();
 	}

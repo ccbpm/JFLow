@@ -14,7 +14,7 @@ public class EnVers extends EntitiesMyPK
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new EnVer();
 	}

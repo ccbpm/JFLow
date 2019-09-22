@@ -14,7 +14,7 @@ public class ExcelFields extends EntitiesNoName
 	 生成Excel字段实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new ExcelField();
 	}

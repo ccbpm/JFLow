@@ -231,7 +231,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
 			sql = sql.replace("@WebUser.getName()", WebUser.getName());
 			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
-			sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+			sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 
 			if (sql.contains("@") == true)
 			{
@@ -1843,7 +1843,7 @@ public class WF_MyFlow extends DirectoryPageBase
 					{
 						myurl += "?1=1";
 					}
-					Attrs myattrs = currNode.getHisWork().EnMap.Attrs;
+					Attrs myattrs = currNode.getHisWork().getEnMap().getAttrs();
 					Work hisWK = currNode.getHisWork();
 					for (Attr attr : myattrs)
 					{
@@ -1851,7 +1851,7 @@ public class WF_MyFlow extends DirectoryPageBase
 						{
 							break;
 						}
-						myurl = myurl.replace("@" + attr.Key, hisWK.GetValStrByKey(attr.Key));
+						myurl = myurl.replace("@" + attr.Key, hisWK.GetValStrByKey(attr.getKey()));
 					}
 					myurl = myurl.replace("@WebUser.getNo()", WebUser.getNo());
 					myurl = myurl.replace("@WebUser.getName()", WebUser.getName());
@@ -1886,13 +1886,13 @@ public class WF_MyFlow extends DirectoryPageBase
 					//        string url = tt.TurnToURL.Clone().ToString();
 					//        if (url.Contains("?") == false)
 					//            url += "?1=1";
-					//        Attrs attrs = currNode.HisWork.EnMap.Attrs;
+					//        Attrs attrs = currNode.HisWork.getEnMap().getAttrs();
 					//        Work hisWK1 = currNode.HisWork;
 					//        foreach (Attr attr in attrs)
 					//        {
 					//            if (url.Contains("@") == false)
 					//                break;
-					//            url = url.Replace("@" + attr.Key, hisWK1.GetValStrByKey(attr.Key));
+					//            url = url.Replace("@" + attr.Key, hisWK1.GetValStrByKey(attr.getKey()));
 					//        }
 					//        if (url.Contains("@"))
 					//            throw new Exception("流程设计错误，在节点转向url中参数没有被替换下来。Url:" + url);
@@ -2005,7 +2005,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
 		sql = sql.replace("@WebUser.getName()", WebUser.getName());
 		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
-		sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//获取选中的数据源
@@ -2095,8 +2095,8 @@ public class WF_MyFlow extends DirectoryPageBase
 		//            continue;
 		//        }
 
-		//        Attrs frmAttrs = en.EnMap.Attrs;
-		//        Attrs wkAttrs = wk.EnMap.Attrs;
+		//        Attrs frmAttrs = en.getEnMap().getAttrs();
+		//        Attrs wkAttrs = wk.getEnMap().getAttrs();
 		//        foreach (Attr wkattr in wkAttrs)
 		//        {
 		//            if (wkattr.Key.Equals(StartWorkAttr.OID) || wkattr.Key.Equals(StartWorkAttr.FID) || wkattr.Key.Equals(StartWorkAttr.CDT)
@@ -2110,9 +2110,9 @@ public class WF_MyFlow extends DirectoryPageBase
 
 		//            foreach (Attr attr in frmAttrs)
 		//            {
-		//                if (wkattr.Key.Equals(attr.Key))
+		//                if (wkattr.Key.Equals(attr.getKey()))
 		//                {
-		//                    wk.SetValByKey(wkattr.Key, en.GetValStrByKey(attr.Key));
+		//                    wk.SetValByKey(wkattr.Key, en.GetValStrByKey(attr.getKey()));
 		//                    break;
 		//                }
 
@@ -2169,10 +2169,10 @@ public class WF_MyFlow extends DirectoryPageBase
 				gwf.setWFState(wfState);
 
 				gwf.setFK_Dept(WebUser.getFK_Dept());
-				gwf.setDeptName(WebUser.getFK_Dept()Name);
+				gwf.setDeptName(WebUser.getFK_DeptName);
 				gwf.setStarter(WebUser.getNo());
 				gwf.setStarterName(WebUser.getName());
-				gwf.setRDT(DataType.getCurrentDataTime()ss);
+				gwf.setRDT(DataType.getCurrentDataTime());
 				gwf.Insert();
 
 				// 产生工作列表.
@@ -2187,10 +2187,10 @@ public class WF_MyFlow extends DirectoryPageBase
 
 				gwl.setFK_Flow(gwf.getFK_Flow());
 				gwl.setFK_Dept(WebUser.getFK_Dept());
-				gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
+				gwl.setFK_DeptT(WebUser.getFK_DeptName);
 
 				gwl.setSDT("无");
-				gwl.setDTOfWarning(DataType.getCurrentDataTime()ss);
+				gwl.setDTOfWarning(DataType.getCurrentDataTime());
 				gwl.setIsEnable(true);
 
 				gwl.setIsPass(false);

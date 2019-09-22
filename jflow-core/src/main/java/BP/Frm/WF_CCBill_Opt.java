@@ -119,7 +119,7 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
-		Attrs attrs = rpts.GetNewEntity.EnMap.Attrs;
+		Attrs attrs = rpts.GetNewEntity.getEnMap().getAttrs();
 
 		QueryObject qo = new QueryObject(rpts);
 

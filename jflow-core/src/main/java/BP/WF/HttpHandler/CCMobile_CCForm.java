@@ -56,7 +56,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region  查询出来从表数据.
 		GEDtls dtls = new GEDtls(this.getEnsName());
-		GEDtl dtl = dtls.getGetNewEntity() instanceof GEDtl ? (GEDtl)dtls.getGetNewEntity() : null;
+		GEDtl dtl = dtls.getNewEntity() instanceof GEDtl ? (GEDtl)dtls.getNewEntity() : null;
 		dtls.Retrieve("RefPK", this.GetRequestVal("RefPKVal"));
 		Map map = dtl.getEnMap();
 		for (Entity item : dtls.ToJavaList())

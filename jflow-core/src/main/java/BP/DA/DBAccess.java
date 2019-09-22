@@ -1517,13 +1517,13 @@ public class DBAccess {
 				rs = stmt.executeQuery(sql);
 			}
 			Attr attr = null;
-			Entity myen = ens.getGetNewEntity();
+			Entity myen = ens.getNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
 			BP.En.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
-				Entity en = ens.getGetNewEntity();
+				Entity en = ens.getNewEntity();
 				en.setSQLCash(sqlCash);
 				en.setMap(map);
 				// en.setRow( sqlCash.CreateNewRow() );
@@ -1745,13 +1745,13 @@ public class DBAccess {
 				rs = stmt.executeQuery(sql);
 			}
 			Attr attr = null;
-			Entity myen = ens.getGetNewEntity();
+			Entity myen = ens.getNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
 			BP.En.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
-				Entity en = ens.getGetNewEntity();
+				Entity en = ens.getNewEntity();
 				en.setSQLCash(sqlCash);
 				en.setMap(map);
 				// en.setRow( sqlCash.CreateNewRow() );
@@ -1937,13 +1937,13 @@ public class DBAccess {
 			}
 
 			Attr attr = null;
-			Entity myen = ens.getGetNewEntity();
+			Entity myen = ens.getNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
 			BP.En.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
-				Entity en = ens.getGetNewEntity();
+				Entity en = ens.getNewEntity();
 				en.setSQLCash(sqlCash);
 				en.setMap(map);
 				// en.setRow( sqlCash.CreateNewRow() );

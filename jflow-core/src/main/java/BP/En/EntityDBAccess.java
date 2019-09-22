@@ -260,7 +260,7 @@ public class EntityDBAccess
 		try
 		{
 			DataTable dt = new DataTable();
-			switch (ens.getGetNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
+			switch (ens.getNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
 			{
 				case AppCenterDSN:
 					dt = DBAccess.RunSQLReturnTable(sql);
@@ -274,13 +274,13 @@ public class EntityDBAccess
 				return 0;
 			}
 
-			Map enMap = ens.getGetNewEntity().getEnMap();
+			Map enMap = ens.getNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
 
 			//Entity  en1 = ens.GetNewEntity;
 			for (DataRow dr : dt.Rows)
 			{
-				Entity en = ens.getGetNewEntity();
+				Entity en = ens.getNewEntity();
 				//Entity  en = en1.CreateInstance();
 				for (Attr attr : attrs)
 				{
@@ -296,13 +296,13 @@ public class EntityDBAccess
 		catch (RuntimeException ex)
 		{
 			// ens.GetNewEntity.CheckPhysicsTable();
-			throw new RuntimeException("@在[" + ens.getGetNewEntity().getEnDesc() + "]查询时出现错误:" + ex.getMessage());
+			throw new RuntimeException("@在[" + ens.getNewEntity().getEnDesc() + "]查询时出现错误:" + ex.getMessage());
 		}
 	}
 	public static int Retrieve(Entities ens, String sql, Paras paras, String[] fullAttrs)
 	{
 		DataTable dt = null;
-		switch (ens.getGetNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
+		switch (ens.getNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
 		{
 			case AppCenterDSN:
 				dt = DBAccess.RunSQLReturnTable(sql, paras);

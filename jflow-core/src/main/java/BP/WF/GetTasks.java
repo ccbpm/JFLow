@@ -33,7 +33,7 @@ public class GetTasks extends BP.En.Entities
 	 获得实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GetTask();
 	}

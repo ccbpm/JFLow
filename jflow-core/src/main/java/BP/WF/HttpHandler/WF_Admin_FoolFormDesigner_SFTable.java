@@ -59,7 +59,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 					continue;
 				}
 
-				if (en.EnMap.Attrs.Contains("No") == false)
+				if (en.getEnMap().getAttrs().Contains("No") == false)
 				{
 					continue;
 				}

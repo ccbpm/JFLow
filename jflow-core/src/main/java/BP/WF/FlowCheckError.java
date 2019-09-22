@@ -320,7 +320,7 @@ public class FlowCheckError
 
 					sql = sql.replace("@WebUser.getNo()", "'ss'");
 					sql = sql.replace("@WebUser.getName()", "'ss'");
-					sql = sql.replace("@WebUser.getFK_Dept()Name", "'ss'");
+					sql = sql.replace("@WebUser.getFK_DeptName", "'ss'");
 					sql = sql.replace("@WebUser.getFK_Dept()", "'ss'");
 
 
@@ -401,7 +401,7 @@ public class FlowCheckError
 					{
 						continue;
 					}
-					if (ndOfCond.getHisWork().EnMap.Attrs.Contains(cond.getAttrKey()) == false)
+					if (ndOfCond.getHisWork().getEnMap().getAttrs().Contains(cond.getAttrKey()) == false)
 					{
 						this.AddMsgError("@错误:属性:" + cond.getAttrKey() + " , " + cond.getAttrName() + " 不存在。", nd);
 						continue;
@@ -569,7 +569,7 @@ public class FlowCheckError
 			{
 				Work wk = nd.getHisWork();
 				String attrKey = "";
-				for (Attr attr : wk.EnMap.Attrs)
+				for (Attr attr : wk.getEnMap().getAttrs())
 				{
 					if (attr.UIVisible == true && attr.UIIsDoc && attr.UIIsReadonly == false)
 					{
@@ -605,7 +605,7 @@ public class FlowCheckError
 
 			if (this.flow.getIsMD5())
 			{
-				if (nd.getHisWork().EnMap.Attrs.Contains(WorkAttr.MD5) == false)
+				if (nd.getHisWork().getEnMap().getAttrs().Contains(WorkAttr.MD5) == false)
 				{
 					nd.RepareMap(this.flow);
 				}

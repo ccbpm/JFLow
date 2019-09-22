@@ -21,7 +21,7 @@ public class Nodes extends EntitiesOID
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Node();
 	}
@@ -73,7 +73,7 @@ public class Nodes extends EntitiesOID
 			qo.DoQuery();
 
 			Cash.AddObj(this.toString(), Depositary.Application, nds);
-			Cash.AddObj(this.getGetNewEntity().toString(), Depositary.Application, nds);
+			Cash.AddObj(this.getNewEntity().toString(), Depositary.Application, nds);
 		}
 
 		this.Clear();

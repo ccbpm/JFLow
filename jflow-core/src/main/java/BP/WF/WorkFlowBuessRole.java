@@ -32,10 +32,10 @@ public class WorkFlowBuessRole
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
 			// 为了保持与ccflow4.5的兼容,从开始节点属性里获取.
-			Attr myattr = wk.EnMap.Attrs.GetAttrByKey("Title");
+			Attr myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			if (myattr == null)
 			{
-				myattr = wk.EnMap.Attrs.GetAttrByKey("Title");
+				myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			}
 
 			if (myattr != null)
@@ -45,20 +45,20 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 
 		titleRole = titleRole.replace("@WebUser.getNo()", emp.No);
 		titleRole = titleRole.replace("@WebUser.getName()", emp.Name);
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", emp.FK_DeptText);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptName", emp.FK_DeptText);
 		titleRole = titleRole.replace("@WebUser.getFK_Dept()", emp.FK_Dept);
 		titleRole = titleRole.replace("@RDT", rdt);
 		if (titleRole.contains("@") == true)
 		{
-			Attrs attrs = wk.EnMap.Attrs;
+			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换。
 			for (Attr attr : attrs)
@@ -71,7 +71,7 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -85,7 +85,7 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 			}
 		}
 		titleRole = titleRole.replace('~', '-');
@@ -118,10 +118,10 @@ public class WorkFlowBuessRole
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
 			// 为了保持与ccflow4.5的兼容,从开始节点属性里获取.
-			Attr myattr = wk.EnMap.Attrs.GetAttrByKey("Title");
+			Attr myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			if (myattr == null)
 			{
-				myattr = wk.EnMap.Attrs.GetAttrByKey("Title");
+				myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			}
 
 			if (myattr != null)
@@ -131,25 +131,25 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+			titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 		}
 
 		titleRole = titleRole.replace("@WebUser.getNo()", wk.getRec());
 		titleRole = titleRole.replace("@WebUser.getName()", wk.getRecText());
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", wk.getRecOfEmp().FK_DeptText);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptName", wk.getRecOfEmp().FK_DeptText);
 		titleRole = titleRole.replace("@WebUser.getFK_Dept()", wk.getRecOfEmp().FK_Dept);
 		titleRole = titleRole.replace("@RDT", wk.getRDT());
 
 		if (titleRole.contains("@"))
 		{
-			Attrs attrs = wk.EnMap.Attrs;
+			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换 , 因为外键文本的字段的长度相对较长。
 			for (Attr attr : attrs)
@@ -163,7 +163,7 @@ public class WorkFlowBuessRole
 					continue;
 				}
 
-				String temp = wk.GetValStrByKey(attr.Key);
+				String temp = wk.GetValStrByKey(attr.getKey());
 				if (DataType.IsNullOrEmpty(temp))
 				{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -187,7 +187,7 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 			}
 		}
 		titleRole = titleRole.replace('~', '-');
@@ -230,20 +230,20 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+			titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 		}
 
 
 		titleRole = titleRole.replace("@WebUser.getNo()", wk.getFlowStarter());
 		titleRole = titleRole.replace("@WebUser.getName()", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 		titleRole = titleRole.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", wk.getFlowStartRDT());
 		if (titleRole.contains("@"))
@@ -261,7 +261,7 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -276,7 +276,7 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
 			}
 		}
 		titleRole = titleRole.replace('~', '-');
@@ -318,7 +318,7 @@ public class WorkFlowBuessRole
 				continue;
 			}
 
-			Attrs attrs = en.EnMap.Attrs;
+			Attrs attrs = en.getEnMap().getAttrs();
 			// 优先考虑外键的替换,因为外键文本的字段的长度相对较长。
 			for (Attr attr : attrs)
 			{
@@ -330,7 +330,7 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, en.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -345,7 +345,7 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, en.GetValStrByKey(attr.Key));
+				titleRole = titleRole.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
 			}
 
 			//如果全部已经替换完成.
@@ -1117,7 +1117,7 @@ public class WorkFlowBuessRole
 				specEmpFields = "SysSendEmps";
 			}
 
-			if (enParas.EnMap.Attrs.Contains(specEmpFields) == false)
+			if (enParas.getEnMap().getAttrs().Contains(specEmpFields) == false)
 			{
 				throw new RuntimeException("@您设置的接受人规则是按照表单指定的字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
 			}
@@ -1159,7 +1159,7 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(emps))
 			{
-				throw new RuntimeException("@没有在字段[" + enParas.EnMap.Attrs.GetAttrByKey(specEmpFields).Desc + "]中指定接受人，工作无法向下发送。");
+				throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).Desc + "]中指定接受人，工作无法向下发送。");
 			}
 
 			// 把它加入接受人员列表中.

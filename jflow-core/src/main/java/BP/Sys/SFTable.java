@@ -73,9 +73,9 @@ public class SFTable extends EntityNoName
 					{
 						pa[1] = pa[1].replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					}
-					if (pa[1].contains("@WebUser.getFK_Dept()Name"))
+					if (pa[1].contains("@WebUser.getFK_DeptName"))
 					{
-						pa[1] = pa[1].replace("@WebUser.getFK_Dept()Name", WebUser.getFK_DeptName());
+						pa[1] = pa[1].replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
 					}
 				}
 				catch (java.lang.Exception e)
@@ -819,7 +819,7 @@ public class SFTable extends EntityNoName
 		if (this.getSrcType() == Sys.SrcType.BPClass)
 		{
 			Entities ens = ClassFactory.GetEns(this.getNo());
-			Entity en = ens.getGetNewEntity();
+			Entity en = ens.getNewEntity();
 			this.setName(en.getEnDesc());
 
 			//检查是否是树结构.

@@ -41,7 +41,7 @@ public class FlowFormTrees extends EntitiesTree
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new FlowFormTree();
 	}

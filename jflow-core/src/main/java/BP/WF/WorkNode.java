@@ -111,7 +111,7 @@ public class WorkNode
 	{
 		if (_execerDeptName == null)
 		{
-			_execerDeptName = WebUser.getFK_Dept()Name;
+			_execerDeptName = WebUser.getFK_DeptName;
 		}
 		return _execerDeptName;
 	}
@@ -542,10 +542,10 @@ public class WorkNode
 				break;
 			default:
 				this.getHisGenerWorkFlow().setFK_Node(town.getHisNode().getNodeID());
-				this.getHisGenerWorkFlow().setSDTOfNode(dtOfShould.toString(DataType.SysDataTimeFormat));
+				this.getHisGenerWorkFlow().setSDTOfNode(dtOfShould.toString(DataType.getSysDataTimeFormat()));
 				this.getHisGenerWorkFlow().SetPara("CH" + this.town.getHisNode().getNodeID(), this.getHisGenerWorkFlow().getSDTOfNode());
-				//this.HisGenerWorkFlow.SDTOfFlow = dtOfFlow.ToString(DataType.SysDataTimeFormat);
-				//this.HisGenerWorkFlow.SDTOfFlowWarning = dtOfFlowWarning.ToString(DataType.SysDataTimeFormat);
+				//this.HisGenerWorkFlow.SDTOfFlow = dtOfFlow.ToString(DataType.getSysDataTimeFormat());
+				//this.HisGenerWorkFlow.SDTOfFlowWarning = dtOfFlowWarning.ToString(DataType.getSysDataTimeFormat());
 				this.getHisGenerWorkFlow().setTodoEmpsNum(dt.Rows.size());
 				break;
 		}
@@ -625,11 +625,11 @@ public class WorkNode
 			}
 			else
 			{
-				wl.setSDT(dtOfShould.toString(DataType.SysDataTimeFormat + ":ss"));
+				wl.setSDT(dtOfShould.toString(DataType.getSysDataTimeFormat() + ":ss"));
 			}
 
 			//警告日期.
-			wl.setDTOfWarning(dtOfWarning.toString(DataType.SysDataTimeFormat));
+			wl.setDTOfWarning(dtOfWarning.toString(DataType.getSysDataTimeFormat()));
 
 			wl.setFK_Flow(town.getHisNode().getFK_Flow());
 			//  wl.Sender = this.Execer;
@@ -835,10 +835,10 @@ public class WorkNode
 				}
 				else
 				{
-					wl.setSDT(dtOfShould.toString(DataType.SysDataTimeFormat + ":ss"));
+					wl.setSDT(dtOfShould.toString(DataType.getSysDataTimeFormat() + ":ss"));
 				}
 
-				wl.setDTOfWarning(dtOfWarning.toString(DataType.SysDataTimeFormat));
+				wl.setDTOfWarning(dtOfWarning.toString(DataType.getSysDataTimeFormat()));
 
 				wl.setFK_Flow(town.getHisNode().getFK_Flow());
 				if (this.IsHaveSubThreadGroupMark == true)
@@ -1330,8 +1330,8 @@ public class WorkNode
 					}
 
 					skipWork.setRec(this.getExecer());
-					skipWork.SetValByKey(WorkAttr.RDT, DataType.getCurrentDataTime()ss);
-					skipWork.SetValByKey(WorkAttr.CDT, DataType.getCurrentDataTime()ss);
+					skipWork.SetValByKey(WorkAttr.RDT, DataType.getCurrentDataTime());
+					skipWork.SetValByKey(WorkAttr.CDT, DataType.getCurrentDataTime());
 					skipWork.ResetDefaultVal();
 
 					// 把里面的默认值也copy报表里面去.
@@ -1580,7 +1580,7 @@ public class WorkNode
 									if (gedtls.size() != 0)
 									{
 										GEDtl dtl1 = gedtls[0] instanceof GEDtl ? (GEDtl)gedtls[0] : null;
-										if (dtl1.EnMap.Attrs.Contains("IsPass") == false)
+										if (dtl1.getEnMap().getAttrs().Contains("IsPass") == false)
 										{
 											isEnablePass = false;
 										}
@@ -1755,7 +1755,7 @@ public class WorkNode
 							///#region 处理签名，让签名的人是发起人。
 
 
-						Attrs attrs = skipWork.EnMap.Attrs;
+						Attrs attrs = skipWork.getEnMap().getAttrs();
 						boolean isUpdate = false;
 						for (Attr attr : attrs)
 						{
@@ -1763,22 +1763,22 @@ public class WorkNode
 							{
 								if (attr.DefaultValOfReal.equals("@WebUser.getNo()"))
 								{
-									skipWork.SetValByKey(attr.Key, this.getHisGenerWorkFlow().getStarter());
+									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarter());
 									isUpdate = true;
 								}
 								if (attr.DefaultValOfReal.equals("@WebUser.getName()"))
 								{
-									skipWork.SetValByKey(attr.Key, this.getHisGenerWorkFlow().getStarterName());
+									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarterName());
 									isUpdate = true;
 								}
 								if (attr.DefaultValOfReal.equals("@WebUser.getFK_Dept()"))
 								{
-									skipWork.SetValByKey(attr.Key, this.getHisGenerWorkFlow().getFK_Dept());
+									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getFK_Dept());
 									isUpdate = true;
 								}
 								if (attr.DefaultValOfReal.equals("@WebUser.DeptName"))
 								{
-									skipWork.SetValByKey(attr.Key, this.getHisGenerWorkFlow().getDeptName());
+									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getDeptName());
 									isUpdate = true;
 								}
 							}
@@ -2084,7 +2084,7 @@ public class WorkNode
 			dtOfShould = Glo.AddDayHoursSpan(LocalDateTime.now(), this.getHisNode().getTimeLimit(), this.getHisNode().getTimeLimitHH(), this.getHisNode().getTimeLimitMM(), this.getHisNode().getTWay());
 
 		// 应完成日期.
-		String sdt = dtOfShould.toString(DataType.SysDataTimeFormat);
+		String sdt = dtOfShould.toString(DataType.getSysDataTimeFormat());
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -2548,13 +2548,13 @@ public class WorkNode
 		}
 
 		// 流程应完成时间。
-		if (this.getHisWork().EnMap.Attrs.Contains(WorkSysFieldAttr.SysSDTOfFlow))
+		if (this.getHisWork().getEnMap().getAttrs().Contains(WorkSysFieldAttr.SysSDTOfFlow))
 		{
 			this.getHisGenerWorkFlow().setSDTOfFlow(this.getHisWork().GetValStrByKey(WorkSysFieldAttr.SysSDTOfFlow));
 		}
 
 		// 下一个节点应完成时间。
-		if (this.getHisWork().EnMap.Attrs.Contains(WorkSysFieldAttr.SysSDTOfNode))
+		if (this.getHisWork().getEnMap().getAttrs().Contains(WorkSysFieldAttr.SysSDTOfNode))
 		{
 			this.getHisGenerWorkFlow().setSDTOfNode(this.getHisWork().GetValStrByKey(WorkSysFieldAttr.SysSDTOfNode));
 		}
@@ -3210,11 +3210,11 @@ public class WorkNode
 						DataTable myDT = DBAccess.RunSQLReturnTable(sql);
 						if (myDT.Rows.size() == 1)
 						{
-							Attrs attrs = mywk.EnMap.Attrs;
+							Attrs attrs = mywk.getEnMap().getAttrs();
 							for (Attr attr : attrs)
 							{
 
-								switch (attr.Key)
+								switch (attr.getKey())
 								{
 									case GEDtlAttr.FID:
 									case GEDtlAttr.OID:
@@ -3775,7 +3775,7 @@ public class WorkNode
 		String FK_Emp = "";
 		String toEmpsStr = "";
 		String emps = "";
-		for (GenerWorkerList wl : current_gwls)
+		for (GenerWorkerList wl : current_gwls.ToJavaList())
 		{
 			toEmpsStr += BP.WF.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
 
@@ -3922,7 +3922,7 @@ public class WorkNode
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerlist SET CDT=" + dbstr + "CDT WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node AND FK_Emp=" + dbstr + "FK_Emp";
-		ps.Add(GenerWorkerListAttr.CDT, DataType.getCurrentDataTime()ss);
+		ps.Add(GenerWorkerListAttr.CDT, DataType.getCurrentDataTime());
 		ps.Add(GenerWorkerListAttr.WorkID, this.getWorkID());
 		ps.Add(GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
 		ps.Add(GenerWorkerListAttr.FK_Emp, this.getExecer());
@@ -4546,7 +4546,7 @@ public class WorkNode
 					if (gedtls.size() != 0)
 					{
 						GEDtl dtl1 = gedtls[0] instanceof GEDtl ? (GEDtl)gedtls[0] : null;
-						if (dtl1.EnMap.Attrs.Contains("IsPass") == false)
+						if (dtl1.getEnMap().getAttrs().Contains("IsPass") == false)
 						{
 							isEnablePass = false;
 						}
@@ -5014,7 +5014,7 @@ public class WorkNode
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#region 处理默认变量.
-				//foreach (Attr attr in geEn.EnMap.Attrs)
+				//foreach (Attr attr in geEn.getEnMap().getAttrs())
 				//{
 				//    if (attr.DefaultValOfReal == "@RDT")
 				//    {
@@ -5041,7 +5041,7 @@ public class WorkNode
 				//        continue;
 				//    }
 
-				//    if (attr.DefaultValOfReal == "@WebUser.getFK_Dept()Name")
+				//    if (attr.DefaultValOfReal == "@WebUser.getFK_DeptName")
 				//    {
 				//        Emp emp = new Emp(item.FK_Emp);
 				//        geEn.SetValByKey(attr.Key, emp.FK_DeptText);
@@ -5361,7 +5361,7 @@ public class WorkNode
 
 								log.setFK_Emp(WebUser.getNo());
 								log.setFK_EmpDept(WebUser.getFK_Dept());
-								log.setFK_EmpDeptName(WebUser.getFK_Dept()Name);
+								log.setFK_EmpDeptName(WebUser.getFK_DeptName);
 								log.setFK_Flow(this.getHisNode().getFK_Flow());
 								log.setFlowName(this.getHisFlow().Name);
 
@@ -5618,19 +5618,19 @@ public class WorkNode
 
 		BP.WF.Template.FrmNodes frmNDs = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
 		String err = "";
-		for (FrmNode item : frmNDs)
+		for (FrmNode item : frmNDs.ToJavaList())
 		{
 			MapData md = new MapData(item.getFK_Frm());
 
 			//可能是url.
-			if (md.HisFrmType == FrmType.Url)
+			if (md.getHisFrmType() == FrmType.Url)
 			{
 				continue;
 			}
 
 			//检查是否有？
 			boolean isHave = false;
-			for (FrmField myff : ffs)
+			for (FrmField myff : ffs.ToJavaList())
 			{
 				if (!myff.getFK_MapData().equals(item.getFK_Frm()))
 				{
@@ -5782,12 +5782,12 @@ public class WorkNode
 			}
 			else
 			{
-				gwl.setSDT(dtNow.toString(DataType.SysDataTimeFormat + ":ss"));
+				gwl.setSDT(dtNow.toString(DataType.getSysDataTimeFormat() + ":ss"));
 			}
 
 			//设置预警日期, 为了方便提前1天预警.
 			dtNow = dtNow.plusDays(-1);
-			gwl.setDTOfWarning(dtNow.toString(DataType.SysDataTimeFormat));
+			gwl.setDTOfWarning(dtNow.toString(DataType.getSysDataTimeFormat()));
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 处理天业集团对会签人的考核.
@@ -6124,8 +6124,9 @@ public class WorkNode
 	 处理队列节点
 	 
 	 @return 是否可以向下发送?
+	 * @throws Exception 
 	*/
-	public final boolean DealOradeNode()
+	public final boolean DealOradeNode() throws Exception
 	{
 		GenerWorkerLists gwls = new GenerWorkerLists();
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass);
@@ -6220,7 +6221,7 @@ public class WorkNode
 				qo.addAnd();
 				qo.AddWhere(GenerWorkFlowAttr.PNodeID, this.getHisNode().getNodeID());
 				qo.addAnd();
-				qo.AddWhere(GenerWorkFlowAttr.PFlowNo, this.getHisFlow().No);
+				qo.AddWhere(GenerWorkFlowAttr.PFlowNo, this.getHisFlow().getNo());
 				qo.addAnd();
 				qo.AddWhere(GenerWorkFlowAttr.WFSta, WFSta.Runing.getValue());
 				qo.DoQuery();
@@ -6872,7 +6873,7 @@ public class WorkNode
 			gwl.setFK_DeptT(emp.FK_DeptText);
 
 			gwl.setSDT("无");
-			gwl.setDTOfWarning(DataType.getCurrentDataTime()ss);
+			gwl.setDTOfWarning(DataType.getCurrentDataTime());
 			gwl.setIsEnable(true);
 
 			gwl.setIsPass(false);
@@ -7803,7 +7804,7 @@ public class WorkNode
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 							///#region 保存单据
 						Bill bill = new Bill();
-						bill.setMyPK( this.getHisWork().getFID() + "_" + this.getHisWork().getOID() + "_" + this.getHisNode().getNodeID() + "_" + func.getNo();
+						bill.setMyPK( this.getHisWork().getFID() + "_" + this.getHisWork().getOID() + "_" + this.getHisNode().getNodeID() + "_" + func.getNo());
 						bill.setFID(this.getHisWork().getFID());
 						bill.setWorkID(this.getHisWork().getOID());
 						bill.setFK_Node(this.getHisNode().getNodeID());
@@ -7942,14 +7943,14 @@ public class WorkNode
 				String msgOfSend = this.getHisNode().getTurnToDealDoc();
 				if (msgOfSend.contains("@"))
 				{
-					Attrs attrs = this.getHisWork().EnMap.Attrs;
+					Attrs attrs = this.getHisWork().getEnMap().getAttrs();
 					for (Attr attr : attrs)
 					{
 						if (msgOfSend.contains("@") == false)
 						{
 							continue;
 						}
-						msgOfSend = msgOfSend.replace("@" + attr.Key, this.getHisWork().GetValStrByKey(attr.Key));
+						msgOfSend = msgOfSend.replace("@" + attr.Key, this.getHisWork().GetValStrByKey(attr.getKey()));
 					}
 				}
 
@@ -8930,7 +8931,7 @@ public class WorkNode
 		}
 
 		this.getHisWork().SetValByKey("Title", gwf.getTitle());
-		gwf.setRDT(DataType.getCurrentDataTime()ss); // this.HisWork.RDT;
+		gwf.setRDT(DataType.getCurrentDataTime()); // this.HisWork.RDT;
 		gwf.setStarter(this.getExecer());
 		gwf.setStarterName(this.getExecerName());
 		gwf.setFK_Flow(this.getHisNode().getFK_Flow());
@@ -8955,7 +8956,7 @@ public class WorkNode
 				String err1 = BP.WF.Glo.multilingual("可能是流程设计错误,获取开始节点[" + gwf.getTitle() + "]的整体流程应完成时间有错误,是否包含SysSDTOfFlow字段? 异常信息:{0}.", "WorkNode", "wf_eng_error_5", ex.getMessage());
 				Log.DefaultLogWriteLineError(err1);
 				/*获取开始节点的整体流程应完成时间有错误,是否包含SysSDTOfFlow字段? .*/
-				if (this.getHisWork().EnMap.Attrs.Contains(WorkSysFieldAttr.SysSDTOfFlow) == false)
+				if (this.getHisWork().getEnMap().getAttrs().Contains(WorkSysFieldAttr.SysSDTOfFlow) == false)
 				{
 					String err2 = BP.WF.Glo.multilingual("流程设计错误，您设置的流程时效属性是按开始节点表单SysSDTOfFlow字段计算,但是开始节点表单不包含字段 SysSDTOfFlow ,系统错误信息:{0}.", "WorkNode", "wf_eng_error_5", ex.getMessage());
 					throw new RuntimeException(err2);
@@ -9008,7 +9009,7 @@ public class WorkNode
 				}
 			}
 
-			gwf.setSDTOfFlow(sdtOfFlow.toString(DataType.SysDataTimeFormat));
+			gwf.setSDTOfFlow(sdtOfFlow.toString(DataType.getSysDataTimeFormat()));
 
 		}
 		//按照设置的天数
@@ -9020,7 +9021,7 @@ public class WorkNode
 			{
 				throw new RuntimeException(BP.WF.Glo.multilingual("@初始化开始节点数据错误:{0}.", "WorkNode", "wf_eng_error_5", "设置流程完成时间不能为0天"));
 			}
-			gwf.setSDTOfFlow(LocalDateTime.now().plusDays(day).toString(DataType.SysDataTimeFormat));
+			gwf.setSDTOfFlow(LocalDateTime.now().plusDays(day).toString(DataType.getSysDataTimeFormat()));
 		}
 		//加入两个参数. 2013-02-17
 		if (gwf.getPWorkID() != 0)
@@ -9120,7 +9121,7 @@ public class WorkNode
 		wl.setFK_Dept(this.getExecerDeptNo());
 		// wl.WarningHour = this.HisNode.WarningHour;
 		wl.setSDT("无");
-		wl.setDTOfWarning(DataType.getCurrentDataTime()ss);
+		wl.setDTOfWarning(DataType.getCurrentDataTime());
 
 
 
@@ -9138,8 +9139,8 @@ public class WorkNode
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
-		this.rptGe.setFlowStartRDT(DataType.getCurrentDataTime()ss);
-		this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTime()ss);
+		this.rptGe.setFlowStartRDT(DataType.getCurrentDataTime());
+		this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTime());
 	}
 
 	/** 
@@ -9180,7 +9181,7 @@ public class WorkNode
 		}
 
 		rptGe.setFlowEnder(this.getExecer());
-		rptGe.setFlowEnderRDT(DataType.getCurrentDataTime()ss);
+		rptGe.setFlowEnderRDT(DataType.getCurrentDataTime());
 
 		//设置当前的流程所有的用时.
 		rptGe.setFlowDaySpan(DataType.GeTimeLimits(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT), DataType.getCurrentDataTime()));
@@ -9212,9 +9213,9 @@ public class WorkNode
 	*/
 	public final void DoCopyRptWork(Work fromWK)
 	{
-		for (Attr attr : fromWK.EnMap.Attrs)
+		for (Attr attr : fromWK.getEnMap().getAttrs())
 		{
-			switch (attr.Key)
+			switch (attr.getKey())
 			{
 				case BP.WF.Data.GERptAttr.FK_NY:
 				case BP.WF.Data.GERptAttr.FK_Dept:
@@ -9231,7 +9232,7 @@ public class WorkNode
 					break;
 			}
 
-			Object obj = fromWK.GetValByKey(attr.Key);
+			Object obj = fromWK.GetValByKey(attr.getKey());
 			if (obj == null)
 			{
 				continue;
@@ -9279,7 +9280,7 @@ public class WorkNode
 			t.setFID(this.getHisGenerWorkFlow().getFID());
 		}
 
-		t.setRDT(DataType.getCurrentDataTime()ss);
+		t.setRDT(DataType.getCurrentDataTime());
 		t.setHisActionType(at);
 
 		t.setNDFrom(getndFrom().getNodeID());
@@ -9416,7 +9417,7 @@ public class WorkNode
 		t.setWorkID(this.getHisWork().getOID());
 		t.setFID(this.getHisWork().getFID());
 
-		t.setRDT(DataType.getCurrentDataTime()ss);
+		t.setRDT(DataType.getCurrentDataTime());
 
 
 		t.setHisActionType(at);
@@ -9535,7 +9536,7 @@ public class WorkNode
 		int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID(), GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 		if (i != 0)
 		{
-			gwl.setCDT(DataType.getCurrentDataTime()ss);
+			gwl.setCDT(DataType.getCurrentDataTime());
 			gwl.Update();
 		}
 
@@ -9659,7 +9660,7 @@ public class WorkNode
 
 		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
 		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
 		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 
@@ -10286,7 +10287,7 @@ public class WorkNode
 		return this._HisNode;
 	}
 	private RememberMe HisRememberMe = null;
-	public final RememberMe GetHisRememberMe(Node nd)
+	public final RememberMe GetHisRememberMe(Node nd) throws Exception
 	{
 		if (HisRememberMe == null || HisRememberMe.getFK_Node() != nd.getNodeID())
 		{

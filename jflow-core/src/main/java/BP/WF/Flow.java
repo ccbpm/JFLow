@@ -1307,7 +1307,7 @@ public class Flow extends BP.En.EntityNoName
 		mygwf.setStarter(WebUser.getNo());
 		mygwf.setStarterName(WebUser.getName());
 		mygwf.setFK_Dept(WebUser.getFK_Dept());
-		mygwf.setDeptName(WebUser.getFK_Dept()Name);
+		mygwf.setDeptName(WebUser.getFK_DeptName);
 		mygwf.setRDT(BP.DA.DataType.getCurrentDataTime());
 		mygwf.setTitle(rpt.getTitle());
 		mygwf.setBillNo(rpt.getBillNo());
@@ -1477,8 +1477,8 @@ public class Flow extends BP.En.EntityNoName
 		wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
 		wk.SetValByKey(GERptAttr.WFState, WFState.Runing);
 		wk.SetValByKey("FK_Dept", WebUser.getFK_Dept());
-		wk.SetValByKey("FK_DeptName", WebUser.getFK_Dept()Name);
-		wk.SetValByKey("FK_DeptText", WebUser.getFK_Dept()Name);
+		wk.SetValByKey("FK_DeptName", WebUser.getFK_DeptName);
+		wk.SetValByKey("FK_DeptText", WebUser.getFK_DeptName);
 		wk.setFID(0);
 		wk.SetValByKey("RecText", WebUser.getName());
 
@@ -2175,7 +2175,7 @@ public class Flow extends BP.En.EntityNoName
 
 								sql = sql.replace("@WebUser.getNo()", "ss");
 								sql = sql.replace("@WebUser.getName()", "ss");
-								sql = sql.replace("@WebUser.getFK_Dept()Name", "ss");
+								sql = sql.replace("@WebUser.getFK_DeptName", "ss");
 								sql = sql.replace("@WebUser.getFK_Dept()", "ss");
 
 
@@ -2274,7 +2274,7 @@ public class Flow extends BP.En.EntityNoName
 							{
 								continue;
 							}
-							if (ndOfCond.getHisWork().EnMap.Attrs.Contains(cond.getAttrKey()) == false)
+							if (ndOfCond.getHisWork().getEnMap().getAttrs().Contains(cond.getAttrKey()) == false)
 							{
 								throw new RuntimeException("@错误:属性:" + cond.getAttrKey() + " , " + cond.getAttrName() + " 不存在。");
 							}
@@ -2394,7 +2394,7 @@ public class Flow extends BP.En.EntityNoName
 				{
 					Work wk = nd.getHisWork();
 					String attrKey = "";
-					for (Attr attr : wk.EnMap.Attrs)
+					for (Attr attr : wk.getEnMap().getAttrs())
 					{
 						if (attr.UIVisible == true && attr.UIIsDoc && attr.UIIsReadonly == false)
 						{
@@ -2431,7 +2431,7 @@ public class Flow extends BP.En.EntityNoName
 
 				if (this.getIsMD5())
 				{
-					if (nd.getHisWork().EnMap.Attrs.Contains(WorkAttr.MD5) == false)
+					if (nd.getHisWork().getEnMap().getAttrs().Contains(WorkAttr.MD5) == false)
 					{
 						nd.RepareMap(this);
 					}
@@ -6717,7 +6717,7 @@ public class Flow extends BP.En.EntityNoName
 	@Override
 	protected boolean beforeUpdate()
 	{
-		this.setVer(BP.DA.DataType.getCurrentDataTime()ss);
+		this.setVer(BP.DA.DataType.getCurrentDataTime());
 		Node.CheckFlow(this);
 		return super.beforeUpdate();
 	}

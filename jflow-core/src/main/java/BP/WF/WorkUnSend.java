@@ -24,7 +24,7 @@ public class WorkUnSend
 	{
 		if (_AppType == null)
 		{
-			if (BP.Sys.SystemConfig.IsBSsystem == false)
+			if (BP.Sys.SystemConfig.getIsBSsystem() == false)
 			{
 				_AppType = "WF";
 			}
@@ -1075,7 +1075,7 @@ public class WorkUnSend
 		Node nd = new Node(this.UnSendToNode);
 		gwf.setNodeName(nd.getName());
 		gwf.setSender(WebUser.getNo());
-		gwf.setSendDT(BP.DA.DataType.getCurrentDataTime()ss);
+		gwf.setSendDT(BP.DA.DataType.getCurrentDataTime());
 		gwf.Update();
 
 

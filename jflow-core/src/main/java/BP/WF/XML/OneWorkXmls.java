@@ -28,7 +28,7 @@ public class OneWorkXmls extends XmlEns
 	 得到它的 Entity 
 	*/
 	@Override
-	public XmlEn getGetNewEntity()
+	public XmlEn getNewEntity()
 	{
 		return new OneWorkXml();
 	}

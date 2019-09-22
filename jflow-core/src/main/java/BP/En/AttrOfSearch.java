@@ -123,15 +123,15 @@ public class AttrOfSearch
 						WebUser.getDeptParentNo());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.getFK_Dept()Name"))
+			if (_DefaultVal.contains("@WebUser.getFK_DeptName"))
 			{
-				return _DefaultVal.replace("@WebUser.getFK_Dept()Name",
+				return _DefaultVal.replace("@WebUser.getFK_DeptName",
 						WebUser.getFK_DeptName());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.getFK_Dept()NameOfFull"))
+			if (_DefaultVal.contains("@WebUser.getFK_DeptNameOfFull"))
 			{
-				return _DefaultVal.replace("@WebUser.getFK_Dept()NameOfFull",
+				return _DefaultVal.replace("@WebUser.getFK_DeptNameOfFull",
 						WebUser.getFK_DeptNameOfFull());
 			}
 			

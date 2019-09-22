@@ -282,7 +282,7 @@ public class AutoRunStratFlows extends Method
 						break;
 					default:
 						boolean isHave = false;
-						for (Attr attr : wk.EnMap.Attrs)
+						for (Attr attr : wk.getEnMap().getAttrs())
 						{
 							if (attr.Key.toLowerCase().equals(f))
 							{

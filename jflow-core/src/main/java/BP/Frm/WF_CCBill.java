@@ -1096,7 +1096,7 @@ public class WF_CCBill extends DirectoryPageBase
 		//删除临时文件
 		(new File(filePath)).delete();
 
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "err@无导入的数据";
 		}

@@ -968,7 +968,7 @@ public class WF_CommEntity extends DirectoryPageBase
 				dr.set("IsCanBatch", item.IsCanBatch);
 				dr.set("GroupName", item.GroupName);
 				Attrs attrs = item.HisAttrs;
-				if (attrs.Count == 0)
+				if (attrs.size() == 0)
 				{
 					dr.set("FunPara", "false");
 				}
@@ -987,7 +987,7 @@ public class WF_CommEntity extends DirectoryPageBase
 			AttrsOfOneVSM oneVsM = en.EnMap.AttrsOfOneVSM;
 			String sql = "";
 			int i = 0;
-			if (oneVsM.Count > 0)
+			if (oneVsM.size() > 0)
 			{
 				for (AttrOfOneVSM vsM : oneVsM)
 				{

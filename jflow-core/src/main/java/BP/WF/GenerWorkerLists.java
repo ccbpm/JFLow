@@ -173,7 +173,7 @@ public class GenerWorkerLists extends Entities
 	public final ArrayList<BP.WF.GenerWorkerList> Tolist()
 	{
 		ArrayList<BP.WF.GenerWorkerList> list = new ArrayList<BP.WF.GenerWorkerList>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BP.WF.GenerWorkerList)this[i]);
 		}

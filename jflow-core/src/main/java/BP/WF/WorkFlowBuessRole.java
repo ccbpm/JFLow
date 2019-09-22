@@ -557,7 +557,7 @@ public class WorkFlowBuessRole
 //ORIGINAL LINE: public static Node RequestNextNode(Node currNode, Int64 workid, GenerWorkFlow currWorkFlow, GERpt enPara = null)
 	public static Node RequestNextNode(Node currNode, long workid, GenerWorkFlow currWorkFlow, GERpt enPara)
 	{
-		if (currNode.getHisToNodes().Count == 1)
+		if (currNode.getHisToNodes().size() == 1)
 		{
 			return (Node)currNode.getHisToNodes()[0];
 		}
@@ -599,19 +599,19 @@ public class WorkFlowBuessRole
 
 		// 检查当前的状态是是否是退回，.
 		Nodes nds = currNode.getHisToNodes();
-		if (nds.Count == 1)
+		if (nds.size() == 1)
 		{
 			Node toND = (Node)nds[0];
 			return toND;
 		}
-		if (nds.Count == 0)
+		if (nds.size() == 0)
 		{
 			throw new RuntimeException("@没有找到它的下了步节点.");
 		}
 
 		Conds dcsAll = new Conds();
 		dcsAll.Retrieve(CondAttr.NodeID, currNode.getNodeID(), CondAttr.CondType, CondType.Dir.getValue(), CondAttr.PRI);
-		if (dcsAll.Count == 0)
+		if (dcsAll.size() == 0)
 		{
 			throw new RuntimeException("@没有为节点(" + currNode.getNodeID() + " , " + currNode.getName() + ")设置方向条件,有分支的地方必须有方向条件.");
 		}
@@ -643,7 +643,7 @@ public class WorkFlowBuessRole
 				dcs.AddEntity(dc);
 			}
 
-			if (dcs.Count == 0)
+			if (dcs.size() == 0)
 			{
 			   // throw new Exception("@流程设计错误：从节点(" + currNode.Name + ")到节点(" + nd.Name + ")，没有设置方向条件，有分支的节点必须有方向条件。");
 				continue;
@@ -658,7 +658,7 @@ public class WorkFlowBuessRole
 			///#endregion 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 
 		// 如果没有找到,就找到没有设置方向条件的节点,没有设置方向条件的节点是默认同意的.
-		if (myNodes.Count == 0)
+		if (myNodes.size() == 0)
 		{
 			for (Node nd : nds)
 			{
@@ -672,20 +672,20 @@ public class WorkFlowBuessRole
 					dcs.AddEntity(dc);
 				}
 
-				if (dcs.Count == 0)
+				if (dcs.size() == 0)
 				{
 					return nd;
 				}
 			}
 		}
 
-		if (myNodes.Count == 0)
+		if (myNodes.size() == 0)
 		{
 			throw new RuntimeException("@当前用户(" + BP.Web.WebUser.Name + "),定义节点的方向条件错误:从{" + currNode.getNodeID() + currNode.getName() + "}节点到其它节点,定义的所有转向条件都不成立.");
 		}
 
 		//如果找到1个.
-		if (myNodes.Count == 1)
+		if (myNodes.size() == 1)
 		{
 			Node toND = myNodes[0] instanceof Node ? (Node)myNodes[0] : null;
 			return toND;
@@ -788,7 +788,7 @@ public class WorkFlowBuessRole
 			}
 
 			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0 && toNode.getHisWhenNoWorker() == false)
+			if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
 			{
 				throw new RuntimeException("@没有找到可接受的工作人员。@技术信息：执行的SQL没有发现人员:" + sql);
 			}
@@ -811,7 +811,7 @@ public class WorkFlowBuessRole
 
 			sql = "SELECT No, Name,FK_Dept AS GroupMark FROM Port_Emp WHERE FK_Dept IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node=" + toNode.getNodeID() + ")";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0 && toNode.getHisWhenNoWorker() == false)
+			if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
 			{
 				throw new RuntimeException("@没有找到可接受的工作人员,接受人方式为, ‘按绑定部门计算,该部门一人处理标识该工作结束(子线程)’ @技术信息：执行的SQL没有发现人员:" + sql);
 			}
@@ -847,7 +847,7 @@ public class WorkFlowBuessRole
 					ps.SQL = "SELECT " + empFild + ", * FROM " + dtl.PTable + " WHERE RefPK=" + dbStr + "OID ORDER BY OID";
 					ps.Add("OID", workid);
 					dt = DBAccess.RunSQLReturnTable(ps);
-					if (dt.Rows.Count == 0 && toNode.getHisWhenNoWorker() == false)
+					if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
 					{
 						throw new RuntimeException("@流程设计错误，到达的节点（" + toNode.getName() + "）在指定的节点中没有数据，无法找到子线程的工作人员。");
 					}
@@ -856,7 +856,7 @@ public class WorkFlowBuessRole
 				catch (RuntimeException ex)
 				{
 					msg += ex.getMessage();
-					//if (dtls.Count == 1)
+					//if (dtls.size() == 1)
 					//    throw new Exception("@估计是流程设计错误,没有在分流节点的明细表中设置");
 				}
 			}
@@ -873,7 +873,7 @@ public class WorkFlowBuessRole
 			ps.Add("FK_Node", toNode.getNodeID());
 			ps.SQL = "SELECT FK_Emp FROM WF_NodeEmp WHERE FK_Node=" + dbStr + "FK_Node ORDER BY FK_Emp";
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("@流程设计错误:下一个节点(" + toNode.getName() + ")没有绑定工作人员 . ");
 			}
@@ -891,7 +891,7 @@ public class WorkFlowBuessRole
 			ps.Add("WorkID", workid);
 			ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				/*从上次发送设置的地方查询. */
 				SelectAccpers sas = new SelectAccpers();
@@ -944,7 +944,7 @@ public class WorkFlowBuessRole
 				ps.Add("FK_Node", Integer.parseInt(strs));
 				ps.Add("OID", workid);
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 1)
+				if (dt.Rows.size() == 1)
 				{
 					return dt;
 				}
@@ -987,7 +987,7 @@ public class WorkFlowBuessRole
 
 				DataTable dt_ND = DBAccess.RunSQLReturnTable(ps);
 				//添加到结果表
-				if (dt_ND.Rows.Count != 0)
+				if (dt_ND.Rows.size() != 0)
 				{
 					for (DataRow row : dt_ND.Rows)
 					{
@@ -1011,7 +1011,7 @@ public class WorkFlowBuessRole
 				ps.Add("NDFrom", Integer.parseInt(nd));
 				ps.Add("WorkID", workid);
 				dt_ND = DBAccess.RunSQLReturnTable(ps);
-				if (dt_ND.Rows.Count != 0)
+				if (dt_ND.Rows.size() != 0)
 				{
 					for (DataRow row : dt_ND.Rows)
 					{
@@ -1052,7 +1052,7 @@ public class WorkFlowBuessRole
 					}
 
 					DataTable dt_PWork = DBAccess.RunSQLReturnTable(ps);
-					if (dt_PWork.Rows.Count != 0)
+					if (dt_PWork.Rows.size() != 0)
 					{
 						for (DataRow row : dt_PWork.Rows)
 						{
@@ -1084,7 +1084,7 @@ public class WorkFlowBuessRole
 					}
 
 					dt_PWork = DBAccess.RunSQLReturnTable(ps);
-					if (dt_PWork.Rows.Count != 0)
+					if (dt_PWork.Rows.size() != 0)
 					{
 						for (DataRow row : dt_PWork.Rows)
 						{
@@ -1096,7 +1096,7 @@ public class WorkFlowBuessRole
 				}
 			}
 			//返回指定节点的处理人
-			if (dt.Rows.Count != 0)
+			if (dt.Rows.size() != 0)
 			{
 				return dt;
 			}
@@ -1141,7 +1141,7 @@ public class WorkFlowBuessRole
 					dr.set(0, ss[0]);
 					dt.Rows.Add(dr);
 				}
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					throw new RuntimeException("@输入的接受人员信息错误;[" + emps + "]。");
 				}
@@ -1217,7 +1217,7 @@ public class WorkFlowBuessRole
 			dt = DBAccess.RunSQLReturnTable(sql);
 
 
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -1238,7 +1238,7 @@ public class WorkFlowBuessRole
 			ps.Add("WorkID", workid);
 			ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -1249,7 +1249,7 @@ public class WorkFlowBuessRole
 				ps.SQL = "SELECT  A.No, A.Name  FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node=" + dbStr + "FK_Node";
 				ps.Add("FK_Node", toNode.getNodeID());
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count > 0 && toNode.getHisWhenNoWorker() == false)
+				if (dt.Rows.size() > 0 && toNode.getHisWhenNoWorker() == false)
 				{
 					return dt;
 				}
@@ -1271,7 +1271,7 @@ public class WorkFlowBuessRole
 				ps.SQL = sql;
 
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					/* 如果项目组里没有工作人员就提交到公共部门里去找。*/
 					sql = "SELECT NO FROM Port_Emp WHERE NO IN ";
@@ -1306,7 +1306,7 @@ public class WorkFlowBuessRole
 				}
 
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count > 0)
+				if (dt.Rows.size() > 0)
 				{
 					return dt;
 				}
@@ -1324,7 +1324,7 @@ public class WorkFlowBuessRole
 			ps.Add("FK_Node", toNode.getNodeID());
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -1349,7 +1349,7 @@ public class WorkFlowBuessRole
 
 
 
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -1380,7 +1380,7 @@ public class WorkFlowBuessRole
 				ps.Add("FK_Node", Integer.parseInt(para));
 
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count != 1)
+				if (dt.Rows.size() != 1)
 				{
 					throw new RuntimeException("@流程设计错误，到达的节点（" + toNode.getName() + "）在指定的节点中没有数据，无法找到工作的人员。");
 				}
@@ -1441,7 +1441,7 @@ public class WorkFlowBuessRole
 				ps.Add("WorkID", workid);
 
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					/* 如果项目组里没有工作人员就提交到公共部门里去找。*/
 					sql = "SELECT DISTINCT FK_Emp  FROM " + BP.WF.Glo.getEmpStation() + " WHERE FK_Station IN "
@@ -1462,9 +1462,9 @@ public class WorkFlowBuessRole
 
 			dt = DBAccess.RunSQLReturnTable(ps);
 			// 如果能够找到.
-			if (dt.Rows.Count >= 1)
+			if (dt.Rows.size() >= 1)
 			{
-				if (dt.Rows.Count == 1)
+				if (dt.Rows.size() == 1)
 				{
 					/*如果人员只有一个的情况，说明他可能要 */
 				}
@@ -1519,7 +1519,7 @@ public class WorkFlowBuessRole
 				ps.Add("FK_Node", toNode.getNodeID());
 				ps.Add("FK_Prj2", prjNo);
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					/* 如果项目组里没有工作人员就提交到公共部门里去找。 */
 
@@ -1554,10 +1554,10 @@ public class WorkFlowBuessRole
 			}
 
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				NodeStations nextStations = toNode.getNodeStations();
-				if (nextStations.Count == 0)
+				if (nextStations.size() == 0)
 				{
 					throw new RuntimeException("@节点没有岗位:" + toNode.getNodeID() + "  " + toNode.getName());
 				}
@@ -1693,10 +1693,10 @@ public class WorkFlowBuessRole
 		ps.Add("FK_Emp", empNo);
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			NodeStations nextStations = toNode.getNodeStations();
-			if (nextStations.Count == 0)
+			if (nextStations.size() == 0)
 			{
 				throw new RuntimeException("@节点没有岗位:" + toNode.getNodeID() + "  " + toNode.getName());
 			}
@@ -1721,7 +1721,7 @@ public class WorkFlowBuessRole
 			ps.Add("FK_Emp", empNo);
 			dt = DBAccess.RunSQLReturnTable(ps);
 
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return null;
 			}
@@ -1763,7 +1763,7 @@ public class WorkFlowBuessRole
 
 		//执行抄送.
 		DataTable dt = ccEn.GenerCCers(rpt, workid);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "@设置的抄送规则，没有找到抄送人员。";
 		}

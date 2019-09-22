@@ -63,7 +63,7 @@ public class FrmEles extends EntitiesMyPK
 	public final ArrayList<FrmEle> Tolist()
 	{
 		ArrayList<FrmEle> list = new ArrayList<FrmEle>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmEle)this[i]);
 		}

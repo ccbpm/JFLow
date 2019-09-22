@@ -54,7 +54,7 @@ public class RptDepts extends Entities
 	public final ArrayList<RptDept> Tolist()
 	{
 		ArrayList<RptDept> list = new ArrayList<RptDept>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((RptDept)this[i]);
 		}

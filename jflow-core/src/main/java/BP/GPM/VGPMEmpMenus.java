@@ -48,7 +48,7 @@ public class VGPMEmpMenus extends EntitiesMyPK
 	public final ArrayList<VGPMEmpMenu> Tolist()
 	{
 		ArrayList<VGPMEmpMenu> list = new ArrayList<VGPMEmpMenu>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((VGPMEmpMenu)this[i]);
 		}

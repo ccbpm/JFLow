@@ -68,7 +68,7 @@ public class PushMsgs extends EntitiesMyPK
 	public final ArrayList<PushMsg> Tolist()
 	{
 		ArrayList<PushMsg> list = new ArrayList<PushMsg>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((PushMsg)this[i]);
 		}

@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -617,8 +618,9 @@ public class FrmAttachmentExt extends EntityMyPK
 	 附件
 	 
 	 @param mypk 主键
+	 * @throws Exception 
 	*/
-	public FrmAttachmentExt(String mypk)
+	public FrmAttachmentExt(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -767,19 +769,19 @@ public class FrmAttachmentExt extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "类别设置";
 		rm.ClassMethodName = this.toString() + ".DoSettingSort";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "测试FTP服务器";
 		rm.ClassMethodName = this.toString() + ".DoTestFTPHost";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "设置扩展列";
 		rm.ClassMethodName = this.toString() + ".DtlOfAth";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -833,7 +835,7 @@ public class FrmAttachmentExt extends EntityMyPK
 
 	public boolean IsUse = false;
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getFK_Node() == 0)
 		{
@@ -922,9 +924,10 @@ public class FrmAttachmentExt extends EntityMyPK
 	}
 	/** 
 	 插入之后
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterInsert()
+	protected void afterInsert() throws Exception
 	{
 		GroupField gf = new GroupField();
 		if (gf.IsExit(GroupFieldAttr.CtrlID, this.getMyPK()) == false)
@@ -940,7 +943,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setMyPK(this.getMyPK());
@@ -954,9 +957,10 @@ public class FrmAttachmentExt extends EntityMyPK
 
 	/** 
 	 删除之后.
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		GroupField gf = new GroupField();
 		gf.Delete(GroupFieldAttr.CtrlID, this.getMyPK());

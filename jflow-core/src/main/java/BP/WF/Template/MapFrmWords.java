@@ -50,7 +50,7 @@ public class MapFrmWords extends EntitiesNoName
 	public final ArrayList<MapFrmWord> Tolist()
 	{
 		ArrayList<MapFrmWord> list = new ArrayList<MapFrmWord>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapFrmWord)this[i]);
 		}

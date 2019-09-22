@@ -32,8 +32,9 @@ public abstract class EntityOIDName extends EntityOID
 	 构造
 	 
 	 @param oid OID
+	 * @throws Exception 
 	*/
-	protected EntityOIDName(int oid)
+	protected EntityOIDName(int oid) throws Exception
 	{
 		super(oid);
 	}
@@ -57,8 +58,9 @@ public abstract class EntityOIDName extends EntityOID
 	 按照名称查询。
 	 
 	 @return 返回查询出来的个数
+	 * @throws Exception 
 	*/
-	public final int RetrieveByName()
+	public final int RetrieveByName() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere("Name", this.getName());
@@ -72,7 +74,7 @@ public abstract class EntityOIDName extends EntityOID
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws NumberFormatException, Exception
 	{
 		if (this.getEnMap().getIsAllowRepeatName() == false)
 		{

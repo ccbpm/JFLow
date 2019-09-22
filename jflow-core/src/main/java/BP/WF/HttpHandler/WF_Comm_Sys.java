@@ -163,7 +163,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
-		if (files.Count == 0)
+		if (files.size() == 0)
 		{
 			return "err@请选择要导入的数据信息。";
 		}
@@ -191,7 +191,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		//删除临时文件
 		(new File(filePath)).delete();
 
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "err@无导入的数据";
 		}
@@ -532,26 +532,26 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 					sql = "SELECT " + attr.Field + " FROM " + map.PhysicsTable + " WHERE " + attr.Field + " NOT IN (SELECT " + pkAttr.Field + " FROM " + table + " )";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.Count == 0)
+					if (dt.Rows.size() == 0)
 					{
 						continue;
 					}
 					else
 					{
-						msg += "<BR>:有" + dt.Rows.Count + "个错误。" + attr.Desc + " sql= " + sql;
+						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.Desc + " sql= " + sql;
 					}
 				}
 				if (attr.MyFieldType == FieldType.PKEnum || attr.MyFieldType == FieldType.Enum)
 				{
 					sql = "SELECT " + attr.Field + " FROM " + map.PhysicsTable + " WHERE " + attr.Field + " NOT IN ( select Intkey from sys_enum WHERE ENUMKEY='" + attr.UIBindKey + "' )";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.Count == 0)
+					if (dt.Rows.size() == 0)
 					{
 						continue;
 					}
 					else
 					{
-						msg += "<BR>:有" + dt.Rows.Count + "个错误。" + attr.Desc + " sql= " + sql;
+						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.Desc + " sql= " + sql;
 					}
 				}
 			}
@@ -846,7 +846,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		SFTables sfs = new SFTables();
 		sfs.Retrieve(SFTableAttr.FK_SFDBSrc, no);
 
-		if (sfs.Count > 0)
+		if (sfs.size() > 0)
 		{
 			//Alert("当前数据源已经使用，不能删除！");
 			return "当前数据源已经使用，不能删除！";
@@ -862,7 +862,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
-		if (files.Count == 0)
+		if (files.size() == 0)
 		{
 			return "err@请选择要上传的流程模版。";
 		}
@@ -885,7 +885,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		//HttpFileCollection files = context.Request.Files;
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 		var files = HttpContextHelper.RequestFiles();
-		if (files.Count == 0)
+		if (files.size() == 0)
 		{
 			return "err@请选择要上传的图片。";
 		}

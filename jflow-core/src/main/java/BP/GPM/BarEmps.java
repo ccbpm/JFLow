@@ -70,7 +70,7 @@ public class BarEmps extends EntitiesMyPK
 	public final ArrayList<BarEmp> Tolist()
 	{
 		ArrayList<BarEmp> list = new ArrayList<BarEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BarEmp)this[i]);
 		}

@@ -40,7 +40,7 @@ import BP.Tools.StringUtils;
 import BP.WF.Template.FrmField;
 import BP.WF.Template.FrmFieldAttr;
 import BP.Web.WebUser;
-import BP.XML.XmlEn;
+import BP.Sys.*;;
 
 /**
  * Entity 的摘要说明。
@@ -79,6 +79,31 @@ public abstract class Entity implements Serializable {
 			throw new RuntimeException("@no ens" + this.toString());
 		}
 		return _GetNewEntities;
+	}
+	
+	public String getPKField()
+	{
+		for (Attr attr : this.getEnMap().getAttrs())
+		{
+			switch (attr.getKey())
+			{
+				case "OID":
+					return attr.getField();
+				case "No":
+					return attr.getField();
+				case "MyPK":
+					return attr.getField();
+				default:
+					break;
+			}
+
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.PKFK)
+			{
+				return attr.getField();
+			}
+		}
+
+		throw new RuntimeException("@娌℃湁缁欍��" + this.getEnDesc() + "銆戝畾涔変富閿��");
 	}
 
 	public String getClassID() {
@@ -3560,17 +3585,12 @@ public abstract class Entity implements Serializable {
 	 */
 	private Row _row = null;
 
-	public final Row getRow() {
-		if (this._row == null) {
-
-		
-			try {
-				this._row = this.getSQLCash().getRow();
-			} catch (Exception e) {
-				this._row.LoadAttrs(this.getEnMap().getAttrs());
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public final Row getRow()
+	{
+		if (this._row == null)
+		{
+			this._row = new Row();
+			this._row.LoadAttrs(this.getEnMap().getAttrs());
 		}
 		return this._row;
 	}

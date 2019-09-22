@@ -320,7 +320,7 @@ public class SysEnums extends Entities
 	public final ArrayList<SysEnum> Tolist()
 	{
 		ArrayList<SysEnum> list = new ArrayList<SysEnum>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SysEnum)this.get(i));
 		}

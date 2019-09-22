@@ -79,7 +79,7 @@ public class GEEntityWordFrms extends EntitiesOID
 	public final ArrayList<GEEntityWordFrm> Tolist()
 	{
 		ArrayList<GEEntityWordFrm> list = new ArrayList<GEEntityWordFrm>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GEEntityWordFrm)this[i]);
 		}

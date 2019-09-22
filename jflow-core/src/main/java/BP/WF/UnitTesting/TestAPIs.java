@@ -44,7 +44,7 @@ public class TestAPIs extends EntitiesNoName
 	public final ArrayList<TestAPI> Tolist()
 	{
 		ArrayList<TestAPI> list = new ArrayList<TestAPI>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((TestAPI)this[i]);
 		}

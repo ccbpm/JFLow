@@ -91,14 +91,14 @@ public class WF_AppClassic extends DirectoryPageBase
 		obj.AddWhere("WFState=2 or WFState=3 or WFState=4 or WFState=5 or WFState=6 or WFState=8 or WFState=10");
 		obj.addRightBracket();
 		obj.DoQuery();
-		ht.put("Todolist_MyStartFlow", myStartFlows.Count);
+		ht.put("Todolist_MyStartFlow", myStartFlows.size());
 
 		//我参与
 		MyJoinFlows myFlows = new MyJoinFlows();
 		obj = new QueryObject(myFlows);
 		obj.AddWhere("Emps like '%" + WebUser.No + "%'");
 		obj.DoQuery();
-		ht.put("Todolist_MyFlow", myFlows.Count);
+		ht.put("Todolist_MyFlow", myFlows.size());
 
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}

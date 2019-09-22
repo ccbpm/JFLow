@@ -35,7 +35,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 		Nodes nodes = new Nodes();
 		nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, getFK_Flow(), BP.WF.Template.NodeAttr.Step);
 
-		if (nodes.Count == 0)
+		if (nodes.size() == 0)
 		{
 			return "";
 		}
@@ -225,7 +225,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 			//表单
 			MapDatas mapS = new MapDatas();
 			mapS.RetrieveByAttr(MapDataAttr.FK_FormTree, formTree.No);
-			if (mapS != null && mapS.Count > 0)
+			if (mapS != null && mapS.size() > 0)
 			{
 				for (MapData map : mapS)
 				{

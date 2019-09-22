@@ -32,7 +32,7 @@ public class GENoNames extends EntitiesNoName
 		return new GENoName(this.SFTable, this.Desc);
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return this.RetrieveAllFromDBSource();
 	}
@@ -47,7 +47,7 @@ public class GENoNames extends EntitiesNoName
 	*/
 	public final List<GENoName> ToJavaList()
 	{
-		return (List<GENoName>)this;
+		return (List<GENoName>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -57,7 +57,7 @@ public class GENoNames extends EntitiesNoName
 	public final ArrayList<GENoName> Tolist()
 	{
 		ArrayList<GENoName> list = new ArrayList<GENoName>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GENoName)this.get(i));
 		}

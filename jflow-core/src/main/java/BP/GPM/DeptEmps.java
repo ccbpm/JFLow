@@ -52,7 +52,7 @@ public class DeptEmps extends EntitiesMyPK
 	public final ArrayList<DeptEmp> Tolist()
 	{
 		ArrayList<DeptEmp> list = new ArrayList<DeptEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((DeptEmp)this[i]);
 		}

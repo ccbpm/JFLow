@@ -49,7 +49,7 @@ public class MapAttrSFSQLs extends EntitiesMyPK
 	public final ArrayList<MapAttrSFSQL> Tolist()
 	{
 		ArrayList<MapAttrSFSQL> list = new ArrayList<MapAttrSFSQL>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapAttrSFSQL)this[i]);
 		}

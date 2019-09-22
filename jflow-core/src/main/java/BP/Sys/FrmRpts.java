@@ -56,7 +56,7 @@ public class FrmRpts extends EntitiesNoName
 	public final ArrayList<FrmRpt> Tolist()
 	{
 		ArrayList<FrmRpt> list = new ArrayList<FrmRpt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmRpt)this.get(i));
 		}

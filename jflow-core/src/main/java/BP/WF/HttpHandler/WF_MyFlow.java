@@ -420,7 +420,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			DataTable dt = BP.WF.Glo.StartGuidEnties(this.getWorkID(), this.getFK_Flow(), this.getFK_Node(), key);
 
 			/*如果父流程编号，就要设置父子关系。*/
-			if (dt != null && dt.Rows.Count > 0 && dt.Columns.Contains("PFlowNo") == true)
+			if (dt != null && dt.Rows.size() > 0 && dt.Columns.Contains("PFlowNo") == true)
 			{
 				String pFlowNo = dt.Rows[0]["PFlowNo"].toString();
 				int pNodeID = Integer.parseInt(dt.Rows[0]["PNodeID"].toString());
@@ -1872,7 +1872,7 @@ public class WF_MyFlow extends DirectoryPageBase
 					return "TurnUrl@" + myurl;
 				case TurnToByCond:
 					//TurnTos tts = new TurnTos(this.FK_Flow);
-					//if (tts.Count == 0)
+					//if (tts.size() == 0)
 					//{
 					//    BP.WF.Dev2Interface.Port_SendMsg("admin", currFlow.Name + "在" + currND.Name + "节点处，出现错误", "您没有设置节点完成后的转向条件。", "Err" + currND.No + "_" + this.WorkID, SMSMsgType.Err, this.FK_Flow, this.FK_Node, this.WorkID, this.FID);
 					//    throw new Exception("@您没有设置节点完成后的转向条件。");
@@ -2427,7 +2427,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			}
 
 			String treeNo = "0";
-			if (isHave && mds.Count == 1)
+			if (isHave && mds.size() == 1)
 			{
 				treeNo = "00";
 			}
@@ -2485,7 +2485,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				obj.addAnd();
 				obj.AddWhere(FrmFieldAttr.IsNotNull, 1);
 				obj.DoQuery();
-				if (formFields != null && formFields.Count > 0)
+				if (formFields != null && formFields.size() > 0)
 				{
 					IsNotNull = true;
 				}

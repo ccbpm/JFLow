@@ -35,7 +35,7 @@ public class ToolbarExcels extends EntitiesNoName
 	public final ArrayList<ToolbarExcel> Tolist()
 	{
 		ArrayList<ToolbarExcel> list = new ArrayList<ToolbarExcel>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ToolbarExcel)this.get(i));
 		}

@@ -69,7 +69,7 @@ public class NodeSimples extends EntitiesOIDName
 	public final ArrayList<BP.WF.Template.NodeSimple> Tolist()
 	{
 		ArrayList<BP.WF.Template.NodeSimple> list = new ArrayList<BP.WF.Template.NodeSimple>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BP.WF.Template.NodeSimple)this[i]);
 		}

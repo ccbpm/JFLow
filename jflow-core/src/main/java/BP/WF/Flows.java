@@ -152,7 +152,7 @@ public class Flows extends EntitiesNoName
 	public final ArrayList<Flow> Tolist()
 	{
 		ArrayList<Flow> list = new ArrayList<Flow>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Flow)this[i]);
 		}

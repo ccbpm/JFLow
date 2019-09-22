@@ -236,20 +236,20 @@ public class FlowCheckError
 			{
 				case ByStation:
 				case FindSpecDeptEmpsInStationlist:
-					if (nd.getNodeStations().Count == 0)
+					if (nd.getNodeStations().size() == 0)
 					{
 						this.AddMsgInfo("错误:您设置了该节点的访问规则是按岗位，但是您没有为节点绑定岗位。", nd);
 					}
 					break;
 				case ByDept:
-					if (nd.getNodeDepts().Count == 0)
+					if (nd.getNodeDepts().size() == 0)
 					{
 						this.AddMsgInfo("设置了该节点的访问规则是按部门，但是您没有为节点绑定部门", nd);
 					}
 
 					break;
 				case ByBindEmp:
-					if (nd.getNodeEmps().Count == 0)
+					if (nd.getNodeEmps().size() == 0)
 					{
 						this.AddMsgInfo("您设置了该节点的访问规则是按人员，但是您没有为节点绑定人员。", nd);
 					}
@@ -292,7 +292,7 @@ public class FlowCheckError
 					}
 
 					DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
-					if (mydt.Rows.Count == 0)
+					if (mydt.Rows.size() == 0)
 					{
 						this.AddMsgInfo("按照岗位与部门的交集计算错误，没有人员集合{" + mysql + "}", nd);
 					}
@@ -378,7 +378,7 @@ public class FlowCheckError
 			//设置它没有流程完成条件.
 			nd.setIsCCFlow(false);
 
-			if (conds.Count != 0)
+			if (conds.size() != 0)
 			{
 				this.AddMsgInfo("开始检查(" + nd.getName() + ")方向条件:", nd);
 
@@ -536,12 +536,12 @@ public class FlowCheckError
 			if (fl.getSubFlowOver() == SubFlowOver.SendParentFlowToNextStep)
 			{
 				Node nd = new Node(flow.getFK_Node());
-				if (nd.getHisToNodes().Count > 1)
+				if (nd.getHisToNodes().size() > 1)
 				{
 					this.AddMsgError("@当前节点[" + nd.getName() + "]的可以启动子流程或者延续流程.被启动的子流程设置了当子流程结束时让父流程自动运行到下一个节点，但是当前节点有分支，导致流程无法运行到下一个节点.", nd);
 				}
 
-				if (nd.getHisToNodes().Count == 1)
+				if (nd.getHisToNodes().size() == 1)
 				{
 					Node toNode = nd.getHisToNodes()[0] instanceof Node ? (Node)nd.getHisToNodes()[0] : null;
 					if (nd.getHisDeliveryWay() == DeliveryWay.BySelected)
@@ -658,7 +658,7 @@ public class FlowCheckError
 				if (nd.getCondModel() == CondModel.ByUserSelected)
 				{
 					Nodes toNodes = nd.getHisToNodes();
-					if (toNodes.Count == 1)
+					if (toNodes.size() == 1)
 					{
 						//msg += "@错误:节点ID:" + nd.NodeID + " 名称:" + nd.Name + " 错误当前节点为子线程，但是该节点的到达.";
 					}

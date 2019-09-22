@@ -52,7 +52,7 @@ public class GenerWorkFlowViews extends Entities
 	public final ArrayList<GenerWorkFlowView> Tolist()
 	{
 		ArrayList<GenerWorkFlowView> list = new ArrayList<GenerWorkFlowView>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GenerWorkFlowView)this[i]);
 		}

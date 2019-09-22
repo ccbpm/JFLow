@@ -166,7 +166,7 @@ public class Node extends Entity
 			// 获得已经走过的节点IDs.
 		DataTable dtNodeIDs = DBAccess.RunSQLReturnTable(sql);
 		String frmIDs = "";
-		if (dtNodeIDs.Rows.Count > 0)
+		if (dtNodeIDs.Rows.size() > 0)
 		{
 				//把所有的节点字段.
 			for (DataRow dr : dtNodeIDs.Rows)
@@ -468,12 +468,12 @@ public class Node extends Entity
 			return NodePosType.Start;
 		}
 
-		if (this.getFromNodes().Count == 0)
+		if (this.getFromNodes().size() == 0)
 		{
 			return NodePosType.Mid;
 		}
 
-		if (this.getHisToNodes().Count == 0)
+		if (this.getHisToNodes().size() == 0)
 		{
 			return NodePosType.End;
 		}
@@ -514,7 +514,7 @@ public class Node extends Entity
 
 		//FlowSort fs = new FlowSort(fl.FK_FlowSort);
 
-		if (nds.Count == 0)
+		if (nds.size() == 0)
 		{
 			return "流程[" + fl.No + fl.Name + "]中没有节点数据，您需要注册一下这个流程。";
 		}
@@ -1637,7 +1637,7 @@ public class Node extends Entity
 	*/
 	public final boolean getIsMultiStations()
 	{
-		if (this.getNodeStations().Count > 1)
+		if (this.getNodeStations().size() > 1)
 		{
 			return true;
 		}

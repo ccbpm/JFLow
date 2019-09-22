@@ -46,7 +46,7 @@ public class ToolbarExcelSlns extends EntitiesMyPK
 	public final ArrayList<ToolbarExcelSln> Tolist()
 	{
 		ArrayList<ToolbarExcelSln> list = new ArrayList<ToolbarExcelSln>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ToolbarExcelSln)this[i]);
 		}

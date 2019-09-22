@@ -37,7 +37,7 @@ public class Langues extends EntitiesMyPK
 	public final ArrayList<Langue> Tolist()
 	{
 		ArrayList<Langue> list = new ArrayList<Langue>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Langue)this[i]);
 		}

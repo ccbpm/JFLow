@@ -70,7 +70,7 @@ import java.util.*;
 						System.Xml.Schema.XmlSchemaParticle tempVar2 = ctype.Particle;
 						seq = tempVar2 instanceof XmlSchemaSequence ? (XmlSchemaSequence)tempVar2 : null;
 
-						if (seq != null && seq.Items.Count > 0)
+						if (seq != null && seq.Items.size() > 0)
 						{
 							mtd.setReturn(resType = (seq.Items[0] instanceof XmlSchemaElement ? (XmlSchemaElement)seq.Items[0] : null).SchemaTypeName.Name);
 						}
@@ -84,7 +84,7 @@ import java.util.*;
 						System.Xml.Schema.XmlSchemaParticle tempVar3 = ctype.Particle;
 						seq = tempVar3 instanceof XmlSchemaSequence ? (XmlSchemaSequence)tempVar3 : null;
 
-						if (seq != null && seq.Items.Count > 0)
+						if (seq != null && seq.Items.size() > 0)
 						{
 							for (XmlSchemaElement pe : seq.Items)
 							{

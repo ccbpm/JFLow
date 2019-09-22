@@ -1342,7 +1342,7 @@ public class FlowExt extends EntityNoName
 			String actionType = ActionType.Forward.getValue() + "," + ActionType.FlowOver.getValue() + "," + ActionType.ForwardFL.getValue() + "," + ActionType.ForwardHL.getValue();
 			String sql = "SELECT  * FROM " + ndTrack + " WHERE   ActionType IN (" + actionType + ")  and WorkID=" + workid + " ORDER BY RDT DESC, NDFrom ";
 			System.Data.DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("@工作ID为:" + workid + "的数据不存在.");
 			}
@@ -1520,7 +1520,7 @@ public class FlowExt extends EntityNoName
 		Emp emp1 = new Emp("admin");
 		BP.Web.WebUser.SignInOfGener(emp1);
 
-		return "全部生成成功,影响数据(" + wks.Count + ")条";
+		return "全部生成成功,影响数据(" + wks.size() + ")条";
 	}
 
 	/** 
@@ -1573,7 +1573,7 @@ public class FlowExt extends EntityNoName
 		Emp emp1 = new Emp("admin");
 		BP.Web.WebUser.SignInOfGener(emp1);
 
-		return "全部生成成功,影响数据(" + wks.Count + ")条";
+		return "全部生成成功,影响数据(" + wks.size() + ")条";
 	}
 
 	/** 
@@ -2067,7 +2067,7 @@ public class FlowExt extends EntityNoName
 
 			BP.WF.Template.FrmNodeComponent fnd = new FrmNodeComponent(nd.getNodeID());
 
-			if (nd.getIsEndNode() == true || nd.getHisToNodes().Count == 0)
+			if (nd.getIsEndNode() == true || nd.getHisToNodes().size() == 0)
 			{
 				nd.setFrmWorkCheckSta(FrmWorkCheckSta.Readonly);
 				nd.setNodeFrmID("ND" + Integer.parseInt(this.No) + "02");

@@ -48,7 +48,7 @@ public class GroupMenus extends EntitiesMM
 	public final ArrayList<GroupMenu> Tolist()
 	{
 		ArrayList<GroupMenu> list = new ArrayList<GroupMenu>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GroupMenu)this[i]);
 		}

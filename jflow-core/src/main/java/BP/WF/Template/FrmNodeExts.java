@@ -55,7 +55,7 @@ public class FrmNodeExts extends EntitiesMyPK
 	public final ArrayList<FrmNodeExt> Tolist()
 	{
 		ArrayList<FrmNodeExt> list = new ArrayList<FrmNodeExt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmNodeExt)this[i]);
 		}

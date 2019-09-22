@@ -47,7 +47,7 @@ public class Bars extends EntitiesNoName
 	public final ArrayList<Bar> Tolist()
 	{
 		ArrayList<Bar> list = new ArrayList<Bar>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Bar)this[i]);
 		}

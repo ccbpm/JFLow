@@ -47,7 +47,7 @@ public class PerSettings extends EntitiesMyPK
 	public final ArrayList<PerSetting> Tolist()
 	{
 		ArrayList<PerSetting> list = new ArrayList<PerSetting>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((PerSetting)this[i]);
 		}

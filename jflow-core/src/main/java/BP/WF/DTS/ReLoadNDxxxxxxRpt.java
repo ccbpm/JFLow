@@ -66,6 +66,6 @@ public class ReLoadNDxxxxxxRpt extends Method
 				msg += "@在处理流程(" + fl.Name + ")出现异常" + ex.getMessage();
 			}
 		}
-		return "提示：" + fls.Count + "个流程参与了体检，信息如下：@" + msg;
+		return "提示：" + fls.size() + "个流程参与了体检，信息如下：@" + msg;
 	}
 }

@@ -182,7 +182,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 			//流程完成条件Count
 			BP.WF.Template.Conds conds = new BP.WF.Template.Conds(BP.WF.Template.CondType.Flow, node.getNodeID());
-			dr.set("HisFinishCondsCount", conds.Count);
+			dr.set("HisFinishCondsCount", conds.size());
 
 			dt.Rows.Add(dr);
 		}
@@ -504,7 +504,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 			BP.WF.Template.FrmNodes fns = new BP.WF.Template.FrmNodes(Integer.parseInt(this.getFK_Flow() + "01"));
-			if (fns.Count >= 2)
+			if (fns.size() >= 2)
 			{
 				if (en.getStartGuideWay() == Template.StartGuideWay.ByFrms)
 				{
@@ -568,7 +568,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
-		if (files.Count == 0)
+		if (files.size() == 0)
 		{
 		return "err@请选择要上传的流程模版。";
 		}

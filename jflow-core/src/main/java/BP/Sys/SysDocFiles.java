@@ -49,7 +49,7 @@ public class SysDocFiles extends Entities
 	public final ArrayList<SysDocFile> Tolist()
 	{
 		ArrayList<SysDocFile> list = new ArrayList<SysDocFile>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SysDocFile)this.get(i));
 		}

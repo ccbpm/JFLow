@@ -48,7 +48,7 @@ public class Apps extends EntitiesNoName
 	public final ArrayList<App> Tolist()
 	{
 		ArrayList<App> list = new ArrayList<App>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((App)this[i]);
 		}

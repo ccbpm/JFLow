@@ -47,7 +47,7 @@ public class SFTableSQLs extends EntitiesNoName
 	public final ArrayList<SFTableSQL> Tolist()
 	{
 		ArrayList<SFTableSQL> list = new ArrayList<SFTableSQL>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SFTableSQL)this.get(i));
 		}

@@ -76,14 +76,14 @@ public class WorkReturn
 		if (returnToNodeID == 0)
 		{
 			DataTable dt = BP.WF.Dev2Interface.DB_GenerWillReturnNodes(currNodeID, workID, fid);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("err@当前节点不允许退回，系统根据退回规则没有找到可以退回的到的节点。");
 			}
 
-			if (dt.Rows.Count != 1)
+			if (dt.Rows.size() != 1)
 			{
-				throw new RuntimeException("err@当前节点可以退回的节点有[" + dt.Rows.Count + "]个，您需要指定要退回的节点才能退回。");
+				throw new RuntimeException("err@当前节点可以退回的节点有[" + dt.Rows.size() + "]个，您需要指定要退回的节点才能退回。");
 			}
 
 			returnToNodeID = Integer.parseInt(dt.Rows[0][0].toString());
@@ -152,7 +152,7 @@ public class WorkReturn
 		ps.Add("NDFrom", this.ReturnToNode.getNodeID());
 		ps.Add("WorkID", this.WorkID);
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (dt.Rows.Count >= 1)
+		if (dt.Rows.size() >= 1)
 		{
 			String rdt = dt.Rows[0][0].toString();
 
@@ -695,7 +695,7 @@ public class WorkReturn
 
 		String toEmp = "";
 		String toEmpName = "";
-		if (gwls.Count == 1)
+		if (gwls.size() == 1)
 		{
 			/*有可能多次退回的情况，表示曾经退回过n次。*/
 			for (GenerWorkerList item : gwls)
@@ -718,12 +718,12 @@ public class WorkReturn
 			for (Node nd : nds)
 			{
 				gwls.Retrieve(GenerWorkerListAttr.WorkID, this.FID, GenerWorkerListAttr.FK_Node, nd.getNodeID(), GenerWorkerListAttr.IsPass, 1);
-				if (gwls.Count == 0)
+				if (gwls.size() == 0)
 				{
 					continue;
 				}
 
-				if (gwls.Count != 1)
+				if (gwls.size() != 1)
 				{
 					throw new RuntimeException("@应该只有一个记录，现在有多个，可能错误。");
 				}
@@ -1055,7 +1055,7 @@ public class WorkReturn
 		}
 
 		gwf.setTodoEmps(toDoEmps);
-		gwf.setTodoEmpsNum(gwls.Count);
+		gwf.setTodoEmpsNum(gwls.size());
 		gwf.setEmps(emps);
 		gwf.Update();
 
@@ -1440,7 +1440,7 @@ public class WorkReturn
 		ps.Add("FID", this.HisWork.getFID());
 		ps.Add("FK_Node", backtoNodeID);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (dt.Rows.Count != 1)
+		if (dt.Rows.size() != 1)
 		{
 			throw new RuntimeException("@ system error , this values must be =1");
 		}

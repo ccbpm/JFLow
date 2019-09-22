@@ -48,7 +48,7 @@ public class EmpMenus extends EntitiesMM
 	public final ArrayList<EmpMenu> Tolist()
 	{
 		ArrayList<EmpMenu> list = new ArrayList<EmpMenu>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((EmpMenu)this[i]);
 		}

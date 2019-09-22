@@ -23,8 +23,9 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	 附件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmAttachmentExts(String fk_mapdata)
+	public FrmAttachmentExts(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(FrmAttachmentAttr.FK_MapData, fk_mapdata, FrmAttachmentAttr.FK_Node, 0);
 	}
@@ -58,7 +59,7 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	public final ArrayList<FrmAttachment> Tolist()
 	{
 		ArrayList<FrmAttachment> list = new ArrayList<FrmAttachment>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmAttachment)this[i]);
 		}

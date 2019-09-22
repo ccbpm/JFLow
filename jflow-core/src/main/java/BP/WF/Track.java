@@ -390,7 +390,7 @@ public class Track extends BP.En.Entity
 	{
 		String sql = "SELECT * FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK='" + mypk + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			throw new RuntimeException("@日志数据丢失.." + sql);
 		}

@@ -28,7 +28,7 @@ public class Conds extends Entities
 	*/
 	public final boolean getIsAllPassed()
 	{
-		if (this.Count == 0)
+		if (this.size() == 0)
 		{
 			throw new RuntimeException("@没有要判断的集合.");
 		}
@@ -205,7 +205,7 @@ public class Conds extends Entities
 	public final ArrayList<Cond> Tolist()
 	{
 		ArrayList<Cond> list = new ArrayList<Cond>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Cond)this[i]);
 		}

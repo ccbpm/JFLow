@@ -98,7 +98,7 @@ public class Glo
 		boolean isFirstYLT = true;
 		Nodes nodes = new Nodes();
 		//含有流转自定义文件
-		if (dtYL.Rows.Count != 0)
+		if (dtYL.Rows.size() != 0)
 		{
 			for (Node nd : nds)
 			{
@@ -230,7 +230,7 @@ public class Glo
 
 			//获取子流程
 			subs = new SubFlows(nd.getNodeID());
-			if (subs.Count == 0)
+			if (subs.size() == 0)
 			{
 
 			  // json += "},";
@@ -463,7 +463,7 @@ public class Glo
 
 			}
 
-			//if (idxNode == nds.Count)
+			//if (idxNode == nds.size())
 			//    json += "}";
 			//else
 			//    json += "},";
@@ -534,7 +534,7 @@ public class Glo
 		json += "{ name: \"实际工作时间\", start: " + ToData(gwf.getRDT()) + ", end: " + ToData(gwf.getSendDT()) + " , color: \"#f0f0f0\" }";
 		json += "]";
 
-		if (gwfs.Count == 0)
+		if (gwfs.size() == 0)
 		{
 			json += "}";
 			json += "]";
@@ -557,7 +557,7 @@ public class Glo
 			json += "{ name: \"实际工作时间\", start:  " + ToData(gwf.getRDT()) + ", end: " + ToData(gwf.getSendDT()) + " }";
 			json += "]";
 
-			if (idx == gwfs.Count)
+			if (idx == gwfs.size())
 			{
 				json += "}";
 				json += "]";
@@ -1361,7 +1361,7 @@ public class Glo
 			if (dbtype == DBType.MSSQL)
 			{
 				DataTable dtYueSu = DBAccess.RunSQLReturnTable("SELECT b.name, a.name FName from sysobjects b join syscolumns a on b.id = a.cdefault where a.id = object_id('WF_Emp') and a.Name='StartFlows' ");
-				if (dtYueSu.Rows.Count != 0)
+				if (dtYueSu.Rows.size() != 0)
 				{
 					DBAccess.RunSQL(" ALTER TABLE WF_Emp drop  constraint " + dtYueSu.Rows[0][0]);
 				}
@@ -1405,7 +1405,7 @@ public class Glo
 
 			//规范升级根目录.
 			DataTable dttree = DBAccess.RunSQLReturnTable("SELECT No FROM Sys_FormTree WHERE ParentNo='-1' ");
-			if (dttree.Rows.Count == 1)
+			if (dttree.Rows.size() == 1)
 			{
 				DBAccess.RunSQL("UPDATE Sys_FormTree SET ParentNo='1' WHERE ParentNo='0' ");
 				DBAccess.RunSQL("UPDATE Sys_FormTree SET No='1' WHERE No='0'  ");
@@ -1903,7 +1903,7 @@ public class Glo
 			// 首先检查是否升级过.
 			sql = "SELECT * FROM Sys_FormTree WHERE No = '1'";
 			DataTable formTree_dt = DBAccess.RunSQLReturnTable(sql);
-			if (formTree_dt.Rows.Count == 0)
+			if (formTree_dt.Rows.size() == 0)
 			{
 				/*没有升级过.增加根节点*/
 				SysFormTree formTree = new SysFormTree();
@@ -2667,7 +2667,7 @@ public class Glo
 		//检查组织解构是否正确.
 		String sql = "SELECT * FROM Port_Dept WHERE ParentNo='0' ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			BP.Port.Dept rootDept = new BP.Port.Dept();
 			rootDept.Name = "总部";
@@ -2822,7 +2822,7 @@ public class Glo
 			}
 		}
 
-		rowNum = rowNum + 2 + dtls.Count;
+		rowNum = rowNum + 2 + dtls.size();
 
 		// 创建Word文档
 		String CheckedInfo = "";
@@ -2912,7 +2912,7 @@ public class Glo
 		//            if (attr.GroupID != gf.OID)
 		//                continue;
 
-		//            if (newTable.Rows.Count < groupIdx)
+		//            if (newTable.Rows.size() < groupIdx)
 		//                continue;
 
 		//            #region 增加从表
@@ -2957,7 +2957,7 @@ public class Glo
 
 		//                newTable.Cell(groupIdx, 1).Select();
 		//                WordApp.Selection.Delete(ref Nothing, ref Nothing);
-		//                Word.Table newTableDtl = WordDoc.Tables.Add(WordApp.Selection.Range, dtlsDB.Count + 1, colNum,
+		//                Word.Table newTableDtl = WordDoc.Tables.Add(WordApp.Selection.Range, dtlsDB.size() + 1, colNum,
 		//                    ref Nothing, ref Nothing);
 
 		//                newTableDtl.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -3798,7 +3798,7 @@ public class Glo
 
 
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					throw new RuntimeException("err@没有找到那一行数据." + sql);
 				}
@@ -3806,7 +3806,7 @@ public class Glo
 				Hashtable ht = new Hashtable();
 				//转换成ht表
 				DataRow row = dt.Rows[0];
-				for (int i = 0; i < row.Table.Columns.Count; i++)
+				for (int i = 0; i < row.Table.Columns.size(); i++)
 				{
 					switch (row.Table.Columns[i].ColumnName.toLowerCase())
 					{
@@ -3895,7 +3895,7 @@ public class Glo
 					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
 				}
 				dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count == 1)
+				if (dt.Rows.size() == 1)
 				{
 					DataRow dr = dt.Rows[0];
 					for (DataColumn dc : dt.Columns)
@@ -5881,7 +5881,7 @@ public class Glo
 
 			ps.Add("WorkID", workid);
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return;
 			}
@@ -5893,7 +5893,7 @@ public class Glo
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 求上一个节点的日期.
 			dt = Dev2Interface.Flow_GetPreviousNodeTrack(workid, nd.getNodeID());
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return;
 			}
@@ -5924,7 +5924,7 @@ public class Glo
 		String preSender = "";
 		String preSenderText = "";
 		DataTable dt_Sender = Dev2Interface.Flow_GetPreviousNodeTrack(workid, nd.getNodeID());
-		if (dt_Sender.Rows.Count > 0)
+		if (dt_Sender.Rows.size() > 0)
 		{
 			preSender = dt_Sender.Rows[0]["EmpFrom"].toString();
 			preSenderText = dt_Sender.Rows[0]["EmpFromT"].toString();
@@ -6654,7 +6654,7 @@ public class Glo
 
 				sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkid + " AND FK_Flow='" + flow.No + "'";
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count == 0 || dt.Rows.Count == 1)
+				if (dt.Rows.size() == 0 || dt.Rows.size() == 1)
 				{
 					return true;
 				}
@@ -6764,7 +6764,7 @@ public class Glo
 
 			sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pWorkidStr + " AND FK_Flow='" + flow.No + "'";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0 || dt.Rows.Count == 1)
+			if (dt.Rows.size() == 0 || dt.Rows.size() == 1)
 			{
 				return true;
 			}

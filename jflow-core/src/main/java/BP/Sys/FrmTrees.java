@@ -65,7 +65,7 @@ public class FrmTrees extends EntitiesTree
 	public final ArrayList<FrmTree> Tolist()
 	{
 		ArrayList<FrmTree> list = new ArrayList<FrmTree>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmTree)this.get(i));
 		}

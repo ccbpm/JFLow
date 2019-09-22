@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -138,8 +139,9 @@ public class FrmImgAth extends EntityMyPK
 	 图片附件
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmImgAth(String mypk)
+	public FrmImgAth(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -185,14 +187,14 @@ public class FrmImgAth extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//this.MyPK = this.FK_MapData + "_" + this.CtrlID;
 		return super.beforeUpdateInsertAction();
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		BP.Sys.FrmImgAth imgAth = new BP.Sys.FrmImgAth();
 		imgAth.setMyPK(this.getMyPK());
@@ -207,9 +209,10 @@ public class FrmImgAth extends EntityMyPK
 
 	/** 
 	 删除后清缓存
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());

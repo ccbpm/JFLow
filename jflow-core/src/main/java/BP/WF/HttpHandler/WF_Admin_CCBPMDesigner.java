@@ -66,7 +66,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 		//判断是否为空，如果为空，则创建一个流程根结点，added by liuxc,2016-01-24
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			FlowSort fs = new FlowSort();
 			fs.No = "99";
@@ -132,7 +132,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			 sql = "SELECT 'F' + No as No,Name, 'F' + ParentNo as ParentNo FROM WF_FlowSort WHERE No='" + fk_flowsort + "' OR ParentNo='" + fk_flowsort + "' ORDER BY Idx";
 
 		DataTable dtFlowSorts = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		//if (dtFlowSort.Rows.Count == 0)
+		//if (dtFlowSort.Rows.size() == 0)
 		//{
 		//    fk_dept = BP.Web.WebUser.FK_Dept;
 		//    sql = "SELECT No,Name,ParentNo FROM Port_Dept WHERE No='" + fk_dept + "' OR ParentNo='" + fk_dept + "' ORDER BY Idx ";
@@ -1093,7 +1093,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 		//判断是否为空，如果为空，则创建一个流程根结点，added by liuxc,2016-01-24
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			FlowSort fs = new FlowSort();
 			fs.No = "99";
@@ -1408,7 +1408,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			newMenus.Add(menu);
 		}
 		//添加默认，无权限
-		if (newMenus.Count == 0)
+		if (newMenus.size() == 0)
 		{
 			AdminMenu menu = new AdminMenu();
 			menu.setNo("1");
@@ -1461,7 +1461,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	{
 		String treeJson = "";
 
-		if (tabel.Rows.Count > 0)
+		if (tabel.Rows.size() > 0)
 		{
 			sbJson.append("[");
 			String filer = "";

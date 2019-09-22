@@ -65,7 +65,7 @@ public class MakeForm2Html
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 输出Ele
 		FrmEles eles = mapData.FrmEles;
-		if (eles.Count >= 1)
+		if (eles.size() >= 1)
 		{
 			for (FrmEle ele : eles)
 			{
@@ -674,7 +674,7 @@ public class MakeForm2Html
 							///#region 排除正在审批的人员.
 						String nodeID = dr.get("NDFrom").toString();
 						String empFrom = dr.get("EmpFrom").toString();
-						if (dtOfTodo.Rows.Count != 0)
+						if (dtOfTodo.Rows.size() != 0)
 						{
 							boolean isHave = false;
 							for (DataRow mydr : dtOfTodo.Rows)
@@ -758,7 +758,7 @@ public class MakeForm2Html
 			///#region 输出附件
 		FrmAttachments aths = new FrmAttachments(frmID);
 		//FrmAttachmentDBs athDBs = null;
-		//if (aths.Count > 0)
+		//if (aths.size() > 0)
 		//    athDBs = new FrmAttachmentDBs(frmID, en.PKVal.ToString());
 
 		for (FrmAttachment ath : aths)
@@ -926,7 +926,7 @@ public class MakeForm2Html
 			// 获得已经走过的节点IDs.
 			DataTable dtNodeIDs = DBAccess.RunSQLReturnTable(sql);
 			String frmIDs = "";
-			if (dtNodeIDs.Rows.Count > 0)
+			if (dtNodeIDs.Rows.size() > 0)
 			{
 				//把所有的节点字段.
 				for (DataRow dr : dtNodeIDs.Rows)
@@ -1467,7 +1467,7 @@ public class MakeForm2Html
 					///#region 排除正在审批的人员.
 					String nodeID = dr.get("NDFrom").toString();
 					String empFrom = dr.get("EmpFrom").toString();
-					if (dtOfTodo.Rows.Count != 0)
+					if (dtOfTodo.Rows.size() != 0)
 					{
 						boolean isHave = false;
 						for (DataRow mydr : dtOfTodo.Rows)

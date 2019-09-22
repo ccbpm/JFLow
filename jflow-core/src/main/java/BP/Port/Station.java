@@ -99,7 +99,7 @@ public class Station extends EntityNoName
 		{
 			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = v.GetStation(this.getNo());
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("@编号为(" + this.getNo() + ")的岗位不存在。");
 			}
@@ -123,7 +123,7 @@ public class Station extends EntityNoName
 		{
 			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = v.GetStation(this.getNo());
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return 0;
 			}

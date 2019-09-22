@@ -74,7 +74,7 @@ public class WorkFlow
 
 		// 判断他的工作生成的工作者.
 		GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID(), wn.getHisNode().getNodeID());
-		if (gwls.Count == 0)
+		if (gwls.size() == 0)
 		{
 			//return true;
 			//throw new Exception("@工作流程定义错误,没有找到能够执行此项工作的人员.相关信息:工作ID="+this.WorkID+",节点ID="+wn.HisNode.NodeID );
@@ -394,7 +394,7 @@ public class WorkFlow
 				{
 					/* 找到等待处理节点的上一个点 */
 					Nodes priNodes = nextNode.getFromNodes();
-					if (priNodes.Count != 1)
+					if (priNodes.size() != 1)
 					{
 						throw new RuntimeException("@没有实现子流程不同线程的需求。");
 					}
@@ -681,7 +681,7 @@ public class WorkFlow
 				{
 					/* 找到等待处理节点的上一个点 */
 					Nodes priNodes = nextNode.getFromNodes();
-					if (priNodes.Count != 1)
+					if (priNodes.size() != 1)
 					{
 						throw new RuntimeException("@没有实现子流程不同线程的需求。");
 					}
@@ -951,7 +951,7 @@ public class WorkFlow
 				{
 					/* 找到等待处理节点的上一个点 */
 					Nodes priNodes = nextNode.getFromNodes();
-					if (priNodes.Count != 1)
+					if (priNodes.size() != 1)
 					{
 						throw new RuntimeException("@没有实现子流程不同线程的需求。");
 					}
@@ -1087,7 +1087,7 @@ public class WorkFlow
 			// 增加消息 
 			WorkNode wn = this.GetCurrentWorkNode();
 			GenerWorkerLists wls = new GenerWorkerLists(wn.getHisWork().getOID(), wn.getHisNode().getNodeID());
-			if (wls.Count == 0)
+			if (wls.size() == 0)
 			{
 				throw new RuntimeException("@恢复流程出现错误,产生的工作者列表");
 			}
@@ -1503,7 +1503,7 @@ public class WorkFlow
 	{
 		String msg = "";
 		DataTable dt = DBAccess.RunSQLReturnTable("SELECT Title,RDT,Rec,OID FROM ND" + this.getStartNodeID() + " WHERE FID=" + this.getFID());
-		switch (dt.Rows.Count)
+		switch (dt.Rows.size())
 		{
 			case 0:
 				Node nd = new Node(this.getStartNodeID());
@@ -1512,7 +1512,7 @@ public class WorkFlow
 				msg = String.format("@发起人： %1$s  日期：%2$s 发起的流程 标题：%3$s ，已经成功完成。", dt.Rows[0]["Rec"].toString(), dt.Rows[0]["RDT"].toString(), dt.Rows[0]["Title"].toString());
 				break;
 			default:
-				msg = "@下列(" + dt.Rows.Count + ")位人员发起的流程已经完成。";
+				msg = "@下列(" + dt.Rows.size() + ")位人员发起的流程已经完成。";
 				for (DataRow dr : dt.Rows)
 				{
 					msg += "<br>发起人：" + dr.get("Rec") + " 发起日期：" + dr.get("RDT") + " 标题：" + dr.get("Title") + "<a href='./../../WF/WFRpt.htm?WorkID=" + dr.get("OID") + "&FK_Flow=" + this.getHisFlow().No + "' target=_blank>详细...</a>";
@@ -1956,7 +1956,7 @@ public class WorkFlow
 	public static boolean IsCanDoWorkCheckByEmpDuty(int nodeId, String dutyNo)
 	{
 		String sql = "SELECT a.FK_Node FROM WF_NodeDuty  a,  Port_EmpDuty b WHERE (a.FK_Duty=b.FK_Duty) AND (a.FK_Node=" + nodeId + " AND b.FK_Duty=" + dutyNo + ")";
-		if (DBAccess.RunSQLReturnTable(sql).Rows.Count == 0)
+		if (DBAccess.RunSQLReturnTable(sql).Rows.size() == 0)
 		{
 			return false;
 		}
@@ -2229,7 +2229,7 @@ public class WorkFlow
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		GenerWorkerLists wls = new GenerWorkerLists();
 		wls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
-		if (wls.Count == 0)
+		if (wls.size() == 0)
 		{
 			return "移交失败没有当前的工作。";
 		}
@@ -2243,7 +2243,7 @@ public class WorkFlow
 		WorkNode wn = new WorkNode(wk1, nd);
 		wn.AddToTrack(ActionType.UnShift, WebUser.No, WebUser.Name, nd.getNodeID(), nd.getName(), "撤消移交");
 
-		if (wls.Count == 1)
+		if (wls.size() == 1)
 		{
 			GenerWorkerList wl = (GenerWorkerList)wls[0];
 			wl.setFK_Emp(WebUser.No);

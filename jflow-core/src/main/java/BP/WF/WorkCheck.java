@@ -38,7 +38,7 @@ public class WorkCheck
 			String myPk = "";
 			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID={0} AND FK_Node={1} AND FK_Flow='{2}' ORDER BY RDT DESC";
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
-			if (dt != null && dt.Rows.Count > 0)
+			if (dt != null && dt.Rows.size() > 0)
 			{
 				myPk = dt.Rows[0]["RDT"].toString();
 				myPk = myPk.replace("-", "").replace(":", "").replace(" ", "");
@@ -67,7 +67,7 @@ public class WorkCheck
 
 
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
-			if (dt != null && dt.Rows.Count > 0)
+			if (dt != null && dt.Rows.size() > 0)
 			{
 				myPk = dt.Rows[0]["RDT"].toString();
 				myPk = myPk.replace("-", "").replace(":", "").replace(" ", "");

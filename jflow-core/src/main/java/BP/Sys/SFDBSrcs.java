@@ -86,7 +86,7 @@ public class SFDBSrcs extends EntitiesNoName
 	*/
 	public final List<SFDBSrc> ToJavaList()
 	{
-		return (List<SFDBSrc>)this;
+		return (List<SFDBSrc>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -96,7 +96,7 @@ public class SFDBSrcs extends EntitiesNoName
 	public final ArrayList<SFDBSrc> Tolist()
 	{
 		ArrayList<SFDBSrc> list = new ArrayList<SFDBSrc>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SFDBSrc)this.get(i));
 		}

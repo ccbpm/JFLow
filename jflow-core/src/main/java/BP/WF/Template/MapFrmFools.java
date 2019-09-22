@@ -50,7 +50,7 @@ public class MapFrmFools extends EntitiesNoName
 	public final ArrayList<MapFrmFool> Tolist()
 	{
 		ArrayList<MapFrmFool> list = new ArrayList<MapFrmFool>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapFrmFool)this[i]);
 		}

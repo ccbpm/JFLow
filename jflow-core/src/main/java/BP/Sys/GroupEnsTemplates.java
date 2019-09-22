@@ -66,7 +66,7 @@ public class GroupEnsTemplates extends EntitiesOID
 	public final ArrayList<GroupEnsTemplate> Tolist()
 	{
 		ArrayList<GroupEnsTemplate> list = new ArrayList<GroupEnsTemplate>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GroupEnsTemplate)this.get(i));
 		}

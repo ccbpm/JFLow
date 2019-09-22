@@ -76,7 +76,7 @@ public class GEEntityMyPKs extends Entities
 	public final ArrayList<GEEntityMyPK> Tolist()
 	{
 		ArrayList<GEEntityMyPK> list = new ArrayList<GEEntityMyPK>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GEEntityMyPK)this.get(i));
 		}

@@ -283,7 +283,7 @@ public class Selector extends Entity
 		{
 			for (DataTable dt : ds.Tables)
 			{
-				for (int i = 0; i < dt.Columns.Count; i++)
+				for (int i = 0; i < dt.Columns.size(); i++)
 				{
 					if (dt.Columns[i].ColumnName.toUpperCase().equals("NO"))
 					{
@@ -510,7 +510,7 @@ public class Selector extends Entity
 		}
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dtEmp.Rows.Count > 0)
+		if (dtEmp.Rows.size() > 0)
 		{
 			dt.TableName = "Depts";
 			ds.Tables.Add(dt);

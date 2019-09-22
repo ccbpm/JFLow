@@ -56,7 +56,7 @@ public class CHExts extends Entities
 	public final ArrayList<CHExt> Tolist()
 	{
 		ArrayList<CHExt> list = new ArrayList<CHExt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((CHExt)this[i]);
 		}

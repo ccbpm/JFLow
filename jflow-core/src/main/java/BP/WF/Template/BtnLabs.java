@@ -45,7 +45,7 @@ public class BtnLabs extends Entities
 	public final ArrayList<BtnLab> Tolist()
 	{
 		ArrayList<BtnLab> list = new ArrayList<BtnLab>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BtnLab)this[i]);
 		}

@@ -50,7 +50,7 @@ public class FrmWorkChecks extends Entities
 	public final ArrayList<FrmWorkCheck> Tolist()
 	{
 		ArrayList<FrmWorkCheck> list = new ArrayList<FrmWorkCheck>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmWorkCheck)this[i]);
 		}

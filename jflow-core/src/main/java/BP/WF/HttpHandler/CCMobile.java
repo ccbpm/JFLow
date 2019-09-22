@@ -235,7 +235,7 @@ public class CCMobile extends DirectoryPageBase
 		rws.Retrieve(BP.WF.ReturnWorkAttr.ReturnToNode, this.getFK_Node(), BP.WF.ReturnWorkAttr.WorkID, this.getWorkID(), BP.WF.ReturnWorkAttr.RDT);
 		StringBuilder append = new StringBuilder();
 		append.append("[");
-		if (rws.Count != 0)
+		if (rws.size() != 0)
 		{
 			for (BP.WF.ReturnWork rw : rws)
 			{

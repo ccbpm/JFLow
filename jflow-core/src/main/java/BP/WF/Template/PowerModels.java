@@ -46,7 +46,7 @@ public class PowerModels extends EntitiesMyPK
 	public final ArrayList<PowerModel> Tolist()
 	{
 		ArrayList<PowerModel> list = new ArrayList<PowerModel>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((PowerModel)this[i]);
 		}

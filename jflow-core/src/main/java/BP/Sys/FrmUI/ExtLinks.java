@@ -48,7 +48,7 @@ public class ExtLinks extends EntitiesMyPK
 	public final ArrayList<ExtLink> Tolist()
 	{
 		ArrayList<ExtLink> list = new ArrayList<ExtLink>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ExtLink)this[i]);
 		}

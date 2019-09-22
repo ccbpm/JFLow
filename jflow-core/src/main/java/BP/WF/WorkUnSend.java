@@ -185,7 +185,7 @@ public class WorkUnSend
 			//
 			NodeCancels ncs = new NodeCancels();
 			ncs.Retrieve(NodeCancelAttr.FK_Node, wn.getHisNode().getNodeID());
-			if (ncs.Count == 0)
+			if (ncs.size() == 0)
 			{
 				throw new RuntimeException("@流程设计错误, 您设置了当前节点(" + wn.getHisNode().getName() + ")可以让指定的节点人员撤销，但是您没有设置指定的节点.");
 			}
@@ -373,7 +373,7 @@ public class WorkUnSend
 			/*要检查一个是否有 子流程，如果有，则删除它们。*/
 			GenerWorkFlows gwfs = new GenerWorkFlows();
 			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, this.WorkID);
-			if (gwfs.Count > 0)
+			if (gwfs.size() > 0)
 			{
 				for (GenerWorkFlow item : gwfs)
 				{
@@ -491,7 +491,7 @@ public class WorkUnSend
 						+ " IN(SELECT DISTINCT(NDTo) FROM " + truckTable + "  WHERE ActionType=" + ActionType.ForwardFL.getValue() + " AND WorkID=" + this.WorkID + " AND NDFrom='" + nd.getNodeID() + "'"
 						+ "  ) ";
 				DataTable dt = DBAccess.RunSQLReturnTable(threadSQL);
-				if (dt == null || dt.Rows.Count == 0)
+				if (dt == null || dt.Rows.size() == 0)
 				{
 					throw new RuntimeException("err@流程运行错误：当不存在子线程时,改过程应该处于待办状态");
 				}
@@ -635,7 +635,7 @@ public class WorkUnSend
 			/*指定的节点可以撤销,首先判断当前人员是否有权限.*/
 			NodeCancels ncs = new NodeCancels();
 			ncs.Retrieve(NodeCancelAttr.FK_Node, wn.getHisNode().getNodeID());
-			if (ncs.Count == 0)
+			if (ncs.size() == 0)
 			{
 				throw new RuntimeException("@流程设计错误, 您设置了当前节点(" + wn.getHisNode().getName() + ")可以让指定的节点人员撤销，但是您没有设置指定的节点.");
 			}
@@ -643,7 +643,7 @@ public class WorkUnSend
 			/* 查询出来. */
 			sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE FK_Emp='" + WebUser.No + "' AND IsPass=1 AND IsEnable=1 AND WorkID=" + wn.getHisWork().getOID() + " ORDER BY RDT DESC ";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("err@撤销流程错误,您没有权限执行撤销发送.");
 			}
@@ -819,7 +819,7 @@ public class WorkUnSend
 		gwf.setNodeName(cancelToNode.getName());
 		//恢复上一步发送人
 		DataTable dtPrevTrack = Dev2Interface.Flow_GetPreviousNodeTrack(this.WorkID, cancelToNode.getNodeID());
-		if (dtPrevTrack != null && dtPrevTrack.Rows.Count > 0)
+		if (dtPrevTrack != null && dtPrevTrack.Rows.size() > 0)
 		{
 			gwf.setSender(dtPrevTrack.Rows[0]["EmpFrom"].toString());
 		}
@@ -926,7 +926,7 @@ public class WorkUnSend
 			/*要检查一个是否有 子流程，如果有，则删除它们。*/
 			GenerWorkFlows gwfs = new GenerWorkFlows();
 			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, this.WorkID);
-			if (gwfs.Count > 0)
+			if (gwfs.size() > 0)
 			{
 				for (GenerWorkFlow item : gwfs)
 				{

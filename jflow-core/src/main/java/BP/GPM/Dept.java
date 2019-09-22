@@ -274,7 +274,7 @@ public class Dept extends EntityTree
 	public final void GenerChildNameOfPath(String deptNo)
 	{
 		Depts depts = new Depts(deptNo);
-		if (depts != null && depts.Count > 0)
+		if (depts != null && depts.size() > 0)
 		{
 			for (Dept dept : depts)
 			{

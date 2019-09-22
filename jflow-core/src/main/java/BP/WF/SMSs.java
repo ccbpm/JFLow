@@ -43,7 +43,7 @@ public class SMSs extends Entities
 	public final ArrayList<SMS> Tolist()
 	{
 		ArrayList<SMS> list = new ArrayList<SMS>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SMS)this[i]);
 		}

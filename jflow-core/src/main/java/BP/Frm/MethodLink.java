@@ -3,6 +3,7 @@ package BP.Frm;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import java.util.*;
@@ -65,11 +66,11 @@ public class MethodLink extends EntityMyPK
 	*/
 	public final RefMethodType getRefMethodType()
 	{
-		return (RefMethodType)this.GetValIntByKey(MethodAttr.RefMethodType);
+		return RefMethodType.forValue( this.GetValIntByKey(MethodAttr.RefMethodType));
 	}
 	public final void setRefMethodType(RefMethodType value)
 	{
-		this.SetValByKey(MethodAttr.RefMethodType, (int)value);
+		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -77,10 +78,10 @@ public class MethodLink extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
-		if (WebUser.IsAdmin)
+		if (WebUser.getIsAdmin())
 		{
 			uac.IsUpdate = true;
 			return uac;
@@ -99,9 +100,9 @@ public class MethodLink extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 
@@ -126,8 +127,8 @@ public class MethodLink extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 工具栏.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(  map);
+		return map;
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

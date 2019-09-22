@@ -157,7 +157,7 @@ public final class HttpContextHelper
 
 	public static void ResponseAddHeader(String name, String value)
 	{
-		if (value.Count(c -> (int)c > 128) > 0)
+		if (value.size()(c -> (int)c > 128) > 0)
 		{
 			value = HttpUtility.UrlEncode(value, Encoding.UTF8);
 		}
@@ -317,7 +317,7 @@ public final class HttpContextHelper
 	}
 	public static int getRequestFilesCount()
 	{
-		return getCurrent().Request.Files.Count;
+		return getCurrent().Request.Files.size();
 	}
 	public static long RequestFileLength(int key)
 	{
@@ -350,7 +350,7 @@ public final class HttpContextHelper
 		try
 		{
 			System.Web.HttpFileCollection filelist = HttpContextHelper.getCurrent().Request.Files;
-			if (filelist == null || filelist.Count == 0)
+			if (filelist == null || filelist.size() == 0)
 			{
 				throw new UnsupportedOperationException("没有上传文件");
 			}

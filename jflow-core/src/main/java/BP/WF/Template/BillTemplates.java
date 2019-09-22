@@ -93,7 +93,7 @@ public class BillTemplates extends EntitiesNoName
 	public final ArrayList<BillTemplate> Tolist()
 	{
 		ArrayList<BillTemplate> list = new ArrayList<BillTemplate>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BillTemplate)this[i]);
 		}

@@ -56,7 +56,7 @@ public class CHs extends Entities
 	public final ArrayList<CH> Tolist()
 	{
 		ArrayList<CH> list = new ArrayList<CH>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((CH)this[i]);
 		}

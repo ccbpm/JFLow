@@ -53,7 +53,7 @@ public class Selectors extends Entities
 	public final ArrayList<Selector> Tolist()
 	{
 		ArrayList<Selector> list = new ArrayList<Selector>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Selector)this[i]);
 		}

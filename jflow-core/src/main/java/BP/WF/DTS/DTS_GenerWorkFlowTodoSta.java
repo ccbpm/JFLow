@@ -116,7 +116,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 向预警人员发消息.
 
-		if (dt.Rows.Count >= 1)
+		if (dt.Rows.size() >= 1)
 		{
 			//更新预警状态.
 			sql = "UPDATE WF_GenerWorkFlow  SET TodoSta=1 ";

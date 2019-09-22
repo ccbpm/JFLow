@@ -64,7 +64,7 @@ public class RptTemplates extends Entities
 	public final ArrayList<RptTemplate> Tolist()
 	{
 		ArrayList<RptTemplate> list = new ArrayList<RptTemplate>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((RptTemplate)this.get(i));
 		}

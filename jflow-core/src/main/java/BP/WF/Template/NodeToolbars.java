@@ -63,7 +63,7 @@ public class NodeToolbars extends EntitiesOID
 	public final ArrayList<NodeToolbar> Tolist()
 	{
 		ArrayList<NodeToolbar> list = new ArrayList<NodeToolbar>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((NodeToolbar)this[i]);
 		}

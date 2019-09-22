@@ -48,7 +48,7 @@ public class SFTables extends EntitiesNoName
 	public final ArrayList<SFTable> Tolist()
 	{
 		ArrayList<SFTable> list = new ArrayList<SFTable>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SFTable)this.get(i));
 		}

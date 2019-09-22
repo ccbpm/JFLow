@@ -67,7 +67,7 @@ public class FrmTransferCustoms extends Entities
 	public final ArrayList<FrmTransferCustom> Tolist()
 	{
 		ArrayList<FrmTransferCustom> list = new ArrayList<FrmTransferCustom>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmTransferCustom)this[i]);
 		}

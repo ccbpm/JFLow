@@ -66,7 +66,7 @@ public class FlowFormTrees extends EntitiesTree
 	public final ArrayList<FlowFormTree> Tolist()
 	{
 		ArrayList<FlowFormTree> list = new ArrayList<FlowFormTree>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FlowFormTree)this[i]);
 		}

@@ -44,7 +44,7 @@ public class SysEnumMains extends EntitiesNoName
 	public final ArrayList<SysEnumMain> Tolist()
 	{
 		ArrayList<SysEnumMain> list = new ArrayList<SysEnumMain>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SysEnumMain)this.get(i));
 		}

@@ -55,7 +55,7 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	public final ArrayList<FoolTruckNodeFrm> Tolist()
 	{
 		ArrayList<FoolTruckNodeFrm> list = new ArrayList<FoolTruckNodeFrm>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FoolTruckNodeFrm)this[i]);
 		}

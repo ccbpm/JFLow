@@ -376,7 +376,7 @@ public class CCFlowAPI
 				//存在表单方案只读
 				String sql1 = "Select FK_Frm From WF_FrmNode Where FK_Frm In(" + wk.HisPassedFrmIDs + ") And FrmSln=" + FrmSln.Readonly.getValue() + " And FK_Node=" + nd.getNodeID();
 				DataTable dt1 = DBAccess.RunSQLReturnTable(sql1);
-				if (dt1.Rows.Count > 0)
+				if (dt1.Rows.size() > 0)
 				{
 					//获取节点
 					String nodes = "";
@@ -406,7 +406,7 @@ public class CCFlowAPI
 				//存在表单方案默认
 				sql1 = "Select FK_Frm From WF_FrmNode Where FK_Frm In(" + wk.HisPassedFrmIDs + ") And FrmSln=" + FrmSln.Default.getValue() + " And FK_Node=" + nd.getNodeID();
 				dt1 = DBAccess.RunSQLReturnTable(sql1);
-				 if (dt1.Rows.Count > 0)
+				 if (dt1.Rows.size() > 0)
 				 {
 					 //获取节点
 					String nodes = "";
@@ -436,7 +436,7 @@ public class CCFlowAPI
 				 sql1 = "Select FK_Frm From WF_FrmNode Where FK_Frm In(" + wk.HisPassedFrmIDs + ") And FrmSln=" + FrmSln.Self.getValue() + " And FK_Node=" + nd.getNodeID();
 				dt1 = DBAccess.RunSQLReturnTable(sql1);
 
-				 if (dt1.Rows.Count > 0)
+				 if (dt1.Rows.size() > 0)
 				 {
 					 //获取节点
 					String nodes = "";
@@ -623,7 +623,7 @@ public class CCFlowAPI
 						///#region 到达其他节点.
 					//上一次选择的节点.
 					int defalutSelectedNodeID = 0;
-					if (nds.Count > 1)
+					if (nds.size() > 1)
 					{
 						String mysql = "";
 						// 找出来上次发送选择的节点.
@@ -947,7 +947,7 @@ public class CCFlowAPI
 					ReturnWorks rws = new ReturnWorks();
 					rws.Retrieve(ReturnWorkAttr.ReturnToNode, fk_node, ReturnWorkAttr.WorkID, workID, ReturnWorkAttr.RDT);
 
-					if (rws.Count != 0)
+					if (rws.size() != 0)
 					{
 						//string msgInfo = "";
 						//foreach (BP.WF.ReturnWork rw in rws)
@@ -1005,7 +1005,7 @@ public class CCFlowAPI
 					qo.AddWhere(ShiftWorkAttr.FK_Node, fk_node);
 					qo.addOrderBy(ShiftWorkAttr.RDT);
 					qo.DoQuery();
-					if (fws.Count >= 1)
+					if (fws.size() >= 1)
 					{
 						DataRow drMsg = dtAlert.NewRow();
 						drMsg.set("Title", "移交历史信息");
@@ -1140,7 +1140,7 @@ public class CCFlowAPI
 			myds.Tables.Add(wk.ToDataTableField(md.No));
 
 			//把附件的数据放入.
-			if (md.FrmAttachments.Count > 0)
+			if (md.FrmAttachments.size() > 0)
 			{
 				sql = "SELECT * FROM Sys_FrmAttachmentDB where RefPKVal=" + workID + " AND FK_MapData='ND" + fk_node + "'";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -1148,7 +1148,7 @@ public class CCFlowAPI
 				myds.Tables.Add(dt);
 			}
 			// 图片附件数据放入
-			if (md.FrmImgAths.Count > 0)
+			if (md.FrmImgAths.size() > 0)
 			{
 				sql = "SELECT * FROM Sys_FrmImgAthDB where RefPKVal=" + workID + " AND FK_MapData='ND" + fk_node + "'";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -1157,7 +1157,7 @@ public class CCFlowAPI
 			}
 
 			//把从表的数据放入.
-			if (md.MapDtls.Count > 0)
+			if (md.MapDtls.size() > 0)
 			{
 				for (MapDtl dtl : md.MapDtls)
 				{

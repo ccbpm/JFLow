@@ -436,7 +436,7 @@ public class MapData extends EntityNoName
 					strs += "'" + dr.get(0).toString() + "',";
 				}
 
-				if (dt.Rows.Count >= 1)
+				if (dt.Rows.size() >= 1)
 				{
 					strs += "'ssss'";
 					obj.RetrieveInOrderBy("EnumKey", strs, SysEnumAttr.IntKey);
@@ -1006,7 +1006,7 @@ public class MapData extends EntityNoName
 	public final Map GenerHisMap()
 	{
 		MapAttrs mapAttrs = this.getMapAttrs();
-		if (mapAttrs.Count == 0)
+		if (mapAttrs.size() == 0)
 		{
 			this.RepairMap();
 			mapAttrs = this.getMapAttrs();
@@ -1676,7 +1676,7 @@ public class MapData extends EntityNoName
 		// 求出dataset的map.
 		String oldMapID = "";
 		DataTable dtMap = ds.Tables["Sys_MapData"];
-		if (dtMap.Rows.Count == 1)
+		if (dtMap.Rows.size() == 1)
 		{
 			oldMapID = dtMap.Rows[0]["No"].toString();
 		}
@@ -2118,7 +2118,7 @@ public class MapData extends EntityNoName
 					}
 					break;
 				case "WF_Node":
-					if (dt.Rows.Count > 0)
+					if (dt.Rows.size() > 0)
 					{
 						endDoSQL += "@UPDATE WF_Node SET FWCSta=2"
 							+ ",FWC_X=" + dt.Rows[0]["FWC_X"] + ",FWC_Y=" + dt.Rows[0]["FWC_Y"] + ",FWC_H=" + dt.Rows[0]["FWC_H"] + ",FWC_W=" + dt.Rows[0]["FWC_W"] + ",FWCType=" + dt.Rows[0]["FWCType"] + " WHERE NodeID=" + fk_mapdata.replace("ND", "");
@@ -2152,7 +2152,7 @@ public class MapData extends EntityNoName
 	public final void RepairMap()
 	{
 		GroupFields gfs = new GroupFields(this.getNo());
-		if (gfs.Count == 0)
+		if (gfs.size() == 0)
 		{
 			GroupField gf = new GroupField();
 			gf.setFrmID(this.getNo());

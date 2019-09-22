@@ -46,7 +46,7 @@ public class GERpts extends BP.En.EntitiesOID
 	public final ArrayList<GERpt> Tolist()
 	{
 		ArrayList<GERpt> list = new ArrayList<GERpt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GERpt)this[i]);
 		}

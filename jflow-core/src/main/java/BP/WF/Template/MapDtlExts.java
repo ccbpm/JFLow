@@ -59,7 +59,7 @@ public class MapDtlExts extends EntitiesNoName
 	public final ArrayList<MapDtlExt> Tolist()
 	{
 		ArrayList<MapDtlExt> list = new ArrayList<MapDtlExt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapDtlExt)this[i]);
 		}

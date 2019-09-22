@@ -170,7 +170,7 @@ public class Sync extends Method
 
 			SearchResultCollection rss = ds.FindAll();
 			DBAccess.RunSQL("DELETE FROM Port_Emp WHERE FK_Dept='" + mydept.No + "'");
-			if (rss.Count == 0)
+			if (rss.size() == 0)
 			{
 				continue;
 			}
@@ -268,7 +268,7 @@ public class Sync extends Method
 			sta.DirectInsert();
 
 			System.DirectoryServices.PropertyCollection pcoll = deGroup.Properties;
-			int n = pcoll.get("member").Count;
+			int n = pcoll.get("member").size();
 			for (int l = 0; l < n; l++)
 			{
 				try
@@ -294,7 +294,7 @@ public class Sync extends Method
 		//岗位类型.
 		StationTypes typs = new StationTypes();
 		typs.RetrieveAll();
-		if (typs.Count == 0)
+		if (typs.size() == 0)
 		{
 			StationType st = new StationType();
 			st.Name = "未分组";

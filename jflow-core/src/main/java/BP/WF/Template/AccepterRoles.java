@@ -63,7 +63,7 @@ public class AccepterRoles extends EntitiesOID
 	public final ArrayList<AccepterRole> Tolist()
 	{
 		ArrayList<AccepterRole> list = new ArrayList<AccepterRole>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((AccepterRole)this[i]);
 		}

@@ -54,7 +54,7 @@ public class RptEmps extends Entities
 	public final ArrayList<RptEmp> Tolist()
 	{
 		ArrayList<RptEmp> list = new ArrayList<RptEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((RptEmp)this[i]);
 		}

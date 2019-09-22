@@ -65,7 +65,7 @@ public class FindWorkerRoles extends EntitiesOID
 	public final ArrayList<FindWorkerRole> Tolist()
 	{
 		ArrayList<FindWorkerRole> list = new ArrayList<FindWorkerRole>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FindWorkerRole)this[i]);
 		}

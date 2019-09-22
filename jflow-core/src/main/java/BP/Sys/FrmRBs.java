@@ -67,7 +67,7 @@ public class FrmRBs extends EntitiesMyPK
 	public final ArrayList<FrmRB> Tolist()
 	{
 		ArrayList<FrmRB> list = new ArrayList<FrmRB>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmRB)this.get(i));
 		}

@@ -56,6 +56,6 @@ public class DTSCheckFlowAll extends Method
 			fl.DoCheck();
 		}
 
-		return "提示：" + fls.Count + "个流程参与了体检。";
+		return "提示：" + fls.size() + "个流程参与了体检。";
 	}
 }

@@ -248,7 +248,7 @@ public class Map
 	}
 	public final void AddHidden(String refKey, String symbol, String val)
 	{
-		AttrOfSearch aos = new AttrOfSearch("K" + this.getAttrsOfSearch().Count, refKey, refKey, symbol, val, 0, true);
+		AttrOfSearch aos = new AttrOfSearch("K" + this.getAttrsOfSearch().size(), refKey, refKey, symbol, val, 0, true);
 		this.getAttrsOfSearch().Add(aos);
 	}
 	/** 
@@ -2029,11 +2029,7 @@ public class Map
 	 @param savePath 保存位置(默认为:\datauser\ensName\)
 	*/
 
-	public final void AddMyFile(String fileDesc, String ext)
-	{
-		AddMyFile(fileDesc, ext, null);
-	}
-
+ 
 	public final void AddMyFile(String fileDesc)
 	{
 		AddMyFile(fileDesc, null, null);

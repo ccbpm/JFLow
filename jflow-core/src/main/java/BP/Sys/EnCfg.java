@@ -4,6 +4,8 @@ import BP.DA.*;
 import BP.En.*;
 import BP.*;
 import BP.Web.*;
+
+import java.nio.file.Path;
 import java.util.*;
 
 /** 
@@ -72,7 +74,7 @@ public class EnCfg extends EntityNo
 		String str = this.GetValStringByKey(EnCfgAttr.FJWebPath);
 		if (str.equals("") || str == null)
 		{
-			str = Path.Combine(HttpContextHelper.getRequestApplicationPath(), "DataUser/", this.getNo());
+			str = Path.combine(HttpContextHelper.getRequestApplicationPath(), "DataUser/", this.getNo());
 		}
 		str = str.replace("\\", "/");
 		if (!str.endsWith("/"))

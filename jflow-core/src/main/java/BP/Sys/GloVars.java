@@ -200,7 +200,7 @@ public class GloVars extends EntitiesNoName
 	public final ArrayList<GloVar> Tolist()
 	{
 		ArrayList<GloVar> list = new ArrayList<GloVar>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GloVar)this.get(i));
 		}

@@ -57,7 +57,7 @@ public class AdminEmps extends EntitiesNoName
 	public final ArrayList<AdminEmp> Tolist()
 	{
 		ArrayList<AdminEmp> list = new ArrayList<AdminEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((AdminEmp)this[i]);
 		}

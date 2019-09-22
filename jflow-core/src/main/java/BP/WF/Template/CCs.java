@@ -51,7 +51,7 @@ public class CCs extends Entities
 	public final ArrayList<CC> Tolist()
 	{
 		ArrayList<CC> list = new ArrayList<CC>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((CC)this[i]);
 		}

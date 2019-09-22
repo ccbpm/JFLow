@@ -150,7 +150,7 @@ public class NodeCancels extends EntitiesMM
 	public final ArrayList<NodeCancel> Tolist()
 	{
 		ArrayList<NodeCancel> list = new ArrayList<NodeCancel>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((NodeCancel)this[i]);
 		}

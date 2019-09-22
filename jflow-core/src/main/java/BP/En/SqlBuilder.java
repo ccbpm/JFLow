@@ -507,7 +507,7 @@ public class SqlBuilder {
 		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " ( ";
 
 		if (attrs.size() == 0) {
-			throw new RuntimeException("@" + en.getEnDesc() + " , 没有属性集合 attrs.Count = 0 ,能执行数据表的创建.");
+			throw new RuntimeException("@" + en.getEnDesc() + " , 没有属性集合 attrs.size() = 0 ,能执行数据表的创建.");
 		}
 
 		for (Attr attr : attrs) {
@@ -1289,10 +1289,7 @@ public class SqlBuilder {
 					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
 							+ map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
 				}
-				if (attr.getMyFieldType() == FieldType.BindTable) {
-					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
-							+ attr.getKey() + "Text";
-				}
+			 
 				break;
 			case DataType.AppInt:
 				val = val + "," + mainTable + attr.getField() + " " + attr.getKey() + "";
@@ -1313,10 +1310,7 @@ public class SqlBuilder {
 							+ map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
 				}
 
-				if (attr.getMyFieldType() == FieldType.BindTable) {
-					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
-							+ attr.getKey() + "Text";
-				}
+				 
 				break;
 			case DataType.AppFloat:
 			case DataType.AppDouble:
@@ -1380,10 +1374,7 @@ public class SqlBuilder {
 							+ map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
 
 				}
-				if (attr.getMyFieldType() == FieldType.BindTable) {
-					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
-							+ attr.getKey() + "Text";
-				}
+			 
 				break;
 			case DataType.AppInt:
 				val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
@@ -1406,10 +1397,7 @@ public class SqlBuilder {
 					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
 							+ map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
 				}
-				if (attr.getMyFieldType() == FieldType.BindTable) {
-					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
-							+ attr.getKey() + "Text";
-				}
+				 
 				break;
 			case DataType.AppFloat:
 			case DataType.AppBoolean:

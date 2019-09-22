@@ -64,7 +64,7 @@ public class AutoRunWF_Task extends Method
 			dt = DBAccess.RunSQLReturnTable(sql);
 		}
 
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "无任务";
 		}
@@ -123,7 +123,7 @@ public class AutoRunWF_Task extends Method
 				sql = "SELECT * FROM " + md.PTable + " WHERE MainPK='" + mypk + "' AND WFState=1";
 				try
 				{
-					if (DBAccess.RunSQLReturnTable(sql).Rows.Count != 0)
+					if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 					{
 						continue;
 					}

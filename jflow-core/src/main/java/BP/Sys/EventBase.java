@@ -202,7 +202,7 @@ public abstract class EventBase
 		String sql = "SELECT  MyPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID=" + this.getWorkID() + " AND NDFrom=" + this.getFK_Node() + " ORDER BY RDT ";
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return null;
 		}

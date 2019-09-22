@@ -43,7 +43,7 @@ public class StationExts extends EntitiesNoName
 	public final ArrayList<StationExt> Tolist()
 	{
 		ArrayList<StationExt> list = new ArrayList<StationExt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((StationExt)this[i]);
 		}

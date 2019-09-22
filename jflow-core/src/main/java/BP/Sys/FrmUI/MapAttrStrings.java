@@ -49,7 +49,7 @@ public class MapAttrStrings extends EntitiesMyPK
 	public final ArrayList<MapAttrString> Tolist()
 	{
 		ArrayList<MapAttrString> list = new ArrayList<MapAttrString>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapAttrString)this[i]);
 		}

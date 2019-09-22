@@ -44,7 +44,7 @@ public class EnVers extends EntitiesMyPK
 	public final ArrayList<EnVer> Tolist()
 	{
 		ArrayList<EnVer> list = new ArrayList<EnVer>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((EnVer)this[i]);
 		}

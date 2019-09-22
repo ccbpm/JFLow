@@ -49,7 +49,7 @@ public class MapAttrEnums extends EntitiesMyPK
 	public final ArrayList<MapAttrEnum> Tolist()
 	{
 		ArrayList<MapAttrEnum> list = new ArrayList<MapAttrEnum>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapAttrEnum)this[i]);
 		}

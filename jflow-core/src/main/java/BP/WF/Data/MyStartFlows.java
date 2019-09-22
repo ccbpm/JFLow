@@ -64,7 +64,7 @@ public class MyStartFlows extends Entities
 	public final ArrayList<MyStartFlow> Tolist()
 	{
 		ArrayList<MyStartFlow> list = new ArrayList<MyStartFlow>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MyStartFlow)this[i]);
 		}

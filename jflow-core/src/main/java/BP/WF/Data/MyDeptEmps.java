@@ -49,7 +49,7 @@ public class MyDeptEmps extends BP.En.EntitiesNoName
 	public final ArrayList<MyDeptEmp> Tolist()
 	{
 		ArrayList<MyDeptEmp> list = new ArrayList<MyDeptEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MyDeptEmp)this[i]);
 		}

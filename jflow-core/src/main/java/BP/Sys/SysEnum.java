@@ -188,7 +188,7 @@ public class SysEnum extends EntityMyPK
 		//获取引用枚举的表单
 		String sql = " select  distinct(FK_MapData)from Sys_FrmRB where EnumKey='" + this.getEnumKey() + "'";
 		System.Data.DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			super.afterInsert();
 			return;

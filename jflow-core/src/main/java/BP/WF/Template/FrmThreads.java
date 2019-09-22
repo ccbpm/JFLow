@@ -67,7 +67,7 @@ public class FrmThreads extends Entities
 	public final ArrayList<FrmThread> Tolist()
 	{
 		ArrayList<FrmThread> list = new ArrayList<FrmThread>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmThread)this[i]);
 		}

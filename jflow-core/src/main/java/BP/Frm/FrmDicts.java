@@ -52,7 +52,7 @@ public class FrmDicts extends EntitiesNoName
 	public final ArrayList<FrmDict> Tolist()
 	{
 		ArrayList<FrmDict> list = new ArrayList<FrmDict>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmDict)this[i]);
 		}

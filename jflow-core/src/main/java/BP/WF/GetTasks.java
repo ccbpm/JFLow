@@ -56,7 +56,7 @@ public class GetTasks extends BP.En.Entities
 	public final ArrayList<GetTask> Tolist()
 	{
 		ArrayList<GetTask> list = new ArrayList<GetTask>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GetTask)this[i]);
 		}

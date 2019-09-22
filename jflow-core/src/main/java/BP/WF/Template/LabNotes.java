@@ -64,7 +64,7 @@ public class LabNotes extends Entities
 	public final ArrayList<LabNote> Tolist()
 	{
 		ArrayList<LabNote> list = new ArrayList<LabNote>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((LabNote)this[i]);
 		}

@@ -47,7 +47,7 @@ public class MapDataTemplates extends EntitiesNoName
 	public final ArrayList<MapDataTemplate> Tolist()
 	{
 		ArrayList<MapDataTemplate> list = new ArrayList<MapDataTemplate>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapDataTemplate)this.get(i));
 		}

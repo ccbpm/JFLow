@@ -131,7 +131,7 @@ public class FindWorker
 			}
 
 			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0 && town.getHisNode().getHisWhenNoWorker() == false)
+			if (dt.Rows.size() == 0 && town.getHisNode().getHisWhenNoWorker() == false)
 			{
 				throw new RuntimeException("@没有找到可接受的工作人员。@技术信息：执行的SQL没有发现人员:" + sql);
 			}
@@ -149,7 +149,7 @@ public class FindWorker
 
 			sql = "SELECT No, Name,FK_Dept AS GroupMark FROM Port_Emp WHERE FK_Dept IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node=" + town.getHisNode().getNodeID() + ")";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0 && town.getHisNode().getHisWhenNoWorker() == false)
+			if (dt.Rows.size() == 0 && town.getHisNode().getHisWhenNoWorker() == false)
 			{
 				throw new RuntimeException("@没有找到可接受的工作人员,接受人方式为, ‘按绑定部门计算,该部门一人处理标识该工作结束(子线程)’ @技术信息：执行的SQL没有发现人员:" + sql);
 			}
@@ -184,7 +184,7 @@ public class FindWorker
 					ps.SQL = "SELECT " + empFild + ", * FROM " + dtl.PTable + " WHERE RefPK=" + dbStr + "OID ORDER BY OID";
 					ps.Add("OID", this.WorkID);
 					dt = DBAccess.RunSQLReturnTable(ps);
-					if (dt.Rows.Count == 0 && town.getHisNode().getHisWhenNoWorker() == false)
+					if (dt.Rows.size() == 0 && town.getHisNode().getHisWhenNoWorker() == false)
 					{
 						throw new RuntimeException("@流程设计错误，到达的节点（" + town.getHisNode().getName() + "）在指定的节点中没有数据，无法找到子线程的工作人员。");
 					}
@@ -193,7 +193,7 @@ public class FindWorker
 				catch (RuntimeException ex)
 				{
 					msg += ex.getMessage();
-					//if (dtls.Count == 1)
+					//if (dtls.size() == 1)
 					//    throw new Exception("@估计是流程设计错误,没有在分流节点的明细表中设置");
 				}
 			}
@@ -210,7 +210,7 @@ public class FindWorker
 			ps.Add("FK_Node", town.getHisNode().getNodeID());
 			ps.SQL = "SELECT FK_Emp FROM WF_NodeEmp WHERE FK_Node=" + dbStr + "FK_Node ORDER BY FK_Emp";
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("@流程设计错误:下一个节点(" + town.getHisNode().getName() + ")没有绑定工作人员 . ");
 			}
@@ -228,7 +228,7 @@ public class FindWorker
 			ps.Add("WorkID", this.currWn.getHisWork().getOID());
 			ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				/*从上次发送设置的地方查询. */
 				SelectAccpers sas = new SelectAccpers();
@@ -282,7 +282,7 @@ public class FindWorker
 					myworkid = this.currWn.getHisWork().getFID();
 				}
 				dt = DBAccess.RunSQLReturnTable("SELECT Starter as No, StarterName as Name FROM WF_GenerWorkFlow WHERE WorkID=" + myworkid);
-				if (dt.Rows.Count == 1)
+				if (dt.Rows.size() == 1)
 				{
 					return dt;
 				}
@@ -296,7 +296,7 @@ public class FindWorker
 					return dt;
 				}
 
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					throw new RuntimeException("@流程设计错误，到达的节点（" + town.getHisNode().getName() + "）无法找到开始节点的工作人员。");
 				}
@@ -356,7 +356,7 @@ public class FindWorker
 
 				DataTable dt_ND = DBAccess.RunSQLReturnTable(ps);
 				//添加到结果表
-				if (dt_ND.Rows.Count != 0)
+				if (dt_ND.Rows.size() != 0)
 				{
 					for (DataRow row : dt_ND.Rows)
 					{
@@ -383,7 +383,7 @@ public class FindWorker
 				ps.Add("NDFrom", Integer.parseInt(nd));
 
 				dt_ND = DBAccess.RunSQLReturnTable(ps);
-				if (dt_ND.Rows.Count != 0)
+				if (dt_ND.Rows.size() != 0)
 				{
 					for (DataRow row : dt_ND.Rows)
 					{
@@ -402,7 +402,7 @@ public class FindWorker
 
 				dt_ND = DBAccess.RunSQLReturnTable(ps);
 				//添加到结果表
-				if (dt_ND.Rows.Count != 0)
+				if (dt_ND.Rows.size() != 0)
 				{
 					for (DataRow row : dt_ND.Rows)
 					{
@@ -447,7 +447,7 @@ public class FindWorker
 					}
 
 					DataTable dt_PWork = DBAccess.RunSQLReturnTable(ps);
-					if (dt_PWork.Rows.Count != 0)
+					if (dt_PWork.Rows.size() != 0)
 					{
 						for (DataRow row : dt_PWork.Rows)
 						{
@@ -480,7 +480,7 @@ public class FindWorker
 					}
 
 					dt_PWork = DBAccess.RunSQLReturnTable(ps);
-					if (dt_PWork.Rows.Count != 0)
+					if (dt_PWork.Rows.size() != 0)
 					{
 						for (DataRow row : dt_PWork.Rows)
 						{
@@ -492,7 +492,7 @@ public class FindWorker
 				}
 			}
 			//返回指定节点的处理人
-			if (dt.Rows.Count != 0)
+			if (dt.Rows.size() != 0)
 			{
 				return dt;
 			}
@@ -538,7 +538,7 @@ public class FindWorker
 					dr.set(0, ss[0]);
 					dt.Rows.Add(dr);
 				}
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					throw new RuntimeException("@输入的接受人员信息错误;[" + emps + "]。");
 				}
@@ -626,7 +626,7 @@ public class FindWorker
 
 			dt = DBAccess.RunSQLReturnTable(sql);
 
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -660,7 +660,7 @@ public class FindWorker
 
 			dt = DBAccess.RunSQLReturnTable(sql);
 
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -688,7 +688,7 @@ public class FindWorker
 			ps.Add("WorkID", this.currWn.getHisWork().getOID());
 			ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -704,7 +704,7 @@ public class FindWorker
 
 				ps.Add("FK_Node", town.getHisNode().getNodeID());
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count > 0 && town.getHisNode().getHisWhenNoWorker() == false)
+				if (dt.Rows.size() > 0 && town.getHisNode().getHisWhenNoWorker() == false)
 				{
 					return dt;
 				}
@@ -726,7 +726,7 @@ public class FindWorker
 				ps.SQL = sql;
 
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					/* 如果项目组里没有工作人员就提交到公共部门里去找。*/
 					sql = "SELECT NO FROM Port_Emp WHERE NO IN ";
@@ -760,7 +760,7 @@ public class FindWorker
 				}
 
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count > 0)
+				if (dt.Rows.size() > 0)
 				{
 					return dt;
 				}
@@ -778,7 +778,7 @@ public class FindWorker
 			ps.Add("FK_Node", town.getHisNode().getNodeID());
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -807,7 +807,7 @@ public class FindWorker
 			ps.Add("FK_Node", town.getHisNode().getNodeID());
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -881,7 +881,7 @@ public class FindWorker
 			ps.Add("FK_Emp", WebUser.No);
 			dt = DBAccess.RunSQLReturnTable(ps);
 
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -929,7 +929,7 @@ public class FindWorker
 					ps.Add("FK_Node", Integer.parseInt(str));
 
 					dt = DBAccess.RunSQLReturnTable(ps);
-					if (dt.Rows.Count != 1)
+					if (dt.Rows.size() != 1)
 					{
 						continue;
 					}
@@ -993,7 +993,7 @@ public class FindWorker
 				ps.Add("WorkID", this.WorkID);
 
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					/* 如果项目组里没有工作人员就提交到公共部门里去找。*/
 					sql = "SELECT DISTINCT FK_Emp  FROM " + BP.WF.Glo.getEmpStation() + " WHERE FK_Station IN "
@@ -1014,9 +1014,9 @@ public class FindWorker
 
 			dt = DBAccess.RunSQLReturnTable(ps);
 			// 如果能够找到.
-			if (dt.Rows.Count >= 1)
+			if (dt.Rows.size() >= 1)
 			{
-				if (dt.Rows.Count == 1)
+				if (dt.Rows.size() == 1)
 				{
 					/*如果人员只有一个的情况，说明他可能要 */
 				}
@@ -1074,7 +1074,7 @@ public class FindWorker
 				ps.Add("FK_Node", town.getHisNode().getNodeID());
 				ps.Add("FK_Prj2", prjNo);
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					/* 如果项目组里没有工作人员就提交到公共部门里去找。 */
 
@@ -1108,10 +1108,10 @@ public class FindWorker
 			}
 
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				NodeStations nextStations = town.getHisNode().getNodeStations();
-				if (nextStations.Count == 0)
+				if (nextStations.size() == 0)
 				{
 					throw new RuntimeException("@节点没有岗位:" + town.getHisNode().getNodeID() + "  " + town.getHisNode().getName());
 				}
@@ -1159,7 +1159,7 @@ public class FindWorker
 
 			//检查指定的父部门下面是否有该人员.
 			DataTable mydtTemp = this.Func_GenerWorkerList_SpecDept(nowDeptID, empNo);
-			if (mydtTemp.Rows.Count != 0)
+			if (mydtTemp.Rows.size() != 0)
 			{
 				return mydtTemp;
 			}
@@ -1182,7 +1182,7 @@ public class FindWorker
 
 			//该部门下的所有子部门是否有人员.
 			DataTable mydtTemp = Func_GenerWorkerList_SpecDept_SameLevel(nowDeptID, empNo);
-			if (mydtTemp.Rows.Count != 0)
+			if (mydtTemp.Rows.size() != 0)
 			{
 				return mydtTemp;
 			}
@@ -1196,7 +1196,7 @@ public class FindWorker
 		//递归出来子部门下有该岗位的人员
 		DataTable mydt = Func_GenerWorkerList_SpecDept_SameLevel(nowDeptID, empNo);
 
-		if ((mydt == null || mydt.Rows.Count == 0) && this.town.getHisNode().getHisWhenNoWorker() == false)
+		if ((mydt == null || mydt.Rows.size() == 0) && this.town.getHisNode().getHisWhenNoWorker() == false)
 		{
 			//如果递归没有找到人,就全局搜索岗位.
 			sql = "SELECT A.FK_Emp FROM  Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
@@ -1205,7 +1205,7 @@ public class FindWorker
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
 
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
@@ -1214,7 +1214,7 @@ public class FindWorker
 				throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.No + ",名称:" + WebUser.Name + " , 部门编号:" + WebUser.FK_Dept + " 部门名称：" + WebUser.FK_DeptName);
 			}
 
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				mydt = new DataTable();
 				mydt.Columns.Add(new DataColumn("No", String.class));
@@ -1326,7 +1326,7 @@ public class FindWorker
 		if (toWn.getHisNode().getHisDeliveryWay() != DeliveryWay.ByCCFlowBPM)
 		{
 			DataTable re_dt = this.FindByWorkFlowModel();
-			if (re_dt.Rows.Count == 1)
+			if (re_dt.Rows.size() == 1)
 			{
 				return re_dt; //如果只有一个人，就直接返回，就不处理了。
 			}
@@ -1411,7 +1411,7 @@ public class FindWorker
 				///#endregion
 
 			//本节点接收人不允许包含上一步发送人 。
-			if (this.town.getHisNode().getIsExpSender() == true && re_dt.Rows.Count >= 2)
+			if (this.town.getHisNode().getIsExpSender() == true && re_dt.Rows.size() >= 2)
 			{
 				/*
 				 * 排除了接受人分组的情况, 因为如果有了分组，就破坏了分组的结构了.
@@ -1447,7 +1447,7 @@ public class FindWorker
 			en.WorkID = this.WorkID;
 
 			DataTable dt = en.GenerWorkerOfDataTable();
-			if (dt == null || dt.Rows.Count == 0)
+			if (dt == null || dt.Rows.size() == 0)
 			{
 				continue;
 			}

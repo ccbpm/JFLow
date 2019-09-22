@@ -291,7 +291,7 @@ public class EntityDBAccess
 			int i = dt.Rows.size();
 			//dt.Dispose();
 			return i;
-			//return dt.Rows.Count;
+			//return dt.Rows.size();
 		}
 		catch (RuntimeException ex)
 		{
@@ -337,6 +337,6 @@ public class EntityDBAccess
 		int i = dt.Rows.size();
 		//dt.Dispose();
 		return i;
-		//return dt.Rows.Count;
+		//return dt.Rows.size();
 	}
 }

@@ -161,7 +161,7 @@ public class FrmNodes extends EntitiesMyPK
 	public final ArrayList<FrmNode> Tolist()
 	{
 		ArrayList<FrmNode> list = new ArrayList<FrmNode>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmNode)this[i]);
 		}

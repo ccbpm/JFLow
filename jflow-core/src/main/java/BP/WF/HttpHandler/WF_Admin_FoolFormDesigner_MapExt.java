@@ -660,7 +660,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		dt.Columns[1].ColumnName = "Name";
 		ds.Tables.Add(dt);
 
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "err@表单中没有要级联的下拉框.";
 		}
@@ -726,7 +726,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		//字段值.
 		FrmRBs rbs = new FrmRBs();
 		rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
-		if (rbs.Count == 0)
+		if (rbs.size() == 0)
 		{
 			/*初始枚举值变化.
 			 */
@@ -1362,12 +1362,12 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		String sql = "SELECT * FROM STARCO_TemplateNRCMaterielDtl WHERE FK_Template='" + fk_Template + "'";
 		DataTable dt = new DataTable();
 		dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt != null && dt.Rows.Count > 0)
+		if (dt != null && dt.Rows.size() > 0)
 		{
 			//string sql1 = "SELECT * FROM ND105Dtl1 WHERE RefPK='" + workid + "'";
 			//DataTable dt1 = new DataTable();
 			//dt1 = DBAccess.RunSQLReturnTable(sql1);
-			//if (dt1 != null && dt1.Rows.Count > 0)
+			//if (dt1 != null && dt1.Rows.size() > 0)
 			//{
 
 			//}
@@ -1375,7 +1375,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			String delSql = "DELETE FROM ND105Dtl1 WHERE RefPK='" + workid + "'";
 			DBAccess.RunSQLReturnString(delSql);
 
-			for (int i = 0; i < dt.Rows.Count; i++)
+			for (int i = 0; i < dt.Rows.size(); i++)
 			{
 				GEDtl dtl = new GEDtl("ND105Dtl1");
 

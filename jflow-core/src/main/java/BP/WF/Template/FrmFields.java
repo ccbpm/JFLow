@@ -51,7 +51,7 @@ public class FrmFields extends EntitiesMyPK
 	public final ArrayList<FrmField> Tolist()
 	{
 		ArrayList<FrmField> list = new ArrayList<FrmField>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmField)this[i]);
 		}

@@ -63,7 +63,7 @@ public class SubFlows extends EntitiesMyPK
 	public final ArrayList<SubFlow> Tolist()
 	{
 		ArrayList<SubFlow> list = new ArrayList<SubFlow>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SubFlow)this[i]);
 		}

@@ -63,7 +63,7 @@ public class UserRegedits extends EntitiesMyPK
 	public final ArrayList<UserRegedit> Tolist()
 	{
 		ArrayList<UserRegedit> list = new ArrayList<UserRegedit>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((UserRegedit)this.get(i));
 		}

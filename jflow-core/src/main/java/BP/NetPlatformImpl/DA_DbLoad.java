@@ -44,8 +44,8 @@ public class DA_DbLoad
 				return null;
 			}
 
-			String[] excelSheets = new String[dt.Rows.Count];
-			for (int i = 0; i < dt.Rows.Count; i++)
+			String[] excelSheets = new String[dt.Rows.size()];
+			for (int i = 0; i < dt.Rows.size(); i++)
 			{
 				excelSheets[i] = dt.Rows[i]["TABLE_NAME"].toString();
 			}

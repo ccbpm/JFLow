@@ -154,7 +154,7 @@ public class CCEmps extends EntitiesMM
 	public final ArrayList<CCEmp> Tolist()
 	{
 		ArrayList<CCEmp> list = new ArrayList<CCEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((CCEmp)this[i]);
 		}

@@ -64,7 +64,7 @@ public class PartParentSubGuides extends EntitiesMyPK
 	public final ArrayList<PartParentSubGuide> Tolist()
 	{
 		ArrayList<PartParentSubGuide> list = new ArrayList<PartParentSubGuide>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((PartParentSubGuide)this[i]);
 		}

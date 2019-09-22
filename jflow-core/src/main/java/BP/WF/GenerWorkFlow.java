@@ -944,7 +944,7 @@ public class GenerWorkFlow extends Entity
 
 		String sql = "SELECT FK_Node FROM WF_GenerWorkerlist WHERE WORKID='" + this.getWorkID() + "' ORDER BY FK_Node desc";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			/*如果是开始工作节点，就删除它。*/
 			WorkFlow wf = new WorkFlow(new Flow(this.getFK_Flow()), this.getWorkID(), this.getFID());

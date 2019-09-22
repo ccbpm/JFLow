@@ -45,7 +45,7 @@ public class Auths extends EntitiesMyPK
 	public final ArrayList<Auth> Tolist()
 	{
 		ArrayList<Auth> list = new ArrayList<Auth>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Auth)this[i]);
 		}

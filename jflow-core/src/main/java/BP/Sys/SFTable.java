@@ -15,14 +15,14 @@ public class SFTable extends EntityNoName
 	/** 
 	 获得外部数据表
 	*/
-	public final System.Data.DataTable GenerHisDataTable()
+	public final DataTable GenerHisDataTable()
 	{
 		//创建数据源.
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region BP类
-		if (this.getSrcType() == Sys.SrcType.BPClass)
+		if (this.getSrcType() == SrcType.BPClass)
 		{
 			Entities ens = ClassFactory.GetEns(this.getNo());
 			return ens.RetrieveAllToTable();
@@ -34,7 +34,7 @@ public class SFTable extends EntityNoName
 			///#region  WebServices
 		// this.SrcType == Sys.SrcType.WebServices，by liuxc 
 		//暂只考虑No,Name结构的数据源，2015.10.04，added by liuxc
-		if (this.getSrcType() == Sys.SrcType.WebServices)
+		if (this.getSrcType() == SrcType.WebServices)
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var td = this.getTableDesc().split("[,]", -1); //接口名称,返回类型
@@ -148,7 +148,7 @@ public class SFTable extends EntityNoName
 
 					XmlNode root = null;
 
-					if (xml.ChildNodes.Count < 2)
+					if (xml.ChildNodes.size() < 2)
 					{
 						root = xml.ChildNodes[0];
 					}
@@ -785,7 +785,7 @@ public class SFTable extends EntityNoName
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
-		if (attrs.Count != 0)
+		if (attrs.size() != 0)
 		{
 			String err = "";
 			for (MapAttr item : attrs)
@@ -978,7 +978,7 @@ public class SFTable extends EntityNoName
 		DataTable dt = this.GenerHisDataTable();
 
 		String sql = "";
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			/*初始化数据.*/
 			if (this.getCodeStruct() == Sys.CodeStruct.Tree)

@@ -55,7 +55,7 @@ public class Bills extends EntitiesMyPK
 	public final ArrayList<Bill> Tolist()
 	{
 		ArrayList<Bill> list = new ArrayList<Bill>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Bill)this[i]);
 		}

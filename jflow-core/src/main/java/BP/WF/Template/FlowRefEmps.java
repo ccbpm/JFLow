@@ -64,7 +64,7 @@ public class FlowRefEmps extends EntitiesMyPK
 	public final ArrayList<FlowRefEmp> Tolist()
 	{
 		ArrayList<FlowRefEmp> list = new ArrayList<FlowRefEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FlowRefEmp)this[i]);
 		}

@@ -45,7 +45,7 @@ public class StationTypes extends EntitiesNoName
 	public final ArrayList<StationType> Tolist()
 	{
 		ArrayList<StationType> list = new ArrayList<StationType>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((StationType)this[i]);
 		}

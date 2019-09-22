@@ -49,7 +49,7 @@ public class SysForms extends EntitiesNoName
 	public final ArrayList<SysForm> Tolist()
 	{
 		ArrayList<SysForm> list = new ArrayList<SysForm>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SysForm)this[i]);
 		}

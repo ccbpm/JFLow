@@ -48,7 +48,7 @@ public class Tracks extends BP.En.EntitiesMyPK
 	public final ArrayList<Track> Tolist()
 	{
 		ArrayList<Track> list = new ArrayList<Track>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Track)this[i]);
 		}

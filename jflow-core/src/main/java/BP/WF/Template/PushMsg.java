@@ -759,7 +759,7 @@ public class PushMsg extends EntityMyPK
 			ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
 			ps.Add(ReturnWorkAttr.WorkID, Long.parseLong(en.PKVal.toString()));
 			DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
-			if (retunWdt.Rows.Count != 0)
+			if (retunWdt.Rows.size() != 0)
 			{
 				String returnMsg = retunWdt.Rows[0]["BeiZhu"].toString();
 				String returner = retunWdt.Rows[0]["ReturnerName"].toString();
@@ -806,7 +806,7 @@ public class PushMsg extends EntityMyPK
 
 				String sql = "SELECT EmpFromT AS Name,EmpFrom AS No FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A  WHERE  A.ActionType=1 AND A.WorkID=" + workid + " AND A.NDFrom=" + nodeID;
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					continue;
 				}
@@ -983,7 +983,7 @@ public class PushMsg extends EntityMyPK
 			{
 				/*向所有参与人发送消息. */
 				DataTable dt = DBAccess.RunSQLReturnTable("SELECT Emps,TodoEmps FROM WF_GenerWorkFlow WHERE WorkID=" + workid);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					return "";
 				}
@@ -1133,7 +1133,7 @@ public class PushMsg extends EntityMyPK
 	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
 	//                ps.Add(ReturnWorkAttr.WorkID,Int64.Parse( en.PKVal.ToString()));
 	//                DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
-	//                if (retunWdt.Rows.Count != 0)
+	//                if (retunWdt.Rows.size() != 0)
 	//                {
 	//                    string returnMsg = retunWdt.Rows[0]["BeiZhu"].ToString();
 	//                    string returner = retunWdt.Rows[0]["ReturnerName"].ToString();
@@ -1144,7 +1144,7 @@ public class PushMsg extends EntityMyPK
 
 	//            string sql = "SELECT b.Name, b.Email, b.No FROM ND" + int.Parse(this.FK_Flow) + "Track a, WF_Emp b WHERE  a.ActionType=1 AND A.WorkID=" + workid + " AND a.NDFrom=" + nodeID + " AND a.EmpFrom=B.No ";
 	//            DataTable dt = DBAccess.RunSQLReturnTable(sql);
-	//            if (dt.Rows.Count == 0)
+	//            if (dt.Rows.size() == 0)
 	//                continue;
 
 	//            foreach (DataRow dr in dt.Rows)
@@ -1179,7 +1179,7 @@ public class PushMsg extends EntityMyPK
 	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
 	//            ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//            DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
-	//            if (retunWdt.Rows.Count != 0)
+	//            if (retunWdt.Rows.size() != 0)
 	//            {
 	//                string returnMsg = retunWdt.Rows[0]["BeiZhu"].ToString();
 	//                string returner = retunWdt.Rows[0]["ReturnerName"].ToString();
@@ -1388,7 +1388,7 @@ public class PushMsg extends EntityMyPK
 
 	//            string sql = "SELECT b.Name, b.Tel ,b.No FROM ND" + int.Parse(this.FK_Flow) + "Track a, WF_Emp b WHERE  a.ActionType=1 AND A.WorkID=" + workid + " AND a.NDFrom=" + nodeID + " AND a.EmpFrom=B.No ";
 	//            DataTable dt = DBAccess.RunSQLReturnTable(sql);
-	//            if (dt.Rows.Count == 0)
+	//            if (dt.Rows.size() == 0)
 	//                continue;
 
 	//            if (this.FK_Event == BP.Sys.EventListOfNode.ReturnAfter)
@@ -1398,7 +1398,7 @@ public class PushMsg extends EntityMyPK
 	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
 	//                ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//                DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
-	//                if (retunWdt.Rows.Count != 0)
+	//                if (retunWdt.Rows.size() != 0)
 	//                {
 	//                    string returnMsg = retunWdt.Rows[0]["BeiZhu"].ToString();
 	//                    string returner = retunWdt.Rows[0]["ReturnerName"].ToString();
@@ -1449,7 +1449,7 @@ public class PushMsg extends EntityMyPK
 	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
 	//            ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//            DataTable dt = DBAccess.RunSQLReturnTable(ps);
-	//            if (dt.Rows.Count != 0)
+	//            if (dt.Rows.size() != 0)
 	//            {
 	//                string returnMsg = dt.Rows[0]["BeiZhu"].ToString();
 	//                string returner = dt.Rows[0]["ReturnerName"].ToString();

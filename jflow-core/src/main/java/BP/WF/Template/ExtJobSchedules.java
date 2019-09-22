@@ -50,7 +50,7 @@ public class ExtJobSchedules extends EntitiesMyPK
 	public final ArrayList<ExtJobSchedule> Tolist()
 	{
 		ArrayList<ExtJobSchedule> list = new ArrayList<ExtJobSchedule>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ExtJobSchedule)this[i]);
 		}

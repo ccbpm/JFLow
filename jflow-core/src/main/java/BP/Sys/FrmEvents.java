@@ -41,7 +41,7 @@ public class FrmEvents extends EntitiesOID
 	*/
 	public final String DoEventNode(String dotype, Entity en, String atPara)
 	{
-		if (this.Count == 0)
+		if (this.size() == 0)
 		{
 			return null;
 		}
@@ -71,7 +71,7 @@ public class FrmEvents extends EntitiesOID
 	*/
 	private String _DoEventNode(String dotype, Entity en, String atPara)
 	{
-		if (this.Count == 0)
+		if (this.size() == 0)
 		{
 			return null;
 		}
@@ -739,7 +739,7 @@ public class FrmEvents extends EntitiesOID
 	public final ArrayList<FrmEvent> Tolist()
 	{
 		ArrayList<FrmEvent> list = new ArrayList<FrmEvent>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmEvent)this[i]);
 		}

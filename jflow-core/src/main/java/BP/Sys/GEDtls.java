@@ -70,7 +70,7 @@ public class GEDtls extends EntitiesOID
 	public final ArrayList<GEDtl> Tolist()
 	{
 		ArrayList<GEDtl> list = new ArrayList<GEDtl>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GEDtl)this.get(i));
 		}

@@ -50,7 +50,7 @@ public class MapFrmNodes extends EntitiesNoName
 	public final ArrayList<MapFrmNode> Tolist()
 	{
 		ArrayList<MapFrmNode> list = new ArrayList<MapFrmNode>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapFrmNode)this[i]);
 		}

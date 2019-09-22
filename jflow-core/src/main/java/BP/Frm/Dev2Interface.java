@@ -116,8 +116,9 @@ public class Dev2Interface
 	 @param frmID 表单ID
 	 @param workID 工作ID
 	 @return 返回保存结果
+	 * @throws Exception 
 	*/
-	public static String SaveWork(String frmID, long workID)
+	public static String SaveWork(String frmID, long workID) throws Exception
 	{
 		FrmBill fb = new FrmBill(frmID);
 
@@ -304,44 +305,44 @@ public class Dev2Interface
 
 		//复制明细。
 		MapDtls dtls = new MapDtls(frmID);
-		if (dtls.Count > 0)
+		if (dtls.size() > 0)
 		{
-			for (MapDtl dtl : dtls)
+			for (MapDtl dtl : dtls.ToJavaList())
 			{
-				if (dtl.IsCopyNDData == false)
+				if (dtl.getIsCopyNDData() == false)
 				{
 					continue;
 				}
 
 				//new 一个实例.
-				GEDtl dtlData = new GEDtl(dtl.No);
+				GEDtl dtlData = new GEDtl(dtl.getNo());
 
-				GEDtls dtlsFromData = new GEDtls(dtl.No);
+				GEDtls dtlsFromData = new GEDtls(dtl.getNo());
 				dtlsFromData.Retrieve(GEDtlAttr.RefPK, workID);
-				for (GEDtl geDtlFromData : dtlsFromData)
+				for (GEDtl geDtlFromData : dtlsFromData.ToJavaList())
 				{
 					//是否启用多附件
 					FrmAttachmentDBs dbs = null;
-					if (dtl.IsEnableAthM == true)
+					if (dtl.getIsEnableAthM() == true)
 					{
 						//根据从表的OID 获取附件信息
 						dbs = new FrmAttachmentDBs();
-						dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, geDtlFromData.OID);
+						dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, geDtlFromData.getOID());
 					}
 
 					dtlData.Copy(geDtlFromData);
-					dtlData.RefPK = String.valueOf(rpt.getOID());
+					dtlData.setRefPK( String.valueOf(rpt.getOID()));
 					dtlData.InsertAsNew();
-					if (dbs != null && dbs.Count != 0)
+					if (dbs != null && dbs.size() != 0)
 					{
 						//复制附件信息
 						FrmAttachmentDB newDB = new FrmAttachmentDB();
-						for (FrmAttachmentDB db : dbs)
+						for (FrmAttachmentDB db : dbs.ToJavaList())
 						{
 							newDB.Copy(db);
-							newDB.RefPKVal = dtlData.OID.toString();
-							newDB.FID = dtlData.OID;
-							newDB.MyPK = BP.DA.DBAccess.GenerGUID();
+							newDB.setRefPKVal( dtlData.getOID());
+							newDB.setFID( dtlData.getOID());
+							newDB.setMyPK( BP.DA.DBAccess.GenerGUID());
 							newDB.Insert();
 						}
 					}
@@ -354,18 +355,18 @@ public class Dev2Interface
 		//获取附件组件、
 		FrmAttachments athDecs = new FrmAttachments(frmID);
 		//复制附件数据。
-		if (athDecs.Count > 0)
+		if (athDecs.size() > 0)
 		{
-			for (FrmAttachment athDec : athDecs)
+			for (FrmAttachment athDec : athDecs.ToJavaList())
 			{
 				FrmAttachmentDBs aths = new FrmAttachmentDBs();
-				aths.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDec.MyPK,FrmAttachmentDBAttr.RefPKVal, workID);
-				for (FrmAttachmentDB athDB : aths)
+				aths.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDec.getMyPK(),FrmAttachmentDBAttr.RefPKVal, workID);
+				for (FrmAttachmentDB athDB : aths.ToJavaList())
 				{
 					FrmAttachmentDB athDB_N = new FrmAttachmentDB();
 					athDB_N.Copy(athDB);
-					athDB_N.RefPKVal = String.valueOf(rpt.getOID());
-					athDB_N.MyPK = BP.DA.DBAccess.GenerGUID();
+					athDB_N.setRefPKVal( rpt.getOID());
+					athDB_N.setMyPK( BP.DA.DBAccess.GenerGUID());
 					athDB_N.Insert();
 				}
 			}
@@ -393,7 +394,7 @@ public class Dev2Interface
 
 		DataTable dtSort = ens.ToDataTableField("Sort");
 		dtSort.TableName = "Sort";
-		ds.Tables.Add(dtSort);
+		ds.Tables.add(dtSort);
 
 		//查询出来单据运行模式的.
 		FrmBills bills = new FrmBills();

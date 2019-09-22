@@ -51,7 +51,7 @@ public class HungUps extends EntitiesMyPK
 	public final ArrayList<HungUp> Tolist()
 	{
 		ArrayList<HungUp> list = new ArrayList<HungUp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((HungUp)this[i]);
 		}

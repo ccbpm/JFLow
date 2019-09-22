@@ -49,7 +49,7 @@ public class MapAttrNums extends EntitiesMyPK
 	public final ArrayList<MapAttrNum> Tolist()
 	{
 		ArrayList<MapAttrNum> list = new ArrayList<MapAttrNum>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapAttrNum)this[i]);
 		}

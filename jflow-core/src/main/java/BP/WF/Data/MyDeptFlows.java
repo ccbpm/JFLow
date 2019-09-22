@@ -51,7 +51,7 @@ public class MyDeptFlows extends Entities
 	public final ArrayList<MyDeptFlow> Tolist()
 	{
 		ArrayList<MyDeptFlow> list = new ArrayList<MyDeptFlow>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MyDeptFlow)this[i]);
 		}

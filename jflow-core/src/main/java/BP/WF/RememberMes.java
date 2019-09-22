@@ -49,7 +49,7 @@ public class RememberMes extends Entities
 	public final ArrayList<RememberMe> Tolist()
 	{
 		ArrayList<RememberMe> list = new ArrayList<RememberMe>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((RememberMe)this[i]);
 		}

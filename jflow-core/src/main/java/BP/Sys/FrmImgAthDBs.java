@@ -61,7 +61,7 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	public final ArrayList<FrmImgAthDB> Tolist()
 	{
 		ArrayList<FrmImgAthDB> list = new ArrayList<FrmImgAthDB>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmImgAthDB)this[i]);
 		}

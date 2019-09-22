@@ -213,7 +213,7 @@ public class TransferCustom extends EntityMyPK
 	{
 		TransferCustoms ens = new TransferCustoms();
 		ens.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.Idx);
-		if (ens.Count == 0)
+		if (ens.size() == 0)
 		{
 			return null;
 		}

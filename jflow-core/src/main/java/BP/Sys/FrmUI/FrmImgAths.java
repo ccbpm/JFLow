@@ -23,8 +23,9 @@ public class FrmImgAths extends EntitiesMyPK
 	 图片附件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmImgAths(String fk_mapdata)
+	public FrmImgAths(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{
@@ -55,7 +56,7 @@ public class FrmImgAths extends EntitiesMyPK
 	*/
 	public final List<FrmImgAth> ToJavaList()
 	{
-		return (List<FrmImgAth>)this;
+		return (List<FrmImgAth>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -65,7 +66,7 @@ public class FrmImgAths extends EntitiesMyPK
 	public final ArrayList<FrmImgAth> Tolist()
 	{
 		ArrayList<FrmImgAth> list = new ArrayList<FrmImgAth>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmImgAth)this.get(i));
 		}

@@ -67,7 +67,7 @@ public class FrmTracks extends Entities
 	public final ArrayList<FrmTrack> Tolist()
 	{
 		ArrayList<FrmTrack> list = new ArrayList<FrmTrack>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmTrack)this[i]);
 		}

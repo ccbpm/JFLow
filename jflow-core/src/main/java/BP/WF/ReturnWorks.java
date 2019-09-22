@@ -49,7 +49,7 @@ public class ReturnWorks extends Entities
 	public final ArrayList<ReturnWork> Tolist()
 	{
 		ArrayList<ReturnWork> list = new ArrayList<ReturnWork>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ReturnWork)this[i]);
 		}

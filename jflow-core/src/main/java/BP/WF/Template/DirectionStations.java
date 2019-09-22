@@ -45,7 +45,7 @@ public class DirectionStations extends EntitiesMM
 	public final ArrayList<DirectionStation> Tolist()
 	{
 		ArrayList<DirectionStation> list = new ArrayList<DirectionStation>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((DirectionStation)this[i]);
 		}

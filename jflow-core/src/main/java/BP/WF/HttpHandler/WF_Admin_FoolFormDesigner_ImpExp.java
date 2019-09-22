@@ -380,7 +380,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			{
 				SysEnums se = new SysEnums();
 				se.Retrieve(SysEnumAttr.EnumKey, ma.UIBindKey);
-				if (se.Count > 0)
+				if (se.size() > 0)
 				{
 					ma.MyDataType = BP.DA.DataType.AppInt;
 					ma.LGType = BP.En.FieldTypeS.Enum;

@@ -66,7 +66,7 @@ public class SysFormTrees extends EntitiesTree
 	public final ArrayList<SysFormTree> Tolist()
 	{
 		ArrayList<SysFormTree> list = new ArrayList<SysFormTree>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SysFormTree)this[i]);
 		}

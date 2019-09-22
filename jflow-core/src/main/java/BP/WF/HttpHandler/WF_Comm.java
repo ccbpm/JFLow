@@ -1123,7 +1123,7 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@方法名错误或者该方法已经不存在" + ensName;
 		}
 
-		if (rm.HisAttrs.Count == 0)
+		if (rm.HisAttrs.size() == 0)
 		{
 			Hashtable ht = new Hashtable();
 			ht.put("No", ensName);
@@ -2210,7 +2210,7 @@ public class WF_Comm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理无参数的方法.
-		if (rm.HisAttrs == null || rm.HisAttrs.Count == 0)
+		if (rm.HisAttrs == null || rm.HisAttrs.size() == 0)
 		{
 
 			String infos = "";
@@ -3433,7 +3433,7 @@ public class WF_Comm extends DirectoryPageBase
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 		var files = HttpContextHelper.RequestFiles();
-		if (files.Count == 0)
+		if (files.size() == 0)
 		{
 			return "err@请选择要上传的文件。";
 		}
@@ -3582,7 +3582,7 @@ public class WF_Comm extends DirectoryPageBase
 		//HttpFileCollection files = context.Request.Files;
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 		var files = HttpContextHelper.RequestFiles();
-		if (files.Count == 0)
+		if (files.size() == 0)
 		{
 			return "err@请选择要上传的文件。";
 		}
@@ -3903,7 +3903,7 @@ public class WF_Comm extends DirectoryPageBase
 
 		}
 
-		if (contentFlag == false && dt.Rows.Count != 0)
+		if (contentFlag == false && dt.Rows.size() != 0)
 		{
 			dt.Rows[0]["Checked"] = "true";
 		}

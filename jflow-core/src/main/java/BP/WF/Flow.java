@@ -574,7 +574,7 @@ public class Flow extends BP.En.EntityNoName
 				ps.Add(GERptAttr.GuestNo, GuestUser.No);
 				ps.Add(GERptAttr.WFState, WFState.Blank.getValue());
 				DataTable dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count > 0 && IsNewWorkID == false)
+				if (dt.Rows.size() > 0 && IsNewWorkID == false)
 				{
 					wk.setOID(Long.parseLong(dt.Rows[0][0].toString()));
 					int nodeID = Integer.parseInt(dt.Rows[0][1].toString());
@@ -595,7 +595,7 @@ public class Flow extends BP.En.EntityNoName
 				DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
 				//如果没有启用草稿，并且存在草稿就取第一条 by dgq 5.28
-				if (dt.Rows.Count > 0)
+				if (dt.Rows.size() > 0)
 				{
 					wk.setOID(Long.parseLong(dt.Rows[0][0].toString()));
 					wk.RetrieveFromDBSources();
@@ -826,7 +826,7 @@ public class Flow extends BP.En.EntityNoName
 			String tablePKVal = paras.get("FromTablePKVal").toString();
 
 			DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM " + tableName + " WHERE " + tablePK + "='" + tablePKVal + "'");
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("@利用table传递数据错误，没有找到指定的行数据，无法为用户填充数据。");
 			}
@@ -942,7 +942,7 @@ public class Flow extends BP.En.EntityNoName
 
 			String sql = "SELECT * FROM " + pFlow.getPTable() + " WHERE OID=" + pOID;
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count != 1)
+			if (dt.Rows.size() != 1)
 			{
 				throw new RuntimeException("@不应该查询不到父流程的数据[" + sql + "], 可能的情况之一,请确认该父流程的调用节点是子线程，但是没有把子线程的FID参数传递进来。");
 			}
@@ -1055,11 +1055,11 @@ public class Flow extends BP.En.EntityNoName
 				///#region 复制其他数据..
 			//复制明细。
 			MapDtls dtls = wk.getHisMapDtls();
-			if (dtls.Count > 0)
+			if (dtls.size() > 0)
 			{
 				MapDtls dtlsFrom = wkFrom.getHisMapDtls();
 				int idx = 0;
-				if (dtlsFrom.Count == dtls.Count)
+				if (dtlsFrom.size() == dtls.size())
 				{
 					for (MapDtl dtl : dtls)
 					{
@@ -1101,7 +1101,7 @@ public class Flow extends BP.En.EntityNoName
 							else
 							{
 								dtlData.InsertAsNew();
-								if (dbs != null && dbs.Count != 0)
+								if (dbs != null && dbs.size() != 0)
 								{
 									//复制附件信息
 									FrmAttachmentDB newDB = new FrmAttachmentDB();
@@ -1121,9 +1121,9 @@ public class Flow extends BP.En.EntityNoName
 			}
 
 			//复制附件数据。
-			if (wk.getHisFrmAttachments().Count > 0)
+			if (wk.getHisFrmAttachments().size() > 0)
 			{
-				if (wkFrom.getHisFrmAttachments().Count > 0)
+				if (wkFrom.getHisFrmAttachments().size() > 0)
 				{
 					int toNodeID = wk.getNodeID();
 
@@ -1164,11 +1164,11 @@ public class Flow extends BP.En.EntityNoName
 				///#region 复制独立表单数据.
 			//求出来被copy的节点有多少个独立表单.
 			FrmNodes fnsFrom = new BP.WF.Template.FrmNodes(fromNd.getNodeID());
-			if (fnsFrom.Count != 0)
+			if (fnsFrom.size() != 0)
 			{
 				//求当前节点表单的绑定的表单.
 				FrmNodes fns = new BP.WF.Template.FrmNodes(nd.getNodeID());
-				if (fns.Count != 0)
+				if (fns.size() != 0)
 				{
 					//开始遍历当前绑定的表单.
 					for (FrmNode fn : fns)
@@ -1401,7 +1401,7 @@ public class Flow extends BP.En.EntityNoName
 				MapData md = new MapData("ND" + Integer.parseInt(nd.getFK_Flow()) + "01");
 				sql = "SELECT * FROM " + md.PTable + " WHERE OID=" + workid;
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count == 1)
+				if (dt.Rows.size() == 1)
 				{
 					rpt.Copy(dt.Rows[0]);
 					try
@@ -1583,7 +1583,7 @@ public class Flow extends BP.En.EntityNoName
 
 		String sql = "SELECT " + dtsArray[0] + " FROM " + this.getPTable().toUpperCase() + " WHERE OID=" + rpt.getOID();
 		DataTable lcDt = DBAccess.RunSQLReturnTable(sql);
-		if (lcDt.Rows.Count == 0) //没有记录就return掉
+		if (lcDt.Rows.size() == 0) //没有记录就return掉
 		{
 			return "";
 		}
@@ -1667,7 +1667,7 @@ public class Flow extends BP.En.EntityNoName
 		sql = "SELECT * FROM " + this.getDTSBTable().toUpperCase() + " WHERE " + getDTSBTablePK() + "='" + lcDt.Rows[0][getDTSBTablePK()] + "'";
 		DataTable dt = src.RunSQLReturnTable(sql);
 		//如果存在，执行更新，如果不存在，执行插入
-		if (dt.Rows.Count > 0)
+		if (dt.Rows.size() > 0)
 		{
 
 			sql = "UPDATE " + this.getDTSBTable().toUpperCase() + " SET " + upVal + " WHERE " + getDTSBTablePK() + "='" + lcDt.Rows[0][getDTSBTablePK()] + "'";
@@ -1763,12 +1763,12 @@ public class Flow extends BP.En.EntityNoName
 		String errMsg = "";
 		// 获取主表数据.
 		DataTable dtMain = DBAccess.RunSQLReturnTable(me.Tag);
-		if (dtMain.Rows.Count == 0)
+		if (dtMain.Rows.size() == 0)
 		{
 			return "流程(" + this.Name + ")此时无任务,查询语句:" + me.Tag.Replace("'", "”");
 		}
 
-		msg += "@查询到(" + dtMain.Rows.Count + ")条任务.";
+		msg += "@查询到(" + dtMain.Rows.size() + ")条任务.";
 
 		if (dtMain.Columns.Contains("Starter") == false)
 		{
@@ -1800,7 +1800,7 @@ public class Flow extends BP.En.EntityNoName
 
 			String mainPK = dr.get("MainPK").toString();
 			String sql = "SELECT OID FROM " + md.PTable + " WHERE MainPK='" + mainPK + "'";
-			if (DBAccess.RunSQLReturnTable(sql).Rows.Count != 0)
+			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 			{
 				msg += "@" + this.Name + ",第" + idx + "条,此任务在之前已经完成。";
 				continue; //说明已经调度过了
@@ -1829,7 +1829,7 @@ public class Flow extends BP.En.EntityNoName
 				wk.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
 			}
 
-			if (ds.Tables.Count != 0)
+			if (ds.Tables.size() != 0)
 			{
 				// MapData md = new MapData(nodeTable);
 				MapDtls dtls = md.MapDtls; // new MapDtls(nodeTable);
@@ -2113,19 +2113,19 @@ public class Flow extends BP.En.EntityNoName
 				{
 					case ByStation:
 					case FindSpecDeptEmpsInStationlist:
-						if (nd.getNodeStations().Count == 0)
+						if (nd.getNodeStations().size() == 0)
 						{
 							msg += "@错误:您设置了该节点的访问规则是按岗位，但是您没有为节点绑定岗位。";
 						}
 						break;
 					case ByDept:
-						if (nd.getNodeDepts().Count == 0)
+						if (nd.getNodeDepts().size() == 0)
 						{
 							msg += "@错误:您设置了该节点的访问规则是按部门，但是您没有为节点绑定部门。";
 						}
 						break;
 					case ByBindEmp:
-						if (nd.getNodeEmps().Count == 0)
+						if (nd.getNodeEmps().size() == 0)
 						{
 							msg += "@错误:您设置了该节点的访问规则是按人员，但是您没有为节点绑定人员。";
 						}
@@ -2152,7 +2152,7 @@ public class Flow extends BP.En.EntityNoName
 
 
 						DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
-						if (mydt.Rows.Count == 0)
+						if (mydt.Rows.size() == 0)
 						{
 							msg += "@错误:按照岗位与部门的交集计算错误，没有人员集合{" + mysql + "}";
 						}
@@ -2250,7 +2250,7 @@ public class Flow extends BP.En.EntityNoName
 				//设置它没有流程完成条件.
 				nd.setIsCCFlow(false);
 
-				if (conds.Count != 0)
+				if (conds.size() != 0)
 				{
 					msg += "@信息:开始检查(" + nd.getName() + ")方向条件:";
 					for (Cond cond : conds)
@@ -2350,12 +2350,12 @@ public class Flow extends BP.En.EntityNoName
 				if (fl.getSubFlowOver() == SubFlowOver.SendParentFlowToNextStep)
 				{
 					Node nd = new Node(flow.getFK_Node());
-					if (nd.getHisToNodes().Count > 1)
+					if (nd.getHisToNodes().size() > 1)
 					{
 						msg += "@当前节点[" + nd.getName() + "]的可以启动子流程或者延续流程.被启动的子流程设置了当子流程结束时让父流程自动运行到下一个节点，但是当前节点有分支，导致流程无法运行到下一个节点.";
 					}
 
-					if (nd.getHisToNodes().Count == 1)
+					if (nd.getHisToNodes().size() == 1)
 					{
 						Node toNode = nd.getHisToNodes()[0] instanceof Node ? (Node)nd.getHisToNodes()[0] : null;
 						if (nd.getHisDeliveryWay() == DeliveryWay.BySelected)
@@ -2479,7 +2479,7 @@ public class Flow extends BP.En.EntityNoName
 					if (nd.getCondModel() == CondModel.ByUserSelected)
 					{
 						Nodes toNodes = nd.getHisToNodes();
-						if (toNodes.Count == 1)
+						if (toNodes.size() == 1)
 						{
 							//msg += "@错误:节点ID:" + nd.NodeID + " 名称:" + nd.Name + " 错误当前节点为子线程，但是该节点的到达.";
 						}
@@ -3275,7 +3275,7 @@ public class Flow extends BP.En.EntityNoName
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		this.CheckRptData(this.getHisNodes(), dt);
 
-		return "@共有:" + dt.Rows.Count + "条(" + this.Name + ")数据被装载成功。";
+		return "@共有:" + dt.Rows.size() + "条(" + this.Name + ")数据被装载成功。";
 	}
 	/** 
 	 检查与修复报表数据
@@ -3423,7 +3423,7 @@ public class Flow extends BP.En.EntityNoName
 
 			// 取出来从表.
 			MapDtls dtls = new MapDtls("ND" + nd.getNodeID());
-			if (dtls.Count == 0)
+			if (dtls.size() == 0)
 			{
 				continue;
 			}
@@ -6439,7 +6439,7 @@ public class Flow extends BP.En.EntityNoName
 	public final Node DoNewNode(int x, int y, String icon)
 	{
 		Node nd = new Node();
-		int idx = this.getHisNodes().Count;
+		int idx = this.getHisNodes().size();
 		if (idx == 0)
 		{
 			idx++;
@@ -6736,9 +6736,9 @@ public class Flow extends BP.En.EntityNoName
 		{
 			String str = "SELECT * FROM WF_Flow WHERE PTable='" + this.getPTable() + "' AND FK_FlowSort='' ";
 			DataTable dt = DBAccess.RunSQLReturnTable(str);
-			if (dt.Rows.Count >= 1)
+			if (dt.Rows.size() >= 1)
 			{
-				return "err@删除流程出错，该流程下有[" + dt.Rows.Count + "]个子版本您不能删除。";
+				return "err@删除流程出错，该流程下有[" + dt.Rows.size() + "]个子版本您不能删除。";
 			}
 		}
 
@@ -6902,7 +6902,7 @@ public class Flow extends BP.En.EntityNoName
 	{
 		String sql = "SELECT FK_FlowSort,No FROM WF_Flow WHERE PTable='" + this.getPTable() + "' AND FK_FlowSort!='' ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "err@没有找到主版本,请联系管理员.";
 		}

@@ -47,7 +47,7 @@ public class ExtContrals extends EntitiesMyPK
 	public final ArrayList<ExtContral> Tolist()
 	{
 		ArrayList<ExtContral> list = new ArrayList<ExtContral>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ExtContral)this[i]);
 		}

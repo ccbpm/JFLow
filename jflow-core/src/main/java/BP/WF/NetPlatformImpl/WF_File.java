@@ -16,7 +16,7 @@ public class WF_File
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			 var filelist = HttpContextHelper.Current.Request.Files;
-			if (filelist == null || filelist.Count == 0)
+			if (filelist == null || filelist.size() == 0)
 			{
 				throw new UnsupportedOperationException("没有上传文件");
 			}
@@ -48,7 +48,7 @@ public class WF_File
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var filelist = HttpContextHelper.Current.Request.Files;
-			if (filelist == null || filelist.Count == 0)
+			if (filelist == null || filelist.size() == 0)
 			{
 				throw new UnsupportedOperationException("没有上传文件");
 			}
@@ -65,7 +65,7 @@ public class WF_File
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var filelist = HttpContextHelper.Current.Request.Files;
-			if (filelist == null || filelist.Count == 0)
+			if (filelist == null || filelist.size() == 0)
 			{
 				throw new UnsupportedOperationException("没有上传文件");
 			}

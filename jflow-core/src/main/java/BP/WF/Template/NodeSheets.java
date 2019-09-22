@@ -48,7 +48,7 @@ public class NodeSheets extends Entities
 	public final ArrayList<NodeSheet> Tolist()
 	{
 		ArrayList<NodeSheet> list = new ArrayList<NodeSheet>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((NodeSheet)this[i]);
 		}

@@ -46,7 +46,7 @@ public class WF_CCForm extends DirectoryPageBase
 			if (athDesc.FileShowWay == FileShowWay.Pict)
 			{
 				/* 如果是图片轮播，就在这里根据数据输出轮播的html代码.*/
-				if (dbs.Count == 0 && athDesc.IsUpload == true)
+				if (dbs.size() == 0 && athDesc.IsUpload == true)
 				{
 					/*没有数据并且，可以上传,就转到上传的界面上去.*/
 					return "url@AthImg.htm?1=1" + this.getRequestParas();
@@ -57,7 +57,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 执行装载模版.
-			if (dbs.Count == 0 && athDesc.IsWoEnableTemplete == true)
+			if (dbs.size() == 0 && athDesc.IsWoEnableTemplete == true)
 			{
 				/*如果数量为0,就检查一下是否有模版如果有就加载模版文件.*/
 				String templetePath = BP.Sys.SystemConfig.PathOfDataUser + "AthTemplete\\" + athDesc.NoOfObj.trim();
@@ -296,7 +296,7 @@ public class WF_CCForm extends DirectoryPageBase
 							for (DataRow dr : dtDtlFull.Rows)
 							{
 								BP.Sys.GEDtl mydtl = new GEDtl(fk_dtl);
-								//  mydtl.OID = dtls.Count + 1;
+								//  mydtl.OID = dtls.size() + 1;
 								dtls.AddEntity(mydtl);
 								for (DataColumn dc : dtDtlFull.Columns)
 								{
@@ -514,24 +514,24 @@ public class WF_CCForm extends DirectoryPageBase
 		JsonString.append("{ ");
 		JsonString.append("\"Head\":[ ");
 
-		if (dt != null && dt.Rows.Count > 0)
+		if (dt != null && dt.Rows.size() > 0)
 		{
-			for (int i = 0; i < dt.Rows.Count; i++)
+			for (int i = 0; i < dt.Rows.size(); i++)
 			{
 				JsonString.append("{ ");
-				for (int j = 0; j < dt.Columns.Count; j++)
+				for (int j = 0; j < dt.Columns.size(); j++)
 				{
-					if (j < dt.Columns.Count - 1)
+					if (j < dt.Columns.size() - 1)
 					{
 						JsonString.append("\"" + dt.Columns[j].ColumnName.toString() + "\":\"" + dt.Rows[i][j].toString() + "\",");
 					}
-					else if (j == dt.Columns.Count - 1)
+					else if (j == dt.Columns.size() - 1)
 					{
 						JsonString.append("\"" + dt.Columns[j].ColumnName.toString() + "\":\"" + dt.Rows[i][j].toString() + "\"");
 					}
 				}
 				/*end Of String*/
-				if (i == dt.Rows.Count - 1)
+				if (i == dt.Rows.size() - 1)
 				{
 					JsonString.append("} ");
 				}
@@ -2135,7 +2135,7 @@ public class WF_CCForm extends DirectoryPageBase
 				//获得主表事件.
 				FrmEvents fes = new FrmEvents(this.getEnsName()); //获得事件.
 				GEEntity mainEn = null;
-				if (fes.Count > 0)
+				if (fes.size() > 0)
 				{
 					String msg = fes.DoEventNode(EventListDtlList.DtlSaveBefore, en);
 					if (DataType.IsNullOrEmpty(msg) == false)
@@ -2186,7 +2186,7 @@ public class WF_CCForm extends DirectoryPageBase
 				//获得主表事件.
 				FrmEvents fes = new FrmEvents(this.getEnsName()); //获得事件.
 				GEEntity mainEn = null;
-				if (fes.Count > 0)
+				if (fes.size() > 0)
 				{
 					String msg = fes.DoEventNode(EventListDtlList.DtlItemSaveAfter, en);
 					if (DataType.IsNullOrEmpty(msg) == false)
@@ -2328,7 +2328,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 从表保存前处理事件.
-		if (fes.Count > 0)
+		if (fes.size() > 0)
 		{
 			mainEn = mdtl.GenerGEMainEntity(this.getRefPKVal());
 			String msg = fes.DoEventNode(EventListDtlList.DtlSaveBefore, mainEn);
@@ -2434,7 +2434,7 @@ public class WF_CCForm extends DirectoryPageBase
 		//获得主表事件.
 		FrmEvents fes = new FrmEvents(fk_mapDtl); //获得事件.
 		GEEntity mainEn = null;
-		if (fes.Count > 0)
+		if (fes.size() > 0)
 		{
 			mainEn = mdtl.GenerGEMainEntity(this.getRefPKVal());
 			String msg = fes.DoEventNode(EventListDtlList.DtlSaveBefore, mainEn);
@@ -2474,7 +2474,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 从表保存后处理事件。
-		if (fes.Count > 0)
+		if (fes.size() > 0)
 		{
 			String msg = fes.DoEventNode(EventListDtlList.DtlSaveEnd, mainEn);
 			if (DataType.IsNullOrEmpty(msg) == false)
@@ -2515,7 +2515,7 @@ public class WF_CCForm extends DirectoryPageBase
 		//获得主表事件.
 		FrmEvents fes = new FrmEvents(this.getFK_MapDtl()); //获得事件.
 		GEEntity mainEn = null;
-		if (fes.Count > 0)
+		if (fes.size() > 0)
 		{
 			String msg = fes.DoEventNode(FrmEventListDtl.DtlRowDelBefore, dtl);
 			if (DataType.IsNullOrEmpty(msg) == false)
@@ -2547,7 +2547,7 @@ public class WF_CCForm extends DirectoryPageBase
 			///#region 从表 删除 后处理事件.
 		//获得主表事件.
 		fes = new FrmEvents(this.getFK_MapDtl()); //获得事件.
-		if (fes.Count > 0)
+		if (fes.size() > 0)
 		{
 			String msg = fes.DoEventNode(FrmEventListDtl.DtlRowDelAfter, dtl);
 			if (DataType.IsNullOrEmpty(msg) == false)
@@ -4181,7 +4181,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return "err@导入数据失败:" + sql;
 			}
@@ -4373,7 +4373,7 @@ public class WF_CCForm extends DirectoryPageBase
 			//HttpFileCollection files = context.Request.Files;
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var files = HttpContextHelper.RequestFiles();
-			if (files.Count == 0)
+			if (files.size() == 0)
 			{
 				return "err@请选择要上传的从表模版。";
 			}
@@ -4477,7 +4477,7 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 
 			int i = 0;
-			long oid = BP.DA.DBAccess.GenerOID("Dtl", dt.Rows.Count);
+			long oid = BP.DA.DBAccess.GenerOID("Dtl", dt.Rows.size());
 			String rdt = BP.DA.DataType.CurrentData;
 
 			String errMsg = "";
@@ -4662,7 +4662,7 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 
 			int i = 0;
-			long oid = BP.DA.DBAccess.GenerOID(dtlEn.EnMap.PhysicsTable, dt.Rows.Count);
+			long oid = BP.DA.DBAccess.GenerOID(dtlEn.EnMap.PhysicsTable, dt.Rows.size());
 			String rdt = BP.DA.DataType.CurrentData;
 
 			String errMsg = "";
@@ -5283,7 +5283,7 @@ public class WF_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 处理权限控制.
 
-		if (dbs.Count == 0)
+		if (dbs.size() == 0)
 		{
 			return "err@文件不存在，不需打包下载。";
 		}

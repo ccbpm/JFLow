@@ -41,14 +41,14 @@ public class Stations extends EntitiesNoName
 			//获得数据.
 			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = v.GetStations();
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return 0;
 			}
 
 			//设置查询.
 			QueryObject.InitEntitiesByDataTable(this, dt, null);
-			return dt.Rows.Count;
+			return dt.Rows.size();
 		}
 		else
 		{
@@ -69,14 +69,14 @@ public class Stations extends EntitiesNoName
 			//获得数据.
 			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = v.GetStations();
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return 0;
 			}
 
 			//设置查询.
 			QueryObject.InitEntitiesByDataTable(this, dt, null);
-			return dt.Rows.Count;
+			return dt.Rows.size();
 		}
 		else
 		{
@@ -105,7 +105,7 @@ public class Stations extends EntitiesNoName
 	public final ArrayList<Station> Tolist()
 	{
 		ArrayList<Station> list = new ArrayList<Station>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Station)this.get(i));
 		}

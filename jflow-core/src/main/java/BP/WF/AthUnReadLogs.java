@@ -50,7 +50,7 @@ public class AthUnReadLogs extends EntitiesMyPK
 	public final ArrayList<AthUnReadLog> Tolist()
 	{
 		ArrayList<AthUnReadLog> list = new ArrayList<AthUnReadLog>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((AthUnReadLog)this[i]);
 		}

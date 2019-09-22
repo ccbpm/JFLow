@@ -56,7 +56,7 @@ public class FrmLabs extends EntitiesMyPK
 	public final ArrayList<FrmLab> Tolist()
 	{
 		ArrayList<FrmLab> list = new ArrayList<FrmLab>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmLab)this.get(i));
 		}

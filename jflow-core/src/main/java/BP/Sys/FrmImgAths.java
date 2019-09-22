@@ -56,7 +56,7 @@ public class FrmImgAths extends EntitiesMyPK
 	public final ArrayList<FrmImgAth> Tolist()
 	{
 		ArrayList<FrmImgAth> list = new ArrayList<FrmImgAth>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmImgAth)this.get(i));
 		}

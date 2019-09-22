@@ -24,7 +24,7 @@ public class WorkNodes extends ArrayList<Object>
 	*/
 	public final Works getGetWorks()
 	{
-		if (this.Count == 0)
+		if (this.size() == 0)
 		{
 			throw new RuntimeException(BP.WF.Glo.multilingual("@初始化失败，没有找到任何节点。", "WorkNode", "not_found_pre_node_3"));
 		}
@@ -66,7 +66,7 @@ public class WorkNodes extends ArrayList<Object>
 
 			this.Add(new WorkNode(wk, nd));
 		}
-		return this.Count;
+		return this.size();
 	}
 	/** 
 	 这个方法有问题的
@@ -88,7 +88,7 @@ public class WorkNodes extends ArrayList<Object>
 			String table = "ND" + Integer.parseInt(flow.No) + "Track";
 			String actionSQL = "SELECT EmpFrom,EmpFromT,RDT FROM " + table + " WHERE WorkID=" + oid + " AND NDFrom=" + nd.getNodeID() + " AND ActionType=" + ActionType.Forward.getValue();
 			DataTable dt = DBAccess.RunSQLReturnTable(actionSQL);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				continue;
 			}
@@ -98,7 +98,7 @@ public class WorkNodes extends ArrayList<Object>
 			wk.SetValByKey("RDT", dt.Rows[0]["RDT"].toString());
 			this.Add(new WorkNode(wk, nd));
 		}
-		return this.Count;
+		return this.size();
 	}
 	public final int GenerByWorkID(Flow flow, long oid)
 	{
@@ -135,7 +135,7 @@ public class WorkNodes extends ArrayList<Object>
 			wk.SetValByKey("RDT", dr.get("RDT").toString());
 			this.Add(new WorkNode(wk, nd));
 		}
-		return this.Count;
+		return this.size();
 	}
 	/** 
 	 删除工作流程

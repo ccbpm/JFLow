@@ -84,7 +84,7 @@ public class MapAttrs extends EntitiesMyPK
 	public final ArrayList<MapAttr> Tolist()
 	{
 		ArrayList<MapAttr> list = new ArrayList<MapAttr>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapAttr)this[i]);
 		}

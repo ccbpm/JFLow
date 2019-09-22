@@ -751,7 +751,7 @@ public class FlowSheet extends EntityNoName
 			String actionType = ActionType.Forward.getValue() + "," + ActionType.FlowOver.getValue() + "," + ActionType.ForwardFL.getValue() + "," + ActionType.ForwardHL.getValue();
 			String sql = "SELECT  * FROM " + ndTrack + " WHERE   ActionType IN (" + actionType + ")  and WorkID=" + workid + " ORDER BY RDT DESC, NDFrom ";
 			System.Data.DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("@工作ID为:" + workid + "的数据不存在.");
 			}
@@ -944,7 +944,7 @@ public class FlowSheet extends EntityNoName
 		Emp emp1 = new Emp("admin");
 		BP.Web.WebUser.SignInOfGener(emp1);
 
-		return "全部生成成功,影响数据(" + wks.Count + ")条";
+		return "全部生成成功,影响数据(" + wks.size() + ")条";
 	}
 
 	/** 
@@ -998,7 +998,7 @@ public class FlowSheet extends EntityNoName
 		Emp emp1 = new Emp("admin");
 		BP.Web.WebUser.SignInOfGener(emp1);
 
-		return "全部生成成功,影响数据(" + wks.Count + ")条";
+		return "全部生成成功,影响数据(" + wks.size() + ")条";
 	}
 	/** 
 	 流程监控

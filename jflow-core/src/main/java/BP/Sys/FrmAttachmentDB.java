@@ -130,9 +130,9 @@ public class FrmAttachmentDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.RefPKVal);
 	}
-	public final void setRefPKVal(String value)
+	public final void setRefPKVal(String v)
 	{
-		this.SetValByKey(FrmAttachmentDBAttr.RefPKVal, value);
+		this.SetValByKey(FrmAttachmentDBAttr.RefPKVal, v);
 	}
 	/** 
 	 工作ID.

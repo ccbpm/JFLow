@@ -63,7 +63,7 @@ public class UpTrack extends Method
 			// 查询.
 			String sql = "SELECT * FROM WF_Track WHERE FK_Flow='" + fl.No + "'";
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			for (int i = 0; i < dt.Rows.Count; i++)
+			for (int i = 0; i < dt.Rows.size(); i++)
 			{
 				Track tk = new Track();
 				tk.FK_Flow = fl.No;

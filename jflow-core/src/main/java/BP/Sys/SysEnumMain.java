@@ -53,7 +53,7 @@ public class SysEnumMain extends EntityNoName
 		catch (RuntimeException ex)
 		{
 			SysEnums ses = new SysEnums(no);
-			if (ses.Count == 0)
+			if (ses.size() == 0)
 			{
 				throw ex;
 			}

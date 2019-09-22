@@ -683,11 +683,11 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				DataTable newdt = new DataTable();
 				newdt = dt.Clone();
 				//判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
-				if (dt.Rows.Count > 0)
+				if (dt.Rows.size() > 0)
 				{
 					if (Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.Return.getValue()) || Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.UnSend.getValue()))
 					{
-						if (dt.Rows.Count > 1)
+						if (dt.Rows.size() > 1)
 						{
 							dt.Rows.RemoveAt(0);
 							dt.Rows.RemoveAt(0);
@@ -699,10 +699,10 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 						newdt = dt;
 					}
-					else if (dt.Rows.Count > 1 && (Equals(dt.Rows[1]["ACTIONTYPE"], ActionType.Return.getValue()) || Equals(dt.Rows[1]["ACTIONTYPE"], ActionType.UnSend.getValue())))
+					else if (dt.Rows.size() > 1 && (Equals(dt.Rows[1]["ACTIONTYPE"], ActionType.Return.getValue()) || Equals(dt.Rows[1]["ACTIONTYPE"], ActionType.UnSend.getValue())))
 					{
 						//删除已发送的节点，
-						if (dt.Rows.Count > 3)
+						if (dt.Rows.size() > 3)
 						{
 							dt.Rows.RemoveAt(1);
 							dt.Rows.RemoveAt(1);
@@ -794,11 +794,11 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				ds.Tables.Add(dt);
 			}
 
-			//for (int i = 0; i < ds.Tables.Count; i++)
+			//for (int i = 0; i < ds.Tables.size(); i++)
 			//{
 			//    dt = ds.Tables[i];
 			//    dt.TableName = dt.TableName.ToUpper();
-			//    for (int j = 0; j < dt.Columns.Count; j++)
+			//    for (int j = 0; j < dt.Columns.size(); j++)
 			//    {
 			//        dt.Columns[j].ColumnName = dt.Columns[j].ColumnName.ToUpper();
 			//    }
@@ -904,11 +904,11 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				dt = DBAccess.RunSQLReturnTable(sql);
 
 				//判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
-				if (dt.Rows.Count > 0)
+				if (dt.Rows.size() > 0)
 				{
 					if (Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.Return.getValue()) || Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.UnSend.getValue()))
 					{
-						if (dt.Rows.Count > 1)
+						if (dt.Rows.size() > 1)
 						{
 							dt.Rows.RemoveAt(0);
 							dt.Rows.RemoveAt(0);
@@ -945,11 +945,11 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				ds.Tables.Add(dt);
 			}
 
-			//for (int i = 0; i < ds.Tables.Count; i++)
+			//for (int i = 0; i < ds.Tables.size(); i++)
 			//{
 			//    dt = ds.Tables[i];
 			//    dt.TableName = dt.TableName.ToUpper();
-			//    for (int j = 0; j < dt.Columns.Count; j++)
+			//    for (int j = 0; j < dt.Columns.size(); j++)
 			//    {
 			//        dt.Columns[j].ColumnName = dt.Columns[j].ColumnName.ToUpper();
 			//    }

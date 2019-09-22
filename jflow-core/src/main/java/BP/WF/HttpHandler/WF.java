@@ -108,7 +108,7 @@ public class WF extends DirectoryPageBase
 
 		nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 		athDescs.Retrieve(FrmAttachmentAttr.FK_MapData, nd.getNodeFrmID());
-		if (athDescs.Count != 0)
+		if (athDescs.size() != 0)
 		{
 			FrmAttachment athDesc = athDescs[0] instanceof FrmAttachment ? (FrmAttachment)athDescs[0] : null;
 
@@ -255,7 +255,7 @@ public class WF extends DirectoryPageBase
 			///#region 图片附件
 		nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), String.valueOf(this.getWorkID()));
-		if (imgAthDBs != null && imgAthDBs.Count > 0)
+		if (imgAthDBs != null && imgAthDBs.size() > 0)
 		{
 			DataTable dt_ImgAth = imgAthDBs.ToDataTableField("Sys_FrmImgAthDB");
 			myds.Tables.Add(dt_ImgAth);
@@ -1255,7 +1255,7 @@ public class WF extends DirectoryPageBase
 
 
 		DataTable ndrpt = DBAccess.RunSQLReturnTable("SELECT PFlowNo,PWorkID FROM " + fl.getPTable() + " WHERE OID=" + workid);
-		if (ndrpt.Rows.Count == 0)
+		if (ndrpt.Rows.size() == 0)
 		{
 			urlExt = "&PFlowNo=0&PWorkID=0&IsToobar=0&IsHidden=true";
 		}
@@ -1269,7 +1269,7 @@ public class WF extends DirectoryPageBase
 		urlExt = urlExt.replace("PFlowNo=null", "");
 		urlExt = urlExt.replace("PWorkID=null", "");
 
-		if (gwf.atPara.HisHT.Count > 0)
+		if (gwf.atPara.HisHT.size() > 0)
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			for (var item : gwf.atPara.HisHT.keySet())
@@ -1345,7 +1345,7 @@ public class WF extends DirectoryPageBase
 		}
 		String endUrl = "";
 
-		if (gwf.atPara.HisHT.Count > 0)
+		if (gwf.atPara.HisHT.size() > 0)
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			for (var item : gwf.atPara.HisHT.keySet())
@@ -2079,7 +2079,7 @@ public class WF extends DirectoryPageBase
 		WFEmp em = new WFEmp();
 		em.Retrieve(WFEmpAttr.Author, BP.Web.WebUser.No);
 
-		if (dt.Rows.Count > 0 && BP.Web.WebUser.IsAuthorize == false)
+		if (dt.Rows.size() > 0 && BP.Web.WebUser.IsAuthorize == false)
 		{
 			return "suess@有授权";
 		}

@@ -565,7 +565,7 @@ public class MyStartFlow extends Entity
 		pss.Add("ActionType", BP.WF.ActionType.Forward.getValue());
 		pss.Add("WorkID", this.getWorkID());
 		DataTable dt = DBAccess.RunSQLReturnTable(pss);
-		if (dt != null && dt.Rows.Count > 0)
+		if (dt != null && dt.Rows.size() > 0)
 		{
 			String myPk = dt.Rows[0][0].toString();
 			return "/WF/WFRpt.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();

@@ -35,7 +35,7 @@ public class MethodFuncs extends EntitiesMyPK
 	*/
 	public final List<MethodFunc> ToJavaList()
 	{
-		return (List<MethodFunc>)this;
+		return (List<MethodFunc>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -45,9 +45,9 @@ public class MethodFuncs extends EntitiesMyPK
 	public final ArrayList<MethodFunc> Tolist()
 	{
 		ArrayList<MethodFunc> list = new ArrayList<MethodFunc>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MethodFunc)this[i]);
+			list.add((MethodFunc)this.get(i));
 		}
 		return list;
 	}

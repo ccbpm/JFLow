@@ -695,7 +695,7 @@ public class WebUser
 		try
 		{
 			String sql = "SELECT No FROM WF_Emp WHERE UserType=1 AND No='" + WebUser.getNo() + "'";
-			if (DBAccess.RunSQLReturnTable(sql).Rows.Count == 1)
+			if (DBAccess.RunSQLReturnTable(sql).Rows.size() == 1)
 			{
 				return true;
 			}

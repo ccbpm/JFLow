@@ -307,7 +307,7 @@ public abstract class Work extends Entity
 	public final void SaveAsOID(long oid)
 	{
 		this.SetValByKey("OID", oid);
-		if (this.RetrieveNotSetValues().Rows.Count == 0)
+		if (this.RetrieveNotSetValues().Rows.size() == 0)
 		{
 			this.InsertAsOID(oid);
 		}

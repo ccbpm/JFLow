@@ -113,7 +113,7 @@ public class SFTableSQL extends EntityNoName
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
-		if (attrs.Count != 0)
+		if (attrs.size() != 0)
 		{
 			String err = "";
 			for (MapAttr item : attrs)

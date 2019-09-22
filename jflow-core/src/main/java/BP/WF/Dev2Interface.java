@@ -460,7 +460,7 @@ public class Dev2Interface
 		{
 			String mainPK = dr.get("MainPK").toString();
 			String sql = "SELECT OID FROM " + md.PTable + " WHERE MainPK='" + mainPK + "'";
-			if (DBAccess.RunSQLReturnTable(sql).Rows.Count != 0)
+			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 			{
 				continue; //说明已经调度过了
 			}
@@ -488,7 +488,7 @@ public class Dev2Interface
 				wk.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
 			}
 
-			if (ds.Tables.Count != 0)
+			if (ds.Tables.size() != 0)
 			{
 				String refPK = dr.get("MainPK").toString();
 				MapDtls dtls = wk.getHisNode().getMapData().MapDtls; // new MapDtls(nodeTable);
@@ -1056,7 +1056,7 @@ public class Dev2Interface
 		qo.AddWhere(GenerWorkerListAttr.FK_Node, nd.getFromNodes()[0].GetValByKey(NodeAttr.NodeID));
 
 		DataTable dt = qo.DoQueryToTable();
-		if (dt.Rows.Count == 1)
+		if (dt.Rows.size() == 1)
 		{
 			qo.clear();
 			qo.AddWhere(GenerWorkerListAttr.FID, wk.getOID());
@@ -2919,7 +2919,7 @@ public class Dev2Interface
 
 				dt.Rows.Add(dr);
 			}
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("err@没有获取到应该退回的节点列表.");
 			}
@@ -3034,7 +3034,7 @@ public class Dev2Interface
 						dt.Columns["ATPARA"].ColumnName = "AtPara";
 					}
 
-					if (mydt.Rows.Count != 0)
+					if (mydt.Rows.size() != 0)
 					{
 						return mydt;
 					}
@@ -3076,14 +3076,14 @@ public class Dev2Interface
 				}
 				break;
 			case ReturnSpecifiedNodes: //退回指定的节点。
-				if (wns.Count == 0)
+				if (wns.size() == 0)
 				{
 					wns.GenerByWorkID(wn.getHisNode().getHisFlow(), workid);
 				}
 
 				NodeReturns rnds = new NodeReturns();
 				rnds.Retrieve(NodeReturnAttr.FK_Node, fk_node);
-				if (rnds.Count == 0)
+				if (rnds.size() == 0)
 				{
 					throw new RuntimeException("@流程设计错误，您设置该节点可以退回指定的节点，但是指定的节点集合为空，请在节点属性设置它的制订节点。");
 				}
@@ -3121,7 +3121,7 @@ public class Dev2Interface
 			case ByReturnLine: //按照流程图画的退回线执行退回.
 				Directions dirs = new Directions();
 				dirs.Retrieve(DirectionAttr.Node, fk_node);
-				if (dirs.Count == 0)
+				if (dirs.size() == 0)
 				{
 					throw new RuntimeException("@流程设计错误:当前节点没有画向后退回的退回线,更多的信息请参考退回规则.");
 				}
@@ -3131,7 +3131,7 @@ public class Dev2Interface
 					Node toNode = new Node(dir.getToNode());
 					sql = "SELECT a.FK_Emp,a.FK_EmpText FROM WF_GenerWorkerlist a, WF_Node b WHERE   a.FK_Node=" + toNode.getNodeID() + " AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1";
 					DataTable dt1 = DBAccess.RunSQLReturnTable(sql);
-					if (dt1.Rows.Count == 0)
+					if (dt1.Rows.size() == 0)
 					{
 						continue;
 					}
@@ -3167,7 +3167,7 @@ public class Dev2Interface
 			dt.Columns["ATPARA"].ColumnName = "AtPara";
 		}
 
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			throw new RuntimeException("@没有计算出来要退回的节点，请管理员确认节点退回规则是否合理？当前节点名称:" + nd.getName() + ",退回规则:" + nd.getHisReturnRole().toString());
 		}
@@ -4720,7 +4720,7 @@ public class Dev2Interface
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT MyPK FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND WorkID=" + workid + " And NDTo='0' ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return false;
 		}
@@ -4746,7 +4746,7 @@ public class Dev2Interface
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT MyPK FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND WorkID=" + workid + "  ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return false;
 		}
@@ -4777,7 +4777,7 @@ public class Dev2Interface
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + WebUser.No + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return isNullAsVal;
 		}
@@ -4795,7 +4795,7 @@ public class Dev2Interface
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT Tag FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + empFrom + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "";
 		}
@@ -4821,7 +4821,7 @@ public class Dev2Interface
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND WorkID=" + workId + " ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			//BP.Sys.FrmWorkCheck fwc = new FrmWorkCheck(nodeFrom);
 			//return fwc.FWCDefInfo;
@@ -4849,7 +4849,7 @@ public class Dev2Interface
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.AskforHelp.getValue() + " AND EmpFrom='" + WebUser.No + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "";
 		}
@@ -5666,7 +5666,7 @@ public class Dev2Interface
 			{
 				String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + flowNo + "' AND WFState >=2 ";
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					// return true; //没有人发起，他可以发起。
 				}
@@ -5680,9 +5680,9 @@ public class Dev2Interface
 			{
 				String sql = "SELECT Starter, RDT,WFState FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + flowNo + "' AND WFState != 3";
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count != 0)
+				if (dt.Rows.size() != 0)
 				{
-					if (dt.Rows.Count == 1 && Integer.parseInt(dt.Rows[0]["WFState"].toString()) == 0)
+					if (dt.Rows.size() == 1 && Integer.parseInt(dt.Rows[0]["WFState"].toString()) == 0)
 					{
 
 					}
@@ -5710,7 +5710,7 @@ public class Dev2Interface
 
 					String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + flStr + "' AND WFState >=2 ";
 					DataTable dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.Count == 0)
+					if (dt.Rows.size() == 0)
 					{
 						BP.WF.Flow myflow = new Flow(flStr);
 						throw new RuntimeException("流程:[" + myflow.Name + "]没有发起,您不能启动[" + item.getSubFlowName() + "]。");
@@ -5731,7 +5731,7 @@ public class Dev2Interface
 
 					String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + flStr + "' AND WFState =3 ";
 					DataTable dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.Count == 0)
+					if (dt.Rows.size() == 0)
 					{
 						BP.WF.Flow myflow = new Flow(flStr);
 						throw new RuntimeException("流程:[" + myflow.Name + "]没有完成,您不能启动[" + item.getSubFlowName() + "]。");
@@ -5760,7 +5760,7 @@ public class Dev2Interface
 
 			String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + fl.No + "' AND WFState >=2 ";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return true;
 			}
@@ -5868,7 +5868,7 @@ public class Dev2Interface
 		{
 			String mysql = "SELECT FK_Emp, IsPass FROM WF_GenerWorkerList WHERE WorkID=" + workID + " AND FK_Node=" + mygwf.getFK_Node();
 			DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
-			if (mydt.Rows.Count == 0)
+			if (mydt.Rows.size() == 0)
 			{
 				return true;
 			}
@@ -5893,7 +5893,7 @@ public class Dev2Interface
 		ps.Add("FK_Emp", userNo);
 		ps.Add("WorkID", workID);
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return false;
 		}
@@ -5991,7 +5991,7 @@ public class Dev2Interface
 		String sql = "SELECT c.RunModel, a.TaskSta FROM WF_GenerWorkFlow a , WF_GenerWorkerlist b, WF_Node c WHERE a.FK_Node='" + nodeID + "'  AND b.FK_Node=c.NodeID AND a.WorkID=b.WorkID AND a.FK_Node=b.FK_Node  AND b.GuestNo='" + userNo + "' AND b.IsEnable=1 AND a.WorkID=" + workID;
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return false;
 		}
@@ -6140,7 +6140,7 @@ public class Dev2Interface
 		String toEmp = "", toEmpName = "";
 		String mailTitle = "催办:" + gwf.getTitle() + ", 发送人:" + WebUser.Name;
 		//如果子线程找不到流转日志并且父流程编号不为空，在父流程进行查找接收人
-		if (wls.Count == 0 && gwf.getFID() != 0)
+		if (wls.size() == 0 && gwf.getFID() != 0)
 		{
 			wls = new GenerWorkerLists(gwf.getFID(), gwf.getFK_Node());
 		}
@@ -6337,7 +6337,7 @@ public class Dev2Interface
 
 		// 执行更新.
 		GenerWorkerLists gwls = new GenerWorkerLists(workid);
-		GenerWorkerList gwl = gwls[gwls.Count - 1] instanceof GenerWorkerList ? (GenerWorkerList)gwls[gwls.Count - 1] : null; //获得最后一个。
+		GenerWorkerList gwl = gwls[gwls.size() - 1] instanceof GenerWorkerList ? (GenerWorkerList)gwls[gwls.size() - 1] : null; //获得最后一个。
 		gwl.setWorkID(workid);
 		gwl.setFK_Node(toNodeID);
 		gwl.setFK_NodeText(nd.getName());
@@ -6929,7 +6929,7 @@ public class Dev2Interface
 			dtHistory.Rows.Add(dr);
 		}
 
-		if (dtHistory.Rows.Count == 0)
+		if (dtHistory.Rows.size() == 0)
 		{
 			DataRow dr = dtHistory.NewRow();
 			dr.set("FK_Node", gwf.getFK_Node());
@@ -7296,7 +7296,7 @@ public class Dev2Interface
 
 		//string sql = "SELECT * FROM " + pFlow.PTable + " WHERE OID=" + pOID;
 		//DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		//if (dt.Rows.Count != 1)
+		//if (dt.Rows.size() != 1)
 		//    throw new Exception("@不应该查询不到父流程的数据[" + sql + "], 可能的情况之一,请确认该父流程的调用节点是子线程，但是没有把子线程的FID参数传递进来。");
 
 		//wk.Copy(dt.Rows[0]);
@@ -7387,11 +7387,11 @@ public class Dev2Interface
 		///#region 复制其他数据..
 		////复制明细。
 		//MapDtls dtls = wk.HisMapDtls;
-		//if (dtls.Count > 0)
+		//if (dtls.size() > 0)
 		//{
 		//    MapDtls dtlsFrom = wkFrom.HisMapDtls;
 		//    int idx = 0;
-		//    if (dtlsFrom.Count == dtls.Count)
+		//    if (dtlsFrom.size() == dtls.size())
 		//    {
 		//        foreach (MapDtl dtl in dtls)
 		//        {
@@ -7434,9 +7434,9 @@ public class Dev2Interface
 		//}
 
 		////复制附件数据。
-		//if (wk.HisFrmAttachments.Count > 0)
+		//if (wk.HisFrmAttachments.size() > 0)
 		//{
-		//    if (wkFrom.HisFrmAttachments.Count > 0)
+		//    if (wkFrom.HisFrmAttachments.size() > 0)
 		//    {
 		//        int toNodeID = wk.NodeID;
 
@@ -7474,11 +7474,11 @@ public class Dev2Interface
 		///#region 复制独立表单数据.
 		////求出来被copy的节点有多少个独立表单.
 		//FrmNodes fnsFrom = new Template.FrmNodes(fromNd.NodeID);
-		//if (fnsFrom.Count != 0)
+		//if (fnsFrom.size() != 0)
 		//{
 		//    //求当前节点表单的绑定的表单.
 		//    FrmNodes fns = new Template.FrmNodes(nd.NodeID);
-		//    if (fns.Count != 0)
+		//    if (fns.size() != 0)
 		//    {
 		//        //开始遍历当前绑定的表单.
 		//        foreach (FrmNode fn in fns)
@@ -9815,12 +9815,12 @@ public class Dev2Interface
 			DataTable toDoEmpsTable = DBAccess.RunSQLReturnTable(ps1);
 			String toDoEmps = "";
 			String toDoEmpsNum = "";
-			if (toDoEmpsTable == null || toDoEmpsTable.Rows.Count == 0)
+			if (toDoEmpsTable == null || toDoEmpsTable.Rows.size() == 0)
 			{
 				throw new RuntimeException("@流程数据错误,没有找到需更新的待处理人。");
 			}
 
-			toDoEmpsNum = String.valueOf(toDoEmpsTable.Rows.Count);
+			toDoEmpsNum = String.valueOf(toDoEmpsTable.Rows.size());
 			for (DataRow dr : toDoEmpsTable.Rows)
 			{
 				toDoEmps += String.format("%1$s,%2$s", dr.get("FK_Emp").toString(), dr.get("FK_EmpText").toString()) + ";";
@@ -10037,7 +10037,7 @@ public class Dev2Interface
 		gwf.Update();
 
 		// 设置当前状态为 2 表示加签状态.
-		if (gwls.Count == 0)
+		if (gwls.size() == 0)
 		{
 			/*可能是第一个节点.*/
 			GenerWorkerList gwl = new GenerWorkerList();
@@ -10577,7 +10577,7 @@ public class Dev2Interface
 				ps.Add("WorkID", workid);
 				ps.Add("FK_Node", item.getNodeID());
 				DataTable dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					continue;
 				}
@@ -10621,7 +10621,7 @@ public class Dev2Interface
 				ps.Add("WorkID", workid);
 				ps.Add("FK_Node", item.getNodeID());
 				DataTable dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					continue;
 				}
@@ -10767,7 +10767,7 @@ public class Dev2Interface
 		{
 			FrmEleDBs eleDBs = new FrmEleDBs("ND" + nodeid, String.valueOf(workid));
 
-			if (eleDBs.Count > 0)
+			if (eleDBs.size() > 0)
 			{
 				eleDBs.Delete(FrmEleDBAttr.FK_MapData, "ND" + nodeid, FrmEleDBAttr.RefPKVal, workid);
 			}
@@ -11457,7 +11457,7 @@ public class Dev2Interface
 		}
 
 		NodeStations stas = new NodeStations(nodeID);
-		if (stas.Count == 0)
+		if (stas.size() == 0)
 		{
 			BP.WF.Node toNd = new BP.WF.Node(nodeID);
 			throw new RuntimeException("@流程设计错误：设计员没有设计节点[" + toNd.getName() + "]，接受人的岗位范围。");
@@ -11482,7 +11482,7 @@ public class Dev2Interface
 		}
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count != 0)
+		if (dt.Rows.size() != 0)
 		{
 			return dt;
 		}

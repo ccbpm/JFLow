@@ -33,7 +33,7 @@ public class Log {
 	}
 
 	public static void DefaultLogWriteLineDebug(String msg) {
-		DefaultLogWriteLine(LogType.de, msg);
+		DefaultLogWriteLine(LogType.Debug, msg);
 	}
 
 	//

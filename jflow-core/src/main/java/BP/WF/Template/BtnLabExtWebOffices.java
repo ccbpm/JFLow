@@ -46,7 +46,7 @@ public class BtnLabExtWebOffices extends Entities
 	public final ArrayList<BtnLabExtWebOffice> Tolist()
 	{
 		ArrayList<BtnLabExtWebOffice> list = new ArrayList<BtnLabExtWebOffice>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BtnLabExtWebOffice)this[i]);
 		}

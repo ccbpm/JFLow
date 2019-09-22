@@ -1157,7 +1157,7 @@ public class MapDtlExt extends EntityNoName
 	public final String DFreeFrm()
 	{
 		FrmLabs labs = new Sys.FrmLabs(this.No);
-		if (labs.Count == 0)
+		if (labs.size() == 0)
 		{
 			//进行初始化控件位置及标签
 			MapData md = new MapData();

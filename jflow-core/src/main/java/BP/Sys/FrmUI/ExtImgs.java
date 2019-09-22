@@ -65,7 +65,7 @@ public class ExtImgs extends EntitiesMyPK
 	public final ArrayList<ExtImg> Tolist()
 	{
 		ArrayList<ExtImg> list = new ArrayList<ExtImg>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ExtImg)this[i]);
 		}

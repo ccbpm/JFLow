@@ -32,7 +32,7 @@ public class GETrees extends EntitiesNoName
 		return new GETree(this.SFTable, this.Desc);
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return this.RetrieveAllFromDBSource();
 	}
@@ -46,7 +46,7 @@ public class GETrees extends EntitiesNoName
 	*/
 	public final List<GETree> ToJavaList()
 	{
-		return (List<GETree>)this;
+		return (List<GETree>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -56,7 +56,7 @@ public class GETrees extends EntitiesNoName
 	public final ArrayList<GETree> Tolist()
 	{
 		ArrayList<GETree> list = new ArrayList<GETree>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GETree)this.get(i));
 		}

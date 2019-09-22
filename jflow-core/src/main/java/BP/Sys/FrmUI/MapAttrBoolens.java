@@ -39,7 +39,7 @@ public class MapAttrBoolens extends EntitiesMyPK
 	*/
 	public final List<MapAttrBoolen> ToJavaList()
 	{
-		return (List<MapAttrBoolen>)this;
+		return (List<MapAttrBoolen>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -49,9 +49,9 @@ public class MapAttrBoolens extends EntitiesMyPK
 	public final ArrayList<MapAttrBoolen> Tolist()
 	{
 		ArrayList<MapAttrBoolen> list = new ArrayList<MapAttrBoolen>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapAttrBoolen)this[i]);
+			list.add((MapAttrBoolen)this.get(i));
 		}
 		return list;
 	}

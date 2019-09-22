@@ -144,7 +144,7 @@ public class GEEntity extends Entity
 		//被copy的明细集合.
 		MapDtls dtlsFrom = new MapDtls(en.FK_MapData);
 
-		if (dtls.Count != dtls.Count)
+		if (dtls.size() != dtls.size())
 		{
 			throw new RuntimeException("@复制的两个表单从表不一致...");
 		}

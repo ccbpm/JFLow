@@ -76,7 +76,7 @@ public class GEEntityExcelFrms extends EntitiesOID
 	public final ArrayList<GEEntityExcelFrm> Tolist()
 	{
 		ArrayList<GEEntityExcelFrm> list = new ArrayList<GEEntityExcelFrm>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GEEntityExcelFrm)this[i]);
 		}

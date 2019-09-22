@@ -61,7 +61,7 @@ public class Depts extends EntitiesTree
 	public final ArrayList<Dept> Tolist()
 	{
 		ArrayList<Dept> list = new ArrayList<Dept>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Dept)this[i]);
 		}

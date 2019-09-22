@@ -58,7 +58,7 @@ public class FrmLines extends EntitiesMyPK
 	public final ArrayList<FrmLine> Tolist()
 	{
 		ArrayList<FrmLine> list = new ArrayList<FrmLine>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmLine)this.get(i));
 		}

@@ -87,7 +87,7 @@ public class AppSort extends EntityNoName
 	{
 		Apps pps = new Apps();
 		pps.Retrieve(AppAttr.FK_AppSort, this.No);
-		if (pps.Count != 0)
+		if (pps.size() != 0)
 		{
 			throw new RuntimeException("err@该类别下有系统，您不能删除，请把该系统类别下的系统移除或者删除，您才能删除该类别。");
 		}

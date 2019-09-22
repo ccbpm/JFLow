@@ -85,7 +85,7 @@ public class FlowExts extends EntitiesNoName
 	public final ArrayList<FlowExt> Tolist()
 	{
 		ArrayList<FlowExt> list = new ArrayList<FlowExt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FlowExt)this[i]);
 		}

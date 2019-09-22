@@ -114,7 +114,7 @@ public class DeptStations extends Entities
 	public final ArrayList<DeptStation> Tolist()
 	{
 		ArrayList<DeptStation> list = new ArrayList<DeptStation>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((DeptStation)this.get(i));
 		}

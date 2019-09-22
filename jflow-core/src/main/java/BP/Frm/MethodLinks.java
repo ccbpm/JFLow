@@ -45,7 +45,7 @@ public class MethodLinks extends EntitiesMyPK
 	public final ArrayList<MethodLink> Tolist()
 	{
 		ArrayList<MethodLink> list = new ArrayList<MethodLink>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MethodLink)this[i]);
 		}

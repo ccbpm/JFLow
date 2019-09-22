@@ -49,7 +49,7 @@ public class MapDatas extends EntitiesNoName
 	public final ArrayList<MapData> Tolist()
 	{
 		ArrayList<MapData> list = new ArrayList<MapData>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapData)this.get(i));
 		}

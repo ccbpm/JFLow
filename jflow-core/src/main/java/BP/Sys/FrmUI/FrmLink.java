@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import java.util.*;
 
@@ -162,8 +163,9 @@ public class FrmLink extends EntityMyPK
 	 超连接
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmLink(String mypk)
+	public FrmLink(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -201,7 +203,7 @@ public class FrmLink extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		BP.Sys.FrmLink frmLink = new BP.Sys.FrmLink();
 		frmLink.setMyPK(this.getMyPK());
@@ -216,9 +218,10 @@ public class FrmLink extends EntityMyPK
 
 	/** 
 	 删除后清缓存
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());

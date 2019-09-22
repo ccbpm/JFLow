@@ -50,7 +50,7 @@ public class Tasks extends Entities
 	public final ArrayList<Task> Tolist()
 	{
 		ArrayList<Task> list = new ArrayList<Task>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Task)this[i]);
 		}

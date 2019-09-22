@@ -57,7 +57,7 @@ public class FrmAttachmentDBs extends EntitiesMyPK
 	public final ArrayList<FrmAttachmentDB> Tolist()
 	{
 		ArrayList<FrmAttachmentDB> list = new ArrayList<FrmAttachmentDB>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmAttachmentDB)this.get(i));
 		}

@@ -51,7 +51,7 @@ public class MapDataExts extends EntitiesNoName
 	public final ArrayList<MapDataExt> Tolist()
 	{
 		ArrayList<MapDataExt> list = new ArrayList<MapDataExt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapDataExt)this[i]);
 		}

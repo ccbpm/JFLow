@@ -99,7 +99,7 @@ public class Directions extends En.Entities
 	public final ArrayList<Direction> Tolist()
 	{
 		ArrayList<Direction> list = new ArrayList<Direction>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Direction)this[i]);
 		}

@@ -31,8 +31,9 @@ public class GETree extends EntityNoName
 	 编号
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public GETree(String no)
+	public GETree(String no) throws Exception
 	{
 		super(no);
 

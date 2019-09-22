@@ -66,7 +66,7 @@ public class FrmNodeComponents extends Entities
 	public final ArrayList<FrmNodeComponent> Tolist()
 	{
 		ArrayList<FrmNodeComponent> list = new ArrayList<FrmNodeComponent>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmNodeComponent)this[i]);
 		}

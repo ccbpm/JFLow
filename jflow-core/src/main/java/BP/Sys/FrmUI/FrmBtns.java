@@ -39,7 +39,7 @@ public class FrmBtns extends EntitiesMyPK
 	*/
 	public final List<FrmBtn> ToJavaList()
 	{
-		return (List<FrmBtn>)this;
+		return (List<FrmBtn>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -49,7 +49,7 @@ public class FrmBtns extends EntitiesMyPK
 	public final ArrayList<FrmBtn> Tolist()
 	{
 		ArrayList<FrmBtn> list = new ArrayList<FrmBtn>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmBtn)this.get(i));
 		}

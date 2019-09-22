@@ -673,12 +673,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String ImpTableField_Save()
 	{
 		MapData md = new MapData();
-		md.No = this.getFK_MapData();
+		md.setNo(this.getFK_MapData());
 		md.RetrieveFromDBSources();
 
-		String msg = md.Name + "导入字段信息:" + this.getFK_MapData();
+		String msg = md.getName() + "导入字段信息:" + this.getFK_MapData();
 		boolean isLeft = true;
-		float maxEnd = md.MaxEnd;
+		float maxEnd = md.getMaxEnd();
 
 		for (String name : HttpContextHelper.RequestParamKeys)
 		{
@@ -715,7 +715,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			{
 				SysEnums se = new SysEnums();
 				se.Retrieve(SysEnumAttr.EnumKey, ma.UIBindKey);
-				if (se.Count > 0)
+				if (se.size() > 0)
 				{
 					ma.MyDataType = BP.DA.DataType.AppInt;
 					ma.LGType = BP.En.FieldTypeS.Enum;
@@ -1102,7 +1102,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			ps.SQL = "SELECT OID FROM Sys_GroupField WHERE FrmID=" + SystemConfig.AppCenterDBVarStr + "FrmID and (CtrlID is null or ctrlid ='') ORDER BY OID DESC ";
 			ps.Add("FrmID", this.getFK_MapData());
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt != null && dt.Rows.Count > 0)
+			if (dt != null && dt.Rows.size() > 0)
 			{
 				iGroupID = Integer.parseInt(dt.Rows[0][0].toString());
 			}

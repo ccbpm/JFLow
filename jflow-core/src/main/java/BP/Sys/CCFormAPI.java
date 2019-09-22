@@ -1744,8 +1744,8 @@ public class CCFormAPI
 
 		//// sqls.Replace(";", ";" + Environment.NewLine);
 		// DataSet ds = DA.DBAccess.RunSQLReturnDataSet(sqls);
-		// if (ds != null && ds.Tables.Count == listNames.Count)
-		//     for (int i = 0; i < listNames.Count; i++)
+		// if (ds != null && ds.Tables.size() == listNames.size())
+		//     for (int i = 0; i < listNames.size(); i++)
 		//     {
 		//         ds.Tables[i].TableName = listNames[i];
 		//     }
@@ -1770,7 +1770,7 @@ public class CCFormAPI
 
 		for (DataTable item : ds.Tables)
 		{
-			if (item.TableName.equals("Sys_MapAttr") && item.Rows.Count == 0)
+			if (item.TableName.equals("Sys_MapAttr") && item.Rows.size() == 0)
 			{
 				md.RepairMap();
 			}

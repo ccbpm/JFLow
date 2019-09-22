@@ -38,7 +38,7 @@ public class Groups extends EntitiesNoName
 	*/
 	public final List<Group> ToJavaList()
 	{
-		return (List<Group>)this;
+		return (List<Group>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -48,9 +48,9 @@ public class Groups extends EntitiesNoName
 	public final ArrayList<Group> Tolist()
 	{
 		ArrayList<Group> list = new ArrayList<Group>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Group)this[i]);
+			list.add((Group)this.get(i));
 		}
 		return list;
 	}

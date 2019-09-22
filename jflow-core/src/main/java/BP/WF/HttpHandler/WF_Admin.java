@@ -178,7 +178,7 @@ public class WF_Admin extends DirectoryPageBase
 				case BySelected: //所有的人员多可以启动, 2016年11月开始约定此规则.
 					sql = "SELECT No as FK_Emp FROM Port_Emp ";
 					dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.Count > 300)
+					if (dt.Rows.size() > 300)
 					{
 						if (SystemConfig.AppCenterDBType == BP.DA.DBType.MSSQL)
 						{
@@ -207,12 +207,12 @@ public class WF_Admin extends DirectoryPageBase
 			}
 
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return "err@您按照:" + nd.getHisDeliveryWay() + "的方式设置的开始节点的访问规则，但是开始节点没有人员。";
 			}
 
-			if (dt.Rows.Count > 2000)
+			if (dt.Rows.size() > 2000)
 			{
 				return "err@可以发起开始节点的人员太多，会导致系统崩溃变慢，您需要在流程属性里设置可以发起的测试用户.";
 			}

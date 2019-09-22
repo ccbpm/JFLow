@@ -519,7 +519,7 @@ public class CCFormParse
 		btn.setX(Float.parseFloat(vector.get(0).ToJson()));
 		btn.setY(Float.parseFloat(vector.get(1).ToJson()));
 		btn.setIsEnable(true);
-		/*for (int iProperty = 0; iProperty < properties.Count; iProperty++)
+		/*for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
 		    JsonData property = properties[iProperty];
 		    if (property == null || !property.Keys.Contains("property") || property["property"] == null)

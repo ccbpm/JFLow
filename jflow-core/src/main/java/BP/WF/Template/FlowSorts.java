@@ -67,7 +67,7 @@ public class FlowSorts extends EntitiesTree
 	public final ArrayList<FlowSort> Tolist()
 	{
 		ArrayList<FlowSort> list = new ArrayList<FlowSort>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FlowSort)this[i]);
 		}

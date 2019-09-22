@@ -154,7 +154,7 @@ public class NodeDepts extends EntitiesMM
 	public final ArrayList<NodeDept> Tolist()
 	{
 		ArrayList<NodeDept> list = new ArrayList<NodeDept>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((NodeDept)this[i]);
 		}

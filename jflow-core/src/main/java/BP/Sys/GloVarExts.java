@@ -49,7 +49,7 @@ public class GloVarExts extends EntitiesNoName
 	public final ArrayList<GloVarExt> Tolist()
 	{
 		ArrayList<GloVarExt> list = new ArrayList<GloVarExt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GloVarExt)this.get(i));
 		}

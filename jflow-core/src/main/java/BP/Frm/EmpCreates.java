@@ -70,7 +70,7 @@ public class EmpCreates extends EntitiesMM
 	public final ArrayList<EmpCreate> Tolist()
 	{
 		ArrayList<EmpCreate> list = new ArrayList<EmpCreate>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((EmpCreate)this[i]);
 		}

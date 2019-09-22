@@ -56,7 +56,7 @@ public class MapFrames extends EntitiesMyPK
 	public final ArrayList<MapFrame> Tolist()
 	{
 		ArrayList<MapFrame> list = new ArrayList<MapFrame>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapFrame)this[i]);
 		}

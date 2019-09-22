@@ -994,9 +994,9 @@ public abstract class DirectoryPageBase
 				}
 				if (paras.contains(attr.get("KeyOfEn") + "=AVG"))
 				{
-					if (dt.Rows.Count != 0)
+					if (dt.Rows.size() != 0)
 					{
-						d = Double.parseDouble((d / dt.Rows.Count).toString("0.0000"));
+						d = Double.parseDouble((d / dt.Rows.size()).toString("0.0000"));
 					}
 
 				}
@@ -1358,7 +1358,7 @@ public abstract class DirectoryPageBase
 			dt.Columns.Add("序", Integer.class).ExtendedProperties.Add("width", 50);
 			dt.Columns["序"].SetOrdinal(0);
 
-			for (int i = 0; i < dt.Rows.Count; i++)
+			for (int i = 0; i < dt.Rows.size(); i++)
 			{
 				dt.Rows[i]["序"] = i + 1;
 			}
@@ -1377,8 +1377,8 @@ public abstract class DirectoryPageBase
 		headerRowIndex = tangible.StringHelper.isNullOrWhiteSpace(header) ? -1 : 0;
 		dateRowIndex = date ? (headerRowIndex + 1) : -1;
 		titleRowIndex = date ? dateRowIndex + 1 : headerRowIndex == -1 ? 0 : 1;
-		sumRowIndex = sumColumns.isEmpty() ? -1 : titleRowIndex + dt.Rows.Count + 1;
-		creatorRowIndex = tangible.StringHelper.isNullOrWhiteSpace(creator) ? -1 : sumRowIndex == -1 ? titleRowIndex + dt.Rows.Count + 1 : sumRowIndex + 1;
+		sumRowIndex = sumColumns.isEmpty() ? -1 : titleRowIndex + dt.Rows.size() + 1;
+		creatorRowIndex = tangible.StringHelper.isNullOrWhiteSpace(creator) ? -1 : sumRowIndex == -1 ? titleRowIndex + dt.Rows.size() + 1 : sumRowIndex + 1;
 
 		try (FileStream fs = new FileStream(file, FileMode.Create))
 		{
@@ -1543,7 +1543,7 @@ public abstract class DirectoryPageBase
 			//输出文件标题
 			if (headerRow != null)
 			{
-				sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(headerRowIndex, headerRowIndex, 0, dt.Columns.Count - 1));
+				sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(headerRowIndex, headerRowIndex, 0, dt.Columns.size() - 1));
 				cell = headerRow.GetCell(0);
 				cell.SetCellValue(header);
 				cell.CellStyle = headerStyle;
@@ -1552,7 +1552,7 @@ public abstract class DirectoryPageBase
 			//输出日期
 			if (dateRow != null)
 			{
-				sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(dateRowIndex, dateRowIndex, 0, dt.Columns.Count - 1));
+				sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(dateRowIndex, dateRowIndex, 0, dt.Columns.size() - 1));
 				cell = dateRow.GetCell(0);
 				cell.SetCellValue("日期：" + LocalDateTime.Today.toString("yyyy-MM-dd"));
 				cell.CellStyle = userStyle;
@@ -1561,7 +1561,7 @@ public abstract class DirectoryPageBase
 			//输出制表人
 			if (creatorRow != null)
 			{
-				sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(creatorRowIndex, creatorRowIndex, 0, dt.Columns.Count - 1));
+				sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(creatorRowIndex, creatorRowIndex, 0, dt.Columns.size() - 1));
 				cell = creatorRow.GetCell(0);
 				cell.SetCellValue("制表人：" + creator);
 				cell.CellStyle = userStyle;
@@ -1618,7 +1618,7 @@ public abstract class DirectoryPageBase
 			{
 				sumRow.HeightInPoints = DEF_ROW_HEIGHT;
 
-				for (c = 0; c < dt.Columns.Count; c++)
+				for (c = 0; c < dt.Columns.size(); c++)
 				{
 					cell = sumRow.GetCell(c);
 					cell.CellStyle = cellStyle;
@@ -1628,7 +1628,7 @@ public abstract class DirectoryPageBase
 						continue;
 					}
 
-					cell.SetCellFormula(String.format("SUM(%1$s:%2$s)", GetCellName(c, titleRowIndex + 1), GetCellName(c, titleRowIndex + dt.Rows.Count)));
+					cell.SetCellFormula(String.format("SUM(%1$s:%2$s)", GetCellName(c, titleRowIndex + 1), GetCellName(c, titleRowIndex + dt.Rows.size())));
 				}
 			}
 

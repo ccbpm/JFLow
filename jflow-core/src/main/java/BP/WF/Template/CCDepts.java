@@ -154,7 +154,7 @@ public class CCDepts extends EntitiesMM
 	public final ArrayList<CCDept> Tolist()
 	{
 		ArrayList<CCDept> list = new ArrayList<CCDept>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((CCDept)this[i]);
 		}

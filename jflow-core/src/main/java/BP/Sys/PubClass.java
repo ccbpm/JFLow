@@ -1074,7 +1074,7 @@ public class PubClass
 
 		String table = en.getEnMap().getPhysicsTable();
 		Attrs fkAttrs = en.getEnMap().getHisFKAttrs();
-		if (fkAttrs.Count == 0)
+		if (fkAttrs.size() == 0)
 		{
 			return msg;
 		}

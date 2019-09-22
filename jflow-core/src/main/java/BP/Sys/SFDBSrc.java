@@ -117,7 +117,7 @@ public class SFDBSrc extends EntityNoName
 	public final int RunSQLReturnInt(String sql, int isNullAsVal)
 	{
 		DataTable dt = this.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return isNullAsVal;
 		}
@@ -612,7 +612,7 @@ public class SFDBSrc extends EntityNoName
 				throw new RuntimeException("@未涉及的数据库类型。");
 		}
 
-		return dt.Rows.Count == 0 ? null : dt.Rows[0][0].toString();
+		return dt.Rows.size() == 0 ? null : dt.Rows[0][0].toString();
 	}
 
 	/** 
@@ -1444,7 +1444,7 @@ public class SFDBSrc extends EntityNoName
 					String sql = String.format("SELECT c.COLUMN_TYPE FROM information_schema.columns c WHERE c.TABLE_SCHEMA = '%1$s' AND c.TABLE_NAME = '%2$s' AND c.COLUMN_NAME = '%3$s'", this.getDBName(), tableName, oldName);
 
 					DataTable dt = RunSQLReturnTable(sql);
-					if (dt.Rows.Count > 0)
+					if (dt.Rows.size() > 0)
 					{
 						RunSQL(String.format("ALTER TABLE %1$s CHANGE COLUMN %2$s %3$s %4$s", tableName, oldName, newName, dt.Rows[0][0]));
 					}
@@ -1458,7 +1458,7 @@ public class SFDBSrc extends EntityNoName
 					String sql = String.format("SELECT t.VIEW_DEFINITION FROM information_schema.views t WHERE t.TABLE_SCHEMA = '%1$s' AND t.TABLE_NAME = '%2$s'", this.getDBName(), oldName);
 
 					DataTable dt = RunSQLReturnTable(sql);
-					if (dt.Rows.Count == 0)
+					if (dt.Rows.size() == 0)
 					{
 						RunSQL("DROP VIEW " + oldName);
 					}
@@ -1609,7 +1609,7 @@ public class SFDBSrc extends EntityNoName
 		String str = "";
 		MapDatas mds = new MapDatas();
 		mds.Retrieve(MapDataAttr.DBSrc, this.getNo());
-		if (mds.Count != 0)
+		if (mds.size() != 0)
 		{
 			str += "如下表单使用了该数据源，您不能删除它。";
 			for (MapData md : mds)
@@ -1620,7 +1620,7 @@ public class SFDBSrc extends EntityNoName
 
 		SFTables tabs = new SFTables();
 		tabs.Retrieve(SFTableAttr.FK_SFDBSrc, this.getNo());
-		if (tabs.Count != 0)
+		if (tabs.size() != 0)
 		{
 			str += "如下 table 使用了该数据源，您不能删除它。";
 			for (SFTable tab : tabs)

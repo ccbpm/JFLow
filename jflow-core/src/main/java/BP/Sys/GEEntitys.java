@@ -79,7 +79,7 @@ public class GEEntitys extends EntitiesOID
 	public final ArrayList<GEEntity> Tolist()
 	{
 		ArrayList<GEEntity> list = new ArrayList<GEEntity>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GEEntity)this.get(i));
 		}

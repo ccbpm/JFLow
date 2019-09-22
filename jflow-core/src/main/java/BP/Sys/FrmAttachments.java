@@ -56,7 +56,7 @@ public class FrmAttachments extends EntitiesMyPK
 	public final ArrayList<FrmAttachment> Tolist()
 	{
 		ArrayList<FrmAttachment> list = new ArrayList<FrmAttachment>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmAttachment)this.get(i));
 		}

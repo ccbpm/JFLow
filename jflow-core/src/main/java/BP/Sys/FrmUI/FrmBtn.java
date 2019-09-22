@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -32,8 +33,9 @@ public class FrmBtn extends EntityMyPK
 	 按钮
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmBtn(String mypk)
+	public FrmBtn(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -82,7 +84,7 @@ public class FrmBtn extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		BP.Sys.FrmBtn frmBtn = new BP.Sys.FrmBtn();
 		frmBtn.setMyPK(this.getMyPK());
@@ -97,9 +99,10 @@ public class FrmBtn extends EntityMyPK
 
 	/** 
 	 删除后清缓存
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());

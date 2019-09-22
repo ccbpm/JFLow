@@ -70,7 +70,7 @@ public class ButtonState
 
 		String sql = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + workid;
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			/* 说明没有 workid 初始化工作的情况, 只有保存与发送两个按钮是可用的 */
 			this.Btn_Send = true;

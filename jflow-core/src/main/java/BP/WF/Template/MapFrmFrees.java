@@ -50,7 +50,7 @@ public class MapFrmFrees extends EntitiesNoName
 	public final ArrayList<MapFrmFree> Tolist()
 	{
 		ArrayList<MapFrmFree> list = new ArrayList<MapFrmFree>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapFrmFree)this[i]);
 		}

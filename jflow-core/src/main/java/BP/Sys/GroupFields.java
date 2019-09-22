@@ -110,7 +110,7 @@ public class GroupFields extends EntitiesOID
 	public final ArrayList<GroupField> Tolist()
 	{
 		ArrayList<GroupField> list = new ArrayList<GroupField>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GroupField)this.get(i));
 		}

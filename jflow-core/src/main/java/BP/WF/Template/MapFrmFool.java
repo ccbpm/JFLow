@@ -477,7 +477,7 @@ public class MapFrmFool extends EntityNoName
 		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.No + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.No + "' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
 		MapAttrs attrs = new MapAttrs();
 		attrs.RetrieveInSQL(sql);
-		if (attrs.Count != 0)
+		if (attrs.size() != 0)
 		{
 			GroupField gf = null;
 			GroupFields gfs = new GroupFields(this.No);
@@ -599,7 +599,7 @@ public class MapFrmFool extends EntityNoName
 			GroupFields gfs = new GroupFields();
 			gfs.Retrieve(GroupFieldAttr.FrmID, enName, GroupFieldAttr.CtrlID, ctrlID, GroupFieldAttr.CtrlType, ctrlType);
 
-			if (gfs.Count <= 1)
+			if (gfs.size() <= 1)
 			{
 				continue;
 			}

@@ -51,7 +51,7 @@ public class MapRpts extends EntitiesNoName
 	public final ArrayList<MapRpt> Tolist()
 	{
 		ArrayList<MapRpt> list = new ArrayList<MapRpt>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapRpt)this[i]);
 		}

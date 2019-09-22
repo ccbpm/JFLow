@@ -54,7 +54,7 @@ public class RptStations extends Entities
 	public final ArrayList<RptStation> Tolist()
 	{
 		ArrayList<RptStation> list = new ArrayList<RptStation>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((RptStation)this[i]);
 		}

@@ -31,8 +31,9 @@ public class GENoName extends EntityNoName
 	 编号
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public GENoName(String no)
+	public GENoName(String no) throws Exception
 	{
 		super(no);
 

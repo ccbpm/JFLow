@@ -50,7 +50,7 @@ public class GenerBills extends Entities
 	public final ArrayList<GenerBill> Tolist()
 	{
 		ArrayList<GenerBill> list = new ArrayList<GenerBill>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GenerBill)this[i]);
 		}

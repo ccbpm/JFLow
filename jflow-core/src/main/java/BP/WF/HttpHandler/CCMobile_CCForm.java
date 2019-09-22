@@ -56,35 +56,35 @@ public class CCMobile_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region  查询出来从表数据.
 		GEDtls dtls = new GEDtls(this.getEnsName());
-		GEDtl dtl = dtls.GetNewEntity instanceof GEDtl ? (GEDtl)dtls.GetNewEntity : null;
+		GEDtl dtl = dtls.getGetNewEntity() instanceof GEDtl ? (GEDtl)dtls.getGetNewEntity() : null;
 		dtls.Retrieve("RefPK", this.GetRequestVal("RefPKVal"));
-		Map map = dtl.EnMap;
+		Map map = dtl.getEnMap();
 		for (Entity item : dtls)
 		{
-			String pkval = item.GetValStringByKey(dtl.PK);
+			String pkval = item.GetValStringByKey(dtl.getPK());
 			for (Attr attr : map.Attrs)
 			{
-				if (attr.IsRefAttr == true)
+				if (attr.getIsRefAttr() == true)
 				{
 					continue;
 				}
 
-				if (attr.MyDataType == DataType.AppDateTime || attr.MyDataType == DataType.AppDate)
+				if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
 				{
-					if (attr.UIIsReadonly == true)
+					if (attr.getUIIsReadonly() == true)
 					{
 						continue;
 					}
 
-					String val = this.GetValFromFrmByKey("TB_" + attr.Key + "_" + pkval, null);
-					item.SetValByKey(attr.Key, val);
+					String val = this.GetValFromFrmByKey("TB_" + attr.getKey() + "_" + pkval, null);
+					item.SetValByKey(attr.getKey(), val);
 					continue;
 				}
 
 
-				if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
+				if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
 				{
-					String val = this.GetValFromFrmByKey("TB_" + attr.Key + "_" + pkval, null);
+					String val = this.GetValFromFrmByKey("TB_" + attr.getKey() + "_" + pkval, null);
 					item.SetValByKey(attr.Key, val);
 					continue;
 				}
@@ -185,7 +185,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 		var files = HttpContextHelper.RequestFiles();
-		for (int i = 0; i < files.Count; i++)
+		for (int i = 0; i < files.size(); i++)
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var file = files[i];

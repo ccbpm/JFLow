@@ -53,7 +53,7 @@ public class AutoRun_WhoExeIt extends Method
 		DataTable dt = null;
 
 		dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return "无任务";
 		}

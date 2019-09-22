@@ -49,7 +49,7 @@ public class ShiftWorks extends Entities
 	public final ArrayList<ShiftWork> Tolist()
 	{
 		ArrayList<ShiftWork> list = new ArrayList<ShiftWork>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ShiftWork)this[i]);
 		}

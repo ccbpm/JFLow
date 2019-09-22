@@ -48,7 +48,7 @@ public class ExtHandWritings extends EntitiesMyPK
 	public final ArrayList<ExtHandWriting> Tolist()
 	{
 		ArrayList<ExtHandWriting> list = new ArrayList<ExtHandWriting>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((ExtHandWriting)this[i]);
 		}

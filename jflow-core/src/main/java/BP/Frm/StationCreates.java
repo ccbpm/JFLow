@@ -70,7 +70,7 @@ public class StationCreates extends EntitiesMM
 	public final ArrayList<StationCreate> Tolist()
 	{
 		ArrayList<StationCreate> list = new ArrayList<StationCreate>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((StationCreate)this[i]);
 		}

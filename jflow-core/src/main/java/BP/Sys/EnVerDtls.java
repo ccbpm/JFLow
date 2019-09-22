@@ -60,7 +60,7 @@ public class EnVerDtls extends EntitiesMyPK
 	public final ArrayList<EnVerDtl> Tolist()
 	{
 		ArrayList<EnVerDtl> list = new ArrayList<EnVerDtl>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((EnVerDtl)this[i]);
 		}

@@ -51,7 +51,7 @@ public class MyDeptTodolists extends Entities
 	public final ArrayList<MyDeptTodolist> Tolist()
 	{
 		ArrayList<MyDeptTodolist> list = new ArrayList<MyDeptTodolist>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MyDeptTodolist)this[i]);
 		}

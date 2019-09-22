@@ -56,7 +56,7 @@ public class Methods extends EntitiesMyPK
 	public final ArrayList<Method> Tolist()
 	{
 		ArrayList<Method> list = new ArrayList<Method>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Method)this[i]);
 		}

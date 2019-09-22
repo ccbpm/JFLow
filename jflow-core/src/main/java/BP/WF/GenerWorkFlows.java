@@ -64,7 +64,7 @@ public class GenerWorkFlows extends Entities
 	public final ArrayList<GenerWorkFlow> Tolist()
 	{
 		ArrayList<BP.WF.GenerWorkFlow> list = new ArrayList<BP.WF.GenerWorkFlow>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BP.WF.GenerWorkFlow)this[i]);
 		}

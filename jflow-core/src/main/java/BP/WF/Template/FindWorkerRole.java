@@ -391,7 +391,7 @@ public class FindWorkerRole extends EntityOIDName
 					case SpecNodeSubmiter: // 指定节点提交人的直线领导.
 						sql = "SELECT FK_Emp,FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + this.WorkID + " AND FK_Node=" + this.getTagVal1();
 						dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-						if (dt.Rows.Count == 0)
+						if (dt.Rows.size() == 0)
 						{
 							throw new RuntimeException("@没有找到指定节点数据，请反馈给系统管理员，技术信息:" + sql);
 						}
@@ -506,7 +506,7 @@ public class FindWorkerRole extends EntityOIDName
 				{
 					sql = "SELECT FK_Emp FROM Port_DeptEmp WHERE DutyLevel='" + this.getTagVal2() + "' AND FK_Dept='" + tempDeptNo + "'";
 					DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-					if (mydt.Rows.Count != 0)
+					if (mydt.Rows.size() != 0)
 					{
 						return mydt; //直接反回.
 					}
@@ -526,7 +526,7 @@ public class FindWorkerRole extends EntityOIDName
 				{
 					sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station='" + this.getTagVal2() + "' AND FK_Dept='" + tempDeptNo + "'";
 					DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-					if (mydt.Rows.Count != 0)
+					if (mydt.Rows.size() != 0)
 					{
 						return mydt; //直接反回.
 					}
@@ -588,7 +588,7 @@ public class FindWorkerRole extends EntityOIDName
 				{
 					sql = "SELECT FK_Emp FROM Port_DeptEmp WHERE DutyLevel='" + this.getTagVal2() + "' AND FK_Dept='" + tempDeptNo + "'";
 					DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-					if (mydt.Rows.Count != 0)
+					if (mydt.Rows.size() != 0)
 					{
 						return mydt; //直接反回.
 					}
@@ -608,7 +608,7 @@ public class FindWorkerRole extends EntityOIDName
 				{
 					  sql = "SELECT FK_Emp FROM Port_DeptEmp WHERE FK_Duty='" + this.getTagVal2() + "' AND FK_Dept='" + tempDeptNo + "'";
 					  DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-					if (mydt.Rows.Count != 0)
+					if (mydt.Rows.size() != 0)
 					{
 						return mydt; //直接反回.
 					}
@@ -628,7 +628,7 @@ public class FindWorkerRole extends EntityOIDName
 				{
 					sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station='" + this.getTagVal2() + "' AND FK_Dept='" + tempDeptNo + "'";
 					DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-					if (mydt.Rows.Count != 0)
+					if (mydt.Rows.size() != 0)
 					{
 						return mydt; //直接反回.
 					}

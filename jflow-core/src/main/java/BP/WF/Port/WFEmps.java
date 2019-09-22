@@ -58,7 +58,7 @@ public class WFEmps extends EntitiesNoName
 	public final ArrayList<WFEmp> Tolist()
 	{
 		ArrayList<WFEmp> list = new ArrayList<WFEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((WFEmp)this[i]);
 		}

@@ -81,7 +81,7 @@ public abstract class EntityOID extends Entity
 		this.Insert();
 	}
 	@Override
-	public boolean getIsExits()
+	public boolean getIsExits() throws Exception
 	{
 		if (this.getOID() == 0)
 		{
@@ -148,9 +148,10 @@ public abstract class EntityOID extends Entity
 	 删除之前的操作。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (super.beforeDelete() == false)
 		{
@@ -170,7 +171,7 @@ public abstract class EntityOID extends Entity
 		}
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		return super.beforeUpdateInsertAction();
 	}
@@ -179,9 +180,10 @@ public abstract class EntityOID extends Entity
 	 beforeInsert 之前的操作。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getOID() == -999)
 		{
@@ -209,9 +211,10 @@ public abstract class EntityOID extends Entity
 	 beforeUpdate
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (super.beforeUpdate() == false)
 		{
@@ -236,8 +239,9 @@ public abstract class EntityOID extends Entity
 		///#region public 方法
 	/** 
 	 作为一个新的实体保存。
+	 * @throws Exception 
 	*/
-	public final void SaveAsNew()
+	public final void SaveAsNew() throws Exception
 	{
 		try
 		{
@@ -252,8 +256,9 @@ public abstract class EntityOID extends Entity
 	}
 	/** 
 	 按照指定的OID Insert.
+	 * @throws Exception 
 	*/
-	public final void InsertAsOID(int oid)
+	public final void InsertAsOID(int oid) throws Exception
 	{
 		this.SetValByKey("OID", oid);
 		try
@@ -266,7 +271,7 @@ public abstract class EntityOID extends Entity
 			throw ex;
 		}
 	}
-	public final void InsertAsOID(long oid)
+	public final void InsertAsOID(long oid) throws Exception
 	{
 		try
 		{
@@ -293,8 +298,9 @@ public abstract class EntityOID extends Entity
 	 按照指定的OID 保存
 	 
 	 @param oid
+	 * @throws Exception 
 	*/
-	public final void SaveAsOID(int oid)
+	public final void SaveAsOID(int oid) throws Exception
 	{
 		this.SetValByKey("OID", oid);
 		if (this.getIsExits() == false)

@@ -92,12 +92,12 @@ public class WF_WorkOpt extends DirectoryPageBase
 			templetes.Retrieve(BillTemplateAttr.FK_MapData, this.getFK_MapData(), BillTemplateAttr.No, billNo);
 		}
 
-		if (templetes.Count == 0)
+		if (templetes.size() == 0)
 		{
 			return "err@当前节点上没有绑定单据模板。";
 		}
 
-		if (templetes.Count == 1)
+		if (templetes.size() == 1)
 		{
 			BillTemplate templete = templetes[0] instanceof BillTemplate ? (BillTemplate)templetes[0] : null;
 
@@ -233,7 +233,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				ndxxRpt.Copy(wk);
 
 				//把数据赋值给wk. 有可能用户还没有执行流程检查，字段没有同步到 NDxxxRpt.
-				if (ndxxRpt.Row.Count > wk.Row.Count)
+				if (ndxxRpt.Row.size() > wk.Row.size())
 				{
 					wk.Row = ndxxRpt.Row;
 				}
@@ -460,7 +460,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				//ndxxRpt.Copy(wk);
 
 				//把数据赋值给wk. 有可能用户还没有执行流程检查，字段没有同步到 NDxxxRpt.
-				//if (ndxxRpt.Row.Count > wk.Row.Count)
+				//if (ndxxRpt.Row.size() > wk.Row.size())
 				//   wk.Row = ndxxRpt.Row;
 
 				rtf.HisGEEntity = ndxxRpt;
@@ -787,7 +787,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			}
 
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.Count != 0)
+			if (dt.Rows.size() != 0)
 			{
 				String tag = dt.Rows[0]["Tag"].toString();
 				String emps = dt.Rows[0]["EmpTo"].toString();
@@ -827,7 +827,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				}
 			}
 
-			if (dt.Rows.Count != 0)
+			if (dt.Rows.size() != 0)
 			{
 				sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID());
 			}
@@ -1939,7 +1939,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			{
 				//判断可编辑审核信息是否处于最后一条，不处于最后一条，则将其移到最后一条
 				DataRow rdoc = tkDt.Select("IsDoc=True")[0];
-				if (tkDt.Rows.IndexOf(rdoc) != tkDt.Rows.Count - 1)
+				if (tkDt.Rows.IndexOf(rdoc) != tkDt.Rows.size() - 1)
 				{
 					tkDt.Rows.Add(rdoc.ItemArray)["RDT"] = "";
 
@@ -1950,7 +1950,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				else
 				{
 					//判断刚退回时，退回接收人一打开，审核信息复制一条
-					Track lastTrack = tks[tks.Count - 1] instanceof Track ? (Track)tks[tks.Count - 1] : null;
+					Track lastTrack = tks[tks.size() - 1] instanceof Track ? (Track)tks[tks.size() - 1] : null;
 					if ((lastTrack.getHisActionType() == ActionType.Return || lastTrack.getHisActionType() == ActionType.Forward) && lastTrack.getNDTo() == tkDoc.getNDFrom())
 					{
 						//  tkDt.Rows.Add(rdoc.ItemArray)["RDT"] = "";
@@ -2533,7 +2533,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			{
 				//判断可编辑审核信息是否处于最后一条，不处于最后一条，则将其移到最后一条
 				DataRow rdoc = tkDt.Select("IsDoc=True")[0];
-				if (tkDt.Rows.IndexOf(rdoc) != tkDt.Rows.Count - 1)
+				if (tkDt.Rows.IndexOf(rdoc) != tkDt.Rows.size() - 1)
 				{
 					tkDt.Rows.Add(rdoc.ItemArray)["RDT"] = "";
 
@@ -2910,7 +2910,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		sql = "SELECT MyPK,RDT FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE NDFrom = " + this.getFK_Node() + " AND ActionType = " + ActionType.WorkCheck.getValue() + " AND EmpFrom = '" + WebUser.No + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql, 1, 1, "MyPK", "RDT", "DESC");
 
-		return dt.Rows.Count > 0 ? dt.Rows[0]["RDT"].toString() : "";
+		return dt.Rows.size() > 0 ? dt.Rows[0]["RDT"].toString() : "";
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -3263,7 +3263,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		rws.Retrieve(BP.WF.ReturnWorkAttr.ReturnToNode, this.getFK_Node(), BP.WF.ReturnWorkAttr.WorkID, this.getWorkID(), BP.WF.ReturnWorkAttr.RDT);
 
 		String msgInfo = "";
-		if (rws.Count != 0)
+		if (rws.size() != 0)
 		{
 			for (BP.WF.ReturnWork rw : rws)
 			{
@@ -3525,7 +3525,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 
 		DataTable dtDept = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dtDept.Rows.Count == 0)
+		if (dtDept.Rows.size() == 0)
 		{
 			fk_dept = BP.Web.WebUser.FK_Dept;
 			sql = "SELECT No,Name,ParentNo FROM Port_Dept WHERE No='" + fk_dept + "' OR ParentNo='" + fk_dept + "' ORDER BY Idx ";
@@ -3620,7 +3620,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		if (toNodeID == 0)
 		{
 			Nodes nds = nd.getHisToNodes();
-			if (nds.Count == 1)
+			if (nds.size() == 1)
 			{
 				toNodeID = nds[0].GetValIntByKey("NodeID");
 			}
@@ -3652,7 +3652,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		if (SystemConfig.CustomerNo.equals("TianYe")) //天业集团，去掉00000001董事长
 		{
 			//DataTable TYEmp = ds.Tables["Emps"];
-			//if (TYEmp.Rows.Count != 0)
+			//if (TYEmp.Rows.size() != 0)
 			//    foreach (DataRow row in TYEmp.Rows)
 			//        if (row["No"].ToString() == "00000001")
 			//        {
@@ -3689,7 +3689,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 			DataTable mydt = DBAccess.RunSQLReturnTable(sql);
 			String emps = "";
-			if (mydt.Rows.Count != 0)
+			if (mydt.Rows.size() != 0)
 			{
 				emps = mydt.Rows[0]["Tag"].toString();
 				if (emps.equals("") || emps == null)
@@ -3897,7 +3897,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 
 			//如果只有一个退回节点，就需要判断是否启用了单节点退回规则.
-			if (dt.Rows.Count == 1)
+			if (dt.Rows.size() == 1)
 			{
 				Node nd = new Node(this.getFK_Node());
 				if (nd.getReturnOneNodeRole() != 0)
@@ -4117,7 +4117,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		//获得上次默认选择的节点
 		int lastSelectNodeID = BP.WF.Dev2Interface.WorkOpt_ToNodes_GetLasterSelectNodeID(this.getFK_Flow(), this.getFK_Node());
-		if (lastSelectNodeID == 0 && nds.Count != 0)
+		if (lastSelectNodeID == 0 && nds.size() != 0)
 		{
 			lastSelectNodeID = Integer.parseInt(nds[0].PKVal.toString());
 		}
@@ -4264,7 +4264,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			}
 
 			//绑定独立表单，表单自定义方案验证错误弹出窗口进行提示.
-			if (currNode.getHisFrms() != null && currNode.getHisFrms().Count > 0 && ex.getMessage().Contains("在提交前检查到如下必输字段填写不完整") == true)
+			if (currNode.getHisFrms() != null && currNode.getHisFrms().size() > 0 && ex.getMessage().Contains("在提交前检查到如下必输字段填写不完整") == true)
 			{
 				return "err@" + ex.getMessage().Replace("@@", "@").Replace("@", "<BR>@");
 			}
@@ -4360,7 +4360,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		//设置的手工运行的流转信息.
 		TransferCustoms tcs = new TransferCustoms(this.getWorkID());
-		if (tcs.Count == 0)
+		if (tcs.size() == 0)
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 执行计算未来处理人.

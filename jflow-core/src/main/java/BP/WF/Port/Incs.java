@@ -45,7 +45,7 @@ public class Incs extends EntitiesNoName
 	public final ArrayList<Inc> Tolist()
 	{
 		ArrayList<Inc> list = new ArrayList<Inc>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Inc)this[i]);
 		}

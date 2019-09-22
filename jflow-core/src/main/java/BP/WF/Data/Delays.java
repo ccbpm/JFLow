@@ -56,7 +56,7 @@ public class Delays extends EntitiesMyPK
 	public final ArrayList<Delay> Tolist()
 	{
 		ArrayList<Delay> list = new ArrayList<Delay>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Delay)this[i]);
 		}

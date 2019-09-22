@@ -52,7 +52,7 @@ public class RptDfines extends EntitiesNoName
 	public final ArrayList<RptDfine> Tolist()
 	{
 		ArrayList<RptDfine> list = new ArrayList<RptDfine>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((RptDfine)this[i]);
 		}

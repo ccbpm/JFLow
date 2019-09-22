@@ -63,7 +63,7 @@ public class SubFlowHands extends EntitiesMyPK
 	public final ArrayList<SubFlowHand> Tolist()
 	{
 		ArrayList<SubFlowHand> list = new ArrayList<SubFlowHand>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SubFlowHand)this[i]);
 		}

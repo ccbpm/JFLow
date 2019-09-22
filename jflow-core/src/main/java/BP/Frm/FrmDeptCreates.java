@@ -70,7 +70,7 @@ public class FrmDeptCreates extends EntitiesMM
 	public final ArrayList<FrmDeptCreate> Tolist()
 	{
 		ArrayList<FrmDeptCreate> list = new ArrayList<FrmDeptCreate>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((FrmDeptCreate)this[i]);
 		}

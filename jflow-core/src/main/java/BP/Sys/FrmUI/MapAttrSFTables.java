@@ -49,7 +49,7 @@ public class MapAttrSFTables extends EntitiesMyPK
 	public final ArrayList<MapAttrSFTable> Tolist()
 	{
 		ArrayList<MapAttrSFTable> list = new ArrayList<MapAttrSFTable>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MapAttrSFTable)this[i]);
 		}

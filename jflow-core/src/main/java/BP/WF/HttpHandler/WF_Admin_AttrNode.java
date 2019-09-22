@@ -684,7 +684,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nodes = new Nodes();
 				nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, getFK_Flow(), BP.WF.Template.NodeAttr.Step);
 
-				if (nodes.Count == 0)
+				if (nodes.size() == 0)
 				{
 					String nodeid = getFK_MapData().replace("ND", "");
 					String flowno = "";
@@ -1537,7 +1537,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 			//流程完成条件Count
 			BP.WF.Template.Conds conds = new BP.WF.Template.Conds(BP.WF.Template.CondType.Flow, node.getNodeID());
-			dr.set("HisFinishCondsCount", conds.Count);
+			dr.set("HisFinishCondsCount", conds.size());
 
 
 			dt.Rows.Add(dr);

@@ -47,7 +47,7 @@ public class Menus extends EntitiesTree
 	public final ArrayList<Menu> Tolist()
 	{
 		ArrayList<Menu> list = new ArrayList<Menu>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Menu)this[i]);
 		}

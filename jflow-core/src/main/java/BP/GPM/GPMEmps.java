@@ -54,7 +54,7 @@ public class GPMEmps extends EntitiesNoName
 	public final ArrayList<GPMEmp> Tolist()
 	{
 		ArrayList<GPMEmp> list = new ArrayList<GPMEmp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((GPMEmp)this[i]);
 		}

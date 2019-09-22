@@ -78,7 +78,7 @@ public class Nodes extends EntitiesOID
 
 		this.Clear();
 		this.AddEntities(nds);
-		return this.Count;
+		return this.size();
 	}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -103,7 +103,7 @@ public class Nodes extends EntitiesOID
 	public final ArrayList<BP.WF.Node> Tolist()
 	{
 		ArrayList<BP.WF.Node> list = new ArrayList<BP.WF.Node>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((BP.WF.Node)this[i]);
 		}

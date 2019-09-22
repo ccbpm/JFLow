@@ -50,7 +50,7 @@ public class WorkFlowDeleteLogs extends Entities
 	public final ArrayList<WorkFlowDeleteLog> Tolist()
 	{
 		ArrayList<WorkFlowDeleteLog> list = new ArrayList<WorkFlowDeleteLog>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((WorkFlowDeleteLog)this[i]);
 		}

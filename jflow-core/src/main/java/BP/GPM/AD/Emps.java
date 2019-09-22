@@ -54,7 +54,7 @@ public class Emps extends EntitiesNoName
 	public final ArrayList<Emp> Tolist()
 	{
 		ArrayList<Emp> list = new ArrayList<Emp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Emp)this[i]);
 		}

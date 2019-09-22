@@ -16,7 +16,7 @@ public class SelectAccpers extends EntitiesMyPK
 	*/
 	public final boolean getIsSetNextTime()
 	{
-		if (this.Count == 0)
+		if (this.size() == 0)
 		{
 			return false;
 		}
@@ -57,7 +57,7 @@ public class SelectAccpers extends EntitiesMyPK
 		this.Retrieve(SelectAccperAttr.FK_Node, fk_node, SelectAccperAttr.WorkID, maxWorkID);
 
 		//返回查询结果.
-		return this.Count;
+		return this.size();
 	}
 	/** 
 	 查询上次的设置
@@ -80,7 +80,7 @@ public class SelectAccpers extends EntitiesMyPK
 		this.Retrieve(SelectAccperAttr.FK_Node, fk_node, SelectAccperAttr.WorkID, maxWorkID);
 
 		//返回查询结果.
-		return this.Count;
+		return this.size();
 	}
 	/** 
 	 他的到人员
@@ -153,7 +153,7 @@ public class SelectAccpers extends EntitiesMyPK
 	public final ArrayList<SelectAccper> Tolist()
 	{
 		ArrayList<SelectAccper> list = new ArrayList<SelectAccper>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((SelectAccper)this[i]);
 		}

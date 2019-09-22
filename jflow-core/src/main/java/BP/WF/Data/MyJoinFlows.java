@@ -51,7 +51,7 @@ public class MyJoinFlows extends Entities
 	public final ArrayList<MyJoinFlow> Tolist()
 	{
 		ArrayList<MyJoinFlow> list = new ArrayList<MyJoinFlow>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MyJoinFlow)this[i]);
 		}

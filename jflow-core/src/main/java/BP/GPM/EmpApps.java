@@ -48,7 +48,7 @@ public class EmpApps extends EntitiesMyPK
 	public final ArrayList<EmpApp> Tolist()
 	{
 		ArrayList<EmpApp> list = new ArrayList<EmpApp>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((EmpApp)this[i]);
 		}

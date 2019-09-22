@@ -64,7 +64,7 @@ public class Parts extends EntitiesMyPK
 	public final ArrayList<Part> Tolist()
 	{
 		ArrayList<Part> list = new ArrayList<Part>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((Part)this[i]);
 		}

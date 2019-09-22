@@ -208,7 +208,7 @@ public class AutoRunStratFlows extends Method
 		String errMsg = "";
 		// 获取主表数据.
 		DataTable dtMain = BP.DA.DBAccess.RunSQLReturnTable(me.Tag);
-		if (dtMain.Rows.Count == 0)
+		if (dtMain.Rows.size() == 0)
 		{
 			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.Name + ")此时无任务.");
 			return;
@@ -242,7 +242,7 @@ public class AutoRunStratFlows extends Method
 
 			String mainPK = dr.get("MainPK").toString();
 			String sql = "SELECT OID FROM " + nodeTable + " WHERE MainPK='" + mainPK + "'";
-			if (DBAccess.RunSQLReturnTable(sql).Rows.Count != 0)
+			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 			{
 				continue; //说明已经调度过了
 			}
@@ -310,7 +310,7 @@ public class AutoRunStratFlows extends Method
 				wk.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
 			}
 
-			if (ds.Tables.Count != 0)
+			if (ds.Tables.size() != 0)
 			{
 				// MapData md = new MapData(nodeTable);
 				MapDtls dtls = new MapDtls(nodeTable);

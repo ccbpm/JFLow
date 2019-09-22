@@ -80,7 +80,7 @@ public class FullSA
 			{
 				String sql = "SELECT No, Name FROM Port_Emp WHERE No IN (SELECT A.FK_Emp FROM " + BP.WF.Glo.getEmpStation() + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + item.getNodeID() + ")";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					continue;
 				}
@@ -119,7 +119,7 @@ public class FullSA
 				ps.Add("WorkID", currWorkNode.getHisWork().getOID());
 				ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
 				dt = DBAccess.RunSQLReturnTable(ps);
-				if (dt.Rows.Count == 0)
+				if (dt.Rows.size() == 0)
 				{
 					if (item.getHisFlow().getHisFlowAppType() == FlowAppType.Normal)
 					{
@@ -135,7 +135,7 @@ public class FullSA
 
 						ps.Add("FK_Node", item.getNodeID());
 						dt = DBAccess.RunSQLReturnTable(ps);
-						if (dt.Rows.Count == 0)
+						if (dt.Rows.size() == 0)
 						{
 							continue;
 						}

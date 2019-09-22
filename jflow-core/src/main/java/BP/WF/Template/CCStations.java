@@ -130,7 +130,7 @@ public class CCStations extends EntitiesMM
 	public final ArrayList<CCStation> Tolist()
 	{
 		ArrayList<CCStation> list = new ArrayList<CCStation>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((CCStation)this[i]);
 		}

@@ -30,7 +30,7 @@ public class Dev2Interface
 		{
 			String sql = "SELECT SID FROM Port_Emp WHERE No='" + userNo + "'";
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("用户不存在或者SID错误。");
 			}

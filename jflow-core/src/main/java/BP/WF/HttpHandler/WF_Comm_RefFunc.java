@@ -460,7 +460,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 			sql = String.format("SELECT No,Name,ParentNo FROM Port_Dept WHERE IsUnit = 1 AND ParentNo = '%1$s'", parentrootid);
 			dt = DBAccess.RunSQLReturnTable(sql);
 
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				dt.Rows.Add("-1", "无单位数据", parentrootid);
 			}
@@ -501,7 +501,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 			node.getattributes().setTType("STROOT");
 			node.setstate("closed");
 
-			if (dt.Rows.Count > 0)
+			if (dt.Rows.size() > 0)
 			{
 				node.setchildren(new ArrayList<EasyuiTreeNode>());
 				node.getchildren().add(new EasyuiTreeNode());

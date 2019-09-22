@@ -47,8 +47,9 @@ public abstract class EntityMyPK extends Entity
 	 class Name 
 	 
 	 @param _MyPK _MyPK
+	 * @throws Exception 
 	*/
-	protected EntityMyPK(String _MyPK)
+	protected EntityMyPK(String _MyPK) throws Exception
 	{
 		this.setMyPK(_MyPK);
 		this.Retrieve();

@@ -1,247 +1,197 @@
 package BP.En;
 
-import BP.DA.*;
-import BP.Sys.*;
-import java.math.*;
+import java.math.BigDecimal;
 
-//using BP.En.MBase;
-public class SqlBuilder
-{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 关于IEntitiy的操作
-	//		public static String GetKeyCondition(IEntity en)
-	//		{ 
-	//			return null;
-	//		}
-	//		public static String RetrieveAll(IEntity en)
-	//		{ 
-	//			return null;
-	//		}
-	//		public static String Retrieve(IEntity en)
-	//		{ 
-	//			return null;
-	//		}
-	//		public static String Insert(IEntity en)
-	//		{ 
-	//			return null;
-	//		}
-	//		public static String Delete(IEntity en)
-	//		{ 
-	//			return null;
-	//		}
-	//		public static String Update(IEntity en)
-	//		{ 
-	//			return null;
-	//		}
+import BP.DA.DBAccess;
+import BP.DA.DBType;
+import BP.DA.DataType;
+import BP.DA.Paras;
+import BP.Sys.MapAttr;
+import BP.Sys.SysDocFile;
+import BP.Sys.SysEnums;
+import BP.Sys.SystemConfig;
+import BP.Tools.StringHelper;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+public class SqlBuilder {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region GetKeyCondition
+	/**
+	 * 得到主健
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String GetKeyConditionOfMS(Entity en) {
 
-	/** 
-	 得到主健
-	 
-	 @param en
-	 @return 
-	*/
-	public static String GetKeyConditionOfMS(Entity en)
-	{
-		// 判断特殊情况。
-		switch (en.getPKField())
-		{
-			case "OID":
-				return " OID=@OID";
-			case "No":
-				return " No=@No";
-			case "MyPK":
-				return " MyPK=@MyPK";
-				break;
-			default:
-				break;
-		}
+		String pk = en.getPK();
+		if (pk.equals("OID"))
+			return en.getEnMap().getPhysicsTable() + ".OID=:OID";
 
-		if (en.getEnMap().getAttrs().Contains("OID"))
-		{
-			int key = en.GetValIntByKey("OID");
-			if (key == 0)
-			{
-				throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " " + en.getEnMap().getPhysicsTable() + "]，没有给PK OID 赋值,不能进行查询操作。");
-			}
-			//   if (en.PKs.Length == 1)
-			return " OID=@OID" + key;
-		}
+		if (pk.equals("No"))
+			return en.getEnMap().getPhysicsTable() + ".No=:No";
+
+		if (pk.equals("MyPK"))
+			return en.getEnMap().getPhysicsTable() + ".MyPK=:MyPK";
+
+		if (pk.equals("NodeID"))
+			return en.getEnMap().getPhysicsTable() + ".NodeID=:NodeID";
+
+		if (pk.equals("WorkID"))
+			return en.getEnMap().getPhysicsTable() + ".WorkID=:WorkID";
 
 		String sql = " (1=1) ";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				if (attr.getMyDataType() == DataType.AppString)
-				{
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		String physicsTable = enMap.getPhysicsTable();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
+					|| attr.getMyFieldType() == FieldType.PKEnum) {
+				if (attr.getMyDataType() == DataType.AppString) {
 					String val = en.GetValByKey(attr.getKey()).toString();
-					if (val == null || val.equals(""))
-					{
-						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " " + en.getEnMap().getPhysicsTable() + "]没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
+					if (val == null || val.equals("")) {
+						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " "
+								+ physicsTable + "]没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
-					sql = sql + " AND " + attr.getField() + "=@" + attr.getKey();
+					sql = sql + " AND " +physicsTable+ "." + attr.getField() + "=:" + attr.getKey();
 					continue;
 				}
-				if (attr.getMyDataType() == DataType.AppInt)
-				{
-					if (en.GetValIntByKey(attr.getKey()) == 0 && attr.getKey().equals("OID"))
-					{
-						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " " + en.getEnMap().getPhysicsTable() + "]，没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
+				if (attr.getMyDataType() == DataType.AppInt) {
+					if (en.GetValIntByKey(attr.getKey()) == 0 && attr.getKey().equals("OID")) {
+						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " "
+								+ physicsTable + "]，没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
-					sql = sql + " AND " + attr.getField() + "=@" + attr.getKey();
+					sql = sql + " AND " + physicsTable + "." +attr.getField() + "=:" + attr.getKey();
 					continue;
 				}
 			}
 		}
 		return sql;
 	}
-	/** 
-	 得到主健
-	 
-	 @param en
-	 @return 
-	*/
-	public static String GetKeyConditionOfOLE(Entity en)
-	{
+
+	/**
+	 * 得到主健
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String GetKeyConditionOfOLE(Entity en) {
 		// 判断特殊情况。
-		if (en.getEnMap().getAttrs().Contains("OID"))
-		{
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		if (attrs.Contains("OID")) {
 			int key = en.GetValIntByKey("OID");
-			if (key == 0)
-			{
-				throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " " + en.getEnMap().getPhysicsTable() + "]，没有给PK OID 赋值,不能进行查询操作。");
+			if (key == 0) {
+				throw new RuntimeException("@在执行[" + enMap.getEnDesc() + " " + enMap.getPhysicsTable()+ "]，没有给PK OID 赋值,不能进行查询操作。");
 			}
 
-			if (en.getPKs().length == 1)
-			{
-				return en.getEnMap().getPhysicsTable() + ".OID=" + key;
+			if (en.getPKs().length == 1) {
+				return enMap.getPhysicsTable() + ".OID=" + key;
 			}
 		}
-		//			if (en.EnMap.Attrs.Contains("MID"))
-		//			{
-		//				int key=en.GetValIntByKey("MID");
-		//				if (key==0)
-		//					throw new Exception("@在执行["+en.EnMap.EnDesc+ " " +en.EnMap.PhysicsTable +"]，没有给PK MID 赋值,不能进行查询操作。");
-		//				return en.EnMap.PhysicsTable+".MID="+key ;
-		//			}
 
 		String sql = " (1=1) ";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				if (attr.getMyDataType() == DataType.AppString)
-				{
+		String physicsTable = enMap.getPhysicsTable();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
+					|| attr.getMyFieldType() == FieldType.PKEnum) {
+				if (attr.getMyDataType() == DataType.AppString) {
 					String val = en.GetValByKey(attr.getKey()).toString();
-					if (val == null || val.equals(""))
-					{
-						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " " + en.getEnMap().getPhysicsTable() + "]没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
+					if (val == null || val.equals("")) {
+						throw new RuntimeException("@在执行[" + enMap.getEnDesc() + " "
+								+ physicsTable + "]没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
-					sql = sql + " AND " + en.getEnMap().getPhysicsTable() + ".[" + attr.getField() + "]='" + en.GetValByKey(attr.getKey()).toString() + "'";
+					sql = sql + " AND " + physicsTable + ".[" + attr.getField() + "]='"
+							+ en.GetValByKey(attr.getKey()).toString() + "'";
 					continue;
 				}
 
-				if (attr.getMyDataType() == DataType.AppInt)
-				{
-					if (en.GetValIntByKey(attr.getKey()) == 0 && attr.getKey().equals("OID"))
-					{
-						throw new RuntimeException("@在执行[" + en.getEnMap().getEnDesc() + " " + en.getEnMap().getPhysicsTable() + "]，没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
+				if (attr.getMyDataType() == DataType.AppInt) {
+					if (en.GetValIntByKey(attr.getKey()) == 0 && attr.getKey().equals("OID")) {
+						throw new RuntimeException("@在执行[" + enMap.getEnDesc() + " "
+								+ physicsTable + "]，没有给PK " + attr.getKey() + " 赋值,不能进行查询操作。");
 					}
-					sql = sql + " AND " + en.getEnMap().getPhysicsTable() + ".[" + attr.getField() + "]=" + en.GetValStringByKey(attr.getKey());
+					sql = sql + " AND " + physicsTable + ".[" + attr.getField() + "]="
+							+ en.GetValStringByKey(attr.getKey());
 					continue;
 				}
 			}
 		}
 		return sql;
 	}
-	/** 
-	 得到主健
-	 
-	 @param en
-	 @return 
-	*/
-	public static String GenerWhereByPK(Entity en, String dbStr)
-	{
-		if (en.getPKCount() == 1)
-		{
-			if (dbStr.equals("?"))
-			{
-				return en.getEnMap().getPhysicsTable() + "." + en.getPKField() + "=" + dbStr;
-			}
-			else
-			{
-				return en.getEnMap().getPhysicsTable() + "." + en.getPKField() + "=" + dbStr + en.getPK();
+
+	/**
+	 * 得到主健
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String GenerWhereByPK(Entity en, String dbStr) {
+
+		if (en.getPKCount() == 1) {
+			if (dbStr.equals("?")) {
+				return en.getEnMap().getPhysicsTable() + "." + en.getPK() + "=" + dbStr;
+			} else {
+				return en.getEnMap().getPhysicsTable() + "." + en.getPK() + "=" + dbStr + en.getPK();
 			}
 		}
 
 		String sql = " (1=1) ";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				if (dbStr.equals("?"))
-				{
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (Attr attr :attrs ) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
+					|| attr.getMyFieldType() == FieldType.PKEnum) {
+				if (dbStr.equals("?")) {
 					sql = sql + " AND " + attr.getField() + "=" + dbStr;
-				}
-				else
-				{
+				} else {
 					sql = sql + " AND " + attr.getField() + "=" + dbStr + attr.getField();
 				}
 			}
 		}
 		return sql;
 	}
-	/** 
-	 
-	 
-	 @param en
-	 @return 
-	*/
-	public static Paras GenerParasPK(Entity en)
-	{
+
+	/**
+	 * @param en
+	 * @return
+	 */
+	public static Paras GenerParasPK(Entity en) {
+
 		Paras paras = new Paras();
 		String pk = en.getPK();
 
-		switch (pk)
-		{
-			case "OID":
-				paras.Add("OID", en.GetValIntByKey("OID"));
-				return paras;
-			case "No":
-				paras.Add("No", en.GetValStrByKey("No"));
-				return paras;
-			case "MyPK":
-				paras.Add("MyPK", en.GetValStrByKey("MyPK"));
-				return paras;
-			case "NodeID":
-				paras.Add("NodeID", en.GetValIntByKey("NodeID"));
-				return paras;
-			case "WorkID":
-				paras.Add("WorkID", en.GetValIntByKey("WorkID"));
-				return paras;
-			default:
-				break;
+		if (pk.equals("OID")) {
+			paras.Add("OID", en.GetValIntByKey("OID"));
+			return paras;
 		}
 
+		if (pk.equals("No")) {
+			paras.Add("No", en.GetValStrByKey("No"));
+			return paras;
+		}
 
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				if (attr.getMyDataType() == DataType.AppString)
-				{
+		if (pk.equals("MyPK")) {
+			paras.Add("MyPK", en.GetValStrByKey("MyPK"));
+			return paras;
+		}
+		if (pk.equals("NodeID")) {
+			paras.Add("NodeID", en.GetValIntByKey("NodeID"));
+			return paras;
+		}
+
+		if (pk.equals("WorkID")) {
+			paras.Add("WorkID", en.GetValIntByKey("WorkID"));
+			return paras;
+		}
+		
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
+					|| attr.getMyFieldType() == FieldType.PKEnum) {
+				if (attr.getMyDataType() == DataType.AppString) {
 					paras.Add(attr.getKey(), en.GetValByKey(attr.getKey()).toString());
 					continue;
 				}
 
-				if (attr.getMyDataType() == DataType.AppInt)
-				{
+				if (attr.getMyDataType() == DataType.AppInt) {
 					paras.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
 					continue;
 				}
@@ -249,251 +199,211 @@ public class SqlBuilder
 		}
 		return paras;
 	}
-	public static String GetKeyConditionOfOraForPara(Entity en)
-	{
-		// 不能删除物理表名称，会引起未定义列。
 
-		// 判断特殊情况, 
-		switch (en.getPK())
-		{
-			case "OID":
-				return en.getEnMap().getPhysicsTable() + ".OID=" + en.getHisDBVarStr() + "OID";
-			case "ID":
-				return en.getEnMap().getPhysicsTable() + ".ID=" + en.getHisDBVarStr() + "ID";
-			case "No":
-				return en.getEnMap().getPhysicsTable() + ".No=" + en.getHisDBVarStr() + "No";
-			case "MyPK":
-				return en.getEnMap().getPhysicsTable() + ".MyPK=" + en.getHisDBVarStr() + "MyPK";
-			case "NodeID":
-				return en.getEnMap().getPhysicsTable() + ".NodeID=" + en.getHisDBVarStr() + "NodeID";
-			case "WorkID":
-				return en.getEnMap().getPhysicsTable() + ".WorkID=" + en.getHisDBVarStr() + "WorkID";
-			default:
-				break;
-		}
+	public static String GetKeyConditionOfOraForPara(Entity en) {
+
+		String pk = en.getPK();
+		if (pk.equals("OID"))
+			return en.getEnMap().getPhysicsTable() + ".OID=:OID";
+
+		if (pk.equals("No"))
+			return en.getEnMap().getPhysicsTable() + ".No=:No";
+
+		if (pk.equals("MyPK"))
+			return en.getEnMap().getPhysicsTable() + ".MyPK=:MyPK";
+
+		if (pk.equals("NodeID"))
+			return en.getEnMap().getPhysicsTable() + ".NodeID=:NodeID";
+
+		if (pk.equals("WorkID"))
+			return en.getEnMap().getPhysicsTable() + ".WorkID=:WorkID";
 
 		String sql = " (1=1) ";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				if (attr.getMyDataType() == DataType.AppString)
-				{
-					sql = sql + " AND " + en.getEnMap().getPhysicsTable() + "." + attr.getField() + "=" + en.getHisDBVarStr() + attr.getKey();
+
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		String physicsTable = enMap.getPhysicsTable();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
+					|| attr.getMyFieldType() == FieldType.PKEnum) {
+				if (attr.getMyDataType() == DataType.AppString) {
+					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=" + en.getHisDBVarStr()
+							+ attr.getKey();
 					continue;
 				}
-				if (attr.getMyDataType() == DataType.AppInt)
-				{
-					sql = sql + " AND " + en.getEnMap().getPhysicsTable() + "." + attr.getField() + "=" + en.getHisDBVarStr() + attr.getKey();
+				if (attr.getMyDataType() == DataType.AppInt) {
+					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=" + en.getHisDBVarStr()
+							+ attr.getKey();
 					continue;
 				}
 			}
 		}
-		return sql.substring(" (1=1)  AND ".length());
+		return sql.substring((new String(" (1=1)  AND ")).length());
 	}
-	public static String GetKeyConditionOfInformixForPara(Entity en)
-	{
-		// 不能删除物理表名称，会引起未定义列。
 
-		// 判断特殊情况, 
-		switch (en.getPK())
-		{
-			case "OID":
-				return en.getEnMap().getPhysicsTable() + ".OID=?";
-			case "No":
-				return en.getEnMap().getPhysicsTable() + ".No=?";
-			case "MyPK":
-				return en.getEnMap().getPhysicsTable() + ".MyPK=?";
-			case "ID":
-				return en.getEnMap().getPhysicsTable() + ".ID=?";
-			default:
-				break;
-		}
+	public static String GetKeyConditionOfInformixForPara(Entity en) {
+		// 不能删除物理表名称，会引起未定义列。
+		String pk = en.getPK();
+		if (pk.equals("OID"))
+			return en.getEnMap().getPhysicsTable() + ".OID=:OID";
+
+		if (pk.equals("No"))
+			return en.getEnMap().getPhysicsTable() + ".No=:No";
+
+		if (pk.equals("MyPK"))
+			return en.getEnMap().getPhysicsTable() + ".MyPK=:MyPK";
+
+		if (pk.equals("NodeID"))
+			return en.getEnMap().getPhysicsTable() + ".NodeID=:NodeID";
+
+		if (pk.equals("WorkID"))
+			return en.getEnMap().getPhysicsTable() + ".WorkID=:WorkID";
 
 		String sql = " (1=1) ";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				if (attr.getMyDataType() == DataType.AppString)
-				{
-					sql = sql + " AND " + en.getEnMap().getPhysicsTable() + "." + attr.getField() + "=?";
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		String physicsTable = enMap.getPhysicsTable();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
+					|| attr.getMyFieldType() == FieldType.PKEnum) {
+				if (attr.getMyDataType() == DataType.AppString) {
+					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=?";
 					continue;
 				}
-				if (attr.getMyDataType() == DataType.AppInt)
-				{
-					sql = sql + " AND " + en.getEnMap().getPhysicsTable() + "." + attr.getField() + "=?";
+				if (attr.getMyDataType() == DataType.AppInt) {
+					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=?";
 					continue;
 				}
 			}
 		}
-		return sql.substring(" (1=1)  AND ".length());
+		return sql.substring((new String(" (1=1)  AND ")).length());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-	/** 
-	 查询全部信息
-	 
-	 @param en 实体
-	 @return sql
-	*/
-	public static String RetrieveAll(Entity en)
-	{
+	public static String GetKeyConditionOfMySQL(Entity en) {
+		// 不能删除物理表名称，会引起未定义列。
+		String pk = en.getPK();
+
+		if (pk.equals("OID"))
+			return en.getEnMap().getPhysicsTable() + ".OID=:OID";
+
+		if (pk.equals("No"))
+			return en.getEnMap().getPhysicsTable() + ".No=:No";
+
+		if (pk.equals("MyPK"))
+			return en.getEnMap().getPhysicsTable() + ".MyPK=:MyPK";
+
+		if (pk.equals("NodeID"))
+			return en.getEnMap().getPhysicsTable() + ".NodeID=:NodeID";
+
+		if (pk.equals("WorkID"))
+			return en.getEnMap().getPhysicsTable() + ".WorkID=:WorkID";
+
+		String sql = " (1=1) ";
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		String physicsTable = enMap.getPhysicsTable();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
+					|| attr.getMyFieldType() == FieldType.PKEnum) {
+				if (attr.getMyDataType() == DataType.AppString) {
+					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=:" + attr.getField();
+					continue;
+				}
+				if (attr.getMyDataType() == DataType.AppInt) {
+					sql = sql + " AND " + physicsTable + "." + attr.getField() + "=:" + attr.getField();
+					continue;
+				}
+			}
+		}
+		return sql.substring((new String(" (1=1)  AND ")).length());
+	}
+
+	/**
+	 * 查询全部信息
+	 * 
+	 * @param en
+	 *            实体
+	 * @return sql
+	 * @throws Exception
+	 */
+	public static String RetrieveAll(Entity en) throws Exception {
 		return SqlBuilder.SelectSQL(en, SystemConfig.getTopNum());
 	}
-	/** 
-	 查询
-	 
-	 @param en 实体
-	 @return string
-	*/
-	public static String Retrieve(Entity en)
-	{
+
+	/**
+	 * 查询
+	 * 
+	 * @param en
+	 *            实体
+	 * @return string
+	 * @throws Exception
+	 */
+	public static String Retrieve(Entity en) throws Exception {
 		String sql = "";
-		switch (en.getEnMap().getEnDBUrl().getDBType())
-		{
-			case MSSQL:
-			case MySQL:
-				sql = SqlBuilder.SelectSQLOfMS(en, 1) + "   AND ( " + SqlBuilder.GenerWhereByPK(en, "@") + " )";
-				break;
-			case Access:
-				// sql = SqlBuilder.SelectSQLOfOLE(en, 1) + "  AND ( " + SqlBuilder.GetKeyConditionOfOLE(en,"@") + " )";
-				sql = SqlBuilder.SelectSQLOfOLE(en, 1) + "  AND ( " + SqlBuilder.GenerWhereByPK(en, "@") + " )";
-				break;
-			case Oracle:
-			case Informix:
-				sql = SqlBuilder.SelectSQLOfOra(en, 1) + "  AND ( " + SqlBuilder.GenerWhereByPK(en, ":") + " )";
-				break;
-			case DB2:
-				throw new RuntimeException("还没有实现。");
-			default:
-				throw new RuntimeException("还没有实现。");
+		switch (SystemConfig.getAppCenterDBType()) {
+		case MSSQL:
+		case MySQL:
+			sql = SqlBuilder.SelectSQLOfMS(en, 1) + "   AND ( " + SqlBuilder.GenerWhereByPK(en, ":") + " )";
+			break;
+		case Access:
+			sql = SqlBuilder.SelectSQLOfOLE(en, 1) + "  AND ( " + SqlBuilder.GenerWhereByPK(en, ":") + " )";
+			break;
+		case Oracle:
+		case Informix:
+			sql = SqlBuilder.SelectSQLOfOra(en, 1) + "  AND ( " + SqlBuilder.GenerWhereByPK(en, ":") + " )";
+			break;
+		case DB2:
+			throw new RuntimeException("还没有实现。");
+		default:
+			throw new RuntimeException("还没有实现。");
 		}
 		sql = sql.replace("WHERE   AND", " WHERE ");
 		sql = sql.replace("WHERE  AND", " WHERE ");
 		sql = sql.replace("WHERE AND", " WHERE ");
 		return sql;
 	}
-	public static String RetrieveForPara(Entity en)
-	{
+
+	public static String RetrieveForPara(Entity en) throws Exception {
 		String sql = null;
-		switch (en.getEnMap().getEnDBUrl().getDBType())
-		{
-			case MSSQL:
-				sql = SqlBuilder.SelectSQLOfMS(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, "@");
-				break;
-			case MySQL:
-				sql = SqlBuilder.SelectSQLOfMySQL(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, "@");
-				break;
-			case PostgreSQL:
-				sql = SqlBuilder.SelectSQLOfPostgreSQL(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, "@");
-				break;
-			case Oracle:
-				sql = SqlBuilder.SelectSQLOfOra(en, 1) + "AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
-				break;
-			case Informix:
-				sql = SqlBuilder.SelectSQLOfInformix(en, 1) + " WHERE (" + SqlBuilder.GenerWhereByPK(en, "?") + " )";
-				break;
-			case Access:
-				sql = SqlBuilder.SelectSQLOfOLE(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, "@");
-				break;
-			case DB2:
-			default:
-				throw new RuntimeException("还没有实现。");
+		switch (SystemConfig.getAppCenterDBType()) {
+		case MSSQL:
+			sql = SqlBuilder.SelectSQLOfMS(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, ":");
+			break;
+		case MySQL:
+			sql = SqlBuilder.SelectSQLOfMySQL(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, ":");
+			break;
+		case Oracle:
+			sql = SqlBuilder.SelectSQLOfOra(en, 1) + "AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
+			break;
+		case Informix:
+			sql = SqlBuilder.SelectSQLOfInformix(en, 1) + " WHERE (" + SqlBuilder.GenerWhereByPK(en, "?") + " )";
+			break;
+		case Access:
+			sql = SqlBuilder.SelectSQLOfOLE(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, ":");
+			break;
+		case DB2:
+		default:
+			throw new RuntimeException("还没有实现。");
 		}
 		sql = sql.replace("WHERE  AND", "WHERE");
 		sql = sql.replace("WHERE AND", "WHERE");
 		return sql;
 	}
-	public static String RetrieveForPara_bak(Entity en)
-	{
-		switch (en.getEnMap().getEnDBUrl().getDBType())
-		{
-			case MSSQL:
-			case MySQL:
-			case Access:
-				if (en.getEnMap().getHisFKAttrs().Count == 0)
-				{
-					return SqlBuilder.SelectSQLOfMS(en, 1) + SqlBuilder.GetKeyConditionOfOraForPara(en);
-				}
-				else
-				{
-					return SqlBuilder.SelectSQLOfMS(en, 1) + "  AND ( " + SqlBuilder.GetKeyConditionOfOraForPara(en) + " )";
-				}
-				return SqlBuilder.SelectSQLOfMS(en, 1) + "  AND ( " + SqlBuilder.GetKeyConditionOfMS(en) + " )";
-			case Oracle:
-			case Informix:
-				if (en.getEnMap().getHisFKAttrs().Count == 0)
-				{
-					return SqlBuilder.SelectSQLOfOra(en, 1) + SqlBuilder.GetKeyConditionOfOraForPara(en);
-				}
-				else
-				{
-					return SqlBuilder.SelectSQLOfOra(en, 1) + "  AND ( " + SqlBuilder.GetKeyConditionOfOraForPara(en) + " )";
-				}
-			case DB2:
-			default:
-				throw new RuntimeException("还没有实现。");
-		}
-	}
-	public static String GenerFormOfOra(Entity en)
-	{
-		String from = " FROM " + en.getEnMap().getPhysicsTable();
 
-		if (en.getEnMap().getHisFKEnumAttrs().Count == 0)
-		{
-			return from + " WHERE (1=1) ";
+	public static String GenerFormWhereOfOra(Entity en) {
+		Map enMap = en.getEnMap();
+		String from = " FROM " + enMap.getPhysicsTable();
+
+		if (enMap.getHisFKAttrs().size() == 0) {
+			return from + " WHERE ";
 		}
 
-		String mytable = en.getEnMap().getPhysicsTable();
+		String mytable = enMap.getPhysicsTable();
 		from += ",";
 		// 产生外键表列表。
-		Attrs fkAttrs = en.getEnMap().getHisFKAttrs();
-		for (Attr attr : fkAttrs)
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-
-			Entity en1 = attr.getHisFKEn();
-			String fktable = en1.getEnMap().getPhysicsTable();
-			fktable = fktable + " " + fktable + "_" + attr.getKey();
-			from += fktable + " ,";
-		}
-
-		//产生枚举表列表。
-		Attrs enumAttrs = en.getEnMap().getHisEnumAttrs();
-		for (Attr attr : enumAttrs)
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-			//string enumTable = "Enum_"+attr.Key;
-			from += " (SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ,";
-		}
-		from = from.substring(0, from.length() - 1);
-		return from;
-	}
-	public static String GenerFormWhereOfOra(Entity en)
-	{
-		String from = " FROM " + en.getEnMap().getPhysicsTable();
-
-		if (en.getEnMap().getHisFKAttrs().Count == 0)
-		{
-			return from + " WHERE (1=1) ";
-		}
-
-		String mytable = en.getEnMap().getPhysicsTable();
-		from += ",";
-		// 产生外键表列表。
-		Attrs fkAttrs = en.getEnMap().getHisFKAttrs();
-		for (Attr attr : fkAttrs)
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		Attrs fkAttrs = enMap.getHisFKAttrs();
+		for (Attr attr : fkAttrs) {
+			if (attr == null || attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
@@ -509,38 +419,31 @@ public class SqlBuilder
 		boolean isAddAnd = true;
 
 		// 开始形成 外键 where.
-		for (Attr attr : fkAttrs)
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : fkAttrs) {
+			if (attr == null || attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
 			Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
 			String fktable = "T" + attr.getKey();
 
-			if (isAddAnd == false)
-			{
-				if (attr.getMyDataType() == DataType.AppString)
-				{
-					where += "(  " + mytable + "." + attr.getKey() + "=" + fktable + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
-				}
-				else
-				{
-					where += "(  " + mytable + "." + attr.getKey() + "=" + fktable + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
+			if (!isAddAnd) {
+				if (attr.getMyDataType() == DataType.AppString) {
+					where += "(  " + mytable + "." + attr.getKey() + "=" + fktable + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
+				} else {
+					where += "(  " + mytable + "." + attr.getKey() + "=" + fktable + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
 				}
 
 				isAddAnd = true;
-			}
-			else
-			{
-				if (attr.getMyDataType() == DataType.AppString)
-				{
-					where += " AND (  " + mytable + "." + attr.getKey() + "=" + fktable + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
-				}
-				else
-				{
-					where += " AND (  " + mytable + "." + attr.getKey() + "=" + fktable + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
+			} else {
+				if (attr.getMyDataType() == DataType.AppString) {
+					where += " AND (  " + mytable + "." + attr.getKey() + "=" + fktable + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
+				} else {
+					where += " AND (  " + mytable + "." + attr.getKey() + "=" + fktable + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue()) + "  (+) )";
 				}
 			}
 		}
@@ -549,32 +452,37 @@ public class SqlBuilder
 		where = where.replace("WHERE AND", "WHERE");
 		return from + where;
 	}
-	public static String GenerFormWhereOfInformix(Entity en)
-	{
-		String from = " FROM " + en.getEnMap().getPhysicsTable();
-		String mytable = en.getEnMap().getPhysicsTable();
-		Attrs fkAttrs = en.getEnMap().getHisFKAttrs();
-		String where = "";
-		boolean isAddAnd = true;
 
+	public static String GenerFormWhereOfInformix(Entity en) {
+		Map enMap = en.getEnMap();
+		String from = " FROM " + enMap.getPhysicsTable();
+		String mytable = enMap.getPhysicsTable();
+		Attrs fkAttrs = enMap.getHisFKAttrs();
+		String where = "";
+		MapAttr mapAttr = null;
 		// 开始形成 外键 where.
-		for (Attr attr : fkAttrs)
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : fkAttrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
+			if (!attr.getIsFK())
+				continue;
+			mapAttr = attr.getToMapAttr();
 
-			Entity en1 = attr.getHisFKEn();
-			String fktable = en1.getEnMap().getPhysicsTable();
-			if (isAddAnd == true)
-			{
-				isAddAnd = false;
-				where += " LEFT JOIN " + fktable + "  " + fktable + "_" + attr.getKey() + "  ON " + mytable + "." + attr.getKey() + "=" + fktable + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
-			}
-			else
-			{
-				where += " LEFT JOIN " + fktable + "  " + fktable + "_" + attr.getKey() + "  ON " + mytable + "." + attr.getKey() + "=" + fktable + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
+			// 去除webservice填充DDL数据的类型
+			if (mapAttr.getLGType() == FieldTypeS.Normal && mapAttr.getUIContralType() == UIContralType.DDL)
+				continue;
+
+			String fktable = attr.getHisFKEn().getEnMap().getPhysicsTable();
+			Attr refAttr = attr.getHisFKEn().getEnMap().GetAttrByKey(attr.getUIRefKeyValue());
+			try {
+				if (DBAccess.IsExitsObject(fktable)) {
+
+					where += " LEFT JOIN " + fktable + "  " + fktable + "_" + attr.getKey() + "  ON " + mytable + "."
+							+ attr.getField() + "=" + fktable + "_" + attr.getField() + "." + refAttr.getField();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -582,415 +490,227 @@ public class SqlBuilder
 		where = where.replace("WHERE AND", "WHERE");
 		return from + where;
 	}
-	/** 
-	 生成sql.
-	 
-	 @param en
-	 @return 
-	*/
-	public static String GenerCreateTableSQLOfMS(Entity en)
-	{
-		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null)
-		{
+
+	/**
+	 * 生成sql.
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String GenerCreateTableSQLOfMS(Entity en) {
+		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null) {
 			return "DELETE FROM Sys_enum where enumkey='sdsf44a23'";
 		}
+		
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " ( ";
 
-		//    throw new Exception(en.ToString() +" map error "+en.GetType() );
-
-		String sql = "CREATE TABLE  " + en.getEnMap().getPhysicsTable() + " ( ";
-		Attrs attrs = en.getEnMap().getAttrs();
-		if (attrs.Count == 0)
-		{
-			throw new RuntimeException("@" + en.getEnDesc() + " , [" + en.getEnMap().getPhysicsTable() + "]没有属性/字段集合 attrs.Count = 0 ,能执行数据表的创建.");
+		if (attrs.size() == 0) {
+			throw new RuntimeException("@" + en.getEnDesc() + " , 没有属性集合 attrs.Count = 0 ,能执行数据表的创建.");
 		}
 
-		for (Attr attr : attrs)
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
-
-			int len = attr.getMaxLength();
-
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getIsPK())
-					{
-						sql += "[" + attr.getField() + "]  NVARCHAR (" + attr.getMaxLength() + ") NOT NULL,";
-					}
-					else
-					{
-						if (attr.getMaxLength() >= 4000)
-						{
-							sql += "[" + attr.getField() + "]  NVARCHAR (MAX) NULL,";
-						}
-						else
-						{
-							sql += "[" + attr.getField() + "]  NVARCHAR (" + attr.getMaxLength() + ") NULL,";
-						}
-					}
-					break;
-				case DataType.AppFloat:
-				case DataType.AppMoney:
-					sql += "[" + attr.getField() + "] FLOAT NULL,";
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-					if (attr.getIsPK())
-					{
-						//说明这个是自动增长的列.
-						if (attr.getUIBindKey().equals("1"))
-						{
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				if (attr.getIsPK()) {
+					sql += "[" + attr.getField() + "]  NVARCHAR (" + attr.getMaxLength() + ") NOT NULL,";
+				} else {
+					sql += "[" + attr.getField() + "]  NVARCHAR (" + attr.getMaxLength() + ") NULL,";
+				}
+				break;
+			case DataType.AppRate:
+			case DataType.AppFloat:
+			case DataType.AppMoney:
+				sql += "[" + attr.getField() + "] FLOAT NULL,";
+				break;
+			case DataType.AppBoolean:
+			case DataType.AppInt:
+				if (attr.getIsPK()) {
+					try {
+						// 说明这个是自动增长的列.
+						if (attr.getUIBindKey().equals("1")) {
 							sql += "[" + attr.getField() + "] INT  primary key identity(1,1),";
-						}
-						else
-						{
+						} else {
 							sql += "[" + attr.getField() + "] INT NOT NULL,";
 						}
+					} catch (Exception e) {
+						sql += "[" + attr.getField() + "] INT NOT NULL,";
 					}
-					else
-					{
-						sql += "[" + attr.getField() + "] INT  NULL,";
-					}
-					break;
-				case DataType.AppDouble:
-					sql += "[" + attr.getField() + "]  FLOAT  NULL,";
-					break;
-				default:
-					break;
-			}
-		}
-		sql = sql.substring(0, sql.length() - 1);
-		sql += ")";
-		return sql;
-	}
-	/** 
-	 执行PSQL.
-	 
-	 @param en 实体
-	 @return 生成的SQL
-	*/
-	public static String GenerCreateTableSQLOfPostgreSQL(Entity en)
-	{
-		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null)
-		{
-			return "DELETE FROM Sys_enum where enumkey='sdsf44a23'";
-		}
-
-		//    throw new Exception(en.ToString() +" map error "+en.GetType() );
-
-		String sql = "CREATE TABLE  " + en.getEnMap().getPhysicsTable() + " ( ";
-		Attrs attrs = en.getEnMap().getAttrs();
-		if (attrs.Count == 0)
-		{
-			throw new RuntimeException("@" + en.getEnDesc() + " , [" + en.getEnMap().getPhysicsTable() + "]没有属性/字段集合 attrs.Count = 0 ,能执行数据表的创建.");
-		}
-
-		for (Attr attr : attrs)
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-
-			int len = attr.getMaxLength();
-
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getIsPK())
-					{
-						sql += attr.getField() + "  VARCHAR (" + attr.getMaxLength() + ") NOT NULL,";
-					}
-					else
-					{
-						if (attr.getMaxLength() >= 4000)
-						{
-							sql += attr.getField() + " VARCHAR (" + attr.getMaxLength() + ") NULL,";
-						}
-						else
-						{
-							sql += attr.getField() + " VARCHAR (" + attr.getMaxLength() + ") NULL,";
-						}
-					}
-					break;
-				case DataType.AppFloat:
-				case DataType.AppMoney:
-					sql += attr.getField() + " FLOAT NULL,";
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-					if (attr.getIsPK())
-					{
-						//说明这个是自动增长的列.
-						if (attr.getUIBindKey().equals("1"))
-						{
-							sql += attr.getField() + " INT  primary key identity(1,1),";
-						}
-						else
-						{
-							sql += attr.getField() + " INT NOT NULL,";
-						}
-					}
-					else
-					{
-						sql += attr.getField() + "  INT  NULL,";
-					}
-					break;
-				case DataType.AppDouble:
-					sql += attr.getField() + " FLOAT  NULL,";
-					break;
-				default:
-					break;
-			}
-		}
-		sql = sql.substring(0, sql.length() - 1);
-		sql += ")";
-		return sql;
-	}
-	public static String GenerCreateTableSQLOf_OLE(Entity en)
-	{
-		String sql = "CREATE TABLE  " + en.getEnMap().getPhysicsTable() + " (";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-
-			int len = attr.getMaxLength();
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getMaxLength() <= 254)
-					{
-						if (attr.getIsPK())
-						{
-							sql += "[" + attr.getField() + "]  varchar (" + attr.getMaxLength() + ") NOT NULL,";
-						}
-						else
-						{
-							sql += "[" + attr.getField() + "]  varchar (" + attr.getMaxLength() + ") NULL,";
-						}
-					}
-					else
-					{
-						if (attr.getIsPK())
-						{
-							sql += "[" + attr.getField() + "]  text  NOT NULL,";
-						}
-						else
-						{
-							sql += "[" + attr.getField() + "] text,";
-						}
-					}
-					break;
-				case DataType.AppFloat:
-				case DataType.AppMoney:
-					sql += "[" + attr.getField() + "] float  NULL,";
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-					if (attr.getIsPK())
-					{
-						sql += "[" + attr.getField() + "] int NOT NULL,";
-					}
-					else
-					{
-						sql += "[" + attr.getField() + "] int  NULL,";
-					}
-					break;
-				case DataType.AppDouble:
-					sql += "[" + attr.getField() + "]  float  NULL,";
-					break;
-				default:
-					break;
-			}
-		}
-		sql = sql.substring(0, sql.length() - 1);
-		sql += ")";
-		return sql;
-	}
-	public static String GenerCreateTableSQL(Entity en)
-	{
-		switch (DBAccess.getAppCenterDBType())
-		{
-			case Oracle:
-				return GenerCreateTableSQLOfOra(en);
-			case PostgreSQL:
-				return GenerCreateTableSQLOfPostgreSQL(en);
-			case Informix:
-				return GenerCreateTableSQLOfInfoMix(en);
-			case MSSQL:
-			case Access:
-				return GenerCreateTableSQLOfMS(en);
+				} else {
+					sql += "[" + attr.getField() + "] INT  NULL,";
+				}
+				break;
+			case DataType.AppDouble:
+				sql += "[" + attr.getField() + "]  FLOAT  NULL,";
+				break;
 			default:
 				break;
+			}
+		}
+		sql = sql.substring(0, sql.length() - 1);
+		sql += ")";
+		return sql;
+	}
+
+	
+
+	public static String GenerCreateTableSQL(Entity en) {
+		switch (DBAccess.getAppCenterDBType()) {
+		case Oracle:
+			return GenerCreateTableSQLOfOra_OK(en);
+		case Informix:
+			return GenerCreateTableSQLOfInfoMix(en);
+		case MSSQL:
+		case Access:
+			return GenerCreateTableSQLOfMS(en);
+		default:
+			break;
 		}
 		return null;
 	}
-	/** 
-	 生成sql.
-	 
-	 @param en
-	 @return 
-	*/
-	public static String GenerCreateTableSQLOfOra(Entity en)
-	{
-		if (en.getEnMap().getPhysicsTable() == null)
-		{
+
+	public static String DeleteSysEnumsSQL(String table, String key) {
+		switch (DBAccess.getAppCenterDBType()) {
+		case Oracle:
+			return "DELETE FROM " + table + " WHERE " + key + "=:p";
+		case MySQL:
+			return "DELETE FROM " + table + " WHERE " + key + "=:p";
+		case MSSQL:
+			return "DELETE FROM " + table + " WHERE " + key + "=:p";
+		case Access:
+			return "DELETE FROM " + table + " WHERE " + key + "=:p";
+		default:
+			break;
+		}
+		return null;
+	}
+	
+	/*
+	 * 生成sql.
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String GenerCreateTableSQLOfOra_OK(Entity en) {
+		if (en.getEnMap().getPhysicsTable() == null) {
 			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
 
-		if (en.getEnMap().getPhysicsTable().trim().length() == 0)
-		{
+		if (en.getEnMap().getPhysicsTable().trim().length() == 0) {
 			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
-
-		String sql = "CREATE TABLE  " + en.getEnMap().getPhysicsTable() + " (";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		
+		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " (";
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getIsPK())
-					{
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				if (attr.getIsPK()) {
+					sql += attr.getField() + " varchar (" + attr.getMaxLength() + ") NOT NULL,";
+				} else {
+					sql += attr.getField() + " varchar (" + attr.getMaxLength() + ") NULL,";
+				}
+				break;
+			case DataType.AppRate:
+			case DataType.AppFloat:
+			case DataType.AppMoney:
+			case DataType.AppDouble:
+				sql += attr.getField() + " float NULL,";
+				break;
+			case DataType.AppBoolean:
+			case DataType.AppInt:
+
+				if (attr.getIsPK()) {
+					if ("1".equals(attr.getUIBindKey())) {
+						sql += attr.getField() + " int  primary key identity(1,1),";
+					} else {
+						sql += attr.getField() + " int NOT NULL,";
+					}
+				} else {
+					sql += attr.getField() + " int ,";
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		sql = sql.substring(0, sql.length() - 1);
+		sql += ")";
+
+		return sql;
+	}
+
+	public static String GenerCreateTableSQLOfInfoMix(Entity en) {
+		if (en.getEnMap().getPhysicsTable() == null) {
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
+		}
+
+		if (en.getEnMap().getPhysicsTable().trim().length() == 0) {
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
+		}
+
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+
+		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " (";
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
+				continue;
+			}
+
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				if (attr.getMaxLength() >= 255) {
+					if (attr.getIsPK()) {
+						sql += attr.getField() + " lvarchar (" + attr.getMaxLength() + "),";
+					} else {
+						sql += attr.getField() + " lvarchar (" + attr.getMaxLength() + "),";
+					}
+				} else {
+					if (attr.getIsPK()) {
 						sql += attr.getField() + " varchar (" + attr.getMaxLength() + ") NOT NULL,";
+					} else {
+						sql += attr.getField() + " varchar (" + attr.getMaxLength() + "),";
 					}
-					else
-					{
-						if (attr.getMaxLength() >= 4000)
-						{
-							sql += attr.getField() + " varchar (" + attr.getMaxLength() + ") NULL,";
-						}
-						else
-						{
-							sql += attr.getField() + " varchar (" + attr.getMaxLength() + ") NULL,";
-						}
+				}
+				break;
+			case DataType.AppRate:
+			case DataType.AppFloat:
+			case DataType.AppMoney:
+			case DataType.AppDouble:
+				sql += attr.getField() + " float,";
+				break;
+			case DataType.AppBoolean:
+			case DataType.AppInt:
+				// 说明这个是自动增长的列.
+				if (attr.getIsPK()) {
+					if (attr.getUIBindKey().equals("1")) {
+						sql += attr.getField() + "  Serial not null,";
+					} else {
+						sql += attr.getField() + " int8 NOT NULL,";
 					}
-					break;
-				case DataType.AppFloat:
-				case DataType.AppMoney:
-				case DataType.AppDouble:
-					sql += attr.getField() + " float NULL,";
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-
-					if (attr.getIsPK())
-					{
-						if (attr.getUIBindKey().equals("1"))
-						{
-							sql += attr.getField() + " int  primary key identity(1,1),";
-						}
-						else
-						{
-							sql += attr.getField() + " int NOT NULL,";
-						}
-					}
-					else
-					{
-						sql += attr.getField() + " int ,";
-					}
-					break;
-				default:
-					break;
-			}
-		}
-		sql = sql.substring(0, sql.length() - 1);
-		sql += ")";
-
-		return sql;
-	}
-	public static String GenerCreateTableSQLOfInfoMix(Entity en)
-	{
-		if (en.getEnMap().getPhysicsTable() == null)
-		{
-			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
-		}
-
-		if (en.getEnMap().getPhysicsTable().trim().length() == 0)
-		{
-			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
-		}
-
-		String sql = "CREATE TABLE  " + en.getEnMap().getPhysicsTable() + " (";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getMaxLength() >= 255)
-					{
-						if (attr.getIsPK())
-						{
-							sql += attr.getField() + " lvarchar (" + attr.getMaxLength() + "),";
-						}
-						else
-						{
-							sql += attr.getField() + " lvarchar (" + attr.getMaxLength() + "),";
-						}
-					}
-					else
-					{
-						if (attr.getIsPK())
-						{
-							sql += attr.getField() + " varchar (" + attr.getMaxLength() + ") NOT NULL,";
-						}
-						else
-						{
-							sql += attr.getField() + " varchar (" + attr.getMaxLength() + "),";
-						}
-					}
-					break;
-				case DataType.AppFloat:
-				case DataType.AppMoney:
-				case DataType.AppDouble:
-					sql += attr.getField() + " float,";
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-					//说明这个是自动增长的列.
-					if (attr.getIsPK())
-					{
-						if (attr.getUIBindKey().equals("1"))
-						{
-							sql += attr.getField() + "  Serial not null,";
-						}
-						else
-						{
-							sql += attr.getField() + " int8 NOT NULL,";
-						}
-					}
-					else
-					{
-						sql += attr.getField() + " int8,";
-					}
-					break;
-				default:
-					break;
+				} else {
+					sql += attr.getField() + " int8,";
+				}
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -999,82 +719,73 @@ public class SqlBuilder
 
 		return sql;
 	}
-	/** 
-	 生成sql.
-	 
-	 @param en
-	 @return 
-	*/
-	public static String GenerCreateTableSQLOfMySQL(Entity en)
-	{
-		if (en.getEnMap().getPhysicsTable() == null)
-		{
+
+	/**
+	 * 生成sql.
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String GenerCreateTableSQLOfMySQL(Entity en) {
+		if (en.getEnMap().getPhysicsTable() == null) {
 			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
 
-		if (en.getEnMap().getPhysicsTable().trim().length() == 0)
-		{
-			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
+		if (en.getEnMap().getPhysicsTable().trim().length() == 0) {
+			throw new RuntimeException("您没有为[" + en.getEnDesc() + ", " + en.toString() + "],设置物理表。");
 		}
-
-		String sql = "CREATE TABLE  " + en.getEnMap().getPhysicsTable() + " (";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		
+		Map enMap = en.getEnMap();
+		Attrs attrs = enMap.getAttrs();
+		String sql = "CREATE TABLE  " + enMap.getPhysicsTable() + " (";
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getIsPK())
-					{
-						sql += attr.getField() + " NVARCHAR (" + attr.getMaxLength() + ") NOT NULL COMMENT '" + attr.getDesc() + "',";
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				if (attr.getIsPK()) {
+					sql += attr.getField() + " NVARCHAR (" + attr.getMaxLength() + ") NOT NULL,";
+				} else {
+					if (attr.getMaxLength() > 3000) {
+						sql += attr.getField() + " TEXT NULL,";
+					} else {
+						sql += attr.getField() + " NVARCHAR (" + attr.getMaxLength() + ") NULL,";
 					}
-					else
-					{
-						if (attr.getMaxLength() > 3000)
-						{
-							sql += attr.getField() + " TEXT NULL COMMENT '" + attr.getDesc() + "',";
-						}
-						else
-						{
-							sql += attr.getField() + " NVARCHAR (" + attr.getMaxLength() + ") NULL COMMENT '" + attr.getDesc() + "',";
-						}
+				}
+				break;
+			case DataType.AppRate:
+			case DataType.AppFloat:
+				sql += attr.getField() + " float  NULL COMMENT '" + attr.getDesc() + "',";
+				break;
+			case DataType.AppMoney:
+				sql += attr.getField() + " decimal(20,4)  NULL COMMENT '" + attr.getDesc() + "',";
+				break;
+			case DataType.AppDouble:
+				sql += attr.getField() + " double  NULL COMMENT '" + attr.getDesc() + "',";
+				break;
+//			case DataType.AppFloat:
+//			case DataType.AppMoney:
+//			case DataType.AppDouble:
+//				sql += attr.getField() + " float  NULL,";
+//				break;
+			case DataType.AppBoolean:
+			case DataType.AppInt:
+				if (attr.getIsPK()) {
+					if ("1".equals(attr.getUIBindKey())) {
+						sql += attr.getField() + " int(4) primary key not null auto_increment,";
+					} else {
+						sql += attr.getField() + " int   NULL,";
 					}
-					break;
-				case DataType.AppFloat:
-					sql += attr.getField() + " float  NULL COMMENT '" + attr.getDesc() + "',";
-					break;
-				case DataType.AppMoney:
-					sql += attr.getField() + " decimal(20,4)  NULL COMMENT '" + attr.getDesc() + "',";
-					break;
-				case DataType.AppDouble:
-					sql += attr.getField() + " double  NULL COMMENT '" + attr.getDesc() + "',";
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-					if (attr.getIsPK() && attr.getKey().equals("OID"))
-					{
-						if (attr.getUIBindKey().equals("1"))
-						{
-							sql += attr.getField() + " INT(4) primary key not null auto_increment COMMENT '" + attr.getDesc() + "',";
-						}
-						else
-						{
-							sql += attr.getField() + " INT NOT NULL COMMENT '" + attr.getDesc() + "',";
-						}
-					}
-					else
-					{
-						sql += attr.getField() + " INT DEFAULT " + attr.getDefaultVal() + " COMMENT '" + attr.getDesc() + "',";
-					}
-					break;
-				default:
-					break;
+				} else {
+					sql += attr.getField() + " int ,";
+				}
+				break;
+			default:
+				break;
 			}
 		}
 		sql = sql.substring(0, sql.length() - 1);
@@ -1082,1136 +793,853 @@ public class SqlBuilder
 
 		return sql;
 	}
-	public static String GenerFormWhereOfOra(Entity en, Map map)
-	{
+
+	public static String GenerFormWhereOfOra(Entity en, Map map) {
 		String from = " FROM " + map.getPhysicsTable();
-		//	string where="  ";
+		// string where=" ";
 		String table = "";
 		String tableAttr = "";
 		String enTable = map.getPhysicsTable();
 
-		for (Attr attr : map.getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.Normal || attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.Normal || attr.getMyFieldType() == FieldType.PK
+					|| attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-			{
-				//Entity en1= ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
+			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 				Entity en1 = attr.getHisFKEn();
 
 				table = en1.getEnMap().getPhysicsTable();
 				tableAttr = "T" + attr.getKey() + "";
-				from = from + " LEFT OUTER JOIN " + table + "   " + tableAttr + " ON " + enTable + "." + attr.getField() + "=" + tableAttr + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
-				//where=where+" AND "+" ("+en.EnMap.PhysicsTable+"."+attr.Field+"="+en1.EnMap.PhysicsTable+"_"+attr.Key+"."+en1.EnMap.Attrs.GetFieldByKey(attr.UIRefKeyValue )+" ) "  ;
+				from = from + " LEFT OUTER JOIN " + table + "   " + tableAttr + " ON " + enTable + "." + attr.getField()
+						+ "=" + tableAttr + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
 				continue;
 			}
-			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				//from= from+ " LEFT OUTER JOIN "+table+" AS "+tableAttr+ " ON "+enTable+"."+attr.Field+"="+tableAttr+"."+en1.EnMap.Attrs.GetFieldByKey( attr.UIRefKeyValue );
+			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON " + enTable + "." + attr.getField() + "=" + tableAttr + ".IntKey ";
-				//	where=where+" AND  ( "+en.EnMap.PhysicsTable+"."+attr.Field+"= Enum_"+attr.Key+".IntKey ) ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='"
+						+ attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON " + enTable + "." + attr.getField()
+						+ "=" + tableAttr + ".IntKey ";
+
 			}
 		}
-		//from=from+", "+en.EnMap.PhysicsTable;
-		//where="("+where+")";			
+
 		return from + "  WHERE (1=1) ";
 	}
 
-	public static String GenerFormWhereOfMS(Entity en)
-	{
-		String from = " FROM " + en.getEnMap().getPhysicsTable();
+	public static String GenerFormWhereOfMS(Entity en) {
+		Map enMap = en.getEnMap();
+		String from = " FROM " + enMap.getPhysicsTable();
 
-		//去除原因有时获取外键不正确
-		//if (en.EnMap.HisFKAttrs.Count == 0)
-		//    return from + " WHERE (1=1)";
+		if (enMap.getHisFKAttrs().size() == 0) {
+			return from + " WHERE (1=1)";
+		}
 
-		String mytable = en.getEnMap().getPhysicsTable();
-		Attrs fkAttrs = en.getEnMap().getAttrs();
+		String mytable = enMap.getPhysicsTable();
+		Attrs fkAttrs = enMap.getAttrs();
 		MapAttr mapAttr = null;
-		for (Attr attr : fkAttrs)
-		{
-			if (attr.getIsFK() == false)
-			{
-				continue;
-			}
+		for (Attr attr : fkAttrs) {
 
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
+			if (!attr.getIsFK())
+				continue;
 
 			mapAttr = attr.getToMapAttr();
 
-			//去除webservice填充DDL数据的类型，2015.9.25，added by liuxc
-			if (mapAttr.getLGType() == FieldTypeS.Normal && attr.getUIContralType() == UIContralType.DDL)
-			{
+			// 去除webservice填充DDL数据的类型
+			if (mapAttr.getLGType() == FieldTypeS.Normal && mapAttr.getUIContralType() == UIContralType.DDL)
 				continue;
-			}
 
 			String fktable = attr.getHisFKEn().getEnMap().getPhysicsTable();
 			Attr refAttr = attr.getHisFKEn().getEnMap().GetAttrByKey(attr.getUIRefKeyValue());
-			//added by liuxc,2017-9-11，此处增加是否存在实体表，因新增的字典表类型"动态SQL查询"，此类型没有具体的实体表，完全由SQL动态生成的数据集合，此处不判断会使生成的SQL报错
-			//if (DBAccess.IsExitsObject(fktable))
 
-			from += " LEFT JOIN " + fktable + " AS " + fktable + "_" + attr.getKey() + " ON " + mytable + "." + attr.getField() + "=" + fktable + "_" + attr.getField() + "." + refAttr.getField();
+			from += " LEFT JOIN " + fktable + " AS " + fktable + "_" + attr.getKey() + " ON " + mytable + "."
+					+ attr.getField() + "=" + fktable + "_" + attr.getField() + "." + refAttr.getField();
+
 		}
 		return from + " WHERE (1=1) ";
+
+		
 	}
-	/** 
-	 GenerFormWhere
-	 
-	 @param en
-	 @return 
-	*/
-	public static String GenerFormWhereOfMS(Entity en, Map map)
-	{
+
+	/**
+	 * GenerFormWhere
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String GenerFormWhereOfMS(Entity en, Map map) {
 		String from = " FROM " + map.getPhysicsTable();
-		//	string where="  ";
 		String table = "";
 		String tableAttr = "";
 		String enTable = map.getPhysicsTable();
-		for (Attr attr : map.getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.Normal || attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.Normal || attr.getMyFieldType() == FieldType.PK
+					|| attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-			{
-				//Entity en1= ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
+			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 				Entity en1 = attr.getHisFKEn();
 
 				table = en1.getEnMap().getPhysicsTable();
 				tableAttr = en1.getEnMap().getPhysicsTable() + "_" + attr.getKey();
-				if (attr.getMyDataType() == DataType.AppInt)
-				{
-					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON ISNULL( " + enTable + "." + attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
+				if (attr.getMyDataType() == DataType.AppInt) {
+					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON ISNULL( " + enTable + "."
+							+ attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
+				} else {
+					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON ISNULL( " + enTable + "."
+							+ attr.getField() + ", '" + en.GetValByKey(attr.getKey()) + "')=" + tableAttr + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
 				}
-				else
-				{
-					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON ISNULL( " + enTable + "." + attr.getField() + ", '" + en.GetValByKey(attr.getKey()) + "')=" + tableAttr + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
-				}
-				//where=where+" AND "+" ("+en.EnMap.PhysicsTable+"."+attr.Field+"="+en1.EnMap.PhysicsTable+"_"+attr.Key+"."+en1.EnMap.Attrs.GetFieldByKey(attr.UIRefKeyValue )+" ) "  ;
 				continue;
 			}
-
-			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				//from= from+ " LEFT OUTER JOIN "+table+" AS "+tableAttr+ " ON "+enTable+"."+attr.Field+"="+tableAttr+"."+en1.EnMap.Attrs.GetFieldByKey( attr.UIRefKeyValue );
+			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON ISNULL( " + enTable + "." + attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + ".IntKey ";
-				//	where=where+" AND  ( "+en.EnMap.PhysicsTable+"."+attr.Field+"= Enum_"+attr.Key+".IntKey ) ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='"
+						+ attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON ISNULL( " + enTable + "."
+						+ attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + ".IntKey ";
 			}
 		}
-		//from=from+", "+en.EnMap.PhysicsTable;
-		//where="("+where+")";			
 		return from + "  WHERE (1=1) ";
 	}
-	/** 
-	 GenerFormWhere
-	 
-	 @param en
-	 @return 
-	*/
-	protected static String GenerFormWhereOfMSOLE(Entity en)
-	{
-		String fromTop = en.getEnMap().getPhysicsTable();
+
+	/**
+	 * GenerFormWhere
+	 * 
+	 * @param en
+	 * @return
+	 */
+	protected static String GenerFormWhereOfMSOLE(Entity en) {
+		Map enMap = en.getEnMap();
+		String fromTop = enMap.getPhysicsTable();
 
 		String from = "";
-		//	string where="  ";
+		// string where=" ";
 		String table = "";
 		String tableAttr = "";
-		String enTable = en.getEnMap().getPhysicsTable();
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.Normal || attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.RefText)
-			{
+		String enTable = enMap.getPhysicsTable();
+		Attrs attrs = enMap.getAttrs();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.Normal || attr.getMyFieldType() == FieldType.PK
+					|| attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 			fromTop = "(" + fromTop;
 
-			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-			{
-				Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
+			if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+				Entity en1 = attr.getHisFKEn();
 				table = en1.getEnMap().getPhysicsTable();
 				tableAttr = en1.getEnMap().getPhysicsTable() + "_" + attr.getKey();
 
-				if (attr.getMyDataType() == DataType.AppInt)
-				{
-					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON IIf( ISNULL( " + enTable + "." + attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + " , " + enTable + "." + attr.getField() + " )=" + tableAttr + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
-				}
-				else
-				{
-					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON IIf( ISNULL( " + enTable + "." + attr.getField() + "), '" + en.GetValStringByKey(attr.getKey()) + "', " + enTable + "." + attr.getField() + " )=" + tableAttr + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
+				if (attr.getMyDataType() == DataType.AppInt) {
+					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON IIf( ISNULL( " + enTable + "."
+							+ attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + " , " + enTable + "."
+							+ attr.getField() + " )=" + tableAttr + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
+				} else {
+					from = from + " LEFT OUTER JOIN " + table + " AS " + tableAttr + " ON IIf( ISNULL( " + enTable + "."
+							+ attr.getField() + "), '" + en.GetValStringByKey(attr.getKey()) + "', " + enTable + "."
+							+ attr.getField() + " )=" + tableAttr + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
 				}
 			}
-			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-			{
-				//from= from+ " LEFT OUTER JOIN "+table+" AS "+tableAttr+ " ON "+enTable+"."+attr.Field+"="+tableAttr+"."+en1.EnMap.Attrs.GetFieldByKey( attr.UIRefKeyValue );
+			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON IIf( ISNULL( " + enTable + "." + attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + ", " + enTable + "." + attr.getField() + ")=" + tableAttr + ".IntKey ";
-				//	where=where+" AND  ( "+en.EnMap.PhysicsTable+"."+attr.Field+"= Enum_"+attr.Key+".IntKey ) ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='"
+						+ attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON IIf( ISNULL( " + enTable + "."
+						+ attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + ", " + enTable + "."
+						+ attr.getField() + ")=" + tableAttr + ".IntKey ";
 			}
 
 			from = from + ")";
 		}
 		fromTop = " FROM " + fromTop;
-		//from=from+", "+en.EnMap.PhysicsTable;
-		//where="("+where+")";			
 		return fromTop + from + "  WHERE (1=1) ";
 	}
 
-	protected static String SelectSQLOfOra(Entity en, int topNum)
-	{
+	protected static String SelectSQLOfOra(Entity en, int topNum) throws Exception {
 		String val = ""; // key = null;
 		String mainTable = "";
-
-		if (en.getEnMap().getHisFKAttrs().Count != 0)
-		{
-			mainTable = en.getEnMap().getPhysicsTable() + ".";
+		
+		Map enMap = en.getEnMap();
+		
+		if (enMap.getHisFKAttrs().size() != 0) {
+			mainTable = enMap.getPhysicsTable() + ".";
 		}
-
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		
+		Attrs attrs = enMap.getAttrs();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					Object tempVar = attr.getDefaultVal();
-					if (attr.getDefaultVal() == null || tempVar instanceof String ? (String)tempVar : null.equals(""))
-					{
-						if (attr.getIsKeyEqualField())
-						{
-							val = val + ", " + mainTable + attr.getField();
-						}
-						else
-						{
-							val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-						}
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				Object tempVar = attr.getDefaultVal();
+				if ( tempVar == null || tempVar.equals("")) {
+					if (attr.getIsKeyEqualField()) {
+						val = val + "," + mainTable + attr.getField();
+					} else {
+						val = val + "," + mainTable + attr.getField() + "" + attr.getKey();
 					}
-					else
-					{
-						val = val + ",NVL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') " + attr.getKey();
-					}
+				} else {
+					val = val + ",NVL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') "
+							+ attr.getKey();
+				}
 
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", T" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppInt:
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Map map = attr.getHisFKEn().getEnMap();
+					val = val + ", T" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + " AS "
+							+ attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppInt:
 
-					val = val + ",NVL(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ")   " + attr.getKey() + "";
+				val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
 
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-					{
-						if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
-						{
-							throw new RuntimeException("@" + en.toString() + " key=" + attr.getKey() + " UITag=" + attr.UITag);
-						}
+				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
 
-						Sys.SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
-						val = val + "," + ses.GenerCaseWhenForOracle(en.toString(), mainTable, attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
-					}
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						if (attr.getHisFKEns() == null)
-						{
-							throw new RuntimeException("@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc() + ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
-						}
+					val = val + "," + BP.DA.Cash.getCaseWhenSQL(mainTable, attr.getKey(), attr.getField(),
+							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()), attr.UITag);
+				}
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Map map = attr.getHisFKEn().getEnMap();
+					val = val + ", T" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS "
+							+ attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppFloat:
+			case DataType.AppBoolean:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
 
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", T" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppFloat:
-					val = val + ", NVL( " + mainTable + attr.getField() + " ," + attr.getDefaultVal().toString() + ") AS  " + attr.getKey();
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", NVL( " + mainTable + attr.getField() + ",0) " + attr.getKey();
-					}
-					else
-					{
-						val = val + ", NVL(" + mainTable + attr.getField() + ",1) " + attr.getKey();
-					}
-					break;
-				case DataType.AppDouble:
-					val = val + ", NVL( " + mainTable + attr.getField() + " ," + attr.getDefaultVal().toString() + ") " + attr.getKey();
-					break;
-				case DataType.AppMoney:
-					val = val + ", NVL( " + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") " + attr.getKey();
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getDefaultVal() == null || attr.getDefaultVal().toString().equals(""))
-					{
-						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-					}
-					else
-					{
-						val = val + ",NVL(" + mainTable + attr.getField() + ",'" + attr.getDefaultVal().toString() + "') " + attr.getKey();
-					}
-					break;
-				default:
-					throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+				break;
+			default:
+				throw new RuntimeException(
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 
 		return " SELECT  " + val.substring(1) + SqlBuilder.GenerFormWhereOfOra(en);
 	}
-	/** 
-	 SelectSQLOfInformix
-	 
-	 @param en
-	 @param topNum
-	 @return 
-	*/
-	protected static String SelectSQLOfInformix(Entity en, int topNum)
-	{
+
+	/**
+	 * SelectSQLOfInformix
+	 * 
+	 * @param en
+	 * @param topNum
+	 * @return
+	 * @throws Exception
+	 */
+	protected static String SelectSQLOfInformix(Entity en, int topNum) throws Exception {
 		String val = "";
 		String mainTable = "";
 
-		if (en.getEnMap().getHisFKAttrs().Count != 0)
-		{
+		if (en.getEnMap().getHisFKAttrs().size() != 0) {
 			mainTable = en.getEnMap().getPhysicsTable() + ".";
 		}
 
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : en.getEnMap().getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					Object tempVar = attr.getDefaultVal();
-					if (attr.getDefaultVal() == null || tempVar instanceof String ? (String)tempVar : null.equals(""))
-					{
-						if (attr.getIsKeyEqualField())
-						{
-							val = val + ", " + mainTable + attr.getField();
-						}
-						else
-						{
-							val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-						}
-					}
-					else
-					{
-						val = val + ",NVL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') " + attr.getKey();
-					}
-
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppInt:
-
-					val = val + ",NVL(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ")   " + attr.getKey() + "";
-
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-					{
-						if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
-						{
-							throw new RuntimeException("@" + en.toString() + " key=" + attr.getKey() + " UITag=" + attr.UITag);
-						}
-
-						Sys.SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
-						val = val + "," + ses.GenerCaseWhenForOracle(en.toString(), mainTable, attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
-					}
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppFloat:
-					val = val + ", NVL( round(" + mainTable + attr.getField() + ",4) ," + attr.getDefaultVal().toString() + ") AS  " + attr.getKey();
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", NVL( " + mainTable + attr.getField() + ",0) " + attr.getKey();
-					}
-					else
-					{
-						val = val + ", NVL(" + mainTable + attr.getField() + ",1) " + attr.getKey();
-					}
-					break;
-				case DataType.AppDouble:
-					val = val + ", NVL( round(" + mainTable + attr.getField() + " ,4) ," + attr.getDefaultVal().toString() + ") " + attr.getKey();
-					break;
-				case DataType.AppMoney:
-					val = val + ", NVL( round(" + mainTable + attr.getField() + ",4)," + attr.getDefaultVal().toString() + ") " + attr.getKey();
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getDefaultVal() == null || attr.getDefaultVal().toString().equals(""))
-					{
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				Object tempVar = attr.getDefaultVal();
+				if (attr.getDefaultVal() == null || tempVar == null || tempVar.equals("")) {
+					if (attr.getIsKeyEqualField()) {
+						val = val + ", " + mainTable + attr.getField();
+					} else {
 						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
 					}
-					else
-					{
-						val = val + ",NVL(" + mainTable + attr.getField() + ",'" + attr.getDefaultVal().toString() + "') " + attr.getKey();
+				} else {
+					val = val + ",NVL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') "
+							+ attr.getKey();
+				}
+
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Map map = attr.getHisFKEn().getEnMap();
+					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
+							+ map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppInt:
+
+				val = val + ",NVL(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ")   " + attr.getKey()
+						+ "";
+
+				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
+					if (StringHelper.isNullOrEmpty(attr.getUIBindKey())) {
+						throw new RuntimeException(
+								"@" + en.toString() + " key=" + attr.getKey() + " UITag=" + attr.UITag);
 					}
-					break;
-				default:
-					throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+
+					SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
+					val = val + "," + ses.GenerCaseWhenForOracle(en.toString(), mainTable, attr.getKey(),
+							attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
+				}
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Map map = attr.getHisFKEn().getEnMap();
+					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
+							+ map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppFloat:
+				val = val + ", NVL( round(" + mainTable + attr.getField() + ",4) ," + attr.getDefaultVal().toString()
+						+ ") AS  " + attr.getKey();
+				break;
+			case DataType.AppBoolean:
+				if (attr.getDefaultVal().toString().equals("0")) {
+					val = val + ", NVL( " + mainTable + attr.getField() + ",0) " + attr.getKey();
+				} else {
+					val = val + ", NVL(" + mainTable + attr.getField() + ",1) " + attr.getKey();
+				}
+				break;
+			case DataType.AppDouble:
+				val = val + ", NVL( round(" + mainTable + attr.getField() + " ,4) ," + attr.getDefaultVal().toString()
+						+ ") " + attr.getKey();
+				break;
+			case DataType.AppMoney:
+				val = val + ", NVL( round(" + mainTable + attr.getField() + ",4)," + attr.getDefaultVal().toString()
+						+ ") " + attr.getKey();
+				break;
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				if (attr.getDefaultVal() == null || attr.getDefaultVal().toString().equals("")) {
+					val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
+				} else {
+					val = val + ",NVL(" + mainTable + attr.getField() + ",'" + attr.getDefaultVal().toString() + "') "
+							+ attr.getKey();
+				}
+				break;
+			default:
+				throw new RuntimeException(
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 		return " SELECT  " + val.substring(1) + SqlBuilder.GenerFormWhereOfInformix(en);
 	}
 
-	public static String SelectSQL(Entity en, int topNum)
-	{
-		switch (en.getEnMap().getEnDBUrl().getDBType())
-		{
-			case MSSQL:
-				return SqlBuilder.SelectSQLOfMS(en, topNum);
-			case MySQL:
-				return SqlBuilder.SelectSQLOfMySQL(en, topNum);
-			case PostgreSQL:
-				return SqlBuilder.SelectSQLOfPostgreSQL(en, topNum);
-			case Access:
-				return SqlBuilder.SelectSQLOfOLE(en, topNum);
-			case Oracle:
-				return SqlBuilder.SelectSQLOfOra(en, topNum);
-			case Informix:
-				return SqlBuilder.SelectSQLOfInformix(en, topNum);
+	public static String SelectSQL(Entity en, int topNum) throws Exception {
+		switch (SystemConfig.getAppCenterDBType()) {
+		case MSSQL:
+			return SqlBuilder.SelectSQLOfMS(en, topNum);
+		case MySQL:
+			return SqlBuilder.SelectSQLOfMySQL(en, topNum);
+		case Access:
+			return SqlBuilder.SelectSQLOfOLE(en, topNum);
+		case Oracle:
+			return SqlBuilder.SelectSQLOfOra(en, topNum);
+		case Informix:
+			return SqlBuilder.SelectSQLOfInformix(en, topNum);
+		default:
+			throw new RuntimeException("没有判断的情况");
+		}
+	}
+
+	/**
+	 * 得到sql of select
+	 * 
+	 * @param en
+	 *            实体
+	 * @return sql
+	 * @throws Exception
+	 */
+	public static String SelectCountSQL(Entity en) throws Exception {
+		switch (SystemConfig.getAppCenterDBType()) {
+		case MSSQL:
+			return SqlBuilder.SelectCountSQLOfMS(en);
+		case Access:
+			return SqlBuilder.SelectSQLOfOLE(en, 0);
+		case Oracle:
+		case Informix:
+			return SqlBuilder.SelectSQLOfOra(en, 0);
+		default:
+			return null;
+		}
+	}
+
+	/**
+	 * 建立SelectSQLOfOLE
+	 * 
+	 * @param en
+	 *            要执行的en
+	 * @param topNum
+	 *            最高查询个数
+	 * @return 返回查询sql
+	 */
+	public static String SelectSQLOfOLE(Entity en, int topNum) {
+		String val = "";
+		Map enMap = en.getEnMap();
+		String mainTable = enMap.getPhysicsTable() + ".";
+		Attrs attrs = enMap.getAttrs();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
+				continue;
+			}
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				val = val + ", IIf( ISNULL(" + mainTable + attr.getField() + "), '" + attr.getDefaultVal().toString()
+						+ "', " + mainTable + attr.getField() + " ) AS [" + attr.getKey() + "]";
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
+					val = val + ", IIf( ISNULL(" + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + ") ,'',"
+							+ en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + ") AS " + attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppInt:
+				val = val + ",IIf( ISNULL(" + mainTable + attr.getField() + ")," + attr.getDefaultVal().toString() + ","
+						+ mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
+				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
+					val = val + ",IIf( ISNULL( Enum_" + attr.getKey() + ".Lab),'',Enum_" + attr.getKey() + ".Lab ) AS "
+							+ attr.getKey() + "Text";
+				}
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
+					val = val + ", IIf( ISNULL(" + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + "),0 ,"
+							+ en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + ") AS " + attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppFloat:
+				val = val + ",IIf( ISNULL( Round(" + mainTable + attr.getField() + ",2) ),"
+						+ attr.getDefaultVal().toString() + "," + mainTable + attr.getField() + ") AS [" + attr.getKey()
+						+ "]";
+				break;
+			case DataType.AppBoolean:
+				if (attr.getDefaultVal().toString().equals("0")) {
+					val = val + ", IIf( ISNULL(" + mainTable + attr.getField() + "),0 ," + mainTable + attr.getField()
+							+ ") AS [" + attr.getKey() + "]";
+				} else {
+					val = val + ",IIf( ISNULL(" + mainTable + attr.getField() + "),1," + mainTable + attr.getField()
+							+ ") AS [" + attr.getKey() + "]";
+				}
+				break;
+			case DataType.AppDouble:
+				val = val + ", IIf(ISNULL( Round(" + mainTable + attr.getField() + ",4) ),"
+						+ attr.getDefaultVal().toString() + "," + mainTable + attr.getField() + ") AS [" + attr.getKey()
+						+ "]";
+				break;
+			case DataType.AppMoney:
+				val = val + ",IIf( ISNULL(  Round(" + mainTable + attr.getField() + ",2) ),"
+						+ attr.getDefaultVal().toString() + "," + mainTable + attr.getField() + ") AS [" + attr.getKey()
+						+ "]";
+				break;
+			case DataType.AppDate:
+				val = val + ", IIf(ISNULL( " + mainTable + attr.getField() + "), '" + attr.getDefaultVal().toString()
+						+ "'," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
+				break;
+			case DataType.AppDateTime:
+				val = val + ", IIf(ISNULL(" + mainTable + attr.getField() + "), '" + attr.getDefaultVal().toString()
+						+ "'," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
+				break;
 			default:
-				throw new RuntimeException("没有判断的情况");
+				throw new RuntimeException(
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+			}
 		}
+		if (topNum == -1 || topNum == 0) {
+			topNum = 99999;
+		}
+
+		return " SELECT TOP " + (new Integer(topNum)).toString() + " " + val.substring(1)
+				+ SqlBuilder.GenerFormWhereOfMSOLE(en);
 	}
 
-	/** 
-	 得到sql of select
-	 
-	 @param en 实体
-	 @param top top
-	 @return sql
-	*/
-	public static String SelectCountSQL(Entity en)
-	{
-		switch (en.getEnMap().getEnDBUrl().getDBType())
-		{
-			case MSSQL:
-				return SqlBuilder.SelectCountSQLOfMS(en);
-			case Access:
-				return SqlBuilder.SelectSQLOfOLE(en, 0);
-			case Oracle:
-			case Informix:
-				return SqlBuilder.SelectSQLOfOra(en, 0);
+	public static String SelectSQLOfMS(Entity en, int topNum) throws Exception {
+		String val = ""; // key = null;
+		String mainTable = "";
+
+		Map enMap = en.getEnMap();
+
+		if (enMap.getHisFKAttrs().size() != 0) {
+			mainTable = enMap.getPhysicsTable() + ".";
+		}
+		Attrs atts = enMap.getAttrs();
+		for (Attr attr : atts) {
+			if (attr.getMyFieldType() == FieldType.RefText)
+				continue;
+
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				Object tempVar = attr.getDefaultVal();
+				if (attr.getDefaultVal() == null || tempVar == null || tempVar.equals("")) {
+					if (attr.getIsKeyEqualField()) {
+						val = val + ", " + mainTable + attr.getField();
+					} else {
+						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
+					}
+				} else {
+					val = val + ",ISNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') "
+							+ attr.getKey();
+				}
+
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Map map = attr.getHisFKEn().getEnMap();
+					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
+							+ map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
+				}
+				if (attr.getMyFieldType() == FieldType.BindTable) {
+					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
+							+ attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppInt:
+				val = val + "," + mainTable + attr.getField() + " " + attr.getKey() + "";
+
+				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
+					val = val + "," + BP.DA.Cash.getCaseWhenSQL(mainTable, attr.getKey(), attr.getField(),
+							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()), attr.UITag);
+				}
+
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					if (attr.getHisFKEns() == null)
+						throw new Exception(
+								"@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc()
+										+ ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
+
+					Map map = attr.getHisFKEn().getEnMap();
+					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
+							+ map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
+				}
+
+				if (attr.getMyFieldType() == FieldType.BindTable) {
+					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
+							+ attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+			case DataType.AppBoolean:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
+				break;
 			default:
-				return null;
-		}
-	}
-	/** 
-	 建立SelectSQLOfOLE 
-	 
-	 @param en 要执行的en
-	 @param topNum 最高查询个数
-	 @return 返回查询sql
-	*/
-	public static String SelectSQLOfOLE(Entity en, int topNum)
-	{
-		String val = ""; // key = null;
-		String mainTable = en.getEnMap().getPhysicsTable() + ".";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
+				throw new RuntimeException(
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					val = val + ", IIf( ISNULL(" + mainTable + attr.getField() + "), '" + attr.getDefaultVal().toString() + "', " + mainTable + attr.getField() + " ) AS [" + attr.getKey() + "]";
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
-						val = val + ", IIf( ISNULL(" + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + ") ,''," + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + ") AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppInt:
-					val = val + ",IIf( ISNULL(" + mainTable + attr.getField() + ")," + attr.getDefaultVal().toString() + "," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-					{
-						val = val + ",IIf( ISNULL( Enum_" + attr.getKey() + ".Lab),'',Enum_" + attr.getKey() + ".Lab ) AS " + attr.getKey() + "Text";
-					}
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
-						val = val + ", IIf( ISNULL(" + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + "),0 ," + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + ") AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppFloat:
-					val = val + ",IIf( ISNULL( Round(" + mainTable + attr.getField() + ",2) )," + attr.getDefaultVal().toString() + "," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", IIf( ISNULL(" + mainTable + attr.getField() + "),0 ," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					}
-					else
-					{
-						val = val + ",IIf( ISNULL(" + mainTable + attr.getField() + "),1," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					}
-					break;
-				case DataType.AppDouble:
-					val = val + ", IIf(ISNULL( Round(" + mainTable + attr.getField() + ",4) )," + attr.getDefaultVal().toString() + "," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppMoney:
-					val = val + ",IIf( ISNULL(  Round(" + mainTable + attr.getField() + ",2) )," + attr.getDefaultVal().toString() + "," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppDate:
-					val = val + ", IIf(ISNULL( " + mainTable + attr.getField() + "), '" + attr.getDefaultVal().toString() + "'," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppDateTime:
-					val = val + ", IIf(ISNULL(" + mainTable + attr.getField() + "), '" + attr.getDefaultVal().toString() + "'," + mainTable + attr.getField() + ") AS [" + attr.getKey() + "]";
-					break;
-				default:
-					throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
-			}
-		}
-		if (topNum == -1 || topNum == 0)
-		{
-			topNum = 99999;
 		}
 
-		//return  " SELECT TOP " +topNum.ToString()+" " +val.Substring(1) + " FROM "+en.EnMap.PhysicsTable;
-		return " SELECT TOP " + String.valueOf(topNum) + " " + val.substring(1) + SqlBuilder.GenerFormWhereOfMSOLE(en);
+		if (topNum == -1 || topNum == 0) {
+			topNum = 99999;
+		}
+		return " SELECT  TOP " + (new Integer(topNum)).toString() + " " + val.substring(1)
+				+ SqlBuilder.GenerFormWhereOfMS(en);
 	}
-	/** 
-	 生成sqlserver标准的sql
-	 
-	 @param en 实体类
-	 @param topNum 前几行
-	 @return 生成的SQL
-	*/
-	public static String SelectSQLOfMS(Entity en, int topNum)
-	{
+
+	public static String SelectSQLOfMySQL(Entity en, int topNum) throws Exception {
+
 		String val = ""; // key = null;
 		String mainTable = "";
 
-		if (en.getEnMap().getHisFKAttrs().Count != 0)
-		{
-			mainTable = en.getEnMap().getPhysicsTable() + ".";
+		Map enMap = en.getEnMap();
+
+		if (enMap.getHisFKAttrs().size() != 0) {
+			mainTable = enMap.getPhysicsTable() + ".";
 		}
 
-		if (en.getEnMap().getAttrs().Count == 0)
-		{
-			en.DTSMapToSys_MapData();
-			throw new RuntimeException("err@错误:" + en.toString() + "没有attrs属性，无法生成SQL, 如果是动态实体请关闭后，重新打开一次。");
-		}
+		Attrs attrs = enMap.getAttrs();
 
-
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
+		for (Attr attr : attrs) {
 			if (attr.getMyFieldType() == FieldType.RefText)
-			{
 				continue;
-			}
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					Object tempVar = attr.getDefaultVal();
-					if (attr.getDefaultVal() == null || tempVar instanceof String ? (String)tempVar : null.equals(""))
-					{
-						if (attr.getIsKeyEqualField())
-						{
-							val = val + ", " + mainTable + attr.getField();
-						}
-						else
-						{
-							val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-						}
-					}
-					else
-					{
-						val = val + ",ISNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') " + attr.getKey();
-					}
 
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						if (attr.getHisFKEns() == null)
-						{
-							throw new RuntimeException("@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc() + ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
-						}
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				Object tempVar = attr.getDefaultVal();
+				if (tempVar == null || tempVar.equals("")) {
 
-						Map map = attr.getHisFKEn().getEnMap();
-
-						if (DBAccess.IsExitsObject(map.getPhysicsTable()))
-						{
-							val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
-						}
-						else
-						{
-							val = val + ", '' AS " + attr.getKey() + "Text";
-						}
-					}
-					break;
-				case DataType.AppInt:
-					if (attr.getIsNull())
-					{
-						val = val + "," + mainTable + attr.getField() + " " + attr.getKey() + "";
-					}
-					else
-					{
-						val = val + ",ISNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ")   " + attr.getKey() + "";
-					}
-
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-					{
-						if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
-						{
-							throw new RuntimeException("@" + en.toString() + " key=" + attr.getKey() + " UITag=" + attr.UITag + "");
-						}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-///#warning 20111-12-03 不应出现异常。
-						if (attr.getUIBindKey().contains("."))
-						{
-							throw new RuntimeException("@" + en.toString() + " &UIBindKey=" + attr.getUIBindKey() + " @Key=" + attr.getKey());
-						}
-
-						Sys.SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
-						val = val + "," + ses.GenerCaseWhenForOracle(mainTable, attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
-					}
-
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppFloat:
-				case DataType.AppDouble:
-				case DataType.AppMoney:
-					if (attr.getIsNull())
-					{
+					if (attr.getIsKeyEqualField()) {
+						val = val + ", " + mainTable + attr.getField();
+					} else {
 						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
 					}
-					else //不处理
-					{
-						val = val + ", ISNULL( " + mainTable + attr.getField() + " ," + attr.getDefaultVal().toString() + ") AS  " + attr.getKey();
-					}
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", ISNULL( " + mainTable + attr.getField() + ",0) " + attr.getKey();
-					}
-					else
-					{
-						val = val + ", ISNULL(" + mainTable + attr.getField() + ",1) " + attr.getKey();
-					}
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getDefaultVal() == null || attr.getDefaultVal().toString().equals(""))
-					{
-						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-					}
-					else
-					{
-						val = val + ",ISNULL(" + mainTable + attr.getField() + ",'" + attr.getDefaultVal().toString() + "') " + attr.getKey();
-					}
-					break;
-				default:
-					throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
-			}
-		}
 
-		//return  " SELECT TOP " +topNum.ToString()+" " +val.Substring(1) + " FROM "+en.EnMap.PhysicsTable;
-		if (topNum == -1 || topNum == 0)
-		{
-			topNum = 99999;
-		}
-		return " SELECT  TOP " + String.valueOf(topNum) + " " + val.substring(1) + SqlBuilder.GenerFormWhereOfMS(en);
-	}
-	/** 
-	 生成postgresql标准的sql
-	 
-	 @param en 实体类
-	 @param topNum 前几行
-	 @return 生成的SQL
-	*/
-	public static String SelectSQLOfPostgreSQL(Entity en, int topNum)
-	{
-		String val = ""; // key = null;
-		String mainTable = "";
+				} else {
+					val = val + ",IFNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') "
+							+ attr.getKey();
+				}
 
-		if (en.getEnMap().getHisFKAttrs().Count != 0)
-		{
-			mainTable = en.getEnMap().getPhysicsTable() + ".";
-		}
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Map map = attr.getHisFKEn().getEnMap();
 
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					Object tempVar = attr.getDefaultVal();
-					if (attr.getDefaultVal() == null || tempVar instanceof String ? (String)tempVar : null.equals(""))
-					{
-						if (attr.getIsKeyEqualField())
-						{
-							val = val + ", " + mainTable + attr.getField();
-						}
-						else
-						{
-							val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-						}
-					}
-					else
-					{
-					 //   val = val + ",COALESCE(" + mainTable + attr.Field + ", '" + attr.DefaultVal + "') AS " + attr.Key;
-						val = val + ",COALESCE(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') AS " + attr.getKey();
+					// @xu 删除了一段代码.
+					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
+							+ map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
 
-					}
+				}
+				if (attr.getMyFieldType() == FieldType.BindTable) {
+					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
+							+ attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppInt:
+				val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
 
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						if (attr.getHisFKEns() == null)
-						{
-							throw new RuntimeException("@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc() + ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
-						}
+				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
 
-						Map map = attr.getHisFKEn().getEnMap();
+					val = val + "," + BP.DA.Cash.getCaseWhenSQL(mainTable, attr.getKey(), attr.getField(),
+							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()), attr.UITag);
 
-						if (DBAccess.IsExitsObject(map.getPhysicsTable()))
-						{
-							val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
-						}
-						else
-						{
-							val = val + ", '' AS " + attr.getKey() + "Text";
-						}
-					}
-					break;
-				case DataType.AppInt:
-					if (attr.getIsNull())
-					{
-						val = val + "," + mainTable + attr.getField() + " " + attr.getKey() + "";
-					}
-					else
-					{
-						val = val + ",COALESCE(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ")  AS " + attr.getKey() + "";
-					}
+				}
 
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-					{
-						if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
-						{
-							throw new RuntimeException("@" + en.toString() + " key=" + attr.getKey() + " UITag=" + attr.UITag + "");
-						}
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-///#warning 20111-12-03 不应出现异常。
-						if (attr.getUIBindKey().contains("."))
-						{
-							throw new RuntimeException("@" + en.toString() + " &UIBindKey=" + attr.getUIBindKey() + " @Key=" + attr.getKey());
-						}
+					if (attr.getHisFKEns() == null)
+						throw new Exception(
+								"@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc()
+										+ ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
 
-						Sys.SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
-						val = val + "," + ses.GenerCaseWhenForOracle(mainTable, attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
-					}
-
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppFloat:
-				case DataType.AppDouble:
-				case DataType.AppMoney:
-					if (attr.getIsNull())
-					{
-						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-					}
-					else //不处理
-					{
-						val = val + ", COALESCE( " + mainTable + attr.getField() + " ," + attr.getDefaultVal().toString() + ") AS  " + attr.getKey();
-					}
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", COALESCE( " + mainTable + attr.getField() + ",0) AS " + attr.getKey();
-					}
-					else
-					{
-						val = val + ", COALESCE(" + mainTable + attr.getField() + ",1) AS " + attr.getKey();
-					}
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getDefaultVal() == null || attr.getDefaultVal().toString().equals(""))
-					{
-						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-					}
-					else
-					{
-						val = val + ",COALESCE(" + mainTable + attr.getField() + ",'" + attr.getDefaultVal().toString() + "') AS " + attr.getKey();
-					}
-					break;
-				default:
-					throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
-			}
-		}
-
-		//return  " SELECT TOP " +topNum.ToString()+" " +val.Substring(1) + " FROM "+en.EnMap.PhysicsTable;
-		if (topNum == -1 || topNum == 0)
-		{
-			topNum = 99999;
-		}
-		return " SELECT " + val.substring(1) + SqlBuilder.GenerFormWhereOfMS(en);
-	}
-	public static String SelectSQLOfMySQL(Entity en, int topNum)
-	{
-		String val = ""; // key = null;
-		String mainTable = "";
-
-		if (en.getEnMap().getHisFKAttrs().Count != 0)
-		{
-			mainTable = en.getEnMap().getPhysicsTable() + ".";
-		}
-
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					Object tempVar = attr.getDefaultVal();
-					if (attr.getDefaultVal() == null || tempVar instanceof String ? (String)tempVar : null.equals(""))
-					{
-						if (attr.getIsKeyEqualField())
-						{
-							val = val + ", " + mainTable + attr.getField();
-						}
-						else
-						{
-							val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-						}
-					}
-					else
-					{
-						val = val + ",IFNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') " + attr.getKey();
-					}
-
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppInt:
-					val = val + ",IFNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ")   " + attr.getKey() + "";
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-					{
-						if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
-						{
-							throw new RuntimeException("@" + en.toString() + " key=" + attr.getKey() + " UITag=" + attr.UITag);
-						}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-///#warning 2011-12-03 不应出现异常。
-						if (attr.getUIBindKey().contains("."))
-						{
-							throw new RuntimeException("@" + en.toString() + " &UIBindKey=" + attr.getUIBindKey() + " @Key=" + attr.getKey());
-						}
-
-						Sys.SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
-						val = val + "," + ses.GenerCaseWhenForOracle(mainTable, attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
-					}
-
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						if (attr.getHisFKEns() == null)
-						{
-							throw new RuntimeException("@生成SQL错误 Entity=" + en.toString() + " 外键字段｛" + attr.getKey() + "." + attr.getDesc() + ", UIBindKey=" + attr.getUIBindKey() + "｝已经无效, 也许该类或者外键字段被移除，请通知管理员解决。");
-						}
-
-
-						Map map = attr.getHisFKEn().getEnMap();
-						val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "." + map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppFloat:
-					val = val + ", IFNULL( " + mainTable + attr.getField() + " ," + attr.getDefaultVal().toString() + ") AS  " + attr.getKey();
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", IFNULL( " + mainTable + attr.getField() + ",0) " + attr.getKey();
-					}
-					else
-					{
-						val = val + ", IFNULL(" + mainTable + attr.getField() + ",1) " + attr.getKey();
-					}
-					break;
-				case DataType.AppDouble:
-					val = val + ", IFNULL( " + mainTable + attr.getField() + "  ," + attr.getDefaultVal().toString() + ") " + attr.getKey();
-					break;
-				case DataType.AppMoney:
-					val = val + ", IFNULL( " + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") " + attr.getKey();
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					if (attr.getDefaultVal() == null || attr.getDefaultVal().toString().equals(""))
-					{
-						val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
-					}
-					else
-					{
-						val = val + ",IFNULL(" + mainTable + attr.getField() + ",'" + attr.getDefaultVal().toString() + "') " + attr.getKey();
-					}
-					break;
-				default:
-					throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+					Map map = attr.getHisFKEn().getEnMap();
+					val = val + ", " + map.getPhysicsTable() + "_" + attr.getKey() + "."
+							+ map.GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
+				}
+				if (attr.getMyFieldType() == FieldType.BindTable) {
+					val = val + ", " + attr.getUIBindKey() + "_" + attr.getKey() + "." + attr.getUIRefKeyText() + " AS "
+							+ attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppFloat:
+			case DataType.AppBoolean:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				val = val + "," + mainTable + attr.getField() + " " + attr.getKey();
+				break;
+			default:
+				throw new RuntimeException(
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 
 		return " SELECT   " + val.substring(1) + SqlBuilder.GenerFormWhereOfMS(en);
 	}
 
-	/** 
-	 建立selectSQL 
-	 
-	 @param en 要执行的en
-	 @param topNum 最高查询个数
-	 @return 返回查询sql
-	*/
-	public static String SelectCountSQLOfMS(Entity en)
-	{
+
+	/**
+	 * 建立selectSQL
+	 * 
+	 * @param en
+	 *            要执行的en
+	 * @return 返回查询sql
+	 */
+	public static String SelectCountSQLOfMS(Entity en) {
 		// 判断内存里面是否有 此sql.
 		String sql = "SELECT COUNT(*) ";
 		return sql + SqlBuilder.GenerFormWhereOfMS(en, en.getEnMap());
 	}
-	public static String SelectSQLOfOra(String enName, Map map)
-	{
+
+	public static String SelectSQLOfOra(String enName, Map map) throws Exception {
 		String val = ""; // key = null;
 		String mainTable = map.getPhysicsTable() + ".";
-		for (Attr attr : map.getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					if (attr.getDefaultVal() == null)
-					{
-						val = val + ", " + mainTable + attr.getField() + " AS " + attr.getKey();
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				Object tempVar = attr.getDefaultVal();
+				if (attr.getDefaultVal() == null || tempVar == null || tempVar.equals("")) {
+					if (attr.getIsKeyEqualField()) {
+						val = val + "," + mainTable + attr.getField();
+					} else {
+						val = val + "," + mainTable + attr.getField() + "" + attr.getKey();
 					}
-					else
-					{
-						val = val + ", NVL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') AS " + attr.getKey();
-					}
+				} else {
+					val = val + ",NVL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') "
+							+ attr.getKey();
+				}
 
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
-						val = val + ", T" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppInt:
-					val = val + ", NVL(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ") AS  " + attr.getKey() + "";
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-					{
-						Sys.SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
-						val = val + "," + ses.GenerCaseWhenForOracle(enName, mainTable, attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
-					}
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						Entity en1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
-						val = val + ", T" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + "  AS " + attr.getKey() + "Text";
-					}
-					break;
-				case DataType.AppFloat:
-					val = val + ", NVL( " + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") AS  " + attr.getKey();
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", NVL( " + mainTable + attr.getField() + " , 0)  AS " + attr.getKey();
-					}
-					else
-					{
-						val = val + ", NVL(  " + mainTable + attr.getField() + ", 1)  AS " + attr.getKey();
-					}
-					break;
-				case DataType.AppDouble:
-					val = val + ", NVL( " + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") AS " + attr.getKey();
-					break;
-				case DataType.AppMoney:
-					val = val + ", NVL( " + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") AS " + attr.getKey();
-					break;
-				case DataType.AppDate:
-					val = val + ", NVL(  " + mainTable + attr.getField() + ", '" + attr.getDefaultVal().toString() + "')  AS " + attr.getKey();
-					break;
-				case DataType.AppDateTime:
-					val = val + ", NVL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal().toString() + "') AS " + attr.getKey();
-					break;
-				default:
-					throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Entity en1 = attr.getHisFKEn();
+					val = val + ", T" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText())
+							+ " AS " + attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppInt:
+				val = val + ", NVL(" + mainTable + attr.getField() + "," + attr.getDefaultVal() + ") AS  "
+						+ attr.getKey() + "";
+				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
+					val = val + "," + BP.DA.Cash.getCaseWhenSQL(mainTable, attr.getKey(), attr.getField(),
+							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()), attr.UITag);
+				}
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Map map1 = attr.getHisFKEn().getEnMap();
+					val = val + ", T" + attr.getKey() + "." + map1.GetFieldByKey(attr.getUIRefKeyText()) + "  AS "
+							+ attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppFloat:
+			case DataType.AppBoolean:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				val = val + "," + mainTable + attr.getField() + " AS " + attr.getKey();
+				break;
+			default:
+				throw new RuntimeException(
+						"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
 			}
 		}
 		return "SELECT " + val.substring(1);
 	}
-	/** 
-	 产生sql
-	 
-	 @return 
-	*/
-	public static String SelectSQLOfMS(Map map)
-	{
+
+	/**
+	 * 产生sql
+	 * 
+	 * @return
+	 */
+	public static String SelectSQLOfMS(Map map) {
 		String val = ""; // key = null;
 		String mainTable = map.getPhysicsTable() + ".";
-		for (Attr attr : map.getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					if (attr.getDefaultVal() == null)
-					{
-						val = val + " " + mainTable + attr.getField() + " AS [" + attr.getKey() + "]";
-					}
-					else
-					{
-						val = val + ",ISNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal().toString() + "') AS [" + attr.getKey() + "]";
-					}
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				if (attr.getDefaultVal() == null) {
+					val = val + " " + mainTable + attr.getField() + " AS [" + attr.getKey() + "]";
+				} else {
+					val = val + ",ISNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal().toString()
+							+ "') AS [" + attr.getKey() + "]";
+				}
 
-					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+					Entity en1 = attr.getHisFKEn();
+					val = val + "," + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "."
+							+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
+				}
+				break;
+			case DataType.AppInt:
+				if (attr.getIsNull()) {
+					// 如果允许为空
+					val = val + ", " + mainTable + attr.getField() + " AS [" + attr.getKey() + "]";
+				} else {
+					val = val + ", ISNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal().toString()
+							+ ") AS [" + attr.getKey() + "]";
+					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
+						val = val + ", Enum_" + attr.getKey() + ".Lab  AS " + attr.getKey() + "Text";
+					}
+					if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
 						Entity en1 = attr.getHisFKEn();
-						val = val + "," + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
+						val = val + ", " + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "."
+								+ en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey()
+								+ "Text";
 					}
+				}
+				break;
+			case DataType.AppFloat:
+			case DataType.AppBoolean:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				val = val + ", " + mainTable + attr.getField() + " AS [" + attr.getKey() + "]";
+				break;
+			default:
+				if (attr.getKey().equals("MyNum")) {
+					val = val + ", COUNT(*)  AS MyNum ";
 					break;
-				case DataType.AppInt:
-					if (attr.getIsNull())
-					{
-						/*如果允许为空*/
-						val = val + ", " + mainTable + attr.getField() + " AS [" + attr.getKey() + "]";
-					}
-					else
-					{
-						val = val + ", ISNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") AS [" + attr.getKey() + "]";
-						if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
-						{
-							val = val + ", Enum_" + attr.getKey() + ".Lab  AS " + attr.getKey() + "Text";
-						}
-						if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-						{
-							//Entity en1= ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
-							Entity en1 = attr.getHisFKEn();
-							val = val + ", " + en1.getEnMap().getPhysicsTable() + "_" + attr.getKey() + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyText()) + " AS " + attr.getKey() + "Text";
-						}
-					}
-					break;
-				case DataType.AppFloat:
-					val = val + ", ISNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppBoolean:
-					if (attr.getDefaultVal().toString().equals("0"))
-					{
-						val = val + ", ISNULL(" + mainTable + attr.getField() + ",0) AS [" + attr.getKey() + "]";
-					}
-					else
-					{
-						val = val + ", ISNULL(" + mainTable + attr.getField() + ",1) AS [" + attr.getKey() + "]";
-					}
-					break;
-				case DataType.AppDouble:
-					val = val + ", ISNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppMoney:
-					val = val + ", ISNULL(" + mainTable + attr.getField() + "," + attr.getDefaultVal().toString() + ") AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppDate:
-					val = val + ", ISNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal().toString() + "') AS [" + attr.getKey() + "]";
-					break;
-				case DataType.AppDateTime:
-					val = val + ", ISNULL(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal().toString() + "') AS [" + attr.getKey() + "]";
-					break;
-				default:
-					if (attr.getKey().equals("MyNum"))
-					{
-						val = val + ", COUNT(*)  AS MyNum ";
-						break;
-					}
-					else
-					{
-						throw new RuntimeException("@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
-					}
+				} else {
+					throw new RuntimeException(
+							"@没有定义的数据类型! attr=" + attr.getKey() + " MyDataType =" + attr.getMyDataType());
+				}
 			}
 		}
 		return "SELECT TOP @TopNum " + val.substring(1);
 	}
-	public static String UpdateOfMSAccess(Entity en, String[] keys)
-	{
-		String val = "";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			/* 两个PK 的情况 */
-			//if (attr.IsPK)
-			//    continue;
 
-			if (keys != null)
-			{
+	public static String UpdateOfMSAccess(Entity en, String[] keys) {
+		String val = "";
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (Attr attr : attrs) {
+
+			if (keys != null) {
 				boolean isHave = false;
-				for (String s : keys)
-				{
-					if (attr.getKey().equals(s))
-					{
-						/* 如果找到了要更新的key */
+				for (String s : keys) {
+					if (attr.getKey().equals(s)) {
+						// 如果找到了要更新的key
 						isHave = true;
 						break;
 					}
 				}
-				if (isHave == false)
-				{
+				if (!isHave) {
 					continue;
 				}
 			}
 
-
-			if (attr.getMyFieldType() == FieldType.RefText || attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
-			{
+			if (attr.getMyFieldType() == FieldType.RefText || attr.getMyFieldType() == FieldType.PK
+					|| attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum) {
 				continue;
 			}
 
-			switch (attr.getMyDataType())
-			{
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				val = val + ",[" + attr.getField() + "]='" + en.GetValStringByKey(attr.getKey()) + "'";
+				break;
+			case DataType.AppInt:
+				val = val + ",[" + attr.getField() + "]=" + en.GetValStringByKey(attr.getKey());
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+				String str = en.GetValStringByKey(attr.getKey()).toString();
+				str = str.replace("￥", "");
+				str = str.replace(",", "");
+				val = val + ",[" + attr.getField() + "]=" + str;
+				break;
+			case DataType.AppBoolean:
+				val = val + ",[" + attr.getField() + "]=" + en.GetValStringByKey(attr.getKey());
+				break;
+			case DataType.AppDate: // 如果是日期类型。
+			case DataType.AppDateTime:
+				String da = en.GetValStringByKey(attr.getKey());
+				if (da.indexOf("_DATE") == -1) {
+					val = val + ",[" + attr.getField() + "]='" + da + "'";
+				} else {
+					val = val + ",[" + attr.getField() + "]=" + da;
+				}
+				break;
+			default:
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
+			}
+		}
+
+		String sql = "";
+
+		if (val.equals("")) {
+			// 如果没有出现要更新.
+			for (Attr attr : attrs) {
+				if (keys != null) {
+					boolean isHave = false;
+					for (String s : keys) {
+						if (attr.getKey().equals(s)) {
+							// 如果找到了要更新的key
+							isHave = true;
+							break;
+						}
+					}
+					if (!isHave) {
+						continue;
+					}
+				}
+				switch (attr.getMyDataType()) {
 				case DataType.AppString:
 					val = val + ",[" + attr.getField() + "]='" + en.GetValStringByKey(attr.getKey()) + "'";
 					break;
@@ -2232,174 +1660,151 @@ public class SqlBuilder
 				case DataType.AppDate: // 如果是日期类型。
 				case DataType.AppDateTime:
 					String da = en.GetValStringByKey(attr.getKey());
-					if (da.indexOf("_DATE") == -1)
-					{
+					if (da.indexOf("_DATE") == -1) {
 						val = val + ",[" + attr.getField() + "]='" + da + "'";
-					}
-					else
-					{
+					} else {
 						val = val + ",[" + attr.getField() + "]=" + da;
 					}
 					break;
 				default:
 					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
+				}
+			}
+			// return null;
+			// throw new Exception("出现了一个不合理的更新：没有要更新的数据。");
+		}
+
+		if (val.equals("")) {
+			String ms = "";
+			for (String str : keys) {
+				ms += str;
+			}
+			throw new RuntimeException(en.getEnDesc() + "执行更新错误：无效的属性[" + ms + "]对于本实体来说。");
+		}
+		sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
+				+ SqlBuilder.GetKeyConditionOfOLE(en);
+		return sql.replace(",=''", "");
+	}
+
+	/**
+	 * 产生要更新的sql 语句
+	 * 
+	 * @param en
+	 *            要更新的entity
+	 * @param keys
+	 *            要更新的keys
+	 * @return sql
+	 */
+	public static String Update(Entity en, String[] keys) {
+		Map map = en.getEnMap();
+		if (map.getAttrs().size() == 0) {
+			throw new RuntimeException("@实体：" + en.toString() + " ,Attrs属性集合信息丢失，导致无法生成SQL。");
+		}
+
+		String val = "";
+		for (Attr attr : map.getAttrs()) {
+			if (keys != null) {
+				boolean isHave = false;
+				for (String s : keys) {
+					if (attr.getKey().equals(s)) {
+						// 如果找到了要更新的key
+						isHave = true;
+						break;
+					}
+				}
+				if (!isHave) {
+					continue;
+				}
+			}
+
+			if (attr.getMyFieldType() == FieldType.RefText) {
+				continue;
+			}
+
+			// 有可能是两个主键的情况。
+			// if (attr.IsPK)
+			// continue;
+
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				if (map.getEnDBUrl().getDBType() == DBType.Access) {
+					val = val + ",[" + attr.getField() + "]='" + en.GetValStringByKey(attr.getKey()).replace('\'', '~')
+							+ "'";
+				} else {
+					if (attr.getUIIsDoc() && attr.getKey().equals("Doc")) {
+
+						String doc = en.GetValStringByKey(attr.getKey());
+						if (map.getAttrs().Contains("DocLength")) {
+							en.SetValByKey("DocLength", doc.length());
+						}
+
+						if (doc.length() >= 2000) {
+							SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), doc);
+							val = val + "," + attr.getField() + "=''";
+						} else {
+							val = val + "," + attr.getField() + "='"
+									+ en.GetValStringByKey(attr.getKey()).replace('\'', '~') + "'";
+						}
+					} else {
+						val = val + "," + attr.getField() + "='"
+								+ en.GetValStringByKey(attr.getKey()).replace('\'', '~') + "'";
+					}
+				}
+				break;
+			case DataType.AppInt:
+				val = val + "," + attr.getField() + "=" + en.GetValStringByKey(attr.getKey());
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+				String str = en.GetValStringByKey(attr.getKey()).toString();
+				str = str.replace("￥", "");
+				str = str.replace(",", "");
+				val = val + "," + attr.getField() + "=" + str;
+				break;
+			case DataType.AppBoolean:
+				val = val + "," + attr.getField() + "=" + en.GetValStringByKey(attr.getKey());
+				break;
+			case DataType.AppDate: // 如果是日期类型。
+			case DataType.AppDateTime:
+				String da = en.GetValStringByKey(attr.getKey());
+				if (da.indexOf("_DATE") == -1) {
+					val = val + "," + attr.getField() + "='" + da + "'";
+				} else {
+					val = val + "," + attr.getField() + "=" + da;
+				}
+				break;
+			default:
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
 		}
 
 		String sql = "";
 
-		if (val.equals(""))
-		{
-			/*如果没有出现要更新.*/
-			for (Attr attr : en.getEnMap().getAttrs())
-			{
-				if (keys != null)
-				{
+		if (val.equals("")) {
+			// 如果没有出现要更新.
+			for (Attr attr : map.getAttrs()) {
+				if (keys != null) {
 					boolean isHave = false;
-					for (String s : keys)
-					{
-						if (attr.getKey().equals(s))
-						{
-							/* 如果找到了要更新的key */
+					for (String s : keys) {
+						if (attr.getKey().equals(s)) {
+							// 如果找到了要更新的key
 							isHave = true;
 							break;
 						}
 					}
-					if (isHave == false)
-					{
+					if (!isHave) {
 						continue;
 					}
 				}
-				switch (attr.getMyDataType())
-				{
-					case DataType.AppString:
-						val = val + ",[" + attr.getField() + "]='" + en.GetValStringByKey(attr.getKey()) + "'";
-						break;
-					case DataType.AppInt:
-						val = val + ",[" + attr.getField() + "]=" + en.GetValStringByKey(attr.getKey());
-						break;
-					case DataType.AppFloat:
-					case DataType.AppDouble:
-					case DataType.AppMoney:
-						String str = en.GetValStringByKey(attr.getKey()).toString();
-						str = str.replace("￥", "");
-						str = str.replace(",", "");
-						val = val + ",[" + attr.getField() + "]=" + str;
-						break;
-					case DataType.AppBoolean:
-						val = val + ",[" + attr.getField() + "]=" + en.GetValStringByKey(attr.getKey());
-						break;
-					case DataType.AppDate: // 如果是日期类型。
-					case DataType.AppDateTime:
-						String da = en.GetValStringByKey(attr.getKey());
-						if (da.indexOf("_DATE") == -1)
-						{
-							val = val + ",[" + attr.getField() + "]='" + da + "'";
-						}
-						else
-						{
-							val = val + ",[" + attr.getField() + "]=" + da;
-						}
-						break;
-					default:
-						throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
-				}
-			}
-			//return null;
-			//throw new Exception("出现了一个不合理的更新：没有要更新的数据。");
-		}
 
-		if (val.equals(""))
-		{
-			String ms = "";
-			for (String str : keys)
-			{
-				ms += str;
-			}
-			throw new RuntimeException(en.getEnDesc() + "执行更新错误：无效的属性[" + ms + "]对于本实体来说。");
-		}
-		sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) +
-					" WHERE " + SqlBuilder.GetKeyConditionOfOLE(en);
-		return sql.replace(",=''", "");
-	}
-	/** 
-	 产生要更新的sql 语句
-	 
-	 @param en 要更新的entity
-	 @param keys 要更新的keys
-	 @return sql
-	*/
-	public static String Update(Entity en, String[] keys)
-	{
-		Map map = en.getEnMap();
-		if (map.getAttrs().Count == 0)
-		{
-			throw new RuntimeException("@实体：" + en.toString() + " ,Attrs属性集合信息丢失，导致无法生成SQL。");
-		}
+				// 两个PK 的情况。
+				// if (attr.IsPK)
+				// continue;
 
-		String val = "";
-		for (Attr attr : map.getAttrs())
-		{
-			if (keys != null)
-			{
-				boolean isHave = false;
-				for (String s : keys)
-				{
-					if (attr.getKey().equals(s))
-					{
-						/* 如果找到了要更新的key*/
-						isHave = true;
-						break;
-					}
-				}
-				if (isHave == false)
-				{
-					continue;
-				}
-			}
-
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-
-			/*有可能是两个主键的情况。*/
-			//  if (attr.IsPK)
-			//  continue;
-
-			switch (attr.getMyDataType())
-			{
+				switch (attr.getMyDataType()) {
 				case DataType.AppString:
-					if (map.getEnDBUrl().getDBType() == DBType.Access)
-					{
-						val = val + ",[" + attr.getField() + "]='" + en.GetValStringByKey(attr.getKey()).replace('\'', '~') + "'";
-					}
-					else
-					{
-						if (attr.getUIIsDoc() && attr.getKey().equals("Doc"))
-						{
-
-							String doc = en.GetValStringByKey(attr.getKey());
-							if (map.getAttrs().Contains("DocLength"))
-							{
-								en.SetValByKey("DocLength", doc.length());
-							}
-
-							if (doc.length() >= 2000)
-							{
-								Sys.SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), doc);
-								val = val + "," + attr.getField() + "=''";
-							}
-							else
-							{
-								val = val + "," + attr.getField() + "='" + en.GetValStringByKey(attr.getKey()).replace('\'', '~') + "'";
-							}
-						}
-						else
-						{
-							val = val + "," + attr.getField() + "='" + en.GetValStringByKey(attr.getKey()).replace('\'', '~') + "'";
-						}
-					}
+					val = val + "," + attr.getField() + "='" + en.GetValStringByKey(attr.getKey()) + "'";
 					break;
 				case DataType.AppInt:
 					val = val + "," + attr.getField() + "=" + en.GetValStringByKey(attr.getKey());
@@ -2418,819 +1823,540 @@ public class SqlBuilder
 				case DataType.AppDate: // 如果是日期类型。
 				case DataType.AppDateTime:
 					String da = en.GetValStringByKey(attr.getKey());
-					if (da.indexOf("_DATE") == -1)
-					{
+					if (da.indexOf("_DATE") == -1) {
 						val = val + "," + attr.getField() + "='" + da + "'";
-					}
-					else
-					{
+					} else {
 						val = val + "," + attr.getField() + "=" + da;
 					}
 					break;
 				default:
 					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
-			}
-		}
-
-		String sql = "";
-
-		if (val.equals(""))
-		{
-			/*如果没有出现要更新.*/
-			for (Attr attr : map.getAttrs())
-			{
-				if (keys != null)
-				{
-					boolean isHave = false;
-					for (String s : keys)
-					{
-						if (attr.getKey().equals(s))
-						{
-							/* 如果找到了要更新的key */
-							isHave = true;
-							break;
-						}
-					}
-					if (isHave == false)
-					{
-						continue;
-					}
-				}
-
-				// 两个PK 的情况。
-				//if (attr.IsPK)
-				//    continue;
-
-
-				switch (attr.getMyDataType())
-				{
-					case DataType.AppString:
-						val = val + "," + attr.getField() + "='" + en.GetValStringByKey(attr.getKey()) + "'";
-						break;
-					case DataType.AppInt:
-						val = val + "," + attr.getField() + "=" + en.GetValStringByKey(attr.getKey());
-						break;
-					case DataType.AppFloat:
-					case DataType.AppDouble:
-					case DataType.AppMoney:
-						String str = en.GetValStringByKey(attr.getKey()).toString();
-						str = str.replace("￥", "");
-						str = str.replace(",", "");
-						val = val + "," + attr.getField() + "=" + str;
-						break;
-					case DataType.AppBoolean:
-						val = val + "," + attr.getField() + "=" + en.GetValStringByKey(attr.getKey());
-						break;
-					case DataType.AppDate: // 如果是日期类型。
-					case DataType.AppDateTime:
-						String da = en.GetValStringByKey(attr.getKey());
-						if (da.indexOf("_DATE") == -1)
-						{
-							val = val + "," + attr.getField() + "='" + da + "'";
-						}
-						else
-						{
-							val = val + "," + attr.getField() + "=" + da;
-						}
-						break;
-					default:
-						throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 				}
 			}
-			//return null;
-			//throw new Exception("出现了一个不合理的更新：没有要更新的数据。");
+			// return null;
+			// throw new Exception("出现了一个不合理的更新：没有要更新的数据。");
 		}
 
-		if (val.equals(""))
-		{
+		if (val.equals("")) {
 			String ms = "";
-			for (String str : keys)
-			{
+			for (String str : keys) {
 				ms += str;
 			}
 			throw new RuntimeException(en.getEnDesc() + "执行更新错误：无效的属性[" + ms + "]对于本实体来说。");
 		}
 
-		switch (en.getEnMap().getEnDBUrl().getDBType())
-		{
-			case MSSQL:
-			case Access:
-			case MySQL:
-			case PostgreSQL:
-				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) +
-					" WHERE " + SqlBuilder.GenerWhereByPK(en, "@");
-				break;
-			case Oracle:
-				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) +
-					" WHERE " + SqlBuilder.GenerWhereByPK(en, ":");
-				break;
-			case Informix:
-				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) +
-					" WHERE " + SqlBuilder.GenerWhereByPK(en, ":");
-				break;
-			default:
-				throw new RuntimeException("no this case db type . ");
+		switch (SystemConfig.getAppCenterDBType()) {
+		case MSSQL:
+		case Access:
+			sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
+					+ SqlBuilder.GenerWhereByPK(en, ":");
+			break;
+		case MySQL:
+			sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
+					+ SqlBuilder.GenerWhereByPK(en, "?");
+			break;
+		case Oracle:
+			sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
+					+ SqlBuilder.GenerWhereByPK(en, ":");
+			break;
+		case Informix:
+			sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
+					+ SqlBuilder.GenerWhereByPK(en, ":");
+			break;
+		default:
+			throw new RuntimeException("no this case db type . ");
 		}
 		return sql.replace(",=''", "");
 	}
-	public static Paras GenerParas_Update_Informix(Entity en, String[] keys)
-	{
-		if (keys == null)
-		{
+
+	public static Paras GenerParas_Update_Informix(Entity en, String[] keys) {
+		if (keys == null) {
 			return GenerParas_Update_Informix(en);
 		}
 
 		String mykeys = "@";
-		for (String key : keys)
-		{
+		for (String key : keys) {
 			mykeys += key + "@";
 		}
 
 		Map map = en.getEnMap();
 		Paras ps = new Paras();
-		for (Attr attr : map.getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			if (attr.getIsPK())
-			{
+			if (attr.getIsPK()) {
 				continue;
 			}
 
-			if (mykeys.contains("@" + attr.getKey() + "@") == false)
-			{
+			if (!mykeys.contains("@" + attr.getKey() + "@")) {
 				continue;
 			}
 
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					if (attr.getUIIsDoc() && attr.getKey().equals("Doc"))
-					{
-						String doc = en.GetValStrByKey(attr.getKey()).replace('\'', '~');
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				if (attr.getUIIsDoc() && attr.getKey().equals("Doc")) {
+					String doc = en.GetValStrByKey(attr.getKey()).replace('\'', '~');
 
-						if (map.getAttrs().Contains("DocLength"))
-						{
-							en.SetValByKey("DocLength", doc.length());
-						}
-
-						if (doc.length() >= 2000)
-						{
-							Sys.SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), doc);
-							ps.Add(attr.getKey(), "");
-						}
-						else
-						{
-							ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
-						}
+					if (map.getAttrs().Contains("DocLength")) {
+						en.SetValByKey("DocLength", doc.length());
 					}
-					else
-					{
+
+					if (doc.length() >= 2000) {
+						SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), doc);
+						ps.Add(attr.getKey(), "");
+					} else {
 						ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
 					}
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-					ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
-					break;
-				case DataType.AppFloat:
-				case DataType.AppDouble:
-				case DataType.AppMoney:
-					String str = en.GetValStrByKey(attr.getKey()).toString();
-					str = str.replace("￥", "");
-					str = str.replace(",", "");
-					if (DataType.IsNullOrEmpty(str))
-					{
-						ps.Add(attr.getKey(), 0);
-					}
-					else
-					{
-						ps.Add(attr.getKey(), BigDecimal.Parse(str));
-					}
-					break;
-				case DataType.AppDate: // 如果是日期类型。
-				case DataType.AppDateTime:
-					String da = en.GetValStringByKey(attr.getKey());
-					ps.Add(attr.getKey(), da);
-					break;
-				default:
-					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
-			}
-		}
-		switch (en.getPK())
-		{
-			case "OID":
-			case "WorkID":
-			case "FID":
-				ps.Add(en.getPK(), en.GetValIntByKey(en.getPK()));
+				} else {
+					ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
+				}
+				break;
+			case DataType.AppBoolean:
+			case DataType.AppInt:
+				ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+				String str = en.GetValStrByKey(attr.getKey()).toString();
+				str = str.replace("￥", "");
+				str = str.replace(",", "");
+				if (StringHelper.isNullOrEmpty(str)) {
+					ps.Add(attr.getKey(), 0);
+				} else {
+					ps.Add(attr.getKey(), new java.math.BigDecimal(str));
+				}
+				break;
+			case DataType.AppDate: // 如果是日期类型。
+			case DataType.AppDateTime:
+				String da = en.GetValStringByKey(attr.getKey());
+				ps.Add(attr.getKey(), da);
 				break;
 			default:
-				ps.Add(en.getPK(), en.GetValStrByKey(en.getPK()));
-				break;
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
+			}
+		}
+
+		if (en.getPK().equals("OID") || en.getPK().equals("WorkID") || en.getPK().equals("FID")) {
+			ps.Add(en.getPK(), en.GetValIntByKey(en.getPK()));
+		} else {
+			ps.Add(en.getPK(), en.GetValStrByKey(en.getPK()));
 		}
 		return ps;
 	}
-	public static Paras GenerParas_Update_Informix(Entity en)
-	{
-		String mykeys = "@";
 
+	public static Paras GenerParas_Update_Informix(Entity en) {
 		Map map = en.getEnMap();
 		Paras ps = new Paras();
-		for (Attr attr : map.getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			if (attr.getIsPK())
-			{
+			if (attr.getIsPK()) {
 				continue;
 			}
 
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					if (attr.getUIIsDoc() && attr.getKey().equals("Doc"))
-					{
-						String doc = en.GetValStrByKey(attr.getKey()).replace('\'', '~');
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				if (attr.getUIIsDoc() && attr.getKey().equals("Doc")) {
+					String doc = en.GetValStrByKey(attr.getKey()).replace('\'', '~');
 
-						if (map.getAttrs().Contains("DocLength"))
-						{
-							en.SetValByKey("DocLength", doc.length());
-						}
-
-						if (doc.length() >= 2000)
-						{
-							Sys.SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), doc);
-							ps.Add(attr.getKey(), "");
-						}
-						else
-						{
-							ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
-						}
+					if (map.getAttrs().Contains("DocLength")) {
+						en.SetValByKey("DocLength", doc.length());
 					}
-					else
-					{
+
+					if (doc.length() >= 2000) {
+						SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), doc);
+						ps.Add(attr.getKey(), "");
+					} else {
 						ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
 					}
-					break;
-				case DataType.AppBoolean:
-				case DataType.AppInt:
-					ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
-					break;
-				case DataType.AppFloat:
-				case DataType.AppDouble:
-				case DataType.AppMoney:
-					String str = en.GetValStrByKey(attr.getKey()).toString();
-					str = str.replace("￥", "");
-					str = str.replace(",", "");
-					if (DataType.IsNullOrEmpty(str))
-					{
-						ps.Add(attr.getKey(), 0);
-					}
-					else
-					{
-						ps.Add(attr.getKey(), BigDecimal.Parse(str));
-					}
-					break;
-				case DataType.AppDate: // 如果是日期类型。
-				case DataType.AppDateTime:
-					String da = en.GetValStringByKey(attr.getKey());
-					ps.Add(attr.getKey(), da);
-					break;
-				default:
-					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
+				} else {
+					ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
+				}
+				break;
+			case DataType.AppBoolean:
+			case DataType.AppInt:
+				ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+				String str = en.GetValStrByKey(attr.getKey()).toString();
+				str = str.replace("￥", "");
+				str = str.replace(",", "");
+				if (StringHelper.isNullOrEmpty(str)) {
+					ps.Add(attr.getKey(), 0);
+				} else {
+					ps.Add(attr.getKey(), new java.math.BigDecimal(str));
+				}
+				break;
+			case DataType.AppDate: // 如果是日期类型。
+			case DataType.AppDateTime:
+				String da = en.GetValStringByKey(attr.getKey());
+				ps.Add(attr.getKey(), da);
+				break;
+			default:
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
 		}
 
 		String pk = en.getPK();
-		switch (pk)
-		{
-			case "OID":
-			case "WorkID":
-				ps.Add(en.getPK(), en.GetValIntByKey(pk));
-				break;
-			case "No":
-			case "MyPK":
-			case "ID":
-				ps.Add(en.getPK(), en.GetValStrByKey(pk));
-				break;
-			default:
-				for (Attr attr : map.getAttrs())
-				{
-					if (attr.getIsPK() == false)
-					{
-						continue;
-					}
-					switch (attr.getMyDataType())
-					{
-						case DataType.AppString:
-							ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
-							break;
-						case DataType.AppInt:
-							ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
-							break;
-						default:
-							throw new RuntimeException("@SqlBulider.update, 没有这个数据类型...");
-					}
+
+		if (pk.equals("OID") || pk.equals("WorkID")) {
+			ps.Add(en.getPK(), en.GetValIntByKey(pk));
+		} else if (pk.equals("No") || pk.equals("MyPK") || pk.equals("ID")) {
+			ps.Add(en.getPK(), en.GetValStrByKey(pk));
+		} else {
+			for (Attr attr : map.getAttrs()) {
+				if (!attr.getIsPK()) {
+					continue;
 				}
-				break;
+				switch (attr.getMyDataType()) {
+				case DataType.AppString:
+					ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
+					break;
+				case DataType.AppInt:
+					ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
+					break;
+				default:
+					throw new RuntimeException("@SqlBulider.update, 没有这个数据类型...");
+				}
+			}
 		}
 		return ps;
 	}
-	public static Paras GenerParas(Entity en, String[] keys)
-	{
+
+	public static Paras GenerParas(Entity en, String[] keys) {
 		boolean IsEnableNull = BP.Sys.SystemConfig.getIsEnableNull();
 		String mykeys = "@";
-		if (keys != null)
-		{
-			for (String key : keys)
-			{
+		if (keys != null) {
+			for (String key : keys) {
 				mykeys += key + "@";
 			}
 		}
 
 		Map map = en.getEnMap();
 		Paras ps = new Paras();
-		String errKey = "";
-		try
-		{
-			for (Attr attr : map.getAttrs())
-			{
-				if (attr.getMyFieldType() == FieldType.RefText)
-				{
-					continue;
-				}
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
+				continue;
+			}
 
-				if (keys != null)
-				{
-					if (mykeys.contains("@" + attr.getKey() + "@") == false)
-					{
-						if (attr.getIsPK() == false)
-						{
-							continue;
-						}
+			if (keys != null) {
+				if (!mykeys.contains("@" + attr.getKey() + "@")) {
+					if (!attr.getIsPK()) {
+						continue;
 					}
 				}
+			}
 
-				errKey = attr.getKey();
-
-				switch (attr.getMyDataType())
-				{
-					case DataType.AppString:
-						if (attr.getMaxLength() >= 4000)
-						{
-							ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'), true);
-						}
-						else
-						{
-							ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
-						}
-
-						break;
-					case DataType.AppBoolean:
-						ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
-						break;
-					case DataType.AppInt:
-						if (attr.getKey().equals("MyPK")) //特殊判断解决 truck 是64位的int类型的数值问题.
-						{
-							ps.Add(attr.getKey(), en.GetValInt64ByKey(attr.getKey()));
-						}
-						else
-						{
-							if (en.getRow().get(attr.getKey()) == DBNull.Value)
-							{
-								ps.Add(attr.getKey(), Integer.parseInt(attr.getDefaultValOfReal()));
-								continue;
-							}
-
-							String strInt = en.getRow().get(attr.getKey()).toString();
-							if (strInt == null || strInt.equals("") || strInt.equals("null"))
-							{
-								ps.Add(attr.getKey(), Integer.parseInt(attr.getDefaultValOfReal()));
-							}
-							else
-							{
-								ps.Add(attr.getKey(), Integer.parseInt(strInt));
-							}
-						}
-						break;
-					//@YLN
-					case DataType.AppFloat:
-					case DataType.AppDouble:
-						//ps.Add(attr.Key, en.GetValFloatByKey(attr.Key, 0));
-						String tempVar = en.GetValStrByKey(attr.getKey());
-						String str = tempVar instanceof String ? (String)tempVar : null;
-						if (DataType.IsNullOrEmpty(str))
-						{
-							if (IsEnableNull)
-							{
-								ps.Add(attr.getKey(), DBNull.Value);
-							}
-							else
-							{
-								ps.Add(attr.getKey(), 0);
-							}
-						}
-						else
-						{
-							ps.Add(attr.getKey(), BigDecimal.Parse(str));
-						}
-						break;
-					case DataType.AppMoney:
-						Object val = en.getRow().GetValByKey(attr.getKey());
-						if (val == null || val == DBNull.Value)
-						{
-							str = "0";
-						}
-						else
-						{
-							str = val.toString();
-							str = str.replace("￥", "");
-							str = str.replace(",", "");
-						}
-
-						ps.Add(attr.getKey(), Double.parseDouble(str, System.Globalization.NumberStyles.Any));
-
-						break;
-					case DataType.AppDate: // 如果是日期类型。
-					case DataType.AppDateTime:
-						String da = en.GetValStringByKey(attr.getKey());
-						ps.Add(attr.getKey(), da);
-						break;
-					default:
-						throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				if (attr.getUIIsDoc() && attr.getKey().equals("Doc")) {
+					ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
+				} else {
+					ps.Add(attr.getKey(), en.GetValStrByKey(attr.getKey()).replace('\'', '~'));
 				}
+				break;
+			case DataType.AppBoolean:
+				ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
+				break;
+			case DataType.AppInt:
+				if (attr.getKey().equals("MyPK")) // 特殊判断解决truck
+													// 是64位的int类型的数值问题.
+				{
+					ps.Add(attr.getKey(), en.GetValInt64ByKey(attr.getKey()));
+				} else {
+					if (IsEnableNull) {
+						String s = en.GetValStrByKey(attr.getKey());
+						if (StringHelper.isNullOrEmpty(s)) {
+							ps.Add(attr.getKey(), 0);
+						} else {
+							ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
+						}
+					} else {
+						ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
+					}
+				}
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+				String str = en.GetValStrByKey(attr.getKey()).toString();
+				str = str.replace("￥", "");
+				str = str.replace(",", "");
+				if (StringHelper.isNullOrEmpty(str)) {
+					if (IsEnableNull) {
+						// ps.AddDBNull(attr.getKey());
+						ps.Add(attr.getKey(), null, BigDecimal.class);
+					} else {
+						ps.Add(attr.getKey(), 0);
+					}
+				} else {
+					ps.Add(attr.getKey(), new BigDecimal(str));
+				}
+				break;
+			case DataType.AppDate: // 如果是日期类型。
+			case DataType.AppDateTime:
+				String da = en.GetValStringByKey(attr.getKey());
+				ps.Add(attr.getKey(), da);
+				break;
+			default:
+				throw new RuntimeException("@SqlBulider.update, 没有这个数据类型");
 			}
-		}
-		catch (RuntimeException ex)
-		{
-			Attr attr = en.getEnMap().GetAttrByKey(errKey);
-			errKey = "@attrKey=" + attr.getKey() + ",AttrVal=" + en.getRow().get(attr.getKey()) + ",DataType=" + attr.getMyDataTypeStr();
-			throw new RuntimeException("生成参数期间错误:" + errKey + "@错误信息:" + ex.getMessage());
 		}
 
-		if (keys != null)
-		{
-			switch (en.getPK())
-			{
-				case "OID":
-				case "WorkID":
-					ps.Add(en.getPK(), en.GetValIntByKey(en.getPK()));
-					break;
-				default:
-					ps.Add(en.getPK(), en.GetValStrByKey(en.getPK()));
-					break;
+		if (keys != null) {
+			if (en.getPK().equals("OID") || en.getPK().equals("WorkID")) {
+				ps.Add(en.getPK(), en.GetValIntByKey(en.getPK()));
+			} else {
+				ps.Add(en.getPK(), en.GetValStrByKey(en.getPK()));
 			}
 		}
+
 		return ps;
 	}
-	public static String UpdateForPara(Entity en, String[] keys)
-	{
+
+	public static String UpdateForPara(Entity en, String[] keys) {
 		String mykey = "";
-		if (keys != null)
-		{
-			for (String s : keys)
-			{
+		if (keys != null) {
+			for (String s : keys) {
 				mykey += "@" + s + ",";
 			}
 		}
 
 		String dbVarStr = en.getHisDBVarStr();
-		//  string dbstr = en.HisDBVarStr;
 		Map map = en.getEnMap();
 		String val = "";
-		for (Attr attr : map.getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText || attr.getIsPK())
-			{
+		for (Attr attr : map.getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText || attr.getIsPK()) {
 				continue;
 			}
 
-			if (keys != null)
-			{
-				if (mykey.contains("@" + attr.getKey() + ",") == false)
-				{
+			if (keys != null) {
+				if (!mykey.contains("@" + attr.getKey() + ",")) {
 					continue;
 				}
 			}
 
-			if (dbVarStr.equals("?"))
-			{
-				val = val + "," + attr.getField() + "=" + dbVarStr;
-			}
-			else
-			{
-				val = val + "," + attr.getField() + "=" + dbVarStr + attr.getKey();
-			}
+			val = val + "," + attr.getField() + "=" + dbVarStr + attr.getKey();
+
 		}
-		if (DataType.IsNullOrEmpty(val))
-		{
-			for (Attr attr : map.getAttrs())
-			{
-				if (attr.getMyFieldType() == FieldType.RefText)
-				{
+		if (StringHelper.isNullOrEmpty(val)) {
+			for (Attr attr : map.getAttrs()) {
+				if (attr.getMyFieldType() == FieldType.RefText) {
 					continue;
 				}
 
-				if (keys != null)
-				{
-					if (mykey.contains("@" + attr.getKey() + ",") == false)
-					{
+				if (keys != null) {
+					if (!mykey.contains("@" + attr.getKey() + ",")) {
 						continue;
 					}
 				}
 
 				val = val + "," + attr.getField() + "=" + attr.getField();
 			}
-			//   throw new Exception("@生成SQL出现错误:" + map.EnDesc + "，" + en.ToString() + "，要更新的字段为空。");
 		}
-		if (!DataType.IsNullOrEmpty(val))
-		{
+		if (!StringHelper.isNullOrEmpty(val)) {
 			val = val.substring(1);
 		}
-		String sql = "";
-		switch (en.getEnMap().getEnDBUrl().getDBType())
-		{
-			case MSSQL:
-			case Access:
-			case MySQL:
-			case PostgreSQL:
-				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val +
-					" WHERE " + SqlBuilder.GenerWhereByPK(en, "@");
-				break;
-			case Informix:
-				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val +
-					" WHERE " + SqlBuilder.GenerWhereByPK(en, "?");
-				break;
-			case Oracle:
-				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val +
-					" WHERE " + SqlBuilder.GenerWhereByPK(en, ":");
-				break;
-			default:
-				throw new RuntimeException("no this case db type . ");
-		}
+		String sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val + " WHERE "
+				+ SqlBuilder.GenerWhereByPK(en, en.getHisDBVarStr());
+
 		return sql.replace(",=''", "");
 	}
-	/** 
-	 Delete sql
-	 
-	 @param en
-	 @return 
-	*/
-	public static String DeleteForPara(Entity en)
-	{
+
+	/**
+	 * Delete sql
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String DeleteForPara(Entity en) {
 		String dbstr = en.getHisDBVarStr();
-		String sql = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + SqlBuilder.GenerWhereByPK(en, dbstr);
+		String sql = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE "
+				+ SqlBuilder.GenerWhereByPK(en, dbstr);
 		return sql;
 	}
-	public static String InsertForPara(Entity en)
-	{
+
+	public static String InsertForPara(Entity en) {
+
 		String dbstr = en.getHisDBVarStr();
-		if (dbstr.equals("?"))
-		{
-			return InsertForPara_Informix(en);
-		}
 
-		boolean isInnkey = false;
-		if (en.getIsOIDEntity())
-		{
-			EntityOID myen = en instanceof EntityOID ? (EntityOID)en : null;
-			isInnkey = false; // myen.IsInnKey;
-		}
+		boolean isMySQL = false;
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+			isMySQL = true;
 
-		String key = "", field = "", val = "";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
+		String field = "", val = "";
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (Attr attr : attrs) {
+
 			if (attr.getMyFieldType() == FieldType.RefText)
-			{
 				continue;
-			}
 
-			if (isInnkey)
-			{
-				if (attr.getKey().equals("OID"))
-				{
-					continue;
-				}
-			}
+			if (isMySQL)
+				field = field + "," + attr.getField();
+			else
+				field = field + ",[" + attr.getField() + "]";
 
-			key = attr.getKey();
-			field = field + ",[" + attr.getField() + "]";
 			val = val + "," + dbstr + attr.getKey();
 		}
-		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( " + val.substring(1) + ")";
+		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( "
+				+ val.substring(1) + ")";
 		return sql;
 	}
-	public static String InsertForPara_Informix(Entity en)
-	{
+
+	public static String InsertForPara_Informix(Entity en) {
 		boolean isInnkey = false;
-		if (en.getIsOIDEntity())
-		{
-			EntityOID myen = en instanceof EntityOID ? (EntityOID)en : null;
+		if (en.getIsOIDEntity()) {
 			isInnkey = false;
 		}
 
-		String key = "", field = "", val = "";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		String field = "", val = "";
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (Attr attr : attrs) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 
-			if (isInnkey)
-			{
-				if (attr.getKey().equals("OID"))
-				{
+			if (isInnkey) {
+				if (attr.getKey().equals("OID")) {
 					continue;
 				}
 			}
 
-			key = attr.getKey();
 			field = field + ",[" + attr.getField() + "]";
 			val = val + ",?";
 		}
-		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( " + val.substring(1) + ")";
+		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( "
+				+ val.substring(1) + ")";
 		return sql;
 	}
-	/** 
-	 Insert 
-	 
-	 @param en
-	 @return 
-	*/
-	public static String Insert(Entity en)
-	{
+
+	/**
+	 * Insert
+	 * 
+	 * @param en
+	 * @return
+	 */
+	public static String Insert(Entity en) {
 		String key = "", field = "", val = "";
 		Attrs attrs = en.getEnMap().getAttrs();
-		if (attrs.Count == 0)
-		{
+		if (attrs.size() == 0) 
 			throw new RuntimeException("@实体：" + en.toString() + " ,Attrs属性集合信息丢失，导致无法生成SQL。");
-		}
-
-		for (Attr attr : attrs)
-		{
+		
+		for (Attr attr : attrs) {
 			if (attr.getMyFieldType() == FieldType.RefText)
-			{
 				continue;
-			}
 
 			key = attr.getKey();
 			field = field + "," + attr.getField();
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					String str = en.GetValStringByKey(key);
-					if (DataType.IsNullOrEmpty(str))
-					{
-						str = "";
-					}
-					else
-					{
-						str = str.replace('\'', '~');
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				String str = en.GetValStringByKey(key);
+				if (StringHelper.isNullOrEmpty(str)) {
+					str = "";
+				} else {
+					str = str.replace('\'', '~');
+				}
+
+				if (attr.getUIIsDoc() && attr.getKey().equals("Doc")) {
+					if (attrs.Contains("DocLength")) {
+						en.SetValByKey("DocLength", str.length());
 					}
 
-					if (attr.getUIIsDoc() && attr.getKey().equals("Doc"))
-					{
-						if (attrs.Contains("DocLength"))
-						{
+					if (str.length() >= 2000) {
+						SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), str);
+						if (attrs.Contains("DocLength")) {
 							en.SetValByKey("DocLength", str.length());
 						}
-
-						if (str.length() >= 2000)
-						{
-							Sys.SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), str);
-							if (attrs.Contains("DocLength"))
-							{
-								en.SetValByKey("DocLength", str.length());
-							}
-							val = val + ",''";
-						}
-						else
-						{
-							val = val + ",'" + str + "'";
-						}
+						val = val + ",''";
+					} else {
+						val = val + ",'" + str + "'";
 					}
-					else
-					{
-						val = val + ",'" + en.GetValStringByKey(key).replace('\'', '~') + "'";
-					}
-					break;
-				case DataType.AppInt:
-				case DataType.AppBoolean:
-					val = val + "," + en.GetValIntByKey(key);
-					break;
-				case DataType.AppFloat:
-				case DataType.AppDouble:
-				case DataType.AppMoney:
-					String strNum = en.GetValStringByKey(key).toString();
-					strNum = strNum.replace("￥", "");
-					strNum = strNum.replace(",", "");
-					if (strNum.equals(""))
-					{
-						strNum = "0";
-					}
-					val = val + "," + strNum;
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					String da = en.GetValStringByKey(attr.getKey());
-					if (da.indexOf("_DATE") == -1)
-					{
-						val = val + ",'" + da + "'";
-					}
-					else
-					{
-						val = val + "," + da;
-					}
-					break;
-				default:
-					throw new RuntimeException("@bulider insert sql error: 没有这个数据类型");
+				} else {
+					val = val + ",'" + en.GetValStringByKey(key).replace('\'', '~') + "'";
+				}
+				break;
+			case DataType.AppInt:
+			case DataType.AppBoolean:
+				val = val + "," + en.GetValIntByKey(key);
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+				String strNum = en.GetValStringByKey(key).toString();
+				strNum = strNum.replace("￥", "");
+				strNum = strNum.replace(",", "");
+				if (strNum.equals("")) {
+					strNum = "0";
+				}
+				val = val + "," + strNum;
+				break;
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				String da = en.GetValStringByKey(attr.getKey());
+				if (da.indexOf("_DATE") == -1) {
+					val = val + ",'" + da + "'";
+				} else {
+					val = val + "," + da;
+				}
+				break;
+			default:
+				throw new RuntimeException("@bulider insert sql error: 没有这个数据类型");
 			}
 		}
-		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( " + val.substring(1) + ")";
+		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( "
+				+ val.substring(1) + ")";
 		return sql;
 	}
-	public static String InsertOFOLE(Entity en)
-	{
+
+	public static String InsertOFOLE(Entity en) {
 		String key = "", field = "", val = "";
-		for (Attr attr : en.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
+		for (Attr attr : en.getEnMap().getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
 				continue;
 			}
 			key = attr.getKey();
 			field = field + ",[" + attr.getField() + "]";
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppString:
-					val = val + ", '" + en.GetValStringByKey(key) + "'";
-					break;
-				case DataType.AppInt:
-				case DataType.AppBoolean:
-					val = val + "," + en.GetValIntByKey(key);
-					break;
-				case DataType.AppFloat:
-				case DataType.AppDouble:
-				case DataType.AppMoney:
-					String str = en.GetValStringByKey(key).toString();
-					str = str.replace("￥", "");
-					str = str.replace(",", "");
-					if (str.equals(""))
-					{
-						str = "0";
-					}
-					val = val + "," + str;
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-					String da = en.GetValStringByKey(attr.getKey());
-					if (da.indexOf("_DATE") == -1)
-					{
-						val = val + ",'" + da + "'";
-					}
-					else
-					{
-						val = val + "," + da;
-					}
-					break;
-				default:
-					throw new RuntimeException("@bulider insert sql error: 没有这个数据类型");
+			switch (attr.getMyDataType()) {
+			case DataType.AppString:
+				val = val + ", '" + en.GetValStringByKey(key) + "'";
+				break;
+			case DataType.AppInt:
+			case DataType.AppBoolean:
+				val = val + "," + en.GetValIntByKey(key);
+				break;
+			case DataType.AppFloat:
+			case DataType.AppDouble:
+			case DataType.AppMoney:
+				String str = en.GetValStringByKey(key).toString();
+				str = str.replace("￥", "");
+				str = str.replace(",", "");
+				if (str.equals("")) {
+					str = "0";
+				}
+				val = val + "," + str;
+				break;
+			case DataType.AppDate:
+			case DataType.AppDateTime:
+				String da = en.GetValStringByKey(attr.getKey());
+				if (da.indexOf("_DATE") == -1) {
+					val = val + ",'" + da + "'";
+				} else {
+					val = val + "," + da;
+				}
+				break;
+			default:
+				throw new RuntimeException("@bulider insert sql error: 没有这个数据类型");
 			}
 		}
-		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( " + val.substring(1) + ")";
+		String sql = "INSERT INTO " + en.getEnMap().getPhysicsTable() + " (" + field.substring(1) + " ) VALUES ( "
+				+ val.substring(1) + ")";
 		return sql;
-	}
-
-	/** 
-	 获取判断指定表达式如果为空，则返回指定值的SQL表达式
-	 <p>注：目前只对MSSQL/ORACLE/MYSQL三种数据库做兼容</p>
-	 <p>added by liuxc,2017-03-07</p>
-	 
-	 @param expression 要判断的表达式，在SQL中的写法
-	 @param isNullBack 判断的表达式为NULL，返回值的表达式，在SQL中的写法
-	 @return 
-	*/
-	public static String GetIsNullInSQL(String expression, String isNullBack)
-	{
-		switch (DBAccess.getAppCenterDBType())
-		{
-			case MSSQL:
-				return " ISNULL(" + expression + "," + isNullBack + ")";
-			case Oracle:
-				return " NVL(" + expression + "," + isNullBack + ")";
-			case MySQL:
-				return " IFNULL(" + expression + "," + isNullBack + ")";
-			case PostgreSQL:
-				return " COALESCE(" + expression + "," + isNullBack + ")";
-			default:
-				throw new RuntimeException("GetIsNullInSQL未涉及的数据库类型");
-		}
 	}
 }

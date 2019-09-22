@@ -69,7 +69,7 @@ public class UAC
 	public final void OpenAllForStation(String fk_station)
 	{
 		Paras ps = new Paras();
-		ps.Add("user", Web.WebUser.getNo());
+		ps.Add("user", WebUser.getNo());
 		ps.Add("st", fk_station);
 
 		boolean bl;

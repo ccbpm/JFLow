@@ -13,7 +13,6 @@ import BP.En.Entity;
 import BP.En.Map;
 import BP.En.SQLCash;
 import BP.En.SqlBuilder;
-import BP.Pub.RepBill;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
@@ -49,7 +48,7 @@ public class Cash {
 			}
 		} else {
 			ses = new SysEnums();
-			ses.RegIt(enumKey, tag, true);
+			ses.RegIt(enumKey, tag);
 			// ses.LoadIt(enumKey);
 		}
 
@@ -488,9 +487,7 @@ public class Cash {
 				file = SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + cfile;
 			}
 
-			if (SystemConfig.getIsDebug()) {
-				RepBill.RepairBill(file);
-			}
+			 
 			try {
 				val = ConvertTools.StreamReaderToStringConvert(file, "us-ascii");
 			} catch (Exception ex) {

@@ -801,8 +801,7 @@ public class Attrs extends ArrayList<Attr>
 		if (attr.getMyFieldType() == FieldType.FK
 				|| attr.getMyFieldType() == FieldType.Enum
 				|| attr.getMyFieldType() == FieldType.PKEnum
-				|| attr.getMyFieldType() == FieldType.PKFK
-				|| attr.getMyFieldType() == FieldType.BindTable)
+				|| attr.getMyFieldType() == FieldType.PKFK)
 		{
 			
 			Attr myattr = new Attr();

@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.WF.Template.*;
 import java.util.*;

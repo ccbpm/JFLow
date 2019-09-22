@@ -23,7 +23,11 @@ public enum LogType
 	/** 
 	 错误
 	*/
-	Error(3);
+	Error(3),
+	/*
+	 * debug
+	 * */
+	Debug(4);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

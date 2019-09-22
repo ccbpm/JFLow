@@ -50,6 +50,15 @@ public class EnumInfoXmls extends XmlEns
 	{
 		return null;
 	}
+
+	/** 
+	 转化成 java list,C#不能调用.
+	 @return List
+	*/
+	public final java.util.List<EnumInfoXml> ToJavaList()
+	{
+		return (java.util.List<EnumInfoXml>)(Object)this;
+	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 

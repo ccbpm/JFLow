@@ -1,491 +1,1043 @@
 package BP.Sys;
 
-import Oracle.ManagedDataAccess.Client.*;
-import MySql.*;
-import MySql.Data.*;
-import MySql.Data.Common.*;
-import MySql.Data.MySqlClient.*;
-import BP.DA.*;
-import BP.Web.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Properties;
 
-/** 
- 系统配值
-*/
-public class SystemConfig
-{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region ftp 配置.
-	/** 
-	 ftp服务器类型.
-	*/
-	public static String getFTPServerType()
-	{
-		String str = SystemConfig.getAppSettings().get("FTPServerType");
-		return BP.Sys.Glo.String_JieMi(str);
-	}
-	/** 
-	 服务器IP
-	*/
-	public static String getFTPServerIP()
-	{
-		String str = SystemConfig.getAppSettings().get("FTPServerIP");
-		return BP.Sys.Glo.String_JieMi(str);
-	}
-	/** 
-	 用户编号
-	*/
-	public static String getFTPUserNo()
-	{
-		String str = SystemConfig.getAppSettings().get("FTPUserNo");
-		return BP.Sys.Glo.String_JieMi(str);
-	}
-	/** 
-	 密码
-	*/
-	public static String getFTPUserPassword()
-	{
-		String str = SystemConfig.getAppSettings().get("FTPUserPassword");
-		return BP.Sys.Glo.String_JieMi(str);
-	}
-	/** 
-	 端口号
-	*/
-	public static String getFTPPort()
-	{
-		String str = SystemConfig.getAppSettings().get("FTPPort");
-		return BP.Sys.Glo.String_JieMi(str);
-	}
-	/** 
-	 附件上传加密
-	*/
-	public static boolean getIsEnableAthEncrypt()
-	{
-		return SystemConfig.GetValByKeyBoolen("IsEnableAthEncrypt", false);
-	}
-	/** 
-	 附件上传位置
-	*/
-	public static boolean getIsUploadFileToFTP()
-	{
-		return SystemConfig.GetValByKeyBoolen("IsUploadFileToFTP", false);
+import org.apache.commons.io.IOUtils;
+
+import BP.DA.DataRow;
+import BP.DA.DataSet;
+import BP.DA.DataTable;
+import BP.DA.DataType;
+import BP.Tools.StringHelper;
+
+/**
+ * 系统配置
+ * 
+ * @author thinkpad
+ * 
+ */
+public class SystemConfig {
+	private static boolean _IsBSsystem = true;
+
+	public static String getFTPServerType() {
+		
+		return SystemConfig.getAppSettings().get("FTPServerType").toString();
 	}
 
-	public static String getAttachWebSite()
-	{
-		return SystemConfig.getAppSettings().get("AttachWebSite");
+	/// #region ftp配置.
+	public static String getFTPServerIP() {
+		return SystemConfig.getAppSettings().get("FTPServerIP").toString();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 组织结构的配置.
+	public static String getFTPUserNo() throws Exception {
 
-	/** 
-	 OS结构
-	*/
-	public static OSModel getOSModel()
-	{
-		return Sys.OSModel.OneMore;
-			//return (OSModel)SystemConfig.GetValByKeyInt("OSModel", 0);
+		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();
+		return str;
+
+		// return str;
 	}
-	public static OSDBSrc getOSDBSrc()
-	{
+
+	public static String getFTPUserPassword() throws Exception {
+		String str = SystemConfig.getAppSettings().get("FTPUserPassword").toString();
+		return str;
+	}
+
+	 /// <summary>
+    /// 附件上传加密
+    /// </summary>
+    public static boolean getIsEnableAthEncrypt(){
+    	Object isEnableAthEncryptObj=SystemConfig.getAppSettings().get("IsEnableAthEncrypt");
+    	if(isEnableAthEncryptObj==null){
+    		return false;
+    	}
+    	
+        String IsEnableAthEncrypt = isEnableAthEncryptObj.toString();
+
+        if (DataType.IsNullOrEmpty(IsEnableAthEncrypt) == true)
+            return false;
+
+        if (SystemConfig.getAppSettings().get("IsEnableAthEncrypt").toString().equals("1"))
+            return true;
+        return false;
+    
+    }
+    /// <summary>
+    /// 附件上传位置
+    /// </summary>
+    public static boolean getIsUploadFileToFTP(){
+        String IsUploadFileToFTP = SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString();
+
+        if (DataType.IsNullOrEmpty(IsUploadFileToFTP) == true)
+            return false;
+
+        if (SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString().equals("1"))
+            return true;
+        return false;
+    }
+	public static String getAttachWebSite() {
+		return SystemConfig.getAppSettings().get("AttachWebSite").toString();
+	}
+
+	/**
+	 * OS结构
+	 */
+	public static OSModel getOSModel() {
+		return OSModel.forValue(SystemConfig.GetValByKeyInt("OSModel", 0));
+	}
+
+	public static OSDBSrc getOSDBSrc() {
 		return OSDBSrc.forValue(SystemConfig.GetValByKeyInt("OSDBSrc", 0));
 	}
-	/** 
-	 结束流程 窗口配置
-	*/
-	public static IsOpenEndFlow getIsOpenEndFlow()
-	{
-		return IsOpenEndFlow.forValue(SystemConfig.GetValByKeyInt("IsOpenEndFlow", 0));
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-	/** 
-	 运行的平台为转换java平台使用.
-	*/
-	public static Plant Plant = Sys.Plant.CSharp;
-	/** 
-	 读取配置文件
-	 
-	 @param cfgFile
-	*/
-	public static void ReadConfigFile(String cfgFile)
-	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 清除缓存
-		BP.En.ClassFactory._BPAssemblies = null;
-		if (BP.En.ClassFactory.Htable_Ens != null)
-		{
-			BP.En.ClassFactory.Htable_Ens.clear();
+	/**
+	 * 读取配置文件
+	 * 
+	 * @param cfgFile
+	 * @throws Exception
+	 */
+	public static void ReadConfigFile(InputStream fis) throws Exception {
+
+		if (SystemConfig.getCS_AppSettings() != null) {
+			SystemConfig.getCS_AppSettings().clear();
 		}
 
-		if (BP.En.ClassFactory.Htable_XmlEn != null)
-		{
-			BP.En.ClassFactory.Htable_XmlEn.clear();
+		Properties properties = new Properties();
+		try {
+			properties.load(fis);
+			for (Object s : properties.keySet()) {
+				getCS_AppSettings().put(s.toString(), String.valueOf(properties.get(s)));
+			}
+			fis.close();
+		} catch (IOException e) {
+			throw new Exception("读取配置文件失败", e);
 		}
-
-		if (BP.En.ClassFactory.Htable_XmlEns != null)
-		{
-			BP.En.ClassFactory.Htable_XmlEns.clear();
-		}
-
-		if (BP.Sys.SystemConfig.getCS_AppSettings() != null)
-		{
-			BP.Sys.SystemConfig.getCS_AppSettings().Clear();
-		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 清除缓存
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 加载 Web.Config 文件配置
-		if ((new File(cfgFile)).isFile() == false)
-		{
-			throw new RuntimeException("文件不存在 [" + cfgFile + "]");
-		}
-		String _RefConfigPath = cfgFile;
-		InputStreamReader read = new InputStreamReader(cfgFile);
-		String firstline = read.ReadLine();
-		String cfg = read.ReadToEnd();
-		read.close();
-
-		int start = cfg.toLowerCase().indexOf("<appsettings>");
-		int end = cfg.toLowerCase().indexOf("</appsettings>");
-
-		cfg = cfg.substring(start, end + "</appsettings".length() + 1);
-
-		String tempFile = "Web.config.xml";
-
-		OutputStreamWriter write = new OutputStreamWriter(tempFile);
-		write.write(firstline + System.lineSeparator());
-		write.write(cfg);
-		write.flush();
-		write.close();
-
-		DataSet dscfg = new DataSet("cfg");
-		dscfg.ReadXml(tempFile);
-
-		//    BP.Sys.SystemConfig.CS_AppSettings = new System.Collections.Specialized.NameValueCollection();
-		BP.Sys.SystemConfig.CS_DBConnctionDic.clear();
-		for (DataRow row : dscfg.Tables["add"].Rows)
-		{
-			BP.Sys.SystemConfig.getCS_AppSettings().Add(row.get("key").toString().trim(), row.get("value").toString().trim());
-		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 关于开发商的信息
-	public static String getVer()
-	{
-		try
-		{
-			return getAppSettings().get("Ver");
+	/**
+	 * 获取xml中的配置信息 GroupTitle, ShowTextLen, DefaultSelectedAttrs, TimeSpan
+	 * 
+	 * @param key
+	 * @param ensName
+	 * @return
+	 */
+	public static String GetConfigXmlEns(String key, String ensName) {
+		try {
+			Object tempVar = BP.DA.Cash.GetObj("TConfigEns", BP.DA.Depositary.Application);
+			DataTable dt = (DataTable) ((tempVar instanceof DataTable) ? tempVar : null);
+			if (dt == null) {
+				DataSet ds = new DataSet("dss");
+				ds.readXml(BP.Sys.SystemConfig.getPathOfXML() + "Ens/ConfigEns.xml");
+				dt = ds.Tables.get(0);
+				BP.DA.Cash.AddObj("TConfigEns", BP.DA.Depositary.Application, dt);
+			}
+
+			for (DataRow dr : dt.Rows) {
+				if (dr.getValue("Key").equals(key) && dr.getValue("For").equals(ensName)) {
+					return dr.getValue("Val") == null ? "" : dr.getValue("Val").toString();
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			;
 		}
-		catch (java.lang.Exception e)
-		{
+		return null;
+	}
+
+	/**
+	 * 关于开发商的信息
+	 * 
+	 * @return
+	 */
+	public static String getVer() {
+		try {
+			return getAppSettings().get("Ver").toString();
+		} catch (java.lang.Exception e) {
 			return "1.0.0";
 		}
 	}
-	public static String getTouchWay()
-	{
-		try
-		{
-			return getAppSettings().get("TouchWay");
-		}
-		catch (java.lang.Exception e)
-		{
+
+	public static String getTouchWay() {
+		try {
+			return getAppSettings().get("TouchWay").toString();
+		} catch (java.lang.Exception e) {
 			return SystemConfig.getCustomerTel() + " 地址:" + SystemConfig.getCustomerAddr();
 		}
 	}
-	public static String getCopyRight()
-	{
-		try
-		{
-			return getAppSettings().get("CopyRight");
-		}
-		catch (java.lang.Exception e)
-		{
+
+	public static String getCopyRight() {
+		try {
+			return getAppSettings().get("CopyRight").toString();
+		} catch (java.lang.Exception e) {
 			return "版权所有@" + getCustomerName();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 用户配置信息
-	/** 
-	 系统语言（）
-	 对多语言的系统有效。
-	*/
-	public static String getSysLanguage()
-	{
-		String s = getAppSettings().get("SysLanguage");
-		if (s == null)
-		{
-			s = "CH";
+	public static String getCompanyID() {
+		String s = getAppSettings().get("CompanyID").toString();
+		if (StringHelper.isNullOrEmpty(s)) {
+			return "CCFlow";
 		}
 		return s;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 逻辑处理
-	/** 
-	 封装了AppSettings
-	*/
-	private static NameValueCollection _CS_AppSettings;
-	public static NameValueCollection getCS_AppSettings()
-	{
-		if (_CS_AppSettings == null)
-		{
-			_CS_AppSettings = new NameValueCollection();
+	/**
+	 * 开发商全称
+	 * 
+	 * @return
+	 */
+	public static String getDeveloperName() {
+		return getAppSettings().get("DeveloperName").toString();
+	}
+
+	/**
+	 * 开发商简称
+	 * 
+	 * @return
+	 */
+	public static String getDeveloperShortName() {
+		return getAppSettings().get("DeveloperShortName").toString();
+	}
+
+	/**
+	 * 开发商电话
+	 * 
+	 * @return
+	 */
+	public static String getDeveloperTel() {
+		return getAppSettings().get("DeveloperTel").toString();
+	}
+
+	/**
+	 * 开发商的地址
+	 * 
+	 * @return
+	 */
+	public static String getDeveloperAddr() {
+		return (String) getAppSettings().get("DeveloperAddr");
+
+	}
+
+	/**
+	 * 系统语言 对多语言的系统有效。
+	 * 
+	 * @return
+	 */
+	public static String getSysLanguage() {
+		return "CH";
+	}
+
+	/**
+	 * 封装了AppSettings, 负责存放 配置的基本信息
+	 */
+	private static Hashtable<String, Object> _CS_AppSettings = null;
+
+	public static Hashtable<String, Object> getCS_AppSettings() {
+
+		if (_CS_AppSettings == null || _CS_AppSettings.size() == 0) {
+			try {
+				_CS_AppSettings = new java.util.Hashtable<String, Object>();
+				
+				Properties props = new Properties();
+				InputStream is = null;
+				try {
+					is = BP.Difference.Helper.loadResource();
+					BufferedReader bf = new BufferedReader(new InputStreamReader(is, "UTF-8"));// 解决读取properties文件中产生中文乱码的问题
+					props.load(bf);
+				} finally {
+					IOUtils.closeQuietly(is);
+				}
+				_CS_AppSettings = (Hashtable) props;
+			} catch (Exception e) {
+				throw new RuntimeException("读取配置文件失败", e);
+			}
 		}
 		return _CS_AppSettings;
 	}
-	public static void setCS_AppSettings(NameValueCollection value)
-	{
-		_CS_AppSettings = value;
+
+
+
+	/**
+	 * 封装了AppSettings
+	 * 
+	 * @return
+	 */
+	public static Hashtable<String, Object> getAppSettings() {
+		return getCS_AppSettings();
 	}
 
-	public static void InitOptons(NameValueCollection appSetting, NameValueCollection connections)
-	{
+	static {
+		CS_DBConnctionDic = new Hashtable<String, Object>();
+	}
 
+	/**
+	 * 应用程序路径
+	 * 
+	 * @return
+	 */
+	public static String getPhysicalApplicationPath() {
+		return "D:\\JJFlow\\trunk\\JJFlow\\";
 	}
-	/** 
-	 封装了AppSettings
-	*/
-	public static NameValueCollection getAppSettings()
-	{
-		if (SystemConfig.getIsBSsystem())
-		{
-			return System.Configuration.ConfigurationManager.AppSettings;
-		}
-		else
-		{
-			return getCS_AppSettings();
-		}
-	}
-	static
-	{
-		CS_DBConnctionDic = new Hashtable();
-	}
-	/** 
-	 应用程序路径
-	*/
-	public static String getPhysicalApplicationPath()
-	{
-		if (SystemConfig.getIsBSsystem() && HttpContextHelper.getCurrent() != null)
-		{
-			return HttpContextHelper.getPhysicalApplicationPath();
-		}
-		else
-		{
-			return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-		}
-	}
-	/** 
-	 文件放置的路径
-	*/
-	public static String getPathOfUsersFiles()
-	{
+
+	/**
+	 * 文件放置的路径
+	 * 
+	 * @return
+	 */
+	public static String getPathOfUsersFiles() {
 		return "/Data/Files/";
 	}
-	/** 
-	 临时文件路径
-	*/
-	public static String getPathOfTemp()
-	{
-		return getPathOfDataUser() + "Temp\\";
-	}
-	public static String getPathOfWorkDir()
-	{
-		if (BP.Sys.SystemConfig.getIsBSsystem())
-		{
-			String path1 = HttpContextHelper.getPhysicalApplicationPath() + "\\..\\";
-			File info1 = new File(path1);
-			return info1.getPath();
-		}
-		else
-		{
-			String path = AppDomain.CurrentDomain.BaseDirectory + "\\..\\..\\..\\";
-			File info = new File(path);
-			return info.getPath();
-		}
-	}
-	public static String getPathOfFDB()
-	{
-		String s = SystemConfig.getAppSettings().get("FDB");
-		if (s.equals("") || s == null)
-		{
-			return getPathOfWebApp() + "\\DataUser\\FDB\\";
-		}
-		return s;
-	}
-	/** 
-	 数据文件
-	*/
-	public static String getPathOfData()
-	{
-		return getPathOfWebApp() + "\\WF\\Data\\";
-	}
-	public static String getPathOfDataUser()
-	{
-		String tmp = SystemConfig.getAppSettings().get("DataUserDirPath");
-		if (DataType.IsNullOrEmpty(tmp))
-		{
-			tmp = getPathOfWebApp() + "DataUser\\";
-		}
-		else
-		{
-			if (tmp.contains("\\"))
-			{
-				tmp.replace("\\", "");
-			}
 
-			tmp = getPathOfWebApp() + tmp + "\\DataUser\\";
-		}
-		return tmp;
+	/**
+	 * 临时文件路径
+	 * 
+	 * @return
+	 */
+	public static String getPathOfTemp() {
+		return getPathOfDataUser() + "Temp";
 	}
-	/** 
-	 XmlFilePath
-	*/
-	public static String getPathOfXML()
-	{
-		return getPathOfWebApp() + "\\WF\\Data\\XML\\";
+
+	public static String getPathOfWorkDir() {
+		return "D:/JJFlow/trunk/";
 	}
-	public static String getPathOfAppUpdate()
-	{
-		return getPathOfWebApp() + "\\WF\\Data\\AppUpdate\\";
+
+	public static String getPathOfFDB() {
+		return getPathOfWebApp() + "/DataUser/FDB/";
 	}
-	public static String getPathOfCyclostyleFile()
-	{
-		return getPathOfWebApp() + "\\DataUser\\CyclostyleFile\\";
+
+	/**
+	 * 数据文件
+	 * 
+	 * @return
+	 */
+	public static String getPathOfData() {
+
+		BP.DA.Log.DebugWriteInfo(getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()
+				+ File.separator + "Data" + File.separator);
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data"
+				+ File.separator;
 	}
-	/** 
-	 应用程序名称
-	*/
-	public static String getAppName()
-	{
-		return HttpContextHelper.getRequestApplicationPath().replace("/", "");
+
+	public static String getPathOfDataUser() {
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString() + "DataUser/";
 	}
-	/** 
-	 ccflow物理目录
-	*/
-	public static String getCCFlowAppPath()
-	{
-		if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("DataUserDirPath")) == false)
-		{
-			return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath");
+
+	/**
+	 * XmlFilePath
+	 * 
+	 * @return
+	 */
+	public static String getPathOfXML() {
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/XML/";
+	}
+
+	public static String getPathOfAppUpdate() {
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/AppUpdate/";
+	}
+
+	public static String getPathOfCyclostyleFile() {
+		return getPathOfWebApp() + "DataUser/CyclostyleFile/";
+	}
+
+	/**
+	 * 应用程序名称
+	 * 
+	 * @return
+	 */
+	public static String getAppName() {
+		return "JJFlow";
+	}
+
+	/**
+	 * ccflow物理目录
+	 * 
+	 * @return
+	 */
+	public static String getCCFlowAppPath() {
+		// if (!StringHelper.isNullOrEmpty(SystemConfig
+		// .getAppSettings().get("DataUserDirPath").toString())) {
+		// return getPathOfWebApp()
+		// + SystemConfig.getAppSettings().get("DataUserDirPath")
+		// .toString();
+		// }
+		if (SystemConfig.getAppSettings().get("DataUserDirPath") != null) {
+			return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString();
 		}
 		return getPathOfWebApp();
 	}
-	/** 
-	 ccflow网站目录
-	*/
-	public static String getCCFlowWebPath()
-	{
-		if (!DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("CCFlowAppPath")))
-		{
-			return SystemConfig.getAppSettings().get("CCFlowAppPath");
+
+	/*
+	 * 集成的框架.
+	 * */
+	public static String getRunOnPlant() {
+		 
+		String str= (String) SystemConfig.getAppSettings().get("RunOnPlant") ;
+		if ( str== null) {
+			return "BP";			 
 		}
-		return "/";
+		
+		return str;
+		 
 	}
-	/** 
-	 网站地址用于生成url, 支持cs程序调用ws程序.
-	*/
-	public static String getHostURL()
-	{
-		if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("HostURL")) == false)
-		{
-			return SystemConfig.getAppSettings().get("HostURL");
-		}
-		return getHostURLOfBS(); // "http:/127.0.0.1/";
+	
+	/**
+	 * ccflow网站目录
+	 * 
+	 * @return
+	 */
+	public static String getCCFlowWebPath() {
+		return BP.WF.Glo.getCCFlowAppPath();
 	}
 
-	/** 
-	 移动端用于生成url, 支持cs程序调用ws程序.
-	*/
-	public static String getMobileURL()
-	{
-		if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("MobileURL")) == false)
-		{
-			return SystemConfig.getAppSettings().get("MobileURL");
-		}
-		return SystemConfig.getAppSettings().get("MobileURL"); // "http:/127.0.0.1/";
-	}
-
-	/** 
-	 HostURL 在bs的模式下调用.
-	*/
-	public static String getHostURLOfBS()
-	{
-		String url = "http://" + HttpContextHelper.getRequestUrlAuthority();
-		return url;
-	}
-	/** 
-	 WebApp Path.
-	*/
-	public static String getPathOfWebApp()
-	{
-		if (SystemConfig.getIsBSsystem())
-		{
-			return HttpContextHelper.getPhysicalApplicationPath();
-		}
-		else
-		{
-			if (SystemConfig.getSysNo().equals("FTA"))
-			{
-				return AppDomain.CurrentDomain.BaseDirectory;
+	/**
+	 * WebApp Path
+	 * 
+	 * @return
+	 */
+	public static String getPathOfWebApp() {
+		// return "D:\\JJFlow\\trunk\\JJFlow";
+		if (SystemConfig.getIsBSsystem()) {
+			if (Glo.getRequest() == null || Glo.getRequest().getSession() == null) {
+				return BP.WF.Glo.getHostURL() + "/";
+			} else {
+				return Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
 			}
-			else
-			{
-				return AppDomain.CurrentDomain.BaseDirectory + "..\\..\\";
-			}
+		} else {
+			return "";
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 共同变量。
-	public static boolean IsBSsystem_Test = true;
-	/** 
-	 是不是BS系统结构。
-	*/
-	private static boolean _IsBSsystem = true;
-	/** 
-	 是不是BS系统结构。
-	*/
-	public static boolean getIsBSsystem()
-	{
-			// return true;
-		return SystemConfig._IsBSsystem;
+	public static boolean getIsBSsystem() {
+		return SystemConfig.GetValByKeyBoolen("IsBSsystem", true);
 	}
-	public static void setIsBSsystem(boolean value)
-	{
+
+	public static void setIsBSsystem(boolean value) {
 		SystemConfig._IsBSsystem = value;
 	}
-	public static boolean getIsCSsystem()
-	{
-		return !SystemConfig._IsBSsystem;
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 系统配置信息
-	/** 
-	 执行清空
-	*/
-	public static void DoClearCash()
-	{
+	public static boolean getIsCSsystem() {
+		return !SystemConfig.getIsBSsystem();
+	}
+
+	// 统配置信息
+	/**
+	 * 系统编号
+	 * 
+	 * @return
+	 */
+	public static String getSysNo() {
+		return getAppSettings().get("SysNo").toString();
+	}
+
+	/**
+	 * 系统名称
+	 * 
+	 * @return
+	 */
+	public static String getSysName() {
+		String s = getAppSettings().get("SysName").toString();
+		if (s == null) {
+			s = "请在web.propertoes中配置SysName名称";
+		}
+		return s;
+	}
+
+	public static String getOrderWay() {
+		return getAppSettings().get("OrderWay").toString();
+	}
+
+	public static int getPageSize() {
+		try {
+			return Integer.parseInt(getAppSettings().get("PageSize").toString());
+		} catch (java.lang.Exception e) {
+			return 99999;
+		}
+	}
+
+	public static int getMaxDDLNum() {
+		try {
+			return Integer.parseInt(getAppSettings().get("MaxDDLNum").toString());
+		} catch (java.lang.Exception e) {
+			return 50;
+		}
+	}
+
+	public static int getPageSpan() {
+		try {
+			return Integer.parseInt(getAppSettings().get("PageSpan").toString());
+		} catch (java.lang.Exception e) {
+			return 20;
+		}
+	}
+
+	/**
+	 * 到的路径.PageOfAfterAuthorizeLogin
+	 * 
+	 * @return
+	 */
+	public static String getPageOfAfterAuthorizeLogin() {
+		/*
+		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
+		 * + "" + getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
+		 */
+		return Glo.class.getClass().getResource("/").getPath() + ""
+				+ getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
+	}
+
+	/**
+	 * 丢失session 到的路径
+	 * 
+	 * @return
+	 */
+	public static String getPageOfLostSession() {
+		/*
+		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
+		 * + "" + getAppSettings().get("PageOfLostSession").toString();
+		 */
+		return Glo.class.getClass().getResource("/").getPath() + ""
+				+ getAppSettings().get("PageOfLostSession").toString();
+	}
+
+	/**
+	 * 日志路径
+	 * 
+	 * @return
+	 */
+	public static String getPathOfLog() {
+		return getPathOfWebApp() + "/DataUser/Log/";
+	}
+
+	/**
+	 * 系统名称
+	 * 
+	 * @return
+	 */
+	public static int getTopNum() {
+		try {
+			return Integer.parseInt(getAppSettings().get("TopNum").toString());
+		} catch (java.lang.Exception e) {
+			return 99999;
+		}
+	}
+
+	/**
+	 * 服务电话
+	 * 
+	 * @return
+	 */
+	public static String getServiceTel() {
+		return getAppSettings().get("ServiceTel").toString();
+	}
+
+	/**
+	 * 服务E-mail
+	 * 
+	 * @return
+	 */
+	public static String getServiceMail() {
+		return getAppSettings().get("ServiceMail").toString();
+	}
+
+	/**
+	 * 第3方软件
+	 * 
+	 * @return
+	 */
+	public static String getThirdPartySoftWareKey() {
+		return getAppSettings().get("ThirdPartySoftWareKey").toString();
+	}
+
+	public static boolean getIsEnableNull() {
+		if (getAppSettings().get("IsEnableNull").toString().equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 是否 debug 状态
+	 * 
+	 * @return
+	 */
+	public static boolean getIsDebug() {
+		if (getAppSettings().get("IsDebug").toString().equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean getIsOpenSQLCheck() {
+		if (getAppSettings().get("IsOpenSQLCheck").toString().equals("0")) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * 是不是多系统工作
+	 * 
+	 * @return
+	 */
+	public static boolean getIsMultiSys() {
+		if (getAppSettings().get("IsMultiSys").toString().equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 是不是多线程工作
+	 * 
+	 * @return
+	 */
+	public static boolean getIsMultiThread_del() {
+		if (getAppSettings().get("IsMultiThread").toString().equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 是不是多语言版本
+	 * 
+	 * @return
+	 */
+	public static boolean getIsMultiLanguageSys() {
+		if (getAppSettings().get("IsMultiLanguageSys").toString().equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 处理临时缓存
+	/**
+	 * 放在 Temp 中的cash 多少时间失效。0, 表示永久不失效
+	 * 
+	 * @return
+	 */
+	private static int getCashFail() {
+		try {
+			return Integer.parseInt(getAppSettings().get("CashFail").toString());
+		} catch (java.lang.Exception e) {
+			return 0;
+		}
+	}
+
+	/**
+	 * 当前的 TempCash 是否失效了
+	 * 
+	 * @return
+	 */
+	public static boolean getIsTempCashFail() {
+		/*
+		 * warning if (SystemConfig.getCashFail() == 0){ return false; } if
+		 * (_CashFailDateTime == null){ _CashFailDateTime = new Date(); return
+		 * true; }else{ TimeSpan ts = new Date() - _CashFailDateTime; if
+		 * (ts.Minutes >= SystemConfig.getCashFail()) { _CashFailDateTime = new
+		 * Date(); return true; } return false; }
+		 */
+		return true;
+	}
+
+	public static Date _CashFailDateTime = new Date(0);
+
+	// 客户配置信息
+	/**
+	 * 客户编号
+	 * 
+	 * @return
+	 */
+	public static String getCustomerNo() {
+		return getAppSettings().get("CustomerNo").toString();
+	}
+
+	/**
+	 * 客户名称
+	 * 
+	 * @return
+	 */
+	public static String getCustomerName() {
+		return getAppSettings().get("CustomerName").toString();
+	}
+
+	public static String getCustomerURL() {
+		return getAppSettings().get("CustomerURL").toString();
+	}
+
+	/**
+	 * 客户简称
+	 * 
+	 * @return
+	 */
+	public static String getCustomerShortName() {
+		return getAppSettings().get("CustomerShortName").toString();
+	}
+
+	/**
+	 * 客户地址
+	 * 
+	 * @return
+	 */
+	public static String getCustomerAddr() {
+		return getAppSettings().get("CustomerAddr").toString();
+	}
+
+	/**
+	 * 客户电话
+	 * 
+	 * @return
+	 */
+	public static String getCustomerTel() {
+		return getAppSettings().get("CustomerTel").toString();
+	}
+
+	/// #region 微信相关配置信息
+     /// <summary>
+     /// 企业标识
+     /// </summary>
+     public static String getWX_CorpID(){
+    	 return getAppSettings().get("CorpID").toString();
+     }
+     
+     /// <summary>
+     /// 帐号钥匙
+     /// </summary>
+     public static String getWX_AppSecret(){
+    	 return getAppSettings().get("AppSecret").toString();
+     }
+    
+     /// <summary>
+     /// 应用令牌
+     /// </summary>
+     public static String getWX_WeiXinToken(){
+    	 return getAppSettings().get("WeiXinToken").toString();
+     }
+     
+     /// <summary>
+     /// 应用加密所用的秘钥
+     /// </summary>
+     public static String getWX_EncodingAESKey(){
+    	 return getAppSettings().get("EncodingAESKey").toString();
+     }
+    
+     /// <summary>
+     /// 进入应用后的欢迎提示
+     /// </summary>
+     public static boolean getWeiXin_AgentWelCom(){
+    	 return GetValByKeyBoolen("WeiXin_AgentWelCom", false);
+     }
+     
+     /// <summary>
+     /// 应用ID
+     /// </summary>
+     public static String getWX_AgentID(){
+    	 return getAppSettings().get("AgentID").toString();
+     }
+     
+     /// <summary>
+     /// 消息链接网址
+     /// </summary>
+     public static String getWX_MessageUrl()
+     {
+    	 return getAppSettings().get("WeiXin_MessageUrl").toString();
+     }
+     ///#endregion
+
+     ///#region 钉钉配置相关
+     /// <summary>
+     /// 企业标识
+     /// </summary>
+     public static String getDing_CorpID()
+     {
+    	 return getAppSettings().get("Ding_CorpID").toString();
+        
+     }
+     /// <summary>
+     /// 密钥
+     /// </summary>
+     public static String getDing_CorpSecret()
+     {
+    	 return getAppSettings().get("Ding_CorpSecret").toString();
+    
+     }
+     /// <summary>
+     /// 登录验证密钥
+     /// </summary>
+     public static String getDing_SSOsecret()
+     {
+    	 return getAppSettings().get("Ding_SSOsecret").toString();
+        
+     }
+     /// <summary>
+     /// 消息超链接服务器地址
+     /// </summary>
+     public static String getDing_MessageUrl()
+     {
+    	 return getAppSettings().get("Ding_MessageUrl").toString();
+       
+     }
+     /// <summary>
+     /// 企业应用编号
+     /// </summary>
+     public static String getDing_AgentID()
+     {
+    	 return getAppSettings().get("Ding_AgentID").toString();
+    	
+     }
+     ///#endregion
+
+
+ 	public static String GetValByKey(String key, String isNullas) {
+
+ 		if (getAppSettings().containsKey(key) == false)
+ 			return isNullas;
+
+ 		Object s = getAppSettings().get(key);
+ 		if (s == null) {
+ 			s = isNullas;
+ 		}
+ 		return s.toString();
+ 	}
+ 	
+ 	
+	public static boolean GetValByKeyBoolen(String key, boolean isNullas) {
+
+		if (getAppSettings().containsKey(key) == false)
+			return isNullas;
+
+		String s = getAppSettings().get(key).toString();
+		if (s == null)
+			return isNullas;
+
+		if (s == null)
+			return isNullas;
+
+		if (s.equals("1"))
+			return true;
+
+		return false;
+
+	}
+
+	public static int GetValByKeyInt(String key, int isNullas) {
+
+		if (getAppSettings().containsKey(key) == false)
+			return isNullas;
+
+		Object s = getAppSettings().get(key);
+		if (s == null) {
+			return isNullas;
+		}
+		return Integer.parseInt(s.toString());
+	}
+
+	public static float GetValByKeyFloat(String key, int isNullas) {
+
+		if (getAppSettings().containsKey(key) == false)
+			return isNullas;
+
+		Object s = getAppSettings().get(key);
+		if (s == null) {
+			return isNullas;
+		}
+		return Float.parseFloat(s.toString());
+	}
+
+	/**
+	 * 当前数据库连接
+	 * 
+	 * @return
+	 */
+	public static String getAppCenterDSN() {
+		String dsn = getAppSettings().get("AppCenterDSN").toString();
+		return dsn;
+	}
+
+	/**
+	 * 当前数据库连接用户.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getUser() throws Exception {
+
+		if (SystemConfig.getCustomerNo().equals("BWDA")) {
+			String user = getAppSettings().get("JflowUser.encryption").toString();
+			user = Glo.String_JieMi(user);
+			return user;
+		}
+
+		return getAppSettings().get("JflowUser").toString();
+	}
+
+	public static String getPassword() throws Exception {
+		
+		if (SystemConfig.getCustomerNo().equals("BWDA") ) {
+			String user = getAppSettings().get("JflowPassword.encryption").toString();
+			user = Glo.String_JieMi(user);
+			return user;
+		}
+		
+		return  getAppSettings().get("JflowPassword").toString();
+	 
+	}
+
+	public static void setAppCenterDSN(String value) {
+		/*
+		 * warning getAppSettings().get("AppCenterDSN").toString() = value;
+		 */
+		getAppSettings().put("AppCenterDSN", value);
+	}
+
+	/**
+	 * 获取主应用程序的数据库类型
+	 * 
+	 * @return
+	 */
+	public static BP.DA.DBType getAppCenterDBType() {
+		Object jdbcType = getAppSettings().get("AppCenterDBType");
+		if (jdbcType != null) {
+			String dbType = jdbcType.toString();
+			if (dbType.equalsIgnoreCase("MSMSSQL") || dbType.equalsIgnoreCase("MSSQL")) {
+				return BP.DA.DBType.MSSQL;
+			} else if (dbType.equalsIgnoreCase("Oracle")) {
+				return BP.DA.DBType.Oracle;
+			} else if (dbType.equalsIgnoreCase("MySQL")) {
+				return BP.DA.DBType.MySQL;
+			}
+		}
+		throw new RuntimeException("位置的数据库类型，请配置AppCenterDBType属性。");
+	}
+
+	/**
+	 * 获取不同类型的数据库变量标记
+	 * 
+	 * @return
+	 */
+	public static String getAppCenterDBVarStr() {
+		switch (SystemConfig.getAppCenterDBType()) {
+		case MSSQL:
+			return ":";
+		case Oracle:
+			return ":";
+		case Informix:
+			return "?";
+		case MySQL:
+			return ":";
+		default:
+			return "";
+		}
+	}
+
+	public static String getAppCenterDBLengthStr() {
+		switch (SystemConfig.getAppCenterDBType()) {
+		case Oracle:
+			return "Length";
+		case MSSQL:
+			return "LEN";
+		case Informix:
+			return "Length";
+		case Access:
+			return "Length";
+		default:
+			return "Length";
+		}
+	}
+
+	/**
+	 * 获取不同类型的substring函数
+	 * 
+	 * @return
+	 */
+	public static String getAppCenterDBSubstringStr() {
+		switch (SystemConfig.getAppCenterDBType()) {
+		case Oracle:
+			return "substr";
+		case MSSQL:
+			return "substring";
+		case Informix:
+			return "MySubString";
+		case Access:
+			return "Mid";
+		default:
+			return "substring";
+		}
+	}
+
+	private static String _AppCenterDBDatabase = null;
+
+	/**
+	 * 数据库名称
+	 * 
+	 * @return
+	 */
+	public static String getAppCenterDBDatabase() {
+		if (_AppCenterDBDatabase == null) {
+			_AppCenterDBDatabase = getAppSettings().get("AppCenterDBDatabase").toString();
+			/*
+			 * warning switch (BP.DA.DBAccess.getAppCenterDBType()){ case MSSQL:
+			 * SqlConnection connMSSQL = new
+			 * SqlConnection(SystemConfig.getAppCenterDSN()); if
+			 * (connMSSQL.State != ConnectionState.Open) { connMSSQL.Open(); }
+			 * _AppCenterDBDatabase = connMSSQL.Database; break; case Oracle:
+			 * OracleConnection connOra = new
+			 * OracleConnection(SystemConfig.getAppCenterDSN()); if
+			 * (connOra.State != ConnectionState.Open) { connOra.Open(); }
+			 * _AppCenterDBDatabase = connOra.Database; break; case MySQL:
+			 * MySqlConnection connMySQL = new
+			 * MySqlConnection(SystemConfig.getAppCenterDSN()); if
+			 * (connMySQL.State != ConnectionState.Open) { connMySQL.Open(); }
+			 * _AppCenterDBDatabase = connMySQL.Database; break; //case
+			 * DA.DBType.Informix: // IfxConnection connIFX = new
+			 * IfxConnection(SystemConfig.AppCenterDSN); // if (connIFX.State !=
+			 * ConnectionState.Open) // connIFX.Open(); // _AppCenterDBDatabase
+			 * = connIFX.Database; // break; default: throw new
+			 * RuntimeException("@没有判断的数据类型."); break; }
+			 */
+
+		}
+		// 返回database.
+		return _AppCenterDBDatabase;
+	}
+
+	public static String getAppCenterDBAddStringStr() {
+		switch (SystemConfig.getAppCenterDBType()) {
+		case Oracle:
+		case MySQL:
+		case Informix:
+			return "||";
+		default:
+			return "+";
+		}
+	}
+
+	public static String getAppSavePath() {
+		String savePath = getAppSettings().get("SavaPath").toString();
+		return savePath;
+	}
+
+	public static Hashtable<String, Object> CS_DBConnctionDic;
+
+	public static void DoClearCash_del() {
+		DoClearCash();
+	}
+
+	/**
+	 * 执行清空
+	 */
+	public static void DoClearCash() {
 		// HttpRuntime.UnloadAppDomain();
 		BP.DA.Cash.getMap_Cash().clear();
 		BP.DA.Cash.getSQL_Cash().clear();
@@ -494,856 +1046,37 @@ public class SystemConfig
 		BP.DA.Cash.getBS_Cash().clear();
 		BP.DA.Cash.getBill_Cash().clear();
 		BP.DA.CashEntity.getDCash().clear();
-	}
-	/** 
-	 系统编号
-	*/
-	public static String getSysNo()
-	{
-		return getAppSettings().get("SysNo");
+
+		try {
+			// System.Web.HttpContext.Current.Session.Clear();
+			// System.Web.HttpContext.Current.Application.Clear();
+		} catch (java.lang.Exception e) {
+		}
 	}
 
-	/** 
-	 系统名称
-	*/
-	public static String getSysName()
-	{
-		String s = getAppSettings().get("SysName");
-		if (s == null)
-		{
-			s = "请在web.config中配置SysName名称。";
-		}
-		return s;
-	}
-	public static String getOrderWay()
-	{
-		return getAppSettings().get("OrderWay");
-	}
-	public static int getPageSize()
-	{
-		try
-		{
-			return Integer.parseInt(getAppSettings().get("PageSize"));
-		}
-		catch (java.lang.Exception e)
-		{
-			return 99999;
-		}
-	}
-	public static int getMaxDDLNum()
-	{
-		try
-		{
-			return Integer.parseInt(getAppSettings().get("MaxDDLNum"));
-		}
-		catch (java.lang.Exception e)
-		{
-			return 50;
-		}
-	}
-	public static int getPageSpan()
-	{
-		try
-		{
-			return Integer.parseInt(getAppSettings().get("PageSpan"));
-		}
-		catch (java.lang.Exception e)
-		{
-			return 20;
-		}
-	}
-	/** 
-	  到的路径.PageOfAfterAuthorizeLogin
-	*/
-	public static String getPageOfAfterAuthorizeLogin()
-	{
-		return HttpContextHelper.getRequestApplicationPath() + getAppSettings().get("PageOfAfterAuthorizeLogin");
-	}
-	/** 
-	 丢失session 到的路径.
-	*/
-	public static String getPageOfLostSession()
-	{
-		return HttpContextHelper.getRequestApplicationPath() + getAppSettings().get("PageOfLostSession");
-	}
-	/** 
-	 日志路径
-	*/
-	public static String getPathOfLog()
-	{
-		return getPathOfWebApp() + "\\DataUser\\Log\\";
-	}
-
-	/** 
-	 系统名称
-	*/
-	public static int getTopNum()
-	{
-		try
-		{
-			return Integer.parseInt(getAppSettings().get("TopNum"));
-		}
-		catch (java.lang.Exception e)
-		{
-			return 99999;
-		}
-	}
-	/** 
-	 服务电话
-	*/
-	public static String getServiceTel()
-	{
-		return getAppSettings().get("ServiceTel");
-	}
-	/** 
-	 服务E-mail
-	*/
-	public static String getServiceMail()
-	{
-		return getAppSettings().get("ServiceMail");
-	}
-	/** 
-	 第3方软件
-	*/
-	public static String getThirdPartySoftWareKey()
-	{
-		return getAppSettings().get("ThirdPartySoftWareKey");
-	}
-	/** 
-	 是否启用CCIM?
-	*/
-	public static boolean getIsEnableCCIM()
-	{
-		if (getAppSettings().get("IsEnableCCIM").equals("1"))
-		{
+	/**
+	 * 是否启用CCIM?
+	 * 
+	 * @return
+	 */
+	public static boolean getIsEnableCCIM() {
+		if ("1".equals(getAppSettings().get("IsEnableCCIM"))) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	public static boolean getIsEnableNull()
-	{
-		if (getAppSettings().get("IsEnableNull").equals("1"))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	/** 
-	 是否 debug 状态
-	*/
-	public static boolean getIsDebug()
-	{
-		if (getAppSettings().get("IsDebug").equals("1"))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	public static boolean getIsOpenSQLCheck()
-	{
-		if (getAppSettings().get("IsOpenSQLCheck").equals("0"))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-	/** 
-	 是不是多系统工作。
-	*/
-	public static boolean getIsMultiSys()
-	{
-		if (getAppSettings().get("IsMultiSys").equals("1"))
-		{
-			return true;
-		}
-		return false;
-	}
-
-	/** 
-	 是否启用密码加密
-	*/
-	public static boolean getIsEnablePasswordEncryption()
-	{
-		String tempVar = getAppSettings().get("IsEnablePasswordEncryption");
-		String s = tempVar instanceof String ? (String)tempVar : null;
-		if (s == null || s.equals("0"))
-		{
+	/**
+	 * 是否启用密码加密
+	 * 
+	 */
+	public static boolean getIsEnablePasswordEncryption() {
+		String s = (String) ((SystemConfig.getAppSettings().get("IsEnablePasswordEncryption") instanceof String)
+				? SystemConfig.getAppSettings().get("IsEnablePasswordEncryption") : null);
+		if (s == null || s.equals("0")) {
 			return false;
 		}
 		return true;
 	}
-	/** 
-	 是否多语言？
-	*/
-	public static boolean getIsMultilingual()
-	{
-		if (getAppSettings().get("IsMultilingual").equals("1"))
-		{
-			return true;
-		}
-		return false;
-	}
-	/** 
-	 使用的语言
-	*/
-	public static String getLangue()
-	{
-		String str = getAppSettings().get("Langue");
-		if (DataType.IsNullOrEmpty(str))
-		{
-			return "CN";
-		}
-		return str;
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 处理临时缓存
-	/** 
-	 回话丢失时间长度(默认为500分钟)
-	*/
-	public static int getSessionLostMinute()
-	{
-		return SystemConfig.GetValByKeyInt("SessionLostMinute", 500000);
-	}
-	/** 
-	 放在 Temp 中的cash 多少时间失效。
-	 0, 表示永久不失效。
-	*/
-	private static int getCashFail()
-	{
-		try
-		{
-			return Integer.parseInt(getAppSettings().get("CashFail"));
-		}
-		catch (java.lang.Exception e)
-		{
-			return 0;
-		}
-	}
-	/** 
-	 当前的 TempCash 是否失效了
-	*/
-	public static boolean getIsTempCashFail()
-	{
-		if (SystemConfig.getCashFail() == 0)
-		{
-			return false;
-		}
-
-		if (_CashFailDateTime == null)
-		{
-			_CashFailDateTime = LocalDateTime.now();
-			return true;
-		}
-		else
-		{
-			TimeSpan ts = LocalDateTime.now() - _CashFailDateTime;
-			if (ts.Minutes >= SystemConfig.getCashFail())
-			{
-				_CashFailDateTime = LocalDateTime.now();
-				return true;
-			}
-			return false;
-		}
-	}
-	public static LocalDateTime _CashFailDateTime = LocalDateTime.MIN;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 客户配置信息
-	/** 
-	 客户编号
-	*/
-	public static String getCustomerNo()
-	{
-		return getAppSettings().get("CustomerNo");
-	}
-	/** 
-	 客户名称
-	*/
-	public static String getCustomerName()
-	{
-		return getAppSettings().get("CustomerName");
-	}
-	/** 
-	 客户名称
-	*/
-	public static String getRunOnPlant()
-	{
-		return (getAppSettings().get("RunOnPlant")) != null ? getAppSettings().get("RunOnPlant") : "";
-	}
-	public static String getCustomerURL()
-	{
-		return getAppSettings().get("CustomerURL");
-	}
-	/** 
-	 客户简称
-	*/
-	public static String getCustomerShortName()
-	{
-		return getAppSettings().get("CustomerShortName");
-	}
-	/** 
-	 客户地址
-	*/
-	public static String getCustomerAddr()
-	{
-		return getAppSettings().get("CustomerAddr");
-	}
-	/** 
-	 客户电话
-	*/
-	public static String getCustomerTel()
-	{
-		return getAppSettings().get("CustomerTel");
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 微信相关配置信息
-	/** 
-	 企业标识
-	*/
-	public static String getWX_CorpID()
-	{
-		return getAppSettings().get("CorpID");
-	}
-	/** 
-	 帐号钥匙
-	*/
-	public static String getWX_AppSecret()
-	{
-		return getAppSettings().get("AppSecret");
-	}
-	/** 
-	 应用令牌
-	*/
-	public static String getWX_WeiXinToken()
-	{
-		return getAppSettings().get("WeiXinToken");
-	}
-	/** 
-	 应用加密所用的秘钥
-	*/
-	public static String getWX_EncodingAESKey()
-	{
-		return getAppSettings().get("EncodingAESKey");
-	}
-	/** 
-	 进入应用后的欢迎提示
-	*/
-	public static boolean getWeiXin_AgentWelCom()
-	{
-		return GetValByKeyBoolen("WeiXin_AgentWelCom", false);
-	}
-	/** 
-	 应用ID
-	*/
-	public static String getWX_AgentID()
-	{
-		return getAppSettings().get("AgentID");
-	}
-	/** 
-	 消息链接网址
-	*/
-	public static String getWX_MessageUrl()
-	{
-		return getAppSettings().get("WeiXin_MessageUrl");
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 钉钉配置相关
-	/** 
-	 企业标识
-	*/
-	public static String getDing_CorpID()
-	{
-		return getAppSettings().get("Ding_CorpID");
-	}
-	/** 
-	 密钥
-	*/
-	public static String getDing_CorpSecret()
-	{
-		return getAppSettings().get("Ding_CorpSecret");
-	}
-	/** 
-	 登录验证密钥
-	*/
-	public static String getDing_SSOsecret()
-	{
-		return getAppSettings().get("Ding_SSOsecret");
-	}
-	/** 
-	 消息超链接服务器地址
-	*/
-	public static String getDing_MessageUrl()
-	{
-		return getAppSettings().get("Ding_MessageUrl");
-	}
-	/** 
-	 企业应用编号
-	*/
-	public static String getDing_AgentID()
-	{
-		return getAppSettings().get("Ding_AgentID");
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-	/** 
-	取得配置 NestedNamesSection 内的相应 key 的内容
-	 
-	 @param key
-	 @return 
-	*/
-	public static NameValueCollection GetConfig(String key)
-	{
-		Hashtable ht = (Hashtable)System.Configuration.ConfigurationManager.GetSection("NestedNamesSection");
-		return (NameValueCollection)ht.get(key);
-	}
-	public static String GetValByKey(String key, String isNullas)
-	{
-		String s = getAppSettings().get(key);
-		if (s == null)
-		{
-			s = isNullas;
-		}
-		return s;
-	}
-	public static boolean GetValByKeyBoolen(String key, boolean isNullas)
-	{
-		String s = getAppSettings().get(key);
-		if (s == null)
-		{
-			return isNullas;
-		}
-
-		if (s.equals("1"))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	public static int GetValByKeyInt(String key, int isNullas)
-	{
-		String s = getAppSettings().get(key);
-		if (s == null)
-		{
-			return isNullas;
-		}
-		return Integer.parseInt(s);
-	}
-	/** 
-	 工作小时数
-	 
-	 @param key 键
-	 @param isNullas 如果是空返回的值
-	 @return 
-	*/
-	public static float GetValByKeyFloat(String key, int isNullas)
-	{
-		String s = getAppSettings().get(key);
-		if (s == null)
-		{
-			return isNullas;
-		}
-		return Float.parseFloat(s);
-	}
-	public static String GetConfigXmlKeyVal(String key)
-	{
-		try
-		{
-			DataSet ds = new DataSet("dss");
-			ds.ReadXml(BP.Sys.SystemConfig.getPathOfXML() + "\\KeyVal.xml");
-			DataTable dt = ds.Tables[0];
-			for (DataRow dr : dt.Rows)
-			{
-				if (dr.get("Key").toString().equals(key))
-				{
-					return dr.get("Val").toString();
-				}
-			}
-			throw new RuntimeException("在您利用GetXmlConfig 取值出现错误，没有找到key= " + key + ", 请检查 /data/Xml/KeyVal.xml. ");
-		}
-		catch (RuntimeException ex)
-		{
-			throw ex;
-		}
-	}
-	public static String GetConfigXmlNode(String fk_Breed, String enName, String key)
-	{
-		try
-		{
-			String file = BP.Sys.SystemConfig.getPathOfXML() + "\\Node\\" + fk_Breed + ".xml";
-			DataSet ds = new DataSet("dss");
-			try
-			{
-				ds.ReadXml(file);
-			}
-			catch (java.lang.Exception e)
-			{
-				return null;
-			}
-			DataTable dt = ds.Tables[0];
-			if (dt.Columns.Contains(key) == false)
-			{
-				throw new RuntimeException(file + "配置错误，您没有按照格式配置，它不包含标记 " + key);
-			}
-			for (DataRow dr : dt.Rows)
-			{
-				if (dr.get("NodeEnName").toString().equals(enName))
-				{
-					if (dr.get(key).equals(DBNull.Value))
-					{
-						return null;
-					}
-					else
-					{
-						return dr.get(key).toString();
-					}
-
-				}
-			}
-			return null;
-		}
-		catch (RuntimeException ex)
-		{
-			throw ex;
-		}
-	}
-	/** 
-	 获取xml中的配置信息
-	 GroupTitle, ShowTextLen, DefaultSelectedAttrs, TimeSpan
-	 
-	 @param key
-	 @param ensName
-	 @return 
-	*/
-	public static String GetConfigXmlEns(String key, String ensName)
-	{
-		try
-		{
-			Object tempVar = BP.DA.Cash.GetObj("TConfigEns", BP.DA.Depositary.Application);
-			DataTable dt = tempVar instanceof DataTable ? (DataTable)tempVar : null;
-			if (dt == null)
-			{
-				DataSet ds = new DataSet("dss");
-				ds.ReadXml(BP.Sys.SystemConfig.getPathOfXML() + "\\Ens\\ConfigEns.xml");
-				dt = ds.Tables[0];
-				BP.DA.Cash.AddObj("TConfigEns", BP.DA.Depositary.Application, dt);
-			}
-
-			for (DataRow dr : dt.Rows)
-			{
-				if (dr.get("Key").toString().equals(key) && dr.get("For").toString().equals(ensName))
-				{
-					return dr.get("Val").toString();
-				}
-			}
-			return null;
-		}
-		catch (RuntimeException ex)
-		{
-			throw ex;
-		}
-	}
-	public static String GetConfigXmlSQL(String key)
-	{
-		try
-		{
-			DataSet ds = new DataSet("dss");
-			ds.ReadXml(BP.Sys.SystemConfig.getPathOfXML() + "\\SQL\\" + BP.Sys.SystemConfig.getThirdPartySoftWareKey() + ".xml");
-			DataTable dt = ds.Tables[0];
-			for (DataRow dr : dt.Rows)
-			{
-				if (dr.get("No").toString().equals(key))
-				{
-					return dr.get("SQL").toString();
-				}
-			}
-			throw new RuntimeException("在您利用 GetXmlConfig 取值出现错误，没有找到key= " + key + ", 请检查 /Data/XML/" + SystemConfig.getThirdPartySoftWareKey() + ".xml. ");
-		}
-		catch (RuntimeException ex)
-		{
-			throw ex;
-		}
-	}
-	public static String GetConfigXmlSQLApp(String key)
-	{
-		try
-		{
-			DataSet ds = new DataSet("dss");
-			ds.ReadXml(BP.Sys.SystemConfig.getPathOfXML() + "\\SQL\\App.xml");
-			DataTable dt = ds.Tables[0];
-			for (DataRow dr : dt.Rows)
-			{
-				if (dr.get("No").toString().equals(key))
-				{
-					return dr.get("SQL").toString();
-				}
-			}
-			throw new RuntimeException("在您利用 GetXmlConfig 取值出现错误，没有找到key= " + key + ", 请检查 /Data/XML/App.xml. ");
-		}
-		catch (RuntimeException ex)
-		{
-			throw ex;
-		}
-	}
-
-	public static String GetConfigXmlSQL(String key, String replaceKey, String replaceVal)
-	{
-		return GetConfigXmlSQL(key).replace(replaceKey, replaceVal);
-	}
-	public static String GetConfigXmlSQL(String key, String replaceKey1, String replaceVal1, String replaceKey2, String replaceVal2)
-	{
-		return GetConfigXmlSQL(key).replace(replaceKey1, replaceVal1).replace(replaceKey2, replaceVal2);
-	}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region dsn
-	/** 
-	 数据库连接.
-	*/
-	public static String _AppCenterDSN = null;
-	/** 
-	 数据库连接
-	*/
-	public static String getAppCenterDSN()
-	{
-		if (_AppCenterDSN != null)
-		{
-			return _AppCenterDSN;
-		}
-
-		String str = getAppSettings().get("AppCenterDSN");
-		if (DataType.IsNullOrEmpty(str) == false)
-		{
-			return str;
-		}
-
-		str = getAppSettings().get("AppCenterDSN.encryption");
-
-		if (DataType.IsNullOrEmpty(str) == true)
-		{
-			throw new RuntimeException("err@没有配置数据库连接字符串.");
-		}
-
-		DecryptAndEncryptionHelper.decode decode = new DecryptAndEncryptionHelper.decode();
-		_AppCenterDSN = decode.decode_exe(str);
-		return _AppCenterDSN;
-	}
-	public static void setAppCenterDSN(String value)
-	{
-		_AppCenterDSN = value;
-	}
-	public static String getDBAccessOfOracle()
-	{
-		return getAppSettings().get("DBAccessOfOracle");
-	}
-	public static String getDBAccessOfOracle1()
-	{
-		return getAppSettings().get("DBAccessOfOracle1");
-	}
-	public static String getDBAccessOfMSSQL()
-	{
-		return getAppSettings().get("DBAccessOfMSSQL");
-	}
-	public static String getDBAccessOfOLE()
-	{
-		String dsn = getAppSettings().get("DBAccessOfOLE");
-		if (dsn.indexOf("@Pass") != -1)
-		{
-			dsn = dsn.replace("@Pass", "helloccs");
-		}
-
-		if (dsn.indexOf("@Path") != -1)
-		{
-			dsn = dsn.replace("@Path", SystemConfig.getPathOfWebApp());
-		}
-		return dsn;
-
-	}
-	public static String getDBAccessOfODBC()
-	{
-		return getAppSettings().get("DBAccessOfODBC");
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-	/** 
-	 获取主应用程序的数据库部署方式．
-	*/
-	public static BP.DA.DBModel getAppCenterDBModel()
-	{
-		switch (getAppSettings().get("AppCenterDBModel"))
-		{
-			case "Domain":
-				return BP.DA.DBModel.Domain;
-			default:
-				return BP.DA.DBModel.Single;
-		}
-	}
-	/** 
-	 获取主应用程序的数据库类型．
-	*/
-	public static BP.DA.DBType getAppCenterDBType()
-	{
-		switch (getAppSettings().get("AppCenterDBType"))
-		{
-			case "MSMSSQL":
-			case "MSSQL":
-				return BP.DA.DBType.MSSQL;
-			case "Oracle":
-				return BP.DA.DBType.Oracle;
-			case "MySQL":
-				return BP.DA.DBType.MySQL;
-			case "PostgreSQL":
-				return BP.DA.DBType.PostgreSQL;
-			case "Access":
-				return BP.DA.DBType.Access;
-			case "Informix":
-				return BP.DA.DBType.Informix;
-			default:
-				return BP.DA.DBType.Oracle;
-		}
-	}
-	private static String _AppCenterDBDatabase = null;
-	/** 
-	 数据库名称
-	*/
-	public static String getAppCenterDBDatabase()
-	{
-		if (_AppCenterDBDatabase == null)
-		{
-			switch (BP.DA.DBAccess.getAppCenterDBType())
-			{
-				case MSSQL:
-					SqlConnection connMSSQL = new SqlConnection(SystemConfig.getAppCenterDSN());
-					if (connMSSQL.State != ConnectionState.Open)
-					{
-						connMSSQL.Open();
-					}
-					_AppCenterDBDatabase = connMSSQL.Database;
-					break;
-				case Oracle:
-					OracleConnection connOra = new OracleConnection(SystemConfig.getAppCenterDSN());
-					if (connOra.State != ConnectionState.Open)
-					{
-						connOra.Open();
-					}
-					_AppCenterDBDatabase = connOra.Database;
-					break;
-				case MySQL:
-					MySqlConnection connMySQL = new MySqlConnection(SystemConfig.getAppCenterDSN());
-					if (connMySQL.State != ConnectionState.Open)
-					{
-						connMySQL.Open();
-					}
-					_AppCenterDBDatabase = connMySQL.Database;
-					break;
-						//From Zhou IBM 删除
-					//case DA.DBType.Informix:
-					//    IfxConnection connIFX = new IfxConnection(SystemConfig.AppCenterDSN);
-					//    if (connIFX.State != ConnectionState.Open)
-					//        connIFX.Open();
-					//    _AppCenterDBDatabase = connIFX.Database;
-					//    break;
-				default:
-					throw new RuntimeException("@没有判断的数据类型.");
-					break;
-			}
-		}
-
-			// 返回database.
-		return _AppCenterDBDatabase;
-	}
-	/** 
-	 获取不同类型的数据库变量标记
-	*/
-	public static String getAppCenterDBVarStr()
-	{
-		switch (SystemConfig.getAppCenterDBType())
-		{
-			case Oracle:
-			case PostgreSQL:
-				return ":";
-			case MySQL:
-			case Informix:
-				return "?";
-			default:
-				return "@";
-		}
-	}
-
-	public static String getAppCenterDBLengthStr()
-	{
-		switch (SystemConfig.getAppCenterDBType())
-		{
-			case Oracle:
-				return "Length";
-			case MSSQL:
-				return "LEN";
-			case Informix:
-				return "Length";
-			case Access:
-				return "Length";
-			default:
-				return "Length";
-		}
-	}
-	/** 
-	 获取不同类型的substring函数的书写
-	*/
-	public static String getAppCenterDBSubstringStr()
-	{
-		switch (SystemConfig.getAppCenterDBType())
-		{
-			case Oracle:
-				return "substr";
-			case MSSQL:
-				return "substring";
-			case Informix:
-				return "MySubString";
-			case Access:
-				return "Mid";
-			default:
-				return "substring";
-		}
-	}
-	public static String getAppCenterDBAddStringStr()
-	{
-		switch (SystemConfig.getAppCenterDBType())
-		{
-			case Oracle:
-			case MySQL:
-			case Informix:
-				return "||";
-			default:
-				return "+";
-		}
-	}
-	public static Hashtable CS_DBConnctionDic;
 }

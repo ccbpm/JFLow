@@ -2,6 +2,7 @@ package BP.En;
 
 import BP.DA.*;
 import BP.Sys.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import java.time.*;
 import java.math.*;
@@ -593,7 +594,7 @@ public class Map
 		if (this._HisCfgAttrs == null)
 		{
 			this._HisCfgAttrs = new Attrs();
-			if (Web.WebUser.getNo().equals("admin"))
+			if (WebUser.getNo().equals("admin"))
 			{
 
 				this._HisCfgAttrs.AddDDLSysEnum("UIRowStyleGlo", 2, "表格数据行风格(应用全局)", true, false, "UIRowStyleGlo", "@0=无风格@1=交替风格@2=鼠标移动@3=交替并鼠标移动");
@@ -938,7 +939,7 @@ public class Map
 	public final void GenerMap(String xml)
 	{
 		DataSet ds = new DataSet("");
-		ds.ReadXml(xml);
+		ds.readXml(xml);
 		for (DataTable dt : ds.Tables)
 		{
 			switch (dt.TableName)
@@ -968,18 +969,19 @@ public class Map
 
 	private void DealDT_Base(DataTable dt)
 	{
-		if (dt.Rows.Count != 1)
+		if (dt.Rows.size() != 1)
 		{
 			throw new RuntimeException("基础信息配置错误，不能多于或者少于1行记录。");
 		}
 		for (DataColumn dc : dt.Columns)
 		{
-			String val = dt.Rows[0][dc.ColumnName].toString();
+			String val = dt.Rows.get(0).getValue(dc.ColumnName).toString();
 			if (val == null)
 			{
 				continue;
 			}
-			if (dt.Rows[0][dc.ColumnName] == DBNull.Value)
+			
+			if (dt.Rows.get(0).getValue(dc.ColumnName) ==null)
 			{
 				continue;
 			}
@@ -1361,7 +1363,7 @@ public class Map
 			// 因为组成的select 语句放入了内存,修改它的时间也要修改内存的数据。
 			//DA.Cash.AddObj(this.ToString()+"SQL",Depositary.Application,null);
 
-		DA.Cash.RemoveObj(this.toString() + "SQL", Depositary.Application);
+	 BP.DA.Cash.RemoveObj(this.toString() + "SQL", Depositary.Application);
 		Cash.RemoveObj("MapOf" + this.toString(), this.getDepositaryOfMap()); // RemoveObj
 
 			//DA.Cash.setObj(en.ToString()+"SQL",en.EnMap.DepositaryOfMap) as string;
@@ -1383,7 +1385,7 @@ public class Map
 	{
 		if (this._attrs == null)
 		{
-			this._attrs = new En.Attrs();
+			this._attrs = new Attrs();
 		}
 
 		Attrs myattrs = value;
@@ -1939,10 +1941,9 @@ public class Map
 		//把关系实体类的属性放入文件实体类中去。
 		for (BP.Sys.MapAttr attr : attrs)
 		{
-			if (this.getAttrs().Contains(attr.getKeyOfEn()) == true)
-			{
+			if (this.getAttrs().Contains(attr.getKeyOfEn()) == true)			
 				continue;
-			}
+			
 			this.AddAttr(attr.getHisAttr());
 		}
 	}

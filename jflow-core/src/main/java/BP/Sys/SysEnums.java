@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -16,7 +18,7 @@ public class SysEnums extends Entities
 	public final String ToDesc()
 	{
 		String strs = "";
-		for (SysEnum se : this)
+		for (SysEnum se : this.ToJavaList())
 		{
 			strs += se.getIntKey() + " " + se.getLab() + ";";
 		}
@@ -31,13 +33,13 @@ public class SysEnums extends Entities
 			return sql;
 		}
 
-		if (this.Count == 0)
+		if (this.size() == 0)
 		{
 			throw new RuntimeException("@枚举值" + enumKey + "已被删除。");
 		}
 
 		sql = " CASE NVL(" + mTable + field + "," + def + ")";
-		for (SysEnum se1 : this)
+		for (SysEnum se1 : this.ToJavaList())
 		{
 			sql += " WHEN " + se1.getIntKey() + " THEN '" + se1.getLab() + "'";
 		}
@@ -58,7 +60,7 @@ public class SysEnums extends Entities
 
 	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def)
 	{
-		if (this.Count == 0)
+		if (this.size() == 0)
 		{
 			throw new RuntimeException("@枚举值（" + enumKey + "）已被删除，无法形成期望的SQL。");
 		}
@@ -66,7 +68,7 @@ public class SysEnums extends Entities
 
 		String sql = "";
 		sql = " CASE " + mTable + field;
-		for (SysEnum se1 : this)
+		for (SysEnum se1 : this.ToJavaList())
 		{
 			sql += " WHEN " + se1.getIntKey() + " THEN '" + se1.getLab() + "'";
 		}
@@ -91,7 +93,7 @@ public class SysEnums extends Entities
 
 			try
 			{
-				BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET Lang='" + Web.WebUser.getSysLang() + "' WHERE LANG IS NULL ");
+				BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET Lang='" + WebUser.getSysLang() + "' WHERE LANG IS NULL ");
 
 				BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
 
@@ -135,7 +137,7 @@ public class SysEnums extends Entities
 		BP.Sys.XML.EnumInfoXmls xmls = new BP.Sys.XML.EnumInfoXmls();
 		xmls.RetrieveAll();
 		SysEnums ses = new SysEnums();
-		for (BP.Sys.XML.EnumInfoXml xml : xmls)
+		for (BP.Sys.XML.EnumInfoXml xml : xmls.ToJavaList())
 		{
 			ses.RegIt(xml.getKey(), xml.getVals());
 		}
@@ -169,7 +171,7 @@ public class SysEnums extends Entities
 			String[] strs = vals.split("[@]", -1);
 			SysEnums ens = new SysEnums();
 			ens.Delete(SysEnumAttr.EnumKey, EnumKey);
-			this.Clear();
+			this.clear();
 
 			for (String s : strs)
 			{
@@ -188,9 +190,9 @@ public class SysEnums extends Entities
 				{
 					kvsValues[i] = vk[i + 1];
 				}
-				se.setLab(tangible.StringHelper.join("=", kvsValues));
+				se.setLab(BP.Tools.StringHelper.join("=", kvsValues));
 				se.setEnumKey(EnumKey);
-				se.setLang(BP.Web.WebUser.getSysLang());
+				se.setLang(WebUser.getSysLang());
 				se.Insert();
 				this.AddEntity(se);
 			}
@@ -203,7 +205,7 @@ public class SysEnums extends Entities
 	}
 	public final boolean Full(String enumKey)
 	{
-		Entities ens = (Entities)Cash.GetObjFormApplication("EnumOf" + enumKey + Web.WebUser.getSysLang(), null);
+		Entities ens = (Entities)Cash.GetObjFormApplication("EnumOf" + enumKey + WebUser.getSysLang(), null);
 		if (ens != null)
 		{
 			this.AddEntities(ens);
@@ -213,7 +215,7 @@ public class SysEnums extends Entities
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SysEnumAttr.EnumKey, enumKey);
 		qo.addAnd();
-		qo.AddWhere(SysEnumAttr.Lang, Web.WebUser.getSysLang());
+		qo.AddWhere(SysEnumAttr.Lang, WebUser.getSysLang());
 		qo.addOrderBy(SysEnumAttr.IntKey);
 		if (qo.DoQuery() == 0)
 		{
@@ -221,7 +223,7 @@ public class SysEnums extends Entities
 			return false;
 		}
 
-		Cash.AddObj("EnumOf" + enumKey + Web.WebUser.getSysLang(), Depositary.Application, this);
+		Cash.AddObj("EnumOf" + enumKey + WebUser.getSysLang(), Depositary.Application, this);
 		return true;
 	}
 	///// <summary>
@@ -243,8 +245,9 @@ public class SysEnums extends Entities
 	 @param key
 	 @param val
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int Delete(String key, Object val)
+	public  int Delete(String key, Object val) throws Exception
 	{
 		try
 		{

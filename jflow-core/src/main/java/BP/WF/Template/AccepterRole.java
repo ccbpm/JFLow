@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -52,7 +53,7 @@ public class AccepterRole extends EntityOID
 	*/
 	public AccepterRole(int oid)
 	{
-		this.OID = oid;
+		this.setOID(  oid);
 		this.Retrieve();
 	}
 	/** 

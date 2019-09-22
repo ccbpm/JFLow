@@ -57,8 +57,9 @@ public abstract class EntityOID extends Entity
 	 根据OID构造实体
 	 
 	 @param oid oid
+	 * @throws Exception 
 	*/
-	protected EntityOID(int oid)
+	protected EntityOID(int oid) throws Exception
 	{
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
@@ -69,12 +70,12 @@ public abstract class EntityOID extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region override 方法
 	@Override
-	public int DirectInsert()
+	public int DirectInsert() throws Exception
 	{
 		this.setOID(DBAccess.GenerOID());
 		return super.DirectInsert();
 	}
-	public final void InsertAsNew()
+	public final void InsertAsNew() throws Exception
 	{
 		this.setOID(0);
 		this.Insert();

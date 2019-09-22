@@ -161,7 +161,7 @@ public class AtPara
 		}
 	}
 	private Hashtable _HisHT = null;
-	public final Hashtable getHisHT()
+	public final Hashtable<String, String> getHisHT()
 	{
 		if (_HisHT == null)
 		{

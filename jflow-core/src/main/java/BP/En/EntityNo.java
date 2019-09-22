@@ -35,9 +35,10 @@ public abstract class EntityNo extends Entity
 	 Insert 之前的操作。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 
 		Attr attr = this.getEnMap().GetAttrByKey("No");
@@ -85,8 +86,9 @@ public abstract class EntityNo extends Entity
 	 通过编号得到实体。
 	 
 	 @param _no 编号
+	 * @throws Exception 
 	*/
-	public EntityNo(String _no)
+	public EntityNo(String _no) throws Exception
 	{
 		if (_no == null || _no.equals(""))
 		{
@@ -100,7 +102,7 @@ public abstract class EntityNo extends Entity
 		}
 	}
 	@Override
-	public int Save()
+	public int Save() throws Exception
 	{
 		/*如果包含编号。 */
 		if (this.getIsExits())
@@ -127,8 +129,9 @@ public abstract class EntityNo extends Entity
 		///#region 提供的查寻方法
 	/** 
 	 生成一个编号
+	 * @throws Exception 
 	*/
-	public final String getGenerNewNo()
+	public final String getGenerNewNo() throws Exception
 	{
 		return this.GenerNewNoByKey("No");
 	}
@@ -136,8 +139,9 @@ public abstract class EntityNo extends Entity
 	 生成编号
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerNewEntityNo()
+	public final String GenerNewEntityNo() throws Exception
 	{
 		return this.GenerNewNoByKey("No");
 	}
@@ -145,8 +149,9 @@ public abstract class EntityNo extends Entity
 	 按 No 查询。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int RetrieveByNo()
+	public final int RetrieveByNo() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(EntityNoAttr.No, this.getNo());
@@ -157,8 +162,9 @@ public abstract class EntityNo extends Entity
 	 
 	 @param _No No
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int RetrieveByNo(String _No)
+	public final int RetrieveByNo(String _No) throws Exception
 	{
 		this.setNo(_No);
 		QueryObject qo = new QueryObject(this);

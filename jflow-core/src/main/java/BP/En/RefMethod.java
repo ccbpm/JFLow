@@ -1,70 +1,68 @@
 package BP.En;
 
-import BP.DA.*;
-import BP.Web.Controls.*;
-import java.io.*;
+import java.lang.reflect.Method;
 
-/** 
- RefMethod 的摘要说明。
-*/
+import BP.Tools.StringHelper;
+
+/**
+ * RefMethod 的摘要说明。
+ */
 public class RefMethod
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 与窗口有关的方法.
-	/** 
-	 高度
-	*/
+	
+	 
+	
+	// 与窗口有关的方法.
+	/**
+	 * 高度
+	 */
 	public int Height = 600;
-	/** 
-	 宽度
-	*/
+	/**
+	 * 宽度
+	 */
 	public int Width = 800;
 	public String Target = "_B123";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-	/** 
-	 功能
-	*/
-	public RefMethodType RefMethodType = RefMethodType.Func;
-	/** 
-	 相关字段
-	*/
+	/**
+	 * 功能
+	 */
+	public RefMethodType refMethodType= BP.En.RefMethodType.Func;
+	/*
+	 * warning public RefMethodType RefMethodType = RefMethodType.Func;
+	 */
+	/**
+	 * 相关字段
+	 */
 	public String RefAttrKey = null;
-	/** 
-	 连接标签
-	*/
+	/**
+	 * 连接标签
+	 */
 	public String RefAttrLinkLabel = null;
 	/** 
-	 分组名称
-	*/
+	 * 分组名称
+	 */
 	public String GroupName = null;
-	/** 
-	 是否显示在Ens中?
-	*/
-	public boolean IsForEns = false;
-	/** 
-	 相关功能
-	*/
+
+	
+	/**
+	 * 是否显示在Ens中?
+	 */
+	public boolean IsForEns = true;
+	
+	/**
+	 * 相关功能
+	 */
 	public RefMethod()
 	{
 	}
-   /** 
-	 相关功能
 	
-	@param groupName
-   */
-	public RefMethod(String groupName)
-	{
-		this.GroupName = groupName;
-	}
-	/** 
-	 参数
-	*/
+	/**
+	 * 参数
+	 */
 	private Attrs _HisAttrs = null;
-	/** 
-	 参数
-	*/
+	
+	/**
+	 * 参数
+	 */
 	public final Attrs getHisAttrs()
 	{
 		if (_HisAttrs == null)
@@ -73,113 +71,184 @@ public class RefMethod
 		}
 		return _HisAttrs;
 	}
+	
 	public final void setHisAttrs(Attrs value)
 	{
 		_HisAttrs = value;
 	}
-	/** 
-	 索引位置，用它区分实体.
-	*/
+	
+	/**
+	 * 索引位置，用它区分实体.
+	 */
 	public int Index = 0;
-	/** 
-	 是否显示
-	*/
+	/**
+	 * 是否显示
+	 */
 	public boolean Visable = true;
-	/** 
-	 是否可以批处理
-	*/
+	/**
+	 * 是否可以批处理
+	 */
 	public boolean IsCanBatch = false;
-	/** 
-	 标题
-	*/
+	/**
+	 * 标题
+	 */
 	public String Title = null;
-	/** 
-	 操作前提示信息
-	*/
+	/**
+	 * 操作前提示信息
+	 */
 	public String Warning = null;
-	/** 
-	 连接
-	*/
+	/**
+	 * 连接
+	 */
 	public String ClassMethodName = null;
-	/** 
-	 图标
-	*/
+	/**
+	 * 图标
+	 */
 	public String Icon = null;
+	
 	public final String GetIcon(String path)
 	{
 		if (this.Icon == null)
 		{
-			return null;
-			return "<img src='/WF/Img/Btn/Do.gif'  border=0 />";
-		}
-		else
+			/*
+			 * warning return null;
+			 */
+			return "<img src='" + path + "WF/Img/Btn/Do.gif'  border=0 />";
+		} else
 		{
-			String url = path + Icon;
-			url = url.replace("//", "/");
+			String url = Icon;
+			if (!Icon.contains("http://"))
+			{
+				Icon = path + Icon;
+				// url = url.replace("//", "/");
+			}
+			
 			return "<img src='" + url + "'  border=0 />";
 		}
 	}
-	/** 
-	 提示信息
-	*/
+	
+	/**
+	 * 提示信息
+	 */
 	public String ToolTip = null;
-
-	/** 
-	 PKVal
-	*/
+	
+	/**
+	 * PKVal
+	 */
 	public Object PKVal = "PKVal";
 	/** 
 	 
+	 
 	*/
 	public Entity HisEn = null;
-	/** 
-	 实体PK
-	*/
-	public String[] PKs = "".split("[.]", -1);
-	/** 
-	 执行
-	 
-	 @param paras
-	 @return 
-	*/
-	public final Object Do(Object[] paras)
+	/**
+	 * 实体PK
+	 */
+	public String[] PKs = (new String("")).split("[.]", -1);
+	
+	/**
+	 * 执行
+	 * 
+	 * @param paras
+	 * @return
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
+	public final Object Do(Object[] paras) throws Exception
 	{
-		String str = tangible.StringHelper.trim(this.ClassMethodName, ' ', ';', '.');
+		// throw new RuntimeException("编译不通过");
+		
+		String str = StringHelper.trim(this.ClassMethodName, ' ', ';', '.');
 		int pos = str.lastIndexOf(".");
 		String clas = str.substring(0, pos);
-		String meth = tangible.StringHelper.trim(str.substring(pos, str.length()), '.', ' ', '(', ')');
-		if (this.HisEn == null)
+		String meth = str.substring(pos + 1, str.length());
+		if (meth.contains("()"))
 		{
-			this.HisEn = BP.En.ClassFactory.GetEn(clas);
+			meth = meth.replace("()", "");
+		}
+		if (null == this.HisEn)
+		{
+			this.HisEn = ClassFactory.GetEn(clas);
 			Attrs attrs = this.HisEn.getEnMap().getAttrs();
 		}
-
-		java.lang.Class tp = this.HisEn.getClass();
-		java.lang.reflect.Method mp = tp.getMethod(meth);
-		if (mp == null)
+		Method mp = null;
+		Method[] mps = this.HisEn.getClass().getMethods();
+		int length = mps.length;
+		for (int i = 0; i < length; i++)
 		{
-			throw new RuntimeException("@对象实例[" + tp.FullName + "]中没有找到方法[" + meth + "]！");
+//			System.out.println(mps[i].getName());
+			if (mps[i].getName().equals(meth))
+			{
+				
+				mp = mps[i];
+				break;
+			}
 		}
-
+		if (null == mp)
+			throw new Exception("@对象实例中没有找到方法[" + meth + "]！");
 		try
 		{
-			return mp.Invoke(this.HisEn, paras); //调用由此 MethodInfo 实例反射的方法或构造函数。
-		}
-		catch (System.Reflection.TargetException ex)
+			if (mp.getParameterTypes().length > 0)
+			{
+				return mp.invoke(this.HisEn, paras);
+			} else
+			{
+				return mp.invoke(this.HisEn);
+			}
+			// 调用由此 MethodInfo 实例反射的方法或构造函数。
+		} catch (Exception e)
 		{
+			String cause = e.getCause().getMessage();
+			String msg = e.getMessage();
+			if (!StringHelper.isNullOrEmpty(msg))
+			{
+				cause = msg + "\n" + cause;
+			}
 			String strs = "";
 			if (paras == null)
 			{
-				throw new RuntimeException(ex.getMessage());
-			}
-			else
+				throw new Exception(cause);
+			} else
 			{
 				for (Object obj : paras)
 				{
-					strs += "para= " + obj.toString() + " type=" + obj.getClass().toString() + "\n<br>";
+					strs += "para= " + obj.toString() + "\n<br>";
 				}
+				throw new Exception(cause + "  more info:" + strs);
 			}
-			throw new RuntimeException(ex.getMessage() + "  more info:" + strs);
 		}
+		
+		/*
+		 * warning String str = StringHelper.trim(this.ClassMethodName, ' ',
+		 * ';', '.'); int pos = str.lastIndexOf("."); String clas =
+		 * str.substring(0, pos); String meth = str.substring(pos,
+		 * str.length()).Trim('.', ' ', '(', ')'); if (this.HisEn == null) {
+		 * this.HisEn = ClassFactory.GetEn(clas); Attrs attrs =
+		 * this.HisEn.getEnMap().getAttrs();
+		 * 
+		 * //if (SystemConfig.getIsBSsystem()) //{ // //string val =
+		 * BP.Sys.Glo.Request.QueryString["No"]; // //if (val == null) // //{ //
+		 * // val = BP.Sys.Glo.Request.QueryString["PK"]; // //} //
+		 * this.HisEn.PKVal = BP.Sys.Glo.Request.QueryString[this.HisEn.PK]; //}
+		 * //else // this.HisEn.PKVal = this.PKVal; //this.HisEn.Retrieve(); }
+		 * 
+		 * java.lang.Class tp = this.HisEn.getClass(); java.lang.reflect.Method
+		 * mp = tp.getMethod(meth); if (mp == null) { throw new
+		 * RuntimeException("@对象实例[" + tp.FullName + "]中没有找到方法[" + meth + "]！");
+		 * }
+		 * 
+		 * try { return mp.invoke(this.HisEn, paras); //调用由此 MethodInfo
+		 * 实例反射的方法或构造函数。 } catch (System.Reflection.TargetException ex) { String
+		 * strs = ""; if (paras == null) { throw new
+		 * RuntimeException(ex.getMessage()); } else { for (Object obj : paras)
+		 * { strs += "para= " + obj.toString() + " type=" +
+		 * obj.getClass().toString() + "\n<br>"; } } throw new
+		 * RuntimeException(ex.getMessage() + "  more info:" + strs); }
+		 */
 	}
+
+
+
+	
+
 }

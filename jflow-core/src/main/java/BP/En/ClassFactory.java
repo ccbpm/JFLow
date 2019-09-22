@@ -256,7 +256,7 @@ public class ClassFactory {
 	 *            类名称
 	 * @return En
 	 */
-	public static BP.XML.XmlEns GetXmlEns(String className) {
+	public static BP.Sys.XML.XmlEns GetXmlEns(String className) {
 		if (Htable_XmlEns == null) {
 			Htable_XmlEns = new Hashtable<String, Object>();
 			String cl = "BP.XML.XmlEns";
@@ -266,7 +266,7 @@ public class ClassFactory {
 			}
 		}
 		Object tmp = Htable_XmlEns.get(className);
-		return ((BP.XML.XmlEns) ((tmp instanceof BP.XML.XmlEns) ? tmp : null));
+		return ((BP.Sys.XML.XmlEns) ((tmp instanceof BP.Sys.XML.XmlEns) ? tmp : null));
 	}
 
 	// 获取 en
@@ -279,7 +279,7 @@ public class ClassFactory {
 	 *            类名称
 	 * @return En
 	 */
-	public static BP.XML.XmlEn GetXmlEn(String className) {
+	public static BP.Sys.XML.XmlEn GetXmlEn(String className) {
 		if (Htable_XmlEn == null) {
 			Htable_XmlEn = new Hashtable<String, Object>();
 			String cl = "BP.XML.XmlEn";
@@ -289,7 +289,7 @@ public class ClassFactory {
 			}
 		}
 		Object tmp = Htable_XmlEn.get(className);
-		return ((BP.XML.XmlEn) ((tmp instanceof BP.XML.XmlEn) ? tmp : null));
+		return ((BP.Sys.XML.XmlEn) ((tmp instanceof BP.Sys.XML.XmlEn) ? tmp : null));
 	}
 
 	public static String getClassPath() {

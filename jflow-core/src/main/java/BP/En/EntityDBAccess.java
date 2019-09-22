@@ -20,8 +20,9 @@ public class EntityDBAccess
 	 
 	 @param en
 	 @return 
+	 * @throws Exception 
 	*/
-	public static int Delete(Entity en)
+	public static int Delete(Entity en) throws Exception
 	{
 		if (en.getEnMap().getEnType() == EnType.View)
 		{
@@ -42,8 +43,9 @@ public class EntityDBAccess
 	 @param en 产生要更新的语句
 	 @param keys 要更新的属性(null,认为更新全部)
 	 @return sql
+	 * @throws Exception 
 	*/
-	public static int Update(Entity en, String[] keys)
+	public static int Update(Entity en, String[] keys) throws Exception
 	{
 		if (en.getEnMap().getEnType() == EnType.View)
 		{
@@ -88,12 +90,10 @@ public class EntityDBAccess
 								}
 								return DBAccess.RunSQL(en.getSQLCash().GetUpdateSQL(en, keys), ps);
 							}
-							else
-							{
+						 
 								return DBAccess.RunSQL(en.getSQLCash().GetUpdateSQL(en, keys), SqlBuilder.GenerParas(en, keys));
-							}
-							break;
-
+							 
+						 
 					}
 				//case DBUrlType.DBAccessOfMSSQL1:
 				//    return DBAccessOfMSSQL1.RunSQL(SqlBuilder.Update(en, keys));
@@ -151,14 +151,14 @@ public class EntityDBAccess
 					throw new RuntimeException("@没有设置DB类型。");
 			}
 
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return 0;
 			}
 			Attrs attrs = en.getEnMap().getAttrs();
 			EntityDBAccess.fullDate(dt, en, attrs);
-			int i = dt.Rows.Count;
-			dt.Dispose();
+			int i = dt.Rows.size();
+			//dt..();
 			return i;
 		}
 		catch (RuntimeException ex)
@@ -190,14 +190,14 @@ public class EntityDBAccess
 				throw new RuntimeException("@没有设置DB类型。");
 		}
 
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return 0;
 		}
 		Attrs attrs = en.getEnMap().getAttrs();
 		EntityDBAccess.fullDate(dt, en, attrs);
-		int num = dt.Rows.Count;
-		dt.Dispose();
+		int num = dt.Rows.size();
+		//dt.Dispose();
 		return num;
 	}
 	/** 
@@ -233,14 +233,14 @@ public class EntityDBAccess
 					throw new RuntimeException("@没有设置DB类型。");
 			}
 
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return 0;
 			}
 			Attrs attrs = en.getEnMap().getAttrs();
 			EntityDBAccess.fullDate(dt, en, attrs);
-			int i = dt.Rows.Count;
-			dt.Dispose();
+			int i = dt.Rows.size();
+			//dt.Dispose();
 			return i;
 		}
 		catch (RuntimeException ex)
@@ -252,7 +252,7 @@ public class EntityDBAccess
 	{
 		for (Attr attr : attrs)
 		{
-			en.getRow().SetValByKey(attr.getKey(), dt.Rows[0][attr.getKey()]);
+			en.getRow().SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey()));
 		}
 	}
 	public static int Retrieve(Entities ens, String sql)
@@ -269,7 +269,7 @@ public class EntityDBAccess
 					throw new RuntimeException("@没有设置DB类型。");
 			}
 
-			if (dt.Rows.Count == 0)
+			if (dt.Rows.size() == 0)
 			{
 				return 0;
 			}
@@ -288,8 +288,8 @@ public class EntityDBAccess
 				}
 				ens.AddEntity(en);
 			}
-			int i = dt.Rows.Count;
-			dt.Dispose();
+			int i = dt.Rows.size();
+			//dt.Dispose();
 			return i;
 			//return dt.Rows.Count;
 		}
@@ -326,7 +326,7 @@ public class EntityDBAccess
 				throw new RuntimeException("@没有设置DB类型。");
 		}
 
-		if (dt.Rows.Count == 0)
+		if (dt.Rows.size() == 0)
 		{
 			return 0;
 		}
@@ -334,8 +334,8 @@ public class EntityDBAccess
 		//设置查询.
 		QueryObject.InitEntitiesByDataTable(ens, dt, fullAttrs);
 
-		int i = dt.Rows.Count;
-		dt.Dispose();
+		int i = dt.Rows.size();
+		//dt.Dispose();
 		return i;
 		//return dt.Rows.Count;
 	}

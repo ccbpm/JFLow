@@ -378,9 +378,9 @@ public class CH extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_CH", "时效考核");
@@ -437,8 +437,8 @@ public class CH extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 计算属性.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

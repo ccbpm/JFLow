@@ -21,7 +21,7 @@ public class FrmAttachmentExt extends EntityMyPK
 		UAC uac = new UAC();
 		uac.IsView = true;
 		uac.IsInsert = false;
-		if (BP.Web.WebUser.getNo().equals("admin") || BP.Web.WebUser.getIsAdmin() == true)
+		if (WebUser.getNo().equals("admin") || WebUser.getIsAdmin() == true)
 		{
 			uac.IsUpdate = true;
 			uac.IsDelete = true;

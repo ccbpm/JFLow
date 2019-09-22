@@ -38,7 +38,7 @@ public class NodeSheets extends Entities
 	*/
 	public final List<NodeSheet> ToJavaList()
 	{
-		return (List<NodeSheet>)this;
+		return (List<NodeSheet>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class NodeSheets extends Entities
 		ArrayList<NodeSheet> list = new ArrayList<NodeSheet>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((NodeSheet)this[i]);
+			list.add((NodeSheet)this.get(i));
 		}
 		return list;
 	}

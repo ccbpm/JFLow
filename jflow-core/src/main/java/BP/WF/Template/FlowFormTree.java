@@ -103,9 +103,9 @@ public class FlowFormTree extends EntityTree
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Sys_FormTree", "独立表单树-用于数据解构构造");
@@ -121,7 +121,7 @@ public class FlowFormTree extends EntityTree
 			// 隶属的流程编号.
 		map.AddTBString(FlowFormTreeAttr.FK_Flow, null, "流程编号", true, true, 1, 20, 20);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 }

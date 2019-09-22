@@ -40,7 +40,7 @@ public class MapFrameExt extends EntityMyPK
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-			//if (Web.WebUser.No.Equals("admin"))
+			//if (Web.WebUser.getNo().Equals("admin"))
 			//{
 		uac.IsUpdate = true;
 		uac.IsDelete = true;

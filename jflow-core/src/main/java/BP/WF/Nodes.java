@@ -93,7 +93,7 @@ public class Nodes extends EntitiesOID
 	*/
 	public final List<Node> ToJavaList()
 	{
-		return (List<Node>)this;
+		return (List<Node>)(Object)this;
 	}
 	/** 
 	 转化成list 为了翻译成java的需要
@@ -105,7 +105,7 @@ public class Nodes extends EntitiesOID
 		ArrayList<BP.WF.Node> list = new ArrayList<BP.WF.Node>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BP.WF.Node)this[i]);
+			list.add((BP.WF.Node)this.get(i));
 		}
 		return list;
 	}

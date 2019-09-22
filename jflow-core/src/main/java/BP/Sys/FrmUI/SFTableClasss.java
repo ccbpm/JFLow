@@ -39,7 +39,7 @@ public class SFTableClasss extends EntitiesNoName
 	*/
 	public final List<SFTableClass> ToJavaList()
 	{
-		return (List<SFTableClass>)this;
+		return (List<SFTableClass>)(Object)this;
 	}
 	/** 
 	 转化成list

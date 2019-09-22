@@ -143,9 +143,9 @@ public class AthUnReadLog extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_AthUnReadLog", "附件未读日志");
@@ -176,10 +176,10 @@ public class AthUnReadLog extends EntityMyPK
 		  //  map.AddSearchAttr(GenerWorkFlowAttr.FK_NY);
 		map.AddSearchAttr(GenerWorkFlowAttr.FK_Flow);
 
-		   // map.AddHidden(FlowDataAttr.FlowEmps, " LIKE ", "'%@@WebUser.No%'");
+		   // map.AddHidden(FlowDataAttr.FlowEmps, " LIKE ", "'%@@WebUser.getNo()%'");
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

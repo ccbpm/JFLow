@@ -37,7 +37,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		int nid = 0;
 
 		tangible.OutObject<Integer> tempOut_nid = new tangible.OutObject<Integer>();
-		if (tangible.StringHelper.isNullOrWhiteSpace(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
+		if (DataType.IsNullOrEmpty(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
 		{
 		nid = tempOut_nid.argValue;
 			throw new RuntimeException("参数nodeid不正确");
@@ -47,7 +47,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		nid = tempOut_nid.argValue;
 	}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(data))
+		if (DataType.IsNullOrEmpty(data))
 		{
 			data = "";
 		}
@@ -56,7 +56,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		String[] empNos = data.split(",".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
 		//提交内容过长时，采用分段式提交
-		if (tangible.StringHelper.isNullOrWhiteSpace(partno))
+		if (DataType.IsNullOrEmpty(partno))
 		{
 			nemps.Delete(BP.WF.Template.NodeEmpAttr.FK_Node, nid);
 		}
@@ -98,7 +98,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 			nemp.Insert();
 		}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(partno))
+		if (DataType.IsNullOrEmpty(partno))
 		{
 			jr.setMsg("保存成功");
 		}
@@ -151,7 +151,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		int nid = 0;
 
 		tangible.OutObject<Integer> tempOut_nid = new tangible.OutObject<Integer>();
-		if (tangible.StringHelper.isNullOrWhiteSpace(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
+		if (DataType.IsNullOrEmpty(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
 		{
 		nid = tempOut_nid.argValue;
 			throw new RuntimeException("参数nodeid不正确");
@@ -161,7 +161,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		nid = tempOut_nid.argValue;
 	}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(data))
+		if (DataType.IsNullOrEmpty(data))
 		{
 			data = "";
 		}
@@ -170,7 +170,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		String[] deptNos = data.split("|".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
 		//提交内容过长时，采用分段式提交
-		if (tangible.StringHelper.isNullOrWhiteSpace(partno))
+		if (DataType.IsNullOrEmpty(partno))
 		{
 			ndepts.Delete(BP.WF.Template.NodeDeptAttr.FK_Node, nid);
 		}
@@ -212,7 +212,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 			nemp.Insert();
 		}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(partno))
+		if (DataType.IsNullOrEmpty(partno))
 		{
 			jr.setMsg("保存成功");
 		}
@@ -327,7 +327,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		int nid = 0;
 
 		tangible.OutObject<Integer> tempOut_nid = new tangible.OutObject<Integer>();
-		if (tangible.StringHelper.isNullOrWhiteSpace(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
+		if (DataType.IsNullOrEmpty(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
 		{
 		nid = tempOut_nid.argValue;
 			throw new RuntimeException("参数nodeid不正确");
@@ -337,7 +337,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		nid = tempOut_nid.argValue;
 	}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(data))
+		if (DataType.IsNullOrEmpty(data))
 		{
 			data = "";
 		}
@@ -346,7 +346,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		String[] stNos = data.split("|".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
 		//提交内容过长时，采用分段式提交
-		if (tangible.StringHelper.isNullOrWhiteSpace(partno))
+		if (DataType.IsNullOrEmpty(partno))
 		{
 			nsts.Delete(BP.WF.Template.NodeStationAttr.FK_Node, nid);
 		}
@@ -388,7 +388,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 			nst.Insert();
 		}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(partno))
+		if (DataType.IsNullOrEmpty(partno))
 		{
 			jr.setMsg("保存成功");
 		}
@@ -437,7 +437,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		String sql = null;
 		DataTable dt = null;
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(parentrootid))
+		if (DataType.IsNullOrEmpty(parentrootid))
 		{
 			throw new RuntimeException("参数parentrootid不能为空");
 		}
@@ -462,7 +462,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 
 			if (dt.Rows.size() == 0)
 			{
-				dt.Rows.Add("-1", "无单位数据", parentrootid);
+				dt.Rows.add("-1", "无单位数据", parentrootid);
 			}
 
 			node = new EasyuiTreeNode();
@@ -529,11 +529,11 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		String tp = this.GetRequestVal("stype"); //ST,UNIT
 		String ttype = this.GetRequestVal("ttype"); //STROOT,UNITROOT,ST,CST,S
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(parentid))
+		if (DataType.IsNullOrEmpty(parentid))
 		{
 			throw new RuntimeException("参数parentid不能为空");
 		}
-		if (tangible.StringHelper.isNullOrWhiteSpace(nid))
+		if (DataType.IsNullOrEmpty(nid))
 		{
 			throw new RuntimeException("参数nodeid不能为空");
 		}
@@ -735,7 +735,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 	{
 		if (DBAccess.IsExitsTableCol("Port_StationType", "Idx") == false)
 		{
-			if (DBAccess.IsView("Port_StationType", SystemConfig.AppCenterDBType) == false)
+			if (DBAccess.IsView("Port_StationType", SystemConfig.getAppCenterDBType()) == false)
 			{
 				BP.GPM.StationType st = new GPM.StationType();
 				st.CheckPhysicsTable();

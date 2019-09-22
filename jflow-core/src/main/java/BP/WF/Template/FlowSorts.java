@@ -27,19 +27,19 @@ public class FlowSorts extends EntitiesTree
 		return new FlowSort();
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int i = super.RetrieveAll(FlowSortAttr.Idx);
 		if (i == 0)
 		{
 			FlowSort fs = new FlowSort();
-			fs.Name = "公文类";
-			fs.No = "01";
+			fs.setName("公文类");
+			fs.setNo("01");
 			fs.Insert();
 
 			fs = new FlowSort();
-			fs.Name = "办公类";
-			fs.No = "02";
+			fs.setName("办公类");
+			fs.setNo("02");
 			fs.Insert();
 			i = super.RetrieveAll();
 		}
@@ -57,7 +57,7 @@ public class FlowSorts extends EntitiesTree
 	*/
 	public final List<FlowSort> ToJavaList()
 	{
-		return (List<FlowSort>)this;
+		return (List<FlowSort>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -69,7 +69,7 @@ public class FlowSorts extends EntitiesTree
 		ArrayList<FlowSort> list = new ArrayList<FlowSort>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FlowSort)this[i]);
+			list.add((FlowSort)this.get(i));
 		}
 		return list;
 	}

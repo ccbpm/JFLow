@@ -60,7 +60,7 @@ public class EmpCreates extends EntitiesMM
 	*/
 	public final List<EmpCreate> ToJavaList()
 	{
-		return (List<EmpCreate>)this;
+		return (List<EmpCreate>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -72,7 +72,7 @@ public class EmpCreates extends EntitiesMM
 		ArrayList<EmpCreate> list = new ArrayList<EmpCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((EmpCreate)this[i]);
+			list.add((EmpCreate)this.get(i));
 		}
 		return list;
 	}

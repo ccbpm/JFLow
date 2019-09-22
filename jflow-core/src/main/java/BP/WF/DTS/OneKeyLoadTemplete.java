@@ -45,7 +45,7 @@ public class OneKeyLoadTemplete extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			return false;
 		}
@@ -116,7 +116,7 @@ public class OneKeyLoadTemplete extends Method
 		dt = ds.Tables["Port_Emp"];
 		Object tempVar = QueryObject.InitEntitiesByDataTable(emps, dt, null);
 		emps = tempVar instanceof Emps ? (Emps)tempVar : null;
-		for (Emp item : emps)
+		for (Emp item : emps.ToJavaList())
 		{
 			item.DirectInsert(); //插入数据.
 		}
@@ -127,7 +127,7 @@ public class OneKeyLoadTemplete extends Method
 		dt = ds.Tables["Port_Dept"];
 		Object tempVar2 = QueryObject.InitEntitiesByDataTable(depts, dt, null);
 		depts = tempVar2 instanceof Depts ? (Depts)tempVar2 : null;
-		for (Dept item : depts)
+		for (Dept item : depts.ToJavaList())
 		{
 			item.DirectInsert(); //插入数据.
 		}
@@ -222,7 +222,7 @@ public class OneKeyLoadTemplete extends Method
 
 				String sql = "SELECT * FROM " + item.No;
 				ds = new DataSet();
-				ds.Tables.Add(BP.DA.DBAccess.RunSQLReturnTable(sql));
+				ds.Tables.add(BP.DA.DBAccess.RunSQLReturnTable(sql));
 				ds.WriteXml(pathOfTables + "\\" + item.No + ".xml");
 			}
 		}

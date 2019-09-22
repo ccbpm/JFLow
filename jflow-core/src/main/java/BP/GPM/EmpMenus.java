@@ -38,7 +38,7 @@ public class EmpMenus extends EntitiesMM
 	*/
 	public final List<EmpMenu> ToJavaList()
 	{
-		return (List<EmpMenu>)this;
+		return (List<EmpMenu>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class EmpMenus extends EntitiesMM
 		ArrayList<EmpMenu> list = new ArrayList<EmpMenu>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((EmpMenu)this[i]);
+			list.add((EmpMenu)this.get(i));
 		}
 		return list;
 	}

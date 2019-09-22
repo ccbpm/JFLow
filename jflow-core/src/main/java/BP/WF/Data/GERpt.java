@@ -298,7 +298,7 @@ public class GERpt extends BP.En.EntityOID
 	@Override
 	public void Copy(System.Data.DataRow dr)
 	{
-		for (Attr attr : this.getEnMap().Attrs)
+		for (Attr attr : this.getEnMap().getAttrs())
 		{
 			if (WorkAttr.CDT.equals(attr.Key) || WorkAttr.RDT.equals(attr.Key) || WorkAttr.Rec.equals(attr.Key) || WorkAttr.FID.equals(attr.Key) || WorkAttr.OID.equals(attr.Key) || WorkAttr.Emps.equals(attr.Key) || GERptAttr.AtPara.equals(attr.Key) || GERptAttr.BillNo.equals(attr.Key) || GERptAttr.FID.equals(attr.Key) || GERptAttr.FK_Dept.equals(attr.Key) || GERptAttr.FK_NY.equals(attr.Key) || GERptAttr.FlowDaySpan.equals(attr.Key) || GERptAttr.FlowEmps.equals(attr.Key) || GERptAttr.FlowEnder.equals(attr.Key) || GERptAttr.FlowEnderRDT.equals(attr.Key) || GERptAttr.FlowEndNode.equals(attr.Key) || GERptAttr.FlowNote.equals(attr.Key) || GERptAttr.FlowStarter.equals(attr.Key) || GERptAttr.GuestName.equals(attr.Key) || GERptAttr.GuestNo.equals(attr.Key) || GERptAttr.GUID.equals(attr.Key) || GERptAttr.PEmp.equals(attr.Key) || GERptAttr.PFlowNo.equals(attr.Key) || GERptAttr.PNodeID.equals(attr.Key) || GERptAttr.PWorkID.equals(attr.Key) || GERptAttr.Title.equals(attr.Key) || GERptAttr.PrjNo.equals(attr.Key) || GERptAttr.PrjName.equals(attr.Key) || attr.Key.equals("No") || attr.Key.equals("Name"))
 			{
@@ -395,7 +395,7 @@ public class GERpt extends BP.En.EntityOID
 			this._enMap = MapData.GenerHisMap(this.getRptName());
 		}
 
-		return this._enMap;
+		return this.get_enMap();
 	}
 	/** 
 	 报表

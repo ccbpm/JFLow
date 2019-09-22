@@ -37,7 +37,7 @@ public class MapDataTemplates extends EntitiesNoName
 	*/
 	public final List<MapDataTemplate> ToJavaList()
 	{
-		return (List<MapDataTemplate>)this;
+		return (List<MapDataTemplate>)(Object)this;
 	}
 	/** 
 	 转化成list

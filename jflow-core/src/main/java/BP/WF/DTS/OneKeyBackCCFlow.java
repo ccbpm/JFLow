@@ -66,7 +66,7 @@ public class OneKeyBackCCFlow extends Method
 		//WF_FlowSort
 		DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM WF_FlowSort");
 		dt.TableName = "WF_FlowSort";
-		dsFlows.Tables.Add(dt);
+		dsFlows.Tables.add(dt);
 		dsFlows.WriteXml(path + "\\FlowTables.xml");
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份流程类别信息.
@@ -77,22 +77,22 @@ public class OneKeyBackCCFlow extends Method
 		//emps
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Emp");
 		dt.TableName = "Port_Emp";
-		dsPort.Tables.Add(dt);
+		dsPort.Tables.add(dt);
 
 		//Port_Dept
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Dept");
 		dt.TableName = "Port_Dept";
-		dsPort.Tables.Add(dt);
+		dsPort.Tables.add(dt);
 
 		//Port_Station
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Station");
 		dt.TableName = "Port_Station";
-		dsPort.Tables.Add(dt);
+		dsPort.Tables.add(dt);
 
 		//Port_EmpStation
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_DeptEmpStation");
 		dt.TableName = "Port_DeptEmpStation";
-		dsPort.Tables.Add(dt);
+		dsPort.Tables.add(dt);
 
 
 		dsPort.WriteXml(path + "\\PortTables.xml");
@@ -106,17 +106,17 @@ public class OneKeyBackCCFlow extends Method
 		//Sys_EnumMain
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_EnumMain");
 		dt.TableName = "Sys_EnumMain";
-		dsSysTables.Tables.Add(dt);
+		dsSysTables.Tables.add(dt);
 
 		//Sys_Enum
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_Enum");
 		dt.TableName = "Sys_Enum";
-		dsSysTables.Tables.Add(dt);
+		dsSysTables.Tables.add(dt);
 
 		//Sys_FormTree
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_FormTree");
 		dt.TableName = "Sys_FormTree";
-		dsSysTables.Tables.Add(dt);
+		dsSysTables.Tables.add(dt);
 		dsSysTables.WriteXml(path + "\\SysTables.xml");
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份系统数据.
@@ -143,7 +143,7 @@ public class OneKeyBackCCFlow extends Method
 			{
 				String sql = "SELECT * FROM " + item.No + " ";
 				DataSet ds = new DataSet();
-				ds.Tables.Add(BP.DA.DBAccess.RunSQLReturnTable(sql));
+				ds.Tables.add(BP.DA.DBAccess.RunSQLReturnTable(sql));
 				ds.WriteXml(pathOfTables + "\\" + item.No + ".xml");
 			}
 			catch (java.lang.Exception e)
@@ -158,7 +158,7 @@ public class OneKeyBackCCFlow extends Method
 			///#region 5.备份流程.
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			FlowSort fs = new FlowSort();
 			fs.No = fl.getFK_FlowSort();

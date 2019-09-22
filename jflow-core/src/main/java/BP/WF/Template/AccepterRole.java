@@ -50,8 +50,9 @@ public class AccepterRole extends EntityOID
 	 接受人规则
 	 
 	 @param oid 接受人规则ID	
+	 * @throws Exception 
 	*/
-	public AccepterRole(int oid)
+	public AccepterRole(int oid) throws Exception
 	{
 		this.setOID(  oid);
 		this.Retrieve();
@@ -62,9 +63,9 @@ public class AccepterRole extends EntityOID
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_AccepterRole", "接受人规则");
@@ -82,8 +83,8 @@ public class AccepterRole extends EntityOID
 		map.AddTBString(AccepterRoleAttr.Tag4, null, "Tag4", false, true, 0, 999, 10);
 		map.AddTBString(AccepterRoleAttr.Tag5, null, "Tag5", false, true, 0, 999, 10);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

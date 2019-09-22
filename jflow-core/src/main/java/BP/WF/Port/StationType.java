@@ -36,9 +36,9 @@ public class StationType extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("Port_StationType");
 		map.EnDesc = "岗位类型";
@@ -49,7 +49,7 @@ public class StationType extends EntityNoName
 
 		map.AddTBStringPK(StationTypeAttr.No, null, "编号", true, true, 2, 2, 2);
 		map.AddTBString(StationTypeAttr.Name, null, "名称", true, false, 1, 50, 20);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 }

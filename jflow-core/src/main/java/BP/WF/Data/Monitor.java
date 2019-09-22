@@ -336,11 +336,11 @@ public class Monitor extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WF.WFState.Complete)
+		if (value == WFState.Complete)
 		{
 			SetValByKey(MonitorAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WF.WFState.Delete)
+		else if (value == WFState.Delete)
 		{
 			SetValByKey(MonitorAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -427,9 +427,9 @@ public class Monitor extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_EmpWorks", "流程监控");
@@ -457,7 +457,7 @@ public class Monitor extends Entity
 
 			////增加隐藏的查询条件.
 			//AttrOfSearch search = new AttrOfSearch(MonitorAttr.WorkerDept, "部门",
-			//    MonitorAttr.WorkerDept, "=", BP.Web.WebUser.FK_Dept, 0, true);
+			//    MonitorAttr.WorkerDept, "=", WebUser.getFK_Dept(), 0, true);
 			//map.AttrsOfSearch.Add(search);
 
 		RefMethod rm = new RefMethod();
@@ -470,8 +470,8 @@ public class Monitor extends Entity
 		rm.Icon = "../../WF/Img/Btn/CC.gif";
 		rm.Title = "移交";
 		rm.ClassMethodName = this.toString() + ".DoShift";
-		rm.HisAttrs.AddDDLEntities("ToEmp", null, "移交给:", new BP.WF.Data.MyDeptEmps(),true);
-		rm.HisAttrs.AddTBString("Note", null, "移交原因", true, false, 0, 300, 100);
+		rm.getHisAttrs().AddDDLEntities("ToEmp", null, "移交给:", new BP.WF.Data.MyDeptEmps(),true);
+		rm.getHisAttrs().AddTBString("Note", null, "移交原因", true, false, 0, 300, 100);
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -487,12 +487,12 @@ public class Monitor extends Entity
 		rm.Title = "回滚";
 		rm.IsForEns = false;
 		rm.ClassMethodName = this.toString() + ".DoComeBack";
-		rm.HisAttrs.AddTBInt("NodeID", 0, "回滚到节点", true, false);
-		rm.HisAttrs.AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);
+		rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
+		rm.getHisAttrs().AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);
 		map.AddRefMethod(rm);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

@@ -1176,8 +1176,8 @@ public class MapDtl extends EntityNoName
 			attr.setUIIsEnable(false);
 			attr.setMaxLen(20);
 			attr.setMinLen(0);
-			attr.setDefVal("@WebUser.No");
-			attr.setTag("@WebUser.No");
+			attr.setDefVal("@WebUser.getNo()");
+			attr.setTag("@WebUser.getNo()");
 			attr.Insert();
 		}
 	}

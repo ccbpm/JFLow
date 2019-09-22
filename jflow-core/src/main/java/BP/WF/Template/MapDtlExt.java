@@ -40,7 +40,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String getImpSQLInit()
 	{
-		return this.GetValStringByKey(MapDtlAttr.ImpSQLInit).Replace("~", "'");
+		return this.GetValStringByKey(MapDtlAttr.ImpSQLInit).replace("~", "'");
 	}
 	public final void setImpSQLInit(String value)
 	{
@@ -51,7 +51,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String getImpSQLSearch()
 	{
-		return this.GetValStringByKey(MapDtlAttr.ImpSQLSearch).Replace("~", "'");
+		return this.GetValStringByKey(MapDtlAttr.ImpSQLSearch).replace("~", "'");
 	}
 	public final void setImpSQLSearch(String value)
 	{
@@ -62,7 +62,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String getImpSQLFullOneRow()
 	{
-		return this.GetValStringByKey(MapDtlAttr.ImpSQLFullOneRow).Replace("~", "'");
+		return this.GetValStringByKey(MapDtlAttr.ImpSQLFullOneRow).replace("~", "'");
 	}
 	public final void setImpSQLFullOneRow(String value)
 	{
@@ -82,7 +82,7 @@ public class MapDtlExt extends EntityNoName
 	}
 	public final void setDtlModel(DtlModel value)
 	{
-		this.SetValByKey(MapDtlAttr.Model, (int)value);
+		this.SetValByKey(MapDtlAttr.Model, value.getValue());
 	}
 	/** 
 	 是否启用行锁定.
@@ -109,7 +109,7 @@ public class MapDtlExt extends EntityNoName
 	}
 	public final void setDtlAddRecModel(DtlAddRecModel value)
 	{
-		this.SetPara(MapDtlAttr.DtlAddRecModel, (int)value);
+		this.SetPara(MapDtlAttr.DtlAddRecModel, value.getValue());
 	}
 	/** 
 	 保存方式
@@ -120,7 +120,7 @@ public class MapDtlExt extends EntityNoName
 	}
 	public final void setDtlSaveModel(DtlSaveModel value)
 	{
-		this.SetPara(MapDtlAttr.DtlSaveModel, (int)value);
+		this.SetPara(MapDtlAttr.DtlSaveModel, value.getValue());
 	}
 	/** 
 	 是否启用Link,在记录的右边.
@@ -644,7 +644,7 @@ public class MapDtlExt extends EntityNoName
 	}
 	public final void setDtlOpenType(DtlOpenType value)
 	{
-		this.SetValByKey(MapDtlAttr.DtlOpenType, (int)value);
+		this.SetValByKey(MapDtlAttr.DtlOpenType, value.getValue());
 	}
 	/** 
 	 分组字段
@@ -773,9 +773,9 @@ public class MapDtlExt extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("Sys_MapDtl", "明细");
 
@@ -939,7 +939,7 @@ public class MapDtlExt extends EntityNoName
 		rm.Title = "导入其从表字段"; // "设计表单";
 		rm.Warning = "导入后系统不会自动刷新，请手工刷新。";
 		rm.ClassMethodName = this.toString() + ".ImpFromDtlID";
-		rm.HisAttrs.AddTBString("ID", null, "请输入要导入的从表ID", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("ID", null, "请输入要导入的从表ID", true, false, 0, 100, 100);
 		rm.RefMethodType = RefMethodType.Func;
 		map.AddRefMethod(rm);
 
@@ -1017,8 +1017,8 @@ public class MapDtlExt extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 实验中的功能.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 	@Override
@@ -1089,8 +1089,8 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String OpenAthAttr()
 	{
-		String url = "../../Comm/RefFunc/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&PKVal=" + this.No + "_AthMDtl";
-		// string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" + this.No + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		String url = "../../Comm/RefFunc/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&PKVal=" " + this.getNo()+ " "_AthMDtl";
+		// string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" " + this.getNo()+ " "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 
@@ -1101,8 +1101,8 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DtlImp()
 	{
-		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" + this.No + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
-	   // string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapDtl=" + this.No + "&FromDtl=1";
+		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" " + this.getNo()+ " "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+	   // string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapDtl=" " + this.getNo()+ " "&FromDtl=1";
 		return url;
 	}
 	/** 
@@ -1112,8 +1112,8 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DtlImpV2019()
 	{
-		//string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" + this.No + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
-		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapDtl=" + this.No + "&FromDtl=1";
+		//string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" " + this.getNo()+ " "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapDtl=" " + this.getNo()+ " "&FromDtl=1";
 		return url;
 	}
 	/** 
@@ -1135,7 +1135,7 @@ public class MapDtlExt extends EntityNoName
 	{
 
 		//  http://localhost:18272/WF/Admin/FoolFormDesigner/ImpTableField.htm?FK_MapData=CCFrm_CZBankBXDtl1&reset=true
-		String url = "../../Admin/FoolFormDesigner/ImpTableField.htm?FK_MapData=" + this.No + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		String url = "../../Admin/FoolFormDesigner/ImpTableField.htm?FK_MapData=" " + this.getNo()+ " "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -1145,7 +1145,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DFoolFrm()
 	{
-		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.No + "&FromDtl=1&IsFirst=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" " + this.getNo()+ " "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 
@@ -1183,7 +1183,7 @@ public class MapDtlExt extends EntityNoName
 					maxEnd = maxEnd + 40;
 					/* 是否是左边 */
 					lab = new FrmLab();
-					lab.MyPK = BP.DA.DBAccess.GenerGUID();
+					lab.setMyPK( BP.DA.DBAccess.GenerGUID();
 					lab.FK_MapData = attr.FK_MapData;
 					lab.Text = attr.Name;
 					lab.FontName = "Arial";
@@ -1198,7 +1198,7 @@ public class MapDtlExt extends EntityNoName
 				else
 				{
 					lab = new FrmLab();
-					lab.MyPK = BP.DA.DBAccess.GenerGUID();
+					lab.setMyPK( BP.DA.DBAccess.GenerGUID();
 					lab.FK_MapData = attr.FK_MapData;
 					lab.Text = attr.Name;
 					lab.FontName = "Arial";
@@ -1223,7 +1223,7 @@ public class MapDtlExt extends EntityNoName
 				maxEnd = maxEnd + 40;
 				/* 是否是左边 */
 				FrmLab lab = new FrmLab();
-				lab.MyPK = BP.DA.DBAccess.GenerGUID();
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
 				lab.FK_MapData = dtl.FK_MapData;
 				lab.Text = dtl.Name;
 				lab.FontName = "Arial";
@@ -1241,7 +1241,7 @@ public class MapDtlExt extends EntityNoName
 
 			md.ResetMaxMinXY();
 		}
-		String url = "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.No + "&FromDtl=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		String url = "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=" " + this.getNo()+ " "&FromDtl=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 
@@ -1263,11 +1263,11 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DoAction()
 	{
-		return "../../Admin/FoolFormDesigner/ActionForDtl.htm?DoType=Edit&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/FoolFormDesigner/ActionForDtl.htm?DoType=Edit&FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 	public final String HidAttr()
 	{
-		return "../../Admin/FoolFormDesigner/HidAttr.htm?DoType=Edit&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/FoolFormDesigner/HidAttr.htm?DoType=Edit&FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1326,7 +1326,7 @@ public class MapDtlExt extends EntityNoName
 		attrs.Retrieve(MapAttrAttr.FK_MapData, refDtl);
 		for (MapAttr attr : attrs)
 		{
-			attr.MyPK = this.No + "_" + attr.KeyOfEn;
+			attr.setMyPK( this.No + "_" + attr.KeyOfEn;
 			attr.FK_MapData = this.No;
 			attr.Insert();
 		}
@@ -1340,7 +1340,7 @@ public class MapDtlExt extends EntityNoName
 		{
 			mapExt = new MapExt();
 			mapExt = ext;
-			mapExt.MyPK = ext.MyPK + "_" + this.getFK_Node();
+			mapExt.setMyPK( ext.MyPK + "_" + this.getFK_Node();
 			mapExt.FK_MapData = this.No;
 			mapExt.Insert();
 		}
@@ -1352,18 +1352,18 @@ public class MapDtlExt extends EntityNoName
 			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
 			//获取原始附件的属性
 
-			athDesc.MyPK = this.No + "_AthMDtl";
+			athDesc.setMyPK( this.No + "_AthMDtl";
 			if (athDesc.RetrieveFromDBSources() == 0)
 			{
 				//获取原来附件的属性
 				BP.Sys.FrmAttachment oldAthDesc = new BP.Sys.FrmAttachment();
-				oldAthDesc.MyPK = refDtl + "_AthMDtl";
+				oldAthDesc.setMyPK( refDtl + "_AthMDtl";
 				if (oldAthDesc.RetrieveFromDBSources() == 0)
 				{
 					return "原始从表的附件属性不存在，请联系管理员";
 				}
 				athDesc = oldAthDesc;
-				athDesc.MyPK = this.No + "_AthMDtl";
+				athDesc.setMyPK( this.No + "_AthMDtl";
 				athDesc.FK_MapData = this.No;
 				athDesc.NoOfObj = "AthMDtl";
 				athDesc.Name = this.Name;
@@ -1380,7 +1380,7 @@ public class MapDtlExt extends EntityNoName
 
 			//判断是否有隐藏的AthNum 字段
 			MapAttr attr = new MapAttr();
-			attr.MyPK = this.No + "_AthNum";
+			attr.setMyPK( this.No + "_AthNum";
 			int count = attr.RetrieveFromDBSources();
 			if (count == 0)
 			{
@@ -1418,7 +1418,7 @@ public class MapDtlExt extends EntityNoName
 		if (this.getIsEnableAthM() == true)
 		{
 			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-			athDesc.MyPK = this.No + "_AthMDtl";
+			athDesc.setMyPK( this.No + "_AthMDtl";
 			if (athDesc.RetrieveFromDBSources() == 0)
 			{
 				athDesc.FK_MapData = this.No;
@@ -1437,7 +1437,7 @@ public class MapDtlExt extends EntityNoName
 
 			//判断是否有隐藏的AthNum 字段
 			MapAttr attr = new MapAttr();
-			attr.MyPK = this.No + "_AthNum";
+			attr.setMyPK( this.No + "_AthNum";
 			int count = attr.RetrieveFromDBSources();
 			if (count == 0)
 			{

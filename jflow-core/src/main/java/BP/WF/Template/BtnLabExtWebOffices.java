@@ -36,7 +36,7 @@ public class BtnLabExtWebOffices extends Entities
 	*/
 	public final List<BtnLabExtWebOffice> ToJavaList()
 	{
-		return (List<BtnLabExtWebOffice>)this;
+		return (List<BtnLabExtWebOffice>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -48,7 +48,7 @@ public class BtnLabExtWebOffices extends Entities
 		ArrayList<BtnLabExtWebOffice> list = new ArrayList<BtnLabExtWebOffice>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BtnLabExtWebOffice)this[i]);
+			list.add((BtnLabExtWebOffice)this.get(i));
 		}
 		return list;
 	}

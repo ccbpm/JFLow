@@ -34,7 +34,7 @@ public class Tool_Repair extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -63,7 +63,7 @@ public class Tool_Repair extends Method
 
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.IsPass, 0);
-			for (GenerWorkerList gwl : gwls)
+			for (GenerWorkerList gwl : gwls.ToJavaList())
 			{
 				if (todoEmps.contains(gwl.getFK_Emp() + ",") == false)
 				{

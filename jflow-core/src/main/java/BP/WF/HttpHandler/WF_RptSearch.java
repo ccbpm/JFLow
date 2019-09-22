@@ -30,47 +30,47 @@ public class WF_RptSearch extends DirectoryPageBase
 
 		//我发起的流程.
 		Paras ps = new Paras();
-		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter=" + SystemConfig.AppCenterDBVarStr + "Starter GROUP BY FK_Flow, FlowName ";
-		ps.Add("Starter", BP.Web.WebUser.No);
+		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter=" + SystemConfig.getAppCenterDBVarStr() + "Starter GROUP BY FK_Flow, FlowName ";
+		ps.Add("Starter", WebUser.getNo());
 
 		//string sql = "";
-		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + BP.Web.WebUser.No + "' GROUP BY FK_Flow, FlowName ";
+		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		System.Data.DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Start";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["NUM"].ColumnName = "Num";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("NUM").ColumnName = "Num";
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//待办.
 		ps = new Paras();
-		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp GROUP BY FK_Flow, FlowName ";
-		ps.Add("FK_Emp", BP.Web.WebUser.No);
-		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + BP.Web.WebUser.No + "' GROUP BY FK_Flow, FlowName ";
+		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp GROUP BY FK_Flow, FlowName ";
+		ps.Add("FK_Emp", WebUser.getNo());
+		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		System.Data.DataTable dtTodolist = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dtTodolist.TableName = "Todolist";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtTodolist.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dtTodolist.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dtTodolist.Columns["NUM"].ColumnName = "Num";
+			dtTodolist.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dtTodolist.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dtTodolist.Columns.get("NUM").ColumnName = "Num";
 		}
 
-		ds.Tables.Add(dtTodolist);
+		ds.Tables.add(dtTodolist);
 
 		//正在运行的流程.
 		System.Data.DataTable dtRuning = BP.WF.Dev2Interface.DB_TongJi_Runing();
 		dtRuning.TableName = "Runing";
-		ds.Tables.Add(dtRuning);
+		ds.Tables.add(dtRuning);
 
 
 		//归档的流程.
 		System.Data.DataTable dtOK = BP.WF.Dev2Interface.DB_TongJi_FlowComplete();
 		dtOK.TableName = "OK";
-		ds.Tables.Add(dtOK);
+		ds.Tables.add(dtOK);
 
 		//返回结果.
 		return BP.Tools.Json.DataSetToJson(ds, false);
@@ -156,27 +156,27 @@ public class WF_RptSearch extends DirectoryPageBase
 				+ " WHERE (A.Title LIKE '%" + keywords + "%' "
 				+ " or A.Starter LIKE '%" + keywords + "%' "
 				+ " or A.StarterName LIKE '%" + keywords + "%') "
-				+ " AND (A.Emps LIKE '@%" + WebUser.No + "%' "
-				+ " or A.TodoEmps LIKE '%" + WebUser.No + "%') "
+				+ " AND (A.Emps LIKE '@%" + WebUser.getNo() + "%' "
+				+ " or A.TodoEmps LIKE '%" + WebUser.getNo() + "%') "
 				+ " AND A.WFState!=0 ";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "WF_GenerWorkFlow";
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["FID"].ColumnName = "FID";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["WFSTA"].ColumnName = "WFSta";
-			dt.Columns["EMPS"].ColumnName = "Emps";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps"; //处理人.
-			dt.Columns["WFSTATE"].ColumnName = "WFState"; //处理人.
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("FID").ColumnName = "FID";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("WFSTA").ColumnName = "WFSta";
+			dt.Columns.get("EMPS").ColumnName = "Emps";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps"; //处理人.
+			dt.Columns.get("WFSTATE").ColumnName = "WFState"; //处理人.
 		}
 		if (dt != null)
 		{
@@ -196,7 +196,7 @@ public class WF_RptSearch extends DirectoryPageBase
 	*/
 	public final String KeySearch_GenerOpenUrl()
 	{
-		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.No) == true)
+		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo()) == true)
 		{
 			return "1";
 		}

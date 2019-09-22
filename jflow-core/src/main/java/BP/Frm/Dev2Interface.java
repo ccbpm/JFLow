@@ -36,13 +36,13 @@ public class Dev2Interface
 
 		gb.setWorkID(BP.DA.DBAccess.GenerOID("WorkID"));
 		gb.setBillState(BillState.None); //初始化状态.
-		gb.setStarter(BP.Web.WebUser.No);
-		gb.setStarterName(BP.Web.WebUser.Name);
+		gb.setStarter(WebUser.getNo());
+		gb.setStarterName(WebUser.getName());
 		gb.setFrmName(fb.Name); //单据名称.
 		gb.setFrmID(fb.No); //单据ID
 
 		gb.setFK_FrmTree(fb.getFK_FormTree()); //单据类别.
-		gb.setRDT(BP.DA.DataType.CurrentDataTime);
+		gb.setRDT(BP.DA.DataType.getCurrentDataTime());
 		gb.setNDStep(1);
 		gb.setNDStepName("启动");
 
@@ -87,7 +87,7 @@ public class Dev2Interface
 		//创建rpt.
 		BP.WF.Data.GERpt rpt = new BP.WF.Data.GERpt(frmID);
 
-		int i = rpt.Retrieve("Starter", WebUser.No, "BillState", 0);
+		int i = rpt.Retrieve("Starter", WebUser.getNo(), "BillState", 0);
 		if (i >= 1)
 		{
 			rpt.SetValByKey("RDT", DataType.CurrentData);
@@ -97,8 +97,8 @@ public class Dev2Interface
 
 		//更新基础的数据到表单表.
 		rpt.SetValByKey("BillState", 0);
-		rpt.SetValByKey("Starter", WebUser.No);
-		rpt.SetValByKey("StarterName", WebUser.Name);
+		rpt.SetValByKey("Starter", WebUser.getNo());
+		rpt.SetValByKey("StarterName", WebUser.getName());
 		rpt.SetValByKey("RDT", DataType.CurrentData);
 
 		rpt.getEnMap().CodeStruct = fb.getEnMap().CodeStruct;
@@ -272,13 +272,13 @@ public class Dev2Interface
 		GenerBill gb = new GenerBill();
 		gb.setWorkID(BP.DA.DBAccess.GenerOID("WorkID"));
 		gb.setBillState(BillState.None); //初始化状态.
-		gb.setStarter(BP.Web.WebUser.No);
-		gb.setStarterName(BP.Web.WebUser.Name);
+		gb.setStarter(WebUser.getNo());
+		gb.setStarterName(WebUser.getName());
 		gb.setFrmName(fb.Name); //单据名称.
 		gb.setFrmID(fb.No); //单据ID
 
 		gb.setFK_FrmTree(fb.getFK_FormTree()); //单据类别.
-		gb.setRDT(BP.DA.DataType.CurrentDataTime);
+		gb.setRDT(BP.DA.DataType.getCurrentDataTime());
 		gb.setNDStep(1);
 		gb.setNDStepName("启动");
 
@@ -403,7 +403,7 @@ public class Dev2Interface
 
 		DataTable dtStart = bills.ToDataTableField();
 		dtStart.TableName = "Start";
-		ds.Tables.Add(dtStart);
+		ds.Tables.add(dtStart);
 		return ds;
 	}
 	/** 
@@ -427,7 +427,7 @@ public class Dev2Interface
 	{
 		if (DataType.IsNullOrEmpty(empID) == true)
 		{
-			empID = BP.Web.WebUser.No;
+			empID = WebUser.getNo();
 		}
 
 		GenerBills bills = new GenerBills();
@@ -454,21 +454,21 @@ public class Dev2Interface
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+			titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 		}
 
 
-		titleRole = titleRole.replace("@WebUser.No", WebUser.No);
-		titleRole = titleRole.replace("@WebUser.Name", WebUser.Name);
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.FK_DeptNameOfFull);
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		titleRole = titleRole.replace("@WebUser.getNo()", WebUser.getNo());
+		titleRole = titleRole.replace("@WebUser.getName()", WebUser.getName());
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", LocalDateTime.now().toString("yy年MM月dd日HH时mm分"));
 		if (titleRole.contains("@"))
 		{
@@ -558,7 +558,7 @@ public class Dev2Interface
 
 		if (billNo.contains("@WebUser.DeptZi"))
 		{
-			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.FK_Dept + "'", "");
+			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'", "");
 			billNo = billNo.replace("@WebUser.DeptZi", val.toString());
 		}
 
@@ -597,7 +597,7 @@ public class Dev2Interface
 		String maxBillNo = DBAccess.RunSQLReturnString(sql);
 		int ilsh = 0;
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(maxBillNo))
+		if (DataType.IsNullOrEmpty(maxBillNo))
 		{
 			//没有数据，则所有流水号都从1开始
 			for (Map.Entry<Integer, Integer> kv : loc.entrySet())

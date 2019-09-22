@@ -34,7 +34,7 @@ public class TableFieldAddComment extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}

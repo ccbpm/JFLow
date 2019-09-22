@@ -167,13 +167,13 @@ public class Glo
 		sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\MSSQL_GPM_VIEW.sql";
 
 		//MySQL 语法有所区别
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MySQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\MySQL_GPM_VIEW.sql";
 		}
 
 		//Oracle 语法有所区别
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\Oracle_GPM_VIEW.sql";
 		}
@@ -186,7 +186,7 @@ public class Glo
 		//处理全路径
 		Depts depts = new Depts();
 		depts.RetrieveAll();
-		for (Dept dept : depts)
+		for (Dept dept : depts.ToJavaList())
 		{
 			dept.GenerNameOfPath();
 		}

@@ -121,7 +121,7 @@ public class Depts extends BP.En.EntitiesNoName
 	*/
 	public final List<Dept> ToJavaList()
 	{
-		return (List<Dept>)this;
+		return (List<Dept>)(Object)this;
 	}
 	/** 
 	 转化成list

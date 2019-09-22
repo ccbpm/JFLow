@@ -171,7 +171,7 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 
 		//计算出来曾经抄送过的人.
 		Paras ps = new Paras();
-		ps.SQL = "SELECT CCToName FROM WF_CCList WHERE FK_Node=" + SystemConfig.AppCenterDBVarStr + "FK_Node AND WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+		ps.SQL = "SELECT CCToName FROM WF_CCList WHERE FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("FK_Node",this.getFK_Node());
 		ps.Add("WorkID",this.getWorkID());
 		//string sql = "SELECT CCToName FROM WF_CCList WHERE FK_Node=" + this.FK_Node + " AND WorkID=" + this.WorkID;
@@ -221,13 +221,13 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 		DataSet ds = new DataSet();
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Port_StationType";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//岗位.
 		String sqlStas = "SELECT NO,NAME,FK_STATIONTYPE FROM Port_Station ORDER BY FK_STATIONTYPE,NO";
 		DataTable dtSta = BP.DA.DBAccess.RunSQLReturnTable(sqlStas);
 		dtSta.TableName = "Port_Station";
-		ds.Tables.Add(dtSta);
+		ds.Tables.add(dtSta);
 		return BP.Tools.Json.ToJson(ds);
 	}
 	/** 

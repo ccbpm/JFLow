@@ -49,7 +49,7 @@ public class UpdateCCFlow extends Method
 	@Override
 	public Object Do()
 	{
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			return "非法的用户执行。";
 		}

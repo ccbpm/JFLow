@@ -33,7 +33,7 @@ public class Serials extends Entities
 	*/
 	public final List<Serial> ToJavaList()
 	{
-		return (List<Serial>)this;
+		return (List<Serial>)(Object)this;
 	}
 	/** 
 	 转化成list

@@ -34,7 +34,7 @@ public class TestAPIs extends EntitiesNoName
 	*/
 	public final List<TestAPI> ToJavaList()
 	{
-		return (List<TestAPI>)this;
+		return (List<TestAPI>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -46,7 +46,7 @@ public class TestAPIs extends EntitiesNoName
 		ArrayList<TestAPI> list = new ArrayList<TestAPI>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((TestAPI)this[i]);
+			list.add((TestAPI)this.get(i));
 		}
 		return list;
 	}

@@ -533,7 +533,7 @@ public class CCFormParse
 		    switch (propertyBtn)
 		    {
 		        case "primitives.1.str":
-		            btn.Text = val == null ? "" : val.Replace(" ", "&nbsp;").Replace("\n", "@");
+		            btn.Text = val == null ? "" : val.Replace(" ", "&nbsp;").replace("\n", "@");
 		            break;
 		        case "ButtonEvent":
 		            btn.EventType = val == null ? 0 : int.Parse(val);

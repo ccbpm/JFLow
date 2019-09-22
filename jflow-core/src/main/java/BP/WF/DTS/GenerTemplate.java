@@ -69,7 +69,7 @@ public class GenerTemplate extends Method
 		{
 			String pathDir = path + "\\Flow.流程模板\\" + sort.No + "." + sort.Name;
 			(new File(pathDir)).mkdirs();
-			for (Flow fl : fls)
+			for (Flow fl : fls.ToJavaList())
 			{
 				fl.DoExpFlowXmlTemplete(pathDir);
 			}
@@ -80,12 +80,12 @@ public class GenerTemplate extends Method
 		{
 			String pathDir = path + "\\Frm.表单模板\\" + sort.No + "." + sort.Name;
 			(new File(pathDir)).mkdirs();
-			for (Flow fl : fls)
+			for (Flow fl : fls.ToJavaList())
 			{
-				String pathFlowDir = pathDir + "\\" + fl.No + "." + fl.Name;
+				String pathFlowDir = pathDir + "\\" + fl.getNo() + "." + fl.Name;
 				(new File(pathFlowDir)).mkdirs();
 				Nodes nds = new Nodes(fl.No);
-				for (Node nd : nds)
+				for (Node nd : nds.ToJavaList())
 				{
 					MapData md = new MapData("ND" + nd.getNodeID());
 					System.Data.DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);

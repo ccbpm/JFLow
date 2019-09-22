@@ -22,7 +22,7 @@ public class ToolbarExcelSln extends EntityMyPK
 		uac.IsDelete = false;
 		uac.IsInsert = false;
 		uac.IsView = false;
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsUpdate = true;
 			uac.IsView = true;

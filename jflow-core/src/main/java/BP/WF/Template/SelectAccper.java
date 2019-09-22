@@ -201,7 +201,7 @@ public class SelectAccper extends EntityMyPK
 	}
 	public SelectAccper(String mypk)
 	{
-		this.MyPK = mypk;
+		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
@@ -210,9 +210,9 @@ public class SelectAccper extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_SelectAccper", "选择接受/抄送人信息");
@@ -245,8 +245,8 @@ public class SelectAccper extends EntityMyPK
 		map.AddTBDateTime(SelectAccperAttr.PlanADT, null, "到达日期(计划)", true, false);
 		map.AddTBDateTime(SelectAccperAttr.PlanSDT, null, "应完成日期(计划)", true, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -263,8 +263,8 @@ public class SelectAccper extends EntityMyPK
 	public final void ResetPK()
 	{
 		//注释掉了.
-		// this.MyPK = this.FK_Node + "_" + this.WorkID + "_" + this.FK_Emp+"_"+this.Idx;
-		this.MyPK = this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp();
+		// this.setMyPK( this.FK_Node + "_" + this.WorkID + "_" + this.FK_Emp+"_"+this.Idx;
+		this.setMyPK( this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp();
 	}
 	@Override
 	protected boolean beforeUpdateInsertAction()
@@ -287,12 +287,12 @@ public class SelectAccper extends EntityMyPK
 		}
 
 		this.ResetPK();
-		this.setRec(BP.Web.WebUser.No);
+		this.setRec(WebUser.getNo());
 		return super.beforeUpdateInsertAction();
 	}
 	//protected override bool beforeUpdateInsertAction()
 	//{
-	//    this.Rec = BP.Web.WebUser.No;
+	//    this.Rec = WebUser.getNo();
 	//    return base.beforeUpdateInsertAction();
 	//}
 }

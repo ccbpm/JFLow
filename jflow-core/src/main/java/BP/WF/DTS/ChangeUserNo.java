@@ -40,7 +40,7 @@ public class ChangeUserNo extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -73,7 +73,7 @@ public class ChangeUserNo extends Method
 			MapAttrs attrs = new MapAttrs(md.No);
 			for (MapAttr attr : attrs)
 			{
-				if (attr.UIIsEnable == false && attr.DefValReal.equals("@WebUser.No"))
+				if (attr.UIIsEnable == false && attr.DefValReal.equals("@WebUser.getNo()"))
 				{
 					sqls += "\t\n UPDATE " + md.PTable + " SET ";
 				}

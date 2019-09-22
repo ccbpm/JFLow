@@ -17,7 +17,7 @@ public class CCDepts extends EntitiesMM
 	public final Stations getHisStations()
 	{
 		Stations ens = new Stations();
-		for (CCDept ns : this)
+		for (CCDept ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Station(ns.getFK_Dept()));
 		}
@@ -29,7 +29,7 @@ public class CCDepts extends EntitiesMM
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (CCDept ns : this)
+		for (CCDept ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -45,8 +45,9 @@ public class CCDepts extends EntitiesMM
 	 抄送部门
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public CCDepts(int NodeID)
+	public CCDepts(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCDeptAttr.FK_Node, NodeID);
@@ -56,8 +57,9 @@ public class CCDepts extends EntitiesMM
 	 抄送部门
 	 
 	 @param StationNo StationNo 
+	 * @throws Exception 
 	*/
-	public CCDepts(String StationNo)
+	public CCDepts(String StationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCDeptAttr.FK_Dept, StationNo);
@@ -76,15 +78,16 @@ public class CCDepts extends EntitiesMM
 	 
 	 @param sts 工作部门集合
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Stations sts)
+	public final Nodes GetHisNodes(Stations sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
-		for (Station st : sts)
+		for (Station st : sts.ToJavaList())
 		{
-			tmp = this.GetHisNodes(st.No);
-			for (Node nd : tmp)
+			tmp = this.GetHisNodes(st.getNo());
+			for (Node nd : tmp.ToJavaList())
 			{
 				if (nds.Contains(nd))
 				{
@@ -101,15 +104,16 @@ public class CCDepts extends EntitiesMM
 	 
 	 @param stationNo 工作部门编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String stationNo)
+	public final Nodes GetHisNodes(String stationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCDeptAttr.FK_Dept, stationNo);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (CCDept en : this)
+		for (CCDept en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -120,15 +124,16 @@ public class CCDepts extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Stations GetHisStations(int nodeID)
+	public final Stations GetHisStations(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCDeptAttr.FK_Node, nodeID);
 		qo.DoQuery();
 
 		Stations ens = new Stations();
-		for (CCDept en : this)
+		for (CCDept en : this.ToJavaList())
 		{
 			ens.AddEntity(new Station(en.getFK_Dept()));
 		}
@@ -144,7 +149,7 @@ public class CCDepts extends EntitiesMM
 	*/
 	public final List<CCDept> ToJavaList()
 	{
-		return (List<CCDept>)this;
+		return (List<CCDept>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -156,7 +161,7 @@ public class CCDepts extends EntitiesMM
 		ArrayList<CCDept> list = new ArrayList<CCDept>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((CCDept)this[i]);
+			list.add((CCDept)this.get(i));
 		}
 		return list;
 	}

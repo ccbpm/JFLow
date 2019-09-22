@@ -54,7 +54,7 @@ public class MapDtls extends EntitiesNoName
 	*/
 	public final List<MapDtl> ToJavaList()
 	{
-		return (List<MapDtl>)this;
+		return (List<MapDtl>)(Object)this;
 	}
 	/** 
 	 转化成list

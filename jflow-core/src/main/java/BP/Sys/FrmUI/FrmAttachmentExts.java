@@ -49,7 +49,7 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	*/
 	public final List<FrmAttachment> ToJavaList()
 	{
-		return (List<FrmAttachment>)this;
+		return (List<FrmAttachment>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -61,7 +61,7 @@ public class FrmAttachmentExts extends EntitiesMyPK
 		ArrayList<FrmAttachment> list = new ArrayList<FrmAttachment>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmAttachment)this[i]);
+			list.add((FrmAttachment)this.get(i));
 		}
 		return list;
 	}

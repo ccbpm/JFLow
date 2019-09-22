@@ -40,7 +40,7 @@ public class MapFrmExcels extends EntitiesNoName
 	*/
 	public final List<MapFrmExcel> ToJavaList()
 	{
-		return (List<MapFrmExcel>)this;
+		return (List<MapFrmExcel>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class MapFrmExcels extends EntitiesNoName
 		ArrayList<MapFrmExcel> list = new ArrayList<MapFrmExcel>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapFrmExcel)this[i]);
+			list.add((MapFrmExcel)this.get(i));
 		}
 		return list;
 	}

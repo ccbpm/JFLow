@@ -38,7 +38,7 @@ public class GroupStations extends EntitiesMM
 	*/
 	public final List<GroupStation> ToJavaList()
 	{
-		return (List<GroupStation>)this;
+		return (List<GroupStation>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class GroupStations extends EntitiesMM
 		ArrayList<GroupStation> list = new ArrayList<GroupStation>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GroupStation)this[i]);
+			list.add((GroupStation)this.get(i));
 		}
 		return list;
 	}

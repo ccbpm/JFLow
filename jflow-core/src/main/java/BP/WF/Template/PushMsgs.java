@@ -58,7 +58,7 @@ public class PushMsgs extends EntitiesMyPK
 	*/
 	public final List<PushMsg> ToJavaList()
 	{
-		return (List<PushMsg>)this;
+		return (List<PushMsg>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -70,7 +70,7 @@ public class PushMsgs extends EntitiesMyPK
 		ArrayList<PushMsg> list = new ArrayList<PushMsg>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((PushMsg)this[i]);
+			list.add((PushMsg)this.get(i));
 		}
 		return list;
 	}

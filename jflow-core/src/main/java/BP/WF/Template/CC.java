@@ -2,7 +2,9 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
+import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -47,7 +49,7 @@ public class CC extends Entity
 				DataRow dr = dt.NewRow();
 				dr.set("No", mydr.get("No"));
 				dr.set("Name", mydr.get("Name"));
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 		}
 
@@ -61,13 +63,13 @@ public class CC extends Entity
 				DataRow dr = dt.NewRow();
 				dr.set("No", mydr.get("No"));
 				dr.set("Name", mydr.get("Name"));
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 		}
 
 		if (this.getCCIsStations() == true)
 		{
-			if (this.getCCStaWay() == WF.CCStaWay.StationOnly)
+			if (this.getCCStaWay() == CCStaWay.StationOnly)
 			{
 
 					sql = "SELECT No,Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C  WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Node=" + this.getNodeID();
@@ -78,21 +80,21 @@ public class CC extends Entity
 					DataRow dr = dt.NewRow();
 					dr.set("No", mydr.get("No"));
 					dr.set("Name", mydr.get("Name"));
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 			}
 
-			if (this.getCCStaWay() == WF.CCStaWay.StationSmartCurrNodeWorker || this.getCCStaWay() == WF.CCStaWay.StationSmartNextNodeWorker)
+			if (this.getCCStaWay() == CCStaWay.StationSmartCurrNodeWorker || this.getCCStaWay() == CCStaWay.StationSmartNextNodeWorker)
 			{
 				/*按岗位智能计算*/
 				String deptNo = "";
-				if (this.getCCStaWay() == WF.CCStaWay.StationSmartCurrNodeWorker)
+				if (this.getCCStaWay() == CCStaWay.StationSmartCurrNodeWorker)
 				{
-					deptNo = BP.Web.WebUser.FK_Dept;
+					deptNo = WebUser.getFK_Dept();
 				}
 				else
 				{
-					deptNo = DBAccess.RunSQLReturnStringIsNull("SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + workid + " AND IsEnable=1 AND IsPass=0", BP.Web.WebUser.FK_Dept);
+					deptNo = DBAccess.RunSQLReturnStringIsNull("SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + workid + " AND IsEnable=1 AND IsPass=0", WebUser.getFK_Dept());
 				}
 
 
@@ -104,11 +106,11 @@ public class CC extends Entity
 					DataRow dr = dt.NewRow();
 					dr.set("No", mydr.get("No"));
 					dr.set("Name", mydr.get("Name"));
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 			}
 
-			if (this.getCCStaWay() == WF.CCStaWay.StationAdndDept)
+			if (this.getCCStaWay() == CCStaWay.StationAdndDept)
 			{
 
 					sql = "SELECT No,Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C, WF_CCDept D WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND A.FK_Dept=D.FK_Dept AND B.FK_Dept=D.FK_Dept AND C.FK_Node=" + this.getNodeID() + " AND D.FK_Node=" + this.getNodeID();
@@ -119,7 +121,7 @@ public class CC extends Entity
 					DataRow dr = dt.NewRow();
 					dr.set("No", mydr.get("No"));
 					dr.set("Name", mydr.get("Name"));
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 			}
 
@@ -130,12 +132,12 @@ public class CC extends Entity
 
 				if (this.getCCStaWay() == CCStaWay.StationDeptUpLevelCurrNodeWorker)
 				{
-					deptNo = BP.Web.WebUser.FK_Dept;
+					deptNo = WebUser.getFK_Dept();
 				}
 
 				if (this.getCCStaWay() == CCStaWay.StationDeptUpLevelNextNodeWorker)
 				{
-					deptNo = DBAccess.RunSQLReturnStringIsNull("SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + workid + " AND IsEnable=1 AND IsPass=0", BP.Web.WebUser.FK_Dept);
+					deptNo = DBAccess.RunSQLReturnStringIsNull("SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + workid + " AND IsEnable=1 AND IsPass=0", WebUser.getFK_Dept());
 				}
 
 				while (true)
@@ -151,7 +153,7 @@ public class CC extends Entity
 						DataRow dr = dt.NewRow();
 						dr.set("No", mydr.get("No"));
 						dr.set("Name", mydr.get("Name"));
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 
 					if (dept.ParentNo.equals("0"))
@@ -159,18 +161,18 @@ public class CC extends Entity
 						break;
 					}
 
-					deptNo = dept.ParentNo;
+					deptNo = dept.getParentNo();
 				}
 			}
 		}
 
 		if (this.getCCIsSQLs() == true)
 		{
-			Object tempVar = this.getCCSQL().Clone();
+			Object tempVar = this.getCCSQL().clone();
 			sql = tempVar instanceof String ? (String)tempVar : null;
-			sql = sql.replace("@WebUser.No", BP.Web.WebUser.No);
-			sql = sql.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			sql = sql.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+			sql = sql.replace("@WebUser.getName()", WebUser.getName());
+			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			if (sql.contains("@") == true)
 			{
 				sql = BP.WF.Glo.DealExp(sql, rpt, null);
@@ -183,7 +185,7 @@ public class CC extends Entity
 				DataRow dr = dt.NewRow();
 				dr.set("No", mydr.get("No"));
 				dr.set("Name", mydr.get("Name"));
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 		}
 		//将dt中的重复数据过滤掉  
@@ -207,12 +209,13 @@ public class CC extends Entity
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			uac.IsView = false;
 			return uac;
@@ -341,8 +344,9 @@ public class CC extends Entity
 	 抄送设置
 	 
 	 @param nodeid
+	 * @throws Exception 
 	*/
-	public CC(int nodeid)
+	public CC(int nodeid) throws Exception
 	{
 		this.setNodeID(nodeid);
 		this.Retrieve();
@@ -353,9 +357,9 @@ public class CC extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "抄送规则");
@@ -392,11 +396,11 @@ public class CC extends Entity
 
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.AttrsOfOneVSM.AddBranches(new BP.WF.Template.CCDepts(), new BP.Port.Depts(), BP.WF.Template.NodeDeptAttr.FK_Node, BP.WF.Template.NodeDeptAttr.FK_Dept, "抄送部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranches(new BP.WF.Template.CCDepts(), new BP.Port.Depts(), BP.WF.Template.NodeDeptAttr.FK_Node, BP.WF.Template.NodeDeptAttr.FK_Dept, "抄送部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.AttrsOfOneVSM.AddBranchesAndLeaf(new BP.WF.Template.CCEmps(), new BP.Port.Emps(), BP.WF.Template.NodeEmpAttr.FK_Node, BP.WF.Template.NodeEmpAttr.FK_Emp, "抄送接受人(AddBranchesAndLeaf)", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranchesAndLeaf(new BP.WF.Template.CCEmps(), new BP.Port.Emps(), BP.WF.Template.NodeEmpAttr.FK_Node, BP.WF.Template.NodeEmpAttr.FK_Emp, "抄送接受人(AddBranchesAndLeaf)", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 对应关系
@@ -412,8 +416,8 @@ public class CC extends Entity
 			//map.AttrsOfOneVSM.Add(new BP.WF.Template.CCEmps(), new BP.WF.Port.Emps(), NodeEmpAttr.FK_Node, NodeEmpAttr.FK_Emp, DeptAttr.Name,
 			//    DeptAttr.No, "抄送人员");
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

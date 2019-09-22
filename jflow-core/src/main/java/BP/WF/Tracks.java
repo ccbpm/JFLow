@@ -37,7 +37,7 @@ public class Tracks extends BP.En.Entities
 	*/
 	public final List<Track> ToJavaList()
 	{
-		return (List<Track>)this;
+		return (List<Track>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -49,7 +49,7 @@ public class Tracks extends BP.En.Entities
 		ArrayList<Track> list = new ArrayList<Track>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Track)this[i]);
+			list.add((Track)this.get(i));
 		}
 		return list;
 	}

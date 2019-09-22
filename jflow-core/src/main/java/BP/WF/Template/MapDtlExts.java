@@ -49,7 +49,7 @@ public class MapDtlExts extends EntitiesNoName
 	*/
 	public final List<MapDtlExt> ToJavaList()
 	{
-		return (List<MapDtlExt>)this;
+		return (List<MapDtlExt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -61,7 +61,7 @@ public class MapDtlExts extends EntitiesNoName
 		ArrayList<MapDtlExt> list = new ArrayList<MapDtlExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapDtlExt)this[i]);
+			list.add((MapDtlExt)this.get(i));
 		}
 		return list;
 	}

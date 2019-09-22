@@ -40,7 +40,7 @@ public class AthUnReadLogs extends EntitiesMyPK
 	*/
 	public final List<AthUnReadLog> ToJavaList()
 	{
-		return (List<AthUnReadLog>)this;
+		return (List<AthUnReadLog>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class AthUnReadLogs extends EntitiesMyPK
 		ArrayList<AthUnReadLog> list = new ArrayList<AthUnReadLog>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((AthUnReadLog)this[i]);
+			list.add((AthUnReadLog)this.get(i));
 		}
 		return list;
 	}

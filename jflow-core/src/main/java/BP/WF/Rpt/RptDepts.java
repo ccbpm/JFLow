@@ -44,7 +44,7 @@ public class RptDepts extends Entities
 	*/
 	public final List<RptDept> ToJavaList()
 	{
-		return (List<RptDept>)this;
+		return (List<RptDept>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -56,7 +56,7 @@ public class RptDepts extends Entities
 		ArrayList<RptDept> list = new ArrayList<RptDept>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((RptDept)this[i]);
+			list.add((RptDept)this.get(i));
 		}
 		return list;
 	}

@@ -38,7 +38,7 @@ public class ExtHandWritings extends EntitiesMyPK
 	*/
 	public final List<ExtHandWriting> ToJavaList()
 	{
-		return (List<ExtHandWriting>)this;
+		return (List<ExtHandWriting>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class ExtHandWritings extends EntitiesMyPK
 		ArrayList<ExtHandWriting> list = new ArrayList<ExtHandWriting>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((ExtHandWriting)this[i]);
+			list.add((ExtHandWriting)this.get(i));
 		}
 		return list;
 	}

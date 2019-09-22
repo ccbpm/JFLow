@@ -60,7 +60,7 @@ public class StationCreates extends EntitiesMM
 	*/
 	public final List<StationCreate> ToJavaList()
 	{
-		return (List<StationCreate>)this;
+		return (List<StationCreate>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -72,7 +72,7 @@ public class StationCreates extends EntitiesMM
 		ArrayList<StationCreate> list = new ArrayList<StationCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((StationCreate)this[i]);
+			list.add((StationCreate)this.get(i));
 		}
 		return list;
 	}

@@ -74,7 +74,7 @@ public class WF_CCForm extends DirectoryPageBase
 					throw new RuntimeException("@流程设计错误，该多附件启用了模版组件，模版目录:" + templetePath + "里没有模版文件.");
 				}
 
-				for (File fl : fls)
+				for (File fl : fls.ToJavaList())
 				{
 					if ((new File(athDesc.SaveTo)).isDirectory() == false)
 					{
@@ -107,7 +107,7 @@ public class WF_CCForm extends DirectoryPageBase
 					FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 
 					dbUpload.CheckPhysicsTable();
-					dbUpload.MyPK = athDesc.FK_MapData + String.valueOf(oid);
+					dbUpload.setMyPK( athDesc.FK_MapData + String.valueOf(oid);
 					dbUpload.NodeID = String.valueOf(getFK_Node());
 					dbUpload.FK_FrmAttachment = this.getFK_FrmAttachment();
 
@@ -121,7 +121,7 @@ public class WF_CCForm extends DirectoryPageBase
 					{
 						/*如果是协同，就让他是PWorkID. */
 						Paras ps = new Paras();
-						ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+						ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 						ps.Add("WorkID", this.getPKVal());
 						String pWorkID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0).toString();
 						if (pWorkID == null || pWorkID.equals("0"))
@@ -140,9 +140,9 @@ public class WF_CCForm extends DirectoryPageBase
 					dbUpload.FileName = fl.getName();
 					dbUpload.FileSize = (float)info.length();
 
-					dbUpload.RDT = DataType.CurrentDataTime;
-					dbUpload.Rec = BP.Web.WebUser.No;
-					dbUpload.RecName = BP.Web.WebUser.Name;
+					dbUpload.RDT = DataType.getCurrentDataTime();
+					dbUpload.Rec = WebUser.getNo();
+					dbUpload.RecName = WebUser.getName();
 
 					dbUpload.Insert();
 
@@ -164,7 +164,7 @@ public class WF_CCForm extends DirectoryPageBase
 			//        && DataType.IsNullOrEmpty(this.FK_Flow) == false
 			//        && this.FK_Node != 0)
 			//    {
-			//        isDel = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.FK_Flow, this.FK_Node, this.WorkID, WebUser.No);
+			//        isDel = BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.FK_Flow, this.FK_Node, this.WorkID, WebUser.getNo());
 			//        if (isDel == false)
 			//            isUpdate = false;
 			//    }
@@ -189,10 +189,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 
 			//增加附件描述.
-			ds.Tables.Add(athDesc.ToDataTableField("AthDesc"));
+			ds.Tables.add(athDesc.ToDataTableField("AthDesc"));
 
 			//增加附件.
-			ds.Tables.Add(dbs.ToDataTableField("DBAths"));
+			ds.Tables.add(dbs.ToDataTableField("DBAths"));
 
 			//返回.
 			return BP.Tools.Json.ToJson(ds);
@@ -292,7 +292,7 @@ public class WF_CCForm extends DirectoryPageBase
 							MapDtl dtl = new MapDtl(fk_dtl);
 
 							DataTable dtDtlFull = DBAccess.RunSQLReturnTable(mysql);
-							BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.PTable + " WHERE RefPK=" + oid);
+							BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + oid);
 							for (DataRow dr : dtDtlFull.Rows)
 							{
 								BP.Sys.GEDtl mydtl = new GEDtl(fk_dtl);
@@ -316,7 +316,7 @@ public class WF_CCForm extends DirectoryPageBase
 							}
 							DataRow drRe = dtDtl.NewRow();
 							drRe.set(0, fk_dtl);
-							dtDtl.Rows.Add(drRe);
+							dtDtl.Rows.add(drRe);
 						}
 						return JSONTODT(dtDtl);
 						break;
@@ -339,7 +339,7 @@ public class WF_CCForm extends DirectoryPageBase
 								DataRow dr = dt1.NewRow();
 								dr.set(0, ss[0]);
 								// dr[1] = ss[1];
-								dt1.Rows.Add(dr);
+								dt1.Rows.add(dr);
 							}
 							return JSONTODT(dt1);
 						}
@@ -406,9 +406,9 @@ public class WF_CCForm extends DirectoryPageBase
 		sql = sql.replace("\n", "");
 
 
-		sql = sql.replace("@WebUser.No", WebUser.No);
-		sql = sql.replace("@WebUser.Name", WebUser.Name);
-		sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+		sql = sql.replace("@WebUser.getName()", WebUser.getName());
+		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		String oid = this.GetRequestVal("OID");
 		if (oid != null)
@@ -454,7 +454,7 @@ public class WF_CCForm extends DirectoryPageBase
 	{
 		//  return BP.Tools.Json.ToJson(dt);
 
-		if ((BP.Sys.SystemConfig.AppCenterDBType == DBType.Informix || BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle) && dealSQL != null)
+		if ((BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Informix || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) && dealSQL != null)
 		{
 			/*如果数据库不区分大小写, 就要按用户输入的sql进行二次处理。*/
 			String mysql = dealSQL.trim();
@@ -596,7 +596,7 @@ public class WF_CCForm extends DirectoryPageBase
 		if (md.HisFrmType == FrmType.Url)
 		{
 			String no = this.GetRequestVal("NO");
-			String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&UserNo=" + WebUser.No + "&SID=" + this.getSID();
+			String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + this.getSID();
 
 			String url = "";
 			/*如果是URL.*/
@@ -615,7 +615,7 @@ public class WF_CCForm extends DirectoryPageBase
 		if (md.HisFrmType == FrmType.Entity)
 		{
 			String no = this.GetRequestVal("NO");
-			String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&UserNo=" + WebUser.No + "&SID=" + this.getSID();
+			String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + this.getSID();
 
 			BP.En.Entities ens = BP.En.ClassFactory.GetEns(md.PTable);
 
@@ -657,7 +657,7 @@ public class WF_CCForm extends DirectoryPageBase
 		if (md.HisFrmType == FrmType.WordFrm)
 		{
 			String no = this.GetRequestVal("NO");
-			String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&UserNo=" + WebUser.No + "&SID=" + this.getSID() + "&FK_MapData=" + this.getFK_MapData() + "&OIDPKVal=" + this.getOID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
+			String urlParas = "OID=" + this.getRefOID() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + this.getSID() + "&FK_MapData=" + this.getFK_MapData() + "&OIDPKVal=" + this.getOID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
 			/*如果是URL.*/
 			String requestParas = this.getRequestParasOfAll();
 			String[] parasArrary = this.getRequestParasOfAll().split("[&]", -1);
@@ -895,7 +895,7 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 
 			//生成新路径，解决返回相同src后图片不切换问题
-			//string newName = ImgAthPK + "_" + this.MyPK + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+			//string newName = ImgAthPK + "_" + this.getMyPK() + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
 			String webPath = BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data/" + myName + ".png";
 			//string saveToPath = this.context.Server.MapPath(BP.WF.Glo.CCFlowAppPath + "DataUser/ImgAth/Data");
 			String saveToPath = SystemConfig.PathOfWebApp + (BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data");
@@ -938,7 +938,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 			////更新数据表                
 			//FrmImgAthDB imgAthDB = new FrmImgAthDB();
-			//imgAthDB.MyPK = myName;
+			//imgAthDB.setMyPK( myName;
 			//imgAthDB.FK_MapData = this.FK_MapData;
 			//imgAthDB.FK_FrmImgAth = ImgAthPK;
 			//imgAthDB.RefPKVal = this.MyPK;
@@ -947,8 +947,8 @@ public class WF_CCForm extends DirectoryPageBase
 			//imgAthDB.FileExts = "png";
 			//imgAthDB.FileSize = fileSize;
 			//imgAthDB.RDT = DateTime.Now.ToString("yyyy-MM-dd mm:HH");
-			//imgAthDB.Rec = BP.Web.WebUser.No;
-			//imgAthDB.RecName = BP.Web.WebUser.Name;
+			//imgAthDB.Rec = WebUser.getNo();
+			//imgAthDB.RecName = WebUser.getName();
 			//imgAthDB.Save();
 			return "{SourceImage:\"" + webPath + "\"}";
 		}
@@ -982,7 +982,7 @@ public class WF_CCForm extends DirectoryPageBase
 		{
 			newName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
 		}
-		//string newName = ImgAthPK + "_" + this.MyPK + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+		//string newName = ImgAthPK + "_" + this.getMyPK() + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
 		String webPath = BP.WF.Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data/" + newName + ".png";
 		String savePath = SystemConfig.CCFlowAppPath + "DataUser/ImgAth/Data/" + newName + ".png";
 		//获取上传的大图片
@@ -1178,7 +1178,7 @@ public class WF_CCForm extends DirectoryPageBase
 			if (DataType.IsNullOrEmpty(atParas) == false)
 			{
 				AtPara ap = new AtPara(atParas);
-				for (String key : ap.HisHT.keySet())
+				for (String key : ap.getHisHT().keySet())
 				{
 					if (en.Row.ContainsKey(key) == true) //有就该变.
 					{
@@ -1230,7 +1230,7 @@ public class WF_CCForm extends DirectoryPageBase
 			DataTable mainTable = en.ToDataTableField(md.No);
 			mainTable.TableName = "MainTable";
 
-			ds.Tables.Add(mainTable);
+			ds.Tables.add(mainTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 把主表数据放入.
 
@@ -1283,7 +1283,7 @@ public class WF_CCForm extends DirectoryPageBase
 					fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
 					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
 					dt.TableName = keyOfEn; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
-					ds.Tables.Add(dt);
+					ds.Tables.add(dt);
 					continue;
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1298,17 +1298,17 @@ public class WF_CCForm extends DirectoryPageBase
 				DataTable dataTable = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 				if (dataTable != null)
 				{
-					ds.Tables.Add(dataTable);
+					ds.Tables.add(dataTable);
 				}
 				else
 				{
 					DataRow ddldr = ddlTable.NewRow();
 					ddldr.set("No", uiBindKey);
-					ddlTable.Rows.Add(ddldr);
+					ddlTable.Rows.add(ddldr);
 				}
 			}
 			ddlTable.TableName = "UIBindKey";
-			ds.Tables.Add(ddlTable);
+			ds.Tables.add(ddlTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion End把外键表加入DataSet
 
@@ -1367,7 +1367,7 @@ public class WF_CCForm extends DirectoryPageBase
 				//如果是累加表单.
 				if (nd.getHisFormType() == NodeFormType.FoolTruck)
 				{
-					DataSet myds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), BP.Web.WebUser.No, this.GetRequestVal("FromWorkOpt"));
+					DataSet myds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), WebUser.getNo(), this.GetRequestVal("FromWorkOpt"));
 
 					return BP.Tools.Json.ToJson(myds);
 				}
@@ -1410,7 +1410,7 @@ public class WF_CCForm extends DirectoryPageBase
 			GenerWorkFlow gwf = new GenerWorkFlow();
 			gwf.setWorkID(pk);
 			gwf.RetrieveFromDBSources();
-			ds.Tables.Add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+			ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 根据who is pk 获取数据.
@@ -1421,7 +1421,7 @@ public class WF_CCForm extends DirectoryPageBase
 			if (DataType.IsNullOrEmpty(atParas) == false)
 			{
 				AtPara ap = new AtPara(atParas);
-				for (String key : ap.HisHT.keySet())
+				for (String key : ap.getHisHT().keySet())
 				{
 					if (en.Row.ContainsKey(key) == true) //有就该变.
 					{
@@ -1558,7 +1558,7 @@ public class WF_CCForm extends DirectoryPageBase
 					fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
 					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
 					dt.TableName = keyOfEn; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
-					ds.Tables.Add(dt);
+					ds.Tables.add(dt);
 					continue;
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1574,17 +1574,17 @@ public class WF_CCForm extends DirectoryPageBase
 
 				if (dataTable != null)
 				{
-					ds.Tables.Add(dataTable);
+					ds.Tables.add(dataTable);
 				}
 				else
 				{
 					DataRow ddldr = ddlTable.NewRow();
 					ddldr.set("No", uiBindKey);
-					ddlTable.Rows.Add(ddldr);
+					ddlTable.Rows.add(ddldr);
 				}
 			}
 			ddlTable.TableName = "UIBindKey";
-			ds.Tables.Add(ddlTable);
+			ds.Tables.add(ddlTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion End把外键表加入DataSet
 
@@ -1663,10 +1663,10 @@ public class WF_CCForm extends DirectoryPageBase
 							dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
 							dr.set(GroupFieldAttr.Idx, 100);
 							dr.set(GroupFieldAttr.Lab, "审核信息");
-							gf.Rows.Add(dr);
+							gf.Rows.add(dr);
 
 							ds.Tables.Remove("Sys_GroupField");
-							ds.Tables.Add(gf);
+							ds.Tables.add(gf);
 
 							//执行更新,就自动生成那个丢失的字段分组.
 							refFnc.Update();
@@ -1712,10 +1712,10 @@ public class WF_CCForm extends DirectoryPageBase
 							dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
 							dr.set(GroupFieldAttr.Idx, 100);
 							dr.set(GroupFieldAttr.Lab, "审核信息");
-							gf.Rows.Add(dr);
+							gf.Rows.add(dr);
 
 							ds.Tables.Remove("Sys_GroupField");
-							ds.Tables.Add(gf);
+							ds.Tables.add(gf);
 
 							//更新,为了让其表单上自动增加审核分组.
 							BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(nd.getNodeID());
@@ -1736,16 +1736,16 @@ public class WF_CCForm extends DirectoryPageBase
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion 没有审核组件分组就增加上审核组件分组.
-				ds.Tables.Add(fnc.ToDataTableField("WF_FrmNodeComponent"));
+				ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
 			}
 			if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
 			{
-				ds.Tables.Add(nd.ToDataTableField("WF_Node"));
+				ds.Tables.add(nd.ToDataTableField("WF_Node"));
 			}
 
 			if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
 			{
-				ds.Tables.Add(fn.ToDataTableField("WF_FrmNode"));
+				ds.Tables.add(fn.ToDataTableField("WF_FrmNode"));
 			}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1766,7 +1766,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 					//改变他的属性. 不知道是否应该这样写？
 					ds.Tables.Remove("Sys_MapAttr");
-					ds.Tables.Add(dtMapAttr);
+					ds.Tables.add(dtMapAttr);
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion 只读方案.
@@ -1828,69 +1828,69 @@ public class WF_CCForm extends DirectoryPageBase
 							// 设置默认值.
 							switch (ff.getDefVal())
 							{
-								case "@WebUser.No":
+								case "@WebUser.getNo()":
 									if (attr.UIIsReadonly == true)
 									{
-										en.SetValByKey(attr.Key, Web.WebUser.No);
+										en.SetValByKey(attr.Key, Web.WebUser.getNo());
 									}
 									else
 									{
 										if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, Web.WebUser.No);
+											en.SetValByKey(attr.Key, Web.WebUser.getNo());
 										}
 									}
 									continue;
-								case "@WebUser.Name":
+								case "@WebUser.getName()":
 									if (attr.UIIsReadonly == true)
 									{
-										en.SetValByKey(attr.Key, Web.WebUser.Name);
+										en.SetValByKey(attr.Key, Web.WebUser.getName());
 									}
 									else
 									{
 										if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, Web.WebUser.Name);
+											en.SetValByKey(attr.Key, Web.WebUser.getName());
 										}
 									}
 									continue;
-								case "@WebUser.FK_Dept":
+								case "@WebUser.getFK_Dept()":
 									if (attr.UIIsReadonly == true)
 									{
-										en.SetValByKey(attr.Key, Web.WebUser.FK_Dept);
+										en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept());
 									}
 									else
 									{
 										if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, Web.WebUser.FK_Dept);
+											en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept());
 										}
 									}
 									continue;
-								case "@WebUser.FK_DeptName":
+								case "@WebUser.getFK_Dept()Name":
 									if (attr.UIIsReadonly == true)
 									{
-										en.SetValByKey(attr.Key, Web.WebUser.FK_DeptName);
+										en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()Name);
 									}
 									else
 									{
 										if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, Web.WebUser.FK_DeptName);
+											en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()Name);
 										}
 									}
 									continue;
-								case "@WebUser.FK_DeptNameOfFull":
-								case "@WebUser.FK_DeptFullName":
+								case "@WebUser.getFK_Dept()NameOfFull":
+								case "@WebUser.getFK_Dept()FullName":
 									if (attr.UIIsReadonly == true)
 									{
-										en.SetValByKey(attr.Key, Web.WebUser.FK_DeptNameOfFull);
+										en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()NameOfFull);
 									}
 									else
 									{
 										if (DataType.IsNullOrEmpty(myval) || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, Web.WebUser.FK_DeptNameOfFull);
+											en.SetValByKey(attr.Key, Web.WebUser.getFK_Dept()NameOfFull);
 										}
 									}
 									continue;
@@ -1904,7 +1904,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 										if (attr.MyDataType == DataType.AppDateTime || myval.equals(v))
 										{
-											en.SetValByKey(attr.Key, DataType.CurrentDataTime);
+											en.SetValByKey(attr.Key, DataType.getCurrentDataTime());
 										}
 									}
 									else
@@ -1917,7 +1917,7 @@ public class WF_CCForm extends DirectoryPageBase
 											}
 											else
 											{
-												en.SetValByKey(attr.Key, DataType.CurrentDataTime);
+												en.SetValByKey(attr.Key, DataType.getCurrentDataTime());
 											}
 										}
 									}
@@ -1946,7 +1946,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 					//改变他的属性. 不知道是否应该这样写？
 					ds.Tables.Remove("Sys_MapAttr");
-					ds.Tables.Add(dtMapAttr);
+					ds.Tables.add(dtMapAttr);
 
 					//处理radiobutton的模式的控件.
 				}
@@ -1962,7 +1962,7 @@ public class WF_CCForm extends DirectoryPageBase
 			//增加主表数据.
 			DataTable mainTable = en.ToDataTableField(md.No);
 			mainTable.TableName = "MainTable";
-			ds.Tables.Add(mainTable);
+			ds.Tables.add(mainTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 加入主表的数据.
 
@@ -2040,7 +2040,7 @@ public class WF_CCForm extends DirectoryPageBase
 			DataTable mainTable = en.ToDataTableField(md.No);
 			mainTable.TableName = "MainTable";
 
-			ds.Tables.Add(mainTable);
+			ds.Tables.add(mainTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 把主表数据放入.
 
@@ -2629,21 +2629,21 @@ public class WF_CCForm extends DirectoryPageBase
 
 		//主表数据.
 		DataTable dt = md.ToDataTableField("Main");
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//主表字段.
 		MapAttrs attrs = md.MapAttrs;
-		ds.Tables.Add(attrs.ToDataTableField("MapAttrs"));
+		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
 		//从表.
 		MapDtls dtls = md.MapDtls;
-		ds.Tables.Add(dtls.ToDataTableField("MapDtls"));
+		ds.Tables.add(dtls.ToDataTableField("MapDtls"));
 
 		//从表的从表.
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			MapAttrs subAttrs = new MapAttrs(dtl.No);
-			ds.Tables.Add(subAttrs.ToDataTableField(dtl.No));
+			ds.Tables.add(subAttrs.ToDataTableField(dtl.No));
 		}
 
 		//从表的数据.
@@ -2660,7 +2660,7 @@ public class WF_CCForm extends DirectoryPageBase
 				case DtlOpenType.ForEmp: // 按人员来控制.
 					qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
 					qo.addAnd();
-					qo.AddWhere(GEDtlAttr.Rec, WebUser.No);
+					qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
 					break;
 				case DtlOpenType.ForWorkID: // 按工作ID来控制
 					qo.AddWhere(GEDtlAttr.RefPK, this.getRefPKVal());
@@ -2697,11 +2697,11 @@ public class WF_CCForm extends DirectoryPageBase
 		//从表
 		DataTable dtDtl = qo.DoQueryToTable();
 		dtDtl.TableName = "DTDtls";
-		ds.Tables.Add(dtDtl);
+		ds.Tables.add(dtDtl);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 		//enDtls.Retrieve(GEDtlAttr.RefPK, this.RefPKVal);
-		//ds.Tables.Add(enDtls.ToDataTableField("DTDtls"));
+		//ds.Tables.add(enDtls.ToDataTableField("DTDtls"));
 
 		return BP.Tools.Json.ToJson(ds);
 
@@ -2719,15 +2719,15 @@ public class WF_CCForm extends DirectoryPageBase
 
 		//主表数据.
 		DataTable dt = md.ToDataTableField("Main");
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//主表字段.
 		MapAttrs attrs = md.MapAttrs;
-		ds.Tables.Add(attrs.ToDataTableField("MapAttrs"));
+		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
 		GEDtls enDtls = new GEDtls(this.getEnsName());
 		enDtls.Retrieve(GEDtlAttr.RefPK, this.getRefPKVal());
-		ds.Tables.Add(enDtls.ToDataTableField("DTDtls"));
+		ds.Tables.add(enDtls.ToDataTableField("DTDtls"));
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -2823,7 +2823,7 @@ public class WF_CCForm extends DirectoryPageBase
 		String mypk = this.GetRequestVal("FK_MapExt");
 
 		MapExt me = new MapExt();
-		me.MyPK = mypk;
+		me.setMyPK( mypk;
 		me.Retrieve();
 
 		//获得配置信息.
@@ -2838,9 +2838,9 @@ public class WF_CCForm extends DirectoryPageBase
 
 		DataSet resultDs = new DataSet();
 		String sqlObjs = me.PopValTreeSQL;
-		sqlObjs = sqlObjs.replace("@WebUser.No", BP.Web.WebUser.No);
-		sqlObjs = sqlObjs.replace("@WebUser.Name", BP.Web.WebUser.Name);
-		sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+		sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
+		sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
+		sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		sqlObjs = sqlObjs.replace("@ParentNo", parentNo);
 		sqlObjs = this.DealExpByFromVals(sqlObjs);
 
@@ -2848,34 +2848,34 @@ public class WF_CCForm extends DirectoryPageBase
 		dt.TableName = "DTObjs";
 
 		//判断是否是oracle.
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["PARENTNO"].ColumnName = "ParentNo";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
 		}
-		resultDs.Tables.Add(dt);
+		resultDs.Tables.add(dt);
 
 		//doubleTree
 		if (me.PopValWorkModel == PopValWorkModel.TreeDouble && !parentNo.equals(me.PopValTreeParentNo))
 		{
 			sqlObjs = me.PopValDoubleTreeEntitySQL;
-			sqlObjs = sqlObjs.replace("@WebUser.No", BP.Web.WebUser.No);
-			sqlObjs = sqlObjs.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			sqlObjs = sqlObjs.replace("@ParentNo", parentNo);
 			sqlObjs = this.DealExpByFromVals(sqlObjs);
 
 			DataTable entityDt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
 			entityDt.TableName = "DTEntitys";
-			resultDs.Tables.Add(entityDt);
+			resultDs.Tables.add(entityDt);
 
 
 			//判断是否是oracle.
-			if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
-				entityDt.Columns["NO"].ColumnName = "No";
-				entityDt.Columns["NAME"].ColumnName = "Name";
+				entityDt.Columns.get("NO").ColumnName = "No";
+				entityDt.Columns.get("NAME").ColumnName = "Name";
 
 			}
 
@@ -2918,7 +2918,7 @@ public class WF_CCForm extends DirectoryPageBase
 	public final String PopVal_Init()
 	{
 		MapExt me = new MapExt();
-		me.MyPK = this.getFK_MapExt();
+		me.setMyPK( this.getFK_MapExt();
 		me.Retrieve();
 
 		//数据对象，将要返回的.
@@ -2929,7 +2929,7 @@ public class WF_CCForm extends DirectoryPageBase
 		DataTable dtcfg = BP.Sys.PubClass.HashtableToDataTable(ht);
 
 		//增加到数据源.
-		ds.Tables.Add(dtcfg);
+		ds.Tables.add(dtcfg);
 
 		if (me.PopValWorkModel == PopValWorkModel.SelfUrl)
 		{
@@ -2939,9 +2939,9 @@ public class WF_CCForm extends DirectoryPageBase
 		if (me.PopValWorkModel == PopValWorkModel.TableOnly)
 		{
 			String sqlObjs = me.PopValEntitySQL;
-			sqlObjs = sqlObjs.replace("@WebUser.No", BP.Web.WebUser.No);
-			sqlObjs = sqlObjs.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 			sqlObjs = this.DealExpByFromVals(sqlObjs);
 
@@ -2949,7 +2949,7 @@ public class WF_CCForm extends DirectoryPageBase
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
 			dt.TableName = "DTObjs";
 			DoCheckTableColumnNameCase(dt);
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 			return BP.Tools.Json.ToJson(ds);
 		}
 
@@ -2962,31 +2962,31 @@ public class WF_CCForm extends DirectoryPageBase
 			String sqlObjs = me.PopValGroupSQL;
 			if (sqlObjs.length() > 10)
 			{
-				sqlObjs = sqlObjs.replace("@WebUser.No", BP.Web.WebUser.No);
-				sqlObjs = sqlObjs.replace("@WebUser.Name", BP.Web.WebUser.Name);
-				sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+				sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
+				sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
+				sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 				sqlObjs = this.DealExpByFromVals(sqlObjs);
 
 
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
 				dt.TableName = "DTGroup";
 				DoCheckTableColumnNameCase(dt);
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 
 			sqlObjs = me.PopValEntitySQL;
 			if (sqlObjs.length() > 10)
 			{
-				sqlObjs = sqlObjs.replace("@WebUser.No", BP.Web.WebUser.No);
-				sqlObjs = sqlObjs.replace("@WebUser.Name", BP.Web.WebUser.Name);
-				sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+				sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
+				sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
+				sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 				sqlObjs = this.DealExpByFromVals(sqlObjs);
 
 
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
 				dt.TableName = "DTEntity";
 				DoCheckTableColumnNameCase(dt);
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 			return BP.Tools.Json.ToJson(ds);
 
@@ -3020,9 +3020,9 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 
 			String sqlObjs = me.PopValTablePageSQL;
-			sqlObjs = sqlObjs.replace("@WebUser.No", BP.Web.WebUser.No);
-			sqlObjs = sqlObjs.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			sqlObjs = sqlObjs.replace("@Key", key);
 
 			//三个固定参数.
@@ -3088,10 +3088,10 @@ public class WF_CCForm extends DirectoryPageBase
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
 			dt.TableName = "DTObjs";
 			DoCheckTableColumnNameCase(dt);
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//处理查询条件.
-			//$Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE No='@WebUser.No'
+			//$Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE No='@WebUser.getNo()'
 			//$Para=XB#Label=性别#EnumKey=XB
 			//$Para=DTFrom#Label=注册日期从#DefVal=@Now-30
 			//$Para=DTTo#Label=到#DefVal=@Now
@@ -3108,9 +3108,9 @@ public class WF_CCForm extends DirectoryPageBase
 				if (cond.contains("#ListSQL=") == true)
 				{
 					sql = cond.substring(cond.indexOf("ListSQL") + 8);
-					sql = sql.replace("@WebUser.No", WebUser.No);
-					sql = sql.replace("@WebUser.Name", WebUser.Name);
-					sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+					sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+					sql = sql.replace("@WebUser.getName()", WebUser.getName());
+					sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					sql = this.DealExpByFromVals(sql);
 				}
 
@@ -3151,7 +3151,7 @@ public class WF_CCForm extends DirectoryPageBase
 				DataTable dtPara = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				dtPara.TableName = para;
 				DoCheckTableColumnNameCase(dt);
-				ds.Tables.Add(dtPara); //加入到参数集合.
+				ds.Tables.add(dtPara); //加入到参数集合.
 			}
 
 
@@ -3170,7 +3170,7 @@ public class WF_CCForm extends DirectoryPageBase
 	public final String PopVal_InitTablePageCount()
 	{
 		MapExt me = new MapExt();
-		me.MyPK = this.getFK_MapExt();
+		me.setMyPK( this.getFK_MapExt();
 		me.Retrieve();
 
 		//数据对象，将要返回的.
@@ -3181,7 +3181,7 @@ public class WF_CCForm extends DirectoryPageBase
 		DataTable dtcfg = BP.Sys.PubClass.HashtableToDataTable(ht);
 
 		//增加到数据源.
-		ds.Tables.Add(dtcfg);
+		ds.Tables.add(dtcfg);
 
 		if (me.PopValWorkModel == PopValWorkModel.SelfUrl)
 		{
@@ -3203,9 +3203,9 @@ public class WF_CCForm extends DirectoryPageBase
 			String countSQL = me.PopValTablePageSQLCount;
 
 			//固定参数.
-			countSQL = countSQL.replace("@WebUser.No", BP.Web.WebUser.No);
-			countSQL = countSQL.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			countSQL = countSQL.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			countSQL = countSQL.replace("@WebUser.getNo()", WebUser.getNo());
+			countSQL = countSQL.replace("@WebUser.getName()", WebUser.getName());
+			countSQL = countSQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			countSQL = countSQL.replace("@Key", key);
 			countSQL = this.DealExpByFromVals(countSQL);
 
@@ -3268,12 +3268,12 @@ public class WF_CCForm extends DirectoryPageBase
 			DataTable dtCount = new DataTable("DTCout");
 			dtCount.TableName = "DTCout";
 			dtCount.Columns.Add("Count", Integer.class);
-			dtCount.Rows.Add(new String[] {count});
-			ds.Tables.Add(dtCount);
+			dtCount.Rows.add(new String[] {count});
+			ds.Tables.add(dtCount);
 
 
 			//处理查询条件.
-			//$Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE No='@WebUser.No'
+			//$Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE No='@WebUser.getNo()'
 			//$Para=XB#Label=性别#EnumKey=XB
 			//$Para=DTFrom#Label=注册日期从#DefVal=@Now-30
 			//$Para=DTTo#Label=到#DefVal=@Now
@@ -3290,9 +3290,9 @@ public class WF_CCForm extends DirectoryPageBase
 				if (cond.contains("#ListSQL=") == true)
 				{
 					sql = cond.substring(cond.indexOf("ListSQL") + 8);
-					sql = sql.replace("@WebUser.No", WebUser.No);
-					sql = sql.replace("@WebUser.Name", WebUser.Name);
-					sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+					sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+					sql = sql.replace("@WebUser.getName()", WebUser.getName());
+					sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					sql = this.DealExpByFromVals(sql);
 				}
 
@@ -3332,7 +3332,7 @@ public class WF_CCForm extends DirectoryPageBase
 				//查询出来数据，就把他放入到dataset里面.
 				DataTable dtPara = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				dtPara.TableName = para;
-				ds.Tables.Add(dtPara); //加入到参数集合.
+				ds.Tables.add(dtPara); //加入到参数集合.
 			}
 
 
@@ -3351,7 +3351,7 @@ public class WF_CCForm extends DirectoryPageBase
 	public final String PopVal_InitTablePageList()
 	{
 		MapExt me = new MapExt();
-		me.MyPK = this.getFK_MapExt();
+		me.setMyPK( this.getFK_MapExt();
 		me.Retrieve();
 
 		//数据对象，将要返回的.
@@ -3362,7 +3362,7 @@ public class WF_CCForm extends DirectoryPageBase
 		DataTable dtcfg = BP.Sys.PubClass.HashtableToDataTable(ht);
 
 		//增加到数据源.
-		ds.Tables.Add(dtcfg);
+		ds.Tables.add(dtcfg);
 
 		if (me.PopValWorkModel == PopValWorkModel.SelfUrl)
 		{
@@ -3396,9 +3396,9 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 
 			String sqlObjs = me.PopValTablePageSQL;
-			sqlObjs = sqlObjs.replace("@WebUser.No", BP.Web.WebUser.No);
-			sqlObjs = sqlObjs.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			sqlObjs = sqlObjs.replace("@Key", key);
 
 			//三个固定参数.
@@ -3463,10 +3463,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
 			dt.TableName = "DTObjs";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//处理查询条件.
-			//$Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE No='@WebUser.No'
+			//$Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE No='@WebUser.getNo()'
 			//$Para=XB#Label=性别#EnumKey=XB
 			//$Para=DTFrom#Label=注册日期从#DefVal=@Now-30
 			//$Para=DTTo#Label=到#DefVal=@Now
@@ -3483,9 +3483,9 @@ public class WF_CCForm extends DirectoryPageBase
 				if (cond.contains("#ListSQL=") == true)
 				{
 					sql = cond.substring(cond.indexOf("ListSQL") + 8);
-					sql = sql.replace("@WebUser.No", WebUser.No);
-					sql = sql.replace("@WebUser.Name", WebUser.Name);
-					sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+					sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+					sql = sql.replace("@WebUser.getName()", WebUser.getName());
+					sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					sql = this.DealExpByFromVals(sql);
 				}
 
@@ -3525,7 +3525,7 @@ public class WF_CCForm extends DirectoryPageBase
 				//查询出来数据，就把他放入到dataset里面.
 				DataTable dtPara = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				dtPara.TableName = para;
-				ds.Tables.Add(dtPara); //加入到参数集合.
+				ds.Tables.add(dtPara); //加入到参数集合.
 			}
 
 
@@ -3539,7 +3539,7 @@ public class WF_CCForm extends DirectoryPageBase
 	private void SingleAttach(String attachPk, long workid, long fid, int fk_node, String ensName)
 	{
 		FrmAttachment frmAth = new FrmAttachment();
-		frmAth.MyPK = attachPk;
+		frmAth.setMyPK( attachPk;
 		frmAth.RetrieveFromDBSources();
 
 		String athDBPK = attachPk + "_" + workid;
@@ -3580,7 +3580,7 @@ public class WF_CCForm extends DirectoryPageBase
 		File info = new File(saveTo);
 
 		FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-		dbUpload.MyPK = athDBPK;
+		dbUpload.setMyPK( athDBPK;
 		dbUpload.FK_FrmAttachment = attachPk;
 		dbUpload.RefPKVal = String.valueOf(this.getWorkID());
 		dbUpload.FID = fid;
@@ -3607,9 +3607,9 @@ public class WF_CCForm extends DirectoryPageBase
 
 		dbUpload.FileName = HttpContextHelper.RequestFiles(0).FileName;
 		dbUpload.FileSize = (float)info.length();
-		dbUpload.Rec = WebUser.No;
-		dbUpload.RecName = WebUser.Name;
-		dbUpload.RDT = BP.DA.DataType.CurrentDataTime;
+		dbUpload.Rec = WebUser.getNo();
+		dbUpload.RecName = WebUser.getName();
+		dbUpload.RDT = BP.DA.DataType.getCurrentDataTime();
 
 		dbUpload.NodeID = String.valueOf(fk_node);
 		dbUpload.Save();
@@ -3814,7 +3814,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 				File info = new File(realSaveTo);
 				FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-				dbUpload.MyPK = guid; // athDesc.FK_MapData + oid.ToString();
+				dbUpload.setMyPK( guid; // athDesc.FK_MapData + oid.ToString();
 				dbUpload.NodeID = String.valueOf(this.getFK_Node());
 				dbUpload.Sort = sort;
 				dbUpload.FK_FrmAttachment = attachPk;
@@ -3856,9 +3856,9 @@ public class WF_CCForm extends DirectoryPageBase
 
 				dbUpload.FileName = file.FileName;
 				dbUpload.FileSize = (float)info.length();
-				dbUpload.RDT = DataType.CurrentDataTimess;
-				dbUpload.Rec = BP.Web.WebUser.No;
-				dbUpload.RecName = BP.Web.WebUser.Name;
+				dbUpload.RDT = DataType.getCurrentDataTime()ss;
+				dbUpload.Rec = WebUser.getNo();
+				dbUpload.RecName = WebUser.getName();
 				dbUpload.RefPKVal = pkVal;
 				dbUpload.FID = this.getFID();
 
@@ -3925,7 +3925,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 				File info = new File(temp);
 				FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-				dbUpload.MyPK = BP.DA.DBAccess.GenerGUID();
+				dbUpload.setMyPK( BP.DA.DBAccess.GenerGUID();
 				dbUpload.Sort = sort;
 				dbUpload.NodeID = String.valueOf(getFK_Node());
 				dbUpload.FK_FrmAttachment = athDesc.MyPK;
@@ -3944,7 +3944,7 @@ public class WF_CCForm extends DirectoryPageBase
 				{
 					/*如果是协同，就让他是PWorkID. */
 					Paras ps = new Paras();
-					ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+					ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 					ps.Add("WorkID", pkVal);
 					String pWorkID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0).toString();
 					if (pWorkID == null || pWorkID.equals("0"))
@@ -3958,9 +3958,9 @@ public class WF_CCForm extends DirectoryPageBase
 				dbUpload.FK_FrmAttachment = athDesc.MyPK;
 				dbUpload.FileName = file.FileName;
 				dbUpload.FileSize = (float)info.length();
-				dbUpload.RDT = DataType.CurrentDataTimess;
-				dbUpload.Rec = BP.Web.WebUser.No;
-				dbUpload.RecName = BP.Web.WebUser.Name;
+				dbUpload.RDT = DataType.getCurrentDataTime()ss;
+				dbUpload.Rec = WebUser.getNo();
+				dbUpload.RecName = WebUser.getName();
 				if (athDesc.IsExpCol == true)
 				{
 					if (paras != null && paras.length() > 0)
@@ -4082,7 +4082,7 @@ public class WF_CCForm extends DirectoryPageBase
 	*/
 	public final String FrmSingle_Init()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_MapData()))
+		if (DataType.IsNullOrEmpty(this.getFK_MapData()))
 		{
 			throw new RuntimeException("FK_MapData参数不能为空");
 		}
@@ -4117,7 +4117,7 @@ public class WF_CCForm extends DirectoryPageBase
 		}
 
 		ht.put("OID", oid);
-		ht.put("UserNo", WebUser.No);
+		ht.put("UserNo", WebUser.getNo());
 		ht.put("SID", WebUser.SID);
 
 		return BP.Tools.Json.ToJsonEntityModel(ht);
@@ -4205,9 +4205,9 @@ public class WF_CCForm extends DirectoryPageBase
 
 		String sql = dtl.ImpSQLSearch;
 		sql = sql.replace("@Key", this.GetRequestVal("Key"));
-		sql = sql.replace("@WebUser.No", WebUser.No);
-		sql = sql.replace("@WebUser.Name", WebUser.Name);
-		sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+		sql = sql.replace("@WebUser.getName()", WebUser.getName());
+		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		DataSet ds = new DataSet();
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -4221,7 +4221,7 @@ public class WF_CCForm extends DirectoryPageBase
 	public final String DtlImpBySQL_Delete()
 	{
 		MapDtl dtl = new MapDtl(this.getEnsName());
-		BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.PTable + " WHERE RefPK='" + this.getRefPKVal() + "'");
+		BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + this.getRefPKVal() + "'");
 		return "";
 	}
 	/** 
@@ -4391,7 +4391,7 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 
 			//保存临时文件.
-			String file = tempPath + "\\" + WebUser.No + ext;
+			String file = tempPath + "\\" + WebUser.getNo() + ext;
 
 			if ((new File(tempPath)).isDirectory() == false)
 			{
@@ -4473,7 +4473,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 			if (this.GetRequestValInt("DDL_ImpWay") == 0)
 			{
-				BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.PTable + " WHERE RefPK='" + this.getWorkID() + "'");
+				BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + this.getWorkID() + "'");
 			}
 
 			int i = 0;
@@ -4584,7 +4584,7 @@ public class WF_CCForm extends DirectoryPageBase
 						break;
 				}
 				dtlEn.SetValByKey("RDT", rdt);
-				dtlEn.SetValByKey("Rec", WebUser.No);
+				dtlEn.SetValByKey("Rec", WebUser.getNo());
 				i++;
 				//dtlEn.OID = (int)DBAccess.GenerOID(this.EnsName);
 				dtlEn.Insert();
@@ -4605,7 +4605,7 @@ public class WF_CCForm extends DirectoryPageBase
 		}
 		catch (RuntimeException ex)
 		{
-			String msg = ex.getMessage().Replace("'", "‘");
+			String msg = ex.getMessage().replace("'", "‘");
 			return "err@" + msg;
 		}
 	}
@@ -4772,7 +4772,7 @@ public class WF_CCForm extends DirectoryPageBase
 		}
 		catch (RuntimeException ex)
 		{
-			String msg = ex.getMessage().Replace("'", "‘");
+			String msg = ex.getMessage().replace("'", "‘");
 			return "err@" + msg;
 		}
 	}
@@ -4817,7 +4817,7 @@ public class WF_CCForm extends DirectoryPageBase
 			dr.set("BillNo", strs[0]);
 			dr.set("BillName", strs[1]);
 
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 
 		//返回json.
@@ -4916,7 +4916,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 			//增加轨迹表.
 			Paras ps = new BP.DA.Paras();
-			ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.AppCenterDBVarStr + "ActionType AND WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+			ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add(TrackAttr.ActionType, ActionType.WorkCheck.getValue());
 			ps.Add(TrackAttr.WorkID, this.getWorkID());
 			engine.dtTrack = BP.DA.DBAccess.RunSQLReturnTable(ps);
@@ -4927,16 +4927,16 @@ public class WF_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 保存单据，以方便查询.
 		Bill bill = new Bill();
-		bill.MyPK = this.getFID() + "_" + this.getWorkID() + "_" + this.getFK_Node() + "_" + billIdx;
+		bill.setMyPK( this.getFID() + "_" + this.getWorkID() + "_" + this.getFK_Node() + "_" + billIdx;
 		bill.setWorkID(this.getWorkID());
 		bill.setFK_Node(this.getFK_Node());
-		bill.setFK_Dept(WebUser.FK_Dept);
-		bill.setFK_Emp(WebUser.No);
+		bill.setFK_Dept(WebUser.getFK_Dept());
+		bill.setFK_Emp(WebUser.getNo());
 
 		bill.setUrl("/DataUser/Bill/FlowFrm/" + LocalDateTime.now().toString("yyyyMMdd") + "/" + tempNameChinese + "." + this.getWorkID() + ".doc");
 		bill.setFullPath(toPath + file);
 
-		bill.setRDT(DataType.CurrentDataTime);
+		bill.setRDT(DataType.getCurrentDataTime());
 		bill.setFK_NY(DataType.CurrentYearMonth);
 		bill.setFK_Flow(this.getFK_Flow());
 		if (this.getWorkID() != 0)
@@ -4987,7 +4987,7 @@ public class WF_CCForm extends DirectoryPageBase
 		String delPK = this.GetRequestVal("DelPKVal");
 
 		FrmAttachmentDB delDB = new FrmAttachmentDB();
-		delDB.MyPK = delPK == null ? this.getMyPK() : delPK;
+		delDB.setMyPK( delPK == null ? this.getMyPK() : delPK;
 		delDB.RetrieveFromDBSources();
 		delDB.Delete(); //删除上传的文件.
 		return "删除成功.";
@@ -5005,11 +5005,11 @@ public class WF_CCForm extends DirectoryPageBase
 	public final String AttachmentUpload_Down()
 	{
 		FrmAttachmentDB downDB = new FrmAttachmentDB();
-		downDB.MyPK = this.getMyPK();
+		downDB.setMyPK( this.getMyPK();
 		downDB.Retrieve();
 
 		FrmAttachment dbAtt = new FrmAttachment();
-		dbAtt.MyPK = downDB.FK_FrmAttachment;
+		dbAtt.setMyPK( downDB.FK_FrmAttachment;
 		dbAtt.Retrieve();
 
 		if (dbAtt.AthSaveWay == AthSaveWay.IISServer)
@@ -5033,7 +5033,7 @@ public class WF_CCForm extends DirectoryPageBase
 	public final void AttachmentDownFromByte()
 	{
 		FrmAttachmentDB downDB = new FrmAttachmentDB();
-		downDB.MyPK = this.getMyPK();
+		downDB.setMyPK( this.getMyPK();
 		downDB.Retrieve();
 		downDB.FileName = HttpUtility.UrlEncode(downDB.FileName);
 //C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
@@ -5062,10 +5062,10 @@ public class WF_CCForm extends DirectoryPageBase
 		FoolTruckNodeFrm sln = new FoolTruckNodeFrm();
 		sln.setFrmSln(-1);
 		String fromFrm = this.GetRequestVal("FromFrm");
-		sln.MyPK = fromFrm + "_" + this.getFK_Node() + "_" + this.getFK_Flow();
+		sln.setMyPK( fromFrm + "_" + this.getFK_Node() + "_" + this.getFK_Flow();
 		int result = sln.RetrieveFromDBSources();
 		BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-		athDesc.MyPK = this.getFK_FrmAttachment();
+		athDesc.setMyPK( this.getFK_FrmAttachment();
 		athDesc.RetrieveFromDBSources();
 
 		/*没有查询到解决方案, 就是只读方案 */
@@ -5086,7 +5086,7 @@ public class WF_CCForm extends DirectoryPageBase
 		if (sln.getFrmSln() == 2)
 		{
 			BP.Sys.FrmAttachment athDescNode = new BP.Sys.FrmAttachment();
-			athDescNode.MyPK = this.getFK_FrmAttachment() + "_" + this.getFK_Node();
+			athDescNode.setMyPK( this.getFK_FrmAttachment() + "_" + this.getFK_Node();
 			if (athDescNode.RetrieveFromDBSources() == 0)
 			{
 				//没有设定附件权限，保持原来的附件权限模式
@@ -5117,14 +5117,14 @@ public class WF_CCForm extends DirectoryPageBase
 			///#endregion
 
 		BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
-		athDesc.MyPK = this.getFK_FrmAttachment();
+		athDesc.setMyPK( this.getFK_FrmAttachment();
 		if (this.getFK_Node() == 0 || this.getFK_Flow() == null)
 		{
 			athDesc.RetrieveFromDBSources();
 			return athDesc;
 		}
 
-		athDesc.MyPK = this.getFK_FrmAttachment();
+		athDesc.setMyPK( this.getFK_FrmAttachment();
 		int result = athDesc.RetrieveFromDBSources();
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -5145,7 +5145,7 @@ public class WF_CCForm extends DirectoryPageBase
 		if (result == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false && this.getFK_FrmAttachment().contains("DocMultiAth"))
 		{
 			/*如果没有查询到它,就有可能是公文多附件被删除了.*/
-			athDesc.MyPK = this.getFK_FrmAttachment();
+			athDesc.setMyPK( this.getFK_FrmAttachment();
 			athDesc.NoOfObj = "DocMultiAth";
 			athDesc.FK_MapData = this.getFK_MapData();
 			athDesc.Exts = "*.*";
@@ -5169,10 +5169,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 			//有可能在其其它的节点上没有这个附件，所以也要循环增加上它.
 			BP.WF.Nodes nds = new BP.WF.Nodes(this.getFK_Flow());
-			for (BP.WF.Node nd : nds)
+			for (BP.WF.Node nd : nds.ToJavaList())
 			{
 				athDesc.FK_MapData = "ND" + nd.getNodeID();
-				athDesc.MyPK = athDesc.FK_MapData + "_" + athDesc.NoOfObj;
+				athDesc.setMyPK( athDesc.FK_MapData + "_" + athDesc.NoOfObj;
 				if (athDesc.IsExits == true)
 				{
 					continue;
@@ -5197,7 +5197,7 @@ public class WF_CCForm extends DirectoryPageBase
 				fk_mapdata = this.GetRequestVal("FFK_MapData");
 			}
 
-			if (tangible.StringHelper.isNullOrWhiteSpace(fk_mapdata))
+			if (DataType.IsNullOrEmpty(fk_mapdata))
 			{
 				fk_mapdata = this.GetRequestVal("FK_MapData");
 			}
@@ -5238,7 +5238,7 @@ public class WF_CCForm extends DirectoryPageBase
 					athDesc.HisDeleteWay = AthDeleteWay.None;
 					athDesc.IsUpload = false;
 					athDesc.IsDownload = true;
-					athDesc.MyPK = this.getFK_FrmAttachment();
+					athDesc.setMyPK( this.getFK_FrmAttachment();
 					return athDesc;
 				}
 
@@ -5246,15 +5246,15 @@ public class WF_CCForm extends DirectoryPageBase
 				{
 					if (this.getFK_FrmAttachment().contains("AthMDtl") == true)
 					{
-						athDesc.MyPK = this.getFK_MapData() + "_" + nd.getNodeID() + "_AthMDtl";
+						athDesc.setMyPK( this.getFK_MapData() + "_" + nd.getNodeID() + "_AthMDtl";
 						athDesc.RetrieveFromDBSources();
 					}
 					else
 					{
-						athDesc.MyPK = this.getFK_FrmAttachment() + "_" + nd.getNodeID();
+						athDesc.setMyPK( this.getFK_FrmAttachment() + "_" + nd.getNodeID();
 						athDesc.RetrieveFromDBSources();
 					}
-					athDesc.MyPK = this.getFK_FrmAttachment();
+					athDesc.setMyPK( this.getFK_FrmAttachment();
 					return athDesc;
 				}
 			}
@@ -5289,9 +5289,9 @@ public class WF_CCForm extends DirectoryPageBase
 		}
 
 		String basePath = SystemConfig.PathOfDataUser + "Temp";
-		String tempUserPath = basePath + "\\" + WebUser.No;
-		String tempFilePath = basePath + "\\" + WebUser.No + "\\" + this.getOID();
-		String zipPath = basePath + "\\" + WebUser.No;
+		String tempUserPath = basePath + "\\" + WebUser.getNo();
+		String tempFilePath = basePath + "\\" + WebUser.getNo() + "\\" + this.getOID();
+		String zipPath = basePath + "\\" + WebUser.getNo();
 		String zipFile = zipPath + "\\" + zipName + ".zip";
 
 		String info = "";
@@ -5386,14 +5386,14 @@ public class WF_CCForm extends DirectoryPageBase
 		zipName = DataType.PraseStringToUrlFileName(zipName);
 
 		GenerWorkerList gwf = new GenerWorkerList();
-		gwf.Retrieve(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.No, GenerWorkerListAttr.FK_Node, this.getFK_Node(), GenerWorkerListAttr.WorkID, this.getWorkID());
+		gwf.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.FK_Node, this.getFK_Node(), GenerWorkerListAttr.WorkID, this.getWorkID());
 
 		String str = gwf.GetParaString(athDesc.NoOfObj);
 		str += "ALL";
 		gwf.SetPara(athDesc.NoOfObj, str);
 		gwf.Update();
 
-		String url = HttpContextHelper.RequestApplicationPath + "DataUser/Temp/" + WebUser.No + "/" + zipName + ".zip";
+		String url = HttpContextHelper.RequestApplicationPath + "DataUser/Temp/" + WebUser.getNo() + "/" + zipName + ".zip";
 		return "url@" + url;
 
 	}
@@ -5471,7 +5471,7 @@ public class WF_CCForm extends DirectoryPageBase
 			return "err@非法的访问，请与管理员联系。SID=" + this.getSID();
 		}
 
-		if (!this.getUserNo().equals(BP.Web.WebUser.No))
+		if (!this.getUserNo().equals(WebUser.getNo()))
 		{
 			BP.WF.Dev2Interface.Port_SigOut();
 			BP.WF.Dev2Interface.Port_Login(this.getUserNo());

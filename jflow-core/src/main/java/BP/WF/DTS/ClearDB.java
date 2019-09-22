@@ -53,7 +53,7 @@ public class ClearDB extends Method
 	@Override
 	public Object Do()
 	{
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			return "非法的用户执行。";
 		}
@@ -85,7 +85,7 @@ public class ClearDB extends Method
 		}
 
 		Nodes nds = new Nodes();
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			try
 			{
@@ -112,7 +112,7 @@ public class ClearDB extends Method
 
 		MapDtls dtls = new MapDtls();
 		dtls.RetrieveAll();
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			try
 			{

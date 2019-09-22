@@ -113,9 +113,9 @@ public class NodeToolbar extends EntityOID
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeToolbar", "自定义工具栏");
@@ -136,8 +136,8 @@ public class NodeToolbar extends EntityOID
 		map.AddTBInt(NodeToolbarAttr.FK_Node, 0, "节点", false,true);
 		map.AddMyFile("图标");
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

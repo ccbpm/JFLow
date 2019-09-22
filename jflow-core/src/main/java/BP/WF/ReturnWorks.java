@@ -39,7 +39,7 @@ public class ReturnWorks extends Entities
 	*/
 	public final List<ReturnWork> ToJavaList()
 	{
-		return (List<ReturnWork>)this;
+		return (List<ReturnWork>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -51,7 +51,7 @@ public class ReturnWorks extends Entities
 		ArrayList<ReturnWork> list = new ArrayList<ReturnWork>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((ReturnWork)this[i]);
+			list.add((ReturnWork)this.get(i));
 		}
 		return list;
 	}

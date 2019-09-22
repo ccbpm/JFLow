@@ -32,7 +32,7 @@ public class BarOfStartlist extends BarBase
 	@Override
 	public boolean getIsCanView()
 	{
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MSSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			return true;
 		}
@@ -66,7 +66,7 @@ public class BarOfStartlist extends BarBase
 	public String getDocuments()
 	{
 		Paras ps = new Paras();
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MSSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			ps.SQL = "SELECT top 9 Title,RDT,FK_Flow,WorkID,FK_Node,Sender FROM WF_GenerWorkFlow WHERE Starter=" + ps.DBStr + "FK_Emp ORDER BY WorkID ";
 		}

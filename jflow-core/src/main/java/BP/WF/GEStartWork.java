@@ -52,8 +52,8 @@ public class GEStartWork extends StartWork
 	@Override
 	public Map getEnMap()
 	{
-		this._enMap = BP.Sys.MapData.GenerHisMap(this.NodeFrmID);
-		return this._enMap;
+		this.set_enMap( BP.Sys.MapData.GenerHisMap(this.NodeFrmID));
+		return this.get_enMap();
 	}
 	/** 
 	 获得他的集合

@@ -110,16 +110,16 @@ public class CCFlowAPI
 
 
 			DataTable Sys_MapAttr = mattrs.ToDataTableField("Sys_MapAttr");
-			myds.Tables.Add(Sys_MapAttr);
+			myds.Tables.add(Sys_MapAttr);
 
 			//把流程信息表发送过去.
 			GenerWorkFlow gwf = new GenerWorkFlow();
 			gwf.setWorkID(workID);
 			gwf.RetrieveFromDBSources();
-			myds.Tables.Add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+			myds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 			//加入WF_Node.
 			DataTable WF_Node = nd.ToDataTableField("WF_Node");
-			myds.Tables.Add(WF_Node);
+			myds.Tables.add(WF_Node);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 加入组件的状态信息, 在解析表单的时候使用.
@@ -212,10 +212,10 @@ public class CCFlowAPI
 						dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
 						dr.set(GroupFieldAttr.Idx, 100);
 						dr.set(GroupFieldAttr.Lab, "审核信息");
-						gf.Rows.Add(dr);
+						gf.Rows.add(dr);
 
 						myds.Tables.Remove("Sys_GroupField");
-						myds.Tables.Add(gf);
+						myds.Tables.add(gf);
 
 						//执行更新,就自动生成那个丢失的字段分组.
 						refFnc.Update();
@@ -268,10 +268,10 @@ public class CCFlowAPI
 						dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
 						dr.set(GroupFieldAttr.Idx, 100);
 						dr.set(GroupFieldAttr.Lab, "审核信息");
-						gf.Rows.Add(dr);
+						gf.Rows.add(dr);
 
 						myds.Tables.Remove("Sys_GroupField");
-						myds.Tables.Add(gf);
+						myds.Tables.add(gf);
 
 						//更新,为了让其自动增加审核分组.
 						BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(nd.getNodeID());
@@ -283,7 +283,7 @@ public class CCFlowAPI
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 没有审核组件分组就增加上审核组件分组.
 
-			myds.Tables.Add(fnc.ToDataTableField("WF_FrmNodeComponent"));
+			myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 加入组件的状态信息, 在解析表单的时候使用.
@@ -318,24 +318,24 @@ public class CCFlowAPI
 
 				//按照时间的顺序查找出来 ids .
 				String sqlOrder = "SELECT OID FROM  Sys_GroupField WHERE   FrmID IN (" + myFrmIDs + ")";
-				if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle)
+				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "',FrmID) , Idx";
 				}
 
-				if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MSSQL)
+				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY CHARINDEX(FrmID, '" + myFrmIDs + "'), Idx";
 				}
 
-				if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MySQL)
+				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "', FrmID ), Idx";
 				}
-				if (BP.Sys.SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "', FrmID ), Idx";
@@ -357,7 +357,7 @@ public class CCFlowAPI
 
 				DataTable dtGF = gfsNew.ToDataTableField("Sys_GroupField");
 				myds.Tables.Remove("Sys_GroupField");
-				myds.Tables.Add(dtGF);
+				myds.Tables.add(dtGF);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion 处理字段分组排序.
 
@@ -496,7 +496,7 @@ public class CCFlowAPI
 
 				//替换掉现有的.
 				myds.Tables.Remove("Sys_MapAttr"); //移除.
-				myds.Tables.Add(attrs.ToDataTableField("Sys_MapAttr")); //增加.
+				myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); //增加.
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion 处理mapattrs
 
@@ -509,7 +509,7 @@ public class CCFlowAPI
 				enums.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData in(" + myFrmIDs + ")", SysEnumAttr.IntKey);
 
 				// 加入最新的枚举.
-				myds.Tables.Add(enums.ToDataTableField("Sys_Enum"));
+				myds.Tables.add(enums.ToDataTableField("Sys_Enum"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion 把枚举放入里面去.
 
@@ -525,7 +525,7 @@ public class CCFlowAPI
 				qo.DoQuery();
 
 				// 加入最新的MapExt.
-				myds.Tables.Add(exts.ToDataTableField("Sys_MapExt"));
+				myds.Tables.add(exts.ToDataTableField("Sys_MapExt"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion  MapExt .
 
@@ -544,7 +544,7 @@ public class CCFlowAPI
 				qo.DoQuery();
 
 				// 加入最新的MapDtl.
-				myds.Tables.Add(dtls.ToDataTableField("Sys_MapDtl"));
+				myds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion  MapDtl .
 
@@ -562,7 +562,7 @@ public class CCFlowAPI
 				qo.DoQuery();
 
 				// 加入最新的Sys_FrmAttachment.
-				myds.Tables.Add(frmAtchs.ToDataTableField("Sys_FrmAttachment"));
+				myds.Tables.add(frmAtchs.ToDataTableField("Sys_FrmAttachment"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion  FrmAttachment .
 
@@ -577,9 +577,9 @@ public class CCFlowAPI
 
 			if (nd.getIsStartNode() == false)
 			{
-				if (gwf.getTodoEmps().contains(BP.Web.WebUser.No + ",") == false)
+				if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
 				{
-					gwf.setTodoEmps(gwf.getTodoEmps() + BP.Web.WebUser.No + "," + BP.Web.WebUser.Name);
+					gwf.setTodoEmps(gwf.getTodoEmps() + WebUser.getNo() + "," + WebUser.getName());
 					gwf.Update();
 				}
 			}
@@ -587,7 +587,7 @@ public class CCFlowAPI
 			//增加转向下拉框数据.
 			if (nd.getCondModel() == CondModel.SendButtonSileSelect)
 			{
-				if (nd.getIsStartNode() == true || gwf.getTodoEmps().contains(WebUser.No + ",") == true)
+				if (nd.getIsStartNode() == true || gwf.getTodoEmps().contains(WebUser.getNo() + ",") == true)
 				{
 					/*如果当前不是主持人,如果不是主持人，就不让他显示下拉框了.*/
 
@@ -613,7 +613,7 @@ public class CCFlowAPI
 							dr.set("Name", "启动:" + item.getSubFlowName());
 							dr.set("IsSelectEmps", "1");
 							dr.set("IsSelected", "0");
-							dtToNDs.Rows.Add(dr);
+							dtToNDs.Rows.add(dr);
 						}
 					}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -627,19 +627,19 @@ public class CCFlowAPI
 					{
 						String mysql = "";
 						// 找出来上次发送选择的节点.
-						if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+						if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 						{
 							mysql = "SELECT  top 1 NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + fk_node + " AND ActionType=1 ORDER BY WorkID DESC";
 						}
-						else if (SystemConfig.AppCenterDBType == DBType.Oracle)
+						else if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 						{
 							mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + fk_node + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
 						}
-						else if (SystemConfig.AppCenterDBType == DBType.MySQL)
+						else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 						{
 							mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + fk_node + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1";
 						}
-						else if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+						else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 						{
 							mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + fk_node + " AND ActionType=1 ORDER BY WorkID  DESC limit 1";
 						}
@@ -650,7 +650,7 @@ public class CCFlowAPI
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 						///#region 为天业集团做一个特殊的判断.
-					if (SystemConfig.CustomerNo.equals("TianYe") && nd.getName().contains("董事长") == true)
+					if (SystemConfig.getCustomerNo().equals("TianYe") && nd.getName().contains("董事长") == true)
 					{
 						/*如果是董事长节点, 如果是下一个节点默认的是备案. */
 						for (Node item : nds)
@@ -692,14 +692,14 @@ public class CCFlowAPI
 							dr.set("IsSelected", "0");
 						}
 
-						dtToNDs.Rows.Add(dr);
+						dtToNDs.Rows.add(dr);
 					}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 						///#endregion 到达其他节点。
 
 
 					//增加一个下拉框, 对方判断是否有这个数据.
-					myds.Tables.Add(dtToNDs);
+					myds.Tables.add(dtToNDs);
 				}
 			}
 
@@ -707,11 +707,11 @@ public class CCFlowAPI
 			//string sql = "SELECT * FROM WF_Node WHERE NodeID=" + fk_node;
 			//DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			//dt.TableName = "WF_NodeBar";
-			//myds.Tables.Add(dt);
+			//myds.Tables.add(dt);
 
 			//// 流程数据.
 			//Flow fl = new Flow(fk_flow);
-			//myds.Tables.Add(fl.ToDataTableField("WF_Flow"));
+			//myds.Tables.add(fl.ToDataTableField("WF_Flow"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 流程设置信息.
 
@@ -786,13 +786,13 @@ public class CCFlowAPI
 
 				DataTable rptdt = rpt.ToDataTableField("MainTable");
 
-				myds.Tables.Add(rptdt);
+				myds.Tables.add(rptdt);
 			}
 			else
 			{
 				DataTable mainTable = wk.ToDataTableField(md.No);
 				mainTable.TableName = "MainTable";
-				myds.Tables.Add(mainTable);
+				myds.Tables.add(mainTable);
 			}
 			String sql = "";
 			DataTable dt = null;
@@ -858,9 +858,9 @@ public class CCFlowAPI
 						DataRow drDll = dt_FK_Dll.NewRow();
 						drDll.set("No", dllRow.get("No"));
 						drDll.set("Name", dllRow.get("Name"));
-						dt_FK_Dll.Rows.Add(drDll);
+						dt_FK_Dll.Rows.add(drDll);
 					}
-					myds.Tables.Add(dt_FK_Dll);
+					myds.Tables.add(dt_FK_Dll);
 					continue;
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -877,17 +877,17 @@ public class CCFlowAPI
 				{
 					DataRow ddldr = ddlTable.NewRow();
 					ddldr.set("No", uiBindKey);
-					ddlTable.Rows.Add(ddldr);
+					ddlTable.Rows.add(ddldr);
 				}
 				else
 				{
-					myds.Tables.Add(mydt);
+					myds.Tables.add(mydt);
 				}
 
 
 			}
 			ddlTable.TableName = "UIBindKey";
-			myds.Tables.Add(ddlTable);
+			myds.Tables.add(ddlTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion End把外键表加入DataSet
 
@@ -917,7 +917,7 @@ public class CCFlowAPI
 						DataRow drMsg = dtAlert.NewRow();
 						drMsg.set("Title", worker + "," + workerName + "回复信息:");
 						drMsg.set("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt);
-						dtAlert.Rows.Add(drMsg);
+						dtAlert.Rows.add(drMsg);
 					}
 					break;
 				case Askfor: //加签.
@@ -934,7 +934,7 @@ public class CCFlowAPI
 						DataRow drMsg = dtAlert.NewRow();
 						drMsg.set("Title", worker + "," + workerName + "请求加签:");
 						drMsg.set("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "<a href='./WorkOpt/AskForRe.htm?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workID + "&FID=" + fid + "' >回复加签意见</a> --");
-						dtAlert.Rows.Add(drMsg);
+						dtAlert.Rows.add(drMsg);
 
 						//提示信息.
 						// this.FlowMsg.AlertMsg_Info(worker + "," + workerName + "请求加签:",
@@ -956,7 +956,7 @@ public class CCFlowAPI
 						//    //drMsg["Title"] = "来自节点:" + rw.ReturnNodeName + " 退回人:" + rw.ReturnerName + "  " + rw.RDT + "&nbsp;<a href='/DataUser/ReturnLog/" + fk_flow + "/" + rw.MyPK + ".htm' target=_blank>工作日志</a>";
 						//    drMsg["Title"] = "来自节点:" + rw.ReturnNodeName + " 退回人:" + rw.ReturnerName + "  " + rw.RDT;
 						//    drMsg["Msg"] = rw.BeiZhuHtml;
-						//    dtAlert.Rows.Add(drMsg);
+						//    dtAlert.Rows.add(drMsg);
 						//}
 
 						String msgInfo = "";
@@ -985,14 +985,14 @@ public class CCFlowAPI
 							DataRow drMsg = dtAlert.NewRow();
 							drMsg.set("Title", "退回信息");
 							drMsg.set("Msg", msgInfo + "\t\n" + str);
-							dtAlert.Rows.Add(drMsg);
+							dtAlert.Rows.add(drMsg);
 						}
 						else
 						{
 							DataRow drMsg = dtAlert.NewRow();
 							drMsg.set("Title", "退回信息");
 							drMsg.set("Msg", msgInfo + "\t\n" + str);
-							dtAlert.Rows.Add(drMsg);
+							dtAlert.Rows.add(drMsg);
 						}
 					}
 					break;
@@ -1013,7 +1013,7 @@ public class CCFlowAPI
 						for (ShiftWork fw : fws)
 						{
 							String temp = "@移交人[" + fw.getFK_Emp() + "," + fw.getFK_EmpName() + "]。@接受人：" + fw.getToEmp() + "," + fw.getToEmpName() + "。<br>移交原因：-------------" + fw.getNoteHtml();
-							if (fw.getFK_Emp().equals(WebUser.No))
+							if (fw.getFK_Emp().equals(WebUser.getNo()))
 							{
 								temp = "<b>" + temp + "</b>";
 							}
@@ -1022,7 +1022,7 @@ public class CCFlowAPI
 							msg += temp + "<hr/>";
 						}
 						drMsg.set("Msg", msg);
-						dtAlert.Rows.Add(drMsg);
+						dtAlert.Rows.add(drMsg);
 					}
 					break;
 				default:
@@ -1040,20 +1040,20 @@ public class CCFlowAPI
 				nd.WorkID = workID; //为获取表单ID ( NodeFrmID )提供参数.
 
 				FrmNode fn = new FrmNode();
-				fn.MyPK = nd.getNodeFrmID() + "_" + nd.getNodeID() + "_" + nd.getFK_Flow();
+				fn.setMyPK( nd.getNodeFrmID() + "_" + nd.getNodeID() + "_" + nd.getFK_Flow();
 				fn.Retrieve();
-				myds.Tables.Add(fn.ToDataTableField("FrmNode"));
+				myds.Tables.add(fn.ToDataTableField("FrmNode"));
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 增加流程节点表单绑定信息.
 
 
-			myds.Tables.Add(dtAlert);
+			myds.Tables.add(dtAlert);
 			return myds;
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DebugWriteError(ex.StackTrace);
+			Log.DebugWriteError(ex.getStackTrace());
 			throw new RuntimeException("generoWorkNode@" + ex.getMessage());
 		}
 	}
@@ -1082,7 +1082,7 @@ public class CCFlowAPI
 		try
 		{
 			Emp emp = new Emp(userNo);
-			BP.Web.WebUser.SignInOfGener(emp);
+			WebUser.SignInOfGener(emp);
 
 			MapData md = new MapData();
 			md.No = "ND" + fk_node;
@@ -1108,11 +1108,11 @@ public class CCFlowAPI
 			String sql = "SELECT * FROM WF_Node WHERE NodeID=" + fk_node;
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_NodeBar";
-			myds.Tables.Add(dt);
+			myds.Tables.add(dt);
 
 			// 流程数据.
 			Flow fl = new Flow(fk_flow);
-			myds.Tables.Add(fl.ToDataTableField("WF_Flow"));
+			myds.Tables.add(fl.ToDataTableField("WF_Flow"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 流程设置信息.
 
@@ -1137,7 +1137,7 @@ public class CCFlowAPI
 			}
 
 			wk.ResetDefaultVal();
-			myds.Tables.Add(wk.ToDataTableField(md.No));
+			myds.Tables.add(wk.ToDataTableField(md.No));
 
 			//把附件的数据放入.
 			if (md.FrmAttachments.size() > 0)
@@ -1145,7 +1145,7 @@ public class CCFlowAPI
 				sql = "SELECT * FROM Sys_FrmAttachmentDB where RefPKVal=" + workID + " AND FK_MapData='ND" + fk_node + "'";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				dt.TableName = "Sys_FrmAttachmentDB";
-				myds.Tables.Add(dt);
+				myds.Tables.add(dt);
 			}
 			// 图片附件数据放入
 			if (md.FrmImgAths.size() > 0)
@@ -1153,7 +1153,7 @@ public class CCFlowAPI
 				sql = "SELECT * FROM Sys_FrmImgAthDB where RefPKVal=" + workID + " AND FK_MapData='ND" + fk_node + "'";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				dt.TableName = "Sys_FrmImgAthDB";
-				myds.Tables.Add(dt);
+				myds.Tables.add(dt);
 			}
 
 			//把从表的数据放入.
@@ -1171,7 +1171,7 @@ public class CCFlowAPI
 							case DtlOpenType.ForEmp: // 按人员来控制.
 								qo.AddWhere(GEDtlAttr.RefPK, workID);
 								qo.addAnd();
-								qo.AddWhere(GEDtlAttr.Rec, WebUser.No);
+								qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
 								break;
 							case DtlOpenType.ForWorkID: // 按工作ID来控制
 								qo.AddWhere(GEDtlAttr.RefPK, workID);
@@ -1204,7 +1204,7 @@ public class CCFlowAPI
 					}
 
 					dtDtl.TableName = dtl.No; //修改明细表的名称.
-					myds.Tables.Add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
+					myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
 				}
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1241,7 +1241,7 @@ public class CCFlowAPI
 					continue;
 				}
 
-				myds.Tables.Add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+				myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion End把外键表加入DataSet
@@ -1253,14 +1253,14 @@ public class CCFlowAPI
 			gwf.setWorkID(workID);
 			gwf.RetrieveFromDBSources();
 
-			myds.Tables.Add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+			myds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
 			if (gwf.getWFState() == WFState.Shift)
 			{
 				//如果是转发.
 				BP.WF.ShiftWorks fws = new ShiftWorks();
 				fws.Retrieve(ShiftWorkAttr.WorkID, workID, ShiftWorkAttr.FK_Node, fk_node);
-				myds.Tables.Add(fws.ToDataTableField("WF_ShiftWork"));
+				myds.Tables.add(fws.ToDataTableField("WF_ShiftWork"));
 			}
 
 			if (gwf.getWFState() == WFState.ReturnSta)
@@ -1268,7 +1268,7 @@ public class CCFlowAPI
 				//如果是退回.
 				ReturnWorks rts = new ReturnWorks();
 				rts.Retrieve(ReturnWorkAttr.WorkID, workID, ReturnWorkAttr.ReturnToNode, fk_node, ReturnWorkAttr.RDT);
-				myds.Tables.Add(rts.ToDataTableField("WF_ReturnWork"));
+				myds.Tables.add(rts.ToDataTableField("WF_ReturnWork"));
 			}
 
 			if (gwf.getWFState() == WFState.HungUp)
@@ -1276,7 +1276,7 @@ public class CCFlowAPI
 				//如果是挂起.
 				HungUps hups = new HungUps();
 				hups.Retrieve(HungUpAttr.WorkID, workID, HungUpAttr.FK_Node, fk_node);
-				myds.Tables.Add(hups.ToDataTableField("WF_HungUp"));
+				myds.Tables.add(hups.ToDataTableField("WF_HungUp"));
 			}
 
 			//if (gwf.WFState == WFState.Askfor)
@@ -1284,7 +1284,7 @@ public class CCFlowAPI
 			//    //如果是加签.
 			//    BP.WF.ShiftWorks fws = new ShiftWorks();
 			//    fws.Retrieve(ShiftWorkAttr.WorkID, workID, ShiftWorkAttr.FK_Node, fk_node);
-			//    myds.Tables.Add(fws.ToDataTableField("WF_ShiftWork"));
+			//    myds.Tables.add(fws.ToDataTableField("WF_ShiftWork"));
 			//}
 
 			long wfid = workID;
@@ -1296,43 +1296,43 @@ public class CCFlowAPI
 
 			//放入track信息.
 			Paras ps = new Paras();
-			ps.SQL = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID";
+			ps.SQL = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtNode = DBAccess.RunSQLReturnTable(ps);
 			dtNode.TableName = "Track";
-			myds.Tables.Add(dtNode);
+			myds.Tables.add(dtNode);
 
 			//工作人员列表，用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM  WF_GenerWorkerlist WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID";
+			ps.SQL = "SELECT * FROM  WF_GenerWorkerlist WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtGenerWorkerlist = DBAccess.RunSQLReturnTable(ps);
 			dtGenerWorkerlist.TableName = "WF_GenerWorkerlist";
-			myds.Tables.Add(dtGenerWorkerlist);
+			myds.Tables.add(dtGenerWorkerlist);
 
 			//放入CCList信息. 用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM WF_CCList WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID";
+			ps.SQL = "SELECT * FROM WF_CCList WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtCCList = DBAccess.RunSQLReturnTable(ps);
 			dtCCList.TableName = "WF_CCList";
-			myds.Tables.Add(dtCCList);
+			myds.Tables.add(dtCCList);
 
 			//放入WF_SelectAccper信息. 用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM WF_SelectAccper WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID";
+			ps.SQL = "SELECT * FROM WF_SelectAccper WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtSelectAccper = DBAccess.RunSQLReturnTable(ps);
 			dtSelectAccper.TableName = "WF_SelectAccper";
-			myds.Tables.Add(dtSelectAccper);
+			myds.Tables.add(dtSelectAccper);
 
 			//放入所有的节点信息. 用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM WF_Node WHERE FK_Flow=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "FK_Flow ORDER BY " + NodeAttr.Step;
+			ps.SQL = "SELECT * FROM WF_Node WHERE FK_Flow=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "FK_Flow ORDER BY " + NodeAttr.Step;
 			ps.Add("FK_Flow", fk_flow);
 			DataTable dtNodes = DBAccess.RunSQLReturnTable(ps);
 			dtNodes.TableName = "Nodes";
-			myds.Tables.Add(dtNodes);
+			myds.Tables.add(dtNodes);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 把流程信息放入里面.
@@ -1341,7 +1341,7 @@ public class CCFlowAPI
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DebugWriteError(ex.StackTrace);
+			Log.DebugWriteError(ex.getStackTrace());
 			throw new RuntimeException(ex.getMessage());
 		}
 	}

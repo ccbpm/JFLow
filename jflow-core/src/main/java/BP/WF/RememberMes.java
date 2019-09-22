@@ -39,7 +39,7 @@ public class RememberMes extends Entities
 	*/
 	public final List<RememberMe> ToJavaList()
 	{
-		return (List<RememberMe>)this;
+		return (List<RememberMe>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -51,7 +51,7 @@ public class RememberMes extends Entities
 		ArrayList<RememberMe> list = new ArrayList<RememberMe>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((RememberMe)this[i]);
+			list.add((RememberMe)this.get(i));
 		}
 		return list;
 	}

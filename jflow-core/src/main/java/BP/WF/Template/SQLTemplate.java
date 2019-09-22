@@ -60,9 +60,9 @@ public class SQLTemplate extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_SQLTemplate", "SQL模板");
 
@@ -79,8 +79,8 @@ public class SQLTemplate extends EntityNoName
 			//查询条件.
 		map.AddSearchAttr(SQLTemplateAttr.SQLType);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

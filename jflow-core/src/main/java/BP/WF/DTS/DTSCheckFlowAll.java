@@ -51,7 +51,7 @@ public class DTSCheckFlowAll extends Method
 	{
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			fl.DoCheck();
 		}

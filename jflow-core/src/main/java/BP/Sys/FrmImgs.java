@@ -49,7 +49,7 @@ public class FrmImgs extends EntitiesMyPK
 	*/
 	public final List<FrmImg> ToJavaList()
 	{
-		return (List<FrmImg>)this;
+		return (List<FrmImg>)(Object)this;
 	}
 	/** 
 	 转化成list

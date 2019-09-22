@@ -37,9 +37,9 @@ public class StationType extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("Port_StationType");
 		map.EnDesc = "岗位类型";
@@ -53,9 +53,9 @@ public class StationType extends EntityNoName
 		map.AddTBString(StationAttr.OrgNo, null, "OrgNo", true, false, 0, 60, 250);
 
 			//增加隐藏查询条件.
-		map.AddHidden(StationAttr.OrgNo, "=", BP.Web.WebUser.FK_Dept);
+		map.AddHidden(StationAttr.OrgNo, "=", WebUser.getFK_Dept());
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 }

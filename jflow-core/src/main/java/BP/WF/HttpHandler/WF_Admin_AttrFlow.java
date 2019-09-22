@@ -27,7 +27,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	*/
 	public final String APICodeFEE_Init()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(getFK_Flow()))
+		if (DataType.IsNullOrEmpty(getFK_Flow()))
 		{
 			return "err@FK_Flow参数不能为空！";
 		}
@@ -51,7 +51,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 
 		String Title = flow.Name + "[" + flow.No + "]";
-		String code = BP.DA.DataType.ReadTextFile(tmpPath); //, System.Text.Encoding.UTF8).Replace("F001Templepte", string.Format("FEE{0}", flow.No)).Replace("@FlowName", flow.Name).Replace("@FlowNo", flow.No);
+		String code = BP.DA.DataType.ReadTextFile(tmpPath); //, System.Text.Encoding.UTF8).replace("F001Templepte", string.Format("FEE{0}", flow.No)).replace("@FlowName", flow.Name).replace("@FlowNo", flow.No);
 		code = code.replace("F001Templepte", String.format("FEE%1$s", flow.No)).replace("@FlowName", flow.Name).replace("@FlowNo", flow.No);
 
 
@@ -184,7 +184,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			BP.WF.Template.Conds conds = new BP.WF.Template.Conds(BP.WF.Template.CondType.Flow, node.getNodeID());
 			dr.set("HisFinishCondsCount", conds.size());
 
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -201,19 +201,19 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		BP.Sys.SFDBSrc src = new SFDBSrc("local");
 		DataTable dt = src.GetTables();
 		dt.TableName = "Tables";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 
 		//把节点信息放入.
 		BP.WF.Nodes nds = new Nodes(this.getFK_Flow());
 		DataTable dtNode = nds.ToDataTableField("Nodes");
-		ds.Tables.Add(dtNode);
+		ds.Tables.add(dtNode);
 
 
 		// 把流程信息放入.
 		BP.WF.Flow fl = new BP.WF.Flow(this.getFK_Flow());
 		DataTable dtFlow = fl.ToDataTableField("Flow");
-		ds.Tables.Add(dtFlow);
+		ds.Tables.add(dtFlow);
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
@@ -330,18 +330,18 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		DataTable dtColms = src.GetColumns(this.GetRequestVal("TableName"));
 		dtColms.TableName = "Cols";
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtColms.Columns["NO"].ColumnName = "No";
-			dtColms.Columns["NAME"].ColumnName = "Name";
+			dtColms.Columns.get("NO").ColumnName = "No";
+			dtColms.Columns.get("NAME").ColumnName = "Name";
 		}
 
-		ds.Tables.Add(dtColms);
+		ds.Tables.add(dtColms);
 
 		//属性列表.
 		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt");
 		DataTable dtAttrs = attrs.ToDataTableStringField("Sys_MapAttr");
-		ds.Tables.Add(dtAttrs);
+		ds.Tables.add(dtAttrs);
 
 		//转化成json,返回.
 		return BP.Tools.Json.DataSetToJson(ds, false);
@@ -627,7 +627,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		DataSet ds = new System.Data.DataSet();
 		Nodes nds = new Nodes(this.getFK_Flow());
 		DataTable dt = nds.ToDataTableField("Nodes");
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//把文件放入ds.
 		String path = SystemConfig.PathOfWebApp + "\\WF\\Admin\\ClientBin\\NodeIcon\\";
@@ -643,11 +643,11 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			DataRow dr = dtIcon.NewRow();
 			dr.set(0, fileName);
 			dr.set(1, fileName);
-			dtIcon.Rows.Add(dr);
+			dtIcon.Rows.add(dr);
 		}
 
 		dtIcon.TableName = "ICONs";
-		ds.Tables.Add(dtIcon);
+		ds.Tables.add(dtIcon);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -666,17 +666,17 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		//流程上的字段
 		BP.Sys.MapAttrs attrs = new BP.Sys.MapAttrs();
 		attrs.Retrieve(BP.Sys.MapAttrAttr.FK_MapData, "ND" + Integer.parseInt(this.getFK_Flow()) + "rpt", "LGType", 0, "MyDataType", 1);
-		ds.Tables.Add(attrs.ToDataTableField("FrmFields"));
+		ds.Tables.add(attrs.ToDataTableField("FrmFields"));
 
 		//节点 
 		BP.WF.Nodes nds = new BP.WF.Nodes(this.getFK_Flow());
-		ds.Tables.Add(nds.ToDataTableField("Nodes"));
+		ds.Tables.add(nds.ToDataTableField("Nodes"));
 
 		//mypk
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.MyPK = this.getMyPK();
+		msg.setMyPK( this.getMyPK();
 		msg.RetrieveFromDBSources();
-		ds.Tables.Add(msg.ToDataTableField("PushMsgEntity"));
+		ds.Tables.add(msg.ToDataTableField("PushMsgEntity"));
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
@@ -689,7 +689,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	public final String PushMsg_Save()
 	{
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.MyPK = this.getMyPK();
+		msg.setMyPK( this.getMyPK();
 		msg.RetrieveFromDBSources();
 
 		msg.setFK_Event(this.getFK_Event()); //流程时限规则
@@ -701,7 +701,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			///#region 求出来选择的节点.
 		String nodesOfSMS = "";
 		String nodesOfEmail = "";
-		for (BP.WF.Node mynd : nds)
+		for (BP.WF.Node mynd : nds.ToJavaList())
 		{
 			for (String key : HttpContextHelper.RequestParamKeys)
 			{
@@ -734,15 +734,15 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		msg.setSMSPushModel(this.GetRequestVal("PushModel"));
 
 		//短信推送方式。
-		msg.setSMSPushWay((int)(HttpContextHelper.RequestParams("RB_SMS").Replace("RB_SMS_", "")));
+		msg.setSMSPushWay((int)(HttpContextHelper.RequestParams("RB_SMS").replace("RB_SMS_", "")));
 
 		//短信手机字段.
 		msg.setSMSField(HttpContextHelper.RequestParams("DDL_SMS_Fields"));
 		//替换变量
 		String smsstr = HttpContextHelper.RequestParams("TB_SMS");
 		//扬玉慧 此处是配置界面  不应该把用户名和用户编号转化掉
-		//smsstr = smsstr.Replace("@WebUser.Name", BP.Web.WebUser.Name);
-		//smsstr = smsstr.Replace("@WebUser.No", BP.Web.WebUser.No);
+		//smsstr = smsstr.Replace("@WebUser.getName()", WebUser.getName());
+		//smsstr = smsstr.Replace("@WebUser.getNo()", WebUser.getNo());
 
 		System.Data.DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable();
 		// smsstr = smsstr.Replace("@RDT",);
@@ -754,9 +754,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 邮件保存.
 		//邮件.
-		//msg.MailPushWay = Convert.ToInt32(HttpContext.Current.Request["RB_Email"].ToString().Replace("RB_Email_", "")); ;
+		//msg.MailPushWay = Convert.ToInt32(HttpContext.Current.Request["RB_Email"].ToString().replace("RB_Email_", "")); ;
 		//2019-07-25 zyt改造
-		msg.setMailPushWay((int)(HttpContextHelper.RequestParams("RB_Email").Replace("RB_Email_", "")));
+		msg.setMailPushWay((int)(HttpContextHelper.RequestParams("RB_Email").replace("RB_Email_", "")));
 		//邮件标题与内容.
 		msg.setMailTitle_Real(HttpContextHelper.RequestParams("TB_Email_Title"));
 		msg.setMailDoc_Real(HttpContextHelper.RequestParams("TB_Email_Doc"));
@@ -770,7 +770,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		//保存.
 		if (DataType.IsNullOrEmpty(msg.MyPK) == true)
 		{
-			msg.MyPK = BP.DA.DBAccess.GenerGUID();
+			msg.setMyPK( BP.DA.DBAccess.GenerGUID();
 			msg.Insert();
 		}
 		else

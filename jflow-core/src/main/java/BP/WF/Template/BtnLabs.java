@@ -35,7 +35,7 @@ public class BtnLabs extends Entities
 	*/
 	public final List<BtnLab> ToJavaList()
 	{
-		return (List<BtnLab>)this;
+		return (List<BtnLab>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -47,7 +47,7 @@ public class BtnLabs extends Entities
 		ArrayList<BtnLab> list = new ArrayList<BtnLab>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BtnLab)this[i]);
+			list.add((BtnLab)this.get(i));
 		}
 		return list;
 	}

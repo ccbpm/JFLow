@@ -55,10 +55,10 @@ public class AddIdxColForMapDtl extends Method
 		MapDtls dtls = new MapDtls();
 		dtls.RetrieveAll();
 
-		for (MapDtl item : dtls)
+		for (MapDtl item : dtls.ToJavaList())
 		{
 			MapAttr ma = new MapAttr();
-			ma.MyPK = item.No + "_Idx";
+			ma.setMyPK( item.No + "_Idx";
 			if (ma.IsExits == true)
 			{
 				continue;

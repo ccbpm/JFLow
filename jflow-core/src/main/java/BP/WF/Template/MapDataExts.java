@@ -41,7 +41,7 @@ public class MapDataExts extends EntitiesNoName
 	*/
 	public final List<MapDataExt> ToJavaList()
 	{
-		return (List<MapDataExt>)this;
+		return (List<MapDataExt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class MapDataExts extends EntitiesNoName
 		ArrayList<MapDataExt> list = new ArrayList<MapDataExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapDataExt)this[i]);
+			list.add((MapDataExt)this.get(i));
 		}
 		return list;
 	}

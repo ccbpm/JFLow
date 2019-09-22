@@ -134,11 +134,11 @@ public class AutoRunWF_Task extends Method
 					continue;
 				}
 
-				if (!starter.equals(BP.Web.WebUser.No))
+				if (!starter.equals(WebUser.getNo()))
 				{
-					BP.Web.WebUser.Exit();
+					WebUser.Exit();
 					BP.Port.Emp empadmin = new BP.Port.Emp(starter);
-					BP.Web.WebUser.SignInOfGener(empadmin);
+					WebUser.SignInOfGener(empadmin);
 				}
 
 				Work wk = fl.NewWork();

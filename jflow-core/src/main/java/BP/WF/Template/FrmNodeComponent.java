@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.*;
 import java.util.*;
@@ -72,8 +73,9 @@ public class FrmNodeComponent extends Entity
 	 节点表单组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmNodeComponent(String mapData)
+	public FrmNodeComponent(String mapData) throws Exception
 	{
 		String mapdata = mapData.replace("ND", "");
 		if (DataType.IsNumStr(mapdata) == false)
@@ -96,8 +98,9 @@ public class FrmNodeComponent extends Entity
 	 节点表单组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmNodeComponent(int nodeID)
+	public FrmNodeComponent(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -108,9 +111,9 @@ public class FrmNodeComponent extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "节点表单组件");
@@ -123,24 +126,24 @@ public class FrmNodeComponent extends Entity
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true,true, 0, 100, 10);
 
 		FrmWorkCheck fwc = new FrmWorkCheck();
-		map.AddAttrs(fwc.getEnMap().Attrs);
+		map.AddAttrs(fwc.getEnMap().getAttrs());
 
 		FrmSubFlow subflow = new FrmSubFlow();
-		map.AddAttrs(subflow.getEnMap().Attrs);
+		map.AddAttrs(subflow.getEnMap().getAttrs());
 
 		FrmThread thread = new FrmThread();
-		map.AddAttrs(thread.getEnMap().Attrs);
+		map.AddAttrs(thread.getEnMap().getAttrs());
 
 			//轨迹组件.
 		FrmTrack track = new FrmTrack();
-		map.AddAttrs(track.getEnMap().Attrs);
+		map.AddAttrs(track.getEnMap().getAttrs());
 
 			//流转自定义组件.
 		FrmTransferCustom ftt = new FrmTransferCustom();
-		map.AddAttrs(ftt.getEnMap().Attrs);
+		map.AddAttrs(ftt.getEnMap().getAttrs());
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 	@Override
@@ -161,10 +164,10 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.FrmID, this.getNo(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
 			{
 				gf = new GroupField();
-				gf.FrmID = "ND" + this.getNodeID();
-				gf.CtrlType = GroupCtrlType.FWC;
-				gf.Lab = "审核组件";
-				gf.Idx = 0;
+				gf.setFrmID("ND" + this.getNodeID());
+				gf.setCtrlType( GroupCtrlType.FWC);
+				gf.setLab( "审核组件");
+				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
 		}
@@ -185,11 +188,11 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "SubFlow" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.FrmID = "ND" + this.getNodeID();
-				gf.CtrlID = "SubFlow" + this.getNo();
-				gf.CtrlType = GroupCtrlType.SubFlow;
-				gf.Lab = "父子流程组件";
-				gf.Idx = 0;
+				gf.setFrmID( "ND" + this.getNodeID());
+				gf.setCtrlID(  "SubFlow" + this.getNo());
+				gf.setCtrlType(  GroupCtrlType.SubFlow);
+				gf.setLab( "父子流程组件");
+				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
 		}
@@ -209,11 +212,11 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmTrack" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.FrmID = "ND" + this.getNodeID();
-				gf.CtrlID = "FrmTrack" + this.getNo();
-				gf.CtrlType = GroupCtrlType.Track;
-				gf.Lab = "轨迹";
-				gf.Idx = 0;
+				gf.setFrmID(  "ND" + this.getNodeID());
+				gf.setCtrlID( "FrmTrack" + this.getNo());
+				gf.setCtrlType( GroupCtrlType.Track);
+				gf.setLab( "轨迹");
+				gf.setIdx( 0);
 				gf.Insert(); //插入.
 			}
 		}

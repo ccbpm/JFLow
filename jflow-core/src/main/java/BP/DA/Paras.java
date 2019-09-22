@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import BP.Sys.SystemConfig;
-import BP.Web.WebUser;
+
 
 /**
  * 参数集合
@@ -239,7 +239,7 @@ public class Paras extends ArrayList<Para>
 	
 	public void AddFK_Emp() throws Exception
 	{
-		this.Add("FK_Emp", WebUser.getNo());
+		this.Add("FK_Emp", BP.Web.WebUser.getNo());
 	}
 	
 	public final void AddFK_NY(String fk_ny)

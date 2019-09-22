@@ -34,7 +34,7 @@ public class UpTrack extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -55,13 +55,13 @@ public class UpTrack extends Method
 		fls.RetrieveAllFromDBSource();
 
 		String info = "";
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			// 检查报表.
 			Track.CreateOrRepairTrackTable(fl.No);
 
 			// 查询.
-			String sql = "SELECT * FROM WF_Track WHERE FK_Flow='" + fl.No + "'";
+			String sql = "SELECT * FROM WF_Track WHERE FK_Flow='" + fl.getNo() + "'";
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			for (int i = 0; i < dt.Rows.size(); i++)
 			{

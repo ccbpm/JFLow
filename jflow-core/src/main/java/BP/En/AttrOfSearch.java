@@ -3,7 +3,7 @@ package BP.En;
 import java.util.Enumeration;
 
 import BP.Difference.ContextHolderUtils;
-import BP.Web.WebUser;
+import WebUser;
 
 /**
  * SearchKey 的摘要说明。 用来处理一条记录的存放，问题。
@@ -101,19 +101,19 @@ public class AttrOfSearch
 		
 		if (_DefaultVal.contains("@"))
 		{
-			if (_DefaultVal.contains("@WebUser.No"))
+			if (_DefaultVal.contains("@WebUser.getNo()"))
 			{
-				return _DefaultVal.replace("@WebUser.No", WebUser.getNo());
+				return _DefaultVal.replace("@WebUser.getNo()", WebUser.getNo());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.Name"))
+			if (_DefaultVal.contains("@WebUser.getName()"))
 			{
-				return _DefaultVal.replace("@WebUser.Name", WebUser.getName());
+				return _DefaultVal.replace("@WebUser.getName()", WebUser.getName());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.FK_Dept"))
+			if (_DefaultVal.contains("@WebUser.getFK_Dept()"))
 			{
-				return _DefaultVal.replace("@WebUser.FK_Dept",
+				return _DefaultVal.replace("@WebUser.getFK_Dept()",
 						WebUser.getFK_Dept());
 			}
 			
@@ -123,15 +123,15 @@ public class AttrOfSearch
 						WebUser.getDeptParentNo());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.FK_DeptName"))
+			if (_DefaultVal.contains("@WebUser.getFK_Dept()Name"))
 			{
-				return _DefaultVal.replace("@WebUser.FK_DeptName",
+				return _DefaultVal.replace("@WebUser.getFK_Dept()Name",
 						WebUser.getFK_DeptName());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.FK_DeptNameOfFull"))
+			if (_DefaultVal.contains("@WebUser.getFK_Dept()NameOfFull"))
 			{
-				return _DefaultVal.replace("@WebUser.FK_DeptNameOfFull",
+				return _DefaultVal.replace("@WebUser.getFK_Dept()NameOfFull",
 						WebUser.getFK_DeptNameOfFull());
 			}
 			

@@ -45,7 +45,7 @@ public class FrmNodeExts extends EntitiesMyPK
 	*/
 	public final List<FrmNodeExt> ToJavaList()
 	{
-		return (List<FrmNodeExt>)this;
+		return (List<FrmNodeExt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -57,7 +57,7 @@ public class FrmNodeExts extends EntitiesMyPK
 		ArrayList<FrmNodeExt> list = new ArrayList<FrmNodeExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmNodeExt)this[i]);
+			list.add((FrmNodeExt)this.get(i));
 		}
 		return list;
 	}

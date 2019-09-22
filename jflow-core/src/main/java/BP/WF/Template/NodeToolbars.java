@@ -52,7 +52,7 @@ public class NodeToolbars extends EntitiesOID
 	*/
 	public final List<NodeToolbar> ToJavaList()
 	{
-		return (List<NodeToolbar>)this;
+		return (List<NodeToolbar>)(Object)this;
 	}
 
 	/** 
@@ -65,7 +65,7 @@ public class NodeToolbars extends EntitiesOID
 		ArrayList<NodeToolbar> list = new ArrayList<NodeToolbar>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((NodeToolbar)this[i]);
+			list.add((NodeToolbar)this.get(i));
 		}
 		return list;
 	}

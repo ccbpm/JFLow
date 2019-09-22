@@ -81,9 +81,9 @@ public class NodeSimple extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "节点");
@@ -104,8 +104,8 @@ public class NodeSimple extends Entity
 		map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
 		map.AddTBInt(NodeAttr.Y, 0, "Y坐标", false, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

@@ -158,9 +158,9 @@ public class Emp extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Emp", "子公司人员");
@@ -180,14 +180,14 @@ public class Emp extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "设置加密密码";
-		rm.HisAttrs.AddTBString("FrmID", null, "输入密码", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FrmID", null, "输入密码", true, false, 0, 100, 100);
 		rm.Warning = "您确定要执行设置改密码吗？";
 		rm.ClassMethodName = this.toString() + ".DoSetPassword";
 		map.AddRefMethod(rm);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -244,7 +244,7 @@ public class Emp extends EntityNoName
 	public final String DoSetPassword(String password)
 	{
 		String str = BP.Tools.Cryptography.EncryptString(password);
-		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No='" + this.No + "'");
+		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No='" " + this.getNo()+ " "'");
 		return "设置成功..";
 	}
 	/** 
@@ -270,8 +270,8 @@ public class Emp extends EntityNoName
 		}
 
 		Emp.Copy(emp);
-		Emp.setFK_Dept(WebUser.FK_Dept);
-		Emp.setRootOfDept(WebUser.FK_Dept);
+		Emp.setFK_Dept(WebUser.getFK_Dept());
+		Emp.setRootOfDept(WebUser.getFK_Dept());
 		Emp.setUserType(1);
 		Emp.Save();
 

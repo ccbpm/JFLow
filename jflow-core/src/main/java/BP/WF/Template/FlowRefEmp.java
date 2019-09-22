@@ -185,7 +185,7 @@ public class FlowRefEmp extends EntityMyPK
 	*/
 	public FlowRefEmp(String mypk)
 	{
-		this.MyPK = mypk;
+		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
@@ -194,9 +194,9 @@ public class FlowRefEmp extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Part", "流程关联人员");
@@ -218,8 +218,8 @@ public class FlowRefEmp extends EntityMyPK
 		map.AddTBString(FlowRefEmpAttr.Tag8, null, "Tag8", false, true, 0, 2000, 10);
 		map.AddTBString(FlowRefEmpAttr.Tag9, null, "Tag9", false, true, 0, 2000, 10);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

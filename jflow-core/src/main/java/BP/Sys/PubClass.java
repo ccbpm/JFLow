@@ -649,7 +649,7 @@ public class PubClass
 
 		MapDtls dtls = new MapDtls();
 		dtls.RetrieveAllFromDBSource();
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			try
 			{
@@ -1230,7 +1230,7 @@ public class PubClass
 		{
 			dr.set(key, ht.get(key) instanceof String ? (String)ht.get(key) : null);
 		}
-		dt.Rows.Add(dr);
+		dt.Rows.add(dr);
 		return dt;
 	}
 

@@ -35,7 +35,7 @@ public class DirectionStations extends EntitiesMM
 	*/
 	public final List<DirectionStation> ToJavaList()
 	{
-		return (List<DirectionStation>)this;
+		return (List<DirectionStation>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -47,7 +47,7 @@ public class DirectionStations extends EntitiesMM
 		ArrayList<DirectionStation> list = new ArrayList<DirectionStation>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((DirectionStation)this[i]);
+			list.add((DirectionStation)this.get(i));
 		}
 		return list;
 	}

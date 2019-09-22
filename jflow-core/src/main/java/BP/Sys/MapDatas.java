@@ -39,7 +39,7 @@ public class MapDatas extends EntitiesNoName
 	*/
 	public final List<MapData> ToJavaList()
 	{
-		return (List<MapData>)this;
+		return (List<MapData>)(Object)this;
 	}
 	/** 
 	 转化成list

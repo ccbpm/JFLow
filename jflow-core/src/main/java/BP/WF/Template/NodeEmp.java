@@ -59,9 +59,9 @@ public class NodeEmp extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeEmp", "节点人员");
@@ -70,8 +70,8 @@ public class NodeEmp extends EntityMM
 		map.AddTBIntPK(NodeEmpAttr.FK_Node,0,"Node",true,true);
 		map.AddDDLEntitiesPK(NodeEmpAttr.FK_Emp, null, "到人员", new Emps(), true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

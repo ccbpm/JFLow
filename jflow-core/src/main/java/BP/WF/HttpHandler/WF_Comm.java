@@ -88,7 +88,7 @@ public class WF_Comm extends DirectoryPageBase
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		ens.RetrieveByAttr(RefPK, FK);
 		DataTable dt = ens.ToDataTableField("GridData");
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//获取实体对应的列明
 		Entity en = ens.GetNewEntity;
@@ -126,10 +126,10 @@ public class WF_Comm extends DirectoryPageBase
 			{
 				row.set("field", attr.KeyOfEn + "Text");
 			}
-			dt.Rows.Add(row);
+			dt.Rows.add(row);
 		}
 
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -191,7 +191,7 @@ public class WF_Comm extends DirectoryPageBase
 		dtAttrs.TableName = "Sys_MapAttrs";
 
 		DataSet ds = new DataSet();
-		ds.Tables.Add(dtAttrs); //把描述加入.
+		ds.Tables.add(dtAttrs); //把描述加入.
 
 		//查询结果
 		QueryObject qo = new QueryObject(ens);
@@ -258,7 +258,7 @@ public class WF_Comm extends DirectoryPageBase
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.MyPK = WebUser.No + this.getEnsName() + "_SearchAttrs";
+				sUr.setMyPK( WebUser.getNo() + this.getEnsName() + "_SearchAttrs";
 				sUr.RetrieveFromDBSources();
 
 				/* 如果是多选值 */
@@ -272,7 +272,7 @@ public class WF_Comm extends DirectoryPageBase
 					{
 						if (key.equals("FK_Dept"))
 						{
-							val = WebUser.FK_Dept;
+							val = WebUser.getFK_Dept();
 						}
 					}
 					else
@@ -341,7 +341,7 @@ public class WF_Comm extends DirectoryPageBase
 		qo.DoQuery();
 		DataTable dt = ens.ToDataTableField();
 		dt.TableName = "Group_Dtls";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -421,7 +421,7 @@ public class WF_Comm extends DirectoryPageBase
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.MyPK = WebUser.No + this.getEnsName() + "_SearchAttrs";
+				sUr.setMyPK( WebUser.getNo() + this.getEnsName() + "_SearchAttrs";
 				sUr.RetrieveFromDBSources();
 
 				/* 如果是多选值 */
@@ -435,7 +435,7 @@ public class WF_Comm extends DirectoryPageBase
 					{
 						if (key.equals("FK_Dept"))
 						{
-							val = WebUser.FK_Dept;
+							val = WebUser.getFK_Dept();
 						}
 					}
 					else
@@ -762,7 +762,7 @@ public class WF_Comm extends DirectoryPageBase
 			if (DataType.IsNullOrEmpty(frmParas) == false)
 			{
 				AtPara ap = new AtPara(frmParas);
-				for (String key : ap.HisHT.keySet())
+				for (String key : ap.getHisHT().keySet())
 				{
 					en.SetPara(key, ap.GetValStrByKey(key));
 				}
@@ -974,7 +974,7 @@ public class WF_Comm extends DirectoryPageBase
 
 				Object valObj = val;
 
-				if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					valObj = BP.Sys.Glo.GenerRealType(en.EnMap.Attrs, key, val);
 				}
@@ -1042,7 +1042,7 @@ public class WF_Comm extends DirectoryPageBase
 
 				//获得真实的数据类型.
 				Object typeVal = val;
-				if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					typeVal = BP.Sys.Glo.GenerRealType(attrs, key, val);
 				}
@@ -1365,9 +1365,9 @@ public class WF_Comm extends DirectoryPageBase
 			dr.set("Width", item.Width); //下拉框显示的宽度.
 			dr.set("UIContralType", item.HisAttr.UIContralType);
 
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//把外键枚举增加到里面.
 		for (AttrSearch item : attrs)
@@ -1377,7 +1377,7 @@ public class WF_Comm extends DirectoryPageBase
 				SysEnums ses = new SysEnums(item.HisAttr.UIBindKey);
 				DataTable dtEnum = ses.ToDataTableField();
 				dtEnum.TableName = item.Key;
-				ds.Tables.Add(dtEnum);
+				ds.Tables.add(dtEnum);
 				continue;
 			}
 
@@ -1388,7 +1388,7 @@ public class WF_Comm extends DirectoryPageBase
 
 				DataTable dtEn = ensFK.ToDataTableField();
 				dtEn.TableName = item.Key;
-				ds.Tables.Add(dtEn);
+				ds.Tables.add(dtEn);
 			}
 			//绑定SQL的外键
 			if (item.HisAttr.UIDDLShowType == BP.Web.Controls.DDLShowType.BindSQL)
@@ -1418,7 +1418,7 @@ public class WF_Comm extends DirectoryPageBase
 				dtSQl.TableName = item.Key;
 				if (ds.Tables.Contains(item.Key) == false)
 				{
-					ds.Tables.Add(dtSQl);
+					ds.Tables.add(dtSQl);
 				}
 			}
 
@@ -1489,11 +1489,11 @@ public class WF_Comm extends DirectoryPageBase
 			row.set("Width", attr.UIWidthInt);
 			row.set("UIContralType", attr.UIContralType);
 
-			dtAttrs.Rows.Add(row);
+			dtAttrs.Rows.add(row);
 		}
 
 		DataSet ds = new DataSet();
-		ds.Tables.Add(dtAttrs); //把描述加入.
+		ds.Tables.add(dtAttrs); //把描述加入.
 
 		md.Name = map.EnDesc;
 
@@ -1503,11 +1503,11 @@ public class WF_Comm extends DirectoryPageBase
 		//获取实体类的主键
 		md.SetPara("PK", en.PK);
 
-		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 		//取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.MyPK = WebUser.No + "_" + this.getEnsName() + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 
 		//获得关键字.
@@ -1570,25 +1570,25 @@ public class WF_Comm extends DirectoryPageBase
 				{
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : (" '%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
 				qo.addOr();
 
-				if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : ("'%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 
 			}
@@ -1605,8 +1605,8 @@ public class WF_Comm extends DirectoryPageBase
 
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
-			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
+			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
+			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			//按日期查询
 			if (map.DTSearchWay == DTSearchWay.ByDate)
@@ -1660,7 +1660,7 @@ public class WF_Comm extends DirectoryPageBase
 				qo.addLeftBracket();
 
 				//获得真实的数据类型.
-				if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 					var valType = BP.Sys.Glo.GenerRealType(en.EnMap.Attrs, attr.RefAttrKey, attr.DefaultValRun);
@@ -1724,7 +1724,7 @@ public class WF_Comm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 获得查询数据.
-		for (String str : ap.HisHT.keySet())
+		for (String str : ap.getHisHT().keySet())
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var val = ap.GetValStrByKey(str);
@@ -1783,7 +1783,7 @@ public class WF_Comm extends DirectoryPageBase
 		DataTable mydt = ens.ToDataTableField();
 		mydt.TableName = "DT";
 
-		ds.Tables.Add(mydt); //把数据加入里面.
+		ds.Tables.add(mydt); //把数据加入里面.
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 获得方法的集合
@@ -1839,9 +1839,9 @@ public class WF_Comm extends DirectoryPageBase
 			dr.set("GroupName", item.GroupName);
 			dr.set("ClassMethodName", item.ClassMethodName);
 
-			dtM.Rows.Add(dr); //增加到rows.
+			dtM.Rows.add(dr); //增加到rows.
 		}
-		ds.Tables.Add(dtM); //把数据加入里面.
+		ds.Tables.add(dtM); //把数据加入里面.
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -1857,7 +1857,7 @@ public class WF_Comm extends DirectoryPageBase
 		MapAttrs attrs = map.Attrs.ToMapAttrs;
 		//取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.MyPK = WebUser.No + "_" + this.getEnsName() + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 
 		//获得关键字.
@@ -1913,25 +1913,25 @@ public class WF_Comm extends DirectoryPageBase
 				{
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.AppCenterDBVarStr.equals("@"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : (" '%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
 				qo.addOr();
 
-				if (SystemConfig.AppCenterDBVarStr.equals("@"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : ("'%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 
 			}
@@ -1948,8 +1948,8 @@ public class WF_Comm extends DirectoryPageBase
 
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
-			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
+			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
+			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			if (map.DTSearchWay == DTSearchWay.ByDate)
 			{
@@ -2058,7 +2058,7 @@ public class WF_Comm extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 获得查询数据.
-		for (String str : ap.HisHT.keySet())
+		for (String str : ap.getHisHT().keySet())
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var val = ap.GetValStrByKey(str);
@@ -2082,7 +2082,7 @@ public class WF_Comm extends DirectoryPageBase
 	{
 
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.MyPK = WebUser.No + "_" + this.getEnsName() + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 
 		String url = "?EnsName=" + this.getEnsName();
@@ -2169,10 +2169,10 @@ public class WF_Comm extends DirectoryPageBase
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.GetNewEntity;
 		String name = "数据导出";
-		String filename = name + "_" + BP.DA.DataType.CurrentDataTimeCNOfLong + "_" + WebUser.Name + ".xls";
+		String filename = name + "_" + BP.DA.DataType.getCurrentDataTime()CNOfLong + "_" + WebUser.getName() + ".xls";
 		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name);
 		//DataTableToExcel(Search_Data(ens, en),en, filename, name,
-		//                                                  BP.Web.WebUser.Name, true, true, true);
+		//                                                  WebUser.getName(), true, true, true);
 
 		return filePath;
 	}
@@ -2269,7 +2269,7 @@ public class WF_Comm extends DirectoryPageBase
 
 		//属性.
 		DataTable mapAttrs = attrs.ToDataTableField("Sys_MapAttrs");
-		ds.Tables.Add(mapAttrs);
+		ds.Tables.add(mapAttrs);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 该方法的默认值.
@@ -2291,25 +2291,25 @@ public class WF_Comm extends DirectoryPageBase
 			//替换默认值的@的
 			else
 			{
-				if (v.equals("@WebUser.No"))
+				if (v.equals("@WebUser.getNo()"))
 				{
-					mydrMain.set(item.KeyOfEn, Web.WebUser.No);
+					mydrMain.set(item.KeyOfEn, Web.WebUser.getNo());
 				}
-				else if (v.equals("@WebUser.Name"))
+				else if (v.equals("@WebUser.getName()"))
 				{
-					mydrMain.set(item.KeyOfEn, Web.WebUser.Name);
+					mydrMain.set(item.KeyOfEn, Web.WebUser.getName());
 				}
-				else if (v.equals("@WebUser.FK_Dept"))
+				else if (v.equals("@WebUser.getFK_Dept()"))
 				{
-					mydrMain.set(item.KeyOfEn, Web.WebUser.FK_Dept);
+					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_Dept());
 				}
-				else if (v.equals("@WebUser.FK_DeptName"))
+				else if (v.equals("@WebUser.getFK_Dept()Name"))
 				{
-					mydrMain.set(item.KeyOfEn, Web.WebUser.FK_DeptName);
+					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_Dept()Name);
 				}
-				else if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName"))
+				else if (v.equals("@WebUser.getFK_Dept()NameOfFull") || v.equals("@WebUser.getFK_Dept()FullName"))
 				{
-					mydrMain.set(item.KeyOfEn, Web.WebUser.FK_DeptNameOfFull);
+					mydrMain.set(item.KeyOfEn, Web.WebUser.getFK_Dept()NameOfFull);
 				}
 				else if (v.equals("@RDT"))
 				{
@@ -2319,7 +2319,7 @@ public class WF_Comm extends DirectoryPageBase
 					}
 					if (item.MyDataType == DataType.AppDateTime)
 					{
-						mydrMain.set(item.KeyOfEn, DataType.CurrentDataTime);
+						mydrMain.set(item.KeyOfEn, DataType.getCurrentDataTime());
 					}
 				}
 				else
@@ -2336,8 +2336,8 @@ public class WF_Comm extends DirectoryPageBase
 			}
 
 		}
-		dtMain.Rows.Add(mydrMain);
-		ds.Tables.Add(dtMain);
+		dtMain.Rows.add(mydrMain);
+		ds.Tables.add(dtMain);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 该方法的默认值.
 
@@ -2370,7 +2370,7 @@ public class WF_Comm extends DirectoryPageBase
 			String fk_mapData = dr.get("FK_MapData").toString();
 			if (ds.Tables.Contains(uiBindKey) == false)
 			{
-				ds.Tables.Add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+				ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 			}
 
 		}
@@ -2404,14 +2404,14 @@ public class WF_Comm extends DirectoryPageBase
 				dt1.TableName = attr.Key;
 
 				//@杜. 翻译当前部分.
-				if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
-					dt1.Columns["NO"].ColumnName = "No";
-					dt1.Columns["NAME"].ColumnName = "Name";
+					dt1.Columns.get("NO").ColumnName = "No";
+					dt1.Columns.get("NAME").ColumnName = "Name";
 				}
 				if (ds.Tables.Contains(attr.Key) == false)
 				{
-					ds.Tables.Add(dt1);
+					ds.Tables.add(dt1);
 				}
 
 			}
@@ -2442,12 +2442,12 @@ public class WF_Comm extends DirectoryPageBase
 				drEnum.set("Lab", se.Lab);
 				drEnum.set("EnumKey", se.EnumKey);
 				drEnum.set("IntKey", se.IntKey);
-				dtEnum.Rows.Add(drEnum);
+				dtEnum.Rows.add(drEnum);
 			}
 
 		}
 
-		ds.Tables.Add(dtEnum);
+		ds.Tables.add(dtEnum);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 加入该方法的枚举.
 
@@ -2461,12 +2461,12 @@ public class WF_Comm extends DirectoryPageBase
 		DataRow mydr = dt.NewRow();
 		mydr.set("Title", rm.Title);
 		mydr.set("Warning", rm.Warning);
-		dt.Rows.Add(mydr);
+		dt.Rows.add(mydr);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 增加该方法的信息
 
 		//增加到里面.
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -2482,7 +2482,7 @@ public class WF_Comm extends DirectoryPageBase
 		QueryObject qo = new QueryObject(dtls);
 		qo.addOrderBy(en.PK);
 		qo.DoQuery();
-		ds.Tables.Add(dtls.ToDataTableField("Ens"));
+		ds.Tables.add(dtls.ToDataTableField("Ens"));
 
 		//实体.
 		Entity dtl = dtls.GetNewEntity;
@@ -2529,13 +2529,13 @@ public class WF_Comm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
-		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 字段属性.
 		MapAttrs attrs = dtl.EnMap.Attrs.ToMapAttrs;
 		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
-		ds.Tables.Add(sys_MapAttrs);
+		ds.Tables.add(sys_MapAttrs);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 字段属性.
 
@@ -2574,7 +2574,7 @@ public class WF_Comm extends DirectoryPageBase
 				continue;
 			}
 
-			ds.Tables.Add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 		}
 
 		String enumKeys = "";
@@ -2595,15 +2595,15 @@ public class WF_Comm extends DirectoryPageBase
 
 			dtEnum.TableName = "Sys_Enum";
 
-			if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
-				dtEnum.Columns["MYPK"].ColumnName = "MyPK";
-				dtEnum.Columns["LAB"].ColumnName = "Lab";
-				dtEnum.Columns["ENUMKEY"].ColumnName = "EnumKey";
-				dtEnum.Columns["INTKEY"].ColumnName = "IntKey";
-				dtEnum.Columns["LANG"].ColumnName = "Lang";
+				dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
+				dtEnum.Columns.get("LAB").ColumnName = "Lab";
+				dtEnum.Columns.get("ENUMKEY").ColumnName = "EnumKey";
+				dtEnum.Columns.get("INTKEY").ColumnName = "IntKey";
+				dtEnum.Columns.get("LANG").ColumnName = "Lang";
 			}
-			ds.Tables.Add(dtEnum);
+			ds.Tables.add(dtEnum);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 把外键与枚举放入里面去.
@@ -2695,7 +2695,7 @@ public class WF_Comm extends DirectoryPageBase
 			//qo.DoQuery(en.PK, BP.Sys.SystemConfig.PageSize, this.PageIdx, false);
 			qo.DoQuery();
 			Map map = en.EnMap;
-			for (Entity item : dtls)
+			for (Entity item : dtls.ToJavaList())
 			{
 				String pkval = item.PKVal.toString();
 
@@ -2910,7 +2910,7 @@ public class WF_Comm extends DirectoryPageBase
 			dr.set("Icon", item.Icon);
 			dr.set("IsCanBatch", item.IsCanBatch);
 			dr.set("GroupName", item.GroupName);
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -3268,9 +3268,9 @@ public class WF_Comm extends DirectoryPageBase
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
 
-		sql = sql.replace("@WebUser.No", WebUser.No); //替换变量.
-		sql = sql.replace("@WebUser.Name", WebUser.Name); //替换变量.
-		sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept); //替换变量.
+		sql = sql.replace("@WebUser.getNo()", WebUser.getNo()); //替换变量.
+		sql = sql.replace("@WebUser.getName()", WebUser.getName()); //替换变量.
+		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept()); //替换变量.
 		sql = sql.replace("@WebUser.DeptParentNo)", WebUser.DeptParentNo); //替换变量.
 
 
@@ -3290,7 +3290,7 @@ public class WF_Comm extends DirectoryPageBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		//暂定
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			//获取SQL的字段
 			//获取 from 的位置
@@ -3365,7 +3365,7 @@ public class WF_Comm extends DirectoryPageBase
 	{
 		Hashtable ht = new Hashtable();
 
-		String userNo = Web.WebUser.No;
+		String userNo = Web.WebUser.getNo();
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
 			ht.put("No", "");
@@ -3374,22 +3374,22 @@ public class WF_Comm extends DirectoryPageBase
 			ht.put("FK_DeptName", "");
 			ht.put("FK_DeptNameOfFull", "");
 
-			ht.put("CustomerNo", BP.Sys.SystemConfig.CustomerNo);
+			ht.put("CustomerNo", BP.Sys.SystemConfig.getCustomerNo());
 			ht.put("CustomerName", BP.Sys.SystemConfig.CustomerName);
 			return BP.Tools.Json.ToJson(ht);
 		}
 
-		ht.put("No", WebUser.No);
-		ht.put("Name", WebUser.Name);
-		ht.put("FK_Dept", WebUser.FK_Dept);
-		ht.put("FK_DeptName", WebUser.FK_DeptName);
-		ht.put("FK_DeptNameOfFull", WebUser.FK_DeptNameOfFull);
-		ht.put("CustomerNo", BP.Sys.SystemConfig.CustomerNo);
+		ht.put("No", WebUser.getNo());
+		ht.put("Name", WebUser.getName());
+		ht.put("FK_Dept", WebUser.getFK_Dept());
+		ht.put("FK_DeptName", WebUser.getFK_Dept()Name);
+		ht.put("FK_DeptNameOfFull", WebUser.getFK_Dept()NameOfFull);
+		ht.put("CustomerNo", BP.Sys.SystemConfig.getCustomerNo());
 		ht.put("CustomerName", BP.Sys.SystemConfig.CustomerName);
 		ht.put("SID", WebUser.SID);
 
 		//检查是否是授权状态.
-		if (WebUser.IsAuthorize == true)
+		if (WebUser.getIsAuthorize() == true)
 		{
 			ht.put("IsAuthorize", "1");
 			ht.put("Auth", WebUser.Auth);
@@ -3483,7 +3483,7 @@ public class WF_Comm extends DirectoryPageBase
 
 
 		//如果是天业集团则保存在ftp服务器上
-		if (SystemConfig.CustomerNo.equals("TianYe") || SystemConfig.IsUploadFileToFTP == true)
+		if (SystemConfig.getCustomerNo().equals("TianYe") || SystemConfig.IsUploadFileToFTP == true)
 		{
 			String guid = DBAccess.GenerGUID();
 
@@ -3630,7 +3630,7 @@ public class WF_Comm extends DirectoryPageBase
 		String filepath = "";
 
 		//如果是天业集团则保存在ftp服务器上
-		if (SystemConfig.CustomerNo.equals("TianYe") || SystemConfig.IsUploadFileToFTP == true)
+		if (SystemConfig.getCustomerNo().equals("TianYe") || SystemConfig.IsUploadFileToFTP == true)
 		{
 			String guid = DBAccess.GenerGUID();
 
@@ -3824,9 +3824,9 @@ public class WF_Comm extends DirectoryPageBase
 			dr.set("Field", item.Key);
 			dr.set("Name", item.HisAttr.Desc);
 			dr.set("MyFieldType", item.HisAttr.MyFieldType);
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//把外键枚举增加到里面.
 		for (AttrSearch item : attrs)
@@ -3836,7 +3836,7 @@ public class WF_Comm extends DirectoryPageBase
 				SysEnums ses = new SysEnums(item.HisAttr.UIBindKey);
 				DataTable dtEnum = ses.ToDataTableField();
 				dtEnum.TableName = item.Key;
-				ds.Tables.Add(dtEnum);
+				ds.Tables.add(dtEnum);
 				continue;
 			}
 
@@ -3848,7 +3848,7 @@ public class WF_Comm extends DirectoryPageBase
 				DataTable dtEn = ensFK.ToDataTableField();
 				dtEn.TableName = item.Key;
 
-				ds.Tables.Add(dtEn);
+				ds.Tables.add(dtEn);
 			}
 		}
 
@@ -3879,7 +3879,7 @@ public class WF_Comm extends DirectoryPageBase
 		dt.TableName = "Attrs";
 
 		//获取注册信心表
-		UserRegedit ur = new UserRegedit(WebUser.No, this.getEnsName() + "_Group");
+		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
 		String reAttrs = this.GetRequestVal("Attrs");
 
 		//判断是否已经选择分组
@@ -3898,7 +3898,7 @@ public class WF_Comm extends DirectoryPageBase
 					dr.set("Checked", "true");
 					contentFlag = true;
 				}
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 
 		}
@@ -3928,7 +3928,7 @@ public class WF_Comm extends DirectoryPageBase
 		//aas.RetrieveBy(ActiveAttrAttr.For, this.EnsName);
 
 		//获取注册信息表
-		UserRegedit ur = new UserRegedit(WebUser.No, this.getEnsName() + "_Group");
+		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
 
 		DataTable dt = new DataTable();
 		dt.Columns.Add("Field");
@@ -3942,7 +3942,7 @@ public class WF_Comm extends DirectoryPageBase
 		dtr.set("Field", "Group_Number");
 		dtr.set("Name", "数量");
 		dtr.set("Checked", "true");
-		dt.Rows.Add(dtr);
+		dt.Rows.add(dtr);
 
 		DataTable ddlDt = new DataTable();
 		ddlDt.TableName = "Group_Number";
@@ -3953,8 +3953,8 @@ public class WF_Comm extends DirectoryPageBase
 		ddlDr.set("No", "SUM");
 		ddlDr.set("Name", "求和");
 		ddlDr.set("Selected", "true");
-		ddlDt.Rows.Add(ddlDr);
-		ds.Tables.Add(ddlDt);
+		ddlDt.Rows.add(ddlDr);
+		ds.Tables.add(ddlDt);
 
 		for (Attr attr : map.Attrs)
 		{
@@ -3998,7 +3998,7 @@ public class WF_Comm extends DirectoryPageBase
 			//    if (ur.Vals.IndexOf(attr.Key) != -1)
 			//        dr["Checked"] = "true";
 
-			//    dt.Rows.Add(dr);
+			//    dt.Rows.add(dr);
 
 			//    isHave = true;
 			//}
@@ -4018,7 +4018,7 @@ public class WF_Comm extends DirectoryPageBase
 				dtr.set("Checked", "true");
 			}
 
-			dt.Rows.Add(dtr);
+			dt.Rows.add(dtr);
 
 			ddlDt = new DataTable();
 			ddlDt.Columns.Add("No");
@@ -4033,7 +4033,7 @@ public class WF_Comm extends DirectoryPageBase
 			{
 				ddlDr.set("Selected", "true");
 			}
-			ddlDt.Rows.Add(ddlDr);
+			ddlDt.Rows.add(ddlDr);
 
 			ddlDr = ddlDt.NewRow();
 			ddlDr.set("No", "AVG");
@@ -4042,7 +4042,7 @@ public class WF_Comm extends DirectoryPageBase
 			{
 				ddlDr.set("Selected", "true");
 			}
-			ddlDt.Rows.Add(ddlDr);
+			ddlDt.Rows.add(ddlDr);
 
 			if (this.getIsContainsNDYF())
 			{
@@ -4053,14 +4053,14 @@ public class WF_Comm extends DirectoryPageBase
 				{
 					ddlDr.set("Selected", "true");
 				}
-				ddlDt.Rows.Add(ddlDr);
+				ddlDt.Rows.add(ddlDr);
 			}
 
-			ds.Tables.Add(ddlDt);
+			ds.Tables.add(ddlDt);
 
 
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 		return BP.Tools.Json.ToJson(ds);
 	}
 
@@ -4078,7 +4078,7 @@ public class WF_Comm extends DirectoryPageBase
 		DataSet ds = new DataSet();
 
 		//获取注册信息表
-		UserRegedit ur = new UserRegedit(WebUser.No, this.getEnsName() + "_Group");
+		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
 
 		// 查询出来关于它的活动列配置.
 		ActiveAttrs aas = new ActiveAttrs();
@@ -4096,12 +4096,12 @@ public class WF_Comm extends DirectoryPageBase
 		showSum.Columns.Add("NoShowSum");
 		DataRow sumdr = showSum.NewRow();
 		sumdr.set("NoShowSum", NoShowSum);
-		showSum.Rows.Add(sumdr);
+		showSum.Rows.add(sumdr);
 
 		DataTable activeAttr = aas.ToDataTable();
 		activeAttr.TableName = "ActiveAttr";
-		ds.Tables.Add(activeAttr);
-		ds.Tables.Add(showSum);
+		ds.Tables.add(activeAttr);
+		ds.Tables.add(showSum);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -4150,7 +4150,7 @@ public class WF_Comm extends DirectoryPageBase
 				}
 
 				Condition += aa.Condition;
-				if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					groupKey += " round ( cast (" + aa.Exp + " as  numeric), 4)  \"" + paras[0] + "\",";
 				}
@@ -4177,7 +4177,7 @@ public class WF_Comm extends DirectoryPageBase
 						}
 						else
 						{
-							if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+							if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 							{
 								groupKey += " round ( cast (SUM(" + paras[0] + ") as  numeric), 4)  \"" + paras[0] + "\",";
 							}
@@ -4189,7 +4189,7 @@ public class WF_Comm extends DirectoryPageBase
 
 						break;
 					case "AVG":
-						if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+						if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 						{
 							groupKey += " round ( cast (AVG(" + paras[0] + ") as  numeric), 4)  \"" + paras[0] + "\",";
 						}
@@ -4205,7 +4205,7 @@ public class WF_Comm extends DirectoryPageBase
 						}
 						else
 						{
-							if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+							if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 							{
 								groupKey += " round ( cast (SUM(" + paras[0] + ") as  numeric), 4)  \"" + paras[0] + "\",";
 							}
@@ -4292,7 +4292,7 @@ public class WF_Comm extends DirectoryPageBase
 		Paras myps = new Paras();
 		//获取查询的注册表
 		BP.Sys.UserRegedit searchUr = new UserRegedit();
-		searchUr.MyPK = WebUser.No + "_" + this.getEnsName() + "_SearchAttrs";
+		searchUr.setMyPK( WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs";
 		searchUr.RetrieveFromDBSources();
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -4342,8 +4342,8 @@ public class WF_Comm extends DirectoryPageBase
 		//时间
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
-			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
+			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
+			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			//按日期查询
 			if (map.DTSearchWay == DTSearchWay.ByDate)
@@ -4381,17 +4381,17 @@ public class WF_Comm extends DirectoryPageBase
 		}
 		/** #region 获得查询数据.
 		*/
-		for (String str : ap.HisHT.keySet())
+		for (String str : ap.getHisHT().keySet())
 		{
 			Object val = ap.GetValStrByKey(str);
 			if (val.equals("all"))
 			{
 				continue;
 			}
-			where += " " + str + "=" + SystemConfig.AppCenterDBVarStr + str + "   AND ";
+			where += " " + str + "=" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
 			if (!str.equals("FK_NY"))
 			{
-				whereOfLJ += " " + str + " =" + SystemConfig.AppCenterDBVarStr + str + "   AND ";
+				whereOfLJ += " " + str + " =" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
 			}
 
 			myps.Add(str, val);
@@ -4452,7 +4452,7 @@ public class WF_Comm extends DirectoryPageBase
 			{
 				mydr.set(dc.ColumnName, dr.get(dc.ColumnName));
 			}
-			dt1.Rows.Add(mydr);
+			dt1.Rows.add(mydr);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
@@ -4617,9 +4617,9 @@ public class WF_Comm extends DirectoryPageBase
 				}
 			}
 		}
-		ds.Tables.Add(dt);
-		ds.Tables.Add(AttrsOfNum.ToMapAttrs.ToDataTableField("AttrsOfNum"));
-		ds.Tables.Add(AttrsOfGroup.ToMapAttrs.ToDataTableField("AttrsOfGroup"));
+		ds.Tables.add(dt);
+		ds.Tables.add(AttrsOfNum.ToMapAttrs.ToDataTableField("AttrsOfNum"));
+		ds.Tables.add(AttrsOfGroup.ToMapAttrs.ToDataTableField("AttrsOfGroup"));
 		return ds;
 	}
 	public final String ParseExpToDecimal()
@@ -4649,7 +4649,7 @@ public class WF_Comm extends DirectoryPageBase
 		DataSet ds = new DataSet();
 
 		//获取注册信息表
-		UserRegedit ur = new UserRegedit(WebUser.No, this.getEnsName() + "_Group");
+		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
 
 		// 查询出来关于它的活动列配置.
 		ActiveAttrs aas = new ActiveAttrs();
@@ -4714,7 +4714,7 @@ public class WF_Comm extends DirectoryPageBase
 			qo.addAnd();
 			qo.AddWhere("AttrKey", "=", AttrKey);
 			qo.addAnd();
-			qo.AddWhere("FK_Emp", "=", WebUser.No);
+			qo.AddWhere("FK_Emp", "=", WebUser.getNo());
 			qo.addAnd();
 			qo.AddWhere("LB", "=", "1");
 
@@ -4728,12 +4728,12 @@ public class WF_Comm extends DirectoryPageBase
 			dt.Columns.Add("DataCount", Integer.class);
 			DataRow dr = dt.NewRow();
 			dr.set("DataCount", qo.GetCount());
-			dt.Rows.Add(dr);
-			ds.Tables.Add(dt);
+			dt.Rows.add(dr);
+			ds.Tables.add(dt);
 
 			qo.DoQuery("MyPK", iPageSize, iPageNumber);
 
-			ds.Tables.Add(dvs.ToDataTableField("MainTable")); //把描述加入.
+			ds.Tables.add(dvs.ToDataTableField("MainTable")); //把描述加入.
 		}
 		if (lb.equals("hisWords"))
 		{
@@ -4749,7 +4749,7 @@ public class WF_Comm extends DirectoryPageBase
 			GEEntitys ges = new GEEntitys(rptNo);
 			QueryObject qo = new QueryObject(ges);
 			String fk_emp = this.GetRequestVal("FK_Emp");
-			qo.AddWhere(fk_emp, "=", WebUser.No);
+			qo.AddWhere(fk_emp, "=", WebUser.getNo());
 			qo.addAnd();
 			qo.AddWhere(AttrKey, "!=", "");
 			String pageNumber = GetRequestVal("pageNumber");
@@ -4762,8 +4762,8 @@ public class WF_Comm extends DirectoryPageBase
 			dt.Columns.Add("DataCount", Integer.class);
 			DataRow dr = dt.NewRow();
 			dr.set("DataCount", qo.GetCount());
-			dt.Rows.Add(dr);
-			ds.Tables.Add(dt);
+			dt.Rows.add(dr);
+			ds.Tables.add(dt);
 
 			qo.DoQuery("OID", iPageSize, iPageNumber);
 
@@ -4780,10 +4780,10 @@ public class WF_Comm extends DirectoryPageBase
 				dr = newDt.NewRow();
 				dr.set("CurValue", drs.get(AttrKey));
 				dr.set("MyPK", drs.get("OID"));
-				newDt.Rows.Add(dr);
+				newDt.Rows.add(dr);
 			}
 
-			ds.Tables.Add(newDt); //把描述加入.
+			ds.Tables.add(newDt); //把描述加入.
 
 
 		}
@@ -4833,7 +4833,7 @@ public class WF_Comm extends DirectoryPageBase
 			int index = iPageSize * (iPageNumber - 1);
 			for (String folder : folderArray)
 			{
-				dt.Rows.Add("", "", "");
+				dt.Rows.add("", "", "");
 				if (count >= index && count < iPageSize * iPageNumber)
 				{
 					dt.Rows[count]["MyPk"] = BP.DA.DBAccess.GenerGUID();
@@ -4848,13 +4848,13 @@ public class WF_Comm extends DirectoryPageBase
 				count += 1;
 			}
 
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 			dt = new DataTable("DataCount");
 			dt.Columns.Add("DataCount", Integer.class);
 			DataRow dr = dt.NewRow();
 			dr.set("DataCount", folderArray.length);
-			dt.Rows.Add(dr);
-			ds.Tables.Add(dt);
+			dt.Rows.add(dr);
+			ds.Tables.add(dt);
 			return BP.Tools.Json.ToJson(ds);
 		}
 		catch (RuntimeException e)

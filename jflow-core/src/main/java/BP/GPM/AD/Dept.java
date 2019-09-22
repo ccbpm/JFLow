@@ -85,9 +85,9 @@ public class Dept extends EntityTree
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map();
@@ -112,8 +112,8 @@ public class Dept extends EntityTree
 			//顺序号.
 		map.AddTBInt(DeptAttr.Idx, 0, "顺序号", true, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

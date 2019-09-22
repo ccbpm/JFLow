@@ -39,7 +39,7 @@ public class MapAttrNums extends EntitiesMyPK
 	*/
 	public final List<MapAttrNum> ToJavaList()
 	{
-		return (List<MapAttrNum>)this;
+		return (List<MapAttrNum>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -51,7 +51,7 @@ public class MapAttrNums extends EntitiesMyPK
 		ArrayList<MapAttrNum> list = new ArrayList<MapAttrNum>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapAttrNum)this[i]);
+			list.add((MapAttrNum)this.get(i));
 		}
 		return list;
 	}

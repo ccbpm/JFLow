@@ -39,7 +39,7 @@ public class SysForms extends EntitiesNoName
 	*/
 	public final List<SysForm> ToJavaList()
 	{
-		return (List<SysForm>)this;
+		return (List<SysForm>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -51,7 +51,7 @@ public class SysForms extends EntitiesNoName
 		ArrayList<SysForm> list = new ArrayList<SysForm>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SysForm)this[i]);
+			list.add((SysForm)this.get(i));
 		}
 		return list;
 	}

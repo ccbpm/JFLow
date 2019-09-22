@@ -189,7 +189,7 @@ public class FrmImgAth extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		//this.MyPK = this.FK_MapData + "_" + this.CtrlID;
+		//this.setMyPK( this.FK_MapData + "_" + this.CtrlID;
 		return super.beforeUpdateInsertAction();
 	}
 

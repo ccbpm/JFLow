@@ -30,6 +30,7 @@ import BP.Tools.StringUtils;
 import BP.Tools.chs2py;
 import BP.WF.Glo;
 import BP.WF.PortalInterface;
+import BP.Web.WebUser;
 
 public class DataType {
 	public static boolean IsNullOrEmpty(String s) {
@@ -1546,7 +1547,7 @@ public class DataType {
 	}
 
 	public static String GetDataTypeDese(int datatype) {
-		if (BP.Web.WebUser.getSysLang().equals("CH")) {
+		if (WebUser.getSysLang().equals("CH")) {
 			switch (datatype) {
 			case DataType.AppBoolean:
 				return "布尔(Int)";

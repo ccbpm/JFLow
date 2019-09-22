@@ -28,7 +28,7 @@ import BP.En.SQLCash;
 import BP.Sys.SystemConfig;
 import BP.Tools.CRC32Helper;
 import BP.Tools.StringHelper;
-import BP.Web.WebUser;
+
 
 /**
  * 数据库访问。 这个类负责处理了 实体信息
@@ -1213,7 +1213,7 @@ public class DBAccess {
 		try {
 
 			// 首先取具有事务的conn. @xushuhao
-			conn = GetConnOfTransactionForMySQL(WebUser.getNo());
+			conn = GetConnOfTransactionForMySQL(BP.Web.WebUser.getNo());
 
 			if (conn == null)
 				conn = DBAccess.getGetAppCenterDBConn_MySQL();
@@ -2748,7 +2748,7 @@ public class DBAccess {
 		 * 
 		 * //ORIGINAL LINE: byte[] byteFile = null; byte[] byteFile = null; if
 		 * (dr.Read()) { if (dr[0] == null ||
-		 * tangible.DotNetToJavaStringHelper.isNullOrEmpty(dr[0].toString())) {
+		 * tangible.DataType.IsNullOrEmpty(dr[0].toString())) {
 		 * return null; } byteFile = (byte[])dr[0]; } return byteFile;
 		 * 
 		 * 
@@ -2774,7 +2774,7 @@ public class DBAccess {
 		 * " ADD  " + fileSaveField + " blob "; BP.DA.DBAccess.RunSQL(sql); }
 		 * throw new RuntimeException("@缺少此字段,有可能系统自动修复." + ex.getMessage()); }
 		 * byte[] byteFile = null; if (dr.Read()) { if (dr[0] == null ||
-		 * tangible.DotNetToJavaStringHelper.isNullOrEmpty(dr[0].toString())) {
+		 * tangible.DataType.IsNullOrEmpty(dr[0].toString())) {
 		 * return null; } byteFile = (byte[])dr[0]; }
 		 * 
 		 * return byteFile; }
@@ -2802,7 +2802,7 @@ public class DBAccess {
 		 * RuntimeException("@缺少此字段,有可能系统自动修复." + ex.getMessage()); }
 		 * 
 		 * byte[] byteFile = null; if (dr.Read()) { if (dr[0] == null ||
-		 * tangible.DotNetToJavaStringHelper.isNullOrEmpty(dr[0].toString())) {
+		 * tangible.DataType.IsNullOrEmpty(dr[0].toString())) {
 		 * return null; }
 		 * 
 		 * byteFile = (byte[])dr[0]; }
@@ -2820,13 +2820,13 @@ public class DBAccess {
 
 		Connection conn = ContextHolderUtils.getInstance().getDataSource().getConnection();
 		conn.setAutoCommit(false); // 设置不能自动提交.
-		SetConnOfTransactionForMySQL(WebUser.getNo(), conn);
+		SetConnOfTransactionForMySQL(BP.Web.WebUser.getNo(), conn);
 	}
 
 	// 提交事物 @xushuaho
 	public static void DoTransactionCommit() throws Exception {
 
-		String id = WebUser.getNo();
+		String id = BP.Web.WebUser.getNo();
 		Connection conn = DBAccess.GetConnOfTransactionForMySQL(id);
 		conn.commit();
 		conn.setAutoCommit(true); // 设置不能自动提交.
@@ -2837,7 +2837,7 @@ public class DBAccess {
 	// 回滚事物 @xushuaho
 	public static void DoTransactionRollback() throws Exception {
 
-		String buessID = WebUser.getNo();
+		String buessID = BP.Web.WebUser.getNo();
 
 		Connection conn = DBAccess.GetConnOfTransactionForMySQL(buessID);
 		conn.rollback();

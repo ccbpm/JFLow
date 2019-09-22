@@ -163,7 +163,7 @@ public class FrmBtn extends EntityMyPK
 	public final String getTextHtml()
 	{
 			//if (this.EventType)
-			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).Replace("@","<br>") + "</b>";
+			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).replace("@","<br>") + "</b>";
 			//else
 			return this.GetValStrByKey(FrmBtnAttr.Text).replace("@", "<br>");
 	}

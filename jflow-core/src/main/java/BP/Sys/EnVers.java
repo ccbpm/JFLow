@@ -34,7 +34,7 @@ public class EnVers extends EntitiesMyPK
 	*/
 	public final List<EnVer> ToJavaList()
 	{
-		return (List<EnVer>)this;
+		return (List<EnVer>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -46,7 +46,7 @@ public class EnVers extends EntitiesMyPK
 		ArrayList<EnVer> list = new ArrayList<EnVer>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((EnVer)this[i]);
+			list.add((EnVer)this.get(i));
 		}
 		return list;
 	}

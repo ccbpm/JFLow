@@ -844,7 +844,7 @@ public class RTFEngine {
 						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueImgStrs(para)));
 					/*else if (para.contains("Img@QR"))
 						str = new StringBuilder(
-								str.toString().Replace("<" + para + ">", this.GetValueImgStrsOfQR(billUrl)));*/
+								str.toString().replace("<" + para + ">", this.GetValueImgStrsOfQR(billUrl)));*/
 					else if (para.contains(".BPPaint"))
 						str = new StringBuilder(
 								str.toString().replace("<" + para + ">", this.GetValueBPPaintStrs(para)));

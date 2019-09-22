@@ -47,7 +47,7 @@ public class FrmBtns extends EntitiesMyPK
 	*/
 	public final List<FrmBtn> ToJavaList()
 	{
-		return (List<FrmBtn>)this;
+		return (List<FrmBtn>)(Object)this;
 	}
 	/** 
 	 转化成list

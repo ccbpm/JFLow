@@ -139,7 +139,7 @@ public class Dept extends EntityTree
 
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new BP.Port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new BP.Port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 
 			//平铺模式.
@@ -260,7 +260,7 @@ public class Dept extends EntityTree
 		//更新人员路径信息.
 		BP.GPM.Emps emps = new Emps();
 		emps.Retrieve(EmpAttr.FK_Dept, this.getNo());
-		for (BP.GPM.Emp emp : emps)
+		for (BP.GPM.Emp emp : emps.ToJavaList())
 		{
 			emp.Update();
 		}
@@ -276,7 +276,7 @@ public class Dept extends EntityTree
 		Depts depts = new Depts(deptNo);
 		if (depts != null && depts.size() > 0)
 		{
-			for (Dept dept : depts)
+			for (Dept dept : depts.ToJavaList())
 			{
 				dept.GenerNameOfPath();
 				GenerChildNameOfPath(dept.getNo());
@@ -285,7 +285,7 @@ public class Dept extends EntityTree
 				//更新人员路径信息.
 				BP.GPM.Emps emps = new Emps();
 				emps.Retrieve(EmpAttr.FK_Dept, this.getNo());
-				for (BP.GPM.Emp emp : emps)
+				for (BP.GPM.Emp emp : emps.ToJavaList())
 				{
 					emp.Update();
 				}

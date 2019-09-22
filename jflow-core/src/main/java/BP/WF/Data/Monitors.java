@@ -41,7 +41,7 @@ public class Monitors extends Entities
 	*/
 	public final List<Monitor> ToJavaList()
 	{
-		return (List<Monitor>)this;
+		return (List<Monitor>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class Monitors extends Entities
 		ArrayList<Monitor> list = new ArrayList<Monitor>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Monitor)this[i]);
+			list.add((Monitor)this.get(i));
 		}
 		return list;
 	}

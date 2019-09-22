@@ -52,11 +52,11 @@ public class WF_Setting extends DirectoryPageBase
 	public final String Default_Init()
 	{
 		Hashtable ht = new Hashtable();
-		ht.put("UserNo", WebUser.No);
-		ht.put("UserName", WebUser.Name);
+		ht.put("UserNo", WebUser.getNo());
+		ht.put("UserName", WebUser.getName());
 
 		BP.Port.Emp emp = new Emp();
-		emp.No = WebUser.No;
+		emp.No = WebUser.getNo();
 		emp.Retrieve();
 
 		//部门名称.
@@ -65,7 +65,7 @@ public class WF_Setting extends DirectoryPageBase
 		if (SystemConfig.OSModel == OSModel.OneMore)
 		{
 			BP.GPM.DeptEmpStations des = new BP.GPM.DeptEmpStations();
-			des.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Emp, WebUser.No);
+			des.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Emp, WebUser.getNo());
 
 			String depts = "";
 			String stas = "";
@@ -106,7 +106,7 @@ public class WF_Setting extends DirectoryPageBase
 		}
 
 
-		BP.WF.Port.WFEmp wfemp = new Port.WFEmp(WebUser.No);
+		WFEmp wfemp = new Port.WFEmp(WebUser.getNo());
 		ht.put("Tel", wfemp.getTel());
 		ht.put("Email", wfemp.getEmail());
 		ht.put("Author", wfemp.getAuthor());
@@ -120,14 +120,14 @@ public class WF_Setting extends DirectoryPageBase
 	*/
 	public final String Author_Init()
 	{
-		BP.WF.Port.WFEmp emp = new Port.WFEmp(BP.Web.WebUser.No);
+		WFEmp emp = new Port.WFEmp(WebUser.getNo());
 		Hashtable ht = emp.Row;
-		ht.remove(BP.WF.Port.WFEmpAttr.StartFlows); //移除这一列不然无法形成json.
+		ht.remove(WFEmpAttr.StartFlows); //移除这一列不然无法形成json.
 		return emp.ToJson();
 	}
 	public final String Author_Save()
 	{
-		BP.WF.Port.WFEmp emp = new Port.WFEmp(BP.Web.WebUser.No);
+		WFEmp emp = new Port.WFEmp(WebUser.getNo());
 		emp.setAuthor(this.GetRequestVal("Author"));
 		emp.setAuthorDate(this.GetRequestVal("AuthorDate"));
 		emp.setAuthorWay(this.GetRequestValInt("AuthorWay"));
@@ -139,16 +139,16 @@ public class WF_Setting extends DirectoryPageBase
 		///#region 图片签名.
 	public final String Siganture_Init()
 	{
-		if (BP.Web.WebUser.NoOfRel == null)
+		if (WebUser.getNo()OfRel == null)
 		{
 			return "err@登录信息丢失";
 		}
 
 		Hashtable ht = new Hashtable();
-		ht.put("No", BP.Web.WebUser.No);
-		ht.put("Name", BP.Web.WebUser.Name);
-		ht.put("FK_Dept", BP.Web.WebUser.FK_Dept);
-		ht.put("FK_DeptName", BP.Web.WebUser.FK_DeptName);
+		ht.put("No", WebUser.getNo());
+		ht.put("Name", WebUser.getName());
+		ht.put("FK_Dept", WebUser.getFK_Dept());
+		ht.put("FK_DeptName", WebUser.getFK_Dept()Name);
 		return BP.Tools.Json.ToJson(ht);
 	}
 	public final String Siganture_Save()
@@ -157,7 +157,7 @@ public class WF_Setting extends DirectoryPageBase
 		String empNo = this.GetRequestVal("EmpNo");
 		if (DataType.IsNullOrEmpty(empNo) == true)
 		{
-			empNo = WebUser.No;
+			empNo = WebUser.getNo();
 		}
 		try
 		{
@@ -177,8 +177,8 @@ public class WF_Setting extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 
-		//f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.No + ".jpg");
-		// f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.Name + ".jpg");
+		//f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.getNo() + ".jpg");
+		// f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.getName() + ".jpg");
 
 		//f.PostedFile.InputStream.Close();
 		//f.PostedFile.InputStream.Dispose();
@@ -199,7 +199,7 @@ public class WF_Setting extends DirectoryPageBase
 
 		if (DataType.IsNullOrEmpty(empNo) == true)
 		{
-			empNo = WebUser.No;
+			empNo = WebUser.getNo();
 		}
 		try
 		{
@@ -234,22 +234,22 @@ public class WF_Setting extends DirectoryPageBase
 	public final String ChangeDept_Init()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT a.No,a.Name, NameOfPath, '0' AS  CurrentDept FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
-		ps.Add("FK_Emp", BP.Web.WebUser.No);
+		ps.SQL = "SELECT a.No,a.Name, NameOfPath, '0' AS  CurrentDept FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+		ps.Add("FK_Emp", WebUser.getNo());
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["CURRENTDEPT"].ColumnName = "CurrentDept";
-			dt.Columns["NAMEOFPATH"].ColumnName = "NameOfPath";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("CURRENTDEPT").ColumnName = "CurrentDept";
+			dt.Columns.get("NAMEOFPATH").ColumnName = "NameOfPath";
 		}
 
 		//设置当前的部门.
 		for (DataRow dr : dt.Rows)
 		{
-			if (dr.get("No").toString().equals(WebUser.FK_Dept))
+			if (dr.get("No").toString().equals(WebUser.getFK_Dept()))
 			{
 				dr.set("CurrentDept", "1");
 			}
@@ -272,35 +272,35 @@ public class WF_Setting extends DirectoryPageBase
 		String deptNo = this.GetRequestVal("DeptNo");
 		BP.GPM.Dept dept = new GPM.Dept(deptNo);
 
-		BP.Web.WebUser.FK_Dept = dept.No;
-		BP.Web.WebUser.FK_DeptName = dept.Name;
-		BP.Web.WebUser.FK_DeptNameOfFull = dept.NameOfPath;
+		WebUser.getFK_Dept() = dept.No;
+		WebUser.getFK_Dept()Name = dept.Name;
+		WebUser.getFK_Dept()NameOfFull = dept.NameOfPath;
 
 		////重新设置cookies.
 		//string strs = "";
-		//strs += "@No=" + WebUser.No;
-		//strs += "@Name=" + WebUser.Name;
-		//strs += "@FK_Dept=" + WebUser.FK_Dept;
-		//strs += "@FK_DeptName=" + WebUser.FK_DeptName;
-		//strs += "@FK_DeptNameOfFull=" + WebUser.FK_DeptNameOfFull;
-		//BP.Web.WebUser.SetValToCookie(strs);
+		//strs += "@No=" + WebUser.getNo();
+		//strs += "@Name=" + WebUser.getName();
+		//strs += "@FK_Dept=" + WebUser.getFK_Dept();
+		//strs += "@FK_DeptName=" + WebUser.getFK_Dept()Name;
+		//strs += "@FK_DeptNameOfFull=" + WebUser.getFK_Dept()NameOfFull;
+		//WebUser.SetValToCookie(strs);
 
-		BP.WF.Port.WFEmp emp = new Port.WFEmp(WebUser.No);
+		WFEmp emp = new Port.WFEmp(WebUser.getNo());
 		emp.setStartFlows("");
 		emp.Update();
 
 		try
 		{
-			String sql = "UPDATE Port_Emp Set fk_dept='" + deptNo + "' WHERE no='" + WebUser.No + "'";
+			String sql = "UPDATE Port_Emp Set fk_dept='" + deptNo + "' WHERE no='" + WebUser.getNo() + "'";
 			DBAccess.RunSQL(sql);
-			BP.WF.Dev2Interface.Port_Login(WebUser.No);
+			BP.WF.Dev2Interface.Port_Login(WebUser.getNo());
 		}
 		catch (RuntimeException ex)
 		{
 
 		}
 
-		return "@执行成功,已经切换到｛" + BP.Web.WebUser.FK_DeptName + "｝部门上。";
+		return "@执行成功,已经切换到｛" + WebUser.getFK_Dept()Name + "｝部门上。";
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -320,7 +320,7 @@ public class WF_Setting extends DirectoryPageBase
 		///#region 修改密码.
 	public final String ChangePassword_Init()
 	{
-		if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.AppCenterDBType) == true)
+		if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == true)
 		{
 			return "err@当前是组织结构集成模式，您不能修改密码，请在被集成的系统修改密码。";
 		}
@@ -337,7 +337,7 @@ public class WF_Setting extends DirectoryPageBase
 		String oldPass = this.GetRequestVal("OldPass");
 		String pass = this.GetRequestVal("Pass");
 
-		BP.Port.Emp emp = new Emp(BP.Web.WebUser.No);
+		BP.Port.Emp emp = new Emp(WebUser.getNo());
 		if (emp.CheckPass(oldPass) == false)
 		{
 			return "err@旧密码错误.";

@@ -7,6 +7,7 @@ import BP.Sys.*;
 import BP.Tools.*;
 import BP.Web.*;
 import BP.WF.Data.*;
+import BP.WFEmp;
 import BP.WF.Template.*;
 import java.util.*;
 import java.io.*;
@@ -55,9 +56,9 @@ public class Dev2Interface
 	public static int getTodolist_Todolist()
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 				/*不是授权状态*/
 			if (BP.WF.Glo.getIsEnableTaskPool() == true)
@@ -69,14 +70,14 @@ public class Dev2Interface
 				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp ";
 			}
 
-			ps.Add("FK_Emp", BP.Web.WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 
 				//  BP.DA.Log.DebugWriteInfo(ps.SQL);
 			return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 		}
 
 			/*如果是授权状态, 获取当前委托人的信息. */
-		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
@@ -88,7 +89,7 @@ public class Dev2Interface
 				{
 					ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp ";
 				}
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case SpecFlows:
 				if (BP.WF.Glo.getIsEnableTaskPool() == true)
@@ -100,7 +101,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows();
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case None:
 					/*不是授权状态 */
@@ -113,7 +114,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp ";
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 			default:
 				throw new RuntimeException("no such way...");
@@ -123,13 +124,14 @@ public class Dev2Interface
 
 	/** 
 	 待办工作数量
+	 * @throws Exception 
 	*/
-	public static int getTodolist_EmpWorks()
+	public static int getTodolist_EmpWorks() throws Exception
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 				/*不是授权状态*/
 			if (BP.WF.Glo.getIsEnableTaskPool() == true)
@@ -141,14 +143,14 @@ public class Dev2Interface
 				ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp ";
 			}
 
-			ps.Add("FK_Emp", BP.Web.WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 
 				//  BP.DA.Log.DebugWriteInfo(ps.SQL);
 			return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 		}
 
 			/*如果是授权状态, 获取当前委托人的信息. */
-		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
@@ -161,7 +163,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp ";
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case SpecFlows:
 				if (BP.WF.Glo.getIsEnableTaskPool() == true)
@@ -173,7 +175,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows();
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case None:
 					/*不是授权状态 */
@@ -186,7 +188,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT count(WorkID) as Num FROM WF_EmpWorks WHERE  FK_Emp=" + dbstr + "FK_Emp ";
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 			default:
 				throw new RuntimeException("no such way...");
@@ -200,8 +202,8 @@ public class Dev2Interface
 	public static int getTodolist_CCWorks()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT count(MyPK) as Num FROM WF_CCList WHERE CCTo=" + SystemConfig.AppCenterDBVarStr + "FK_Emp AND Sta=0";
-		ps.Add("FK_Emp", BP.Web.WebUser.No);
+		ps.SQL = "SELECT count(MyPK) as Num FROM WF_CCList WHERE CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND Sta=0";
+		ps.Add("FK_Emp", WebUser.getNo());
 		return DBAccess.RunSQLReturnValInt(ps, 0);
 	}
 	/** 
@@ -209,7 +211,7 @@ public class Dev2Interface
 	*/
 	public static int getTodolist_HungUpNum()
 	{
-		String sql = "SELECT  COUNT(WorkID) AS Num from WF_GenerWorkFlow where WFState=4 and  WorkID in (SELECT distinct WorkID FROM WF_HungUp WHERE Rec='" + BP.Web.WebUser.No + "')";
+		String sql = "SELECT  COUNT(WorkID) AS Num from WF_GenerWorkFlow where WFState=4 and  WorkID in (SELECT distinct WorkID FROM WF_HungUp WHERE Rec='" + WebUser.getNo() + "')";
 		return BP.DA.DBAccess.RunSQLReturnValInt(sql);
 	}
 	/** 
@@ -219,18 +221,18 @@ public class Dev2Interface
 	{
 		String sql;
 		int state = WFState.Runing.getValue();
-		if (WebUser.IsAuthorize)
+		if (WebUser.getIsAuthorize())
 		{
 				/*如果是授权状态.*/
-			WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
-			sql = "SELECT count( distinct A.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) AND A.FK_Flow IN " + emp.getAuthorFlows();
+			WFEmp emp = new WFEmp(WebUser.getNo());
+			sql = "SELECT count( distinct A.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) AND A.FK_Flow IN " + emp.getAuthorFlows();
 			return BP.DA.DBAccess.RunSQLReturnValInt(sql);
 		}
 		else
 		{
 			Paras ps = new Paras();
-			ps.SQL = "SELECT count( distinct A.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) ";
-			ps.Add("FK_Emp", WebUser.No);
+			ps.SQL = "SELECT count( distinct A.WorkID ) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.IsEnable=1 AND (B.IsPass=1 OR B.IsPass<0) ";
+			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 		}
 	}
@@ -241,10 +243,10 @@ public class Dev2Interface
 	public static int getTodolist_Draft()
 	{
 			/*获取数据.*/
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		BP.DA.Paras ps = new BP.DA.Paras();
 		ps.SQL = "SELECT count(a.WorkID ) as Num FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter";
-		ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.No);
+		ps.Add(GenerWorkFlowAttr.Starter, WebUser.getNo());
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 	}
 	/** 
@@ -253,10 +255,10 @@ public class Dev2Interface
 	public static int getTodolist_HuiQian()
 	{
 			/*获取数据.*/
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		BP.DA.Paras ps = new BP.DA.Paras();
 		ps.SQL = "SELECT COUNT(workid) as Num FROM WF_GenerWorkerlist WHERE FK_Emp=" + dbStr + "FK_Emp AND IsPass=90";
-		ps.Add(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.No);
+		ps.Add(GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 	}
 	/** 
@@ -269,15 +271,15 @@ public class Dev2Interface
 
 			/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
-		ps.SQL = "SELECT count(WorkID) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.No + "@%' AND WFState=" + WFState.Complete.getValue();
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		ps.SQL = "SELECT count(WorkID) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' AND WFState=" + WFState.Complete.getValue();
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 			//}
 			//else
 			//{
 			//    Paras ps = new Paras();
-			//    string dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
-			//    ps.SQL = "SELECT count(*) Num FROM V_FlowData WHERE FlowEmps LIKE '%@" + WebUser.No + "%' AND FID=0 AND WFState=" + (int)WFState.Complete;
+			//    string dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+			//    ps.SQL = "SELECT count(*) Num FROM V_FlowData WHERE FlowEmps LIKE '%@" + WebUser.getNo() + "%' AND FID=0 AND WFState=" + (int)WFState.Complete;
 			//    return BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 			//}
 	}
@@ -287,37 +289,37 @@ public class Dev2Interface
 	public static int getTodolist_Sharing()
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Sharing.getValue();
 		String sql;
 		String realSql = null;
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 				/*不是授权状态*/
 			ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ";
-			ps.Add("FK_Emp", BP.Web.WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 		}
 
 			/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
 				ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case SpecFlows:
 				ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows() + " ";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case None:
-					//   WebUser.IsAuthorize = false;
+					//   WebUser.getIsAuthorize() = false;
 					/*不是授权状态*/
 				ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				return BP.DA.DBAccess.RunSQLReturnValInt(ps);
-				//throw new Exception("对方(" + WebUser.No + ")已经取消了授权.");
+				//throw new Exception("对方(" + WebUser.getNo() + ")已经取消了授权.");
 			default:
 				throw new RuntimeException("no such way...");
 		}
@@ -334,11 +336,11 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Takeback.getValue();
 		String sql;
 		String realSql;
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 				/*不是授权状态*/
 				// ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ORDER BY FK_Flow,ADT DESC ";
@@ -347,24 +349,24 @@ public class Dev2Interface
 
 				// ps.SQL = "select v1.*,v2.name,v3.name as ParentName from (" + realSql + ") as v1 left join JXW_Inc v2 on v1.WorkID=v2.OID left join Jxw_Inc V3 on v1.PWorkID = v3.OID ORDER BY v1.ADT DESC";
 
-			ps.Add("FK_Emp", BP.Web.WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 		}
 
 			/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
 				ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case SpecFlows:
 				ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows() + "";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case None:
-				throw new RuntimeException("对方(" + WebUser.No + ")已经取消了授权.");
+				throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
 			default:
 				throw new RuntimeException("no such way...");
 		}
@@ -404,7 +406,7 @@ public class Dev2Interface
 		int i = me.Retrieve(MapExtAttr.FK_MapData, "ND" + Integer.parseInt(fl.No) + "01", MapExtAttr.ExtType, "PageLoadFull");
 		if (i == 0)
 		{
-			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.Name + ")的开始节点设置发起数据,请参考说明书解决.");
+			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
 			return;
 		}
 
@@ -422,7 +424,7 @@ public class Dev2Interface
 			String dtlName = tempStrs[0];
 			DataTable dtlTable = BP.DA.DBAccess.RunSQLReturnTable(sql.replace(dtlName + "=", ""));
 			dtlTable.TableName = dtlName;
-			ds.Tables.Add(dtlTable);
+			ds.Tables.add(dtlTable);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 读取数据.
@@ -444,7 +446,7 @@ public class Dev2Interface
 
 		if (errMsg.length() > 2)
 		{
-			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.Name + ")的开始节点设置发起数据,不完整." + errMsg);
+			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.getName() + ")的开始节点设置发起数据,不完整." + errMsg);
 			return;
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -466,18 +468,18 @@ public class Dev2Interface
 			}
 
 			String starter = dr.get("Starter").toString();
-			if (!starter.equals(BP.Web.WebUser.No))
+			if (!starter.equals(WebUser.getNo()))
 			{
-				BP.Web.WebUser.Exit();
+				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
 				emp.No = starter;
 				if (emp.RetrieveFromDBSources() == 0)
 				{
-					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.Name + ")设置的发起人员:" + emp.No + "不存在。");
+					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.No + "不存在。");
 					continue;
 				}
 
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 			}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -492,7 +494,7 @@ public class Dev2Interface
 			{
 				String refPK = dr.get("MainPK").toString();
 				MapDtls dtls = wk.getHisNode().getMapData().MapDtls; // new MapDtls(nodeTable);
-				for (MapDtl dtl : dtls)
+				for (MapDtl dtl : dtls.ToJavaList())
 				{
 					for (DataTable dt : ds.Tables)
 					{
@@ -628,7 +630,7 @@ public class Dev2Interface
 			///#region 获取track数据.
 		String sqlOfWhere2 = "";
 		String sqlOfWhere1 = "";
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		if (fid == 0)
 		{
@@ -660,27 +662,27 @@ public class Dev2Interface
 		}
 
 		//把列名转化成区分大小写.
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["MYPK"].ColumnName = "MyPK";
-			dt.Columns["ACTIONTYPE"].ColumnName = "ActionType";
-			dt.Columns["ACTIONTYPETEXT"].ColumnName = "ActionTypeText";
-			dt.Columns["FID"].ColumnName = "FID";
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["NDFROM"].ColumnName = "NDFrom";
-			dt.Columns["NDFROMT"].ColumnName = "NDFromT";
-			dt.Columns["NDTO"].ColumnName = "NDTo";
-			dt.Columns["NDTOT"].ColumnName = "NDToT";
-			dt.Columns["EMPFROM"].ColumnName = "EmpFrom";
-			dt.Columns["EMPFROMT"].ColumnName = "EmpFromT";
-			dt.Columns["EMPTO"].ColumnName = "EmpTo";
-			dt.Columns["EMPTOT"].ColumnName = "EmpToT";
-			dt.Columns["RDT"].ColumnName = "RDT";
-			dt.Columns["WORKTIMESPAN"].ColumnName = "WorkTimeSpan";
-			dt.Columns["MSG"].ColumnName = "Msg";
-			dt.Columns["NODEDATA"].ColumnName = "NodeData";
-			dt.Columns["EXER"].ColumnName = "Exer";
-			dt.Columns["TAG"].ColumnName = "Tag";
+			dt.Columns.get("MYPK").ColumnName = "MyPK";
+			dt.Columns.get("ACTIONTYPE").ColumnName = "ActionType";
+			dt.Columns.get("ACTIONTYPETEXT").ColumnName = "ActionTypeText";
+			dt.Columns.get("FID").ColumnName = "FID";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("NDFROM").ColumnName = "NDFrom";
+			dt.Columns.get("NDFROMT").ColumnName = "NDFromT";
+			dt.Columns.get("NDTO").ColumnName = "NDTo";
+			dt.Columns.get("NDTOT").ColumnName = "NDToT";
+			dt.Columns.get("EMPFROM").ColumnName = "EmpFrom";
+			dt.Columns.get("EMPFROMT").ColumnName = "EmpFromT";
+			dt.Columns.get("EMPTO").ColumnName = "EmpTo";
+			dt.Columns.get("EMPTOT").ColumnName = "EmpToT";
+			dt.Columns.get("RDT").ColumnName = "RDT";
+			dt.Columns.get("WORKTIMESPAN").ColumnName = "WorkTimeSpan";
+			dt.Columns.get("MSG").ColumnName = "Msg";
+			dt.Columns.get("NODEDATA").ColumnName = "NodeData";
+			dt.Columns.get("EXER").ColumnName = "Exer";
+			dt.Columns.get("TAG").ColumnName = "Tag";
 		}
 
 		//把track加入里面去.
@@ -698,7 +700,7 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_GenerNDxxxRpt(String fk_flow, String userNo)
 	{
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Rpt WHERE FlowStarter=" + dbstr + "FlowStarter  ORDER BY RDT";
 		ps.Add(GERptAttr.FlowStarter, userNo);
@@ -723,13 +725,13 @@ public class Dev2Interface
 		ps.SQL = "SELECT No,Name,FK_Dept FROM Port_Emp ";
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(ps);
 		dtEmp.TableName = "Emps";
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 
 		ps = new Paras();
 		ps.SQL = "SELECT No,Name FROM Port_Dept ";
 		DataTable dtDept = DBAccess.RunSQLReturnTable(ps);
 		dtDept.TableName = "Depts";
-		ds.Tables.Add(dtDept);
+		ds.Tables.add(dtDept);
 		return ds;
 	}
 	/** 
@@ -746,14 +748,14 @@ public class Dev2Interface
 		ps.SQL = "SELECT No,Name,FK_Dept FROM Port_Emp ";
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(ps);
 		dtEmp.TableName = "Emps";
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 
 
 		ps = new Paras();
 		ps.SQL = "SELECT No,Name FROM Port_Dept ";
 		DataTable dtDept = DBAccess.RunSQLReturnTable(ps);
 		dtDept.TableName = "Depts";
-		ds.Tables.Add(dtDept);
+		ds.Tables.add(dtDept);
 
 		return ds;
 	}
@@ -778,24 +780,24 @@ public class Dev2Interface
 		}
 		else
 		{
-			ps.SQL = "SELECT a.MyPK,A.Title,A.FK_Flow,A.FlowName,A.WorkID,A.Doc,A.Rec,A.RDT,A.FID,B.FK_Node,B.NodeName,B.WFSta FROM WF_CCList A, WF_GenerWorkFlow B WHERE A.CCTo=" + SystemConfig.AppCenterDBVarStr + "FK_Emp AND B.WorkID=A.WorkID";
+			ps.SQL = "SELECT a.MyPK,A.Title,A.FK_Flow,A.FlowName,A.WorkID,A.Doc,A.Rec,A.RDT,A.FID,B.FK_Node,B.NodeName,B.WFSta FROM WF_CCList A, WF_GenerWorkFlow B WHERE A.CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND B.WorkID=A.WorkID";
 			ps.Add("FK_Emp", FK_Emp);
 		}
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["MYPK"].ColumnName = "MyPK";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["DOC"].ColumnName = "DOC";
-			dt.Columns["REC"].ColumnName = "REC";
-			dt.Columns["RDT"].ColumnName = "RDT";
-			dt.Columns["FID"].ColumnName = "FID";
-			dt.Columns["WFSTA"].ColumnName = "WFSta";
+			dt.Columns.get("MYPK").ColumnName = "MyPK";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("DOC").ColumnName = "DOC";
+			dt.Columns.get("REC").ColumnName = "REC";
+			dt.Columns.get("RDT").ColumnName = "RDT";
+			dt.Columns.get("FID").ColumnName = "FID";
+			dt.Columns.get("WFSTA").ColumnName = "WFSta";
 		}
 
 		return dt;
@@ -805,43 +807,43 @@ public class Dev2Interface
 		Paras ps = new Paras();
 		if (FK_Emp == null)
 		{
-			ps.SQL = "SELECT * FROM WF_CCList WHERE Sta=" + SystemConfig.AppCenterDBVarStr + "Sta";
+			ps.SQL = "SELECT * FROM WF_CCList WHERE Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta";
 			ps.Add("Sta", sta.getValue());
 		}
 		else
 		{
-			ps.SQL = "SELECT * FROM WF_CCList WHERE CCTo=" + SystemConfig.AppCenterDBVarStr + "FK_Emp AND Sta=" + SystemConfig.AppCenterDBVarStr + "Sta";
+			ps.SQL = "SELECT * FROM WF_CCList WHERE CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta";
 			ps.Add("FK_Emp", FK_Emp);
 			ps.Add("Sta", sta.getValue());
 		}
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["MYPK"].ColumnName = "MyPK";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["DOC"].ColumnName = "DOC";
-			dt.Columns["REC"].ColumnName = "REC";
-			dt.Columns["RDT"].ColumnName = "RDT";
-			dt.Columns["FID"].ColumnName = "FID";
+			dt.Columns.get("MYPK").ColumnName = "MyPK";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("DOC").ColumnName = "DOC";
+			dt.Columns.get("REC").ColumnName = "REC";
+			dt.Columns.get("RDT").ColumnName = "RDT";
+			dt.Columns.get("FID").ColumnName = "FID";
 		}
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["mypk"].ColumnName = "MyPK";
-			dt.Columns["title"].ColumnName = "Title";
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["nodename"].ColumnName = "NodeName";
-			dt.Columns["fk_node"].ColumnName = "FK_Node";
-			dt.Columns["workid"].ColumnName = "WorkID";
-			dt.Columns["doc"].ColumnName = "DOC";
-			dt.Columns["rec"].ColumnName = "REC";
-			dt.Columns["rdt"].ColumnName = "RDT";
-			dt.Columns["fid"].ColumnName = "FID";
+			dt.Columns.get("mypk").ColumnName = "MyPK";
+			dt.Columns.get("title").ColumnName = "Title";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("nodename").ColumnName = "NodeName";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("doc").ColumnName = "DOC";
+			dt.Columns.get("rec").ColumnName = "REC";
+			dt.Columns.get("rdt").ColumnName = "RDT";
+			dt.Columns.get("fid").ColumnName = "FID";
 		}
 		return dt;
 	}
@@ -899,7 +901,7 @@ public class Dev2Interface
 	*/
 	public static Flows DB_GenerCanStartFlowsOfEntities(String userNo)
 	{
-		if (BP.Sys.SystemConfig.OSDBSrc == OSDBSrc.Database)
+		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			String sql = "";
 			// 采用新算法.
@@ -917,11 +919,11 @@ public class Dev2Interface
 			qo.AddWhereInSQL("No", sql);
 			qo.addAnd();
 			qo.AddWhere(FlowAttr.IsCanStart, true);
-			if (WebUser.IsAuthorize)
+			if (WebUser.getIsAuthorize())
 			{
 				/*如果是授权状态*/
 				qo.addAnd();
-				WF.Port.WFEmp wfEmp = new BP.WF.Port.WFEmp(userNo);
+				WFEmp wfEmp = new WFEmp(userNo);
 				qo.AddWhereIn("No", wfEmp.getAuthorFlows());
 			}
 			qo.addOrderBy("FK_FlowSort", FlowAttr.Idx);
@@ -965,7 +967,7 @@ public class Dev2Interface
 	{
 		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,A.IsStartInMobile, A.Idx";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
-		sql += " WHERE A.No=B.FK_Flow AND A.IsCanStart=1 AND A.FK_FlowSort=C.No  AND FK_Emp='" + WebUser.No + "' ";
+		sql += " WHERE A.No=B.FK_Flow AND A.IsCanStart=1 AND A.FK_FlowSort=C.No  AND FK_Emp='" + WebUser.getNo() + "' ";
 		if (DataType.IsNullOrEmpty(domain) == false)
 		{
 			sql += " AND C.Domain='" + domain + "'";
@@ -975,26 +977,26 @@ public class Dev2Interface
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["ISBATCHSTART"].ColumnName = "IsBatchStart";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-			dt.Columns["FK_FLOWSORTTEXT"].ColumnName = "FK_FlowSortText";
-			dt.Columns["ISSTARTINMOBILE"].ColumnName = "IsStartInMobile";
-			dt.Columns["IDX"].ColumnName = "Idx";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("ISBATCHSTART").ColumnName = "IsBatchStart";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns.get("FK_FLOWSORTTEXT").ColumnName = "FK_FlowSortText";
+			dt.Columns.get("ISSTARTINMOBILE").ColumnName = "IsStartInMobile";
+			dt.Columns.get("IDX").ColumnName = "Idx";
 
 		}
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["no"].ColumnName = "No";
-			dt.Columns["name"].ColumnName = "Name";
-			dt.Columns["isbatchstart"].ColumnName = "IsBatchStart";
-			dt.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
-			dt.Columns["fk_flowsorttext"].ColumnName = "FK_FlowSortText";
-			dt.Columns["isstartinmobile"].ColumnName = "IsStartInMobile";
-			dt.Columns["idx"].ColumnName = "Idx";
+			dt.Columns.get("no").ColumnName = "No";
+			dt.Columns.get("name").ColumnName = "Name";
+			dt.Columns.get("isbatchstart").ColumnName = "IsBatchStart";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+			dt.Columns.get("fk_flowsorttext").ColumnName = "FK_FlowSortText";
+			dt.Columns.get("isstartinmobile").ColumnName = "IsStartInMobile";
+			dt.Columns.get("idx").ColumnName = "Idx";
 		}
 		return dt;
 	}
@@ -1014,7 +1016,7 @@ public class Dev2Interface
 			newRow.set("Name", row.get("Name"));
 			newRow.set("ParentNo", row.get("ParentNo"));
 			newRow.set("ICON", "icon-tree_folder");
-			table.Rows.Add(newRow);
+			table.Rows.add(newRow);
 		}
 
 		for (DataRow row : table.Rows)
@@ -1111,40 +1113,40 @@ public class Dev2Interface
 	public static DataTable DB_GenerDraftDataTable(String flowNo)
 	{
 		/*获取数据.*/
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		BP.DA.Paras ps = new BP.DA.Paras();
 		if (flowNo == null)
 		{
 			ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter ORDER BY RDT";
-			ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.No);
+			ps.Add(GenerWorkFlowAttr.Starter, WebUser.getNo());
 		}
 		else
 		{
 			ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter AND FK_Flow=" + dbStr + "FK_Flow ORDER BY RDT";
 			ps.Add(GenerWorkFlowAttr.FK_Flow, flowNo);
-			ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.No);
+			ps.Add(GenerWorkFlowAttr.Starter, WebUser.getNo());
 		}
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["RDT"].ColumnName = "RDT";
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("RDT").ColumnName = "RDT";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
 		}
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["workid"].ColumnName = "WorkID";
-			dt.Columns["title"].ColumnName = "Title";
-			dt.Columns["rdt"].ColumnName = "RDT";
-			dt.Columns["flownote"].ColumnName = "FlowNote";
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["atpara"].ColumnName = "AtPara";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("title").ColumnName = "Title";
+			dt.Columns.get("rdt").ColumnName = "RDT";
+			dt.Columns.get("flownote").ColumnName = "FlowNote";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("atpara").ColumnName = "AtPara";
 		}
 		return dt;
 	}
@@ -1182,7 +1184,7 @@ public class Dev2Interface
 
 		if (userNo == null)
 		{
-			userNo = BP.Web.WebUser.No;
+			userNo = WebUser.getNo();
 		}
 
 		//执行sql.
@@ -1190,102 +1192,102 @@ public class Dev2Interface
 		ps.SQL = "SELECT * FROM WF_GenerWorkFlow WHERE AtPara LIKE  '%F_" + userNo + "=1%'";
 		if (flowNo != null)
 		{
-			ps.SQL = "SELECT * FROM WF_GenerWorkFlow WHERE AtPara LIKE  '%F_" + userNo + "=1%' AND FK_Flow=" + SystemConfig.AppCenterDBVarStr + "FK_Flow";
+			ps.SQL = "SELECT * FROM WF_GenerWorkFlow WHERE AtPara LIKE  '%F_" + userNo + "=1%' AND FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow";
 			ps.Add("FK_Flow", flowNo);
 		}
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		//添加oracle的处理
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["WFSTA"].ColumnName = "WFSta";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["RDT"].ColumnName = "RDT";
-			dt.Columns["BILLNO"].ColumnName = "BillNo";
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt.Columns["FID"].ColumnName = "FID";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["WFSTATE"].ColumnName = "WFState";
-			dt.Columns["FK_NY"].ColumnName = "FK_NY";
-			dt.Columns["MYNUM"].ColumnName = "MyNum";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["PRI"].ColumnName = "PRI";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["SDTOFFLOW"].ColumnName = "SDTOfFlow";
-			dt.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-			dt.Columns["PWORKID"].ColumnName = "PWorkID";
-			dt.Columns["PNODEID"].ColumnName = "PNodeID";
-			dt.Columns["PFID"].ColumnName = "PFID";
-			dt.Columns["PEMP"].ColumnName = "PEmp";
-			dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt.Columns["TASKSTA"].ColumnName = "TaskSta";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
-			dt.Columns["EMPS"].ColumnName = "Emps";
-			dt.Columns["GUID"].ColumnName = "GUID";
-			dt.Columns["WEEKNUM"].ColumnName = "WeekNum";
-			dt.Columns["TSPAN"].ColumnName = "TSpan";
-			dt.Columns["TODOSTA"].ColumnName = "TodoSta";
-			dt.Columns["SYSTYPE"].ColumnName = "SysType";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("WFSTA").ColumnName = "WFSta";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("RDT").ColumnName = "RDT";
+			dt.Columns.get("BILLNO").ColumnName = "BillNo";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt.Columns.get("FID").ColumnName = "FID";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt.Columns.get("FK_NY").ColumnName = "FK_NY";
+			dt.Columns.get("MYNUM").ColumnName = "MyNum";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("PRI").ColumnName = "PRI";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
+			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+			dt.Columns.get("PNODEID").ColumnName = "PNodeID";
+			dt.Columns.get("PFID").ColumnName = "PFID";
+			dt.Columns.get("PEMP").ColumnName = "PEmp";
+			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+			dt.Columns.get("EMPS").ColumnName = "Emps";
+			dt.Columns.get("GUID").ColumnName = "GUID";
+			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
+			dt.Columns.get("TSPAN").ColumnName = "TSpan";
+			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
 
-			// dt.Columns["CFLOWNO"].ColumnName = "CFlowNo";
-			// dt.Columns["CWORKID"].ColumnName = "CWorkID";
+			// dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
+			// dt.Columns.get("CWORKID").ColumnName = "CWorkID";
 		}
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["workid"].ColumnName = "WorkID";
-			dt.Columns["startername"].ColumnName = "StarterName";
-			dt.Columns["title"].ColumnName = "Title";
-			dt.Columns["wfsta"].ColumnName = "WFSta";
-			dt.Columns["nodename"].ColumnName = "NodeName";
-			dt.Columns["rdt"].ColumnName = "RDT";
-			dt.Columns["billno"].ColumnName = "BillNo";
-			dt.Columns["flownote"].ColumnName = "FlowNote";
-			dt.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["fk_dept"].ColumnName = "FK_Dept";
-			dt.Columns["fid"].ColumnName = "FID";
-			dt.Columns["fk_node"].ColumnName = "FK_Node";
-			dt.Columns["wfstate"].ColumnName = "WFState";
-			dt.Columns["fk_ny"].ColumnName = "FK_NY";
-			dt.Columns["mynum"].ColumnName = "MyNum";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["starter"].ColumnName = "Starter";
-			dt.Columns["sender"].ColumnName = "Sender";
-			dt.Columns["deptname"].ColumnName = "DeptName";
-			dt.Columns["pri"].ColumnName = "PRI";
-			dt.Columns["sdtofnode"].ColumnName = "SDTOfNode";
-			dt.Columns["sdtofflow"].ColumnName = "SDTOfFlow";
-			dt.Columns["pflowno"].ColumnName = "PFlowNo";
-			dt.Columns["pworkid"].ColumnName = "PWorkID";
-			dt.Columns["pnodeid"].ColumnName = "PNodeID";
-			dt.Columns["pfid"].ColumnName = "PFID";
-			dt.Columns["pemp"].ColumnName = "PEmp";
-			dt.Columns["guestno"].ColumnName = "GuestNo";
-			dt.Columns["guestname"].ColumnName = "GuestName";
-			dt.Columns["todoemps"].ColumnName = "TodoEmps";
-			dt.Columns["todoempsnum"].ColumnName = "TodoEmpsNum";
-			dt.Columns["tasksta"].ColumnName = "TaskSta";
-			dt.Columns["atpara"].ColumnName = "AtPara";
-			dt.Columns["emps"].ColumnName = "Emps";
-			dt.Columns["guid"].ColumnName = "GUID";
-			dt.Columns["weeknum"].ColumnName = "WeekNum";
-			dt.Columns["tspan"].ColumnName = "TSpan";
-			dt.Columns["todosta"].ColumnName = "TodoSta";
-			dt.Columns["systype"].ColumnName = "SysType";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("startername").ColumnName = "StarterName";
+			dt.Columns.get("title").ColumnName = "Title";
+			dt.Columns.get("wfsta").ColumnName = "WFSta";
+			dt.Columns.get("nodename").ColumnName = "NodeName";
+			dt.Columns.get("rdt").ColumnName = "RDT";
+			dt.Columns.get("billno").ColumnName = "BillNo";
+			dt.Columns.get("flownote").ColumnName = "FlowNote";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
+			dt.Columns.get("fid").ColumnName = "FID";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("wfstate").ColumnName = "WFState";
+			dt.Columns.get("fk_ny").ColumnName = "FK_NY";
+			dt.Columns.get("mynum").ColumnName = "MyNum";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("starter").ColumnName = "Starter";
+			dt.Columns.get("sender").ColumnName = "Sender";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("pri").ColumnName = "PRI";
+			dt.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+			dt.Columns.get("sdtofflow").ColumnName = "SDTOfFlow";
+			dt.Columns.get("pflowno").ColumnName = "PFlowNo";
+			dt.Columns.get("pworkid").ColumnName = "PWorkID";
+			dt.Columns.get("pnodeid").ColumnName = "PNodeID";
+			dt.Columns.get("pfid").ColumnName = "PFID";
+			dt.Columns.get("pemp").ColumnName = "PEmp";
+			dt.Columns.get("guestno").ColumnName = "GuestNo";
+			dt.Columns.get("guestname").ColumnName = "GuestName";
+			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("tasksta").ColumnName = "TaskSta";
+			dt.Columns.get("atpara").ColumnName = "AtPara";
+			dt.Columns.get("emps").ColumnName = "Emps";
+			dt.Columns.get("guid").ColumnName = "GUID";
+			dt.Columns.get("weeknum").ColumnName = "WeekNum";
+			dt.Columns.get("tspan").ColumnName = "TSpan";
+			dt.Columns.get("todosta").ColumnName = "TodoSta";
+			dt.Columns.get("systype").ColumnName = "SysType";
 
-			// dt.Columns["CFLOWNO"].ColumnName = "CFlowNo";
-			// dt.Columns["CWORKID"].ColumnName = "CWorkID";
+			// dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
+			// dt.Columns.get("CWORKID").ColumnName = "CWorkID";
 		}
 		return dt;
 	}
@@ -1324,71 +1326,71 @@ public class Dev2Interface
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//添加oracle的处理
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["PRI"].ColumnName = "PRI";
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			// dt.Columns["ISREAD"].ColumnName = "IsRead";
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["WFSTATE"].ColumnName = "WFState";
-			dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["PWORKID"].ColumnName = "PWorkID";
-			dt.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["FID"].ColumnName = "FID";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-			dt.Columns["SYSTYPE"].ColumnName = "SysType";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt.Columns["BILLNO"].ColumnName = "BillNo";
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt.Columns["TODOSTA"].ColumnName = "TodoSta";
-			dt.Columns["TASKSTA"].ColumnName = "TaskSta";
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
-			dt.Columns["MYNUM"].ColumnName = "MyNum";
+			dt.Columns.get("PRI").ColumnName = "PRI";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			// dt.Columns.get("ISREAD").ColumnName = "IsRead";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("FID").ColumnName = "FID";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt.Columns.get("BILLNO").ColumnName = "BillNo";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+			dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["pri"].ColumnName = "PRI";
-			dt.Columns["workid"].ColumnName = "WorkID";
-			dt.Columns["title"].ColumnName = "Title";
-			// dt.Columns["ISREAD"].ColumnName = "IsRead";
-			dt.Columns["starter"].ColumnName = "Starter";
-			dt.Columns["startername"].ColumnName = "StarterName";
-			dt.Columns["wfstate"].ColumnName = "WFState";
-			dt.Columns["fk_dept"].ColumnName = "FK_Dept";
-			dt.Columns["deptname"].ColumnName = "DeptName";
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["pworkid"].ColumnName = "PWorkID";
-			dt.Columns["pflowno"].ColumnName = "PFlowNo";
-			dt.Columns["fk_node"].ColumnName = "FK_Node";
-			dt.Columns["nodename"].ColumnName = "NodeName";
-			dt.Columns["fid"].ColumnName = "FID";
-			dt.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
-			dt.Columns["systype"].ColumnName = "SysType";
-			dt.Columns["sdtofnode"].ColumnName = "SDTOfNode";
-			dt.Columns["guestno"].ColumnName = "GuestNo";
-			dt.Columns["guestname"].ColumnName = "GuestName";
-			dt.Columns["billno"].ColumnName = "BillNo";
-			dt.Columns["flownote"].ColumnName = "FlowNote";
-			dt.Columns["todoemps"].ColumnName = "TodoEmps";
-			dt.Columns["todoempsnum"].ColumnName = "TodoEmpsNum";
-			dt.Columns["todosta"].ColumnName = "TodoSta";
-			dt.Columns["tasksta"].ColumnName = "TaskSta";
-			dt.Columns["sender"].ColumnName = "Sender";
-			dt.Columns["atpara"].ColumnName = "AtPara";
-			dt.Columns["mynum"].ColumnName = "MyNum";
+			dt.Columns.get("pri").ColumnName = "PRI";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("title").ColumnName = "Title";
+			// dt.Columns.get("ISREAD").ColumnName = "IsRead";
+			dt.Columns.get("starter").ColumnName = "Starter";
+			dt.Columns.get("startername").ColumnName = "StarterName";
+			dt.Columns.get("wfstate").ColumnName = "WFState";
+			dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("pworkid").ColumnName = "PWorkID";
+			dt.Columns.get("pflowno").ColumnName = "PFlowNo";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("nodename").ColumnName = "NodeName";
+			dt.Columns.get("fid").ColumnName = "FID";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+			dt.Columns.get("systype").ColumnName = "SysType";
+			dt.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+			dt.Columns.get("guestno").ColumnName = "GuestNo";
+			dt.Columns.get("guestname").ColumnName = "GuestName";
+			dt.Columns.get("billno").ColumnName = "BillNo";
+			dt.Columns.get("flownote").ColumnName = "FlowNote";
+			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("todosta").ColumnName = "TodoSta";
+			dt.Columns.get("tasksta").ColumnName = "TaskSta";
+			dt.Columns.get("sender").ColumnName = "Sender";
+			dt.Columns.get("atpara").ColumnName = "AtPara";
+			dt.Columns.get("mynum").ColumnName = "MyNum";
 		}
 
 		return dt;
@@ -1403,7 +1405,7 @@ public class Dev2Interface
 	{
 
 		return null;
-		//BP.Web.WebUser.SignInOfGener2017
+		//WebUser.SignInOfGener2017
 	}
 	/** 
 	 获取当前人员待处理的工作
@@ -1440,14 +1442,14 @@ public class Dev2Interface
 			wfStateSql = "  A.WFState=" + showWhat;
 		}
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql;
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
 			if (fk_node == 0)
 			{
-				if (BP.Sys.SystemConfig.CustomerNo.equals("TianYe"))
+				if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe"))
 				{
 					if (BP.WF.Glo.getIsEnableTaskPool() == true)
 					{
@@ -1490,92 +1492,92 @@ public class Dev2Interface
 			}
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 			//添加oracle的处理
-			if (SystemConfig.AppCenterDBType == DBType.Oracle)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 			{
-				dt.Columns["PRI"].ColumnName = "PRI";
-				dt.Columns["WORKID"].ColumnName = "WorkID";
-				dt.Columns["ISREAD"].ColumnName = "IsRead";
-				dt.Columns["STARTER"].ColumnName = "Starter";
-				dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-				dt.Columns["WFSTATE"].ColumnName = "WFState";
-				dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-				dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-				dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-				dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-				dt.Columns["PWORKID"].ColumnName = "PWorkID";
-				dt.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-				dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-				dt.Columns["NODENAME"].ColumnName = "NodeName";
-				dt.Columns["WORKERDEPT"].ColumnName = "WorkerDept";
-				dt.Columns["TITLE"].ColumnName = "Title";
-				dt.Columns["RDT"].ColumnName = "RDT";
-				dt.Columns["ADT"].ColumnName = "ADT";
-				dt.Columns["SDT"].ColumnName = "SDT";
-				dt.Columns["FK_EMP"].ColumnName = "FK_Emp";
-				dt.Columns["FID"].ColumnName = "FID";
-				dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-				dt.Columns["SYSTYPE"].ColumnName = "SysType";
-				dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-				dt.Columns["PRESSTIMES"].ColumnName = "PressTimes";
-				dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-				dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-				dt.Columns["BILLNO"].ColumnName = "BillNo";
-				dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-				dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-				dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-				dt.Columns["TODOSTA"].ColumnName = "TodoSta";
-				dt.Columns["TASKSTA"].ColumnName = "TaskSta";
-				dt.Columns["LISTTYPE"].ColumnName = "ListType";
-				dt.Columns["SENDER"].ColumnName = "Sender";
-				dt.Columns["ATPARA"].ColumnName = "AtPara";
-				dt.Columns["MYNUM"].ColumnName = "MyNum";
+				dt.Columns.get("PRI").ColumnName = "PRI";
+				dt.Columns.get("WORKID").ColumnName = "WorkID";
+				dt.Columns.get("ISREAD").ColumnName = "IsRead";
+				dt.Columns.get("STARTER").ColumnName = "Starter";
+				dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+				dt.Columns.get("WFSTATE").ColumnName = "WFState";
+				dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+				dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+				dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+				dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+				dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+				dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+				dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+				dt.Columns.get("NODENAME").ColumnName = "NodeName";
+				dt.Columns.get("WORKERDEPT").ColumnName = "WorkerDept";
+				dt.Columns.get("TITLE").ColumnName = "Title";
+				dt.Columns.get("RDT").ColumnName = "RDT";
+				dt.Columns.get("ADT").ColumnName = "ADT";
+				dt.Columns.get("SDT").ColumnName = "SDT";
+				dt.Columns.get("FK_EMP").ColumnName = "FK_Emp";
+				dt.Columns.get("FID").ColumnName = "FID";
+				dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+				dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+				dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+				dt.Columns.get("PRESSTIMES").ColumnName = "PressTimes";
+				dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+				dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+				dt.Columns.get("BILLNO").ColumnName = "BillNo";
+				dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+				dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+				dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+				dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+				dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+				dt.Columns.get("LISTTYPE").ColumnName = "ListType";
+				dt.Columns.get("SENDER").ColumnName = "Sender";
+				dt.Columns.get("ATPARA").ColumnName = "AtPara";
+				dt.Columns.get("MYNUM").ColumnName = "MyNum";
 			}
 
-			if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
-				dt.Columns["pri"].ColumnName = "PRI";
-				dt.Columns["workid"].ColumnName = "WorkID";
-				dt.Columns["isread"].ColumnName = "IsRead";
-				dt.Columns["starter"].ColumnName = "Starter";
-				dt.Columns["startername"].ColumnName = "StarterName";
-				dt.Columns["wfstate"].ColumnName = "WFState";
-				dt.Columns["fk_dept"].ColumnName = "FK_Dept";
-				dt.Columns["deptname"].ColumnName = "DeptName";
-				dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-				dt.Columns["flowname"].ColumnName = "FlowName";
-				dt.Columns["pworkid"].ColumnName = "PWorkID";
-				dt.Columns["pflowno"].ColumnName = "PFlowNo";
-				dt.Columns["fk_node"].ColumnName = "FK_Node";
-				dt.Columns["nodename"].ColumnName = "NodeName";
-				dt.Columns["workerdept"].ColumnName = "WorkerDept";
-				dt.Columns["title"].ColumnName = "Title";
-				dt.Columns["rdt"].ColumnName = "RDT";
-				dt.Columns["adt"].ColumnName = "ADT";
-				dt.Columns["sdt"].ColumnName = "SDT";
-				dt.Columns["fk_emp"].ColumnName = "FK_Emp";
-				dt.Columns["fid"].ColumnName = "FID";
-				dt.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
-				dt.Columns["systype"].ColumnName = "SysType";
-				dt.Columns["sdtofnode"].ColumnName = "SDTOfNode";
-				dt.Columns["presstimes"].ColumnName = "PressTimes";
-				dt.Columns["guestno"].ColumnName = "GuestNo";
-				dt.Columns["guestname"].ColumnName = "GuestName";
-				dt.Columns["billno"].ColumnName = "BillNo";
-				dt.Columns["flownote"].ColumnName = "FlowNote";
-				dt.Columns["todoemps"].ColumnName = "TodoEmps";
-				dt.Columns["todoempsnum"].ColumnName = "TodoEmpsNum";
-				dt.Columns["todosta"].ColumnName = "TodoSta";
-				dt.Columns["tasksta"].ColumnName = "TaskSta";
-				dt.Columns["listtype"].ColumnName = "ListType";
-				dt.Columns["sender"].ColumnName = "Sender";
-				dt.Columns["atpara"].ColumnName = "AtPara";
-				dt.Columns["mynum"].ColumnName = "MyNum";
+				dt.Columns.get("pri").ColumnName = "PRI";
+				dt.Columns.get("workid").ColumnName = "WorkID";
+				dt.Columns.get("isread").ColumnName = "IsRead";
+				dt.Columns.get("starter").ColumnName = "Starter";
+				dt.Columns.get("startername").ColumnName = "StarterName";
+				dt.Columns.get("wfstate").ColumnName = "WFState";
+				dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
+				dt.Columns.get("deptname").ColumnName = "DeptName";
+				dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+				dt.Columns.get("flowname").ColumnName = "FlowName";
+				dt.Columns.get("pworkid").ColumnName = "PWorkID";
+				dt.Columns.get("pflowno").ColumnName = "PFlowNo";
+				dt.Columns.get("fk_node").ColumnName = "FK_Node";
+				dt.Columns.get("nodename").ColumnName = "NodeName";
+				dt.Columns.get("workerdept").ColumnName = "WorkerDept";
+				dt.Columns.get("title").ColumnName = "Title";
+				dt.Columns.get("rdt").ColumnName = "RDT";
+				dt.Columns.get("adt").ColumnName = "ADT";
+				dt.Columns.get("sdt").ColumnName = "SDT";
+				dt.Columns.get("fk_emp").ColumnName = "FK_Emp";
+				dt.Columns.get("fid").ColumnName = "FID";
+				dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+				dt.Columns.get("systype").ColumnName = "SysType";
+				dt.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+				dt.Columns.get("presstimes").ColumnName = "PressTimes";
+				dt.Columns.get("guestno").ColumnName = "GuestNo";
+				dt.Columns.get("guestname").ColumnName = "GuestName";
+				dt.Columns.get("billno").ColumnName = "BillNo";
+				dt.Columns.get("flownote").ColumnName = "FlowNote";
+				dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+				dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+				dt.Columns.get("todosta").ColumnName = "TodoSta";
+				dt.Columns.get("tasksta").ColumnName = "TaskSta";
+				dt.Columns.get("listtype").ColumnName = "ListType";
+				dt.Columns.get("sender").ColumnName = "Sender";
+				dt.Columns.get("atpara").ColumnName = "AtPara";
+				dt.Columns.get("mynum").ColumnName = "MyNum";
 			}
 			return dt;
 		}
 
 		/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
@@ -1637,92 +1639,92 @@ public class Dev2Interface
 				}
 				break;
 			case None:
-				throw new RuntimeException("对方(" + WebUser.No + ")已经取消了授权.");
+				throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
 			default:
 				throw new RuntimeException("no such way...");
 		}
 		DataTable dt2 = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		//添加oracle的处理
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt2.Columns["PRI"].ColumnName = "PRI";
-			dt2.Columns["WORKID"].ColumnName = "WorkID";
-			dt2.Columns["ISREAD"].ColumnName = "IsRead";
-			dt2.Columns["STARTER"].ColumnName = "Starter";
-			dt2.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt2.Columns["WFSTATE"].ColumnName = "WFState";
-			dt2.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt2.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt2.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt2.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt2.Columns["PWORKID"].ColumnName = "PWorkID";
-			dt2.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-			dt2.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt2.Columns["NODENAME"].ColumnName = "NodeName";
-			dt2.Columns["WORKERDEPT"].ColumnName = "WorkerDept";
-			dt2.Columns["TITLE"].ColumnName = "Title";
-			dt2.Columns["RDT"].ColumnName = "RDT";
-			dt2.Columns["ADT"].ColumnName = "ADT";
-			dt2.Columns["SDT"].ColumnName = "SDT";
-			dt2.Columns["FK_EMP"].ColumnName = "FK_Emp";
-			dt2.Columns["FID"].ColumnName = "FID";
-			dt2.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-			dt2.Columns["SYSTYPE"].ColumnName = "SysType";
-			dt2.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt2.Columns["PRESSTIMES"].ColumnName = "PressTimes";
-			dt2.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt2.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt2.Columns["BILLNO"].ColumnName = "BillNo";
-			dt2.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt2.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt2.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt2.Columns["TODOSTA"].ColumnName = "TodoSta";
-			dt2.Columns["TASKSTA"].ColumnName = "TaskSta";
-			dt2.Columns["LISTTYPE"].ColumnName = "ListType";
-			dt2.Columns["SENDER"].ColumnName = "Sender";
-			dt2.Columns["ATPARA"].ColumnName = "AtPara";
-			dt2.Columns["MYNUM"].ColumnName = "MyNum";
+			dt2.Columns.get("PRI").ColumnName = "PRI";
+			dt2.Columns.get("WORKID").ColumnName = "WorkID";
+			dt2.Columns.get("ISREAD").ColumnName = "IsRead";
+			dt2.Columns.get("STARTER").ColumnName = "Starter";
+			dt2.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt2.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt2.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt2.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt2.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt2.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt2.Columns.get("PWORKID").ColumnName = "PWorkID";
+			dt2.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+			dt2.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt2.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt2.Columns.get("WORKERDEPT").ColumnName = "WorkerDept";
+			dt2.Columns.get("TITLE").ColumnName = "Title";
+			dt2.Columns.get("RDT").ColumnName = "RDT";
+			dt2.Columns.get("ADT").ColumnName = "ADT";
+			dt2.Columns.get("SDT").ColumnName = "SDT";
+			dt2.Columns.get("FK_EMP").ColumnName = "FK_Emp";
+			dt2.Columns.get("FID").ColumnName = "FID";
+			dt2.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt2.Columns.get("SYSTYPE").ColumnName = "SysType";
+			dt2.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt2.Columns.get("PRESSTIMES").ColumnName = "PressTimes";
+			dt2.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt2.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt2.Columns.get("BILLNO").ColumnName = "BillNo";
+			dt2.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt2.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt2.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt2.Columns.get("TODOSTA").ColumnName = "TodoSta";
+			dt2.Columns.get("TASKSTA").ColumnName = "TaskSta";
+			dt2.Columns.get("LISTTYPE").ColumnName = "ListType";
+			dt2.Columns.get("SENDER").ColumnName = "Sender";
+			dt2.Columns.get("ATPARA").ColumnName = "AtPara";
+			dt2.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt2.Columns["pri"].ColumnName = "PRI";
-			dt2.Columns["workid"].ColumnName = "WorkID";
-			dt2.Columns["isread"].ColumnName = "IsRead";
-			dt2.Columns["starter"].ColumnName = "Starter";
-			dt2.Columns["startername"].ColumnName = "StarterName";
-			dt2.Columns["wfstate"].ColumnName = "WFState";
-			dt2.Columns["fk_dept"].ColumnName = "FK_Dept";
-			dt2.Columns["deptname"].ColumnName = "DeptName";
-			dt2.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt2.Columns["flowname"].ColumnName = "FlowName";
-			dt2.Columns["pworkid"].ColumnName = "PWorkID";
-			dt2.Columns["pflowno"].ColumnName = "PFlowNo";
-			dt2.Columns["fk_node"].ColumnName = "FK_Node";
-			dt2.Columns["nodename"].ColumnName = "NodeName";
-			dt2.Columns["workerdept"].ColumnName = "WorkerDept";
-			dt2.Columns["title"].ColumnName = "Title";
-			dt2.Columns["rdt"].ColumnName = "RDT";
-			dt2.Columns["adt"].ColumnName = "ADT";
-			dt2.Columns["sdt"].ColumnName = "SDT";
-			dt2.Columns["fk_emp"].ColumnName = "FK_Emp";
-			dt2.Columns["fid"].ColumnName = "FID";
-			dt2.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
-			dt2.Columns["systype"].ColumnName = "SysType";
-			dt2.Columns["sdtofnode"].ColumnName = "SDTOfNode";
-			dt2.Columns["presstimes"].ColumnName = "PressTimes";
-			dt2.Columns["guestno"].ColumnName = "GuestNo";
-			dt2.Columns["guestname"].ColumnName = "GuestName";
-			dt2.Columns["billno"].ColumnName = "BillNo";
-			dt2.Columns["flownote"].ColumnName = "FlowNote";
-			dt2.Columns["todoemps"].ColumnName = "TodoEmps";
-			dt2.Columns["todoempsnum"].ColumnName = "TodoEmpsNum";
-			dt2.Columns["todosta"].ColumnName = "TodoSta";
-			dt2.Columns["tasksta"].ColumnName = "TaskSta";
-			dt2.Columns["listtype"].ColumnName = "ListType";
-			dt2.Columns["sender"].ColumnName = "Sender";
-			dt2.Columns["atpara"].ColumnName = "AtPara";
-			dt2.Columns["mynum"].ColumnName = "MyNum";
+			dt2.Columns.get("pri").ColumnName = "PRI";
+			dt2.Columns.get("workid").ColumnName = "WorkID";
+			dt2.Columns.get("isread").ColumnName = "IsRead";
+			dt2.Columns.get("starter").ColumnName = "Starter";
+			dt2.Columns.get("startername").ColumnName = "StarterName";
+			dt2.Columns.get("wfstate").ColumnName = "WFState";
+			dt2.Columns.get("fk_dept").ColumnName = "FK_Dept";
+			dt2.Columns.get("deptname").ColumnName = "DeptName";
+			dt2.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt2.Columns.get("flowname").ColumnName = "FlowName";
+			dt2.Columns.get("pworkid").ColumnName = "PWorkID";
+			dt2.Columns.get("pflowno").ColumnName = "PFlowNo";
+			dt2.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt2.Columns.get("nodename").ColumnName = "NodeName";
+			dt2.Columns.get("workerdept").ColumnName = "WorkerDept";
+			dt2.Columns.get("title").ColumnName = "Title";
+			dt2.Columns.get("rdt").ColumnName = "RDT";
+			dt2.Columns.get("adt").ColumnName = "ADT";
+			dt2.Columns.get("sdt").ColumnName = "SDT";
+			dt2.Columns.get("fk_emp").ColumnName = "FK_Emp";
+			dt2.Columns.get("fid").ColumnName = "FID";
+			dt2.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+			dt2.Columns.get("systype").ColumnName = "SysType";
+			dt2.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+			dt2.Columns.get("presstimes").ColumnName = "PressTimes";
+			dt2.Columns.get("guestno").ColumnName = "GuestNo";
+			dt2.Columns.get("guestname").ColumnName = "GuestName";
+			dt2.Columns.get("billno").ColumnName = "BillNo";
+			dt2.Columns.get("flownote").ColumnName = "FlowNote";
+			dt2.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt2.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+			dt2.Columns.get("todosta").ColumnName = "TodoSta";
+			dt2.Columns.get("tasksta").ColumnName = "TaskSta";
+			dt2.Columns.get("listtype").ColumnName = "ListType";
+			dt2.Columns.get("sender").ColumnName = "Sender";
+			dt2.Columns.get("atpara").ColumnName = "AtPara";
+			dt2.Columns.get("mynum").ColumnName = "MyNum";
 		}
 		return dt2;
 	}
@@ -1745,9 +1747,9 @@ public class Dev2Interface
 	{
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql;
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
 			if (DataType.IsNullOrEmpty(fk_flow))
@@ -1781,7 +1783,7 @@ public class Dev2Interface
 		}
 
 		/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
@@ -1843,7 +1845,7 @@ public class Dev2Interface
 				}
 				break;
 			case None:
-				throw new RuntimeException("对方(" + WebUser.No + ")已经取消了授权.");
+				throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
 			default:
 				throw new RuntimeException("no such way...");
 		}
@@ -1860,9 +1862,9 @@ public class Dev2Interface
 	{
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql;
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
 			if (DataType.IsNullOrEmpty(fk_flow))
@@ -1898,7 +1900,7 @@ public class Dev2Interface
 		}
 
 		/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
@@ -1914,7 +1916,7 @@ public class Dev2Interface
 					}
 
 					ps.Add("WFState", wfState.getValue());
-					ps.Add("FK_Emp", BP.Web.WebUser.No);
+					ps.Add("FK_Emp", WebUser.getNo());
 				}
 				else
 				{
@@ -1928,7 +1930,7 @@ public class Dev2Interface
 					}
 
 					ps.Add("WFState", wfState.getValue());
-					ps.Add("FK_Emp", BP.Web.WebUser.No);
+					ps.Add("FK_Emp", WebUser.getNo());
 					ps.Add("FK_Flow", fk_flow);
 				}
 				break;
@@ -1945,7 +1947,7 @@ public class Dev2Interface
 					}
 
 					ps.Add("WFState", wfState.getValue());
-					ps.Add("FK_Emp", BP.Web.WebUser.No);
+					ps.Add("FK_Emp", WebUser.getNo());
 				}
 				else
 				{
@@ -1959,12 +1961,12 @@ public class Dev2Interface
 					}
 
 					ps.Add("WFState", wfState.getValue());
-					ps.Add("FK_Emp", BP.Web.WebUser.No);
+					ps.Add("FK_Emp", WebUser.getNo());
 					ps.Add("FK_Flow", fk_flow);
 				}
 				break;
 			case None:
-				throw new RuntimeException("对方(" + WebUser.No + ")已经取消了授权.");
+				throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
 			default:
 				throw new RuntimeException("no such way...");
 		}
@@ -1988,15 +1990,15 @@ public class Dev2Interface
 	{
 		if (userNo == null)
 		{
-			userNo = BP.Web.WebUser.No;
-			if (WebUser.IsAuthorize == false)
+			userNo = WebUser.getNo();
+			if (WebUser.getIsAuthorize() == false)
 			{
 				throw new RuntimeException("@授权登录的模式下不能调用此接口.");
 			}
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + "  OR WFState=" + WFState.AskForReplay.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + " OR WFState=" + WFState.Fix.getValue();
 		/*不是授权状态*/
 		if (BP.WF.Glo.getIsEnableTaskPool() == true)
@@ -2011,9 +2013,9 @@ public class Dev2Interface
 		ps.Add("FK_Emp", userNo);
 
 		//获取授权给他的人员列表.
-		BP.WF.Port.WFEmps emps = new BP.WF.Port.WFEmps();
-		emps.Retrieve(BP.WF.Port.WFEmpAttr.Author, userNo);
-		for (BP.WF.Port.WFEmp emp : emps)
+		WFEmps emps = new WFEmps();
+		emps.Retrieve(WFEmpAttr.Author, userNo);
+		for (WFEmp emp : emps.ToJavaList())
 		{
 			switch (emp.getHisAuthorWay())
 			{
@@ -2056,20 +2058,20 @@ public class Dev2Interface
 	public static DataTable DB_GenerEmpWorksOfDataTable()
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + "  OR WFState=" + WFState.AskForReplay.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + " OR WFState=" + WFState.Fix.getValue();
 		String sql;
 
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
 			ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ORDER BY ADT DESC";
-			ps.Add("FK_Emp", BP.Web.WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnTable(ps);
 		}
 
 		/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
@@ -2082,7 +2084,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ORDER BY ADT DESC";
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case SpecFlows:
 				if (BP.WF.Glo.getIsEnableTaskPool() == true)
@@ -2094,7 +2096,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows() + "   ORDER BY ADT DESC";
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case None:
 				/*不是授权状态*/
@@ -2107,7 +2109,7 @@ public class Dev2Interface
 					ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ORDER BY ADT DESC";
 				}
 
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				return BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 				WebUser.Auth = null; //对方已经取消了授权.
@@ -2126,7 +2128,7 @@ public class Dev2Interface
 	{
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT FK_Flow as No,FlowName,COUNT(*) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + userNo + "@%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " GROUP BY FK_Flow,FlowName";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
@@ -2196,8 +2198,9 @@ public class Dev2Interface
 	 @param pageIdx 页码
 	 @param strFlow 流程编号
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_FlowComplete(String strFlow, int pageSize, int pageIdx)
+	public static DataTable DB_FlowComplete(String strFlow, int pageSize, int pageIdx) throws Exception
 	{
 
 		/* 如果不是删除流程注册表. */
@@ -2224,22 +2227,22 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
-		ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.No + "@%' AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["NUM"].ColumnName = "Num";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("NUM").ColumnName = "Num";
 		}
 
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["num"].ColumnName = "Num";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("num").ColumnName = "Num";
 		}
 
 		return dt;
@@ -2254,51 +2257,51 @@ public class Dev2Interface
 	{
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
-		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.No + "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 		//@史连雨,需要翻译.
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["TYPE"].ColumnName = "Type";
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-			dt.Columns["SYSTYPE"].ColumnName = "SysType";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["TITLE"].ColumnName = "Title";
+			dt.Columns.get("TYPE").ColumnName = "Type";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("TITLE").ColumnName = "Title";
 
-			dt.Columns["WFSTA"].ColumnName = "WFSta";
-			dt.Columns["WFSTATE"].ColumnName = "WFState";
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
+			dt.Columns.get("WFSTA").ColumnName = "WFSta";
+			dt.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
 
-			dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["SDTOFFLOW"].ColumnName = "SDTOfFlow";
-			dt.Columns["PFLOWNO"].ColumnName = "PflowNo";
-			dt.Columns["PWORKID"].ColumnName = "PWorkID";
+			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
+			dt.Columns.get("PFLOWNO").ColumnName = "PflowNo";
+			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
 
-			dt.Columns["PNODEID"].ColumnName = "PNodeID";
-			dt.Columns["PEMP"].ColumnName = "PEmp";
-			dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt.Columns["BILLNO"].ColumnName = "BillNo";
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
+			dt.Columns.get("PNODEID").ColumnName = "PNodeID";
+			dt.Columns.get("PEMP").ColumnName = "PEmp";
+			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt.Columns.get("BILLNO").ColumnName = "BillNo";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
 
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt.Columns["TASKSTA"].ColumnName = "TaskSta";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
-			dt.Columns["EMPS"].ColumnName = "Emps";
-			dt.Columns["DOMAIN"].ColumnName = "Domain";
-			dt.Columns["SENDDT"].ColumnName = "SendDT";
-			dt.Columns["WEEKNUM"].ColumnName = "WeekNum";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+			dt.Columns.get("EMPS").ColumnName = "Emps";
+			dt.Columns.get("DOMAIN").ColumnName = "Domain";
+			dt.Columns.get("SENDDT").ColumnName = "SendDT";
+			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
 		}
 		return dt;
 	}
@@ -2313,7 +2316,7 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + userNo + "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 
@@ -2329,7 +2332,7 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + userNo + "@%' AND T.FK_Flow='" + flowNo + "' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
@@ -2341,7 +2344,7 @@ public class Dev2Interface
 	public static DataTable DB_FlowCompleteAndCC()
 	{
 		DataTable dt = DB_FlowComplete();
-		DataTable ccDT = DB_CCList_CheckOver(WebUser.No);
+		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
 
 		try
 		{
@@ -2370,7 +2373,7 @@ public class Dev2Interface
 
 			}
 			newRow.set("Type", "CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();
@@ -2380,27 +2383,27 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		if (DataType.IsNullOrEmpty(fk_flow))
 		{
 			if (DataType.IsNullOrEmpty(title))
 			{
-				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.No + "@%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow!='010' order by RDT desc";
+				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow!='010' order by RDT desc";
 			}
 			else
 			{
-				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.No + "@%' and Title Like '%" + title + "%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow!='010' order by RDT desc";
+				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' and Title Like '%" + title + "%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow!='010' order by RDT desc";
 			}
 		}
 		else
 		{
 			if (DataType.IsNullOrEmpty(title))
 			{
-				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.No + "@%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow='" + fk_flow + "' order by RDT desc";
+				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow='" + fk_flow + "' order by RDT desc";
 			}
 			else
 			{
-				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.No + "@%' and Title Like '%" + title + "%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow='" + fk_flow + "' order by RDT desc";
+				ps.SQL = "SELECT 'RUNNING' AS Type,* FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' and Title Like '%" + title + "%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " and FK_Flow='" + fk_flow + "' order by RDT desc";
 			}
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
@@ -2410,7 +2413,7 @@ public class Dev2Interface
 	public static DataTable DB_FlowCompleteAndCC2(String fk_flow, String title)
 	{
 		DataTable dt = DB_FlowComplete2(fk_flow, title);
-		DataTable ccDT = DB_CCList_CheckOver(WebUser.No);
+		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
 		try
 		{
 			dt.Columns.Add("MyPK");
@@ -2438,7 +2441,7 @@ public class Dev2Interface
 
 			}
 			newRow.set("Type", "CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();
@@ -2447,8 +2450,9 @@ public class Dev2Interface
 	 获得任务池的工作列表
 	 
 	 @return 任务池的工作列表
+	 * @throws Exception 
 	*/
-	public static DataTable DB_TaskPool()
+	public static DataTable DB_TaskPool() throws Exception
 	{
 		if (BP.WF.Glo.getIsEnableTaskPool() == false)
 		{
@@ -2456,109 +2460,109 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Sharing.getValue();
 		String sql;
 		String realSql = null;
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
 			ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ";
-			ps.Add("FK_Emp", BP.Web.WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnTable(ps);
 		}
 
 		/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
 				ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case SpecFlows:
 				ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows() + " ";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case None:
-				throw new RuntimeException("对方(" + WebUser.No + ")已经取消了授权.");
+				throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
 			default:
 				throw new RuntimeException("no such way...");
 		}
 		//@杜. 这里需要翻译.
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["ISREAD"].ColumnName = "IsRead";
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["WFSTATE"].ColumnName = "WFState";
-			dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["PWORKID"].ColumnName = "PWorkID";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("ISREAD").ColumnName = "IsRead";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
 
-			dt.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["WORKERDEPT"].ColumnName = "WorkerDept";
-			dt.Columns["FK_EMP"].ColumnName = "FK_Emp";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
+			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("WORKERDEPT").ColumnName = "WorkerDept";
+			dt.Columns.get("FK_EMP").ColumnName = "FK_Emp";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 
-			dt.Columns["SYSTYPE"].ColumnName = "SysType";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt.Columns["BILLNO"].ColumnName = "BillNo";
+			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt.Columns.get("BILLNO").ColumnName = "BillNo";
 
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt.Columns["TODOSTA"].ColumnName = "TodoSta";
-			dt.Columns["TASKSTA"].ColumnName = "TaskSta";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
 
-			dt.Columns["LISTTYPE"].ColumnName = "ListType";
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
-			dt.Columns["MYNUM"].ColumnName = "MyNum";
+			dt.Columns.get("LISTTYPE").ColumnName = "ListType";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+			dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["workid"].ColumnName = "WorkID";
-			dt.Columns["isread"].ColumnName = "IsRead";
-			dt.Columns["starter"].ColumnName = "Starter";
-			dt.Columns["startername"].ColumnName = "StarterName";
-			dt.Columns["wfstate"].ColumnName = "WFState";
-			dt.Columns["fk_dept"].ColumnName = "FK_Dept";
-			dt.Columns["deptname"].ColumnName = "DeptName";
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["pworkid"].ColumnName = "PWorkID";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("isread").ColumnName = "IsRead";
+			dt.Columns.get("starter").ColumnName = "Starter";
+			dt.Columns.get("startername").ColumnName = "StarterName";
+			dt.Columns.get("wfstate").ColumnName = "WFState";
+			dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("pworkid").ColumnName = "PWorkID";
 
-			dt.Columns["pflowno"].ColumnName = "PFlowNo";
-			dt.Columns["fk_node"].ColumnName = "FK_Node";
-			dt.Columns["workerdept"].ColumnName = "WorkerDept";
-			dt.Columns["fk_emp"].ColumnName = "FK_Emp";
-			dt.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
+			dt.Columns.get("pflowno").ColumnName = "PFlowNo";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("workerdept").ColumnName = "WorkerDept";
+			dt.Columns.get("fk_emp").ColumnName = "FK_Emp";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
 
-			dt.Columns["systype"].ColumnName = "SysType";
-			dt.Columns["sdtofnode"].ColumnName = "SDTOfNode";
-			dt.Columns["guestno"].ColumnName = "GuestNo";
-			dt.Columns["guestname"].ColumnName = "GuestName";
-			dt.Columns["billno"].ColumnName = "BillNo";
+			dt.Columns.get("systype").ColumnName = "SysType";
+			dt.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+			dt.Columns.get("guestno").ColumnName = "GuestNo";
+			dt.Columns.get("guestname").ColumnName = "GuestName";
+			dt.Columns.get("billno").ColumnName = "BillNo";
 
-			dt.Columns["flownote"].ColumnName = "FlowNote";
-			dt.Columns["todoemps"].ColumnName = "TodoEmps";
-			dt.Columns["todoempsnum"].ColumnName = "TodoEmpsNum";
-			dt.Columns["todosta"].ColumnName = "TodoSta";
-			dt.Columns["tasksta"].ColumnName = "TaskSta";
+			dt.Columns.get("flownote").ColumnName = "FlowNote";
+			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("todosta").ColumnName = "TodoSta";
+			dt.Columns.get("tasksta").ColumnName = "TaskSta";
 
-			dt.Columns["listtype"].ColumnName = "ListType";
-			dt.Columns["sender"].ColumnName = "Sender";
-			dt.Columns["atpara"].ColumnName = "AtPara";
-			dt.Columns["mynum"].ColumnName = "MyNum";
+			dt.Columns.get("listtype").ColumnName = "ListType";
+			dt.Columns.get("sender").ColumnName = "Sender";
+			dt.Columns.get("atpara").ColumnName = "AtPara";
+			dt.Columns.get("mynum").ColumnName = "MyNum";
 		}
 
 
@@ -2577,11 +2581,11 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Takeback.getValue();
 		String sql;
 		String realSql;
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
 			// ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ORDER BY FK_Flow,ADT DESC ";
@@ -2590,102 +2594,102 @@ public class Dev2Interface
 
 			// ps.SQL = "select v1.*,v2.name,v3.name as ParentName from (" + realSql + ") as v1 left join JXW_Inc v2 on v1.WorkID=v2.OID left join Jxw_Inc V3 on v1.PWorkID = v3.OID ORDER BY v1.ADT DESC";
 
-			ps.Add("FK_Emp", BP.Web.WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnTable(ps);
 		}
 
 		/*如果是授权状态, 获取当前委托人的信息. */
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		switch (emp.getHisAuthorWay())
 		{
 			case All:
 				ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND TaskSta=0";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case SpecFlows:
 				ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows() + "";
-				ps.Add("FK_Emp", BP.Web.WebUser.No);
+				ps.Add("FK_Emp", WebUser.getNo());
 				break;
 			case None:
-				throw new RuntimeException("对方(" + WebUser.No + ")已经取消了授权.");
+				throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
 			default:
 				throw new RuntimeException("no such way...");
 		}
 
 		//@杜. 这里需要翻译.
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["ISREAD"].ColumnName = "IsRead";
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["WFSTATE"].ColumnName = "WFState";
-			dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["PWORKID"].ColumnName = "PWorkID";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("ISREAD").ColumnName = "IsRead";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
 
-			dt.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["WORKERDEPT"].ColumnName = "WorkerDept";
-			dt.Columns["FK_EMP"].ColumnName = "FK_Emp";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
+			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("WORKERDEPT").ColumnName = "WorkerDept";
+			dt.Columns.get("FK_EMP").ColumnName = "FK_Emp";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 
-			dt.Columns["SYSTYPE"].ColumnName = "SysType";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt.Columns["BILLNO"].ColumnName = "BillNo";
+			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt.Columns.get("BILLNO").ColumnName = "BillNo";
 
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt.Columns["TODOSTA"].ColumnName = "TodoSta";
-			dt.Columns["TASKSTA"].ColumnName = "TaskSta";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
 
-			dt.Columns["LISTTYPE"].ColumnName = "ListType";
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
-			dt.Columns["MYNUM"].ColumnName = "MyNum";
+			dt.Columns.get("LISTTYPE").ColumnName = "ListType";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+			dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["workid"].ColumnName = "WorkID";
-			dt.Columns["isread"].ColumnName = "IsRead";
-			dt.Columns["starter"].ColumnName = "Starter";
-			dt.Columns["startername"].ColumnName = "StarterName";
-			dt.Columns["wfstate"].ColumnName = "WFState";
-			dt.Columns["fk_dept"].ColumnName = "FK_Dept";
-			dt.Columns["deptname"].ColumnName = "DeptName";
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["pworkid"].ColumnName = "PWorkID";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("isread").ColumnName = "IsRead";
+			dt.Columns.get("starter").ColumnName = "Starter";
+			dt.Columns.get("startername").ColumnName = "StarterName";
+			dt.Columns.get("wfstate").ColumnName = "WFState";
+			dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("pworkid").ColumnName = "PWorkID";
 
-			dt.Columns["pflowno"].ColumnName = "PFlowNo";
-			dt.Columns["fk_node"].ColumnName = "FK_Node";
-			dt.Columns["workerdept"].ColumnName = "WorkerDept";
-			dt.Columns["fk_emp"].ColumnName = "FK_Emp";
-			dt.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
+			dt.Columns.get("pflowno").ColumnName = "PFlowNo";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("workerdept").ColumnName = "WorkerDept";
+			dt.Columns.get("fk_emp").ColumnName = "FK_Emp";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
 
-			dt.Columns["systype"].ColumnName = "SysType";
-			dt.Columns["sdtofnode"].ColumnName = "SDTOfNode";
-			dt.Columns["guestno"].ColumnName = "GuestNo";
-			dt.Columns["guestname"].ColumnName = "GuestName";
-			dt.Columns["billno"].ColumnName = "BillNo";
+			dt.Columns.get("systype").ColumnName = "SysType";
+			dt.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+			dt.Columns.get("guestno").ColumnName = "GuestNo";
+			dt.Columns.get("guestname").ColumnName = "GuestName";
+			dt.Columns.get("billno").ColumnName = "BillNo";
 
-			dt.Columns["flownote"].ColumnName = "FlowNote";
-			dt.Columns["todoemps"].ColumnName = "TodoEmps";
-			dt.Columns["todoempsnum"].ColumnName = "TodoEmpsNum";
-			dt.Columns["todosta"].ColumnName = "TodoSta";
-			dt.Columns["tasksta"].ColumnName = "TaskSta";
+			dt.Columns.get("flownote").ColumnName = "FlowNote";
+			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("todosta").ColumnName = "TodoSta";
+			dt.Columns.get("tasksta").ColumnName = "TaskSta";
 
-			dt.Columns["listtype"].ColumnName = "ListType";
-			dt.Columns["sender"].ColumnName = "Sender";
-			dt.Columns["atpara"].ColumnName = "AtPara";
-			dt.Columns["mynum"].ColumnName = "MyNum";
+			dt.Columns.get("listtype").ColumnName = "ListType";
+			dt.Columns.get("sender").ColumnName = "Sender";
+			dt.Columns.get("atpara").ColumnName = "AtPara";
+			dt.Columns.get("mynum").ColumnName = "MyNum";
 		}
 
 		return dt;
@@ -2709,27 +2713,27 @@ public class Dev2Interface
 	{
 		String sql;
 		int state = WFState.HungUp.getValue();
-		if (WebUser.IsAuthorize)
+		if (WebUser.getIsAuthorize())
 		{
-			WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+			WFEmp emp = new WFEmp(WebUser.getNo());
 			if (DataType.IsNullOrEmpty(fk_flow))
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
 			}
 			else
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.FK_Flow='" + fk_flow + "' AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND  B.IsPass=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.FK_Flow='" + fk_flow + "' AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND  B.IsPass=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
 			}
 		}
 		else
 		{
 			if (DataType.IsNullOrEmpty(fk_flow))
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1   ";
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1   ";
 			}
 			else
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 ";
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 ";
 			}
 		}
 		GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -2743,7 +2747,7 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_GenerDeleteWorkList()
 	{
-		return DB_GenerDeleteWorkList(WebUser.No, null);
+		return DB_GenerDeleteWorkList(WebUser.getNo(), null);
 	}
 	/** 
 	 获得逻辑删除的流程:根据流程编号
@@ -2756,27 +2760,27 @@ public class Dev2Interface
 	{
 		String sql;
 		int state = WFState.Delete.getValue();
-		if (WebUser.IsAuthorize)
+		if (WebUser.getIsAuthorize())
 		{
-			WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+			WFEmp emp = new WFEmp(WebUser.getNo());
 			if (DataType.IsNullOrEmpty(fk_flow))
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
 			}
 			else
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND  B.IsPass=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND  B.IsPass=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
 			}
 		}
 		else
 		{
 			if (DataType.IsNullOrEmpty(fk_flow))
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1   ";
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE  A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1   ";
 			}
 			else
 			{
-				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 ";
+				sql = "SELECT A.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WFState=" + state + " AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 ";
 			}
 		}
 		GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -2798,11 +2802,11 @@ public class Dev2Interface
 	public static DataTable DB_NDxxRpt(String fk_flow, WFState sta)
 	{
 		Flow fl = new Flow(fk_flow);
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql = "SELECT OID,Title,RDT,FID FROM " + fl.getPTable() + " WHERE WFState=" + sta.getValue() + " AND Rec=" + dbstr + "Rec";
 		BP.DA.Paras ps = new BP.DA.Paras();
 		ps.SQL = sql;
-		ps.Add("Rec", BP.Web.WebUser.No);
+		ps.Add("Rec", WebUser.getNo());
 		return DBAccess.RunSQLReturnTable(ps);
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2843,7 +2847,7 @@ public class Dev2Interface
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			int i = gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getPWorkID());
 			String nodes = "";
-			for (GenerWorkerList gwl : gwls)
+			for (GenerWorkerList gwl : gwls.ToJavaList())
 			{
 				DataRow dr = dt.NewRow();
 				dr.set("No", String.valueOf(gwl.getFK_Node()));
@@ -2859,7 +2863,7 @@ public class Dev2Interface
 				dr.set("Rec", gwl.getFK_Emp());
 				dr.set("RecName", gwl.getFK_EmpText());
 				dr.set("IsBackTracking", "0");
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			return dt;
 		}
@@ -2917,7 +2921,7 @@ public class Dev2Interface
 					dr.set("IsBackTracking", "0");
 				}
 
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			if (dt.Rows.size() == 0)
 			{
@@ -2941,21 +2945,21 @@ public class Dev2Interface
 					/*如果当前点是分流，或者是分合流，就不按退回规则计算了。*/
 					sql = "SELECT A.FK_Node AS No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking FROM WF_GenerWorkerlist a, WF_Node b WHERE a.FK_Node=b.NodeID AND a.FID=" + fid + " AND a.WorkID=" + workid + " AND a.FK_Node!=" + fk_node + " AND a.IsPass=1 ORDER BY RDT DESC ";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (SystemConfig.AppCenterDBType == DBType.Oracle)
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 					{
-						dt.Columns["NO"].ColumnName = "No";
-						dt.Columns["NAME"].ColumnName = "Name";
-						dt.Columns["REC"].ColumnName = "Rec";
-						dt.Columns["RECNAME"].ColumnName = "RecName";
-						dt.Columns["ISBACKTRACKING"].ColumnName = "IsBackTracking";
+						dt.Columns.get("NO").ColumnName = "No";
+						dt.Columns.get("NAME").ColumnName = "Name";
+						dt.Columns.get("REC").ColumnName = "Rec";
+						dt.Columns.get("RECNAME").ColumnName = "RecName";
+						dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
 					}
-					if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 					{
-						dt.Columns["no"].ColumnName = "No";
-						dt.Columns["name"].ColumnName = "Name";
-						dt.Columns["rec"].ColumnName = "Rec";
-						dt.Columns["recname"].ColumnName = "RecName";
-						dt.Columns["isbacktracking"].ColumnName = "IsBackTracking";
+						dt.Columns.get("no").ColumnName = "No";
+						dt.Columns.get("name").ColumnName = "Name";
+						dt.Columns.get("rec").ColumnName = "Rec";
+						dt.Columns.get("recname").ColumnName = "RecName";
+						dt.Columns.get("isbacktracking").ColumnName = "IsBackTracking";
 					}
 
 					return dt;
@@ -2975,23 +2979,23 @@ public class Dev2Interface
 
 				dt = DBAccess.RunSQLReturnTable(sql);
 
-				if (SystemConfig.AppCenterDBType == DBType.Oracle)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 				{
-					dt.Columns["NO"].ColumnName = "No";
-					dt.Columns["NAME"].ColumnName = "Name";
-					dt.Columns["REC"].ColumnName = "Rec";
-					dt.Columns["RECNAME"].ColumnName = "RecName";
-					dt.Columns["ISBACKTRACKING"].ColumnName = "IsBackTracking";
-					dt.Columns["ATPARA"].ColumnName = "AtPara"; //参数.
+					dt.Columns.get("NO").ColumnName = "No";
+					dt.Columns.get("NAME").ColumnName = "Name";
+					dt.Columns.get("REC").ColumnName = "Rec";
+					dt.Columns.get("RECNAME").ColumnName = "RecName";
+					dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
+					dt.Columns.get("ATPARA").ColumnName = "AtPara"; //参数.
 				}
-				if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
-					dt.Columns["no"].ColumnName = "No";
-					dt.Columns["name"].ColumnName = "Name";
-					dt.Columns["rec"].ColumnName = "Rec";
-					dt.Columns["recname"].ColumnName = "RecName";
-					dt.Columns["isbacktracking"].ColumnName = "IsBackTracking";
-					dt.Columns["atpara"].ColumnName = "AtPara"; //参数.
+					dt.Columns.get("no").ColumnName = "No";
+					dt.Columns.get("name").ColumnName = "Name";
+					dt.Columns.get("rec").ColumnName = "Rec";
+					dt.Columns.get("recname").ColumnName = "RecName";
+					dt.Columns.get("isbacktracking").ColumnName = "IsBackTracking";
+					dt.Columns.get("atpara").ColumnName = "AtPara"; //参数.
 				}
 				return dt;
 			case ReturnPreviousNode:
@@ -3002,14 +3006,14 @@ public class Dev2Interface
 					/*如果当前点是分流，或者是分合流，就不按退回规则计算了。*/
 					sql = "SELECT A.FK_Node AS No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking, a.AtPara FROM WF_GenerWorkerlist a, WF_Node b WHERE a.FK_Node=b.NodeID AND a.FID=" + fid + " AND a.WorkID=" + workid + " AND a.FK_Node=" + mywnP.getHisNode().getNodeID() + " AND a.IsPass=1 ORDER BY RDT DESC ";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 					{
-						dt.Columns["NO"].ColumnName = "No";
-						dt.Columns["NAME"].ColumnName = "Name";
-						dt.Columns["REC"].ColumnName = "Rec";
-						dt.Columns["RECNAME"].ColumnName = "RecName";
-						dt.Columns["ISBACKTRACKING"].ColumnName = "IsBackTracking";
-						dt.Columns["ATPARA"].ColumnName = "AtPara"; //参数.
+						dt.Columns.get("NO").ColumnName = "No";
+						dt.Columns.get("NAME").ColumnName = "Name";
+						dt.Columns.get("REC").ColumnName = "Rec";
+						dt.Columns.get("RECNAME").ColumnName = "RecName";
+						dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
+						dt.Columns.get("ATPARA").ColumnName = "AtPara"; //参数.
 					}
 					return dt;
 				}
@@ -3024,14 +3028,14 @@ public class Dev2Interface
 					sql = "SELECT A.FK_Node as \"No\",a.FK_NodeText as \"Name\", a.FK_Emp as \"Rec\", a.FK_EmpText as \"RecName\", b.IsBackTracking as \"IsBackTracking\", a.AtPara as \"AtPara\"  FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 AND a.FK_Node=" + mywnP.getHisNode().getNodeID() + "  AND a.AtPara NOT LIKE '%@IsHuiQian=1%' ORDER BY a.RDT DESC ";
 					DataTable mydt = DBAccess.RunSQLReturnTable(sql);
 
-					if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 					{
-						dt.Columns["NO"].ColumnName = "No";
-						dt.Columns["NAME"].ColumnName = "Name";
-						dt.Columns["REC"].ColumnName = "Rec";
-						dt.Columns["RECNAME"].ColumnName = "RecName";
-						dt.Columns["ISBACKTRACKING"].ColumnName = "IsBackTracking";
-						dt.Columns["ATPARA"].ColumnName = "AtPara";
+						dt.Columns.get("NO").ColumnName = "No";
+						dt.Columns.get("NAME").ColumnName = "Name";
+						dt.Columns.get("REC").ColumnName = "Rec";
+						dt.Columns.get("RECNAME").ColumnName = "RecName";
+						dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
+						dt.Columns.get("ATPARA").ColumnName = "AtPara";
 					}
 
 					if (mydt.Rows.size() != 0)
@@ -3040,19 +3044,19 @@ public class Dev2Interface
 					}
 
 					//有可能是跳转过来的节点.//edited by liuxc,2017-05-26,改RDT排序为CDT排序，更准确，以避免有时找错上一步节点的情况发生
-					if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+					if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 					{
 						sql = "SELECT top 1 A.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 ORDER BY a.CDT DESC ";
 					}
-					else if (SystemConfig.AppCenterDBType == DBType.Oracle)
+					else if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 					{
 						sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 AND rownum =1  ORDER BY a.CDT DESC ";
 					}
-					else if (SystemConfig.AppCenterDBType == DBType.MySQL)
+					else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 					{
 						sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 ORDER BY a.CDT DESC LIMIT 1";
 					}
-					else if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+					else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 					{
 						sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 ORDER BY a.CDT DESC LIMIT 1";
 					}
@@ -3063,14 +3067,14 @@ public class Dev2Interface
 
 					dt = DBAccess.RunSQLReturnTable(sql);
 
-					if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 					{
-						dt.Columns["NO"].ColumnName = "No";
-						dt.Columns["NAME"].ColumnName = "Name";
-						dt.Columns["REC"].ColumnName = "Rec";
-						dt.Columns["RECNAME"].ColumnName = "RecName";
-						dt.Columns["ISBACKTRACKING"].ColumnName = "IsBackTracking";
-						dt.Columns["ATPARA"].ColumnName = "AtPara";
+						dt.Columns.get("NO").ColumnName = "No";
+						dt.Columns.get("NAME").ColumnName = "Name";
+						dt.Columns.get("REC").ColumnName = "Rec";
+						dt.Columns.get("RECNAME").ColumnName = "RecName";
+						dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
+						dt.Columns.get("ATPARA").ColumnName = "AtPara";
 					}
 					return dt;
 				}
@@ -3097,7 +3101,7 @@ public class Dev2Interface
 						continue;
 					}
 
-					for (GenerWorkerList gwl : gwls)
+					for (GenerWorkerList gwl : gwls.ToJavaList())
 					{
 						DataRow dr = dt.NewRow();
 						dr.set("No", String.valueOf(gwl.getFK_Node()));
@@ -3114,7 +3118,7 @@ public class Dev2Interface
 							dr.set("IsBackTracking", "0");
 						}
 
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 				}
 				break;
@@ -3139,7 +3143,7 @@ public class Dev2Interface
 					DataRow dr = dt.NewRow();
 					dr.set("No", String.valueOf(toNode.getNodeID()));
 					dr.set("Name", toNode.getName());
-					dr.set("Rec", dt1.Rows[0][0]);
+					dr.set("Rec", dt1.get(0).getValue(0));
 					dr.set("RecName", dt1.Rows[0][1]);
 					if (toNode.getIsBackTracking() == true)
 					{
@@ -3150,21 +3154,21 @@ public class Dev2Interface
 						dr.set("IsBackTracking", "0");
 					}
 
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				break;
 			default:
 				throw new RuntimeException("@没有判断的退回类型。");
 		}
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["REC"].ColumnName = "Rec";
-			dt.Columns["RECNAME"].ColumnName = "RecName";
-			dt.Columns["ISBACKTRACKING"].ColumnName = "IsBackTracking";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("REC").ColumnName = "Rec";
+			dt.Columns.get("RECNAME").ColumnName = "RecName";
+			dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
 		}
 
 		if (dt.Rows.size() == 0)
@@ -3204,7 +3208,7 @@ public class Dev2Interface
 //ORIGINAL LINE: public static DataTable DB_GenerRuning(string userNo, string fk_flow, bool isMyStarter = false, string domain = null)
 	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter, String domain)
 	{
-		String dbStr = SystemConfig.AppCenterDBVarStr;
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 
 		//获取用户当前所在的节点
@@ -3212,23 +3216,23 @@ public class Dev2Interface
 		switch (DBAccess.AppCenterDBType)
 		{
 			case DBType.Oracle:
-				currNode = "(SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.No + "' Order by RDT DESC ) WHERE rownum=1)";
+				currNode = "(SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC ) WHERE rownum=1)";
 				break;
 			case DBType.MySQL:
 			case DBType.PostgreSQL:
-				currNode = "(SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.No + "' Order by RDT DESC LIMIT 1)";
+				currNode = "(SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC LIMIT 1)";
 				break;
 			case DBType.MSSQL:
-				currNode = "(SELECT TOP 1 FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.No + "' Order by RDT DESC)";
+				currNode = "(SELECT TOP 1 FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC)";
 				break;
 			default:
 				break;
 		}
 
 		//授权模式.
-		if (WebUser.IsAuthorize == true)
+		if (WebUser.getIsAuthorize() == true)
 		{
-			WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(userNo);
+			WFEmp emp = new WFEmp(userNo);
 			if (DataType.IsNullOrEmpty(fk_flow))
 			{
 				if (isMyStarter == true)
@@ -3262,7 +3266,7 @@ public class Dev2Interface
 		}
 
 		//非授权模式，
-		if (WebUser.IsAuthorize == false)
+		if (WebUser.getIsAuthorize() == false)
 		{
 
 			if (DataType.IsNullOrEmpty(fk_flow))
@@ -3298,51 +3302,51 @@ public class Dev2Interface
 		}
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["WFSTA"].ColumnName = "WFSta";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["RDT"].ColumnName = "RDT";
-			dt.Columns["BILLNO"].ColumnName = "BillNo";
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt.Columns["FID"].ColumnName = "FID";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["WFSTATE"].ColumnName = "WFState";
-			dt.Columns["FK_NY"].ColumnName = "FK_NY";
-			dt.Columns["MYNUM"].ColumnName = "MyNum";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["PRI"].ColumnName = "PRI";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["SDTOFFLOW"].ColumnName = "SDTOfFlow";
-			dt.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-			dt.Columns["PWORKID"].ColumnName = "PWorkID";
-			dt.Columns["PNODEID"].ColumnName = "PNodeID";
-			dt.Columns["PFID"].ColumnName = "PFID";
-			dt.Columns["PEMP"].ColumnName = "PEmp";
-			dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt.Columns["TASKSTA"].ColumnName = "TaskSta";
-			dt.Columns["ATPARA"].ColumnName = "AtPara";
-			dt.Columns["EMPS"].ColumnName = "Emps";
-			dt.Columns["GUID"].ColumnName = "GUID";
-			dt.Columns["WEEKNUM"].ColumnName = "WeekNum";
-			dt.Columns["TSPAN"].ColumnName = "TSpan";
-			dt.Columns["TODOSTA"].ColumnName = "TodoSta";
-			dt.Columns["SYSTYPE"].ColumnName = "SysType";
-			dt.Columns["CURRNODE"].ColumnName = "CurrNode";
-			//dt.Columns["CFLOWNO"].ColumnName = "CFlowNo";
-			//dt.Columns["CWORKID"].ColumnName = "CWorkID";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("WFSTA").ColumnName = "WFSta";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("RDT").ColumnName = "RDT";
+			dt.Columns.get("BILLNO").ColumnName = "BillNo";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt.Columns.get("FID").ColumnName = "FID";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt.Columns.get("FK_NY").ColumnName = "FK_NY";
+			dt.Columns.get("MYNUM").ColumnName = "MyNum";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("PRI").ColumnName = "PRI";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
+			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+			dt.Columns.get("PNODEID").ColumnName = "PNodeID";
+			dt.Columns.get("PFID").ColumnName = "PFID";
+			dt.Columns.get("PEMP").ColumnName = "PEmp";
+			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+			dt.Columns.get("EMPS").ColumnName = "Emps";
+			dt.Columns.get("GUID").ColumnName = "GUID";
+			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
+			dt.Columns.get("TSPAN").ColumnName = "TSpan";
+			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+			dt.Columns.get("CURRNODE").ColumnName = "CurrNode";
+			//dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
+			//dt.Columns.get("CWORKID").ColumnName = "CWorkID";
 
 		}
 		return dt;
@@ -3354,26 +3358,26 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_TongJi_Runing()
 	{
-		String dbStr = SystemConfig.AppCenterDBVarStr;
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
-		if (WebUser.IsAuthorize)
+		if (WebUser.getIsAuthorize())
 		{
-			WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(BP.Web.WebUser.No);
+			WFEmp emp = new WFEmp(WebUser.getNo());
 			ps.SQL = "SELECT a.FK_Flow,a.FlowName, Count(a.WorkID) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN " + emp.getAuthorFlows() + " GROUP BY A.FK_Flow, A.FlowName";
-			ps.Add("FK_Emp", WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 		}
 		else
 		{
 			ps.SQL = "SELECT a.FK_Flow,a.FlowName, Count(a.WorkID) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0)  GROUP BY A.FK_Flow, A.FlowName";
-			ps.Add("FK_Emp", WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 		}
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["NUM"].ColumnName = "Num";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("NUM").ColumnName = "Num";
 		}
 		return dt;
 	}
@@ -3384,18 +3388,18 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_TongJi_TodoSta()
 	{
-		String dbStr = SystemConfig.AppCenterDBVarStr;
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
-		if (WebUser.IsAuthorize)
+		if (WebUser.getIsAuthorize())
 		{
-			WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(BP.Web.WebUser.No);
+			BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.getNo());
 			ps.SQL = "SELECT a.FK_Flow,a.FlowName, Count(a.WorkID) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0) AND A.FK_Flow IN " + emp.getAuthorFlows() + " GROUP BY A.FK_Flow, A.FlowName";
-			ps.Add("FK_Emp", WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 		}
 		else
 		{
 			ps.SQL = "SELECT a.FK_Flow,a.FlowName, Count(a.WorkID) as Num FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND  (B.IsPass=1 or B.IsPass < 0)  GROUP BY A.FK_Flow, A.FlowName";
-			ps.Add("FK_Emp", WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
@@ -3435,21 +3439,21 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_GenerRuningV2()
 	{
-		String userNo = WebUser.No;
+		String userNo = WebUser.getNo();
 		String fk_flow = null;
 
 		String sql;
 		int state = WFState.Runing.getValue();
-		if (WebUser.IsAuthorize)
+		if (WebUser.getIsAuthorize())
 		{
-			WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(userNo);
+			WFEmp emp = new WFEmp(userNo);
 			if (DataType.IsNullOrEmpty(fk_flow))
 			{
 				sql = "SELECT a.* FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + userNo + "' AND B.IsEnable=1 AND B.IsPass=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
 			}
 			else
 			{
-				sql = "SELECT a.* FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND B.IsPass=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
+				sql = "SELECT a.* FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND B.IsPass=1 AND A.FK_Flow IN " + emp.getAuthorFlows();
 			}
 		}
 		else
@@ -3477,12 +3481,12 @@ public class Dev2Interface
 		if (type.equals("unRead"))
 		{
 			sql = "SELECT LEFT(CONVERT(VARCHAR(20),RDT,120),10) AS SortRDT,Datepart(WEEKDAY, CONVERT(DATETIME,RDT)  + @@DateFirst - 1) AS WeekRDT,"
-				+ "* FROM Sys_SMS WHERE SendTo ='" + WebUser.No + "' AND (IsRead = 0 OR IsRead IS NULL)  ORDER BY RDT DESC";
+				+ "* FROM Sys_SMS WHERE SendTo ='" + WebUser.getNo() + "' AND (IsRead = 0 OR IsRead IS NULL)  ORDER BY RDT DESC";
 		}
 		else
 		{
 			sql = "SELECT LEFT(CONVERT(VARCHAR(20),RDT,120),10) AS SortRDT,Datepart(WEEKDAY, CONVERT(DATETIME,RDT)  + @@DateFirst - 1) AS WeekRDT,"
-				+ "* FROM Sys_SMS WHERE SendTo ='" + WebUser.No + "'  ORDER BY RDT DESC";
+				+ "* FROM Sys_SMS WHERE SendTo ='" + WebUser.getNo() + "'  ORDER BY RDT DESC";
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(sql);
 	}
@@ -3527,7 +3531,7 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_GenerRuning()
 	{
-		DataTable dt = DB_GenerRuning(BP.Web.WebUser.No, null);
+		DataTable dt = DB_GenerRuning(WebUser.getNo(), null);
 
 		/*暂时屏蔽type的拼接，拼接后转json会报错 于庆海修改*/
 		/*dt.Columns.Add("Type");
@@ -3566,7 +3570,7 @@ public class Dev2Interface
 	public static DataTable DB_GenerRuningAndCC()
 	{
 		DataTable dt = DB_GenerRuning();
-		DataTable ccDT = DB_CCList_CheckOver(WebUser.No);
+		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
 		try
 		{
 			dt.Columns.Add("MyPK");
@@ -3592,7 +3596,7 @@ public class Dev2Interface
 				}
 			}
 			newRow.set("Type", "CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();
@@ -3622,7 +3626,7 @@ public class Dev2Interface
 	public static DataTable DB_GenerRuningAndCC2(String name, String fk_flow, String title)
 	{
 		DataTable dt = DB_GenerRuning3(name, fk_flow, title);
-		DataTable ccDT = DB_CCList_CheckOver(WebUser.No);
+		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
 		try
 		{
 			dt.Columns.Add("MyPK");
@@ -3650,7 +3654,7 @@ public class Dev2Interface
 
 			}
 			newRow.set("Type", "CC");
-			dt.Rows.Add(newRow);
+			dt.Rows.add(newRow);
 		}
 		dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();
@@ -3682,8 +3686,8 @@ public class Dev2Interface
 			fromTable = fl.getPTable();
 		}
 
-		String sql = "SELECT a.*, b.Starter,b.Title as STitle,b.ADT,b.WorkID FROM " + fromTable + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.No + "'";
-		// string sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.No + "'";
+		String sql = "SELECT a.*, b.Starter,b.Title as STitle,b.ADT,b.WorkID FROM " + fromTable + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+		// string sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo() + "'";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		return dt;
 	}
@@ -3711,13 +3715,13 @@ public class Dev2Interface
 //ORIGINAL LINE: public static void Port_LoginBySID(string userNo, string sid, string deviceNo = "PC")
 	public static void Port_LoginBySID(String userNo, String sid, String deviceNo)
 	{
-		if (userNo.equals(WebUser.No))
+		if (userNo.equals(WebUser.getNo()))
 		{
 			return;
 		}
 
 
-		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(userNo);
+		WFEmp emp = new WFEmp(userNo);
 
 		String key = "SID_" + deviceNo + userNo;
 		String guid = emp.GetParaString(key);
@@ -3764,7 +3768,7 @@ public class Dev2Interface
 	public static String Port_SMSInfo(String userNo)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT MyPK, EmailTitle  FROM sys_sms where SendTo=" + SystemConfig.AppCenterDBVarStr + "SendTo AND IsAlert=0";
+		ps.SQL = "SELECT MyPK, EmailTitle  FROM sys_sms where SendTo=" + SystemConfig.getAppCenterDBVarStr() + "SendTo AND IsAlert=0";
 		ps.Add("SendTo", userNo);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		String strs = "";
@@ -3773,7 +3777,7 @@ public class Dev2Interface
 			strs += "@" + dr.get(0) + "=" + dr.get(1).toString();
 		}
 		ps = new Paras();
-		ps.SQL = "UPDATE  sys_sms SET IsAlert=1 WHERE  SendTo=" + SystemConfig.AppCenterDBVarStr + "SendTo AND IsAlert=0";
+		ps.SQL = "UPDATE  sys_sms SET IsAlert=1 WHERE  SendTo=" + SystemConfig.getAppCenterDBVarStr() + "SendTo AND IsAlert=0";
 		ps.Add("SendTo", userNo);
 		DBAccess.RunSQL(ps);
 		return strs;
@@ -3824,7 +3828,7 @@ public class Dev2Interface
 
 		String key = "SID_" + logDev;
 
-		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(userNo);
+		WFEmp emp = new WFEmp(userNo);
 
 		//如果第一次登录.
 		String myGuid = emp.GetParaString(key);
@@ -3886,7 +3890,7 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		ps.SQL = "SELECT SID FROM Port_Emp WHERE No=" + SystemConfig.AppCenterDBVarStr + "No";
+		ps.SQL = "SELECT SID FROM Port_Emp WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "No";
 		ps.Add("No", userNo);
 
 		String mysid = DBAccess.RunSQLReturnStringIsNull(ps, null);
@@ -3917,7 +3921,7 @@ public class Dev2Interface
 		if (Glo.getUpdataSID().contains("UPDATE Port_Emp SET SID=") == true)
 		{
 			//判断是否视图，如果为视图则不进行修改 需要翻译
-			if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.AppCenterDBType) == true)
+			if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == true)
 			{
 				return false;
 			}
@@ -3941,7 +3945,7 @@ public class Dev2Interface
 		}
 		catch (RuntimeException ex)
 		{
-			if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.AppCenterDBType) == true)
+			if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == true)
 			{
 				throw new RuntimeException("@执行更新SID失败,您在组织结构集成的时候需要配置一个更新SID的SQL, 比如: update MyUserTable SET SID=@SID WHERE BH='@No'");
 			}
@@ -3971,7 +3975,7 @@ public class Dev2Interface
 			msgDoc += " <hr>打开工作: " + url;
 		}
 
-		String para = "@FK_Flow=" + flowNo + "@WorkID=" + workID + "@FK_Node=" + nodeID + "@Sender=" + BP.Web.WebUser.No;
+		String para = "@FK_Flow=" + flowNo + "@WorkID=" + workID + "@FK_Node=" + nodeID + "@Sender=" + WebUser.getNo();
 		BP.WF.SMS.SendMsg(userNo, title, msgDoc, msgFlag, msgType, para);
 	}
 
@@ -4005,7 +4009,7 @@ public class Dev2Interface
 //ORIGINAL LINE: public static void Port_SendMessage(string sendToEmpNo, string smsDoc, string emailTitle, string msgType, string msgGroupFlag, string sendEmpNo, string openUrl, string pushModel, string msgPK = null, string atParas = null)
 	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel, String msgPK, String atParas)
 	{
-		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(sendToEmpNo);
+		WFEmp emp = new WFEmp(sendToEmpNo);
 		SMS sms = new SMS();
 		if (DataType.IsNullOrEmpty(msgPK) == false)
 		{
@@ -4015,11 +4019,11 @@ public class Dev2Interface
 				return;
 			}
 
-			sms.MyPK = msgPK;
+			sms.setMyPK( msgPK;
 		}
 		else
 		{
-			sms.MyPK = DBAccess.GenerGUID();
+			sms.setMyPK( DBAccess.GenerGUID();
 		}
 
 		sms.setHisEmailSta(MsgSta.UnRun);
@@ -4027,7 +4031,7 @@ public class Dev2Interface
 
 		if (sendEmpNo == null)
 		{
-			sms.setSender(WebUser.No);
+			sms.setSender(WebUser.getNo());
 		}
 		else
 		{
@@ -4056,7 +4060,7 @@ public class Dev2Interface
 			///#endregion 短消息信息
 
 		// 其他属性.
-		sms.setRDT(BP.DA.DataType.CurrentDataTime);
+		sms.setRDT(BP.DA.DataType.getCurrentDataTime());
 
 		sms.setMsgType(msgType); // 消息类型.
 
@@ -4098,17 +4102,17 @@ public class Dev2Interface
 	//            return;
 	//        }
 
-	//        sms.MyPK = msgPK;
+	//        sms.setMyPK( msgPK;
 	//    }
 	//    else
 	//    {
-	//        sms.MyPK = DBAccess.GenerGUID();
+	//        sms.setMyPK( DBAccess.GenerGUID();
 	//    }
 
 	//    sms.HisEmailSta = MsgSta.UnRun;
 	//    if (sender == null)
 	//    {
-	//        sms.Sender = WebUser.No;
+	//        sms.Sender = WebUser.getNo();
 	//    }
 	//    else
 	//    {
@@ -4132,7 +4136,7 @@ public class Dev2Interface
 	//    sms.HisMobileSta = MsgSta.Disable;
 
 	//    // 其他属性.
-	//    sms.RDT = BP.DA.DataType.CurrentDataTime;
+	//    sms.RDT = BP.DA.DataType.getCurrentDataTime();
 
 	//    //消息参数.
 	//    sms.AtPara = paras;
@@ -4168,11 +4172,11 @@ public class Dev2Interface
 	//            return;
 	//        }
 
-	//        sms.MyPK = msgPK;
+	//        sms.setMyPK( msgPK;
 	//    }
 	//    else
 	//    {
-	//        sms.MyPK = DBAccess.GenerGUID();
+	//        sms.setMyPK( DBAccess.GenerGUID();
 	//    }
 
 	//    sms.HisEmailSta = MsgSta.Disable;
@@ -4180,7 +4184,7 @@ public class Dev2Interface
 
 	//    if (sender == null)
 	//    {
-	//        sms.Sender = WebUser.No;
+	//        sms.Sender = WebUser.getNo();
 	//    }
 	//    else
 	//    {
@@ -4195,7 +4199,7 @@ public class Dev2Interface
 	//    sms.Title = title;
 
 	//    // 其他属性.
-	//    sms.RDT = BP.DA.DataType.CurrentDataTime;
+	//    sms.RDT = BP.DA.DataType.getCurrentDataTime();
 
 	//    sms.MsgType = msgType; // 消息类型.
 
@@ -4219,7 +4223,7 @@ public class Dev2Interface
 	public static DataTable Port_GetNewMsg(String userNo, String dateLastTime)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "SendTo AND RDT >" + BP.Sys.SystemConfig.AppCenterDBVarStr + "RDT Group By MsgType";
+		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "SendTo AND RDT >" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "RDT Group By MsgType";
 		ps.Add(BP.WF.SMSAttr.SendTo, userNo);
 		ps.Add(BP.WF.SMSAttr.RDT, dateLastTime);
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
@@ -4234,7 +4238,7 @@ public class Dev2Interface
 	public static DataTable Port_GetNewMsg(String userNo)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "SendTo  Group By MsgType";
+		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "SendTo  Group By MsgType";
 		ps.Add(BP.WF.SMSAttr.SendTo, userNo);
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		return dt;
@@ -4317,7 +4321,7 @@ public class Dev2Interface
 		LocalDateTime d = LocalDateTime.MIN;
 		if (DataType.IsNullOrEmpty(rdt))
 		{
-			t.setRDT(DataType.CurrentDataTimess);
+			t.setRDT(DataType.getCurrentDataTime()ss);
 		}
 		else
 		{
@@ -4333,7 +4337,7 @@ public class Dev2Interface
 
 		if (empNoFrom == null)
 		{
-			t.setEmpFrom(WebUser.No);
+			t.setEmpFrom(WebUser.getNo());
 		}
 		else
 		{
@@ -4342,7 +4346,7 @@ public class Dev2Interface
 
 		if (empNameFrom == null)
 		{
-			t.setEmpFromT(WebUser.Name);
+			t.setEmpFromT(WebUser.getName());
 		}
 		else
 		{
@@ -4356,8 +4360,8 @@ public class Dev2Interface
 
 		if (empNoTo == null)
 		{
-			t.setEmpTo(WebUser.No);
-			t.setEmpToT(WebUser.Name);
+			t.setEmpTo(WebUser.getNo());
+			t.setEmpToT(WebUser.getName());
 		}
 		else
 		{
@@ -4446,21 +4450,21 @@ public class Dev2Interface
 //ORIGINAL LINE: public static void WriteTrackWorkCheck(string flowNo, int currNodeID, Int64 workid, Int64 fid, string msg, string optionName, string fwcView = null)
 	public static void WriteTrackWorkCheck(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName, String fwcView)
 	{
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
 		gwf.RetrieveFromDBSources();
 
 		//求主键 2017.10.6以前的逻辑.
-		String tag = currNodeID + "_" + workid + "_" + fid + "_" + BP.Web.WebUser.No;
+		String tag = currNodeID + "_" + workid + "_" + fid + "_" + WebUser.getNo();
 
 		//求当前是否是会签.  zhangsan,张三;李四;王五;
 		String nodeName = gwf.getNodeName();
 		Node nd = new Node(currNodeID);
 		if (nd.getIsStartNode() == false)
 		{
-			if (gwf.getTodoEmps().contains(WebUser.No + ",") == false)
+			if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
 			{
 				nodeName = nd.getName() + "(会签)";
 			}
@@ -4486,7 +4490,7 @@ public class Dev2Interface
 		ps.Add(TrackAttr.NDFromT, nodeName);
 		ps.Add(TrackAttr.Msg, msg);
 		ps.Add(TrackAttr.Tag, tag);
-		ps.Add(TrackAttr.RDT, DataType.CurrentDataTimess);
+		ps.Add(TrackAttr.RDT, DataType.getCurrentDataTime()ss);
 		int num = DBAccess.RunSQL(ps);
 
 		if (num > 1)
@@ -4507,7 +4511,7 @@ public class Dev2Interface
 
 	public static void WriteTrackWorkCheckForTangRenYiYao(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName)
 	{
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 		//WorkNode wn = new WorkNode(workid, currNodeID);
 		GenerWorkFlow gwf = new GenerWorkFlow();
@@ -4515,10 +4519,10 @@ public class Dev2Interface
 		gwf.RetrieveFromDBSources();
 
 		//求主键 2017.10.6以前的逻辑.
-		String tag = gwf.getParas_LastSendTruckID() + "_" + currNodeID + "_" + workid + "_" + fid + "_" + BP.Web.WebUser.No;
+		String tag = gwf.getParas_LastSendTruckID() + "_" + currNodeID + "_" + workid + "_" + fid + "_" + WebUser.getNo();
 
 		String nodeName = gwf.getNodeName();
-		if (gwf.getTodoEmps().contains(WebUser.No + ",") == false)
+		if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
 		{
 			nodeName = nodeName + "(会签)";
 		}
@@ -4535,7 +4539,7 @@ public class Dev2Interface
 			DBAccess.RunSQL(ps);
 
 			////先删除其他人员写入的数据.
-			////string sql = "DELETE FROM ND" + int.Parse(flowNo) + "Track WHERE  Tag LIKE '" + gwf.Paras_LastSendTruckID + "%' AND EmpFrom='"+BP.Web.WebUser.No+"' ";
+			////string sql = "DELETE FROM ND" + int.Parse(flowNo) + "Track WHERE  Tag LIKE '" + gwf.Paras_LastSendTruckID + "%' AND EmpFrom='"+WebUser.getNo()+"' ";
 			//string sql = "DELETE FROM ND" + int.Parse(flowNo) + "Track WHERE  Tag LIKE '" + gwf.Paras_LastSendTruckID + "%'";
 			//DBAccess.RunSQL(ps);
 			//写入日志
@@ -4548,7 +4552,7 @@ public class Dev2Interface
 			ps.Add(TrackAttr.NDFromT, nodeName);
 			ps.Add(TrackAttr.Msg, msg);
 			ps.Add(TrackAttr.Tag, tag);
-			ps.Add(TrackAttr.RDT, DataType.CurrentDataTimess);
+			ps.Add(TrackAttr.RDT, DataType.getCurrentDataTime()ss);
 			if (DBAccess.RunSQL(ps) == 0)
 			{
 				//如果没有更新到，就写入.
@@ -4568,7 +4572,7 @@ public class Dev2Interface
 	*/
 	public static void WriteTrackDailyLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName)
 	{
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String today = BP.DA.DataType.CurrentData;
 
 		Paras ps = new Paras();
@@ -4576,7 +4580,7 @@ public class Dev2Interface
 		ps.Add(TrackAttr.Msg, msg);
 		ps.Add(TrackAttr.WorkID, workid);
 		ps.Add(TrackAttr.NDFrom, nodeFrom);
-		ps.Add(TrackAttr.EmpFrom, WebUser.No);
+		ps.Add(TrackAttr.EmpFrom, WebUser.getNo());
 		if (DBAccess.RunSQL(ps) == 0)
 		{
 			//如果没有更新到，就写入.
@@ -4595,7 +4599,7 @@ public class Dev2Interface
 	*/
 	public static void WriteTrackWeekLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName)
 	{
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 		LocalDateTime dTime = LocalDateTime.now();
 		LocalDateTime startWeek = dTime.plusDays(1 - Integer.parseInt(String.format("%d", dTime.getDayOfWeek()))); //本周第一天
@@ -4616,7 +4620,7 @@ public class Dev2Interface
 		{
 			sql = "SELECT * FROM ND" + Integer.parseInt(flowNo) +
 				"Track  WHERE  RDT LIKE '" + de.getValue().toString() + "%' AND WorkID=" + workid + "  AND NDFrom='" +
-				nodeFrom + "' AND EmpFrom='" + WebUser.No + "' AND ActionType=" + ActionType.WorkCheck.getValue();
+				nodeFrom + "' AND EmpFrom='" + WebUser.getNo() + "' AND ActionType=" + ActionType.WorkCheck.getValue();
 
 			if (DBAccess.RunSQLReturnCOUNT(sql) != 0)
 			{
@@ -4634,7 +4638,7 @@ public class Dev2Interface
 			ps.Add(TrackAttr.Msg, msg);
 			ps.Add(TrackAttr.WorkID, workid);
 			ps.Add(TrackAttr.NDFrom, nodeFrom);
-			ps.Add(TrackAttr.EmpFrom, WebUser.No);
+			ps.Add(TrackAttr.EmpFrom, WebUser.getNo());
 
 			DBAccess.RunSQL(ps);
 		}
@@ -4655,8 +4659,8 @@ public class Dev2Interface
 	*/
 	public static void WriteTrackMonthLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName)
 	{
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
-		String today = BP.DA.DataType.CurrentData;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String today = BP.DA.DataType.getCurrentDate();
 
 		LocalDateTime dTime = LocalDateTime.now();
 		LocalDateTime startDay = dTime.plusDays(1 - dTime.getDayOfMonth()); //本月第一天
@@ -4679,7 +4683,7 @@ public class Dev2Interface
 		{
 			sql = "SELECT * FROM ND" + Integer.parseInt(flowNo) +
 				"Track  WHERE  RDT LIKE '" + de.getValue().toString() + "%' AND WorkID=" + workid + "  AND NDFrom='" +
-				nodeFrom + "' AND EmpFrom='" + WebUser.No + "' AND ActionType=" + ActionType.WorkCheck.getValue();
+				nodeFrom + "' AND EmpFrom='" + WebUser.getNo() + "' AND ActionType=" + ActionType.WorkCheck.getValue();
 
 			if (DBAccess.RunSQLReturnCOUNT(sql) != 0)
 			{
@@ -4696,7 +4700,7 @@ public class Dev2Interface
 			ps.Add(TrackAttr.Msg, msg);
 			ps.Add(TrackAttr.WorkID, workid);
 			ps.Add(TrackAttr.NDFrom, nodeFrom);
-			ps.Add(TrackAttr.EmpFrom, WebUser.No);
+			ps.Add(TrackAttr.EmpFrom, WebUser.getNo());
 
 			DBAccess.RunSQL(ps);
 		}
@@ -4725,7 +4729,7 @@ public class Dev2Interface
 			return false;
 		}
 
-		String pk = dt.Rows[0][0].toString();
+		String pk = dt.Rows.get(0).getValue(0).toString();
 		sql = "UPDATE " + table + " SET " + TrackAttr.ActionTypeText + "='" + label + "' WHERE MyPK=" + pk;
 		BP.DA.DBAccess.RunSQL(sql);
 		return true;
@@ -4751,7 +4755,7 @@ public class Dev2Interface
 			return false;
 		}
 
-		String pk = dt.Rows[0][0].toString();
+		String pk = dt.Rows.get(0).getValue(0).toString();
 		sql = "UPDATE " + table + " SET " + TrackAttr.ActionTypeText + "='" + label + "' WHERE MyPK=" + pk;
 		BP.DA.DBAccess.RunSQL(sql);
 		return true;
@@ -4775,13 +4779,13 @@ public class Dev2Interface
 	public static String GetCheckInfo(String flowNo, long workId, int nodeFrom, String isNullAsVal)
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
-		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + WebUser.No + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
+		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + WebUser.getNo() + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0)
 		{
 			return isNullAsVal;
 		}
-		String checkinfo = dt.Rows[0][0].toString();
+		String checkinfo = dt.Rows.get(0).getValue(0).toString();
 		if (DataType.IsNullOrEmpty(checkinfo))
 		{
 			return isNullAsVal;
@@ -4799,7 +4803,7 @@ public class Dev2Interface
 		{
 			return "";
 		}
-		String checkinfo = dt.Rows[0][0].toString();
+		String checkinfo = dt.Rows.get(0).getValue(0).toString();
 		if (DataType.IsNullOrEmpty(checkinfo))
 		{
 			return "";
@@ -4827,7 +4831,7 @@ public class Dev2Interface
 			//return fwc.FWCDefInfo;
 			return null;
 		}
-		String checkinfo = dt.Rows[0][0].toString();
+		String checkinfo = dt.Rows.get(0).getValue(0).toString();
 		return checkinfo;
 	}
 	/** 
@@ -4841,20 +4845,20 @@ public class Dev2Interface
 	public static void DeleteCheckInfo(String flowNo, long workId, int nodeFrom)
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
-		String sql = "DELETE FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + WebUser.No + "' AND WorkID=" + workId;
+		String sql = "DELETE FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + WebUser.getNo() + "' AND WorkID=" + workId;
 		BP.DA.DBAccess.RunSQL(sql);
 	}
 	public static String GetAskForHelpReInfo(String flowNo, long workId, int nodeFrom)
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
-		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.AskforHelp.getValue() + " AND EmpFrom='" + WebUser.No + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
+		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.AskforHelp.getValue() + " AND EmpFrom='" + WebUser.getNo() + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0)
 		{
 			return "";
 		}
 
-		String checkinfo = dt.Rows[0][0].toString();
+		String checkinfo = dt.Rows.get(0).getValue(0).toString();
 		return checkinfo;
 	}
 
@@ -4872,7 +4876,7 @@ public class Dev2Interface
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE " + table + " SET Msg=" + dbstr + "Msg  WHERE ActionType=" + dbstr +
 			"ActionType and WorkID=" + dbstr + "WorkID and NDFrom=" + dbstr + "NDFrom";
@@ -4892,7 +4896,7 @@ public class Dev2Interface
 	*/
 	public static void SetBillNo(String flowNo, long workID, String newBillNo)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET BillNo=" + dbstr + "BillNo  WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add("BillNo", newBillNo);
@@ -4940,10 +4944,10 @@ public class Dev2Interface
 
 		if (parentEmpNo == null)
 		{
-			parentEmpNo = WebUser.No;
+			parentEmpNo = WebUser.getNo();
 		}
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET PFlowNo=" + dbstr + "PFlowNo, PWorkID=" + dbstr + "PWorkID,PNodeID=" + dbstr + "PNodeID,PEmp=" + dbstr + "PEmp WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.PFlowNo, pgwf.getFK_Flow());
@@ -4977,8 +4981,9 @@ public class Dev2Interface
 	 
 	 @param flowNo 流程编号
 	 @return 返回当前操作员创建的工作
+	 * @throws Exception 
 	*/
-	public static Work Flow_GenerWork(String flowNo)
+	public static Work Flow_GenerWork(String flowNo) throws Exception
 	{
 		Flow fl = new Flow(flowNo);
 		Work wk = fl.NewWork();
@@ -5041,7 +5046,7 @@ public class Dev2Interface
 		}
 		catch (RuntimeException ex)
 		{
-			throw new RuntimeException("@删除前错误，" + ex.StackTrace);
+			throw new RuntimeException("@删除前错误，" + ex.getStackTrace());
 		}
 		return "删除成功";
 	}
@@ -5050,7 +5055,7 @@ public class Dev2Interface
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workID);
 		gwf.RetrieveFromDBSources();
-		if (!gwf.getStarter().equals(WebUser.No) && WebUser.IsAdmin == false)
+		if (!gwf.getStarter().equals(WebUser.getNo()) && WebUser.getIsAdmin() == false)
 		{
 			return "err@流程不是您发起的，或者您不是管理员所以您不能删除该草稿。";
 		}
@@ -5058,7 +5063,7 @@ public class Dev2Interface
 		//删除流程。
 		gwf.Delete();
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 		Paras ps = new Paras();
 
@@ -5076,7 +5081,7 @@ public class Dev2Interface
 		ps.Add("OID", workID);
 		BP.DA.DBAccess.RunSQL(ps);
 
-		BP.DA.Log.DefaultLogWriteLineInfo(WebUser.Name + "删除了FlowNo 为'" + flowNo + "',workID为'" + workID + "'的数据");
+		BP.DA.Log.DefaultLogWriteLineInfo(WebUser.getName() + "删除了FlowNo 为'" + flowNo + "',workID为'" + workID + "'的数据");
 
 		return "草稿删除成功";
 	}
@@ -5133,14 +5138,14 @@ public class Dev2Interface
 			//删除子线程
 			GenerWorkFlows gwfs = new GenerWorkFlows();
 			gwfs.Retrieve(GenerWorkFlowAttr.FID, workID);
-			for (GenerWorkFlow item : gwfs)
+			for (GenerWorkFlow item : gwfs.ToJavaList())
 			{
 				Flow_DoDeleteFlowByFlag(item.getFK_Flow(), item.getWorkID(), "删除子流程:" + msg, false);
 			}
 			//删除子流程
 			gwfs = new GenerWorkFlows();
 			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workID);
-			for (GenerWorkFlow item : gwfs)
+			for (GenerWorkFlow item : gwfs.ToJavaList())
 			{
 				Flow_DoDeleteFlowByFlag(item.getFK_Flow(), item.getWorkID(), "删除子流程:" + msg, false);
 			}
@@ -5206,20 +5211,20 @@ public class Dev2Interface
 			throw new RuntimeException("没有查询到相关业务实例");
 		}
 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras pas = new Paras();
-		switch (SystemConfig.AppCenterDBType)
+		switch (SystemConfig.getAppCenterDBType())
 		{
-			case DBType.MSSQL:
+			case MSSQL:
 				pas.SQL = "SELECT TOP 1 * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + dbstr + "WorkID  AND NDTo=" + dbstr + "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") ORDER BY RDT DESC";
 				break;
-			case DBType.Oracle:
+			case Oracle:
 				pas.SQL = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track  WHERE WorkID=" + dbstr + "WorkID  AND NDTo=" + dbstr + "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") AND ROWNUM=1 ORDER BY RDT DESC ";
 				break;
-			case DBType.MySQL:
+			case MySQL:
 				pas.SQL = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track  WHERE WorkID=" + dbstr + "WorkID AND NDTo=" + dbstr + "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") ORDER BY RDT DESC limit 0,1 ";
 				break;
-			case DBType.PostgreSQL:
+			case PostgreSQL:
 				pas.SQL = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track  WHERE WorkID=" + dbstr + "WorkID AND NDTo=" + dbstr + "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") ORDER BY RDT DESC limit 1 ";
 				break;
 			default:
@@ -5261,7 +5266,7 @@ public class Dev2Interface
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workid);
 
-		for (GenerWorkFlow item : gwfs)
+		for (GenerWorkFlow item : gwfs.ToJavaList())
 		{
 			try
 			{
@@ -5353,7 +5358,7 @@ public class Dev2Interface
 				if (subFlow.getIsAutoSendSubFlowOver() == 2)
 				{
 					Flow fl = new Flow(gwf.getPFlowNo());
-					String flowOver = BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getPFlowNo(), gwf.getPWorkID(), "父流程[" + fl.Name + "],WorkID为[" + gwf.getPWorkID() + "]成功结束");
+					String flowOver = BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getPFlowNo(), gwf.getPWorkID(), "父流程[" + fl.getName() + "],WorkID为[" + gwf.getPWorkID() + "]成功结束");
 					return flowOver;
 				}
 
@@ -5375,13 +5380,13 @@ public class Dev2Interface
 				{
 					//主流程自动运行到一下节点
 					SendReturnObjs returnObjs = BP.WF.Dev2Interface.Node_SendWork(slFlowNo, slWorkID);
-					String sendSuccess = "同级子流程[" + fl.Name + "]程自动运行到下一个节点，发送过程如下：\n @接收人" + returnObjs.getVarAcceptersName() + "\n @下一步[" + returnObjs.getVarCurrNodeName() + "]启动";
+					String sendSuccess = "同级子流程[" + fl.getName() + "]程自动运行到下一个节点，发送过程如下：\n @接收人" + returnObjs.getVarAcceptersName() + "\n @下一步[" + returnObjs.getVarCurrNodeName() + "]启动";
 					return sendSuccess;
 				}
 				//结束父流程
 				if (subFlow.getIsAutoSendSLSubFlowOver() == 2)
 				{
-					return BP.WF.Dev2Interface.Flow_DoFlowOver(slFlowNo, slWorkID, "同级子流程流程[" + fl.Name + "],WorkID为[" + slWorkID + "]成功结束");
+					return BP.WF.Dev2Interface.Flow_DoFlowOver(slFlowNo, slWorkID, "同级子流程流程[" + fl.getName() + "],WorkID为[" + slWorkID + "]成功结束");
 				}
 
 			}
@@ -5403,7 +5408,7 @@ public class Dev2Interface
 	public static int Node_GetNextStepNode(String fk_flow, long workid)
 	{
 		////检查当前人员是否可以执行当前工作.
-		//if (BP.WF.Dev2Interface.Flow_CheckIsCanDoCurrentWork( workid, WebUser.No) == false)
+		//if (BP.WF.Dev2Interface.Flow_CheckIsCanDoCurrentWork( workid, WebUser.getNo()) == false)
 		//    throw new Exception("@当前人员不能执行此节点上的工作.");
 
 		//获取当前nodeID.
@@ -5427,7 +5432,7 @@ public class Dev2Interface
 	public static int Flow_GetCurrentNode(long workID)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+		ps.SQL = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("WorkID", workID);
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 	}
@@ -5470,7 +5475,7 @@ public class Dev2Interface
 	public static DataTable Flow_GetWorkerList(long workID)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM WF_GenerWorkerList WHERE IsEnable=1 AND IsPass=0 AND WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+		ps.SQL = "SELECT * FROM WF_GenerWorkerList WHERE IsEnable=1 AND IsPass=0 AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("WorkID", workID);
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
@@ -5517,17 +5522,17 @@ public class Dev2Interface
 		Node nd = new Node(Integer.parseInt(flowNo + "01"));
 		if (nd.getIsGuestNode() == true)
 		{
-			if (!BP.Web.WebUser.No.equals("Guest"))
+			if (!WebUser.getNo().equals("Guest"))
 			{
-				throw new RuntimeException("@当前节点是来宾处理节点，但是目前您{" + BP.Web.WebUser.No + "}不是来宾帐号。");
+				throw new RuntimeException("@当前节点是来宾处理节点，但是目前您{" + WebUser.getNo() + "}不是来宾帐号。");
 			}
 			return true;
 		}
 
 		Paras ps = new Paras();
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		int num = 0;
-		if (SystemConfig.OSDBSrc == OSDBSrc.Database)
+		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			switch (nd.getHisDeliveryWay())
 			{
@@ -5539,15 +5544,7 @@ public class Dev2Interface
 					num = DBAccess.RunSQLReturnValInt(ps);
 					break;
 				case ByDept:
-					if (SystemConfig.OSModel == OSModel.OneOne)
-					{
-						ps.SQL = "SELECT COUNT(A.FK_Node) as Num FROM WF_NodeDept A, Port_Emp B WHERE A.FK_Dept= B.FK_Dept AND  A.FK_Node=" + dbstr + "FK_Node AND B.No=" + dbstr + "FK_Emp";
-						ps.Add("FK_Node", nd.getNodeID());
-						ps.Add("FK_Emp", userNo);
-						num = DBAccess.RunSQLReturnValInt(ps);
-					}
-					else
-					{
+					 
 						ps.SQL = "SELECT COUNT(A.FK_Node) as Num FROM WF_NodeDept A, Port_DeptEmp B WHERE A.FK_Dept= B.FK_Dept AND  A.FK_Node=" + dbstr + "FK_Node AND B.FK_Emp=" + dbstr + "FK_Emp";
 						ps.Add("FK_Node", nd.getNodeID());
 						ps.Add("FK_Emp", userNo);
@@ -5561,7 +5558,7 @@ public class Dev2Interface
 							ps.Add("FK_Emp", userNo);
 							num = DBAccess.RunSQLReturnValInt(ps);
 						}
-					}
+					 
 					break;
 				case ByBindEmp:
 					ps.SQL = "SELECT COUNT(*) AS Num FROM WF_NodeEmp WHERE FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr + "FK_Node";
@@ -5603,7 +5600,7 @@ public class Dev2Interface
 			{
 				case ByStation:
 					//var obj = BP.DA.DataType.GetPortalInterfaceSoapClientInstance();
-					//DataTable mydt = obj.GetEmpHisStations(BP.Web.WebUser.No);
+					//DataTable mydt = obj.GetEmpHisStations(WebUser.getNo());
 					//string mystas = BP.DA.DBAccess.GenerWhereInPKsString(mydt);
 					//ps.SQL = "SELECT COUNT(FK_Node) AS Num FROM WF_NodeStation WHERE FK_Node=" + dbstr + "FK_Node AND FK_Station IN(" + mystas + ")";
 					//ps.Add("FK_Node", nd.NodeID);
@@ -5611,7 +5608,7 @@ public class Dev2Interface
 					break;
 				case ByDept:
 					//var objMy = BP.DA.DataType.GetPortalInterfaceSoapClientInstance();
-					//DataTable mydtDept = objMy.GetEmpHisDepts(BP.Web.WebUser.No);
+					//DataTable mydtDept = objMy.GetEmpHisDepts(WebUser.getNo());
 					//string dtps = BP.DA.DBAccess.GenerWhereInPKsString(mydtDept);
 
 					//ps.SQL = "SELECT COUNT(FK_Node) as Num FROM WF_NodeDept WHERE FK_Dept IN (" + dtps + ") B.FK_Dept AND  A.FK_Node=" + dbstr + "FK_Node";
@@ -5758,7 +5755,7 @@ public class Dev2Interface
 				return true;
 			}
 
-			String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + fl.No + "' AND WFState >=2 ";
+			String sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkID + " AND FK_Flow='" + fl.getNo() + "' AND WFState >=2 ";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() == 0)
 			{
@@ -5817,7 +5814,7 @@ public class Dev2Interface
 	*/
 	public static boolean Flow_CheckAllSubFlowIsOver(int nodeID, long workID)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE  PNodeID=" + dbstr + "PNodeID AND PWorkID=" + dbstr + "PWorkID AND WFState!=" + dbstr + "WFState ";
 		ps.Add(GenerWorkFlowAttr.PNodeID, nodeID);
@@ -5887,7 +5884,7 @@ public class Dev2Interface
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 判断是否是开始节点.
 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT c.RunModel,c.IsGuestNode, a.GuestNo, a.TaskSta, a.WFState, IsPass FROM WF_GenerWorkFlow a, WF_GenerWorkerlist b, WF_Node c WHERE  b.FK_Node=c.NodeID AND a.WorkID=b.WorkID AND a.FK_Node=b.FK_Node  AND b.FK_Emp=" + dbstr + "FK_Emp AND (b.IsEnable=1 OR b.IsPass>=70 OR IsPass=0)   AND a.WorkID=" + dbstr + "WorkID ";
 		ps.Add("FK_Emp", userNo);
@@ -5942,7 +5939,7 @@ public class Dev2Interface
 			}
 		}
 
-		int i = Integer.parseInt(dt.Rows[0][0].toString());
+		int i = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
 
 		RunModel rm = RunModel.forValue(i);
 		switch (rm)
@@ -5982,7 +5979,7 @@ public class Dev2Interface
 			return true;
 		}
 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		//ps.SQL = "SELECT c.RunModel FROM WF_GenerWorkFlow a , WF_GenerWorkerlist b, WF_Node c WHERE a.FK_Node=" + dbstr + "FK_Node AND b.FK_Node=c.NodeID AND a.WorkID=b.WorkID AND a.FK_Node=b.FK_Node  AND b.FK_Emp=" + dbstr + "FK_Emp AND b.IsEnable=1 AND a.workid=" + dbstr + "WorkID";
 		//ps.Add("FK_Node", nodeID);
@@ -5996,7 +5993,7 @@ public class Dev2Interface
 			return false;
 		}
 
-		int i = Integer.parseInt(dt.Rows[0][0].toString());
+		int i = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
 		TaskSta TaskStai = TaskSta.forValue(Integer.parseInt(dt.Rows[0][1].toString()));
 		if (TaskStai == TaskSta.Sharing)
 		{
@@ -6049,7 +6046,7 @@ public class Dev2Interface
 	{
 		if (userNo == null)
 		{
-			userNo = WebUser.No;
+			userNo = WebUser.getNo();
 		}
 		if (userNo.equals("admin"))
 		{
@@ -6057,13 +6054,13 @@ public class Dev2Interface
 		}
 
 		//先从轨迹里判断.
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT count(MyPK) as Num FROM ND" + Integer.parseInt(flowNo) + "Track WHERE (WorkID=" + dbStr + "WorkID OR FID=" + dbStr + "FID) AND (EmpFrom=" + dbStr + "Emp1 OR EmpTo=" + dbStr + "Emp2)";
 		ps.Add(BP.WF.TrackAttr.WorkID, workid);
 		ps.Add(BP.WF.TrackAttr.FID, workid);
-		ps.Add("Emp1", WebUser.No);
-		ps.Add("Emp2", WebUser.No);
+		ps.Add("Emp1", WebUser.getNo());
+		ps.Add("Emp2", WebUser.getNo());
 
 		if (BP.DA.DBAccess.RunSQLReturnValInt(ps) > 1)
 		{
@@ -6087,7 +6084,7 @@ public class Dev2Interface
 				throw new RuntimeException("@流程引擎数据被删除.");
 			}
 		}
-		if (fk_dept.equals(BP.Web.WebUser.FK_Dept))
+		if (fk_dept.equals(WebUser.getFK_Dept()))
 		{
 			return true;
 		}
@@ -6138,14 +6135,14 @@ public class Dev2Interface
 		/*找到当前待办的工作人员*/
 		GenerWorkerLists wls = new GenerWorkerLists(workID, gwf.getFK_Node());
 		String toEmp = "", toEmpName = "";
-		String mailTitle = "催办:" + gwf.getTitle() + ", 发送人:" + WebUser.Name;
+		String mailTitle = "催办:" + gwf.getTitle() + ", 发送人:" + WebUser.getName();
 		//如果子线程找不到流转日志并且父流程编号不为空，在父流程进行查找接收人
 		if (wls.size() == 0 && gwf.getFID() != 0)
 		{
 			wls = new GenerWorkerLists(gwf.getFID(), gwf.getFK_Node());
 		}
 
-		for (GenerWorkerList wl : wls)
+		for (GenerWorkerList wl : wls.ToJavaList())
 		{
 			if (wl.getIsEnable() == false)
 			{
@@ -6173,7 +6170,7 @@ public class Dev2Interface
 		{
 			String subMsg = "";
 			GenerWorkFlows gwfs = gwf.getHisSubFlowGenerWorkFlows();
-			for (GenerWorkFlow item : gwfs)
+			for (GenerWorkFlow item : gwfs.ToJavaList())
 			{
 				subMsg += "@已经启动对子线程:" + item.getTitle() + "的催办,消息如下:";
 				subMsg += Flow_DoPress(item.getWorkID(), msg, false);
@@ -6260,7 +6257,7 @@ public class Dev2Interface
 		title = title.replace('"', '“');
 		title = title.replace('"', '”');
 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + dbstr + "Title WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.Title, title);
@@ -6305,7 +6302,7 @@ public class Dev2Interface
 	*/
 	public static String Flow_Schedule(long workid, int toNodeID, String toEmper)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 		Node nd = new Node(toNodeID);
 		Emp emp = new Emp(toEmper);
@@ -6347,7 +6344,7 @@ public class Dev2Interface
 		gwl.setIsEnable(true);
 		gwl.setIsRead(false);
 		gwl.setWhoExeIt(nd.getWhoExeIt());
-		//  gwl.Sender = BP.Web.WebUser.No;
+		//  gwl.Sender = WebUser.getNo();
 		gwl.setHungUpTimes(0);
 		gwl.setFID(gwf.getFID());
 		gwl.setFK_Dept(emp.FK_Dept);
@@ -6411,7 +6408,7 @@ public class Dev2Interface
 			tc.setWorkID(workid); //工作ID.
 			tc.setWorker(vals[3]); //工作人员.
 			tc.setSubFlowNo(subFlow); //子流程.
-			tc.MyPK = tc.getFK_Node() + "_" + tc.getWorkID() + "_" + idx;
+			tc.setMyPK( tc.getFK_Node() + "_" + tc.getWorkID() + "_" + idx;
 			tc.setTodolistModel(TodolistModel.forValue(todomodel)); //处理模式.
 			tc.Save();
 			idx++;
@@ -6425,13 +6422,13 @@ public class Dev2Interface
 			cidx = 0;
 			for (int i = 0; i < ccs.length; i++)
 			{
-				if (tangible.StringHelper.isNullOrWhiteSpace(ccs[i]) || ccs[i].equals("0"))
+				if (DataType.IsNullOrEmpty(ccs[i]) || ccs[i].equals("0"))
 				{
 					continue;
 				}
 
 				sa = new SelectAccper();
-				sa.MyPK = nodeid + "_" + workid + "_" + ccs[i];
+				sa.setMyPK( nodeid + "_" + workid + "_" + ccs[i];
 				sa.setFK_Emp(ccs[i].trim());
 				sa.setEmpName(ccNames[i].trim());
 				sa.setFK_Node(nodeid);
@@ -6452,14 +6449,14 @@ public class Dev2Interface
 			//gwf.WFSta = WFSta.Runing;
 			gwf.setWFState(WFState.Blank);
 
-			gwf.setStarter(WebUser.No);
-			gwf.setStarterName(WebUser.Name);
+			gwf.setStarter(WebUser.getNo());
+			gwf.setStarterName(WebUser.getName());
 
 			gwf.setFK_Flow(flowNo);
 			BP.WF.Flow fl = new Flow(flowNo);
 			gwf.setFK_FlowSort(fl.getFK_FlowSort());
 			gwf.setSysType(fl.getSysType());
-			gwf.setFK_Dept(WebUser.FK_Dept);
+			gwf.setFK_Dept(WebUser.getFK_Dept());
 
 			gwf.setTransferCustomType(runType);
 			gwf.Insert();
@@ -6492,15 +6489,15 @@ public class Dev2Interface
 			//  gwf.WFSta = WFSta.Runing;
 			gwf.setWFState(WFState.Blank);
 
-			gwf.setStarter(WebUser.No);
-			gwf.setStarterName(WebUser.Name);
+			gwf.setStarter(WebUser.getNo());
+			gwf.setStarterName(WebUser.getName());
 
 			gwf.setFK_Flow(flowNo);
 			BP.WF.Flow fl = new Flow(flowNo);
 			gwf.setFK_FlowSort(fl.getFK_FlowSort());
 			gwf.setSysType(fl.getSysType());
 
-			gwf.setFK_Dept(WebUser.FK_Dept);
+			gwf.setFK_Dept(WebUser.getFK_Dept());
 
 			gwf.setTransferCustomType(runType);
 			gwf.Insert();
@@ -6549,7 +6546,7 @@ public class Dev2Interface
 			tc.setWorkID(workid); //工作ID.
 			tc.setWorker(vals[3]); //工作人员.
 			tc.setSubFlowNo(subFlow); //子流程.
-			tc.MyPK = tc.getFK_Node() + "_" + tc.getWorkID() + "_" + idx;
+			tc.setMyPK( tc.getFK_Node() + "_" + tc.getWorkID() + "_" + idx);
 			tc.setTodolistModel(TodolistModel.forValue(todomodel)); //处理模式.
 			tc.Save();
 			idx++;
@@ -6563,13 +6560,13 @@ public class Dev2Interface
 			cidx = 0;
 			for (int i = 0; i < ccs.length; i++)
 			{
-				if (tangible.StringHelper.isNullOrWhiteSpace(ccs[i]) || ccs[i].equals("0"))
+				if (DataType.IsNullOrEmpty(ccs[i]) || ccs[i].equals("0"))
 				{
 					continue;
 				}
 
 				sa = new SelectAccper();
-				sa.MyPK = nodeid + "_" + workid + "_" + ccs[i];
+				sa.setMyPK( nodeid + "_" + workid + "_" + ccs[i];
 				sa.setFK_Emp(ccs[i].trim());
 				sa.setEmpName(ccNames[i].trim());
 				sa.setFK_Node(nodeid);
@@ -6618,7 +6615,7 @@ public class Dev2Interface
 		if (fl.getFlowDeleteRole() == FlowDeleteRole.ByMyStarter)
 		{
 			Paras ps = new Paras();
-			ps.SQL = "SELECT WorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID AND Starter=" + SystemConfig.AppCenterDBVarStr + "Starter";
+			ps.SQL = "SELECT WorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND Starter=" + SystemConfig.getAppCenterDBVarStr() + "Starter";
 			ps.Add("WorkID", workid);
 			ps.Add("Starter", userNo);
 			String user = BP.DA.DBAccess.RunSQLReturnStringIsNull(ps, null);
@@ -6634,7 +6631,7 @@ public class Dev2Interface
 		if (fl.getFlowDeleteRole() == FlowDeleteRole.ByNodeSetting)
 		{
 			Paras ps = new Paras();
-			ps.SQL = "SELECT WorkID FROM WF_GenerWorkerlist A, WF_Node B  WHERE A.FK_Node=B.NodeID  AND B.DelEnable=1  AND A.WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID AND A.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+			ps.SQL = "SELECT WorkID FROM WF_GenerWorkerlist A, WF_Node B  WHERE A.FK_Node=B.NodeID  AND B.DelEnable=1  AND A.WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND A.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 			ps.Add("WorkID", workid);
 			ps.Add("FK_Emp", userNo);
 			String user = BP.DA.DBAccess.RunSQLReturnStringIsNull(ps, null);
@@ -6675,13 +6672,13 @@ public class Dev2Interface
 	public static String Flow_BBSDelete(String flowNo, String mypk, String username)
 	{
 		Paras pss = new Paras();
-		pss.SQL = "SELECT EMPFROM FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK=" + SystemConfig.AppCenterDBVarStr + "MyPK ";
+		pss.SQL = "SELECT EMPFROM FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK ";
 		pss.Add("MyPK", mypk);
 		String str = BP.DA.DBAccess.RunSQLReturnString(pss);
 		if (str.equals(username) || username.equals(str))
 		{
 			Paras ps = new Paras();
-			ps.SQL = "DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK=" + SystemConfig.AppCenterDBVarStr + "MyPK ";
+			ps.SQL = "DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK ";
 			ps.Add("MyPK", mypk);
 			BP.DA.DBAccess.RunSQL(ps);
 			return "删除成功.";
@@ -6707,15 +6704,15 @@ public class Dev2Interface
 			throw new RuntimeException("@ 设置关注错误：没有找到 WorkID= " + workid + " 的实例。");
 		}
 
-		String isFocus = gwf.GetParaString("F_" + WebUser.No, "0"); //edit by liuxc,2016-10-22,修复关注/取消关注逻辑错误
+		String isFocus = gwf.GetParaString("F_" + WebUser.getNo(), "0"); //edit by liuxc,2016-10-22,修复关注/取消关注逻辑错误
 
 		if (isFocus.equals("0"))
 		{
-			gwf.SetPara("F_" + WebUser.No, "1");
+			gwf.SetPara("F_" + WebUser.getNo(), "1");
 		}
 		else
 		{
-			gwf.SetPara("F_" + WebUser.No, "0");
+			gwf.SetPara("F_" + WebUser.getNo(), "0");
 		}
 
 		gwf.DirectUpdate();
@@ -6779,7 +6776,7 @@ public class Dev2Interface
 		//删除当前节点人员信息.
 		gwl.Delete(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
 
-		for (Emp item : emps)
+		for (Emp item : emps.ToJavaList())
 		{
 			//插入一条信息，让调整的人员显示待办.
 			gwl.setFK_Emp(item.No);
@@ -6820,15 +6817,15 @@ public class Dev2Interface
 			throw new RuntimeException("@ 设置关注错误：没有找到 WorkID= " + workid + " 的实例。");
 		}
 
-		String isFocus = gwf.GetParaString("C_" + WebUser.No, "0");
+		String isFocus = gwf.GetParaString("C_" + WebUser.getNo(), "0");
 
 		if (isFocus.equals("0"))
 		{
-			gwf.SetPara("C_" + WebUser.No, "1");
+			gwf.SetPara("C_" + WebUser.getNo(), "1");
 		}
 		else
 		{
-			gwf.SetPara("C_" + WebUser.No, "0");
+			gwf.SetPara("C_" + WebUser.getNo(), "0");
 		}
 
 		gwf.DirectUpdate();
@@ -6854,7 +6851,7 @@ public class Dev2Interface
 		 *  4. TodoEmps 停留的待办人员.
 		 */
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
-		ds.Tables.Add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+		ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
 
 		/*节点信息: 节点信息表,存储每个环节的节点信息数据.
@@ -6863,13 +6860,13 @@ public class Dev2Interface
 		 * X,Y 节点图形位置，如果使用进度图就不需要了.
 		*/
 		NodeSimples nds = new NodeSimples(gwf.getFK_Flow());
-		ds.Tables.Add(nds.ToDataTableField("WF_Node"));
+		ds.Tables.add(nds.ToDataTableField("WF_Node"));
 
 		/*
 		 * 节点的连接线. 
 		 */
 		Directions dirs = new Directions(gwf.getFK_Flow());
-		ds.Tables.Add(dirs.ToDataTableField("WF_Direction"));
+		ds.Tables.add(dirs.ToDataTableField("WF_Direction"));
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 运动轨迹
@@ -6910,7 +6907,7 @@ public class Dev2Interface
 			dr.set("RDT", drTrack.get("RDT"));
 			dr.set("SDT", "");
 			dr.set("IsPass", 1); // gwl.IsPassInt; //是否通过.
-			dtHistory.Rows.Add(dr);
+			dtHistory.Rows.add(dr);
 		}
 
 		//如果流程没有完成.
@@ -6920,13 +6917,13 @@ public class Dev2Interface
 			dr.set("FK_Node", gwf.getFK_Node());
 			//dr["ActionType"] = drTrack["NDFrom"];
 			dr.set("NodeName", gwf.getNodeName());
-			dr.set("EmpNo", WebUser.No);
-			dr.set("EmpName", WebUser.Name);
-			dr.set("DeptName", WebUser.FK_DeptName); //部门名称.
+			dr.set("EmpNo", WebUser.getNo());
+			dr.set("EmpName", WebUser.getName());
+			dr.set("DeptName", WebUser.getFK_Dept()Name); //部门名称.
 			dr.set("RDT", DataType.CurrentData);
 			dr.set("SDT", "");
 			dr.set("IsPass", 0); // gwl.IsPassInt; //是否通过.
-			dtHistory.Rows.Add(dr);
+			dtHistory.Rows.add(dr);
 		}
 
 		if (dtHistory.Rows.size() == 0)
@@ -6938,11 +6935,11 @@ public class Dev2Interface
 			dr.set("EmpName", gwf.getStarterName());
 			dr.set("RDT", gwf.getRDT());
 			dr.set("SDT", gwf.getSDTOfNode());
-			dtHistory.Rows.Add(dr);
+			dtHistory.Rows.add(dr);
 		}
 
 		// 给 dtHistory runModel 赋值.
-		for (NodeSimple nd : nds)
+		for (NodeSimple nd : nds.ToJavaList())
 		{
 			int runMode = nd.GetValIntByKey(NodeAttr.RunModel);
 			for (DataRow dr : dtHistory.Rows)
@@ -6953,14 +6950,14 @@ public class Dev2Interface
 				}
 			}
 		}
-		ds.Tables.Add(dtHistory);
+		ds.Tables.add(dtHistory);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 运动轨迹
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 游离态
 		TransferCustoms tranfs = new TransferCustoms(workID);
-		ds.Tables.Add(tranfs.ToDataTableField("WF_TransferCustom"));
+		ds.Tables.add(tranfs.ToDataTableField("WF_TransferCustom"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 游离态
 
@@ -6996,12 +6993,12 @@ public class Dev2Interface
 //ORIGINAL LINE: public static bool Flow_AuthorSave(string Author, int AuthorWay, string AuthorFlows = null, string AuthorDate = null, string AuthorToDate = null)
 	public static boolean Flow_AuthorSave(String Author, int AuthorWay, String AuthorFlows, String AuthorDate, String AuthorToDate)
 	{
-		if (WebUser.No == null)
+		if (WebUser.getNo() == null)
 		{
 			throw new RuntimeException("@ 非法用户，请执行登录后再试。");
 		}
 
-		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.No);
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		emp.setAuthor(Author);
 		emp.setAuthorWay(AuthorWay);
 		emp.setAuthorDate(BP.DA.DataType.CurrentData);
@@ -7032,13 +7029,13 @@ public class Dev2Interface
 	*/
 	public static boolean Flow_AuthorCancel()
 	{
-		if (WebUser.No == null)
+		if (WebUser.getNo() == null)
 		{
 			throw new RuntimeException("@ 非法用户，请执行登录后再试。");
 		}
 
-		BP.WF.Port.WFEmp myau = new BP.WF.Port.WFEmp(WebUser.No);
-		BP.DA.Log.DefaultLogWriteLineInfo("取消授权:" + WebUser.No + "取消了对(" + myau.getAuthor() + ")的授权。");
+		WFEmp myau = new WFEmp(WebUser.getNo());
+		BP.DA.Log.DefaultLogWriteLineInfo("取消授权:" + WebUser.getNo() + "取消了对(" + myau.getAuthor() + ")的授权。");
 		myau.setAuthor("");
 		myau.setAuthorWay(0);
 		myau.setAuthorDate("");
@@ -7053,12 +7050,12 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_AuthorEmps()
 	{
-		if (WebUser.No == null)
+		if (WebUser.getNo() == null)
 		{
 			throw new RuntimeException("@ 非法用户，请执行登录后再试。");
 		}
 
-		return BP.DA.DBAccess.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + WebUser.No + "'");
+		return BP.DA.DBAccess.RunSQLReturnTable("SELECT * FROM WF_EMP WHERE AUTHOR='" + WebUser.getNo() + "'");
 	}
 	/** 
 	 获取委托给当前登录人的流程待办信息
@@ -7068,13 +7065,13 @@ public class Dev2Interface
 	*/
 	public static DataTable DB_AuthorEmpWorks(String empNo)
 	{
-		if (WebUser.No == null)
+		if (WebUser.getNo() == null)
 		{
 			throw new RuntimeException("@ 非法用户，请执行登录后再试。");
 		}
 
-		WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(empNo);
-		if (!DataType.IsNullOrEmpty(emp.getAuthor()) && emp.getAuthor().equals(WebUser.No) && emp.getAuthorIsOK() == true)
+		BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(empNo);
+		if (!DataType.IsNullOrEmpty(emp.getAuthor()) && emp.getAuthor().equals(WebUser.getNo()) && emp.getAuthorIsOK() == true)
 		{
 			String sql = "";
 			String wfSql = "  WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + "  OR WFState=" + WFState.AskForReplay.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + " OR WFState=" + WFState.Fix.getValue();
@@ -7125,7 +7122,7 @@ public class Dev2Interface
 	*/
 	public static String GetFlowParas(int nodeID, long workid)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT Paras FROM WF_GenerWorkerlist WHERE FK_Node=" + dbstr + "FK_Node AND WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkerListAttr.FK_Node, nodeID);
@@ -7259,7 +7256,7 @@ public class Dev2Interface
 
 			if (DataType.IsNullOrEmpty(paras) == false && Glo.getIsEnableTrackRec() == true)
 			{
-				String dbstr = SystemConfig.AppCenterDBVarStr;
+				String dbstr = SystemConfig.getAppCenterDBVarStr();
 				Paras ps = new Paras();
 				ps.SQL = "UPDATE WF_GenerWorkerlist SET AtPara=" + dbstr + "Paras WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node";
 				ps.Add(GenerWorkerListAttr.Paras, paras);
@@ -7346,7 +7343,7 @@ public class Dev2Interface
 		//    rpt.SetValByKey(GERptAttr.PWorkID, PWorkID);
 
 		//    //忘记了增加这句话.
-		//    rpt.SetValByKey(GERptAttr.PEmp, WebUser.No);
+		//    rpt.SetValByKey(GERptAttr.PEmp, WebUser.getNo());
 
 		//    //要处理单据编号 BillNo .
 		//    if (this.BillNoFormat != "")
@@ -7358,8 +7355,8 @@ public class Dev2Interface
 		//    }
 
 		//    rpt.SetValByKey(GERptAttr.FID, 0);
-		//    rpt.SetValByKey(GERptAttr.FlowStartRDT, BP.DA.DataType.CurrentDataTime);
-		//    rpt.SetValByKey(GERptAttr.FlowEnderRDT, BP.DA.DataType.CurrentDataTime);
+		//    rpt.SetValByKey(GERptAttr.FlowStartRDT, BP.DA.DataType.getCurrentDataTime());
+		//    rpt.SetValByKey(GERptAttr.FlowEnderRDT, BP.DA.DataType.getCurrentDataTime());
 		//    rpt.SetValByKey(GERptAttr.MyNum, 0);
 		//    rpt.SetValByKey(GERptAttr.WFState, (int)WFState.Blank);
 		//    rpt.SetValByKey(GERptAttr.FlowStarter, emp.No);
@@ -7423,7 +7420,7 @@ public class Dev2Interface
 		//                }
 		//                else
 		//                {
-		//                    if (this.StartLimitRole == WF.StartLimitRole.OnlyOneSubFlow)
+		//                    if (this.StartLimitRole == StartLimitRole.OnlyOneSubFlow)
 		//                        dtlData.SaveAsOID(geDtlFromData.OID); //为子流程的时候，仅仅允许被调用1次.
 		//                    else
 		//                        dtlData.InsertAsNew();
@@ -7456,14 +7453,14 @@ public class Dev2Interface
 		//            if (athDB_N.HisAttachmentUploadType == AttachmentUploadType.Single)
 		//            {
 		//                /*如果是单附件.*/
-		//                athDB_N.MyPK = athDB_N.FK_FrmAttachment + "_" + wk.OID;
+		//                athDB_N.setMyPK( athDB_N.FK_FrmAttachment + "_" + wk.OID;
 		//                if (athDB_N.IsExits == true)
 		//                    continue; /*说明上一个节点或者子线程已经copy过了, 但是还有子线程向合流点传递数据的可能，所以不能用break.*/
 		//                athDB_N.Insert();
 		//            }
 		//            else
 		//            {
-		//                athDB_N.MyPK = athDB_N.UploadGUID + "_" + athDB_N.FK_MapData + "_" + wk.OID;
+		//                athDB_N.setMyPK( athDB_N.UploadGUID + "_" + athDB_N.FK_MapData + "_" + wk.OID;
 		//                athDB_N.Insert();
 		//            }
 		//        }
@@ -7615,10 +7612,10 @@ public class Dev2Interface
 		// 给全局变量赋值.
 		BP.WF.Glo.setSendHTOfTemp(ht);
 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		if (DataType.IsNullOrEmpty(starter))
 		{
-			starter = WebUser.No;
+			starter = WebUser.getNo();
 		}
 
 		Flow fl = new Flow(flowNo);
@@ -7728,7 +7725,7 @@ public class Dev2Interface
 
 		gwf.setStarter(empStarter.No);
 		gwf.setStarterName(empStarter.Name);
-		gwf.setRDT(DataType.CurrentDataTime);
+		gwf.setRDT(DataType.getCurrentDataTime());
 		gwf.setPWorkID(parentWorkID);
 		gwf.setPFID(parentFID);
 		gwf.setPFlowNo(parentFlowNo);
@@ -7782,7 +7779,7 @@ public class Dev2Interface
 
 		String[] emps = todoEmps.split("[,]", -1); //分开字符串.
 		String tempStrs = ""; //临时变量，防止重复插入.
-		for (String emp : emps)
+		for (String emp : emps.ToJavaList())
 		{
 			if (DataType.IsNullOrEmpty(emp) == true)
 			{
@@ -7814,7 +7811,7 @@ public class Dev2Interface
 			gwl.setFK_DeptT(empEn.FK_DeptText);
 
 			gwl.setSDT("无");
-			gwl.setDTOfWarning(DataType.CurrentDataTime);
+			gwl.setDTOfWarning(DataType.getCurrentDataTime());
 			gwl.setIsEnable(true);
 			gwl.setIsPass(false);
 			gwl.setPRI(gwf.getPRI());
@@ -7889,7 +7886,7 @@ public class Dev2Interface
 
 		if (DataType.IsNullOrEmpty(flowStarter))
 		{
-			flowStarter = WebUser.No;
+			flowStarter = WebUser.getNo();
 		}
 
 		Flow fl = new Flow(flowNo);
@@ -8007,7 +8004,7 @@ public class Dev2Interface
 
 		gwf.setStarter(emp.No);
 		gwf.setStarterName(emp.Name);
-		gwf.setRDT(DataType.CurrentDataTime);
+		gwf.setRDT(DataType.getCurrentDataTime());
 
 		if (htWork != null && htWork.containsKey("PRI") == true)
 		{
@@ -8056,11 +8053,11 @@ public class Dev2Interface
 
 
 			gwl.setSDT("无");
-			gwl.setDTOfWarning(DataType.CurrentDataTime);
+			gwl.setDTOfWarning(DataType.getCurrentDataTime());
 			gwl.setIsEnable(true);
 
 			gwl.setIsPass(false);
-			//     gwl.Sender = WebUser.No;
+			//     gwl.Sender = WebUser.getNo();
 			gwl.setPRI(gwf.getPRI());
 			gwl.Insert();
 		}
@@ -8068,7 +8065,7 @@ public class Dev2Interface
 			///#endregion 为开始工作创建待办
 
 		// 执行对报表的数据表WFState状态的更新 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE " + fl.getPTable() + " SET WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta,Title=" + dbstr + "Title,FK_Dept=" + dbstr + "FK_Dept,PFlowNo=" + dbstr + "PFlowNo,PWorkID=" + dbstr + "PWorkID WHERE OID=" + dbstr + "OID";
 
@@ -8101,7 +8098,7 @@ public class Dev2Interface
 
 		////写入日志.
 		//WorkNode wn = new WorkNode(wk, nd);
-		//wn.AddToTrack(ActionType.CallSubFlow, flowStarter, emp.Name, nd.NodeID, nd.Name, "来自" + WebUser.No + "," + WebUser.Name
+		//wn.AddToTrack(ActionType.CallSubFlow, flowStarter, emp.Name, nd.NodeID, nd.Name, "来自" + WebUser.getNo() + "," + WebUser.getName()
 		//    + "工作发起.");
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -8179,7 +8176,7 @@ public class Dev2Interface
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, int toNodeID, String nextWorkers)
 	{
 
-		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.No, WebUser.Name, WebUser.FK_Dept, WebUser.FK_DeptName, null);
+		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_Dept()Name, null);
 	}
 	/** 
 	 发送工作
@@ -8195,7 +8192,7 @@ public class Dev2Interface
 	*/
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String nextWorkers)
 	{
-		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.No, WebUser.Name, WebUser.FK_Dept, WebUser.FK_DeptName, null);
+		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_Dept()Name, null);
 	}
 	/** 
 	 发送工作
@@ -8267,7 +8264,7 @@ public class Dev2Interface
 			///#region 更新发送参数.
 		if (htWork != null)
 		{
-			String dbstr = SystemConfig.AppCenterDBVarStr;
+			String dbstr = SystemConfig.getAppCenterDBVarStr();
 			Paras ps = new Paras();
 
 			String paras = "";
@@ -8321,7 +8318,7 @@ public class Dev2Interface
 				LocalDateTime dtOfFlow = LocalDateTime.now();
 				LocalDateTime dtOfFlowWarning = LocalDateTime.now();
 				Part part = new Part();
-				part.MyPK = nd.getFK_Flow() + "_0_DeadLineRole";
+				part.setMyPK( nd.getFK_Flow() + "_0_DeadLineRole";
 				int count = part.RetrieveFromDBSources();
 				if (count != 0)
 				{
@@ -8349,7 +8346,7 @@ public class Dev2Interface
 					dtOfFlow = Glo.AddDayHoursSpan(LocalDateTime.now(), tag1, tag2, Integer.parseInt(part.getTag3()), (TWay)Integer.parseInt(part.getTag4()));
 					//计算警告日期.  时限时间-预警时间
 					dtOfFlowWarning = Glo.AddDayHoursSpan(LocalDateTime.now(), (tag1 * 24 + tag2 - tag7) / 24, (tag1 * 24 + tag2 - tag7) % 24, Integer.parseInt(part.getTag3()), (TWay)Integer.parseInt(part.getTag4()));
-					String dbstr = SystemConfig.AppCenterDBVarStr;
+					String dbstr = SystemConfig.getAppCenterDBVarStr();
 					Paras ps = new Paras();
 					ps.SQL = "UPDATE WF_GenerWorkFlow SET SDTOfFlow=" + dbstr + "SDTOfFlow,SDTOfFlowWarning=" + dbstr + "SDTOfFlowWarning WHERE WorkID=" + dbstr + "WorkID";
 					ps.Add(GenerWorkFlowAttr.SDTOfFlow, dtOfFlow.toString(DataType.SysDataTimeFormat));
@@ -8452,7 +8449,7 @@ public class Dev2Interface
 		Node fromNode = new Node(fk_node);
 
 		CCList list = new CCList();
-		list.MyPK = DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+		list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
 		list.setFK_Flow(gwf.getFK_Flow());
 		list.setFlowName(gwf.getFlowName());
 		list.setFK_Node(fk_node);
@@ -8465,8 +8462,8 @@ public class Dev2Interface
 		//增加抄送人部门.
 		Emp emp = new Emp(toEmpNo);
 		list.setCCToDept(emp.FK_Dept);
-		list.setRDT(DataType.CurrentDataTime);
-		list.setRec(WebUser.No);
+		list.setRDT(DataType.getCurrentDataTime());
+		list.setRec(WebUser.getNo());
 		list.setWorkID(gwf.getWorkID());
 		list.setFID(gwf.getFID());
 		list.setPFlowNo(gwf.getPFlowNo());
@@ -8509,7 +8506,7 @@ public class Dev2Interface
 		BP.WF.Dev2Interface.Port_SendMsg(toEmpNo, msgTitle, msgDoc, "CC" + gwf.getFK_Node() + "_" + gwf.getWorkID(), SMSMsgType.CC, gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
 
 		//记录日志.
-		Glo.AddToTrack(ActionType.CC, gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), gwf.getNodeName(), WebUser.No, WebUser.Name, gwf.getFK_Node(), gwf.getNodeName(), toEmpNo, toEmpName, msgTitle, null);
+		Glo.AddToTrack(ActionType.CC, gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), gwf.getNodeName(), WebUser.getNo(), WebUser.getName(), gwf.getFK_Node(), gwf.getNodeName(), toEmpNo, toEmpName, msgTitle, null);
 
 		return "已经成功的把工作抄送给:" + toEmpNo + "," + toEmpName;
 	}
@@ -8580,7 +8577,7 @@ public class Dev2Interface
 		if (toEmps != null)
 		{
 			String[] emps = toEmps.split("[;]", -1);
-			for (String empStr : emps)
+			for (String empStr : emps.ToJavaList())
 			{
 				if (DataType.IsNullOrEmpty(empStr) == true || empStr.contains(",") == false)
 				{
@@ -8597,7 +8594,7 @@ public class Dev2Interface
 				}
 
 				CCList list = new CCList();
-				list.MyPK = DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+				list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
 				list.setFK_Flow(gwf.getFK_Flow());
 				list.setFlowName(gwf.getFlowName());
 				list.setFK_Node(fk_node);
@@ -8606,8 +8603,8 @@ public class Dev2Interface
 				list.setDoc(doc);
 				list.setCCTo(empNo);
 				list.setCCToName(empName);
-				list.setRDT(DataType.CurrentDataTime);
-				list.setRec(WebUser.No);
+				list.setRDT(DataType.getCurrentDataTime());
+				list.setRec(WebUser.getNo());
 				list.setWorkID(gwf.getWorkID());
 				list.setFID(gwf.getFID());
 				list.setPFlowNo(gwf.getPFlowNo());
@@ -8661,7 +8658,7 @@ public class Dev2Interface
 			toDepts = toDepts.replace(";", ",");
 
 			String[] depts = toDepts.split("[,]", -1);
-			for (String deptNo : depts)
+			for (String deptNo : depts.ToJavaList())
 			{
 				if (DataType.IsNullOrEmpty(deptNo) == true)
 				{
@@ -8680,7 +8677,7 @@ public class Dev2Interface
 					}
 
 					CCList list = new CCList();
-					list.MyPK = DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+					list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
 					list.setFK_Flow(gwf.getFK_Flow());
 					list.setFlowName(gwf.getFlowName());
 					list.setFK_Node(fk_node);
@@ -8689,8 +8686,8 @@ public class Dev2Interface
 					list.setDoc(doc);
 					list.setCCTo(empNo);
 					list.setCCToName(empName);
-					list.setRDT(DataType.CurrentDataTime);
-					list.setRec(WebUser.No);
+					list.setRDT(DataType.getCurrentDataTime());
+					list.setRec(WebUser.getNo());
 					list.setWorkID(gwf.getWorkID());
 					list.setFID(gwf.getFID());
 					list.setPFlowNo(gwf.getPFlowNo());
@@ -8766,7 +8763,7 @@ public class Dev2Interface
 					}
 
 					CCList list = new CCList();
-					list.MyPK = DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+					list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
 					list.setFK_Flow(gwf.getFK_Flow());
 					list.setFlowName(gwf.getFlowName());
 					list.setFK_Node(fk_node);
@@ -8775,8 +8772,8 @@ public class Dev2Interface
 					list.setDoc(doc);
 					list.setCCTo(empNo);
 					list.setCCToName(empName);
-					list.setRDT(DataType.CurrentDataTime);
-					list.setRec(WebUser.No);
+					list.setRDT(DataType.getCurrentDataTime());
+					list.setRec(WebUser.getNo());
 					list.setWorkID(gwf.getWorkID());
 					list.setFID(gwf.getFID());
 					list.setPFlowNo(gwf.getPFlowNo());
@@ -8856,7 +8853,7 @@ public class Dev2Interface
 					}
 
 					CCList list = new CCList();
-					list.MyPK = DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+					list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
 					list.setFK_Flow(gwf.getFK_Flow());
 					list.setFlowName(gwf.getFlowName());
 					list.setFK_Node(fk_node);
@@ -8865,8 +8862,8 @@ public class Dev2Interface
 					list.setDoc(doc);
 					list.setCCTo(empNo);
 					list.setCCToName(empName);
-					list.setRDT(DataType.CurrentDataTime);
-					list.setRec(WebUser.No);
+					list.setRDT(DataType.getCurrentDataTime());
+					list.setRec(WebUser.getNo());
 					list.setWorkID(gwf.getWorkID());
 					list.setFID(gwf.getFID());
 					list.setPFlowNo(gwf.getPFlowNo());
@@ -8920,7 +8917,7 @@ public class Dev2Interface
 
 		////记录日志.
 		//Glo.AddToTrack(ActionType.CC, gwf.FK_Flow, workID, gwf.FID, gwf.FK_Node, gwf.NodeName,
-		//    WebUser.No, WebUser.Name, gwf.FK_Node, gwf.NodeName, toAllEmps, toAllEmps, title, null);
+		//    WebUser.getNo(), WebUser.getName(), gwf.FK_Node, gwf.NodeName, toAllEmps, toAllEmps, title, null);
 	}
 	/** 
 	 执行删除
@@ -8930,7 +8927,7 @@ public class Dev2Interface
 	public static void Node_CC_DoDel(String mypk)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "DELETE FROM WF_CCList WHERE MyPK=" + SystemConfig.AppCenterDBVarStr + "MyPK";
+		ps.SQL = "DELETE FROM WF_CCList WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK";
 		ps.Add(CCListAttr.MyPK, mypk);
 		BP.DA.DBAccess.RunSQL(ps);
 	}
@@ -8944,11 +8941,11 @@ public class Dev2Interface
 	*/
 	public static void Node_CC_SetSta(int nodeID, long workid, String empNo, CCSta sta)
 	{
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_CCList   SET Sta=" + dbstr + "Sta,CDT=" + dbstr + "CDT WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node AND CCTo=" + dbstr + "CCTo";
 		ps.Add(CCListAttr.Sta, sta.getValue());
-		ps.Add(CCListAttr.CDT, DataType.CurrentDataTime);
+		ps.Add(CCListAttr.CDT, DataType.getCurrentDataTime());
 		ps.Add(CCListAttr.WorkID, workid);
 		ps.Add(CCListAttr.FK_Node, nodeID);
 		ps.Add(CCListAttr.CCTo, empNo);
@@ -8967,7 +8964,7 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.AppCenterDBVarStr + "Sta  WHERE MyPK=" + SystemConfig.AppCenterDBVarStr + "MyPK";
+		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta  WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK";
 		ps.Add(CCListAttr.Sta, CCSta.Read.getValue());
 		ps.Add(CCListAttr.MyPK, mypk);
 		BP.DA.DBAccess.RunSQL(ps);
@@ -8982,14 +8979,14 @@ public class Dev2Interface
 	public static void Node_CC_SetRead(int nodeID, long workid, String empNo)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.AppCenterDBVarStr + "Sta  WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID AND FK_Node=" + SystemConfig.AppCenterDBVarStr + "FK_Node AND CCTo=" + SystemConfig.AppCenterDBVarStr + "CCTo";
+		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta  WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND CCTo=" + SystemConfig.getAppCenterDBVarStr() + "CCTo";
 		ps.Add(CCListAttr.Sta, CCSta.Read.getValue());
 		ps.Add(CCListAttr.WorkID, workid);
 		ps.Add(CCListAttr.FK_Node, nodeID);
 		ps.Add(CCListAttr.CCTo, empNo);
 
 		ps = new Paras();
-		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsRead=1 WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID AND FK_Node=" + SystemConfig.AppCenterDBVarStr + "FK_Node AND FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsRead=1 WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		ps.Add(GenerWorkerListAttr.WorkID, workid);
 		ps.Add(GenerWorkerListAttr.FK_Node, nodeID);
 		ps.Add(GenerWorkerListAttr.FK_Emp, empNo);
@@ -9016,7 +9013,7 @@ public class Dev2Interface
 		Node nd = new Node(fk_node);
 
 		CCList list = new CCList();
-		list.MyPK = DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+		list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
 		list.setFK_Flow(fk_flow);
 		list.setFlowName(fl.Name);
 		list.setFK_Node(fk_node);
@@ -9040,8 +9037,8 @@ public class Dev2Interface
 		Emp emp = new Emp(toEmpNo);
 		list.setCCToDept(emp.FK_Dept);
 
-		list.setRDT(DataType.CurrentDataTime);
-		list.setRec(WebUser.No);
+		list.setRDT(DataType.getCurrentDataTime());
+		list.setRec(WebUser.getNo());
 		list.setWorkID(workID);
 		list.setFID(0);
 		list.setPFlowNo(pFlowNo);
@@ -9059,10 +9056,10 @@ public class Dev2Interface
 
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 		//记录日志.
-		Glo.AddToTrack(ActionType.CC, fk_flow, workID, 0, nd.getNodeID(), nd.getName(), WebUser.No, WebUser.Name, nd.getNodeID(), nd.getName(), toEmpNo, toEmpName, msgTitle, null);
+		Glo.AddToTrack(ActionType.CC, fk_flow, workID, 0, nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmpNo, toEmpName, msgTitle, null);
 
 		//发送邮件.
-		BP.WF.Dev2Interface.Port_SendMsg(toEmpNo, WebUser.Name + "把工作:" + gwf.getTitle(), "抄送:" + msgTitle, "CC" + nd.getNodeID() + "_" + workID + "_", BP.WF.SMSMsgType.CC, gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
+		BP.WF.Dev2Interface.Port_SendMsg(toEmpNo, WebUser.getName() + "把工作:" + gwf.getTitle(), "抄送:" + msgTitle, "CC" + nd.getNodeID() + "_" + workID + "_", BP.WF.SMSMsgType.CC, gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
 
 		return "已经成功的把工作抄送给:" + toEmpNo + "," + toEmpName;
 
@@ -9094,7 +9091,7 @@ public class Dev2Interface
 		}
 
 		//删除流程.
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Flow fl = new Flow(fk_flow);
 		Paras ps = new Paras();
 		ps.SQL = "DELETE FROM " + fl.getPTable() + " WHERE OID=" + dbstr + "OID ";
@@ -9133,7 +9130,7 @@ public class Dev2Interface
 				throw new RuntimeException("@设置待办错误，只有在开始节点时才能设置待办，现在的节点是:" + gwf.getNodeName());
 			}
 
-			gwf.setTodoEmps(BP.Web.WebUser.No + "," + WebUser.Name + ";");
+			gwf.setTodoEmps(WebUser.getNo() + "," + WebUser.getName() + ";");
 			gwf.setTodoEmpsNum(1);
 			gwf.setWFState(WFState.Runing);
 			gwf.Update();
@@ -9150,13 +9147,13 @@ public class Dev2Interface
 	public static void Node_SetSDT(long workID, String sdt)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "UPDATE WF_GenerWorkerlist SET SDT=" + SystemConfig.AppCenterDBVarStr + "SDT WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID AND IsPass=0";
+		ps.SQL = "UPDATE WF_GenerWorkerlist SET SDT=" + SystemConfig.getAppCenterDBVarStr() + "SDT WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND IsPass=0";
 		ps.Add("SDT", sdt);
 		ps.Add("WorkID", workID);
 		BP.DA.DBAccess.RunSQL(ps);
 
 		ps = new Paras();
-		ps.SQL = "UPDATE WF_GenerWorkFlow SET SDTOfNode=" + SystemConfig.AppCenterDBVarStr + "SDTOfNode WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID ";
+		ps.SQL = "UPDATE WF_GenerWorkFlow SET SDTOfNode=" + SystemConfig.getAppCenterDBVarStr() + "SDTOfNode WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID ";
 		ps.Add("SDTOfNode", sdt);
 		ps.Add("WorkID", workID);
 		BP.DA.DBAccess.RunSQL(ps);
@@ -9186,7 +9183,7 @@ public class Dev2Interface
 				throw new RuntimeException("@设置草稿错误，只有在开始节点时才能设置草稿，现在的节点是:" + gwf.getTitle());
 			}
 
-			gwf.setTodoEmps(BP.Web.WebUser.No + "," + WebUser.Name + ";");
+			gwf.setTodoEmps(WebUser.getNo() + "," + WebUser.getName() + ";");
 			gwf.setTodoEmpsNum(1);
 			gwf.setWFState(WFState.Draft);
 			gwf.Update();
@@ -9194,13 +9191,13 @@ public class Dev2Interface
 			GenerWorkerList gwl = new GenerWorkerList();
 			gwl.setWorkID(workID);
 			gwl.setFK_Node(Integer.parseInt(fk_flow + "01"));
-			gwl.setFK_Emp(WebUser.No);
+			gwl.setFK_Emp(WebUser.getNo());
 			if (gwl.RetrieveFromDBSources() == 0)
 			{
-				gwl.setFK_EmpText(WebUser.Name);
+				gwl.setFK_EmpText(WebUser.getName());
 				gwl.setIsPassInt(0);
-				gwl.setSDT(DataType.CurrentDataTimess);
-				gwl.setDTOfWarning(DataType.CurrentDataTime);
+				gwl.setSDT(DataType.getCurrentDataTime()ss);
+				gwl.setDTOfWarning(DataType.getCurrentDataTime());
 				gwl.setIsEnable(true);
 				gwl.setIsRead(true);
 				gwl.setIsPass(false);
@@ -9209,10 +9206,10 @@ public class Dev2Interface
 		}
 
 		Flow fl = new Flow(fk_flow);
-		//string sql = "UPDATE "+fl.PTable+" SET WFStarter=1, FlowStater='"+WebUser.No+"' WHERE OID="+workID;
+		//string sql = "UPDATE "+fl.PTable+" SET WFStarter=1, FlowStater='"+WebUser.getNo()+"' WHERE OID="+workID;
 
 		//@sly .
-		String sql = "UPDATE " + fl.getPTable() + " SET  FlowStarter='" + WebUser.No + "',WFState=1 WHERE OID=" + workID;
+		String sql = "UPDATE " + fl.getPTable() + " SET  FlowStarter='" + WebUser.getNo() + "',WFState=1 WHERE OID=" + workID;
 		DBAccess.RunSQL(sql);
 	}
 	/** 
@@ -9226,7 +9223,7 @@ public class Dev2Interface
 	{
 		AtPara ap = new AtPara(paras);
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
-		for (String key : ap.HisHT.keySet())
+		for (String key : ap.getHisHT().keySet())
 		{
 			gwf.SetPara(key, ap.GetValStrByKey(key));
 		}
@@ -9313,9 +9310,9 @@ public class Dev2Interface
 				}
 			}
 
-			wk.setRec(WebUser.No);
-			wk.setRecText(WebUser.Name);
-			wk.SetValByKey(StartWorkAttr.FK_Dept, WebUser.FK_Dept);
+			wk.setRec(WebUser.getNo());
+			wk.setRecText(WebUser.getName());
+			wk.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
 			wk.BeforeSave();
 			wk.Save();
 
@@ -9351,7 +9348,7 @@ public class Dev2Interface
 							daDtl.ResetDefaultVal();
 
 							daDtl.RefPK = String.valueOf(workID);
-							daDtl.RDT = DataType.CurrentDataTime;
+							daDtl.RDT = DataType.getCurrentDataTime();
 
 							//执行保存.
 							daDtl.InsertAsOID(DBAccess.GenerOID("Dtl")); //插入数据.
@@ -9374,7 +9371,7 @@ public class Dev2Interface
 
 				if (DataType.IsNullOrEmpty(paras) == false && Glo.getIsEnableTrackRec() == true)
 				{
-					String dbstr = SystemConfig.AppCenterDBVarStr;
+					String dbstr = SystemConfig.getAppCenterDBVarStr();
 					Paras ps = new Paras();
 					ps.SQL = "UPDATE WF_GenerWorkerlist SET AtPara=" + dbstr + "Paras WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node";
 					ps.Add(GenerWorkerListAttr.Paras, paras);
@@ -9400,24 +9397,24 @@ public class Dev2Interface
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
-						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.No + "," + WebUser.Name + "@");
+						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getNo() + "," + WebUser.getName() + "@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly)
 					{
-						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.No + "@");
+						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getNo() + "@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
 					{
-						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.Name + "@");
+						rptGe.SetValByKey(GERptAttr.FlowEmps, "@" + WebUser.getName() + "@");
 					}
 
-					rptGe.SetValByKey(GERptAttr.FlowStarter, WebUser.No);
-					rptGe.SetValByKey(GERptAttr.FlowStartRDT, DataType.CurrentDataTime);
+					rptGe.SetValByKey(GERptAttr.FlowStarter, WebUser.getNo());
+					rptGe.SetValByKey(GERptAttr.FlowStartRDT, DataType.getCurrentDataTime());
 					rptGe.SetValByKey(GERptAttr.WFState, 0);
 					rptGe.SetValByKey(GERptAttr.FK_NY, DataType.CurrentYearMonth);
-					rptGe.SetValByKey(GERptAttr.FK_Dept, WebUser.FK_Dept);
+					rptGe.SetValByKey(GERptAttr.FK_Dept, WebUser.getFK_Dept());
 					rptGe.Insert();
 				}
 				else
@@ -9562,11 +9559,11 @@ public class Dev2Interface
 					gwf.setNodeName(nd.getName());
 					gwf.setWFState(wfState);
 
-					gwf.setFK_Dept(WebUser.FK_Dept);
-					gwf.setDeptName(WebUser.FK_DeptName);
-					gwf.setStarter(WebUser.No);
-					gwf.setStarterName(WebUser.Name);
-					gwf.setRDT(DataType.CurrentDataTime);
+					gwf.setFK_Dept(WebUser.getFK_Dept());
+					gwf.setDeptName(WebUser.getFK_Dept()Name);
+					gwf.setStarter(WebUser.getNo());
+					gwf.setStarterName(WebUser.getName());
+					gwf.setRDT(DataType.getCurrentDataTime());
 					gwf.Insert();
 
 					//@sly 这里在代码移动到下面了.
@@ -9584,23 +9581,23 @@ public class Dev2Interface
 				// 产生工作列表. @sly
 				GenerWorkerList gwl = new GenerWorkerList();
 				gwl.setWorkID(workID);
-				gwl.setFK_Emp(WebUser.No);
-				gwl.setFK_EmpText(WebUser.Name);
+				gwl.setFK_Emp(WebUser.getNo());
+				gwl.setFK_EmpText(WebUser.getName());
 
 				gwl.setFK_Node(fk_node);
 				gwl.setFK_NodeText(nd.getName());
 				gwl.setFID(0);
 
 				gwl.setFK_Flow(fk_flow);
-				gwl.setFK_Dept(WebUser.FK_Dept);
-				gwl.setFK_DeptT(WebUser.FK_DeptName);
+				gwl.setFK_Dept(WebUser.getFK_Dept());
+				gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
 
 				gwl.setSDT("无");
-				gwl.setDTOfWarning(DataType.CurrentDataTime);
+				gwl.setDTOfWarning(DataType.getCurrentDataTime());
 				gwl.setIsEnable(true);
 
 				gwl.setIsPass(false);
-				//  gwl.Sender = WebUser.No;
+				//  gwl.Sender = WebUser.getNo();
 				gwl.setPRI(gwf.getPRI());
 				gwl.Save();
 
@@ -9670,7 +9667,7 @@ public class Dev2Interface
 			//保存从表
 			for (DataTable dt : workDtls.Tables)
 			{
-				for (MapDtl dtl : dtls)
+				for (MapDtl dtl : dtls.ToJavaList())
 				{
 					if (!dt.TableName.equals(dtl.No))
 					{
@@ -9732,22 +9729,22 @@ public class Dev2Interface
 		gwf.setTaskSta(TaskSta.Takeback);
 		gwf.Update();
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		//设置已经被取走的状态。
 		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsEnable=-1 WHERE IsEnable=1 AND WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node AND FK_Emp!=" + dbstr + "FK_Emp ";
 		ps.Add(GenerWorkerListAttr.WorkID, workid);
 		ps.Add(GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
-		ps.Add(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.No);
+		ps.Add(GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 		int i = DBAccess.RunSQL(ps);
 
-		BP.WF.Dev2Interface.WriteTrackInfo(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), workid, 0, "任务被" + WebUser.Name + "从任务池取走.", "获取");
+		BP.WF.Dev2Interface.WriteTrackInfo(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), workid, 0, "任务被" + WebUser.getName() + "从任务池取走.", "获取");
 		if (i > 0)
 		{
 			Paras ps1 = new Paras();
 			//取走后 将WF_GenerWorkFlow 中的 TodoEmps,TodoEmpsNum 修改下  杨玉慧 
 			ps1.SQL = "UPDATE WF_GenerWorkFlow SET TodoEmps=" + dbstr + "TodoEmps,TodoEmpsNum=1 WHERE  WorkID=" + dbstr + "WorkID";
-			String toDoEmps = BP.Web.WebUser.No + "," + BP.Web.WebUser.Name;
+			String toDoEmps = WebUser.getNo() + "," + WebUser.getName();
 			ps1.Add(GenerWorkFlowAttr.TodoEmps, toDoEmps);
 			ps1.Add(GenerWorkerListAttr.WorkID, workid);
 			BP.DA.Log.DefaultLogWriteLineInfo(toDoEmps);
@@ -9793,7 +9790,7 @@ public class Dev2Interface
 		gwf.setTaskSta(TaskSta.Sharing);
 		gwf.Update();
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		//设置已经被取走的状态。
 		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsEnable=1 WHERE IsEnable=-1 AND WorkID=" + dbstr + "WorkID ";
@@ -9811,7 +9808,7 @@ public class Dev2Interface
 			ps1.SQL = "SELECT FK_Emp,FK_EmpText FROM WF_GenerWorkerlist  WHERE IsEnable=1 AND WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node ";
 			ps1.Add(GenerWorkerListAttr.WorkID, workid);
 			ps1.Add(GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
-			ps1.Add(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.No);
+			ps1.Add(GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 			DataTable toDoEmpsTable = DBAccess.RunSQLReturnTable(ps1);
 			String toDoEmps = "";
 			String toDoEmpsNum = "";
@@ -9836,7 +9833,7 @@ public class Dev2Interface
 			DBAccess.RunSQL(ps2);
 		}
 
-		BP.WF.Dev2Interface.WriteTrackInfo(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), workid, 0, "任务被" + WebUser.Name + "放入了任务池.", "放入");
+		BP.WF.Dev2Interface.WriteTrackInfo(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), workid, 0, "任务被" + WebUser.getName() + "放入了任务池.", "放入");
 	}
 	/** 
 	 增加下一步骤的接受人(用于当前步骤向下一步骤发送时增加接受人)
@@ -9877,7 +9874,7 @@ public class Dev2Interface
 
 
 		String[] emps = fk_emp.split("[,]", -1);
-		for (String empNo : emps)
+		for (String empNo : emps.ToJavaList())
 		{
 			if (DataType.IsNullOrEmpty(empNo) == true)
 			{
@@ -9918,7 +9915,7 @@ public class Dev2Interface
 		sa.Delete(SelectAccperAttr.FK_Node, formNodeID, SelectAccperAttr.WorkID, workID, SelectAccperAttr.FK_Emp, emp, SelectAccperAttr.Tag, tag);
 
 		Emp empEn = new Emp();
-		sa.MyPK = formNodeID + "_" + workID + "_" + emp + "_" + tag;
+		sa.setMyPK( formNodeID + "_" + workID + "_" + emp + "_" + tag;
 		empEn.No = emp;
 		sa.setTag(tag);
 		sa.setFK_Emp(emp);
@@ -9967,7 +9964,7 @@ public class Dev2Interface
 	*/
 	public static TimeSpan Node_GetHungUpTimeSpan(String flowNo, int nodeID, long workid)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 		String instr = ActionType.HungUp.getValue() + "," + ActionType.UnHungUp.getValue();
 		Paras ps = new Paras();
@@ -10021,7 +10018,7 @@ public class Dev2Interface
 		BP.WF.GenerWorkFlow gwf = new GenerWorkFlow(workid);
 
 		//检查当前人员是否开可以执行当前的工作?
-		if (Flow_IsCanDoCurrentWork(gwf.getWorkID(), WebUser.No) == false)
+		if (Flow_IsCanDoCurrentWork(gwf.getWorkID(), WebUser.getNo()) == false)
 		{
 			throw new RuntimeException("@当前的工作已经被别人处理或者您没有处理该工作的权限.");
 		}
@@ -10046,10 +10043,10 @@ public class Dev2Interface
 			gwl.setFK_Emp(askForEmp);
 			gwl.setFK_Node(gwf.getFK_Node());
 			gwl.setFK_NodeText(gwl.getFK_NodeText());
-			gwl.setFK_Emp(BP.Web.WebUser.No);
-			gwl.setFK_EmpText(BP.Web.WebUser.Name);
-			gwl.setFK_Dept(BP.Web.WebUser.FK_Dept);
-			gwl.setFK_DeptT(WebUser.FK_DeptName);
+			gwl.setFK_Emp(WebUser.getNo());
+			gwl.setFK_EmpText(WebUser.getName());
+			gwl.setFK_Dept(WebUser.getFK_Dept());
+			gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
 
 			gwl.setIsPassInt(askforSta.getValue());
 			gwl.Insert();
@@ -10059,21 +10056,21 @@ public class Dev2Interface
 			//设置流程标题.
 			if (gwf.getTitle().length() == 0)
 			{
-				Flow_SetFlowTitle(gwf.getFK_Flow(), workid, "来自" + WebUser.Name + "的工作加签.");
+				Flow_SetFlowTitle(gwf.getFK_Flow(), workid, "来自" + WebUser.getName() + "的工作加签.");
 			}
 		}
 		// endWarning.
 
 
 		// 处理状态.
-		for (GenerWorkerList item : gwls)
+		for (GenerWorkerList item : gwls.ToJavaList())
 		{
 			if (item.getIsEnable() == false)
 			{
 				continue;
 			}
 
-			if (item.getFK_Emp().equals(WebUser.No))
+			if (item.getFK_Emp().equals(WebUser.getNo()))
 			{
 				// GenerWorkerList gwl = gwls[0] as GenerWorkerList;
 				item.setIsPassInt(askforSta.getValue());
@@ -10188,7 +10185,7 @@ public class Dev2Interface
 
 		//要分配给的人员.
 		String[] emps = toEmps.split("[,]", -1);
-		for (String empNo : emps)
+		for (String empNo : emps.ToJavaList())
 		{
 			if (DataType.IsNullOrEmpty(empNo) == true)
 			{
@@ -10201,7 +10198,7 @@ public class Dev2Interface
 			GenerWorkerList gwl = null; //接收人
 
 			//开始找接收人.
-			for (GenerWorkerList item : gwls)
+			for (GenerWorkerList item : gwls.ToJavaList())
 			{
 				if (item.getFK_Emp().equals(empNo))
 				{
@@ -10269,7 +10266,7 @@ public class Dev2Interface
 			/*如果是队列模式，或者是协作模式. */
 			try
 			{
-				String sql = "UPDATE WF_GenerWorkerlist SET FK_Emp='" + emp.No + "', FK_EmpText='" + emp.Name + "' WHERE FK_Emp='" + WebUser.No + "' AND FK_Node=" + gwf.getFK_Node() + " AND WorkID=" + workID;
+				String sql = "UPDATE WF_GenerWorkerlist SET FK_Emp='" + emp.No + "', FK_EmpText='" + emp.Name + "' WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Node=" + gwf.getFK_Node() + " AND WorkID=" + workID;
 				i = BP.DA.DBAccess.RunSQL(sql);
 			}
 			catch (java.lang.Exception e)
@@ -10278,7 +10275,7 @@ public class Dev2Interface
 			}
 
 			//记录日志.
-			Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.No, WebUser.Name, nd.getNodeID(), nd.getName(), toEmp, emp.Name, msg, null);
+			Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.Name, msg, null);
 
 			String info = "@工作移交成功。@您已经成功的把工作移交给：" + emp.No + " , " + emp.Name;
 
@@ -10308,7 +10305,7 @@ public class Dev2Interface
 		gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.WorkID, gwf.getWorkID());
 		gwls.Delete(GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.WorkID, gwf.getWorkID());
 
-		for (GenerWorkerList item : gwls)
+		for (GenerWorkerList item : gwls.ToJavaList())
 		{
 			item.setFK_Emp(emp.No);
 			item.setFK_EmpText(emp.Name);
@@ -10319,7 +10316,7 @@ public class Dev2Interface
 
 		gwf.setWFState(WFState.Shift);
 		gwf.setTodoEmpsNum(1);
-		gwf.setTodoEmps(WebUser.No + "," + WebUser.Name + ";");
+		gwf.setTodoEmps(WebUser.getNo() + "," + WebUser.getName() + ";");
 		gwf.Update();
 
 
@@ -10329,12 +10326,12 @@ public class Dev2Interface
 		sf.setToEmp(toEmp);
 		sf.setToEmpName(emp.Name);
 		sf.setNote(msg);
-		sf.setFK_Emp(WebUser.No);
-		sf.setFK_EmpName(WebUser.Name);
+		sf.setFK_Emp(WebUser.getNo());
+		sf.setFK_EmpName(WebUser.getName());
 		sf.Insert();
 
 		//记录日志.
-		Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.No, WebUser.Name, nd.getNodeID(), nd.getName(), toEmp, emp.Name, msg, null);
+		Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.Name, msg, null);
 
 
 		String inf1o = "@工作移交成功。@您已经成功的把工作移交给：" + emp.No + " , " + emp.Name;
@@ -10498,8 +10495,8 @@ public class Dev2Interface
 		}
 
 		WorkNode wn = new WorkNode(workid, fromNodeID);
-		String msg = wn.NodeSend(new Node(tackToNodeID), BP.Web.WebUser.No).ToMsgOfHtml();
-		wn.AddToTrack(ActionType.Tackback, WebUser.No, WebUser.Name, tackToNodeID, nd.getName(), doMsg);
+		String msg = wn.NodeSend(new Node(tackToNodeID), WebUser.getNo()).ToMsgOfHtml();
+		wn.AddToTrack(ActionType.Tackback, WebUser.getNo(), WebUser.getName(), tackToNodeID, nd.getName(), doMsg);
 		return msg;
 	}
 	/** 
@@ -10518,7 +10515,7 @@ public class Dev2Interface
 		BP.WF.Dev2Interface.WriteTrackWorkCheck(fk_flow, fk_node, workid, fid, checkNote, fwc.getFWCOpLabel());
 
 		//设置审核完成.
-		BP.WF.Dev2Interface.Node_CC_SetSta(fk_node, workid, BP.Web.WebUser.No, BP.WF.Template.CCSta.CheckOver);
+		BP.WF.Dev2Interface.Node_CC_SetSta(fk_node, workid, WebUser.getNo(), BP.WF.Template.CCSta.CheckOver);
 
 	}
 	/** 
@@ -10529,7 +10526,7 @@ public class Dev2Interface
 	*/
 	public static void Node_SetWorkRead(int nodeID, long workid)
 	{
-		Node_SetWorkRead(nodeID, workid, BP.Web.WebUser.No);
+		Node_SetWorkRead(nodeID, workid, WebUser.getNo());
 	}
 	/** 
 	 设置是此工作为读取状态
@@ -10542,7 +10539,7 @@ public class Dev2Interface
 	{
 		Node nd = new Node(nodeID);
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET IsRead=1 WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node AND FK_Emp=" + dbstr + "FK_Emp";
 		ps.Add("WorkID", workid);
@@ -10596,7 +10593,7 @@ public class Dev2Interface
 				ps.SQL = "SELECT " + BP.WF.WorkSysFieldAttr.SysIsReadReceipts + " FROM ND" + fromNodeID + "    WHERE OID=" + dbstr + "OID";
 				ps.Add("OID", workid);
 				DataTable dt1 = DBAccess.RunSQLReturnTable(ps);
-				if (dt1.Rows[0][0].toString().equals("1"))
+				if (dt1.get(0).getValue(0).toString().equals("1"))
 				{
 					isSend = true;
 				}
@@ -10657,7 +10654,7 @@ public class Dev2Interface
 			ps.SQL = "SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + dbstr + "WorkID ";
 			ps.Add("WorkID", workid);
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
-			String title = dt.Rows[0][0].toString();
+			String title = dt.Rows.get(0).getValue(0).toString();
 
 			// 获取流程的发送人.
 			ps = new Paras();
@@ -10665,10 +10662,10 @@ public class Dev2Interface
 			ps.Add("WorkID", workid);
 			ps.Add("FK_Node", nodeID);
 			dt = DBAccess.RunSQLReturnTable(ps);
-			String sender = dt.Rows[0][0].toString();
+			String sender = dt.Rows.get(0).getValue(0).toString();
 
 			//发送已读回执。
-			BP.WF.Dev2Interface.Port_SendMsg(sender, "已读回执:" + title, "您发送的工作已经被" + WebUser.Name + "在" + DataType.CurrentDataTimeCNOfShort + " 打开.", "RP" + workid + "_" + nodeID, BP.WF.SMSMsgType.Self, nd.getFK_Flow(), nd.getNodeID(), workid, 0);
+			BP.WF.Dev2Interface.Port_SendMsg(sender, "已读回执:" + title, "您发送的工作已经被" + WebUser.getName() + "在" + DataType.getCurrentDataTime()CNOfShort + " 打开.", "RP" + workid + "_" + nodeID, BP.WF.SMSMsgType.Self, nd.getFK_Flow(), nd.getNodeID(), workid, 0);
 		}
 
 		//执行节点打开后事件.
@@ -10687,7 +10684,7 @@ public class Dev2Interface
 	*/
 	public static void Node_SetWorkUnRead(long workid, String userNo)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET IsRead=0 WHERE WorkID=" + dbstr + "WorkID AND FK_Emp=" + dbstr + "FK_Emp";
 		ps.Add("WorkID", workid);
@@ -10702,7 +10699,7 @@ public class Dev2Interface
 	*/
 	public static void Node_SetWorkUnRead(long workid)
 	{
-		Node_SetWorkUnRead(workid, BP.Web.WebUser.No);
+		Node_SetWorkUnRead(workid, WebUser.getNo());
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 工作有关接口
@@ -10992,7 +10989,7 @@ public class Dev2Interface
 
 			File info = new File(realSaveTo);
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-			dbUpload.MyPK = guid; // athDesc.FK_MapData + oid.ToString();
+			dbUpload.setMyPK( guid; // athDesc.FK_MapData + oid.ToString();
 			dbUpload.NodeID = String.valueOf(nodeid);
 			dbUpload.Sort = sort;
 			dbUpload.FK_FrmAttachment = athNo;
@@ -11022,9 +11019,9 @@ public class Dev2Interface
 
 			dbUpload.FileName = fileName;
 			dbUpload.FileSize = (float)info.length();
-			dbUpload.RDT = DataType.CurrentDataTimess;
-			dbUpload.Rec = BP.Web.WebUser.No;
-			dbUpload.RecName = BP.Web.WebUser.Name;
+			dbUpload.RDT = DataType.getCurrentDataTime()ss;
+			dbUpload.Rec = WebUser.getNo();
+			dbUpload.RecName = WebUser.getName();
 			dbUpload.RefPKVal = pkVal;
 
 			dbUpload.UploadGUID = guid;
@@ -11080,7 +11077,7 @@ public class Dev2Interface
 
 			File info = new File(temp);
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-			dbUpload.MyPK = BP.DA.DBAccess.GenerGUID();
+			dbUpload.setMyPK( BP.DA.DBAccess.GenerGUID();
 			dbUpload.Sort = sort;
 			dbUpload.NodeID = String.valueOf(nodeid);
 			dbUpload.FK_FrmAttachment = athDesc.MyPK;
@@ -11101,7 +11098,7 @@ public class Dev2Interface
 			{
 				/*如果是协同，就让他是PWorkID. */
 				Paras ps = new Paras();
-				ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+				ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 				ps.Add("WorkID", pkVal);
 				String pWorkID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0).toString();
 				if (pWorkID == null || pWorkID.equals("0"))
@@ -11116,9 +11113,9 @@ public class Dev2Interface
 			dbUpload.FK_FrmAttachment = athDesc.MyPK;
 			dbUpload.FileName = fileName;
 			dbUpload.FileSize = (float)info.length();
-			dbUpload.RDT = DataType.CurrentDataTimess;
-			dbUpload.Rec = BP.Web.WebUser.No;
-			dbUpload.RecName = BP.Web.WebUser.Name;
+			dbUpload.RDT = DataType.getCurrentDataTime()ss;
+			dbUpload.Rec = WebUser.getNo();
+			dbUpload.RecName = WebUser.getName();
 
 			dbUpload.UploadGUID = guid;
 
@@ -11348,23 +11345,23 @@ public class Dev2Interface
 	public static int WorkOpt_ToNodes_GetLasterSelectNodeID(String flowNo, int nodeID)
 	{
 		String sql = "";
-		switch (SystemConfig.AppCenterDBType)
+		switch (SystemConfig.getAppCenterDBType())
 		{
 			case DBType.MSSQL:
 			case DBType.Access:
-				sql = "SELECT TOP 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + BP.Web.WebUser.No + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
+				sql = "SELECT TOP 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
 			case DBType.Oracle:
-				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  RowNum=1 AND EmpFrom='" + BP.Web.WebUser.No + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
+				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  RowNum=1 AND EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
 			case DBType.MySQL:
-				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + BP.Web.WebUser.No + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ") limit 0,1";
+				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ") limit 0,1";
 				break;
 			case DBType.Informix:
-				sql = "SELECT first 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + BP.Web.WebUser.No + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
+				sql = "SELECT first 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
 			case DBType.PostgreSQL:
-				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + BP.Web.WebUser.No + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ") ORDER BY RDT DESC limit 1";
+				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ") ORDER BY RDT DESC limit 1";
 				break;
 			default:
 				throw new RuntimeException("@没有实现该类型的数据库支持.");
@@ -11426,7 +11423,7 @@ public class Dev2Interface
 			case Station:
 				DataTable dt = WorkOpt_Accepter_ByStation(nodeID);
 				dt.TableName = "Port_Emp";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 				break;
 			case SQL:
 				ds = WorkOpt_Accepter_BySQL(nodeID);
@@ -11469,7 +11466,7 @@ public class Dev2Interface
 			sql = "SELECT A.No,A.Name, A.FK_Dept, B.Name as DeptName FROM Port_Emp A,Port_Dept B WHERE A.FK_Dept=B.No AND a.NO IN ( ";
 			sql += "SELECT FK_EMP FROM Port_DeptEmpStation WHERE FK_STATION ";
 			sql += "IN (SELECT FK_STATION FROM WF_NodeStation WHERE FK_Node=" + nodeID + ") ";
-			sql += ") AND a.No IN (SELECT No FROM Port_Emp WHERE FK_Dept ='" + WebUser.FK_Dept + "')";
+			sql += ") AND a.No IN (SELECT No FROM Port_Emp WHERE FK_Dept ='" + WebUser.getFK_Dept() + "')";
 			sql += " ORDER BY B.Idx,B.No,A.Idx,A.No ";
 		}
 		else
@@ -11477,7 +11474,7 @@ public class Dev2Interface
 			sql = "SELECT A.No,A.Name, A.FK_Dept, B.Name as DeptName FROM Port_Emp A,Port_Dept B WHERE A.FK_Dept=B.No AND a.NO IN ( ";
 			sql += "SELECT FK_EMP FROM " + BP.WF.Glo.getEmpStation() + " WHERE FK_STATION ";
 			sql += "IN (SELECT FK_STATION FROM WF_NodeStation WHERE FK_Node=" + nodeID + ") ";
-			sql += ") AND a.No IN (SELECT No FROM Port_Emp WHERE FK_Dept ='" + WebUser.FK_Dept + "')";
+			sql += ") AND a.No IN (SELECT No FROM Port_Emp WHERE FK_Dept ='" + WebUser.getFK_Dept() + "')";
 			sql += " ORDER BY A.FK_DEPT,A.No ";
 		}
 
@@ -11502,21 +11499,21 @@ public class Dev2Interface
 		DataSet ds = new DataSet();
 		Selector MySelector = new Selector(nodeID);
 		String sqlGroup = MySelector.getSelectorP1();
-		sqlGroup = sqlGroup.replace("@WebUser.No", WebUser.No);
-		sqlGroup = sqlGroup.replace("@WebUser.Name", WebUser.Name);
-		sqlGroup = sqlGroup.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		sqlGroup = sqlGroup.replace("@WebUser.getNo()", WebUser.getNo());
+		sqlGroup = sqlGroup.replace("@WebUser.getName()", WebUser.getName());
+		sqlGroup = sqlGroup.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		String sqlDB = MySelector.getSelectorP2();
-		sqlDB = sqlDB.replace("@WebUser.No", WebUser.No);
-		sqlDB = sqlDB.replace("@WebUser.Name", WebUser.Name);
-		sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		sqlDB = sqlDB.replace("@WebUser.getNo()", WebUser.getNo());
+		sqlDB = sqlDB.replace("@WebUser.getName()", WebUser.getName());
+		sqlDB = sqlDB.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
 		dtGroup.TableName = "Port_Dept";
-		ds.Tables.Add(dtGroup);
+		ds.Tables.add(dtGroup);
 		DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
 		dtDB.TableName = "Port_Emp";
-		ds.Tables.Add(dtDB);
+		ds.Tables.add(dtDB);
 
 		return ds;
 	}
@@ -11536,11 +11533,11 @@ public class Dev2Interface
 
 		DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
 		dtGroup.TableName = "Port_Dept";
-		ds.Tables.Add(dtGroup);
+		ds.Tables.add(dtGroup);
 
 		DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
 		dtDB.TableName = "Port_Emp";
-		ds.Tables.Add(dtDB);
+		ds.Tables.add(dtDB);
 
 		return ds;
 	}
@@ -11557,11 +11554,11 @@ public class Dev2Interface
 		DataSet ds = new DataSet();
 		DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
 		dtGroup.TableName = "Port_Dept";
-		ds.Tables.Add(dtGroup);
+		ds.Tables.add(dtGroup);
 
 		DataTable dtDB = DBAccess.RunSQLReturnTable(sqlDB);
 		dtDB.TableName = "Port_Emp";
-		ds.Tables.Add(dtDB);
+		ds.Tables.add(dtDB);
 		return ds;
 	}
 
@@ -11580,7 +11577,7 @@ public class Dev2Interface
 		ens.Delete(SelectAccperAttr.FK_Node, nodeID, SelectAccperAttr.WorkID, workid);
 
 		//下次是否记忆选择，清空掉。
-		String sql = "UPDATE WF_SelectAccper SET " + SelectAccperAttr.IsRemember + " = 0 WHERE Rec='" + WebUser.No + "' AND IsRemember=1 AND FK_Node=" + nodeID;
+		String sql = "UPDATE WF_SelectAccper SET " + SelectAccperAttr.IsRemember + " = 0 WHERE Rec='" + WebUser.getNo() + "' AND IsRemember=1 AND FK_Node=" + nodeID;
 		BP.DA.DBAccess.RunSQL(sql);
 
 		//开始执行保存.
@@ -11593,12 +11590,12 @@ public class Dev2Interface
 			}
 
 			SelectAccper en = new SelectAccper();
-			en.MyPK = nodeID + "_" + workid + "_" + str;
+			en.setMyPK( nodeID + "_" + workid + "_" + str;
 			en.setFK_Emp(str);
 			en.setFK_Node(nodeID);
 
 			en.setWorkID(workid);
-			en.setRec(WebUser.No);
+			en.setRec(WebUser.getNo());
 			en.setIsRemember(isNextTime);
 			en.Insert();
 		}

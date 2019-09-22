@@ -54,7 +54,7 @@ public class MyStartFlows extends Entities
 	*/
 	public final List<MyStartFlow> ToJavaList()
 	{
-		return (List<MyStartFlow>)this;
+		return (List<MyStartFlow>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -66,7 +66,7 @@ public class MyStartFlows extends Entities
 		ArrayList<MyStartFlow> list = new ArrayList<MyStartFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MyStartFlow)this[i]);
+			list.add((MyStartFlow)this.get(i));
 		}
 		return list;
 	}

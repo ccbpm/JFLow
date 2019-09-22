@@ -27,7 +27,7 @@ public class Langues extends EntitiesMyPK
 	*/
 	public final List<Langue> ToJavaList()
 	{
-		return (List<Langue>)this;
+		return (List<Langue>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -39,7 +39,7 @@ public class Langues extends EntitiesMyPK
 		ArrayList<Langue> list = new ArrayList<Langue>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Langue)this[i]);
+			list.add((Langue)this.get(i));
 		}
 		return list;
 	}

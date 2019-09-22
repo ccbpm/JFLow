@@ -41,7 +41,7 @@ public class FrmFields extends EntitiesMyPK
 	*/
 	public final List<FrmField> ToJavaList()
 	{
-		return (List<FrmField>)this;
+		return (List<FrmField>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class FrmFields extends EntitiesMyPK
 		ArrayList<FrmField> list = new ArrayList<FrmField>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmField)this[i]);
+			list.add((FrmField)this.get(i));
 		}
 		return list;
 	}

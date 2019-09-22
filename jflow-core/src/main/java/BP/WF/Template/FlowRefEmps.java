@@ -54,7 +54,7 @@ public class FlowRefEmps extends EntitiesMyPK
 	*/
 	public final List<FlowRefEmp> ToJavaList()
 	{
-		return (List<FlowRefEmp>)this;
+		return (List<FlowRefEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -66,7 +66,7 @@ public class FlowRefEmps extends EntitiesMyPK
 		ArrayList<FlowRefEmp> list = new ArrayList<FlowRefEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FlowRefEmp)this[i]);
+			list.add((FlowRefEmp)this.get(i));
 		}
 		return list;
 	}

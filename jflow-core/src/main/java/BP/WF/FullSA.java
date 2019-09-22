@@ -54,7 +54,7 @@ public class FullSA
 		sa.Delete(SelectAccperAttr.WorkID, workid);
 
 		//求出已经路过的节点.
-		DataTable dt = DBAccess.RunSQLReturnTable("SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID", "WorkID", workid);
+		DataTable dt = DBAccess.RunSQLReturnTable("SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID", "WorkID", workid);
 		String passedNodeIDs = "";
 		for (DataRow item : dt.Rows)
 		{
@@ -113,7 +113,7 @@ public class FullSA
 			//按照绑定的部门计算
 			if (item.getHisDeliveryWay() == DeliveryWay.ByDept)
 			{
-				String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+				String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 				Paras ps = new Paras();
 				ps.Add("FK_Node", item.getNodeID());
 				ps.Add("WorkID", currWorkNode.getHisWork().getOID());
@@ -176,13 +176,13 @@ public class FullSA
 			if (item.getHisDeliveryWay() == DeliveryWay.BySpecNodeEmp && String.valueOf(currND.getNodeID()).equals(item.getDeliveryParas()))
 			{
 
-				sa.setFK_Emp(WebUser.No);
+				sa.setFK_Emp(WebUser.getNo());
 				sa.setFK_Node(item.getNodeID());
 
 				sa.setWorkID(workid);
 				sa.setInfo("无");
 				sa.setAccType(0);
-				sa.setEmpName(WebUser.Name);
+				sa.setEmpName(WebUser.getName());
 
 				sa.ResetPK();
 				if (sa.IsExits)
@@ -230,7 +230,7 @@ public class FullSA
 				///#region 按部门与岗位的交集计算.
 			if (item.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 			{
-				String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+				String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 				String sql = "";
 
 				//added by liuxc,2015.6.30.
@@ -304,13 +304,13 @@ public class FullSA
 				/*如果按照岗位访问*/
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#region 最后判断 - 按照岗位来执行。
-				String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+				String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 				String sql = "";
 				Paras ps = new Paras();
 				/* 如果执行节点 与 接受节点岗位集合不一致 */
 				/* 没有查询到的情况下, 先按照本部门计算。*/
 
-				switch (BP.Sys.SystemConfig.AppCenterDBType)
+				switch (BP.Sys.SystemConfig.getAppCenterDBType())
 				{
 					case DBType.MySQL:
 					case DBType.MSSQL:
@@ -330,7 +330,7 @@ public class FullSA
 				ps = new Paras();
 				ps.SQL = sql;
 				ps.Add("FK_Node", item.getNodeID());
-				ps.Add("FK_Dept", WebUser.FK_Dept);
+				ps.Add("FK_Dept", WebUser.getFK_Dept());
 
 				dt = DBAccess.RunSQLReturnTable(ps);
 				for (DataRow dr : dt.Rows)

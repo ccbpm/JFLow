@@ -34,7 +34,7 @@ public class ReLoadNDxxxxxxRpt extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -55,7 +55,7 @@ public class ReLoadNDxxxxxxRpt extends Method
 
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			try
 			{
@@ -63,7 +63,7 @@ public class ReLoadNDxxxxxxRpt extends Method
 			}
 			catch (RuntimeException ex)
 			{
-				msg += "@在处理流程(" + fl.Name + ")出现异常" + ex.getMessage();
+				msg += "@在处理流程(" + fl.getName() + ")出现异常" + ex.getMessage();
 			}
 		}
 		return "提示：" + fls.size() + "个流程参与了体检，信息如下：@" + msg;

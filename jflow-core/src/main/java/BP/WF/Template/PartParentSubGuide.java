@@ -186,7 +186,7 @@ public class PartParentSubGuide extends EntityMyPK
 	*/
 	public PartParentSubGuide(String mypk)
 	{
-		this.MyPK = mypk;
+		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
@@ -195,9 +195,9 @@ public class PartParentSubGuide extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Part", "前置导航-父子流程");
@@ -211,7 +211,7 @@ public class PartParentSubGuide extends EntityMyPK
 		map.AddTBString(PartAttr.Tag1, null, "流程名称", true, true, 0, 2000, 10);
 
 		map.AddTBString(PartAttr.Tag2, null, "隐藏查询条件", true, false, 0, 2000, 10,true);
-		map.SetHelperAlert(PartAttr.Tag2, "格式为: WFState=3 AND FlowStarter=＠WebUser.No  这些列都在NDxxRpt表里可以通过SELECT * FROM Sys_MapAttr WHERE FK_MapData=NDxxxRpt 找到. ");
+		map.SetHelperAlert(PartAttr.Tag2, "格式为: WFState=3 AND FlowStarter=＠WebUser.getNo()  这些列都在NDxxRpt表里可以通过SELECT * FROM Sys_MapAttr WHERE FK_MapData=NDxxxRpt 找到. ");
 
 		map.AddTBString(PartAttr.Tag3, null, "显示的列", true, false, 0, 2000, 10, true);
 		map.SetHelperAlert(PartAttr.Tag3, "格式为: ＠Title,标题＠Tel,电话＠Email,邮件  这些列都在NDxxRpt表里可以通过SELECT * FROM Sys_MapAttr WHERE FK_MapData=NDxxxRpt 找到.");
@@ -223,8 +223,8 @@ public class PartParentSubGuide extends EntityMyPK
 			//map.AddTBString(PartAttr.Tag8, null, "Tag8", false, true, 0, 2000, 10);
 			//map.AddTBString(PartAttr.Tag9, null, "Tag9", false, true, 0, 2000, 10);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	@Override
 	protected boolean beforeUpdateInsertAction()

@@ -35,7 +35,7 @@ public class CCFormAPI extends Dev2Interface
 		var dtls = entity.Dtls;
 
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		for (var item : dtls)
+		for (var item : dtls.ToJavaList())
 		{
 			rtf.EnsDataDtls.Add(item);
 		}
@@ -89,7 +89,7 @@ public class CCFormAPI extends Dev2Interface
 		//主表数据放入集合.
 		DataTable mainTable = en.ToDataTableField();
 		mainTable.TableName = "MainTable";
-		myds.Tables.Add(mainTable);
+		myds.Tables.add(mainTable);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 主表 Sys_MapData
@@ -102,8 +102,8 @@ public class CCFormAPI extends Dev2Interface
 		dr.set(MapDataAttr.No, enName);
 		dr.set(MapDataAttr.Name, map.EnDesc);
 		dr.set(MapDataAttr.PTable, map.PhysicsTable);
-		dt.Rows.Add(dr);
-		myds.Tables.Add(dt);
+		dt.Rows.add(dr);
+		myds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 主表 Sys_MapData
 
@@ -136,7 +136,7 @@ public class CCFormAPI extends Dev2Interface
 						String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + attr.UIBindKey + "' ORDER BY IntKey ";
 						DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 						dtEnum.TableName = attr.UIBindKey;
-						myds.Tables.Add(dtEnum);
+						myds.Tables.add(dtEnum);
 					}
 
 					break;
@@ -152,7 +152,7 @@ public class CCFormAPI extends Dev2Interface
 						ens.RetrieveAll();
 						DataTable mydt = ens.ToDataTableDescField();
 						mydt.TableName = ens.toString();
-						myds.Tables.Add(mydt);
+						myds.Tables.add(mydt);
 					}
 					break;
 				default:
@@ -161,9 +161,9 @@ public class CCFormAPI extends Dev2Interface
 
 			// 设置控件类型.
 			dr.set(MapAttrAttr.UIContralType, (int)attr.UIContralType);
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
-		myds.Tables.Add(dt);
+		myds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 主表 Sys_MapAttr
 
@@ -173,7 +173,7 @@ public class CCFormAPI extends Dev2Interface
 		//sql = "SELECT * FROM Sys_MapExt WHERE 1=2";
 		//dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//dt.TableName = "Sys_MapExt";
-		//myds.Tables.Add(dt);
+		//myds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion //主表 Sys_MapExt 扩展属性
 
@@ -200,7 +200,7 @@ public class CCFormAPI extends Dev2Interface
 			DataTable dtDtl = qo.DoQueryToTable();
 
 			dtDtl.TableName = item.EnsName; //修改明细表的名称.
-			myds.Tables.Add(dtDtl); //加入这个明细表.
+			myds.Tables.add(dtDtl); //加入这个明细表.
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 把从表的数据放入.
@@ -220,8 +220,8 @@ public class CCFormAPI extends Dev2Interface
 			dr.set(MapDtlAttr.No, item.EnsName);
 			dr.set(MapDtlAttr.Name, item.Desc);
 			dr.set(MapDtlAttr.PTable, dtl.EnMap.PhysicsTable);
-			dt.Rows.Add(dr);
-			myds.Tables.Add(dt);
+			dt.Rows.add(dr);
+			myds.Tables.add(dt);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 从表 Sys_MapDtl (相当于mapdata)
@@ -255,7 +255,7 @@ public class CCFormAPI extends Dev2Interface
 							String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + attr.UIBindKey + "' ORDER BY IntKey ";
 							DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 							dtEnum.TableName = attr.UIBindKey;
-							myds.Tables.Add(dtEnum);
+							myds.Tables.add(dtEnum);
 						}
 						break;
 					case FieldType.FK:
@@ -270,7 +270,7 @@ public class CCFormAPI extends Dev2Interface
 							ens.RetrieveAll();
 							DataTable mydt = ens.ToDataTableDescField();
 							mydt.TableName = ens.toString();
-							myds.Tables.Add(mydt);
+							myds.Tables.add(mydt);
 						}
 						break;
 					default:
@@ -279,9 +279,9 @@ public class CCFormAPI extends Dev2Interface
 
 				// 设置控件类型.
 				dr.set(MapAttrAttr.UIContralType, (int)attr.UIContralType);
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
-			myds.Tables.Add(dt);
+			myds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 明细表 Sys_MapAttr
 
@@ -356,7 +356,7 @@ public class CCFormAPI extends Dev2Interface
 		{
 			//实体.
 			GEEntityMyPK wk = new GEEntityMyPK(frmID);
-			wk.MyPK = pkval.toString();
+			wk.setMyPK( pkval.toString();
 			if (wk.RetrieveFromDBSources() == 0)
 			{
 				wk.Insert();
@@ -371,7 +371,7 @@ public class CCFormAPI extends Dev2Interface
 		if (DataType.IsNullOrEmpty(atParas) == false)
 		{
 			AtPara ap = new AtPara(atParas);
-			for (String key : ap.HisHT.keySet())
+			for (String key : ap.getHisHT().keySet())
 			{
 				switch (key)
 				{
@@ -404,26 +404,26 @@ public class CCFormAPI extends Dev2Interface
 		String sql = "SELECT * FROM Sys_MapData WHERE No='" + frmID + "' ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapData";
-		myds.Tables.Add(dt);
+		myds.Tables.add(dt);
 
 		//增加表单字段描述.
 		sql = "SELECT * FROM Sys_MapAttr WHERE FK_MapData='" + frmID + "' ";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapAttr";
-		myds.Tables.Add(dt);
+		myds.Tables.add(dt);
 
 		//增加从表信息.
 		sql = "SELECT * FROM Sys_MapDtl WHERE FK_MapData='" + frmID + "' ";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapDtl";
-		myds.Tables.Add(dt);
+		myds.Tables.add(dt);
 
 
 		//主表的配置信息.
 		sql = "SELECT * FROM Sys_MapExt WHERE FK_MapData='" + frmID + "'";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapExt";
-		myds.Tables.Add(dt);
+		myds.Tables.add(dt);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 加载 从表表单模版信息.（含 从表的枚举/外键相关数据）
@@ -447,20 +447,20 @@ public class CCFormAPI extends Dev2Interface
 			//明细表的主表描述
 			sql = "SELECT * FROM Sys_MapDtl WHERE No='" + item.No + "'";
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Sys_MapDtl_For_" + (tangible.StringHelper.isNullOrWhiteSpace(item.Alias) ? item.No : item.Alias);
-			myds.Tables.Add(dt);
+			dt.TableName = "Sys_MapDtl_For_" + (DataType.IsNullOrEmpty(item.Alias) ? item.No : item.Alias);
+			myds.Tables.add(dt);
 
 			//明细表的表单描述
 			sql = "SELECT * FROM Sys_MapAttr WHERE FK_MapData='" + item.No + "'";
 			dtMapAttr = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			dtMapAttr.TableName = "Sys_MapAttr_For_" + (tangible.StringHelper.isNullOrWhiteSpace(item.Alias) ? item.No : item.Alias);
-			myds.Tables.Add(dtMapAttr);
+			dtMapAttr.TableName = "Sys_MapAttr_For_" + (DataType.IsNullOrEmpty(item.Alias) ? item.No : item.Alias);
+			myds.Tables.add(dtMapAttr);
 
 			//明细表的配置信息.
 			sql = "SELECT * FROM Sys_MapExt WHERE FK_MapData='" + item.No + "'";
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Sys_MapExt_For_" + (tangible.StringHelper.isNullOrWhiteSpace(item.Alias) ? item.No : item.Alias);
-			myds.Tables.Add(dt);
+			dt.TableName = "Sys_MapExt_For_" + (DataType.IsNullOrEmpty(item.Alias) ? item.No : item.Alias);
+			myds.Tables.add(dt);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 从表的 外键表/枚举
@@ -490,7 +490,7 @@ public class CCFormAPI extends Dev2Interface
 					String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 					DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 					dtEnum.TableName = uiBindKey;
-					myds.Tables.Add(dtEnum);
+					myds.Tables.add(dtEnum);
 					continue;
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -521,7 +521,7 @@ public class CCFormAPI extends Dev2Interface
 					dt = DBAccess.RunSQLReturnTable(fullSQL);
 
 					dt.TableName = mypk;
-					myds.Tables.Add(dt);
+					myds.Tables.add(dt);
 					continue;
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -534,7 +534,7 @@ public class CCFormAPI extends Dev2Interface
 						continue;
 					}
 
-					myds.Tables.Add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+					myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion 外键字段
@@ -584,7 +584,7 @@ public class CCFormAPI extends Dev2Interface
 		//增加主表数据.
 		DataTable mainTable = en.ToDataTableField(md.No);
 		mainTable.TableName = "MainTable";
-		myds.Tables.Add(mainTable);
+		myds.Tables.add(mainTable);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 主表数据
@@ -621,7 +621,7 @@ public class CCFormAPI extends Dev2Interface
 						case DtlOpenType.ForEmp: // 按人员来控制.
 							qo.AddWhere(GEDtlAttr.RefPK, pkval);
 							qo.addAnd();
-							qo.AddWhere(GEDtlAttr.Rec, WebUser.No);
+							qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
 							break;
 						case DtlOpenType.ForWorkID: // 按工作ID来控制
 							qo.AddWhere(GEDtlAttr.RefPK, pkval);
@@ -669,8 +669,8 @@ public class CCFormAPI extends Dev2Interface
 				}
 			}
 
-			dtDtl.TableName = tangible.StringHelper.isNullOrWhiteSpace(dtl.Alias) ? dtl.No : dtl.Alias; //edited by liuxc,2017-10-10.如果有别名，则使用别名，没有则使用No
-			myds.Tables.Add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
+			dtDtl.TableName = DataType.IsNullOrEmpty(dtl.Alias) ? dtl.No : dtl.Alias; //edited by liuxc,2017-10-10.如果有别名，则使用别名，没有则使用No
+			myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 从表数据
@@ -701,7 +701,7 @@ public class CCFormAPI extends Dev2Interface
 				String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 				dtEnum.TableName = uiBindKey;
-				myds.Tables.Add(dtEnum);
+				myds.Tables.add(dtEnum);
 				continue;
 			}
 
@@ -732,7 +732,7 @@ public class CCFormAPI extends Dev2Interface
 				fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
 				dt = DBAccess.RunSQLReturnTable(fullSQL);
 				dt.TableName = myPK; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
-				myds.Tables.Add(dt);
+				myds.Tables.add(dt);
 				continue;
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -740,7 +740,7 @@ public class CCFormAPI extends Dev2Interface
 
 			dt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 			dt.TableName = uiBindKey;
-			myds.Tables.Add(dt);
+			myds.Tables.add(dt);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 主表的 外键表/枚举
@@ -788,7 +788,7 @@ public class CCFormAPI extends Dev2Interface
 		if (DataType.IsNullOrEmpty(atParas) == false)
 		{
 			AtPara ap = new AtPara(atParas);
-			for (String key : ap.HisHT.keySet())
+			for (String key : ap.getHisHT().keySet())
 			{
 				try
 				{
@@ -812,15 +812,15 @@ public class CCFormAPI extends Dev2Interface
 			///#region 加载从表表单模版信息.
 
 		DataTable Sys_MapDtl = dtl.ToDataTableField("Sys_MapDtl");
-		myds.Tables.Add(Sys_MapDtl);
+		myds.Tables.add(Sys_MapDtl);
 
 		//明细表的表单描述
 		DataTable Sys_MapAttr = dtl.MapAttrs.ToDataTableField("Sys_MapAttr");
-		myds.Tables.Add(Sys_MapAttr);
+		myds.Tables.add(Sys_MapAttr);
 
 		//明细表的配置信息.
 		DataTable Sys_MapExt = dtl.MapExts.ToDataTableField("Sys_MapExt");
-		myds.Tables.Add(Sys_MapExt);
+		myds.Tables.add(Sys_MapExt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 加载从表表单模版信息.
 
@@ -862,7 +862,7 @@ public class CCFormAPI extends Dev2Interface
 				dtEnum.Columns[0].ColumnName = "No";
 				dtEnum.Columns[1].ColumnName = "Name";
 
-				myds.Tables.Add(dtEnum);
+				myds.Tables.add(dtEnum);
 				continue;
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -897,7 +897,7 @@ public class CCFormAPI extends Dev2Interface
 				dt.Columns[0].ColumnName = "No";
 				dt.Columns[1].ColumnName = "Name";
 
-				myds.Tables.Add(dt);
+				myds.Tables.add(dt);
 				continue;
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -916,17 +916,17 @@ public class CCFormAPI extends Dev2Interface
 			{
 				DataRow ddldr = ddlTable.NewRow();
 				ddldr.set("No", uiBindKey);
-				ddlTable.Rows.Add(ddldr);
+				ddlTable.Rows.add(ddldr);
 			}
 			else
 			{
-				myds.Tables.Add(mydt);
+				myds.Tables.add(mydt);
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 外键字段
 		}
 		ddlTable.TableName = "UIBindKey";
-		myds.Tables.Add(ddlTable);
+		myds.Tables.add(ddlTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 把从表的- 外键表/枚举 加入 DataSet.
 
@@ -948,7 +948,7 @@ public class CCFormAPI extends Dev2Interface
 		//增加主表数据.
 		DataTable mainTable = en.ToDataTableField(frmID);
 		mainTable.TableName = "MainTable";
-		myds.Tables.Add(mainTable);
+		myds.Tables.add(mainTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 把主表数据放入.
 
@@ -964,7 +964,7 @@ public class CCFormAPI extends Dev2Interface
 				case DtlOpenType.ForEmp: // 按人员来控制.
 					qo.AddWhere(GEDtlAttr.RefPK, pkval);
 					qo.addAnd();
-					qo.AddWhere(GEDtlAttr.Rec, WebUser.No);
+					qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
 					break;
 				case DtlOpenType.ForWorkID: // 按工作ID来控制
 					qo.addLeftBracket();
@@ -1019,7 +1019,7 @@ public class CCFormAPI extends Dev2Interface
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 修改区分大小写. Oracle
-			if (BP.DA.DBType.Oracle == SystemConfig.AppCenterDBType)
+			if (BP.DA.DBType.Oracle == SystemConfig.getAppCenterDBType())
 			{
 				for (DataColumn dr : dtDtl.Columns)
 				{
@@ -1055,7 +1055,7 @@ public class CCFormAPI extends Dev2Interface
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 修改区分大小写. PostgreSQL
-			if (BP.DA.DBType.PostgreSQL == SystemConfig.AppCenterDBType)
+			if (BP.DA.DBType.PostgreSQL == SystemConfig.getAppCenterDBType())
 			{
 				for (DataColumn dr : dtDtl.Columns)
 				{
@@ -1107,7 +1107,7 @@ public class CCFormAPI extends Dev2Interface
 		}
 
 		dtDtl.TableName = "DBDtl"; //修改明细表的名称.
-		myds.Tables.Add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
+		myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 把从表的数据放入.
 
@@ -1116,7 +1116,7 @@ public class CCFormAPI extends Dev2Interface
 		GEDtl dtlBlank = dtls.GetNewEntity instanceof GEDtl ? (GEDtl)dtls.GetNewEntity : null;
 		dtlBlank.ResetDefaultVal();
 
-		myds.Tables.Add(dtlBlank.ToDataTableField("Blank"));
+		myds.Tables.add(dtlBlank.ToDataTableField("Blank"));
 
 		// myds.WriteXml("c:\\xx.xml");
 

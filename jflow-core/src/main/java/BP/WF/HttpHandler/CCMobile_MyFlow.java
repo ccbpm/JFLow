@@ -130,7 +130,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 			DataRow dr = dt.NewRow();
 			dr.set("KeyOfEn", attr.KeyOfEn);
 			dr.set("NoteVal", text);
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 
 		}
 
@@ -184,7 +184,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 
 	public final String MyFlowGener_Delete()
 	{
-		BP.WF.Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), Web.WebUser.Name + "用户删除", true);
+		BP.WF.Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), Web.WebUser.getName() + "用户删除", true);
 		return "删除成功...";
 	}
 

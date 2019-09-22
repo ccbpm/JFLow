@@ -35,7 +35,7 @@ public class MethodLinks extends EntitiesMyPK
 	*/
 	public final List<MethodLink> ToJavaList()
 	{
-		return (List<MethodLink>)this;
+		return (List<MethodLink>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -47,7 +47,7 @@ public class MethodLinks extends EntitiesMyPK
 		ArrayList<MethodLink> list = new ArrayList<MethodLink>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MethodLink)this[i]);
+			list.add((MethodLink)this.get(i));
 		}
 		return list;
 	}

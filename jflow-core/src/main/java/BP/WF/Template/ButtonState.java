@@ -5,6 +5,7 @@ import BP.*;
 import BP.Sys.*;
 import BP.En.*;
 import BP.WF.*;
+import BP.Web.WebUser;
 
 /** 
  按钮状态
@@ -15,7 +16,7 @@ public class ButtonState
 	public int CurrNodeIDOfUI = 0;
 	public int CurrNodeIDOfFlow = 0;
 	public String FK_Flow = null;
-	public final void InitNodeIsCurr()
+	public final void InitNodeIsCurr() throws Exception
 	{
 		// 获取.
 		Node nd = new Node(this.CurrNodeIDOfFlow);
@@ -35,7 +36,7 @@ public class ButtonState
 
 		// 判断它是否可以处理上一步工作.
 		GenerWorkerList wl = new GenerWorkerList();
-		int num = wl.Retrieve(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.No, GenerWorkerListAttr.FK_Node, wnPri.getHisNode().getNodeID(), GenerWorkerListAttr.WorkID, this.WorkID);
+		int num = wl.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.FK_Node, wnPri.getHisNode().getNodeID(), GenerWorkerListAttr.WorkID, this.WorkID);
 		if (num >= 1)
 		{
 			/*如果能够处理上一步工作*/
@@ -58,7 +59,7 @@ public class ButtonState
 			this.Btn_UnSend = true;
 		}
 	}
-	public ButtonState(String fk_flow, int currNodeID, long workid)
+	public ButtonState(String fk_flow, int currNodeID, long workid) throws Exception
 	{
 		this.FK_Flow = fk_flow;
 		this.CurrNodeIDOfUI = currNodeID;
@@ -79,7 +80,7 @@ public class ButtonState
 		}
 
 		// 设置当前流程节点。
-		this.CurrNodeIDOfFlow = Integer.parseInt(dt.Rows[0][0].toString());
+		this.CurrNodeIDOfFlow = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
 
 		if (this.CurrNodeIDOfUI == this.CurrNodeIDOfFlow)
 		{

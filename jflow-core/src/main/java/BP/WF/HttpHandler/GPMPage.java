@@ -26,15 +26,15 @@ public class GPMPage extends DirectoryPageBase
 	*/
 	public final String Siganture_Init()
 	{
-		if (BP.Web.WebUser.NoOfRel == null)
+		if (WebUser.getNo()OfRel == null)
 		{
 			return "err@登录信息丢失";
 		}
 		Hashtable ht = new Hashtable();
-		ht.put("No", BP.Web.WebUser.No);
-		ht.put("Name",BP.Web.WebUser.Name);
-		ht.put("FK_Dept", BP.Web.WebUser.FK_Dept);
-		ht.put("FK_DeptName", BP.Web.WebUser.FK_DeptName);
+		ht.put("No", WebUser.getNo());
+		ht.put("Name",WebUser.getName());
+		ht.put("FK_Dept", WebUser.getFK_Dept());
+		ht.put("FK_DeptName", WebUser.getFK_Dept()Name);
 		return BP.Tools.Json.ToJson(ht);
 	}
 
@@ -78,7 +78,7 @@ public class GPMPage extends DirectoryPageBase
 		//f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + this.FK_Emp + ".jpg");
 		HttpContextHelper.UploadFile(f, BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + this.getFK_Emp() + ".jpg");
 
-		// f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.Name + ".jpg");
+		// f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.getName() + ".jpg");
 
 		//f.PostedFile.InputStream.Close();
 		//f.PostedFile.InputStream.Dispose();
@@ -102,10 +102,10 @@ public class GPMPage extends DirectoryPageBase
 	{
 
 		BP.GPM.Depts depts = new GPM.Depts();
-		if (WebUser.No.equals("admin") == false)
+		if (WebUser.getNo().equals("admin") == false)
 		{
-			depts.Retrieve("ParentNo",WebUser.FK_Dept);
-			depts.AddEntity(new Dept(WebUser.FK_Dept));
+			depts.Retrieve("ParentNo",WebUser.getFK_Dept());
+			depts.AddEntity(new Dept(WebUser.getFK_Dept()));
 			return depts.ToJson();
 		}
 

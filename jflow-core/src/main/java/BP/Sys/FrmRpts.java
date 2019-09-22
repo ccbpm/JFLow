@@ -21,8 +21,9 @@ public class FrmRpts extends EntitiesNoName
 	 纬度报表s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmRpts(String fk_mapdata)
+	public FrmRpts(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(FrmRptAttr.FK_MapData, fk_mapdata, FrmRptAttr.No);
 	}
@@ -46,7 +47,7 @@ public class FrmRpts extends EntitiesNoName
 	*/
 	public final List<FrmRpt> ToJavaList()
 	{
-		return (List<FrmRpt>)this;
+		return (List<FrmRpt>)(Object)this;
 	}
 	/** 
 	 转化成list

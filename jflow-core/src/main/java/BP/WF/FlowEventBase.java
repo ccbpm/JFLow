@@ -504,21 +504,21 @@ public abstract class FlowEventBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理参数.
-		Row r = en.Row;
+		Row r = en.getRow();
 		try
 		{
 			//系统参数.
-			r.Add("FK_MapData", en.ClassID);
+			r.add("FK_MapData", en.getClassID());
 		}
 		catch (java.lang.Exception e)
 		{
-			r["FK_MapData"] = en.ClassID;
+			r["FK_MapData"] = en.getClassID();
 		}
 
 		if (atPara != null)
 		{
 			AtPara ap = new AtPara(atPara);
-			for (String s : ap.HisHT.keySet())
+			for (String s : ap.getHisHT().keySet())
 			{
 				try
 				{
@@ -531,7 +531,7 @@ public abstract class FlowEventBase
 			}
 		}
 
-		if (SystemConfig.IsBSsystem == true)
+		if (SystemConfig.getIsBSsystem() == true)
 		{
 			/*如果是bs系统, 就加入外部url的变量.*/
 			for (String key : HttpContextHelper.RequestParamKeys)

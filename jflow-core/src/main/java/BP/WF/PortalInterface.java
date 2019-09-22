@@ -42,12 +42,12 @@ public class PortalInterface
 	*/
 	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String guestNo, String title, long parentWorkID, String parentFlowNo, int parentNodeID, String parentEmp)
 	{
-		//if (BP.Web.WebUser.No != "Guest")
+		//if (WebUser.getNo() != "Guest")
 		//    throw new Exception("@必须是Guest登陆才能发起.");
 
 
 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		Flow fl = new Flow(flowNo);
 		Node nd = new Node(fl.getStartNodeID());
@@ -74,7 +74,7 @@ public class PortalInterface
 
 
 
-		Emp empStarter = new Emp(BP.Web.WebUser.No);
+		Emp empStarter = new Emp(WebUser.getNo());
 		Work wk = fl.NewWork(empStarter, htPara);
 		long workID = wk.getOID();
 
@@ -222,7 +222,7 @@ public class PortalInterface
 
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql;
 
 		/*不是授权状态*/
@@ -253,11 +253,11 @@ public class PortalInterface
 
 		if (DataType.IsNullOrEmpty(fk_flow))
 		{
-			sql = "SELECT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND B.IsPass=1 AND A.GuestNo='" + guestNo + "' ";
+			sql = "SELECT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND B.IsPass=1 AND A.GuestNo='" + guestNo + "' ";
 		}
 		else
 		{
-			sql = "SELECT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND B.IsPass=1  AND A.GuestNo='" + guestNo + "'";
+			sql = "SELECT a.WorkID FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND B.IsPass=1  AND A.GuestNo='" + guestNo + "'";
 		}
 
 		GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -279,7 +279,7 @@ public class PortalInterface
 	*/
 	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr + "GuestName WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add("GuestNo", guestNo);
@@ -313,7 +313,7 @@ public class PortalInterface
 			throw new RuntimeException("@设置外部用户待办信息失败:参数workID不能为0.");
 		}
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr + "GuestName WHERE WorkID=" + dbstr + "WorkID AND IsPass=0";
 		ps.Add("GuestNo", guestNo);

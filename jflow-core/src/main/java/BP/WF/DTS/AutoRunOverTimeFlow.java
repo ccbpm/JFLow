@@ -55,7 +55,7 @@ public class AutoRunOverTimeFlow extends Method
 		DataTable generTab = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfNode<='" + DataType.CurrentDataTime + "' ";
+		sql += " WHERE a.SDTOfNode<='" + DataType.getCurrentDataTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
@@ -78,7 +78,7 @@ public class AutoRunOverTimeFlow extends Method
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, fk_node);
 
 			boolean isLogin = false;
-			for (GenerWorkerList item : gwls)
+			for (GenerWorkerList item : gwls.ToJavaList())
 			{
 				if (item.getIsEnable() == false)
 				{
@@ -86,14 +86,14 @@ public class AutoRunOverTimeFlow extends Method
 				}
 
 				BP.Port.Emp emp = new Emp(item.getFK_Emp());
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 				isLogin = true;
 			}
 
 			if (isLogin == false)
 			{
 				BP.Port.Emp emp = new Emp("admin");
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 			}
 
 
@@ -169,7 +169,7 @@ public class AutoRunOverTimeFlow extends Method
 							GenerWorkerList workerList = new GenerWorkerList();
 							workerList.RetrieveByAttrAnd(GenerWorkerListAttr.WorkID, workid, GenerWorkFlowAttr.FK_Node, fk_node);
 
-							BP.Web.WebUser.SignInOfGener(workerList.getHisEmp());
+							WebUser.SignInOfGener(workerList.getHisEmp());
 
 							WorkNode firstwn = new WorkNode(workid, fk_node);
 							String sendIfo = firstwn.NodeSend().ToMsgOfText();

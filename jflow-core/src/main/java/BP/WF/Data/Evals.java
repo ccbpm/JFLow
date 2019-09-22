@@ -40,7 +40,7 @@ public class Evals extends EntitiesMyPK
 	*/
 	public final List<Eval> ToJavaList()
 	{
-		return (List<Eval>)this;
+		return (List<Eval>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class Evals extends EntitiesMyPK
 		ArrayList<Eval> list = new ArrayList<Eval>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Eval)this[i]);
+			list.add((Eval)this.get(i));
 		}
 		return list;
 	}

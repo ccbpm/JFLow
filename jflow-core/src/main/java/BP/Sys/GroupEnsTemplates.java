@@ -56,7 +56,7 @@ public class GroupEnsTemplates extends EntitiesOID
 	*/
 	public final List<GroupEnsTemplate> ToJavaList()
 	{
-		return (List<GroupEnsTemplate>)this;
+		return (List<GroupEnsTemplate>)(Object)this;
 	}
 	/** 
 	 转化成list

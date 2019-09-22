@@ -213,9 +213,9 @@ public class TruckViewPower extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Flow", "流程模版主表");
@@ -255,8 +255,8 @@ public class TruckViewPower extends EntityNoName
 			///#endregion 权限控制.
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -274,7 +274,7 @@ public class TruckViewPower extends EntityNoName
 	{
 		if (userNo == null)
 		{
-			userNo = BP.Web.WebUser.No;
+			userNo = WebUser.getNo();
 		}
 		return true;
 	}

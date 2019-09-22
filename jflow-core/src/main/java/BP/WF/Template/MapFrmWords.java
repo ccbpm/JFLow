@@ -40,7 +40,7 @@ public class MapFrmWords extends EntitiesNoName
 	*/
 	public final List<MapFrmWord> ToJavaList()
 	{
-		return (List<MapFrmWord>)this;
+		return (List<MapFrmWord>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class MapFrmWords extends EntitiesNoName
 		ArrayList<MapFrmWord> list = new ArrayList<MapFrmWord>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapFrmWord)this[i]);
+			list.add((MapFrmWord)this.get(i));
 		}
 		return list;
 	}

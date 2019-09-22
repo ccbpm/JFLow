@@ -56,7 +56,7 @@ public class AutoRunStratFlows extends Method
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 自动启动流程
-		for (BP.WF.Flow fl : fls)
+		for (BP.WF.Flow fl : fls.ToJavaList())
 		{
 			if (fl.getHisFlowRunWay() == BP.WF.FlowRunWay.HandWork)
 			{
@@ -70,7 +70,7 @@ public class AutoRunStratFlows extends Method
 
 			if (fl.getRunObj() == null || fl.getRunObj().equals(""))
 			{
-				String msg = "您设置自动运行流程错误，没有设置流程内容，流程编号：" + fl.No + ",流程名称:" + fl.Name;
+				String msg = "您设置自动运行流程错误，没有设置流程内容，流程编号：" + fl.getNo() + ",流程名称:" + fl.Name;
 				BP.DA.Log.DebugWriteError(msg);
 				continue;
 			}
@@ -147,10 +147,10 @@ public class AutoRunStratFlows extends Method
 					break;
 			}
 		}
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			BP.Port.Emp empadmin = new BP.Port.Emp("admin");
-			BP.Web.WebUser.SignInOfGener(empadmin);
+			WebUser.SignInOfGener(empadmin);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 发送消息
@@ -171,16 +171,16 @@ public class AutoRunStratFlows extends Method
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 读取数据.
 		BP.Sys.MapExt me = new MapExt();
-		me.MyPK = "ND" + Integer.parseInt(fl.No) + "01" + "_" + MapExtXmlList.StartFlow;
+		me.setMyPK( "ND" + Integer.parseInt(fl.No) + "01" + "_" + MapExtXmlList.StartFlow;
 		int i = me.RetrieveFromDBSources();
 		if (i == 0)
 		{
-			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.Name + ")的开始节点设置发起数据,请参考说明书解决.");
+			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
 			return;
 		}
 		if (DataType.IsNullOrEmpty(me.Tag))
 		{
-			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.Name + ")的开始节点设置发起数据,请参考说明书解决.");
+			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
 			return;
 		}
 
@@ -198,7 +198,7 @@ public class AutoRunStratFlows extends Method
 			String dtlName = tempStrs[0];
 			DataTable dtlTable = BP.DA.DBAccess.RunSQLReturnTable(sql.replace(dtlName + "=", ""));
 			dtlTable.TableName = dtlName;
-			ds.Tables.Add(dtlTable);
+			ds.Tables.add(dtlTable);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 读取数据.
@@ -210,7 +210,7 @@ public class AutoRunStratFlows extends Method
 		DataTable dtMain = BP.DA.DBAccess.RunSQLReturnTable(me.Tag);
 		if (dtMain.Rows.size() == 0)
 		{
-			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.Name + ")此时无任务.");
+			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.getName() + ")此时无任务.");
 			return;
 		}
 
@@ -226,7 +226,7 @@ public class AutoRunStratFlows extends Method
 
 		if (errMsg.length() > 2)
 		{
-			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.Name + ")的开始节点设置发起数据,不完整." + errMsg);
+			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.getName() + ")的开始节点设置发起数据,不完整." + errMsg);
 			return;
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -248,14 +248,14 @@ public class AutoRunStratFlows extends Method
 			}
 
 			String starter = dr.get("Starter").toString();
-			if (!starter.equals(WebUser.No))
+			if (!starter.equals(WebUser.getNo()))
 			{
-				BP.Web.WebUser.Exit();
+				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
 				emp.No = starter;
 				if (emp.RetrieveFromDBSources() == 0)
 				{
-					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.Name + ")设置的发起人员:" + emp.No + "不存在。");
+					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.No + "不存在。");
 					continue;
 				}
 				WebUser.SignInOfGener(emp);
@@ -314,7 +314,7 @@ public class AutoRunStratFlows extends Method
 			{
 				// MapData md = new MapData(nodeTable);
 				MapDtls dtls = new MapDtls(nodeTable);
-				for (MapDtl dtl : dtls)
+				for (MapDtl dtl : dtls.ToJavaList())
 				{
 					for (DataTable dt : ds.Tables)
 					{
@@ -376,7 +376,7 @@ public class AutoRunStratFlows extends Method
 				if (toNodeID == fl.getStartNodeID())
 				{
 					/* 发起后让它停留在开始节点上，就是为开始节点创建一个待办。*/
-					long workID = BP.WF.Dev2Interface.Node_CreateBlankWork(fl.No, null, null, WebUser.No, null);
+					long workID = BP.WF.Dev2Interface.Node_CreateBlankWork(fl.No, null, null, WebUser.getNo(), null);
 					if (workID != wk.getOID())
 					{
 						throw new RuntimeException("@异常信息:不应该不一致的workid.");
@@ -385,14 +385,14 @@ public class AutoRunStratFlows extends Method
 					{
 						wk.Update();
 					}
-					msg = "已经为(" + WebUser.No + ") 创建了开始工作节点. ";
+					msg = "已经为(" + WebUser.getNo() + ") 创建了开始工作节点. ";
 				}
 
 				BP.DA.Log.DefaultLogWriteLineInfo(msg);
 			}
 			catch (RuntimeException ex)
 			{
-				BP.DA.Log.DefaultLogWriteLineWarning("@" + fl.Name + ",第" + idx + "条,发起人员:" + WebUser.No + "-" + WebUser.Name + "发起时出现错误.\r\n" + ex.getMessage());
+				BP.DA.Log.DefaultLogWriteLineWarning("@" + fl.getName() + ",第" + idx + "条,发起人员:" + WebUser.getNo() + "-" + WebUser.getName() + "发起时出现错误.\r\n" + ex.getMessage());
 			}
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

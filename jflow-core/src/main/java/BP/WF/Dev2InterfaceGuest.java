@@ -50,12 +50,12 @@ public class Dev2InterfaceGuest
 	*/
 	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String guestNo, String title, long parentWorkID, String parentFlowNo, int parentNodeID, String parentEmp)
 	{
-		//if (BP.Web.WebUser.No != "Guest")
+		//if (WebUser.getNo() != "Guest")
 		//    throw new Exception("@必须是Guest登陆才能发起.");
 
 
 
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		Flow fl = new Flow(flowNo);
 		Node nd = new Node(fl.getStartNodeID());
@@ -81,7 +81,7 @@ public class Dev2InterfaceGuest
 		}
 
 
-		Emp empStarter = new Emp(BP.Web.WebUser.No);
+		Emp empStarter = new Emp(WebUser.getNo());
 		Work wk = fl.NewWork(empStarter, htPara);
 		long workID = wk.getOID();
 
@@ -186,8 +186,8 @@ public class Dev2InterfaceGuest
 		gwf.setFK_Flow(flowNo);
 		gwf.setFK_FlowSort(fl.getFK_FlowSort());
 		gwf.setSysType(fl.getSysType());
-		gwf.setFK_Dept(WebUser.FK_Dept);
-		gwf.setDeptName(WebUser.FK_DeptName);
+		gwf.setFK_Dept(WebUser.getFK_Dept());
+		gwf.setDeptName(WebUser.getFK_Dept()Name);
 		gwf.setFK_Node(fl.getStartNodeID());
 		gwf.setNodeName(nd.getName());
 		gwf.setWFState(WFState.Runing);
@@ -199,9 +199,9 @@ public class Dev2InterfaceGuest
 		{
 			gwf.setTitle(title);
 		}
-		gwf.setStarter(WebUser.No);
-		gwf.setStarterName(WebUser.Name);
-		gwf.setRDT(DataType.CurrentDataTimess);
+		gwf.setStarter(WebUser.getNo());
+		gwf.setStarterName(WebUser.getName());
+		gwf.setRDT(DataType.getCurrentDataTime()ss);
 		gwf.setPWorkID(parentWorkID);
 	   // gwf.PFID = parentFID;
 		gwf.setPFlowNo(parentFlowNo);
@@ -219,18 +219,18 @@ public class Dev2InterfaceGuest
 		GenerWorkerList gwl = new GenerWorkerList();
 		gwl.setWorkID(wk.getOID());
 		gwl.setFK_Node(nd.getNodeID());
-		gwl.setFK_Emp(WebUser.No);
+		gwl.setFK_Emp(WebUser.getNo());
 		i = gwl.RetrieveFromDBSources();
 
-		gwl.setFK_EmpText(WebUser.Name);
+		gwl.setFK_EmpText(WebUser.getName());
 		gwl.setFK_NodeText(nd.getName());
 		gwl.setFID(0);
 		gwl.setFK_Flow(fl.No);
-		gwl.setFK_Dept(WebUser.FK_Dept);
-		gwl.setFK_DeptT(WebUser.FK_DeptName);
+		gwl.setFK_Dept(WebUser.getFK_Dept());
+		gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
 
 		gwl.setSDT("无");
-		gwl.setDTOfWarning(DataType.CurrentDataTime);
+		gwl.setDTOfWarning(DataType.getCurrentDataTime());
 		gwl.setIsEnable(true);
 		gwl.setIsPass(false);
 		gwl.setPRI(gwf.getPRI());
@@ -317,7 +317,7 @@ public class Dev2InterfaceGuest
 
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String sql;
 
 		/*不是授权状态*/
@@ -365,11 +365,11 @@ public class Dev2InterfaceGuest
 
 		if (DataType.IsNullOrEmpty(fk_flow))
 		{
-			sql = "SELECT a.* FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND B.IsPass=1 AND A.GuestNo='" + guestNo + "' ";
+			sql = "SELECT a.* FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND B.IsPass=1 AND A.GuestNo='" + guestNo + "' ";
 		}
 		else
 		{
-			sql = "SELECT a.* FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.No + "' AND B.IsEnable=1 AND B.IsPass=1  AND A.GuestNo='" + guestNo + "'";
+			sql = "SELECT a.* FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.FK_Flow='" + fk_flow + "'  AND A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "' AND B.IsEnable=1 AND B.IsPass=1  AND A.GuestNo='" + guestNo + "'";
 		}
 
 		return BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -393,7 +393,7 @@ public class Dev2InterfaceGuest
 	*/
 	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName)
 	{
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr + "GuestName WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add("GuestNo", guestNo);
@@ -427,7 +427,7 @@ public class Dev2InterfaceGuest
 			throw new RuntimeException("@设置外部用户待办信息失败:参数workID不能为0.");
 		}
 
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr + "GuestName WHERE WorkID=" + dbstr + "WorkID AND IsPass=0";
 		ps.Add("GuestNo", guestNo);

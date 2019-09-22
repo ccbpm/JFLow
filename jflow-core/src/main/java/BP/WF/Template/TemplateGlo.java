@@ -29,8 +29,8 @@ public class TemplateGlo
 		fl.Retrieve();
 
 	   FlowExt flowExt = new FlowExt(flowNo);
-	   flowExt.setDesignerNo(BP.Web.WebUser.No);
-	   flowExt.setDesignerName(BP.Web.WebUser.Name);
+	   flowExt.setDesignerNo(WebUser.getNo());
+	   flowExt.setDesignerName(WebUser.getName());
 	   flowExt.setDesignTime(LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
 	   flowExt.DirectSave();
 

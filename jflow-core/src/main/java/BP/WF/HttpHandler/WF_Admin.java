@@ -52,7 +52,7 @@ public class WF_Admin extends DirectoryPageBase
 		//清除缓存.
 		BP.Sys.SystemConfig.DoClearCash();
 
-		if (1 == 2 && BP.Web.WebUser.IsAdmin == false)
+		if (1 == 2 && WebUser.getIsAdmin() == false)
 		{
 			return "err@您不是管理员，无法执行该操作.";
 		}
@@ -63,16 +63,16 @@ public class WF_Admin extends DirectoryPageBase
 		if (this.getRefNo() != null)
 		{
 			Emp emp = new Emp(this.getRefNo());
-			BP.Web.WebUser.SignInOfGener(emp);
+			WebUser.SignInOfGener(emp);
 			HttpContextHelper.SessionSet("FK_Flow", this.getFK_Flow());
 			return "url@../MyFlow.htm?FK_Flow=" + this.getFK_Flow();
 		}
 
 		FlowExt fl = new FlowExt(this.getFK_Flow());
 
-		if (1 == 2 && !BP.Web.WebUser.No.equals("admin") && fl.getTester().length() <= 1)
+		if (1 == 2 && !WebUser.getNo().equals("admin") && fl.getTester().length() <= 1)
 		{
-			String msg = "err@二级管理员[" + BP.Web.WebUser.Name + "]您好,您尚未为该流程配置测试人员.";
+			String msg = "err@二级管理员[" + WebUser.getName() + "]您好,您尚未为该流程配置测试人员.";
 			msg += "您需要在流程属性里的底部[设置流程发起测试人]的属性里，设置可以发起的测试人员,多个人员用逗号分开.";
 			return msg;
 		}
@@ -108,7 +108,7 @@ public class WF_Admin extends DirectoryPageBase
 				dr.set("No", emp.No);
 				dr.set("Name", emp.Name);
 				dr.set("FK_DeptText", emp.FK_DeptText);
-				dtEmps.Rows.Add(dr);
+				dtEmps.Rows.add(dr);
 			}
 			return BP.Tools.Json.ToJson(dtEmps);
 		}
@@ -180,17 +180,17 @@ public class WF_Admin extends DirectoryPageBase
 					dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 					if (dt.Rows.size() > 300)
 					{
-						if (SystemConfig.AppCenterDBType == BP.DA.DBType.MSSQL)
+						if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.MSSQL)
 						{
 							sql = "SELECT top 300 No as FK_Emp FROM Port_Emp ";
 						}
 
-						if (SystemConfig.AppCenterDBType == BP.DA.DBType.Oracle)
+						if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.Oracle)
 						{
 							sql = "SELECT  No as FK_Emp FROM Port_Emp WHERE ROWNUM <300 ";
 						}
 
-						if (SystemConfig.AppCenterDBType == BP.DA.DBType.MySQL)
+						if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.MySQL)
 						{
 							sql = "SELECT  No as FK_Emp FROM Port_Emp   limit 0,300 ";
 						}
@@ -242,13 +242,13 @@ public class WF_Admin extends DirectoryPageBase
 				drNew.set("Name", emp.Name);
 				drNew.set("FK_DeptText", emp.FK_DeptText);
 
-				dtMyEmps.Rows.Add(drNew);
+				dtMyEmps.Rows.add(drNew);
 			}
 
 
 			//检查物理表,避免错误.
 			Nodes nds = new Nodes(this.getFK_Flow());
-			for (Node mynd : nds)
+			for (Node mynd : nds.ToJavaList())
 			{
 				mynd.getHisWork().CheckPhysicsTable();
 			}
@@ -308,7 +308,7 @@ public class WF_Admin extends DirectoryPageBase
 
 		Hashtable ht = new Hashtable();
 		ht.put("OSModel", (int)BP.WF.Glo.getOSModel()); //组织结构类型.
-		ht.put("DBType", SystemConfig.AppCenterDBType.toString()); //数据库类型.
+		ht.put("DBType", SystemConfig.getAppCenterDBType().toString()); //数据库类型.
 		ht.put("Ver", BP.WF.Glo.Ver); //版本号.
 
 		return BP.Tools.Json.ToJson(ht);
@@ -353,7 +353,7 @@ public class WF_Admin extends DirectoryPageBase
 			return "err@用户名或密码错误.";
 		}
 
-		BP.Web.WebUser.SignInOfGener(emp);
+		WebUser.SignInOfGener(emp);
 
 		return "登录成功.";
 	}
@@ -401,7 +401,7 @@ public class WF_Admin extends DirectoryPageBase
 
 		String add = "+";
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			add = "||";
 		}

@@ -20,7 +20,7 @@ public class FrmNodes extends EntitiesMyPK
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (FrmNode ns : this)
+		for (FrmNode ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -41,8 +41,9 @@ public class FrmNodes extends EntitiesMyPK
 	 节点表单
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public FrmNodes(String fk_flow, int nodeID)
+	public FrmNodes(String fk_flow, int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Flow, fk_flow);
@@ -56,8 +57,9 @@ public class FrmNodes extends EntitiesMyPK
 	 节点表单
 	 
 	 @param NodeNo NodeNo 
+	 * @throws Exception 
 	*/
-	public FrmNodes(int nodeID)
+	public FrmNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Node, nodeID);
@@ -82,15 +84,16 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @param sts 节点表单
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts)
+	public final Nodes GetHisNodes(Nodes sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
-		for (Node st : sts)
+		for (Node st : sts.ToJavaList())
 		{
 			tmp = this.GetHisNodes(st.getNo());
-			for (Node nd : tmp)
+			for (Node nd : tmp.ToJavaList())
 			{
 				if (nds.Contains(nd))
 				{
@@ -106,15 +109,16 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @param NodeNo 工作节点编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo)
+	public final Nodes GetHisNodes(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Node, NodeNo);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (FrmNode en : this)
+		for (FrmNode en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Frm()));
 		}
@@ -125,15 +129,16 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID)
+	public final Nodes GetHisNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Frm, nodeID);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (FrmNode en : this)
+		for (FrmNode en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -151,7 +156,7 @@ public class FrmNodes extends EntitiesMyPK
 	*/
 	public final List<FrmNode> ToJavaList()
 	{
-		return (List<FrmNode>)this;
+		return (List<FrmNode>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -163,7 +168,7 @@ public class FrmNodes extends EntitiesMyPK
 		ArrayList<FrmNode> list = new ArrayList<FrmNode>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmNode)this[i]);
+			list.add((FrmNode)this.get(i));
 		}
 		return list;
 	}

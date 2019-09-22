@@ -62,7 +62,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 
 		////已经配置的事件类实体.
 		//DataTable dtFrm = ndevs.ToDataTableField("FrmEvents");
-		//ds.Tables.Add(dtFrm);
+		//ds.Tables.add(dtFrm);
 
 		//把事件类型列表放入里面.（发送前，发送成功时.）
 		EventLists xmls = new EventLists();
@@ -70,7 +70,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 
 		DataTable dt = xmls.ToDataTable();
 		dt.TableName = "EventLists";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -88,7 +88,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 		ndevs.Retrieve(FrmEventAttr.FK_MapData, this.getFK_MapData());
 
 		DataTable dt = ndevs.ToDataTableField("FrmEvents");
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//业务单元集合.
 		DataTable dtBuess = new DataTable();
@@ -101,10 +101,10 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 			DataRow dr = dtBuess.NewRow();
 			dr.set("No", en.toString());
 			dr.set("Name", en.Title);
-			dtBuess.Rows.Add(dr);
+			dtBuess.Rows.add(dr);
 		}
 
-		ds.Tables.Add(dtBuess);
+		ds.Tables.add(dtBuess);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -117,7 +117,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 	{
 		//事件实体.
 		FrmEvent en = new FrmEvent();
-		en.MyPK = this.getMyPK();
+		en.setMyPK( this.getMyPK();
 		en.Delete();
 		return "删除成功.";
 	}
@@ -129,7 +129,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 		en.FK_Node = this.getFK_Node();
 		en.FK_Event = this.GetRequestVal("FK_Event"); //事件类型.
 		en.HisDoTypeInt = this.GetValIntFromFrmByKey("EventDoType"); //执行类型.
-		en.MyPK = this.getFK_Node() + "_" + en.FK_Event + "_" + en.HisDoTypeInt; //组合主键.
+		en.setMyPK( this.getFK_Node() + "_" + en.FK_Event + "_" + en.HisDoTypeInt; //组合主键.
 		en.RetrieveFromDBSources();
 
 		en.MsgOKString = this.GetValFromFrmByKey("MsgOK"); //成功的消息.

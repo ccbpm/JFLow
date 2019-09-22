@@ -40,7 +40,7 @@ public class WorkFlowDeleteLogs extends Entities
 	*/
 	public final List<WorkFlowDeleteLog> ToJavaList()
 	{
-		return (List<WorkFlowDeleteLog>)this;
+		return (List<WorkFlowDeleteLog>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class WorkFlowDeleteLogs extends Entities
 		ArrayList<WorkFlowDeleteLog> list = new ArrayList<WorkFlowDeleteLog>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((WorkFlowDeleteLog)this[i]);
+			list.add((WorkFlowDeleteLog)this.get(i));
 		}
 		return list;
 	}

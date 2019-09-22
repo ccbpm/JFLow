@@ -19,7 +19,7 @@ public class MapDataExt extends EntityNoName
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -281,7 +281,7 @@ public class MapDataExt extends EntityNoName
 	}
 	public final void setRptDTSearchWay(DTSearchWay value)
 	{
-		this.SetPara(MapDataAttr.RptDTSearchWay, (int)value);
+		this.SetPara(MapDataAttr.RptDTSearchWay, value.getValue());
 	}
 	/** 
 	 时间字段
@@ -595,7 +595,7 @@ public class MapDataExt extends EntityNoName
 	}
 	public final void setHisAppType(AppType value)
 	{
-		this.SetValByKey(MapDataAttr.AppType, (int)value);
+		this.SetValByKey(MapDataAttr.AppType, value.getValue());
 	}
 	/** 
 	 备注
@@ -755,9 +755,9 @@ public class MapDataExt extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("Sys_MapData", "表单属性");
 		map.Java_SetEnType(EnType.Sys);
@@ -902,17 +902,17 @@ public class MapDataExt extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "重命名字段";
 		  //  rm.Warning = "您确定要处理吗？";
-		rm.HisAttrs.AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("FieldNew", null, "新字段英文名", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FieldNew", null, "新字段英文名", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoChangeFieldName";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "重命表单ID";
 			//  rm.GroupName = "高级设置";
-		rm.HisAttrs.AddTBString("NewFrmID1", null, "新表单ID名称", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("NewFrmID2", null, "确认表单ID名称", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("NewFrmID1", null, "新表单ID名称", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("NewFrmID2", null, "确认表单ID名称", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoChangeFrmID";
 		rm.Icon = "../../WF/Img/ReName.png";
 		map.AddRefMethod(rm);
@@ -986,8 +986,8 @@ public class MapDataExt extends EntityNoName
 			//map.AddRefMethod(rm);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -1001,7 +1001,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoDesignerFool()
 	{
-		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.No + "&IsFirst=1&MyPK=" + this.No + "&IsEditMapData=True";
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" " + this.getNo()+ " "&IsFirst=1&MyPK=" " + this.getNo()+ " "&IsEditMapData=True";
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -1063,7 +1063,7 @@ public class MapDataExt extends EntityNoName
 		MapAttr attrOld = new MapAttr();
 		attrOld.KeyOfEn = fieldOld;
 		attrOld.FK_MapData = this.No;
-		attrOld.MyPK = attrOld.FK_MapData + "_" + attrOld.KeyOfEn;
+		attrOld.setMyPK( attrOld.FK_MapData + "_" + attrOld.KeyOfEn;
 		if (attrOld.RetrieveFromDBSources() == 0)
 		{
 			return "@旧字段输入错误[" + attrOld.KeyOfEn + "].";
@@ -1073,7 +1073,7 @@ public class MapDataExt extends EntityNoName
 		MapAttr attrNew = new MapAttr();
 		attrNew.KeyOfEn = newField;
 		attrNew.FK_MapData = this.No;
-		attrNew.MyPK = attrNew.FK_MapData + "_" + attrNew.KeyOfEn;
+		attrNew.setMyPK( attrNew.FK_MapData + "_" + attrNew.KeyOfEn;
 		if (attrNew.RetrieveFromDBSources() == 1)
 		{
 			return "@该字段[" + attrNew.KeyOfEn + "]已经存在.";
@@ -1098,7 +1098,7 @@ public class MapDataExt extends EntityNoName
 		MapExts exts = new MapExts(this.No);
 		for (MapExt item : exts)
 		{
-			item.MyPK = item.MyPK.Replace("_" + fieldOld, "_" + newField);
+			item.setMyPK( item.MyPK.Replace("_" + fieldOld, "_" + newField);
 
 			if (fieldOld.equals(item.AttrOfOper))
 			{
@@ -1129,7 +1129,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoCheckFrm()
 	{
-		return "../../Admin/AttrNode/CheckFrm.htm?FK_MapData=" + this.No + "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
+		return "../../Admin/AttrNode/CheckFrm.htm?FK_MapData=" " + this.getNo()+ " "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
 	}
 
 	/** 
@@ -1139,7 +1139,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoBatchEditAttr()
 	{
-		return "../../Admin/FoolFormDesigner/BatchEdit.aspx?FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/FoolFormDesigner/BatchEdit.aspx?FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 批量设置正则表达式规则.
@@ -1148,7 +1148,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoRegularExpressionBatch()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 排序字段顺序
@@ -1157,7 +1157,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoSortingMapAttrs()
 	{
-		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 	  /** 
 	 设计表单
@@ -1166,7 +1166,7 @@ public class MapDataExt extends EntityNoName
 	  */
 	public final String DoDFrom()
 	{
-		return "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" + this.No + "&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		return "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" " + this.getNo()+ " "&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 	}
 	/** 
 	 设计傻瓜表单
@@ -1175,7 +1175,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoDFromCol4()
 	{
-		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.No + "&IsFirst=1&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" " + this.getNo()+ " "&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 	}
 	/** 
 	 查询
@@ -1184,7 +1184,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoSearch()
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.No + "&EnsName=" + this.No;
+		return "../../Comm/Search.htm?s=34&FK_MapData=" " + this.getNo()+ " "&EnsName=" + this.No;
 	}
 	/** 
 	 调用分析API
@@ -1193,7 +1193,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoGroup()
 	{
-		return "../../Comm/Group.htm?s=34&FK_MapData=" + this.No + "&EnsName=" + this.No;
+		return "../../Comm/Group.htm?s=34&FK_MapData=" " + this.getNo()+ " "&EnsName=" + this.No;
 	}
 	/** 
 	 数据源管理
@@ -1202,20 +1202,20 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoDBSrc()
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.No + "&EnsName=BP.Sys.SFDBSrcs";
+		return "../../Comm/Search.htm?s=34&FK_MapData=" " + this.getNo()+ " "&EnsName=BP.Sys.SFDBSrcs";
 	}
 	public final String DoWordFrm()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData=" + this.No + "&ExtType=WordFrm&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=WordFrm&RefNo=";
 	}
 
 	public final String DoPageLoadFull()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoInitScript()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 表单属性.
@@ -1224,7 +1224,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoBodyAttr()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.No + "&ExtType=BodyAttr&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -1233,7 +1233,7 @@ public class MapDataExt extends EntityNoName
 	*/
 	public final String DoEvent()
 	{
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.No + "&T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" " + this.getNo()+ " "&T=sd&FK_Node=0";
 	}
 
 	/** 

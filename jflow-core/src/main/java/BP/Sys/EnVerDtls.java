@@ -50,7 +50,7 @@ public class EnVerDtls extends EntitiesMyPK
 	*/
 	public final List<EnVerDtl> ToJavaList()
 	{
-		return (List<EnVerDtl>)this;
+		return (List<EnVerDtl>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -62,7 +62,7 @@ public class EnVerDtls extends EntitiesMyPK
 		ArrayList<EnVerDtl> list = new ArrayList<EnVerDtl>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((EnVerDtl)this[i]);
+			list.add((EnVerDtl)this.get(i));
 		}
 		return list;
 	}

@@ -46,7 +46,7 @@ public class CHExts extends Entities
 	*/
 	public final List<CHExt> ToJavaList()
 	{
-		return (List<CHExt>)this;
+		return (List<CHExt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -58,7 +58,7 @@ public class CHExts extends Entities
 		ArrayList<CHExt> list = new ArrayList<CHExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((CHExt)this[i]);
+			list.add((CHExt)this.get(i));
 		}
 		return list;
 	}

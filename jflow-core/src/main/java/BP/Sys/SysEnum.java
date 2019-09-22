@@ -102,13 +102,13 @@ public class SysEnum extends EntityMyPK
 	public SysEnum(String enumKey, int val)
 	{
 		this.setEnumKey(enumKey);
-		this.setLang(BP.Web.WebUser.getSysLang());
+		this.setLang(WebUser.getSysLang());
 		this.setIntKey(val);
 		this.setMyPK(this.getEnumKey() + "_" + this.getLang() + "_" + this.getIntKey());
 		int i = this.RetrieveFromDBSources();
 		if (i == 0)
 		{
-			i = this.Retrieve(SysEnumAttr.EnumKey, enumKey, SysEnumAttr.Lang, BP.Web.WebUser.getSysLang(), SysEnumAttr.IntKey, this.getIntKey());
+			i = this.Retrieve(SysEnumAttr.EnumKey, enumKey, SysEnumAttr.Lang, WebUser.getSysLang(), SysEnumAttr.IntKey, this.getIntKey());
 			SysEnums ses = new SysEnums();
 			ses.Full(enumKey);
 			if (i == 0)
@@ -172,7 +172,7 @@ public class SysEnum extends EntityMyPK
 	{
 		if (this.getLang() == null && this.getLang().equals(""))
 		{
-			this.setLang(BP.Web.WebUser.getSysLang());
+			this.setLang(WebUser.getSysLang());
 		}
 
 		this.setMyPK(this.getEnumKey() + "_" + this.getLang() + "_" + this.getIntKey());

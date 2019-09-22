@@ -44,7 +44,7 @@ public class Emps extends EntitiesNoName
 	*/
 	public final List<Emp> ToJavaList()
 	{
-		return (List<Emp>)this;
+		return (List<Emp>)(Object)this;
 	}
 	/** 
 	 转化成list

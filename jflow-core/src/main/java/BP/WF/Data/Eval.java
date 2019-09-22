@@ -219,9 +219,9 @@ public class Eval extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_CHEval", "工作质量评价");
 
@@ -249,8 +249,8 @@ public class Eval extends EntityMyPK
 		map.AddTBString(EvalAttr.DeptName, null, "部门名称", false, true, 0, 100, 10);
 		map.AddTBString(EvalAttr.FK_NY, null, "年月", false, true, 0, 7, 10);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

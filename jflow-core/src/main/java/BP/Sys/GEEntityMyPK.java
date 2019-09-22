@@ -151,7 +151,7 @@ public class GEEntityMyPK extends Entity
 
 		//序号.
 		int i = 0;
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			//删除旧的数据.
 			BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + this.getMyPK());
@@ -216,7 +216,7 @@ public class GEEntityMyPK extends Entity
 
 		//复制从表数据.
 		MapDtls dtls = new MapDtls(this.FK_MapData);
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			//删除旧的数据.
 			BP.DA.DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + this.getMyPK());

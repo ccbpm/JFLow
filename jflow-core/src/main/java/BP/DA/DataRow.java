@@ -210,4 +210,12 @@ public class DataRow extends LinkedHashMap<String, Object>
 		}
 		return obj;
 	}
+
+	public void set(String string, Object object) {
+		 
+		if (object==null)
+			object="";
+		
+		this.set(string, object.toString());
+	}
 }

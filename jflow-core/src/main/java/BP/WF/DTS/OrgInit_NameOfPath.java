@@ -53,7 +53,7 @@ public class OrgInit_NameOfPath extends Method
 		{
 			Depts depts = new Depts();
 			depts.RetrieveAll();
-			for (Dept dept : depts)
+			for (Dept dept : depts.ToJavaList())
 			{
 				dept.GenerNameOfPath();
 			}

@@ -552,7 +552,7 @@ public class CCFormAPI
 		attrN.setMinLen(0);
 		attrN.setUIIsEnable(true);
 		attrN.setUIIsLine(false);
-		attrN.setDefVal("@WebUser.Name");
+		attrN.setDefVal("@WebUser.getName()");
 		attrN.setUIIsEnable(false);
 		attrN.setGroupID(gf.getOID());
 		attrN.setIsSigan(true);
@@ -650,7 +650,7 @@ public class CCFormAPI
 		attr.setMinLen(0);
 		attr.setUIIsEnable(true);
 		attr.setUIIsLine(false);
-		attr.setDefVal("@WebUser.No");
+		attr.setDefVal("@WebUser.getNo()");
 		attr.setUIIsEnable(false);
 		attr.setGroupID(gf.getOID());
 		attr.setIsSigan(true);
@@ -1445,71 +1445,71 @@ public class CCFormAPI
 
 		//加入主表信息.
 		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
-		ds.Tables.Add(Sys_MapData);
+		ds.Tables.add(Sys_MapData);
 
 		//加入分组表.
 		DataTable Sys_GroupField = md.getGroupFields().ToDataTableField("Sys_GroupField");
-		ds.Tables.Add(Sys_GroupField);
+		ds.Tables.add(Sys_GroupField);
 
 		//加入明细表.
 		DataTable Sys_MapDtl = md.getOrigMapDtls().ToDataTableField("Sys_MapDtl");
-		ds.Tables.Add(Sys_MapDtl);
+		ds.Tables.add(Sys_MapDtl);
 
 		//加入枚举表.
 		DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
-		ds.Tables.Add(Sys_Menu);
+		ds.Tables.add(Sys_Menu);
 
 		//加入外键属性.
 		DataTable Sys_MapAttr = md.getMapAttrs().ToDataTableField("Sys_MapAttr");
-		ds.Tables.Add(Sys_MapAttr);
+		ds.Tables.add(Sys_MapAttr);
 
 		//加入扩展属性.
 		DataTable Sys_MapExt = md.getMapExts().ToDataTableField("Sys_MapExt");
-		ds.Tables.Add(Sys_MapExt);
+		ds.Tables.add(Sys_MapExt);
 
 		//线.
 		DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
-		ds.Tables.Add(Sys_FrmLine);
+		ds.Tables.add(Sys_FrmLine);
 
 		//link.
 		DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
-		ds.Tables.Add(Sys_FrmLink);
+		ds.Tables.add(Sys_FrmLink);
 
 		//btn.
 		DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
-		ds.Tables.Add(Sys_FrmBtn);
+		ds.Tables.add(Sys_FrmBtn);
 
 		//Sys_FrmLab.
 		DataTable Sys_FrmLab = md.getFrmLabs().ToDataTableField("Sys_FrmLab");
-		ds.Tables.Add(Sys_FrmLab);
+		ds.Tables.add(Sys_FrmLab);
 
 		//img.
 		DataTable Sys_FrmImg = md.getFrmImgs().ToDataTableField("Sys_FrmImg");
-		ds.Tables.Add(Sys_FrmImg);
+		ds.Tables.add(Sys_FrmImg);
 
 		//Sys_FrmRB.
 		DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
-		ds.Tables.Add(Sys_FrmRB);
+		ds.Tables.add(Sys_FrmRB);
 
 		//Sys_FrmEle.
 		DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
-		ds.Tables.Add(Sys_FrmEle);
+		ds.Tables.add(Sys_FrmEle);
 
 		//Sys_MapFrame.
 		DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
-		ds.Tables.Add(Sys_MapFrame);
+		ds.Tables.add(Sys_MapFrame);
 
 		//Sys_FrmAttachment.
 		DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
-		ds.Tables.Add(Sys_FrmAttachment);
+		ds.Tables.add(Sys_FrmAttachment);
 
 		//FrmImgAths. 上传图片附件.
 		DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
-		ds.Tables.Add(Sys_FrmImgAth);
+		ds.Tables.add(Sys_FrmImgAth);
 
 		//FrmImgAthDBs 上传图片信息
 		DataTable Sys_FrmImgAthDB = md.getFrmImgAthDB().ToDataTableField("Sys_FrmImgAthDB");
-		ds.Tables.Add(Sys_FrmImgAthDB);
+		ds.Tables.add(Sys_FrmImgAthDB);
 
 		//放入缓存.
 		BP.DA.CashFrmTemplate.Put(frmID, ds);
@@ -1533,80 +1533,80 @@ public class CCFormAPI
 
 		//加入主表信息.
 		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
-		ds.Tables.Add(Sys_MapData);
+		ds.Tables.add(Sys_MapData);
 
 		//加入分组表.
 		GroupFields gfs = new GroupFields();
 		gfs.RetrieveIn(GroupFieldAttr.FrmID, frmIDs);
 		DataTable Sys_GroupField = gfs.ToDataTableField("Sys_GroupField");
-		ds.Tables.Add(Sys_GroupField);
+		ds.Tables.add(Sys_GroupField);
 
 		//加入明细表.
 		DataTable Sys_MapDtl = md.getOrigMapDtls().ToDataTableField("Sys_MapDtl");
-		ds.Tables.Add(Sys_MapDtl);
+		ds.Tables.add(Sys_MapDtl);
 
 		//加入枚举表.
 		SysEnums ses = new SysEnums();
 		ses.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + frmIDs + ") ");
 		DataTable Sys_Menu = ses.ToDataTableField("Sys_Enum");
-		ds.Tables.Add(Sys_Menu);
+		ds.Tables.add(Sys_Menu);
 
 		//加入字段属性.
 		MapAttrs attrs = new MapAttrs();
 		attrs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
 		DataTable Sys_MapAttr = attrs.ToDataTableField("Sys_MapAttr");
-		ds.Tables.Add(Sys_MapAttr);
+		ds.Tables.add(Sys_MapAttr);
 
 		//加入扩展属性.
 		MapExts exts = new MapExts();
 		exts.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
 		DataTable Sys_MapExt = exts.ToDataTableField("Sys_MapExt");
-		ds.Tables.Add(Sys_MapExt);
+		ds.Tables.add(Sys_MapExt);
 
 		//线.
 		DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
-		ds.Tables.Add(Sys_FrmLine);
+		ds.Tables.add(Sys_FrmLine);
 
 		//link.
 		DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
-		ds.Tables.Add(Sys_FrmLink);
+		ds.Tables.add(Sys_FrmLink);
 
 		//btn.
 		DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
-		ds.Tables.Add(Sys_FrmBtn);
+		ds.Tables.add(Sys_FrmBtn);
 
 		//Sys_FrmLab.
 		FrmLabs frmlabs = new FrmLabs();
 		frmlabs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
 		DataTable Sys_FrmLab = frmlabs.ToDataTableField("Sys_FrmLab");
-		ds.Tables.Add(Sys_FrmLab);
+		ds.Tables.add(Sys_FrmLab);
 
 		//img.
 		//Sys_FrmLab.
 		FrmImgs frmImgs = new FrmImgs();
 		frmImgs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
 		// DataTable Sys_FrmImg = md.FrmImgs.ToDataTableField("Sys_FrmImg");
-		ds.Tables.Add(frmImgs.ToDataTableField("Sys_FrmImg"));
+		ds.Tables.add(frmImgs.ToDataTableField("Sys_FrmImg"));
 
 		//Sys_FrmRB.
 		DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
-		ds.Tables.Add(Sys_FrmRB);
+		ds.Tables.add(Sys_FrmRB);
 
 		//Sys_FrmEle.
 		DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
-		ds.Tables.Add(Sys_FrmEle);
+		ds.Tables.add(Sys_FrmEle);
 
 		//Sys_MapFrame.
 		DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
-		ds.Tables.Add(Sys_MapFrame);
+		ds.Tables.add(Sys_MapFrame);
 
 		//Sys_FrmAttachment.
 		DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
-		ds.Tables.Add(Sys_FrmAttachment);
+		ds.Tables.add(Sys_FrmAttachment);
 
 		//FrmImgAths. 上传图片附件.
 		DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
-		ds.Tables.Add(Sys_FrmImgAth);
+		ds.Tables.add(Sys_FrmImgAth);
 
 		return ds;
 	}
@@ -1764,7 +1764,7 @@ public class CCFormAPI
 				}
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(s);
 				dt.TableName = listNames.get(i);
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 		}
 
@@ -1776,7 +1776,7 @@ public class CCFormAPI
 			}
 		}
 
-		ds.Tables.Add(dtMapDtl);
+		ds.Tables.add(dtMapDtl);
 		return ds;
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

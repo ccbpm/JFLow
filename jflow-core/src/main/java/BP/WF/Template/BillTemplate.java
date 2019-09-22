@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.*;
 import java.util.*;
@@ -24,21 +25,7 @@ public class BillTemplate extends EntityNoName
 		uac.OpenForSysAdmin();
 		return uac;
 	}
-	/** 
-	 编号
-	*/
-	public final String getNo()
-	{
-		String no = this.GetValStrByKey("No");
-		no = no.replace("\n", "");
-		no = no.replace(" ", "");
-		return no;
-	}
-	public final void setNo(String value)
-	{
-		this.SetValByKey("No", value);
-		this.SetValByKey(BillTemplateAttr.TempFilePath, value);
-	}
+	 
 	/** 
 	 生成的单据类型
 	*/
@@ -137,7 +124,7 @@ public class BillTemplate extends EntityNoName
 	public BillTemplate()
 	{
 	}
-	public BillTemplate(String no)
+	public BillTemplate(String no) throws Exception
 	{
 		super(no.replace("\n","").trim());
 	}
@@ -153,17 +140,17 @@ public class BillTemplate extends EntityNoName
 	{
 //C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
 //ORIGINAL LINE: byte[] bytes = BP.DA.DBAccess.GetByteFromDB(this.EnMap.PhysicsTable, "No", this.No, "DBFile");
-		byte[] bytes = BP.DA.DBAccess.GetByteFromDB(this.getEnMap().PhysicsTable, "No", this.getNo(), "DBFile");
+		byte[] bytes = BP.DA.DBAccess.GetByteFromDB(this.getEnMap().getPhysicsTable(), "No", this.getNo(), "DBFile");
 		if (bytes != null)
 		{
 			return bytes;
 		}
 
 		//如果没有找到，就看看默认的文件是否有.
-		String tempExcel = BP.Sys.SystemConfig.PathOfDataUser + "CyclostyleFile\\" + this.getNo() + ".rtf";
+		String tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "CyclostyleFile\\" + this.getNo() + ".rtf";
 		if ((new File(tempExcel)).isFile() == false)
 		{
-			tempExcel = BP.Sys.SystemConfig.PathOfDataUser + "CyclostyleFile\\Word单据模版定义演示.docx";
+			tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "CyclostyleFile\\Word单据模版定义演示.docx";
 		}
 
 		bytes = BP.DA.DataType.ConvertFileToByte(tempExcel);
@@ -175,9 +162,9 @@ public class BillTemplate extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_BillTemplate", "单据模板");
 
@@ -204,8 +191,8 @@ public class BillTemplate extends EntityNoName
 
 		   // map.AddTBString(BillTemplateAttr.ExpField, null, "要排除的字段", false, false, 0, 800, 20);
 		   // map.AddTBString(BillTemplateAttr.ReplaceVal, null, "要替换的值", false, false, 0, 3000, 20);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

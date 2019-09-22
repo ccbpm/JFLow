@@ -41,7 +41,7 @@ public class MyDeptTodolists extends Entities
 	*/
 	public final List<MyDeptTodolist> ToJavaList()
 	{
-		return (List<MyDeptTodolist>)this;
+		return (List<MyDeptTodolist>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class MyDeptTodolists extends Entities
 		ArrayList<MyDeptTodolist> list = new ArrayList<MyDeptTodolist>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MyDeptTodolist)this[i]);
+			list.add((MyDeptTodolist)this.get(i));
 		}
 		return list;
 	}

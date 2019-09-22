@@ -166,9 +166,9 @@ public class SubFlowHand extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeSubFlow", "手动启动子流程");
@@ -206,8 +206,8 @@ public class SubFlowHand extends EntityMyPK
 		map.AddTBString(SubFlowHandAttr.SpecFlowOverNote, null, "备注", true, false, 0, 500, 150, true);
 
 		map.AddTBInt(SubFlowHandAttr.Idx, 0, "显示顺序", true, false);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -215,7 +215,7 @@ public class SubFlowHand extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.MyPK = this.getFK_Node() + "_" + this.getSubFlowNo() + "_0";
+		this.setMyPK( this.getFK_Node() + "_" + this.getSubFlowNo() + "_0";
 		return super.beforeInsert();
 	}
 }

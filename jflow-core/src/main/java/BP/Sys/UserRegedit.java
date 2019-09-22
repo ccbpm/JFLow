@@ -248,19 +248,7 @@ public class UserRegedit extends EntityMyPK
 	{
 		this.SetValByKey(UserRegeditAttr.MVals, value);
 	}
-	public final String getMyPK()
-	{
-		return this.GetValStringByKey(UserRegeditAttr.MyPK);
-	}
-	public final void setMyPK(String value)
-	{
-		this.SetValByKey(UserRegeditAttr.MyPK, value);
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
+	  
 	/** 
 	 用户注册表
 	*/
@@ -352,7 +340,7 @@ public class UserRegedit extends EntityMyPK
 	*/
 	public final HashMap<String, String> GetVals()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getVals()))
+		if (DataType.IsNullOrEmpty(this.getVals()))
 		{
 			return new HashMap<String, String>();
 		}
@@ -391,7 +379,7 @@ public class UserRegedit extends EntityMyPK
 		UserRegedit ur = new UserRegedit("admin", ensName + "_SearchAttrs");
 		String impEmps = (new AtPara(ur.getParas())).GetValStrByKey("ImpEmpNos");
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(impEmps))
+		if (DataType.IsNullOrEmpty(impEmps))
 		{
 			return true;
 		}
@@ -414,7 +402,7 @@ public class UserRegedit extends EntityMyPK
 		//获取可导入权限
 		UserRegedit ur = new UserRegedit("admin", ensName + "_SearchAttrs");
 		String impEmps = (new AtPara(ur.getParas())).GetValStrByKey("ExpEmpNos");
-		if (tangible.StringHelper.isNullOrWhiteSpace(impEmps))
+		if (DataType.IsNullOrEmpty(impEmps))
 		{
 			return true;
 		}

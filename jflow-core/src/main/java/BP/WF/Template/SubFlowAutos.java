@@ -53,7 +53,7 @@ public class SubFlowAutos extends EntitiesMyPK
 	*/
 	public final List<SubFlowAuto> ToJavaList()
 	{
-		return (List<SubFlowAuto>)this;
+		return (List<SubFlowAuto>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -65,7 +65,7 @@ public class SubFlowAutos extends EntitiesMyPK
 		ArrayList<SubFlowAuto> list = new ArrayList<SubFlowAuto>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SubFlowAuto)this[i]);
+			list.add((SubFlowAuto)this.get(i));
 		}
 		return list;
 	}

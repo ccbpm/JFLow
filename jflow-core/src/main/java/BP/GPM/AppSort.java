@@ -60,9 +60,9 @@ public class AppSort extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("GPM_AppSort");
 		map.DepositaryOfEntity = Depositary.None;
@@ -76,8 +76,8 @@ public class AppSort extends EntityNoName
 		map.AddTBInt(AppSortAttr.Idx, 0, "显示顺序", true, false);
 		map.AddTBString(AppSortAttr.RefMenuNo, null, "关联的菜单编号", false, false, 0, 300, 20);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

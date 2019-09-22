@@ -33,7 +33,7 @@ import BP.Sys.Glo;
 import BP.Sys.SystemConfig;
 import BP.Sys.UIConfig;
 import BP.Tools.StringHelper;
-import BP.Web.WebUser;
+import WebUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

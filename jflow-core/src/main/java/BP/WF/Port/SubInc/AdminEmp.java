@@ -158,9 +158,9 @@ public class AdminEmp extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Emp", "管理员");
@@ -188,16 +188,16 @@ public class AdminEmp extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "设置加密密码";
-		rm.HisAttrs.AddTBString("FrmID", null, "输入密码", true, false, 0, 100, 100);
-			//rm.HisAttrs.AddTBString("FrmwID", null, "ewww", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FrmID", null, "输入密码", true, false, 0, 100, 100);
+			//rm.getHisAttrs().AddTBString("FrmwID", null, "ewww", true, false, 0, 100, 100);
 		rm.Warning = "您确定要执行设置改密码吗？";
 		rm.ClassMethodName = this.toString() + ".DoSetPassword";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "增加管理员";
-		rm.HisAttrs.AddTBString("emp", null, "管理员帐号", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("OrgNo", null, "可管理的组织结构代码", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("emp", null, "管理员帐号", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("OrgNo", null, "可管理的组织结构代码", true, false, 0, 100, 100);
 		rm.RefMethodType = RefMethodType.Func;
 		rm.ClassMethodName = this.toString() + ".DoAdd";
 		map.AddRefMethod(rm);
@@ -205,8 +205,8 @@ public class AdminEmp extends EntityNoName
 
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -321,7 +321,7 @@ public class AdminEmp extends EntityNoName
 	public final String DoSetPassword(String password)
 	{
 		String str = BP.Tools.Cryptography.EncryptString(password);
-		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No='" + this.No + "'");
+		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No='" " + this.getNo()+ " "'");
 		return "设置成功..";
 	}
 

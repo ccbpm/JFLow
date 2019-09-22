@@ -197,9 +197,9 @@ public class FrmTrack extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "轨迹图标组件");
@@ -222,8 +222,8 @@ public class FrmTrack extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class MapDataURLs extends EntitiesNoName
 	*/
 	public final List<MapDataURL> ToJavaList()
 	{
-		return (List<MapDataURL>)this;
+		return (List<MapDataURL>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class MapDataURLs extends EntitiesNoName
 		ArrayList<MapDataURL> list = new ArrayList<MapDataURL>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapDataURL)this[i]);
+			list.add((MapDataURL)this.get(i));
 		}
 		return list;
 	}

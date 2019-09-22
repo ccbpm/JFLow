@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.WF.*;
 import BP.Sys.*;
@@ -328,8 +329,9 @@ public class FrmSubFlow extends Entity
 	 父子流程
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmSubFlow(String mapData)
+	public FrmSubFlow(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -358,8 +360,9 @@ public class FrmSubFlow extends Entity
 	 父子流程
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmSubFlow(int nodeID)
+	public FrmSubFlow(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -370,9 +373,9 @@ public class FrmSubFlow extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "父子流程");
@@ -411,24 +414,24 @@ public class FrmSubFlow extends Entity
 		RefMethod rm = new RefMethod();
 		rm.Title = "手动启动子流程";
 		rm.ClassMethodName = this.toString() + ".DoSubFlowHand";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "自动触发子流程";
 		rm.ClassMethodName = this.toString() + ".DoSubFlowAuto";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "延续子流程";
 		rm.ClassMethodName = this.toString() + ".DoSubFlowYanXu";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -467,18 +470,14 @@ public class FrmSubFlow extends Entity
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写方法.
+	 
 	@Override
-	protected boolean beforeUpdateInsertAction()
-	{
-		return super.beforeUpdateInsertAction();
-	}
-	@Override
-	protected void afterUpdate()
+	protected void afterUpdate() throws Exception
 	{
 		//清空缓存，重新查数据
 		Node nd = new Node(this.getNodeID());
 		nd.RetrieveFromDBSources();
-		Cash2019.UpdateRow(nd.toString(),String.valueOf(this.getNodeID()),nd.Row);
+		Cash2019.UpdateRow(nd.toString(),String.valueOf(this.getNodeID()),nd.getRow());
 
 		super.afterUpdate();
 	}

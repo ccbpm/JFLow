@@ -239,7 +239,7 @@ public class GEDtl extends EntityOID
 			return false;
 		}
 
-		this.setRec(BP.Web.WebUser.getNo());
+		this.setRec(WebUser.getNo());
 		this.setRDT(DataType.getCurrentDataTime());
 
 		this.AutoFull(); //处理自动计算。

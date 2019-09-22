@@ -33,7 +33,7 @@ public class Conds extends Entities
 			throw new RuntimeException("@没有要判断的集合.");
 		}
 
-		for (Cond en : this)
+		for (Cond en : this.ToJavaList())
 		{
 			if (en.getIsPassed() == false)
 			{
@@ -44,7 +44,7 @@ public class Conds extends Entities
 	}
 	public final CondOrAnd getCondOrAnd()
 	{
-		for (Cond item : this)
+		for (Cond item : this.ToJavaList())
 		{
 			return item.getCondOrAnd();
 		}
@@ -71,7 +71,7 @@ public class Conds extends Entities
 	public final boolean getIsPassAnd()
 	{
 			// 判断  and. 的关系。
-		for (Cond en : this)
+		for (Cond en : this.ToJavaList())
 		{
 			if (en.getIsPassed() == false)
 			{
@@ -83,7 +83,7 @@ public class Conds extends Entities
 	public final boolean getIsPassOr()
 	{
 			// 判断  and. 的关系。
-		for (Cond en : this)
+		for (Cond en : this.ToJavaList())
 		{
 			if (en.getIsPassed() == true)
 			{
@@ -98,7 +98,7 @@ public class Conds extends Entities
 	public final String getMsgOfDesc()
 	{
 		String msg = "";
-		for (Cond c : this)
+		for (Cond c : this.ToJavaList())
 		{
 			msg += "@" + c.MsgOfCond;
 		}
@@ -109,7 +109,7 @@ public class Conds extends Entities
 	*/
 	public final boolean getIsOneOfCondPassed()
 	{
-		for (Cond en : this)
+		for (Cond en : this.ToJavaList())
 		{
 			if (en.getIsPassed() == true)
 			{
@@ -123,7 +123,7 @@ public class Conds extends Entities
 	*/
 	public final Cond getGetOneOfCondPassed()
 	{
-		for (Cond en : this)
+		for (Cond en : this.ToJavaList())
 		{
 			if (en.getIsPassed() == true)
 			{
@@ -163,7 +163,7 @@ public class Conds extends Entities
 	{
 		this.NodeID = nodeID;
 		this.Retrieve(CondAttr.NodeID, nodeID, CondAttr.CondType, ct.getValue(), CondAttr.PRI);
-		for (Cond en : this)
+		for (Cond en : this.ToJavaList())
 		{
 			en.setWorkID(workid);
 			en.en = enData;
@@ -195,7 +195,7 @@ public class Conds extends Entities
 	*/
 	public final List<Cond> ToJavaList()
 	{
-		return (List<Cond>)this;
+		return (List<Cond>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -207,7 +207,7 @@ public class Conds extends Entities
 		ArrayList<Cond> list = new ArrayList<Cond>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Cond)this[i]);
+			list.add((Cond)this.get(i));
 		}
 		return list;
 	}

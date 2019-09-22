@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -261,7 +262,7 @@ public class BtnLab extends Entity
 	*/
 	public final String getSendJS()
 	{
-		String str = this.GetValStringByKey(BtnAttr.SendJS).Replace("~", "'");
+		String str = this.GetValStringByKey(BtnAttr.SendJS).replace("~", "'");
 		if (this.getCCRole() == BP.WF.CCRole.WhenSend)
 		{
 			str = str + "  if ( OpenCC()==false) return false;";
@@ -872,8 +873,9 @@ public class BtnLab extends Entity
 	 节点按钮权限
 	 
 	 @param nodeid 节点ID
+	 * @throws Exception 
 	*/
-	public BtnLab(int nodeid)
+	public BtnLab(int nodeid) throws Exception
 	{
 		this.setNodeID(nodeid);
 		this.RetrieveFromDBSources();
@@ -884,9 +886,9 @@ public class BtnLab extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "节点标签");
@@ -1088,12 +1090,12 @@ public class BtnLab extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		Node fl = new Node();
 		fl.setNodeID(this.getNodeID());

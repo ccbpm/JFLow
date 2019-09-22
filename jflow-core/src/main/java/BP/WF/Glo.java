@@ -100,7 +100,7 @@ public class Glo
 		//含有流转自定义文件
 		if (dtYL.Rows.size() != 0)
 		{
-			for (Node nd : nds)
+			for (Node nd : nds.ToJavaList())
 			{
 				if (nd.GetParaBoolen("IsYouLiTai") == true)
 				{
@@ -256,7 +256,7 @@ public class Glo
 				GenerWorkFlow firstStartGwf = null;
 				GenerWorkFlow endStartGwf = null;
 				boolean IsFirst = true;
-				for (GenerWorkFlow subGWF : gwfs)
+				for (GenerWorkFlow subGWF : gwfs.ToJavaList())
 				{
 					if (!subGWF.getFK_Flow().equals(sub.getSubFlowNo()))
 					{
@@ -547,7 +547,7 @@ public class Glo
 
 		//增加子流成.
 		int idx = 0;
-		for (GenerWorkFlow subGWF : gwfs)
+		for (GenerWorkFlow subGWF : gwfs.ToJavaList())
 		{
 			idx++;
 
@@ -607,7 +607,7 @@ public class Glo
 		DataRow dr = dtFlows.NewRow();
 		dr.set("id", gwf.getFK_Flow());
 		dr.set("name", gwf.getFlowName());
-		dtFlows.Rows.Add(dr);
+		dtFlows.Rows.add(dr);
 
 		DataRow drItem = dtSeries.NewRow();
 		drItem.set("name", "项目计划日期");
@@ -615,7 +615,7 @@ public class Glo
 		drItem.set("end", gwf.getSDTOfFlow());
 		drItem.set("color", "#f0f0f0");
 		drItem.set("RefPK", gwf.getFK_Flow());
-		dtSeries.Rows.Add(drItem);
+		dtSeries.Rows.add(drItem);
 
 		drItem = dtSeries.NewRow();
 		drItem.set("name", "项目启动日期");
@@ -623,19 +623,19 @@ public class Glo
 		drItem.set("end", gwf.getSDTOfFlow());
 		drItem.set("color", "#f0f0f0");
 		drItem.set("RefPK", gwf.getFK_Flow());
-		dtSeries.Rows.Add(drItem);
+		dtSeries.Rows.add(drItem);
 
 
 		//增加子流程数据.
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		gwfs.Retrieve("PWorkID", workID);
 
-		for (GenerWorkFlow subFlow : gwfs)
+		for (GenerWorkFlow subFlow : gwfs.ToJavaList())
 		{
 			dr = dtFlows.NewRow();
 			dr.set("id", subFlow.getFK_Flow());
 			dr.set("name", subFlow.getFlowName());
-			dtFlows.Rows.Add(dr);
+			dtFlows.Rows.add(dr);
 
 
 			drItem = dtSeries.NewRow();
@@ -644,12 +644,12 @@ public class Glo
 			drItem.set("end", subFlow.getSDTOfFlow());
 			drItem.set("color", "#f0f0f0");
 			drItem.set("RefPK", subFlow.getFK_Flow());
-			dtSeries.Rows.Add(drItem);
+			dtSeries.Rows.add(drItem);
 		}
 
 		DataSet ds = new DataSet();
-		ds.Tables.Add(dtFlows);
-		ds.Tables.Add(dtSeries);
+		ds.Tables.add(dtFlows);
+		ds.Tables.add(dtSeries);
 
 		return ToJsonOfGantt(ds);
 	}
@@ -768,7 +768,7 @@ public class Glo
 	*/
 	public static String multilingual(String defaultMsg, String className, String key, String[] paramList)
 	{
-		if (BP.Web.WebUser.SysLang.equals("zh-cn") || BP.Web.WebUser.SysLang.equals("CH"))
+		if (WebUser.SysLang.equals("zh-cn") || WebUser.SysLang.equals("CH"))
 		{
 			return String.format(defaultMsg, paramList);
 		}
@@ -781,7 +781,7 @@ public class Glo
 		{
 			if (key.equals((String)dr.ItemArray[0]))
 			{
-				switch (BP.Web.WebUser.SysLang)
+				switch (WebUser.SysLang)
 				{
 					case "zh-cn":
 						val = (String)dr.ItemArray[1];
@@ -1033,7 +1033,7 @@ public class Glo
 				}
 				se.Lab = tangible.StringHelper.join("=", kvsValues);
 				se.EnumKey = enumMain.No;
-				se.Lang = BP.Web.WebUser.SysLang;
+				se.Lang = WebUser.SysLang;
 				se.Insert();
 			}
 		}
@@ -1099,7 +1099,7 @@ public class Glo
 		{
 			String mypk = ext.FK_MapData + "_" + ext.AttrOfOper;
 			MapAttr ma = new MapAttr();
-			ma.MyPK = mypk;
+			ma.setMyPK( mypk;
 			if (ma.RetrieveFromDBSources() == 0)
 			{
 				ext.Delete();
@@ -1120,7 +1120,7 @@ public class Glo
 			}
 
 			MapExt extP = new MapExt();
-			extP.MyPK = ext.MyPK + "_FullData";
+			extP.setMyPK( ext.MyPK + "_FullData";
 			int i = extP.RetrieveFromDBSources();
 			if (i == 1)
 			{
@@ -1143,7 +1143,7 @@ public class Glo
 		{
 			String mypk = ext.FK_MapData + "_" + ext.AttrOfOper;
 			MapAttr ma = new MapAttr();
-			ma.MyPK = mypk;
+			ma.setMyPK( mypk;
 			if (ma.RetrieveFromDBSources() == 0)
 			{
 				ext.Delete();
@@ -1172,7 +1172,7 @@ public class Glo
 			}
 
 			MapExt extP = new MapExt();
-			extP.MyPK = ext.MyPK + "_FullData";
+			extP.setMyPK( ext.MyPK + "_FullData";
 			int i = extP.RetrieveFromDBSources();
 			if (i == 1)
 			{
@@ -1201,7 +1201,7 @@ public class Glo
 		{
 			String mypk = ext.FK_MapData + "_" + ext.AttrOfOper;
 			MapAttr ma = new MapAttr();
-			ma.MyPK = mypk;
+			ma.setMyPK( mypk;
 			if (ma.RetrieveFromDBSources() == 0)
 			{
 				ext.Delete();
@@ -1219,7 +1219,7 @@ public class Glo
 
 
 			MapExt extP = new MapExt();
-			extP.MyPK = ext.MyPK + "_FullData";
+			extP.setMyPK( ext.MyPK + "_FullData";
 			int i = extP.RetrieveFromDBSources();
 			if (i == 1)
 			{
@@ -1328,12 +1328,12 @@ public class Glo
 				///#endregion 给city 设置拼音.
 
 			//增加列FlowStars
-			BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp();
+			WFEmp wfemp = new WFEmp();
 			wfemp.CheckPhysicsTable();
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 更新wf_emp. 的字段类型. 2019.06.19
-			DBType dbtype = BP.Sys.SystemConfig.AppCenterDBType;
+			DBType dbtype = BP.Sys.SystemConfig.getAppCenterDBType();
 
 			if (dbtype == DBType.Oracle)
 			{
@@ -1363,7 +1363,7 @@ public class Glo
 				DataTable dtYueSu = DBAccess.RunSQLReturnTable("SELECT b.name, a.name FName from sysobjects b join syscolumns a on b.id = a.cdefault where a.id = object_id('WF_Emp') and a.Name='StartFlows' ");
 				if (dtYueSu.Rows.size() != 0)
 				{
-					DBAccess.RunSQL(" ALTER TABLE WF_Emp drop  constraint " + dtYueSu.Rows[0][0]);
+					DBAccess.RunSQL(" ALTER TABLE WF_Emp drop  constraint " + dtYueSuget(0).getValue(0));
 				}
 
 				DBAccess.RunSQL(" ALTER TABLE WF_Emp ALTER column  StartFlows text");
@@ -1558,7 +1558,7 @@ public class Glo
 			{
 				String sqls = "";
 
-				if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					sqls += "UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.TBFullCtrl + "'";
 					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.PopVal + "'";
@@ -1567,7 +1567,7 @@ public class Glo
 				}
 
 
-				if (SystemConfig.AppCenterDBType == DBType.MySQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
 					sqls += "UPDATE Sys_MapExt SET MyPK=CONCAT(ExtType,'_',FK_Mapdata,'_',AttrOfOper) WHERE ExtType='" + MapExtXmlList.TBFullCtrl + "'";
 					sqls += "@UPDATE Sys_MapExt SET MyPK=CONCAT(ExtType,'_',FK_Mapdata,'_',AttrOfOper) WHERE ExtType='" + MapExtXmlList.PopVal + "'";
@@ -1696,17 +1696,17 @@ public class Glo
 			BP.DA.DBAccess.RunSQL("delete  from Sys_Enum WHERE EnumKey in ('BillFileType','EventDoType','FormType','BatchRole','StartGuideWay','NodeFormType')");
 			DBAccess.RunSQL("UPDATE Sys_FrmSln SET FK_Flow =(SELECT FK_FLOW FROM WF_Node WHERE NODEID=Sys_FrmSln.FK_Node) WHERE FK_Flow IS NULL");
 
-			if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 			{
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm+'_'+convert(varchar,FK_Node )+'_'+FK_Flow");
 			}
 
-			if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm||'_'||FK_Node||'_'||FK_Flow");
 			}
 
-			if (SystemConfig.AppCenterDBType == DBType.MySQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 			{
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=CONCAT(FK_Frm,'_',FK_Node,'_',FK_Flow)");
 			}
@@ -1797,7 +1797,7 @@ public class Glo
 
 			String sqlscript = "";
 			//执行必须的sql.
-			switch (BP.Sys.SystemConfig.AppCenterDBType)
+			switch (BP.Sys.SystemConfig.getAppCenterDBType())
 			{
 				case DBType.Oracle:
 					sqlscript = BP.Sys.SystemConfig.PathOfData + "\\Install\\SQLScript\\InitView_Ora.sql";
@@ -1837,7 +1837,7 @@ public class Glo
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 修复 mapattr UIHeight, UIWidth 类型错误.
-			switch (BP.Sys.SystemConfig.AppCenterDBType)
+			switch (BP.Sys.SystemConfig.getAppCenterDBType())
 			{
 				case DBType.Oracle:
 					msg = "@Sys_MapAttr 修改字段";
@@ -1855,7 +1855,7 @@ public class Glo
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 升级常用词汇
-			switch (BP.Sys.SystemConfig.AppCenterDBType)
+			switch (BP.Sys.SystemConfig.getAppCenterDBType())
 			{
 				case DBType.Oracle:
 					int i = DBAccess.RunSQLReturnCOUNT("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_DEFVAL' AND COLUMN_NAME = 'PARENTNO'");
@@ -1950,7 +1950,7 @@ public class Glo
 			emp.No = "admin";
 			if (emp.RetrieveFromDBSources() == 1)
 			{
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 			}
 			else
 			{
@@ -1959,7 +1959,7 @@ public class Glo
 				emp.FK_Dept = "01";
 				emp.Pass = "123";
 				emp.Insert();
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 				//throw new Exception("admin 用户丢失，请注意大小写。");
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1967,7 +1967,7 @@ public class Glo
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 修复 Sys_FrmImg 表字段 ImgAppType Tag0
-			switch (BP.Sys.SystemConfig.AppCenterDBType)
+			switch (BP.Sys.SystemConfig.getAppCenterDBType())
 			{
 				case DBType.Oracle:
 					int i = DBAccess.RunSQLReturnCOUNT("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_FRMIMG' AND COLUMN_NAME = 'TAG0'");
@@ -2021,11 +2021,11 @@ public class Glo
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 密码加密
-			if (SystemConfig.IsEnablePasswordEncryption == true && BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.AppCenterDBType) == false)
+			if (SystemConfig.IsEnablePasswordEncryption == true && BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == false)
 			{
 				BP.Port.Emps emps = new BP.Port.Emps();
 				emps.RetrieveAllFromDBSource();
-				for (Emp empEn : emps)
+				for (Emp empEn : emps.ToJavaList())
 				{
 					if (DataType.IsNullOrEmpty(empEn.Pass) || empEn.Pass.Length < 30)
 					{
@@ -2049,7 +2049,7 @@ public class Glo
 		}
 		catch (RuntimeException ex)
 		{
-			String err = "问题出处:" + ex.getMessage() + "<hr>" + msg + "<br>详细信息:@" + ex.StackTrace + "<br>@<a href='../DBInstall.aspx' >点这里到系统升级界面。</a>";
+			String err = "问题出处:" + ex.getMessage() + "<hr>" + msg + "<br>详细信息:@" + ex.getStackTrace() + "<br>@<a href='../DBInstall.aspx' >点这里到系统升级界面。</a>";
 			BP.DA.Log.DebugWriteError("系统升级错误:" + err);
 			return err;
 		}
@@ -2092,7 +2092,7 @@ public class Glo
 	*/
 	public static boolean getIsEnableHuiQianList()
 	{
-		if (SystemConfig.CustomerNo.equals("TianYe"))
+		if (SystemConfig.getCustomerNo().equals("TianYe"))
 		{
 			return true;
 		}
@@ -2189,14 +2189,14 @@ public class Glo
 		BP.Sys.FrmRB myrb = new BP.Sys.FrmRB();
 		myrb.CheckPhysicsTable();
 
-		BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp();
+		WFEmp wfemp = new WFEmp();
 		wfemp.CheckPhysicsTable();
 
 		if (BP.DA.DBAccess.IsExitsTableCol("WF_Emp", "StartFlows") == false)
 		{
 			String sql = "";
 			//增加StartFlows这个字段
-			switch (SystemConfig.AppCenterDBType)
+			switch (SystemConfig.getAppCenterDBType())
 			{
 				case DBType.MSSQL:
 					sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
@@ -2230,7 +2230,7 @@ public class Glo
 		BP.DA.DBAccess.RunSQLScript(sqlscript);
 
 		BP.Port.Emp empAdmin = new Emp("admin");
-		BP.Web.WebUser.SignInOfGener(empAdmin);
+		WebUser.SignInOfGener(empAdmin);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 执行基本的 sql
 
@@ -2394,7 +2394,7 @@ public class Glo
 
 		sqlscript = "";
 		//执行必须的sql.
-		switch (BP.Sys.SystemConfig.AppCenterDBType)
+		switch (BP.Sys.SystemConfig.getAppCenterDBType())
 		{
 			case DBType.Oracle:
 				sqlscript = BP.Sys.SystemConfig.CCFlowAppPath + "\\WF\\Data\\Install\\SQLScript\\InitView_Ora.sql";
@@ -2442,10 +2442,10 @@ public class Glo
 			BP.Port.Emps emps = new BP.Port.Emps();
 			emps.RetrieveAllFromDBSource();
 			int i = 0;
-			for (BP.Port.Emp emp : emps)
+			for (BP.Port.Emp emp : emps.ToJavaList())
 			{
 				i++;
-				BP.WF.Port.WFEmp wfEmp = new BP.WF.Port.WFEmp();
+				WFEmp wfEmp = new WFEmp();
 				wfEmp.Copy(emp);
 				wfEmp.No = emp.No;
 
@@ -2470,7 +2470,7 @@ public class Glo
 			}
 
 			// 生成简历数据.
-			for (BP.Port.Emp emp : emps)
+			for (BP.Port.Emp emp : emps.ToJavaList())
 			{
 				for (int myIdx = 0; myIdx < 6; myIdx++)
 				{
@@ -2513,7 +2513,7 @@ public class Glo
 		if (isInstallFlowDemo == true)
 		{
 			BP.Port.Emp emp = new BP.Port.Emp("admin");
-			BP.Web.WebUser.SignInOfGener(emp);
+			WebUser.SignInOfGener(emp);
 			BP.Sys.Glo.WriteLineInfo("开始装载模板...");
 			String msg = "";
 
@@ -2621,7 +2621,7 @@ public class Glo
 		{
 			Flows fls = new Flows();
 			fls.RetrieveAllFromDBSource();
-			for (Flow fl : fls)
+			for (Flow fl : fls.ToJavaList())
 			{
 				try
 				{
@@ -2784,7 +2784,7 @@ public class Glo
 		MapAttrs mattrs = new MapAttrs(enName);
 		GroupFields gfs = new GroupFields(enName);
 		MapDtls dtls = new MapDtls(enName);
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			dtl.IsUse = false;
 		}
@@ -2867,7 +2867,7 @@ public class Glo
 		//    WordApp.Selection.TypeParagraph(); // 插入段落
 
 		//    // 文档中创建表格
-		//    Word.Table newTable = WordDoc.Tables.Add(WordApp.Selection.Range, rowNum, 4, ref  Nothing, ref  Nothing);
+		//    Word.Table newTable = WordDoc.Tables.add(WordApp.Selection.Range, rowNum, 4, ref  Nothing, ref  Nothing);
 
 		//    // 设置表格样式
 		//    newTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleThickThinLargeGap;
@@ -2957,7 +2957,7 @@ public class Glo
 
 		//                newTable.Cell(groupIdx, 1).Select();
 		//                WordApp.Selection.Delete(ref Nothing, ref Nothing);
-		//                Word.Table newTableDtl = WordDoc.Tables.Add(WordApp.Selection.Range, dtlsDB.size() + 1, colNum,
+		//                Word.Table newTableDtl = WordDoc.Tables.add(WordApp.Selection.Range, dtlsDB.size() + 1, colNum,
 		//                    ref Nothing, ref Nothing);
 
 		//                newTableDtl.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -3349,7 +3349,7 @@ public class Glo
 				BP.WF.Dev2Interface.SetParentInfo(gwfSubFlow.getFK_Flow(), workidC, gwfParent.getWorkID());
 
 				// 是否可以执行？
-				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workidC, WebUser.No) == true)
+				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workidC, WebUser.getNo()) == true)
 				{
 					//执行向下发送.
 					try
@@ -3410,7 +3410,7 @@ public class Glo
 		{
 			s = "admin,";
 		}
-		return s.contains(BP.Web.WebUser.No);
+		return s.contains(WebUser.getNo());
 	}
 	public static boolean getIsEnableTrackRec()
 	{
@@ -3514,7 +3514,7 @@ public class Glo
 		if (DataType.IsNullOrEmpty(paras) == false)
 		{
 			AtPara ap = new AtPara(paras);
-			ht = ap.HisHT;
+			ht = ap.getHisHT();
 		}
 
 		Emp emp = new Emp(empNo);
@@ -3633,7 +3633,7 @@ public class Glo
 		Track t = new Track();
 		t.setWorkID(workID);
 		t.setFID(fid);
-		t.setRDT(DataType.CurrentDataTimess);
+		t.setRDT(DataType.getCurrentDataTime()ss);
 		t.setHisActionType(at);
 
 		t.setNDFrom(fromNodeID);
@@ -3676,11 +3676,11 @@ public class Glo
 	*/
 	public static boolean ExeExp(String exp, Entity en)
 	{
-		exp = exp.replace("@WebUser.No", WebUser.No);
-		exp = exp.replace("@WebUser.Name", WebUser.Name);
-		exp = exp.replace("@WebUser.FK_DeptNameOfFull", WebUser.FK_DeptNameOfFull);
-		exp = exp.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-		exp = exp.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
+		exp = exp.replace("@WebUser.getName()", WebUser.getName());
+		exp = exp.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
+		exp = exp.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		String[] strs = exp.split("[ ]", -1);
 		boolean isPass = false;
@@ -3791,10 +3791,10 @@ public class Glo
 				//sql = " SELECT * FROM (" + sql + ") T WHERE T.NO='" + sKey + "' ";
 
 				//替换变量
-				sql = sql.replace("@WebUser.No", WebUser.No);
-				sql = sql.replace("@WebUser.Name", WebUser.Name);
-				sql = sql.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-				sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+				sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+				sql = sql.replace("@WebUser.getName()", WebUser.getName());
+				sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+				sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -3931,7 +3931,7 @@ public class Glo
 		}
 
 		// 填充从表.
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			//如果有数据，就不要填充了.
 
@@ -4034,8 +4034,8 @@ public class Glo
 							gedtl.FID = Long.parseLong(en.PKVal.toString());
 							break;
 					}
-					gedtl.RDT = DataType.CurrentDataTime;
-					gedtl.Rec = WebUser.No;
+					gedtl.RDT = DataType.getCurrentDataTime();
+					gedtl.Rec = WebUser.getNo();
 					gedtl.Insert();
 				}
 			}
@@ -4053,9 +4053,9 @@ public class Glo
 	{
 		String sql = sqlExp;
 		sql = sql.replace("~", "'");
-		sql = sql.replace("@WebUser.No", BP.Web.WebUser.No);
-		sql = sql.replace("@WebUser.Name", BP.Web.WebUser.Name);
-		sql = sql.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+		sql = sql.replace("@WebUser.getName()", WebUser.getName());
+		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		for (String key : ht.keySet())
 		{
@@ -4073,7 +4073,7 @@ public class Glo
 		{
 			GenerWorkFlow gwf = new GenerWorkFlow(myWorkID);
 			AtPara ap = gwf.atPara;
-			for (String str : ap.HisHT.keySet())
+			for (String str : ap.getHisHT().keySet())
 			{
 				sql = sql.replace("@" + str, ap.GetValStrByKey(str));
 			}
@@ -4269,17 +4269,17 @@ public class Glo
 		}
 
 		//首先替换加; 的。
-		exp = exp.replace("@WebUser.No;", WebUser.No);
-		exp = exp.replace("@WebUser.Name;", WebUser.Name);
-		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.FK_DeptName);
-		exp = exp.replace("@WebUser.FK_Dept;", WebUser.FK_Dept);
+		exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
+		exp = exp.replace("@WebUser.getName();", WebUser.getName());
+		exp = exp.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 
 		// 替换没有 ; 的 .
-		exp = exp.replace("@WebUser.No", WebUser.No);
-		exp = exp.replace("@WebUser.Name", WebUser.Name);
-		exp = exp.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-		exp = exp.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
+		exp = exp.replace("@WebUser.getName()", WebUser.getName());
+		exp = exp.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		if (exp.contains("@") == false)
 		{
@@ -4387,17 +4387,17 @@ public class Glo
 		}
 
 		//首先替换加; 的。
-		exp = exp.replace("@WebUser.No;", WebUser.No);
-		exp = exp.replace("@WebUser.Name;", WebUser.Name);
-		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.FK_DeptName);
-		exp = exp.replace("@WebUser.FK_Dept;", WebUser.FK_Dept);
+		exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
+		exp = exp.replace("@WebUser.getName();", WebUser.getName());
+		exp = exp.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 
 		// 替换没有 ; 的 .
-		exp = exp.replace("@WebUser.No", WebUser.No);
-		exp = exp.replace("@WebUser.Name", WebUser.Name);
-		exp = exp.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-		exp = exp.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
+		exp = exp.replace("@WebUser.getName()", WebUser.getName());
+		exp = exp.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 		if (exp.contains("@") == false)
 		{
@@ -4467,7 +4467,7 @@ public class Glo
 
 				DataRow dr = dt.NewRow();
 				dr.set(0, str);
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			DataView dv = dt.DefaultView;
 			dv.Sort = "No DESC";
@@ -4661,7 +4661,7 @@ public class Glo
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 检查数据是否完整。
 
-			BP.Web.WebUser.SignInOfGener(emp);
+			WebUser.SignInOfGener(emp);
 			Flow fl = nd.getHisFlow();
 			Work wk = fl.NewWork();
 
@@ -4701,8 +4701,8 @@ public class Glo
 				}
 			}
 
-			wk.SetValByKey(WorkAttr.Rec, BP.Web.WebUser.No);
-			wk.SetValByKey(StartWorkAttr.FK_Dept, BP.Web.WebUser.FK_Dept);
+			wk.SetValByKey(WorkAttr.Rec, WebUser.getNo());
+			wk.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
 			wk.SetValByKey("FK_NY", DataType.CurrentYearMonth);
 			wk.SetValByKey(WorkAttr.MyNum, 1);
 			wk.Update();
@@ -4775,7 +4775,7 @@ public class Glo
 	{
 		DataTable dt = BP.DA.DBLoad.ReadExcelFileToDataTable(xlsFile);
 		DataSet ds = new DataSet();
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 		ds.WriteXml("C:\\已完成.xml");
 
 		String err = "";
@@ -4850,7 +4850,7 @@ public class Glo
 				///#endregion 检查数据是否完整。
 
 
-			BP.Web.WebUser.SignInOfGener(emp);
+			WebUser.SignInOfGener(emp);
 			Flow fl = ndOfEnd.getHisFlow();
 			Work wk = fl.NewWork();
 			for (DataColumn dc : dt.Columns)
@@ -4858,8 +4858,8 @@ public class Glo
 				wk.SetValByKey(dc.ColumnName.trim(), dr.get(dc.ColumnName).toString().trim());
 			}
 
-			wk.SetValByKey(WorkAttr.Rec, BP.Web.WebUser.No);
-			wk.SetValByKey(StartWorkAttr.FK_Dept, BP.Web.WebUser.FK_Dept);
+			wk.SetValByKey(WorkAttr.Rec, WebUser.getNo());
+			wk.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
 			wk.SetValByKey("FK_NY", DataType.CurrentYearMonth);
 			wk.SetValByKey(WorkAttr.MyNum, 1);
 			wk.Update();
@@ -4881,7 +4881,7 @@ public class Glo
 
 			//结束点结束。
 			emp = new BP.Port.Emp(executer);
-			BP.Web.WebUser.SignInOfGener(emp);
+			WebUser.SignInOfGener(emp);
 
 			Work wkEnd = ndOfEnd.GetWork(wk.getOID());
 			for (DataColumn dc : dt.Columns)
@@ -4889,8 +4889,8 @@ public class Glo
 				wkEnd.SetValByKey(dc.ColumnName.trim(), dr.get(dc.ColumnName).toString().trim());
 			}
 
-			wkEnd.SetValByKey(WorkAttr.Rec, BP.Web.WebUser.No);
-			wkEnd.SetValByKey(StartWorkAttr.FK_Dept, BP.Web.WebUser.FK_Dept);
+			wkEnd.SetValByKey(WorkAttr.Rec, WebUser.getNo());
+			wkEnd.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
 			wkEnd.SetValByKey("FK_NY", DataType.CurrentYearMonth);
 			wkEnd.SetValByKey(WorkAttr.MyNum, 1);
 			wkEnd.Update();
@@ -4918,7 +4918,7 @@ public class Glo
 	*/
 	public static void IsSingleUser(String userNo)
 	{
-		if (DataType.IsNullOrEmpty(WebUser.No) || !userNo.equals(WebUser.No))
+		if (DataType.IsNullOrEmpty(WebUser.getNo()) || !userNo.equals(WebUser.getNo()))
 		{
 			if (!DataType.IsNullOrEmpty(userNo))
 			{
@@ -4943,7 +4943,7 @@ public class Glo
 	//    foreach (Flow fl in fls)
 	//    {
 	//        fl.CheckRpt();
-	//        sql += "\t\n SELECT '" + fl.No + "' as FK_Flow, '" + fl.Name + "' AS FlowName, '" + fl.FK_FlowSort + "' as FK_FlowSort,CDT,Emps,FID,FK_Dept,FK_NY,";
+	//        sql += "\t\n SELECT '" + fl.getNo() + "' as FK_Flow, '" + fl.getName() + "' AS FlowName, '" + fl.FK_FlowSort + "' as FK_FlowSort,CDT,Emps,FID,FK_Dept,FK_NY,";
 	//        sql += "MyNum,OID,RDT,Rec,Title,WFState,FlowEmps,";
 	//        sql += "FlowStarter,FlowStartRDT,FlowEnder,FlowEnderRDT,FlowDaySpan FROM ND" + int.Parse(fl.No) + "Rpt";
 	//        sql += "\t\n  UNION";
@@ -4987,7 +4987,7 @@ public class Glo
 	public static String getSessionMsg()
 	{
 		Paras p = new Paras();
-		p.SQL = "SELECT Msg FROM WF_Emp where No=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		p.SQL = "SELECT Msg FROM WF_Emp where No=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		p.AddFK_Emp();
 		return DBAccess.RunSQLReturnString(p);
 	}
@@ -4998,7 +4998,7 @@ public class Glo
 			return;
 		}
 		Paras p = new Paras();
-		p.SQL = "UPDATE WF_Emp SET Msg=" + SystemConfig.AppCenterDBVarStr + "v WHERE No=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		p.SQL = "UPDATE WF_Emp SET Msg=" + SystemConfig.getAppCenterDBVarStr() + "v WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		p.Add("v", value);
 		p.AddFK_Emp();
 
@@ -5006,11 +5006,11 @@ public class Glo
 		if (i == 0)
 		{
 				/*如果没有更新到.*/
-			BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp();
-			emp.No = BP.Web.WebUser.No;
-			emp.Name = BP.Web.WebUser.Name;
-			emp.setFK_Dept(BP.Web.WebUser.FK_Dept);
-			emp.setEmail((new BP.GPM.Emp(WebUser.No)).Email);
+			WFEmp emp = new WFEmp();
+			emp.No = WebUser.getNo();
+			emp.Name = WebUser.getName();
+			emp.setFK_Dept(WebUser.getFK_Dept());
+			emp.setEmail((new BP.GPM.Emp(WebUser.getNo())).Email);
 			emp.Insert();
 			DBAccess.RunSQL(p);
 		}
@@ -5062,7 +5062,7 @@ public class Glo
 		{
 			_SendHTOfTemp = new Hashtable();
 		}
-		return _SendHTOfTemp.get(BP.Web.WebUser.No) instanceof Hashtable ? (Hashtable)_SendHTOfTemp.get(BP.Web.WebUser.No) : null;
+		return _SendHTOfTemp.get(WebUser.getNo()) instanceof Hashtable ? (Hashtable)_SendHTOfTemp.get(WebUser.getNo()) : null;
 	}
 	public static void setSendHTOfTemp(Hashtable value)
 	{
@@ -5075,7 +5075,7 @@ public class Glo
 		{
 			_SendHTOfTemp = new Hashtable();
 		}
-		_SendHTOfTemp.put(BP.Web.WebUser.No, value);
+		_SendHTOfTemp.put(WebUser.getNo(), value);
 	}
 	/** 
 	 报表属性集合
@@ -5250,7 +5250,7 @@ public class Glo
 	public static boolean CheckIsEnableWFEmp()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT UseSta FROM WF_Emp WHERE No=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		ps.SQL = "SELECT UseSta FROM WF_Emp WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		ps.AddFK_Emp();
 		String s = DBAccess.RunSQLReturnStringIsNull(ps, "1");
 		if (s.equals("1") || s == null)
@@ -5326,14 +5326,14 @@ public class Glo
 	*/
 	public static String getUpdataMainDeptSQL()
 	{
-		return BP.Sys.SystemConfig.GetValByKey("UpdataMainDeptSQL", "UPDATE Port_Emp SET FK_Dept=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "FK_Dept WHERE No=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "No");
+		return BP.Sys.SystemConfig.GetValByKey("UpdataMainDeptSQL", "UPDATE Port_Emp SET FK_Dept=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "FK_Dept WHERE No=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "No");
 	}
 	/** 
 	 更新SID的SQL
 	*/
 	public static String getUpdataSID()
 	{
-		return BP.Sys.SystemConfig.GetValByKey("UpdataSID", "UPDATE Port_Emp SET SID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "SID WHERE No=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "No");
+		return BP.Sys.SystemConfig.GetValByKey("UpdataSID", "UPDATE Port_Emp SET SID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "SID WHERE No=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "No");
 	}
 	/** 
 	 处理显示格式
@@ -5376,7 +5376,7 @@ public class Glo
 //ORIGINAL LINE: public static string DealUserInfoShowModel(string emps, bool idBefore = true)
 	public static String DealUserInfoShowModel(String emps, boolean idBefore)
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(emps))
+		if (DataType.IsNullOrEmpty(emps))
 		{
 			return emps;
 		}
@@ -5853,7 +5853,7 @@ public class Glo
 			///#region 求参与人员 todoEmps ，应完成日期 sdt ，与工作派发日期 prvRDT.
 		//参与人员.
 		String todoEmps = "";
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		if (nd.getIsEndNode() == true && gwl == null)
 		{
 			/* 如果是最后一个节点，可以使用这样的方式来求人员信息 , */
@@ -5861,7 +5861,7 @@ public class Glo
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 求应完成日期，与参与的人集合.
 			Paras ps = new Paras();
-			switch (SystemConfig.AppCenterDBType)
+			switch (SystemConfig.getAppCenterDBType())
 			{
 				case DBType.MSSQL:
 					ps.SQL = "SELECT TOP 1 SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID ";
@@ -5909,12 +5909,12 @@ public class Glo
 			if (gwl == null)
 			{
 				gwl = new GenerWorkerList();
-				gwl.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, nd.getNodeID(), GenerWorkerListAttr.FK_Emp, WebUser.No);
+				gwl.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, nd.getNodeID(), GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 			}
 
 			prvRDT = gwl.getRDT(); // dt.Rows[0]["RDT"].ToString(); //上一个时间点的记录日期.
 			sdt = gwl.getSDT(); //  dt.Rows[0]["SDT"].ToString(); //应完成日期.
-			todoEmps = WebUser.No + "," + WebUser.Name + ";";
+			todoEmps = WebUser.getNo() + "," + WebUser.getName() + ";";
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 求参与人员，应完成日期，与工作派发日期.
@@ -5955,11 +5955,11 @@ public class Glo
 		ch.setFK_Node(nd.getNodeID()); //节点.
 		ch.setFK_NodeT(nd.getName());
 
-		ch.setFK_Dept(WebUser.FK_Dept); //部门.
-		ch.setFK_DeptT(WebUser.FK_DeptName);
+		ch.setFK_Dept(WebUser.getFK_Dept()); //部门.
+		ch.setFK_DeptT(WebUser.getFK_Dept()Name);
 
-		ch.setFK_Emp(WebUser.No); //当事人.
-		ch.setFK_EmpT(WebUser.Name);
+		ch.setFK_Emp(WebUser.getNo()); //当事人.
+		ch.setFK_EmpT(WebUser.getName());
 
 		// 处理相关联的当事人.
 		ch.setGroupEmpsNames(todoEmps);
@@ -5988,7 +5988,7 @@ public class Glo
 		ch.setGroupEmps(empids);
 
 		// mypk.
-		ch.MyPK = nd.getNodeID() + "_" + workid + "_" + fid + "_" + WebUser.No;
+		ch.setMyPK( nd.getNodeID() + "_" + workid + "_" + fid + "_" + WebUser.getNo();
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 初始化基础数据.
 
@@ -6043,7 +6043,7 @@ public class Glo
 			else
 			{
 				//如果遇到退回的情况就可能涉及到主键重复的问题.
-				ch.MyPK = BP.DA.DBAccess.GenerGUID();
+				ch.setMyPK( BP.DA.DBAccess.GenerGUID();
 				ch.Insert();
 			}
 		}
@@ -6229,7 +6229,7 @@ public class Glo
 			if (isContantSelf == false)
 			{
 				qo.addAnd();
-				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.No);
+				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
 			}
 			qo.addOrderBy("RDT");
 			qo.DoQuery();
@@ -6246,7 +6246,7 @@ public class Glo
 			if (isContantSelf == false)
 			{
 				qo.addAnd();
-				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.No);
+				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
 			}
 			qo.addOrderBy("RDT");
 			qo.DoQuery();
@@ -6275,7 +6275,7 @@ public class Glo
 				if (isContantSelf == false)
 				{
 					qo.addAnd();
-					qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.No);
+					qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
 				}
 				qo.addOrderBy("RDT");
 				qo.DoQuery();
@@ -6314,7 +6314,7 @@ public class Glo
 			if (!me.Tag1.equals(""))
 			{
 				String tag1 = me.Tag1 + ",";
-				if (tag1.contains(BP.Web.WebUser.No + ","))
+				if (tag1.contains(WebUser.getNo() + ","))
 				{
 					//根据设置的人员计算.
 					isCando = true;
@@ -6333,7 +6333,7 @@ public class Glo
 				}
 			}
 
-			if (!me.Tag3.equals("") && BP.Web.WebUser.FK_Dept == me.Tag3)
+			if (!me.Tag3.equals("") && WebUser.getFK_Dept() == me.Tag3)
 			{
 				//根据部门编号判断.
 				isCando = true;
@@ -6371,7 +6371,7 @@ public class Glo
 			if (!me.Tag1.equals(""))
 			{
 				String tag1 = me.Tag1 + ",";
-				if (tag1.contains(BP.Web.WebUser.No + ","))
+				if (tag1.contains(WebUser.getNo() + ","))
 				{
 					//根据设置的人员计算.
 					isCando = true;
@@ -6390,7 +6390,7 @@ public class Glo
 				}
 			}
 
-			if (!me.Tag3.equals("") && BP.Web.WebUser.FK_Dept == me.Tag3)
+			if (!me.Tag3.equals("") && WebUser.getFK_Dept() == me.Tag3)
 			{
 				//根据部门编号判断.
 				isCando = true;
@@ -6419,13 +6419,13 @@ public class Glo
 		//}
 
 		HttpContextHelper.SessionSet("info", info);
-		HttpContextHelper.Response.Redirect(Glo.getCCFlowAppPath() + "WF/MyFlowInfo.aspx?Msg=" + DataType.CurrentDataTimess, false);
+		HttpContextHelper.Response.Redirect(Glo.getCCFlowAppPath() + "WF/MyFlowInfo.aspx?Msg=" + DataType.getCurrentDataTime()ss, false);
 	}
 	public static void ToMsgErr(String info)
 	{
 		info = "<font color=red>" + info + "</font>";
 		HttpContextHelper.SessionSet("info", info);
-		HttpContextHelper.Response.Redirect(Glo.getCCFlowAppPath() + "WF/MyFlowInfo.aspx?Msg=" + DataType.CurrentDataTimess, false);
+		HttpContextHelper.Response.Redirect(Glo.getCCFlowAppPath() + "WF/MyFlowInfo.aspx?Msg=" + DataType.getCurrentDataTime()ss, false);
 	}
 	/** 
 	 检查流程发起限制
@@ -6451,7 +6451,7 @@ public class Glo
 		if (role == StartLimitRole.Day)
 		{
 			/* 仅允许一天发起一次 */
-			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT LIKE '" + DataType.CurrentData + "%' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.No + "'";
+			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT LIKE '" + DataType.CurrentData + "%' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
@@ -6489,7 +6489,7 @@ public class Glo
 			 * 1, 找出周1 与周日分别是第几日.
 			 * 2, 按照这个范围去查询,如果查询到结果，就说明已经启动了。
 			 */
-			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT >= '" + DataType.WeekOfMonday(dtNow) + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.No + "'";
+			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT >= '" + DataType.WeekOfMonday(dtNow) + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
@@ -6534,7 +6534,7 @@ public class Glo
 
 		if (role == StartLimitRole.Month)
 		{
-			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY = '" + DataType.CurrentYearMonth + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.No + "'";
+			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY = '" + DataType.CurrentYearMonth + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
@@ -6568,7 +6568,7 @@ public class Glo
 
 		if (role == StartLimitRole.JD)
 		{
-			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY = '" + DataType.CurrentAPOfJD + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.No + "'";
+			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY = '" + DataType.CurrentAPOfJD + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
@@ -6602,7 +6602,7 @@ public class Glo
 
 		if (role == StartLimitRole.Year)
 		{
-			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY LIKE '" + DataType.CurrentYear + "%' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.No + "'";
+			sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY LIKE '" + DataType.CurrentYear + "%' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
@@ -6711,7 +6711,7 @@ public class Glo
 			}
 
 			//找出已经发起的全部流程.
-			sql = "SELECT " + flow.getStartLimitPara() + " FROM " + ptable + " WHERE  WFState NOT IN(0,1) AND FlowStarter='" + WebUser.No + "'";
+			sql = "SELECT " + flow.getStartLimitPara() + " FROM " + ptable + " WHERE  WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 			for (DataRow dr : dt.Rows)
 			{
@@ -6801,7 +6801,7 @@ public class Glo
 		//开始复制.
 		for (FrmField item : frms)
 		{
-			item.MyPK = frmID + "_" + fk_flow + "_" + currNodeID + "_" + item.getKeyOfEn();
+			item.setMyPK( frmID + "_" + fk_flow + "_" + currNodeID + "_" + item.getKeyOfEn();
 			item.setFK_Node(currNodeID);
 			item.Insert(); // 插入数据库.
 		}
@@ -6821,7 +6821,7 @@ public class Glo
 		//复制权限
 		for (FrmAttachment fa : fas)
 		{
-			fa.MyPK = fa.FK_MapData + "_" + fa.NoOfObj + "_" + currNodeID;
+			fa.setMyPK( fa.FK_MapData + "_" + fa.NoOfObj + "_" + currNodeID;
 			fa.FK_Node = currNodeID;
 			fa.Insert();
 		}
@@ -6856,7 +6856,7 @@ public class Glo
 
 		// throw new Exception("@接受人不能为空");
 
-		String dbStr = SystemConfig.AppCenterDBVarStr;
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		//保存系统通知消息
 		StringBuilder strHql1 = new StringBuilder();
 		//加密处理

@@ -97,9 +97,9 @@ public class Task extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_Task", "任务");
 		map.Java_SetEnType(EnType.Admin);
@@ -121,8 +121,8 @@ public class Task extends EntityMyPK
 		map.AddTBString(TaskAttr.StartDT, null, "发起时间", true, false, 0, 20, 10);
 		map.AddTBString(TaskAttr.RDT, null, "插入数据时间", true, false, 0, 20, 10);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

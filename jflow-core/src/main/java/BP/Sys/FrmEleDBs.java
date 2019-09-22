@@ -63,7 +63,7 @@ public class FrmEleDBs extends EntitiesMyPK
 	*/
 	public final List<FrmEleDB> ToJavaList()
 	{
-		return (List<FrmEleDB>)this;
+		return (List<FrmEleDB>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -75,7 +75,7 @@ public class FrmEleDBs extends EntitiesMyPK
 		ArrayList<FrmEleDB> list = new ArrayList<FrmEleDB>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmEleDB)this[i]);
+			list.add((FrmEleDB)this.get(i));
 		}
 		return list;
 	}

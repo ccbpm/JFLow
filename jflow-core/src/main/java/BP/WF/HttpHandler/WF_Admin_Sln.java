@@ -68,7 +68,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 		for (String node : nodeList)
 		{
-			if (tangible.StringHelper.isNullOrWhiteSpace(node))
+			if (DataType.IsNullOrEmpty(node))
 			{
 				continue;
 			}
@@ -80,7 +80,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 			for (String frm : frmList)
 			{
-				if (tangible.StringHelper.isNullOrWhiteSpace(frm))
+				if (DataType.IsNullOrEmpty(frm))
 				{
 					continue;
 				}
@@ -91,14 +91,14 @@ public class WF_Admin_Sln extends DirectoryPageBase
 				if (fn.IsExit("mypk", frm + "_" + this.getFK_Node() + "_" + this.getFK_Flow()))
 				{
 					frmNode.Copy(fn);
-					frmNode.MyPK = frm + "_" + nodeid + "_" + this.getFK_Flow();
+					frmNode.setMyPK( frm + "_" + nodeid + "_" + this.getFK_Flow();
 					frmNode.setFK_Flow(this.getFK_Flow());
 					frmNode.setFK_Node(nodeid);
 					frmNode.setFK_Frm(frm);
 				}
 				else
 				{
-					frmNode.MyPK = frm + "_" + nodeid + "_" + this.getFK_Flow();
+					frmNode.setMyPK( frm + "_" + nodeid + "_" + this.getFK_Flow();
 					frmNode.setFK_Flow(this.getFK_Flow());
 					frmNode.setFK_Node(nodeid);
 					frmNode.setFK_Frm(frm);
@@ -151,7 +151,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 				fn.setFK_Flow(this.getFK_Flow());
 				fn.setFK_Node(this.getFK_Node());
 
-				fn.MyPK = fn.getFK_Frm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow();
+				fn.setMyPK( fn.getFK_Frm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow();
 
 				fn.Save();
 			}

@@ -37,8 +37,9 @@ public class LabNotes extends Entities
 	 标签集合.
 	 
 	 @param FlowNo
+	 * @throws Exception 
 	*/
-	public LabNotes(String fk_flow)
+	public LabNotes(String fk_flow) throws Exception
 	{
 		this.Retrieve(NodeAttr.FK_Flow, fk_flow);
 	}
@@ -54,7 +55,7 @@ public class LabNotes extends Entities
 	*/
 	public final List<LabNote> ToJavaList()
 	{
-		return (List<LabNote>)this;
+		return (List<LabNote>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -66,7 +67,7 @@ public class LabNotes extends Entities
 		ArrayList<LabNote> list = new ArrayList<LabNote>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((LabNote)this[i]);
+			list.add((LabNote)this.get(i));
 		}
 		return list;
 	}

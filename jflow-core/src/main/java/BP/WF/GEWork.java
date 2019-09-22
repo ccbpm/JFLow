@@ -13,7 +13,7 @@ public class GEWork extends Work
 		///#region 与_SQLCash 操作有关
 	private SQLCash _SQLCash = null;
 	@Override
-	public SQLCash getSQLCash()
+	public SQLCash getSQLCash() throws Exception
 	{
 		if (_SQLCash == null)
 		{
@@ -78,7 +78,7 @@ public class GEWork extends Work
 	public Map getEnMap()
 	{
 		this._enMap = BP.Sys.MapData.GenerHisMap(this.NodeFrmID);
-		return this._enMap;
+		return this.get_enMap();
 	}
 	/** 
 	 GEWorks

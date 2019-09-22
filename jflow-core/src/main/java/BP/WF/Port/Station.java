@@ -48,9 +48,9 @@ public class Station extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Port_Station", "岗位");
@@ -68,8 +68,8 @@ public class Station extends EntityNoName
 			//查询条件.
 		map.AddSearchAttr(StationAttr.FK_StationType);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

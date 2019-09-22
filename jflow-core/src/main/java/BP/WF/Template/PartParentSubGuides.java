@@ -54,7 +54,7 @@ public class PartParentSubGuides extends EntitiesMyPK
 	*/
 	public final List<PartParentSubGuide> ToJavaList()
 	{
-		return (List<PartParentSubGuide>)this;
+		return (List<PartParentSubGuide>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -66,7 +66,7 @@ public class PartParentSubGuides extends EntitiesMyPK
 		ArrayList<PartParentSubGuide> list = new ArrayList<PartParentSubGuide>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((PartParentSubGuide)this[i]);
+			list.add((PartParentSubGuide)this.get(i));
 		}
 		return list;
 	}

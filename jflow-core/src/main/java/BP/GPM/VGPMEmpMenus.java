@@ -38,7 +38,7 @@ public class VGPMEmpMenus extends EntitiesMyPK
 	*/
 	public final List<VGPMEmpMenu> ToJavaList()
 	{
-		return (List<VGPMEmpMenu>)this;
+		return (List<VGPMEmpMenu>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class VGPMEmpMenus extends EntitiesMyPK
 		ArrayList<VGPMEmpMenu> list = new ArrayList<VGPMEmpMenu>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((VGPMEmpMenu)this[i]);
+			list.add((VGPMEmpMenu)this.get(i));
 		}
 		return list;
 	}

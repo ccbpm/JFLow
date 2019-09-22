@@ -46,7 +46,7 @@ public class FrmAttachments extends EntitiesMyPK
 	*/
 	public final List<FrmAttachment> ToJavaList()
 	{
-		return (List<FrmAttachment>)this;
+		return (List<FrmAttachment>)(Object)this;
 	}
 	/** 
 	 转化成list

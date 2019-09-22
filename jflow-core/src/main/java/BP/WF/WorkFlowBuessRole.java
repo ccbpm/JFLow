@@ -45,16 +45,16 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 
-		titleRole = titleRole.replace("@WebUser.No", emp.No);
-		titleRole = titleRole.replace("@WebUser.Name", emp.Name);
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.FK_DeptNameOfFull);
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", emp.FK_DeptText);
-		titleRole = titleRole.replace("@WebUser.FK_Dept", emp.FK_Dept);
+		titleRole = titleRole.replace("@WebUser.getNo()", emp.No);
+		titleRole = titleRole.replace("@WebUser.getName()", emp.Name);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", emp.FK_DeptText);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()", emp.FK_Dept);
 		titleRole = titleRole.replace("@RDT", rdt);
 		if (titleRole.contains("@") == true)
 		{
@@ -131,20 +131,20 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+			titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 		}
 
-		titleRole = titleRole.replace("@WebUser.No", wk.getRec());
-		titleRole = titleRole.replace("@WebUser.Name", wk.getRecText());
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.FK_DeptNameOfFull);
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", wk.getRecOfEmp().FK_DeptText);
-		titleRole = titleRole.replace("@WebUser.FK_Dept", wk.getRecOfEmp().FK_Dept);
+		titleRole = titleRole.replace("@WebUser.getNo()", wk.getRec());
+		titleRole = titleRole.replace("@WebUser.getName()", wk.getRecText());
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", wk.getRecOfEmp().FK_DeptText);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()", wk.getRecOfEmp().FK_Dept);
 		titleRole = titleRole.replace("@RDT", wk.getRDT());
 
 		if (titleRole.contains("@"))
@@ -217,10 +217,10 @@ public class WorkFlowBuessRole
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
 			// 为了保持与ccflow4.5的兼容,从开始节点属性里获取.
-			Attr myattr = wk.getEnMap().Attrs.GetAttrByKey("Title");
+			Attr myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			if (myattr == null)
 			{
-				myattr = wk.getEnMap().Attrs.GetAttrByKey("Title");
+				myattr = wk.getEnMap().getAttrs().GetAttrByKey("Title");
 			}
 
 			if (myattr != null)
@@ -230,25 +230,25 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+			titleRole = "@WebUser.getFK_Dept()Name-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 		}
 
 
-		titleRole = titleRole.replace("@WebUser.No", wk.getFlowStarter());
-		titleRole = titleRole.replace("@WebUser.Name", WebUser.Name);
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.FK_DeptNameOfFull);
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		titleRole = titleRole.replace("@WebUser.getNo()", wk.getFlowStarter());
+		titleRole = titleRole.replace("@WebUser.getName()", WebUser.getName());
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+		titleRole = titleRole.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", wk.getFlowStartRDT());
 		if (titleRole.contains("@"))
 		{
-			Attrs attrs = wk.getEnMap().Attrs;
+			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换,因为外键文本的字段的长度相对较长。
 			for (Attr attr : attrs)
@@ -401,7 +401,7 @@ public class WorkFlowBuessRole
 
 		if (billNo.contains("@WebUser.DeptZi"))
 		{
-			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.FK_Dept + "'", "");
+			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'", "");
 			billNo = billNo.replace("@WebUser.DeptZi", val.toString());
 		}
 
@@ -462,7 +462,7 @@ public class WorkFlowBuessRole
 			String maxBillNo = DBAccess.RunSQLReturnString(sql);
 			int ilsh = 0;
 
-			if (tangible.StringHelper.isNullOrWhiteSpace(maxBillNo))
+			if (DataType.IsNullOrEmpty(maxBillNo))
 			{
 				//没有数据，则所有流水号都从1开始
 				for (Map.Entry<Integer, Integer> kv : loc.entrySet())
@@ -621,7 +621,7 @@ public class WorkFlowBuessRole
 		Nodes myNodes = new Nodes();
 		int toNodeId = 0;
 		int numOfWay = 0;
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			Conds dcs = new Conds();
 			for (Cond dc : dcsAll)
@@ -660,7 +660,7 @@ public class WorkFlowBuessRole
 		// 如果没有找到,就找到没有设置方向条件的节点,没有设置方向条件的节点是默认同意的.
 		if (myNodes.size() == 0)
 		{
-			for (Node nd : nds)
+			for (Node nd : nds.ToJavaList())
 			{
 				Conds dcs = new Conds();
 				for (Cond dc : dcsAll)
@@ -681,7 +681,7 @@ public class WorkFlowBuessRole
 
 		if (myNodes.size() == 0)
 		{
-			throw new RuntimeException("@当前用户(" + BP.Web.WebUser.Name + "),定义节点的方向条件错误:从{" + currNode.getNodeID() + currNode.getName() + "}节点到其它节点,定义的所有转向条件都不成立.");
+			throw new RuntimeException("@当前用户(" + WebUser.getName() + "),定义节点的方向条件错误:从{" + currNode.getNodeID() + currNode.getName() + "}节点到其它节点,定义的所有转向条件都不成立.");
 		}
 
 		//如果找到1个.
@@ -730,7 +730,7 @@ public class WorkFlowBuessRole
 			DataRow dr = mydt.NewRow();
 			dr.set("No", "Guest");
 			dr.set("Name", "外部用户");
-			mydt.Rows.Add(dr);
+			mydt.Rows.add(dr);
 			return mydt;
 		}
 
@@ -740,15 +740,15 @@ public class WorkFlowBuessRole
 		String FK_Emp;
 
 		//变量.
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 		Paras ps = new Paras();
 		// 按上一节点发送人处理。
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeEmp)
 		{
 			DataRow dr = dt.NewRow();
-			dr.set(0, BP.Web.WebUser.No);
-			dt.Rows.Add(dr);
+			dr.set(0, WebUser.getNo());
+			dt.Rows.add(dr);
 			return dt;
 		}
 
@@ -833,7 +833,7 @@ public class WorkFlowBuessRole
 
 			BP.Sys.MapDtls dtls = new BP.Sys.MapDtls(currNode.getNodeFrmID());
 			String msg = null;
-			for (BP.Sys.MapDtl dtl : dtls)
+			for (BP.Sys.MapDtl dtl : dtls.ToJavaList())
 			{
 				try
 				{
@@ -844,7 +844,7 @@ public class WorkFlowBuessRole
 					}
 
 					ps = new Paras();
-					ps.SQL = "SELECT " + empFild + ", * FROM " + dtl.PTable + " WHERE RefPK=" + dbStr + "OID ORDER BY OID";
+					ps.SQL = "SELECT " + empFild + ", * FROM " + dtl.getPTable() + " WHERE RefPK=" + dbStr + "OID ORDER BY OID";
 					ps.Add("OID", workid);
 					dt = DBAccess.RunSQLReturnTable(ps);
 					if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
@@ -920,7 +920,7 @@ public class WorkFlowBuessRole
 				{
 					DataRow dr = dt.NewRow();
 					dr.set(0, item.getFK_Emp());
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				return dt;
 			}
@@ -952,8 +952,8 @@ public class WorkFlowBuessRole
 				{
 					/* 有可能当前节点就是第一个节点，那个时间还没有初始化数据，就返回当前人. */
 					DataRow dr = dt.NewRow();
-					dr.set(0, BP.Web.WebUser.No);
-					dt.Rows.Add(dr);
+					dr.set(0, WebUser.getNo());
+					dt.Rows.add(dr);
 					return dt;
 				}
 			}
@@ -961,7 +961,7 @@ public class WorkFlowBuessRole
 			// 首先从本流程里去找。
 			strs = strs.replace(";", ",");
 			String[] nds = strs.split("[,]", -1);
-			for (String nd : nds)
+			for (String nd : nds.ToJavaList())
 			{
 				if (DataType.IsNullOrEmpty(nd))
 				{
@@ -993,7 +993,7 @@ public class WorkFlowBuessRole
 					{
 						DataRow dr = dt.NewRow();
 						dr.set(0, row.get(0).toString());
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
 					continue;
@@ -1017,7 +1017,7 @@ public class WorkFlowBuessRole
 					{
 						DataRow dr = dt.NewRow();
 						dr.set(0, row.get(0).toString());
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 				}
 			}
@@ -1058,7 +1058,7 @@ public class WorkFlowBuessRole
 						{
 							DataRow dr = dt.NewRow();
 							dr.set(0, row.get(0).toString());
-							dt.Rows.Add(dr);
+							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
 						continue;
@@ -1090,7 +1090,7 @@ public class WorkFlowBuessRole
 						{
 							DataRow dr = dt.NewRow();
 							dr.set(0, row.get(0).toString());
-							dt.Rows.Add(dr);
+							dt.Rows.add(dr);
 						}
 					}
 				}
@@ -1139,7 +1139,7 @@ public class WorkFlowBuessRole
 					String[] ss = str.split("[,]", -1);
 					DataRow dr = dt.NewRow();
 					dr.set(0, ss[0]);
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				if (dt.Rows.size() == 0)
 				{
@@ -1176,7 +1176,7 @@ public class WorkFlowBuessRole
 
 				DataRow dr = dt.NewRow();
 				dr.set(0, s);
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			return dt;
 		}
@@ -1344,7 +1344,7 @@ public class WorkFlowBuessRole
 
 			ps = new Paras();
 			sql = "SELECT No,Name FROM Port_Emp WHERE No=" + dbStr + "FK_Emp ";
-			ps.Add("FK_Emp", WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 			dt = DBAccess.RunSQLReturnTable(ps);
 
 
@@ -1361,8 +1361,8 @@ public class WorkFlowBuessRole
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
-		String empNo = WebUser.No;
-		String empDept = WebUser.FK_Dept;
+		String empNo = WebUser.getNo();
+		String empDept = WebUser.getFK_Dept();
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 按指定的节点的人员岗位，做为下一步骤的流程接受人。
@@ -1385,7 +1385,7 @@ public class WorkFlowBuessRole
 					throw new RuntimeException("@流程设计错误，到达的节点（" + toNode.getName() + "）在指定的节点中没有数据，无法找到工作的人员。");
 				}
 
-				empNo = dt.Rows[0][0].toString();
+				empNo = dt.Rows.get(0).getValue(0).toString();
 				empDept = dt.Rows[0][1].toString();
 			}
 			else
@@ -1477,8 +1477,8 @@ public class WorkFlowBuessRole
 		{
 			/* 说明，就把当前人员做为下一个节点处理人。*/
 			DataRow dr = dt.NewRow();
-			dr.set(0, WebUser.No);
-			dt.Rows.Add(dr);
+			dr.set(0, WebUser.getNo());
+			dt.Rows.add(dr);
 			return dt;
 		}
 
@@ -1488,7 +1488,7 @@ public class WorkFlowBuessRole
 			/* 没有查询到的情况下, 先按照本部门计算。*/
 			if (flowAppType == FlowAppType.Normal)
 			{
-				if (BP.Sys.SystemConfig.OSDBSrc == Sys.OSDBSrc.Database)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.Database)
 				{
 						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B  WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
 					ps = new Paras();
@@ -1497,7 +1497,7 @@ public class WorkFlowBuessRole
 					ps.Add("FK_Dept", empDept);
 				}
 
-				if (BP.Sys.SystemConfig.OSDBSrc == Sys.OSDBSrc.WebServices)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.WebServices)
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + toNode.getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
@@ -1567,7 +1567,7 @@ public class WorkFlowBuessRole
 				boolean isInit = false;
 				for (DataRow dr : dt.Rows)
 				{
-					if (dr.get(0).toString().equals(BP.Web.WebUser.No))
+					if (dr.get(0).toString().equals(WebUser.getNo()))
 					{
 						/* 如果岗位分组不一样，并且结果集合里还有当前的人员，就说明了出现了当前操作员，拥有本节点上的岗位也拥有下一个节点的工作岗位
 						 导致：节点的分组不同，传递到同一个人身上。 */
@@ -1594,7 +1594,7 @@ public class WorkFlowBuessRole
 		while (true)
 		{
 			BP.Port.Dept myDept = new BP.Port.Dept(nowDeptID);
-			nowDeptID = myDept.ParentNo;
+			nowDeptID = myDept.getParentNo();
 			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0"))
 			{
 				break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
@@ -1683,7 +1683,7 @@ public class WorkFlowBuessRole
 	private static DataTable RequetNextNodeWorkers_DiGui(String deptNo, String empNo, Node toNode)
 	{
 		String sql;
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
 			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
 		Paras ps = new Paras();
@@ -1791,7 +1791,7 @@ public class WorkFlowBuessRole
 			//抄送信息.
 			ccMsg += "(" + toUserNo + " - " + toUserName + ");";
 			CCList list = new CCList();
-			list.MyPK = workid + "_" + node.getNodeID() + "_" + dr.get(0).toString();
+			list.setMyPK( workid + "_" + node.getNodeID() + "_" + dr.get(0).toString();
 			list.setFK_Flow(node.getFK_Flow());
 			list.setFlowName(node.getFlowName());
 			list.setFK_Node(node.getNodeID());
@@ -1800,8 +1800,8 @@ public class WorkFlowBuessRole
 			list.setDoc(ccDoc);
 			list.setCCTo(dr.get(0).toString());
 			list.setCCToName(dr.get(1).toString());
-			list.setRDT(DataType.CurrentDataTime);
-			list.setRec(WebUser.No);
+			list.setRDT(DataType.getCurrentDataTime());
+			list.setRec(WebUser.getNo());
 			list.setWorkID(workid);
 			list.setFID(fid);
 
@@ -1834,14 +1834,14 @@ public class WorkFlowBuessRole
 			{
 				//     //写入消息提示.
 				//     ccMsg += list.CCTo + "(" + dr[1].ToString() + ");";
-				//     BP.WF.Port.WFEmp wfemp = new Port.WFEmp(list.CCTo);
+				//     WFEmp wfemp = new Port.WFEmp(list.CCTo);
 				//     string sid = list.CCTo + "_" + list.WorkID + "_" + list.FK_Node + "_" + list.RDT;
 				//     string url = basePath + "WF/Do.aspx?DoType=OF&SID=" + sid;
 				//     string urlWap = basePath + "WF/Do.aspx?DoType=OF&SID=" + sid + "&IsWap=1";
 				//     string mytemp = mailTemp.Clone() as string;
-				//     mytemp = string.Format(mytemp, wfemp.Name, WebUser.Name, url, urlWap);
+				//     mytemp = string.Format(mytemp, wfemp.Name, WebUser.getName(), url, urlWap);
 				//     string title = string.Format("工作抄送:{0}.工作:{1},发送人:{2},需您查阅",
-				//this.HisNode.FlowName, this.HisNode.Name, WebUser.Name);
+				//this.HisNode.FlowName, this.HisNode.Name, WebUser.getName());
 				//     BP.WF.Dev2Interface.Port_SendMsg(wfemp.No, title, mytemp, null, BP.Sys.SMSMsgType.CC, list.FK_Flow, list.FK_Node, list.WorkID, list.FID);
 			}
 		}
@@ -1906,7 +1906,7 @@ public class WorkFlowBuessRole
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 如果是写入抄送列表.
 			CCList list = new CCList();
-			list.MyPK = DBAccess.GenerGUID(); // workid + "_" + node.NodeID + "_" + item.Key.ToString();
+			list.setMyPK( DBAccess.GenerGUID(); // workid + "_" + node.NodeID + "_" + item.Key.ToString();
 			list.setFK_Flow(nd.getFK_Flow());
 			list.setFlowName(nd.getFlowName());
 			list.setFK_Node(nd.getNodeID());
@@ -1915,8 +1915,8 @@ public class WorkFlowBuessRole
 			list.setDoc(ccDoc);
 			list.setCCTo(item.getKey().toString());
 			list.setCCToName(item.getValue().toString());
-			list.setRDT(DataType.CurrentDataTime);
-			list.setRec(WebUser.No);
+			list.setRDT(DataType.getCurrentDataTime());
+			list.setRec(WebUser.getNo());
 			list.setWorkID(workid);
 			list.setFID(fid);
 			list.setInEmpWorks(nd.getCCWriteTo() == CCWriteTo.CCList ? false : true); //added by liuxc,2015.7.6
@@ -1951,7 +1951,7 @@ public class WorkFlowBuessRole
 			if (BP.WF.Glo.getIsEnableSysMessage() == true)
 			{
 				ccMsg += list.getCCTo() + "(" + item.getValue().toString() + ");";
-				BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(list.getCCTo());
+				WFEmp wfemp = new WFEmp(list.getCCTo());
 
 				String sid = list.getCCTo() + "_" + list.getWorkID() + "_" + list.getFK_Node() + "_" + list.getRDT();
 				String url = basePath + "WF/Do.htm?DoType=OF&SID=" + sid;
@@ -1964,9 +1964,9 @@ public class WorkFlowBuessRole
 
 				Object tempVar3 = mailTemp.Clone();
 				String mytemp = tempVar3 instanceof String ? (String)tempVar3 : null;
-				mytemp = String.format(mytemp, wfemp.Name, WebUser.Name, url, urlWap);
+				mytemp = String.format(mytemp, wfemp.Name, WebUser.getName(), url, urlWap);
 
-				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", nd.getFlowName(), nd.getName(), WebUser.Name);
+				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", nd.getFlowName(), nd.getName(), WebUser.getName());
 
 				BP.WF.Dev2Interface.Port_SendMsg(wfemp.No, title, mytemp, null, BP.WF.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID());
 			}

@@ -17,7 +17,7 @@ public class NodeReturns extends EntitiesMM
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (NodeReturn ns : this)
+		for (NodeReturn ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getReturnTo()));
 		}
@@ -96,7 +96,7 @@ public class NodeReturns extends EntitiesMM
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeReturn en : this)
+		for (NodeReturn en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -115,7 +115,7 @@ public class NodeReturns extends EntitiesMM
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeReturn en : this)
+		for (NodeReturn en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getReturnTo()));
 		}
@@ -131,7 +131,7 @@ public class NodeReturns extends EntitiesMM
 	*/
 	public final List<NodeReturn> ToJavaList()
 	{
-		return (List<NodeReturn>)this;
+		return (List<NodeReturn>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -143,7 +143,7 @@ public class NodeReturns extends EntitiesMM
 		ArrayList<NodeReturn> list = new ArrayList<NodeReturn>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((NodeReturn)this[i]);
+			list.add((NodeReturn)this.get(i));
 		}
 		return list;
 	}

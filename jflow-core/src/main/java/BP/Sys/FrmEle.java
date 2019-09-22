@@ -562,7 +562,7 @@ public class FrmEle extends EntityMyPK
 	{
 
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = true;
 			uac.IsUpdate = true;

@@ -19,7 +19,7 @@ public class NodeCancels extends EntitiesMM
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (NodeCancel ns : this)
+		for (NodeCancel ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getCancelTo()));
 		}
@@ -103,7 +103,7 @@ public class NodeCancels extends EntitiesMM
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeCancel en : this)
+		for (NodeCancel en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -122,7 +122,7 @@ public class NodeCancels extends EntitiesMM
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeCancel en : this)
+		for (NodeCancel en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getCancelTo()));
 		}
@@ -140,7 +140,7 @@ public class NodeCancels extends EntitiesMM
 	*/
 	public final List<NodeCancel> ToJavaList()
 	{
-		return (List<NodeCancel>)this;
+		return (List<NodeCancel>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -152,7 +152,7 @@ public class NodeCancels extends EntitiesMM
 		ArrayList<NodeCancel> list = new ArrayList<NodeCancel>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((NodeCancel)this[i]);
+			list.add((NodeCancel)this.get(i));
 		}
 		return list;
 	}

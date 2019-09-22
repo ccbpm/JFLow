@@ -38,7 +38,7 @@ public class SysForm extends EntityNoName
 	}
 	public final void setHisFrmType(FrmType value)
 	{
-		this.SetValByKey(SysFormAttr.FrmType, (int)value);
+		this.SetValByKey(SysFormAttr.FrmType, value.getValue());
 	}
 	public final String getFK_FormTree()
 	{
@@ -75,9 +75,9 @@ public class SysForm extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Sys_MapData", "系统表单");
@@ -102,8 +102,8 @@ public class SysForm extends EntityNoName
 		map.AddTBInt(Sys.MapDataAttr.FrmW, 900, "系统表单宽度", true, false);
 		map.AddTBInt(Sys.MapDataAttr.FrmH, 1200, "系统表单高度", true, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	public final int getFrmW()
 	{

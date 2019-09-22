@@ -37,7 +37,7 @@ public class PerSettings extends EntitiesMyPK
 	*/
 	public final List<PerSetting> ToJavaList()
 	{
-		return (List<PerSetting>)this;
+		return (List<PerSetting>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -49,7 +49,7 @@ public class PerSettings extends EntitiesMyPK
 		ArrayList<PerSetting> list = new ArrayList<PerSetting>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((PerSetting)this[i]);
+			list.add((PerSetting)this.get(i));
 		}
 		return list;
 	}

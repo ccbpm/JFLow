@@ -69,7 +69,7 @@ public class GEEntityWordFrms extends EntitiesOID
 	*/
 	public final List<GEEntityWordFrm> ToJavaList()
 	{
-		return (List<GEEntityWordFrm>)this;
+		return (List<GEEntityWordFrm>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -81,7 +81,7 @@ public class GEEntityWordFrms extends EntitiesOID
 		ArrayList<GEEntityWordFrm> list = new ArrayList<GEEntityWordFrm>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GEEntityWordFrm)this[i]);
+			list.add((GEEntityWordFrm)this.get(i));
 		}
 		return list;
 	}

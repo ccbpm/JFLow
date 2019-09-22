@@ -23,7 +23,7 @@ public class RememberMe extends EntityMyPK
 	public final void setFK_Emp(String value)
 	{
 		this.SetValByKey(RememberMeAttr.FK_Emp, value);
-		this.MyPK = this.getFK_Node() + "_" + BP.Web.WebUser.No;
+		this.setMyPK( this.getFK_Node() + "_" + WebUser.getNo();
 	}
 	/** 
 	 当前节点
@@ -35,7 +35,7 @@ public class RememberMe extends EntityMyPK
 	public final void setFK_Node(int value)
 	{
 		this.SetValByKey(RememberMeAttr.FK_Node, value);
-		this.MyPK = this.getFK_Node() + "_" + BP.Web.WebUser.No;
+		this.setMyPK( this.getFK_Node() + "_" + WebUser.getNo();
 	}
 	/** 
 	 有效的工作人员
@@ -125,9 +125,9 @@ public class RememberMe extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_RememberMe", "记忆我");
 
@@ -141,8 +141,8 @@ public class RememberMe extends EntityMyPK
 
 		map.AddTBString(RememberMeAttr.Emps, "", "所有的工作人员", true, false, 0, 4000, 10);
 		map.AddTBString(RememberMeAttr.EmpsExt, "", "工作人员Ext", true, false, 0, 4000, 10);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -150,8 +150,8 @@ public class RememberMe extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction()
 	{
-		this.setFK_Emp(BP.Web.WebUser.No);
-		this.MyPK = this.getFK_Node() + "_" + this.getFK_Emp();
+		this.setFK_Emp(WebUser.getNo());
+		this.setMyPK( this.getFK_Node() + "_" + this.getFK_Emp();
 		return super.beforeUpdateInsertAction();
 	}
 }

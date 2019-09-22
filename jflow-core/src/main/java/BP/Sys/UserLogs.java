@@ -19,8 +19,9 @@ public class UserLogs extends EntitiesMyPK
 	 
 	 
 	 @param emp
+	 * @throws Exception 
 	*/
-	public UserLogs(String emp)
+	public UserLogs(String emp) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(UserLogAttr.FK_Emp, emp);
@@ -70,7 +71,7 @@ public class UserLogs extends EntitiesMyPK
 	*/
 	public final List<UserLog> ToJavaList()
 	{
-		return (List<UserLog>)this;
+		return (List<UserLog>)(Object)this;
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。

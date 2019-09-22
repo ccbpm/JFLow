@@ -34,7 +34,7 @@ public class RelFlowTemplateToSubInc extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -67,7 +67,7 @@ public class RelFlowTemplateToSubInc extends Method
 		Flows fls = new Flows(rootNo);
 
 		String infos = "";
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			//不是模版.
 			if (fl.getFlowMark().equals("") == true)
@@ -75,7 +75,7 @@ public class RelFlowTemplateToSubInc extends Method
 				continue;
 			}
 
-			infos += "@开始发布流程模版:" + fl.Name + " 标记:" + fl.getFlowMark();
+			infos += "@开始发布流程模版:" + fl.getName() + " 标记:" + fl.getFlowMark();
 
 			//把该模版发布到子公司里面去.
 			for (DataRow dr : dtInc.Rows)
@@ -107,7 +107,7 @@ public class RelFlowTemplateToSubInc extends Method
 				//作为一个新的流程编号，导入该流程树的子节点下.
 				BP.WF.Flow.DoLoadFlowTemplate(incNo, filePath, ImpFlowTempleteModel.AsNewFlow);
 
-				infos += "@模版:" + fl.Name + " 标记:" + fl.getFlowMark() + " 已经发布到子公司:" + incName;
+				infos += "@模版:" + fl.getName() + " 标记:" + fl.getFlowMark() + " 已经发布到子公司:" + incName;
 			}
 		}
 

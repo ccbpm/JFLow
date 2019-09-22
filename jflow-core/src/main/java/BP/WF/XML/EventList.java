@@ -19,7 +19,7 @@ public class EventList extends XmlEn
 	}
 	public final String getName()
 	{
-		return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+		return this.GetValStringByKey(WebUser.getSysLang());
 	}
 	/** 
 	 扩展名称
@@ -28,11 +28,11 @@ public class EventList extends XmlEn
 	{
 		if (this.getIsHaveMsg())
 		{
-			return "<img src='../Img/Message24.png' border=0 width='17px'/>" + this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+			return "<img src='../Img/Message24.png' border=0 width='17px'/>" + this.GetValStringByKey(WebUser.getSysLang());
 		}
 		else
 		{
-			return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+			return this.GetValStringByKey(WebUser.getSysLang());
 		}
 	}
 	/** 

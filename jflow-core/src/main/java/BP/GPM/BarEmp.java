@@ -80,9 +80,9 @@ public class BarEmp extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("GPM_BarEmp");
 		map.DepositaryOfEntity = Depositary.None;
@@ -97,8 +97,8 @@ public class BarEmp extends EntityMyPK
 		map.AddTBInt(BarEmpAttr.IsShow, 1, "是否显示", false, true);
 		map.AddTBInt(BarEmpAttr.Idx, 0, "显示顺序", false, true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

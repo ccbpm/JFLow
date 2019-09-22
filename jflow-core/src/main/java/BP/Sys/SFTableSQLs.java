@@ -37,7 +37,7 @@ public class SFTableSQLs extends EntitiesNoName
 	*/
 	public final List<SFTableSQL> ToJavaList()
 	{
-		return (List<SFTableSQL>)this;
+		return (List<SFTableSQL>)(Object)this;
 	}
 	/** 
 	 转化成list

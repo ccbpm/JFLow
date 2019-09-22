@@ -36,7 +36,7 @@ public class StationTypes extends EntitiesNoName
 	*/
 	public final List<StationType> ToJavaList()
 	{
-		return (List<StationType>)this;
+		return (List<StationType>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -48,7 +48,7 @@ public class StationTypes extends EntitiesNoName
 		ArrayList<StationType> list = new ArrayList<StationType>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((StationType)this[i]);
+			list.add((StationType)this.get(i));
 		}
 		return list;
 	}

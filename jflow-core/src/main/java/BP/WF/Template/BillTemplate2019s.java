@@ -37,8 +37,9 @@ public class BillTemplate2019s extends EntitiesNoName
 	 按节点查询
 	 
 	 @param nd
+	 * @throws Exception 
 	*/
-	public BillTemplate2019s(Node nd)
+	public BillTemplate2019s(Node nd) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(BillTemplate2019Attr.NodeID, nd.getNodeID());
@@ -53,8 +54,9 @@ public class BillTemplate2019s extends EntitiesNoName
 	 按流程查询
 	 
 	 @param fk_flow 流程编号
+	 * @throws Exception 
 	*/
-	public BillTemplate2019s(String fk_flow)
+	public BillTemplate2019s(String fk_flow) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(BillTemplate2019Attr.NodeID, "SELECT NodeID FROM WF_Node WHERE fk_flow='" + fk_flow + "'");
@@ -64,8 +66,9 @@ public class BillTemplate2019s extends EntitiesNoName
 	 按节点查询
 	 
 	 @param fk_node 节点ID
+	 * @throws Exception 
 	*/
-	public BillTemplate2019s(int fk_node)
+	public BillTemplate2019s(int fk_node) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(BillTemplate2019Attr.NodeID, fk_node);
@@ -83,7 +86,7 @@ public class BillTemplate2019s extends EntitiesNoName
 	*/
 	public final List<BillTemplate2019> ToJavaList()
 	{
-		return (List<BillTemplate2019>)this;
+		return (List<BillTemplate2019>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -95,7 +98,7 @@ public class BillTemplate2019s extends EntitiesNoName
 		ArrayList<BillTemplate2019> list = new ArrayList<BillTemplate2019>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BillTemplate2019)this[i]);
+			list.add((BillTemplate2019)this.get(i));
 		}
 		return list;
 	}

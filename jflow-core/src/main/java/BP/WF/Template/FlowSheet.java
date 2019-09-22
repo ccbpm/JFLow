@@ -201,7 +201,7 @@ public class FlowSheet extends EntityNoName
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin") || this.getDesignerNo().equals(WebUser.No))
+		if (WebUser.getNo().equals("admin") || this.getDesignerNo().equals(WebUser.getNo()))
 		{
 			uac.IsUpdate = true;
 		}
@@ -240,9 +240,9 @@ public class FlowSheet extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Flow", "流程");
@@ -470,8 +470,8 @@ public class FlowSheet extends EntityNoName
 		rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Title = "按照工作ID删除单个流程"; // this.ToE("DelFlowData", "删除数据"); // "删除数据";
 		rm.ClassMethodName = this.toString() + ".DoDelDataOne";
-		rm.HisAttrs.AddTBInt("WorkID", 0, "输入工作ID", true, false);
-		rm.HisAttrs.AddTBString("beizhu", null, "删除备注", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBInt("WorkID", 0, "输入工作ID", true, false);
+		rm.getHisAttrs().AddTBString("beizhu", null, "删除备注", true, false, 0, 100, 100);
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -540,9 +540,9 @@ public class FlowSheet extends EntityNoName
 		rm.Icon = "../../WF/Img/Btn/Back.png";
 		rm.ClassMethodName = this.toString() + ".DoRebackFlowData()";
 			// rm.Warning = "您确定要回滚它吗？";
-		rm.HisAttrs.AddTBInt("workid", 0, "请输入要会滚WorkID", true, false);
-		rm.HisAttrs.AddTBInt("nodeid", 0, "回滚到的节点ID", true, false);
-		rm.HisAttrs.AddTBString("note", null, "回滚原因", true, false, 0, 600, 200);
+		rm.getHisAttrs().AddTBInt("workid", 0, "请输入要会滚WorkID", true, false);
+		rm.getHisAttrs().AddTBInt("nodeid", 0, "回滚到的节点ID", true, false);
+		rm.getHisAttrs().AddTBString("note", null, "回滚原因", true, false, 0, 600, 200);
 		map.AddRefMethod(rm);
 
 
@@ -611,8 +611,8 @@ public class FlowSheet extends EntityNoName
 			//  map.AddRefMethod(rm);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -626,7 +626,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoAction()
 	{
-		return "../../Admin/AttrNode/Action.htm?NodeID=0&FK_Flow=" + this.No + "&tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrNode/Action.htm?NodeID=0&FK_Flow=" " + this.getNo()+ " "&tk=" + (new Random()).nextDouble();
 	}
 	public final String DoDBSrc()
 	{
@@ -634,12 +634,12 @@ public class FlowSheet extends EntityNoName
 	}
 	public final String DoBTable()
 	{
-		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.No) + "01&FK_Flow=" + this.No + "&ExtType=StartFlow&RefNo=" + DataType.CurrentDataTime;
+		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.No) + "01&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 
 	public final String DoBindFlowSheet()
 	{
-		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow=" + this.No + "&ExtType=StartFlow&RefNo=" + DataType.CurrentDataTime;
+		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 批量发起字段
@@ -648,7 +648,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoBatchStartFields()
 	{
-		return "../../Admin/AttrFlow/BatchStartFields.htm?s=d34&FK_Flow=" + this.No + "&ExtType=StartFlow&RefNo=" + DataType.CurrentDataTime;
+		return "../../Admin/AttrFlow/BatchStartFields.htm?s=d34&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 执行流程数据表与业务表数据手工同步
@@ -828,15 +828,15 @@ public class FlowSheet extends EntityNoName
 			rw.setWorkID(workid);
 			rw.setReturnNode(backToNodeID);
 			rw.setReturnNodeName(endN.getName());
-			rw.setReturner(WebUser.No);
-			rw.setReturnerName(WebUser.Name);
+			rw.setReturner(WebUser.getNo());
+			rw.setReturnerName(WebUser.getName());
 
 			rw.setReturnToNode(currWl.getFK_Node());
 			rw.setReturnToEmp(currWl.getFK_Emp());
 			rw.setBeiZhu(note);
-			rw.setRDT(DataType.CurrentDataTime);
+			rw.setRDT(DataType.getCurrentDataTime());
 			rw.setIsBackTracking(false);
-			rw.MyPK = BP.DA.DBAccess.GenerGUID();
+			rw.setMyPK( BP.DA.DBAccess.GenerGUID();
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion   加入退回信息, 让接受人能够看到退回原因.
 
@@ -847,7 +847,7 @@ public class FlowSheet extends EntityNoName
 			rpt.Update();
 
 			// 向接受人发送一条消息.
-			BP.WF.Dev2Interface.Port_SendMsg(currWl.getFK_Emp(), "工作恢复:" + gwf.getTitle(), "工作被:" + WebUser.No + " 恢复." + note, "ReBack" + workid, BP.WF.SMSMsgType.SendSuccess, this.No, Integer.parseInt(this.No + "01"), workid, 0);
+			BP.WF.Dev2Interface.Port_SendMsg(currWl.getFK_Emp(), "工作恢复:" + gwf.getTitle(), "工作被:" + WebUser.getNo() + " 恢复." + note, "ReBack" + workid, BP.WF.SMSMsgType.SendSuccess, this.No, Integer.parseInt(this.No + "01"), workid, 0);
 
 			//写入该日志.
 			WorkNode wn = new WorkNode(workid, currWl.getFK_Node());
@@ -873,7 +873,7 @@ public class FlowSheet extends EntityNoName
 	 */
 	public final String DoGenerFlowEmps()
 	{
-		if (!WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			return "非admin用户不能执行。";
 		}
@@ -883,7 +883,7 @@ public class FlowSheet extends EntityNoName
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		gwfs.Retrieve(GenerWorkFlowAttr.FK_Flow, this.No);
 
-		for (GenerWorkFlow gwf : gwfs)
+		for (GenerWorkFlow gwf : gwfs.ToJavaList())
 		{
 			String emps = "";
 			String sql = "SELECT EmpFrom FROM ND" + Integer.parseInt(this.No) + "Track  WHERE WorkID=" + gwf.getWorkID();
@@ -912,13 +912,13 @@ public class FlowSheet extends EntityNoName
 		Sys.MapData md = new Sys.MapData(tableRpt);
 		for (Work wk : wks)
 		{
-			if (!wk.getRec().equals(WebUser.No))
+			if (!wk.getRec().equals(WebUser.getNo()))
 			{
-				BP.Web.WebUser.Exit();
+				WebUser.Exit();
 				try
 				{
 					Emp emp = new Emp(wk.getRec());
-					BP.Web.WebUser.SignInOfGener(emp);
+					WebUser.SignInOfGener(emp);
 				}
 				catch (java.lang.Exception e)
 				{
@@ -930,19 +930,19 @@ public class FlowSheet extends EntityNoName
 			Paras ps = new Paras();
 			ps.Add("Title", title);
 			ps.Add("OID", wk.getOID());
-			ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.AppCenterDBVarStr + "Title WHERE OID=" + SystemConfig.AppCenterDBVarStr + "OID";
+			ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE " + md.PTable + " SET Title=" + SystemConfig.AppCenterDBVarStr + "Title WHERE OID=" + SystemConfig.AppCenterDBVarStr + "OID";
+			ps.SQL = "UPDATE " + md.PTable + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.AppCenterDBVarStr + "Title WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "OID";
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
 
 		}
 		Emp emp1 = new Emp("admin");
-		BP.Web.WebUser.SignInOfGener(emp1);
+		WebUser.SignInOfGener(emp1);
 
 		return "全部生成成功,影响数据(" + wks.size() + ")条";
 	}
@@ -952,7 +952,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoGenerTitle()
 	{
-		if (!WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			return "非admin用户不能执行。";
 		}
@@ -966,13 +966,13 @@ public class FlowSheet extends EntityNoName
 		for (Work wk : wks)
 		{
 
-			if (!wk.getRec().equals(WebUser.No))
+			if (!wk.getRec().equals(WebUser.getNo()))
 			{
-				BP.Web.WebUser.Exit();
+				WebUser.Exit();
 				try
 				{
 					Emp emp = new Emp(wk.getRec());
-					BP.Web.WebUser.SignInOfGener(emp);
+					WebUser.SignInOfGener(emp);
 				}
 				catch (java.lang.Exception e)
 				{
@@ -984,19 +984,19 @@ public class FlowSheet extends EntityNoName
 			Paras ps = new Paras();
 			ps.Add("Title", title);
 			ps.Add("OID", wk.getOID());
-			ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.AppCenterDBVarStr + "Title WHERE OID=" + SystemConfig.AppCenterDBVarStr + "OID";
+			ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE " + md.PTable + " SET Title=" + SystemConfig.AppCenterDBVarStr + "Title WHERE OID=" + SystemConfig.AppCenterDBVarStr + "OID";
+			ps.SQL = "UPDATE " + md.PTable + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.AppCenterDBVarStr + "Title WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "OID";
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
 
 		}
 		Emp emp1 = new Emp("admin");
-		BP.Web.WebUser.SignInOfGener(emp1);
+		WebUser.SignInOfGener(emp1);
 
 		return "全部生成成功,影响数据(" + wks.size() + ")条";
 	}
@@ -1007,8 +1007,8 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoDataManger()
 	{
-		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.htm?FK_Flow=" + this.No + "&ExtType=StartFlow&RefNo=", 700, 500);
-		return "../../Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.No + "&ExtType=StartFlow&RefNo=";
+		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.htm?FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=", 700, 500);
+		return "../../Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=";
 	}
 	/** 
 	 绑定独立表单
@@ -1017,7 +1017,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoFlowFormTree()
 	{
-		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow=" + this.No + "&ExtType=StartFlow&RefNo=" + DataType.CurrentDataTime;
+		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 定义报表
@@ -1071,7 +1071,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoRunIt()
 	{
-		return "../../Admin/TestFlow.htm?FK_Flow=" + this.No + "&Lang=CH";
+		return "../../Admin/TestFlow.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
 	}
 	/** 
 	 执行检查

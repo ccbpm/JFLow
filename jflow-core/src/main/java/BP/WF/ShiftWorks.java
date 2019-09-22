@@ -39,7 +39,7 @@ public class ShiftWorks extends Entities
 	*/
 	public final List<ShiftWork> ToJavaList()
 	{
-		return (List<ShiftWork>)this;
+		return (List<ShiftWork>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -51,7 +51,7 @@ public class ShiftWorks extends Entities
 		ArrayList<ShiftWork> list = new ArrayList<ShiftWork>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((ShiftWork)this[i]);
+			list.add((ShiftWork)this.get(i));
 		}
 		return list;
 	}

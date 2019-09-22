@@ -38,24 +38,24 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			//加入节点表单. 如果没有流程参数.
 
 			Paras ps = new Paras();
-			ps.SQL = "SELECT NodeID, Name  FROM WF_Node WHERE FK_Flow=" + SystemConfig.AppCenterDBVarStr + "FK_Flow ORDER BY NODEID ";
+			ps.SQL = "SELECT NodeID, Name  FROM WF_Node WHERE FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow ORDER BY NODEID ";
 			ps.Add("FK_Flow", this.getFK_Flow());
 			dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 			dt.TableName = "WF_Node";
 
-			if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
-				dt.Columns["NODEID"].ColumnName = "NodeID";
-				dt.Columns["NAME"].ColumnName = "Name";
+				dt.Columns.get("NODEID").ColumnName = "NodeID";
+				dt.Columns.get("NAME").ColumnName = "Name";
 			}
 
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 		}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 加入表单库目录.
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sql = "SELECT NO as No ,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
 		}
@@ -66,24 +66,24 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FormTree";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["PARENTNO"].ColumnName = "ParentNo";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//加入表单
 		sql = "SELECT A.No, A.Name, A.FK_FormTree  FROM Sys_MapData A, Sys_FormTree B WHERE A.FK_FormTree=B.No";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapData";
-		ds.Tables.Add(dt);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		ds.Tables.add(dt);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["FK_FORMTREE"].ColumnName = "FK_FormTree";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("FK_FORMTREE").ColumnName = "FK_FormTree";
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 加入表单库目录.
@@ -94,24 +94,24 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_FlowSort";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["PARENTNO"].ColumnName = "ParentNo";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//加入表单
 		sql = "SELECT No, Name, FK_FlowSort  FROM WF_Flow ";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Flow";
-		ds.Tables.Add(dt);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		ds.Tables.add(dt);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 加入流程树目录.
@@ -120,7 +120,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			///#region 数据源
 		BP.Sys.SFDBSrcs ens = new BP.Sys.SFDBSrcs();
 		ens.RetrieveAll();
-		ds.Tables.Add(ens.ToDataTableField("SFDBSrcs"));
+		ds.Tables.add(ens.ToDataTableField("SFDBSrcs"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -307,13 +307,13 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 
 		//01.当前节点表单已经存在的列
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
-		ds.Tables.Add(attrs.ToDataTableField("MapAttrs"));
+		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
 		//02.数据源表中的列
 		SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
 		DataTable tableColumns = src.GetColumns(this.GetRequestVal("STable"));
 		tableColumns.TableName = "TableColumns";
-		ds.Tables.Add(tableColumns);
+		ds.Tables.add(tableColumns);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -336,13 +336,13 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			}
 		}
 		dt.TableName = "Columns";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//02.添加枚举
 		SysEnums ens = new SysEnums(MapAttrAttr.MyDataType);
-		ds.Tables.Add(ens.ToDataTableField("EnumsDataType"));
+		ds.Tables.add(ens.ToDataTableField("EnumsDataType"));
 		ens = new SysEnums(MapAttrAttr.LGType);
-		ds.Tables.Add(ens.ToDataTableField("EnumsLGType"));
+		ds.Tables.add(ens.ToDataTableField("EnumsLGType"));
 
 		return BP.Tools.Json.ToJson(ds);
 
@@ -373,7 +373,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			ma.MyDataType = Integer.parseInt(this.GetRequestVal("DDL_DBType_" + colname));
 			ma.MaxLen = Integer.parseInt(this.GetRequestVal("TB_Len_" + colname));
 			ma.UIBindKey = this.GetRequestVal("TB_BindKey_" + colname);
-			ma.MyPK = this.getFK_MapData() + "_" + ma.KeyOfEn;
+			ma.setMyPK( this.getFK_MapData() + "_" + ma.KeyOfEn;
 			ma.LGType = BP.En.FieldTypeS.Normal;
 
 			if (!ma.UIBindKey.equals(""))
@@ -414,7 +414,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 				maxEnd = maxEnd + 40;
 				/* 是否是左边 */
 				lab = new FrmLab();
-				lab.MyPK = BP.DA.DBAccess.GenerGUID();
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
 				lab.FK_MapData = this.getFK_MapData();
 				lab.Text = ma.Name;
 				lab.X = 40;
@@ -428,7 +428,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			else
 			{
 				lab = new FrmLab();
-				lab.MyPK = BP.DA.DBAccess.GenerGUID();
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
 				lab.FK_MapData = this.getFK_MapData();
 				lab.Text = ma.Name;
 				lab.X = 350;

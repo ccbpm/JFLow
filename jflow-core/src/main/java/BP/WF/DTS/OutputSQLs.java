@@ -32,7 +32,7 @@ public class OutputSQLs extends DataIOEn
 	}
 	public final String GenerSqls()
 	{
-		Log.DefaultLogWriteLine(LogType.Info, BP.Web.WebUser.Name + "开始调度考核信息:" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+		Log.DefaultLogWriteLine(LogType.Info, WebUser.getName() + "开始调度考核信息:" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
 		String infoMsg = "", errMsg = "";
 
 		Nodes nds = new Nodes();
@@ -48,7 +48,7 @@ public class OutputSQLs extends DataIOEn
 
 		String sqls = "";
 		int i = 0;
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			if (nd.getIsPCNode()) // 如果是计算机节点.
 			{

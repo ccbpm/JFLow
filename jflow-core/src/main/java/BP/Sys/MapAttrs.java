@@ -51,7 +51,7 @@ public class MapAttrs extends EntitiesMyPK
 	public final int getWithOfCtl()
 	{
 		int i = 0;
-		for (MapAttr item : this)
+		for (MapAttr item : this.ToJavaList())
 		{
 			if (item.getUIVisible() == false)
 			{
@@ -74,7 +74,7 @@ public class MapAttrs extends EntitiesMyPK
 	*/
 	public final List<MapAttr> ToJavaList()
 	{
-		return (List<MapAttr>)this;
+		return (List<MapAttr>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -86,7 +86,7 @@ public class MapAttrs extends EntitiesMyPK
 		ArrayList<MapAttr> list = new ArrayList<MapAttr>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapAttr)this[i]);
+			list.add((MapAttr)this.get(i));
 		}
 		return list;
 	}

@@ -36,7 +36,7 @@ public class PowerModels extends EntitiesMyPK
 	*/
 	public final List<PowerModel> ToJavaList()
 	{
-		return (List<PowerModel>)this;
+		return (List<PowerModel>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -48,7 +48,7 @@ public class PowerModels extends EntitiesMyPK
 		ArrayList<PowerModel> list = new ArrayList<PowerModel>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((PowerModel)this[i]);
+			list.add((PowerModel)this.get(i));
 		}
 		return list;
 	}

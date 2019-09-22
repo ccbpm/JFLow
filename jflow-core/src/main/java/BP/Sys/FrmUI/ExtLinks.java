@@ -38,7 +38,7 @@ public class ExtLinks extends EntitiesMyPK
 	*/
 	public final List<ExtLink> ToJavaList()
 	{
-		return (List<ExtLink>)this;
+		return (List<ExtLink>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class ExtLinks extends EntitiesMyPK
 		ArrayList<ExtLink> list = new ArrayList<ExtLink>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((ExtLink)this[i]);
+			list.add((ExtLink)this.get(i));
 		}
 		return list;
 	}

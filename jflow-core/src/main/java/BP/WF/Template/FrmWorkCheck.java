@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.*;
 import java.util.*;
@@ -360,8 +361,9 @@ public class FrmWorkCheck extends Entity
 	 审核组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmWorkCheck(String mapData)
+	public FrmWorkCheck(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -390,8 +392,9 @@ public class FrmWorkCheck extends Entity
 	 审核组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmWorkCheck(int nodeID)
+	public FrmWorkCheck(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -402,9 +405,9 @@ public class FrmWorkCheck extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "审核组件");
@@ -467,8 +470,8 @@ public class FrmWorkCheck extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -485,7 +488,7 @@ public class FrmWorkCheck extends Entity
 			{
 				workCheckAth = new FrmAttachment();
 				/*如果没有查询到它,就有可能是没有创建.*/
-				workCheckAth.MyPK = "ND" + this.getNodeID() + "_FrmWorkCheck";
+				workCheckAth.setMyPK( "ND" + this.getNodeID() + "_FrmWorkCheck";
 				workCheckAth.FK_MapData = "ND" + String.valueOf(this.getNodeID());
 				workCheckAth.NoOfObj = "FrmWorkCheck";
 				workCheckAth.Exts = "*.*";

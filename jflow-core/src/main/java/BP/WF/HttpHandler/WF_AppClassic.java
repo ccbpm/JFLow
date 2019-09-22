@@ -65,8 +65,8 @@ public class WF_AppClassic extends DirectoryPageBase
 	public final String Home_Init()
 	{
 		Hashtable ht = new Hashtable();
-		ht.put("UserNo", BP.Web.WebUser.No);
-		ht.put("UserName", BP.Web.WebUser.Name);
+		ht.put("UserNo", WebUser.getNo());
+		ht.put("UserName", WebUser.getName());
 
 		//系统名称.
 		ht.put("SysName", BP.Sys.SystemConfig.SysName);
@@ -79,12 +79,12 @@ public class WF_AppClassic extends DirectoryPageBase
 		ht.put("Todolist_Apply", BP.WF.Dev2Interface.getTodolist_Apply()); //申请下来的任务个数.
 		ht.put("Todolist_Draft", BP.WF.Dev2Interface.getTodolist_Draft()); //草稿数量.
 		ht.put("Todolist_Complete", BP.WF.Dev2Interface.getTodolist_Complete()); //完成数量.
-		ht.put("UserDeptName", WebUser.FK_DeptName);
+		ht.put("UserDeptName", WebUser.getFK_Dept()Name);
 
 		//我发起
 		MyStartFlows myStartFlows = new MyStartFlows();
 		QueryObject obj = new QueryObject(myStartFlows);
-		obj.AddWhere(MyStartFlowAttr.Starter, WebUser.No);
+		obj.AddWhere(MyStartFlowAttr.Starter, WebUser.getNo());
 		obj.addAnd();
 		//运行中\已完成\挂起\退回\转发\加签\批处理\
 		obj.addLeftBracket();
@@ -96,7 +96,7 @@ public class WF_AppClassic extends DirectoryPageBase
 		//我参与
 		MyJoinFlows myFlows = new MyJoinFlows();
 		obj = new QueryObject(myFlows);
-		obj.AddWhere("Emps like '%" + WebUser.No + "%'");
+		obj.AddWhere("Emps like '%" + WebUser.getNo() + "%'");
 		obj.DoQuery();
 		ht.put("Todolist_MyFlow", myFlows.size());
 
@@ -163,7 +163,7 @@ public class WF_AppClassic extends DirectoryPageBase
 				{
 					/*如果包含昵称列,就检查昵称是否存在.*/
 					Paras ps = new Paras();
-					ps.SQL = "SELECT No FROM Port_Emp WHERE NikeName=" + SystemConfig.AppCenterDBVarStr + "NikeName";
+					ps.SQL = "SELECT No FROM Port_Emp WHERE NikeName=" + SystemConfig.getAppCenterDBVarStr() + "NikeName";
 					ps.Add("NikeName", userNo);
 					String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 					if (no == null)
@@ -182,7 +182,7 @@ public class WF_AppClassic extends DirectoryPageBase
 				{
 					/*如果包含Name列,就检查Name是否存在.*/
 					Paras ps = new Paras();
-					ps.SQL = "SELECT No FROM Port_Emp WHERE Name=" + SystemConfig.AppCenterDBVarStr + "Name";
+					ps.SQL = "SELECT No FROM Port_Emp WHERE Name=" + SystemConfig.getAppCenterDBVarStr() + "Name";
 					ps.Add("Name", userNo);
 					String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 					if (no == null)
@@ -231,20 +231,20 @@ public class WF_AppClassic extends DirectoryPageBase
 		ht.put("SysName", SystemConfig.SysName);
 		ht.put("ServiceTel", SystemConfig.ServiceTel);
 		ht.put("CustomerName", SystemConfig.CustomerName);
-		if (WebUser.NoOfRel == null)
+		if (WebUser.getNo()OfRel == null)
 		{
 			ht.put("UserNo", "");
 			ht.put("UserName", "");
 		}
 		else
 		{
-			ht.put("UserNo", WebUser.No);
+			ht.put("UserNo", WebUser.getNo());
 
-			String name = WebUser.Name;
+			String name = WebUser.getName();
 
 			if (DataType.IsNullOrEmpty(name) == true)
 			{
-				ht.put("UserName", WebUser.No);
+				ht.put("UserName", WebUser.getNo());
 			}
 			else
 			{

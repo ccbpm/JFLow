@@ -73,7 +73,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 			///#region 向预警人员发消息.
 		// 向预警的人员发消息.
 		Node nd = new Node();
-		BP.WF.Port.WFEmp emp = new Port.WFEmp();
+		WFEmp emp = new Port.WFEmp();
 		for (DataRow dr : dt.Rows)
 		{
 			long workid = Long.parseLong(dr.get("WorkID").toString());

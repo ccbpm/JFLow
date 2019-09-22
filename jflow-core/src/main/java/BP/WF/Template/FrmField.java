@@ -157,7 +157,7 @@ public class FrmField extends EntityMyPK
 	@Override
 	public String InitMyPKVals()
 	{
-		this.MyPK = this.getFK_MapData() + "_" + this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.getKeyOfEn() + "_" + this.getEleType();
+		this.setMyPK( this.getFK_MapData() + "_" + this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.getKeyOfEn() + "_" + this.getEleType();
 		return super.InitMyPKVals();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -186,9 +186,9 @@ public class FrmField extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Sys_FrmSln", "表单字段方案");
@@ -228,8 +228,8 @@ public class FrmField extends EntityMyPK
 
 		map.AddTBString(MapAttrAttr.DefVal, null, "默认值", true, false, 0, 200, 20);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -239,7 +239,7 @@ public class FrmField extends EntityMyPK
 	//    if (DataType.IsNullOrEmpty(this.EleType))
 	//        this.EleType = FrmEleType.Field;
 
-	//    this.MyPK = this.FK_MapData + "_" + this.FK_Flow + "_" + this.FK_Node + "_" + this.KeyOfEn + "_" + this.EleType;
+	//    this.setMyPK( this.FK_MapData + "_" + this.FK_Flow + "_" + this.FK_Node + "_" + this.KeyOfEn + "_" + this.EleType;
 	//    return base.beforeInsert();
 	//}
 }

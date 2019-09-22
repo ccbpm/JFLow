@@ -186,21 +186,21 @@ public class PushMsg extends EntityMyPK
 		switch (this.getFK_Event())
 		{
 			case EventListOfNode.WorkArrive:
-				return "新工作{{Title}},发送人@WebUser.No,@WebUser.Name";
+				return "新工作{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
 			case EventListOfNode.SendSuccess:
-				return "新工作{{Title}},发送人@WebUser.No,@WebUser.Name";
+				return "新工作{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
 			case EventListOfNode.ShitAfter:
-				return "移交来的新工作{{Title}},移交人@WebUser.No,@WebUser.Name";
+				return "移交来的新工作{{Title}},移交人@WebUser.getNo(),@WebUser.getName()";
 			case EventListOfNode.ReturnAfter:
-				return "被退回来{{Title}},退回人@WebUser.No,@WebUser.Name";
+				return "被退回来{{Title}},退回人@WebUser.getNo(),@WebUser.getName()";
 			case EventListOfNode.UndoneAfter:
-				return "工作被撤销{{Title}},发送人@WebUser.No,@WebUser.Name";
+				return "工作被撤销{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
 			case EventListOfNode.AskerReAfter:
-				return "加签新工作{{Title}},发送人@WebUser.No,@WebUser.Name";
+				return "加签新工作{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
 			case EventListOfNode.FlowOverAfter:
-				return "流程{{Title}}已经结束,处理人@WebUser.No,@WebUser.Name";
+				return "流程{{Title}}已经结束,处理人@WebUser.getNo(),@WebUser.getName()";
 			case EventListOfNode.AfterFlowDel:
-				return "流程{{Title}}已经删除,处理人@WebUser.No,@WebUser.Name";
+				return "流程{{Title}}已经删除,处理人@WebUser.getNo(),@WebUser.getName()";
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
 				break;
@@ -256,7 +256,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n致! ";
-				str += "\t\n    @WebUser.No, @WebUser.Name";
+				str += "\t\n    @WebUser.getNo(), @WebUser.getName()";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.SendSuccess:
@@ -268,7 +268,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致!! ";
-				str += "\t\n    @WebUser.No, @WebUser.Name";
+				str += "\t\n    @WebUser.getNo(), @WebUser.getName()";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.ReturnAfter:
@@ -280,7 +280,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.ShitAfter:
@@ -290,7 +290,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n ";
-				str += "\t\n    @WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.UndoneAfter:
@@ -300,7 +300,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.AskerReAfter: //加签.
@@ -310,14 +310,14 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.FlowOverAfter: //流程结束后.
 				str += "\t\n您好:";
 				str += "\t\n    工作{{Title}}已经结束, 点击这里打开工作报告{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
 				str += "\t\n    @RDT";
 				break;
 			default:
@@ -470,22 +470,22 @@ public class PushMsg extends EntityMyPK
 		{
 			case EventListOfNode.WorkArrive:
 			case EventListOfNode.SendSuccess:
-				str = "有新工作{{Title}}需要您处理, 发送人:@WebUser.No, @WebUser.Name,打开{Url} .";
+				str = "有新工作{{Title}}需要您处理, 发送人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
 				break;
 			case EventListOfNode.ReturnAfter:
-				str = "工作{{Title}}被退回,退回人:@WebUser.No, @WebUser.Name,打开{Url} .";
+				str = "工作{{Title}}被退回,退回人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
 				break;
 			case EventListOfNode.ShitAfter:
-				str = "移交工作{{Title}},移交人:@WebUser.No, @WebUser.Name,打开{Url} .";
+				str = "移交工作{{Title}},移交人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
 				break;
 			case EventListOfNode.UndoneAfter:
-				str = "工作撤销{{Title}},撤销人:@WebUser.No, @WebUser.Name,打开{Url}.";
+				str = "工作撤销{{Title}},撤销人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
 				break;
 			case EventListOfNode.AskerReAfter: //加签.
-				str = "工作加签{{Title}},加签人:@WebUser.No, @WebUser.Name,打开{Url}.";
+				str = "工作加签{{Title}},加签人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
 				break;
 			case EventListOfNode.FlowOverAfter: //加签.
-				str = "流程{{Title}}已经结束,最后处理人:@WebUser.No, @WebUser.Name,打开{Url}.";
+				str = "流程{{Title}}已经结束,最后处理人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
 				break;
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
@@ -536,9 +536,9 @@ public class PushMsg extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_PushMsg", "消息推送");
@@ -584,8 +584,8 @@ public class PushMsg extends EntityMyPK
 		map.AddTBString(PushMsgAttr.ByEmps, null, "发送给指定的人员", true, false, 0, 100, 10);
 		map.AddTBAtParas(500);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -634,17 +634,17 @@ public class PushMsg extends EntityMyPK
 		try
 		{
 			//系统参数.
-			r.Add("FK_MapData", en.ClassID);
+			r.Add("FK_MapData", en.getClassID());
 		}
 		catch (java.lang.Exception e)
 		{
-			r["FK_MapData"] = en.ClassID;
+			r["FK_MapData"] = en.getClassID();
 		}
 
 		if (atPara != null)
 		{
 			AtPara ap = new AtPara(atPara);
-			for (String s : ap.HisHT.keySet())
+			for (String s : ap.getHisHT().keySet())
 			{
 				try
 				{
@@ -675,7 +675,7 @@ public class PushMsg extends EntityMyPK
 
 		//生成URL.
 		String hostUrl = BP.WF.Glo.getHostURL();
-		String sid = "{EmpStr}_" + workid + "_" + currNode.getNodeID() + "_" + DataType.CurrentDataTime;
+		String sid = "{EmpStr}_" + workid + "_" + currNode.getNodeID() + "_" + DataType.getCurrentDataTime();
 		String openWorkURl = hostUrl + "WF/Do.htm?DoType=OF&SID=" + sid;
 		openWorkURl = openWorkURl.replace("//", "/");
 		openWorkURl = openWorkURl.replace("http:/", "http://");
@@ -731,8 +731,8 @@ public class PushMsg extends EntityMyPK
 			///#region 邮件标题
 		mailTitle = this.getMailTitle();
 		mailTitle = mailTitle.replace("{Title}", title);
-		mailTitle = mailTitle.replace("@WebUser.No", WebUser.No);
-		mailTitle = mailTitle.replace("@WebUser.Name", WebUser.Name);
+		mailTitle = mailTitle.replace("@WebUser.getNo()", WebUser.getNo());
+		mailTitle = mailTitle.replace("@WebUser.getName()", WebUser.getName());
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 邮件标题
@@ -741,8 +741,8 @@ public class PushMsg extends EntityMyPK
 			///#region  处理消息内容
 		smsDoc = smsDoc.replace("{Title}", title);
 		smsDoc = smsDoc.replace("{Url}", openUrl);
-		smsDoc = smsDoc.replace("@WebUser.No", WebUser.No);
-		smsDoc = smsDoc.replace("@WebUser.Name", WebUser.Name);
+		smsDoc = smsDoc.replace("@WebUser.getNo()", WebUser.getNo());
+		smsDoc = smsDoc.replace("@WebUser.getName()", WebUser.getName());
 		smsDoc = smsDoc.replace("@WorkID", en.PKVal.toString());
 		smsDoc = smsDoc.replace("@OID", en.PKVal.toString());
 
@@ -756,7 +756,7 @@ public class PushMsg extends EntityMyPK
 		{
 			//获取退回原因
 			Paras ps = new Paras();
-			ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
+			ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 			ps.Add(ReturnWorkAttr.WorkID, Long.parseLong(en.PKVal.toString()));
 			DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 			if (retunWdt.Rows.size() != 0)
@@ -783,7 +783,7 @@ public class PushMsg extends EntityMyPK
 			openUrl = openUrl.replace("{EmpStr}", toEmp);
 
 			//发送消息
-			BP.WF.Dev2Interface.Port_SendMessage(toEmp, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel());
+			BP.WF.Dev2Interface.Port_SendMessage(toEmp, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
 			return "@已向:{" + toEmp + "}发送提醒信息.";
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -826,7 +826,7 @@ public class PushMsg extends EntityMyPK
 					String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node();
 
 					//发送消息
-					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel());
+					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
 					//处理短消息.
 					toEmpIDs += empName + ",";
 				}
@@ -847,11 +847,11 @@ public class PushMsg extends EntityMyPK
 			}
 			bySQL = bySQL.replace("~", "'");
 			//替换SQL中的参数
-			bySQL = bySQL.replace("@WebUser.No", WebUser.No);
-			bySQL = bySQL.replace("@WebUser.Name", WebUser.Name);
-			bySQL = bySQL.replace("@WebUser.FK_DeptNameOfFull", WebUser.FK_DeptNameOfFull);
-			bySQL = bySQL.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
-			bySQL = bySQL.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+			bySQL = bySQL.replace("@WebUser.getNo()", WebUser.getNo());
+			bySQL = bySQL.replace("@WebUser.getName()", WebUser.getName());
+			bySQL = bySQL.replace("@WebUser.getFK_Dept()NameOfFull", WebUser.getFK_Dept()NameOfFull);
+			bySQL = bySQL.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
+			bySQL = bySQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			/*如果仍然有没有替换下来的变量.*/
 			if (bySQL.contains("@") == true)
 			{
@@ -873,7 +873,7 @@ public class PushMsg extends EntityMyPK
 				String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node();
 
 				//发送消息
-				BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel());
+				BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
 
 				//处理短消息.
 				toEmpIDs += empName + ",";
@@ -899,14 +899,14 @@ public class PushMsg extends EntityMyPK
 				{
 					continue;
 				}
-				BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(empNo);
+				WFEmp emp = new WFEmp(empNo);
 				// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
 				Object tempVar3 = smsDoc.Clone();
 				String smsDocReal = tempVar3 instanceof String ? (String)tempVar3 : null;
 				smsDocReal = smsDocReal.replace("{EmpStr}", emp.Name);
 				openUrl = openUrl.replace("{EmpStr}", emp.No);
 				//发送消息
-				BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel());
+				BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
 				//处理短消息.
 				toEmpIDs += emp.Name + ",";
 			}
@@ -925,7 +925,7 @@ public class PushMsg extends EntityMyPK
 				/*当前节点的处理人.*/
 				toEmpIDs = jumpToEmps;
 				String[] emps = toEmpIDs.split("[,]", -1);
-				for (String empNo : emps)
+				for (String empNo : emps.ToJavaList())
 				{
 					if (DataType.IsNullOrEmpty(empNo))
 					{
@@ -938,7 +938,7 @@ public class PushMsg extends EntityMyPK
 					smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
 
-					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel());
+					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
 				}
 				return "@已向:{" + toEmpIDs + "}发送提醒信息.";
 			}
@@ -952,13 +952,13 @@ public class PushMsg extends EntityMyPK
 				/*如果向接受人发送消息.*/
 				toEmpIDs = objs.getVarAcceptersID();
 				String[] emps = toEmpIDs.split("[,]", -1);
-				for (String empNo : emps)
+				for (String empNo : emps.ToJavaList())
 				{
 					if (DataType.IsNullOrEmpty(empNo))
 					{
 						continue;
 					}
-					if (empNo.equals(WebUser.No))
+					if (empNo.equals(WebUser.getNo()))
 					{
 						continue;
 					}
@@ -968,7 +968,7 @@ public class PushMsg extends EntityMyPK
 					smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
 					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid;
-					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel(), paras);
+					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel(), paras);
 
 				}
 				return "@已向:{" + toEmpIDs + "}发送提醒信息.";
@@ -1008,7 +1008,7 @@ public class PushMsg extends EntityMyPK
 				}
 				String[] emps = empsStrs.split("[@]", -1);
 
-				for (String empNo : emps)
+				for (String empNo : emps.ToJavaList())
 				{
 					if (DataType.IsNullOrEmpty(empNo))
 					{
@@ -1023,7 +1023,7 @@ public class PushMsg extends EntityMyPK
 					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid;
 
 					//发送消息
-					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel(), paras);
+					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel(), paras);
 				}
 				return "@已向:{" + empsStrs + "}发送提醒信息.";
 			}
@@ -1037,14 +1037,14 @@ public class PushMsg extends EntityMyPK
 				//获取当前节点的接收人
 				GenerWorkFlow gwf = new GenerWorkFlow(workid);
 				String[] emps = gwf.getTodoEmps().split("[;]", -1);
-				for (String emp : emps)
+				for (String emp : emps.ToJavaList())
 				{
 					if (DataType.IsNullOrEmpty(emp))
 					{
 						continue;
 					}
 					String[] empA = emp.split("[,]", -1);
-					if (DataType.IsNullOrEmpty(empA[0]) == true || empA[0].equals(WebUser.No))
+					if (DataType.IsNullOrEmpty(empA[0]) == true || empA[0].equals(WebUser.getNo()))
 					{
 						continue;
 					}
@@ -1054,7 +1054,7 @@ public class PushMsg extends EntityMyPK
 					smsDocReal = smsDocReal.replace("{EmpStr}", empA[0]);
 					openUrl = openUrl.replace("{EmpStr}", empA[0]);
 					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid;
-					BP.WF.Dev2Interface.Port_SendMessage(empA[0], smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, BP.Web.WebUser.No, openUrl, this.getSMSPushModel(), paras);
+					BP.WF.Dev2Interface.Port_SendMessage(empA[0], smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel(), paras);
 				}
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1103,8 +1103,8 @@ public class PushMsg extends EntityMyPK
 	//    mailDocTmp = mailDocTmp.Replace("{Title}", title);
 	//    mailDocTmp = mailDocTmp.Replace("{Title}", title);
 
-	//    mailDocTmp = mailDocTmp.Replace("@WebUser.No", WebUser.No);
-	//    mailDocTmp = mailDocTmp.Replace("@WebUser.Name", WebUser.Name);
+	//    mailDocTmp = mailDocTmp.Replace("@WebUser.getNo()", WebUser.getNo());
+	//    mailDocTmp = mailDocTmp.Replace("@WebUser.getName()", WebUser.getName());
 
 	//    /*如果仍然有没有替换下来的变量.*/
 	//    if (mailDocTmp.Contains("@"))
@@ -1130,7 +1130,7 @@ public class PushMsg extends EntityMyPK
 	//            {
 	//                //获取退回原因
 	//                Paras ps = new Paras();
-	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
+	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//                ps.Add(ReturnWorkAttr.WorkID,Int64.Parse( en.PKVal.ToString()));
 	//                DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 	//                if (retunWdt.Rows.size() != 0)
@@ -1158,7 +1158,7 @@ public class PushMsg extends EntityMyPK
 
 	//                string paras = "@FK_Flow=" + currNode.FK_Flow + "&FK_Node=" + currNode.NodeID + "@WorkID=" + workid;
 	//                //发送邮件
-	//                BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, this.FK_Event + workid, BP.Web.WebUser.No, null, empNo, paras);
+	//                BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, this.FK_Event + workid, WebUser.getNo(), null, empNo, paras);
 	//                msg += dr["Name"].ToString() + ",";
 	//            }
 	//        }
@@ -1176,7 +1176,7 @@ public class PushMsg extends EntityMyPK
 	//        {
 	//            //获取退回原因
 	//            Paras ps = new Paras();
-	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
+	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//            ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//            DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 	//            if (retunWdt.Rows.size() != 0)
@@ -1203,11 +1203,11 @@ public class PushMsg extends EntityMyPK
 	//                mailDocReal = mailDocReal.Replace("{EmpStr}", emp);
 
 	//                //获得当前人的邮件.
-	//                BP.WF.Port.WFEmp empEn = new BP.WF.Port.WFEmp(emp);
+	//                WFEmp empEn = new WFEmp(emp);
 
 	//                //发送邮件.
 	//                BP.WF.Dev2Interface.Port_SendEmail(empEn.Email, mailTitleTmp, mailDocReal, this.FK_Event,
-	//                    "WKAlt" + currNode.NodeID + "_" + workid, BP.Web.WebUser.No, null, emp);
+	//                    "WKAlt" + currNode.NodeID + "_" + workid, WebUser.getNo(), null, emp);
 	//            }
 	//            return "@已向:{" + toEmpIDs + "}发送提醒信息.";
 	//        }
@@ -1218,7 +1218,7 @@ public class PushMsg extends EntityMyPK
 	//            string emailAddress = r[this.MailAddress] as string;
 
 	//            //发送邮件
-	//            BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, BP.Web.WebUser.No, null, null);
+	//            BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, WebUser.getNo(), null, null);
 	//            return "@已向:{" + emailAddress + "}发送提醒信息.";
 	//        }
 	//    }
@@ -1237,7 +1237,7 @@ public class PushMsg extends EntityMyPK
 	//            {
 	//                if (DataType.IsNullOrEmpty(emp))
 	//                    continue;
-	//                if (emp == WebUser.No)
+	//                if (emp == WebUser.getNo())
 	//                    continue;
 
 	//                // 因为要发给不同的人，所有需要clone 一下，然后替换发送.
@@ -1245,7 +1245,7 @@ public class PushMsg extends EntityMyPK
 	//                mailDocReal = mailDocReal.Replace("{EmpStr}", emp);
 
 	//                //获得当前人的邮件.
-	//                BP.WF.Port.WFEmp empEn = new BP.WF.Port.WFEmp(emp);
+	//                WFEmp empEn = new WFEmp(emp);
 
 	//                string paras = "@FK_Flow=" + currNode.FK_Flow + "&FK_Node=" + currNode.NodeID + "@WorkID=" + workid;
 
@@ -1259,7 +1259,7 @@ public class PushMsg extends EntityMyPK
 	//                }
 
 	//                //发送邮件.
-	//                BP.WF.Dev2Interface.Port_SendEmail(mail, mailTitleTmp, mailDocReal, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, BP.Web.WebUser.No, null, emp, paras);
+	//                BP.WF.Dev2Interface.Port_SendEmail(mail, mailTitleTmp, mailDocReal, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, WebUser.getNo(), null, emp, paras);
 
 	//            }
 	//            return "@已向:{" + toEmpIDs + "}发送提醒信息.";
@@ -1272,7 +1272,7 @@ public class PushMsg extends EntityMyPK
 	//            string paras = "@FK_Flow=" + currNode.FK_Flow + "&FK_Node=" + currNode.NodeID + "@WorkID=" + workid;
 
 	//            //发送邮件
-	//            BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, BP.Web.WebUser.No, null, null, paras);
+	//            BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, WebUser.getNo(), null, null, paras);
 
 	//            return "@已向:{" + emailAddress + "}发送提醒信息.";
 	//        }
@@ -1304,12 +1304,12 @@ public class PushMsg extends EntityMyPK
 	//                mailDocReal = mailDocReal.Replace("{EmpStr}", emp);
 
 	//                //获得当前人的邮件.
-	//                BP.WF.Port.WFEmp empEn = new BP.WF.Port.WFEmp(emp);
+	//                WFEmp empEn = new WFEmp(emp);
 
 	//                string paras = "@FK_Flow=" + currNode.FK_Flow + "&FK_Node=" + currNode.NodeID + "@WorkID=" + workid;
 
 	//                //发送邮件.
-	//                BP.WF.Dev2Interface.Port_SendEmail(empEn.Email, mailTitleTmp, mailDocReal, this.FK_Event, "FlowOver" + workid, BP.Web.WebUser.No, null, emp, paras);
+	//                BP.WF.Dev2Interface.Port_SendEmail(empEn.Email, mailTitleTmp, mailDocReal, this.FK_Event, "FlowOver" + workid, WebUser.getNo(), null, emp, paras);
 	//            }
 	//            return "@已向:{" + toEmpIDs + "}发送提醒信息.";
 	//        }
@@ -1322,7 +1322,7 @@ public class PushMsg extends EntityMyPK
 	//            string paras = "@FK_Flow=" + currNode.FK_Flow + "&FK_Node=" + currNode.NodeID + "@WorkID=" + workid;
 
 	//            //发送邮件
-	//            BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, "FlowOver" + workid, BP.Web.WebUser.No, null, null, paras);
+	//            BP.WF.Dev2Interface.Port_SendEmail(emailAddress, mailTitleTmp, mailDocTmp, this.FK_Event, "FlowOver" + workid, WebUser.getNo(), null, null, paras);
 	//            return "@已向:{" + emailAddress + "}发送提醒信息.";
 	//        }
 	//    }
@@ -1355,8 +1355,8 @@ public class PushMsg extends EntityMyPK
 	//    smsDocTmp = this.SMSDoc.Clone() as string;
 	//    smsDocTmp = smsDocTmp.Replace("{Title}", title);
 	//    smsDocTmp = smsDocTmp.Replace("{Url}", openWorkURL);
-	//    smsDocTmp = smsDocTmp.Replace("@WebUser.No", WebUser.No);
-	//    smsDocTmp = smsDocTmp.Replace("@WebUser.Name", WebUser.Name);
+	//    smsDocTmp = smsDocTmp.Replace("@WebUser.getNo()", WebUser.getNo());
+	//    smsDocTmp = smsDocTmp.Replace("@WebUser.getName()", WebUser.getName());
 	//    smsDocTmp = smsDocTmp.Replace("@WorkID", en.PKVal.ToString());
 	//    smsDocTmp = smsDocTmp.Replace("@OID", en.PKVal.ToString());
 
@@ -1395,7 +1395,7 @@ public class PushMsg extends EntityMyPK
 	//            {
 	//                //获取退回原因
 	//                Paras ps = new Paras();
-	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
+	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//                ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//                DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 	//                if (retunWdt.Rows.size() != 0)
@@ -1425,7 +1425,7 @@ public class PushMsg extends EntityMyPK
 	//                string paras = "@FK_Flow=" + this.FK_Flow + "@WorkID=" + workid + "@FK_Node=" + this.FK_Node;
 
 	//                //发送邮件.
-	//                BP.WF.Dev2Interface.Port_SendSMS(tel, mailDocReal, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, WebUser.No, null, empNo, paras, title, openWorkURL, this.SMSPushModel);
+	//                BP.WF.Dev2Interface.Port_SendSMS(tel, mailDocReal, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, WebUser.getNo(), null, empNo, paras, title, openWorkURL, this.SMSPushModel);
 
 	//                //处理短消息.
 	//                toEmpIDs += empName + ",";
@@ -1446,7 +1446,7 @@ public class PushMsg extends EntityMyPK
 	//        {
 	//            //获取退回原因
 	//            Paras ps = new Paras();
-	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID  ORDER BY RDT DESC";
+	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//            ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//            DataTable dt = DBAccess.RunSQLReturnTable(ps);
 	//            if (dt.Rows.size() != 0)
@@ -1473,12 +1473,12 @@ public class PushMsg extends EntityMyPK
 	//                    string smsDocTmpReal = smsDocTmp.Clone() as string;
 	//                    smsDocTmpReal = smsDocTmpReal.Replace("{EmpStr}", emp);
 	//                    openWorkURL = openWorkURL.Replace("{EmpStr}", emp);
-	//                    BP.WF.Port.WFEmp empEn = new Port.WFEmp(emp);
+	//                    WFEmp empEn = new Port.WFEmp(emp);
 
 	//                    string paras = "@FK_Flow=" + currNode.FK_Flow + "@WorkID=" + workid + "@FK_Node=" + currNode.NodeID;
 
 	//                    //发送短信.
-	//                    Dev2Interface.Port_SendSMS(empEn.Tel, smsDocTmpReal, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, BP.Web.WebUser.No, null, emp, null, title, openWorkURL, this.SMSPushModel);
+	//                    Dev2Interface.Port_SendSMS(empEn.Tel, smsDocTmpReal, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, WebUser.getNo(), null, emp, null, title, openWorkURL, this.SMSPushModel);
 	//                }
 	//                //return "@已向:{" + toEmpIDs + "}发送提醒手机短信，由 " + this.FK_Event + " 发出.";
 	//                return "@已向:{" + toEmpIDs + "}发送提醒消息.";
@@ -1492,7 +1492,7 @@ public class PushMsg extends EntityMyPK
 
 	//            //发送短信.
 	//            string paras = "@FK_Flow=" + currNode.FK_Flow + "@WorkID=" + workid + "@FK_Node=" + currNode.NodeID;
-	//            BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, BP.Web.WebUser.No, null, paras, title, openWorkURL, this.SMSPushModel);
+	//            BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.FK_Event, "WKAlt" + currNode.NodeID + "_" + workid, WebUser.getNo(), null, paras, title, openWorkURL, this.SMSPushModel);
 	//            return "@已向:{" + tel + "}发送提醒消息.";
 	//            //  return "@已向:{" + tel + "}发送提醒手机短信，由 " + this.FK_Event + " 发出.";
 
@@ -1544,7 +1544,7 @@ public class PushMsg extends EntityMyPK
 	//                    string paras = "@FK_Flow=" + currNode.FK_Flow + "@WorkID=" + workid + "@FK_Node=" + currNode.NodeID;
 
 	//                    //发送短信.
-	//                    Dev2Interface.Port_SendSMS(empEn.Tel, smsDocTmpReal, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, BP.Web.WebUser.No, null, empID, paras, title, openWorkURL, this.SMSPushModel);
+	//                    Dev2Interface.Port_SendSMS(empEn.Tel, smsDocTmpReal, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, WebUser.getNo(), null, empID, paras, title, openWorkURL, this.SMSPushModel);
 	//                }
 	//                return "";
 	//                //return "@已向:{" + toEmpIDs + "}发送提醒消息.";
@@ -1561,7 +1561,7 @@ public class PushMsg extends EntityMyPK
 	//                string paras = "@FK_Flow=" + currNode.FK_Flow + "@WorkID=" + workid + "@FK_Node=" + currNode.NodeID;
 
 	//                //发送短信.
-	//                BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, BP.Web.WebUser.No, null, paras, title, openWorkURL, this.SMSPushModel);
+	//                BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.FK_Event, "WKAlt" + objs.VarToNodeID + "_" + workid, WebUser.getNo(), null, paras, title, openWorkURL, this.SMSPushModel);
 	//                return "@已向:{" + tel + "}发送提醒手机短信.";
 	//            }
 	//        }
@@ -1586,21 +1586,21 @@ public class PushMsg extends EntityMyPK
 	//                    if (DataType.IsNullOrEmpty(empID))
 	//                        continue;
 
-	//                    if (empID == WebUser.No)
+	//                    if (empID == WebUser.getNo())
 	//                        continue;
 
 	//                    string smsDocTmpReal = smsDocTmp.Clone() as string;
 	//                    smsDocTmpReal = smsDocTmpReal.Replace("{EmpStr}", empID);
 	//                    openWorkURL = openWorkURL.Replace("{EmpStr}", empID);
 
-	//                    BP.WF.Port.WFEmp empEn = new Port.WFEmp();
+	//                    WFEmp empEn = new Port.WFEmp();
 	//                    empEn.No = empID;
 	//                    empEn.RetrieveFromDBSources();
 
 	//                    string paras = "@FK_Flow=" + currNode.FK_Flow + "@WorkID=" + workid + "@FK_Node=" + currNode.NodeID;
 
 	//                    //发送短信.
-	//                    Dev2Interface.Port_SendSMS(empEn.Tel, smsDocTmpReal, this.FK_Event, "FlowOver" + workid, BP.Web.WebUser.No, null, empID, paras, title, openWorkURL, this.SMSPushModel);
+	//                    Dev2Interface.Port_SendSMS(empEn.Tel, smsDocTmpReal, this.FK_Event, "FlowOver" + workid, WebUser.getNo(), null, empID, paras, title, openWorkURL, this.SMSPushModel);
 	//                }
 
 	//                return "";
@@ -1617,7 +1617,7 @@ public class PushMsg extends EntityMyPK
 	//            {
 	//                string paras = "@FK_Flow=" + currNode.FK_Flow + "@WorkID=" + workid + "@FK_Node=" + currNode.NodeID;
 	//                //发送短信.
-	//                BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.FK_Event, "FlowOver" + workid, BP.Web.WebUser.No, null, paras, title, openWorkURL, this.SMSPushModel);
+	//                BP.WF.Dev2Interface.Port_SendSMS(tel, smsDocTmp, this.FK_Event, "FlowOver" + workid, WebUser.getNo(), null, paras, title, openWorkURL, this.SMSPushModel);
 	//                return "@已向:{" + tel + "}发送提醒消息.";
 	//            }
 	//        }
@@ -1636,7 +1636,7 @@ public class PushMsg extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction()
 	{
-		//  this.MyPK = this.FK_Event + "_" + this.FK_Node + "_" + this.PushWay;
+		//  this.setMyPK( this.FK_Event + "_" + this.FK_Node + "_" + this.PushWay;
 
 		String sql = "UPDATE WF_PushMsg SET FK_Flow=(SELECT FK_Flow FROM WF_Node WHERE NodeID= WF_PushMsg.FK_Node)";
 		BP.DA.DBAccess.RunSQL(sql);

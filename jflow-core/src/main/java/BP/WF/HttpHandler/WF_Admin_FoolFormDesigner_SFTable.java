@@ -81,7 +81,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 					dr.set("Name", en.EnMap.EnDesc + " " + ens.toString());
 				}
 
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			catch (java.lang.Exception e)
 			{
@@ -126,12 +126,12 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 		String src = this.GetRequestVal("src");
 		String table = this.GetRequestVal("table");
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(src))
+		if (DataType.IsNullOrEmpty(src))
 		{
 			throw new RuntimeException("err@参数不正确");
 		}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(table))
+		if (DataType.IsNullOrEmpty(table))
 		{
 			return "[]";
 		}
@@ -141,7 +141,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 
 		for (DataRow r : dt.Rows)
 		{
-			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == DBNull.Value || tangible.StringHelper.isNullOrWhiteSpace(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
+			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == DBNull.Value || DataType.IsNullOrEmpty(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
 		}
 
 		return BP.Tools.Json.ToJson(dt);

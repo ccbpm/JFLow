@@ -22,12 +22,13 @@ public class Frms extends EntitiesNoName
 	 Frm
 	 
 	 @param fk_flow
+	 * @throws Exception 
 	*/
-	public Frms(String fk_flow)
+	public Frms(String fk_flow) throws Exception
 	{
 		this.Retrieve(FrmAttr.FK_Flow, fk_flow);
 	}
-	public Frms(int fk_node)
+	public Frms(int fk_node) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereInSQL(FrmAttr.No, "SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + fk_node);
@@ -51,7 +52,7 @@ public class Frms extends EntitiesNoName
 	*/
 	public final List<Frm> ToJavaList()
 	{
-		return (List<Frm>)this;
+		return (List<Frm>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -63,7 +64,7 @@ public class Frms extends EntitiesNoName
 		ArrayList<Frm> list = new ArrayList<Frm>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Frm)this[i]);
+			list.add((Frm)this.get(i));
 		}
 		return list;
 	}

@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Port.*;
 import BP.WF.Data.*;
@@ -14,17 +15,7 @@ public class WorkFlowDeleteLog extends EntityOID
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
-	/** 
-	 工作ID
-	*/
-	public final long getOID()
-	{
-		return this.GetValInt64ByKey(WorkFlowDeleteLogAttr.OID);
-	}
-	public final void setOID(long value)
-	{
-		SetValByKey(WorkFlowDeleteLogAttr.OID, value);
-	}
+	  
 	/** 
 	 操作人
 	*/
@@ -124,9 +115,9 @@ public class WorkFlowDeleteLog extends EntityOID
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_WorkFlowDeleteLog", "流程删除日志");
@@ -156,10 +147,10 @@ public class WorkFlowDeleteLog extends EntityOID
 		map.AddSearchAttr(GenerWorkFlowAttr.FK_Dept);
 		map.AddSearchAttr(GenerWorkFlowAttr.FK_Flow);
 
-		   // map.AddHidden(FlowDataAttr.FlowEmps, " LIKE ", "'%@@WebUser.No%'");
+		   // map.AddHidden(FlowDataAttr.FlowEmps, " LIKE ", "'%@@WebUser.getNo()%'");
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

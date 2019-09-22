@@ -47,7 +47,7 @@ public class MapExts extends Entities
 	*/
 	public final List<MapExt> ToJavaList()
 	{
-		return (List<MapExt>)this;
+		return (List<MapExt>)(Object)this;
 	}
 	/** 
 	 转化成list

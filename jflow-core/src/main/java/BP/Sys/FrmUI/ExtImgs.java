@@ -55,7 +55,7 @@ public class ExtImgs extends EntitiesMyPK
 	*/
 	public final List<ExtImg> ToJavaList()
 	{
-		return (List<ExtImg>)this;
+		return (List<ExtImg>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -67,7 +67,7 @@ public class ExtImgs extends EntitiesMyPK
 		ArrayList<ExtImg> list = new ArrayList<ExtImg>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((ExtImg)this[i]);
+			list.add((ExtImg)this.get(i));
 		}
 		return list;
 	}

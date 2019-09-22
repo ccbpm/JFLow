@@ -56,7 +56,7 @@ public class SysFormTrees extends EntitiesTree
 	*/
 	public final List<SysFormTree> ToJavaList()
 	{
-		return (List<SysFormTree>)this;
+		return (List<SysFormTree>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -68,7 +68,7 @@ public class SysFormTrees extends EntitiesTree
 		ArrayList<SysFormTree> list = new ArrayList<SysFormTree>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SysFormTree)this[i]);
+			list.add((SysFormTree)this.get(i));
 		}
 		return list;
 	}

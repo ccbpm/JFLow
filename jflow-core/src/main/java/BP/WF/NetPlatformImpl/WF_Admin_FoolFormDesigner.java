@@ -15,7 +15,7 @@ import java.util.*;
 		*/
 		public static ArrayList<WSMethod> GetWebServiceMethods(SFDBSrc dbsrc)
 		{
-				if (dbsrc == null || tangible.StringHelper.isNullOrWhiteSpace(dbsrc.IP))
+				if (dbsrc == null || DataType.IsNullOrEmpty(dbsrc.IP))
 				{
 					return new ArrayList<WSMethod>();
 				}

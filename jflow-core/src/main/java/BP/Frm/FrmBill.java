@@ -21,7 +21,7 @@ public class FrmBill extends EntityNoName
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -108,7 +108,7 @@ public class FrmBill extends EntityNoName
 		String str = this.GetValStrByKey(FrmBillAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
-			str = "@WebUser.FK_DeptName @WebUser.Name @RDT";
+			str = "@WebUser.getFK_Dept()Name @WebUser.getName() @RDT";
 		}
 		return str;
 	}
@@ -151,9 +151,9 @@ public class FrmBill extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		
 		Map map = new Map("Sys_MapData", "单据属性");
@@ -308,8 +308,8 @@ public class FrmBill extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "绑定到菜单目录"; // "设计表单";
-		rm.HisAttrs.AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3");
-		rm.HisAttrs.AddTBString("Name", "@Name", "菜单名称", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3");
+		rm.getHisAttrs().AddTBString("Name", "@Name", "菜单名称", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoBindMenu";
 		rm.Visable = true;
 		rm.RefMethodType = RefMethodType.Func;
@@ -404,8 +404,8 @@ public class FrmBill extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 报表定义.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -419,7 +419,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoCreateRole()
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 查询权限
@@ -428,7 +428,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoSearchRole()
 	{
-		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 删除规则.
@@ -437,7 +437,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoDeleteRole()
 	{
-		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 权限控制.
@@ -477,11 +477,11 @@ public class FrmBill extends EntityNoName
 
 	public final String DoMethod()
 	{
-		return "../../CCBill/Admin/Method.htm?s=34&FrmID=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/Method.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoPageLoadFull()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -490,7 +490,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoEvent()
 	{
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.No + "&T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" " + this.getNo()+ " "&T=sd&FK_Node=0";
 	}
 	/** 
 	 设计表单
@@ -694,7 +694,7 @@ public class FrmBill extends EntityNoName
 		///#region 业务逻辑.
 	public final String CreateBlankWorkID()
 	{
-		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankBillID(this.No, BP.Web.WebUser.No, null));
+		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankBillID(this.No, WebUser.getNo(), null));
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 业务逻辑.
@@ -708,11 +708,11 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoOpenBill()
 	{
-		return "../../CCBill/Search.htm?FrmID=" + this.No + "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
+		return "../../CCBill/Search.htm?FrmID=" " + this.getNo()+ " "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
 	}
 	public final String DoAPI()
 	{
-		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.No + "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
+		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" " + this.getNo()+ " "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 方法操作.

@@ -118,7 +118,7 @@ public abstract class StartWork extends Work
 		}
 		if (this.getOID() < 0)
 		{
-			throw new RuntimeException("@实体[" + this.EnDesc + "]没有被实例化，不能Delete().");
+			throw new RuntimeException("@实体[" + this.getEnDesc() + "]没有被实例化，不能Delete().");
 		}
 		return true;
 	}
@@ -132,7 +132,7 @@ public abstract class StartWork extends Work
 	{
 		if (this.getOID() > 0)
 		{
-			throw new RuntimeException("@实体[" + this.EnDesc + "], 已经被实例化，不能Insert.");
+			throw new RuntimeException("@实体[" + this.getEnDesc() + "], 已经被实例化，不能Insert.");
 		}
 
 		this.SetValByKey("OID", DBAccess.GenerOID());
@@ -141,7 +141,7 @@ public abstract class StartWork extends Work
 	@Override
 	protected boolean beforeUpdateInsertAction()
 	{
-		this.setEmps(BP.Web.WebUser.No);
+		this.setEmps(WebUser.getNo());
 		return super.beforeUpdateInsertAction();
 	}
 	/** 
@@ -158,7 +158,7 @@ public abstract class StartWork extends Work
 		}
 		if (this.getOID() < 0)
 		{
-			throw new RuntimeException("@实体[" + this.EnDesc + "]没有被实例化，不能Update().");
+			throw new RuntimeException("@实体[" + this.getEnDesc() + "]没有被实例化，不能Update().");
 		}
 		return super.beforeUpdate();
 	}

@@ -58,7 +58,7 @@ public class DeptStations extends Entities
 		qo.DoQuery();
 
 		Emps ens = new Emps();
-		for (DeptStation en : this)
+		for (DeptStation en : this.ToJavaList())
 		{
 			ens.AddEntity(new Emp(en.getFK_Dept()));
 		}
@@ -84,7 +84,7 @@ public class DeptStations extends Entities
 			qo.AddWhere(DeptStationAttr.FK_Dept, empId);
 			qo.addOrderBy(DeptStationAttr.FK_Station);
 			qo.DoQuery();
-			for (DeptStation en : this)
+			for (DeptStation en : this.ToJavaList())
 			{
 				ens.AddEntity(new Station(en.getFK_Station()));
 			}
@@ -104,7 +104,7 @@ public class DeptStations extends Entities
 	*/
 	public final List<DeptStation> ToJavaList()
 	{
-		return (List<DeptStation>)this;
+		return (List<DeptStation>)(Object)this;
 	}
 	/** 
 	 转化成list

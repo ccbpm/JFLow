@@ -333,11 +333,11 @@ public class Glo
 		return;
 		/*
 		UserLog ul = new UserLog();
-		ul.MyPK = DBAccess.GenerGUID();
+		ul.setMyPK( DBAccess.GenerGUID();
 		ul.FK_Emp = empNo;
 		ul.LogFlag = logType;
 		ul.Docs = msg;
-		ul.RDT = DataType.CurrentDataTime;
+		ul.RDT = DataType.getCurrentDataTime();
 		try
 		{
 		    if (BP.Sys.SystemConfig.IsBSsystem)

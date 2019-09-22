@@ -348,11 +348,11 @@ public class MyStartFlow extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WF.WFState.Complete)
+		if (value == WFState.Complete)
 		{
 			SetValByKey(MyStartFlowAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WF.WFState.Delete)
+		else if (value == WFState.Delete)
 		{
 			SetValByKey(MyStartFlowAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -462,9 +462,9 @@ public class MyStartFlow extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "我发起的流程");
@@ -504,7 +504,7 @@ public class MyStartFlow extends Entity
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 
 			//我发起的流程.
-		AttrOfSearch search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", BP.Web.WebUser.No, 0, true);
+		AttrOfSearch search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", WebUser.getNo(), 0, true);
 
 		map.AttrsOfSearch.Add(search);
 
@@ -534,8 +534,8 @@ public class MyStartFlow extends Entity
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -561,13 +561,13 @@ public class MyStartFlow extends Entity
 	public final String DoOpenLastForm()
 	{
 		Paras pss = new Paras();
-		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "ActionType AND WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID ORDER BY RDT DESC";
+		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
 		pss.Add("ActionType", BP.WF.ActionType.Forward.getValue());
 		pss.Add("WorkID", this.getWorkID());
 		DataTable dt = DBAccess.RunSQLReturnTable(pss);
 		if (dt != null && dt.Rows.size() > 0)
 		{
-			String myPk = dt.Rows[0][0].toString();
+			String myPk = dt.Rows.get(0).getValue(0).toString();
 			return "/WF/WFRpt.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
 		}
 

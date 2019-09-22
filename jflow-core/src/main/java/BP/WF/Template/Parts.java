@@ -54,7 +54,7 @@ public class Parts extends EntitiesMyPK
 	*/
 	public final List<Part> ToJavaList()
 	{
-		return (List<Part>)this;
+		return (List<Part>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -66,7 +66,7 @@ public class Parts extends EntitiesMyPK
 		ArrayList<Part> list = new ArrayList<Part>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Part)this[i]);
+			list.add((Part)this.get(i));
 		}
 		return list;
 	}

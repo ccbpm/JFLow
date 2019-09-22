@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -59,9 +60,9 @@ public class CCEmp extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_CCEmp", "抄送人员");
@@ -70,8 +71,8 @@ public class CCEmp extends EntityMM
 		map.AddTBIntPK(CCEmpAttr.FK_Node, 0, "节点", true, true);
 		map.AddDDLEntitiesPK(CCEmpAttr.FK_Emp, null, "人员", new Emps(), true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

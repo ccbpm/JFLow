@@ -47,7 +47,7 @@ public class AdminEmps extends EntitiesNoName
 	*/
 	public final List<AdminEmp> ToJavaList()
 	{
-		return (List<AdminEmp>)this;
+		return (List<AdminEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -59,7 +59,7 @@ public class AdminEmps extends EntitiesNoName
 		ArrayList<AdminEmp> list = new ArrayList<AdminEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((AdminEmp)this[i]);
+			list.add((AdminEmp)this.get(i));
 		}
 		return list;
 	}

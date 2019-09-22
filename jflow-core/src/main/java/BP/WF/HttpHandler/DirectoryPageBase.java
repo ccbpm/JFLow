@@ -1066,7 +1066,7 @@ public abstract class DirectoryPageBase
 	{
 		if (filename == null)
 		{
-			filename = title + "_" + BP.DA.DataType.CurrentDataCNOfLong + "_" + WebUser.Name + ".xls"; //"Ep" + this.Session.SessionID + ".xls";
+			filename = title + "_" + BP.DA.DataType.CurrentDataCNOfLong + "_" + WebUser.getName() + ".xls"; //"Ep" + this.Session.SessionID + ".xls";
 		}
 		String file = filename;
 		boolean flag = true;
@@ -1253,7 +1253,7 @@ public abstract class DirectoryPageBase
 
 
 			objStreamWriter.WriteLine();
-			objStreamWriter.write((char)9 + " 制表人：" + (char)9 + WebUser.Name + (char)9 + "日期：" + (char)9 + LocalDateTime.now().ToShortDateString() + System.lineSeparator());
+			objStreamWriter.write((char)9 + " 制表人：" + (char)9 + WebUser.getName() + (char)9 + "日期：" + (char)9 + LocalDateTime.now().ToShortDateString() + System.lineSeparator());
 
 		}
 		catch (java.lang.Exception e)
@@ -1356,7 +1356,7 @@ public abstract class DirectoryPageBase
 		if (index && dt.Columns.Contains("序") == false)
 		{
 			dt.Columns.Add("序", Integer.class).ExtendedProperties.Add("width", 50);
-			dt.Columns["序"].SetOrdinal(0);
+			dt.Columns.get("序"].SetOrdinal(0);
 
 			for (int i = 0; i < dt.Rows.size(); i++)
 			{
@@ -1374,11 +1374,11 @@ public abstract class DirectoryPageBase
 			sumColumns.add(col.Ordinal);
 		}
 
-		headerRowIndex = tangible.StringHelper.isNullOrWhiteSpace(header) ? -1 : 0;
+		headerRowIndex = DataType.IsNullOrEmpty(header) ? -1 : 0;
 		dateRowIndex = date ? (headerRowIndex + 1) : -1;
 		titleRowIndex = date ? dateRowIndex + 1 : headerRowIndex == -1 ? 0 : 1;
 		sumRowIndex = sumColumns.isEmpty() ? -1 : titleRowIndex + dt.Rows.size() + 1;
-		creatorRowIndex = tangible.StringHelper.isNullOrWhiteSpace(creator) ? -1 : sumRowIndex == -1 ? titleRowIndex + dt.Rows.size() + 1 : sumRowIndex + 1;
+		creatorRowIndex = DataType.IsNullOrEmpty(creator) ? -1 : sumRowIndex == -1 ? titleRowIndex + dt.Rows.size() + 1 : sumRowIndex + 1;
 
 		try (FileStream fs = new FileStream(file, FileMode.Create))
 		{

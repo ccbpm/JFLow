@@ -66,7 +66,7 @@ public class GEEntityMyPKs extends Entities
 	*/
 	public final List<GEEntityMyPK> ToJavaList()
 	{
-		return (List<GEEntityMyPK>)this;
+		return (List<GEEntityMyPK>)(Object)this;
 	}
 	/** 
 	 转化成list

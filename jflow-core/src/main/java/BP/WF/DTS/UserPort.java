@@ -32,7 +32,7 @@ public class UserPort extends DataIOEn2
 		//BP.Port.DTS.GenerDept gd = new BP.Port.DTS.GenerDept();
 		//gd.Do();
 		// 调度人员信息。
-		// Emp emp = new Emp(Web.WebUser.No);
+		// Emp emp = new Emp(Web.WebUser.getNo());
 		// emp.DoDTSEmpDeptStation();
 	}
 }

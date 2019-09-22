@@ -67,9 +67,9 @@ public class TestCase extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_TestCase", "自定义流程测试");
@@ -78,8 +78,8 @@ public class TestCase extends EntityMyPK
 		map.AddTBString(TestCaseDtlAttr.FK_Flow, null, "流程编号", true, false, 0, 100, 100, true);
 		map.AddTBString(TestCaseDtlAttr.ParaType, null, "参数类型", true, false, 0, 100, 100, true);
 		map.AddTBString(TestCaseDtlAttr.Vals, null, "值s", true, false, 0, 500, 300, true);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

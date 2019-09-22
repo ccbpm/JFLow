@@ -51,14 +51,14 @@ public class WF extends DirectoryPageBase
 
 		DataTable mainTable = wk.ToDataTableField("MainTable");
 		mainTable.TableName = "MainTable";
-		myds.Tables.Add(mainTable);
+		myds.Tables.add(mainTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
 
 		//加入WF_Node.
 		DataTable WF_Node = nd.ToDataTableField("WF_Node").Copy();
-		myds.Tables.Add(WF_Node);
+		myds.Tables.add(WF_Node);
 
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -98,7 +98,7 @@ public class WF extends DirectoryPageBase
 			fnc.SetValByKey(FTCAttr.FTC_X, refFnc.GetValFloatByKey(FTCAttr.FTC_X));
 			fnc.SetValByKey(FTCAttr.FTC_Y, refFnc.GetValFloatByKey(FTCAttr.FTC_Y));
 		}
-		myds.Tables.Add(fnc.ToDataTableField("WF_FrmNodeComponent").Copy());
+		myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent").Copy());
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 加入组件的状态信息, 在解析表单的时候使用.
 
@@ -117,7 +117,7 @@ public class WF extends DirectoryPageBase
 			if (athDesc.HisCtrlWay == AthCtrlWay.PWorkID)
 			{
 				Paras ps = new Paras();
-				ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+				ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 				ps.Add("WorkID", this.getWorkID());
 				String pWorkID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0).toString();
 				if (pWorkID == null || pWorkID.equals("0"))
@@ -154,7 +154,7 @@ public class WF extends DirectoryPageBase
 			}
 
 			//增加一个数据源.
-			myds.Tables.Add(dbs.ToDataTableField("Sys_FrmAttachmentDB").Copy());
+			myds.Tables.add(dbs.ToDataTableField("Sys_FrmAttachmentDB").Copy());
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
@@ -220,9 +220,9 @@ public class WF extends DirectoryPageBase
 					DataRow drDll = dt_FK_Dll.NewRow();
 					drDll.set("No", dllRow.get("No"));
 					drDll.set("Name", dllRow.get("Name"));
-					dt_FK_Dll.Rows.Add(drDll);
+					dt_FK_Dll.Rows.add(drDll);
 				}
-				myds.Tables.Add(dt_FK_Dll);
+				myds.Tables.add(dt_FK_Dll);
 				continue;
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -239,15 +239,15 @@ public class WF extends DirectoryPageBase
 			{
 				DataRow ddldr = ddlTable.NewRow();
 				ddldr.set("No", uiBindKey);
-				ddlTable.Rows.Add(ddldr);
+				ddlTable.Rows.add(ddldr);
 			}
 			else
 			{
-				myds.Tables.Add(mydt);
+				myds.Tables.add(mydt);
 			}
 		}
 		ddlTable.TableName = "UIBindKey";
-		myds.Tables.Add(ddlTable);
+		myds.Tables.add(ddlTable);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion End把外键表加入DataSet
 
@@ -258,7 +258,7 @@ public class WF extends DirectoryPageBase
 		if (imgAthDBs != null && imgAthDBs.size() > 0)
 		{
 			DataTable dt_ImgAth = imgAthDBs.ToDataTableField("Sys_FrmImgAthDB");
-			myds.Tables.Add(dt_ImgAth);
+			myds.Tables.add(dt_ImgAth);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
@@ -278,7 +278,7 @@ public class WF extends DirectoryPageBase
 	*/
 	public final String Watchdog_Init()
 	{
-		String sql = " SELECT FK_Flow,FlowName, COUNT(workid) as Num FROM V_MyFlowData WHERE MyEmpNo='" + WebUser.No + "' ";
+		String sql = " SELECT FK_Flow,FlowName, COUNT(workid) as Num FROM V_MyFlowData WHERE MyEmpNo='" + WebUser.getNo() + "' ";
 		sql += " GROUP BY  FK_Flow,FlowName ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Group";
@@ -291,7 +291,7 @@ public class WF extends DirectoryPageBase
 	*/
 	public final String Watchdog_InitFlows()
 	{
-		String sql = " SELECT *  FROM V_MyFlowData WHERE MyEmpNo='" + WebUser.No + "' AND FK_Flow='" + this.getFK_Flow() + "'";
+		String sql = " SELECT *  FROM V_MyFlowData WHERE MyEmpNo='" + WebUser.getNo() + "' AND FK_Flow='" + this.getFK_Flow() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Flows";
 		return BP.Tools.Json.ToJson(dt);
@@ -311,7 +311,7 @@ public class WF extends DirectoryPageBase
 	public final String HasSealPic()
 	{
 		String no = GetRequestVal("No");
-		if (tangible.StringHelper.isNullOrWhiteSpace(no))
+		if (DataType.IsNullOrEmpty(no))
 		{
 			return "";
 		}
@@ -372,7 +372,7 @@ public class WF extends DirectoryPageBase
 					if (Sta.equals("0"))
 					{
 						BP.WF.Template.CCList cc1 = new BP.WF.Template.CCList();
-						cc1.MyPK = this.getMyPK();
+						cc1.setMyPK( this.getMyPK();
 						cc1.Retrieve();
 						cc1.setHisSta(CCSta.Read);
 						cc1.Update();
@@ -380,7 +380,7 @@ public class WF extends DirectoryPageBase
 					return "url@./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID();
 				case "DelCC": //删除抄送.
 					CCList cc = new CCList();
-					cc.MyPK = this.getMyPK();
+					cc.setMyPK( this.getMyPK();
 					cc.Retrieve();
 					cc.setHisSta(CCSta.Del);
 					cc.Update();
@@ -434,19 +434,19 @@ public class WF extends DirectoryPageBase
 					return "info@Close";
 					break;
 				case "EmpDoUp":
-					BP.WF.Port.WFEmp ep = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
+					WFEmp ep = new WFEmp(this.GetRequestVal("RefNo"));
 					ep.DoUp();
 
-					BP.WF.Port.WFEmps emps111 = new BP.WF.Port.WFEmps();
+					WFEmps emps111 = new WFEmps();
 					//  emps111.RemoveCash();
 					emps111.RetrieveAll();
 					return "info@Close";
 					break;
 				case "EmpDoDown":
-					BP.WF.Port.WFEmp ep1 = new BP.WF.Port.WFEmp(this.GetRequestVal("RefNo"));
+					WFEmp ep1 = new WFEmp(this.GetRequestVal("RefNo"));
 					ep1.DoDown();
 
-					BP.WF.Port.WFEmps emps11441 = new BP.WF.Port.WFEmps();
+					WFEmps emps11441 = new WFEmps();
 					//  emps11441.RemoveCash();
 					emps11441.RetrieveAll();
 					return "info@Close";
@@ -485,34 +485,34 @@ public class WF extends DirectoryPageBase
 				case "ExitAuth":
 					BP.Port.Emp emp = new BP.Port.Emp(this.getFK_Emp());
 					//首先退出，再进行登录
-					BP.Web.WebUser.Exit();
-					BP.Web.WebUser.SignInOfGener(emp, WebUser.SysLang);
+					WebUser.Exit();
+					WebUser.SignInOfGener(emp, WebUser.SysLang);
 					return "info@Close";
 				case "LogAs":
-					BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(this.getFK_Emp());
+					WFEmp wfemp = new WFEmp(this.getFK_Emp());
 					if (wfemp.getAuthorIsOK() == false)
 					{
 						return "err@授权失败";
 					}
 					BP.Port.Emp emp1 = new BP.Port.Emp(this.getFK_Emp());
-					BP.Web.WebUser.SignInOfGener(emp1, "CH", false, false, wfemp.getAuthor(), WebUser.Name);
+					WebUser.SignInOfGener(emp1, "CH", false, false, wfemp.getAuthor(), WebUser.getName());
 					return "info@Close";
 				case "TakeBack": // 取消授权。
-					BP.WF.Port.WFEmp myau = new BP.WF.Port.WFEmp(WebUser.No);
-					BP.DA.Log.DefaultLogWriteLineInfo("取消授权:" + WebUser.No + "取消了对(" + myau.getAuthor() + ")的授权。");
+					WFEmp myau = new WFEmp(WebUser.getNo());
+					BP.DA.Log.DefaultLogWriteLineInfo("取消授权:" + WebUser.getNo() + "取消了对(" + myau.getAuthor() + ")的授权。");
 					myau.setAuthor("");
 					myau.setAuthorWay(0);
 					myau.Update();
 					return "info@Close";
 				case "AutoTo": // 执行授权。
-					BP.WF.Port.WFEmp au = new BP.WF.Port.WFEmp();
-					au.No = WebUser.No;
+					WFEmp au = new WFEmp();
+					au.No = WebUser.getNo();
 					au.RetrieveFromDBSources();
 					au.setAuthorDate(BP.DA.DataType.CurrentData);
 					au.setAuthor(this.getFK_Emp());
 					au.setAuthorWay(1);
 					au.Save();
-					BP.DA.Log.DefaultLogWriteLineInfo("执行授权:" + WebUser.No + "执行了对(" + au.getAuthor() + ")的授权。");
+					BP.DA.Log.DefaultLogWriteLineInfo("执行授权:" + WebUser.getNo() + "执行了对(" + au.getAuthor() + ")的授权。");
 					return "info@Close";
 				case "UnSend": //执行撤消发送。
 					String url = "./WorkOpt/UnSend.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
@@ -617,7 +617,7 @@ public class WF extends DirectoryPageBase
 
 		int idx = 0;
 		//获得关注的数据.
-		System.Data.DataTable dt = BP.WF.Dev2Interface.DB_Focus(flowNo, BP.Web.WebUser.No);
+		System.Data.DataTable dt = BP.WF.Dev2Interface.DB_Focus(flowNo, WebUser.getNo());
 		SysEnums stas = new SysEnums("WFSta");
 		String[] tempArr;
 		for (System.Data.DataRow dr : dt.Rows)
@@ -681,7 +681,7 @@ public class WF extends DirectoryPageBase
 	{
 		//获得当前人员的部门,根据部门获得该人员的组织集合.
 		Paras ps = new Paras();
-		ps.SQL = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		ps.SQL = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		ps.AddFK_Emp();
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
@@ -706,17 +706,17 @@ public class WF extends DirectoryPageBase
 
 		DataTable dtSort = qo.DoQueryToTable();
 		dtSort.TableName = "Sort";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtSort.Columns["NO"].ColumnName = "No";
-			dtSort.Columns["NAME"].ColumnName = "Name";
-			dtSort.Columns["PARENTNO"].ColumnName = "ParentNo";
-			dtSort.Columns["ORGNO"].ColumnName = "OrgNo";
+			dtSort.Columns.get("NO").ColumnName = "No";
+			dtSort.Columns.get("NAME").ColumnName = "Name";
+			dtSort.Columns.get("PARENTNO").ColumnName = "ParentNo";
+			dtSort.Columns.get("ORGNO").ColumnName = "OrgNo";
 		}
 
 		//定义容器.
 		DataSet ds = new DataSet();
-		ds.Tables.Add(dtSort); //增加到里面去.
+		ds.Tables.add(dtSort); //增加到里面去.
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 获取类别列表.
 
@@ -731,7 +731,7 @@ public class WF extends DirectoryPageBase
 		dtStart.Columns.Add("Note");
 
 		//获得所有的流程（包含了所有子公司与集团的可以发起的流程但是没有根据组织结构进行过滤.）
-		DataTable dtAllFlows = Dev2Interface.DB_StarFlows(Web.WebUser.No);
+		DataTable dtAllFlows = Dev2Interface.DB_StarFlows(Web.WebUser.getNo());
 
 		//按照当前用户的流程类别权限进行过滤.
 		for (DataRow drSort : dtSort.Rows)
@@ -751,19 +751,19 @@ public class WF extends DirectoryPageBase
 				drNew.set("IsBatchStart", drFlow.get("IsBatchStart"));
 				drNew.set("IsStartInMobile", drFlow.get("IsStartInMobile"));
 				drNew.set("Note", drFlow.get("Note"));
-				dtStart.Rows.Add(drNew); //增加到里里面去.
+				dtStart.Rows.add(drNew); //增加到里里面去.
 			}
 		}
 
 		//把经过权限过滤的流程实体放入到集合里.
-		ds.Tables.Add(dtStart); //增加到里面去.
+		ds.Tables.add(dtStart); //增加到里面去.
 
 		//返回组合
 		String json = BP.Tools.Json.DataSetToJson(ds, false);
 
 		//放入缓存里面去.
-		BP.WF.Port.WFEmp em = new WFEmp();
-		em.No = BP.Web.WebUser.No;
+		WFEmp em = new WFEmp();
+		em.No = WebUser.getNo();
 
 		//把json存入数据表，避免下一次再取.
 		if (json.length() > 40)
@@ -784,7 +784,7 @@ public class WF extends DirectoryPageBase
 		if (this.GetRequestVal("IsRef") != null)
 		{
 			//清除权限.
-			DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows='' WHERE No='" + BP.Web.WebUser.No + "' ");
+			DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows='' WHERE No='" + WebUser.getNo() + "' ");
 
 			//处理权限,为了防止未知的错误.
 			DBAccess.RunSQL("UPDATE WF_FLOWSORT SET ORGNO='0' WHERE ORGNO='' OR ORGNO IS NULL OR ORGNO='101'");
@@ -793,13 +793,13 @@ public class WF extends DirectoryPageBase
 		}
 
 		//需要翻译.
-		BP.WF.Port.WFEmp em = new WFEmp();
-		em.No = BP.Web.WebUser.No;
+		WFEmp em = new WFEmp();
+		em.No = WebUser.getNo();
 		if (em.RetrieveFromDBSources() == 0)
 		{
-			em.setFK_Dept(BP.Web.WebUser.FK_Dept);
-			em.Name = Web.WebUser.Name;
-			em.setEmail((new BP.GPM.Emp(WebUser.No)).Email);
+			em.setFK_Dept(WebUser.getFK_Dept());
+			em.Name = Web.WebUser.getName();
+			em.setEmail((new BP.GPM.Emp(WebUser.getNo())).Email);
 			em.Insert();
 		}
 		String json = em.getStartFlows();
@@ -809,14 +809,14 @@ public class WF extends DirectoryPageBase
 		}
 
 		//如果是节水公司的，就特别处理.
-		if (WebUser.FK_Dept.indexOf("18099") == 0)
+		if (WebUser.getFK_Dept().indexOf("18099") == 0)
 		{
 			return Start_InitTianYe_JieShui();
 		}
 
 		//获得当前人员的部门,根据部门获得该人员的组织集合.
 		Paras ps = new Paras();
-		ps.SQL = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		ps.SQL = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		ps.AddFK_Emp();
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
@@ -848,17 +848,17 @@ public class WF extends DirectoryPageBase
 
 		DataTable dtSort = qo.DoQueryToTable();
 		dtSort.TableName = "Sort";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtSort.Columns["NO"].ColumnName = "No";
-			dtSort.Columns["NAME"].ColumnName = "Name";
-			dtSort.Columns["PARENTNO"].ColumnName = "ParentNo";
-			dtSort.Columns["ORGNO"].ColumnName = "OrgNo";
+			dtSort.Columns.get("NO").ColumnName = "No";
+			dtSort.Columns.get("NAME").ColumnName = "Name";
+			dtSort.Columns.get("PARENTNO").ColumnName = "ParentNo";
+			dtSort.Columns.get("ORGNO").ColumnName = "OrgNo";
 		}
 
 		//定义容器.
 		DataSet ds = new DataSet();
-		ds.Tables.Add(dtSort); //增加到里面去.
+		ds.Tables.add(dtSort); //增加到里面去.
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 获取类别列表.
 
@@ -873,7 +873,7 @@ public class WF extends DirectoryPageBase
 		dtStart.Columns.Add("Note");
 
 		//获得所有的流程（包含了所有子公司与集团的可以发起的流程但是没有根据组织结构进行过滤.）
-		DataTable dtAllFlows = Dev2Interface.DB_StarFlows(Web.WebUser.No);
+		DataTable dtAllFlows = Dev2Interface.DB_StarFlows(Web.WebUser.getNo());
 
 		//按照当前用户的流程类别权限进行过滤.
 		for (DataRow drSort : dtSort.Rows)
@@ -893,12 +893,12 @@ public class WF extends DirectoryPageBase
 				drNew.set("IsBatchStart", drFlow.get("IsBatchStart"));
 				drNew.set("IsStartInMobile", drFlow.get("IsStartInMobile"));
 				drNew.set("Note", drFlow.get("Note"));
-				dtStart.Rows.Add(drNew); //增加到里里面去.
+				dtStart.Rows.add(drNew); //增加到里里面去.
 			}
 		}
 
 		//把经过权限过滤的流程实体放入到集合里.
-		ds.Tables.Add(dtStart); //增加到里面去.
+		ds.Tables.add(dtStart); //增加到里面去.
 
 		//返回组合
 		json = BP.Tools.Json.DataSetToJson(ds, false);
@@ -920,14 +920,14 @@ public class WF extends DirectoryPageBase
 	public final String Start_Init()
 	{
 		//通用的处理器.
-		if (BP.Sys.SystemConfig.CustomerNo.equals("TianYe"))
+		if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe"))
 		{
 			return Start_InitTianYe();
 		}
 		String json = "";
 
-		BP.WF.Port.WFEmp em = new WFEmp();
-		em.No = BP.Web.WebUser.No;
+		WFEmp em = new WFEmp();
+		em.No = WebUser.getNo();
 		if (DataType.IsNullOrEmpty(em.No) == true)
 		{
 			return "err@登录信息丢失,请重新登录.";
@@ -935,19 +935,19 @@ public class WF extends DirectoryPageBase
 
 		if (em.RetrieveFromDBSources() == 0)
 		{
-			em.setFK_Dept(BP.Web.WebUser.FK_Dept);
-			em.Name = Web.WebUser.Name;
+			em.setFK_Dept(WebUser.getFK_Dept());
+			em.Name = Web.WebUser.getName();
 			em.Insert();
 		}
 		String sql = "";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 
-			 sql = "SELECT dbms_lob.substr(StartFlows) as StartFlows From WF_Emp WHERE No='" + WebUser.No + "'";
+			 sql = "SELECT dbms_lob.substr(StartFlows) as StartFlows From WF_Emp WHERE No='" + WebUser.getNo() + "'";
 		}
 		else
 		{
-			 sql = "SELECT StartFlows as StartFlows From WF_Emp WHERE No='" + WebUser.No + "'";
+			 sql = "SELECT StartFlows as StartFlows From WF_Emp WHERE No='" + WebUser.getNo() + "'";
 		}
 		json = DBAccess.RunSQLReturnString(sql);
 		if (DataType.IsNullOrEmpty(json) == false)
@@ -965,12 +965,12 @@ public class WF extends DirectoryPageBase
 
 		DataTable dtSort = fss.ToDataTableField("Sort");
 		dtSort.TableName = "Sort";
-		ds.Tables.Add(dtSort);
+		ds.Tables.add(dtSort);
 
 		//获得能否发起的流程.
-		DataTable dtStart = Dev2Interface.DB_StarFlows(Web.WebUser.No);
+		DataTable dtStart = Dev2Interface.DB_StarFlows(Web.WebUser.getNo());
 		dtStart.TableName = "Start";
-		ds.Tables.Add(dtStart);
+		ds.Tables.add(dtStart);
 
 		//返回组合
 		json = BP.Tools.Json.DataSetToJson(ds, false);
@@ -981,7 +981,7 @@ public class WF extends DirectoryPageBase
 			Paras ps = new Paras();
 			ps.SQL = "UPDATE WF_Emp SET StartFlows=" + ps.DBStr + "StartFlows WHERE No=" + ps.DBStr + "No";
 			ps.Add("StartFlows", json);
-			ps.Add("No", WebUser.No);
+			ps.Add("No", WebUser.getNo());
 			DBAccess.RunSQL(ps);
 		}
 
@@ -1003,20 +1003,20 @@ public class WF extends DirectoryPageBase
 
 		DataTable dtSort = fss.ToDataTableField("Sort");
 		dtSort.TableName = "Sort";
-		ds.Tables.Add(dtSort);
+		ds.Tables.add(dtSort);
 
 		//获得能否发起的流程.
 		DataTable dtStart = DBAccess.RunSQLReturnTable("SELECT No,Name, FK_FlowSort FROM WF_Flow ORDER BY FK_FlowSort,Idx");
 		dtStart.TableName = "Start";
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtStart.Columns["NO"].ColumnName = "No";
-			dtStart.Columns["NAME"].ColumnName = "Name";
-			dtStart.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
+			dtStart.Columns.get("NO").ColumnName = "No";
+			dtStart.Columns.get("NAME").ColumnName = "Name";
+			dtStart.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 		}
 
-		ds.Tables.Add(dtStart);
+		ds.Tables.add(dtStart);
 
 
 
@@ -1048,98 +1048,98 @@ public class WF extends DirectoryPageBase
 	{
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
-		ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE Emps LIKE '%@" + WebUser.No + "@%' and WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' and WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		//添加oracle的处理
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["PRI"].ColumnName = "PRI";
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["FID"].ColumnName = "FID";
-			dt.Columns["WFSTATE"].ColumnName = "WFState";
-			dt.Columns["WFSTA"].ColumnName = "WFSta";
-			dt.Columns["WEEKNUM"].ColumnName = "WeekNum";
-			dt.Columns["TSPAN"].ColumnName = "TSpan";
-			dt.Columns["TODOSTA"].ColumnName = "TodoSta";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["TODOEMPSNUM"].ColumnName = "TodoEmpsNum";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["TASKSTA"].ColumnName = "TaskSta";
-			dt.Columns["SYSTYPE"].ColumnName = "SysType";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["SENDDT"].ColumnName = "SendDT";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["SDTOFFLOW"].ColumnName = "SDTOfFlow";
-			dt.Columns["RDT"].ColumnName = "RDT";
-			dt.Columns["PWORKID"].ColumnName = "PWorkID";
-			dt.Columns["PFLOWNO"].ColumnName = "PFlowNo";
-			dt.Columns["PFID"].ColumnName = "PFID";
-			dt.Columns["PEMP"].ColumnName = "PEmp";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["MYNUM"].ColumnName = "MyNum";
-			dt.Columns["GUID"].ColumnName = "Guid";
-			dt.Columns["GUESTNO"].ColumnName = "GuestNo";
-			dt.Columns["GUESTNAME"].ColumnName = "GuestName";
-			dt.Columns["FLOWNOTE"].ColumnName = "FlowNote";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
-			dt.Columns["FK_NY"].ColumnName = "FK_NY";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FK_DEPT"].ColumnName = "FK_Dept";
-			dt.Columns["EMPS"].ColumnName = "Emps";
-			dt.Columns["DOMAIN"].ColumnName = "Domain";
-			dt.Columns["DEPTNAME"].ColumnName = "DeptName";
-			dt.Columns["BILLNO"].ColumnName = "BillNo";
+			dt.Columns.get("PRI").ColumnName = "PRI";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("FID").ColumnName = "FID";
+			dt.Columns.get("WFSTATE").ColumnName = "WFState";
+			dt.Columns.get("WFSTA").ColumnName = "WFSta";
+			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
+			dt.Columns.get("TSPAN").ColumnName = "TSpan";
+			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
+			dt.Columns.get("SYSTYPE").ColumnName = "SysType";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("SENDDT").ColumnName = "SendDT";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("SDTOFFLOW").ColumnName = "SDTOfFlow";
+			dt.Columns.get("RDT").ColumnName = "RDT";
+			dt.Columns.get("PWORKID").ColumnName = "PWorkID";
+			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
+			dt.Columns.get("PFID").ColumnName = "PFID";
+			dt.Columns.get("PEMP").ColumnName = "PEmp";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("MYNUM").ColumnName = "MyNum";
+			dt.Columns.get("GUID").ColumnName = "Guid";
+			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
+			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
+			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
+			dt.Columns.get("FK_NY").ColumnName = "FK_NY";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
+			dt.Columns.get("EMPS").ColumnName = "Emps";
+			dt.Columns.get("DOMAIN").ColumnName = "Domain";
+			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dt.Columns.get("BILLNO").ColumnName = "BillNo";
 		}
 
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["pri"].ColumnName = "PRI";
-			dt.Columns["workid"].ColumnName = "WorkID";
-			dt.Columns["fid"].ColumnName = "FID";
-			dt.Columns["wfstate"].ColumnName = "WFState";
-			dt.Columns["wfsta"].ColumnName = "WFSta";
-			dt.Columns["weeknum"].ColumnName = "WeekNum";
-			dt.Columns["tspan"].ColumnName = "TSpan";
-			dt.Columns["todosta"].ColumnName = "TodoSta";
-			dt.Columns["deptname"].ColumnName = "DeptName";
-			dt.Columns["todoempsnum"].ColumnName = "TodoEmpsNum";
-			dt.Columns["todoemps"].ColumnName = "TodoEmps";
-			dt.Columns["title"].ColumnName = "Title";
-			dt.Columns["tasksta"].ColumnName = "TaskSta";
-			dt.Columns["systype"].ColumnName = "SysType";
-			dt.Columns["startername"].ColumnName = "StarterName";
-			dt.Columns["starter"].ColumnName = "Starter";
-			dt.Columns["sender"].ColumnName = "Sender";
-			dt.Columns["senddt"].ColumnName = "SendDT";
-			dt.Columns["sdtofnode"].ColumnName = "SDTOfNode";
-			dt.Columns["sdtofflow"].ColumnName = "SDTOfFlow";
-			dt.Columns["rdt"].ColumnName = "RDT";
-			dt.Columns["pworkid"].ColumnName = "PWorkID";
-			dt.Columns["pflowno"].ColumnName = "PFlowNo";
-			dt.Columns["pfid"].ColumnName = "PFID";
-			dt.Columns["pemp"].ColumnName = "PEmp";
-			dt.Columns["nodename"].ColumnName = "NodeName";
-			dt.Columns["mynum"].ColumnName = "MyNum";
-			dt.Columns["guid"].ColumnName = "Guid";
-			dt.Columns["guestno"].ColumnName = "GuestNo";
-			dt.Columns["guestname"].ColumnName = "GuestName";
-			dt.Columns["flownote"].ColumnName = "FlowNote";
-			dt.Columns["flowname"].ColumnName = "FlowName";
-			dt.Columns["fk_ny"].ColumnName = "FK_NY";
-			dt.Columns["fk_node"].ColumnName = "FK_Node";
-			dt.Columns["fk_flowsort"].ColumnName = "FK_FlowSort";
-			dt.Columns["fk_flow"].ColumnName = "FK_Flow";
-			dt.Columns["fk_dept"].ColumnName = "FK_Dept";
-			dt.Columns["emps"].ColumnName = "Emps";
-			dt.Columns["domain"].ColumnName = "Domain";
-			dt.Columns["deptname"].ColumnName = "DeptName";
-			dt.Columns["billno"].ColumnName = "BillNo";
+			dt.Columns.get("pri").ColumnName = "PRI";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("fid").ColumnName = "FID";
+			dt.Columns.get("wfstate").ColumnName = "WFState";
+			dt.Columns.get("wfsta").ColumnName = "WFSta";
+			dt.Columns.get("weeknum").ColumnName = "WeekNum";
+			dt.Columns.get("tspan").ColumnName = "TSpan";
+			dt.Columns.get("todosta").ColumnName = "TodoSta";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt.Columns.get("title").ColumnName = "Title";
+			dt.Columns.get("tasksta").ColumnName = "TaskSta";
+			dt.Columns.get("systype").ColumnName = "SysType";
+			dt.Columns.get("startername").ColumnName = "StarterName";
+			dt.Columns.get("starter").ColumnName = "Starter";
+			dt.Columns.get("sender").ColumnName = "Sender";
+			dt.Columns.get("senddt").ColumnName = "SendDT";
+			dt.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+			dt.Columns.get("sdtofflow").ColumnName = "SDTOfFlow";
+			dt.Columns.get("rdt").ColumnName = "RDT";
+			dt.Columns.get("pworkid").ColumnName = "PWorkID";
+			dt.Columns.get("pflowno").ColumnName = "PFlowNo";
+			dt.Columns.get("pfid").ColumnName = "PFID";
+			dt.Columns.get("pemp").ColumnName = "PEmp";
+			dt.Columns.get("nodename").ColumnName = "NodeName";
+			dt.Columns.get("mynum").ColumnName = "MyNum";
+			dt.Columns.get("guid").ColumnName = "Guid";
+			dt.Columns.get("guestno").ColumnName = "GuestNo";
+			dt.Columns.get("guestname").ColumnName = "GuestName";
+			dt.Columns.get("flownote").ColumnName = "FlowNote";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("fk_ny").ColumnName = "FK_NY";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
+			dt.Columns.get("emps").ColumnName = "Emps";
+			dt.Columns.get("domain").ColumnName = "Domain";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("billno").ColumnName = "BillNo";
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -1264,7 +1264,7 @@ public class WF extends DirectoryPageBase
 			urlExt = "&PFlowNo=" + ndrpt.Rows[0]["PFlowNo"] + "&PWorkID=" + ndrpt.Rows[0]["PWorkID"] + "&IsToobar=0&IsHidden=true";
 		}
 
-		urlExt += "&From=CCFlow&TruckKey=" + tk.GetValStrByKey("MyPK") + "&DoType=" + this.getDoType() + "&UserNo=" + WebUser.No != null ? WebUser.No : "" + "&SID=" + WebUser.SID != null ? WebUser.SID : "";
+		urlExt += "&From=CCFlow&TruckKey=" + tk.GetValStrByKey("MyPK") + "&DoType=" + this.getDoType() + "&UserNo=" + WebUser.getNo() != null ? WebUser.getNo() : "" + "&SID=" + WebUser.SID != null ? WebUser.SID : "";
 
 		urlExt = urlExt.replace("PFlowNo=null", "");
 		urlExt = urlExt.replace("PWorkID=null", "");
@@ -1395,28 +1395,28 @@ public class WF extends DirectoryPageBase
 		String sql = "SELECT A.WorkID, A.Title,A.FK_Flow, A.FlowName, A.Starter, A.StarterName, A.Sender, A.Sender,A.FK_Node,A.NodeName,A.SDTOfNode,A.TodoEmps";
 		sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B ";
 		sql += " WHERE A.WorkID=B.WorkID and a.FK_Node=b.FK_Node ";
-		sql += " AND (B.IsPass=90 OR A.AtPara LIKE '%HuiQianZhuChiRen=" + WebUser.No + "%') ";
-		sql += " AND B.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		sql += " AND (B.IsPass=90 OR A.AtPara LIKE '%HuiQianZhuChiRen=" + WebUser.getNo() + "%') ";
+		sql += " AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 
 		Paras ps = new Paras();
-		ps.Add("FK_Emp", WebUser.No);
+		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL = sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
 
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -1430,28 +1430,28 @@ public class WF extends DirectoryPageBase
 		String sql = "SELECT A.WorkID, A.Title,A.FK_Flow, A.FlowName, A.Starter, A.StarterName, A.Sender, A.Sender,A.FK_Node,A.NodeName,A.SDTOfNode,A.TodoEmps";
 		sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Node C ";
 		sql += " WHERE A.WorkID=B.WorkID and a.FK_Node=b.FK_Node AND A.FK_Node=C.NodeID AND C.TodolistModel=1 ";
-		sql += " AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
-		//   sql += " AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		sql += " AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+		//   sql += " AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 
 		Paras ps = new Paras();
-		ps.Add("FK_Emp", WebUser.No);
+		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL = sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
 
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -1465,30 +1465,30 @@ public class WF extends DirectoryPageBase
 	{
 		String sql = "SELECT A.WorkID, A.Title,A.FK_Flow, A.FlowName, A.Starter, A.StarterName, A.Sender, A.Sender,A.FK_Node,A.NodeName,A.SDTOfNode,A.TodoEmps";
 		sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Node C ";
-		sql += " WHERE A.WorkID=B.WorkID and a.FK_Node=b.FK_Node AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		sql += " WHERE A.WorkID=B.WorkID and a.FK_Node=b.FK_Node AND B.IsPass=0 AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		sql += " AND B.AtPara LIKE '%IsHuiQian=1%' ";
 		sql += " AND A.FK_Node=C.NodeID ";
 		sql += " AND C.TodolistModel= 4";
 
 		Paras ps = new Paras();
-		ps.Add("FK_Emp", WebUser.No);
+		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL = sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["WORKID"].ColumnName = "WorkID";
-			dt.Columns["TITLE"].ColumnName = "Title";
-			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
-			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
+			dt.Columns.get("WORKID").ColumnName = "WorkID";
+			dt.Columns.get("TITLE").ColumnName = "Title";
+			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
+			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 
-			dt.Columns["STARTER"].ColumnName = "Starter";
-			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
+			dt.Columns.get("STARTER").ColumnName = "Starter";
+			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
 
-			dt.Columns["SENDER"].ColumnName = "Sender";
-			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
-			dt.Columns["NODENAME"].ColumnName = "NodeName";
-			dt.Columns["SDTOFNODE"].ColumnName = "SDTOfNode";
-			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps";
+			dt.Columns.get("SENDER").ColumnName = "Sender";
+			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
+			dt.Columns.get("NODENAME").ColumnName = "NodeName";
+			dt.Columns.get("SDTOFNODE").ColumnName = "SDTOfNode";
+			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -1501,7 +1501,7 @@ public class WF extends DirectoryPageBase
 	{
 		String fk_node = this.GetRequestVal("FK_Node");
 		String showWhat = this.GetRequestVal("ShowWhat");
-		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(WebUser.No, this.getFK_Node(), showWhat);
+		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(WebUser.getNo(), this.getFK_Node(), showWhat);
 		return BP.Tools.Json.ToJson(dt);
 	}
 	/** 
@@ -1527,7 +1527,7 @@ public class WF extends DirectoryPageBase
 		return "err@尚未重构完成.";
 
 		//DataTable dt = null;
-		//foreach (BP.WF.Port.WFEmp item in ems)
+		//foreach (WFEmp item in ems)
 		//{
 		//    if (dt == null)
 		//    {
@@ -1630,18 +1630,18 @@ public class WF extends DirectoryPageBase
 	{
 		Hashtable ht = new Hashtable();
 
-		if (BP.Web.WebUser.NoOfRel == null)
+		if (WebUser.getNo()OfRel == null)
 		{
 			ht.put("UserNo", "");
 		}
 		else
 		{
-			ht.put("UserNo", BP.Web.WebUser.No);
+			ht.put("UserNo", WebUser.getNo());
 		}
 
-		if (BP.Web.WebUser.IsAuthorize)
+		if (WebUser.getIsAuthorize())
 		{
-			ht.put("Auth", BP.Web.WebUser.Auth);
+			ht.put("Auth", WebUser.Auth);
 		}
 		else
 		{
@@ -1683,13 +1683,13 @@ public class WF extends DirectoryPageBase
 	*/
 	public final String AuthorList_LoginAs()
 	{
-		BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(this.getNo());
+		WFEmp wfemp = new WFEmp(this.getNo());
 
 		//if (wfemp.AuthorIsOK == false)
 		//   return "err@授权登录失败！";
 
 		BP.Port.Emp emp1 = new BP.Port.Emp(this.getNo());
-		BP.Web.WebUser.SignInOfGener(emp1, "CH", false, false, BP.Web.WebUser.No, BP.Web.WebUser.Name);
+		WebUser.SignInOfGener(emp1, "CH", false, false, WebUser.getNo(), WebUser.getName());
 
 		return "授权登录成功！";
 	}
@@ -1705,7 +1705,7 @@ public class WF extends DirectoryPageBase
 		//没有传FK_Node
 		if (DataType.IsNullOrEmpty(fk_node))
 		{
-			String sql = "SELECT a.NodeID, a.Name,a.FlowName, COUNT(WorkID) AS NUM  FROM WF_Node a, WF_EmpWorks b WHERE A.NodeID=b.FK_Node AND B.FK_Emp='" + WebUser.No + "' AND b.WFState NOT IN (7) AND a.BatchRole!=0 GROUP BY A.NodeID, a.Name,a.FlowName ";
+			String sql = "SELECT a.NodeID, a.Name,a.FlowName, COUNT(WorkID) AS NUM  FROM WF_Node a, WF_EmpWorks b WHERE A.NodeID=b.FK_Node AND B.FK_Emp='" + WebUser.getNo() + "' AND b.WFState NOT IN (7) AND a.BatchRole!=0 GROUP BY A.NodeID, a.Name,a.FlowName ";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 			return BP.Tools.Json.ToJson(dt);
 		}
@@ -1723,35 +1723,35 @@ public class WF extends DirectoryPageBase
 		//获取节点信息
 		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
 		Flow fl = nd.getHisFlow();
-		ds.Tables.Add(nd.ToDataTableField("WF_Node"));
+		ds.Tables.add(nd.ToDataTableField("WF_Node"));
 
 		String sql = "";
 
 		if (nd.getHisRunModel() == RunModel.SubThread)
 		{
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.No + "'";
+			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}
 		else
 		{
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.No + "'";
+			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}
 
 		//获取待审批的流程信息集合
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Batch_List";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//获取按钮权限
 		BtnLab btnLab = new BtnLab(this.getFK_Node());
 
-		ds.Tables.Add(btnLab.ToDataTableField("Sys_BtnLab"));
+		ds.Tables.add(btnLab.ToDataTableField("Sys_BtnLab"));
 
 		//获取报表数据
-		String inSQL = "SELECT WorkID FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.No + "' AND WFState!=7 AND FK_Node=" + this.getFK_Node();
+		String inSQL = "SELECT WorkID FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo() + "' AND WFState!=7 AND FK_Node=" + this.getFK_Node();
 		Works wks = nd.getHisWorks();
 		wks.RetrieveInSQL(inSQL);
 
-		ds.Tables.Add(wks.ToDataTableField("WF_Work"));
+		ds.Tables.add(wks.ToDataTableField("WF_Work"));
 
 		//获取字段属性
 		MapAttrs attrs = new MapAttrs("ND" + this.getFK_Node());
@@ -1781,7 +1781,7 @@ public class WF extends DirectoryPageBase
 			}
 		}
 
-		ds.Tables.Add(realAttr.ToDataTableField("Sys_MapAttr"));
+		ds.Tables.add(realAttr.ToDataTableField("Sys_MapAttr"));
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -1799,7 +1799,7 @@ public class WF extends DirectoryPageBase
 		MapAttrs attrs = new MapAttrs("ND" + this.getFK_Node());
 
 		//获取数据
-		String sql = String.format("SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='%1$s' and FK_Node='%2$s'", WebUser.No, this.getFK_Node());
+		String sql = String.format("SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='%1$s' and FK_Node='%2$s'", WebUser.getNo(), this.getFK_Node());
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		int idx = -1;
@@ -1921,7 +1921,7 @@ public class WF extends DirectoryPageBase
 		MapAttrs attrs = new MapAttrs("ND" + this.getFK_Node());
 
 		//获取数据
-		String sql = String.format("SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='%1$s' and FK_Node='%2$s'", WebUser.No, this.getFK_Node());
+		String sql = String.format("SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='%1$s' and FK_Node='%2$s'", WebUser.getNo(), this.getFK_Node());
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		int idx = -1;
@@ -1985,7 +1985,7 @@ public class WF extends DirectoryPageBase
 		MapAttrs attrs = new MapAttrs("ND" + this.getFK_Node());
 
 		//获取数据
-		String sql = String.format("SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='%1$s' and FK_Node='%2$s'", WebUser.No, this.getFK_Node());
+		String sql = String.format("SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='%1$s' and FK_Node='%2$s'", WebUser.getNo(), this.getFK_Node());
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		int idx = -1;
@@ -2034,10 +2034,10 @@ public class WF extends DirectoryPageBase
 		{
 			BP.Port.Emp emp = new BP.Port.Emp(UserNo);
 			//首先退出
-			BP.Web.WebUser.Exit();
+			WebUser.Exit();
 			//再进行登录
 			BP.Port.Emp emp1 = new BP.Port.Emp(Author);
-			BP.Web.WebUser.SignInOfGener(emp1, "CH", false, false, null, null);
+			WebUser.SignInOfGener(emp1, "CH", false, false, null, null);
 		}
 		catch (RuntimeException ex)
 		{
@@ -2053,15 +2053,15 @@ public class WF extends DirectoryPageBase
 	public final String AuthorList_Init()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT No,Name,AuthorDate FROM WF_Emp WHERE AUTHOR=" + SystemConfig.AppCenterDBVarStr + "AUTHOR";
-		ps.Add("AUTHOR", BP.Web.WebUser.No);
+		ps.SQL = "SELECT No,Name,AuthorDate FROM WF_Emp WHERE AUTHOR=" + SystemConfig.getAppCenterDBVarStr() + "AUTHOR";
+		ps.Add("AUTHOR", WebUser.getNo());
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["AUTHORDATE"].ColumnName = "AuthorDate";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("AUTHORDATE").ColumnName = "AuthorDate";
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -2073,13 +2073,13 @@ public class WF extends DirectoryPageBase
 	public final String IsHaveAuthor()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM WF_EMP WHERE AUTHOR=" + SystemConfig.AppCenterDBVarStr + "AUTHOR";
-		ps.Add("AUTHOR", BP.Web.WebUser.No);
+		ps.SQL = "SELECT * FROM WF_EMP WHERE AUTHOR=" + SystemConfig.getAppCenterDBVarStr() + "AUTHOR";
+		ps.Add("AUTHOR", WebUser.getNo());
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		WFEmp em = new WFEmp();
-		em.Retrieve(WFEmpAttr.Author, BP.Web.WebUser.No);
+		em.Retrieve(WFEmpAttr.Author, WebUser.getNo());
 
-		if (dt.Rows.size() > 0 && BP.Web.WebUser.IsAuthorize == false)
+		if (dt.Rows.size() > 0 && WebUser.getIsAuthorize() == false)
 		{
 			return "suess@有授权";
 		}
@@ -2105,7 +2105,7 @@ public class WF extends DirectoryPageBase
 	*/
 	public final String AuthExit()
 	{
-		return this.AuthExitAndLogin(this.getNo(), BP.Web.WebUser.Auth);
+		return this.AuthExitAndLogin(this.getNo(), WebUser.Auth);
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 登录相关.
@@ -2140,22 +2140,22 @@ public class WF extends DirectoryPageBase
 		System.Data.DataTable dt = null;
 		if (sta.equals("-1"))
 		{
-			dt = BP.WF.Dev2Interface.DB_CCList(BP.Web.WebUser.No);
+			dt = BP.WF.Dev2Interface.DB_CCList(WebUser.getNo());
 		}
 
 		if (sta.equals("0"))
 		{
-			dt = BP.WF.Dev2Interface.DB_CCList_UnRead(BP.Web.WebUser.No);
+			dt = BP.WF.Dev2Interface.DB_CCList_UnRead(WebUser.getNo());
 		}
 
 		if (sta.equals("1"))
 		{
-			dt = BP.WF.Dev2Interface.DB_CCList_Read(BP.Web.WebUser.No);
+			dt = BP.WF.Dev2Interface.DB_CCList_Read(WebUser.getNo());
 		}
 
 		if (sta.equals("2"))
 		{
-			dt = BP.WF.Dev2Interface.DB_CCList_Delete(BP.Web.WebUser.No);
+			dt = BP.WF.Dev2Interface.DB_CCList_Delete(WebUser.getNo());
 		}
 
 		//int allNum = qo.GetCount();
@@ -2214,7 +2214,7 @@ public class WF extends DirectoryPageBase
 			return "err@非法的访问，请与管理员联系。SID=" + this.getSID();
 		}
 
-		if (DataType.IsNullOrEmpty(WebUser.No) == true || BP.Web.WebUser.No.equals(this.getUserNo()) == false)
+		if (DataType.IsNullOrEmpty(WebUser.getNo()) == true || WebUser.getNo().equals(this.getUserNo()) == false)
 		{
 			BP.WF.Dev2Interface.Port_SigOut();
 			try
@@ -2384,11 +2384,11 @@ public class WF extends DirectoryPageBase
 		{
 			String guid = this.GetRequestVal("GUID");
 			BP.WF.SMS sms = new SMS();
-			sms.MyPK = guid;
+			sms.setMyPK( guid;
 			sms.Retrieve();
 
 			//判断当前的登录人员.
-			if (!sms.getSendToEmpNo().equals(BP.Web.WebUser.No))
+			if (!sms.getSendToEmpNo().equals(WebUser.getNo()))
 			{
 				BP.WF.Dev2Interface.Port_Login(sms.getSendToEmpNo());
 			}
@@ -2398,7 +2398,7 @@ public class WF extends DirectoryPageBase
 			{
 				case SMSMsgType.SendSuccess: // 发送成功的提示.
 
-					if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(ap.GetValInt64ByKey("WorkID"), BP.Web.WebUser.No) == true)
+					if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(ap.GetValInt64ByKey("WorkID"), WebUser.getNo()) == true)
 					{
 						return "url@MyFlow.htm?FK_Flow=" + ap.GetValStrByKey("FK_Flow") + "&WorkID=" + ap.GetValStrByKey("WorkID") + "&o2=1" + paras;
 					}

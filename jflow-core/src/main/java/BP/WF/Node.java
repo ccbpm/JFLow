@@ -151,13 +151,13 @@ public class Node extends Entity
 		sql += "  AND B.FormType=" + NodeFormType.FoolTruck.getValue() + " "; // 仅仅找累加表单.
 		sql += "  AND NDFrom!=" + this.getNodeID() + " "; //排除当前的表单.
 
-			//if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+			//if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 			//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
 
-			//if (SystemConfig.AppCenterDBType == DBType.MySQL)
+			//if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 			//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+cast(B.NodeID as varchar(10)) ) ";
 
-			//if (SystemConfig.AppCenterDBType == DBType.Oracle)
+			//if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 			//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
 
 		sql += "  AND (A.WorkID=" + this.WorkID + ") ";
@@ -449,7 +449,7 @@ public class Node extends Entity
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsUpdate = true;
 		}
@@ -501,7 +501,7 @@ public class Node extends Entity
 		sqls += "@UPDATE WF_Node  SET IsCCFlow=1 WHERE NodeID IN (SELECT NodeID FROM WF_Cond a WHERE a.NodeID= NodeID AND CondType=1 )";
 		BP.DA.DBAccess.RunSQLs(sqls);
 
-		if (SystemConfig.OSDBSrc == OSDBSrc.Database)
+		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			// 删除必要的数据.
 			DBAccess.RunSQL("DELETE FROM WF_NodeEmp WHERE FK_Emp  NOT IN (SELECT No from Port_Emp)");
@@ -520,7 +520,7 @@ public class Node extends Entity
 		}
 
 		// 更新是否是有完成条件的节点。
-		BP.DA.DBAccess.RunSQL("UPDATE WF_Node SET IsCCFlow=0  WHERE FK_Flow='" + fl.No + "'");
+		BP.DA.DBAccess.RunSQL("UPDATE WF_Node SET IsCCFlow=0  WHERE FK_Flow='" + fl.getNo() + "'");
 		BP.DA.DBAccess.RunSQL("DELETE FROM WF_Direction WHERE Node=0 OR ToNode=0");
 		BP.DA.DBAccess.RunSQL("DELETE FROM WF_Direction WHERE Node  NOT IN (SELECT NODEID FROM WF_Node )");
 		BP.DA.DBAccess.RunSQL("DELETE FROM WF_Direction WHERE ToNode  NOT IN (SELECT NODEID FROM WF_Node) ");
@@ -529,7 +529,7 @@ public class Node extends Entity
 		DataTable dt = null;
 
 		// 单据信息，岗位，节点信息。
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			BP.Sys.MapData md = new BP.Sys.MapData();
 			md.No = "ND" + nd.getNodeID();
@@ -588,13 +588,13 @@ public class Node extends Entity
 		}
 
 		// 处理岗位分组.
-		sql = "SELECT HisStas, COUNT(*) as NUM FROM WF_Node WHERE FK_Flow='" + fl.No + "' GROUP BY HisStas";
+		sql = "SELECT HisStas, COUNT(*) as NUM FROM WF_Node WHERE FK_Flow='" + fl.getNo() + "' GROUP BY HisStas";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
 			String stas = dr.get(0).toString();
 			String nodes = "";
-			for (Node nd : nds)
+			for (Node nd : nds.ToJavaList())
 			{
 				if (nd.getHisStas().equals(stas))
 				{
@@ -602,7 +602,7 @@ public class Node extends Entity
 				}
 			}
 
-			for (Node nd : nds)
+			for (Node nd : nds.ToJavaList())
 			{
 				if (nodes.contains("@" + String.valueOf(nd.getNodeID())) == false)
 				{
@@ -614,7 +614,7 @@ public class Node extends Entity
 			}
 		}
 		/* 判断流程的类型 */
-		sql = "SELECT Name FROM WF_Node WHERE (NodeWorkType=" + NodeWorkType.StartWorkFL.getValue() + " OR NodeWorkType=" + NodeWorkType.WorkFHL.getValue() + " OR NodeWorkType=" + NodeWorkType.WorkFL.getValue() + " OR NodeWorkType=" + NodeWorkType.WorkHL.getValue() + ") AND (FK_Flow='" + fl.No + "')";
+		sql = "SELECT Name FROM WF_Node WHERE (NodeWorkType=" + NodeWorkType.StartWorkFL.getValue() + " OR NodeWorkType=" + NodeWorkType.WorkFHL.getValue() + " OR NodeWorkType=" + NodeWorkType.WorkFL.getValue() + " OR NodeWorkType=" + NodeWorkType.WorkHL.getValue() + ") AND (FK_Flow='" + fl.getNo() + "')";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		fl.DirectUpdate();
 		return null;
@@ -717,25 +717,25 @@ public class Node extends Entity
 		{
 			workCheckAth = new FrmAttachment();
 			/*如果没有查询到它,就有可能是没有创建.*/
-			workCheckAth.MyPK = "ND" + this.getNodeID() + "_FrmWorkCheck";
-			workCheckAth.FK_MapData = "ND" + String.valueOf(this.getNodeID());
-			workCheckAth.NoOfObj = "FrmWorkCheck";
-			workCheckAth.Exts = "*.*";
+			workCheckAth.setMyPK( "ND" + this.getNodeID() + "_FrmWorkCheck");
+			workCheckAth.setFK_MapData("ND" + String.valueOf(this.getNodeID()));
+			workCheckAth.setNoOfObj("FrmWorkCheck");
+			workCheckAth.setExts( "*.*");
 
 			//存储路径.
-			workCheckAth.SaveTo = "/DataUser/UploadFile/";
-			workCheckAth.IsNote = false; //不显示note字段.
-			workCheckAth.IsVisable = false; // 让其在form 上不可见.
+			workCheckAth.setSaveTo("/DataUser/UploadFile/");
+			workCheckAth.setIsNote(  false); //不显示note字段.
+			workCheckAth.setIsVisable( false); // 让其在form 上不可见.
 
 			//位置.
-			workCheckAth.X = (float)94.09;
-			workCheckAth.Y = (float)333.18;
-			workCheckAth.W = (float)626.36;
-			workCheckAth.H = (float)150;
+			workCheckAth.setX((float)94.09);
+			workCheckAth.setY( (float)333.18);
+			workCheckAth.setW((float)626.36);
+			workCheckAth.setH( (float)150);
 
 			//多附件.
-			workCheckAth.UploadType = AttachmentUploadType.Multi;
-			workCheckAth.Name = "审核组件";
+			workCheckAth.setUploadType( AttachmentUploadType.Multi);
+			workCheckAth.setName("审核组件");
 			workCheckAth.SetValByKey("AtPara", "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=");
 			workCheckAth.Insert();
 		}
@@ -744,9 +744,10 @@ public class Node extends Entity
 
 	/** 
 	 清空WFEmp中的StartFlows文件
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		if (this.getIsStartNode() == true)
 		{
@@ -940,7 +941,7 @@ public class Node extends Entity
 	}
 	public final boolean getIsEnableTaskPool()
 	{
-		if (this.getTodolistModel() == WF.TodolistModel.Sharing)
+		if (this.getTodolistModel() == TodolistModel.Sharing)
 		{
 			return true;
 		}
@@ -1062,7 +1063,7 @@ public class Node extends Entity
 	}
 	public final void setTWay(TWay value)
 	{
-		this.SetValByKey(NodeAttr.TWay, (int)value);
+		this.SetValByKey(NodeAttr.TWay, value.getValue());
 	}
 	/** 
 	 逾期 - 提醒方式
@@ -1313,7 +1314,7 @@ public class Node extends Entity
 	*/
 	private Node _GetHisPriFLNode(Nodes nds)
 	{
-		for (Node mynd : nds)
+		for (Node mynd : nds.ToJavaList())
 		{
 			if (mynd.getIsFL())
 			{
@@ -1464,7 +1465,7 @@ public class Node extends Entity
 	}
 	public final void setHisPrintPDFModle(int value)
 	{
-		this.SetValByKey(BtnAttr.PrintPDFModle, (int)value);
+		this.SetValByKey(BtnAttr.PrintPDFModle, value.getValue());
 	}
 	/** 
 	 打印水印设置规则
@@ -2003,12 +2004,12 @@ public class Node extends Entity
 
 		if (DataType.IsNullOrEmpty(str))
 		{
-			if (this.getBlockModel() == WF.BlockModel.CurrNodeAll)
+			if (this.getBlockModel() == BlockModel.CurrNodeAll)
 			{
 				return "还有子流程没有完成您不能提交,需要等到所有的子流程完成后您才能发送.";
 			}
 
-			if (this.getBlockModel() == WF.BlockModel.SpecSubFlow)
+			if (this.getBlockModel() == BlockModel.SpecSubFlow)
 			{
 				return "还有子流程没有完成您不能提交,需要等到所有的子流程完成后您才能发送.";
 			}
@@ -2382,9 +2383,9 @@ public class Node extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "节点");
@@ -2601,8 +2602,8 @@ public class Node extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	/** 
 	 我能处理当前的节点吗？
@@ -2631,7 +2632,7 @@ public class Node extends Entity
 		{
 			GenerWorkFlows gwfs = new GenerWorkFlows();
 			gwfs.Retrieve("FK_Flow", this.getFK_Flow());
-			for (GenerWorkFlow gwf : gwfs)
+			for (GenerWorkFlow gwf : gwfs.ToJavaList())
 			{
 				BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.getFK_Flow(), gwf.getWorkID(), "流程成功结束");
 			}
@@ -2983,7 +2984,7 @@ public class Node extends Entity
 			attr.UIIsEnable = false;
 			attr.MaxLen = 32;
 			attr.MinLen = 0;
-			attr.DefVal = "@WebUser.No";
+			attr.DefVal = "@WebUser.getNo()";
 			attr.Insert();
 		}
 
@@ -3238,7 +3239,7 @@ public class Node extends Entity
 		attr.UIIsEnable = false;
 		attr.MaxLen = 32;
 		attr.MinLen = 0;
-		attr.DefVal = "@WebUser.No";
+		attr.DefVal = "@WebUser.getNo()";
 		attr.Insert();
 
 		attr = new BP.Sys.MapAttr();

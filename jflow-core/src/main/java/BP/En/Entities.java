@@ -149,7 +149,7 @@ public abstract class Entities extends ArrayList<Entity>
 		DataSet ds = new DataSet();
 		ds.Tables.add(dt);
 		/*
-		 * warning ds.Tables.Add(dt);
+		 * warning ds.Tables.add(dt);
 		 */
 		ds.WriteXml(file);
 		return dt.Rows.size();
@@ -1509,7 +1509,7 @@ public abstract class Entities extends ArrayList<Entity>
 		 * Boolean.class; dt.Columns.Add(col); for (DataRow dr : dt.Rows) { if
 		 * (dr[attr.getKey()].toString().equals("1")) { dr["tmp" +
 		 * attr.getKey()] = true; } else { dr["tmp" + attr.getKey()] = false; }
-		 * } dt.Columns.remove(attr.getKey()); dt.Columns["tmp" +
+		 * } dt.Columns.remove(attr.getKey()); dt.Columns.get("tmp" +
 		 * attr.getKey()].ColumnName = attr.getKey(); continue; } if
 		 * (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType()
 		 * == DataType.AppDate) { DataColumn col = new DataColumn();
@@ -1526,7 +1526,7 @@ public abstract class Entities extends ArrayList<Entity>
 		 * 
 		 * }
 		 * 
-		 * } dt.Columns.remove(attr.getKey()); dt.Columns["tmp" +
+		 * } dt.Columns.remove(attr.getKey()); dt.Columns.get("tmp" +
 		 * attr.getKey()].ColumnName = attr.getKey(); continue; } } return dt;
 		 */
 	}
@@ -1593,7 +1593,7 @@ public abstract class Entities extends ArrayList<Entity>
 			}
 			dt.Rows.add(dr);
 			/*
-			 * warning dt.Rows.Add(dr);
+			 * warning dt.Rows.add(dr);
 			 */
 		}
 		return dt;
@@ -1658,7 +1658,7 @@ public abstract class Entities extends ArrayList<Entity>
 			}
 			dt.Rows.add(dr);
 			/*
-			 * warning dt.Rows.Add(dr);
+			 * warning dt.Rows.add(dr);
 			 */
 		}
 		return dt;
@@ -1700,7 +1700,7 @@ public abstract class Entities extends ArrayList<Entity>
 			}
 			dt.Rows.add(dr);
 			/*
-			 * warning dt.Rows.Add(dr);
+			 * warning dt.Rows.add(dr);
 			 */
 		}
 		return dt;
@@ -1816,7 +1816,7 @@ public abstract class Entities extends ArrayList<Entity>
 			}
 			dt.Rows.add(dr);
 			/*
-			 * warning dt.Rows.Add(dr);
+			 * warning dt.Rows.add(dr);
 			 */
 		}
 		return dt;

@@ -98,24 +98,24 @@ public class WF_RptDfine extends DirectoryPageBase
 		String sql = "SELECT No,Name,ParentNo FROM WF_FlowSort ORDER BY ParentNo, Idx";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sort";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["PARENTNO"].ColumnName = "ParentNo";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		sql = "SELECT No,Name,FK_FlowSort FROM WF_Flow WHERE IsCanStart=1 ORDER BY FK_FlowSort, Idx";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Flows";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
@@ -143,11 +143,11 @@ public class WF_RptDfine extends DirectoryPageBase
 			/*如果仅仅部门领导可以查看: 检查当前人是否是部门领导人.*/
 			if (DBAccess.IsExitsTableCol("Port_Dept", "Leader") == true)
 			{
-				ps.SQL = "SELECT Leader FROM Port_Dept WHERE No=" + SystemConfig.AppCenterDBVarStr + "No";
-				ps.Add("No", BP.Web.WebUser.FK_Dept);
-				//string sql = "SELECT Leader FROM Port_Dept WHERE No='" + BP.Web.WebUser.FK_Dept + "'";
+				ps.SQL = "SELECT Leader FROM Port_Dept WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "No";
+				ps.Add("No", WebUser.getFK_Dept());
+				//string sql = "SELECT Leader FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'";
 				String strs = DBAccess.RunSQLReturnStringIsNull(ps, null);
-				if (strs != null && strs.contains(BP.Web.WebUser.No) == true)
+				if (strs != null && strs.contains(WebUser.getNo()) == true)
 				{
 					ht.put("MyDept", "我本部门发起的流程");
 				}
@@ -172,7 +172,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		ht.put("FlowName", fl.Name);
 
 		String advEmps = SystemConfig.AppSettings["AdvEmps"];
-		if (advEmps != null && advEmps.contains(BP.Web.WebUser.No) == true)
+		if (advEmps != null && advEmps.contains(WebUser.getNo()) == true)
 		{
 			ht.put("Adminer", "高级查询");
 		}
@@ -180,7 +180,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		{
 			String data = fl.GetParaString("AdvSearchRight");
 			data = "," + data + ",";
-			if (data.contains(BP.Web.WebUser.No + ",") == true)
+			if (data.contains(WebUser.getNo() + ",") == true)
 			{
 				ht.put("Adminer", "高级查询");
 			}
@@ -219,7 +219,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		///#region MyStartFlow.htm 我发起的流程
 	public final String FlowSearch_Init()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
+		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
@@ -266,12 +266,12 @@ public class WF_RptDfine extends DirectoryPageBase
 		String cfgfix = "_SearchAttrs";
 		UserRegedit ur = new UserRegedit();
 		ur.AutoMyPK = false;
-		ur.MyPK = WebUser.No + rptNo + cfgfix;
+		ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
 
 		if (ur.RetrieveFromDBSources() == 0)
 		{
-			ur.MyPK = WebUser.No + rptNo + cfgfix;
-			ur.FK_Emp = WebUser.No;
+			ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
+			ur.FK_Emp = WebUser.getNo();
 			ur.CfgKey = rptNo + cfgfix;
 
 			ur.Insert();
@@ -336,10 +336,10 @@ public class WF_RptDfine extends DirectoryPageBase
 				row.set("No", attr.KeyOfEn + "Text");
 			}
 
-			dt.Rows.Add(row);
+			dt.Rows.add(row);
 		}
 
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -362,7 +362,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		for (String ctrl : ctrls)
 		{
 			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示context.Request.QueryString[ctrl]
-			if (tangible.StringHelper.isNullOrWhiteSpace(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
+			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
 			{
 				continue;
 			}
@@ -410,7 +410,7 @@ public class WF_RptDfine extends DirectoryPageBase
 								row.set("Type", "combotree");
 								dtNoName = ens.ToDataTableField();
 								dtNoName.TableName = ar.KeyOfEn;
-								ds.Tables.Add(dtNoName);
+								ds.Tables.add(dtNoName);
 
 								row.set("ValueField", "No");
 								row.set("TextField", "Name");
@@ -425,7 +425,7 @@ public class WF_RptDfine extends DirectoryPageBase
 									row.set("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
 									dtNoName.TableName = ar.KeyOfEn;
-									ds.Tables.Add(dtNoName);
+									ds.Tables.add(dtNoName);
 
 									row.set("ValueField", "No");
 									row.set("TextField", "Name");
@@ -434,14 +434,14 @@ public class WF_RptDfine extends DirectoryPageBase
 								else
 								{
 									dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-									dtNoName.Rows.Add("all", "全部");
+									dtNoName.Rows.add("all", "全部");
 
 									for (Entity en : ens)
 									{
-										dtNoName.Rows.Add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
+										dtNoName.Rows.add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
 									}
 
-									ds.Tables.Add(dtNoName);
+									ds.Tables.add(dtNoName);
 
 									row.set("ValueField", "No");
 									row.set("TextField", "Name");
@@ -450,16 +450,16 @@ public class WF_RptDfine extends DirectoryPageBase
 							break;
 						case FieldTypeS.Enum:
 							dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-							dtNoName.Rows.Add("all", "全部");
+							dtNoName.Rows.add("all", "全部");
 
 							SysEnums enums = new SysEnums(ar.UIBindKey);
 
 							for (SysEnum en : enums)
 							{
-								dtNoName.Rows.Add(en.IntKey.toString(), en.Lab);
+								dtNoName.Rows.add(en.IntKey.toString(), en.Lab);
 							}
 
-							ds.Tables.Add(dtNoName);
+							ds.Tables.add(dtNoName);
 
 							row.set("ValueField", "No");
 							row.set("TextField", "Name");
@@ -472,10 +472,10 @@ public class WF_RptDfine extends DirectoryPageBase
 					break;
 			}
 
-			dt.Rows.Add(row);
+			dt.Rows.add(row);
 		}
 
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -487,13 +487,13 @@ public class WF_RptDfine extends DirectoryPageBase
 		switch (this.getSearchType())
 		{
 			case "My": //我发起的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 				break;
 			case "MyDept": //我部门发起的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
 				break;
 			case "MyJoin": //我参与的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
 				break;
 			case "Adminer":
 				break;
@@ -507,9 +507,9 @@ public class WF_RptDfine extends DirectoryPageBase
 		qo.AddWhere(" AND FID = 0 ");
 
 		md.SetPara("T_total", qo.GetCount());
-		qo.DoQuery("OID", tangible.StringHelper.isNullOrWhiteSpace(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), 1);
-		ds.Tables.Add(ges.ToDataTableField("MainData"));
-		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), 1);
+		ds.Tables.add(ges.ToDataTableField("MainData"));
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -529,7 +529,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 		UserRegedit ur = new UserRegedit();
-		ur.MyPK = WebUser.No + rptNo + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 
 		ur.SearchKey = searchKey;
@@ -548,13 +548,13 @@ public class WF_RptDfine extends DirectoryPageBase
 		switch (this.getSearchType())
 		{
 			case "My": //我发起的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 				break;
 			case "MyDept": //我部门发起的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
 				break;
 			case "MyJoin": //我参与的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
 				break;
 			case "Adminer":
 				break;
@@ -568,9 +568,9 @@ public class WF_RptDfine extends DirectoryPageBase
 
 
 		md.SetPara("T_total", qo.GetCount());
-		qo.DoQuery("OID", tangible.StringHelper.isNullOrWhiteSpace(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), pageIdx);
-		ds.Tables.Add(ges.ToDataTableField("MainData"));
-		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), pageIdx);
+		ds.Tables.add(ges.ToDataTableField("MainData"));
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
@@ -590,7 +590,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 		UserRegedit ur = new UserRegedit();
-		ur.MyPK = WebUser.No + rptNo + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 
 		ur.SearchKey = searchKey;
@@ -615,15 +615,15 @@ public class WF_RptDfine extends DirectoryPageBase
 		{
 			case "My": //我发起的.
 				title = "我发起的流程";
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 				break;
 			case "MyDept": //我部门发起的.
 				title = "我部门发起的流程";
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
 				break;
 			case "MyJoin": //我参与的.
 				title = "我参与的流程";
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
 				break;
 			case "Adminer":
 				break;
@@ -653,7 +653,7 @@ public class WF_RptDfine extends DirectoryPageBase
 	*/
 	public final String FlowGroup_Init()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
+		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
@@ -700,12 +700,12 @@ public class WF_RptDfine extends DirectoryPageBase
 		String cfgfix = "_SearchAttrs";
 		UserRegedit ur = new UserRegedit();
 		ur.AutoMyPK = false;
-		ur.MyPK = WebUser.No + rptNo + cfgfix;
+		ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
 
 		if (ur.RetrieveFromDBSources() == 0)
 		{
-			ur.MyPK = WebUser.No + rptNo + cfgfix;
-			ur.FK_Emp = WebUser.No;
+			ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
+			ur.FK_Emp = WebUser.getNo();
 			ur.CfgKey = rptNo + cfgfix;
 
 			ur.Insert();
@@ -715,12 +715,12 @@ public class WF_RptDfine extends DirectoryPageBase
 		cfgfix = "_GroupAttrs";
 		UserRegedit groupUr = new UserRegedit();
 		groupUr.AutoMyPK = false;
-		groupUr.MyPK = WebUser.No + rptNo + cfgfix;
+		groupUr.setMyPK( WebUser.getNo() + rptNo + cfgfix;
 
 		if (groupUr.RetrieveFromDBSources() == 0)
 		{
-			groupUr.MyPK = WebUser.No + rptNo + cfgfix;
-			groupUr.FK_Emp = WebUser.No;
+			groupUr.setMyPK( WebUser.getNo() + rptNo + cfgfix;
+			groupUr.FK_Emp = WebUser.getNo();
 			groupUr.CfgKey = rptNo + cfgfix;
 
 			groupUr.Insert();
@@ -792,10 +792,10 @@ public class WF_RptDfine extends DirectoryPageBase
 					dr.set("Checked", "true");
 				}
 
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -811,7 +811,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		dtr.set("Field", "Group_Number");
 		dtr.set("Name", "数量");
 		dtr.set("Checked", "true");
-		dt.Rows.Add(dtr);
+		dt.Rows.add(dtr);
 
 		DataTable ddlDt = new DataTable();
 		ddlDt.TableName = "Group_Number";
@@ -822,8 +822,8 @@ public class WF_RptDfine extends DirectoryPageBase
 		ddlDr.set("No", "SUM");
 		ddlDr.set("Name", "求和");
 		ddlDr.set("Selected", "true");
-		ddlDt.Rows.Add(ddlDr);
-		ds.Tables.Add(ddlDt);
+		ddlDt.Rows.add(ddlDr);
+		ds.Tables.add(ddlDt);
 
 
 		for (MapAttr attr : attrs)
@@ -863,7 +863,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			{
 				dtr.set("Checked", "true");
 			}
-			dt.Rows.Add(dtr);
+			dt.Rows.add(dtr);
 
 			ddlDt = new DataTable();
 			ddlDt.Columns.Add("No");
@@ -878,7 +878,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			{
 				ddlDr.set("Selected", "true");
 			}
-			ddlDt.Rows.Add(ddlDr);
+			ddlDt.Rows.add(ddlDr);
 
 			ddlDr = ddlDt.NewRow();
 			ddlDr.set("No", "AVG");
@@ -887,7 +887,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			{
 				ddlDr.set("Selected", "true");
 			}
-			ddlDt.Rows.Add(ddlDr);
+			ddlDt.Rows.add(ddlDr);
 
 			if (this.getIsContainsNDYF())
 			{
@@ -898,13 +898,13 @@ public class WF_RptDfine extends DirectoryPageBase
 				{
 					ddlDr.set("Selected", "true");
 				}
-				ddlDt.Rows.Add(ddlDr);
+				ddlDt.Rows.add(ddlDr);
 			}
 
-			ds.Tables.Add(ddlDt);
+			ds.Tables.add(ddlDt);
 
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -927,7 +927,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		for (String ctrl : ctrls)
 		{
 			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示context.Request.QueryString[ctrl]
-			if (tangible.StringHelper.isNullOrWhiteSpace(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
+			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
 			{
 				continue;
 			}
@@ -976,7 +976,7 @@ public class WF_RptDfine extends DirectoryPageBase
 								row.set("Type", "combotree");
 								dtNoName = ens.ToDataTableField();
 								dtNoName.TableName = ar.KeyOfEn;
-								ds.Tables.Add(dtNoName);
+								ds.Tables.add(dtNoName);
 
 								row.set("ValueField", "No");
 								row.set("TextField", "Name");
@@ -991,7 +991,7 @@ public class WF_RptDfine extends DirectoryPageBase
 									row.set("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
 									dtNoName.TableName = ar.KeyOfEn;
-									ds.Tables.Add(dtNoName);
+									ds.Tables.add(dtNoName);
 
 									row.set("ValueField", "No");
 									row.set("TextField", "Name");
@@ -1000,14 +1000,14 @@ public class WF_RptDfine extends DirectoryPageBase
 								else
 								{
 									dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-									dtNoName.Rows.Add("all", "全部");
+									dtNoName.Rows.add("all", "全部");
 
 									for (Entity en : ens)
 									{
-										dtNoName.Rows.Add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
+										dtNoName.Rows.add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
 									}
 
-									ds.Tables.Add(dtNoName);
+									ds.Tables.add(dtNoName);
 
 									row.set("ValueField", "No");
 									row.set("TextField", "Name");
@@ -1017,16 +1017,16 @@ public class WF_RptDfine extends DirectoryPageBase
 
 						case FieldTypeS.Enum:
 							dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-							dtNoName.Rows.Add("all", "全部");
+							dtNoName.Rows.add("all", "全部");
 
 							SysEnums enums = new SysEnums(ar.UIBindKey);
 
 							for (SysEnum en : enums)
 							{
-								dtNoName.Rows.Add(en.IntKey.toString(), en.Lab);
+								dtNoName.Rows.add(en.IntKey.toString(), en.Lab);
 							}
 
-							ds.Tables.Add(dtNoName);
+							ds.Tables.add(dtNoName);
 
 							row.set("ValueField", "No");
 							row.set("TextField", "Name");
@@ -1040,11 +1040,11 @@ public class WF_RptDfine extends DirectoryPageBase
 					break;
 			}
 
-			dt.Rows.Add(row);
+			dt.Rows.add(row);
 		}
 
-		ds.Tables.Add(dt);
-		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+		ds.Tables.add(dt);
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -1085,7 +1085,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 
 
-		UserRegedit groupUr = new UserRegedit(WebUser.No, rptNo + "_GroupAttrs");
+		UserRegedit groupUr = new UserRegedit(WebUser.getNo(), rptNo + "_GroupAttrs");
 		//分组的参数
 		String groupVals = groupUr.Vals;
 		//查询条件
@@ -1237,13 +1237,13 @@ public class WF_RptDfine extends DirectoryPageBase
 		switch (this.getGroupType())
 		{
 			case "My": //我发起的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 				break;
 			case "MyDept": //我部门发起的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
 				break;
 			case "MyJoin": //我参与的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
 				break;
 			case "Adminer":
 				break;
@@ -1253,7 +1253,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		//查询注册信息表
 		UserRegedit ur = new UserRegedit();
-		ur.MyPK = WebUser.No + rptNo + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
@@ -1277,7 +1277,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			{
 				mydr.set(dc.ColumnName, dr.get(dc.ColumnName));
 			}
-			dt1.Rows.Add(mydr);
+			dt1.Rows.add(mydr);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
@@ -1325,7 +1325,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			AtPara ap = new AtPara(ur.Vals);
 			/** #region 获得查询数据.
 			*/
-			for (String str : ap.HisHT.keySet())
+			for (String str : ap.getHisHT().keySet())
 			{
 				Object val = ap.GetValStrByKey(str);
 				if (val.equals("all"))
@@ -1334,7 +1334,7 @@ public class WF_RptDfine extends DirectoryPageBase
 				}
 				if (!str.equals("FK_NY"))
 				{
-					whereOFLJ += " " + str + " =" + SystemConfig.AppCenterDBVarStr + str + "   AND ";
+					whereOFLJ += " " + str + " =" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
 				}
 
 			}
@@ -1461,9 +1461,9 @@ public class WF_RptDfine extends DirectoryPageBase
 				}
 			}
 		}
-		ds.Tables.Add(dt);
-		ds.Tables.Add(AttrsOfNum.ToMapAttrs.ToDataTableField("AttrsOfNum"));
-		ds.Tables.Add(AttrsOfGroup.ToMapAttrs.ToDataTableField("AttrsOfGroup"));
+		ds.Tables.add(dt);
+		ds.Tables.add(AttrsOfNum.ToMapAttrs.ToDataTableField("AttrsOfNum"));
+		ds.Tables.add(AttrsOfGroup.ToMapAttrs.ToDataTableField("AttrsOfGroup"));
 
 
 		return ds;
@@ -1508,7 +1508,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		}
 
 		//获取注册信息表
-		UserRegedit ur = new UserRegedit(WebUser.No, rptNo + "_GroupAttrs");
+		UserRegedit ur = new UserRegedit(WebUser.getNo(), rptNo + "_GroupAttrs");
 
 
 
@@ -1525,7 +1525,7 @@ public class WF_RptDfine extends DirectoryPageBase
 	*/
 	public final String FlowContrastDtl_Init()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
+		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
@@ -1560,10 +1560,10 @@ public class WF_RptDfine extends DirectoryPageBase
 				row.set("No", attr.KeyOfEn + "Text");
 			}
 
-			dt.Rows.Add(row);
+			dt.Rows.add(row);
 		}
 
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//查询结果
 		QueryObject qo = new QueryObject(ges);
@@ -1610,7 +1610,7 @@ public class WF_RptDfine extends DirectoryPageBase
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.MyPK = WebUser.No + rptNo + "_SearchAttrs";
+				sUr.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
 				sUr.RetrieveFromDBSources();
 
 				/* 如果是多选值 */
@@ -1624,7 +1624,7 @@ public class WF_RptDfine extends DirectoryPageBase
 					{
 						if (key.equals("FK_Dept"))
 						{
-							val = WebUser.FK_Dept;
+							val = WebUser.getFK_Dept();
 						}
 					}
 					else
@@ -1674,7 +1674,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		dt = qo.DoQueryToTable();
 		dt.TableName = "Group_Dtls";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -1687,7 +1687,7 @@ public class WF_RptDfine extends DirectoryPageBase
 	*/
 	public final String FlowGroupDtl_Exp()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
+		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
@@ -1750,7 +1750,7 @@ public class WF_RptDfine extends DirectoryPageBase
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.MyPK = WebUser.No + rptNo + "_SearchAttrs";
+				sUr.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
 				sUr.RetrieveFromDBSources();
 
 				/* 如果是多选值 */
@@ -1764,7 +1764,7 @@ public class WF_RptDfine extends DirectoryPageBase
 					{
 						if (key.equals("FK_Dept"))
 						{
-							val = WebUser.FK_Dept;
+							val = WebUser.getFK_Dept();
 						}
 					}
 					else
@@ -1877,7 +1877,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			searchKey = ur.SearchKey;
 		}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(searchKey))
+		if (DataType.IsNullOrEmpty(searchKey))
 		{
 			qo.addLeftBracket();
 			qo.AddWhere("abc", "all");
@@ -1919,26 +1919,26 @@ public class WF_RptDfine extends DirectoryPageBase
 				if (i == 1)
 				{
 					qo.addLeftBracket();
-					if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : (" '%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
 
 				qo.addOr();
 
-				if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : ("'%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 			}
 
@@ -2053,7 +2053,7 @@ public class WF_RptDfine extends DirectoryPageBase
 				case UIContralType.DDL:
 					cid = "DDL_" + attr.Key;
 
-					if (kvs.containsKey(cid) == false || tangible.StringHelper.isNullOrWhiteSpace(kvs.get(cid)))
+					if (kvs.containsKey(cid) == false || DataType.IsNullOrEmpty(kvs.get(cid)))
 					{
 						continue;
 					}
@@ -2077,7 +2077,7 @@ public class WF_RptDfine extends DirectoryPageBase
 							{
 								if (attr.Key.equals("FK_Dept"))
 								{
-									selectVal = WebUser.FK_Dept;
+									selectVal = WebUser.getFK_Dept();
 								}
 							}
 							else
@@ -2212,28 +2212,28 @@ public class WF_RptDfine extends DirectoryPageBase
 		//字段描述.
 		MapAttrs attrs = new MapAttrs(fk_mapdata);
 		DataTable dtAttrs = attrs.ToDataTableField("Sys_MapAttr");
-		ds.Tables.Add(dtAttrs);
+		ds.Tables.add(dtAttrs);
 
 		//数据.
 		GEEntitys ges = new GEEntitys(fk_mapdata);
 
 		//设置查询条件.
 		QueryObject qo = new QueryObject(ges);
-		qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+		qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 
 		//查询.
 		// qo.DoQuery(BP.WF.Data.GERptAttr.OID, 15, this.PageIdx);
 
-		if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			DataTable dt = qo.DoQueryToTable();
 			dt.TableName = "dt";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 		}
 		else
 		{
 			qo.DoQuery();
-			ds.Tables.Add(ges.ToDataTableField("dt"));
+			ds.Tables.add(ges.ToDataTableField("dt"));
 		}
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
@@ -2248,25 +2248,25 @@ public class WF_RptDfine extends DirectoryPageBase
 		//字段描述.
 		MapAttrs attrs = new MapAttrs(fk_mapdata);
 		DataTable dtAttrs = attrs.ToDataTableField("Sys_MapAttr");
-		ds.Tables.Add(dtAttrs);
+		ds.Tables.add(dtAttrs);
 
 		//数据.
 		GEEntitys ges = new GEEntitys(fk_mapdata);
 
 		//设置查询条件.
 		QueryObject qo = new QueryObject(ges);
-		qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+		qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
 
-		if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			DataTable dt = qo.DoQueryToTable();
 			dt.TableName = "dt";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 		}
 		else
 		{
 			qo.DoQuery();
-			ds.Tables.Add(ges.ToDataTableField("dt"));
+			ds.Tables.add(ges.ToDataTableField("dt"));
 		}
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}

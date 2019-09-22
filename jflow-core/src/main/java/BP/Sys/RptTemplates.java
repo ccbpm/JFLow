@@ -54,7 +54,7 @@ public class RptTemplates extends Entities
 	*/
 	public final List<RptTemplate> ToJavaList()
 	{
-		return (List<RptTemplate>)this;
+		return (List<RptTemplate>)(Object)this;
 	}
 	/** 
 	 转化成list

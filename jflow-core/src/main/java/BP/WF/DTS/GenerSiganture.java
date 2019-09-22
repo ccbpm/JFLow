@@ -59,7 +59,7 @@ public class GenerSiganture extends Method
 			String fontName = "宋体";
 			String empOKs = "";
 			String empErrs = "";
-			for (Emp emp : emps)
+			for (Emp emp : emps.ToJavaList())
 			{
 				String pathMe = BP.Sys.SystemConfig.PathOfDataUser + "\\Siganture\\" + emp.No + ".JPG";
 				if ((new File(pathMe)).isFile())

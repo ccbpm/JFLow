@@ -125,9 +125,9 @@ public class FrmEvents extends EntitiesOID
 		}
 
 		doc = doc.replace("~", "'");
-		doc = doc.replace("@WebUser.No", BP.Web.WebUser.getNo());
-		doc = doc.replace("@WebUser.Name", BP.Web.WebUser.getName());
-		doc = doc.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+		doc = doc.replace("@WebUser.getNo()", WebUser.getNo());
+		doc = doc.replace("@WebUser.getName()", WebUser.getName());
+		doc = doc.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		doc = doc.replace("@FK_Node", nev.getFK_MapData().replace("ND", ""));
 		doc = doc.replace("@FK_MapData", nev.getFK_MapData());
 		doc = doc.replace("@WorkID", en.GetValStrByKey("OID", "@WorkID"));
@@ -491,7 +491,7 @@ public class FrmEvents extends EntitiesOID
 				String evmethod = nev.getMonthedName();
 				String evparams = nev.getMonthedParas();
 
-				if (tangible.StringHelper.isNullOrWhiteSpace(evdll) || !(new File(evdll)).isFile())
+				if (DataType.IsNullOrEmpty(evdll) || !(new File(evdll)).isFile())
 				{
 					throw new RuntimeException("@DLL文件【MonthedDLL】“" + (evdll != null ? evdll : "") + "”设置不正确，请重新设置！");
 				}
@@ -507,7 +507,7 @@ public class FrmEvents extends EntitiesOID
 				}
 
 				//方法
-				if (tangible.StringHelper.isNullOrWhiteSpace(evmethod))
+				if (DataType.IsNullOrEmpty(evmethod))
 				{
 					throw new RuntimeException("@DLL文件【MonthedDLL】“" + evdll + "”中类【MonthedClass】“" + evclass + "”的方法名【MonthedName】不能为空，请重新设置！");
 				}
@@ -574,7 +574,7 @@ public class FrmEvents extends EntitiesOID
 
 				if (!pss.isEmpty())
 				{
-					if (tangible.StringHelper.isNullOrWhiteSpace(evparams))
+					if (DataType.IsNullOrEmpty(evparams))
 					{
 						throw new RuntimeException("@DLL文件【MonthedDLL】“" + evdll + "”中类【MonthedClass】“" + evclass + "”的方法【MonthedName】“" + evmethod + "”的参数【MonthedParas】不能为空，请重新设置！");
 					}
@@ -729,7 +729,7 @@ public class FrmEvents extends EntitiesOID
 	*/
 	public final List<FrmEvent> ToJavaList()
 	{
-		return (List<FrmEvent>)this;
+		return (List<FrmEvent>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -741,7 +741,7 @@ public class FrmEvents extends EntitiesOID
 		ArrayList<FrmEvent> list = new ArrayList<FrmEvent>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmEvent)this[i]);
+			list.add((FrmEvent)this.get(i));
 		}
 		return list;
 	}

@@ -41,7 +41,7 @@ public class CCs extends Entities
 	*/
 	public final List<CC> ToJavaList()
 	{
-		return (List<CC>)this;
+		return (List<CC>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class CCs extends Entities
 		ArrayList<CC> list = new ArrayList<CC>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((CC)this[i]);
+			list.add((CC)this.get(i));
 		}
 		return list;
 	}

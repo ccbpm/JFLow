@@ -13,8 +13,9 @@ public class FrmRpt extends EntityNoName
 		///#region 外键属性
 	/** 
 	 框架
+	 * @throws Exception 
 	*/
-	public final MapFrames getMapFrames()
+	public final MapFrames getMapFrames() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
 		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames)tempVar : null;
@@ -809,8 +810,8 @@ public class FrmRpt extends EntityNoName
 			attr.setUIIsEnable(false);
 			attr.setMaxLen(20);
 			attr.setMinLen(0);
-			attr.setDefVal("@WebUser.No");
-			attr.setTag("@WebUser.No");
+			attr.setDefVal("@WebUser.getNo()");
+			attr.setTag("@WebUser.getNo()");
 			attr.Insert();
 		}
 	}

@@ -43,7 +43,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 		switch (ctrlType)
 		{
 			case "Dtl":
-				ps.SQL = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				//sql = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData='" + this.FK_MapData + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
@@ -51,7 +51,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 				ht.put("Name", "从表" + num);
 				break;
 			case "AthMulti":
-				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.FK_MapData + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
@@ -59,7 +59,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 				ht.put("Name", "多附件" + num);
 				break;
 			case "ImgAth":
-				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.FK_MapData + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
@@ -67,7 +67,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 				ht.put("Name", "图片附件" + num);
 				break;
 			case "AthSingle":
-				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.FK_MapData + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
@@ -75,7 +75,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 				ht.put("Name", "单附件" + num);
 				break;
 			case "AthImg":
-				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.FK_MapData + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
@@ -83,7 +83,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 				ht.put("Name", "图片附件" + num);
 				break;
 			case "HandSiganture": //手写板.
-				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData" + " AND EleType=" + SystemConfig.AppCenterDBVarStr + "EleType";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData" + " AND EleType=" + SystemConfig.getAppCenterDBVarStr() + "EleType";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				ps.Add("EleType", ctrlType);
 				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='"+ctrlType+"'";
@@ -92,7 +92,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 				ht.put("Name", "签字板" + num);
 				break;
 			case "iFrame": //框架
-				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData" + " AND EleType=" + SystemConfig.AppCenterDBVarStr + "EleType";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData" + " AND EleType=" + SystemConfig.getAppCenterDBVarStr() + "EleType";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				ps.Add("EleType", ctrlType);
 				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='" + ctrlType + "'";
@@ -101,7 +101,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 				ht.put("Name", "框架" + num);
 				break;
 			case "Fieldset": //分组
-				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData" + " AND EleType=" + SystemConfig.AppCenterDBVarStr + "EleType";
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData" + " AND EleType=" + SystemConfig.getAppCenterDBVarStr() + "EleType";
 				ps.Add("FK_MapData", this.getFK_MapData());
 				ps.Add("EleType", ctrlType);
 				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='" + ctrlType + "'";

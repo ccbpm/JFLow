@@ -59,7 +59,7 @@ public class NodeSimples extends EntitiesOIDName
 	*/
 	public final List<NodeSimple> ToJavaList()
 	{
-		return (List<NodeSimple>)this;
+		return (List<NodeSimple>)(Object)this;
 	}
 	/** 
 	 转化成list 为了翻译成java的需要
@@ -71,7 +71,7 @@ public class NodeSimples extends EntitiesOIDName
 		ArrayList<BP.WF.Template.NodeSimple> list = new ArrayList<BP.WF.Template.NodeSimple>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BP.WF.Template.NodeSimple)this[i]);
+			list.add((BP.WF.Template.NodeSimple)this.get(i));
 		}
 		return list;
 	}

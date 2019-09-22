@@ -136,9 +136,9 @@ public class ShiftWork extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_ShiftWork", "移交记录");
@@ -157,14 +157,14 @@ public class ShiftWork extends EntityMyPK
 		map.AddTBString(ShiftWorkAttr.Note, null, "移交原因", true, true, 0, 2000, 10);
 
 		map.AddTBInt(ShiftWorkAttr.IsRead, 0, "是否读取？", true, true);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.MyPK = BP.DA.DBAccess.GenerOIDByGUID().toString();
-		this.setRDT(DataType.CurrentDataTime);
+		this.setMyPK( BP.DA.DBAccess.GenerOIDByGUID().toString();
+		this.setRDT(DataType.getCurrentDataTime());
 		return super.beforeInsert();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

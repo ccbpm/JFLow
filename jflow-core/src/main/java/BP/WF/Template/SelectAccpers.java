@@ -21,7 +21,7 @@ public class SelectAccpers extends EntitiesMyPK
 			return false;
 		}
 
-		for (SelectAccper item : this)
+		for (SelectAccper item : this.ToJavaList())
 		{
 			if (item.getIsRemember() == true)
 			{
@@ -70,7 +70,7 @@ public class SelectAccpers extends EntitiesMyPK
 	public final int QueryAccepterPriSetting(int fk_node)
 	{
 		//找出最近的工作ID.
-		int maxWorkID = BP.DA.DBAccess.RunSQLReturnValInt("SELECT Max(WorkID) FROM WF_SelectAccper WHERE " + SelectAccperAttr.IsRemember + "=1 AND Rec='" + BP.Web.WebUser.No + "' AND FK_Node=" + fk_node, 0);
+		int maxWorkID = BP.DA.DBAccess.RunSQLReturnValInt("SELECT Max(WorkID) FROM WF_SelectAccper WHERE " + SelectAccperAttr.IsRemember + "=1 AND Rec='" + WebUser.getNo() + "' AND FK_Node=" + fk_node, 0);
 		if (maxWorkID == 0)
 		{
 			return 0;
@@ -88,7 +88,7 @@ public class SelectAccpers extends EntitiesMyPK
 	public final Emps getHisEmps()
 	{
 		Emps ens = new Emps();
-		for (SelectAccper ns : this)
+		for (SelectAccper ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Emp(ns.getFK_Emp()));
 		}
@@ -100,7 +100,7 @@ public class SelectAccpers extends EntitiesMyPK
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (SelectAccper ns : this)
+		for (SelectAccper ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -143,7 +143,7 @@ public class SelectAccpers extends EntitiesMyPK
 	*/
 	public final List<SelectAccper> ToJavaList()
 	{
-		return (List<SelectAccper>)this;
+		return (List<SelectAccper>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -155,7 +155,7 @@ public class SelectAccpers extends EntitiesMyPK
 		ArrayList<SelectAccper> list = new ArrayList<SelectAccper>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SelectAccper)this[i]);
+			list.add((SelectAccper)this.get(i));
 		}
 		return list;
 	}

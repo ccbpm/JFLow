@@ -48,7 +48,7 @@ public class WFEmps extends EntitiesNoName
 	*/
 	public final List<WFEmp> ToJavaList()
 	{
-		return (List<WFEmp>)this;
+		return (List<WFEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -60,7 +60,7 @@ public class WFEmps extends EntitiesNoName
 		ArrayList<WFEmp> list = new ArrayList<WFEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((WFEmp)this[i]);
+			list.add((WFEmp)this.get(i));
 		}
 		return list;
 	}

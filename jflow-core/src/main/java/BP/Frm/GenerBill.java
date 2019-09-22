@@ -342,7 +342,7 @@ public class GenerBill extends Entity
 	{
 			//if (value == BillState.)
 			//    SetValByKey(GenerBillAttr.BillSta, (int)BillSta.Complete);
-			//else if (value == WF.BillState.Delete)
+			//else if (value == BillState.Delete)
 			//    SetValByKey(GenerBillAttr.BillSta, (int)BillSta.Etc);
 			//else
 			//    SetValByKey(GenerBillAttr.BillSta, (int)BillSta.Runing);
@@ -376,7 +376,7 @@ public class GenerBill extends Entity
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -412,9 +412,9 @@ public class GenerBill extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("Frm_GenerBill", "单据控制表");
 		map.Java_SetEnType(EnType.Sys);
@@ -458,8 +458,8 @@ public class GenerBill extends Entity
 		map.AddTBString(GenerBillAttr.FK_NY, null, "年月", false, false, 0, 7, 7);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

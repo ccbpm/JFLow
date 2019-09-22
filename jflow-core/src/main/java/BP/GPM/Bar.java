@@ -163,8 +163,8 @@ public class Bar extends EntityNoName
 
 				String sql = this.getTag1();
 				sql = sql.replace("~", "'");
-				sql = sql.replace("@WebUser.No", BP.Web.WebUser.No);
-				sql = sql.replace("@WebUser.Name", BP.Web.WebUser.Name);
+				sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+				sql = sql.replace("@WebUser.getName()", WebUser.getName());
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				for (DataRow dr : dt.Rows)
 				{
@@ -195,7 +195,7 @@ public class Bar extends EntityNoName
 								html += "\t\n<li><a href=\"" + url + "\" target='_self' >" + name + "</a></li>";
 								break;
 							case 2: //覆盖新窗口
-								html += "\t\n<li><a href=\"" + url + "\" target='" + this.No + "' >" + name + "</a></li>";
+								html += "\t\n<li><a href=\"" + url + "\" target='" " + this.getNo()+ " "' >" + name + "</a></li>";
 								break;
 							default:
 								break;
@@ -259,9 +259,9 @@ public class Bar extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("GPM_Bar");
 		map.DepositaryOfEntity = Depositary.None;
@@ -305,8 +305,8 @@ public class Bar extends EntityNoName
 
 		map.AddSearchAttr(BarAttr.OpenWay);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -325,7 +325,7 @@ public class Bar extends EntityNoName
 	@Override
 	protected void afterDelete()
 	{
-		String sql = "DELETE FROM GPM_BarEmp WHERE FK_Bar='" + this.No + "'";
+		String sql = "DELETE FROM GPM_BarEmp WHERE FK_Bar='" " + this.getNo()+ " "'";
 		DBAccess.RunSQL(sql);
 		super.afterDelete();
 	}

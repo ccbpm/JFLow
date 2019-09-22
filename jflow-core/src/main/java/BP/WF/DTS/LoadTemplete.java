@@ -40,7 +40,7 @@ public class LoadTemplete extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -115,9 +115,9 @@ public class LoadTemplete extends Method
 				}
 				catch (RuntimeException ex)
 				{
-					BP.DA.Log.DefaultLogWriteLineInfo("@装载表单模版文件:" + f + "出现错误," + ex.getMessage() + " <br> " + ex.StackTrace);
+					BP.DA.Log.DefaultLogWriteLineInfo("@装载表单模版文件:" + f + "出现错误," + ex.getMessage() + " <br> " + ex.getStackTrace());
 
-					throw new RuntimeException("@装载模版文件:" + f + "出现错误," + ex.getMessage() + " <br> " + ex.StackTrace);
+					throw new RuntimeException("@装载模版文件:" + f + "出现错误," + ex.getMessage() + " <br> " + ex.getStackTrace());
 				}
 			}
 		}

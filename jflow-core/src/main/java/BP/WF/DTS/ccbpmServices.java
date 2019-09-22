@@ -85,7 +85,7 @@ public class ccbpmServices extends Method
 	private void DoOverDueFlow()
 	{
 		//特殊处理天津的需求.
-		if (SystemConfig.CustomerNo.equals(""))
+		if (SystemConfig.getCustomerNo().equals(""))
 		{
 			DoTianJinSpecFunc();
 		}
@@ -95,7 +95,7 @@ public class ccbpmServices extends Method
 		DataTable dt = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfFlow<='" + DataType.CurrentDataTime + "' ";
+		sql += " WHERE a.SDTOfFlow<='" + DataType.getCurrentDataTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		dt = DBAccess.RunSQLReturnTable(sql);
@@ -123,7 +123,7 @@ public class ccbpmServices extends Method
 			///#region  流程预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfFlowWarning<='" + DataType.CurrentDataTime + "' ";
+		sql += " WHERE a.SDTOfFlowWarning<='" + DataType.getCurrentDataTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		dt = DBAccess.RunSQLReturnTable(sql);
@@ -152,7 +152,7 @@ public class ccbpmServices extends Method
 			///#region 节点预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfNode>='" + DataType.CurrentDataTime + "' ";
+		sql += " WHERE a.SDTOfNode>='" + DataType.getCurrentDataTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
@@ -224,7 +224,7 @@ public class ccbpmServices extends Method
 
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfNode<='" + DataType.CurrentDataTime + "' ";
+		sql += " WHERE a.SDTOfNode<='" + DataType.getCurrentDataTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
@@ -248,7 +248,7 @@ public class ccbpmServices extends Method
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, fk_node);
 
 			boolean isLogin = false;
-			for (GenerWorkerList item : gwls)
+			for (GenerWorkerList item : gwls.ToJavaList())
 			{
 				if (item.getIsEnable() == false)
 				{
@@ -256,14 +256,14 @@ public class ccbpmServices extends Method
 				}
 
 				BP.Port.Emp emp = new Emp(item.getFK_Emp());
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 				isLogin = true;
 			}
 
 			if (isLogin == false)
 			{
 				BP.Port.Emp emp = new Emp("admin");
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 			}
 
 			try
@@ -592,7 +592,7 @@ public class ccbpmServices extends Method
 			///#region 发送邮件.
 		if (DataType.IsNullOrEmpty(sms.getEmail()))
 		{
-			BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(sms.getSendToEmpNo());
+			WFEmp emp = new WFEmp(sms.getSendToEmpNo());
 			sms.setEmail(emp.getEmail());
 		}
 

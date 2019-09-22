@@ -56,7 +56,7 @@ public class FlowFormTrees extends EntitiesTree
 	*/
 	public final List<FlowFormTree> ToJavaList()
 	{
-		return (List<FlowFormTree>)this;
+		return (List<FlowFormTree>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -68,7 +68,7 @@ public class FlowFormTrees extends EntitiesTree
 		ArrayList<FlowFormTree> list = new ArrayList<FlowFormTree>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FlowFormTree)this[i]);
+			list.add((FlowFormTree)this.get(i));
 		}
 		return list;
 	}

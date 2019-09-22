@@ -48,7 +48,7 @@ public class FrmLines extends EntitiesMyPK
 	*/
 	public final List<FrmLine> ToJavaList()
 	{
-		return (List<FrmLine>)this;
+		return (List<FrmLine>)(Object)this;
 	}
 	/** 
 	 转化成list

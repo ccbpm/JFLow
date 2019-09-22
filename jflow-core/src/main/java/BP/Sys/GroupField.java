@@ -13,7 +13,7 @@ public class GroupField extends EntityOID
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin") || BP.Web.WebUser.getIsAdmin())
+		if (WebUser.getNo().equals("admin") || WebUser.getIsAdmin())
 		{
 				/* */
 			uac.IsDelete = true;

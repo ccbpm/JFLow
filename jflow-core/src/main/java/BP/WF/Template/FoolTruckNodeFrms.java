@@ -45,7 +45,7 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	*/
 	public final List<FoolTruckNodeFrm> ToJavaList()
 	{
-		return (List<FoolTruckNodeFrm>)this;
+		return (List<FoolTruckNodeFrm>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -57,7 +57,7 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 		ArrayList<FoolTruckNodeFrm> list = new ArrayList<FoolTruckNodeFrm>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FoolTruckNodeFrm)this[i]);
+			list.add((FoolTruckNodeFrm)this.get(i));
 		}
 		return list;
 	}

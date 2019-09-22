@@ -96,7 +96,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	public final String NewHidF()
 	{
 		MapAttr mdHid = new MapAttr();
-		mdHid.MyPK = this.getFK_MapData() + "_" + this.getKeyOfEn();
+		mdHid.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
 		mdHid.FK_MapData = this.getFK_MapData();
 		mdHid.KeyOfEn = this.getKeyOfEn();
 		mdHid.Name = this.getName();
@@ -166,11 +166,11 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		DataSet ds = new DataSet();
 
 		SFDBSrc src = new SFDBSrc("local");
-		ds.Tables.Add(src.ToDataTableField("SFDBSrc"));
+		ds.Tables.add(src.ToDataTableField("SFDBSrc"));
 
 		DataTable tables = src.GetTables(true);
 		tables.TableName = "Tables";
-		ds.Tables.Add(tables);
+		ds.Tables.add(tables);
 		return BP.Tools.Json.ToJson(ds);
 
 	}
@@ -401,48 +401,48 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			//属性.
 			MapAttrs attrs = new MapAttrs(this.getFK_MapData());
 			attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIVisible, 1);
-			ds.Tables.Add(attrs.ToDataTableField("Sys_MapAttr"));
+			ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
 			FrmBtns btns = new FrmBtns(this.getFK_MapData());
-			ds.Tables.Add(btns.ToDataTableField("Sys_FrmBtn"));
+			ds.Tables.add(btns.ToDataTableField("Sys_FrmBtn"));
 
 			FrmRBs rbs = new FrmRBs(this.getFK_MapData());
-			ds.Tables.Add(rbs.ToDataTableField("Sys_FrmRB"));
+			ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
 
 			FrmLabs labs = new FrmLabs(this.getFK_MapData());
-			ds.Tables.Add(labs.ToDataTableField("Sys_FrmLab"));
+			ds.Tables.add(labs.ToDataTableField("Sys_FrmLab"));
 
 			FrmLinks links = new FrmLinks(this.getFK_MapData());
-			ds.Tables.Add(links.ToDataTableField("Sys_FrmLink"));
+			ds.Tables.add(links.ToDataTableField("Sys_FrmLink"));
 
 			FrmImgs imgs = new FrmImgs(this.getFK_MapData());
-			ds.Tables.Add(imgs.ToDataTableField("Sys_FrmImg"));
+			ds.Tables.add(imgs.ToDataTableField("Sys_FrmImg"));
 
 			FrmImgAths imgAths = new FrmImgAths(this.getFK_MapData());
-			ds.Tables.Add(imgAths.ToDataTableField("Sys_FrmImgAth"));
+			ds.Tables.add(imgAths.ToDataTableField("Sys_FrmImgAth"));
 
 			FrmAttachments aths = new FrmAttachments(this.getFK_MapData());
-			ds.Tables.Add(aths.ToDataTableField("Sys_FrmAttachment"));
+			ds.Tables.add(aths.ToDataTableField("Sys_FrmAttachment"));
 
 			MapDtls dtls = new MapDtls();
 			dtls.Retrieve(MapDtlAttr.FK_MapData, this.getFK_MapData(), MapDtlAttr.FK_Node, 0);
-			ds.Tables.Add(dtls.ToDataTableField("Sys_MapDtl"));
+			ds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
 
 			FrmLines lines = new FrmLines(this.getFK_MapData());
-			ds.Tables.Add(lines.ToDataTableField("Sys_FrmLine"));
+			ds.Tables.add(lines.ToDataTableField("Sys_FrmLine"));
 
 			BP.Sys.FrmUI.MapFrameExts mapFrameExts = new BP.Sys.FrmUI.MapFrameExts(this.getFK_MapData());
-			ds.Tables.Add(mapFrameExts.ToDataTableField("Sys_MapFrame"));
+			ds.Tables.add(mapFrameExts.ToDataTableField("Sys_MapFrame"));
 
 			//组织节点组件信息.
 			String sql = "";
 			if (this.getFK_Node() > 100)
 			{
-				sql += "select '轨迹图' AS Name,'FlowChart' AS No,FrmTrackSta Sta,FrmTrack_X X,FrmTrack_Y Y,FrmTrack_H H,FrmTrack_W  W from WF_Node WHERE nodeid=" + SystemConfig.AppCenterDBVarStr + "nodeid";
-				sql += " union select '审核组件'AS Name, 'FrmCheck'AS No,FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node WHERE nodeid=" + SystemConfig.AppCenterDBVarStr + "nodeid";
-				sql += " union select '子流程' AS Name,'SubFlowDtl'AS  No,SFSta Sta,SF_X X,SF_Y Y,SF_H H, SF_W W from WF_Node  WHERE nodeid=" + SystemConfig.AppCenterDBVarStr + "nodeid";
-				sql += " union select '子线程' AS Name, 'ThreadDtl'AS  No,FrmThreadSta Sta,FrmThread_X X,FrmThread_Y Y,FrmThread_H H,FrmThread_W W from WF_Node WHERE nodeid=" + SystemConfig.AppCenterDBVarStr + "nodeid";
-				sql += " union select '流转自定义' AS Name,'FrmTransferCustom' AS  No,FTCSta Sta,FTC_X X,FTC_Y Y,FTC_H H,FTC_W  W FROM WF_Node WHERE nodeid=" + SystemConfig.AppCenterDBVarStr + "nodeid";
+				sql += "select '轨迹图' AS Name,'FlowChart' AS No,FrmTrackSta Sta,FrmTrack_X X,FrmTrack_Y Y,FrmTrack_H H,FrmTrack_W  W from WF_Node WHERE nodeid=" + SystemConfig.getAppCenterDBVarStr() + "nodeid";
+				sql += " union select '审核组件'AS Name, 'FrmCheck'AS No,FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node WHERE nodeid=" + SystemConfig.getAppCenterDBVarStr() + "nodeid";
+				sql += " union select '子流程' AS Name,'SubFlowDtl'AS  No,SFSta Sta,SF_X X,SF_Y Y,SF_H H, SF_W W from WF_Node  WHERE nodeid=" + SystemConfig.getAppCenterDBVarStr() + "nodeid";
+				sql += " union select '子线程' AS Name, 'ThreadDtl'AS  No,FrmThreadSta Sta,FrmThread_X X,FrmThread_Y Y,FrmThread_H H,FrmThread_W W from WF_Node WHERE nodeid=" + SystemConfig.getAppCenterDBVarStr() + "nodeid";
+				sql += " union select '流转自定义' AS Name,'FrmTransferCustom' AS  No,FTCSta Sta,FTC_X X,FTC_Y Y,FTC_H H,FTC_W  W FROM WF_Node WHERE nodeid=" + SystemConfig.getAppCenterDBVarStr() + "nodeid";
 				Paras ps = new Paras();
 				ps.SQL = sql;
 				ps.Add("nodeid", this.getFK_Node());
@@ -474,7 +474,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 				dt.TableName = "FigureCom";
 
-				if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					//  figureComCols = "Name,No,Sta,X,Y,H,W";
 					dt.Columns[0].ColumnName = "Name";
@@ -485,7 +485,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 					dt.Columns[5].ColumnName = "H";
 					dt.Columns[6].ColumnName = "W";
 				}
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 
 			return BP.Tools.Json.ToJson(ds);

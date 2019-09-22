@@ -206,6 +206,6 @@ public abstract class EventBase
 		{
 			return null;
 		}
-		return dt.Rows[0][0].toString();
+		return dt.Rows.get(0).getValue(0).toString();
 	}
 }

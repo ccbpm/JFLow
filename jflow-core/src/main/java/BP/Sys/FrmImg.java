@@ -54,7 +54,7 @@ public class FrmImg extends EntityMyPK
 	}
 	public final void setIsEdit(int value)
 	{
-		this.SetValByKey(FrmImgAttr.IsEdit, (int)value);
+		this.SetValByKey(FrmImgAttr.IsEdit, value.getValue());
 	}
 	/** 
 	 应用类型

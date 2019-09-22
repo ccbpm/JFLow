@@ -85,7 +85,7 @@ public class LabNote extends EntityMyPK
 	*/
 	public LabNote(String mypk)
 	{
-		this.MyPK = mypk;
+		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
@@ -94,9 +94,9 @@ public class LabNote extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_LabNote", "标签");
@@ -110,8 +110,8 @@ public class LabNote extends EntityMyPK
 		map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
 		map.AddTBInt(NodeAttr.Y, 0, "Y坐标", false, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -119,7 +119,7 @@ public class LabNote extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.MyPK = BP.DA.DBAccess.GenerOID().toString();
+		this.setMyPK( BP.DA.DBAccess.GenerOID().toString();
 		return super.beforeInsert();
 	}
 }

@@ -44,7 +44,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 		//获取track.
 		DataTable dt = BP.WF.Dev2Interface.DB_GenerTrackTable(this.getFK_Flow(), this.getWorkID(), this.getFID());
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -117,7 +117,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(this.getWorkID());
 		gwf.RetrieveFromDBSources();
-		ds.Tables.Add(gwf.ToDataTableField("WF_GenerWorkFlow"));
+		ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
 		if (gwf.getWFState() != WFState.Complete)
 		{
@@ -125,7 +125,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID());
 
 			//warning 补偿式的更新.  做特殊的判断，当会签过了以后仍然能够看isPass=90的错误数据.
-			for (GenerWorkerList item : gwls)
+			for (GenerWorkerList item : gwls.ToJavaList())
 			{
 				if (item.getIsPassInt() == 90 && gwf.getFK_Node() != item.getFK_Node())
 				{
@@ -133,12 +133,12 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 					item.Update();
 				}
 			}
-			ds.Tables.Add(gwls.ToDataTableField("WF_GenerWorkerList"));
+			ds.Tables.add(gwls.ToDataTableField("WF_GenerWorkerList"));
 		}
 
 		//把节点审核配置信息.
 		FrmWorkCheck fwc = new FrmWorkCheck(gwf.getFK_Node());
-		ds.Tables.Add(fwc.ToDataTableField("FrmWorkCheck"));
+		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 		//返回结果.
 		return BP.Tools.Json.DataSetToJson(ds, false);
@@ -223,7 +223,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 	public final String getName()
 	{
-		String str = BP.Web.WebUser.Name;
+		String str = WebUser.getName();
 		if (str == null || str.equals("") || str.equals("null"))
 		{
 			return null;
@@ -235,7 +235,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 	public final String FlowBBS_Delete()
 	{
-		return BP.WF.Dev2Interface.Flow_BBSDelete(this.getFK_Flow(), this.getMyPK(), WebUser.No);
+		return BP.WF.Dev2Interface.Flow_BBSDelete(this.getFK_Flow(), this.getMyPK(), WebUser.getNo());
 	}
 	/** 
 	 执行撤销
@@ -304,7 +304,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		String psql = "SELECT A.PowerFlag,A.EmpNo,A.EmpName FROM WF_PowerModel A WHERE PowerCtrlType =1"
 		 + " UNION "
 		 + "SELECT A.PowerFlag,B.No,B.Name FROM WF_PowerModel A, Port_Emp B, Port_Deptempstation C WHERE A.PowerCtrlType = 0 AND B.No = C.FK_Emp AND A.StaNo = C.FK_Station";
-		psql = "SELECT PowerFlag From(" + psql + ")D WHERE  D.EmpNo='" + WebUser.No + "'";
+		psql = "SELECT PowerFlag From(" + psql + ")D WHERE  D.EmpNo='" + WebUser.getNo() + "'";
 
 	   String powers = DBAccess.RunSQLReturnStringIsNull(psql,"");
 
@@ -313,7 +313,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 文件打印的权限判断，这里为天业集团做的特殊判断，现实的应用中，都可以打印.
-		if (SystemConfig.CustomerNo.equals("TianYe") && !WebUser.No.equals("admin"))
+		if (SystemConfig.getCustomerNo().equals("TianYe") && !WebUser.getNo().equals("admin"))
 		{
 			CanPackUp = IsCanPrintSpecForTianYe(gwf);
 		}
@@ -345,7 +345,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		{
 			case Runing: // 运行时
 				/*删除流程.*/
-				if (BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(), WebUser.No) == true)
+				if (BP.WF.Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(), WebUser.getNo()) == true)
 				{
 					ht.put("IsCanDelete", 1);
 				}
@@ -383,7 +383,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				/*撤销发送*/
 				GenerWorkerLists workerlists = new GenerWorkerLists();
 				QueryObject info = new QueryObject(workerlists);
-				info.AddWhere(GenerWorkerListAttr.FK_Emp, WebUser.No);
+				info.AddWhere(GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 				info.addAnd();
 				info.AddWhere(GenerWorkerListAttr.IsPass, "1");
 				info.addAnd();
@@ -426,7 +426,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 			case Complete: // 完成.
 			case Delete: // 逻辑删除..
 				/*恢复使用流程*/
-				if (WebUser.No.equals("admin"))
+				if (WebUser.getNo().equals("admin"))
 				{
 					ht.put("CanRollBack", 1);
 				}
@@ -450,7 +450,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				break;
 			case HungUp: // 挂起.
 				/*撤销挂起*/
-				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(getWorkID(), WebUser.No) == false)
+				if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(getWorkID(), WebUser.getNo()) == false)
 				{
 					ht.put("CanUnHungUp", 0);
 				}
@@ -496,7 +496,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 			if (btn.getPrintPDFEnable() == true || btn.getPrintZipEnable() == true)
 			{
 				String empFrom = dr.get(1).toString();
-				if (gwf.getWFState() == BP.WF.WFState.Complete && (empFrom.equals(BP.Web.WebUser.No) || gwf.getStarter().equals(WebUser.No)))
+				if (gwf.getWFState() == BP.WF.WFState.Complete && (empFrom.equals(WebUser.getNo()) || gwf.getStarter().equals(WebUser.getNo())))
 				{
 					return true;
 				}
@@ -606,25 +606,25 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 			String sql = "SELECT No \"No\", Name \"Name\", Paras \"Paras\", ChartType \"ChartType\" FROM WF_Flow WHERE No='" + fk_flow + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_Flow";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//获取流程中的节点信息
 			sql = "SELECT NodeID \"ID\", Name \"Name\", ICON \"Icon\", X \"X\", Y \"Y\", NodePosType \"NodePosType\",RunModel \"RunModel\",HisToNDs \"HisToNDs\",TodolistModel \"TodolistModel\" FROM WF_Node WHERE FK_Flow='" + fk_flow + "' ORDER BY Step";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_Node";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//获取流程中的标签信息
 			sql = "SELECT MyPK \"MyPK\", Name \"Name\", X \"X\", Y \"Y\" FROM WF_LabNote WHERE FK_Flow='" + fk_flow + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_LabNote";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//获取流程中的线段方向信息
 			sql = "SELECT Node \"Node\", ToNode \"ToNode\", 0 as  \"DirType\", 0 as \"IsCanBack\",Dots \"Dots\" FROM WF_Direction WHERE FK_Flow='" + fk_flow + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_Direction";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			if (workid != 0)
 			{
@@ -662,7 +662,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 				dt = DBAccess.RunSQLReturnTable(String.format(sql, workid));
 				dt.TableName = "FlowInfo";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 
 				//获得流程状态.
 				WFState wfState = WFState.forValue(Integer.parseInt(dt.Rows[0]["WFState"].toString()));
@@ -670,7 +670,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				String fk_Node = dt.Rows[0]["FK_Node"].toString();
 				//把节点审核配置信息.
 				FrmWorkCheck fwc = new FrmWorkCheck(fk_Node);
-				ds.Tables.Add(fwc.ToDataTableField("FrmWorkCheck"));
+				ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 
 				//获取工作轨迹信息
@@ -728,7 +728,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 								}
 								DataRow newdr = newdt.NewRow();
 								newdr.ItemArray = dr.ItemArray;
-								newdt.Rows.Add(newdr);
+								newdt.Rows.add(newdr);
 							}
 						}
 						else
@@ -745,20 +745,20 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				}
 
 				newdt.TableName = "Track";
-				ds.Tables.Add(newdt);
+				ds.Tables.add(newdt);
 
 				//获取预先计算的节点处理人，以及处理时间,added by liuxc,2016-4-15
 				sql = "SELECT wsa.FK_Node as \"FK_Node\",wsa.FK_Emp as \"FK_Emp\",wsa.EmpName as \"EmpName\",wsa.TimeLimit as \"TimeLimit\",wsa.TSpanHour as \"TSpanHour\",wsa.ADT as \"ADT\",wsa.SDT as \"SDT\" FROM WF_SelectAccper wsa WHERE wsa.WorkID = " + workid;
 				dt = DBAccess.RunSQLReturnTable(sql);
 				// dt.TableName = "POSSIBLE";
 				dt.TableName = "Possible";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 
 				//获取节点处理人数据，及处理/查看信息
 				sql = "SELECT wgw.FK_Emp as \"FK_Emp\",wgw.FK_Node as \"FK_Node\",wgw.FK_EmpText as \"FK_EmpText\",wgw.RDT as \"RDT\",wgw.IsRead as \"IsRead\",wgw.IsPass as \"IsPass\" FROM WF_GenerWorkerlist wgw WHERE wgw.WorkID = " + workid + (fid == 0 ? (" OR FID=" + workid) : (" OR WorkID=" + fid + " OR FID=" + fid));
 				dt = DBAccess.RunSQLReturnTable(sql);
 				dt.TableName = "DISPOSE";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 
 
 
@@ -780,7 +780,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 					qo.DoQuery();
 
 					DataTable dtGwls = gwls.ToDataTableField("WF_GenerWorkerList");
-					ds.Tables.Add(dtGwls);
+					ds.Tables.add(dtGwls);
 				}
 
 			}
@@ -791,7 +791,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 					  " WHERE WorkID=0 ORDER BY RDT ASC";
 				dt = DBAccess.RunSQLReturnTable(sql);
 				dt.TableName = "TRACK";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 
 			//for (int i = 0; i < ds.Tables.size(); i++)
@@ -837,25 +837,25 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 			String sql = "SELECT No \"No\", Name \"Name\", Paras \"Paras\", ChartType \"ChartType\" FROM WF_Flow WHERE No='" + fk_flow + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_FLOW";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//获取流程中的节点信息
 			sql = "SELECT NodeID \"ID\", Name \"Name\", ICON \"Icon\", X \"X\", Y \"Y\", NodePosType \"NodePosType\", RunModel \"RunModel\",HisToNDs \"HisToNDs\",TodolistModel \"TodolistModel\" FROM WF_Node WHERE FK_Flow='" + fk_flow + "' ORDER BY Step";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_NODE";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//获取流程中的标签信息
 			sql = "SELECT MyPK \"MyPK\", Name \"Name\", X \"X\", Y \"Y\" FROM WF_LabNote WHERE FK_Flow='" + fk_flow + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_LABNOTE";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//获取流程中的线段方向信息
 			sql = "SELECT Node \"Node\", ToNode \"ToNode\", 0 as  \"DirType\", 0 as \"IsCanBack\",Dots \"Dots\" FROM WF_Direction WHERE FK_Flow='" + fk_flow + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "WF_DIRECTION";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			if (workid != 0)
 			{
@@ -893,7 +893,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 				dt = DBAccess.RunSQLReturnTable(String.format(sql, workid));
 				dt.TableName = "FLOWINFO";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 
 				//获取工作轨迹信息
 				String trackTable = "ND" + Integer.parseInt(fk_flow) + "Track";
@@ -921,19 +921,19 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				}
 
 				dt.TableName = "TRACK";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 
 				//获取预先计算的节点处理人，以及处理时间,added by liuxc,2016-4-15
 				sql = "SELECT wsa.FK_Node as \"FK_Node\",wsa.FK_Emp as \"FK_Emp\",wsa.EmpName as \"EmpName\",wsa.TimeLimit as \"TimeLimit\",wsa.TSpanHour as \"TSpanHour\",wsa.ADT as \"ADT\",wsa.SDT as \"SDT\" FROM WF_SelectAccper wsa WHERE wsa.WorkID = " + workid;
 				dt = DBAccess.RunSQLReturnTable(sql);
 				dt.TableName = "POSSIBLE";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 
 				//获取节点处理人数据，及处理/查看信息
 				sql = "SELECT wgw.FK_Emp as \"FK_Emp\",wgw.FK_Node as \"FK_Node\",wgw.FK_EmpText as \"FK_EmpText\",wgw.RDT as \"RDT\",wgw.IsRead as \"IsRead\",wgw.IsPass as \"IsPass\" FROM WF_GenerWorkerlist wgw WHERE wgw.WorkID = " + workid + (fid == 0 ? (" OR FID=" + workid) : (" OR WorkID=" + fid + " OR FID=" + fid));
 				dt = DBAccess.RunSQLReturnTable(sql);
 				dt.TableName = "DISPOSE";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 			else
 			{
@@ -942,7 +942,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 					  " WHERE WorkID=0 ORDER BY RDT ASC";
 				dt = DBAccess.RunSQLReturnTable(sql);
 				dt.TableName = "TRACK";
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 
 			//for (int i = 0; i < ds.Tables.size(); i++)
@@ -972,7 +972,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	public final String FlowBBSList()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "ActionType AND WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID";
+		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		ps.Add("WorkID", this.getWorkID());
 
@@ -985,7 +985,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	public final String FlowBBS_Check()
 	{
 		Paras pss = new Paras();
-		pss.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "ActionType AND WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID AND  EMPFROMT='" + this.getUserName() + "'";
+		pss.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID AND  EMPFROMT='" + this.getUserName() + "'";
 		pss.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		pss.Add("WorkID", this.getWorkID());
 
@@ -999,9 +999,9 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	public final String FlowBBS_Save()
 	{
 		String msg = this.GetValFromFrmByKey("TB_Msg");
-		String mypk = BP.WF.Dev2Interface.Flow_BBSAdd(this.getFK_Flow(), this.getWorkID(), this.getFID(), msg, WebUser.No, WebUser.Name);
+		String mypk = BP.WF.Dev2Interface.Flow_BBSAdd(this.getFK_Flow(), this.getWorkID(), this.getFID(), msg, WebUser.getNo(), WebUser.getName());
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE MyPK=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "MyPK";
+		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE MyPK=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "MyPK";
 		ps.Add("MyPK", mypk);
 		return BP.Tools.Json.ToJson(BP.DA.DBAccess.RunSQLReturnTable(ps));
 	}
@@ -1015,10 +1015,10 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	{
 		SMS sms = new SMS();
 		sms.RetrieveByAttr(SMSAttr.MyPK, getMyPK());
-		sms.MyPK = DBAccess.GenerGUID();
-		sms.setRDT(DataType.CurrentDataTime);
+		sms.setMyPK( DBAccess.GenerGUID();
+		sms.setRDT(DataType.getCurrentDataTime());
 		sms.setSendToEmpNo(this.getUserName());
-		sms.setSender(WebUser.No);
+		sms.setSender(WebUser.getNo());
 		sms.setTitle(this.getTitle());
 		sms.setDocOfEmail(this.getMsg());
 		sms.Insert();
@@ -1032,7 +1032,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	public final String FlowBBS_Count()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT COUNT(ActionType) FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "ActionType AND WorkID=" + BP.Sys.SystemConfig.AppCenterDBVarStr + "WorkID";
+		ps.SQL = "SELECT COUNT(ActionType) FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		ps.Add("WorkID", this.getWorkID());
 		String count = BP.DA.DBAccess.RunSQLReturnValInt(ps).toString();

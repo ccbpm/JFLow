@@ -43,7 +43,7 @@ public class Selectors extends Entities
 	*/
 	public final List<Selector> ToJavaList()
 	{
-		return (List<Selector>)this;
+		return (List<Selector>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -55,7 +55,7 @@ public class Selectors extends Entities
 		ArrayList<Selector> list = new ArrayList<Selector>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Selector)this[i]);
+			list.add((Selector)this.get(i));
 		}
 		return list;
 	}

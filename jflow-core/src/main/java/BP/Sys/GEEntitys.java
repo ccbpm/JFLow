@@ -69,7 +69,7 @@ public class GEEntitys extends EntitiesOID
 	*/
 	public final List<GEEntity> ToJavaList()
 	{
-		return (List<GEEntity>)this;
+		return (List<GEEntity>)(Object)this;
 	}
 	/** 
 	 转化成list

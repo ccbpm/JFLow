@@ -91,7 +91,7 @@ public class GenerWorkerLists extends Entities
 		}
 
 		RememberMe rm = new RememberMe();
-		rm.setFK_Emp(BP.Web.WebUser.No);
+		rm.setFK_Emp(WebUser.getNo());
 		rm.setFK_Node(nodeId);
 		if (rm.RetrieveFromDBSources() == 0)
 		{
@@ -100,7 +100,7 @@ public class GenerWorkerLists extends Entities
 
 		GenerWorkerList wl = (GenerWorkerList)this[0];
 		String[] emps = rm.getEmps().split("[@]", -1);
-		for (String emp : emps)
+		for (String emp : emps.ToJavaList())
 		{
 			if (emp == null || emp.equals(""))
 			{
@@ -116,7 +116,7 @@ public class GenerWorkerLists extends Entities
 			mywl.Copy(wl);
 			mywl.setIsEnable(false);
 			mywl.setFK_Emp(emp);
-			WF.Port.WFEmp myEmp = new BP.WF.Port.WFEmp(emp);
+			WFEmp myEmp = new WFEmp(emp);
 			mywl.setFK_EmpText(myEmp.Name);
 			try
 			{
@@ -163,7 +163,7 @@ public class GenerWorkerLists extends Entities
 	*/
 	public final List<GenerWorkerList> ToJavaList()
 	{
-		return (List<GenerWorkerList>)this;
+		return (List<GenerWorkerList>)(Object)this;
 	}
 	/** 
 	 转化成list 为了翻译成java的需要
@@ -175,7 +175,7 @@ public class GenerWorkerLists extends Entities
 		ArrayList<BP.WF.GenerWorkerList> list = new ArrayList<BP.WF.GenerWorkerList>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BP.WF.GenerWorkerList)this[i]);
+			list.add((BP.WF.GenerWorkerList)this.get(i));
 		}
 		return list;
 	}

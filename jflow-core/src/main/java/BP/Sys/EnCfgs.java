@@ -39,7 +39,7 @@ public class EnCfgs extends EntitiesNo
 	*/
 	public final List<EnCfg> ToJavaList()
 	{
-		return (List<EnCfg>)this;
+		return (List<EnCfg>)(Object)this;
 	}
 	/** 
 	 转化成list

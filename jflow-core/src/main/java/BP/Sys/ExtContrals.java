@@ -37,7 +37,7 @@ public class ExtContrals extends EntitiesMyPK
 	*/
 	public final List<ExtContral> ToJavaList()
 	{
-		return (List<ExtContral>)this;
+		return (List<ExtContral>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -49,7 +49,7 @@ public class ExtContrals extends EntitiesMyPK
 		ArrayList<ExtContral> list = new ArrayList<ExtContral>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((ExtContral)this[i]);
+			list.add((ExtContral)this.get(i));
 		}
 		return list;
 	}

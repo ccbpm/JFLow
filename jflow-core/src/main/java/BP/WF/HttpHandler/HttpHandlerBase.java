@@ -64,14 +64,14 @@ public abstract class HttpHandlerBase implements IHttpHandler, IRequiresSessionS
 			//返回执行错误的结果.
 			if (ex.getCause() != null)
 			{
-				err = "err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]错误 \t\n @" + ex.getCause().getMessage() + " \t\n @技术信息:" + ex.StackTrace + " \t\n相关参数:" + paras;
+				err = "err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]错误 \t\n @" + ex.getCause().getMessage() + " \t\n @技术信息:" + ex.getStackTrace() + " \t\n相关参数:" + paras;
 			}
 			else
 			{
-				err = "err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]错误 \t\n @" + ex.getMessage() + " \t\n @技术信息:" + ex.StackTrace + " \t\n相关参数:" + paras;
+				err = "err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]错误 \t\n @" + ex.getMessage() + " \t\n @技术信息:" + ex.getStackTrace() + " \t\n相关参数:" + paras;
 			}
 
-			if (Web.WebUser.No == null)
+			if (Web.WebUser.getNo() == null)
 			{
 				err = "err@登录时间过长,请重新登录. @其他信息:" + err;
 			}

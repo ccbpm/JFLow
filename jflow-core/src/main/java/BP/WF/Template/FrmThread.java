@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.WF.*;
 import BP.Sys.*;
@@ -156,8 +157,9 @@ public class FrmThread extends Entity
 	 子线程组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmThread(String mapData)
+	public FrmThread(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -186,8 +188,9 @@ public class FrmThread extends Entity
 	 子线程组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmThread(int nodeID)
+	public FrmThread(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -198,9 +201,9 @@ public class FrmThread extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "子线程组件");
@@ -225,15 +228,11 @@ public class FrmThread extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
-	@Override
-	protected boolean beforeUpdateInsertAction()
-	{
-		return super.beforeUpdateInsertAction();
-	}
+	 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

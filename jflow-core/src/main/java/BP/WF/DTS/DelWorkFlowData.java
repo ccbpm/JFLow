@@ -25,7 +25,7 @@ public class DelWorkFlowData extends DataIOEn
 	@Override
 	public void Do()
 	{
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			throw new RuntimeException("非法用户。");
 		}
@@ -49,7 +49,7 @@ public class DelWorkFlowData extends DataIOEn
 		nds.RetrieveAll();
 
 		String msg = "";
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 
 			Work wk = null;

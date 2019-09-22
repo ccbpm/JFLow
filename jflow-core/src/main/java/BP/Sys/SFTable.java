@@ -47,7 +47,7 @@ public class SFTable extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			for (var p : ps)
 			{
-				if (tangible.StringHelper.isNullOrWhiteSpace(p))
+				if (DataType.IsNullOrEmpty(p))
 				{
 					continue;
 				}
@@ -61,21 +61,21 @@ public class SFTable extends EntityNoName
 				//此处要SL中显示表单时，会有问题
 				try
 				{
-					if (pa[1].contains("@WebUser.No"))
+					if (pa[1].contains("@WebUser.getNo()"))
 					{
-						pa[1] = pa[1].replace("@WebUser.No", BP.Web.WebUser.getNo());
+						pa[1] = pa[1].replace("@WebUser.getNo()", WebUser.getNo());
 					}
-					if (pa[1].contains("@WebUser.Name"))
+					if (pa[1].contains("@WebUser.getName()"))
 					{
-						pa[1] = pa[1].replace("@WebUser.Name", BP.Web.WebUser.getName());
+						pa[1] = pa[1].replace("@WebUser.getName()", WebUser.getName());
 					}
-					if (pa[1].contains("@WebUser.FK_Dept"))
+					if (pa[1].contains("@WebUser.getFK_Dept()"))
 					{
-						pa[1] = pa[1].replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+						pa[1] = pa[1].replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					}
-					if (pa[1].contains("@WebUser.FK_DeptName"))
+					if (pa[1].contains("@WebUser.getFK_Dept()Name"))
 					{
-						pa[1] = pa[1].replace("@WebUser.FK_DeptName", BP.Web.WebUser.getFK_DeptName());
+						pa[1] = pa[1].replace("@WebUser.getFK_Dept()Name", WebUser.getFK_DeptName());
 					}
 				}
 				catch (java.lang.Exception e)
@@ -133,12 +133,12 @@ public class SFTable extends EntityNoName
 
 					for (int i = 0; i < jdata.size(); i++)
 					{
-						dt.Rows.Add(jdata.get(i)["No"].toString(), jdata.get(i)["Name"].toString());
+						dt.Rows.add(jdata.get(i)["No"].toString(), jdata.get(i)["Name"].toString());
 					}
 
 					return dt;
 				case "Xml":
-					if (result == null || tangible.StringHelper.isNullOrWhiteSpace(result.toString()))
+					if (result == null || DataType.IsNullOrEmpty(result.toString()))
 					{
 						throw new RuntimeException("@返回的XML格式字符串不正确。");
 					}
@@ -163,7 +163,7 @@ public class SFTable extends EntityNoName
 
 					for (XmlNode node : root.ChildNodes)
 					{
-						dt.Rows.Add(node.SelectSingleNode("No").InnerText, node.SelectSingleNode("Name").InnerText);
+						dt.Rows.add(node.SelectSingleNode("No").InnerText, node.SelectSingleNode("Name").InnerText);
 					}
 
 					return dt;
@@ -207,19 +207,19 @@ public class SFTable extends EntityNoName
 			}
 
 			runObj = runObj.replace("~", "'");
-			if (runObj.contains("@WebUser.No"))
+			if (runObj.contains("@WebUser.getNo()"))
 			{
-				runObj = runObj.replace("@WebUser.No", BP.Web.WebUser.getNo());
+				runObj = runObj.replace("@WebUser.getNo()", WebUser.getNo());
 			}
 
-			if (runObj.contains("@WebUser.Name"))
+			if (runObj.contains("@WebUser.getName()"))
 			{
-				runObj = runObj.replace("@WebUser.Name", BP.Web.WebUser.getName());
+				runObj = runObj.replace("@WebUser.getName()", WebUser.getName());
 			}
 
-			if (runObj.contains("@WebUser.FK_Dept"))
+			if (runObj.contains("@WebUser.getFK_Dept()"))
 			{
-				runObj = runObj.replace("@WebUser.FK_Dept", BP.Web.WebUser.getFK_Dept());
+				runObj = runObj.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			}
 
 			DataTable dt = src.RunSQLReturnTable(runObj);
@@ -842,7 +842,7 @@ public class SFTable extends EntityNoName
 			if (DBAccess.IsExitsObject(this.getNo()) == true)
 			{
 				return super.beforeInsert();
-				//throw new Exception("err@表名[" + this.No + "]已经存在，请使用其他的表名.");
+				//throw new Exception("err@表名[" " + this.getNo()+ " "]已经存在，请使用其他的表名.");
 			}
 
 			String sql = "";
@@ -886,7 +886,7 @@ public class SFTable extends EntityNoName
 				sql += "[Name]";
 				sql += (this.getCodeStruct() == Sys.CodeStruct.Tree ? ",[ParentNo])" : ")");
 				sql += " AS ";
-				sql += "SELECT " + this.getColumnValue() + " No," + this.getColumnText() + " Name" + (this.getCodeStruct() == Sys.CodeStruct.Tree ? ("," + this.getParentValue() + " ParentNo") : "") + " FROM " + this.getSrcTable() + (tangible.StringHelper.isNullOrWhiteSpace(this.getSelectStatement()) ? "" : (" WHERE " + this.getSelectStatement()));
+				sql += "SELECT " + this.getColumnValue() + " No," + this.getColumnText() + " Name" + (this.getCodeStruct() == Sys.CodeStruct.Tree ? ("," + this.getParentValue() + " ParentNo") : "") + " FROM " + this.getSrcTable() + (DataType.IsNullOrEmpty(this.getSelectStatement()) ? "" : (" WHERE " + this.getSelectStatement()));
 
 				if (Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
@@ -902,20 +902,20 @@ public class SFTable extends EntityNoName
 			//if (this.SrcType == Sys.SrcType.SQL)
 			//{
 			//    //暂时这样处理
-			//    string sql = "CREATE VIEW " + this.No + " (";
+			//    string sql = "CREATE VIEW " " + this.getNo()+ " " (";
 			//    sql += "[No],";
 			//    sql += "[Name]";
 			//    sql += (this.CodeStruct == Sys.CodeStruct.Tree ? ",[ParentNo])" : ")");
 			//    sql += " AS ";
 			//    sql += this.SelectStatement;
 
-			//    if (Sys.SystemConfig.AppCenterDBType == DBType.MySQL)
+			//    if (Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 			//    {
-			//        sql = sql.Replace("[", "`").Replace("]", "`");
+			//        sql = sql.Replace("[", "`").replace("]", "`");
 			//    }
 			//    else
 			//    {
-			//        sql = sql.Replace("[", "").Replace("]", "");
+			//        sql = sql.Replace("[", "").replace("]", "");
 			//    }
 			//    this.RunSQL(sql);
 			//}

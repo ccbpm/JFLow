@@ -2,7 +2,9 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
+import BP.Web.WebUser;
 import BP.Port.*;
 import java.util.*;
 
@@ -135,9 +137,9 @@ public class ReturnWork extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_ReturnWork", "退回轨迹");
@@ -159,20 +161,20 @@ public class ReturnWork extends EntityMyPK
 		map.AddTBDateTime(ReturnWorkAttr.RDT, null, "退回日期", true, true);
 
 		map.AddTBInt(ReturnWorkAttr.IsBackTracking, 0, "是否要原路返回?", true, true);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setReturner(BP.Web.WebUser.No);
-		this.setReturnerName(BP.Web.WebUser.Name);
+		this.setReturner(WebUser.getNo());
+		this.setReturnerName(WebUser.getName());
 
-		this.setRDT(DataType.CurrentDataTime);
+		this.setRDT(DataType.getCurrentDataTime());
 		return super.beforeInsert();
 	}
 }

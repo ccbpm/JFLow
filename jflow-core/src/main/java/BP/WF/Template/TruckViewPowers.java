@@ -36,7 +36,7 @@ public class TruckViewPowers extends EntitiesNoName
 	*/
 	public final List<TruckViewPower> ToJavaList()
 	{
-		return (List<TruckViewPower>)this;
+		return (List<TruckViewPower>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -48,7 +48,7 @@ public class TruckViewPowers extends EntitiesNoName
 		ArrayList<TruckViewPower> list = new ArrayList<TruckViewPower>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((TruckViewPower)this[i]);
+			list.add((TruckViewPower)this.get(i));
 		}
 		return list;
 	}

@@ -21,8 +21,9 @@ public class MapFrames extends EntitiesMyPK
 	 框架s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public MapFrames(String fk_mapdata)
+	public MapFrames(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(MapFrameAttr.FK_MapData, fk_mapdata);
 	}
@@ -46,7 +47,7 @@ public class MapFrames extends EntitiesMyPK
 	*/
 	public final List<MapFrame> ToJavaList()
 	{
-		return (List<MapFrame>)this;
+		return (List<MapFrame>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -58,7 +59,7 @@ public class MapFrames extends EntitiesMyPK
 		ArrayList<MapFrame> list = new ArrayList<MapFrame>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapFrame)this[i]);
+			list.add((MapFrame)this.get(i));
 		}
 		return list;
 	}

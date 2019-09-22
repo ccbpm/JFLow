@@ -371,7 +371,7 @@ public class FrmAttachmentDB extends EntityMyPK
 	protected void afterDelete()
 	{
 		//判断删除excel数据提取的数据
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_FrmAttachment()))
+		if (DataType.IsNullOrEmpty(this.getFK_FrmAttachment()))
 		{
 			return;
 		}

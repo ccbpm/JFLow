@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -64,10 +65,11 @@ public class FrmNodeExt extends EntityMyPK
 	 节点表单
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmNodeExt(String mypk)
+	public FrmNodeExt(String mypk) throws Exception
 	{
-		this.MyPK = mypk;
+		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
@@ -76,9 +78,9 @@ public class FrmNodeExt extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_FrmNode", "节点表单");
@@ -137,43 +139,43 @@ public class FrmNodeExt extends EntityMyPK
 			//@袁丽娜
 		rm.Title = "启用规则";
 		rm.ClassMethodName = this.toString() + ".DoEnableRole()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "字段权限";
 		rm.ClassMethodName = this.toString() + ".DoFields()";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "从表权限";
 		rm.ClassMethodName = this.toString() + ".DoDtls()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "附件权限";
 		rm.ClassMethodName = this.toString() + ".DoAths()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "图片附件权限";
+		rm.Title ="图片附件权限";
 		rm.ClassMethodName = this.toString() + ".DoImgAths()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "从其他节点Copy权限设置";
 		rm.ClassMethodName = this.toString() + ".DoCopyFromNode()";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "改变表单类型";
 		rm.ClassMethodName = this.toString() + ".DoChangeFrmType()";
-		rm.HisAttrs.AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
+		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
 		map.AddRefMethod(rm);
 
 			//rm = new RefMethod();
@@ -183,8 +185,8 @@ public class FrmNodeExt extends EntityMyPK
 			//map.AddRefMethod(rm);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -194,13 +196,14 @@ public class FrmNodeExt extends EntityMyPK
 	 
 	 @param val 要改变的类型
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoChangeFrmType(int val)
+	public final String DoChangeFrmType(int val) throws Exception
 	{
 		MapData md = new MapData(this.getFK_Frm());
-		String str = "原来的是:" + md.HisFrmTypeText + "类型，";
-		md.HisFrmTypeInt = val;
-		str += "现在修改为：" + md.HisFrmTypeText + "类型";
+		String str = "原来的是:" + md.getHisFrmTypeText() + "类型，";
+		md.setHisFrmTypeInt(  val);
+		str += "现在修改为：" + md.getHisFrmTypeText() + "类型";
 		md.Update();
 
 		return str;
@@ -233,7 +236,7 @@ public class FrmNodeExt extends EntityMyPK
 	}
 	public final String DoEnableRole()
 	{
-		return "../../Admin/AttrNode/BindFrmsNodeEnableRole.htm?MyPK=" + this.MyPK;
+		return "../../Admin/AttrNode/BindFrmsNodeEnableRole.htm?MyPK=" + this.getMyPK();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 表单元素权限.

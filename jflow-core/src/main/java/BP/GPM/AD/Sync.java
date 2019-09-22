@@ -31,7 +31,7 @@ public class Sync extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -159,7 +159,7 @@ public class Sync extends Method
 		Depts depts = new Depts();
 		depts.RetrieveAll();
 
-		for (Dept mydept : depts)
+		for (Dept mydept : depts.ToJavaList())
 		{
 
 			DirectoryEntry deptDE = new DirectoryEntry(mydept.getNameOfPath(), Glo.getADUser(), Glo.getADPassword());

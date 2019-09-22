@@ -19,15 +19,15 @@ public class Depts extends EntitiesNoName
 	@Override
 	public int RetrieveAll()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return super.RetrieveAll();
 		}
 
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(DeptAttr.No, " = ", BP.Web.WebUser.FK_Dept);
+		qo.AddWhere(DeptAttr.No, " = ", WebUser.getFK_Dept());
 		qo.addOr();
-		qo.AddWhere(DeptAttr.ParentNo, " = ", BP.Web.WebUser.FK_Dept);
+		qo.AddWhere(DeptAttr.ParentNo, " = ", WebUser.getFK_Dept());
 		return qo.DoQuery();
 	}
 	/** 
@@ -55,7 +55,7 @@ public class Depts extends EntitiesNoName
 	*/
 	public final List<Dept> ToJavaList()
 	{
-		return (List<Dept>)this;
+		return (List<Dept>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -67,7 +67,7 @@ public class Depts extends EntitiesNoName
 		ArrayList<Dept> list = new ArrayList<Dept>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Dept)this[i]);
+			list.add((Dept)this.get(i));
 		}
 		return list;
 	}

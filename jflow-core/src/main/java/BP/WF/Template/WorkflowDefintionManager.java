@@ -37,7 +37,7 @@ public class WorkflowDefintionManager
 
 				AtPara ap = new AtPara(dir);
 
-				String dots = ap.GetValStrByKey("Dots").Replace('#', '@');
+				String dots = ap.GetValStrByKey("Dots").replace('#', '@');
 				if (DataType.IsNullOrEmpty(dots) == true)
 				{
 					dots = "";
@@ -65,7 +65,7 @@ public class WorkflowDefintionManager
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 保存节点
 			String[] nds = nodes.split("[~]", -1);
-			for (String nd : nds)
+			for (String nd : nds.ToJavaList())
 			{
 				if (DataType.IsNullOrEmpty(nd))
 				{
@@ -95,7 +95,7 @@ public class WorkflowDefintionManager
 
 				AtPara ap = new AtPara(lab);
 				LabNote ln = new LabNote();
-				ln.MyPK = BP.DA.DBAccess.GenerGUID(); // ap.GetValStrByKey("MyPK");
+				ln.setMyPK( BP.DA.DBAccess.GenerGUID(); // ap.GetValStrByKey("MyPK");
 				ln.setFK_Flow(fk_flow);
 				ln.setName(ap.GetValStrByKey("Label"));
 				ln.setX(ap.GetValIntByKey("X"));

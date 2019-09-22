@@ -53,7 +53,7 @@ public class UserRegedits extends EntitiesMyPK
 	*/
 	public final List<UserRegedit> ToJavaList()
 	{
-		return (List<UserRegedit>)this;
+		return (List<UserRegedit>)(Object)this;
 	}
 	/** 
 	 转化成list

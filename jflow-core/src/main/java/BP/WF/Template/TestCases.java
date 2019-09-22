@@ -43,7 +43,7 @@ public class TestCases extends EntitiesMyPK
 	*/
 	public final List<TestCase> ToJavaList()
 	{
-		return (List<TestCase>)this;
+		return (List<TestCase>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -55,7 +55,7 @@ public class TestCases extends EntitiesMyPK
 		ArrayList<TestCase> list = new ArrayList<TestCase>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((TestCase)this[i]);
+			list.add((TestCase)this.get(i));
 		}
 		return list;
 	}

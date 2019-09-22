@@ -72,7 +72,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		MapData md = new MapData(this.getFK_MapData());
 		//清缓存
 		md.ClearCash();
-		ds.Tables.Add(md.ToDataTableField("Sys_MapData").Copy());
+		ds.Tables.add(md.ToDataTableField("Sys_MapData").Copy());
 
 
 		// 字段属性.
@@ -82,28 +82,28 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			item.DefVal = item.DefValReal;
 		}
 
-		ds.Tables.Add(attrs.ToDataTableField("Sys_MapAttr"));
+		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
-		ds.Tables.Add(gfs.ToDataTableField("Sys_GroupField"));
+		ds.Tables.add(gfs.ToDataTableField("Sys_GroupField"));
 
 		MapDtls dtls = new MapDtls();
 		dtls.Retrieve(MapDtlAttr.FK_MapData,this.getFK_MapData(),MapDtlAttr.FK_Node,0);
-		ds.Tables.Add(dtls.ToDataTableField("Sys_MapDtl"));
+		ds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
 
 		MapFrames frms = new MapFrames(this.getFK_MapData());
-		ds.Tables.Add(frms.ToDataTableField("Sys_MapFrame"));
+		ds.Tables.add(frms.ToDataTableField("Sys_MapFrame"));
 
 
 
 		//附件表.
 		FrmAttachments aths = new FrmAttachments(this.getFK_MapData());
-		ds.Tables.Add(aths.ToDataTableField("Sys_FrmAttachment"));
+		ds.Tables.add(aths.ToDataTableField("Sys_FrmAttachment"));
 
 
 		//加入扩展属性.
 		MapExts MapExts = new MapExts(this.getFK_MapData());
-		ds.Tables.Add(MapExts.ToDataTableField("Sys_MapExt"));
+		ds.Tables.add(MapExts.ToDataTableField("Sys_MapExt"));
 
 		// 检查组件的分组是否完整?
 		for (GroupField item : gfs)
@@ -111,7 +111,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				boolean isHave = false;
 			if (item.CtrlType.equals("Dtl"))
 			{
-				for (MapDtl dtl : dtls)
+				for (MapDtl dtl : dtls.ToJavaList())
 				{
 					if (dtl.No == item.CtrlID)
 					{
@@ -134,7 +134,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			{
 				FrmNodeComponent fnc = new FrmNodeComponent(Integer.parseInt(nodeStr));
 				//   var f = fnc.GetValFloatByKey("FWC_H");
-				ds.Tables.Add(fnc.ToDataTableField("WF_Node").Copy());
+				ds.Tables.add(fnc.ToDataTableField("WF_Node").Copy());
 			}
 		}
 
@@ -185,7 +185,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 
 				//存储表要与原明细表一致
-				if (tangible.StringHelper.isNullOrWhiteSpace(odtl.PTable))
+				if (DataType.IsNullOrEmpty(odtl.PTable))
 				{
 					dtl.PTable = odtl.No;
 				}
@@ -235,7 +235,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 					}
 
 					item.FK_MapData = this.getFK_MapDtl() + "_" + this.getFK_Node();
-					item.MyPK = item.FK_MapData + "_" + item.KeyOfEn;
+					item.setMyPK( item.FK_MapData + "_" + item.KeyOfEn;
 					item.Save();
 					idx++;
 					item.Idx = idx;
@@ -311,7 +311,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String SysEnumList_SaveEnumField()
 	{
 		MapAttr attr = new Sys.MapAttr();
-		attr.MyPK = this.getFK_MapData() + "_" + this.getKeyOfEn();
+		attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
 		if (attr.RetrieveFromDBSources() != 0)
 		{
 			return "err@字段名[" + this.getKeyOfEn() + "]已经存在.";
@@ -340,7 +340,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		//paras参数
 		Paras ps = new Paras();
-		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.AppCenterDBVarStr + "FrmID AND ( CtrlType='' OR CtrlType IS NULL ) ORDER BY OID DESC ";
+		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID AND ( CtrlType='' OR CtrlType IS NULL ) ORDER BY OID DESC ";
 		ps.Add("FrmID", this.getFK_MapData());
 		//string sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.FK_MapData + "' AND ( CtrlType='' OR CtrlType IS NULL ) ORDER BY OID DESC ";
 		attr.GroupID = DBAccess.RunSQLReturnValInt(ps, 0);
@@ -383,7 +383,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		FrmAttachment ath = new FrmAttachment();
 		ath.FK_MapData = this.getFK_MapData();
 		ath.NoOfObj = this.GetRequestVal("AthNo");
-		ath.MyPK = ath.FK_MapData + "_" + ath.NoOfObj;
+		ath.setMyPK( ath.FK_MapData + "_" + ath.NoOfObj;
 		if (ath.RetrieveFromDBSources() == 1)
 		{
 			return "err@附件ID:" + ath.NoOfObj + "已经存在.";
@@ -545,7 +545,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		BP.Sys.SFDBSrcs ens = new BP.Sys.SFDBSrcs();
 		ens.RetrieveAll();
 		DataSet ds = new DataSet();
-		ds.Tables.Add(ens.ToDataTableField("SFDBSrcs"));
+		ds.Tables.add(ens.ToDataTableField("SFDBSrcs"));
 		return BP.Tools.Json.ToJson(ds);
 	}
 
@@ -632,7 +632,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		for (String s : arr)
 		{
-			if (tangible.StringHelper.isNullOrWhiteSpace(s))
+			if (DataType.IsNullOrEmpty(s))
 			{
 				continue;
 			}
@@ -655,14 +655,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			if (this.getSColumns().contains(dr.get("No")))
 			{
-				dt.Rows.Add(dr.ItemArray);
+				dt.Rows.add(dr.ItemArray);
 			}
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 		SysEnums ens = new SysEnums(MapAttrAttr.MyDataType);
-		ds.Tables.Add(ens.ToDataTableField("MyDataType"));
+		ds.Tables.add(ens.ToDataTableField("MyDataType"));
 		SysEnums ens1 = new SysEnums(MapAttrAttr.LGType);
-		ds.Tables.Add(ens1.ToDataTableField("LGType"));
+		ds.Tables.add(ens1.ToDataTableField("LGType"));
 		return BP.Tools.Json.ToJson(ds);
 	}
 	/** 
@@ -692,7 +692,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			MapAttr ma = new MapAttr();
 			ma.KeyOfEn = columnName;
 			ma.FK_MapData = this.getFK_MapData();
-			ma.MyPK = this.getFK_MapData() + "_" + ma.KeyOfEn;
+			ma.setMyPK( this.getFK_MapData() + "_" + ma.KeyOfEn;
 			if (ma.IsExits)
 			{
 				msg += "\t\n字段:" + ma.KeyOfEn + " - " + ma.Name + "已存在.";
@@ -747,7 +747,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				maxEnd = maxEnd + 40;
 				/* 是否是左边 */
 				lab = new FrmLab();
-				lab.MyPK = BP.DA.DBAccess.GenerGUID();
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
 				lab.FK_MapData = this.getFK_MapData();
 				lab.Text = ma.Name;
 				lab.X = 40;
@@ -761,7 +761,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			else
 			{
 				lab = new FrmLab();
-				lab.MyPK = BP.DA.DBAccess.GenerGUID();
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
 				lab.FK_MapData = this.getFK_MapData();
 				lab.Text = ma.Name;
 				lab.X = 350;
@@ -798,11 +798,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			mf.H = 300;
 			mf.Name = "我的框架.";
 			mf.FK_MapData = this.getFK_MapData();
-			mf.MyPK = BP.DA.DBAccess.GenerGUID();
+			mf.setMyPK( BP.DA.DBAccess.GenerGUID();
 		}
 		else
 		{
-			mf.MyPK = this.getMyPK();
+			mf.setMyPK( this.getMyPK();
 			mf.RetrieveFromDBSources();
 		}
 		return mf.ToJson();
@@ -856,7 +856,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		ens.RetrieveAll();
 
 		DataTable dt = ens.ToDataTableField("SFTables");
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		int pTableModel = 0;
 		if (this.GetRequestVal("PTableModel").equals("2"))
@@ -888,7 +888,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			DataTable mydt = MapData.GetFieldsOfPTableMode2(this.getFK_MapData());
 			mydt.TableName = "Fields";
-			ds.Tables.Add(mydt);
+			ds.Tables.add(mydt);
 		}
 
 		return BP.Tools.Json.ToJson(ds);
@@ -896,7 +896,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String SFList_SaveSFField()
 	{
 		MapAttr attr = new Sys.MapAttr();
-		attr.MyPK = this.getFK_MapData() + "_" + this.getKeyOfEn();
+		attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
 		if (attr.RetrieveFromDBSources() != 0)
 		{
 			return "err@字段名[" + this.getKeyOfEn() + "]已经存在.";
@@ -906,7 +906,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		attr.Retrieve();
 		Paras ps = new Paras();
-		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.AppCenterDBVarStr + "FrmID AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
+		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
 		ps.Add("FrmID",this.getFK_MapData());
 		//string sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.FK_MapData + "' AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
 		attr.GroupID = DBAccess.RunSQLReturnValInt(ps, 0);
@@ -942,7 +942,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 		{
-			attr.MyPK = this.getMyPK();
+			attr.setMyPK( this.getMyPK();
 			attr.RetrieveFromDBSources();
 		}
 		else
@@ -1024,7 +1024,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			mydr.set("FType", dr.get("FType"));
 			mydr.set("FLen", dr.get("FLen"));
 			mydr.set("FDesc", dr.get("FDesc"));
-			mydt.Rows.Add(mydr);
+			mydt.Rows.add(mydr);
 		}
 
 		mydt.TableName = "dt";
@@ -1040,7 +1040,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		MapAttr attr = new MapAttr();
 		attr.FK_MapData = frmID;
 		attr.KeyOfEn = keyOfEn;
-		attr.MyPK = attr.FK_MapData + "_" + keyOfEn;
+		attr.setMyPK( attr.FK_MapData + "_" + keyOfEn;
 		if (attr.IsExits)
 		{
 			return "err@该字段[" + keyOfEn + "]已经加入里面了.";
@@ -1059,7 +1059,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 		Paras ps = new Paras();
-		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.AppCenterDBVarStr + "FrmID AND CtrlType='' OR CtrlType= NULL";
+		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID AND CtrlType='' OR CtrlType= NULL";
 		ps.Add("FrmID", this.getFK_MapData());
 		//string sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.FK_MapData + "' AND CtrlType='' OR CtrlType= NULL";
 		attr.GroupID = DBAccess.RunSQLReturnValInt(ps, 0);
@@ -1099,12 +1099,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		try
 		{
 			Paras ps = new Paras();
-			ps.SQL = "SELECT OID FROM Sys_GroupField WHERE FrmID=" + SystemConfig.AppCenterDBVarStr + "FrmID and (CtrlID is null or ctrlid ='') ORDER BY OID DESC ";
+			ps.SQL = "SELECT OID FROM Sys_GroupField WHERE FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID and (CtrlID is null or ctrlid ='') ORDER BY OID DESC ";
 			ps.Add("FrmID", this.getFK_MapData());
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
 			if (dt != null && dt.Rows.size() > 0)
 			{
-				iGroupID = Integer.parseInt(dt.Rows[0][0].toString());
+				iGroupID = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
 			}
 		}
 		catch (RuntimeException ex)
@@ -1134,7 +1134,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		attr.KeyOfEn = newNo;
 		attr.FK_MapData = this.getFK_MapData();
 		attr.LGType = FieldTypeS.Normal;
-		attr.MyPK = this.getFK_MapData() + "_" + newNo;
+		attr.setMyPK( this.getFK_MapData() + "_" + newNo;
 		attr.GroupID = iGroupID;
 		attr.MyDataType = fType;
 
@@ -1242,7 +1242,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.Insert();
 
 			BP.Sys.FrmUI.MapAttrDT dt = new Sys.FrmUI.MapAttrDT();
-			dt.MyPK = attr.MyPK;
+			dt.setMyPK( attr.MyPK;
 			dt.RetrieveFromDBSources();
 			dt.Format = 0;
 			dt.Update();
@@ -1265,7 +1265,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.Insert();
 
 			BP.Sys.FrmUI.MapAttrDT dt = new Sys.FrmUI.MapAttrDT();
-			dt.MyPK = attr.MyPK;
+			dt.setMyPK( attr.MyPK;
 			dt.RetrieveFromDBSources();
 			dt.Format = 1;
 			dt.Update();
@@ -1305,7 +1305,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 		{
-			attr.MyPK = this.getMyPK();
+			attr.setMyPK( this.getMyPK();
 			attr.RetrieveFromDBSources();
 		}
 		else
@@ -1343,7 +1343,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 		{
-			attr.MyPK = this.getMyPK();
+			attr.setMyPK( this.getMyPK();
 			attr.RetrieveFromDBSources();
 		}
 		else
@@ -1404,7 +1404,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		//分组值.
 		DataSet ds = new DataSet();
-		ds.Tables.Add(gfs.ToDataTableField("Sys_GroupField"));
+		ds.Tables.add(gfs.ToDataTableField("Sys_GroupField"));
 
 		//枚举值.
 		String enumKey = this.getEnumKey();
@@ -1415,7 +1415,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 		SysEnums enums = new SysEnums(enumKey);
-		ds.Tables.Add(enums.ToDataTableField("Sys_Enum"));
+		ds.Tables.add(enums.ToDataTableField("Sys_Enum"));
 
 		//转化成json输出.
 		String json = BP.Tools.Json.ToJson(ds);
@@ -1433,7 +1433,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		try
 		{
 			MapAttr attr = new MapAttr();
-			attr.MyPK = this.getMyPK();
+			attr.setMyPK( this.getMyPK();
 			attr.RetrieveFromDBSources();
 			attr.Delete();
 			return "删除成功...";
@@ -1471,7 +1471,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.FK_MapData = this.getFK_MapData();
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
-				attr.MyPK = this.getMyPK();
+				attr.setMyPK( this.getMyPK();
 				attr.RetrieveFromDBSources();
 			}
 			else
@@ -1550,7 +1550,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				attr.UIVisible = true;
 			}
 
-			attr.MyPK = this.getFK_MapData() + "_" + this.getKeyOfEn();
+			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
 
 			attr.Save();
 
@@ -1582,7 +1582,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.FK_MapData = this.getFK_MapData();
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
-				attr.MyPK = this.getMyPK();
+				attr.setMyPK( this.getMyPK();
 				attr.RetrieveFromDBSources();
 			}
 			else
@@ -1653,7 +1653,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				attr.UIVisible = true;
 			}
 
-			attr.MyPK = this.getFK_MapData() + "_" + this.getKeyOfEn();
+			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
 			attr.Save();
 
 			return "保存成功.";
@@ -1687,7 +1687,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
-				attr.MyPK = this.getMyPK();
+				attr.setMyPK( this.getMyPK();
 				attr.RetrieveFromDBSources();
 			}
 
@@ -1789,7 +1789,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				}
 			}
 
-			attr.MyPK = this.getFK_MapData() + "_" + this.getKeyOfEn();
+			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
 			attr.Save();
 
 			return "保存成功.";
@@ -1840,7 +1840,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				for (MapAttr item : attrs)
 				{
 					item.FK_MapData = this.getFK_MapDtl() + "_" + this.getFK_Node();
-					item.MyPK = item.FK_MapData + "_" + item.KeyOfEn;
+					item.setMyPK( item.FK_MapData + "_" + item.KeyOfEn;
 					item.Save();
 					idx++;
 					item.Idx = idx;
@@ -1859,12 +1859,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		DataSet ds = new DataSet();
 		DataTable dt = dtl.ToDataTableField("Main");
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//获得字段列表.
 		MapAttrs attrsDtl = new MapAttrs(this.getFK_MapDtl());
 		DataTable dtAttrs = attrsDtl.ToDataTableField("Ens");
-		ds.Tables.Add(dtAttrs);
+		ds.Tables.add(dtAttrs);
 
 		//返回json配置信息.
 		return BP.Tools.Json.ToJson(ds);
@@ -1933,16 +1933,16 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			if (this.getFK_Node() == 0)
 			{
-				ath.MyPK = this.getFK_MapData() + "_" + this.getAth();
+				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth();
 			}
 			else
 			{
-				ath.MyPK = this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node();
+				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node();
 			}
 		}
 		else
 		{
-			ath.MyPK = this.getMyPK();
+			ath.setMyPK( this.getMyPK();
 
 		}
 		int i = ath.RetrieveFromDBSources();
@@ -1974,11 +1974,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			}
 			if (this.getFK_Node() == 0)
 			{
-				ath.MyPK = this.getFK_MapData() + "_" + this.getAth();
+				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth();
 			}
 			else
 			{
-				ath.MyPK = this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node();
+				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node();
 			}
 
 			//插入一个新的.
@@ -2001,7 +2001,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		ath.FK_MapData = this.getFK_MapData();
 		ath.NoOfObj = this.getAth();
 		ath.FK_Node = this.getFK_Node();
-		ath.MyPK = this.getFK_MapData() + "_" + this.getAth();
+		ath.setMyPK( this.getFK_MapData() + "_" + this.getAth();
 
 		int i = ath.RetrieveFromDBSources();
 		Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(ath);
@@ -2019,7 +2019,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String Attachment_Delete()
 	{
 		FrmAttachment ath = new FrmAttachment();
-		ath.MyPK = this.getMyPK();
+		ath.setMyPK( this.getMyPK();
 		ath.Delete();
 		return "删除成功.." + ath.MyPK;
 	}
@@ -2036,7 +2036,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	{
 		String sfno = this.GetRequestVal("sfno"); //context.Request.QueryString["sfno"];
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(sfno))
+		if (DataType.IsNullOrEmpty(sfno))
 		{
 			return "err@参数不正确";
 		}
@@ -2109,7 +2109,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String SFGuide_Getmtds()
 	{
 		String src = this.GetRequestVal("src"); //context.Request.QueryString["src"];
-		if (tangible.StringHelper.isNullOrWhiteSpace(src))
+		if (DataType.IsNullOrEmpty(src))
 		{
 			return "err@系统中没有webservices类型的数据源，该类型的外键表不能创建，请维护数据源.";
 		}
@@ -2130,13 +2130,13 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		String src = this.GetRequestVal("src"); //context.Request.QueryString["src"];
 		String table = this.GetRequestVal("table"); //context.Request.QueryString["table"];
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(src))
+		if (DataType.IsNullOrEmpty(src))
 		{
 			throw new RuntimeException("err@参数不正确");
 		}
 
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(table))
+		if (DataType.IsNullOrEmpty(table))
 		{
 			return "[]";
 		}
@@ -2151,7 +2151,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		for (DataRow r : dt.Rows)
 		{
-			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == DBNull.Value || tangible.StringHelper.isNullOrWhiteSpace(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
+			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == DBNull.Value || DataType.IsNullOrEmpty(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -2187,7 +2187,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		int st = 0;
 
 		tangible.OutObject<Integer> tempOut_st = new tangible.OutObject<Integer>();
-		if (tangible.StringHelper.isNullOrWhiteSpace(stru) || !tangible.TryParseHelper.tryParseInt(stru, tempOut_st))
+		if (DataType.IsNullOrEmpty(stru) || !tangible.TryParseHelper.tryParseInt(stru, tempOut_st))
 		{
 		st = tempOut_st.argValue;
 			throw new RuntimeException("err@参数不正确.");
@@ -2236,7 +2236,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				Object tempVar = sfs.GetEntityByKey(ens.toString());
 				sf = tempVar instanceof SFTable ? (SFTable)tempVar : null;
 
-				if ((sf != null && !sfno.equals(sf.No)) || tangible.StringHelper.isNullOrWhiteSpace(ens.toString()))
+				if ((sf != null && !sfno.equals(sf.No)) || DataType.IsNullOrEmpty(ens.toString()))
 				{
 					continue;
 				}
@@ -2264,7 +2264,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		SFDBSrcs srcs = new SFDBSrcs();
 		tangible.OutObject<Integer> tempOut_itype = new tangible.OutObject<Integer>();
-		if (!tangible.StringHelper.isNullOrWhiteSpace(type) && tangible.TryParseHelper.tryParseInt(type, tempOut_itype))
+		if (!DataType.IsNullOrEmpty(type) && tangible.TryParseHelper.tryParseInt(type, tempOut_itype))
 		{
 		itype = tempOut_itype.argValue;
 			onlyWS = true;
@@ -2333,11 +2333,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		BP.Sys.SysEnumMains ens = new BP.Sys.SysEnumMains();
 		ens.RetrieveAll();
-		ds.Tables.Add(ens.ToDataTableField("EnumMain"));
+		ds.Tables.add(ens.ToDataTableField("EnumMain"));
 
 		BP.Sys.SFTables tabs = new BP.Sys.SFTables();
 		tabs.RetrieveAll();
-		ds.Tables.Add(tabs.ToDataTableField("SFTables"));
+		ds.Tables.add(tabs.ToDataTableField("SFTables"));
 
 		return BP.Tools.Json.ToJson(ds);
 	}

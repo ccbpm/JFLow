@@ -73,7 +73,7 @@ public class Directions extends En.Entities
 		qo.AddWhere(DirectionAttr.ToNode,nodeID);
 		qo.DoQuery();
 		Nodes ens = new Nodes();
-		for (Direction en : this)
+		for (Direction en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getNode()));
 		}
@@ -89,7 +89,7 @@ public class Directions extends En.Entities
 	*/
 	public final List<Direction> ToJavaList()
 	{
-		return (List<Direction>)this;
+		return (List<Direction>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -101,7 +101,7 @@ public class Directions extends En.Entities
 		ArrayList<Direction> list = new ArrayList<Direction>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Direction)this[i]);
+			list.add((Direction)this.get(i));
 		}
 		return list;
 	}

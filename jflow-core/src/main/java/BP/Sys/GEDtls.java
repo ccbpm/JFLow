@@ -60,7 +60,7 @@ public class GEDtls extends EntitiesOID
 	*/
 	public final List<GEDtl> ToJavaList()
 	{
-		return (List<GEDtl>)this;
+		return (List<GEDtl>)(Object)this;
 	}
 	/** 
 	 转化成list

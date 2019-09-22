@@ -53,7 +53,7 @@ public class SubFlowYanXus extends EntitiesMyPK
 	*/
 	public final List<SubFlowYanXu> ToJavaList()
 	{
-		return (List<SubFlowYanXu>)this;
+		return (List<SubFlowYanXu>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -65,7 +65,7 @@ public class SubFlowYanXus extends EntitiesMyPK
 		ArrayList<SubFlowYanXu> list = new ArrayList<SubFlowYanXu>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SubFlowYanXu)this[i]);
+			list.add((SubFlowYanXu)this.get(i));
 		}
 		return list;
 	}

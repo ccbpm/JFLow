@@ -53,7 +53,7 @@ public class SubFlowHands extends EntitiesMyPK
 	*/
 	public final List<SubFlowHand> ToJavaList()
 	{
-		return (List<SubFlowHand>)this;
+		return (List<SubFlowHand>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -65,7 +65,7 @@ public class SubFlowHands extends EntitiesMyPK
 		ArrayList<SubFlowHand> list = new ArrayList<SubFlowHand>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SubFlowHand)this[i]);
+			list.add((SubFlowHand)this.get(i));
 		}
 		return list;
 	}

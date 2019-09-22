@@ -26,7 +26,7 @@ public class GetTask extends BP.En.Entity
 		{
 			case ByPreviousNodeFormEmpsField:
 				NodeEmps ndemps = new NodeEmps(this.getNodeID());
-				if (ndemps.Contains(NodeEmpAttr.FK_Emp, WebUser.No) == false)
+				if (ndemps.Contains(NodeEmpAttr.FK_Emp, WebUser.getNo()) == false)
 				{
 					return false;
 				}
@@ -132,9 +132,9 @@ public class GetTask extends BP.En.Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "取回任务");
@@ -152,8 +152,8 @@ public class GetTask extends BP.En.Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 字段
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	/** 
 	 取回任务

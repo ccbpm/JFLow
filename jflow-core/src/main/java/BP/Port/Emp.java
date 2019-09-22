@@ -358,7 +358,7 @@ public class Emp extends EntityNoName
 
 	public final String ChangePass(String oldpass, String pass1, String pass2)
 	{
-		if (!this.getNo().equals(BP.Web.WebUser.getNo()))
+		if (!this.getNo().equals(WebUser.getNo()))
 		{
 			return "err@sss";
 		}

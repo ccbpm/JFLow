@@ -60,14 +60,14 @@ public class App extends EntityNoName
 
 		if (this.getSSOType().equals("0")) //SID验证
 		{
-			String SID = DBAccess.RunSQLReturnStringIsNull("SELECT SID FROM Port_Emp WHERE No='" + Web.WebUser.No + "'", null);
+			String SID = DBAccess.RunSQLReturnStringIsNull("SELECT SID FROM Port_Emp WHERE No='" + Web.WebUser.getNo() + "'", null);
 			if (url.contains("?"))
 			{
-				url += "&UserNo=" + Web.WebUser.No + "&SID=" + SID;
+				url += "&UserNo=" + Web.WebUser.getNo() + "&SID=" + SID;
 			}
 			else
 			{
-				url += "?UserNo=" + Web.WebUser.No + "&SID=" + SID;
+				url += "?UserNo=" + Web.WebUser.getNo() + "&SID=" + SID;
 			}
 		}
 		return url;
@@ -206,9 +206,9 @@ public class App extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("GPM_App");
 		map.DepositaryOfEntity = Depositary.None;
@@ -257,8 +257,8 @@ public class App extends EntityNoName
 			//rm.Title = "第二连接：登录方式为不传值、连接不设置用户名密码转为第二连接。";
 		rm.ClassMethodName = this.toString() + ".About";
 		   // map.AddRefMethod(rm);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -411,7 +411,7 @@ public class App extends EntityNoName
 	{
 		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.No;
 
-	   // PubClass.WinOpen("/GPM/WhoCanUseApp.aspx?FK_App=" + this.No + "&IsRef=1", 500, 700);
+	   // PubClass.WinOpen("/GPM/WhoCanUseApp.aspx?FK_App=" " + this.getNo()+ " "&IsRef=1", 500, 700);
 		//return null;
 	}
 	/** 
@@ -453,7 +453,7 @@ public class App extends EntityNoName
 		Emps emps = new Emps();
 		emps.RetrieveAllFromDBSource();
 
-		for (Emp emp : emps)
+		for (Emp emp : emps.ToJavaList())
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 初始化系统访问权限.
@@ -462,7 +462,7 @@ public class App extends EntityNoName
 			me.Copy(this);
 			me.setFK_Emp(emp.No);
 			me.setFK_App(this.No);
-			me.MyPK = this.No + "_" + me.getFK_Emp();
+			me.setMyPK( this.No + "_" + me.getFK_Emp();
 			me.Insert();
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 初始化系统访问权限.

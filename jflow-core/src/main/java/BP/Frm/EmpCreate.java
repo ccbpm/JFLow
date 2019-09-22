@@ -58,9 +58,9 @@ public class EmpCreate extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Frm_EmpCreate", "单据可创建的人员");
@@ -68,8 +68,8 @@ public class EmpCreate extends EntityMM
 		map.AddTBStringPK(EmpCreateAttr.FrmID,null,"表单",true,true,1,100,100);
 		map.AddDDLEntitiesPK(EmpCreateAttr.FK_Emp, null, "人员", new Emps(), true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

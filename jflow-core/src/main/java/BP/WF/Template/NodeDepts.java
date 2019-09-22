@@ -17,7 +17,7 @@ public class NodeDepts extends EntitiesMM
 	public final Stations getHisStations()
 	{
 		Stations ens = new Stations();
-		for (NodeDept ns : this)
+		for (NodeDept ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Station(ns.getFK_Dept()));
 		}
@@ -29,7 +29,7 @@ public class NodeDepts extends EntitiesMM
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (NodeDept ns : this)
+		for (NodeDept ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -109,7 +109,7 @@ public class NodeDepts extends EntitiesMM
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeDept en : this)
+		for (NodeDept en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -128,7 +128,7 @@ public class NodeDepts extends EntitiesMM
 		qo.DoQuery();
 
 		Stations ens = new Stations();
-		for (NodeDept en : this)
+		for (NodeDept en : this.ToJavaList())
 		{
 			ens.AddEntity(new Station(en.getFK_Dept()));
 		}
@@ -144,7 +144,7 @@ public class NodeDepts extends EntitiesMM
 	*/
 	public final List<NodeDept> ToJavaList()
 	{
-		return (List<NodeDept>)this;
+		return (List<NodeDept>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -156,7 +156,7 @@ public class NodeDepts extends EntitiesMM
 		ArrayList<NodeDept> list = new ArrayList<NodeDept>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((NodeDept)this[i]);
+			list.add((NodeDept)this.get(i));
 		}
 		return list;
 	}

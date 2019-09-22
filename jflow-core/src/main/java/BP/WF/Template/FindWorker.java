@@ -18,7 +18,7 @@ public class FindWorker
 	public WorkNode town = null;
 	public WorkNode currWn = null;
 	public Flow fl = null;
-	private String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 	public Paras ps = null;
 	private String JumpToEmp = null;
 	private int JumpToNode = 0;
@@ -56,7 +56,7 @@ public class FindWorker
 		if (DataType.IsNullOrEmpty(JumpToEmp) == false)
 		{
 			String[] emps = JumpToEmp.split("[,]", -1);
-			for (String emp : emps)
+			for (String emp : emps.ToJavaList())
 			{
 				if (DataType.IsNullOrEmpty(emp))
 				{
@@ -64,7 +64,7 @@ public class FindWorker
 				}
 				DataRow dr = dt.NewRow();
 				dr.set(0, emp);
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			return dt;
 		}
@@ -73,8 +73,8 @@ public class FindWorker
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByPreviousNodeEmp)
 		{
 			DataRow dr = dt.NewRow();
-			dr.set(0, BP.Web.WebUser.No);
-			dt.Rows.Add(dr);
+			dr.set(0, WebUser.getNo());
+			dt.Rows.add(dr);
 			return dt;
 		}
 
@@ -170,7 +170,7 @@ public class FindWorker
 			this.currWn.getHisNode().WorkID = this.WorkID; //为获取表单ID ( NodeFrmID )提供参数.
 			BP.Sys.MapDtls dtls = new BP.Sys.MapDtls(this.currWn.getHisNode().getNodeFrmID());
 			String msg = null;
-			for (BP.Sys.MapDtl dtl : dtls)
+			for (BP.Sys.MapDtl dtl : dtls.ToJavaList())
 			{
 				try
 				{
@@ -181,7 +181,7 @@ public class FindWorker
 					}
 
 					ps = new Paras();
-					ps.SQL = "SELECT " + empFild + ", * FROM " + dtl.PTable + " WHERE RefPK=" + dbStr + "OID ORDER BY OID";
+					ps.SQL = "SELECT " + empFild + ", * FROM " + dtl.getPTable() + " WHERE RefPK=" + dbStr + "OID ORDER BY OID";
 					ps.Add("OID", this.WorkID);
 					dt = DBAccess.RunSQLReturnTable(ps);
 					if (dt.Rows.size() == 0 && town.getHisNode().getHisWhenNoWorker() == false)
@@ -259,7 +259,7 @@ public class FindWorker
 				{
 					DataRow dr = dt.NewRow();
 					dr.set(0, item.getFK_Emp());
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				return dt;
 			}
@@ -291,8 +291,8 @@ public class FindWorker
 				if (this.currWn.getHisNode().getIsStartNode())
 				{
 					DataRow dr = dt.NewRow();
-					dr.set(0, BP.Web.WebUser.No);
-					dt.Rows.Add(dr);
+					dr.set(0, WebUser.getNo());
+					dt.Rows.add(dr);
 					return dt;
 				}
 
@@ -310,7 +310,7 @@ public class FindWorker
 			// 首先从本流程里去找。
 			strs = strs.replace(";", ",");
 			String[] nds = strs.split("[,]", -1);
-			for (String nd : nds)
+			for (String nd : nds.ToJavaList())
 			{
 				if (DataType.IsNullOrEmpty(nd))
 				{
@@ -362,7 +362,7 @@ public class FindWorker
 					{
 						DataRow dr = dt.NewRow();
 						dr.set(0, row.get(0).toString());
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
 					continue;
@@ -389,7 +389,7 @@ public class FindWorker
 					{
 						DataRow dr = dt.NewRow();
 						dr.set(0, row.get(0).toString());
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 					continue;
 				}
@@ -408,7 +408,7 @@ public class FindWorker
 					{
 						DataRow dr = dt.NewRow();
 						dr.set(0, row.get(0).toString());
-						dt.Rows.Add(dr);
+						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
 					continue;
@@ -453,7 +453,7 @@ public class FindWorker
 						{
 							DataRow dr = dt.NewRow();
 							dr.set(0, row.get(0).toString());
-							dt.Rows.Add(dr);
+							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
 						continue;
@@ -486,7 +486,7 @@ public class FindWorker
 						{
 							DataRow dr = dt.NewRow();
 							dr.set(0, row.get(0).toString());
-							dt.Rows.Add(dr);
+							dt.Rows.add(dr);
 						}
 					}
 				}
@@ -513,7 +513,7 @@ public class FindWorker
 				specEmpFields = "SysSendEmps";
 			}
 
-			if (this.currWn.rptGe.getEnMap().Attrs.Contains(specEmpFields) == false)
+			if (this.currWn.rptGe.getEnMap().getAttrs().Contains(specEmpFields) == false)
 			{
 				throw new RuntimeException("@您设置的接受人规则是按照表单指定的字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
 			}
@@ -536,7 +536,7 @@ public class FindWorker
 					String[] ss = str.split("[,]", -1);
 					DataRow dr = dt.NewRow();
 					dr.set(0, ss[0]);
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				if (dt.Rows.size() == 0)
 				{
@@ -573,7 +573,7 @@ public class FindWorker
 
 				DataRow dr = dt.NewRow();
 				dr.set(0, s);
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 			}
 			return dt;
 		}
@@ -592,7 +592,7 @@ public class FindWorker
 			}
 			catch (RuntimeException ex)
 			{
-				if (this.currWn.rptGe.getEnMap().Attrs.Contains("PrjNo") == false)
+				if (this.currWn.rptGe.getEnMap().getAttrs().Contains("PrjNo") == false)
 				{
 					throw new RuntimeException("@当前流程是工程类流程，但是在节点表单中没有PrjNo字段(注意区分大小写)，请确认。@异常信息:" + ex.getMessage());
 				}
@@ -622,7 +622,7 @@ public class FindWorker
 			//      + " ORDER BY pdes.FK_Emp";
 
 			sql = "SELECT A.FK_Emp FROM Port_DeptEmpStation A, WF_NodeDept B, WF_NodeStation C ";
-			sql += "WHERE  A.FK_Dept=B.FK_Dept AND B.FK_Node=C.FK_Node AND C.FK_Node=" + town.getHisNode().getNodeID() + " AND A.FK_Dept='" + BP.Web.WebUser.FK_Dept + "'";
+			sql += "WHERE  A.FK_Dept=B.FK_Dept AND B.FK_Node=C.FK_Node AND C.FK_Node=" + town.getHisNode().getNodeID() + " AND A.FK_Dept='" + WebUser.getFK_Dept() + "'";
 
 			dt = DBAccess.RunSQLReturnTable(sql);
 
@@ -844,14 +844,14 @@ public class FindWorker
 					continue;
 				}
 
-				if (kv[0].equals(WebUser.No))
+				if (kv[0].equals(WebUser.getNo()))
 				{
 					String empTo = kv[1];
 					//BP.Port.Emp emp = new BP.Port.Emp(empTo);
 					DataRow dr = dt.NewRow();
 					dr.set(0, empTo);
 					//  dr[1] = emp.Name;
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 					return dt;
 				}
 			}
@@ -861,7 +861,7 @@ public class FindWorker
 				String empTo = defUser;
 				DataRow dr = dt.NewRow();
 				dr.set(0, empTo);
-				dt.Rows.Add(dr);
+				dt.Rows.add(dr);
 				return dt;
 			}
 
@@ -878,7 +878,7 @@ public class FindWorker
 			/* 考虑当前操作人员的部门, 如果本部门没有这个岗位就不向上寻找. */
 			ps = new Paras();
 			sql = "SELECT No,Name FROM Port_Emp WHERE No=" + dbStr + "FK_Emp ";
-			ps.Add("FK_Emp", WebUser.No);
+			ps.Add("FK_Emp", WebUser.getNo());
 			dt = DBAccess.RunSQLReturnTable(ps);
 
 			if (dt.Rows.size() > 0)
@@ -900,8 +900,8 @@ public class FindWorker
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
-		String empNo = WebUser.No;
-		String empDept = WebUser.FK_Dept;
+		String empNo = WebUser.getNo();
+		String empDept = WebUser.getFK_Dept();
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 按指定的节点的人员岗位，做为下一步骤的流程接受人。
@@ -934,7 +934,7 @@ public class FindWorker
 						continue;
 					}
 
-					empNo = dt.Rows[0][0].toString();
+					empNo = dt.Rows.get(0).getValue(0).toString();
 					empDept = dt.Rows[0][1].toString();
 				}
 
@@ -1032,8 +1032,8 @@ public class FindWorker
 		{
 			/* 说明，就把当前人员做为下一个节点处理人。*/
 			DataRow dr = dt.NewRow();
-			dr.set(0, WebUser.No);
-			dt.Rows.Add(dr);
+			dr.set(0, WebUser.getNo());
+			dt.Rows.add(dr);
 			return dt;
 		}
 
@@ -1043,7 +1043,7 @@ public class FindWorker
 			/* 没有查询到的情况下, 先按照本部门计算。*/
 			if (flowAppType == FlowAppType.Normal)
 			{
-				if (BP.Sys.SystemConfig.OSDBSrc == Sys.OSDBSrc.Database)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.Database)
 				{
 					sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B         WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
 					ps = new Paras();
@@ -1052,7 +1052,7 @@ public class FindWorker
 					ps.Add("FK_Dept", empDept);
 				}
 
-				if (BP.Sys.SystemConfig.OSDBSrc == Sys.OSDBSrc.WebServices)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.WebServices)
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + town.getHisNode().getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
@@ -1121,7 +1121,7 @@ public class FindWorker
 				boolean isInit = false;
 				for (DataRow dr : dt.Rows)
 				{
-					if (dr.get(0).toString().equals(BP.Web.WebUser.No))
+					if (dr.get(0).toString().equals(WebUser.getNo()))
 					{
 						/* 如果岗位分组不一样，并且结果集合里还有当前的人员，就说明了出现了当前操作员，拥有本节点上的岗位也拥有下一个节点的工作岗位
 						 导致：节点的分组不同，传递到同一个人身上。 */
@@ -1150,7 +1150,7 @@ public class FindWorker
 		while (true)
 		{
 			BP.Port.Dept myDept = new BP.Port.Dept(nowDeptID);
-			nowDeptID = myDept.ParentNo;
+			nowDeptID = myDept.getParentNo();
 			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0"))
 			{
 				break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
@@ -1173,7 +1173,7 @@ public class FindWorker
 		while (true)
 		{
 			BP.Port.Dept myDept = new BP.Port.Dept(nowDeptID);
-			nowDeptID = myDept.ParentNo;
+			nowDeptID = myDept.getParentNo();
 			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0"))
 			{
 				break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
@@ -1211,7 +1211,7 @@ public class FindWorker
 			}
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
 			{
-				throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.No + ",名称:" + WebUser.Name + " , 部门编号:" + WebUser.FK_Dept + " 部门名称：" + WebUser.FK_DeptName);
+				throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo() + ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称：" + WebUser.getFK_Dept()Name);
 			}
 
 			if (dt.Rows.size() == 0)
@@ -1317,7 +1317,7 @@ public class FindWorker
 			DataRow dr = mydt.NewRow();
 			dr.set("No", "Guest");
 			dr.set("Name", "外部用户");
-			mydt.Rows.Add(dr);
+			mydt.Rows.add(dr);
 			return mydt;
 		}
 
@@ -1385,13 +1385,13 @@ public class FindWorker
 
 									DataRow dr = re_dt.NewRow();
 									dr.set(0, empRow.get(0));
-									re_dt.Rows.Add(dr);
+									re_dt.Rows.add(dr);
 								}
 							}
 							break;
 						case "SpecEmps": //按人员编号
 							String[] emps = specContent.split("[,]", -1);
-							for (String emp : emps)
+							for (String emp : emps.ToJavaList())
 							{
 								//排除为空编号
 								if (DataType.IsNullOrEmpty(emp))
@@ -1401,7 +1401,7 @@ public class FindWorker
 
 								DataRow dr = re_dt.NewRow();
 								dr.set(0, emp);
-								re_dt.Rows.Add(dr);
+								re_dt.Rows.add(dr);
 							}
 							break;
 					}
@@ -1422,14 +1422,14 @@ public class FindWorker
 				for (DataRow row : re_dt.Rows)
 				{
 					//排除当前登录人
-					if (row.get(0).toString().equals(WebUser.No))
+					if (row.get(0).toString().equals(WebUser.getNo()))
 					{
 						continue;
 					}
 
 					DataRow dr = dt.NewRow();
 					dr.set(0, row.get(0));
-					dt.Rows.Add(dr);
+					dt.Rows.add(dr);
 				}
 				return dt;
 			}
@@ -1458,13 +1458,13 @@ public class FindWorker
 				DataTable re_dt = dt.Clone();
 				for (DataRow row : dt.Rows)
 				{
-					if (row.get(0).toString().equals(WebUser.No))
+					if (row.get(0).toString().equals(WebUser.getNo()))
 					{
 						continue;
 					}
 					DataRow dr = re_dt.NewRow();
 					dr.set(0, row.get(0));
-					re_dt.Rows.Add(dr);
+					re_dt.Rows.add(dr);
 				}
 				return re_dt;
 			}

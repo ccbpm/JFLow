@@ -42,7 +42,7 @@ public class WF_CommEntity extends DirectoryPageBase
 			Entity dtl = dtls.GetNewEntity;
 			dtls.Retrieve(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
 			Map map = dtl.EnMap;
-			for (Entity item : dtls)
+			for (Entity item : dtls.ToJavaList())
 			{
 				String pkval = item.GetValStringByKey(dtl.PK);
 				for (Attr attr : map.Attrs)
@@ -181,7 +181,7 @@ public class WF_CommEntity extends DirectoryPageBase
 		//查询出来从表数据.
 		Entities dtls = ClassFactory.GetEns(this.getEnsName());
 		dtls.Retrieve(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
-		ds.Tables.Add(dtls.ToDataTableField("Dtls"));
+		ds.Tables.add(dtls.ToDataTableField("Dtls"));
 
 		//实体.
 		Entity dtl = dtls.GetNewEntity;
@@ -212,13 +212,13 @@ public class WF_CommEntity extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 加入权限信息.
 
-		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 字段属性.
 		MapAttrs attrs = dtl.EnMap.Attrs.ToMapAttrs;
 		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
-		ds.Tables.Add(sys_MapAttrs);
+		ds.Tables.add(sys_MapAttrs);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 字段属性.
 
@@ -257,7 +257,7 @@ public class WF_CommEntity extends DirectoryPageBase
 				continue;
 			}
 
-			ds.Tables.Add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
+			ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 		}
 
 		for (Attr attr : dtl.EnMap.Attrs)
@@ -295,13 +295,13 @@ public class WF_CommEntity extends DirectoryPageBase
 				dt.TableName = attr.Key;
 
 				//@杜. 翻译当前部分.
-				if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
-					dt.Columns["NO"].ColumnName = "No";
-					dt.Columns["NAME"].ColumnName = "Name";
+					dt.Columns.get("NO").ColumnName = "No";
+					dt.Columns.get("NAME").ColumnName = "Name";
 				}
 
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 		}
 
@@ -322,15 +322,15 @@ public class WF_CommEntity extends DirectoryPageBase
 			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 			dtEnum.TableName = "Sys_Enum";
 
-			if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
-				dtEnum.Columns["MYPK"].ColumnName = "MyPK";
-				dtEnum.Columns["LAB"].ColumnName = "Lab";
-				dtEnum.Columns["ENUMKEY"].ColumnName = "EnumKey";
-				dtEnum.Columns["INTKEY"].ColumnName = "IntKey";
-				dtEnum.Columns["LANG"].ColumnName = "Lang";
+				dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
+				dtEnum.Columns.get("LAB").ColumnName = "Lab";
+				dtEnum.Columns.get("ENUMKEY").ColumnName = "EnumKey";
+				dtEnum.Columns.get("INTKEY").ColumnName = "IntKey";
+				dtEnum.Columns.get("LANG").ColumnName = "Lang";
 			}
-			ds.Tables.Add(dtEnum);
+			ds.Tables.add(dtEnum);
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 把外键与枚举放入里面去.
@@ -362,11 +362,11 @@ public class WF_CommEntity extends DirectoryPageBase
 
 		String myFilePath = BP.Sys.SystemConfig.PathOfDataUser + this.getEnsName().substring(0, this.getEnsName().length() - 1);
 
-		for (Entity dt : dtls)
+		for (Entity dt : dtls.ToJavaList())
 		{
 			String pkval = dt.PKVal.toString();
 			Object tempVar = dt.GetValByKey("MyFileExt");
-			String ext = tangible.StringHelper.isNullOrWhiteSpace(tempVar instanceof String ? (String)tempVar : null) ? "" : dt.GetValByKey("MyFileExt").toString();
+			String ext = DataType.IsNullOrEmpty(tempVar instanceof String ? (String)tempVar : null) ? "" : dt.GetValByKey("MyFileExt").toString();
 			if (DataType.IsNullOrEmpty(ext) == true)
 			{
 				continue;
@@ -489,13 +489,13 @@ public class WF_CommEntity extends DirectoryPageBase
 					DataRow dr = attrFiles.NewRow();
 					dr.set("FileNo", attrFile.FileNo);
 					dr.set("FileName", attrFile.FileName);
-					attrFiles.Rows.Add(dr);
+					attrFiles.Rows.add(dr);
 				}
-				ds.Tables.Add(attrFiles);
+				ds.Tables.add(attrFiles);
 
 				//增加附件列表
 				SysFileManagers sfs = new SysFileManagers(en.toString(), en.PKVal.toString());
-				ds.Tables.Add(sfs.ToDataTableField("Sys_FileManager"));
+				ds.Tables.add(sfs.ToDataTableField("Sys_FileManager"));
 			}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -527,11 +527,11 @@ public class WF_CommEntity extends DirectoryPageBase
 				///#endregion 加入权限信息.
 
 
-			ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+			ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 			//把主数据放入里面去.
 			DataTable dtMain = en.ToDataTableField("MainTable");
-			ds.Tables.Add(dtMain);
+			ds.Tables.add(dtMain);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 增加上分组信息.
@@ -576,9 +576,9 @@ public class WF_CommEntity extends DirectoryPageBase
 				{
 					dr.set("Tip", vals[2]);
 				}
-				dtGroups.Rows.Add(dr);
+				dtGroups.Rows.add(dr);
 			}
-			ds.Tables.Add(dtGroups);
+			ds.Tables.add(dtGroups);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 增加上分组信息.
@@ -613,7 +613,7 @@ public class WF_CommEntity extends DirectoryPageBase
 				}
 				drAttr.set(MapAttrAttr.GroupID, currGroupID);
 			}
-			ds.Tables.Add(sys_MapAttrs);
+			ds.Tables.add(sys_MapAttrs);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 字段属性.
 
@@ -621,7 +621,7 @@ public class WF_CommEntity extends DirectoryPageBase
 				///#region 加入扩展属性.
 			MapExts mapExts = new MapExts(this.getEnName() + "s");
 			DataTable Sys_MapExt = mapExts.ToDataTableField("Sys_MapExt");
-			ds.Tables.Add(Sys_MapExt);
+			ds.Tables.add(Sys_MapExt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 加入扩展属性.
 
@@ -665,7 +665,7 @@ public class WF_CommEntity extends DirectoryPageBase
 				DataTable dt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 				dt.TableName = keyOfEn;
 
-				ds.Tables.Add(dt);
+				ds.Tables.add(dt);
 			}
 
 			//加入sql模式的外键.
@@ -697,13 +697,13 @@ public class WF_CommEntity extends DirectoryPageBase
 					dt.TableName = attr.Key;
 
 					//@杜. 翻译当前部分.
-					if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 					{
-						dt.Columns["NO"].ColumnName = "No";
-						dt.Columns["NAME"].ColumnName = "Name";
+						dt.Columns.get("NO").ColumnName = "No";
+						dt.Columns.get("NAME").ColumnName = "Name";
 					}
 
-					ds.Tables.Add(dt);
+					ds.Tables.add(dt);
 				}
 			}
 
@@ -725,16 +725,16 @@ public class WF_CommEntity extends DirectoryPageBase
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 				dtEnum.TableName = "Sys_Enum";
 
-				if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
-					dtEnum.Columns["MYPK"].ColumnName = "MyPK";
-					dtEnum.Columns["LAB"].ColumnName = "Lab";
-					dtEnum.Columns["ENUMKEY"].ColumnName = "EnumKey";
-					dtEnum.Columns["INTKEY"].ColumnName = "IntKey";
-					dtEnum.Columns["LANG"].ColumnName = "Lang";
+					dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
+					dtEnum.Columns.get("LAB").ColumnName = "Lab";
+					dtEnum.Columns.get("ENUMKEY").ColumnName = "EnumKey";
+					dtEnum.Columns.get("INTKEY").ColumnName = "IntKey";
+					dtEnum.Columns.get("LANG").ColumnName = "Lang";
 				}
 
-				ds.Tables.Add(dtEnum);
+				ds.Tables.add(dtEnum);
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 把外键与枚举放入里面去.
@@ -796,13 +796,13 @@ public class WF_CommEntity extends DirectoryPageBase
 				dr.set("IsCanBatch", item.IsCanBatch);
 				dr.set("GroupName", item.GroupName);
 
-				dtM.Rows.Add(dr); //增加到rows.
+				dtM.Rows.add(dr); //增加到rows.
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 增加 上方法.
 
 			//增加方法。
-			ds.Tables.Add(dtM);
+			ds.Tables.add(dtM);
 
 			return BP.Tools.Json.ToJson(ds);
 		}
@@ -899,7 +899,7 @@ public class WF_CommEntity extends DirectoryPageBase
 
 			//把主数据放入里面去.
 			DataTable dtMain = en.ToDataTableField("MainTable");
-			ds.Tables.Add(dtMain);
+			ds.Tables.add(dtMain);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 增加 上方法.
@@ -977,7 +977,7 @@ public class WF_CommEntity extends DirectoryPageBase
 					dr.set("FunPara", "true");
 				}
 
-				dtM.Rows.Add(dr); //增加到rows.
+				dtM.Rows.add(dr); //增加到rows.
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 增加 上方法.
@@ -1074,7 +1074,7 @@ public class WF_CommEntity extends DirectoryPageBase
 						}
 					}
 					dr.set("Title", vsM.Desc + "(" + i + ")");
-					dtM.Rows.Add(dr);
+					dtM.Rows.add(dr);
 				}
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1119,12 +1119,12 @@ public class WF_CommEntity extends DirectoryPageBase
 
 				dr.set("RefMethodType", (int)RefMethodType.RightFrameOpen);
 
-				dtM.Rows.Add(dr);
+				dtM.Rows.add(dr);
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 增加 从表.
 
-			ds.Tables.Add(dtM);
+			ds.Tables.add(dtM);
 
 
 
@@ -1222,9 +1222,9 @@ public class WF_CommEntity extends DirectoryPageBase
 		//组织数据.
 		DataSet ds = new DataSet();
 		String rootNo = vsM.RootNo;
-		if (rootNo.equals("@WebUser.FK_Dept") || rootNo.equals("WebUser.FK_Dept"))
+		if (rootNo.equals("@WebUser.getFK_Dept()") || rootNo.equals("WebUser.getFK_Dept()"))
 		{
-			rootNo = WebUser.FK_Dept;
+			rootNo = WebUser.getFK_Dept();
 		}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1257,7 +1257,7 @@ public class WF_CommEntity extends DirectoryPageBase
 				dr.set("ParentNo", rootNo);
 			}
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 生成树目录.
 
@@ -1278,10 +1278,10 @@ public class WF_CommEntity extends DirectoryPageBase
 			return "err@MM实体类字段属性需要按照外键属性编写:" + dot2DotEnsName + " - " + attrOfMInMM;
 		}
 
-		dtSelected.Columns[attrOfMInMM + "Text"].ColumnName = "Name";
+		dtSelected.Columns[attrOfMInMM + "Text").ColumnName = "Name";
 
 		dtSelected.Columns.Remove(AttrOfOneInMM);
-		ds.Tables.Add(dtSelected); //已经选择的数据.
+		ds.Tables.add(dtSelected); //已经选择的数据.
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 生成选择的数据.
 

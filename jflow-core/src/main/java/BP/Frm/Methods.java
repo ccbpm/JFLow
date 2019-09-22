@@ -46,7 +46,7 @@ public class Methods extends EntitiesMyPK
 	*/
 	public final List<Method> ToJavaList()
 	{
-		return (List<Method>)this;
+		return (List<Method>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -58,7 +58,7 @@ public class Methods extends EntitiesMyPK
 		ArrayList<Method> list = new ArrayList<Method>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Method)this[i]);
+			list.add((Method)this.get(i));
 		}
 		return list;
 	}

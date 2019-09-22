@@ -69,9 +69,9 @@ public class NodeStation extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeStation", "节点岗位");
@@ -81,8 +81,8 @@ public class NodeStation extends EntityMM
 			// #warning ,这里为了方便用户选择，让分组都统一采用了枚举类型. edit zhoupeng. 2015.04.28. 注意jflow也要修改.
 		map.AddDDLEntitiesPK(NodeStationAttr.FK_Station, null, "工作岗位", new BP.GPM.Stations(), true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 	/** 

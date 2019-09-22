@@ -68,7 +68,7 @@ public class GenerDeptTree extends Method
 		depts.Retrieve(BP.Port.DeptAttr.ParentNo, dept.No);
 
 		int idx = 0;
-		for (BP.Port.Dept item : depts)
+		for (BP.Port.Dept item : depts.ToJavaList())
 		{
 			idx++;
 
@@ -93,7 +93,7 @@ public class GenerDeptTree extends Method
 		depts.Retrieve(BP.Port.DeptAttr.ParentNo, dept.No);
 
 		int idx = 0;
-		for (BP.Port.Dept item : depts)
+		for (BP.Port.Dept item : depts.ToJavaList())
 		{
 			idx++;
 			String subNo = tangible.StringHelper.padLeft(String.valueOf(idx), 2, '0');

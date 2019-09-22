@@ -45,7 +45,7 @@ public class Bills extends EntitiesMyPK
 	*/
 	public final List<Bill> ToJavaList()
 	{
-		return (List<Bill>)this;
+		return (List<Bill>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -57,7 +57,7 @@ public class Bills extends EntitiesMyPK
 		ArrayList<Bill> list = new ArrayList<Bill>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Bill)this[i]);
+			list.add((Bill)this.get(i));
 		}
 		return list;
 	}

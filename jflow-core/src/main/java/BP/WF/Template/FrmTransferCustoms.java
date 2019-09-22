@@ -56,7 +56,7 @@ public class FrmTransferCustoms extends Entities
 	*/
 	public final List<FrmTransferCustom> ToJavaList()
 	{
-		return (List<FrmTransferCustom>)this;
+		return (List<FrmTransferCustom>)(Object)this;
 	}
 
 	/** 
@@ -69,7 +69,7 @@ public class FrmTransferCustoms extends Entities
 		ArrayList<FrmTransferCustom> list = new ArrayList<FrmTransferCustom>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmTransferCustom)this[i]);
+			list.add((FrmTransferCustom)this.get(i));
 		}
 		return list;
 	}

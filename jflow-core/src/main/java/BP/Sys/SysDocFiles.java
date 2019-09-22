@@ -39,7 +39,7 @@ public class SysDocFiles extends Entities
 	*/
 	public final List<SysDocFile> ToJavaList()
 	{
-		return (List<SysDocFile>)this;
+		return (List<SysDocFile>)(Object)this;
 	}
 	/** 
 	 转化成list

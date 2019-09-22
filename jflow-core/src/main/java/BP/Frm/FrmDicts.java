@@ -42,7 +42,7 @@ public class FrmDicts extends EntitiesNoName
 	*/
 	public final List<FrmDict> ToJavaList()
 	{
-		return (List<FrmDict>)this;
+		return (List<FrmDict>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -54,7 +54,7 @@ public class FrmDicts extends EntitiesNoName
 		ArrayList<FrmDict> list = new ArrayList<FrmDict>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmDict)this[i]);
+			list.add((FrmDict)this.get(i));
 		}
 		return list;
 	}

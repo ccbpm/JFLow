@@ -208,7 +208,7 @@ public class MakeForm2Html
 				String pk = en.PKVal.toString();
 				String myPK = frmID + "_" + img.MyPK + "_" + pk;
 				FrmEleDB frmEleDB = new FrmEleDB();
-				frmEleDB.MyPK = myPK;
+				frmEleDB.setMyPK( myPK;
 				if (frmEleDB.RetrieveFromDBSources() == 0)
 				{
 					//生成二维码
@@ -231,7 +231,7 @@ public class MakeForm2Html
 				//获取登录人岗位
 				String stationNo = "";
 				//签章对应部门
-				String fk_dept = WebUser.FK_Dept;
+				String fk_dept = WebUser.getFK_Dept();
 				//部门来源类别
 				String sealType = "0";
 				//签章对应岗位
@@ -258,7 +258,7 @@ public class MakeForm2Html
 						if (fk_dept.equals("all"))
 						{
 							//默认当前登陆人
-							fk_dept = WebUser.FK_Dept;
+							fk_dept = WebUser.getFK_Dept();
 							//发起人
 							if (sealType.equals("1"))
 							{
@@ -281,8 +281,8 @@ public class MakeForm2Html
 						}
 					}
 					//判断本部门下是否有此人
-					//sql = "SELECT fk_station from port_deptEmpStation where fk_dept='" + fk_dept + "' and fk_emp='" + WebUser.No + "'";
-					sql = String.format(" select FK_Station from Port_DeptStation where FK_Dept ='%1$s' and FK_Station in (select FK_Station from " + BP.WF.Glo.getEmpStation() + " where FK_Emp='%2$s')", fk_dept, WebUser.No);
+					//sql = "SELECT fk_station from port_deptEmpStation where fk_dept='" + fk_dept + "' and fk_emp='" + WebUser.getNo() + "'";
+					sql = String.format(" select FK_Station from Port_DeptStation where FK_Dept ='%1$s' and FK_Station in (select FK_Station from " + BP.WF.Glo.getEmpStation() + " where FK_Emp='%2$s')", fk_dept, WebUser.getNo());
 					DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 					for (DataRow dr : dt.Rows)
 					{
@@ -341,7 +341,7 @@ public class MakeForm2Html
 								if (single.FK_MapData.substring(6, single.FK_MapData.Length).equals(img.EnPK.substring(6, img.EnPK.Length)))
 								{
 									single.FK_MapData = img.EnPK;
-									single.MyPK = img.EnPK + "_" + en.GetValStrByKey("OID") + "_" + img.EnPK;
+									single.setMyPK( img.EnPK + "_" + en.GetValStrByKey("OID") + "_" + img.EnPK;
 									single.RefPKVal = img.EnPK;
 									//  single.DirectInsert();
 									//  realDB = single; cut by zhoupeng .没有看明白.
@@ -365,7 +365,7 @@ public class MakeForm2Html
 						//如果没有查到记录，控件不显示。说明没有走盖章的一步
 						x = img.X + wtX;
 						sb.append("\t\n<DIV id=" + img.MyPK + " style='position:absolute;left:" + x + "px;top:" + y + "px;text-align:left;vertical-align:top' >");
-						sb.append("\t\n<img src='" + imgSrc + "' onerror='javascript:this.src='" + appPath + "DataUser/ICON/" + BP.Sys.SystemConfig.CustomerNo + "/LogBiger.png';' style='padding: 0px;margin: 0px;border-width: 0px;width:" + img.W + "px;height:" + img.H + "px;' />");
+						sb.append("\t\n<img src='" + imgSrc + "' onerror='javascript:this.src='" + appPath + "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png';' style='padding: 0px;margin: 0px;border-width: 0px;width:" + img.W + "px;height:" + img.H + "px;' />");
 						sb.append("\t\n</DIV>");
 					}
 				}
@@ -555,7 +555,7 @@ public class MakeForm2Html
 			///#region 输出明细.
 		int dtlsCount = 0;
 		MapDtls dtls = new MapDtls(frmID);
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			if (dtl.IsView == false)
 			{
@@ -1220,7 +1220,7 @@ public class MakeForm2Html
 				///#region 输出数据.
 				GEDtls dtls = new GEDtls(gf.CtrlID);
 				dtls.Retrieve(GEDtlAttr.RefPK, workid);
-				for (GEDtl dtl : dtls)
+				for (GEDtl dtl : dtls.ToJavaList())
 				{
 					sb.append("<tr>");
 
@@ -1384,10 +1384,10 @@ public class MakeForm2Html
 				//替换URL的
 				url = url.replace("@basePath", basePath);
 				//替换系统参数
-				url = url.replace("@WebUser.No", WebUser.No);
-				url = url.replace("@WebUser.Name;", WebUser.Name);
-				url = url.replace("@WebUser.FK_DeptName;", WebUser.FK_DeptName);
-				url = url.replace("@WebUser.FK_Dept;", WebUser.FK_Dept);
+				url = url.replace("@WebUser.getNo()", WebUser.getNo());
+				url = url.replace("@WebUser.getName();", WebUser.getName());
+				url = url.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+				url = url.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 				//替换参数
 				if (url.indexOf("?") > 0)
@@ -2196,10 +2196,10 @@ public class MakeForm2Html
 			{
 				String url = mapData.Url;
 				//替换系统参数
-				url = url.replace("@WebUser.No", WebUser.No);
-				url = url.replace("@WebUser.Name;", WebUser.Name);
-				url = url.replace("@WebUser.FK_DeptName;", WebUser.FK_DeptName);
-				url = url.replace("@WebUser.FK_Dept;", WebUser.FK_Dept);
+				url = url.replace("@WebUser.getNo()", WebUser.getNo());
+				url = url.replace("@WebUser.getName();", WebUser.getName());
+				url = url.replace("@WebUser.getFK_Dept()Name;", WebUser.getFK_Dept()Name);
+				url = url.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
 
 				//替换参数
 				if (url.indexOf("?") > 0)
@@ -2365,7 +2365,7 @@ public class MakeForm2Html
 
 				if (gwf.getWFState() == WFState.Runing)
 				{
-					if (SystemConfig.CustomerNo.equals("TianYe") && gwf.getNodeName().contains("反馈") == true)
+					if (SystemConfig.getCustomerNo().equals("TianYe") && gwf.getNodeName().contains("反馈") == true)
 					{
 						nd = new Node(gwf.getFK_Node());
 						if (nd.getIsEndNode() == true)
@@ -2436,7 +2436,7 @@ public class MakeForm2Html
 	private static String SignPic(String userNo)
 	{
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(userNo))
+		if (DataType.IsNullOrEmpty(userNo))
 		{
 			return "";
 		}

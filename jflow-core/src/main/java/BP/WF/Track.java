@@ -331,9 +331,9 @@ public class Track extends BP.En.Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Track", "轨迹表");
@@ -371,8 +371,8 @@ public class Track extends BP.En.Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 字段
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	/** 
 	 轨迹
@@ -430,7 +430,7 @@ public class Track extends BP.En.Entity
 		DBAccess.DropTablePK("WF_Track");
 
 		String sqlRename = "";
-		switch (SystemConfig.AppCenterDBType)
+		switch (SystemConfig.getAppCenterDBType())
 		{
 			case DBType.MSSQL:
 				sqlRename = "EXEC SP_RENAME WF_Track, " + ptable;
@@ -469,7 +469,7 @@ public class Track extends BP.En.Entity
 	public final void DoInsert(long mypk)
 	{
 		String ptable = "ND" + Integer.parseInt(this.FK_Flow) + "Track";
-		String dbstr = SystemConfig.AppCenterDBVarStr;
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql = "INSERT INTO " + ptable;
 		sql += "(";
 		sql += "" + TrackAttr.MyPK + ",";
@@ -534,10 +534,10 @@ public class Track extends BP.En.Entity
 
 		LocalDateTime d = LocalDateTime.MIN;
 		tangible.OutObject<LocalDateTime> tempOut_d = new tangible.OutObject<LocalDateTime>();
-		if (tangible.StringHelper.isNullOrWhiteSpace(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
+		if (DataType.IsNullOrEmpty(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
 		{
 		d = tempOut_d.argValue;
-			this.setRDT(DataType.CurrentDataTimess);
+			this.setRDT(DataType.getCurrentDataTime()ss);
 		}
 	else
 	{
@@ -551,7 +551,7 @@ public class Track extends BP.En.Entity
 			Paras ps = SqlBuilder.GenerParas(this, null);
 			ps.SQL = sql;
 
-			switch (SystemConfig.AppCenterDBType)
+			switch (SystemConfig.getAppCenterDBType())
 			{
 				case DBType.MSSQL:
 					this.RunSQL(ps);
@@ -562,9 +562,9 @@ public class Track extends BP.En.Entity
 				case DBType.MySQL:
 				case DBType.Informix:
 				default:
-					ps.SQL = ps.SQL.Replace("[", "").Replace("]", "");
+					ps.SQL = ps.SQL.Replace("[", "").replace("]", "");
 					this.RunSQL(ps); // 运行sql.
-					//  this.RunSQL(sql.Replace("[", "").Replace("]", ""), SqlBuilder.GenerParas(this, null));
+					//  this.RunSQL(sql.Replace("[", "").replace("]", ""), SqlBuilder.GenerParas(this, null));
 					break;
 			}
 		}
@@ -591,13 +591,13 @@ public class Track extends BP.En.Entity
 		if (this.getHisActionType() == ActionType.Start || this.getHisActionType() == ActionType.StartChildenFlow)
 		{
 			Paras ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkerlist SET RDT=" + SystemConfig.AppCenterDBVarStr + "RDT WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID ";
+			ps.SQL = "UPDATE WF_GenerWorkerlist SET RDT=" + SystemConfig.getAppCenterDBVarStr() + "RDT WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID ";
 			ps.Add("RDT", this.getRDT());
 			ps.Add("WorkID", this.getWorkID());
 			DBAccess.RunSQL(ps);
 
 			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET RDT=" + SystemConfig.AppCenterDBVarStr + "RDT WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID ";
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET RDT=" + SystemConfig.getAppCenterDBVarStr() + "RDT WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID ";
 			ps.Add("RDT", this.getRDT());
 			ps.Add("WorkID", this.getWorkID());
 			DBAccess.RunSQL(ps);
@@ -611,28 +611,28 @@ public class Track extends BP.En.Entity
 	@Override
 	protected boolean beforeInsert()
 	{
-		if (BP.Web.WebUser.No.equals("Guest"))
+		if (WebUser.getNo().equals("Guest"))
 		{
 			this.setExer(BP.Web.GuestUser.No + "," + BP.Web.GuestUser.Name);
 		}
 		else
 		{
-			if (BP.Web.WebUser.IsAuthorize)
+			if (WebUser.getIsAuthorize())
 			{
-				this.setExer(BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.Auth, BP.Web.WebUser.AuthName));
+				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.Auth, WebUser.AuthName));
 			}
 			else
 			{
-				this.setExer(BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.No, BP.Web.WebUser.Name));
+				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
 			}
 		}
 
 		LocalDateTime d = LocalDateTime.MIN;
 		tangible.OutObject<LocalDateTime> tempOut_d = new tangible.OutObject<LocalDateTime>();
-		if (tangible.StringHelper.isNullOrWhiteSpace(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
+		if (DataType.IsNullOrEmpty(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
 		{
 		d = tempOut_d.argValue;
-			this.setRDT(BP.DA.DataType.CurrentDataTimess);
+			this.setRDT(BP.DA.DataType.getCurrentDataTime()ss);
 		}
 	else
 	{

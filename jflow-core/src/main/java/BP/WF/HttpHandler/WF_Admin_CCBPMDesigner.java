@@ -25,7 +25,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 "                           union " + "\r\n" +
 "                           SELECT NO, 'F'+FK_FlowSort as ParentNo,(NO + '.' + NAME) as Name,IDX,0 IsParent,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle || BP.Sys.SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT * FROM (SELECT 'F'||No as No,'F'||ParentNo as ParentNo,Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                        union " + "\r\n" +
@@ -33,7 +33,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MySQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT * FROM (SELECT CONCAT('F', No) No, CONCAT('F', ParentNo) ParentNo, Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                           union " + "\r\n" +
@@ -43,26 +43,26 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["no"].ColumnName = "No";
-			dt.Columns["name"].ColumnName = "Name";
-			dt.Columns["parentno"].ColumnName = "ParentNo";
-			dt.Columns["idx"].ColumnName = "IDX";
+			dt.Columns.get("no").ColumnName = "No";
+			dt.Columns.get("name").ColumnName = "Name";
+			dt.Columns.get("parentno").ColumnName = "ParentNo";
+			dt.Columns.get("idx").ColumnName = "IDX";
 
-			dt.Columns["ttype"].ColumnName = "TTYPE";
-			dt.Columns["dtype"].ColumnName = "DTYPE";
+			dt.Columns.get("ttype").ColumnName = "TTYPE";
+			dt.Columns.get("dtype").ColumnName = "DTYPE";
 		}
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			dt.Columns["NO"].ColumnName = "No";
-			dt.Columns["NAME"].ColumnName = "Name";
-			dt.Columns["PARENTNO"].ColumnName = "ParentNo";
-			dt.Columns["IDX"].ColumnName = "IDX";
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+			dt.Columns.get("IDX").ColumnName = "IDX";
 
-			dt.Columns["TTYPE"].ColumnName = "TTYPE";
-			dt.Columns["DTYPE"].ColumnName = "DTYPE";
+			dt.Columns.get("TTYPE").ColumnName = "TTYPE";
+			dt.Columns.get("DTYPE").ColumnName = "DTYPE";
 		}
 
 		//判断是否为空，如果为空，则创建一个流程根结点，added by liuxc,2016-01-24
@@ -74,7 +74,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			fs.Name = "流程树";
 			fs.Insert();
 
-			dt.Rows.Add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+			dt.Rows.add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
 		}
 		else
 		{
@@ -86,10 +86,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 
-		if (!WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.No;
+			aemp.No = WebUser.getNo();
 			if (aemp.RetrieveFromDBSources() == 0)
 			{
 				return "err@登录帐号错误.";
@@ -105,7 +105,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 			newRootRow.set("ParentNo", "F0");
 			DataTable newDt = dt.Clone();
-			newDt.Rows.Add(newRootRow.ItemArray);
+			newDt.Rows.add(newRootRow.ItemArray);
 			GenerChildRows(dt, newDt, newRootRow);
 			dt = newDt;
 		}
@@ -134,15 +134,15 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		DataTable dtFlowSorts = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//if (dtFlowSort.Rows.size() == 0)
 		//{
-		//    fk_dept = BP.Web.WebUser.FK_Dept;
+		//    fk_dept = WebUser.getFK_Dept();
 		//    sql = "SELECT No,Name,ParentNo FROM Port_Dept WHERE No='" + fk_dept + "' OR ParentNo='" + fk_dept + "' ORDER BY Idx ";
 		//    dtDept = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//}
 
 		dtFlowSorts.TableName = "FlowSorts";
-		ds.Tables.Add(dtFlowSorts);
+		ds.Tables.add(dtFlowSorts);
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtFlowSorts.Columns[0].ColumnName = "No";
 			dtFlowSorts.Columns[1].ColumnName = "Name";
@@ -158,8 +158,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtFlows.TableName = "Flows";
-		ds.Tables.Add(dtFlows);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		ds.Tables.add(dtFlows);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtFlows.Columns[0].ColumnName = "No";
 			dtFlows.Columns[1].ColumnName = "Name";
@@ -181,14 +181,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		String orgNo = this.GetRequestVal("OrgNo");
 
 		BP.WF.Port.AdminEmp ae = new Port.AdminEmp();
-		ae.No = WebUser.No + "@" + orgNo;
+		ae.No = WebUser.getNo() + "@" + orgNo;
 		if (ae.RetrieveFromDBSources() == 0)
 		{
 			return "err@您不是该组织的管理员.";
 		}
 
 		BP.WF.Port.AdminEmp ae1 = new Port.AdminEmp();
-		ae1.No = WebUser.No;
+		ae1.No = WebUser.getNo();
 		ae1.RetrieveFromDBSources();
 
 		if (ae1.getRootOfDept().equals(orgNo) == true)
@@ -197,7 +197,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 		ae1.Copy(ae);
-		ae1.No = WebUser.No;
+		ae1.No = WebUser.getNo();
 		ae1.Update();
 
 		//AdminEmp ad = new AdminEmp();
@@ -221,16 +221,16 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		Flows fls = new Flows();
 		fls.RetrieveAll();
 
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			DataRow dr = dt.NewRow();
 			dr.set("FlowNo", fl.No);
 			dr.set("FlowName", fl.Name);
-			dr.set("NumOfRuning", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.No + "' AND WFState in (2,5)", 0));
-			dr.set("NumOfOK", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.No + "' AND WFState = 3 ", 0));
-			dr.set("NumOfEtc", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.No + "' AND WFState in (4,5,6,7,8) ", 0));
+			dr.set("NumOfRuning", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.getNo() + "' AND WFState in (2,5)", 0));
+			dr.set("NumOfOK", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.getNo() + "' AND WFState = 3 ", 0));
+			dr.set("NumOfEtc", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.getNo() + "' AND WFState in (4,5,6,7,8) ", 0));
 
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -337,7 +337,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		//dr["FileName"] = md.Name+".xml";
 		//dr["FileType"] = "xml";
 		//dr["FlieContent"] = docs;
-		//dt.Rows.Add(dr);
+		//dt.Rows.add(dr);
 		//return BP.Tools.Json.ToJson(dt);
 	}
 
@@ -387,7 +387,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		String deptid = this.GetRequestVal("DeptNo");
 		String stid = this.GetRequestVal("StationNo");
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(deptid) || tangible.StringHelper.isNullOrWhiteSpace(stid))
+		if (DataType.IsNullOrEmpty(deptid) || DataType.IsNullOrEmpty(stid))
 		{
 			return "[]";
 		}
@@ -411,7 +411,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			Object tempVar = emps.GetEntityByKey(des.FK_Emp);
 			emp = tempVar instanceof BP.GPM.Emp ? (BP.GPM.Emp)tempVar : null;
 
-			dt.Rows.Add(emp.No, deptid + "|" + stid, emp.Name, "EMP");
+			dt.Rows.add(emp.No, deptid + "|" + stid, emp.Name, "EMP");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -428,12 +428,12 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		String parentrootid = this.GetRequestVal("parentrootid"); // context.Request.QueryString["parentrootid"];
 		String newRootId = "";
 
-		if (!WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.No;
+			aemp.No = WebUser.getNo();
 
-			if (aemp.RetrieveFromDBSources() != 0 && aemp.getUserType() == 1 && !tangible.StringHelper.isNullOrWhiteSpace(aemp.getRootOfDept()))
+			if (aemp.RetrieveFromDBSources() != 0 && aemp.getUserType() == 1 && !DataType.IsNullOrEmpty(aemp.getRootOfDept()))
 			{
 				newRootId = aemp.getRootOfDept();
 			}
@@ -443,7 +443,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		{
 			BP.WF.Port.Dept dept = new BP.WF.Port.Dept();
 
-			if (!tangible.StringHelper.isNullOrWhiteSpace(newRootId))
+			if (!DataType.IsNullOrEmpty(newRootId))
 			{
 				if (dept.Retrieve(BP.WF.Port.DeptAttr.No, newRootId) == 0)
 				{
@@ -462,13 +462,13 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 				}
 			}
 
-			dt.Rows.Add(dept.No, dept.getParentNo(), dept.Name, "DEPT");
+			dt.Rows.add(dept.No, dept.getParentNo(), dept.Name, "DEPT");
 		}
 		else
 		{
 			BP.GPM.Dept dept = new BP.GPM.Dept();
 
-			if (!tangible.StringHelper.isNullOrWhiteSpace(newRootId))
+			if (!DataType.IsNullOrEmpty(newRootId))
 			{
 				if (dept.Retrieve(BP.GPM.DeptAttr.No, newRootId) == 0)
 				{
@@ -487,7 +487,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 				}
 			}
 
-			dt.Rows.Add(dept.No, dept.ParentNo, dept.Name, "DEPT");
+			dt.Rows.add(dept.No, dept.ParentNo, dept.Name, "DEPT");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -523,10 +523,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		BP.GPM.Emp emp = null;
 		ArrayList<String> inemps = new ArrayList<String>();
 
-		for (BP.GPM.Dept dept : depts)
+		for (BP.GPM.Dept dept : depts.ToJavaList())
 		{
 			//增加部门
-			dt.Rows.Add(dept.No, dept.ParentNo, dept.Name, "DEPT");
+			dt.Rows.add(dept.No, dept.ParentNo, dept.Name, "DEPT");
 		}
 
 		//增加部门岗位
@@ -540,7 +540,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 				continue;
 			}
 
-			dt.Rows.Add(ds.FK_Station, rootid, stt.Name, "STATION");
+			dt.Rows.add(ds.FK_Station, rootid, stt.Name, "STATION");
 		}
 
 		//增加没有岗位的人员
@@ -560,7 +560,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		for (String inemp : inemps)
 		{
 			emp = new BP.GPM.Emp(inemp);
-			dt.Rows.Add(emp.No, rootid, emp.Name, "EMP");
+			dt.Rows.add(emp.No, rootid, emp.Name, "EMP");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -578,14 +578,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		try
 		{
 			//如果登录信息丢失了,就让其重新登录一次.
-			if (DataType.IsNullOrEmpty(BP.Web.WebUser.NoOfRel) == true)
+			if (DataType.IsNullOrEmpty(WebUser.getNo()OfRel) == true)
 			{
 				String userNo = this.GetRequestVal("UserNo");
 				String sid = this.GetRequestVal("SID");
 				BP.WF.Dev2Interface.Port_LoginBySID(userNo, sid);
 			}
 
-			if (BP.Web.WebUser.IsAdmin == false)
+			if (WebUser.getIsAdmin() == false)
 			{
 				return "url@Login.htm?DoType=Logout&Err=NoAdminUsers";
 			}
@@ -610,7 +610,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			ht.put("SysNo", SystemConfig.SysNo);
 			ht.put("SysName", SystemConfig.SysName);
 
-			ht.put("CustomerNo", SystemConfig.CustomerNo);
+			ht.put("CustomerNo", SystemConfig.getCustomerNo());
 			ht.put("CustomerName", SystemConfig.CustomerName);
 
 			//集成的平台.
@@ -678,7 +678,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 		////让admin登录
-		//if (DataType.IsNullOrEmpty(BP.Web.WebUser.No) || BP.Web.WebUser.IsAdmin == false)
+		//if (DataType.IsNullOrEmpty(WebUser.getNo()) || WebUser.getIsAdmin() == false)
 		//    return "url@Login.htm?DoType=Logout";
 
 		//如果没有流程表，就执行安装.
@@ -740,7 +740,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	//流程设计器登陆前台，转向规则，判断是否为天业BPM
 	public final String Login_Redirect()
 	{
-		if (SystemConfig.CustomerNo.equals("TianYe"))
+		if (SystemConfig.getCustomerNo().equals("TianYe"))
 		{
 			return "url@../../../BPM/pages/login.html";
 		}
@@ -780,7 +780,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			}
 			//return BP.WF.Glo.lang("no_permission_login_2", para);
 
-			if (tangible.StringHelper.isNullOrWhiteSpace(adminEmp.getRootOfFlow()) == true)
+			if (DataType.IsNullOrEmpty(adminEmp.getRootOfFlow()) == true)
 			{
 				return "err@二级管理员用户没有设置流程树的权限..";
 			}
@@ -819,15 +819,15 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		DataSet ds = new DataSet();
 		DataTable dtNodes = DBAccess.RunSQLReturnTable("SELECT NODEID,NAME,X,Y,RUNMODEL FROM WF_NODE WHERE FK_FLOW='" + this.getFK_Flow() + "'");
 		dtNodes.TableName = "Nodes";
-		ds.Tables.Add(dtNodes);
+		ds.Tables.add(dtNodes);
 
 		DataTable dtDirection = DBAccess.RunSQLReturnTable("SELECT NODE,TONODE FROM WF_DIRECTION WHERE FK_FLOW='" + this.getFK_Flow() + "'");
 		dtDirection.TableName = "Direction";
-		ds.Tables.Add(dtDirection);
+		ds.Tables.add(dtDirection);
 
 		DataTable dtLabNote = DBAccess.RunSQLReturnTable("SELECT MYPK,NAME,X,Y FROM WF_LABNOTE WHERE FK_FLOW='" + this.getFK_Flow() + "'");
 		dtLabNote.TableName = "LabNote";
-		ds.Tables.Add(dtLabNote);
+		ds.Tables.add(dtLabNote);
 
 
 		// return BP.Tools.Json.DataSetToJson(ds, false);
@@ -1007,14 +1007,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	*/
 	public final String GetWebUserInfo()
 	{
-		if (WebUser.No == null)
+		if (WebUser.getNo() == null)
 		{
 			return "err@当前用户没有登录，请登录后再试。";
 		}
 
 		Hashtable ht = new Hashtable();
 
-		BP.Port.Emp emp = new BP.Port.Emp(WebUser.No);
+		BP.Port.Emp emp = new BP.Port.Emp(WebUser.getNo());
 
 		ht.put("No", emp.No);
 		ht.put("Name", emp.Name);
@@ -1022,7 +1022,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		ht.put("SID", emp.SID);
 
 
-		if (WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			ht.put("IsAdmin", "1");
 			ht.put("RootOfDept", "0");
@@ -1032,7 +1032,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		else
 		{
 			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.No;
+			aemp.No = WebUser.getNo();
 
 			if (aemp.RetrieveFromDBSources() == 0)
 			{
@@ -1063,7 +1063,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 "                           union " + "\r\n" +
 "                           SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) as NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX ";
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle || BP.Sys.SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT * FROM (SELECT 'F'||No as NO,'F'||ParentNo as PARENTNO,NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                        union " + "\r\n" +
@@ -1071,7 +1071,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MySQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT * FROM (SELECT CONCAT('F', No) NO, CONCAT('F', ParentNo) PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                           union " + "\r\n" +
@@ -1081,15 +1081,15 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns["no"].ColumnName = "NO";
-			dt.Columns["name"].ColumnName = "NAME";
-			dt.Columns["parentno"].ColumnName = "PARENTNO";
-			dt.Columns["idx"].ColumnName = "IDX";
-			dt.Columns["isparent"].ColumnName = "ISPARENT";
-			dt.Columns["ttype"].ColumnName = "TTYPE";
-			dt.Columns["dtype"].ColumnName = "DTYPE";
+			dt.Columns.get("no").ColumnName = "NO";
+			dt.Columns.get("name").ColumnName = "NAME";
+			dt.Columns.get("parentno").ColumnName = "PARENTNO";
+			dt.Columns.get("idx").ColumnName = "IDX";
+			dt.Columns.get("isparent").ColumnName = "ISPARENT";
+			dt.Columns.get("ttype").ColumnName = "TTYPE";
+			dt.Columns.get("dtype").ColumnName = "DTYPE";
 		}
 
 		//判断是否为空，如果为空，则创建一个流程根结点，added by liuxc,2016-01-24
@@ -1101,7 +1101,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			fs.Name = "流程树";
 			fs.Insert();
 
-			dt.Rows.Add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+			dt.Rows.add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
 		}
 		else
 		{
@@ -1113,10 +1113,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 
-		if (!WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.No;
+			aemp.No = WebUser.getNo();
 			if (aemp.RetrieveFromDBSources() == 0)
 			{
 				return "err@登录帐号错误.";
@@ -1132,7 +1132,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 			newRootRow.set("PARENTNO", "F0");
 			DataTable newDt = dt.Clone();
-			newDt.Rows.Add(newRootRow.ItemArray);
+			newDt.Rows.add(newRootRow.ItemArray);
 			GenerChildRows(dt, newDt, newRootRow);
 			dt = newDt;
 		}
@@ -1146,7 +1146,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		DataRow[] rows = dt.Select("ParentNo='" + parentRow.get("NO") + "'");
 		for (DataRow r : rows)
 		{
-			newDt.Rows.Add(r.ItemArray);
+			newDt.Rows.add(r.ItemArray);
 			GenerChildRows(dt, newDt, r);
 		}
 	}
@@ -1154,7 +1154,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	public final String GetBindingFormsTable()
 	{
 		String fk_flow = GetValFromFrmByKey("fk_flow");
-		if (tangible.StringHelper.isNullOrWhiteSpace(fk_flow))
+		if (DataType.IsNullOrEmpty(fk_flow))
 		{
 			return "[]";
 		}
@@ -1211,7 +1211,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		//组织数据源.
 		String sqls = "";
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sqls = "SELECT No \"No\", ParentNo \"ParentNo\",Name \"Name\", Idx \"Idx\", 1 \"IsParent\", 'FORMTYPE' \"TType\" FROM Sys_FormTree ORDER BY Idx ASC ; ";
 			sqls += "SELECT No \"No\", FK_FormTree as \"ParentNo\", Name \"Name\",Idx \"Idx\", 0 \"IsParent\", 'FORM' \"TType\" FROM Sys_MapData  WHERE AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree) ORDER BY Idx ASC";
@@ -1230,14 +1230,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		DataTable dtSort = ds.Tables[0]; //类别表.
 		DataTable dtForm = ds.Tables[1].Clone(); //表单表,这个是最终返回的数据.
 
-		if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtForm.Columns["no"].ColumnName = "No";
-			dtForm.Columns["name"].ColumnName = "Name";
-			dtForm.Columns["parentno"].ColumnName = "ParentNo";
-			dtForm.Columns["idx"].ColumnName = "Idx";
-			dtForm.Columns["isparent"].ColumnName = "IsParent";
-			dtForm.Columns["ttype"].ColumnName = "TType";
+			dtForm.Columns.get("no").ColumnName = "No";
+			dtForm.Columns.get("name").ColumnName = "Name";
+			dtForm.Columns.get("parentno").ColumnName = "ParentNo";
+			dtForm.Columns.get("idx").ColumnName = "Idx";
+			dtForm.Columns.get("isparent").ColumnName = "IsParent";
+			dtForm.Columns.get("ttype").ColumnName = "TType";
 		}
 
 		//增加顶级目录.
@@ -1249,7 +1249,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		drFormRoot.set(3, rowsOfSort[0].get("Idx"));
 		drFormRoot.set(4, rowsOfSort[0].get("IsParent"));
 		drFormRoot.set(5, rowsOfSort[0].get("TType"));
-		dtForm.Rows.Add(drFormRoot); //增加顶级类别..
+		dtForm.Rows.add(drFormRoot); //增加顶级类别..
 
 		//把类别数据组装到form数据里.
 		for (DataRow dr : dtSort.Rows)
@@ -1261,27 +1261,27 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			drForm.set(3, dr.get("Idx"));
 			drForm.set(4, dr.get("IsParent"));
 			drForm.set(5, dr.get("TType"));
-			dtForm.Rows.Add(drForm); //类别.
+			dtForm.Rows.add(drForm); //类别.
 		}
 
 		for (DataRow row : ds.Tables[1].Rows)
 		{
-			dtForm.Rows.Add(row.ItemArray);
+			dtForm.Rows.add(row.ItemArray);
 		}
 
-		if (WebUser.No.equals("admin") == false)
+		if (WebUser.getNo().equals("admin") == false)
 		{
 			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.No;
+			aemp.No = WebUser.getNo();
 			aemp.RetrieveFromDBSources();
 
 			if (aemp.getUserType() != 1)
 			{
-				return "err@您[" + WebUser.No + "]已经不是二级管理员了.";
+				return "err@您[" + WebUser.getNo() + "]已经不是二级管理员了.";
 			}
 			if (aemp.getRootOfForm().equals(""))
 			{
-				return "err@没有给二级管理员[" + WebUser.No + "]设置表单树的权限...";
+				return "err@没有给二级管理员[" + WebUser.getNo() + "]设置表单树的权限...";
 			}
 
 			DataRow[] rootRows = dtForm.Select("No='" + aemp.getRootOfForm() + "'");
@@ -1289,7 +1289,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 			newRootRow.set("ParentNo", "0");
 			DataTable newDt = dtForm.Clone();
-			newDt.Rows.Add(newRootRow.ItemArray);
+			newDt.Rows.add(newRootRow.ItemArray);
 
 			GenerChildRows(dtForm, newDt, newRootRow);
 			dtForm = newDt;
@@ -1322,10 +1322,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		BP.GPM.Station stt = null;
 		BP.GPM.Emp empt = null;
 
-		for (BP.GPM.Dept dept : depts)
+		for (BP.GPM.Dept dept : depts.ToJavaList())
 		{
 			//增加部门
-			dt.Rows.Add(dept.No, dept.ParentNo, dept.Name, "DEPT");
+			dt.Rows.add(dept.No, dept.ParentNo, dept.Name, "DEPT");
 
 			//增加部门岗位
 			dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, dept.No);
@@ -1339,7 +1339,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 					continue;
 				}
 
-				dt.Rows.Add(dept.No + "|" + ds.FK_Station, dept.No, stt.Name, "STATION");
+				dt.Rows.add(dept.No + "|" + ds.FK_Station, dept.No, stt.Name, "STATION");
 
 				//增加部门岗位人员
 				dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, dept.No, BP.GPM.DeptEmpStationAttr.FK_Station, ds.FK_Station);
@@ -1354,7 +1354,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 						continue;
 					}
 
-					dt.Rows.Add(dept.No + "|" + ds.FK_Station + "|" + des.FK_Emp, dept.No + "|" + ds.FK_Station, empt.Name, "EMP");
+					dt.Rows.add(dept.No + "|" + ds.FK_Station + "|" + des.FK_Emp, dept.No + "|" + ds.FK_Station, empt.Name, "EMP");
 				}
 			}
 		}
@@ -1383,7 +1383,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		for (AdminMenuGroup menu : groups)
 		{
 			//是否可以使用？
-			if (menu.IsCanUse(WebUser.No) == false)
+			if (menu.IsCanUse(WebUser.getNo()) == false)
 			{
 				continue;
 			}
@@ -1400,7 +1400,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		for (AdminMenu menu : menus)
 		{
 			//是否可以使用？
-			if (menu.IsCanUse(WebUser.No) == false)
+			if (menu.IsCanUse(WebUser.getNo()) == false)
 			{
 				continue;
 			}
@@ -1614,7 +1614,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		//检查是否有流程？
 		Paras ps = new Paras();
-		ps.SQL = "SELECT COUNT(*) FROM WF_Flow WHERE FK_FlowSort=" + SystemConfig.AppCenterDBVarStr + "fk_flowSort";
+		ps.SQL = "SELECT COUNT(*) FROM WF_Flow WHERE FK_FlowSort=" + SystemConfig.getAppCenterDBVarStr() + "fk_flowSort";
 		ps.Add("fk_flowSort", fk_flowSort);
 		//string sql = "SELECT COUNT(*) FROM WF_Flow WHERE FK_FlowSort='" + fk_flowSort + "'";
 		if (DBAccess.RunSQLReturnValInt(ps) != 0)
@@ -1624,7 +1624,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		//检查是否有子目录？
 		ps = new Paras();
-		ps.SQL = "SELECT COUNT(*) FROM WF_FlowSort WHERE ParentNo=" + SystemConfig.AppCenterDBVarStr + "ParentNo";
+		ps.SQL = "SELECT COUNT(*) FROM WF_FlowSort WHERE ParentNo=" + SystemConfig.getAppCenterDBVarStr() + "ParentNo";
 		ps.Add("ParentNo", fk_flowSort);
 		//sql = "SELECT COUNT(*) FROM WF_FlowSort WHERE ParentNo='" + fk_flowSort + "'";
 		if (DBAccess.RunSQLReturnValInt(ps) != 0)
@@ -1720,9 +1720,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		//检查是否有子类别？
 		Paras ps = new Paras();
-		ps.SQL = "SELECT COUNT(*) FROM Sys_FormTree WHERE ParentNo=" + SystemConfig.AppCenterDBVarStr + "ParentNo";
+		ps.SQL = "SELECT COUNT(*) FROM Sys_FormTree WHERE ParentNo=" + SystemConfig.getAppCenterDBVarStr() + "ParentNo";
 		ps.Add("ParentNo", this.getNo());
-		//string sql = "SELECT COUNT(*) FROM Sys_FormTree WHERE ParentNo='" + this.No + "'";
+		//string sql = "SELECT COUNT(*) FROM Sys_FormTree WHERE ParentNo='" " + this.getNo()+ " "'";
 		if (DBAccess.RunSQLReturnValInt(ps) != 0)
 		{
 			return "err@该目录下有子类别，您不能删除。";
@@ -1730,9 +1730,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		//检查是否有表单？
 		ps = new Paras();
-		ps.SQL = "SELECT COUNT(*) FROM Sys_MapData WHERE FK_FormTree=" + SystemConfig.AppCenterDBVarStr + "FK_FormTree";
+		ps.SQL = "SELECT COUNT(*) FROM Sys_MapData WHERE FK_FormTree=" + SystemConfig.getAppCenterDBVarStr() + "FK_FormTree";
 		ps.Add("FK_FormTree", this.getNo());
-		//sql = "SELECT COUNT(*) FROM Sys_MapData WHERE FK_FormTree='" + this.No + "'";
+		//sql = "SELECT COUNT(*) FROM Sys_MapData WHERE FK_FormTree='" " + this.getNo()+ " "'";
 		if (DBAccess.RunSQLReturnValInt(ps) != 0)
 		{
 			return "err@该目录下有表单，您不能删除。";

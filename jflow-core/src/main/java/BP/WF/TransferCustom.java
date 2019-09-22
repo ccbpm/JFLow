@@ -146,9 +146,9 @@ public class TransferCustom extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_TransferCustom", "自定义运行路径");
 		map.Java_SetEnType(EnType.Admin);
@@ -172,8 +172,8 @@ public class TransferCustom extends EntityMyPK
 
 			//map.AddTBString(TransferCustomAttr.StartDT, null, "发起时间", true, false, 0, 20, 10);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -193,7 +193,7 @@ public class TransferCustom extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction()
 	{
-		this.MyPK = this.getFK_Node() + "_" + this.getWorkID();
+		this.setMyPK( this.getFK_Node() + "_" + this.getWorkID();
 		return super.beforeInsert();
 	}
 
@@ -256,7 +256,7 @@ public class TransferCustom extends EntityMyPK
 			String sql = "SELECT AtPara FROM WF_Node WHERE NodeID In(SELECT ToNode FROM WF_Direction WHERE Node=" + currNodeID + ")";
 			Nodes nds = new Nodes();
 			nds.RetrieveInSQL(NodeAttr.NodeID,"SELECT ToNode FROM WF_Direction WHERE Node = " + currNodeID);
-			for (Node nd : nds)
+			for (Node nd : nds.ToJavaList())
 			{
 				if (nd.GetParaBoolen(NodeAttr.IsYouLiTai) == true)
 				{

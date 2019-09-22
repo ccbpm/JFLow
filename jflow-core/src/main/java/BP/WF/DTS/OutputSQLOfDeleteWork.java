@@ -35,7 +35,7 @@ public class OutputSQLOfDeleteWork extends DataIOEn
 		Nodes nds = new Nodes();
 		nds.RetrieveAll();
 		String delSQL = "";
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			delSQL += "\n DELETE FROM " + nd.getPTable() + "  ; ";
 		}

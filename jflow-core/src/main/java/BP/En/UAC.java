@@ -21,7 +21,7 @@ public class UAC
 	*/
 	public final void LoadRightFromCCGPM(Entity en)
 	{
-		String sql = "SELECT Tag1  FROM V_GPM_EmpMenu WHERE  FK_Emp='" + BP.Web.WebUser.getNo() + "'  AND Url LIKE '%" + en.toString() + "%'  ";
+		String sql = "SELECT Tag1  FROM V_GPM_EmpMenu WHERE  FK_Emp='" + WebUser.getNo() + "'  AND Url LIKE '%" + en.toString() + "%'  ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
@@ -90,7 +90,7 @@ public class UAC
 	*/
 	public final UAC OpenForSysAdmin()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			this.OpenAll();
 		}
@@ -99,7 +99,7 @@ public class UAC
 	}
 	public final UAC OpenForAppAdmin()
 	{
-		if (BP.Web.WebUser.getNo() != null && BP.Web.WebUser.getNo().contains("admin") == true)
+		if (WebUser.getNo() != null && WebUser.getNo().contains("admin") == true)
 		{
 			this.OpenAll();
 		}

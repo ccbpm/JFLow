@@ -57,7 +57,7 @@ public class Method extends EntityMyPK
 	}
 	public final void setRefMethodType(RefMethodType value)
 	{
-		this.SetValByKey(MethodAttr.RefMethodType, (int)value);
+		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -76,9 +76,9 @@ public class Method extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Frm_Method", "表单方法");
@@ -114,8 +114,8 @@ public class Method extends EntityMyPK
 		map.AddDDLSysEnum(MethodAttr.WhatAreYouTodo, 0, "执行完毕后干啥？", true, true, MethodAttr.WhatAreYouTodo, "@0=关闭提示窗口@1=关闭提示窗口并刷新@2=转入到Search.htm页面上去");
 
 		map.AddTBInt(MethodAttr.Idx, 0, "Idx", true, false);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

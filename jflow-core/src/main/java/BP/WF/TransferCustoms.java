@@ -59,7 +59,7 @@ public class TransferCustoms extends EntitiesMyPK
 	*/
 	public final List<TransferCustom> ToJavaList()
 	{
-		return (List<TransferCustom>)this;
+		return (List<TransferCustom>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -71,7 +71,7 @@ public class TransferCustoms extends EntitiesMyPK
 		ArrayList<TransferCustom> list = new ArrayList<TransferCustom>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((TransferCustom)this[i]);
+			list.add((TransferCustom)this.get(i));
 		}
 		return list;
 	}

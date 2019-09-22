@@ -64,7 +64,7 @@ public class FrmNode extends EntityMyPK
 	}
 	public final void setHisFrmType(BP.Sys.FrmType value)
 	{
-		this.SetValByKey(FrmNodeAttr.FrmType, (int)value);
+		this.SetValByKey(FrmNodeAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单类型
@@ -386,9 +386,9 @@ public class FrmNode extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_FrmNode", "节点表单");
@@ -430,8 +430,8 @@ public class FrmNode extends EntityMyPK
 
 		map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, true, 0, 20, 20);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -464,7 +464,7 @@ public class FrmNode extends EntityMyPK
 			throw new RuntimeException("@流程编号为空");
 		}
 
-		this.MyPK = this.getFK_Frm() + "_" + this.getFK_Node() + "_" + this.getFK_Flow();
+		this.setMyPK( this.getFK_Frm() + "_" + this.getFK_Node() + "_" + this.getFK_Flow();
 
 		//获取表单的类型
 		MapData mapData = new MapData();

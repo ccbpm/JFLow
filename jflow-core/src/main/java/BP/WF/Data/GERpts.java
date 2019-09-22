@@ -36,7 +36,7 @@ public class GERpts extends BP.En.EntitiesOID
 	*/
 	public final List<GERpt> ToJavaList()
 	{
-		return (List<GERpt>)this;
+		return (List<GERpt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -48,7 +48,7 @@ public class GERpts extends BP.En.EntitiesOID
 		ArrayList<GERpt> list = new ArrayList<GERpt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GERpt)this[i]);
+			list.add((GERpt)this.get(i));
 		}
 		return list;
 	}

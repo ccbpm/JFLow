@@ -51,7 +51,7 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	*/
 	public final List<FrmImgAthDB> ToJavaList()
 	{
-		return (List<FrmImgAthDB>)this;
+		return (List<FrmImgAthDB>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -63,7 +63,7 @@ public class FrmImgAthDBs extends EntitiesMyPK
 		ArrayList<FrmImgAthDB> list = new ArrayList<FrmImgAthDB>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmImgAthDB)this[i]);
+			list.add((FrmImgAthDB)this.get(i));
 		}
 		return list;
 	}

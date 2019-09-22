@@ -23,13 +23,13 @@ public class GPMEmp extends EntityNoName
 		}
 
 
-			String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp='" + this.No + "'";
+			String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp='" " + this.getNo()+ " "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				return false;
 			}
 
-			sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp='" + this.No + "'";
+			sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp='" " + this.getNo()+ " "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				return false;
@@ -62,7 +62,7 @@ public class GPMEmp extends EntityNoName
 		}
 		catch (RuntimeException ex)
 		{
-			throw new RuntimeException("@获取操作员" + this.No + "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
+			throw new RuntimeException("@获取操作员" " + this.getNo()+ " "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
 		}
 	}
 	/** 
@@ -181,9 +181,9 @@ public class GPMEmp extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map();
@@ -237,11 +237,11 @@ public class GPMEmp extends EntityNoName
 		map.AddRefMethod(rm);
 
 			//节点绑定部门. 节点绑定部门.
-		map.AttrsOfOneVSM.AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 	public final String DoEmpDepts()

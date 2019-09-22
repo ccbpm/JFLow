@@ -190,7 +190,7 @@ public class GloVars extends EntitiesNoName
 	*/
 	public final List<GloVar> ToJavaList()
 	{
-		return (List<GloVar>)this;
+		return (List<GloVar>)(Object)this;
 	}
 	/** 
 	 转化成list

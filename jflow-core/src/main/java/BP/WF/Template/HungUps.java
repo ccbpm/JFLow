@@ -41,7 +41,7 @@ public class HungUps extends EntitiesMyPK
 	*/
 	public final List<HungUp> ToJavaList()
 	{
-		return (List<HungUp>)this;
+		return (List<HungUp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class HungUps extends EntitiesMyPK
 		ArrayList<HungUp> list = new ArrayList<HungUp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((HungUp)this[i]);
+			list.add((HungUp)this.get(i));
 		}
 		return list;
 	}

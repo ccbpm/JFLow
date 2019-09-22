@@ -25,7 +25,7 @@ public class EventListDtl extends XmlEn
 	*/
 	public final String getName()
 	{
-		return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+		return this.GetValStringByKey(WebUser.getSysLang());
 	}
 	/** 
 	 描述

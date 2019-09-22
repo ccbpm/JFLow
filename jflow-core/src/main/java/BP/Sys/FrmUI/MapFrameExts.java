@@ -48,7 +48,7 @@ public class MapFrameExts extends EntitiesMyPK
 	*/
 	public final List<MapFrameExt> ToJavaList()
 	{
-		return (List<MapFrameExt>)this;
+		return (List<MapFrameExt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -60,7 +60,7 @@ public class MapFrameExts extends EntitiesMyPK
 		ArrayList<MapFrameExt> list = new ArrayList<MapFrameExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapFrameExt)this[i]);
+			list.add((MapFrameExt)this.get(i));
 		}
 		return list;
 	}

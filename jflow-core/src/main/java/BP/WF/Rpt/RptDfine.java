@@ -37,7 +37,7 @@ public class RptDfine extends EntityNoName
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.IsAdmin)
+		if (WebUser.getIsAdmin())
 		{
 			uac.IsUpdate = true;
 			uac.IsDelete = false;
@@ -72,9 +72,9 @@ public class RptDfine extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Flow", "报表定义");
@@ -358,8 +358,8 @@ public class RptDfine extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 高级查询.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -374,7 +374,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoColsChose(String rptMark)
 	{
-		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow=" + this.No + "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow=" " + this.getNo()+ " "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
 	}
 	/** 
 	 列的次序
@@ -384,7 +384,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoColsOrder(String rptMark)
 	{
-		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow=" + this.No + "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow=" " + this.getNo()+ " "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
 	}
 	/** 
 	 查询条件设置
@@ -394,7 +394,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoSearchCond(String rptMark)
 	{
-		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow=" + this.No + "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow=" " + this.getNo()+ " "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
 	}
 	/** 
 	 导出模版设置
@@ -404,7 +404,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoRptExportTemplate(String rptMark)
 	{
-		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow=" + this.No + "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow=" " + this.getNo()+ " "&RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
 	}
 	/** 
 	 重置设置.

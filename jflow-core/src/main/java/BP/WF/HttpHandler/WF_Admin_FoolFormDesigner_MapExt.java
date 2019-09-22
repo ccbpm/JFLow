@@ -104,7 +104,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		me.Tag4 = this.GetValFromFrmByKey("DDL_Fileds");
 
 		//执行保存.
-		me.MyPK = MapExtXmlList.AutoFullDtlField + "_" + me.FK_MapData + "_" + me.AttrOfOper;
+		me.setMyPK( MapExtXmlList.AutoFullDtlField + "_" + me.FK_MapData + "_" + me.AttrOfOper;
 		if (me.Update() == 0)
 		{
 			me.Insert();
@@ -143,14 +143,14 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		DataTable dt = me.ToDataTableField();
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//把从表放入里面.
 		MapDtls dtls = new MapDtls(this.getFK_MapData());
-		ds.Tables.Add(dtls.ToDataTableField("Dtls"));
+		ds.Tables.add(dtls.ToDataTableField("Dtls"));
 
 		//把从表的字段放入.
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String sql = "SELECT KeyOfEn as \"No\",Name as \"Name\" FROM Sys_MapAttr WHERE FK_MapData='" + dtl.No + "' AND (MyDataType=2 OR MyDataType=3 OR MyDataType=5 OR MyDataType=8)  ";
 			sql += " AND KeyOfEn !='OID' AND KeyOfEn!='FID' AND KeyOfEn!='RefPK' ";
@@ -158,7 +158,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			//把从表增加里面去.
 			DataTable mydt = DBAccess.RunSQLReturnTable(sql);
 			mydt.TableName = dtl.No;
-			ds.Tables.Add(mydt);
+			ds.Tables.add(mydt);
 		}
 
 		//把主表的字段放入
@@ -168,7 +168,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		//把从表增加里面去.
 		 DataTable maindt = DBAccess.RunSQLReturnTable(mainsql);
 		 maindt.TableName = "main_Attr";
-		 ds.Tables.Add(maindt);
+		 ds.Tables.add(maindt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -194,7 +194,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		me.ExtType = MapExtXmlList.AutoFull;
 
 		//执行保存.
-		me.MyPK = MapExtXmlList.AutoFull + "_" + me.FK_MapData + "_" + me.AttrOfOper;
+		me.setMyPK( MapExtXmlList.AutoFull + "_" + me.FK_MapData + "_" + me.AttrOfOper;
 		if (me.Update() == 0)
 		{
 			me.Insert();
@@ -227,7 +227,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		DataTable dt = me.ToDataTableField();
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -286,7 +286,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		srcs.RetrieveAll();
 		DataTable dtSrc = srcs.ToDataTableField();
 		dtSrc.TableName = "Sys_SFDBSrc";
-		ds.Tables.Add(dtSrc);
+		ds.Tables.add(dtSrc);
 
 		// 加载 mapext 数据.
 		MapExt me = new MapExt();
@@ -311,7 +311,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		DataTable dt = me.ToDataTableField();
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -340,7 +340,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			String fk_mapdtl = kvs[0];
 			String sql = kvs[1];
 
-			for (MapDtl dtl : dtls)
+			for (MapDtl dtl : dtls.ToJavaList())
 			{
 				if (!fk_mapdtl.equals(dtl.No))
 				{
@@ -350,7 +350,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			}
 		}
 
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String cols = "";
 			MapAttrs attrs = new MapAttrs(dtl.No);
@@ -374,7 +374,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		MapExt me = new MapExt(this.getMyPK());
 
 		String str = "";
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String sql = this.GetRequestVal("TB_" + dtl.No);
 			sql = sql.trim();
@@ -399,7 +399,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 	public final String TBFullCtrlDDL_Init()
 	{
 		MapExt myme = new MapExt();
-		myme.MyPK = this.getMyPK();
+		myme.setMyPK( this.getMyPK();
 		myme.RetrieveFromDBSources();
 		MapAttrs attrs = new MapAttrs(myme.FK_MapData);
 		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, (int)UIContralType.DDL);
@@ -505,7 +505,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		srcs.RetrieveAll();
 		DataTable dtSrc = srcs.ToDataTableField();
 		dtSrc.TableName = "Sys_SFDBSrc";
-		ds.Tables.Add(dtSrc);
+		ds.Tables.add(dtSrc);
 
 		// 加载 mapext 数据.
 		MapExt me = new MapExt();
@@ -528,7 +528,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		DataTable dt = me.ToDataTableField();
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -579,7 +579,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		srcs.RetrieveAll();
 		DataTable dtSrc = srcs.ToDataTableField();
 		dtSrc.TableName = "Sys_SFDBSrc";
-		ds.Tables.Add(dtSrc);
+		ds.Tables.add(dtSrc);
 
 		// 加载 mapext 数据.
 		MapExt me = new MapExt();
@@ -604,7 +604,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		DataTable dt = me.ToDataTableField();
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -631,7 +631,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		me.ExtType = MapExtXmlList.ActiveDDL;
 
 		//执行保存.
-		me.MyPK = MapExtXmlList.ActiveDDL + "_" + me.FK_MapData + "_" + me.AttrOfOper + "_" + me.AttrOfOper;
+		me.setMyPK( MapExtXmlList.ActiveDDL + "_" + me.FK_MapData + "_" + me.AttrOfOper + "_" + me.AttrOfOper;
 		me.Save();
 
 		return "保存成功.";
@@ -649,7 +649,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		//加载外键字段.
 		Paras ps = new Paras();
-		ps.SQL = "SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData AND KeyOfEn!=" + SystemConfig.AppCenterDBVarStr + "KeyOfEn";
+		ps.SQL = "SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData AND KeyOfEn!=" + SystemConfig.getAppCenterDBVarStr() + "KeyOfEn";
 		ps.Add("FK_MapData", this.getFK_MapData());
 		ps.Add("KeyOfEn",this.getKeyOfEn());
 		//var sql = "SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData='" + this.FK_MapData + "' AND KeyOfEn!='" + this.KeyOfEn + "'";
@@ -658,7 +658,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		dt.Columns[0].ColumnName = "No";
 		dt.Columns[1].ColumnName = "Name";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		if (dt.Rows.size() == 0)
 		{
@@ -670,7 +670,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		srcs.RetrieveAll();
 		DataTable dtSrc = srcs.ToDataTableField();
 		dtSrc.TableName = "Sys_SFDBSrc";
-		ds.Tables.Add(dtSrc);
+		ds.Tables.add(dtSrc);
 
 		// 加载mapext 数据.
 		MapExt me = new MapExt();
@@ -692,7 +692,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		dt = me.ToDataTableField();
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -712,16 +712,16 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		//放入表单字段.
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
-		ds.Tables.Add(attrs.ToDataTableField("Sys_MapAttr"));
+		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
 		//属性.
 		MapAttr attr = new MapAttr();
-		attr.MyPK = this.getFK_MapData() + "_" + this.getKeyOfEn();
+		attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
 		attr.Retrieve();
 
 		//把分组加入里面.
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
-		ds.Tables.Add(gfs.ToDataTableField("Sys_GroupFields"));
+		ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
 
 		//字段值.
 		FrmRBs rbs = new FrmRBs();
@@ -746,7 +746,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		}
 
 		//加入单选按钮.
-		ds.Tables.Add(rbs.ToDataTableField("Sys_FrmRB"));
+		ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
 		return BP.Tools.Json.ToJson(ds);
 	}
 	/** 
@@ -764,7 +764,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		for (DataRow dr : dt.Rows)
 		{
 			FrmRB rb = new FrmRB();
-			rb.MyPK = dr.get("MyPK").toString();
+			rb.setMyPK( dr.get("MyPK").toString();
 			rb.Retrieve();
 
 			rb.Script = dr.get("Script").toString();
@@ -793,26 +793,26 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		DataSet ds = new DataSet();
 
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.AppCenterDBVarStr + "AttrOfOper AND FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+		ps.SQL = "SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.getAppCenterDBVarStr() + "AttrOfOper AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
 		ps.Add("AttrOfOper",this.getKeyOfEn());
 		ps.Add("FK_MapData",this.getFK_MapData());
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		BP.Sys.XML.RegularExpressions res = new BP.Sys.XML.RegularExpressions();
 		res.Retrieve("ForCtrl", "TB");
 
 		DataTable myDT = res.ToDataTable();
 		myDT.TableName = "RE";
-		ds.Tables.Add(myDT);
+		ds.Tables.add(myDT);
 
 
 		BP.Sys.XML.RegularExpressionDtls dtls = new BP.Sys.XML.RegularExpressionDtls();
 		dtls.RetrieveAll();
 		DataTable myDTDtls = dtls.ToDataTable();
 		myDTDtls.TableName = "REDtl";
-		ds.Tables.Add(myDTDtls);
+		ds.Tables.add(myDTDtls);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -821,26 +821,26 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		DataSet ds = new DataSet();
 
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.AppCenterDBVarStr + "AttrOfOper AND FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+		ps.SQL = "SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.getAppCenterDBVarStr() + "AttrOfOper AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
 		ps.Add("AttrOfOper", this.getKeyOfEn());
 		ps.Add("FK_MapData", this.getFK_MapData());
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		BP.Sys.XML.RegularExpressions res = new BP.Sys.XML.RegularExpressions();
 		res.Retrieve("ForCtrl", "TBNum");
 
 		DataTable myDT = res.ToDataTable();
 		myDT.TableName = "RE";
-		ds.Tables.Add(myDT);
+		ds.Tables.add(myDT);
 
 
 		BP.Sys.XML.RegularExpressionDtls dtls = new BP.Sys.XML.RegularExpressionDtls();
 		dtls.RetrieveAll();
 		DataTable myDTDtls = dtls.ToDataTable();
 		myDTDtls.TableName = "REDtl";
-		ds.Tables.Add(myDTDtls);
+		ds.Tables.add(myDTDtls);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -853,7 +853,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		}
 
 		MapExt me = new MapExt();
-		me.MyPK = MapExtXmlList.TBFullCtrl + "_" + this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + tagID;
+		me.setMyPK( MapExtXmlList.TBFullCtrl + "_" + this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + tagID;
 		me.FK_MapData = this.getFK_MapData();
 		me.AttrOfOper = this.getKeyOfEn();
 		me.ExtType = "RegularExpression";
@@ -901,9 +901,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		sql = sql.replace("@Val", key);
 		sql = sql.replace("@val", key);
 
-		sql = sql.replace("@WebUser.No", WebUser.No);
-		sql = sql.replace("@WebUser.Name", WebUser.Name);
-		sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+		sql = sql.replace("@WebUser.getName()", WebUser.getName());
+		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		if (oid != null)
 		{
 			sql = sql.replace("@OID", oid);
@@ -938,7 +938,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 	public final String PopVal_Init()
 	{
 		MapExt ext = new MapExt();
-		ext.MyPK = this.getMyPK();
+		ext.setMyPK( this.getMyPK();
 		if (ext.RetrieveFromDBSources() == 0)
 		{
 		   // throw new Exception("err@主键=" + ext.MyPK + "的配置数据丢失");
@@ -959,7 +959,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		try
 		{
 			MapExt me = new MapExt();
-			me.MyPK = this.getFK_MapExt();
+			me.setMyPK( this.getFK_MapExt();
 			me.FK_MapData = this.getFK_MapData();
 			me.ExtType = "PopVal";
 			me.AttrOfOper = this.getKeyOfEn();
@@ -1109,7 +1109,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		srcs.RetrieveAll();
 		DataTable dtSrc = srcs.ToDataTableField();
 		dtSrc.TableName = "Sys_SFDBSrc";
-		ds.Tables.Add(dtSrc);
+		ds.Tables.add(dtSrc);
 
 		// 加载 mapext 数据.
 		MapExt me = new MapExt();
@@ -1134,7 +1134,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		DataTable dt = me.ToDataTableField();
 		dt.TableName = "Sys_MapExt";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -1163,7 +1163,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			String fk_mapdtl = kvs[0];
 			String sql = kvs[1];
 
-			for (MapDtl dtl : dtls)
+			for (MapDtl dtl : dtls.ToJavaList())
 			{
 				if (!fk_mapdtl.equals(dtl.No))
 				{
@@ -1173,7 +1173,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			}
 		}
 
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String cols = "";
 			MapAttrs attrs = new MapAttrs(dtl.No);
@@ -1197,7 +1197,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 		MapExt me = new MapExt(this.getMyPK());
 
 		String str = "";
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String sql = this.GetRequestVal("TB_" + dtl.No);
 			sql = sql.trim();
@@ -1393,7 +1393,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 				String shuLiang = dt.Rows[i]["Qty"].toString();
 				String piCiHao = dt.Rows[i]["PCH"].toString();
 				String rdt = LocalDateTime.now().toString();
-				String userNo = WebUser.No;
+				String userNo = WebUser.getNo();
 
 				String sql2 = "INSERT INTO ND105Dtl1(MingChen,JianHao,RefPK,ShuLiang,PiCiHao,RDT,Rec) VALUES('" + name + "','" + jianHao + "','" + workId + "','" + shuLiang + "','" + piCiHao + "','" + rdt + "','" + userNo + "')";
 				String result = DBAccess.RunSQLReturnString(sql2);

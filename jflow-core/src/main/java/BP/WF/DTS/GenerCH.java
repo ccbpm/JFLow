@@ -37,7 +37,7 @@ public class GenerCH extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -61,7 +61,7 @@ public class GenerCH extends Method
 			BP.WF.Nodes nds = new Nodes();
 			nds.RetrieveAll();
 
-			for (Node nd : nds)
+			for (Node nd : nds.ToJavaList())
 			{
 				String sql = "SELECT * FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "TRACK WHERE NDFrom=" + nd.getNodeID() + " ORDER BY WorkID, RDT ";
 				System.Data.DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -89,7 +89,7 @@ public class GenerCH extends Method
 
 					//当前的人员，如果不是就让其登录.
 					String fk_emp = dr.get(BP.WF.TrackAttr.EmpFrom) instanceof String ? (String)dr.get(BP.WF.TrackAttr.EmpFrom) : null;
-					if (!fk_emp.equals(BP.Web.WebUser.No))
+					if (!fk_emp.equals(WebUser.getNo()))
 					{
 						try
 						{
@@ -115,7 +115,7 @@ public class GenerCH extends Method
 		}
 		catch (RuntimeException ex)
 		{
-			return "生成考核失败:" + ex.StackTrace;
+			return "生成考核失败:" + ex.getStackTrace();
 		}
 
 		//登录.

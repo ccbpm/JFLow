@@ -51,7 +51,7 @@ public class Depts extends EntitiesTree
 	*/
 	public final List<Dept> ToJavaList()
 	{
-		return (List<Dept>)this;
+		return (List<Dept>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -63,7 +63,7 @@ public class Depts extends EntitiesTree
 		ArrayList<Dept> list = new ArrayList<Dept>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Dept)this[i]);
+			list.add((Dept)this.get(i));
 		}
 		return list;
 	}

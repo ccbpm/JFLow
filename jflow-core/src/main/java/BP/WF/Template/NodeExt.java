@@ -26,7 +26,7 @@ public class NodeExt extends Entity
 	*/
 	private String get(String sysNo, String searchTitle)
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(sysNo) || tangible.StringHelper.isNullOrWhiteSpace(searchTitle))
+		if (DataType.IsNullOrEmpty(sysNo) || DataType.IsNullOrEmpty(searchTitle))
 		{
 			return "javascript:alert('此处还没有帮助信息！')";
 		}
@@ -248,7 +248,7 @@ public class NodeExt extends Entity
 		}
 
 		Flow fl = new Flow(this.getFK_Flow());
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsUpdate = true;
 		}
@@ -285,9 +285,9 @@ public class NodeExt extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "节点");
@@ -715,7 +715,7 @@ public class NodeExt extends Entity
 		rm.RefAttrLinkLabel = "";
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-		if (BP.Sys.SystemConfig.CustomerNo.equals("HCBD"))
+		if (BP.Sys.SystemConfig.getCustomerNo().equals("HCBD"))
 		{
 				/* 为海成邦达设置的个性化需求. */
 			rm = new RefMethod();
@@ -925,8 +925,8 @@ public class NodeExt extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 实验中的功能
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1054,7 +1054,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoFrmNodeComponent()
 	{
-		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PKVal=" + this.getNodeID() + "&t=" + DataType.CurrentDataTime;
+		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PKVal=" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 特别用户特殊字段权限.
@@ -1063,7 +1063,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoSpecFieldsSpecUsers()
 	{
-		return "../../Admin/AttrNode/SepcFiledsSepcUsers.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/AttrNode/SepcFiledsSepcUsers.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 排序字段顺序
@@ -1072,7 +1072,7 @@ public class NodeExt extends Entity
 	*/
 	public final String DoSortingMapAttrs()
 	{
-		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 表单相关.
@@ -1365,12 +1365,12 @@ public class NodeExt extends Entity
 		//如果启动了会签,并且是抢办模式,强制设置为队列模式.或者组长模式.
 		if (this.getHuiQianRole() != WF.HuiQianRole.None)
 		{
-			if (this.getHuiQianRole() == WF.HuiQianRole.Teamup)
+			if (this.getHuiQianRole() == HuiQianRole.Teamup)
 			{
 				DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + TodolistModel.Teamup.getValue() + "  WHERE NodeID=" + this.getNodeID());
 			}
 
-			if (this.getHuiQianRole() == WF.HuiQianRole.TeamupGroupLeader)
+			if (this.getHuiQianRole() == HuiQianRole.TeamupGroupLeader)
 			{
 				DBAccess.RunSQL("UPDATE WF_Node SET TodolistModel=" + TodolistModel.TeamupGroupLeader.getValue() + ", TeamLeaderConfirmRole=" + TeamLeaderConfirmRole.HuiQianLeader.getValue() + " WHERE NodeID=" + this.getNodeID());
 			}
@@ -1384,7 +1384,7 @@ public class NodeExt extends Entity
 
 			//获得到达的节点.
 			Nodes nds = nd.getHisToNodes();
-			for (Node mynd : nds)
+			for (Node mynd : nds.ToJavaList())
 			{
 				if (mynd.getHisDeliveryWay() == DeliveryWay.BySelected)
 				{
@@ -1401,7 +1401,7 @@ public class NodeExt extends Entity
 		{
 			/*如果是启用了按钮，就检查当前节点到达的节点是否有【按照选择接受人】的方式确定接收人的范围. */
 			Nodes nds = nd.getHisToNodes();
-			for (Node mynd : nds)
+			for (Node mynd : nds.ToJavaList())
 			{
 				if (mynd.getHisDeliveryWay() == DeliveryWay.BySelected)
 				{
@@ -1420,13 +1420,13 @@ public class NodeExt extends Entity
 		if (this.getFWCAth() == FWCAth.MinAth)
 		{
 			FrmAttachment workCheckAth = new FrmAttachment();
-			workCheckAth.MyPK = "ND" + this.getNodeID() + "_FrmWorkCheck";
+			workCheckAth.setMyPK( "ND" + this.getNodeID() + "_FrmWorkCheck";
 			//不包含审核组件
 			if (workCheckAth.RetrieveFromDBSources() == 0)
 			{
 				workCheckAth = new FrmAttachment();
 				/*如果没有查询到它,就有可能是没有创建.*/
-				workCheckAth.MyPK = "ND" + this.getNodeID() + "_FrmWorkCheck";
+				workCheckAth.setMyPK( "ND" + this.getNodeID() + "_FrmWorkCheck";
 				workCheckAth.FK_MapData = "ND" + String.valueOf(this.getNodeID());
 				workCheckAth.NoOfObj = "FrmWorkCheck";
 				workCheckAth.Exts = "*.*";

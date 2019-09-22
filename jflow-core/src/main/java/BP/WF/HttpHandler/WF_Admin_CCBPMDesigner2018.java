@@ -214,7 +214,7 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 			int x = Integer.parseInt(this.GetValFromFrmByKey("X"));
 			int y = Integer.parseInt(this.GetValFromFrmByKey("Y"));
 
-			lb.MyPK = this.getFK_Flow() + "_" + x + "_" + y + "_" + (num + 1);
+			lb.setMyPK( this.getFK_Flow() + "_" + x + "_" + y + "_" + (num + 1);
 			lb.setName(Name);
 			lb.setFK_Flow(this.getFK_Flow());
 			lb.setX(x);

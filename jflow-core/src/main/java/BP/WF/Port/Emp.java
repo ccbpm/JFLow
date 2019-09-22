@@ -26,7 +26,7 @@ public class Emp extends EntityNoName
 		}
 		catch (RuntimeException ex)
 		{
-			throw new RuntimeException("@获取操作员" + this.No + "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
+			throw new RuntimeException("@获取操作员" " + this.getNo()+ " "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
 		}
 	}
 
@@ -125,9 +125,9 @@ public class Emp extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Port_Emp", "用户");
@@ -165,13 +165,13 @@ public class Emp extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "更改登录帐号";
 		rm.Warning = "您确定要处理吗？如果确定，该用户当前的待办信息一起其他的流程信息都会被重置到新编号里。";
-		rm.HisAttrs.AddTBString("FieldNew", null, "新帐号", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FieldNew", null, "新帐号", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoChangeUserNo";
 		map.AddRefMethod(rm);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	/** 
 	 重置当前用户编号
@@ -181,7 +181,7 @@ public class Emp extends EntityNoName
 	*/
 	public final String DoChangeUserNo(String userNo)
 	{
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			return "非超级管理员，不能执行。";
 		}
@@ -189,14 +189,14 @@ public class Emp extends EntityNoName
 		String msg = "";
 		int i = 0;
 		//更新待办.
-		String sql = "update wf_generworkerlist set fk_emp='" + userNo + "' where fk_emp='" + this.No + "'";
+		String sql = "update wf_generworkerlist set fk_emp='" + userNo + "' where fk_emp='" " + this.getNo()+ " "'";
 		i = BP.DA.DBAccess.RunSQL(sql);
 		if (i != 0)
 		{
 			msg += "@待办更新[" + i + "]个。";
 		}
 
-		sql = "UPDATE WF_GENERWORKFLOW  SET STARTER='" + userNo + "'  WHERE STARTER='" + this.No + "'";
+		sql = "UPDATE WF_GENERWORKFLOW  SET STARTER='" + userNo + "'  WHERE STARTER='" " + this.getNo()+ " "'";
 		i = BP.DA.DBAccess.RunSQL(sql);
 		if (i != 0)
 		{
@@ -207,9 +207,9 @@ public class Emp extends EntityNoName
 		//更换流程信息的数据表
 		BP.WF.Flows fls = new Flows();
 		fls.RetrieveAll();
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
-			sql = "UPDATE " + fl.getPTable() + " SET FlowEnder='" + userNo + "' WHERE FlowEnder='" + this.No + "'";
+			sql = "UPDATE " + fl.getPTable() + " SET FlowEnder='" + userNo + "' WHERE FlowEnder='" " + this.getNo()+ " "'";
 			i = DBAccess.RunSQL(sql);
 
 			if (i != 0)
@@ -217,7 +217,7 @@ public class Emp extends EntityNoName
 				msg += "@流程注册更新[" + i + "]个。";
 			}
 
-			sql = "UPDATE  " + fl.getPTable() + "  SET FlowStarter='" + userNo + "' WHERE FlowStarter='" + this.No + "'";
+			sql = "UPDATE  " + fl.getPTable() + "  SET FlowStarter='" + userNo + "' WHERE FlowStarter='" " + this.getNo()+ " "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -225,7 +225,7 @@ public class Emp extends EntityNoName
 			}
 
 
-			sql = "UPDATE  " + fl.getPTable() + "  SET Rec='" + userNo + "' WHERE Rec='" + this.No + "'";
+			sql = "UPDATE  " + fl.getPTable() + "  SET Rec='" + userNo + "' WHERE Rec='" " + this.getNo()+ " "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -233,7 +233,7 @@ public class Emp extends EntityNoName
 			}
 
 			String trackTable = "ND" + Integer.parseInt(fl.No) + "Track";
-			sql = "UPDATE  " + trackTable + "  SET EmpFrom='" + userNo + "' WHERE EmpFrom='" + this.No + "'";
+			sql = "UPDATE  " + trackTable + "  SET EmpFrom='" + userNo + "' WHERE EmpFrom='" " + this.getNo()+ " "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -241,7 +241,7 @@ public class Emp extends EntityNoName
 			}
 
 
-			sql = "UPDATE  " + trackTable + "  SET EmpTo='" + userNo + "' WHERE EmpTo='" + this.No + "'";
+			sql = "UPDATE  " + trackTable + "  SET EmpTo='" + userNo + "' WHERE EmpTo='" " + this.getNo()+ " "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -249,7 +249,7 @@ public class Emp extends EntityNoName
 			}
 
 
-			sql = "UPDATE  " + trackTable + "  SET Exer='" + userNo + "' WHERE Exer='" + this.No + "'";
+			sql = "UPDATE  " + trackTable + "  SET Exer='" + userNo + "' WHERE Exer='" " + this.getNo()+ " "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -263,12 +263,12 @@ public class Emp extends EntityNoName
 		attrs.RetrieveAll();
 		for (BP.Sys.MapAttr attr : attrs)
 		{
-			if (attr.DefValReal.Contains("@WebUser.No") == true)
+			if (attr.DefValReal.Contains("@WebUser.getNo()") == true)
 			{
 				try
 				{
 					BP.Sys.MapData md = new Sys.MapData(attr.FK_MapData);
-					sql = "UPDATE " + md.PTable + " SET " + attr.KeyOfEn + "='" + userNo + "' WHERE " + attr.KeyOfEn + "='" + this.No + "'";
+					sql = "UPDATE " + md.PTable + " SET " + attr.KeyOfEn + "='" + userNo + "' WHERE " + attr.KeyOfEn + "='" " + this.getNo()+ " "'";
 					i = DBAccess.RunSQL(sql);
 					if (i != 0)
 					{
@@ -309,7 +309,7 @@ public class Emp extends EntityNoName
 	@Override
 	protected boolean beforeDelete()
 	{
-		//if (BP.Web.WebUser.IsAdmin == false)
+		//if (WebUser.getIsAdmin() == false)
 		//    throw new Exception("err@非管理员不能删除.");
 
 		return super.beforeDelete();

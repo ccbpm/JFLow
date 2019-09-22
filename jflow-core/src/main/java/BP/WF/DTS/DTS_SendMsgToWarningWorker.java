@@ -63,7 +63,7 @@ public class DTS_SendMsgToWarningWorker extends Method
 			String empNo = dr.get("FK_Emp").toString();
 			String empName = dr.get("FK_EmpText").toString();
 
-			BP.WF.Port.WFEmp emp = new Port.WFEmp(empNo);
+			WFEmp emp = new Port.WFEmp(empNo);
 
 			if (way == CHAlertWay.ByEmail)
 			{

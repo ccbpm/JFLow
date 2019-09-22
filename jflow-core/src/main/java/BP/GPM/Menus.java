@@ -37,7 +37,7 @@ public class Menus extends EntitiesTree
 	*/
 	public final List<Menu> ToJavaList()
 	{
-		return (List<Menu>)this;
+		return (List<Menu>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -49,7 +49,7 @@ public class Menus extends EntitiesTree
 		ArrayList<Menu> list = new ArrayList<Menu>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Menu)this[i]);
+			list.add((Menu)this.get(i));
 		}
 		return list;
 	}

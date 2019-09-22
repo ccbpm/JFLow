@@ -57,9 +57,9 @@ public class StationExt extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Port_Station","岗位");
@@ -79,8 +79,8 @@ public class StationExt extends EntityNoName
 		map.AttrsOfOneVSM.AddBranches(new StationMenus(), new BP.GPM.Menus(), BP.GPM.StationMenuAttr.FK_Station, BP.GPM.StationMenuAttr.FK_Menu, "绑定菜单", EmpAttr.Name, EmpAttr.No, "0");
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

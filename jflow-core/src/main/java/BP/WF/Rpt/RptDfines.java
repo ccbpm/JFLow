@@ -42,7 +42,7 @@ public class RptDfines extends EntitiesNoName
 	*/
 	public final List<RptDfine> ToJavaList()
 	{
-		return (List<RptDfine>)this;
+		return (List<RptDfine>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -54,7 +54,7 @@ public class RptDfines extends EntitiesNoName
 		ArrayList<RptDfine> list = new ArrayList<RptDfine>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((RptDfine)this[i]);
+			list.add((RptDfine)this.get(i));
 		}
 		return list;
 	}

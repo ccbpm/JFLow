@@ -34,7 +34,7 @@ public class TestSamples extends EntitiesMyPK
 	*/
 	public final List<TestSample> ToJavaList()
 	{
-		return (List<TestSample>)this;
+		return (List<TestSample>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -46,7 +46,7 @@ public class TestSamples extends EntitiesMyPK
 		ArrayList<TestSample> list = new ArrayList<TestSample>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((TestSample)this[i]);
+			list.add((TestSample)this.get(i));
 		}
 		return list;
 	}

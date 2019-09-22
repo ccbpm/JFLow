@@ -45,8 +45,9 @@ public class FlowSheets extends EntitiesNoName
 	 工作流程
 	 
 	 @param fk_sort
+	 * @throws Exception 
 	*/
-	public FlowSheets(String fk_sort)
+	public FlowSheets(String fk_sort) throws Exception
 	{
 		this.Retrieve(BP.WF.Template.FlowAttr.FK_FlowSort, fk_sort);
 	}
@@ -75,7 +76,7 @@ public class FlowSheets extends EntitiesNoName
 	*/
 	public final List<FlowSheet> ToJavaList()
 	{
-		return (List<FlowSheet>)this;
+		return (List<FlowSheet>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -87,7 +88,7 @@ public class FlowSheets extends EntitiesNoName
 		ArrayList<FlowSheet> list = new ArrayList<FlowSheet>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FlowSheet)this[i]);
+			list.add((FlowSheet)this.get(i));
 		}
 		return list;
 	}

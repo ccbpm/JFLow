@@ -54,7 +54,7 @@ public class RepariNodeFrmMap extends Method
 
 
 		String info = "";
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			String msg = nd.RepareMap(nd.getHisFlow());
 			if (!msg.equals(""))

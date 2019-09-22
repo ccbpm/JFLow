@@ -132,7 +132,7 @@ public class ExcelFile extends EntityNoName
 	@Override
 	protected boolean beforeUpdateInsertAction()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getMark()))
+		if (DataType.IsNullOrEmpty(this.getMark()))
 		{
 			this.setMark(BP.Tools.chs2py.ConvertStr2Code(this.getName()));
 		}

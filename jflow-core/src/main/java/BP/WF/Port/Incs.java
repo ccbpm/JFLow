@@ -35,7 +35,7 @@ public class Incs extends EntitiesNoName
 	*/
 	public final List<Inc> ToJavaList()
 	{
-		return (List<Inc>)this;
+		return (List<Inc>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -47,7 +47,7 @@ public class Incs extends EntitiesNoName
 		ArrayList<Inc> list = new ArrayList<Inc>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Inc)this[i]);
+			list.add((Inc)this.get(i));
 		}
 		return list;
 	}

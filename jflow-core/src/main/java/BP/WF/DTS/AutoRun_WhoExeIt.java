@@ -67,14 +67,14 @@ public class AutoRun_WhoExeIt extends Method
 			int paras = Integer.parseInt(dr.get("FK_Node").toString());
 			String fk_flow = dr.get("FK_Flow").toString();
 
-			if (BP.Web.WebUser.No.equals(FK_Emp) == false)
+			if (WebUser.getNo().equals(FK_Emp) == false)
 			{
 				BP.WF.Dev2Interface.Port_Login(FK_Emp);
 			}
 
 			try
 			{
-				info += "发送成功:" + BP.Web.WebUser.No + BP.WF.Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
+				info += "发送成功:" + WebUser.getNo() + BP.WF.Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
 			}
 			catch (RuntimeException ex)
 			{
@@ -84,7 +84,7 @@ public class AutoRun_WhoExeIt extends Method
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 自动启动流程
 
-		if (BP.Web.WebUser.No.equals("admin") == false)
+		if (WebUser.getNo().equals("admin") == false)
 		{
 			BP.WF.Dev2Interface.Port_Login("admin");
 		}

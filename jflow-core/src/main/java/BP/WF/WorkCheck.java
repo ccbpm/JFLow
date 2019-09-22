@@ -134,7 +134,7 @@ public class WorkCheck
 
 			BP.DA.Paras ps = new BP.DA.Paras();
 			String sql = "SELECT * FROM ND" + Integer.parseInt(this.FlowNo) + "Track WHERE ";
-			String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+			String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 			if (this.FID == 0)
 			{
 					// 为了兼容多种数据库，所以使用了两个相同的参数.

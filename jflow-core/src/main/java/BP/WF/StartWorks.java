@@ -31,7 +31,7 @@ public abstract class StartWorks extends Works
 	{
 		QueryObject qo = new QueryObject(this);
 		//qo.Top=50;
-		qo.AddWhere(StartWorkAttr.OID, " in ", " ( SELECT WorkID FROM V_WF_Msg  WHERE  FK_Flow='" + flow + "' AND FK_Emp='" + BP.Web.WebUser.No + "' )");
+		qo.AddWhere(StartWorkAttr.OID, " in ", " ( SELECT WorkID FROM V_WF_Msg  WHERE  FK_Flow='" + flow + "' AND FK_Emp='" + WebUser.getNo() + "' )");
 		return qo.DoQueryToTable();
 	}
 	/** 
@@ -44,13 +44,13 @@ public abstract class StartWorks extends Works
 		//string sql="SELECT OID AS WORKID, TITLE, ";
 		QueryObject qo = new QueryObject(this);
 		//qo.Top=50;
-		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			qo.AddWhere(StartWorkAttr.OID, " in ", " (  SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + BP.Web.WebUser.No + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID ) )");
+			qo.AddWhere(StartWorkAttr.OID, " in ", " (  SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID ) )");
 		}
 		else
 		{
-			qo.AddWhere(StartWorkAttr.OID, " in ", " (  SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + BP.Web.WebUser.No + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID ) )");
+			qo.AddWhere(StartWorkAttr.OID, " in ", " (  SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID ) )");
 		}
 		return qo.DoQueryToTable();
 	}
@@ -61,12 +61,12 @@ public abstract class StartWorks extends Works
 	*/
 	public final DataTable RetrieveMyTaskV2(String flow)
 	{
-		String sql = "SELECT OID, TITLE, RDT, Rec FROM  " + this.GetNewEntity.EnMap.PhysicsTable + " WHERE OID IN (   SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + BP.Web.WebUser.No + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID )  )";
+		String sql = "SELECT OID, TITLE, RDT, Rec FROM  " + this.GetNewEntity.EnMap.PhysicsTable + " WHERE OID IN (   SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID )  )";
 		return DBAccess.RunSQLReturnTable(sql);
 		/*
 		QueryObject qo = new QueryObject(this);
 		//qo.Top=50;
-		qo.AddWhere(StartWorkAttr.OID," in ", " ( SELECT WorkID FROM V_WF_Msg  WHERE  FK_Flow='"+flow+"' AND FK_Emp="+Web.WebUser.No+")" );
+		qo.AddWhere(StartWorkAttr.OID," in ", " ( SELECT WorkID FROM V_WF_Msg  WHERE  FK_Flow='"+flow+"' AND FK_Emp="+Web.WebUser.getNo()+")" );
 		return qo.DoQueryToTable();
 		*/
 	}
@@ -79,7 +79,7 @@ public abstract class StartWorks extends Works
 	{
 		QueryObject qo = new QueryObject(this);
 		//qo.Top=50;
-		qo.AddWhere(StartWorkAttr.OID, " IN ", " ( SELECT WorkID FROM V_WF_Msg  WHERE  (FK_Flow='" + flow + "' AND FK_Emp='" + BP.Web.WebUser.No + "' ) AND ( FK_Flow in ( SELECT No FROM WF_Flow WHERE FK_FlowSort='" + flowSort + "' )) )");
+		qo.AddWhere(StartWorkAttr.OID, " IN ", " ( SELECT WorkID FROM V_WF_Msg  WHERE  (FK_Flow='" + flow + "' AND FK_Emp='" + WebUser.getNo() + "' ) AND ( FK_Flow in ( SELECT No FROM WF_Flow WHERE FK_FlowSort='" + flowSort + "' )) )");
 		return qo.DoQueryToTable();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

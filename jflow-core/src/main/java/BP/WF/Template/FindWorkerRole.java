@@ -272,7 +272,7 @@ public class FindWorkerRole extends EntityOIDName
 	public WorkNode town = null;
 	public WorkNode currWn = null;
 	public Flow fl = null;
-	private String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 	public Paras ps = null;
 	public long WorkID = 0;
 	public Node HisNode = null;
@@ -293,9 +293,9 @@ public class FindWorkerRole extends EntityOIDName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_FindWorkerRole", "找人规则");
@@ -336,8 +336,8 @@ public class FindWorkerRole extends EntityOIDName
 		map.AddTBInt(FindWorkerRoleAttr.IsEnable, 1, "是否可用", false, false);
 		map.AddTBInt(FindWorkerRoleAttr.Idx, 0, "IDX", false, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -385,8 +385,8 @@ public class FindWorkerRole extends EntityOIDName
 				switch (this.getHisFindLeaderType())
 				{
 					case Submiter: // 当前提交人的直线领导
-						empNo = BP.Web.WebUser.No;
-						empDept = BP.Web.WebUser.FK_Dept;
+						empNo = WebUser.getNo();
+						empDept = WebUser.getFK_Dept();
 						break;
 					case SpecNodeSubmiter: // 指定节点提交人的直线领导.
 						sql = "SELECT FK_Emp,FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + this.WorkID + " AND FK_Node=" + this.getTagVal1();
@@ -395,13 +395,13 @@ public class FindWorkerRole extends EntityOIDName
 						{
 							throw new RuntimeException("@没有找到指定节点数据，请反馈给系统管理员，技术信息:" + sql);
 						}
-						empNo = dt.Rows[0][0] instanceof String ? (String)dt.Rows[0][0] : null;
+						empNo = dt.Rows.get(0).getValue(0) instanceof String ? (String)dt.Rows.get(0).getValue(0) : null;
 						empDept = dt.Rows[0][1] instanceof String ? (String)dt.Rows[0][1] : null;
 						break;
 					case BySpecField: //指定节点字段人员的直接领导..
 						sql = " SELECT " + this.getTagVal1() + " FROM " + this.HisNode.getHisFlow().getPTable() + " WHERE OID=" + this.WorkID;
 						dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-						empNo = dt.Rows[0][0] instanceof String ? (String)dt.Rows[0][0] : null;
+						empNo = dt.Rows.get(0).getValue(0) instanceof String ? (String)dt.Rows.get(0).getValue(0) : null;
 						if (DataType.IsNullOrEmpty(empNo))
 						{
 							throw new RuntimeException("@指定的节点字段(" + this.getTagVal1() + ")的值为空.");
@@ -492,7 +492,7 @@ public class FindWorkerRole extends EntityOIDName
 			case All: // 所有该部门性质下的人员.
 				sql = "SELECT Leader FROM Port_DeptEmp WHERE FK_Emp='" + empNo + "' AND FK_Dept='" + empDept + "'";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-				leader = dt.Rows[0][0] instanceof String ? (String)dt.Rows[0][0] : null;
+				leader = dt.Rows.get(0).getValue(0) instanceof String ? (String)dt.Rows.get(0).getValue(0) : null;
 				if (DataType.IsNullOrEmpty(leader))
 				{
 					throw new RuntimeException("@系统管理员没有给(" + empNo + ")在部门(" + empDept + ")中设置直接领导.");
@@ -516,7 +516,7 @@ public class FindWorkerRole extends EntityOIDName
 					{
 						return null; //如果到了跟节点.
 					}
-					tempDeptNo = d.ParentNo;
+					tempDeptNo = d.getParentNo();
 				}
 				break;
 			case SpecStation: // 特定岗位的领导.
@@ -537,7 +537,7 @@ public class FindWorkerRole extends EntityOIDName
 						/* 在直线领导中没有找到 */
 						return null; //如果到了跟节点.
 					}
-					tempDeptNo = d.ParentNo;
+					tempDeptNo = d.getParentNo();
 				}
 				break;
 			default:
@@ -548,7 +548,7 @@ public class FindWorkerRole extends EntityOIDName
 		dt.Columns.Add(new DataColumn("No", String.class));
 		DataRow dr = dt.NewRow();
 		dr.set(0, leader);
-		dt.Rows.Add(dr);
+		dt.Rows.add(dr);
 		return dt;
 	}
 	public String ErrMsg = null;
@@ -575,7 +575,7 @@ public class FindWorkerRole extends EntityOIDName
 			case DirLeader: // 直接领导.
 				sql = "SELECT Leader FROM Port_DeptEmp WHERE FK_Emp='" + empNo + "' AND FK_Dept='" + empDept + "'";
 				dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-				leader = dt.Rows[0][0] instanceof String ? (String)dt.Rows[0][0] : null;
+				leader = dt.Rows.get(0).getValue(0) instanceof String ? (String)dt.Rows.get(0).getValue(0) : null;
 				if (DataType.IsNullOrEmpty(leader))
 				{
 					throw new RuntimeException("@系统管理员没有给(" + empNo + ")在部门(" + empDept + ")中设置直接领导.");
@@ -598,7 +598,7 @@ public class FindWorkerRole extends EntityOIDName
 					{
 						return null; //如果到了跟节点.
 					}
-					tempDeptNo = d.ParentNo;
+					tempDeptNo = d.getParentNo();
 				}
 				break;
 			case DutyLeader: // 特定职务的领导.
@@ -618,7 +618,7 @@ public class FindWorkerRole extends EntityOIDName
 					{
 						return null; //如果到了跟节点.
 					}
-					tempDeptNo = d.ParentNo;
+					tempDeptNo = d.getParentNo();
 				}
 				break;
 			case SpecStation: // 特定岗位的领导.
@@ -639,7 +639,7 @@ public class FindWorkerRole extends EntityOIDName
 						/* 在直线领导中没有找到 */
 						return null; //如果到了跟节点.
 					}
-					tempDeptNo = d.ParentNo;
+					tempDeptNo = d.getParentNo();
 				}
 				break;
 			default:
@@ -650,7 +650,7 @@ public class FindWorkerRole extends EntityOIDName
 		dt.Columns.Add(new DataColumn("No", String.class));
 		DataRow dr = dt.NewRow();
 		dr.set(0, leader);
-		dt.Rows.Add(dr);
+		dt.Rows.add(dr);
 		return dt;
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -658,6 +658,6 @@ public class FindWorkerRole extends EntityOIDName
 
 	public final String getDBStr()
 	{
-		return SystemConfig.AppCenterDBVarStr;
+		return SystemConfig.getAppCenterDBVarStr();
 	}
 }

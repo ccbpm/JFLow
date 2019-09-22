@@ -2,7 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
-import BP.Web.WebUser;
+import WebUser;
 
 import java.util.*;
 
@@ -291,7 +291,7 @@ public class SysEnums extends Entities
 	*/
 	public final String GetLabByVal(int val)
 	{
-		for (SysEnum en : this)
+		for (SysEnum en : this.ToJavaList())
 		{
 			if (en.getIntKey() == val)
 			{
@@ -310,7 +310,7 @@ public class SysEnums extends Entities
 	*/
 	public final List<SysEnum> ToJavaList()
 	{
-		return (List<SysEnum>)this;
+		return (List<SysEnum>)(Object)this;
 	}
 	/** 
 	 转化成list

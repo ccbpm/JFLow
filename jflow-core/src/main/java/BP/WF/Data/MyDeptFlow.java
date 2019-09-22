@@ -347,11 +347,11 @@ public class MyDeptFlow extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WF.WFState.Complete)
+		if (value == WFState.Complete)
 		{
 			SetValByKey(MyDeptFlowAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WF.WFState.Delete)
+		else if (value == WFState.Delete)
 		{
 			SetValByKey(MyDeptFlowAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -461,9 +461,9 @@ public class MyDeptFlow extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "我部门的流程");
@@ -500,7 +500,7 @@ public class MyDeptFlow extends Entity
 
 
 			//增加隐藏的查询条件.
-		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", BP.Web.WebUser.FK_Dept, 0, true);
+		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", WebUser.getFK_Dept(), 0, true);
 
 		map.AttrsOfSearch.Add(search);
 
@@ -510,8 +510,8 @@ public class MyDeptFlow extends Entity
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		map.AddRefMethod(rm);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

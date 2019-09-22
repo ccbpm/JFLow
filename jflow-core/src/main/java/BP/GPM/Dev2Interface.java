@@ -26,7 +26,7 @@ public class Dev2Interface
 	*/
 	public static void Port_Login(String userNo, String sid)
 	{
-		if (BP.Sys.SystemConfig.OSDBSrc == OSDBSrc.Database)
+		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			String sql = "SELECT SID FROM Port_Emp WHERE No='" + userNo + "'";
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -72,7 +72,7 @@ public class Dev2Interface
 	public static String Port_SMSInfo(String userNo)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT MyPK, EmailTitle  FROM sys_sms WHERE SendToEmpID=" + SystemConfig.AppCenterDBVarStr + "SendToEmpID AND IsAlert=0";
+		ps.SQL = "SELECT MyPK, EmailTitle  FROM sys_sms WHERE SendToEmpID=" + SystemConfig.getAppCenterDBVarStr() + "SendToEmpID AND IsAlert=0";
 		ps.Add("SendToEmpID", userNo);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		String strs = "";
@@ -81,7 +81,7 @@ public class Dev2Interface
 			strs += "@" + dr.get(0) + "=" + dr.get(1).toString();
 		}
 		ps = new Paras();
-		ps.SQL = "UPDATE  sys_sms SET IsAlert=1 WHERE  SendToEmpID=" + SystemConfig.AppCenterDBVarStr + "SendToEmpID AND IsAlert=0";
+		ps.SQL = "UPDATE  sys_sms SET IsAlert=1 WHERE  SendToEmpID=" + SystemConfig.getAppCenterDBVarStr() + "SendToEmpID AND IsAlert=0";
 		ps.Add("SendToEmpID", userNo);
 		DBAccess.RunSQL(ps);
 		return strs;
@@ -101,7 +101,7 @@ public class Dev2Interface
 	public static DataTable DB_Menus(String userNo, String app)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM GPM_EmpMenu WHERE FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp AND FK_App=" + SystemConfig.AppCenterDBVarStr + "FK_App ";
+		ps.SQL = "SELECT * FROM GPM_EmpMenu WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND FK_App=" + SystemConfig.getAppCenterDBVarStr() + "FK_App ";
 		ps.Add("FK_Emp", userNo);
 		ps.Add("FK_App", app);
 		return DBAccess.RunSQLReturnTable(ps);
@@ -115,7 +115,7 @@ public class Dev2Interface
 	public static DataTable DB_Apps(String userNo)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM GPM_EmpApp WHERE FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp ";
+		ps.SQL = "SELECT * FROM GPM_EmpApp WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp ";
 		ps.Add("FK_Emp", userNo);
 		return DBAccess.RunSQLReturnTable(ps);
 	}

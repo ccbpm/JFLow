@@ -40,7 +40,7 @@ public class FrmWorkChecks extends Entities
 	*/
 	public final List<FrmWorkCheck> ToJavaList()
 	{
-		return (List<FrmWorkCheck>)this;
+		return (List<FrmWorkCheck>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class FrmWorkChecks extends Entities
 		ArrayList<FrmWorkCheck> list = new ArrayList<FrmWorkCheck>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmWorkCheck)this[i]);
+			list.add((FrmWorkCheck)this.get(i));
 		}
 		return list;
 	}

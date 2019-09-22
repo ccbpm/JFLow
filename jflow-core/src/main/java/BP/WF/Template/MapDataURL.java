@@ -18,7 +18,7 @@ public class MapDataURL extends EntityNoName
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -280,7 +280,7 @@ public class MapDataURL extends EntityNoName
 	}
 	public final void setRptDTSearchWay(DTSearchWay value)
 	{
-		this.SetPara(MapDataAttr.RptDTSearchWay, (int)value);
+		this.SetPara(MapDataAttr.RptDTSearchWay, value.getValue());
 	}
 	/** 
 	 时间字段
@@ -557,7 +557,7 @@ public class MapDataURL extends EntityNoName
 
 	public static boolean getIsEditDtlModel()
 	{
-		String s = BP.Web.WebUser.GetSessionByKey("IsEditDtlModel", "0");
+		String s = WebUser.GetSessionByKey("IsEditDtlModel", "0");
 		if (s.equals("0"))
 		{
 			return false;
@@ -569,7 +569,7 @@ public class MapDataURL extends EntityNoName
 	}
 	public static void setIsEditDtlModel(boolean value)
 	{
-		BP.Web.WebUser.SetSessionByKey("IsEditDtlModel", "1");
+		WebUser.SetSessionByKey("IsEditDtlModel", "1");
 	}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -611,7 +611,7 @@ public class MapDataURL extends EntityNoName
 	}
 	public final void setHisAppType(AppType value)
 	{
-		this.SetValByKey(MapDataAttr.AppType, (int)value);
+		this.SetValByKey(MapDataAttr.AppType, value.getValue());
 	}
 	/** 
 	 备注
@@ -771,9 +771,9 @@ public class MapDataURL extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Sys_MapData", "URL表单属性");
@@ -819,8 +819,8 @@ public class MapDataURL extends EntityNoName
 			//rm.Target = "_blank";
 			//map.AddRefMethod(rm);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

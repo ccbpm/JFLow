@@ -19,13 +19,14 @@ public class GetTasks extends BP.En.Entities
 	}
 	/** 
 	 取回任务集合
+	 * @throws Exception 
 	*/
-	public GetTasks(String fk_flow)
+	public GetTasks(String fk_flow) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GetTaskAttr.FK_Flow, fk_flow);
 		qo.addAnd();
-		qo.AddWhereLen(GetTaskAttr.CheckNodes, " >= ", 3, SystemConfig.AppCenterDBType);
+		qo.AddWhereLen(GetTaskAttr.CheckNodes, " >= ", 3, SystemConfig.getAppCenterDBType());
 		qo.DoQuery();
 	}
 	/** 
@@ -46,7 +47,7 @@ public class GetTasks extends BP.En.Entities
 	*/
 	public final List<GetTask> ToJavaList()
 	{
-		return (List<GetTask>)this;
+		return (List<GetTask>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -58,7 +59,7 @@ public class GetTasks extends BP.En.Entities
 		ArrayList<GetTask> list = new ArrayList<GetTask>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GetTask)this[i]);
+			list.add((GetTask)this.get(i));
 		}
 		return list;
 	}

@@ -75,10 +75,10 @@ public class DTS_DealDeferredWork extends Method
 			}
 			dealWorkIDs += "," + workid + ",";
 
-			if (!FK_Emp.equals(WebUser.No))
+			if (!FK_Emp.equals(WebUser.getNo()))
 			{
 				Emp emp = new Emp(FK_Emp);
-				BP.Web.WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp);
 			}
 
 			BP.WF.Template.NodeExt nd = new BP.WF.Template.NodeExt();
@@ -128,10 +128,10 @@ public class DTS_DealDeferredWork extends Method
 					msg += BP.WF.Dev2Interface.Node_SendWork(fk_flow, workid, null, null, nextNodeID, null).ToMsgOfText();
 					break;
 				case AutoShiftToSpecUser: //移交给指定的人员.
-					msg += BP.WF.Dev2Interface.Node_Shift(workid, nd.getDoOutTime(), "来自ccflow的自动消息:(" + BP.Web.WebUser.Name + ")工作未按时处理(" + nd.getName() + "),现在移交给您。");
+					msg += BP.WF.Dev2Interface.Node_Shift(workid, nd.getDoOutTime(), "来自ccflow的自动消息:(" + WebUser.getName() + ")工作未按时处理(" + nd.getName() + "),现在移交给您。");
 					break;
 				case SendMsgToSpecUser: //向指定的人员发消息.
-					BP.WF.Dev2Interface.Port_SendMsg(nd.getDoOutTime(), "来自ccflow的自动消息:(" + BP.Web.WebUser.Name + ")工作未按时处理(" + nd.getName() + ")", "感谢您选择ccflow.", "SpecEmp" + workid);
+					BP.WF.Dev2Interface.Port_SendMsg(nd.getDoOutTime(), "来自ccflow的自动消息:(" + WebUser.getName() + ")工作未按时处理(" + nd.getName() + ")", "感谢您选择ccflow.", "SpecEmp" + workid);
 					break;
 				case DeleteFlow: //删除流程.
 					msg += BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(fk_flow, workid, true);
@@ -144,7 +144,7 @@ public class DTS_DealDeferredWork extends Method
 			}
 		}
 		Emp emp1 = new Emp("admin");
-		BP.Web.WebUser.SignInOfGener(emp1);
+		WebUser.SignInOfGener(emp1);
 		return msg;
 
 	}

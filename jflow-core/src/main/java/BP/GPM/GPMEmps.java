@@ -44,7 +44,7 @@ public class GPMEmps extends EntitiesNoName
 	*/
 	public final List<GPMEmp> ToJavaList()
 	{
-		return (List<GPMEmp>)this;
+		return (List<GPMEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -56,7 +56,7 @@ public class GPMEmps extends EntitiesNoName
 		ArrayList<GPMEmp> list = new ArrayList<GPMEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GPMEmp)this[i]);
+			list.add((GPMEmp)this.get(i));
 		}
 		return list;
 	}

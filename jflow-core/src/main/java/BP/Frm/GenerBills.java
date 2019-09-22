@@ -40,7 +40,7 @@ public class GenerBills extends Entities
 	*/
 	public final List<GenerBill> ToJavaList()
 	{
-		return (List<GenerBill>)this;
+		return (List<GenerBill>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class GenerBills extends Entities
 		ArrayList<GenerBill> list = new ArrayList<GenerBill>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GenerBill)this[i]);
+			list.add((GenerBill)this.get(i));
 		}
 		return list;
 	}

@@ -42,7 +42,7 @@ public class FrmTemplates extends EntitiesNoName
 	*/
 	public final List<FrmTemplate> ToJavaList()
 	{
-		return (List<FrmTemplate>)this;
+		return (List<FrmTemplate>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -54,7 +54,7 @@ public class FrmTemplates extends EntitiesNoName
 		ArrayList<FrmTemplate> list = new ArrayList<FrmTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmTemplate)this[i]);
+			list.add((FrmTemplate)this.get(i));
 		}
 		return list;
 	}

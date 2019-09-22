@@ -55,9 +55,9 @@ public class PowerModel extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_PowerModel", "权限模型");
@@ -85,8 +85,8 @@ public class PowerModel extends EntityMyPK
 		  //  map.AddTBInt(PowerModelAttr.NodeID, 0, "节点", true, false);
 		map.AddTBString(PowerModelAttr.FrmID, null, "表单ID", true, false, 0, 100, 10);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

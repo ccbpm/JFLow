@@ -464,16 +464,16 @@ public class MapAttr extends EntityMyPK
 
 		switch (s.toLowerCase())
 		{
-			case "@webuser.no":
-				return BP.Web.WebUser.getNo();
-			case "@webuser.name":
-				return BP.Web.WebUser.getName();
-			case "@webuser.fk_dept":
-				return BP.Web.WebUser.getFK_Dept();
-			case "@webuser.fk_deptname":
-				return BP.Web.WebUser.getFK_DeptName();
-			case "@webuser.fk_deptfullname":
-				return BP.Web.WebUser.getFK_DeptNameOfFull();
+			case "@WebUser.getNo()":
+				return WebUser.getNo();
+			case "@WebUser.getName()":
+				return WebUser.getName();
+			case "@WebUser.getFK_Dept()":
+				return WebUser.getFK_Dept();
+			case "@WebUser.getFK_Dept()name":
+				return WebUser.getFK_DeptName();
+			case "@WebUser.getFK_Dept()fullname":
+				return WebUser.getFK_DeptNameOfFull();
 			case "@fk_ny":
 				return DataType.getCurrentYearMonth();
 			case "@fk_nd":
@@ -1402,7 +1402,7 @@ public class MapAttr extends EntityMyPK
 				break;
 		}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getKeyOfEn()))
+		if (DataType.IsNullOrEmpty(this.getKeyOfEn()))
 		{
 			this.setMyPK(this.getFK_MapData());
 		}

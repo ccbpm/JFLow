@@ -64,7 +64,7 @@ public class GroupFields extends EntitiesOID
 		qo.AddWhere(GroupFieldAttr.FrmID, enName);
 		qo.addAnd();
 		qo.AddWhereIsNull(GroupFieldAttr.CtrlID);
-		//qo.AddWhereLen(GroupFieldAttr.CtrlID, " = ", 0, SystemConfig.AppCenterDBType);
+		//qo.AddWhereLen(GroupFieldAttr.CtrlID, " = ", 0, SystemConfig.getAppCenterDBType());
 		int num = qo.DoQuery();
 
 		if (num == 0)
@@ -100,7 +100,7 @@ public class GroupFields extends EntitiesOID
 	*/
 	public final List<GroupField> ToJavaList()
 	{
-		return (List<GroupField>)this;
+		return (List<GroupField>)(Object)this;
 	}
 	/** 
 	 转化成list

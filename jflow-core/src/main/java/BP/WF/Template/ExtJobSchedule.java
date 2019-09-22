@@ -30,7 +30,7 @@ public class ExtJobSchedule extends EntityMyPK
 	*/
 	public final String getURL()
 	{
-		return this.GetValStringByKey(MapAttrAttr.Tag2).Replace("#", "@");
+		return this.GetValStringByKey(MapAttrAttr.Tag2).replace("#", "@");
 	}
 	public final void setURL(String value)
 	{
@@ -68,7 +68,7 @@ public class ExtJobSchedule extends EntityMyPK
 	{
 		UAC uac = new UAC();
 		uac.Readonly();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsUpdate = true;
 			uac.IsDelete = true;
@@ -88,7 +88,7 @@ public class ExtJobSchedule extends EntityMyPK
 	*/
 	public ExtJobSchedule(String mypk)
 	{
-		this.MyPK = mypk;
+		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
@@ -97,9 +97,9 @@ public class ExtJobSchedule extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("Sys_MapAttr", "流程进度图");
 		map.Java_SetDepositaryOfEntity(Depositary.None);
@@ -131,8 +131,8 @@ public class ExtJobSchedule extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 个性化属性.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

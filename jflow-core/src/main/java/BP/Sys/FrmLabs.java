@@ -46,7 +46,7 @@ public class FrmLabs extends EntitiesMyPK
 	*/
 	public final List<FrmLab> ToJavaList()
 	{
-		return (List<FrmLab>)this;
+		return (List<FrmLab>)(Object)this;
 	}
 	/** 
 	 转化成list

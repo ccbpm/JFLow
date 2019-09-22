@@ -66,7 +66,7 @@ public class GEEntityExcelFrms extends EntitiesOID
 	*/
 	public final List<GEEntityExcelFrm> ToJavaList()
 	{
-		return (List<GEEntityExcelFrm>)this;
+		return (List<GEEntityExcelFrm>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -78,7 +78,7 @@ public class GEEntityExcelFrms extends EntitiesOID
 		ArrayList<GEEntityExcelFrm> list = new ArrayList<GEEntityExcelFrm>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GEEntityExcelFrm)this[i]);
+			list.add((GEEntityExcelFrm)this.get(i));
 		}
 		return list;
 	}

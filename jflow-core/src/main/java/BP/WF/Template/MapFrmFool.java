@@ -86,7 +86,7 @@ public class MapFrmFool extends EntityNoName
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -121,9 +121,9 @@ public class MapFrmFool extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Sys_MapData", "傻瓜表单属性");
@@ -262,9 +262,9 @@ public class MapFrmFool extends EntityNoName
 			//带有参数的方法.
 		rm = new RefMethod();
 		rm.Title = "重命名字段";
-		rm.HisAttrs.AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("FieldNew", null, "新字段英文名", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FieldNew", null, "新字段英文名", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoChangeFieldName";
 		rm.Icon = "../../WF/Img/ReName.png";
 		map.AddRefMethod(rm);
@@ -304,7 +304,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Title = "改变表单类型";
 		rm.GroupName = "高级功能";
 		rm.ClassMethodName = this.toString() + ".DoChangeFrmType()";
-		rm.HisAttrs.AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
+		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
@@ -333,8 +333,8 @@ public class MapFrmFool extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 方法 - 开发接口.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	/** 
 	 删除后清缓存
@@ -360,9 +360,9 @@ public class MapFrmFool extends EntityNoName
 	public final String DoChangeFrmType(int val)
 	{
 		MapData md = new MapData(this.No);
-		String str = "原来的是:" + md.HisFrmTypeText + "类型，";
+		String str = "原来的是:" + md.getHisFrmTypeText() + "类型，";
 		md.HisFrmTypeInt = val;
-		str += "现在修改为：" + md.HisFrmTypeText + "类型";
+		str += "现在修改为：" + md.getHisFrmTypeText() + "类型";
 		md.Update();
 
 		return str;
@@ -417,7 +417,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoBill()
 	{
-		return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.No + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+		return "../../Admin/AttrNode/Bill.htm?FK_MapData=" " + this.getNo()+ " "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 单据打印
@@ -426,7 +426,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoBill2019()
 	{
-		return "../../Admin/AttrNode/Bill2019.htm?FK_MapData=" + this.No + "&FrmID=" + this.No + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+		return "../../Admin/AttrNode/Bill2019.htm?FK_MapData=" " + this.getNo()+ " "&FrmID=" " + this.getNo()+ " "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
 
 	/** 
@@ -436,7 +436,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoDesignerFool()
 	{
-		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.No + "&MyPK=" + this.No + "&IsFirst=1&IsEditMapData=True";
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" " + this.getNo()+ " "&MyPK=" " + this.getNo()+ " "&IsFirst=1&IsEditMapData=True";
 	}
 
 	/** 
@@ -448,7 +448,7 @@ public class MapFrmFool extends EntityNoName
 	{
 		if (this.No.Contains("ND") == true)
 		{
-			return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.No.Replace("ND", "") + "&t=" + DataType.CurrentDataTime;
+			return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.No.Replace("ND", "") + "&t=" + DataType.getCurrentDataTime();
 		}
 		else
 		{
@@ -474,7 +474,7 @@ public class MapFrmFool extends EntityNoName
 		String str = "";
 
 		//处理失去分组的字段. 
-		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.No + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.No + "' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
+		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" " + this.getNo()+ " "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" " + this.getNo()+ " "' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
 		MapAttrs attrs = new MapAttrs();
 		attrs.RetrieveInSQL(sql);
 		if (attrs.size() != 0)
@@ -506,7 +506,7 @@ public class MapFrmFool extends EntityNoName
 
 		//从表.
 		MapDtls dtls = new MapDtls(this.No);
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			GroupField gf = new GroupField();
 			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.No, GroupFieldAttr.FrmID, this.No);
@@ -580,7 +580,7 @@ public class MapFrmFool extends EntityNoName
 
 
 		//删除重复的数据, 比如一个从表显示了多个分组里. 增加此部分.
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sql = "SELECT * FROM (SELECT FrmID,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY FrmID,CtrlID,CtrlType ) WHERE Num > 1";
 		}
@@ -637,7 +637,7 @@ public class MapFrmFool extends EntityNoName
 		MapAttr attrOld = new MapAttr();
 		attrOld.KeyOfEn = fieldOld;
 		attrOld.FK_MapData = this.No;
-		attrOld.MyPK = attrOld.FK_MapData + "_" + attrOld.KeyOfEn;
+		attrOld.setMyPK( attrOld.FK_MapData + "_" + attrOld.KeyOfEn;
 		if (attrOld.RetrieveFromDBSources() == 0)
 		{
 			return "@旧字段输入错误[" + attrOld.KeyOfEn + "].";
@@ -647,7 +647,7 @@ public class MapFrmFool extends EntityNoName
 		MapAttr attrNew = new MapAttr();
 		attrNew.KeyOfEn = newField;
 		attrNew.FK_MapData = this.No;
-		attrNew.MyPK = attrNew.FK_MapData + "_" + attrNew.KeyOfEn;
+		attrNew.setMyPK( attrNew.FK_MapData + "_" + attrNew.KeyOfEn;
 		if (attrNew.RetrieveFromDBSources() == 1)
 		{
 			return "@该字段[" + attrNew.KeyOfEn + "]已经存在.";
@@ -672,7 +672,7 @@ public class MapFrmFool extends EntityNoName
 		MapExts exts = new MapExts(this.No);
 		for (MapExt item : exts)
 		{
-			item.MyPK = item.MyPK.Replace("_" + fieldOld, "_" + newField);
+			item.setMyPK( item.MyPK.Replace("_" + fieldOld, "_" + newField);
 
 			if (fieldOld.equals(item.AttrOfOper))
 			{
@@ -702,7 +702,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoRegularExpressionBatch()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 批量修改字段
@@ -711,7 +711,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoBatchEditAttr()
 	{
-		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 排序字段顺序
@@ -720,7 +720,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoSortingMapAttrs()
 	{
-		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
+		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" " + this.getNo()+ " "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 设计表单
@@ -729,7 +729,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoDFrom()
 	{
-		String url = "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" + this.No + "&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		String url = "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" " + this.getNo()+ " "&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -739,7 +739,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoDFromCol4()
 	{
-		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.No + "&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&IsFirst=1&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" " + this.getNo()+ " "&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&IsFirst=1&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -749,7 +749,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoSearch()
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.No + "&EnsName=" + this.No;
+		return "../../Comm/Search.htm?s=34&FK_MapData=" " + this.getNo()+ " "&EnsName=" + this.No;
 	}
 	/** 
 	 调用分析API
@@ -758,7 +758,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoGroup()
 	{
-		return "../../Comm/Group.htm?s=34&FK_MapData=" + this.No + "&EnsName=" + this.No;
+		return "../../Comm/Group.htm?s=34&FK_MapData=" " + this.getNo()+ " "&EnsName=" + this.No;
 	}
 	/** 
 	 数据源管理
@@ -767,20 +767,20 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoDBSrc()
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.No + "&EnsName=BP.Sys.SFDBSrcs";
+		return "../../Comm/Search.htm?s=34&FK_MapData=" " + this.getNo()+ " "&EnsName=BP.Sys.SFDBSrcs";
 	}
 	public final String DoWordFrm()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData=" + this.No + "&ExtType=WordFrm&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=WordFrm&RefNo=";
 	}
 
 	public final String DoPageLoadFull()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoInitScript()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.No + "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 傻瓜表单属性.
@@ -789,7 +789,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoBodyAttr()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.No + "&ExtType=BodyAttr&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -798,7 +798,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoEvent()
 	{
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.No + "&T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" " + this.getNo()+ " "&T=sd&FK_Node=0";
 	}
 
 	/** 

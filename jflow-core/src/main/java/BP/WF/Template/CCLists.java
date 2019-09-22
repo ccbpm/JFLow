@@ -36,8 +36,9 @@ public class CCLists extends EntitiesMyPK
 	 @param flowNo
 	 @param workid
 	 @param fid
+	 * @throws Exception 
 	*/
-	public CCLists(String flowNo, long workid, long fid)
+	public CCLists(String flowNo, long workid, long fid) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCListAttr.FK_Flow, flowNo);
@@ -64,7 +65,7 @@ public class CCLists extends EntitiesMyPK
 	*/
 	public final List<CCList> ToJavaList()
 	{
-		return (List<CCList>)this;
+		return (List<CCList>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -76,7 +77,7 @@ public class CCLists extends EntitiesMyPK
 		ArrayList<CCList> list = new ArrayList<CCList>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((CCList)this[i]);
+			list.add((CCList)this.get(i));
 		}
 		return list;
 	}

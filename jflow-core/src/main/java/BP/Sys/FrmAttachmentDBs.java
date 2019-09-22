@@ -47,7 +47,7 @@ public class FrmAttachmentDBs extends EntitiesMyPK
 	*/
 	public final List<FrmAttachmentDB> ToJavaList()
 	{
-		return (List<FrmAttachmentDB>)this;
+		return (List<FrmAttachmentDB>)(Object)this;
 	}
 	/** 
 	 转化成list

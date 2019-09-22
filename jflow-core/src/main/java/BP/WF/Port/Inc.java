@@ -68,9 +68,9 @@ public class Inc extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Port_Inc", "独立组织");
@@ -89,11 +89,11 @@ public class Inc extends EntityNoName
 		rm.Title = "设置二级管理员";
 		rm.Warning = "设置为子公司后，系统就会在流程树上分配一个目录节点.";
 		rm.ClassMethodName = this.toString() + ".SetSubInc";
-		rm.HisAttrs.AddTBString("No", null, "子公司管理员编号", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("No", null, "子公司管理员编号", true, false, 0, 100, 100);
 		map.AddRefMethod(rm);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

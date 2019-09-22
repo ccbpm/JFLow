@@ -62,7 +62,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			dr.set("No", en.toString());
 			dr.set("Name", en.Title);
 			dr.set("Note", en.Note);
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -447,7 +447,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
 			File[] fls = mydir.GetFiles();
-			for (File fl : fls)
+			for (File fl : fls.ToJavaList())
 			{
 				if (expFileName.contains(fl.getName()))
 				{
@@ -476,7 +476,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
 			File[] fls = mydir.GetFiles();
-			for (File fl : fls)
+			for (File fl : fls.ToJavaList())
 			{
 				if (expFileName.contains(fl.getName()))
 				{
@@ -719,7 +719,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			}
 			dr.set("Name", en.EnMap.EnDesc);
 			dr.set("PTable", en.EnMap.PhysicsTable);
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -775,15 +775,15 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		DataSet ds = new DataSet();
 
 		SFDBSrc src = new SFDBSrc();
-		if (!tangible.StringHelper.isNullOrWhiteSpace(this.GetRequestVal("No")))
+		if (!DataType.IsNullOrEmpty(this.GetRequestVal("No")))
 		{
 			src = new SFDBSrc(getNo());
 		}
-		ds.Tables.Add(src.ToDataTableField("SFDBSrc"));
+		ds.Tables.add(src.ToDataTableField("SFDBSrc"));
 
 		SysEnums enums = new SysEnums();
 		enums.Retrieve(SysEnumAttr.EnumKey, SFDBSrcAttr.DBSrcType, SysEnumAttr.IntKey);
-		ds.Tables.Add(enums.ToDataTableField("DBSrcType"));
+		ds.Tables.add(enums.ToDataTableField("DBSrcType"));
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -936,7 +936,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			dr.set("FileName", file.getName());
 			dr.set("ChangeTime", file.LastAccessTime.toString());
 
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 		return BP.Tools.Json.ToJson(dt);
 

@@ -59,7 +59,7 @@ public class DeptFlowSearchs extends EntitiesMyPK
 	*/
 	public final List<DeptFlowSearch> ToJavaList()
 	{
-		return (List<DeptFlowSearch>)this;
+		return (List<DeptFlowSearch>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -71,7 +71,7 @@ public class DeptFlowSearchs extends EntitiesMyPK
 		ArrayList<DeptFlowSearch> list = new ArrayList<DeptFlowSearch>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((DeptFlowSearch)this[i]);
+			list.add((DeptFlowSearch)this.get(i));
 		}
 		return list;
 	}

@@ -32,7 +32,7 @@ public class WorkNodes extends ArrayList<Object>
 		Works ens = this.get(0).getHisNode().getHisWorks();
 		ens.Clear();
 
-		for (WorkNode wn : this)
+		for (WorkNode wn : this.ToJavaList())
 		{
 			ens.AddEntity(wn.getHisWork());
 		}
@@ -50,7 +50,7 @@ public class WorkNodes extends ArrayList<Object>
 		this.Clear();
 
 		Nodes nds = flow.getHisNodes();
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			if (nd.getHisRunModel() == RunModel.SubThread)
 			{
@@ -78,7 +78,7 @@ public class WorkNodes extends ArrayList<Object>
 	public final int GenerByWorkID2014_01_06(Flow flow, long oid)
 	{
 		Nodes nds = flow.getHisNodes();
-		for (Node nd : nds)
+		for (Node nd : nds.ToJavaList())
 		{
 			Work wk = nd.GetWork(oid);
 			if (wk == null)
@@ -142,7 +142,7 @@ public class WorkNodes extends ArrayList<Object>
 	*/
 	public final void DeleteWorks()
 	{
-		for (WorkNode wn : this)
+		for (WorkNode wn : this.ToJavaList())
 		{
 			if (wn.getHisFlow().getHisDataStoreModel() != DataStoreModel.ByCCFlow)
 			{

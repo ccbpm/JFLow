@@ -38,7 +38,7 @@ public class EmpApps extends EntitiesMyPK
 	*/
 	public final List<EmpApp> ToJavaList()
 	{
-		return (List<EmpApp>)this;
+		return (List<EmpApp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class EmpApps extends EntitiesMyPK
 		ArrayList<EmpApp> list = new ArrayList<EmpApp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((EmpApp)this[i]);
+			list.add((EmpApp)this.get(i));
 		}
 		return list;
 	}

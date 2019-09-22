@@ -309,9 +309,9 @@ public class Track extends BP.En.EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Frm_Track", "轨迹表");
@@ -346,8 +346,8 @@ public class Track extends BP.En.EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 字段
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 	/** 
 	 轨迹
@@ -363,28 +363,28 @@ public class Track extends BP.En.EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		if (BP.Web.WebUser.No.equals("Guest"))
+		if (WebUser.getNo().equals("Guest"))
 		{
 			this.setExer(BP.Web.GuestUser.No + "," + BP.Web.GuestUser.Name);
 		}
 		else
 		{
-			if (BP.Web.WebUser.IsAuthorize)
+			if (WebUser.getIsAuthorize())
 			{
-				this.setExer(BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.Auth, BP.Web.WebUser.AuthName));
+				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.Auth, WebUser.AuthName));
 			}
 			else
 			{
-				this.setExer(BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.No, BP.Web.WebUser.Name));
+				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
 			}
 		}
 
 		LocalDateTime d = LocalDateTime.MIN;
 		tangible.OutObject<LocalDateTime> tempOut_d = new tangible.OutObject<LocalDateTime>();
-		if (tangible.StringHelper.isNullOrWhiteSpace(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
+		if (DataType.IsNullOrEmpty(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
 		{
 		d = tempOut_d.argValue;
-			this.setRDT(BP.DA.DataType.CurrentDataTimess);
+			this.setRDT(BP.DA.DataType.getCurrentDataTime()ss);
 		}
 	else
 	{

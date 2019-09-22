@@ -25,14 +25,14 @@ public class Flows extends EntitiesNoName
 		Flows fls = new Flows();
 		fls.RetrieveAll();
 
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			fl.DoCheck();
 			fl.GenerFlowXmlTemplete();
 		}
 
 		// 生成索引界面
-		String path = SystemConfig.PathOfWorkDir + "\\VisualFlow\\DataUser\\FlowDesc\\";
+		String path = SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\";
 		String msg = "";
 		msg += "<html>";
 		msg += "\r\n<title>.net工作流程引擎设计，流程模板</title>";
@@ -41,15 +41,15 @@ public class Flows extends EntitiesNoName
 
 		msg += "\r\n<h1>驰骋流程模板网</h1> <br><a href=index.htm >返回首页</a> - <a href='http://ccFlow.org' >访问驰骋工作流程管理系统，工作流引擎官方网站</a> 流程系统建设请联系:QQ:793719823,Tel:18660153393<hr>";
 
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
-			msg += "\r\n <h3><b><a href='./" + fl.No + "/index.htm' target=_blank>" + fl.Name + "</a></b> - <a href='" + fl.No + ".gif' target=_blank  >" + fl.Name + "流程图</a></h3>";
+			msg += "\r\n <h3><b><a href='./" + fl.getNo() + "/index.htm' target=_blank>" + fl.getName() + "</a></b> - <a href='" + fl.getNo() + ".gif' target=_blank  >" + fl.getName() + "流程图</a></h3>";
 
 			msg += "\r\n<UL>";
 			Nodes nds = fl.getHisNodes();
-			for (Node nd : nds)
+			for (Node nd : nds.ToJavaList())
 			{
-				msg += "\r\n<li><a href='./" + fl.No + "/" + nd.getNodeID() + "_" + nd.getFlowName() + "_" + nd.getName() + "表单.doc' target=_blank>步骤" + nd.getStep() + ", - " + nd.getName() + "模板</a> -<a href='./" + fl.No + "/" + nd.getNodeID() + "_" + nd.getName() + "_表单模板.htm' target=_blank>Html版</a></li>";
+				msg += "\r\n<li><a href='./" + fl.getNo() + "/" + nd.getNodeID() + "_" + nd.getFlowName() + "_" + nd.getName() + "表单.doc' target=_blank>步骤" + nd.getStep() + ", - " + nd.getName() + "模板</a> -<a href='./" + fl.getNo() + "/" + nd.getNodeID() + "_" + nd.getName() + "_表单模板.htm' target=_blank>Html版</a></li>";
 			}
 			msg += "\r\n</UL>";
 		}
@@ -58,12 +58,12 @@ public class Flows extends EntitiesNoName
 
 		try
 		{
-			String pathDef = SystemConfig.PathOfWorkDir + "\\VisualFlow\\DataUser\\FlowDesc\\" + SystemConfig.CustomerNo + "_index.htm";
+			String pathDef = SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\" + SystemConfig.getCustomerNo() + "_index.htm";
 			DataType.WriteFile(pathDef, msg);
 
-			pathDef = SystemConfig.PathOfWorkDir + "\\VisualFlow\\DataUser\\FlowDesc\\index.htm";
+			pathDef = SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\index.htm";
 			DataType.WriteFile(pathDef, msg);
-			System.Diagnostics.Process.Start(SystemConfig.PathOfWorkDir + "\\VisualFlow\\DataUser\\FlowDesc\\");
+			System.Diagnostics.Process.Start(SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\");
 		}
 		catch (java.lang.Exception e)
 		{
@@ -76,8 +76,9 @@ public class Flows extends EntitiesNoName
 		///#region 查询
 	/** 
 	 查出来全部的自动流程
+	 * @throws Exception 
 	*/
-	public final void RetrieveIsAutoWorkFlow()
+	public final void RetrieveIsAutoWorkFlow() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowAttr.FlowType, 1);
@@ -89,13 +90,15 @@ public class Flows extends EntitiesNoName
 	 
 	 @param flowSort 流程类别
 	 @param IsCountInLifeCycle 是不是计算在生存期间内 true 查询出来全部的 
+	 * @return 
+	 * @throws Exception 
 	*/
-	public final void Retrieve(String flowSort)
+	public final int Retrieve(String flowSort) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowAttr.FK_FlowSort, flowSort);
 		qo.addOrderBy(FlowAttr.No);
-		qo.DoQuery();
+		return qo.DoQuery();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -112,8 +115,9 @@ public class Flows extends EntitiesNoName
 	 工作流程
 	 
 	 @param fk_sort
+	 * @throws Exception 
 	*/
-	public Flows(String fk_sort)
+	public Flows(String fk_sort) throws Exception
 	{
 		this.Retrieve(FlowAttr.FK_FlowSort, fk_sort);
 	}
@@ -142,7 +146,7 @@ public class Flows extends EntitiesNoName
 	*/
 	public final List<Flow> ToJavaList()
 	{
-		return (List<Flow>)this;
+		return (List<Flow>)(Object)this;
 	}
 	/** 
 	 转化成 list
@@ -154,7 +158,7 @@ public class Flows extends EntitiesNoName
 		ArrayList<Flow> list = new ArrayList<Flow>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Flow)this[i]);
+			list.add((Flow)this.get(i));
 		}
 		return list;
 	}

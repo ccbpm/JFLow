@@ -676,7 +676,7 @@ public class MapData extends EntityNoName
 
 	public static boolean getIsEditDtlModel()
 	{
-		String s = BP.Web.WebUser.GetSessionByKey("IsEditDtlModel", "0");
+		String s = WebUser.GetSessionByKey("IsEditDtlModel", "0");
 		if (s.equals("0"))
 		{
 			return false;
@@ -688,7 +688,7 @@ public class MapData extends EntityNoName
 	}
 	public static void setIsEditDtlModel(boolean value)
 	{
-		BP.Web.WebUser.SetSessionByKey("IsEditDtlModel", "1");
+		WebUser.SetSessionByKey("IsEditDtlModel", "1");
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 基本属性.
@@ -1026,7 +1026,7 @@ public class MapData extends EntityNoName
 
 		// 产生从表。
 		MapDtls dtls = this.getMapDtls(); // new MapDtls(this.No);
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			GEDtls dtls1 = new GEDtls(dtl.getNo());
 			map.AddDtl(dtls1, "RefPK");
@@ -1083,7 +1083,7 @@ public class MapData extends EntityNoName
 
 		// dtls.
 		MapDtls dtls = this.getMapDtls();
-		for (MapDtl item : dtls)
+		for (MapDtl item : dtls.ToJavaList())
 		{
 			DataTable dtDtls = ds.Tables[item.getNo()];
 			GEDtls dtlsEn = new GEDtls(item.getNo());
@@ -1313,7 +1313,7 @@ public class MapData extends EntityNoName
 			mydr.set("FType", dr.get("FType"));
 			mydr.set("FLen", dr.get("FLen"));
 			mydr.set("FDesc", dr.get("FDesc"));
-			mydt.Rows.Add(mydr);
+			mydt.Rows.add(mydr);
 		}
 		return mydt;
 	}
@@ -1564,7 +1564,7 @@ public class MapData extends EntityNoName
 
 		//把从表字段设置为只读.
 		MapDtls dtls = new MapDtls(fk_mapdata);
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			dtl.setIsInsert(false);
 			dtl.setIsUpdate(false);
@@ -1791,7 +1791,7 @@ public class MapData extends EntityNoName
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
 
-						//en.MyPK = "Btn_" + idx + "_" + fk_mapdata;
+						//en.setMyPK( "Btn_" + idx + "_" + fk_mapdata;
 						en.setMyPK(DBAccess.GenerGUID());
 						en.Insert();
 					}
@@ -1813,7 +1813,7 @@ public class MapData extends EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-						//en.MyPK = "LE_" + idx + "_" + fk_mapdata;
+						//en.setMyPK( "LE_" + idx + "_" + fk_mapdata;
 						en.setMyPK(DBAccess.GenerGUID());
 						en.Insert();
 					}
@@ -1834,7 +1834,7 @@ public class MapData extends EntityNoName
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
 						//  en.FK_MapData = fk_mapdata; 删除此行解决从表lab的问题。
-						//en.MyPK = "LB_" + idx + "_" + fk_mapdata;
+						//en.setMyPK( "LB_" + idx + "_" + fk_mapdata;
 						en.setMyPK(DBAccess.GenerGUID());
 						en.Insert();
 					}
@@ -1856,7 +1856,7 @@ public class MapData extends EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, fk_mapdata));
 						}
-						//en.MyPK = "LK_" + idx + "_" + fk_mapdata;
+						//en.setMyPK( "LK_" + idx + "_" + fk_mapdata;
 						en.setMyPK(DBAccess.GenerGUID());
 						en.Insert();
 					}
@@ -2162,7 +2162,7 @@ public class MapData extends EntityNoName
 			String sqls = "";
 			sqls += "@UPDATE Sys_MapDtl SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
 			sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
-			//sqls += "@UPDATE Sys_MapFrame SET GroupID=" + gf.OID + " WHERE FK_MapData='" + this.No + "'";
+			//sqls += "@UPDATE Sys_MapFrame SET GroupID=" + gf.OID + " WHERE FK_MapData='" " + this.getNo()+ " "'";
 			sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
 			DBAccess.RunSQLs(sqls);
 		}
@@ -2173,7 +2173,7 @@ public class MapData extends EntityNoName
 				GroupField gfFirst = gfs.get(0) instanceof GroupField ? (GroupField)gfs.get(0) : null;
 
 				String sqls = "";
-				//   sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gfFirst.OID + "       WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapAttr       WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.No + "') or GroupID is null) AS X) AND FK_MapData='" + this.No + "' ";
+				//   sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gfFirst.OID + "       WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapAttr       WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" " + this.getNo()+ " "') or GroupID is null) AS X) AND FK_MapData='" " + this.getNo()+ " "' ";
 				sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gfFirst.getOID() + " WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_FrmAttachment WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "')) AS X) AND FK_MapData='" + this.getNo() + "' ";
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2490,7 +2490,7 @@ public class MapData extends EntityNoName
 		{
 			//就增加隐藏字段.
 			//MapAttr attr = new BP.Sys.MapAttr();
-			// attr.MyPK = this.No + "_SealData";
+			// attr.setMyPK( this.No + "_SealData";
 			// attr.FK_MapData = this.No;
 			// attr.HisEditType = BP.En.EditType.UnDel;
 			//attr.KeyOfEn = "SealData";
@@ -2590,7 +2590,7 @@ public class MapData extends EntityNoName
 		}
 
 		MapDtls dtls = new MapDtls(this.getNo());
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			dtl.Delete();
 		}

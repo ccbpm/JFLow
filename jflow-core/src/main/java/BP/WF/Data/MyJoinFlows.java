@@ -41,7 +41,7 @@ public class MyJoinFlows extends Entities
 	*/
 	public final List<MyJoinFlow> ToJavaList()
 	{
-		return (List<MyJoinFlow>)this;
+		return (List<MyJoinFlow>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class MyJoinFlows extends Entities
 		ArrayList<MyJoinFlow> list = new ArrayList<MyJoinFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MyJoinFlow)this[i]);
+			list.add((MyJoinFlow)this.get(i));
 		}
 		return list;
 	}

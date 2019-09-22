@@ -38,7 +38,7 @@ public class Apps extends EntitiesNoName
 	*/
 	public final List<App> ToJavaList()
 	{
-		return (List<App>)this;
+		return (List<App>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class Apps extends EntitiesNoName
 		ArrayList<App> list = new ArrayList<App>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((App)this[i]);
+			list.add((App)this.get(i));
 		}
 		return list;
 	}

@@ -59,7 +59,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 		GEDtl dtl = dtls.getGetNewEntity() instanceof GEDtl ? (GEDtl)dtls.getGetNewEntity() : null;
 		dtls.Retrieve("RefPK", this.GetRequestVal("RefPKVal"));
 		Map map = dtl.getEnMap();
-		for (Entity item : dtls)
+		for (Entity item : dtls.ToJavaList())
 		{
 			String pkval = item.GetValStringByKey(dtl.getPK());
 			for (Attr attr : map.Attrs)
@@ -281,7 +281,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				File info = new File(realSaveTo);
 
 				FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-				dbUpload.MyPK = guid; // athDesc.FK_MapData + oid.ToString();
+				dbUpload.setMyPK( guid; // athDesc.FK_MapData + oid.ToString();
 				dbUpload.NodeID = String.valueOf(this.getFK_Node());
 				dbUpload.FK_FrmAttachment = attachPk;
 				dbUpload.FK_MapData = athDesc.FK_MapData;
@@ -306,9 +306,9 @@ public class CCMobile_CCForm extends DirectoryPageBase
 
 				dbUpload.FileName = fileName + ext;
 				dbUpload.FileSize = (float)info.length();
-				dbUpload.RDT = DataType.CurrentDataTimess;
-				dbUpload.Rec = BP.Web.WebUser.No;
-				dbUpload.RecName = BP.Web.WebUser.Name;
+				dbUpload.RDT = DataType.getCurrentDataTime()ss;
+				dbUpload.Rec = WebUser.getNo();
+				dbUpload.RecName = WebUser.getName();
 				dbUpload.RefPKVal = PKVal;
 				dbUpload.FID = this.getFID();
 
@@ -376,7 +376,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 
 				File info = new File(temp);
 				FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-				dbUpload.MyPK = BP.DA.DBAccess.GenerGUID();
+				dbUpload.setMyPK( BP.DA.DBAccess.GenerGUID();
 				dbUpload.NodeID = String.valueOf(getFK_Node());
 				dbUpload.FK_FrmAttachment = athDesc.MyPK;
 				dbUpload.FID = this.getFID(); //流程id.
@@ -390,7 +390,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				{
 					/*如果是协同，就让他是PWorkID. */
 					Paras ps = new Paras();
-					ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+					ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 					ps.Add("WorkID", PKVal);
 					String pWorkID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0).toString();
 					if (pWorkID == null || pWorkID.equals("0"))
@@ -404,9 +404,9 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				dbUpload.FK_FrmAttachment = athDesc.MyPK;
 				dbUpload.FileName = file.FileName;
 				dbUpload.FileSize = (float)info.length();
-				dbUpload.RDT = DataType.CurrentDataTimess;
-				dbUpload.Rec = BP.Web.WebUser.No;
-				dbUpload.RecName = BP.Web.WebUser.Name;
+				dbUpload.RDT = DataType.getCurrentDataTime()ss;
+				dbUpload.Rec = WebUser.getNo();
+				dbUpload.RecName = WebUser.getName();
 				//if (athDesc.IsNote)
 				//    dbUpload.MyNote = this.Pub1.GetTextBoxByID("TB_Note").Text;
 

@@ -27,7 +27,7 @@ public class FrmTrees extends EntitiesTree
 	}
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int i = super.RetrieveAll();
 		if (i == 0)
@@ -55,7 +55,7 @@ public class FrmTrees extends EntitiesTree
 	*/
 	public final List<FrmTree> ToJavaList()
 	{
-		return (List<FrmTree>)this;
+		return (List<FrmTree>)(Object)this;
 	}
 	/** 
 	 转化成list

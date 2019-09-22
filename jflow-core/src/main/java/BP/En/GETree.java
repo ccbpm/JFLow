@@ -46,7 +46,7 @@ public class GETree extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		   // if (this._enMap != null) return this._enMap;
+		   // if (this.get_enMap() != null) return this.get_enMap();
 		Map map = new Map(this.PhysicsTable, this.Desc);
 		map.setIsAutoGenerNo(true);
 
@@ -58,8 +58,8 @@ public class GETree extends EntityNoName
 		map.AddTBStringPK(GETreeAttr.No, null, "编号", true, true, 1, 30, 3);
 		map.AddTBString(GETreeAttr.Name, null, "名称", true, false, 1, 60, 500);
 		return map;
-		//    this._enMap = map;
-			//return this._enMap;
+		//    this.set_enMap(map);
+			//return this.get_enMap();
 	}
 	public String PhysicsTable = null;
 	public String Desc = null;

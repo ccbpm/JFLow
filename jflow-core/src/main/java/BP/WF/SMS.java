@@ -28,17 +28,17 @@ public class SMS extends EntityMyPK
 	{
 
 		SMS sms = new SMS();
-		sms.MyPK = DBAccess.GenerGUID();
+		sms.setMyPK( DBAccess.GenerGUID();
 		sms.setHisEmailSta(MsgSta.UnRun);
 
-		sms.setSender(WebUser.No);
+		sms.setSender(WebUser.getNo());
 		sms.setSendToEmpNo(userNo);
 
 		sms.setTitle(msgTitle);
 		sms.setDocOfEmail(msgDoc);
 
-		sms.setSender(BP.Web.WebUser.No);
-		sms.setRDT(BP.DA.DataType.CurrentDataTime);
+		sms.setSender(WebUser.getNo());
+		sms.setRDT(BP.DA.DataType.getCurrentDataTime());
 
 		sms.setMsgFlag(msgFlag); // 消息标志.
 		sms.setMsgType(msgType); // 消息类型.'
@@ -139,7 +139,7 @@ public class SMS extends EntityMyPK
 	}
 	public final void setIsRead(int value)
 	{
-		this.SetValByKey(SMSAttr.IsRead, (int)value);
+		this.SetValByKey(SMSAttr.IsRead, value.getValue());
 	}
 	public final int getIsAlert()
 	{
@@ -147,7 +147,7 @@ public class SMS extends EntityMyPK
 	}
 	public final void setIsAlert(int value)
 	{
-		this.SetValByKey(SMSAttr.IsAlert, (int)value);
+		this.SetValByKey(SMSAttr.IsAlert, value.getValue());
 	}
 	/** 
 	 消息标记(可以用它来避免发送重复)
@@ -282,9 +282,9 @@ public class SMS extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("Sys_SMS", "消息");
@@ -314,8 +314,8 @@ public class SMS extends EntityMyPK
 			//其他参数.
 		map.AddTBAtParas(500);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -466,28 +466,28 @@ public class SMS extends EntityMyPK
 			//站内消息
 			if (this.getPushModel().contains("CCMsg") == true)
 			{
-				soap.SendToCCMSG(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+				soap.SendToCCMSG(this.MyPK, WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
 			}
 			//短信
 			if (this.getPushModel().contains("SMS") == true)
 			{
-			   soap.SendToWebServices(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+			   soap.SendToWebServices(this.MyPK, WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
 			}
 			//钉钉
 			if (this.getPushModel().contains("DingDing") == true)
 			{
 
-				soap.SendToDingDing(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+				soap.SendToDingDing(this.MyPK, WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
 			}
 			//微信
 			if (this.getPushModel().contains("WeiXin") == true)
 			{
-				BP.WF.WeiXin.WeiXinMessage.SendMsgToUsers(this.getSendToEmpNo(), this.getTitle(), this.getDoc(), WebUser.No);
+				BP.WF.WeiXin.WeiXinMessage.SendMsgToUsers(this.getSendToEmpNo(), this.getTitle(), this.getDoc(), WebUser.getNo());
 			}
 			//WebService
 			if (this.getPushModel().contains("WS") == true)
 			{
-				soap.SendToWebServices(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+				soap.SendToWebServices(this.MyPK, WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
 			}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

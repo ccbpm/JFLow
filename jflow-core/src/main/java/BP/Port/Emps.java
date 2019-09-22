@@ -63,7 +63,7 @@ public class Emps extends EntitiesNoName
 	@Override
 	public int RetrieveAll()
 	{
-		//if (BP.Web.WebUser.No != "admin")
+		//if (WebUser.getNo() != "admin")
 		//    throw new Exception("@您没有查询的权限.");
 
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
@@ -126,7 +126,7 @@ public class Emps extends EntitiesNoName
 	*/
 	public final List<Emp> ToJavaList()
 	{
-		return (List<Emp>)this;
+		return (List<Emp>)(Object)this;
 	}
 	/** 
 	 转化成list

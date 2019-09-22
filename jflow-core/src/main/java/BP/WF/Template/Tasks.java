@@ -40,7 +40,7 @@ public class Tasks extends Entities
 	*/
 	public final List<Task> ToJavaList()
 	{
-		return (List<Task>)this;
+		return (List<Task>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class Tasks extends Entities
 		ArrayList<Task> list = new ArrayList<Task>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Task)this[i]);
+			list.add((Task)this.get(i));
 		}
 		return list;
 	}

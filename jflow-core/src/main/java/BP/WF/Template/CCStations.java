@@ -17,7 +17,7 @@ public class CCStations extends EntitiesMM
 	public final Stations getHisStations()
 	{
 		Stations ens = new Stations();
-		for (CCStation ns : this)
+		for (CCStation ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Station(ns.getFK_Station()));
 		}
@@ -29,7 +29,7 @@ public class CCStations extends EntitiesMM
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (CCStation ns : this)
+		for (CCStation ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -85,7 +85,7 @@ public class CCStations extends EntitiesMM
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (CCStation en : this)
+		for (CCStation en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -104,7 +104,7 @@ public class CCStations extends EntitiesMM
 		qo.DoQuery();
 
 		Stations ens = new Stations();
-		for (CCStation en : this)
+		for (CCStation en : this.ToJavaList())
 		{
 			ens.AddEntity(new Station(en.getFK_Station()));
 		}
@@ -120,7 +120,7 @@ public class CCStations extends EntitiesMM
 	*/
 	public final List<CCStation> ToJavaList()
 	{
-		return (List<CCStation>)this;
+		return (List<CCStation>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -132,7 +132,7 @@ public class CCStations extends EntitiesMM
 		ArrayList<CCStation> list = new ArrayList<CCStation>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((CCStation)this[i]);
+			list.add((CCStation)this.get(i));
 		}
 		return list;
 	}

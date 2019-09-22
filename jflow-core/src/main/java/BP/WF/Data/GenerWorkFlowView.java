@@ -341,11 +341,11 @@ public class GenerWorkFlowView extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WF.WFState.Complete)
+		if (value == WFState.Complete)
 		{
 			SetValByKey(GenerWorkFlowViewAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WF.WFState.Delete)
+		else if (value == WFState.Delete)
 		{
 			SetValByKey(GenerWorkFlowViewAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -474,9 +474,9 @@ public class GenerWorkFlowView extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "流程查询");
@@ -537,10 +537,10 @@ public class GenerWorkFlowView extends Entity
 		rm.Icon = "../../WF/Img/Btn/Back.png";
 		rm.Title = "回滚";
 		rm.ClassMethodName = this.toString() + ".Rollback";
-			//rm.HisAttrs.AddTBInt("NodeID", 0, "回滚到节点", true, false);
-		   // rm.HisAttrs.AddTBInt("NodeID", 0, "回滚到节点", true, false);
-		rm.HisAttrs.AddTBString("NodeID", null, "NodeID", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("EmpNo", null, "回滚到人员编号",true,false,0,100,100);
+			//rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
+		   // rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
+		rm.getHisAttrs().AddTBString("NodeID", null, "NodeID", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("EmpNo", null, "回滚到人员编号",true,false,0,100,100);
 		map.AddRefMethod(rm);
 
 
@@ -564,14 +564,14 @@ public class GenerWorkFlowView extends Entity
 
 		rm = new RefMethod();
 		rm.Title = "调整";
-		rm.HisAttrs.AddTBString("wenben", null, "调整到人员", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBInt("shuzi", 0, "调整到节点", true, false);
+		rm.getHisAttrs().AddTBString("wenben", null, "调整到人员", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBInt("shuzi", 0, "调整到节点", true, false);
 
 		rm.ClassMethodName = this.toString() + ".DoTest";
 		map.AddRefMethod(rm);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -609,7 +609,7 @@ public class GenerWorkFlowView extends Entity
 		}
 		catch (RuntimeException ex)
 		{
-			infos += "@ 错误:" + fl.No + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.Name;
+			infos += "@ 错误:" + fl.getNo() + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.Name;
 		}
 
 		String json = DataType.ReadTextFile(file);
@@ -646,7 +646,7 @@ public class GenerWorkFlowView extends Entity
 		Flows fls = new Flows();
 		fls.RetrieveAll();
 
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 
 
@@ -678,7 +678,7 @@ public class GenerWorkFlowView extends Entity
 				}
 				catch (RuntimeException ex)
 				{
-					infos += "@ 错误:" + fl.No + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.Name;
+					infos += "@ 错误:" + fl.getNo() + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.Name;
 				}
 
 				String json = DataType.ReadTextFile(file);

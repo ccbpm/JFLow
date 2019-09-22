@@ -15,7 +15,7 @@ public class Menu extends EntityTree
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = true;
 			uac.IsUpdate = true;
@@ -44,7 +44,7 @@ public class Menu extends EntityTree
 	//    }
 	//    set
 	//    {
-	//        this.SetValByKey(MenuAttr.CtrlWay, (int)value);
+	//        this.SetValByKey(MenuAttr.CtrlWay, value.getValue());
 	//    }
 	//}
 	/** 
@@ -217,9 +217,9 @@ public class Menu extends EntityTree
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("GPM_Menu"); // 类的基本属性.
 		map.DepositaryOfEntity = Depositary.None;
@@ -291,7 +291,7 @@ public class Menu extends EntityTree
 		map.AttrsOfOneVSM.AddGroupListModel(new StationMenus(), new BP.GPM.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, "绑定到岗位-分组模式", StationAttr.FK_StationType, "Name", EmpAttr.No);
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.AttrsOfOneVSM.AddBranchesAndLeaf(new EmpMenus(), new BP.Port.Emps(), EmpMenuAttr.FK_Menu, EmpMenuAttr.FK_Emp, "绑定人员-树结构", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranchesAndLeaf(new EmpMenus(), new BP.Port.Emps(), EmpMenuAttr.FK_Menu, EmpMenuAttr.FK_Emp, "绑定人员-树结构", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 			//不带有参数的方法.
 		RefMethod rm = new RefMethod();
@@ -313,11 +313,11 @@ public class Menu extends EntityTree
 		rm.Title = "创建单据";
 		rm.Warning = "您确定要创建吗？";
 
-		rm.HisAttrs.AddTBString("No", null, "单据编号", true, false, 0, 100, 100);
-		rm.HisAttrs.AddTBString("Name", null, "单据名称", true, false, 0, 100, 400);
-		rm.HisAttrs.AddTBString("PTable", null, "存储表(为空则为编号相同)", true, false, 0, 100, 100);
-		rm.HisAttrs.AddDDLSysEnum("FrmType", 0, "单据模式", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单");
-		rm.HisAttrs.AddDDLSQL("Sys_FormTree", "", "选择表单树", "SELECT No,Name FROM Sys_FormTree WHERE ParentNo='1'");
+		rm.getHisAttrs().AddTBString("No", null, "单据编号", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("Name", null, "单据名称", true, false, 0, 100, 400);
+		rm.getHisAttrs().AddTBString("PTable", null, "存储表(为空则为编号相同)", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "单据模式", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单");
+		rm.getHisAttrs().AddDDLSQL("Sys_FormTree", "", "选择表单树", "SELECT No,Name FROM Sys_FormTree WHERE ParentNo='1'");
 
 		rm.ClassMethodName = this.toString() + ".DoAddCCBill";
 		map.AddRefMethod(rm);
@@ -325,8 +325,8 @@ public class Menu extends EntityTree
 			///#endregion 创建菜单.
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

@@ -147,7 +147,7 @@ public class Selector extends Entity
 		UAC uac = new UAC();
 		uac.IsDelete = false;
 		uac.IsInsert = false;
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsUpdate = true;
 			uac.IsView = true;
@@ -184,9 +184,9 @@ public class Selector extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -228,17 +228,17 @@ public class Selector extends Entity
 		map.AttrsOfOneVSM.AddGroupListModel(new BP.WF.Template.NodeStations(), new BP.WF.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "绑定岗位(树)", StationAttr.FK_StationType, "Name", "No");
 
 			//节点绑定部门. 节点绑定部门.
-		map.AttrsOfOneVSM.AddBranches(new BP.WF.Template.NodeDepts(), new BP.Port.Depts(), BP.WF.Template.NodeDeptAttr.FK_Node, BP.WF.Template.NodeDeptAttr.FK_Dept, "绑定部门", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranches(new BP.WF.Template.NodeDepts(), new BP.Port.Depts(), BP.WF.Template.NodeDeptAttr.FK_Node, BP.WF.Template.NodeDeptAttr.FK_Dept, "绑定部门", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.AttrsOfOneVSM.AddBranchesAndLeaf(new BP.WF.Template.NodeEmps(), new BP.Port.Emps(), BP.WF.Template.NodeEmpAttr.FK_Node, BP.WF.Template.NodeEmpAttr.FK_Emp, "绑定接受人", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranchesAndLeaf(new BP.WF.Template.NodeEmps(), new BP.Port.Emps(), BP.WF.Template.NodeEmpAttr.FK_Node, BP.WF.Template.NodeEmpAttr.FK_Emp, "绑定接受人", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -279,7 +279,7 @@ public class Selector extends Entity
 				break;
 		}
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			for (DataTable dt : ds.Tables)
 			{
@@ -308,7 +308,7 @@ public class Selector extends Entity
 			}
 		}
 
-		ds.Tables.Add(this.ToDataTableField("Selector"));
+		ds.Tables.add(this.ToDataTableField("Selector"));
 
 		return ds;
 	}
@@ -334,13 +334,13 @@ public class Selector extends Entity
 		String sql = "SELECT distinct No,Name, ParentNo FROM Port_Dept ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//人员.
 		sql = "SELECT distinct No, Name, FK_Dept FROM Port_Emp ";
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 
 		return ds;
 	}
@@ -362,7 +362,7 @@ public class Selector extends Entity
 			sqlGroup = BP.WF.Glo.DealExp(sqlGroup, en, null); //@祝梦娟
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlGroup);
 			dt.TableName = "Depts";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 		}
 
 		//求人员范围.
@@ -371,7 +371,7 @@ public class Selector extends Entity
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sqlDB);
 		dtEmp.TableName = "Emps";
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 
 		//求默认选择的数据.
 		if (!this.getSelectorP3().equals(""))
@@ -382,7 +382,7 @@ public class Selector extends Entity
 			DataTable dtDef = BP.DA.DBAccess.RunSQLReturnTable(sqlDB);
 			dtDef.TableName = "DefaultSelected";
 
-			ds.Tables.Add(dtDef);
+			ds.Tables.add(dtDef);
 		}
 
 
@@ -391,9 +391,9 @@ public class Selector extends Entity
 		{
 			sqlDB = this.getSelectorP4();
 
-			sqlDB = sqlDB.replace("@WebUser.No", WebUser.No);
-			sqlDB = sqlDB.replace("@WebUser.Name", WebUser.Name);
-			sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+			sqlDB = sqlDB.replace("@WebUser.getNo()", WebUser.getNo());
+			sqlDB = sqlDB.replace("@WebUser.getName()", WebUser.getName());
+			sqlDB = sqlDB.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 			sqlDB = sqlDB.replace("@WorkID", en.GetValStringByKey("OID"));
 			sqlDB = sqlDB.replace("@OID", en.GetValStringByKey("OID"));
@@ -405,7 +405,7 @@ public class Selector extends Entity
 
 			DataTable dtForce = BP.DA.DBAccess.RunSQLReturnTable(sqlDB);
 			dtForce.TableName = "ForceSelected";
-			ds.Tables.Add(dtForce);
+			ds.Tables.add(dtForce);
 		}
 
 		return ds;
@@ -435,12 +435,12 @@ public class Selector extends Entity
 
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "Depts";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//人员.
 			sql = "SELECT distinct a.No, a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeDept b, WF_PrjEmp C WHERE a.FK_Dept=b.FK_Dept  AND A.No=C.FK_Emp  AND B.FK_Node=" + nodeID + " AND C.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ";
 			dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			ds.Tables.Add(dtEmp);
+			ds.Tables.add(dtEmp);
 			dtEmp.TableName = "Emps";
 			return ds;
 		}
@@ -450,12 +450,12 @@ public class Selector extends Entity
 		sql = "SELECT distinct a.No,a.Name, a.ParentNo FROM Port_Dept a,  WF_NodeDept b WHERE a.No=b.FK_Dept AND B.FK_Node=" + nodeID + " ";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//人员.
 		sql = "SELECT distinct a.No, a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeDept b WHERE a.FK_Dept=b.FK_Dept AND B.FK_Node=" + nodeID + " ";
 		dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 		dtEmp.TableName = "Emps";
 		return ds;
 	}
@@ -475,14 +475,14 @@ public class Selector extends Entity
 		String sql = "SELECT distinct a.No,a.Name, a.ParentNo FROM Port_Dept a, WF_NodeEmp b, Port_Emp c WHERE b.FK_Emp=c.No AND a.No=c.FK_Dept AND B.FK_Node=" + nodeID + " ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//人员.
 		sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeEmp b WHERE a.No=b.FK_Emp AND b.FK_Node=" + nodeID + " ";
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 		return ds;
 	}
 
@@ -495,28 +495,28 @@ public class Selector extends Entity
 
 		//部门.
 		String sql = "";
-		sql = "SELECT d.No,d.Name,d.ParentNo  FROM  Port_DeptEmp  de,port_dept as d where de.FK_Dept = d.No and de.FK_Emp = '" + BP.Web.WebUser.No + "'";
+		sql = "SELECT d.No,d.Name,d.ParentNo  FROM  Port_DeptEmp  de,port_dept as d where de.FK_Dept = d.No and de.FK_Emp = '" + WebUser.getNo() + "'";
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
 		//人员.
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.FK_Dept + "' AND b.FK_Node=" + nodeID + ")  ORDER BY A.Idx ";
+			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND b.FK_Node=" + nodeID + ")  ORDER BY A.Idx ";
 		}
 		else
 		{
-			sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND C.FK_Dept='" + WebUser.FK_Dept + "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
+			sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
 		}
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (dtEmp.Rows.size() > 0)
 		{
 			dt.TableName = "Depts";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			dtEmp.TableName = "Emps";
-			ds.Tables.Add(dtEmp);
+			ds.Tables.add(dtEmp);
 		}
 		else //如果没人，就查询父级
 		{
@@ -528,7 +528,7 @@ public class Selector extends Entity
 			+ "( SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID ='" + workID + "' ))";
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "Depts";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			// 如果当前的节点不是开始节点， 从轨迹里面查询。
 			sql = "SELECT DISTINCT b.No,b.Name,b.FK_Dept   FROM " + BP.WF.Glo.getEmpStation() + " a,Port_Emp b  WHERE FK_Station IN "
@@ -539,7 +539,7 @@ public class Selector extends Entity
 
 			dtEmp = DBAccess.RunSQLReturnTable(sql);
 			dtEmp.TableName = "Emps";
-			ds.Tables.Add(dtEmp);
+			ds.Tables.add(dtEmp);
 		}
 		return ds;
 	}
@@ -552,7 +552,7 @@ public class Selector extends Entity
 		//部门.
 		String sql = "";
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + ")  AS Port_Dept  ";
 		}
@@ -563,13 +563,13 @@ public class Selector extends Entity
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 
 
 		//人员.
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + ")  ";
 		}
@@ -581,7 +581,7 @@ public class Selector extends Entity
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 		return ds;
 	}
 
@@ -606,10 +606,10 @@ public class Selector extends Entity
 			sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d, WF_PrjEmp E WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND d.No=e.FK_Emp And C.FK_Emp=E.FK_Emp  AND B.FK_Node=" + nodeID + " AND E.FK_Prj='" + en.GetValStrByKey("PrjNo") + "' ORDER BY A.No,A.Idx";
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "Depts";
-			ds.Tables.Add(dt);
+			ds.Tables.add(dt);
 
 			//人员.
-			if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 				{
@@ -626,7 +626,7 @@ public class Selector extends Entity
 			}
 
 			dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
-			ds.Tables.Add(dtEmp);
+			ds.Tables.add(dtEmp);
 			dtEmp.TableName = "Emps";
 			return ds;
 		}
@@ -636,10 +636,10 @@ public class Selector extends Entity
 		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + " ORDER BY A.No,A.Idx";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//人员.
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{
@@ -657,7 +657,7 @@ public class Selector extends Entity
 
 		dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
-		ds.Tables.Add(dtEmp);
+		ds.Tables.add(dtEmp);
 
 		return ds;
 	}

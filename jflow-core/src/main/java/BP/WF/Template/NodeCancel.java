@@ -55,9 +55,9 @@ public class NodeCancel extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeCancel", "可撤销的节点");
@@ -68,8 +68,8 @@ public class NodeCancel extends EntityMM
 		map.AddTBIntPK(NodeCancelAttr.FK_Node, 0, "节点", true, true);
 		map.AddTBIntPK(NodeCancelAttr.CancelTo, 0, "撤销到", true, true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

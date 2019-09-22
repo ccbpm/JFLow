@@ -26,7 +26,7 @@ public class MyDeptEmps extends BP.En.EntitiesNoName
 	public int RetrieveAll()
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(MyDeptEmpAttr.FK_Dept, BP.Web.WebUser.FK_Dept);
+		qo.AddWhere(MyDeptEmpAttr.FK_Dept, WebUser.getFK_Dept());
 		return qo.DoQuery();
 	}
 
@@ -39,7 +39,7 @@ public class MyDeptEmps extends BP.En.EntitiesNoName
 	*/
 	public final List<MyDeptEmp> ToJavaList()
 	{
-		return (List<MyDeptEmp>)this;
+		return (List<MyDeptEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -51,7 +51,7 @@ public class MyDeptEmps extends BP.En.EntitiesNoName
 		ArrayList<MyDeptEmp> list = new ArrayList<MyDeptEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MyDeptEmp)this[i]);
+			list.add((MyDeptEmp)this.get(i));
 		}
 		return list;
 	}

@@ -33,7 +33,7 @@ public class StationTypes extends EntitiesNoName
 	*/
 	public final List<StationType> ToJavaList()
 	{
-		return (List<StationType>)this;
+		return (List<StationType>)(Object)this;
 	}
 	/** 
 	 转化成list

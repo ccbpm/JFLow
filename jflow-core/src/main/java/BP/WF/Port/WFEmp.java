@@ -261,9 +261,9 @@ public class WFEmp extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Emp", "操作员");
@@ -300,8 +300,8 @@ public class WFEmp extends EntityNoName
 
 		map.AddTBAtParas(3500); //增加字段.
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -356,7 +356,7 @@ public class WFEmp extends EntityNoName
 		for (DataRow dr : dt.Rows)
 		{
 			BP.Port.Emp emp1 = new BP.Port.Emp(dr.get("No").toString());
-			BP.WF.Port.WFEmp empWF = new BP.WF.Port.WFEmp();
+			WFEmp empWF = new WFEmp();
 			empWF.Copy(emp1);
 			try
 			{

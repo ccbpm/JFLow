@@ -40,7 +40,7 @@ public class MapFrmFrees extends EntitiesNoName
 	*/
 	public final List<MapFrmFree> ToJavaList()
 	{
-		return (List<MapFrmFree>)this;
+		return (List<MapFrmFree>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class MapFrmFrees extends EntitiesNoName
 		ArrayList<MapFrmFree> list = new ArrayList<MapFrmFree>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapFrmFree)this[i]);
+			list.add((MapFrmFree)this.get(i));
 		}
 		return list;
 	}

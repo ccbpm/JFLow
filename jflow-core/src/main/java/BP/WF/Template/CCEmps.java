@@ -17,7 +17,7 @@ public class CCEmps extends EntitiesMM
 	public final Emps getHisEmps()
 	{
 		Emps ens = new Emps();
-		for (CCEmp ns : this)
+		for (CCEmp ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Emp(ns.getFK_Emp()));
 		}
@@ -29,7 +29,7 @@ public class CCEmps extends EntitiesMM
 	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (CCEmp ns : this)
+		for (CCEmp ns : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -46,8 +46,9 @@ public class CCEmps extends EntitiesMM
 	 节点到人员
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public CCEmps(int NodeID)
+	public CCEmps(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCEmpAttr.FK_Node, NodeID);
@@ -57,8 +58,9 @@ public class CCEmps extends EntitiesMM
 	 节点到人员
 	 
 	 @param EmpNo EmpNo 
+	 * @throws Exception 
 	*/
-	public CCEmps(String EmpNo)
+	public CCEmps(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCEmpAttr.FK_Emp, EmpNo);
@@ -77,15 +79,16 @@ public class CCEmps extends EntitiesMM
 	 
 	 @param sts 到人员集合
 	 @return 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Emps sts)
+	public final Nodes GetHisNodes(Emps sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
-		for (Emp st : sts)
+		for (Emp st : sts.ToJavaList())
 		{
-			tmp = this.GetHisNodes(st.No);
-			for (Node nd : tmp)
+			tmp = this.GetHisNodes(st.getNo());
+			for (Node nd : tmp.ToJavaList())
 			{
 				if (nds.Contains(nd))
 				{
@@ -101,15 +104,16 @@ public class CCEmps extends EntitiesMM
 	 
 	 @param EmpNo 到人员编号
 	 @return 节点s
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String EmpNo)
+	public final Nodes GetHisNodes(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCEmpAttr.FK_Emp, EmpNo);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (CCEmp en : this)
+		for (CCEmp en : this.ToJavaList())
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -120,15 +124,16 @@ public class CCEmps extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
+	 * @throws Exception 
 	*/
-	public final Emps GetHisEmps(int nodeID)
+	public final Emps GetHisEmps(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCEmpAttr.FK_Node, nodeID);
 		qo.DoQuery();
 
 		Emps ens = new Emps();
-		for (CCEmp en : this)
+		for (CCEmp en : this.ToJavaList())
 		{
 			ens.AddEntity(new Emp(en.getFK_Emp()));
 		}
@@ -144,7 +149,7 @@ public class CCEmps extends EntitiesMM
 	*/
 	public final List<CCEmp> ToJavaList()
 	{
-		return (List<CCEmp>)this;
+		return (List<CCEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -156,7 +161,7 @@ public class CCEmps extends EntitiesMM
 		ArrayList<CCEmp> list = new ArrayList<CCEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((CCEmp)this[i]);
+			list.add((CCEmp)this.get(i));
 		}
 		return list;
 	}

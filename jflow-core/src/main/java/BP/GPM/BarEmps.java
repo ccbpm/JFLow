@@ -35,14 +35,14 @@ public class BarEmps extends EntitiesMyPK
 		for (Bar b : bars)
 		{
 			BarEmp be = new BarEmp();
-			be.MyPK = b.No + "_" + BP.Web.WebUser.No;
+			be.setMyPK( b.No + "_" + WebUser.getNo();
 			if (be.RetrieveFromDBSources() == 1)
 			{
 				continue;
 			}
 
 			be.setFK_Bar(b.No);
-			be.setFK_Emp(BP.Web.WebUser.No);
+			be.setFK_Emp(WebUser.getNo());
 			be.setIsShow(true);
 			be.setTitle(b.Name);
 			be.Insert();
@@ -60,7 +60,7 @@ public class BarEmps extends EntitiesMyPK
 	*/
 	public final List<BarEmp> ToJavaList()
 	{
-		return (List<BarEmp>)this;
+		return (List<BarEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -72,7 +72,7 @@ public class BarEmps extends EntitiesMyPK
 		ArrayList<BarEmp> list = new ArrayList<BarEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BarEmp)this[i]);
+			list.add((BarEmp)this.get(i));
 		}
 		return list;
 	}

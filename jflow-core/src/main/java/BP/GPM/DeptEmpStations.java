@@ -42,7 +42,7 @@ public class DeptEmpStations extends EntitiesMyPK
 	*/
 	public final List<DeptEmpStation> ToJavaList()
 	{
-		return (List<DeptEmpStation>)this;
+		return (List<DeptEmpStation>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -54,7 +54,7 @@ public class DeptEmpStations extends EntitiesMyPK
 		ArrayList<DeptEmpStation> list = new ArrayList<DeptEmpStation>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((DeptEmpStation)this[i]);
+			list.add((DeptEmpStation)this.get(i));
 		}
 		return list;
 	}

@@ -40,7 +40,7 @@ public class MapFrmNodes extends EntitiesNoName
 	*/
 	public final List<MapFrmNode> ToJavaList()
 	{
-		return (List<MapFrmNode>)this;
+		return (List<MapFrmNode>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -52,7 +52,7 @@ public class MapFrmNodes extends EntitiesNoName
 		ArrayList<MapFrmNode> list = new ArrayList<MapFrmNode>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapFrmNode)this[i]);
+			list.add((MapFrmNode)this.get(i));
 		}
 		return list;
 	}

@@ -47,7 +47,7 @@ public class RptExportTemplateCell
 //ORIGINAL LINE: [XmlIgnore] public string CellName
 	public final String getCellName()
 	{
-		if (tangible.StringHelper.isNullOrWhiteSpace(_cellName))
+		if (DataType.IsNullOrEmpty(_cellName))
 		{
 			_cellName = GetCellName(getColumnIdx(), getRowIdx());
 		}

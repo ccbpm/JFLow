@@ -65,9 +65,9 @@ public class NodeReturn extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeReturn", "可退回的节点");
@@ -76,8 +76,8 @@ public class NodeReturn extends EntityMM
 		map.AddTBIntPK(NodeReturnAttr.ReturnTo, 0, "退回到", true, true);
 		map.AddTBString(NodeReturnAttr.Dots, null, "轨迹信息", true, true,0,300,0,false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

@@ -54,7 +54,7 @@ public class FrmBills extends EntitiesNoName
 		ArrayList<FrmBill> list = new ArrayList<FrmBill>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmBill)this[i]);
+			list.add((FrmBill)this.get(i));
 		}
 		return list;
 	}

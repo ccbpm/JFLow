@@ -62,7 +62,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			DataRow dr = dtBuess.NewRow();
 			dr.set("No", en.toString());
 			dr.set("Name", en.Title);
-			dtBuess.Rows.Add(dr);
+			dtBuess.Rows.add(dr);
 		}
 
 		return BP.Tools.Json.ToJson(dtBuess);
@@ -179,7 +179,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	public final String PushMsg_Save()
 	{
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.MyPK = this.getMyPK();
+		msg.setMyPK( this.getMyPK();
 		msg.RetrieveFromDBSources();
 
 		msg.setFK_Event(this.getFK_Event());
@@ -190,7 +190,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		msg.setFK_Flow(nd.getFK_Flow());
 
 		//推送方式。
-		msg.setSMSPushWay((int)(HttpContextHelper.RequestParams("RB_SMS").Replace("RB_SMS_", "")));
+		msg.setSMSPushWay((int)(HttpContextHelper.RequestParams("RB_SMS").replace("RB_SMS_", "")));
 
 		//表单字段作为接收人.
 		msg.setSMSField(HttpContextHelper.RequestParams("DDL_SMS_Fields"));
@@ -198,7 +198,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 其他节点的处理人方式（求选择的节点）
 		String nodesOfSMS = "";
-		for (BP.WF.Node mynd : nds)
+		for (BP.WF.Node mynd : nds.ToJavaList())
 		{
 			for (String key : HttpContextHelper.RequestParamKeys)
 			{
@@ -232,7 +232,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		//节点预警
 		if (this.getFK_Event().equals(BP.Sys.EventListOfNode.NodeWarning))
 		{
-			int noticeType = (int)(HttpContextHelper.RequestParams("RB_NoticeType").Replace("RB_NoticeType", ""));
+			int noticeType = (int)(HttpContextHelper.RequestParams("RB_NoticeType").replace("RB_NoticeType", ""));
 			msg.SetPara("NoticeType", noticeType);
 			int hour = (int)HttpContextHelper.RequestParams("TB_NoticeHour");
 			msg.SetPara("NoticeHour", hour);
@@ -241,7 +241,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		//节点逾期
 		if (this.getFK_Event().equals(BP.Sys.EventListOfNode.NodeOverDue))
 		{
-			int noticeType = (int)(HttpContextHelper.RequestParams("RB_NoticeType").Replace("RB_NoticeType", ""));
+			int noticeType = (int)(HttpContextHelper.RequestParams("RB_NoticeType").replace("RB_NoticeType", ""));
 			msg.SetPara("NoticeType", noticeType);
 			int day = (int)HttpContextHelper.RequestParams("TB_NoticeDay");
 			msg.SetPara("NoticeDay", day);
@@ -250,7 +250,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		//保存.
 		if (DataType.IsNullOrEmpty(msg.MyPK) == true)
 		{
-			msg.MyPK = BP.DA.DBAccess.GenerGUID();
+			msg.setMyPK( BP.DA.DBAccess.GenerGUID();
 			msg.Insert();
 		}
 		else
@@ -270,19 +270,19 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		BP.Sys.MapAttrs attrs = new BP.Sys.MapAttrs();
 		attrs.Retrieve(BP.Sys.MapAttrAttr.FK_MapData, "ND" + this.getFK_Node(), "LGType", 0, "MyDataType", 1);
-		ds.Tables.Add(attrs.ToDataTableField("FrmFields"));
+		ds.Tables.add(attrs.ToDataTableField("FrmFields"));
 
 		//节点 
 		//TODO 数据太多优化一下
 		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
 		BP.WF.Nodes nds = new BP.WF.Nodes(nd.getFK_Flow());
-		ds.Tables.Add(nds.ToDataTableField("Nodes"));
+		ds.Tables.add(nds.ToDataTableField("Nodes"));
 
 		//mypk
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.MyPK = this.getMyPK();
+		msg.setMyPK( this.getMyPK();
 		msg.RetrieveFromDBSources();
-		ds.Tables.Add(msg.ToDataTableField("PushMsgEntity"));
+		ds.Tables.add(msg.ToDataTableField("PushMsgEntity"));
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
@@ -311,21 +311,21 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		// nd.FormUrl = nd.FormUrl;
 
 		DataTable mydt = nd.ToDataTableField("WF_Node");
-		ds.Tables.Add(mydt);
+		ds.Tables.add(mydt);
 
 		BtnLabExtWebOffice mybtn = new BtnLabExtWebOffice(this.getFK_Node());
 		DataTable mydt2 = mybtn.ToDataTableField("WF_BtnLabExtWebOffice");
-		ds.Tables.Add(mydt2);
+		ds.Tables.add(mydt2);
 
 		BtnLab btn = new BtnLab(this.getFK_Node());
 		DataTable dtBtn = btn.ToDataTableField("WF_BtnLab");
-		ds.Tables.Add(dtBtn);
+		ds.Tables.add(dtBtn);
 
 		//节点s
 		Nodes nds = new Nodes(nd.getFK_Flow());
 
 		//节点s
-		ds.Tables.Add(nds.ToDataTableField("Nodes"));
+		ds.Tables.add(nds.ToDataTableField("Nodes"));
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -539,7 +539,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		tdtl.No = getFK_MapData();
 		if (tdtl.RetrieveFromDBSources() == 1)
 		{
-			ds.Tables.Add(tdtl.ToDataTableField("tdtl"));
+			ds.Tables.add(tdtl.ToDataTableField("tdtl"));
 		}
 
 		return BP.Tools.Json.ToJson(ds);
@@ -572,7 +572,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			{
 				if (IsExistInDataRowArray(dtGroups.Rows, GroupFieldAttr.OID, dr.get(MapAttrAttr.GroupID)) == false)
 				{
-					dtNoGroupAttrs.Rows.Add(dr.ItemArray);
+					dtNoGroupAttrs.Rows.add(dr.ItemArray);
 				}
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -583,7 +583,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 如果没有，则创建分组（1.明细2.多附件3.按钮）
 			//01、未分组明细表,自动创建一个
-			for (MapDtl mapDtl : dtls)
+			for (MapDtl mapDtl : dtls.ToJavaList())
 			{
 				if (GetGroupID(mapDtl.No, groups) == 0)
 				{
@@ -673,7 +673,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			}
 
 
-			isDtl.Rows.Add(tddr.ItemArray);
+			isDtl.Rows.add(tddr.ItemArray);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion
 
@@ -697,26 +697,26 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				}
 				DataTable dtNodes = nodes.ToDataTableField("dtNodes");
 				dtNodes.TableName = "dtNodes";
-				ds.Tables.Add(dtNodes);
+				ds.Tables.add(dtNodes);
 			}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion
 
-			ds.Tables.Add(mapdatas.ToDataTableField("mapdatas"));
+			ds.Tables.add(mapdatas.ToDataTableField("mapdatas"));
 			dtGroups.TableName = "dtGroups";
-			ds.Tables.Add(dtGroups);
+			ds.Tables.add(dtGroups);
 			dtNoGroupAttrs.TableName = "dtNoGroupAttrs";
-			ds.Tables.Add(dtNoGroupAttrs);
+			ds.Tables.add(dtNoGroupAttrs);
 			dtAttrs.TableName = "dtAttrs";
-			ds.Tables.Add(dtAttrs);
+			ds.Tables.add(dtAttrs);
 			dtDtls.TableName = "dtDtls";
-			ds.Tables.Add(dtDtls);
-			ds.Tables.Add(athMents.ToDataTableField("athMents"));
-			ds.Tables.Add(btns.ToDataTableField("btns"));
-			ds.Tables.Add(isDtl);
+			ds.Tables.add(dtDtls);
+			ds.Tables.add(athMents.ToDataTableField("athMents"));
+			ds.Tables.add(btns.ToDataTableField("btns"));
+			ds.Tables.add(isDtl);
 
-			//ds.Tables.Add(nodes.ToDataTableField("nodes"));
+			//ds.Tables.add(nodes.ToDataTableField("nodes"));
 		}
 	}
 
@@ -1045,7 +1045,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				int groupidx = 0;
 				int tgroupidx = 0;
 
-				for (MapDtl dtl : dtls)
+				for (MapDtl dtl : dtls.ToJavaList())
 				{
 					dtlIdx = dtl.No.Replace(dtl.FK_MapData + "Dtl", "");
 					Object tempVar5 = tdtls.GetEntityByKey(MapDtlAttr.No, tmd + "Dtl" + dtlIdx);
@@ -1540,7 +1540,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			dr.set("HisFinishCondsCount", conds.size());
 
 
-			dt.Rows.Add(dr);
+			dt.Rows.add(dr);
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -1719,7 +1719,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		nds.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, this.getFK_Flow());
 
 		int i = 0;
-		for (BP.WF.Node nd : nds)
+		for (BP.WF.Node nd : nds.ToJavaList())
 		{
 			String cb = this.GetRequestVal("CB_" + nd.getNodeID());
 			if (cb == null || cb.equals(""))
@@ -1747,12 +1747,12 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		///#region 表单检查(CheckFrm.htm)
 	public final String CheckFrm_Check()
 	{
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			return "err@只有管理员有权限进行此项操作！";
 		}
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_MapData()))
+		if (DataType.IsNullOrEmpty(this.getFK_MapData()))
 		{
 			return "err@参数FK_MapData不能为空！";
 		}
@@ -1769,11 +1769,11 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		//1.1主表
 		for (MapExt me : mes)
 		{
-			if (!tangible.StringHelper.isNullOrWhiteSpace(me.AttrOfOper))
+			if (!DataType.IsNullOrEmpty(me.AttrOfOper))
 			{
 				en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrOfOper);
 
-				if (en != null && !tangible.StringHelper.isNullOrWhiteSpace(me.AttrsOfActive))
+				if (en != null && !DataType.IsNullOrEmpty(me.AttrsOfActive))
 				{
 					en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrsOfActive);
 				}
@@ -1787,18 +1787,18 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 
 		//1.2明细表
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			mes = new MapExts(dtl.No);
 			attrs = new MapAttrs(dtl.No);
 
 			for (MapExt me : mes)
 			{
-				if (!tangible.StringHelper.isNullOrWhiteSpace(me.AttrOfOper))
+				if (!DataType.IsNullOrEmpty(me.AttrOfOper))
 				{
 					en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrOfOper);
 
-					if (en != null && !tangible.StringHelper.isNullOrWhiteSpace(me.AttrsOfActive))
+					if (en != null && !DataType.IsNullOrEmpty(me.AttrsOfActive))
 					{
 						en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrsOfActive);
 					}
@@ -1829,7 +1829,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 
 		//2.2明细表
-		for (MapDtl dtl : dtls)
+		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			ffs = new FrmFields();
 			ffs.Retrieve(FrmFieldAttr.FK_MapData, dtl.No);

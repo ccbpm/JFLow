@@ -33,7 +33,7 @@ public class SysEnumMains extends EntitiesNoName
 	*/
 	public final List<SysEnumMain> ToJavaList()
 	{
-		return (List<SysEnumMain>)this;
+		return (List<SysEnumMain>)(Object)this;
 	}
 
 	/** 

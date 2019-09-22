@@ -167,7 +167,7 @@ public class FrmEleDB extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction()
 	{
-		//this.MyPK = this.FK_MapData + "_" + this.EleID + "_" + this.RefPKVal;
+		//this.setMyPK( this.FK_MapData + "_" + this.EleID + "_" + this.RefPKVal;
 	   // this.GenerPKVal();
 		return super.beforeUpdateInsertAction();
 	}

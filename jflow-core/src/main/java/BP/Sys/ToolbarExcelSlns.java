@@ -35,7 +35,7 @@ public class ToolbarExcelSlns extends EntitiesMyPK
 	*/
 	public final List<ToolbarExcelSln> ToJavaList()
 	{
-		return (List<ToolbarExcelSln>)this;
+		return (List<ToolbarExcelSln>)(Object)this;
 	}
 
 	/** 
@@ -48,7 +48,7 @@ public class ToolbarExcelSlns extends EntitiesMyPK
 		ArrayList<ToolbarExcelSln> list = new ArrayList<ToolbarExcelSln>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((ToolbarExcelSln)this[i]);
+			list.add((ToolbarExcelSln)this.get(i));
 		}
 		return list;
 	}

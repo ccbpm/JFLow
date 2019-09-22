@@ -54,7 +54,7 @@ public class GenerWorkFlows extends Entities
 	*/
 	public final List<GenerWorkFlow> ToJavaList()
 	{
-		return (List<GenerWorkFlow>)this;
+		return (List<GenerWorkFlow>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -66,7 +66,7 @@ public class GenerWorkFlows extends Entities
 		ArrayList<BP.WF.GenerWorkFlow> list = new ArrayList<BP.WF.GenerWorkFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((BP.WF.GenerWorkFlow)this[i]);
+			list.add((BP.WF.GenerWorkFlow)this.get(i));
 		}
 		return list;
 	}

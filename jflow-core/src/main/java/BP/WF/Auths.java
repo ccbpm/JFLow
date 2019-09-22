@@ -35,7 +35,7 @@ public class Auths extends EntitiesMyPK
 	*/
 	public final List<Auth> ToJavaList()
 	{
-		return (List<Auth>)this;
+		return (List<Auth>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -47,7 +47,7 @@ public class Auths extends EntitiesMyPK
 		ArrayList<Auth> list = new ArrayList<Auth>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Auth)this[i]);
+			list.add((Auth)this.get(i));
 		}
 		return list;
 	}

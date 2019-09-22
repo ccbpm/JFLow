@@ -45,7 +45,7 @@ public class Cond extends EntityMyPK
 		BP.WF.Template.SpecOperWay way = this.getSpecOperWay();
 		if (way == Template.SpecOperWay.CurrOper)
 		{
-			return BP.Web.WebUser.No;
+			return WebUser.getNo();
 		}
 
 
@@ -448,7 +448,7 @@ public class Cond extends EntityMyPK
 	*/
 	public Cond(String mypk)
 	{
-		this.MyPK = mypk;
+		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -500,14 +500,14 @@ public class Cond extends EntityMyPK
 				{
 					if (strs.contains("@" + st.FK_Station + "@"))
 					{
-						this.MsgOfCond = "@以岗位判断方向，条件为true：岗位集合" + strs + "，操作员(" + BP.Web.WebUser.No + ")岗位:" + st.FK_Station + st.FK_StationT;
+						this.MsgOfCond = "@以岗位判断方向，条件为true：岗位集合" + strs + "，操作员(" + WebUser.getNo() + ")岗位:" + st.FK_Station + st.FK_StationT;
 						return true;
 					}
 					strs1 += st.FK_Station + "-" + st.FK_StationT;
 				}
 			}
 
-			this.MsgOfCond = "@以岗位判断方向，条件为false：岗位集合" + strs + "，操作员(" + BP.Web.WebUser.No + ")岗位:" + strs1;
+			this.MsgOfCond = "@以岗位判断方向，条件为false：岗位集合" + strs + "，操作员(" + WebUser.getNo() + ")岗位:" + strs1;
 			return false;
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion
@@ -550,13 +550,13 @@ public class Cond extends EntityMyPK
 			{
 				if (strs.contains("@" + st.FK_Dept + "@"))
 				{
-					this.MsgOfCond = "@以岗位判断方向，条件为true：部门集合" + strs + "，操作员(" + BP.Web.WebUser.No + ")部门:" + st.FK_Dept;
+					this.MsgOfCond = "@以岗位判断方向，条件为true：部门集合" + strs + "，操作员(" + WebUser.getNo() + ")部门:" + st.FK_Dept;
 					return true;
 				}
 				strs1 += st.FK_Dept;
 			}
 
-			this.MsgOfCond = "@以部门判断方向，条件为false：部门集合" + strs + "，操作员(" + BP.Web.WebUser.No + ")部门:" + strs1;
+			this.MsgOfCond = "@以部门判断方向，条件为false：部门集合" + strs + "，操作员(" + WebUser.getNo() + ")部门:" + strs1;
 			return false;
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -570,9 +570,9 @@ public class Cond extends EntityMyPK
 				//this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.AttrKey + " (" + en.GetValStringByKey(this.AttrKey) + ") 操作符:(" + this.FK_Operator + ") 判断值:(" + this.OperatorValue.ToString() + ")";
 			String sql = this.getOperatorValueStr();
 			sql = sql.replace("~", "'");
-			sql = sql.replace("@WebUser.No", BP.Web.WebUser.No);
-			sql = sql.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			sql = sql.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+			sql = sql.replace("@WebUser.getName()", WebUser.getName());
+			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 				//获取参数值
 				//System.Collections.Specialized.NameValueCollection urlParams = HttpContextHelper.RequestParams; // System.Web.HttpContext.Current.Request.Form;
@@ -595,7 +595,7 @@ public class Cond extends EntityMyPK
 			if (sql.contains("@") == true)
 			{
 					/* 如果包含 @ */
-				for (Attr attr : this.en.getEnMap().Attrs)
+				for (Attr attr : this.en.getEnMap().getAttrs())
 				{
 					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.Key));
 				}
@@ -628,9 +628,9 @@ public class Cond extends EntityMyPK
 
 			String sql = sqltemplate.getDocs();
 			sql = sql.replace("~", "'");
-			sql = sql.replace("@WebUser.No", BP.Web.WebUser.No);
-			sql = sql.replace("@WebUser.Name", BP.Web.WebUser.Name);
-			sql = sql.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+			sql = sql.replace("@WebUser.getName()", WebUser.getName());
+			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 			if (en.IsOIDEntity == true)
 			{
@@ -641,7 +641,7 @@ public class Cond extends EntityMyPK
 			if (sql.contains("@") == true)
 			{
 					/* 如果包含 @ */
-				for (Attr attr : this.en.getEnMap().Attrs)
+				for (Attr attr : this.en.getEnMap().getAttrs())
 				{
 					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.Key));
 				}
@@ -699,12 +699,12 @@ public class Cond extends EntityMyPK
 
 			if (url.contains("&SID") == false)
 			{
-				url += "&SID=" + BP.Web.WebUser.SID;
+				url += "&SID=" + WebUser.SID;
 			}
 
 			if (url.contains("&UserNo") == false)
 			{
-				url += "&UserNo=" + BP.Web.WebUser.No;
+				url += "&UserNo=" + WebUser.getNo();
 			}
 
 
@@ -848,7 +848,7 @@ public class Cond extends EntityMyPK
 			//从节点表单里判断.
 		if (this.getHisDataFrom() == ConnDataFrom.NodeForm)
 		{
-			if (en.getEnMap().Attrs.Contains(this.getAttrKey()) == false)
+			if (en.getEnMap().getAttrs().Contains(this.getAttrKey()) == false)
 			{
 				throw new RuntimeException("err@判断条件方向出现错误：实体：" + nd.EnDesc + " 属性" + this.getAttrKey() + "已经被删除方向条件判断失败.");
 			}
@@ -970,9 +970,9 @@ public class Cond extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_Cond", "条件");
 		map.IndexField = CondAttr.NodeID;
@@ -1008,8 +1008,8 @@ public class Cond extends EntityMyPK
 			//      map.AddDDLSysEnum(NodeAttr.CondOrAnd, 0, "方向条件类型",
 			//true, true, NodeAttr.CondOrAnd, "@0=And(条件集合中所有的都成立)@1=Or(条件集合中只有一个成立)");
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

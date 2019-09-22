@@ -60,7 +60,7 @@ public class AppClass
 					mydr.set("NodeName", tond.getName());
 					mydr.set("FK_Node", tond.getNodeID()); // nd["NodeID"].ToString();
 					mydr.set("RunModel", tond.getHisRunModel().getValue());
-					tracks.Rows.Add(mydr);
+					tracks.Rows.add(mydr);
 
 					//设置当前节点.
 				  //  currNode = tond.HisToNodes[0].GetValIntByKey("NodeID");
@@ -84,7 +84,7 @@ public class AppClass
 					mydr.set("NodeName", nd.get("Name").toString());
 					mydr.set("FK_Node", nd.get("NodeID").toString());
 					mydr.set("RunModel", nd.get("RunModel").toString());
-					tracks.Rows.Add(mydr);
+					tracks.Rows.add(mydr);
 					break;
 				}
 			}
@@ -128,7 +128,7 @@ public class AppClass
 			drNew.set("SDT", dr.get("SDT"));
 			drNew.set("IsPass", dr.get("IsPass"));
 
-			dtNew.Rows.Add(drNew);
+			dtNew.Rows.add(drNew);
 		}
 
 		return BP.Tools.Json.ToJson(dtNew);
@@ -187,7 +187,7 @@ public class AppClass
 
 			//加载接口.
 			DataSet ds = new DataSet();
-			ds = BP.WF.CCFlowAPI.GenerWorkNode(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), BP.Web.WebUser.No);
+			ds = BP.WF.CCFlowAPI.GenerWorkNode(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), WebUser.getNo());
 
 			//要保留的tables.
 		   // string tables = ",WF_GenerWorkFlow,WF_Node,AlertMsg,Track,";
@@ -226,7 +226,7 @@ public class AppClass
 			String sql = "SELECT C.Name AS DeptName, A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workid + " AND (A.ActionType=" + ActionType.WorkCheck.getValue() + ") AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dtTrack.TableName = "Track";
-			ds.Tables.Add(dtTrack);
+			ds.Tables.add(dtTrack);
 
 			return BP.Tools.Json.ToJson(ds);
 		}

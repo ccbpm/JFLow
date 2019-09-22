@@ -21,8 +21,9 @@ public class FrmEles extends EntitiesMyPK
 	 表单元素扩展s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmEles(String fk_mapdata)
+	public FrmEles(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{
@@ -53,7 +54,7 @@ public class FrmEles extends EntitiesMyPK
 	*/
 	public final List<FrmEle> ToJavaList()
 	{
-		return (List<FrmEle>)this;
+		return (List<FrmEle>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -65,7 +66,7 @@ public class FrmEles extends EntitiesMyPK
 		ArrayList<FrmEle> list = new ArrayList<FrmEle>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmEle)this[i]);
+			list.add((FrmEle)this.get(i));
 		}
 		return list;
 	}

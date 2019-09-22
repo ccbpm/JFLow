@@ -72,7 +72,7 @@ public class PerSetting extends EntityMyPK
 	*/
 	public PerSetting(String no)
 	{
-		this.MyPK = no;
+		this.setMyPK( no;
 		this.Retrieve();
 	}
 	/** 
@@ -81,9 +81,9 @@ public class PerSetting extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("GPM_PerSetting");
@@ -100,8 +100,8 @@ public class PerSetting extends EntityMyPK
 		map.AddTBString(PerSettingAttr.UserPass, null, "UserPass", true, false, 0, 200, 20, true);
 		map.AddTBInt(PerSettingAttr.Idx, 0, "显示顺序", false, true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -109,7 +109,7 @@ public class PerSetting extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction()
 	{
-		this.MyPK = this.getFK_Emp() + "_" + this.getFK_App();
+		this.setMyPK( this.getFK_Emp() + "_" + this.getFK_App();
 		return super.beforeUpdateInsertAction();
 	}
 }

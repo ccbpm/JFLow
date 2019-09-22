@@ -89,7 +89,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			if (this.getWorkID() != 0)
 			{
 				Paras ps = new Paras();
-				ps.SQL = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.AppCenterDBVarStr + "WorkID";
+				ps.SQL = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 				ps.Add("WorkID", this.getWorkID());
 				_FK_Node = DBAccess.RunSQLReturnValInt(ps, 0);
 			}
@@ -220,7 +220,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			Object tempVar = fl.getStartGuidePara2().Clone();
 			String sql = tempVar instanceof String ? (String)tempVar : null;
 			//判断是否有查询条件
-			if (!tangible.StringHelper.isNullOrWhiteSpace(skey))
+			if (!DataType.IsNullOrEmpty(skey))
 			{
 				Object tempVar2 = fl.getStartGuidePara1().Clone();
 				sql = tempVar2 instanceof String ? (String)tempVar2 : null;
@@ -228,10 +228,10 @@ public class WF_MyFlow extends DirectoryPageBase
 			}
 			sql = sql.replace("~", "'");
 			//替换约定参数
-			sql = sql.replace("@WebUser.No", WebUser.No);
-			sql = sql.replace("@WebUser.Name", WebUser.Name);
-			sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
-			sql = sql.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
+			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+			sql = sql.replace("@WebUser.getName()", WebUser.getName());
+			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
 
 			if (sql.contains("@") == true)
 			{
@@ -290,11 +290,11 @@ public class WF_MyFlow extends DirectoryPageBase
 		if (this.getWorkID() != 0)
 		{
 			//判断是否有执行该工作的权限.
-			boolean isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), BP.Web.WebUser.No);
+			boolean isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
 			if (isCanDo == false)
 			{
 				GenerWorkFlow mygwf = new GenerWorkFlow(this.getWorkID());
-				return "err@您[" + WebUser.No + "," + WebUser.Name + "]不能执行当前工作, 当前工作已经运转到[" + mygwf.getNodeName() + "],处理人[" + mygwf.getTodoEmps() + "]。";
+				return "err@您[" + WebUser.getNo() + "," + WebUser.getName() + "]不能执行当前工作, 当前工作已经运转到[" + mygwf.getNodeName() + "],处理人[" + mygwf.getTodoEmps() + "]。";
 			}
 
 			gwf = new GenerWorkFlow();
@@ -354,10 +354,10 @@ public class WF_MyFlow extends DirectoryPageBase
 		{
 			try
 			{
-				if (BP.WF.Dev2Interface.Flow_IsCanStartThisFlow(this.getFK_Flow(), WebUser.No, this.getPFlowNo(), this.getPNodeID(), this.getPWorkID()) == false)
+				if (BP.WF.Dev2Interface.Flow_IsCanStartThisFlow(this.getFK_Flow(), WebUser.getNo(), this.getPFlowNo(), this.getPNodeID(), this.getPWorkID()) == false)
 				{
 					/*是否可以发起流程？ @李国文. */
-					return "err@您(" + BP.Web.WebUser.No + ")没有发起或者处理该流程的权限.";
+					return "err@您(" + WebUser.getNo() + ")没有发起或者处理该流程的权限.";
 				}
 			}
 			catch (RuntimeException ex)
@@ -370,7 +370,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		if (this.getWorkID() == 0 && this.getcurrND().getIsStartNode() && this.GetRequestVal("IsCheckGuide") == null)
 		{
 
-			long workid = BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null, WebUser.No, null, this.getPWorkID(), this.getPFID(), this.getPFlowNo(), this.getPNodeID(), null, 0, null,null,isStartSameLevelFlow);
+			long workid = BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null, WebUser.getNo(), null, this.getPWorkID(), this.getPFID(), this.getPFlowNo(), this.getPNodeID(), null, 0, null,null,isStartSameLevelFlow);
 
 			String hostRun = this.getcurrFlow().GetValStrByKey(FlowAttr.HostRun);
 			if (DataType.IsNullOrEmpty(hostRun) == false)
@@ -428,7 +428,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				String pEmp = ""; // dt.Rows[0]["PEmp"].ToString();
 				if (DataType.IsNullOrEmpty(pEmp))
 				{
-					pEmp = WebUser.No;
+					pEmp = WebUser.getNo();
 				}
 
 				//设置父子关系.
@@ -450,7 +450,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			gwf.SetPara("SLFlowNo", slFlowNo);
 			gwf.SetPara("SLNodeID", slNode);
 			gwf.SetPara("SLWorkID", slWorkID);
-			gwf.SetPara("SLEmp", BP.Web.WebUser.No);
+			gwf.SetPara("SLEmp", WebUser.getNo());
 			gwf.Update();
 		}
 
@@ -466,7 +466,7 @@ public class WF_MyFlow extends DirectoryPageBase
 
 			if (this.getWorkID() == 0)
 			{
-				this.setWorkID(BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null, WebUser.No, null));
+				this.setWorkID(BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null, WebUser.getNo(), null));
 				currWK = getcurrND().getHisWork();
 				currWK.setOID(this.getWorkID());
 				currWK.Retrieve();
@@ -509,22 +509,22 @@ public class WF_MyFlow extends DirectoryPageBase
 			{
 				if (gwf.getParas_Frms().equals("") == false)
 				{
-					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.No + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
+					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
 				}
 				else
 				{
-					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.No + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
+					toUrl = "MyFlowGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
 				}
 			}
 			else
 			{
 				if (gwf.getParas_Frms().equals("") == false)
 				{
-					toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.No + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
+					toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParas_Frms();
 				}
 				else
 				{
-					toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.No + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
+					toUrl = "MyFlowTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&SID=" + WebUser.SID + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
 				}
 			}
 
@@ -798,7 +798,7 @@ public class WF_MyFlow extends DirectoryPageBase
 
 		if (urlExt.contains("&UserNo") == false)
 		{
-			urlExt += "&UserNo=" + HttpUtility.UrlEncode(WebUser.No);
+			urlExt += "&UserNo=" + HttpUtility.UrlEncode(WebUser.getNo());
 		}
 
 		if (urlExt.contains("&SID") == false)
@@ -919,7 +919,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				{
 					if (btnLab.getHuiQianLeaderRole() == 0)
 					{
-						if (!gwf.getHuiQianZhuChiRen().equals(WebUser.No))
+						if (!gwf.getHuiQianZhuChiRen().equals(WebUser.getNo()))
 						{
 							isAskForOrHuiQian = true;
 						}
@@ -927,7 +927,7 @@ public class WF_MyFlow extends DirectoryPageBase
 					else
 					{
 						//不是主持人
-						if (gwf.getHuiQianZhuChiRen().contains(WebUser.No + ",") == false)
+						if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false)
 						{
 							isAskForOrHuiQian = true;
 						}
@@ -944,7 +944,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 是否是会签？.
-			if (isAskForOrHuiQian == true && SystemConfig.CustomerNo.equals("LIMS"))
+			if (isAskForOrHuiQian == true && SystemConfig.getCustomerNo().equals("LIMS"))
 			{
 				return "";
 			}
@@ -1387,7 +1387,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			else
 			{
 				/*判断是否是加签状态，如果是，就判断是否是主持人，如果不是主持人，就让其 isAskFor=true ,屏蔽退回等按钮. */
-				if (gwf.getTodoEmps().contains(WebUser.No + ",") == false)
+				if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
 				{
 					isAskForOrHuiQian = true;
 				}
@@ -1672,7 +1672,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				}
 			}
 
-			if (!SystemConfig.CustomerNo.equals("XJTY"))
+			if (!SystemConfig.getCustomerNo().equals("XJTY"))
 			{
 				/* 打包下载zip */
 				if (btnLab.getPrintZipEnable() == true)
@@ -1853,9 +1853,9 @@ public class WF_MyFlow extends DirectoryPageBase
 						}
 						myurl = myurl.replace("@" + attr.Key, hisWK.GetValStrByKey(attr.Key));
 					}
-					myurl = myurl.replace("@WebUser.No", BP.Web.WebUser.No);
-					myurl = myurl.replace("@WebUser.Name", BP.Web.WebUser.Name);
-					myurl = myurl.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+					myurl = myurl.replace("@WebUser.getNo()", WebUser.getNo());
+					myurl = myurl.replace("@WebUser.getName()", WebUser.getName());
+					myurl = myurl.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 					if (myurl.contains("@"))
 					{
@@ -1868,7 +1868,7 @@ public class WF_MyFlow extends DirectoryPageBase
 						myurl += "&PWorkID=" + this.getWorkID();
 					}
 
-					myurl += "&FromFlow=" + this.getFK_Flow() + "&FromNode=" + this.getFK_Node() + "&UserNo=" + WebUser.No + "&SID=" + WebUser.SID;
+					myurl += "&FromFlow=" + this.getFK_Flow() + "&FromNode=" + this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.SID;
 					return "TurnUrl@" + myurl;
 				case TurnToByCond:
 					//TurnTos tts = new TurnTos(this.FK_Flow);
@@ -1897,15 +1897,15 @@ public class WF_MyFlow extends DirectoryPageBase
 					//        if (url.Contains("@"))
 					//            throw new Exception("流程设计错误，在节点转向url中参数没有被替换下来。Url:" + url);
 
-					//        url += "&PFlowNo=" + this.FK_Flow + "&FromNode=" + this.FK_Node + "&PWorkID=" + this.WorkID + "&UserNo=" + WebUser.No + "&SID=" + WebUser.SID;
+					//        url += "&PFlowNo=" + this.FK_Flow + "&FromNode=" + this.FK_Node + "&PWorkID=" + this.WorkID + "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.SID;
 					//        return "url@" + url;
 					//    }
 					//}
 					return msg;
 				default:
-					msg = msg.replace("@WebUser.No", BP.Web.WebUser.No);
-					msg = msg.replace("@WebUser.Name", BP.Web.WebUser.Name);
-					msg = msg.replace("@WebUser.FK_Dept", BP.Web.WebUser.FK_Dept);
+					msg = msg.replace("@WebUser.getNo()", WebUser.getNo());
+					msg = msg.replace("@WebUser.getName()", WebUser.getName());
+					msg = msg.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					return msg;
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1935,7 +1935,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			//绑定独立表单，表单自定义方案验证错误弹出窗口进行提示.
 			if (ex.getMessage().Contains("提交前检查到如下必填字段填写不完整") == true || ex.getMessage().Contains("您没有上传附件") == true || ex.getMessage().Contains("您没有上传图片附件") == true)
 			{
-				return "err@" + ex.getMessage().Replace("@@", "@").Replace("@", "<BR>@");
+				return "err@" + ex.getMessage().replace("@@", "@").replace("@", "<BR>@");
 			}
 
 			//防止发送失败丢失接受人，导致不能出现下拉方向选择框. @杜.
@@ -1945,21 +1945,21 @@ public class WF_MyFlow extends DirectoryPageBase
 				if (this.getHisGenerWorkFlow().getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)
 				{
 					//如果是主持人.
-					if (this.getHisGenerWorkFlow().getHuiQianZhuChiRen().equals(WebUser.No))
+					if (this.getHisGenerWorkFlow().getHuiQianZhuChiRen().equals(WebUser.getNo()))
 					{
-						if (this.getHisGenerWorkFlow().getTodoEmps().contains(BP.Web.WebUser.No + ",") == false)
+						if (this.getHisGenerWorkFlow().getTodoEmps().contains(WebUser.getNo() + ",") == false)
 						{
-							this.getHisGenerWorkFlow().setTodoEmps(this.getHisGenerWorkFlow().getTodoEmps() + WebUser.No + "," + BP.Web.WebUser.Name + ";");
+							this.getHisGenerWorkFlow().setTodoEmps(this.getHisGenerWorkFlow().getTodoEmps() + WebUser.getNo() + "," + WebUser.getName() + ";");
 							this.getHisGenerWorkFlow().Update();
 						}
 					}
 					else
 					{
 						//非主持人.
-						String empStr = BP.Web.WebUser.No + "," + BP.Web.WebUser.Name + ";";
+						String empStr = WebUser.getNo() + "," + WebUser.getName() + ";";
 						if (this.getHisGenerWorkFlow().getTodoEmps().contains(empStr) == false)
 						{
-							this.getHisGenerWorkFlow().setTodoEmps(this.getHisGenerWorkFlow().getTodoEmps() + empStr); // BP.Web.WebUser.No +","+BP.Web.WebUser.Name + ";";
+							this.getHisGenerWorkFlow().setTodoEmps(this.getHisGenerWorkFlow().getTodoEmps() + empStr); // WebUser.getNo() +","+WebUser.getName() + ";";
 							this.getHisGenerWorkFlow().Update();
 						}
 					}
@@ -1968,7 +1968,7 @@ public class WF_MyFlow extends DirectoryPageBase
 
 				if (this.getHisGenerWorkFlow().getHuiQianTaskSta() != HuiQianTaskSta.HuiQianing)
 				{
-					String empStr = BP.Web.WebUser.No + "," + BP.Web.WebUser.Name + ";";
+					String empStr = WebUser.getNo() + "," + WebUser.getName() + ";";
 					if (this.getHisGenerWorkFlow().getTodoEmps().contains(empStr) == false)
 					{
 						this.getHisGenerWorkFlow().setTodoEmps(this.getHisGenerWorkFlow().getTodoEmps() + empStr);
@@ -1994,7 +1994,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		//判断是否有查询条件
 		Object tempVar = fl.getStartGuidePara2().Clone();
 		sql = tempVar instanceof String ? (String)tempVar : null;
-		if (!tangible.StringHelper.isNullOrWhiteSpace(key))
+		if (!DataType.IsNullOrEmpty(key))
 		{
 			Object tempVar2 = fl.getStartGuidePara1().Clone();
 			sql = tempVar2 instanceof String ? (String)tempVar2 : null;
@@ -2002,10 +2002,10 @@ public class WF_MyFlow extends DirectoryPageBase
 		}
 		//替换变量
 		sql = sql.replace("~", "'");
-		sql = sql.replace("@WebUser.No", WebUser.No);
-		sql = sql.replace("@WebUser.Name", WebUser.Name);
-		sql = sql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
-		sql = sql.replace("@WebUser.FK_DeptName", WebUser.FK_DeptName);
+		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
+		sql = sql.replace("@WebUser.getName()", WebUser.getName());
+		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sql = sql.replace("@WebUser.getFK_Dept()Name", WebUser.getFK_Dept()Name);
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//获取选中的数据源
@@ -2168,33 +2168,33 @@ public class WF_MyFlow extends DirectoryPageBase
 				gwf.setNodeName(nd.getName());
 				gwf.setWFState(wfState);
 
-				gwf.setFK_Dept(WebUser.FK_Dept);
-				gwf.setDeptName(WebUser.FK_DeptName);
-				gwf.setStarter(WebUser.No);
-				gwf.setStarterName(WebUser.Name);
-				gwf.setRDT(DataType.CurrentDataTimess);
+				gwf.setFK_Dept(WebUser.getFK_Dept());
+				gwf.setDeptName(WebUser.getFK_Dept()Name);
+				gwf.setStarter(WebUser.getNo());
+				gwf.setStarterName(WebUser.getName());
+				gwf.setRDT(DataType.getCurrentDataTime()ss);
 				gwf.Insert();
 
 				// 产生工作列表.
 				GenerWorkerList gwl = new GenerWorkerList();
 				gwl.setWorkID(this.getWorkID());
-				gwl.setFK_Emp(WebUser.No);
-				gwl.setFK_EmpText(WebUser.Name);
+				gwl.setFK_Emp(WebUser.getNo());
+				gwl.setFK_EmpText(WebUser.getName());
 
 				gwl.setFK_Node(gwf.getFK_Node());
 				gwl.setFK_NodeText(nd.getName());
 				gwl.setFID(0);
 
 				gwl.setFK_Flow(gwf.getFK_Flow());
-				gwl.setFK_Dept(WebUser.FK_Dept);
-				gwl.setFK_DeptT(WebUser.FK_DeptName);
+				gwl.setFK_Dept(WebUser.getFK_Dept());
+				gwl.setFK_DeptT(WebUser.getFK_Dept()Name);
 
 				gwl.setSDT("无");
-				gwl.setDTOfWarning(DataType.CurrentDataTimess);
+				gwl.setDTOfWarning(DataType.getCurrentDataTime()ss);
 				gwl.setIsEnable(true);
 
 				gwl.setIsPass(false);
-				//  gwl.Sender = WebUser.No;
+				//  gwl.Sender = WebUser.getNo();
 				gwl.setPRI(gwf.getPRI());
 				gwl.Insert();
 			}
@@ -2342,9 +2342,9 @@ public class WF_MyFlow extends DirectoryPageBase
 
 					mysql = mysql.replace("@FK_Flow", this.getFK_Flow());
 
-					mysql = mysql.replace("@WebUser.No", WebUser.No);
-					mysql = mysql.replace("@WebUser.Name", WebUser.Name);
-					mysql = mysql.replace("@WebUser.FK_Dept", WebUser.FK_Dept);
+					mysql = mysql.replace("@WebUser.getNo()", WebUser.getNo());
+					mysql = mysql.replace("@WebUser.getName()", WebUser.getName());
+					mysql = mysql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 
 					//替换特殊字符.
@@ -2359,7 +2359,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				case ByStation:
 					Object tempVar2 = frmNode.getFrmEnableExp().Clone();
 					String exp = tempVar2 instanceof String ? (String)tempVar2 : null;
-					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.No + "'";
+					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getNo() + "'";
 					String station = DBAccess.RunSQLReturnString(Sql);
 					if (DataType.IsNullOrEmpty(station) == true)
 					{
@@ -2384,7 +2384,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				case ByDept:
 					Object tempVar3 = frmNode.getFrmEnableExp().Clone();
 					exp = tempVar3 instanceof String ? (String)tempVar3 : null;
-					Sql = "SELECT FK_Dept FROM Port_DeptEmp where FK_Emp='" + WebUser.No + "'";
+					Sql = "SELECT FK_Dept FROM Port_DeptEmp where FK_Emp='" + WebUser.getNo() + "'";
 					String dept = DBAccess.RunSQLReturnString(Sql);
 					if (DataType.IsNullOrEmpty(dept) == true)
 					{
@@ -2762,7 +2762,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		{
 			DataSet ds = new DataSet();
 
-			ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), BP.Web.WebUser.No);
+			ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), WebUser.getNo());
 
 			//Node nd = new Node(this.FK_Node);
 			//if (nd.HisFormType == NodeFormType.SheetTree)
@@ -2771,7 +2771,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			//}
 			//把他转化小写,适应多个数据库.
 			//   wf_generWorkFlowDt = DBAccess.ToLower(wf_generWorkFlowDt);
-			// ds.Tables.Add(wf_generWorkFlowDt);
+			// ds.Tables.add(wf_generWorkFlowDt);
 			// ds.WriteXml("c:\\xx.xml");
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2792,7 +2792,7 @@ public class WF_MyFlow extends DirectoryPageBase
 
 
 				//把节点与表单的关联管理放入到系统.
-				ds.Tables.Add(fns.ToDataTableField("FrmNodes"));
+				ds.Tables.add(fns.ToDataTableField("FrmNodes"));
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 如果是移动应用就考虑多表单的问题.

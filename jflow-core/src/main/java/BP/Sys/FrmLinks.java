@@ -21,8 +21,9 @@ public class FrmLinks extends EntitiesMyPK
 	 超连接s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmLinks(String fk_mapdata)
+	public FrmLinks(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
 	}
@@ -46,7 +47,7 @@ public class FrmLinks extends EntitiesMyPK
 	*/
 	public final List<FrmLink> ToJavaList()
 	{
-		return (List<FrmLink>)this;
+		return (List<FrmLink>)(Object)this;
 	}
 	/** 
 	 转化成list

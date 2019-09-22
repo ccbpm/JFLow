@@ -96,7 +96,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	public final String ConditionLine_Init()
 	{
 		ps = new Paras();
-		ps.SQL = "SELECT A.NodeID, A.Name FROM WF_Node A,  WF_Direction B WHERE A.NodeID=B.ToNode AND B.Node=" + SystemConfig.AppCenterDBVarStr + "Node";
+		ps.SQL = "SELECT A.NodeID, A.Name FROM WF_Node A,  WF_Direction B WHERE A.NodeID=B.ToNode AND B.Node=" + SystemConfig.getAppCenterDBVarStr() + "Node";
 		ps.Add("Node", this.getFK_Node());
 		//string sql = "SELECT A.NodeID, A.Name FROM WF_Node A,  WF_Direction B WHERE A.NodeID=B.ToNode AND B.Node=" + this.FK_Node;
 
@@ -125,7 +125,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Url.toString();
 
 		Cond cond = new Cond();
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -150,7 +150,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.setHisDataFrom(ConnDataFrom.Url);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -217,19 +217,19 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Conds conds = new Conds();
 		conds.Retrieve(CondAttr.FK_Node, Integer.parseInt(fk_mainNode), CondAttr.ToNodeID, Integer.parseInt(toNodeID));
 
-		ds.Tables.Add(conds.ToDataTableField("WF_Conds"));
+		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
 
 		String noteIn = "'FID','PRI','PNodeID','PrjNo', 'PrjName', 'FK_NY','FlowDaySpan', 'MyNum','Rec','CDT','RDT','AtPara','WFSta','FlowNote','FlowStartRDT','FlowEnderRDT','FlowEnder','FlowSpanDays','WFState','OID','PWorkID','PFlowNo','PEmp','FlowEndNode','GUID'";
 
 		//增加字段集合.
 		String sql = "";
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT KeyOfEn as No, KeyOfEn||' - '||Name as Name FROM Sys_MapAttr WHERE FK_MapData='ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
 			sql += " AND KeyOfEn Not IN (" + noteIn + ") ";
 			sql += " AND MyDataType NOT IN (6,7) ";
 		}
-		else if (SystemConfig.AppCenterDBType == DBType.MySQL)
+		else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT KeyOfEn as No, CONCAT(KeyOfEn,' - ', Name ) as Name FROM Sys_MapAttr WHERE FK_MapData='ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
 			sql += " AND KeyOfEn Not IN (" + noteIn + ") ";
@@ -251,8 +251,8 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		DataRow dr = dt.NewRow();
 		dr.set(0, "all");
 		dr.set(1, "请选择表单字段");
-		dt.Rows.Add(dr);
-		ds.Tables.Add(dt);
+		dt.Rows.add(dr);
+		ds.Tables.add(dt);
 
 		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
 	}
@@ -260,7 +260,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	{
 		//字段属性.
 		MapAttr attr = new MapAttr();
-		attr.MyPK = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + this.getKeyOfEn();
+		attr.setMyPK( "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + this.getKeyOfEn();
 		attr.Retrieve();
 		return AttrCond(attr);
 	}
@@ -346,19 +346,19 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		{
 			case Flow:
 			case Node:
-				cond.MyPK = BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case Dir:
-				// cond.MyPK = cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
-				cond.MyPK = BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				// cond.setMyPK( cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case SubFlow: //启动子流程.
-				cond.MyPK = BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
@@ -382,7 +382,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	public final String StandAloneFrm_Init()
 	{
 		ps = new Paras();
-		ps.SQL = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node=" + SystemConfig.AppCenterDBVarStr + "FK_Node";
+		ps.SQL = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node";
 		ps.Add("FK_Node",this.getFK_Node());
 		//string sql = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node=" + this.FK_Node;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
@@ -393,17 +393,17 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		DataRow dr = dt.NewRow();
 		dr.set(0, "all");
 		dr.set(1, "请选择表单");
-		dt.Rows.Add(dr);
+		dt.Rows.add(dr);
 
 		DataSet ds = new DataSet();
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 
 		//增加条件集合.
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		Conds conds = new Conds();
 		conds.Retrieve(CondAttr.FK_Node, fk_mainNode, CondAttr.ToNodeID, toNodeID);
-		ds.Tables.Add(conds.ToDataTableField("WF_Conds"));
+		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
 
 		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
 	}
@@ -496,19 +496,19 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		{
 			case Flow:
 			case Node:
-				cond.MyPK = BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case Dir:
-				// cond.MyPK = cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
-				cond.MyPK = BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				// cond.setMyPK( cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case SubFlow: //启动子流程.
-				cond.MyPK = BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
@@ -524,7 +524,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	{
 		//字段属性.
 		MapAttr attr = new MapAttr();
-		attr.MyPK = this.getFrmID() + "_" + this.getKeyOfEn();
+		attr.setMyPK( this.getFrmID() + "_" + this.getKeyOfEn();
 		attr.Retrieve();
 		return AttrCond(attr);
 	}
@@ -533,12 +533,12 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		//定义数据容器.
 		DataSet ds = new DataSet();
 
-		ds.Tables.Add(attr.ToDataTableField("Sys_MapAttr"));
+		ds.Tables.add(attr.ToDataTableField("Sys_MapAttr"));
 
 		if (attr.LGType == FieldTypeS.Enum)
 		{
 			SysEnums ses = new SysEnums(attr.UIBindKey);
-			ds.Tables.Add(ses.ToDataTableField("Enums"));
+			ds.Tables.add(ses.ToDataTableField("Enums"));
 		}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -553,34 +553,34 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			DataRow dr = dtOperNumber.NewRow();
 			dr.set("No", "dengyu");
 			dr.set("Name", "= 等于");
-			dtOperNumber.Rows.Add(dr);
+			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
 			dr.set("No", "dayu");
 			dr.set("Name", " > 大于");
-			dtOperNumber.Rows.Add(dr);
+			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
 			dr.set("No", "dayudengyu");
 			dr.set("Name", " >= 大于等于");
-			dtOperNumber.Rows.Add(dr);
+			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
 			dr.set("No", "xiaoyu");
 			dr.set("Name", " < 小于");
-			dtOperNumber.Rows.Add(dr);
+			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
 			dr.set("No", "xiaoyudengyu");
 			dr.set("Name", " <= 小于等于");
-			dtOperNumber.Rows.Add(dr);
+			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
 			dr.set("No", "budengyu");
 			dr.set("Name", " != 不等于");
-			dtOperNumber.Rows.Add(dr);
+			dtOperNumber.Rows.add(dr);
 
-			ds.Tables.Add(dtOperNumber);
+			ds.Tables.add(dtOperNumber);
 		}
 		else
 		{
@@ -594,18 +594,18 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			DataRow dr = dtOper.NewRow();
 			dr.set("No", "dengyu");
 			dr.set("Name", "= 等于");
-			dtOper.Rows.Add(dr);
+			dtOper.Rows.add(dr);
 
 			dr = dtOper.NewRow();
 			dr.set("No", "like");
 			dr.set("Name", " LIKE 包含");
-			dtOper.Rows.Add(dr);
+			dtOper.Rows.add(dr);
 
 			dr = dtOper.NewRow();
 			dr.set("No", "budengyu");
 			dr.set("Name", " != 不等于");
-			dtOper.Rows.Add(dr);
-			ds.Tables.Add(dtOper);
+			dtOper.Rows.add(dr);
+			ds.Tables.add(dtOper);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 增加操作符 string.
 		}
@@ -634,7 +634,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQLTemplate.toString();
 
 		Cond cond = new Cond();
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -660,7 +660,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.setHisDataFrom(ConnDataFrom.SQLTemplate);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -720,7 +720,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQL.toString();
 
 		Cond cond = new Cond();
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -746,7 +746,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.setHisDataFrom(ConnDataFrom.SQL);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -803,12 +803,12 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		//岗位类型.
 		BP.GPM.StationTypes tps = new BP.GPM.StationTypes();
 		tps.RetrieveAll();
-		ds.Tables.Add(tps.ToDataTableField("StationTypes"));
+		ds.Tables.add(tps.ToDataTableField("StationTypes"));
 
 		//岗位.
 		BP.GPM.Stations sts = new BP.GPM.Stations();
 		sts.RetrieveAll();
-		ds.Tables.Add(sts.ToDataTableField("Stations"));
+		ds.Tables.add(sts.ToDataTableField("Stations"));
 
 
 		//取有可能存盘的数据.
@@ -816,9 +816,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		Cond cond = new Cond();
 		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.RetrieveFromDBSources();
-		ds.Tables.Add(cond.ToDataTableField("Cond"));
+		ds.Tables.add(cond.ToDataTableField("Cond"));
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
@@ -842,7 +842,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + HisCondType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + ToNodeID + ") AND DataFrom!=" + ConnDataFrom.Stas.getValue());
 
 		// 删除岗位条件.
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		if (cond.RetrieveFromDBSources() == 0)
 		{
 			cond.setHisDataFrom(ConnDataFrom.Stas);
@@ -915,7 +915,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + this.GetRequestValInt("ToNodeID") + ") AND DataFrom!=" + ConnDataFrom.Depts.getValue());
 
 		String mypk = this.GetRequestValInt("FK_MainNode") + "_" + this.GetRequestValInt("ToNodeID") + "_" + condType.toString() + "_" + ConnDataFrom.Depts.toString();
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 
 		if (cond.RetrieveFromDBSources() == 0)
 		{
@@ -986,7 +986,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Paras.toString();
 
 		Cond cond = new Cond();
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -1012,7 +1012,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.setHisDataFrom(ConnDataFrom.Paras);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -1064,12 +1064,12 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		//岗位类型.
 		BP.GPM.StationTypes tps = new BP.GPM.StationTypes();
 		tps.RetrieveAll();
-		ds.Tables.Add(tps.ToDataTableField("StationTypes"));
+		ds.Tables.add(tps.ToDataTableField("StationTypes"));
 
 		//岗位.
 		BP.GPM.Stations sts = new BP.GPM.Stations();
 		sts.RetrieveAll();
-		ds.Tables.Add(sts.ToDataTableField("Stations"));
+		ds.Tables.add(sts.ToDataTableField("Stations"));
 
 
 		//取有可能存盘的数据.
@@ -1077,9 +1077,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		Cond cond = new Cond();
 		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
-		cond.MyPK = mypk;
+		cond.setMyPK( mypk;
 		cond.RetrieveFromDBSources();
-		ds.Tables.Add(cond.ToDataTableField("Cond"));
+		ds.Tables.add(cond.ToDataTableField("Cond"));
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
 

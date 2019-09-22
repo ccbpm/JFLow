@@ -82,9 +82,9 @@ public class Direction extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Direction", "节点方向信息");
@@ -111,8 +111,8 @@ public class Direction extends EntityMyPK
 			//DeptAttr.No, "节点部门", Dot2DotModel.TreeDept);
 
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -125,13 +125,13 @@ public class Direction extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.MyPK = this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode();
+		this.setMyPK( this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode();
 		return super.beforeInsert();
 	}
 	@Override
 	protected boolean beforeDelete()
 	{
-		this.MyPK = this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode();
+		this.setMyPK( this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode();
 		return super.beforeDelete();
 	}
 }

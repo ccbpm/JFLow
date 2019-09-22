@@ -55,7 +55,7 @@ public class FindWorkerRoles extends EntitiesOID
 	*/
 	public final List<FindWorkerRole> ToJavaList()
 	{
-		return (List<FindWorkerRole>)this;
+		return (List<FindWorkerRole>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -67,7 +67,7 @@ public class FindWorkerRoles extends EntitiesOID
 		ArrayList<FindWorkerRole> list = new ArrayList<FindWorkerRole>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FindWorkerRole)this[i]);
+			list.add((FindWorkerRole)this.get(i));
 		}
 		return list;
 	}

@@ -78,7 +78,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		//所有的字段.
 		String fk_mapdata = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
 		MapAttrs mattrs = new MapAttrs(fk_mapdata);
-		ds.Tables.Add(mattrs.ToDataTableField("Sys_MapAttrOfAll"));
+		ds.Tables.add(mattrs.ToDataTableField("Sys_MapAttrOfAll"));
 
 		//判断rptNo是否存在于mapdata中
 		MapData md = new MapData();
@@ -110,7 +110,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 
 		//选择的字段,就是报表的字段.
 		MapAttrs mattrsOfRpt = new MapAttrs(rptNo);
-		ds.Tables.Add(mattrsOfRpt.ToDataTableField("Sys_MapAttrOfSelected"));
+		ds.Tables.add(mattrsOfRpt.ToDataTableField("Sys_MapAttrOfSelected"));
 
 		//系统字段.
 		MapAttrs mattrsOfSystem = new MapAttrs();
@@ -122,7 +122,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 				mattrsOfSystem.AddEntity(item);
 			}
 		}
-		ds.Tables.Add(mattrsOfSystem.ToDataTableField("Sys_MapAttrOfSystem"));
+		ds.Tables.add(mattrsOfSystem.ToDataTableField("Sys_MapAttrOfSystem"));
 
 		//返回.
 		return BP.Tools.Json.DataSetToJson(ds, false);
@@ -173,7 +173,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 			if (attr.KeyOfEn.equals("Title") || attr.KeyOfEn.equals("WorkID") || attr.KeyOfEn.equals("OID"))
 			{
 				attr.FK_MapData = rptNo;
-				attr.MyPK = attr.FK_MapData + "_" + attr.KeyOfEn;
+				attr.setMyPK( attr.FK_MapData + "_" + attr.KeyOfEn;
 				attr.DirectInsert();
 				continue;
 			}
@@ -182,7 +182,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 			if (fields.contains("," + attr.KeyOfEn + ",") == true)
 			{
 				attr.FK_MapData = rptNo;
-				attr.MyPK = attr.FK_MapData + "_" + attr.KeyOfEn;
+				attr.setMyPK( attr.FK_MapData + "_" + attr.KeyOfEn;
 				attr.DirectInsert();
 			}
 		}
@@ -268,7 +268,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 			String mypk = rptNo + "_" + vals[0];
 
 			MapAttr attr = new MapAttr();
-			attr.MyPK = mypk;
+			attr.setMyPK( mypk;
 			attr.Retrieve();
 
 			attr.Name = vals[1];
@@ -278,14 +278,14 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		}
 
 		MapAttr myattr = new MapAttr();
-		myattr.MyPK = rptNo + "_OID";
+		myattr.setMyPK( rptNo + "_OID";
 		myattr.RetrieveFromDBSources();
 		myattr.Idx = 200;
 		myattr.Name = "工作ID";
 		myattr.Update();
 
 		myattr = new MapAttr();
-		myattr.MyPK = rptNo + "_Title";
+		myattr.setMyPK( rptNo + "_Title";
 		myattr.RetrieveFromDBSources();
 		myattr.Idx = -100;
 		myattr.Name = "标题";
@@ -334,12 +334,12 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 			md.RetrieveFromDBSources();
 		}
 
-		ds.Tables.Add(md.ToDataTableField("Main"));
+		ds.Tables.add(md.ToDataTableField("Main"));
 
 		//查询出来枚举与外键类型的字段集合.
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo);
-		ds.Tables.Add(attrs.ToDataTableField("Sys_MapAttr"));
+		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 检查是否有日期字段.
@@ -373,7 +373,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 					dtAttrs.AddEntity(mattr);
 				}
 			}
-			ds.Tables.Add(dtAttrs.ToDataTableField("Sys_MapAttrOfDate"));
+			ds.Tables.add(dtAttrs.ToDataTableField("Sys_MapAttrOfDate"));
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion

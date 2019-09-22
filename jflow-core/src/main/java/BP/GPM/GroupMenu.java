@@ -71,9 +71,9 @@ public class GroupMenu extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("GPM_GroupMenu");
 		map.DepositaryOfEntity = Depositary.None;
@@ -84,8 +84,8 @@ public class GroupMenu extends EntityMM
 		map.AddTBStringPK(GroupMenuAttr.FK_Group, null, "权限组", false, false, 0, 50, 20);
 		map.AddTBStringPK(GroupMenuAttr.FK_Menu, null, "菜单", false, false, 0, 50, 20);
 		map.AddBoolean(GroupMenuAttr.IsChecked, true, "是否选中", true, true);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

@@ -33,7 +33,7 @@ public class SMSs extends Entities
 	*/
 	public final List<SMS> ToJavaList()
 	{
-		return (List<SMS>)this;
+		return (List<SMS>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -45,7 +45,7 @@ public class SMSs extends Entities
 		ArrayList<SMS> list = new ArrayList<SMS>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SMS)this[i]);
+			list.add((SMS)this.get(i));
 		}
 		return list;
 	}

@@ -49,7 +49,7 @@ public class SysFileManagers extends EntitiesOID
 	}
 	public final SysFileManager GetSysFileByAttrFileNo(String key)
 	{
-		for (SysFileManager en : this)
+		for (SysFileManager en : this.ToJavaList())
 		{
 			if (en.getAttrFileNo().equals(key))
 			{

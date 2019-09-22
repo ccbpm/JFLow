@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Port.*;
 import BP.WF.*;
@@ -25,7 +26,7 @@ public class CCList extends EntityMyPK
 	{
 		if (value == CCSta.Read)
 		{
-			this.setCDT(DataType.CurrentDataTime);
+			this.setCDT(DataType.getCurrentDataTime());
 		}
 		this.SetValByKey(CCListAttr.Sta, value.getValue());
 	}
@@ -37,7 +38,7 @@ public class CCList extends EntityMyPK
 	{
 
 		UAC uac = new UAC();
-		if (!BP.Web.WebUser.No.equals("admin"))
+		if (!WebUser.getNo().equals("admin"))
 		{
 			uac.IsView = false;
 			return uac;
@@ -286,9 +287,9 @@ public class CCList extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_CCList", "抄送列表");
 
@@ -326,8 +327,8 @@ public class CCList extends EntityMyPK
 			//added by liuxc,2015.7.6，标识是否在待办列表里显示
 		map.AddBoolean(CCListAttr.InEmpWorks, false, "是否加入待办列表", true, true);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

@@ -60,7 +60,7 @@ public class FrmDeptCreates extends EntitiesMM
 	*/
 	public final List<FrmDeptCreate> ToJavaList()
 	{
-		return (List<FrmDeptCreate>)this;
+		return (List<FrmDeptCreate>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -72,7 +72,7 @@ public class FrmDeptCreates extends EntitiesMM
 		ArrayList<FrmDeptCreate> list = new ArrayList<FrmDeptCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmDeptCreate)this[i]);
+			list.add((FrmDeptCreate)this.get(i));
 		}
 		return list;
 	}

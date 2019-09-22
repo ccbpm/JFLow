@@ -37,7 +37,7 @@ public class Bars extends EntitiesNoName
 	*/
 	public final List<Bar> ToJavaList()
 	{
-		return (List<Bar>)this;
+		return (List<Bar>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -49,7 +49,7 @@ public class Bars extends EntitiesNoName
 		ArrayList<Bar> list = new ArrayList<Bar>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Bar)this[i]);
+			list.add((Bar)this.get(i));
 		}
 		return list;
 	}
@@ -90,11 +90,11 @@ public class Bars extends EntitiesNoName
 
 
 			BP.GPM.BarEmp barEmp = new BarEmp();
-			barEmp.MyPK = en.getNo() + "_" + Web.WebUser.No;
+			barEmp.setMyPK( en.getNo() + "_" + Web.WebUser.getNo();
 		   int i = barEmp.RetrieveFromDBSources();
 
 			barEmp.setFK_Bar(en.getNo());
-			barEmp.setFK_Emp(Web.WebUser.No);
+			barEmp.setFK_Emp(Web.WebUser.getNo());
 			barEmp.setIsShow(true);
 			barEmp.setTitle(en.getName());
 			if (i == 0)

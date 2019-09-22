@@ -46,7 +46,7 @@ public class Delays extends EntitiesMyPK
 	*/
 	public final List<Delay> ToJavaList()
 	{
-		return (List<Delay>)this;
+		return (List<Delay>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -58,7 +58,7 @@ public class Delays extends EntitiesMyPK
 		ArrayList<Delay> list = new ArrayList<Delay>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Delay)this[i]);
+			list.add((Delay)this.get(i));
 		}
 		return list;
 	}

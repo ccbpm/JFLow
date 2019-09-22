@@ -383,9 +383,9 @@ public class GenerWorkerList extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_GenerWorkerlist", "工作者");
@@ -442,8 +442,8 @@ public class GenerWorkerList extends Entity
 			//参数标记 2014-04-05.
 		map.AddTBAtParas(4000);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -467,10 +467,10 @@ public class GenerWorkerList extends Entity
 			this.setGuestName(this.getFK_EmpText());
 			this.setGuestNo(BP.Web.GuestUser.No);
 		}
-		//this.Sender = BP.Web.WebUser.No;
+		//this.Sender = WebUser.getNo();
 
 		//增加记录日期.
-		this.SetValByKey(GenerWorkerListAttr.RDT, DataType.CurrentDataTimess);
+		this.SetValByKey(GenerWorkerListAttr.RDT, DataType.getCurrentDataTime()ss);
 
 		return super.beforeInsert();
 	}

@@ -1,16 +1,5 @@
 package BP.Sys;
 
-import Oracle.ManagedDataAccess.Client.*;
-import MySql.*;
-import MySql.Data.*;
-import MySql.Data.Common.*;
-import MySql.Data.MySqlClient.*;
-import BP.DA.*;
-import BP.Web.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
-
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 ///#region Copyright
 //------------------------------------------------------------------------------

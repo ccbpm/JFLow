@@ -75,7 +75,7 @@ public class FlowExts extends EntitiesNoName
 	*/
 	public final List<FlowExt> ToJavaList()
 	{
-		return (List<FlowExt>)this;
+		return (List<FlowExt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -87,7 +87,7 @@ public class FlowExts extends EntitiesNoName
 		ArrayList<FlowExt> list = new ArrayList<FlowExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FlowExt)this[i]);
+			list.add((FlowExt)this.get(i));
 		}
 		return list;
 	}

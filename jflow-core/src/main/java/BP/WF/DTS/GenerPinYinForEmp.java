@@ -38,7 +38,7 @@ public class GenerPinYinForEmp extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.IsAdmin == true)
+		if (WebUser.getIsAdmin() == true)
 		{
 			return true;
 		}
@@ -55,7 +55,7 @@ public class GenerPinYinForEmp extends Method
 	@Override
 	public Object Do()
 	{
-		if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.AppCenterDBType) == true)
+		if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == true)
 		{
 			return "port_emp 是一个视图无法生成拼音.";
 		}
@@ -67,7 +67,7 @@ public class GenerPinYinForEmp extends Method
 
 		BP.GPM.Emps emps = new BP.GPM.Emps();
 		emps.RetrieveAll();
-		for (BP.GPM.Emp item : emps)
+		for (BP.GPM.Emp item : emps.ToJavaList())
 		{
 			if (item.PinYin.Contains("/") == true)
 			{

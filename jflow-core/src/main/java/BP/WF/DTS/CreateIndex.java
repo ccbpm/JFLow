@@ -35,7 +35,7 @@ public class CreateIndex extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -52,7 +52,7 @@ public class CreateIndex extends Method
 		String info = "开始为Track表创建索引.";
 
 		Flows fls = new Flows();
-		for (Flow fl : fls)
+		for (Flow fl : fls.ToJavaList())
 		{
 			info += fl.CreateIndex();
 		}

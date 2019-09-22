@@ -121,7 +121,7 @@ public class SFDBSrc extends EntityNoName
 		{
 			return isNullAsVal;
 		}
-		return Integer.parseInt(dt.Rows[0][0].toString());
+		return Integer.parseInt(dtget(0).getValue(0).toString());
 	}
 	/** 
 	 运行SQL
@@ -612,7 +612,7 @@ public class SFDBSrc extends EntityNoName
 				throw new RuntimeException("@未涉及的数据库类型。");
 		}
 
-		return dt.Rows.size() == 0 ? null : dt.Rows[0][0].toString();
+		return dt.Rows.size() == 0 ? null : dt.Rows.get(0).getValue(0).toString();
 	}
 
 	/** 
@@ -1202,7 +1202,7 @@ public class SFDBSrc extends EntityNoName
 				DataRow mydr = dt.NewRow();
 				mydr.set("No", dr.get("No"));
 				mydr.set("Name", dr.get("Name"));
-				dt.Rows.Add(mydr);
+				dt.Rows.add(mydr);
 			}
 
 			return dt;
@@ -1446,7 +1446,7 @@ public class SFDBSrc extends EntityNoName
 					DataTable dt = RunSQLReturnTable(sql);
 					if (dt.Rows.size() > 0)
 					{
-						RunSQL(String.format("ALTER TABLE %1$s CHANGE COLUMN %2$s %3$s %4$s", tableName, oldName, newName, dt.Rows[0][0]));
+						RunSQL(String.format("ALTER TABLE %1$s CHANGE COLUMN %2$s %3$s %4$s", tableName, oldName, newName, dt.Rows.get(0).getValue(0)));
 					}
 				}
 				else if (objType.toLowerCase().equals("table"))
@@ -1464,7 +1464,7 @@ public class SFDBSrc extends EntityNoName
 					}
 					else
 					{
-						RunSQL(String.format("CREATE VIEW %1$s AS %2$s", newName, dt.Rows[0][0]));
+						RunSQL(String.format("CREATE VIEW %1$s AS %2$s", newName, dt.Rows.get(0).getValue(0)));
 						RunSQL("DROP VIEW " + oldName);
 					}
 				}

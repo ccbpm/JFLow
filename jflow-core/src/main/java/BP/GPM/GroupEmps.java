@@ -38,7 +38,7 @@ public class GroupEmps extends EntitiesMM
 	*/
 	public final List<GroupEmp> ToJavaList()
 	{
-		return (List<GroupEmp>)this;
+		return (List<GroupEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -50,7 +50,7 @@ public class GroupEmps extends EntitiesMM
 		ArrayList<GroupEmp> list = new ArrayList<GroupEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GroupEmp)this[i]);
+			list.add((GroupEmp)this.get(i));
 		}
 		return list;
 	}

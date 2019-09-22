@@ -41,7 +41,7 @@ public class MapRpts extends EntitiesNoName
 	*/
 	public final List<MapRpt> ToJavaList()
 	{
-		return (List<MapRpt>)this;
+		return (List<MapRpt>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -53,7 +53,7 @@ public class MapRpts extends EntitiesNoName
 		ArrayList<MapRpt> list = new ArrayList<MapRpt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((MapRpt)this[i]);
+			list.add((MapRpt)this.get(i));
 		}
 		return list;
 	}

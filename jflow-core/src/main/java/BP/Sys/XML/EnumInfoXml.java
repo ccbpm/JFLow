@@ -3,6 +3,7 @@ package BP.Sys.XML;
 import BP.DA.*;
 import BP.En.*;
 import BP.Sys.XML.*;
+import BP.Web.WebUser;
 import BP.Sys.*;
 
 /** 
@@ -14,7 +15,7 @@ public class EnumInfoXml extends XmlEn
 		///#region 属性
 	public final String getName()
 	{
-		return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+		return this.GetValStringByKey(WebUser.getSysLang());
 	}
 	public final String getKey()
 	{
@@ -25,7 +26,7 @@ public class EnumInfoXml extends XmlEn
 	*/
 	public final String getVals()
 	{
-		String str = BP.Web.WebUser.getSysLang();
+		String str = WebUser.getSysLang();
 		str = "CH";
 		return this.GetValStringByKey(str);
 	}

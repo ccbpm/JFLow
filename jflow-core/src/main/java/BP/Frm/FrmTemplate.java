@@ -20,7 +20,7 @@ public class FrmTemplate extends EntityNoName
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.No.equals("admin"))
+		if (WebUser.getNo().equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -70,7 +70,7 @@ public class FrmTemplate extends EntityNoName
 	}
 	public final void setFrmType(FrmType value)
 	{
-		this.SetValByKey(MapDataAttr.FrmType, (int)value);
+		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单树
@@ -119,7 +119,7 @@ public class FrmTemplate extends EntityNoName
 		String str = this.GetValStrByKey(FrmTemplateAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
-			str = "@WebUser.FK_DeptName @WebUser.Name @RDT";
+			str = "@WebUser.getFK_Dept()Name @WebUser.getName() @RDT";
 		}
 		return str;
 	}
@@ -153,9 +153,9 @@ public class FrmTemplate extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("Sys_MapData", "单据模版");
 		map.Java_SetEnType(EnType.Sys);
@@ -204,15 +204,15 @@ public class FrmTemplate extends EntityNoName
 		map.AttrsOfOneVSM.AddGroupListModel(new StationCreates(), new BP.WF.Port.Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位AddGroupListModel", StationAttr.FK_StationType);
 
 			//节点绑定部门. 节点绑定部门.
-		map.AttrsOfOneVSM.AddBranches(new FrmDeptCreates(), new BP.Port.Depts(), FrmDeptCreateAttr.FrmID, FrmDeptCreateAttr.FK_Dept, "可以创建的部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranches(new FrmDeptCreates(), new BP.Port.Depts(), FrmDeptCreateAttr.FrmID, FrmDeptCreateAttr.FK_Dept, "可以创建的部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.AttrsOfOneVSM.AddBranchesAndLeaf(new EmpCreates(), new BP.Port.Emps(), EmpCreateAttr.FrmID, EmpCreateAttr.FK_Emp, "可以创建的人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranchesAndLeaf(new EmpCreates(), new BP.Port.Emps(), EmpCreateAttr.FrmID, EmpCreateAttr.FK_Emp, "可以创建的人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 可以创建的权限
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

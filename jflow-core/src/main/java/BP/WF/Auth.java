@@ -53,9 +53,9 @@ public class Auth extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Auth", "授权");
@@ -74,8 +74,8 @@ public class Auth extends EntityMyPK
 		map.AddTBDate(AuthAttr.TakeBackDT, null, "取回日期", true, false);
 		map.AddTBDate(AuthAttr.RDT, null, "记录日期", true, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -83,7 +83,7 @@ public class Auth extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.MyPK = BP.DA.DBAccess.GenerGUID();
+		this.setMyPK( BP.DA.DBAccess.GenerGUID();
 		return super.beforeInsert();
 	}
 }

@@ -69,7 +69,7 @@ public class GenerWorkFlow extends Entity
 		this.SetValByKey(GenerWorkFlowAttr.Sender, value);
 
 			//当前日期.
-		this.SetValByKey(GenerWorkFlowAttr.SendDT, DataType.CurrentDataTime);
+		this.SetValByKey(GenerWorkFlowAttr.SendDT, DataType.getCurrentDataTime());
 	}
 	/** 
 	 发送日期
@@ -477,11 +477,11 @@ public class GenerWorkFlow extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WF.WFState.Complete)
+		if (value == WFState.Complete)
 		{
 			SetValByKey(GenerWorkFlowAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WF.WFState.Delete || value == WF.WFState.Blank)
+		else if (value == WFState.Delete || value == WFState.Blank)
 		{
 			SetValByKey(GenerWorkFlowAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -610,22 +610,22 @@ public class GenerWorkFlow extends Entity
 	*/
 	public final boolean getParas_Focus()
 	{
-		return this.GetParaBoolen("F_" + BP.Web.WebUser.No,false);
+		return this.GetParaBoolen("F_" + WebUser.getNo(),false);
 	}
 	public final void setParas_Focus(boolean value)
 	{
-		this.SetPara("F_" + BP.Web.WebUser.No, value);
+		this.SetPara("F_" + WebUser.getNo(), value);
 	}
 	/** 
 	 确认与取消确认
 	*/
 	public final boolean getParas_Confirm()
 	{
-		return this.GetParaBoolen("C_" + BP.Web.WebUser.No,false);
+		return this.GetParaBoolen("C_" + WebUser.getNo(),false);
 	}
 	public final void setParas_Confirm(boolean value)
 	{
-		this.SetPara("C_" + BP.Web.WebUser.No, value);
+		this.SetPara("C_" + WebUser.getNo(), value);
 	}
 	/** 
 	 最后一个执行发送动作的ID.
@@ -778,9 +778,9 @@ public class GenerWorkFlow extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "流程实例");
@@ -867,8 +867,8 @@ public class GenerWorkFlow extends Entity
 		rm.Warning = "您确定要执行此功能吗？ \t\n 1)如果是断流程，并且停留在第一个节点上，系统为执行删除它。\t\n 2)如果是非地第一个节点，系统会返回到上次发起的位置。";
 		map.AddRefMethod(rm);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -952,7 +952,7 @@ public class GenerWorkFlow extends Entity
 			return "此流程是因为发起工作失败被系统删除。";
 		}
 
-		int FK_Node = Integer.parseInt(dt.Rows[0][0].toString());
+		int FK_Node = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
 
 		Node nd = new Node(FK_Node);
 		if (nd.getIsStartNode())
@@ -970,7 +970,7 @@ public class GenerWorkFlow extends Entity
 		String str = "";
 		GenerWorkerLists wls = new GenerWorkerLists();
 		wls.Retrieve(GenerWorkerListAttr.FK_Node, FK_Node, GenerWorkerListAttr.WorkID, this.getWorkID());
-		for (GenerWorkerList wl : wls)
+		for (GenerWorkerList wl : wls.ToJavaList())
 		{
 			str += wl.getFK_Emp() + wl.getFK_EmpText() + ",";
 		}
@@ -998,7 +998,7 @@ public class GenerWorkFlow extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region  查看一下是否有当前的工作节点信息。
 		boolean isHave = false;
-		for (GenerWorkerList wl : wls)
+		for (GenerWorkerList wl : wls.ToJavaList())
 		{
 			if (wl.getFK_Node() == this.getFK_Node())
 			{

@@ -198,7 +198,7 @@ public class SysFileManager extends EntityOID
 	@Override
 	protected boolean beforeInsert()
 	{
-	   this.setRec(BP.Web.WebUser.getNo());
+	   this.setRec(WebUser.getNo());
 	   this.setRDT(DataType.getCurrentDataTime());
 		return super.beforeInsert();
 	}

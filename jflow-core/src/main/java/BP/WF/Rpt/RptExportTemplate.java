@@ -146,7 +146,7 @@ public class RptExportTemplate
 	{
 		for (RptExportTemplateCell cell : getCells())
 		{
-			if (!tangible.StringHelper.isNullOrWhiteSpace(cell.getDtlKeyOfEn()))
+			if (!DataType.IsNullOrEmpty(cell.getDtlKeyOfEn()))
 			{
 				return cell.getFK_DtlMapData();
 			}

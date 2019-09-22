@@ -182,9 +182,9 @@ public class SubFlow extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeSubFlow", "子流程(所有类型子流程属性)");
@@ -229,8 +229,8 @@ public class SubFlow extends EntityMyPK
 		map.AddTBInt(SubFlowAttr.SendModel, 0, "自动触发的子流程发送方式", false, true);
 
 		map.AddTBInt(SubFlowAttr.Idx, 0, "顺序", true, false);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -243,7 +243,7 @@ public class SubFlow extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.MyPK = this.getFK_Node() + "_" + this.getSubFlowNo() + "_" + this.getSubFlowType();
+		this.setMyPK( this.getFK_Node() + "_" + this.getSubFlowNo() + "_" + this.getSubFlowType();
 		return super.beforeInsert();
 	}
 }

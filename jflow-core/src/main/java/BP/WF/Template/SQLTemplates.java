@@ -44,7 +44,7 @@ public class SQLTemplates extends EntitiesNoName
 	*/
 	public final List<SQLTemplate> ToJavaList()
 	{
-		return (List<SQLTemplate>)this;
+		return (List<SQLTemplate>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -56,7 +56,7 @@ public class SQLTemplates extends EntitiesNoName
 		ArrayList<SQLTemplate> list = new ArrayList<SQLTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((SQLTemplate)this[i]);
+			list.add((SQLTemplate)this.get(i));
 		}
 		return list;
 	}

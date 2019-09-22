@@ -13,17 +13,7 @@ public class FrmTree extends EntityTree
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性.
-	/** 
-	 序号
-	*/
-	public final int getIdx()
-	{
-		return this.GetValIntByKey(FrmTreeAttr.Idx);
-	}
-	public final void setIdx(int value)
-	{
-		this.SetValByKey(FrmTreeAttr.Idx, value);
-	}
+	 
 	/** 
 	 父节点编号
 	*/
@@ -78,7 +68,7 @@ public class FrmTree extends EntityTree
 		map.Java_SetDepositaryOfEntity(Depositary.Application);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
-		map.IndexField = FrmTreeAttr.ParentNo;
+		map.IndexField = FrmTreeAttr.getParentNo();
 
 
 		map.AddTBStringPK(FrmTreeAttr.No, null, "编号", true, true, 1, 10, 20);

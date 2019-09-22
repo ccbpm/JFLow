@@ -39,7 +39,7 @@ public class UIConfig
 	{
 		String colstr = this.HisAP.GetValStrByKey("ShowColumns");
 
-		if (tangible.StringHelper.isNullOrWhiteSpace(colstr))
+		if (DataType.IsNullOrEmpty(colstr))
 		{
 			return new String[0];
 		}
@@ -138,8 +138,9 @@ public class UIConfig
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int Save()
+	public final int Save() throws Exception
 	{
 		EnCfg cfg = new EnCfg(this.HisEn.toString());
 		cfg.setUI(this.HisAP.GenerAtParaStrs());

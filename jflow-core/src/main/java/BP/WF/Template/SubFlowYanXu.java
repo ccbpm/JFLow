@@ -108,9 +108,9 @@ public class SubFlowYanXu extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeSubFlow", "延续子流程");
@@ -145,8 +145,8 @@ public class SubFlowYanXu extends EntityMyPK
 		map.AddDDLSQL(SubFlowYanXuAttr.ReturnToNode, "0", "要退回的节点", "SELECT NodeID AS No, Name FROM WF_Node WHERE FK_Flow IN (SELECT FK_Flow FROM WF_Node WHERE NodeID=@FK_Node; )", true);
 
 		map.AddTBInt(SubFlowYanXuAttr.Idx, 0, "显示顺序", true, false);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -159,7 +159,7 @@ public class SubFlowYanXu extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()
 	{
-		this.MyPK = this.getFK_Node() + "_" + this.getSubFlowNo() + "_2";
+		this.setMyPK( this.getFK_Node() + "_" + this.getSubFlowNo() + "_2";
 		return super.beforeInsert();
 	}
 

@@ -98,9 +98,9 @@ public class TestSample extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 		Map map = new Map("WF_TestSample");
 		map.EnDesc = "测试明细";
@@ -122,7 +122,7 @@ public class TestSample extends EntityMyPK
 		map.AddTBFloat(TestSampleAttr.TimesPerSecond, 0, "每秒跑多少个?", true, false);
 
 		map.AddSearchAttr(TestSampleAttr.FK_API);
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 }

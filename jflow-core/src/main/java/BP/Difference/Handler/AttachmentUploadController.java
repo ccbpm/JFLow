@@ -42,7 +42,7 @@ import BP.Tools.SftpUtil;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmSln;
 import BP.WF.Template.WhoIsPK;
-import BP.Web.WebUser;
+import WebUser;
 
 
 @Controller
@@ -492,8 +492,8 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setFileName(item.getOriginalFilename());
 			dbUpload.setFileSize((float) info.length());
 			dbUpload.setRDT(DataType.getCurrentDataTimess());
-			dbUpload.setRec(BP.Web.WebUser.getNo());
-			dbUpload.setRecName(BP.Web.WebUser.getName());
+			dbUpload.setRec(WebUser.getNo());
+			dbUpload.setRecName(WebUser.getName());
 			dbUpload.setFID(this.getFID());
 			dbUpload.setUploadGUID(guid);
 			dbUpload.setRefPKVal(pkVal);
@@ -589,8 +589,8 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setFileExts(exts);
 			dbUpload.setFileSize((float) info.length());
 			dbUpload.setRDT(DataType.getCurrentDataTimess());
-			dbUpload.setRec(BP.Web.WebUser.getNo());
-			dbUpload.setRecName(BP.Web.WebUser.getName());
+			dbUpload.setRec(WebUser.getNo());
+			dbUpload.setRecName(WebUser.getName());
 			if (fileEncrypt == true)
                   dbUpload.SetPara("IsEncrypt", 1);
 			if (athDesc.getIsExpCol() == true) {

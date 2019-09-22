@@ -47,7 +47,7 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 	*/
 	public final List<GenerWorkFlowViewNY> ToJavaList()
 	{
-		return (List<GenerWorkFlowViewNY>)this;
+		return (List<GenerWorkFlowViewNY>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -59,7 +59,7 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 		ArrayList<GenerWorkFlowViewNY> list = new ArrayList<GenerWorkFlowViewNY>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((GenerWorkFlowViewNY)this[i]);
+			list.add((GenerWorkFlowViewNY)this.get(i));
 		}
 		return list;
 	}

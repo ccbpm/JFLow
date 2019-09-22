@@ -2,7 +2,7 @@ package BP.En;
 
 import BP.DA.*;
 import BP.Sys.*;
-import BP.Web.WebUser;
+import WebUser;
 import BP.Web.Controls.*;
 import java.time.*;
 import java.math.*;

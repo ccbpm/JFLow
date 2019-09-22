@@ -67,7 +67,7 @@ public class CCMobile extends DirectoryPageBase
 			{
 				/*如果包含昵称列,就检查昵称是否存在.*/
 				Paras ps = new Paras();
-				ps.SQL = "SELECT No FROM Port_Emp WHERE NikeName=" + SystemConfig.AppCenterDBVarStr + "userNo";
+				ps.SQL = "SELECT No FROM Port_Emp WHERE NikeName=" + SystemConfig.getAppCenterDBVarStr() + "userNo";
 				ps.Add("userNo", userNo);
 				//string sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
 				String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
@@ -112,7 +112,7 @@ public class CCMobile extends DirectoryPageBase
 
 	public final String GetUserInfo()
 	{
-		if (WebUser.No == null)
+		if (WebUser.getNo() == null)
 		{
 			return "{err:'nologin'}";
 		}
@@ -120,17 +120,17 @@ public class CCMobile extends DirectoryPageBase
 		StringBuilder append = new StringBuilder();
 		append.append("{");
 		String userPath = SystemConfig.PathOfWebApp + "/DataUser/UserIcon/";
-		String userIcon = userPath + BP.Web.WebUser.No + "Biger.png";
+		String userIcon = userPath + WebUser.getNo() + "Biger.png";
 		if ((new File(userIcon)).isFile())
 		{
-			append.append("UserIcon:'" + BP.Web.WebUser.No + "Biger.png'");
+			append.append("UserIcon:'" + WebUser.getNo() + "Biger.png'");
 		}
 		else
 		{
 			append.append("UserIcon:'DefaultBiger.png'");
 		}
-		append.append(",UserName:'" + BP.Web.WebUser.Name + "'");
-		append.append(",UserDeptName:'" + BP.Web.WebUser.FK_DeptName + "'");
+		append.append(",UserName:'" + WebUser.getName() + "'");
+		append.append(",UserDeptName:'" + WebUser.getFK_Dept()Name + "'");
 		append.append("}");
 		return append.toString();
 	}
@@ -142,8 +142,8 @@ public class CCMobile extends DirectoryPageBase
 	public final String Home_Init()
 	{
 		Hashtable ht = new Hashtable();
-		ht.put("UserNo", BP.Web.WebUser.No);
-		ht.put("UserName", BP.Web.WebUser.Name);
+		ht.put("UserNo", WebUser.getNo());
+		ht.put("UserName", WebUser.getName());
 
 		//系统名称.
 		ht.put("SysName", BP.Sys.SystemConfig.SysName);
@@ -169,13 +169,13 @@ public class CCMobile extends DirectoryPageBase
 	public final String Home_Init_WorkCount()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + SystemConfig.AppCenterDBVarStr + "Emps%' GROUP BY TSpan";
-		ps.Add("Emps", WebUser.No);
-		//string sql = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + WebUser.No + "%' GROUP BY TSpan";
+		ps.SQL = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + SystemConfig.getAppCenterDBVarStr() + "Emps%' GROUP BY TSpan";
+		ps.Add("Emps", WebUser.getNo());
+		//string sql = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + WebUser.getNo() + "%' GROUP BY TSpan";
 		DataSet ds = new DataSet();
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		ds.Tables.Add(dt);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		ds.Tables.add(dt);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns[0].ColumnName = "TSpan";
 			dt.Columns[1].ColumnName = "Num";
@@ -214,7 +214,7 @@ public class CCMobile extends DirectoryPageBase
 	{
 		String fk_node = this.GetRequestVal("FK_Node");
 		String showWhat = this.GetRequestVal("ShowWhat");
-		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(WebUser.No, this.getFK_Node(), showWhat);
+		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable(WebUser.getNo(), this.getFK_Node(), showWhat);
 		return BP.Tools.Json.ToJson(dt);
 	}
 	/** 
@@ -366,15 +366,15 @@ public class CCMobile extends DirectoryPageBase
 		SysEnums ses = new SysEnums("TSpan");
 		DataTable dtTSpan = ses.ToDataTableField();
 		dtTSpan.TableName = "TSpan";
-		ds.Tables.Add(dtTSpan);
+		ds.Tables.add(dtTSpan);
 
 		if (this.getFK_Flow() == null)
 		{
-			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.No + "%' OR Starter='" + WebUser.No + "') AND WFState > 1 GROUP BY TSpan";
+			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.getNo() + "%' OR Starter='" + WebUser.getNo() + "') AND WFState > 1 GROUP BY TSpan";
 		}
 		else
 		{
-			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow() + "' AND (Emps LIKE '%" + WebUser.No + "%' OR Starter='" + WebUser.No + "')  AND WFState > 1 GROUP BY TSpan";
+			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow() + "' AND (Emps LIKE '%" + WebUser.getNo() + "%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 GROUP BY TSpan";
 		}
 
 		DataTable dtTSpanNum = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -397,22 +397,22 @@ public class CCMobile extends DirectoryPageBase
 			///#region 2、处理流程类别列表.
 		if (tSpan.equals("-1"))
 		{
-			sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.No + "%' OR TodoEmps LIKE '%" + BP.Web.WebUser.No + ",%' OR Starter='" + WebUser.No + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
+			sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.getNo() + "%' OR TodoEmps LIKE '%" + WebUser.getNo() + ",%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
 		}
 		else
 		{
-			sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE TSpan=" + tSpan + " AND (Emps LIKE '%" + WebUser.No + "%' OR TodoEmps LIKE '%" + BP.Web.WebUser.No + ",%' OR Starter='" + WebUser.No + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
+			sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE TSpan=" + tSpan + " AND (Emps LIKE '%" + WebUser.getNo() + "%' OR TodoEmps LIKE '%" + WebUser.getNo() + ",%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
 		}
 
 		DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtFlows.Columns[0].ColumnName = "No";
 			dtFlows.Columns[1].ColumnName = "Name";
 			dtFlows.Columns[2].ColumnName = "Num";
 		}
 		dtFlows.TableName = "Flows";
-		ds.Tables.Add(dtFlows);
+		ds.Tables.add(dtFlows);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -420,7 +420,7 @@ public class CCMobile extends DirectoryPageBase
 			///#region 3、处理流程实例列表.
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		String sqlWhere = "";
-		sqlWhere = "(1 = 1)AND (((Emps LIKE '%" + WebUser.No + "%')OR(TodoEmps LIKE '%" + WebUser.No + "%')OR(Starter = '" + WebUser.No + "')) AND (WFState > 1)";
+		sqlWhere = "(1 = 1)AND (((Emps LIKE '%" + WebUser.getNo() + "%')OR(TodoEmps LIKE '%" + WebUser.getNo() + "%')OR(Starter = '" + WebUser.getNo() + "')) AND (WFState > 1)";
 		if (!tSpan.equals("-1"))
 		{
 			sqlWhere += "AND (TSpan = '" + tSpan + "') ";
@@ -436,24 +436,24 @@ public class CCMobile extends DirectoryPageBase
 		}
 		sqlWhere += "ORDER BY RDT DESC";
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM (select * from WF_GenerWorkFlow where " + sqlWhere + ") where rownum <= 500";
 		}
-		else if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+		else if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			sql = "SELECT  TOP 500 ISNULL(WorkID, 0) WorkID,ISNULL(FID, 0) FID ,FK_Flow,FlowName,Title, ISNULL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,ISNULL(RDT, '2018-05-04 19:29') RDT,ISNULL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere;
 		}
-		else if (SystemConfig.AppCenterDBType == DBType.MySQL)
+		else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT IFNULL(WorkID, 0) WorkID,IFNULL(FID, 0) FID ,FK_Flow,FlowName,Title, IFNULL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,IFNULL(RDT, '2018-05-04 19:29') RDT,IFNULL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere + " LIMIT 500";
 		}
-		else if (SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere + " LIMIT 500";
 		}
 		DataTable mydt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			mydt.Columns[0].ColumnName = "WorkID";
 			mydt.Columns[1].ColumnName = "FID";
@@ -485,7 +485,7 @@ public class CCMobile extends DirectoryPageBase
 			///#endregion
 
 
-		ds.Tables.Add(mydt);
+		ds.Tables.add(mydt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -495,7 +495,7 @@ public class CCMobile extends DirectoryPageBase
 			///#region 获取track数据.
 		String sqlOfWhere2 = "";
 		String sqlOfWhere1 = "";
-		String dbStr = BP.Sys.SystemConfig.AppCenterDBVarStr;
+		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		if (fid == 0)
 		{
@@ -540,7 +540,7 @@ public class CCMobile extends DirectoryPageBase
 
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		QueryObject qo = new QueryObject(gwfs);
-		qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", "%" + BP.Web.WebUser.No + "%");
+		qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", "%" + WebUser.getNo() + "%");
 		if (!DataType.IsNullOrEmpty(TSpan))
 		{
 			qo.addAnd();
@@ -553,7 +553,7 @@ public class CCMobile extends DirectoryPageBase
 		}
 		qo.Top = 50;
 
-		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			qo.DoQuery();
 			DataTable dt = gwfs.ToDataTableField("Ens");

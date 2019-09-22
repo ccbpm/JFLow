@@ -48,8 +48,9 @@ public class FlowSort extends EntityTree
 	 流程类别
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public FlowSort(String _No)
+	public FlowSort(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -71,9 +72,9 @@ public class FlowSort extends EntityTree
 	@Override
 	public Map getEnMap()
 	{
-		if (this._enMap != null)
+		if (this.get_enMap() != null)
 		{
-			return this._enMap;
+			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_FlowSort", "流程类别");
@@ -88,14 +89,14 @@ public class FlowSort extends EntityTree
 		map.SetHelperAlert(FlowSortAttr.Domain, "用于区分不同系统的流程,比如:一个集团有多个子系统每个子系统都有自己的流程,就需要标记那些流程是那个子系统的.");
 		map.AddTBInt(FlowSortAttr.Idx, 0, "Idx", false, false);
 
-		this._enMap = map;
-		return this._enMap;
+		this.set_enMap(map);
+		return this.get_enMap();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		String sql = "UPDATE WF_GenerWorkFlow SET Domain='" + this.getDomain() + "' WHERE FK_FlowSort='" + this.No + "'";
+		String sql = "UPDATE WF_GenerWorkFlow SET Domain='" + this.getDomain() + "' WHERE FK_FlowSort='" + this.getNo()+ "'";
 		DBAccess.RunSQL(sql);
 
 		//@sly

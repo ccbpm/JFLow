@@ -39,7 +39,7 @@ public class GloVarExts extends EntitiesNoName
 	*/
 	public final List<GloVarExt> ToJavaList()
 	{
-		return (List<GloVarExt>)this;
+		return (List<GloVarExt>)(Object)this;
 	}
 	/** 
 	 转化成list

@@ -22,7 +22,7 @@ public class EnDtls extends ArrayList<EnDtl>
 	 */
 	public final boolean IsContainKey(String className)
 	{
-		for (EnDtl ed : this)
+		for (EnDtl ed : this.ToJavaList())
 		{
 			if (ed.getEnsName().equals(className))
 			{
@@ -59,7 +59,7 @@ public class EnDtls extends ArrayList<EnDtl>
 	 */
 	public final boolean IsExits(EnDtl en)
 	{
-		for (EnDtl dtl : this)
+		for (EnDtl dtl : this.ToJavaList())
 		{
 			if (dtl.getEns() == en.getEns())
 			{
@@ -78,7 +78,7 @@ public class EnDtls extends ArrayList<EnDtl>
 	 */
 	public final EnDtl GetEnDtlByKey(String key)
 	{
-		for (EnDtl dtl : this)
+		for (EnDtl dtl : this.ToJavaList())
 		{
 			if (dtl.getRefKey().equals(key))
 			{
@@ -108,7 +108,7 @@ public class EnDtls extends ArrayList<EnDtl>
 	 */
 	public final EnDtl GetEnDtlByEnsName(String className)
 	{
-		for (EnDtl en : this)
+		for (EnDtl en : this.ToJavaList())
 		{
 			if (en.getEnsName().equals(className))
 			{

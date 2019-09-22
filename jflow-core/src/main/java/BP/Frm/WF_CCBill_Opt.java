@@ -106,9 +106,9 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 			row.set("Width", attr.UIWidthInt);
 			row.set("UIContralType", attr.UIContralType);
 			row.set("LGType", attr.LGType);
-			dt.Rows.Add(row);
+			dt.Rows.add(row);
 		}
-		ds.Tables.Add(dt);
+		ds.Tables.add(dt);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 查询显示的列
 
@@ -130,22 +130,22 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 		if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			qo.addLeftBracket();
-			if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 			{
-				qo.AddWhere("Title", " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : (" '%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+				qo.AddWhere("Title", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 			qo.addOr();
-			if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 			{
-				qo.AddWhere("BillNo", " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : ("'%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+				qo.AddWhere("BillNo", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("BillNo", " LIKE ", "'%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+				qo.AddWhere("BillNo", " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 
 			qo.MyParas.Add("SKey", keyWord);
@@ -201,7 +201,7 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 		DataTable mydt = rpts.ToDataTableField();
 		mydt.TableName = "DT";
 
-		ds.Tables.Add(mydt); //把数据加入里面.
+		ds.Tables.add(mydt); //把数据加入里面.
 
 		return BP.Tools.Json.ToJson(ds);
 	}

@@ -131,7 +131,7 @@ public final class HttpContextHelper
 //ORIGINAL LINE: public static void ResponseWriteFile(string filePath, string clientFileName = null, string contentType = "application/octet-stream")
 	public static void ResponseWriteFile(String filePath, String clientFileName, String contentType)
 	{
-		if (tangible.StringHelper.isNullOrEmpty(clientFileName))
+		if (DataType.IsNullOrEmpty(clientFileName))
 		{
 			clientFileName = (new File(filePath)).getName();
 		}

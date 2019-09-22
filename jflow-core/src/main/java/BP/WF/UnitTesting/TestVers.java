@@ -34,7 +34,7 @@ public class TestVers extends EntitiesNoName
 	*/
 	public final List<TestVer> ToJavaList()
 	{
-		return (List<TestVer>)this;
+		return (List<TestVer>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -44,9 +44,9 @@ public class TestVers extends EntitiesNoName
 	public final ArrayList<TestVer> Tolist()
 	{
 		ArrayList<TestVer> list = new ArrayList<TestVer>();
-		for (int i = 0; i < this.Count; i++)
+		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((TestVer)this[i]);
+			list.add((TestVer)this.get(i));
 		}
 		return list;
 	}

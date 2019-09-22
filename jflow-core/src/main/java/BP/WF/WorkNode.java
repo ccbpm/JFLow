@@ -10490,7 +10490,7 @@ public class WorkNode
 					if (mystr.length == 2)
 					{
 						String sendNode = mystr[1];
-						if (tangible.StringHelper.isNullOrEmpty(sendNode) == false && sendNode.equals("0") == false)
+						if (DataType.IsNullOrEmpty(sendNode) == false && sendNode.equals("0") == false)
 						{
 							nodeid = Integer.parseInt(sendNode);
 						}

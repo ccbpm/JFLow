@@ -691,7 +691,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		String userNo = this.GetRequestVal("UserNo");
 		String sid = this.GetRequestVal("SID");
 
-		if (!tangible.StringHelper.isNullOrEmpty(sid) && !tangible.StringHelper.isNullOrEmpty(userNo))
+		if (!DataType.IsNullOrEmpty(sid) && !DataType.IsNullOrEmpty(userNo))
 		{
 			/*  */
 			try

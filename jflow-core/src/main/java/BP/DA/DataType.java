@@ -19,7 +19,7 @@ public class DataType
 			return true;
 		}
 
-		return tangible.StringHelper.isNullOrEmpty(s);
+		return DataType.IsNullOrEmpty(s);
 	}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -799,7 +799,7 @@ public class DataType
 	*/
 	public static DataSet CXmlFileToDataSet(String xmlFilePath)
 	{
-		if (!tangible.StringHelper.isNullOrEmpty(xmlFilePath))
+		if (!DataType.IsNullOrEmpty(xmlFilePath))
 		{
 			//string path = HttpContext.Current.Server.MapPath(xmlFilePath);
 			StringReader StrStream = null;

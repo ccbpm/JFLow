@@ -2,6 +2,7 @@ package BP.WF.UnitTesting;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -41,8 +42,8 @@ public class TestVer extends EntityNoName
 			return this._enMap;
 		}
 
-		Map map = new Map("WF_TestVer");
-		map.EnDesc = "测试版本";
+		Map map = new Map("WF_TestVer","测试版本");
+		  
 
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);

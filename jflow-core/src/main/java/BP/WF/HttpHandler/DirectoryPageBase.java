@@ -263,7 +263,7 @@ public abstract class DirectoryPageBase
 			if (!key.equals("1")) // 过滤url中1=1的情形
 			{
 				String value = HttpContextHelper.RequestParams(key);
-				if (!tangible.StringHelper.isNullOrEmpty(value))
+				if (!DataType.IsNullOrEmpty(value))
 				{
 					urlExt += String.format("&%1$s=%2$s", key, value);
 				}
@@ -400,17 +400,17 @@ public abstract class DirectoryPageBase
 		String doType = "";
 
 		doType = this.GetRequestVal("DoType");
-		if (tangible.StringHelper.isNullOrEmpty(doType))
+		if (DataType.IsNullOrEmpty(doType))
 		{
 			doType = this.GetRequestVal("Action");
 		}
 
-		if (tangible.StringHelper.isNullOrEmpty(doType))
+		if (DataType.IsNullOrEmpty(doType))
 		{
 			doType = this.GetRequestVal("action");
 		}
 
-		if (tangible.StringHelper.isNullOrEmpty(doType))
+		if (DataType.IsNullOrEmpty(doType))
 		{
 			doType = this.GetRequestVal("Method");
 		}

@@ -123,7 +123,7 @@ public class GPMPage extends DirectoryPageBase
 	public final String LoadDatagridDeptEmp_Init()
 	{
 		String deptNo = this.GetRequestVal("deptNo");
-		if (tangible.StringHelper.isNullOrEmpty(deptNo))
+		if (DataType.IsNullOrEmpty(deptNo))
 		{
 			return "{ total: 0, rows: [] }";
 		}
@@ -136,16 +136,16 @@ public class GPMPage extends DirectoryPageBase
 			searchText.trim();
 		}
 		String addQue = "";
-		if (!tangible.StringHelper.isNullOrEmpty(searchText))
+		if (!DataType.IsNullOrEmpty(searchText))
 		{
 			addQue = "  AND (pe.No like '%" + searchText + "%' or pe.Name like '%" + searchText + "%') ";
 		}
 
 		String pageNumber = this.GetRequestVal("pageNumber");
-		int iPageNumber = tangible.StringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+		int iPageNumber = DataType.IsNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
 		//每页多少行
 		String pageSize = this.GetRequestVal("pageSize");
-		int iPageSize = tangible.StringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+		int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
 		String sql = "(select pe.*,pd.name FK_DutyText from port_emp pe left join port_duty pd on pd.no = pe.fk_duty where pe.no in (select fk_emp from Port_DeptEmp where fk_dept='" + deptNo + "') "
 			+ addQue + " ) dbSo ";
@@ -170,7 +170,7 @@ public class GPMPage extends DirectoryPageBase
 		String sql = "";
 		String orderByStr = "";
 
-		if (!tangible.StringHelper.isNullOrEmpty(orderKey))
+		if (!DataType.IsNullOrEmpty(orderKey))
 		{
 			orderByStr = " ORDER BY " + orderKey;
 		}

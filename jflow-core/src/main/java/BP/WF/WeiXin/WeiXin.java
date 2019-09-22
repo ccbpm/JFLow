@@ -12,8 +12,8 @@ public class WeiXin
 		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + BP.Sys.SystemConfig.WX_CorpID + "&corpsecret=" + BP.Sys.SystemConfig.WX_AppSecret + "";
 
 		AccessToken AT = new AccessToken();
-		String str = BP.DA.DataType.ReadURLContext(url, 5000, Encoding.UTF8);
-		AT = FormatToJson.<AccessToken>ParseFromJson(str);
+	//	String str = BP.DA.DataType.ReadURLContext(url, 5000, Encoding.UTF8);
+		//AT = FormatToJson.<AccessToken>ParseFromJson(str);
 		accessToken = AT.getaccess_token();
 
 		return accessToken;

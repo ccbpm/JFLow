@@ -4593,7 +4593,7 @@ public class WF_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 执行导入数据.
 
-			if (tangible.StringHelper.isNullOrEmpty(errMsg) == true)
+			if (DataType.IsNullOrEmpty(errMsg) == true)
 			{
 				return "info@共有(" + i + ")条数据导入成功。";
 			}
@@ -4760,7 +4760,7 @@ public class WF_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 执行导入数据.
 
-			if (tangible.StringHelper.isNullOrEmpty(errMsg) == true)
+			if (DataType.IsNullOrEmpty(errMsg) == true)
 			{
 				return "info@共有(" + i + ")条数据导入成功。";
 			}

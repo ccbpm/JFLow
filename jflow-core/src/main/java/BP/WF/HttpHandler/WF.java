@@ -1764,7 +1764,7 @@ public class WF extends DirectoryPageBase
 			String[] strs = batchParas.split("[,]", -1);
 			for (String str : strs)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(str) || str.contains("@PFlowNo") == true)
+				if (DataType.IsNullOrEmpty(str) || str.contains("@PFlowNo") == true)
 				{
 					continue;
 				}

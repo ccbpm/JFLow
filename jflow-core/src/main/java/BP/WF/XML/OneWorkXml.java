@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.Sys.XML.*;
 import BP.Sys.*;
+import BP.Sys.Plant;
 import BP.WF.*;
 
 /** 
@@ -13,17 +14,12 @@ public class OneWorkXml extends XmlEnNoName
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性.
-	public final String getName()
-	{
-		return this.GetValStringByKey(BP.Web.WebUser.SysLang);
-	}
+ 
 	public final String getURL()
 	{
-		if (BP.WF.Glo.Plant == Plant.CCFlow)
-		{
-			return this.GetValStringByKey("UrlCCFlow");
-		}
-		return this.GetValStringByKey("UrlJFlow");
+		 
+			return this.GetValStringByKey("Url"+BP.WF.Glo.Plant);
+		 
 	}
 
 	public final String getIsDefault()

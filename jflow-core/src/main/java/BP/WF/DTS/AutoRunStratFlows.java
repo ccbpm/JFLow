@@ -82,7 +82,7 @@ public class AutoRunStratFlows extends Method
 			boolean IsCanRun = false;
 			for (String str : strs)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(str))
+				if (DataType.IsNullOrEmpty(str))
 				{
 					continue;
 				}
@@ -178,7 +178,7 @@ public class AutoRunStratFlows extends Method
 			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.Name + ")的开始节点设置发起数据,请参考说明书解决.");
 			return;
 		}
-		if (tangible.StringHelper.isNullOrEmpty(me.Tag))
+		if (DataType.IsNullOrEmpty(me.Tag))
 		{
 			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.Name + ")的开始节点设置发起数据,请参考说明书解决.");
 			return;
@@ -189,7 +189,7 @@ public class AutoRunStratFlows extends Method
 		String[] dtlSQLs = me.Tag1.split("[*]", -1);
 		for (String sql : dtlSQLs)
 		{
-			if (tangible.StringHelper.isNullOrEmpty(sql))
+			if (DataType.IsNullOrEmpty(sql))
 			{
 				continue;
 			}
@@ -297,7 +297,7 @@ public class AutoRunStratFlows extends Method
 						break;
 				}
 			}
-			if (tangible.StringHelper.isNullOrEmpty(err) == false)
+			if (DataType.IsNullOrEmpty(err) == false)
 			{
 				throw new RuntimeException("您设置的字段:" + err + "不存在开始节点的表单中，设置的sql:" + me.Tag);
 			}

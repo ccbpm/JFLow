@@ -76,7 +76,7 @@ public class AdminMenuGroup extends XmlEn
 	*/
 	public final boolean IsCanUse(String no)
 	{
-		if (tangible.StringHelper.isNullOrEmpty(this.getFor()))
+		if (DataType.IsNullOrEmpty(this.getFor()))
 		{
 			return true;
 		}

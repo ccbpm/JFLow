@@ -969,7 +969,7 @@ public class WorkReturn
 
 		//如果事件返回的信息不是null，就终止执行。
 		String msg = fl.DoFlowEventEntity(EventListOfNode.ReturnBefore, this.HisNode, rpt, atPara);
-		if (!tangible.StringHelper.isNullOrEmpty(msg)) // 2019-08-28 zl。原来是 if(msg!=null)。返回空字符串表示执行成功，不应该终止。
+		if (!DataType.IsNullOrEmpty(msg)) // 2019-08-28 zl。原来是 if(msg!=null)。返回空字符串表示执行成功，不应该终止。
 		{
 			return msg;
 		}

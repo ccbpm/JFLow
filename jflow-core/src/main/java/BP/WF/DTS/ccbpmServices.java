@@ -590,7 +590,7 @@ public class ccbpmServices extends Method
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 发送邮件.
-		if (tangible.StringHelper.isNullOrEmpty(sms.getEmail()))
+		if (DataType.IsNullOrEmpty(sms.getEmail()))
 		{
 			BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(sms.getSendToEmpNo());
 			sms.setEmail(emp.getEmail());

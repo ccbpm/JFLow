@@ -330,7 +330,7 @@ public class GuestUser
 			GuestUser.setNo(HttpContextHelper.RequestCookieGet("No", "CCS"));
 			GuestUser.setName(HttpContextHelper.RequestCookieGet("Name", "CCS"));
 
-			if (tangible.StringHelper.isNullOrEmpty(GuestUser.getNo()))
+			if (DataType.IsNullOrEmpty(GuestUser.getNo()))
 			{
 				throw new RuntimeException("@err-002 Guest 登录信息丢失。");
 			}

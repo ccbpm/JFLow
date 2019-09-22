@@ -4719,10 +4719,10 @@ public class WF_Comm extends DirectoryPageBase
 			qo.AddWhere("LB", "=", "1");
 
 			String pageNumber = GetRequestVal("pageNumber");
-			int iPageNumber = tangible.StringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			int iPageNumber = DataType.IsNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
 			//每页多少行
 			String pageSize = GetRequestVal("pageSize");
-			int iPageSize = tangible.StringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+			int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
 			DataTable dt = new DataTable("DataCount");
 			dt.Columns.Add("DataCount", Integer.class);
@@ -4753,10 +4753,10 @@ public class WF_Comm extends DirectoryPageBase
 			qo.addAnd();
 			qo.AddWhere(AttrKey, "!=", "");
 			String pageNumber = GetRequestVal("pageNumber");
-			int iPageNumber = tangible.StringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			int iPageNumber = DataType.IsNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
 			//每页多少行
 			String pageSize = GetRequestVal("pageSize");
-			int iPageSize = tangible.StringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+			int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
 			DataTable dt = new DataTable("DataCount");
 			dt.Columns.Add("DataCount", Integer.class);
@@ -4818,9 +4818,9 @@ public class WF_Comm extends DirectoryPageBase
 			String[] strArray;
 
 			String pageNumber = GetRequestVal("pageNumber");
-			int iPageNumber = tangible.StringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			int iPageNumber = DataType.IsNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
 			String pageSize = GetRequestVal("pageSize");
-			int iPageSize = tangible.StringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+			int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
 			DataSet ds = new DataSet();
 			DataTable dt = new DataTable("MainTable");

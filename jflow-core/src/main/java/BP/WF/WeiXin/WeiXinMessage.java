@@ -1,6 +1,7 @@
 package BP.WF.WeiXin;
 
 import BP.Tools.*;
+import BP.DA.DataType;
 import BP.En.*;
 import BP.WF.*;
 
@@ -24,19 +25,19 @@ public class WeiXinMessage
 		append_Json.append("{");
 		append_Json.append("\"msgtype\":\"text\"");
 		//按人员
-		if (!tangible.StringHelper.isNullOrEmpty(msgText.gettouser()))
+		if (DataType.IsNullOrEmpty(msgText.gettouser())==false)
 		{
 			append_Json.append(",\"touser\":\"" + msgText.gettouser() + "\"");
 		}
 
 		//按部门
-		if (!tangible.StringHelper.isNullOrEmpty(msgText.gettoparty()))
+		if (DataType.IsNullOrEmpty(msgText.gettoparty())==false)
 		{
 			append_Json.append(",\"toparty\":\"" + msgText.gettoparty() + "\"");
 		}
 
 		//标签
-		if (!tangible.StringHelper.isNullOrEmpty(msgText.gettotag()))
+		if (!DataType.IsNullOrEmpty(msgText.gettotag()))
 		{
 			append_Json.append(",\"totag\":\"" + msgText.gettotag() + "\"");
 		}
@@ -66,17 +67,17 @@ public class WeiXinMessage
 		append_Json.append("{");
 		append_Json.append("\"msgtype\":\"news\"");
 		//按人员
-		if (!tangible.StringHelper.isNullOrEmpty(msgNews.gettouser()))
+		if (!DataType.IsNullOrEmpty(msgNews.gettouser()))
 		{
 			append_Json.append(",\"touser\":\"" + msgNews.gettouser() + "\"");
 		}
 		//按部门
-		if (!tangible.StringHelper.isNullOrEmpty(msgNews.gettoparty()))
+		if (!DataType.IsNullOrEmpty(msgNews.gettoparty()))
 		{
 			append_Json.append(",\"toparty\":\"" + msgNews.gettoparty() + "\"");
 		}
 		//标签
-		if (!tangible.StringHelper.isNullOrEmpty(msgNews.gettotag()))
+		if (!DataType.IsNullOrEmpty(msgNews.gettotag()))
 		{
 			append_Json.append(",\"totag\":\"" + msgNews.gettotag() + "\"");
 		}
@@ -90,11 +91,11 @@ public class WeiXinMessage
 			append_Json.append("{");
 			append_Json.append("\"title\":\"" + item.gettitle() + "\"");
 			append_Json.append(",\"description\":\"" + item.getdescription() + "\"");
-			if (!tangible.StringHelper.isNullOrEmpty(item.geturl()))
+			if (!DataType.IsNullOrEmpty(item.geturl()))
 			{
 				append_Json.append(",\"url\":\"" + item.geturl() + "\"");
 			}
-			if (!tangible.StringHelper.isNullOrEmpty(item.getpicurl()))
+			if (!DataType.IsNullOrEmpty(item.getpicurl()))
 			{
 				append_Json.append(",\"picurl\":\"" + item.getpicurl() + "\"");
 			}

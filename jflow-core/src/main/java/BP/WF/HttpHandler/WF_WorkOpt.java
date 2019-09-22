@@ -4103,7 +4103,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			String[] mytoNodes = toNodes.split("[,]", -1);
 			for (String str : mytoNodes)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(str) == true)
+				if (DataType.IsNullOrEmpty(str) == true)
 				{
 					continue;
 				}

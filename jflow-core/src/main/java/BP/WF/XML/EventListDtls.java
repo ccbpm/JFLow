@@ -35,7 +35,7 @@ public class EventListDtls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.PathOfXML + "\\EventList.xml";
+		return SystemConfig.getPathOfXML() + "\\EventList.xml";
 	}
 	/** 
 	 物理表名

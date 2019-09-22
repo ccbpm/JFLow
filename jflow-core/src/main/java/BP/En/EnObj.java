@@ -423,7 +423,7 @@ public abstract class EnObj implements Serializable
 			dt.Columns.Add(new DataColumn("No", String.class));
 			for (String str : strs)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(str))
+				if (DataType.IsNullOrEmpty(str))
 				{
 					continue;
 				}
@@ -479,7 +479,7 @@ public abstract class EnObj implements Serializable
 			/*如果是bs*/
 			for (String key : HttpContextHelper.getRequestParamKeys())
 			{
-				if (tangible.StringHelper.isNullOrEmpty(key))
+				if (DataType.IsNullOrEmpty(key))
 				{
 					continue;
 				}

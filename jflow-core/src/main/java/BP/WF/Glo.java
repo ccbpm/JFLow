@@ -838,7 +838,7 @@ public class Glo
 	public static String getPrintBackgroundWord()
 	{
 		String s = BP.Sys.SystemConfig.AppSettings["PrintBackgroundWord"];
-		if (tangible.StringHelper.isNullOrEmpty(s))
+		if (DataType.IsNullOrEmpty(s))
 		{
 			s = "驰骋工作流引擎@开源驰骋 - ccflow@openc";
 		}
@@ -2027,7 +2027,7 @@ public class Glo
 				emps.RetrieveAllFromDBSource();
 				for (Emp empEn : emps)
 				{
-					if (tangible.StringHelper.isNullOrEmpty(empEn.Pass) || empEn.Pass.Length < 30)
+					if (DataType.IsNullOrEmpty(empEn.Pass) || empEn.Pass.Length < 30)
 					{
 						empEn.Pass = BP.Tools.Cryptography.EncryptString(empEn.Pass);
 						empEn.DirectUpdate();
@@ -2649,7 +2649,7 @@ public class Glo
 		// 流程树根节点校验
 		String tmp = "SELECT Name FROM WF_FlowSort WHERE ParentNo='0'";
 		tmp = DBAccess.RunSQLReturnString(tmp);
-		if (tangible.StringHelper.isNullOrEmpty(tmp))
+		if (DataType.IsNullOrEmpty(tmp))
 		{
 			tmp = "INSERT INTO WF_FlowSort(No,Name,ParentNo,TreeNo,idx,IsDir) values('01','流程树',0,'',0,0)";
 			DBAccess.RunSQLReturnString(tmp);
@@ -2658,7 +2658,7 @@ public class Glo
 		// 表单树根节点校验
 		tmp = "SELECT Name FROM Sys_FormTree WHERE ParentNo = '0' ";
 		tmp = DBAccess.RunSQLReturnString(tmp);
-		if (tangible.StringHelper.isNullOrEmpty(tmp))
+		if (DataType.IsNullOrEmpty(tmp))
 		{
 			tmp = "INSERT INTO Sys_FormTree(No,Name,ParentNo,Idx,IsDir) values('001','表单树',0,0,0)";
 			DBAccess.RunSQLReturnString(tmp);
@@ -3335,7 +3335,7 @@ public class Glo
 			GenerWorkFlow gwfSubFlow = new GenerWorkFlow();
 			for (String id : workids)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(id))
+				if (DataType.IsNullOrEmpty(id))
 				{
 					continue;
 				}
@@ -3368,7 +3368,7 @@ public class Glo
 						String[] myokwokid = okworkids.split("[,]", -1);
 						for (String okwokid : myokwokid)
 						{
-							if (tangible.StringHelper.isNullOrEmpty(id))
+							if (DataType.IsNullOrEmpty(id))
 							{
 								continue;
 							}
@@ -3406,7 +3406,7 @@ public class Glo
 	public static boolean getIsAdmin()
 	{
 		String s = BP.Sys.SystemConfig.AppSettings["adminers"];
-		if (tangible.StringHelper.isNullOrEmpty(s))
+		if (DataType.IsNullOrEmpty(s))
 		{
 			s = "admin,";
 		}
@@ -3415,7 +3415,7 @@ public class Glo
 	public static boolean getIsEnableTrackRec()
 	{
 		String s = BP.Sys.SystemConfig.AppSettings["IsEnableTrackRec"];
-		if (tangible.StringHelper.isNullOrEmpty(s))
+		if (DataType.IsNullOrEmpty(s))
 		{
 			return false;
 		}
@@ -3511,7 +3511,7 @@ public class Glo
 	{
 		backHtml = ""; //需要重新赋空值
 		Hashtable ht = null;
-		if (tangible.StringHelper.isNullOrEmpty(paras) == false)
+		if (DataType.IsNullOrEmpty(paras) == false)
 		{
 			AtPara ap = new AtPara(paras);
 			ht = ap.HisHT;
@@ -3531,7 +3531,7 @@ public class Glo
 
 		for (String acce : accepters)
 		{
-			if (tangible.StringHelper.isNullOrEmpty(acce) == true)
+			if (DataType.IsNullOrEmpty(acce) == true)
 			{
 				continue;
 			}
@@ -3568,7 +3568,7 @@ public class Glo
 			return;
 		}
 
-		if (tangible.StringHelper.isNullOrEmpty(objs.getVarAcceptersID())) //此处添加为空判断，跳过下面方法的执行，否则出错。
+		if (DataType.IsNullOrEmpty(objs.getVarAcceptersID())) //此处添加为空判断，跳过下面方法的执行，否则出错。
 		{
 			return;
 		}
@@ -3576,7 +3576,7 @@ public class Glo
 
 		for (String acce : accepters)
 		{
-			if (tangible.StringHelper.isNullOrEmpty(acce) == true)
+			if (DataType.IsNullOrEmpty(acce) == true)
 			{
 				continue;
 			}
@@ -3883,12 +3883,12 @@ public class Glo
 
 		DataTable dt = null;
 		String sql = item.Tag;
-		if (tangible.StringHelper.isNullOrEmpty(sql) == false)
+		if (DataType.IsNullOrEmpty(sql) == false)
 		{
 			/* 如果有填充主表的sql  */
 			sql = Glo.DealExp(sql, en, null);
 
-			if (tangible.StringHelper.isNullOrEmpty(sql) == false)
+			if (DataType.IsNullOrEmpty(sql) == false)
 			{
 				if (sql.contains("@"))
 				{
@@ -3916,7 +3916,7 @@ public class Glo
 								break;
 						}
 
-						if (tangible.StringHelper.isNullOrEmpty(en.GetValStringByKey(dc.ColumnName)) || en.GetValStringByKey(dc.ColumnName).equals("0"))
+						if (DataType.IsNullOrEmpty(en.GetValStringByKey(dc.ColumnName)) || en.GetValStringByKey(dc.ColumnName).equals("0"))
 						{
 							en.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
 						}
@@ -3925,7 +3925,7 @@ public class Glo
 			}
 		}
 
-		if (tangible.StringHelper.isNullOrEmpty(item.Tag1) || item.Tag1.Length < 15)
+		if (DataType.IsNullOrEmpty(item.Tag1) || item.Tag1.Length < 15)
 		{
 			return en;
 		}
@@ -3940,7 +3940,7 @@ public class Glo
 			String[] sqls = item.Tag1.split("[*]", -1);
 			for (String mysql : sqls)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(mysql))
+				if (DataType.IsNullOrEmpty(mysql))
 				{
 					continue;
 				}
@@ -3959,7 +3959,7 @@ public class Glo
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 					///#endregion 处理sql.
 
-				if (tangible.StringHelper.isNullOrEmpty(sql))
+				if (DataType.IsNullOrEmpty(sql))
 				{
 					continue;
 				}
@@ -4348,7 +4348,7 @@ public class Glo
 			/*如果是bs*/
 			for (String key : HttpContextHelper.RequestParamKeys)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(key))
+				if (DataType.IsNullOrEmpty(key))
 				{
 					continue;
 				}
@@ -4460,7 +4460,7 @@ public class Glo
 			dt.Columns.Add(new DataColumn("No", String.class));
 			for (String str : strs)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(str))
+				if (DataType.IsNullOrEmpty(str))
 				{
 					continue;
 				}
@@ -4516,7 +4516,7 @@ public class Glo
 			/*如果是bs*/
 			for (String key : HttpContextHelper.RequestParamKeys)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(key))
+				if (DataType.IsNullOrEmpty(key))
 				{
 					continue;
 				}
@@ -4641,7 +4641,7 @@ public class Glo
 				err += "@账号:" + starter + ",不存在。";
 				continue;
 			}
-			if (tangible.StringHelper.isNullOrEmpty(emp.FK_Dept))
+			if (DataType.IsNullOrEmpty(emp.FK_Dept))
 			{
 				err += "@账号:" + starter + ",没有部门。";
 				continue;
@@ -4653,7 +4653,7 @@ public class Glo
 				err += "@账号:" + executer + ",不存在。";
 				continue;
 			}
-			if (tangible.StringHelper.isNullOrEmpty(emp.FK_Dept))
+			if (DataType.IsNullOrEmpty(emp.FK_Dept))
 			{
 				err += "@账号:" + executer + ",没有部门。";
 				continue;
@@ -4784,7 +4784,7 @@ public class Glo
 		for (DataRow dr : dt.Rows)
 		{
 			String flowPK = dr.get("FlowPK").toString().trim();
-			if (tangible.StringHelper.isNullOrEmpty(flowPK))
+			if (DataType.IsNullOrEmpty(flowPK))
 			{
 				continue;
 			}
@@ -4824,7 +4824,7 @@ public class Glo
 				continue;
 			}
 
-			if (tangible.StringHelper.isNullOrEmpty(emp.FK_Dept))
+			if (DataType.IsNullOrEmpty(emp.FK_Dept))
 			{
 				err += "@账号:" + starter + ",没有设置部门。";
 				continue;
@@ -4840,7 +4840,7 @@ public class Glo
 			else
 			{
 				emp.RetrieveFromDBSources();
-				if (tangible.StringHelper.isNullOrEmpty(emp.FK_Dept))
+				if (DataType.IsNullOrEmpty(emp.FK_Dept))
 				{
 					err += "@账号:" + starter + ",没有设置部门。";
 					continue;
@@ -4918,9 +4918,9 @@ public class Glo
 	*/
 	public static void IsSingleUser(String userNo)
 	{
-		if (tangible.StringHelper.isNullOrEmpty(WebUser.No) || !userNo.equals(WebUser.No))
+		if (DataType.IsNullOrEmpty(WebUser.No) || !userNo.equals(WebUser.No))
 		{
-			if (!tangible.StringHelper.isNullOrEmpty(userNo))
+			if (!DataType.IsNullOrEmpty(userNo))
 			{
 				BP.WF.Dev2Interface.Port_Login(userNo);
 			}
@@ -4993,7 +4993,7 @@ public class Glo
 	}
 	public static void setSessionMsg(String value)
 	{
-		if (tangible.StringHelper.isNullOrEmpty(value) == true)
+		if (DataType.IsNullOrEmpty(value) == true)
 		{
 			return;
 		}
@@ -5438,7 +5438,7 @@ public class Glo
 			//如果两个参数都不为空说明启用
 		String corpid = BP.Sys.SystemConfig.Ding_CorpID;
 		String corpsecret = BP.Sys.SystemConfig.Ding_CorpSecret;
-		if (tangible.StringHelper.isNullOrEmpty(corpid) || tangible.StringHelper.isNullOrEmpty(corpsecret))
+		if (DataType.IsNullOrEmpty(corpid) || DataType.IsNullOrEmpty(corpsecret))
 		{
 			return false;
 		}
@@ -5453,7 +5453,7 @@ public class Glo
 			//如果两个参数都不为空说明启用
 		String corpid = BP.Sys.SystemConfig.WX_CorpID;
 		String corpsecret = BP.Sys.SystemConfig.WX_AppSecret;
-		if (tangible.StringHelper.isNullOrEmpty(corpid) || tangible.StringHelper.isNullOrEmpty(corpsecret))
+		if (DataType.IsNullOrEmpty(corpid) || DataType.IsNullOrEmpty(corpsecret))
 		{
 			return false;
 		}
@@ -5502,7 +5502,7 @@ public class Glo
 	public static String getCCIMDBName()
 	{
 		String baseUrl = BP.Sys.SystemConfig.AppSettings["CCIMDBName"];
-		if (tangible.StringHelper.isNullOrEmpty(baseUrl) == true)
+		if (DataType.IsNullOrEmpty(baseUrl) == true)
 		{
 			baseUrl = "ccPort.dbo";
 		}
@@ -5519,7 +5519,7 @@ public class Glo
 		}
 
 		String baseUrl = BP.Sys.SystemConfig.AppSettings["HostURL"];
-		if (tangible.StringHelper.isNullOrEmpty(baseUrl) == true)
+		if (DataType.IsNullOrEmpty(baseUrl) == true)
 		{
 			baseUrl = "http://127.0.0.1/";
 		}
@@ -5541,7 +5541,7 @@ public class Glo
 		}
 
 		String baseUrl = BP.Sys.SystemConfig.AppSettings["BpmMobileAddress"];
-		if (tangible.StringHelper.isNullOrEmpty(baseUrl) == true)
+		if (DataType.IsNullOrEmpty(baseUrl) == true)
 		{
 			baseUrl = "http://127.0.0.1/";
 		}
@@ -5977,7 +5977,7 @@ public class Glo
 		String empids = ",";
 		for (String str : strs)
 		{
-			if (tangible.StringHelper.isNullOrEmpty(str))
+			if (DataType.IsNullOrEmpty(str))
 			{
 				continue;
 			}
@@ -6463,7 +6463,7 @@ public class Glo
 				String[] strs = flow.getStartLimitPara().split("[@]", -1);
 				for (String str : strs)
 				{
-					if (tangible.StringHelper.isNullOrEmpty(str))
+					if (DataType.IsNullOrEmpty(str))
 					{
 						continue;
 					}
@@ -6503,7 +6503,7 @@ public class Glo
 				String[] strs = flow.getStartLimitPara().split("[@]", -1);
 				for (String str : strs)
 				{
-					if (tangible.StringHelper.isNullOrEmpty(str))
+					if (DataType.IsNullOrEmpty(str))
 					{
 						continue;
 					}
@@ -6546,7 +6546,7 @@ public class Glo
 				String[] strs = flow.getStartLimitPara().split("[@]", -1);
 				for (String str : strs)
 				{
-					if (tangible.StringHelper.isNullOrEmpty(str))
+					if (DataType.IsNullOrEmpty(str))
 					{
 						continue;
 					}
@@ -6580,7 +6580,7 @@ public class Glo
 				String[] strs = flow.getStartLimitPara().split("[@]", -1);
 				for (String str : strs)
 				{
-					if (tangible.StringHelper.isNullOrEmpty(str))
+					if (DataType.IsNullOrEmpty(str))
 					{
 						continue;
 					}
@@ -6614,7 +6614,7 @@ public class Glo
 				String[] strs = flow.getStartLimitPara().split("[@]", -1);
 				for (String str : strs)
 				{
-					if (tangible.StringHelper.isNullOrEmpty(str))
+					if (DataType.IsNullOrEmpty(str))
 					{
 						continue;
 					}
@@ -6696,7 +6696,7 @@ public class Glo
 			String val = "";
 			for (String str : strs)
 			{
-				if (tangible.StringHelper.isNullOrEmpty(str) == true)
+				if (DataType.IsNullOrEmpty(str) == true)
 				{
 					continue;
 				}

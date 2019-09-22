@@ -38,7 +38,7 @@ public class OneWorkXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.PathOfData + "\\Xml\\WFAdmin.xml";
+		return SystemConfig.getPathOfData() + "\\Xml\\WFAdmin.xml";
 	}
 	/** 
 	 物理表名

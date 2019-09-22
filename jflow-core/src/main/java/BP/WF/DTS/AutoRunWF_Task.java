@@ -94,7 +94,7 @@ public class AutoRunWF_Task extends Method
 			}
 
 			String startDT = dr.get(TaskAttr.StartDT).toString();
-			if (tangible.StringHelper.isNullOrEmpty(startDT) == false)
+			if (DataType.IsNullOrEmpty(startDT) == false)
 			{
 				/*如果设置了发起时间,就检查当前时间是否与现在的时间匹配.*/
 				if (LocalDateTime.now().compareTo(LocalDateTime.parse(startDT)) < 0)
@@ -146,7 +146,7 @@ public class AutoRunWF_Task extends Method
 				String[] strs = paras.split("[@]", -1);
 				for (String str : strs)
 				{
-					if (tangible.StringHelper.isNullOrEmpty(str))
+					if (DataType.IsNullOrEmpty(str))
 					{
 						continue;
 					}

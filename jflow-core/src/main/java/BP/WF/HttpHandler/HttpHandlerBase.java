@@ -26,12 +26,12 @@ public abstract class HttpHandlerBase implements IHttpHandler, IRequiresSessionS
 		DirectoryPageBase ctrl = tempVar instanceof DirectoryPageBase ? (DirectoryPageBase)tempVar : null;
 
 		//让其支持跨域访问.
-		if (!tangible.StringHelper.isNullOrEmpty(HttpContextHelper.Request.Headers["Origin"]))
+		if (!DataType.IsNullOrEmpty(HttpContextHelper.Request.Headers["Origin"]))
 		{
 			String allAccess_Control_Allow_Origin = System.Web.Configuration.WebConfigurationManager.AppSettings["Access-Control-Allow-Origin"];
 
 
-			if (!tangible.StringHelper.isNullOrEmpty(allAccess_Control_Allow_Origin))
+			if (!DataType.IsNullOrEmpty(allAccess_Control_Allow_Origin))
 			{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 				var origin = HttpContextHelper.Request.Headers["Origin"];

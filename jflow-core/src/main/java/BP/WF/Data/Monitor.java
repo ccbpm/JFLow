@@ -1,33 +1,20 @@
 package BP.WF.Data;
 
-import java.io.IOException;
-
-import BP.DA.Log;
-import BP.Difference.ContextHolderUtils;
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.QueryObject;
-import BP.En.RefMethod;
-import BP.En.UAC;
-import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
-import BP.WF.Flows;
-import BP.WF.Glo;
-import BP.WF.TaskSta;
-import BP.WF.WFSta;
-import BP.WF.WFState;
-import BP.WF.Template.FlowExt;
-
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  流程监控
- 
 */
 public class Monitor extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	@Override
 	public UAC getHisUAC()
 	{
@@ -37,7 +24,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 主键
-	 
 	*/
 	@Override
 	public String getPK()
@@ -46,7 +32,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 工作流程编号
-	 
 	*/
 	public final String getFK_Flow()
 	{
@@ -58,7 +43,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 BillNo
-	 
 	*/
 	public final String getBillNo()
 	{
@@ -70,7 +54,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 流程名称
-	 
 	*/
 	public final String getFlowName()
 	{
@@ -82,7 +65,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 优先级
-	 
 	*/
 	public final int getPRI()
 	{
@@ -94,7 +76,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 待办人员数量
-	 
 	*/
 	public final int getTodoEmpsNum()
 	{
@@ -106,7 +87,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 待办人员列表
-	 
 	*/
 	public final String getTodoEmps()
 	{
@@ -118,7 +98,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 参与人
-	 
 	*/
 	public final String getEmps()
 	{
@@ -130,7 +109,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 状态
-	 
 	*/
 	public final TaskSta getTaskSta()
 	{
@@ -142,7 +120,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 类别编号
-	 
 	*/
 	public final String getFK_Emp()
 	{
@@ -154,7 +131,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 部门编号
-	 
 	*/
 	public final String getFK_Dept()
 	{
@@ -166,7 +142,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 标题
-	 
 	*/
 	public final String getTitle()
 	{
@@ -178,7 +153,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 客户编号
-	 
 	*/
 	public final String getGuestNo()
 	{
@@ -190,7 +164,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 客户名称
-	 
 	*/
 	public final String getGuestName()
 	{
@@ -202,7 +175,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 产生时间
-	 
 	*/
 	public final String getRDT()
 	{
@@ -214,7 +186,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 节点应完成时间
-	 
 	*/
 	public final String getSDTOfNode()
 	{
@@ -226,7 +197,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 流程应完成时间
-	 
 	*/
 	public final String getSDTOfFlow()
 	{
@@ -238,7 +208,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getWorkID()
 	{
@@ -250,7 +219,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 主线程ID
-	 
 	*/
 	public final long getFID()
 	{
@@ -262,7 +230,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 父节点流程编号.
-	 
 	*/
 	public final long getPWorkID()
 	{
@@ -274,7 +241,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 父流程调用的节点
-	 
 	*/
 	public final int getPNodeID()
 	{
@@ -286,7 +252,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 PFlowNo
-	 
 	*/
 	public final String getPFlowNo()
 	{
@@ -298,7 +263,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 吊起子流程的人员
-	 
 	*/
 	public final String getPEmp()
 	{
@@ -310,7 +274,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 发起人
-	 
 	*/
 	public final String getStarter()
 	{
@@ -322,7 +285,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 发起人名称
-	 
 	*/
 	public final String getStarterName()
 	{
@@ -334,7 +296,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 发起人部门名称
-	 
 	*/
 	public final String getDeptName()
 	{
@@ -346,7 +307,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 当前节点名称
-	 
 	*/
 	public final String getNodeName()
 	{
@@ -358,7 +318,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 当前工作到的节点
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -370,7 +329,6 @@ public class Monitor extends Entity
 	}
 	/** 
 	 工作流程状态
-	 
 	*/
 	public final WFState getWFState()
 	{
@@ -378,11 +336,11 @@ public class Monitor extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WFState.Complete)
+		if (value == WF.WFState.Complete)
 		{
 			SetValByKey(MonitorAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WFState.Delete)
+		else if (value == WF.WFState.Delete)
 		{
 			SetValByKey(MonitorAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -406,8 +364,8 @@ public class Monitor extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = (WFState)this.getWFState();
-		switch(ws)
+		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		switch (ws)
 		{
 			case Complete:
 				return "已完成";
@@ -432,13 +390,23 @@ public class Monitor extends Entity
 	{
 		SetValByKey(MonitorAttr.GUID, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 参数属性.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 产生的工作流程
 	*/
 	public Monitor()
 	{
 	}
-	public Monitor(long workId) throws Exception
+	public Monitor(long workId)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MonitorAttr.WorkID, workId);
@@ -459,9 +427,9 @@ public class Monitor extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_EmpWorks", "流程监控");
@@ -489,52 +457,51 @@ public class Monitor extends Entity
 
 			////增加隐藏的查询条件.
 			//AttrOfSearch search = new AttrOfSearch(MonitorAttr.WorkerDept, "部门",
-			//    MonitorAttr.WorkerDept, "=", BP.Web.WebUser.getFK_Dept(), 0, true);
+			//    MonitorAttr.WorkerDept, "=", BP.Web.WebUser.FK_Dept, 0, true);
 			//map.AttrsOfSearch.Add(search);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "流程轨迹";
 		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/CC.gif";
+		rm.Icon = "../../WF/Img/Btn/CC.gif";
 		rm.Title = "移交";
 		rm.ClassMethodName = this.toString() + ".DoShift";
-		rm.getHisAttrs().AddDDLEntities("ToEmp", null, "移交给:", new BP.WF.Data.MyDeptEmps(),true);
-		rm.getHisAttrs().AddTBString("Note", null, "移交原因", true, false, 0, 300, 100);
+		rm.HisAttrs.AddDDLEntities("ToEmp", null, "移交给:", new BP.WF.Data.MyDeptEmps(),true);
+		rm.HisAttrs.AddTBString("Note", null, "移交原因", true, false, 0, 300, 100);
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/Delete.gif";
+		rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Title = "删除";
 		rm.Warning = "您确定要删除该流程吗？";
 		rm.ClassMethodName = this.toString() + ".DoDelete";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/Back.png";
+		rm.Icon = "../../WF/Img/Btn/Back.png";
 
 		rm.Title = "回滚";
 		rm.IsForEns = false;
 		rm.ClassMethodName = this.toString() + ".DoComeBack";
-		rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
-		rm.getHisAttrs().AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);
+		rm.HisAttrs.AddTBInt("NodeID", 0, "回滚到节点", true, false);
+		rm.HisAttrs.AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);
 		map.AddRefMethod(rm);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 执行功能.
 	public final String DoTrack()
 	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() + "WF/WFRpt.jsp?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow(), 900, 800);
-		} catch (IOException e) {
-			Log.DebugWriteError("Monitor DoTrack()" + e);
-		}
-		return null;
+		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
 	 执行移交
@@ -542,25 +509,20 @@ public class Monitor extends Entity
 	 @param ToEmp
 	 @param Note
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoShift(String ToEmp, String Note) throws Exception
+	public final String DoShift(String ToEmp, String Note)
 	{
-		try {
-			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), null) == false)
-			{
-				return "您没有操作该流程数据的权限.";
-			}
-		} catch (Exception e) {
-			Log.DebugWriteError("Monitor DoShift " + e);
+		if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
+		{
+			return "您没有操作该流程数据的权限.";
 		}
 
 		try
 		{
-			BP.WF.Dev2Interface.Node_Shift(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), ToEmp, Note);
+			BP.WF.Dev2Interface.Node_Shift(this.getWorkID(), ToEmp, Note);
 			return "移交成功";
 		}
-		catch(RuntimeException ex)
+		catch (RuntimeException ex)
 		{
 			return "移交失败@" + ex.getMessage();
 		}
@@ -569,17 +531,12 @@ public class Monitor extends Entity
 	 执行删除
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoDelete() throws Exception
+	public final String DoDelete()
 	{
-		try {
-			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(),null) == false)
-			{
-				return "您没有操作该流程数据的权限.";
-			}
-		} catch (Exception e) {
-			Log.DebugWriteError("Monitor DoDelete()" + e);
+		if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
+		{
+			return "您没有操作该流程数据的权限.";
 		}
 
 		try
@@ -594,24 +551,20 @@ public class Monitor extends Entity
 	}
 	public final String DoSkip()
 	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() + "WF/Admin/FlowDB/FlowSkip.jsp?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node(), 900, 800);
-		} catch (IOException e) {
-			Log.DebugWriteError("Moniter DoSkip()" +e);
-		}
-		return null;
+		return "../../Admin/FlowDB/FlowSkip.aspx?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 	/** 
 	 回滚
+	 
 	 @param nodeid 节点ID
 	 @param note 回滚原因
 	 @return 回滚的结果
-	 * @throws Exception 
 	*/
-	public final String DoComeBack(int nodeid, String note) throws Exception
+	public final String DoComeBack(int nodeid, String note)
 	{
-		BP.WF.Template.FlowExt fl = new FlowExt(this.getFK_Flow());
-		
+		BP.WF.Template.FlowSheet fl = new Template.FlowSheet(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), nodeid, note);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

@@ -1,41 +1,35 @@
 package BP.WF.Template;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
 
 /** 
- 生成的类型
- 
+ 二维码生成方式
 */
 public enum QRModel
 {
-	//不生成
-	None(0),
-	//生成
-	Gener(1);
+	/** 
+	 不生成
+	*/
+	None,
+	/** 
+	 生成
+	*/
+	Gener;
 
-	private int intValue;
-	private static java.util.HashMap<Integer, QRModel> mappings;
-	private synchronized static java.util.HashMap<Integer, QRModel> getMappings()
-	{
-		if (mappings == null)
-		{
-			mappings = new java.util.HashMap<Integer, QRModel>();
-		}
-		return mappings;
-	}
-
-	private QRModel(int value)
-	{
-		intValue = value;
-		QRModel.getMappings().put(value, this);
-	}
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{
-		return intValue;
+		return this.ordinal();
 	}
 
 	public static QRModel forValue(int value)
 	{
-		return getMappings().get(value);
+		return values()[value];
 	}
 }

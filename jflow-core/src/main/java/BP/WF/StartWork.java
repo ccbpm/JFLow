@@ -1,25 +1,27 @@
 package BP.WF;
 
-import BP.DA.DBAccess;
-import BP.En.SQLCash;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
 
 /** 	 
  开始工作基类,所有开始工作都要从这里继承
 */
-public abstract class StartWork extends Work{
-
+public abstract class StartWork extends Work
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 与_SQLCash 操作有关
 	private SQLCash _SQLCash = null;
 	@Override
-	public SQLCash getSQLCash() throws Exception
+	public SQLCash getSQLCash()
 	{
 		if (_SQLCash == null)
 		{
-			_SQLCash = BP.DA.Cash.GetSQL("ND" + (new Integer(this.getNodeID())).toString());
+			_SQLCash = BP.DA.Cash.GetSQL("ND" + String.valueOf(this.getNodeID()));
 			if (_SQLCash == null)
 			{
 				_SQLCash = new SQLCash(this);
-				BP.DA.Cash.SetSQL("ND" + (new Integer(this.getNodeID())).toString(), _SQLCash);
+				BP.DA.Cash.SetSQL("ND" + String.valueOf(this.getNodeID()), _SQLCash);
 			}
 		}
 		return _SQLCash;
@@ -29,14 +31,13 @@ public abstract class StartWork extends Work{
 	{
 		_SQLCash = value;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region  单据属性
 	/** 
 	 FK_Dept
-	 
 	*/
 	public final String getFK_Dept()
 	{
@@ -46,8 +47,32 @@ public abstract class StartWork extends Work{
 	{
 		this.SetValByKey(StartWorkAttr.FK_Dept, value);
 	}
-	 
-		
+	//public string FK_DeptOf2Code
+	//{
+	//    get
+	//    {
+	//        return this.FK_Dept.Substring(6);
+	//    } 
+	//}
+	/** 
+	 FK_XJ
+	*/
+	//public string FK_XJ
+	//{
+	//    get
+	//    {
+	//        return this.GetValStringByKey(StartWorkAttr.FK_Dept);
+	//    }
+	//    set
+	//    {
+	//        this.SetValByKey(StartWorkAttr.FK_Dept, value);
+	//    }
+	//}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 工作内容标题
 	*/
@@ -59,72 +84,84 @@ public abstract class StartWork extends Work{
 	{
 		this.SetValByKey(StartWorkAttr.Title,value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 工作流程
 	*/
 	protected StartWork()
 	{
 	}
-	protected StartWork(long oid) throws Exception
+	protected StartWork(long oid)
 	{
 		super(oid);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region  重写基类的方法。
 	/** 
 	 删除之前的操作。
+	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete()
 	{
-		if (super.beforeDelete()==false)
+		if (super.beforeDelete() == false)
 		{
 			return false;
 		}
 		if (this.getOID() < 0)
 		{
-			throw new RuntimeException("@实体["+this.getEnDesc()+"]没有被实例化，不能Delete().");
+			throw new RuntimeException("@实体[" + this.EnDesc + "]没有被实例化，不能Delete().");
 		}
 		return true;
 	}
 	/** 
 	 插入之前的操作。
+	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		if (this.getOID() > 0)
 		{
-			throw new RuntimeException("@实体[" + this.getEnDesc() + "], 已经被实例化，不能Insert.");
+			throw new RuntimeException("@实体[" + this.EnDesc + "], 已经被实例化，不能Insert.");
 		}
 
 		this.SetValByKey("OID", DBAccess.GenerOID());
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		this.setEmps(BP.Web.WebUser.getNo());
+		this.setEmps(BP.Web.WebUser.No);
 		return super.beforeUpdateInsertAction();
 	}
 	/** 
 	 更新操作
+	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate() throws Exception
+	protected boolean beforeUpdate()
 	{
-		if (super.beforeUpdate()==false)
+		if (super.beforeUpdate() == false)
 		{
 			return false;
 		}
 		if (this.getOID() < 0)
 		{
-			throw new RuntimeException("@实体["+this.getEnDesc()+"]没有被实例化，不能Update().");
+			throw new RuntimeException("@实体[" + this.EnDesc + "]没有被实例化，不能Update().");
 		}
 		return super.beforeUpdate();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

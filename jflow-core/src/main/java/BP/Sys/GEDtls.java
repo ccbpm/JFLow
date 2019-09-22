@@ -1,39 +1,29 @@
 package BP.Sys;
 
-import java.util.ArrayList;
-import java.util.List;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+import java.math.*;
 
-import BP.En.EntitiesOID;
-import BP.En.Entity;
-
-/**
- * 通用从表s
- */
+/** 
+ 通用从表s
+*/
 public class GEDtls extends EntitiesOID
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	public static ArrayList<GEDtl> convertGEDtls(Object obj)
-	{
-		return (ArrayList<GEDtl>) obj;
-	}
-	
-	public List<GEDtl> ToJavaList()
-	{
-		return (List<GEDtl>)(Object)this;
-	}
-	/**
-	 * 节点ID
-	 */
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重载基类方法
+	/** 
+	 节点ID
+	*/
 	public String FK_MapDtl = null;
-	
-	// 方法
-	/**
-	 * 得到它的 Entity
-	 */
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
+	/** 
+	 得到它的 Entity
+	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
@@ -43,21 +33,49 @@ public class GEDtls extends EntitiesOID
 		}
 		return new GEDtl(this.FK_MapDtl);
 	}
-	
-	/**
-	 * 通用从表ID
-	 */
+	/** 
+	 通用从表ID
+	*/
 	public GEDtls()
 	{
 	}
-	
-	/**
-	 * 通用从表ID
-	 * 
-	 * @param fk_mapdtl
-	 */
+	/** 
+	 通用从表ID
+	 
+	 @param fk_mapdtl
+	*/
 	public GEDtls(String fk_mapdtl)
 	{
 		this.FK_MapDtl = fk_mapdtl;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<GEDtl> ToJavaList()
+	{
+		return (List<GEDtl>)this;
+	}
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<GEDtl> Tolist()
+	{
+		ArrayList<GEDtl> list = new ArrayList<GEDtl>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((GEDtl)this.get(i));
+		}
+		return list;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,0 +1,95 @@
+package BP.WF.Template;
+
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
+
+/** 
+ 方向与工作岗位对应
+ 节点的工作岗位有两部分组成.	 
+ 记录了从一个节点到其他的多个节点.
+ 也记录了到这个节点的其他的节点.
+*/
+public class DirectionStation extends EntityMM
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
+	/** 
+	 UI界面上的访问控制
+	*/
+	@Override
+	public UAC getHisUAC()
+	{
+		UAC uac = new UAC();
+		uac.OpenAll();
+		return uac;
+	}
+	/** 
+	节点
+	*/
+	public final int getFK_Direction()
+	{
+		return this.GetValIntByKey(DirectionStationAttr.FK_Direction);
+	}
+	public final void setFK_Direction(int value)
+	{
+		this.SetValByKey(DirectionStationAttr.FK_Direction, value);
+	}
+	public final String getFK_StationT()
+	{
+		return this.GetValRefTextByKey(DirectionStationAttr.FK_Station);
+	}
+	/** 
+	 工作岗位
+	*/
+	public final String getFK_Station()
+	{
+		return this.GetValStringByKey(DirectionStationAttr.FK_Station);
+	}
+	public final void setFK_Station(String value)
+	{
+		this.SetValByKey(DirectionStationAttr.FK_Station, value);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
+	/** 
+	 方向与工作岗位对应
+	*/
+	public DirectionStation()
+	{
+	}
+	/** 
+	 重写基类方法
+	*/
+	@Override
+	public Map getEnMap()
+	{
+		if (this._enMap != null)
+		{
+			return this._enMap;
+		}
+
+		Map map = new Map("WF_DirectionStation", "节点岗位");
+
+		map.AddTBIntPK(DirectionStationAttr.FK_Direction, 0,"节点", false,false);
+
+		if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneOne)
+		{
+			map.AddDDLEntitiesPK(DirectionStationAttr.FK_Station, null, "工作岗位", new BP.Port.Stations(), true);
+		}
+		else
+		{
+ // #warning ,这里为了方便用户选择，让分组都统一采用了枚举类型. edit zhoupeng. 2015.04.28. 注意jflow也要修改.
+			map.AddDDLEntitiesPK(DirectionStationAttr.FK_Station, null, "工作岗位", new BP.GPM.Stations(), true);
+		}
+		this._enMap = map;
+		return this._enMap;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+}

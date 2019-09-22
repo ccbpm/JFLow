@@ -1,43 +1,39 @@
 package BP.WF.Template;
 
-public enum TemplateFileModel {
-	/// <summary>
-    /// 旧版本的rtf模版格式
-    /// </summary>
-    RTF(0),
-    /// <summary>
-    /// Word模版格式
-    /// </summary>
-    VSTOForWord(1),
-    /// <summary>
-    /// Excel模版格式
-    /// </summary>
-    VSTOForExcel(2);
-    
-    private int intValue;
-	private static java.util.HashMap<Integer, TemplateFileModel> mappings;
-	private synchronized static java.util.HashMap<Integer, TemplateFileModel> getMappings()
-	{
-		if (mappings == null)
-		{
-			mappings = new java.util.HashMap<Integer, TemplateFileModel>();
-		}
-		return mappings;
-	}
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
 
-	private TemplateFileModel(int value)
-	{
-		intValue = value;
-		TemplateFileModel.getMappings().put(value, this);
-	}
+/** 
+ 模版类型
+*/
+public enum TemplateFileModel
+{
+	/** 
+	 旧版本的rtf模版格式
+	*/
+	RTF,
+	/** 
+	 Word模版格式
+	*/
+	VSTOForWord,
+	/** 
+	 Excel模版格式
+	*/
+	VSTOForExcel;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{
-		return intValue;
+		return this.ordinal();
 	}
 
 	public static TemplateFileModel forValue(int value)
 	{
-		return getMappings().get(value);
+		return values()[value];
 	}
 }

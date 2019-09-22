@@ -1,34 +1,34 @@
 package BP.Sys;
 
-import BP.En.EntityNoNameAttr;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  明细
 */
 public class MapDtlAttr extends EntityNoNameAttr
 {
-	public static final String Alias = "Alias";
-	
 	/** 
 	 行Idx
 	*/
 	public static final String RowIdx = "RowIdx";
 	/** 
-	 填充Data
-	*/
-	public static final String ImpFixDataSql = "ImpFixDataSql";
-	/** 
-	 填充树形Sql
-	*/
-	public static final String ImpFixTreeSql = "ImpFixTreeSql";
-	/** 
 	 工作模式
 	*/
 	public static final String Model = "Model";
 	/** 
+	 使用的版本
+	*/
+	public static final String DtlVer = "DtlVer";
+	/** 
 	 主表
 	*/
 	public static final String FK_MapData = "FK_MapData";
+	/** 
+	 别名
+	*/
+	public static final String Alias = "Alias";
 	/** 
 	 PTable
 	*/
@@ -62,10 +62,6 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String WhenOverSize = "WhenOverSize";
 	/** 
-	 GroupID
-	*/
-	public static final String GroupID = "GroupID";
-	/** 
 	 是否可以删除
 	*/
 	public static final String IsDelete = "IsDelete";
@@ -83,36 +79,44 @@ public class MapDtlAttr extends EntityNoNameAttr
 	public static final String IsEnablePass = "IsEnablePass";
 	/** 
 	 是否是合流汇总数据
-	 
 	*/
 	public static final String IsHLDtl = "IsHLDtl";
 	/** 
 	 是否是分流
 	*/
 	public static final String IsFLDtl = "IsFLDtl";
-	public static final String ListShowModel = "ListShowModel";
-	
-	public static final String ImpSQLFullOneRow = "ImpSQLFullOneRow";
-	public static final String EditModel = "EditModel";
-	public static final String ImpSQLNames = "ImpSQLNames"; 
-	
 	/** 
 	 是否显示标题
 	*/
 	public static final String IsShowTitle = "IsShowTitle";
 	/** 
-	 显示格式
+	 列表显示格式
 	*/
-	public static final String DtlShowModel = "DtlShowModel";
+	public static final String ListShowModel = "ListShowModel";
+	/** 
+	 行数据显示格式
+	*/
+	public static final String EditModel = "EditModel";
+	/** 
+	 移动端显示方式
+	*/
+	public static final String MobileShowModel = "MobileShowModel";
+	/** 
+	 移动端列表展示时显示的字段
+	*/
+	public static final String MobileShowField = "MobileShowField";
 	/** 
 	 过滤的SQL 表达式.
 	*/
 	public static final String FilterSQLExp = "FilterSQLExp";
+	/** 
+	 列自动计算表达式
+	*/
 	public static final String ColAutoExp = "ColAutoExp";
-	public static final String PTableModel = "PTableModel";
+	/** 
+	 显示列
+	*/
 	public static final String ShowCols = "ShowCols";
-	
-	
 	/** 
 	 是否可见
 	*/
@@ -131,17 +135,14 @@ public class MapDtlAttr extends EntityNoNameAttr
 	public static final String H = "H";
 	/** 
 	 w宽度
-	 
 	*/
 	public static final String W = "W";
 	/** 
 	 宽度
-	 
 	*/
 	public static final String FrmW = "FrmW";
 	/** 
 	 高度
-	 
 	*/
 	public static final String FrmH = "FrmH";
 	/** 
@@ -169,6 +170,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String GroupField = "GroupField";
 	/** 
+	 关联主键
+	*/
+	public static final String RefPK = "RefPK";
+	/** 
 	 是否启用分组字段
 	*/
 	public static final String IsEnableGroupField = "IsEnableGroupField";
@@ -176,6 +181,17 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 节点(用于多表单的权限控制)
 	*/
 	public static final String FK_Node = "FK_Node";
+	/** 
+	 映射的实体事件类
+	*/
+	public static final String FEBD = "FEBD";
+	/** 
+	 导入模式.
+	*/
+	public static final String ImpModel = "ImpModel";
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
 	public static final String IsEnableLink = "IsEnableLink";
 	public static final String LinkLabel = "LinkLabel";
 	public static final String LinkUrl = "LinkUrl";
@@ -188,6 +204,11 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 明细表追加模式
 	*/
 	public static final String DtlAddRecModel = "DtlAddRecModel";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 参数属性.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
 	/** 
 	 是否启用锁定
 	*/
@@ -200,15 +221,15 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 子线程分组字段.
 	*/
 	public static final String SubThreadGroupMark = "SubThreadGroupMark";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 参数属性.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 导入导出属性.
 	/** 
 	 是否可以导出
 	*/
 	public static final String IsExp = "IsExp";
-	/** 
-	 导入方式
-	*/
-	public static final String ImpModel = "ImpModel";
-	 
 	/** 
 	 查询sql
 	*/
@@ -218,14 +239,13 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String ImpSQLInit = "ImpSQLInit";
 	/** 
-	 填充数据
+	 填充数据一行数据
 	*/
-	public static final String ImpSQLFull = "ImpSQLFull";
-	/*
-	 * 事件类
-	 * */
-	public static final String FEBD = "FEBD";
-	public static final String RefPK = "RefPK";
-	/**使用的版本**/
-	public static final String DtlVer = "DtlVer";
+	public static final String ImpSQLFullOneRow = "ImpSQLFullOneRow";
+	/** 
+	 列的中文名称
+	*/
+	public static final String ImpSQLNames = "ImpSQLNames";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

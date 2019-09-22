@@ -1,19 +1,19 @@
 package BP.WF.DTS;
 
-import BP.DA.DBAccess;
-import BP.En.Method;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrs;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  修复非法字段名称
- 
 */
 public class PackAutoErrFormatFieldTable extends Method
 {
 	/** 
 	 修复非法字段名称
-	 
 	*/
 	public PackAutoErrFormatFieldTable()
 	{
@@ -33,7 +33,6 @@ public class PackAutoErrFormatFieldTable extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -44,10 +43,9 @@ public class PackAutoErrFormatFieldTable extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
 		String keys = "~!@#$%^&*()+{}|:<>?`=[];,./～！＠＃￥％……＆×（）——＋｛｝｜：“《》？｀－＝［］；＇，．／";
 		char[] cc = keys.toCharArray();
@@ -56,17 +54,17 @@ public class PackAutoErrFormatFieldTable extends Method
 			DBAccess.RunSQL("update sys_mapattr set keyofen=REPLACE(keyofen,'" + c + "' , '')");
 		}
 
-		BP.Sys.MapAttrs attrs = new MapAttrs();
+		BP.Sys.MapAttrs attrs = new Sys.MapAttrs();
 		attrs.RetrieveAll();
 		int idx = 0;
 		String msg = "";
-		for (BP.Sys.MapAttr item : attrs.ToJavaList())
+		for (BP.Sys.MapAttr item : attrs)
 		{
-			String f = item.getKeyOfEn();
+			String f = item.KeyOfEn.Clone().toString();
 			try
 			{
-				int i = Integer.parseInt(item.getKeyOfEn().substring(0, 1));
-				item.setKeyOfEn ("F" + item.getKeyOfEn());
+				int i = Integer.parseInt(item.KeyOfEn.substring(0, 1));
+				item.KeyOfEn = "F" + item.KeyOfEn;
 				try
 				{
 					MapAttr itemCopy = new MapAttr();
@@ -83,12 +81,12 @@ public class PackAutoErrFormatFieldTable extends Method
 			{
 				continue;
 			}
-			DBAccess.RunSQL("UPDATE sys_mapAttr set KeyOfEn='"+item.getKeyOfEn()+"', mypk=FK_MapData+'_'+keyofen where keyofen='"+item.getKeyOfEn()+"'");
-			msg += "@第(" + idx + ")个错误修复成功，原（"+f+"）修复成("+item.getKeyOfEn()+").";
+			DBAccess.RunSQL("UPDATE sys_mapAttr set KeyOfEn='" + item.KeyOfEn + "', mypk=FK_MapData+'_'+keyofen where keyofen='" + item.KeyOfEn + "'");
+			msg += "@第(" + idx + ")个错误修复成功，原（" + f + "）修复成(" + item.KeyOfEn + ").";
 			idx++;
 		}
 
 		BP.DA.DBAccess.RunSQL("UPDATE Sys_MapAttr SET MyPK=FK_MapData+'_'+KeyOfEn WHERE MyPK!=FK_MapData+'_'+KeyOfEn");
-		return "修复信息如下:"+msg;
+		return "修复信息如下:" + msg;
 	}
 }

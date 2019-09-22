@@ -1,43 +1,22 @@
 package BP.WF.Template;
 
-
-
-import BP.DA.Depositary;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.WF.CCRole;
-import BP.WF.HuiQianRole;
-import BP.WF.JumpWay;
-import BP.WF.Node;
-import BP.WF.SubFlowCtrlRole;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  节点按钮权限
 */
 public class BtnLab extends Entity
 {
-	
-	/// <summary>
-    /// 会签规则
-    /// </summary>
-    public final HuiQianRole getHuiQianRole()
-    {
-         return HuiQianRole.forValue( this.GetValIntByKey(BtnAttr.HuiQianRole));
-    }
-    /// <summary>
-    /// 会签标签
-    /// </summary>
-    public String getHuiQianLab()
-    {
-            return this.GetValStringByKey(BtnAttr.HuiQianLab);
-    }
 	/** 
 	 访问控制
-	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -45,6 +24,9 @@ public class BtnLab extends Entity
 		uac.IsDelete = false;
 		return uac;
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 but
 	*/
@@ -70,6 +52,17 @@ public class BtnLab extends Entity
 	public final void setNodeID(int value)
 	{
 		this.SetValByKey(BtnAttr.NodeID, value);
+	}
+	/** 
+	 名称
+	*/
+	public final String getName()
+	{
+		return this.GetValStringByKey(BtnAttr.Name);
+	}
+	public final void setName(String value)
+	{
+		this.SetValByKey(BtnAttr.Name, value);
 	}
 	/** 
 	 查询标签
@@ -182,10 +175,6 @@ public class BtnLab extends Entity
 	{
 		return this.GetValStringByKey(BtnAttr.SubFlowLab);
 	}
-	public final SubFlowCtrlRole getSubFlowCtrlRole()
-	{
-		return SubFlowCtrlRole.forValue(this.GetValIntByKey(BtnAttr.SubFlowCtrlRole));
-	}
 	/** 
 	 跳转标签
 	*/
@@ -219,7 +208,7 @@ public class BtnLab extends Entity
 		return this.GetValStringByKey(BtnAttr.ReturnField);
 	}
 	/** 
-	 跳转是否启用
+	 退回是否启用
 	*/
 	public final boolean getReturnEnable()
 	{
@@ -272,7 +261,7 @@ public class BtnLab extends Entity
 	*/
 	public final String getSendJS()
 	{
-		String str = this.GetValStringByKey(BtnAttr.SendJS).replace("~", "'");
+		String str = this.GetValStringByKey(BtnAttr.SendJS).Replace("~", "'");
 		if (this.getCCRole() == BP.WF.CCRole.WhenSend)
 		{
 			str = str + "  if ( OpenCC()==false) return false;";
@@ -294,6 +283,23 @@ public class BtnLab extends Entity
 		return this.GetValBooleanByKey(BtnAttr.TrackEnable);
 	}
 	/** 
+	 查看父流程标签
+	*/
+	public final String getShowParentFormLab()
+	{
+		return this.GetValStringByKey(BtnAttr.ShowParentFormLab);
+	}
+
+	/** 
+	 是否启用查看父流程
+	*/
+	public final boolean getShowParentFormEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.ShowParentFormEnable);
+	}
+
+
+	/** 
 	 抄送标签
 	*/
 	public final String getCCLab()
@@ -309,7 +315,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 删除标签
-	 
 	*/
 	public final String getDeleteLab()
 	{
@@ -317,7 +322,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 删除类型
-	 
 	*/
 	public final int getDeleteEnable()
 	{
@@ -325,7 +329,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 结束流程
-	 
 	*/
 	public final String getEndFlowLab()
 	{
@@ -333,7 +336,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 是否启用结束流程
-	 
 	*/
 	public final boolean getEndFlowEnable()
 	{
@@ -341,7 +343,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 是否启用流转自定义
-	 
 	*/
 	public final String getTCLab()
 	{
@@ -349,7 +350,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 是否启用流转自定义
-	 
 	*/
 	public final boolean getTCEnable()
 	{
@@ -360,9 +360,18 @@ public class BtnLab extends Entity
 		this.SetValByKey(BtnAttr.TCEnable, value);
 	}
 
+	public final int getHelpRole()
+	{
+		return this.GetValIntByKey(BtnAttr.HelpRole);
+	}
+
+	public final String getHelpLab()
+	{
+		return this.GetValStringByKey(BtnAttr.HelpLab);
+	}
+
 	/** 
 	 审核标签
-	 
 	*/
 	public final String getWorkCheckLab()
 	{
@@ -370,19 +379,20 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 标签是否启用？
-	 
 	*/
-	public final boolean getSubFlowEnable()
-	{
-		return this.GetValBooleanByKey(BtnAttr.SubFlowEnable);
-	}
-	public final void setSubFlowEnable(boolean value)
-	{
-		this.SetValByKey(BtnAttr.SubFlowEnable, value);
-	}
+	//public bool SubFlowEnable111
+	//{
+	//    get
+	//    {
+	//        return this.GetValBooleanByKey(BtnAttr.SubFlowEnable);
+	//    }
+	//    set
+	//    {
+	//        this.SetValByKey(BtnAttr.SubFlowEnable, value);
+	//    }
+	//}
 	/** 
 	 审核是否可用
-	 
 	*/
 	public final boolean getWorkCheckEnable()
 	{
@@ -394,15 +404,13 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 考核 是否可用
-	 
 	*/
-	public final boolean getCHEnable()
+	public final int getCHRole()
 	{
-		return this.GetValBooleanByKey(BtnAttr.CHEnable);
+		return this.GetValIntByKey(BtnAttr.CHRole);
 	}
 	/** 
 	 考核 标签
-	 
 	*/
 	public final String getCHLab()
 	{
@@ -410,7 +418,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 重要性 是否可用
-	 
 	*/
 	public final boolean getPRIEnable()
 	{
@@ -418,7 +425,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 重要性 标签
-	 
 	*/
 	public final String getPRILab()
 	{
@@ -426,7 +432,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 关注 是否可用
-	 
 	*/
 	public final boolean getFocusEnable()
 	{
@@ -434,15 +439,89 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 关注 标签
-	 
 	*/
 	public final String getFocusLab()
 	{
 		return this.GetValStringByKey(BtnAttr.FocusLab);
 	}
+
+	/** 
+	 分配 是否可用
+	*/
+	public final boolean getAllotEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.AllotEnable);
+	}
+	/** 
+	 分配 标签
+	*/
+	public final String getAllotLab()
+	{
+		return this.GetValStringByKey(BtnAttr.AllotLab);
+	}
+
+	/** 
+	 确认 是否可用
+	*/
+	public final boolean getConfirmEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.ConfirmEnable);
+	}
+	/** 
+	 确认标签
+	*/
+	public final String getConfirmLab()
+	{
+		return this.GetValStringByKey(BtnAttr.ConfirmLab);
+	}
+
+	/** 
+	 打包下载 是否可用
+	*/
+	public final boolean getPrintZipEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.PrintZipEnable);
+	}
+	/** 
+	 打包下载 标签
+	*/
+	public final String getPrintZipLab()
+	{
+		return this.GetValStringByKey(BtnAttr.PrintZipLab);
+	}
+	/** 
+	 pdf 是否可用
+	*/
+	public final boolean getPrintPDFEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.PrintPDFEnable);
+	}
+	/** 
+	 打包下载 标签
+	*/
+	public final String getPrintPDFLab()
+	{
+		return this.GetValStringByKey(BtnAttr.PrintPDFLab);
+	}
+
+	/** 
+	 html 是否可用
+	*/
+	public final boolean getPrintHtmlEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.PrintHtmlEnable);
+	}
+	/** 
+	 html 标签
+	*/
+	public final String getPrintHtmlLab()
+	{
+		return this.GetValStringByKey(BtnAttr.PrintHtmlLab);
+	}
+
+
 	/** 
 	 批量处理是否可用
-	 
 	*/
 	public final boolean getBatchEnable()
 	{
@@ -450,7 +529,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 批处理标签
-	 
 	*/
 	public final String getBatchLab()
 	{
@@ -458,7 +536,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 加签
-	 
 	*/
 	public final boolean getAskforEnable()
 	{
@@ -466,23 +543,40 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 加签
-	 
 	*/
 	public final String getAskforLab()
 	{
 		return this.GetValStringByKey(BtnAttr.AskforLab);
 	}
 	/** 
-	是否启用文档,@0=不启用@1=按钮方式@2=公文在前@3=表单在前
-	 
+	 会签规则
 	*/
-	public int getWebOfficeEnable()
+	public final HuiQianRole getHuiQianRole()
+	{
+		return HuiQianRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianRole));
+	}
+	/** 
+	 会签标签
+	*/
+	public final String getHuiQianLab()
+	{
+		return this.GetValStringByKey(BtnAttr.HuiQianLab);
+	}
+
+	public final HuiQianLeaderRole getHuiQianLeaderRole()
+	{
+		return HuiQianLeaderRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianLeaderRole));
+	}
+
+	/** 
+	是否启用文档,@0=不启用@1=按钮方式@2=公文在前@3=表单在前
+	*/
+	private int getWebOfficeEnable()
 	{
 		return this.GetValIntByKey(BtnAttr.WebOfficeEnable);
 	}
 	/** 
 	 公文的工作模式 @0=不启用@1=按钮方式@2=标签页置后方式@3=标签页置前方式
-	 
 	*/
 	public final WebOfficeWorkModel getWebOfficeWorkModel()
 	{
@@ -492,10 +586,8 @@ public class BtnLab extends Entity
 	{
 		this.SetValByKey(BtnAttr.WebOfficeEnable, value.getValue());
 	}
-
 	/** 
 	 文档按钮标签
-	 
 	*/
 	public final String getWebOfficeLab()
 	{
@@ -503,7 +595,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 打开本地文件
-	 
 	*/
 	public final boolean getOfficeOpenEnable()
 	{
@@ -511,7 +602,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 打开本地标签      
-	 
 	*/
 	public final String getOfficeOpenLab()
 	{
@@ -519,7 +609,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 打开模板
-	 
 	*/
 	public final boolean getOfficeOpenTemplateEnable()
 	{
@@ -527,7 +616,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 打开模板标签
-	 
 	*/
 	public final String getOfficeOpenTemplateLab()
 	{
@@ -535,7 +623,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 保存按钮
-	 
 	*/
 	public final boolean getOfficeSaveEnable()
 	{
@@ -543,7 +630,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 保存标签
-	 
 	*/
 	public final String getOfficeSaveLab()
 	{
@@ -551,7 +637,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 接受修订
-	 
 	*/
 	public final boolean getOfficeAcceptEnable()
 	{
@@ -559,7 +644,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 接受修订标签
-	 
 	*/
 	public final String getOfficeAcceptLab()
 	{
@@ -567,7 +651,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 拒绝修订
-	 
 	*/
 	public final boolean getOfficeRefuseEnable()
 	{
@@ -575,7 +658,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 拒绝修订标签
-	 
 	*/
 	public final String getOfficeRefuseLab()
 	{
@@ -587,7 +669,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 是否套红
-	 
 	*/
 	public final boolean getOfficeOverEnable()
 	{
@@ -595,7 +676,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 套红按钮标签
-	 
 	*/
 	public final String getOfficeOverLab()
 	{
@@ -603,7 +683,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 是否打印
-	 
 	*/
 	public final boolean getOfficePrintEnable()
 	{
@@ -611,7 +690,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 是否查看用户留痕
-	 
 	*/
 	public final boolean getOfficeMarksEnable()
 	{
@@ -619,7 +697,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 打印按钮标签
-	 
 	*/
 	public final String getOfficePrintLab()
 	{
@@ -627,7 +704,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 签章按钮
-	 
 	*/
 	public final boolean getOfficeSealEnable()
 	{
@@ -635,7 +711,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 签章标签
-	 
 	*/
 	public final String getOfficeSealLab()
 	{
@@ -644,7 +719,6 @@ public class BtnLab extends Entity
 
 	/** 
 	插入流程
-	 
 	*/
 	public final boolean getOfficeInsertFlowEnable()
 	{
@@ -652,7 +726,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 流程标签
-	 
 	*/
 	public final String getOfficeInsertFlowLab()
 	{
@@ -662,7 +735,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 是否自动记录节点信息
-	 
 	*/
 	public final boolean getOfficeNodeInfo()
 	{
@@ -671,7 +743,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 是否自动记录节点信息
-	 
 	*/
 	public final boolean getOfficeReSavePDF()
 	{
@@ -680,7 +751,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 是否进入留痕模式
-	 
 	*/
 	public final boolean getOfficeIsMarks()
 	{
@@ -689,7 +759,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 风险点模板
-	 
 	*/
 	public final String getOfficeFengXianTemplate()
 	{
@@ -703,7 +772,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 下载按钮标签
-	 
 	*/
 	public final String getOfficeDownLab()
 	{
@@ -711,7 +779,6 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 下载按钮标签
-	 
 	*/
 	public final boolean getOfficeIsDown()
 	{
@@ -720,7 +787,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 是否启用下载
-	 
 	*/
 	public final boolean getOfficeDownEnable()
 	{
@@ -729,7 +795,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 指定文档模板
-	 
 	*/
 	public final String getOfficeTemplate()
 	{
@@ -739,7 +804,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 是否使用父流程的文档
-	 
 	*/
 	public final boolean getOfficeIsParent()
 	{
@@ -748,7 +812,6 @@ public class BtnLab extends Entity
 
 	/** 
 	 是否自动套红
-	 
 	*/
 	public final boolean getOfficeTHEnable()
 	{
@@ -756,20 +819,51 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 自动套红模板
-	 
 	*/
 	public final String getOfficeTHTemplate()
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeTHTemplate);
 	}
 
+
+	/** 
+	 公文标签
+	*/
+	public final String getOfficeBtnLab()
+	{
+		return this.GetValStringByKey(BtnAttr.OfficeBtnLab);
+	}
+	/** 
+	 公文标签
+	*/
+	public final boolean getOfficeBtnEnable()
+	{
+		return this.GetValBooleanByKey(BtnAttr.OfficeBtnEnable);
+	}
+
+
+	/** 
+	 备注标签
+	*/
+	public final String getNoteLab()
+	{
+		return this.GetValStringByKey(BtnAttr.NoteLab);
+	}
+	/** 
+	备注标签
+	*/
+	public final int getNoteEnable()
+	{
+		return this.GetValIntByKey(BtnAttr.NoteEnable);
+	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 Btn
-	 
 	*/
 	public BtnLab()
 	{
@@ -778,126 +872,25 @@ public class BtnLab extends Entity
 	 节点按钮权限
 	 
 	 @param nodeid 节点ID
-	 * @throws Exception 
 	*/
-	public BtnLab(int nodeid) throws Exception
+	public BtnLab(int nodeid)
 	{
 		this.setNodeID(nodeid);
 		this.RetrieveFromDBSources();
 	}
-	/** 分配 是否可用
-	 
-	*/
-	public final boolean getAllotEnable()
-	{
-		return this.GetValBooleanByKey(BtnAttr.AllotEnable);
-	}
-	/** 
-	 分配 标签
-	 
-	 */
-	public final String getAllotLab()
-	{
-		return this.GetValStringByKey(BtnAttr.AllotLab);
-	}
-	/** 确认 是否可用
-	 
-	*/
-	public final boolean getConfirmEnable()
-	{
-		return this.GetValBooleanByKey(BtnAttr.ConfirmEnable);
-	}
-	/** 
-	 确认标签
-	 
-	*/
-	public final String getConfirmLab()
-	{
-		return this.GetValStringByKey(BtnAttr.ConfirmLab);
-	}
-	
-	/** 
-	 打包下载 是否可用
-	 
-*/
-	public final boolean getPrintZipEnable()
-	{
-		return this.GetValBooleanByKey(BtnAttr.PrintZipEnable);
-	}
-	/** 
-	 打包下载 标签
-	 
-	*/
-	public final String getPrintZipLab()
-	{
-		return this.GetValStringByKey(BtnAttr.PrintZipLab);
-	}
-
-
-	/** 
-	 pdf 是否可用
-	 
-	*/
-	public final boolean getPrintPDFEnable()
-	{
-		return this.GetValBooleanByKey(BtnAttr.PrintPDFEnable);
-	}
-	/** 
-	 打包下载 标签
-	 
-	*/
-	public final String getPrintPDFLab()
-	{
-		return this.GetValStringByKey(BtnAttr.PrintPDFLab);
-	}
-
-	/** 
-	 html 是否可用
-	 
-	*/
-	public final boolean getPrintHtmlEnable()
-	{
-		return this.GetValBooleanByKey(BtnAttr.PrintHtmlEnable);
-	}
-	/** 
-	 html 标签
-	 
-	*/
-	public final String getPrintHtmlLab()
-	{
-		return this.GetValStringByKey(BtnAttr.PrintHtmlLab);
-	}
-	
-	/** 
-	 备注是否可用
-	 
-	*/
-	public final boolean getNoteEnable()
-	{
-		return this.GetValBooleanByKey(BtnAttr.NoteEnable);
-	}
-	/** 
-	 备注 标签
-	 
-	*/
-	public final String getNoteLab()
-	{
-		return this.GetValStringByKey(BtnAttr.NoteLab);
-	}
-	
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Node", "节点标签");
+
 
 		map.Java_SetDepositaryOfEntity(Depositary.Application);
 
@@ -923,21 +916,21 @@ public class BtnLab extends Entity
 		map.AddBoolean(BtnAttr.ThreadIsCanShift, false, "是否可以移交子线程(当前节点已经发送出去的线程，并且当前节点是分流，或者分合流有效，在子线程退回后的操作)？", true, true, true);
 
 
-		map.AddTBString(BtnAttr.SubFlowLab, "子流程", "子流程按钮标签", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.SubFlowEnable, false, "是否启用", true, true);
-
+			// add 2019.1.9 for 东孚.
+		map.AddTBString(BtnAttr.OfficeBtnLab, "打开公文", "公文按钮标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.OfficeBtnEnable, false, "是否启用", true, true);
 
 		map.AddTBString(BtnAttr.ReturnLab, "退回", "退回按钮标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.ReturnRole, true, "是否启用", true, true);
 		map.AddTBString(BtnAttr.ReturnField, "", "退回信息填写字段", true, false, 0, 50, 10, true);
-		map.AddDDLSysEnum(NodeAttr.ReturnOneNodeRole, 0, "单节点退回规则", true, true, NodeAttr.ReturnOneNodeRole,
-                "@@0=不启用@1=按照[退回信息填写字段]作为退回意见直接退回@2=按照[审核组件]填写的信息作为退回意见直接退回", true);
+
+		map.AddDDLSysEnum(NodeAttr.ReturnOneNodeRole, 0, "单节点退回规则", true, true, NodeAttr.ReturnOneNodeRole, "@@0=不启用@1=按照[退回信息填写字段]作为退回意见直接退回@2=按照[审核组件]填写的信息作为退回意见直接退回", true);
 
 
 		map.AddTBString(BtnAttr.CCLab, "抄送", "抄送按钮标签", true, false, 0, 50, 10);
 		map.AddDDLSysEnum(BtnAttr.CCRole, 0, "抄送规则", true, true, BtnAttr.CCRole);
 
-			//map.AddBoolean(BtnAttr, true, "是否启用", true, true);
+			//  map.AddBoolean(BtnAttr, true, "是否启用", true, true);
 
 		map.AddTBString(BtnAttr.ShiftLab, "移交", "移交按钮标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.ShiftEnable, true, "是否启用", true, true);
@@ -951,15 +944,12 @@ public class BtnLab extends Entity
 		map.AddTBString(BtnAttr.HungLab, "挂起", "挂起按钮标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.HungEnable, false, "是否启用", true, true);
 
+		map.AddTBString(BtnAttr.ShowParentFormLab, "查看父流程", "查看父流程按钮标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.ShowParentFormEnable, false, "是否启用", true, true);
+		map.SetHelperAlert(BtnAttr.ShowParentFormLab,"如果当前流程实例不是子流程，即时启用了，也不显示该按钮。");
+
 		map.AddTBString(BtnAttr.PrintDocLab, "打印单据", "打印单据按钮标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.PrintDocEnable, false, "是否启用", true, true);
-		
-		
-        map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.HuiQianRole, false, "是否启用", true, true);
-
-			//map.AddTBString(BtnAttr.AthLab, "附件", "附件按钮标签", true, false, 0, 50, 10);
-			//map.AddBoolean(BtnAttr.FJOpen, true, "是否启用", true, true);
 
 		map.AddTBString(BtnAttr.TrackLab, "轨迹", "轨迹按钮标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.TrackEnable, true, "是否启用", true, true);
@@ -985,10 +975,20 @@ public class BtnLab extends Entity
 		map.AddTBString(BtnAttr.AskforLab, "加签", "加签标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.AskforEnable, false, "是否启用", true, true);
 
+		map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);
+		map.AddDDLSysEnum(BtnAttr.HuiQianRole, 0, "会签模式", true, true, BtnAttr.HuiQianRole, "@0=不启用@1=协作模式@4=组长模式");
+
+		map.AddDDLSysEnum(BtnAttr.HuiQianLeaderRole, 0, "会签组长规则", true, true, BtnAttr.HuiQianLeaderRole, "0=只有一个组长@1=最后一个组长发送@2=任意组长发送",true);
+
+			//map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);
+			//map.AddDDLSysEnum(BtnAttr.HuiQianRole, 0, "会签模式", true, true, BtnAttr.HuiQianRole, "@0=不启用@1=组长模式@2=协作模式");
+
+		   // map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);
+		  //  map.AddBoolean(BtnAttr.HuiQianRole, false, "是否启用", true, true);
+
 			// add by stone 2014-11-21. 让用户可以自己定义流转.
 		map.AddTBString(BtnAttr.TCLab, "流转自定义", "流转自定义", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.TCEnable, false, "是否启用", true, true);
-
 
 		map.AddTBString(BtnAttr.WebOfficeLab, "公文", "公文标签", true, false, 0, 50, 10);
 			//map.AddBoolean(BtnAttr.WebOfficeEnable, false, "是否启用", true, true);
@@ -1000,35 +1000,47 @@ public class BtnLab extends Entity
 
 			// add by 周朋 2015-08-06. 节点时限.
 		map.AddTBString(BtnAttr.CHLab, "节点时限", "节点时限", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.CHEnable, false, "是否启用", true, true);
+		map.AddDDLSysEnum(BtnAttr.CHRole, 0, "时限规则", true, true, BtnAttr.CHRole, "0=禁用@1=启用@2=只读@3=启用并可以调整流程应完成时间");
 
-		// add 2017.5.4  邀请其他人参与当前的工作.
-        map.AddTBString(BtnAttr.AllotLab, "分配", "分配按钮标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.AllotEnable, false, "是否启用", true, true);
-        
+			// add 2017.5.4  邀请其他人参与当前的工作.
+		map.AddTBString(BtnAttr.AllotLab, "分配", "分配按钮标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.AllotEnable, false, "是否启用", true, true);
+
+
 			// add by 周朋 2015-12-24. 节点时限.
 		map.AddTBString(BtnAttr.FocusLab, "关注", "关注", true, false, 0, 50, 10);
-		map.AddBoolean(BtnAttr.FocusEnable, false, "是否启用", true, true);
-	    // add 2017.5.4 确认就是告诉发送人，我接受这件工作了.
-        map.AddTBString(BtnAttr.ConfirmLab, "确认", "确认按钮标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.ConfirmEnable, false, "是否启用", true, true);
+		map.AddBoolean(BtnAttr.FocusEnable, true, "是否启用", true, true);
 
-        // add 2017.9.1 for 天业集团.
-        map.AddTBString(BtnAttr.PrintHtmlLab, "打印Html", "打印Html标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.PrintHtmlEnable, false, "是否启用", true, true);
+			// add 2017.5.4 确认就是告诉发送人，我接受这件工作了.
+		map.AddTBString(BtnAttr.ConfirmLab, "确认", "确认按钮标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.ConfirmEnable, false, "是否启用", true, true);
 
-        // add 2017.9.1 for 天业集团.
-        map.AddTBString(BtnAttr.PrintPDFLab, "打印pdf", "打印pdf标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.PrintPDFEnable, false, "是否启用", true, true);
+			// add 2017.9.1 for 天业集团.
+		map.AddTBString(BtnAttr.PrintHtmlLab, "打印Html", "打印Html标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.PrintHtmlEnable, false, "是否启用", true, true);
 
-        // add 2017.9.1 for 天业集团.
-        map.AddTBString(BtnAttr.PrintZipLab, "打包下载", "打包下载zip按钮标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.PrintZipEnable, false, "是否启用", true, true);
+			// add 2017.9.1 for 天业集团.
+		map.AddTBString(BtnAttr.PrintPDFLab, "打印pdf", "打印pdf标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.PrintPDFEnable, false, "是否启用", true, true);
 
-        //备注 流程不流转，设置备注信息提醒已处理人员当前流程运行情况
-        map.AddTBString(BtnAttr.NoteLab, "备注", "备注标签", true, false, 0, 50, 10);
-        map.AddBoolean(BtnAttr.NoteEnable, false, "是否启用", true, true);
+			// add 2017.9.1 for 天业集团.
+		map.AddTBString(BtnAttr.PrintZipLab, "打包下载", "打包下载zip按钮标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.PrintZipEnable, false, "是否启用", true, true);
 
+			// add 2019.3.10 增加List.
+		map.AddTBString(BtnAttr.ListLab, "列表", "列表按钮标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.ListEnable, true, "是否启用", true, true);
+
+			//备注 流程不流转，设置备注信息提醒已处理人员当前流程运行情况
+		map.AddTBString(BtnAttr.NoteLab, "备注", "备注标签", true, false, 0, 50, 10);
+		map.AddDDLSysEnum(BtnAttr.NoteEnable, 0, "启用规则", true, true, BtnAttr.NoteEnable, "0=禁用@1=启用@2=只读");
+
+			//for 周大福.
+		map.AddTBString(BtnAttr.HelpLab, "帮助", "帮助标签", true, false, 0, 50, 10);
+		map.AddDDLSysEnum(BtnAttr.HelpRole, 0, "帮助显示规则", true, true, BtnAttr.HelpRole, "0=禁用@1=启用@2=强制提示@3=选择性提示");
+
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 公文按钮
 		map.AddTBString(BtnAttr.OfficeOpenLab, "打开本地", "打开本地标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.OfficeOpenEnable, false, "是否启用", true, true);
@@ -1073,21 +1085,28 @@ public class BtnLab extends Entity
 		map.AddBoolean(BtnAttr.OfficeTHEnable, false, "是否自动套红", true, true);
 		map.AddTBString(BtnAttr.OfficeTHTemplate, "", "自动套红模板", true, false, 0, 200, 10);
 
-		// add 2017.5.4 确认就是告诉发送人，我接受这件工作了.
-//        map.AddTBString(BtnAttr.ConfirmLab, "确认", "确认按钮标签", true, false, 0, 50, 10);
-//        map.AddBoolean(BtnAttr.ConfirmEnable, false, "是否启用", true, true);
-		this.set_enMap(map);
-		return this.get_enMap();
-	}
-	
-	 @Override
-	  protected   void afterInsertUpdateAction() throws Exception
-     {
-         Node fl = new Node();
-         fl.setNodeID( this.getNodeID());
-         fl.RetrieveFromDBSources();
-         fl.Update();     
-        
-     }
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
+		this._enMap = map;
+		return this._enMap;
+	}
+
+	@Override
+	protected void afterInsertUpdateAction()
+	{
+		Node fl = new Node();
+		fl.setNodeID(this.getNodeID());
+		fl.RetrieveFromDBSources();
+		fl.Update();
+
+		BtnLab btnLab = new BtnLab();
+		btnLab.setNodeID(this.getNodeID());
+		btnLab.RetrieveFromDBSources();
+		btnLab.Update();
+
+		super.afterInsertUpdateAction();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

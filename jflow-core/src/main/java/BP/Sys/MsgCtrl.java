@@ -1,31 +1,37 @@
 package BP.Sys;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Web.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
+import java.math.*;
+
 /** 
  消息控制方式
- 
 */
 public enum MsgCtrl
 {
 	/** 
 	 bufasong 
-	 
 	*/
 	None,
 	/** 
 	 按照设置计算
-	 
 	*/
 	BySet,
 	/** 
 	 按照表单的是否发送字段计算，字段:IsSendMsg
-	 
 	*/
 	ByFrmIsSendMsg,
 	/** 
 	 按照SDK参数计算.
-	 
 	*/
 	BySDK;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

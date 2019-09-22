@@ -1,20 +1,22 @@
 package BP.WF.Template;
 
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.Sys.SystemConfig;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  子线程组件s
- 
 */
 public class FrmThreads extends Entities
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 子线程组件s
-	 
 	*/
 	public FrmThreads()
 	{
@@ -23,11 +25,10 @@ public class FrmThreads extends Entities
 	 子线程组件s
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmThreads(String fk_mapdata) throws Exception
+	public FrmThreads(String fk_mapdata)
 	{
-		if (SystemConfig.getIsDebug())
+		if (SystemConfig.IsDebug)
 		{
 			this.Retrieve("No", fk_mapdata);
 		}
@@ -38,25 +39,24 @@ public class FrmThreads extends Entities
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new FrmThread();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List
 	/** 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmThread> ToJavaList()
+	public final List<FrmThread> ToJavaList()
 	{
-		return (java.util.List<FrmThread>)(Object)this;
+		return (List<FrmThread>)this;
 	}
 
 	/** 
@@ -64,15 +64,15 @@ public class FrmThreads extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmThread> Tolist()
+	public final ArrayList<FrmThread> Tolist()
 	{
-		java.util.ArrayList<FrmThread> list = new java.util.ArrayList<FrmThread>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmThread> list = new ArrayList<FrmThread>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FrmThread)this.get(i));
+			list.add((FrmThread)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

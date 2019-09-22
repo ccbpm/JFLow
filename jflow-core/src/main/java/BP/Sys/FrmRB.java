@@ -2,18 +2,17 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  单选框
- 
 */
 public class FrmRB extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 提示
-	 
 	*/
 	public final String getTip()
 	{
@@ -23,10 +22,9 @@ public class FrmRB extends EntityMyPK
 	{
 		this.SetValByKey(FrmRBAttr.Tip, value);
 	}
-	
+
 	/** 
-	 设置值
-	 
+	 字段设置值
 	*/
 	public final String getSetVal()
 	{
@@ -38,7 +36,6 @@ public class FrmRB extends EntityMyPK
 	}
 	/** 
 	 要执行的脚本
-	 
 	*/
 	public final String getScript()
 	{
@@ -51,7 +48,6 @@ public class FrmRB extends EntityMyPK
 
 	/** 
 	 字段-配置信息
-	 
 	*/
 	public final String getFieldsCfg()
 	{
@@ -87,7 +83,6 @@ public class FrmRB extends EntityMyPK
 	}
 	/** 
 	  Y
-	 
 	*/
 	public final float getY()
 	{
@@ -121,26 +116,32 @@ public class FrmRB extends EntityMyPK
 	{
 		this.SetValByKey(FrmRBAttr.EnumKey, value);
 	}
-
+	public final int getFontSize()
+	{
+		return this.GetParaInt(FrmRBAttr.FontSize, 12);
+	}
+	public final void setFontSize(int value)
+	{
+		this.SetPara(FrmRBAttr.FontSize, value);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 单选框
-	 
 	*/
 	public FrmRB()
 	{
 	}
-	public FrmRB(String mypk) throws Exception
+	public FrmRB(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -154,15 +155,17 @@ public class FrmRB extends EntityMyPK
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 
-		map.AddMyPK();
-		map.AddTBString(FrmRBAttr.FK_MapData, null, "表单ID", true, false, 0, 100, 20);
-		map.AddTBString(FrmRBAttr.KeyOfEn, null, "字段", true, false, 0, 30, 20);
-		map.AddTBString(FrmRBAttr.EnumKey, null, "枚举值", true, false, 0, 30, 20);
-		map.AddTBString(FrmRBAttr.Lab, null, "标签", true, false, 0, 90, 20);
-		map.AddTBInt(FrmRBAttr.IntKey, 0, "IntKey", true, false);
-		
-        map.AddTBInt(MapAttrAttr.UIIsEnable, 0, "是否启用", true, false);
+		map.IndexField = FrmImgAthDBAttr.FK_MapData;
 
+
+		map.AddMyPK();
+		map.AddTBString(FrmRBAttr.FK_MapData, null, "表单ID", true, false, 0, 300, 20);
+		map.AddTBString(FrmRBAttr.KeyOfEn, null, "字段", true, false, 0, 300, 20);
+		map.AddTBString(FrmRBAttr.EnumKey, null, "枚举值", true, false, 0, 30, 20);
+		map.AddTBString(FrmRBAttr.Lab, null, "标签", true, false, 0, 500, 20);
+		map.AddTBInt(FrmRBAttr.IntKey, 0, "IntKey", true, false);
+
+		map.AddTBInt(MapAttrAttr.UIIsEnable, 0, "是否启用", true, false);
 
 		map.AddTBFloat(FrmRBAttr.X, 5, "X", true, false);
 		map.AddTBFloat(FrmRBAttr.Y, 5, "Y", false, false);
@@ -170,30 +173,28 @@ public class FrmRB extends EntityMyPK
 			//要执行的脚本.
 		map.AddTBString(FrmRBAttr.Script, null, "要执行的脚本", true, false, 0, 4000, 20);
 		map.AddTBString(FrmRBAttr.FieldsCfg, null, "配置信息@FieldName=Sta", true, false, 0, 4000, 20);
+		map.AddTBString(FrmRBAttr.SetVal, null, "设置的值", true, false, 0, 200, 20);
 
 		map.AddTBString(FrmRBAttr.Tip, null, "选择后提示的信息", true, false, 0, 1000, 20);
-		 map.AddTBString(FrmRBAttr.SetVal, null, "设置的值", true, false, 0, 200, 20);
+		map.AddTBString(FrmRBAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
-		
-        map.AddTBAtParas(1000);
-
+			//map.AddTBAtParas(1000);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeUpdateInsertAction();

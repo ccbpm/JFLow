@@ -1,10 +1,16 @@
 package BP.GPM;
 
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+
 /** 
  部门人员信息
 */
 public class DeptEmpAttr
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 部门
 	*/
@@ -13,16 +19,6 @@ public class DeptEmpAttr
 	 人员
 	*/
 	public static final String FK_Emp = "FK_Emp";
-	/** 
-	 职务
-	*/
-	public static final String FK_Duty = "FK_Duty";
-	/** 
-	 职务级别
-	*/
-	public static final String DutyLevel = "DutyLevel";
-	/** 
-	 它的领导
-	*/
-	public static final String Leader = "Leader";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

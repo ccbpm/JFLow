@@ -1,33 +1,28 @@
 package BP.Sys;
 
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
 
 /** 
- 表单类型 0=傻瓜表单@1=自由表单@2=Silverlight表单(已取消)@3=嵌入式表单@4=Word表单@5=Excel表单
- 
+ 表单类型 @0=傻瓜表单@1=自由表单@3=嵌入式表单@4=Word表单@5=Excel表单@6=VSTOForExcel@7=Entity
 */
 public enum FrmType
 {
 	/** 
 	 傻瓜表单
-	 
 	*/
 	FoolForm(0),
 	/** 
 	 自由表单
-	 
 	*/
 	FreeFrm(1),
 	/** 
-	 Silverlight表单(已取消)
-	 
-	*/
-	Silverlight(2),
-	/** 
 	 URL表单(自定义)
-	 
 	*/
 	Url(3),
-	
 	/** 
 	 Word类型表单
 	*/
@@ -40,22 +35,26 @@ public enum FrmType
 	 VSTOExccel模式.
 	*/
 	VSTOForExcel(6),
-	/**
-	 * 实体类组件
-	 */
-	Entity(7),
 	/** 
-	 公文表单
+	 实体类
 	*/
-	WebOffice(8);
+	Entity(7);
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FrmType> mappings;
-	private synchronized static java.util.HashMap<Integer, FrmType> getMappings()
+	private static java.util.HashMap<Integer, FrmType> getMappings()
 	{
 		if (mappings == null)
 		{
-			mappings = new java.util.HashMap<Integer, FrmType>();
+			synchronized (FrmType.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, FrmType>();
+				}
+			}
 		}
 		return mappings;
 	}
@@ -63,7 +62,7 @@ public enum FrmType
 	private FrmType(int value)
 	{
 		intValue = value;
-		FrmType.getMappings().put(value, this);
+		getMappings().put(value, this);
 	}
 
 	public int getValue()

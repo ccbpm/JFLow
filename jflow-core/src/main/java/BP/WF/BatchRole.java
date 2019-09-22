@@ -2,25 +2,23 @@ package BP.WF;
 
 /** 
  节点工作批处理
- 
 */
 public enum BatchRole
 {
 	/** 
 	 不可以
-	 
 	*/
 	None,
 	/** 
 	 批量审批
-	 
 	*/
 	Ordinary,
 	/** 
 	 分组批量审核
-	 
 	*/
 	Group;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

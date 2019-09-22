@@ -1,21 +1,18 @@
 package BP.Sys;
 
-import java.util.ArrayList;
-
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  GroupFields
- 
 */
 public class GroupFields extends EntitiesOID
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 GroupFields
-	 
 	*/
 	public GroupFields()
 	{
@@ -24,9 +21,8 @@ public class GroupFields extends EntitiesOID
 	 GroupFields
 	 
 	 @param enName 名称
-	 * @throws Exception 
 	*/
-	public GroupFields(String enName) throws Exception
+	public GroupFields(String enName)
 	{
 		int i = this.Retrieve(GroupFieldAttr.FrmID, enName, GroupFieldAttr.Idx);
 		if (i == 0)
@@ -50,7 +46,6 @@ public class GroupFields extends EntitiesOID
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -62,18 +57,17 @@ public class GroupFields extends EntitiesOID
 	 
 	 @param enName
 	 @return 
-	 * @throws Exception 
 	*/
-	public final int RetrieveFieldGroup(String enName) throws Exception
+	public final int RetrieveFieldGroup(String enName)
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(GroupFieldAttr.EnName, enName);
+		qo.AddWhere(GroupFieldAttr.FrmID, enName);
 		qo.addAnd();
 		qo.AddWhereIsNull(GroupFieldAttr.CtrlID);
-		//qo.AddWhereLen(GroupFieldAttr.CtrlID, " = ", 0, SystemConfig.getAppCenterDBType());
-		int num=qo.DoQuery();
+		//qo.AddWhereLen(GroupFieldAttr.CtrlID, " = ", 0, SystemConfig.AppCenterDBType);
+		int num = qo.DoQuery();
 
-		if (num==0)
+		if (num == 0)
 		{
 			GroupField gf = new GroupField();
 			gf.setFrmID(enName);
@@ -94,33 +88,34 @@ public class GroupFields extends EntitiesOID
 		}
 		return num;
 	}
-	public static ArrayList<GroupField> convertGroupFields(Object obj)
-	{
-		return (ArrayList<GroupField>) obj;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupField> ToJavaList()
+	public final List<GroupField> ToJavaList()
 	{
-		return (java.util.List<GroupField>)(Object)this;
+		return (List<GroupField>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<GroupField> Tolist()
+	public final ArrayList<GroupField> Tolist()
 	{
-		java.util.ArrayList<GroupField> list = new java.util.ArrayList<GroupField>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<GroupField> list = new ArrayList<GroupField>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((GroupField)this.get(i));
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

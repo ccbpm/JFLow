@@ -1,21 +1,17 @@
 package BP.Sys.FrmUI;
 
-import BP.DA.Depositary;
-import BP.DA.Log;
-import BP.En.EnType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Sys.FrmLabAttr;
-import BP.Sys.FrmLinkAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.PubClass;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
-超连接
+ 超连接
 */
 public class FrmLink extends EntityMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 FontStyle
 	*/
@@ -29,13 +25,7 @@ public class FrmLink extends EntityMyPK
 	}
 	public final String getFontColorHtml()
 	{
-		try {
-			return PubClass.ToHtmlColor(this.getFontColor());
-		} catch (Exception e) {
-			Log.DebugWriteError("frmLink getFontColorHtml:"+e.getMessage());
-			e.printStackTrace();
-		}
-		return "";
+		return PubClass.ToHtmlColor(this.getFontColor());
 	}
 	/** 
 	 FontColor
@@ -50,7 +40,7 @@ public class FrmLink extends EntityMyPK
 	}
 	public final String getURL()
 	{
-		return this.GetValStringByKey(FrmLinkAttr.URL).replace("#","@");
+		return this.GetValStringByKey(FrmLinkAttr.URL).replace("#", "@");
 	}
 	public final void setURL(String value)
 	{
@@ -146,16 +136,20 @@ public class FrmLink extends EntityMyPK
 	{
 		this.SetValByKey(FrmLabAttr.IsItalic, value);
 	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.Readonly();
-		//if (BP.Web.WebUser.getNo().equals("admin"))
-		//{
+		if (BP.Web.WebUser.getNo().equals("admin"))
+		{
 			uac.IsUpdate = true;
-		//}
+		}
 		return uac;
 	}
 	/** 
@@ -168,9 +162,8 @@ public class FrmLink extends EntityMyPK
 	 超连接
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmLink(String mypk) throws Exception
+	public FrmLink(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -189,31 +182,48 @@ public class FrmLink extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = MapAttrAttr.FK_MapData;
 
+
+			//连接目标.
 		map.AddMyPK();
-
-		map.AddTBString(FrmLinkAttr.Target, "_blank", "连接目标", true, false, 0, 20, 20);
-		map.SetHelperAlert(FrmLinkAttr.Target, "可以输入:_blank,_parent,_self");
-
+		map.AddTBString(FrmLinkAttr.Target, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
 		map.AddTBString(FrmLinkAttr.Text, "New Link", "标签", true, false, 0, 500, 20, true);
 		map.AddTBString(FrmLinkAttr.URL, null, "URL", true, false, 0, 500, 20, true);
 		map.AddTBString(FrmLinkAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 
-
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "所在分组", MapAttrString.SQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData' AND (CtrlType IS NULL OR CtrlType='')  ", true);
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+
 	@Override
-	 protected  void afterInsertUpdateAction() throws Exception
-     {
-         BP.Sys.FrmLink frmLink = new BP.Sys.FrmLink();
-         frmLink.setMyPK(this.getMyPK());
-         frmLink.RetrieveFromDBSources();
-         frmLink.Update();
-         super.afterInsertUpdateAction();
-     }
+	protected void afterInsertUpdateAction()
+	{
+		BP.Sys.FrmLink frmLink = new BP.Sys.FrmLink();
+		frmLink.setMyPK(this.getMyPK());
+		frmLink.RetrieveFromDBSources();
+		frmLink.Update();
+
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+
+		super.afterInsertUpdateAction();
+	}
+
+	/** 
+	 删除后清缓存
+	*/
+	@Override
+	protected void afterDelete()
+	{
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		super.afterDelete();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

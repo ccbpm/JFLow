@@ -1,21 +1,21 @@
 package BP.WF.Template;
 
-import BP.DA.Depositary;
-import BP.En.EntitySimpleTree;
-import BP.En.Map;
-import BP.Sys.MapData;
-import BP.Tools.StringHelper;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
   独立表单树
- 
 */
-public class SysFormTree extends EntitySimpleTree
+public class SysFormTree extends EntityTree
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性.
 	/** 
 	 是否是目录
-	 
 	*/
 	public final boolean getIsDir()
 	{
@@ -27,7 +27,6 @@ public class SysFormTree extends EntitySimpleTree
 	}
 	/** 
 	 序号
-	 
 	*/
 	public final int getIdx()
 	{
@@ -39,8 +38,7 @@ public class SysFormTree extends EntitySimpleTree
 	}
 	/** 
 	 父节点编号
-	 
-	*//*
+	*/
 	public final String getParentNo()
 	{
 		return this.GetValStringByKey(SysFormTreeAttr.ParentNo);
@@ -48,59 +46,14 @@ public class SysFormTree extends EntitySimpleTree
 	public final void setParentNo(String value)
 	{
 		this.SetValByKey(SysFormTreeAttr.ParentNo, value);
-	}*/
-	/** 
-	 子文件夹
-	*/
-	public final SysForms getHisSubFormSorts()
-	{
-		try
-		{
-			SysForms formSorts = new SysForms();
-			formSorts.RetrieveByAttr(SysFormTreeAttr.ParentNo, this.getNo());
-			return formSorts;
-		}
-		catch (java.lang.Exception e)
-		{
-		}
-		return null;
 	}
-	/** 
-	 类别下所包含表单
-	*/
-	public final SysForms getHisForms()
-	{
-		try
-		{
-			SysForms flowSorts = new SysForms();
-			flowSorts.RetrieveByAttr(SysFormTreeAttr.FK_FormSort, this.getNo());
-			return flowSorts;
-		}
-		catch (java.lang.Exception e)
-		{
-		}
-		return null;
-	}
-	/** 
-	 数据源
-	 
-	*/
-	public final String getDBSrc()
-	{
-		return this.GetValStringByKey(SysFormTreeAttr.DBSrc);
-	}
-	public final void setDBSrc(String value)
-	{
-		this.SetValByKey(SysFormTreeAttr.DBSrc, value);
-	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 属性.
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 独立表单树
-	 
 	*/
 	public SysFormTree()
 	{
@@ -109,27 +62,25 @@ public class SysFormTree extends EntitySimpleTree
 	 独立表单树
 	 
 	 @param _No
-	 * @throws Exception 
 	*/
-	public SysFormTree(String _No) throws Exception
+	public SysFormTree(String _No)
 	{
 		super(_No);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 系统方法.
 	/** 
 	 独立表单树Map
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_FormTree", "表单树");
@@ -141,23 +92,20 @@ public class SysFormTree extends EntitySimpleTree
 		map.AddTBStringPK(SysFormTreeAttr.No, null, "编号", true, true, 1, 10, 20);
 		map.AddTBString(SysFormTreeAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(SysFormTreeAttr.ParentNo, null, "父节点No", false, false, 0, 100, 30);
-		//map.AddTBString(SysFormTreeAttr.DBSrc, "local", "数据源", false, false, 0, 100, 30);
-
-		map.AddTBInt(SysFormTreeAttr.IsDir, 0, "是否是目录?", false, false);
 		map.AddTBInt(SysFormTreeAttr.Idx, 0, "Idx", false, false);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 系统方法.
 
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete()
 	{
-		if (!StringHelper.isNullOrEmpty(this.getNo()))
+		if (!DataType.IsNullOrEmpty(this.No))
 		{
-			DeleteChild(this.getNo());
+			DeleteChild(this.No);
 		}
 		return super.beforeDelete();
 	}
@@ -165,38 +113,37 @@ public class SysFormTree extends EntitySimpleTree
 	 删除子项
 	 
 	 @param parentNo
-	 * @throws Exception 
 	*/
-	private void DeleteChild(String parentNo) throws Exception
+	private void DeleteChild(String parentNo)
 	{
 		SysFormTrees formTrees = new SysFormTrees();
 		formTrees.RetrieveByAttr(SysFormTreeAttr.ParentNo, parentNo);
-		for (SysFormTree item : formTrees.ToJavaList())
+		for (SysFormTree item : formTrees)
 		{
 			MapData md = new MapData();
-			md.setFK_FormTree(item.getNo());
+			md.FK_FormTree = item.No;
 			md.Delete();
-			DeleteChild(item.getNo());
+			DeleteChild(item.No);
 		}
 	}
-	public final String DoCreateSameLevelNodeIt(String name) throws Exception
+	public final String DoCreateSameLevelNodeIt(String name)
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
-		en.setNo(BP.DA.DBAccess.GenerOID()+"");
-		en.setName(name);
+		en.No = BP.DA.DBAccess.GenerOID().toString();
+		en.Name = name;
 		en.Insert();
-		return en.getNo();
+		return en.No;
 	}
-	public final String DoCreateSubNodeIt(String name) throws Exception
+	public final String DoCreateSubNodeIt(String name)
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
-		en.setNo(BP.DA.DBAccess.GenerOID()+"");
-		en.setParentNo(this.getNo());
-		en.setName(name);
+		en.No = BP.DA.DBAccess.GenerOID().toString();
+		en.setParentNo(this.No);
+		en.Name = name;
 		en.Insert();
-		return en.getNo();
+		return en.No;
 	}
 	public final void DoUp()
 	{

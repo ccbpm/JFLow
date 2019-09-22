@@ -1,50 +1,24 @@
 package BP.WF.Template;
 
-import BP.DA.DBUrlType;
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
-import BP.Sys.AppType;
-import BP.Sys.DTSearchWay;
-import BP.Sys.FrmAttachmentAttr;
-import BP.Sys.FrmAttachments;
-import BP.Sys.FrmBtns;
-import BP.Sys.FrmEles;
-import BP.Sys.FrmEvents;
-import BP.Sys.FrmImgAths;
-import BP.Sys.FrmImgs;
-import BP.Sys.FrmLabs;
-import BP.Sys.FrmLines;
-import BP.Sys.FrmLinks;
-import BP.Sys.FrmRBs;
-import BP.Sys.FrmRpts;
-import BP.Sys.GroupFields;
-import BP.Sys.MapAttrs;
-import BP.Sys.MapDataAttr;
-import BP.Sys.MapDtls;
-import BP.Sys.MapExts;
-import BP.Sys.MapFrames;
-import BP.Sys.SystemConfig;
-import BP.Tools.StringHelper;
-import BP.WF.Glo;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  表单属性
- 
 */
 public class MapDataURL extends EntityNoName
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -53,14 +27,13 @@ public class MapDataURL extends EntityNoName
 		uac.Readonly();
 		return uac;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 权限控制.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region weboffice文档属性(参数属性)
 	/** 
 	 是否启用锁定行
-	 
 	*/
 	public final boolean getIsRowLock()
 	{
@@ -73,7 +46,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否启用打印
-	 
 	*/
 	public final boolean getIsWoEnablePrint()
 	{
@@ -85,7 +57,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 是否启用只读
-	 
 	*/
 	public final boolean getIsWoEnableReadonly()
 	{
@@ -97,7 +68,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 是否启用修订
-	 
 	*/
 	public final boolean getIsWoEnableRevise()
 	{
@@ -109,7 +79,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 是否启用保存
-	 
 	*/
 	public final boolean getIsWoEnableSave()
 	{
@@ -121,7 +90,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 是否查看用户留痕
-	 
 	*/
 	public final boolean getIsWoEnableViewKeepMark()
 	{
@@ -133,7 +101,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 是否启用weboffice
-	 
 	*/
 	public final boolean getIsWoEnableWF()
 	{
@@ -146,7 +113,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否启用套红
-	 
 	*/
 	public final boolean getIsWoEnableOver()
 	{
@@ -159,7 +125,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否启用签章
-	 
 	*/
 	public final boolean getIsWoEnableSeal()
 	{
@@ -172,7 +137,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否启用公文模板
-	 
 	*/
 	public final boolean getIsWoEnableTemplete()
 	{
@@ -185,7 +149,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否记录节点信息
-	 
 	*/
 	public final boolean getIsWoEnableCheck()
 	{
@@ -197,7 +160,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 是否插入流程图
-	 
 	*/
 	public final boolean getIsWoEnableInsertFlow()
 	{
@@ -210,7 +172,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否插入风险点
-	 
 	*/
 	public final boolean getIsWoEnableInsertFengXian()
 	{
@@ -223,7 +184,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否启用留痕模式
-	 
 	*/
 	public final boolean getIsWoEnableMarks()
 	{
@@ -236,7 +196,6 @@ public class MapDataURL extends EntityNoName
 
 	/** 
 	 是否插入风险点
-	 
 	*/
 	public final boolean getIsWoEnableDown()
 	{
@@ -247,14 +206,13 @@ public class MapDataURL extends EntityNoName
 		this.SetPara(FrmAttachmentAttr.IsWoEnableDown, value);
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion weboffice文档属性
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 自动计算属性.
 	/** 
 	 左边界.
-	 
 	*/
 	public final float getMaxLeft()
 	{
@@ -266,7 +224,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 右边界
-	 
 	*/
 	public final float getMaxRight()
 	{
@@ -278,7 +235,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 最高top
-	 
 	*/
 	public final float getMaxTop()
 	{
@@ -290,7 +246,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 最低
-	 
 	*/
 	public final float getMaxEnd()
 	{
@@ -300,14 +255,13 @@ public class MapDataURL extends EntityNoName
 	{
 		this.SetPara(MapDataAttr.MaxEnd, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 自动计算属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 报表属性(参数方式存储).
 	/** 
 	 是否关键字查询
-	 
 	*/
 	public final boolean getRptIsSearchKey()
 	{
@@ -319,19 +273,17 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 时间段查询方式
-	 
 	*/
 	public final DTSearchWay getRptDTSearchWay()
 	{
-		return DTSearchWay.forValue(this.GetParaInt(MapDataAttr.RptDTSearchWay));
+		return (DTSearchWay)this.GetParaInt(MapDataAttr.RptDTSearchWay);
 	}
 	public final void setRptDTSearchWay(DTSearchWay value)
 	{
-		this.SetPara(MapDataAttr.RptDTSearchWay, value.getValue());
+		this.SetPara(MapDataAttr.RptDTSearchWay, (int)value);
 	}
 	/** 
 	 时间字段
-	 
 	*/
 	public final String getRptDTSearchKey()
 	{
@@ -343,7 +295,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 查询外键枚举字段
-	 
 	*/
 	public final String getRptSearchKeys()
 	{
@@ -353,10 +304,10 @@ public class MapDataURL extends EntityNoName
 	{
 		this.SetPara(MapDataAttr.RptSearchKeys, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 报表属性(参数方式存储).
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 外键属性
 	public final String getVer()
 	{
@@ -368,7 +319,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 顺序号
-	 
 	*/
 	public final int getIdx()
 	{
@@ -380,262 +330,229 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 框架
-	 * @throws Exception 
-	 
 	*/
-	public final MapFrames getMapFrames() throws Exception
+	public final MapFrames getMapFrames()
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
-		MapFrames obj = (MapFrames)((tempVar instanceof MapFrames) ? tempVar : null);
+		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapFrames(this.getNo());
+			obj = new MapFrames(this.No);
 			this.SetRefObject("MapFrames", obj);
 		}
 		return obj;
 	}
 	/** 
 	 分组字段
-	 * @throws Exception 
-	 
 	*/
-	public final GroupFields getGroupFields() throws Exception
+	public final GroupFields getGroupFields()
 	{
 		Object tempVar = this.GetRefObject("GroupFields");
-		GroupFields obj = (GroupFields)((tempVar instanceof GroupFields) ? tempVar : null);
+		GroupFields obj = tempVar instanceof GroupFields ? (GroupFields)tempVar : null;
 		if (obj == null)
 		{
-			obj = new GroupFields(this.getNo());
+			obj = new GroupFields(this.No);
 			this.SetRefObject("GroupFields", obj);
 		}
 		return obj;
 	}
 	/** 
 	 逻辑扩展
-	 * @throws Exception 
-	 
 	*/
-	public final MapExts getMapExts() throws Exception
+	public final MapExts getMapExts()
 	{
 		Object tempVar = this.GetRefObject("MapExts");
-		MapExts obj = (MapExts)((tempVar instanceof MapExts) ? tempVar : null);
+		MapExts obj = tempVar instanceof MapExts ? (MapExts)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapExts(this.getNo());
+			obj = new MapExts(this.No);
 			this.SetRefObject("MapExts", obj);
 		}
 		return obj;
 	}
 	/** 
 	 事件
-	 * @throws Exception 
-	 
 	*/
-	public final FrmEvents getFrmEvents() throws Exception
+	public final FrmEvents getFrmEvents()
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
-		FrmEvents obj = (FrmEvents)((tempVar instanceof FrmEvents) ? tempVar : null);
+		FrmEvents obj = tempVar instanceof FrmEvents ? (FrmEvents)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmEvents(this.getNo());
+			obj = new FrmEvents(this.No);
 			this.SetRefObject("FrmEvents", obj);
 		}
 		return obj;
 	}
-	 
 	/** 
 	 从表
-	 * @throws Exception 
-	 
 	*/
-	public final MapDtls getMapDtls() throws Exception
+	public final MapDtls getMapDtls()
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
-		MapDtls obj = (MapDtls)((tempVar instanceof MapDtls) ? tempVar : null);
+		MapDtls obj = tempVar instanceof MapDtls ? (MapDtls)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapDtls(this.getNo());
+			obj = new MapDtls(this.No);
 			this.SetRefObject("MapDtls", obj);
 		}
 		return obj;
 	}
 	/** 
 	 报表
-	 * @throws Exception 
-	 
 	*/
-	public final FrmRpts getFrmRpts() throws Exception
+	public final FrmRpts getFrmRpts()
 	{
 		Object tempVar = this.GetRefObject("FrmRpts");
-		FrmRpts obj = (FrmRpts)((tempVar instanceof FrmRpts) ? tempVar : null);
+		FrmRpts obj = tempVar instanceof FrmRpts ? (FrmRpts)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmRpts(this.getNo());
+			obj = new FrmRpts(this.No);
 			this.SetRefObject("FrmRpts", obj);
 		}
 		return obj;
 	}
 	/** 
 	 超连接
-	 * @throws Exception 
-	 
 	*/
-	public final FrmLinks getFrmLinks() throws Exception
+	public final FrmLinks getFrmLinks()
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
-		FrmLinks obj = (FrmLinks)((tempVar instanceof FrmLinks) ? tempVar : null);
+		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLinks(this.getNo());
+			obj = new FrmLinks(this.No);
 			this.SetRefObject("FrmLinks", obj);
 		}
 		return obj;
 	}
 	/** 
 	 按钮
-	 * @throws Exception 
-	 
 	*/
-	public final FrmBtns getFrmBtns() throws Exception
+	public final FrmBtns getFrmBtns()
 	{
 		Object tempVar = this.GetRefObject("FrmBtns");
-		FrmBtns obj = (FrmBtns)((tempVar instanceof FrmBtns) ? tempVar : null);
+		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmBtns(this.getNo());
+			obj = new FrmBtns(this.No);
 			this.SetRefObject("FrmBtns", obj);
 		}
 		return obj;
 	}
 	/** 
 	 元素
-	 * @throws Exception 
-	 
 	*/
-	public final FrmEles getFrmEles() throws Exception
+	public final FrmEles getFrmEles()
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
-		FrmEles obj = (FrmEles)((tempVar instanceof FrmEles) ? tempVar : null);
+		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmEles(this.getNo());
+			obj = new FrmEles(this.No);
 			this.SetRefObject("FrmEles", obj);
 		}
 		return obj;
 	}
 	/** 
 	 线
-	 * @throws Exception 
-	 
 	*/
-	public final FrmLines getFrmLines() throws Exception
+	public final FrmLines getFrmLines()
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
-		FrmLines obj = (FrmLines)((tempVar instanceof FrmLines) ? tempVar : null);
+		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLines(this.getNo());
+			obj = new FrmLines(this.No);
 			this.SetRefObject("FrmLines", obj);
 		}
 		return obj;
 	}
 	/** 
 	 标签
-	 * @throws Exception 
-	 
 	*/
-	public final FrmLabs getFrmLabs() throws Exception
+	public final FrmLabs getFrmLabs()
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmLabs obj = (FrmLabs)((tempVar instanceof FrmLabs) ? tempVar : null);
+		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLabs(this.getNo());
+			obj = new FrmLabs(this.No);
 			this.SetRefObject("FrmLabs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 图片
-	 * @throws Exception 
-	 
 	*/
-	public final FrmImgs getFrmImgs() throws Exception
+	public final FrmImgs getFrmImgs()
 	{
 		Object tempVar = this.GetRefObject("FrmImgs");
-		FrmImgs obj = (FrmImgs)((tempVar instanceof FrmImgs) ? tempVar : null);
+		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmImgs(this.getNo());
+			obj = new FrmImgs(this.No);
 			this.SetRefObject("FrmImgs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 附件
-	 * @throws Exception 
-	 
 	*/
-	public final FrmAttachments getFrmAttachments() throws Exception
+	public final FrmAttachments getFrmAttachments()
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
-		FrmAttachments obj = (FrmAttachments)((tempVar instanceof FrmAttachments) ? tempVar : null);
+		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmAttachments(this.getNo());
+			obj = new FrmAttachments(this.No);
 			this.SetRefObject("FrmAttachments", obj);
 		}
 		return obj;
 	}
 	/** 
 	 图片附件
-	 * @throws Exception 
-	 
 	*/
-	public final FrmImgAths getFrmImgAths() throws Exception
+	public final FrmImgAths getFrmImgAths()
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
-		FrmImgAths obj = (FrmImgAths)((tempVar instanceof FrmImgAths) ? tempVar : null);
+		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmImgAths(this.getNo());
+			obj = new FrmImgAths(this.No);
 			this.SetRefObject("FrmImgAths", obj);
 		}
 		return obj;
 	}
 	/** 
 	 单选按钮
-	 * @throws Exception 
-	 
 	*/
-	public final FrmRBs getFrmRBs() throws Exception
+	public final FrmRBs getFrmRBs()
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
-		FrmRBs obj = (FrmRBs)((tempVar instanceof FrmRBs) ? tempVar : null);
+		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmRBs(this.getNo());
+			obj = new FrmRBs(this.No);
 			this.SetRefObject("FrmRBs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 属性
-	 * @throws Exception 
-	 
 	*/
-	public final MapAttrs getMapAttrs() throws Exception
+	public final MapAttrs getMapAttrs()
 	{
 		Object tempVar = this.GetRefObject("MapAttrs");
-		MapAttrs obj = (MapAttrs)((tempVar instanceof MapAttrs) ? tempVar : null);
+		MapAttrs obj = tempVar instanceof MapAttrs ? (MapAttrs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapAttrs(this.getNo());
+			obj = new MapAttrs(this.No);
 			this.SetRefObject("MapAttrs", obj);
 		}
 		return obj;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	public static boolean getIsEditDtlModel()
@@ -655,18 +572,17 @@ public class MapDataURL extends EntityNoName
 		BP.Web.WebUser.SetSessionByKey("IsEditDtlModel", "1");
 	}
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 物理表
-	 
 	*/
 	public final String getPTable()
 	{
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
 		if (s.equals("") || s == null)
 		{
-			return this.getNo();
+			return this.No;
 		}
 		return s;
 	}
@@ -676,7 +592,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 URL
-	 
 	*/
 	public final String getUrl()
 	{
@@ -692,15 +607,14 @@ public class MapDataURL extends EntityNoName
 	}
 	public final AppType getHisAppType()
 	{
-		return AppType.forValue(this.GetValIntByKey(MapDataAttr.AppType));
+		return (AppType)this.GetValIntByKey(MapDataAttr.AppType);
 	}
 	public final void setHisAppType(AppType value)
 	{
-		this.SetValByKey(MapDataAttr.AppType, value);
+		this.SetValByKey(MapDataAttr.AppType, (int)value);
 	}
 	/** 
 	 备注
-	 
 	*/
 	public final String getNote()
 	{
@@ -712,7 +626,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 是否有CA.
-	 
 	*/
 	public final boolean getIsHaveCA()
 	{
@@ -725,7 +638,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 类别，可以为空.
-	 
 	*/
 	public final String getFK_FrmSort()
 	{
@@ -737,7 +649,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 类别，可以为空.
-	 
 	*/
 	public final String getFK_FormTree()
 	{
@@ -749,7 +660,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 从表集合.
-	 
 	*/
 	public final String getDtls()
 	{
@@ -761,12 +671,11 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 主键
-	 
 	*/
 	public final String getEnPK()
 	{
 		String s = this.GetValStrByKey(MapDataAttr.EnPK);
-		if (StringHelper.isNullOrEmpty(s))
+		if (DataType.IsNullOrEmpty(s))
 		{
 			return "OID";
 		}
@@ -781,13 +690,13 @@ public class MapDataURL extends EntityNoName
 	{
 		if (_HisEns == null)
 		{
-			_HisEns = BP.En.ClassFactory.GetEns(this.getNo());
+			_HisEns = BP.En.ClassFactory.GetEns(this.No);
 		}
 		return _HisEns;
 	}
 	public final Entity getHisEn()
 	{
-		return this.getHisEns().getGetNewEntity();
+		return this.getHisEns().GetNewEntity;
 	}
 	public final float getFrmW()
 	{
@@ -821,7 +730,6 @@ public class MapDataURL extends EntityNoName
 	}
 	/** 
 	 表格显示的列
-	 
 	*/
 	public final int getTableCol()
 	{
@@ -836,47 +744,14 @@ public class MapDataURL extends EntityNoName
 	{
 		this.SetValByKey(MapDataAttr.TableCol, value);
 	}
-	public final String getTableWidth()
-	{
-			//switch (this.TableCol)
-			//{
-			//    case 2:
-			//        return
-			//        labCol = 25;
-			//        ctrlCol = 75;
-			//        break;
-			//    case 4:
-			//        labCol = 20;
-			//        ctrlCol = 30;
-			//        break;
-			//    case 6:
-			//        labCol = 15;
-			//        ctrlCol = 30;
-			//        break;
-			//    case 8:
-			//        labCol = 10;
-			//        ctrlCol = 15;
-			//        break;
-			//    default:
-			//        break;
-			//}
 
-
-		int i = this.GetValIntByKey(MapDataAttr.TableWidth);
-		if (i <= 50)
-		{
-			return "100%";
-		}
-		return i + "px";
-	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 表单属性
-	 
 	*/
 	public MapDataURL()
 	{
@@ -885,46 +760,41 @@ public class MapDataURL extends EntityNoName
 	 表单属性
 	 
 	 @param no 映射编号
-	 * @throws Exception 
 	*/
-	public MapDataURL(String no) throws Exception
+	public MapDataURL(String no)
 	{
 		super(no);
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_MapData", "URL表单属性");
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 基本属性.
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, false, 1, 200, 20);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20);
-
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", false, false, 0, 500, 20);
 
 		map.AddTBString(MapDataAttr.Url, null, "URL连接", true, false, 0, 500, 20, true);
-		
 
-		//表单的运行类型.
-	   map.AddDDLSysEnum(MapDataAttr.FrmType, BP.Sys.FrmType.FreeFrm.getValue(), "表单类型",true, false, MapDataAttr.FrmType);
+			//表单的运行类型.
+		map.AddDDLSysEnum(MapDataAttr.FrmType, (int)BP.Sys.FrmType.FreeFrm, "表单类型",true, false, MapDataAttr.FrmType);
 
-	
 			//数据源.
-		//map.AddDDLEntities(MapDataAttr.DBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), false);
-		map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
-
+		   // map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 基本属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 设计者信息.
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
@@ -932,17 +802,27 @@ public class MapDataURL extends EntityNoName
 		map.AddTBString(MapDataAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapDataAttr.Ver, null, "版本号", true, true, 0, 30, 20);
 		map.AddTBStringDoc(MapDataAttr.Note, null, "备注", true, false, true);
+
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 设计者信息.
- 
 
-		this.set_enMap(map);
-		return this.get_enMap();
+			//RefMethod rm = new RefMethod();
+			//rm.Title = "打开URL"; // "设计表单";
+			//rm.GroupName = "基本功能";
+			//rm.ClassMethodName = this.ToString() + ".DoOpenUrl";
+			//rm.Icon = "../../WF/Img/FullData.png";
+			//rm.Visable = true;
+			//rm.RefMethodType = RefMethodType.LinkeWinOpen;
+			//rm.Target = "_blank";
+			//map.AddRefMethod(rm);
+
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 	/** 
 	 排序字段顺序

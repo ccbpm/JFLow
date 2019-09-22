@@ -1,52 +1,71 @@
 package BP.DA;
 
-/**
- * 数据库类型
- */
+/** 
+ 数据库类型
+*/
 public enum DBType
 {
-	/**
-	 * sqlserver
-	 */
-	MSSQL,
-	/**
-	 * oracle
-	 */
-	Oracle,
-	/**
-	 * Access
-	 */
-	Access,
-	/**
-	 * PostgreSQL
-	 */
-	PostgreSQL,
-	/**
-	 * DB2
-	 */
-	DB2,
-	/**
-	 * MySQL
-	 */
-	MySQL,
-	/**
-	 * Informix
-	 */
-	Informix, 
-	
-	/**
-	 * WebServices
-	 */
-	WebServices;
-	 
-	
+	/** 
+	 sqlserver
+	*/
+	MSSQL(0),
+	/** 
+	 oracle  
+	*/
+	Oracle(1),
+	/** 
+	 Access
+	*/
+	Access(2),
+	/** 
+	 PostgreSQL 
+	*/
+	PostgreSQL(3),
+	/** 
+	 DB2
+	*/
+	DB2(4),
+	/** 
+	 MySQL
+	*/
+	MySQL(5),
+	/** 
+	 Informix
+	*/
+	Informix(6);
+
+	public static final int SIZE = java.lang.Integer.SIZE;
+
+	private int intValue;
+	private static java.util.HashMap<Integer, DBType> mappings;
+	private static java.util.HashMap<Integer, DBType> getMappings()
+	{
+		if (mappings == null)
+		{
+			synchronized (DBType.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, DBType>();
+				}
+			}
+		}
+		return mappings;
+	}
+
+	private DBType(int value)
+	{
+		intValue = value;
+		getMappings().put(value, this);
+	}
+
 	public int getValue()
 	{
-		return this.ordinal();
+		return intValue;
 	}
-	
+
 	public static DBType forValue(int value)
 	{
-		return values()[value];
+		return getMappings().get(value);
 	}
 }

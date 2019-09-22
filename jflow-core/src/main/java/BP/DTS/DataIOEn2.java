@@ -1,774 +1,652 @@
 package BP.DTS;
 
-import BP.DA.DBAccess;
-import BP.DA.DBUrlType;
-import BP.DA.DataColumn;
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.DA.DataType;
+import BP.DA.*;
+import BP.En.*;
+import BP.Web.Controls.*;
+import BP.Web.*;
+import java.util.*;
 
-/**
- * EnMap 的摘要说明。
- */
+/** 
+ EnMap 的摘要说明。
+*/
 public abstract class DataIOEn2
 {
-	
-	/**
-	 * 获取在 DTS 中的编号。
-	 * 
-	 * @return
-	 */
+
+	/** 
+	 获取在 DTS 中的编号。
+	 
+	 @return 
+	*/
 	public final String GetNoInDTS()
 	{
-		// DTS.SysDTS dts =new SysDTS();
-		// QueryObject qo = new QueryObject(dts);
-		// qo.AddWhere(DTSAttr.RunText,this.ToString());
-		// if (qo.DoQuery()==0)
-		// throw new Exception("没有取道调度的编号.");
-		// else
-		// return dts.No;
-		
+		//DTS.SysDTS dts =new SysDTS();
+		//QueryObject qo = new QueryObject(dts);
+		//qo.AddWhere(DTSAttr.RunText,this.ToString());
+		//if (qo.DoQuery()==0)
+		//    throw new Exception("没有取道调度的编号.");
+		//else
+		//    return dts.No;
+
 		return null;
 	}
-	
-	/**
-	 * 执行它 在线程中。
-	 */
+	/** 
+	 执行它 在线程中。
+	*/
 	public final void DoItInThread()
 	{
-		// ThreadStart ts = new ThreadStart(this.Do);
-		// Thread thread = new Thread(ts);
-		// thread.start();
+		java.lang.Runnable ts = this.Do;
+		Thread thread = new Thread(ts);
+		thread.start();
 	}
-	
-	// 基本属性.
-	/**
-	 * 选择sql .
-	 */
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region Directly
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性.
+	/** 
+	 选择sql .
+	*/
 	public String SELECTSQL = null;
-	/**
-	 * 数据同步类型．
-	 */
+	/** 
+	 数据同步类型．
+	*/
 	public DoType HisDoType = DoType.UnName;
-	/**
-	 * 运行类型时间
-	 */
+	/** 
+	 运行类型时间
+	*/
 	public RunTimeType HisRunTimeType = RunTimeType.UnName;
-	/**
-	 * 标题
-	 */
+	/** 
+	 标题
+	*/
 	public String Title = "未命名数据同步";
-	/**
-	 * WHERE .
-	 */
+	/** 
+	 WHERE .
+	*/
 	public String FromWhere = null;
-	/**
-	 * FFs
-	 */
+	/** 
+	 FFs
+	*/
 	public FFs FFs = null;
-	/**
-	 * 从Table .
-	 */
+	/** 
+	 从Table .
+	*/
 	public String FromTable = null;
-	/**
-	 * 到Table.
-	 */
+	/** 
+	 到Table.
+	*/
 	public String ToTable = null;
-	/**
-	 * 从DBUrl.
-	 */
-	public DBUrlType FromDBUrl = DBUrlType.forValue(0);
-	/**
-	 * 到DBUrl.
-	 */
-	public DBUrlType ToDBUrl = DBUrlType.forValue(0);
-	/**
-	 * 更新语句
-	 */
+	/** 
+	 从DBUrl.
+	*/
+	public DBUrlType FromDBUrl = DBUrlType.values()[0];
+	/** 
+	 到DBUrl.
+	*/
+	public DBUrlType ToDBUrl = DBUrlType.values()[0];
+	/** 
+	 更新语句
+	*/
 	public String UPDATEsql;
-	/**
-	 * 备注
-	 */
+	/** 
+	 备注
+	*/
 	public String Note = "无";
-	
+
 	public String DefaultEveryMonth = "99";
 	public String DefaultEveryDay = "99";
 	public String DefaultEveryHH = "99";
 	public String DefaultEveryMin = "99";
-	/**
-	 * 类别
-	 */
+	/** 
+	 类别
+	*/
 	public String FK_Sort = "0";
-	
+
+
+//		/// <summary>
+//		/// 增量更新的数据源sql.
+//		/// 用这个sql，查询出来一个结果集合，这个集合用于更新的集合。
+//		/// 一般的来说，这个sql是根据当前的月份自动生成的。
+//		/// </summary>
+//		public string IncrementalDBSourceSQL;
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+	/*
+	 * 根据现实的情况我们把调度分为以下几种。
+	 * 1，增量调度。
+	 *    例：纳税人纳税信息，特点：
+	 *   a,数据与时间成增量的增加。
+	 *   b,月份以前的数据不变化。
+	 * 
+	 *   总结：原表数据随时间只增加，增加前的数据不变化。         
+	 * 
+	 * 2，变化调度。
+	 *   例：纳税人信息。
+	 *   特点：源表纳税人数据增，删，改，都有可能发生。
+	 *
+	 * 3，删除方式同步．
+	 *   步骤：
+	 * 　１，先删除．
+	 * 　２，插入新的数据． 
+	 * */
+	/** 
+	 调度
+	*/
 	public DataIOEn2()
 	{
 	}
-	
-	public final void Directly(String fromSQL, String toPTable, String pk)
-	{
-		this.Directly(fromSQL, toPTable);
-		this.ToDBUrlRunSQL("CREATE INDEX " + toPTable + "ID ON " + toPTable
-				+ " (" + pk + ")");
-	}
-	
-	public final void Directly(String fromSQL, String toPTable, String pk1,
-			String pk2)
-	{
-		this.Directly(fromSQL, toPTable);
-		this.ToDBUrlRunSQL("CREATE INDEX " + toPTable + "ID ON " + toPTable
-				+ " (" + pk1 + "," + pk2 + ")");
-	}
-	
-	public final void Directly(String fromSQL, String toPTable, String pk1,
-			String pk2, String pk3)
-	{
-		this.Directly(fromSQL, toPTable);
-		this.ToDBUrlRunSQL("CREATE INDEX " + toPTable + "ID ON " + toPTable
-				+ " (" + pk1 + "," + pk2 + "," + pk3 + ")");
-	}
-	
-	public final void Directly(String fromSQL, String toPTable)
-	{
-		BP.DA.DataTable dt = this.FromDBUrlRunSQLReturnTable(fromSQL);
-		String sql = null;
-		sql = "INSERT INTO " + toPTable + "(";
-		for (BP.DA.DataColumn dc : dt.Columns)
-		{
-			sql += dc.ColumnName + ",";
-		}
-		sql = sql.substring(0, sql.length() - 1);
-		sql += ") VALUES (";
-		try
-		{
-			this.ToDBUrlRunSQL(" drop table " + toPTable);
-		} catch (java.lang.Exception e)
-		{
-		}
-		
-		String createTable = "CREATE TABLE " + toPTable + " (";
-		for (DataColumn dc : dt.Columns)
-		{
-			if (dc.DataType.toString().equals("System.String"))
-			{
-				createTable += dc.ColumnName + " nvarchar (700) NULL  ,";
-			} else if (dc.DataType.toString().equals("System.Int16")
-					|| dc.DataType.toString().equals("System.Int32")
-					|| dc.DataType.toString().equals("System.Int64"))
-			{
-				createTable += dc.ColumnName + " int NULL,";
-			} else if (dc.DataType.toString().equals("System.Decimal"))
-			{
-				createTable += dc.ColumnName + " decimal NULL,";
-			} else
-			{
-				createTable += dc.ColumnName + " float NULL,";
-			}
-		}
-		createTable = createTable.substring(0, createTable.length() - 1);
-		createTable += ")";
-		this.ToDBUrlRunSQL(createTable);
-		
-		String sql2 = null;
-		String errormsg = "";
-		for (DataRow dr : dt.Rows)
-		{
-			sql2 = sql;
-			for (DataColumn dc : dt.Columns)
-			{
-				/*
-				 * warning sql2+="'"+dr.getValue(dc.ColumnName)+"',";
-				 */
-				sql2 += "'" + dr.getValue(dc.ColumnName) + "',";
-			}
-			sql2 = sql2.substring(0, sql2.length() - 1) + ")";
-			try
-			{
-				this.ToDBUrlRunSQL(sql2);
-			} catch (RuntimeException ex)
-			{
-				errormsg += ex.getMessage();
-			}
-		}
-		if (!errormsg.equals(""))
-		{
-			throw new RuntimeException(" data output error: " + errormsg);
-		}
-		
-	}
-	
-	public final DataTable FromDBUrlRunSQLReturnTable(String selectSql)
-	{
-		// 得到数据源泉．
-		DataTable dt = new DataTable();
-		switch (this.FromDBUrl)
-		{
-			case AppCenterDSN:
-				try
-				{
-					dt = DBAccess.RunSQLReturnTable(selectSql);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				break;
-			// case DBAccessOfMSMSSQL:
-			// dt=DBAccessOfMSMSSQL.RunSQLReturnTable(selectSql);
-			// break;
-			// case DBAccessOfODBC:
-			// dt=DBAccessOfODBC.RunSQLReturnTable(selectSql);
-			// break;
-			// case DBAccessOfOLE:
-			// dt=DBAccessOfOLE.RunSQLReturnTable(selectSql);
-			// break;
-			// case DBAccessOfOracle:
-			// dt=DBAccessOfOracle.RunSQLReturnTable(selectSql);
-			// break;
-			// case DBUrlType.DBAccessOfOracle1:
-			// dt=DBAccessOfOracle1.RunSQLReturnTable( selectSql );
-			// break;
-			default:
-				break;
-		}
-		return dt;
-	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 公共方法．
+
 	public final int ToDBUrlRunSQL(String sql)
 	{
-		switch (this.ToDBUrl)
-		{
-			case AppCenterDSN:
-				try
-				{
-					return DBAccess.RunSQL(sql);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				// case DBAccessOfMSMSSQL:
-				// return DBAccessOfMSMSSQL.RunSQL(sql);
-				// case DBAccessOfODBC:
-				// return DBAccessOfODBC.RunSQL(sql);
-				// case DBAccessOfOLE:
-				// return DBAccessOfOLE.RunSQL(sql);
-				// case DBAccessOfOracle:
-				// return DBAccessOfOracle.RunSQL(sql);
-			default:
-				throw new RuntimeException("@ error it");
-		}
+		return DBAccess.RunSQL(sql);
+
 	}
-	
 	public final int ToDBUrlRunDropTable(String table)
 	{
 		switch (this.ToDBUrl)
 		{
-		// case AppCenterDSN:
-		// return DBAccess.RunSQLDropTable(table);
-		// case DBAccessOfMSMSSQL:
-		// return DBAccessOfMSMSSQL.RunSQL(table);
-		// case DBAccessOfODBC:
-		// return DBAccessOfODBC.RunSQL(table);
-		// case DBAccessOfOLE:
-		// return DBAccessOfOLE.RunSQL(table);
-		// case DBAccessOfOracle:
-		// return DBAccessOfOracle.RunSQLTRUNCATETable(table);
+			case AppCenterDSN:
+				return DBAccess.RunSQLDropTable(table);
+			//case DBUrlType.DBAccessOfMSSQL1:
+			//    return DBAccessOfMSSQL1.RunSQL(table);
+			//case DBUrlType.DBAccessOfMSSQL2:
+			//    return DBAccessOfMSSQL2.RunSQL(table);
+			case DBAccessOfODBC:
+				return DBAccessOfODBC.RunSQL(table);
+			//case DBUrlType.DBAccessOfOracle1:
+			//    return DBAccessOfOracle1.RunSQLTRUNCATETable(table);
+			//case DBUrlType.DBAccessOfOracle2:
+			//    return DBAccessOfOracle2.RunSQLTRUNCATETable(table);
 			default:
 				throw new RuntimeException("@ error it");
 		}
 	}
-	
+	/** 
+	 是否存在?
+	 
+	 @param sql 要判断的sql
+	 @return 
+	*/
 	public final boolean ToDBUrlIsExit(String sql)
 	{
-		switch (this.ToDBUrl)
-		{
-			case AppCenterDSN:
-				try
-				{
-					return DBAccess.IsExits(sql);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				// case DBAccessOfMSMSSQL:
-				// return DBAccessOfMSMSSQL.IsExits(sql);
-				// case DBAccessOfODBC:
-				// return DBAccessOfODBC.IsExits(sql);
-				// case DBAccessOfOLE:
-				// return DBAccessOfOLE.IsExits(sql);
-				// case DBAccessOfOracle:
-				// return DBAccessOfOracle.IsExits(sql);
-			default:
-				throw new RuntimeException("@ error it");
-		}
+		return DBAccess.IsExits(sql);
+
+		//switch(this.ToDBUrl)
+		//{
+		//    case DBUrlType.AppCenterDSN:
+		//        return DBAccess.IsExits(sql);
+		//    case DBUrlType.DBAccessOfMSSQL1:
+		//        return DBAccessOfMSSQL1.IsExits(sql);
+		//    case DBUrlType.DBAccessOfMSSQL2:
+		//        return DBAccessOfMSSQL2.IsExits(sql);
+		//    case DBUrlType.DBAccessOfODBC:
+		//        return DBAccessOfODBC.IsExits(sql);
+		//    case DBUrlType.DBAccessOfOLE:
+		//        return DBAccessOfOLE.IsExits(sql);
+		//    case DBUrlType.DBAccessOfOracle1:
+		//        return DBAccessOfOracle1.IsExits(sql);
+		//    case DBUrlType.DBAccessOfOracle2:
+		//        return DBAccessOfOracle2.IsExits(sql);
+		//    default:
+		//        throw new Exception("@ error it");
+		//}
 	}
-	
-	// 方法， New 2005-01-29
-	
-	public void Do() throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法， New   2005-01-29
+
+	/** 
+	 执行，用于子类的重写。
+	*/
+	public void Do()
 	{
 		if (this.HisDoType == DoType.UnName)
 		{
 			throw new RuntimeException("@没有说明同步的类型,请在基础信息里面设置同步的类型(构造函数．)．");
 		}
-		
+
 		if (this.HisDoType == DoType.DeleteInsert)
 		{
 			this.DeleteInsert();
 		}
-		
+
 		if (this.HisDoType == DoType.Inphase)
 		{
 			this.Inphase();
 		}
-		
+
 		if (this.HisDoType == DoType.Incremental)
 		{
 			this.Incremental();
 		}
 	}
-	
-	public final void Incremental() throws Exception
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 用于增量调度
+	/** 
+	 增量调度：
+	 比如： 纳税人的纳税信息。
+	 特点：1， 数据与时间成增量的增加。
+		   2， 月份以前的数据不变化。
+	*/
+	public final void Incremental()
 	{
-		this.DoBefore();
+		/*
+		 * 实现步骤：
+		 * 1，组成sql.
+		 * 2，执行更新。
+		 *  
+		 * */
+		this.DoBefore(); // 调用，更新前的业务逻辑处理。
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region  得到要更新的数据源。
 		DataTable FromDataTable = this.GetFromDataTable();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 开始执行更新。
 		String isExitSql = "";
 		String InsertSQL = "";
+		//遍历 数据源表.
 		for (DataRow FromDR : FromDataTable.Rows)
 		{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 判断是否存在．
+			/* 判断是否存在，如果存在continue. 不存在就 insert.  */
 			isExitSql = "SELECT * FROM " + this.ToTable + " WHERE ";
 			for (FF ff : this.FFs)
 			{
-				if (!ff.IsPK)
+				if (ff.IsPK == false)
 				{
 					continue;
 				}
-				isExitSql += ff.ToField + "='" + FromDR.getValue(ff.FromField)
-						+ "' AND ";
+				isExitSql += ff.ToField + "='" + FromDR.get(ff.FromField) + "' AND ";
 			}
-			
-			isExitSql = isExitSql.substring(0, isExitSql.length() - 5);
-			
-			try
+
+			isExitSql = isExitSql.substring(0,isExitSql.length() - 5);
+
+			if (DBAccess.IsExits(isExitSql)) //如果不存在就 insert .
 			{
-				if (DBAccess.IsExits(isExitSql)) // 如果不存在就 insert.
-				{
-					continue;
-				}
-			} catch (Exception e1)
-			{
-				e1.printStackTrace();
+				continue;
 			}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#endregion  判断是否存在
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 执行插入操作
 			InsertSQL = "INSERT INTO " + this.ToTable + "(";
 			for (FF ff : this.FFs)
 			{
 				InsertSQL += ff.ToField.toString() + ",";
 			}
-			InsertSQL = InsertSQL.substring(0, InsertSQL.length() - 1);
+			InsertSQL = InsertSQL.substring(0,InsertSQL.length() - 1);
 			InsertSQL += ") values(";
 			for (FF ff : this.FFs)
 			{
-				if (ff.DataType == DataType.AppString
-						|| ff.DataType == DataType.AppDateTime)
+				if (ff.DataType == DataType.AppString || ff.DataType == DataType.AppDateTime)
 				{
-					InsertSQL += "'" + FromDR.getValue(ff.FromField).toString()
-							+ "',";
-				} else
-				{
-					InsertSQL += FromDR.getValue(ff.FromField).toString() + ",";
+					InsertSQL += "'" + FromDR.get(ff.FromField).toString() + "',";
 				}
-				
+				else
+				{
+					InsertSQL += FromDR.get(ff.FromField).toString() + ",";
+				}
 			}
-			InsertSQL = InsertSQL.substring(0, InsertSQL.length() - 1);
+			InsertSQL = InsertSQL.substring(0,InsertSQL.length() - 1);
 			InsertSQL += ")";
-			switch (this.ToDBUrl)
-			{
-				case AppCenterDSN:
-					try
-					{
-						DBAccess.RunSQL(InsertSQL);
-					} catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-					break;
-				// case DBAccessOfMSMSSQL:
-				// DBAccessOfOLE.RunSQL(InsertSQL);
-				// break;
-				// case DBAccessOfOLE:
-				// DBAccessOfOLE.RunSQL(InsertSQL);
-				// break;
-				// case DBAccessOfOracle:
-				// DBAccessOfOracle.RunSQL(InsertSQL);
-				// break;
-				// case DBAccessOfODBC:
-				// DBAccessOfODBC.RunSQL(InsertSQL);
-				// break;
-				/*
-				 * warning case DA.DBUrlType.AppCenterDSN:
-				 * DBAccess.RunSQL(InsertSQL); break; case
-				 * DA.DBUrlType.DBAccessOfMSMSSQL:
-				 * DBAccessOfOLE.RunSQL(InsertSQL); break; case
-				 * DA.DBUrlType.DBAccessOfOLE: DBAccessOfOLE.RunSQL(InsertSQL);
-				 * break; case DA.DBUrlType.DBAccessOfOracle:
-				 * DBAccessOfOracle.RunSQL(InsertSQL); break; case
-				 * DA.DBUrlType.DBAccessOfODBC:
-				 * DBAccessOfODBC.RunSQL(InsertSQL); break;
-				 */
-				default:
-					break;
-			}
-			// 执行插入操作
-			
+			DBAccess.RunSQL(InsertSQL);
+
+
+			//switch(this.ToDBUrl)
+			//{
+			//    case DA.DBUrlType.AppCenterDSN:
+			//        DBAccess.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL1:
+			//        DBAccessOfMSSQL1.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL2:
+			//        DBAccessOfMSSQL2.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOLE:
+			//        DBAccessOfOLE.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle1:
+			//        DBAccessOfOracle1.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle2:
+			//        DBAccessOfOracle2.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfODBC:
+			//        DBAccessOfODBC.RunSQL(InsertSQL);
+			//        break;
+			//    default:
+			//        break;
+			//}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#endregion 执行插入操作
+
 		}
-		// 结束,开始执行更新
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 结束,开始执行更新
+
 		this.DoAfter(); // 调用，更新之后的业务处理。
 	}
-	
+	/** 
+	 增量调度以前要执行的方法。
+	*/
 	protected void DoBefore()
 	{
 	}
-	
+	/** 
+	 增量调度之后要执行的方法。
+	*/
 	protected void DoAfter()
 	{
 	}
-	
-	public final void DeleteInsert() throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 删除(清空) 之后插入(适合任何一种数据调度)
+	/** 
+	 删除之后插入, 用于数据量不太大,更新频率不太频繁的数据处理.
+	*/
+	public final void DeleteInsert()
 	{
-		this.DoBefore(); // 调用业务处理。
+		this.DoBefore(); //调用业务处理。
+		// 得到源表.
 		DataTable FromDataTable = this.GetFromDataTable();
 		this.DeleteObjData();
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region  遍历源表 插入操作
 		String InsertSQL = "";
 		for (DataRow FromDR : FromDataTable.Rows)
 		{
-			
+
 			InsertSQL = "INSERT INTO " + this.ToTable + "(";
 			for (FF ff : this.FFs)
 			{
 				InsertSQL += ff.ToField.toString() + ",";
 			}
-			InsertSQL = InsertSQL.substring(0, InsertSQL.length() - 1);
+			InsertSQL = InsertSQL.substring(0,InsertSQL.length() - 1);
 			InsertSQL += ") values(";
 			for (FF ff : this.FFs)
 			{
-				if (ff.DataType == DataType.AppString
-						|| ff.DataType == DataType.AppDateTime)
+				if (ff.DataType == DataType.AppString || ff.DataType == DataType.AppDateTime)
 				{
-					/*
-					 * warning
-					 * InsertSQL+="'"+FromDR[ff.FromField].toString()+"',";
-					 */
-					InsertSQL += "'" + FromDR.getValue(ff.FromField).toString()
-							+ "',";
-				} else
+					InsertSQL += "'" + FromDR.get(ff.FromField).toString() + "',";
+				}
+				else
 				{
-					/*
-					 * warning InsertSQL+=FromDR[ff.FromField].toString()+",";
-					 */
-					InsertSQL += FromDR.getValue(ff.FromField).toString() + ",";
+					InsertSQL += FromDR.get(ff.FromField).toString() + ",";
 				}
 			}
-			InsertSQL = InsertSQL.substring(0, InsertSQL.length() - 1);
+			InsertSQL = InsertSQL.substring(0,InsertSQL.length() - 1);
 			InsertSQL += ")";
-			
-			switch (this.ToDBUrl)
-			{
-				case AppCenterDSN:
-					try
-					{
-						DBAccess.RunSQL(InsertSQL);
-					} catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-					break;
-				// case DBAccessOfMSMSSQL:
-				// DBAccessOfMSMSSQL.RunSQL(InsertSQL);
-				// break;
-				// case DBAccessOfOLE:
-				// DBAccessOfOLE.RunSQL(InsertSQL);
-				// break;
-				// case DBAccessOfOracle:
-				// DBAccessOfOracle.RunSQL(InsertSQL);
-				// break;
-				// case DBAccessOfODBC:
-				// DBAccessOfODBC.RunSQL(InsertSQL);
-				// break;
-				/*
-				 * warning case DA.DBUrlType.AppCenterDSN:
-				 * DBAccess.RunSQL(InsertSQL); break; case
-				 * DA.DBUrlType.DBAccessOfMSMSSQL:
-				 * DBAccessOfMSMSSQL.RunSQL(InsertSQL); break; case
-				 * DA.DBUrlType.DBAccessOfOLE: DBAccessOfOLE.RunSQL(InsertSQL);
-				 * break; case DA.DBUrlType.DBAccessOfOracle:
-				 * DBAccessOfOracle.RunSQL(InsertSQL); break; case
-				 * DA.DBUrlType.DBAccessOfODBC:
-				 * DBAccessOfODBC.RunSQL(InsertSQL); break;
-				 */
-				default:
-					break;
-			}
-			
+			DBAccess.RunSQL(InsertSQL);
+
+
+
+			//switch(this.ToDBUrl)
+			//{
+			//    case DA.DBUrlType.AppCenterDSN:
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL1:
+			//        DBAccessOfMSSQL1.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL2:
+			//        DBAccessOfMSSQL2.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOLE:
+			//        DBAccessOfOLE.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle1:
+			//        DBAccessOfOracle1.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle2:
+			//        DBAccessOfOracle2.RunSQL(InsertSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfODBC:
+			//        DBAccessOfODBC.RunSQL(InsertSQL);
+			//        break;
+			//    default:
+			//        break;
+			//}
+
 		}
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+
+
 		this.DoAfter(); // 调用业务处理。
-		
+
 	}
-	
-	public final void DeleteObjData() throws Exception
+	public final void DeleteObjData()
 	{
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 删除表内容
 		switch (this.ToDBUrl)
 		{
 			case AppCenterDSN:
 				DBAccess.RunSQL("DELETE FROM  " + this.ToTable);
 				break;
-			case DBAccessOfMSMSSQL:
-				DBAccess.RunSQL("DELETE  FROM " + this.ToTable);
-				break;
-			// case DBAccessOfOLE:
-			// DBAccessOfOLE.RunSQL("DELETE FROM  " + this.ToTable);
-			// break;
-			// case DBAccessOfOracle:
-			// DBAccessOfOracle.RunSQL("DELETE  FROM " + this.ToTable);
-			// break;
-			// case DBAccessOfODBC:
-			// DBAccessOfODBC.RunSQL("DELETE FROM  " + this.ToTable);
-			// break;
-			/*
-			 * warning case DA.DBUrlType.AppCenterDSN:
-			 * DBAccess.RunSQL("DELETE FROM  " + this.ToTable); break; case
-			 * DA.DBUrlType.DBAccessOfMSMSSQL: DBAccess.RunSQL("DELETE  FROM " +
-			 * this.ToTable); break; case DA.DBUrlType.DBAccessOfOLE:
-			 * DBAccessOfOLE.RunSQL("DELETE FROM  " + this.ToTable); break; case
-			 * DA.DBUrlType.DBAccessOfOracle:
-			 * DBAccessOfOracle.RunSQL("DELETE  FROM " + this.ToTable); break;
-			 * case DA.DBUrlType.DBAccessOfODBC:
-			 * DBAccessOfODBC.RunSQL("DELETE FROM  " + this.ToTable); break;
-			 */
+			//case DA.DBUrlType.DBAccessOfMSSQL1:
+			//    DBAccessOfMSSQL1.RunSQL("DELETE  FROM " + this.ToTable);						
+			//    break;
+			//case DA.DBUrlType.DBAccessOfMSSQL2:
+			//    DBAccessOfMSSQL2.RunSQL("DELETE  FROM " + this.ToTable);
+			//    break;
+			//case DA.DBUrlType.DBAccessOfOLE:
+			//    DBAccessOfOLE.RunSQL("DELETE FROM  " + this.ToTable);
+			//    break;
+			//case DA.DBUrlType.DBAccessOfOracle1:
+			//    DBAccessOfOracle1.RunSQL("DELETE  FROM " + this.ToTable);
+			//    break;
+			//case DA.DBUrlType.DBAccessOfOracle2:
+			//    DBAccessOfOracle2.RunSQL("DELETE  FROM " + this.ToTable);
+			//    break;
+			//case DA.DBUrlType.DBAccessOfODBC:
+			//    DBAccessOfODBC.RunSQL("DELETE FROM  " + this.ToTable);
+			//    break;
 			default:
 				break;
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 	}
-	
-	public final DataTable GetToDataTable() throws Exception
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 同步数据。
+	/** 
+	 得到数据源。
+	 
+	 @return 
+	*/
+	public final DataTable GetToDataTable()
 	{
 		String sql = "SELECT * FROM " + this.ToTable;
 		DataTable FromDataTable = new DataTable();
-		switch (this.ToDBUrl)
-		{
-			case AppCenterDSN:
-				FromDataTable = DBAccess.RunSQLReturnTable(sql);
-				break;
-			case DBAccessOfMSMSSQL:
-				FromDataTable = DBAccess.RunSQLReturnTable(sql);
-				break;
-			// case DBAccessOfOLE:
-			// FromDataTable=DBAccessOfOLE.RunSQLReturnTable(sql);
-			// break;
-			// case DBAccessOfOracle:
-			// FromDataTable=DBAccessOfOracle.RunSQLReturnTable(sql);
-			// break;
-			// case DBAccessOfODBC:
-			// FromDataTable=DBAccessOfODBC.RunSQLReturnTable(sql);
-			// break;
-			/*
-			 * warning case DA.DBUrlType.AppCenterDSN:
-			 * FromDataTable=DBAccess.RunSQLReturnTable(sql); break; case
-			 * DA.DBUrlType.DBAccessOfMSMSSQL:
-			 * FromDataTable=DBAccess.RunSQLReturnTable(sql); break; case
-			 * DA.DBUrlType.DBAccessOfOLE:
-			 * FromDataTable=DBAccessOfOLE.RunSQLReturnTable(sql); break; case
-			 * DA.DBUrlType.DBAccessOfOracle:
-			 * FromDataTable=DBAccessOfOracle.RunSQLReturnTable(sql); break;
-			 * case DA.DBUrlType.DBAccessOfODBC:
-			 * FromDataTable=DBAccessOfODBC.RunSQLReturnTable(sql); break;
-			 */
-			default:
-				throw new RuntimeException("the to dburl error DBUrlType ");
-		}
-		
+		FromDataTable = DBAccess.RunSQLReturnTable(sql);
+
+
+		//switch(this.ToDBUrl)
+		//{
+		//    case DA.DBUrlType.AppCenterDSN:
+		//        FromDataTable=DBAccess.RunSQLReturnTable(sql);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfMSSQL2:
+		//        FromDataTable = DBAccessOfMSSQL2.RunSQLReturnTable(sql);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfMSSQL1:
+		//        FromDataTable = DBAccessOfMSSQL1.RunSQLReturnTable(sql);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfOLE:
+		//        FromDataTable=DBAccessOfOLE.RunSQLReturnTable(sql);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfOracle1:
+		//        FromDataTable = DBAccessOfOracle1.RunSQLReturnTable(sql);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfOracle2:
+		//        FromDataTable = DBAccessOfOracle2.RunSQLReturnTable(sql);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfODBC:
+		//        FromDataTable=DBAccessOfODBC.RunSQLReturnTable(sql);
+		//        break;
+		//    default:
+		//        throw new Exception("the to dburl error DBUrlType ");
+		//}
+
 		return FromDataTable;
-		
+
 	}
-	
-	public final DataTable GetFromDataTable() throws Exception
+	/** 
+	 得到数据源。
+	 
+	 @return 数据源 
+	*/
+	public final DataTable GetFromDataTable()
 	{
 		String FromSQL = "SELECT ";
 		for (FF ff : this.FFs)
 		{
+			//对日期型的判断
 			if (ff.DataType == DataType.AppDateTime)
 			{
-				FromSQL += " CASE  "
-						+ " when datalength( CONVERT(NVARCHAR,datepart(month,"
-						+ ff.FromField + " )))=1 then datename(year,"
-						+ ff.FromField
-						+ " )+'-'+('0'+CONVERT(NVARCHAR,datepart(month,"
-						+ ff.FromField + " ))) " + " else " + " datename(year,"
-						+ ff.FromField
-						+ " )+'-'+CONVERT(NVARCHAR,datepart(month,"
-						+ ff.FromField + " )) " + " END " + " AS "
-						+ ff.FromField + " , ";
-			} else
+				FromSQL += " CASE  "+
+					" when datalength( CONVERT(VARCHAR,datepart(month," + ff.FromField + " )))=1 then datename(year," + ff.FromField + " )+'-'+('0'+CONVERT(NVARCHAR,datepart(month," + ff.FromField + " ))) " +
+					" else "+
+					" datename(year," + ff.FromField + " )+'-'+CONVERT(VARCHAR,datepart(month," + ff.FromField + " )) " +
+					" END "+
+					" AS " + ff.FromField + " , ";
+			}
+			else
 			{
 				FromSQL += ff.FromField + ",";
 			}
 		}
-		
-		FromSQL = FromSQL.substring(0, FromSQL.length() - 1);
+
+		FromSQL = FromSQL.substring(0,FromSQL.length() - 1);
 		FromSQL += " from " + this.FromTable;
 		FromSQL += this.FromWhere;
 		DataTable FromDataTable = new DataTable();
-		switch (this.FromDBUrl)
-		{
-			case AppCenterDSN:
-				FromDataTable = DBAccess.RunSQLReturnTable(FromSQL);
-				break;
-			case DBAccessOfMSMSSQL:
-				FromDataTable = DBAccess.RunSQLReturnTable(FromSQL);
-				break;
-			// case DBAccessOfOLE:
-			// FromDataTable=DBAccessOfOLE.RunSQLReturnTable(FromSQL);
-			// break;
-			// case DBAccessOfOracle:
-			// FromDataTable=DBAccessOfOracle.RunSQLReturnTable(FromSQL);
-			// break;
-			// case DBAccessOfODBC:
-			// FromDataTable=DBAccessOfODBC.RunSQLReturnTable(FromSQL);
-			// break;
-			/*
-			 * warning case DA.DBUrlType.AppCenterDSN:
-			 * FromDataTable=DBAccess.RunSQLReturnTable(FromSQL); break; case
-			 * DA.DBUrlType.DBAccessOfMSMSSQL:
-			 * FromDataTable=DBAccess.RunSQLReturnTable(FromSQL); break; case
-			 * DA.DBUrlType.DBAccessOfOLE:
-			 * FromDataTable=DBAccessOfOLE.RunSQLReturnTable(FromSQL); break;
-			 * case DA.DBUrlType.DBAccessOfOracle:
-			 * FromDataTable=DBAccessOfOracle.RunSQLReturnTable(FromSQL); break;
-			 * case DA.DBUrlType.DBAccessOfODBC:
-			 * FromDataTable=DBAccessOfODBC.RunSQLReturnTable(FromSQL); break;
-			 */
-			default:
-				throw new RuntimeException("the from dburl error DBUrlType ");
-		}
+		FromDataTable = DBAccess.RunSQLReturnTable(FromSQL);
 		return FromDataTable;
 	}
-	
-	public final void Inphase() throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion end 方法New peng 2005-01-29
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
+	/** 
+	 同步更新.
+	*/
+	public final void Inphase()
 	{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 得到源表
 		this.DoBefore();
-		
+
 		String FromSQL = "SELECT ";
 		for (FF ff : this.FFs)
 		{
+			//对日期型的判断
 			if (ff.DataType == DataType.AppDateTime)
 			{
-				FromSQL += " CASE  "
-						+ " when datalength( CONVERT(NVARCHAR,datepart(month,"
-						+ ff.FromField + " )))=1 then datename(year,"
-						+ ff.FromField
-						+ " )+'-'+('0'+CONVERT(NVARCHAR,datepart(month,"
-						+ ff.FromField + " ))) " + " else " + " datename(year,"
-						+ ff.FromField
-						+ " )+'-'+CONVERT(NVARCHAR,datepart(month,"
-						+ ff.FromField + " )) " + " END " + " AS "
-						+ ff.FromField + " , ";
-			} else
+				FromSQL += " CASE  "+
+					" when datalength( CONVERT(VARCHAR,datepart(month," + ff.FromField + " )))=1 then datename(year," + ff.FromField + " )+'-'+('0'+CONVERT(NVARCHAR,datepart(month," + ff.FromField + " ))) " +
+					" else "+
+					" datename(year," + ff.FromField + " )+'-'+CONVERT(VARCHAR,datepart(month," + ff.FromField + " )) " +
+					" END "+
+					" AS " + ff.FromField + " , ";
+			}
+			else
 			{
 				FromSQL += ff.FromField + ",";
 			}
 		}
-		FromSQL = FromSQL.substring(0, FromSQL.length() - 1);
+		FromSQL = FromSQL.substring(0,FromSQL.length() - 1);
 		FromSQL += " from " + this.FromTable;
 		FromSQL += this.FromWhere;
 		DataTable FromDataTable = new DataTable();
-		switch (this.FromDBUrl)
-		{
-			case AppCenterDSN:
-				FromDataTable = DBAccess.RunSQLReturnTable(FromSQL);
-				break;
-			case DBAccessOfMSMSSQL:
-				FromDataTable = DBAccess.RunSQLReturnTable(FromSQL);
-				break;
-			// case DBAccessOfOLE:
-			// FromDataTable=DBAccessOfOLE.RunSQLReturnTable(FromSQL);
-			// break;
-			// case DBAccessOfOracle:
-			// FromDataTable=DBAccessOfOracle.RunSQLReturnTable(FromSQL);
-			// break;
-			// case DBAccessOfODBC:
-			// FromDataTable=DBAccessOfODBC.RunSQLReturnTable(FromSQL);
-			// break;
-			/*
-			 * warning case DA.DBUrlType.AppCenterDSN:
-			 * FromDataTable=DBAccess.RunSQLReturnTable(FromSQL); break; case
-			 * DA.DBUrlType.DBAccessOfMSMSSQL:
-			 * FromDataTable=DBAccess.RunSQLReturnTable(FromSQL); break; case
-			 * DA.DBUrlType.DBAccessOfOLE:
-			 * FromDataTable=DBAccessOfOLE.RunSQLReturnTable(FromSQL); break;
-			 * case DA.DBUrlType.DBAccessOfOracle:
-			 * FromDataTable=DBAccessOfOracle.RunSQLReturnTable(FromSQL); break;
-			 * case DA.DBUrlType.DBAccessOfODBC:
-			 * FromDataTable=DBAccessOfODBC.RunSQLReturnTable(FromSQL); break;
-			 */
-			default:
-				break;
-		}
-		
-		// 得到目的表(字段只包含主键)
+		FromDataTable = DBAccess.RunSQLReturnTable(FromSQL);
+
+
+		//switch(this.FromDBUrl)
+		//{
+		//    case DA.DBUrlType.AppCenterDSN:
+		//        FromDataTable=DBAccess.RunSQLReturnTable(FromSQL);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfMSSQL1:
+		//        FromDataTable = DBAccessOfMSSQL1.RunSQLReturnTable(FromSQL);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfMSSQL2:
+		//        FromDataTable = DBAccessOfMSSQL2.RunSQLReturnTable(FromSQL);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfOLE:
+		//        FromDataTable=DBAccessOfOLE.RunSQLReturnTable(FromSQL);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfOracle2:
+		//        FromDataTable = DBAccessOfOracle2.RunSQLReturnTable(FromSQL);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfOracle1:
+		//        FromDataTable = DBAccessOfOracle1.RunSQLReturnTable(FromSQL);
+		//        break;
+		//    case DA.DBUrlType.DBAccessOfODBC:
+		//        FromDataTable=DBAccessOfODBC.RunSQLReturnTable(FromSQL);
+		//        break;
+		//    default:
+		//        break;
+		//}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 得到目的表(字段只包含主键)
 		String ToSQL = "SELECT ";
 		for (FF ff : this.FFs)
 		{
-			if (!ff.IsPK)
+			if (ff.IsPK == false)
 			{
 				continue;
 			}
 			ToSQL += ff.ToField + ",";
 		}
-		ToSQL = ToSQL.substring(0, ToSQL.length() - 1);
+		ToSQL = ToSQL.substring(0,ToSQL.length() - 1);
 		ToSQL += " FROM " + this.ToTable;
 		DataTable ToDataTable = new DataTable();
-		switch (this.ToDBUrl)
-		{
-			case AppCenterDSN:
-				ToDataTable = DBAccess.RunSQLReturnTable(ToSQL);
-				break;
-			case DBAccessOfMSMSSQL:
-				ToDataTable = DBAccess.RunSQLReturnTable(ToSQL);
-				break;
-			// case DBAccessOfOLE:
-			// ToDataTable=DBAccessOfOLE.RunSQLReturnTable(ToSQL);
-			// break;
-			// case DBAccessOfOracle:
-			// ToDataTable=DBAccessOfOracle.RunSQLReturnTable(ToSQL);
-			// break;
-			// case DBAccessOfODBC:
-			// ToDataTable=DBAccessOfODBC.RunSQLReturnTable(ToSQL);
-			// break;
-			/*
-			 * warning case DA.DBUrlType.AppCenterDSN:
-			 * ToDataTable=DBAccess.RunSQLReturnTable(ToSQL); break; case
-			 * DA.DBUrlType.DBAccessOfMSMSSQL:
-			 * ToDataTable=DBAccess.RunSQLReturnTable(ToSQL); break; case
-			 * DA.DBUrlType.DBAccessOfOLE:
-			 * ToDataTable=DBAccessOfOLE.RunSQLReturnTable(ToSQL); break; case
-			 * DA.DBUrlType.DBAccessOfOracle:
-			 * ToDataTable=DBAccessOfOracle.RunSQLReturnTable(ToSQL); break;
-			 * case DA.DBUrlType.DBAccessOfODBC:
-			 * ToDataTable=DBAccessOfODBC.RunSQLReturnTable(ToSQL); break;
-			 */
-			default:
-				break;
-		}
-		
+		ToDataTable = DBAccess.RunSQLReturnTable(ToSQL);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
 		String SELECTSQL = "";
 		String InsertSQL = "";
 		String UpdateSQL = "";
 		String DeleteSQL = "";
-		// int i=0;
-		// int j=0;
+		//int i=0;
+		//int j=0;
 		int result = 0;
-		
-		// 遍历源表
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region  遍历源表
 		for (DataRow FromDR : FromDataTable.Rows)
 		{
 			UpdateSQL = "UPDATE  " + this.ToTable + " SET ";
@@ -778,324 +656,226 @@ public abstract class DataIOEn2
 				{
 					case DataType.AppDateTime:
 					case DataType.AppString:
-						UpdateSQL += ff.ToField + "='"
-								+ FromDR.getValue(ff.FromField).toString()
-								+ "',";
-						/*
-						 * warning UpdateSQL+= ff.ToField+
-						 * "='"+FromDR[ff.FromField].toString()+"',";
-						 */
+						UpdateSQL += ff.ToField + "='" + FromDR.get(ff.FromField).toString() + "',";
 						break;
 					case DataType.AppFloat:
 					case DataType.AppInt:
 					case DataType.AppMoney:
-					case DataType.AppRate:
 					case DataType.AppDate:
 					case DataType.AppDouble:
-						UpdateSQL += ff.ToField + "="
-								+ FromDR.getValue(ff.FromField).toString()
-								+ ",";
-						/*
-						 * warning UpdateSQL+= ff.ToField+
-						 * "="+FromDR[ff.FromField].toString()+",";
-						 */
+						UpdateSQL += ff.ToField + "=" + FromDR.get(ff.FromField).toString() + ",";
 						break;
 					default:
 						throw new RuntimeException("没有涉及到的数据类型.");
 				}
 			}
-			UpdateSQL = UpdateSQL.substring(0, UpdateSQL.length() - 1);
+			UpdateSQL = UpdateSQL.substring(0,UpdateSQL.length() - 1);
 			UpdateSQL += " WHERE ";
 			for (FF ff : this.FFs)
 			{
-				if (!ff.IsPK)
+				if (ff.IsPK == false)
 				{
 					continue;
 				}
-				UpdateSQL += ff.ToField + "='" + FromDR.getValue(ff.FromField)
-						+ "' AND ";
-				/*
-				 * warning UpdateSQL+= ff.ToField +"='"+FromDR[ff.FromField]+
-				 * "' AND ";
-				 */
+				UpdateSQL += ff.ToField + "='" + FromDR.get(ff.FromField) + "' AND ";
 			}
-			
-			UpdateSQL = UpdateSQL.substring(0, UpdateSQL.length() - 5);
-			switch (this.ToDBUrl)
-			{
-				case AppCenterDSN:
-					result = DBAccess.RunSQL(UpdateSQL);
-					break;
-				case DBAccessOfMSMSSQL:
-					String a = UpdateSQL;
-					result = DBAccess.RunSQL(UpdateSQL);
-					break;
-				// case DBAccessOfOLE:
-				// result=DBAccessOfOLE.RunSQL(UpdateSQL);
-				// break;
-				// case DBAccessOfOracle:
-				// result=DBAccessOfOracle.RunSQL(UpdateSQL);
-				// break;
-				// case DBAccessOfODBC:
-				// result=DBAccessOfODBC.RunSQL(UpdateSQL);
-				// break;
-				/*
-				 * warning case DA.DBUrlType.AppCenterDSN:
-				 * result=DBAccess.RunSQL(UpdateSQL); break; case
-				 * DA.DBUrlType.DBAccessOfMSMSSQL: String a=UpdateSQL;
-				 * result=DBAccess.RunSQL(UpdateSQL); break; case
-				 * DA.DBUrlType.DBAccessOfOLE:
-				 * result=DBAccessOfOLE.RunSQL(UpdateSQL); break; case
-				 * DA.DBUrlType.DBAccessOfOracle:
-				 * result=DBAccessOfOracle.RunSQL(UpdateSQL); break; case
-				 * DA.DBUrlType.DBAccessOfODBC:
-				 * result=DBAccessOfODBC.RunSQL(UpdateSQL); break;
-				 */
-				default:
-					break;
-			}
+
+			UpdateSQL = UpdateSQL.substring(0,UpdateSQL.length() - 5);
+			result = DBAccess.RunSQL(UpdateSQL);
+
+
+			//switch(this.ToDBUrl)
+			//{
+			//    case DA.DBUrlType.AppCenterDSN:
+			//        result=DBAccess.RunSQL(UpdateSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL1:
+			//        string a=UpdateSQL;
+			//        result = DBAccessOfMSSQL1.RunSQL(UpdateSQL);						
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL2:
+			//        string b = UpdateSQL;
+			//        result = DBAccessOfMSSQL2.RunSQL(UpdateSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOLE:
+			//        result=DBAccessOfOLE.RunSQL(UpdateSQL);						
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle1:
+			//        result=DBAccessOfOracle1.RunSQL(UpdateSQL);	
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle2:
+			//        result = DBAccessOfOracle2.RunSQL(UpdateSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfODBC:
+			//        result=DBAccessOfODBC.RunSQL(UpdateSQL);		
+			//        break;
+			//    default:
+			//        break;
+			//}
 			if (result == 0)
 			{
-				// 插入操作
+				//插入操作
 				InsertSQL = "INSERT INTO " + this.ToTable + "(";
 				for (FF ff : this.FFs)
 				{
 					InsertSQL += ff.ToField.toString() + ",";
 				}
-				InsertSQL = InsertSQL.substring(0, InsertSQL.length() - 1);
+				InsertSQL = InsertSQL.substring(0,InsertSQL.length() - 1);
 				InsertSQL += ") values(";
 				for (FF ff : this.FFs)
 				{
-					if (ff.DataType == DataType.AppString
-							|| ff.DataType == DataType.AppDateTime)
+					if (ff.DataType == DataType.AppString || ff.DataType == DataType.AppDateTime)
 					{
-						InsertSQL += "'"
-								+ FromDR.getValue(ff.FromField).toString()
-								+ "',";
-						/*
-						 * warning
-						 * InsertSQL+="'"+FromDR[ff.FromField].toString()+"',";
-						 */
-					} else
+						InsertSQL += "'" + FromDR.get(ff.FromField).toString() + "',";
+					}
+					else
 					{
-						InsertSQL += FromDR.getValue(ff.FromField).toString()
-								+ ",";
-						/*
-						 * warning
-						 * InsertSQL+=FromDR[ff.FromField].toString()+",";
-						 */
+						InsertSQL += FromDR.get(ff.FromField).toString() + ",";
 					}
 				}
-				InsertSQL = InsertSQL.substring(0, InsertSQL.length() - 1);
+				InsertSQL = InsertSQL.substring(0,InsertSQL.length() - 1);
 				InsertSQL += ")";
-				switch (this.ToDBUrl)
-				{
-					case AppCenterDSN:
-						DBAccess.RunSQL(InsertSQL);
-						break;
-					case DBAccessOfMSMSSQL:
-						DBAccess.RunSQL(InsertSQL);
-						break;
-					// case DBAccessOfOLE:
-					// DBAccessOfOLE.RunSQL(InsertSQL);
-					// break;
-					// case DBAccessOfOracle:
-					// DBAccessOfOracle.RunSQL(InsertSQL);
-					// break;
-					// case DBAccessOfODBC:
-					// DBAccessOfODBC.RunSQL(InsertSQL);
-					// break;
-					/*
-					 * warning case DA.DBUrlType.AppCenterDSN:
-					 * DBAccess.RunSQL(InsertSQL); break; case
-					 * DA.DBUrlType.DBAccessOfMSMSSQL:
-					 * DBAccess.RunSQL(InsertSQL); break; case
-					 * DA.DBUrlType.DBAccessOfOLE:
-					 * DBAccessOfOLE.RunSQL(InsertSQL); break; case
-					 * DA.DBUrlType.DBAccessOfOracle:
-					 * DBAccessOfOracle.RunSQL(InsertSQL); break; case
-					 * DA.DBUrlType.DBAccessOfODBC:
-					 * DBAccessOfODBC.RunSQL(InsertSQL); break;
-					 */
-					default:
-						break;
-				}
+				DBAccess.RunSQL(InsertSQL);
+
+
+				//switch(this.ToDBUrl)
+				//{
+				//    case DA.DBUrlType.AppCenterDSN:
+				//        DBAccess.RunSQL(InsertSQL);
+				//        break;
+				//    case DA.DBUrlType.DBAccessOfMSSQL1:
+				//        DBAccessOfMSSQL1.RunSQL(InsertSQL);
+				//        break;
+				//    case DA.DBUrlType.DBAccessOfMSSQL2:
+				//        DBAccessOfMSSQL2.RunSQL(InsertSQL);
+				//        break;
+				//    case DA.DBUrlType.DBAccessOfOLE:
+				//        DBAccessOfOLE.RunSQL(InsertSQL);
+				//        break;
+				//    case DA.DBUrlType.DBAccessOfOracle1:
+				//        DBAccessOfOracle1.RunSQL(InsertSQL);
+				//        break;
+				//    case DA.DBUrlType.DBAccessOfOracle2:
+				//        DBAccessOfOracle2.RunSQL(InsertSQL);
+				//        break;
+				//    case DA.DBUrlType.DBAccessOfODBC:
+				//        DBAccessOfODBC.RunSQL(InsertSQL);
+				//        break;
+				//    default:
+				//        break;
+				//}
 			}
-			
+
 		}
-		
-		// 遍历目的表 如果该条记录存在,continue,如果该条记录不存在,则根据主键删除目的表的对应数据
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region    遍历目的表 如果该条记录存在,continue,如果该条记录不存在,则根据主键删除目的表的对应数据
 		for (DataRow ToDR : ToDataTable.Rows)
 		{
 			SELECTSQL = "SELECT ";
 			for (FF ff : this.FFs)
 			{
-				if (!ff.IsPK)
+				if (ff.IsPK == false)
 				{
 					continue;
 				}
 				SELECTSQL += ff.FromField + ",";
 			}
-			SELECTSQL = SELECTSQL.substring(0, SELECTSQL.length() - 1);
+			SELECTSQL = SELECTSQL.substring(0,SELECTSQL.length() - 1);
 			SELECTSQL += " FROM " + this.FromTable + " WHERE ";
 			for (FF ff : this.FFs)
 			{
-				if (!ff.IsPK)
+				if (ff.IsPK == false)
 				{
 					continue;
 				}
 				if (ff.DataType == DataType.AppDateTime)
 				{
-					SELECTSQL += " case "
-							+ " when datalength( CONVERT(NVARCHAR,datepart(month,"
-							+ ff.FromField + " )))=1 then datename(year,"
-							+ ff.FromField
-							+ " )+'-'+('0'+CONVERT(VARCHAR,datepart(month,"
-							+ ff.FromField + " ))) " + " else "
-							+ " datename(year," + ff.FromField
-							+ " )+'-'+CONVERT(VARCHAR,datepart(month,"
-							+ ff.FromField + " )) " + " END " + "='"
-							+ ToDR.getValue(ff.ToField).toString() + "' AND ";
-					/*
-					 * warning SELECTSQL+=" case "+
-					 * " when datalength( CONVERT(NVARCHAR,datepart(month,"
-					 * +ff.FromField+" )))=1 then datename(year,"+ff.FromField+
-					 * " )+'-'+('0'+CONVERT(VARCHAR,datepart(month,"
-					 * +ff.FromField+" ))) "+ " else "+
-					 * " datename(year,"+ff.FromField
-					 * +" )+'-'+CONVERT(VARCHAR,datepart(month,"
-					 * +ff.FromField+" )) "+ " END "+
-					 * "='"+ToDR[ff.ToField].toString()+"' AND ";
-					 */
-				} else
+					SELECTSQL += " case "+
+						" when datalength( CONVERT(VARCHAR,datepart(month," + ff.FromField + " )))=1 then datename(year," + ff.FromField + " )+'-'+('0'+CONVERT(VARCHAR,datepart(month," + ff.FromField + " ))) "+
+						" else "+
+						" datename(year," + ff.FromField + " )+'-'+CONVERT(VARCHAR,datepart(month," + ff.FromField + " )) "+
+						" END "+
+						"='" + ToDR.get(ff.ToField).toString() + "' AND ";
+				}
+				else
 				{
 					if (ff.DataType == DataType.AppString)
 					{
-						SELECTSQL += ff.FromField + "='"
-								+ ToDR.getValue(ff.ToField).toString()
-								+ "' AND ";
-						/*
-						 * warning
-						 * SELECTSQL+=ff.FromField+"='"+ToDR[ff.ToField].
-						 * toString()+"' AND ";
-						 */
-					} else
+						SELECTSQL += ff.FromField + "='" + ToDR.get(ff.ToField).toString() + "' AND ";
+					}
+					else
 					{
-						SELECTSQL += ff.FromField + "="
-								+ ToDR.getValue(ff.ToField).toString()
-								+ " AND ";
-						/*
-						 * warning
-						 * SELECTSQL+=ff.FromField+"="+ToDR[ff.ToField].toString
-						 * ()+" AND ";
-						 */
+						SELECTSQL += ff.FromField + "=" + ToDR.get(ff.ToField).toString() + " AND ";
 					}
 				}
 			}
-			SELECTSQL = SELECTSQL.substring(0, SELECTSQL.length() - 5);
-			// SELECTSQL+=this.FromWhere;
+			SELECTSQL = SELECTSQL.substring(0,SELECTSQL.length() - 5);
+			//SELECTSQL+=this.FromWhere;
 			result = 0;
-			switch (this.FromDBUrl)
-			{
-			// case AppCenterDSN:
-			// result=DBAccess.RunSQLReturnCOUNT(SELECTSQL);
-			// break;
-			// case DBAccessOfMSMSSQL:
-			// result=DBAccess.RunSQLReturnCOUNT(SELECTSQL);
-			// break;
-			// case DBAccessOfOLE:
-			// result=DBAccessOfOLE.RunSQLReturnCOUNT(SELECTSQL);
-			// break;
-			// case DBAccessOfOracle:
-			// result=DBAccessOfOracle.RunSQL(SELECTSQL);
-			// break;
-			// case DBAccessOfODBC:
-			// result=DBAccessOfODBC.RunSQLReturnCOUNT(SELECTSQL);
-			// break;
-			/*
-			 * warning case DA.DBUrlType.AppCenterDSN:
-			 * result=DBAccess.RunSQLReturnCOUNT(SELECTSQL); break; case
-			 * DA.DBUrlType.DBAccessOfMSMSSQL:
-			 * result=DBAccess.RunSQLReturnCOUNT(SELECTSQL); break; case
-			 * DA.DBUrlType.DBAccessOfOLE:
-			 * result=DBAccessOfOLE.RunSQLReturnCOUNT(SELECTSQL); break; case
-			 * DA.DBUrlType.DBAccessOfOracle:
-			 * result=DBAccessOfOracle.RunSQL(SELECTSQL); break; case
-			 * DA.DBUrlType.DBAccessOfODBC:
-			 * result=DBAccessOfODBC.RunSQLReturnCOUNT(SELECTSQL); break;
-			 */
-				default:
-					break;
-			}
-			
+			result = DBAccess.RunSQLReturnCOUNT(SELECTSQL);
+
+
+			//switch(this.FromDBUrl)
+			//{
+			//    case DA.DBUrlType.AppCenterDSN:
+			//        result=DBAccess.RunSQLReturnCOUNT(SELECTSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL1:
+			//        result = DBAccessOfMSSQL1.RunSQLReturnCOUNT(SELECTSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfMSSQL2:
+			//        result = DBAccessOfMSSQL2.RunSQLReturnCOUNT(SELECTSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOLE:
+			//        result=DBAccessOfOLE.RunSQLReturnCOUNT(SELECTSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle1:
+			//        result = DBAccessOfOracle1.RunSQL(SELECTSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfOracle2:
+			//        result = DBAccessOfOracle2.RunSQL(SELECTSQL);
+			//        break;
+			//    case DA.DBUrlType.DBAccessOfODBC:
+			//        result=DBAccessOfODBC.RunSQLReturnCOUNT(SELECTSQL);
+			//        break;
+			//    default:
+			//        break;
+			//}
+
 			if (result != 1)
 			{
-				// delete
+				//delete
 				DeleteSQL = "delete FROM  " + this.ToTable + " WHERE ";
 				for (FF ff : this.FFs)
 				{
-					if (!ff.IsPK)
+					if (ff.IsPK == false)
 					{
 						continue;
 					}
 					if (ff.DataType == DataType.AppString)
 					{
-						DeleteSQL += ff.ToField + "='"
-								+ ToDR.getValue(ff.ToField).toString()
-								+ "' AND ";
-						/*
-						 * warning
-						 * DeleteSQL+=ff.ToField+"='"+ToDR[ff.ToField].toString
-						 * ()+"' AND ";
-						 */
-					} else
+						DeleteSQL += ff.ToField + "='" + ToDR.get(ff.ToField).toString() + "' AND ";
+					}
+					else
 					{
-						DeleteSQL += ff.ToField + "="
-								+ ToDR.getValue(ff.ToField).toString()
-								+ " AND ";
+						DeleteSQL += ff.ToField + "=" + ToDR.get(ff.ToField).toString() + " AND ";
 					}
 				}
-				DeleteSQL = DeleteSQL.substring(0, DeleteSQL.length() - 5);
-				switch (this.ToDBUrl)
-				{
-					case AppCenterDSN:
-						DBAccess.RunSQL(DeleteSQL);
-						break;
-					case DBAccessOfMSMSSQL:
-						DBAccess.RunSQL(DeleteSQL);
-						break;
-					// case DBAccessOfOLE:
-					// DBAccessOfOLE.RunSQL(DeleteSQL);
-					// break;
-					// case DBAccessOfOracle:
-					// DBAccessOfOracle.RunSQL(DeleteSQL);
-					// break;
-					// case DBAccessOfODBC:
-					// DBAccessOfODBC.RunSQL(DeleteSQL);
-					// break;
-					/*
-					 * warning case DA.DBUrlType.AppCenterDSN:
-					 * DBAccess.RunSQL(DeleteSQL); break; case
-					 * DA.DBUrlType.DBAccessOfMSMSSQL:
-					 * DBAccess.RunSQL(DeleteSQL); break; case
-					 * DA.DBUrlType.DBAccessOfOLE:
-					 * DBAccessOfOLE.RunSQL(DeleteSQL); break; case
-					 * DA.DBUrlType.DBAccessOfOracle:
-					 * DBAccessOfOracle.RunSQL(DeleteSQL); break; case
-					 * DA.DBUrlType.DBAccessOfODBC:
-					 * DBAccessOfODBC.RunSQL(DeleteSQL); break;
-					 */
-					default:
-						break;
-				}
+				DeleteSQL = DeleteSQL.substring(0,DeleteSQL.length() - 5);
+				DBAccess.RunSQL(DeleteSQL);
 				continue;
-			} else if (result > 1)
+			}
+			else if (result > 1)
 			{
-				throw new RuntimeException("目的数据异常错误＋表名；关键字" + this.ToTable
-						+ "关键字" + ToDR.getValue(0).toString());
+				throw new RuntimeException("目的数据异常错误＋表名；关键字" + this.ToTable + "关键字" + ToDR.get(0).toString());
 			}
 		}
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
 		if (this.UPDATEsql != null)
 		{
 			switch (this.ToDBUrl)
@@ -1103,33 +883,12 @@ public abstract class DataIOEn2
 				case AppCenterDSN:
 					DBAccess.RunSQL(UPDATEsql);
 					break;
-				case DBAccessOfMSMSSQL:
-					DBAccess.RunSQL(UPDATEsql);
-					break;
-				// case DBAccessOfOLE:
-				// DBAccessOfOLE.RunSQL(UPDATEsql);
-				// break;
-				// case DBAccessOfOracle:
-				// DBAccessOfOracle.RunSQL(UPDATEsql);
-				// break;
-				// case DBAccessOfODBC:
-				// DBAccessOfODBC.RunSQL(UPDATEsql);
-				// break;
-				/*
-				 * warning case DA.DBUrlType.AppCenterDSN:
-				 * DBAccess.RunSQL(UPDATEsql); break; case
-				 * DA.DBUrlType.DBAccessOfMSMSSQL: DBAccess.RunSQL(UPDATEsql);
-				 * break; case DA.DBUrlType.DBAccessOfOLE:
-				 * DBAccessOfOLE.RunSQL(UPDATEsql); break; case
-				 * DA.DBUrlType.DBAccessOfOracle:
-				 * DBAccessOfOracle.RunSQL(UPDATEsql); break; case
-				 * DA.DBUrlType.DBAccessOfODBC:
-				 * DBAccessOfODBC.RunSQL(UPDATEsql); break;
-				 */
 				default:
 					break;
 			}
 		}
 		this.DoAfter();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

@@ -1,20 +1,21 @@
 package BP.WF.Template;
 
-import BP.En.EnType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  任务
- 
 */
 public class Task extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 参数
-	 
 	*/
 	public final String getParas()
 	{
@@ -26,7 +27,6 @@ public class Task extends EntityMyPK
 	}
 	/** 
 	 发起人
-	 
 	*/
 	public final String getStarter()
 	{
@@ -37,8 +37,29 @@ public class Task extends EntityMyPK
 		this.SetValByKey(TaskAttr.Starter, value);
 	}
 	/** 
+	 到达的人员
+	*/
+	public final String getToEmps()
+	{
+		return this.GetValStringByKey(TaskAttr.ToEmps);
+	}
+	public final void setToEmps(String value)
+	{
+		this.SetValByKey(TaskAttr.ToEmps, value);
+	}
+	/** 
+	 到达节点（可以为0）
+	*/
+	public final int getToNode()
+	{
+		return this.GetValIntByKey(TaskAttr.ToNode);
+	}
+	public final void setToNode(int value)
+	{
+		this.SetValByKey(TaskAttr.ToNode, value);
+	}
+	/** 
 	 流程编号
-	 
 	*/
 	public final String getFK_Flow()
 	{
@@ -50,7 +71,6 @@ public class Task extends EntityMyPK
 	}
 	/** 
 	 发起时间（可以为空）
-	 
 	*/
 	public final String getStartDT()
 	{
@@ -60,28 +80,26 @@ public class Task extends EntityMyPK
 	{
 		this.SetValByKey(TaskAttr.StartDT, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 Task
-	 
 	*/
 	public Task()
 	{
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("WF_Task", "任务");
 		map.Java_SetEnType(EnType.Admin);
@@ -89,6 +107,11 @@ public class Task extends EntityMyPK
 		map.AddMyPK(); //唯一的主键.
 		map.AddTBString(TaskAttr.FK_Flow, null, "流程编号", true, false, 0, 200, 10);
 		map.AddTBString(TaskAttr.Starter, null, "发起人", true, false, 0, 200, 10);
+
+			//为上海同事科技增加两个字段. 可以为空.
+		map.AddTBInt(TaskAttr.ToNode, 0, "到达的节点", true, false);
+		map.AddTBString(TaskAttr.ToEmps, null, "到达人员", true, false, 0, 200, 10);
+
 		map.AddTBString(TaskAttr.Paras, null, "参数", true, false, 0, 4000, 10);
 
 			// TaskSta 0=未发起，1=成功发起，2=发起失败.
@@ -98,9 +121,9 @@ public class Task extends EntityMyPK
 		map.AddTBString(TaskAttr.StartDT, null, "发起时间", true, false, 0, 20, 10);
 		map.AddTBString(TaskAttr.RDT, null, "插入数据时间", true, false, 0, 20, 10);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

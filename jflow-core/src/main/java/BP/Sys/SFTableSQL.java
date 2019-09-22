@@ -2,34 +2,30 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
-import BP.Tools.Json;
-import BP.Tools.StringHelper;
+import java.util.*;
 
 /** 
  用户自定义表
- * @param <CodeCompileUnit>
 */
 public class SFTableSQL extends EntityNoName
 {
 
-	/** 
-	 用户自定义表
-	 
-	*/
-	public SFTableSQL()
-	{
-	}
-
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
 		return uac;
 	}
-
+	/** 
+	 用户自定义表
+	*/
+	public SFTableSQL()
+	{
+	}
 	/** 
 	 EnMap
 	*/
@@ -65,24 +61,24 @@ public class SFTableSQL extends EntityNoName
 		map.AddTBStringDoc(SFTableAttr.SelectStatement, null, "查询语句", true, false);
 		map.AddTBDateTime(SFTableAttr.RDT, null, "加入日期", false, false);
 
-
-
 			//查找.
 		map.AddSearchAttr(SFTableAttr.FK_SFDBSrc);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "查看数据";
 		rm.ClassMethodName = this.toString() + ".DoEdit";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		rm.IsForEns = false;
-		map.AddRefMethod(rm);
-
+		 map.AddRefMethod(rm);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
 	/** 
 	 编辑数据
+	 
 	 @return 
 	*/
 	public final String DoEdit()
@@ -96,9 +92,9 @@ public class SFTableSQL extends EntityNoName
 			return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo();
 		}
 	}
+
 	/** 
 	 是否是类
-	 
 	*/
 	public final boolean getIsClass()
 	{
@@ -112,16 +108,15 @@ public class SFTableSQL extends EntityNoName
 		}
 	}
 
-	
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete()
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
-		if (attrs.size() != 0)
+		if (attrs.Count != 0)
 		{
 			String err = "";
-			for (MapAttr item : attrs.ToJavaList())
+			for (MapAttr item : attrs)
 			{
 				err += " @ " + item.getMyPK() + " " + item.getName();
 			}
@@ -129,5 +124,4 @@ public class SFTableSQL extends EntityNoName
 		}
 		return super.beforeDelete();
 	}
-
 }

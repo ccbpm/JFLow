@@ -1,17 +1,19 @@
 package BP.WF;
 
-import BP.En.Entities;
-import BP.En.Map;
-import BP.En.SQLCash;
+import BP.DA.*;
+import BP.WF.*;
+import BP.En.*;
 
 /** 
  普通工作
 */
 public class GEWork extends Work
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 与_SQLCash 操作有关
 	private SQLCash _SQLCash = null;
 	@Override
-	public SQLCash getSQLCash() throws Exception
+	public SQLCash getSQLCash()
 	{
 		if (_SQLCash == null)
 		{
@@ -29,19 +31,20 @@ public class GEWork extends Work
 	{
 		_SQLCash = value;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 普通工作
 	*/
 	public GEWork()
 	{
 	}
-	@Override
-	public String toString(){
-		return this.NodeFrmID;
-		
-	}
 	/** 
 	 普通工作
+	 
 	 @param nodeid 节点ID
 	*/
 	public GEWork(int nodeid, String nodeFrmID)
@@ -49,11 +52,10 @@ public class GEWork extends Work
 		this.NodeFrmID = nodeFrmID;
 		this.setNodeID(nodeid);
 		this.setSQLCash(null);
-		
-		
 	}
 	/** 
 	 普通工作
+	 
 	 @param nodeid 节点ID
 	 @param _oid OID
 	*/
@@ -63,28 +65,20 @@ public class GEWork extends Work
 		this.setNodeID(nodeid);
 		this.setOID(_oid);
 		this.setSQLCash(null);
-		
-		try {
-			Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);		  
-			this.set_enMap(map);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region Map
 	/** 
 	 重写基类方法
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		try {
-			this.set_enMap(BP.Sys.MapData.GenerHisMap(this.NodeFrmID));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return this.get_enMap();
+		this._enMap = BP.Sys.MapData.GenerHisMap(this.NodeFrmID);
+		return this._enMap;
 	}
 	/** 
 	 GEWorks
@@ -97,5 +91,18 @@ public class GEWork extends Work
 			return new GEWorks();
 		}
 		return new GEWorks(this.getNodeID(), this.NodeFrmID);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+	/** 
+	 重写tostring 返回fromID.
+	 
+	 @return 
+	*/
+	@Override
+	public String toString()
+	{
+		return this.NodeFrmID;
 	}
 }

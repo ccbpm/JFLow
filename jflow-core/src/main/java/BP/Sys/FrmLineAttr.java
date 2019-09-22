@@ -2,21 +2,13 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  线
- 
 */
 public class FrmLineAttr extends EntityOIDNameAttr
 {
-	/**
-	 * X
-	 */
-	public static final String X = "X";
-	/**
-	 * Y
-	 */
-	public static final String Y = "Y";
 	/** 
 	 主表
 	*/
@@ -35,22 +27,18 @@ public class FrmLineAttr extends EntityOIDNameAttr
 	public static final String X2 = "X2";
 	/** 
 	 Y2
-	 
 	*/
 	public static final String Y2 = "Y2";
 	/** 
 	 宽度
-	 
 	*/
 	public static final String BorderWidth = "BorderWidth";
 	/** 
 	 颜色
-	 
 	*/
 	public static final String BorderColor = "BorderColor";
 	/** 
 	 GUID
-	 
 	*/
 	public static final String GUID = "GUID";
 }

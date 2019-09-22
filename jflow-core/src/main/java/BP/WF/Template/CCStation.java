@@ -1,26 +1,23 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.EntityMM;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.WF.Nodes;
-import BP.WF.Port.Stations;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  抄送到岗位
  节点的工作岗位有两部分组成.	 
  记录了从一个节点到其他的多个节点.
  也记录了到这个节点的其他的节点.
- 
 */
 public class CCStation extends EntityMM
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
-	 
 	*/
 	@Override
 	public UAC getHisUAC()
@@ -31,7 +28,6 @@ public class CCStation extends EntityMM
 	}
 	/** 
 	节点
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -43,7 +39,6 @@ public class CCStation extends EntityMM
 	}
 	/** 
 	 岗位名称
-	 
 	*/
 	public final String getFK_StationT()
 	{
@@ -51,7 +46,6 @@ public class CCStation extends EntityMM
 	}
 	/** 
 	 工作岗位
-	 
 	*/
 	public final String getFK_Station()
 	{
@@ -61,28 +55,26 @@ public class CCStation extends EntityMM
 	{
 		this.SetValByKey(CCStationAttr.FK_Station, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 抄送到岗位
-	 
 	*/
 	public CCStation()
 	{
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_CCStation", "抄送岗位");
@@ -90,10 +82,10 @@ public class CCStation extends EntityMM
 		map.AddDDLEntitiesPK(CCStationAttr.FK_Node, 0, DataType.AppInt, "节点", new Nodes(), NodeAttr.NodeID, NodeAttr.Name, true);
 		map.AddDDLEntitiesPK(CCStationAttr.FK_Station, null, "工作岗位", new Stations(), true);
 
-		this.set_enMap(map);
+		this._enMap = map;
 
-		return this.get_enMap();
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

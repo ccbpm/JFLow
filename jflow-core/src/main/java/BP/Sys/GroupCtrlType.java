@@ -2,10 +2,10 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  控件类型
- 
 */
 public class GroupCtrlType
 {
@@ -18,12 +18,10 @@ public class GroupCtrlType
 	public static final String Thread = "Thread";
 	/** 
 	 流转自定义组件
-	 
 	*/
 	public static final String FTC = "FTC";
 	/** 
 	 按钮控件
-	 
-*/
+	*/
 	public static final String Btn = "Btn";
 }

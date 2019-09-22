@@ -1,29 +1,41 @@
 package BP.WF.Template;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
 
 /** 
  生成的文件打开方式
- 
 */
 public enum BillOpenModel
 {
 	/** 
-	 下载保存	 
+	 下载保存
 	*/
-	
 	DownLoad(0),
-	/*
-	 * 在线WebOffice打开
-	 */
+	/** 
+	 在线WebOffice打开
+	*/
 	WebOffice(1);
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, BillOpenModel> mappings;
-	private synchronized static java.util.HashMap<Integer, BillOpenModel> getMappings()
+	private static java.util.HashMap<Integer, BillOpenModel> getMappings()
 	{
 		if (mappings == null)
 		{
-			mappings = new java.util.HashMap<Integer, BillOpenModel>();
+			synchronized (BillOpenModel.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, BillOpenModel>();
+				}
+			}
 		}
 		return mappings;
 	}
@@ -31,7 +43,7 @@ public enum BillOpenModel
 	private BillOpenModel(int value)
 	{
 		intValue = value;
-		BillOpenModel.getMappings().put(value, this);
+		getMappings().put(value, this);
 	}
 
 	public int getValue()

@@ -1,0 +1,104 @@
+package BP.WF.Template;
+
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
+
+/** 
+ 单据模板s
+*/
+public class BillTemplate2019s extends EntitiesNoName
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
+	/** 
+	 得到它的 Entity 
+	*/
+	@Override
+	public Entity getGetNewEntity()
+	{
+		return new BillTemplate2019();
+	}
+	/** 
+	 单据模板
+	*/
+	public BillTemplate2019s()
+	{
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 查询与构造
+	/** 
+	 按节点查询
+	 
+	 @param nd
+	*/
+	public BillTemplate2019s(Node nd)
+	{
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere(BillTemplate2019Attr.NodeID, nd.getNodeID());
+		if (nd.getIsStartNode())
+		{
+			qo.addOr();
+			qo.AddWhere("No", "SLHZ");
+		}
+		qo.DoQuery();
+	}
+	/** 
+	 按流程查询
+	 
+	 @param fk_flow 流程编号
+	*/
+	public BillTemplate2019s(String fk_flow)
+	{
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhereInSQL(BillTemplate2019Attr.NodeID, "SELECT NodeID FROM WF_Node WHERE fk_flow='" + fk_flow + "'");
+		qo.DoQuery();
+	}
+	/** 
+	 按节点查询
+	 
+	 @param fk_node 节点ID
+	*/
+	public BillTemplate2019s(int fk_node)
+	{
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere(BillTemplate2019Attr.NodeID, fk_node);
+		qo.DoQuery();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 查询与构造
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<BillTemplate2019> ToJavaList()
+	{
+		return (List<BillTemplate2019>)this;
+	}
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<BillTemplate2019> Tolist()
+	{
+		ArrayList<BillTemplate2019> list = new ArrayList<BillTemplate2019>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((BillTemplate2019)this[i]);
+		}
+		return list;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+}

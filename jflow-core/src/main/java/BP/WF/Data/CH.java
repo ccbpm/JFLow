@@ -1,16 +1,42 @@
 package BP.WF.Data;
 
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  时效考核
-  
 */
 public class CH extends EntityMyPK
 {
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
+	/** 
+	 发送人
+	*/
+	public final String getSender()
+	{
+		return this.GetValStringByKey(CHAttr.Sender);
+	}
+	public final void setSender(String value)
+	{
+		this.SetValByKey(CHAttr.Sender, value);
+	}
+	/** 
+	 发送人名称
+	*/
+	public final String getSenderT()
+	{
+		return this.GetValStringByKey(CHAttr.SenderT);
+	}
+	public final void setSenderT(String value)
+	{
+		this.SetValByKey(CHAttr.SenderT, value);
+	}
 	/** 
 	 考核状态
 	*/
@@ -35,7 +61,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 时间从
-	 
 	*/
 	public final String getDTFrom()
 	{
@@ -47,7 +72,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 应完成日期
-	 
 	*/
 	public final String getSDT()
 	{
@@ -59,7 +83,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 流程标题
-	 
 	*/
 	public final String getTitle()
 	{
@@ -71,7 +94,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 流程编号
-	 
 	*/
 	public final String getFK_Flow()
 	{
@@ -83,7 +105,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 流程
-	 
 	*/
 	public final String getFK_FlowT()
 	{
@@ -95,7 +116,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 限期
-	 
 	*/
 	public final int getTimeLimit()
 	{
@@ -107,7 +127,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 实际完成用时.
-	 
 	*/
 	public final float getUseDays()
 	{
@@ -119,7 +138,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 逾期时间
-	 
 	*/
 	public final float getOverDays()
 	{
@@ -131,7 +149,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 用时（分钟）
-	 
 	*/
 	public final float getUseMinutes()
 	{
@@ -143,7 +160,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 超时（分钟）
-	 
 	*/
 	public final float getOverMinutes()
 	{
@@ -155,7 +171,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 操作人员
-	 
 	*/
 	public final String getFK_Emp()
 	{
@@ -167,7 +182,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 人员
-	 
 	*/
 	public final String getFK_EmpT()
 	{
@@ -179,7 +193,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 相关当事人
-	 
 	*/
 	public final String getGroupEmps()
 	{
@@ -191,7 +204,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 相关当事人名称
-	 
 	*/
 	public final String getGroupEmpsNames()
 	{
@@ -203,7 +215,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 相关当事人数量
-	 
 	*/
 	public final int getGroupEmpsNum()
 	{
@@ -215,7 +226,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 部门
-	 
 	*/
 	public final String getFK_Dept()
 	{
@@ -227,7 +237,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 部门名称
-	 
 	*/
 	public final String getFK_DeptT()
 	{
@@ -239,7 +248,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 年月
-	 
 	*/
 	public final String getFK_NY()
 	{
@@ -250,8 +258,18 @@ public class CH extends EntityMyPK
 		this.SetValByKey(CHAttr.FK_NY, value);
 	}
 	/** 
+	 考核方式
+	*/
+	public final int getDTSWay()
+	{
+		return this.GetValIntByKey(CHAttr.DTSWay);
+	}
+	public final void setDTSWay(int value)
+	{
+		this.SetValByKey(CHAttr.DTSWay, value);
+	}
+	/** 
 	 周
-	 
 	*/
 	public final int getWeekNum()
 	{
@@ -263,7 +281,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 工作ID
-	 
 	*/
 	public final long getWorkID()
 	{
@@ -275,7 +292,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getFID()
 	{
@@ -287,7 +303,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 节点ID
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -299,7 +314,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 节点名称
-	 
 	*/
 	public final String getFK_NodeT()
 	{
@@ -309,11 +323,8 @@ public class CH extends EntityMyPK
 	{
 		this.SetValByKey(CHAttr.FK_NodeT, value);
 	}
-
-		///#endregion
-
-	/** 总扣分
-	 
+	/** 
+	 总扣分
 	*/
 	public final float getPoints()
 	{
@@ -323,44 +334,13 @@ public class CH extends EntityMyPK
 	{
 		this.SetValByKey(CHAttr.Points, value);
 	}
-	
-	/** 发送人
-	 
-	*/
-	public final String getSender()
-	{
-		return this.GetValStringByKey(CHAttr.Sender);
-	}
-	public final void setSender(String value)
-	{
-		this.SetValByKey(CHAttr.Sender, value);
-	}
-	/** 
-	 发送人名称
-	 
-	*/
-	public final String getSenderT()
-	{
-		return this.GetValStringByKey(CHAttr.SenderT);
-	}
-	public final void setSenderT(String value)
-	{
-		this.SetValByKey(CHAttr.SenderT, value);
-	}
-	/** 考核方式
-			 
-	*/
-	public final int getDTSWay()
-	{
-		return this.GetValIntByKey(CHAttr.DTSWay);
-	}
-	public final void setDTSWay(int value)
-	{
-		this.SetValByKey(CHAttr.DTSWay, value);
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 UI界面上的访问控制
-	 
 	*/
 	@Override
 	public UAC getHisUAC()
@@ -374,7 +354,6 @@ public class CH extends EntityMyPK
 	}
 	/** 
 	 时效考核
-	 
 	*/
 	public CH()
 	{
@@ -383,81 +362,85 @@ public class CH extends EntityMyPK
 	 
 	 
 	 @param pk
-	 * @throws Exception 
 	*/
-	public CH(String pk) throws Exception
+	public CH(String pk)
 	{
 		super(pk);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region Map
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_CH", "时效考核");
 
 		map.AddMyPK();
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 基本属性.
 		map.AddTBInt(CHAttr.WorkID, 0, "工作ID", false, true);
-        map.AddTBInt(CHAttr.FID, 0, "FID", false, true);
-        map.AddTBString(CHAttr.Title, null, "标题", false, false, 0, 900, 5);
+		map.AddTBInt(CHAttr.FID, 0, "FID", false, true);
+		map.AddTBString(CHAttr.Title, null, "标题", false, false, 0, 900, 5);
 
-        map.AddTBString(CHAttr.FK_Flow, null, "流程", false, false, 3, 3, 3);
-        map.AddTBString(CHAttr.FK_FlowT, null, "流程名称", true, true, 0, 200, 5);
+		map.AddTBString(CHAttr.FK_Flow, null, "流程", false, false, 3, 3, 3);
+		map.AddTBString(CHAttr.FK_FlowT, null, "流程名称", true, true, 0, 200, 5);
 
-        map.AddTBInt(CHAttr.FK_Node, 0, "节点", false, false);
-        map.AddTBString(CHAttr.FK_NodeT, null, "节点名称", true, true, 0, 200, 5);
-
-
-        map.AddTBString(CHAttr.Sender, null, "发送人", false, false, 0, 200, 3);
-        map.AddTBString(CHAttr.SenderT, null, "发送人名称", true, true, 0, 200, 5);
+		map.AddTBInt(CHAttr.FK_Node, 0, "节点", false, false);
+		map.AddTBString(CHAttr.FK_NodeT, null, "节点名称", true, true, 0, 200, 5);
 
 
-        map.AddTBString(CHAttr.FK_Emp, null, "当事人", true, true, 0, 30, 3);
-        map.AddTBString(CHAttr.FK_EmpT, null, "当事人名称", true, true, 0, 200, 5);
-
-        //为邓州增加的属性. 解决多人处理一个节点的工作的问题.
-        map.AddTBString(CHAttr.GroupEmps, null, "相关当事人", true, true, 0, 400, 3);
-        map.AddTBString(CHAttr.GroupEmpsNames, null, "相关当事人名称", true, true, 0, 900, 3);
-        map.AddTBInt(CHAttr.GroupEmpsNum, 1, "相关当事人数量", false, false);
+		map.AddTBString(CHAttr.Sender, null, "发送人", false, false, 0, 200, 3);
+		map.AddTBString(CHAttr.SenderT, null, "发送人名称", true, true, 0, 200, 5);
 
 
-        map.AddTBString(CHAttr.DTFrom, null, "任务下达时间", true, true, 0, 50, 5);
-        map.AddTBString(CHAttr.DTTo, null, "任务处理时间", true, true, 0, 50, 5);
-        map.AddTBString(CHAttr.SDT, null, "应完成日期", true, true, 0, 50, 5);
+		map.AddTBString(CHAttr.FK_Emp, null, "当事人", true, true, 0, 30, 3);
+		map.AddTBString(CHAttr.FK_EmpT, null, "当事人名称", true, true, 0, 200, 5);
 
-        map.AddTBString(CHAttr.FK_Dept, null, "隶属部门", true, true, 0, 50, 5);
-        map.AddTBString(CHAttr.FK_DeptT, null, "部门名称", true, true, 0, 500, 5);
-        map.AddTBString(CHAttr.FK_NY, null, "隶属月份", true, true, 0, 10, 10);
-        map.AddDDLSysEnum(CHAttr.DTSWay, 0, "考核方式", true, true, CHAttr.DTSWay, "@0=不考核@1=按照时效考核@2=按照工作量考核");
+			//为邓州增加的属性. 解决多人处理一个节点的工作的问题.
+		map.AddTBString(CHAttr.GroupEmps, null, "相关当事人", true, true, 0, 400, 3);
+		map.AddTBString(CHAttr.GroupEmpsNames, null, "相关当事人名称", true, true, 0, 900, 3);
+		map.AddTBInt(CHAttr.GroupEmpsNum, 1, "相关当事人数量", false, false);
 
-        map.AddTBString(CHAttr.TimeLimit, null, "规定限期", true, true, 0, 50, 5);
-        map.AddTBFloat(CHAttr.OverMinutes, 0, "逾期分钟", false, true);
-        map.AddTBFloat(CHAttr.UseDays, 0, "实际使用天", false, true);
-        map.AddTBFloat(CHAttr.UseMinutes, 0, "实际使用分钟", false, true);
-        map.AddTBFloat(CHAttr.OverDays, 0, "逾期天", false, true);
-        map.AddTBInt(CHAttr.CHSta, 0, "状态", true, true);
-        map.AddTBInt(CHAttr.WeekNum, 0, "第几周", false, true);
-        map.AddTBFloat(CHAttr.Points, 0, "总扣分", true, true);
-        map.AddTBIntMyNum();
 
+		map.AddTBString(CHAttr.DTFrom, null, "任务下达时间", true, true, 0, 50, 5);
+		map.AddTBString(CHAttr.DTTo, null, "任务处理时间", true, true, 0, 50, 5);
+		map.AddTBString(CHAttr.SDT, null, "应完成日期", true, true, 0, 50, 5);
+
+		map.AddTBString(CHAttr.FK_Dept, null, "隶属部门", true, true, 0, 50, 5);
+		map.AddTBString(CHAttr.FK_DeptT, null, "部门名称", true, true, 0, 500, 5);
+		map.AddTBString(CHAttr.FK_NY, null, "隶属月份", true, true, 0, 10, 10);
+		map.AddDDLSysEnum(CHAttr.DTSWay, 0, "考核方式", true, true, CHAttr.DTSWay, "@0=不考核@1=按照时效考核@2=按照工作量考核");
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 基本属性.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 计算属性.
+		map.AddTBString(CHAttr.TimeLimit, null, "规定限期", true, true, 0, 50, 5);
+		map.AddTBFloat(CHAttr.OverMinutes, 0, "逾期分钟", false, true);
+		map.AddTBFloat(CHAttr.UseDays, 0, "实际使用天", false, true);
+		map.AddTBFloat(CHAttr.OverDays, 0, "逾期天", false, true);
+		map.AddTBInt(CHAttr.CHSta, 0, "状态", true, true);
+		map.AddTBInt(CHAttr.WeekNum, 0, "第几周", false, true);
+		map.AddTBFloat(CHAttr.Points, 0, "总扣分", true, true);
+		map.AddTBIntMyNum();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 计算属性.
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 }

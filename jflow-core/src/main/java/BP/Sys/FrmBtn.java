@@ -2,27 +2,27 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  按钮
- 
 */
 public class FrmBtn extends EntityMyPK
 {
-	 ///#region 属性
-			/** 
-			 所在的分组
-			 
-			*/
-			public final int getGroupID()
-			{
-				return this.GetValIntByKey(FrmBtnAttr.GroupID);
-			}
-			public final void setGroupID(int value)
-			{
-				this.SetValByKey(FrmBtnAttr.GroupID, value);
-			}
-		
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
+	/** 
+	 所在的分组
+	*/
+	public final int getGroupID()
+	{
+		return this.GetValIntByKey(FrmBtnAttr.GroupID);
+	}
+	public final void setGroupID(int value)
+	{
+		this.SetValByKey(FrmBtnAttr.GroupID, value);
+	}
 	public final String getMsgOK()
 	{
 		return this.GetValStringByKey(FrmBtnAttr.MsgOK);
@@ -41,7 +41,6 @@ public class FrmBtn extends EntityMyPK
 	}
 	/** 
 	 EventContext
-	 
 	*/
 	public final String getEventContext()
 	{
@@ -54,17 +53,10 @@ public class FrmBtn extends EntityMyPK
 	}
 	public final String getIsViewHtml()
 	{
-		try {
-			return PubClass.ToHtmlColor(this.getIsView());
-		} catch (Exception e) {
-			Log.DebugWriteError(e.getMessage());
-			e.printStackTrace();
-		}
-		return "";
+		return PubClass.ToHtmlColor(this.getIsView());
 	}
 	/** 
 	 IsView
-	 
 	*/
 	public final String getIsView()
 	{
@@ -72,16 +64,13 @@ public class FrmBtn extends EntityMyPK
 	}
 	public final void setIsView(String value)
 	{
-
-//		switch (value)
-//ORIGINAL LINE: case "#FF000000":
-		if (value.equals("#FF000000"))
+		switch (value)
 		{
+			case "#FF000000":
 				this.SetValByKey(FrmBtnAttr.IsView, "Red");
 				return;
-		}
-		else
-		{
+			default:
+				break;
 		}
 		this.SetValByKey(FrmBtnAttr.IsView, value);
 	}
@@ -103,7 +92,6 @@ public class FrmBtn extends EntityMyPK
 	}
 	/** 
 	 IsEnable
-	 
 	*/
 	public final boolean getIsEnable()
 	{
@@ -115,7 +103,6 @@ public class FrmBtn extends EntityMyPK
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getY()
 	{
@@ -127,7 +114,6 @@ public class FrmBtn extends EntityMyPK
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getX()
 	{
@@ -143,7 +129,6 @@ public class FrmBtn extends EntityMyPK
 	}
 	/** 
 	 BtnType
-	 
 	*/
 	public final int getEventType()
 	{
@@ -155,7 +140,6 @@ public class FrmBtn extends EntityMyPK
 	}
 	/** 
 	 FK_MapData
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -167,7 +151,6 @@ public class FrmBtn extends EntityMyPK
 	}
 	/** 
 	 Text
-	 
 	*/
 	public final String getText()
 	{
@@ -180,15 +163,17 @@ public class FrmBtn extends EntityMyPK
 	public final String getTextHtml()
 	{
 			//if (this.EventType)
-			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).replace("@","<br>") + "</b>";
+			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).Replace("@","<br>") + "</b>";
 			//else
 			return this.GetValStrByKey(FrmBtnAttr.Text).replace("@", "<br>");
 	}
-	
-	//#region 构造方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 按钮
-	 
 	*/
 	public FrmBtn()
 	{
@@ -197,16 +182,14 @@ public class FrmBtn extends EntityMyPK
 	 按钮
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmBtn(String mypk) throws Exception
+	public FrmBtn(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -220,6 +203,8 @@ public class FrmBtn extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = FrmBtnAttr.FK_MapData;
+
 
 		map.AddMyPK();
 		map.AddTBString(FrmBtnAttr.FK_MapData, null, "表单ID", true, false, 1, 100, 20);
@@ -231,7 +216,7 @@ public class FrmBtn extends EntityMyPK
 		map.AddTBInt(FrmBtnAttr.IsView, 0, "是否可见", false, false);
 		map.AddTBInt(FrmBtnAttr.IsEnable, 0, "是否起用", false, false);
 
-		map.AddTBInt(FrmBtnAttr.BtnType, 0, "类型", false, false);
+			//map.AddTBInt(FrmBtnAttr.BtnType, 0, "类型", false, false);
 
 		map.AddTBInt(FrmBtnAttr.UAC, 0, "控制类型", false, false);
 		map.AddTBString(FrmBtnAttr.UACContext, null, "控制内容", true, false, 0, 3900, 20);
@@ -242,11 +227,14 @@ public class FrmBtn extends EntityMyPK
 		map.AddTBString(FrmBtnAttr.MsgOK, null, "运行成功提示", true, false, 0, 500, 20);
 		map.AddTBString(FrmBtnAttr.MsgErr, null, "运行失败提示", true, false, 0, 500, 20);
 
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		map.AddTBString(FrmBtnAttr.BtnID, null, "按钮ID", true, false, 0, 128, 20);
+
+		map.AddTBInt(FrmBtnAttr.GroupID, 0, "所在分组", false, false);
+
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

@@ -1,16 +1,17 @@
 package BP.Sys.XML;
 
-import BP.XML.XmlEn;
-import BP.XML.XmlEns;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.XML.*;
+import BP.Sys.*;
 
-/**
- * SQLList 的摘要说明，属性的配置。
- * @author fanleiwei
- *
- */
-public class SQLList extends XmlEn{
-	
-	//region 属性
+/** 
+ SQLList 的摘要说明，属性的配置。
+*/
+public class SQLList extends XmlEn
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getNo()
 	{
 		return this.GetValStringByKey(SQLListAttr.No);
@@ -19,7 +20,6 @@ public class SQLList extends XmlEn{
 	{
 		return this.GetValStringByKey(SQLListAttr.SQL);
 	}
-	
 	/** 
 	 备注
 	*/
@@ -27,7 +27,11 @@ public class SQLList extends XmlEn{
 	{
 		return this.GetValStringByKey(SQLListAttr.Note);
 	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 查询
 	*/
@@ -51,4 +55,6 @@ public class SQLList extends XmlEn{
 	{
 		return new SQLLists();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

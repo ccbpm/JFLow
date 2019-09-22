@@ -1,21 +1,19 @@
 package BP.Sys;
 
-import java.util.ArrayList;
-
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Web.*;
+import java.util.*;
 
 /** 
  图片s
- 
 */
 public class FrmImgs extends EntitiesMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 图片s
-	 
 	*/
 	public FrmImgs()
 	{
@@ -24,55 +22,49 @@ public class FrmImgs extends EntitiesMyPK
 	 图片s
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmImgs(String fk_mapdata) throws Exception
+	public FrmImgs(String fk_mapdata)
 	{
-		if (SystemConfig.getIsDebug())
-		{
-			this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
-		}
-		else
-		{
-			this.RetrieveFromCash(FrmLineAttr.FK_MapData, (Object)fk_mapdata);
-		}
+
+	   this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
+
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new FrmImg();
 	}
-	public static ArrayList<FrmImg> convertFrmImgs(Object obj)
-	{
-		return (ArrayList<FrmImg>) obj;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmImg> ToJavaList()
+	public final List<FrmImg> ToJavaList()
 	{
-		return (java.util.List<FrmImg>)(Object)this;
+		return (List<FrmImg>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmImg> Tolist()
+	public final ArrayList<FrmImg> Tolist()
 	{
-		java.util.ArrayList<FrmImg> list = new java.util.ArrayList<FrmImg>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmImg> list = new ArrayList<FrmImg>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((FrmImg)this.get(i));
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

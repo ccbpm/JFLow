@@ -1,11 +1,10 @@
 package BP.WF.Template;
 
-import BP.DA.DBAccess;
-import BP.DA.DataTable;
-import BP.WF.GenerWorkerList;
-import BP.WF.GenerWorkerListAttr;
-import BP.WF.Node;
-import BP.WF.WorkNode;
+import BP.DA.*;
+import BP.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
 
 /** 
  按钮状态
@@ -16,35 +15,40 @@ public class ButtonState
 	public int CurrNodeIDOfUI = 0;
 	public int CurrNodeIDOfFlow = 0;
 	public String FK_Flow = null;
-	public final void InitNodeIsCurr() throws Exception
+	public final void InitNodeIsCurr()
 	{
 		// 获取.
 		Node nd = new Node(this.CurrNodeIDOfFlow);
 		if (nd.getIsStartNode())
 		{
-			// 开始节点允许删除流程 
+			/* 开始节点允许删除流程 */
 			this.Btn_DelFlow = true;
 			this.Btn_Send = true;
 			this.Btn_Save = true;
 			return;
 		}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 判断是否可以撤销发送.
 		WorkNode wn = new WorkNode(this.WorkID, this.CurrNodeIDOfFlow);
 		WorkNode wnPri = wn.GetPreviousWorkNode();
 
 		// 判断它是否可以处理上一步工作.
 		GenerWorkerList wl = new GenerWorkerList();
-		int num = wl.Retrieve(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.getNo(), GenerWorkerListAttr.FK_Node, wnPri.getHisNode().getNodeID(), GenerWorkerListAttr.WorkID, this.WorkID);
+		int num = wl.Retrieve(GenerWorkerListAttr.FK_Emp, BP.Web.WebUser.No, GenerWorkerListAttr.FK_Node, wnPri.getHisNode().getNodeID(), GenerWorkerListAttr.WorkID, this.WorkID);
 		if (num >= 1)
 		{
-			//如果能够处理上一步工作
+			/*如果能够处理上一步工作*/
 		}
 		else
 		{
-			//不能处理上一步工作, 就可以让其退回
+			/*不能处理上一步工作, 就可以让其退回*/
 			this.Btn_Return = nd.getIsCanReturn();
 			this.Btn_Send = true;
 			this.Btn_Save = true;
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 	}
 	public final void InitNodeIsNotCurr()
 	{
@@ -54,7 +58,7 @@ public class ButtonState
 			this.Btn_UnSend = true;
 		}
 	}
-	public ButtonState(String fk_flow, int currNodeID, long workid) throws Exception
+	public ButtonState(String fk_flow, int currNodeID, long workid)
 	{
 		this.FK_Flow = fk_flow;
 		this.CurrNodeIDOfUI = currNodeID;
@@ -66,20 +70,20 @@ public class ButtonState
 
 		String sql = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + workid;
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.size() == 0)
+		if (dt.Rows.Count == 0)
 		{
-			// 说明没有 workid 初始化工作的情况, 只有保存与发送两个按钮是可用的 
+			/* 说明没有 workid 初始化工作的情况, 只有保存与发送两个按钮是可用的 */
 			this.Btn_Send = true;
 			this.Btn_Save = true;
 			return;
 		}
 
 		// 设置当前流程节点。
-		this.CurrNodeIDOfFlow = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
+		this.CurrNodeIDOfFlow = Integer.parseInt(dt.Rows[0][0].toString());
 
 		if (this.CurrNodeIDOfUI == this.CurrNodeIDOfFlow)
 		{
-			//如果流程运行的节点与当前的节点是相等的
+			/*如果流程运行的节点与当前的节点是相等的*/
 			InitNodeIsCurr();
 		}
 		else

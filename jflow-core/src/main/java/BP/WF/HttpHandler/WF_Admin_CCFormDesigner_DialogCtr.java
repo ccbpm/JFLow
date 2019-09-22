@@ -1,186 +1,186 @@
 package BP.WF.HttpHandler;
 
-import java.util.Hashtable;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
-import org.apache.http.protocol.HttpContext;
-
-import BP.DA.DBAccess;
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.Difference.Handler.WebContralBase;
-import BP.En.UIContralType;
-import BP.Sys.MapData;
-import BP.Sys.SFTable;
-import BP.Sys.SysEnumMain;
-import BP.Tools.StringHelper;
 /** 
  初始化函数
 */
-public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
+public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 {
-	
- 
 	/** 
-	 初始化函数
-	 @param mycontext
+	 构造函数
 	*/
-	public WF_Admin_CCFormDesigner_DialogCtr(HttpContext mycontext)
+	public WF_Admin_CCFormDesigner_DialogCtr()
 	{
-		this.context = mycontext;
 	}
 
-	public WF_Admin_CCFormDesigner_DialogCtr() {
-		  
-	}
-
-	
 	/** 
 	 获取隐藏字段
 	 
 	 @return 
-	 * @throws Exception 
-*/
-	public final String Hiddenfielddata() throws Exception
+	*/
+	public final String Hiddenfielddata()
 	{
 		return BP.Sys.CCFormAPI.DB_Hiddenfielddata(this.getFK_MapData());
 	}
-	
-	
-	
-	
-	
 	/** 
-	 * 默认执行的方法
+	 
+	 
 	 @return 
 	*/
 	public final String PublicNoName_InitFieldVal()
 	{
 		String sql = "";
 		Hashtable ht = new Hashtable();
-		String ctrlType = getRequest().getParameter("CtrlType");
-		if(StringHelper.isNullOrEmpty(ctrlType)){
-			ctrlType = this.GetRequestVal("action");
-		}
+
+		String ctrlType = this.GetRequestVal("CtrlType");
 		int num = 1;
-		if("Dtl".equals(ctrlType))
+		Paras ps = new Paras();
+		switch (ctrlType)
 		{
-			sql = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData='" + this.getFK_MapData() + "'";
-			num = DBAccess.RunSQLReturnValInt(sql) + 1;
-			ht.put("No", this.getFK_MapData() + "Dtl" + num);
-			ht.put("Name", "从表" + num);
-		}else if("AthMulti".equals(ctrlType))
-		{
-			sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getFK_MapData() + "'";
-			num = DBAccess.RunSQLReturnValInt(sql) + 1;
-			ht.put("No", "AthMulti" + num);
-			ht.put("Name", "多附件" + num);
-		}else if("AthSingle".equals(ctrlType))
-		{
-			sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getFK_MapData() + "'";
-			num = DBAccess.RunSQLReturnValInt(sql) + 1;
-			ht.put("No", "AthSingle" + num);
-			ht.put("Name", "单附件" + num);
-		}else if("AthImg".equals(ctrlType))
-		{
-			sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.getFK_MapData() + "'";
-			num = DBAccess.RunSQLReturnValInt(sql) + 1;
-			ht.put("No", "AthImg" + num);
-			ht.put("Name", "图片附件" + num);
-		}else if("HandSiganture".equals(ctrlType))
-		{
-			sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.getFK_MapData() + "' AND EleType='" + ctrlType + "'";
-			num = DBAccess.RunSQLReturnValInt(sql) + 1;
-			ht.put("No", "HandSiganture" + num);
-			ht.put("Name", "签字板" + num);
-		}else if("iFrame".equals(ctrlType))
-		{
-			sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.getFK_MapData() + "' AND EleType='" + ctrlType + "'";
-			num = DBAccess.RunSQLReturnValInt(sql) + 1;
-			ht.put("No", "iFrame" + num);
-			ht.put("Name", "框架" + num);
-		}else if("Fieldset".equals(ctrlType))
-		{
-			sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.getFK_MapData() + "' AND EleType='" + ctrlType + "'";
-			num = DBAccess.RunSQLReturnValInt(sql) + 1;
-			ht.put("No", "Fieldset" + num);
-			ht.put("Name", "分组" + num);
+			case "Dtl":
+				ps.SQL = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				//sql = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData='" + this.FK_MapData + "'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", this.getFK_MapData() + "Dtl" + num);
+				ht.put("Name", "从表" + num);
+				break;
+			case "AthMulti":
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.FK_MapData + "'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", "AthMulti" + num);
+				ht.put("Name", "多附件" + num);
+				break;
+			case "ImgAth":
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.FK_MapData + "'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", "ImgAth" + num);
+				ht.put("Name", "图片附件" + num);
+				break;
+			case "AthSingle":
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.FK_MapData + "'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", "AthSingle" + num);
+				ht.put("Name", "单附件" + num);
+				break;
+			case "AthImg":
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.FK_MapData + "'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", "AthImg" + num);
+				ht.put("Name", "图片附件" + num);
+				break;
+			case "HandSiganture": //手写板.
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData" + " AND EleType=" + SystemConfig.AppCenterDBVarStr + "EleType";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				ps.Add("EleType", ctrlType);
+				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='"+ctrlType+"'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", "HandSiganture" + num);
+				ht.put("Name", "签字板" + num);
+				break;
+			case "iFrame": //框架
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData" + " AND EleType=" + SystemConfig.AppCenterDBVarStr + "EleType";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				ps.Add("EleType", ctrlType);
+				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='" + ctrlType + "'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", "iFrame" + num);
+				ht.put("Name", "框架" + num);
+				break;
+			case "Fieldset": //分组
+				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + SystemConfig.AppCenterDBVarStr + "FK_MapData" + " AND EleType=" + SystemConfig.AppCenterDBVarStr + "EleType";
+				ps.Add("FK_MapData", this.getFK_MapData());
+				ps.Add("EleType", ctrlType);
+				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='" + ctrlType + "'";
+				num = DBAccess.RunSQLReturnValInt(ps) + 1;
+				ht.put("No", "Fieldset" + num);
+				ht.put("Name", "分组" + num);
+				break;
+			default:
+				ht.put("No", ctrlType +1);
+				ht.put("Name", ctrlType+1);
+				break;
 		}
-		else {
-			ht.put("No", ctrlType +1);
-			ht.put("Name", ctrlType+1);
-		}
+
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 枚举界面.
-	public final String FrmTable_GetSFTableList() throws Exception
+	/** 
+	 获得外键列表.
+	 
+	 @return 
+	*/
+	public final String FrmTable_GetSFTableList()
 	{
-		int pageNumber = this.GetRequestValInt("pageNumber");
-		if (pageNumber == 0)
-		{
-			pageNumber = 1;
-		}
-
-		int pageSize = this.GetRequestValInt("pageSize");
-		if (pageSize == 0)
-		{
-			pageSize = 9999;
-		}
-
-		return BP.Sys.CCFormAPI.DB_SFTableList(pageNumber, pageSize);
+		//WF_Admin_FoolFormDesigner wf = new WF_Admin_FoolFormDesigner(this.context);
+		SFTables ens = new SFTables();
+		ens.RetrieveAll();
+		return ens.ToJson();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 枚举界面.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
+	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	public String DoDefaultMethod() throws Exception
+	protected String DoDefaultMethod()
 	{
-		String sql = "";
-		if("NewSFTableField".equals(getDoType()))//创建一个SFTable字段.
-		{
-			//调用接口,执行保存.
-			try {
-				BP.Sys.CCFormAPI.SaveFieldSFTable(this.getFK_MapData(), this.getKeyOfEn(), this.GetRequestVal("Name"), this.GetRequestVal("UIBindKey"), this.GetRequestValFloat("x"), this.GetRequestValFloat("y"),0);
-			} catch (Exception e) {
-				return "保存外部字段失败";
-			}
-			return "执行成功.";
-		}else if("FrmTable_DelSFTable".equals(getDoType()))
-		{
-			SFTable sfDel = new SFTable();
-			sfDel.setNo(this.GetRequestVal("FK_SFTable"));
-			sfDel.Delete();
-			return "删除成功.";
-		}
 		//找不不到标记就抛出异常.
-		return "err@标记[" + this.getDoType() + "]，没有找到.";
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到.");
 	}
-	
-	
-	 ///#endregion 执行父类的重写方法.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 执行父类的重写方法.
 
-			public String FrmTextBox_ParseStringToPinyin()
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 功能界面 .
+	/** 
+	 转化拼音 @李国文.
+	 
+	 @return 返回转换后的拼音
+	*/
+	public final String FrmTextBox_ParseStringToPinyin()
 	{
-		String name = getRequest().getParameter("name");
-		String flag = getRequest().getParameter("flag");
+		String name = GetRequestVal("name");
 
-		if (flag.equals("true"))
-		{
-			 return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, true);			
-		}
+		String flag = this.GetRequestVal("flag");
+		flag = DataType.IsNullOrEmpty(flag) == true ? "true" : flag.toLowerCase();
 
-		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, false);
+		//此处配置最大长度为20，edited by liuxc,2017-9-25
+		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(flag, "true"), true, 20);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 功能界面方法.
 
-	// / <summary>
-	// / 获得表单对应的物理表特定的数据类型字段
-	// / </summary>
-	// / <returns></returns>
-	public String FrmTextBoxChoseOneField_Init() throws Exception {
+	/** 
+	 获得表单对应的物理表特定的数据类型字段
+	 
+	 @return 
+	*/
+	public final String FrmTextBoxChoseOneField_Init()
+	{
 		DataTable mydt = MapData.GetFieldsOfPTableMode2(this.getFK_MapData());
 		mydt.TableName = "dt";
 		return BP.Tools.Json.ToJson(mydt);
 	}
-
 }

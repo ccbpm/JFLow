@@ -3,22 +3,21 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.En.*;
 import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  SQL模板
- 
 */
 public class SQLTemplate extends EntityNoName
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region  属性
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -26,14 +25,13 @@ public class SQLTemplate extends EntityNoName
 	}
 	/** 
 	 打开的连接
-	 
 	*/
 	public final String getDocs()
 	{
-		String s= this.GetValStrByKey(SQLTemplateAttr.Docs);
+		String s = this.GetValStrByKey(SQLTemplateAttr.Docs);
 		if (s.equals("") || s == null)
 		{
-			return this.getNo();
+			return this.No;
 		}
 		return s;
 	}
@@ -41,32 +39,30 @@ public class SQLTemplate extends EntityNoName
 	{
 		this.SetValByKey(SQLTemplateAttr.Docs, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造函数
 	/** 
 	 SQL模板
-	 
 	*/
 	public SQLTemplate()
 	{
 	}
-	public SQLTemplate(String no) throws Exception
+	public SQLTemplate(String no)
 	{
 		super(no.replace("\n","").trim());
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("WF_SQLTemplate", "SQL模板");
 
@@ -83,9 +79,9 @@ public class SQLTemplate extends EntityNoName
 			//查询条件.
 		map.AddSearchAttr(SQLTemplateAttr.SQLType);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

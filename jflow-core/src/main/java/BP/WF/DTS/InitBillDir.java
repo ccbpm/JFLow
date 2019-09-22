@@ -1,22 +1,21 @@
 package BP.WF.DTS;
 
-import java.io.File;
-
-import BP.DA.DBUrlType;
-import BP.DTS.DataIOEn;
-import BP.DTS.DoType;
-import BP.DTS.RunTimeType;
-import BP.En.QueryObject;
-import BP.Port.Dept;
-import BP.Port.Depts;
-import BP.WF.Template.BillTemplate;
-import BP.WF.Template.BillTemplates;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.WF.Data.*;
+import BP.WF.Template.*;
+import BP.DTS.*;
+import BP.WF.*;
+import java.io.*;
+import java.time.*;
 
 public class InitBillDir extends DataIOEn
 {
 	/** 
 	 流程时效考核
-	 
 	*/
 	public InitBillDir()
 	{
@@ -28,11 +27,9 @@ public class InitBillDir extends DataIOEn
 	}
 	/** 
 	 创建单据目录
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public void Do() throws Exception
+	public void Do()
 	{
 		if (true) //此方法暂时排除，不需要创建目录。
 		{
@@ -48,34 +45,31 @@ public class InitBillDir extends DataIOEn
 
 
 		String path = BP.WF.Glo.getFlowFileBill();
-		int year = new java.util.Date().getYear();//.Year.toString();
-		File file = new File(path);
-		if (file.exists() == false)
+		String year = LocalDateTime.now().getYear().toString();
+
+		if ((new File(path)).isDirectory() == false)
 		{
-			file = new File(path);
-			file.mkdirs();
+			(new File(path)).mkdirs();
 		}
-		file = new File(path + "\\\\" + year);
-		if (file.exists() == false)
+
+		if ((new File(path + "\\\\" + year)).isDirectory() == false)
 		{
-			file.mkdirs();
+			(new File(path + "\\\\" + year)).mkdirs();
 		}
 
 
-		for (Dept Dept : Depts.ToJavaList())
+		for (Dept Dept : Depts)
 		{
-			file = new File(path + "\\\\" + year + "\\\\" + Dept.getNo());
-			if (file.exists() == false)
+			if ((new File(path + "\\\\" + year + "\\\\" + Dept.No)).isDirectory() == false)
 			{
-				file.mkdirs();
+				(new File(path + "\\\\" + year + "\\\\" + Dept.No)).mkdirs();
 			}
 
-			for (BillTemplate func : funcs.ToJavaList())
+			for (BillTemplate func : funcs)
 			{
-				file = new File(path + "\\\\" + year + "\\\\" + Dept.getNo() + "\\\\" + func.getNo());
-				if (file.exists() == false)
+				if ((new File(path + "\\\\" + year + "\\\\" + Dept.No + "\\\\" + func.getNo())).isDirectory() == false)
 				{
-					file.mkdirs();
+					(new File(path + "\\\\" + year + "\\\\" + Dept.No + "\\\\" + func.getNo())).mkdirs();
 				}
 			}
 		}

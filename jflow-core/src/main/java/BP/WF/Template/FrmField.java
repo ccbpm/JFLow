@@ -1,21 +1,22 @@
 package BP.WF.Template;
 
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.Sys.MapAttrAttr;
-import BP.Tools.StringHelper;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  表单字段方案
- 
 */
 public class FrmField extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 元素类型.
-	 
 	*/
 	public final String getEleType()
 	{
@@ -27,7 +28,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 正则表达式
-	 
 	*/
 	public final String getRegularExp()
 	{
@@ -47,7 +47,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 是否为空
-	 
 	*/
 	public final boolean getIsNotNull()
 	{
@@ -59,7 +58,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 是否写入流程数据表
-	 
 	*/
 	public final boolean getIsWriteToFlowTable()
 	{
@@ -72,7 +70,6 @@ public class FrmField extends EntityMyPK
 
 	/** 
 	 表单ID
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -84,7 +81,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 字段
-	 
 	*/
 	public final String getKeyOfEn()
 	{
@@ -96,7 +92,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 流程编号
-	 
 	*/
 	public final String getFK_Flow()
 	{
@@ -108,7 +103,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 解决方案
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -120,7 +114,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 是否可见
-	 
 	*/
 	public final boolean getUIVisible()
 	{
@@ -132,7 +125,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 是否可用
-	 
 	*/
 	public final boolean getUIIsEnable()
 	{
@@ -152,7 +144,6 @@ public class FrmField extends EntityMyPK
 	}
 	/** 
 	 是否是数字签名?
-	 
 	*/
 	public final boolean getIsSigan()
 	{
@@ -163,13 +154,19 @@ public class FrmField extends EntityMyPK
 		this.SetValByKey(MapAttrAttr.IsSigan, value);
 	}
 
+	@Override
+	public String InitMyPKVals()
+	{
+		this.MyPK = this.getFK_MapData() + "_" + this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.getKeyOfEn() + "_" + this.getEleType();
+		return super.InitMyPKVals();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 表单字段方案
-	 
 	*/
 	public FrmField()
 	{
@@ -178,22 +175,20 @@ public class FrmField extends EntityMyPK
 	 表单字段方案
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmField(String mypk) throws Exception
+	public FrmField(String mypk)
 	{
 		super(mypk);
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_FrmSln", "表单字段方案");
@@ -222,25 +217,29 @@ public class FrmField extends EntityMyPK
 			// 是否写入流程表? 2014-01-26，如果是，则首先写入该节点的数据表，然后copy到流程数据表里
 			// 在节点发送时有ccflow自动写入，写入目的就是为了
 		map.AddTBInt(FrmFieldAttr.IsWriteToFlowTable, 0, "是否写入流程表", true, false);
+
+		map.AddTBInt(FrmFieldAttr.IsWriteToGenerWorkFlow, 0, "是否写入流程注册表", true, false);
+
+			//map.AddDDLSysEnum(FrmFieldAttr.IsWriteToFlowTable, 0, "写入规则", true, true, FrmFieldAttr.IsWriteToFlowTable,
+			  //  "@0=不写入@1=写入流程数据表@2=写入流程注册表@3=写入全部");
+
+
 		map.AddBoolean(MapAttrAttr.IsSigan, false, "是否签名", true, true);
 
 		map.AddTBString(MapAttrAttr.DefVal, null, "默认值", true, false, 0, 200, 20);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	@Override
-	protected boolean beforeInsert() throws Exception
-	{
-		if (StringHelper.isNullOrEmpty(this.getEleType()))
-		{
-			this.setEleType(FrmEleType.Field);
-		}
+	//protected override bool beforeInsert()
+	//{
+	//    if (DataType.IsNullOrEmpty(this.EleType))
+	//        this.EleType = FrmEleType.Field;
 
-		this.setMyPK(this.getFK_MapData() + "_" + this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.getKeyOfEn() + "_" + this.getEleType());
-		return super.beforeInsert();
-	}
+	//    this.MyPK = this.FK_MapData + "_" + this.FK_Flow + "_" + this.FK_Node + "_" + this.KeyOfEn + "_" + this.EleType;
+	//    return base.beforeInsert();
+	//}
 }

@@ -1,19 +1,22 @@
 package BP.WF.Template;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  抄送s
- 
 */
 public class CCs extends Entities
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -22,40 +25,38 @@ public class CCs extends Entities
 	}
 	/** 
 	 抄送
-	 
 	*/
 	public CCs()
 	{
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<CC> ToJavaList()
+	public final List<CC> ToJavaList()
 	{
-		return (java.util.List<CC>)(Object)this;
+		return (List<CC>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<CC> Tolist()
+	public final ArrayList<CC> Tolist()
 	{
-		java.util.ArrayList<CC> list = new java.util.ArrayList<CC>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<CC> list = new ArrayList<CC>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((CC)this.get(i));
+			list.add((CC)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,14 +1,18 @@
 package BP.WF;
 
-import BP.DA.DataType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import java.util.*;
 
 /** 
  移交记录
 */
 public class ShiftWork extends EntityMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -115,6 +119,11 @@ public class ShiftWork extends EntityMyPK
 	{
 		SetValByKey(ShiftWorkAttr.ToEmp, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 移交记录
 	*/
@@ -127,9 +136,9 @@ public class ShiftWork extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_ShiftWork", "移交记录");
@@ -148,15 +157,16 @@ public class ShiftWork extends EntityMyPK
 		map.AddTBString(ShiftWorkAttr.Note, null, "移交原因", true, true, 0, 2000, 10);
 
 		map.AddTBInt(ShiftWorkAttr.IsRead, 0, "是否读取？", true, true);
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
-		this.setMyPK(String.valueOf(BP.DA.DBAccess.GenerOIDByGUID()));
-		this.setRDT(DataType.getCurrentDataTime());
+		this.MyPK = BP.DA.DBAccess.GenerOIDByGUID().toString();
+		this.setRDT(DataType.CurrentDataTime);
 		return super.beforeInsert();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

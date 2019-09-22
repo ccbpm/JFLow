@@ -1,19 +1,19 @@
 package BP.WF.Template;
 
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.Sys.FrmType;
-import BP.Sys.MapDataAttr;
-import BP.WF.FormRunType;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  表单
- 
 */
 public class Frm extends EntityNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	public FrmNode HisFrmNode = null;
 	public final String getPTable()
 	{
@@ -41,19 +41,19 @@ public class Frm extends EntityNoName
 	}
 	public final FrmType getHisFrmType()
 	{
-		return FrmType.forValue(this.GetValIntByKey(FrmAttr.FrmType));
+		return (FrmType)this.GetValIntByKey(FrmAttr.FrmType);
 	}
 	public final void setHisFrmType(FrmType value)
 	{
-		this.SetValByKey(FrmAttr.FrmType, value);
+		this.SetValByKey(FrmAttr.FrmType, (int)value);
 	}
-	public final void setHisFormRunType(FormRunType value)
-	{
-		this.SetValByKey(FrmAttr.FrmType, value.getValue());
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 Frm
-	 
 	*/
 	public Frm()
 	{
@@ -62,23 +62,21 @@ public class Frm extends EntityNoName
 	 Frm
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public Frm(String no) throws Exception
+	public Frm(String no)
 	{
 		super(no);
 
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_MapData", "表单库");
@@ -90,7 +88,7 @@ public class Frm extends EntityNoName
 		 //   map.AddDDLSysEnum(FrmAttr.FrmType, 0, "独立表单属性:运行类型", true, false, FrmAttr.FrmType);
 
 			//表单的运行类型.
-		map.AddDDLSysEnum(FrmAttr.FrmType, BP.Sys.FrmType.FreeFrm.getValue(), "表单类型",true, false, FrmAttr.FrmType);
+		map.AddDDLSysEnum(FrmAttr.FrmType, (int)BP.Sys.FrmType.FreeFrm, "表单类型",true, false, FrmAttr.FrmType);
 
 		map.AddTBString(FrmAttr.PTable, null, "物理表", true, false, 0, 50, 10);
 		map.AddTBInt(FrmAttr.DBURL, 0, "DBURL", true, false);
@@ -104,18 +102,18 @@ public class Frm extends EntityNoName
 		map.AddTBInt(BP.Sys.MapDataAttr.FrmW, 900, "表单宽度", true, false);
 		map.AddTBInt(BP.Sys.MapDataAttr.FrmH, 1200, "表单高度", true, false);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 	public final int getFrmW()
 	{
-		return this.GetValIntByKey(MapDataAttr.FrmW);
+		return this.GetValIntByKey(Sys.MapDataAttr.FrmW);
 	}
 	public final int getFrmH()
 	{
 		return this.GetValIntByKey(BP.Sys.MapDataAttr.FrmH);
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

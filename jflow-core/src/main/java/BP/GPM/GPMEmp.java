@@ -2,46 +2,46 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.Port.*;
+import java.util.*;
 
 /** 
  操作员 的摘要说明。
- 
 */
 public class GPMEmp extends EntityNoName
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 扩展属性
 	/** 
 	 该人员是否被禁用.
-	 
 	*/
 	public final boolean getIsEnable()
 	{
-		if (this.getNo().equals("admin"))
+		if (this.No.equals("admin"))
 		{
 			return true;
 		}
 
-		 
-			String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp='" + this.getNo() + "'";
+
+			String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp='" + this.No + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				return false;
 			}
 
-			sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp='" + this.getNo() + "'";
+			sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp='" + this.No + "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				return false;
 			}
-		
 
-		 
+
+
 
 		return true;
 	}
 	/** 
 	 拼音
-	 
 	*/
 	public final String getPinYin()
 	{
@@ -53,10 +53,8 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 主要的部门。
-	 * @throws Exception 
-	 
 	*/
-	public final Dept getHisDept() throws Exception
+	public final Dept getHisDept()
 	{
 		try
 		{
@@ -64,12 +62,11 @@ public class GPMEmp extends EntityNoName
 		}
 		catch (RuntimeException ex)
 		{
-			throw new RuntimeException("@获取操作员" + this.getNo() + "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
+			throw new RuntimeException("@获取操作员" + this.No + "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
 		}
 	}
 	/** 
 	 部门
-	 
 	*/
 	public final String getFK_Dept()
 	{
@@ -101,7 +98,6 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 密码
-	 
 	*/
 	public final String getPass()
 	{
@@ -113,7 +109,6 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 顺序号
-	 
 	*/
 	public final int getIdx()
 	{
@@ -125,7 +120,6 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 签字类型
-	 
 	*/
 	public final int getSignType()
 	{
@@ -135,7 +129,10 @@ public class GPMEmp extends EntityNoName
 	{
 		this.SetValByKey(EmpAttr.SignType, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 公共方法
 	/** 
 	 检查密码(可以重写此方法)
@@ -151,11 +148,13 @@ public class GPMEmp extends EntityNoName
 		}
 		return false;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 公共方法
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造函数
 	/** 
 	 操作员
-	 
 	*/
 	public GPMEmp()
 	{
@@ -164,14 +163,13 @@ public class GPMEmp extends EntityNoName
 	 操作员
 	 
 	 @param no 编号
-	 * @throws Exception 
 	*/
-	public GPMEmp(String no) throws Exception
+	public GPMEmp(String no)
 	{
 		super(no);
 	}
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -179,31 +177,35 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map();
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 基本属性
-		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); //要连接的数据源（表示要连接到的那个系统数据库）。
-		map.setPhysicsTable("Port_Emp"); // 要物理表。
+		map.EnDBUrl = new DBUrl(DBUrlType.AppCenterDSN); //要连接的数据源（表示要连接到的那个系统数据库）。
+		map.PhysicsTable = "Port_Emp"; // 要物理表。
 		map.Java_SetDepositaryOfMap(Depositary.Application); //实体map的存放位置.
 		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体存放位置
-		map.setEnDesc("用户"); // "用户"; // 实体的描述.
+		map.EnDesc = "用户"; // "用户"; // 实体的描述.
 		map.Java_SetEnType(EnType.App); //实体类型。
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 字段
-			//关于字段属性的增加 
-		map.AddTBStringPK(EmpAttr.No, null, "登陆账号", true, false, 1, 50, 50);
-		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 200, 30);
+			/*关于字段属性的增加 */
+		map.AddTBStringPK(EmpAttr.No, null, "登陆账号", true, false, 1, 50, 100);
+		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 200, 100);
 		map.AddTBString(EmpAttr.Pass, "123", "密码", false, false, 0, 100, 10);
-		map.AddDDLEntities(EmpAttr.FK_Dept, null, "主要部门", new BP.Port.Depts(), true);
+		map.AddDDLEntities(EmpAttr.FK_Dept, null, "主要部门", new BP.Port.Depts(), false);
 
 		map.AddTBString(EmpAttr.SID, null, "安全校验码", false, false, 0, 36, 36);
 		map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);
@@ -214,62 +216,62 @@ public class GPMEmp extends EntityNoName
 		map.AddDDLSysEnum(EmpAttr.SignType, 0, "签字类型", true,true, EmpAttr.SignType, "@0=不签名@1=图片签名@2=电子签名");
 
 		map.AddTBInt(EmpAttr.Idx, 0, "序号", true, false);
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 字段
 
 		map.AddSearchAttr(EmpAttr.SignType);
 
 			//节点绑定部门. 节点绑定部门.
-		map.getAttrsOfOneVSM().AddBranches(new EmpMenus(), new BP.GPM.Menus(), BP.GPM.EmpMenuAttr.FK_Emp, BP.GPM.EmpMenuAttr.FK_Menu, "人员菜单", EmpAttr.Name, EmpAttr.No, "0");
+		map.AttrsOfOneVSM.AddBranches(new EmpMenus(), new BP.GPM.Menus(), BP.GPM.EmpMenuAttr.FK_Emp, BP.GPM.EmpMenuAttr.FK_Menu, "人员菜单", EmpAttr.Name, EmpAttr.No, "0");
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "设置图片签名";
 		rm.ClassMethodName = this.toString() + ".DoSinger";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "部门岗位";
 		rm.ClassMethodName = this.toString() + ".DoEmpDepts";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 			//节点绑定部门. 节点绑定部门.
-		map.getAttrsOfOneVSM().AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.AttrsOfOneVSM.AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
 
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 
 	public final String DoEmpDepts()
 	{
-		return "../../../GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
+		return "../../../GPM/EmpDepts.htm?FK_Emp=" + this.No;
 	}
 
 	public final String DoSinger()
 	{
-		return "../../../GPM/Siganture.htm?EmpNo=" + this.getNo();
+		return "../../../GPM/Siganture.htm?EmpNo=" + this.No;
 	}
 
-	public static GPMEmp GenerData(GPMEmp en) throws Exception
+	public static GPMEmp GenerData(GPMEmp en)
 	{
 		//增加拼音，以方便查找.
-		String pinyinQP = BP.DA.DataType.ParseStringToPinyin(en.getName()).toLowerCase();
-		String pinyinJX = BP.DA.DataType.ParseStringToPinyinJianXie(en.getName()).toLowerCase();
+		String pinyinQP = BP.DA.DataType.ParseStringToPinyin(en.Name).toLowerCase();
+		String pinyinJX = BP.DA.DataType.ParseStringToPinyinJianXie(en.Name).toLowerCase();
 		en.setPinYin("," + pinyinQP + "," + pinyinJX + ",");
 
 		//处理岗位信息.
 		DeptEmpStations des = new DeptEmpStations();
-		des.Retrieve(DeptEmpStationAttr.FK_Emp, en.getNo());
+		des.Retrieve(DeptEmpStationAttr.FK_Emp, en.No);
 
 		String depts = "";
 		String stas = "";
 
-		for (DeptEmpStation item : des.ToJavaList())
+		for (DeptEmpStation item : des)
 		{
 			BP.GPM.Dept dept = new BP.GPM.Dept();
-			dept.setNo(item.getFK_Dept());
+			dept.No = item.FK_Dept;
 			if (dept.RetrieveFromDBSources() == 0)
 			{
 				item.Delete();
@@ -277,28 +279,28 @@ public class GPMEmp extends EntityNoName
 			}
 
 			//给拼音重新定义值,让其加上部门的信息.
-			en.setPinYin(en.getPinYin() + pinyinJX + "/" + BP.DA.DataType.ParseStringToPinyinJianXie(dept.getName()).toLowerCase() + ",");
+			en.setPinYin(en.getPinYin() + pinyinJX + "/" + BP.DA.DataType.ParseStringToPinyinJianXie(dept.Name).toLowerCase() + ",");
 
 			BP.Port.Station sta = new BP.Port.Station();
-			sta.setNo(item.getFK_Station());
+			sta.No = item.FK_Station;
 			if (sta.RetrieveFromDBSources() == 0)
 			{
 				item.Delete();
 				continue;
 			}
 
-			stas += "@" + dept.getNameOfPath() + "|" + sta.getName();
+			stas += "@" + dept.NameOfPath + "|" + sta.Name;
 
-			if (depts.contains("@" + dept.getNameOfPath()) == false)
+			if (depts.contains("@" + dept.NameOfPath) == false)
 			{
-				depts += "@" + dept.getNameOfPath();
+				depts += "@" + dept.NameOfPath;
 			}
 		}
 		return en;
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
 		//处理其他的数据.
 		BP.GPM.GPMEmp.GenerData(this);
@@ -306,7 +308,6 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 向上移动
-	 
 	*/
 	public final void DoUp()
 	{
@@ -314,14 +315,13 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 向下移动
-	 
 	*/
 	public final void DoDown()
 	{
 		this.DoOrderDown(EmpAttr.FK_Dept, this.getFK_Dept(), EmpAttr.Idx);
 	}
 
-	public final String DoResetpassword(String pass1, String pass2) throws Exception
+	public final String DoResetpassword(String pass1, String pass2)
 	{
 		if (pass1.equals(pass2) == false)
 		{
@@ -334,13 +334,12 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 获取集合
-	 
 	*/
 	@Override
 	public Entities getGetNewEntities()
 	{
 		return new Emps();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 构造函数
 }

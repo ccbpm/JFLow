@@ -1,70 +1,65 @@
 package BP.WF.Rpt;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-
-import BP.Tools.StringHelper;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
 
 /** 
  报表导出模板
- 
 */
 public class RptExportTemplate
 {
 	/** 
 	 模板最后修改时间
 	*/
-	private java.util.Date privateLastModify = new java.util.Date(0);
-	public final java.util.Date getLastModify()
+	private LocalDateTime LastModify = LocalDateTime.MIN;
+	public final LocalDateTime getLastModify()
 	{
-		return privateLastModify;
+		return LastModify;
 	}
-	public final void setLastModify(java.util.Date value)
+	public final void setLastModify(LocalDateTime value)
 	{
-		privateLastModify = value;
+		LastModify = value;
 	}
 
 	/** 
 	 导出填充方向
-	 
 	*/
-	private FillDirection privateDirection = FillDirection.forValue(0);
+	private FillDirection Direction = FillDirection.values()[0];
 	public final FillDirection getDirection()
 	{
-		return privateDirection;
+		return Direction;
 	}
 	public final void setDirection(FillDirection value)
 	{
-		privateDirection = value;
+		Direction = value;
 	}
 
 	/** 
 	 导出开始填充的行/列号
-	 
 	*/
-	private int privateBeginIdx;
+	private int BeginIdx;
 	public final int getBeginIdx()
 	{
-		return privateBeginIdx;
+		return BeginIdx;
 	}
 	public final void setBeginIdx(int value)
 	{
-		privateBeginIdx = value;
+		BeginIdx = value;
 	}
 
 	/** 
 	 字段与单元格绑定信息集合
-	 
 	*/
-	private java.util.ArrayList<RptExportTemplateCell> privateCells;
-	public final java.util.ArrayList<RptExportTemplateCell> getCells()
+	private ArrayList<RptExportTemplateCell> Cells;
+	public final ArrayList<RptExportTemplateCell> getCells()
 	{
-		return privateCells;
+		return Cells;
 	}
-	public final void setCells(java.util.ArrayList<RptExportTemplateCell> value)
+	public final void setCells(ArrayList<RptExportTemplateCell> value)
 	{
-		privateCells = value;
+		Cells = value;
 	}
 
 	/** 
@@ -75,7 +70,7 @@ public class RptExportTemplate
 	*/
 	public final boolean HaveCellInMapData(String fk_mapdata)
 	{
-		for(RptExportTemplateCell cell : getCells())
+		for (RptExportTemplateCell cell : getCells())
 		{
 			if (cell.getFK_MapData().equals(fk_mapdata))
 			{
@@ -95,9 +90,9 @@ public class RptExportTemplate
 
 		RptExportTemplateCell cell = getCells().get(0);
 
-		if(direction == FillDirection.Vertical)
+		if (direction == FillDirection.Vertical)
 		{
-			for(int i = 1;i<getCells().size();i++)
+			for (int i = 1;i < getCells().size();i++)
 			{
 				if (getCells().get(i).getColumnIdx() < cell.getColumnIdx())
 				{
@@ -108,7 +103,7 @@ public class RptExportTemplate
 			return cell;
 		}
 
-		for(int i = 1;i<getCells().size();i++)
+		for (int i = 1;i < getCells().size();i++)
 		{
 			if (getCells().get(i).getRowIdx() < cell.getRowIdx())
 			{
@@ -129,13 +124,10 @@ public class RptExportTemplate
 	{
 		try
 		{
-			//StreamWriter sw = new StreamWriter(fileName, false, Encoding.UTF8);
-			FileOutputStream fos = new FileOutputStream(fileName);
-			OutputStreamWriter sw1 = new OutputStreamWriter(fos,"UTF-8");
-//			try
-//			{
-//				new XmlSerializer(RptExportTemplate.class).Serialize(sw, this);
-//			}
+			try (OutputStreamWriter sw = new OutputStreamWriter(fileName, java.nio.charset.StandardCharsets.UTF_8))
+			{
+				(new XmlSerializer(RptExportTemplate.class)).Serialize(sw, this);
+			}
 
 			return true;
 		}
@@ -152,9 +144,9 @@ public class RptExportTemplate
 	*/
 	public final String GetDtl()
 	{
-		for(RptExportTemplateCell cell : getCells())
+		for (RptExportTemplateCell cell : getCells())
 		{
-			if (!StringHelper.isNullOrWhiteSpace(cell.getDtlKeyOfEn()))
+			if (!tangible.StringHelper.isNullOrWhiteSpace(cell.getDtlKeyOfEn()))
 			{
 				return cell.getFK_DtlMapData();
 			}
@@ -171,46 +163,35 @@ public class RptExportTemplate
 	*/
 	public static RptExportTemplate FromXml(String fileName)
 	{
-		RptExportTemplate t = null;
+		RptExportTemplate t;
 
-		//if(! File.Exists(fileName))
-		if(new File(fileName).exists())
+		if (!(new File(fileName)).isFile())
 		{
-			RptExportTemplate tempVar = new RptExportTemplate();
-			tempVar.setLastModify(new java.util.Date());
-			tempVar.setDirection(FillDirection.Vertical);
-			tempVar.setCells(new java.util.ArrayList<RptExportTemplateCell>());
-			t = tempVar;
+			t = new RptExportTemplate();
+			t.setLastModify(LocalDateTime.now());
+			t.setDirection(FillDirection.Vertical);
+			t.setCells(new ArrayList<RptExportTemplateCell>());
 
 			t.SaveXml(fileName);
 			return t;
 		}
 
-		/*
 		try
 		{
-
-//			using (var sr = new StreamReader(fileName, Encoding.UTF8))
-			StreamReader sr = new StreamReader(fileName, Encoding.UTF8);
-			try
+			try (InputStreamReader sr = new InputStreamReader(fileName, java.nio.charset.StandardCharsets.UTF_8))
 			{
-				Object tempVar2 = XmlSerializer(RptExportTemplate.class).Deserialize(sr);
-				t = new (RptExportTemplate)((tempVar2 instanceof RptExportTemplate) ? tempVar2 : null);
-			}
-			finally
-			{
-				sr.dispose();
+				Object tempVar = (new XmlSerializer(RptExportTemplate.class)).Deserialize(sr);
+				t = tempVar instanceof RptExportTemplate ? (RptExportTemplate)tempVar : null;
 			}
 		}
 		catch (java.lang.Exception e)
 		{
-			RptExportTemplate tempVar3 = new RptExportTemplate();
-			tempVar3.setLastModify(new java.util.Date());
-			tempVar3.setDirection(FillDirection.Vertical);
-			tempVar3.setCells(new java.util.ArrayList<RptExportTemplateCell>());
-			t = tempVar3;
+			t = new RptExportTemplate();
+			t.setLastModify(LocalDateTime.now());
+			t.setDirection(FillDirection.Vertical);
+			t.setCells(new ArrayList<RptExportTemplateCell>());
 		}
-		 */
+
 		return t;
 	}
 }

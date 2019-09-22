@@ -1,23 +1,22 @@
 package BP.Sys;
 
-import BP.DA.Depositary;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
   ToolbarExcel 控制器
- 
 */
 public class ToolbarExcelSln extends EntityMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 界面上的访问控制
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
@@ -30,14 +29,13 @@ public class ToolbarExcelSln extends EntityMyPK
 		}
 		return uac;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 功能按钮.
 	/** 
 	 打开本地标签.
-	 
 	*/
 	public final String getOfficeOpenLab()
 	{
@@ -49,7 +47,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 是否打开本地模版文件.
-	 
 	*/
 	public final boolean getOfficeOpenEnable()
 	{
@@ -61,7 +58,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 打开模板 标签.
-	 
 	*/
 	public final String getOfficeOpenTemplateLab()
 	{
@@ -73,7 +69,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 打开模板.
-	 
 	*/
 	public final boolean getOfficeOpenTemplateEnable()
 	{
@@ -85,7 +80,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 保存 标签.
-	 
 	*/
 	public final String getOfficeSaveLab()
 	{
@@ -97,7 +91,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 保存.是否启用.
-	 
 	*/
 	public final boolean getOfficeSaveEnable()
 	{
@@ -109,7 +102,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 接受修订 标签.
-	 
 	*/
 	public final String getOfficeAcceptLab()
 	{
@@ -121,7 +113,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 接受修订.
-	 
 	*/
 	public final boolean getOfficeAcceptEnable()
 	{
@@ -133,7 +124,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 拒绝修订 标签.
-	 
 	*/
 	public final String getOfficeRefuseLab()
 	{
@@ -145,7 +135,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 拒绝修订.
-	 
 	*/
 	public final boolean getOfficeRefuseEnable()
 	{
@@ -157,7 +146,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 套红按钮 标签.
-	 
 	*/
 	public final String getOfficeOverLab()
 	{
@@ -169,7 +157,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 套红按钮.
-	 
 	*/
 	public final boolean getOfficeOverEnable()
 	{
@@ -181,7 +168,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 查看用户留痕
-	 
 	*/
 	public final boolean getOfficeMarksEnable()
 	{
@@ -193,7 +179,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 打印按钮-标签
-	 
 	*/
 	public final String getOfficePrintLab()
 	{
@@ -205,7 +190,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 打印
-	 
 	*/
 	public final boolean getOfficePrintEnable()
 	{
@@ -217,7 +201,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 签章-标签
-	 
 	*/
 	public final String getOfficeSealLab()
 	{
@@ -229,7 +212,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 签章
-	 
 	*/
 	public final boolean getOfficeSealEnable()
 	{
@@ -244,7 +226,6 @@ public class ToolbarExcelSln extends EntityMyPK
 
 	/** 
 	 插入流程-标签
-	 
 	*/
 	public final String getOfficeInsertFlowLab()
 	{
@@ -256,7 +237,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 插入流程
-	 
 	*/
 	public final boolean getOfficeInsertFlowEnable()
 	{
@@ -269,7 +249,6 @@ public class ToolbarExcelSln extends EntityMyPK
 
 	/** 
 	 是否自动记录节点信息
-	 
 	*/
 	public final boolean getOfficeNodeInfo()
 	{
@@ -281,7 +260,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 是否该节点保存为PDF
-	 
 	*/
 	public final boolean getOfficeReSavePDF()
 	{
@@ -293,7 +271,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 是否进入留痕模式
-	 
 	*/
 	public final boolean getOfficeIsMarks()
 	{
@@ -305,7 +282,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 指定文档模板
-	 
 	*/
 	public final String getOfficeTemplate()
 	{
@@ -317,7 +293,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 是否使用父流程的文档
-	 
 	*/
 	public final boolean getOfficeIsParent()
 	{
@@ -329,7 +304,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 是否启用标签
-	 
 	*/
 	public final String getOfficeDownLab()
 	{
@@ -341,7 +315,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 下载
-	 
 	*/
 	public final boolean getOfficeIsDown()
 	{
@@ -349,7 +322,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 是否自动套红
-	 
 	*/
 	public final boolean getOfficeTHEnable()
 	{
@@ -361,7 +333,6 @@ public class ToolbarExcelSln extends EntityMyPK
 	}
 	/** 
 	 套红模板
-	 
 	*/
 	public final String getOfficeTHTemplate()
 	{
@@ -371,14 +342,13 @@ public class ToolbarExcelSln extends EntityMyPK
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeTHTemplate, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 ToolbarExcel功能控制区域
-	 
 	*/
 	public ToolbarExcelSln()
 	{
@@ -387,24 +357,23 @@ public class ToolbarExcelSln extends EntityMyPK
 	 ToolbarExcel功能控制
 	 
 	 @param no 表单ID
-	 * @throws Exception 
 	*/
-	public ToolbarExcelSln(String mypk) throws Exception
+	public ToolbarExcelSln(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
-	public ToolbarExcelSln(String fk_flow, int fk_node, String fk_frm) throws Exception
+	public ToolbarExcelSln(String fk_flow, int fk_node, String fk_frm)
 	{
 		int i = this.Retrieve(ToolbarExcelSlnAttr.FK_Flow, fk_flow, ToolbarExcelSlnAttr.FK_Node, fk_node, ToolbarExcelSlnAttr.FK_Frm, fk_frm);
 		if (i == 0)
 		{
+			return;
 			throw new RuntimeException("@表单关联信息已被删除。");
 		}
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -425,7 +394,7 @@ public class ToolbarExcelSln extends EntityMyPK
 		map.AddTBString(ToolbarExcelSlnAttr.FK_Flow, null, "流程编号", true, true, 1, 20, 20);
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 公文按钮
 		map.AddTBString(ToolbarExcelAttr.OfficeOpenLab, "打开本地", "打开本地标签", true, false, 0, 50, 10);
 		map.AddBoolean(ToolbarExcelAttr.OfficeOpenEnable, false, "是否启用", true, true);
@@ -468,12 +437,12 @@ public class ToolbarExcelSln extends EntityMyPK
 
 		map.AddBoolean(ToolbarExcelAttr.OfficeTHEnable, false, "是否自动套红", true, true);
 		map.AddTBString(ToolbarExcelAttr.OfficeTHTemplate, "", "自动套红模板", true, false, 0, 200, 10);
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

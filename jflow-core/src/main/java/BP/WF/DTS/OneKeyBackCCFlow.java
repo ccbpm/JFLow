@@ -1,35 +1,29 @@
 package BP.WF.DTS;
 
-import java.io.File;
-
-import BP.DA.DBAccess;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.En.Method;
-import BP.Sys.MapData;
-import BP.Sys.MapDatas;
-import BP.Sys.SFTable;
-import BP.Sys.SFTables;
-import BP.Sys.SrcType;
-import BP.WF.Flow;
-import BP.WF.Flows;
-import BP.WF.Template.FlowSort;
-import BP.WF.Template.SysFormTree;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import java.io.*;
+import java.time.*;
 
 /** 
  Method 的摘要说明
- 
 */
 public class OneKeyBackCCFlow extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public OneKeyBackCCFlow()
 	{
 		this.Title = "一键备份流程与表单。";
 		this.Help = "把流程、表单、组织结构数据都生成xml文档备份到C:\\CCFlowTemplete下面。";
+		this.GroupName = "数据备份/恢复";
+
 	}
 	/** 
 	 设置执行变量
@@ -46,7 +40,6 @@ public class OneKeyBackCCFlow extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -57,160 +50,155 @@ public class OneKeyBackCCFlow extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
-		String path = "C:\\CCFlowTemplete" + new java.util.Date();//.ToString("yy年MM月dd日HH时mm分ss秒");
-		File file = new File(path);
-		if (file.exists() == false)
+		String path = "C:\\CCFlowTemplete" + LocalDateTime.now().toString("yy年MM月dd日HH时mm分ss秒");
+		if ((new File(path)).isDirectory() == false)
 		{
-			file.mkdirs();
+			(new File(path)).mkdirs();
 		}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 1.备份流程类别信息
 		DataSet dsFlows = new DataSet();
 		//WF_FlowSort
 		DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM WF_FlowSort");
 		dt.TableName = "WF_FlowSort";
-		dsFlows.Tables.add(dt);
+		dsFlows.Tables.Add(dt);
 		dsFlows.WriteXml(path + "\\FlowTables.xml");
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份流程类别信息.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 2.备份组织结构.
 		DataSet dsPort = new DataSet();
 		//emps
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Emp");
 		dt.TableName = "Port_Emp";
-		dsPort.Tables.add(dt);
+		dsPort.Tables.Add(dt);
 
 		//Port_Dept
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Dept");
 		dt.TableName = "Port_Dept";
-		dsPort.Tables.add(dt);
+		dsPort.Tables.Add(dt);
 
 		//Port_Station
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Station");
 		dt.TableName = "Port_Station";
-		dsPort.Tables.add(dt);
+		dsPort.Tables.Add(dt);
 
 		//Port_EmpStation
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_DeptEmpStation");
 		dt.TableName = "Port_DeptEmpStation";
-		dsPort.Tables.add(dt);
+		dsPort.Tables.Add(dt);
 
 
 		dsPort.WriteXml(path + "\\PortTables.xml");
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份表单相关数据.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 3.备份系统数据
 		DataSet dsSysTables = new DataSet();
 
 		//Sys_EnumMain
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_EnumMain");
 		dt.TableName = "Sys_EnumMain";
-		dsSysTables.Tables.add(dt);
+		dsSysTables.Tables.Add(dt);
 
 		//Sys_Enum
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_Enum");
 		dt.TableName = "Sys_Enum";
-		dsSysTables.Tables.add(dt);
+		dsSysTables.Tables.Add(dt);
 
 		//Sys_FormTree
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_FormTree");
 		dt.TableName = "Sys_FormTree";
-		dsSysTables.Tables.add(dt);
+		dsSysTables.Tables.Add(dt);
 		dsSysTables.WriteXml(path + "\\SysTables.xml");
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份系统数据.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 4.备份表单相关数据.
 		String pathOfTables = path + "\\SFTables";
-		 file = new File(pathOfTables);
-		 file.mkdirs();
+		(new File(pathOfTables)).mkdirs();
 		SFTables tabs = new SFTables();
 		tabs.RetrieveAll();
-		for (SFTable item : tabs.ToJavaList())
+		for (SFTable item : tabs)
 		{
-			if (item.getNo().contains("."))
+			if (item.No.Contains("."))
 			{
 				continue;
 			}
 
-			if (item.getSrcType() != SrcType.CreateTable)
+			if (item.SrcType != SrcType.CreateTable)
 			{
 				continue;
 			}
 
 			try
 			{
-				String sql = "SELECT * FROM " + item.getNo() + " ";
+				String sql = "SELECT * FROM " + item.No + " ";
 				DataSet ds = new DataSet();
-				ds.Tables.add(BP.DA.DBAccess.RunSQLReturnTable(sql));
-				ds.WriteXml(pathOfTables + "\\" + item.getNo() + ".xml");
+				ds.Tables.Add(BP.DA.DBAccess.RunSQLReturnTable(sql));
+				ds.WriteXml(pathOfTables + "\\" + item.No + ".xml");
 			}
 			catch (java.lang.Exception e)
 			{
 
 			}
 		}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份表单相关数据.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 5.备份流程.
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
-		for (Flow fl : fls.ToJavaList())
+		for (Flow fl : fls)
 		{
 			FlowSort fs = new FlowSort();
-			fs.setNo(fl.getFK_FlowSort());
+			fs.No = fl.getFK_FlowSort();
 			fs.RetrieveFromDBSources();
 
-			String pathDir = path + "\\Flow\\" + fs.getNo() + "." + fs.getName()+"\\";
-			file = new File(pathDir);
-			if (file.exists() == false)
+			String pathDir = path + "\\Flow\\" + fs.No + "." + fs.Name + "\\";
+			if ((new File(pathDir)).isDirectory() == false)
 			{
-				file.mkdirs();
+				(new File(pathDir)).mkdirs();
 			}
 
 			fl.DoExpFlowXmlTemplete(pathDir);
 		}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份流程.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 6.备份表单.
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAllFromDBSource();
-		for (MapData md : mds.ToJavaList())
+		for (MapData md : mds)
 		{
-			if (md.getFK_FrmSort().length() < 2)
+			if (md.FK_FrmSort.Length < 2)
 			{
 				continue;
 			}
 
 			SysFormTree fs = new SysFormTree();
-			fs.setNo( md.getFK_FormTree());
+			fs.No = md.FK_FormTree;
 			fs.RetrieveFromDBSources();
 
-			String pathDir = path + "\\Form\\" + fs.getNo() + "." + fs.getName();
-			file = new File(pathDir);
-			if (file.exists() == false)
+			String pathDir = path + "\\Form\\" + fs.No + "." + fs.Name;
+			if ((new File(pathDir)).isDirectory() == false)
 			{
-				file.mkdirs();
+				(new File(pathDir)).mkdirs();
 			}
-			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
-			ds.WriteXml(pathDir + "\\" + md.getName() + ".xml");
+			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
+			ds.WriteXml(pathDir + "\\" + md.Name + ".xml");
 		}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 备份表单.
 
 		return "执行成功,存放路径:" + path;

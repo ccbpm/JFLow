@@ -1,14 +1,13 @@
 package BP.WF;
 
-import BP.En.Map;
-import BP.Port.Station;
-import BP.Port.Stations;
-import BP.WF.Template.NodeAttr;
-import BP.WF.Template.NodeEmpAttr;
-import BP.WF.Template.NodeEmps;
-import BP.WF.Template.NodeStation;
-import BP.WF.Template.NodeStations;
-import BP.Web.WebUser;
+import BP.En.*;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import BP.WF.Data.*;
+import BP.WF.Template.*;
+import java.util.*;
 
 /** 
  取回任务
@@ -17,17 +16,17 @@ public class GetTask extends BP.En.Entity
 {
 	/** 
 	 我可以处理当前的工作吗？
+	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final boolean Can_I_Do_It() throws Exception
+	public final boolean Can_I_Do_It()
 	{
-		// 判断我是否可以处理当前点数据？ 
+		/* 判断我是否可以处理当前点数据？ */
 		switch (this.getHisDeliveryWay())
 		{
 			case ByPreviousNodeFormEmpsField:
 				NodeEmps ndemps = new NodeEmps(this.getNodeID());
-				if (ndemps.Contains(NodeEmpAttr.FK_Emp, WebUser.getNo()) == false)
+				if (ndemps.Contains(NodeEmpAttr.FK_Emp, WebUser.No) == false)
 				{
 					return false;
 				}
@@ -36,17 +35,17 @@ public class GetTask extends BP.En.Entity
 					return true;
 				}
 			case ByStation:
-				Stations sts = WebUser.getHisStations();
+				Stations sts = WebUser.HisStations;
 				String myStaStrs = "@";
-				for (Station st : sts.ToJavaList())
+				for (Station st : sts)
 				{
-					myStaStrs += "@" + st.getNo();
+					myStaStrs += "@" + st.No;
 				}
 				myStaStrs = myStaStrs + "@";
 
 				NodeStations ndeStas = new NodeStations(this.getNodeID());
 				boolean isHave = false;
-				for (NodeStation ndS : ndeStas.ToJavaList())
+				for (NodeStation ndS : ndeStas)
 				{
 					if (myStaStrs.contains("@" + ndS.getFK_Station() + "@") == true)
 					{
@@ -62,8 +61,12 @@ public class GetTask extends BP.En.Entity
 			default: // 其它的情况则不与判断。
 				// jc.Delete(); // 设置是非法的，直接删除。
 				return false;
+				break;
 		}
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region attrs
 	/** 
 	 投递方式
 	*/
@@ -113,7 +116,7 @@ public class GetTask extends BP.En.Entity
 	}
 	public final String getCheckNodes()
 	{
-		String s= this.GetValStringByKey(GetTaskAttr.CheckNodes);
+		String s = this.GetValStringByKey(GetTaskAttr.CheckNodes);
 		s = s.replace("~", "'");
 		return s;
 	}
@@ -121,25 +124,36 @@ public class GetTask extends BP.En.Entity
 	{
 		this.SetValByKey(GetTaskAttr.CheckNodes, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion attrs
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Node", "取回任务");
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 字段
 		map.AddTBIntPK(NodeAttr.NodeID, 0,"NodeID", true, true);
 		map.AddTBString(NodeAttr.Name, null,"节点名称", true, false, 0, 100, 10);
 		map.AddTBInt(NodeAttr.Step,0, "步骤", true, false);
 		map.AddTBString(NodeAttr.FK_Flow, null, "流程编号", true, false, 0, 10, 10);
-		map.AddTBString(GetTaskAttr.CheckNodes, null, "工作节点s", true, false, 0, 800, 100);
+		map.AddTBString(GetTaskAttr.CheckNodes, null, "工作节点s", true, false, 0, 50, 100);
 
 		map.AddTBInt(NodeAttr.DeliveryWay, 0, "访问规则", true, true);
-		this.set_enMap(map);
-		return this.get_enMap();
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 字段
+
+		this._enMap = map;
+		return this._enMap;
 	}
 	/** 
 	 取回任务
@@ -147,9 +161,11 @@ public class GetTask extends BP.En.Entity
 	public GetTask()
 	{
 	}
-	public GetTask(int nodeId) throws Exception
+	public GetTask(int nodeId)
 	{
 		this.setNodeID(nodeId);
 		this.Retrieve();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion attrs
 }

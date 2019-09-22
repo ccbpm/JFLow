@@ -1,23 +1,18 @@
 package BP.Sys.FrmUI;
 
-import BP.DA.DBAccess;
-import BP.DA.Depositary;
-import BP.En.EnType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
- 外键字段
+ 外部数据源
 */
 public class MapAttrSFSQL extends EntityMyPK
 {
-	 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 文本字段参数属性.
 	/** 
 	 表单ID
 	*/
@@ -51,6 +46,11 @@ public class MapAttrSFSQL extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 控制权限
 	*/
@@ -64,7 +64,7 @@ public class MapAttrSFSQL extends EntityMyPK
 		return uac;
 	}
 	/** 
-	 外键字段
+	 外部数据源
 	*/
 	public MapAttrSFSQL()
 	{
@@ -79,109 +79,109 @@ public class MapAttrSFSQL extends EntityMyPK
 		{
 			return this.get_enMap();
 		}
- 
-		 Map map = new Map("Sys_MapAttr", "外部数据源");
-         map.Java_SetDepositaryOfEntity(Depositary.None);
-         map.Java_SetDepositaryOfMap(Depositary.Application);
-         map.Java_SetEnType(EnType.Sys);
 
-        // #region 基本信息.
-         
-         map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
-         map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
-
-         map.AddTBString(MapAttrAttr.Name, null, "字段中文名", true, false, 0, 200, 20);
-         map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段名", true, true, 1, 200, 20);
-
-         //默认值.
-         map.AddDDLSysEnum(MapAttrAttr.LGType, 4, "类型", true, false);
-         map.AddTBString(MapAttrAttr.UIBindKey, null, "外键SFTable", true, true, 0, 100, 20);
-
-         map.AddTBString(MapAttrAttr.DefVal, null, "默认值", true, false, 0, 300, 20);
-
-         //map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
-         //map.AddTBFloat(MapAttrAttr.UIHeight, 23, "高度", true, true);
- 
-         map.AddBoolean(MapAttrAttr.UIVisible, true, "是否可见", true, false);
-         map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
+		Map map = new Map("Sys_MapAttr", "外部数据源");
+		map.Java_SetDepositaryOfEntity(Depositary.None);
+		map.Java_SetDepositaryOfMap(Depositary.Application);
+		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = MapAttrAttr.FK_MapData;
 
 
-        // map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
-        // map.AddBoolean("IsEnableJS", false, "是否启用JS高级设置？", true, true); //参数字段.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 基本信息.
+		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
+		map.AddDDLSysEnum(MapAttrAttr.LGType, 4, "类型", false, false);
+		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 
-         //#endregion 基本信息.
+		map.AddTBString(MapAttrAttr.Name, null, "字段中文名", true, false, 0, 200, 20, true);
+		map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段名", true, true, 1, 200, 20, true);
 
-        // #region 傻瓜表单。
-         map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT","@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+			//默认值.
+		map.AddTBString(MapAttrAttr.UIBindKey, null, "外键SFTable", true, true, 0, 100, 20);
 
-         //显示的分组.
-         map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组",MapAttrString.SQLOfGroupAttr(), true);
-         //#endregion 傻瓜表单。
-         //文本占单元格数量
-         map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString",
-             "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+		map.AddTBString(MapAttrAttr.DefVal, null, "默认值", true, false, 0, 300, 20);
 
-         //文本跨行
-         map.AddDDLSysEnum(MapAttrAttr.RowSpan, 1, "行数", true, true, "RowSpanAttrString",
-            "@1=跨1行@2=跨2行@3=跨3行");
-         
-        // #region 执行的方法.
-         RefMethod rm = new RefMethod();
-         rm = new RefMethod();
-         rm.Title = "设置联动";
-         rm.ClassMethodName = this.toString() + ".DoActiveDDL()";
-         rm.refMethodType =RefMethodType.RightFrameOpen;
-         map.AddRefMethod(rm);
+			//map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
+			//map.AddTBFloat(MapAttrAttr.UIHeight, 23, "高度", true, true);
 
-         rm = new RefMethod();
-         rm.Title = "设置显示过滤";
-         rm.ClassMethodName = this.toString() + ".DoAutoFullDLL()";
-         rm.refMethodType = RefMethodType.RightFrameOpen;
-         map.AddRefMethod(rm);
+		map.AddBoolean(MapAttrAttr.UIVisible, true, "可见", true, false);
+		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 
-         rm = new RefMethod();
-         rm.Title = "填充其他控件";
-         rm.ClassMethodName = this.toString() + ".DoDDLFullCtrl()";
-         rm.refMethodType= RefMethodType.RightFrameOpen;
-         map.AddRefMethod(rm);
+		   // map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
+		   // map.AddBoolean("IsEnableJS", false, "是否启用JS高级设置？", true, true); //参数字段.
 
-         rm = new RefMethod();
-         rm.Title = "外键表属性";
-         rm.ClassMethodName = this.toString() + ".DoSFTable()";
-         rm.refMethodType = RefMethodType.LinkeWinOpen;
-         rm.GroupName = "高级";
-         map.AddRefMethod(rm);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 基本信息.
 
-         rm = new RefMethod();
-         rm.Title = "事件绑函数";
-         rm.ClassMethodName = this.toString() + ".BindFunction()";
-         rm.refMethodType = RefMethodType.RightFrameOpen;
-         map.AddRefMethod(rm);
-      
-       //  #endregion 执行的方法.
-         
-         
-         
-         
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 傻瓜表单。
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+
+			//文本占单元格数量
+		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+
+			//文本跨行
+		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
+			//显示的分组.
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 傻瓜表单。
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 执行的方法.
+		RefMethod rm = new RefMethod();
+		rm = new RefMethod();
+		rm.Title = "设置联动";
+		rm.ClassMethodName = this.toString() + ".DoActiveDDL()";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "设置显示过滤";
+		rm.ClassMethodName = this.toString() + ".DoAutoFullDLL()";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+
+		rm = new RefMethod();
+		rm.Title = "填充其他控件";
+		rm.ClassMethodName = this.toString() + ".DoDDLFullCtrl2019()";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "外键表属性";
+		rm.ClassMethodName = this.toString() + ".DoSFTable()";
+		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.GroupName = "高级";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "事件绑函数";
+		rm.ClassMethodName = this.toString() + ".BindFunction()";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 执行的方法.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法执行.
 	/** 
-	 旧版本设置
+	 绑定函数
 	 
 	 @return 
 	*/
-	public final String DoOldVer()
+	public final String BindFunction()
 	{
-		return "../../Admin/FoolFormDesigner/EditTable.htm?KeyOfEn=" + this.getKeyOfEn() + "&EnumKey=" + this.getUIBindKey() + "&MyPK=" + this.getMyPK() + "&UIBindKey=" + this.getUIBindKey();
-	}
-	public final String DoOldVerAspx()
-	{
-		return "../../Admin/FoolFormDesigner/EditTable.aspx?KeyOfEn=" + this.getKeyOfEn() + "&EnumKey=" + this.getUIBindKey() + "&MyPK=" + this.getMyPK() + "&UIBindKey=" + this.getUIBindKey();
+		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
 	 外键表属性
@@ -192,14 +192,6 @@ public class MapAttrSFSQL extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/GuideSFTableAttr.htm?FK_SFTable=" + this.getUIBindKey();
 	}
-	 /// <summary>
-    /// 绑定函数
-    /// </summary>
-    /// <returns></returns>
-    public final String BindFunction()
-    {
-        return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
-    }
 	/** 
 	 设置填充其他下拉框
 	 
@@ -207,7 +199,11 @@ public class MapAttrSFSQL extends EntityMyPK
 	*/
 	public final String DoDDLFullCtrl()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn();
+		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=DDLFullCtrl_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
+	}
+	public final String DoDDLFullCtrl2019()
+	{
+		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK());
 	}
 	/** 
 	 设置下拉框显示过滤
@@ -227,39 +223,43 @@ public class MapAttrSFSQL extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
-	
-	/// <summary>
-    /// 删除，把影子字段也要删除.
-    /// </summary>
-	@Override
-    protected  void afterDelete() throws Exception
-    {
-        MapAttr attr = new MapAttr();
-        attr.setMyPK(attr.getFK_MapData()+ "_" + this.getKeyOfEn() + "T");
-        attr.Delete();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 方法执行.
 
-        //删除相对应的rpt表中的字段
-        if (this.getFK_MapData().contains("ND") == true)
-        {
-            String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
-            String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() + "T' OR KeyOfEn='" + this.getKeyOfEn() + "')";
-            DBAccess.RunSQL(sql);
-        }
-
-        //调用frmEditAction, 完成其他的操作.
-        BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
-        super.afterDelete();
-    }
-    
+	/** 
+	 删除，把影子字段也要删除.
+	*/
 	@Override
-	protected  void afterInsertUpdateAction() throws Exception
-    {
-        MapAttr mapAttr = new MapAttr();
-        mapAttr.setMyPK(this.getMyPK());
-        mapAttr.RetrieveFromDBSources();
-        mapAttr.Update();
-        //调用frmEditAction, 完成其他的操作.
-        BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
-        super.afterInsertUpdateAction();
-    }
+	protected void afterDelete()
+	{
+		MapAttr attr = new MapAttr();
+		attr.setMyPK(attr.getFK_MapData() + "_" + this.getKeyOfEn() + "T");
+		attr.Delete();
+
+		//删除相对应的rpt表中的字段
+		if (this.getFK_MapData().contains("ND") == true)
+		{
+			String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+			String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() + "T' OR KeyOfEn='" + this.getKeyOfEn() + "')";
+			DBAccess.RunSQL(sql);
+		}
+
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		super.afterDelete();
+	}
+
+	@Override
+	protected void afterInsertUpdateAction()
+	{
+		MapAttr mapAttr = new MapAttr();
+		mapAttr.setMyPK(this.getMyPK());
+		mapAttr.RetrieveFromDBSources();
+		mapAttr.Update();
+
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+
+		super.afterInsertUpdateAction();
+	}
 }

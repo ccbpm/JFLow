@@ -1,20 +1,21 @@
 package BP.GPM;
 
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  部门人员信息 的摘要说明。
 */
 public class DeptEmp extends EntityMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -44,44 +45,17 @@ public class DeptEmp extends EntityMyPK
 		SetValByKey(DeptEmpAttr.FK_Dept, value);
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
 	}
-	public final String getFK_DutyT()
-	{
-		return this.GetValRefTextByKey(DeptEmpAttr.FK_Duty);
-	}
-	/** 
-	职务
-	*/
-	public final String getFK_Duty()
-	{
-		return this.GetValStringByKey(DeptEmpAttr.FK_Duty);
-	}
-	public final void setFK_Duty(String value)
-	{
-		SetValByKey(DeptEmpAttr.FK_Duty, value);
-		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Duty() + "_" + this.getFK_Emp());
-	}
-	/** 
-	 领导
-	*/
-	public final String getLeader()
-	{
-		return this.GetValStringByKey(DeptEmpAttr.Leader);
-	}
-	public final void setLeader(String value)
-	{
-		SetValByKey(DeptEmpAttr.Leader, value);
-	}
-	/** 
-	 职务类别
-	*/
-	public final int getDutyLevel()
-	{
-		return this.GetValIntByKey(DeptEmpAttr.DutyLevel);
-	}
-	public final void setDutyLevel(int value)
-	{
-		this.SetValByKey(DeptEmpAttr.DutyLevel, value);
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 扩展属性
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 工作部门人员信息
 	*/
@@ -90,11 +64,11 @@ public class DeptEmp extends EntityMyPK
 	}
 	/** 
 	 查询
+	 
 	 @param deptNo 部门编号
 	 @param empNo 人员编号
-	 * @throws Exception 
 	*/
-	public DeptEmp(String deptNo, String empNo) throws Exception
+	public DeptEmp(String deptNo, String empNo)
 	{
 		this.setFK_Dept(deptNo);
 		this.setFK_Emp(empNo);
@@ -114,24 +88,29 @@ public class DeptEmp extends EntityMyPK
 
 		Map map = new Map("Port_DeptEmp");
 		map.setEnDesc("部门人员信息");
+		map.IndexField = DeptEmpAttr.FK_Dept;
 
-		map.AddMyPK(); map.AddDDLEntities(DeptEmpAttr.FK_Emp, null, "操作员", new BP.Port.Emps(), false);
+
+		map.AddMyPK();
 		map.AddTBString(DeptEmpAttr.FK_Dept, null, "部门", false, false, 1, 50, 1);
-		 
+		map.AddDDLEntities(DeptEmpAttr.FK_Emp, null, "操作员", new BP.Port.Emps(), false);
+
+
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 	/** 
 	 更新前做的事情
+	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
-	 
-			return super.beforeUpdateInsertAction();
-		 
+		return super.beforeUpdateInsertAction();
 	}
 }

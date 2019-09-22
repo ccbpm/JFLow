@@ -1,31 +1,14 @@
 package BP.Sys;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
-import BP.DA.DBAccess;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.DA.Paras;
-import BP.En.FieldTypeS;
-import BP.En.QueryObject;
-import BP.En.UIContralType;
-import BP.Tools.Json;
-import BP.Tools.StringHelper;
-import BP.WF.RefObject;
+import BP.En.*;
+import BP.DA.*;
+import LitJson.*;
+import java.util.*;
+import java.io.*;
+import java.nio.file.*;
 
 /** 
  表单API
- 
 */
 public class CCFormAPI
 {
@@ -42,7 +25,7 @@ public class CCFormAPI
 		return "附件(" + num + ")";
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 创建修改字段.
 	/** 
 	 创建通用组件入口
@@ -53,48 +36,26 @@ public class CCFormAPI
 	 @param name 名称
 	 @param x 位置x
 	 @param y 位置y
-	 * @throws Exception 
 	*/
-	public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y) throws Exception
+	public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y)
 	{
-		if (ctrlType.equals("Dtl")){
+		FrmEle fe = null;
+		switch (ctrlType)
+		{
+			case "Dtl":
 				CreateOrSaveDtl(fk_mapdata, no, name, x, y);
-		}else if (ctrlType.equals("AthMulti")){
+				break;
+			case "AthMulti":
 				CreateOrSaveAthMulti(fk_mapdata, no, name, x, y);
-		}else if (ctrlType.equals("AthSingle")){
+				break;
+			case "AthSingle":
 				CreateOrSaveAthSingle(fk_mapdata, no, name, x, y);
-		}else if (ctrlType.equals("AthImg")){
+				break;
+			case "AthImg":
 				CreateOrSaveAthImg(fk_mapdata, no, name, x, y);
-		}else if(ctrlType.equals("Fieldset")){//分组.
-			FrmEle fe = new FrmEle();
-            fe.setMyPK (fk_mapdata + "_" + no);
-            if (fe.RetrieveFromDBSources() != 0)
-                throw new Exception("@创建失败，已经有同名元素[" + no + "]的控件.");
-            fe.setFK_MapData(fk_mapdata);
-            fe.setEleType("Fieldset");
-            fe.setEleName(name);
-            fe.setEleID ( no);
-            fe.setX( x);
-            fe.setY(y);
-            fe.Insert();
-		}else if(ctrlType.equals("iFrame")){
-			MapFrame mapFrame = new MapFrame();
-            mapFrame.setMyPK(fk_mapdata + "_" + no);
-            if (mapFrame.RetrieveFromDBSources() != 0)
-                throw new Exception("@创建失败，已经有同名元素[" + no + "]的控件.");
-            mapFrame.setFK_MapData(fk_mapdata);
-            mapFrame.setEleType("iFrame");
-            mapFrame.setName(name);
-            mapFrame.setFrmID(no);
-            mapFrame.setURL("http://ccflow.org");
-            mapFrame.setX(x);
-            mapFrame.setY(y);
-            mapFrame.setW(400);
-            mapFrame.setH(600);
-            mapFrame.Insert();
-             //分组.
-		}else if (ctrlType.equals("Fieldset")){
-				FrmEle fe = new FrmEle();
+				break;
+			case "Fieldset": //分组.
+				fe = new FrmEle();
 				fe.setMyPK(fk_mapdata + "_" + no);
 				if (fe.RetrieveFromDBSources() != 0)
 				{
@@ -104,33 +65,51 @@ public class CCFormAPI
 				fe.setEleType("Fieldset");
 				fe.setEleName(name);
 				fe.setEleID(no);
-				fe.setTag1("http://ccflow.org");
 				fe.setX(x);
 				fe.setY(y);
-				fe.setW(400);
-                fe.setH(600);
 				fe.Insert();
-		}else if (ctrlType.equals("HandSiganture")){
-			 //检查是否可以创建字段? 
-            MapData md = new MapData(fk_mapdata);
-            md.CheckPTableSaveModel(no);
+				//CreateOrSaveAthImg(fk_mapdata, no, name, x, y);
+				break;
 
-            MapAttr ma = new MapAttr();
-            ma.setFK_MapData(fk_mapdata);
-            ma.setKeyOfEn(no);
-            ma.setName(name);
-            ma.setMyDataType(DataType.AppString);
-            ma.setUIContralType(UIContralType.HandWriting);
-            ma.setX(x);
-            ma.setY( y);
-            //frmID设置字段所属的分组
-            GroupField groupField = new GroupField();
-            groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
-            ma.setGroupID((int) groupField.getOID());
-            ma.Insert();
-		}
-		else
-		{
+			case "iFrame": //框架.
+				MapFrame mapFrame = new MapFrame();
+				mapFrame.setMyPK(fk_mapdata + "_" + no);
+				if (mapFrame.RetrieveFromDBSources() != 0)
+				{
+					throw new RuntimeException("@创建失败，已经有同名元素[" + no + "]的控件.");
+				}
+				mapFrame.setFK_MapData(fk_mapdata);
+				mapFrame.setEleType("iFrame");
+				mapFrame.setName(name);
+				mapFrame.setFrmID(no);
+				mapFrame.setURL("http://ccflow.org");
+				mapFrame.setX(x);
+				mapFrame.setY(y);
+				mapFrame.setW(400);
+				mapFrame.setH(600);
+				mapFrame.Insert();
+				break;
+
+			case "HandSiganture": //签字版
+				//检查是否可以创建字段? 
+				MapData md = new MapData(fk_mapdata);
+				md.CheckPTableSaveModel(no);
+
+				MapAttr ma = new MapAttr();
+				ma.setFK_MapData(fk_mapdata);
+				ma.setKeyOfEn(no);
+				ma.setName(name);
+				ma.setMyDataType(DataType.AppString);
+				ma.setUIContralType(UIContralType.HandWriting);
+				ma.setX(x);
+				ma.setY(y);
+				//frmID设置字段所属的分组
+				GroupField groupField = new GroupField();
+				groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+				ma.setGroupID(groupField.getOID());
+				ma.Insert();
+				break;
+			default:
 				throw new RuntimeException("@没有判断的存储控件:" + ctrlType + ",存储该控件前,需要做判断.");
 		}
 	}
@@ -142,9 +121,8 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x 位置x
 	 @param y 位置y
-	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y) throws Exception
+	public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y)
 	{
 		FrmImgAth ath = new FrmImgAth();
 		ath.setFK_MapData(fk_mapdata);
@@ -154,14 +132,6 @@ public class CCFormAPI
 		ath.setX(x);
 		ath.setY(y);
 		ath.Insert();
-
-		//ath.MyPK = ath.FK_MapData + "_" + ath.NoOfObj;
-		//ath.RetrieveFromDBSources();
-		//ath.UploadType = AttachmentUploadType.Single;
-		//ath.Name = name;
-		//ath.X = x;
-		//ath.Y = y;
-		//ath.Save();
 	}
 	/** 
 	 创建/修改-多附件
@@ -171,9 +141,8 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x 位置x
 	 @param y 位置y
-	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y) throws Exception
+	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y)
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
@@ -195,21 +164,26 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x
 	 @param y
-	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y) throws Exception
+	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y)
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
 		ath.setNoOfObj(no);
 		ath.setMyPK(ath.getFK_MapData() + "_" + ath.getNoOfObj());
 		int i = ath.RetrieveFromDBSources();
+
 		if (i == 0)
 		{
-			//ath.setSaveTo(SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + fk_mapdata + "\\");
-            if (fk_mapdata.contains("ND") == true)
-                 ath.setHisCtrlWay(AthCtrlWay.WorkID); 
-			
+			if (!SystemConfig.getCustomerNo().equals("Factory5_mobile"))
+			{
+				//ath.SaveTo = SystemConfig.PathOfDataUser + "\\UploadFile\\" + fk_mapdata + "\\";
+				ath.setSaveTo("/DataUser/UploadFile/" + fk_mapdata + "/");
+			}
+			if (fk_mapdata.contains("ND") == true)
+			{
+				ath.setHisCtrlWay(AthCtrlWay.WorkID);
+			}
 		}
 
 		ath.setUploadType(AttachmentUploadType.Multi);
@@ -226,26 +200,31 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x
 	 @param y
-	 * @throws Exception 
 	*/
-	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y) throws Exception
+	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y)
 	{
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(dtlNo);
 
 		if (dtl.RetrieveFromDBSources() == 0)
 		{
+			if (dtlName == null)
+			{
+				dtlName = dtlNo;
+			}
+
+			//把他的模式复制过来.
+			MapData md = new MapData(fk_mapdata);
+			dtl.setPTableModel(md.getPTableModel());
+
 			dtl.setW(500);
-			
-		    //把他的模式复制过来.
-            MapData md = new MapData(fk_mapdata);
-            dtl.setPTableModel(md.getPTableModel());            
 		}
 
 		dtl.setX(x);
 		dtl.setY(y);
 		dtl.setName(dtlName);
 		dtl.setFK_MapData(fk_mapdata);
+
 		dtl.Save();
 
 		//初始化他的map.
@@ -253,7 +232,7 @@ public class CCFormAPI
 	}
 	/** 
 	 创建一个外部数据字段
-	
+	 
 	 @param fk_mapdata 表单ID
 	 @param fieldName 字段名
 	 @param fieldDesc 字段中文名
@@ -261,78 +240,86 @@ public class CCFormAPI
 	 @param x 位置
 	 @param y 位置
 	 @param colSpan 跨的列数
-	 * @throws Exception 
 	*/
-	
-	public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y, int colSpan)
-			throws Exception
+
+	public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y)
 	{
-
-		 //检查是否可以创建字段? 
-        MapData md = new MapData(fk_mapdata);
-        if(md.RetrieveFromDBSources() == 1)
-          md.CheckPTableSaveModel(fieldName);
-
-        //外键字段表.
-        SFTable sf = new SFTable(fk_SFTable);
-
-        if (DataType.IsNullOrEmpty(fieldDesc) == true)
-            fieldDesc = sf.getName();
-
-        MapAttr attr = new MapAttr();
-        attr.setMyPK( fk_mapdata + "_" + fieldName);
-        attr.RetrieveFromDBSources();
-
-        //基本属性赋值.
-        attr.setFK_MapData( fk_mapdata);
-        attr.setKeyOfEn(  fieldName);
-        attr.setName( fieldDesc);
-        attr.setMyDataType(  BP.DA.DataType.AppString);
-        attr.setUIContralType(BP.En.UIContralType.DDL);
-        attr.setUIBindKey( fk_SFTable); //绑定信息.
-        attr.setX( x);
-        attr.setY( y);
-        
-        //根据外键表的类型不同，设置它的LGType.
-        switch (sf.getSrcType())
-        {
-            case CreateTable:
-            case TableOrView:
-            case BPClass:
-                attr.setLGType(FieldTypeS.FK);
-                break;
-            case SQL: //是sql模式.
-            default:
-                attr.setLGType(FieldTypeS.Normal);
-                break;
-        }
-        	
-        //frmID设置字段所属的分组
-        GroupField groupField = new GroupField();
-        groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
-        attr.setGroupID((int)groupField.getOID());
-        attr.Save();
-
-        //如果是普通的字段, 这个属于外部数据类型,或者webservices类型.
-        if (attr.getLGType() == FieldTypeS.Normal)
-        {
-            MapAttr attrH = new MapAttr();
-            attrH.Copy(attr);
-            attrH.setKeyOfEn( attr.getKeyOfEn() + "T");
-            attrH.setName(attr.getName());
-            attrH.setUIContralType( BP.En.UIContralType.TB);
-            attrH.setMinLen( 0);
-            attrH.setMaxLen( 60);
-            attrH.setMyDataType(BP.DA.DataType.AppString);
-            attrH.setUIVisible( false);
-            attrH.setUIIsEnable( false);
-            attrH.setMyPK(attrH.getFK_MapData() + "_" + attrH.getKeyOfEn());
-            attrH.Save();
-        }
-        
+		SaveFieldSFTable(fk_mapdata, fieldName, fieldDesc, fk_SFTable, x, y, 1);
 	}
 
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static void SaveFieldSFTable(string fk_mapdata, string fieldName, string fieldDesc, string fk_SFTable, float x, float y, int colSpan = 1)
+	public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y, int colSpan)
+	{
+		//检查是否可以创建字段? 
+		MapData md = new MapData();
+		md.setNo(fk_mapdata);
+		if (md.RetrieveFromDBSources() == 1)
+		{
+			md.CheckPTableSaveModel(fieldName);
+		}
 
+		//外键字段表.
+		SFTable sf = new SFTable(fk_SFTable);
+
+		if (DataType.IsNullOrEmpty(fieldDesc) == true)
+		{
+			fieldDesc = sf.getName();
+		}
+
+		MapAttr attr = new MapAttr();
+		attr.setMyPK(fk_mapdata + "_" + fieldName);
+		attr.RetrieveFromDBSources();
+
+		//基本属性赋值.
+		attr.setFK_MapData(fk_mapdata);
+		attr.setKeyOfEn(fieldName);
+		attr.setName(fieldDesc);
+		attr.setMyDataType(BP.DA.DataType.AppString);
+
+		attr.setUIContralType(BP.En.UIContralType.DDL);
+		attr.setUIBindKey(fk_SFTable); //绑定信息.
+		//   attr.LGType = FieldTypeS.FK;
+		attr.setX(x);
+		attr.setY(y);
+
+		//根据外键表的类型不同，设置它的LGType.
+		switch (sf.getSrcType())
+		{
+			case CreateTable:
+			case TableOrView:
+			case BPClass:
+				attr.setLGType(FieldTypeS.FK);
+				break;
+			case SQL: //是sql模式.
+			default:
+				attr.setLGType(FieldTypeS.Normal);
+				break;
+		}
+
+		//frmID设置字段所属的分组
+		GroupField groupField = new GroupField();
+		groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+		attr.setGroupID(groupField.getOID());
+		attr.Save();
+
+		//如果是普通的字段, 这个属于外部数据类型,或者webservices类型. sql 语句类型.
+		if (attr.getLGType() == FieldTypeS.Normal)
+		{
+			MapAttr attrH = new MapAttr();
+			attrH.Copy(attr);
+			attrH.setKeyOfEn(attr.getKeyOfEn() + "T");
+			attrH.setName(attr.getName());
+			attrH.setUIContralType(BP.En.UIContralType.TB);
+			attrH.setMinLen(0);
+			attrH.setMaxLen(500);
+			attrH.setMyDataType(BP.DA.DataType.AppString);
+			attrH.setUIVisible(false);
+			attrH.setUIIsEnable(false);
+			attrH.setMyPK(attrH.getFK_MapData() + "_" + attrH.getKeyOfEn());
+			attrH.Save();
+		}
+	}
 	/** 
 	 保存枚举字段
 	 
@@ -344,10 +331,16 @@ public class CCFormAPI
 	 @param x 位置x
 	 @param y 位置y
 	 @param colSpan 横跨的行数
-	 * @throws Exception 
 	*/
 
-	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan) throws Exception
+	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y)
+	{
+		SaveFieldEnum(fk_mapdata, fieldName, fieldDesc, enumKey, ctrlType, x, y, 1);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static void SaveFieldEnum(string fk_mapdata, string fieldName, string fieldDesc, string enumKey, UIContralType ctrlType, float x, float y, int colSpan = 1)
+	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan)
 	{
 		MapAttr ma = new MapAttr();
 		ma.setFK_MapData(fk_mapdata);
@@ -373,7 +366,7 @@ public class CCFormAPI
 		{
 			SysEnums ses = new SysEnums(ma.getUIBindKey());
 			int idx = 0;
-			for (SysEnum item : ses.ToJavaList())
+			for (SysEnum item : ses)
 			{
 				idx++;
 				FrmRB rb = new FrmRB();
@@ -392,53 +385,46 @@ public class CCFormAPI
 				rb.Save();
 			}
 		}
-		
 		//frmID设置字段所属的分组
-        GroupField groupField = new GroupField();
-        groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
-        ma.setGroupID((int)groupField.getOID());
-        
+		GroupField groupField = new GroupField();
+		groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+		ma.setGroupID(groupField.getOID());
+
 		ma.Save();
 	}
-	
-	/**
-	 * 创建图片
-	 * @param frmID
-	 * @param keyOfEn
-	 * @param name
-	 * @param x
-	 * @param y
-	 * @throws Exception 
-	 */
-	public static void NewImage(String frmID, String keyOfEn, String name, float x, float y) throws Exception
-    {
-        FrmImg img = new FrmImg();
-        img.setMyPK(keyOfEn);
-        img.setFK_MapData(frmID);
-        img.setName(name);
-        img.setIsEdit(1);
-        img.setHisImgAppType(ImgAppType.Img);
-        img.setX(x);
-        img.setY(y);
 
-        img.Insert();
-
-    }
-	/** 
-	 创建字段
-	 
-	 @param frmID
-	 @param field
-	 @param fieldDesc
-	 @param mydataType
-	 @param x
-	 @param y
-	 @param colSpan
-	 * @throws Exception 
-	*/
-
-	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y, int colSpan) throws Exception
+	public static void NewImage(String frmID, String keyOfEn, String name, float x, float y)
 	{
+		//BP.Sys.CCFormParse.SaveImage(frmID, control, properties, imgPKs, ctrlID);
+		//imgPKs = imgPKs.Replace(ctrlID + "@", "@");
+
+		FrmImg img = new FrmImg();
+		img.setMyPK(keyOfEn);
+		img.setFK_MapData(frmID);
+		img.setName(name);
+		img.setIsEdit(1);
+		img.setHisImgAppType(ImgAppType.Img);
+		img.setX(x);
+		img.setY(y);
+
+		img.Insert();
+
+	}
+
+
+	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y)
+	{
+		NewField(frmID, field, fieldDesc, mydataType, x, y, 1);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static void NewField(string frmID, string field, string fieldDesc, int mydataType, float x, float y, int colSpan = 1)
+	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y, int colSpan)
+	{
+		//检查是否可以创建字段? 
+		MapData md = new MapData(frmID);
+		md.CheckPTableSaveModel(field);
+
 		MapAttr ma = new MapAttr();
 		ma.setFK_MapData(frmID);
 		ma.setKeyOfEn(field);
@@ -446,18 +432,27 @@ public class CCFormAPI
 		ma.setMyDataType(mydataType);
 		ma.setX(x);
 		ma.setY(y);
-		
-		//frmID设置字段所属的分组
-        GroupField groupField = new GroupField();
-        groupField.Retrieve(GroupFieldAttr.FrmID, frmID, GroupFieldAttr.CtrlType, "");
-        ma.setGroupID((int)groupField.getOID());
-        
-		ma.Insert();
 
+		//frmID设置字段所属的分组
+		GroupField groupField = new GroupField();
+		groupField.Retrieve(GroupFieldAttr.FrmID, frmID, GroupFieldAttr.CtrlType, "");
+		ma.setGroupID(groupField.getOID());
+
+		ma.Insert();
 	}
 
-	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan) throws Exception
+	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y)
 	{
+		NewEnumField(fk_mapdata, field, fieldDesc, enumKey, ctrlType, x, y, 1);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static void NewEnumField(string fk_mapdata, string field, string fieldDesc, string enumKey, UIContralType ctrlType, float x, float y, int colSpan = 1)
+	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan)
+	{
+		//检查是否可以创建字段? 
+		MapData md = new MapData(fk_mapdata);
+		md.CheckPTableSaveModel(field);
 
 		MapAttr ma = new MapAttr();
 		ma.setFK_MapData(fk_mapdata);
@@ -470,11 +465,12 @@ public class CCFormAPI
 		ma.setLGType(FieldTypeS.Enum);
 		ma.setUIContralType(ctrlType);
 		ma.setUIBindKey(enumKey);
-		
+
 		//frmID设置字段所属的分组
-        GroupField groupField = new GroupField();
-        groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
-        ma.setGroupID((int)groupField.getOID());
+		GroupField groupField = new GroupField();
+		groupField.Retrieve(GroupFieldAttr.FrmID, fk_mapdata, GroupFieldAttr.CtrlType, "");
+		ma.setGroupID(groupField.getOID());
+
 		ma.Insert();
 
 		if (ma.getUIContralType() != UIContralType.RadioBtn)
@@ -487,7 +483,7 @@ public class CCFormAPI
 
 		SysEnums ses = new SysEnums(ma.getUIBindKey());
 		int idx = 0;
-		for (SysEnum item : ses.ToJavaList())
+		for (SysEnum item : ses)
 		{
 			idx++;
 			FrmRB rb = new FrmRB();
@@ -511,9 +507,8 @@ public class CCFormAPI
 	 @param gKey
 	 @param gName
 	 @return 
-	 * @throws Exception 
 	*/
-	public static String NewCheckGroup(String frmID, String gKey, String gName) throws Exception
+	public static String NewCheckGroup(String frmID, String gKey, String gName)
 	{
 		//string gKey = v1;
 		//string gName = v2;
@@ -525,7 +520,7 @@ public class CCFormAPI
 		i += attrN.Retrieve(MapAttrAttr.FK_MapData, frmID, MapAttrAttr.KeyOfEn, gKey + "_RDT");
 		if (i > 0)
 		{
-			return "error:前缀已经使用：" + gKey + " ， 请确认您是否增加了这个审核分组或者，请您更换其他的前缀。";
+			return "err@前缀已经使用：" + gKey + " ， 请确认您是否增加了这个审核分组或者，请您更换其他的前缀。";
 		}
 
 		GroupField gf = new GroupField();
@@ -542,7 +537,7 @@ public class CCFormAPI
 		attrN.setUIIsEnable(true);
 		attrN.setUIIsLine(true);
 		attrN.setMaxLen(4000);
-		attrN.setGroupID((int)gf.getOID());
+		attrN.setGroupID(gf.getOID());
 		attrN.setUIHeight(23 * 3);
 		attrN.setIdx(1);
 		attrN.Insert();
@@ -557,9 +552,9 @@ public class CCFormAPI
 		attrN.setMinLen(0);
 		attrN.setUIIsEnable(true);
 		attrN.setUIIsLine(false);
-		attrN.setDefVal("WebUser.No");
+		attrN.setDefVal("@WebUser.Name");
 		attrN.setUIIsEnable(false);
-		attrN.setGroupID((int)gf.getOID());
+		attrN.setGroupID(gf.getOID());
 		attrN.setIsSigan(true);
 		attrN.setIdx(2);
 		attrN.Insert();
@@ -574,11 +569,13 @@ public class CCFormAPI
 		attrN.setUIIsLine(false);
 		attrN.setDefVal("@RDT");
 		attrN.setUIIsEnable(false);
-		attrN.setGroupID((int)gf.getOID());
+		attrN.setGroupID(gf.getOID());
 		attrN.setIdx(3);
 		attrN.Insert();
 
-		// 判断是否是节点设置的审核分组，如果是就为节点设置焦点字段。
+		/*
+		 * 判断是否是节点设置的审核分组，如果是就为节点设置焦点字段。
+		 */
 		frmID = frmID.replace("ND", "");
 		int nodeid = 0;
 		try
@@ -592,37 +589,51 @@ public class CCFormAPI
 		}
 		return null;
 
+		/*
+		Node nd = new Node();
+		nd.NodeID = nodeid;
+		if (nd.RetrieveFromDBSources() != 0 && DataType.IsNullOrEmpty(nd.FocusField) == true)
+		{
+		    nd.FocusField = "@" + gKey + "_Note";
+		    nd.Update();
+		}
+		 * */
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 创建修改字段.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 模版操作.
 	/** 
 	 创建一个审核分组
+	 
 	 @param frmID 表单ID
 	 @param groupName 分组名称
 	 @param prx 前缀
-	 * @throws Exception 
 	*/
-	public static void CreateCheckGroup(String frmID, String groupName, String prx) throws Exception
+	public static void CreateCheckGroup(String frmID, String groupName, String prx)
 	{
 		GroupField gf = new GroupField();
 		gf.setLab(groupName);
 		gf.setFrmID(frmID);
-		gf.setFrmID(frmID);
-		
-		   int i=gf.Retrieve(GroupFieldAttr.Lab, groupName, GroupFieldAttr.FrmID, frmID);
-           if (i ==0)
-               gf.Insert();
-             
+		int i = gf.Retrieve(GroupFieldAttr.Lab, groupName, GroupFieldAttr.FrmID, frmID);
+		if (i == 0)
+		{
+			gf.Insert();
+		}
 
 		MapAttr attr = new MapAttr();
 		attr.setFK_MapData(frmID);
 		attr.setKeyOfEn(prx + "_Note");
-		attr.setName("审核意见"); // sta; // this.ToE("CheckNote", "审核意见");
+		attr.setName("审核意见"); // sta;  // this.ToE("CheckNote", "审核意见");
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIContralType(UIContralType.TB);
 		attr.setUIIsEnable(true);
 		attr.setUIIsLine(true);
 		attr.setMaxLen(4000);
-		attr.setColSpan(4);
-		attr.setGroupID((int)gf.getOID());
+		attr.SetValByKey(MapAttrAttr.ColSpan, 4);
+		// attr.ColSpan = 4;
+		attr.setGroupID(gf.getOID());
 		attr.setUIHeight(23 * 3);
 		attr.setIdx(1);
 		attr.Insert();
@@ -639,9 +650,9 @@ public class CCFormAPI
 		attr.setMinLen(0);
 		attr.setUIIsEnable(true);
 		attr.setUIIsLine(false);
-		attr.setDefVal("@WebUser.Name");
+		attr.setDefVal("@WebUser.No");
 		attr.setUIIsEnable(false);
-		attr.setGroupID((int)gf.getOID());
+		attr.setGroupID(gf.getOID());
 		attr.setIsSigan(true);
 		attr.setIdx(2);
 		attr.Insert();
@@ -657,7 +668,7 @@ public class CCFormAPI
 		attr.setUIIsLine(false);
 		attr.setDefVal("@RDT");
 		attr.setUIIsEnable(false);
-		attr.setGroupID((int)gf.getOID());
+		attr.setGroupID(gf.getOID());
 		attr.setIdx(3);
 		attr.Insert();
 		attr.Update("Idx", 3);
@@ -669,9 +680,16 @@ public class CCFormAPI
 	 @param frmName 表单名称
 	 @param frmTreeID 表单类别编号（表单树ID）
 	 @param frmType 表单类型
-	 * @throws Exception 
 	*/
-	public static void CreateFrm(String frmID, String frmName, String frmTreeID, FrmType frmType) throws Exception
+
+	public static void CreateFrm(String frmID, String frmName, String frmTreeID)
+	{
+		CreateFrm(frmID, frmName, frmTreeID, FrmType.FreeFrm);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static void CreateFrm(string frmID, string frmName, string frmTreeID, FrmType frmType = FrmType.FreeFrm)
+	public static void CreateFrm(String frmID, String frmName, String frmTreeID, FrmType frmType)
 	{
 		MapData md = new MapData();
 		md.setNo(frmID);
@@ -685,44 +703,70 @@ public class CCFormAPI
 		md.Insert();
 	}
 	/** 
-	 执行保存
-	 @param fk_mapdata
-	 @param jsonStrOfH5Frm
-	 * @throws Exception 
+	 修复表单.
+	 
+	 @param frmID
 	*/
-	public static void SaveFrm(String fk_mapdata, String jsonStrOfH5Frm) throws Exception
+	public static void RepareCCForm(String frmID)
 	{
-		JSONObject  jd = JSONObject.fromObject(jsonStrOfH5Frm);
-		if (jd.isNullObject())
+		MapAttr attr = new MapAttr();
+		if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, frmID) == false)
 		{
-			throw new RuntimeException("error:表单格式不正确，保存失败。");
+			attr.setFK_MapData(frmID);
+			attr.setKeyOfEn("OID");
+			attr.setName("主键");
+			attr.setMyDataType(BP.DA.DataType.AppInt);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setDefVal("0");
+			attr.setHisEditType(BP.En.EditType.Readonly);
+			attr.Insert();
 		}
 
-		JSONObject form_MapData = jd.getJSONObject("c");
+	}
+	/** 
+	 执行保存
+	 
+	 @param fk_mapdata
+	 @param jsonStrOfH5Frm
+	*/
+	public static void SaveFrm(String fk_mapdata, String jsonStrOfH5Frm)
+	{
+		// BP.DA.DataType.WriteFile("D:\\AAAAAA.JSON", jsonStrOfH5Frm);
+		//return;
+		JsonData jd = JsonMapper.ToObject(jsonStrOfH5Frm);
+		if (jd.getIsObject() == false)
+		{
+			throw new RuntimeException("err@表单格式不正确，保存失败。");
+		}
+
+		JsonData form_MapData = jd.get("c");
 
 		//直接保存表单图信息.
 		MapData mapData = new MapData(fk_mapdata);
-		mapData.setFrmW(Float.parseFloat(form_MapData.optString("width")));
-		mapData.setFrmH(Float.parseFloat(form_MapData.optString("height")));
-		mapData.setDesignerTool("Html5");
+		mapData.setFrmW(Float.parseFloat(form_MapData.get("width").ToJson()));
+		mapData.setFrmH(Float.parseFloat(form_MapData.get("height").ToJson()));
+		//   mapData.DesignerTool = "Html5";
 		mapData.Update();
 
 		//执行保存.
 		SaveFrm(fk_mapdata, jd);
-		
-		//清空缓存.
-		BP.DA.CashEntity.getDCash().clear();
+
+		//一直没有找到设置3列，自动回到四列的情况.
+		DBAccess.RunSQL("UPDATE Sys_MapAttr SET ColSpan=3 WHERE  UIHeight<=23 AND ColSpan=4");
 	}
 	/** 
-	 将表单设计串格式化为Json
+	 将表单设计串格式化为Json.
 	 
 	 @param formData
 	 @return 
-	 * @throws Exception 
 	*/
-	private static void SaveFrm(String fk_mapdata, JSONObject formData) throws Exception
+	private static void SaveFrm(String fk_mapdata, LitJson.JsonData formData)
 	{
-		//#region 求 PKs.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 求 PKs.
 		//标签.
 		String labelPKs = "@";
 		FrmLabs labs = new FrmLabs();
@@ -814,13 +858,14 @@ public class CCFormAPI
 		//附加元素..
 		String eleIDs = "@";
 		FrmEles feles = new FrmEles();
+		;
 		feles.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata);
 		for (FrmEle item : feles.ToJavaList())
 		{
 			eleIDs += item.getEleID() + "@";
 		}
 		eleIDs += "@";
-		
+
 		//框架
 		String frameIDs = "@";
 		MapFrames frames = new MapFrames();
@@ -830,24 +875,22 @@ public class CCFormAPI
 			frameIDs += item.getMyPK() + "@";
 		}
 		frameIDs += "@";
-		//#endregion 求PKs.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 求PKs.
+
 
 		// 保存线.
-		JSONArray form_Lines = formData.getJSONObject("m").getJSONArray("connectors");
+		JsonData form_Lines = formData.get("m")["connectors"];
 		BP.Sys.CCFormParse.SaveLine(fk_mapdata, form_Lines);
 
 		//其他控件，Label,Img,TextBox
-		JSONObject s = formData.getJSONObject("s");
-		JSONArray form_Controls = formData.getJSONObject("s").getJSONArray("figures");
-		
-		
-		
-		if (form_Controls.isArray() == false || form_Controls.size() == 0)
+		JsonData form_Controls = formData.get("s")["figures"];
+		if (form_Controls.getIsArray() == false || form_Controls.size() == 0)
 		{
-			//画布里没有任何东西, 清楚所有的元素.
+			/*画布里没有任何东西, 清楚所有的元素.*/
 			String delSqls = "";
-			delSqls += "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapdata + "' AND KeyOfEn NOT IN ('OID')";
-			delSqls += "@DELETE FROM Sys_FrmRB WHERE FK_MapData='" + fk_mapdata + "'" ; //枚举值的相关rb.
+			delSqls += "@DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapdata + "' AND KeyOfEn NOT IN ('OID')";
+			delSqls += "@DELETE FROM Sys_FrmRB WHERE FK_MapData='" + fk_mapdata + "'"; //枚举值的相关rb.
 			delSqls += "@DELETE FROM Sys_MapDtl WHERE FK_MapData='" + fk_mapdata + "'";
 			delSqls += "@DELETE FROM Sys_FrmBtn WHERE FK_MapData='" + fk_mapdata + "'";
 			delSqls += "@DELETE FROM Sys_FrmLine WHERE FK_MapData='" + fk_mapdata + "'";
@@ -858,7 +901,7 @@ public class CCFormAPI
 			delSqls += "@DELETE FROM Sys_FrmEle WHERE FK_MapData='" + fk_mapdata + "'";
 			delSqls += "@DELETE FROM Sys_FrmImgAth WHERE FK_MapData='" + fk_mapdata + "'";
 			delSqls += "@DELETE FROM Sys_MapFrame WHERE FK_MapData='" + fk_mapdata + "'";
-			
+
 			BP.DA.DBAccess.RunSQLs(delSqls);
 			return;
 		}
@@ -866,40 +909,49 @@ public class CCFormAPI
 		String flowEle = "";
 		String sqls = "";
 
-	    String nodeIDStr = fk_mapdata.replace("ND", "");
-	    int nodeID = 0;
-	    if (BP.DA.DataType.IsNumStr(nodeIDStr) == true)
-	    {
-		    nodeID = Integer.parseInt(nodeIDStr);
-	    }
-	    
-	    String flowCtrls="";
-		
+		String nodeIDStr = fk_mapdata.replace("ND", "");
+		int nodeID = 0;
+		if (BP.DA.DataType.IsNumStr(nodeIDStr) == true)
+		{
+			nodeID = Integer.parseInt(nodeIDStr);
+		}
+
+		//流程控件.
+		String flowCtrls = "";
+
 		//循环元素.
 		for (int idx = 0, jControl = form_Controls.size(); idx < jControl; idx++)
 		{
-			JSONObject control = (JSONObject) form_Controls.getJSONObject(idx); //不存在控件类型不进行处理，继续循环.
-			if (control == null || control.optString("CCForm_Shape") == null)
+			JsonData control = form_Controls.get(idx); //不存在控件类型不进行处理，继续循环.
+			if (control == null || control.get("CCForm_Shape") == null)
 			{
 				continue;
 			}
 
-			String shape = control.optString("CCForm_Shape");
-			if (control.optString("CCForm_MyPK") == null)
+			String shape = control.get("CCForm_Shape").toString();
+
+			if (control.getKeys().contains("CCForm_MyPK") == false)
 			{
 				continue;
 			}
 
-			String ctrlID = control.optString("CCForm_MyPK");
-
-			JSONArray properties = control.getJSONArray("properties"); //属性集合.
-
-			//#region 装饰类控件.
-			if (shape.equals("Label")) //保存标签.
+			if (control.get("CCForm_MyPK") == null)
 			{
+				continue;
+			}
+
+			String ctrlID = control.get("CCForm_MyPK").toString();
+
+			JsonData properties = control.get("properties"); //属性集合.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 装饰类控件.
+			switch (shape)
+			{
+				case "Label": //保存标签.
 					if (ctrlID.indexOf("RB_") == 0)
 					{
-						//让其向下运行.
+						/*让其向下运行.*/
 						shape = "RadioButtonItem";
 					}
 					else
@@ -908,45 +960,40 @@ public class CCFormAPI
 						labelPKs = labelPKs.replace(ctrlID + "@", "@");
 					}
 					continue;
-			}
-			else if (shape.equals("Button")) //保存Button.
-			{
+				case "Button": //保存Button.
 					BP.Sys.CCFormParse.SaveButton(fk_mapdata, control, properties, btnsPKs, ctrlID);
 					btnsPKs = btnsPKs.replace(ctrlID + "@", "@");
 					continue;
-			}
-			else if (shape.equals("HyperLink")) //保存link.
-			{
+				case "HyperLink": //保存link.
 					BP.Sys.CCFormParse.SaveHyperLink(fk_mapdata, control, properties, linkPKs, ctrlID);
 					linkPKs = linkPKs.replace(ctrlID + "@", "@");
 					continue;
-			}
-			else if (shape.equals("Image")) //保存Img.
-			{
+				case "Image": //保存Img.
 					BP.Sys.CCFormParse.SaveImage(fk_mapdata, control, properties, imgPKs, ctrlID);
 					imgPKs = imgPKs.replace(ctrlID + "@", "@");
 					continue;
+				default:
+					break;
 			}
-			else
-			{
-			}
-			//#endregion 装饰类控件.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#endregion 装饰类控件.
 
-			//#region 数据类控件.
-			if (shape.contains("TextBox") == true || shape.contains("DropDownList") == true)
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 数据类控件.
+			if (shape.contains("TextBox") == true || shape.contains("DropDownList") == true || FrmEle.HandSiganture.equals(shape))
 			{
 				BP.Sys.CCFormParse.SaveMapAttr(fk_mapdata, ctrlID, shape, control, properties, attrPKs);
-				attrPKs = attrPKs.replace("@"+ctrlID + "@", "@");
+				attrPKs = attrPKs.replace("@" + ctrlID + "@", "@");
 				continue;
 			}
 
 			//求出公共的属性-坐标.
-			JSONObject style = control.getJSONObject("style");
-			JSONArray vector = style.getJSONArray("gradientBounds");
-			float x = Float.parseFloat(String.valueOf(vector.get(0)));
-			float y = Float.parseFloat(String.valueOf(vector.get(1)));
-			float maxX = Float.parseFloat(String.valueOf(vector.get(2)));
-			float maxY = Float.parseFloat(String.valueOf(vector.get(3)));
+			JsonData style = control.get("style");
+			JsonData vector = style.get("gradientBounds");
+			float x = Float.parseFloat(vector.get(0).ToJson());
+			float y = Float.parseFloat(vector.get(1).ToJson());
+			float maxX = Float.parseFloat(vector.get(2).ToJson());
+			float maxY = Float.parseFloat(vector.get(3).ToJson());
 			float width = maxX - x;
 			float height = maxY - y;
 
@@ -954,52 +1001,46 @@ public class CCFormAPI
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveDtl(fk_mapdata, ctrlID, x, y, height, width);
-				dtlPKs = dtlPKs.replace("@"+ctrlID + "@", "@");
+				dtlPKs = dtlPKs.replace("@" + ctrlID + "@", "@");
 				continue;
 			}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 数据类控件.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 附件.
 			if (shape.equals("AthMulti") || shape.equals("AthSingle"))
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveAthMulti(fk_mapdata, ctrlID, x, y, height, width);
-				athMultis = athMultis.replace("@"+ctrlID + "@", "@");
+				athMultis = athMultis.replace("@" + ctrlID + "@", "@");
 				continue;
 			}
 			if (shape.equals("AthImg"))
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveAthImg(fk_mapdata, ctrlID, x, y, height, width);
-				athImgs = athImgs.replace("@"+ctrlID + "@", "@");
+				athImgs = athImgs.replace("@" + ctrlID + "@", "@");
 				continue;
 			}
 
-			if (shape.equals("Fieldset"))
+			//存储到FrmEle 类的控件，都可以使用该方法保存.
+			if (shape.equals("Fieldset") || FrmEle.Fieldset.equals(shape))
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveFrmEle(fk_mapdata, shape, ctrlID, x, y, height, width);
-				eleIDs = eleIDs.replace("@"+ctrlID + "@", "@");
+				eleIDs = eleIDs.replace("@" + ctrlID + "@", "@");
 				continue;
 			}
 
-			/*if (shape.equals("iFrame"))
-			{
-				//记录已经存在的ID， 需要当时保存.
-				BP.Sys.CCFormParse.SaveFrmEle(fk_mapdata, shape, ctrlID, x, y, height, width);
-				eleIDs = eleIDs.replace(ctrlID + "@", "@");
-				continue;
-			}*/
-			
 			if (shape.equals("iFrame"))
 			{
 				//记录已经存在的ID， 需要当时保存.
 				BP.Sys.CCFormParse.SaveMapFrame(fk_mapdata, shape, ctrlID, x, y, height, width);
-				frameIDs = frameIDs.replace("@"+ctrlID + "@", "@");
+				frameIDs = frameIDs.replace("@" + ctrlID + "@", "@");
 				continue;
 			}
+
 
 			if (shape.equals("RadioButton"))
 			{
@@ -1020,7 +1061,7 @@ public class CCFormAPI
 					continue;
 				}
 
-				attrPKs = attrPKs.replace("@"+str + "@", "@");
+				attrPKs = attrPKs.replace("@" + str + "@", "@");
 				continue;
 			}
 
@@ -1028,115 +1069,109 @@ public class CCFormAPI
 			{
 				continue;
 			}
-			//#endregion 附件.
-			
-			
-			// #region 处理流程组件, 如果已经传来节点ID,说明是节点表单.
-             //流程类的组件,都记录下来放入到Sys_MapData.FlowCtrls 字段里. 记录控件的位置，原来记录到节点里的都要取消掉.
-             //@zhoupeng
-             if (shape.equals("FlowChart") 
-            		 || shape.equals("FrmCheck")
-            		 || shape.equals("SubFlowDtl")
-            		 || shape.equals("ThreadDtl"))
-             {
-                 if (flowCtrls.contains(shape) == false)
-                     flowCtrls += "@Ctrl=" + shape + ",X=" + x + ",Y=" + y + ",H=" + height + ",W=" + width;
-             }
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#endregion 附件.
 
-			
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 处理流程组件, 如果已经传来节点ID,说明是节点表单.
+			//流程类的组件,都记录下来放入到Sys_MapData.FlowCtrls 字段里. 记录控件的位置，原来记录到节点里的都要取消掉.
+			//@zhoupeng
+			if (shape.equals("FlowChart") || shape.equals("FrmCheck") || shape.equals("SubFlowDtl") || shape.equals("ThreadDtl"))
+			{
+				if (flowCtrls.contains(shape) == false)
+				{
+					flowCtrls += "@Ctrl=" + shape + ",X=" + x + ",Y=" + y + ",H=" + height + ",W=" + width;
+				}
+			}
+
 			if (nodeID != 0)
 			{
-				sqls="";
-				if (shape.equals("FlowChart"))
+				sqls = "";
+				switch (shape)
 				{
+					case "FlowChart":
 						if (DBAccess.RunSQLReturnString("SELECT FrmTrackSta FROM WF_Node WHERE NodeID=" + nodeID).equals("0"))
 						{
-							//状态是 0 就把他启用起来. 
+							/*状态是 0 就把他启用起来. */
 							sqls += "@UPDATE WF_Node SET FrmTrackSta=1,FrmTrack_X=" + x + ",FrmTrack_Y=" + y + ",FrmTrack_H=" + height + ", FrmTrack_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						else
 						{
-							// 仅仅更新位置与高度。
+							/* 仅仅更新位置与高度。*/
 							sqls += "@UPDATE WF_Node SET FrmTrack_X=" + x + ",FrmTrack_Y=" + y + ",FrmTrack_H=" + height + ", FrmTrack_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						flowEle += shape + ",";
 						continue;
-				}
-				else if (shape.equals("FrmCheck"))
-				{
+					case "FrmCheck":
 						if (DBAccess.RunSQLReturnString("SELECT FWCSta FROM WF_Node WHERE NodeID=" + nodeID).equals("0"))
 						{
-							//状态是 0 就把他启用起来. 
+							/*状态是 0 就把他启用起来. */
 							sqls += "@UPDATE WF_Node SET FWCSta=1,FWC_X=" + x + ",FWC_Y=" + y + ",FWC_H=" + height + ", FWC_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						else
 						{
-							// 仅仅更新位置与高度。
+							/* 仅仅更新位置与高度。*/
 							sqls += "@UPDATE WF_Node SET FWC_X=" + x + ",FWC_Y=" + y + ",FWC_H=" + height + ", FWC_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						flowEle += shape + ",";
 						continue;
-				}
-				else if (shape.equals("SubFlowDtl")) //子流程
-				{
+					case "SubFlowDtl": //子流程
 						if (DBAccess.RunSQLReturnString("SELECT SFSta FROM WF_Node WHERE NodeID=" + nodeID).equals("0"))
 						{
-							//状态是 0 就把他启用起来. 
+							/*状态是 0 就把他启用起来. */
 							sqls += "@UPDATE WF_Node SET SFSta=1,SF_X=" + x + ",SF_Y=" + y + ",SF_H=" + height + ", SF_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						else
 						{
-							// 仅仅更新位置与高度。
+							/* 仅仅更新位置与高度。*/
 							sqls += "@UPDATE WF_Node SET SF_X=" + x + ",SF_Y=" + y + ",SF_H=" + height + ", SF_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						flowEle += shape + ",";
 						continue;
-				}
-				else if (shape.equals("ThreadDtl")) //子线程
-				{
+					case "ThreadDtl": //子线程
 						if (DBAccess.RunSQLReturnString("SELECT FrmThreadSta FROM WF_Node WHERE NodeID=" + nodeID).equals("0"))
 						{
-							//状态是 0 就把他启用起来. 
+							/*状态是 0 就把他启用起来. */
 							sqls += "@UPDATE WF_Node SET FrmThreadSta=1,FrmThread_X=" + x + ",FrmThread_Y=" + y + ",FrmThread_H=" + height + ",FrmThread_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						else
 						{
-							// 仅仅更新位置与高度。
+							/* 仅仅更新位置与高度。*/
 							sqls += "@UPDATE WF_Node SET FrmThread_X=" + x + ",FrmThread_Y=" + y + ",FrmThread_H=" + height + ", FrmThread_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						flowEle += shape + ",";
 						continue;
-				}
-				else if (shape.equals("FrmTransferCustom")) //流转自定义
-				{
+					case "FrmTransferCustom": //流转自定义
 						if (DBAccess.RunSQLReturnString("SELECT FTCSta FROM WF_Node WHERE NodeID=" + nodeID).equals("0"))
 						{
-							//状态是 0 就把他启用起来. 
+							/*状态是 0 就把他启用起来. */
 							sqls += "@UPDATE WF_Node SET FTCSta=1,FTC_X=" + x + ",FTC_Y=" + y + ",FTC_H=" + height + ",FTC_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						else
 						{
-							// 仅仅更新位置与高度。
+							/* 仅仅更新位置与高度。*/
 							sqls += "@UPDATE WF_Node SET FTC_X=" + x + ",FTC_Y=" + y + ",FrmThread_H=" + height + ",FTC_W=" + width + " WHERE NodeID=" + nodeIDStr;
 						}
 						flowEle += shape + ",";
 						continue;
-				}
-				else
-				{
+					default:
+						break;
 				}
 			}
-			
-			 if (shape.equals("FlowChart") || shape.equals("FrmCheck") || shape.equals("SubFlowDtl") || shape.equals("ThreadDtl"))
-                 continue;
-			 
-			
-			throw new RuntimeException("@没有判断的类型:shape = " + shape);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#endregion 处理流程组件.
+
+			if (shape.equals("FlowChart") || shape.equals("FrmCheck") || shape.equals("SubFlowDtl") || shape.equals("ThreadDtl"))
+			{
+				continue;
+			}
+
+			throw new RuntimeException("@没有判断的ccform保存控件的类型:shape = " + shape);
 		}
 
-		 //更新组件.
-        DBAccess.RunSQL("UPDATE Sys_MapData SET FlowCtrls='"+flowCtrls+"' WHERE No='"+fk_mapdata+"'");
-		///#region 处理节点表单。
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 处理节点表单。
 		if (nodeID != 0)
 		{
 			//轨迹组件.
@@ -1171,19 +1206,24 @@ public class CCFormAPI
 		}
 
 		//执行要更新的sql.
-		if ( ! sqls.equals(""))
+		if (!sqls.equals(""))
 		{
 			BP.DA.DBAccess.RunSQLs(sqls);
 			sqls = "";
 		}
-		///#endregion 处理节点表单。
-		
-		//#region 删除没有替换下来的 PKs, 说明这些都已经被删除了.
+
+		//更新组件. @zhoupeng.
+		DBAccess.RunSQL("UPDATE Sys_MapData SET FlowCtrls='" + flowCtrls + "' WHERE No='" + fk_mapdata + "'");
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 处理节点表单。
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 删除没有替换下来的 PKs, 说明这些都已经被删除了.
 		String[] pks = labelPKs.split("[@]", -1);
 		sqls = "";
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
@@ -1193,7 +1233,7 @@ public class CCFormAPI
 		pks = btnsPKs.split("[@]", -1);
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
@@ -1203,7 +1243,7 @@ public class CCFormAPI
 		pks = linkPKs.split("[@]", -1);
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
@@ -1214,7 +1254,7 @@ public class CCFormAPI
 		pks = imgPKs.split("[@]", -1);
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
@@ -1225,7 +1265,7 @@ public class CCFormAPI
 		pks = attrPKs.split("[@]", -1);
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
@@ -1242,25 +1282,25 @@ public class CCFormAPI
 		pks = dtlPKs.split("[@]", -1);
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
-			
-			 //调用删除逻辑.
-            MapDtl dtl = new MapDtl();
-            dtl.setNo(pk);
-            dtl.RetrieveFromDBSources();
-            dtl.Delete();
 
-			//sqls += "@DELETE FROM Sys_MapDtl WHERE No='" + pk + "'";
+			//调用删除逻辑.
+			MapDtl dtl = new MapDtl();
+			dtl.setNo(pk);
+			dtl.RetrieveFromDBSources();
+			dtl.Delete();
+
+			// sqls += "@DELETE FROM Sys_MapDtl WHERE No='" + pk + "'";
 		}
 
 
 		pks = athMultis.split("[@]", -1);
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
@@ -1271,7 +1311,7 @@ public class CCFormAPI
 		pks = athImgs.split("[@]", -1);
 		for (String pk : pks)
 		{
-			if (StringHelper.isNullOrEmpty(pk))
+			if (DataType.IsNullOrEmpty(pk))
 			{
 				continue;
 			}
@@ -1279,15 +1319,74 @@ public class CCFormAPI
 			sqls += "@DELETE FROM Sys_FrmImgAth WHERE CtrlID='" + pk + "' AND FK_MapData='" + fk_mapdata + "'";
 		}
 
-
 		//删除这些，没有替换下来的数据.
 		BP.DA.DBAccess.RunSQLs(sqls);
-		
-		//更新组件 
-        DBAccess.RunSQL("UPDATE Sys_MapData SET FlowCtrls='"+flowCtrls+"' WHERE No='"+fk_mapdata+"'");
-        
-		//#endregion 删除没有替换下来的 PKs, 说明这些都已经被删除了.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 删除没有替换下来的 PKs, 说明这些都已经被删除了.
 
+		//清空缓存
+		MapData mymd = new MapData(fk_mapdata);
+		mymd.RepairMap();
+		BP.Sys.SystemConfig.DoClearCash();
+	}
+
+	/** 
+	 复制表单
+	 
+	 @param srcFrmID 源表单ID
+	 @param copyFrmID copy到表单ID
+	 @param copyFrmName 表单名称
+	*/
+	public static String CopyFrm(String srcFrmID, String copyFrmID, String copyFrmName, String fk_frmTree)
+	{
+		MapData mymd = new MapData();
+		mymd.setNo(copyFrmID);
+		if (mymd.RetrieveFromDBSources() == 1)
+		{
+			throw new RuntimeException("@目标表单ID:" + copyFrmID + "已经存在，位于:" + mymd.getFK_FormTreeText() + "目录下.");
+		}
+
+		//获得源文件信息.
+		DataSet ds = GenerHisDataSet(srcFrmID);
+
+		//导入表单文件.
+		ImpFrmTemplate(copyFrmID, ds, false);
+
+		//复制模版文件.
+		MapData md = new MapData(copyFrmID);
+
+		if (md.getHisFrmType() == FrmType.ExcelFrm)
+		{
+			/*如果是excel表单，那就需要复制excel文件.*/
+			String srcFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + srcFrmID + ".xls";
+			String toFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + copyFrmID + ".xls";
+			if ((new File(srcFile)).isFile() == true)
+			{
+				if ((new File(toFile)).isFile() == false)
+				{
+					Files.copy(Paths.get(srcFile), Paths.get(toFile), StandardCopyOption.COPY_ATTRIBUTES);
+				}
+			}
+
+			srcFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + srcFrmID + ".xlsx";
+			toFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + copyFrmID + ".xlsx";
+			if ((new File(srcFile)).isFile() == true)
+			{
+				if ((new File(toFile)).isFile() == false)
+				{
+					Files.copy(Paths.get(srcFile), Paths.get(toFile), StandardCopyOption.COPY_ATTRIBUTES);
+				}
+			}
+		}
+
+		md.Retrieve();
+
+		md.setFK_FormTree(fk_frmTree);
+		md.setFK_FrmSort(fk_frmTree);
+		md.setName(copyFrmName);
+		md.Update();
+
+		return "表单复制成功,您需要重新登录，或者刷新才能看到。";
 	}
 	/** 
 	 导入表单API
@@ -1295,13 +1394,222 @@ public class CCFormAPI
 	 @param toFrmID 要导入的表单ID
 	 @param fromds 数据源
 	 @param isSetReadonly 是否把空间设置只读？
-	 * @throws Exception 
 	*/
-	public static void ImpFrmTemplate(String toFrmID, DataSet fromds) throws Exception
+	public static void ImpFrmTemplate(String toFrmID, DataSet fromds, boolean isSetReadonly)
 	{
 		MapData.ImpMapData(toFrmID, fromds);
 	}
+	/** 
+	 修改frm的事件
 	 
+	 @param frmID
+	*/
+	public static void AfterFrmEditAction(String frmID)
+	{
+		BP.DA.CashFrmTemplate.Remove(frmID);
+		MapData mapdata = new MapData(frmID);
+		mapdata.CleanObject();
+		return;
+	}
+	/** 
+	 获得表单信息.
+	 
+	 @param frmID 表单
+	 @return 
+	*/
+
+	public static System.Data.DataSet GenerHisDataSet(String frmID)
+	{
+		return GenerHisDataSet(frmID, null);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static System.Data.DataSet GenerHisDataSet(string frmID, string frmName = null)
+	public static System.Data.DataSet GenerHisDataSet(String frmID, String frmName)
+	{
+		DataSet dsFrm = BP.DA.CashFrmTemplate.GetFrmDataSetModel(frmID);
+		if (dsFrm != null)
+		{
+			return dsFrm;
+		}
+
+		DataSet ds = new DataSet();
+
+		//创建实体对象.
+		MapData md = new MapData(frmID);
+
+		if (DataType.IsNullOrEmpty(md.getName()) == true && frmName != null)
+		{
+			md.setName(frmName);
+		}
+
+		//加入主表信息.
+		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
+		ds.Tables.Add(Sys_MapData);
+
+		//加入分组表.
+		DataTable Sys_GroupField = md.getGroupFields().ToDataTableField("Sys_GroupField");
+		ds.Tables.Add(Sys_GroupField);
+
+		//加入明细表.
+		DataTable Sys_MapDtl = md.getOrigMapDtls().ToDataTableField("Sys_MapDtl");
+		ds.Tables.Add(Sys_MapDtl);
+
+		//加入枚举表.
+		DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
+		ds.Tables.Add(Sys_Menu);
+
+		//加入外键属性.
+		DataTable Sys_MapAttr = md.getMapAttrs().ToDataTableField("Sys_MapAttr");
+		ds.Tables.Add(Sys_MapAttr);
+
+		//加入扩展属性.
+		DataTable Sys_MapExt = md.getMapExts().ToDataTableField("Sys_MapExt");
+		ds.Tables.Add(Sys_MapExt);
+
+		//线.
+		DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
+		ds.Tables.Add(Sys_FrmLine);
+
+		//link.
+		DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
+		ds.Tables.Add(Sys_FrmLink);
+
+		//btn.
+		DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
+		ds.Tables.Add(Sys_FrmBtn);
+
+		//Sys_FrmLab.
+		DataTable Sys_FrmLab = md.getFrmLabs().ToDataTableField("Sys_FrmLab");
+		ds.Tables.Add(Sys_FrmLab);
+
+		//img.
+		DataTable Sys_FrmImg = md.getFrmImgs().ToDataTableField("Sys_FrmImg");
+		ds.Tables.Add(Sys_FrmImg);
+
+		//Sys_FrmRB.
+		DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
+		ds.Tables.Add(Sys_FrmRB);
+
+		//Sys_FrmEle.
+		DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
+		ds.Tables.Add(Sys_FrmEle);
+
+		//Sys_MapFrame.
+		DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
+		ds.Tables.Add(Sys_MapFrame);
+
+		//Sys_FrmAttachment.
+		DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
+		ds.Tables.Add(Sys_FrmAttachment);
+
+		//FrmImgAths. 上传图片附件.
+		DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
+		ds.Tables.Add(Sys_FrmImgAth);
+
+		//FrmImgAthDBs 上传图片信息
+		DataTable Sys_FrmImgAthDB = md.getFrmImgAthDB().ToDataTableField("Sys_FrmImgAthDB");
+		ds.Tables.Add(Sys_FrmImgAthDB);
+
+		//放入缓存.
+		BP.DA.CashFrmTemplate.Put(frmID, ds);
+
+		return ds;
+	}
+	public static System.Data.DataSet GenerHisDataSet_AllEleInfo(String fk_mapdata)
+	{
+
+		MapData md = new MapData(fk_mapdata);
+
+		//求出 frmIDs 
+		String frmIDs = "'" + fk_mapdata + "'";
+		MapDtls mdtls = new MapDtls(md.getNo());
+		for (MapDtl item : mdtls)
+		{
+			frmIDs += ",'" + item.getNo() + "'";
+		}
+
+		DataSet ds = new DataSet();
+
+		//加入主表信息.
+		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
+		ds.Tables.Add(Sys_MapData);
+
+		//加入分组表.
+		GroupFields gfs = new GroupFields();
+		gfs.RetrieveIn(GroupFieldAttr.FrmID, frmIDs);
+		DataTable Sys_GroupField = gfs.ToDataTableField("Sys_GroupField");
+		ds.Tables.Add(Sys_GroupField);
+
+		//加入明细表.
+		DataTable Sys_MapDtl = md.getOrigMapDtls().ToDataTableField("Sys_MapDtl");
+		ds.Tables.Add(Sys_MapDtl);
+
+		//加入枚举表.
+		SysEnums ses = new SysEnums();
+		ses.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + frmIDs + ") ");
+		DataTable Sys_Menu = ses.ToDataTableField("Sys_Enum");
+		ds.Tables.Add(Sys_Menu);
+
+		//加入字段属性.
+		MapAttrs attrs = new MapAttrs();
+		attrs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
+		DataTable Sys_MapAttr = attrs.ToDataTableField("Sys_MapAttr");
+		ds.Tables.Add(Sys_MapAttr);
+
+		//加入扩展属性.
+		MapExts exts = new MapExts();
+		exts.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
+		DataTable Sys_MapExt = exts.ToDataTableField("Sys_MapExt");
+		ds.Tables.Add(Sys_MapExt);
+
+		//线.
+		DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
+		ds.Tables.Add(Sys_FrmLine);
+
+		//link.
+		DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
+		ds.Tables.Add(Sys_FrmLink);
+
+		//btn.
+		DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
+		ds.Tables.Add(Sys_FrmBtn);
+
+		//Sys_FrmLab.
+		FrmLabs frmlabs = new FrmLabs();
+		frmlabs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
+		DataTable Sys_FrmLab = frmlabs.ToDataTableField("Sys_FrmLab");
+		ds.Tables.Add(Sys_FrmLab);
+
+		//img.
+		//Sys_FrmLab.
+		FrmImgs frmImgs = new FrmImgs();
+		frmImgs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
+		// DataTable Sys_FrmImg = md.FrmImgs.ToDataTableField("Sys_FrmImg");
+		ds.Tables.Add(frmImgs.ToDataTableField("Sys_FrmImg"));
+
+		//Sys_FrmRB.
+		DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
+		ds.Tables.Add(Sys_FrmRB);
+
+		//Sys_FrmEle.
+		DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
+		ds.Tables.Add(Sys_FrmEle);
+
+		//Sys_MapFrame.
+		DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
+		ds.Tables.Add(Sys_MapFrame);
+
+		//Sys_FrmAttachment.
+		DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
+		ds.Tables.Add(Sys_FrmAttachment);
+
+		//FrmImgAths. 上传图片附件.
+		DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
+		ds.Tables.Add(Sys_FrmImgAth);
+
+		return ds;
+	}
 	/** 
 	 获得表单模版dataSet格式.
 	 
@@ -1310,10 +1618,172 @@ public class CCFormAPI
 	 @return DataSet
 	*/
 
- 
-	//#endregion 模版操作.
+	public static System.Data.DataSet GenerHisDataSet_AllEleInfo2017(String fk_mapdata)
+	{
+		return GenerHisDataSet_AllEleInfo2017(fk_mapdata, false);
+	}
 
-	//#region 其他功能.
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static System.Data.DataSet GenerHisDataSet_AllEleInfo2017(string fk_mapdata, bool isCheckFrmType = false)
+	public static System.Data.DataSet GenerHisDataSet_AllEleInfo2017(String fk_mapdata, boolean isCheckFrmType)
+	{
+		MapData md = new MapData(fk_mapdata);
+
+		//从表.
+		String sql = "SELECT * FROM Sys_MapDtl WHERE FK_MapData ='{0}'";
+		sql = String.format(sql, fk_mapdata);
+		DataTable dtMapDtl = DBAccess.RunSQLReturnTable(sql);
+		dtMapDtl.TableName = "Sys_MapDtl";
+
+		String ids = String.format("'%1$s'", fk_mapdata);
+		for (DataRow dr : dtMapDtl.Rows)
+		{
+			ids += ",'" + dr.get("No") + "'";
+		}
+		String sqls = "";
+		ArrayList<String> listNames = new ArrayList<String>();
+
+		// Sys_GroupField.
+		listNames.add("Sys_GroupField");
+		sql = "SELECT * FROM Sys_GroupField WHERE  FrmID IN (" + ids + ")";
+		sqls += sql;
+
+		// Sys_Enum
+		listNames.add("Sys_Enum");
+		sql = "@SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + ids + ") ) order By EnumKey,IntKey";
+		sqls += sql;
+
+		// 审核组件
+		String nodeIDstr = fk_mapdata.replace("ND", "");
+		if (DataType.IsNumStr(nodeIDstr))
+		{
+			// 审核组件状态:0 禁用;1 启用;2 只读;
+			listNames.add("WF_Node");
+			sql = "@SELECT * FROM WF_Node WHERE NodeID=" + nodeIDstr + " AND  ( FWCSta >0  OR SFSta >0 )";
+			sqls += sql;
+		}
+
+		String where = " FK_MapData IN (" + ids + ")";
+
+		// Sys_MapData.
+		listNames.add("Sys_MapData");
+		sql = "@SELECT * FROM Sys_MapData WHERE No='" + fk_mapdata + "'";
+		sqls += sql;
+
+		// Sys_MapAttr.
+		listNames.add("Sys_MapAttr");
+
+		sql = "@SELECT * FROM Sys_MapAttr WHERE " + where + " AND KeyOfEn NOT IN('WFState') ORDER BY FK_MapData, IDX  ";
+		sqls += sql;
+
+
+		// Sys_MapExt.
+		listNames.add("Sys_MapExt");
+		sql = "@SELECT * FROM Sys_MapExt WHERE " + where;
+		sqls += sql;
+
+		//if (isCheckFrmType == true && md.HisFrmType == FrmType.FreeFrm)
+		//{
+		// line.
+		listNames.add("Sys_FrmLine");
+		sql = "@SELECT * FROM Sys_FrmLine WHERE " + where;
+		sqls += sql;
+
+		// link.
+		listNames.add("Sys_FrmLink");
+		sql = "@SELECT * FROM Sys_FrmLink WHERE " + where;
+		sqls += sql;
+
+		// btn.
+		listNames.add("Sys_FrmBtn");
+		sql = "@SELECT * FROM Sys_FrmBtn WHERE " + where;
+		sqls += sql;
+
+		// Sys_FrmImg.
+		listNames.add("Sys_FrmImg");
+		sql = "@SELECT * FROM Sys_FrmImg WHERE " + where;
+		sqls += sql;
+
+		// Sys_FrmLab.
+		listNames.add("Sys_FrmLab");
+		sql = "@SELECT * FROM Sys_FrmLab WHERE " + where;
+		sqls += sql;
+		//}
+
+		// Sys_FrmRB.
+		listNames.add("Sys_FrmRB");
+		sql = "@SELECT * FROM Sys_FrmRB WHERE " + where;
+		sqls += sql;
+
+		// ele.
+		listNames.add("Sys_FrmEle");
+		sql = "@SELECT * FROM Sys_FrmEle WHERE " + where;
+		sqls += sql;
+
+		//Sys_MapFrame.
+		listNames.add("Sys_MapFrame");
+		sql = "@SELECT * FROM Sys_MapFrame WHERE " + where;
+		sqls += sql;
+
+		// Sys_FrmAttachment. 
+		listNames.add("Sys_FrmAttachment");
+		/* 20150730 小周鹏修改 添加AtPara 参数 START */
+		//sql = "@SELECT  MyPK,FK_MapData,UploadType,X,Y,W,H,NoOfObj,Name,Exts,SaveTo,IsUpload,IsDelete,IsDownload "
+		// + " FROM Sys_FrmAttachment WHERE " + where + " AND FK_Node=0";
+		sql = "@SELECT * "
+			+ " FROM Sys_FrmAttachment WHERE " + where + "";
+
+		/* 20150730 小周鹏修改 添加AtPara 参数 END */
+		sqls += sql;
+
+		// Sys_FrmImgAth.
+		listNames.add("Sys_FrmImgAth");
+
+		sql = "@SELECT * FROM Sys_FrmImgAth WHERE " + where;
+		sqls += sql;
+
+		//// sqls.Replace(";", ";" + Environment.NewLine);
+		// DataSet ds = DA.DBAccess.RunSQLReturnDataSet(sqls);
+		// if (ds != null && ds.Tables.Count == listNames.Count)
+		//     for (int i = 0; i < listNames.Count; i++)
+		//     {
+		//         ds.Tables[i].TableName = listNames[i];
+		//     }
+
+		String[] strs = sqls.split("[@]", -1);
+		DataSet ds = new DataSet();
+
+		if (strs != null && strs.length == listNames.size())
+		{
+			for (int i = 0; i < listNames.size(); i++)
+			{
+				String s = strs[i];
+				if (DataType.IsNullOrEmpty(s))
+				{
+					continue;
+				}
+				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(s);
+				dt.TableName = listNames.get(i);
+				ds.Tables.Add(dt);
+			}
+		}
+
+		for (DataTable item : ds.Tables)
+		{
+			if (item.TableName.equals("Sys_MapAttr") && item.Rows.Count == 0)
+			{
+				md.RepairMap();
+			}
+		}
+
+		ds.Tables.Add(dtMapDtl);
+		return ds;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 模版操作.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 其他功能.
 	/** 
 	 保存枚举
 	 
@@ -1322,18 +1792,23 @@ public class CCFormAPI
 	 @param cfg 配置 @0=xxx@1=yyyy@n=xxxxxc
 	 @param lang 语言
 	 @return 
-	 * @throws Exception 
 	*/
 
-//ORIGINAL LINE: public static string SaveEnum(string enumKey, string enumLab, string cfg, bool isNew,string lang = "CH")
-	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew, String lang) throws Exception
+	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew)
+	{
+		return SaveEnum(enumKey, enumLab, cfg, isNew, "CH");
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static string SaveEnum(string enumKey, string enumLab, string cfg, bool isNew, string lang = "CH")
+	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew, String lang)
 	{
 		SysEnumMain sem = new SysEnumMain();
 		sem.setNo(enumKey);
-		int dataCount=sem.RetrieveFromDBSources();
+		int dataCount = sem.RetrieveFromDBSources();
 		if (dataCount > 0 && isNew)
 		{
-			return "已存在枚举" + enumKey + ",请修改枚举名字";
+			return "err@已存在枚举" + enumKey + ",请修改枚举名字";
 		}
 
 		if (dataCount == 0)
@@ -1341,7 +1816,7 @@ public class CCFormAPI
 			sem.setName(enumLab);
 			sem.setCfgVal(cfg);
 			sem.setLang(lang);
-			sem.Insert();
+			sem.DirectInsert();
 		}
 		else
 		{
@@ -1354,7 +1829,7 @@ public class CCFormAPI
 		String[] strs = cfg.split("[@]", -1);
 		for (String str : strs)
 		{
-			if (StringHelper.isNullOrEmpty(str))
+			if (DataType.IsNullOrEmpty(str))
 			{
 				continue;
 			}
@@ -1364,133 +1839,18 @@ public class CCFormAPI
 			se.setLang(lang);
 			se.setIntKey(Integer.parseInt(kvs[0]));
 			//杨玉慧
-			 //解决当  枚举值含有 ‘=’号时，保存不进去的方法
+			//解决当  枚举值含有 ‘=’号时，保存不进去的方法
 			String[] kvsValues = new String[kvs.length - 1];
 			for (int i = 0; i < kvsValues.length; i++)
 			{
 				kvsValues[i] = kvs[i + 1];
 			}
-			se.setLab(StringHelper.join("=", kvsValues));
+			se.setLab(tangible.StringHelper.join("=", kvsValues));
 			se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getIntKey());
 			se.Save();
 		}
 		return "保存成功.";
 	}
-	
-	
-	  /** 
-		 复制表单
-		 
-		 @param srcFrmID 源表单ID
-		 @param copyFrmID copy到表单ID
-		 @param copyFrmName 表单名称
-	 * @throws Exception 
-	  */
-		public static String CopyFrm(String srcFrmID, String copyFrmID, String copyFrmName, String fk_frmTree) throws Exception
-		{
-			MapData mymd = new MapData();
-			mymd.setNo(copyFrmID);
-			if (mymd.RetrieveFromDBSources() == 1)
-			{
-				throw new RuntimeException("@目标表单ID:"+copyFrmID+"已经存在，位于:"+mymd.getFK_FormTreeText()+"目录下.");
-			}
-
-			//获得源文件信息.
-			DataSet ds =  GenerHisDataSet(srcFrmID,null);
-
-			//导入表单文件.
-			ImpFrmTemplate(copyFrmID, ds);
-
-			//复制模版文件.
-			MapData md = new MapData(copyFrmID);
-
-			if (md.getHisFrmType() == FrmType.ExcelFrm)
-			{
-				//如果是excel表单，那就需要复制excel文件.
-				String srcFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + srcFrmID + ".xls";
-				String toFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + copyFrmID + ".xls";
-				if (new File(srcFile).exists() == true)
-				{
-					if (new File(toFile).exists() == false)
-					{
-						
-						
-						//File.Copy(srcFile, toFile, false);
-						InputStream in = null;
-						OutputStream out = null;
-						try {
-							in = new FileInputStream(srcFile);
-							out = new FileOutputStream(toFile);
-							byte[] buffer = new byte[8888];
-							int length;
-							while ((length = in.read(buffer)) != -1) {
-								out.write(buffer, 0, length);
-							}
-							out.flush();
-						} catch (Exception e) {
-							if (out != null) {
-								try {
-									out.close();
-								} catch (Exception e2) {
-								}
-							}
-							if (in != null) {
-								try {
-									in.close();
-								} catch (Exception e2) {
-								}
-							}
-						}
-					}
-				}
-
-				srcFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + srcFrmID + ".xlsx";
-				toFile = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + copyFrmID + ".xlsx";
-				if (new File(srcFile).exists() == true)
-				{
-					if (new File(toFile).exists() == false)
-					{
-						//System.IO.File.Copy(srcFile, toFile, false);
-						InputStream in = null;
-						OutputStream out = null;
-						try {
-							in = new FileInputStream(srcFile);
-							out = new FileOutputStream(toFile);
-							byte[] buffer = new byte[8888];
-							int length;
-							while ((length = in.read(buffer)) != -1) {
-								out.write(buffer, 0, length);
-							}
-							out.flush();
-						} catch (Exception e) {
-							if (out != null) {
-								try {
-									out.close();
-								} catch (Exception e2) {
-								}
-							}
-							if (in != null) {
-								try {
-									in.close();
-								} catch (Exception e2) {
-								}
-							}
-						}
-					}
-				}
-			}
-
-			md.Retrieve();
-
-			md.setFK_FormTree(fk_frmTree);
-			md.setFK_FrmSort(fk_frmTree);
-			md.setName(copyFrmName);
-			md.Update();
-
-			return "表单复制成功,您需要重新登录，或者刷新才能看到。";
-		}
-	
-	
 	/** 
 	 转拼音方法
 	 
@@ -1500,11 +1860,12 @@ public class CCFormAPI
 	*/
 	public static String ParseStringToPinyinField(String name, boolean isQuanPin)
 	{
-		 if (BP.DA.DataType.IsNullOrEmpty(name) == true)
-             return "";
-		
+		if (BP.DA.DataType.IsNullOrEmpty(name) == true)
+		{
+			return "";
+		}
+
 		String s = "";
-		
 		try
 		{
 			if (isQuanPin == true)
@@ -1512,7 +1873,7 @@ public class CCFormAPI
 				s = BP.DA.DataType.ParseStringToPinyin(name);
 				if (s.length() > 15)
 				{
-					s = BP.DA.DataType.ParseStringToPinyinWordFirst(name);
+					s = BP.DA.DataType.ParseStringToPinyinJianXie(name);
 				}
 			}
 			else
@@ -1530,26 +1891,10 @@ public class CCFormAPI
 			if (s.length() > 0)
 			{
 				//去除开头数字
-				int iHead = 0;
 				String headStr = s.substring(0, 1);
-				RefObject<Integer> tempRef_iHead = new RefObject<Integer>(iHead);
-				boolean tempVar = StringHelper.isNumeric(headStr);
-				//boolean tempVar = Integer.TryParse(headStr, tempRef_iHead) == true;
-				iHead = tempRef_iHead.argvalue;
-				while (tempVar)
+				if (DataType.IsNumStr(headStr) == true)
 				{
-					if(s.length()==0)
-						break;
-					//替换为空
-					s = s.substring(1);
-					if (s.length() > 0)
-					{
-						headStr = s.substring(0, 1);
-					}
-					RefObject<Integer> tempRef_iHead2 = new RefObject<Integer>(iHead);
-					tempVar = StringHelper.isNumeric(headStr);
-					//tempVar = Integer.TryParse(headStr, tempRef_iHead2) == true;
-					iHead = tempRef_iHead2.argvalue;
+					s = "F" + s;
 				}
 			}
 			//去掉空格，去掉点.
@@ -1562,63 +1907,100 @@ public class CCFormAPI
 			throw new RuntimeException(ex.getMessage());
 		}
 	}
-	/// 转拼音全拼/简写方法(若转换后以数字开头，则前面加F)
-    /// <para>added by liuxc,2017-9-25</para>
-    /// </summary>
-    /// <param name="name">中文字符串</param>
-    /// <param name="isQuanPin">是否转换全拼</param>
-    /// <param name="removeSpecialSymbols">是否去除特殊符号，仅保留汉字、数字、字母、下划线</param>
-    /// <param name="maxLen">转化后字符串最大长度，0为不限制</param>
-    /// <returns>转化后的拼音，不成功则抛出异常.</returns>
-    public static String ParseStringToPinyinField(String name, Boolean isQuanPin, Boolean removeSpecialSymbols, int maxLen)
-    {
-    	 if (BP.DA.DataType.IsNullOrEmpty(name) == true)
-             return "";
-    	 
-        String s = "";
+	/** 
+	 转拼音全拼/简写方法(若转换后以数字开头，则前面加F)
+	 <p>added by liuxc,2017-9-25</p>
+	 
+	 @param name 中文字符串
+	 @param isQuanPin 是否转换全拼
+	 @param removeSpecialSymbols 是否去除特殊符号，仅保留汉字、数字、字母、下划线
+	 @param maxLen 转化后字符串最大长度，0为不限制
+	 @return 转化后的拼音，不成功则抛出异常.
+	*/
+	public static String ParseStringToPinyinField(String name, boolean isQuanPin, boolean removeSpecialSymbols, int maxLen)
+	{
+		if (BP.DA.DataType.IsNullOrEmpty(name) == true)
+		{
+			return "";
+		}
 
-        if (removeSpecialSymbols)
-            name = DataType.ParseStringForName(name, maxLen);
+		String s = "";
 
-        try
-        {
-            if (isQuanPin == true)
-            {
-                s = BP.DA.DataType.ParseStringToPinyin(name);
-            }
-            else
-            {
-                s = BP.DA.DataType.ParseStringToPinyinJianXie(name);
-            }
-            //如果全拼长度超过maxLen，则取前maxLen长度的字符
-            if (maxLen > 0 && s.length() > maxLen)
-                s = s.substring(0, maxLen);
+		if (removeSpecialSymbols)
+		{
+			name = DataType.ParseStringForName(name, maxLen);
+		}
 
-            if (s.length() > 0)
-            {
-                //去除开头数字
-                String headStr = s.substring(0, 1);
-                if (DataType.IsNumStr(headStr) == true)
-                    s = "F" + (s.length() > maxLen - 1 ? s.substring(0, maxLen - 1) : s);
-            }
 
-            return s;
-        }
-        catch (Exception ex)
-        {
-        	new RuntimeException(ex.getMessage());
-        }
-		return s;
-    }
+		try
+		{
+			if (isQuanPin == true)
+			{
+				s = BP.DA.DataType.ParseStringToPinyin(name);
+			}
+			else
+			{
+				s = BP.DA.DataType.ParseStringToPinyinJianXie(name);
+			}
+
+			//如果全拼长度超过maxLen，则取前maxLen长度的字符
+			if (maxLen > 0 && s.length() > maxLen)
+			{
+				s = s.substring(0, maxLen);
+			}
+
+			if (s.length() > 0)
+			{
+				//去除开头数字
+				String headStr = s.substring(0, 1);
+				if (DataType.IsNumStr(headStr) == true)
+				{
+					s = "F" + (s.length() > maxLen - 1 ? s.substring(0, maxLen - 1) : s);
+				}
+			}
+
+			return s;
+		}
+		catch (RuntimeException ex)
+		{
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+	/** 
+	 多音字转拼音
+	 
+	 @param charT 单个汉字
+	 @return 包含返回拼音，否则返回null
+	*/
+	public static String ChinaMulTonesToPinYin(String charT)
+	{
+		try
+		{
+			ChMulToneXmls mulChs = new ChMulToneXmls();
+			mulChs.RetrieveAll();
+			for (ChMulToneXml en : mulChs)
+			{
+				if (en.getNo().equals(charT))
+				{
+					return en.getName();
+				}
+			}
+		}
+		catch (RuntimeException ex)
+		{
+			throw new RuntimeException(ex.getMessage());
+		}
+		return null;
+	}
+
 	/** 
 	 获得外键表
 	 
 	 @param pageNumber 第几页
 	 @param pageSize 每页大小
 	 @return json
-	 * @throws Exception 
 	*/
-	public static String DB_SFTableList(int pageNumber, int pageSize) throws Exception
+	public static String DB_SFTableList(int pageNumber, int pageSize)
 	{
 		//获得查询.
 		SFTables sftables = new SFTables();
@@ -1628,36 +2010,18 @@ public class CCFormAPI
 		//查询
 		obj.DoQuery(SysEnumMainAttr.No, pageSize, pageNumber);
 
-		return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(sftables, RowCount);
-	}
-	/** 
-	 获取所有枚举
-	 
-	 @param pageNumber 第几页
-	 @param pageSize 每页大小
-	 @return json
-	 * @throws Exception 
-	*/
-	public static String DB_EnumerationList(int pageNumber, int pageSize) throws Exception
-	{
-		SysEnumMains enumMains = new SysEnumMains();
-		QueryObject obj = new QueryObject(enumMains);
-		int RowCount = obj.GetCount();
-		//查询
-		obj.DoQuery(SysEnumMainAttr.No, pageSize, pageNumber);
-
-		return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(enumMains, RowCount);
+		//转化成json.
+		return BP.Tools.Json.ToJson(sftables.ToDataTableField());
+		// return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(sftables, RowCount);
 	}
 	/** 
 	 获得隐藏字段集合.
 	 
 	 @param fk_mapdata
 	 @return 
-	 * @throws Exception 
 	*/
-	public static String DB_Hiddenfielddata(String fk_mapdata) throws Exception
+	public static String DB_Hiddenfielddata(String fk_mapdata)
 	{
-		int RowCount = 0;
 		MapAttrs mapAttrs = new MapAttrs();
 		QueryObject obj = new QueryObject(mapAttrs);
 		obj.AddWhere(MapAttrAttr.FK_MapData, fk_mapdata);
@@ -1665,241 +2029,12 @@ public class CCFormAPI
 		obj.AddWhere(MapAttrAttr.UIVisible, "0");
 		obj.addAnd();
 		obj.AddWhere(MapAttrAttr.EditType, "0");
-		RowCount = obj.GetCount();
 		//查询
-		obj.DoQuery(); 
+		obj.DoQuery();
 
-		return BP.Tools.Entitis2Json.ConvertEntitis2GridJsonOnlyData(mapAttrs);
+		return mapAttrs.ToJson();
 	}
-	/**
-	 * 清缓存
-	 * @param frmID
-	 * @throws Exception 
-	 */
-	 public static void AfterFrmEditAction(String frmID) throws Exception
-     {
-         BP.DA.CashFrmTemplate.Remove(frmID);
-         MapData mapdata = new MapData(frmID);
-         mapdata.CleanObject();
-         return ;
-     }
-	  /// <summary>
-    /// 获得表单模版dataSet格式.
-    /// </summary>
-    /// <param name="fk_mapdata">表单ID</param>
-    /// <param name="isCheckFrmType">是否检查表单类型</param>
-    /// <returns>DataSet</returns>
-    public static DataSet GenerHisDataSet_AllEleInfo(String fk_mapdata) throws Exception
-    {
-    	  
-    	MapData md = new MapData(fk_mapdata);
-
-        //求出 frmIDs 
-        String frmIDs = "'" + fk_mapdata + "'";
-        MapDtls mdtls = new MapDtls(md.getNo());
-        for (MapDtl item : mdtls.ToJavaList())
-            frmIDs += ",'" + item.getNo() + "'";
-        
-        DataSet ds = new DataSet();
-
-        //加入主表信息.
-        DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
-        ds.Tables.add(Sys_MapData);
-
-        //加入分组表.
-        GroupFields gfs = new GroupFields();
-        gfs.RetrieveIn(GroupFieldAttr.FrmID, frmIDs);
-        DataTable Sys_GroupField = gfs.ToDataTableField("Sys_GroupField");
-        ds.Tables.add(Sys_GroupField);
-
-        //加入明细表.
-        DataTable Sys_MapDtl = md.getMapDtls().ToDataTableField("Sys_MapDtl");
-        ds.Tables.add(Sys_MapDtl);
-
-        //加入枚举表.
-        SysEnums ses = new SysEnums();
-        ses.RetrieveInSQL(SysEnumAttr.EnumKey, "SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + frmIDs + ") ");
-        DataTable Sys_Menu = ses.ToDataTableField("Sys_Enum");
-        ds.Tables.add(Sys_Menu);
-
-        //加入字段属性.
-        MapAttrs attrs = new MapAttrs();       
-        attrs.RetrieveIn(MapAttrAttr.FK_MapData,   frmIDs);
-        DataTable Sys_MapAttr = attrs.ToDataTableField("Sys_MapAttr");
-        ds.Tables.add(Sys_MapAttr);
-
-        //加入扩展属性.
-        MapExts exts = new MapExts();
-        exts.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
-        DataTable Sys_MapExt = exts.ToDataTableField("Sys_MapExt");
-        ds.Tables.add(Sys_MapExt);
-
-        //线.
-        DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
-        ds.Tables.add(Sys_FrmLine);
-
-        //link.
-        DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
-        ds.Tables.add(Sys_FrmLink);
-
-        //btn.
-        DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
-        ds.Tables.add(Sys_FrmBtn);
-
-        //Sys_FrmLab.
-        FrmLabs frmlabs = new FrmLabs();
-        frmlabs.RetrieveIn(MapAttrAttr.FK_MapData, frmIDs);
-        DataTable Sys_FrmLab =frmlabs.ToDataTableField("Sys_FrmLab");
-        ds.Tables.add(Sys_FrmLab);
-
-        //img.
-        DataTable Sys_FrmImg = md.getFrmImgs().ToDataTableField("Sys_FrmImg");
-        ds.Tables.add(Sys_FrmImg);
-
-        //Sys_FrmRB.
-        DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
-        ds.Tables.add(Sys_FrmRB);
-
-        //Sys_FrmEle.
-        DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
-        ds.Tables.add(Sys_FrmEle);
-
-        //Sys_MapFrame.
-        DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
-        ds.Tables.add(Sys_MapFrame);
-
-        //Sys_FrmAttachment.
-        DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
-        ds.Tables.add(Sys_FrmAttachment);
-
-        //FrmImgAths. 上传图片附件.
-        DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
-        ds.Tables.add(Sys_FrmImgAth);
-
-        return ds;
-    }
-	
-	public static DataSet GenerHisDataSet(String fk_mapdata) throws Exception
-	{
-	   return	GenerHisDataSet( fk_mapdata, null);		
-	}
-	 
-
-	public static DataSet GenerHisDataSet(String fk_mapdata, String frmName) throws Exception {
-		
-		
-		  DataSet dsFrm = BP.DA.CashFrmTemplate.GetFrmDataSetModel(fk_mapdata);
-          if (dsFrm != null)
-              return dsFrm;
-		
-		
-		DataSet ds = new DataSet();
-
-		//创建实体对象.
-		MapData md = new MapData(fk_mapdata);
-		
-		if(DataType.IsNullOrEmpty(md.getName()) == true && frmName != null)
-			md.setName(frmName);
-		 
-		//加入主表信息.
-		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
-		ds.Tables.add(Sys_MapData);
-
-
-		//加入分组表.
-		DataTable Sys_GroupField = md.getGroupFields().ToDataTableField("Sys_GroupField");
-		ds.Tables.add(Sys_GroupField);
-
-
-		//加入明细表.
-		DataTable Sys_MapDtl = md.getOrigMapDtls().ToDataTableField("Sys_MapDtl");
-		ds.Tables.add(Sys_MapDtl);
-
-
-		//加入枚举表.
-		DataTable Sys_Menu = md.getSysEnums().ToDataTableField("Sys_Enum");
-		ds.Tables.add(Sys_Menu);
-
-
-		//加入外键属性.
-		DataTable Sys_MapAttr = md.getMapAttrs().ToDataTableField("Sys_MapAttr");
-		ds.Tables.add(Sys_MapAttr);
-
-		//加入扩展属性.
-		DataTable Sys_MapExt = md.getMapExts().ToDataTableField("Sys_MapExt");
-		ds.Tables.add(Sys_MapExt);
-
-		//线.
-		DataTable Sys_FrmLine = md.getFrmLines().ToDataTableField("Sys_FrmLine");
-		ds.Tables.add(Sys_FrmLine);
-
-		//link.
-		DataTable Sys_FrmLink = md.getFrmLinks().ToDataTableField("Sys_FrmLink");
-		ds.Tables.add(Sys_FrmLink);
-
-		//btn.
-		DataTable Sys_FrmBtn = md.getFrmBtns().ToDataTableField("Sys_FrmBtn");
-		ds.Tables.add(Sys_FrmBtn);
-
-		//Sys_FrmLab.
-		DataTable Sys_FrmLab = md.getFrmLabs().ToDataTableField("Sys_FrmLab");
-		ds.Tables.add(Sys_FrmLab);
-
-		//img.
-		DataTable Sys_FrmImg = md.getFrmImgs().ToDataTableField("Sys_FrmImg");
-		ds.Tables.add(Sys_FrmImg);
-
-		//Sys_FrmRB.
-		DataTable Sys_FrmRB = md.getFrmRBs().ToDataTableField("Sys_FrmRB");
-		ds.Tables.add(Sys_FrmRB);
-
-		//Sys_FrmEle.
-		DataTable Sys_FrmEle = md.getFrmEles().ToDataTableField("Sys_FrmEle");
-		ds.Tables.add(Sys_FrmEle);
-
-		//Sys_MapFrame.
-		DataTable Sys_MapFrame = md.getMapFrames().ToDataTableField("Sys_MapFrame");
-		ds.Tables.add(Sys_MapFrame);
-
-		//Sys_FrmAttachment.
-		DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
-		ds.Tables.add(Sys_FrmAttachment);
-
-		//FrmImgAths. 上传图片附件.
-		DataTable Sys_FrmImgAth = md.getFrmImgAths().ToDataTableField("Sys_FrmImgAth");
-		ds.Tables.add(Sys_FrmImgAth);
-		
-		//Sys_FrmImgAthDB 图片附件记录
-		DataTable Sys_FrmImgAthDB = md.getFrmImgAthDBs().ToDataTableField("Sys_FrmImgAthDB");
-		ds.Tables.add(Sys_FrmImgAthDB);
-		
-		//放入缓存.
-		BP.DA.CashFrmTemplate.Put(fk_mapdata, ds);
-		return ds;
-	}
- 
-	/** 修复表单.
-	 
-	 @param frmID
-	 * @throws Exception 
-*/
-	public static void RepareCCForm(String frmID) throws Exception
-	{
-		MapAttr attr = new MapAttr();
-		if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, frmID) == false)
-		{
-			attr.setFK_MapData(frmID);
-			attr.setKeyOfEn("OID");
-			attr.setName("主键");
-			attr.setMyDataType(BP.DA.DataType.AppInt);
-			attr.setUIContralType(UIContralType.TB);
-			attr.setLGType(FieldTypeS.Normal);
-			attr.setUIVisible(false);
-			attr.setUIIsEnable(false);
-			attr.setDefVal("0");
-			attr.setHisEditType(BP.En.EditType.Readonly);
-			attr.Insert();
-		}
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 其他功能.
 
 }

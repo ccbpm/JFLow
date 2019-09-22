@@ -1,5 +1,13 @@
 package BP.WF.Port;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
+import java.time.*;
 
 public enum AlertWay
 {
@@ -23,6 +31,8 @@ public enum AlertWay
 	 内部消息
 	*/
 	AppSystemMsg;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

@@ -1,15 +1,23 @@
 package BP.WF;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.Data.*;
+import java.util.*;
 
 /** 
  流程删除日志
 */
 public class WorkFlowDeleteLogAttr
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
-	public static final String OID="OID";
+	public static final String OID = "OID";
 	/** 
 	 流程编号
 	*/
@@ -21,11 +29,11 @@ public class WorkFlowDeleteLogAttr
 	/** 
 	 删除人员
 	*/
-	public static final String Oper="Oper";
+	public static final String Oper = "Oper";
 	/** 
 	 删除原因
 	*/
-	public static final String DeleteNote="DeleteNote";
+	public static final String DeleteNote = "DeleteNote";
 	/** 
 	 删除日期
 	*/
@@ -50,6 +58,11 @@ public class WorkFlowDeleteLogAttr
 	 删除节点后是否需要原路返回？
 	*/
 	public static final String IsBackTracking = "IsBackTracking";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 流程属性
 	/** 
 	 标题
 	*/
@@ -106,4 +119,6 @@ public class WorkFlowDeleteLogAttr
 	 父流程编号
 	*/
 	public static final String PFlowNo = "PFlowNo";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

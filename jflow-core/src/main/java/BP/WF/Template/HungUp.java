@@ -1,19 +1,20 @@
 package BP.WF.Template;
 
-import BP.En.EnType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.Tools.StringHelper;
-import BP.WF.HungUpWay;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.Template.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  挂起
- 
 */
 public class HungUp extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final HungUpWay getHungUpWay()
 	{
 		return HungUpWay.forValue(this.GetValIntByKey(HungUpAttr.HungUpWay));
@@ -40,12 +41,11 @@ public class HungUp extends EntityMyPK
 	}
 	/** 
 	 挂起标题
-	 
 	*/
 	public final String getTitle()
 	{
-		String s= this.GetValStringByKey(HungUpAttr.Title);
-		if (StringHelper.isNullOrEmpty(s))
+		String s = this.GetValStringByKey(HungUpAttr.Title);
+		if (DataType.IsNullOrEmpty(s))
 		{
 			s = "来自@Rec的挂起信息.";
 		}
@@ -57,7 +57,6 @@ public class HungUp extends EntityMyPK
 	}
 	/** 
 	 挂起原因
-	 
 	*/
 	public final String getNote()
 	{
@@ -77,7 +76,6 @@ public class HungUp extends EntityMyPK
 	}
 	/** 
 	 解除挂起时间
-	 
 	*/
 	public final String getDTOfUnHungUp()
 	{
@@ -89,7 +87,6 @@ public class HungUp extends EntityMyPK
 	}
 	/** 
 	 预计解除挂起时间
-	 
 	*/
 	public final String getDTOfUnHungUpPlan()
 	{
@@ -101,7 +98,6 @@ public class HungUp extends EntityMyPK
 	}
 	/** 
 	 解除挂起时间
-	 
 	*/
 	public final String getDTOfHungUp()
 	{
@@ -111,32 +107,32 @@ public class HungUp extends EntityMyPK
 	{
 		this.SetValByKey(HungUpAttr.DTOfHungUp, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 挂起
-	 
 	*/
 	public HungUp()
 	{
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_HungUp", "挂起");
 		map.Java_SetEnType(EnType.Admin);
+		map.IndexField = HungUpAttr.WorkID;
+
 
 		map.AddMyPK();
 		map.AddTBInt(HungUpAttr.FK_Node, 0, "节点ID", true, true);
@@ -151,16 +147,15 @@ public class HungUp extends EntityMyPK
 		map.AddTBDateTime(HungUpAttr.DTOfUnHungUp, null, "实际解除挂起时间", true, false);
 		map.AddTBDateTime(HungUpAttr.DTOfUnHungUpPlan, null, "预计解除挂起时间", true, false);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 	/** 
 	 执行释放挂起
-	 
 	*/
 	public final void DoRelease()
 	{
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

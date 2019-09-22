@@ -1,19 +1,21 @@
 package BP.WF.Port;
 
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.Tools.StringHelper;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
+import java.time.*;
 
 /** 
  操作员
 */
 public class WFEmp extends EntityNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	public final String getHisAlertWayT()
 	{
 		return this.GetValRefTextByKey(WFEmpAttr.AlertWay);
@@ -37,6 +39,9 @@ public class WFEmp extends EntityNoName
 	{
 		SetValByKey(WFEmpAttr.UseSta, value);
 	}
+	/** 
+	 部门编号
+	*/
 	public final String getFK_Dept()
 	{
 		return this.GetValStringByKey(WFEmpAttr.FK_Dept);
@@ -45,6 +50,9 @@ public class WFEmp extends EntityNoName
 	{
 		SetValByKey(WFEmpAttr.FK_Dept, value);
 	}
+	/** 
+	 风格文件
+	*/
 	public final String getStyle()
 	{
 		return this.GetValStringByKey(WFEmpAttr.Style);
@@ -53,8 +61,10 @@ public class WFEmp extends EntityNoName
 	{
 		this.SetValByKey(WFEmpAttr.Style, value);
 	}
- 
-	 
+
+	/** 
+	 电话
+	*/
 	public final String getTel()
 	{
 		return this.GetValStringByKey(WFEmpAttr.Tel);
@@ -79,18 +89,18 @@ public class WFEmp extends EntityNoName
 		}
 		else
 		{
-			return "<a href=\"javascript:WinOpen('./Msg/SMS.jsp?Tel=" + this.getTel() + "');\"  ><img src='../WF/Img/sms.gif' border=0/>" + this.getTel() + "</a>";
+			return "<a href=\"javascript:WinOpen('./Msg/SMS.aspx?Tel=" + this.getTel() + "');\"  ><img src='/WF/Img/SMS.gif' border=0/>" + this.getTel() + "</a>";
 		}
 	}
 	public final String getEmailHtml()
 	{
-		if (this.getEmail()==null || this.getEmail().length() == 0)
+		if (this.getEmail() == null || this.getEmail().length() == 0)
 		{
 			return "未设置";
 		}
 		else
 		{
-			return "<a href='Mailto:" + this.getEmail() + "' ><img src='/WF/Img/sms.gif' border=0/>" + this.getEmail() + "</a>";
+			return "<a href='Mailto:" + this.getEmail() + "' ><img src='/WF/Img/SMS.gif' border=0/>" + this.getEmail() + "</a>";
 		}
 	}
 	public final String getEmail()
@@ -130,14 +140,14 @@ public class WFEmp extends EntityNoName
 	*/
 	public final String getAuthorFlows()
 	{
-		String s= this.GetValStringByKey(WFEmpAttr.AuthorFlows);
+		String s = this.GetValStringByKey(WFEmpAttr.AuthorFlows);
 		s = s.replace(",", "','");
-		return "('"+s+"')";
+		return "('" + s + "')";
 	}
 	public final void setAuthorFlows(String value)
 	{
 			//授权流程为空时的bug  解决
-		if (!StringHelper.isNullOrEmpty(value))
+		if (!DataType.IsNullOrEmpty(value))
 		{
 			SetValByKey(WFEmpAttr.AuthorFlows, value.substring(1));
 		}
@@ -145,36 +155,29 @@ public class WFEmp extends EntityNoName
 		{
 			SetValByKey(WFEmpAttr.AuthorFlows, "");
 		}
+			//SetValByKey(WFEmpAttr.AuthorFlows, value.Substring(1));
 	}
-	 
-	public final String getStas() throws Exception
+	/** 
+	 发起流程.
+	*/
+	public final String getStartFlows()
 	{
-		String s= this.GetValStringByKey(WFEmpAttr.Stas);
-		if (s.equals(""))
-		{
-			EmpStations ess = new EmpStations();
-			ess.Retrieve(EmpStationAttr.FK_Emp, this.getNo());
-			for (EmpStation es : ess.ToJavaList())
-			{
-				s += es.getFK_StationT() + ",";
-			}
-
-			if (ess.size() != 0)
-			{
-				  //  this.Stas = s;
-				this.Update();
-					//this.Update(WFEmpAttr.Stas, s);
-			}
-			return s;
-		}
-		else
-		{
-			return s;
-		}
+		return this.GetValStrByKey(WFEmpAttr.StartFlows);
 	}
-	public final void setStas_(String value)
+	public final void setStartFlows(String value)
 	{
-		SetValByKey(WFEmpAttr.Stas, value);
+		SetValByKey(WFEmpAttr.StartFlows, value);
+	}
+	/** 
+	 图片签名密码
+	*/
+	public final String getSPass()
+	{
+		return this.GetValStringByKey(WFEmpAttr.SPass);
+	}
+	public final void setSPass(String value)
+	{
+		SetValByKey(WFEmpAttr.SPass, value);
 	}
 
 	/** 
@@ -182,11 +185,10 @@ public class WFEmp extends EntityNoName
 	*/
 	public final AuthorWay getHisAuthorWay()
 	{
-		return AuthorWay.forValue(this.getAuthorWay());
+		return getAuthorWay().forValue(this.getAuthorWay());
 	}
 	/** 
 	 授权方式
-	 
 	*/
 	public final int getAuthorWay()
 	{
@@ -198,38 +200,33 @@ public class WFEmp extends EntityNoName
 	}
 	public final boolean getAuthorIsOK()
 	{
-		int b= this.GetValIntByKey(WFEmpAttr.AuthorWay);
+		int b = this.GetValIntByKey(WFEmpAttr.AuthorWay);
 		if (b == 0)
 		{
-			return false;
+			return false; //不授权.
 		}
+
+			// if (DataType.IsNullOrEmpty(this.Author) == true)
+			//  return false;
 
 		if (this.getAuthorToDate().length() < 4)
 		{
 			return true; //没有填写时间,当做无期限
 		}
 
-		java.util.Date dt = DataType.ParseSysDateTime2DateTime(this.getAuthorToDate());
-		if (dt.compareTo(new java.util.Date()) < 0)
+		LocalDateTime dt = DataType.ParseSysDateTime2DateTime(this.getAuthorToDate());
+		if (dt.compareTo(LocalDateTime.now()) < 0)
 		{
 			return false;
 		}
 
 		return true;
 	}
-	
-	/** 发起流程.
-	 
-	*/
-	public final String getStartFlows()
-	{
-		return this.GetValStrByKey(WFEmpAttr.StartFlows);
-	}
-	public final void setStartFlows(String value)
-	{
-		SetValByKey(WFEmpAttr.StartFlows, value);
-	}
-			
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 操作员
 	*/
@@ -238,12 +235,12 @@ public class WFEmp extends EntityNoName
 	}
 	/** 
 	 操作员
+	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public WFEmp(String no) throws Exception
+	public WFEmp(String no)
 	{
-		this.setNo(no);
+		this.No = no;
 		try
 		{
 			if (this.RetrieveFromDBSources() == 0)
@@ -264,49 +261,55 @@ public class WFEmp extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Emp", "操作员");
 
 		map.AddTBStringPK(WFEmpAttr.No, null, "No", true, true, 1, 50, 36);
-		map.AddTBString(WFEmpAttr.Name, null, "Name", true,false, 0, 50, 20);
+		map.AddTBString(WFEmpAttr.Name, null, "Name", true, false, 0, 50, 20);
 		map.AddTBInt(WFEmpAttr.UseSta, 1, "用户状态0禁用,1正常.", true, true);
 
 		map.AddTBString(WFEmpAttr.Tel, null, "Tel", true, true, 0, 50, 20);
 		map.AddTBString(WFEmpAttr.FK_Dept, null, "FK_Dept", true, true, 0, 100, 36);
 		map.AddTBString(WFEmpAttr.Email, null, "Email", true, true, 0, 50, 20);
-	 
 
 		map.AddDDLSysEnum(WFEmpAttr.AlertWay, 3, "收听方式", true, true, WFEmpAttr.AlertWay);
 		map.AddTBString(WFEmpAttr.Author, null, "授权人", true, true, 0, 50, 20);
 		map.AddTBString(WFEmpAttr.AuthorDate, null, "授权日期", true, true, 0, 50, 20);
 
-	    //0不授权， 1完全授权，2，指定流程范围授权. 
+			//0不授权， 1完全授权，2，指定流程范围授权. 
 		map.AddTBInt(WFEmpAttr.AuthorWay, 0, "授权方式", true, true);
 		map.AddTBDate(WFEmpAttr.AuthorToDate, null, "授权到日期", true, true);
-		map.AddTBString(WFEmpAttr.AuthorFlows, null, "可以执行的授权流程", true, true, 0, 1000, 20);
+
+		map.AddTBString(WFEmpAttr.AuthorFlows, null, "可以执行的授权流程", true, true, 0, 3900, 0);
 
 		map.AddTBString(WFEmpAttr.Stas, null, "岗位s", true, true, 0, 3000, 20);
 		map.AddTBString(WFEmpAttr.Depts, null, "Deptss", true, true, 0, 100, 36);
 
-		 
 		map.AddTBString(WFEmpAttr.Msg, null, "Msg", true, true, 0, 4000, 20);
 		map.AddTBString(WFEmpAttr.Style, null, "Style", true, true, 0, 4000, 20);
-		//map.AddTBString(WFEmpAttr.StartFlows, null, "可以发起的流程", true, true, 0, 4000, 20);
-		
+
+			//map.AddTBStringDoc(WFEmpAttr.StartFlows, null, "可以发起的流程", true, true);
+
+		map.AddTBString(WFEmpAttr.SPass, null, "图片签名密码", true, true, 0, 200, 20);
+
 		map.AddTBInt(WFEmpAttr.Idx, 0, "Idx", false, false);
-		
-        map.AddTBAtParas(3500); //增加字段.
-        
-		
-		this.set_enMap(map);
-		return this.get_enMap();
+
+		map.AddTBAtParas(3500); //增加字段.
+
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	@Override
-	protected boolean beforeUpdate() throws Exception
+	protected boolean beforeUpdate()
 	{
 		String msg = "";
 		//if (this.Email.Length == 0)
@@ -338,18 +341,21 @@ public class WFEmp extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		this.setUseSta(1);
 		return super.beforeInsert();
 	}
-	public static void DTSData() throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+	public static void DTSData()
 	{
 		String sql = "select No from Port_Emp where No not in (select No from WF_Emp)";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
-			BP.Port.Emp emp1 = new BP.Port.Emp(dr.getValue("No").toString());
+			BP.Port.Emp emp1 = new BP.Port.Emp(dr.get("No").toString());
 			BP.WF.Port.WFEmp empWF = new BP.WF.Port.WFEmp();
 			empWF.Copy(emp1);
 			try

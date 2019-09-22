@@ -1,69 +1,81 @@
 package BP.GPM;
 
+import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
-/**
- * 人员信息块s
- * 
- */
-public class BarEmps extends EntitiesMyPK {
-	/// #region 构造
-	/**
-	 * 人员信息块s
-	 * 
-	 */
-	public BarEmps() {
+/** 
+ 人员信息块s
+*/
+public class BarEmps extends EntitiesMyPK
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
+	/** 
+	 人员信息块s
+	*/
+	public BarEmps()
+	{
 	}
-
-	/**
-	 * 得到它的 Entity
-	 * 
-	 */
+	/** 
+	 得到它的 Entity
+	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getGetNewEntity()
+	{
 		return new BarEmp();
 	}
-	/// #endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	public final void InitMyBars() throws Exception {
+	public final String InitMyBars()
+	{
 		Bars bars = new Bars();
 		bars.RetrieveAll();
-		for (Bar b : bars.ToJavaList()) {
+		for (Bar b : bars)
+		{
 			BarEmp be = new BarEmp();
-			be.setMyPK(b.getNo() + "_" + BP.Web.WebUser.getNo());
-			if (be.RetrieveFromDBSources() == 1) {
+			be.MyPK = b.No + "_" + BP.Web.WebUser.No;
+			if (be.RetrieveFromDBSources() == 1)
+			{
 				continue;
 			}
 
-			be.setFK_Bar(b.getNo());
-			be.setFK_Emp(BP.Web.WebUser.getNo());
+			be.setFK_Bar(b.No);
+			be.setFK_Emp(BP.Web.WebUser.No);
 			be.setIsShow(true);
-			be.setTitle(b.getName());
+			be.setTitle(b.Name);
 			be.Insert();
 		}
+
+		return "执行成功";
 	}
 
-	/**
-	 *  为了适应自动翻译成java的需要,把实体转换成List.
-	 * 
-	 * @return List
-	 */
-	public final java.util.List<BarEmp> ToJavaList() {
-		return (java.util.List<BarEmp>) (Object)this;
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<BarEmp> ToJavaList()
+	{
+		return (List<BarEmp>)this;
 	}
-
-	/**
-	 * 转化成list
-	 * 
-	 * @return List
-	 */
-	public final java.util.ArrayList<BarEmp> Tolist() {
-		java.util.ArrayList<BarEmp> list = new java.util.ArrayList<BarEmp>();
-		for (int i = 0; i < this.size(); i++) {
-			list.add((BarEmp) this.get(i));
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<BarEmp> Tolist()
+	{
+		ArrayList<BarEmp> list = new ArrayList<BarEmp>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((BarEmp)this[i]);
 		}
 		return list;
 	}
-
-	/// #endregion 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

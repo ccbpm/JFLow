@@ -1,17 +1,16 @@
 package BP.GPM;
 
-import BP.DA.Depositary;
-import BP.En.EnType;
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  岗位
 */
 public class Station extends EntityNoName
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getFK_StationType()
 	{
 		return this.GetValStrByKey(StationAttr.FK_StationType);
@@ -20,14 +19,23 @@ public class Station extends EntityNoName
 	{
 		this.SetValByKey(StationAttr.FK_StationType, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 实现基本的方方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 岗位
 	*/
@@ -36,10 +44,10 @@ public class Station extends EntityNoName
 	}
 	/** 
 	 岗位
+	 
 	 @param _No
-	 * @throws Exception 
 	*/
-	public Station(String _No) throws Exception
+	public Station(String _No)
 	{
 		super(_No);
 	}
@@ -58,16 +66,23 @@ public class Station extends EntityNoName
 
 		map.Java_SetEnType(EnType.Admin);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
-		map.Java_SetDepositaryOfEntity(Depositary.Application);
-		map.Java_SetCodeStruct("2");
+		map.Java_SetDepositaryOfEntity(Depositary.None);
 
-		map.AddTBStringPK(EmpAttr.No, null, "编号", true, true, 1, 20, 100);
-		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 100, 200);
+			// map.Java_SetCodeStruct("4");
+			// map.IsAutoGenerNo = true;
+
+		map.AddTBStringPK(StationAttr.No, null, "编号", true, false, 1, 50, 200);
+		map.AddTBString(StationAttr.Name, null, "名称", true, false, 0, 100, 200);
 		map.AddDDLEntities(StationAttr.FK_StationType, null, "类型", new StationTypes(), true);
-		 
-		map.AddTBStringDoc(StationAttr.OrgNo, "0", "隶属组织", true, false, true);
+
+			//map.AddTBStringDoc(StationAttr.DutyReq, null, "职责要求", true, false, true);
+			//map.AddTBStringDoc(StationAttr.Makings, null, "素质要求", true, false, true);
+
+		map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, false, 0, 50, 250);
 		map.AddSearchAttr(StationAttr.FK_StationType);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

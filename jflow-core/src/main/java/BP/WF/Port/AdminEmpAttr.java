@@ -1,68 +1,81 @@
 package BP.WF.Port;
 
-/**
- * 管理员
- * @author Administrator
- *
- */
-public class AdminEmpAttr {
-	/*
-	 * No
-	 */
-    public static String No = "No";
-    /*
-     * 申请人
-     */
-    public static String Name = "Name";
-    public static String LoginData = "LoginData";
-    public static String Tel = "Tel";
-    /*
-    *  授权人
-    */
-    public static String Author = "Author";
-    /*
-     * 授权日期
-     */
-    public static String AuthorDate = "AuthorDate";
-    /*
-     * 是否处于授权状态
-     */
-    public static String AuthorWay = "AuthorWay";
-    /*
-     * 授权自动收回日期
-     */
-    public static String AuthorToDate = "AuthorToDate";
-    public static String Email = "Email";
-    public static String AlertWay = "AlertWay";
-    public static String Stas = "Stas";
-    public static String Depts = "Depts";
-    public static String FK_Dept = "FK_Dept";
-    public static String Idx = "Idx";
-    public static String FtpUrl = "FtpUrl";
-    public static String Style = "Style";
-    public static String Msg = "Msg";
-    public static String TM = "TM";
-    public static String UseSta = "UseSta";
-    /*
-     * 授权的人员
-     */
-    public static String AuthorFlows = "AuthorFlows";
-    /*
-     * 用户状态
-     */
-    public static  String UserType = "UserType";
-    /*
-     * 流程根目录
-     */
-    public static String RootOfFlow = "RootOfFlow";
-    /*
-     * 表单根目录
-     */
-    public static String RootOfForm = "RootOfForm";
-    /*
-     * 部门根目录
-     */
-    public static String RootOfDept = "RootOfDept";
-    
-    public static String OrgNo = "OrgNo";
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
+
+/** 
+ 管理员
+*/
+public class AdminEmpAttr
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
+	/** 
+	 No
+	*/
+	public static final String No = "No";
+	/** 
+	 申请人
+	*/
+	public static final String Name = "Name";
+	public static final String LoginData = "LoginData";
+	public static final String Tel = "Tel";
+	/** 
+	 授权人
+	*/
+	public static final String Author = "Author";
+	/** 
+	 授权日期
+	*/
+	public static final String AuthorDate = "AuthorDate";
+	/** 
+	 是否处于授权状态
+	*/
+	public static final String AuthorWay = "AuthorWay";
+	/** 
+	 授权自动收回日期
+	*/
+	public static final String AuthorToDate = "AuthorToDate";
+	public static final String Email = "Email";
+	public static final String AlertWay = "AlertWay";
+	public static final String Stas = "Stas";
+	public static final String Depts = "Depts";
+	public static final String FK_Dept = "FK_Dept";
+	/** 
+	 所在组织
+	*/
+	public static final String OrgNo = "OrgNo";
+	public static final String Idx = "Idx";
+	public static final String FtpUrl = "FtpUrl";
+	public static final String Style = "Style";
+	public static final String Msg = "Msg";
+	public static final String TM = "TM";
+	public static final String UseSta = "UseSta";
+	/** 
+	 授权的人员
+	*/
+	public static final String AuthorFlows = "AuthorFlows";
+	/** 
+	 用户状态
+	*/
+	public static final String UserType = "UserType";
+	/** 
+	 流程根目录
+	*/
+	public static final String RootOfFlow = "RootOfFlow";
+	/** 
+	 表单根目录
+	*/
+	public static final String RootOfForm = "RootOfForm";
+	/** 
+	 部门根目录
+	*/
+	public static final String RootOfDept = "RootOfDept";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

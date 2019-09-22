@@ -1,18 +1,21 @@
 package BP.WF.Template;
 
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.Sys.FrmType;
-import BP.Sys.MapDataAttr;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  系统表单
- 
 */
 public class SysForm extends EntityNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	public final String getPTable()
 	{
 		return this.GetValStringByKey(SysFormAttr.PTable);
@@ -31,11 +34,11 @@ public class SysForm extends EntityNoName
 	}
 	public final FrmType getHisFrmType()
 	{
-		return FrmType.forValue(this.GetValIntByKey(SysFormAttr.FrmType));
+		return (FrmType)this.GetValIntByKey(SysFormAttr.FrmType);
 	}
 	public final void setHisFrmType(FrmType value)
 	{
-		this.SetValByKey(SysFormAttr.FrmType, value);
+		this.SetValByKey(SysFormAttr.FrmType, (int)value);
 	}
 	public final String getFK_FormTree()
 	{
@@ -45,14 +48,13 @@ public class SysForm extends EntityNoName
 	{
 		this.SetValByKey(SysFormAttr.FK_FormTree, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 Frm
-	 
 	*/
 	public SysForm()
 	{
@@ -61,23 +63,21 @@ public class SysForm extends EntityNoName
 	 Frm
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public SysForm(String no) throws Exception
+	public SysForm(String no)
 	{
 		super(no);
 
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_MapData", "系统表单");
@@ -87,7 +87,7 @@ public class SysForm extends EntityNoName
 		map.AddTBString(SysFormAttr.Name, null, null, true, false, 0, 500, 10);
 
 			//表单类型.
-		map.AddTBInt(MapDataAttr.FrmType, 1, "表单类型", true, false);
+		map.AddTBInt(Sys.MapDataAttr.FrmType, 1, "表单类型", true, false);
 
 
 			//该表单对应的物理表
@@ -99,21 +99,21 @@ public class SysForm extends EntityNoName
 			//系统表单类别.
 		map.AddTBString(SysFormAttr.FK_FormTree, null, "表单树", true, false, 0, 10, 20);
 
-		map.AddTBInt(MapDataAttr.FrmW, 900, "系统表单宽度", true, false);
-		map.AddTBInt(MapDataAttr.FrmH, 1200, "系统表单高度", true, false);
+		map.AddTBInt(Sys.MapDataAttr.FrmW, 900, "系统表单宽度", true, false);
+		map.AddTBInt(Sys.MapDataAttr.FrmH, 1200, "系统表单高度", true, false);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 	public final int getFrmW()
 	{
-		return this.GetValIntByKey(MapDataAttr.FrmW);
+		return this.GetValIntByKey(Sys.MapDataAttr.FrmW);
 	}
 	public final int getFrmH()
 	{
-		return this.GetValIntByKey(MapDataAttr.FrmH);
+		return this.GetValIntByKey(Sys.MapDataAttr.FrmH);
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

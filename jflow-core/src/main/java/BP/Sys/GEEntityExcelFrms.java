@@ -1,67 +1,87 @@
 package BP.Sys;
 
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
-import BP.En.QueryObject;
+import BP.En.*;
+import java.util.*;
 
-/**
- * 默认值s
- */
-public class GEEntityExcelFrms extends EntitiesNoName
+/** 
+ excel表单实体s
+*/
+public class GEEntityExcelFrms extends EntitiesOID
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 查询.
-	 * 
-	 * @param EnsName
-	 * @param key
-	 * @param FK_Emp
-	 * @throws Exception 
-	 */
-	public final void Retrieve(String EnsName, String key, int FK_Emp) throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重载基类方法
+	@Override
+	public String toString()
 	{
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(DefValAttr.AttrKey, key);
-		qo.addAnd();
-	//	qo.AddWhere(DefValAttr.EnsName, EnsName);
-		qo.addAnd();
-		qo.AddWhere(DefValAttr.FK_Emp, FK_Emp);
-		qo.DoQuery();
+		return this.FK_MapData;
 	}
-	
-	/**
-	 * 查询
-	 * 
-	 * @param EnsName
-	 * @param key
-	 * @throws Exception 
-	 */
-	public final void Retrieve(String EnsName, String key) throws Exception
-	{
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(DefValAttr.AttrKey, key);
-		qo.addAnd();
-		//qo.AddWhere(DefValAttr.EnsName, EnsName);
-		qo.DoQuery();
-	}
-	
-	/**
-	 * 默认值s
-	 */
-	public GEEntityExcelFrms()
-	{
-	}
-	
-	/**
-	 * 得到它的 Entity
-	 */
+	/** 
+	 主键
+	*/
+	public String FK_MapData = null;
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
+	/** 
+	 得到它的 Entity
+	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
-		return new DefVal();
+			//if (this.FK_MapData == null)
+			//    throw new Exception("@没有能 FK_MapData 给值。");
+
+		if (this.FK_MapData == null)
+		{
+			return new GEEntity();
+		}
+		return new GEEntity(this.FK_MapData);
 	}
+	/** 
+	 通用实体ID
+	*/
+	public GEEntityExcelFrms()
+	{
+	}
+	/** 
+	 通用实体ID
+	 
+	 @param fk_mapdtl
+	*/
+	public GEEntityExcelFrms(String fk_mapdata)
+	{
+		this.FK_MapData = fk_mapdata;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<GEEntityExcelFrm> ToJavaList()
+	{
+		return (List<GEEntityExcelFrm>)this;
+	}
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<GEEntityExcelFrm> Tolist()
+	{
+		ArrayList<GEEntityExcelFrm> list = new ArrayList<GEEntityExcelFrm>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((GEEntityExcelFrm)this[i]);
+		}
+		return list;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

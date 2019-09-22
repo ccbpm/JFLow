@@ -1,26 +1,29 @@
 package BP.WF.XML;
 
-import java.io.File;
-import java.util.List;
-
-import BP.En.Entities;
-import BP.Sys.SystemConfig;
-import BP.XML.XmlEn;
-import BP.XML.XmlEns;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.XML.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  工作一户式s
 */
 public class OneWorkXmls extends XmlEns
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 工作一户式s
 	*/
 	public OneWorkXmls()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
 	*/
@@ -35,8 +38,7 @@ public class OneWorkXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		BP.DA.Log.DebugWriteInfo(SystemConfig.getPathOfData() + "XML"+File.separator+"WFAdmin.xml");
-		return SystemConfig.getPathOfData() + "XML"+File.separator+"WFAdmin.xml";
+		return SystemConfig.PathOfData + "\\Xml\\WFAdmin.xml";
 	}
 	/** 
 	 物理表名
@@ -51,8 +53,6 @@ public class OneWorkXmls extends XmlEns
 	{
 		return null;
 	}
-	public List<OneWorkXml> ToJavaListXmlEnss()
-	{
-		return (List<OneWorkXml>)(Object)this;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

@@ -1,16 +1,18 @@
 package BP.Sys.FrmUI;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
-实体属性s
+ 实体属性s
 */
 public class MapAttrBoolens extends EntitiesMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 实体属性s
 	*/
@@ -25,6 +27,11 @@ public class MapAttrBoolens extends EntitiesMyPK
 	{
 		return new MapAttrBoolen();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -32,7 +39,7 @@ public class MapAttrBoolens extends EntitiesMyPK
 	*/
 	public final List<MapAttrBoolen> ToJavaList()
 	{
-		return (List<MapAttrBoolen>)(Object)this;
+		return (List<MapAttrBoolen>)this;
 	}
 	/** 
 	 转化成list
@@ -42,10 +49,12 @@ public class MapAttrBoolens extends EntitiesMyPK
 	public final ArrayList<MapAttrBoolen> Tolist()
 	{
 		ArrayList<MapAttrBoolen> list = new ArrayList<MapAttrBoolen>();
-		for (int i = 0; i < this.size(); i++)
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((MapAttrBoolen)this.get(i));
+			list.add((MapAttrBoolen)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

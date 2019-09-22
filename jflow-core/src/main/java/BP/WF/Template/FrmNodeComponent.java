@@ -1,26 +1,21 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Sys.GroupCtrlType;
-import BP.Sys.GroupField;
-import BP.Sys.GroupFieldAttr;
-import BP.WF.Node;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  节点表单组件
- 
 */
 public class FrmNodeComponent extends Entity
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 公共属性
 	/** 
 	 节点属性.
-	 
 	*/
 	public final String getNo()
 	{
@@ -33,7 +28,6 @@ public class FrmNodeComponent extends Entity
 	}
 	/** 
 	 节点ID
-	 
 	*/
 	public final int getNodeID()
 	{
@@ -43,28 +37,25 @@ public class FrmNodeComponent extends Entity
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 控制
-	 
 	*/
 	@Override
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		uac.IsUpdate=true;
-		//uac.OpenForSysAdmin();
+		uac.OpenAll();
 		uac.IsDelete = false;
 		uac.IsInsert = false;
 		return uac;
 	}
 	/** 
 	 重写主键
-	 
 	*/
 	@Override
 	public String getPK()
@@ -73,7 +64,6 @@ public class FrmNodeComponent extends Entity
 	}
 	/** 
 	 节点表单组件
-	 
 	*/
 	public FrmNodeComponent()
 	{
@@ -82,9 +72,8 @@ public class FrmNodeComponent extends Entity
 	 节点表单组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmNodeComponent(String mapData) throws Exception
+	public FrmNodeComponent(String mapData)
 	{
 		String mapdata = mapData.replace("ND", "");
 		if (DataType.IsNumStr(mapdata) == false)
@@ -107,81 +96,83 @@ public class FrmNodeComponent extends Entity
 	 节点表单组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmNodeComponent(int nodeID) throws Exception
+	public FrmNodeComponent(int nodeID)
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Node", "节点表单组件");
 		map.Java_SetEnType(EnType.Sys);
+		map.Java_SetDepositaryOfEntity(Depositary.Application);
+		map.Java_SetDepositaryOfMap(Depositary.Application);
+
 
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true,true, 0, 100, 10);
 
 		FrmWorkCheck fwc = new FrmWorkCheck();
-		map.AddAttrs(fwc.getEnMap().getAttrs());
+		map.AddAttrs(fwc.getEnMap().Attrs);
 
 		FrmSubFlow subflow = new FrmSubFlow();
-		map.AddAttrs(subflow.getEnMap().getAttrs());
+		map.AddAttrs(subflow.getEnMap().Attrs);
 
 		FrmThread thread = new FrmThread();
-		map.AddAttrs(thread.getEnMap().getAttrs());
+		map.AddAttrs(thread.getEnMap().Attrs);
 
 			//轨迹组件.
 		FrmTrack track = new FrmTrack();
-		map.AddAttrs(track.getEnMap().getAttrs());
+		map.AddAttrs(track.getEnMap().Attrs);
 
 			//流转自定义组件.
 		FrmTransferCustom ftt = new FrmTransferCustom();
-		map.AddAttrs(ftt.getEnMap().getAttrs());
+		map.AddAttrs(ftt.getEnMap().Attrs);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 
 	@Override
-	protected boolean beforeUpdate() throws Exception
+	protected boolean beforeUpdate()
 	{
 		GroupField gf = new GroupField();
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 审核组件.
 		FrmWorkCheck fwc = new FrmWorkCheck(this.getNodeID());
 		fwc.Copy(this);
-
 		if (fwc.getHisFrmWorkCheckSta() == FrmWorkCheckSta.Disable)
 		{
-			gf.Delete(GroupFieldAttr.CtrlID, "FWC" + this.getNo());
+			gf.Delete(GroupFieldAttr.FrmID, this.getNo(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC);
 		}
 		else
 		{
-			if (gf.IsExit(GroupFieldAttr.CtrlID, "FWC" + this.getNo()) == false)
+			if (gf.IsExit(GroupFieldAttr.FrmID, this.getNo(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
 			{
 				gf = new GroupField();
-				gf.setFrmID("ND" + this.getNodeID());
-				gf.setCtrlID("FWC" + this.getNo());
-				gf.setCtrlType(GroupCtrlType.FWC);
-				gf.setLab("审核组件");
-				gf.setIdx(0);
+				gf.FrmID = "ND" + this.getNodeID();
+				gf.CtrlType = GroupCtrlType.FWC;
+				gf.Lab = "审核组件";
+				gf.Idx = 0;
 				gf.Insert(); //插入.
 			}
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 审核组件.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 父子流程组件.
 		FrmSubFlow subflow = new FrmSubFlow(this.getNodeID());
 		subflow.Copy(this);
 
@@ -194,15 +185,19 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "SubFlow" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setFrmID("ND" + this.getNodeID());
-				gf.setCtrlID("SubFlow" + this.getNo());
-				gf.setCtrlType(GroupCtrlType.SubFlow);
-				gf.setLab("父子流程组件"); 
-				gf.setIdx(0); 
+				gf.FrmID = "ND" + this.getNodeID();
+				gf.CtrlID = "SubFlow" + this.getNo();
+				gf.CtrlType = GroupCtrlType.SubFlow;
+				gf.Lab = "父子流程组件";
+				gf.Idx = 0;
 				gf.Insert(); //插入.
 			}
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 父子流程组件.
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 处理轨迹组件.
 		FrmTrack track = new FrmTrack(this.getNodeID());
 		track.Copy(this);
 		if (track.getFrmTrackSta() == FrmTrackSta.Disable)
@@ -214,15 +209,19 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmTrack" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setFrmID("ND" + this.getNodeID());
-				gf.setCtrlID("FrmTrack" + this.getNo());
-				gf.setCtrlType(GroupCtrlType.Track);
-				gf.setLab("轨迹");
-				gf.setIdx(0);
+				gf.FrmID = "ND" + this.getNodeID();
+				gf.CtrlID = "FrmTrack" + this.getNo();
+				gf.CtrlType = GroupCtrlType.Track;
+				gf.Lab = "轨迹";
+				gf.Idx = 0;
 				gf.Insert(); //插入.
 			}
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 处理轨迹组件.
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 子线程组件.
 		FrmThread thread = new FrmThread(this.getNodeID());
 		thread.Copy(this);
 
@@ -235,15 +234,19 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmThread" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setFrmID("ND" + this.getNodeID());
-				gf.setCtrlID("FrmThread" + this.getNo());
-				gf.setCtrlType(GroupCtrlType.Thread);
-				gf.setLab("子线程");
-				gf.setIdx(0);
+				gf.EnName = "ND" + this.getNodeID();
+				gf.CtrlID = "FrmThread" + this.getNo();
+				gf.CtrlType = GroupCtrlType.Thread;
+				gf.Lab = "子线程";
+				gf.Idx = 0;
 				gf.Insert(); //插入.
 			}
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 子线程组件.
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 流转自定义组件.
 		FrmTransferCustom ftc = new FrmTransferCustom(this.getNodeID());
 		ftc.Copy(this);
 
@@ -256,27 +259,30 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmFTC" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.setFrmID("ND" + this.getNodeID());
-				gf.setCtrlID("FrmFTC" + this.getNo());
-				gf.setCtrlType(GroupCtrlType.FTC);
-				gf.setLab("流转自定义");
-				gf.setIdx(0);
+				gf.FrmID = "ND" + this.getNodeID();
+				gf.CtrlID = "FrmFTC" + this.getNo();
+				gf.CtrlType = GroupCtrlType.FTC;
+				gf.Lab = "流转自定义";
+				gf.Idx = 0;
 				gf.Insert(); //插入.
 			}
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 流转自定义组件.
 
 		return super.beforeUpdate();
 	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 	@Override
-	 protected  void afterInsertUpdateAction() throws Exception
-    {
-        Node fl = new Node();
-        fl.setNodeID(this.getNodeID());
-        fl.RetrieveFromDBSources();
-        fl.Update();
+	protected void afterInsertUpdateAction()
+	{
+		Node fl = new Node();
+		fl.setNodeID(this.getNodeID());
+		fl.RetrieveFromDBSources();
+		fl.Update();
 
-        super.afterInsertUpdateAction();
-    }
-
+		super.afterInsertUpdateAction();
+	}
 }

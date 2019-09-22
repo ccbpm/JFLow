@@ -1,13 +1,19 @@
 package BP.WF.Data;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  工作质量评价s BP.Port.FK.Evals
 */
 public class Evals extends EntitiesMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -22,26 +28,34 @@ public class Evals extends EntitiesMyPK
 	public Evals()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<Eval> ToJavaList()
+	public final List<Eval> ToJavaList()
 	{
-		return (java.util.List<Eval>)(Object)this;
+		return (List<Eval>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<Eval> Tolist()
+	public final ArrayList<Eval> Tolist()
 	{
-		java.util.ArrayList<Eval> list = new java.util.ArrayList<Eval>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<Eval> list = new ArrayList<Eval>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((Eval)this.get(i));
+			list.add((Eval)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

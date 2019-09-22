@@ -1,61 +1,60 @@
 package BP.Sys;
 
-import java.util.ArrayList;
-
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
 
 /** 
  映射基础s
- 
 */
 public class MapDatas extends EntitiesNoName
 {
-
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 映射基础s
-	 
 	*/
 	public MapDatas()
 	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new MapData();
 	}
-	
-	public static ArrayList<MapData> convertMapDatas(Object obj)
-	{
-		return (ArrayList<MapData>) obj;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<MapData> ToJavaList()
+	public final List<MapData> ToJavaList()
 	{
-		return (java.util.List<MapData>)(Object)this;
+		return (List<MapData>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<MapData> Tolist()
+	public final ArrayList<MapData> Tolist()
 	{
-		java.util.ArrayList<MapData> list = new java.util.ArrayList<MapData>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<MapData> list = new ArrayList<MapData>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((MapData)this.get(i));
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

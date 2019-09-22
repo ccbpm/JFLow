@@ -1,11 +1,14 @@
 package BP.WF.Template;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  节点按钮权限s
- 
 */
 public class BtnLabs extends Entities
 {
@@ -23,26 +26,31 @@ public class BtnLabs extends Entities
 	{
 		return new BtnLab();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<BtnLab> ToJavaList()
+	public final List<BtnLab> ToJavaList()
 	{
-		return (java.util.List<BtnLab>)(Object)this;
+		return (List<BtnLab>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<BtnLab> Tolist()
+	public final ArrayList<BtnLab> Tolist()
 	{
-		java.util.ArrayList<BtnLab> list = new java.util.ArrayList<BtnLab>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<BtnLab> list = new ArrayList<BtnLab>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((BtnLab)this.get(i));
+			list.add((BtnLab)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

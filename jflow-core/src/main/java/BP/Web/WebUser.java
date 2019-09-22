@@ -1,187 +1,96 @@
 package BP.Web;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import BP.En.*;
+import BP.DA.*;
+import BP.Port.*;
+import BP.Sys.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
 
-import javax.servlet.http.Cookie;
-import javax.sound.sampled.Port;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-
-import BP.DA.DBAccess;
-import BP.DA.Paras;
-import BP.Difference.ContextHolderUtils;
-import BP.En.QueryObject;
-import BP.Port.Current;
-import BP.Port.Emp;
-import BP.Port.Stations;
-import BP.Sys.OSDBSrc;
-import BP.Sys.OSModel;
-import BP.Sys.SystemConfig;
-import BP.Tools.StringHelper;
-import BP.WF.Dev2Interface;
-import BP.WF.DotNetToJavaStringHelper;
-
-/**
- * User 的摘要说明。
- */
-public class WebUser {
-
-	/**
-	 * 登录
-	 * 
-	 * @param em
-	 * @throws Exception 
-	 */
-	public static void SignInOfGener(Emp em) throws Exception {
-		SignInOfGener(em, "CH", null, true, false);
-	}
-
-	/**
-	 * 登录
-	 * 
-	 * @param em
-	 * @param isRememberMe
-	 * @throws Exception 
-	 */
-	public static void SignInOfGener(Emp em, boolean isRememberMe) throws Exception {
-		SignInOfGener(em, "CH", null, isRememberMe, false);
-	}
-
-	/**
-	 * 登录
-	 * 
-	 * @param em
-	 * @param auth
-	 * @throws Exception 
-	 */
-	public static void SignInOfGenerAuth(Emp em, String auth) throws Exception {
-		SignInOfGener(em, "CH", auth, true, false);
-	}
-
-	/**
-	 * 登录
-	 * 
-	 * @param em
-	 * @param lang
-	 * @throws Exception 
-	 */
-	public static void SignInOfGenerLang(Emp em, String lang, boolean isRememberMe) throws Exception {
-		SignInOfGener(em, lang, null, isRememberMe, false);
-	}
-
-	/**
-	 * 登录
-	 * 
-	 * @param em
-	 * @param lang
-	 * @throws Exception 
-	 */
-	public static void SignInOfGenerLang(Emp em, String lang) throws Exception {
-		SignInOfGener(em, lang, null, true, false);
-	}
-
-	public static void SignInOfGener(Emp em, String lang) throws Exception {
-		SignInOfGener(em, lang, em.getNo(), true, false);
-	}
-
-	/**
-	 * 登录
-	 * 
-	 * @param em 登录人
-	 * @param lang 语言
-	 * @param auth 被授权登录人
-	 * @param isRememberMe 是否记忆我
-	 * @throws Exception 
-	 */
-	public static void SignInOfGener(Emp em, String lang, String auth, boolean isRememberMe) throws Exception {
-		SignInOfGener(em, lang, auth, isRememberMe, false);
-	}
-
-	/**
-	 * 通用的登录
-	 * 
-	 * @param em 人员
-	 * @param lang 语言
-	 * @param auth 授权人
-	 * @param isRememberMe 是否记录cookies
-	 * @param IsRecSID 是否记录SID
-	 * @throws Exception 
-	 */
-	public static String SignInOfGener(Emp em, String lang, String auth, boolean isRememberMe, boolean IsRecSID) throws Exception {
-		if (SystemConfig.getIsBSsystem()) {
-			if("BP".equals(SystemConfig.getRunOnPlant())) {
-				//嵌入jeesite4 后写登录日志会造成死循环。
-				BP.Sys.Glo.WriteUserLog("SignIn", em.getNo(), "登录");
-			}			
+/** 
+ User 的摘要说明。
+*/
+public class WebUser
+{
+	/** 
+	 密码解密
+	 
+	 @param pass 用户输入密码
+	 @return 解密后的密码
+	*/
+	public static String ParsePass(String pass)
+	{
+		if (pass.equals(""))
+		{
+			return "";
 		}
-		if (auth == null) {
-			auth = "";
+
+		String str = "";
+		char[] mychars = pass.toCharArray();
+		int i = 0;
+		for (char c : mychars)
+		{
+			i++;
+
+			//step 1 
+			long A = (long)c * 2;
+
+			// step 2
+			long B = A - i * i;
+
+			// step 3 
+			long C = 0;
+			if (B > 196)
+			{
+				C = 196;
+			}
+			else
+			{
+				C = B;
+			}
+
+			str = str + String.valueOf((char)C);
 		}
-		String sid = null;
-		try {
-			WebUser.setNo(em.getNo());
-			WebUser.setName(em.getName());
-			WebUser.setFK_Dept(em.getFK_Dept());
-			WebUser.setFK_DeptName(em.getFK_DeptText());
-			
-			try {
-				sid = ContextHolderUtils.getSession().getId();
-			} catch (Exception e) {
-				sid = DBAccess.GenerOID()+"";
-			}
-			
-			if (IsRecSID) {
-				WebUser.setSID(sid);
-				Dev2Interface.Port_SetSID(em.getNo(), sid);
-			}
-			
-			WebUser.setAuth(auth);
-			WebUser.setUserWorkDev(UserWorkDev.PC);
-			WebUser.setSysLang(lang);
-			
-			if (SystemConfig.getIsBSsystem()) {
-				try {
-					int expiry = 60 * 60 * 24 * 2;
-					ContextHolderUtils.addCookie("No", expiry, em.getNo());
-					ContextHolderUtils.addCookie("Name", expiry, URLEncoder.encode(em.getName(), "UTF-8"));
-					ContextHolderUtils.addCookie("IsRememberMe", expiry, isRememberMe ? "1" : "0");
-					ContextHolderUtils.addCookie("FK_Dept", expiry, em.getFK_Dept());
-					ContextHolderUtils.addCookie("FK_DeptName", expiry, URLEncoder.encode(em.getFK_DeptText(), "UTF-8"));
-					if (ContextHolderUtils.getSession() != null) {
-						ContextHolderUtils.addCookie("Token", expiry, sid);
-						ContextHolderUtils.addCookie("SID", expiry, sid);
-					}
-					ContextHolderUtils.addCookie("Lang", expiry, lang);
-//					String isEnableStyle = SystemConfig.getAppSettings().get("IsEnableStyle").toString();
-//					if (isEnableStyle.equals("1")) {
-//						try {
-//							String sql = "SELECT Style FROM WF_Emp WHERE No='" + em.getNo() + "' ";
-//							int val = DBAccess.RunSQLReturnValInt(sql, 0);
-//							/*
-//							 * warning cookie.Values.Add("Style", (new
-//							 * Integer(val)).toString());
-//							 */
-//							ContextHolderUtils.addCookie("Style", expiry, String.valueOf(val));
-//							WebUser.setStyle(String.valueOf(val));
-//						} catch (java.lang.Exception e) {}
-//					}
-					/*
-					 * warning cookie.Values.Add("Auth", auth); // 授权人.
-					 * BP.Glo.getHttpContextCurrent().Response.AppendCookie(cookie);
-					 */
-					ContextHolderUtils.addCookie("Auth", expiry, auth);
-				} catch (Exception e) {
+		return str;
+	}
+	/** 
+	 更改一个人当前登录的主要部门
+	 再一个人有多个部门的情况下有效.
+	 
+	 @param empNo 人员编号
+	 @param fk_dept 当前所在的部门.
+	*/
+	public static void ChangeMainDept(String empNo, String fk_dept)
+	{
+		//这里要考虑集成的模式下，更新会出现是.
+
+		String sql = BP.Sys.SystemConfig.GetValByKey("UpdataMainDeptSQL", "");
+		if (sql.equals(""))
+		{
+			/*如果没有配置, 就取默认的配置.*/
+			sql = "UPDATE Port_Emp SET FK_Dept=@FK_Dept WHERE No=@No";
+		}
+
+		sql = sql.replace("@FK_Dept", "'" + fk_dept + "'");
+		sql = sql.replace("@No", "'" + empNo + "'");
+
+		try
+		{
+			if (sql.contains("UPDATE Port_Emp SET FK_Dept=") == true)
+			{
+				if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == true)
+				{
+					return;
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			BP.DA.DBAccess.RunSQL(sql);
 		}
-		return sid;
+		catch (RuntimeException ex)
+		{
+			throw new RuntimeException("@执行更改当前操作员的主部门的时候错误,请检查SQL配置:" + ex.getMessage());
+		}
+
 	}
 	/** 
 	 通用的登陆
@@ -191,10 +100,46 @@ public class WebUser {
 	 @param auth 授权人
 	 @param isRememberMe 是否记录cookies
 	 @param IsRecSID 是否记录SID
-	 * @throws Exception 
 	*/
-	public static void SignInOfGener(Emp em, String lang, boolean isRememberMe, boolean IsRecSID, String authNo, String authName) throws Exception
+
+	public static void SignInOfGener(Emp em, String lang, boolean isRememberMe, boolean IsRecSID, String authNo)
 	{
+		SignInOfGener(em, lang, isRememberMe, IsRecSID, authNo, null);
+	}
+
+	public static void SignInOfGener(Emp em, String lang, boolean isRememberMe, boolean IsRecSID)
+	{
+		SignInOfGener(em, lang, isRememberMe, IsRecSID, null, null);
+	}
+
+	public static void SignInOfGener(Emp em, String lang, boolean isRememberMe)
+	{
+		SignInOfGener(em, lang, isRememberMe, false, null, null);
+	}
+
+	public static void SignInOfGener(Emp em, String lang)
+	{
+		SignInOfGener(em, lang, false, false, null, null);
+	}
+
+	public static void SignInOfGener(Emp em)
+	{
+		SignInOfGener(em, "CH", false, false, null, null);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static void SignInOfGener(Emp em, string lang = "CH", bool isRememberMe = false, bool IsRecSID = false, string authNo = null, string authName = null)
+	public static void SignInOfGener(Emp em, String lang, boolean isRememberMe, boolean IsRecSID, String authNo, String authName)
+	{
+		if (HttpContextHelper.getCurrent() == null)
+		{
+			SystemConfig.setIsBSsystem(false);
+		}
+		else
+		{
+			SystemConfig.setIsBSsystem(true);
+		}
+
 		if (SystemConfig.getIsBSsystem())
 		{
 			BP.Sys.Glo.WriteUserLog("SignIn", em.getNo(), "登录");
@@ -202,40 +147,36 @@ public class WebUser {
 
 		WebUser.setNo(em.getNo());
 		WebUser.setName(em.getName());
-		if (DotNetToJavaStringHelper.isNullOrEmpty(authNo) == false)
+		if (DataType.IsNullOrEmpty(authNo) == false)
 		{
-			WebUser.setAuth(authNo);//被授权人，实际工作的执行者.
+			WebUser.setAuth(authNo); //被授权人，实际工作的执行者.
 			WebUser.setAuthName(authName);
 		}
 		else
 		{
 			WebUser.setAuth(null);
-			WebUser.setAuthName(null);;
+			WebUser.setAuthName(null);
 		}
 
-
-		//登录模式？
-		BP.Web.WebUser.setUserWorkDev(UserWorkDev.PC);
-
-		///#region 解决部门的问题.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 解决部门的问题.
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
-			if (DotNetToJavaStringHelper.isNullOrEmpty(em.getFK_Dept()) == true)
+			if (DataType.IsNullOrEmpty(em.getFK_Dept()) == true)
 			{
 				String sql = "";
-				if (BP.Sys.SystemConfig.getOSModel()== OSModel.OneOne)
-				{
-					sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + em.getNo() + "'";
-				}
-				else
-				{
-					sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + em.getNo() + "'";
-				}
+
+				sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + em.getNo() + "'";
 
 				String deptNo = BP.DA.DBAccess.RunSQLReturnString(sql);
-				if (DotNetToJavaStringHelper.isNullOrEmpty(deptNo) == true)
+				if (DataType.IsNullOrEmpty(deptNo) == true)
 				{
-					throw new RuntimeException("@登录人员(" + em.getNo() + "," + em.getName() + ")没有维护部门...");
+					sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + em.getNo() + "'";
+					deptNo = BP.DA.DBAccess.RunSQLReturnString(sql);
+					if (DataType.IsNullOrEmpty(deptNo) == true)
+					{
+						throw new RuntimeException("@登录人员(" + em.getNo() + "," + em.getName() + ")没有维护部门...");
+					}
 				}
 				else
 				{
@@ -244,17 +185,17 @@ public class WebUser {
 				}
 			}
 
-			BP.Port.Dept dept = new BP.Port.Dept();
+			BP.Port.Dept dept = new Dept();
 			dept.setNo(em.getFK_Dept());
 			if (dept.RetrieveFromDBSources() == 0)
 			{
-				throw new RuntimeException("@登录人员(" + em.getNo() + "," + em.getName() + ")没有维护部门,或者部门编号{"+em.getFK_Dept()+"}不存在.");
+				throw new RuntimeException("@登录人员(" + em.getNo() + "," + em.getName() + ")没有维护部门,或者部门编号{" + em.getFK_Dept() + "}不存在.");
 			}
 		}
 
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 		{
-			/*Object ws = DataType.GetPortalInterfaceSoapClientInstance();
+			BP.En30.ccportal.PortalInterfaceSoapClient ws = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = ws.GetEmpHisDepts(em.getNo());
 			String strs = BP.DA.DBAccess.GenerWhereInPKsString(dt);
 			Paras ps = new Paras();
@@ -262,7 +203,6 @@ public class WebUser {
 			ps.Add("Depts", strs);
 			ps.Add("No", em.getNo());
 			BP.DA.DBAccess.RunSQL(ps);
-			WebUser.setHisDeptsStr(strs);
 
 			dt = ws.GetEmpHisStations(em.getNo());
 			strs = BP.DA.DBAccess.GenerWhereInPKsString(dt);
@@ -271,582 +211,581 @@ public class WebUser {
 			ps.Add("Stas", strs);
 			ps.Add("No", em.getNo());
 			BP.DA.DBAccess.RunSQL(ps);
-			WebUser.setHisStationsStr(strs);*/
 		}
-		///#endregion 解决部门的问题.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 解决部门的问题.
 
 		WebUser.setFK_Dept(em.getFK_Dept());
 		WebUser.setFK_DeptName(em.getFK_DeptText());
-		WebUser.setHisDeptsStr(null);
-		WebUser.setHisStationsStr(null);
 		if (IsRecSID)
 		{
-			//判断是否视图，如果为视图则不进行修改 @于庆海 需要翻译
-			if (BP.DA.DBAccess.IsView("Port_Emp") == false){
-			//如果记录sid
-			SimpleDateFormat formatter = new SimpleDateFormat ("MMddHHmmss");
-			String sid1 = formatter.format(new Date());
-			DBAccess.RunSQL("UPDATE Port_Emp SET SID='" + sid1 + "' WHERE No='" + WebUser.getNo() + "'");
-			WebUser.setSID(sid1);
-		}
+			//判断是否视图，如果为视图则不进行修改 
+			if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == false)
+			{
+				/*如果记录sid*/
+				String sid1 = LocalDateTime.now().toString("MMddHHmmss");
+				DBAccess.RunSQL("UPDATE Port_Emp SET SID='" + sid1 + "' WHERE No='" + WebUser.getNo() + "'");
+				WebUser.setSID(sid1);
+			}
 		}
 
 		WebUser.setSysLang(lang);
 		if (BP.Sys.SystemConfig.getIsBSsystem())
 		{
-			//System.Web.HttpContext.Current.Response.Cookies.Clear();
+			// cookie操作，为适应不同平台，统一使用HttpContextHelper
+			HashMap<String, String> cookieValues = new HashMap<String, String>();
 
-			//HttpCookie hc = BP.Sys.Glo.getRequest().getCookies("CCS");
-			Cookie hc = ContextHolderUtils.getCookie("CCS");
-			if (hc != null)
-			{
-				ContextHolderUtils.deleteCookie("CCS");
-			}
-
-			int expiry = 60 * 60 * 24 * 2;
-			ContextHolderUtils.addCookie("No", expiry, em.getNo());
-			ContextHolderUtils.addCookie("Name", expiry, URLEncoder.encode(em.getName(), "UTF-8"));
-
+			cookieValues.put("No", em.getNo());
+			cookieValues.put("Name", HttpUtility.UrlEncode(em.getName()));
 
 			if (isRememberMe)
 			{
-				ContextHolderUtils.addCookie("IsRememberMe", expiry, "1");
+				cookieValues.put("IsRememberMe", "1");
 			}
 			else
 			{
-				ContextHolderUtils.addCookie("IsRememberMe", expiry, "0");
+				cookieValues.put("IsRememberMe", "0");
 			}
 
-			ContextHolderUtils.addCookie("FK_Dept", expiry, em.getFK_Dept());
-			ContextHolderUtils.addCookie("FK_DeptName", expiry, URLEncoder.encode(em.getFK_DeptText(), "UTF-8"));
+			cookieValues.put("FK_Dept", em.getFK_Dept());
+			cookieValues.put("FK_DeptName", HttpUtility.UrlEncode(em.getFK_DeptText()));
 
-			if (ContextHolderUtils.getSession() != null)
+			if (HttpContextHelper.getCurrent().Session != null)
 			{
-				ContextHolderUtils.addCookie("Token", expiry, getNoOfSessionID());
-				ContextHolderUtils.addCookie("SID", expiry, getNoOfSessionID());
+				cookieValues.put("Token", HttpContextHelper.getSessionID());
+				cookieValues.put("SID", HttpContextHelper.getSessionID());
 			}
 
-			ContextHolderUtils.addCookie("Lang", expiry, lang);
+			cookieValues.put("Lang", lang);
 			if (authNo == null)
 			{
 				authNo = "";
 			}
-			
-			ContextHolderUtils.addCookie("Auth", expiry, authNo);//授权人.
+			cookieValues.put("Auth", authNo); //授权人.
 
 			if (authName == null)
 			{
 				authName = "";
 			}
-			ContextHolderUtils.addCookie("AuthName", expiry, URLEncoder.encode(authName, "UTF-8"));//授权人名称
+			cookieValues.put("AuthName", authName); //授权人名称..
+
+			HttpContextHelper.ResponseCookieAdd(cookieValues, null, "CCS");
 		}
 	}
 
-	private static void ChangeMainDept(String no, String deptNo) {
-		//这里要考虑集成的模式下，更新会出现是.
-
-		String sql = BP.Sys.SystemConfig.GetValByKey("UpdataMainDeptSQL", "");
-		if (sql.equals(""))
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 静态方法
+	/** 
+	 通过key,取出session.
+	 
+	 @param key key
+	 @param isNullAsVal 如果是Null, 返回的值.
+	 @return 
+	*/
+	public static String GetSessionByKey(String key, String isNullAsVal)
+	{
+		//2019-07-25 zyt改造
+		if (getIsBSMode() && HttpContextHelper.getCurrent() != null && HttpContextHelper.getCurrent().Session != null)
 		{
-			//如果没有配置, 就取默认的配置.
-			sql = "UPDATE Port_Emp SET FK_Dept=@FK_Dept WHERE No=@No";
-		}
-
-		sql = sql.replace("@FK_Dept","'"+deptNo+"'");
-		sql = sql.replace("@No", "'"+no+"'");
-
-		try
-		{
-			if (sql.contains("UPDATE Port_Emp SET FK_Dept=") == true)
-				if (BP.DA.DBAccess.IsView("Port_Emp") == true)
-                    return;
-			BP.DA.DBAccess.RunSQL(sql);
-		}
-		catch (RuntimeException ex)
-		{
-			throw new RuntimeException("@执行更改当前操作员的主部门的时候错误,请检查SQL配置:" + ex.getMessage());
-		}
-	}
-
-	/**
-	 * 退出
-	 */
-	public static void Exit() {
-		try {
-//			String token = WebUser.getToken();
-//			ContextHolderUtils.clearCookie();// 不能全部都清除，应只清理本系统数据。
-//			ContextHolderUtils.getSession().invalidate();// 不能全部都清除，应只清理本系统数据。
-			// 清理Session
-			WebUser.setNo(null);
-			WebUser.setName(null);
-			WebUser.setFK_Dept(null);
-			WebUser.setFK_DeptName(null);
-			WebUser.setSID(null);
-			WebUser.setAuth(null);
-			//WebUser.setUserWorkDev(null);
-			WebUser.setSysLang(null);
-			if (SystemConfig.getIsBSsystem()) {
-				int expiry = 60 * 60 * 24 * 2;
-				ContextHolderUtils.addCookie("No", expiry, null);
-				ContextHolderUtils.addCookie("Name", expiry, null);
-				ContextHolderUtils.addCookie("IsRememberMe", expiry, null);
-				ContextHolderUtils.addCookie("FK_Dept", expiry, null);
-				ContextHolderUtils.addCookie("FK_DeptName", expiry, null);
-				ContextHolderUtils.addCookie("Token", expiry, null);
-				ContextHolderUtils.addCookie("SID", expiry, null);
-				ContextHolderUtils.addCookie("Lang", expiry, null);
-				ContextHolderUtils.addCookie("Auth", expiry, null);
+			String str = HttpContextHelper.SessionGetString(key);
+			if (DataType.IsNullOrEmpty(str))
+			{
+				str = isNullAsVal;
 			}
-//			WebUser.setToken(token);
-		} catch (java.lang.Exception e2) {}
+			return str;
+		}
+		else
+		{
+			if (BP.Port.Current.Session.get(key) == null || BP.Port.Current.Session.get(key).toString().equals(""))
+			{
+				BP.Port.Current.Session.put(key, isNullAsVal);
+				return isNullAsVal;
+			}
+			else
+			{
+				return (String)BP.Port.Current.Session.get(key);
+			}
+		}
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	/**
-	 * 是不是b/s 工作模式。
-	 */
-	private static boolean getIsBSMode() {
-		
-		if (ContextHolderUtils.getRequest() == null) {
+	/** 
+	 是不是b/s 工作模式。
+	*/
+	protected static boolean getIsBSMode()
+	{
+		if (HttpContextHelper.getCurrent() == null)
+		{
 			return false;
-		} else {
+		}
+		else
+		{
 			return true;
 		}
 	}
-	
-//	public static Object GetObjByKey(String key) {
-//		if (getIsBSMode()) {
-//			/*
-//			 * warning return BP.Glo.getHttpContextCurrent().Session[key];
-//			 */
-//			return ContextHolderUtils.getSession().getAttribute(key);
-//		} else {
-//			return Current.Session.get(key);
-//		}
-//	}
-
-	// 静态方法
-	/**
-	 * 通过key,取出session.
-	 * 
-	 * @param key key
-	 * @param isNullAsVal 如果是Null, 返回的值.
-	 * @return
-	 */
-	public static String GetSessionByKey(String key, String isNullAsVal) {
-//		return GetSessionByKey(key, isNullAsVal, false);
-//	}
-//
-//	/**
-//	 * 通过key,取出session.
-//	 * 
-//	 * @param key key
-//	 * @param isNullAsVal 如果是Null, 返回的值.
-//	 * @return
-//	 */
-//	public static String GetSessionByKey(String key, String isNullAsVal, boolean isChinese) {
-//		try {
-			if (getIsBSMode() && null != ContextHolderUtils.getRequest() && null != ContextHolderUtils.getSession()) {
-				Object value = ContextHolderUtils.getSession().getAttribute(key);
-				String str = value == null ? "" : String.valueOf(value);
-				if (StringHelper.isNullOrEmpty(str)) {
-					str = isNullAsVal;
-				}
-				return str;
-			} else {
-				if ((Current.Session.get(key) == null || Current.Session.get(key).toString().equals("")) && isNullAsVal != null) {
-					return isNullAsVal;
-				} else {
-					String str = (String) Current.Session.get(key);
-					return str;
-				}
-			}
-//		} catch (UnsupportedEncodingException e) {
-//			return isNullAsVal;
-//		}
-	}
-
-	public static Object GetSessionByKey(String key, Object defaultObjVal) {
-		if (getIsBSMode() && null != ContextHolderUtils.getRequest() && null != ContextHolderUtils.getSession()) {
-			Object value = ContextHolderUtils.getSession().getAttribute(key);
-			if (null == value) {
-				return defaultObjVal;
-			} else {
-				return value;
-			}
-		} else {
-			if (Current.Session.get(key) == null) {
-				return defaultObjVal;
-			} else {
-				return Current.Session.get(key);
-			}
-		}
-	}
-
-	/**
-	 * 设置session
-	 * 
-	 * @param key 键
-	 * @param val 值
-	 */
-	public static void SetSessionByKey(String key, Object val) {
-		if (getIsBSMode() && null != ContextHolderUtils.getRequest() && null != ContextHolderUtils.getSession()) {
-			ContextHolderUtils.getSession().setAttribute(key, val);
-		} else {
-			Current.SetSession(key, val);
-		}
-	}
-
-	public static String GetValFromCookie(String valKey, String isNullAsVal, boolean isChinese) {
-		if (!getIsBSMode()) {
-			return Current.GetSessionStr(valKey, isNullAsVal);
-		}
-	
-		try {
-			// 先从session里面取.
-			Object value = ContextHolderUtils.getSession().getAttribute(valKey);
-			String v = value == null ? "" : String.valueOf(value);
-			if (!StringHelper.isNullOrEmpty(v)) {
-				if (isChinese) {
-					v = URLDecoder.decode(v, "UTF-8");
-				}
-				return v;
-			}
-		} catch (java.lang.Exception e) {}
-	
-		try {
-			String val = null;
-			Cookie cookie = ContextHolderUtils.getCookie(valKey);
-			if (cookie != null){
-				if (isChinese) {
-					val = URLDecoder.decode(cookie.getValue(), "UTF-8");
-				} else {
-					val = cookie.getValue();
-				}
-			}
-	
-			if (StringHelper.isNullOrEmpty(val)) {
-				return isNullAsVal;
-			}
-			return val;
-		} catch (java.lang.Exception e2) {
-			e2.printStackTrace();
-			return isNullAsVal;
-		}
-	}
-
- 
-
-	public static String getSysLang() {
-		return "CH";
-	}
-
-	public static void setSysLang(String value) {
-		SetSessionByKey("Lang", value);
-	}
-
-	/**
-	 * FK_Dept
-	 * @throws Exception 
-	 */
-	public static String getFK_Dept() 
+	/** 
+	 设置session
+	 
+	 @param key 键
+	 @param val 值
+	*/
+	public static void SetSessionByKey(String key, String val)
 	{
-		
-		String val = GetValFromCookie("FK_Dept", null, false);
-		if (val == null) {
-			throw new RuntimeException("@err-003 FK_Dept 登录信息丢失，请确认当前操作员的部门信息是否完整，检查表:Port_Emp 字段 FK_Dept。");
+		if (val == null)
+		{
+			return;
 		}
-		return val;
-	}
-
-	public static void setFK_Dept(String value) {
-		SetSessionByKey("FK_Dept", value);
-	}
-
-	/**
-	 * 当前登录人员的父节点编号
-	 * @throws Exception 
-	 */
-	public static String getDeptParentNo() throws Exception {
-		String val = GetValFromCookie("DeptParentNo", null, false);
-		if (val == null) {
-			
-			if (WebUser.getFK_Dept()==null)			
-			throw new RuntimeException("@err-001 DeptParentNo, FK_Dept 登录信息丢失。");
-			
-			   BP.Port.Dept dept = new BP.Port.Dept( WebUser.getFK_Dept());
-               BP.Web.WebUser.setDeptParentNo(  dept.getParentNo());
-               return dept.getParentNo();
+		//2019-07-25 zyt改造
+		if (getIsBSMode() == true && HttpContextHelper.getCurrent() != null && HttpContextHelper.getCurrent().Session != null)
+		{
+			HttpContextHelper.SessionSet(key, val);
 		}
-		return val;
-	}
-
-	public static void setDeptParentNo(String value) {
-		SetSessionByKey("DeptParentNo", value);
-	}
-
-	/**
-	 * 检查权限控制
-	 * @param sid
-	 * @return
-	 */
-	public static boolean CheckSID(String UserNo, String SID) {
-//		String mysid = null;
-//		try {
-//			mysid = DBAccess.RunSQLReturnStringIsNull(
-//					"SELECT SID FROM Port_Emp WHERE No='" + UserNo + "'", null);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		if (SID != null && SID.equals(mysid)) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-		return true;
-	}
-
-	/**
-	 * sessionID
-	 */
-	public static String getNoOfSessionID() {
-		String s = GetSessionByKey("No", null);
-		if (s == null) {
-			/*
-			 * warning return BP.Glo.getHttpContextCurrent().Session.SessionID;
-			 */
-			return ContextHolderUtils.getSession().getId();
+		else
+		{
+			BP.Port.Current.SetSession(key, val);
 		}
-		return s;
 	}
-	
-	/**
-	 *  是否是操作员？
-	 * @throws Exception 
-	 */
-    public static boolean getIsAdmin() throws Exception
-    {
-            if ("admin".equals(BP.Web.WebUser.getNo()))
-                return true;
-            try
-            {
-                String sql = "SELECT * FROM WF_Emp WHERE UserType=1 AND No='"+WebUser.getNo()+"'";
-                if (DBAccess.RunSQLReturnTable(sql).Rows.size() == 1)
-                    return true;
-                return false;
-            }
-            catch (Exception E)
-            {
-                return false;
-            }
-      }
-    
+	/** 
+	 退回
+	*/
+	public static void Exit()
+	{
+		if (getIsBSMode() == false)
+		{
+			HttpContextHelper.ResponseCookieDelete(new String[] {"No", "Name", "Pass", "IsRememberMe", "Auth", "AuthName"}, "CCS");
 
-	public static String getNoOfRel() {
-		return GetSessionByKey("No", null);
-	}
-
-	/**
-	 * 编号
-	 * @throws Exception 
-	 */
-	public static String getNo() throws Exception {
-		// 如果设置了第三方的SessionKey名称，则进行根据第三方系统用户Key进行登录。
-		String userNoSessionKey = ContextHolderUtils.getInstance().getUserNoSessionKey();
-		if (StringUtils.isNotBlank(userNoSessionKey)){
-			String userNo = ObjectUtils.toString(ContextHolderUtils.getSession().getAttribute(userNoSessionKey));
-			// 如果第三方的用户id不存在，则代表已退出，同步退出jflow。
-			if (StringUtils.isNotBlank(userNo)){
-				// 如果是平台管理员账号，则转换为jflow的管理员账号
-				if (BP.WF.Glo.getIsAdmin(userNo)){
-					userNo = "admin";
-				}
-				// 获取当前是否已登录，如果已登录并且与第三方id一样，则直接返回，否则重新登录
-				String val = GetSessionByKey("No", "");
-				if (val != null && userNo.equals(val)){
-					return val;
-				}else{
-					// 登录WF平台，这里需要保存SID方便第三方系统获取。
-					BP.Port.Emp emp = new BP.Port.Emp(userNo);
-					WebUser.SignInOfGener(emp, "CH", null, true, true);
-				}
-			}else{
-				WebUser.Exit();
-			}
+			return;
 		}
-		//		String val = GetValFromCookie("No", null, true);
-		String val = GetSessionByKey("No", "");
-		if (val == null) {
-			//val = "admin";
-			throw new RuntimeException("@err-002 No 登录信息丢失。");
+
+		try
+		{
+			BP.Port.Current.Session.clear();
+
+			HttpContextHelper.ResponseCookieDelete(new String[] {"No", "Name", "Pass", "IsRememberMe", "Auth", "AuthName"}, "CCS");
+
+			HttpContextHelper.SessionClear();
 		}
-		return val;
-	}
-
-	public static void setNo(String value) {
-		SetSessionByKey("No", value.trim());
-	}
-
-	/**
-	 * 名称
-	 */
-	public static String getName() {
-		//		String val = GetValFromCookie("Name", null, true);
-		String val = GetSessionByKey("Name", "");
-		if (val == null) {
-			throw new RuntimeException("@err-002 Name 登录信息丢失。");
+		catch (java.lang.Exception e)
+		{
 		}
-		return val;
 	}
-
-	public static void setName(String value) {
-		SetSessionByKey("Name", value);
-	}
-
-	/**
-	 * 域
-	 */
-	public static String getDomain() {
-		String val = GetSessionByKey("Domain", "");
-		if (val == null) {
-			throw new RuntimeException("@err-003 Domain 登录信息丢失。");
-		}
-		return val;
-	}
-
-	public static void setDomain(String value) {
-		SetSessionByKey("Domain", value);
-	}
-
-	/**
-	 * 令牌
-	 */
-	public static String getToken() {
-
-		return GetSessionByKey("token", "null");
-	}
-
-	public static void setToken(String value) {
-		SetSessionByKey("token", value);
-	}
-
-	/**
-	 * 授权人
-	 */
-	public static String getAuth() {
+	/** 
+	 授权人
+	*/
+	public static String getAuth()
+	{
 		String val = GetValFromCookie("Auth", null, false);
-		if (val == null) {
+		if (val == null)
+		{
 			val = GetSessionByKey("Auth", null);
 		}
 		return val;
 	}
-
-	public static void setAuth(String value) {
-		if (value == null || value.equals("")) {
+	public static void setAuth(String value)
+	{
+		if (value.equals(""))
+		{
 			SetSessionByKey("Auth", null);
-		} else {
-			SetSessionByKey("Auth", value);
-		}
-	}
-
-	// 使用授权人ID
-	public static String getAuthName()
-	{
-		String val = GetValFromCookie("AuthName", null, false);
-		if (val == null)
-		{
-		val = GetSessionByKey("AuthName", null);
-		}
-		return val;
-	}
-	public static void setAuthName(String value)
-	{
-		if (null == value || "null".equals(value) || value.equals(""))
-		{
-		SetSessionByKey("AuthName", null);
 		}
 		else
 		{
-		SetSessionByKey("AuthName", value);
+			SetSessionByKey("Auth", value);
 		}
 	}
-
-	public static String getFK_DeptName() {
-		try {
-			//String val = GetValFromCookie("FK_DeptName", null, true);
-			String val = GetSessionByKey("FK_DeptName", "");
+	/** 
+	 部门名称
+	*/
+	public static String getFK_DeptName()
+	{
+		try
+		{
+			String val = GetValFromCookie("FK_DeptName", null, true);
 			return val;
-		} catch (java.lang.Exception e) {
+		}
+		catch (java.lang.Exception e)
+		{
 			return "无";
 		}
 	}
-
-	public static void setFK_DeptName(String value) {
+	public static void setFK_DeptName(String value)
+	{
 		SetSessionByKey("FK_DeptName", value);
 	}
-
-	/**
-	 * 部门全称
-	 */
-	public static String getFK_DeptNameOfFull() {
+	/** 
+	 部门全称
+	*/
+	public static String getFK_DeptNameOfFull()
+	{
 		String val = GetValFromCookie("FK_DeptNameOfFull", null, true);
-		if (StringHelper.isNullOrEmpty(val)) {
-			try {
-				val = DBAccess.RunSQLReturnStringIsNull("SELECT NameOfPath FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'", "");
+		if (DataType.IsNullOrEmpty(val))
+		{
+			try
+			{
+				val = DBAccess.RunSQLReturnStringIsNull("SELECT NameOfPath FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'", null);
 				return val;
-			} catch (java.lang.Exception e) {
+			}
+			catch (java.lang.Exception e)
+			{
 				val = WebUser.getFK_DeptName();
 			}
 
-			// 给它赋值.
+				//给它赋值.
 			setFK_DeptNameOfFull(val);
 		}
 		return val;
 	}
-
-	public static void setFK_DeptNameOfFull(String value) {
+	public static void setFK_DeptNameOfFull(String value)
+	{
 		SetSessionByKey("FK_DeptNameOfFull", value);
 	}
+	/** 
+	 令牌
+	*/
+	public static String getToken()
+	{
+		return GetSessionByKey("token", "null");
+	}
+	public static void setToken(String value)
+	{
+		SetSessionByKey("token", value);
+	}
+	/** 
+	 语言
+	*/
+	public static String getSysLang()
+	{
+		return "CH";
+			/*
+			string no = GetSessionByKey("Lang", null);
+			if (no == null || no == "")
+			{
+			    if (IsBSMode)
+			    {
+			        // HttpCookie hc1 = BP.Sys.Glo.Request.Cookies["CCS"];
+			        string lang = HttpContextHelper.RequestCookieGet("Lang", "CCS");
+			        if (String.IsNullOrEmpty(lang))
+			            return "CH";
+			        SetSessionByKey("Lang", lang);
+			    }
+			    else
+			    {
+			        return "CH";
+			    }
+			    return GetSessionByKey("Lang", "CH");
+			}
+			else
+			{
+			    return no;
+			}*/
+	}
+	public static void setSysLang(String value)
+	{
+		SetSessionByKey("Lang", value);
+	}
+	/** 
+	 当前登录人员的部门
+	*/
+	public static String getFK_Dept()
+	{
+		String val = GetValFromCookie("FK_Dept", null, false);
+		if (val == null)
+		{
+			if (WebUser.getNo() == null)
+			{
+				throw new RuntimeException("@登录信息丢失，请你确认是否启用了cookie? ");
+			}
 
-	public static String getStyle() {
-		return GetSessionByKey("Style", "0");
+			String sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + WebUser.getNo() + "'";
+			String dept = BP.DA.DBAccess.RunSQLReturnStringIsNull(sql, null);
+			if (dept == null && SystemConfig.getOSModel() == OSModel.OneMore)
+			{
+				sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + WebUser.getNo() + "'";
+				dept = BP.DA.DBAccess.RunSQLReturnStringIsNull(sql, null);
+			}
+
+			if (dept == null)
+			{
+				throw new RuntimeException("@err-003 FK_Dept，当前登录人员(" + WebUser.getNo() + ")，没有设置部门。");
+			}
+
+			SetSessionByKey("FK_Dept", dept);
+			return dept;
+		}
+		return val;
+	}
+	public static void setFK_Dept(String value)
+	{
+		SetSessionByKey("FK_Dept", value);
+	}
+	/** 
+	 所在的集团编号
+	*/
+	public static String getGroupNo111()
+	{
+		String val = GetValFromCookie("GroupNo", null, false);
+		if (val == null)
+		{
+			if (!SystemConfig.getCustomerNo().equals("Bank"))
+			{
+				return "0";
+			}
+
+			if (WebUser.getNo() == null)
+			{
+				throw new RuntimeException("@登录信息丢失，请你确认是否启用了cookie? ");
+			}
+
+			String sql = "SELECT GroupNo FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'";
+			String groupNo = BP.DA.DBAccess.RunSQLReturnStringIsNull(sql, null);
+
+			if (groupNo == null)
+			{
+				throw new RuntimeException("@err-003 FK_Dept，当前登录人员(" + WebUser.getNo() + ")，没有设置部门。");
+			}
+
+			SetSessionByKey("GroupNo", groupNo);
+			return groupNo;
+		}
+		return val;
+	}
+	public static void setGroupNo111(String value)
+	{
+		SetSessionByKey("GroupNo", value);
+	}
+	/** 
+	 当前登录人员的父节点编号
+	*/
+	public static String getDeptParentNo()
+	{
+		String val = GetValFromCookie("DeptParentNo", null, false);
+		if (val == null)
+		{
+			if (BP.Web.WebUser.getFK_Dept() == null)
+			{
+				throw new RuntimeException("@err-001 DeptParentNo, FK_Dept 登录信息丢失。");
+			}
+
+			BP.Port.Dept dept = new Port.Dept(BP.Web.WebUser.getFK_Dept());
+			BP.Web.WebUser.setDeptParentNo(dept.getParentNo());
+			return dept.getParentNo();
+		}
+		return val;
+	}
+	public static void setDeptParentNo(String value)
+	{
+		SetSessionByKey("DeptParentNo", value);
+	}
+	/** 
+	 检查权限控制
+	 
+	 @param sid
+	 @return 
+	*/
+	public static boolean CheckSID(String userNo, String sid)
+	{
+		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
+		{
+			return true;
+		}
+
+		Paras paras = new Paras();
+		paras.SQL = "SELECT SID FROM Port_Emp WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "No";
+		paras.Add("No", userNo);
+		String mysid = DBAccess.RunSQLReturnStringIsNull(paras, null);
+		return sid.equals(mysid);
+	}
+	public static String getNoOfRel()
+	{
+		String val = GetSessionByKey("No", null);
+		if (val == null)
+		{
+			return GetValFromCookie("No", null, true);
+		}
+		return val;
+	}
+	public static String GetValFromCookie(String valKey, String isNullAsVal, boolean isChinese)
+	{
+
+
+		if (getIsBSMode() == false)
+		{
+			return BP.Port.Current.GetSessionStr(valKey, isNullAsVal);
+		}
+
+		try
+		{
+			//先从session里面取.
+			//string v = System.Web.HttpContext.Current.Session[valKey] as string;
+			//2019-07-25 zyt改造
+			String v = HttpContextHelper.<String>SessionGet(valKey);
+			if (DataType.IsNullOrEmpty(v) == false)
+			{
+				return v;
+			}
+		}
+		catch (java.lang.Exception e)
+		{
+		}
+
+
+		try
+		{
+			String val = HttpContextHelper.RequestCookieGet(valKey, "CCS");
+
+			if (isChinese)
+			{
+				val = HttpUtility.UrlDecode(val);
+			}
+
+
+
+			if (DataType.IsNullOrEmpty(val))
+			{
+				return isNullAsVal;
+			}
+			return val;
+		}
+		catch (java.lang.Exception e2)
+		{
+			return isNullAsVal;
+		}
+		throw new RuntimeException("@err-001 (" + valKey + ")登录信息丢失。");
+	}
+	/** 
+	 设置信息.
+	 
+	 @param keyVals
+	*/
+	public static void SetValToCookie(String keyVals)
+	{
+		if (BP.Sys.SystemConfig.getIsBSsystem() == false)
+		{
+			return;
+		}
+
+		/* 2019-7-25 张磊 如下代码没有作用，删除
+		HttpCookie hc = BP.Sys.Glo.Request.Cookies["CCS"];
+		if (hc != null)
+		    BP.Sys.Glo.Request.Cookies.Remove("CCS");
+
+		HttpCookie cookie = new HttpCookie("CCS");
+		cookie.Expires = DateTime.Now.AddMinutes(SystemConfig.SessionLostMinute);
+		*/
+
+		HashMap<String, String> cookieValues = new HashMap<String, String>();
+		AtPara ap = new AtPara(keyVals);
+		for (String key : ap.getHisHT().keySet())
+		{
+			cookieValues.put(key, ap.GetValStrByKey(key));
+		}
+
+		HttpContextHelper.ResponseCookieAdd(cookieValues, LocalDateTime.now().plusMinutes(SystemConfig.getSessionLostMinute()), "CCS");
 	}
 
-	public static void setStyle(String value) {
-		SetSessionByKey("Style", value);
+	/** 
+	 是否是操作员？
+	*/
+	public static boolean getIsAdmin()
+	{
+		if (BP.Web.WebUser.getNo().equals("admin"))
+		{
+			return true;
+		}
+		try
+		{
+			String sql = "SELECT No FROM WF_Emp WHERE UserType=1 AND No='" + WebUser.getNo() + "'";
+			if (DBAccess.RunSQLReturnTable(sql).Rows.Count == 1)
+			{
+				return true;
+			}
+			return false;
+		}
+		catch (java.lang.Exception e)
+		{
+			return false;
+		}
 	}
-
-	/**
-	 * 当前工作人员实体
-	 * @throws Exception 
-	 */
-	public static Emp getHisEmp() throws Exception {
-		return new Emp(WebUser.getNo());
+	/** 
+	 编号
+	*/
+	public static String getNo()
+	{
+		return GetValFromCookie("No", null, true);
 	}
+	public static void setNo(String value)
+	{
+		SetSessionByKey("No", value.trim()); //@祝梦娟.
+	}
+	/** 
+	 名称
+	*/
+	public static String getName()
+	{
+		String no = BP.Web.WebUser.getNo();
 
-	/**
-	 * SID
-	 */
-	public static String getSID() {
+		String val = GetValFromCookie("Name", no, true);
+		if (val == null)
+		{
+			throw new RuntimeException("@err-002 Name 登录信息丢失。");
+		}
+
+		return val;
+	}
+	public static void setName(String value)
+	{
+		SetSessionByKey("Name", value);
+	}
+	/** 
+	 域
+	*/
+	public static String getDomain()
+	{
+		String val = GetValFromCookie("Domain", null, true);
+		if (val == null)
+		{
+			throw new RuntimeException("@err-003 Domain 登录信息丢失。");
+		}
+		return val;
+	}
+	public static void setDomain(String value)
+	{
+		SetSessionByKey("Domain", value);
+	}
+	public static Stations getHisStations()
+	{
+		Stations sts = new Stations();
+		QueryObject qo = new QueryObject(sts);
+		qo.AddWhereInSQL("No", "SELECT FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + WebUser.getNo() + "'");
+		qo.DoQuery();
+
+		return sts;
+	}
+	/** 
+	 SID
+	*/
+	public static String getSID()
+	{
 		String val = GetValFromCookie("SID", null, true);
-		if (val == null) {
+		if (val == null)
+		{
 			return "";
 		}
 		return val;
 	}
-
-	public static void setSID(String value) {
+	public static void setSID(String value)
+	{
 		SetSessionByKey("SID", value);
 	}
 	/** 
 	 设置SID
 	 
 	 @param sid
-	 * @throws Exception 
-*/
-	public static void SetSID(String sid) throws Exception
+	*/
+	public static void SetSID(String sid)
 	{
-		//判断是否视图，如果为视图则不进行修改 @于庆海 需要翻译
-		if (BP.DA.DBAccess.IsView("Port_Emp") == false)
+		//判断是否视图，如果为视图则不进行修改
+		if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == false)
 		{
 			Paras ps = new Paras();
 			ps.SQL = "UPDATE Port_Emp SET SID=" + SystemConfig.getAppCenterDBVarStr() + "SID WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "No";
@@ -856,277 +795,77 @@ public class WebUser {
 		}
 		WebUser.setSID(sid);
 	}
-
-	/**
-	 * 是否是授权状态
-	 */
-	public static boolean getIsAuthorize() {
-		if (getAuth() == null || getAuth().equals("")) {
+	/** 
+	 是否是授权状态
+	*/
+	public static boolean getIsAuthorize()
+	{
+		if (getAuth() == null || getAuth().equals(""))
+		{
 			return false;
 		}
 		return true;
 	}
-
-	/**
-	 * 使用授权人ID
-	 */
-	public static String getAuthorizerEmpID() {
-		return GetSessionByKey("AuthorizerEmpID", null);
-
-	}
-
-	public static void setAuthorizerEmpID(String value) {
-		SetSessionByKey("AuthorizerEmpID", value);
-	}
-
-	/**
-	 * 用户工作方式.
-	 */
-	public static UserWorkDev getUserWorkDev() {
-		if (BP.Sys.SystemConfig.getIsBSsystem() == false) {
-			return getUserWorkDev().PC;
-		}
-
-		int s = (Integer) GetSessionByKey("UserWorkDev", 0);
-		BP.Web.UserWorkDev wd = UserWorkDev.forValue(s);
-		return wd;
-	}
-
-	public static void setUserWorkDev(UserWorkDev value) {
-		SetSessionByKey("UserWorkDev", value.getValue());
-	}
-
-	public static boolean getIsWap() {
-		if (!SystemConfig.getIsBSsystem())
-			return false;
-		int s = Integer.parseInt(GetSessionByKey("IsWap", 9).toString());
-		if (9 == s) {
-			String userAgent = ContextHolderUtils.getRequest().getHeader("USER-AGENT").toLowerCase();
-			boolean b = userAgent.contains("wap");
-			setIsWap(b);
-			if (b) {
-				SetSessionByKey("IsWap", 1);
-			} else {
-				SetSessionByKey("IsWap", 0);
-			}
-			return b;
-		}
-		if (s == 1)
-			return true;
-		else
-			return false;
-	}
-
-	public static void setIsWap(boolean value) {
-		if (value) {
-			SetSessionByKey("IsWap", 1);
-		} else {
-			SetSessionByKey("IsWap", 0);
-		}
-	}
-
-	// 部门权限
-	 
-
-	// 部门权限
-
-	// public static Stations getHisStations() {
-	// EmpStations sts = new EmpStations();
-	// return sts.GetHisStations(WebUser.getNo());
-	// }
-	public static Stations getHisStations() throws Exception {
-		Object obj = null;
-		obj = GetSessionByKey("HisSts", obj);
-		if (obj == null) {
-			Stations sts = new Stations();
-			QueryObject qo = new QueryObject(sts);
-			qo.AddWhereInSQL("No", "SELECT FK_Station FROM Port_EmpStation WHERE FK_Emp='" + WebUser.getNo() + "'");
-			qo.DoQuery();
-			SetSessionByKey("HisSts", sts);
-			return sts;
-		}
-		return (Stations) ((obj instanceof Stations) ? obj : null);
-	}
-
-	/**
-	 * 岗位s
-	 * @throws Exception 
-	 */
-	public static String getHisStationsStr() throws Exception {
-		String val = GetValFromCookie("HisStationsStr", null, true);
-		if (val == null) {
-			Object tempVar = BP.DA.DBAccess.RunSQLReturnVal("SELECT Stas FROM WF_Emp WHERE No='" + WebUser.getNo() + "'");
-			val = (String) ((tempVar instanceof String) ? tempVar : null);
-
-			if (val == null) {
-				val = "";
-			}
-			SetSessionByKey("HisStationsStr", val);
-		}
-		return val;
-	}
-
-	public static void setHisStationsStr(String value) {
-		SetSessionByKey("HisStationsStr", value);
-
-	}
-
-	/**
-	 * 部门s
-	 * @throws Exception 
-	 */
-	public static String getHisDeptsStr() throws Exception {
-		String val = GetValFromCookie("HisDeptsStr", "", true);
-		if (val == null) {
-			Object tempVar = BP.DA.DBAccess.RunSQLReturnVal("SELECT Depts FROM WF_Emp WHERE No='" + WebUser.getNo() + "'");
-			val = (String) ((tempVar instanceof String) ? tempVar : null);
-			if (val == null) {
-				val = "";
-			}
-			SetSessionByKey("HisDeptsStr", val);
-		}
-		return val;
-	}
-
-	public static void setHisDeptsStr(String value) {
-		SetSessionByKey("HisDeptsStr", value);
-	}
-	
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName, String authNo) throws UnsupportedEncodingException
-	{
-		SignInOfGener2017(userNo, userName, deptNo, deptName, authNo, null);
-	}
-
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName) throws UnsupportedEncodingException
-	{
-		SignInOfGener2017(userNo, userName, deptNo, deptName, null, null);
-	}
-
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo) throws UnsupportedEncodingException
-	{
-		SignInOfGener2017(userNo, userName, deptNo, null, null, null);
-	}
-
-	public static void SignInOfGener2017(String userNo, String userName) throws UnsupportedEncodingException
-	{
-		SignInOfGener2017(userNo, userName, null, null, null, null);
-	}
-
-	public static void SignInOfGener2017(String userNo) throws UnsupportedEncodingException
-	{
-		SignInOfGener2017(userNo, null, null, null, null, null);
-	}
-
 	/** 
-	 * 用户登录
-	 * @param userNo 用户编号
-	 * @param userName 用户名称
-	 * @param deptNo 部门编号
-	 * @param deptName 名称
-	 * @param authNo 授权人编号
-	 * @param authName 名称
-	 * @throws UnsupportedEncodingException 
-	 */
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName, String authNo, String authName) throws UnsupportedEncodingException
+	 使用授权人ID
+	*/
+	public static String getAuthName()
 	{
-		if (ContextHolderUtils.getRequest() == null)
+		String val = GetValFromCookie("AuthName", null, false);
+		if (val == null)
 		{
-			SystemConfig.setIsBSsystem(false);
+			val = GetSessionByKey("AuthName", null);
+		}
+		return val;
+	}
+	public static void setAuthName(String value)
+	{
+		if (value.equals(""))
+		{
+			SetSessionByKey("AuthName", null);
 		}
 		else
 		{
-			SystemConfig.setIsBSsystem(true);
-		}
-
-
-		WebUser.setNo(userNo);
-		WebUser.setName(userName);
-		if (DotNetToJavaStringHelper.isNullOrEmpty(authNo) == false)
-		{
-			WebUser.setAuth(authNo); //被授权人，实际工作的执行者.
-			WebUser.setAuthName(authName);
-		}
-		else
-		{
-			WebUser.setAuth(null); 
-			WebUser.setAuthName(null); 
-		}
-
-
-		//登录模式？
-		BP.Web.WebUser.setUserWorkDev(UserWorkDev.PC);
-
-
-		///#region 解决部门的问题.
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
-		{
-			if (StringHelper.isNullOrEmpty(deptNo) == true)
-			{
-				String sql = "";
-				if (BP.Sys.SystemConfig.getOSModel() == OSModel.OneOne)
-				{
-					sql = "SELECT FK_Dept FROM Port_EmpDept WHERE FK_Emp='" + userNo + "'";
-				}
-				else
-				{
-					sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + userNo + "'";
-				}
-
-				deptNo = BP.DA.DBAccess.RunSQLReturnString(sql);
-				if (StringHelper.isNullOrEmpty(deptNo) == true)
-				{
-					throw new RuntimeException("@登录人员(" + userNo + "," + userName + ")没有维护部门...");
-				}
-				else
-				{
-					//调用接口更改所在的部门.
-					// WebUser.ChangeMainDept(em.No, deptNo);
-				}
-			}
-		}
-
-
-
-		///#endregion 解决部门的问题.
-
-		WebUser.setFK_Dept(deptNo);
-		WebUser.setFK_DeptName(deptName); 
-		WebUser.setHisDeptsStr(null);
-		WebUser.setHisStationsStr(null);
-
-		if (BP.Sys.SystemConfig.getIsBSsystem())
-		{
-			//System.Web.HttpContext.Current.Response.Cookies.Clear();
-			//HttpCookie hc = Glo.getRequest.Cookies["CCS"];
-			Cookie hc = ContextHolderUtils.getCookie("CCS");
-			if (hc != null)
-			{
-				hc = new Cookie("CCS",null);
-			}
-
-			int expiry = 60 * 60 * 24 * 2;
-			ContextHolderUtils.addCookie("No", expiry, userNo);
-			ContextHolderUtils.addCookie("Name", expiry, URLEncoder.encode(userName, "UTF-8"));
-
-			ContextHolderUtils.addCookie("FK_Dept", expiry, deptNo);
-			ContextHolderUtils.addCookie("FK_DeptName", expiry, URLEncoder.encode(deptName, "UTF-8"));
-			if (ContextHolderUtils.getSession() != null)
-			{
-				ContextHolderUtils.addCookie("Token", expiry, getNoOfSessionID());
-				ContextHolderUtils.addCookie("SID", expiry, getNoOfSessionID());
-			}
-
-			if (authNo == null)
-			{
-				authNo = "";
-			}
-
-			ContextHolderUtils.addCookie("Auth", expiry, authNo);//授权人.
-			if (authName == null)
-			{
-				authName = "";
-			}
-			ContextHolderUtils.addCookie("AuthName", expiry, authName);//授权人名称..
+			SetSessionByKey("AuthName", value);
 		}
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 当前人员操作方法.
+	public static void DeleteTempFileOfMy()
+	{
+		String usr = HttpContextHelper.RequestCookieGet("No", "CCS"); //hc.Values["No"];
+		String[] strs = System.IO.Directory.GetFileSystemEntries(SystemConfig.getPathOfTemp());
+		for (String str : strs)
+		{
+			if (str.indexOf(usr) == -1)
+			{
+				continue;
+			}
+
+			try
+			{
+				(new File(str)).delete();
+			}
+			catch (java.lang.Exception e)
+			{
+			}
+		}
+	}
+	public static void DeleteTempFileOfAll()
+	{
+		String[] strs = System.IO.Directory.GetFileSystemEntries(SystemConfig.getPathOfTemp());
+		for (String str : strs)
+		{
+			try
+			{
+				(new File(str)).delete();
+			}
+			catch (java.lang.Exception e)
+			{
+			}
+		}
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

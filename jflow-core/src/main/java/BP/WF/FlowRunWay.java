@@ -2,30 +2,27 @@ package BP.WF;
 
 /** 
  流程启动类型
- 
 */
 public enum FlowRunWay
 {
 	/** 
 	 手工启动
-	 
 	*/
 	HandWork,
 	/** 
 	 指定人员按时启动
-	 
 	*/
 	SpecEmp,
 	/** 
 	 数据集按时启动
-	 
 	*/
 	DataModel,
 	/** 
 	 触发式启动
-	 
 	*/
 	InsertModel;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

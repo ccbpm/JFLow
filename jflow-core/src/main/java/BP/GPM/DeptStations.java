@@ -1,17 +1,16 @@
 package BP.GPM;
 
-import BP.DA.Cash;
-import BP.DA.Depositary;
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.En.QueryObject;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  部门岗位对应 
 */
 public class DeptStations extends Entities
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 工作部门岗位对应
 	*/
@@ -20,14 +19,18 @@ public class DeptStations extends Entities
 	}
 	/** 
 	 工作人员与岗位集合
-	 * @throws Exception 
 	*/
-	public DeptStations(String stationNo) throws Exception
+	public DeptStations(String stationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DeptStationAttr.FK_Station, stationNo);
 		qo.DoQuery();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -36,14 +39,18 @@ public class DeptStations extends Entities
 	{
 		return new DeptStation();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 查询方法
 	/** 
 	 岗位对应的节点
+	 
 	 @param stationNo 岗位编号
 	 @return 节点s
-	 * @throws Exception 
 	*/
-	public final Emps GetHisEmps(String stationNo) throws Exception
+	public final Emps GetHisEmps(String stationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DeptStationAttr.FK_Station, stationNo);
@@ -51,7 +58,7 @@ public class DeptStations extends Entities
 		qo.DoQuery();
 
 		Emps ens = new Emps();
-		for(DeptStation en : this.ToJavaList())
+		for (DeptStation en : this)
 		{
 			ens.AddEntity(new Emp(en.getFK_Dept()));
 		}
@@ -60,16 +67,16 @@ public class DeptStations extends Entities
 	}
 	/** 
 	 工作部门岗位对应s
+	 
 	 @param empId empId
 	 @return 工作部门岗位对应s 
-	 * @throws Exception 
 	*/
-	public final Stations GetHisStations(String empId) throws Exception
+	public final Stations GetHisStations(String empId)
 	{
 		Stations ens = new Stations();
-		if (Cash.IsExits("DeptStationsOf"+empId, Depositary.Application))
+		if (Cash.IsExits("DeptStationsOf" + empId, Depositary.Application))
 		{
-			return (Stations)Cash.GetObjFormApplication("DeptStationsOf"+empId, null);
+			return (Stations)Cash.GetObjFormApplication("DeptStationsOf" + empId, null);
 		}
 		else
 		{
@@ -77,35 +84,42 @@ public class DeptStations extends Entities
 			qo.AddWhere(DeptStationAttr.FK_Dept, empId);
 			qo.addOrderBy(DeptStationAttr.FK_Station);
 			qo.DoQuery();
-			for(DeptStation en : this.ToJavaList())
+			for (DeptStation en : this)
 			{
 				ens.AddEntity(new Station(en.getFK_Station()));
 			}
-			Cash.AddObj("DeptStationsOf"+empId, Depositary.Application, ens);
+			Cash.AddObj("DeptStationsOf" + empId, Depositary.Application, ens);
 			return ens;
 		}
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<DeptStation> ToJavaList()
+	public final List<DeptStation> ToJavaList()
 	{
-		return (java.util.List<DeptStation>)(Object)this;
+		return (List<DeptStation>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<DeptStation> Tolist()
+	public final ArrayList<DeptStation> Tolist()
 	{
-		java.util.ArrayList<DeptStation> list = new java.util.ArrayList<DeptStation>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<DeptStation> list = new ArrayList<DeptStation>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((DeptStation)this.get(i));
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

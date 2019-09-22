@@ -1,32 +1,32 @@
 package BP.WF.Template;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  Accpter
- 
 */
 public class Selectors extends Entities
 {
 	/** 
 	 Accpter
-	 
 	*/
 	public Selectors()
 	{
 	}
-	//袁丽娜
-	public Selectors(String fk_flow) throws Exception
+
+	public Selectors(String fk_flow)
 	{
-		String sql = "select NodeId from WF_Node where FK_Flow='"+fk_flow+"'";
+		String sql = "select NodeId from WF_Node where FK_Flow='" + fk_flow + "'";
 		this.RetrieveInSQL(sql);
-		
-		return;
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -34,31 +34,31 @@ public class Selectors extends Entities
 		return new Selector();
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<Selector> ToJavaList()
+	public final List<Selector> ToJavaList()
 	{
-		return (java.util.List<Selector>)(Object)this;
+		return (List<Selector>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<Selector> Tolist()
+	public final ArrayList<Selector> Tolist()
 	{
-		java.util.ArrayList<Selector> list = new java.util.ArrayList<Selector>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<Selector> list = new ArrayList<Selector>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((Selector)this.get(i));
+			list.add((Selector)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

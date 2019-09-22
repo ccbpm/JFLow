@@ -3,43 +3,42 @@ package BP.GPM;
 import BP.Sys.*;
 import BP.DA.*;
 import BP.En.*;
+import BP.*;
+import java.util.*;
 
 public class Glo
 {
 	/** 
 	 运行模式
-	 
 	*/
 	public static OSModel getOSModel()
 	{
-		OSModel os = OSModel.forValue(SystemConfig.GetValByKeyInt("OSModel", 1));
-		return os;
+		return getOSModel().OneMore;
+			//OSModel os = (OSModel)BP.Sys.SystemConfig.GetValByKeyInt("OSModel", 1);
+			//return os;  
 	}
 	/** 
 	 钉钉是否启用
-	 
 	*/
 	public static boolean getIsEnable_DingDing()
 	{
 			//如果两个参数都不为空说明启用
-		String corpid = SystemConfig.getDing_CorpID();
-		String corpsecret = SystemConfig.getDing_CorpSecret();
+		String corpid = BP.Sys.SystemConfig.Ding_CorpID;
+		String corpsecret = BP.Sys.SystemConfig.Ding_CorpSecret;
 		if (DataType.IsNullOrEmpty(corpid) || DataType.IsNullOrEmpty(corpsecret))
 		{
 			return false;
 		}
-
 		return true;
 	}
 	/** 
 	 微信是否启用
-	 
 	*/
 	public static boolean getIsEnable_WeiXin()
 	{
 			//如果两个参数都不为空说明启用
-		String corpid = SystemConfig.getWX_CorpID();
-		String corpsecret = SystemConfig.getWX_AppSecret();
+		String corpid = BP.Sys.SystemConfig.WX_CorpID;
+		String corpsecret = BP.Sys.SystemConfig.WX_AppSecret;
 		if (DataType.IsNullOrEmpty(corpid) || DataType.IsNullOrEmpty(corpsecret))
 		{
 			return false;
@@ -49,21 +48,19 @@ public class Glo
 	}
 	/** 
 	 安装包
-	 * @throws Exception 
-	 
 	*/
-	public static void DoInstallDataBase(String lang, String yunXingHuanjing) throws Exception
+	public static void DoInstallDataBase()
 	{
-		java.util.ArrayList al = null;
+		ArrayList al = null;
 		String info = "BP.En.Entity";
 		al = BP.En.ClassFactory.GetObjects(info);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 1, 修复表
 		for (Object obj : al)
 		{
 			Entity en = null;
-			en = (Entity)((obj instanceof Entity) ? obj : null);
+			en = obj instanceof Entity ? (Entity)obj : null;
 			if (en == null)
 			{
 				continue;
@@ -78,6 +75,12 @@ public class Glo
 			{
 				continue;
 			}
+
+			if (en.toString().contains("BP.GPM.") == false)
+			{
+				continue;
+			}
+
 			//if (en.ToString().Contains("BP.GPM."))
 			//    continue;
 			//if (en.ToString().Contains("BP.Demo."))
@@ -86,8 +89,12 @@ public class Glo
 			String table = null;
 			try
 			{
-				table = en.getEnMap().getPhysicsTable();
+				table = en.EnMap.PhysicsTable;
 				if (table == null)
+				{
+					continue;
+				}
+				if (en.EnMap.PhysicsTable.toLowerCase().contains("demo_") == true)
 				{
 					continue;
 				}
@@ -97,22 +104,21 @@ public class Glo
 				continue;
 			}
 
-
-			if (table.equals("WF_EmpWorks") || table.equals("WF_GenerEmpWorkDtls") || table.equals("WF_GenerEmpWorks"))
+			switch (table)
 			{
+				case "WF_EmpWorks":
+				case "WF_GenerEmpWorkDtls":
+				case "WF_GenerEmpWorks":
 					continue;
+				case "Sys_Enum":
+					en.CheckPhysicsTable();
+					break;
+				default:
+					en.CheckPhysicsTable();
+					break;
 			}
 
-			else if (table.equals("Sys_Enum"))
-			{
-					en.CheckPhysicsTable();
-			}
-			else
-			{
-					en.CheckPhysicsTable();
-			}
-
-			en.setPKVal("123");
+			en.PKVal = "123";
 			try
 			{
 				en.RetrieveFromDBSources();
@@ -123,113 +129,69 @@ public class Glo
 				en.CheckPhysicsTable();
 			}
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 修复
 
-		///#endregion 修复
-
-		///#region 2, 注册枚举类型 sql
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 2, 注册枚举类型 sql
 		// 2, 注册枚举类型。
 		BP.Sys.XML.EnumInfoXmls xmls = new BP.Sys.XML.EnumInfoXmls();
 		xmls.RetrieveAll();
-		for (BP.Sys.XML.EnumInfoXml xml : xmls.ToJavaList())
+		for (BP.Sys.XML.EnumInfoXml xml : xmls)
 		{
 			BP.Sys.SysEnums ses = new BP.Sys.SysEnums();
-			ses.RegIt(xml.getKey(), xml.getVals());
+			ses.RegIt(xml.Key, xml.Vals);
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 注册枚举类型
 
-		///#endregion 注册枚举类型
-
-		///#region 3, 执行基本的 sql
-		String sqlscript = SystemConfig.getPathOfWebApp() + "\\GPM\\SQLScript\\Port_Inc_CH_BPM.sql";
-		//孙战平将RunSQLScript改为RunSQLScriptGo
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 3, 执行基本的 sql
+		String sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\Port_Inc_CH_BPM.sql";
 		BP.DA.DBAccess.RunSQLScript(sqlscript);
-		///#endregion 修复
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 修复
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 5, 初始化数据。
+		if (BP.DA.DBAccess.IsExitsObject("GPM_AppSort") == true)
+		{
+			sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\InitPublicData.sql";
+			BP.DA.DBAccess.RunSQLScript(sqlscript);
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 初始化数据
 
-		///#region 5, 初始化数据。
-
-		sqlscript = SystemConfig.getPathOfWebApp() + "\\GPM\\SQLScript\\InitPublicData.sql";
-		BP.DA.DBAccess.RunSQLScript(sqlscript);
-
-
-
-		sqlscript = SystemConfig.getPathOfWebApp() + "\\GPM\\SQLScript\\MSSQL_GPM_VIEW.sql";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 6, 创建视图。
+		sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\MSSQL_GPM_VIEW.sql";
 
 		//MySQL 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.MySQL)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "\\GPM\\SQLScript\\MySQL_GPM_VIEW.sql";
+			sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\MySQL_GPM_VIEW.sql";
 		}
+
 		//Oracle 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (BP.Sys.SystemConfig.AppCenterDBType == DBType.Oracle)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "\\GPM\\SQLScript\\Oracle_GPM_VIEW.sql";
+			sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\Oracle_GPM_VIEW.sql";
 		}
+
 		BP.DA.DBAccess.RunSQLScriptGo(sqlscript);
-
-			///#region 7, 初始化系统访问权限
-		//查询出来系统
-		Apps apps = new Apps();
-		apps.RetrieveAll();
-
-		//查询出来人员.
-		Emps emps = new Emps();
-		emps.RetrieveAllFromDBSource();
-		//查询出来菜单
-		Menus menus = new Menus();
-		menus.RetrieveAllFromDBSource();
-
-		//删除数据.
-		BP.DA.DBAccess.RunSQL("DELETE FROM GPM_EmpApp");
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 创建视图
 
 
-		for (Emp emp : emps.ToJavaList())
-		{
-				///#region 初始化系统访问权限.
-			for (App app : apps.ToJavaList())
-			{
-				EmpApp me = new EmpApp();
-				me.Copy(app);
-				me.setFK_Emp(emp.getNo());
-				me.setFK_App(app.getNo());
-				me.setName(app.getName());
-				me.setMyPK(app.getNo() + "_" + me.getFK_Emp());
-				me.Insert();
-			}
-				///#region 初始化人员菜单权限
-			for (Menu menu : menus.ToJavaList())
-			{
-				EmpMenu em = new EmpMenu();
-				em.Copy(menu);
-				em.setFK_Emp(emp.getNo());
-				em.setFK_App(menu.getFK_App());
-				em.setFK_Menu(menu.getNo());
-				//em.setMyPK(menu.getNo() + "_" + emp.getNo());
-				em.Insert();
-			}
-				///#endregion
-		}
 		//处理全路径
 		Depts depts = new Depts();
 		depts.RetrieveAll();
-		for (Dept dept : depts.ToJavaList())
+		for (Dept dept : depts)
 		{
 			dept.GenerNameOfPath();
 		}
-			///#endregion
-	}
-	/** 
-	 安装CCIM
-	 
-	 @param lang
-	 @param yunXingHuanjing
-	 @param isDemo
-	*/
-	public static void DoInstallCCIM(String lang, String dbTypes)
-	{
-	  //  string sqlscript = SystemConfig.PathOfWebApp + "\\GPM\\SQLScript\\CCIM_"+BP.Sys.SystemConfig.AppCenterDBType+".sql";
-	   // BP.DA.DBAccess.RunSQLScriptGo(sqlscript);
-	}
 
+	}
 	/** 
 	 是否可以执行判断
 	 

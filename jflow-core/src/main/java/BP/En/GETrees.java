@@ -1,0 +1,67 @@
+package BP.En;
+
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+
+/** 
+ 树结构实体s
+*/
+public class GETrees extends EntitiesNoName
+{
+	/** 
+	 物理表
+	*/
+	public String SFTable = null;
+	public String Desc = null;
+
+	/** 
+	 GETrees
+	*/
+	public GETrees()
+	{
+	}
+	public GETrees(String sftable, String tableDesc)
+	{
+		this.SFTable = sftable;
+		this.Desc = tableDesc;
+	}
+	@Override
+	public Entity getGetNewEntity()
+	{
+		return new GETree(this.SFTable, this.Desc);
+	}
+	@Override
+	public int RetrieveAll()
+	{
+		return this.RetrieveAllFromDBSource();
+	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<GETree> ToJavaList()
+	{
+		return (List<GETree>)this;
+	}
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<GETree> Tolist()
+	{
+		ArrayList<GETree> list = new ArrayList<GETree>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((GETree)this.get(i));
+		}
+		return list;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+}

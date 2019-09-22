@@ -1,19 +1,13 @@
 package BP.GPM;
 
+import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  权限组
- 
 */
-public class GroupAttr extends EntitySimpleTreeAttr
+public class GroupAttr extends EntityTreeAttr
 {
-	/** 
-	 序号
-	 
-	*/
-	public static final String Idx = "Idx";
-
 	public static final String ByEmpAttr = "ByEmpAttr";
-
 }

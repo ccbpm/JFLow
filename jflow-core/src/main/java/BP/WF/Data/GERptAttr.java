@@ -1,5 +1,10 @@
 package BP.WF.Data;
 
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
   属性
@@ -59,7 +64,7 @@ public class GERptAttr
 	*/
 	public static final String FlowDaySpan = "FlowDaySpan";
 	/** 
-	 结束节点
+	 停留节点
 	*/
 	public static final String FlowEndNode = "FlowEndNode";
 	/** 
@@ -118,12 +123,4 @@ public class GERptAttr
 	 数量
 	*/
 	public static final String MyNum = "MyNum";
-	/**
-	 * 延续流程ID
-	 */
-	public static final String CWorkID = "CWorkID";
-	/**
-	 * 延续流程编号
-	 */
-	public static final String CFlowNo = "CFlowNo";
 }

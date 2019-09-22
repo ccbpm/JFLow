@@ -1,31 +1,54 @@
 package BP.Sys;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
-/**
- * 序列号s
- */
+/** 
+ 序列号s
+*/
 public class Serials extends Entities
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 序列号s
-	 */
+	/** 
+	 序列号s
+	*/
 	public Serials()
 	{
 	}
-	
-	/**
-	 * 得到它的 Entity
-	 */
+	/** 
+	 得到它的 Entity
+	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new Serial();
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<Serial> ToJavaList()
+	{
+		return (List<Serial>)this;
+	}
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<Serial> Tolist()
+	{
+		ArrayList<Serial> list = new ArrayList<Serial>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((Serial)this.get(i));
+		}
+		return list;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

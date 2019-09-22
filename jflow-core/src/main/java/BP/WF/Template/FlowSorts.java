@@ -1,10 +1,11 @@
 package BP.WF.Template;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import BP.En.EntitiesTree;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  流程类别
@@ -25,34 +26,20 @@ public class FlowSorts extends EntitiesTree
 	{
 		return new FlowSort();
 	}
-
-	/** 
-	 流程类别s
-	 
-	 @param no ss
-	 @param name anme
-	*/
-	public final void AddByNoName(String no, String name)
-	{
-		FlowSort en = new FlowSort();
-		en.setNo (no);
-		en.setName (name);
-		this.AddEntity(en);
-	}
 	@Override
-	public int RetrieveAll() throws Exception
+	public int RetrieveAll()
 	{
 		int i = super.RetrieveAll(FlowSortAttr.Idx);
 		if (i == 0)
 		{
 			FlowSort fs = new FlowSort();
-			fs.setName("公文类");
-			fs.setNo("01");
+			fs.Name = "公文类";
+			fs.No = "01";
 			fs.Insert();
 
 			fs = new FlowSort();
-			fs.setName("公文类");
-			fs.setNo("02");
+			fs.Name = "办公类";
+			fs.No = "02";
 			fs.Insert();
 			i = super.RetrieveAll();
 		}
@@ -61,15 +48,16 @@ public class FlowSorts extends EntitiesTree
 	}
 
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FlowSort> ToJavaListFs()
+	public final List<FlowSort> ToJavaList()
 	{
-		return (List<FlowSort>)(Object)this;
+		return (List<FlowSort>)this;
 	}
 	/** 
 	 转化成list
@@ -79,11 +67,12 @@ public class FlowSorts extends EntitiesTree
 	public final ArrayList<FlowSort> Tolist()
 	{
 		ArrayList<FlowSort> list = new ArrayList<FlowSort>();
-		for (int i = 0; i < this.size(); i++)
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FlowSort)this.get(i));
+			list.add((FlowSort)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

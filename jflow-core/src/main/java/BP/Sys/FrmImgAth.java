@@ -2,18 +2,17 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  图片附件
- 
 */
 public class FrmImgAth extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 名称
-	 
 	*/
 	public final String getName()
 	{
@@ -25,7 +24,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 控件ID
-	 
 	*/
 	public final String getCtrlID()
 	{
@@ -37,7 +35,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getY()
 	{
@@ -49,7 +46,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getX()
 	{
@@ -61,7 +57,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 H
-	 
 	*/
 	public final float getH()
 	{
@@ -73,7 +68,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 W
-	 
 	*/
 	public final float getW()
 	{
@@ -85,7 +79,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 FK_MapData
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -97,7 +90,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 是否可编辑
-	 
 	*/
 	public final boolean getIsEdit()
 	{
@@ -109,7 +101,6 @@ public class FrmImgAth extends EntityMyPK
 	}
 	/** 
 	 是否必填，2016-11-1
-	 
 	*/
 	public final boolean getIsRequired()
 	{
@@ -119,14 +110,13 @@ public class FrmImgAth extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAthAttr.IsRequired, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 图片附件
-	 
 	*/
 	public FrmImgAth()
 	{
@@ -135,16 +125,14 @@ public class FrmImgAth extends EntityMyPK
 	 图片附件
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmImgAth(String mypk) throws Exception
+	public FrmImgAth(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -157,6 +145,8 @@ public class FrmImgAth extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = FrmImgAttr.FK_MapData;
+
 		map.AddMyPK();
 
 		map.AddTBString(FrmImgAthAttr.FK_MapData, null, "表单ID", true, false, 1, 100, 20);
@@ -172,19 +162,18 @@ public class FrmImgAth extends EntityMyPK
 
 		map.AddTBInt(FrmImgAthAttr.IsEdit, 1, "是否可编辑", true, true);
 		map.AddTBInt(FrmImgAthAttr.IsRequired, 0, "是否必填项", true, true);
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		map.AddTBString(MapAttrAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		
-		this.setMyPK(this.getFK_MapData() +"_"+ this.getCtrlID());		 
+		this.setMyPK(this.getFK_MapData() + "_" + this.getCtrlID());
 		return super.beforeUpdateInsertAction();
 	}
 }

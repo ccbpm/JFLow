@@ -1,25 +1,17 @@
 package BP.Sys;
 
-import java.util.UUID;
-
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
-import BP.Tools.StringHelper;
+import BP.En.*;
+import java.util.*;
 
 /** 
-Excel模板
-
+ Excel模板
 */
 public class ExcelFile extends EntityNoName
 {
-
-	///#region 属性
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 获取或设置标识
-	 
 	*/
 	public final String getMark()
 	{
@@ -32,7 +24,6 @@ public class ExcelFile extends EntityNoName
 
 	/** 
 	 获取或设置类型
-	 
 	*/
 	public final ExcelType getExcelType()
 	{
@@ -45,7 +36,6 @@ public class ExcelFile extends EntityNoName
 
 	/** 
 	 获取或设置上传说明
-	 
 	*/
 	public final String getNote()
 	{
@@ -56,24 +46,24 @@ public class ExcelFile extends EntityNoName
 		this.SetValByKey(ExcelFileAttr.Note, value);
 	}
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 属性
 
-	///#endregion 属性
-
-
-	///#region 构造方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	public ExcelFile()
 	{
 	}
 
-	public ExcelFile(String no) throws Exception
+	public ExcelFile(String no)
 	{
 		this.Retrieve(ExcelFileAttr.No, no);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 构造方法
 
-	///#endregion 构造方法
-
-
-	///#region 权限控制
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 权限控制
 	@Override
 	public UAC getHisUAC()
 	{
@@ -81,14 +71,13 @@ public class ExcelFile extends EntityNoName
 		uac.OpenAll();
 		return uac;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 权限控制
 
-	///#endregion 权限控制
-
-
-	///#region EnMap
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region EnMap
 	/** 
 	 Excel模板Map
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -114,38 +103,36 @@ public class ExcelFile extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "模板配置";
 		rm.ClassMethodName = this + ".ExcelConfig";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
-	///#endregion EnMap
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion EnMap
 
 	public final String ExcelConfig()
 	{
 		return SystemConfig.getCCFlowWebPath() + "WF/Admin/ExcelUploadConfig.htm?No=" + this.getNo();
 	}
 
-
-	///#region 重写事件
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重写事件
 	/** 
 	 记录添加前事件
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
-		this.setNo(UUID.randomUUID().toString());
+		this.setNo(String.format("%d", UUID.NewGuid()));
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		if (StringHelper.isNullOrWhiteSpace(this.getMark()))
+		if (tangible.StringHelper.isNullOrWhiteSpace(this.getMark()))
 		{
 			this.setMark(BP.Tools.chs2py.ConvertStr2Code(this.getName()));
 		}
@@ -153,6 +140,6 @@ public class ExcelFile extends EntityNoName
 		return super.beforeUpdateInsertAction();
 	}
 
-
-	///#endregion 重写事件
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 重写事件
 }

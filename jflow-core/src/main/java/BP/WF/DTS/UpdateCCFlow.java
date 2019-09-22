@@ -1,7 +1,11 @@
 package BP.WF.DTS;
 
-import BP.DA.Log;
-import BP.En.Method;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  Method 的摘要说明
@@ -18,6 +22,7 @@ public class UpdateCCFlow extends Method
 	}
 	/** 
 	 设置执行变量
+	 
 	 @return 
 	*/
 	@Override
@@ -38,23 +43,19 @@ public class UpdateCCFlow extends Method
 	}
 	/** 
 	 执行
+	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
-		if ( ! BP.Web.WebUser.getNo().equals("admin"))
+		if (!BP.Web.WebUser.No.equals("admin"))
 		{
 			return "非法的用户执行。";
 		}
 
-		try {
-			BP.WF.Glo.UpdataCCFlowVer();
+		BP.WF.Glo.UpdataCCFlowVer();
 
-		} catch (Exception e) {
-			Log.DebugWriteError("UpdateCCFlow  Do()" + e);
-		}
 		return "执行成功,系统已经修复了最新版本的数据库.";
 	}
 }

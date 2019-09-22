@@ -1,55 +1,53 @@
 package BP.WF;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-
 import BP.DA.*;
 import BP.En.*;
+import BP.Web.Controls.*;
+import BP.Web.*;
 import BP.Sys.*;
+import BP.WF.XML.*;
+import java.time.*;
+import java.math.*;
 
 /** 
  流程事件基类
  0,集成该基类的子类,可以重写事件的方法与基类交互.
  1,一个子类必须与一个流程模版绑定.
  2,基类里有很多流程运行过程中的变量，这些变量可以辅助开发者在编写复杂的业务逻辑的时候使用.
- 3,该基类有一个子类模版，位于:\\WF\Admin\AttrFlow\F001Templepte.cs .
- 
+ 3,该基类有一个子类模版，位于:\CCFlow\WF\Admin\AttrFlow\F001Templepte.cs .
 */
 public abstract class FlowEventBase
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 要求子类强制重写的属性.
 	/** 
 	 流程编号/流程标记.
-	 该参数用于说明要把此事件注册到那一个流程模版上.	 
+	 该参数用于说明要把此事件注册到那一个流程模版上.
 	*/
 	public abstract String getFlowMark();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 要求子类重写的属性.
 
-		 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性/内部变量(流程在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 	/** 
 	 发送对象
-	 
 	*/
 	public SendReturnObjs SendReturnObjs = null;
 	/** 
 	 实体，一般是工作实体
-	 
 	*/
 	public Entity HisEn = null;
 	/** 
 	 当前节点
-	 
 	*/
 	public Node HisNode = null;
 	/** 
 	 参数对象.
-	 
 	*/
 	private Row _SysPara = null;
 	/** 
 	 参数
-	 
 	*/
 	public final Row getSysPara()
 	{
@@ -63,48 +61,62 @@ public abstract class FlowEventBase
 	{
 		_SysPara = value;
 	}
-	
 	/** 
-	 *成功信息
-	 */
+	 成功信息
+	*/
 	public String SucessInfo = null;
-	
-	/**
-	 *  是否停止流程？
-	 */
-    public boolean IsStopFlow = false;
-    
-	///#endregion 属性/内部变量(流程在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 属性/内部变量(流程在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 
-
-	///#region 在发送前的事件里可以改变参数.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 在发送前的事件里可以改变参数.
 	/** 
 	 要跳转的节点.(开发人员可以设置该参数,改变发送到的节点转向.)
-	 
 	*/
-	public int JumpToNodeID = 0;
+	private int _JumpToNodeID = 0;
+	public final int getJumpToNodeID()
+	{
+		return _JumpToNodeID;
+	}
+	public final void setJumpToNodeID(int value)
+	{
+		this._JumpToNodeID = value;
+	}
 	/** 
 	 接受人, (开发人员可以设置该参数,改变接受人的范围.)
-	 
 	*/
-	public String JumpToEmps = null;
-    ///#endregion 在发送前的事件里可以改变参数
+	private String _JumpToEmps = null;
+	public final String getJumpToEmps()
+	{
+		return _JumpToEmps;
+	}
+	public final void setJumpToEmps(String value)
+	{
+		this._JumpToEmps = value;
+	}
+	/** 
+	 是否停止流程？
+	*/
+	public boolean IsStopFlow = false;
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 在发送前的事件里可以改变参数
 
-
-    ///#region 系统参数
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 系统参数
 	/** 
 	 表单ID
-	 
 	*/
 	public final String getFK_Mapdata()
 	{
 		return this.GetValStr("FK_MapData");
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 常用属性.
 	/** 
 	 工作ID
-	 
 	*/
 	public final int getOID()
 	{
@@ -112,36 +124,27 @@ public abstract class FlowEventBase
 	}
 	/** 
 	 工作ID
-	 
 	*/
 	public final long getWorkID()
 	{
-		if (this.getOID() == 0)
+		try
 		{
 			return this.GetValInt64("WorkID"); //有可能开始节点的WorkID=0
 		}
-		return this.getOID();
+		catch (RuntimeException e)
+		{
+			return this.getOID();
+		}
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getFID()
 	{
 		return this.GetValInt64("FID");
 	}
-	
-	/**
-	 * 父流程ID
-	 */
-	public final long getPWorkID()
-	{
-		return this.GetValInt64("PWorkID");
-	}
-	
 	/** 
 	 传过来的WorkIDs集合，子流程.
-	 
 	*/
 	public final String getWorkIDs()
 	{
@@ -149,46 +152,44 @@ public abstract class FlowEventBase
 	}
 	/** 
 	 编号集合s
-	 
 	*/
 	public final String getNos()
 	{
 		return this.GetValStr("Nos");
 	}
-	
-	/**
-	 * 项目编码
-	 * @return
-	 */
-	public final String getPrjNo(){
+	/** 
+	 项目编号
+	*/
+	public final String getPrjNo()
+	{
 		return this.GetValStr("PrjNo");
 	}
-	
-	/**
-	 * 项目名称
-	 * @return
-	 */
-	public final String getPrjName(){
+	/** 
+	 项目名称
+	*/
+	public final String getPrjName()
+	{
 		return this.GetValStr("PrjName");
 	}
-	
-	/**
-	 * 流程标题
-	 * @return
-	 */
-	public final String getTitle(){
-		return this.GetValStr("Title");
+	/** 
+	 流程标题
+	*/
+	public final String getTitle()
+	{
+		return this.GetValStr(BP.WF.Data.NDXRptBaseAttr.Title);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 常用属性.
 
-
-	//获取参数方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 获取参数方法
 	/** 
 	 事件参数
 	 
 	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final Date GetValDateTime(String key)
+	public final LocalDateTime GetValDateTime(String key)
 	{
 		try
 		{
@@ -259,34 +260,36 @@ public abstract class FlowEventBase
 	*/
 	public final BigDecimal GetValDecimal(String key)
 	{
-		return new BigDecimal(this.GetValStr(key));
+		return BigDecimal.Parse(this.GetValStr(key));
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 获取参数方法
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 流程事件基类
-	 
 	*/
 	public FlowEventBase()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 构造方法
 
-	//节点表单事件	
-	public String FrmLoadAfter() throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 节点表单事件
+	public String FrmLoadAfter()
 	{
 		return null;
 	}
-	public String FrmLoadBefore()throws Exception
+	public String FrmLoadBefore()
 	{
 		return null;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 要求子类重写的方法(流程事件).
 	/** 
 	 当创建WorkID的时候
@@ -302,7 +305,7 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null，不提示信息，返回string提示结束信息,抛出异常就阻止流程删除.
 	*/
-	public String FlowOverBefore()throws Exception
+	public String FlowOverBefore()
 	{
 		return null;
 	}
@@ -311,7 +314,7 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null，不提示信息，返回string提示结束信息,抛出异常不处理。
 	*/
-	public String FlowOverAfter()throws Exception
+	public String FlowOverAfter()
 	{
 		return null;
 	}
@@ -320,7 +323,7 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null,不提示信息,返回信息，提示删除警告/提示信息, 抛出异常阻止删除操作.
 	*/
-	public String BeforeFlowDel()throws Exception
+	public String BeforeFlowDel()
 	{
 		return null;
 	}
@@ -329,28 +332,26 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null,不提示信息,返回信息，提示删除警告/提示信息, 抛出异常不处理.
 	*/
-	public String AfterFlowDel()throws Exception
+	public String AfterFlowDel()
 	{
 		return null;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 要求子类重写的方法(流程事件).
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 要求子类重写的方法(节点事件).
 	/** 
 	 保存后
-	 
 	*/
-	public String SaveAfter()throws Exception
+	public String SaveAfter()
 	{
 		return null;
 	}
 	/** 
 	 保存前
-	 
 	*/
-	public String SaveBefore()throws Exception
+	public String SaveBefore()
 	{
 		return null;
 	}
@@ -364,26 +365,16 @@ public abstract class FlowEventBase
 		return null;
 	}
 	/** 
-	流程到达
-	 
-	*/
-	public String WorkArrive()throws Exception
-	{
-		return null;
-	}
-	/** 
 	发送前
-	 
 	*/
-	public String SendWhen()throws Exception
+	public String SendWhen()
 	{
 		return null;
 	}
 	/** 
 	 发送成功时
-	 
 	*/
-	public String SendSuccess()throws Exception
+	public String SendSuccess()
 	{
 		return null;
 	}
@@ -392,7 +383,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String SendError()throws Exception
+	public String SendError()
 	{
 		return null;
 	}
@@ -401,7 +392,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String ReturnBefore()throws Exception
+	public String ReturnBefore()
 	{
 		return null;
 	}
@@ -410,7 +401,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String ReturnAfter()throws Exception
+	public String ReturnAfter()
 	{
 		return null;
 	}
@@ -419,7 +410,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String UndoneBefore()throws Exception
+	public String UndoneBefore()
 	{
 		return null;
 	}
@@ -428,7 +419,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String UndoneAfter()throws Exception
+	public String UndoneAfter()
 	{
 		return null;
 	}
@@ -437,7 +428,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String ShiftAfter()throws Exception
+	public String ShiftAfter()
 	{
 		return null;
 	}
@@ -446,7 +437,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String AskerAfter()throws Exception
+	public String AskerAfter()
 	{
 		return null;
 	}
@@ -455,7 +446,7 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String AskerReAfter()throws Exception
+	public String AskerReAfter()
 	{
 		return null;
 	}
@@ -464,178 +455,181 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String QueueSendAfter()throws Exception
+	public String QueueSendAfter()
 	{
 		return null;
 	}
-
+	/** 
+	 工作到达的时候
+	 
+	 @return 
+	*/
+	public String WorkArrive()
+	{
+		return null;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 要求子类重写的方法(节点事件).
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基类方法.
 	/** 
 	 执行事件
 	 
 	 @param eventType 事件类型
 	 @param en 实体参数
-	 * @throws Exception 
 	*/
-	public final String DoIt(String eventType, Node currNode, Entity en, String atPara, Node jumpToNode, String jumpToEmps) throws Exception
+
+	public final String DoIt(String eventType, Node currNode, Entity en, String atPara, int jumpToNodeID)
+	{
+		return DoIt(eventType, currNode, en, atPara, jumpToNodeID, null);
+	}
+
+	public final String DoIt(String eventType, Node currNode, Entity en, String atPara)
+	{
+		return DoIt(eventType, currNode, en, atPara, 0, null);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public string DoIt(string eventType, Node currNode, Entity en, string atPara, int jumpToNodeID = 0, string toEmps = null)
+	public final String DoIt(String eventType, Node currNode, Entity en, String atPara, int jumpToNodeID, String toEmps)
 	{
 		this.HisEn = en;
 		this.HisNode = currNode;
+		//  this.WorkID = en.GetValInt64ByKey("OID");
+		this.setJumpToEmps(toEmps);
+		this.setJumpToNodeID(jumpToNodeID);
+		this.setSysPara(null);
+		this.IsStopFlow = false;
 
-		//用于代码改变跳转规则,方向条件规则.
-		this.JumpToEmps = jumpToEmps;
-		this.JumpToNodeID = 0;	
-		
-		 this.setSysPara(null);
-         this.IsStopFlow = false;
-
-		///#region 处理参数.
-		Row r = en.getRow();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 处理参数.
+		Row r = en.Row;
 		try
 		{
 			//系统参数.
-			r.put("FK_MapData", en.getClassID());
+			r.Add("FK_MapData", en.ClassID);
 		}
 		catch (java.lang.Exception e)
 		{
-			r.put("FK_MapData", en.getClassID());
+			r["FK_MapData"] = en.ClassID;
 		}
 
 		if (atPara != null)
 		{
 			AtPara ap = new AtPara(atPara);
-			for (String s : ap.getHisHT().keySet())
+			for (String s : ap.HisHT.keySet())
 			{
 				try
 				{
-					r.put(s, ap.GetValStrByKey(s));
-				} catch (java.lang.Exception e2)
+					r.Add(s, ap.GetValStrByKey(s));
+				}
+				catch (java.lang.Exception e2)
 				{
-					// r[s] = ap.GetValStrByKey(s);
-					r.put(s, ap.GetValStrByKey(s));
+					r[s] = ap.GetValStrByKey(s);
 				}
 			}
 		}
 
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.IsBSsystem == true)
 		{
 			/*如果是bs系统, 就加入外部url的变量.*/
-			ArrayList<String> keys = BP.Sys.Glo.getQueryStringKeys();
-			for (String key : keys)
+			for (String key : HttpContextHelper.RequestParamKeys)
 			{
-				 if (key == "OID" ||key==null )
-                     continue;
-				r.put(key, BP.Sys.Glo.getRequest().getParameter(key));
+				if (key.equals("OID") || key == null)
+				{
+					continue;
+				}
+
+				String val = HttpContextHelper.RequestParams(key); //BP.Sys.Glo.Request.QueryString[key];
+
+				try
+				{
+					r.Add(key, val);
+				}
+				catch (java.lang.Exception e3)
+				{
+					r[key] = val;
+				}
 			}
 		}
-		
 		this.setSysPara(r);
-		if (eventType.equals(EventListOfNode.CreateWorkID)) // 节点表单事件。
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 处理参数.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 执行事件.
+		switch (eventType)
 		{
+			case EventListOfNode.CreateWorkID: // 节点表单事件。
 				return this.CreateWorkID();
-		}
-		else if (eventType.equals(EventListOfNode.FrmLoadAfter)) // 节点表单事件。
-		{
+			case EventListOfNode.FrmLoadAfter: // 节点表单事件。
 				return this.FrmLoadAfter();
-		}
-		else if (eventType.equals(EventListOfNode.FrmLoadBefore)) // 节点表单事件。
-		{
+			case EventListOfNode.FrmLoadBefore: // 节点表单事件。
 				return this.FrmLoadBefore();
-		}
-		else if (eventType.equals(EventListOfNode.SaveAfter)) // 节点事件 保存后。
-		{
+			case EventListOfNode.SaveAfter: // 节点事件 保存后。
 				return this.SaveAfter();
-		}
-		else if (eventType.equals(EventListOfNode.SaveBefore)) // 节点事件 - 保存前.。
-		{
+			case EventListOfNode.SaveBefore: // 节点事件 - 保存前.。
 				return this.SaveBefore();
-		}
-		else if (eventType.equals(EventListOfNode.SendWhen)) // 节点事件 - 发送前。
-		{
-			this.IsStopFlow = false;
+			case EventListOfNode.SendWhen: // 节点事件 - 发送前。
 
-           String str = this.SendWhen();
+				this.IsStopFlow = false;
 
-            if (this.IsStopFlow == true)
-                return "@Info=" + str  + "@IsStopFlow=1";
+				String str = this.SendWhen();
 
-            if (this.JumpToNodeID == 0 && this.JumpToEmps == null)
-                return str;
+				if (this.IsStopFlow == true)
+				{
+					return "@Info=" + str + "@IsStopFlow=1";
+				}
 
-            //返回这个格式, NodeSend 来解析.
-                return str;
-		}
-		else if (eventType.equals(EventListOfNode.SendSuccess)) // 节点事件 - 发送成功时。
-		{
+				if (this.getJumpToNodeID() == 0 && this.getJumpToEmps() == null)
+				{
+					return str;
+				}
+
+				//返回这个格式, NodeSend 来解析.
+				return "@Info=" + str + "@ToNodeID=" + this.getJumpToNodeID() + "@ToEmps=" + this.getJumpToEmps();
+
+			case EventListOfNode.SendSuccess: // 节点事件 - 发送成功时。
 				return this.SendSuccess();
-		}
-		else if (eventType.equals(EventListOfNode.SendError)) // 节点事件 - 发送失败。
-		{
+			case EventListOfNode.SendError: // 节点事件 - 发送失败。
 				return this.SendError();
-		}
-		else if (eventType.equals(EventListOfNode.ReturnBefore)) // 节点事件 - 退回前。
-		{
+			case EventListOfNode.ReturnBefore: // 节点事件 - 退回前。
 				return this.ReturnBefore();
-		}
-		else if (eventType.equals(EventListOfNode.ReturnAfter)) // 节点事件 - 退回后。
-		{
+			case EventListOfNode.ReturnAfter: // 节点事件 - 退回后。
 				return this.ReturnAfter();
-		}
-		else if (eventType.equals(EventListOfNode.UndoneBefore)) // 节点事件 - 撤销前。
-		{
+			case EventListOfNode.UndoneBefore: // 节点事件 - 撤销前。
 				return this.UndoneBefore();
-		}
-		else if (eventType.equals(EventListOfNode.UndoneAfter)) // 节点事件 - 撤销后。
-		{
+			case EventListOfNode.UndoneAfter: // 节点事件 - 撤销后。
 				return this.UndoneAfter();
-		}
-		else if (eventType.equals(EventListOfNode.ShitAfter)) // 节点事件-移交后
-		{
+			case EventListOfNode.ShitAfter: // 节点事件-移交后
 				return this.ShiftAfter();
-		}
-		else if (eventType.equals(EventListOfNode.AskerAfter)) //节点事件 加签后
-		{
+			case EventListOfNode.AskerAfter: //节点事件 加签后
 				return this.AskerAfter();
-		}
-		else if (eventType.equals(EventListOfNode.AskerReAfter)) //节点事件加签回复后
-		{
+			case EventListOfNode.AskerReAfter: //节点事件加签回复后
 				return this.FlowOverBefore();
-		}
-		else if (eventType.equals(EventListOfNode.QueueSendAfter)) //队列节点发送后
-		{
+			case EventListOfNode.QueueSendAfter: //队列节点发送后
 				return this.AskerReAfter();
-
-		}
-		else if (eventType.equals(EventListOfNode.FlowOnCreateWorkID)) // 流程事件 -------------------------------------------。
-		{
+			case EventListOfNode.FlowOnCreateWorkID: // 流程事件 -------------------------------------------。
 				return this.FlowOnCreateWorkID();
-		}
-		else if (eventType.equals(EventListOfNode.WorkArrive)) // 流程到达
-		{
-				return this.WorkArrive();
-		} 
-		else if (eventType.equals(EventListOfNode.FlowOverBefore)) // 流程结束前.。
-		{
+			case EventListOfNode.FlowOverBefore: // 流程结束前.。
 				return this.FlowOverBefore();
-		}
-		else if (eventType.equals(EventListOfNode.FlowOverAfter)) // 流程结束后。
-		{
+			case EventListOfNode.FlowOverAfter: // 流程结束后。
 				return this.FlowOverAfter();
-		}
-		else if (eventType.equals(EventListOfNode.BeforeFlowDel)) // 流程删除前。
-		{
+			case EventListOfNode.BeforeFlowDel: // 流程删除前。
 				return this.BeforeFlowDel();
-		}
-		else if (eventType.equals(EventListOfNode.AfterFlowDel)) // 删除后.
-		{
+			case EventListOfNode.AfterFlowDel: // 删除后.
 				return this.AfterFlowDel();
-		}
-		else
-		{
+			case EventListOfNode.WorkArrive: // 工作到达时.
+				return this.WorkArrive();
+			default:
 				throw new RuntimeException("@没有判断的事件类型:" + eventType);
+				break;
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 执行事件.
+		return null;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 基类方法.
 }

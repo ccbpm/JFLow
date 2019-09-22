@@ -3,59 +3,57 @@ package BP.GPM;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
- 用户菜单s
- 
+ 人员菜单功能s
 */
-public class VGPMEmpMenus extends EntitiesMM
+public class VGPMEmpMenus extends EntitiesMyPK
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造
 	/** 
-	 用户s
-	 
+	 菜单s
 	*/
 	public VGPMEmpMenus()
 	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new VGPMEmpMenu();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<VGPMEmpMenu> ToJavaList()
+	public final List<VGPMEmpMenu> ToJavaList()
 	{
-		return (java.util.List<VGPMEmpMenu>)(Object)this;
+		return (List<VGPMEmpMenu>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<VGPMEmpMenu> Tolist()
+	public final ArrayList<VGPMEmpMenu> Tolist()
 	{
-		java.util.ArrayList<VGPMEmpMenu> list = new java.util.ArrayList<VGPMEmpMenu>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<VGPMEmpMenu> list = new ArrayList<VGPMEmpMenu>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((VGPMEmpMenu)this.get(i));
+			list.add((VGPMEmpMenu)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,28 +1,23 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMM;
-import BP.En.Entity;
-import BP.En.QueryObject;
-import BP.WF.Node;
-import BP.WF.Nodes;
-import BP.WF.Port.Station;
-import BP.WF.Port.Stations;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  抄送到岗位
- 
 */
 public class CCStations extends EntitiesMM
 {
 	/** 
 	 他的工作岗位
-	 * @throws Exception 
-	 
 	*/
-	public final Stations getHisStations() throws Exception
+	public final Stations getHisStations()
 	{
 		Stations ens = new Stations();
-		for (CCStation ns : this.ToJavaList())
+		for (CCStation ns : this)
 		{
 			ens.AddEntity(new Station(ns.getFK_Station()));
 		}
@@ -30,13 +25,11 @@ public class CCStations extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
-	 * @throws Exception 
-	 
 	*/
-	public final Nodes getHisNodes() throws Exception
+	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (CCStation ns : this.ToJavaList())
+		for (CCStation ns : this)
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -45,7 +38,6 @@ public class CCStations extends EntitiesMM
 	}
 	/** 
 	 抄送到岗位
-	 
 	*/
 	public CCStations()
 	{
@@ -54,9 +46,8 @@ public class CCStations extends EntitiesMM
 	 抄送到岗位
 	 
 	 @param nodeID 节点ID
-	 * @throws Exception 
 	*/
-	public CCStations(int nodeID) throws Exception
+	public CCStations(int nodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Node, nodeID);
@@ -66,9 +57,8 @@ public class CCStations extends EntitiesMM
 	 抄送到岗位
 	 
 	 @param StationNo StationNo 
-	 * @throws Exception 
 	*/
-	public CCStations(String StationNo) throws Exception
+	public CCStations(String StationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Station, StationNo);
@@ -76,7 +66,6 @@ public class CCStations extends EntitiesMM
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -88,16 +77,15 @@ public class CCStations extends EntitiesMM
 	 
 	 @param stationNo 工作岗位编号
 	 @return 节点s
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String stationNo) throws Exception
+	public final Nodes GetHisNodes(String stationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Station, stationNo);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (CCStation en : this.ToJavaList())
+		for (CCStation en : this)
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -108,47 +96,46 @@ public class CCStations extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
-	 * @throws Exception 
 	*/
-	public final Stations GetHisStations(int nodeID) throws Exception
+	public final Stations GetHisStations(int nodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCStationAttr.FK_Node, nodeID);
 		qo.DoQuery();
 
 		Stations ens = new Stations();
-		for (CCStation en : this.ToJavaList())
+		for (CCStation en : this)
 		{
 			ens.AddEntity(new Station(en.getFK_Station()));
 		}
 		return ens;
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<CCStation> ToJavaList()
+	public final List<CCStation> ToJavaList()
 	{
-		return (java.util.List<CCStation>)(Object)this;
+		return (List<CCStation>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<CCStation> Tolist()
+	public final ArrayList<CCStation> Tolist()
 	{
-		java.util.ArrayList<CCStation> list = new java.util.ArrayList<CCStation>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<CCStation> list = new ArrayList<CCStation>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((CCStation)this.get(i));
+			list.add((CCStation)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

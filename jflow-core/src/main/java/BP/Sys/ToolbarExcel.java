@@ -1,23 +1,22 @@
 package BP.Sys;
 
-import BP.DA.Depositary;
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
   ToolbarExcel 控制器
- 
 */
 public class ToolbarExcel extends EntityNoName
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 界面上的访问控制
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
@@ -30,7 +29,11 @@ public class ToolbarExcel extends EntityNoName
 		}
 		return uac;
 	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 功能按钮.
 	/** 
 	 打开本地标签.
 	*/
@@ -44,7 +47,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 是否打开本地模版文件.
-	 
 	*/
 	public final boolean getOfficeOpenEnable()
 	{
@@ -56,7 +58,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 打开模板 标签.
-	 
 	*/
 	public final String getOfficeOpenTemplateLab()
 	{
@@ -68,7 +69,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 打开模板.
-	 
 	*/
 	public final boolean getOfficeOpenTemplateEnable()
 	{
@@ -80,7 +80,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 保存 标签.
-	 
 	*/
 	public final String getOfficeSaveLab()
 	{
@@ -92,7 +91,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 保存.是否启用.
-	 
 	*/
 	public final boolean getOfficeSaveEnable()
 	{
@@ -104,7 +102,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 接受修订 标签.
-	 
 	*/
 	public final String getOfficeAcceptLab()
 	{
@@ -116,7 +113,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 接受修订.
-	 
 	*/
 	public final boolean getOfficeAcceptEnable()
 	{
@@ -128,7 +124,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 拒绝修订 标签.
-	 
 	*/
 	public final String getOfficeRefuseLab()
 	{
@@ -140,7 +135,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 拒绝修订.
-	 
 	*/
 	public final boolean getOfficeRefuseEnable()
 	{
@@ -152,7 +146,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 套红按钮 标签.
-	 
 	*/
 	public final String getOfficeOverLab()
 	{
@@ -164,7 +157,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 套红按钮.
-	 
 	*/
 	public final boolean getOfficeOverEnable()
 	{
@@ -176,7 +168,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 查看用户留痕
-	 
 	*/
 	public final boolean getOfficeMarksEnable()
 	{
@@ -188,7 +179,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 打印按钮-标签
-	 
 	*/
 	public final String getOfficePrintLab()
 	{
@@ -200,7 +190,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 打印
-	 
 	*/
 	public final boolean getOfficePrintEnable()
 	{
@@ -212,7 +201,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 签章-标签
-	 
 	*/
 	public final String getOfficeSealLab()
 	{
@@ -224,7 +212,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 签章
-	 
 	*/
 	public final boolean getOfficeSealEnable()
 	{
@@ -239,7 +226,6 @@ public class ToolbarExcel extends EntityNoName
 
 	/** 
 	 插入流程-标签
-	 
 	*/
 	public final String getOfficeInsertFlowLab()
 	{
@@ -251,7 +237,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 插入流程
-	 
 	*/
 	public final boolean getOfficeInsertFlowEnable()
 	{
@@ -264,7 +249,6 @@ public class ToolbarExcel extends EntityNoName
 
 	/** 
 	 是否自动记录节点信息
-	 
 	*/
 	public final boolean getOfficeNodeInfo()
 	{
@@ -276,7 +260,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 是否该节点保存为PDF
-	 
 	*/
 	public final boolean getOfficeReSavePDF()
 	{
@@ -288,7 +271,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 是否进入留痕模式
-	 
 	*/
 	public final boolean getOfficeIsMarks()
 	{
@@ -300,7 +282,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 指定文档模板
-	 
 	*/
 	public final String getOfficeTemplate()
 	{
@@ -312,7 +293,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 是否使用父流程的文档
-	 
 	*/
 	public final boolean getOfficeIsParent()
 	{
@@ -324,7 +304,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 是否启用标签
-	 
 	*/
 	public final String getOfficeDownLab()
 	{
@@ -336,7 +315,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 下载
-	 
 	*/
 	public final boolean getOfficeDownEnable()
 	{
@@ -348,7 +326,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 是否自动套红
-	 
 	*/
 	public final boolean getOfficeTHEnable()
 	{
@@ -360,7 +337,6 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 套红模板
-	 
 	*/
 	public final String getOfficeTHTemplate()
 	{
@@ -370,7 +346,11 @@ public class ToolbarExcel extends EntityNoName
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeTHTemplate, value);
 	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 ToolbarExcel功能控制区域
 	*/
@@ -379,10 +359,10 @@ public class ToolbarExcel extends EntityNoName
 	}
 	/** 
 	 ToolbarExcel功能控制
+	 
 	 @param no 表单ID
-	 * @throws Exception 
 	*/
-	public ToolbarExcel(String no) throws Exception
+	public ToolbarExcel(String no)
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -400,13 +380,13 @@ public class ToolbarExcel extends EntityNoName
 
 		Map map = new Map("Sys_MapData", "ToolbarExcel功能控制");
 
-		map.Java_SetDepositaryOfEntity(Depositary.None);
+		map.Java_SetDepositaryOfEntity(Depositary.Application);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, false, 1, 200, 20);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 公文按钮
 		map.AddTBString(ToolbarExcelAttr.OfficeOpenLab, "打开本地", "打开本地标签", true, false, 0, 50, 10);
 		map.AddBoolean(ToolbarExcelAttr.OfficeOpenEnable, false, "是否启用", true, true);
@@ -449,9 +429,12 @@ public class ToolbarExcel extends EntityNoName
 
 		map.AddBoolean(ToolbarExcelAttr.OfficeTHEnable, false, "是否自动套红", true, true);
 		map.AddTBString(ToolbarExcelAttr.OfficeTHTemplate, "", "自动套红模板", true, false, 0, 200, 10);
-		//#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

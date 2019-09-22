@@ -1,26 +1,24 @@
 package BP.WF;
 
 /** 
- 节点工作退回规则
- 
+ 子流程结束处理规则
 */
 public enum SubFlowOver
 {
 	/** 
-	无
-	 
+	 无
 	*/
 	None,
 	/** 
 	 发送父流程到下一个节点
-	 
 	*/
 	SendParentFlowToNextStep,
 	/** 
-	结束父流程
-	 
+	 结束父流程
 	*/
 	OverParentFlow;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

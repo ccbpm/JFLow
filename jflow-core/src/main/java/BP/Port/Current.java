@@ -1,24 +1,22 @@
 package BP.Port;
 
+import java.util.*;
+
 public class Current
 {
 	static
 	{
-		Session = new java.util.Hashtable();
+		Session = new Hashtable();
 	}
-	public static java.util.Hashtable Session;
-	
+	public static Hashtable Session;
 	public static void SetSession(Object key, Object Value)
 	{
 		if (Session.containsKey(key))
 		{
 			Session.remove(key);
 		}
-		if (Value != null){
-			Session.put(key, Value);
-		}
+		Session.put(key,Value);
 	}
-	
 	public static String GetSessionStr(Object key, String isNullAsValue)
 	{
 		Object val = Session.get(key);
@@ -26,11 +24,11 @@ public class Current
 		{
 			return isNullAsValue;
 		}
-		return (String) ((val instanceof String) ? val : null);
-		// if (Session.ContainsKey(key))
-		// {
-		// Session.remove(key);
-		// }
-		// Session.Add(key, Value);
+		return val instanceof String ? (String)val : null;
+		//if (Session.ContainsKey(key))
+		//{
+		//    Session.Remove(key);
+		//}
+		//Session.Add(key, Value);
 	}
 }

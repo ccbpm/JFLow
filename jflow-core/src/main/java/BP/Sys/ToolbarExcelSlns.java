@@ -1,24 +1,23 @@
 package BP.Sys;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  ToolbarExcel表单.
- 
 */
 public class ToolbarExcelSlns extends EntitiesMyPK
 {
 	/** 
 	 功能控制
-	 
 	*/
 	public ToolbarExcelSlns()
 	{
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -26,14 +25,17 @@ public class ToolbarExcelSlns extends EntitiesMyPK
 		return new ToolbarExcelSln();
 	}
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
+
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<ToolbarExcelSln> ToJavaList()
+	public final List<ToolbarExcelSln> ToJavaList()
 	{
-		return (java.util.List<ToolbarExcelSln>)(Object)this;
+		return (List<ToolbarExcelSln>)this;
 	}
 
 	/** 
@@ -41,13 +43,15 @@ public class ToolbarExcelSlns extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<ToolbarExcelSln> Tolist()
+	public final ArrayList<ToolbarExcelSln> Tolist()
 	{
-		java.util.ArrayList<ToolbarExcelSln> list = new java.util.ArrayList<ToolbarExcelSln>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<ToolbarExcelSln> list = new ArrayList<ToolbarExcelSln>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((ToolbarExcelSln)this.get(i));
+			list.add((ToolbarExcelSln)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

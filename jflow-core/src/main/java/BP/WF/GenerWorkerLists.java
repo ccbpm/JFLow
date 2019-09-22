@@ -1,21 +1,20 @@
 package BP.WF;
 
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.En.QueryObject;
-import BP.WF.Port.WFEmp;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import java.util.*;
 
 /** 
  工作人员集合
- 
 */
 public class GenerWorkerLists extends Entities
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -24,16 +23,15 @@ public class GenerWorkerLists extends Entities
 	}
 	/** 
 	 GenerWorkerList
-	 
 	*/
 	public GenerWorkerLists()
 	{
 	}
-	public GenerWorkerLists(long workId) throws Exception
+	public GenerWorkerLists(long workId)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
-		qo.addOrderBy(GenerWorkerListAttr.RDT,GenerWorkerListAttr.FK_Node);
+		qo.addOrderBy(GenerWorkerListAttr.RDT);
 		qo.DoQuery();
 		return;
 	}
@@ -42,9 +40,8 @@ public class GenerWorkerLists extends Entities
 	 
 	 @param workId
 	 @param nodeId
-	 * @throws Exception 
 	*/
-	public GenerWorkerLists(long workId, int nodeId) throws Exception
+	public GenerWorkerLists(long workId, int nodeId)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
@@ -53,7 +50,7 @@ public class GenerWorkerLists extends Entities
 		qo.DoQuery();
 		return;
 	}
-	public GenerWorkerLists(long workId, int nodeId, String FK_Emp) throws Exception
+	public GenerWorkerLists(long workId, int nodeId, String FK_Emp)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
@@ -70,9 +67,8 @@ public class GenerWorkerLists extends Entities
 	 @param workId 工作ID
 	 @param nodeId 节点ID
 	 @param isWithEmpExts 是否包含为分配的人员
-	 * @throws Exception 
 	*/
-	public GenerWorkerLists(long workId, int nodeId, boolean isWithEmpExts) throws Exception
+	public GenerWorkerLists(long workId, int nodeId, boolean isWithEmpExts)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.addLeftBracket();
@@ -95,18 +91,18 @@ public class GenerWorkerLists extends Entities
 		}
 
 		RememberMe rm = new RememberMe();
-		rm.setFK_Emp(BP.Web.WebUser.getNo());
+		rm.setFK_Emp(BP.Web.WebUser.No);
 		rm.setFK_Node(nodeId);
 		if (rm.RetrieveFromDBSources() == 0)
 		{
 			return;
 		}
 
-		GenerWorkerList wl = (GenerWorkerList)this.get(0);
+		GenerWorkerList wl = (GenerWorkerList)this[0];
 		String[] emps = rm.getEmps().split("[@]", -1);
 		for (String emp : emps)
 		{
-			if (emp==null || emp.equals(""))
+			if (emp == null || emp.equals(""))
 			{
 				continue;
 			}
@@ -120,8 +116,8 @@ public class GenerWorkerLists extends Entities
 			mywl.Copy(wl);
 			mywl.setIsEnable(false);
 			mywl.setFK_Emp(emp);
-			WFEmp myEmp = new WFEmp(emp);
-			mywl.setFK_EmpText(myEmp.getName());
+			WF.Port.WFEmp myEmp = new BP.WF.Port.WFEmp(emp);
+			mywl.setFK_EmpText(myEmp.Name);
 			try
 			{
 				mywl.Insert();
@@ -140,9 +136,8 @@ public class GenerWorkerLists extends Entities
 	 
 	 @param workId 工作者ID
 	 @param flowNo 流程编号
-	 * @throws Exception 
 	*/
-	public GenerWorkerLists(long workId, String flowNo) throws Exception
+	public GenerWorkerLists(long workId, String flowNo)
 	{
 		if (workId == 0)
 		{
@@ -156,26 +151,34 @@ public class GenerWorkerLists extends Entities
 		qo.AddWhere(GenerWorkerListAttr.FK_Flow, flowNo);
 		qo.DoQuery();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<GenerWorkerList> ToJavaList()
+	public final List<GenerWorkerList> ToJavaList()
 	{
-		return (java.util.List<GenerWorkerList>)(Object)this;
+		return (List<GenerWorkerList>)this;
 	}
 	/** 
 	 转化成list 为了翻译成java的需要
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<BP.WF.GenerWorkerList> Tolist()
+	public final ArrayList<BP.WF.GenerWorkerList> Tolist()
 	{
-		java.util.ArrayList<BP.WF.GenerWorkerList> list = new java.util.ArrayList<BP.WF.GenerWorkerList>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<BP.WF.GenerWorkerList> list = new ArrayList<BP.WF.GenerWorkerList>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((BP.WF.GenerWorkerList)this.get(i));
+			list.add((BP.WF.GenerWorkerList)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

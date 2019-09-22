@@ -1,11 +1,15 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  表单字段方案s
- 
 */
 public class FrmFields extends EntitiesMyPK
 {
@@ -14,16 +18,13 @@ public class FrmFields extends EntitiesMyPK
 	}
 	/** 
 	 查询
-	 * @throws Exception 
-	 
 	*/
-	public FrmFields(String fk_mapdata, int nodeID) throws Exception
+	public FrmFields(String fk_mapdata, int nodeID)
 	{
 		this.Retrieve(FrmFieldAttr.FK_MapData, fk_mapdata, FrmFieldAttr.FK_Node, nodeID,FrmFieldAttr.EleType, FrmEleType.Field);
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -31,31 +32,31 @@ public class FrmFields extends EntitiesMyPK
 		return new FrmField();
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmField> ToJavaList()
+	public final List<FrmField> ToJavaList()
 	{
-		return (java.util.List<FrmField>)(Object)this;
+		return (List<FrmField>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmField> Tolist()
+	public final ArrayList<FrmField> Tolist()
 	{
-		java.util.ArrayList<FrmField> list = new java.util.ArrayList<FrmField>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmField> list = new ArrayList<FrmField>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FrmField)this.get(i));
+			list.add((FrmField)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

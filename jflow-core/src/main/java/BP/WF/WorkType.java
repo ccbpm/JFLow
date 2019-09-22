@@ -2,20 +2,19 @@ package BP.WF;
 
 /** 
  工作类型
- 
 */
 public enum WorkType
 {
 	/** 
 	 普通的
-	 
 	*/
 	Ordinary,
 	/** 
 	 自动的
-	 
 	*/
 	Auto;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

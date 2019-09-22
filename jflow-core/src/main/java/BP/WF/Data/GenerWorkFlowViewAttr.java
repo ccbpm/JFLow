@@ -1,13 +1,21 @@
 package BP.WF.Data;
 
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  流程实例
 */
 public class GenerWorkFlowViewAttr
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -126,17 +134,14 @@ public class GenerWorkFlowViewAttr
 	public static final String GuestName = "GuestName";
 	/** 
 	 单据编号
-	 
 	*/
 	public static final String BillNo = "BillNo";
 	/** 
 	 备注
-	 
 	*/
 	public static final String FlowNote = "FlowNote";
 	/** 
 	 待办人员
-	 
 	*/
 	public static final String TodoEmps = "TodoEmps";
 	/** 
@@ -159,4 +164,6 @@ public class GenerWorkFlowViewAttr
 	 GUID
 	*/
 	public static final String GUID = "GUID";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

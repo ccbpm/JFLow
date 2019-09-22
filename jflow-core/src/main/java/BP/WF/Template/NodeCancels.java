@@ -1,28 +1,25 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMM;
-import BP.En.Entity;
-import BP.En.QueryObject;
-import BP.WF.Node;
-import BP.WF.Nodes;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  可撤销的节点
- 
 */
 public class NodeCancels extends EntitiesMM
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造与属性.
 	/** 
 	 他的撤销到
-	 * @throws Exception 
-	 
 	*/
-	public final Nodes getHisNodes() throws Exception
+	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (NodeCancel ns : this.ToJavaList())
+		for (NodeCancel ns : this)
 		{
 			ens.AddEntity(new Node(ns.getCancelTo()));
 		}
@@ -30,7 +27,6 @@ public class NodeCancels extends EntitiesMM
 	}
 	/** 
 	 可撤销的节点
-	 
 	*/
 	public NodeCancels()
 	{
@@ -39,9 +35,8 @@ public class NodeCancels extends EntitiesMM
 	 可撤销的节点
 	 
 	 @param NodeID 节点ID
-	 * @throws Exception 
 	*/
-	public NodeCancels(int NodeID) throws Exception
+	public NodeCancels(int NodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.FK_Node, NodeID);
@@ -51,9 +46,8 @@ public class NodeCancels extends EntitiesMM
 	 可撤销的节点
 	 
 	 @param NodeNo NodeNo 
-	 * @throws Exception 
 	*/
-	public NodeCancels(String NodeNo) throws Exception
+	public NodeCancels(String NodeNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.CancelTo, NodeNo);
@@ -61,33 +55,31 @@ public class NodeCancels extends EntitiesMM
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new NodeCancel();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 构造与属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 公共方法.
 	/** 
 	 可撤销的节点s
 	 
 	 @param sts 可撤销的节点
 	 <Cancels></Cancels>
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts) throws Exception
+	public final Nodes GetHisNodes(Nodes sts)
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
-		for (Node st : sts.ToJavaList())
+		for (Node st : sts)
 		{
 			tmp = this.GetHisNodes(st.getNo());
-			for (Node nd : tmp.ToJavaList())
+			for (Node nd : tmp)
 			{
 				if (nds.Contains(nd))
 				{
@@ -103,16 +95,15 @@ public class NodeCancels extends EntitiesMM
 	 
 	 @param NodeNo 撤销到编号
 	 <Cancels>节点s</Cancels>
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo) throws Exception
+	public final Nodes GetHisNodes(String NodeNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.CancelTo, NodeNo);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeCancel en : this.ToJavaList())
+		for (NodeCancel en : this)
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -123,49 +114,48 @@ public class NodeCancels extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 <Cancels>转向此节点的集合的Nodes (FromNodes)</Cancels> 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID) throws Exception
+	public final Nodes GetHisNodes(int nodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.FK_Node, nodeID);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeCancel en : this.ToJavaList())
+		for (NodeCancel en : this)
 		{
 			ens.AddEntity(new Node(en.getCancelTo()));
 		}
 		return ens;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 公共方法.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeCancel> ToJavaList()
+	public final List<NodeCancel> ToJavaList()
 	{
-		return (java.util.List<NodeCancel>)(Object)this;
+		return (List<NodeCancel>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<NodeCancel> Tolist()
+	public final ArrayList<NodeCancel> Tolist()
 	{
-		java.util.ArrayList<NodeCancel> list = new java.util.ArrayList<NodeCancel>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<NodeCancel> list = new ArrayList<NodeCancel>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((NodeCancel)this.get(i));
+			list.add((NodeCancel)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,17 +1,19 @@
 package BP.Sys.FrmUI;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
 import java.util.*;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
-
 /** 
-超连接s
+ 手写签名版s
 */
 public class ExtHandWritings extends EntitiesMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
-	 超连接s
+	 手写签名版s
 	*/
 	public ExtHandWritings()
 	{
@@ -24,6 +26,11 @@ public class ExtHandWritings extends EntitiesMyPK
 	{
 		return new ExtHandWriting();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -31,7 +38,7 @@ public class ExtHandWritings extends EntitiesMyPK
 	*/
 	public final List<ExtHandWriting> ToJavaList()
 	{
-		return (List<ExtHandWriting>)(Object)this;
+		return (List<ExtHandWriting>)this;
 	}
 	/** 
 	 转化成list
@@ -41,10 +48,12 @@ public class ExtHandWritings extends EntitiesMyPK
 	public final ArrayList<ExtHandWriting> Tolist()
 	{
 		ArrayList<ExtHandWriting> list = new ArrayList<ExtHandWriting>();
-		for (int i = 0; i < this.size(); i++)
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((ExtHandWriting)this.get(i));
+			list.add((ExtHandWriting)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

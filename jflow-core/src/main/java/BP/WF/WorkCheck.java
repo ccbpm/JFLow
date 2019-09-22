@@ -1,11 +1,5 @@
 package BP.WF;
 
-import BP.DA.DBType;
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.En.QueryObject;
-import BP.Sys.SystemConfig;
-
 /** 
  审核工作节点
 */
@@ -14,7 +8,7 @@ public class WorkCheck
 	/** 
 	 工作ID
 	*/
-	public long WorkID=0;
+	public long WorkID = 0;
 	public long FID = 0;
 	/** 
 	 节点ID
@@ -33,22 +27,23 @@ public class WorkCheck
 	}
 	/** 
 	 获取主键32位
+	 
 	 @return 
 	*/
 	public final int GetMyPK32()
 	{
 		try
 		{
-			int newPK = Integer.parseInt((new Long(this.WorkID)).toString()) + this.NodeID + Integer.parseInt(this.FlowNo);
+			int newPK = Integer.parseInt(String.valueOf(this.WorkID)) + this.NodeID + Integer.parseInt(this.FlowNo);
 			String myPk = "";
 			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID={0} AND FK_Node={1} AND FK_Flow='{2}' ORDER BY RDT DESC";
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
-			if (dt != null && dt.Rows.size() > 0)
+			if (dt != null && dt.Rows.Count > 0)
 			{
-				myPk = dt.Rows.get(0).get("RDT").toString();
+				myPk = dt.Rows[0]["RDT"].toString();
 				myPk = myPk.replace("-", "").replace(":", "").replace(" ", "");
 				myPk = myPk.substring(4);
-				newPK = Integer.parseInt((new Long(this.WorkID)).toString()) + this.NodeID + Integer.parseInt(this.FlowNo) + Integer.parseInt(myPk);
+				newPK = Integer.parseInt(String.valueOf(this.WorkID)) + this.NodeID + Integer.parseInt(this.FlowNo) + Integer.parseInt(myPk);
 			}
 			return newPK;
 		}
@@ -66,18 +61,18 @@ public class WorkCheck
 	{
 		try
 		{
-			long newPK = Long.parseLong((new Long(this.WorkID)).toString()) + this.NodeID + Long.parseLong(this.FlowNo);
+			long newPK = Long.parseLong(String.valueOf(this.WorkID)) + this.NodeID + Long.parseLong(this.FlowNo);
 			String myPk = "";
 			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID={0} AND FK_Node={1} AND FK_Flow='{2}' ORDER BY RDT DESC";
 
 
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
-			if (dt != null && dt.Rows.size() > 0)
+			if (dt != null && dt.Rows.Count > 0)
 			{
-				myPk = dt.Rows.get(0).getValue("RDT").toString();
+				myPk = dt.Rows[0]["RDT"].toString();
 				myPk = myPk.replace("-", "").replace(":", "").replace(" ", "");
 				myPk = myPk.substring(2);
-				newPK = Long.parseLong((new Long(this.WorkID)).toString()) + this.NodeID + Long.parseLong(this.FlowNo) + Long.parseLong(myPk);
+				newPK = Long.parseLong(String.valueOf(this.WorkID)) + this.NodeID + Long.parseLong(this.FlowNo) + Long.parseLong(myPk);
 			}
 			return newPK;
 		}
@@ -86,12 +81,12 @@ public class WorkCheck
 			return 0;
 		}
 	}
-	public final Tracks getHisWorkChecks() throws Exception
+	public final Tracks getHisWorkChecks()
 	{
 		if (_HisWorkChecks == null)
 		{
 			_HisWorkChecks = new Tracks();
-			BP.En.QueryObject qo = new QueryObject(_HisWorkChecks);
+			BP.En.QueryObject qo = new En.QueryObject(_HisWorkChecks);
 
 			if (this.FID != 0)
 			{
@@ -100,36 +95,29 @@ public class WorkCheck
 			else
 			{
 				qo.AddWhere(TrackAttr.WorkID, this.WorkID);
-				
-				if (this.WorkID!=0)
+
+				if (this.WorkID != 0)
 				{
-				qo.addOr();
-				qo.AddWhere(TrackAttr.FID, this.WorkID);
+					qo.addOr();
+					qo.AddWhere(TrackAttr.FID, this.WorkID);
 				}
 			}
 
 			qo.addOrderBy(TrackAttr.RDT);
 
-			String sql = qo.getSQL();
+			String sql = qo.SQL;
 			sql = sql.replace("WF_Track", "ND" + Integer.parseInt(this.FlowNo) + "Track");
-			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
+			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql, qo.MyParas);
 
-			//dt.DefaultView.Sort = "RDT desc";			
-			BP.En.Attrs attrs = _HisWorkChecks.getGetNewEntity().getEnMap().getAttrs();
-			
-			Boolean isOracle=false;				
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)			
-				isOracle=true;	 
-			
+			dt.DefaultView.Sort = "RDT desc";
+
+			BP.En.Attrs attrs = _HisWorkChecks.getGetNewEntity().EnMap.Attrs;
 			for (DataRow dr : dt.Rows)
 			{
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
-				{					
-					 if (isOracle==true)
-					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
-					else
-						en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+				{
+					en.Row.SetValByKey(attr.Key, dr.get(attr.Key));
 				}
 
 				_HisWorkChecks.AddEntity(en);
@@ -146,7 +134,7 @@ public class WorkCheck
 
 			BP.DA.Paras ps = new BP.DA.Paras();
 			String sql = "SELECT * FROM ND" + Integer.parseInt(this.FlowNo) + "Track WHERE ";
-			String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+			String dbstr = BP.Sys.SystemConfig.AppCenterDBVarStr;
 			if (this.FID == 0)
 			{
 					// 为了兼容多种数据库，所以使用了两个相同的参数.
@@ -165,20 +153,23 @@ public class WorkCheck
 				ps.Add("WorkID", this.WorkID);
 				ps.Add("FID", this.FID);
 			}
+
 			ps.SQL = sql;
+
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+
 				//获得Attrs
-			BP.En.Attrs attrs=_HisWorkChecks.getGetNewEntity().getEnMap().getAttrs();
+			BP.En.Attrs attrs = _HisWorkChecks.getGetNewEntity().EnMap.Attrs;
 			 for (DataRow dr : dt.Rows)
-			{
+			 {
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
 				{
-					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+					en.Row.SetValByKey(attr.Key, dr.get(attr.Key));
 				}
 
 				_HisWorkChecks.AddEntity(en);
-			}
+			 }
 		}
 		return _HisWorkChecks;
 	}

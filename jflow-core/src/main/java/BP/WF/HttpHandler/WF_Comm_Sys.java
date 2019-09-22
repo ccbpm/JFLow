@@ -1,55 +1,422 @@
 package BP.WF.HttpHandler;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.Template.*;
+import BP.NetPlatformImpl.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-
-import BP.DA.DBAccess;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.Difference.Handler.CommonFileUtils;
-import BP.Difference.Handler.WebContralBase;
-import BP.En.Attr;
-import BP.En.Attrs;
-import BP.En.ClassFactory;
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.En.EntityMyPK;
-import BP.En.EntityNoName;
-import BP.En.FieldType;
-import BP.Sys.DBSrcType;
-import BP.Sys.SFDBSrc;
-import BP.Sys.SFDBSrcAttr;
-import BP.Sys.SFDBSrcs;
-import BP.Sys.SFTable;
-import BP.Sys.SFTableAttr;
-import BP.Sys.SysEnum;
-import BP.Sys.SysEnumAttr;
-import BP.Sys.SysEnums;
-import BP.Sys.FrmUI.SFTables;
-import BP.Tools.DealString;
-import BP.Tools.StringHelper;
 /** 
  页面功能实体
- 
 */
-public class WF_Comm_Sys extends WebContralBase
+public class WF_Comm_Sys extends DirectoryPageBase
 {
-	
-	/**
-	 * 构造函数
-	 */
+	/** 
+	 单元测试
+	 
+	 @return 
+	*/
+	public final String UnitTesting_Init()
+	{
+		DataTable dt = new DataTable();
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
+		dt.Columns.Add("Note");
+
+		ArrayList al = null;
+		al = BP.En.ClassFactory.GetObjects("BP.UnitTesting.TestBase");
+		for (Object obj : al)
+		{
+			BP.UnitTesting.TestBase en = null;
+			try
+			{
+				en = obj instanceof BP.UnitTesting.TestBase ? (BP.UnitTesting.TestBase)obj : null;
+				if (en == null)
+				{
+					continue;
+				}
+				String s = en.Title;
+				if (en == null)
+				{
+					continue;
+				}
+			}
+			catch (java.lang.Exception e)
+			{
+				continue;
+			}
+
+			if (en.toString() == null)
+			{
+				continue;
+			}
+
+			DataRow dr = dt.NewRow();
+			dr.set("No", en.toString());
+			dr.set("Name", en.Title);
+			dr.set("Note", en.Note);
+			dt.Rows.Add(dr);
+		}
+		return BP.Tools.Json.ToJson(dt);
+	}
+	public final String UnitTesting_Done()
+	{
+		try
+		{
+			BP.UnitTesting.TestBase tc = BP.UnitTesting.Glo.GetTestEntity(this.getEnName());
+			tc.Do();
+			return "执行成功.<hr>" + tc.Note.replace("\t\n", "@<br>");
+		}
+		catch (RuntimeException ex)
+		{
+			return "err@" + ex.getMessage();
+		}
+	}
+	public final String ImpData_Init()
+	{
+		return "";
+	}
+	private String ImpData_DoneMyPK(Entities ens, DataTable dt)
+	{
+		//错误信息
+		String errInfo = "";
+		EntityMyPK en = (EntityMyPK)ens.GetNewEntity;
+		//定义属性.
+		Attrs attrs = en.EnMap.Attrs;
+
+		int impWay = this.GetRequestValInt("ImpWay");
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 清空方式导入.
+		//清空方式导入.
+		int count = 0; //导入的行数
+		int changeCount = 0; //更新数据的行数
+		String successInfo = "";
+		if (impWay == 0)
+		{
+			ens.ClearTable();
+			for (DataRow dr : dt.Rows)
+			{
+				en = (EntityMyPK)ens.GetNewEntity;
+				//给实体赋值
+				errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 0);
+				//获取PKVal
+				en.PKVal = en.InitMyPKVals();
+				if (en.RetrieveFromDBSources() == 0)
+				{
+					en.Insert();
+					count++;
+					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.PKVal + "的导入成功</span><br/>";
+				}
+
+			}
+		}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 清空方式导入.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 更新方式导入
+		if (impWay == 1 || impWay == 2)
+		{
+			for (DataRow dr : dt.Rows)
+			{
+				en = (EntityMyPK)ens.GetNewEntity;
+				//给实体赋值
+				errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 1);
+
+				//获取PKVal
+				en.PKVal = en.InitMyPKVals();
+				if (en.RetrieveFromDBSources() == 0)
+				{
+					en.Insert();
+					count++;
+					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.PKVal + "的导入成功</span><br/>";
+				}
+				else
+				{
+					changeCount++;
+					SetEntityAttrVal("", dr, attrs, en, dt, 1);
+					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.PKVal + "的更新成功</span><br/>";
+				}
+			}
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
+	}
+	/** 
+	 执行导入
+	 
+	 @return 
+	*/
+	public final String ImpData_Done()
+	{
+
+//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
+		if (files.Count == 0)
+		{
+			return "err@请选择要导入的数据信息。";
+		}
+
+		String errInfo = "";
+
+		String ext = ".xls";
+		String fileName = (new File(files[0].FileName)).getName();
+		if (fileName.contains(".xlsx"))
+		{
+			ext = ".xlsx";
+		}
+
+
+		//设置文件名
+		String fileNewName = LocalDateTime.now().toString("yyyyMMddHHmmssff") + ext;
+
+		//文件存放路径
+		String filePath = BP.Sys.SystemConfig.PathOfTemp + "\\" + fileNewName;
+		//files[0].SaveAs(filePath);
+		HttpContextHelper.UploadFile(files[0], filePath);
+		//从excel里面获得数据表.
+		DataTable dt = BP.DA.DBLoad.ReadExcelFileToDataTable(filePath);
+
+		//删除临时文件
+		(new File(filePath)).delete();
+
+		if (dt.Rows.Count == 0)
+		{
+			return "err@无导入的数据";
+		}
+
+		//获得entity.
+		Entities ens = ClassFactory.GetEns(this.getEnsName());
+		Entity en = ens.GetNewEntity;
+
+		if (en.PK.equals("MyPK") == true)
+		{
+			return this.ImpData_DoneMyPK(ens, dt);
+		}
+
+		if (en.IsNoEntity == false)
+		{
+			return "err@必须是EntityNo或者EntityMyPK实体,才能导入.";
+		}
+
+		String noColName = ""; //实体列的编号名称.
+		String nameColName = ""; //实体列的名字名称.
+
+		Attr attr = en.EnMap.GetAttrByKey("No");
+		noColName = attr.Desc;
+		BP.En.Map map = en.EnMap;
+		String codeStruct = map.CodeStruct;
+		attr = map.GetAttrByKey("Name");
+		nameColName = attr.Desc;
+
+		//定义属性.
+		Attrs attrs = en.EnMap.Attrs;
+
+		int impWay = this.GetRequestValInt("ImpWay");
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 清空方式导入.
+		//清空方式导入.
+		int count = 0; //导入的行数
+		int changeCount = 0; //更新的行数
+		String successInfo = "";
+		if (impWay == 0)
+		{
+			ens.ClearTable();
+			for (DataRow dr : dt.Rows)
+			{
+				String no = dr.get(noColName).toString();
+				String name = dr.get(nameColName).toString();
+
+				//判断是否是自增序列，序列的格式
+				if (!DataType.IsNullOrEmpty(codeStruct))
+				{
+					no = tangible.StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
+				}
+
+				EntityNoName myen = ens.GetNewEntity instanceof EntityNoName ? (EntityNoName)ens.GetNewEntity : null;
+				myen.No = no;
+				if (myen.IsExits == true)
+				{
+					errInfo += "err@编号[" + no + "][" + name + "]重复.";
+					continue;
+				}
+
+				myen.Name = name;
+
+				en = ens.GetNewEntity;
+
+				//给实体赋值
+				errInfo += SetEntityAttrVal(no, dr, attrs, en, dt, 0);
+				count++;
+				successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的导入成功</span><br/>";
+			}
+		}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 清空方式导入.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 更新方式导入
+		if (impWay == 1 || impWay == 2)
+		{
+			for (DataRow dr : dt.Rows)
+			{
+				String no = dr.get(noColName).toString();
+				String name = dr.get(nameColName).toString();
+				//判断是否是自增序列，序列的格式
+				if (!DataType.IsNullOrEmpty(codeStruct))
+				{
+					no = tangible.StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
+				}
+				EntityNoName myen = ens.GetNewEntity instanceof EntityNoName ? (EntityNoName)ens.GetNewEntity : null;
+				myen.No = no;
+				if (myen.IsExits == true)
+				{
+					//给实体赋值
+					errInfo += SetEntityAttrVal(no, dr, attrs, myen, dt, 1);
+					changeCount++;
+					successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的更新成功</span><br/>";
+					continue;
+				}
+				myen.Name = name;
+
+				//给实体赋值
+				errInfo += SetEntityAttrVal(no, dr, attrs, en, dt, 0);
+				count++;
+				successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的导入成功</span><br/>";
+			}
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
+	}
+
+	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType)
+	{
+		String errInfo = "";
+		//按照属性赋值.
+		for (Attr item : attrs)
+		{
+			if (item.Key.equals("No"))
+			{
+				en.SetValByKey(item.Key, no);
+				continue;
+			}
+			if (item.Key.equals("Name"))
+			{
+				en.SetValByKey(item.Key, dr.get(item.Desc).toString());
+				continue;
+			}
+
+
+			if (dt.Columns.Contains(item.Desc) == false)
+			{
+				continue;
+			}
+
+			//枚举处理.
+			if (item.MyFieldType == FieldType.Enum)
+			{
+				String val = dr.get(item.Desc).toString();
+
+				SysEnum se = new SysEnum();
+				int i = se.Retrieve(SysEnumAttr.EnumKey, item.UIBindKey, SysEnumAttr.Lab, val);
+
+				if (i == 0)
+				{
+					errInfo += "err@枚举[" + item.Key + "][" + item.Desc + "]，值[" + val + "]不存在.";
+					continue;
+				}
+
+				en.SetValByKey(item.Key, se.IntKey);
+				continue;
+			}
+
+			//外键处理.
+			if (item.MyFieldType == FieldType.FK)
+			{
+				String val = dr.get(item.Desc).toString();
+				Entity attrEn = item.HisFKEn;
+				int i = attrEn.Retrieve("Name", val);
+				if (i == 0)
+				{
+					errInfo += "err@外键[" + item.Key + "][" + item.Desc + "]，值[" + val + "]不存在.";
+					continue;
+				}
+
+				if (i != 1)
+				{
+					errInfo += "err@外键[" + item.Key + "][" + item.Desc + "]，值[" + val + "]重复..";
+					continue;
+				}
+
+				//把编号值给他.
+				en.SetValByKey(item.Key, attrEn.GetValByKey("No"));
+				continue;
+			}
+
+			//boolen类型的处理..
+			if (item.MyDataType == DataType.AppBoolean)
+			{
+				String val = dr.get(item.Desc).toString();
+				if (val.equals("是") || val.equals("有"))
+				{
+					en.SetValByKey(item.Key, 1);
+				}
+				else
+				{
+					en.SetValByKey(item.Key, 0);
+				}
+				continue;
+			}
+
+			String myval = dr.get(item.Desc).toString();
+			en.SetValByKey(item.Key, myval);
+		}
+
+		try
+		{
+			if (en.IsNoEntity == true)
+			{
+				if (saveType == 0)
+				{
+					en.Insert();
+				}
+				else
+				{
+					en.Update();
+				}
+			}
+
+		}
+		catch (RuntimeException ex)
+		{
+			return "err@" + ex.getMessage();
+		}
+
+		return errInfo;
+	}
+
+
+	/** 
+	 构造函数
+	*/
 	public WF_Comm_Sys()
 	{
-	
 	}
-	
 	/** 
 	 函数库
 	 
@@ -60,7 +427,7 @@ public class WF_Comm_Sys extends WebContralBase
 		String expFileName = "all-wcprops,dir-prop-base,entries";
 		String expDirName = ".svn";
 
-		String pathDir = BP.Sys.SystemConfig.getPathOfData() + "/JSLib/";
+		String pathDir = BP.Sys.SystemConfig.PathOfData + "\\JSLib\\";
 
 		String html = "";
 		html += "<fieldset>";
@@ -69,7 +436,7 @@ public class WF_Comm_Sys extends WebContralBase
 
 		//.AddFieldSet();
 		File dir = new File(pathDir);
-		File[] dirs = new File(pathDir).listFiles();
+		File[] dirs = dir.GetDirectories();
 		for (File mydir : dirs)
 		{
 			if (expDirName.contains(mydir.getName()))
@@ -79,29 +446,26 @@ public class WF_Comm_Sys extends WebContralBase
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			if(mydir.isDirectory()){
-				File[] fls = mydir.listFiles();
-				for (File fl : fls)
+			File[] fls = mydir.GetFiles();
+			for (File fl : fls)
+			{
+				if (expFileName.contains(fl.getName()))
 				{
-					if (expFileName.contains(fl.getName()))
-					{
-						continue;
-					}
-
-					html += "<li>" + fl.getName() + "</li>";
+					continue;
 				}
 
+				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
 		html += "</fieldset>";
 
-		pathDir = BP.Sys.SystemConfig.getPathOfDataUser() + "/JSLib/";
+		pathDir = BP.Sys.SystemConfig.PathOfDataUser + "\\JSLib\\";
 		html += "<fieldset>";
 		html += "<legend>" + "用户自定义函数. 位置:" + pathDir + "</legend>";
 
 		dir = new File(pathDir);
-		dirs = dir.listFiles();
+		dirs = dir.GetDirectories();
 		for (File mydir : dirs)
 		{
 			if (expDirName.contains(mydir.getName()))
@@ -111,16 +475,14 @@ public class WF_Comm_Sys extends WebContralBase
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			if(mydir.isDirectory()){
-				File[] fls = mydir.listFiles();
-				for (File fl : fls)
+			File[] fls = mydir.GetFiles();
+			for (File fl : fls)
+			{
+				if (expFileName.contains(fl.getName()))
 				{
-					if (expFileName.contains(fl.getName()))
-					{
-						continue;
-					}
-					html += "<li>" + fl.getName() + "</li>";
+					continue;
 				}
+				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
@@ -128,14 +490,14 @@ public class WF_Comm_Sys extends WebContralBase
 		return html;
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 系统实体属性.
-	public final String SystemClass_EnsCheck() throws Exception
+	public final String SystemClass_EnsCheck()
 	{
 		try
 		{
 			BP.En.Entity en = BP.En.ClassFactory.GetEn(this.getEnName());
-			BP.En.Map map = en.getEnMap();
+			BP.En.Map map = en.EnMap;
 			en.CheckPhysicsTable();
 			String msg = "";
 			// string msg = "";
@@ -148,94 +510,93 @@ public class WF_Comm_Sys extends WebContralBase
 
 			DataTable dt = new DataTable();
 			Entity refen = null;
-			for (Attr attr : map.getAttrs())
+			for (Attr attr : map.Attrs)
 			{
-				//
-				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
+				if (attr.MyFieldType == FieldType.FK || attr.MyFieldType == FieldType.PKFK)
 				{
-					refen = ClassFactory.GetEns(attr.getUIBindKey()).getGetNewEntity();
-					table = refen.getEnMap().getPhysicsTable();
+					refen = ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
+					table = refen.EnMap.PhysicsTable;
 					sql1 = "SELECT COUNT(*) FROM " + table;
 
-					Attr pkAttr = refen.getEnMap().GetAttrByKey(refen.getPK());
-					sql2 = "SELECT COUNT( distinct " + pkAttr.getField() + ") FROM " + table;
+					Attr pkAttr = refen.EnMap.GetAttrByKey(refen.PK);
+					sql2 = "SELECT COUNT( distinct " + pkAttr.Field + ") FROM " + table;
 
 					COUNT1 = DBAccess.RunSQLReturnValInt(sql1);
 					COUNT2 = DBAccess.RunSQLReturnValInt(sql2);
 
 					if (COUNT1 != COUNT2)
 					{
-						msg += "<BR>@关联表(" + refen.getEnMap().getEnDesc() + ")主键不唯一，它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
-						msg += "@SQL= SELECT * FROM (  select " + refen.getPK() + ",  COUNT(*) AS NUM  from " + table + " GROUP BY " + refen.getPK() + " ) WHERE NUM!=1";
+						msg += "<BR>@关联表(" + refen.EnMap.EnDesc + ")主键不唯一，它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
+						msg += "@SQL= SELECT * FROM (  select " + refen.PK + ",  COUNT(*) AS NUM  from " + table + " GROUP BY " + refen.PK + " ) WHERE NUM!=1";
 					}
 
-					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN (SELECT " + pkAttr.getField() + " FROM " + table + " )";
+					sql = "SELECT " + attr.Field + " FROM " + map.PhysicsTable + " WHERE " + attr.Field + " NOT IN (SELECT " + pkAttr.Field + " FROM " + table + " )";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.size() == 0)
+					if (dt.Rows.Count == 0)
 					{
 						continue;
 					}
 					else
 					{
-						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.getDesc() + " sql= " + sql;
+						msg += "<BR>:有" + dt.Rows.Count + "个错误。" + attr.Desc + " sql= " + sql;
 					}
 				}
-				if (attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.Enum)
+				if (attr.MyFieldType == FieldType.PKEnum || attr.MyFieldType == FieldType.Enum)
 				{
-					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN ( select Intkey from sys_enum WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
+					sql = "SELECT " + attr.Field + " FROM " + map.PhysicsTable + " WHERE " + attr.Field + " NOT IN ( select Intkey from sys_enum WHERE ENUMKEY='" + attr.UIBindKey + "' )";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.size() == 0)
+					if (dt.Rows.Count == 0)
 					{
 						continue;
 					}
 					else
 					{
-						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.getDesc() + " sql= " + sql;
+						msg += "<BR>:有" + dt.Rows.Count + "个错误。" + attr.Desc + " sql= " + sql;
 					}
 				}
 			}
 
 			// 检查pk是否一致。
-			if (en.getPKs().length == 1)
+			if (en.PKs.Length == 1)
 			{
-				sql1 = "SELECT COUNT(*) FROM " + map.getPhysicsTable();
+				sql1 = "SELECT COUNT(*) FROM " + map.PhysicsTable;
 				COUNT1 = DBAccess.RunSQLReturnValInt(sql1);
 
-				Attr attrMyPK = en.getEnMap().GetAttrByKey(en.getPK());
-				sql2 = "SELECT COUNT(DISTINCT " + attrMyPK.getField() + ") FROM " + map.getPhysicsTable();
+				Attr attrMyPK = en.EnMap.GetAttrByKey(en.PK);
+				sql2 = "SELECT COUNT(DISTINCT " + attrMyPK.Field + ") FROM " + map.PhysicsTable;
 				COUNT2 = DBAccess.RunSQLReturnValInt(sql2);
 				if (COUNT1 != COUNT2)
 				{
-					msg += "@物理表(" + map.getEnDesc() + ")中主键不唯一;它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
-					msg += "@SQL= SELECT * FROM (  select " + en.getPK() + ",  COUNT(*) AS NUM  from " + map.getPhysicsTable() + " GROUP BY " + en.getPK() + " ) WHERE NUM!=1";
+					msg += "@物理表(" + map.EnDesc + ")中主键不唯一;它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
+					msg += "@SQL= SELECT * FROM (  select " + en.PK + ",  COUNT(*) AS NUM  from " + map.PhysicsTable + " GROUP BY " + en.PK + " ) WHERE NUM!=1";
 				}
 			}
 
 			if (msg.equals(""))
 			{
-				return map.getEnDesc() + ":数据体检成功,完全正确.";
+				return map.EnDesc + ":数据体检成功,完全正确.";
 			}
 
-			String info = map.getEnDesc() + ":数据体检信息：体检失败" + msg;
+			String info = map.EnDesc + ":数据体检信息：体检失败" + msg;
 			return info;
 
 		}
-		catch(RuntimeException ex)
+		catch (RuntimeException ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	public final String SystemClass_Fields() throws Exception
+	public final String SystemClass_Fields()
 	{
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.GetNewEntity;
 
-		BP.En.Map map = en.getEnMap();
+		BP.En.Map map = en.EnMap;
 		en.CheckPhysicsTable();
 
 		String html = "<table>";
 
-		html += "<caption>数据结构" + map.getEnDesc() + "," + map.getPhysicsTable() + "</caption>";
+		html += "<caption>数据结构" + map.EnDesc + "," + map.PhysicsTable + "</caption>";
 
 		html += "<tr>";
 		html += "<th>序号</th>";
@@ -250,42 +611,42 @@ public class WF_Comm_Sys extends WebContralBase
 		html += "</tr>";
 
 		int i = 0;
-		for (Attr attr : map.getAttrs())
+		for (Attr attr : map.Attrs)
 		{
-			if (attr.getMyFieldType() == FieldType.RefText)
+			if (attr.MyFieldType == FieldType.RefText)
 			{
 				continue;
 			}
 			i++;
 			html += "<tr>";
 			html += "<td>" + i + "</td>";
-			html += "<td>" + attr.getDesc() + "</td>";
-			html += "<td>" + attr.getKey() + "</td>";
-			html += "<td>" + attr.getField() + "</td>";
-			html += "<td>" + attr.getMyDataTypeStr() + "</td>";
-			html += "<td>" + attr.getMyFieldType().toString() + "</td>";
+			html += "<td>" + attr.Desc + "</td>";
+			html += "<td>" + attr.Key + "</td>";
+			html += "<td>" + attr.Field + "</td>";
+			html += "<td>" + attr.MyDataTypeStr + "</td>";
+			html += "<td>" + attr.MyFieldType.toString() + "</td>";
 
-			if (attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat || attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney)
+			if (attr.MyDataType == DataType.AppBoolean || attr.MyDataType == DataType.AppDouble || attr.MyDataType == DataType.AppFloat || attr.MyDataType == DataType.AppInt || attr.MyDataType == DataType.AppMoney)
 			{
 				html += "<td>无</td>";
 			}
 			else
 			{
-				html += "<td>" + attr.getMaxLength() + "</td>";
+				html += "<td>" + attr.MaxLength + "</td>";
 			}
 
 
-			switch (attr.getMyFieldType())
+			switch (attr.MyFieldType)
 			{
-				case Enum:
-				case PKEnum:
+				case FieldType.Enum:
+				case FieldType.PKEnum:
 					try
 					{
-						SysEnums ses = new SysEnums(attr.getUIBindKey());
+						SysEnums ses = new SysEnums(attr.UIBindKey);
 						String str = "";
-						for (SysEnum se : ses.ToJavaList())
+						for (SysEnum se : ses)
 						{
-							str += se.getIntKey() + "&nbsp;" + se.getLab() + ",";
+							str += se.IntKey + "&nbsp;" + se.Lab + ",";
 						}
 						html += "<td>" + str + "</td>";
 					}
@@ -295,17 +656,17 @@ public class WF_Comm_Sys extends WebContralBase
 
 					}
 					break;
-				case FK:
-				case PKFK:
-					Entities myens = ClassFactory.GetEns(attr.getUIBindKey());
-					html += "<td>表/视图:" + myens.getGetNewEntity().getEnMap().getPhysicsTable() + " 关联字段:" + attr.getUIRefKeyValue() + "," + attr.getUIRefKeyText()+"</td>";
+				case FieldType.FK:
+				case FieldType.PKFK:
+					Entities myens = ClassFactory.GetEns(attr.UIBindKey);
+					html += "<td>表/视图:" + myens.GetNewEntity.EnMap.PhysicsTable + " 关联字段:" + attr.UIRefKeyValue + "," + attr.UIRefKeyText + "</td>";
 					break;
 				default:
 					html += "<td>无</td>";
 					break;
 			}
 
-			html += "<td>" + attr.getDefaultVal().toString() + "</td>";
+			html += "<td>" + attr.DefaultVal.toString() + "</td>";
 			html += "</tr>";
 		}
 		html += "</table>";
@@ -315,20 +676,20 @@ public class WF_Comm_Sys extends WebContralBase
 	public final String SystemClass_Init()
 	{
 		DataTable dt = new DataTable();
-		dt.Columns.Add("No",String.class);
-		dt.Columns.Add("EnsName",String.class);
-		dt.Columns.Add("Name",String.class);
-		dt.Columns.Add("PTable",String.class);
+		dt.Columns.Add("No");
+		dt.Columns.Add("EnsName");
+		dt.Columns.Add("Name");
+		dt.Columns.Add("PTable");
 
-		java.util.ArrayList al = null;
+		ArrayList al = null;
 		al = BP.En.ClassFactory.GetObjects("BP.En.Entity");
 		for (Object obj : al)
 		{
 			Entity en = null;
 			try
 			{
-				en = (Entity)((obj instanceof Entity) ? obj : null);
-				String s = en.getEnDesc();
+				en = obj instanceof Entity ? (Entity)obj : null;
+				String s = en.EnDesc;
 				if (en == null)
 				{
 					continue;
@@ -347,27 +708,27 @@ public class WF_Comm_Sys extends WebContralBase
 
 			DataRow dr = dt.NewRow();
 
-			dr.setValue("No", en.toString() + "");
+			dr.set("No", en.toString());
 			try
 			{
-				dr.setValue("EnsName", en.getGetNewEntities().toString() + "");
+				dr.set("EnsName", en.GetNewEntities.toString());
 			}
 			catch (java.lang.Exception e2)
 			{
-				dr.setValue("EnsName", en.toString()+"s");
+				dr.set("EnsName", en.toString() + "s");
 			}
-			dr.setValue("Name",en.getEnMap().getEnDesc() + "");
-			dr.setValue("PTable",en.getEnMap().getPhysicsTable() + "");
-			dt.Rows.add(dr);
+			dr.set("Name", en.EnMap.EnDesc);
+			dr.set("PTable", en.EnMap.PhysicsTable);
+			dt.Rows.Add(dr);
 		}
 
 		return BP.Tools.Json.ToJson(dt);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -377,33 +738,30 @@ public class WF_Comm_Sys extends WebContralBase
 	@Override
 	protected String DoDefaultMethod()
 	{
-		String sfno = this.getRequest().getParameter("sfno");
+		String sfno = this.GetRequestVal("sfno");
 		SFTable sftable = null;
 		DataTable dt = null;
 		StringBuilder s = null;
 
-//C# TO JAVA CONVERTER NOTE: The following 'switch' operated on a string member and was converted to Java 'if-else' logic:
-//		switch (this.DoType)
-//ORIGINAL LINE: case "DtlFieldUp":
-		if (this.getDoType().equals("DtlFieldUp")) //字段上移
+		switch (this.getDoType())
 		{
+			case "DtlFieldUp": //字段上移
 				return "执行成功.";
 
 
-		}
-		else
-		{
+			default:
+				break;
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + this.getRequest().getRequestURL());
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 执行父类的重写方法.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 数据源管理
-	public final String SFDBSrcNewGuide_GetList() throws Exception
+	public final String SFDBSrcNewGuide_GetList()
 	{
 		//SysEnums enums = new SysEnums(SFDBSrcAttr.DBSrcType);
 		SFDBSrcs srcs = new SFDBSrcs();
@@ -412,57 +770,57 @@ public class WF_Comm_Sys extends WebContralBase
 		return srcs.ToJson();
 	}
 
-	public final String SFDBSrcNewGuide_LoadSrc() throws Exception
+	public final String SFDBSrcNewGuide_LoadSrc()
 	{
 		DataSet ds = new DataSet();
 
 		SFDBSrc src = new SFDBSrc();
-		if (!StringUtils.isEmpty(this.GetRequestVal("No")))
+		if (!tangible.StringHelper.isNullOrWhiteSpace(this.GetRequestVal("No")))
 		{
-			src = new SFDBSrc();
+			src = new SFDBSrc(getNo());
 		}
-		ds.Tables.add(src.ToDataTableField("SFDBSrc"));
+		ds.Tables.Add(src.ToDataTableField("SFDBSrc"));
 
 		SysEnums enums = new SysEnums();
 		enums.Retrieve(SysEnumAttr.EnumKey, SFDBSrcAttr.DBSrcType, SysEnumAttr.IntKey);
-		ds.Tables.add(enums.ToDataTableField("DBSrcType"));
+		ds.Tables.Add(enums.ToDataTableField("DBSrcType"));
 
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String SFDBSrcNewGuide_SaveSrc() throws Exception
+	public final String SFDBSrcNewGuide_SaveSrc()
 	{
 		SFDBSrc src = new SFDBSrc();
-		src.setNo(this.GetRequestVal("TB_No"));
+		src.No = this.GetRequestVal("TB_No");
 		if (src.RetrieveFromDBSources() > 0 && this.GetRequestVal("NewOrEdit").equals("New"))
 		{
-			return ("已经存在数据源编号为“" + src.getNo()+ "”的数据源，编号不能重复！");
+			return ("已经存在数据源编号为“" + src.No + "”的数据源，编号不能重复！");
 		}
-		src.setName(this.GetRequestVal("TB_Name"));
-		src.setDBSrcType(DBSrcType.forValue(this.GetRequestValInt("DDL_DBSrcType")));
-		switch (src.getDBSrcType())
+		src.Name = this.GetRequestVal("TB_Name");
+		src.DBSrcType = (DBSrcType)this.GetRequestValInt("DDL_DBSrcType");
+		switch (src.DBSrcType)
 		{
-			case SQLServer:
-			case Oracle:
-			case MySQL:
-			case Informix:
-				if (src.getDBSrcType() != DBSrcType.Oracle)
+			case DBSrcType.SQLServer:
+			case DBSrcType.Oracle:
+			case DBSrcType.MySQL:
+			case DBSrcType.Informix:
+				if (src.DBSrcType != DBSrcType.Oracle)
 				{
-					src.setDBName(this.GetRequestVal("TB_DBName"));
+					src.DBName = this.GetRequestVal("TB_DBName");
 				}
 				else
 				{
-					src.setDBName("");
+					src.DBName = "";
 				}
-				src.setIP(this.GetRequestVal("TB_IP"));
-				src.setUserID(this.GetRequestVal("TB_UserID"));
-				src.setPassword(this.GetRequestVal("TB_Password"));
+				src.IP = this.GetRequestVal("TB_IP");
+				src.UserID = this.GetRequestVal("TB_UserID");
+				src.Password = this.GetRequestVal("TB_PWword");
 				break;
-			case WebServices:
-				src.setDBName(""); 
-				src.setIP(this.GetRequestVal("TB_IP"));
-				src.setUserID(""); 
-				src.setPassword(""); 
+			case DBSrcType.WebServices:
+				src.DBName = "";
+				src.IP = this.GetRequestVal("TB_IP");
+				src.UserID = "";
+				src.Password = "";
 				break;
 			default:
 				break;
@@ -480,7 +838,7 @@ public class WF_Comm_Sys extends WebContralBase
 		return "保存成功..";
 	}
 
-	public final String SFDBSrcNewGuide_DelSrc() throws Exception
+	public final String SFDBSrcNewGuide_DelSrc()
 	{
 		String no = this.GetRequestVal("No");
 
@@ -488,7 +846,7 @@ public class WF_Comm_Sys extends WebContralBase
 		SFTables sfs = new SFTables();
 		sfs.Retrieve(SFTableAttr.FK_SFDBSrc, no);
 
-		if (sfs.size() > 0)
+		if (sfs.Count > 0)
 		{
 			//Alert("当前数据源已经使用，不能删除！");
 			return "当前数据源已经使用，不能删除！";
@@ -498,411 +856,91 @@ public class WF_Comm_Sys extends WebContralBase
 		src.Delete();
 		return "删除成功..";
 	}
-	
-	
-//	public void setMultipartRequest(DefaultMultipartHttpServletRequest request) {
-//		this.request = request;
-//	}
-//
-//	private DefaultMultipartHttpServletRequest request;
-	
+
 	//javaScript 脚本上传
-	public final String javaScriptImp_Done(){
-		File xmlFile = null;
-		String fileName="";
-		HttpServletRequest request = getRequest();
-		String contentType = request.getContentType();
-		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
-//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");
-//			fileName = multipartFile.getOriginalFilename();
-			
-			fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
-			
-			String savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"JSLibData"+"/"+fileName;
-			xmlFile = new File(savePath);
-			if(xmlFile.exists()){
-				xmlFile.delete();
-			}
-//			try {
-//				multipartFile.transferTo(xmlFile);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				return "err@执行失败";
-//			}
-			
-			try {
-				CommonFileUtils.upload(request, "File_Upload", xmlFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "err@执行失败";
-			}
+	public final String javaScriptImp_Done()
+	{
+//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
+		if (files.Count == 0)
+		{
+			return "err@请选择要上传的流程模版。";
 		}
-		return "脚本"+fileName+"导入成功";
+		String fileName = files[0].FileName;
+		String savePath = BP.Sys.SystemConfig.PathOfDataUser + "JSLibData" + "\\" + fileName;
+
+		//存在文件则删除
+		if ((new File(savePath)).isDirectory() == true)
+		{
+			(new File(savePath)).delete();
+		}
+
+		//files[0].SaveAs(savePath);
+		HttpContextHelper.UploadFile(files[0], savePath);
+		return "脚本" + fileName + "导入成功";
 	}
-	
-	 public String RichUploadFile()
-     {
-		 File xmlFile = null;
-		String fileName="";
-		String savePath="";
-		HttpServletRequest request = getRequest();
-		String contentType = request.getContentType();
-		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
-//			MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("upfile");
-//			fileName = multipartFile.getOriginalFilename();
-			fileName = CommonFileUtils.getOriginalFilename(request, "upfile");
-			savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"RichTextFile";
-			if(new File(savePath).exists()==false)
-				new File(savePath).mkdirs();
-			savePath = savePath+"/"+fileName;
-			xmlFile = new File(savePath);
-			if(xmlFile.exists()){
-				xmlFile.delete();
-			}
-//			try {
-//				multipartFile.transferTo(xmlFile);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				return "err@执行失败";
-//			}
-			try {
-				CommonFileUtils.upload(request, "upfile", xmlFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "err@执行失败";
-			}
+
+	public final String RichUploadFile()
+	{
+		//HttpFileCollection files = context.Request.Files;
+//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+		var files = HttpContextHelper.RequestFiles();
+		if (files.Count == 0)
+		{
+			return "err@请选择要上传的图片。";
 		}
-         
-         return savePath;
-     }
+		//获取文件存放目录
+		String directory = this.GetRequestVal("Directory");
+		String fileName = files[0].FileName;
+		String savePath = BP.Sys.SystemConfig.PathOfDataUser + "RichTextFile" + "\\" + directory;
+
+		if ((new File(savePath)).isDirectory() == false)
+		{
+			(new File(savePath)).mkdirs();
+		}
+
+		savePath = savePath + "\\" + fileName;
+		//存在文件则删除
+		if ((new File(savePath)).isDirectory() == true)
+		{
+			(new File(savePath)).delete();
+		}
+
+		//files[0].SaveAs(savePath);
+		HttpContextHelper.UploadFile(files[0], savePath);
+		return savePath;
+	}
 
 	/**
 	 * 获取已知目录下的文件列表
 	 * @return
 	 */
-	public final String javaScriptFiles(){
-		String savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"JSLibData";
-		File dirFile = new File(savePath);
-		if(!dirFile.isDirectory()) 
+	public final String javaScriptFiles()
+	{
+		String savePath = BP.Sys.SystemConfig.PathOfDataUser + "JSLibData";
+
+		File di = new File(savePath);
+		//找到该目录下的文件 
+		File[] fileList = di.GetFiles();
+
+		if (fileList == null || fileList.length == 0)
+		{
 			return "";
-	    File[] fileList = dirFile.listFiles();
-	    if(fileList==null||fileList.length==0)
-	    	return "";
-	    DataTable dt = new DataTable();
-	    dt.Columns.Add("FileName");
-	    dt.Columns.Add("ChangeTime");
-	    for(File file:fileList){
-	    	DataRow dr = dt.NewRow();
-			dr.setValue("FileName", file.getName());
-			dr.setValue("ChangeTime",new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(file.lastModified())));
-			dt.Rows.add(dr);
-	    }
-	    return BP.Tools.Json.ToJson(dt);
-			
+		}
+		DataTable dt = new DataTable();
+		dt.Columns.Add("FileName");
+		dt.Columns.Add("ChangeTime");
+		for (File file : fileList)
+		{
+			DataRow dr = dt.NewRow();
+			dr.set("FileName", file.getName());
+			dr.set("ChangeTime", file.LastAccessTime.toString());
+
+			dt.Rows.Add(dr);
+		}
+		return BP.Tools.Json.ToJson(dt);
+
 	}
-	
-	  private String ImpData_DoneMyPK(Entities ens, DataTable dt) throws Exception
-      {
-          //错误信息
-          String errInfo = "";
-          Entity en = ens.getGetNewEntity();
-          //定义属性.
-          Attrs attrs = en.getEnMap().getAttrs();
-
-          int impWay = this.GetRequestValInt("ImpWay");
-
-          //清空方式导入.
-          int count = 0;//导入的行数
-          int changeCount = 0;
-          String successInfo = "";
-          if (impWay == 0)
-          {
-	          ens.ClearTable();
-	          for (DataRow dr : dt.Rows)
-	          {
-	              en = (EntityMyPK)ens.getGetNewEntity();
-	              //给实体赋值
-	              errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 0);
-	              //获取PKVal
-                  en.setPKVal(((EntityMyPK)en).InitMyPKVals());
-                  if (en.RetrieveFromDBSources() == 0)
-                  {
-                      en.Insert();
-                      count++;
-                      successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
-                  }
-	          }
-          }
-          //更新方式导入
-          if (impWay == 1 || impWay == 2)
-          {
-              for (DataRow dr : dt.Rows)
-              {
-                  en = (EntityMyPK)ens.getGetNewEntity();
-                  //给实体赋值
-                  errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 1);
-                  
-                  //获取PKVal
-                  en.setPKVal(((EntityMyPK)en).InitMyPKVals());
-                  if (en.RetrieveFromDBSources() == 0)
-                  {
-                      en.Insert();
-                      count++;
-                      successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
-                  }
-                  else
-                  {
-                	  changeCount++;
-                      SetEntityAttrVal("", dr, attrs, en, dt, 1);
-                      successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的更新成功</span><br/>";
-                  }
-              }
-          }
-         
-          return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo+"@Split"+"changeCount="+changeCount;
-      }
-
-	/// <summary>
-    /// 执行导入
-    /// </summary>
-    /// <returns></returns>
-    public String ImpData_Done() throws Exception
-    {
-    	HttpServletRequest request = getRequest();
-//    	MultipartFile multiFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");  	
-//        if (multiFile==null)
-//            return "err@请选择要导入的数据信息。";
-    	long filesSize = CommonFileUtils.getFilesSize(request, "File_Upload");
-    	if(filesSize == 0){
-    		return "err@请选择要导入的数据信息。";
-    	}
-
-        String errInfo="";
-
-        String ext = ".xls";
-//        String fileName = multiFile.getOriginalFilename();
-        String fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
-        if (fileName.contains(".xlsx"))
-            ext = ".xlsx";
-
-
-        //设置文件名
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		String currDate = sdf.format(new Date());
-		
-        String fileNewName = currDate + ext;
-        //文件存放路径
-        String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "\\" + fileNewName;
-        File tempFile = new File(filePath);
-        if(tempFile.exists()){
-        	tempFile.delete();
-		}
-		try {
-			//multiFile.transferTo(tempFile);
-			CommonFileUtils.upload(request, "File_Upload", tempFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "err@执行失败";
-		}
-
-
-        //从excel里面获得数据表.
-        DataTable dt = BP.DA.DBLoad.GetTableByExt(filePath);
-
-        //删除临时文件
-        tempFile.delete();
-
-        if (dt.Rows.size()==0)
-            return "err@无导入的数据";
-
-        //获得entity.
-        Entities ens = ClassFactory.GetEns(this.getEnsName());
-        Entity en =ens.getGetNewEntity();
-        
-        if(en.getPK().equals("MyPK") == true)
-            return this.ImpData_DoneMyPK(ens, dt);
-        
-        if (en.getIsNoEntity()==false)
-            return "err@必须是EntityNo是实体";
-
-        String noColName = ""; //实体列的编号名称.
-        String nameColName = ""; //实体列的名字名称.
-        BP.En.Map map = en.getEnMap();
-        String codeStruct = map.getCodeStruct();
-        Attr attr=map.GetAttrByKey("No");
-        noColName = attr.getDesc(); //
-
-        attr=en.getEnMap().GetAttrByKey("Name");
-        nameColName = attr.getDesc(); //
-
-        //定义属性.
-        Attrs attrs = en.getEnMap().getAttrs();
-
-        int impWay = this.GetRequestValInt("ImpWay");
-
-        ///#region 清空方式导入.
-        //清空方式导入.
-        int count =0;//导入的行数
-        int changeCount = 0;//更新的行数
-        String successInfo="";
-        if (impWay==0)
-        {
-            ens.ClearTable();
-            for(DataRow dr : dt.Rows)
-            {
-                String no = dr.getValue(noColName).toString();
-                //判断是否是自增序列，序列的格式
-                if(!StringHelper.isNullOrEmpty(codeStruct)){
-                	no = DealString.padLeft(no,Integer.parseInt(codeStruct),'0');
-                }
-                
-                String name = dr.getValue(nameColName).toString();
-
-                EntityNoName myen = (EntityNoName) ens.getGetNewEntity();
-                myen.setNo(no);
-                if (myen.getIsExits()==true)
-                {
-                    errInfo += "err@编号["+no+"]["+name+"]重复.";
-                    continue;
-                }
-               
-                myen.setName(name);
-
-                 en = ens.getGetNewEntity();
-
-                //给实体赋值
-                errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
-                count++;
-                successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的导入成功</span><br/>";
-                
-            }
-        }
-
-        ///#endregion 清空方式导入.
-
-
-        ///#region 更新方式导入
-        if (impWay == 1 || impWay == 2)
-        {
-            for(DataRow dr : dt.Rows)
-            {
-            	String no = dr.getValue(noColName).toString();
-            	//判断是否是自增序列，序列的格式
-                if(!StringHelper.isNullOrEmpty(codeStruct)){
-                	no = DealString.padLeft(no,Integer.parseInt(codeStruct),'0');
-                }
-                String name = dr.getValue(nameColName).toString();
-
-                EntityNoName myen = (EntityNoName) ens.getGetNewEntity();
-                myen.setNo(no);
-                if (myen.getIsExits() == true)
-                {
-                    //给实体赋值
-                    errInfo += SetEntityAttrVal(no,dr, attrs, myen, dt,1);
-                    changeCount++;
-                    successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的更新成功</span><br/>";
-                    continue;
-                }
-                myen.setName(name);
-
-                //给实体赋值
-                errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
-                count++;
-                successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的导入成功</span><br/>";
-            }
-        }
-       /// #endregion
-
-           return "errInfo="+errInfo+"@Split"+"count="+count+"@Split"+"successInfo="+successInfo+"@Split"+"changeCount="+changeCount;
-
-    }
-
-    private String SetEntityAttrVal(String no,DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType) throws Exception
-    {
-        String errInfo = "";
-        //按照属性赋值.
-        for (Attr item : attrs)
-        {
-            if (item.getKey() == "No" )
-            {
-                en.SetValByKey(item.getKey(), no);
-                
-                continue;
-            }
-            if(item.getKey() == "Name"){
-                en.SetValByKey(item.getKey(), dr.getValue(item.getDesc()).toString());
-                continue;
-            }
-                
-
-            if (dt.Columns.contains(item.getDesc()) == false)
-                continue;
-
-            //枚举处理.
-            if (item.getMyFieldType() == FieldType.Enum)
-            {
-                String val = dr.getValue(item.getDesc()).toString();
-
-                SysEnum se = new SysEnum();
-                int i = se.Retrieve(SysEnumAttr.EnumKey, item.getUIBindKey(), SysEnumAttr.Lab, val);
-
-                if (i == 0)
-                {
-                    errInfo += "err@枚举[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
-                    en.SetValByKey(item.getKey(),"");
-                    continue;
-                }
-
-                en.SetValByKey(item.getKey(), se.getIntKey());
-                continue;
-            }
-
-            //外键处理.
-            if (item.getMyFieldType() == FieldType.FK)
-            {
-                String val = dr.getValue(item.getDesc()).toString();
-                Entity attrEn = item.getHisFKEn();
-                int i = attrEn.Retrieve("Name", val);
-                if (i == 0)
-                {
-                    errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
-                    en.SetValByKey(item.getKey(),"");
-                    continue;
-                }
-
-                if (i != 1)
-                {
-                    errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]重复..";
-                    en.SetValByKey(item.getKey(),"");
-                    continue;
-                }
-
-                //把编号值给他.
-                en.SetValByKey(item.getKey(), attrEn.GetValByKey("No"));
-                continue;
-            }
-
-            //boolen类型的处理..
-            if (item.getMyDataType() == DataType.AppBoolean)
-            {
-                String val = dr.getValue(item.getDesc()).toString();
-                if (val == "是" || val == "有")
-                    en.SetValByKey(item.getKey(), 1);
-                else
-                    en.SetValByKey(item.getKey(), 0);
-                continue;
-            }
-
-            String myval = dr.getValue(item.getDesc()).toString();
-            en.SetValByKey(item.getKey(), myval);
-        }
-        if (en.getIsNoEntity() == true)
-        {
-            if (saveType == 0)
-                en.Insert();
-            else
-                en.Update();
-        }
-        return errInfo;
-    }
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

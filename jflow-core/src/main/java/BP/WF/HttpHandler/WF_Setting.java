@@ -1,37 +1,30 @@
 package BP.WF.HttpHandler;
 
-import java.io.File;
-import java.util.Hashtable;
-
-import javax.servlet.http.HttpServletRequest;
 import BP.DA.*;
-import BP.Difference.Handler.CommonFileUtils;
-import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
-import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
+import BP.NetPlatformImpl.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
 
 /** 
  页面功能实体
- 
 */
-public class WF_Setting extends WebContralBase
+public class WF_Setting extends DirectoryPageBase
 {
-	
-	/**
-	 * 构造函数
-	 */
+	/** 
+	 构造函数
+	*/
 	public WF_Setting()
 	{
-	
 	}
-	
-	
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -41,154 +34,277 @@ public class WF_Setting extends WebContralBase
 	@Override
 	protected String DoDefaultMethod()
 	{
-		return "";
-	}
+		switch (this.getDoType())
+		{
+			case "DtlFieldUp": //字段上移
+				return "执行成功.";
+			default:
+				break;
+		}
 
-	public final String Default_Init() throws Exception
+		//找不不到标记就抛出异常.
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 执行父类的重写方法.
+
+
+	public final String Default_Init()
 	{
-		java.util.Hashtable ht = new java.util.Hashtable();
-		ht.put("UserNo", WebUser.getNo());
-		ht.put("UserName", WebUser.getName());
+		Hashtable ht = new Hashtable();
+		ht.put("UserNo", WebUser.No);
+		ht.put("UserName", WebUser.Name);
 
 		BP.Port.Emp emp = new Emp();
-		emp.setNo(WebUser.getNo());
+		emp.No = WebUser.No;
 		emp.Retrieve();
 
 		//部门名称.
-		ht.put("DeptName", emp.getFK_DeptText());
+		ht.put("DeptName", emp.FK_DeptText);
 
-		 
+		if (SystemConfig.OSModel == OSModel.OneMore)
+		{
 			BP.GPM.DeptEmpStations des = new BP.GPM.DeptEmpStations();
-			des.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Emp, WebUser.getNo());
+			des.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Emp, WebUser.No);
 
 			String depts = "";
 			String stas = "";
 
-			for (BP.GPM.DeptEmpStation item : des.ToJavaList()
-					)
+			for (BP.GPM.DeptEmpStation item : des)
 			{
 				BP.Port.Dept dept = new Dept();
-				dept.setNo(item.getFK_Dept());
+				dept.No = item.FK_Dept;
 				int count = dept.RetrieveFromDBSources();
-				if(count !=0)
-					depts += dept.getName() + "、";
+				if (count != 0)
+				{
+					depts += dept.Name + "、";
+				}
 
+
+				if (DataType.IsNullOrEmpty(item.FK_Station) == true)
+				{
+					continue;
+				}
+
+				if (DataType.IsNullOrEmpty(item.FK_Dept) == true)
+				{
+					//   item.Delete();
+					continue;
+				}
 
 				BP.Port.Station sta = new Station();
-				sta.setNo(item.getFK_Station());
+				sta.No = item.FK_Station;
 				count = sta.RetrieveFromDBSources();
-				if(count!=0)
-					stas += sta.getName() + "、";
+				if (count != 0)
+				{
+					stas += sta.Name + "、";
+				}
 			}
 
 			ht.put("Depts", depts);
 			ht.put("Stations", stas);
-		
+		}
 
-		 
 
-		BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(WebUser.getNo());
+		BP.WF.Port.WFEmp wfemp = new Port.WFEmp(WebUser.No);
 		ht.put("Tel", wfemp.getTel());
 		ht.put("Email", wfemp.getEmail());
+		ht.put("Author", wfemp.getAuthor());
 
 		return BP.Tools.Json.ToJson(ht);
 	}
-
-		///#region 图片签名.
-	public final String Siganture_Init() throws Exception
+	/** 
+	 初始化
+	 
+	 @return json数据
+	*/
+	public final String Author_Init()
 	{
-		if (BP.Web.WebUser.getNoOfRel() == null)
-            return "err@登录信息丢失";
-
-		java.util.Hashtable ht = new java.util.Hashtable();
-        ht.put("No", BP.Web.WebUser.getNo());
-        ht.put("Name", BP.Web.WebUser.getName());
-        ht.put("FK_Dept", BP.Web.WebUser.getFK_Dept());
-        ht.put("FK_DeptName", BP.Web.WebUser.getFK_DeptName());
-        return BP.Tools.Json.ToJson(ht);
+		BP.WF.Port.WFEmp emp = new Port.WFEmp(BP.Web.WebUser.No);
+		Hashtable ht = emp.Row;
+		ht.remove(BP.WF.Port.WFEmpAttr.StartFlows); //移除这一列不然无法形成json.
+		return emp.ToJson();
 	}
-	
+	public final String Author_Save()
+	{
+		BP.WF.Port.WFEmp emp = new Port.WFEmp(BP.Web.WebUser.No);
+		emp.setAuthor(this.GetRequestVal("Author"));
+		emp.setAuthorDate(this.GetRequestVal("AuthorDate"));
+		emp.setAuthorWay(this.GetRequestValInt("AuthorWay"));
+		emp.Update();
+		return "保存成功";
+	}
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 图片签名.
+	public final String Siganture_Init()
+	{
+		if (BP.Web.WebUser.NoOfRel == null)
+		{
+			return "err@登录信息丢失";
+		}
+
+		Hashtable ht = new Hashtable();
+		ht.put("No", BP.Web.WebUser.No);
+		ht.put("Name", BP.Web.WebUser.Name);
+		ht.put("FK_Dept", BP.Web.WebUser.FK_Dept);
+		ht.put("FK_DeptName", BP.Web.WebUser.FK_DeptName);
+		return BP.Tools.Json.ToJson(ht);
+	}
 	public final String Siganture_Save()
 	{
+		//HttpPostedFile f = context.Request.Files[0];
+		String empNo = this.GetRequestVal("EmpNo");
+		if (DataType.IsNullOrEmpty(empNo) == true)
+		{
+			empNo = WebUser.No;
+		}
 		try
 		{
-			String empNo = this.GetRequestVal("EmpNo");
-	        if (DataType.IsNullOrEmpty(empNo) == true)
-	             empNo = WebUser.getNo();
-	        HttpServletRequest request = getRequest();
-			String contentType = request.getContentType();
-			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 				
-				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + empNo + ".jpg";
-				File tempFile = new File(tempFilePath);
-				if(tempFile.exists()){
-					tempFile.delete();
-				}
-//				MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");
-//				multipartFile.transferTo(tempFile);
-				CommonFileUtils.upload(request, "File_Upload", tempFile);
-			 }
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "err@执行失败";
-		}
-		
-		return "文件上传成功";
-    
-	}
+			String tempFile = BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + empNo + ".jpg";
+			if ((new File(tempFile)).isFile() == true)
+			{
+				(new File(tempFile)).delete();
+			}
 
-		///#endregion 图片签名.
-	//	 头像.
-    public String HeadPic_Save()
-    {
-    	
-    	try
-		{
-			String empNo = this.GetRequestVal("EmpNo");
-	        if (DataType.IsNullOrEmpty(empNo) == true)
-	             empNo = WebUser.getNo();
-	        HttpServletRequest request = getRequest();
-			String contentType = request.getContentType();
-			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 				
-				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/UserIcon/" + empNo + ".png";
-				File tempFile = new File(tempFilePath);
-				if(tempFile.exists()){
-					tempFile.delete();
-				}
-//				MultipartFile multipartFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");
-//				multipartFile.transferTo(tempFile);
-				CommonFileUtils.upload(request, "File_Upload", tempFile);
-			 }
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "err@执行失败";
+			//f.SaveAs(tempFile);
+			HttpContextHelper.UploadFile(tempFile);
+			System.Drawing.Image img = System.Drawing.Image.FromFile(tempFile);
+			img.Dispose();
 		}
-		
-		return "文件上传成功";
-    }
-    
-    /// <summary>
-    /// 初始化
-    /// </summary>
-    /// <returns>json数据</returns>
-    public String Author_Init() throws Exception
-    {
-        BP.WF.Port.WFEmp emp = new WFEmp(BP.Web.WebUser.getNo());
-        Hashtable ht = emp.getRow();
-        ht.remove(BP.WF.Port.WFEmpAttr.StartFlows); //移除这一列不然无法形成json.
-        return emp.ToJson();
-    }
-    public String Author_Save() throws Exception
-    {
-    	 BP.WF.Port.WFEmp emp = new WFEmp(BP.Web.WebUser.getNo());
-        emp.setAuthor(this.GetRequestVal("Author"));
-        emp.setAuthorDate(this.GetRequestVal("AuthorDate"));
-        emp.setAuthorWay(this.GetRequestValInt("AuthorWay"));
-        emp.Update();
-        return "保存成功";
-    }
-    
-    
+		catch (RuntimeException ex)
+		{
+			return "err@" + ex.getMessage();
+		}
+
+		//f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.No + ".jpg");
+		// f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.Name + ".jpg");
+
+		//f.PostedFile.InputStream.Close();
+		//f.PostedFile.InputStream.Dispose();
+		//f.Dispose();
+
+		//   this.Response.Redirect(this.Request.RawUrl, true);
+		return "上传成功！";
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 图片签名.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 头像.
+	public final String HeadPic_Save()
+	{
+		//HttpPostedFile f = context.Request.Files[0];
+		String empNo = this.GetRequestVal("EmpNo");
+
+		if (DataType.IsNullOrEmpty(empNo) == true)
+		{
+			empNo = WebUser.No;
+		}
+		try
+		{
+			String tempFile = BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/UserIcon/" + empNo + ".png";
+			if ((new File(tempFile)).isFile() == true)
+			{
+				(new File(tempFile)).delete();
+			}
+
+			//f.SaveAs(tempFile);
+			HttpContextHelper.UploadFile(tempFile);
+			System.Drawing.Image img = System.Drawing.Image.FromFile(tempFile);
+			img.Dispose();
+		}
+		catch (RuntimeException ex)
+		{
+			return "err@" + ex.getMessage();
+		}
+
+		return "上传成功！";
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 头像.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 切换部门.
+	/** 
+	 初始化切换部门.
+	 
+	 @return 
+	*/
+	public final String ChangeDept_Init()
+	{
+		Paras ps = new Paras();
+		ps.SQL = "SELECT a.No,a.Name, NameOfPath, '0' AS  CurrentDept FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp";
+		ps.Add("FK_Emp", BP.Web.WebUser.No);
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+
+		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		{
+			dt.Columns["NO"].ColumnName = "No";
+			dt.Columns["NAME"].ColumnName = "Name";
+			dt.Columns["CURRENTDEPT"].ColumnName = "CurrentDept";
+			dt.Columns["NAMEOFPATH"].ColumnName = "NameOfPath";
+		}
+
+		//设置当前的部门.
+		for (DataRow dr : dt.Rows)
+		{
+			if (dr.get("No").toString().equals(WebUser.FK_Dept))
+			{
+				dr.set("CurrentDept", "1");
+			}
+
+			if (!dr.get("NameOfPath").toString().equals(""))
+			{
+				dr.set("Name", dr.get("NameOfPath"));
+			}
+		}
+
+		return BP.Tools.Json.ToJson(dt);
+	}
+	/** 
+	 提交选择的部门。
+	 
+	 @return 
+	*/
+	public final String ChangeDept_Submit()
+	{
+		String deptNo = this.GetRequestVal("DeptNo");
+		BP.GPM.Dept dept = new GPM.Dept(deptNo);
+
+		BP.Web.WebUser.FK_Dept = dept.No;
+		BP.Web.WebUser.FK_DeptName = dept.Name;
+		BP.Web.WebUser.FK_DeptNameOfFull = dept.NameOfPath;
+
+		////重新设置cookies.
+		//string strs = "";
+		//strs += "@No=" + WebUser.No;
+		//strs += "@Name=" + WebUser.Name;
+		//strs += "@FK_Dept=" + WebUser.FK_Dept;
+		//strs += "@FK_DeptName=" + WebUser.FK_DeptName;
+		//strs += "@FK_DeptNameOfFull=" + WebUser.FK_DeptNameOfFull;
+		//BP.Web.WebUser.SetValToCookie(strs);
+
+		BP.WF.Port.WFEmp emp = new Port.WFEmp(WebUser.No);
+		emp.setStartFlows("");
+		emp.Update();
+
+		try
+		{
+			String sql = "UPDATE Port_Emp Set fk_dept='" + deptNo + "' WHERE no='" + WebUser.No + "'";
+			DBAccess.RunSQL(sql);
+			BP.WF.Dev2Interface.Port_Login(WebUser.No);
+		}
+		catch (RuntimeException ex)
+		{
+
+		}
+
+		return "@执行成功,已经切换到｛" + BP.Web.WebUser.FK_DeptName + "｝部门上。";
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 	public final String UserIcon_Init()
 	{
 		return "";
@@ -198,108 +314,45 @@ public class WF_Setting extends WebContralBase
 	{
 		return "";
 	}
-	
+
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 修改密码.
+	public final String ChangePassword_Init()
+	{
+		if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.AppCenterDBType) == true)
+		{
+			return "err@当前是组织结构集成模式，您不能修改密码，请在被集成的系统修改密码。";
+		}
+
+		return "";
+	}
 	/** 
-	 修改密码 @于庆海.
+	 修改密码 .
 	 
 	 @return 
-	 * @throws Exception 
-*/
-	public final String ChangePassword_Submit() throws Exception
+	*/
+	public final String ChangePassword_Submit()
 	{
 		String oldPass = this.GetRequestVal("OldPass");
 		String pass = this.GetRequestVal("Pass");
 
-		BP.Port.Emp emp = new Emp(BP.Web.WebUser.getNo());
+		BP.Port.Emp emp = new Emp(BP.Web.WebUser.No);
 		if (emp.CheckPass(oldPass) == false)
 		{
 			return "err@旧密码错误.";
 		}
 
-		if (BP.Sys.SystemConfig.getIsEnablePasswordEncryption() == true)
+		if (BP.Sys.SystemConfig.IsEnablePasswordEncryption == true)
 		{
-			pass = Cryptography.EncryptString(pass);
+			pass = BP.Tools.Cryptography.EncryptString(pass);
 		}
-		emp.setPass(pass);
+		emp.Pass = pass;
 		emp.Update();
 
 		return "密码修改成功...";
 	}
-	/** 切换部门.
-	 
-	 @return 
-	 * @throws Exception 
-	 */
-   public  String ChangeDept_Submit() throws Exception
-	
-    {
-		
-		
-        String deptNo = this.GetRequestVal("DeptNo");
-        BP.GPM.Dept dept = new BP.GPM.Dept(deptNo);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 修改密码.
 
-        BP.Web.WebUser.setFK_Dept(dept.getNo());//FK_Dept = dept.No;
-        BP.Web.WebUser.setFK_DeptName(dept.getName());//FK_DeptName = dept.Name;
-        BP.Web.WebUser.setFK_DeptNameOfFull(dept.getNameOfPath());//FK_DeptNameOfFull = dept.NameOfPath;
-
-        //重新设置cookies.
-        String strs = "";
-        strs += "@No=" + WebUser.getNo();
-        strs += "@Name=" + WebUser.getName();
-        strs += "@FK_Dept=" + WebUser.getFK_Dept();
-        strs += "@FK_DeptName=" + WebUser.getFK_DeptName();
-        strs += "@FK_DeptNameOfFull=" + WebUser.getFK_DeptNameOfFull();
-        //BP.Web.WebUser.setSetValToCookie(strs);
-        BP.WF.Port.WFEmp emp = new BP.WF.Port.WFEmp(WebUser.getNo());
-        emp.setStartFlows(""); 
-        emp.Update();
-
-        try
-        {
-            String sql = "UPDATE Port_Emp Set fk_dept='"+deptNo+"' WHERE no='"+WebUser.getNo()+"'";
-            DBAccess.RunSQL(sql);
-            BP.WF.Dev2Interface.Port_Login(WebUser.getNo());
-        }
-        catch (Exception ex)
-        {
-
-        }
-		//ChangeDept_Init();
-        return "@执行成功,已经切换到｛" + BP.Web.WebUser.getFK_DeptName() + "｝部门上。";
-    }
-	
-	/** 初始化切换部门.
-	 
-	 @return 
-	 * @throws Exception 
-	 */
-	public final String ChangeDept_Init() throws Exception
-	{
-		String sql = "SELECT a.No,a.Name, NameOfPath, '0' AS  CurrentDept FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp='" + BP.Web.WebUser.getNo() + "'";
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-			dt.Columns.get("CURRENTDEPT").ColumnName = "CurrentDept";
-			dt.Columns.get("NAMEOFPATH").ColumnName = "NameOfPath";
-		}
-
-		//设置当前的部门.
-		for (DataRow dr : dt.Rows)
-		{
-			if (dr.getValue("No").toString().equals(WebUser.getFK_Dept()))
-			{
-				dr.setValue("CurrentDept","1");
-			}
-
-			if (!dr.getValue("NameOfPath").toString().equals(""))
-			{
-				dr.setValue("Name", dr.getValue("NameOfPath"));
-			}
-		}
-
-		return BP.Tools.Json.ToJson(dt);
-	}
 }

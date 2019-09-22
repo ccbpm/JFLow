@@ -1,24 +1,17 @@
 package BP.WF;
 
-import BP.En.Entities;
-import BP.En.Map;
+import BP.DA.*;
+import BP.En.*;
 
 /** 
  开始工作节点
- 
 */
 public class GEStartWork extends StartWork
 {
-
-	
-		
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2209840289945012750L;
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 开始工作节点
-	 
 	*/
 	public GEStartWork()
 	{
@@ -33,14 +26,6 @@ public class GEStartWork extends StartWork
 		this.setNodeID(nodeid);
 		this.NodeFrmID = nodeFrmID;
 		this.setSQLCash(null);
-		
-		try {
-			Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);		  
-			this.set_enMap(map);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 	}
 	/** 
@@ -55,42 +40,24 @@ public class GEStartWork extends StartWork
 		this.NodeFrmID = nodeFrmID;
 		this.setOID(_oid);
 		this.setSQLCash(null);
-		
-		try {
-		Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);		  
-		this.set_enMap(map);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
 	}
-	 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region Map
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		  
-		 
-			try {
-				
-				Map map= BP.Sys.MapData.GenerHisMap(this.NodeFrmID);
-				  
-			this.set_enMap(map);
-			
-			return map;
-				//return map;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		 
-		return this.get_enMap();
+		this._enMap = BP.Sys.MapData.GenerHisMap(this.NodeFrmID);
+		return this._enMap;
 	}
+	/** 
+	 获得他的集合
+	*/
 	@Override
 	public Entities getGetNewEntities()
 	{
@@ -100,6 +67,6 @@ public class GEStartWork extends StartWork
 		}
 		return new GEStartWorks(this.getNodeID(), this.NodeFrmID);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

@@ -1,38 +1,35 @@
 package BP.WF.Template;
 
-import java.io.IOException;
-
 import BP.DA.*;
-import BP.Difference.ContextHolderUtils;
 import BP.En.*;
 import BP.WF.*;
-import BP.WF.Glo;
 import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  傻瓜表单属性
- 
 */
 public class MapFrmFool extends EntityNoName
 {
- 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 是否是节点表单?
-	 
 	*/
 	public final boolean getIsNodeFrm()
 	{
-		if (this.getNo().contains("ND") == false)
+		if (this.No.Contains("ND") == false)
 		{
 			return false;
 		}
 
-		if (this.getNo().contains("Rpt") == true)
+		if (this.No.Contains("Rpt") == true)
 		{
 			return false;
 		}
 
-		if (this.getNo().substring(0, 2).equals("ND") && this.getNo().contains("Dtl")==false)
+		if (this.No.substring(0, 2).equals("ND") && this.No.Contains("Dtl") == false)
 		{
 			return true;
 		}
@@ -40,79 +37,56 @@ public class MapFrmFool extends EntityNoName
 		return false;
 	}
 	/** 
-	物理存储表.
-	 
+	 物理存储表
 	*/
-    public final String getPTable()
-    {
-    	return this.GetValStrByKey(MapDataAttr.PTable);
-    }
-	/** 
-	物理存储表.
-	 
-	*/
-    public final void setPTable(String value)
-    {
-    	this.SetValByKey(MapDataAttr.PTable, value);
-    }
+	public final String getPTable()
+	{
+		return this.GetValStrByKey(MapDataAttr.PTable);
+	}
+	public final void setPTable(String value)
+	{
+		this.SetValByKey(MapDataAttr.PTable, value);
+	}
 	/** 
 	 节点ID.
-	 
 	*/
 	public final int getNodeID()
 	{
-		return Integer.parseInt(this.getNo().replace("ND", ""));
-	}
-	/** 
-	 傻瓜表单-宽度
-	 
-	*/
-	public final String getTableWidth()
-	{
-		int i = this.GetValIntByKey(MapDataAttr.TableWidth);
-		if (i <= 50)
+		if (this.No.indexOf("ND") != 0)
 		{
-			return "900";
+			return 0;
 		}
-		return (new Integer(i)).toString();
+		return Integer.parseInt(this.No.Replace("ND", ""));
 	}
-	/** 
-	 傻瓜表单-高度
-	 
-	*/
-	public final String getTableHeight()
-	{
-		int i = this.GetValIntByKey(MapDataAttr.TableHeight);
-		if (i <= 500)
-		{
-			return "900";
-		}
-		return (new Integer(i)).toString();
-	}
+
 	/** 
 	 表格显示的列
-	 
 	*/
 	public final int getTableCol()
 	{
 		return 4;
-
+		int i = this.GetValIntByKey(MapDataAttr.TableCol);
+		if (i == 0 || i == 1)
+		{
+			return 4;
+		}
+		return i;
 	}
 	public final void setTableCol(int value)
 	{
 		this.SetValByKey(MapDataAttr.TableCol, value);
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
 			uac.IsDelete = false;
 			uac.IsUpdate = true;
@@ -121,14 +95,13 @@ public class MapFrmFool extends EntityNoName
 		uac.Readonly();
 		return uac;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 权限控制.
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 傻瓜表单属性
-	 
 	*/
 	public MapFrmFool()
 	{
@@ -137,153 +110,163 @@ public class MapFrmFool extends EntityNoName
 	 傻瓜表单属性
 	 
 	 @param no 表单ID
-	 * @throws Exception 
 	*/
-	public MapFrmFool(String no) throws Exception
+	public MapFrmFool(String no)
 	{
 		super(no);
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
-		Map map = new Map("Sys_MapData", "傻瓜傻瓜表单属性");
+		Map map = new Map("Sys_MapData", "傻瓜表单属性");
 		map.Java_SetEnType(EnType.Sys);
 		map.Java_SetCodeStruct("4");
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 基本属性.
 
-		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, false, 1, 190, 20);
+		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
+
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", true, false, 0, 100, 20);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20, true);
 
-		 map.AddDDLSysEnum(MapDataAttr.TableCol, 0, "表单显示列数", true, true, MapDataAttr.TableCol,
-                 "@0=4列@1=6列@2=3列");
-		map.AddTBInt(MapDataAttr.TableWidth, 900, "傻瓜表单宽度", true, false);
-		map.AddTBInt(MapDataAttr.TableHeight, 900, "傻瓜表单高度", true, false);
+		map.AddDDLSysEnum(MapDataAttr.TableCol, 0, "表单显示列数", true, true, "显示方式", "@0=4列@1=6列@2=上下模式3列");
+
+		  //  map.AddTBInt(MapDataAttr.TableWidth, 900, "傻瓜表单宽度", true, false);
+		   // map.AddTBInt(MapDataAttr.TableHeight, 900, "傻瓜表单高度", true, false);
+
+		map.AddTBInt(MapDataAttr.FrmW, 900, "表单宽度", true, false);
+		map.AddTBInt(MapDataAttr.FrmH, 900, "表单高度", true, false);
 
 			//数据源.
 		map.AddDDLEntities(MapDataAttr.DBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), true);
 		map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
 			//表单的运行类型.
-		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, MapDataAttr.FrmType);
+		map.AddDDLSysEnum(MapDataAttr.FrmType, (int)BP.Sys.FrmType.FreeFrm, "表单类型", true, false, MapDataAttr.FrmType);
+			//表单解析 0 普通 1 页签展示
+		map.AddDDLSysEnum(MapDataAttr.FrmShowType, 0, "表单展示方式", true, true, "表单展示方式", "@0=普通方式@1=页签方式");
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 基本属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 设计者信息.
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
 		map.AddTBString(MapDataAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapDataAttr.Ver, null, "版本号", true, true, 0, 30, 20);
+		   // map.AddTBString(MapFrmFreeAttr.DesignerTool, null, "表单设计器", true, true, 0, 30, 20);
 
-		map.AddTBStringDoc(MapDataAttr.Note, null, "备注", true, false, true);
+		map.AddTBString(MapDataAttr.Note, null, "备注", true, false,0,400,100, true);
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 设计者信息.
 
 			//查询条件.
 		map.AddSearchAttr(MapDataAttr.DBSrc);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 方法 - 基本功能.
 
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "启动傻瓜表单设计器";
 		rm.ClassMethodName = this.toString() + ".DoDesignerFool";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/xlsx.gif";
+		rm.Icon = "../../WF/Img/FileType/xlsx.gif";
 		rm.Visable = true;
 		rm.Target = "_blank";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.RefMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoPageLoadFull";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FullData.png";
+		rm.Icon = "../../WF/Img/FullData.png";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "表单事件"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoEvent";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Event.png";
+		rm.Icon = "../../WF/Img/Event.png";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批量设置验证规则";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/RegularExpression.png";
+		rm.Icon = "../../WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpressionBatch";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批量修改字段"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoBatchEditAttr";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Admin/CCBPMDesigner/Img/field.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/field.png";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-
+		  //  map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "手机端表单";
-		rm.Icon = BP.WF.Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Img/telephone.png";
+		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/telephone.png";
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "内置JavaScript脚本"; // "设计表单";
+		rm.Title = "JS编程"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoInitScript";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Script.png";
+		rm.Icon = "../../WF/Img/Script.png";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "表单body属性"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoBodyAttr";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Script.png";
+		rm.Icon = "../../WF/Img/Script.png";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "导出XML表单模版"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoExp";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Export.png";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "../../WF/Img/Export.png";
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
-		//带有参数的方法.
+
+			//带有参数的方法.
 		rm = new RefMethod();
 		rm.Title = "重命名字段";
-		rm.getHisAttrs().AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
-		rm.getHisAttrs().AddTBString("FieldNew", null, "新字段英文名", true, false, 0, 100, 100);
-		rm.getHisAttrs().AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
+		rm.HisAttrs.AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
+		rm.HisAttrs.AddTBString("FieldNew", null, "新字段英文名", true, false, 0, 100, 100);
+		rm.HisAttrs.AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoChangeFieldName";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/ReName.png";
+		rm.Icon = "../../WF/Img/ReName.png";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -291,78 +274,161 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoCheckFixFrmForUpdateVer";
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "表单检查";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/check.png";
+		rm.Icon = "../../WF/Img/Check.png";
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-		
+
 		rm = new RefMethod();
-        rm.Title = "模板打印";
-        rm.ClassMethodName = this.toString() + ".DoBill";
-        rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
-        rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Title = "模板打印";
+		rm.ClassMethodName = this.toString() + ".DoBill";
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
+		rm = new RefMethod();
+		rm.Title = "模板打印2019";
+		rm.ClassMethodName = this.toString() + ".DoBill2019";
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 方法 - 基本功能.
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 高级功能.
+			//@李国文.
+		rm = new RefMethod();
+		rm.Title = "改变表单类型";
+		rm.GroupName = "高级功能";
+		rm.ClassMethodName = this.toString() + ".DoChangeFrmType()";
+		rm.HisAttrs.AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
+		map.AddRefMethod(rm);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 方法 - 开发接口.
 		rm = new RefMethod();
 		rm.Title = "调用查询API"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoSearch";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Table.gif";
+		rm.Icon = "../../WF/Img/Table.gif";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.RefMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		//map.AddRefMethod(rm);
+		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "调用分析API"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoGroup";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Table.gif";
+		rm.Icon = "../../WF/Img/Table.gif";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.RefMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
-		//map.AddRefMethod(rm);
-
+		map.AddRefMethod(rm);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 方法 - 开发接口.
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+	/** 
+	 删除后清缓存
+	*/
+	@Override
+	protected void afterDelete()
+	{
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.No);
+		super.afterDelete();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	@Override
-	protected void afterInsertUpdateAction() throws Exception {
-		//修改关联明细表
-        MapDtl dtl = new MapDtl();
-        dtl.setNo(this.getNo());
-        if (dtl.RetrieveFromDBSources() == 1)
-        {
-        	dtl.setName(this.getName());
-        	dtl.setPTable(this.getPTable());
-        	dtl.DirectUpdate();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 高级设置.
+	/** 
+	 改变表单类型 @李国文 ，需要搬到jflow.并测试.
+	 
+	 @param val 要改变的类型
+	 @return 
+	*/
+	public final String DoChangeFrmType(int val)
+	{
+		MapData md = new MapData(this.No);
+		String str = "原来的是:" + md.HisFrmTypeText + "类型，";
+		md.HisFrmTypeInt = val;
+		str += "现在修改为：" + md.HisFrmTypeText + "类型";
+		md.Update();
 
-            MapData map = new MapData(this.getNo());
-            //避免显示在表单库中
-            map.setFK_FrmSort("");
-            map.setFK_FormTree("");
-            map.DirectUpdate();
-        }	
+		return str;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 高级设置.
 
+
+	@Override
+	protected boolean beforeUpdate()
+	{
+		//注册事件表单实体.
+		//BP.Sys.FormEventBase feb = BP.Sys.Glo.GetFormEventBaseByEnName(this.No);
+		//if (feb == null)
+		//    this.FromEventEntity = "";
+		//else
+
+		//    this.FromEventEntity = feb.ToString();
+
+		return super.beforeUpdate();
+	}
+	@Override
+	protected void afterUpdate()
+	{
+		//修改关联明细表
+		MapDtl dtl = new MapDtl();
+		dtl.No = this.No;
+		if (dtl.RetrieveFromDBSources() == 1)
+		{
+			dtl.Name = this.Name;
+			dtl.PTable = this.getPTable();
+			dtl.DirectUpdate();
+
+			MapData map = new MapData(this.No);
+			//避免显示在表单库中
+			map.FK_FrmSort = "";
+			map.FK_FormTree = "";
+			map.DirectUpdate();
+		}
+
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.No);
+
+		super.afterUpdate();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 节点表单方法.
 	/** 
 	 单据打印
+	 
 	 @return 
 	*/
-    public String DoBill()
-    {
-        return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
-    }
+	public final String DoBill()
+	{
+		return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.No + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+	}
+	/** 
+	 单据打印
+	 
+	 @return 
+	*/
+	public final String DoBill2019()
+	{
+		return "../../Admin/AttrNode/Bill2019.htm?FK_MapData=" + this.No + "&FrmID=" + this.No + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+	}
+
 	/** 
 	 傻瓜表单设计器
 	 
@@ -370,7 +436,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoDesignerFool()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&MyPK=" + this.getNo() + "&IsEditMapData=True&IsFirst=1";
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.No + "&MyPK=" + this.No + "&IsFirst=1&IsEditMapData=True";
 	}
 
 	/** 
@@ -380,116 +446,130 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoNodeFrmCompent()
 	{
-		if (this.getNo().contains("ND") == true)
+		if (this.No.Contains("ND") == true)
 		{
-			return Glo.getCCFlowAppPath() + "WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.getNo().replace("ND", "") + "&t=" + DataType.getCurrentDataTime();
+			return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.No.Replace("ND", "") + "&t=" + DataType.CurrentDataTime;
 		}
 		else
 		{
-			return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Do.htm&DoType=FWCShowError";
+			return "../../Admin/FoolFormDesigner/Do.htm&DoType=FWCShowError";
 		}
 	}
 	/** 
 	 执行旧版本的兼容性检查.
-	 * @throws Exception 
-	 
 	*/
-	public final String DoCheckFixFrmForUpdateVer() throws Exception
+	public final String DoCheckFixFrmForUpdateVer()
 	{
 		// 更新状态.
 		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlType='' WHERE CtrlType IS NULL");
 		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlID='' WHERE CtrlID IS NULL");
-		 
+		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlID='' WHERE CtrlID IS NULL");
+
+		//删除重影数据.
+		DBAccess.RunSQL("DELETE FROM Sys_GroupField WHERE CtrlType='FWC' and CTRLID is null");
+
+		//一直遇到遇到自动变长的问题, 强制其修复过来.
+		DBAccess.RunSQL("UPDATE Sys_Mapattr SET colspan=3 WHERE UIHeight<=38 AND colspan=4");
 
 		String str = "";
-  
-        //一直遇到遇到自动变长的问题, 强制其修复过来.
-        DBAccess.RunSQL("UPDATE Sys_Mapattr SET colspan=3 WHERE UIHeight<=38 AND colspan=4");
 
-         // 处理失去分组的字段. 
-        String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
-        MapAttrs attrs = new MapAttrs();
-        attrs.RetrieveInSQL(sql);
-        if (attrs.size() != 0)
-        {
-            GroupField gf = null;
-            GroupFields gfs = new GroupFields(this.getNo());
-            for (GroupField mygf : gfs.ToJavaList())
-            {
-                if ( DataType.IsNullOrEmpty( mygf.getCtrlID()) )
-                    gf = mygf;
-            }
+		//处理失去分组的字段. 
+		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.No + "' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.No + "' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
+		MapAttrs attrs = new MapAttrs();
+		attrs.RetrieveInSQL(sql);
+		if (attrs.Count != 0)
+		{
+			GroupField gf = null;
+			GroupFields gfs = new GroupFields(this.No);
+			for (GroupField mygf : gfs)
+			{
+				if (mygf.CtrlID.equals(""))
+				{
+					gf = mygf;
+				}
+			}
 
-            if (gf == null)
-            {
-                gf = new GroupField();
-                gf.setLab(  "基本信息");
-                gf.setFrmID( this.getNo());
-                gf.Insert();
-            }
+			if (gf == null)
+			{
+				gf = new GroupField();
+				gf.Lab = "基本信息";
+				gf.FrmID = this.No;
+				gf.Insert();
+			}
 
-            //设置GID.
-            for (MapAttr attr : attrs.ToJavaList())
-            {
-                attr.Update(MapAttrAttr.GroupID, gf.getOID());
-            }
-        }
+			//设置GID.
+			for (MapAttr attr : attrs)
+			{
+				attr.Update(MapAttrAttr.GroupID, gf.OID);
+			}
+		}
+
 		//从表.
-		MapDtls dtls = new MapDtls(this.getNo());
-		for (MapDtl dtl : dtls.ToJavaList())
+		MapDtls dtls = new MapDtls(this.No);
+		for (MapDtl dtl : dtls)
 		{
 			GroupField gf = new GroupField();
-			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.getNo(), GroupFieldAttr.FrmID, this.getNo());
-            if (i == 1)
-                continue;
-		
-			gf.setLab(dtl.getName());
-			gf.setCtrlID(dtl.getNo());
-			gf.setCtrlType("Dtl");
-			gf.setFrmID(dtl.getFK_MapData());
-			gf.DirectSave();
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.No, GroupFieldAttr.FrmID, this.No);
+			if (i == 1)
+			{
+				continue;
+			}
 
-			str += "@为从表" + dtl.getName() + " 增加了分组.";
+			//GroupField gf = new GroupField();
+			//if (gf.IsExit(GroupFieldAttr.CtrlID, dtl.No) == true && !DataType.IsNullOrEmpty(gf.CtrlType))
+			//    continue;
+
+			gf.Lab = dtl.Name;
+			gf.CtrlID = dtl.No;
+			gf.CtrlType = "Dtl";
+			gf.FrmID = dtl.FK_MapData;
+			gf.DirectSave();
+			str += "@为从表" + dtl.Name + " 增加了分组.";
 		}
 
 		// 框架.
-		MapFrames frams = new MapFrames(this.getNo());
-		for (MapFrame fram : frams.ToJavaList())
+		MapFrames frams = new MapFrames(this.No);
+		for (MapFrame fram : frams)
 		{
 			GroupField gf = new GroupField();
-			 int i = gf.Retrieve(GroupFieldAttr.CtrlID, fram.getMyPK(), GroupFieldAttr.FrmID, this.getNo());
-             if (i == 1)
-                 continue;
-			
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, fram.MyPK, GroupFieldAttr.FrmID, this.No);
+			if (i == 1)
+			{
+				continue;
+			}
 
-			gf.setLab(fram.getName());
-			gf.setCtrlID(fram.getMyPK());
-			gf.setCtrlType("Frame");
-			gf.setFrmID(fram.getFK_MapData());
+			gf.Lab = fram.Name;
+			gf.CtrlID = fram.MyPK;
+			gf.CtrlType = "Frame";
+			gf.EnName = fram.FK_MapData;
 			gf.Insert();
 
-			str += "@为框架 " + fram.getName() + " 增加了分组.";
-
+			str += "@为框架 " + fram.Name + " 增加了分组.";
 		}
- 
-		// 附件.
-		FrmAttachments aths = new FrmAttachments(this.getNo());
-		for (FrmAttachment ath : aths.ToJavaList())
-		{
-			   GroupField gf = new GroupField();
-			   int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.getMyPK(), GroupFieldAttr.FrmID, this.getNo());
-               if (i == 1)
-                   continue;
-               
-              
 
-			gf.setLab(ath.getName());
-			gf.setCtrlID(ath.getMyPK());
-			gf.setCtrlType("Ath");
-			gf.setFrmID(ath.getFK_MapData());
+		// 附件.
+		FrmAttachments aths = new FrmAttachments(this.No);
+		for (FrmAttachment ath : aths)
+		{
+			if (ath.IsVisable == false)
+			{
+				continue;
+			}
+
+			GroupField gf = new GroupField();
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.MyPK, GroupFieldAttr.FrmID, this.No);
+			if (i == 1)
+			{
+				continue;
+			}
+
+			gf.Lab = ath.Name;
+			gf.CtrlID = ath.MyPK;
+			gf.CtrlType = "Ath";
+			gf.FrmID = ath.FK_MapData;
 			gf.Insert();
 
-			str += "@为附件 " + ath.getName() + " 增加了分组.";
+			str += "@为附件 " + ath.Name + " 增加了分组.";
 		}
 
 		if (this.getIsNodeFrm() == true)
@@ -498,38 +578,40 @@ public class MapFrmFool extends EntityNoName
 			conn.Update();
 		}
 
-		//删除重复的数据, 比如一个从表显示了多个分组里. @于庆海增加此部分.
-		String sqls = "";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+
+		//删除重复的数据, 比如一个从表显示了多个分组里. 增加此部分.
+		if (SystemConfig.AppCenterDBType == DBType.Oracle)
 		{
-			sqls = "SELECT * FROM (SELECT FrmID,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY FrmID,CtrlID,CtrlType ) WHERE Num > 1";
+			sql = "SELECT * FROM (SELECT FrmID,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY FrmID,CtrlID,CtrlType ) WHERE Num > 1";
 		}
 		else
 		{
-			sqls = "SELECT * FROM (SELECT FrmID,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY FrmID,CtrlID,CtrlType ) AS A WHERE A.Num > 1";
+			sql = "SELECT * FROM (SELECT FrmID,CtrlID,CtrlType, count(*) as Num FROM sys_groupfield WHERE CtrlID!='' GROUP BY FrmID,CtrlID,CtrlType ) AS A WHERE A.Num > 1";
 		}
 
-		DataTable dt = DBAccess.RunSQLReturnTable(sqls);
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
-			String enName = dr.getValue(0).toString();
-			String ctrlID = dr.getValue(1).toString();
-			String ctrlType = dr.getValue(2).toString();
+			String enName = dr.get(0).toString();
+			String ctrlID = dr.get(1).toString();
+			String ctrlType = dr.get(2).toString();
 
 			GroupFields gfs = new GroupFields();
-			gfs.Retrieve(GroupFieldAttr.EnName, enName, GroupFieldAttr.CtrlID, ctrlID, GroupFieldAttr.CtrlType, ctrlType);
+			gfs.Retrieve(GroupFieldAttr.FrmID, enName, GroupFieldAttr.CtrlID, ctrlID, GroupFieldAttr.CtrlType, ctrlType);
 
-			if (gfs.size() <= 1)
+			if (gfs.Count <= 1)
 			{
 				continue;
 			}
-			for (GroupField gf : gfs.ToJavaList())
+			for (GroupField gf : gfs)
 			{
 				gf.Delete(); //删除其中的一个.
 				break;
 			}
 		}
-		
+
+
+
 		if (str.equals(""))
 		{
 			return "检查成功.";
@@ -537,10 +619,10 @@ public class MapFrmFool extends EntityNoName
 
 		return str + ", @@@ 检查成功。";
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 通用方法.
 	/** 
 	 替换名称
@@ -549,27 +631,26 @@ public class MapFrmFool extends EntityNoName
 	 @param newField 新字段
 	 @param newFieldName 新字段名称(可以为空)
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) throws Exception
+	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName)
 	{
 		MapAttr attrOld = new MapAttr();
-		attrOld.setKeyOfEn(fieldOld);
-		attrOld.setFK_MapData(this.getNo());
-		attrOld.setMyPK(attrOld.getFK_MapData() + "_" + attrOld.getKeyOfEn());
+		attrOld.KeyOfEn = fieldOld;
+		attrOld.FK_MapData = this.No;
+		attrOld.MyPK = attrOld.FK_MapData + "_" + attrOld.KeyOfEn;
 		if (attrOld.RetrieveFromDBSources() == 0)
 		{
-			return "@旧字段输入错误[" + attrOld.getKeyOfEn() + "].";
+			return "@旧字段输入错误[" + attrOld.KeyOfEn + "].";
 		}
 
 		//检查是否存在该字段？
 		MapAttr attrNew = new MapAttr();
-		attrNew.setKeyOfEn(newField);
-		attrNew.setFK_MapData(this.getNo());
-		attrNew.setMyPK(attrNew.getFK_MapData() + "_" + attrNew.getKeyOfEn());
+		attrNew.KeyOfEn = newField;
+		attrNew.FK_MapData = this.No;
+		attrNew.MyPK = attrNew.FK_MapData + "_" + attrNew.KeyOfEn;
 		if (attrNew.RetrieveFromDBSources() == 1)
 		{
-			return "@该字段[" + attrNew.getKeyOfEn() + "]已经存在.";
+			return "@该字段[" + attrNew.KeyOfEn + "]已经存在.";
 		}
 
 		//删除旧数据.
@@ -577,39 +658,39 @@ public class MapFrmFool extends EntityNoName
 
 		//copy这个数据,增加上它.
 		attrNew.Copy(attrOld);
-		attrNew.setKeyOfEn(newField);
-		attrNew.setFK_MapData(this.getNo());
+		attrNew.KeyOfEn = newField;
+		attrNew.FK_MapData = this.No;
 
 		if (!newFieldName.equals(""))
 		{
-			attrNew.setName(newFieldName);
+			attrNew.Name = newFieldName;
 		}
 
 		attrNew.Insert();
 
 		//更新处理他的相关业务逻辑.
-		MapExts exts = new MapExts(this.getNo());
-		for (MapExt item : exts.ToJavaList())
+		MapExts exts = new MapExts(this.No);
+		for (MapExt item : exts)
 		{
-			item.setMyPK(item.getMyPK().replace("_" + fieldOld, "_" + newField));
+			item.MyPK = item.MyPK.Replace("_" + fieldOld, "_" + newField);
 
-			if (fieldOld.equals(item.getAttrOfOper()))
+			if (fieldOld.equals(item.AttrOfOper))
 			{
-				item.setAttrOfOper(newField);
+				item.AttrOfOper = newField;
 			}
 
-			if (fieldOld.equals(item.getAttrsOfActive()))
+			if (fieldOld.equals(item.AttrsOfActive))
 			{
-				item.setAttrsOfActive(newField);
+				item.AttrsOfActive = newField;
 			}
 
-			item.setTag(item.getTag().replace(fieldOld, newField));
-			item.setTag1(item.getTag1().replace(fieldOld, newField));
-			item.setTag2(item.getTag2().replace(fieldOld, newField));
-			item.setTag3(item.getTag3().replace(fieldOld, newField));
+			item.Tag = item.Tag.Replace(fieldOld, newField);
+			item.Tag1 = item.Tag1.Replace(fieldOld, newField);
+			item.Tag2 = item.Tag2.Replace(fieldOld, newField);
+			item.Tag3 = item.Tag3.Replace(fieldOld, newField);
 
-			item.setAtPara(item.getAtPara().replace(fieldOld, newField));
-			item.setDoc(item.getDoc().replace(fieldOld, newField));
+			item.AtPara = item.AtPara.Replace(fieldOld, newField);
+			item.Doc = item.Doc.Replace(fieldOld, newField);
 			item.Save();
 		}
 		return "执行成功";
@@ -621,7 +702,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoRegularExpressionBatch()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.jsp?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
 	}
 	/** 
 	 批量修改字段
@@ -630,7 +711,7 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoBatchEditAttr()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
 	}
 	/** 
 	 排序字段顺序
@@ -639,119 +720,96 @@ public class MapFrmFool extends EntityNoName
 	*/
 	public final String DoSortingMapAttrs()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
+		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" + this.No + "&t=" + DataType.CurrentDataTime;
 	}
 	/** 
 	 设计表单
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoDFrom() throws Exception
+	public final String DoDFrom()
 	{
-		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/CCForm/Frm.jsp?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), url, 800, 650);
-		} catch (IOException e) {
-			Log.DebugWriteError("MapFrmFool DoDFrom()" + e);
-		}
-		return null;
+		String url = "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" + this.No + "&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		return url;
 	}
 	/** 
 	 设计傻瓜表单
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoDFromCol4() throws Exception
+	public final String DoDFromCol4()
 	{
-		String url = Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&UserNo=" + BP.Web.WebUser.getNo() + "&SID=" + BP.Web.WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), url, 800, 650);
-		} catch (IOException e) {
-			Log.DebugWriteError("MapFrmFool DoDFromCol4()" + e);
-		}
-		return null;
+		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.No + "&UserNo=" + BP.Web.WebUser.No + "&SID=" + Web.WebUser.SID + "&IsFirst=1&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.CustomerNo;
+		return url;
 	}
 	/** 
 	 查询
+	 
 	 @return 
 	*/
 	public final String DoSearch()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
+		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.No + "&EnsName=" + this.No;
 	}
 	/** 
 	 调用分析API
+	 
 	 @return 
 	*/
 	public final String DoGroup()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Comm/Group.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
+		return "../../Comm/Group.htm?s=34&FK_MapData=" + this.No + "&EnsName=" + this.No;
 	}
 	/** 
 	 数据源管理
+	 
 	 @return 
 	*/
 	public final String DoDBSrc()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=BP.Sys.SFDBSrcs";
+		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.No + "&EnsName=BP.Sys.SFDBSrcs";
 	}
 	public final String DoWordFrm()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/WordFrm.jsp?s=34&FK_MapData=" + this.getNo() + "&ExtType=WordFrm&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData=" + this.No + "&ExtType=WordFrm&RefNo=";
 	}
-	public final String DoExcelFrm()
-	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/ExcelFrm.jsp?s=34&FK_MapData=" + this.getNo() + "&ExtType=ExcelFrm&RefNo=";
-	}
+
 	public final String DoPageLoadFull()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.No + "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoInitScript()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.No + "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 傻瓜表单属性.
+	 
 	 @return 
 	*/
 	public final String DoBodyAttr()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=BodyAttr&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.No + "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
 	 表单事件
+	 
 	 @return 
 	*/
 	public final String DoEvent()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.No + "&T=sd&FK_Node=0";
 	}
-	/** 
-	 导出
-	 @return 
-	*/
-	public final String DoMapExt()
-	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/MapExt/List.jsp?FK_MapData=" + this.getNo() + "&T=sd";
-	}
+
 	/** 
 	 导出表单
+	 
 	 @return 
 	*/
 	public final String DoExp()
 	{
-		return Glo.getCCFlowAppPath() + "WF/Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData=" + this.getNo();
-		/*String urlExt = Glo.getCCFlowAppPath() + "WF/Admin/XAP/DoPort.jsp?DoType=DownFormTemplete&FK_MapData=" + this.getNo();
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(), urlExt, 900, 1000);
-		} catch (IOException e) {
-			Log.DebugWriteError("MapFrmFool DoExp()" + e);
-		}
-		return null;*/
+		return "../../Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData=" + this.No;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 方法.
 }

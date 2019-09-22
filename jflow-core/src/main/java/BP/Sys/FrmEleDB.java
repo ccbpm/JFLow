@@ -2,17 +2,17 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  表单元素扩展DB
- 
 */
 public class FrmEleDB extends EntityMyPK
 {
-	//#region 属性
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 EleID
-	 
 	*/
 	public final String getEleID()
 	{
@@ -24,7 +24,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 Tag1
-	 
 	*/
 	public final String getTag1()
 	{
@@ -36,7 +35,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 Tag2
-	 
 	*/
 	public final String getTag2()
 	{
@@ -48,7 +46,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 Tag3
-	 
 	*/
 	public final String getTag3()
 	{
@@ -60,7 +57,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 Tag4
-	 
 	*/
 	public final String getTag4()
 	{
@@ -72,7 +68,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 Tag5
-	 
 	*/
 	public final String getTag5()
 	{
@@ -84,7 +79,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 FK_MapData
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -96,7 +90,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 RefPKVal
-	 
 	*/
 	public final String getRefPKVal()
 	{
@@ -108,7 +101,6 @@ public class FrmEleDB extends EntityMyPK
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getFID()
 	{
@@ -118,11 +110,13 @@ public class FrmEleDB extends EntityMyPK
 	{
 		this.SetValByKey(FrmEleDBAttr.FID, value);
 	}
-		
-	//#region 构造方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 表单元素扩展DB
-	 
 	*/
 	public FrmEleDB()
 	{
@@ -131,16 +125,14 @@ public class FrmEleDB extends EntityMyPK
 	 表单元素扩展DB
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmEleDB(String mypk) throws Exception
+	public FrmEleDB(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -153,6 +145,7 @@ public class FrmEleDB extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = FrmEleDBAttr.RefPKVal;
 
 		map.AddMyPK();
 		map.AddTBString(FrmEleDBAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
@@ -168,15 +161,14 @@ public class FrmEleDB extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		//@浙商银行
 		//this.MyPK = this.FK_MapData + "_" + this.EleID + "_" + this.RefPKVal;
-		//this.GenerPKVal();
+	   // this.GenerPKVal();
 		return super.beforeUpdateInsertAction();
 	}
 	public final void GenerPKVal()

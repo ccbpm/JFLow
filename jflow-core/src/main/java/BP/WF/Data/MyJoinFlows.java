@@ -1,15 +1,22 @@
 package BP.WF.Data;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
+/** 
+ 我参与的流程s
+*/
 public class MyJoinFlows extends Entities
 {
-
-	///#region 方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -18,41 +25,38 @@ public class MyJoinFlows extends Entities
 	}
 	/** 
 	 我参与的流程集合
-	 
 	*/
 	public MyJoinFlows()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	///#endregion
-
-
-	///#region 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MyJoinFlow> ToJavaList()
+	public final List<MyJoinFlow> ToJavaList()
 	{
-		return (java.util.List<MyJoinFlow>)(Object)this;
+		return (List<MyJoinFlow>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<MyJoinFlow> Tolist()
+	public final ArrayList<MyJoinFlow> Tolist()
 	{
-		java.util.ArrayList<MyJoinFlow> list = new java.util.ArrayList<MyJoinFlow>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<MyJoinFlow> list = new ArrayList<MyJoinFlow>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((MyJoinFlow)this.get(i));
+			list.add((MyJoinFlow)this[i]);
 		}
 		return list;
 	}
-
-	///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }
-
-

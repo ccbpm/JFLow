@@ -1,20 +1,22 @@
 package BP.WF.Template;
 
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.Sys.SystemConfig;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  父子流程s
- 
 */
 public class FrmSubFlows extends Entities
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 父子流程s
-	 
 	*/
 	public FrmSubFlows()
 	{
@@ -23,11 +25,10 @@ public class FrmSubFlows extends Entities
 	 父子流程s
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmSubFlows(String fk_mapdata) throws Exception
+	public FrmSubFlows(String fk_mapdata)
 	{
-		if (SystemConfig.getIsDebug())
+		if (SystemConfig.IsDebug)
 		{
 			this.Retrieve("No", fk_mapdata);
 		}
@@ -38,25 +39,24 @@ public class FrmSubFlows extends Entities
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new FrmSubFlow();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List
 	/** 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmSubFlow> ToJavaList()
+	public final List<FrmSubFlow> ToJavaList()
 	{
-		return (java.util.List<FrmSubFlow>)(Object)this;
+		return (List<FrmSubFlow>)this;
 	}
 
 	/** 
@@ -64,15 +64,15 @@ public class FrmSubFlows extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmSubFlow> Tolist()
+	public final ArrayList<FrmSubFlow> Tolist()
 	{
-		java.util.ArrayList<FrmSubFlow> list = new java.util.ArrayList<FrmSubFlow>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmSubFlow> list = new ArrayList<FrmSubFlow>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FrmSubFlow)this.get(i));
+			list.add((FrmSubFlow)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

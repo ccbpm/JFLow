@@ -2,18 +2,17 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  剪切图片附件数据存储
- 
 */
 public class FrmImgAthDB extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 类别
-	 
 	*/
 	public final String getSort()
 	{
@@ -25,7 +24,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 记录日期
-	 
 	*/
 	public final String getRDT()
 	{
@@ -37,7 +35,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 文件
-	 
 	*/
 	public final String getFileFullName()
 	{
@@ -49,7 +46,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 附件路径
-	 
 	*/
 	public final String getFilePathName()
 	{
@@ -57,7 +53,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 附件名称
-	 
 	*/
 	public final String getFileName()
 	{
@@ -69,7 +64,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 附件扩展名
-	 
 	*/
 	public final String getFileExts()
 	{
@@ -81,7 +75,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 相关附件
-	 
 	*/
 	public final String getFK_FrmImgAth()
 	{
@@ -93,7 +86,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 主键值
-	 
 	*/
 	public final String getRefPKVal()
 	{
@@ -105,7 +97,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 MyNote
-	 
 	*/
 	public final String getMyNote()
 	{
@@ -117,7 +108,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 记录人
-	 
 	*/
 	public final String getRec()
 	{
@@ -129,7 +119,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 记录人名称
-	 
 	*/
 	public final String getRecName()
 	{
@@ -141,7 +130,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 附件编号
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -153,7 +141,6 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	/** 
 	 文件大小
-	 
 	*/
 	public final float getFileSize()
 	{
@@ -161,16 +148,15 @@ public class FrmImgAthDB extends EntityMyPK
 	}
 	public final void setFileSize(float value)
 	{
-		this.SetValByKey(FrmImgAthDBAttr.FileSize, value/1024);
+		this.SetValByKey(FrmImgAthDBAttr.FileSize, value / 1024);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 剪切图片附件数据存储
-	 
 	*/
 	public FrmImgAthDB()
 	{
@@ -179,16 +165,14 @@ public class FrmImgAthDB extends EntityMyPK
 	 剪切图片附件数据存储
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmImgAthDB(String mypk) throws Exception
+	public FrmImgAthDB(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -204,10 +188,14 @@ public class FrmImgAthDB extends EntityMyPK
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.setEnDesc("剪切图片附件数据存储");
 		map.Java_SetEnType(EnType.Sys);
+
+		map.IndexField = FrmImgAthDBAttr.RefPKVal;
+
+
 		map.AddMyPK();
 
 			// 以下三个字段组成一个主键. FK_FrmImgAth+"_"+RefPKVal
-		map.AddTBString(FrmImgAthDBAttr.FK_MapData, null, "附件ID", true, false, 1, 100, 20);
+		map.AddTBString(FrmImgAthDBAttr.FK_MapData, null, "表单ID", true, false, 1, 100, 20);
 		map.AddTBString(FrmImgAthDBAttr.FK_FrmImgAth, null, "图片附件编号", true, false, 1, 50, 20);
 		map.AddTBString(FrmImgAthDBAttr.RefPKVal, null, "实体主键", true, false, 1, 50, 20);
 
@@ -228,10 +216,9 @@ public class FrmImgAthDB extends EntityMyPK
 	 重写
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		this.setMyPK(this.getFK_FrmImgAth() + "_" + this.getRefPKVal());
 		return super.beforeInsert();
@@ -240,14 +227,13 @@ public class FrmImgAthDB extends EntityMyPK
 	 重写
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate() throws Exception
+	protected boolean beforeUpdate()
 	{
 		this.setMyPK(this.getFK_FrmImgAth() + "_" + this.getRefPKVal());
 		return super.beforeUpdate();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

@@ -1,35 +1,46 @@
 package BP.WF;
 
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import java.util.*;
 
 /** 
  流程状态(简)
- 
 */
 public enum WFSta
 {
 	/** 
 	 运行中
-	 
 	*/
 	Runing(0),
 	/** 
 	 已完成
-	 
 	*/
 	Complete(1),
 	/** 
 	 其他
-	 
 	*/
 	Etc(2);
 
+	public static final int SIZE = java.lang.Integer.SIZE;
+
 	private int intValue;
 	private static java.util.HashMap<Integer, WFSta> mappings;
-	private synchronized static java.util.HashMap<Integer, WFSta> getMappings()
+	private static java.util.HashMap<Integer, WFSta> getMappings()
 	{
 		if (mappings == null)
 		{
-			mappings = new java.util.HashMap<Integer, WFSta>();
+			synchronized (WFSta.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, WFSta>();
+				}
+			}
 		}
 		return mappings;
 	}
@@ -37,7 +48,7 @@ public enum WFSta
 	private WFSta(int value)
 	{
 		intValue = value;
-		WFSta.getMappings().put(value, this);
+		getMappings().put(value, this);
 	}
 
 	public int getValue()

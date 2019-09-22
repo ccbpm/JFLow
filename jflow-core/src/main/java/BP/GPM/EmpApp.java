@@ -1,15 +1,16 @@
 package BP.GPM;
 
 import BP.DA.*;
+import BP.Web.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  管理员与系统权限
- 
 */
 public class EmpApp extends EntityMyPK
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	public final String getFK_Emp()
 	{
@@ -45,7 +46,6 @@ public class EmpApp extends EntityMyPK
 	}
 	/** 
 	 图片
-	 
 	*/
 	public final String getImg()
 	{
@@ -61,7 +61,6 @@ public class EmpApp extends EntityMyPK
 	}
 	/** 
 	 超链接
-	 
 	*/
 	public final String getUrl()
 	{
@@ -71,14 +70,13 @@ public class EmpApp extends EntityMyPK
 	{
 		this.SetValByKey(AppAttr.Url, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	/** 
 	 管理员与系统权限
-	 
 	*/
 	public EmpApp()
 	{
@@ -87,28 +85,26 @@ public class EmpApp extends EntityMyPK
 	 管理员与系统权限
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public EmpApp(String no) throws Exception
+	public EmpApp(String no)
 	{
 		this.Retrieve();
 	}
 	/** 
 	 管理员与系统权限
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("GPM_EmpApp");
-		map.setDepositaryOfEntity(Depositary.None);
-		map.setDepositaryOfMap(Depositary.Application);
-		map.setEnDesc("管理员与系统权限");
-		map.setEnType(EnType.App);
+		map.DepositaryOfEntity = Depositary.None;
+		map.DepositaryOfMap = Depositary.Application;
+		map.EnDesc = "管理员与系统权限";
+		map.EnType = EnType.App;
 
 		map.AddMyPK();
 
@@ -121,9 +117,9 @@ public class EmpApp extends EntityMyPK
 
 		map.AddMyFile("图标");
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

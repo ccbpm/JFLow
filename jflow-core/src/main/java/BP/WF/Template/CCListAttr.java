@@ -1,14 +1,19 @@
 package BP.WF.Template;
 
-import BP.En.EntityMyPKAttr;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  抄送 属性
 */
 public class CCListAttr extends EntityMyPKAttr
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 标题
 	*/
@@ -49,28 +54,18 @@ public class CCListAttr extends EntityMyPKAttr
 	 抄送给到部门
 	*/
 	public static final String CCToDept = "CCToDept";
-	public static final String CCToDeptName = "CCToDeptName";
-	
 	/** 
-	 审核意见
-	 
+	 抄送给部门名称
 	*/
-	public static final String CheckNote = "CheckNote";
+	public static final String CCToDeptName = "CCToDeptName";
 	/** 
 	 审核时间
-	 
 	*/
 	public static final String CDT = "CDT";
 	/** 
 	 抄送人员
-	 
 	*/
 	public static final String Rec = "Rec";
-	/** 
-	 抄送人员部门
-	*/
-	public static final String RecDept = "RecDept";
-
 	/** 
 	 RDT
 	*/
@@ -91,4 +86,6 @@ public class CCListAttr extends EntityMyPKAttr
 	 是否加入待办列表
 	*/
 	public static final String InEmpWorks = "InEmpWorks";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

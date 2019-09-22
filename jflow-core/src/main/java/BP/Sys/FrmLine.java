@@ -2,24 +2,18 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  线
- 
 */
 public class FrmLine extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getBorderColorHtml()
 	{
-		try {
-			return PubClass.ToHtmlColor(this.getBorderColor());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return PubClass.ToHtmlColor(this.getBorderColor());
 	}
 	public final String getBorderColor()
 	{
@@ -47,31 +41,6 @@ public class FrmLine extends EntityMyPK
 	public final void setGUID(String value)
 	{
 		this.SetValByKey(FrmLineAttr.GUID, value);
-	}
-	/**
-	 * Y
-	 */
-	public final float getY()
-	{
-		return this.GetValFloatByKey(FrmLineAttr.Y);
-	}
-	
-	public final void setY(float value)
-	{
-		this.SetValByKey(FrmLineAttr.Y, value);
-	}
-	
-	/**
-	 * X
-	 */
-	public final float getX()
-	{
-		return this.GetValFloatByKey(FrmLineAttr.X);
-	}
-	
-	public final void setX(float value)
-	{
-		this.SetValByKey(FrmLineAttr.X, value);
 	}
 	/** 
 	 Y1
@@ -119,21 +88,19 @@ public class FrmLine extends EntityMyPK
 	{
 		this.SetValByKey(FrmLineAttr.X2, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 线
-	 
 	*/
 	public FrmLine()
 	{
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -146,6 +113,8 @@ public class FrmLine extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = FrmImgAthDBAttr.FK_MapData;
+
 
 		map.AddMyPK();
 		map.AddTBString(FrmLineAttr.FK_MapData, null, "主表", true, false, 0, 100, 20);
@@ -163,11 +132,11 @@ public class FrmLine extends EntityMyPK
 		map.AddTBFloat(FrmLineAttr.BorderWidth, 1, "宽度", false, false);
 		map.AddTBString(FrmLineAttr.BorderColor, "black", "颜色", true, false, 0, 30, 20);
 
-		map.AddTBString(FrmBtnAttr.GUID, null, "初始的GUID", true, false, 0, 128, 20);
+		map.AddTBString(FrmLineAttr.GUID, null, "初始的GUID", true, false, 0, 128, 20);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	/** 

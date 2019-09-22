@@ -1,55 +1,64 @@
 package BP.Sys;
 
 
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+
+//using System.Data.OracleClient;
+//using System.ServiceModel.Description;
+//using IBM.Data.Informix;
+
 /** 
  数据源类型
- 
 */
 public enum DBSrcType
 {
 	/** 
 	 本机数据库
-	 
 	*/
 	Localhost(0),
 	/** 
 	 SQL
-	 
 	*/
 	SQLServer(1),
 	/** 
 	 Oracle
-	 
 	*/
 	Oracle(2),
 	/** 
 	 MySQL
-	 
 	*/
 	MySQL(3),
 	/** 
 	 Informix
-	 
 	*/
 	Informix(4),
+	PostgreSQL(5),
 	/** 
 	 WebService数据源
-	 
 	*/
 	WebServices(100),
 	/** 
-	 海尔的double服务.
-	 
+	 海尔的Dubbo服务.
 	*/
-	Double(200);
+	Dubbo(50);
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, DBSrcType> mappings;
-	private synchronized static java.util.HashMap<Integer, DBSrcType> getMappings()
+	private static java.util.HashMap<Integer, DBSrcType> getMappings()
 	{
 		if (mappings == null)
 		{
-			mappings = new java.util.HashMap<Integer, DBSrcType>();
+			synchronized (DBSrcType.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, DBSrcType>();
+				}
+			}
 		}
 		return mappings;
 	}
@@ -57,7 +66,7 @@ public enum DBSrcType
 	private DBSrcType(int value)
 	{
 		intValue = value;
-		DBSrcType.getMappings().put(value, this);
+		getMappings().put(value, this);
 	}
 
 	public int getValue()

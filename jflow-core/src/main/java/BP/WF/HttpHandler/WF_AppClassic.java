@@ -1,98 +1,260 @@
 package BP.WF.HttpHandler;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.Template.*;
+import BP.WF.Data.*;
+import BP.WF.*;
+import java.util.*;
 
-import org.apache.http.protocol.HttpContext;
+/** 
+ 页面功能实体
+*/
+public class WF_AppClassic extends DirectoryPageBase
+{
 
-import BP.DA.DBAccess;
-import BP.DA.DBType;
-import BP.DA.DataColumn;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.Log;
-import BP.Difference.Handler.WebContralBase;
-import BP.En.EditType;
-import BP.En.FieldTypeS;
-import BP.En.UIContralType;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapAttrs;
-import BP.Sys.MapData;
-import BP.Sys.SysEnumMain;
-import BP.Sys.SystemConfig;
-import BP.Web.WebUser;
 
-public class WF_AppClassic extends WebContralBase {
-	/**
-	 * 初始化数据
-	 * 
-	 * @param mycontext
-	 */
-	public WF_AppClassic(HttpContext mycontext) {
-		this.context = mycontext;
+	/** 
+	 构造函数
+	*/
+	public WF_AppClassic()
+	{
+
 	}
 
-	public WF_AppClassic() {
-	}
 
-	// /#region 执行父类的重写方法.
-	/**
-	 * 默认执行的方法
-	 * 
-	 * @return
-	 */
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 执行父类的重写方法.
+	/** 
+	 默认执行的方法
+	 
+	 @return 
+	*/
 	@Override
-	protected String DoDefaultMethod() {
-		// switch (this.DoType)
-		// ORIGINAL LINE: case "DtlFieldUp":
-		if (this.getDoType().equals("DtlFieldUp")) // 字段上移
+	protected String DoDefaultMethod()
+	{
+		switch (this.getDoType())
 		{
-			return "执行成功.";
-		} else {
+			case "DtlFieldUp": //字段上移
+				return "执行成功.";
+			default:
+				break;
 		}
 
-		// 找不不到标记就抛出异常.
-		return "err@没有判断的执行标记:" + this.getDoType();
+		//找不不到标记就抛出异常.
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 执行父类的重写方法.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region xxx 界面 .
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion xxx 界面方法.
+
+	/** 
+	 初始化Home
+	 
+	 @return 
+	*/
+	public final String Home_Init()
+	{
+		Hashtable ht = new Hashtable();
+		ht.put("UserNo", BP.Web.WebUser.No);
+		ht.put("UserName", BP.Web.WebUser.Name);
+
+		//系统名称.
+		ht.put("SysName", BP.Sys.SystemConfig.SysName);
+		ht.put("CustomerName", BP.Sys.SystemConfig.CustomerName);
+
+		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks());
+		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing());
+		ht.put("Todolist_Sharing", BP.WF.Dev2Interface.getTodolist_Sharing());
+		ht.put("Todolist_CCWorks", BP.WF.Dev2Interface.getTodolist_CCWorks());
+		ht.put("Todolist_Apply", BP.WF.Dev2Interface.getTodolist_Apply()); //申请下来的任务个数.
+		ht.put("Todolist_Draft", BP.WF.Dev2Interface.getTodolist_Draft()); //草稿数量.
+		ht.put("Todolist_Complete", BP.WF.Dev2Interface.getTodolist_Complete()); //完成数量.
+		ht.put("UserDeptName", WebUser.FK_DeptName);
+
+		//我发起
+		MyStartFlows myStartFlows = new MyStartFlows();
+		QueryObject obj = new QueryObject(myStartFlows);
+		obj.AddWhere(MyStartFlowAttr.Starter, WebUser.No);
+		obj.addAnd();
+		//运行中\已完成\挂起\退回\转发\加签\批处理\
+		obj.addLeftBracket();
+		obj.AddWhere("WFState=2 or WFState=3 or WFState=4 or WFState=5 or WFState=6 or WFState=8 or WFState=10");
+		obj.addRightBracket();
+		obj.DoQuery();
+		ht.put("Todolist_MyStartFlow", myStartFlows.Count);
+
+		//我参与
+		MyJoinFlows myFlows = new MyJoinFlows();
+		obj = new QueryObject(myFlows);
+		obj.AddWhere("Emps like '%" + WebUser.No + "%'");
+		obj.DoQuery();
+		ht.put("Todolist_MyFlow", myFlows.Count);
+
+		return BP.Tools.Json.ToJsonEntityModel(ht);
+	}
+	public final String Index_Init()
+	{
+		Hashtable ht = new Hashtable();
+		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing()); //运行中.
+		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks()); //待办
+		ht.put("Todolist_CCWorks", BP.WF.Dev2Interface.getTodolist_CCWorks()); //抄送.
+
+		//本周.
+		ht.put("TodayNum", BP.WF.Dev2Interface.getTodolist_CCWorks()); //抄送.
+
+		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
 
-	// /#endregion 执行父类的重写方法.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 登录界面.
+	public final String Portal_Login()
+	{
+		String userNo = this.GetRequestVal("UserNo");
 
-	// /#region xxx 界面 .
+		try
+		{
+			BP.Port.Emp emp = new Emp(userNo);
 
-	// /#endregion xxx 界面方法.
+			BP.WF.Dev2Interface.Port_Login(emp.No);
+			return ".";
+		}
+		catch (RuntimeException ex)
+		{
+			return "err@用户[" + userNo + "]登录失败." + ex.getMessage();
+		}
 
-	/**
-	 * 初始化Home
-	 * 
-	 * @return
-	 * @throws Exception 
-	 */
-	public final String Home_Init() throws Exception {
-		AppACE page = new AppACE(context);
-		return page.Home_Init();
 	}
+	/** 
+	 登录.
+	 
+	 @return 
+	*/
+	public final String Login_Submit()
+	{
+		try
+		{
+			String userNo = this.GetRequestVal("TB_No");
+			if (userNo == null)
+			{
+				userNo = this.GetRequestVal("TB_UserNo");
+			}
 
-	public final String Index_Init() throws Exception {
-		AppACE page = new AppACE(context);
-		return page.Index_Init();
-	}
-	// /#region 登录界面.
-	public final String Login_Init() throws Exception {
-		AppACE page = new AppACE(context);
-		return page.Login_Init();
-	}
+			String pass = this.GetRequestVal("TB_PW");
+			if (pass == null)
+			{
+				pass = this.GetRequestVal("TB_Pass");
+			}
 
-	public final String Login_Submit() throws Exception {
-		AppACE page = new AppACE(context);
-		 
-			return page.Login_Submit();
-		 
+			BP.Port.Emp emp = new Emp();
+			emp.No = userNo;
+			if (emp.RetrieveFromDBSources() == 0)
+			{
+				if (DBAccess.IsExitsTableCol("Port_Emp", "NikeName") == true)
+				{
+					/*如果包含昵称列,就检查昵称是否存在.*/
+					Paras ps = new Paras();
+					ps.SQL = "SELECT No FROM Port_Emp WHERE NikeName=" + SystemConfig.AppCenterDBVarStr + "NikeName";
+					ps.Add("NikeName", userNo);
+					String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
+					if (no == null)
+					{
+						return "err@用户名或者密码错误.";
+					}
+
+					emp.No = no;
+					int i = emp.RetrieveFromDBSources();
+					if (i == 0)
+					{
+						return "err@用户名或者密码错误.";
+					}
+				}
+				else if (DBAccess.IsExitsTableCol("Port_Emp", "Name") == true)
+				{
+					/*如果包含Name列,就检查Name是否存在.*/
+					Paras ps = new Paras();
+					ps.SQL = "SELECT No FROM Port_Emp WHERE Name=" + SystemConfig.AppCenterDBVarStr + "Name";
+					ps.Add("Name", userNo);
+					String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
+					if (no == null)
+					{
+						return "err@用户名或者密码错误.";
+					}
+
+					emp.No = no;
+					int i = emp.RetrieveFromDBSources();
+					if (i == 0)
+					{
+						return "err@用户名或者密码错误.";
+					}
+
+
+				}
+				else
+				{
+					return "err@用户名或者密码错误.";
+				}
+			}
+
+			if (emp.CheckPass(pass) == false)
+			{
+				return "err@用户名或者密码错误.";
+			}
+
+			//调用登录方法.
+			BP.WF.Dev2Interface.Port_Login(emp.No);
+
+			return "";
+		}
+		catch (RuntimeException ex)
+		{
+			return "err@" + ex.getMessage();
+		}
 	}
-	
-	
+	/** 
+	 执行登录
+	 
+	 @return 
+	*/
+	public final String Login_Init()
+	{
+		Hashtable ht = new Hashtable();
+		ht.put("SysName", SystemConfig.SysName);
+		ht.put("ServiceTel", SystemConfig.ServiceTel);
+		ht.put("CustomerName", SystemConfig.CustomerName);
+		if (WebUser.NoOfRel == null)
+		{
+			ht.put("UserNo", "");
+			ht.put("UserName", "");
+		}
+		else
+		{
+			ht.put("UserNo", WebUser.No);
+
+			String name = WebUser.Name;
+
+			if (DataType.IsNullOrEmpty(name) == true)
+			{
+				ht.put("UserName", WebUser.No);
+			}
+			else
+			{
+				ht.put("UserName", name);
+			}
+		}
+
+		return BP.Tools.Json.ToJsonEntityModel(ht);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 登录界面.
+
 }

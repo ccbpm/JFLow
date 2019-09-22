@@ -1,20 +1,25 @@
 package BP.Sys;
 
-public class EnVerDtlAttr {
-	///#region 基本属性
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
-			public static final String EnVerPK = "EnVerPK";
-			public static final String EnName = "EnName";
-			public static final String AttrKey = "AttrKey";
-			public static final String AttrName = "AttrName";
-			public static final String OldVal = "OldVal";
-			public static final String NewVal = "NewVal";
-			public static final String EnVer = "EnVer";
+public class EnVerDtlAttr
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 
-			public static final String RDT = "RDT";
-			public static final String Rec = "Rec";
+	public static final String EnVerPK = "EnVerPK";
+	public static final String EnName = "EnName";
+	public static final String AttrKey = "AttrKey";
+	public static final String AttrName = "AttrName";
+	public static final String OldVal = "OldVal";
+	public static final String NewVal = "NewVal";
+	public static final String EnVer = "EnVer";
 
-	
-			///#endregion
+	public static final String RDT = "RDT";
+	public static final String Rec = "Rec";
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

@@ -2,16 +2,15 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  表单元素扩展
- 
 */
 public class FrmEle extends EntityMyPK
 {
 	/** 
 	 参数字段.
-	 
 	*/
 	public final String getAtPara()
 	{
@@ -23,11 +22,10 @@ public class FrmEle extends EntityMyPK
 	}
 
 
-	//#region 与 label 相关的属性 都存储到 AtParas 里面.
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 与 label 相关的属性 都存储到 AtParas 里面.
 	/** 
 	 文本
-	 
 	*/
 	public final String getLabText()
 	{
@@ -39,7 +37,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 风格
-	 
 	*/
 	public final String getLabStyle()
 	{
@@ -49,10 +46,10 @@ public class FrmEle extends EntityMyPK
 	{
 		this.SetValByKey(FrmEleAttr.AtPara, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与 label 相关的属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 与 link 相关的属性.
 	public final String getLinkText()
 	{
@@ -64,7 +61,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 连接URL
-	 
 	*/
 	public final String getLinkURL()
 	{
@@ -76,7 +72,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 连接目标
-	 
 	*/
 	public final String getLinkTarget()
 	{
@@ -88,7 +83,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 风格
-	 
 	*/
 	public final String getLinkStyle()
 	{
@@ -98,14 +92,13 @@ public class FrmEle extends EntityMyPK
 	{
 		this.SetValByKey(FrmEleAttr.AtPara, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与 link 相关的属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 与 line 相关的属性.
 	/** 
 	 线的颜色
-	 
 	*/
 	public final String getLineBorderColor()
 	{
@@ -117,7 +110,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 宽度
-	   
 	*/
 	public final String getLineBorderWidth()
 	{
@@ -162,14 +154,13 @@ public class FrmEle extends EntityMyPK
 		this.SetValByKey(FrmEleAttr.H, value);
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与线相关的属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 与 Btn 相关的属性.
 	/** 
 	 按钮ID
-	 
 	*/
 	public final String getBtnID()
 	{
@@ -181,7 +172,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 按钮文本
-	 
 	*/
 	public final String getBtnText()
 	{
@@ -193,7 +183,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 按钮类型
-	 
 	*/
 	public final int getBtnType()
 	{
@@ -205,7 +194,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 按钮事件类型
-	 
 	*/
 	public final BtnEventType getBtnEventType()
 	{
@@ -213,7 +201,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 按钮事件内容
-	 
 	*/
 	public final String getBtnEventContext()
 	{
@@ -251,14 +238,13 @@ public class FrmEle extends EntityMyPK
 	//        this.SetPara(FrmBtnAttr.MsgErr, value);
 	//    }
 	//}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与线相关的属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 与 Img 相关的属性.
 	/** 
 	 路径
-	 
 	*/
 	public final String getImgPath()
 	{
@@ -270,7 +256,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 图片链接地址
-	 
 	*/
 	public final String getImgLinkUrl()
 	{
@@ -282,7 +267,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 链接目标
-	 
 	*/
 	public final String getImgLinkTarget()
 	{
@@ -292,14 +276,13 @@ public class FrmEle extends EntityMyPK
 	{
 		this.SetValByKey(FrmEleAttr.Tag3, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与 Img 相关的属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 与 seal 相关的属性.
 	/** 
 	 签章ID
-	 
 	*/
 	public final String getSealID()
 	{
@@ -311,7 +294,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 签章名称
-	 
 	*/
 	public final String getSealName()
 	{
@@ -323,7 +305,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 签章的岗位.
-	 
 	*/
 	public final String getSealStations()
 	{
@@ -335,19 +316,17 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 来源
-	 
 	*/
 	public final int getSealSrcType()
 	{
-		return this.GetParaInt(FrmImgAttr.ImgSrcType);
+		return this.GetParaInt(FrmEleAttr.SrcType);
 	}
 	public final void setSealSrcType(int value)
 	{
-		this.SetPara(FrmImgAttr.ImgSrcType, value);
+		this.SetPara(FrmEleAttr.SrcType, value);
 	}
 	/** 
 	 是否可以编辑?
-	 
 	*/
 	public final boolean getSealIsEdit()
 	{
@@ -357,10 +336,10 @@ public class FrmEle extends EntityMyPK
 	{
 		this.SetPara(FrmImgAttr.IsEdit, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与 seal 相关的属性.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region  签名存储位置.
 	public final String getHandSigantureSavePath()
 	{
@@ -378,69 +357,62 @@ public class FrmEle extends EntityMyPK
 	{
 		return this.GetValStrByKey(FrmEleAttr.Tag4);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion  签名存储位置
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 类型
 	/** 
 	 标签
-	 
 	*/
 	public static final String Label = "Label";
 	/** 
 	 线
-	 
 	*/
 	public static final String Line = "Line";
 	/** 
 	 按钮
-	 
 	*/
 	public static final String Button = "Button";
 	/** 
 	 超连接
-	 
 	*/
 	public static final String Link = "Link";
 	/** 
 	 手工签名
-	 
 	*/
 	public static final String HandSiganture = "HandSiganture";
 	/** 
 	 电子签名
-	 
 	*/
 	public static final String EleSiganture = "EleSiganture";
 	/** 
 	 网页框架
-	 
 	*/
 	public static final String iFrame = "iFrame";
 	/** 
+	 分组
+	*/
+	public static final String Fieldset = "Fieldset";
+	/** 
 	 子线程
-	 
 	*/
 	public static final String SubThread = "SubThread";
 	/** 
 	 地图定位
-	 
 	*/
 	public static final String MapPin = "MapPin";
 	/** 
 	 录音
-	 
 	*/
 	public static final String Microphonehot = "Microphonehot";
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 类型
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 是否起用
-	 
 	*/
 	public final boolean getIsEnable()
 	{
@@ -452,7 +424,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 EleID
-	 
 	*/
 	public final String getEleID()
 	{
@@ -464,7 +435,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 EleName
-	 
 	*/
 	public final String getEleName()
 	{
@@ -476,7 +446,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 Tag1
-	 
 	*/
 	public final String getTag1()
 	{
@@ -488,7 +457,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 Tag2
-	 
 	*/
 	public final String getTag2()
 	{
@@ -500,7 +468,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 Tag3
-	 
 	*/
 	public final String getTag3()
 	{
@@ -521,7 +488,6 @@ public class FrmEle extends EntityMyPK
 
 	/** 
 	 FK_MapData
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -533,7 +499,6 @@ public class FrmEle extends EntityMyPK
 	}
 	/** 
 	 EleType
-	 
 	*/
 	public final String getEleType()
 	{
@@ -578,17 +543,46 @@ public class FrmEle extends EntityMyPK
 
 	public final int getHOfInt()
 	{
-		return Integer.parseInt((new Float(this.getH())).toString());
+		return Integer.parseInt((new Float(this.getH())).toString("0"));
 	}
 	public final int getWOfInt()
 	{
-		return Integer.parseInt((new Float(this.getW())).toString());
+		return Integer.parseInt((new Float(this.getW())).toString("0"));
 	}
-		
-	//#region 构造方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 权限问题
+	/** 
+	 实体的权限控制
+	*/
+	@Override
+	public UAC getHisUAC()
+	{
+
+		UAC uac = new UAC();
+		if (BP.Web.WebUser.getNo().equals("admin"))
+		{
+			uac.IsDelete = true;
+			uac.IsUpdate = true;
+			uac.IsInsert = false;
+			uac.IsView = true;
+		}
+		else
+		{
+			uac.IsView = true;
+		}
+		uac.IsImp = true;
+		return uac;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 权限问题
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 表单元素扩展
-	 
 	*/
 	public FrmEle()
 	{
@@ -597,16 +591,14 @@ public class FrmEle extends EntityMyPK
 	 表单元素扩展
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmEle(String mypk) throws Exception
+	public FrmEle(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -620,6 +612,8 @@ public class FrmEle extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = FrmEleAttr.FK_MapData;
+
 
 			//主键.
 		map.AddMyPK();
@@ -629,30 +623,30 @@ public class FrmEle extends EntityMyPK
 		map.AddTBString(FrmEleAttr.EleID, null, "控件ID值(对部分控件有效)", true, false, 0, 50, 20);
 		map.AddTBString(FrmEleAttr.EleName, null, "控件名称(对部分控件有效)", true, false, 0, 200, 20);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 位置其他.
 		map.AddTBFloat(FrmEleAttr.X, 5, "X", true, false);
 		map.AddTBFloat(FrmEleAttr.Y, 5, "Y", false, false);
 
 		map.AddTBFloat(FrmEleAttr.H, 20, "H", true, false);
 		map.AddTBFloat(FrmEleAttr.W, 20, "W", false, false);
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 位置其他.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 参数.
-		map.AddTBString(FrmEleAttr.Tag1, null, "Tag1", true, false, 0, 50, 20);
+		map.AddTBString(FrmEleAttr.Tag1, null, "链接URL", true, false, 0, 50, 20);
 		map.AddTBString(FrmEleAttr.Tag2, null, "Tag2", true, false, 0, 50, 20);
 		map.AddTBString(FrmEleAttr.Tag3, null, "Tag3", true, false, 0, 50, 20);
 		map.AddTBString(FrmEleAttr.Tag4, null, "Tag4", true, false, 0, 50, 20);
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
-
+		map.AddTBString(FrmEleAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 参数.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 控制属性.
 		map.AddTBInt(FrmEleAttr.IsEnable, 1, "是否启用", false, false);
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 控制属性.
 
 
@@ -662,11 +656,11 @@ public class FrmEle extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
 		if (!this.getEleID().equals(""))
 		{

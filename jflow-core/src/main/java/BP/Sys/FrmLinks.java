@@ -1,21 +1,18 @@
 package BP.Sys;
 
-import java.util.ArrayList;
-
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  超连接s
- 
 */
 public class FrmLinks extends EntitiesMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 超连接s
-	 
 	*/
 	public FrmLinks()
 	{
@@ -24,55 +21,47 @@ public class FrmLinks extends EntitiesMyPK
 	 超连接s
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmLinks(String fk_mapdata) throws Exception
+	public FrmLinks(String fk_mapdata)
 	{
-		if (SystemConfig.getIsDebug())
-		{
-			this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
-		}
-		else
-		{
-			this.RetrieveFromCash(FrmLineAttr.FK_MapData, (Object)fk_mapdata);
-		}
+		this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new FrmLink();
 	}
-	public static ArrayList<FrmLink> convertFrmLinks(Object obj)
-	{
-		return (ArrayList<FrmLink>) obj;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmLink> ToJavaList()
+	public final List<FrmLink> ToJavaList()
 	{
-		return (java.util.List<FrmLink>)(Object)this;
+		return (List<FrmLink>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmLink> Tolist()
+	public final ArrayList<FrmLink> Tolist()
 	{
-		java.util.ArrayList<FrmLink> list = new java.util.ArrayList<FrmLink>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmLink> list = new ArrayList<FrmLink>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((FrmLink)this.get(i));
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

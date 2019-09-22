@@ -1,25 +1,31 @@
 package BP.WF.DTS;
 
-import BP.DA.DBAccess;
-import BP.En.Method;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 // using Security.Principal.WindowsIdentity;
 
+
 /** 
  Method 的摘要说明
- 
 */
 public class DTSDominInfo extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public DTSDominInfo()
 	{
 		this.Title = "生成域数据";
 		this.Help = "生成域数据(未完成)";
-	   // this.HisAttrs.AddTBString("Path", "C:\\ccflow.Template", "生成的路径", true, false, 1, 1900, 200);
+
+		this.GroupName = "AD数据管理";
+
+		// this.HisAttrs.AddTBString("Path", "C:\\ccflow.Template", "生成的路径", true, false, 1, 1900, 200);
 	}
 	/** 
 	 设置执行变量
@@ -32,7 +38,6 @@ public class DTSDominInfo extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -47,6 +52,7 @@ public class DTSDominInfo extends Method
 	@Override
 	public Object Do()
 	{
+		return "功能未实现。";
 
 		String domainHost = "127.0.0.1";
 
@@ -55,7 +61,6 @@ public class DTSDominInfo extends Method
 		sqls += "@DELETE FROM Port_Dept";
 		sqls += "@DELETE FROM Port_Station";
 		sqls += "@DELETE FROM Port_DeptEmpStation";
-	   
 		DBAccess.RunSQLs(sqls);
 
 
@@ -80,9 +85,9 @@ public class DTSDominInfo extends Method
 		//    strArray = res.Path.Split(',');
 		//    for (int j = strArray.Length; j > 0; j--)
 		//    {
-		//        if (strArray[j - 1].substing(0, 3) == "OU=")
+		//        if (strArray[j - 1].Substring(0, 3) == "OU=")
 		//        {
-		//            str = "└" + strArray[j - 1].replace("OU=", "");
+		//            str = "└" + strArray[j - 1].Replace("OU=", "");
 		//        }
 		//    }
 		//}

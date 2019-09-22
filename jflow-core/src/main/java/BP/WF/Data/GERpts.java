@@ -1,6 +1,10 @@
 package BP.WF.Data;
 
-import BP.En.Entity;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  报表s
@@ -22,25 +26,32 @@ public class GERpts extends BP.En.EntitiesOID
 	{
 		return new GERpt();
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<GERpt> ToJavaList()
+	public final List<GERpt> ToJavaList()
 	{
-		return (java.util.List<GERpt>)(Object)this;
+		return (List<GERpt>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<GERpt> Tolist()
+	public final ArrayList<GERpt> Tolist()
 	{
-		java.util.ArrayList<GERpt> list = new java.util.ArrayList<GERpt>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<GERpt> list = new ArrayList<GERpt>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((GERpt)this.get(i));
+			list.add((GERpt)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

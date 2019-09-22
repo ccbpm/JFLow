@@ -2,18 +2,17 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  个人设置
- 
 */
 public class PerSetting extends EntityMyPK
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	/** 
 	 系统
-	 
 	*/
 	public final String getFK_App()
 	{
@@ -55,11 +54,13 @@ public class PerSetting extends EntityMyPK
 	{
 		this.SetValByKey(PerSettingAttr.Idx, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	/** 
 	 个人设置
-	 
 	*/
 	public PerSetting()
 	{
@@ -68,30 +69,28 @@ public class PerSetting extends EntityMyPK
 	 个人设置
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public PerSetting(String no) throws Exception
+	public PerSetting(String no)
 	{
-		this.setMyPK(no);
+		this.MyPK = no;
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("GPM_PerSetting");
-		map.setDepositaryOfEntity(Depositary.None);
-		map.setDepositaryOfMap(Depositary.Application);
-		map.setEnDesc("个人设置");
-		map.setEnType(EnType.Sys);
+		map.DepositaryOfEntity = Depositary.None;
+		map.DepositaryOfMap = Depositary.Application;
+		map.EnDesc = "个人设置";
+		map.EnType = EnType.Sys;
 		map.AddMyPK();
 
 		map.AddTBString(PerSettingAttr.FK_Emp, null, "人员", true, false, 0, 200, 20);
@@ -101,15 +100,16 @@ public class PerSetting extends EntityMyPK
 		map.AddTBString(PerSettingAttr.UserPass, null, "UserPass", true, false, 0, 200, 20, true);
 		map.AddTBInt(PerSettingAttr.Idx, 0, "显示顺序", false, true);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		this.setMyPK(this.getFK_Emp() + "_" + this.getFK_App());
+		this.MyPK = this.getFK_Emp() + "_" + this.getFK_App();
 		return super.beforeUpdateInsertAction();
 	}
 }

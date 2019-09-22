@@ -556,14 +556,7 @@ public class Attrs extends ArrayList<Attr>
 		this.AddDDLEntities(key, field, defaultVal, DataType.AppString, desc,
 				ens, "No", "Name", uiIsEnable);
 	}
-	
-	// EntitiesSimpleTree
-	public final void AddDDLEntities(String key, Object defaultVal,
-			String desc, EntitiesSimpleTree ens, boolean uiIsEnable)
-	{
-		this.AddDDLEntities(key, key, defaultVal, DataType.AppString, desc,
-				ens, "No", "Name", uiIsEnable);
-	}
+	 
 	
 	public final void AddDDLEntities(String key, Object defaultVal,
 			String desc, EntitiesTree ens, boolean uiIsEnable)

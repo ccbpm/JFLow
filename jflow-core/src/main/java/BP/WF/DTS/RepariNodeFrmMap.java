@@ -1,18 +1,19 @@
 package BP.WF.DTS;
 
-import BP.En.Method;
-import BP.WF.Node;
-import BP.WF.Nodes;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
 
 /** 
  修复节点表单map 的摘要说明
- 
 */
 public class RepariNodeFrmMap extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public RepariNodeFrmMap()
 	{
@@ -34,7 +35,6 @@ public class RepariNodeFrmMap extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -45,18 +45,18 @@ public class RepariNodeFrmMap extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
 		Nodes nds = new Nodes();
 		nds.RetrieveAllFromDBSource();
 
+
 		String info = "";
-		for (Node nd : nds.ToJavaList())
+		for (Node nd : nds)
 		{
-			String msg = nd.RepareMap();
+			String msg = nd.RepareMap(nd.getHisFlow());
 			if (!msg.equals(""))
 			{
 				info += "<b>对流程" + nd.getFlowName() + ",节点(" + nd.getNodeID() + ")(" + nd.getName() + "), 检查结果如下:</b>" + msg + "<hr>";

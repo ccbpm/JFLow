@@ -1,29 +1,23 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMM;
-import BP.En.Entity;
-import BP.En.QueryObject;
-import BP.WF.Node;
-import BP.WF.Nodes;
-import BP.WF.Port.Emp;
-import BP.WF.Port.Station;
-import BP.WF.Port.Stations;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  抄送部门
- 
 */
 public class CCDepts extends EntitiesMM
 {
 	/** 
 	 他的工作部门
-	 * @throws Exception 
-	 
 	*/
-	public final Stations getHisStations() throws Exception
+	public final Stations getHisStations()
 	{
 		Stations ens = new Stations();
-		for (CCDept ns : this.ToJavaList())
+		for (CCDept ns : this)
 		{
 			ens.AddEntity(new Station(ns.getFK_Dept()));
 		}
@@ -31,12 +25,11 @@ public class CCDepts extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
-	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes() throws Exception
+	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (CCDept ns : this.ToJavaList())
+		for (CCDept ns : this)
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -50,23 +43,21 @@ public class CCDepts extends EntitiesMM
 	}
 	/** 
 	 抄送部门
+	 
 	 @param NodeID 节点ID
-	 * @throws Exception 
 	*/
-	public CCDepts(int NodeID) throws Exception
+	public CCDepts(int NodeID)
 	{
 		QueryObject qo = new QueryObject(this);
-		
 		qo.AddWhere(CCDeptAttr.FK_Node, NodeID);
-		
 		qo.DoQuery();
 	}
 	/** 
 	 抄送部门
+	 
 	 @param StationNo StationNo 
-	 * @throws Exception 
 	*/
-	public CCDepts(String StationNo) throws Exception
+	public CCDepts(String StationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCDeptAttr.FK_Dept, StationNo);
@@ -82,18 +73,18 @@ public class CCDepts extends EntitiesMM
 	}
 	/** 
 	 取到一个工作部门集合能够访问到的节点s
+	 
 	 @param sts 工作部门集合
 	 @return 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Stations sts) throws Exception
+	public final Nodes GetHisNodes(Stations sts)
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
-		for (Station st : sts.ToJavaList())
+		for (Station st : sts)
 		{
-			tmp = this.GetHisNodes(st.getNo());
-			for (Node nd : tmp.ToJavaList())
+			tmp = this.GetHisNodes(st.No);
+			for (Node nd : tmp)
 			{
 				if (nds.Contains(nd))
 				{
@@ -104,31 +95,21 @@ public class CCDepts extends EntitiesMM
 		}
 		return nds;
 	}
-	/** 
-	 取到一个工作人员能够访问到的节点。
-	 @param empId 工作人员ID
-	 @return 
-	 * @throws Exception 
-	*/
-	public final Nodes GetHisNodes_del(String empId) throws Exception
-	{
-		Emp em = new Emp(empId);
-		return this.GetHisNodes(em.getHisStations());
-	}
+
 	/** 
 	 工作部门对应的节点
+	 
 	 @param stationNo 工作部门编号
 	 @return 节点s
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String stationNo) throws Exception
+	public final Nodes GetHisNodes(String stationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCDeptAttr.FK_Dept, stationNo);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (CCDept en : this.ToJavaList())
+		for (CCDept en : this)
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -136,44 +117,50 @@ public class CCDepts extends EntitiesMM
 	}
 	/** 
 	 转向此节点的集合的Nodes
+	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
-	 * @throws Exception 
 	*/
-	public final Stations GetHisStations(int nodeID) throws Exception
+	public final Stations GetHisStations(int nodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCDeptAttr.FK_Node, nodeID);
 		qo.DoQuery();
 
 		Stations ens = new Stations();
-		for (CCDept en : this.ToJavaList())
+		for (CCDept en : this)
 		{
 			ens.AddEntity(new Station(en.getFK_Dept()));
 		}
 		return ens;
 	}
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<CCDept> ToJavaList()
+	public final List<CCDept> ToJavaList()
 	{
-		return (java.util.List<CCDept>)(Object)this;
+		return (List<CCDept>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<CCDept> Tolist()
+	public final ArrayList<CCDept> Tolist()
 	{
-		java.util.ArrayList<CCDept> list = new java.util.ArrayList<CCDept>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<CCDept> list = new ArrayList<CCDept>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((CCDept)this.get(i));
+			list.add((CCDept)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

@@ -1,12 +1,21 @@
 package BP.WF.Port;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
+import java.time.*;
 
 /** 
  操作员
 */
 public class WFEmpAttr
 {
- 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 No
 	*/
@@ -39,16 +48,21 @@ public class WFEmpAttr
 	public static final String Depts = "Depts";
 	public static final String FK_Dept = "FK_Dept";
 	public static final String Idx = "Idx";
- 
 	public static final String Style = "Style";
 	public static final String Msg = "Msg";
- 
 	public static final String UseSta = "UseSta";
 	/** 
 	 授权的人员
 	*/
 	public static final String AuthorFlows = "AuthorFlows";
-	
-	/// 可以发起的流程
+	/** 
+	 可以发起的流程
+	*/
 	public static final String StartFlows = "StartFlows";
+	/** 
+	 图片签名密码
+	*/
+	public static final String SPass = "SPass";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

@@ -1,22 +1,21 @@
 package BP.WF.DTS;
 
-import BP.DA.DBUrlType;
-import BP.DA.Log;
-import BP.DA.LogType;
-import BP.DTS.DataIOEn;
-import BP.DTS.DoType;
-import BP.DTS.RunTimeType;
-import BP.En.Map;
-import BP.Sys.PubClass;
-import BP.WF.Node;
-import BP.WF.Nodes;
-import BP.WF.WFState;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.WF.Data.*;
+import BP.WF.Template.*;
+import BP.DTS.*;
+import BP.WF.*;
+import java.io.*;
+import java.time.*;
 
 public class OutputSQLs extends DataIOEn
 {
 	/** 
 	 流程时效考核
-	 
 	*/
 	public OutputSQLs()
 	{
@@ -27,20 +26,19 @@ public class OutputSQLs extends DataIOEn
 		this.ToDBUrl = DBUrlType.AppCenterDSN;
 	}
 	@Override
-	public void Do() throws Exception
+	public void Do()
 	{
 		String sql = this.GenerSqls();
-		PubClass.ResponseWriteBlueMsg(sql.replace("\n", "<BR>"));
 	}
-	public final String GenerSqls() throws Exception
+	public final String GenerSqls()
 	{
-		Log.DefaultLogWriteLine(LogType.Info, BP.Web.WebUser.getName() + "开始调度考核信息:" + new java.util.Date());//.ToString("yyyy-MM-dd HH:mm:ss"));
+		Log.DefaultLogWriteLine(LogType.Info, BP.Web.WebUser.Name + "开始调度考核信息:" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
 		String infoMsg = "", errMsg = "";
 
 		Nodes nds = new Nodes();
 		nds.RetrieveAll();
 
-		String fromDateTime = new java.util.Date().getYear() + "-01-01";
+		String fromDateTime = LocalDateTime.now().getYear() + "-01-01";
 		fromDateTime = "2004-01-01 00:00";
 		//string fromDateTime=DateTime.Now.Year+"-01-01 00:00";
 		//string fromDateTime=DateTime.Now.Year+"-01-01 00:00";
@@ -50,17 +48,17 @@ public class OutputSQLs extends DataIOEn
 
 		String sqls = "";
 		int i = 0;
-		for (Node nd : nds.ToJavaList())
+		for (Node nd : nds)
 		{
 			if (nd.getIsPCNode()) // 如果是计算机节点.
 			{
 				continue;
 			}
 			i++;
-			Map map = nd.getHisWork().getEnMap();
-			delSQL = "\n DELETE FROM " + map.getPhysicsTable() + " WHERE  OID  NOT IN (SELECT WORKID FROM WF_GenerWorkFlow ) AND WFState= " + WFState.Runing.getValue();
+			Map map = nd.getHisWork().EnMap;
+			delSQL = "\n DELETE FROM " + map.PhysicsTable + " WHERE  OID  NOT IN (SELECT WORKID FROM WF_GenerWorkFlow ) AND WFState= " + WFState.Runing.getValue();
 
-			sqls += "\n\n\n -- NO:" + i + "、" + nd.getFK_Flow() + nd.getFlowName() + " :  " + map.getEnDesc() + " \n" + delSQL + "; \n" + insertSql + "; \n" + updateSQL + ";";
+			sqls += "\n\n\n -- NO:" + i + "、" + nd.getFK_Flow() + nd.getFlowName() + " :  " + map.EnDesc + " \n" + delSQL + "; \n" + insertSql + "; \n" + updateSQL + ";";
 		}
 		Log.DefaultLogWriteLineInfo(sqls);
 		return sqls;

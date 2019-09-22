@@ -1,15 +1,19 @@
 package BP.WF.Data;
 
-import BP.En.EntityMyPK;
-import BP.En.Map;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  工作质量评价
 */
 public class Eval extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 流程标题
 	*/
@@ -100,7 +104,6 @@ public class Eval extends EntityMyPK
 	}
 	/** 
 	 隶属年月
-	 
 	*/
 	public final String getFK_NY()
 	{
@@ -112,7 +115,6 @@ public class Eval extends EntityMyPK
 	}
 	/** 
 	 流程编号
-	 
 	*/
 	public final String getFK_Flow()
 	{
@@ -188,6 +190,11 @@ public class Eval extends EntityMyPK
 	{
 		this.SetValByKey(EvalAttr.EvalCent, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 工作质量评价
 	*/
@@ -196,11 +203,11 @@ public class Eval extends EntityMyPK
 	}
 	/** 
 	 工作质量评价
+	 
 	 @param workid
 	 @param FK_Node
-	 * @throws Exception 
 	*/
-	public Eval(int workid, int FK_Node) throws Exception
+	public Eval(int workid, int FK_Node)
 	{
 		this.setWorkID(workid);
 		this.setFK_Node(FK_Node);
@@ -212,11 +219,12 @@ public class Eval extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("WF_CHEval", "工作质量评价");
+
 
 		map.AddMyPK();
 		map.AddTBString(EvalAttr.Title, null, "标题", false, true, 0, 500, 10);
@@ -225,7 +233,7 @@ public class Eval extends EntityMyPK
 
 		map.AddTBInt(EvalAttr.WorkID, 0, "工作ID", false, true);
 		map.AddTBInt(EvalAttr.FK_Node, 0, "评价节点", false, true);
-		map.AddTBString(EvalAttr.NodeName, null, "节点名称", false, true, 0, 100, 10);
+		map.AddTBString(EvalAttr.NodeName, null, "停留节点", false, true, 0, 100, 10);
 
 		map.AddTBString(EvalAttr.Rec, null, "评价人", false, true, 0, 50, 10);
 		map.AddTBString(EvalAttr.RecName, null, "评价人名称", false, true, 0, 50, 10);
@@ -241,7 +249,9 @@ public class Eval extends EntityMyPK
 		map.AddTBString(EvalAttr.DeptName, null, "部门名称", false, true, 0, 100, 10);
 		map.AddTBString(EvalAttr.FK_NY, null, "年月", false, true, 0, 7, 10);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

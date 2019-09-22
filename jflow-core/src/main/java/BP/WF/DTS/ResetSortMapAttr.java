@@ -1,23 +1,19 @@
 package BP.WF.DTS;
 
-import BP.DA.DBAccess;
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.En.Method;
-import BP.En.QueryObject;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapAttrs;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  根据坐标排序字段
- 
 */
 public class ResetSortMapAttr extends Method
 {
 	/** 
 	 根据坐标排序字段
-	 
 	*/
 	public ResetSortMapAttr()
 	{
@@ -35,7 +31,6 @@ public class ResetSortMapAttr extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -46,10 +41,9 @@ public class ResetSortMapAttr extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
 		try
 		{
@@ -67,9 +61,9 @@ public class ResetSortMapAttr extends Method
 					qo.addOrderBy(MapAttrAttr.Y, MapAttrAttr.X);
 					qo.DoQuery();
 					int rowIdx = 0;
-					for (MapAttr mapAttr : attrs.ToJavaList())
+					for (MapAttr mapAttr : attrs)
 					{
-						mapAttr.setIdx (rowIdx);
+						mapAttr.Idx = rowIdx;
 						mapAttr.DirectUpdate();
 						rowIdx++;
 					}

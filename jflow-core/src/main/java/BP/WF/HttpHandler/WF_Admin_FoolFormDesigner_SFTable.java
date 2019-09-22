@@ -1,194 +1,181 @@
 package BP.WF.HttpHandler;
 
-import java.util.ArrayList;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
-
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.Difference.Handler.WebContralBase;
-import BP.En.ClassFactory;
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.Sys.CodeStruct;
-import BP.Sys.SFDBSrc;
-import BP.Sys.SFDBSrcs;
-import BP.Sys.SFTable;
-import BP.Sys.SFTables;
-import BP.Sys.SrcType;
-import BP.Sys.SystemConfig;
-import BP.Tools.StringHelper;
-public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase{
-	
-	/**
-	 * 构造函数
-	 */
+/** 
+ 页面功能实体
+*/
+public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
+{
+	/** 
+	 构造函数
+	*/
 	public WF_Admin_FoolFormDesigner_SFTable()
 	{
-	
+
 	}
-	
-	///#region 执行父类的重写方法.
-    /// <summary>
-    /// 默认执行的方法
-    /// </summary>
-    /// <returns></returns>
-    protected String DoDefaultMethod()
-    {
-    	if (this.getDoType().equals("DtlFieldUp")) //字段上移
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region xxx 界面 .
+	/** 
+	  初始化sf0. @于庆海，新方法.
+	 
+	 @return 
+	*/
+	public final String SF0_Init()
+	{
+		String cl = "BP.En.Entities";
+		ArrayList al = ClassFactory.GetObjects(cl);
+
+		//定义容器.
+		DataTable dt = new DataTable();
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
+
+		SFTables sfs = new SFTables();
+		sfs.RetrieveAll();
+
+		for (Object obj : al)
 		{
-				return "执行成功.";
-
-
-		}
-		else
-		{
-		}
-
-        //找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + this.getRequest().getRequestURL());
-    }
-    ///#endregion 执行父类的重写方法.
-
-    ///#region xxx 界面 .
-    /// <summary>
-    ///  初始化sf0. @于庆海，新方法.
-    /// </summary>
-    /// <returns></returns>
-    public String SF0_Init() throws Exception
-    {
-        String cl = "BP.En.Entities";
-        ArrayList al = ClassFactory.GetObjects(cl);
-
-        //定义容器.
-        DataTable dt = new DataTable();
-        dt.Columns.Add("No");
-        dt.Columns.Add("Name");
-
-        SFTables sfs = new SFTables();
-        sfs.RetrieveAll();
-
-        for(Object obj: al)
-        {
-            Entities ens = (Entities) obj;
-            if (ens == null)
-                continue;
-
-            try
-            {
-                Entity en = ens.getGetNewEntity();
-                if (en == null)
-                    continue;
-
-                if (en.getEnMap().getAttrs().Contains("No") == false)
-                    continue;
-
-                if (sfs.Contains(ens.toString()) == true)
-                    continue;
-
-                DataRow dr = dt.NewRow();
-                dr.setValue("No", ens.toString());
-
-                if (en.getIsTreeEntity())
-                	dr.setValue("Name", en.getEnMap().getEnDesc() + "(树结构) " + ens.toString());
-                else
-                	dr.setValue("Name", en.getEnMap().getEnDesc() + " " + ens.toString());
-                dt.Rows.add(dr);
-            }
-            catch(Exception e){
-
-            }
-        }
-        return BP.Tools.Json.ToJson(dt);
-    }
-    public String SF0_Save()
-    {
-        return "保存成功.";
-    }
-    ///#endregion xxx 界面方法.
-
-    ///#region 表或者视图 .
-    /// <summary>
-    ///  初始化sf2.
-    /// </summary>
-    /// <returns></returns>
-    public String SF2_Init() throws Exception
-    {
-        SFDBSrcs srcs = new SFDBSrcs();
-        srcs.RetrieveAll();
-        return srcs.ToJson();
-    }
-
-    public String SF2_GetTVs() throws Exception
-    {
-        String src = this.GetRequestVal("src");
-
-        SFDBSrc sr = new SFDBSrc(src);
-        DataTable dt = sr.GetTables();
-
-        return BP.Tools.Json.ToJson(dt);
-    }
-
-    public String SF2_GetCols() throws Exception
-    {
-        String src = this.GetRequestVal("src");
-        String table = this.GetRequestVal("table");
-
-        if (StringHelper.isNullOrEmpty(src))
-			try {
-				throw new Exception("err@参数不正确");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			Entities ens = obj instanceof Entities ? (Entities)obj : null;
+			if (ens == null)
+			{
+				continue;
 			}
 
-        if (StringHelper.isNullOrEmpty(table))
-        {
-            return "[]";
-        }
+			try
+			{
+				Entity en = ens.GetNewEntity;
+				if (en == null)
+				{
+					continue;
+				}
 
-        SFDBSrc sr = new SFDBSrc(src);
-        DataTable dt = sr.GetColumns(table);
+				if (en.EnMap.Attrs.Contains("No") == false)
+				{
+					continue;
+				}
 
-        for(DataRow r : dt.Rows)
-        {
-        	if(SystemConfig.getAppCenterDBType() == BP.DA.DBType.Oracle){
-				r.setValue("NAME", r.getValue("NO") + (r.getValue("NAME") == null || "".equals(r.getValue("NAME")) || StringUtils.isEmpty(r.getValue("NAME").toString()) ? "" : String.format("[%1$s]", r.getValue("NAME"))));
-			}else{
-				r.setValue("Name", r.getValue("No") + (r.getValue("Name") == null || "".equals(r.getValue("Name")) || StringUtils.isEmpty(r.getValue("Name").toString()) ? "" : String.format("[%1$s]", r.getValue("Name"))));
+				if (sfs.Contains(ens.toString()) == true)
+				{
+					continue;
+				}
+
+				DataRow dr = dt.NewRow();
+				dr.set("No", ens.toString());
+
+				if (en.IsTreeEntity)
+				{
+					dr.set("Name", en.EnMap.EnDesc + "(树结构) " + ens.toString());
+				}
+				else
+				{
+					dr.set("Name", en.EnMap.EnDesc + " " + ens.toString());
+				}
+
+				dt.Rows.Add(dr);
 			}
-        	
-           
-        }
+			catch (java.lang.Exception e)
+			{
 
-        return BP.Tools.Json.ToJson(dt);
-    }
+			}
+		}
+		return BP.Tools.Json.ToJson(dt);
+	}
+	public final String SF0_Save()
+	{
+		return "保存成功.";
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion xxx 界面方法.
 
-    public String SF2_Save() throws Exception
-    {
-        SFTable sf = new SFTable();
-        sf.setNo(this.GetValFromFrmByKey("No"));
-        if (sf.getIsExits())
-            return "err@标记:" + sf.getNo() + "已经存在.";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 表或者视图 .
+	/** 
+	  初始化sf2.
+	 
+	 @return 
+	*/
+	public final String SF2_Init()
+	{
+		SFDBSrcs srcs = new SFDBSrcs();
+		srcs.RetrieveAll();
+		return srcs.ToJson();
+	}
 
-        sf.setName(this.GetValFromFrmByKey("Name"));
-        sf.setFK_SFDBSrc(this.GetValFromFrmByKey("FK_DBSrc"));
-        sf.setSrcTable(this.GetValFromFrmByKey("SrcTable"));
-        sf.setCodeStruct(CodeStruct.forValue(this.GetValIntFromFrmByKey("CodeStruct")));
-        sf.setColumnValue(this.GetValFromFrmByKey("ColumnValue"));
-        sf.setColumnText(this.GetValFromFrmByKey("ColumnText"));
-        if (sf.getCodeStruct() == CodeStruct.Tree)
-        {
-            sf.setParentValue(this.GetValFromFrmByKey("ParentValue"));
-            sf.setDefVal(this.GetValFromFrmByKey("RootValue"));
-        }
-        sf.setSelectStatement(this.GetValFromFrmByKey("Selectstatement"));
-        sf.setSrcType(SrcType.TableOrView);
-        sf.setFK_Val("FK_" + sf.getNo());
-        sf.Save();
+	public final String SF2_GetTVs()
+	{
+		String src = this.GetRequestVal("src");
 
-        return "保存成功！";
-    }
+		SFDBSrc sr = new SFDBSrc(src);
+		DataTable dt = sr.GetTables();
 
-    //#endregion xxx 界面方法.
+		return BP.Tools.Json.ToJson(dt);
+	}
+
+	public final String SF2_GetCols()
+	{
+		String src = this.GetRequestVal("src");
+		String table = this.GetRequestVal("table");
+
+		if (tangible.StringHelper.isNullOrWhiteSpace(src))
+		{
+			throw new RuntimeException("err@参数不正确");
+		}
+
+		if (tangible.StringHelper.isNullOrWhiteSpace(table))
+		{
+			return "[]";
+		}
+
+		SFDBSrc sr = new SFDBSrc(src);
+		DataTable dt = sr.GetColumns(table);
+
+		for (DataRow r : dt.Rows)
+		{
+			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == DBNull.Value || tangible.StringHelper.isNullOrWhiteSpace(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
+		}
+
+		return BP.Tools.Json.ToJson(dt);
+	}
+
+	public final String SF2_Save()
+	{
+		SFTable sf = new SFTable();
+		sf.No = this.GetValFromFrmByKey("No");
+		if (sf.IsExits)
+		{
+			return "err@标记:" + sf.No + "已经存在.";
+		}
+
+		sf.Name = this.GetValFromFrmByKey("Name");
+		sf.FK_SFDBSrc = this.GetValFromFrmByKey("FK_DBSrc");
+		sf.SrcTable = this.GetValFromFrmByKey("SrcTable");
+		sf.CodeStruct = (CodeStruct) this.GetValIntFromFrmByKey("CodeStruct");
+		sf.ColumnValue = this.GetValFromFrmByKey("ColumnValue");
+		sf.ColumnText = this.GetValFromFrmByKey("ColumnText");
+		if (sf.CodeStruct == CodeStruct.Tree)
+		{
+			sf.ParentValue = this.GetValFromFrmByKey("ParentValue");
+			sf.DefVal = this.GetValFromFrmByKey("RootValue");
+		}
+		sf.SelectStatement = this.GetValFromFrmByKey("Selectstatement");
+		sf.SrcType = SrcType.TableOrView;
+		sf.FK_Val = "FK_" + sf.No;
+		sf.Save();
+
+		return "保存成功！";
+	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion xxx 界面方法.
+
 }

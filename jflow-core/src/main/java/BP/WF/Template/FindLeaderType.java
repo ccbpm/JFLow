@@ -1,26 +1,26 @@
 package BP.WF.Template;
 
+import BP.WF.*;
+
 /** 
  找领导类型
- 
 */
 public enum FindLeaderType
 {
 	/** 
 	 提交人
-	 
 	*/
 	Submiter,
 	/** 
 	 指定节点的提交人
-	 
 	*/
 	SpecNodeSubmiter,
 	/** 
 	 特定字段的提交人
-	 
 	*/
 	BySpecField;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

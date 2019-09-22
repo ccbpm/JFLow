@@ -1,17 +1,21 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  系统表单s
- 
 */
 public class SysForms extends EntitiesNoName
 {
 	/** 
 	 Frm
-	 
 	*/
 	public SysForms()
 	{
@@ -19,7 +23,6 @@ public class SysForms extends EntitiesNoName
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -27,31 +30,31 @@ public class SysForms extends EntitiesNoName
 		return new SysForm();
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<SysForm> ToJavaList()
+	public final List<SysForm> ToJavaList()
 	{
-		return (java.util.List<SysForm>)(Object)this;
+		return (List<SysForm>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<SysForm> Tolist()
+	public final ArrayList<SysForm> Tolist()
 	{
-		java.util.ArrayList<SysForm> list = new java.util.ArrayList<SysForm>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<SysForm> list = new ArrayList<SysForm>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((SysForm)this.get(i));
+			list.add((SysForm)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

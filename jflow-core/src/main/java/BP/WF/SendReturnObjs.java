@@ -1,18 +1,17 @@
 package BP.WF;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /** 
  工作发送返回对象集合.
 */
-public class SendReturnObjs extends ArrayList<SendReturnObj>
+public class SendReturnObjs extends ArrayList<Object>
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 获取系统变量.
 	public final long getVarWorkID()
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarWorkID.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarWorkID))
 			{
 				return Long.parseLong(item.MsgOfText);
 			}
@@ -20,10 +19,10 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		return 0;
 	}
 	public final boolean getIsStopFlow()
-   {
+	{
 	   for (SendReturnObj item : this)
 	   {
-		   if (SendReturnMsgFlag.IsStopFlow.equals(item.MsgFlag))
+		   if (item.MsgFlag.equals(SendReturnMsgFlag.IsStopFlow))
 		   {
 			   if (item.MsgOfText.equals("1"))
 			   {
@@ -35,9 +34,9 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 			   }
 		   }
 	   }
+			//throw new Exception("@没有找到系统变量IsStopFlow");
 	   return false;
-	   //throw new RuntimeException("@没有找到系统变量IsStopFlow");
-   }
+	}
 
 	/** 
 	 到达节点ID
@@ -46,7 +45,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarToNodeID.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarToNodeID))
 			{
 				return Integer.parseInt(item.MsgOfText);
 			}
@@ -60,7 +59,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarToNodeIDs.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarToNodeIDs))
 			{
 				return item.MsgOfText;
 			}
@@ -74,7 +73,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarToNodeName.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarToNodeName))
 			{
 				return item.MsgOfText;
 			}
@@ -88,7 +87,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarCurrNodeName.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarCurrNodeName))
 			{
 				return item.MsgOfText;
 			}
@@ -99,7 +98,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarCurrNodeID.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarCurrNodeID))
 			{
 				return Integer.parseInt(item.MsgOfText);
 			}
@@ -113,7 +112,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarAcceptersName.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarAcceptersName))
 			{
 				return item.MsgOfText;
 			}
@@ -127,7 +126,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarAcceptersID.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarAcceptersID))
 			{
 				return item.MsgOfText;
 			}
@@ -141,7 +140,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.MsgOfText.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.MsgOfText))
 			{
 				return item.MsgOfText;
 			}
@@ -156,13 +155,16 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	{
 		for (SendReturnObj item : this)
 		{
-			if (SendReturnMsgFlag.VarTreadWorkIDs.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.VarTreadWorkIDs))
 			{
 				return item.MsgOfText;
 			}
 		}
 		return null;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 	/** 
 	 构造
 	*/
@@ -171,6 +173,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	}
 	/** 
 	 根据指定格式的字符串生成一个事例获取相关变量
+	 
 	 @param specText 指定格式的字符串
 	*/
 	public SendReturnObjs(String specText)
@@ -211,10 +214,11 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 				return;
 			}
 		}
-		this.add(obj);
+		this.InnerList.add(obj);
 	}
 	/** 
 	 转化成特殊的格式
+	 
 	 @return 
 	*/
 	public final String ToMsgOfSpecText()
@@ -224,18 +228,19 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		{
 			if (item.MsgOfText != null)
 			{
-				msg += "$" + item.MsgFlag + "^" +item.HisSendReturnMsgType + "^" + item.MsgOfText;
+				msg += "$" + item.MsgFlag + "^" + item.HisSendReturnMsgType.getValue() + "^" + item.MsgOfText;
 			}
 		}
 
 		//增加上 text信息。
-		msg += "$MsgOfText^"+SendReturnMsgType.Info.getValue() +"^" + this.ToMsgOfText();
+		msg += "$MsgOfText^" + SendReturnMsgType.Info.getValue() + "^" + this.ToMsgOfText();
 
 		msg.replace("@@", "@");
 		return msg;
 	}
 	/** 
 	 装载指定的文本，生成这个对象。
+	 
 	 @param text 指定格式的文本
 	*/
 	public final void LoadSpecText(String text)
@@ -243,12 +248,13 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		String[] strs = text.split("[$]", -1);
 		for (String str : strs)
 		{
-			String[] sp=str.split("[^]", -1);
+			String[] sp = str.split("[^]", -1);
 			this.AddMsg(sp[0], sp[2], null, SendReturnMsgType.forValue(Integer.parseInt(sp[1])));
 		}
 	}
 	/** 
 	 转化成text方式的消息，以方便识别不出来html的设备输出.
+	 
 	 @return 
 	*/
 	public final String ToMsgOfText()
@@ -267,32 +273,74 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 			}
 
 			//特殊判断.
-			if (SendReturnMsgFlag.IsStopFlow.equals(item.MsgFlag))
+			if (item.MsgFlag.equals(SendReturnMsgFlag.IsStopFlow))
 			{
 				msg += "@" + item.MsgOfHtml;
 				continue;
 			}
 
-			if (item.MsgOfText == null || item.MsgOfText.equals("null")==true )
-				continue;
-			
 
-			 
+			if (item.MsgOfText != null)
+			{
 				if (item.MsgOfText.contains("<"))
 				{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+///#warning 不应该出现.
 				  //  BP.DA.Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
 					continue;
 				}
 				msg += "@" + item.MsgOfText;
-				 
-			 
+				continue;
+			}
 
 		}
 		msg.replace("@@", "@");
 		return msg;
 	}
+	public final String ToJson()
+	{
+		if (this.OutMessageText != null)
+		{
+			return this.OutMessageText;
+		}
+
+		String msg = "";
+		for (SendReturnObj item : this)
+		{
+			if (item.HisSendReturnMsgType == SendReturnMsgType.SystemMsg)
+			{
+				continue;
+			}
+
+			//特殊判断.
+			if (item.MsgFlag.equals(SendReturnMsgFlag.IsStopFlow))
+			{
+				msg += "@" + item.MsgOfHtml;
+				continue;
+			}
+
+
+			if (item.MsgOfText != null)
+			{
+				if (item.MsgOfText.contains("<"))
+				{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+///#warning 不应该出现.
+					//  BP.DA.Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
+					continue;
+				}
+				msg += "@" + item.MsgOfText;
+				continue;
+			}
+
+		}
+		msg.replace("@@", "@");
+		return msg;
+
+	}
 	/** 
 	 转化成html方式的消息，以方便html的信息输出.
+	 
 	 @return 
 	*/
 	public final String ToMsgOfHtml()
@@ -315,13 +363,12 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 				msg += "@" + item.MsgOfHtml;
 				continue;
 			}
-			
-			if (item.MsgOfText == null || item.MsgOfText.equals("null")==true )
-				continue;
 
-		 
+			if (item.MsgOfText != null)
+			{
 				msg += "@" + item.MsgOfText;
-				 
+				continue;
+			}
 		}
 		msg = msg.replace("@@", "@");
 		msg = msg.replace("@@", "@");
@@ -331,9 +378,5 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		}
 
 		return msg;
-	}
-	public List<SendReturnObj> ToJavaList()
-	{
-		return (List<SendReturnObj>)(Object)this;
 	}
 }

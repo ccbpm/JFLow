@@ -1,18 +1,19 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Tools.StringHelper;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  抄送
 */
 public class CCList extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 状态
 	*/
@@ -24,20 +25,19 @@ public class CCList extends EntityMyPK
 	{
 		if (value == CCSta.Read)
 		{
-			this.setCDT(DataType.getCurrentDataTime());
+			this.setCDT(DataType.CurrentDataTime);
 		}
 		this.SetValByKey(CCListAttr.Sta, value.getValue());
 	}
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 
 		UAC uac = new UAC();
-		if ( ! BP.Web.WebUser.getNo().equals("admin"))
+		if (!BP.Web.WebUser.No.equals("admin"))
 		{
 			uac.IsView = false;
 			return uac;
@@ -71,10 +71,10 @@ public class CCList extends EntityMyPK
 	*/
 	public final String getCCToName()
 	{
-		String s= this.GetValStringByKey(CCListAttr.CCToName);
-		if (StringHelper.isNullOrEmpty(s))
+		String s = this.GetValStringByKey(CCListAttr.CCToName);
+		if (DataType.IsNullOrEmpty(s))
 		{
-			s=this.getCCTo();
+			s = this.getCCTo();
 		}
 		return s;
 	}
@@ -84,28 +84,28 @@ public class CCList extends EntityMyPK
 	}
 
 	/** 
-	 审核意见
+	 抄送给部门名称
 	*/
-	public final String getCheckNote()
+	public final String getCCToDeptName()
 	{
-		String s = this.GetValStringByKey(CCListAttr.CheckNote);
-		if (StringHelper.isNullOrEmpty(s))
+		String s = this.GetValStringByKey(CCListAttr.CCToDeptName);
+		if (DataType.IsNullOrEmpty(s))
 		{
 			return "无";
 		}
 		return s;
 	}
-	public final void setCheckNote(String value)
+	public final void setCCToDeptName(String value)
 	{
-		this.SetValByKey(CCListAttr.CheckNote, value);
+		this.SetValByKey(CCListAttr.CCToDeptName, value);
 	}
 	/** 
-	 审核意见
+	 抄送给部门名称
 	*/
-	public final String getCheckNoteHtml()
+	public final String getCCToDeptNameHtml()
 	{
-		String s = this.GetValStringByKey(CCListAttr.CheckNote);
-		if (StringHelper.isNullOrEmpty(s))
+		String s = this.GetValStringByKey(CCListAttr.CCToDeptName);
+		if (DataType.IsNullOrEmpty(s))
 		{
 			return "无";
 		}
@@ -133,15 +133,17 @@ public class CCList extends EntityMyPK
 	{
 		this.SetValByKey(CCListAttr.FK_Node, value);
 	}
-	public final int getNDFrom()
-	{
-		return this.GetValIntByKey(CCListAttr.NDFrom);
-	}
-	public final void setNDFrom(int value)
-	{
-		this.SetValByKey(CCListAttr.NDFrom, value);
-	}
-	
+	//public int NDFrom
+	//{
+	//    get
+	//    {
+	//        return this.GetValIntByKey(CCListAttr.NDFrom);
+	//    }
+	//    set
+	//    {
+	//        this.SetValByKey(CCListAttr.NDFrom, value);
+	//    }
+	//}
 	public final long getWorkID()
 	{
 		return this.GetValInt64ByKey(CCListAttr.WorkID);
@@ -160,7 +162,6 @@ public class CCList extends EntityMyPK
 	}
 	/** 
 	 父流程工作ID
-	 
 	*/
 	public final long getPWorkID()
 	{
@@ -268,7 +269,11 @@ public class CCList extends EntityMyPK
 	{
 		this.SetValByKey(CCListAttr.InEmpWorks, value);
 	}
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 CCList
 	*/
@@ -281,47 +286,49 @@ public class CCList extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("WF_CCList", "抄送列表");
 
 
-		  map.AddMyPK();
 
-          map.AddTBString(CCListAttr.Title, null, "标题", true, true, 0, 500, 10, true);
-          map.AddTBInt(CCListAttr.Sta, 0, "状态", true, true);
+		map.AddMyPK();
 
-          map.AddTBString(CCListAttr.FK_Flow, null, "流程编号", true, true, 0, 3, 10, true);
-          map.AddTBString(CCListAttr.FlowName, null, "流程名称", true, true, 0, 200, 10, true);
-          map.AddTBInt(CCListAttr.FK_Node, 0, "节点", true, true);
-          map.AddTBString(CCListAttr.NodeName, null, "节点名称", true, true, 0, 500, 10, true);
+		map.AddTBString(CCListAttr.Title, null, "标题", true, true, 0, 500, 10, true);
+		map.AddTBInt(CCListAttr.Sta, 0, "状态", true, true);
 
-          map.AddTBInt(CCListAttr.WorkID, 0, "工作ID", true, true);
-          map.AddTBInt(CCListAttr.FID, 0, "FID", true, true);
-          
-          map.AddTBStringDoc();
+		map.AddTBString(CCListAttr.FK_Flow, null, "流程编号", true, true, 0, 3, 10, true);
+		map.AddTBString(CCListAttr.FlowName, null, "流程名称", true, true, 0, 200, 10, true);
+		map.AddTBInt(CCListAttr.FK_Node, 0, "节点", true, true);
+		map.AddTBString(CCListAttr.NodeName, null, "节点名称", true, true, 0, 500, 10, true);
 
-          map.AddTBString(CCListAttr.Rec, null, "抄送人员", true, true, 0, 50, 10, true);
-          map.AddTBDateTime(CCListAttr.RDT, null, "记录日期", true, false);
+		map.AddTBInt(CCListAttr.WorkID, 0, "工作ID", true, true);
+		map.AddTBInt(CCListAttr.FID, 0, "FID", true, true);
+
+		map.AddTBStringDoc();
+
+		map.AddTBString(CCListAttr.Rec, null, "抄送人员", true, true, 0, 50, 10, true);
+		map.AddTBDateTime(CCListAttr.RDT, null, "记录日期", true, false);
 
 
-          map.AddTBString(CCListAttr.CCTo, null, "抄送给", true, false, 0, 50, 10, true);
-          map.AddTBString(CCListAttr.CCToName, null, "抄送给(人员名称)", true, false, 0, 50, 10, true);
+		map.AddTBString(CCListAttr.CCTo, null, "抄送给", true, false, 0, 50, 10, true);
+		map.AddTBString(CCListAttr.CCToName, null, "抄送给(人员名称)", true, false, 0, 50, 10, true);
 
-          map.AddTBString(CCListAttr.CCToDept, null, "抄送到部门", true, false, 0, 50, 10, true);
-          map.AddTBString(CCListAttr.CCToDeptName, null, "抄送给部门名称", true, false, 0, 600, 10, true);
+		map.AddTBString(CCListAttr.CCToDept, null, "抄送到部门", true, false, 0, 50, 10, true);
+		map.AddTBString(CCListAttr.CCToDeptName, null, "抄送给部门名称", true, false, 0, 600, 10, true);
 
-          map.AddTBDateTime(CCListAttr.CDT, null, "打开时间", true, false);
+		map.AddTBDateTime(CCListAttr.CDT, null, "打开时间", true, false);
 
-          map.AddTBString(CCListAttr.PFlowNo, null, "父流程编号", true, true, 0, 100, 10, true);
-          map.AddTBInt(CCListAttr.PWorkID, 0, "父流程WorkID", true, true);
-          //added by liuxc,2015.7.6，标识是否在待办列表里显示
-          map.AddBoolean(CCListAttr.InEmpWorks, false, "是否加入待办列表", true, true);
-          
+		map.AddTBString(CCListAttr.PFlowNo, null, "父流程编号", true, true, 0, 100, 10, true);
+		map.AddTBInt(CCListAttr.PWorkID, 0, "父流程WorkID", true, true);
+			//added by liuxc,2015.7.6，标识是否在待办列表里显示
+		map.AddBoolean(CCListAttr.InEmpWorks, false, "是否加入待办列表", true, true);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

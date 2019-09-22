@@ -1,24 +1,19 @@
 package BP.WF.DTS;
 
-import BP.En.FieldTypeS;
-import BP.En.Method;
-import BP.En.UIContralType;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapData;
-import BP.Sys.MapDatas;
-import BP.Sys.PubClass;
-import BP.WF.Node;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  修复数据库 的摘要说明
- 
 */
 public class RepariDB extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public RepariDB()
 	{
@@ -42,7 +37,6 @@ public class RepariDB extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -53,12 +47,11 @@ public class RepariDB extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
-		String rpt =PubClass.DBRpt(BP.DA.DBCheckLevel.High);
+		String rpt = PubClass.DBRpt(BP.DA.DBCheckLevel.High);
 
 		//// 手动升级. 2011-07-08 补充节点字段分组.
 		//string sql = "DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.NodeSheet'";
@@ -70,33 +63,33 @@ public class RepariDB extends Method
 		// 修复因bug丢失的字段.
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAll();
-		for (MapData md : mds.ToJavaList())
+		for (MapData md : mds)
 		{
-			String nodeid = md.getNo().replace("ND","");
+			String nodeid = md.No.Replace("ND","");
 			try
 			{
 				BP.WF.Node nd = new Node(Integer.parseInt(nodeid));
-				nd.RepareMap();
+				nd.RepareMap(nd.getHisFlow());
 				continue;
 			}
-			catch(RuntimeException ex)
+			catch (RuntimeException ex)
 			{
 
 			}
 
 			MapAttr attr = new MapAttr();
-			if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, md.getNo()) == false)
+			if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, md.No) == false)
 			{
-				attr.setFK_MapData (md.getNo());
-				attr.setKeyOfEn ( "OID");
-				attr.setName("OID");
-				attr.setMyDataType ( BP.DA.DataType.AppInt);
-				attr.setUIContralType ( UIContralType.TB);
-				attr.setLGType ( FieldTypeS.Normal);
-				attr.setUIVisible ( false);
-				attr.setUIIsEnable ( false);
-				attr.setDefVal ( "0");
-				attr.setHisEditType ( BP.En.EditType.Readonly);
+				attr.FK_MapData = md.No;
+				attr.KeyOfEn = "OID";
+				attr.Name = "OID";
+				attr.MyDataType = BP.DA.DataType.AppInt;
+				attr.UIContralType = UIContralType.TB;
+				attr.LGType = FieldTypeS.Normal;
+				attr.UIVisible = false;
+				attr.UIIsEnable = false;
+				attr.DefVal = "0";
+				attr.HisEditType = BP.En.EditType.Readonly;
 				attr.Insert();
 			}
 		}

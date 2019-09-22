@@ -2,13 +2,15 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  SysEnumMain
- 
 */
 public class SysEnumMain extends EntityNoName
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 实现基本的方方法
 	public final String getCfgVal()
 	{
 		return this.GetValStrByKey(SysEnumMainAttr.CfgVal);
@@ -25,6 +27,11 @@ public class SysEnumMain extends EntityNoName
 	{
 		this.SetValByKey(SysEnumMainAttr.Lang, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 SysEnumMain
 	*/
@@ -33,48 +40,42 @@ public class SysEnumMain extends EntityNoName
 	}
 	/** 
 	 SysEnumMain
+	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public SysEnumMain(String no) throws Exception
+	public SysEnumMain(String no)
 	{
-		try {
-			try
+		try
+		{
+			this.setNo(no);
+			this.Retrieve();
+		}
+		catch (RuntimeException ex)
+		{
+			SysEnums ses = new SysEnums(no);
+			if (ses.Count == 0)
 			{
-				this.setNo(no);
-				this.Retrieve();
+				throw ex;
 			}
-			catch (RuntimeException ex)
+
+			this.setNo(no);
+			this.setName("未命名");
+			String cfgVal = "";
+			for (SysEnum item : ses)
 			{
-				SysEnums ses = new SysEnums(no);
-				if (ses.size() == 0)
-				{
-					throw ex;
-				}
-				this.setNo(no);
-				this.setName("未命名");
-				String cfgVal = "";
-				for (SysEnum item : ses.ToJavaList())
-				{
-					cfgVal += "@" + item.getIntKey() + "=" + item.getLab();
-				}
-				this.setCfgVal(cfgVal);
-				this.Insert();
+				cfgVal += "@" + item.getIntKey() + "=" + item.getLab();
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.setCfgVal(cfgVal);
+			this.Insert();
 		}
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete()
 	{
 		// 检查这个类型是否被使用？
 		MapAttrs attrs = new MapAttrs();
 		QueryObject qo = new QueryObject(attrs);
-		qo.AddWhere(MapAttrAttr.MyDataType, FieldTypeS.Enum.getValue());
-		qo.addAnd();
-		qo.AddWhere(MapAttrAttr.KeyOfEn, this.getNo());
+		qo.AddWhere(MapAttrAttr.UIBindKey, this.getNo());
 		int i = qo.DoQuery();
 		if (i == 0)
 		{
@@ -84,15 +85,22 @@ public class SysEnumMain extends EntityNoName
 		else
 		{
 			String msg = "错误:下列数据已经引用了枚举您不能删除它。"; // "错误:下列数据已经引用了枚举您不能删除它。";
-			for (MapAttr attr : attrs.ToJavaList())
+			for (MapAttr attr : attrs)
 			{
-				msg += "\t\n" + attr.getField() + "" + attr.getName() + " Table = " + attr.getFK_MapData();
+				msg += "\t\n" + attr.getField() + attr.getName() + " Table = " + attr.getFK_MapData();
 			}
 
 			//抛出异常，阻止删除.
 			throw new RuntimeException(msg);
 		}
 		return super.beforeDelete();
+	}
+	/** 
+	 插入之前处理.
+	*/
+	@Override
+	protected void afterInsert()
+	{
 	}
 	/** 
 	 Map
@@ -116,5 +124,6 @@ public class SysEnumMain extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

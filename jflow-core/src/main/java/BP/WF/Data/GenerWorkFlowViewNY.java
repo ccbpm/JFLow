@@ -1,15 +1,23 @@
 package BP.WF.Data;
 
-import BP.En.EnType;
-import BP.En.EntityNoName;
-import BP.En.Map;
+import BP.Sys.*;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  月份
 */
 public class GenerWorkFlowViewNY extends EntityNoName
 {
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 月份
 	*/
@@ -18,12 +26,12 @@ public class GenerWorkFlowViewNY extends EntityNoName
 	}
 	/** 
 	 月份
+	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public GenerWorkFlowViewNY(String no) throws Exception
+	public GenerWorkFlowViewNY(String no)
 	{
-		this.setNo(no);
+		this.No = no;
 		this.Retrieve();
 	}
 	/** 
@@ -32,17 +40,19 @@ public class GenerWorkFlowViewNY extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("Pub_NY", "月份");
 		map.Java_SetEnType(EnType.View);
 
 		map.AddTBStringPK(GenerWorkFlowViewNYAttr.No, null, "编号", true, false, 2, 30, 20);
 		map.AddTBString(GenerWorkFlowViewNYAttr.Name, null, "名称", true, false, 0, 3900, 20);
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
 }

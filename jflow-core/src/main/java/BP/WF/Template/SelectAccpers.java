@@ -1,31 +1,27 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
-import BP.En.QueryObject;
-import BP.Port.Emp;
-import BP.Port.Emps;
-import BP.WF.Node;
-import BP.WF.Nodes;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  选择接受人
- 
 */
 public class SelectAccpers extends EntitiesMyPK
 {
 	/** 
 	 是否记忆下次选择
-	 
 	*/
 	public final boolean getIsSetNextTime()
 	{
-		if (this.size() == 0)
+		if (this.Count == 0)
 		{
 			return false;
 		}
 
-		for (SelectAccper item : this.ToJavaList())
+		for (SelectAccper item : this)
 		{
 			if (item.getIsRemember() == true)
 			{
@@ -40,9 +36,8 @@ public class SelectAccpers extends EntitiesMyPK
 	 @param fk_node
 	 @param Rec
 	 @return 
-	 * @throws Exception 
 	*/
-	public final int QueryAccepter(int fk_node, String rec, long workid) throws Exception
+	public final int QueryAccepter(int fk_node, String rec, long workid)
 	{
 		//查询出来当前的数据.
 		int i = this.Retrieve(SelectAccperAttr.FK_Node, fk_node, SelectAccperAttr.WorkID, workid);
@@ -62,7 +57,7 @@ public class SelectAccpers extends EntitiesMyPK
 		this.Retrieve(SelectAccperAttr.FK_Node, fk_node, SelectAccperAttr.WorkID, maxWorkID);
 
 		//返回查询结果.
-		return this.size();
+		return this.Count;
 	}
 	/** 
 	 查询上次的设置
@@ -71,12 +66,11 @@ public class SelectAccpers extends EntitiesMyPK
 	 @param rec 当前人员
 	 @param workid 工作ID
 	 @return 
-	 * @throws Exception 
 	*/
-	public final int QueryAccepterPriSetting(int fk_node) throws Exception
+	public final int QueryAccepterPriSetting(int fk_node)
 	{
 		//找出最近的工作ID.
-		int maxWorkID = BP.DA.DBAccess.RunSQLReturnValInt("SELECT Max(WorkID) FROM WF_SelectAccper WHERE " + SelectAccperAttr.IsRemember + "=1 AND Rec='" + BP.Web.WebUser.getNo() + "' AND FK_Node=" + fk_node, 0);
+		int maxWorkID = BP.DA.DBAccess.RunSQLReturnValInt("SELECT Max(WorkID) FROM WF_SelectAccper WHERE " + SelectAccperAttr.IsRemember + "=1 AND Rec='" + BP.Web.WebUser.No + "' AND FK_Node=" + fk_node, 0);
 		if (maxWorkID == 0)
 		{
 			return 0;
@@ -86,17 +80,15 @@ public class SelectAccpers extends EntitiesMyPK
 		this.Retrieve(SelectAccperAttr.FK_Node, fk_node, SelectAccperAttr.WorkID, maxWorkID);
 
 		//返回查询结果.
-		return this.size();
+		return this.Count;
 	}
 	/** 
 	 他的到人员
-	 * @throws Exception 
-	 
 	*/
-	public final Emps getHisEmps() throws Exception
+	public final Emps getHisEmps()
 	{
 		Emps ens = new Emps();
-		for (SelectAccper ns : this.ToJavaList())
+		for (SelectAccper ns : this)
 		{
 			ens.AddEntity(new Emp(ns.getFK_Emp()));
 		}
@@ -104,13 +96,11 @@ public class SelectAccpers extends EntitiesMyPK
 	}
 	/** 
 	 他的工作节点
-	 * @throws Exception 
-	 
 	*/
-	public final Nodes getHisNodes() throws Exception
+	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (SelectAccper ns : this.ToJavaList())
+		for (SelectAccper ns : this)
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -118,7 +108,6 @@ public class SelectAccpers extends EntitiesMyPK
 	}
 	/** 
 	 选择接受人
-	 
 	*/
 	public SelectAccpers()
 	{
@@ -128,20 +117,16 @@ public class SelectAccpers extends EntitiesMyPK
 	 
 	 @param fk_flow
 	 @param workid
-	 * @throws Exception 
 	*/
-	public SelectAccpers(long workid) throws Exception
+	public SelectAccpers(long workid)
 	{
 		BP.En.QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SelectAccperAttr.WorkID, workid);
 		qo.addOrderByDesc(SelectAccperAttr.FK_Node,SelectAccperAttr.Idx);
 		qo.DoQuery();
-
-	  //  this.Retrieve(SelectAccperAttr.WorkID, workid, SelectAccperAttr.Idx);
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -149,31 +134,31 @@ public class SelectAccpers extends EntitiesMyPK
 		return new SelectAccper();
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<SelectAccper> ToJavaList()
+	public final List<SelectAccper> ToJavaList()
 	{
-		return (java.util.List<SelectAccper>)(Object)this;
+		return (List<SelectAccper>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<SelectAccper> Tolist()
+	public final ArrayList<SelectAccper> Tolist()
 	{
-		java.util.ArrayList<SelectAccper> list = new java.util.ArrayList<SelectAccper>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<SelectAccper> list = new ArrayList<SelectAccper>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((SelectAccper)this.get(i));
+			list.add((SelectAccper)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

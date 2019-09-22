@@ -1,45 +1,32 @@
 package BP.Sys;
 
-public enum EditModel {
+/** 
+ 从表显示方式
+*/
+public enum EditModel
+{
+	/** 
+	 表格模式
+	*/
+	TableModel,
+	/** 
+	 傻瓜表单模式
+	*/
+	FoolModel,
+	/** 
+	 自由表单模式
+	*/
+	FreeModel;
 
-	/**
-	 * 表格模式
-	 */
-	TableModel(0),
-	/**
-	 * 傻瓜表单模式
-	 */
-	FoolModel(1),
-	
-	/**
-	 * 自由表单模式
-	 */
-	FreeModel(2);
-	
-	private int intValue;
-	private static java.util.HashMap<Integer, EditModel> mappings;
-	private synchronized static java.util.HashMap<Integer, EditModel> getMappings()
-	{
-		if (mappings == null)
-		{
-			mappings = new java.util.HashMap<Integer, EditModel>();
-		}
-		return mappings;
-	}
-
-	private EditModel(int value)
-	{
-		intValue = value;
-		EditModel.getMappings().put(value, this);
-	}
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{
-		return intValue;
+		return this.ordinal();
 	}
 
 	public static EditModel forValue(int value)
 	{
-		return getMappings().get(value);
+		return values()[value];
 	}
 }

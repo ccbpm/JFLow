@@ -1,20 +1,21 @@
 package BP.WF.Template;
 
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.Sys.SystemConfig;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  节点表单组件s
- 
 */
 public class FrmNodeComponents extends Entities
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 节点表单组件s
-	 
 	*/
 	public FrmNodeComponents()
 	{
@@ -23,11 +24,10 @@ public class FrmNodeComponents extends Entities
 	 节点表单组件s
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmNodeComponents(String fk_mapdata) throws Exception
+	public FrmNodeComponents(String fk_mapdata)
 	{
-		if (SystemConfig.getIsDebug())
+		if (SystemConfig.IsDebug)
 		{
 			this.Retrieve("No", fk_mapdata);
 		}
@@ -38,41 +38,40 @@ public class FrmNodeComponents extends Entities
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new FrmNodeComponent();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmNodeComponent> ToJavaList()
+	public final List<FrmNodeComponent> ToJavaList()
 	{
-		return (java.util.List<FrmNodeComponent>)(Object)this;
+		return (List<FrmNodeComponent>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmNodeComponent> Tolist()
+	public final ArrayList<FrmNodeComponent> Tolist()
 	{
-		java.util.ArrayList<FrmNodeComponent> list = new java.util.ArrayList<FrmNodeComponent>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmNodeComponent> list = new ArrayList<FrmNodeComponent>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FrmNodeComponent)this.get(i));
+			list.add((FrmNodeComponent)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

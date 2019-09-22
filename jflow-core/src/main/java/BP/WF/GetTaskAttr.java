@@ -1,5 +1,14 @@
 package BP.WF;
 
+import BP.En.*;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import BP.WF.Data.*;
+import BP.WF.Template.*;
+import java.util.*;
+
 /** 
   属性
 */

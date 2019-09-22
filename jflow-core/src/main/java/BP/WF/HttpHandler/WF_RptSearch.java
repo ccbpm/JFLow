@@ -1,68 +1,96 @@
 package BP.WF.HttpHandler;
 
-import BP.DA.DBAccess;
-import BP.DA.DBType;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.Difference.Handler.WebContralBase;
-import BP.Sys.SystemConfig;
-import BP.Web.WebUser;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import java.util.*;
 
-public class WF_RptSearch extends WebContralBase{
-	
-	/**
-	 * 构造函数
-	 */
+/** 
+ 页面功能实体
+*/
+public class WF_RptSearch extends DirectoryPageBase
+{
+	/** 
+	 构造函数
+	*/
 	public WF_RptSearch()
 	{
-	
 	}
-	
-	/**
-	 * 流程分布
-	 * @return
-	 * @throws Exception 
-	 */
-	public final String DistributedOfMy_Init() throws Exception
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 流程分布.
+	public final String DistributedOfMy_Init()
 	{
 		DataSet ds = new DataSet();
 
 		//我发起的流程.
-		String sql = "";
-		sql = "select FK_Flow \"FK_Flow\", FlowName \"FlowName\",Count(WorkID) as \"Num\" FROM WF_GenerWorkFlow  WHERE Starter='" + BP.Web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+		Paras ps = new Paras();
+		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter=" + SystemConfig.AppCenterDBVarStr + "Starter GROUP BY FK_Flow, FlowName ";
+		ps.Add("Starter", BP.Web.WebUser.No);
+
+		//string sql = "";
+		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + BP.Web.WebUser.No + "' GROUP BY FK_Flow, FlowName ";
+		System.Data.DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Start";
-		ds.Tables.add(dt);
+		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		{
+			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
+			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
+			dt.Columns["NUM"].ColumnName = "Num";
+		}
+		ds.Tables.Add(dt);
 
 		//待办.
-		sql = "select FK_Flow \"FK_Flow\", FlowName \"FlowName\",Count(WorkID) as \"Num\" FROM wf_empworks  WHERE FK_Emp='" + BP.Web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
-		DataTable dtTodolist = BP.DA.DBAccess.RunSQLReturnTable(sql);
+		ps = new Paras();
+		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp=" + SystemConfig.AppCenterDBVarStr + "FK_Emp GROUP BY FK_Flow, FlowName ";
+		ps.Add("FK_Emp", BP.Web.WebUser.No);
+		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + BP.Web.WebUser.No + "' GROUP BY FK_Flow, FlowName ";
+		System.Data.DataTable dtTodolist = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dtTodolist.TableName = "Todolist";
-		ds.Tables.add(dtTodolist);
+		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
+		{
+			dtTodolist.Columns["FK_FLOW"].ColumnName = "FK_Flow";
+			dtTodolist.Columns["FLOWNAME"].ColumnName = "FlowName";
+			dtTodolist.Columns["NUM"].ColumnName = "Num";
+		}
+
+		ds.Tables.Add(dtTodolist);
 
 		//正在运行的流程.
-		DataTable dtRuning = BP.WF.Dev2Interface.DB_TongJi_Runing();
+		System.Data.DataTable dtRuning = BP.WF.Dev2Interface.DB_TongJi_Runing();
 		dtRuning.TableName = "Runing";
-		ds.Tables.add(dtRuning);
+		ds.Tables.Add(dtRuning);
 
 
 		//归档的流程.
-		DataTable dtOK = BP.WF.Dev2Interface.DB_TongJi_FlowComplete();
+		System.Data.DataTable dtOK = BP.WF.Dev2Interface.DB_TongJi_FlowComplete();
 		dtOK.TableName = "OK";
-	
-		ds.Tables.add(dtOK);
+		ds.Tables.Add(dtOK);
 
 		//返回结果.
-		return BP.Tools.Json.ToJson(ds);
+		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 功能列表
+	/** 
+	 功能列表
+	 
+	 @return 
+	*/
 	public final String Default_Init()
 	{
-		java.util.Hashtable ht = new java.util.Hashtable();
+		Hashtable ht = new Hashtable();
 		ht.put("MyStartFlow", "我发起的流程");
-		ht.put("MyJoinFlow", "我参与的流程");
+		ht.put("MyJoinFlow", "我审批的流程");
 
 
 
@@ -72,100 +100,118 @@ public class WF_RptSearch extends WebContralBase{
 
 		return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	 //打开表单.
-    public String KeySearch_OpenFrm() throws Exception
-    {
-       BP.WF.HttpHandler.WF wf=new WF(this.context);
-        return wf.Runing_OpenFrm();
-    }
-
-    /** 功能列表
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 执行父类的重写方法.
+	/** 
+	 默认执行的方法
 	 
 	 @return 
-     * @throws Exception 
-*/
-	public final String KeySearch_Query() throws Exception
+	*/
+	@Override
+	protected String DoDefaultMethod()
 	{
-		String type = this.GetRequestVal("type");
-		if (DataType.IsNullOrEmpty(type))
+		switch (this.getDoType())
 		{
-			type = "ByTitle";
+			case "DtlFieldUp": //字段上移
+				return "执行成功.";
+			default:
+				break;
 		}
 
-		String keywords = this.GetValFromFrmByKey("TB_KWds");
-		if (DataType.IsNullOrEmpty(keywords)==true)
+		//找不不到标记就抛出异常.
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 执行父类的重写方法.
+
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region xxx 界面 .
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion xxx 界面方法.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region KeySearch.htm
+	/** 
+	 功能列表
+	 
+	 @return 
+	*/
+	public final String KeySearch_Query()
+	{
+		String keywords = this.GetRequestVal("TB_KWds");
+		//对输入的关键字进行验证
+		keywords = Glo.CheckKeyWord(keywords);
+		if (Glo.CheckKeyWordInSql(keywords))
 		{
-			keywords = this.GetRequestVal("TB_Key");
+			return "@err:请输入正确字符！";
 		}
 
-		int myselft = this.GetRequestValInt("CHK_Myself");
-		String sql = "";
+		Paras ps = new Paras();
+		ps.SQL = "SELECT A.FlowName,A.NodeName,A.FK_Flow,A.FK_Node,A.WorkID,A.FID,A.Title,A.StarterName,A.RDT,A.WFSta,A.Emps, A.TodoEmps, A.WFState "
+				+ " FROM WF_GenerWorkFlow A "
+				+ " WHERE (A.Title LIKE '%" + keywords + "%' "
+				+ " or A.Starter LIKE '%" + keywords + "%' "
+				+ " or A.StarterName LIKE '%" + keywords + "%') "
+				+ " AND (A.Emps LIKE '@%" + WebUser.No + "%' "
+				+ " or A.TodoEmps LIKE '%" + WebUser.No + "%') "
+				+ " AND A.WFState!=0 ";
 
-		if (type.equals("ByWorkID"))
-		{
-				if (myselft == 1)
-				{
-					sql = "SELECT FlowName,NodeName,FK_Flow,FK_Node,WorkID,Title,StarterName,RDT,WFSta,Emps,TodoEmps,IsCanDo FROM WF_GenerWorkFlow WHERE  WorkID=" + keywords + " AND Emps LIKE '@%" + WebUser.getNo() + "%'";
-				}
-				else
-				{
-					sql = "SELECT FlowName,NodeName,FK_Flow,FK_Node,WorkID,Title,StarterName,RDT,WFSta,Emps,TodoEmps,IsCanDo FROM WF_GenerWorkFlow WHERE  WorkID=" + keywords;
-				}
-		}
-		else if (type.equals("ByTitle"))
-		{
-				sql = "SELECT A.FlowName,A.NodeName,A.FK_Flow,A.FK_Node,A.WorkID,A.Title,A.StarterName,A.RDT,A.WFSta,A.Emps, A.TodoEmps, A.WFState ";
-				sql += " FROM WF_GenerWorkFlow A ";
-				sql += " WHERE (A.Title LIKE '%" + keywords + "%' ";
-				sql += " or A.Starter LIKE '%" + keywords + "%' ";
-				sql += " or A.StarterName LIKE '%" + keywords + "%') ";
-				sql += " AND (A.Emps LIKE '@%" + WebUser.getNo() + "%' ";
-				sql += " or A.TodoEmps LIKE '%" + WebUser.getNo() + "%') ";
-				
-				sql += " AND A.WFState!=0 ";
-				
-		}
-
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "WF_GenerWorkFlow";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
 		{
-			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
-			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
-			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
-			dt.Columns.get("NODENAME").ColumnName = "NodeName";
-			dt.Columns.get("WORKID").ColumnName = "WorkID";
-			dt.Columns.get("TITLE").ColumnName = "Title";
-			dt.Columns.get("STARTER").ColumnName = "Starter";
-			dt.Columns.get("WFSTA").ColumnName = "WFSta";
-
-			dt.Columns.get("EMPS").ColumnName = "Emps";
-			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps"; //处理人.
-			dt.Columns.get("WFSTATE").ColumnName = "WFState"; //处理人.
-
+			dt.Columns["FLOWNAME"].ColumnName = "FlowName";
+			dt.Columns["FK_FLOW"].ColumnName = "FK_Flow";
+			dt.Columns["FK_NODE"].ColumnName = "FK_Node";
+			dt.Columns["NODENAME"].ColumnName = "NodeName";
+			dt.Columns["WORKID"].ColumnName = "WorkID";
+			dt.Columns["FID"].ColumnName = "FID";
+			dt.Columns["TITLE"].ColumnName = "Title";
+			dt.Columns["STARTERNAME"].ColumnName = "StarterName";
+			dt.Columns["WFSTA"].ColumnName = "WFSta";
+			dt.Columns["EMPS"].ColumnName = "Emps";
+			dt.Columns["TODOEMPS"].ColumnName = "TodoEmps"; //处理人.
+			dt.Columns["WFSTATE"].ColumnName = "WFState"; //处理人.
 		}
+		if (dt != null)
+		{
+			dt.Columns.Add("TDTime");
+			for (DataRow dr : dt.Rows)
+			{
 
-		///#region 加入当前用户信息.
-		DataTable mydt = new DataTable();
-		mydt.Columns.Add("No");
-		mydt.Columns.Add("Name");
-		mydt.Columns.Add("FK_Dept");
-
-		DataRow dr = mydt.NewRow();
-		dr.setValue2017("No", WebUser.getNo());
-		dr.setValue2017("Name",WebUser.getName());
-		dr.setValue2017("FK_Dept",WebUser.getFK_Dept());
-		mydt.Rows.add(dr);
-		mydt.TableName = "WebUser";
-		///#endregion 加入当前用户信息.
-
-
-		DataSet ds = new DataSet();
-		ds.Tables.add(mydt);
-		ds.Tables.add(dt);
-
+				dr.set("TDTime", BP.WF.HttpHandler.CCMobile.GetTraceNewTime(dr.get("FK_Flow").toString(), Integer.parseInt(dr.get("WorkID").toString()), Integer.parseInt(dr.get("FID").toString())));
+			}
+		}
 		return BP.Tools.Json.ToJson(dt);
 	}
+	/** 
+	 判断是否可以执行当前工作？
+	 
+	 @return 
+	*/
+	public final String KeySearch_GenerOpenUrl()
+	{
+		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.No) == true)
+		{
+			return "1";
+		}
+		else
+		{
+			return "0";
+		}
+	}
+	//打开表单.
+	public final String KeySearch_OpenFrm()
+	{
+	   BP.WF.HttpHandler.WF wf = new WF();
+		return wf.Runing_OpenFrm();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 }

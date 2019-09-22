@@ -2,14 +2,14 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  岗位
- 
 */
 public class StationExt extends EntityNoName
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	public final String getFK_StationExtType()
 	{
@@ -19,20 +19,25 @@ public class StationExt extends EntityNoName
 	{
 		this.SetValByKey(StationAttr.FK_StationType, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 实现基本的方方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	/** 
 	 岗位
-	  
 	*/
 	public StationExt()
 	{
@@ -41,22 +46,20 @@ public class StationExt extends EntityNoName
 	 岗位
 	 
 	 @param _No
-	 * @throws Exception 
 	*/
-	public StationExt(String _No) throws Exception
+	public StationExt(String _No)
 	{
 		super(_No);
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Port_Station","岗位");
@@ -73,12 +76,12 @@ public class StationExt extends EntityNoName
 		map.AddSearchAttr(StationAttr.FK_StationType);
 
 			//岗位绑定菜单
-		map.getAttrsOfOneVSM().AddBranches(new StationMenus(), new BP.GPM.Menus(), BP.GPM.StationMenuAttr.FK_Station, BP.GPM.StationMenuAttr.FK_Menu, "绑定菜单", EmpAttr.Name, EmpAttr.No, "0");
+		map.AttrsOfOneVSM.AddBranches(new StationMenus(), new BP.GPM.Menus(), BP.GPM.StationMenuAttr.FK_Station, BP.GPM.StationMenuAttr.FK_Menu, "绑定菜单", EmpAttr.Name, EmpAttr.No, "0");
 
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

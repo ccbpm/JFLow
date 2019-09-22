@@ -1,15 +1,18 @@
 package BP.WF.XML;
 
-import BP.XML.XmlEn;
-import BP.XML.XmlEns;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.XML.*;
+import BP.WF.*;
 
 /** 
  从表事件
 */
 public class EventListDtl extends XmlEn
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 编号
 	*/
@@ -22,7 +25,7 @@ public class EventListDtl extends XmlEn
 	*/
 	public final String getName()
 	{
-		return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+		return this.GetValStringByKey(BP.Web.WebUser.SysLang);
 	}
 	/** 
 	 描述
@@ -31,6 +34,11 @@ public class EventListDtl extends XmlEn
 	{
 		return this.GetValStringByKey("EventDesc");
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 从表事件
 	*/
@@ -39,11 +47,12 @@ public class EventListDtl extends XmlEn
 	}
 	/** 
 	 获取一个实例
-	 
 	*/
 	@Override
 	public XmlEns getGetNewEntities()
 	{
 		return new EventListDtls();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

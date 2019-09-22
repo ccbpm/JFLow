@@ -1,22 +1,17 @@
 package BP.GPM;
 
-import BP.DA.DBUrl;
-import BP.DA.DBUrlType;
-import BP.DA.Depositary;
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.EntityTree;
-import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.Web.*;
+import java.util.*;
 
 /** 
  部门
 */
 public class Dept extends EntityTree
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 全名
 	*/
@@ -39,25 +34,11 @@ public class Dept extends EntityTree
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
-	 
 	private Depts _HisSubDepts = null;
-	/**
-	 * 部门类型
-	 */
-	public final String getFK_DeptType()
-	{
-		return this.GetValStrByKey(DeptAttr.FK_DeptType);
-	}
-	
-	public final void setFK_DeptType(String value)
-	{
-		this.SetValByKey(DeptAttr.FK_DeptType, value);
-	}
 	/** 
 	 它的子节点
-	 * @throws Exception 
 	*/
-	public final Depts getHisSubDepts() throws Exception
+	public final Depts getHisSubDepts()
 	{
 		if (_HisSubDepts == null)
 		{
@@ -65,7 +46,11 @@ public class Dept extends EntityTree
 		}
 		return _HisSubDepts;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 部门
 	*/
@@ -74,16 +59,20 @@ public class Dept extends EntityTree
 	}
 	/** 
 	 部门
+	 
 	 @param no 编号
-	 * @throws Exception 
 	*/
-	public Dept(String no) throws Exception
+	public Dept(String no)
 	{
 		super(no);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重写方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -105,7 +94,7 @@ public class Dept extends EntityTree
 		map.setPhysicsTable("Port_Dept");
 		map.Java_SetEnType(EnType.Admin);
 
-		map.setEnDesc("部门"); // 实体的描述.
+		map.setEnDesc("部门"); //  实体的描述.
 		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体map的存放位置.
 		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
 
@@ -115,90 +104,126 @@ public class Dept extends EntityTree
 		map.AddTBString(DeptAttr.Name, null, "名称", true, false, 0, 100, 30);
 
 			//比如:\\驰骋集团\\南方分公司\\财务部
-		map.AddTBString(DeptAttr.NameOfPath, null, "部门路径", false, false, 0, 300, 30);
-		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", false, false, 0, 100, 30);
+		map.AddTBString(DeptAttr.NameOfPath, null, "部门路径", true, true, 0, 300, 30, true);
 
-		
-		map.AddTBString(DeptAttr.OrgNo, null, "隶属公司", false, false, 0, 100, 30);
+		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, false, 0, 100, 30);
 
 			//顺序号.
-		map.AddTBInt(DeptAttr.Idx, 0, "Idx", false, false);
-		
-		 RefMethod rm = new RefMethod();
-         rm.Title = "重置该部门一下的部门路径";
-         rm.ClassMethodName = this.toString() + ".DoResetPathName";
-         rm.refMethodType = RefMethodType.Func;
+		map.AddTBInt(DeptAttr.Idx, 0, "顺序号", true, false);
 
-         String msg = "当该部门名称变化后,该部门与该部门的子部门名称路径(Port_Dept.NameOfPath)将发生变化.";
-         msg += "\t\n 该部门与该部门的子部门的人员路径也要发生变化Port_Emp列DeptDesc.StaDesc.";
-         msg += "\t\n 您确定要执行吗?";
-         rm.Warning = msg;
+		RefMethod rm = new RefMethod();
+		rm.Title = "重置该部门一下的部门路径";
+		rm.ClassMethodName = this.toString() + ".DoResetPathName";
+		rm.RefMethodType = RefMethodType.Func;
 
-         map.AddRefMethod(rm);
+		String msg = "当该部门名称变化后,该部门与该部门的子部门名称路径(Port_Dept.NameOfPath)将发生变化.";
+		msg += "\t\n 该部门与该部门的子部门的人员路径也要发生变化Port_Emp列DeptDesc.StaDesc.";
+		msg += "\t\n 您确定要执行吗?";
+		rm.Warning = msg;
 
-         rm = new RefMethod();
-         rm.Title = "增加同级部门";
-         rm.ClassMethodName = this.toString() + ".DoSameLevelDept";
-         rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
-         rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
-         map.AddRefMethod(rm);
+		map.AddRefMethod(rm);
 
-         rm = new RefMethod();
-         rm.Title = "增加下级部门";
-         rm.ClassMethodName = this.toString() + ".DoSubDept";
-         rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
-         rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
-         map.AddRefMethod(rm);
+		rm = new RefMethod();
+		rm.Title = "增加同级部门";
+		rm.ClassMethodName = this.toString() + ".DoSameLevelDept";
+		rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+		map.AddRefMethod(rm);
 
-
-         //节点绑定人员. 使用树杆与叶子的模式绑定.
-         map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new BP.Port.Emps(),
-            DeptEmpAttr.FK_Dept,
-            DeptEmpAttr.FK_Emp, "对应人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		rm = new RefMethod();
+		rm.Title = "增加下级部门";
+		rm.ClassMethodName = this.toString() + ".DoSubDept";
+		rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+		rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+		map.AddRefMethod(rm);
 
 
-         //平铺模式.
-         map.getAttrsOfOneVSM().AddGroupPanelModel(new DeptStations(), new Stations(),
-             DeptStationAttr.FK_Dept,
-             DeptStationAttr.FK_Station, "对应岗位(平铺)", StationAttr.FK_StationType,StationAttr.Name,StationAttr.No);
+			//节点绑定人员. 使用树杆与叶子的模式绑定.
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new BP.Port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
 
-         map.getAttrsOfOneVSM().AddGroupListModel(new DeptStations(), new Stations(),
-           DeptStationAttr.FK_Dept,
-           DeptStationAttr.FK_Station, "对应岗位(树)", StationAttr.FK_StationType,StationAttr.Name,StationAttr.No);
+
+			//平铺模式.
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, "对应岗位(平铺)", StationAttr.FK_StationType);
+
+		map.getAttrsOfOneVSM().AddGroupListModel(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, "对应岗位(树)", StationAttr.FK_StationType);
+
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	
-	
-	  /// <summary>
-    /// 创建下级节点.
-    /// </summary>
-    /// <returns></returns>
-    public final String DoMyCreateSubNode() throws Exception
-    {
-        Entity en = this.DoCreateSubNode();
-        return en.ToJson();
-    }
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-    /// <summary>
-    /// 创建同级节点.
-    /// </summary>
-    /// <returns></returns>
-    public final String DoMyCreateSameLevelNode() throws Exception
-    {
-        Entity en = this.DoCreateSameLevelNode();
-        return en.ToJson();
-    }
+	/** 
+	 创建下级节点.
+	 
+	 @return 
+	*/
+	public final String DoMyCreateSubNode()
+	{
+		Entity en = this.DoCreateSubNode();
+		return en.ToJson();
+	}
 
-	
+	/** 
+	 创建同级节点.
+	 
+	 @return 
+	*/
+	public final String DoMyCreateSameLevelNode()
+	{
+		Entity en = this.DoCreateSameLevelNode();
+		return en.ToJson();
+	}
+
+	public final String DoSameLevelDept(String no, String name)
+	{
+		Dept en = new Dept();
+		en.setNo(no);
+		if (en.RetrieveFromDBSources() == 1)
+		{
+			return "err@编号已经存在";
+		}
+
+		en.setName(name);
+		en.setParentNo(this.getParentNo());
+		en.Insert();
+
+		return "增加成功..";
+	}
+	public final String DoSubDept(String no, String name)
+	{
+		Dept en = new Dept();
+		en.setNo(no);
+		if (en.RetrieveFromDBSources() == 1)
+		{
+			return "err@编号已经存在";
+		}
+
+		en.setName(name);
+		en.setParentNo(this.getNo());
+		en.Insert();
+
+		return "增加成功..";
+	}
+	/** 
+	 重置部门
+	 
+	 @return 
+	*/
+	public final String DoResetPathName()
+	{
+		this.GenerNameOfPath();
+		return "重置成功.";
+	}
+
 	/** 
 	 生成部门全名称.
-	 * @throws Exception 
 	*/
-	public final void GenerNameOfPath() throws Exception
+	public final void GenerNameOfPath()
 	{
 		String name = this.getName();
+
 		//根目录不再处理
 		if (this.getIsRoot() == true)
 		{
@@ -229,23 +254,41 @@ public class Dept extends EntityTree
 		name = dept.getName() + "\\" + name;
 		this.setNameOfPath(name);
 		this.DirectUpdate();
+
 		this.GenerChildNameOfPath(this.getNo());
+
+		//更新人员路径信息.
+		BP.GPM.Emps emps = new Emps();
+		emps.Retrieve(EmpAttr.FK_Dept, this.getNo());
+		for (BP.GPM.Emp emp : emps)
+		{
+			emp.Update();
+		}
 	}
 
 	/** 
 	 处理子部门全名称
+	 
 	 @param FK_Dept
-	 * @throws Exception 
 	*/
-	public final void GenerChildNameOfPath(String FK_Dept) throws Exception
+	public final void GenerChildNameOfPath(String deptNo)
 	{
-		Depts depts = new Depts(FK_Dept);
-		if (depts != null && depts.size() > 0)
+		Depts depts = new Depts(deptNo);
+		if (depts != null && depts.Count > 0)
 		{
-			for (Dept dept : depts.ToJavaList())
+			for (Dept dept : depts)
 			{
 				dept.GenerNameOfPath();
 				GenerChildNameOfPath(dept.getNo());
+
+
+				//更新人员路径信息.
+				BP.GPM.Emps emps = new Emps();
+				emps.Retrieve(EmpAttr.FK_Dept, this.getNo());
+				for (BP.GPM.Emp emp : emps)
+				{
+					emp.Update();
+				}
 			}
 		}
 	}

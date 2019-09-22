@@ -1,19 +1,18 @@
 package BP.Sys.FrmUI;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
-import BP.Sys.FrmAttachment;
-import BP.Sys.FrmAttachmentAttr;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
-附件s
+ 附件s
 */
 public class FrmAttachmentExts extends EntitiesMyPK
 {
-	//#region 构造
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 附件s
 	*/
@@ -22,10 +21,10 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	}
 	/** 
 	 附件s
+	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmAttachmentExts(String fk_mapdata) throws Exception
+	public FrmAttachmentExts(String fk_mapdata)
 	{
 		this.Retrieve(FrmAttachmentAttr.FK_MapData, fk_mapdata, FrmAttachmentAttr.FK_Node, 0);
 	}
@@ -37,9 +36,11 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	{
 		return new FrmAttachmentExt();
 	}
-	///#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	//#region 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -47,7 +48,7 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	*/
 	public final List<FrmAttachment> ToJavaList()
 	{
-		return (List<FrmAttachment>)(Object)this;
+		return (List<FrmAttachment>)this;
 	}
 	/** 
 	 转化成list
@@ -57,11 +58,12 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	public final ArrayList<FrmAttachment> Tolist()
 	{
 		ArrayList<FrmAttachment> list = new ArrayList<FrmAttachment>();
-		for (int i = 0; i < this.size(); i++)
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FrmAttachment)this.get(i));
+			list.add((FrmAttachment)this[i]);
 		}
 		return list;
 	}
-	///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

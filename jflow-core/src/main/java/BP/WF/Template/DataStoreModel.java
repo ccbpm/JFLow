@@ -1,21 +1,22 @@
 package BP.WF.Template;
 
+import BP.WF.*;
+
 /** 
  流程数据存储模式
- 
 */
 public enum DataStoreModel
 {
 	/** 
-	 存储在CCFlow数据表里
-	 
+	 轨迹模式
 	*/
 	ByCCFlow,
 	/** 
-	 指定的业务主表
-	 
+	 数据合并模式
 	*/
 	SpecTable;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

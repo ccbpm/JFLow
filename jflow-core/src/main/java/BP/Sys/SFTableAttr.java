@@ -1,6 +1,9 @@
 package BP.Sys;
 
+import BP.DA.*;
 import BP.En.*;
+import BP.Web.*;
+import java.util.*;
 
 /** 
  用户自定义表
@@ -40,6 +43,8 @@ public class SFTableAttr extends EntityNoNameAttr
 	*/
 	public static final String CodeStruct = "CodeStruct";
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 链接到其他系统获取数据的属性。
 	/** 
 	 数据源
 	*/
@@ -64,7 +69,10 @@ public class SFTableAttr extends EntityNoNameAttr
 	 查询语句
 	*/
 	public static final String SelectStatement = "SelectStatement";
-	 
+	/** 
+	 缓存分钟数
+	*/
+	public static final String CashMinute = "CashMinute";
 	/** 
 	 最近缓存的时间
 	*/
@@ -73,5 +81,6 @@ public class SFTableAttr extends EntityNoNameAttr
 	 加入日期
 	*/
 	public static final String RDT = "RDT";
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 链接到其他系统获取数据的属性。
 }

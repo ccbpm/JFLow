@@ -1,47 +1,67 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
-public class FoolTruckNodeFrms  extends EntitiesMyPK{
-	 ///#region 构造方法..
-     /// <summary>
-     /// 累加表单方案
-     /// </summary>
-     public FoolTruckNodeFrms() { }
-     ///#endregion 构造方法..
+/** 
+ 累加表单方案s
+*/
+public class FoolTruckNodeFrms extends EntitiesMyPK
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法..
+	/** 
+	 累加表单方案
+	*/
+	public FoolTruckNodeFrms()
+	{
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 构造方法..
 
-     ///#region 公共方法.
-     /// <summary>
-     /// 得到它的 Entity 
-     /// </summary>
-     public  Entity getGetNewEntity(){
-             return new FoolTruckNodeFrm();
-     }
-     ///#endregion 公共方法.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 公共方法.
+	/** 
+	 得到它的 Entity 
+	*/
+	@Override
+	public Entity getGetNewEntity()
+	{
+		return new FoolTruckNodeFrm();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 公共方法.
 
-     ///#region 为了适应自动翻译成java的需要,把实体转换成List.
-     /// <summary>
-     /// 转化成 java list,C#不能调用.
-     /// </summary>
-     /// <returns>List</returns>
-     public java.util.List<FoolTruckNodeFrm> ToJavaList()
-     {
-         return (java.util.List<FoolTruckNodeFrm>)(Object)this;
-     }
-     /// <summary>
-     /// 转化成list
-     /// </summary>
-     /// <returns>List</returns>
-     public java.util.List<FoolTruckNodeFrm> Tolist()
-     {
-    	 java.util.List<FoolTruckNodeFrm> list = new java.util.ArrayList<FoolTruckNodeFrm>();
-         for (int i = 0; i < this.size(); i++)
-         {
-             list.add((FoolTruckNodeFrm)this.get(i));
-         }
-         return list;
-     }
-     ///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<FoolTruckNodeFrm> ToJavaList()
+	{
+		return (List<FoolTruckNodeFrm>)this;
+	}
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<FoolTruckNodeFrm> Tolist()
+	{
+		ArrayList<FoolTruckNodeFrm> list = new ArrayList<FoolTruckNodeFrm>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((FoolTruckNodeFrm)this[i]);
+		}
+		return list;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

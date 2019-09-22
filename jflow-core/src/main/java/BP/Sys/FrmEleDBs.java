@@ -1,19 +1,18 @@
 package BP.Sys;
 
-import java.util.ArrayList;
-
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  表单元素扩展DBs
- 
 */
 public class FrmEleDBs extends EntitiesMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 表单元素扩展DBs
-	 
 	*/
 	public FrmEleDBs()
 	{
@@ -23,9 +22,8 @@ public class FrmEleDBs extends EntitiesMyPK
 	 
 	 @param fk_mapdata
 	 @param pkval
-	 * @throws Exception 
 	*/
-	public FrmEleDBs(String fk_mapdata, String pkval) throws Exception
+	public FrmEleDBs(String fk_mapdata, String pkval)
 	{
 		this.Retrieve(FrmEleDBAttr.FK_MapData, fk_mapdata, FrmEleDBAttr.EleID, pkval);
 	}
@@ -33,9 +31,8 @@ public class FrmEleDBs extends EntitiesMyPK
 	 表单元素扩展DBs
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmEleDBs(String fk_mapdata) throws Exception
+	public FrmEleDBs(String fk_mapdata)
 	{
 		if (SystemConfig.getIsDebug())
 		{
@@ -48,38 +45,40 @@ public class FrmEleDBs extends EntitiesMyPK
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new FrmEleDB();
 	}
-	public static ArrayList<FrmEleDB> convertFrmEleDBs(Object obj)
-	{
-		return (ArrayList<FrmEleDB>) obj;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmEleDB> ToJavaList()
+	public final List<FrmEleDB> ToJavaList()
 	{
-		return (java.util.List<FrmEleDB>)(Object)this;
+		return (List<FrmEleDB>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmEleDB> Tolist()
+	public final ArrayList<FrmEleDB> Tolist()
 	{
-		java.util.ArrayList<FrmEleDB> list = new java.util.ArrayList<FrmEleDB>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmEleDB> list = new ArrayList<FrmEleDB>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FrmEleDB)this.get(i));
+			list.add((FrmEleDB)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

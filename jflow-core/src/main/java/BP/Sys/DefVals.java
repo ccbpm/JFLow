@@ -1,25 +1,25 @@
 package BP.Sys;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
 
-/**
- * 默认值s
- */
-public class DefVals extends EntitiesMyPK {
+/** 
+ 默认值s
+*/
+public class DefVals extends EntitiesMyPK
+{
 	/** 
 	 默认值
-	 
 	*/
-	public DefVals() {
+	public DefVals()
+	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getGetNewEntity()
+	{
 		return new DefVal();
 	}
-
 }

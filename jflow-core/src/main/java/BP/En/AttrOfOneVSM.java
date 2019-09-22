@@ -13,10 +13,7 @@ public class AttrOfOneVSM
 	
 	public String DefaultGroupAttrKey = "";	
 	
-	/** 
-	 树
-	*/
-	public EntitiesSimpleTree EnsTree = null;
+ 
 	/** 
 	 关联的树字段
 	*/

@@ -1,33 +1,28 @@
 package BP.WF.DTS;
 
-import BP.DA.DBAccess;
-import BP.En.Method;
-import BP.Sys.MapData;
-import BP.Sys.MapDatas;
-import BP.Sys.MapDtl;
-import BP.Sys.MapDtls;
-import BP.WF.Flow;
-import BP.WF.Flows;
-import BP.WF.Node;
-import BP.WF.Nodes;
-import BP.WF.Work;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  Method 的摘要说明
- 
 */
 public class ClearDB extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public ClearDB()
 	{
 		this.Title = "清除流程运行的数据(此功能要在测试环境里运行)";
 		this.Help = "清除所有流程运行的数据，包括待办工作。";
 		this.Warning = "此功能要在测试环境里执行，确认是测试环境吗？";
-		this.Icon = "<img src='../Img/Btn/Delete.gif'  border=0 />";
+		this.Icon = "<img src='/WF/Img/Btn/Delete.gif'  border=0 />";
+
+		this.GroupName = "流程维护";
 	}
 	/** 
 	 设置执行变量
@@ -44,7 +39,6 @@ public class ClearDB extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -55,20 +49,12 @@ public class ClearDB extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
-		try {
-			if ( ! BP.Web.WebUser.getNo().equals("admin"))
-			{
-				return "非法的用户执行。";
-			}
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			
+		if (!BP.Web.WebUser.No.equals("admin"))
+		{
 			return "非法的用户执行。";
 		}
 
@@ -78,7 +64,6 @@ public class ClearDB extends Method
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist");
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow");
 		DBAccess.RunSQL("DELETE FROM WF_ReturnWork");
-		 
 		DBAccess.RunSQL("DELETE FROM WF_SelectAccper");
 		DBAccess.RunSQL("DELETE FROM WF_TransferCustom");
 		DBAccess.RunSQL("DELETE FROM WF_RememberMe");
@@ -88,11 +73,11 @@ public class ClearDB extends Method
 
 		Flows fls = new Flows();
 		fls.RetrieveAll();
-		for (Flow item : fls.ToJavaList())
+		for (Flow item : fls)
 		{
 			try
 			{
-				DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(item.getNo()) + "Track");
+				DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(item.No) + "Track");
 			}
 			catch (java.lang.Exception e)
 			{
@@ -100,12 +85,12 @@ public class ClearDB extends Method
 		}
 
 		Nodes nds = new Nodes();
-		for (Node nd : nds.ToJavaList())
+		for (Node nd : nds)
 		{
 			try
 			{
 				Work wk = nd.getHisWork();
-				DBAccess.RunSQL("DELETE FROM " + wk.getEnMap().getPhysicsTable());
+				DBAccess.RunSQL("DELETE FROM " + wk.EnMap.PhysicsTable);
 			}
 			catch (java.lang.Exception e2)
 			{
@@ -114,11 +99,11 @@ public class ClearDB extends Method
 
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAll();
-		for (MapData nd :  MapDatas.convertMapDatas(mds))
+		for (MapData nd : mds)
 		{
 			try
 			{
-				DBAccess.RunSQL("DELETE FROM " + nd.getPTable());
+				DBAccess.RunSQL("DELETE FROM " + nd.PTable);
 			}
 			catch (java.lang.Exception e3)
 			{
@@ -127,11 +112,11 @@ public class ClearDB extends Method
 
 		MapDtls dtls = new MapDtls();
 		dtls.RetrieveAll();
-		for (MapDtl dtl : dtls.ToJavaList())
+		for (MapDtl dtl : dtls)
 		{
 			try
 			{
-				DBAccess.RunSQL("DELETE FROM " + dtl.getPTable());
+				DBAccess.RunSQL("DELETE FROM " + dtl.PTable);
 			}
 			catch (java.lang.Exception e4)
 			{

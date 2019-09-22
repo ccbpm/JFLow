@@ -1,8 +1,10 @@
 package BP.WF.Template;
 
-import BP.En.EntityMM;
-import BP.En.Map;
-import BP.WF.Port.Emps;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  节点到人员
@@ -12,8 +14,8 @@ import BP.WF.Port.Emps;
 */
 public class CCEmp extends EntityMM
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	节点
 	*/
@@ -40,7 +42,11 @@ public class CCEmp extends EntityMM
 	{
 		return this.GetValRefTextByKey(CCEmpAttr.FK_Emp);
 	}
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 节点到人员
 	*/
@@ -53,17 +59,20 @@ public class CCEmp extends EntityMM
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_CCEmp", "抄送人员");
+		map.IndexField = CCEmpAttr.FK_Node;
 
 		map.AddTBIntPK(CCEmpAttr.FK_Node, 0, "节点", true, true);
 		map.AddDDLEntitiesPK(CCEmpAttr.FK_Emp, null, "人员", new Emps(), true);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

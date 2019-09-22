@@ -1,15 +1,22 @@
 package BP.Sys;
 
-import BP.En.EntityTreeAttr;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Sys.*;
+import java.util.*;
 
+/** 
+ 属性
+*/
 public class FrmTreeAttr extends EntityTreeAttr
-	{
-	  /// <summary>
-    /// 数据源
-    /// </summary>
-    public final static String DBSrc = "DBSrc";
-    /// <summary>
-    /// 组织编号
-    /// </summary>
-    public final static String OrgNo = "OrgNo";
-	}
+{
+	/** 
+	 数据源
+	*/
+	public static final String DBSrc = "DBSrc";
+	/** 
+	 组织编号
+	*/
+	public static final String OrgNo = "OrgNo";
+}

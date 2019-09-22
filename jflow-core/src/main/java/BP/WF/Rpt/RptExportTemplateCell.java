@@ -1,47 +1,53 @@
 package BP.WF.Rpt;
 
-import BP.Tools.StringHelper;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
 
 /** 
  报表导出模板字段与单元格绑定信息对象
- 
 */
 public class RptExportTemplateCell
 {
+//C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
+//ORIGINAL LINE: [XmlIgnore] private string _cellName;
 	private String _cellName;
 
 	/** 
 	 单元格行号
 	*/
-	private int privateRowIdx;
+	private int RowIdx;
 	public final int getRowIdx()
 	{
-		return privateRowIdx;
+		return RowIdx;
 	}
 	public final void setRowIdx(int value)
 	{
-		privateRowIdx = value;
+		RowIdx = value;
 	}
 
 	/** 
 	 单元格列号
 	*/
-	private int privateColumnIdx;
+	private int ColumnIdx;
 	public final int getColumnIdx()
 	{
-		return privateColumnIdx;
+		return ColumnIdx;
 	}
 	public final void setColumnIdx(int value)
 	{
-		privateColumnIdx = value;
+		ColumnIdx = value;
 	}
 
 	/** 
 	 获取单元格名称
 	*/
+//C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
+//ORIGINAL LINE: [XmlIgnore] public string CellName
 	public final String getCellName()
 	{
-		if (StringHelper.isNullOrWhiteSpace(_cellName))
+		if (tangible.StringHelper.isNullOrWhiteSpace(_cellName))
 		{
 			_cellName = GetCellName(getColumnIdx(), getRowIdx());
 		}
@@ -52,77 +58,78 @@ public class RptExportTemplateCell
 	/** 
 	  单元格所属sheet表名
 	*/
-	private String privateSheetName;
+	private String SheetName;
 	public final String getSheetName()
 	{
-		return privateSheetName;
+		return SheetName;
 	}
 	public final void setSheetName(String value)
 	{
-		privateSheetName = value;
+		SheetName = value;
 	}
 
 	/** 
 	 字段所属fk_mapdata
 	*/
-	private String privateFK_MapData;
+	private String FK_MapData;
 	public final String getFK_MapData()
 	{
-		return privateFK_MapData;
+		return FK_MapData;
 	}
 	public final void setFK_MapData(String value)
 	{
-		privateFK_MapData = value;
+		FK_MapData = value;
 	}
 
 	/** 
 	 字段英文名
 	*/
-	private String privateKeyOfEn;
+	private String KeyOfEn;
 	public final String getKeyOfEn()
 	{
-		return privateKeyOfEn;
+		return KeyOfEn;
 	}
 	public final void setKeyOfEn(String value)
 	{
-		privateKeyOfEn = value;
+		KeyOfEn = value;
 	}
 
 	/** 
 	 明细表字段所属fk_mapdata
 	*/
-	private String privateFK_DtlMapData;
+	private String FK_DtlMapData;
 	public final String getFK_DtlMapData()
 	{
-		return privateFK_DtlMapData;
+		return FK_DtlMapData;
 	}
 	public final void setFK_DtlMapData(String value)
 	{
-		privateFK_DtlMapData = value;
+		FK_DtlMapData = value;
 	}
 
 	/** 
 	 明细表字段英文名
 	*/
-	private String privateDtlKeyOfEn;
+	private String DtlKeyOfEn;
 	public final String getDtlKeyOfEn()
 	{
-		return privateDtlKeyOfEn;
+		return DtlKeyOfEn;
 	}
 	public final void setDtlKeyOfEn(String value)
 	{
-		privateDtlKeyOfEn = value;
+		DtlKeyOfEn = value;
 	}
 
 	/** 
 	 获取单元格的显示名称，格式如A1,B2
+	 
 	 @param columnIdx 单元格列号
 	 @param rowIdx 单元格行号
 	 @return 
 	*/
 	public static String GetCellName(int columnIdx, int rowIdx)
 	{
-		int[] maxs = new int[] { 26, 26 * 26 + 26, 26 * 26 * 26 + (26 * 26 + 26) + 26 };
+		int[] maxs = new int[] {26, 26 * 26 + 26, 26 * 26 * 26 + (26 * 26 + 26) + 26};
 		int col = columnIdx + 1;
 		int row = rowIdx + 1;
 
@@ -131,22 +138,24 @@ public class RptExportTemplateCell
 			throw new RuntimeException("列序号不正确，超出最大值");
 		}
 
-		//int alphaCount = maxs.Where(m => m < col).Count() + 1;
 		int alphaCount = 1;
+
 		for (int m : maxs)
-        {
-            if (m < col)
-                alphaCount++;
-        }
+		{
+			if (m < col)
+			{
+				alphaCount++;
+			}
+		}
 
 		switch (alphaCount)
 		{
 			case 1:
-				return (char)(col + 64) + "" + row;
+				return (char)(col + 64) + row;
 			case 2:
-				return (char)((col / 26) + 64) + "" + (char)((col % 26) + 64) + row;
+				return (char)((col / 26) + 64) + (char)((col % 26) + 64) + row;
 			case 3:
-				return (char)((col / 26 / 26) + 64) + "" + (char)(((col - col / 26 / 26 * 26 * 26) / 26) + 64) + "" + (char)((col % 26) + 64) + row;
+				return (char)((col / 26 / 26) + 64) + (char)(((col - col / 26 / 26 * 26 * 26) / 26) + 64) + (char)((col % 26) + 64) + row;
 		}
 
 		return "Unkown";

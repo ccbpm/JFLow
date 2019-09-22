@@ -1,15 +1,21 @@
 package BP.WF.Port;
 
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
+import java.time.*;
 
 /** 
  操作员s 
 */
 public class WFEmps extends EntitiesNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 操作员s
 	*/
@@ -26,30 +32,39 @@ public class WFEmps extends EntitiesNoName
 	}
 
 	@Override
-	public int RetrieveAll() throws Exception
+	public int RetrieveAll()
 	{
-		return super.RetrieveAll("FK_Dept","Idx");
+		return super.RetrieveAll("FK_Dept", "Idx");
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<WFEmp> ToJavaList()
+	public final List<WFEmp> ToJavaList()
 	{
-		return (java.util.List<WFEmp>)(Object)this;
+		return (List<WFEmp>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<WFEmp> Tolist()
+	public final ArrayList<WFEmp> Tolist()
 	{
-		java.util.ArrayList<WFEmp> list = new java.util.ArrayList<WFEmp>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<WFEmp> list = new ArrayList<WFEmp>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((WFEmp)this.get(i));
+			list.add((WFEmp)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

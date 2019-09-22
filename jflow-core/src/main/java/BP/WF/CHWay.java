@@ -2,25 +2,23 @@ package BP.WF;
 
 /** 
  考核规则
- 
 */
 public enum CHWay
 {
 	/** 
 	 不考核
-	 
 	*/
 	None,
 	/** 
 	 按照时效考核
-	 
 	*/
 	ByTime,
 	/** 
 	 按照工作量考核
-	 
 	*/
 	ByWorkNum;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

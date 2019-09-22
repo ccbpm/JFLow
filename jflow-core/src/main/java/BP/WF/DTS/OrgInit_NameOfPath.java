@@ -1,13 +1,16 @@
 package BP.WF.DTS;
 
-import BP.En.Method;
-import BP.GPM.Dept;
-import BP.GPM.Depts;
-import BP.Sys.OSModel;
-import BP.WF.Glo;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.GPM.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.Data.*;
+import BP.WF.Template.*;
+import BP.WF.*;
 
 /** 
- 组织结构处理部门全路径
+ Method 的摘要说明
 */
 public class OrgInit_NameOfPath extends Method
 {
@@ -18,6 +21,8 @@ public class OrgInit_NameOfPath extends Method
 	{
 		this.Title = "组织结构-部门全路径NameOfPath";
 		this.Help = "循环所有部门，重新生成NameOfPath";
+		this.GroupName = "组织解构";
+
 	}
 	/** 
 	 设置执行变量
@@ -34,28 +39,25 @@ public class OrgInit_NameOfPath extends Method
 	@Override
 	public boolean getIsCanDo()
 	{
-		if (Glo.getOSModel() == OSModel.OneMore)
-		{
-			return true;
-		}
-		return false;
+		return true;
 	}
 	/** 
 	 执行
+	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
 		try
 		{
 			Depts depts = new Depts();
 			depts.RetrieveAll();
-			for (Dept dept : depts.ToJavaList())
-			{ 
+			for (Dept dept : depts)
+			{
 				dept.GenerNameOfPath();
 			}
+
 			return "执行成功...";
 		}
 		catch (RuntimeException ex)

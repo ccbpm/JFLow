@@ -1,21 +1,21 @@
 package BP.GPM;
 
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  部门岗位对应 的摘要说明。
 */
 public class DeptStation extends Entity
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -48,7 +48,17 @@ public class DeptStation extends Entity
 	{
 		SetValByKey(DeptStationAttr.FK_Station, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 扩展属性
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 工作部门岗位对应
 	*/
@@ -57,11 +67,11 @@ public class DeptStation extends Entity
 	}
 	/** 
 	 工作人员岗位对应
+	 
 	 @param deptid 部门
 	 @param stationid 岗位编号 	
-	 * @throws Exception 
 	*/
-	public DeptStation(String deptid, String stationid) throws Exception
+	public DeptStation(String deptid, String stationid)
 	{
 		this.setFK_Dept(deptid);
 		this.setFK_Station(stationid);
@@ -92,4 +102,6 @@ public class DeptStation extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

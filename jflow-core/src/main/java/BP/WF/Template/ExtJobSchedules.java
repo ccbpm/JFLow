@@ -1,17 +1,21 @@
 package BP.WF.Template;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.FrmUI.*;
+import BP.WF.*;
 import java.util.*;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
-
 /** 
-超连接s
+ 流程进度图s
 */
 public class ExtJobSchedules extends EntitiesMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
-	 超连接s
+	 流程进度图s
 	*/
 	public ExtJobSchedules()
 	{
@@ -24,6 +28,11 @@ public class ExtJobSchedules extends EntitiesMyPK
 	{
 		return new ExtJobSchedule();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -31,7 +40,7 @@ public class ExtJobSchedules extends EntitiesMyPK
 	*/
 	public final List<ExtJobSchedule> ToJavaList()
 	{
-		return (List<ExtJobSchedule>)(Object)this;
+		return (List<ExtJobSchedule>)this;
 	}
 	/** 
 	 转化成list
@@ -41,10 +50,12 @@ public class ExtJobSchedules extends EntitiesMyPK
 	public final ArrayList<ExtJobSchedule> Tolist()
 	{
 		ArrayList<ExtJobSchedule> list = new ArrayList<ExtJobSchedule>();
-		for (int i = 0; i < this.size(); i++)
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((ExtJobSchedule)this.get(i));
+			list.add((ExtJobSchedule)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

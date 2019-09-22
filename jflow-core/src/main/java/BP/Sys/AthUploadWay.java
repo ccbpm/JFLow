@@ -2,23 +2,23 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  附件上传方式
- 
 */
 public enum AthUploadWay
 {
 	/** 
 	 继承模式
-	 
 	*/
 	Inherit,
 	/** 
 	 协作模式
-	 
 	*/
 	Interwork;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

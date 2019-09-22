@@ -1,40 +1,28 @@
 package BP.En;
 
-import java.util.ArrayList;
+import BP.DA.*;
+import java.util.*;
+import java.math.*;
 
-/**
- * row 集合
- */
-public class Rows extends ArrayList<Row>
+/** 
+ row 集合
+*/
+public class Rows extends ArrayList<Object>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	public Rows()
 	{
 	}
-	
-	public final Row getItem(int index)
+	public final Row get(int index)
 	{
-		return (Row) this.get(index);
-		/*
-		 * warning return (Row)this.get(index);
-		 */
+		return (Row)this.InnerList[index];
 	}
-	
-	/**
-	 * 增加一个Row .
-	 * 
-	 * @param r
-	 *            row
-	 */
+	/** 
+	 增加一个Row .
+	 
+	 @param r row
+	*/
 	public final void Add(Row r)
 	{
-		this.add(r);
-		/*
-		 * warning this.add(r);
-		 */
+		this.InnerList.add(r);
 	}
 }

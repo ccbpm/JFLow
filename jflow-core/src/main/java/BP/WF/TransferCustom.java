@@ -1,18 +1,19 @@
 package BP.WF;
 
-import BP.En.EnType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.QueryObject;
-import BP.WF.Template.NodeAttr;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.Template.*;
+import java.util.*;
 
 /** 
  自定义运行路径
 */
 public class TransferCustom extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 节点ID
 	*/
@@ -24,14 +25,6 @@ public class TransferCustom extends EntityMyPK
 	{
 		this.SetValByKey(TransferCustomAttr.FK_Node, value);
 	}
-	public final String getNodeName()
-	{
-		return this.GetValStringByKey(TransferCustomAttr.NodeName);
-	}
-	public final void setNodeName(String value)
-	{
-		this.SetValByKey(TransferCustomAttr.NodeName, value);
-	}
 	public final long getWorkID()
 	{
 		return this.GetValInt64ByKey(TransferCustomAttr.WorkID);
@@ -39,6 +32,17 @@ public class TransferCustom extends EntityMyPK
 	public final void setWorkID(long value)
 	{
 		this.SetValByKey(TransferCustomAttr.WorkID, value);
+	}
+	/** 
+	 节点名称
+	*/
+	public final String getNodeName()
+	{
+		return this.GetValStringByKey(TransferCustomAttr.NodeName);
+	}
+	public final void setNodeName(String value)
+	{
+		this.SetValByKey(TransferCustomAttr.NodeName, value);
 	}
 	/** 
 	 计划完成日期
@@ -97,7 +101,6 @@ public class TransferCustom extends EntityMyPK
 	}
 	/** 
 	 发起时间（可以为空）
-	 
 	*/
 	public final String getStartDT()
 	{
@@ -107,18 +110,8 @@ public class TransferCustom extends EntityMyPK
 	{
 		this.SetValByKey(TransferCustomAttr.StartDT, value);
 	}
-	
-	public final boolean getIsEnable()
-	{
-		return this.GetValBooleanByKey(TransferCustomAttr.IsEnable);
-	}
-	public final void setIsEnable(boolean value)
-	{
-		this.SetValByKey(TransferCustomAttr.IsEnable, value);
-	}
 	/** 
 	 顺序
-	 
 	*/
 	public final int getIdx()
 	{
@@ -128,28 +121,34 @@ public class TransferCustom extends EntityMyPK
 	{
 		this.SetValByKey(TransferCustomAttr.Idx, value);
 	}
-
+	public final boolean getIsEnable()
+	{
+		return this.GetValBooleanByKey(TransferCustomAttr.IsEnable);
+	}
+	public final void setIsEnable(boolean value)
+	{
+		this.SetValByKey(TransferCustomAttr.IsEnable, value);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 TransferCustom
-	 
 	*/
 	public TransferCustom()
 	{
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("WF_TransferCustom", "自定义运行路径");
 		map.Java_SetEnType(EnType.Admin);
@@ -160,6 +159,7 @@ public class TransferCustom extends EntityMyPK
 		map.AddTBInt(TransferCustomAttr.WorkID, 0, "WorkID", true, false);
 		map.AddTBInt(TransferCustomAttr.FK_Node, 0, "节点ID", true, false);
 		map.AddTBString(TransferCustomAttr.NodeName, null, "节点名称", true, false, 0, 200, 10);
+
 		map.AddTBString(TransferCustomAttr.Worker, null, "处理人(多个人用逗号分开)", true, false, 0, 200, 10);
 		map.AddTBString(TransferCustomAttr.WorkerName, null, "处理人(多个人用逗号分开)", true, false, 0, 200, 10);
 
@@ -167,32 +167,33 @@ public class TransferCustom extends EntityMyPK
 		map.AddTBDateTime(TransferCustomAttr.PlanDT, null, "计划完成日期", true, false);
 		map.AddTBInt(TransferCustomAttr.TodolistModel, 0, "多人工作处理模式", true, false);
 		map.AddTBInt(TransferCustomAttr.IsEnable, 0, "是否启用", true, false);
+
 		map.AddTBInt(TransferCustomAttr.Idx, 0, "顺序号", true, false);
 
 			//map.AddTBString(TransferCustomAttr.StartDT, null, "发起时间", true, false, 0, 20, 10);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public String DoUp()
+	public final String DoUp()
 	{
 		this.DoOrderUp(TransferCustomAttr.WorkID, String.valueOf(this.getWorkID()), TransferCustomAttr.Idx);
 		return "执行成功";
 	}
 
-	public String DoDown()
+	public final String DoDown()
 	{
 		this.DoOrderDown(TransferCustomAttr.WorkID, String.valueOf(this.getWorkID()), TransferCustomAttr.Idx);
 		return "执行成功";
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		this.setMyPK(this.getFK_Node() + "_" + this.getWorkID());
+		this.MyPK = this.getFK_Node() + "_" + this.getWorkID();
 		return super.beforeInsert();
 	}
 
@@ -201,25 +202,25 @@ public class TransferCustom extends EntityMyPK
 	 要分析如下几种情况:
 	 1, 当前节点不存在队列里面，就返回第一个.
 	 2, 如果当前队列为空,就认为需要结束掉, 返回null.
-	 3, 如果当前节点是最后一个,就返回null,表示要结束流程.
+	 3, 如果当前节点是最后一个并且没有连接线连到固定节点,就返回null,表示要结束流程.
+	 4. 如果当前节点是最后一个且有连接线连到固定节点
 	 
 	 @param workid 当前工作ID
 	 @param currNodeID 当前节点ID
 	 @return 获取下一个要到达的定义路径,如果没有就返回空.
-	 * @throws Exception 
 	*/
-	public static TransferCustom GetNextTransferCustom(long workid, int currNodeID) throws Exception
+	public static TransferCustom GetNextTransferCustom(long workid, int currNodeID)
 	{
 		TransferCustoms ens = new TransferCustoms();
 		ens.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.Idx);
-		if (ens.size() == 0)
+		if (ens.Count == 0)
 		{
 			return null;
 		}
 
 		//寻找当前节点的下一个. 
 		boolean isMeet = false;
-		for (TransferCustom item : ens.ToJavaList())
+		for (TransferCustom item : ens)
 		{
 			if (item.getFK_Node() == currNodeID)
 			{
@@ -234,25 +235,33 @@ public class TransferCustom extends EntityMyPK
 		}
 
 		Node node = new Node(currNodeID);
-		if(node.GetParaBoolen(NodeAttr.IsYouLiTai)==false){
-			for(TransferCustom item : ens.ToJavaList())
+		if (node.GetParaBoolen(NodeAttr.IsYouLiTai) == false)
+		{
+			for (TransferCustom item : ens)
 			{
-				if(item.getIsEnable() == true && item.getFK_Node() != currNodeID)
+				if (item.getIsEnable() == true && item.getFK_Node() != currNodeID)
+				{
 					return (TransferCustom)item;
+				}
 			}
 		}
 
+
+	   // }
+
 		//如果当前节点是最后一个自定义节点，且有连接线连到固定节点
-		if(isMeet == true)
+		if (isMeet == true)
 		{
 			//判断当前节点是否连接到固定节点
 			String sql = "SELECT AtPara FROM WF_Node WHERE NodeID In(SELECT ToNode FROM WF_Direction WHERE Node=" + currNodeID + ")";
 			Nodes nds = new Nodes();
 			nds.RetrieveInSQL(NodeAttr.NodeID,"SELECT ToNode FROM WF_Direction WHERE Node = " + currNodeID);
-			for(Node nd : nds.ToJavaList())
+			for (Node nd : nds)
 			{
 				if (nd.GetParaBoolen(NodeAttr.IsYouLiTai) == true)
+				{
 					continue;
+				}
 
 				TransferCustom en = new TransferCustom();
 				en.setFK_Node(nd.getNodeID());
@@ -264,6 +273,7 @@ public class TransferCustom extends EntityMyPK
 			}
 
 		}
+
 		return null;
 		// return null;
 	}

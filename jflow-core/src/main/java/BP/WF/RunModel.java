@@ -2,43 +2,45 @@ package BP.WF;
 
 /** 
  运行模式
- 
 */
 public enum RunModel
 {
 	/** 
 	 普通
-	 
 	*/
 	Ordinary(0),
 	/** 
 	 合流
-	 
 	*/
 	HL(1),
 	/** 
 	 分流
-	 
 	*/
 	FL(2),
 	/** 
 	 分合流
-	 
 	*/
 	FHL(3),
 	/** 
 	 子线程
-	 
 	*/
 	SubThread(4);
 
+	public static final int SIZE = java.lang.Integer.SIZE;
+
 	private int intValue;
 	private static java.util.HashMap<Integer, RunModel> mappings;
-	private synchronized static java.util.HashMap<Integer, RunModel> getMappings()
+	private static java.util.HashMap<Integer, RunModel> getMappings()
 	{
 		if (mappings == null)
 		{
-			mappings = new java.util.HashMap<Integer, RunModel>();
+			synchronized (RunModel.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, RunModel>();
+				}
+			}
 		}
 		return mappings;
 	}
@@ -46,7 +48,7 @@ public enum RunModel
 	private RunModel(int value)
 	{
 		intValue = value;
-		RunModel.getMappings().put(value, this);
+		getMappings().put(value, this);
 	}
 
 	public int getValue()

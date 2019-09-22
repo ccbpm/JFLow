@@ -1,16 +1,11 @@
 package BP.En;
 
-import java.util.ArrayList;
+import java.util.*;
 
-public class SQLCashs extends ArrayList<SQLCash>
+public class SQLCashs extends ArrayList<Object>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	public SQLCashs()
 	{
-		
+
 	}
 }

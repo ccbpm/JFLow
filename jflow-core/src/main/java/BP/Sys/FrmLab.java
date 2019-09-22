@@ -2,18 +2,17 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  标签
- 
 */
 public class FrmLab extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 FontStyle
-	 
 	*/
 	public final String getFontStyle()
 	{
@@ -25,17 +24,10 @@ public class FrmLab extends EntityMyPK
 	}
 	public final String getFontColorHtml()
 	{
-		try {
-			return PubClass.ToHtmlColor(this.getFontColor());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return PubClass.ToHtmlColor(this.getFontColor());
 	}
 	/** 
 	 FontColor
-	 
 	*/
 	public final String getFontColor()
 	{
@@ -43,16 +35,13 @@ public class FrmLab extends EntityMyPK
 	}
 	public final void setFontColor(String value)
 	{
-
-//		switch (value)
-//ORIGINAL LINE: case "#FF000000":
-		if (value.equals("#FF000000"))
+		switch (value)
 		{
+			case "#FF000000":
 				this.SetValByKey(FrmLabAttr.FontColor, "Red");
 				return;
-		}
-		else
-		{
+			default:
+				break;
 		}
 		this.SetValByKey(FrmLabAttr.FontColor, value);
 	}
@@ -82,7 +71,6 @@ public class FrmLab extends EntityMyPK
 	}
 	/** 
 	 FontName
-	 
 	*/
 	public final String getFontName()
 	{
@@ -94,7 +82,6 @@ public class FrmLab extends EntityMyPK
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getY()
 	{
@@ -106,7 +93,6 @@ public class FrmLab extends EntityMyPK
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getX()
 	{
@@ -118,7 +104,6 @@ public class FrmLab extends EntityMyPK
 	}
 	/** 
 	 FontSize
-	 
 	*/
 	public final int getFontSize()
 	{
@@ -130,7 +115,6 @@ public class FrmLab extends EntityMyPK
 	}
 	/** 
 	 FK_MapData
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -142,7 +126,6 @@ public class FrmLab extends EntityMyPK
 	}
 	/** 
 	 Text
-	 
 	*/
 	public final String getText()
 	{
@@ -163,14 +146,13 @@ public class FrmLab extends EntityMyPK
 			return this.GetValStrByKey(FrmLabAttr.Text).replace("@", "<br>");
 		}
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 标签
-	 
 	*/
 	public FrmLab()
 	{
@@ -179,16 +161,14 @@ public class FrmLab extends EntityMyPK
 	 标签
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmLab(String mypk) throws Exception
+	public FrmLab(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -202,6 +182,9 @@ public class FrmLab extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+
+		map.IndexField = FrmImgAthDBAttr.FK_MapData;
+
 
 		map.AddMyPK();
 		map.AddTBString(FrmLabAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
@@ -218,15 +201,14 @@ public class FrmLab extends EntityMyPK
 
 		map.AddTBInt(FrmLabAttr.IsBold, 0, "是否粗体", false, false);
 		map.AddTBInt(FrmLabAttr.IsItalic, 0, "是否斜体", false, false);
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		map.AddTBString(FrmLabAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
-
 
 	/** 
 	 是否存在相同的数据?
@@ -235,7 +217,7 @@ public class FrmLab extends EntityMyPK
 	*/
 	public final boolean IsExitGenerPK()
 	{
-		String sql = "SELECT COUNT(*) FROM " + this.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND X=" + this.getX() + " AND Y=" + this.getY() + "  and Text='" + this.getText()+"'";
+		String sql = "SELECT COUNT(*) FROM " + this.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND X=" + this.getX() + " AND Y=" + this.getY() + "  and Text='" + this.getText() + "'";
 		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 		{
 			return false;

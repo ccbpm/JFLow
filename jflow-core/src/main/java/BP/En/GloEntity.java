@@ -1,17 +1,23 @@
 package BP.En;
 
-import BP.DA.DataColumn;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
- 
+import BP.En.*;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import java.time.*;
+
+//using System.Web.SessionState;
+//using System.Web.UI;
+//using System.Web.UI.WebControls;
+//using System.Web.UI.HtmlControls;
 
 /** 
   关于对Entity扩展，的方法。
- 
 */
 public class GloEntity
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 用到ddl 的方法。
 	public static String GetTextByValue(Entities ens, String no, String isNullAsVal)
 	{
@@ -26,14 +32,14 @@ public class GloEntity
 	}
 	public static String GetTextByValue(Entities ens, String no)
 	{
-		for (Entity en : Entities.convertEntities(ens))
+		for (Entity en : ens)
 		{
 			if (en.GetValStringByKey("No").equals(no))
 			{
 				return en.GetValStringByKey("Name");
 			}
 		}
-		if (ens.size() == 0)
+		if (ens.Count == 0)
 		{
 			throw new RuntimeException("@实体集合里面没有数据.");
 		}
@@ -42,9 +48,27 @@ public class GloEntity
 			throw new RuntimeException("@没有找到No=" + no + "在实体里面");
 		}
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	  
+	//public static string GetEnFilesUrl(Entity en)
+	//{
+	//    string str = null;
+	//    SysFileManagers ens = null; // en.HisSysFileManagers;
+
+	//    string path = BP.Sys.Glo.Request.ApplicationPath;
+	//    foreach (SysFileManager file in ens)
+	//    {
+	//        str += "[<a href='" + path + file.MyFilePath + "' target='f" + file.OID + "' >" + file.MyFileName + "</a>]";
+	//    }
+	//    return str;
+	//}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 关于对entity 的处理
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 转换dataset
 	/** 
 	 把指定的ens 转换为 dataset
 	 
@@ -53,14 +77,13 @@ public class GloEntity
 	*/
 	public static DataSet ToDataSet(Entities spens)
 	{
-		throw new RuntimeException("未实现的方法");
-		/*
-		 * warning DataSet ds = new DataSet(spens.toString());
 
-		// 把主表加入DataSet 
+		DataSet ds = new DataSet(spens.toString());
+
+		/* 把主表加入DataSet */
 		Entity en = spens.getGetNewEntity();
 		DataTable dt = new DataTable();
-		if (spens.size() == 0)
+		if (spens.Count == 0)
 		{
 			QueryObject qo = new QueryObject(spens);
 			dt = qo.DoQueryToTable();
@@ -70,7 +93,7 @@ public class GloEntity
 			dt = spens.ToDataTableField();
 		}
 		dt.TableName = en.getEnDesc(); //设定主表的名称。
-
+//C# TO JAVA CONVERTER TODO TASK: Java has no equivalent to C#-style event wireups:
 		dt.RowChanged += new DataRowChangeEventHandler(dt_RowChanged);
 
 		//dt.RowChanged+=new DataRowChangeEventHandler(dt_RowChanged);
@@ -80,7 +103,7 @@ public class GloEntity
 
 		for (EnDtl ed : en.getEnMap().getDtlsAll())
 		{
-			// 循环主表的明细，编辑好关系并把他们放入 DataSet 里面。
+			/* 循环主表的明细，编辑好关系并把他们放入 DataSet 里面。*/
 			Entities edens = ed.getEns();
 			Entity eden = edens.getGetNewEntity();
 			DataTable edtable = edens.RetrieveAllToTable();
@@ -95,7 +118,7 @@ public class GloEntity
 
 			for (EnDtl ed1 : eden.getEnMap().getDtlsAll())
 			{
-				// 主表的明细的明细。
+				/* 主表的明细的明细。*/
 				Entities edlens1 = ed1.getEns();
 				Entity edlen1 = edlens1.getGetNewEntity();
 
@@ -113,7 +136,7 @@ public class GloEntity
 		}
 
 
-		return ds;*/
+		return ds;
 	}
 	/** 
 	 
@@ -124,9 +147,8 @@ public class GloEntity
 	*/
 	private static DataTable DealBoolTypeInDataTable(Entity en, DataTable dt)
 	{
-		throw new RuntimeException("未实现的方法");
-		/*
-		 * warning for (Attr attr : en.getEnMap().getAttrs())
+
+		for (Attr attr : en.getEnMap().getAttrs())
 		{
 			if (attr.getMyDataType() == DataType.AppBoolean)
 			{
@@ -136,16 +158,16 @@ public class GloEntity
 				dt.Columns.Add(col);
 				for (DataRow dr : dt.Rows)
 				{
-					if (dr[attr.getKey()].toString().equals("1"))
+					if (dr.get(attr.getKey()).toString().equals("1"))
 					{
-						dr["tmp" + attr.getKey()] = true;
+						dr.set("tmp" + attr.getKey(), true);
 					}
 					else
 					{
-						dr["tmp" + attr.getKey()] = false;
+						dr.set("tmp" + attr.getKey(), false);
 					}
 				}
-				dt.Columns.remove(attr.getKey());
+				dt.Columns.Remove(attr.getKey());
 				dt.Columns["tmp" + attr.getKey()].ColumnName = attr.getKey();
 				continue;
 			}
@@ -153,34 +175,34 @@ public class GloEntity
 			{
 				DataColumn col = new DataColumn();
 				col.ColumnName = "tmp" + attr.getKey();
-				col.DataType = java.util.Date.class;
+				col.DataType = LocalDateTime.class;
 				dt.Columns.Add(col);
 				for (DataRow dr : dt.Rows)
 				{
 					try
 					{
-						dr["tmp" + attr.getKey()] = new java.util.Date(java.util.Date.parse(dr[attr.getKey()].toString()));
+						dr.set("tmp" + attr.getKey(), LocalDateTime.parse(dr.get(attr.getKey()).toString()));
 					}
 					catch (java.lang.Exception e)
 					{
 						if (attr.getDefaultVal().toString().equals(""))
 						{
-							dr["tmp" + attr.getKey()] = new java.util.Date();
+							dr.set("tmp" + attr.getKey(), LocalDateTime.now());
 						}
 						else
 						{
-							dr["tmp" + attr.getKey()] = new java.util.Date(java.util.Date.parse(attr.getDefaultVal().toString()));
+							dr.set("tmp" + attr.getKey(), LocalDateTime.parse(attr.getDefaultVal().toString()));
 						}
 
 					}
 
 				}
-				dt.Columns.remove(attr.getKey());
+				dt.Columns.Remove(attr.getKey());
 				dt.Columns["tmp" + attr.getKey()].ColumnName = attr.getKey();
 				continue;
 			}
 		}
-		return dt;*/
+		return dt;
 	}
 	/** 
 	 DataRowChangeEventArgs
@@ -188,11 +210,12 @@ public class GloEntity
 	 @param sender
 	 @param e
 	*/
-//	private static void dt_RowChanged(Object sender, DataRowChangeEventArgs e)
-//	{
-//		throw new RuntimeException(sender.toString() + "  rows change ." + e.Row.toString());
-//	}
+	private static void dt_RowChanged(Object sender, DataRowChangeEventArgs e)
+	{
+		throw new RuntimeException(sender.toString() + "  rows change ." + e.Row.toString());
+	}
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	/** 
@@ -229,57 +252,37 @@ public class GloEntity
 		for (Attr attr : en.getEnMap().getAttrs())
 		{
 			DataRow dr = dt.NewRow();
-			dr.put("输入项目", attr.getDesc());
-			dr.put(nameOfEnterInfo, en.GetValByKey(attr.getKey()));
-			dr.put("信息输入要求", attr.getEnterDesc());
-			dt.Rows.add(dr);
-			/*
-			 * warning dr["输入项目"] = attr.getDesc();
-			dr[nameOfEnterInfo] = en.GetValByKey(attr.getKey());
-			dr["信息输入要求"] = attr.getEnterDesc();
-			dt.Rows.Add(dr);*/
+			dr.set("输入项目", attr.getDesc());
+			dr.set(nameOfEnterInfo, en.GetValByKey(attr.getKey()));
+			dr.set("信息输入要求", attr.getEnterDesc());
+			dt.Rows.Add(dr);
 		}
 		// 如果实体需要附件。
 		if (en.getEnMap().getAdjunctType() != AdjunctType.None)
 		{
 			// 加入附件信息。
 			DataRow dr1 = dt.NewRow();
-			dr1.put("输入项目", "附件");
-			dr1.put(nameOfEnterInfo, "");
-			dr1.put("信息输入要求", "编辑附件");
-			dt.Rows.add(dr1);
-			/*
-			 * warning dr1["输入项目"] = "附件";
-			dr1[nameOfEnterInfo] = "";
-			dr1["信息输入要求"] = "编辑附件";
-			dt.Rows.Add(dr1);*/
+			dr1.set("输入项目", "附件");
+			dr1.set(nameOfEnterInfo, "");
+			dr1.set("信息输入要求", "编辑附件");
+			dt.Rows.Add(dr1);
 		}
 		// 明细
 		for (EnDtl dtl : en.getEnMap().getDtls())
 		{
 			DataRow dr = dt.NewRow();
-			dr.put("输入项目", dtl.getDesc());
-			dr.put(nameOfEnterInfo, "EnsName_" + dtl.getEns().toString() + "_RefKey_" + dtl.getRefKey());
-			dr.put("信息输入要求", "请进入编辑明细");
-			dt.Rows.add(dr);
-			/*
-			 * warning dr["输入项目"] = dtl.getDesc();
-			dr[nameOfEnterInfo] = "EnsName_" + dtl.getEns().toString() + "_RefKey_" + dtl.getRefKey();
-			dr["信息输入要求"] = "请进入编辑明细";
-			dt.Rows.Add(dr);*/
+			dr.set("输入项目", dtl.getDesc());
+			dr.set(nameOfEnterInfo, "EnsName_" + dtl.getEns().toString() + "_RefKey_" + dtl.getRefKey());
+			dr.set("信息输入要求", "请进入编辑明细");
+			dt.Rows.Add(dr);
 		}
 		for (AttrOfOneVSM attr : en.getEnMap().getAttrsOfOneVSM())
 		{
 			DataRow dr = dt.NewRow();
-			dr.put("输入项目", attr.getDesc());
-			dr.put(nameOfEnterInfo, "OneVSM" + attr.getEnsOfMM().toString());
-			dr.put("信息输入要求", "请进入编辑多选");
-			dt.Rows.add(dr);
-			/*
-			 * warning dr["输入项目"] = attr.getDesc();
-			dr[nameOfEnterInfo] = "OneVSM" + attr.getEnsOfMM().toString();
-			dr["信息输入要求"] = "请进入编辑多选";
-			dt.Rows.Add(dr);*/
+			dr.set("输入项目", attr.getDesc());
+			dr.set(nameOfEnterInfo, "OneVSM" + attr.getEnsOfMM().toString());
+			dr.set("信息输入要求", "请进入编辑多选");
+			dt.Rows.Add(dr);
 		}
 		return dt;
 
@@ -311,32 +314,23 @@ public class GloEntity
 		dt.Columns.Add(new DataColumn(col4, String.class));
 
 
-		for (int i = 0; i < en.getEnMap().getHisPhysicsAttrs().size(); i++)
+		for (int i = 0; i < en.getEnMap().getHisPhysicsAttrs().Count; i++)
 		{
 			DataRow dr = dt.NewRow();
-			Attr attr = en.getEnMap().getHisPhysicsAttrs().getItem(i);
-			dr.put(col1, attr.getDesc());
-			dr.put(col2, en.GetValByKey(attr.getKey()));
-			/*
-			 * warning dr[col1] = attr.getDesc();
-			dr[col2] = en.GetValByKey(attr.getKey());*/
+			Attr attr = en.getEnMap().getHisPhysicsAttrs().get(i);
+			dr.set(col1, attr.getDesc());
+			dr.set(col2, en.GetValByKey(attr.getKey()));
 
 			i++;
-			if (i == en.getEnMap().getHisPhysicsAttrs().size())
+			if (i == en.getEnMap().getHisPhysicsAttrs().Count)
 			{
-				dt.Rows.add(dr);
-				/*
-				 * warning dt.Rows.Add(dr);*/
+				dt.Rows.Add(dr);
 				break;
 			}
-			attr = en.getEnMap().getHisPhysicsAttrs().getItem(i);
-			dr.put(col3, attr.getDesc());
-			dr.put(col4, en.GetValByKey(attr.getKey()));
-			dt.Rows.add(dr);
-			/*
-			 * warning dr[col3] = attr.getDesc();
-			dr[col4] = en.GetValByKey(attr.getKey());
-			dt.Rows.Add(dr);*/
+			attr = en.getEnMap().getHisPhysicsAttrs().get(i);
+			dr.set(col3, attr.getDesc());
+			dr.set(col4, en.GetValByKey(attr.getKey()));
+			dt.Rows.Add(dr);
 		}
 
 
@@ -345,50 +339,36 @@ public class GloEntity
 		{
 			// 加入附件信息。
 			DataRow dr1 = dt.NewRow();
-			dr1.put(col1, "附件");
-			dr1.put(col2, "编辑附件");
+			dr1.set(col1, "附件");
+			dr1.set(col2, "编辑附件");
 			//dr["输入项目2"]="附件信息";
 
-			dt.Rows.add(dr1);
-			/*
-			 * warning dr1[col1] = "附件";
-			dr1[col2] = "编辑附件";
-			//dr["输入项目2"]="附件信息";
-
-			dt.Rows.Add(dr1);*/
+			dt.Rows.Add(dr1);
 		}
 		// 明细
 		for (EnDtl dtl : en.getEnMap().getDtls())
 		{
 			DataRow dr = dt.NewRow();
-			dr.put(col1, dtl.getDesc());
-			dr.put(col2, "EnsName_" + dtl.getEns().toString() + "_RefKey_" + dtl.getRefKey());
+			dr.set(col1, dtl.getDesc());
+			dr.set(col2, "EnsName_" + dtl.getEns().toString() + "_RefKey_" + dtl.getRefKey());
 			//dr["输入项目2"]="明细信息";
-			dt.Rows.add(dr);
-			/*
-			 * warning dr[col1] = dtl.getDesc();
-			dr[col2] = "EnsName_" + dtl.getEns().toString() + "_RefKey_" + dtl.getRefKey();
-			//dr["输入项目2"]="明细信息";
-			dt.Rows.Add(dr);*/
+			dt.Rows.Add(dr);
 		}
 		// 多对多的关系
 		for (AttrOfOneVSM attr : en.getEnMap().getAttrsOfOneVSM())
 		{
 			DataRow dr = dt.NewRow();
-			dr.put(col1, attr.getDesc());
-			dr.put(col2, "OneVSM" + attr.getEnsOfMM().toString());
+			dr.set(col1, attr.getDesc());
+			dr.set(col2, "OneVSM" + attr.getEnsOfMM().toString());
 			//dr["输入项目2"]="多选";
-			dt.Rows.add(dr);
-			/*
-			 * warning dr[col1] = attr.getDesc();
-			dr[col2] = "OneVSM" + attr.getEnsOfMM().toString();
-			//dr["输入项目2"]="多选";
-			dt.Rows.Add(dr);*/
+			dt.Rows.Add(dr);
 		}
 		return dt;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 张
 	/** 
 	 通过一个集合，一个key，一个分割符号，获得这个属性的子串。
@@ -400,7 +380,7 @@ public class GloEntity
 	public static String GetEnsString(Entities ens, String key, String listspt)
 	{
 		String str = "";
-		for (Entity en : Entities.convertEntities(ens))
+		for (Entity en : ens)
 		{
 			str += en.GetValByKey(key) + listspt;
 		}
@@ -426,5 +406,6 @@ public class GloEntity
 	{
 		return GetEnsString(ens, ens.getGetNewEntity().getPK(), ";");
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

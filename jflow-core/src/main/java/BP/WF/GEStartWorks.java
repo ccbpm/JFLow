@@ -1,29 +1,27 @@
 package BP.WF;
 
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
 
 /** 
  开始工作节点s
- 
 */
 public class GEStartWorks extends Works
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重载基类方法
 	/** 
 	 节点ID
-	 
 	*/
 	public int NodeID = 0;
 	public String NodeFrmID = "";
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -36,7 +34,6 @@ public class GEStartWorks extends Works
 	}
 	/** 
 	 开始工作节点ID
-	 
 	*/
 	public GEStartWorks()
 	{
@@ -52,6 +49,6 @@ public class GEStartWorks extends Works
 		this.NodeID = nodeid;
 		this.NodeFrmID = nodeFrmID;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

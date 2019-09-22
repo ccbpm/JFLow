@@ -1,18 +1,20 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  轨迹图标组件
- 
 */
 public class FrmTrack extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getNo()
 	{
 		return "ND" + this.getNodeID();
@@ -24,7 +26,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 节点ID
-	 
 	*/
 	public final int getNodeID()
 	{
@@ -36,7 +37,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 控件状态
-	 
 	*/
 	public final FrmTrackSta getFrmTrackSta()
 	{
@@ -48,7 +48,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getFrmTrack_Y()
 	{
@@ -60,7 +59,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getFrmTrack_X()
 	{
@@ -72,7 +70,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 W
-	 
 	*/
 	public final float getFrmTrack_W()
 	{
@@ -92,7 +89,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 H
-	 
 	*/
 	public final float getFrmTrack_H()
 	{
@@ -112,7 +108,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 节点名称.
-	 
 	*/
 	public final String getName()
 	{
@@ -120,24 +115,21 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 显示标签
-	 
 	*/
 	public final String getFrmTrackLab()
 	{
 		return this.GetValStrByKey(FrmTrackAttr.FrmTrackLab);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 控制
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -147,7 +139,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 重写主键
-	 
 	*/
 	@Override
 	public String getPK()
@@ -156,7 +147,6 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 轨迹图标组件
-	 
 	*/
 	public FrmTrack()
 	{
@@ -165,9 +155,8 @@ public class FrmTrack extends Entity
 	 轨迹图标组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmTrack(String mapData) throws Exception
+	public FrmTrack(String mapData)
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -196,35 +185,33 @@ public class FrmTrack extends Entity
 	 轨迹图标组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmTrack(int nodeID) throws Exception
+	public FrmTrack(int nodeID)
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Node", "轨迹图标组件");
 
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
-		map.AddTBString(FrmTrackAttr.FrmTrackLab, "轨迹", "显示标签", true, false, 0, 200, 10, true);
+		map.AddTBString(FrmTrackAttr.FrmTrackLab, "轨迹", "显示标签", true, false, 0, 200, 10, false);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		map.AddDDLSysEnum(FrmTrackAttr.FrmTrackSta,0, "组件状态", true, true, FrmTrackAttr.FrmTrackSta, "@0=禁用@1=标准风格@2=华东院风格@3=华夏银行风格");
+		map.AddDDLSysEnum(FrmTrackAttr.FrmTrackSta, getFrmTrackSta().Disable.getValue(), "组件状态", true, true, FrmTrackAttr.FrmTrackSta, "@0=禁用@1=显示轨迹图@2=显示轨迹表");
 
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_X, 5, "位置X", false, false);
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_Y, 5, "位置Y", false, false);
@@ -232,14 +219,18 @@ public class FrmTrack extends Entity
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_H, 300, "高度", true, false);
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_W, 400, "宽度", true, false);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 
-	 
-
+	@Override
+	protected boolean beforeUpdateInsertAction()
+	{
+		return super.beforeUpdateInsertAction();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

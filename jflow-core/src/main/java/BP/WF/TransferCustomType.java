@@ -1,9 +1,15 @@
 package BP.WF;
 
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import java.util.*;
 
 /** 
  流程运行类型
- 
 */
 public enum TransferCustomType
 {
@@ -14,9 +20,10 @@ public enum TransferCustomType
 	ByCCBPMDefine,
 	/** 
 	 按照工作人员的设置执行(人工干涉模式,人工定义模式.)
-	 
 	*/
 	ByWorkerSet;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

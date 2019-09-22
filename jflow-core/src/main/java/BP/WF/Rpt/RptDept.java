@@ -1,37 +1,35 @@
 package BP.WF.Rpt;
 
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Port.Depts;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  RptDept 的摘要说明。
- 
 */
 public class RptDept extends Entity
 {
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
-			uac.IsView=true;
-			uac.IsDelete=true;
-			uac.IsInsert=true;
-			uac.IsUpdate=true;
-			uac.IsAdjunct=true;
+			uac.IsView = true;
+			uac.IsDelete = true;
+			uac.IsInsert = true;
+			uac.IsUpdate = true;
+			uac.IsAdjunct = true;
 		}
 		return uac;
 	}
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 报表ID
-	 
 	*/
 	public final String getFK_Rpt()
 	{
@@ -47,7 +45,6 @@ public class RptDept extends Entity
 	}
 	/** 
 	部门
-	 
 	*/
 	public final String getFK_Dept()
 	{
@@ -57,20 +54,19 @@ public class RptDept extends Entity
 	{
 		SetValByKey(RptDeptAttr.FK_Dept,value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 扩展属性
 
-		
-
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 报表岗位
-	  
 	*/
 	public RptDept()
 	{
@@ -80,37 +76,36 @@ public class RptDept extends Entity
 	 
 	 @param _empoid 报表ID
 	 @param wsNo 部门编号 	
-	 * @throws Exception 
 	*/
-	public RptDept(String _empoid, String wsNo) throws Exception
+	public RptDept(String _empoid, String wsNo)
 	{
 		this.setFK_Rpt(_empoid);
 		this.setFK_Dept(wsNo);
-		if (this.Retrieve()==0)
+		if (this.Retrieve() == 0)
 		{
 			this.Insert();
 		}
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap()!=null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_RptDept", "报表部门对应信息");
-		map.setEnType(EnType.Dot2Dot);
+		map.EnType = EnType.Dot2Dot;
 
 		map.AddTBStringPK(RptDeptAttr.FK_Rpt, null, "报表", false, false, 1, 15, 1);
 		map.AddDDLEntitiesPK(RptDeptAttr.FK_Dept,null,"部门",new Depts(),true);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

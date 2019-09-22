@@ -1,28 +1,35 @@
 package BP.Sys;
 
-/**
- * 百分比显示方式
- */
+import BP.DA.*;
+import BP.En.*;
+import BP.*;
+import java.util.*;
+
+/** 
+ 百分比显示方式
+*/
 public enum PercentModel
 {
-	/**
-	 * 不显示
-	 */
+	/** 
+	 不显示
+	*/
 	None,
-	/**
-	 * 纵向
-	 */
+	/** 
+	 纵向
+	*/
 	Vertical,
-	/**
-	 * 横向
-	 */
+	/** 
+	 横向
+	*/
 	Transverse;
-	
+
+	public static final int SIZE = java.lang.Integer.SIZE;
+
 	public int getValue()
 	{
 		return this.ordinal();
 	}
-	
+
 	public static PercentModel forValue(int value)
 	{
 		return values()[value];

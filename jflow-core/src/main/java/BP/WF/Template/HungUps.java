@@ -1,19 +1,22 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.Template.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  挂起
- 
 */
 public class HungUps extends EntitiesMyPK
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -22,39 +25,38 @@ public class HungUps extends EntitiesMyPK
 	}
 	/** 
 	 挂起
-	 
 	*/
 	public HungUps()
 	{
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<HungUp> ToJavaList()
+	public final List<HungUp> ToJavaList()
 	{
-		return (java.util.List<HungUp>)(Object)this;
+		return (List<HungUp>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<HungUp> Tolist()
+	public final ArrayList<HungUp> Tolist()
 	{
-		java.util.ArrayList<HungUp> list = new java.util.ArrayList<HungUp>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<HungUp> list = new ArrayList<HungUp>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((HungUp)this.get(i));
+			list.add((HungUp)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

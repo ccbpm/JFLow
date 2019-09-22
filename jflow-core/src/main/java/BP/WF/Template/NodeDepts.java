@@ -1,28 +1,23 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesMM;
-import BP.En.Entity;
-import BP.En.QueryObject;
-import BP.WF.Node;
-import BP.WF.Nodes;
-import BP.WF.Port.Station;
-import BP.WF.Port.Stations;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  节点部门
- 
 */
 public class NodeDepts extends EntitiesMM
 {
 	/** 
 	 他的工作部门
-	 * @throws Exception 
-	 
 	*/
-	public final Stations getHisStations() throws Exception
+	public final Stations getHisStations()
 	{
 		Stations ens = new Stations();
-		for (NodeDept ns : this.ToJavaList())
+		for (NodeDept ns : this)
 		{
 			ens.AddEntity(new Station(ns.getFK_Dept()));
 		}
@@ -30,13 +25,11 @@ public class NodeDepts extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
-	 * @throws Exception 
-	 
 	*/
-	public final Nodes getHisNodes() throws Exception
+	public final Nodes getHisNodes()
 	{
 		Nodes ens = new Nodes();
-		for (NodeDept ns : this.ToJavaList())
+		for (NodeDept ns : this)
 		{
 			ens.AddEntity(new Node(ns.getFK_Node()));
 		}
@@ -45,7 +38,6 @@ public class NodeDepts extends EntitiesMM
 	}
 	/** 
 	 节点部门
-	 
 	*/
 	public NodeDepts()
 	{
@@ -54,9 +46,8 @@ public class NodeDepts extends EntitiesMM
 	 节点部门
 	 
 	 @param NodeID 节点ID
-	 * @throws Exception 
 	*/
-	public NodeDepts(int NodeID) throws Exception
+	public NodeDepts(int NodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeDeptAttr.FK_Node, NodeID);
@@ -66,9 +57,8 @@ public class NodeDepts extends EntitiesMM
 	 节点部门
 	 
 	 @param StationNo StationNo 
-	 * @throws Exception 
 	*/
-	public NodeDepts(String StationNo) throws Exception
+	public NodeDepts(String StationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeDeptAttr.FK_Dept, StationNo);
@@ -76,7 +66,6 @@ public class NodeDepts extends EntitiesMM
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -88,16 +77,15 @@ public class NodeDepts extends EntitiesMM
 	 
 	 @param sts 工作部门集合
 	 @return 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Stations sts) throws Exception
+	public final Nodes GetHisNodes(Stations sts)
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
-		for (Station st : sts.ToJavaList())
+		for (Station st : sts)
 		{
-			tmp = this.GetHisNodes(st.getNo());
-			for (Node nd : tmp.ToJavaList())
+			tmp = this.GetHisNodes(st.No);
+			for (Node nd : tmp)
 			{
 				if (nds.Contains(nd))
 				{
@@ -113,16 +101,15 @@ public class NodeDepts extends EntitiesMM
 	 
 	 @param stationNo 工作部门编号
 	 @return 节点s
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String stationNo) throws Exception
+	public final Nodes GetHisNodes(String stationNo)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeDeptAttr.FK_Dept, stationNo);
 		qo.DoQuery();
 
 		Nodes ens = new Nodes();
-		for (NodeDept en : this.ToJavaList())
+		for (NodeDept en : this)
 		{
 			ens.AddEntity(new Node(en.getFK_Node()));
 		}
@@ -133,48 +120,47 @@ public class NodeDepts extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
-	 * @throws Exception 
 	*/
-	public final Stations GetHisStations(int nodeID) throws Exception
+	public final Stations GetHisStations(int nodeID)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeDeptAttr.FK_Node, nodeID);
 		qo.DoQuery();
 
 		Stations ens = new Stations();
-		for (NodeDept en : this.ToJavaList())
+		for (NodeDept en : this)
 		{
 			ens.AddEntity(new Station(en.getFK_Dept()));
 		}
 		return ens;
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeDept> ToJavaList()
+	public final List<NodeDept> ToJavaList()
 	{
-		return (java.util.List<NodeDept>)(Object)this;
+		return (List<NodeDept>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<NodeDept> Tolist()
+	public final ArrayList<NodeDept> Tolist()
 	{
-		java.util.ArrayList<NodeDept> list = new java.util.ArrayList<NodeDept>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<NodeDept> list = new ArrayList<NodeDept>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((NodeDept)this.get(i));
+			list.add((NodeDept)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

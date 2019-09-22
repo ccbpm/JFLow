@@ -1,24 +1,24 @@
 package BP.Sys;
 
-import BP.En.EntitiesSimpleTree;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
-独立表单树
-
+ 独立表单树
 */
-public class FrmTrees extends EntitiesSimpleTree
+public class FrmTrees extends EntitiesTree
 {
 	/** 
 	 独立表单树s
-	 
 	*/
 	public FrmTrees()
 	{
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -27,7 +27,7 @@ public class FrmTrees extends EntitiesSimpleTree
 	}
 
 	@Override
-	public int RetrieveAll() throws Exception
+	public int RetrieveAll()
 	{
 		int i = super.RetrieveAll();
 		if (i == 0)
@@ -46,31 +46,31 @@ public class FrmTrees extends EntitiesSimpleTree
 		return i;
 	}
 
-
-	///#region 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmTree> ToJavaList()
+	public final List<FrmTree> ToJavaList()
 	{
-		return (java.util.List<FrmTree>)(Object)this;
+		return (List<FrmTree>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FrmTree> Tolist()
+	public final ArrayList<FrmTree> Tolist()
 	{
-		java.util.ArrayList<FrmTree> list = new java.util.ArrayList<FrmTree>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FrmTree> list = new ArrayList<FrmTree>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((FrmTree)this.get(i));
 		}
 		return list;
 	}
-
-	///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

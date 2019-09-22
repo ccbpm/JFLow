@@ -1,35 +1,20 @@
 package BP.WF.Data;
 
-import java.io.IOException;
-
-import BP.DA.Log;
-import BP.Difference.ContextHolderUtils;
-import BP.En.AttrOfSearch;
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.QueryObject;
-import BP.En.RefMethod;
-import BP.En.UAC;
-import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
-import BP.WF.Flows;
-import BP.WF.Glo;
-import BP.WF.TaskSta;
-import BP.WF.WFSta;
-import BP.WF.WFState;
-import BP.WF.Template.FlowExt;
-import BP.WF.Template.FlowSheet;
-
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  我部门的待办
- 
 */
 public class MyDeptTodolist extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	@Override
 	public UAC getHisUAC()
 	{
@@ -223,7 +208,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getWorkID()
 	{
@@ -235,7 +219,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 主线程ID
-	 
 	*/
 	public final long getFID()
 	{
@@ -247,7 +230,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 父节点流程编号.
-	 
 	*/
 	public final long getPWorkID()
 	{
@@ -259,7 +241,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 父流程调用的节点
-	 
 	*/
 	public final int getPNodeID()
 	{
@@ -271,7 +252,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 PFlowNo
-	 
 	*/
 	public final String getPFlowNo()
 	{
@@ -283,7 +263,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 吊起子流程的人员
-	 
 	*/
 	public final String getPEmp()
 	{
@@ -295,7 +274,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 发起人
-	 
 	*/
 	public final String getStarter()
 	{
@@ -307,7 +285,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 发起人名称
-	 
 	*/
 	public final String getStarterName()
 	{
@@ -319,7 +296,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 发起人部门名称
-	 
 	*/
 	public final String getDeptName()
 	{
@@ -331,7 +307,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 当前节点名称
-	 
 	*/
 	public final String getNodeName()
 	{
@@ -343,7 +318,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 当前工作到的节点
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -355,7 +329,6 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 工作流程状态
-	 
 	*/
 	public final WFState getWFState()
 	{
@@ -363,11 +336,11 @@ public class MyDeptTodolist extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WFState.Complete)
+		if (value == WF.WFState.Complete)
 		{
 			SetValByKey(MyDeptTodolistAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WFState.Delete)
+		else if (value == WF.WFState.Delete)
 		{
 			SetValByKey(MyDeptTodolistAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -391,8 +364,8 @@ public class MyDeptTodolist extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = (WFState)this.getWFState();
-		switch(ws)
+		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		switch (ws)
 		{
 			case Complete:
 				return "已完成";
@@ -417,13 +390,23 @@ public class MyDeptTodolist extends Entity
 	{
 		SetValByKey(MyDeptTodolistAttr.GUID, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 参数属性.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 产生的工作流程
 	*/
 	public MyDeptTodolist()
 	{
 	}
-	public MyDeptTodolist(long workId) throws Exception
+	public MyDeptTodolist(long workId)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptTodolistAttr.WorkID, workId);
@@ -444,9 +427,9 @@ public class MyDeptTodolist extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_EmpWorks", "我部门的待办");
@@ -455,12 +438,13 @@ public class MyDeptTodolist extends Entity
 		map.AddTBInt(MyDeptTodolistAttr.FID, 0, "FID", false, false);
 		map.AddTBString(MyDeptTodolistAttr.Title, null, "流程标题", true, false, 0, 300, 10, true);
 		map.AddDDLEntities(MyDeptTodolistAttr.FK_Flow, null, "流程", new Flows(), false);
-
-		map.AddTBString(MyDeptTodolistAttr.Starter, null, "发起人编号", true, false, 0, 30, 10);
-		map.AddTBString(MyDeptTodolistAttr.StarterName, null, "发起人名称", true, false, 0, 30, 10);
 		map.AddTBString(MyDeptTodolistAttr.RDT, null, "发起时间", true, false, 0, 100, 10);
 
+
+		map.AddTBString(MyDeptTodolistAttr.StarterName, null, "发起人名称", true, false, 0, 30, 10);
+
 		map.AddTBString(MyDeptTodolistAttr.NodeName, null, "停留节点", true, false, 0, 100, 10);
+			//map.AddTBString(MyDeptTodolistAttr.TodoEmps, null, "当前处理人", true, false, 0, 100, 10);
 
 		map.AddTBStringDoc(MyDeptTodolistAttr.FlowNote, null, "备注", true, false,true);
 
@@ -475,66 +459,62 @@ public class MyDeptTodolist extends Entity
 		map.AddSearchAttr(MyDeptTodolistAttr.FK_Emp);
 
 			//增加隐藏的查询条件.
-		AttrOfSearch search = new AttrOfSearch(MyDeptTodolistAttr.WorkerDept, "部门", MyDeptTodolistAttr.WorkerDept, "=", BP.Web.WebUser.getFK_Dept(), 0, true);
-		map.getAttrsOfSearch().Add(search);
+		AttrOfSearch search = new AttrOfSearch(MyDeptTodolistAttr.WorkerDept, "部门", MyDeptTodolistAttr.WorkerDept, "=", BP.Web.WebUser.FK_Dept, 0, true);
+		map.AttrsOfSearch.Add(search);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "轨迹";
 		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/CC.gif";
+		rm.Icon = "../../WF/Img/Btn/CC.gif";
 		rm.Title = "移交";
 		rm.ClassMethodName = this.toString() + ".DoShift";
-		rm.getHisAttrs().AddDDLEntities("ToEmp", null, "移交给:", new BP.WF.Flows(), true);
-		rm.getHisAttrs().AddTBString("Note", null, "移交原因", true, false, 0, 300, 100);
+		rm.HisAttrs.AddDDLEntities("ToEmp", null, "移交给:", new BP.WF.Flows(), true);
+		rm.HisAttrs.AddTBString("Note", null, "移交原因", true, false, 0, 300, 100);
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/Back.png";
+		rm.Icon = "../../WF/Img/Btn/Back.png";
 		rm.Title = "回滚";
 		rm.IsForEns = false;
 		rm.ClassMethodName = this.toString() + ".DoComeBack";
-		rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
-		rm.getHisAttrs().AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);
+		rm.HisAttrs.AddTBInt("NodeID", 0, "回滚到节点", true, false);
+		rm.HisAttrs.AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);
 		map.AddRefMethod(rm);
 
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 执行功能.
 	public final String DoTrack()
 	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() + "WF/WFRpt.jsp?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow(), 900, 800);
-		} catch (IOException e) {
-			Log.DebugWriteError("MyDeptTodolist DoTrack "+ e);		
-		}
-		return null;
+		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=";
 	}
 	/** 
 	 执行移交
+	 
 	 @param ToEmp
 	 @param Note
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoShift(String ToEmp, String Note) throws Exception
+	public final String DoShift(String ToEmp, String Note)
 	{
-		try {
-			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(), null) == false)
-			{
-				return "您没有操作该流程数据的权限.";
-			}
-		} catch (Exception e) {
-			Log.DebugWriteError("MyDeptTodolist DoShift "+ e);
+		if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
+		{
+			return "您没有操作该流程数据的权限.";
 		}
 
 		try
 		{
-			BP.WF.Dev2Interface.Node_Shift(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(), ToEmp, Note);
+			BP.WF.Dev2Interface.Node_Shift(this.getWorkID(), ToEmp, Note);
 			return "移交成功";
 		}
 		catch (RuntimeException ex)
@@ -546,17 +526,12 @@ public class MyDeptTodolist extends Entity
 	 执行删除
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoDelete() throws Exception
+	public final String DoDelete()
 	{
-		try {
-			if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID(),null) == false)
-			{
-				return "您没有操作该流程数据的权限.";
-			}
-		} catch (Exception e) {
-			Log.DebugWriteError("MyDeptTodolist DoDelete() " + e);
+		if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
+		{
+			return "您没有操作该流程数据的权限.";
 		}
 
 		try
@@ -571,12 +546,7 @@ public class MyDeptTodolist extends Entity
 	}
 	public final String DoSkip()
 	{
-		try {
-			PubClass.WinOpen(ContextHolderUtils.getResponse(),SystemConfig.getCCFlowWebPath() + "WF/Admin/FlowDB/FlowSkip.jsp?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node(), 900, 800);
-		} catch (IOException e) {
-			Log.DebugWriteError("MyDeptTodolist DoSkip()" +e);
-		}
-		return null;
+		return "../../Admin/FlowDB/FlowSkip.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 	/** 
 	 回滚
@@ -584,13 +554,12 @@ public class MyDeptTodolist extends Entity
 	 @param nodeid 节点ID
 	 @param note 回滚原因
 	 @return 回滚的结果
-	 * @throws Exception 
 	*/
-	public final String DoComeBack(int nodeid, String note) throws Exception
+	public final String DoComeBack(int nodeid, String note)
 	{
-		BP.WF.Template.FlowExt fl = new FlowExt(this.getFK_Flow());
+		BP.WF.Template.FlowSheet fl = new Template.FlowSheet(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), nodeid, note);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

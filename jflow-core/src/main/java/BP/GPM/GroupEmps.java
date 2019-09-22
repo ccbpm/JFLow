@@ -3,54 +3,57 @@ package BP.GPM;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  权限组人员s
- 
 */
 public class GroupEmps extends EntitiesMM
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造
 	/** 
 	 权限组s
-	 
 	*/
 	public GroupEmps()
 	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new GroupEmp();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupEmp> ToJavaList()
+	public final List<GroupEmp> ToJavaList()
 	{
-		return (java.util.List<GroupEmp>)(Object)this;
+		return (List<GroupEmp>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<GroupEmp> Tolist()
+	public final ArrayList<GroupEmp> Tolist()
 	{
-		java.util.ArrayList<GroupEmp> list = new java.util.ArrayList<GroupEmp>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<GroupEmp> list = new ArrayList<GroupEmp>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((GroupEmp)this.get(i));
+			list.add((GroupEmp)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

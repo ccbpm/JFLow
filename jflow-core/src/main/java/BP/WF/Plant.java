@@ -2,12 +2,13 @@ package BP.WF;
 
 /** 
  运行平台
- 
 */
 public enum Plant
 {
 	CCFlow,
 	JFlow;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

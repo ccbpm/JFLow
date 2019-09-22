@@ -1,37 +1,36 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesTree;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  独立表单树
- 
 */
 public class FlowFormTrees extends EntitiesTree
 {
 	/** 
 	 独立表单树s
-	 
 	*/
 	public FlowFormTrees()
 	{
 	}
 	/** 
 	 独立表单树
-	 * @throws Exception 
-	 
 	*/
-	public FlowFormTrees(String flowNo) throws Exception
+	public FlowFormTrees(String flowNo)
 	{
-	   int i= this.Retrieve(FlowFormTreeAttr.FK_Flow, flowNo);
+	   int i = this.Retrieve(FlowFormTreeAttr.FK_Flow, flowNo);
 	   if (i == 0)
 	   {
 		   FlowFormTree tree = new FlowFormTree();
-		   tree.setNo("100");
+		   tree.No = "100";
 		   tree.setFK_Flow(flowNo);
-		   tree.setName("根目录");
-		 
-		   tree.setParentNo("0");
+		   tree.Name = "根目录";
+		  // tree.IsDir = false;
+		   tree.ParentNo = "0";
 		   tree.Insert();
 
 		   //创建一个节点.
@@ -40,7 +39,6 @@ public class FlowFormTrees extends EntitiesTree
 	}
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -49,31 +47,31 @@ public class FlowFormTrees extends EntitiesTree
 	}
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FlowFormTree> ToJavaList()
+	public final List<FlowFormTree> ToJavaList()
 	{
-		return (java.util.List<FlowFormTree>)(Object)this;
+		return (List<FlowFormTree>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<FlowFormTree> Tolist()
+	public final ArrayList<FlowFormTree> Tolist()
 	{
-		java.util.ArrayList<FlowFormTree> list = new java.util.ArrayList<FlowFormTree>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<FlowFormTree> list = new ArrayList<FlowFormTree>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((FlowFormTree)this.get(i));
+			list.add((FlowFormTree)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

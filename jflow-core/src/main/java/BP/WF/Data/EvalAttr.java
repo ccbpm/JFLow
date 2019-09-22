@@ -1,17 +1,23 @@
 package BP.WF.Data;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  工作质量评价
 */
 public class EvalAttr
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 流程编号
 	*/
-	public static final String FK_Flow="FK_Flow";
+	public static final String FK_Flow = "FK_Flow";
 	/** 
 	 流程名称
 	*/
@@ -39,7 +45,7 @@ public class EvalAttr
 	/** 
 	 年月
 	*/
-	public static final String FK_NY="FK_NY";
+	public static final String FK_NY = "FK_NY";
 	/** 
 	 标题
 	*/
@@ -51,11 +57,11 @@ public class EvalAttr
 	/** 
 	 被考核的人员名称
 	*/
-	public static final String EvalEmpName="EvalEmpName";
+	public static final String EvalEmpName = "EvalEmpName";
 	/** 
 	 被考核的人员编号
 	*/
-	public static final String EvalEmpNo="EvalEmpNo";
+	public static final String EvalEmpNo = "EvalEmpNo";
 	/** 
 	 评价分值
 	*/
@@ -67,9 +73,11 @@ public class EvalAttr
 	/** 
 	 评价人员
 	*/
-	public static final String Rec="Rec";
+	public static final String Rec = "Rec";
 	/** 
 	 评价人员名称
 	*/
 	public static final String RecName = "RecName";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

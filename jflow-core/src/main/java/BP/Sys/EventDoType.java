@@ -1,61 +1,64 @@
 package BP.Sys;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Web.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
+import java.math.*;
 
 public enum EventDoType
 {
 	/** 
 	 禁用
-	 
 	*/
 	Disable(0),
 	/** 
 	 执行存储过程
-	 
 	*/
 	SP(1),
 	/** 
 	 运行SQL
-	 
 	*/
 	SQL(2),
 	/** 
 	 自定义URL
-	 
 	*/
 	URLOfSelf(3),
 	/** 
 	 自定义WS
-	 
 	*/
 	WSOfSelf(4),
 	/** 
 	 执行ddl文件的类与方法
-	 
 	*/
 	SpecClass(5),
 	/** 
 	 基类
-	 
 	*/
 	EventBase(6),
-//	/** 
-//	 JS
-//	 
-//	*/
-//	Javascript(7);
-
-	/// <summary>
-	/// 执行的业务单元
-	/// </summary>
+	/** 
+	 执行的业务单元
+	*/
 	BuessUnit(7);
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, EventDoType> mappings;
-	private synchronized static java.util.HashMap<Integer, EventDoType> getMappings()
+	private static java.util.HashMap<Integer, EventDoType> getMappings()
 	{
 		if (mappings == null)
 		{
-			mappings = new java.util.HashMap<Integer, EventDoType>();
+			synchronized (EventDoType.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, EventDoType>();
+				}
+			}
 		}
 		return mappings;
 	}
@@ -63,7 +66,7 @@ public enum EventDoType
 	private EventDoType(int value)
 	{
 		intValue = value;
-		EventDoType.getMappings().put(value, this);
+		getMappings().put(value, this);
 	}
 
 	public int getValue()

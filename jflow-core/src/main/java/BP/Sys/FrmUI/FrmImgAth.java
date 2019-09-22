@@ -1,19 +1,18 @@
 package BP.Sys.FrmUI;
 
-import BP.DA.Depositary;
-import BP.En.EnType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Sys.FrmBtnAttr;
-import BP.Sys.FrmImgAthAttr;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
-图片附件
+ 图片附件
 */
 public class FrmImgAth extends EntityMyPK
 {
-	//#region 属性
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 名称
 	*/
@@ -113,17 +112,14 @@ public class FrmImgAth extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAthAttr.IsRequired, value);
 	}
-	//#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	
-  
-	 
-	//#region 构造方法
-	
-	 /** 
-	 @于庆海.
-	 
-*/
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
+	/** 
+	*/
+
 	@Override
 	public UAC getHisUAC()
 	{
@@ -132,8 +128,6 @@ public class FrmImgAth extends EntityMyPK
 		uac.IsUpdate = true;
 		return uac;
 	}
-	
-	
 	/** 
 	 图片附件
 	*/
@@ -144,9 +138,8 @@ public class FrmImgAth extends EntityMyPK
 	 图片附件
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmImgAth(String mypk) throws Exception
+	public FrmImgAth(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -165,12 +158,13 @@ public class FrmImgAth extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = MapAttrAttr.FK_MapData;
+
 		map.AddMyPK();
 
-		map.AddTBString(FrmImgAthAttr.FK_MapData, null, "表单ID", true, false, 1, 100, 20);
-		map.AddTBString(FrmImgAthAttr.CtrlID, null, "控件ID", true, false, 0, 200, 20);
+		map.AddTBString(FrmImgAthAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
+		map.AddTBString(FrmImgAthAttr.CtrlID, null, "控件ID", true, true, 0, 200, 20);
 		map.AddTBString(FrmImgAthAttr.Name, null, "中文名称", true, false, 0, 200, 20);
-
 
 		map.AddTBFloat(FrmImgAthAttr.X, 5, "X", true, false);
 		map.AddTBFloat(FrmImgAthAttr.Y, 5, "Y", false, false);
@@ -178,34 +172,48 @@ public class FrmImgAth extends EntityMyPK
 		map.AddTBFloat(FrmImgAthAttr.H, 200, "H", true, false);
 		map.AddTBFloat(FrmImgAthAttr.W, 160, "W", false, false);
 
-		map.AddTBInt(FrmImgAthAttr.IsEdit, 1, "是否可编辑", true, true);
-		map.AddTBInt(FrmImgAthAttr.IsRequired, 0, "是否必填项", true, true);
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		map.AddBoolean(FrmImgAthAttr.IsEdit, true, "是否可编辑", true, true);
+			//map.AddTBInt(FrmImgAthAttr.IsEdit, 1, "是否可编辑", true, true);
+		map.AddBoolean(FrmImgAthAttr.IsRequired, false, "是否必填项", true, true);
+			//map.AddTBInt(FrmImgAthAttr.IsRequired, 0, "是否必填项", true, true);
+			//map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, true, 0, 128, 20);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	//#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		 
-			this.setMyPK(this.getFK_MapData() +"_"+ this.getCtrlID());
-		
+		//this.MyPK = this.FK_MapData + "_" + this.CtrlID;
 		return super.beforeUpdateInsertAction();
 	}
-	
+
 	@Override
-	 protected void afterInsertUpdateAction() throws Exception
-     {
-         BP.Sys.FrmImgAth imgAth = new BP.Sys.FrmImgAth();
-         imgAth.setMyPK(this.getMyPK());
-         imgAth.RetrieveFromDBSources();
-         imgAth.Update();
+	protected void afterInsertUpdateAction()
+	{
+		BP.Sys.FrmImgAth imgAth = new BP.Sys.FrmImgAth();
+		imgAth.setMyPK(this.getMyPK());
+		imgAth.RetrieveFromDBSources();
+		imgAth.Update();
 
-         super.afterInsertUpdateAction();
-     }
-	 
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+
+		super.afterInsertUpdateAction();
+	}
+
+	/** 
+	 删除后清缓存
+	*/
+	@Override
+	protected void afterDelete()
+	{
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		super.afterDelete();
+	}
+
 }
-

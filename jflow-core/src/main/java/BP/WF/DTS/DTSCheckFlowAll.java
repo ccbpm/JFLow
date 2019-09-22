@@ -1,18 +1,18 @@
 package BP.WF.DTS;
 
-import BP.En.Method;
-import BP.WF.Flow;
-import BP.WF.Flows;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
 
 /** 
  修复表单物理表字段长度 的摘要说明
- 
 */
 public class DTSCheckFlowAll extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public DTSCheckFlowAll()
 	{
@@ -35,7 +35,6 @@ public class DTSCheckFlowAll extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
@@ -46,18 +45,17 @@ public class DTSCheckFlowAll extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
-		for (Flow fl : fls.ToJavaList())
+		for (Flow fl : fls)
 		{
 			fl.DoCheck();
 		}
 
-		return "提示："+fls.size()+"个流程参与了体检。";
+		return "提示：" + fls.Count + "个流程参与了体检。";
 	}
 }

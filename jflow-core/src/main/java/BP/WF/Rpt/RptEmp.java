@@ -1,23 +1,22 @@
 package BP.WF.Rpt;
 
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Port.Emps;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  RptEmp 的摘要说明。
- 
 */
 public class RptEmp extends Entity
 {
 
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
 			uac.IsView = true;
 			uac.IsDelete = true;
@@ -28,11 +27,10 @@ public class RptEmp extends Entity
 		return uac;
 	}
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 报表ID
-	 
 	*/
 	public final String getFK_Rpt()
 	{
@@ -48,7 +46,6 @@ public class RptEmp extends Entity
 	}
 	/** 
 	人员
-	 
 	*/
 	public final String getFK_Emp()
 	{
@@ -58,20 +55,19 @@ public class RptEmp extends Entity
 	{
 		SetValByKey(RptEmpAttr.FK_Emp, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 扩展属性
 
-		
-
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 报表人员
-	  
 	*/
 	public RptEmp()
 	{
@@ -81,9 +77,8 @@ public class RptEmp extends Entity
 	 
 	 @param _empoid 报表ID
 	 @param wsNo 人员编号 	
-	 * @throws Exception 
 	*/
-	public RptEmp(String _empoid, String wsNo) throws Exception
+	public RptEmp(String _empoid, String wsNo)
 	{
 		this.setFK_Rpt(_empoid);
 		this.setFK_Emp(wsNo);
@@ -94,14 +89,13 @@ public class RptEmp extends Entity
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_RptEmp", "报表人员对应信息");
@@ -110,9 +104,9 @@ public class RptEmp extends Entity
 		map.AddTBStringPK(RptEmpAttr.FK_Rpt, null, "报表", false, false, 1, 15, 1);
 		map.AddDDLEntitiesPK(RptEmpAttr.FK_Emp, null, "人员", new Emps(), true);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

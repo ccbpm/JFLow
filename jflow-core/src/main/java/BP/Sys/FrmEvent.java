@@ -1,27 +1,26 @@
 package BP.Sys;
 
-import BP.DA.Depositary;
-import BP.En.Attr;
-import BP.En.Entity;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Tools.StringHelper;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Web.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
+import java.math.*;
 
 /** 
  事件
  节点的节点保存事件有两部分组成.	 
  记录了从一个节点到其他的多个节点.
  也记录了到这个节点的其他的节点.
- 
 */
 public class FrmEvent extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
 	/** 
 	 名称
-	 
 	*/
 	public final String getMonthedDLL()
 	{
@@ -34,7 +33,6 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 类名
-	 
 	*/
 	public final String getMonthedClass()
 	{
@@ -47,7 +45,6 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 方法名
-	 
 	*/
 	public final String getMonthedName()
 	{
@@ -60,7 +57,6 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 方法参数.
-	 
 	*/
 	public final String getMonthedParas()
 	{
@@ -71,10 +67,15 @@ public class FrmEvent extends EntityMyPK
 	{
 		this.SetPara(FrmEventAttr.MonthedParas, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 参数属性.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	@Override
-	public UAC getHisUAC()
+	public En.UAC getHisUAC()
 	{
-		UAC uac = new UAC();
+		UAC uac = new En.UAC();
 		uac.IsAdjunct = false;
 		uac.IsDelete = false;
 		uac.IsInsert = false;
@@ -82,8 +83,18 @@ public class FrmEvent extends EntityMyPK
 		return uac;
 	}
 	/** 
+	 节点ID
+	*/
+	public final int getFK_Node()
+	{
+		return this.GetValIntByKey(FrmEventAttr.FK_Node);
+	}
+	public final void setFK_Node(int value)
+	{
+		this.SetValByKey(FrmEventAttr.FK_Node, value);
+	}
+	/** 
 	 节点
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -102,26 +113,8 @@ public class FrmEvent extends EntityMyPK
 		String doc = value.replace("'", "~");
 		this.SetValByKey(FrmEventAttr.DoDoc, doc);
 	}
-
-	public int getFK_Node() {
-		return this.GetValIntByKey(FrmEventAttr.FK_Node);
-	}
-
-	public void setFK_Node(int value) {
-		this.SetValByKey(FrmEventAttr.FK_Node, value);
-	}
-
-	public int getHisDoTypeInt() {
-		return this.GetValIntByKey(FrmEventAttr.EventDoType);
-	}
-
-	public void setHisDoTypeInt(int value) {
-		this.SetValByKey(FrmEventAttr.EventDoType, value);
-	}
-
 	/** 
 	 执行成功提示
-	 
 	*/
 	public final String MsgOK(Entity en)
 	{
@@ -194,7 +187,6 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 执行类型
-	 
 	*/
 	public final EventDoType getHisDoType()
 	{
@@ -204,6 +196,19 @@ public class FrmEvent extends EntityMyPK
 	{
 		this.SetValByKey(FrmEventAttr.EventDoType, value.getValue());
 	}
+	public final int getHisDoTypeInt()
+	{
+		return this.GetValIntByKey(FrmEventAttr.EventDoType);
+	}
+	public final void setHisDoTypeInt(int value)
+	{
+		this.SetValByKey(FrmEventAttr.EventDoType, value);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 事件消息.
 	/** 
 	 消息控制类型.
 	*/
@@ -240,42 +245,31 @@ public class FrmEvent extends EntityMyPK
 	public final String getMailTitle()
 	{
 		String str = this.GetValStrByKey(FrmEventAttr.MailTitle);
-		if (StringHelper.isNullOrEmpty(str) == false)
+		if (DataType.IsNullOrEmpty(str) == false)
 		{
 			return str;
 		}
-		if (this.getFK_Event().equals(EventListOfNode.SendSuccess))
+		switch (this.getFK_Event())
 		{
-				return "新工作@Title,发送人WebUser.No,@WebUser.Name";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.ShitAfter))
-		{
-				return "移交来的新工作@Title,移交人WebUser.No,@WebUser.Name";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.ReturnAfter))
-		{
-				return "被退回来@Title,退回人WebUser.No,@WebUser.Name";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.UndoneAfter))
-		{
-				return "工作被撤销@Title,发送人WebUser.No,@WebUser.Name";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.AskerReAfter))
-		{
-				return "加签新工作@Title,发送人WebUser.No,@WebUser.Name";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.AfterFlowDel))
-		{
-				return "工作流程被删除@Title,发送人WebUser.No,@WebUser.Name";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.FlowOverAfter))
-		{
-				return "流程结束@Title,发送人WebUser.No,@WebUser.Name";
-		}
-		else
-		{
+			case EventListOfNode.SendSuccess:
+				return "新工作@Title,发送人@WebUser.No,@WebUser.Name";
+			case EventListOfNode.ShitAfter:
+				return "移交来的新工作@Title,移交人@WebUser.No,@WebUser.Name";
+			case EventListOfNode.ReturnAfter:
+				return "被退回来@Title,退回人@WebUser.No,@WebUser.Name";
+			case EventListOfNode.UndoneAfter:
+				return "工作被撤销@Title,发送人@WebUser.No,@WebUser.Name";
+			case EventListOfNode.AskerReAfter:
+				return "加签新工作@Title,发送人@WebUser.No,@WebUser.Name";
+			case EventListOfNode.AfterFlowDel:
+				return "工作流程被删除@Title,发送人@WebUser.No,@WebUser.Name";
+			case EventListOfNode.FlowOverAfter:
+				return "流程结束@Title,发送人@WebUser.No,@WebUser.Name";
+			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
+				break;
 		}
+		return str;
 	}
 	/** 
 	 邮件标题
@@ -291,7 +285,6 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 邮件内容
-	 
 	*/
 	public final String getMailDoc_Real()
 	{
@@ -303,80 +296,73 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 邮件内容模版
-	 
 	*/
 	public final String getMailDoc()
 	{
 		String str = this.GetValStrByKey(FrmEventAttr.MailDoc);
-		if (StringHelper.isNullOrEmpty(str) == false)
+		if (DataType.IsNullOrEmpty(str) == false)
 		{
 			return str;
 		}
-		if (this.getFK_Event().equals(EventListOfNode.SendSuccess))
+		switch (this.getFK_Event())
 		{
+			case EventListOfNode.SendSuccess:
 				str += "\t\n您好:";
 				str += "\t\n    有新工作@Title需要您处理, 点击这里打开工作{Url} .";
 				str += "\t\n致! ";
-				str += "\t\n    WebUser.No, @WebUser.Name";
+				str += "\t\n    @WebUser.No, @WebUser.Name";
 				str += "\t\n    @RDT";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.ReturnAfter))
-		{
+				break;
+			case EventListOfNode.ReturnAfter:
 				str += "\t\n您好:";
 				str += "\t\n    工作@Title被退回来了, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.ShitAfter))
-		{
+				break;
+			case EventListOfNode.ShitAfter:
 				str += "\t\n您好:";
 				str += "\t\n    移交给您的工作@Title, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.UndoneAfter))
-		{
+				break;
+			case EventListOfNode.UndoneAfter:
 				str += "\t\n您好:";
 				str += "\t\n    移交给您的工作@Title, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.AskerReAfter)) //加签.
-		{
+				break;
+			case EventListOfNode.AskerReAfter: //加签.
 				str += "\t\n您好:";
 				str += "\t\n    移交给您的工作@Title, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.AfterFlowDel)) //流程删除
-		{
+				break;
+			case EventListOfNode.AfterFlowDel: //流程删除
 				str += "\t\n您好:";
 				str += "\t\n    被删除的工作@Title.";
 				str += "\t\n 致! ";
-				str += "\t\n    WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.FlowOverAfter)) //流程结束
-		{
+				break;
+			case EventListOfNode.FlowOverAfter: //流程结束
 				str += "\t\n您好:";
 				str += "\t\n    工作@Title已经结束，点击这里查看工作{Url}.";
 				str += "\t\n 致! ";
-				str += "\t\n    WebUser.No,@WebUser.Name";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
-		}
-		else
-		{
+				break;
+			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
+				break;
 		}
 		return str;
 	}
 	/** 
 	 是否启用短信发送
-	 
 	*/
 	public final boolean getSMSEnable()
 	{
@@ -388,7 +374,6 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 短信模版内容
-	 
 	*/
 	public final String getSMSDoc_Real()
 	{
@@ -401,39 +386,35 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 短信模版内容
-	 
 	*/
 	public final String getSMSDoc()
 	{
 		String str = this.GetValStrByKey(FrmEventAttr.SMSDoc);
-		if (StringHelper.isNullOrEmpty(str) == false)
+		if (DataType.IsNullOrEmpty(str) == false)
 		{
 			return str;
 		}
 
-		if (this.getFK_Event().equals(EventListOfNode.SendSuccess))
+		switch (this.getFK_Event())
 		{
-				str = "有新工作@Title需要您处理, 发送人:WebUser.No, @WebUser.Name,打开{Url} .";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.ReturnAfter))
-		{
-				str = "工作@Title被退回,退回人:WebUser.No, @WebUser.Name,打开{Url} .";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.ShitAfter))
-		{
-				str = "移交工作@Title,移交人:WebUser.No, @WebUser.Name,打开{Url} .";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.UndoneAfter))
-		{
-				str = "工作撤销@Title,撤销人:WebUser.No, @WebUser.Name,打开{Url}.";
-		}
-		else if (this.getFK_Event().equals(EventListOfNode.AskerReAfter)) //加签.
-		{
-				str = "工作加签@Title,加签人:WebUser.No, @WebUser.Name,打开{Url}.";
-		}
-		else
-		{
+			case EventListOfNode.SendSuccess:
+				str = "有新工作@Title需要您处理, 发送人:@WebUser.No, @WebUser.Name,打开{Url} .";
+				break;
+			case EventListOfNode.ReturnAfter:
+				str = "工作@Title被退回,退回人:@WebUser.No, @WebUser.Name,打开{Url} .";
+				break;
+			case EventListOfNode.ShitAfter:
+				str = "移交工作@Title,移交人:@WebUser.No, @WebUser.Name,打开{Url} .";
+				break;
+			case EventListOfNode.UndoneAfter:
+				str = "工作撤销@Title,撤销人:@WebUser.No, @WebUser.Name,打开{Url}.";
+				break;
+			case EventListOfNode.AskerReAfter: //加签.
+				str = "工作加签@Title,加签人:@WebUser.No, @WebUser.Name,打开{Url}.";
+				break;
+			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
+				break;
 		}
 		return str;
 	}
@@ -441,19 +422,23 @@ public class FrmEvent extends EntityMyPK
 	{
 		this.SetValByKey(FrmEventAttr.SMSDoc, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 事件
-	 
 	*/
 	public FrmEvent()
 	{
 	}
-	public FrmEvent(String mypk) throws Exception
+	public FrmEvent(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.RetrieveFromDBSources();
 	}
-	public FrmEvent(String fk_mapdata, String fk_Event) throws Exception
+	public FrmEvent(String fk_mapdata, String fk_Event)
 	{
 		this.setFK_Event(fk_Event);
 		this.setFK_MapData(fk_mapdata);
@@ -462,7 +447,6 @@ public class FrmEvent extends EntityMyPK
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -476,6 +460,9 @@ public class FrmEvent extends EntityMyPK
 
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
+		map.IndexField = FrmEventAttr.FK_MapData;
+
+
 		map.AddMyPK();
 
 		map.AddTBString(FrmEventAttr.FK_Event, null, "事件名称", true, true, 0, 400, 10);
@@ -484,37 +471,43 @@ public class FrmEvent extends EntityMyPK
 		map.AddTBInt(FrmEventAttr.FK_Node, 0, "节点ID", true, true);
 
 		map.AddTBInt(FrmEventAttr.EventDoType, 0, "事件类型", true, true);
+		  //  map.AddTBInt(FrmEventAttr.DoType, 0, "事件类型", true, true);
+
 		map.AddTBString(FrmEventAttr.DoDoc, null, "执行内容", true, true, 0, 400, 10);
+
 		map.AddTBString(FrmEventAttr.MsgOK, null, "成功执行提示", true, true, 0, 400, 10);
 		map.AddTBString(FrmEventAttr.MsgError, null, "异常信息提示", true, true, 0, 400, 10);
 
-		//#region 消息设置. 如下属性放入了节点参数信息了.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 消息设置. 如下属性放入了节点参数信息了.
 		map.AddDDLSysEnum(FrmEventAttr.MsgCtrl, 0, "消息发送控制", true, true, FrmEventAttr.MsgCtrl, "@0=不发送@1=按设置的下一步接受人自动发送（默认）@2=由本节点表单系统字段(IsSendEmail,IsSendSMS)来决定@3=由SDK开发者参数(IsSendEmail,IsSendSMS)来决定", true);
+
 
 		map.AddBoolean(FrmEventAttr.MailEnable, true, "是否启用邮件发送？(如果启用就要设置邮件模版，支持ccflow表达式。)", true, true, true);
 		map.AddTBString(FrmEventAttr.MailTitle, null, "邮件标题模版", true, false, 0, 200, 20, true);
 		map.AddTBStringDoc(FrmEventAttr.MailDoc, null, "邮件内容模版", true, false, true);
 
-		//是否启用手机短信？
+			//是否启用手机短信？
 		map.AddBoolean(FrmEventAttr.SMSEnable, false, "是否启用短信发送？(如果启用就要设置短信模版，支持ccflow表达式。)", true, true, true);
 		map.AddTBStringDoc(FrmEventAttr.SMSDoc, null, "短信内容模版", true, false, true);
 		map.AddBoolean(FrmEventAttr.MobilePushEnable, true, "是否推送到手机、pad端。", true, true, true);
-		//#endregion 消息设置.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 消息设置.
 
-		//参数属性
+			//参数属性
 		map.AddTBAtParas(4000);
 
-		map.AddTBInt(FrmEventAttr.FK_Node, 0, "节点ID", true, true);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	//#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
-		//this.setMyPK(this.getFK_MapData() + "_" + this.getFK_Event());
+		//this.MyPK = this.FK_MapData + "_" + this.FK_Event;
 		return super.beforeUpdateInsertAction();
 	}
 }

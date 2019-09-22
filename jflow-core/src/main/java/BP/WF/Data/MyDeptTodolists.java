@@ -1,13 +1,20 @@
 package BP.WF.Data;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  我部门的待办s
 */
 public class MyDeptTodolists extends Entities
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -22,25 +29,34 @@ public class MyDeptTodolists extends Entities
 	public MyDeptTodolists()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<MyDeptTodolist> ToJavaList()
+	public final List<MyDeptTodolist> ToJavaList()
 	{
-		return (java.util.List<MyDeptTodolist>)(Object)this;
+		return (List<MyDeptTodolist>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<MyDeptTodolist> Tolist()
+	public final ArrayList<MyDeptTodolist> Tolist()
 	{
-		java.util.ArrayList<MyDeptTodolist> list = new java.util.ArrayList<MyDeptTodolist>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<MyDeptTodolist> list = new ArrayList<MyDeptTodolist>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((MyDeptTodolist)this.get(i));
+			list.add((MyDeptTodolist)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

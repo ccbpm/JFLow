@@ -1,13 +1,20 @@
 package BP.WF.Data;
 
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  我参与的流程
 */
 public class MyFlowAttr
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -30,7 +37,6 @@ public class MyFlowAttr
 	public static final String TSpan = "TSpan";
 	/** 
 	 标题
-	 
 	*/
 	public static final String Title = "Title";
 	/** 
@@ -157,4 +163,6 @@ public class MyFlowAttr
 	 GUID
 	*/
 	public static final String GUID = "GUID";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

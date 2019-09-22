@@ -1,25 +1,19 @@
 package BP.Sys;
 
-import java.io.File;
-
 import BP.DA.*;
 import BP.En.*;
-import BP.Tools.FtpUtil;
-import BP.Tools.SftpUtil;
-import BP.Tools.StringHelper;
-import BP.Tools.StringUtils;
+import java.util.*;
+import java.io.*;
 
 /** 
  附件数据存储
- 
 */
 public class FrmAttachmentDB extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 类别
-	 
 	*/
 	public final String getSort()
 	{
@@ -31,13 +25,11 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 记录日期
-	 
 	*/
 	public final String getRDT()
 	{
 		String str = this.GetValStringByKey(FrmAttachmentDBAttr.RDT);
-		return str;
-		//return str.substring(5, 16);
+		return str.substring(5, 16);
 	}
 	public final void setRDT(String value)
 	{
@@ -45,7 +37,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 文件
-	 
 	*/
 	public final String getFileFullName()
 	{
@@ -57,12 +48,16 @@ public class FrmAttachmentDB extends EntityMyPK
 		str = str.replace("~", "-");
 		str = str.replace("'", "-");
 		str = str.replace("*", "-");
-//		str = str.replace("/","\\");
+
+			//str = str.Replace("/", "\\");
+			//str = str.Replace("/", "\\");
+			//str = str.Replace("/", "\\");
+			//str = str.Replace("/", "\\");
+
 		this.SetValByKey(FrmAttachmentDBAttr.FileFullName, str);
 	}
 	/** 
 	 上传GUID
-	 
 	*/
 	public final String getUploadGUID()
 	{
@@ -74,7 +69,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 附件路径
-	 
 	*/
 	public final String getFilePathName()
 	{
@@ -83,7 +77,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 附件名称
-	 
 	*/
 	public final String getFileName()
 	{
@@ -97,10 +90,14 @@ public class FrmAttachmentDB extends EntityMyPK
 		str = str.replace("*", "-");
 
 		this.SetValByKey(FrmAttachmentDBAttr.FileName, str);
+
+		String fileExt = str.substring(str.lastIndexOf('.') + 1);
+
+			//后缀名.
+		this.SetValByKey(FrmAttachmentDBAttr.FileExts, fileExt);
 	}
 	/** 
 	 附件扩展名
-	 
 	*/
 	public final String getFileExts()
 	{
@@ -108,11 +105,10 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	public final void setFileExts(String value)
 	{
-		this.SetValByKey(FrmAttachmentDBAttr.FileExts, value.replace(".",""));
+		this.SetValByKey(FrmAttachmentDBAttr.FileExts, value.replace(".", ""));
 	}
 	/** 
 	 相关附件
-	 
 	*/
 	public final String getFK_FrmAttachment()
 	{
@@ -121,15 +117,14 @@ public class FrmAttachmentDB extends EntityMyPK
 	public final void setFK_FrmAttachment(String value)
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FK_FrmAttachment, value);
-		//给标记赋值.
-		//获取最后"_"的位置
-        int idx = value.lastIndexOf('_');
-        String val = value.substring(idx+1);
-        this.SetValByKey(FrmAttachmentDBAttr.NoOfObj, val);
+
+			//获取最后"_"的位置
+		int idx = value.lastIndexOf('_');
+		String val = value.substring(idx + 1);
+		this.SetValByKey(FrmAttachmentDBAttr.NoOfObj, val);
 	}
 	/** 
 	 主键值
-	 
 	*/
 	public final String getRefPKVal()
 	{
@@ -141,7 +136,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 工作ID.
-	 
 	*/
 	public final long getFID()
 	{
@@ -153,7 +147,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 MyNote
-	 
 	*/
 	public final String getMyNote()
 	{
@@ -165,7 +158,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 记录人
-	 
 	*/
 	public final String getRec()
 	{
@@ -177,7 +169,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 记录人名称
-	 
 	*/
 	public final String getRecName()
 	{
@@ -189,7 +180,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 附件编号
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -201,7 +191,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 文件大小
-	 
 	*/
 	public final float getFileSize()
 	{
@@ -209,11 +198,10 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	public final void setFileSize(float value)
 	{
-		this.SetValByKey(FrmAttachmentDBAttr.FileSize, value/1024);
+		this.SetValByKey(FrmAttachmentDBAttr.FileSize, value / 1024);
 	}
 	/** 
 	 是否锁定行?
-	 
 	*/
 	public final boolean getIsRowLock()
 	{
@@ -225,7 +213,6 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 显示顺序
-	 
 	*/
 	public final int getIdx()
 	{
@@ -235,33 +222,22 @@ public class FrmAttachmentDB extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.Idx, value);
 	}
-	public final int getSaveWay()
-	{
-		return this.GetValIntByKey(FrmAttachmentDBAttr.SaveWay);
-	}
-	public final void setSaveWay(int value)
-	{
-		this.SetValByKey(FrmAttachmentDBAttr.SaveWay, value);
-	}
-	
 	/** 
-	 附件扩展名	 
+	 附件扩展名
 	*/
-	public final int getNodeID()
+	public final String getNodeID()
 	{
-		return this.GetValIntByKey(FrmAttachmentDBAttr.NodeID);
+		return this.GetValStringByKey(FrmAttachmentDBAttr.NodeID);
 	}
-	public final void setNodeID(int fk_node)
+	public final void setNodeID(String value)
 	{
-		this.SetValByKey(FrmAttachmentDBAttr.NodeID, fk_node);
+		this.SetValByKey(FrmAttachmentDBAttr.NodeID, value);
 	}
 	/** 
 	 附件类型
-	 
 	*/
 	public final AttachmentUploadType getHisAttachmentUploadType()
 	{
-
 		if (this.getMyPK().contains("_") && this.getMyPK().length() < 32)
 		{
 			return AttachmentUploadType.Single;
@@ -271,14 +247,13 @@ public class FrmAttachmentDB extends EntityMyPK
 			return AttachmentUploadType.Multi;
 		}
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 附件数据存储
-	 
 	*/
 	public FrmAttachmentDB()
 	{
@@ -287,16 +262,14 @@ public class FrmAttachmentDB extends EntityMyPK
 	 附件数据存储
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmAttachmentDB(String mypk) throws Exception
+	public FrmAttachmentDB(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -310,14 +283,18 @@ public class FrmAttachmentDB extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+
+		map.IndexField = FrmAttachmentDBAttr.RefPKVal;
+
 		map.AddMyPK();
+
 		map.AddTBString(FrmAttachmentDBAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
-		map.AddTBString(FrmAttachmentDBAttr.FK_FrmAttachment, null, "附件编号", true, false, 1, 500, 20);
+		map.AddTBString(FrmAttachmentDBAttr.FK_FrmAttachment, null, "附件主键", true, false, 1, 500, 20);
 		map.AddTBString(FrmAttachmentDBAttr.NoOfObj, null, "附件标识", true, false, 0, 50, 20);
-		
+
 		map.AddTBString(FrmAttachmentDBAttr.RefPKVal, null, "实体主键", true, false, 0, 50, 20);
 		map.AddTBInt(FrmAttachmentDBAttr.FID, 0, "FID", true, false);
-
+		map.AddTBString(FrmAttachmentDBAttr.NodeID, null, "节点ID", true, false, 0, 50, 20);
 
 		map.AddTBString(FrmAttachmentDBAttr.Sort, null, "类别", true, false, 0, 200, 20);
 		map.AddTBString(FrmAttachmentDBAttr.FileFullName, null, "文件路径", true, false, 0, 700, 20);
@@ -329,72 +306,113 @@ public class FrmAttachmentDB extends EntityMyPK
 		map.AddTBString(FrmAttachmentDBAttr.Rec, null, "记录人", true, false, 0, 50, 20);
 		map.AddTBString(FrmAttachmentDBAttr.RecName, null, "记录人名字", true, false, 0, 50, 20);
 		map.AddTBStringDoc(FrmAttachmentDBAttr.MyNote, null, "备注", true, false);
-		map.AddTBString(FrmAttachmentDBAttr.NodeID, null, "节点ID", true, false, 0, 50, 20);
+
 		map.AddTBInt(FrmAttachmentDBAttr.IsRowLock, 0, "是否锁定行", true, false);
+
 			//顺序.
 		map.AddTBInt(FrmAttachmentDBAttr.Idx, 0, "排序", true, false);
+
 			//这个值在上传时候产生.
 		map.AddTBString(FrmAttachmentDBAttr.UploadGUID, null, "上传GUID", true, false, 0, 500, 20);
+
 		map.AddTBAtParas(3000); //增加参数属性.
-		 
+
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	
-	 /// <summary>
-    /// 生成文件.
-    /// </summary>
-    /// <returns></returns>
-    public String MakeFullFileFromFtp()
-    {
-        // string tempFile =  SystemConfig.PathOfTemp +System.Guid.NewGuid()+"."+this.FileExts;
-        String tempFile = SystemConfig.getPathOfTemp() + this.getFileName();
-        
-        try
-        {
-        	File file = new File(tempFile);
-            if (file.exists() == true)
-                file.delete();            
-        }
-        catch(Exception e)
-        {
-            //  tempFile = SystemConfig.PathOfTemp + System.Guid.NewGuid() + this.FileName;
-        }
-       
 
-        return tempFile;
-    }
-    
+	/** 
+	 生成文件.
+	 
+	 @return 
+	*/
+	private String MakeFullFileFromFtp()
+	{
+		String pathOfTemp = SystemConfig.getPathOfTemp();
+		if ((new File(pathOfTemp)).isDirectory() == false)
+		{
+			(new File(pathOfTemp)).mkdirs();
+		}
+
+		String tempFile = pathOfTemp + UUID.NewGuid() + "." + this.getFileExts();
+
+
+	  //  string tempFile = SystemConfig.PathOfTemp + + this.FileName;
+		try
+		{
+			if ((new File(tempFile)).isFile() == true)
+			{
+				(new File(tempFile)).delete();
+			}
+		}
+		catch (java.lang.Exception e)
+		{
+			//  tempFile = SystemConfig.PathOfTemp + System.Guid.NewGuid() + this.FileName;
+		}
+
+		FtpSupport.FtpConnection conn = new FtpSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+
+		conn.GetFile(this.getFileFullName(), tempFile, false, System.IO.FileAttributes.Archive);
+
+		return tempFile;
+	}
 	/** 
 	 重写
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		return super.beforeInsert();
 	}
 
-		///#endregion
-	
 	@Override
-	protected void afterDelete() throws Exception
+	protected void afterDelete()
 	{
 		//判断删除excel数据提取的数据
-		if (StringHelper.isNullOrWhiteSpace(this.getFK_FrmAttachment()))
+		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_FrmAttachment()))
 		{
 			return;
 		}
-		 
+
+		//是一个流程先判断流程是否结束，如果结束了，就不让删除.
+	 //   string nodeID = this.FK_MapData.Replace("ND", "");
+	  //  if (DataType.IsNumStr(nodeID) = true)
+	   // {
+		//}
+
+
 
 		FrmAttachment ath = new FrmAttachment(this.getFK_FrmAttachment());
-		
-		String fkefs = ath.GetParaString("FK_ExcelFile", null);
-		if (StringHelper.isNullOrWhiteSpace(fkefs) == false)
+		try
 		{
-			String[] efarr = StringUtils.split(fkefs, ",");
+			// @于庆海需要翻译.
+			if (ath.getAthSaveWay() == Sys.AthSaveWay.IISServer)
+			{
+				(new File(this.getFileFullName())).delete();
+			}
+
+			if (ath.getAthSaveWay() == Sys.AthSaveWay.FTPServer)
+			{
+				FtpSupport.FtpConnection ftpconn = new FtpSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+
+				String fullName = this.getFileFullName();
+				ftpconn.DeleteFile(fullName);
+			}
+		}
+		catch (RuntimeException ex)
+		{
+			Log.DebugWriteError(ex.getMessage());
+		}
+
+
+
+		//没有看明白这是什么意思.
+		String fkefs = ath.GetParaString("FK_ExcelFile", null);
+		if (DataType.IsNullOrEmpty(fkefs) == false)
+		{
+			String[] efarr = fkefs.split(",".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
 			ExcelFile ef = null;
 			ExcelTables ets = null;
 			for (String fk_ef : efarr)
@@ -405,7 +423,7 @@ public class FrmAttachmentDB extends EntityMyPK
 				if (ef.RetrieveFromDBSources() > 0)
 				{
 					ets = new ExcelTables(fk_ef);
-					for (ExcelTable et : ets.Tojavalist())
+					for (ExcelTable et : ets)
 					{
 						if (DBAccess.IsExitsObject(et.getNo()))
 						{
@@ -416,57 +434,44 @@ public class FrmAttachmentDB extends EntityMyPK
 			}
 		}
 
-		//删除附件.
-		
-	 
-			// @于庆海需要翻译.
-			if (ath.getAthSaveWay()==BP.Sys.AthSaveWay.WebServer)
-			{
-				new File(this.getFileFullName()).delete();
-			}
 
-			if (ath.getAthSaveWay() == BP.Sys.AthSaveWay.FTPServer)
-			{
-				
-				//特殊处理宝旺达的项目，由这个标记，就不要删除ftp文件.
-				if ( this.GetParaBoolen("NotDeleteFtpFile")==true) 
-					return ;
-					
-				if (SystemConfig.getFTPServerType().equals("SFTP"))
-				{
-				   SftpUtil en= BP.WF.Glo.getSftpUtil();
-				   en.deleteFile(this.getFileFullName());				   
-				}
-				
-				if (SystemConfig.getFTPServerType().equals("FTP") )
-				{
-				   FtpUtil  en= BP.WF.Glo.getFtpUtil();
-				   en.deleteFile(this.getFileFullName());
-				   
-				}
-				  
-			}
-
-		
-
-		super.afterDelete();
+		 super.afterDelete();
 	}
-	public String GenerTempFile(AthSaveWay saveWay)
-    {
-        if (saveWay == BP.Sys.AthSaveWay.WebServer)
-            return this.getFileFullName();
 
-        if (saveWay == BP.Sys.AthSaveWay.FTPServer)
-            return this.MakeFullFileFromFtp();
 
-        if (saveWay == BP.Sys.AthSaveWay.DB)
-			try {
-				throw new Exception("@尚未处理存储到db里面的文件.");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-        return this.getFileFullName();
-    }
+	/** 
+	 获得临时文件
+	 
+	 @return 
+	*/
+
+	public final String GenerTempFile()
+	{
+		return GenerTempFile(Sys.AthSaveWay.IISServer);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public string GenerTempFile(AthSaveWay saveWay= Sys.AthSaveWay.IISServer)
+	public final String GenerTempFile(AthSaveWay saveWay)
+	{
+		if (saveWay == Sys.AthSaveWay.IISServer)
+		{
+			return this.getFileFullName();
+		}
+
+		if (saveWay == Sys.AthSaveWay.FTPServer)
+		{
+			return this.MakeFullFileFromFtp();
+		}
+
+		if (saveWay == Sys.AthSaveWay.DB)
+		{
+			throw new RuntimeException("@尚未处理存储到db里面的文件.");
+		}
+
+		throw new RuntimeException("@尚未处理存储到db里面的文件.");
+	}
 }

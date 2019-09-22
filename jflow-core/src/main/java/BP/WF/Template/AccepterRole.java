@@ -1,14 +1,18 @@
 package BP.WF.Template;
 
-import BP.En.EntityOID;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  这里存放每个接受人规则的信息.	 
 */
 public class AccepterRole extends EntityOID
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
@@ -30,6 +34,11 @@ public class AccepterRole extends EntityOID
 	{
 		SetValByKey(AccepterRoleAttr.FK_Node, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 接受人规则
 	*/
@@ -38,12 +47,12 @@ public class AccepterRole extends EntityOID
 	}
 	/** 
 	 接受人规则
+	 
 	 @param oid 接受人规则ID	
-	 * @throws Exception 
 	*/
-	public AccepterRole(int oid) throws Exception
+	public AccepterRole(int oid)
 	{
-		this.setOID(oid);
+		this.OID = oid;
 		this.Retrieve();
 	}
 	/** 
@@ -52,9 +61,9 @@ public class AccepterRole extends EntityOID
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_AccepterRole", "接受人规则");
@@ -72,7 +81,10 @@ public class AccepterRole extends EntityOID
 		map.AddTBString(AccepterRoleAttr.Tag4, null, "Tag4", false, true, 0, 999, 10);
 		map.AddTBString(AccepterRoleAttr.Tag5, null, "Tag5", false, true, 0, 999, 10);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 }

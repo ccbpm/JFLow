@@ -1,14 +1,18 @@
 package BP.WF;
 
-import BP.DA.DataType;
-import BP.En.EntityMyPK;
-import BP.En.Map;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import java.util.*;
 
 /** 
  退回轨迹
 */
 public class ReturnWork extends EntityMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -82,15 +86,15 @@ public class ReturnWork extends EntityMyPK
 	}
 	public final String getBeiZhu()
 	{
-		return this.GetValStringByKey(ReturnWorkAttr.Note);
+		return this.GetValStringByKey(ReturnWorkAttr.BeiZhu);
 	}
 	public final void setBeiZhu(String value)
 	{
-		SetValByKey(ReturnWorkAttr.Note, value);
+		SetValByKey(ReturnWorkAttr.BeiZhu, value);
 	}
 	public final String getBeiZhuHtml()
 	{
-		return this.GetValHtmlStringByKey(ReturnWorkAttr.Note);
+		return this.GetValHtmlStringByKey(ReturnWorkAttr.BeiZhu);
 	}
 	/** 
 	 记录日期
@@ -114,7 +118,11 @@ public class ReturnWork extends EntityMyPK
 	{
 		SetValByKey(ReturnWorkAttr.IsBackTracking, value);
 	}
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 退回轨迹
 	*/
@@ -127,9 +135,9 @@ public class ReturnWork extends EntityMyPK
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_ReturnWork", "退回轨迹");
@@ -139,28 +147,32 @@ public class ReturnWork extends EntityMyPK
 		map.AddTBInt(ReturnWorkAttr.WorkID, 0, "WorkID", true, true);
 
 		map.AddTBInt(ReturnWorkAttr.ReturnNode, 0, "退回节点", true, true);
-		map.AddTBString(ReturnWorkAttr.ReturnNodeName, null, "退回节点名称", true, true, 0, 200, 10);
+		map.AddTBString(ReturnWorkAttr.ReturnNodeName, null, "退回节点名称", true, true, 0, 100, 10);
 
 		map.AddTBString(ReturnWorkAttr.Returner, null, "退回人", true, true, 0, 50, 10);
-		map.AddTBString(ReturnWorkAttr.ReturnerName, null, "退回人名称", true, true, 0, 200, 10);
+		map.AddTBString(ReturnWorkAttr.ReturnerName, null, "退回人名称", true, true, 0, 100, 10);
 
 		map.AddTBInt(ReturnWorkAttr.ReturnToNode, 0, "ReturnToNode", true, true);
 		map.AddTBString(ReturnWorkAttr.ReturnToEmp, null, "退回给", true, true, 0, 4000, 10);
 
-		map.AddTBString(ReturnWorkAttr.Note, "", "退回原因", true, true, 0, 4000, 10);
+		map.AddTBString(ReturnWorkAttr.BeiZhu, null, "退回原因", true, true, 0, 4000, 10);
 		map.AddTBDateTime(ReturnWorkAttr.RDT, null, "退回日期", true, true);
 
 		map.AddTBInt(ReturnWorkAttr.IsBackTracking, 0, "是否要原路返回?", true, true);
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-	@Override
-	protected boolean beforeInsert() throws Exception
-	{
-		this.setReturner(BP.Web.WebUser.getNo());
-		this.setReturnerName(BP.Web.WebUser.getName());
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-		this.setRDT(DataType.getCurrentDataTime());
+
+	@Override
+	protected boolean beforeInsert()
+	{
+		this.setReturner(BP.Web.WebUser.No);
+		this.setReturnerName(BP.Web.WebUser.Name);
+
+		this.setRDT(DataType.CurrentDataTime);
 		return super.beforeInsert();
 	}
 }

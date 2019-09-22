@@ -1,33 +1,33 @@
 package BP.Sys;
 
 import BP.DA.*;
-import BP.Tools.StringHelper;
 import BP.Web.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  扩展
- 
 */
 public class MapExt extends EntityMyPK
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 关于 Pop at 参数
 	/** 
 	 转化JSON
+	 
 	 @return 
 	*/
 	public final String PopValToJson()
 	{
-		//return BP.Tools.Json.ToJson(this.PopValToHashtable(), false);
 		return BP.Tools.Json.ToJsonEntityModel(this.PopValToHashtable());
 	}
-	public final java.util.Hashtable PopValToHashtable()
+	public final Hashtable PopValToHashtable()
 	{
 
 		//创建一个ht, 然后把他转化成json返回出去。
-		java.util.Hashtable ht = new java.util.Hashtable();
-		//ht.put("EntitySQL", this.getPopValEntitySQL());
-		switch (this.getPopValWorkModelNew())
+		Hashtable ht = new Hashtable();
+
+		switch (this.getPopValWorkModel())
 		{
 			case SelfUrl:
 				ht.put("URL", this.getPopValUrl());
@@ -59,22 +59,23 @@ public class MapExt extends EntityMyPK
 		ht.put(MapExtAttr.W, this.getW());
 		ht.put(MapExtAttr.H, this.getH());
 
-		ht.put("PopValWorkModel", this.getPopValWorkModelNew()); //工作模式.
-		ht.put("PopValSelectModel", this.getPopValSelectModelNew()); //单选，多选.
+		ht.put("PopValWorkModel", this.getPopValWorkModel().toString()); //工作模式.
+		ht.put("PopValSelectModel", this.getPopValSelectModel().toString()); //单选，多选.
 
-		ht.put("PopValFormat", this.getPopValFormat()); //返回值格式.
+		ht.put("PopValFormat", this.getPopValFormat().toString()); //返回值格式.
 		ht.put("PopValTitle", this.getPopValTitle()); //窗口标题.
 		ht.put("PopValColNames", this.getPopValColNames()); //列名 @No=编号@Name=名称@Addr=地址.
 		ht.put("PopValSearchTip", this.getPopValSearchTip()); //搜索提示..
 
 		//查询条件.
 		ht.put("PopValSearchCond", this.getPopValSearchCond()); //查询条件..
+
+
 		//转化为Json.
 		return ht;
 	}
 	/** 
 	 连接
-	 
 	*/
 	public final String getPopValUrl()
 	{
@@ -86,7 +87,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 实体SQL
-	 
 	*/
 	public final String getPopValEntitySQL()
 	{
@@ -98,7 +98,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 分组SQL
-	 
 	*/
 	public final String getPopValGroupSQL()
 	{
@@ -110,7 +109,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 分页SQL带有关键字
-	 
 	*/
 	public final String getPopValTablePageSQL()
 	{
@@ -122,7 +120,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 分页SQL获取总行数
-	 
 	*/
 	public final String getPopValTablePageSQLCount()
 	{
@@ -134,7 +131,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 标题
-	 
 	*/
 	public final String getPopValTitle()
 	{
@@ -155,7 +151,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 根目录
-	 
 	*/
 	public final String getPopValTreeParentNo()
 	{
@@ -168,31 +163,16 @@ public class MapExt extends EntityMyPK
 	/** 
 	 Pop 返回值的格式.
 	*/
-	public final int getPopValFormat()
+	public final PopValFormat getPopValFormat()
 	{
-		return this.GetParaInt("PopValFormat");
-	}
-	
-	public final void setPopValFormat(int value)
-	{
-		this.SetPara("PopValFormat", value);
-	}
-	public PopValFormat getPopValFormatNew()
-	{
-		System.out.println(PopValFormat.forValue(this.GetParaInt("PopValFormat")));
-		
 		return PopValFormat.forValue(this.GetParaInt("PopValFormat"));
 	}
-	
-	public final void setPopValFormatNew(PopValFormat value)
+	public final void setPopValFormat(PopValFormat value)
 	{
 		this.SetPara("PopValFormat", value.getValue());
 	}
-	
-
 	/** 
 	 双实体树的实体
-	 
 	*/
 	public final String getPopValDoubleTreeEntitySQL()
 	{
@@ -201,60 +181,32 @@ public class MapExt extends EntityMyPK
 	public final void setPopValDoubleTreeEntitySQL(String value)
 	{
 		this.setTag1(value);
-
 	}
-
 	/** 
 	 pop 选择方式
 	 0,多选,1=单选.
-	 
 	*/
-	public final int getPopValSelectModel()
+	public final PopValSelectModel getPopValSelectModel()
 	{
-		return this.GetParaInt("PopValSelectModel");
+		return PopValSelectModel.forValue(this.GetParaInt("PopValSelectModel"));
 	}
-	
-	public final void setPopValSelectModel(int value)
+	public final void setPopValSelectModel(PopValSelectModel value)
 	{
-		this.SetPara("PopValSelectModel", value);
+		this.SetPara("PopValSelectModel", value.getValue());
 	}
-	
-	public PopValSelectModel getPopValSelectModelNew()
-    {
-        return PopValSelectModel.forValue(this.GetParaInt("PopValSelectModel"));
-    }
-	public  final void setPopValSelectModelNew(PopValSelectModel value)
-    {
-        this.SetPara("PopValSelectModel", value.getValue());
-    }
-	
-	
 	/** 
 	 PopVal工作模式
 	*/
-	
-	public final PopValWorkModel getPopValWorkModelNew()
+	public final PopValWorkModel getPopValWorkModel()
 	{
-		 return PopValWorkModel.values()[this.GetParaInt("PopValWorkModel")];
+		return PopValWorkModel.forValue(this.GetParaInt("PopValWorkModel"));
 	}
-	
-	public final void setPopValWorkModelNew(PopValWorkModel value)
+	public final void setPopValWorkModel(PopValWorkModel value)
 	{
 		this.SetPara("PopValWorkModel", value.getValue());
 	}
-	
-	
-	public int getPopValWorkModel()
-	{
-		 return this.GetParaInt("PopValWorkModel");
-	}
-	public void setPopValWorkModel(int value)
-	{
-		 this.SetPara("PopValWorkModel",value);
-	}
 	/** 
 	 开窗的列中文名称.
-	 
 	*/
 	public final String getPopValColNames()
 	{
@@ -264,22 +216,8 @@ public class MapExt extends EntityMyPK
 	{
 		this.setTag3(value);
 	}
-	
-	/**
-	 * pop 呈现方式 0,表格,1=目录.
-	 */
-	public final int getPopValShowModel()
-	{
-		return this.GetParaInt("PopValShowModel");
-	}
-	
-	public final void setPopValShowModel(int value)
-	{
-		this.SetPara("PopValShowModel", value);
-	}
 	/** 
 	 查询条件
-	 
 	*/
 	public final String getPopValSearchCond()
 	{
@@ -291,7 +229,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 搜索提示关键字
-	 
 	*/
 	public final String getPopValSearchTip()
 	{
@@ -301,11 +238,8 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetPara("PopValSearchTip", value);
 	}
-
-
 	/** 
 	 数据源
-	 
 	*/
 	public final String getFK_DBSrc()
 	{
@@ -315,49 +249,38 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey(MapExtAttr.FK_DBSrc, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getExtDesc()
 	{
 		String dec = "";
-
-//		switch (this.ExtType)
-//ORIGINAL LINE: case MapExtXmlList.ActiveDDL:
-		if (this.getExtType().equals(MapExtXmlList.ActiveDDL))
+		switch (this.getExtType())
 		{
+			case MapExtXmlList.ActiveDDL:
 				dec += "字段" + this.getAttrOfOper();
-		}
-//ORIGINAL LINE: case MapExtXmlList.TBFullCtrl:
-		else if (this.getExtType().equals(MapExtXmlList.TBFullCtrl))
-		{
+				break;
+			case MapExtXmlList.TBFullCtrl:
 				dec += this.getAttrOfOper();
-		}
-//ORIGINAL LINE: case MapExtXmlList.DDLFullCtrl:
-		else if (this.getExtType().equals(MapExtXmlList.DDLFullCtrl))
-		{
+				break;
+			case MapExtXmlList.DDLFullCtrl:
 				dec += "" + this.getAttrOfOper();
-		}
-//ORIGINAL LINE: case MapExtXmlList.InputCheck:
-		else if (this.getExtType().equals(MapExtXmlList.InputCheck))
-		{
+				break;
+			case MapExtXmlList.InputCheck:
 				dec += "字段：" + this.getAttrOfOper() + " 检查内容：" + this.getTag1();
-		}
-//ORIGINAL LINE: case MapExtXmlList.PopVal:
-		else if (this.getExtType().equals(MapExtXmlList.PopVal))
-		{
+				break;
+			case MapExtXmlList.PopVal:
 				dec += "字段：" + this.getAttrOfOper() + " Url：" + this.getTag();
-		}
-		else
-		{
+				break;
+			default:
+				break;
 		}
 		return dec;
 	}
 	/** 
 	 是否自适应大小
-	 
 	*/
 	public final boolean getIsAutoSize()
 	{
@@ -368,15 +291,11 @@ public class MapExt extends EntityMyPK
 		this.SetValByKey(MapExtAttr.IsAutoSize, value);
 	}
 	/** 
-	 数据源
+	 数据格式
 	*/
 	public final String getDBType()
 	{
 		return this.GetValStrByKey(MapExtAttr.DBType);
-	}
-	public final void setDBSrc(String value)
-	{
-		this.SetValByKey(MapExtAttr.DBType, value);
 	}
 	public final void setDBType(String value)
 	{
@@ -409,7 +328,6 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 操作的attrs
-	 
 	*/
 	public final String getAttrOfOper()
 	{
@@ -419,17 +337,12 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey(MapExtAttr.AttrOfOper, value);
 	}
-	public final String getAttrOfOperToLowerCase()
-	{
-		return getAttrOfOper().toLowerCase();
-	}
 	/** 
 	 激活的attrs
-	 
 	*/
 	public final String getAttrsOfActive()
 	{
-		  //  return this.GetValStrByKey(MapExtAttr.AttrsOfActive).replace("~", "'");
+		  //  return this.GetValStrByKey(MapExtAttr.AttrsOfActive).Replace("~", "'");
 		return this.GetValStrByKey(MapExtAttr.AttrsOfActive);
 	}
 	public final void setAttrsOfActive(String value)
@@ -445,16 +358,18 @@ public class MapExt extends EntityMyPK
 		this.SetValByKey(MapExtAttr.FK_MapData, value);
 	}
 	/** 
-	 															
-	 
+	 Doc
 	*/
 	public final String getDoc()
 	{
-		return this.GetValStrByKey("Doc").replace("~","'");
+		String str = this.GetValStrByKey("Doc").replace("~","'");
+		str = str.replace("~", "'");
+		return str;
 	}
 	public final void setDoc(String value)
 	{
-		this.SetValByKey("Doc", value);
+		String str = value.replace("'", "~");
+		this.SetValByKey("Doc", str);
 	}
 
    /** 
@@ -462,18 +377,17 @@ public class MapExt extends EntityMyPK
 	
 	@param ht
 	@return 
- * @throws Exception 
    */
-	public final String AutoFullDLL_SQL_ForDtl(java.util.Hashtable htMainEn, java.util.Hashtable htDtlEn) throws Exception
+	public final String AutoFullDLL_SQL_ForDtl(Hashtable htMainEn, Hashtable htDtlEn)
 	{
-		String fullSQL = this.getDoc().replace("WebUser.No", WebUser.getNo());
+		String fullSQL = this.getDoc().replace("@WebUser.No", WebUser.getNo());
 		fullSQL = fullSQL.replace("@WebUser.Name", WebUser.getName());
-		fullSQL = fullSQL.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 		fullSQL = fullSQL.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+		fullSQL = fullSQL.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 
 		if (fullSQL.contains("@"))
 		{
-			for (Object key : htDtlEn.keySet())
+			for (String key : htDtlEn.keySet())
 			{
 				if (fullSQL.contains("@") == false)
 				{
@@ -481,19 +395,19 @@ public class MapExt extends EntityMyPK
 				}
 				if (fullSQL.contains("@" + key + ";") == true)
 				{
-					fullSQL = fullSQL.replace("@" + key + ";", (String)((htDtlEn.get(key) instanceof String) ? htDtlEn.get(key) : null));
+					fullSQL = fullSQL.replace("@" + key + ";", htDtlEn.get(key) instanceof String ? (String)htDtlEn.get(key) : null);
 				}
 
 				if (fullSQL.contains("@" + key) == true)
 				{
-					fullSQL = fullSQL.replace("@" + key, (String)((htDtlEn.get(key) instanceof String) ? htDtlEn.get(key) : null));
+					fullSQL = fullSQL.replace("@" + key, htDtlEn.get(key) instanceof String ? (String)htDtlEn.get(key) : null);
 				}
 			}
 		}
 
 		if (fullSQL.contains("@"))
 		{
-			for (Object key : htMainEn.keySet())
+			for (String key : htMainEn.keySet())
 			{
 				if (fullSQL.contains("@") == false)
 				{
@@ -502,27 +416,27 @@ public class MapExt extends EntityMyPK
 
 				if (fullSQL.contains("@" + key + ";") == true)
 				{
-					fullSQL = fullSQL.replace("@" + key + ";", (String)((htMainEn.get(key) instanceof String) ? htMainEn.get(key) : null));
+					fullSQL = fullSQL.replace("@" + key + ";", htMainEn.get(key) instanceof String ? (String)htMainEn.get(key) : null);
 				}
 
 				if (fullSQL.contains("@" + key) == true)
 				{
-					fullSQL = fullSQL.replace("@" + key, (String)((htMainEn.get(key) instanceof String) ? htMainEn.get(key) : null));
+					fullSQL = fullSQL.replace("@" + key, htMainEn.get(key) instanceof String ? (String)htMainEn.get(key) : null);
 				}
 			}
 		}
 		return fullSQL;
 	}
 
-	public final String getTagOfSQL_autoFullTB() throws Exception
+	public final String getTagOfSQL_autoFullTB()
 	{
-		if (StringHelper.isNullOrEmpty(this.getTag()))
+		if (DataType.IsNullOrEmpty(this.getTag()))
 		{
 			return this.getDocOfSQLDeal();
 		}
 
 		String sql = this.getTag();
-		sql = sql.replace("WebUser.No", BP.Web.WebUser.getNo());
+		sql = sql.replace("@WebUser.No", BP.Web.WebUser.getNo());
 		sql = sql.replace("@WebUser.Name", BP.Web.WebUser.getName());
 		sql = sql.replace("@WebUser.FK_DeptNameOfFull", BP.Web.WebUser.getFK_DeptNameOfFull());
 		sql = sql.replace("@WebUser.FK_DeptName", BP.Web.WebUser.getFK_DeptName());
@@ -530,10 +444,10 @@ public class MapExt extends EntityMyPK
 		return sql;
 	}
 
-	public final String getDocOfSQLDeal() throws Exception
+	public final String getDocOfSQLDeal()
 	{
 		String sql = this.getDoc();
-		sql = sql.replace("WebUser.No", BP.Web.WebUser.getNo());
+		sql = sql.replace("@WebUser.No", BP.Web.WebUser.getNo());
 		sql = sql.replace("@WebUser.Name", BP.Web.WebUser.getName());
 		sql = sql.replace("@WebUser.FK_DeptNameOfFull", BP.Web.WebUser.getFK_DeptNameOfFull());
 		sql = sql.replace("@WebUser.FK_DeptName", BP.Web.WebUser.getFK_DeptName());
@@ -542,7 +456,7 @@ public class MapExt extends EntityMyPK
 	}
 	public final String getTag()
 	{
-		String s= this.GetValStrByKey("Tag").replace("~", "'");
+		String s = this.GetValStrByKey("Tag").replace("~", "'");
 
 		s = s.replace("\\\\", "\\");
 		s = s.replace("\\\\", "\\");
@@ -587,20 +501,6 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey("Tag4", value);
 	}
-	public final String getTag5()
-	{
-		return this.GetValStrByKey("Tag5").replace("~", "'");
-	}
-	public final void setTag5(String value)
-	{
-		this.SetValByKey("Tag5", value);
-	}
-	public final String getDBSrc()
-	{
-		return this.GetValStrByKey("DBSrc");
-	}
-	
-
 	public final int getH()
 	{
 		return this.GetValIntByKey(MapExtAttr.H);
@@ -617,14 +517,13 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey(MapExtAttr.W, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 扩展
-	 
 	*/
 	public MapExt()
 	{
@@ -633,16 +532,14 @@ public class MapExt extends EntityMyPK
 	 扩展
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public MapExt(String mypk) throws Exception
+	public MapExt(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -657,171 +554,257 @@ public class MapExt extends EntityMyPK
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 
+		map.IndexField = MapDtlAttr.FK_MapData;
+
 		map.AddMyPK();
 
 		map.AddTBString(MapExtAttr.FK_MapData, null, "主表", true, false, 0, 100, 20);
 		map.AddTBString(MapExtAttr.ExtType, null, "类型", true, false, 0, 30, 20);
+
 		map.AddTBInt(MapExtAttr.DoWay, 0, "执行方式", true, false);
 
 		map.AddTBString(MapExtAttr.AttrOfOper, null, "操作的Attr", true, false, 0, 30, 20);
 		map.AddTBString(MapExtAttr.AttrsOfActive, null, "激活的字段", true, false, 0, 900, 20);
 
-		map.AddTBString(MapExtAttr.FK_DBSrc, null, "数据源", true, false, 0, 100, 20);
 		map.AddTBStringDoc();
+
 		map.AddTBString(MapExtAttr.Tag, null, "Tag", true, false, 0, 2000, 20);
+
 		map.AddTBString(MapExtAttr.Tag1, null, "Tag1", true, false, 0, 2000, 20);
 		map.AddTBString(MapExtAttr.Tag2, null, "Tag2", true, false, 0, 2000, 20);
 		map.AddTBString(MapExtAttr.Tag3, null, "Tag3", true, false, 0, 2000, 20);
 		map.AddTBString(MapExtAttr.Tag4, null, "Tag4", true, false, 0, 2000, 20);
 		map.AddTBString(MapExtAttr.Tag5, null, "Tag5", true, false, 0, 2000, 20);
-		
-		map.AddTBString(MapExtAttr.AtPara, null, "参数", true, false, 0, 2000, 20);
-		
 
-        // 数据类型 @0=SQL@1=URLJSON@2=FunctionJSON.
-        //map.AddTBString(MapExtAttr.DBType, null, "数据类型", true, false, 0, 20, 20);
-        map.AddTBInt(MapExtAttr.DBType, 0, "数据类型", true, false);
-		map.AddTBString(MapExtAttr.DBSrc, null, "数据源", true, false, 0, 20, 20);
 
 		map.AddTBInt(MapExtAttr.H, 500, "高度", false, false);
 		map.AddTBInt(MapExtAttr.W, 400, "宽度", false, false);
 
-			// add by stone 2013-12-21 计算的优先级,用于js的计算.
-		map.AddTBInt(MapExtAttr.PRI, 0, "PRI", false, false);
+			// 数据类型 @0=SQL@1=URLJSON@2=FunctionJSON.
+		map.AddTBInt(MapExtAttr.DBType, 0, "数据类型", true, false);
+		map.AddTBString(MapExtAttr.FK_DBSrc, null, "数据源", true, false, 0, 100, 20);
+
+			// add by stone 2013-12-21 计算的优先级,用于js的计算. 
+			// 也可以用于 字段之间的计算 优先级.
+		map.AddTBInt(MapExtAttr.PRI, 0, "PRI/顺序号", false, false);
+		map.AddTBString(MapExtAttr.AtPara, null, "参数", true, false, 0, 3999, 20);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 其他方法.
 	/** 
 	 统一生成主键的规则.
-	 
 	*/
 	public final void InitPK()
 	{
-		String extType = this.getExtType();
-	    if(extType.equals(MapExtXmlList.FullData)){
-	    	//不做任何处理
-	    }
-	    else if (extType.equals(MapExtXmlList.ActiveDDL))
-				this.setMyPK(MapExtXmlList.ActiveDDL +"_"+this.getFK_MapData() + "_" + this.getAttrsOfActive());
-		
-		else if (extType.equals(MapExtXmlList.DDLFullCtrl))
-				this.setMyPK(MapExtXmlList.DDLFullCtrl + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		
-		else if (extType.equals(MapExtXmlList.PopVal))
-			this.setMyPK(MapExtXmlList.PopVal + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		
-		else if(extType.equals(MapExtXmlList.TBFullCtrl))
-              this.setMyPK(MapExtXmlList.TBFullCtrl + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		
-		else if(extType.equals(MapExtXmlList.AutoFull))
-			  this.setMyPK(MapExtXmlList.AutoFull + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		
-		else if(extType.equals(MapExtXmlList.AutoFullDLL))
-            this.setMyPK(MapExtXmlList.AutoFullDLL + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		
-		else if(extType.equals(MapExtXmlList.InputCheck))
-            this.setMyPK(MapExtXmlList.InputCheck + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
-		
-		else if(extType.equals(MapExtXmlList.PageLoadFull))
-            this.setMyPK(MapExtXmlList.PageLoadFull + "_" + this.getFK_MapData());
-		
-		else if(extType.equals(MapExtXmlList.RegularExpression))
-            this.setMyPK(MapExtXmlList.RegularExpression + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper() + "_" + this.getTag());
-		
-		else if(extType.equals(MapExtXmlList.Link))
-            this.setMyPK(MapExtXmlList.Link + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());  
-		
-		else if(extType.equals(MapExtXmlList.BindFunction))
-			this.setMyPK(MapExtXmlList.BindFunction + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper() + "_" + this.getTag());
-		else
+		switch (this.getExtType())
 		{
-			  //这里要去掉，不然组合组主键，会带来错误.
-            if (DataType.IsNullOrEmpty(this.getAttrOfOper()) == true)
-                this.setMyPK( this.getExtType() + "_" + this.getFK_MapData());
-            else
-                this.setMyPK( this.getExtType() + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+			case MapExtXmlList.FullData:
+				break;
+			case MapExtXmlList.ActiveDDL:
+				this.setMyPK(MapExtXmlList.ActiveDDL + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.DDLFullCtrl:
+				this.setMyPK(MapExtXmlList.DDLFullCtrl + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.PopVal:
+				this.setMyPK(MapExtXmlList.PopVal + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.TBFullCtrl:
+				this.setMyPK(MapExtXmlList.TBFullCtrl + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.PopFullCtrl:
+				this.setMyPK(MapExtXmlList.PopFullCtrl + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.AutoFull:
+				this.setMyPK(MapExtXmlList.AutoFull + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.AutoFullDLL:
+				this.setMyPK(MapExtXmlList.AutoFullDLL + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.InputCheck:
+				this.setMyPK(MapExtXmlList.InputCheck + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			case MapExtXmlList.PageLoadFull:
+				this.setMyPK(MapExtXmlList.PageLoadFull + "_" + this.getFK_MapData());
+				break;
+			case MapExtXmlList.RegularExpression:
+				this.setMyPK(MapExtXmlList.RegularExpression + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper() + "_" + this.getTag());
+				break;
+			case MapExtXmlList.BindFunction:
+				this.setMyPK(MapExtXmlList.BindFunction + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper() + "_" + this.getTag());
+				break;
+			case MapExtXmlList.Link:
+				this.setMyPK(MapExtXmlList.Link + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				break;
+			default:
+				//这里要去掉，不然组合组主键，会带来错误.
+				if (DataType.IsNullOrEmpty(this.getAttrOfOper()) == true)
+				{
+					this.setMyPK(this.getExtType() + "_" + this.getFK_MapData());
+				}
+				else
+				{
+					this.setMyPK(this.getExtType() + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());
+				}
+				break;
 		}
 	}
-	
+
+	@Override
+	protected boolean beforeInsert()
+	{
+		if (this.getMyPK().equals(""))
+		{
+			this.setMyPK(DBAccess.GenerGUID()); //@李国文
+		}
+
+		return super.beforeInsert();
+	}
+
+	@Override
+	protected boolean beforeUpdate()
+	{
+		this.InitPK();
+
+		switch (this.getExtType())
+		{
+			case MapExtXmlList.ActiveDDL:
+			case MapExtXmlList.DDLFullCtrl:
+			case MapExtXmlList.TBFullCtrl:
+				if (this.getDoc().contains("@Key") == false)
+				{
+					throw new RuntimeException("@SQL表达式错误，您必须包含@Key ,这个关键字. ");
+				}
+				break;
+			case MapExtXmlList.AutoFullDLL:
+				if (this.getDoc().length() <= 13)
+				{
+					throw new RuntimeException("@必须填写SQL表达式. ");
+				}
+				break;
+			case MapExtXmlList.AutoFull:
+				if (this.getDoc().length() <= 3)
+				{
+					throw new RuntimeException("@必须填写表达式. 比如 @单价;*@数量; ");
+				}
+				break;
+			case MapExtXmlList.PopVal:
+				break;
+			default:
+				break;
+		}
+
+		return super.beforeUpdate();
+	}
+
+	@Override
+	protected void afterInsertUpdateAction()
+	{
+		if (this.getExtType().equals("MultipleChoiceSmall") == true)
+		{
+			//给该字段增加一个KeyOfEnT
+			String mypk = this.getFK_MapData() + "_" + this.getAttrOfOper() + "T";
+			MapAttr attrH = new MapAttr();
+			attrH.setMyPK(mypk);
+			if (attrH.RetrieveFromDBSources() == 0)
+			{
+				MapAttr attr = new MapAttr(this.getFK_MapData() + "_" + this.getAttrOfOper());
+				attrH.Copy(attr);
+				attrH.setKeyOfEn(attr.getKeyOfEn() + "T");
+				attrH.setName(attr.getName());
+				attrH.setUIContralType(BP.En.UIContralType.TB);
+				attrH.setMinLen(0);
+				attrH.setMaxLen(500);
+				attrH.setMyDataType(BP.DA.DataType.AppString);
+				attrH.setUIVisible(false);
+				attrH.setUIIsEnable(true);
+				attrH.setMyPK(attrH.getFK_MapData() + "_" + attrH.getKeyOfEn());
+				attrH.Save();
+				attr.SetPara("MultipleChoiceSmall", "1");
+			}
+		}
+		super.afterInsertUpdateAction();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
 	/** 
 	 删除垃圾数据.
-	 * @throws Exception 
-	 
 	*/
-	public static void DeleteDB() throws Exception
+	public static void DeleteDB()
 	{
 		MapExts exts = new MapExts();
 		exts.RetrieveAll();
+		return;
 
-		for (Object ext : exts)
+		for (MapExt ext : exts)
 		{
-			if (((MapExt) ext).getExtType().equals(MapExtXmlList.ActiveDDL))
+			if (ext.getExtType().equals(MapExtXmlList.ActiveDDL))
 			{
-				if (((MapExt) ext).getAttrOfOper().trim().length() == 0)
+				if (ext.getAttrOfOper().trim().length() == 0)
 				{
-					((Entity) ext).Delete();
+					ext.Delete();
 					continue;
 				}
 
 				MapAttr attr = new MapAttr();
-				attr.setMyPK(((MapExt) ext).getAttrOfOper());
+				attr.setMyPK(ext.getAttrOfOper());
 				if (attr.getIsExits() == true)
 				{
-					((MapExt) ext).setAttrOfOper(attr.getKeyOfEn());
-					((Entity) ext).Delete();
+					ext.setAttrOfOper(attr.getKeyOfEn());
+					ext.Delete();
 
-					((EntityMyPK) ext).setMyPK(((MapExt) ext).getExtType() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() + "_" + ((MapExt) ext).getAttrsOfActive());
-					((Entity) ext).Save();
+					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
+					ext.Save();
 				}
 
-				if (((EntityMyPK) ext).getMyPK().equals(((MapExt) ext).getExtType()) + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() != null)
+				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper()))
 				{
-					((Entity) ext).Delete(); //直接删除.
+					ext.Delete(); //直接删除.
 
-					((EntityMyPK) ext).setMyPK(((MapExt) ext).getExtType() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() + "_" + ((MapExt) ext).getAttrsOfActive());
-					((Entity) ext).Save();
+					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
+					ext.Save();
 					continue;
 				}
 
-				if (((EntityMyPK) ext).getMyPK().equals(((MapExt) ext).getExtType()) + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() + "_" + ((MapExt) ext).getAttrsOfActive() != null)
+				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive()))
 				{
-					((Entity) ext).Delete(); //直接删除.
-					((EntityMyPK) ext).setMyPK(((MapExt) ext).getExtType() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() + "_" + ((MapExt) ext).getAttrsOfActive());
-					((Entity) ext).Save();
+					ext.Delete(); //直接删除.
+					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
+					ext.Save();
 					continue;
 				}
 
-				if (((EntityMyPK) ext).getMyPK().equals(((MapExt) ext).getExtType()) + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrsOfActive() + "_" + ((MapExt) ext).getAttrOfOper() != null)
+				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getFK_MapData() + "_" + ext.getAttrsOfActive() + "_" + ext.getAttrOfOper()))
 				{
-					((Entity) ext).Delete(); //直接删除.
-					((EntityMyPK) ext).setMyPK(((MapExt) ext).getExtType() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() + "_" + ((MapExt) ext).getAttrsOfActive());
-					((Entity) ext).Save();
+					ext.Delete(); //直接删除.
+					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
+					ext.Save();
 					continue;
 				}
 
 
 				//三个主键的情况.
-				if (((EntityMyPK) ext).getMyPK().equals(((MapExt) ext).getExtType()) + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() != null)
+				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper()))
 				{
-					((Entity) ext).Delete();
-					((EntityMyPK) ext).setMyPK(((MapExt) ext).getExtType() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() + "_" + ((MapExt) ext).getAttrsOfActive());
-					((Entity) ext).Save();
+					ext.Delete();
+					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
+					ext.Save();
 					continue;
 				}
 
 				//三个主键的情况.
-				if (((EntityMyPK) ext).getMyPK().equals(((MapExt) ext).getExtType()) + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrsOfActive() != null)
+				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrsOfActive()))
 				{
-					((Entity) ext).Delete();
-					((EntityMyPK) ext).setMyPK(((MapExt) ext).getExtType() + "_" + ((MapExt) ext).getFK_MapData() + "_" + ((MapExt) ext).getAttrOfOper() + "_" + ((MapExt) ext).getAttrsOfActive());
-					((Entity) ext).Save();
+					ext.Delete();
+					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
+					ext.Save();
 					continue;
 				}
 

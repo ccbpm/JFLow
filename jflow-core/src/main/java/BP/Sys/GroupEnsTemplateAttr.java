@@ -1,35 +1,38 @@
 package BP.Sys;
 
-import BP.En.EntityOIDAttr;
+import BP.DA.*;
+import BP.En.*;
+import BP.*;
+import java.util.*;
 
 //using BP.ZHZS.Base;
-/**
- * abc_afs
- */
+/** 
+ abc_afs
+*/
 public class GroupEnsTemplateAttr extends EntityOIDAttr
 {
-	/**
-	 * 名称
-	 */
+	/** 
+	 名称
+	*/
 	public static final String Name = "Name";
-	/**
-	 * 实体名称
-	 */
+	/** 
+	 实体名称
+	*/
 	public static final String EnName = "EnName";
-	/**
-	 * 属性
-	 */
+	/** 
+	 属性
+	*/
 	public static final String Attrs = "Attrs";
-	/**
-	 * 操作列
-	 */
+	/** 
+	 操作列
+	*/
 	public static final String OperateCol = "OperateCol";
-	/**
-	 * 记录人
-	 */
+	/** 
+	 记录人
+	*/
 	public static final String Rec = "Rec";
-	/**
-	 * EnsName
-	 */
+	/** 
+	 EnsName
+	*/
 	public static final String EnsName = "EnsName";
 }

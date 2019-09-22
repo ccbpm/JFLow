@@ -1,89 +1,96 @@
 package BP.Sys;
 
-import BP.DA.Depositary;
-import BP.En.EnType;
-import BP.En.EntityNoName;
-import BP.En.Map;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+import java.math.*;
 
-/**
- * 全局变量
- */
+/** 
+ 全局变量
+*/
 public class GloVar extends EntityNoName
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	// 属性
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final Object getValOfObject()
 	{
 		return this.GetValByKey(GloVarAttr.Val);
 	}
-	
 	public final void setValOfObject(Object value)
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	
 	public final String getVal()
 	{
 		return this.GetValStringByKey(GloVarAttr.Val);
 	}
-	
 	public final void setVal(String value)
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	
 	public final float getValOfFloat()
 	{
-		return this.GetValFloatByKey(GloVarAttr.Val);
+		try
+		{
+			return this.GetValFloatByKey(GloVarAttr.Val);
+		}
+		catch (java.lang.Exception e)
+		{
+			return 0;
+			throw new RuntimeException("@" + this.getName() + ", 没有设置默认值." + this.getVal());
+		}
 	}
-	
 	public final void setValOfFloat(float value)
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	
 	public final int getValOfInt()
 	{
-		return this.GetValIntByKey(GloVarAttr.Val);
+		try
+		{
+			return this.GetValIntByKey(GloVarAttr.Val);
+		}
+		catch (RuntimeException ex)
+		{
+			return 0;
+			throw new RuntimeException("@" + this.getName() + ", 没有设置默认值." + this.getVal());
+		}
 	}
-	
 	public final void setValOfInt(int value)
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	
-	public final java.math.BigDecimal getValOfDecimal()
+	public final BigDecimal getValOfDecimal()
 	{
-		return this.GetValDecimalByKey(GloVarAttr.Val);
+		try
+		{
+			return this.GetValDecimalByKey(GloVarAttr.Val);
+		}
+		catch (java.lang.Exception e)
+		{
+			return 0;
+			throw new RuntimeException("@" + this.getName() + ", 没有设置默认值." + this.getVal());
+		}
 	}
-	
-	public final void setValOfDecimal(java.math.BigDecimal value)
+	public final void setValOfDecimal(BigDecimal value)
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	
 	public final boolean getValOfBoolen()
 	{
 		return this.GetValBooleanByKey(GloVarAttr.Val);
 	}
-	
 	public final void setValOfBoolen(boolean value)
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	
-	/**
-	 * note
-	 */
+	/** 
+	 note
+	*/
 	public final String getNote()
 	{
 		return this.GetValStringByKey(GloVarAttr.Note);
 	}
-	
 	public final void setNote(String value)
 	{
 		this.SetValByKey(GloVarAttr.Note, value);
@@ -99,42 +106,41 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.GroupKey, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	// 构造方法
-	/**
-	 * 全局变量
-	 */
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
+	/** 
+	 全局变量
+	*/
 	public GloVar()
 	{
 	}
-	
-	/**
-	 * 全局变量
-	 * 
-	 * @param mypk
-	 * @throws Exception 
-	 */
-	public GloVar(String no) throws Exception
+	/** 
+	 全局变量
+	 
+	 @param mypk
+	*/
+	public GloVar(String no)
 	{
 		this.setNo(no);
 		this.Retrieve();
 	}
-	
-	/**
-	 * 键值
-	 * 
-	 * @param key
-	 *            key
-	 * @param isNullAsVal
-	 * @throws Exception 
+	 /** 
+	 键值
+	 
+	 @param key key
+	 @param isNullAsVal 
 	 */
-	public GloVar(String key, Object isNullAsVal) throws Exception
+	public GloVar(String key, Object isNullAsVal)
 	{
 		try
 		{
 			this.setNo(key);
 			this.Retrieve();
-		} catch (java.lang.Exception e)
+		}
+		catch (java.lang.Exception e)
 		{
 			if (this.RetrieveFromDBSources() == 0)
 			{
@@ -143,10 +149,9 @@ public class GloVar extends EntityNoName
 			}
 		}
 	}
-	
-	/**
-	 * EnMap
-	 */
+	/** 
+	 EnMap
+	*/
 	@Override
 	public Map getEnMap()
 	{
@@ -154,29 +159,34 @@ public class GloVar extends EntityNoName
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("Sys_GloVar");
-		map.setDepositaryOfEntity(Depositary.None);
-		map.setDepositaryOfMap(Depositary.Application);
-		map.setEnDesc("全局变量");
-		map.setEnType(EnType.Sys);
-		
-		map.AddTBStringPK(GloVarAttr.No, null, "键", true, false, 1, 30, 20);
+
+		Map map = new Map("Sys_GloVar", "全局变量");
+		map.Java_SetDepositaryOfEntity(Depositary.None);
+		map.Java_SetDepositaryOfMap(Depositary.Application);
+		map.Java_SetEnType(EnType.Sys);
+
+		map.AddTBStringPK(GloVarAttr.No, null, "键", true, false, 1, 50, 20);
 		map.AddTBString(GloVarAttr.Name, null, "名称", true, false, 0, 120, 20);
-		map.AddTBString(GloVarAttr.Val, null, "值", true, false, 0, 120, 20,
-				true);
-		map.AddTBString(GloVarAttr.GroupKey, null, "分组值", true, false, 0, 120,
-				20, true);
+		map.AddTBString(GloVarAttr.Val, null, "值", true, false, 0, 4000, 20, true);
+		map.AddTBString(GloVarAttr.GroupKey, null, "分组值", true, false, 0, 120, 20, true);
 		map.AddTBStringDoc(GloVarAttr.Note, null, "说明", true, false, true);
+		map.AddTBInt(GloVarAttr.Idx, 0, "顺序号", true, true);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	///#region 公共属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 公共属性.
+	/** 
+	 公共假期
+	*/
 	private static String _Holidays = null;
 	/** 
 	 一个月份的假期.
-	 * @throws Exception 
 	*/
-	public static String getHolidays() throws Exception
+	public static String getHolidays()
 	{
 		if (_Holidays != null)
 		{
@@ -199,4 +209,7 @@ public class GloVar extends EntityNoName
 	{
 		_Holidays = value;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 }

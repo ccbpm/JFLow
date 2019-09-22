@@ -1,22 +1,31 @@
 package BP.WF;
 
-import BP.DA.DataType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.Port.Dept;
-import BP.Port.Emp;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import java.util.*;
 
 /** 
  工作者列表
- 
 */
 public class GenerWorkerList extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
+	/** 
+	 是否会签
+	*/
+	public final boolean getIsHuiQian()
+	{
+		return this.GetParaBoolen(GenerWorkerListAttr.IsHuiQian);
+	}
+	public final void setIsHuiQian(boolean value)
+	{
+		this.SetPara(GenerWorkerListAttr.IsHuiQian, value);
+	}
 	/** 
 	 分组标记
-	 
 	*/
 	public final String getGroupMark()
 	{
@@ -28,7 +37,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 表单ID(对于动态表单树有效.)
-	 
 	*/
 	public final String getFrmIDs()
 	{
@@ -38,14 +46,13 @@ public class GenerWorkerList extends Entity
 	{
 		this.SetPara(GenerWorkerListAttr.FrmIDs, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 参数属性.
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 谁来执行它
-	 
 	*/
 	public final int getWhoExeIt()
 	{
@@ -65,19 +72,17 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 优先级
-	 
 	*/
 	public final int getPRI()
 	{
-		return this.GetValIntByKey(GenerWorkFlowAttr.PRI);
+		return this.GetValIntByKey(GenerWorkerListAttr.PRI);
 	}
 	public final void setPRI(int value)
 	{
-		SetValByKey(GenerWorkFlowAttr.PRI, value);
+		SetValByKey(GenerWorkerListAttr.PRI, value);
 	}
 	/** 
 	 WorkID
-	 
 	*/
 	@Override
 	public String getPK()
@@ -86,7 +91,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 是否可用(在分配工作时有效)
-	 
 	*/
 	public final boolean getIsEnable()
 	{
@@ -98,7 +102,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 是否通过(对审核的会签节点有效)
-	 
 	*/
 	public final boolean getIsPass()
 	{
@@ -112,7 +115,6 @@ public class GenerWorkerList extends Entity
 	 0=未处理.
 	 1=已经通过.
 	 -2=  标志该节点是干流程人员处理的节点，目的为了让分流节点的人员可以看到待办.
-	 
 	*/
 	public final int getIsPassInt()
 	{
@@ -132,7 +134,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 WorkID
-	 
 	*/
 	public final long getWorkID()
 	{
@@ -144,7 +145,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 Node
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -155,17 +155,16 @@ public class GenerWorkerList extends Entity
 		this.SetValByKey(GenerWorkerListAttr.FK_Node, value);
 	}
 
+	/** 
+	 部门名称
+	*/
 	public final String getFK_DeptT()
 	{
-		try
-		{
-			Dept d = new Dept(this.getFK_Dept());
-			return d.getName();
-		}
-		catch (java.lang.Exception e)
-		{
-			return "";
-		}
+		return this.GetParaString(GenerWorkerListAttr.FK_DeptT);
+	}
+	public final void setFK_DeptT(String value)
+	{
+		this.SetPara(GenerWorkerListAttr.FK_DeptT, value);
 	}
 	public final String getFK_Dept()
 	{
@@ -175,15 +174,8 @@ public class GenerWorkerList extends Entity
 	{
 		this.SetValByKey(GenerWorkerListAttr.FK_Dept, value);
 	}
-	public final void setFK_DeptT(String value)
-	{
-		this.SetPara(GenerWorkerListAttr.FK_Dept, value);
-	}
-	
-	
 	/** 
 	 发送人
-	 
 	*/
 	public final String getSender()
 	{
@@ -195,7 +187,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 节点名称
-	 
 	*/
 	public final String getFK_NodeText()
 	{
@@ -207,7 +198,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getFID()
 	{
@@ -218,29 +208,14 @@ public class GenerWorkerList extends Entity
 		this.SetValByKey(GenerWorkerListAttr.FID, value);
 	}
 	/** 
-	 警告天
-	 
-	*/
-	public final float getWarningHour()
-	{
-		return this.GetValFloatByKey(GenerWorkerListAttr.WarningHour);
-	}
-	public final void setWarningHour(float value)
-	{
-		this.SetValByKey(GenerWorkerListAttr.WarningHour, value);
-	}
-	/** 
 	 工作人员
-	 * @throws Exception 
-	 
 	*/
-	public final Emp getHisEmp() throws Exception
+	public final Emp getHisEmp()
 	{
 		return new Emp(this.getFK_Emp());
 	}
 	/** 
 	 发送日期
-	 
 	*/
 	public final String getRDT()
 	{
@@ -252,7 +227,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 完成时间
-	 
 	*/
 	public final String getCDT()
 	{
@@ -264,7 +238,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 应该完成日期
-	 
 	*/
 	public final String getSDT()
 	{
@@ -276,7 +249,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 警告日期
-	 
 	*/
 	public final String getDTOfWarning()
 	{
@@ -288,7 +260,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 人员
-	 
 	*/
 	public final String getFK_Emp()
 	{
@@ -300,7 +271,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 人员名称
-	 
 	*/
 	public final String getFK_EmpText()
 	{
@@ -312,7 +282,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 流程编号
-	 		 
 	*/
 	public final String getFK_Flow()
 	{
@@ -339,14 +308,13 @@ public class GenerWorkerList extends Entity
 	{
 		this.SetValByKey(GenerWorkerListAttr.GuestName, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 挂起属性
 	/** 
 	 挂起时间
-	 
 	*/
 	public final String getDTOfHungUp()
 	{
@@ -356,24 +324,8 @@ public class GenerWorkerList extends Entity
 	{
 		this.SetValByKey(GenerWorkerListAttr.DTOfHungUp, value);
 	}
-	
-	/** 
-	是否是会签
-	 
-	*/
-	public final Boolean getIsHuiQian()
-	{
-		return this.GetParaBoolen("IsHuiQian");
-	}
-	public final void setIsHuiQian(Boolean value)
-	{
-		this.SetPara("IsHuiQian", value);
-		 
-	}
-	
 	/** 
 	 解除挂起时间
-	 
 	*/
 	public final String getDTOfUnHungUp()
 	{
@@ -385,7 +337,6 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 挂起次数
-	 
 	*/
 	public final int getHungUpTimes()
 	{
@@ -395,15 +346,26 @@ public class GenerWorkerList extends Entity
 	{
 		this.SetValByKey(GenerWorkerListAttr.HungUpTimes, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
+	/** 
+	 主键
+	*/
+	@Override
+	public String getPKField()
+	{
+		return "WorkID,FK_Emp,FK_Node";
+	}
 	/** 
 	 工作者
-	 
 	*/
 	public GenerWorkerList()
 	{
 	}
-	public GenerWorkerList(long workid, int FK_Node, String FK_Emp) throws Exception
+	public GenerWorkerList(long workid, int FK_Node, String FK_Emp)
 	{
 		if (this.getWorkID() == 0)
 		{
@@ -417,17 +379,18 @@ public class GenerWorkerList extends Entity
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_GenerWorkerlist", "工作者");
+
+		map.IndexField = GenerWorkerListAttr.WorkID;
 
 		map.AddTBIntPK(GenerWorkerListAttr.WorkID, 0, "工作ID", true, true);
 		map.AddTBStringPK(GenerWorkerListAttr.FK_Emp, null, "人员", true, false, 0, 20, 100);
@@ -444,10 +407,10 @@ public class GenerWorkerList extends Entity
 			//如果是流程属性来控制的就按流程属性来计算。
 		map.AddTBDateTime(GenerWorkerListAttr.SDT, "应完成日期", false, false);
 		map.AddTBDateTime(GenerWorkerListAttr.DTOfWarning, "警告日期", false, false);
-		//map.AddTBFloat(GenerWorkerListAttr.WarningHour, 0, "预警天", true, false);
+		   // map.AddTBFloat(GenerWorkerListAttr.WarningHour, 0, "预警天", true, false);
 		map.AddTBDateTime(GenerWorkerListAttr.RDT, "记录时间", false, false);
 		map.AddTBDateTime(GenerWorkerListAttr.CDT, "完成时间", false, false);
-		map.AddBoolean(GenerWorkerListAttr.IsEnable, true, "是否可用", true, true);
+		map.AddTBInt(GenerWorkerListAttr.IsEnable, 1, "是否可用", true, true);
 
 			//  add for 上海 2012-11-30
 		map.AddTBInt(GenerWorkerListAttr.IsRead, 0, "是否读取", true, true);
@@ -479,16 +442,16 @@ public class GenerWorkerList extends Entity
 			//参数标记 2014-04-05.
 		map.AddTBAtParas(4000);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写基类的方法.
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		if (this.getFID() != 0)
 		{
@@ -500,16 +463,18 @@ public class GenerWorkerList extends Entity
 
 		if (this.getFK_Emp().equals("Guest"))
 		{
-			this.setFK_EmpText(BP.Web.GuestUser.getName());
+			this.setFK_EmpText(BP.Web.GuestUser.Name);
 			this.setGuestName(this.getFK_EmpText());
-			this.setGuestNo(BP.Web.GuestUser.getNo());
+			this.setGuestNo(BP.Web.GuestUser.No);
 		}
-		
+		//this.Sender = BP.Web.WebUser.No;
+
 		//增加记录日期.
-        this.SetValByKey(GenerWorkerListAttr.RDT,  DataType.getCurrentDataTimess());
+		this.SetValByKey(GenerWorkerListAttr.RDT, DataType.CurrentDataTimess);
+
 		return super.beforeInsert();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 重写基类的方法.
 
 }

@@ -1,35 +1,39 @@
 package BP.WF.Template;
 
-import java.io.File;
-
-import BP.WF.CCBPM_DType;
-import BP.WF.Flow;
-import BP.WF.Node;
+import BP.WF.*;
+import java.time.*;
 
 /** 
- 
- 
+ 流程模版的操作
 */
 public class TemplateGlo
 {
 	/** 
-	 创建一个流程.
+	 创建一个流程模版
 	 
 	 @param flowSort 流程类别
-	 @return string
-	 * @throws Exception 
+	 @param flowName 名称
+	 @param dsm 存储方式
+	 @param ptable 物理量
+	 @param flowMark 标记
+	 @param flowVer 版本
+	 @return 创建的流程编号
 	*/
-	public static String NewFlow(String flowSort, String flowName, BP.WF.Template.DataStoreModel dsm, String ptable, String flowMark, String flowVer) throws Exception
+	public static String NewFlow(String flowSort, String flowName, BP.WF.Template.DataStoreModel dsm, String ptable, String flowMark, String flowVer)
 	{
 		//执行保存.
 		BP.WF.Flow fl = new BP.WF.Flow();
-		//修改类型为CCBPMN
-		//fl.DType = string.IsNullOrEmpty(flowVer) ? 1 : Int32.Parse(flowVer);
-
-		fl.setDType(CCBPM_DType.CCBPM.getValue());
 
 		String flowNo = fl.DoNewFlow(flowSort, flowName, dsm, ptable, flowMark);
-		fl.setNo(flowNo);
+		fl.No = flowNo;
+		fl.Retrieve();
+
+	   FlowExt flowExt = new FlowExt(flowNo);
+	   flowExt.setDesignerNo(BP.Web.WebUser.No);
+	   flowExt.setDesignerName(BP.Web.WebUser.Name);
+	   flowExt.setDesignTime(LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+	   flowExt.DirectSave();
+
 
 		//如果为CCFlow模式则不进行写入Json串
 		if (flowVer.equals("0"))
@@ -37,7 +41,6 @@ public class TemplateGlo
 			return flowNo;
 		}
 
-	  
 		//创建连线
 		Direction drToNode = new Direction();
 		drToNode.setFK_Flow(flowNo);
@@ -45,33 +48,41 @@ public class TemplateGlo
 		drToNode.setToNode(Integer.parseInt(Integer.parseInt(flowNo) + "02"));
 		drToNode.Insert();
 
+		//执行一次流程检查, 为了节省效率，把检查去掉了.
+		fl.DoCheck();
+
 		return flowNo;
 	}
 	/** 
 	 创建一个节点
 	 
-	 @param flowNo
-	 @param x
-	 @param y
-	 @return 
-	 * @throws Exception 
+	 @param flowNo 流程编号
+	 @param x 位置x
+	 @param y 位置y
+	 @return 新的节点ID
 	*/
-	public static int NewNode(String flowNo, int x, int y) throws Exception
+
+	public static int NewNode(String flowNo, int x, int y)
 	{
-		BP.WF.Flow fl = new Flow(flowNo);
-		BP.WF.Node nd = fl.DoNewNode(x, y);
+		return NewNode(flowNo, x, y, null);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public static int NewNode(string flowNo, int x, int y,string icon=null)
+	public static int NewNode(String flowNo, int x, int y, String icon)
+	{
+		BP.WF.Flow fl = new WF.Flow(flowNo);
+		BP.WF.Node nd = fl.DoNewNode(x, y, icon);
 		return nd.getNodeID();
 	}
 	/** 
 	 删除节点.
 	 
 	 @param nodeid
-	 * @throws Exception 
 	*/
-	public static void DeleteNode(int nodeid) throws Exception
+	public static void DeleteNode(int nodeid)
 	{
-		BP.WF.Node nd = new Node(nodeid);
+		BP.WF.Node nd = new WF.Node(nodeid);
 		nd.Delete();
 	}
-	  
 }

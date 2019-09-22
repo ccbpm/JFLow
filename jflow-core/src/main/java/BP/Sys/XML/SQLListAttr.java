@@ -1,9 +1,18 @@
 package BP.Sys.XML;
 
-public class SQLListAttr {
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.XML.*;
+import BP.Sys.*;
+
+/** 
+ 属性
+*/
+public class SQLListAttr
+{
 	/** 
-	 *编号
-	 */
+	 编号
+	*/
 	public static final String No = "No";
 	/** 
 	 SQL

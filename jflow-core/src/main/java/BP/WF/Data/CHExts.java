@@ -1,20 +1,31 @@
 package BP.WF.Data;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  时效考核s
- 
 */
 public class CHExts extends Entities
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法属性
 	/** 
 	 时效考核s
 	*/
 	public CHExts()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 时效考核
 	*/
@@ -23,28 +34,34 @@ public class CHExts extends Entities
 	{
 		return new CHExt();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<CHExt> ToJavaList()
+	public final List<CHExt> ToJavaList()
 	{
-		return (java.util.List<CHExt>)(Object)this;
+		return (List<CHExt>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<CHExt> Tolist()
+	public final ArrayList<CHExt> Tolist()
 	{
-		java.util.ArrayList<CHExt> list = new java.util.ArrayList<CHExt>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<CHExt> list = new ArrayList<CHExt>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((CHExt)this.get(i));
+			list.add((CHExt)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

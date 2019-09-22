@@ -1,20 +1,19 @@
 package BP.GPM;
 
-import BP.Web.WebUser;
+import BP.Sys.*;
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  系统
- 
 */
 public class App extends EntityNoName
 {
-
-	///#region 属性
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 打开方式
-	 
 	*/
 	public final String getOpenWay()
 	{
@@ -25,14 +24,13 @@ public class App extends EntityNoName
 			case 0:
 				return "_blank";
 			case 1:
-				return this.getNo();
+				return this.No;
 			default:
 				return "";
 		}
 	}
 	/** 
 	 路径
-	 
 	*/
 	public final String getWebPath()
 	{
@@ -40,7 +38,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 ICON
-	 
 	*/
 	public final String getICON()
 	{
@@ -52,10 +49,8 @@ public class App extends EntityNoName
 	}
 	/** 
 	 连接
-	 * @throws Exception 
-	 
 	*/
-	public final String getUrl() throws Exception
+	public final String getUrl()
 	{
 		String url = this.GetValStrByKey(AppAttr.Url);
 		if (DataType.IsNullOrEmpty(url))
@@ -65,11 +60,14 @@ public class App extends EntityNoName
 
 		if (this.getSSOType().equals("0")) //SID验证
 		{
-			String SID = DBAccess.RunSQLReturnStringIsNull("SELECT SID FROM Port_Emp WHERE No='" + BP.Web.WebUser.getNo() + "'", null);
-			if (url.contains("?")){
-				url += "&UserNo=" + WebUser.getNo() + "&SID=" + SID;
-			}else{
-				url += "?UserNo=" + WebUser.getNo() + "&SID=" + SID;
+			String SID = DBAccess.RunSQLReturnStringIsNull("SELECT SID FROM Port_Emp WHERE No='" + Web.WebUser.No + "'", null);
+			if (url.contains("?"))
+			{
+				url += "&UserNo=" + Web.WebUser.No + "&SID=" + SID;
+			}
+			else
+			{
+				url += "?UserNo=" + Web.WebUser.No + "&SID=" + SID;
 			}
 		}
 		return url;
@@ -80,7 +78,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 跳转连接
-	 
 	*/
 	public final String getSubUrl()
 	{
@@ -92,7 +89,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 是否启用
-	 
 	*/
 	public final boolean getIsEnable()
 	{
@@ -104,7 +100,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 顺序
-	 
 	*/
 	public final int getIdx()
 	{
@@ -116,7 +111,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 用户控件ID
-	 
 	*/
 	public final String getUidControl()
 	{
@@ -128,7 +122,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 密码控件ID
-	 
 	*/
 	public final String getPwdControl()
 	{
@@ -140,7 +133,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 提交方式
-	 
 	*/
 	public final String getActionType()
 	{
@@ -152,7 +144,6 @@ public class App extends EntityNoName
 	}
 	/** 
 	 登录方式@0=SID验证@1=连接@2=表单提交
-	 
 	*/
 	public final String getSSOType()
 	{
@@ -178,10 +169,23 @@ public class App extends EntityNoName
 	{
 		this.SetValByKey(AppAttr.RefMenuNo, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 按钮权限控制
+	@Override
+	public UAC getHisUAC()
+	{
+		UAC uac = new UAC();
+		uac.OpenForAppAdmin();
+		return uac;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	/** 
 	 系统
-	 
 	*/
 	public App()
 	{
@@ -190,36 +194,34 @@ public class App extends EntityNoName
 	 系统
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public App(String no) throws Exception
+	public App(String no)
 	{
-		this.setNo(no);
+		this.No = no;
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 		Map map = new Map("GPM_App");
-		map.setDepositaryOfEntity(Depositary.None);
-		map.setDepositaryOfMap(Depositary.Application);
-		map.setEnDesc("系统");
-		map.setEnType(EnType.Sys);
+		map.DepositaryOfEntity = Depositary.None;
+		map.DepositaryOfMap = Depositary.Application;
+		map.EnDesc = "系统";
+		map.EnType = EnType.Sys;
 
-
-		map.AddTBStringPK(AppAttr.No, null, "编号", true, false, 2, 30, 20);
-		map.AddTBString(AppAttr.Name, null, "名称", true, false, 0, 3900, 20);
-
+		map.AddTBStringPK(AppAttr.No, null, "编号", true, false, 2, 30, 100);
 		map.AddDDLSysEnum(AppAttr.AppModel, 0, "应用类型", true, true, AppAttr.AppModel, "@0=BS系统@1=CS系统");
+		map.AddTBString(AppAttr.Name, null, "名称", true, false, 0, 3900, 150, true);
 		map.AddDDLEntities(AppAttr.FK_AppSort, null, "类别", new AppSorts(), true);
+		map.AddBoolean(AppAttr.IsEnable, true, "是否启用", true, true);
+
 		map.AddTBString(AppAttr.Url, null, "默认连接", true, false, 0, 3900, 100, true);
 		map.AddTBString(AppAttr.SubUrl, null, "第二连接", true, false, 0, 3900, 100, true);
 		map.AddTBString(AppAttr.UidControl, null, "用户名控件", true, false, 0, 100, 100);
@@ -228,17 +230,15 @@ public class App extends EntityNoName
 		map.AddDDLSysEnum(AppAttr.SSOType, 0, "登录方式", true, true, AppAttr.SSOType, "@0=SID验证@1=连接@2=表单提交@3=不传值");
 		map.AddDDLSysEnum(AppAttr.OpenWay, 0, "打开方式", true, true, AppAttr.OpenWay, "@0=新窗口@1=本窗口@2=覆盖新窗口");
 
-		map.AddTBInt(AppAttr.Idx, 0, "显示顺序", true, false);
-		map.AddBoolean(AppAttr.IsEnable, true, "是否启用", true, true);
-
-		map.AddTBString(AppAttr.RefMenuNo, null, "关联菜单编号", true, false, 0, 3900, 20);
+		map.AddTBString(AppAttr.RefMenuNo, null, "关联菜单编号", true, false, 0, 3900, 100);
 		map.AddTBString(AppAttr.AppRemark, null, "备注", true, false, 0, 500, 500,true);
+		map.AddTBInt(AppAttr.Idx, 0, "显示顺序", true, false);
 		map.AddMyFile("ICON");
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "编辑菜单";
 		rm.ClassMethodName = this.toString() + ".DoMenu";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.RefMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -257,35 +257,37 @@ public class App extends EntityNoName
 			//rm.Title = "第二连接：登录方式为不传值、连接不设置用户名密码转为第二连接。";
 		rm.ClassMethodName = this.toString() + ".About";
 		   // map.AddRefMethod(rm);
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete()
 	{
 		Menu appMenu = new Menu(this.getRefMenuNo());
 		if (appMenu != null && appMenu.getFlag().contains("Flow"))
 		{
 			throw new RuntimeException("@删除失败,此项为工作流菜单，不能删除。");
 		}
+
 		// 删除该系统.
 		Menu menu = new Menu();
-		menu.Delete(MenuAttr.FK_App, this.getNo());
+		menu.Delete(MenuAttr.FK_App, this.No);
 
 		// 删除用户数据.
 		EmpMenu em = new EmpMenu();
-		em.Delete(MenuAttr.FK_App, this.getNo());
+		em.Delete(MenuAttr.FK_App, this.No);
 
 		EmpApp ea = new EmpApp();
-		ea.Delete(MenuAttr.FK_App, this.getNo());
+		ea.Delete(MenuAttr.FK_App, this.No);
 
 		return super.beforeDelete();
 	}
 
 	@Override
-	protected boolean beforeUpdate() throws Exception
+	protected boolean beforeUpdate()
 	{
 
 		if (DataType.IsNullOrEmpty(this.getRefMenuNo()) == false)
@@ -294,8 +296,8 @@ public class App extends EntityNoName
 			AppSort appSort = new AppSort(this.getFK_AppSort());
 
 			Menu menu = new Menu(this.getRefMenuNo());
-			menu.setName(this.getName());
-			menu.setParentNo(appSort.getRefMenuNo());
+			menu.Name = this.Name;
+			menu.ParentNo = appSort.getRefMenuNo();
 			menu.Update();
 		}
 
@@ -303,7 +305,7 @@ public class App extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		AppSort sort = new AppSort(this.getFK_AppSort());
 
@@ -312,51 +314,60 @@ public class App extends EntityNoName
 
 		// 创建子菜单.
 		Object tempVar = menu.DoCreateSubNode();
-		Menu appMenu = (Menu)((tempVar instanceof Menu) ? tempVar : null);
-		appMenu.setFK_App(this.getNo());
-		appMenu.setName(this.getName());
+		Menu appMenu = tempVar instanceof Menu ? (Menu)tempVar : null;
+		appMenu.setFK_App(this.No);
+		appMenu.Name = this.Name;
 		appMenu.setHisMenuType(MenuType.App);
 		appMenu.Update();
 
 		//设置相关的菜单编号.
-		this.setRefMenuNo(appMenu.getNo());
+		this.setRefMenuNo(appMenu.No);
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 为该系统创建几个空白菜单
+		//Menu en = appMenu.DoCreateSubNode() as Menu;
+		//en.FK_App = this.No;
+		//en.Name = this.Name;
+		//en.MenuType = 2;
+		//en.IsDir = true;
+		//en.Update();
 
 		Object tempVar2 = appMenu.DoCreateSubNode();
-		Menu dir = (Menu)((tempVar2 instanceof Menu) ? tempVar2 : null);
-		dir.setFK_App(this.getNo());
-		dir.setName("功能目录1");
-		dir.setMenuType(3);
+		Menu dir = tempVar2 instanceof Menu ? (Menu)tempVar2 : null;
+		dir.setFK_App(this.No);
+		dir.Name = "功能目录1";
+		dir.setMenuType(MenuType.Dir);
 		dir.Update();
 
 		Object tempVar3 = dir.DoCreateSubNode();
-		Menu func = (Menu)((tempVar3 instanceof Menu) ? tempVar3 : null);
-		func.setName("xxx管理1");
-		func.setFK_App(this.getNo());
-		func.setMenuType(4);
+		Menu func = tempVar3 instanceof Menu ? (Menu)tempVar3 : null;
+		func.Name = "xxx管理1";
+		func.setFK_App(this.No);
+		func.setMenuType(MenuType.Menu);
 		func.setUrl("http://ccflow.org");
 		func.Update();
 
 		Object tempVar4 = func.DoCreateSubNode();
-		Menu funcDot = (Menu)((tempVar4 instanceof Menu) ? tempVar4 : null);
-		funcDot.setName("查看");
-		funcDot.setMenuType(5);
-		funcDot.setFK_App(this.getNo());
+		Menu funcDot = tempVar4 instanceof Menu ? (Menu)tempVar4 : null;
+		funcDot.Name = "查看";
+		funcDot.setMenuType(MenuType.Function);
+		funcDot.setFK_App(this.No);
 		funcDot.Update();
 
 		Object tempVar5 = func.DoCreateSubNode();
-		funcDot = (Menu)((tempVar5 instanceof Menu) ? tempVar5 : null);
-		funcDot.setName("增加");
-		funcDot.setMenuType(5);
-		funcDot.setFK_App(this.getNo());
+		funcDot = tempVar5 instanceof Menu ? (Menu)tempVar5 : null;
+		funcDot.Name = "增加";
+		funcDot.setMenuType(MenuType.Function);
+		funcDot.setFK_App(this.No);
 		funcDot.Update();
 
 		Object tempVar6 = func.DoCreateSubNode();
-		funcDot = (Menu)((tempVar6 instanceof Menu) ? tempVar6 : null);
-		funcDot.setName("删除");
-		funcDot.setMenuType(5);
-		funcDot.setFK_App(this.getNo());
+		funcDot = tempVar6 instanceof Menu ? (Menu)tempVar6 : null;
+		funcDot.Name = "删除";
+		funcDot.setMenuType(MenuType.Function);
+		funcDot.setFK_App(this.No);
 		funcDot.Update();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
 		return super.beforeInsert();
@@ -364,23 +375,21 @@ public class App extends EntityNoName
 
 	/** 
 	 为BPM初始化菜单.
-	 * @throws Exception 
-	 
 	*/
-	public static void InitBPMMenu() throws Exception
+	public static void InitBPMMenu()
 	{
 		AppSort sort = new AppSort();
-		sort.setNo("01");
+		sort.No = "01";
 		if (sort.RetrieveFromDBSources() == 0)
 		{
-			sort.setName("应用系统");
+			sort.Name = "应用系统";
 			sort.setRefMenuNo("2000");
 			sort.Insert();
 		}
 
 		App app = new App();
-		app.setNo("CCFlowBPM");
-		app.setName("BPM系统");
+		app.No = "CCFlowBPM";
+		app.Name = "BPM系统";
 		app.setFK_AppSort("01");
 		app.Insert();
 	}
@@ -400,7 +409,7 @@ public class App extends EntityNoName
 	*/
 	public final String DoRef()
 	{
-		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.getNo();
+		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.No;
 
 	   // PubClass.WinOpen("/GPM/WhoCanUseApp.aspx?FK_App=" + this.No + "&IsRef=1", 500, 700);
 		//return null;
@@ -412,7 +421,7 @@ public class App extends EntityNoName
 	*/
 	public final String DoWhoCanUseApp()
 	{
-		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.getNo();
+		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.No;
 	}
 	/** 
 	 打开菜单
@@ -421,41 +430,41 @@ public class App extends EntityNoName
 	*/
 	public final String DoMenu()
 	{
-		return "../../../GPM/AppMenu.htm?FK_App=" + this.getNo();
+		return "../../../GPM/AppMenu.htm?FK_App=" + this.No;
 	}
 	/** 
 	 刷新数据.
-	 * @throws Exception 
-	 
 	*/
-	public final void RefData() throws Exception
+	public final void RefData()
 	{
 		//删除数据.
 		EmpMenus mymes = new EmpMenus();
-		mymes.Delete(EmpMenuAttr.FK_App, this.getNo());
+		mymes.Delete(EmpMenuAttr.FK_App, this.No);
 
 		//删除系统.
 		EmpApps empApps = new EmpApps();
-		empApps.Delete(EmpMenuAttr.FK_App, this.getNo());
+		empApps.Delete(EmpMenuAttr.FK_App, this.No);
 
 		//查询出来菜单.
 		Menus menus = new Menus();
-		menus.Retrieve(EmpMenuAttr.FK_App, this.getNo());
+		menus.Retrieve(EmpMenuAttr.FK_App, this.No);
 
 		//查询出来人员.
 		Emps emps = new Emps();
 		emps.RetrieveAllFromDBSource();
 
-		for (Emp emp : emps.ToJavaList())
+		for (Emp emp : emps)
 		{
-			///#region 初始化系统访问权限.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 初始化系统访问权限.
 
 			EmpApp me = new EmpApp();
 			me.Copy(this);
-			me.setFK_Emp(emp.getNo());
-			me.setFK_App(this.getNo());
-			me.setMyPK(this.getNo() + "_" + me.getFK_Emp());
+			me.setFK_Emp(emp.No);
+			me.setFK_App(this.No);
+			me.MyPK = this.No + "_" + me.getFK_Emp();
 			me.Insert();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 初始化系统访问权限.
 		}
 	}

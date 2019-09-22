@@ -1,34 +1,29 @@
 package BP.WF.DTS;
 
-import java.io.File;
-
-import BP.DA.DataSet;
-import BP.DA.Log;
-import BP.En.Method;
-import BP.Sys.MapData;
-import BP.Sys.SystemConfig;
-import BP.WF.Flow;
-import BP.WF.ImpFlowTempleteModel;
-import BP.WF.Template.FlowSort;
-import BP.WF.Template.FlowSorts;
-import BP.WF.Template.SysFormTree;
-import BP.WF.Template.SysFormTrees;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import java.io.*;
 
 /** 
  Method 的摘要说明
- 
 */
 public class LoadTemplete extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public LoadTemplete()
 	{
 		this.Title = "装载流程演示模板";
 		this.Help = "为了帮助各位爱好者学习与掌握ccflow, 特提供一些流程模板与表单模板以方便学习。";
-		this.Help += "@这些模板的位于" + SystemConfig.getPathOfData() + "FlowDemo/";
+		this.Help += "@这些模板的位于" + SystemConfig.PathOfData + "\\FlowDemo\\";
+		this.GroupName = "流程维护";
+
 	}
 	/** 
 	 设置执行变量
@@ -41,216 +36,199 @@ public class LoadTemplete extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 
 	*/
 	@Override
 	public boolean getIsCanDo()
 	{
-		try {
-			if (BP.Web.WebUser.getNo().equals("admin"))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (BP.Web.WebUser.No.equals("admin"))
+		{
+			return true;
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
 		String msg = "";
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理表单.
 		// 调度表单文件。
-		
-		try {
-			SysFormTrees fss = new SysFormTrees();
-			fss.ClearTable();
-		} catch (Exception e) {
-			Log.DebugWriteError("LoadTemplete Do()" + e);
-		}
+		SysFormTrees fss = new SysFormTrees();
+		fss.ClearTable();
 
 		//创建root.
 		SysFormTree root = new SysFormTree();
-		root.setNo("1");
-		root.setName("表单库");
+		root.No = "1";
+		root.Name = "表单库";
 		root.setParentNo("0");
 		root.Insert();
 
-		String frmPath = SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Form/";
+		String frmPath = SystemConfig.PathOfWebApp + "\\SDKFlowDemo\\FlowDemo\\Form\\";
 		File dirInfo = new File(frmPath);
-		File [] dirs = dirInfo.listFiles();
+		File[] dirs = dirInfo.GetDirectories();
 		int i = 0;
 		for (File item : dirs)
 		{
-			if (item.getName().indexOf(".svn")>0)
+			if (item.getPath().contains(".svn"))
 			{
 				continue;
 			}
 
-			File[] fls = item.listFiles();
+			String[] fls = (new File(item.getPath())).list(File::isFile);
 			if (fls.length == 0)
 			{
 				continue;
 			}
 
 			SysFormTree fs = new SysFormTree();
-			fs.setNo( item.getName().substring(0, 2));
-			fs.setName(item.getName().substring(3));
+			fs.No = item.getName().substring(0, 2);
+			fs.Name = item.getName().substring(3);
 			fs.setParentNo("1");
 			fs.setIdx(i++);
-			fs.Save();
+			fs.Insert();
 
-			for (File f : fls)
+			for (String f : fls)
 			{
-				msg += "@开始调度表单模板文件:" + f;
-				DataSet ds = new DataSet();
-				ds.readXml(f.getPath());
-				//File info = new System.IO.FileInfo(f);
-				if ( !(f.getName().indexOf(".xml") >= 0))
+				File info = new File(f);
+				if (!info.Extension.equals(".xml"))
 				{
 					continue;
 				}
 
+				msg += "@开始调度表单模板文件:" + f;
+				BP.DA.Log.DefaultLogWriteLineInfo("@开始调度表单模板文件:" + f);
+
+				DataSet ds = new DataSet();
+				ds.ReadXml(f);
+
 				try
 				{
 					MapData md = MapData.ImpMapData(ds);
-					md.setFK_FrmSort( fs.getNo());
-					md.setFK_FormTree(fs.getNo());
-					md.setAppType ("0");
-					if(md.RetrieveFromDBSources() == 0)
-						md.Insert();
-					else
-						md.Update();
+					md.FK_FrmSort = fs.No;
+					md.FK_FormTree = fs.No;
+					md.AppType = "0";
+					md.Update();
 				}
-				catch(RuntimeException ex)
+				catch (RuntimeException ex)
 				{
-					throw new RuntimeException("@装载模版文件:"+f+"出现错误,"+ex.getMessage()+" <br> "+ex.getStackTrace());
-				}catch (Exception e)
-				{
-					e.printStackTrace();
+					BP.DA.Log.DefaultLogWriteLineInfo("@装载表单模版文件:" + f + "出现错误," + ex.getMessage() + " <br> " + ex.StackTrace);
+
+					throw new RuntimeException("@装载模版文件:" + f + "出现错误," + ex.getMessage() + " <br> " + ex.StackTrace);
 				}
 			}
 		}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 处理表单.
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理流程.
 		FlowSorts sorts = new FlowSorts();
-		try {
-			sorts.ClearTable();
-		} catch (Exception e) {
-			Log.DebugWriteError("LoadTemplete Do sorts.ClearTable "+e.getMessage());
-			e.printStackTrace();
-		}
-		dirInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/");
-		dirs = dirInfo.listFiles();
+		sorts.ClearTable();
+		dirInfo = new File(SystemConfig.PathOfWebApp + "\\SDKFlowDemo\\FlowDemo\\Flow\\");
+		dirs = dirInfo.GetDirectories();
 
 		FlowSort fsRoot = new FlowSort();
-		fsRoot.setNo ( "1");
-		fsRoot.setName("流程树");
-		fsRoot.setParentNo ( "0");
+		fsRoot.No = "99";
+		fsRoot.Name = "流程树";
+		fsRoot.ParentNo = "0";
 		fsRoot.DirectInsert();
 
 		for (File dir : dirs)
 		{
-			if (dir.getName().contains(".svn"))
+			if (dir.getPath().contains(".svn"))
 			{
 				continue;
 			}
-			File[] fls = dir.listFiles();
+
+			String[] fls = (new File(dir.getPath())).list(File::isFile);
 			if (fls.length == 0)
 			{
 				continue;
 			}
 
 			FlowSort fs = new FlowSort();
-			fs.setNo ( dir.getName().substring(0, 2));
-			fs.setName(dir.getName().substring(3));
-			fs.setParentNo (fsRoot.getNo());
+			fs.No = dir.getName().substring(0, 3);
+			fs.Name = dir.getName().substring(3);
+			fs.ParentNo = fsRoot.No;
 			fs.Insert();
 
-			for (File filePath : fls)
+			for (String filePath : fls)
 			{
-				//判断路径名是否为文件 by fanleiwei 20160423
-				if(!filePath.getPath().endsWith("xml"))
+				msg += "\t\n@开始调度流程模板文件:" + filePath;
+				BP.DA.Log.DefaultLogWriteLineInfo("@开始调度流程模板文件:" + filePath);
+
+				Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(fs.No, filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+				msg += "\t\n@流程:[" + myflow.Name + "]装载成功。";
+
+				File info = new File(filePath);
+				myflow.Name = info.getName().replace(".xml", "");
+				if (myflow.Name.substring(2, 3).equals("."))
 				{
-					continue;
+					myflow.Name = myflow.Name.substring(3);
 				}
-				msg += "@开始调度流程模板文件:" + filePath;
-				try {
-					Flow myflow = Flow.DoLoadFlowTemplate(fs.getNo(),
-							filePath.getPath(),
-							ImpFlowTempleteModel.AsTempleteFlowNo);
-				
-					msg += "@流程:" + myflow.getName() + "装载成功。";
-					
-					myflow.setName(filePath.getName().replace(".xml", ""));
-					if (myflow.getName().substring(2, 3).equals("."))
-					{
-						myflow.setName(myflow.getName().substring(3));
-					}
-					myflow.DirectUpdate();
-				} catch (Exception e) {
-					Log.DebugWriteError("1 LoadTemplete Do Flow.DoLoadFlowTemplate "+e.getMessage());
-					e.printStackTrace();
-				}
+				myflow.DirectUpdate();
 			}
 
 
 			//调度它的下一级目录.
-			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/"+dir.getName());
-			File[] myDirs = dirSubInfo.listFiles();
+			File dirSubInfo = new File(SystemConfig.PathOfWebApp + "\\SDKFlowDemo\\FlowDemo\\Flow\\" + dir.getName());
+			File[] myDirs = dirSubInfo.GetDirectories();
 			for (File mydir : myDirs)
 			{
-				if (mydir.getName().indexOf(".svn") >= 0)				 
+				if (mydir.getPath().contains(".svn"))
+				{
 					continue;
-				
+				}
 
-				File[] myfls = mydir.listFiles();
-				//增加数组非空判断 by fanleiwei 20160423
-				if (myfls == null ||myfls.length == 0)
+				String[] myfls = (new File(mydir.getPath())).list(File::isFile);
+				if (myfls.length == 0)
 				{
 					continue;
 				}
 
 				// 流程类别.
 				Object tempVar = fs.DoCreateSubNode();
-				FlowSort subFlowSort = (FlowSort)((tempVar instanceof FlowSort) ? tempVar : null);
-				subFlowSort.setName(mydir.getName().substring(3));
+				FlowSort subFlowSort = tempVar instanceof FlowSort ? (FlowSort)tempVar : null;
+				subFlowSort.Name = mydir.getName().substring(3);
 				subFlowSort.Update();
 
-				for (File filePath : myfls)
+				for (String filePath : myfls)
 				{
-					msg += "@开始调度流程模板文件:" + filePath;
-					try {
-						Flow myflow = Flow.DoLoadFlowTemplate(subFlowSort.getNo(),
-								filePath.getPath(),ImpFlowTempleteModel.AsTempleteFlowNo);
-						msg += "@流程:" + myflow.getName() + "装载成功。";
-						
-						myflow.setName(filePath.getName().replace(".xml", ""));
-						if (myflow.getName().substring(2, 3).equals("."))
-						{
-							myflow.setName(myflow.getName().substring(3));
-						}
-						myflow.DirectUpdate();
-					} catch (Exception e) {
-						Log.DebugWriteError("2 LoadTemplete Do Flow.DoLoadFlowTemplate "+e.getMessage());
-						e.printStackTrace();
+					msg += "\t\n@开始调度流程模板文件:" + filePath;
+					BP.DA.Log.DefaultLogWriteLineInfo("@开始调度流程模板文件:" + filePath);
+
+					Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(subFlowSort.No, filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+					msg += "\t\n@流程:" + myflow.Name + "装载成功。";
+
+					File info = new File(filePath);
+					myflow.Name = info.getName().replace(".xml", "");
+					if (myflow.Name.substring(2, 3).equals("."))
+					{
+						myflow.Name = myflow.Name.substring(3);
 					}
+					myflow.DirectUpdate();
 				}
 			}
 		}
+
+		//执行流程检查.
+		Flows flsEns = new Flows();
+		flsEns.RetrieveAll();
+		for (Flow fl : flsEns)
+		{
+			fl.DoCheck();
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 处理流程.
+
+
+
 		BP.DA.Log.DefaultLogWriteLineInfo(msg);
+
 		//删除多余的空格.
 		BP.WF.DTS.DeleteBlankGroupField dts = new DeleteBlankGroupField();
 		dts.Do();

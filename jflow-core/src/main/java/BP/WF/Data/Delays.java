@@ -1,45 +1,67 @@
 package BP.WF.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
+
+/** 
+ 逾期流程s
+*/
+public class Delays extends EntitiesMyPK
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法属性
 	/** 
 	 逾期流程s
-	 
 	*/
-	public class Delays extends EntitiesMyPK
+	public Delays()
 	{
-		///#region 构造方法属性
-		/** 
-		 逾期流程s
-		 
-		*/
-		public Delays()
-		{
-		}
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-		/** 
-		 逾期流程
-		 
-		*/
-		@Override
-		public Entity getGetNewEntity()
-		{
-			return new Delay();
-		}
-		
-
-		// 构造方法属性
-		public static ArrayList<Delay> convertBills(Object obj)
-		{
-			return (ArrayList<Delay>) obj;
-		}
-		public List<Bill> ToJavaList()
-		{
-			return (List<Bill>)(Object)this;
-		}
-		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 逾期流程
+	*/
+	@Override
+	public Entity getGetNewEntity()
+	{
+		return new Delay();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<Delay> ToJavaList()
+	{
+		return (List<Delay>)this;
+	}
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<Delay> Tolist()
+	{
+		ArrayList<Delay> list = new ArrayList<Delay>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((Delay)this[i]);
+		}
+		return list;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+}

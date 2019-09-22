@@ -1,26 +1,28 @@
 package BP.Sys;
 
-/** 
-文件保存方式
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
+/** 
+ 文件保存方式
 */
 public enum AthSaveWay
 {
 	/** 
-	 Web服务器
-	 
+	 IIS服务器
 	*/
-	WebServer,
+	IISServer,
 	/** 
 	 保存到数据库
-	 
 	*/
 	DB,
 	/** 
 	 ftp
-	 
 	*/
 	FTPServer;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

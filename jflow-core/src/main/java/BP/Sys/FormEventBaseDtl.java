@@ -1,10 +1,12 @@
 package BP.Sys;
 
-import java.math.BigDecimal;
-import java.util.Enumeration;
-
 import BP.DA.*;
-import BP.En.*;  
+import BP.En.*;
+import BP.Web.Controls.*;
+import BP.Web.*;
+import BP.Sys.*;
+import java.time.*;
+import java.math.*;
 
 /** 
  表单从表事件基类
@@ -12,38 +14,35 @@ import BP.En.*;
  1,一个子类必须与一个表单模版绑定.
  2,基类里有很多表单运行过程中的变量，这些变量可以辅助开发者在编写复杂的业务逻辑的时候使用.
  3,该基类有一个子类模版，位于:\CCForm\WF\Admin\AttrForm\F001Templepte.cs .
- 
 */
 public abstract class FormEventBaseDtl
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 要求子类强制重写的属性.
 	/** 
-	 * 要求子类强制重写的属性.
 	 表单编号/表单标记.
 	 该参数用于说明要把此事件注册到那一个表单模版上.
 	*/
 	public abstract String getFormDtlMark();
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 要求子类重写的属性.
 
-
-	///属性/内部变量(表单在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性/内部变量(表单在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 	/** 
 	 实体，一般是工作实体
-	 
 	*/
 	public Entity HisEn = null;
 	/** 
-	 
 	 
 	*/
 	public Entity HisEnDtl = null;
 	/** 
 	 参数对象.
-	 
 	*/
 	private Row _SysPara = null;
 	/** 
 	 参数
-	 
 	*/
 	public final Row getSysPara()
 	{
@@ -57,12 +56,13 @@ public abstract class FormEventBaseDtl
 	{
 		_SysPara = value;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 属性/内部变量(表单在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 
-
-	/// 系统参数
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 系统参数
 	/** 
 	 表单ID
-	 
 	*/
 	public final String getFK_Mapdata()
 	{
@@ -70,18 +70,18 @@ public abstract class FormEventBaseDtl
 	}
 	/** 
 	 从表ID
-	 
 	*/
 	public final String getFK_MapDtl()
 	{
 		return this.GetValStr("FK_MapDtl");
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-
-	///常用属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 常用属性.
 	/** 
 	 从表ID
-	 
 	*/
 	public final int getOID()
 	{
@@ -89,21 +89,23 @@ public abstract class FormEventBaseDtl
 	}
 	/** 
 	 主表ID
-	 
 	*/
 	public final int getOIDOfMainEn()
 	{
 		return this.GetValInt("OIDOfMainEn");
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 常用属性.
 
-	///获取参数方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 获取参数方法
 	/** 
 	 事件参数
 	 
 	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final java.util.Date GetValDateTime(String key)
+	public final LocalDateTime GetValDateTime(String key)
 	{
 		try
 		{
@@ -172,26 +174,26 @@ public abstract class FormEventBaseDtl
 	 @param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final java.math.BigDecimal GetValDecimal(String key)
+	public final BigDecimal GetValDecimal(String key)
 	{
-		
-		BigDecimal bd = new BigDecimal(this.GetValStr(key));
-		return bd.setScale(4, BigDecimal.ROUND_HALF_UP);
-		
-		 
+		return BigDecimal.Parse(this.GetValStr(key));
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 获取参数方法
 
-
-	///构造方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 表单从表事件基类
-	 
 	*/
 	public FormEventBaseDtl()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 构造方法
 
-	/// 节点表单从表事件
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 节点表单从表事件
 	public String FrmLoadAfter()
 	{
 		return null;
@@ -200,8 +202,11 @@ public abstract class FormEventBaseDtl
 	{
 		return null;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	/// 要求子类重写的方法(表单从表事件).
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 要求子类重写的方法(表单从表事件).
 	/** 
 	 表单删除前
 	 
@@ -220,11 +225,13 @@ public abstract class FormEventBaseDtl
 	{
 		return null;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 要求子类重写的方法(表单从表事件).
 
-	/// 要求子类重写的方法(节点事件).
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 要求子类重写的方法(节点事件).
 	/** 
 	 附件上传前
-	 
 	*/
 	public String AthUploadeBefore()
 	{
@@ -232,7 +239,6 @@ public abstract class FormEventBaseDtl
 	}
 	/** 
 	 上传后
-	 
 	*/
 	public String AthUploadeAfter()
 	{
@@ -240,7 +246,6 @@ public abstract class FormEventBaseDtl
 	}
 	/** 
 	 从表保存前
-	 
 	*/
 	public String RowSaveBefore()
 	{
@@ -248,12 +253,27 @@ public abstract class FormEventBaseDtl
 	}
 	/** 
 	 从表保存后
-	 
 	*/
 	public String RowSaveAfter()
 	{
 		return null;
 	}
+
+	/** 
+	 从表del前
+	*/
+	public String DtlRowDelBefore()
+	{
+		return null;
+	}
+	/** 
+	 从表del后
+	*/
+	public String DtlRowDelAfter()
+	{
+		return null;
+	}
+
 	/** 
 	 创建工作ID后的事件
 	 
@@ -263,8 +283,11 @@ public abstract class FormEventBaseDtl
 	{
 		return null;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 要求子类重写的方法(节点事件).
 
-	///#region 基类方法.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基类方法.
 	/** 
 	 执行事件
 	 
@@ -274,9 +297,12 @@ public abstract class FormEventBaseDtl
 	 @param atPara 参数
 	 @return 返回执行的结果
 	*/
-	public final String DoIt(String eventType,  Entity en, Entity enDtl, String atPara)
+	public final String DoIt(String eventType, Entity en, Entity enDtl, String atPara)
 	{
 		this.HisEn = en;
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 处理参数.
 
 		if (en == null)
 		{
@@ -286,11 +312,11 @@ public abstract class FormEventBaseDtl
 		try
 		{
 			//系统参数.
-			r.put("FK_MapData", en.getClassID() );
+			r.put("FK_MapData", en.getClassID());
 		}
 		catch (java.lang.Exception e)
 		{
-			r.put("FK_MapData" , en.getClassID());
+			r.put("FK_MapData", en.getClassID());
 		}
 
 		if (atPara != null)
@@ -309,30 +335,47 @@ public abstract class FormEventBaseDtl
 			}
 		}
 
-		if (SystemConfig.getIsBSsystem() == true && BP.Sys.Glo.getRequest()!=null)
+		if (SystemConfig.getIsBSsystem() == true)
 		{
-			
-			Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();
-			while (enu.hasMoreElements())
+			/*如果是bs系统, 就加入外部url的变量.*/
+			for (String key : HttpContextHelper.getRequestParamKeys())
 			{
-				// 判断是否有内容，hasNext()
-				String key = (String) enu.nextElement();
-				r.put(key, BP.Sys.Glo.getRequest().getParameter(key));
+				String val = HttpContextHelper.RequestParams(key);
+				try
+				{
+					r.put(key, val);
+				}
+				catch (java.lang.Exception e3)
+				{
+					r.put(key, val);
+				}
 			}
-			
 		}
 		this.setSysPara(r);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 处理参数.
 
-		if (eventType.equals(FrmEventListDtl.RowSaveBefore)) // 从表-保存前.。
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 执行事件.
+		switch (eventType)
 		{
+			case FrmEventListDtl.RowSaveBefore: // 从表-保存前.。
 				return this.RowSaveBefore();
-		}
-		else if (eventType.equals(FrmEventListDtl.RowSaveAfter)) // 从表-保存后.。
-		{
+			case FrmEventListDtl.RowSaveAfter: // 从表-保存后.。
 				return this.RowSaveAfter();
-		}
-		 
+			case FrmEventListDtl.DtlRowDelBefore: // 从表-保存前.。
+				return this.DtlRowDelBefore();
+			case FrmEventListDtl.DtlRowDelAfter: // 从表-保存后.。
+				return this.DtlRowDelAfter();
+			default:
 				throw new RuntimeException("@没有判断的表单从表事件类型:" + eventType);
-		 
+				break;
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 执行事件.
+
+		return null;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 基类方法.
 }

@@ -1,22 +1,25 @@
 package BP.WF.XML;
 
-import BP.XML.XmlEn;
-import BP.XML.XmlEns;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.XML.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  管理员
 */
 public class AdminMenu extends XmlEn
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getNo()
 	{
 		return this.GetValStringByKey("No");
 	}
-	public final String getName()
+	public final void setNo(String value)
 	{
-		return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+		this.SetVal("No", value);
 	}
 	public final String getGroupNo()
 	{
@@ -26,9 +29,13 @@ public class AdminMenu extends XmlEn
 	{
 		this.SetVal("GroupNo", value);
 	}
-	public final String getUrl()
+	public final String getName()
 	{
-		return this.GetValStringByKey("Url");
+		return this.GetValStringByKey("Name");
+	}
+	public final void setName(String value)
+	{
+		this.SetVal("Name", value);
 	}
 	public final String getFor()
 	{
@@ -38,50 +45,19 @@ public class AdminMenu extends XmlEn
 	{
 		this.SetVal("For", value);
 	}
-	public final void setNo(String value)
+	public final String getUrl()
 	{
-		this.SetVal("No", value);
-	}
-	public final String getParentNo()
-	{
-		return this.GetValStringByKey("ParentNo");
-	}
-	public final void setParentNo(String value)
-	{
-		this.SetVal("ParentNo", value);
-	}
-	public final void setName(String value)
-	{
-		this.SetVal("Name", value);
+		return this.GetValStringByKey("Url");
 	}
 	public final void setUrl(String value)
 	{
 		this.SetVal("Url", value);
 	}
-	/** 是否可以使用？
-	 
-	 @param no 操作员编号
-	 @return 
-*/
-	public final boolean IsCanUse(String no)
-	{
-		if (this.getFor().equals(""))
-		{
-			return true;
-		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-		if (no.equals(this.getFor()))
-		{
-			return true;
-		}
-
-		if (this.getFor().equals("SecondAdmin"))
-		{
-			return true;
-		}
-
-		return false;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 节点扩展信息
 	*/
@@ -95,5 +71,33 @@ public class AdminMenu extends XmlEn
 	public XmlEns getGetNewEntities()
 	{
 		return new AdminMenus();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+	/** 
+	 是否可以使用？
+	 
+	 @param no 操作员编号
+	 @return 
+	*/
+	public final boolean IsCanUse(String no)
+	{
+		if (this.getFor().equals(""))
+		{
+			return true;
+		}
+
+		if (this.getFor().equals(no))
+		{
+			return true;
+		}
+
+		if (this.getFor().equals("SecondAdmin"))
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -1,21 +1,27 @@
 package BP.GPM;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  部门人员信息 
 */
 public class DeptEmps extends EntitiesMyPK
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 工作部门人员信息
 	*/
 	public DeptEmps()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -24,26 +30,35 @@ public class DeptEmps extends EntitiesMyPK
 	{
 		return new DeptEmp();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<DeptEmp> ToJavaList()
+	public final List<DeptEmp> ToJavaList()
 	{
-		return (java.util.List<DeptEmp>)(Object)this;
+		return (List<DeptEmp>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<DeptEmp> Tolist()
+	public final ArrayList<DeptEmp> Tolist()
 	{
-		java.util.ArrayList<DeptEmp> list = new java.util.ArrayList<DeptEmp>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<DeptEmp> list = new ArrayList<DeptEmp>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((DeptEmp)this.get(i));
+			list.add((DeptEmp)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+
 }

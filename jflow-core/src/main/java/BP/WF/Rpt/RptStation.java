@@ -1,22 +1,21 @@
 package BP.WF.Rpt;
 
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Port.Stations;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  RptStation 的摘要说明。
- 
 */
 public class RptStation extends Entity
 {
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
 			uac.IsView = true;
 			uac.IsDelete = true;
@@ -27,11 +26,10 @@ public class RptStation extends Entity
 		return uac;
 	}
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 报表ID
-	 
 	*/
 	public final String getFK_Rpt()
 	{
@@ -47,7 +45,6 @@ public class RptStation extends Entity
 	}
 	/** 
 	岗位
-	 
 	*/
 	public final String getFK_Station()
 	{
@@ -57,20 +54,19 @@ public class RptStation extends Entity
 	{
 		SetValByKey(RptStationAttr.FK_Station, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 扩展属性
 
-		
-
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 报表岗位
-	  
 	*/
 	public RptStation()
 	{
@@ -80,9 +76,8 @@ public class RptStation extends Entity
 	 
 	 @param _empoid 报表ID
 	 @param wsNo 岗位编号 	
-	 * @throws Exception 
 	*/
-	public RptStation(String _empoid, String wsNo) throws Exception
+	public RptStation(String _empoid, String wsNo)
 	{
 		this.setFK_Rpt(_empoid);
 		this.setFK_Station(wsNo);
@@ -93,14 +88,13 @@ public class RptStation extends Entity
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_RptStation", "报表岗位对应信息");
@@ -110,9 +104,9 @@ public class RptStation extends Entity
 		map.AddTBStringPK(RptStationAttr.FK_Rpt, null, "报表", false, false, 1, 15, 1);
 		map.AddDDLEntitiesPK(RptStationAttr.FK_Station, null, "岗位", new Stations(), true);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

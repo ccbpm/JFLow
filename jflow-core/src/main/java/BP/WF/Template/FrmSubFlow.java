@@ -1,21 +1,22 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  父子流程
- 
 */
 public class FrmSubFlow extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 标签
-	 
 	*/
 	public final String getSFLab()
 	{
@@ -23,7 +24,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 编号
-	 
 	*/
 	public final String getNo()
 	{
@@ -36,7 +36,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 节点ID
-	 
 	*/
 	public final int getNodeID()
 	{
@@ -48,7 +47,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 可触发的子流程
-	 
 	*/
 	public final String getSFActiveFlows()
 	{
@@ -60,7 +58,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 字段列
-	 
 	*/
 	public final String getSFFields()
 	{
@@ -72,7 +69,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 状态
-	 
 	*/
 	public final FrmSubFlowSta getHisFrmSubFlowSta()
 	{
@@ -84,7 +80,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 显示控制方式
-	 
 	*/
 	public final SFShowCtrl getSFShowCtrl()
 	{
@@ -96,7 +91,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 显示格式(0=表格,1=自由.)
-	 
 	*/
 	public final FrmWorkShowModel getHisFrmWorkShowModel()
 	{
@@ -108,7 +102,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 控件状态
-	 
 	*/
 	public final FrmSubFlowSta getSFSta()
 	{
@@ -120,7 +113,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 显示方式
-	 
 	*/
 	public final FrmWorkShowModel getSFShowModel()
 	{
@@ -132,7 +124,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getSF_Y()
 	{
@@ -144,7 +135,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getSF_X()
 	{
@@ -156,7 +146,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 打开类型
-	 
 	*/
 	public final int getSFOpenType()
 	{
@@ -168,7 +157,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 W
-	 
 	*/
 	public final float getSF_W()
 	{
@@ -188,7 +176,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 H
-	 
 	*/
 	public final float getSF_H()
 	{
@@ -208,7 +195,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 轨迹图是否显示?
-	 
 	*/
 	public final boolean getSFTrackEnable()
 	{
@@ -220,7 +206,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 历史审核信息是否显示?
-	 
 	*/
 	public final boolean getSFListEnable()
 	{
@@ -232,7 +217,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 在轨迹表里是否显示所有的步骤？
-	 
 	*/
 	public final boolean getSFIsShowAllStep()
 	{
@@ -244,7 +228,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 如果用户未审核是否按照默认意见填充?
-	 
 	*/
 	public final boolean getSFIsFullInfo()
 	{
@@ -256,7 +239,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 默认审核信息
-	 
 	*/
 	public final String getSFDefInfo()
 	{
@@ -268,7 +250,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 节点名称.
-	 
 	*/
 	public final String getName()
 	{
@@ -276,11 +257,10 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 标题，如果为空则取节点名称.
-	 
 	*/
 	public final String getSFCaption()
 	{
-		String str= this.GetValStringByKey(FrmSubFlowAttr.SFCaption);
+		String str = this.GetValStringByKey(FrmSubFlowAttr.SFCaption);
 		if (str.equals(""))
 		{
 			str = "启动子流程";
@@ -293,7 +273,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 操作名词(审核，审定，审阅，批示)
-	 
 	*/
 	public final String getSFOpLabel()
 	{
@@ -305,7 +284,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 是否显示数字签名？
-	 
 	*/
 	public final boolean getSigantureEnabel()
 	{
@@ -315,18 +293,16 @@ public class FrmSubFlow extends Entity
 	{
 		this.SetValByKey(FrmSubFlowAttr.SigantureEnabel, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 控制
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -336,7 +312,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 重写主键
-	 
 	*/
 	@Override
 	public String getPK()
@@ -345,7 +320,6 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 父子流程
-	 
 	*/
 	public FrmSubFlow()
 	{
@@ -354,9 +328,8 @@ public class FrmSubFlow extends Entity
 	 父子流程
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmSubFlow(String mapData) throws Exception
+	public FrmSubFlow(String mapData)
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -385,23 +358,21 @@ public class FrmSubFlow extends Entity
 	 父子流程
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmSubFlow(int nodeID) throws Exception
+	public FrmSubFlow(int nodeID)
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Node", "父子流程");
@@ -410,16 +381,16 @@ public class FrmSubFlow extends Entity
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmSubFlowAttr.SFLab, "子流程", "显示标签", true, false, 0, 200, 10, true);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		map.AddDDLSysEnum(FrmSubFlowAttr.SFSta, FrmSubFlowSta.Disable.getValue(), "父子流程状态", true, true, FrmSubFlowAttr.SFSta, "@0=禁用@1=启用@2=只读");
+		map.AddDDLSysEnum(FrmSubFlowAttr.SFSta, FrmSubFlowSta.Disable.getValue(), "组件状态", true, true, FrmSubFlowAttr.SFSta, "@0=禁用@1=启用@2=只读");
 
 		map.AddDDLSysEnum(FrmSubFlowAttr.SFShowModel, FrmWorkShowModel.Free.getValue(), "显示方式", true, true, FrmSubFlowAttr.SFShowModel, "@0=表格方式@1=自由模式"); //此属性暂时没有用.
 
 		map.AddTBString(FrmSubFlowAttr.SFCaption, "启动子流程", "连接标题", true, false, 0, 100, 10, true);
-		map.AddTBString(FrmSubFlowAttr.SFDefInfo, null, "可启动的子流程", true, false, 0, 50, 10,true);
-		map.AddTBString(FrmSubFlowAttr.SFActiveFlows, null, "可触发的子流程", true, false, 0, 50, 10, true);
+		map.AddTBString(FrmSubFlowAttr.SFDefInfo, null, "可启动的子流程编号(多个用逗号分开)", false, false, 0, 50, 10, true);
+		map.AddTBString(FrmSubFlowAttr.SFActiveFlows, null, "可触发的子流程编号(多个用逗号分开)", false, false, 0, 50, 10, true);
 
 		map.AddTBFloat(FrmSubFlowAttr.SF_X, 5, "位置X", true, false);
 		map.AddTBFloat(FrmSubFlowAttr.SF_Y, 5, "位置Y", true, false);
@@ -427,22 +398,90 @@ public class FrmSubFlow extends Entity
 		map.AddTBFloat(FrmSubFlowAttr.SF_H, 300, "高度", true, false);
 		map.AddTBFloat(FrmSubFlowAttr.SF_W, 400, "宽度", true, false);
 
-		map.AddTBString(FrmSubFlowAttr.SFFields, null, "审批格式字段", true, false, 0, 50, 10,true);
+		map.AddTBString(FrmSubFlowAttr.SFFields, null, "审批格式字段", true, false, 0, 50, 10, true);
 
-		map.AddDDLSysEnum(FrmSubFlowAttr.SFShowCtrl, 0, "显示控制方式", true, true, FrmSubFlowAttr.SFShowCtrl, "@0=可以看所有的子流程@1=仅仅可以看自己发起的子流程"); //此属性暂时没有用.
+		map.AddDDLSysEnum(FrmSubFlowAttr.SFShowCtrl, getSFShowCtrl().All.getValue(), "显示控制方式", true, true, FrmSubFlowAttr.SFShowCtrl, "@0=可以看所有的子流程@1=仅仅可以看自己发起的子流程"); //此属性暂时没有用.
 
-		map.AddDDLSysEnum(FrmSubFlowAttr.SFOpenType,0, "打开子流程显示", true, true, FrmSubFlowAttr.SFOpenType, "@0=工作查看器@1=傻瓜表单轨迹查看器"); //此属性暂时没有用.
-
-
+		map.AddDDLSysEnum(FrmSubFlowAttr.SFOpenType, 0, "打开子流程显示", true, true, FrmSubFlowAttr.SFOpenType, "@0=工作查看器@1=傻瓜表单轨迹查看器"); //此属性暂时没有用.
 
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		this.set_enMap(map);
-		return this.get_enMap();
-	}
+		RefMethod rm = new RefMethod();
+		rm.Title = "手动启动子流程";
+		rm.ClassMethodName = this.toString() + ".DoSubFlowHand";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
 
+		rm = new RefMethod();
+		rm.Title = "自动触发子流程";
+		rm.ClassMethodName = this.toString() + ".DoSubFlowAuto";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "延续子流程";
+		rm.ClassMethodName = this.toString() + ".DoSubFlowYanXu";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+
+		this._enMap = map;
+		return this._enMap;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
- 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 子流程。
+	/** 
+	 自动触发
+	 
+	 @return 
+	*/
+	public final String DoSubFlowAuto()
+	{
+		return "../../Admin/AttrNode/SubFlow/SubFlowAuto.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
+	}
+	/** 
+	 手动启动子流程
+	 
+	 @return 
+	*/
+	public final String DoSubFlowHand()
+	{
+		return "../../Admin/AttrNode/SubFlow/SubFlowHand.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
+	}
+	/** 
+	 延续子流程
+	 
+	 @return 
+	*/
+	public final String DoSubFlowYanXu()
+	{
+		return "../../Admin/AttrNode/SubFlow/SubFlowYanXu.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 子流程。
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重写方法.
+	@Override
+	protected boolean beforeUpdateInsertAction()
+	{
+		return super.beforeUpdateInsertAction();
+	}
+	@Override
+	protected void afterUpdate()
+	{
+		//清空缓存，重新查数据
+		Node nd = new Node(this.getNodeID());
+		nd.RetrieveFromDBSources();
+		Cash2019.UpdateRow(nd.toString(),String.valueOf(this.getNodeID()),nd.Row);
+
+		super.afterUpdate();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 重写方法.
 }

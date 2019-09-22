@@ -1,18 +1,20 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  子线程组件
- 
 */
 public class FrmThread extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getNo()
 	{
 		return "ND" + this.getNodeID();
@@ -24,7 +26,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 节点ID
-	 
 	*/
 	public final int getNodeID()
 	{
@@ -36,7 +37,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 控件状态
-	 
 	*/
 	public final FrmThreadSta getFrmThreadSta()
 	{
@@ -48,7 +48,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getFrmThread_Y()
 	{
@@ -60,7 +59,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getFrmThread_X()
 	{
@@ -72,7 +70,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 W
-	 
 	*/
 	public final float getFrmThread_W()
 	{
@@ -92,7 +89,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 H
-	 
 	*/
 	public final float getFrmThread_H()
 	{
@@ -112,7 +108,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 节点名称.
-	 
 	*/
 	public final String getName()
 	{
@@ -120,25 +115,22 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 标签
-	 
 	*/
 	public final String getFrmThreadLab()
 	{
 		return this.GetValStringByKey(FrmThreadAttr.FrmThreadLab);
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 控制
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -148,7 +140,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 重写主键
-	 
 	*/
 	@Override
 	public String getPK()
@@ -157,7 +148,6 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 子线程组件
-	 
 	*/
 	public FrmThread()
 	{
@@ -166,9 +156,8 @@ public class FrmThread extends Entity
 	 子线程组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmThread(String mapData) throws Exception
+	public FrmThread(String mapData)
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -197,23 +186,21 @@ public class FrmThread extends Entity
 	 子线程组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmThread(int nodeID) throws Exception
+	public FrmThread(int nodeID)
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Node", "子线程组件");
@@ -224,10 +211,10 @@ public class FrmThread extends Entity
 		map.AddTBString(FrmThreadAttr.FrmThreadLab, "子线程", "显示标签", true, false, 0, 200, 10, true);
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		map.AddDDLSysEnum(FrmThreadAttr.FrmThreadSta, 0, "组件状态", true, true, FrmThreadAttr.FrmThreadSta, "@0=禁用@1=启用");
+		map.AddDDLSysEnum(FrmThreadAttr.FrmThreadSta, getFrmThreadSta().Disable.getValue(), "组件状态", true, true, FrmThreadAttr.FrmThreadSta, "@0=禁用@1=启用");
 
 		map.AddTBFloat(FrmThreadAttr.FrmThread_X, 5, "位置X", true, false);
 		map.AddTBFloat(FrmThreadAttr.FrmThread_Y, 5, "位置Y", true, false);
@@ -235,13 +222,18 @@ public class FrmThread extends Entity
 		map.AddTBFloat(FrmThreadAttr.FrmThread_H, 300, "高度", true, false);
 		map.AddTBFloat(FrmThreadAttr.FrmThread_W, 400, "宽度", true, false);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
- 
 
+	@Override
+	protected boolean beforeUpdateInsertAction()
+	{
+		return super.beforeUpdateInsertAction();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

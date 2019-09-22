@@ -1,20 +1,21 @@
 package BP.WF.Template;
 
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  标签.	 
- 
 */
 public class LabNote extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
-	 
 	*/
 	@Override
 	public UAC getHisUAC()
@@ -26,7 +27,6 @@ public class LabNote extends EntityMyPK
 
 	/** 
 	 x
-	 
 	*/
 	public final int getX()
 	{
@@ -39,7 +39,6 @@ public class LabNote extends EntityMyPK
 
 	/** 
 	 y
-	 
 	*/
 	public final int getY()
 	{
@@ -51,7 +50,6 @@ public class LabNote extends EntityMyPK
 	}
 	/** 
 	 标签的事务编号
-	 
 	*/
 	public final String getFK_Flow()
 	{
@@ -69,14 +67,13 @@ public class LabNote extends EntityMyPK
 	{
 		SetValByKey(NodeAttr.Name, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 标签
-	 
 	*/
 	public LabNote()
 	{
@@ -85,26 +82,25 @@ public class LabNote extends EntityMyPK
 	 标签
 	 
 	 @param _oid 标签ID	
-	 * @throws Exception 
 	*/
-	public LabNote(String mypk) throws Exception
+	public LabNote(String mypk)
 	{
-		this.setMyPK(mypk);
+		this.MyPK = mypk;
 		this.Retrieve();
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_LabNote", "标签");
+		map.IndexField = NodeAttr.FK_Flow;
 
 		map.AddMyPK();
 
@@ -114,16 +110,16 @@ public class LabNote extends EntityMyPK
 		map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
 		map.AddTBInt(NodeAttr.Y, 0, "Y坐标", false, false);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
-		this.setMyPK(BP.DA.DBAccess.GenerOID()+"");
+		this.MyPK = BP.DA.DBAccess.GenerOID().toString();
 		return super.beforeInsert();
 	}
 }

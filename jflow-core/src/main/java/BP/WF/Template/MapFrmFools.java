@@ -1,60 +1,61 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  傻瓜表单属性s
- 
 */
 public class MapFrmFools extends EntitiesNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 傻瓜表单属性s
-	 
 	*/
 	public MapFrmFools()
 	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new MapFrmFool();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrmFool> ToJavaList()
+	public final List<MapFrmFool> ToJavaList()
 	{
-		return (java.util.List<MapFrmFool>)(Object)this;
+		return (List<MapFrmFool>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<MapFrmFool> Tolist()
+	public final ArrayList<MapFrmFool> Tolist()
 	{
-		java.util.ArrayList<MapFrmFool> list = new java.util.ArrayList<MapFrmFool>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<MapFrmFool> list = new ArrayList<MapFrmFool>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((MapFrmFool)this.get(i));
+			list.add((MapFrmFool)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

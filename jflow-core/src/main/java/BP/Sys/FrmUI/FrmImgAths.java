@@ -1,17 +1,18 @@
 package BP.Sys.FrmUI;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.*;
 import java.util.*;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
-import BP.Sys.FrmLineAttr;
-import BP.Sys.SystemConfig;
-
 /** 
-图片附件s
+ 图片附件s
 */
 public class FrmImgAths extends EntitiesMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 图片附件s
 	*/
@@ -22,9 +23,8 @@ public class FrmImgAths extends EntitiesMyPK
 	 图片附件s
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public FrmImgAths(String fk_mapdata) throws Exception
+	public FrmImgAths(String fk_mapdata)
 	{
 		if (SystemConfig.getIsDebug())
 		{
@@ -43,7 +43,11 @@ public class FrmImgAths extends EntitiesMyPK
 	{
 		return new FrmImgAth();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -51,7 +55,7 @@ public class FrmImgAths extends EntitiesMyPK
 	*/
 	public final List<FrmImgAth> ToJavaList()
 	{
-		return (List<FrmImgAth>)(Object)this;
+		return (List<FrmImgAth>)this;
 	}
 	/** 
 	 转化成list
@@ -61,11 +65,12 @@ public class FrmImgAths extends EntitiesMyPK
 	public final ArrayList<FrmImgAth> Tolist()
 	{
 		ArrayList<FrmImgAth> list = new ArrayList<FrmImgAth>();
-		for (int i = 0; i < this.size(); i++)
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((FrmImgAth)this.get(i));
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }
-

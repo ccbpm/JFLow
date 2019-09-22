@@ -2,18 +2,18 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
-import BP.Tools.StringHelper;
+import BP.Web.*;
+import java.util.*;
 
 /** 
  图片
- 
 */
 public class FrmImg extends EntityMyPK
 {
- 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 中文名称
-	 
 	*/
 	public final String getName()
 	{
@@ -23,10 +23,9 @@ public class FrmImg extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAttr.Name, value);
 	}
-	/**
-	 * 中文对应的字段
-	 * @return
-	 */
+	/** 
+	 对应字段名称
+	*/
 	public final String getKeyOfEn()
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
@@ -37,7 +36,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 英文名称
-	 
 	*/
 	public final String getEnPK()
 	{
@@ -49,7 +47,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 是否可以编辑
-	 
 	*/
 	public final int getIsEdit()
 	{
@@ -61,7 +58,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 应用类型
-	 
 	*/
 	public final ImgAppType getHisImgAppType()
 	{
@@ -73,13 +69,12 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 数据来源
-	 
 	*/
 	public final int getImgSrcType()
 	{
 		return this.GetValIntByKey(FrmImgAttr.ImgSrcType);
 	}
-	public final void setSrcType(int value)
+	public final void setImgSrcType(int value)
 	{
 		this.SetValByKey(FrmImgAttr.ImgSrcType, value);
 	}
@@ -92,6 +87,7 @@ public class FrmImg extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAttr.Tag0, value);
 	}
+
 	public final String getLinkTarget()
 	{
 		return this.GetValStringByKey(FrmImgAttr.LinkTarget);
@@ -102,7 +98,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 URL
-	 
 	*/
 	public final String getLinkURL()
 	{
@@ -115,9 +110,10 @@ public class FrmImg extends EntityMyPK
 	public final String getImgPath()
 	{
 		String src = this.GetValStringByKey(FrmImgAttr.ImgPath);
-		if (StringHelper.isNullOrEmpty(src))
+		if (DataType.IsNullOrEmpty(src))
 		{
-			src =  "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
+			String appPath = HttpContextHelper.getRequestApplicationPath();
+			src = appPath + "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
 		}
 		return src;
 	}
@@ -128,9 +124,10 @@ public class FrmImg extends EntityMyPK
 	public final String getImgURL()
 	{
 		String src = this.GetValStringByKey(FrmImgAttr.ImgURL);
-		if (StringHelper.isNullOrEmpty(src) || src.contains("component/Img"))
+		if (DataType.IsNullOrEmpty(src) || src.contains("component/Img"))
 		{
-			src =  "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
+			String appPath = HttpContextHelper.getRequestApplicationPath();
+			src = appPath + "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
 		}
 		return src;
 	}
@@ -140,7 +137,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getY()
 	{
@@ -152,7 +148,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getX()
 	{
@@ -164,7 +159,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 H
-	 
 	*/
 	public final float getH()
 	{
@@ -176,7 +170,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 W
-	 
 	*/
 	public final float getW()
 	{
@@ -188,7 +181,6 @@ public class FrmImg extends EntityMyPK
 	}
 	/** 
 	 FK_MapData
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -198,14 +190,13 @@ public class FrmImg extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAttr.FK_MapData, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 图片
-	 
 	*/
 	public FrmImg()
 	{
@@ -214,16 +205,14 @@ public class FrmImg extends EntityMyPK
 	 图片
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmImg(String mypk) throws Exception
+	public FrmImg(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -232,61 +221,61 @@ public class FrmImg extends EntityMyPK
 		{
 			return this.get_enMap();
 		}
+		Map map = new Map("Sys_FrmImg", "图片");
+		map.Java_SetDepositaryOfEntity(Depositary.None);
+		map.Java_SetDepositaryOfMap(Depositary.Application);
+		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = FrmImgAttr.FK_MapData;
 
-		   Map map = new Map("Sys_FrmImg", "图片");
-           map.Java_SetDepositaryOfEntity(Depositary.None);
-           map.Java_SetDepositaryOfMap( Depositary.Application);
-           map.Java_SetEnType(EnType.Sys);
-           map.AddMyPK();
+		map.AddMyPK();
 
-           map.AddTBString(FrmImgAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
-           map.AddTBString(MapAttrAttr.KeyOfEn, null, "对应字段", true, false, 1, 100, 20);
+		map.AddTBString(FrmImgAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
+		map.AddTBString(MapAttrAttr.KeyOfEn, null, "对应字段", true, false, 1, 100, 20);
 
-           map.AddTBInt(FrmImgAttr.ImgAppType, 0, "应用类型", false, false);
-           
-           map.AddTBFloat(FrmImgAttr.X, 5, "X", true, false);
-           map.AddTBFloat(FrmImgAttr.Y, 5, "Y", false, false);
+		map.AddTBInt(FrmImgAttr.ImgAppType, 0, "应用类型", false, false);
 
-           map.AddTBFloat(FrmImgAttr.H, 200, "H", true, false);
-           map.AddTBFloat(FrmImgAttr.W, 160, "W", false, false);
+		map.AddTBFloat(FrmImgAttr.X, 5, "X", true, false);
+		map.AddTBFloat(FrmImgAttr.Y, 5, "Y", false, false);
 
-           map.AddTBString(FrmImgAttr.ImgURL, null, "ImgURL", true, false, 0, 200, 20);
-           map.AddTBString(FrmImgAttr.ImgPath, null, "ImgPath", true, false, 0, 200, 20);
-           
-           map.AddTBString(FrmImgAttr.LinkURL, null, "LinkURL", true, false, 0, 200, 20);
-           map.AddTBString(FrmImgAttr.LinkTarget, "_blank", "LinkTarget", true, false, 0, 200, 20);
+		map.AddTBFloat(FrmImgAttr.H, 200, "H", true, false);
+		map.AddTBFloat(FrmImgAttr.W, 160, "W", false, false);
 
-           map.AddTBString(FrmImgAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		map.AddTBString(FrmImgAttr.ImgURL, null, "ImgURL", true, false, 0, 200, 20);
+		map.AddTBString(FrmImgAttr.ImgPath, null, "ImgPath", true, false, 0, 200, 20);
 
-           //如果是 seal 就是岗位集合。
-           map.AddTBString(FrmImgAttr.Tag0, null, "参数", true, false, 0, 500, 20);
-           map.AddTBInt(FrmImgAttr.ImgSrcType, 0, "图片来源0=本地,1=URL", true, false);
-           map.AddTBInt(FrmImgAttr.IsEdit, 0, "是否可以编辑", true, false);
-           map.AddTBString(FrmImgAttr.Name, null, "中文名称", true, false, 0, 500, 20);
-           map.AddTBString(FrmImgAttr.EnPK, null, "英文名称", true, false, 0, 500, 20);
-           map.AddTBInt(MapAttrAttr.ColSpan, 0, "单元格数量", false, true);
-           map.AddTBInt(MapAttrAttr.TextColSpan, 1, "文本单元格数量", false, true);
-           map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", false, true);
+		map.AddTBString(FrmImgAttr.LinkURL, null, "LinkURL", true, false, 0, 200, 20);
+		map.AddTBString(FrmImgAttr.LinkTarget, "_blank", "LinkTarget", true, false, 0, 200, 20);
 
-           //显示的分组.
-           map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组",BP.Sys.FrmUI.MapAttrString.SQLOfGroupAttr(), true);
+		map.AddTBString(FrmImgAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 
+			//如果是 seal 就是岗位集合。
+		map.AddTBString(FrmImgAttr.Tag0, null, "参数", true, false, 0, 500, 20);
+		map.AddTBInt(FrmImgAttr.ImgSrcType, 0, "图片来源0=本地,1=URL", true, false);
+		map.AddTBInt(FrmImgAttr.IsEdit, 0, "是否可以编辑", true, false);
+		map.AddTBString(FrmImgAttr.Name, null, "中文名称", true, false, 0, 500, 20);
+		map.AddTBString(FrmImgAttr.EnPK, null, "英文名称", true, false, 0, 500, 20);
+		map.AddTBInt(MapAttrAttr.ColSpan, 0, "单元格数量", false, true);
+		map.AddTBInt(MapAttrAttr.TextColSpan, 1, "文本单元格数量", false, true);
+		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", false, true);
+
+			//显示的分组.
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", BP.Sys.FrmUI.MapAttrString.getSQLOfGroupAttr(), true);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	
-	/**
-	 * 生成MyPK
-	 */
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 	@Override
-	 protected  boolean beforeInsert() throws Exception
-     {
-         if(DataType.IsNullOrEmpty(this.getKeyOfEn()) == false)
-             this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn()) ;
-         return super.beforeInsert();
-     }
-	
+	protected boolean beforeInsert()
+	{
+		if (DataType.IsNullOrEmpty(this.getKeyOfEn()) == false)
+		{
+			this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+		}
+		return super.beforeInsert();
+	}
 
 	/** 
 	 是否存在相同的数据?
@@ -295,12 +284,11 @@ public class FrmImg extends EntityMyPK
 	*/
 	public final boolean IsExitGenerPK()
 	{
-		String sql = "SELECT COUNT(*) FROM " + this.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND X=" + this.getX() + " AND Y=" + this.getY();
+		String sql = "SELECT COUNT(*) FROM Sys_FrmImg WHERE FK_MapData='" + this.getFK_MapData() + "' AND X=" + this.getX() + " AND Y=" + this.getY();
 		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 		{
 			return false;
 		}
 		return true;
 	}
-	 
 }

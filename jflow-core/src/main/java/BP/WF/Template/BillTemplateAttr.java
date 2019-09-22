@@ -1,55 +1,47 @@
 package BP.WF.Template;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
 
 /** 
  单据模板属性
 */
 public class BillTemplateAttr extends BP.En.EntityNoNameAttr
 {
+	/** 
+	 路径
+	*/
 	public static final String TempFilePath = "TempFilePath";
 	/** 
 	 NodeID
 	*/
 	public static final String NodeID = "NodeID";
 	/** 
-	 是否需要送达
-	*/
-	public static final String IsNeedSend = "IsNeedSend";
-	/** 
 	 为生成单据使用
 	*/
-	public static final String IDX = "IDX";
-	
-	/**
-	 * 单据类型
-	 */
-	public static final String TemplateFileModel = "TemplateFileModel";
-	/** 
-	 要排除的字段
-	*/
-	public static final String ExpField = "ExpField";
-	/** 
-	 要替换的值
-	*/
-	public static final String ReplaceVal = "ReplaceVal";
+	public static final String Idx = "Idx";
 	/** 
 	 单据类型
 	*/
-	public static final String FK_BillType = "FK_BillType";
+	public static final String TemplateFileModel = "TemplateFileModel";
 	/** 
 	 是否生成PDF
 	*/
 	public static final String BillFileType = "BillFileType";
-    /// <summary>
-    /// 文件打开方式
-    /// </summary>
-    public static final String BillOpenModel = "BillOpenModel";
-  /// <summary>
-    /// 表单的ID
-    /// </summary>
-    public static final String FK_MapData = "FK_MapData";
-    /// <summary>
-    /// 是否生成二维码
-    /// </summary>
-    public static final String QRModel = "QRModel";
+	/** 
+	 二维码生成方式
+	*/
+	public static final String QRModel = "QRModel";
+	/** 
+	 文件打开方式
+	*/
+	public static final String BillOpenModel = "BillOpenModel";
+	/** 
+	 表单的ID
+	*/
+	public static final String FK_MapData = "FK_MapData";
 }

@@ -2,18 +2,17 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  表单报表设置数据存储表
- 
 */
 public class FrmReportField extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 表单编号
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -25,7 +24,6 @@ public class FrmReportField extends EntityMyPK
 	}
 	/** 
 	 字段名
-	 
 	*/
 	public final String getKeyOfEn()
 	{
@@ -37,7 +35,6 @@ public class FrmReportField extends EntityMyPK
 	}
 	/** 
 	 显示中文名
-	 
 	*/
 	public final String getName()
 	{
@@ -49,7 +46,6 @@ public class FrmReportField extends EntityMyPK
 	}
 	/** 
 	 列宽
-	 
 	*/
 	public final String getUIWidth()
 	{
@@ -61,7 +57,6 @@ public class FrmReportField extends EntityMyPK
 	}
 	/** 
 	 是否显示
-	 
 	*/
 	public final boolean getUIVisible()
 	{
@@ -73,7 +68,6 @@ public class FrmReportField extends EntityMyPK
 	}
 	/** 
 	 显示顺序
-	 
 	*/
 	public final int getIdx()
 	{
@@ -83,14 +77,13 @@ public class FrmReportField extends EntityMyPK
 	{
 		this.SetValByKey(FrmReportFieldAttr.Idx, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 表单报表
-	 
 	*/
 	public FrmReportField()
 	{
@@ -99,19 +92,17 @@ public class FrmReportField extends EntityMyPK
 	 表单报表
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmReportField(String mypk) throws Exception
+	public FrmReportField(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -136,7 +127,7 @@ public class FrmReportField extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 		return super.beforeUpdateInsertAction();

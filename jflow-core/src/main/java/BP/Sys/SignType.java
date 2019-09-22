@@ -1,35 +1,39 @@
 package BP.Sys;
 
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
+import java.math.*;
+
 /** 
  数字签名类型
- 
 */
 public enum SignType
 {
 	/** 
 	 无
-	 
 	*/
 	None,
 	/** 
 	 图片
-	 
 	*/
 	Pic,
 	/** 
 	 山东CA签名.
-	 
 	*/
 	CA,
 	/** 
 	 广东CA
-	 
 	*/
 	GDCA,
-    /// <summary>
-    /// 图片盖章
-    /// </summary>
-    GZCA;
+	/** 
+	 图片盖章
+	*/
+	GZCA;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

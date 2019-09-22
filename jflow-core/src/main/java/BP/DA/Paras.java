@@ -1,44 +1,121 @@
 package BP.DA;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
+import BP.Sys.*;
+import java.math.*;
 
-import BP.Sys.SystemConfig;
-import BP.Web.WebUser;
-
-/**
- * 参数集合
- */
-public class Paras extends ArrayList<Para>
+/** 
+ 参数集合
+*/
+public class Paras extends ArrayList<Object>
 {
-	private static final long serialVersionUID = 1L;
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 特殊处理
+	public final void AddFK_Emp(String userNo)
+	{
+		this.Add("FK_Emp", userNo);
+	}
+	public final void AddFK_Emp()
+	{
+		this.Add("FK_Emp", Web.WebUser.getNo());
+	}
+
+	public final void AddFK_NY(String fk_ny)
+	{
+		this.Add("FK_NY", fk_ny);
+	}
+	public final void AddFK_NY()
+	{
+		this.Add("FK_NY", DataType.getCurrentYearMonth());
+	}
+
+
+	public final void AddFK_Dept(String val)
+	{
+		this.Add("FK_Dept", val);
+	}
+	public final void AddFK_Dept()
+	{
+		this.Add("FK_Dept", BP.Web.WebUser.getFK_Dept());
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+	public final String ToDesc()
+	{
+		String msg = "";
+		for (Para p : this)
+		{
+			msg += "@" + p.ParaName + " = " + p.val;
+		}
+		return msg;
+	}
+
+	public String SQL = null;
+	public final String getSQLNoPara()
+	{
+		Object tempVar = this.SQL.Clone();
+		String mysql = tempVar instanceof String ? (String)tempVar : null;
+		for (Para p : this)
+		{
+			if (p.DAType == System.Data.DbType.String)
+			{
+				if (mysql.contains(SystemConfig.getAppCenterDBVarStr() + p.ParaName + ","))
+				{
+					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr() + p.ParaName + ",", "'" + p.val.toString() + "',");
+				}
+				else
+				{
+					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr() + p.ParaName, "'" + p.val.toString() + "'");
+				}
+			}
+			else
+			{
+				if (mysql.contains(SystemConfig.getAppCenterDBVarStr() + p.ParaName + ","))
+				{
+					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr() + p.ParaName + ",", p.val.toString() + ",");
+				}
+				else
+				{
+					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr() + p.ParaName, p.val.toString());
+				}
+			}
+		}
+		return mysql;
+	}
+
 	public Paras()
 	{
 	}
-	
 	public Paras(Object o)
 	{
 		this.Add("p", o);
 	}
-	
 	public final String getDBStr()
 	{
 		return BP.Sys.SystemConfig.getAppCenterDBVarStr();
 	}
-	
 	public Paras(String p, Object v)
 	{
 		this.Add(p, v);
 	}
-	
 	public Paras(String p1, Object o1, String p2, Object o2)
 	{
 		this.Add(p1, o1);
 		this.Add(p2, o2);
 	}
-	
+
+	public final boolean COntinckey(String key)
+	{
+		for (Para p : this)
+		{
+			if (p.ParaName.equals(key))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public final void Add(Para para)
 	{
 		for (Para p : this)
@@ -49,43 +126,25 @@ public class Paras extends ArrayList<Para>
 				return;
 			}
 		}
-		this.add(para);
+
+		this.InnerList.add(para);
 	}
-	
 	public final void Add(Object obj)
 	{
-		this.Add("p", obj);
+	   this.Add("p", obj);
 	}
-
-	public final void Add(String _name, Object obj) {
-		
-		if (_name.equals("abc")) {
-			return;
-		}
-		if (obj == null) {
-			throw new RuntimeException("@参数:" + _name + " 值无效.");
-		}
-		for (Para p : this) {
-			if (p.ParaName.equals(_name)) {
-				p.val = obj;
-				return;
-			}
-		}
-		Add(_name, obj, obj.getClass());
-	}
-
-	public final void Add(String _name, Object obj, Class<?> clazzType)
+	public final void Add(String _name, Object obj)
 	{
 		if (_name.equals("abc"))
 		{
 			return;
 		}
-		
-//		if (obj == null)
-//		{
-//			throw new RuntimeException("@参数:" + _name + " 值无效.");
-//		}
-		
+
+		if (obj == null)
+		{
+			throw new RuntimeException("@参数:" + _name + " 值无效.");
+		}
+
 		for (Para p : this)
 		{
 			if (p.ParaName.equals(_name))
@@ -94,130 +153,142 @@ public class Paras extends ArrayList<Para>
 				return;
 			}
 		}
-		
-		if (clazzType == String.class)
+
+		// 2019-8-8 适配pgsql数据库的新版驱动，要求数据类型一致
+		//if (String.Compare("FK_Node", _name, StringComparison.OrdinalIgnoreCase) == 0)
+		//{
+		//    this.Add(_name, Convert.ToInt32(obj));
+		//    return;
+		//}
+		//if (String.Compare("WorkID", _name, StringComparison.OrdinalIgnoreCase) == 0)
+		//{
+		//    this.Add(_name, Convert.ToInt64(obj));
+		//    return;
+		//}
+
+		if (obj.getClass() == String.class)
 		{
-			this.Add(_name, (String) obj);
+			this.Add(_name, obj.toString());
 			return;
 		}
-		
-		if (clazzType == Integer.class || clazzType == Byte.class
-				|| clazzType == Short.class)
+
+		if (obj.getClass() == Integer.class || obj.getClass() == Integer.class || obj.getClass() == Short.class)
 		{
-			this.Add(_name, (Integer) obj);
+			this.Add(_name, Integer.parseInt(obj.toString()));
 			return;
 		}
-		
-		if (clazzType == Long.class)
+
+		if (obj.getClass() == Long.class)
 		{
-			this.Add(_name, (Long) obj);
+			this.Add(_name, Long.parseLong(obj.toString()));
 			return;
 		}
-		
-		if (clazzType == Float.class)
+
+		if (obj.getClass() == Float.class)
 		{
-			this.Add(_name, (Float) obj);
+			this.Add(_name, Float.parseFloat(obj.toString()));
 			return;
 		}
-		
-		if (clazzType == java.math.BigDecimal.class)
+
+		if (obj.getClass() == BigDecimal.class)
 		{
-			this.Add(_name, (java.math.BigDecimal) obj);
+			this.Add(_name, BigDecimal.Parse(obj.toString()));
 			return;
 		}
-		
-		if (clazzType == Double.class)
+
+		if (obj.getClass() == Double.class)
 		{
-			this.Add(_name, (Double) obj);
+			this.Add(_name, Double.parseDouble(obj.toString()));
 			return;
 		}
-		
-		if (clazzType == Date.class)
+
+		if (obj == DBNull.Value)
 		{
-			this.Add(_name, (java.util.Date) obj);
-			return;
+			this.AddDBNull(_name);
 		}
-		
-		/*
-		 * warning if (obj == DBNull.getValue()) { this.AddDBNull(_name); } else
-		 * { throw new RuntimeException("@没有判断的参数类型:" + _name); }
-		 */
-		
-		// this.Add(_name, obj.ToString());
+		else
+		{
+			throw new RuntimeException("@没有判断的参数类型:" + _name);
+		}
+		//     this.Add(_name, obj.ToString());
 	}
-	
-	private void Add(String _name, String _val)
+	/** 
+	 是否是大块文本?
+	 
+	 @param _name 名称
+	 @param _val 值
+	 @param isBigTxt 是否是大文本?
+	*/
+
+	public final void Add(String _name, String _val)
+	{
+		Add(_name, _val, false);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public void Add(string _name, string _val, bool isBigTxt=false)
+	public final void Add(String _name, String _val, boolean isBigTxt)
 	{
 		Para en = new Para();
-		en.DAType = String.class;
+
+		en.DAType = System.Data.DbType.String;
 		en.val = _val;
 		en.ParaName = _name;
 		en.Size = _val.length();
+		en.IsBigText = isBigTxt; //是否是大块文本.
 		this.Add(en);
 	}
-	
-	private void Add(String _name, Integer _val)
+
+	public final void Add(String _name, int _val)
 	{
 		Para en = new Para();
-		en.DAType = Integer.class;
+		en.DAType = System.Data.DbType.Int32;
 		en.val = _val;
 		en.ParaName = _name;
 		this.Add(en);
 	}
-	
-	private void Add(String _name, Long _val)
+	public final void Add(String _name, long _val)
 	{
 		Para en = new Para();
-		en.DAType = Long.class;
+		en.DAType = System.Data.DbType.Int64;
 		en.val = _val;
 		en.ParaName = _name;
 		this.Add(en);
 	}
-	
-	private void Add(String _name, Float _val)
+	public final void Add(String _name, float _val)
 	{
 		Para en = new Para();
-		en.DAType = Float.class;
-		// en.DAType = System.Data.DbType.Int64;
+		en.DAType = System.Data.DbType.Decimal;
+		//   en.DAType = System.Data.DbType.Int64;
 		en.val = _val;
 		en.ParaName = _name;
 		this.Add(en);
 	}
-	
-	/*
-	 * warning public final void AddDBNull(String _name) { Para en = new Para();
-	 * en.DAType = Object.class; en.val = DBNull.getValue(); en.ParaName =
-	 * _name; this.Add(en); }
-	 */
-	
-	private void Add(String _name, java.math.BigDecimal _val)
+	public final void AddDBNull(String _name)
 	{
 		Para en = new Para();
-		en.DAType = BigDecimal.class;
+		en.DAType = System.Data.DbType.Object;
+		en.val = DBNull.Value;
+		en.ParaName = _name;
+		this.Add(en);
+	}
+	public final void Add(String _name, BigDecimal _val)
+	{
+		Para en = new Para();
+		en.DAType = System.Data.DbType.Decimal;
 		en.val = _val;
 		en.ParaName = _name;
 		this.Add(en);
 	}
-	
-	private void Add(String _name, Double _val)
+	public final void Add(String _name, double _val)
 	{
 		Para en = new Para();
-		en.DAType = Double.class;
+		en.DAType = System.Data.DbType.Decimal;
 		en.val = _val;
 		en.ParaName = _name;
 		this.Add(en);
 	}
-	
-	private void Add(String _name, Date _val)
-	{
-		Para en = new Para();
-		en.DAType = Date.class;
-		en.val = _val;
-		en.ParaName = _name;
-		this.Add(en);
-	}
-	
-	public final void remove(String paraName)
+	public final void Remove(String paraName)
 	{
 		int i = 0;
 		for (Para p : this)
@@ -228,105 +299,6 @@ public class Paras extends ArrayList<Para>
 			}
 			i++;
 		}
-		this.remove(i);
-	}
-
-	// 特殊处理
-	public final void AddFK_Emp(String userNo)
-	{
-		this.Add("FK_Emp", userNo);
-	}
-	
-	public void AddFK_Emp() throws Exception
-	{
-		this.Add("FK_Emp", WebUser.getNo());
-	}
-	
-	public final void AddFK_NY(String fk_ny)
-	{
-		this.Add("FK_NY", fk_ny);
-	}
-	
-	public final void AddFK_NY()
-	{
-		this.Add("FK_NY", DataType.getCurrentYearMonth());
-	}
-	
-	public final void AddFK_Dept(String val)
-	{
-		this.Add("FK_Dept", val);
-	}
-	
-	public final String ToDesc()
-	{
-		String msg = "";
-		for (Para p : this)
-		{
-			msg += "@" + p.ParaName + " = " + p.val;
-		}
-		return msg;
-	}
-	
-	public String SQL = null;
-	
-	public final String getSQLNoPara()
-	{
-		Object tempVar = this.SQL;
-		/*
-		 * warning Object tempVar = this.SQL.clone();
-		 */
-		String mysql = (String) ((tempVar instanceof String) ? tempVar : null);
-		if (mysql == null){
-			return null;
-		}
-		for (Para p : this)
-		{
-			if (p.DAType == String.class)
-			{
-				if (mysql.contains(SystemConfig.getAppCenterDBVarStr()
-						+ p.ParaName + ","))
-				{
-					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr()
-							+ p.ParaName + ",", "'" + p.val.toString() + "',");
-				} else
-				{
-					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr()
-							+ p.ParaName, "'" + p.val.toString() + "',");
-				}
-			} else
-			{
-				if (mysql.contains(SystemConfig.getAppCenterDBVarStr()
-						+ p.ParaName + ","))
-				{
-					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr()
-							+ p.ParaName + ",", p.val.toString() + ",");
-				} else
-				{
-					mysql = mysql.replace(SystemConfig.getAppCenterDBVarStr()
-							+ p.ParaName, p.val.toString());
-				}
-			}
-		}
-		return mysql;
-	}
-	
-	private String debugInfo = null;
-	
-	public String getDebugInfo(){
-		if (debugInfo == null){
-			StringBuilder sb = new StringBuilder();
-			sb.append("Num=" + this.size());
-			for (Para pa : this) {
-				sb.append(", " + pa.ParaName + "=" + pa.val + "(");
-				if (pa.val != null){
-					sb.append(pa.val.getClass().getSimpleName());
-				}else{
-					sb.append("null");
-				}
-				sb.append(")");
-			}
-			debugInfo = sb.toString();
-		}
-		return debugInfo;
+		this.RemoveAt(i);
 	}
 }

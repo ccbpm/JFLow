@@ -1,33 +1,20 @@
 package BP.WF.Data;
 
-import java.io.IOException;
-
-import BP.DA.Log;
-import BP.Difference.ContextHolderUtils;
-import BP.En.AttrOfSearch;
-import BP.En.EnType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.QueryObject;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
-import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
-import BP.WF.Flows;
-import BP.WF.Glo;
-import BP.WF.TaskSta;
-import BP.WF.WFSta;
-import BP.WF.WFState;
-
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  我部门的流程
 */
 public class MyDeptFlow extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	@Override
 	public UAC getHisUAC()
 	{
@@ -320,7 +307,6 @@ public class MyDeptFlow extends Entity
 	}
 	/** 
 	 发起人部门名称
-	 
 	*/
 	public final String getDeptName()
 	{
@@ -361,11 +347,11 @@ public class MyDeptFlow extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == WFState.Complete)
+		if (value == WF.WFState.Complete)
 		{
 			SetValByKey(MyDeptFlowAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == WFState.Delete)
+		else if (value == WF.WFState.Delete)
 		{
 			SetValByKey(MyDeptFlowAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -389,8 +375,8 @@ public class MyDeptFlow extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = (WFState)this.getWFState();
-		switch(ws)
+		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		switch (ws)
 		{
 			case Complete:
 				return "已完成";
@@ -415,6 +401,11 @@ public class MyDeptFlow extends Entity
 	{
 		SetValByKey(MyDeptFlowAttr.GUID, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
 
 	public final String getParas_ToNodes()
 	{
@@ -438,14 +429,18 @@ public class MyDeptFlow extends Entity
 	{
 		this.SetPara("AskForReply", value);
 	}
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 参数属性.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 产生的工作流程
 	*/
 	public MyDeptFlow()
 	{
 	}
-	public MyDeptFlow(long workId) throws Exception
+	public MyDeptFlow(long workId)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptFlowAttr.WorkID, workId);
@@ -466,51 +461,67 @@ public class MyDeptFlow extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "我部门的流程");
 		map.Java_SetEnType(EnType.View);
 
-		map.AddTBIntPK(MyDeptFlowAttr.WorkID, 0, "WorkID", true, true);
-		map.AddTBInt(MyDeptFlowAttr.FID, 0, "FID", false, false);
-
+		map.AddTBString(MyDeptFlowAttr.Title, null, "标题", true, false, 0, 100, 150, true);
 		map.AddDDLEntities(MyDeptFlowAttr.FK_Flow, null, "流程", new Flows(), false);
-		map.AddTBString(MyDeptFlowAttr.StarterName, null, "发起人", true, false, 0, 30, 10);
-		map.AddTBString(MyDeptFlowAttr.Title, null, "标题", true, false, 0, 100, 10);
-		map.AddDDLSysEnum(MyDeptFlowAttr.WFSta, 0, "状态", true, false, MyDeptFlowAttr.WFSta);
-		map.AddTBString(MyDeptFlowAttr.NodeName, null, "当前节点", true, false, 0, 100, 10);
-		map.AddTBString(MyDeptFlowAttr.TodoEmps, null, "当前处理人", true, false, 0, 100, 10);
+		map.AddTBString(MyDeptFlowAttr.BillNo, null, "单据编号", true, false, 0, 100, 50);
+
+		map.AddTBString(MyDeptFlowAttr.StarterName, null, "发起人", true, false, 0, 30, 40);
 		map.AddTBDateTime(MyDeptFlowAttr.RDT, "发起日期", true, true);
-		map.AddTBString(MyDeptFlowAttr.FlowNote, null, "备注", true, false, 0, 4000, 10);
-		map.AddTBString(MyDeptFlowAttr.FK_Dept, null, "部门", false, false, 0, 30, 10);
+
+		map.AddTBString(MyDeptFlowAttr.NodeName, null, "当前节点", true, false, 0, 100, 80);
+		map.AddTBString(MyDeptFlowAttr.TodoEmps, null, "当前处理人", true, false, 0, 100, 80);
+
+		map.AddDDLSysEnum(MyDeptFlowAttr.WFSta, 0, "状态", true, false, MyDeptFlowAttr.WFSta);
+		map.AddDDLSysEnum(MyFlowAttr.TSpan, 0, "时间段", true, false, MyFlowAttr.TSpan, "@0=本周@1=上周@2=两周以前@3=三周以前@4=更早");
+
+		map.AddTBStringDoc(MyDeptFlowAttr.FlowNote, null, "备注", true, false,true);
 		map.AddTBMyNum();
+
+			//工作ID
+		map.AddTBIntPK(MyDeptFlowAttr.WorkID, 0, "工作ID", true, true);
+
+			//隐藏字段.
+		map.AddTBInt(MyDeptFlowAttr.FID, 0, "FID", false, false);
+		map.AddTBString(MyDeptFlowAttr.FK_Dept, null, "部门", false, false, 0, 30, 10);
+
 
 		map.AddSearchAttr(MyDeptFlowAttr.FK_Flow);
 		map.AddSearchAttr(MyDeptFlowAttr.WFSta);
+		map.AddSearchAttr(MyDeptFlowAttr.TSpan);
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 
-			//增加隐藏的查询条件.
-		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", BP.Web.WebUser.getFK_Dept(), 0, true);
 
-		map.getAttrsOfSearch().Add(search);
+			//增加隐藏的查询条件.
+		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", BP.Web.WebUser.FK_Dept, 0, true);
+
+		map.AttrsOfSearch.Add(search);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "流程轨迹";
-		rm.refMethodType= RefMethodType.LinkeWinOpen;
 		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		map.AddRefMethod(rm);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 执行诊断
 	public final String DoTrack()
 	{
-
-		return Glo.getCCFlowAppPath() + "/WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
-		
+		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

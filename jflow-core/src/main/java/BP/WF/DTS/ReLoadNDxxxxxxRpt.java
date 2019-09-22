@@ -1,18 +1,18 @@
 package BP.WF.DTS;
 
-import BP.En.Method;
-import BP.WF.Flow;
-import BP.WF.Flows;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
 
 /** 
  修复表单物理表字段长度 的摘要说明
- 
 */
 public class ReLoadNDxxxxxxRpt extends Method
 {
 	/** 
 	 不带有参数的方法
-	 
 	*/
 	public ReLoadNDxxxxxxRpt()
 	{
@@ -30,13 +30,11 @@ public class ReLoadNDxxxxxxRpt extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
 			return true;
 		}
@@ -49,27 +47,25 @@ public class ReLoadNDxxxxxxRpt extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
 		String msg = "";
-		msg+=Flow.RepareV_FlowData_View();
 
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
-		for (Flow fl : fls.ToJavaList())
+		for (Flow fl : fls)
 		{
 			try
 			{
 				msg += fl.DoReloadRptData();
 			}
-			catch(RuntimeException ex)
+			catch (RuntimeException ex)
 			{
-				msg += "@在处理流程(" + fl.getName() + ")出现异常" + ex.getMessage();
+				msg += "@在处理流程(" + fl.Name + ")出现异常" + ex.getMessage();
 			}
 		}
-		return "提示："+fls.size()+"个流程参与了体检，信息如下：@"+msg;
+		return "提示：" + fls.Count + "个流程参与了体检，信息如下：@" + msg;
 	}
 }

@@ -1,25 +1,33 @@
 package BP.WF.Template;
 
-import org.apache.commons.lang.StringUtils;
-
-import BP.DA.DBAccess;
-import BP.En.EntityMyPK;
-import BP.En.Map;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  选择接受人
  节点的到人员有两部分组成.	 
  记录了从一个节点到其他的多个节点.
  也记录了到这个节点的其他的节点.
- 
 */
 public class SelectAccper extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
+	/** 
+	 UI界面上的访问控制
+	*/
+	@Override
+	public UAC getHisUAC()
+	{
+		UAC uac = new UAC();
+		uac.OpenAll();
+		return uac;
+	}
 	/** 
 	工作ID
-	 
 	*/
 	public final long getWorkID()
 	{
@@ -31,7 +39,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	节点
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -41,9 +48,9 @@ public class SelectAccper extends EntityMyPK
 	{
 		this.SetValByKey(SelectAccperAttr.FK_Node, value);
 	}
+
 	/** 
 	 到人员
-	 
 	*/
 	public final String getFK_Emp()
 	{
@@ -55,7 +62,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	 标记
-	 
 	*/
 	public final String getTag()
 	{
@@ -67,11 +73,10 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	 人员名称
-	 
 	*/
 	public final String getEmpName()
 	{
-		String s= this.GetValStringByKey(SelectAccperAttr.EmpName);
+		String s = this.GetValStringByKey(SelectAccperAttr.EmpName);
 		if (s.equals("") || s == null)
 		{
 			s = this.getFK_Emp();
@@ -83,8 +88,18 @@ public class SelectAccper extends EntityMyPK
 		this.SetValByKey(SelectAccperAttr.EmpName, value);
 	}
 	/** 
+	 部门名称
+	*/
+	public final String getDeptName()
+	{
+		return this.GetValStringByKey(SelectAccperAttr.DeptName);
+	}
+	public final void setDeptName(String value)
+	{
+		this.SetValByKey(SelectAccperAttr.DeptName, value);
+	}
+	/** 
 	 接收人
-	 
 	*/
 	public final String getRec()
 	{
@@ -96,7 +111,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	 办理意见  信息
-	 
 	*/
 	public final String getInfo()
 	{
@@ -108,7 +122,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	 是否记忆
-	 
 	*/
 	public final boolean getIsRemember()
 	{
@@ -120,7 +133,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	 顺序号
-	 
 	*/
 	public final int getIdx()
 	{
@@ -132,7 +144,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	  类型(@0=接受人@1=抄送人)
-	 
 	*/
 	public final int getAccType()
 	{
@@ -144,7 +155,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	 时限
-	 
 	*/
 	public final float getTSpanHour()
 	{
@@ -157,7 +167,6 @@ public class SelectAccper extends EntityMyPK
 
 	/** 
 	 工作到达日期(计划)
-	 
 	*/
 	public final String getPlanADT()
 	{
@@ -169,7 +178,6 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	 工作应完成日期(计划)
-	 
 	*/
 	public final String getPlanSDT()
 	{
@@ -179,68 +187,55 @@ public class SelectAccper extends EntityMyPK
 	{
 		this.SetValByKey(SelectAccperAttr.PlanSDT, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	/** 部门名称
-	 
-	*/
-	public final String getDeptName()
-	{
-		return this.GetValStringByKey(SelectAccperAttr.DeptName);
-	}
-	public final void setDeptName(String value)
-	{
-		this.SetValByKey(SelectAccperAttr.DeptName, value);
-	}
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 选择接受人
-	 
 	*/
 	public SelectAccper()
 	{
 
 	}
-	public SelectAccper(String mypk) throws Exception
+	public SelectAccper(String mypk)
 	{
-		this.setMyPK(mypk);
+		this.MyPK = mypk;
 		this.Retrieve();
 	}
 	/** 
 	 重写基类方法
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_SelectAccper", "选择接受/抄送人信息");
-
 		map.AddMyPK();
 
 		map.AddTBInt(SelectAccperAttr.FK_Node, 0, "接受人节点", true, false);
+
 		map.AddTBInt(SelectAccperAttr.WorkID, 0, "WorkID", true, false);
 		map.AddTBString(SelectAccperAttr.FK_Emp, null, "FK_Emp", true, false, 0, 20, 10);
 		map.AddTBString(SelectAccperAttr.EmpName, null, "EmpName", true, false, 0, 20, 10);
 		map.AddTBString(SelectAccperAttr.DeptName, null, "部门名称", true, false, 0, 400, 10);
-
 		map.AddTBInt(SelectAccperAttr.AccType, 0, "类型(@0=接受人@1=抄送人)", true, false);
 		map.AddTBString(SelectAccperAttr.Rec, null, "记录人", true, false, 0, 20, 10);
 		map.AddTBString(SelectAccperAttr.Info, null, "办理意见信息", true, false, 0, 200, 10);
 
 		map.AddTBInt(SelectAccperAttr.IsRemember, 0, "以后发送是否按本次计算", true, false);
 		map.AddTBInt(SelectAccperAttr.Idx, 0, "顺序号(可以用于流程队列审核模式)", true, false);
-//                
-//                 *  add 2015-1-12.
-//                 * 为了解决多维度的人员问题.
-//                 * 在分流点向下发送时, 一个人可以分配两次任务，但是这个任务需要一个维度来区分。
-//                 * 这个维度，有可能是一个类别，批次。
-//                 
+			/*
+			 *  add 2015-1-12.
+			 * 为了解决多维度的人员问题.
+			 * 在分流点向下发送时, 一个人可以分配两次任务，但是这个任务需要一个维度来区分。
+			 * 这个维度，有可能是一个类别，批次。
+			 */
 		map.AddTBString(SelectAccperAttr.Tag, null, "维度信息Tag", true, false, 0, 200, 10);
 
 		map.AddTBInt(SelectAccperAttr.TimeLimit, 0, "时限-天", true, false);
@@ -250,15 +245,15 @@ public class SelectAccper extends EntityMyPK
 		map.AddTBDateTime(SelectAccperAttr.PlanADT, null, "到达日期(计划)", true, false);
 		map.AddTBDateTime(SelectAccperAttr.PlanSDT, null, "应完成日期(计划)", true, false);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		this.ResetPK();
 
@@ -267,24 +262,20 @@ public class SelectAccper extends EntityMyPK
 
 	public final void ResetPK()
 	{
-		this.setMyPK(this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp()+"_"+this.getIdx());
+		//注释掉了.
+		// this.MyPK = this.FK_Node + "_" + this.WorkID + "_" + this.FK_Emp+"_"+this.Idx;
+		this.MyPK = this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction()
 	{
 		if (this.getDeptName().length() == 0)
 		{
-			boolean isHavePathName;
-			try {
-				isHavePathName = DBAccess.IsExitsTableCol("Port_Dept", "NameOfpath");
-			} catch (Exception e) {
-				isHavePathName=false;
-				e.printStackTrace();
-			}
+			boolean isHavePathName = DBAccess.IsExitsTableCol("Port_Dept", "NameOfpath");
 			if (isHavePathName == true)
 			{
 				this.setDeptName(DBAccess.RunSQLReturnStringIsNull("select a.NameOfPath from port_dept a,port_emp b where a.No=b.fk_dept and b.no='" + this.getFK_Emp() + "'", "无"));
-				if (this.getDeptName().equals("无") || StringUtils.isEmpty(this.getDeptName()))
+				if (this.getDeptName().equals("无"))
 				{
 					this.setDeptName(DBAccess.RunSQLReturnStringIsNull("select a.name from port_dept a,port_emp b where a.No=b.fk_dept and b.no='" + this.getFK_Emp() + "'", "无"));
 				}
@@ -294,13 +285,14 @@ public class SelectAccper extends EntityMyPK
 				this.setDeptName(DBAccess.RunSQLReturnStringIsNull("select a.name from port_dept a,port_emp b where a.No=b.fk_dept and b.no='" + this.getFK_Emp() + "'", "无"));
 			}
 		}
+
 		this.ResetPK();
-		this.setRec(BP.Web.WebUser.getNo());
+		this.setRec(BP.Web.WebUser.No);
 		return super.beforeUpdateInsertAction();
 	}
 	//protected override bool beforeUpdateInsertAction()
 	//{
-	//    this.Rec = BP.Web.WebUser.getNo();
+	//    this.Rec = BP.Web.WebUser.No;
 	//    return base.beforeUpdateInsertAction();
 	//}
 }

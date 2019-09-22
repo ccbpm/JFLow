@@ -1,13 +1,18 @@
 package BP.WF;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import java.util.*;
 
 /** 
  记忆我
 */
 public class RememberMes extends Entities
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -22,26 +27,34 @@ public class RememberMes extends Entities
 	public RememberMes()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<RememberMe> ToJavaList()
+	public final List<RememberMe> ToJavaList()
 	{
-		return (java.util.List<RememberMe>)(Object)this;
+		return (List<RememberMe>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<RememberMe> Tolist()
+	public final ArrayList<RememberMe> Tolist()
 	{
-		java.util.ArrayList<RememberMe> list = new java.util.ArrayList<RememberMe>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<RememberMe> list = new ArrayList<RememberMe>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((RememberMe)this.get(i));
+			list.add((RememberMe)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

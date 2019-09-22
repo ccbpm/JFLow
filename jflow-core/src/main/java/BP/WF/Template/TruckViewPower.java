@@ -1,20 +1,21 @@
 package BP.WF.Template;
 
-import BP.DA.Depositary;
-import BP.En.EntityNoName;
-import BP.En.Map;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  流程轨迹权限
- 
 */
 public class TruckViewPower extends EntityNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 发起人可看
-	 
 	*/
 	public final boolean getPStarter()
 	{
@@ -26,7 +27,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 参与人可见
-	 
 	*/
 	public final boolean getPWorker()
 	{
@@ -38,7 +38,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 被抄送人可见
-	 
 	*/
 	public final boolean getPCCer()
 	{
@@ -50,7 +49,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 本部门可见
-	 
 	*/
 	public final boolean getPMyDept()
 	{
@@ -62,7 +60,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 直属上级部门可见
-	 
 	*/
 	public final boolean getPPMyDept()
 	{
@@ -74,7 +71,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 上级部门可见
-	 
 	*/
 	public final boolean getPPDept()
 	{
@@ -86,7 +82,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 平级部门可见
-	 
 	*/
 	public final boolean getPSameDept()
 	{
@@ -98,7 +93,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 指定部门可见
-	 
 	*/
 	public final boolean getPSpecDept()
 	{
@@ -110,7 +104,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 部门编号
-	 
 	*/
 	public final String getPSpecDeptExt()
 	{
@@ -122,7 +115,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 指定岗位可见
-	 
 	*/
 	public final boolean getPSpecSta()
 	{
@@ -134,7 +126,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 岗位编号
-	 
 	*/
 	public final String getPSpecStaExt()
 	{
@@ -147,7 +138,6 @@ public class TruckViewPower extends EntityNoName
 
 	/** 
 	 权限组
-	 
 	*/
 	public final boolean getPSpecGroup()
 	{
@@ -160,7 +150,6 @@ public class TruckViewPower extends EntityNoName
 
 	/** 
 	 权限组编号
-	 
 	*/
 	public final String getPSpecGroupExt()
 	{
@@ -173,7 +162,6 @@ public class TruckViewPower extends EntityNoName
 
 	/** 
 	 指定的人员
-	 
 	*/
 	public final boolean getPSpecEmp()
 	{
@@ -185,7 +173,6 @@ public class TruckViewPower extends EntityNoName
 	}
 	/** 
 	 指定编号
-	 
 	*/
 	public final String getPSpecEmpExt()
 	{
@@ -203,38 +190,35 @@ public class TruckViewPower extends EntityNoName
 
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 流程轨迹权限
-	 
 	*/
 	public TruckViewPower()
 	{
 	}
 
-	public TruckViewPower(String no) throws Exception
+	public TruckViewPower(String no)
 	{
-		this.setNo(no);
+		this.No = no;
 		this.Retrieve();
 	}
 	/** 
 	 map
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
-		Map map = new Map("WF_Flow", "节点标签");
+		Map map = new Map("WF_Flow", "流程模版主表");
 
 		map.Java_SetDepositaryOfEntity(Depositary.Application);
 
@@ -243,7 +227,7 @@ public class TruckViewPower extends EntityNoName
 		map.AddTBString(TruckViewPowerAttr.Name, null, "名称", true, false, 0, 50, 10, true);
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 权限控制. 此部分与流程属性同步.
 		map.AddBoolean(TruckViewPowerAttr.PStarter, true, "发起人可看(必选)", true, false, true);
 		map.AddBoolean(TruckViewPowerAttr.PWorker, true, "参与人可看(必选)", true, false, true);
@@ -267,17 +251,17 @@ public class TruckViewPower extends EntityNoName
 
 		map.AddBoolean(TruckViewPowerAttr.PSpecEmp, true, "指定的人员可看", true, true, false);
 		map.AddTBString(TruckViewPowerAttr.PSpecEmpExt, null, "指定的人员编号", true, false, 0, 200, 100, false);
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 权限控制.
 
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 公用方法.
 	/** 
 	 检查指定的人员是否可以产看该轨迹图.
@@ -285,16 +269,15 @@ public class TruckViewPower extends EntityNoName
 	 @param workid 流程ID
 	 @param userNo 操作员
 	 @return 
-	 * @throws Exception 
 	*/
-	public final boolean CheckICanView(long workid, String userNo) throws Exception
+	public final boolean CheckICanView(long workid, String userNo)
 	{
 		if (userNo == null)
 		{
-			userNo = BP.Web.WebUser.getNo();
+			userNo = BP.Web.WebUser.No;
 		}
 		return true;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

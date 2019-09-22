@@ -2,56 +2,57 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  按钮事件类型 - 与sl 中设置的要相同。
- 
 */
 public enum BtnEventType
 {
 	/** 
 	 禁用
-	 
 	*/
 	Disable(0),
 	/** 
 	 运行存储过程
-	 
 	*/
 	RunSP(1),
 	/** 
 	 运行sql
-	 
 	*/
 	RunSQL(2),
 	/** 
 	 执行URL
-	 
 	*/
 	RunURL(3),
 	/** 
 	 运行webservices
-	 
 	*/
 	RunWS(4),
 	/** 
 	 运行Exe文件.
-	 
 	*/
 	RunExe(5),
 	/** 
 	 运行JS
-	 
 	*/
 	RunJS(6);
 
+	public static final int SIZE = java.lang.Integer.SIZE;
+
 	private int intValue;
 	private static java.util.HashMap<Integer, BtnEventType> mappings;
-	private synchronized static java.util.HashMap<Integer, BtnEventType> getMappings()
+	private static java.util.HashMap<Integer, BtnEventType> getMappings()
 	{
 		if (mappings == null)
 		{
-			mappings = new java.util.HashMap<Integer, BtnEventType>();
+			synchronized (BtnEventType.class)
+			{
+				if (mappings == null)
+				{
+					mappings = new java.util.HashMap<Integer, BtnEventType>();
+				}
+			}
 		}
 		return mappings;
 	}
@@ -59,7 +60,7 @@ public enum BtnEventType
 	private BtnEventType(int value)
 	{
 		intValue = value;
-		BtnEventType.getMappings().put(value, this);
+		getMappings().put(value, this);
 	}
 
 	public int getValue()
@@ -71,4 +72,4 @@ public enum BtnEventType
 	{
 		return getMappings().get(value);
 	}
-} /// <summary>
+}

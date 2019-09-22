@@ -1,7 +1,8 @@
 package BP.GPM;
 
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
 /** 
  岗位s
@@ -23,25 +24,31 @@ public class Stations extends EntitiesNoName
 		return new BP.GPM.Station();
 	}
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<Station> ToJavaList()
+	public final List<Station> ToJavaList()
 	{
-		return (java.util.List<Station>)(Object)this;
+		return (List<Station>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<Station> Tolist()
+	public final ArrayList<Station> Tolist()
 	{
-		java.util.ArrayList<Station> list = new java.util.ArrayList<Station>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<Station> list = new ArrayList<Station>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((Station)this.get(i));
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

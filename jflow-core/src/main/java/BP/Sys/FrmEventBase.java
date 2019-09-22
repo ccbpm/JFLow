@@ -1,29 +1,32 @@
 package BP.Sys;
 
-import BP.DA.AtPara;
-import BP.DA.DataType;
-import BP.En.Entity;
-import BP.En.Row;
+import BP.DA.*;
+import BP.En.*;
+import BP.Web.Controls.*;
+import BP.Web.*;
+import BP.Sys.*;
+import java.time.*;
+import java.math.*;
 
 /** 
  表单事件基类
- 
 */
 public abstract class FrmEventBase
 {
-	//#region 要求子类强制重写的属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 要求子类强制重写的属性.
 	/** 
 	 表单编号
 	 该参数用于说明要把此事件注册到那一个表单模版上.
-	 
 	*/
 	public abstract String getFrmNo();
-	//#endregion 要求子类重写的属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 要求子类重写的属性.
 
-	//#region 常用属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 常用属性.
 	/** 
 	 工作ID
-	 
 	*/
 	public final int getOID()
 	{
@@ -31,7 +34,6 @@ public abstract class FrmEventBase
 	}
 	/** 
 	 工作ID
-	 
 	*/
 	public final long getWorkID()
 	{
@@ -43,7 +45,6 @@ public abstract class FrmEventBase
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getFID()
 	{
@@ -51,7 +52,6 @@ public abstract class FrmEventBase
 	}
 	/** 
 	 传过来的WorkIDs集合，子流程.
-	 
 	*/
 	public final String getWorkIDs()
 	{
@@ -59,7 +59,6 @@ public abstract class FrmEventBase
 	}
 	/** 
 	 编号集合s
-	 
 	*/
 	public final String getNos()
 	{
@@ -67,27 +66,28 @@ public abstract class FrmEventBase
 	}
 	/** 
 	  行数据
-	 
 	*/
-	private Row privateRow;
+	private Row Row;
 	public final Row getRow()
 	{
-		return privateRow;
+		return Row;
 	}
 	public final void setRow(Row value)
 	{
-		privateRow = value;
+		Row = value;
 	}
-	//#endregion 常用属性.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 常用属性.
 
-	//#region 数据字段的方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 数据字段的方法
 	/** 
 	 时间参数
 	 
 	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final java.util.Date GetValDateTime(String key)
+	public final LocalDateTime GetValDateTime(String key)
 	{
 		try
 		{
@@ -156,23 +156,26 @@ public abstract class FrmEventBase
 	 @param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final java.math.BigDecimal GetValDecimal(String key)
+	public final BigDecimal GetValDecimal(String key)
 	{
-		return new java.math.BigDecimal(this.GetValStr(key));
+		return BigDecimal.Parse(this.GetValStr(key));
 	}
-	//#endregion 获取参数方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 获取参数方法
 
-	//#region 构造方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 表单事件基类
-	 
 	*/
 	public FrmEventBase()
 	{
 	}
-	//#endregion 构造方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 构造方法
 
-	//#region 节点表单事件
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 节点表单事件
 	public String FrmLoadAfter()
 	{
 		return null;
@@ -181,12 +184,13 @@ public abstract class FrmEventBase
 	{
 		return null;
 	}
-	//#endregion
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-	//#region 要求子类重写的方法(节点事件).
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 要求子类重写的方法(节点事件).
 	/** 
 	 保存后
-	 
 	*/
 	public String SaveAfter()
 	{
@@ -194,7 +198,6 @@ public abstract class FrmEventBase
 	}
 	/** 
 	 保存前
-	 
 	*/
 	public String SaveBefore()
 	{
@@ -209,9 +212,11 @@ public abstract class FrmEventBase
 	{
 		return null;
 	}
-	//#endregion 要求子类重写的方法(节点事件).
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 要求子类重写的方法(节点事件).
 
-	//#region 基类方法.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基类方法.
 	/** 
 	 执行事件
 	 
@@ -222,7 +227,8 @@ public abstract class FrmEventBase
 	{
 		this.setRow(row);
 
-		//#region 处理参数.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 处理参数.
 		Row r = en.getRow();
 		try
 		{
@@ -231,7 +237,7 @@ public abstract class FrmEventBase
 		}
 		catch (java.lang.Exception e)
 		{
-			this.getRow().put("FK_MapData",en.getClassID());
+			this.getRow().put("FK_MapData", en.getClassID());
 		}
 
 		if (atPara != null)
@@ -250,25 +256,12 @@ public abstract class FrmEventBase
 			}
 		}
 
-		if (SystemConfig.getIsBSsystem() == true&&BP.Sys.Glo.getRequest()!=null)
+		if (SystemConfig.getIsBSsystem() == true)
 		{
-			while (BP.Sys.Glo.getRequest().getParameterNames().hasMoreElements())
+			/*如果是bs系统, 就加入外部url的变量.*/
+			for (String key : HttpContextHelper.getRequestParamKeys())
 			{
-				String key = (String) BP.Sys.Glo.getRequest().getParameterNames().nextElement();
-				String val = BP.Sys.Glo.getRequest().getParameter(key);
-				try
-				{
-					r.put(key, val);
-				} catch (java.lang.Exception e4)
-				{
-					r.put(key, val);
-				}
-			}
-			//如果是bs系统, 就加入外部url的变量.
-			while( BP.Sys.Glo.getRequest().getAttributeNames().hasMoreElements())
-			{
-				String key = (String) BP.Sys.Glo.getRequest().getParameterNames().nextElement();
-				String val = BP.Sys.Glo.getRequest().getParameter(key);
+				String val = HttpContextHelper.RequestParams(key);
 				try
 				{
 					this.getRow().put(key, val);
@@ -279,34 +272,32 @@ public abstract class FrmEventBase
 				}
 			}
 		}
-		//#endregion 处理参数.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 处理参数.
 
-		//#region 执行事件.
-		if (EventListOfNode.CreateWorkID.equals(eventType)) // 节点表单事件。
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 执行事件.
+		switch (eventType)
 		{
+			case EventListOfNode.CreateWorkID: // 节点表单事件。
 				return this.CreateOID();
-		}
-		else if (EventListOfNode.FrmLoadAfter.equals(eventType)) // 节点表单事件。
-		{
+			case EventListOfNode.FrmLoadAfter: // 节点表单事件。
 				return this.FrmLoadAfter();
-		}
-		else if (EventListOfNode.FrmLoadBefore.equals(eventType)) // 节点表单事件。
-		{
+			case EventListOfNode.FrmLoadBefore: // 节点表单事件。
 				return this.FrmLoadBefore();
-		}
-		else if (EventListOfNode.SaveAfter.equals(eventType)) // 节点事件 保存后。
-		{
+			case EventListOfNode.SaveAfter: // 节点事件 保存后。
 				return this.SaveAfter();
-		}
-		else if (EventListOfNode.SaveBefore.equals(eventType)) // 节点事件 - 保存前.。
-		{
+			case EventListOfNode.SaveBefore: // 节点事件 - 保存前.。
 				return this.SaveBefore();
-		}
-		else
-		{
+			default:
 				throw new RuntimeException("@没有判断的事件类型:" + eventType);
+				break;
 		}
-		//#endregion 执行事件.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 执行事件.
+
+		return null;
 	}
-	//#endregion 基类方法.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 基类方法.
 }

@@ -1,50 +1,20 @@
 package BP.WF;
 
-import java.io.IOException;
-
-
-import BP.DA.DBAccess;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.Difference.ContextHolderUtils;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.QueryObject;
-import BP.En.RefMethod;
-import BP.Sys.PubClass;
-import BP.WF.Template.FlowSortAttr;
+import BP.DA.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import java.util.*;
 
 /** 
  流程实例
- 
 */
 public class GenerWorkFlow extends Entity
 {
-	 
-	/** 
-	 是否是流程模版?
-	 
-*/
-	public final boolean getParas_DBTemplate()
-	{
-		return this.GetParaBoolen("DBTemplate");
-	}
-	public final void setParas_DBTemplate(boolean value)
-	{
-		this.SetPara("DBTemplate", value);
-	}
-	/** 
-	 模版名称
-	 
-	*/
-	public final String getParas_DBTemplateName()
-	{
-		return this.GetParaString("DBTemplateName");
-	}
-	public final void setParas_DBTemplateName(String value)
-	{
-		this.SetPara("DBTemplateName", value);
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 主键
 	*/
@@ -99,7 +69,7 @@ public class GenerWorkFlow extends Entity
 		this.SetValByKey(GenerWorkFlowAttr.Sender, value);
 
 			//当前日期.
-		this.SetValByKey(GenerWorkFlowAttr.SendDT, DataType.getCurrentDataTime());
+		this.SetValByKey(GenerWorkFlowAttr.SendDT, DataType.CurrentDataTime);
 	}
 	/** 
 	 发送日期
@@ -112,6 +82,7 @@ public class GenerWorkFlow extends Entity
 	{
 		SetValByKey(GenerWorkFlowAttr.SendDT, value);
 	}
+
 	/** 
 	 流程名称
 	*/
@@ -154,16 +125,18 @@ public class GenerWorkFlow extends Entity
 	}
 	public final void setTodoEmps(String value)
 	{
-		String val = this.GetValStrByKey(GenerWorkFlowAttr.TodoEmps);
-        if (val.contains(value) == true)
-            return;
-		SetValByKey(GenerWorkFlowAttr.TodoEmps, value);
-	}
-	public final void setTodoEmpsV2(String value)
-	{
+		String str = value;
+		str = str.replace(" ", "");
 
-		SetValByKey(GenerWorkFlowAttr.TodoEmps, value);
+		String val = this.GetValStrByKey(GenerWorkFlowAttr.TodoEmps);
+		if (val.contains(str) == true)
+		{
+			return;
+		}
+
+		SetValByKey(GenerWorkFlowAttr.TodoEmps, str);
 	}
+
 	/** 
 	 参与人
 	*/
@@ -176,7 +149,24 @@ public class GenerWorkFlow extends Entity
 		SetValByKey(GenerWorkFlowAttr.Emps, value);
 	}
 	/** 
-	 状态
+	 会签状态
+	*/
+	public final HuiQianTaskSta getHuiQianTaskSta()
+	{
+			//如果有方向信息，并且方向不包含到达的节点.
+		if (this.getHuiQianSendToNodeIDStr().length() > 3 && this.getHuiQianSendToNodeIDStr().contains(this.getFK_Node() + ",") == false)
+		{
+			return WF.HuiQianTaskSta.None;
+		}
+
+		return HuiQianTaskSta.forValue(this.GetParaInt(GenerWorkFlowAttr.HuiQianTaskSta, 0));
+	}
+	public final void setHuiQianTaskSta(HuiQianTaskSta value)
+	{
+		SetPara(GenerWorkFlowAttr.HuiQianTaskSta, value.getValue());
+	}
+	/** 
+	 共享任务池状态
 	*/
 	public final TaskSta getTaskSta()
 	{
@@ -264,16 +254,34 @@ public class GenerWorkFlow extends Entity
 		SetValByKey(GenerWorkFlowAttr.FK_NY, value);
 	}
 	/** 
-	 产生时间
+	 实际开始时间
 	*/
 	public final String getRDT()
 	{
+			//string rdt = this.GetParaString("");
 		return this.GetValStrByKey(GenerWorkFlowAttr.RDT);
 	}
 	public final void setRDT(String value)
 	{
 		this.SetValByKey(GenerWorkFlowAttr.RDT, value);
 		this.setFK_NY(value.substring(0, 7));
+	}
+	/** 
+	 计划开始时间 @sly 
+	 SDTOfFlow 就是计划完成日期.
+	*/
+	public final String getRDTOfSetting()
+	{
+		String str = this.GetParaString("RDTOfSetting");
+		if (DataType.IsNullOrEmpty(str) == true)
+		{
+			return this.getRDT();
+		}
+		return str;
+	}
+	public final void setRDTOfSetting(String value)
+	{
+		this.SetPara("RDTOfSetting", value);
 	}
 	/** 
 	 节点应完成时间
@@ -288,6 +296,7 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 流程应完成时间
+	 RDTOfSetting 是计划开始日期，如果为空就是发起日期.
 	*/
 	public final String getSDTOfFlow()
 	{
@@ -296,6 +305,17 @@ public class GenerWorkFlow extends Entity
 	public final void setSDTOfFlow(String value)
 	{
 		SetValByKey(GenerWorkFlowAttr.SDTOfFlow, value);
+	}
+	/** 
+	 流程预警时间时间
+	*/
+	public final String getSDTOfFlowWarning()
+	{
+		return this.GetValStrByKey(GenerWorkFlowAttr.SDTOfFlowWarning);
+	}
+	public final void setSDTOfFlowWarning(String value)
+	{
+		SetValByKey(GenerWorkFlowAttr.SDTOfFlowWarning, value);
 	}
 	/** 
 	 流程ID
@@ -361,6 +381,28 @@ public class GenerWorkFlow extends Entity
 		SetValByKey(GenerWorkFlowAttr.PFlowNo, value);
 	}
 	/** 
+	 项目编号
+	*/
+	public final String getPrjNo()
+	{
+		return this.GetValStrByKey(GenerWorkFlowAttr.PrjNo);
+	}
+	public final void setPrjNo(String value)
+	{
+		SetValByKey(GenerWorkFlowAttr.PrjNo, value);
+	}
+	/** 
+	 项目名称
+	*/
+	public final String getPrjName()
+	{
+		return this.GetValStrByKey(GenerWorkFlowAttr.PrjName);
+	}
+	public final void setPrjName(String value)
+	{
+		SetValByKey(GenerWorkFlowAttr.PrjName, value);
+	}
+	/** 
 	 吊起子流程的人员
 	*/
 	public final String getPEmp()
@@ -417,7 +459,6 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 当前工作到的节点
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -436,11 +477,11 @@ public class GenerWorkFlow extends Entity
 	}
 	public final void setWFState(WFState value)
 	{
-		if (value == BP.WF.WFState.Complete)
+		if (value == WF.WFState.Complete)
 		{
 			SetValByKey(GenerWorkFlowAttr.WFSta, getWFSta().Complete.getValue());
 		}
-		else if (value == BP.WF.WFState.Delete)
+		else if (value == WF.WFState.Delete || value == WF.WFState.Blank)
 		{
 			SetValByKey(GenerWorkFlowAttr.WFSta, getWFSta().Etc.getValue());
 		}
@@ -458,17 +499,13 @@ public class GenerWorkFlow extends Entity
 	{
 		return WFSta.forValue(this.GetValIntByKey(GenerWorkFlowAttr.WFSta));
 	}
-	public final void setWFSta(WFSta value)
-	{
-		SetValByKey(GenerWorkFlowAttr.WFSta, value.getValue());
-	}
 	/** 
 	 状态
 	*/
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = (WFState)this.getWFState();
-		switch(ws)
+		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		switch (ws)
 		{
 			case Complete:
 				return "已完成";
@@ -483,12 +520,11 @@ public class GenerWorkFlow extends Entity
 			case ReturnSta:
 				return "退回";
 			default:
-				return "其他"+ws.toString();
+				return "其他" + ws.toString();
 		}
 	}
 	/** 
 	 GUID
-	 
 	*/
 	public final String getGUID()
 	{
@@ -498,30 +534,56 @@ public class GenerWorkFlow extends Entity
 	{
 		SetValByKey(GenerWorkFlowAttr.GUID, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 扩展属性
 	/** 
 	 它的子流程
-	 * @throws Exception 
-	 
 	*/
-	public final GenerWorkFlows getHisSubFlowGenerWorkFlows() throws Exception
+	public final GenerWorkFlows getHisSubFlowGenerWorkFlows()
 	{
 		GenerWorkFlows ens = new GenerWorkFlows();
 		ens.Retrieve(GenerWorkFlowAttr.PWorkID, this.getWorkID());
 		return ens;
 	}
-
+	/** 
+	 0=待办中,1=预警中,2=逾期中,3=按期完成,4=逾期完成
+	*/
+	public final int getTodoSta()
+	{
+		return this.GetValIntByKey(GenerWorkFlowAttr.TodoSta);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 扩展属性
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 参数属性.
+	/** 
+	 是否是流程模版?
+	*/
+	public final boolean getParas_DBTemplate()
+	{
+		return this.GetParaBoolen("DBTemplate");
+	}
+	public final void setParas_DBTemplate(boolean value)
+	{
+		this.SetPara("DBTemplate", value);
+	}
+	/** 
+	 模版名称
+	*/
+	public final String getParas_DBTemplateName()
+	{
+		return this.GetParaString("DBTemplateName");
+	}
+	public final void setParas_DBTemplateName(String value)
+	{
+		this.SetPara("DBTemplateName", value);
+	}
 	/** 
 	 选择的表单(用于子流程列表里，打开草稿，记录当初选择的表单.)
-	 
 	*/
 	public final String getParas_Frms()
 	{
@@ -533,7 +595,6 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 到达的节点
-	 
 	*/
 	public final String getParas_ToNodes()
 	{
@@ -546,27 +607,35 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 关注&取消关注
-	 * @throws Exception 
-	 
 	*/
-	public final boolean getParas_Focus() throws Exception
+	public final boolean getParas_Focus()
 	{
-		return this.GetParaBoolen("F_"+BP.Web.WebUser.getNo(),false);
+		return this.GetParaBoolen("F_" + BP.Web.WebUser.No,false);
 	}
-	public final void setParas_Focus(boolean value) throws Exception
+	public final void setParas_Focus(boolean value)
 	{
-		this.SetPara("F_" + BP.Web.WebUser.getNo(), value);
+		this.SetPara("F_" + BP.Web.WebUser.No, value);
+	}
+	/** 
+	 确认与取消确认
+	*/
+	public final boolean getParas_Confirm()
+	{
+		return this.GetParaBoolen("C_" + BP.Web.WebUser.No,false);
+	}
+	public final void setParas_Confirm(boolean value)
+	{
+		this.SetPara("C_" + BP.Web.WebUser.No, value);
 	}
 	/** 
 	 最后一个执行发送动作的ID.
-	 
 	*/
 	public final String getParas_LastSendTruckID()
 	{
-		String str= this.GetParaString("LastTruckID");
+		String str = this.GetParaString("LastTruckID");
 		if (str.equals(""))
 		{
-			str = (new Long(this.getWorkID())).toString();
+			str = String.valueOf(this.getWorkID());
 		}
 		return str;
 	}
@@ -574,9 +643,9 @@ public class GenerWorkFlow extends Entity
 	{
 		this.SetPara("LastTruckID", value);
 	}
+
 	/** 
 	 加签信息
-	 
 	*/
 	public final String getParas_AskForReply()
 	{
@@ -588,7 +657,6 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 是否是退回并原路返回.
-	 
 	*/
 
 	public final boolean getParas_IsTrackBack()
@@ -634,11 +702,9 @@ public class GenerWorkFlow extends Entity
 	{
 		this.SetPara("TodolistModel", value.getValue());
 	}
-	
 	/** 
 	 会签到达人员
-	 
-*/
+	*/
 	public final String getHuiQianSendToEmps()
 	{
 		return this.GetParaString("HuiQianSendToEmps");
@@ -649,16 +715,17 @@ public class GenerWorkFlow extends Entity
 	}
 	/** 
 	 会签到达节点: 101@102
-	 
 	*/
 	public final String getHuiQianSendToNodeIDStr()
 	{
 		return this.GetParaString("HuiQianSendToNodeID");
 	}
-	
+	public final void setHuiQianSendToNodeIDStr(String value)
+	{
+		this.SetPara("HuiQianSendToNodeID", value);
+	}
 	/** 
 	 会签主持人
-	 
 	*/
 	public final String getHuiQianZhuChiRen()
 	{
@@ -668,50 +735,29 @@ public class GenerWorkFlow extends Entity
 	{
 		this.SetPara("HuiQianZhuChiRen", value);
 	}
-	
-	public void setHuiQianZhuChiRenName(String name) {
-		
-		this.SetPara("HuiQianZhuChiRenName", name);
-		
-	}
+	/** 
+	 会签主持人名称
+	*/
 	public final String getHuiQianZhuChiRenName()
 	{
 		return this.GetParaString("HuiQianZhuChiRenName");
 	}
-	 
-	
-    public void setHuiQianSendToNodeIDStr(String name) {
-		this.SetPara("HuiQianSendToNodeID", name);
+	public final void setHuiQianZhuChiRenName(String value)
+	{
+		this.SetPara("HuiQianZhuChiRenName", value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 参数属性.
 
-	/**
-	 * 工程项目编号
-	 * @return
-	 */
-	public String getPrjNo(){
-		return this.GetValStringByKey(GenerWorkFlowAttr.PrjNo);
-	}
-	public void setPrjNo(String value){
-		this.SetValByKey(GenerWorkFlowAttr.PrjNo,value);
-	}
-
-	/**
-	 * 工程项目名称
-	 * @return
-	 */
-	public String getPrjName(){
-		return this.GetValStringByKey(GenerWorkFlowAttr.PrjName);
-	}
-	public void setPrjName(String value){
-		this.SetValByKey(GenerWorkFlowAttr.PrjName,value);
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 产生的工作流程
 	*/
 	public GenerWorkFlow()
 	{
 	}
-	public GenerWorkFlow(long workId) throws Exception
+	public GenerWorkFlow(long workId)
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkFlowAttr.WorkID, workId);
@@ -725,7 +771,6 @@ public class GenerWorkFlow extends Entity
 	*/
 	public final void DoRepair()
 	{
-
 	}
 	/** 
 	 重写基类方法
@@ -733,9 +778,9 @@ public class GenerWorkFlow extends Entity
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "流程实例");
@@ -747,9 +792,7 @@ public class GenerWorkFlow extends Entity
 		map.AddTBString(GenerWorkFlowAttr.SysType, null, "系统类别", true, false, 0, 10, 10);
 		map.AddTBString(GenerWorkFlowAttr.FK_Flow, null, "流程", true, false, 0, 3, 10);
 		map.AddTBString(GenerWorkFlowAttr.FlowName, null, "流程名称", true, false, 0, 100, 10);
-
 		map.AddTBString(GenerWorkFlowAttr.Title, null, "标题", true, false, 0, 1000, 10);
-
 		map.AddDDLSysEnum(GenerWorkFlowAttr.WFSta, 0, "状态", true, false, GenerWorkFlowAttr.WFSta, "@0=运行中@1=已完成@2=其他");
 		map.AddDDLSysEnum(GenerWorkFlowAttr.WFState, 0, "流程状态", true, false, GenerWorkFlowAttr.WFState);
 
@@ -759,7 +802,7 @@ public class GenerWorkFlow extends Entity
 
 
 		map.AddTBDateTime(GenerWorkFlowAttr.RDT, "记录日期", true, true);
-		map.AddTBDateTime(GenerWorkFlowAttr.SendDT, "记录日期", true, true);
+		map.AddTBDateTime(GenerWorkFlowAttr.SendDT, "流程活动时间", true, true);
 		map.AddTBInt(GenerWorkFlowAttr.FK_Node, 0, "节点", true, false);
 		map.AddTBString(GenerWorkFlowAttr.NodeName, null, "节点名称", true, false, 0, 100, 10);
 
@@ -768,7 +811,8 @@ public class GenerWorkFlow extends Entity
 		map.AddTBInt(GenerWorkFlowAttr.PRI, 1, "优先级", true, true);
 
 		map.AddTBDateTime(GenerWorkFlowAttr.SDTOfNode, "节点应完成时间", true, true);
-		map.AddTBDateTime(GenerWorkFlowAttr.SDTOfFlow, "流程应完成时间", true, true);
+		map.AddTBDateTime(GenerWorkFlowAttr.SDTOfFlow,null, "流程应完成时间", true, true);
+		map.AddTBDateTime(GenerWorkFlowAttr.SDTOfFlowWarning, null,"流程预警时间", true, true);
 
 			//父子流程信息.
 		map.AddTBString(GenerWorkFlowAttr.PFlowNo, null, "父流程编号", true, false, 0, 3, 10);
@@ -796,23 +840,20 @@ public class GenerWorkFlow extends Entity
 		map.AddTBString(GenerWorkFlowAttr.FK_NY, null, "年月", false, false, 0, 7, 7);
 		map.AddTBInt(GenerWorkFlowAttr.WeekNum, 0, "周次", true, true);
 		map.AddTBInt(GenerWorkFlowAttr.TSpan, 0, "时间间隔", true, true);
-		
-		map.AddTBString(GenerWorkFlowAttr.Domain, null, "域/系统编号", true, false, 0, 100, 30);
-        map.SetHelperAlert(GenerWorkFlowAttr.Domain, "用于区分不同系统的流程,比如:一个集团有多个子系统每个子系统都有自己的流程,就需要标记那些流程是那个子系统的.");
 
 			//待办状态(0=待办中,1=预警中,2=逾期中,3=按期完成,4=逾期完成) 
 		map.AddTBInt(GenerWorkFlowAttr.TodoSta, 0, "待办状态", true, true);
+		map.AddTBString(GenerWorkFlowAttr.Domain, null, "域/系统编号", true, false, 0, 100, 30);
+		map.SetHelperAlert(GenerWorkFlowAttr.Domain, "用于区分不同系统的流程,比如:一个集团有多个子系统每个子系统都有自己的流程,就需要标记那些流程是那个子系统的.");
 
 		map.AddTBString(GenerWorkFlowAttr.PrjNo, null, "PrjNo", true, false, 0, 100, 10);
 		map.AddTBString(GenerWorkFlowAttr.PrjName, null, "PrjNo", true, false, 0, 100, 10);
-
-		map.AddTBMyNum();
 
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "工作轨迹"; // "工作报告";
 		rm.ClassMethodName = this.toString() + ".DoRpt";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -826,15 +867,19 @@ public class GenerWorkFlow extends Entity
 		rm.Warning = "您确定要执行此功能吗？ \t\n 1)如果是断流程，并且停留在第一个节点上，系统为执行删除它。\t\n 2)如果是非地第一个节点，系统会返回到上次发起的位置。";
 		map.AddRefMethod(rm);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重载基类方法
 	/** 
 	 删除后,需要把工作者列表也要删除.
-	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete() throws Exception
+	protected void afterDelete()
 	{
 		// . clear bad worker .  
 		DBAccess.RunSQLReturnTable("DELETE FROM WF_GenerWorkerlist WHERE WorkID in  ( select WorkID from WF_GenerWorkerlist WHERE WorkID not in (select WorkID from WF_GenerWorkFlow) )");
@@ -843,29 +888,54 @@ public class GenerWorkFlow extends Entity
 		wf.DoDeleteWorkFlowByReal(true); // 删除下面的工作。
 		super.afterDelete();
 	}
+
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		if (this.getStarter().equals("Guest"))
 		{
-			this.setStarterName(BP.Web.GuestUser.getName());
+			this.setStarterName(BP.Web.GuestUser.Name);
 			this.setGuestName(this.getStarterName());
-			this.setGuestNo(BP.Web.GuestUser.getNo());
+			this.setGuestNo(BP.Web.GuestUser.No);
 		}
 
 		return super.beforeInsert();
 	}
-	public final String DoRpt() throws IOException
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 执行诊断
+	/** 
+	 生成父子流程的甘特图
+	 
+	 @return 
+	*/
+	public final String GenerGantt()
 	{
-		PubClass.WinOpen(ContextHolderUtils.getResponse(),"WFRpt.jsp?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow());
-		return null;
+		return BP.WF.Glo.GenerGanttDataOfSubFlows(this.getWorkID());
+	}
+	/** 
+	 终止流程
+	 
+	 @param msg 终止的信息
+	 @return 终止结果
+	*/
+	public final String DoFix(String msg)
+	{
+	   return BP.WF.Dev2Interface.Flow_DoFix(this.getFK_Flow(), this.getWorkID(), true, msg);
+	}
+
+	public final String DoRpt()
+	{
+		return "WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
 	 执行修复
+	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoRepare() throws Exception
+	public final String DoRepare()
 	{
 		if (this.DoSelfTestInfo().equals("没有发现异常。"))
 		{
@@ -874,20 +944,20 @@ public class GenerWorkFlow extends Entity
 
 		String sql = "SELECT FK_Node FROM WF_GenerWorkerlist WHERE WORKID='" + this.getWorkID() + "' ORDER BY FK_Node desc";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (dt.Rows.size() == 0)
+		if (dt.Rows.Count == 0)
 		{
-			//如果是开始工作节点，就删除它。
+			/*如果是开始工作节点，就删除它。*/
 			WorkFlow wf = new WorkFlow(new Flow(this.getFK_Flow()), this.getWorkID(), this.getFID());
 			wf.DoDeleteWorkFlowByReal(true);
 			return "此流程是因为发起工作失败被系统删除。";
 		}
 
-		int FK_Node = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
+		int FK_Node = Integer.parseInt(dt.Rows[0][0].toString());
 
 		Node nd = new Node(FK_Node);
 		if (nd.getIsStartNode())
 		{
-			//如果是开始工作节点，就删除它。
+			/*如果是开始工作节点，就删除它。*/
 			WorkFlow wf = new WorkFlow(new Flow(this.getFK_Flow()), this.getWorkID(), this.getFID());
 			wf.DoDeleteWorkFlowByReal(true);
 			return "此流程是因为发起工作失败被系统删除。";
@@ -900,69 +970,52 @@ public class GenerWorkFlow extends Entity
 		String str = "";
 		GenerWorkerLists wls = new GenerWorkerLists();
 		wls.Retrieve(GenerWorkerListAttr.FK_Node, FK_Node, GenerWorkerListAttr.WorkID, this.getWorkID());
-		for (GenerWorkerList wl : wls.ToJavaList())
+		for (GenerWorkerList wl : wls)
 		{
 			str += wl.getFK_Emp() + wl.getFK_EmpText() + ",";
 		}
 
 		return "此流程是因为[" + nd.getName() + "]工作发送失败被回滚到当前位置，请转告[" + str + "]流程修复成功。";
 	}
-	public final String DoSelfTestInfo() throws Exception
+	public final String DoSelfTestInfo()
 	{
 		GenerWorkerLists wls = new GenerWorkerLists(this.getWorkID(), this.getFK_Flow());
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region  查看一下当前的节点是否开始工作节点。
 		Node nd = new Node(this.getFK_Node());
 		if (nd.getIsStartNode())
 		{
-			// 判断是否是退回的节点 
+			/* 判断是否是退回的节点 */
 			Work wk = nd.getHisWork();
 			wk.setOID(this.getWorkID());
 			wk.Retrieve();
 		}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region  查看一下是否有当前的工作节点信息。
-		boolean isHave=false;
-		for (GenerWorkerList wl : wls.ToJavaList())
+		boolean isHave = false;
+		for (GenerWorkerList wl : wls)
 		{
-			if (wl.getFK_Node()==this.getFK_Node())
+			if (wl.getFK_Node() == this.getFK_Node())
 			{
-				isHave=true;
+				isHave = true;
 			}
 		}
 
-		if (isHave==false)
+		if (isHave == false)
 		{
-			//  
+			/*  */
 			return "已经不存在当前的工作节点信息，造成此流程的原因可能是没有捕获的系统异常，建议删除此流程或者交给系统自动修复它。";
 		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
 		return "没有发现异常。";
 	}
-	/** 
-	 确认与取消确认
-	 * @throws Exception 
-	 
-	 */
-	public final boolean getParas_Confirm() throws Exception
-	{
-		return this.GetParaBoolen("C_"+BP.Web.WebUser.getNo(),false);
-	}
-	public final void setParas_Confirm(boolean value) throws Exception
-	{
-		this.SetPara("C_" + BP.Web.WebUser.getNo(), value);
-	}
-	public final HuiQianTaskSta getHuiQianTaskSta()
-	{
-		return HuiQianTaskSta.forValue(this.GetParaInt(GenerWorkFlowAttr.HuiQianTaskSta));
-	}
-	public final void setHuiQianTaskSta(HuiQianTaskSta value)
-	{
-		this.SetPara(GenerWorkFlowAttr.HuiQianTaskSta, value.getValue());
-	}
-	
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

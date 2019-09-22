@@ -1,24 +1,25 @@
 package BP.WF.Template;
 
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
+import BP.WF.Port.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  流程轨迹权限s
- 
 */
 public class TruckViewPowers extends EntitiesNoName
 {
 	/** 
 	 流程轨迹权限s
-	 
 	*/
 	public TruckViewPowers()
 	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -26,31 +27,31 @@ public class TruckViewPowers extends EntitiesNoName
 		return new TruckViewPower();
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<TruckViewPower> ToJavaList()
+	public final List<TruckViewPower> ToJavaList()
 	{
-		return (java.util.List<TruckViewPower>)(Object)this;
+		return (List<TruckViewPower>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<TruckViewPower> Tolist()
+	public final ArrayList<TruckViewPower> Tolist()
 	{
-		java.util.ArrayList<TruckViewPower> list = new java.util.ArrayList<TruckViewPower>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<TruckViewPower> list = new ArrayList<TruckViewPower>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((TruckViewPower)this.get(i));
+			list.add((TruckViewPower)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

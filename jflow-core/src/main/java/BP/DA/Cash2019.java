@@ -1,12 +1,14 @@
 package BP.DA;
 
-import java.util.Hashtable;
-
-import BP.En.Entities;
-import BP.En.Row;
+import BP.En.*;
+import BP.Pub.*;
+import BP.Sys.*;
+import java.util.*;
 
 public class Cash2019
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 缓存ht
 	private static Hashtable _hts;
 	public static Hashtable gethts()
 	{
@@ -16,7 +18,11 @@ public class Cash2019
 		}
 		return _hts;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 对实体的操作.
 	/** 
 	 把实体放入缓存里面
 	 
@@ -28,22 +34,30 @@ public class Cash2019
 	{
 		synchronized (lockObj)
 		{
-			Hashtable tempVar = (Hashtable)gethts().get(enName);
-			Hashtable ht = (Hashtable)((tempVar instanceof Hashtable) ? tempVar : null);
+			Object tempVar = gethts().get(enName);
+			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 			if (ht == null)
 			{
 				ht = new Hashtable();
 				gethts().put(enName, ht);
 			}
-			ht.put(pkVal.toString(), row);
+			//@sly
+			if (ht.containsKey(pkVal) == true)
+			{
+				ht.put(pkVal, row);
+			}
+			else
+			{
+				ht.put(pkVal, row);
+			}
 		}
 	}
 	public static void UpdateRow(String enName, String pkVal, Row row)
 	{
 		synchronized (lockObj)
 		{
-			Hashtable tempVar = (Hashtable) gethts().get(enName);
-			Hashtable ht = (Hashtable)((tempVar instanceof Hashtable) ? tempVar : null);
+			Object tempVar = gethts().get(enName);
+			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 			if (ht == null)
 			{
 				ht = new Hashtable();
@@ -56,8 +70,8 @@ public class Cash2019
 	{
 		synchronized (lockObj)
 		{
-			Hashtable tempVar = (Hashtable)gethts().get(enName);
-			Hashtable ht = (Hashtable)((tempVar instanceof Hashtable) ? tempVar : null);
+			Object tempVar = gethts().get(enName);
+			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 			if (ht == null)
 			{
 				ht = new Hashtable();
@@ -78,20 +92,24 @@ public class Cash2019
 	{
 		synchronized (lockObj)
 		{
-			Hashtable tempVar = (Hashtable)gethts().get(enName);
-			Hashtable ht = (Hashtable)((tempVar instanceof Hashtable) ? tempVar : null);
+			Object tempVar = gethts().get(enName);
+			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 			if (ht == null)
 			{
 				return null;
 			}
 			if (ht.containsKey(pkVal) == true)
 			{
-				return (Row)((ht.get(pkVal) instanceof Row) ? ht.get(pkVal) : null);
+				return ht.get(pkVal) instanceof Row ? (Row)ht.get(pkVal) : null;
 			}
 			return null;
 		}
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 对实体的操作.
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 对实体的集合操作.
 	/** 
 	 把集合放入缓存.
 	 
@@ -113,4 +131,7 @@ public class Cash2019
 	{
 		return null;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 对实体的集合操作.
+
 }

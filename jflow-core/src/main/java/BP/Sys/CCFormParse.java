@@ -1,17 +1,11 @@
 package BP.Sys;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import BP.DA.DataType;
-import BP.En.FieldTypeS;
-import BP.En.UIContralType;
-import BP.Tools.Json;
-import BP.Tools.StringHelper;
-import BP.Tools.StringUtils;
+import BP.DA.*;
+import LitJson.*;
+import java.math.*;
 
 /** 
  解析控件并保存.
- 
 */
 public class CCFormParse
 {
@@ -25,25 +19,31 @@ public class CCFormParse
 	 @param y 位置
 	 @param h 高度
 	 @param w 宽度
-	 * @throws Exception 
 	*/
-	public static void SaveFrmEle(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w) throws Exception
+	public static void SaveFrmEle(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w)
 	{
 		FrmEle en = new FrmEle();
-		en.setMyPK(fk_mapdata + "_" + ctrlID);
-		en.RetrieveFromDBSources();
 
 		en.setEleType(eleType);
 		en.setFK_MapData(fk_mapdata);
 		en.setEleID(ctrlID);
 
+		int i = en.Retrieve(FrmEleAttr.FK_MapData, fk_mapdata, FrmEleAttr.EleID, ctrlID);
 		en.setX(x);
 		en.setY(y);
 		en.setW(w);
 		en.setH(h);
-		en.Update();
+
+		if (i == 0)
+		{
+			en.Insert();
+		}
+		else
+		{
+			en.Update();
+		}
 	}
-	
+
 	/** 
 	 保存元素
 	 
@@ -54,14 +54,12 @@ public class CCFormParse
 	 @param y 位置
 	 @param h 高度
 	 @param w 宽度
-	 * @throws Exception 
 	*/
-	public static void SaveMapFrame(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w) throws Exception
+	public static void SaveMapFrame(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w)
 	{
 		MapFrame en = new MapFrame();
 		en.setMyPK(ctrlID);
-		en.RetrieveFromDBSources();
-
+		int i = en.RetrieveFromDBSources();
 		en.setEleType(eleType);
 		en.setFK_MapData(fk_mapdata);
 		en.setFrmID(ctrlID);
@@ -70,10 +68,17 @@ public class CCFormParse
 		en.setY(y);
 		en.setW(w);
 		en.setH(h);
-		en.Update();
-		
+
+		if (i == 0)
+		{
+			en.Insert();
+		}
+		else
+		{
+			en.Update();
+		}
 	}
-	
+
 	/** 
 	 保存一个rb
 	 
@@ -81,14 +86,12 @@ public class CCFormParse
 	 @param ctrlID 控件ID
 	 @param x 位置x
 	 @param y 位置y
-	 * @throws Exception 
 	*/
-	public static String SaveFrmRadioButton(String fk_mapdata, String ctrlID, float x, float y) throws Exception
+	public static String SaveFrmRadioButton(String fk_mapdata, String ctrlID, float x, float y)
 	{
-
 		FrmRB en = new FrmRB();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
-		int i= en.RetrieveFromDBSources();
+		int i = en.RetrieveFromDBSources();
 		if (i == 0)
 		{
 			return null;
@@ -109,9 +112,8 @@ public class CCFormParse
 	 @param y 位置y
 	 @param h 高度h
 	 @param w 宽度w
-	 * @throws Exception 
 	*/
-	public static void SaveAthImg(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
+	public static void SaveAthImg(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
 	{
 		FrmImgAth en = new FrmImgAth();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
@@ -134,15 +136,14 @@ public class CCFormParse
 	 @param y 位置y
 	 @param h 高度
 	 @param w 宽度
-	 * @throws Exception 
 	*/
-	public static void SaveAthMulti(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
+	public static void SaveAthMulti(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
 	{
 		FrmAttachment en = new FrmAttachment();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
 		en.setFK_MapData(fk_mapdata);
 		en.setNoOfObj(ctrlID);
-			en.RetrieveFromDBSources();
+		en.RetrieveFromDBSources();
 
 		en.setX(x);
 		en.setY(y);
@@ -150,7 +151,7 @@ public class CCFormParse
 		en.setH(h);
 		en.Update();
 	}
-	public static void SaveDtl(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
+	public static void SaveDtl(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
 	{
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(ctrlID);
@@ -163,163 +164,169 @@ public class CCFormParse
 		dtl.setH(h);
 		dtl.Update();
 	}
-	
-	 public static void SaveiFrame(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
+	public static void SaveiFrame(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	{
+		FrmEle en = new FrmEle();
+		en.setFK_MapData(fk_mapdata);
+		en.setEleID(ctrlID);
+		en.setMyPK(en.getFK_MapData() + "_" + en.getEleID());
+		if (en.RetrieveFromDBSources() == 0)
 		{
-			FrmEle en = new FrmEle();
-			en.setFK_MapData(fk_mapdata);
-			en.setEleID(ctrlID);
-			en.setMyPK(en.getFK_MapData() + "_" + en.getEleID());
-			if (en.RetrieveFromDBSources() == 0)
-			{
-				en.Insert();
-			}
-
-			en.setX( x);
-			en.setY(y);
-			en.setW(w);
-			en.setH(h);
-			en.Update();
+			en.Insert();
 		}
-	
-	
-	public static void SaveMapAttr(String fk_mapdata, String fieldID, String shape, JSONObject control, JSONArray properties, String pks) throws Exception
+
+		en.setX(x);
+		en.setY(y);
+		en.setW(w);
+		en.setH(h);
+		en.Update();
+	}
+	public static void SaveMapAttr(String fk_mapdata, String fieldID, String shape, JsonData control, JsonData properties, String pks)
 	{
 		MapAttr attr = new MapAttr();
 		attr.setFK_MapData(fk_mapdata);
 		attr.setKeyOfEn(fieldID);
 		attr.setMyPK(fk_mapdata + "_" + fieldID);
+		attr.RetrieveFromDBSources();
+
+		//if (attr.KeyOfEn == "BiaoTi")
+		//{
+		//    int i = 11;
+		//}
 
 		//执行一次查询,以防止其他的属性更新错误.
-		if (pks.contains("@" + attr.getKeyOfEn() + "@") == true)
-		{
-			attr.RetrieveFromDBSources();
-		}
+		//if (pks.Contains("@" + attr.KeyOfEn + "@") == true)
+		//    attr.RetrieveFromDBSources();
 
-		if (shape.equals("TextBoxStr") || shape.equals("TextBoxSFTable")) //文本类型.
+		switch (shape)
 		{
-				attr.setLGType(FieldTypeS.Normal);
-				attr.setUIContralType(UIContralType.TB);
-		}
-		else if (shape.equals("TextBoxInt")) //数值
-		{
-				attr.setLGType(FieldTypeS.Normal);
+			case "TextBoxStr": //文本类型.
+			case "TextBoxSFTable":
+				attr.setLGType(En.FieldTypeS.Normal);
+				attr.setUIContralType(En.UIContralType.TB);
+				break;
+			case "TextBoxInt": //数值
+				attr.setLGType(En.FieldTypeS.Normal);
 				attr.setMyDataType(DataType.AppInt);
-				attr.setUIContralType(UIContralType.TB);
-		}
-		else if (shape.equals("TextBoxBoolean"))
-		{
+				attr.setUIContralType(En.UIContralType.TB);
+				break;
+			case "TextBoxBoolean":
 				attr.setMyDataType(DataType.AppBoolean);
-				attr.setUIContralType(UIContralType.CheckBok);
-				attr.setLGType(FieldTypeS.Normal);
-		}
-		else if (shape.equals("TextBoxFloat"))
-		{
-				attr.setLGType(FieldTypeS.Normal);
-				attr.setUIContralType(UIContralType.TB);
-		}
-		else if (shape.equals("TextBoxMoney"))
-		{
+				attr.setUIContralType(En.UIContralType.CheckBok);
+				attr.setLGType(En.FieldTypeS.Normal);
+				break;
+			case "TextBoxFloat":
+				attr.setLGType(En.FieldTypeS.Normal);
+				attr.setUIContralType(En.UIContralType.TB);
+				break;
+			case "TextBoxMoney":
 				attr.setMyDataType(DataType.AppMoney);
-				attr.setLGType(FieldTypeS.Normal);
-				attr.setUIContralType(UIContralType.TB);
-		}
-		else if (shape.equals("TextBoxDate"))
-		{
+				attr.setLGType(En.FieldTypeS.Normal);
+				attr.setUIContralType(En.UIContralType.TB);
+				break;
+			case "TextBoxDate":
 				attr.setMyDataType(DataType.AppDate);
-				attr.setLGType(FieldTypeS.Normal);
-				attr.setUIContralType(UIContralType.TB);
-		}
-		else if (shape.equals("TextBoxDateTime"))
-		{
+				attr.setLGType(En.FieldTypeS.Normal);
+				attr.setUIContralType(En.UIContralType.TB);
+				break;
+			case "TextBoxDateTime":
 				attr.setMyDataType(DataType.AppDateTime);
-				attr.setLGType(FieldTypeS.Normal);
-				attr.setUIContralType(UIContralType.TB);
-		}
-		else if (shape.equals("DropDownListEnum")) //枚举类型.
-		{
+				attr.setLGType(En.FieldTypeS.Normal);
+				attr.setUIContralType(En.UIContralType.TB);
+				break;
+			case "DropDownListEnum": //枚举类型.
 				attr.setMyDataType(BP.DA.DataType.AppInt);
-				attr.setLGType(FieldTypeS.Enum);
-				attr.setUIContralType(UIContralType.DDL);
-		}
-		else if (shape.equals("DropDownListTable")) //外键类型.
-		{
+				attr.setLGType(En.FieldTypeS.Enum);
+				attr.setUIContralType(En.UIContralType.DDL);
+				break;
+			case "DropDownListTable": //外键类型.
 				attr.setMyDataType(BP.DA.DataType.AppString);
-				//@改变了外部数据源的类型
-				//attr.setLGType(FieldTypeS.FK);
-				attr.setUIContralType(UIContralType.DDL);
+				if (pks.contains("@" + attr.getKeyOfEn() + "@") == false)
+				{
+					attr.setLGType(En.FieldTypeS.FK);
+				}
+				attr.setUIContralType(En.UIContralType.DDL);
 				attr.setMaxLen(100);
 				attr.setMinLen(0);
-		}
-		else
-		{
+				break;
+			default:
+				break;
 		}
 
 		//坐标
-		JSONObject style = control.getJSONObject("style");
-		JSONArray vector = style.getJSONArray("gradientBounds");
-		attr.setX(Float.parseFloat(vector.get(0).toString()));
-		attr.setY(Float.parseFloat(vector.get(1).toString()));
+		JsonData style = control.get("style");
+		JsonData vector = style.get("gradientBounds");
+		attr.setX(Float.parseFloat(vector.get(0).ToJson()));
+		attr.setY(Float.parseFloat(vector.get(1).ToJson()));
 
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JSONObject property = (JSONObject) properties.getJSONObject(iProperty); //获得一个属性.
-			if (property == null || !property.containsKey("property") 
-					|| property.optString("property") == null 
-					|| property.optString("property").equals("group"))
+			JsonData property = properties.get(iProperty); //获得一个属性.
+			if (property == null || !property.getKeys().contains("property") || property.get("property") == null || property.get("property").toString().equals("group"))
 			{
 				continue;
 			}
 
 			String val = null;
-			if (property.optString("PropertyValue") != null)
+			if (property.get("PropertyValue") != null)
 			{
-				val = property.optString("PropertyValue");
+				val = property.get("PropertyValue").toString();
 			}
-			String propertyName = property.optString("property");
-
-			if (propertyName.equals("Name") || propertyName.equals("MinLen") || propertyName.equals("MaxLen") || propertyName.equals("DefVal"))
+			String propertyName = property.get("property").toString();
+			switch (propertyName)
 			{
-				attr.SetValByKey(propertyName, val);
-			}
-			else if (propertyName.equals("UIIsEnable") || propertyName.equals("UIVisible"))
-			{
-				attr.SetValByKey(propertyName, val);
-			}
-			else if (propertyName.equals("FieldText"))
-			{
-				attr.setName(val);
-			}
-			else if (propertyName.equals("UIIsInput"))
-			{
-				if (val.equals("true"))
-				{
-					attr.setUIIsInput(true);
-				}
-				else
-				{
-					attr.setUIIsInput(false);
-				}
-			}
-			else if (propertyName.equals("UIBindKey"))
-			{
-				attr.setUIBindKey(val);
-			}
-			else
-			{
+				case "Name":
+					if (attr.getName().equals(""))
+					{
+						attr.setName(val);
+					}
+					break;
+				case "MinLen":
+				case "MaxLen":
+				case "DefVal":
+					attr.SetValByKey(propertyName, val);
+					break;
+				case "UIIsEnable":
+				case "UIVisible":
+					attr.SetValByKey(propertyName, val);
+					break;
+				case "FieldText":
+					if (attr.getName().equals(""))
+					{
+					   attr.setName(val);
+					}
+					break;
+				case "UIIsInput":
+					if (val.equals("true"))
+					{
+						attr.setUIIsInput(true);
+					}
+					else
+					{
+						attr.setUIIsInput(false);
+					}
+					break;
+				case "UIBindKey":
+					attr.setUIBindKey(val);
+					break;
+				default:
+					break;
 			}
 		}
 
 
 		//Textbox 高、宽.
-		java.math.BigDecimal minX = new java.math.BigDecimal(vector.get(0).toString());
-		java.math.BigDecimal minY = new java.math.BigDecimal(vector.get(1).toString());
-		java.math.BigDecimal maxX = new java.math.BigDecimal(vector.get(2).toString());
-		java.math.BigDecimal maxY = new java.math.BigDecimal(vector.get(3).toString());
-		java.math.BigDecimal imgWidth = new java.math.BigDecimal(maxX.intValue() - minX.intValue());
-		java.math.BigDecimal imgHeight =new java.math.BigDecimal(maxY.intValue() - minY.intValue());
-		attr.setUIWidth(Float.parseFloat(String.format("%.2f",imgWidth)));
-		attr.setUIHeight(Float.parseFloat(String.format("%.2f",imgHeight)));
+		BigDecimal minX = BigDecimal.Parse(vector.get(0).ToJson());
+		BigDecimal minY = BigDecimal.Parse(vector.get(1).ToJson());
+		BigDecimal maxX = BigDecimal.Parse(vector.get(2).ToJson());
+		BigDecimal maxY = BigDecimal.Parse(vector.get(3).ToJson());
+		BigDecimal imgWidth = maxX.subtract(minX);
+		BigDecimal imgHeight = maxY.subtract(minY);
+
+		attr.setUIWidth(Float.parseFloat(imgWidth.toString("0.00")));
+		attr.setUIHeight(Float.parseFloat(imgHeight.toString("0.00")));
+
+	  //  attr.ColSpan
 
 		if (pks.contains("@" + attr.getKeyOfEn() + "@") == true)
 		{
@@ -331,64 +338,62 @@ public class CCFormParse
 		}
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 装饰类控件.
 	/** 
 	 保存线.
 	 
 	 @param fk_mapdata
 	 @param form_Lines
-	 * @throws Exception 
 	*/
-	public static void SaveLine(String fk_mapdata, JSONArray form_Lines) throws Exception
+	public static void SaveLine(String fk_mapdata, JsonData form_Lines)
 	{
 		//标签.
 		String linePKs = "@";
 		FrmLines lines = new FrmLines();
 		lines.Retrieve(FrmLabAttr.FK_MapData, fk_mapdata);
-		for (FrmLine item : lines.ToJavaList())
+		for (FrmLine item : lines)
 		{
 			linePKs += item.getMyPK() + "@";
 		}
-		
-		if (form_Lines.isArray() == true && form_Lines.size() > 0)
+
+		if (form_Lines.getIsArray() == true && form_Lines.size() > 0)
 		{
 			for (int idx = 0, jLine = form_Lines.size(); idx < jLine; idx++)
 			{
-				JSONObject line = (JSONObject) form_Lines.getJSONObject(idx);
-				if (line.isNullObject())
+				JsonData line = form_Lines.get(idx);
+				if (line.getIsObject() == false)
 				{
 					continue;
 				}
 
 				FrmLine lineEn = new FrmLine();
 
-				lineEn.setMyPK(line.optString("CCForm_MyPK"));
+				lineEn.setMyPK(line.get("CCForm_MyPK").toString());
 				lineEn.setFK_MapData(fk_mapdata);
 
-				JSONArray turningPoints = line.getJSONArray("turningPoints");
-				lineEn.setX1(Float.parseFloat(turningPoints.getJSONObject(0).getString("x")));
-				lineEn.setX2(Float.parseFloat(turningPoints.getJSONObject(1).getString("x")));
-				lineEn.setY1(Float.parseFloat(turningPoints.getJSONObject(0).getString("y")));
-				lineEn.setY2(Float.parseFloat(turningPoints.getJSONObject(1).getString("y")));
+				JsonData turningPoints = line.get("turningPoints");
+				lineEn.setX1(Float.parseFloat(turningPoints.get(0)["x"].toString()));
+				lineEn.setX2(Float.parseFloat(turningPoints.get(1)["x"].toString()));
+				lineEn.setY1(Float.parseFloat(turningPoints.get(0)["y"].toString()));
+				lineEn.setY2(Float.parseFloat(turningPoints.get(1)["y"].toString()));
 
-				JSONArray properties = line.getJSONArray("properties");
-				JSONObject borderWidth = Json.GetObjectFromArrary_ByKeyValue(properties,"type", "LineWidth");
-				JSONObject borderColor = Json.GetObjectFromArrary_ByKeyValue(properties,"type", "Color");
+				JsonData properties = line.get("properties");
+				JsonData borderWidth = properties.GetObjectFromArrary_ByKeyValue("type", "LineWidth");
+				JsonData borderColor = properties.GetObjectFromArrary_ByKeyValue("type", "Color");
 				String strborderWidth = "2";
-				if (borderWidth != null && borderWidth.optString("PropertyValue") != null
-						&& !StringHelper.isNullOrEmpty(borderWidth.optString("PropertyValue"))) 
+				if (borderWidth != null && borderWidth.get("PropertyValue") != null && !DataType.IsNullOrEmpty(borderWidth.get("PropertyValue").toString()))
 				{
-					strborderWidth = borderWidth.optString("PropertyValue");
+					strborderWidth = borderWidth.get("PropertyValue").toString();
 				}
 				String strBorderColor = "Black";
-				if (borderColor != null && borderColor.optString("PropertyValue") != null && !StringHelper.isNullOrEmpty(borderColor.optString("PropertyValue")))
+				if (borderColor != null && borderColor.get("PropertyValue") != null && !DataType.IsNullOrEmpty(borderColor.get("PropertyValue").toString()))
 				{
-					strBorderColor = borderColor.optString("PropertyValue");
+					strBorderColor = borderColor.get("PropertyValue").toString();
 				}
 				lineEn.setBorderWidth(Float.parseFloat(strborderWidth));
 				lineEn.setBorderColor(strBorderColor);
-				if (linePKs.contains("@"+lineEn.getMyPK() + "@") == true)
+				if (linePKs.contains("@" + lineEn.getMyPK() + "@") == true)
 				{
 					linePKs = linePKs.replace(lineEn.getMyPK() + "@", "");
 					lineEn.DirectUpdate();
@@ -405,7 +410,7 @@ public class CCFormParse
 		String sqls = "";
 		for (String str : strs)
 		{
-			if (StringHelper.isNullOrEmpty(str))
+			if (DataType.IsNullOrEmpty(str))
 			{
 				continue;
 			}
@@ -416,7 +421,7 @@ public class CCFormParse
 			BP.DA.DBAccess.RunSQLs(sqls);
 		}
 	}
-	public static void SaveLabel(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
+	public static void SaveLabel(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
 	{
 		// New lab 对象.
 		FrmLab lab = new FrmLab();
@@ -424,52 +429,50 @@ public class CCFormParse
 		lab.setFK_MapData(fk_mapdata);
 
 		//坐标.
-		JSONObject style = control.getJSONObject("style");
-		JSONArray vector = style.getJSONArray("gradientBounds");
-		lab.setX(Float.parseFloat(vector.get(0).toString()));
-		lab.setY(Float.parseFloat(vector.get(1).toString()));
+		JsonData style = control.get("style");
+		JsonData vector = style.get("gradientBounds");
+		lab.setX(Float.parseFloat(vector.get(0).ToJson()));
+		lab.setY(Float.parseFloat(vector.get(1).ToJson()));
 
 		StringBuilder fontStyle = new StringBuilder();
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
-			if (property == null || !property.containsKey("type") || property.optString("type") == null)
+			JsonData property = properties.get(iProperty);
+			if (property == null || !property.getKeys().contains("type") || property.get("type") == null)
 			{
 				continue;
 			}
 
-			String type = property.optString("type").trim();
+			String type = property.get("type").toString().trim();
 			String val = null;
-			if (property.optString("PropertyValue") != null)
+			if (property.get("PropertyValue") != null)
 			{
-				val = property.optString("PropertyValue");
+				val = property.get("PropertyValue").toString();
 			}
 
-			if (type.equals("SingleText"))
+			switch (type)
 			{
+				case "SingleText":
 					lab.setText(val == null ? "" : val.toString().replace(" ", "&nbsp;").replace("\n", "@"));
-			}
-			else if (type.equals("Color"))
-			{
-					lab.setFontColor(StringUtils.isEmpty(val)||"null".equals(val) || "\"null\"".equals(val)? "#000000" : val.toString());
+					break;
+				case "Color":
+					// lab.FontColor = val == null ? "#FF000000" : val.ToString();
+					lab.setFontColor(val == null ? "#000000" : val.toString());
 					fontStyle.append(String.format("color:%1$s;", lab.getFontColor()));
-			}
-			else if (type.equals("TextFontFamily"))
-			{
+					break;
+				case "TextFontFamily":
 					lab.setFontName(val == null ? "Portable User Interface" : val.toString());
 					if (val != null)
 					{
-						fontStyle.append(String.format("font-family:%1$s;", property.optString("PropertyValue")));
+						fontStyle.append(String.format("font-family:%1$s;", property.get("PropertyValue").ToJson()));
 					}
-			}
-			else if (type.equals("TextFontSize"))
-			{
-					lab.setFontSize(StringHelper.isNullOrEmpty(val) ? 14 : Integer.parseInt(val.toString().replace("px", "")));
+					break;
+				case "TextFontSize":
+					lab.setFontSize(val == null ? 14 : Integer.parseInt(val.toString()));
 					fontStyle.append(String.format("font-size:%1$s;", lab.getFontSize()));
-			}
-			else if (type.equals("FontWeight"))
-			{
-					if ( DataType.IsNullOrEmpty(val) || val.toString().equals("normal"))
+					break;
+				case "FontWeight":
+					if (val == null || val.toString().equals("normal"))
 					{
 						lab.setIsBold(false);
 						fontStyle.append(String.format("font-weight:normal;"));
@@ -479,19 +482,19 @@ public class CCFormParse
 						lab.setIsBold(true);
 						fontStyle.append(String.format("font-weight:%1$s;", val));
 					}
-			}
-			else
-			{
+					break;
+				default:
+					break;
 			}
 		}
 
-		if (lab.getText() == null || lab.getText().equals("") || lab.getText().equals("null"))
+		if (lab.getText() == null || lab.getText().equals(""))
 		{
-			//如果没有取到标签， 从这里获取，系统有一个. 
-			JSONObject primitives = (JSONObject) control.getJSONArray("primitives").get(0);
-			lab.setText(primitives.optString("str").trim());
-			lab.setFontName(primitives.optString("font").trim());
-			lab.setFontSize(Integer.parseInt(primitives.optString("size").trim()));
+			/*如果没有取到标签， 从这里获取，系统有一个. */
+			JsonData primitives = control.get("primitives")[0];
+			lab.setText(primitives.get("str").toString().trim());
+			lab.setFontName(primitives.get("font").toString().trim());
+			lab.setFontSize(Integer.parseInt(primitives.get("size").toString().trim()));
 		}
 
 		lab.setFontStyle(fontStyle.toString());
@@ -504,48 +507,43 @@ public class CCFormParse
 			lab.DirectInsert();
 		}
 	}
-	public static void SaveButton(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
+	public static void SaveButton(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
 	{
 		FrmBtn btn = new FrmBtn(ctrlID);
 		btn.setMyPK(ctrlID);
 		btn.setFK_MapData(fk_mapdata);
 
 		//坐标
-		JSONObject style = control.getJSONObject("style");
-		JSONArray vector = style.getJSONArray("gradientBounds");
-		btn.setX(Float.parseFloat(vector.get(0).toString()));
-		btn.setY(Float.parseFloat(vector.get(1).toString()));
+		JsonData style = control.get("style");
+		JsonData vector = style.get("gradientBounds");
+		btn.setX(Float.parseFloat(vector.get(0).ToJson()));
+		btn.setY(Float.parseFloat(vector.get(1).ToJson()));
 		btn.setIsEnable(true);
-		/*for (int iProperty = 0; iProperty < properties.size(); iProperty++)
+		/*for (int iProperty = 0; iProperty < properties.Count; iProperty++)
 		{
-			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
-			if (property == null || ! property.containsKey("property") || property.optString("property") == null)
-			{
-				continue;
-			}
+		    JsonData property = properties[iProperty];
+		    if (property == null || !property.Keys.Contains("property") || property["property"] == null)
+		        continue;
 
-			String val = null;
-			if (property.optString("PropertyValue") != null)
-			{
-				val = property.optString("PropertyValue");
-			}
+		    string val = null;
+		    if (property["PropertyValue"] != null)
+		        val = property["PropertyValue"].ToString();
 
-			String propertyBtn = property.optString("property");
-			if (propertyBtn.equals("primitives.1.str"))
-			{
-					btn.setText(val == null ? "" : val.replace(" ", "&nbsp;").replace("\n", "@"));
-			}
-			else if (propertyBtn.equals("ButtonEvent"))
-			{
-					btn.setEventType(StringHelper.isNullOrEmpty(val) ? 0 : Integer.parseInt(val));
-			}
-			else if (propertyBtn.equals("BtnEventDoc"))
-			{
-					btn.setEventContext(val == null ? "" : val);
-			}
-			else
-			{
-			}
+		    string propertyBtn = property["property"].ToString();
+		    switch (propertyBtn)
+		    {
+		        case "primitives.1.str":
+		            btn.Text = val == null ? "" : val.Replace(" ", "&nbsp;").Replace("\n", "@");
+		            break;
+		        case "ButtonEvent":
+		            btn.EventType = val == null ? 0 : int.Parse(val);
+		            break;
+		        case "BtnEventDoc":
+		            btn.EventContext = val == null ? "" : val;
+		            break;
+		        default:
+		            break;
+		    }
 		}*/
 		if (pks.contains("@" + btn.getMyPK() + "@") == true)
 		{
@@ -557,55 +555,51 @@ public class CCFormParse
 		}
 	}
 
-	public static void SaveHyperLink(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
+	public static void SaveHyperLink(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
 	{
 		FrmLink link = new FrmLink(ctrlID);
 		link.setMyPK(ctrlID);
 		link.setFK_MapData(fk_mapdata);
 		//坐标
-		JSONArray vector = control.getJSONObject("style").getJSONArray("gradientBounds");
-		link.setX(Float.parseFloat(vector.get(0).toString()));
-		link.setY(Float.parseFloat(vector.get(1).toString()));
+		JsonData vector = control.get("style")["gradientBounds"];
+		link.setX(Float.parseFloat(vector.get(0).ToJson()));
+		link.setY(Float.parseFloat(vector.get(1).ToJson()));
 
 		//属性集合
 		StringBuilder fontStyle = new StringBuilder();
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
-			if (property == null || !property.containsKey("property") || property.optString("property") == null)
+			JsonData property = properties.get(iProperty);
+			if (property == null || !property.getKeys().contains("property") || property.get("property") == null)
 			{
 				continue;
 			}
 
-			String propertyLink = property.optString("property");
-			String valLink = property.optString("PropertyValue");
+			String propertyLink = property.get("property").toString();
+			LitJson.JsonData valLink = property.get("PropertyValue");
 
-			/*if (propertyLink.equals("primitives.0.str") || propertyLink.equals("SingleText"))
+			switch (propertyLink)
 			{
-					link.setText(valLink == null ? "" : valLink.toString());
-			}*/
-			if (propertyLink.equals("primitives.0.style.fillStyle"))
-			{
+				//case "primitives.0.str":
+				//case "SingleText":
+				//    link.Text  = valLink == null ? "" : valLink.ToString();
+				//    break;
+				case "primitives.0.style.fillStyle":
 					link.setFontColor(valLink == null ? "#FF000000" : valLink.toString());
 					fontStyle.append(String.format("color:%1$s;", link.getFontColor()));
-			}
-			else if (propertyLink.equals("FontName"))
-			{
+					break;
+				case "FontName":
 					link.setFontName(valLink == null ? "Portable User Interface" : valLink.toString());
 					if (valLink != null)
 					{
-						fontStyle.append(String.format("font-family:%1$s;", Json.ToJson(valLink)));
+						fontStyle.append(String.format("font-family:%1$s;", valLink.ToJson()));
 					}
 					continue;
-			}
-			else if (propertyLink.equals("FontSize"))
-			{
+				case "FontSize":
 				   link.setFontSize(valLink == null ? 14 : Integer.parseInt(valLink.toString()));
 				   fontStyle.append(String.format("font-size:%1$s;", link.getFontSize()));
 					continue;
-			}
-			else if (propertyLink.equals("primitives.0.fontWeight"))
-			{
+				case "primitives.0.fontWeight":
 					if (valLink == null || valLink.toString().equals("normal"))
 					{
 						link.setIsBold(false);
@@ -617,39 +611,29 @@ public class CCFormParse
 						fontStyle.append(String.format("font-weight:%1$s;", valLink.toString()));
 					}
 					continue;
-			}
-			else if (propertyLink.equals("FontColor"))
-			{
+				case "FontColor":
 					link.setFontColor(valLink == null ? "" : valLink.toString());
 					continue;
-			}
-			/*else if (propertyLink.equals("URL"))
-			{
-					if(valLink == null) valLink=link.getURL();
-					
-					link.setURL(valLink == null ? "" : valLink.toString());
-					continue;
-			}*/
-			/*else if (propertyLink.equals("WinOpenModel"))
-			{
-				   if(valLink == null) valLink=link.getTarget();
-				   
-					link.setTarget(valLink == null ? "_blank" : valLink.toString());
-					continue;
-			}*/
-			else
-			{
+				//case "URL":
+				 //   link.URL = valLink == null ? "" : valLink.ToString();
+				 //   continue;
+				//case "WinOpenModel":
+				 /**   link.Target = valLink == null ? "_blank" : valLink.ToString();
+				 */
+				//    continue;
+				default:
+					break;
 			}
 		}
 		link.setFontStyle(fontStyle.toString());
 
 		if (link.getText() == null || link.getText().equals(""))
 		{
-			//如果没有取到标签， 从这里获取，系统有一个. 	
-			JSONObject primitives = (JSONObject) control.getJSONArray("primitives").get(0);
-			link.setText(primitives.optString("str").trim());
-			link.setFontName(primitives.optString("font").trim());
-			link.setFontSize(Integer.parseInt(primitives.optString("size").trim()));
+			/*如果没有取到标签， 从这里获取，系统有一个. */
+			JsonData primitives = control.get("primitives")[0];
+			link.setText(primitives.get("str").toString().trim());
+			link.setFontName(primitives.get("font").toString().trim());
+			link.setFontSize(Integer.parseInt(primitives.get("size").toString().trim()));
 		}
 
 		//执行保存.
@@ -662,77 +646,74 @@ public class CCFormParse
 			link.DirectInsert();
 		}
 	}
-	public static void SaveImage(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
+	public static void SaveImage(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
 	{
 		FrmImg img = new FrmImg();
 		img.setMyPK(ctrlID);
-		int count = img.RetrieveFromDBSources();
 		img.setFK_MapData(fk_mapdata);
 		img.setIsEdit(1);
 		img.setHisImgAppType(ImgAppType.Img);
 
 		//坐标
-		JSONArray vector = control.getJSONObject("style").getJSONArray("gradientBounds");
-		img.setX(Float.parseFloat(vector.get(0).toString()));
-		img.setY(Float.parseFloat(vector.get(1).toString()));
+		JsonData vector = control.get("style")["gradientBounds"];
+		img.setX(Float.parseFloat(vector.get(0).ToJson()));
+		img.setY(Float.parseFloat(vector.get(1).ToJson()));
 		//图片高、宽
-		java.math.BigDecimal minX = new java.math.BigDecimal(vector.get(0).toString());
-		java.math.BigDecimal minY = new java.math.BigDecimal(vector.get(1).toString());
-		java.math.BigDecimal maxX = new java.math.BigDecimal(vector.get(2).toString());
-		java.math.BigDecimal maxY = new java.math.BigDecimal(vector.get(3).toString());
-		
-		java.math.BigDecimal imgWidth = new java.math.BigDecimal(maxX.intValue() - minX.intValue());
-		java.math.BigDecimal imgHeight =new java.math.BigDecimal(maxY.intValue() - minY.intValue());
-		img.setW(Float.parseFloat(String.format("%.2f",imgWidth)));
-		img.setH(Float.parseFloat(String.format("%.2f",imgHeight)));
-		
+		BigDecimal minX = BigDecimal.Parse(vector.get(0).ToJson());
+		BigDecimal minY = BigDecimal.Parse(vector.get(1).ToJson());
+		BigDecimal maxX = BigDecimal.Parse(vector.get(2).ToJson());
+		BigDecimal maxY = BigDecimal.Parse(vector.get(3).ToJson());
+		BigDecimal imgWidth = maxX.subtract(minX);
+		BigDecimal imgHeight = maxY.subtract(minY);
+
+		img.setW(Float.parseFloat(imgWidth.toString("0.00")));
+		img.setH(Float.parseFloat(imgHeight.toString("0.00")));
+
 		StringBuilder fontStyle = new StringBuilder();
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
-			if (property == null || !property.containsKey("property") || property.optString("property") == null)
+			JsonData property = properties.get(iProperty);
+			if (property == null || !property.getKeys().contains("property") || property.get("property") == null)
 			{
 				continue;
 			}
 
-			if (property.optString("property").equals("LinkURL"))
+			if (property.get("property").toString().equals("LinkURL"))
 			{
 				//图片连接到
-				img.setLinkURL(property.optString("PropertyValue") == null ? "" : property.optString("PropertyValue"));
+				img.setLinkURL(property.get("PropertyValue") == null ? "" : property.get("PropertyValue").toString());
 			}
-			else if (property.optString("property").equals("WinOpenModel"))
+			else if (property.get("property").toString().equals("WinOpenModel"))
 			{
 				//打开窗口方式
-				img.setLinkTarget(property.optString("PropertyValue") == null ? "_blank" : property.optString("PropertyValue"));
+				img.setLinkTarget(property.get("PropertyValue") == null ? "_blank" : property.get("PropertyValue").toString());
 			}
-			else if (property.optString("property").equals("ImgAppType"))
+			else if (property.get("property").toString().equals("ImgAppType"))
 			{
-				//应用类型：0本地图片，1指定路径
-				img.setSrcType(StringHelper.isNullOrEmpty(property.optString("PropertyValue"))? 0 : Integer.parseInt(property.optString("PropertyValue")));
+				//应用类型：0本地图片，1指定路径.
+				img.setImgSrcType(property.get("PropertyValue") == null ? 0 : Integer.parseInt(property.get("PropertyValue").toString()));
 			}
-			else if (property.optString("property").equals("ImgPath") && count ==0)
+			else if (property.get("property").toString().equals("ImgPath"))
 			{
 				//指定图片路径
-				img.setImgURL(property.optString("PropertyValue") == null ? "" : property.optString("PropertyValue"));
+				img.setImgURL(property.get("PropertyValue") == null ? "" : property.get("PropertyValue").toString());
 			}
 		}
 
 		//ImageFrame 本地图片路径
-		JSONArray primitives = control.getJSONArray("primitives");
-		JSONObject primitive = null;
-		for (int i=0; i<primitives.size(); i++)
+		JsonData primitives = control.get("primitives");
+		for (JsonData primitive : primitives)
 		{
-			primitive = primitives.getJSONObject(i);
-			if(null == primitive.optString("oType"))
+			if (primitive.get("oType") == null)
 			{
 				continue;
 			}
-			if (primitive.optString("oType").equals("ImageFrame")  && count ==0)
+			if (primitive.get("oType").ToJson().equals("ImageFrame"))
 			{
-				img.setImgPath(primitive == null ? "" : primitive.optString("url"));
+				img.setImgPath(primitive == null ? "" : primitive.get("url").toString());
 			}
 		}
-		
+
 		//执行保存.
 		if (pks.contains(img.getMyPK() + "@") == true)
 		{
@@ -743,7 +724,7 @@ public class CCFormParse
 			img.DirectInsert();
 		}
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 装饰类控件.
 
 }

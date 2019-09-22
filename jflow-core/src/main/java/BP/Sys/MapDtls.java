@@ -1,20 +1,18 @@
 package BP.Sys;
 
-import java.util.ArrayList;
-
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  明细s
- 
 */
 public class MapDtls extends EntitiesNoName
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 明细s
-	 
 	*/
 	public MapDtls()
 	{
@@ -23,17 +21,20 @@ public class MapDtls extends EntitiesNoName
 	 明细s
 	 
 	 @param fk_mapdata s
-	 * @throws Exception 
 	*/
-	public MapDtls(String fk_mapdata) throws Exception
+	public MapDtls(String fk_mapdata)
 	{
-		//被周朋去掉. 为什么要过滤 = 0的数据.
-		//this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.No);
+		if (fk_mapdata == null)
+		{
+			throw new RuntimeException("fk_mapdata 传的值为空,不能查询.");
+		}
+
+		//zhoupeng 注销掉，为了这样多的过滤条件？
+	   // this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.No);
 		this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata);
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -41,38 +42,34 @@ public class MapDtls extends EntitiesNoName
 		return new MapDtl();
 	}
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDtl> ToJavaList()
+	public final List<MapDtl> ToJavaList()
 	{
-		return (java.util.List<MapDtl>)(Object)this;
+		return (List<MapDtl>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<MapDtl> Tolist()
+	public final ArrayList<MapDtl> Tolist()
 	{
-		java.util.ArrayList<MapDtl> list = new java.util.ArrayList<MapDtl>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<MapDtl> list = new ArrayList<MapDtl>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((MapDtl)this.get(i));
 		}
 		return list;
 	}
-	@SuppressWarnings("unchecked")
-	public static ArrayList<MapDtl> convertMapDtls(Object obj)
-	{
-		return (ArrayList<MapDtl>) obj;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,25 +1,29 @@
 package BP.WF.XML;
 
-import java.util.List;
-
-import BP.En.Entities;
-import BP.Sys.SystemConfig;
-import BP.XML.XmlEn;
-import BP.XML.XmlEns;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.XML.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  事件s
 */
 public class EventLists extends XmlEns
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 事件s
 	*/
 	public EventLists()
 	{
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
 	*/
@@ -34,7 +38,7 @@ public class EventLists extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "EventList.xml";
+		return SystemConfig.PathOfXML + "\\EventList.xml";
 	}
 	/** 
 	 物理表名
@@ -49,8 +53,6 @@ public class EventLists extends XmlEns
 	{
 		return null;
 	}
-	public List<EventList>ToJavaList()
-	{
-		return (List<EventList>)(Object)this;
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

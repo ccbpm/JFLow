@@ -1,55 +1,39 @@
 package BP.Port;
 
-import BP.DA.DBUrl;
-import BP.DA.DBUrlType;
-import BP.DA.Depositary;
-import BP.Difference.ContextHolderUtils;
-import BP.En.EnType;
-import BP.En.EntityNoName;
+import BP.DA.*;
+import BP.En.*;
 import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
-import BP.Sys.PubClass;
+import BP.Web.*;
+import BP.Sys.*;
+import java.util.*;
 
-/**
- * 部门
- */
+/** 
+ 部门
+*/
 public class Dept extends EntityNoName
 {
-	  
-	// 属性
-	/**
-	 * 父节点的ID
-	 */
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
+	/** 
+	 父节点的ID
+	*/
 	public final String getParentNo()
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	
 	public final void setParentNo(String value)
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
-	
-	public final String getParentName()
+	public final int getGrade()
 	{
-		return this.GetValStrByKey(DeptAttr.ParentName);
+		return 1;
 	}
-	
-	public final void setParentName(String value)
-	{
-		this.SetValByKey(DeptAttr.ParentName, value);
-	}
-	 
-	
 	private Depts _HisSubDepts = null;
-	
-	/**
-	 * 它的子节点
-	 * @throws Exception 
-	 */
-	public final Depts getHisSubDepts() throws Exception
+	/** 
+	 它的子节点
+	*/
+	public final Depts getHisSubDepts()
 	{
 		if (_HisSubDepts == null)
 		{
@@ -57,39 +41,41 @@ public class Dept extends EntityNoName
 		}
 		return _HisSubDepts;
 	}
-	
-	// 构造函数
-	/**
-	 * 部门
-	 */
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
+	/** 
+	 部门
+	*/
 	public Dept()
 	{
 	}
-	
-	/**
-	 * 部门
-	 * 
-	 * @param no
-	 *            编号
-	 * @throws Exception 
-	 */
-	public Dept(String no) throws Exception
+	/** 
+	 部门
+	 
+	 @param no 编号
+	*/
+	public Dept(String no)
 	{
 		super(no);
 	}
-	
-	// 重写方法
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重写方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
-	
-	/**
-	 * Map
-	 */
+	/** 
+	 Map
+	*/
 	@Override
 	public Map getEnMap()
 	{
@@ -97,47 +83,73 @@ public class Dept extends EntityNoName
 		{
 			return this.get_enMap();
 		}
-		
-		Map map = new Map();
-		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); // 连接到的那个数据库上. (默认的是:
-															// AppCenterDSN )
-		map.setPhysicsTable("Port_Dept");
-		map.setEnType(EnType.Admin);
-		map.setCodeStruct("2");
-		map.IsEnableVer = true;
-		map.setEnDesc("部门"); // 实体的描述.
-		map.setDepositaryOfEntity(Depositary.Application); // 实体map的存放位置.
-		map.setDepositaryOfMap(Depositary.Application); // Map 的存放位置.
-		
-		map.AddTBStringPK(DeptAttr.No, null, "部门编号", true, true, 1, 50, 20);
-		map.AddTBString(DeptAttr.Name, null, "部门名称", true, false, 0, 100, 30);
-		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, false, 0,100,30);
-		
-		map.AddTBString(DeptAttr.OrgNo, null, "组织编号", false, false, 0, 100, 30);
-		map.AddTBInt(DeptAttr.Idx, 0, "顺序号", false, false);
-		
-		 
-		
-	 
 
-		// 增加点对多属性
+		Map map = new Map();
+		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); //连接到的那个数据库上. (默认的是: AppCenterDSN )
+		map.setPhysicsTable("Port_Dept");
+		map.Java_SetEnType(EnType.Admin);
+		map.IsEnableVer = true;
+
+		map.setEnDesc("部门"); //  实体的描述.
+		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体map的存放位置.
+		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
+
+		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 50, 20);
+		map.AddTBString(DeptAttr.Name, null, "名称", true, false, 0, 100, 30);
+		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, true, 0, 100, 30);
+
+
+
+		RefMethod rm = new RefMethod();
+		rm.Title = "历史变更";
+		rm.ClassMethodName = this.toString() + ".History";
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 增加点对多属性
+			//他的部门权限
+		   // map.AttrsOfOneVSM.Add(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "岗位权限");
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
 		this.set_enMap(map);
-		 
 		return this.get_enMap();
 	}
-	
-	 
-	
-	@Override
-	protected boolean beforeDelete() throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+	public final String History()
 	{
-		Depts depts = new Depts();
-		depts.Retrieve(DeptAttr.ParentNo, this.getNo());
-		if (null != depts && 0 != depts.size())
-		{
-			PubClass.Alert("该部门，存在子部门，不能删除！", ContextHolderUtils.getResponse());
-			return false;
-		}
-		return super.beforeDelete();
+		return "EnVerDtl.htm?EnName=" + this.toString() + "&PK=" + this.getNo();
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 重写查询. 2015.09.31 为适应ws的查询.
+	/** 
+	 查询
+	 
+	 @return 
+	*/
+	@Override
+	public int Retrieve()
+	{
+		 
+			return super.Retrieve();
+		 
+	}
+	/** 
+	 查询.
+	 
+	 @return 
+	*/
+	@Override
+	public int RetrieveFromDBSources()
+	{
+		 
+			return super.RetrieveFromDBSources();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
 }

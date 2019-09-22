@@ -1,25 +1,20 @@
 package BP.En;
 
-import java.util.ArrayList;
-import java.util.List;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import java.io.*;
 
 /** 
  
- 
 */
-public class EnDtls extends ArrayList<EnDtl>
+public class EnDtls extends ArrayList<Object> implements Serializable
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 是不是包含className
-	 * 
-	 * @param className
-	 * @return
-	 */
+	/** 
+	 是不是包含className
+	 
+	 @param className
+	 @return 
+	*/
 	public final boolean IsContainKey(String className)
 	{
 		for (EnDtl ed : this)
@@ -31,32 +26,25 @@ public class EnDtls extends ArrayList<EnDtl>
 		}
 		return false;
 	}
-	
-	/**
-	 * 加入
-	 * 
-	 * @param attr
-	 *            attr
-	 */
+	/** 
+	 加入
+	 
+	 @param attr attr
+	*/
 	public final void Add(EnDtl en)
 	{
-		if (this.IsExits(en))
-		{
-			return;
-		}
-		this.add(en);
-		/*
-		 * warning this.add(en);
-		 */
+		 if (this.IsExits(en))
+		 {
+			 return;
+		 }
+		this.InnerList.add(en);
 	}
-	
-	/**
-	 * 是不是存在集合里面
-	 * 
-	 * @param en
-	 *            要检查的EnDtl
-	 * @return true/false
-	 */
+	/** 
+	 是不是存在集合里面
+	 
+	 @param en 要检查的EnDtl
+	 @return true/false
+	*/
 	public final boolean IsExits(EnDtl en)
 	{
 		for (EnDtl dtl : this)
@@ -68,14 +56,13 @@ public class EnDtls extends ArrayList<EnDtl>
 		}
 		return false;
 	}
-	
-	/**
-	 * 通过一个key 得到它的属性值。
-	 * 
-	 * @param key
-	 *            key
-	 * @return EnDtl
-	 */
+
+	/** 
+	 通过一个key 得到它的属性值。
+	 
+	 @param key key
+	 @return EnDtl
+	*/
 	public final EnDtl GetEnDtlByKey(String key)
 	{
 		for (EnDtl dtl : this)
@@ -87,25 +74,19 @@ public class EnDtls extends ArrayList<EnDtl>
 		}
 		throw new RuntimeException("@没有找到 key=[" + key + "]的属性，请检查map文件。");
 	}
-	
-	/**
-	 * 根据索引访问集合内的元素Attr。
-	 */
-	public final EnDtl getItem(int index)
+	/** 
+	 根据索引访问集合内的元素Attr。
+	*/
+	public final EnDtl get(int index)
 	{
-		return (EnDtl) this.get(index);
-		/*
-		 * warning return (EnDtl)this.get(index);
-		 */
+		return (EnDtl)this.InnerList[index];
 	}
-	
-	/**
-	 * className
-	 * 
-	 * @param className
-	 *            类名称
-	 * @return
-	 */
+	/** 
+	 className
+	 
+	 @param className 类名称
+	 @return 
+	*/
 	public final EnDtl GetEnDtlByEnsName(String className)
 	{
 		for (EnDtl en : this)
@@ -117,9 +98,5 @@ public class EnDtls extends ArrayList<EnDtl>
 		}
 		throw new RuntimeException("@没有找到他的明细:" + className);
 	}
-	
-	public List<EnDtl> ToJavaList()
-	{
-		return (List<EnDtl>)(Object)this;
-	}
+
 }

@@ -1,25 +1,21 @@
 package BP.Sys.FrmUI;
 
-import BP.DA.DataType;
-import BP.DA.Depositary;
-import BP.En.EnType;
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
-import BP.Sys.SFTable;
-import BP.Sys.SFTableAttr;
-import BP.Sys.SystemConfig;
-
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
  用户自定义表
 */
 public class SFTableClass extends EntityNoName
 {
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -58,7 +54,7 @@ public class SFTableClass extends EntityNoName
 		map.AddTBString(SFTableAttr.TableDesc, null, "表描述", true, false, 0, 200, 20);
 		map.AddTBString(SFTableAttr.DefVal, null, "默认值", true, false, 0, 200, 20);
 
-		//数据源.
+			//数据源.
 		map.AddDDLEntities(SFTableAttr.FK_SFDBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), true);
 
 		map.AddTBString(SFTableAttr.SrcTable, null, "数据源表", false, false, 0, 200, 20);
@@ -72,13 +68,15 @@ public class SFTableClass extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "查看数据";
 		rm.ClassMethodName = this.toString() + ".DoEdit";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.RefMethodType = RefMethodType.RightFrameOpen;
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
 	/** 
 	 编辑数据
@@ -93,32 +91,19 @@ public class SFTableClass extends EntityNoName
 	 执行删除.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete()
 	{
-		SFTable sf = new SFTable(this.getNo());
+		BP.Sys.SFTable sf = new Sys.SFTable(this.getNo());
 		sf.Delete();
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		//利用这个时间串进行排序.
 		this.SetValByKey("RDT", DataType.getCurrentDataTime());
 		return super.beforeInsert();
 	}
-	
-	@Override
-	 protected  void afterInsertUpdateAction() throws Exception
-     {
-         SFTable sftable = new SFTable();
-         sftable.setNo(this.getNo());
-         sftable.RetrieveFromDBSources();
-         sftable.Update();
-
-         super.afterInsertUpdateAction();
-     }
-
 }

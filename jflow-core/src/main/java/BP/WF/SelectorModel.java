@@ -1,41 +1,49 @@
 package BP.WF;
 
-/** 
- 抄送类型
- 
-*/
 public enum SelectorModel
 {
 	/** 
-	 不抄送
-	 
+	 岗位
 	*/
-	None,
+	Station,
 	/** 
-	 按人员
-	 
+	 部门
 	*/
-	AsEmps,
+	Dept,
 	/** 
-	 按岗位
-	 
+	 操作员
 	*/
-	AsStation,
+	Emp,
 	/** 
-	 按节点
-	 
+	 SQL
 	*/
-	AsNode,
+	SQL,
 	/** 
-	 按部门
-	 
+	 SQL模版计算
 	*/
-	AsDept,
+	SQLTemplate,
 	/** 
-	 按照部门与岗位
-	 
+	 通用的人员选择器.
 	*/
-	AsDeptAndStation;
+	GenerUserSelecter,
+	/** 
+	 按部门与岗位的交集
+	*/
+	DeptAndStation,
+	/** 
+	 自定义链接
+	*/
+	Url,
+	/** 
+	 通用部门岗位人员选择器
+	*/
+	AccepterOfDeptStationEmp,
+	/** 
+	 按岗位智能计算(操作员所在部门)
+	*/
+	AccepterOfDeptStationOfCurrentOper;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

@@ -1,34 +1,37 @@
 package BP.Sys;
 
+import Oracle.ManagedDataAccess.Client.*;
+import BP.DA.*;
 import BP.En.*;
+import MySql.Data.MySqlClient.*;
+import java.util.*;
 
 /** 
  数据源s
- 
 */
 public class SFDBSrcs extends EntitiesNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 数据源s
-	 
 	*/
 	public SFDBSrcs()
 	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new SFDBSrc();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
 	@Override
-	public int RetrieveAll() throws Exception
+	public int RetrieveAll()
 	{
 		int i = this.RetrieveAllFromDBSource();
 		if (i == 0)
@@ -46,13 +49,12 @@ public class SFDBSrcs extends EntitiesNoName
 	 查询数据源
 	 
 	 @return 返回查询的个数
-	 * @throws Exception 
 	*/
-	public final int RetrieveDBSrc() throws Exception
+	public final int RetrieveDBSrc()
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SFDBSrcAttr.DBSrcType, " < ", 100);
-		int i= qo.DoQuery();
+		int i = qo.DoQuery();
 		if (i == 0)
 		{
 			return this.RetrieveAll();
@@ -63,12 +65,11 @@ public class SFDBSrcs extends EntitiesNoName
 	 查询数据源
 	 
 	 @return 返回查询的个数
-	 * @throws Exception 
 	*/
-	public final int RetrieveWCSrc() throws Exception
+	public final int RetrieveWCSrc()
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(SFDBSrcAttr.DBSrcType, "= ", DBSrcType.WebServices.getValue());
+		qo.AddWhere(SFDBSrcAttr.DBSrcType, "= ",  DBSrcType.WebServices.getValue());
 		int i = qo.DoQuery();
 		if (i == 0)
 		{
@@ -76,29 +77,31 @@ public class SFDBSrcs extends EntitiesNoName
 		}
 		return i;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<SFDBSrc> ToJavaList()
+	public final List<SFDBSrc> ToJavaList()
 	{
-		return (java.util.List<SFDBSrc>)(Object)this;
+		return (List<SFDBSrc>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<SFDBSrc> Tolist()
+	public final ArrayList<SFDBSrc> Tolist()
 	{
-		java.util.ArrayList<SFDBSrc> list = new java.util.ArrayList<SFDBSrc>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<SFDBSrc> list = new ArrayList<SFDBSrc>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((SFDBSrc)this.get(i));
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

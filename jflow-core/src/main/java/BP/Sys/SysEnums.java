@@ -1,65 +1,54 @@
 package BP.Sys;
 
-import java.util.ArrayList;
+import BP.DA.*;
+import BP.En.*;
+import java.util.*;
 
-import BP.DA.Cash;
-import BP.DA.DBType;
-import BP.DA.DBUrl;
-import BP.DA.DataType;
-import BP.DA.Depositary;
-import BP.DA.Paras;
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.En.QueryObject;
-import BP.Tools.StringHelper;
-
-/**
- * 纳税人集合
- */
-public class SysEnums extends Entities {
-	public static ArrayList<SysEnum> convertSysEnums(Object obj) {
-		return (ArrayList<SysEnum>) obj;
-	}
-
-	/**
-	 * 此枚举类型的个数
-	 */
+/** 
+ 纳税人集合 
+*/
+public class SysEnums extends Entities
+{
+	/** 
+	 此枚举类型的个数
+	*/
 	public int Num = -1;
-
-	public final String ToDesc() {
+	public final String ToDesc()
+	{
 		String strs = "";
-		for (SysEnum se : this.ToJavaList()) {
+		for (SysEnum se : this)
+		{
 			strs += se.getIntKey() + " " + se.getLab() + ";";
 		}
 		return strs;
 	}
-
-	public final String GenerCaseWhenForOracle(String enName, String mTable, String key, String field, String enumKey,
-			int def) {
-
-		String sql = (String) Cash.GetObjFormApplication("ESQL" + enName + mTable + key + "_" + enumKey, null);
-
+	public final String GenerCaseWhenForOracle(String enName, String mTable, String key, String field, String enumKey, int def)
+	{
+		String sql = (String)Cash.GetObjFormApplication("ESQL" + enName + mTable + key + "_" + enumKey, null);
 		// string sql = "";
-		if (sql != null) {
+		if (sql != null)
+		{
 			return sql;
 		}
 
-		if (this.size() == 0) {
-			// this.Retrieve(SysEnumAttr.EnumKey, key);
-
-			// this.size() == 0
-			throw new RuntimeException("@枚举值[" + enumKey + "]已被删除,无法生成期望的SQL.");
+		if (this.Count == 0)
+		{
+			throw new RuntimeException("@枚举值" + enumKey + "已被删除。");
 		}
 
 		sql = " CASE NVL(" + mTable + field + "," + def + ")";
-		for (SysEnum se1 : this.ToJavaList()) {
+		for (SysEnum se1 : this)
+		{
 			sql += " WHEN " + se1.getIntKey() + " THEN '" + se1.getLab() + "'";
 		}
 
-		SysEnum se = (SysEnum) this.GetEntityByKey(SysEnumAttr.IntKey, def);
-		if (se == null) {
+		SysEnum se = (SysEnum)this.GetEntityByKey(SysEnumAttr.IntKey, def);
+		if (se == null)
+		{
 			sql += " END \"" + key + "Text\"";
-		} else {
+		}
+		else
+		{
 			sql += " WHEN NULL THEN '" + se.getLab() + "' END \"" + key + "Text\"";
 		}
 
@@ -68,239 +57,272 @@ public class SysEnums extends Entities {
 	}
 
 	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def)
-			throws Exception {
-
-		if (this.size() == 0) {
-			SysEnumMain sem = new SysEnumMain();
-			sem.setNo(enumKey);
-			if (sem.RetrieveFromDBSources() == 1) {
-				SysEnums ens = new SysEnums();
-				ens.RegIt(enumKey, sem.getCfgVal());
-				this.Retrieve(SysEnumAttr.EnumKey, enumKey);
-
-			} else {
-				throw new RuntimeException("@枚举值（" + enumKey + "）已被删除，无法形成期望的SQL。");
-			}
+	{
+		if (this.Count == 0)
+		{
+			throw new RuntimeException("@枚举值（" + enumKey + "）已被删除，无法形成期望的SQL。");
 		}
+
 
 		String sql = "";
 		sql = " CASE " + mTable + field;
-		for (SysEnum se1 : this.ToJavaList()) {
+		for (SysEnum se1 : this)
+		{
 			sql += " WHEN " + se1.getIntKey() + " THEN '" + se1.getLab() + "'";
 		}
 
-		SysEnum se = (SysEnum) this.GetEntityByKey(SysEnumAttr.IntKey, def);
-		if (se == null) {
+		SysEnum se = (SysEnum)this.GetEntityByKey(SysEnumAttr.IntKey, def);
+		if (se == null)
+		{
 			sql += " END \"" + key + "Text\"";
-		} else {
+		}
+		else
+		{
 			sql += " WHEN NULL THEN '" + se.getLab() + "' END \"" + key + "Text\"";
 		}
 
-		// Cash.AddObj("ESQL" + enName + key + "_" + enumKey,
-		// Depositary.Application, sql);
+		// Cash.AddObj("ESQL" + enName + key + "_" + enumKey, Depositary.Application, sql);
 		return sql;
 	}
+	public final void LoadIt(String enumKey)
+	{
+		if (this.Full(enumKey) == false)
+		{
 
-	public final void LoadIt(String enumKey) throws Exception {
+			try
+			{
+				BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET Lang='" + Web.WebUser.getSysLang() + "' WHERE LANG IS NULL ");
 
-		if (this.Full(enumKey) == true)
-			return;
+				BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
 
-		try {
+				//增加数据库类型判断
+				DBUrl dbUrl = new DBUrl();
+				if (DBType.MSSQL == dbUrl.getDBType())
+				{
+					BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
+				}
+				else if (DBType.Oracle == dbUrl.getDBType())
+				{
+					BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK = EnumKey || '_' || Lang || '_' || cast(IntKey  as VARCHAR(5))");
+				}
+				else if (DBType.MySQL == dbUrl.getDBType())
+				{
+					BP.DA.DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK = CONCAT (EnumKey,'_', Lang,'_',CAST(IntKey AS CHAR(5)))");
+				}
 
-			SysEnumMain en = new SysEnumMain();
-			en.setNo(enumKey);
+			}
+			catch (java.lang.Exception e)
+			{
 
-			if (en.RetrieveFromDBSources() == 1) {
-				this.RegIt(enumKey, en.getCfgVal());
-				return;
 			}
 
-			BP.Sys.XML.EnumInfoXml xml = new BP.Sys.XML.EnumInfoXml(enumKey);
-
-			this.RegIt(enumKey, xml.getVals());
-
-		} catch (RuntimeException ex) {
-			throw new RuntimeException("@你没有预制[" + enumKey + "]枚举值。@在修复枚举值出现错误:" + ex.getMessage());
+			try
+			{
+				BP.Sys.XML.EnumInfoXml xml = new BP.Sys.XML.EnumInfoXml(enumKey);
+				this.RegIt(enumKey, xml.getVals());
+			}
+			catch (RuntimeException ex)
+			{
+				throw new RuntimeException("@你没有预制[" + enumKey + "]枚举值。@在修复枚举值出现错误:" + ex.getMessage());
+			}
 		}
-
 	}
-
-	/**
-	 * SysEnums
-	 * 
-	 * @param EnumKey
-	 * @throws Exception
-	 */
-	public SysEnums(String enumKey) throws Exception {
+	/** 
+	 把所有的枚举注册一遍.
+	*/
+	public static void RegAll()
+	{
+		BP.Sys.XML.EnumInfoXmls xmls = new BP.Sys.XML.EnumInfoXmls();
+		xmls.RetrieveAll();
+		SysEnums ses = new SysEnums();
+		for (BP.Sys.XML.EnumInfoXml xml : xmls)
+		{
+			ses.RegIt(xml.getKey(), xml.getVals());
+		}
+	}
+	/** 
+	 SysEnums
+	 
+	 @param EnumKey
+	*/
+	public SysEnums(String enumKey)
+	{
 		this.LoadIt(enumKey);
 	}
-
-	public SysEnums(String enumKey, String vals) throws Exception {
-		if (vals == null || vals.equals("")) {
+	public SysEnums(String enumKey, String vals)
+	{
+		if (vals == null || vals.equals(""))
+		{
 			this.LoadIt(enumKey);
 			return;
 		}
-  
 
-		if (this.Full(enumKey) == false) {
+		if (this.Full(enumKey) == false)
+		{
 			this.RegIt(enumKey, vals);
 		}
 	}
-	
-	public final void RegIt(String EnumKey, String vals) throws Exception {
-		RegIt(  EnumKey,   vals,   true);
-	}
-
-	public final void RegIt(String EnumKey, String vals, Boolean isInsert) throws Exception {
-		try {
+	public final void RegIt(String EnumKey, String vals)
+	{
+		try
+		{
 			String[] strs = vals.split("[@]", -1);
 			SysEnums ens = new SysEnums();
 			ens.Delete(SysEnumAttr.EnumKey, EnumKey);
-			this.clear();
+			this.Clear();
 
-			for (String s : strs) {
-				if (s.equals("") || s == null) {
+			for (String s : strs)
+			{
+				if (s.equals("") || s == null)
+				{
 					continue;
 				}
 
 				String[] vk = s.split("[=]", -1);
 				SysEnum se = new SysEnum();
 				se.setIntKey(Integer.parseInt(vk[0]));
-				// 杨玉慧
-				// 解决当 枚举值含有 ‘=’号时，保存不进去的方法
+			   //杨玉慧
+			   //解决当  枚举值含有 ‘=’号时，保存不进去的方法
 				String[] kvsValues = new String[vk.length - 1];
-				for (int i = 0; i < kvsValues.length; i++) {
+				for (int i = 0; i < kvsValues.length; i++)
+				{
 					kvsValues[i] = vk[i + 1];
 				}
-				se.setLab(StringHelper.join("=", kvsValues));
+				se.setLab(tangible.StringHelper.join("=", kvsValues));
 				se.setEnumKey(EnumKey);
 				se.setLang(BP.Web.WebUser.getSysLang());
-				if (isInsert == true)
-					se.Insert();
+				se.Insert();
 				this.AddEntity(se);
 			}
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex)
+		{
 			throw new RuntimeException(ex.getMessage() + " - " + vals);
 		}
-		// this.Full(EnumKey);
+		//  this.Full(EnumKey);
 	}
-
-	public final boolean Full(String enumKey) throws Exception {
-
-		Entities ens = (Entities) Cash.GetObjFormApplication("EnumOf" + enumKey + BP.Web.WebUser.getSysLang(), null);
-		if (ens != null) {
+	public final boolean Full(String enumKey)
+	{
+		Entities ens = (Entities)Cash.GetObjFormApplication("EnumOf" + enumKey + Web.WebUser.getSysLang(), null);
+		if (ens != null)
+		{
 			this.AddEntities(ens);
 			return true;
 		}
 
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SysEnumAttr.EnumKey, enumKey);
-
+		qo.addAnd();
+		qo.AddWhere(SysEnumAttr.Lang, Web.WebUser.getSysLang());
 		qo.addOrderBy(SysEnumAttr.IntKey);
-		if (qo.DoQuery() == 0) {
-			// 看看xml配置里面是否有?
+		if (qo.DoQuery() == 0)
+		{
+			/* 看看xml配置里面是否有?*/
 			return false;
 		}
 
-		Cash.AddObj("EnumOf" + enumKey + BP.Web.WebUser.getSysLang(), Depositary.Application, this);
+		Cash.AddObj("EnumOf" + enumKey + Web.WebUser.getSysLang(), Depositary.Application, this);
 		return true;
 	}
-
 	///// <summary>
 	///// DBSimpleNoNames
 	///// </summary>
 	///// <returns></returns>
-	// public DBSimpleNoNames ToEntitiesNoName()
-	// {
-	// DBSimpleNoNames ens = new DBSimpleNoNames();
-	// foreach (SysEnum en in this)
-	// {
-	// ens.AddByNoName(en.IntKey.ToString(), en.Lab);
-	// }
-	// return ens;
-	// }
-	/**
-	 * @param key
-	 * @param val
-	 * @return
-	 */
-	public final int Delete(String key, Object val) {
-		try {
+	//public DBSimpleNoNames ToEntitiesNoName()
+	//{
+	//    DBSimpleNoNames ens = new DBSimpleNoNames();
+	//    foreach (SysEnum en in this)
+	//    {
+	//        ens.AddByNoName(en.IntKey.ToString(), en.Lab);
+	//    }
+	//    return ens;
+	//}
+	/** 
+	 
+	 
+	 @param key
+	 @param val
+	 @return 
+	*/
+	public final int Delete(String key, Object val)
+	{
+		try
+		{
 			Entity en = this.getGetNewEntity();
 			Paras ps = new Paras();
 
-			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr()
-					+ "p";
+			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
-		} catch (java.lang.Exception e) {
+		}
+		catch (java.lang.Exception e)
+		{
 			Entity en = this.getGetNewEntity();
-
-			try {
-				en.CheckPhysicsTable();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			en.CheckPhysicsTable();
 
 			Paras ps = new Paras();
-			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr()
-					+ "p";
+			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
 		}
 	}
-
-	/**
-	 * SysEnums
-	 */
-	public SysEnums() {
+	/** 
+	 SysEnums
+	*/
+	public SysEnums()
+	{
 	}
-
-	/**
-	 * 得到它的 Entity
-	 */
+	/** 
+	 得到它的 Entity
+	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getGetNewEntity()
+	{
 		return new SysEnum();
 	}
-
-	/**
-	 * 通过int 得到Lab
-	 * 
-	 * @param val
-	 *            val
-	 * @return string val
-	 */
-	public final String GetLabByVal(int val) {
-		for (SysEnum en : this.ToJavaList()) {
-			if (en.getIntKey() == val) {
+	/** 
+	 通过int 得到Lab
+	 
+	 @param val val
+	 @return string val
+	*/
+	public final String GetLabByVal(int val)
+	{
+		for (SysEnum en : this)
+		{
+			if (en.getIntKey() == val)
+			{
 				return en.getLab();
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * 转化成 java list,C#不能调用.
-	 * 
-	 * @return List
-	 */
-	public final java.util.List<SysEnum> ToJavaList() {
-		return (java.util.List<SysEnum>) (Object) this;
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<SysEnum> ToJavaList()
+	{
+		return (List<SysEnum>)this;
 	}
-
-	/**
-	 * 转化成list
-	 * 
-	 * @return List
-	 */
-	public final java.util.ArrayList<SysEnum> Tolist() {
-		java.util.ArrayList<SysEnum> list = new java.util.ArrayList<SysEnum>();
-		for (int i = 0; i < this.size(); i++) {
-			list.add((SysEnum) this.get(i));
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<SysEnum> Tolist()
+	{
+		ArrayList<SysEnum> list = new ArrayList<SysEnum>();
+		for (int i = 0; i < this.Count; i++)
+		{
+			list.add((SysEnum)this.get(i));
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

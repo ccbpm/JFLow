@@ -1,45 +1,20 @@
 package BP.WF.Rpt;
 
-import org.apache.commons.lang.StringUtils;
-
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.Depositary;
-import BP.En.Entities;
-import BP.En.Entity;
-import BP.En.EntityNoName;
-import BP.En.Map;
-import BP.Sys.DTSearchWay;
-import BP.Sys.FrmAttachments;
-import BP.Sys.FrmBtns;
-import BP.Sys.FrmEles;
-import BP.Sys.FrmEvents;
-import BP.Sys.FrmImgAths;
-import BP.Sys.FrmImgs;
-import BP.Sys.FrmLabs;
-import BP.Sys.FrmLines;
-import BP.Sys.FrmLinks;
-import BP.Sys.FrmRBs;
-import BP.Sys.GEDtl;
-import BP.Sys.GEDtls;
-import BP.Sys.GEEntity;
-import BP.Sys.GroupFields;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapAttrs;
-import BP.Sys.MapData;
-import BP.Sys.MapDtl;
-import BP.Sys.MapDtls;
-import BP.Sys.MapExts;
-import BP.Sys.MapFrames;
-import BP.WF.Flow;
+import BP.DA.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  报表设计
 */
 public class MapRpt extends EntityNoName
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 报表权限控制方式
 	/** 
 	 报表查看权限控制.
 	*/
@@ -84,246 +59,238 @@ public class MapRpt extends EntityNoName
 	{
 		this.SetValByKey(MapRptAttr.RightDeptTag, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 报表权限控制方式
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 外键属性
 	/** 
 	 框架
-	 * @throws Exception 
 	*/
-	public final MapFrames getMapFrames() throws Exception
+	public final MapFrames getMapFrames()
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
-		MapFrames obj = (MapFrames)((tempVar instanceof MapFrames) ? tempVar : null);
+		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapFrames(this.getNo());
+			obj = new MapFrames(this.No);
 			this.SetRefObject("MapFrames", obj);
 		}
 		return obj;
 	}
 	/** 
 	 分组字段
-	 * @throws Exception 
 	*/
-	public final GroupFields getGroupFields() throws Exception
+	public final GroupFields getGroupFields()
 	{
 		Object tempVar = this.GetRefObject("GroupFields");
-		GroupFields obj = (GroupFields)((tempVar instanceof GroupFields) ? tempVar : null);
+		GroupFields obj = tempVar instanceof GroupFields ? (GroupFields)tempVar : null;
 		if (obj == null)
 		{
-			obj = new GroupFields(this.getNo());
+			obj = new GroupFields(this.No);
 			this.SetRefObject("GroupFields", obj);
 		}
 		return obj;
 	}
 	/** 
 	 逻辑扩展
-	 * @throws Exception 
 	*/
-	public final MapExts getMapExts() throws Exception
+	public final MapExts getMapExts()
 	{
 		Object tempVar = this.GetRefObject("MapExts");
-		MapExts obj = (MapExts)((tempVar instanceof MapExts) ? tempVar : null);
+		MapExts obj = tempVar instanceof MapExts ? (MapExts)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapExts(this.getNo());
+			obj = new MapExts(this.No);
 			this.SetRefObject("MapExts", obj);
 		}
 		return obj;
 	}
 	/** 
 	 事件
-	 * @throws Exception 
 	*/
-	public final FrmEvents getFrmEvents() throws Exception
+	public final FrmEvents getFrmEvents()
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
-		FrmEvents obj = (FrmEvents)((tempVar instanceof FrmEvents) ? tempVar : null);
+		FrmEvents obj = tempVar instanceof FrmEvents ? (FrmEvents)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmEvents(this.getNo());
+			obj = new FrmEvents(this.No);
 			this.SetRefObject("FrmEvents", obj);
 		}
 		return obj;
 	}
-	 
+
 	/** 
 	 从表
-	 * @throws Exception 
 	*/
-	public final MapDtls getMapDtls() throws Exception
+	public final MapDtls getMapDtls()
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
-		MapDtls obj = (MapDtls)((tempVar instanceof MapDtls) ? tempVar : null);
+		MapDtls obj = tempVar instanceof MapDtls ? (MapDtls)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapDtls(this.getNo());
+			obj = new MapDtls(this.No);
 			this.SetRefObject("MapDtls", obj);
 		}
 		return obj;
 	}
 	/** 
 	 超连接
-	 * @throws Exception 
 	*/
-	public final FrmLinks getFrmLinks() throws Exception
+	public final FrmLinks getFrmLinks()
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
-		FrmLinks obj = (FrmLinks)((tempVar instanceof FrmLinks) ? tempVar : null);
+		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLinks(this.getNo());
+			obj = new FrmLinks(this.No);
 			this.SetRefObject("FrmLinks", obj);
 		}
 		return obj;
 	}
 	/** 
 	 按钮
-	 * @throws Exception 
 	*/
-	public final FrmBtns getFrmBtns() throws Exception
+	public final FrmBtns getFrmBtns()
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
-		FrmBtns obj = (FrmBtns)((tempVar instanceof FrmBtns) ? tempVar : null);
+		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmBtns(this.getNo());
+			obj = new FrmBtns(this.No);
 			this.SetRefObject("FrmBtns", obj);
 		}
 		return obj;
 	}
 	/** 
 	 元素
-	 * @throws Exception 
 	*/
-	public final FrmEles getFrmEles() throws Exception
+	public final FrmEles getFrmEles()
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
-		FrmEles obj = (FrmEles)((tempVar instanceof FrmEles) ? tempVar : null);
+		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmEles(this.getNo());
+			obj = new FrmEles(this.No);
 			this.SetRefObject("FrmEles", obj);
 		}
 		return obj;
 	}
 	/** 
 	 线
-	 * @throws Exception 
-	 
 	*/
-	public final FrmLines getFrmLines() throws Exception
+	public final FrmLines getFrmLines()
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
-		FrmLines obj = (FrmLines)((tempVar instanceof FrmLines) ? tempVar : null);
+		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLines(this.getNo());
+			obj = new FrmLines(this.No);
 			this.SetRefObject("FrmLines", obj);
 		}
 		return obj;
 	}
 	/** 
 	 标签
-	 * @throws Exception 
 	*/
-	public final FrmLabs getFrmLabs() throws Exception
+	public final FrmLabs getFrmLabs()
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmLabs obj = (FrmLabs)((tempVar instanceof FrmLabs) ? tempVar : null);
+		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLabs(this.getNo());
+			obj = new FrmLabs(this.No);
 			this.SetRefObject("FrmLabs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 图片
-	 * @throws Exception 
 	*/
-	public final FrmImgs getFrmImgs() throws Exception
+	public final FrmImgs getFrmImgs()
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmImgs obj = (FrmImgs)((tempVar instanceof FrmImgs) ? tempVar : null);
+		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmImgs(this.getNo());
+			obj = new FrmImgs(this.No);
 			this.SetRefObject("FrmLabs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 附件
-	 * @throws Exception 
 	*/
-	public final FrmAttachments getFrmAttachments() throws Exception
+	public final FrmAttachments getFrmAttachments()
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
-		FrmAttachments obj = (FrmAttachments)((tempVar instanceof FrmAttachments) ? tempVar : null);
+		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmAttachments(this.getNo());
+			obj = new FrmAttachments(this.No);
 			this.SetRefObject("FrmAttachments", obj);
 		}
 		return obj;
 	}
 	/** 
 	 图片附件
-	 * @throws Exception 
 	*/
-	public final FrmImgAths getFrmImgAths() throws Exception
+	public final FrmImgAths getFrmImgAths()
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
-		FrmImgAths obj = (FrmImgAths)((tempVar instanceof FrmImgAths) ? tempVar : null);
+		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmImgAths(this.getNo());
+			obj = new FrmImgAths(this.No);
 			this.SetRefObject("FrmImgAths", obj);
 		}
 		return obj;
 	}
 	/** 
 	 单选按钮
-	 * @throws Exception 
 	*/
-	public final FrmRBs getFrmRBs() throws Exception
+	public final FrmRBs getFrmRBs()
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
-		FrmRBs obj = (FrmRBs)((tempVar instanceof FrmRBs) ? tempVar : null);
+		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmRBs(this.getNo());
+			obj = new FrmRBs(this.No);
 			this.SetRefObject("FrmRBs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 属性
-	 * @throws Exception 
 	*/
-	public final MapAttrs getMapAttrs() throws Exception
+	public final MapAttrs getMapAttrs()
 	{
 		Object tempVar = this.GetRefObject("MapAttrs");
-		MapAttrs obj = (MapAttrs)((tempVar instanceof MapAttrs) ? tempVar : null);
+		MapAttrs obj = tempVar instanceof MapAttrs ? (MapAttrs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapAttrs(this.getNo());
+			obj = new MapAttrs(this.No);
 			this.SetRefObject("MapAttrs", obj);
 		}
 		return obj;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 流程编号
-	 * @throws Exception 
 	*/
-	public final String getFK_Flow() throws Exception
+	public final String getFK_Flow()
 	{
-	   String str= this.GetValStrByKey(MapRptAttr.FK_Flow);
-	   if (str != null && !str.equals(""))
+	   String str = this.GetValStrByKey(MapRptAttr.FK_Flow);
+	   if (str.equals("") || str == null)
 	   {
-		   str = this.getNo().replace("ND", "");
+		   str = this.No.Replace("ND", "");
 		   str = str.replace("MyRpt", "");
-		   str = str.replace("RptMy", "");
-		   str=StringUtils.leftPad(str,3, "0");
+		   str = tangible.StringHelper.padLeft(str, 3, '0');
 		   this.SetValByKey(MapRptAttr.FK_Flow, str);
 
 
@@ -343,7 +310,7 @@ public class MapRpt extends EntityNoName
 		String s = this.GetValStrByKey(MapRptAttr.PTable);
 		if (s.equals("") || s == null)
 		{
-			return this.getNo();
+			return this.No;
 		}
 		return s;
 	}
@@ -367,61 +334,63 @@ public class MapRpt extends EntityNoName
 	{
 		if (_HisEns == null)
 		{
-			_HisEns = BP.En.ClassFactory.GetEns(this.getNo());
+			_HisEns = BP.En.ClassFactory.GetEns(this.No);
 		}
 		return _HisEns;
 	}
 	public final Entity getHisEn()
 	{
-		return this.getHisEns().getGetNewEntity();
+		return this.getHisEns().GetNewEntity;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	private GEEntity _HisEn = null;
 	public final GEEntity getHisGEEn()
 	{
 		if (this._HisEn == null)
 		{
-			_HisEn = new GEEntity(this.getNo());
+			_HisEn = new GEEntity(this.No);
 		}
 		return _HisEn;
 	}
 	/** 
 	 生成实体
+	 
 	 @param ds
 	 @return 
-	 * @throws Exception 
 	*/
-	public final GEEntity GenerGEEntityByDataSet(DataSet ds) throws Exception
+	public final GEEntity GenerGEEntityByDataSet(DataSet ds)
 	{
 		// New 它的实例.
 		GEEntity en = this.getHisGEEn();
 
 		// 它的table.
-		DataTable dt = ds.Tables.get(Integer.parseInt(this.getNo()));
+		DataTable dt = ds.Tables[this.No];
 
 		//装载数据.
-		en.getRow().LoadDataTable(dt, dt.Rows.get(0));
+		en.Row.LoadDataTable(dt, dt.Rows[0]);
 
 		// dtls.
 		MapDtls dtls = this.getMapDtls();
-		for (Object item : dtls)
+		for (MapDtl item : dtls)
 		{
-			DataTable dtDtls = ds.Tables.get(Integer.parseInt(((MapDtl) item)
-					.getNo()));
-			GEDtls dtlsEn = new GEDtls(((MapDtl) item).getNo());
+			DataTable dtDtls = ds.Tables[item.No];
+			GEDtls dtlsEn = new GEDtls(item.No);
 			for (DataRow dr : dtDtls.Rows)
 			{
 				// 产生它的Entity data.
-				GEDtl dtl = (GEDtl) dtlsEn.getGetNewEntity();
-				dtl.getRow().LoadDataTable(dtDtls, dr);
+				GEDtl dtl = (GEDtl)dtlsEn.GetNewEntity;
+				dtl.Row.LoadDataTable(dtDtls, dr);
 
 				//加入这个集合.
 				dtlsEn.AddEntity(dtl);
 			}
 
 			//加入到他的集合里.
-			en.getDtls().add(dtDtls);
+			en.Dtls.Add(dtDtls);
 		}
 		return en;
 	}
@@ -433,18 +402,13 @@ public class MapRpt extends EntityNoName
 	}
 	/** 
 	 报表设计
+	 
 	 @param no 映射编号
-	 * @throws Exception 
 	*/
-	public MapRpt(String no) throws Exception
+	public MapRpt(String no)
 	{
-		this.setNo(no);
+		this.No = no;
 		this.Retrieve();
-	}
-	public MapRpt(String no,String dbDesc )
-	{
-		this.setNo(no);
-		this.setNote(dbDesc);
 	}
 	/** 
 	 EnMap
@@ -452,9 +416,9 @@ public class MapRpt extends EntityNoName
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_MapData", "报表设计");
@@ -465,7 +429,6 @@ public class MapRpt extends EntityNoName
 
 		map.AddTBStringPK(MapRptAttr.No, null, "编号", true, false, 1, 200, 20);
 		map.AddTBString(MapRptAttr.Name, null, "描述", true, false, 0, 500, 20);
-			//     map.AddTBString(MapRptAttr.SearchKeys, null, "查询键", true, false, 0, 500, 20);
 		map.AddTBString(MapRptAttr.PTable, null, "物理表", true, false, 0, 500, 20);
 		map.AddTBString(MapRptAttr.FK_Flow, null, "流程编号", true, false, 0, 3, 3);
 
@@ -478,36 +441,40 @@ public class MapRpt extends EntityNoName
 		map.AddTBString(MapRptAttr.Note, null, "备注", true, false, 0, 500, 20);
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 权限控制. 2014-12-18
 		map.AddTBInt(MapRptAttr.RightViewWay, 0, "报表查看权限控制方式", true, false);
 		map.AddTBString(MapRptAttr.RightViewTag, null, "报表查看权限控制Tag", true, false, 0, 4000, 20);
 		map.AddTBInt(MapRptAttr.RightDeptWay, 0, "部门数据查看控制方式", true, false);
 		map.AddTBString(MapRptAttr.RightDeptTag, null, "部门数据查看控制Tag", true, false, 0, 4000, 20);
 
-//		map.AttrsOfOneVSM.Add(new RptStations(), new Stations(), RptStationAttr.FK_Rpt, RptStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "岗位权限");
-//		map.AttrsOfOneVSM.Add(new RptDepts(), new Depts(), RptDeptAttr.FK_Rpt, RptDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "部门权限");
-//		map.AttrsOfOneVSM.Add(new RptEmps(), new Emps(), RptEmpAttr.FK_Rpt, RptEmpAttr.FK_Emp, DeptAttr.Name, DeptAttr.No, "人员权限");
-
+		map.AttrsOfOneVSM.Add(new RptStations(), new Stations(), RptStationAttr.FK_Rpt, RptStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "岗位权限");
+		map.AttrsOfOneVSM.Add(new RptDepts(), new Depts(), RptDeptAttr.FK_Rpt, RptDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "部门权限");
+		map.AttrsOfOneVSM.Add(new RptEmps(), new Emps(), RptEmpAttr.FK_Rpt, RptEmpAttr.FK_Emp, DeptAttr.Name, DeptAttr.No, "人员权限");
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 权限控制.
 
 			//增加参数字段.
 		map.AddTBAtParas(1000);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 其他方法.
 	/** 
 	 显示的列.
-	 * @throws Exception 
 	*/
-	public final MapAttrs getHisShowColsAttrs() throws Exception
+	public final MapAttrs getHisShowColsAttrs()
 	{
-		MapAttrs mattrs = new MapAttrs(this.getNo());
+		MapAttrs mattrs = new MapAttrs(this.No);
 		return mattrs;
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert()
 	{
 		this.ResetIt();
 		return super.beforeInsert();
@@ -515,46 +482,45 @@ public class MapRpt extends EntityNoName
 
 	/** 
 	 重置设置.
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final void ResetIt() throws NumberFormatException, Exception
+	public final void ResetIt()
 	{
-		MapData md = new MapData(this.getNo());
-		md.setRptIsSearchKey(true);
-		md.setRptDTSearchWay( DTSearchWay.None);
-		md.setRptDTSearchKey("");
-		md.setRptSearchKeys ("*FK_Dept*WFSta*FK_NY*");
+		MapData md = new MapData(this.No);
+		md.RptIsSearchKey = true;
+		md.RptDTSearchWay = DTSearchWay.None;
+		md.RptDTSearchKey = "";
+		md.RptSearchKeys = "*FK_Dept*WFSta*FK_NY*";
 
 		Flow fl = new Flow(this.getFK_Flow());
 		this.setPTable(fl.getPTable());
 		this.Update();
 
 		String keys = "'OID','FK_Dept','FlowStarter','WFState','Title','FlowStartRDT','FlowEmps','FlowDaySpan','FlowEnder','FlowEnderRDT','FK_NY','FlowEndNode','WFSta'";
-		MapAttrs attrs = new MapAttrs("ND"+Integer.parseInt(this.getFK_Flow())+"Rpt");
+		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt");
 
-		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo()); // 删除已经有的字段。
-		for (MapAttr attr : attrs.ToJavaList())
+		attrs.Delete(MapAttrAttr.FK_MapData, this.No); // 删除已经有的字段。
+		for (MapAttr attr : attrs)
 		{
-			if (keys.contains("'" + attr.getKeyOfEn() + "'") == false)
+			if (keys.contains("'" + attr.KeyOfEn + "'") == false)
 			{
 				continue;
 			}
-			attr.setFK_MapData( this.getNo());
+			attr.FK_MapData = this.No;
 			attr.Insert();
 		}
 	}
 	/** 
 	 删除之前.
+	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete()
 	{
 		MapAttrs attrs = new MapAttrs();
-		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo());
+		attrs.Delete(MapAttrAttr.FK_MapData, this.No);
 		return super.beforeDelete();
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 其他方法.
 }

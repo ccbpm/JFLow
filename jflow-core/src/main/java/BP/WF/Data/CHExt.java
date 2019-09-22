@@ -1,25 +1,22 @@
 package BP.WF.Data;
 
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.RefMethod;
-import BP.En.RefMethodType;
-import BP.En.UAC;
-import BP.Sys.SystemConfig;
-import BP.WF.Flows;
-import BP.WF.Glo;
+import BP.DA.*;
+import BP.En.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  时效考核
-  
 */
 public class CHExt extends EntityMyPK
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 考核状态
-	 
 	*/
 	public final CHSta getCHSta()
 	{
@@ -31,7 +28,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 时间到
-	 
 	*/
 	public final String getDTTo()
 	{
@@ -43,7 +39,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 时间从
-	 
 	*/
 	public final String getDTFrom()
 	{
@@ -55,7 +50,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 应完成日期
-	 
 	*/
 	public final String getSDT()
 	{
@@ -67,7 +61,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 流程标题
-	 
 	*/
 	public final String getTitle()
 	{
@@ -79,7 +72,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 流程编号
-	 
 	*/
 	public final String getFK_Flow()
 	{
@@ -91,7 +83,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 流程
-	 
 	*/
 	public final String getFK_FlowT()
 	{
@@ -103,7 +94,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 限期
-	 
 	*/
 	public final int getTimeLimit()
 	{
@@ -115,7 +105,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 操作人员
-	 
 	*/
 	public final String getFK_Emp()
 	{
@@ -127,7 +116,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 人员
-	 
 	*/
 	public final String getFK_EmpT()
 	{
@@ -139,7 +127,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 部门
-	 
 	*/
 	public final String getFK_Dept()
 	{
@@ -151,7 +138,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 部门名称
-	 
 	*/
 	public final String getFK_DeptT()
 	{
@@ -163,7 +149,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 年月
-	 
 	*/
 	public final String getFK_NY()
 	{
@@ -175,7 +160,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 工作ID
-	 
 	*/
 	public final long getWorkID()
 	{
@@ -187,7 +171,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 流程ID
-	 
 	*/
 	public final long getFID()
 	{
@@ -199,7 +182,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 节点ID
-	 
 	*/
 	public final int getFK_Node()
 	{
@@ -211,7 +193,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 节点名称
-	 
 	*/
 	public final String getFK_NodeT()
 	{
@@ -221,14 +202,13 @@ public class CHExt extends EntityMyPK
 	{
 		this.SetValByKey(CHAttr.FK_NodeT, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 UI界面上的访问控制
-	 
 	*/
 	@Override
 	public UAC getHisUAC()
@@ -242,7 +222,6 @@ public class CHExt extends EntityMyPK
 	}
 	/** 
 	 时效考核
-	 
 	*/
 	public CHExt()
 	{
@@ -251,27 +230,25 @@ public class CHExt extends EntityMyPK
 	 
 	 
 	 @param pk
-	 * @throws Exception 
 	*/
-	public CHExt(String pk) throws Exception
+	public CHExt(String pk)
 	{
 		super(pk);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region Map
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_CH", "时效考核");
@@ -295,25 +272,27 @@ public class CHExt extends EntityMyPK
 
 		map.AddDDLEntities(CHAttr.FK_Dept, null, "隶属部门", new BP.Port.Depts(), false);
 		map.AddDDLEntities(CHAttr.FK_Emp, null, "当事人", new BP.Port.Emps(), false);
-		map.AddDDLEntities(CHAttr.FK_NY, null, "月份", new BP.Pub.NYs(), false);
+		map.AddTBString(CHAttr.FK_NY, null, "月份", true, true, 0, 50, 5);
+			//map.AddDDLEntities(CHAttr.FK_NY, null, "月份", new BP.Pub.NYs(), false);
 
-		map.AddTBIntMyNum();
 		map.AddTBInt(CHAttr.WorkID, 0, "工作ID", false, true);
 		map.AddTBInt(CHAttr.FID, 0, "FID", false, false);
 
 		map.AddTBStringPK(CHAttr.MyPK, null, "MyPK", false, false, 0, 50, 5);
 			//map.AddMyPK();
 
+			//查询条件.
 		map.AddSearchAttr(CHAttr.FK_Dept);
-		map.AddSearchAttr(CHAttr.FK_NY);
+		   // map.AddSearchAttr(CHAttr.FK_NY);
 		map.AddSearchAttr(CHAttr.CHSta);
 		map.AddSearchAttr(CHAttr.FK_Flow);
 
+			//方法.
 		RefMethod rm = new RefMethod();
 		rm.Title = "打开流程轨迹";
 		rm.ClassMethodName = this.toString() + ".DoOpen";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/FileType/doc.gif";
+		rm.RefMethodType = En.RefMethodType.RightFrameOpen;
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);
 
@@ -323,14 +302,14 @@ public class CHExt extends EntityMyPK
 			//rm.Icon = "/WF/Img/FileType/pdf.gif";
 			//map.AddRefMethod(rm);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	public final String DoOpen()
 	{
-		return Glo.getCCFlowAppPath() + "WF/WFRpt.jsp?FK_Flow" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&OID=" + this.getWorkID();
+		return "../../WFRpt.htm?FK_Flow" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&OID=" + this.getWorkID();
 	}
 }

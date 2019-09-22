@@ -1,16 +1,18 @@
 package BP.Sys.FrmUI;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.*;
+import java.util.*;
 
 /** 
-实体属性s
+ 实体属性s
 */
 public class MapAttrSFSQLs extends EntitiesMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 实体属性s
 	*/
@@ -23,8 +25,13 @@ public class MapAttrSFSQLs extends EntitiesMyPK
 	@Override
 	public Entity getGetNewEntity()
 	{
-		return new MapAttrSFTable();
+		return new MapAttrSFSQL();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -32,7 +39,7 @@ public class MapAttrSFSQLs extends EntitiesMyPK
 	*/
 	public final List<MapAttrSFSQL> ToJavaList()
 	{
-		return (List<MapAttrSFSQL>)(Object)this;
+		return (List<MapAttrSFSQL>)this;
 	}
 	/** 
 	 转化成list
@@ -42,10 +49,12 @@ public class MapAttrSFSQLs extends EntitiesMyPK
 	public final ArrayList<MapAttrSFSQL> Tolist()
 	{
 		ArrayList<MapAttrSFSQL> list = new ArrayList<MapAttrSFSQL>();
-		for (int i = 0; i < this.size(); i++)
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((MapAttrSFSQL)this.get(i));
+			list.add((MapAttrSFSQL)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

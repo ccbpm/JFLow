@@ -1,5 +1,10 @@
 package BP.WF.XML;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.Sys.XML.*;
+import BP.WF.*;
 
 /** 
  事件列表

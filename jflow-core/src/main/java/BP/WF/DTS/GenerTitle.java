@@ -1,10 +1,14 @@
 package BP.WF.DTS;
 
-import BP.En.Method;
+import BP.DA.*;
+import BP.Web.Controls.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  重新生成标题
- 
 */
 public class GenerTitle extends Method
 {
@@ -15,9 +19,11 @@ public class GenerTitle extends Method
 	{
 		this.Title = "重新生成标题（为所有的流程，根据新的规则生成流程标题）";
 		this.Help = "您也可以打开流程属性一个个的单独执行。";
+		this.GroupName = "流程维护";
 	}
 	/** 
 	 设置执行变量
+	 
 	 @return 
 	*/
 	@Override
@@ -26,13 +32,11 @@ public class GenerTitle extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
 			return true;
 		}
@@ -42,13 +46,12 @@ public class GenerTitle extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()
 	{
-		BP.WF.Template.FlowExts ens = new BP.WF.Template.FlowExts();
-		for (BP.WF.Template.FlowExt en : ens.ToJavaList())
+		BP.WF.Template.FlowSheets ens = new BP.WF.Template.FlowSheets();
+		for (BP.WF.Template.FlowSheet en : ens)
 		{
 			en.DoGenerTitle();
 		}

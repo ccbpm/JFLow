@@ -1,34 +1,36 @@
 package BP.WF;
 
-import java.util.ArrayList;
-
-import BP.DA.DBAccess;
-import BP.DA.DataRow;
-import BP.DA.DataTable;
-import BP.WF.Template.DataStoreModel;
+import BP.En.*;
+import BP.DA.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.Sys.*;
+import BP.WF.Template.*;
+import BP.WF.Data.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
+import java.math.*;
 
 /** 
  工作节点集合.
- 
 */
-public class WorkNodes extends ArrayList<WorkNode>
+public class WorkNodes extends ArrayList<Object>
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 他的工作s
-	 * @throws Exception 
-	  
 	*/
-	public final Works getGetWorks() throws Exception
+	public final Works getGetWorks()
 	{
-		if (this.size() == 0)
+		if (this.Count == 0)
 		{
-			throw new RuntimeException("@初始化失败，没有找到任何节点。");
+			throw new RuntimeException(BP.WF.Glo.multilingual("@初始化失败，没有找到任何节点。", "WorkNode", "not_found_pre_node_3"));
 		}
 
-		Works ens = this.getItem(0).getHisNode().getHisWorks();
-		ens.clear();
+		Works ens = this.get(0).getHisNode().getHisWorks();
+		ens.Clear();
 
 		for (WorkNode wn : this)
 		{
@@ -38,18 +40,17 @@ public class WorkNodes extends ArrayList<WorkNode>
 	}
 	/** 
 	 工作节点集合
-	 
 	*/
 	public WorkNodes()
 	{
 	}
 
-	public final int GenerByFID(Flow flow, long fid) throws Exception
+	public final int GenerByFID(Flow flow, long fid)
 	{
-		this.clear();
+		this.Clear();
 
 		Nodes nds = flow.getHisNodes();
-		for (Node nd : nds.ToJavaList())
+		for (Node nd : nds)
 		{
 			if (nd.getHisRunModel() == RunModel.SubThread)
 			{
@@ -65,7 +66,7 @@ public class WorkNodes extends ArrayList<WorkNode>
 
 			this.Add(new WorkNode(wk, nd));
 		}
-		return this.size();
+		return this.Count;
 	}
 	/** 
 	 这个方法有问题的
@@ -73,55 +74,48 @@ public class WorkNodes extends ArrayList<WorkNode>
 	 @param flow
 	 @param oid
 	 @return 
-	 * @throws Exception 
 	*/
-	public final int GenerByWorkID2014_01_06(Flow flow, long oid) throws Exception
+	public final int GenerByWorkID2014_01_06(Flow flow, long oid)
 	{
 		Nodes nds = flow.getHisNodes();
-		for (Node nd : nds.ToJavaList())
+		for (Node nd : nds)
 		{
 			Work wk = nd.GetWork(oid);
 			if (wk == null)
 			{
 				continue;
 			}
-			String table = "ND" + Integer.parseInt(flow.getNo()) + "Track";
+			String table = "ND" + Integer.parseInt(flow.No) + "Track";
 			String actionSQL = "SELECT EmpFrom,EmpFromT,RDT FROM " + table + " WHERE WorkID=" + oid + " AND NDFrom=" + nd.getNodeID() + " AND ActionType=" + ActionType.Forward.getValue();
 			DataTable dt = DBAccess.RunSQLReturnTable(actionSQL);
-			if (dt.Rows.size() == 0)
+			if (dt.Rows.Count == 0)
 			{
 				continue;
 			}
 
-			wk.setRec(dt.Rows.get(0).getValue("EmpFrom").toString());
-			wk.setRecText(dt.Rows.get(0).getValue("EmpFromT").toString());
-			wk.SetValByKey("RDT", dt.Rows.get(0).getValue("RDT").toString());
+			wk.setRec(dt.Rows[0]["EmpFrom"].toString());
+			wk.setRecText(dt.Rows[0]["EmpFromT"].toString());
+			wk.SetValByKey("RDT", dt.Rows[0]["RDT"].toString());
 			this.Add(new WorkNode(wk, nd));
 		}
-		return this.size();
+		return this.Count;
 	}
-	public final int GenerByWorkID(Flow flow, long oid) throws NumberFormatException, Exception
+	public final int GenerByWorkID(Flow flow, long oid)
 	{
 		/*退回 ,需要判断跳转的情况，如果是跳转的需要退回到他开始执行的节点
 		* 跳转的节点在WF_GenerWorkerlist中不存在该信息
 		*/
-		String table = "ND" + Integer.parseInt(flow.getNo()) + "Track";
-		String actionSQL = "SELECT EmpFrom,EmpFromT,RDT,NDFrom FROM " + table + " WHERE WorkID=" + oid
-						  +" AND (ActionType=" + ActionType.Start.getValue() 
-						  +" OR ActionType=" + ActionType.Forward.getValue() 
-						  +" OR ActionType=" + ActionType.ForwardFL.getValue() 
-						  +" OR ActionType=" + ActionType.ForwardHL.getValue() 
-						  + " OR ActionType=" + ActionType.SubThreadForward.getValue() 
-						  + " OR ActionType=" + ActionType.Skip.getValue() 
-						  + " )"
-						  +" AND NDFrom IN(SELECT FK_Node FROM WF_Generworkerlist WHERE WorkID=" + oid+")"
-						  + " ORDER BY RDT";
+		String table = "ND" + Integer.parseInt(flow.No) + "Track";
+
+		String actionSQL = "SELECT EmpFrom,EmpFromT,RDT,NDFrom FROM " + table + " WHERE WorkID=" + oid + " AND (ActionType=" + ActionType.Start.getValue() + " OR ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.ForwardHL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + " OR ActionType=" + ActionType.Skip.getValue() + " )"
+					  + " AND NDFrom IN(SELECT FK_Node FROM WF_Generworkerlist WHERE WorkID=" + oid + ")"
+					  + " ORDER BY RDT";
 		DataTable dt = DBAccess.RunSQLReturnTable(actionSQL);
 
 		String nds = "";
 		for (DataRow dr : dt.Rows)
 		{
-			Node nd = new Node(Integer.parseInt(dr.getValue("NDFrom").toString()));
+			Node nd = new Node(Integer.parseInt(dr.get("NDFrom").toString()));
 			Work wk = nd.GetWork(oid);
 			if (wk == null)
 			{
@@ -129,25 +123,24 @@ public class WorkNodes extends ArrayList<WorkNode>
 			}
 
 			// 处理重复的问题.
-			if (nds.contains((new Integer(nd.getNodeID())).toString() + ",") == true)
+			if (nds.contains(String.valueOf(nd.getNodeID()) + ",") == true)
 			{
 				continue;
 			}
-			nds += (new Integer(nd.getNodeID())).toString() + ",";
+			nds += String.valueOf(nd.getNodeID()) + ",";
 
-			wk.setRec(dr.getValue("EmpFrom").toString());
-			wk.setRecText(dr.getValue("EmpFromT").toString());
-			wk.SetValByKey("RDT", dr.getValue("RDT").toString());
+
+			wk.setRec(dr.get("EmpFrom").toString());
+			wk.setRecText(dr.get("EmpFromT").toString());
+			wk.SetValByKey("RDT", dr.get("RDT").toString());
 			this.Add(new WorkNode(wk, nd));
 		}
-		return this.size();
+		return this.Count;
 	}
 	/** 
 	 删除工作流程
-	 * @throws Exception 
-	 
 	*/
-	public final void DeleteWorks() throws Exception
+	public final void DeleteWorks()
 	{
 		for (WorkNode wn : this)
 		{
@@ -158,7 +151,11 @@ public class WorkNodes extends ArrayList<WorkNode>
 			wn.getHisWork().Delete();
 		}
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 方法
 	/** 
 	 增加一个WorkNode
 	 
@@ -166,14 +163,15 @@ public class WorkNodes extends ArrayList<WorkNode>
 	*/
 	public final void Add(WorkNode wn)
 	{
-		this.add(wn);
+		this.InnerList.add(wn);
 	}
 	/** 
 	 根据位置取得数据
-	 
 	*/
-	public final WorkNode getItem(int index)
+	public final WorkNode get(int index)
 	{
-		return (WorkNode)this.get(index);
+		return (WorkNode)this.InnerList[index];
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

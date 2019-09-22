@@ -1,154 +1,113 @@
 package BP.WF;
 
-/**
- * 工作发送返回对象
- * 
- */
-public class SendReturnObj {
-	/**
-	 * 消息标记
-	 * 
-	 */
+/** 
+ 工作发送返回对象
+*/
+public class SendReturnObj
+{
+	/** 
+	 消息标记
+	*/
 	public String MsgFlag = null;
-
-	/**
-	 * 消息标记描述
-	 * 
-	 */
-	public final String getMsgFlagDesc() {
-		if (MsgFlag == null) {
+	/** 
+	 消息标记描述
+	*/
+	public final String getMsgFlagDesc()
+	{
+		if (MsgFlag == null)
+		{
 			throw new RuntimeException("@没有标记");
 		}
 
-		if (MsgFlag.equals(SendReturnMsgFlag.VarAcceptersID)) {
-			return "接受人ID";
-		}
-
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarAcceptersName)) {
-			return "接受人名称";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarAcceptersNID)) {
-			return "接受人ID集合";
-		}
-
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarCurrNodeID)) {
-			return "当前节点ID";
-		}
-
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarCurrNodeName)) {
-			return "接受人集合的名称(用逗号分开)";
-		}
-
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarToNodeID)) {
-			return "到达节点ID";
-		}
-
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarToNodeName)) {
-			return "到达节点名称";
-		}
-
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarTreadWorkIDs)) {
-			return "子线程的WorkIDs";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.BillInfo)) {
-			return "单据信息";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.CCMsg)) {
-			return "抄送信息";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.CondInfo)) {
-			return "条件信息";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.CurrWorkOver)) {
-			return "当前的工作已经完成";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.EditAccepter)) {
-			return "编辑接受者";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.End)) {
-			return "当前的流程已经结束";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.FenLiuInfo)) {
-			return "分流信息";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.FlowOver)) {
-			return "当前流程已经完成";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.FlowOverByCond)) {
-			return "符合完成条件，流程完成.";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.HeLiuOver)) {
-			return "分流完成";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.MacthFlowOver)) {
-			return "符合工作流程完成条件";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.NewFlowUnSend)) {
-			return "新建流程";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.OverCurr)) {
-			return "当前流程完成";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.Rpt)) {
-			return "报表";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.SendSuccessMsg)) {
-			return "发送成功信息";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.SendSuccessMsgErr)) {
-			return "发送错误";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.SendWhen)) {
-			return "发送时";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.ToEmps)) {
-			return "到达人员";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.UnSend)) {
-			return "撤消发送";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.ToEmpExt)) {
-			return "到人员的扩展信息";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.VarWorkID)) {
-			return "工作ID";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.IsStopFlow)) {
-			return "流程是否结束";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.WorkRpt)) {
-			return "工作报告";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.WorkStartNode)) {
-			return "启动节点";
-		}
-		else if (MsgFlag.equals(SendReturnMsgFlag.AllotTask)) {
-			return "分配任务";
-		} else {
-			return "信息";
+		switch (MsgFlag)
+		{
+			case SendReturnMsgFlag.VarAcceptersID:
+				return "接受人ID";
+			case SendReturnMsgFlag.VarAcceptersName:
+				return "接受人名称";
+			case SendReturnMsgFlag.VarAcceptersNID:
+				return "接受人ID集合";
+			case SendReturnMsgFlag.VarCurrNodeID:
+				return "当前节点ID";
+			case SendReturnMsgFlag.VarCurrNodeName:
+				return "接受人集合的名称(用逗号分开)";
+			case SendReturnMsgFlag.VarToNodeID:
+				return "到达节点ID";
+			case SendReturnMsgFlag.VarToNodeName:
+				return "到达节点名称";
+			case SendReturnMsgFlag.VarTreadWorkIDs:
+				return "子线程的WorkIDs";
+			case SendReturnMsgFlag.BillInfo:
+				return "单据信息";
+			case SendReturnMsgFlag.CCMsg:
+				return "抄送信息";
+			case SendReturnMsgFlag.CondInfo:
+				return "条件信息";
+			case SendReturnMsgFlag.CurrWorkOver:
+				return "当前的工作已经完成";
+			case SendReturnMsgFlag.EditAccepter:
+				return "编辑接受者";
+			case SendReturnMsgFlag.End:
+				return "当前的流程已经结束";
+			case SendReturnMsgFlag.FenLiuInfo:
+				return "分流信息";
+			case SendReturnMsgFlag.FlowOver:
+				return "当前流程已经完成";
+			case SendReturnMsgFlag.FlowOverByCond:
+				return "符合完成条件，流程完成.";
+			case SendReturnMsgFlag.HeLiuOver:
+				return "分流完成";
+			case SendReturnMsgFlag.MacthFlowOver:
+				return "符合工作流程完成条件";
+			case SendReturnMsgFlag.NewFlowUnSend:
+				return "新建流程";
+			case SendReturnMsgFlag.OverCurr:
+				return "当前流程完成";
+			case SendReturnMsgFlag.Rpt:
+				return "报表";
+			case SendReturnMsgFlag.SendSuccessMsg:
+				return "发送成功信息";
+			case SendReturnMsgFlag.SendSuccessMsgErr:
+				return "发送错误";
+			case SendReturnMsgFlag.SendWhen:
+				return "发送时";
+			case SendReturnMsgFlag.ToEmps:
+				return "到达人员";
+			case SendReturnMsgFlag.UnSend:
+				return "撤消发送";
+			case SendReturnMsgFlag.ToEmpExt:
+				return "到人员的扩展信息";
+			case SendReturnMsgFlag.VarWorkID:
+				return "工作ID";
+			case SendReturnMsgFlag.IsStopFlow:
+				return "流程是否结束";
+			case SendReturnMsgFlag.WorkRpt:
+				return "工作报告";
+			case SendReturnMsgFlag.WorkStartNode:
+				return "启动节点";
+			case SendReturnMsgFlag.AllotTask:
+				return "分配任务";
+			default:
+				return "信息:" + MsgFlag;
+				//  throw new Exception("@没有判断的标记...");
 		}
 	}
-
-	/**
-	 * 消息类型
-	 * 
-	 */
+	/** 
+	 消息类型
+	*/
 	public SendReturnMsgType HisSendReturnMsgType = SendReturnMsgType.Info;
-	/**
-	 * 消息内容
-	 * 
-	 */
+	/** 
+	 消息内容
+	*/
 	public String MsgOfText = null;
-	/**
-	 * 消息内容Html
-	 * 
-	 */
+	/** 
+	 消息内容Html
+	*/
 	public String MsgOfHtml = null;
-
-	/**
-	 * 发送消息
-	 * 
-	 */
-	public SendReturnObj() {
+	/** 
+	 发送消息
+	*/
+	public SendReturnObj()
+	{
 	}
 }

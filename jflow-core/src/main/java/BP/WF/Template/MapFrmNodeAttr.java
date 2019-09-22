@@ -1,38 +1,40 @@
 package BP.WF.Template;
 
-import BP.Sys.MapDataAttr;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
-public class MapFrmNodeAttr extends MapDataAttr{
+/** 
+ 自由表单属性 attr
+*/
+public class MapFrmNodeAttr extends MapDataAttr
+{
 	/** 
-	保存标签
-	
+	 保存标签
 	*/
 	public static final String BtnSaveLab = "BtnSaveLab";
 	/** 
-	保存是否启用
-	
+	 保存是否启用
 	*/
 	public static final String BtnSaveEnable = "BtnSaveEnable";
-	
 	/** 
-	删除标签
-	
+	 删除标签
 	*/
 	public static final String BtnDelLab = "BtnDelLab";
 	/** 
-	删除是否启用
-	
+	 删除是否启用
 	*/
 	public static final String BtnDelEnable = "BtnDelEnable";
-	
+
 	/** 
-	打印标签
-	
+	 打印标签
 	*/
 	public static final String BtnPrintLab = "BtnPrintLab";
 	/** 
-	打印是否启用
-	
+	 打印是否启用
 	*/
 	public static final String BtnPrintEnable = "BtnPrintEnable";
 }

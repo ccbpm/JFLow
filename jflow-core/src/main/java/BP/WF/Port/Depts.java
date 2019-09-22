@@ -1,8 +1,10 @@
 package BP.WF.Port;
 
-import BP.En.EntitiesNoName;
-import BP.En.Entity;
-import BP.En.QueryObject;
+import BP.DA.*;
+import BP.En.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
 部门集合
@@ -11,21 +13,21 @@ public class Depts extends EntitiesNoName
 {
 	/** 
 	 查询全部。
+	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	public int RetrieveAll() throws Exception
+	public int RetrieveAll()
 	{
-		if (BP.Web.WebUser.getNo().equals("admin"))
+		if (BP.Web.WebUser.No.equals("admin"))
 		{
 			return super.RetrieveAll();
 		}
 
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(DeptAttr.No, " = ", BP.Web.WebUser.getFK_Dept());
+		qo.AddWhere(DeptAttr.No, " = ", BP.Web.WebUser.FK_Dept);
 		qo.addOr();
-		qo.AddWhere(DeptAttr.ParentNo, " = ", BP.Web.WebUser.getFK_Dept());
+		qo.AddWhere(DeptAttr.ParentNo, " = ", BP.Web.WebUser.FK_Dept);
 		return qo.DoQuery();
 	}
 	/** 
@@ -41,26 +43,34 @@ public class Depts extends EntitiesNoName
 	*/
 	public Depts()
 	{
+
 	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<Dept> ToJavaList()
+	public final List<Dept> ToJavaList()
 	{
-		return (java.util.List<Dept>)(Object)this;
+		return (List<Dept>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<Dept> Tolist()
+	public final ArrayList<Dept> Tolist()
 	{
-		java.util.ArrayList<Dept> list = new java.util.ArrayList<Dept>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<Dept> list = new ArrayList<Dept>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((Dept)this.get(i));
+			list.add((Dept)this[i]);
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

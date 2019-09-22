@@ -1,50 +1,59 @@
 package BP.Sys;
 
+import BP.DA.*;
 import BP.En.*;
+import BP.Web.*;
+import java.util.*;
 
 /** 
  用户自定义表s
- 
 */
 public class SFTables extends EntitiesNoName
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
 	/** 
 	 用户自定义表s
-	 
 	*/
 	public SFTables()
 	{
 	}
 	/** 
 	 得到它的 Entity
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
 	{
 		return new SFTable();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final java.util.List<SFTable> ToJavaList()
+	public final List<SFTable> ToJavaList()
 	{
-		return (java.util.List<SFTable>)(Object)this;
+		return (List<SFTable>)this;
 	}
 	/** 
 	 转化成list
+	 
 	 @return List
 	*/
-	public final java.util.ArrayList<SFTable> Tolist()
+	public final ArrayList<SFTable> Tolist()
 	{
-		java.util.ArrayList<SFTable> list = new java.util.ArrayList<SFTable>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<SFTable> list = new ArrayList<SFTable>();
+		for (int i = 0; i < this.Count; i++)
 		{
 			list.add((SFTable)this.get(i));
 		}
 		return list;
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

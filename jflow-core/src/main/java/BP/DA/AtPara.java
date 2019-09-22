@@ -1,48 +1,43 @@
 package BP.DA;
 
-import java.util.Hashtable;
+import java.util.*;
 
 public class AtPara
 {
-	/**
-	 * 工作
-	 */
+	/** 
+	 工作
+	*/
 	public final String getFK_Work()
 	{
 		return this.GetValStrByKey("FK_Work");
 	}
-	
 	public final String getFK_ZJ()
 	{
 		return this.GetValStrByKey("FK_ZJ");
 	}
-	
 	public final int getOID()
 	{
 		return this.GetValIntByKey("OID");
 	}
-	
 	public final String getDoType()
 	{
 		return this.GetValStrByKey("DoType");
 	}
-	
 	public AtPara()
 	{
 	}
-	
-	/**
-	 * 执行一个para
-	 * 
-	 * @param para
-	 */
+	/** 
+	 执行一个para
+	 
+	 @param para
+	*/
 	public AtPara(String para)
 	{
 		if (para == null)
 		{
 			return;
 		}
-		
+
 		String[] strs = para.split("[@]", -1);
 		for (String str : strs)
 		{
@@ -54,7 +49,8 @@ public class AtPara
 			if (mystr.length == 2)
 			{
 				this.SetVal(mystr[0], mystr[1]);
-			} else
+			}
+			else
 			{
 				String v = "";
 				for (int i = 1; i < mystr.length; i++)
@@ -62,7 +58,8 @@ public class AtPara
 					if (i == 1)
 					{
 						v += mystr[i];
-					} else
+					}
+					else
 					{
 						v += "=" + mystr[i];
 					}
@@ -71,29 +68,27 @@ public class AtPara
 			}
 		}
 	}
-	
 	public final void SetVal(String key, String val)
 	{
 		try
 		{
 			this.getHisHT().put(key, val);
-		} catch (java.lang.Exception e)
+		}
+		catch (java.lang.Exception e)
 		{
-			this.getHisHT().put(key, "");
+			this.getHisHT().put(key, val);
 		}
 	}
-	
 	public final String GetValStrByKey(String key)
 	{
-		try
-		{
-			return this.getHisHT().get(key).toString();
-		} catch (java.lang.Exception e)
+		Object tempVar = this.getHisHT().get(key);
+		String str = tempVar instanceof String ? (String)tempVar : null;
+		if (str == null)
 		{
 			return "";
 		}
+		return str;
 	}
-	
 	public final boolean GetValBoolenByKey(String key)
 	{
 		if (this.GetValIntByKey(key) == 0)
@@ -102,79 +97,78 @@ public class AtPara
 		}
 		return true;
 	}
-	
 	public final boolean GetValBoolenByKey(String key, boolean isNullAsVal)
 	{
-		try
-		{
-			int i = Integer.parseInt(this.GetValStrByKey(key));
-			if (i <= 0)
-			{
-				return false;
-			}
-			return true;
-		} catch (java.lang.Exception e)
+		String str = this.GetValStrByKey(key);
+		if (DataType.IsNullOrEmpty(str) == true)
 		{
 			return isNullAsVal;
 		}
+
+		if (str.equals("0") == true)
+		{
+			return false;
+		}
+		return true;
 	}
-	
+
 	public final float GetValFloatByKey(String key)
+	{
+		return GetValFloatByKey(key, 0);
+	}
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public float GetValFloatByKey(string key, float isNullAsVal = 0)
+	public final float GetValFloatByKey(String key, float isNullAsVal)
 	{
 		try
 		{
 			return Float.parseFloat(this.GetValStrByKey(key));
-		} catch (java.lang.Exception e)
+		}
+		catch (java.lang.Exception e)
 		{
-			return 0;
+			return isNullAsVal;
 		}
 	}
-	
+
 	public final int GetValIntByKey(String key)
 	{
-		try
-		{
-			return Integer.parseInt(this.GetValStrByKey(key));
-		} catch (java.lang.Exception e)
-		{
-			return 0;
-		}
+		return GetValIntByKey(key, 0);
 	}
-	
-	
+
+//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+//ORIGINAL LINE: public int GetValIntByKey(string key, int isNullAsVal = 0)
 	public final int GetValIntByKey(String key, int isNullAsVal)
-		  {
-			  try
-			  {
-				  return Integer.parseInt(this.GetValStrByKey(key));
-			  }
-			  catch (java.lang.Exception e)
-			  {
-				  return isNullAsVal;
-			  }
-		  }
+	{
+		String str = this.GetValStrByKey(key);
+		if (str.equals("undefined") || DataType.IsNullOrEmpty(str))
+		{
+			return isNullAsVal;
+		}
+
+		return Integer.parseInt(str);
+
+	}
 	public final long GetValInt64ByKey(String key)
 	{
 		try
 		{
 			return Long.parseLong(this.GetValStrByKey(key));
-		} catch (java.lang.Exception e)
+		}
+		catch (java.lang.Exception e)
 		{
 			return 0;
 		}
 	}
-	
-	private Hashtable<String, String> _HisHT = null;
-	
-	public final Hashtable<String, String> getHisHT()
+	private Hashtable _HisHT = null;
+	public final Hashtable getHisHT()
 	{
 		if (_HisHT == null)
 		{
-			_HisHT = new Hashtable<String, String>();
+			_HisHT = new Hashtable();
 		}
 		return _HisHT;
 	}
-	
 	public final String GenerAtParaStrs()
 	{
 		String s = "";

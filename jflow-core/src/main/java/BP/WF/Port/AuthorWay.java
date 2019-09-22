@@ -1,5 +1,13 @@
 package BP.WF.Port;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Web.*;
+import BP.WF.*;
+import java.util.*;
+import java.time.*;
 
 /** 
  授权方式
@@ -18,6 +26,8 @@ public enum AuthorWay
 	 指定流程授权
 	*/
 	SpecFlows;
+
+	public static final int SIZE = java.lang.Integer.SIZE;
 
 	public int getValue()
 	{

@@ -2,16 +2,17 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import java.util.*;
 
 /** 
  超连接
- 
 */
 public class FrmLink extends EntityMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 FontStyle
-	 
 	*/
 	public final String getFontStyle()
 	{
@@ -23,17 +24,10 @@ public class FrmLink extends EntityMyPK
 	}
 	public final String getFontColorHtml()
 	{
-		try {
-			return PubClass.ToHtmlColor(this.getFontColor());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return PubClass.ToHtmlColor(this.getFontColor());
 	}
 	/** 
 	 FontColor
-	 
 	*/
 	public final String getFontColor()
 	{
@@ -53,7 +47,6 @@ public class FrmLink extends EntityMyPK
 	}
 	/** 
 	 Font
-	 
 	*/
 	public final String getFontName()
 	{
@@ -65,7 +58,6 @@ public class FrmLink extends EntityMyPK
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getY()
 	{
@@ -77,7 +69,6 @@ public class FrmLink extends EntityMyPK
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getX()
 	{
@@ -89,7 +80,6 @@ public class FrmLink extends EntityMyPK
 	}
 	/** 
 	 FontSize
-	 
 	*/
 	public final int getFontSize()
 	{
@@ -101,7 +91,6 @@ public class FrmLink extends EntityMyPK
 	}
 	/** 
 	 FK_MapData
-	 
 	*/
 	public final String getFK_MapData()
 	{
@@ -113,7 +102,6 @@ public class FrmLink extends EntityMyPK
 	}
 	/** 
 	 Text
-	 
 	*/
 	public final String getText()
 	{
@@ -147,9 +135,13 @@ public class FrmLink extends EntityMyPK
 	{
 		this.SetValByKey(FrmLabAttr.IsItalic, value);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 超连接
-	 
 	*/
 	public FrmLink()
 	{
@@ -158,16 +150,14 @@ public class FrmLink extends EntityMyPK
 	 超连接
 	 
 	 @param mypk
-	 * @throws Exception 
 	*/
-	public FrmLink(String mypk) throws Exception
+	public FrmLink(String mypk)
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
@@ -180,8 +170,11 @@ public class FrmLink extends EntityMyPK
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
+		map.IndexField = FrmImgAthDBAttr.FK_MapData;
+
 
 		map.AddMyPK();
+
 		map.AddTBString(FrmLinkAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
 		map.AddTBString(FrmLinkAttr.Text, "New Link", "Label", true, false, 0, 500, 20);
 
@@ -200,10 +193,12 @@ public class FrmLink extends EntityMyPK
 		map.AddTBInt(FrmLabAttr.IsBold, 0, "IsBold", false, false);
 		map.AddTBInt(FrmLabAttr.IsItalic, 0, "IsItalic", false, false);
 
-		map.AddTBString(FrmBtnAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		map.AddTBString(FrmLabAttr.GUID, null, "GUID", true, false, 0, 128, 20);
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

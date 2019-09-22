@@ -1,110 +1,56 @@
 package BP.WF;
 
-import java.util.Properties;
-
-import javax.mail.Authenticator;
-import javax.mail.Message.RecipientType;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
-import BP.DA.DBAccess;
-import BP.DA.DataType;
-import BP.Difference.Handler.PortalWebService;
-import BP.En.EntityMyPK;
-import BP.En.Map;
-import BP.En.UAC;
-import BP.Sys.SystemConfig;
-import BP.Tools.StringHelper;
-import BP.Web.WebUser;
+import BP.DA.*;
+import BP.En.*;
+import BP.Web.*;
+import BP.Sys.*;
+import BP.WF.Port.*;
+import java.util.*;
 
 /** 
  消息
 */
 public class SMS extends EntityMyPK
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 新方法 2013
 	/** 
 	 发送消息
+	 
 	 @param userNo 接受人
 	 @param msgTitle 标题
 	 @param msgDoc 内容
 	 @param msgFlag 标记
 	 @param msgType 类型
 	 @param paras 扩展参数
-	 * @throws Exception 
 	*/
-	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras) throws Exception
+	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras)
 	{
 
 		SMS sms = new SMS();
-		sms.setMyPK(DBAccess.GenerGUID());
+		sms.MyPK = DBAccess.GenerGUID();
 		sms.setHisEmailSta(MsgSta.UnRun);
 
-		sms.setSender(WebUser.getNo());
+		sms.setSender(WebUser.No);
 		sms.setSendToEmpNo(userNo);
 
 		sms.setTitle(msgTitle);
 		sms.setDocOfEmail(msgDoc);
 
-		sms.setSender(BP.Web.WebUser.getNo());
-		sms.setRDT(BP.DA.DataType.getCurrentDataTime());
+		sms.setSender(BP.Web.WebUser.No);
+		sms.setRDT(BP.DA.DataType.CurrentDataTime);
 
 		sms.setMsgFlag(msgFlag); // 消息标志.
 		sms.setMsgType(msgType); // 消息类型.'
 
 		sms.setAtPara(paras);
-//		sms.afterInsert();
 		sms.Insert();
 	}
-	/** 
-	 发送消息
-	 @param mobileNum 手机号吗
-	 @param mobileInfo 短信信息
-	 @param email 邮件
-	 @param title 标题
-	 @param infoBody 邮件内容
-	 @param msgFlag 消息标记，可以为空。
-	 @param guestNo 用户编号
-	 * @throws Exception 
-	*/
-	public static void SendMsg(String mobileNum, String mobileInfo, String email, String title, String infoBody, String msgFlag, String msgType, String guestNo) throws Exception
-	{
-		SMS sms = new SMS();
-		sms.setSender(WebUser.getNo());
-		sms.setRDT(BP.DA.DataType.getCurrentDataTimess());
-		sms.setSendToEmpNo(guestNo);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 新方法
 
-		// 邮件信息
-		sms.setHisEmailSta(MsgSta.UnRun);
-		sms.setTitle(title);
-		sms.setDocOfEmail(infoBody);
-
-		//手机信息.
-		sms.setMobile(mobileNum);
-		sms.setHisMobileSta(MsgSta.UnRun);
-		sms.setMobileInfo(mobileInfo);
-		sms.setMsgFlag(msgFlag); // 消息标志.
-
-		if (DotNetToJavaStringHelper.isNullOrEmpty(msgFlag))
-		{
-			sms.setMyPK(DBAccess.GenerGUID());
-			sms.Insert();
-		}
-		else
-		{
-			// 如果已经有该PK,就不让插入了.
-			try
-			{
-				sms.setMyPK(msgFlag);
-				sms.Insert();
-			}
-			catch (java.lang.Exception e)
-			{
-			}
-		}
-	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 手机短信属性
 	/** 
 	 手机号码
 	*/
@@ -129,7 +75,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 手机信息
-	 
 	*/
 	public final String getMobileInfo()
 	{
@@ -139,13 +84,13 @@ public class SMS extends EntityMyPK
 	{
 		SetValByKey(SMSAttr.MobileInfo, value);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
- 
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region  邮件属性
 	/** 
 	 参数
-	 
 	*/
 	public final String getAtPara()
 	{
@@ -157,7 +102,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 邮件状态
-	 
 	*/
 	public final MsgSta getHisEmailSta()
 	{
@@ -169,7 +113,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 Email
-	 
 	*/
 	public final String getEmail()
 	{
@@ -181,7 +124,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 发送给
-	 
 	*/
 	public final String getSendToEmpNo()
 	{
@@ -209,7 +151,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 消息标记(可以用它来避免发送重复)
-	 
 	*/
 	public final String getMsgFlag()
 	{
@@ -221,7 +162,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 类型
-	 
 	*/
 	public final String getMsgType()
 	{
@@ -233,7 +173,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 发送人
-	 
 	*/
 	public final String getSender()
 	{
@@ -245,7 +184,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 记录日期
-	 
 	*/
 	public final String getRDT()
 	{
@@ -257,7 +195,6 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 标题
-	 
 	*/
 	public final String getTitle()
 	{
@@ -269,15 +206,15 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 邮件内容
-	 
 	*/
 	public final String getDocOfEmail()
 	{
 		String doc = this.GetValStringByKey(SMSAttr.EmailDoc);
-		if (DotNetToJavaStringHelper.isNullOrEmpty(doc))
+		if (DataType.IsNullOrEmpty(doc))
 		{
 			return this.getTitle();
 		}
+
 		return doc.replace('~', '\'');
 	}
 	public final void setDocOfEmail(String value)
@@ -286,29 +223,45 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 邮件内容.
-	 
 	*/
 	public final String getDoc()
 	{
 		String doc = this.GetValStringByKey(SMSAttr.EmailDoc);
-		if (StringHelper.isNullOrEmpty(doc))
+		if (DataType.IsNullOrEmpty(doc))
 		{
 			return this.getTitle();
 		}
 		return doc.replace('~', '\'');
+
+		return this.getDocOfEmail();
 	}
 	public final void setDoc(String value)
 	{
 		SetValByKey(SMSAttr.EmailDoc, value);
 	}
-
+	/** 
+	 打开的连接
+	*/
+	public final String getOpenURL()
+	{
+		return this.GetParaString(SMSAttr.OpenUrl);
+	}
+	public final void setOpenURL(String value)
+	{
+		this.SetPara(SMSAttr.OpenUrl, value);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
+	public final String getPushModel()
+	{
+		return this.GetParaString(SMSAttr.PushModel);
+	}
 
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造函数
 	/** 
 	 UI界面上的访问控制
-	 
 	*/
 	@Override
 	public UAC getHisUAC()
@@ -319,21 +272,19 @@ public class SMS extends EntityMyPK
 	}
 	/** 
 	 消息
-	 
 	*/
 	public SMS()
 	{
 	}
 	/** 
 	 Map
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("Sys_SMS", "消息");
@@ -352,7 +303,7 @@ public class SMS extends EntityMyPK
 		map.AddTBInt(SMSAttr.EmailSta, MsgSta.UnRun.getValue(), "EmaiSta消息状态", true, true);
 		map.AddTBString(SMSAttr.EmailTitle, null, "标题", false, true, 0, 3000, 20);
 		map.AddTBStringDoc(SMSAttr.EmailDoc, null, "内容", false, true);
-		map.AddTBDateTime(SMSAttr.SendDT,null, "发送时间", false, false);
+		map.AddTBDateTime(SMSAttr.SendDT, null, "发送时间", false, false);
 
 		map.AddTBInt(SMSAttr.IsRead, 0, "是否读取?", true, true);
 		map.AddTBInt(SMSAttr.IsAlert, 0, "是否提示?", true, true);
@@ -363,11 +314,12 @@ public class SMS extends EntityMyPK
 			//其他参数.
 		map.AddTBAtParas(500);
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
+
 	/** 
 	 发送邮件
 	 
@@ -375,113 +327,176 @@ public class SMS extends EntityMyPK
 	 @param mailTitle
 	 @param mailDoc
 	 @return 
-	 * @throws Exception 
 	*/
-	public static boolean SendEmailNow(String mail, String mailTitle, String mailDoc) throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no equivalent in Java to the 'async' keyword:
+//ORIGINAL LINE: public static async Task<bool> SendEmailNowAsync(string mail, string mailTitle, string mailDoc)
+	public static Task<Boolean> SendEmailNowAsync(String mail, String mailTitle, String mailDoc)
 	{
-		 if(DataType.IsNullOrEmpty(mail) == true) 
-			 return false;
-		//邮件地址.return
-        final String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
-       
+//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to 'await' in Java:
+		return await Task.Run(() ->
+		{
+				try
+				{
+					System.Net.Mail.MailMessage myEmail = new System.Net.Mail.MailMessage();
 
-       final String emailPassword = SystemConfig.GetValByKey("SendEmailPass", "ccbpm123");
-		// 第一步：配置javax.mail.Session对象  
-		Properties props = new Properties(); 
-		props.setProperty("mail.transport.protocol", "smtp"); 
-		props.put("mail.smtp.host",SystemConfig.GetValByKey("SendEmailHost", "smtp.tom.com"));//发邮件地址
-		props.put("mail.smtp.port",SystemConfig.GetValByKeyInt("SendEmailPort", 25)); //端口号
-		props.put("mail.smtp.auth","true");//使用 STARTTLS安全连接  
-		Authenticator auth = new Authenticator() {
-			public PasswordAuthentication getPasswordAuthentication(){
-			    return new PasswordAuthentication(emailAddr,emailPassword);
-			 }
-		};
+					//邮件地址.
+					String emailAddr = SystemConfig.GetValByKey("SendEmailAddress", null);
+					if (emailAddr == null)
+					{
+						emailAddr = "ccbpmtester@tom.com";
+					}
 
-		Session mailSession = Session.getInstance(props,auth);
-	       		 
-		InternetAddress fromAddress = new InternetAddress(emailAddr);
-        InternetAddress toAddress = new InternetAddress(mail);
+					String emailPassword = SystemConfig.GetValByKey("SendEmailPass", null);
+					if (emailPassword == null)
+					{
+						emailPassword = "ccbpm123";
+					}
 
-		// 3. 创建一封邮件
-        MimeMessage message = new MimeMessage(mailSession);
-        
-        message.setFrom(fromAddress);
-        message.addRecipient(RecipientType.TO, toAddress);
-        
-        message.setSentDate(BP.Tools.DateUtils.currentDate());
-        message.setSubject(mailTitle);
-        message.setText(mailDoc);
-        
-        //4.发送Email,
-        Transport transport = mailSession.getTransport("smtp");//定义发送协议
-   
-		//transport.connect(SystemConfig.GetValByKey("SendEmailHost", "smtp.gmail.com"),emailAddr, emailPassword);
-		//登录邮箱
-        transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
-        
-        return true;
-		
-		
+					String displayName = SystemConfig.GetValByKey("SendEmailDisplayName", "驰骋BPM");
+
+
+					myEmail.From = new System.Net.Mail.MailAddress(emailAddr, displayName, System.Text.Encoding.UTF8);
+
+					myEmail.To.Add(mail);
+					myEmail.Subject = mailTitle;
+					myEmail.SubjectEncoding = System.Text.Encoding.UTF8; //邮件标题编码
+
+					myEmail.IsBodyHtml = true;
+
+					mailDoc = BP.DA.DataType.ParseText2Html(mailDoc);
+
+					myEmail.Body = mailDoc;
+					myEmail.BodyEncoding = System.Text.Encoding.UTF8; //邮件内容编码
+					myEmail.IsBodyHtml = true; //是否是HTML邮件
+					myEmail.Priority = MailPriority.High; // 邮件优先级
+
+					SmtpClient client = new SmtpClient();
+
+					//是否启用ssl?
+					boolean isEnableSSL = false;
+					String emailEnableSSL = SystemConfig.GetValByKey("SendEmailEnableSsl", null);
+					if (emailEnableSSL == null || emailEnableSSL.equals("0"))
+					{
+						isEnableSSL = false;
+					}
+					else
+					{
+						isEnableSSL = true;
+					}
+
+					client.Credentials = new System.Net.NetworkCredential(emailAddr, emailPassword);
+
+					//上述写你的邮箱和密码
+					client.Port = SystemConfig.GetValByKeyInt("SendEmailPort", 587); //使用的端口
+					client.Host = SystemConfig.GetValByKey("SendEmailHost", "smtp.gmail.com");
+
+					// 经过ssl加密.
+					if (SystemConfig.GetValByKeyInt("SendEmailEnableSsl", 1) == 1)
+					{
+						client.EnableSsl = true; //经过ssl加密.
+					}
+					else
+					{
+						client.EnableSsl = false; //经过ssl加密.
+					}
+
+					Object userState = myEmail;
+					client.SendAsync(myEmail, userState);
+					return true;
+				}
+				catch (RuntimeException e)
+				{
+					return false;
+				}
+		});
 	}
 	/** 
 	 插入之后执行的方法.
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	protected void afterInsert() throws Exception
+	protected void afterInsert()
 	{
-		/* 发送消息开关 */
-		if (BP.WF.Glo.getIsEnableSysMessage() == false)		
-			return;
-		
-		
 		try
 		{
-			//PortalInterfaceWSImpl soap = new PortalInterfaceWSImpl();
-			String xmlStr = "";
-			if (this.getHisEmailSta() == MsgSta.UnRun)
+			BP.WF.CCInterface.PortalInterfaceSoapClient soap = null;
+			if (this.getHisEmailSta() != MsgSta.UnRun)
 			{
-				//发送邮件
-				SendEmailNow(this.getEmail(), this.getTitle(), this.getDocOfEmail());
 				return;
 			}
 
-			if (this.getHisMobileSta() == MsgSta.UnRun)
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 发送邮件
+			if (this.getPushModel().contains("Email") == true && DataType.IsNullOrEmpty(this.getEmail()) == false)
 			{
-				String tag = "@MsgFlag=" + this.getMsgFlag() + "@MsgType=" + this.getMsgType() + this.getatPara() + "@Sender=" + this.getSender() + "@SenderName=" + BP.Web.WebUser.getName();
-				PortalWebService service = new PortalWebService();
-				switch (BP.WF.Glo.getShortMessageWriteTo())
+				String emailStrs = this.getEmail();
+				emailStrs = emailStrs.replace(",", ";");
+				emailStrs = emailStrs.replace("，", ";");
+
+				//包含多个邮箱
+				if (emailStrs.contains(";") == true)
 				{
-					case ToSMSTable: //写入消息表。
-						break;
-					case ToWebservices: // 写入webservices.
-						
-						service.SendToWebServices(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
-						//soap.SendToWebServices(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(),tag);
-						break;
-					case ToDingDing: // 写入dingding.
-						service.SendToDingDing(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
-						
-						break;
-					case ToWeiXin: // 写入微信.
-						service.SendToWeiXin(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
-						//soap.SendToWeiXin(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo());
-						break;
-					case CCIM: // 写入即时通讯系统.
-						service.SendToCCIM(this.getSender(), this.getSendToEmpNo(), this.getTitle(),this.getMobileInfo(),this.GetParaString("OpenUrl") , this.getMsgType());
-						
-						//soap.SendToCCIM(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobileInfo(),tag);
-						break;
-					default:
-						break;
+					String[] emails = emailStrs.split("[;]", -1);
+					for (String email : emails)
+					{
+						if (DataType.IsNullOrEmpty(email) == true)
+						{
+							continue;
+						}
+
+						SendEmailNowAsync(email, this.getTitle(), this.getDocOfEmail());
+					}
 				}
+				else
+				{ //单个邮箱
+					SendEmailNowAsync(this.getEmail(), this.getTitle(), this.getDocOfEmail());
+				}
+
 			}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#endregion 发送邮件
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#region 发送短消息 调用接口
+			//发送短消息的前提必须是手机号不能为空
+			//if (DataType.IsNullOrEmpty(this.Mobile) == true)
+			//    return;
+				//throw new Exception("发送短消息时接收人的手机号不能为空,否则接受不到消息");
+
+			soap = BP.WF.Glo.GetPortalInterfaceSoapClient();
+			//站内消息
+			if (this.getPushModel().contains("CCMsg") == true)
+			{
+				soap.SendToCCMSG(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+			}
+			//短信
+			if (this.getPushModel().contains("SMS") == true)
+			{
+			   soap.SendToWebServices(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+			}
+			//钉钉
+			if (this.getPushModel().contains("DingDing") == true)
+			{
+
+				soap.SendToDingDing(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+			}
+			//微信
+			if (this.getPushModel().contains("WeiXin") == true)
+			{
+				BP.WF.WeiXin.WeiXinMessage.SendMsgToUsers(this.getSendToEmpNo(), this.getTitle(), this.getDoc(), WebUser.No);
+			}
+			//WebService
+			if (this.getPushModel().contains("WS") == true)
+			{
+				soap.SendToWebServices(this.MyPK, WebUser.No, this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
+			}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+				///#endregion 发送短消息 调用接口
+
 		}
-		catch(RuntimeException ex)
+		catch (RuntimeException ex)
 		{
-			BP.DA.Log.DebugWriteError("@消息机制没有配置成功."+ex.getMessage());
+			BP.DA.Log.DebugWriteError("@消息机制没有配置成功." + ex.getMessage());
 		}
 		super.afterInsert();
 	}

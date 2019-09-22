@@ -1,16 +1,17 @@
 package BP.WF.Data;
 
-import BP.WF.Node;
-import BP.WF.WFState;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  报表基类
- 
 */
 public abstract class NDXRptBase extends BP.En.EntityOID
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	/** 
 	 工作ID
 	*/
@@ -140,10 +141,9 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 		this.SetValByKey(NDXRptBaseAttr.FlowEnderRDT, value);
 	}
 	/** 
-	 结束节点名称
-	 * @throws Exception 
+	 停留节点
 	*/
-	public final String getFlowEndNodeText() throws Exception
+	public final String getFlowEndNodeText()
 	{
 		Node nd = new Node(this.getFlowEndNode());
 		return nd.getName();
@@ -241,6 +241,30 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 		this.SetValByKey(NDXRptBaseAttr.PFlowNo, value);
 	}
 	/** 
+	 PNodeID
+	*/
+	public final String getPNodeID()
+	{
+		return this.GetValStringByKey(NDXRptBaseAttr.PNodeID);
+	}
+	public final void setPNodeID(String value)
+	{
+		this.SetValByKey(NDXRptBaseAttr.PNodeID, value);
+	}
+	public final String getPEmp()
+	{
+		return this.GetValStringByKey(NDXRptBaseAttr.PEmp);
+	}
+	public final void setPEmp(String value)
+	{
+		this.SetValByKey(NDXRptBaseAttr.PEmp, value);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion attrs
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造
+	/** 
 	 构造
 	*/
 	protected NDXRptBase()
@@ -248,11 +272,13 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 	}
 	/** 
 	 根据OID构造实体
+	 
 	 @param 工作ID workid
-	 * @throws Exception 
 	*/
-	protected NDXRptBase(int workid) throws Exception
+	protected NDXRptBase(int workid)
 	{
 		super(workid);
 	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 构造
 }

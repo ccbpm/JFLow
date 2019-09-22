@@ -1,18 +1,20 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.Entity;
-import BP.En.Map;
-import BP.En.UAC;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.Template.*;
+import BP.WF.*;
+import BP.Sys.*;
+import BP.WF.*;
+import java.util.*;
 
 /** 
  流转自定义组件
- 
 */
 public class FrmTransferCustom extends Entity
 {
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性
 	public final String getNo()
 	{
 		return "ND" + this.getNodeID();
@@ -24,7 +26,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 节点ID
-	 
 	*/
 	public final int getNodeID()
 	{
@@ -36,7 +37,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 控件状态
-	 
 	*/
 	public final FTCSta getFTCSta()
 	{
@@ -48,7 +48,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 工作模式
-	 
 	*/
 	public final int getFTCWorkModel()
 	{
@@ -60,7 +59,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 Y
-	 
 	*/
 	public final float getFTC_Y()
 	{
@@ -72,7 +70,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 X
-	 
 	*/
 	public final float getFTC_X()
 	{
@@ -84,7 +81,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 W
-	 
 	*/
 	public final float getFTC_W()
 	{
@@ -104,7 +100,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 H
-	 
 	*/
 	public final float getFTC_H()
 	{
@@ -124,7 +119,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 节点名称.
-	 
 	*/
 	public final String getName()
 	{
@@ -132,24 +126,21 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 显示标签
-	 
 	*/
 	public final String getFTCLab()
 	{
 		return this.GetValStrByKey(FTCAttr.FTCLab);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
-		
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 构造方法
 	/** 
 	 控制
-	 * @throws Exception 
-	 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -159,7 +150,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 重写主键
-	 
 	*/
 	@Override
 	public String getPK()
@@ -168,7 +158,6 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 流转自定义组件
-	 
 	*/
 	public FrmTransferCustom()
 	{
@@ -177,9 +166,8 @@ public class FrmTransferCustom extends Entity
 	 流转自定义组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmTransferCustom(String mapData) throws Exception
+	public FrmTransferCustom(String mapData)
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -208,23 +196,21 @@ public class FrmTransferCustom extends Entity
 	 流转自定义组件
 	 
 	 @param no
-	 * @throws Exception 
 	*/
-	public FrmTransferCustom(int nodeID) throws Exception
+	public FrmTransferCustom(int nodeID)
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
-	 
 	*/
 	@Override
 	public Map getEnMap()
 	{
-		if (this.get_enMap() != null)
+		if (this._enMap != null)
 		{
-			return this.get_enMap();
+			return this._enMap;
 		}
 
 		Map map = new Map("WF_Node", "流转自定义组件");
@@ -234,10 +220,10 @@ public class FrmTransferCustom extends Entity
 		map.AddTBString(FTCAttr.FTCLab, "流转自定义", "显示标签", true, false, 0, 50, 10, true);
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		map.AddDDLSysEnum(FTCAttr.FTCSta,0, "组件状态", true, true, FTCAttr.FTCSta, "@0=禁用@1=只读@2=可设置人员");
+		map.AddDDLSysEnum(FTCAttr.FTCSta, getFTCSta().Disable.getValue(), "组件状态", true, true, FTCAttr.FTCSta, "@0=禁用@1=只读@2=可设置人员");
 
 		map.AddDDLSysEnum(FTCAttr.FTCWorkModel,0, "工作模式", true, true, FTCAttr.FTCWorkModel, "@0=简洁模式@1=高级模式");
 
@@ -247,14 +233,14 @@ public class FrmTransferCustom extends Entity
 		map.AddTBFloat(FTCAttr.FTC_H, 300, "高度", true, false);
 		map.AddTBFloat(FTCAttr.FTC_W, 400, "宽度", true, false);
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		this.set_enMap(map);
-		return this.get_enMap();
+		this._enMap = map;
+		return this._enMap;
 	}
 
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

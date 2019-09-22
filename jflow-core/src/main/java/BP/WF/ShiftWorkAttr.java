@@ -1,10 +1,18 @@
 package BP.WF;
 
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import java.util.*;
+
 /** 
  移交记录
 */
 public class ShiftWorkAttr
 {
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -41,4 +49,6 @@ public class ShiftWorkAttr
 	 移交给人员名称
 	*/
 	public static final String ToEmpName = "ToEmpName";
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
 }

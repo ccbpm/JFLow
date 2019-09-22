@@ -1,106 +1,197 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
-import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
+import BP.WF.*;
 
 /** 
  页面功能实体
- 
 */
-public class CCMobile_MyFlow extends WebContralBase
+public class CCMobile_MyFlow extends DirectoryPageBase
 {
-	/**
-	 * 构造函数
-	 */
+	/** 
+	 构造函数
+	*/
 	public CCMobile_MyFlow()
 	{
-	
 	}
-	
 	/** 
 	 获得工作节点
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GenerWorkNode() throws Exception
+	public final String GenerWorkNode()
 	{
-		WF_MyFlow en = new WF_MyFlow(this.context);
+		WF_MyFlow en = new WF_MyFlow();
 		return en.GenerWorkNode();
+
+	}
+	/** 
+	 绑定多表单中获取节点表单的数据
+	 
+	 @return 
+	*/
+	public final String GetNoteValue()
+	{
+		int fk_node = this.getFK_Node();
+		if (fk_node == 0)
+		{
+			fk_node = Integer.parseInt(this.getFK_Flow() + "01");
+		}
+		Node nd = new Node(fk_node);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region  获取节点表单的数据
+		Work wk = nd.getHisWork();
+		wk.setOID(this.getWorkID());
+		wk.RetrieveFromDBSources();
+		wk.ResetDefaultVal();
+		if (BP.Sys.SystemConfig.IsBSsystem == true)
+		{
+			// 处理传递过来的参数。
+			for (String k : HttpContextHelper.RequestQueryStringKeys)
+			{
+				if (DataType.IsNullOrEmpty(k) == true)
+				{
+					continue;
+				}
+
+				wk.SetValByKey(k, HttpContextHelper.RequestParams(k));
+			}
+
+			// 处理传递过来的frm参数。
+			for (String k : HttpContextHelper.RequestParamKeys)
+			{
+				if (DataType.IsNullOrEmpty(k) == true)
+				{
+					continue;
+				}
+
+				wk.SetValByKey(k, HttpContextHelper.RequestParams(k));
+			}
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 获取节点表单的数据
+		//节点表单字段
+		MapData md = new MapData(nd.getNodeFrmID());
+		MapAttrs attrs = md.MapAttrs;
+		DataTable dt = new DataTable();
+		dt.TableName = "Node_Note";
+		dt.Columns.Add("KeyOfEn", String.class);
+		dt.Columns.Add("NoteVal", String.class);
+		String nodeNote = nd.GetParaString("NodeNote");
+
+		for (MapAttr attr : attrs)
+		{
+			if (nodeNote.contains("," + attr.KeyOfEn + ",") == false)
+			{
+				continue;
+			}
+			String text = "";
+			switch (attr.LGType)
+			{
+				case FieldTypeS.Normal: // 输出普通类型字段.
+					if (attr.MyDataType == 1 && (int)attr.UIContralType == DataType.AppString)
+					{
+
+						if (attrs.Contains(attr.KeyOfEn + "Text") == true)
+						{
+							text = wk.GetValRefTextByKey(attr.KeyOfEn);
+						}
+						if (DataType.IsNullOrEmpty(text))
+						{
+							if (attrs.Contains(attr.KeyOfEn + "T") == true)
+							{
+								text = wk.GetValStrByKey(attr.KeyOfEn + "T");
+							}
+						}
+					}
+					else
+					{
+						text = wk.GetValStrByKey(attr.KeyOfEn);
+						if (attr.IsRichText == true)
+						{
+							text = text.replace("white-space: nowrap;", "");
+						}
+					}
+
+					break;
+				case FieldTypeS.Enum:
+				case FieldTypeS.FK:
+					text = wk.GetValRefTextByKey(attr.KeyOfEn);
+					break;
+				default:
+					break;
+			}
+			DataRow dr = dt.NewRow();
+			dr.set("KeyOfEn", attr.KeyOfEn);
+			dr.set("NoteVal", text);
+			dt.Rows.Add(dr);
+
+		}
+
+		return BP.Tools.Json.ToJson(dt);
 	}
 	/** 
 	 获得toolbar
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String InitToolBar() throws Exception
+	public final String InitToolBar()
 	{
-		WF_MyFlow en = new WF_MyFlow(this.context);
+		WF_MyFlow en = new WF_MyFlow();
 		return en.InitToolBarForMobile();
 	}
-	public final String MyFlow_Init() throws Exception
+	public final String MyFlow_Init()
 	{
-		WF_MyFlow en = new WF_MyFlow(this.context);
+		WF_MyFlow en = new WF_MyFlow();
 		return en.MyFlow_Init();
 	}
-
-	public final String MyFlow_StopFlow() throws Exception
+	public final String MyFlow_StopFlow()
 	{
-		WF_MyFlow en = new WF_MyFlow(this.context);
+		WF_MyFlow en = new WF_MyFlow();
 		return en.MyFlow_StopFlow();
 	}
-	public final String Save() throws Exception
+	public final String Save()
 	{
-		WF_MyFlow en = new WF_MyFlow(this.context);
+		WF_MyFlow en = new WF_MyFlow();
 		return en.Save();
 	}
-	public final String Send() throws Exception
+	public final String Send()
 	{
-		WF_MyFlow en = new WF_MyFlow(this.context);
+		WF_MyFlow en = new WF_MyFlow();
 		return en.Send();
 	}
-
-	public final String Focus() throws Exception
-    {
-        BP.WF.Dev2Interface.Flow_Focus( this.getWorkID());
-        return "设置成功.";
-    }
-	
-	public String StartGuide_Init() throws Exception
-    {
-        WF_MyFlow en = new WF_MyFlow(this.context);
-        return en.StartGuide_Init();
-    }
-	
-	public final String FrmGener_Init() throws Exception
+	public final String StartGuide_Init()
 	{
-		WF_CCForm ccfrm = new WF_CCForm(this.context);
+		WF_MyFlow en = new WF_MyFlow();
+		return en.StartGuide_Init();
+	}
+	public final String FrmGener_Init()
+	{
+		WF_CCForm ccfrm = new WF_CCForm();
 		return ccfrm.FrmGener_Init();
 	}
-	public final String FrmGener_Save() throws Exception
+	public final String FrmGener_Save()
 	{
-		WF_CCForm ccfrm = new WF_CCForm(this.context);
+		WF_CCForm ccfrm = new WF_CCForm();
 		return ccfrm.FrmGener_Save();
 	}
 
-	public String MyFlowGener_Delete() throws Exception
-    {
-        BP.WF.Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), WebUser.getName()+"用户删除", true);
-        return "删除成功...";
-    }
-	
-	public final String AttachmentUpload_Down() throws Exception
+	public final String MyFlowGener_Delete()
 	{
-		WF_CCForm ccform = new WF_CCForm(this.context);
+		BP.WF.Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), Web.WebUser.Name + "用户删除", true);
+		return "删除成功...";
+	}
+
+	public final String AttachmentUpload_Down()
+	{
+		WF_CCForm ccform = new WF_CCForm();
 		return ccform.AttachmentUpload_Down();
 	}
-	
 
 }

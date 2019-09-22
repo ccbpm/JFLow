@@ -1,19 +1,21 @@
 package BP.WF;
 
-import BP.En.EntitiesMyPK;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.WF.Template.*;
+import java.util.*;
 
 /** 
  自定义运行路径
- 
 */
 public class TransferCustoms extends EntitiesMyPK
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	/** 
 	 得到它的 Entity 
-	 
 	*/
 	@Override
 	public Entity getGetNewEntity()
@@ -22,7 +24,6 @@ public class TransferCustoms extends EntitiesMyPK
 	}
 	/** 
 	 自定义运行路径
-	 
 	*/
 	public TransferCustoms()
 	{
@@ -31,9 +32,8 @@ public class TransferCustoms extends EntitiesMyPK
 	 自定义运行路径
 	 
 	 @param workid 工作ID
-	 * @throws Exception 
 	*/
-	public TransferCustoms(long workid) throws Exception
+	public TransferCustoms(long workid)
 	{
 		this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.Idx);
 	}
@@ -42,40 +42,39 @@ public class TransferCustoms extends EntitiesMyPK
 	 
 	 @param nodeID 节点ID
 	 @param workid 工作ID
-	 * @throws Exception 
 	*/
-	public TransferCustoms(int nodeID, long workid) throws Exception
+	public TransferCustoms(int nodeID, long workid)
 	{
 		this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.FK_Node, nodeID, TransferCustomAttr.Idx);
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<TransferCustom> ToJavaList()
+	public final List<TransferCustom> ToJavaList()
 	{
-		return (java.util.List<TransferCustom>)(Object)this;
+		return (List<TransferCustom>)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.ArrayList<TransferCustom> Tolist()
+	public final ArrayList<TransferCustom> Tolist()
 	{
-		java.util.ArrayList<TransferCustom> list = new java.util.ArrayList<TransferCustom>();
-		for (int i = 0; i < this.size(); i++)
+		ArrayList<TransferCustom> list = new ArrayList<TransferCustom>();
+		for (int i = 0; i < this.Count; i++)
 		{
-			list.add((TransferCustom)this.get(i));
+			list.add((TransferCustom)this[i]);
 		}
 		return list;
 	}
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

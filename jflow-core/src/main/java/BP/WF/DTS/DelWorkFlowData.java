@@ -1,12 +1,16 @@
 package BP.WF.DTS;
 
-import BP.DA.DBAccess;
-import BP.DTS.DataIOEn;
-import BP.DTS.DoType;
-import BP.WF.Node;
-import BP.WF.Nodes;
-import BP.WF.Work;
-import BP.WF.Template.CCLists;
+import BP.DA.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.Port.*;
+import BP.Sys.*;
+import BP.WF.Data.*;
+import BP.WF.Template.*;
+import BP.DTS.*;
+import BP.WF.*;
+import java.io.*;
+import java.time.*;
 
 public class DelWorkFlowData extends DataIOEn
 {
@@ -19,9 +23,9 @@ public class DelWorkFlowData extends DataIOEn
 		//this.ToDBUrl = DBUrlType.AppCenterDSN;
 	}
 	@Override
-	public void Do() throws Exception
+	public void Do()
 	{
-		if ( ! BP.Web.WebUser.getNo().equals("admin"))
+		if (!BP.Web.WebUser.No.equals("admin"))
 		{
 			throw new RuntimeException("非法用户。");
 		}
@@ -45,14 +49,14 @@ public class DelWorkFlowData extends DataIOEn
 		nds.RetrieveAll();
 
 		String msg = "";
-		for (Node nd : nds.ToJavaList())
+		for (Node nd : nds)
 		{
 
 			Work wk = null;
 			try
 			{
 				wk = nd.getHisWork();
-				DBAccess.RunSQL("DELETE FROM " + wk.getEnMap().getPhysicsTable());
+				DBAccess.RunSQL("DELETE FROM " + wk.EnMap.PhysicsTable);
 			}
 			catch (RuntimeException ex)
 			{

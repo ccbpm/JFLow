@@ -1,121 +1,153 @@
 package BP.WF.HttpHandler;
 
-import java.math.BigDecimal;
-import java.util.Enumeration;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.Web.*;
+import BP.Port.*;
+import BP.En.*;
+import BP.WF.*;
+import BP.WF.Rpt.*;
+import BP.WF.Template.*;
+import BP.Web.Controls.*;
+import BP.WF.*;
+import java.util.*;
+import java.io.*;
+import java.math.*;
 
-import org.apache.commons.lang.StringUtils;
-
-import BP.DA.AtPara;
-import BP.DA.DBAccess;
-import BP.DA.DBType;
-import BP.DA.DataColumn;
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.DA.Paras;
-import BP.Difference.Handler.WebContralBase;
-import BP.En.Attr;
-import BP.En.Attrs;
-import BP.En.Entities;
-import BP.En.EntitiesSimpleTree;
-import BP.En.EntitiesTree;
-import BP.En.Entity;
-import BP.En.FieldType;
-import BP.En.QueryObject;
-import BP.En.UIContralType;
-import BP.Sys.DTSearchWay;
-import BP.Sys.GEEntitys;
-import BP.Sys.MapAttr;
-import BP.Sys.MapAttrAttr;
-import BP.Sys.MapAttrs;
-import BP.Sys.MapData;
-import BP.Sys.SysEnum;
-import BP.Sys.SysEnums;
-import BP.Sys.SystemConfig;
-import BP.Sys.UserRegedit;
-import BP.Sys.UserRegeditAttr;
-import BP.WF.DotNetToJavaStringHelper;
-import BP.WF.Flow;
-import BP.WF.Rpt.RptDfine;
-import BP.Web.WebUser;
-
-public class WF_RptDfine extends WebContralBase{
-	
-	/**
-	 * 构造函数
-	 */
-	public WF_RptDfine()
-	{
-	
-	}
-	
-	
+/** 
+ 页面功能实体
+*/
+public class WF_RptDfine extends DirectoryPageBase
+{
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 属性.
+	/** 
+	 查询类型
+	*/
 	public final String getSearchType()
 	{
 		String val = this.GetRequestVal("SearchType");
-		if(DataType.IsNullOrEmpty(val))
-			val = getGroupType();
+
+		if (val == null || val.equals(""))
+		{
+			val = this.GetRequestVal("GroupType");
+		}
 		return val;
 	}
-	
-	public final String getGroupType(){
+
+
+
+	/** 
+	 分析类型
+	*/
+	public final String getGroupType()
+	{
 		return this.GetRequestVal("GroupType");
 	}
-	/** 流程列表
+
+	public final boolean getIsContainsNDYF()
+	{
+		return this.GetRequestValBoolen("IsContainsNDYF");
+	}
+
+	/** 
+	 部门编号
+	*/
+	public final String getFK_Dept()
+	{
+		String str = this.GetRequestVal("FK_Dept");
+		if (str == null || str.equals("") || str.equals("null"))
+		{
+			return null;
+		}
+		return str;
+	}
+	public final void setFK_Dept(String value)
+	{
+		String val = value;
+		if (val.equals("all"))
+		{
+			return;
+		}
+
+		if (this.getFK_Dept() == null)
+		{
+			this.setFK_Dept(value);
+			return;
+		}
+	}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 属性.
+
+	/** 
+	 构造函数
+	*/
+	public WF_RptDfine()
+	{
+	}
+
+	/** 
+	 流程列表
 	 
 	 @return 
-	 */
+	*/
 	public final String Flowlist_Init()
 	{
 		DataSet ds = new DataSet();
 		String sql = "SELECT No,Name,ParentNo FROM WF_FlowSort ORDER BY ParentNo, Idx";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
 		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+			dt.Columns["NO"].ColumnName = "No";
+			dt.Columns["NAME"].ColumnName = "Name";
+			dt.Columns["PARENTNO"].ColumnName = "ParentNo";
 		}
-		ds.Tables.add(dt);
+		ds.Tables.Add(dt);
 
-		sql = "SELECT No,Name,FK_FlowSort FROM WF_Flow ORDER BY FK_FlowSort, Idx";
+		sql = "SELECT No,Name,FK_FlowSort FROM WF_Flow WHERE IsCanStart=1 ORDER BY FK_FlowSort, Idx";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Flows";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.AppCenterDBType == DBType.Oracle || SystemConfig.AppCenterDBType == DBType.PostgreSQL)
 		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
+			dt.Columns["NO"].ColumnName = "No";
+			dt.Columns["NAME"].ColumnName = "Name";
+			dt.Columns["FK_FLOWSORT"].ColumnName = "FK_FlowSort";
 		}
-		ds.Tables.add(dt);
+		ds.Tables.Add(dt);
 
-		return BP.Tools.Json.ToJson(ds);
+		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
-	
-	/** 功能列表
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 功能列表
+	/** 
+	 功能列表
 	 
 	 @return 
-	 * @throws Exception 
-*/
-	public final String Default_Init() throws Exception
+	*/
+	public final String Default_Init()
 	{
-		java.util.Hashtable ht = new java.util.Hashtable();
+		Hashtable ht = new Hashtable();
 		ht.put("My", "我发起的流程");
-		ht.put("MyJoin", "我参与的流程");
+		ht.put("MyJoin", "我审批的流程");
 
 		RptDfine rd = new RptDfine(this.getFK_Flow());
+		Paras ps = new Paras();
 
-		///#region 增加本部门发起流程的查询.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 增加本部门发起流程的查询.
 		if (rd.getMyDeptRole() == 0)
 		{
-			//如果仅仅部门领导可以查看: 检查当前人是否是部门领导人.
+			/*如果仅仅部门领导可以查看: 检查当前人是否是部门领导人.*/
 			if (DBAccess.IsExitsTableCol("Port_Dept", "Leader") == true)
 			{
-				String sql = "SELECT Leader FROM Port_Dept WHERE No='" + BP.Web.WebUser.getFK_Dept() + "'";
-				String strs = DBAccess.RunSQLReturnStringIsNull(sql, null);
-				if (strs != null && strs.contains(BP.Web.WebUser.getNo()) == true)
+				ps.SQL = "SELECT Leader FROM Port_Dept WHERE No=" + SystemConfig.AppCenterDBVarStr + "No";
+				ps.Add("No", BP.Web.WebUser.FK_Dept);
+				//string sql = "SELECT Leader FROM Port_Dept WHERE No='" + BP.Web.WebUser.FK_Dept + "'";
+				String strs = DBAccess.RunSQLReturnStringIsNull(ps, null);
+				if (strs != null && strs.contains(BP.Web.WebUser.No) == true)
 				{
 					ht.put("MyDept", "我本部门发起的流程");
 				}
@@ -124,31 +156,70 @@ public class WF_RptDfine extends WebContralBase{
 
 		if (rd.getMyDeptRole() == 1)
 		{
-			//如果部门下所有的人都可以查看: 
+			/*如果部门下所有的人都可以查看: */
 			ht.put("MyDept", "我本部门发起的流程");
 		}
 
 		if (rd.getMyDeptRole() == 2)
 		{
-			//如果部门下所有的人都可以查看: 
+			/*如果部门下所有的人都可以查看: */
 			ht.put("MyDept", "我本部门发起的流程");
 		}
-		///#endregion 增加本部门发起流程的查询.
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 增加本部门发起流程的查询.
 
-		if (BP.Web.WebUser.getIsAdmin())
+		Flow fl = new Flow(this.getFK_Flow());
+		ht.put("FlowName", fl.Name);
+
+		String advEmps = SystemConfig.AppSettings["AdvEmps"];
+		if (advEmps != null && advEmps.contains(BP.Web.WebUser.No) == true)
 		{
 			ht.put("Adminer", "高级查询");
 		}
-		
-		Flow fl = new Flow(this.getFK_Flow());
-		ht.put("FlowName",fl.getName());
+		else
+		{
+			String data = fl.GetParaString("AdvSearchRight");
+			data = "," + data + ",";
+			if (data.contains(BP.Web.WebUser.No + ",") == true)
+			{
+				ht.put("Adminer", "高级查询");
+			}
+		}
 
-		return BP.Tools.Json.ToJsonEntitiesNoNameModel(ht);
+		return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
 	}
-	
-	public final String FlowSearch_Init() throws Exception
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 执行父类的重写方法.
+	/** 
+	 默认执行的方法
+	 
+	 @return 
+	*/
+	@Override
+	protected String DoDefaultMethod()
 	{
-		if (StringUtils.isEmpty(this.getFK_Flow()))
+		switch (this.getDoType())
+		{
+			case "DtlFieldUp": //字段上移
+				return "执行成功.";
+			default:
+				break;
+		}
+
+		//找不不到标记就抛出异常.
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion 执行父类的重写方法.
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region MyStartFlow.htm 我发起的流程
+	public final String FlowSearch_Init()
+	{
+		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
@@ -156,15 +227,15 @@ public class WF_RptDfine extends WebContralBase{
 		String pageSize = GetRequestVal("pageSize");
 		String fcid = "";
 		DataSet ds = new DataSet();
-		java.util.HashMap<String, String> vals = null;
+		HashMap<String, String> vals = null;
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 
 		//报表信息，包含是否显示关键字查询RptIsSearchKey，过滤条件枚举/下拉字段RptSearchKeys，时间段查询方式RptDTSearchWay，时间字段RptDTSearchKey
 		MapData md = new MapData();
-		md.setNo(rptNo);
+		md.No = rptNo;
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			//如果没有找到，就让其重置一下.
+			/*如果没有找到，就让其重置一下.*/
 			BP.WF.Rpt.RptDfine rd = new RptDfine(this.getFK_Flow());
 
 			if (this.getSearchType().equals("My"))
@@ -174,7 +245,12 @@ public class WF_RptDfine extends WebContralBase{
 
 			if (this.getSearchType().equals("MyJoin"))
 			{
-				rd.DoReset(this.getSearchType(), "我参与的流程");
+				rd.DoReset(this.getSearchType(), "我审批的流程");
+			}
+
+			if (this.getSearchType().equals("MyDept"))
+			{
+				rd.DoReset(this.getSearchType(), "本部门发起的流程");
 			}
 
 			if (this.getSearchType().equals("Adminer"))
@@ -189,32 +265,31 @@ public class WF_RptDfine extends WebContralBase{
 
 		String cfgfix = "_SearchAttrs";
 		UserRegedit ur = new UserRegedit();
-		ur.setAutoMyPK(false);
-		ur.setMyPK(WebUser.getNo() + rptNo + cfgfix);
+		ur.AutoMyPK = false;
+		ur.MyPK = WebUser.No + rptNo + cfgfix;
 
 		if (ur.RetrieveFromDBSources() == 0)
 		{
-			ur.setMyPK(WebUser.getNo() + rptNo + cfgfix);
-			ur.setFK_Emp(WebUser.getNo());
-			ur.setCfgKey(rptNo + cfgfix);
+			ur.MyPK = WebUser.No + rptNo + cfgfix;
+			ur.FK_Emp = WebUser.No;
+			ur.CfgKey = rptNo + cfgfix;
 
 			ur.Insert();
 		}
 
 		vals = ur.GetVals();
+		md.SetPara("RptDTSearchWay", (int)md.RptDTSearchWay);
+		md.SetPara("RptDTSearchKey", md.RptDTSearchKey);
+		md.SetPara("RptIsSearchKey", md.RptIsSearchKey);
 
-		md.SetPara("RptDTSearchWay",md.getRptDTSearchWay().getValue());
-		md.SetPara("RptDTSearchKey",md.getRptDTSearchKey());
-		md.SetPara("RptIsSearchKey",md.getRptIsSearchKey());
+		md.SetPara("T_SearchKey", ur.SearchKey);
 
-		md.SetPara("T_SearchKey", ur.getSearchKey());
-
-		if (md.getRptDTSearchWay() != DTSearchWay.None)
+		if (md.RptDTSearchWay != DTSearchWay.None)
 		{
-			ar = new MapAttr(rptNo, md.getRptDTSearchKey());
-			md.SetPara("T_DateLabel", ar.getName());
+			ar = new MapAttr(rptNo, md.RptDTSearchKey);
+			md.SetPara("T_DateLabel", ar.Name);
 
-			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
+			if (md.RptDTSearchWay == DTSearchWay.ByDate)
 			{
 				md.SetPara("T_DTFrom", ur.GetValStringByKey(UserRegeditAttr.DTFrom));
 				md.SetPara("T_DTTo", ur.GetValStringByKey(UserRegeditAttr.DTTo));
@@ -226,38 +301,50 @@ public class WF_RptDfine extends WebContralBase{
 			}
 		}
 
+		//判断是否含有导出至模板的模板文件，如果有，则显示导出至模板按钮RptExportToTmp
+		String tmpDir = BP.Sys.SystemConfig.PathOfDataUser + "TempleteExpEns\\" + rptNo;
+		if ((new File(tmpDir)).isDirectory())
+		{
+			if (Directory.GetFiles(tmpDir, "*.xls*").Length > 0)
+			{
+				md.SetPara("T_RptExportToTmp", "1");
+			}
+		}
 
-		///#region //增加显示列信息
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region //增加显示列信息
 		DataRow row = null;
 		DataTable dt = new DataTable("Sys_MapAttr");
 		dt.Columns.Add("No", String.class);
 		dt.Columns.Add("Name", String.class);
 		dt.Columns.Add("Width", Integer.class);
+		dt.Columns.Add("UIContralType", Integer.class);
 
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
 
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : attrs)
 		{
 			row = dt.NewRow();
-			row.setValue("No", attr.getKeyOfEn());
-			row.setValue("Name",attr.getName());
-			row.setValue("Width",attr.getUIWidthInt());
+			row.set("No", attr.KeyOfEn);
+			row.set("Name", attr.Name);
+			row.set("Width", attr.UIWidthInt);
+			row.set("UIContralType", attr.UIContralType);
 
-			if (attr.getHisAttr().getIsFKorEnum())
+			if (attr.HisAttr.IsFKorEnum)
 			{
-				row.setValue("No",attr.getKeyOfEn() + "Text");
+				row.set("No", attr.KeyOfEn + "Text");
 			}
 
-			dt.Rows.add(row);
+			dt.Rows.Add(row);
 		}
 
-		ds.Tables.add(dt);
+		ds.Tables.Add(dt);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-		///#endregion
-
-
-		///#region //增加枚举/外键字段信息
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region //增加枚举/外键字段信息
 		attrs = new MapAttrs(rptNo);
 		dt = new DataTable("FilterCtrls");
 		dt.Columns.Add("Id", String.class);
@@ -268,537 +355,169 @@ public class WF_RptDfine extends WebContralBase{
 		dt.Columns.Add("ValueField", String.class);
 		dt.Columns.Add("TextField", String.class);
 		dt.Columns.Add("ParentField", String.class);
-		String[] ctrls = md.getRptSearchKeys().split("[*]", -1);
+		dt.Columns.Add("W", String.class);
+		String[] ctrls = md.RptSearchKeys.split("[*]", -1);
 		DataTable dtNoName = null;
 
 		for (String ctrl : ctrls)
 		{
-			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示
-			if (StringUtils.isEmpty(ctrl) || !DotNetToJavaStringHelper.isNullOrEmpty(this.getRequest().getParameter(ctrl)))
+			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示context.Request.QueryString[ctrl]
+			if (tangible.StringHelper.isNullOrWhiteSpace(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
 			{
 				continue;
 			}
 
 			Object tempVar = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, ctrl);
-			ar = (MapAttr)((tempVar instanceof MapAttr) ? tempVar : null);
+			ar = tempVar instanceof MapAttr ? (MapAttr)tempVar : null;
 			if (ar == null)
 			{
 				continue;
 			}
 
 			row = dt.NewRow();
-			row.setValue("Id", ctrl);
-			row.setValue("Name", ar.getName());
-			row.setValue("DataType", ar.getMyDataType());
-			row.setValue("W", ar.getUIWidth());
-           
+			row.set("Id", ctrl);
+			row.set("Name", ar.Name);
+			row.set("DataType", ar.MyDataType);
+			row.set("W", ar.UIWidth); //宽度.
 
-			//判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示
-
-			switch (ar.getUIContralType())
+			switch (ar.UIContralType)
 			{
-				case DDL:
-					row.setValue("Type", "combo");
-					fcid = "DDL_" + ar.getKeyOfEn();
-
+				case UIContralType.DDL:
+					row.set("Type", "combo");
+					fcid = "DDL_" + ar.KeyOfEn;
 					if (vals.containsKey(fcid))
 					{
 						if (vals.get(fcid).equals("mvals"))
 						{
-							AtPara ap = new AtPara(ur.getMVals());
-							row.setValue("DefaultValue", ap.GetValStrByKey(ar.getKeyOfEn()));
+							AtPara ap = new AtPara(ur.MVals);
+							row.set("DefaultValue", ap.GetValStrByKey(ar.KeyOfEn));
 						}
 						else
 						{
-							row.setValue("DefaultValue", vals.get(fcid));
+							row.set("DefaultValue", vals.get(fcid));
 						}
 					}
 
-					switch (ar.getLGType())
+					switch (ar.LGType)
 					{
-						
-						case FK:
-							Entities ens = ar.getHisAttr().getHisFKEns();
+						case FieldTypeS.FK:
+							Entities ens = ar.HisAttr.HisFKEns;
 							ens.RetrieveAll();
-							EntitiesTree treeEns = (EntitiesTree)((ens instanceof EntitiesTree) ? ens : null);
+							EntitiesTree treeEns = ens instanceof EntitiesTree ? (EntitiesTree)ens : null;
 
 							if (treeEns != null)
 							{
-								row.setValue("Type", "combotree");
-								dtNoName = ens.ToDataTableField(ar.getKeyOfEn());
-								//dtNoName.TableName = ar.getKeyOfEn();
-								ds.Tables.add(dtNoName);
+								row.set("Type", "combotree");
+								dtNoName = ens.ToDataTableField();
+								dtNoName.TableName = ar.KeyOfEn;
+								ds.Tables.Add(dtNoName);
 
-								row.setValue("ValueField", "No");
-								row.setValue("TextField", "Name");
-								row.setValue("ParentField", "ParentNo");
+								row.set("ValueField", "No");
+								row.set("TextField", "Name");
+								row.set("ParentField", "ParentNo");
 							}
 							else
 							{
-								EntitiesSimpleTree treeSimpEns = (EntitiesSimpleTree)((ens instanceof EntitiesSimpleTree) ? ens : null);
+								EntitiesTree treeSimpEns = ens instanceof EntitiesTree ? (EntitiesTree)ens : null;
 
 								if (treeSimpEns != null)
 								{
-									row.setValue("Type", "combotree");
+									row.set("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
-									dtNoName.TableName = ar.getKeyOfEn();
-									ds.Tables.add(dtNoName);
+									dtNoName.TableName = ar.KeyOfEn;
+									ds.Tables.Add(dtNoName);
 
-									row.setValue("ValueField", "No");
-									row.setValue("TextField", "Name");
-									row.setValue("ParentField", "ParentNo");
+									row.set("ValueField", "No");
+									row.set("TextField", "Name");
+									row.set("ParentField", "ParentNo");
 								}
 								else
 								{
-									dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-									dtNoName.Rows.AddDatas("all", "全部");
+									dtNoName = GetNoNameDataTable(ar.KeyOfEn);
+									dtNoName.Rows.Add("all", "全部");
 
-									for (Entity en : ens.ToJavaListEn())
+									for (Entity en : ens)
 									{
-										dtNoName.Rows.AddDatas(en.GetValStringByKey(ar.getHisAttr().getUIRefKeyValue()), en.GetValStringByKey(ar.getHisAttr().getUIRefKeyText()));
+										dtNoName.Rows.Add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
 									}
 
-									ds.Tables.add(dtNoName);
+									ds.Tables.Add(dtNoName);
 
-									row.setValue("ValueField", "No");
-									row.setValue("TextField", "Name");
+									row.set("ValueField", "No");
+									row.set("TextField", "Name");
 								}
 							}
 							break;
-						
-						case Enum:
-							dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-							dtNoName.Rows.AddDatas("all", "全部");
+						case FieldTypeS.Enum:
+							dtNoName = GetNoNameDataTable(ar.KeyOfEn);
+							dtNoName.Rows.Add("all", "全部");
 
-							SysEnums enums = new SysEnums(ar.getUIBindKey());
+							SysEnums enums = new SysEnums(ar.UIBindKey);
 
-							for (SysEnum en : enums.ToJavaList())
+							for (SysEnum en : enums)
 							{
-								dtNoName.Rows.AddDatas(en.getIntKey(), en.getLab());
+								dtNoName.Rows.Add(en.IntKey.toString(), en.Lab);
 							}
 
-							ds.Tables.add(dtNoName);
+							ds.Tables.Add(dtNoName);
 
-							row.setValue("ValueField", "No");
-							row.setValue("TextField", "Name");
+							row.set("ValueField", "No");
+							row.set("TextField", "Name");
 							break;
 						default:
 							break;
 					}
 					break;
-			
 				default:
 					break;
 			}
 
-			dt.Rows.add(row);
+			dt.Rows.Add(row);
 		}
 
-		ds.Tables.add(dt);
+		ds.Tables.Add(dt);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-		///#endregion
-
-
-		///#region //增加第一页数据
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region //增加第一页数据
 		GEEntitys ges = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ges);
 
-		if (this.getSearchType().equals("My")) //我发起的.
+		switch (this.getSearchType())
 		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
-		}
-
-		else if (this.getSearchType().equals("MyDept")) //我部门发起的.
-		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
-		}
-
-		else if (this.getSearchType().equals("MyJoin")) //我参与的.
-		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
-		}
-		else if (this.getSearchType().equals("Adminer"))
-		{
-		}
-		else
-		{
+			case "My": //我发起的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				break;
+			case "MyDept": //我部门发起的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				break;
+			case "MyJoin": //我参与的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				break;
+			case "Adminer":
+				break;
+			default:
 				return "err@" + this.getSearchType() + "标记错误.";
 		}
 
-		qo = InitQueryObject(qo, md, ges.getGetNewEntity().getEnMap().getAttrs(), attrs, ur);
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
 
 		qo.AddWhere(" AND  WFState > 1 ");
-		qo.AddWhere(" AND  FID = 0  ");
-		
+		qo.AddWhere(" AND FID = 0 ");
+
 		md.SetPara("T_total", qo.GetCount());
-		qo.DoQuery("OID", StringUtils.isEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), 1);
-		ds.Tables.add(ges.ToDataTableField("MainData"));
-		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+		qo.DoQuery("OID", tangible.StringHelper.isNullOrWhiteSpace(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), 1);
+		ds.Tables.Add(ges.ToDataTableField("MainData"));
+		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-		///#endregion
-
-		return BP.Tools.Json.ToJson(ds);
+		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
-	
-	private DataTable GetNoNameDataTable(String tableName)
-	{
-		DataTable dt = new DataTable(tableName);
-		dt.Columns.Add("No", String.class);
-		dt.Columns.Add("Name", String.class);
-
-		return dt;
-	}
-	
-	public final QueryObject InitQueryObject(QueryObject qo, MapData md, Attrs attrs, MapAttrs rptAttrs, UserRegedit ur) throws Exception
-	{
-		java.util.HashMap<String, String> kvs = null;
-		java.util.ArrayList<String> keys = new java.util.ArrayList<String>();
-		String cfg = "_SearchAttrs";
-		String searchKey = "";
-		String val = null;
-
-		kvs = ur.GetVals();
-
-		if ( ! this.getSearchType().equals("Adminer"))
-		{
-			qo.addAnd();
-		}
 
 
-		///#region 关键字查询
-		if (md.getRptIsSearchKey())
-		{
-			searchKey = ur.getSearchKey();
-		}
-
-		if (StringUtils.isEmpty(searchKey))
-		{
-			qo.addLeftBracket();
-			qo.AddWhere("abc", "all");
-			qo.addRightBracket();
-		}
-		else
-		{
-			int i = 0;
-
-			for (Attr attr : attrs)
-			{
-				switch (attr.getMyFieldType())
-				{
-					case Enum:
-					case FK:
-					case PKFK:
-						continue;
-					default:
-						break;
-				}
-
-				if (attr.getMyDataType() != DataType.AppString)
-				{
-					continue;
-				}
-
-				if (attr.getMyFieldType() == FieldType.RefText)
-				{
-					continue;
-				}
-
-				if (attr.getKey().equals("FK_Dept"))
-				{
-					continue;
-				}
-
-				i++;
-
-				if (i == 1)
-				{
-					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@")|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-					{
-						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-					}
-					else
-					{
-						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
-					}
-					continue;
-				}
-
-				qo.addOr();
-
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":"))
-				{
-					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-				}
-				else
-				{
-					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
-				}
-			}
-
-			qo.getMyParas().Add("SKey", searchKey);
-			qo.addRightBracket();
-		}
-
-		///#endregion
-
-
-		///#region Url传参条件
-		for (Attr attr : attrs)
-		{
-			if (DotNetToJavaStringHelper.isNullOrEmpty(this.getRequest().getParameter(attr.getKey())))
-			{
-				continue;
-			}
-
-			qo.addAnd();
-			qo.addLeftBracket();
-
-			val = this.getRequest().getParameter(attr.getKey());
-
-			switch (attr.getMyDataType())
-			{
-				case DataType.AppBoolean:
-					qo.AddWhere(attr.getKey(), toStrInt(val));
-					break;
-				case DataType.AppDate:
-				case DataType.AppDateTime:
-				case DataType.AppString:
-					qo.AddWhere(attr.getKey(), val);
-					break;
-				case DataType.AppDouble:
-				case DataType.AppFloat:
-				case DataType.AppMoney:
-					qo.AddWhere(attr.getKey(), Double.parseDouble(val));
-					break;
-				case DataType.AppInt:
-					qo.AddWhere(attr.getKey(), Integer.parseInt(val));
-					break;
-				default:
-					break;
-			}
-
-			qo.addRightBracket();
-
-			if (keys.contains(attr.getKey()) == false)
-			{
-				keys.add(attr.getKey());
-			}
-		}
-
-		///#endregion
-
-
-		///#region 过滤条件
-		for (MapAttr attr1 : rptAttrs.ToJavaList())
-		{
-			Attr attr = attr1.getHisAttr();
-			//此处做判断，如果在URL中已经传了参数，则不算SearchAttrs中的设置
-			if (keys.contains(attr.getKey()))
-			{
-				continue;
-			}
-
-			if (attr.getMyFieldType() == FieldType.RefText)
-			{
-				continue;
-			}
-
-			String selectVal = "";
-			String cid = "";
-
-			switch (attr.getUIContralType())
-			{
-				//case UIContralType.TB:
-				//    switch (attr.MyDataType)
-				//    {
-				//        case DataType.AppDate:
-				//        case DataType.AppDateTime:
-				//            if (attr.MyDataType == DataType.AppDate)
-				//                cid = "D_" + attr.Key;
-				//            else
-				//                cid = "DT_" + attr.Key;
-
-				//            if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
-				//                continue;
-
-				//            selectVal = kvs[cid];
-
-				//            qo.addAnd();
-				//            qo.addLeftBracket();
-				//            qo.AddWhere(attr.Key, selectVal);
-				//            qo.addRightBracket();
-				//            break;
-				//        default:
-				//            cid = "TB_" + attr.Key;
-
-				//            if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
-				//                continue;
-
-				//            selectVal = kvs[cid];
-
-				//            qo.addAnd();
-				//            qo.addLeftBracket();
-				//            qo.AddWhere(attr.Key, " LIKE ", "%" + selectVal + "%");
-				//            qo.addRightBracket();
-				//            break;
-				//    }
-				//    break;
-				case DDL:
-					cid = "DDL_" + attr.getKey();
-
-					if (kvs.containsKey(cid) == false || StringUtils.isEmpty(kvs.get(cid)))
-					{
-						continue;
-					}
-
-					selectVal = kvs.get(cid);
-
-					if (selectVal.equals("all") || selectVal.equals("-1"))
-					{
-						continue;
-					}
-
-					if (selectVal.equals("mvals"))
-					{
-						// 如果是多选值 
-						AtPara ap = new AtPara(ur.getMVals());
-						String instr = ap.GetValStrByKey(attr.getKey());
-
-						if (DotNetToJavaStringHelper.isNullOrEmpty(instr))
-						{
-							if (attr.getKey().equals("FK_Dept") || attr.getKey().equals("FK_Unit"))
-							{
-								if (attr.getKey().equals("FK_Dept"))
-								{
-									selectVal = WebUser.getFK_Dept();
-								}
-							}
-							else
-							{
-								continue;
-							}
-						}
-						else
-						{
-							instr = instr.replace("..", ".");
-							instr = instr.replace(".", "','");
-							instr = instr.substring(2);
-							instr = instr.substring(0, instr.length() - 2);
-
-							qo.addAnd();
-							qo.addLeftBracket();
-							qo.AddWhereIn(attr.getKey(), "(" + instr + ")");
-							qo.addRightBracket();
-							continue;
-						}
-					}
-
-					qo.addAnd();
-					qo.addLeftBracket();
-
-					if (attr.getUIBindKey().equals("BP.Port.Depts") || attr.getUIBindKey().equals("BP.Port.Units")) //判断特殊情况。
-					{
-						qo.AddWhere(attr.getKey(), " LIKE ", selectVal + "%");
-					}
-					else
-					{
-						qo.AddWhere(attr.getKey(), selectVal);
-					}
-
-					qo.addRightBracket();
-					break;
-				//case UIContralType.CheckBok:
-				//    cid = "CB_" + attr.Key;
-
-				//    if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
-				//        continue;
-
-				//    selectVal = kvs[cid];
-
-				//    qo.addAnd();
-				//    qo.addLeftBracket();
-				//    qo.AddWhere(attr.Key, int.Parse(selectVal));
-				//    qo.addRightBracket();
-				//    break;
-				default:
-					break;
-			}
-		}
-
-		///#endregion
-
-
-		///#region 日期处理
-		if (md.getRptDTSearchWay() != DTSearchWay.None)
-		{
-			String dtKey = md.getRptDTSearchKey();
-			String dtFrom = ur.GetValStringByKey(UserRegeditAttr.DTFrom).trim();
-			String dtTo = ur.GetValStringByKey(UserRegeditAttr.DTTo).trim();
-
-			if (DotNetToJavaStringHelper.isNullOrEmpty(dtFrom) == true)
-			{
-				if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
-				{
-					dtFrom = "1900-01-01";
-				}
-				else
-				{
-					dtFrom = "1900-01-01 00:00";
-				}
-			}
-
-			if (DotNetToJavaStringHelper.isNullOrEmpty(dtTo) == true)
-			{
-				if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
-				{
-					dtTo = "2999-01-01";
-				}
-				else
-				{
-					dtTo = "2999-12-31 23:59";
-				}
-			}
-
-			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
-			{
-				dtFrom += " 00:00:00";
-                dtTo += " 23:59:59";
-				qo.addAnd();
-				qo.addLeftBracket();
-				qo.setSQL(dtKey + " >= '" + dtFrom + "'");
-				qo.addAnd();
-				qo.setSQL(dtKey + " <= '" + dtTo + "'");
-				qo.addRightBracket();
-			}
-
-			if (md.getRptDTSearchWay() == DTSearchWay.ByDateTime)
-			{
-				qo.addAnd();
-				qo.addLeftBracket();
-				qo.setSQL(dtKey + " >= '" + dtFrom + " 00:00'");
-				qo.addAnd();
-				qo.setSQL(dtKey + " <= '" + dtTo + " 23:59'");
-				qo.addRightBracket();
-			}
-		}
-
-		///#endregion
-
-		return qo;
-	}
-	
-	public boolean toStrInt(String str){
-		try {
-			int i = Integer.parseInt(str);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-		
-	}
-	
-	public final String FlowSearch_Done() throws Exception
+	public final String FlowSearch_Done()
 	{
 		String vals = this.GetRequestVal("vals");
 		String searchKey = GetRequestVal("key");
@@ -810,14 +529,14 @@ public class WF_RptDfine extends WebContralBase{
 
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 		UserRegedit ur = new UserRegedit();
-		ur.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+		ur.MyPK = WebUser.No + rptNo + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 
-		ur.setSearchKey(searchKey);
-		ur.setDTFrom_Data(dtFrom);
-		ur.setDTTo_Data(dtTo);
-		ur.setVals(vals);
-		ur.setMVals(mvals);
+		ur.SearchKey = searchKey;
+		ur.DTFrom_Data = dtFrom;
+		ur.DTTo_Data = dtTo;
+		ur.Vals = vals;
+		ur.MVals = mvals;
 		ur.Update();
 
 		DataSet ds = new DataSet();
@@ -826,45 +545,41 @@ public class WF_RptDfine extends WebContralBase{
 		GEEntitys ges = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ges);
 
-		if (this.getSearchType().equals("My")) //我发起的.
+		switch (this.getSearchType())
 		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
-		}
-		else if (this.getSearchType().equals("MyDept")) //我部门发起的.
-		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
-		}
-		else if (this.getSearchType().equals("MyJoin")) //我参与的.
-		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
-		}
-		else if (this.getSearchType().equals("Adminer"))
-		{
-		}
-		else
-		{
+			case "My": //我发起的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				break;
+			case "MyDept": //我部门发起的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				break;
+			case "MyJoin": //我参与的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				break;
+			case "Adminer":
+				break;
+			default:
 				return "err@" + this.getSearchType() + "标记错误.";
 		}
 
 
-		qo = InitQueryObject(qo, md, ges.getGetNewEntity().getEnMap().getAttrs(), attrs, ur);
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
 
 		md.SetPara("T_total", qo.GetCount());
-		qo.DoQuery("OID", StringUtils.isEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), pageIdx);
-		ds.Tables.add(ges.ToDataTableField("MainData"));
-		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+		qo.DoQuery("OID", tangible.StringHelper.isNullOrWhiteSpace(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), pageIdx);
+		ds.Tables.Add(ges.ToDataTableField("MainData"));
+		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
 
-		return BP.Tools.Json.ToJson(ds);
+		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
-	
-	/**
-	 * 流程查询导出
-	 * @return
-	 * @throws Exception
-	 */
-	public final String FlowSearch_Exp() throws Exception
+	/** 
+	 导出
+	 
+	 @return 
+	*/
+	public final String FlowSearch_Exp()
 	{
 		String vals = this.GetRequestVal("vals");
 		String searchKey = GetRequestVal("key");
@@ -872,80 +587,88 @@ public class WF_RptDfine extends WebContralBase{
 		String dtTo = GetRequestVal("dtTo");
 		String mvals = GetRequestVal("mvals");
 
+
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 		UserRegedit ur = new UserRegedit();
-		ur.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+		ur.MyPK = WebUser.No + rptNo + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
 
-		ur.setSearchKey(searchKey);
-		ur.setDTFrom_Data(dtFrom);
-		ur.setDTTo_Data(dtTo);
-		ur.setVals(vals);
-		ur.setMVals(mvals);
+		ur.SearchKey = searchKey;
+		ur.DTFrom_Data = dtFrom;
+		ur.DTTo_Data = dtTo;
+		ur.Vals = vals;
+		ur.MVals = mvals;
 		ur.Update();
 
+
+		MapAttrs attrs = new MapAttrs();
+		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
+
+		DataSet ds = new DataSet();
 		MapData md = new MapData(rptNo);
-		MapAttrs attrs = new MapAttrs(rptNo);
+		//MapAttrs attrs = new MapAttrs(rptNo);
 		GEEntitys ges = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ges);
-		
-		String title="数据导出";
-		if (this.getSearchType().equals("My")) //我发起的.
+
+		String title = "数据导出";
+		switch (this.getSearchType())
 		{
+			case "My": //我发起的.
 				title = "我发起的流程";
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
-		}
-		else if (this.getSearchType().equals("MyDept")) //我部门发起的.
-		{
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				break;
+			case "MyDept": //我部门发起的.
 				title = "我部门发起的流程";
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
-		}
-		else if (this.getSearchType().equals("MyJoin")) //我参与的.
-		{
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				break;
+			case "MyJoin": //我参与的.
 				title = "我参与的流程";
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
-		}
-		else if (this.getSearchType().equals("Adminer"))
-		{
-		}
-		else
-		{
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				break;
+			case "Adminer":
+				break;
+			default:
 				return "err@" + this.getSearchType() + "标记错误.";
 		}
-		
-		Entity entity = ges.getGetNewEntity();
-		Attrs enAttrs = entity.getEnMap().getAttrs();
-		qo = InitQueryObject(qo, md,enAttrs , attrs, ur);
-		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
-		String filePath = ExportDGToExcel(qo.DoQueryToTable(), entity, title, enAttrs);
+
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
+		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
+		qo.addOrderByDesc("OID");
+		Attrs attrsa = new Attrs();
+		for (MapAttr attr : attrs)
+		{
+			attrsa.Add(attr.HisAttr);
+		}
+
+		String filePath = ExportDGToExcel(qo.DoQueryToTable(), ges.GetNewEntity, title, attrsa);
+
+
 		return filePath;
 	}
-	
-	 /** 
+	/** 
 	 流程分組分析 1.获取查询条件 2.获取分组的枚举或者外键值 3.获取分析的信息列表进行求和、求平均
 	 
 	 @return 
-	 * @throws Exception 
-*/
-	public final String FlowGroup_Init() throws Exception
+	*/
+	public final String FlowGroup_Init()
 	{
-		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
+		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
 
 		String fcid = "";
 		DataSet ds = new DataSet();
-		java.util.HashMap<String, String> vals = null;
+		HashMap<String, String> vals = null;
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getGroupType();
 
 		//报表信息，包含是否显示关键字查询RptIsSearchKey，过滤条件枚举/下拉字段RptSearchKeys，时间段查询方式RptDTSearchWay，时间字段RptDTSearchKey
 		MapData md = new MapData();
-		md.setNo(rptNo);
+		md.No = rptNo;
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			//如果没有找到，就让其重置一下.
+			/*如果没有找到，就让其重置一下.*/
 			BP.WF.Rpt.RptDfine rd = new RptDfine(this.getFK_Flow());
 
 			if (this.getGroupType().equals("My"))
@@ -976,14 +699,14 @@ public class WF_RptDfine extends WebContralBase{
 		//查询条件的信息表
 		String cfgfix = "_SearchAttrs";
 		UserRegedit ur = new UserRegedit();
-		ur.setAutoMyPK(false);
-		ur.setMyPK(WebUser.getNo() + rptNo + cfgfix);
+		ur.AutoMyPK = false;
+		ur.MyPK = WebUser.No + rptNo + cfgfix;
 
 		if (ur.RetrieveFromDBSources() == 0)
 		{
-			ur.setMyPK(WebUser.getNo() + rptNo + cfgfix);
-			ur.setFK_Emp(WebUser.getNo());
-			ur.setCfgKey(rptNo + cfgfix);
+			ur.MyPK = WebUser.No + rptNo + cfgfix;
+			ur.FK_Emp = WebUser.No;
+			ur.CfgKey = rptNo + cfgfix;
 
 			ur.Insert();
 		}
@@ -991,14 +714,14 @@ public class WF_RptDfine extends WebContralBase{
 		//分组条件存储的信息表
 		cfgfix = "_GroupAttrs";
 		UserRegedit groupUr = new UserRegedit();
-		groupUr.setAutoMyPK(false);
-		groupUr.setMyPK(WebUser.getNo() + rptNo + cfgfix);
+		groupUr.AutoMyPK = false;
+		groupUr.MyPK = WebUser.No + rptNo + cfgfix;
 
 		if (groupUr.RetrieveFromDBSources() == 0)
 		{
-			groupUr.setMyPK(WebUser.getNo() + rptNo + cfgfix);
-			groupUr.setFK_Emp(WebUser.getNo());
-			groupUr.setCfgKey(rptNo + cfgfix);
+			groupUr.MyPK = WebUser.No + rptNo + cfgfix;
+			groupUr.FK_Emp = WebUser.No;
+			groupUr.CfgKey = rptNo + cfgfix;
 
 			groupUr.Insert();
 		}
@@ -1006,17 +729,17 @@ public class WF_RptDfine extends WebContralBase{
 
 
 		vals = ur.GetVals();
-		md.SetPara("RptDTSearchWay",md.getRptDTSearchWay().getValue());
-		md.SetPara("RptDTSearchKey",md.getRptDTSearchKey());
-		md.SetPara("RptIsSearchKey",md.getRptIsSearchKey());
-		md.SetPara("T_SearchKey", ur.getSearchKey());
+		md.SetPara("RptDTSearchWay", (int)md.RptDTSearchWay);
+		md.SetPara("RptDTSearchKey", md.RptDTSearchKey);
+		md.SetPara("RptIsSearchKey", md.RptIsSearchKey);
+		md.SetPara("T_SearchKey", ur.SearchKey);
 
-		if (md.getRptDTSearchWay() != DTSearchWay.None)
+		if (md.RptDTSearchWay != DTSearchWay.None)
 		{
 			ar = new MapAttr(rptNo, md.RptDTSearchKey);
-			md.SetPara("T_DateLabel", ar.getName());
+			md.SetPara("T_DateLabel", ar.Name);
 
-			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
+			if (md.RptDTSearchWay == DTSearchWay.ByDate)
 			{
 				md.SetPara("T_DTFrom", ur.GetValStringByKey(UserRegeditAttr.DTFrom));
 				md.SetPara("T_DTTo", ur.GetValStringByKey(UserRegeditAttr.DTTo));
@@ -1027,7 +750,19 @@ public class WF_RptDfine extends WebContralBase{
 				md.SetPara("T_DTTo", ur.GetValStringByKey(UserRegeditAttr.DTTo));
 			}
 		}
-		///#region //显示的内容
+
+		//判断是否含有导出至模板的模板文件，如果有，则显示导出至模板按钮RptExportToTmp
+		String tmpDir = BP.Sys.SystemConfig.PathOfDataUser + "TempleteExpEns\\" + rptNo;
+		if ((new File(tmpDir)).isDirectory())
+		{
+			if (Directory.GetFiles(tmpDir, "*.xls*").Length > 0)
+			{
+				md.SetPara("T_RptExportToTmp", "1");
+			}
+		}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region //显示的内容
 		DataRow row = null;
 		DataTable dt = new DataTable("Group_MapAttr");
 		dt.Columns.Add("Field", String.class);
@@ -1038,32 +773,34 @@ public class WF_RptDfine extends WebContralBase{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
 
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : attrs)
 		{
-			if (attr.getUIContralType() == UIContralType.DDL)
+			if (attr.UIContralType == UIContralType.DDL)
 			{
 				DataRow dr = dt.NewRow();
-				dr.setValue("Field", attr.getKeyOfEn());
-				dr.setValue("Name",attr.getHisAttr().getDesc());
+				dr.set("Field", attr.KeyOfEn);
+				dr.set("Name", attr.HisAttr.Desc);
 
 				// 根据状态 设置信息.
-				if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
+				if (groupUr.Vals.indexOf(attr.KeyOfEn) != -1)
 				{
-					dr.setValue("Checked","true");
+					dr.set("Checked", "true");
 				}
 
-				if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
+				if (groupUr.Vals.indexOf(attr.KeyOfEn) != -1)
 				{
-					dr.setValue("Checked","true");
+					dr.set("Checked", "true");
 				}
 
-				dt.Rows.add(dr);
+				dt.Rows.Add(dr);
 			}
 		}
-		ds.Tables.add(dt);
-		///#endregion
+		ds.Tables.Add(dt);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-		///#region //分析的内容
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region //分析的内容
 		dt = new DataTable("Analysis_MapAttr");
 		dt.Columns.Add("Field", String.class);
 		dt.Columns.Add("Name", String.class);
@@ -1071,10 +808,10 @@ public class WF_RptDfine extends WebContralBase{
 
 		//如果不存在分析项手动添加一个分析项
 		DataRow dtr = dt.NewRow();
-		dtr.setValue("Field", "Group_Number");
-		dtr.setValue("Name","数量");
-		dtr.setValue("Checked","true");
-		dt.Rows.add(dtr);
+		dtr.set("Field", "Group_Number");
+		dtr.set("Name", "数量");
+		dtr.set("Checked", "true");
+		dt.Rows.Add(dtr);
 
 		DataTable ddlDt = new DataTable();
 		ddlDt.TableName = "Group_Number";
@@ -1082,95 +819,97 @@ public class WF_RptDfine extends WebContralBase{
 		ddlDt.Columns.Add("Name");
 		ddlDt.Columns.Add("Selected");
 		DataRow ddlDr = ddlDt.NewRow();
-		ddlDr.setValue("No", "SUM");
-		ddlDr.setValue("Name","求和");
-		ddlDr.setValue("Selected","true");
-		ddlDt.Rows.add(ddlDr);
-		ds.Tables.add(ddlDt);
+		ddlDr.set("No", "SUM");
+		ddlDr.set("Name", "求和");
+		ddlDr.set("Selected", "true");
+		ddlDt.Rows.Add(ddlDr);
+		ds.Tables.Add(ddlDt);
 
 
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : attrs)
 		{
-			if (attr.getIsPK() || attr.getIsNum() == false)
+			if (attr.IsPK || attr.IsNum == false)
 			{
 				continue;
 			}
-			if (attr.getUIContralType() == UIContralType.TB == false)
+			if (attr.UIContralType == UIContralType.TB == false)
 			{
 				continue;
 			}
-			if (attr.getUIVisible() == false)
+			if (attr.UIVisible == false)
 			{
 				continue;
 			}
-			if (attr.getHisAttr().getMyFieldType() == FieldType.FK)
+			if (attr.HisAttr.MyFieldType == FieldType.FK)
 			{
 				continue;
 			}
-			if (attr.getHisAttr().getMyFieldType() == FieldType.Enum)
+			if (attr.HisAttr.MyFieldType == FieldType.Enum)
 			{
 				continue;
 			}
-			if (attr.getKeyOfEn().equals("OID") || attr.getKeyOfEn().equals("WorkID") || attr.getKeyOfEn().equals("MID"))
+			if (attr.KeyOfEn.equals("OID") || attr.KeyOfEn.equals("WorkID") || attr.KeyOfEn.equals("MID"))
 			{
 				continue;
 			}
 
 			dtr = dt.NewRow();
-			dtr.setValue("Field", attr.getKeyOfEn());
-			dtr.setValue("Name", attr.getHisAttr().getDesc());
+			dtr.set("Field", attr.KeyOfEn);
+			dtr.set("Name", attr.HisAttr.Desc);
 
 
 			// 根据状态 设置信息.
-			if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
+			if (groupUr.Vals.indexOf(attr.KeyOfEn) != -1)
 			{
-				dtr.setValue("Checked", "true");
+				dtr.set("Checked", "true");
 			}
-			dt.Rows.add(dtr);
+			dt.Rows.Add(dtr);
 
 			ddlDt = new DataTable();
 			ddlDt.Columns.Add("No");
 			ddlDt.Columns.Add("Name");
 			ddlDt.Columns.Add("Selected");
-			ddlDt.TableName = attr.getKeyOfEn();
+			ddlDt.TableName = attr.KeyOfEn;
 
 			ddlDr = ddlDt.NewRow();
-			ddlDr.setValue("No", "SUM");
-			ddlDr.setValue("Name", "求和");
-			if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=SUM") != -1)
+			ddlDr.set("No", "SUM");
+			ddlDr.set("Name", "求和");
+			if (groupUr.Vals.indexOf("@" + attr.KeyOfEn + "=SUM") != -1)
 			{
-				ddlDr.setValue("Selected","true");
+				ddlDr.set("Selected", "true");
 			}
-			ddlDt.Rows.add(ddlDr);
+			ddlDt.Rows.Add(ddlDr);
 
 			ddlDr = ddlDt.NewRow();
-			ddlDr.setValue("No","AVG");
-			ddlDr.setValue("Name","求平均");
-			if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=AVG") != -1)
+			ddlDr.set("No", "AVG");
+			ddlDr.set("Name", "求平均");
+			if (groupUr.Vals.indexOf("@" + attr.KeyOfEn + "=AVG") != -1)
 			{
-				ddlDr.setValue("Selected","true");
+				ddlDr.set("Selected", "true");
 			}
-			ddlDt.Rows.add(ddlDr);
-			boolean IsContainsNDYF = false;
-			if (IsContainsNDYF)
+			ddlDt.Rows.Add(ddlDr);
+
+			if (this.getIsContainsNDYF())
 			{
 				ddlDr = ddlDt.NewRow();
-				ddlDr.setValue("No","AMOUNT");
-				ddlDr.setValue("Name","求累计");
-				if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=AMOUNT") != -1)
+				ddlDr.set("No", "AMOUNT");
+				ddlDr.set("Name", "求累计");
+				if (groupUr.Vals.indexOf("@" + attr.KeyOfEn + "=AMOUNT") != -1)
 				{
-					ddlDr.setValue("Selected","true");
+					ddlDr.set("Selected", "true");
 				}
-				ddlDt.Rows.add(ddlDr);
+				ddlDt.Rows.Add(ddlDr);
 			}
 
-			ds.Tables.add(ddlDt);
+			ds.Tables.Add(ddlDt);
 
 		}
-		ds.Tables.add(dt);
-		///#endregion
+		ds.Tables.Add(dt);
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-		///#region //增加枚举/外键字段信息
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region //增加枚举/外键字段信息
 		attrs = new MapAttrs(rptNo);
 		dt = new DataTable("FilterCtrls");
 		dt.Columns.Add("Field", String.class);
@@ -1187,124 +926,110 @@ public class WF_RptDfine extends WebContralBase{
 
 		for (String ctrl : ctrls)
 		{
-			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示
-			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(this.GetRequestVal(ctrl)))
+			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示context.Request.QueryString[ctrl]
+			if (tangible.StringHelper.isNullOrWhiteSpace(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
 			{
 				continue;
 			}
 
 			Object tempVar = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, ctrl);
-			ar = (MapAttr)((tempVar instanceof MapAttr) ? tempVar : null);
+			ar = tempVar instanceof MapAttr ? (MapAttr)tempVar : null;
 			if (ar == null)
 			{
 				continue;
 			}
 
 			row = dt.NewRow();
-			row.setValue("Field", ctrl);
-			row.setValue("Name",ar.getName());
-			row.setValue("DataType",ar.getMyDataType());
-			row.setValue("W",ar.getUIWidth()); //宽度.
+			row.set("Field", ctrl);
+			row.set("Name", ar.Name);
+			row.set("DataType", ar.MyDataType);
+			row.set("W", ar.UIWidth); //宽度.
 
-			switch (ar.getUIContralType())
+			switch (ar.UIContralType)
 			{
-				case DDL:
-					row.setValue("Type","combo");
-					fcid = "DDL_" + ar.getKeyOfEn();
+				case UIContralType.DDL:
+					row.set("Type", "combo");
+					fcid = "DDL_" + ar.KeyOfEn;
 					if (vals.containsKey(fcid))
 					{
 						if (vals.get(fcid).equals("mvals"))
 						{
-							AtPara ap = new AtPara(ur.getMVals());
-							row.setValue("DefaultValue",ap.GetValStrByKey(ar.getKeyOfEn()));
+							AtPara ap = new AtPara(ur.MVals);
+							row.set("DefaultValue", ap.GetValStrByKey(ar.KeyOfEn));
 						}
 						else
 						{
-							row.setValue("DefaultValue",vals.get(fcid));
+							row.set("DefaultValue", vals.get(fcid));
 						}
 					}
 
-					switch (ar.getLGType())
+					switch (ar.LGType)
 					{
 
-						case FK:
-							Entities ens = ar.getHisAttr().getHisFKEns();
+						case FieldTypeS.FK:
+							Entities ens = ar.HisAttr.HisFKEns;
 							ens.RetrieveAll();
-							EntitiesTree treeEns = (EntitiesTree)((ens instanceof EntitiesTree) ? ens : null);
+							EntitiesTree treeEns = ens instanceof EntitiesTree ? (EntitiesTree)ens : null;
 
 							if (treeEns != null)
 							{
-								row.setValue("Type","combotree");
+								row.set("Type", "combotree");
 								dtNoName = ens.ToDataTableField();
-								dtNoName.TableName = ar.getKeyOfEn();
-								ds.Tables.add(dtNoName);
+								dtNoName.TableName = ar.KeyOfEn;
+								ds.Tables.Add(dtNoName);
 
-								row.setValue("ValueField","No");
-								row.setValue("TextField","Name");
-								row.setValue("ParentField","ParentNo");
+								row.set("ValueField", "No");
+								row.set("TextField", "Name");
+								row.set("ParentField", "ParentNo");
 							}
 							else
 							{
-								EntitiesTree treeSimpEns = (EntitiesTree)((ens instanceof EntitiesTree) ? ens : null);
+								EntitiesTree treeSimpEns = ens instanceof EntitiesTree ? (EntitiesTree)ens : null;
 
 								if (treeSimpEns != null)
 								{
-									row.setValue("Type","combotree");
+									row.set("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
-									dtNoName.TableName = ar.getKeyOfEn();
-									ds.Tables.add(dtNoName);
+									dtNoName.TableName = ar.KeyOfEn;
+									ds.Tables.Add(dtNoName);
 
-									row.setValue("ValueField","No");
-									row.setValue("TextField","Name");
-									row.setValue("ParentField","ParentNo");
+									row.set("ValueField", "No");
+									row.set("TextField", "Name");
+									row.set("ParentField", "ParentNo");
 								}
 								else
 								{
-									dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-									DataRow dr = dtNoName.NewRow();
-									dr.setValue("No", "all");
-									dr.setValue("Name", "全部");
-									dtNoName.Rows.add(dr);
+									dtNoName = GetNoNameDataTable(ar.KeyOfEn);
+									dtNoName.Rows.Add("all", "全部");
 
 									for (Entity en : ens)
 									{
-										dr = dtNoName.NewRow();
-										dr.setValue("No", en.GetValStringByKey(ar.getHisAttr().getUIRefKeyValue()));
-										dr.setValue("Name", en.GetValStringByKey(ar.getHisAttr().getUIRefKeyText()));
-										
-										dtNoName.Rows.add(dr);
+										dtNoName.Rows.Add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
 									}
 
-									ds.Tables.add(dtNoName);
+									ds.Tables.Add(dtNoName);
 
-									row.setValue("ValueField","No");
-									row.setValue("TextField","Name");
+									row.set("ValueField", "No");
+									row.set("TextField", "Name");
 								}
 							}
 							break;
 
-						case Enum:
-							dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
-							DataRow dr = dtNoName.NewRow();
-							dr.setValue("No", "all");
-							dr.setValue("Name", "全部");
-							dtNoName.Rows.add(dr);
+						case FieldTypeS.Enum:
+							dtNoName = GetNoNameDataTable(ar.KeyOfEn);
+							dtNoName.Rows.Add("all", "全部");
 
-							SysEnums enums = new SysEnums(ar.getUIBindKey());
+							SysEnums enums = new SysEnums(ar.UIBindKey);
 
-							for (SysEnum en : enums.ToJavaList())
+							for (SysEnum en : enums)
 							{
-								dr = dtNoName.NewRow();
-								dr.setValue("No", en.getIntKey());
-								dr.setValue("Name", en.getLab());
-								dtNoName.Rows.add(dr);
-								dtNoName.Rows.add(dr);
+								dtNoName.Rows.Add(en.IntKey.toString(), en.Lab);
 							}
 
-							ds.Tables.add(dtNoName);
+							ds.Tables.Add(dtNoName);
 
-							row.setValue("ValueField","No");
-							row.setValue("TextField","Name");
+							row.set("ValueField", "No");
+							row.set("TextField", "Name");
 							break;
 						default:
 							break;
@@ -1315,22 +1040,23 @@ public class WF_RptDfine extends WebContralBase{
 					break;
 			}
 
-			dt.Rows.add(row);
+			dt.Rows.Add(row);
 		}
 
-		ds.Tables.add(dt);
-		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
-		///#endregion
+		ds.Tables.Add(dt);
+		ds.Tables.Add(md.ToDataTableField("Sys_MapData"));
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-		return BP.Tools.Json.ToJson(ds);
+		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
 
-	public final String FlowGropu_Done() throws Exception
+	public final String FlowGropu_Done()
 	{
 
 		if (!this.getGroupType().equals("My") && this.getGroupType().equals("MyJoin") && this.getGroupType().equals("MyDept") && this.getGroupType().equals("Adminer"))
 		{
-			 return "info@<img src='../Img/Pub/warning.gif' /><b><font color=red>"+ this.getGroupType() + "标记错误.</font></b>";
+			return "info@<img src='../Img/Pub/warning.gif' /><b><font color=red>" + this.getGroupType() + "标记错误.</font></b>";
 		}
 		DataSet ds = new DataSet();
 		ds = FlowGroupDoneSet();
@@ -1346,20 +1072,22 @@ public class WF_RptDfine extends WebContralBase{
 	 
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final DataSet FlowGroupDoneSet() throws Exception
+	public final DataSet FlowGroupDoneSet()
 	{
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getGroupType();
 		DataSet ds = new DataSet();
 		MapData md = new MapData(rptNo);
 		MapAttrs attrs = new MapAttrs(rptNo);
 		GEEntitys ges = new GEEntitys(rptNo);
+		GEEntity en = new GEEntity(rptNo);
+		Map map = en.EnMapInTime;
 
 
-		UserRegedit groupUr = new UserRegedit(WebUser.getNo(),rptNo+"_GroupAttrs");
+
+		UserRegedit groupUr = new UserRegedit(WebUser.No, rptNo + "_GroupAttrs");
 		//分组的参数
-		String groupVals = groupUr.getVals();
+		String groupVals = groupUr.Vals;
 		//查询条件
 		//分组
 		String groupKey = "";
@@ -1387,7 +1115,7 @@ public class WF_RptDfine extends WebContralBase{
 			{
 				Attr attr = GetAttrByKey(attrs, paras[0]);
 				AttrsOfNum.Add(attr);
-				dataType = attr.getMyDataType();
+				dataType = attr.MyDataType;
 			}
 
 			if (paras[0].equals("Group_Number"))
@@ -1396,8 +1124,9 @@ public class WF_RptDfine extends WebContralBase{
 			}
 			else
 			{
-				if (paras[1].equals("SUM"))
+				switch (paras[1])
 				{
+					case "SUM":
 						if (dataType == 2)
 						{
 							groupKey += " SUM(" + paras[0] + ") \"" + paras[0] + "\",";
@@ -1406,13 +1135,11 @@ public class WF_RptDfine extends WebContralBase{
 						{
 							groupKey += " round ( SUM(" + paras[0] + "), 4) \"" + paras[0] + "\",";
 						}
-				}
-				else if (paras[1].equals("AVG"))
-				{
+						break;
+					case "AVG":
 						groupKey += " round (AVG(" + paras[0] + "), 4)  \"" + paras[0] + "\",";
-				}
-				else if (paras[1].equals("AMOUNT"))
-				{
+						break;
+					case "AMOUNT":
 						if (dataType == 2)
 						{
 							groupKey += " SUM(" + paras[0] + ") \"" + paras[0] + "\",";
@@ -1421,9 +1148,8 @@ public class WF_RptDfine extends WebContralBase{
 						{
 							groupKey += " round ( SUM(" + paras[0] + "), 4) \"" + paras[0] + "\",";
 						}
-				}
-				else
-				{
+						break;
+					default:
 						throw new RuntimeException("没有判断的情况.");
 				}
 
@@ -1441,7 +1167,7 @@ public class WF_RptDfine extends WebContralBase{
 			return null;
 		}
 
-		// 如果包含累计数据，那它一定需要一个月份字段。业务逻辑错误。
+		/* 如果包含累计数据，那它一定需要一个月份字段。业务逻辑错误。*/
 		groupKey = groupKey.substring(0, groupKey.length() - 1);
 		BP.DA.Paras ps = new Paras();
 		// 生成 sql.
@@ -1471,7 +1197,7 @@ public class WF_RptDfine extends WebContralBase{
 		String groupList = this.GetRequestVal("GroupList");
 		if (!DataType.IsNullOrEmpty(SelectedGroupKey))
 		{
-			// 如果是年月 分组， 并且如果内部有 累计属性，就强制选择。
+			/* 如果是年月 分组， 并且如果内部有 累计属性，就强制选择。*/
 			if (groupList.indexOf("FK_NY") != -1 && isHaveLJ)
 			{
 				selectSQL += "FK_NY,";
@@ -1508,231 +1234,236 @@ public class WF_RptDfine extends WebContralBase{
 		//查询语句
 		QueryObject qo = new QueryObject(ges);
 
-		if (this.getGroupType().equals("My")) //我发起的.
+		switch (this.getGroupType())
 		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
-		}
-		else if (this.getGroupType().equals("MyDept")) //我部门发起的.
-		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
-		}
-		else if (this.getGroupType().equals("MyJoin")) //我参与的.
-		{
-				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
-		}
-		else if (this.getGroupType().equals("Adminer"))
-		{
-		}
-		else
-		{
+			case "My": //我发起的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+				break;
+			case "MyDept": //我部门发起的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.FK_Dept);
+				break;
+			case "MyJoin": //我参与的.
+				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+				break;
+			case "Adminer":
+				break;
+			default:
 				return null;
 		}
 
 		//查询注册信息表
 		UserRegedit ur = new UserRegedit();
-		ur.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+		ur.MyPK = WebUser.No + rptNo + "_SearchAttrs";
 		ur.RetrieveFromDBSources();
-		qo = InitQueryObject(qo, md, ges.getGetNewEntity().getEnMap().getAttrs(), attrs, ur);
+		qo = InitQueryObject(qo, md, ges.GetNewEntity.EnMap.Attrs, attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
 		DataTable dt2 = qo.DoGroupQueryToTable(selectSQL + groupKey, groupBy, orderby);
 
-		 DataTable dt1 = dt2.clone();
+		DataTable dt1 = dt2.Clone();
 
-		 dt1.Columns.Add("IDX", Integer.class);
+		dt1.Columns.Add("IDX", Integer.class);
 
-		 ///#region 对他进行分页面
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 对他进行分页面
 
-		 int myIdx = 0;
-		 for (DataRow dr : dt2.Rows)
-		 {
-			 myIdx++;
-			 DataRow mydr = dt1.NewRow();
-			 mydr.setValue("IDX", myIdx);
-			 for (DataColumn dc : dt2.Columns)
-			 {
-				 mydr.setValue(dc.ColumnName,dr.getValue(dc.ColumnName));
-			 }
-			 dt1.Rows.add(mydr);
-		 }
-		 ///#region 处理 Int 类型的分组列。
-		 DataTable dt = dt1.clone();
-		 dt.TableName = "GroupSearch";
-		 dt.Rows.clear();
-		 for (Attr attr : AttrsOfGroup)
-		 {
-			 dt.Columns.get(attr.getKey()).DataType = String.class;
-		 }
-		 for (DataRow dr : dt1.Rows)
-        {
-            dt.Rows.add(dr);
-        }
-		 // 处理这个物理表 , 如果有累计字段, 就扩展它的列。
-		 if (isHaveLJ)
-		 {
-			 // 首先扩充列.
-			 for (Attr attr : AttrsOfNum)
-			 {
-				 if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
-				 {
-					 continue;
-				 }
+		int myIdx = 0;
+		for (DataRow dr : dt2.Rows)
+		{
+			myIdx++;
+			DataRow mydr = dt1.NewRow();
+			mydr.set("IDX", myIdx);
+			for (DataColumn dc : dt2.Columns)
+			{
+				mydr.set(dc.ColumnName, dr.get(dc.ColumnName));
+			}
+			dt1.Rows.Add(mydr);
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-				 switch (attr.getMyDataType())
-				 {
-					 case DataType.AppInt:
-						 dt.Columns.Add(attr.getKey() + "Amount", Integer.class);
-						 break;
-					 default:
-						 dt.Columns.Add(attr.getKey() + "Amount", java.math.BigDecimal.class);
-						 break;
-				 }
-			 }
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 处理 Int 类型的分组列。
+		DataTable dt = dt1.Clone();
+		dt.TableName = "GroupSearch";
+		dt.Rows.Clear();
+		for (Attr attr : AttrsOfGroup)
+		{
+			dt.Columns[attr.Key].DataType = String.class;
+		}
+		for (DataRow dr : dt1.Rows)
+		{
+			dt.ImportRow(dr);
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
 
-			 String sql = "";
-			 String whereOFLJ = "";
-			 AtPara ap = new AtPara(ur.getVals());
-			 /** #region 获得查询数据.
-			 */
-			 for (String str : ap.getHisHT().keySet())
-			 {
-				 Object val = ap.GetValStrByKey(str);
-				 if (val.equals("all"))
-				 {
-					 continue;
-				 }
-				 if (!str.equals("FK_NY"))
-				 {
-					 whereOFLJ += " " + str + " =" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
-				 }
+		// 处理这个物理表 , 如果有累计字段, 就扩展它的列。
+		if (isHaveLJ)
+		{
+			// 首先扩充列.
+			for (Attr attr : AttrsOfNum)
+			{
+				if (StateNumKey.indexOf(attr.Key + "=AMOUNT") == -1)
+				{
+					continue;
+				}
 
-			 }
+				switch (attr.MyDataType)
+				{
+					case DataType.AppInt:
+						dt.Columns.Add(attr.Key + "Amount", Integer.class);
+						break;
+					default:
+						dt.Columns.Add(attr.Key + "Amount", BigDecimal.class);
+						break;
+				}
+			}
 
-			 // 添加累计汇总数据.
-			 for (DataRow dr : dt.Rows)
-			 {
-				 for (Attr attr : AttrsOfNum)
-				 {
-					 if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
-					 {
-						 continue;
-					 }
+			String sql = "";
+			String whereOFLJ = "";
+			AtPara ap = new AtPara(ur.Vals);
+			/** #region 获得查询数据.
+			*/
+			for (String str : ap.HisHT.keySet())
+			{
+				Object val = ap.GetValStrByKey(str);
+				if (val.equals("all"))
+				{
+					continue;
+				}
+				if (!str.equals("FK_NY"))
+				{
+					whereOFLJ += " " + str + " =" + SystemConfig.AppCenterDBVarStr + str + "   AND ";
+				}
 
-					 //形成查询sql.
-					 if (whereOFLJ.length() > 0)
-					 {
-						 sql = "SELECT SUM(" + attr.getKey() + ") FROM " + ges.getGetNewEntity().getEnMap().getPhysicsTable() + whereOFLJ + " AND ";
-					 }
-					 else
-					 {
-						 sql = "SELECT SUM(" + attr.getKey() + ") FROM " + ges.getGetNewEntity().getEnMap().getPhysicsTable() + " WHERE ";
-					 }
+			}
 
-					 for (Attr attr1 : AttrsOfGroup)
-					 {
-						 if (attr1.getKey().equals("FK_NY"))
-						 {
-								 sql += " FK_NY <= '" + dr.get("FK_NY") + "' AND FK_ND='" + dr.get("FK_NY").toString().substring(0, 4) + "' AND ";
-						 }
-						 else if (attr1.getKey().equals("FK_Dept"))
-						 {
-								 sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
-						 }
-						 else if (attr1.getKey().equals("FK_SJ") || attr1.getKey().equals("FK_XJ"))
-						 {
-								 sql += attr1.getKey() + " LIKE '" + dr.get(attr1.getKey()) + "%' AND ";
-						 }
-						 else
-						 {
-								 sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
-						 }
-					 }
+			// 添加累计汇总数据.
+			for (DataRow dr : dt.Rows)
+			{
+				for (Attr attr : AttrsOfNum)
+				{
+					if (StateNumKey.indexOf(attr.Key + "=AMOUNT") == -1)
+					{
+						continue;
+					}
 
-					 sql = sql.substring(0, sql.length() - (new String("AND ")).length());
-					 if (attr.getMyDataType() == DataType.AppInt)
-					 {
-						 dr.setValue(attr.getKey() + "Amount", DBAccess.RunSQLReturnValInt(sql, 0)) ;
-					 }
-					 else
-					 {
-						 dr.setValue(attr.getKey() + "Amount",DBAccess.RunSQLReturnValDecimal(sql, BigDecimal.valueOf(0), 2));
-					 }
-				 }
-			 }
-		 }
+					//形成查询sql.
+					if (whereOFLJ.length() > 0)
+					{
+						sql = "SELECT SUM(" + attr.Key + ") FROM " + ges.GetNewEntity.EnMap.PhysicsTable + whereOFLJ + " AND ";
+					}
+					else
+					{
+						sql = "SELECT SUM(" + attr.Key + ") FROM " + ges.GetNewEntity.EnMap.PhysicsTable + " WHERE ";
+					}
 
-		 // 为表扩充外键
-		 for (Attr attr : AttrsOfGroup)
-		 {
-			 dt.Columns.Add(attr.getKey() + "T", String.class);
-		 }
-		 for (Attr attr : AttrsOfGroup)
-		 {
-			 if (attr.getUIBindKey().indexOf(".") == -1)
-			 {
-				 // 说明它是枚举类型 
-				 SysEnums ses = new SysEnums(attr.getUIBindKey());
-				 for (DataRow dr : dt.Rows)
-				 {
-					 int val = 0;
-					 try
-					 {
-						 val = Integer.parseInt(dr.get(attr.getKey()).toString());
-					 }
-					 catch (java.lang.Exception e)
-					 {
-						 dr.setValue(attr.getKey() + "T"," ");
-						 continue;
-					 }
+					for (Attr attr1 : AttrsOfGroup)
+					{
+						switch (attr1.Key)
+						{
+							case "FK_NY":
+								sql += " FK_NY <= '" + dr.get("FK_NY") + "' AND FK_ND='" + dr.get("FK_NY").toString().substring(0, 4) + "' AND ";
+								break;
+							case "FK_Dept":
+								sql += attr1.Key + "='" + dr.get(attr1.Key) + "' AND ";
+								break;
+							case "FK_SJ":
+							case "FK_XJ":
+								sql += attr1.Key + " LIKE '" + dr.get(attr1.Key) + "%' AND ";
+								break;
+							default:
+								sql += attr1.Key + "='" + dr.get(attr1.Key) + "' AND ";
+								break;
+						}
+					}
 
-					 for (SysEnum se : ses.ToJavaList())
-					 {
-						 if (se.getIntKey() == val)
-						 {
-							 dr.setValue(attr.getKey() + "T",se.getLab());
-						 }
-					 }
-				 }
-				 continue;
-			 }
-			 for (DataRow dr : dt.Rows)
-			 {
-				 Entity myen = attr.getHisFKEn();
-				 String val = dr.get(attr.getKey()).toString();
-				 myen.SetValByKey(attr.getUIRefKeyValue(), val);
-				 try
-				 {
-					 myen.Retrieve();
-					 dr.setValue(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText())) ;
-				 }
-				 catch (java.lang.Exception e2)
-				 {
-					 if (val == null || val.length() <= 1)
-					 {
-						 dr.setValue(attr.getKey() + "T", val);
-					 }
-					 else if (val.substring(0, 2).equals("63"))
-					 {
-						 try
-						 {
-							 BP.Port.Dept Dept = new BP.Port.Dept(val);
-							 dr.setValue(attr.getKey() + "T", Dept.getName());
-						 }
-						 catch (java.lang.Exception e3)
-						 {
-							 dr.setValue(attr.getKey() + "T",val);
-						 }
-					 }
-					 else
-					 {
-						 dr.setValue(attr.getKey() + "T",val);
-					 }
-				 }
-			 }
-		 }
-		 ds.Tables.add(dt);
-		 ds.Tables.add(AttrsOfNum.ToMapAttrs().ToDataTableField("AttrsOfNum"));
-		 ds.Tables.add(AttrsOfGroup.ToMapAttrs().ToDataTableField("AttrsOfGroup"));
+					sql = sql.substring(0, sql.length() - "AND ".length());
+					if (attr.MyDataType == DataType.AppInt)
+					{
+						dr.set(attr.Key + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
+					}
+					else
+					{
+						dr.set(attr.Key + "Amount", DBAccess.RunSQLReturnValDecimal(sql, 0, 2));
+					}
+				}
+			}
+		}
+
+		// 为表扩充外键
+		for (Attr attr : AttrsOfGroup)
+		{
+			dt.Columns.Add(attr.Key + "T", String.class);
+		}
+		for (Attr attr : AttrsOfGroup)
+		{
+			if (attr.UIBindKey.indexOf(".") == -1)
+			{
+				/* 说明它是枚举类型 */
+				SysEnums ses = new SysEnums(attr.UIBindKey);
+				for (DataRow dr : dt.Rows)
+				{
+					int val = 0;
+					try
+					{
+						val = Integer.parseInt(dr.get(attr.Key).toString());
+					}
+					catch (java.lang.Exception e)
+					{
+						dr.set(attr.Key + "T", " ");
+						continue;
+					}
+
+					for (SysEnum se : ses)
+					{
+						if (se.IntKey == val)
+						{
+							dr.set(attr.Key + "T", se.Lab);
+						}
+					}
+				}
+				continue;
+			}
+			for (DataRow dr : dt.Rows)
+			{
+				Entity myen = attr.HisFKEn;
+				String val = dr.get(attr.Key).toString();
+				myen.SetValByKey(attr.UIRefKeyValue, val);
+				try
+				{
+					myen.Retrieve();
+					dr.set(attr.Key + "T", myen.GetValStrByKey(attr.UIRefKeyText));
+				}
+				catch (java.lang.Exception e2)
+				{
+					if (val == null || val.length() <= 1)
+					{
+						dr.set(attr.Key + "T", val);
+					}
+					else if (val.substring(0, 2).equals("63"))
+					{
+						try
+						{
+							BP.Port.Dept Dept = new BP.Port.Dept(val);
+							dr.set(attr.Key + "T", Dept.Name);
+						}
+						catch (java.lang.Exception e3)
+						{
+							dr.set(attr.Key + "T", val);
+						}
+					}
+					else
+					{
+						dr.set(attr.Key + "T", val);
+					}
+				}
+			}
+		}
+		ds.Tables.Add(dt);
+		ds.Tables.Add(AttrsOfNum.ToMapAttrs.ToDataTableField("AttrsOfNum"));
+		ds.Tables.Add(AttrsOfGroup.ToMapAttrs.ToDataTableField("AttrsOfGroup"));
 
 
 		return ds;
@@ -1742,28 +1473,27 @@ public class WF_RptDfine extends WebContralBase{
 	 执行导出
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String FlowGroup_Exp() throws Exception
+	public final String FlowGroup_Exp()
 	{
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getGroupType();
 		String desc = "";
 
 		if (this.getGroupType().equals("My"))
 		{
-			desc="我发起的流程";
+			desc = "我发起的流程";
 		}
 		else if (this.getGroupType().equals("MyJoin"))
 		{
-			 desc="我审批的流程";
+			desc = "我审批的流程";
 		}
-		else if(this.getGroupType().equals("MyDept"))
+		else if (this.getGroupType().equals("MyDept"))
 		{
-			 desc="本部门发起的流程";
+			desc = "本部门发起的流程";
 		}
-		else if(this.getGroupType().equals("Adminer"))
+		else if (this.getGroupType().equals("Adminer"))
 		{
-			 desc="高级查询";
+			desc = "高级查询";
 		}
 		else
 		{
@@ -1778,11 +1508,11 @@ public class WF_RptDfine extends WebContralBase{
 		}
 
 		//获取注册信息表
-		UserRegedit ur = new UserRegedit(WebUser.getNo(), rptNo + "_GroupAttrs");
+		UserRegedit ur = new UserRegedit(WebUser.No, rptNo + "_GroupAttrs");
 
 
 
-		String filePath = ExportDGToExcel(ds,desc, ur.getVals());
+		String filePath = ExportGroupExcel(ds, desc, ur.Vals);
 
 
 		return filePath;
@@ -1792,11 +1522,10 @@ public class WF_RptDfine extends WebContralBase{
 	 初始化数据
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String FlowContrastDtl_Init() throws Exception
+	public final String FlowContrastDtl_Init()
 	{
-		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
+		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
@@ -1804,7 +1533,7 @@ public class WF_RptDfine extends WebContralBase{
 		String pageSize = GetRequestVal("pageSize");
 		String fcid = "";
 		DataSet ds = new DataSet();
-		java.util.HashMap<String, String> vals = null;
+		HashMap<String, String> vals = null;
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 
 		GEEntitys ges = new GEEntitys(rptNo);
@@ -1818,36 +1547,38 @@ public class WF_RptDfine extends WebContralBase{
 		dt.Columns.Add("Name", String.class);
 		dt.Columns.Add("Width", Integer.class);
 		dt.Columns.Add("UIContralType", Integer.class);
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : attrs)
 		{
 			row = dt.NewRow();
-			row.setValue("No", attr.getKeyOfEn());
-			row.setValue("Name",attr.getName());
-			row.setValue("Width",attr.getUIWidthInt());
-			row.setValue("UIContralType",attr.getUIContralType().getValue());
+			row.set("No", attr.KeyOfEn);
+			row.set("Name", attr.Name);
+			row.set("Width", attr.UIWidthInt);
+			row.set("UIContralType", attr.UIContralType);
 
-			if (attr.getHisAttr().getIsFKorEnum())
+			if (attr.HisAttr.IsFKorEnum)
 			{
-				row.setValue("No",attr.getKeyOfEn() + "Text");
+				row.set("No", attr.KeyOfEn + "Text");
 			}
 
-			dt.Rows.add(row);
+			dt.Rows.Add(row);
 		}
 
-		ds.Tables.add(dt);
+		ds.Tables.Add(dt);
 
 		//查询结果
 		QueryObject qo = new QueryObject(ges);
-		Enumeration enu=getRequest().getParameterNames();  
-        boolean isExist = false;
-        String newFK_Dept=this.getFK_Dept();
-        while(enu.hasMoreElements()){ 
-        	isExist = false;
-        	String key=(String)enu.nextElement();  
-			if (key.equals("FK_Flow")|| key.equals("SearchType"))
+
+//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+		var strs = HttpContextHelper.RequestParamKeys; // this.context.Request.Form.ToString().Split('&');
+		for (String str : strs)
+		{
+			if (str.indexOf("FK_Flow") != -1 || str.indexOf("SearchType") != -1)
 			{
 				continue;
 			}
+
+			String[] mykey = str.split("[=]", -1);
+			String key = mykey[0];
 
 			if (key.equals("OID") || key.equals("MyPK"))
 			{
@@ -1856,12 +1587,13 @@ public class WF_RptDfine extends WebContralBase{
 
 			if (key.equals("FK_Dept"))
 			{
-				newFK_Dept = getRequest().getParameter(key);
+				this.setFK_Dept(mykey[1]);
 				continue;
 			}
-			for (MapAttr attr : attrs.ToJavaList())
+			boolean isExist = false;
+			for (MapAttr attr : attrs)
 			{
-				if (attr.getKeyOfEn().toUpperCase().equals(key.toUpperCase()))
+				if (attr.KeyOfEn.toUpperCase().equals(key.toUpperCase()))
 				{
 					isExist = true;
 					break;
@@ -1873,16 +1605,16 @@ public class WF_RptDfine extends WebContralBase{
 				continue;
 			}
 
-			if (getRequest().getParameter(key).equals("mvals"))
+			if (mykey[1].equals("mvals"))
 			{
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+				sUr.MyPK = WebUser.No + rptNo + "_SearchAttrs";
 				sUr.RetrieveFromDBSources();
 
-				// 如果是多选值 
-				String cfgVal = sUr.getMVals();
+				/* 如果是多选值 */
+				String cfgVal = sUr.MVals;
 				AtPara ap = new AtPara(cfgVal);
 				String instr = ap.GetValStrByKey(key);
 				String val = "";
@@ -1892,7 +1624,7 @@ public class WF_RptDfine extends WebContralBase{
 					{
 						if (key.equals("FK_Dept"))
 						{
-							val = WebUser.getFK_Dept();
+							val = WebUser.FK_Dept;
 						}
 					}
 					else
@@ -1906,17 +1638,17 @@ public class WF_RptDfine extends WebContralBase{
 					instr = instr.replace(".", "','");
 					instr = instr.substring(2);
 					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(key, instr);
+					qo.AddWhereIn(mykey[0], instr);
 				}
 			}
 			else
 			{
-				qo.AddWhere(key, getRequest().getParameter(key));
+				qo.AddWhere(mykey[0], mykey[1]);
 			}
 			qo.addAnd();
 		}
 
-		if (newFK_Dept != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
+		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
 		{
 			if (this.getFK_Dept().length() == 2)
 			{
@@ -1927,11 +1659,11 @@ public class WF_RptDfine extends WebContralBase{
 			{
 				if (this.getFK_Dept().length() == 8)
 				{
-					qo.AddWhere("FK_Dept", " = ", newFK_Dept);
+					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
 				}
 				else
 				{
-					qo.AddWhere("FK_Dept", " like ", newFK_Dept + "%");
+					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
 				}
 
 				qo.addAnd();
@@ -1942,7 +1674,7 @@ public class WF_RptDfine extends WebContralBase{
 
 		dt = qo.DoQueryToTable();
 		dt.TableName = "Group_Dtls";
-		ds.Tables.add(dt);
+		ds.Tables.Add(dt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
@@ -1952,17 +1684,17 @@ public class WF_RptDfine extends WebContralBase{
 	 执行导出
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String FlowGroupDtl_Exp() throws Exception
+	public final String FlowGroupDtl_Exp()
 	{
-		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
+		if (tangible.StringHelper.isNullOrWhiteSpace(this.getFK_Flow()))
 		{
 			return "err@参数FK_Flow不能为空";
 		}
 
 		String pageSize = GetRequestVal("pageSize");
 		String fcid = "";
+		HashMap<String, String> vals = null;
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 
 		GEEntitys ges = new GEEntitys(rptNo);
@@ -1974,16 +1706,19 @@ public class WF_RptDfine extends WebContralBase{
 
 		//查询结果
 		QueryObject qo = new QueryObject(ges);
-		Enumeration enu=getRequest().getParameterNames();  
-        boolean isExist = false;
-        String newFK_Dept=this.getFK_Dept();
-        while(enu.hasMoreElements()){ 
-        	isExist = false;
-        	String key=(String)enu.nextElement();  
-			if (key.equals("FK_Flow")|| key.equals("SearchType"))
+
+		//string[] strs = this.context.Request.Form.ToString().Split('&');
+//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+		var strs = HttpContextHelper.RequestParamKeys;
+		for (String str : strs)
+		{
+			if (str.indexOf("FK_Flow") != -1 || str.indexOf("SearchType") != -1)
 			{
 				continue;
 			}
+
+			String[] mykey = str.split("[=]", -1);
+			String key = mykey[0];
 
 			if (key.equals("OID") || key.equals("MyPK"))
 			{
@@ -1992,12 +1727,13 @@ public class WF_RptDfine extends WebContralBase{
 
 			if (key.equals("FK_Dept"))
 			{
-				newFK_Dept = getRequest().getParameter(key);
+				this.setFK_Dept(mykey[1]);
 				continue;
 			}
-			for (MapAttr attr : attrs.ToJavaList())
+			boolean isExist = false;
+			for (MapAttr attr : attrs)
 			{
-				if (attr.getKeyOfEn().toUpperCase().equals(key.toUpperCase()))
+				if (attr.KeyOfEn.toUpperCase().equals(key.toUpperCase()))
 				{
 					isExist = true;
 					break;
@@ -2009,16 +1745,16 @@ public class WF_RptDfine extends WebContralBase{
 				continue;
 			}
 
-			if (getRequest().getParameter(key).equals("mvals"))
+			if (mykey[1].equals("mvals"))
 			{
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+				sUr.MyPK = WebUser.No + rptNo + "_SearchAttrs";
 				sUr.RetrieveFromDBSources();
 
-				// 如果是多选值 
-				String cfgVal = sUr.getMVals();
+				/* 如果是多选值 */
+				String cfgVal = sUr.MVals;
 				AtPara ap = new AtPara(cfgVal);
 				String instr = ap.GetValStrByKey(key);
 				String val = "";
@@ -2028,7 +1764,7 @@ public class WF_RptDfine extends WebContralBase{
 					{
 						if (key.equals("FK_Dept"))
 						{
-							val = WebUser.getFK_Dept();
+							val = WebUser.FK_Dept;
 						}
 					}
 					else
@@ -2042,17 +1778,17 @@ public class WF_RptDfine extends WebContralBase{
 					instr = instr.replace(".", "','");
 					instr = instr.substring(2);
 					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(key, instr);
+					qo.AddWhereIn(mykey[0], instr);
 				}
 			}
 			else
 			{
-				qo.AddWhere(key, getRequest().getParameter(key));
+				qo.AddWhere(mykey[0], mykey[1]);
 			}
 			qo.addAnd();
 		}
 
-		if (newFK_Dept != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
+		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
 		{
 			if (this.getFK_Dept().length() == 2)
 			{
@@ -2063,11 +1799,11 @@ public class WF_RptDfine extends WebContralBase{
 			{
 				if (this.getFK_Dept().length() == 8)
 				{
-					qo.AddWhere("FK_Dept", " = ", newFK_Dept);
+					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
 				}
 				else
 				{
-					qo.AddWhere("FK_Dept", " like ", newFK_Dept + "%");
+					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
 				}
 
 				qo.addAnd();
@@ -2078,17 +1814,17 @@ public class WF_RptDfine extends WebContralBase{
 
 		DataTable dt = qo.DoQueryToTable();
 		Attrs newAttrs = new Attrs();
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : attrs)
 		{
-			if(attr.getKeyOfEn().toUpperCase().equals("OID"))
+			if (attr.KeyOfEn.toUpperCase().equals("OID"))
 			{
 				continue;
 			}
 
-				newAttrs.Add(attr.getHisAttr());
+			newAttrs.Add(attr.HisAttr);
 		}
 
-		String filePath = ExportDGToExcel(dt, ges.getGetNewEntity(), rptNo, newAttrs);
+		String filePath = ExportDGToExcel(dt, ges.GetNewEntity, rptNo, newAttrs);
 
 
 		return filePath;
@@ -2102,15 +1838,436 @@ public class WF_RptDfine extends WebContralBase{
 	*/
 	public final Attr GetAttrByKey(MapAttrs mapAttrs, String key)
 	{
-		for (MapAttr attr : mapAttrs.ToJavaList())
+		for (MapAttr attr : mapAttrs)
 		{
-			if (attr.getKeyOfEn().toUpperCase().equals(key.toUpperCase()))
+			if (attr.KeyOfEn.toUpperCase().equals(key.toUpperCase()))
 			{
-				return attr.getHisAttr();
+				return attr.HisAttr;
 			}
 		}
 		return null;
 
 	}
-}
 
+	/** 
+	 初始化QueryObject
+	 
+	 @param qo
+	 @return 
+	*/
+	public final QueryObject InitQueryObject(QueryObject qo, MapData md, Attrs attrs, MapAttrs rptAttrs, UserRegedit ur)
+	{
+		HashMap<String, String> kvs = null;
+		ArrayList<String> keys = new ArrayList<String>();
+		String cfg = "_SearchAttrs";
+		String searchKey = "";
+		String val = null;
+
+		kvs = ur.GetVals();
+
+		if (!this.getSearchType().equals("Adminer"))
+		{
+			qo.addAnd();
+		}
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 关键字查询
+		if (md.RptIsSearchKey)
+		{
+			searchKey = ur.SearchKey;
+		}
+
+		if (tangible.StringHelper.isNullOrWhiteSpace(searchKey))
+		{
+			qo.addLeftBracket();
+			qo.AddWhere("abc", "all");
+			qo.addRightBracket();
+		}
+		else
+		{
+			int i = 0;
+
+			for (Attr attr : attrs)
+			{
+				switch (attr.MyFieldType)
+				{
+					case FieldType.Enum:
+					case FieldType.FK:
+					case FieldType.PKFK:
+						continue;
+					default:
+						break;
+				}
+
+				if (attr.MyDataType != DataType.AppString)
+				{
+					continue;
+				}
+
+				if (attr.MyFieldType == FieldType.RefText)
+				{
+					continue;
+				}
+
+				if (attr.Key.equals("FK_Dept"))
+				{
+					continue;
+				}
+
+				i++;
+
+				if (i == 1)
+				{
+					qo.addLeftBracket();
+					if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+					{
+						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : (" '%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+					}
+					else
+					{
+						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+					}
+					continue;
+				}
+
+				qo.addOr();
+
+				if (SystemConfig.AppCenterDBVarStr.equals("@") || SystemConfig.AppCenterDBVarStr.equals("?"))
+				{
+					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.AppCenterDBType == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.AppCenterDBVarStr + "SKey,'%')") : ("'%'+" + SystemConfig.AppCenterDBVarStr + "SKey+'%'"));
+				}
+				else
+				{
+					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.AppCenterDBVarStr + "SKey||'%'");
+				}
+			}
+
+			qo.MyParas.Add("SKey", searchKey);
+			qo.addRightBracket();
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region Url传参条件
+		for (Attr attr : attrs)
+		{
+			if (DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(attr.Key)))
+			{
+				continue;
+			}
+
+			qo.addAnd();
+			qo.addLeftBracket();
+
+			val = HttpContextHelper.RequestParams(attr.Key);
+
+			switch (attr.MyDataType)
+			{
+				case DataType.AppBoolean:
+					qo.AddWhere(attr.Key, (boolean)Integer.parseInt(val));
+					break;
+				case DataType.AppDate:
+				case DataType.AppDateTime:
+				case DataType.AppString:
+					qo.AddWhere(attr.Key, val);
+					break;
+				case DataType.AppDouble:
+				case DataType.AppFloat:
+				case DataType.AppMoney:
+					qo.AddWhere(attr.Key, Double.parseDouble(val));
+					break;
+				case DataType.AppInt:
+					qo.AddWhere(attr.Key, Integer.parseInt(val));
+					break;
+				default:
+					break;
+			}
+
+			qo.addRightBracket();
+
+			if (keys.contains(attr.Key) == false)
+			{
+				keys.add(attr.Key);
+			}
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 过滤条件
+		for (MapAttr attr1 : rptAttrs)
+		{
+			Attr attr = attr1.HisAttr;
+			//此处做判断，如果在URL中已经传了参数，则不算SearchAttrs中的设置
+			if (keys.contains(attr.Key))
+			{
+				continue;
+			}
+
+			if (attr.MyFieldType == FieldType.RefText)
+			{
+				continue;
+			}
+
+			String selectVal = "";
+			String cid = "";
+
+			switch (attr.UIContralType)
+			{
+				//case UIContralType.TB:
+				//    switch (attr.MyDataType)
+				//    {
+				//        case DataType.AppDate:
+				//        case DataType.AppDateTime:
+				//            if (attr.MyDataType == DataType.AppDate)
+				//                cid = "D_" + attr.Key;
+				//            else
+				//                cid = "DT_" + attr.Key;
+
+				//            if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
+				//                continue;
+
+				//            selectVal = kvs[cid];
+
+				//            qo.addAnd();
+				//            qo.addLeftBracket();
+				//            qo.AddWhere(attr.Key, selectVal);
+				//            qo.addRightBracket();
+				//            break;
+				//        default:
+				//            cid = "TB_" + attr.Key;
+
+				//            if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
+				//                continue;
+
+				//            selectVal = kvs[cid];
+
+				//            qo.addAnd();
+				//            qo.addLeftBracket();
+				//            qo.AddWhere(attr.Key, " LIKE ", "%" + selectVal + "%");
+				//            qo.addRightBracket();
+				//            break;
+				//    }
+				//    break;
+				case UIContralType.DDL:
+					cid = "DDL_" + attr.Key;
+
+					if (kvs.containsKey(cid) == false || tangible.StringHelper.isNullOrWhiteSpace(kvs.get(cid)))
+					{
+						continue;
+					}
+
+					selectVal = kvs.get(cid);
+
+					if (selectVal.equals("all") || selectVal.equals("-1"))
+					{
+						continue;
+					}
+
+					if (selectVal.equals("mvals"))
+					{
+						/* 如果是多选值 */
+						AtPara ap = new AtPara(ur.MVals);
+						String instr = ap.GetValStrByKey(attr.Key);
+
+						if (DataType.IsNullOrEmpty(instr))
+						{
+							if (attr.Key.equals("FK_Dept") || attr.Key.equals("FK_Unit"))
+							{
+								if (attr.Key.equals("FK_Dept"))
+								{
+									selectVal = WebUser.FK_Dept;
+								}
+							}
+							else
+							{
+								continue;
+							}
+						}
+						else
+						{
+							instr = instr.replace("..", ".");
+							instr = instr.replace(".", "','");
+							instr = instr.substring(2);
+							instr = instr.substring(0, instr.length() - 2);
+
+							qo.addAnd();
+							qo.addLeftBracket();
+							qo.AddWhereIn(attr.Key, "(" + instr + ")");
+							qo.addRightBracket();
+							continue;
+						}
+					}
+
+					qo.addAnd();
+					qo.addLeftBracket();
+
+					if (attr.UIBindKey.equals("BP.Port.Depts") || attr.UIBindKey.equals("BP.Port.Units")) //判断特殊情况。
+					{
+						qo.AddWhere(attr.Key, " LIKE ", selectVal + "%");
+					}
+					else
+					{
+						qo.AddWhere(attr.Key, selectVal);
+					}
+
+					qo.addRightBracket();
+					break;
+				//case UIContralType.CheckBok:
+				//    cid = "CB_" + attr.Key;
+
+				//    if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
+				//        continue;
+
+				//    selectVal = kvs[cid];
+
+				//    qo.addAnd();
+				//    qo.addLeftBracket();
+				//    qo.AddWhere(attr.Key, int.Parse(selectVal));
+				//    qo.addRightBracket();
+				//    break;
+				default:
+					break;
+			}
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 日期处理
+		if (md.RptDTSearchWay != DTSearchWay.None)
+		{
+			String dtKey = md.RptDTSearchKey;
+			String dtFrom = ur.GetValStringByKey(UserRegeditAttr.DTFrom).trim();
+			String dtTo = ur.GetValStringByKey(UserRegeditAttr.DTTo).trim();
+
+			if (DataType.IsNullOrEmpty(dtFrom) == true)
+			{
+				if (md.RptDTSearchWay == DTSearchWay.ByDate)
+				{
+					dtFrom = "1900-01-01";
+				}
+				else
+				{
+					dtFrom = "1900-01-01 00:00";
+				}
+			}
+
+			if (DataType.IsNullOrEmpty(dtTo) == true)
+			{
+				if (md.RptDTSearchWay == DTSearchWay.ByDate)
+				{
+					dtTo = "2999-01-01";
+				}
+				else
+				{
+					dtTo = "2999-12-31 23:59";
+				}
+			}
+
+			if (md.RptDTSearchWay == DTSearchWay.ByDate)
+			{
+				qo.addAnd();
+				qo.addLeftBracket();
+				qo.SQL = dtKey + " >= '" + dtFrom + "'";
+				qo.addAnd();
+				qo.SQL = dtKey + " <= '" + dtTo + "'";
+				qo.addRightBracket();
+			}
+
+			if (md.RptDTSearchWay == DTSearchWay.ByDateTime)
+			{
+				qo.addAnd();
+				qo.addLeftBracket();
+				qo.SQL = dtKey + " >= '" + dtFrom + " 00:00'";
+				qo.addAnd();
+				qo.SQL = dtKey + " <= '" + dtTo + " 23:59'";
+				qo.addRightBracket();
+			}
+		}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion
+
+		return qo;
+	}
+
+	private DataTable GetNoNameDataTable(String tableName)
+	{
+		DataTable dt = new DataTable(tableName);
+		dt.Columns.Add("No", String.class);
+		dt.Columns.Add("Name", String.class);
+
+		return dt;
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#endregion MyStartFlow.htm 我发起的流程
+
+	public final String MyDeptFlow_Init()
+	{
+		String fk_mapdata = "ND" + Integer.parseInt(this.getFK_Flow()) + "RptMyDept";
+
+		DataSet ds = new DataSet();
+
+		//字段描述.
+		MapAttrs attrs = new MapAttrs(fk_mapdata);
+		DataTable dtAttrs = attrs.ToDataTableField("Sys_MapAttr");
+		ds.Tables.Add(dtAttrs);
+
+		//数据.
+		GEEntitys ges = new GEEntitys(fk_mapdata);
+
+		//设置查询条件.
+		QueryObject qo = new QueryObject(ges);
+		qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.No);
+
+		//查询.
+		// qo.DoQuery(BP.WF.Data.GERptAttr.OID, 15, this.PageIdx);
+
+		if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+		{
+			DataTable dt = qo.DoQueryToTable();
+			dt.TableName = "dt";
+			ds.Tables.Add(dt);
+		}
+		else
+		{
+			qo.DoQuery();
+			ds.Tables.Add(ges.ToDataTableField("dt"));
+		}
+
+		return BP.Tools.Json.DataSetToJson(ds, false);
+	}
+
+	public final String MyJoinFlow_Init()
+	{
+		String fk_mapdata = "ND" + Integer.parseInt(this.getFK_Flow()) + "RptMyJoin";
+
+		DataSet ds = new DataSet();
+
+		//字段描述.
+		MapAttrs attrs = new MapAttrs(fk_mapdata);
+		DataTable dtAttrs = attrs.ToDataTableField("Sys_MapAttr");
+		ds.Tables.Add(dtAttrs);
+
+		//数据.
+		GEEntitys ges = new GEEntitys(fk_mapdata);
+
+		//设置查询条件.
+		QueryObject qo = new QueryObject(ges);
+		qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.No + "%");
+
+		if (SystemConfig.AppCenterDBType == DBType.MSSQL)
+		{
+			DataTable dt = qo.DoQueryToTable();
+			dt.TableName = "dt";
+			ds.Tables.Add(dt);
+		}
+		else
+		{
+			qo.DoQuery();
+			ds.Tables.Add(ges.ToDataTableField("dt"));
+		}
+		return BP.Tools.Json.DataSetToJson(ds, false);
+	}
+}

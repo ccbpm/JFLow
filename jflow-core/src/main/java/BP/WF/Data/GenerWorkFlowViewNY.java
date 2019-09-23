@@ -3,6 +3,7 @@ package BP.WF.Data;
 import BP.Sys.*;
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -28,10 +29,11 @@ public class GenerWorkFlowViewNY extends EntityNoName
 	 月份
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public GenerWorkFlowViewNY(String no)
+	public GenerWorkFlowViewNY(String no) throws Exception
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 

@@ -3567,8 +3567,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 子类需要继承
+	 * @throws Exception 
 	 */
-	public abstract Map getEnMap();
+	public abstract Map getEnMap() throws Exception;
 
 	/**
 	 * 动态的获取map

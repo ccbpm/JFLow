@@ -31,7 +31,7 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 		///#endregion
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		String sql = "SELECT DISTINCT FK_NY, FK_NY FROM WF_GenerWorkFlow";
 

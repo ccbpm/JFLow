@@ -2,9 +2,11 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.WF.*;
+import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -377,7 +379,7 @@ public class MyJoinFlow extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		BP.WF.WFState ws = (WFState)this.getWFState();
 		switch (ws)
 		{
 			case Complete:
@@ -442,7 +444,7 @@ public class MyJoinFlow extends Entity
 	public MyJoinFlow()
 	{
 	}
-	public MyJoinFlow(long workId)
+	public MyJoinFlow(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyFlowAttr.WorkID, workId);
@@ -459,9 +461,10 @@ public class MyJoinFlow extends Entity
 	}
 	/** 
 	 重写基类方法
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{
@@ -514,13 +517,13 @@ public class MyJoinFlow extends Entity
 
 			//增加隐藏的查询条件. 我参与的流程.
 		AttrOfSearch search = new AttrOfSearch(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%" + WebUser.getNo() + "%", 0, true);
-		map.AttrsOfSearch.Add(search);
+		map.getAttrsOfSearch().Add(search);
 
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "轨迹";
 		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Icon = "../../WF/Img/Track.png";
 		rm.IsForEns = true;
 		map.AddRefMethod(rm);
@@ -529,7 +532,7 @@ public class MyJoinFlow extends Entity
 		rm.Title = "表单";
 		rm.ClassMethodName = this.toString() + ".DoOpenLastForm";
 		rm.Icon = "../../WF/Img/Form.png";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.IsForEns = true;
 		map.AddRefMethod(rm);
 

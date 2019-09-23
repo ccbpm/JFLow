@@ -1,5 +1,10 @@
 package BP.WF;
 
+import BP.DA.DataRow;
+import BP.DA.DataSet;
+import BP.DA.DataTable;
+import BP.Web.WebUser;
+
 /** 
  第三方应用开发的应用,非标准应用.
 */
@@ -18,14 +23,14 @@ public class AppClass
 	{
 		DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workid);
 
-		DataTable gwf = ds.Tables["WF_GenerWorkFlow"]; //工作记录.
-		DataTable nodes = ds.Tables["WF_Node"]; //节点.
-		DataTable dirs = ds.Tables["WF_Direction"]; //连接线.
-		DataTable tracks = ds.Tables["Track"]; //历史记录.
+		DataTable gwf = ds.GetTableByName("WF_GenerWorkFlow"); //工作记录.
+		DataTable nodes = ds.GetTableByName("WF_Node"); //节点.
+		DataTable dirs = ds.GetTableByName("WF_Direction"); //连接线.
+		DataTable tracks = ds.GetTableByName("Track"); //历史记录.
 
 		//状态,
-		int wfState = Integer.parseInt(gwf.Rows[0]["WFState"].toString());
-		int currNode = Integer.parseInt(gwf.Rows[0]["FK_Node"].toString());
+		int wfState = Integer.parseInt(gwf.Rows.get(0).getValue("WFState").toString());
+		int currNode = Integer.parseInt(gwf.Rows.get(0).getValue("FK_Node").toString());
 		if (wfState == 3)
 		{
 			return BP.Tools.Json.ToJson(tracks); //如果流程结束了，所有的数据都在tracks里面.
@@ -54,7 +59,7 @@ public class AppClass
 				Node nd = new Node(currNode);
 				Nodes tonds = nd.getHisToNodes();
 
-				for (Node tond : tonds)
+				for (Node tond : tonds.ToJavaList())
 				{
 					DataRow mydr = tracks.NewRow();
 					mydr.set("NodeName", tond.getName());
@@ -178,8 +183,9 @@ public class AppClass
 	 
 	 @param workid 工作ID
 	 @return 初始化的sdk表单页面信息
+	 * @throws Exception 
 	*/
-	public static String SDK_Page_Init(long workid)
+	public static String SDK_Page_Init(long workid) throws Exception
 	{
 		try
 		{
@@ -193,30 +199,30 @@ public class AppClass
 		   // string tables = ",WF_GenerWorkFlow,WF_Node,AlertMsg,Track,";
 
 			//移除不要的数据.
-			ds.Tables.Remove("Sys_MapData");
-			ds.Tables.Remove("Sys_MapDtl");
-			ds.Tables.Remove("Sys_Enum");
-			ds.Tables.Remove("Sys_MapExt");
-			ds.Tables.Remove("Sys_FrmLine");
-			ds.Tables.Remove("Sys_FrmLink");
-			ds.Tables.Remove("Sys_FrmBtn");
-			ds.Tables.Remove("Sys_FrmLab");
-			ds.Tables.Remove("Sys_FrmImg");
-			ds.Tables.Remove("Sys_FrmRB");
-			ds.Tables.Remove("Sys_FrmEle");
-			ds.Tables.Remove("Sys_MapFrame");
-			ds.Tables.Remove("Sys_FrmAttachment");
-			ds.Tables.Remove("Sys_FrmImgAth");
-			ds.Tables.Remove("Sys_FrmImgAthDB");
-			ds.Tables.Remove("Sys_MapAttr");
-			ds.Tables.Remove("Sys_GroupField");
-			ds.Tables.Remove("WF_FrmNodeComponent");
-			ds.Tables.Remove("MainTable");
-			ds.Tables.Remove("UIBindKey");
+			ds.Tables.remove("Sys_MapData");
+			ds.Tables.remove("Sys_MapDtl");
+			ds.Tables.remove("Sys_Enum");
+			ds.Tables.remove("Sys_MapExt");
+			ds.Tables.remove("Sys_FrmLine");
+			ds.Tables.remove("Sys_FrmLink");
+			ds.Tables.remove("Sys_FrmBtn");
+			ds.Tables.remove("Sys_FrmLab");
+			ds.Tables.remove("Sys_FrmImg");
+			ds.Tables.remove("Sys_FrmRB");
+			ds.Tables.remove("Sys_FrmEle");
+			ds.Tables.remove("Sys_MapFrame");
+			ds.Tables.remove("Sys_FrmAttachment");
+			ds.Tables.remove("Sys_FrmImgAth");
+			ds.Tables.remove("Sys_FrmImgAthDB");
+			ds.Tables.remove("Sys_MapAttr");
+			ds.Tables.remove("Sys_GroupField");
+			ds.Tables.remove("WF_FrmNodeComponent");
+			ds.Tables.remove("MainTable");
+			ds.Tables.remove("UIBindKey");
 
-			if (ds.Tables.Contains("BP.Port.Depts") == true)
+			if (ds.Tables.contains("BP.Port.Depts") == true)
 			{
-				ds.Tables.Remove("BP.Port.Depts");
+				ds.Tables.remove("BP.Port.Depts");
 			}
 
 

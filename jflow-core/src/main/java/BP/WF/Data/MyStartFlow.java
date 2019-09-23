@@ -2,9 +2,11 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.WF.*;
+import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -376,7 +378,7 @@ public class MyStartFlow extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		BP.WF.WFState ws = (WFState)this.getWFState();
 		switch (ws)
 		{
 			case Complete:
@@ -441,7 +443,7 @@ public class MyStartFlow extends Entity
 	public MyStartFlow()
 	{
 	}
-	public MyStartFlow(long workId)
+	public MyStartFlow(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyStartFlowAttr.WorkID, workId);
@@ -458,9 +460,10 @@ public class MyStartFlow extends Entity
 	}
 	/** 
 	 重写基类方法
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{
@@ -506,15 +509,15 @@ public class MyStartFlow extends Entity
 			//我发起的流程.
 		AttrOfSearch search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", WebUser.getNo(), 0, true);
 
-		map.AttrsOfSearch.Add(search);
+		map.getAttrsOfSearch().Add(search);
 
 		search = new AttrOfSearch(MyStartFlowAttr.WFState, "流程状态", MyStartFlowAttr.WFState, "not in", "('0')", 0, true);
-		map.AttrsOfSearch.Add(search);
+		map.getAttrsOfSearch().Add(search);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "轨迹";
 		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Icon = "../../WF/Img/Track.png";
 		rm.IsForEns = true;
 		map.AddRefMethod(rm);
@@ -523,14 +526,14 @@ public class MyStartFlow extends Entity
 		rm.Title = "表单/轨迹";
 		rm.ClassMethodName = this.toString() + ".DoOpenLastForm";
 		rm.Icon = "../../WF/Img/Form.png";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.IsForEns = true;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "打印表单";
 		rm.ClassMethodName = this.toString() + ".DoPrintFrm";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);
 

@@ -27,7 +27,7 @@ public abstract class EntityOID extends Entity
 	/** 
 	 OID, 如果是空的就返回 0 . 
 	*/
-	public final int getOID()
+	public long getOID()
 	{
 		try
 		{

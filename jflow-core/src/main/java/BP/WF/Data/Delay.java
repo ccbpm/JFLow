@@ -2,6 +2,7 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -318,8 +319,9 @@ public class Delay extends EntityMyPK
 	 
 	 
 	 @param pk
+	 * @throws Exception 
 	*/
-	public Delay(String pk)
+	public Delay(String pk) throws Exception
 	{
 		super(pk);
 	}
@@ -340,8 +342,7 @@ public class Delay extends EntityMyPK
 		}
 
 		Map map = new Map("V_WF_Delay", "逾期流程");
-		map.EnType = En.EnType.View;
-
+		map.setEnType(  BP.En.EnType.View);
 		map.AddMyPK();
 
 		map.AddTBInt(DelayAttr.WorkID, 0, "工作ID", true, true);
@@ -378,10 +379,10 @@ public class Delay extends EntityMyPK
 		map.AddSearchAttr(DelayAttr.FK_Flow);
 
 
-		RefMethod rm = new En.RefMethod();
+		RefMethod rm = new RefMethod();
 		rm.Title = "打开轨迹";
 		rm.ClassMethodName = this.toString() + ".DoOpenTrack";
-		rm.RefMethodType = En.RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);

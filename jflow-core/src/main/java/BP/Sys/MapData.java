@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 import java.io.*;
 import java.time.*;
@@ -1019,7 +1021,7 @@ public class MapData extends EntityNoName
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
 		Attrs attrs = new Attrs();
-		for (MapAttr mapAttr : mapAttrs)
+		for (MapAttr mapAttr : mapAttrs.ToJavaList())
 		{
 			map.AddAttr(mapAttr.getHisAttr());
 		}

@@ -274,8 +274,9 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 	 根据OID构造实体
 	 
 	 @param 工作ID workid
+	 * @throws Exception 
 	*/
-	protected NDXRptBase(int workid)
+	protected NDXRptBase(int workid) throws Exception
 	{
 		super(workid);
 	}

@@ -3,6 +3,8 @@ package BP.WF.Data;
 import BP.En.*;
 import BP.Sys.*;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -23,7 +25,7 @@ public class MyDeptEmps extends BP.En.EntitiesNoName
 		return new MyDeptEmp();
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptEmpAttr.FK_Dept, WebUser.getFK_Dept());

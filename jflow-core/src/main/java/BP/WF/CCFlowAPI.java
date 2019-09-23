@@ -60,21 +60,20 @@ public class CCFlowAPI
 
 
 			//获得表单模版.
-			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No, nd.getName());
+			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo(), nd.getName());
 
 			if (DataType.IsNullOrEmpty(nd.getNodeFrmID()) == false && (nd.getHisFormType() == NodeFormType.FoolForm || nd.getHisFormType() == NodeFormType.FreeForm))
 			{
-				String name = md.Name;
-				if (DataType.IsNullOrEmpty(md.Name) == true)
+				String name = md.getName();
+				if (DataType.IsNullOrEmpty(md.getName()) == true)
 				{
 					name = nd.getName();
 				}
-
-				myds.Tables["Sys_MapData"].Rows[0]["Name"] = name;
+				myds.GetTableByName("Sys_MapData").Rows.get(0).setValue("Name",name );
 			}
 
 			//移除MapAttr
-			myds.Tables.Remove("Sys_MapAttr"); //移除.
+			myds.Tables.remove("Sys_MapAttr"); //移除.
 
 			//获取表单的mapAttr
 			//求出集合.
@@ -82,15 +81,15 @@ public class CCFlowAPI
 
 			/*处理表单权限控制方案*/
 			FrmNode frmNode = new FrmNode();
-			int count = frmNode.Retrieve(FrmNodeAttr.FK_Frm, md.No, FrmNodeAttr.FK_Node, fk_node);
+			int count = frmNode.Retrieve(FrmNodeAttr.FK_Frm, md.getNo(), FrmNodeAttr.FK_Node, fk_node);
 			if (count != 0 && frmNode.getFrmSln() != 0)
 			{
-				FrmFields fls = new FrmFields(md.No, frmNode.getFK_Node());
-				for (FrmField item : fls)
+				FrmFields fls = new FrmFields(md.getNo(), frmNode.getFK_Node());
+				for (FrmField item : fls.ToJavaList())
 				{
-					for (MapAttr attr : mattrs)
+					for (MapAttr attr : mattrs.ToJavaList())
 					{
-						if (!item.getKeyOfEn().equals(attr.KeyOfEn))
+						if (!item.getKeyOfEn().equals(attr.getKeyOfEn()))
 						{
 							continue;
 						}
@@ -100,10 +99,10 @@ public class CCFlowAPI
 							item.setUIIsEnable(false);
 						}
 
-						attr.UIIsEnable = item.getUIIsEnable();
-						attr.UIVisible = item.getUIVisible();
-						attr.IsSigan = item.getIsSigan();
-						attr.DefValReal = item.getDefVal();
+						attr.setUIIsEnable(item.getUIIsEnable());
+                        attr.setUIVisible(item.getUIVisible());
+                        attr.setIsSigan(item.getIsSigan());
+                        attr.setDefValReal(item.getDefVal());
 					}
 				}
 			}

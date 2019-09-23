@@ -504,7 +504,7 @@ public class GenerWorkFlow extends Entity
 	*/
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		BP.WF.WFState ws = (WFState)this.getWFState();
 		switch (ws)
 		{
 			case Complete:

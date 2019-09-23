@@ -2,9 +2,11 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.WF.*;
+import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -375,7 +377,7 @@ public class MyDeptFlow extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		BP.WF.WFState ws = (WFState)this.getWFState();
 		switch (ws)
 		{
 			case Complete:
@@ -440,7 +442,7 @@ public class MyDeptFlow extends Entity
 	public MyDeptFlow()
 	{
 	}
-	public MyDeptFlow(long workId)
+	public MyDeptFlow(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptFlowAttr.WorkID, workId);
@@ -502,7 +504,7 @@ public class MyDeptFlow extends Entity
 			//增加隐藏的查询条件.
 		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", WebUser.getFK_Dept(), 0, true);
 
-		map.AttrsOfSearch.Add(search);
+		map.getAttrsOfSearch().Add(search);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "流程轨迹";

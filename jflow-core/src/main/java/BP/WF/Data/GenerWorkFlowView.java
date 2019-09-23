@@ -5,6 +5,7 @@ import BP.WF.*;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.util.*;
@@ -369,7 +370,7 @@ public class GenerWorkFlowView extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		BP.WF.WFState ws = (WFState) this.getWFState();
 		switch (ws)
 		{
 			case Complete:
@@ -452,8 +453,9 @@ public class GenerWorkFlowView extends Entity
 	 产生的工作流程
 	 
 	 @param workId
+	 * @throws Exception 
 	*/
-	public GenerWorkFlowView(long workId)
+	public GenerWorkFlowView(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkFlowViewAttr.WorkID, workId);
@@ -530,7 +532,7 @@ public class GenerWorkFlowView extends Entity
 		rm.Icon = "../../WF/Img/Btn/CC.gif";
 		rm.Title = "移交";
 		rm.ClassMethodName = this.toString() + ".DoFlowShift";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -549,7 +551,7 @@ public class GenerWorkFlowView extends Entity
 		rm.Title = "跳转";
 		rm.IsForEns = false;
 		rm.ClassMethodName = this.toString() + ".DoFlowSkip";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
@@ -558,7 +560,7 @@ public class GenerWorkFlowView extends Entity
 		rm.Title = "修复该流程数据实例";
 		rm.IsForEns = false;
 		rm.ClassMethodName = this.toString() + ".RepairDataIt";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		map.AddRefMethod(rm);
 
 
@@ -583,15 +585,15 @@ public class GenerWorkFlowView extends Entity
 	{
 	   return BP.WF.Dev2Interface.Flow_ReSend(this.getWorkID(), toNodeID, toEmpNo, "admin调整");
 	}
-	public final String RepairDataIt()
+	public final String RepairDataIt() throws Exception
 	{
 		String infos = "";
 
 		Flow fl = new Flow(this.getFK_Flow());
-		Node nd = new Node(Integer.parseInt(fl.No + "01"));
+		Node nd = new Node(Integer.parseInt(fl.getNo() + "01"));
 		Work wk = nd.getHisWork();
 
-		String trackTable = "ND" + Integer.parseInt(fl.No) + "Track";
+		String trackTable = "ND" + Integer.parseInt(fl.getNo()) + "Track";
 		String sql = "SELECT MyPK FROM " + trackTable + " WHERE WorkID=" + this.getWorkID() + " AND ACTIONTYPE=1 and NDFrom=" + nd.getNodeID();
 		String mypk = DBAccess.RunSQLReturnString(sql);
 		if (DataType.IsNullOrEmpty(mypk) == true)
@@ -609,13 +611,13 @@ public class GenerWorkFlowView extends Entity
 		}
 		catch (RuntimeException ex)
 		{
-			infos += "@ 错误:" + fl.getNo() + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.Name;
+			infos += "@ 错误:" + fl.getNo() + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.getName();
 		}
 
 		String json = DataType.ReadTextFile(file);
 		DataTable dtVal = BP.Tools.Json.ToDataTable(json);
 
-		DataRow mydr = dtVal.Rows[0];
+		DataRow mydr = dtVal.Rows.get(0);
 
 		Attrs attrs = wk.getEnMap().getAttrs();
 		boolean isHave = false;
@@ -625,7 +627,7 @@ public class GenerWorkFlowView extends Entity
 			String enVal = wk.GetValStringByKey(attr.getKey());
 			if (DataType.IsNullOrEmpty(enVal) == true)
 			{
-				wk.SetValByKey(attr.Key, jsonVal);
+				wk.SetValByKey(attr.getKey(), jsonVal);
 				isHave = true;
 			}
 		}
@@ -639,7 +641,7 @@ public class GenerWorkFlowView extends Entity
 
 		return infos;
 	}
-	public final String RepairDataAll()
+	public final String RepairDataAll() throws Exception
 	{
 		String infos = "";
 
@@ -653,10 +655,10 @@ public class GenerWorkFlowView extends Entity
 			String sql = "SELECT OID FROM " + fl.getPTable() + " WHERE BillNo IS NULL AND OID=" + this.getWorkID();
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-			Node nd = new Node(Integer.parseInt(fl.No + "01"));
+			Node nd = new Node(Integer.parseInt(fl.getNo() + "01"));
 			Work wk = nd.getHisWork();
 
-			String trackTable = "ND" + Integer.parseInt(fl.No) + "Track";
+			String trackTable = "ND" + Integer.parseInt(fl.getNo()) + "Track";
 			for (DataRow dr : dt.Rows)
 			{
 				long workid = Long.parseLong(dr.get("OID").toString());
@@ -678,13 +680,13 @@ public class GenerWorkFlowView extends Entity
 				}
 				catch (RuntimeException ex)
 				{
-					infos += "@ 错误:" + fl.getNo() + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.Name;
+					infos += "@ 错误:" + fl.getNo() + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.getName();
 				}
 
 				String json = DataType.ReadTextFile(file);
 				DataTable dtVal = BP.Tools.Json.ToDataTable(json);
 
-				DataRow mydr = dtVal.Rows[0];
+				DataRow mydr = dtVal.Rows.get(0);
 
 				Attrs attrs = wk.getEnMap().getAttrs();
 				boolean isHave = false;
@@ -694,7 +696,7 @@ public class GenerWorkFlowView extends Entity
 					String enVal = wk.GetValStringByKey(attr.getKey());
 					if (DataType.IsNullOrEmpty(enVal) == true)
 					{
-						wk.SetValByKey(attr.Key, jsonVal);
+						wk.SetValByKey(attr.getKey(), jsonVal);
 						isHave = true;
 					}
 				}
@@ -718,7 +720,7 @@ public class GenerWorkFlowView extends Entity
 	*/
 	public final String Rollback(String nodeid, String note)
 	{
-		BP.WF.Template.FlowSheet fl = new Template.FlowSheet(this.getFK_Flow());
+		BP.WF.Template.FlowSheet fl = new FlowSheet(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), Integer.parseInt(nodeid), note);
 	}
 

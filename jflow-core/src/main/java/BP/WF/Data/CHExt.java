@@ -2,6 +2,7 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -230,8 +231,9 @@ public class CHExt extends EntityMyPK
 	 
 	 
 	 @param pk
+	 * @throws Exception 
 	*/
-	public CHExt(String pk)
+	public CHExt(String pk) throws Exception
 	{
 		super(pk);
 	}
@@ -291,7 +293,7 @@ public class CHExt extends EntityMyPK
 		RefMethod rm = new RefMethod();
 		rm.Title = "打开流程轨迹";
 		rm.ClassMethodName = this.toString() + ".DoOpen";
-		rm.RefMethodType = En.RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);

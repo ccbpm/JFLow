@@ -2,6 +2,7 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -362,8 +363,9 @@ public class CH extends EntityMyPK
 	 
 	 
 	 @param pk
+	 * @throws Exception 
 	*/
-	public CH(String pk)
+	public CH(String pk) throws Exception
 	{
 		super(pk);
 	}

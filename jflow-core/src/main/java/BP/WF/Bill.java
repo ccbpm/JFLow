@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -269,8 +270,9 @@ public class Bill extends EntityMyPK
 	 
 	 
 	 @param pk
+	 * @throws Exception 
 	*/
-	public Bill(String pk)
+	public Bill(String pk) throws Exception
 	{
 		super(pk);
 	}
@@ -346,7 +348,7 @@ public class Bill extends EntityMyPK
 	*/
 	public final String DoOpen()
 	{
-		String path = SystemConfig.PathOfWebApp + (this.getUrl());
+		String path = SystemConfig.getPathOfWebApp() + (this.getUrl());
 		return path;
 	}
 	/** 
@@ -356,7 +358,7 @@ public class Bill extends EntityMyPK
 	*/
 	public final String DoOpenPDF()
 	{
-		String path = SystemConfig.PathOfWebApp + (this.getUrl());
+		String path = SystemConfig.getPathOfWebApp() + (this.getUrl());
 		return path;
 	}
 }

@@ -3,6 +3,7 @@ package BP.WF;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import java.util.*;
@@ -81,9 +82,9 @@ public class Auth extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setMyPK( BP.DA.DBAccess.GenerGUID();
+		this.setMyPK( BP.DA.DBAccess.GenerGUID());
 		return super.beforeInsert();
 	}
 }

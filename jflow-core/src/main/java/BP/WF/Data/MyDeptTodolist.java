@@ -2,9 +2,12 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.WF.*;
+import BP.WF.Template.FlowSheet;
+import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -364,7 +367,7 @@ public class MyDeptTodolist extends Entity
 	}
 	public final String getWFStateText()
 	{
-		BP.WF.WFState ws = WFState.forValue(this.getWFState());
+		BP.WF.WFState ws = (WFState)this.getWFState();
 		switch (ws)
 		{
 			case Complete:
@@ -406,7 +409,7 @@ public class MyDeptTodolist extends Entity
 	public MyDeptTodolist()
 	{
 	}
-	public MyDeptTodolist(long workId)
+	public MyDeptTodolist(long workId) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyDeptTodolistAttr.WorkID, workId);
@@ -460,7 +463,7 @@ public class MyDeptTodolist extends Entity
 
 			//增加隐藏的查询条件.
 		AttrOfSearch search = new AttrOfSearch(MyDeptTodolistAttr.WorkerDept, "部门", MyDeptTodolistAttr.WorkerDept, "=", WebUser.getFK_Dept(), 0, true);
-		map.AttrsOfSearch.Add(search);
+		map.getAttrsOfSearch().Add(search);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "轨迹";
@@ -557,7 +560,7 @@ public class MyDeptTodolist extends Entity
 	*/
 	public final String DoComeBack(int nodeid, String note)
 	{
-		BP.WF.Template.FlowSheet fl = new Template.FlowSheet(this.getFK_Flow());
+		BP.WF.Template.FlowSheet fl = new FlowSheet(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), nodeid, note);
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

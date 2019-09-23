@@ -1,11 +1,11 @@
 package BP.Sys;
-
-import BP.Sys.*;
 import BP.DA.*;
-import BP.Web.*;
+import BP.Difference.ContextHolderUtils;
 import BP.En.*;
 import java.util.*;
-import java.io.*;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.math.*;
 
 /** 
@@ -43,17 +43,15 @@ public class Glo
 				val = Integer.parseInt(val.toString());
 				break;
 			case DataType.AppMoney:
-				val = BigDecimal.Parse(val.toString());
+				val = BigDecimal.valueOf(Double.parseDouble(val.toString()));
 				break;
 			default:
 				throw new RuntimeException();
-				break;
 		}
 		return val;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 业务单元.
+     ///#region 业务单元.
 	private static Hashtable Htable_BuessUnit = null;
 	/** 
 	 获得节点事件实体
@@ -66,7 +64,7 @@ public class Glo
 		if (Htable_BuessUnit == null || Htable_BuessUnit.isEmpty())
 		{
 			Htable_BuessUnit = new Hashtable();
-			ArrayList al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
+			ArrayList<BuessUnitBase> al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
 			for (BuessUnitBase en : al)
 			{
 				Htable_BuessUnit.put(en.toString(), en);
@@ -76,7 +74,6 @@ public class Glo
 		BuessUnitBase myen = Htable_BuessUnit.get(enName) instanceof BuessUnitBase ? (BuessUnitBase)Htable_BuessUnit.get(enName) : null;
 		if (myen == null)
 		{
-			//throw new Exception("@根据类名称获取业务单元实例出现错误:" + enName + ",没有找到该类的实体.");
 			BP.DA.Log.DefaultLogWriteLineError("@根据类名称获取业务单元实例出现错误:" + enName + ",没有找到该类的实体.");
 			return null;
 		}
@@ -111,7 +108,7 @@ public class Glo
 		if (Htable_BuessUnit == null || Htable_BuessUnit.isEmpty())
 		{
 			Htable_BuessUnit = new Hashtable();
-			ArrayList al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
+			ArrayList<BuessUnitBase> al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
 			Htable_BuessUnit.clear();
 			for (BuessUnitBase en : al)
 			{
@@ -119,7 +116,7 @@ public class Glo
 			}
 		}
 
-		for (String key : Htable_BuessUnit.keySet())
+		for (Object key : Htable_BuessUnit.keySet())
 		{
 			BuessUnitBase fee = Htable_BuessUnit.get(key) instanceof BuessUnitBase ? (BuessUnitBase)Htable_BuessUnit.get(key) : null;
 			if (fee.toString().equals(flowMark) || fee.toString().contains("," + flowNo + ",") == true)
@@ -129,11 +126,9 @@ public class Glo
 		}
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 业务单元.
+	///#endregion 业务单元.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 与 表单 事件实体相关.
+    ///#region 与 表单 事件实体相关.
 	private static Hashtable Htable_FormFEE = null;
 	/** 
 	 获得节点事件实体
@@ -147,7 +142,7 @@ public class Glo
 		{
 			Htable_FormFEE = new Hashtable();
 
-			ArrayList al = BP.En.ClassFactory.GetObjects("BP.Sys.FormEventBase");
+			ArrayList<FormEventBase> al = BP.En.ClassFactory.GetObjects("BP.Sys.FormEventBase");
 			Htable_FormFEE.clear();
 
 			for (FormEventBase en : al)
@@ -156,32 +151,31 @@ public class Glo
 			}
 		}
 
-		for (String key : Htable_FormFEE.keySet())
+		for (Object keyObj : Htable_FormFEE.keySet())
 		{
-			FormEventBase fee = Htable_FormFEE.get(key) instanceof FormEventBase ? (FormEventBase)Htable_FormFEE.get(key) : null;
+			FormEventBase fee = Htable_FormFEE.get(keyObj) instanceof FormEventBase ? (FormEventBase)Htable_FormFEE.get(keyObj) : null;
 
-			if (key.contains(","))
-			{
-				if (key.indexOf(enName + ",") >= 0 || key.length() == key.indexOf("," + enName) + enName.length() + 1)
+			if (keyObj!=null){
+				String key = keyObj.toString();
+				if(key.contains(","))
+				{
+					if (key.indexOf(enName + ",") >= 0 || key.length() == key.indexOf("," + enName) + enName.length() + 1)
+					{
+						return fee;
+					}
+				}
+				
+				if (enName.equals(key))
 				{
 					return fee;
 				}
 			}
-
-			if (enName.equals(key))
-			{
-				return fee;
-			}
 		}
-
 		return null;
-
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 与 表单 事件实体相关.
+	///#endregion 与 表单 事件实体相关.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 与 表单从表 事件实体相关.
+	///#region 与 表单从表 事件实体相关.
 	private static Hashtable Htable_FormFEEDtl = null;
 	/** 
 	 获得节点事件实体
@@ -194,7 +188,7 @@ public class Glo
 		if (Htable_FormFEEDtl == null || Htable_FormFEEDtl.isEmpty())
 		{
 			Htable_FormFEEDtl = new Hashtable();
-			ArrayList al = BP.En.ClassFactory.GetObjects("BP.Sys.FormEventBaseDtl");
+			ArrayList<FormEventBaseDtl> al = BP.En.ClassFactory.GetObjects("BP.Sys.FormEventBaseDtl");
 			Htable_FormFEEDtl.clear();
 			for (FormEventBaseDtl en : al)
 			{
@@ -202,7 +196,7 @@ public class Glo
 			}
 		}
 
-		for (String key : Htable_FormFEEDtl.keySet())
+		for (Object key : Htable_FormFEEDtl.keySet())
 		{
 			FormEventBaseDtl fee = Htable_FormFEEDtl.get(key) instanceof FormEventBaseDtl ? (FormEventBaseDtl)Htable_FormFEEDtl.get(key) : null;
 			if (fee.getFormDtlMark().indexOf(dtlEnName) >= 0 || fee.getFormDtlMark().equals(dtlEnName))
@@ -212,16 +206,15 @@ public class Glo
 		}
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 与 表单 事件实体相关.
+	///#endregion 与 表单 事件实体相关.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 公共变量.
+	///#region 公共变量.
 	public static String Plant = "CCFlow";
 	/** 
 	 部门版本号
+	 * @throws Exception 
 	*/
-	public static String getDeptsVersion()
+	public static String getDeptsVersion() throws Exception
 	{
 		GloVar en = new GloVar();
 		en.setNo("DeptsVersion");
@@ -250,8 +243,9 @@ public class Glo
 	}
 	/** 
 	 人员版本号
+	 * @throws Exception 
 	*/
-	public static String getUsersVersion()
+	public static String getUsersVersion() throws Exception
 	{
 		GloVar en = new GloVar();
 		en.setNo("UsersVersion");
@@ -264,11 +258,9 @@ public class Glo
 		}
 		return en.getVal();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 公共变量.
+	///#endregion 公共变量.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 写入系统日志(写入的文件:\DataUser\Log\*.*)
+	///#region 写入系统日志(写入的文件:\DataUser\Log\*.*)
 	/** 
 	 写入一条消息
 	 
@@ -296,11 +288,9 @@ public class Glo
 	{
 		BP.DA.Log.DefaultLogWriteLineError(msg);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 写入系统日志
+	///#endregion 写入系统日志
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 写入用户日志(写入的用户表:Sys_UserLog).
+	///#region 写入用户日志(写入的用户表:Sys_UserLog).
 	/** 
 	 写入用户日志
 	 
@@ -308,8 +298,9 @@ public class Glo
 	 @param empNo 操作员编号
 	 @param msg 信息
 	 @param ip IP
+	 * @throws Exception 
 	*/
-	public static void WriteUserLog(String logType, String empNo, String msg, String ip)
+	public static void WriteUserLog(String logType, String empNo, String msg, String ip) throws Exception
 	{
 		UserLog ul = new UserLog();
 		ul.setMyPK(DBAccess.GenerGUID());
@@ -329,122 +320,16 @@ public class Glo
 	*/
 	public static void WriteUserLog(String logType, String empNo, String msg)
 	{
-		//为了提高运行效率，把这个地方屏蔽了。
 		return;
-		/*
-		UserLog ul = new UserLog();
-		ul.setMyPK( DBAccess.GenerGUID();
-		ul.FK_Emp = empNo;
-		ul.LogFlag = logType;
-		ul.Docs = msg;
-		ul.RDT = DataType.getCurrentDataTime();
-		try
-		{
-		    if (BP.Sys.SystemConfig.IsBSsystem)
-		        ul.IP = HttpContextHelper.Request.UserHostAddress;
-		}
-		catch
-		{
-		}
-		ul.Insert();
-		*/
+
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 写入用户日志.
+	///#endregion 写入用户日志.
 
-	/** 
-	 初始化附件信息
-	 如果手工的上传的附件，就要把附加的信息映射出来.
-	 
-	 @param en
-	*/
-	public static void InitEntityAthInfo(BP.En.Entity en)
+	
+
+	public static HttpServletRequest getRequest()
 	{
-		//求出保存路径.
-		String path = en.getEnMap().FJSavePath;
-		if (path.equals("") || path == null || path.equals(""))
-		{
-			path = BP.Sys.SystemConfig.getPathOfDataUser() + en.toString() + "\\";
-		}
-
-		if ((new File(path)).isDirectory() == false)
-		{
-			(new File(path)).mkdirs();
-		}
-
-		//获得该目录下所有的文件.
-		String[] strs = (new File(path)).list(File::isFile);
-		String pkval = en.getPKVal().toString();
-		String myfileName = null;
-		for (String str : strs)
-		{
-			if (str.contains(pkval + ".") == false)
-			{
-				continue;
-			}
-
-			myfileName = str;
-			break;
-		}
-
-		if (myfileName == null)
-		{
-			return;
-		}
-
-		/* 如果包含这二个字段。*/
-		String fileName = myfileName;
-		fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
-
-		en.SetValByKey("MyFilePath", path);
-
-		String ext = "";
-		if (fileName.indexOf(".") != -1)
-		{
-			ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-		}
-
-		String reldir = path;
-		if (reldir.length() > SystemConfig.getPathOfDataUser().length())
-		{
-			reldir = reldir.substring(reldir.toLowerCase().indexOf("\\datauser\\") + "\\datauser\\".length()).replace("\\", "/");
-		}
-		else
-		{
-			reldir = "";
-		}
-
-		if (reldir.length() > 0 && Equals(reldir.charAt(0), '/') == true)
-		{
-			reldir = reldir.substring(1);
-		}
-
-		if (reldir.length() > 0 && Equals(reldir.charAt(reldir.length() - 1), '/') == false)
-		{
-			reldir += "/";
-		}
-
-		en.SetValByKey("MyFileExt", ext);
-		en.SetValByKey("MyFileName", fileName);
-		en.SetValByKey("WebPath", "/DataUser/" + reldir + en.getPKVal() + "." + ext);
-
-		String fullFile = path + "\\" + en.getPKVal() + "." + ext;
-
-		File info = new File(fullFile);
-		en.SetValByKey("MyFileSize", BP.DA.DataType.PraseToMB(info.length()));
-		if (DataType.IsImgExt(ext))
-		{
-			System.Drawing.Image img = System.Drawing.Image.FromFile(fullFile);
-			en.SetValByKey("MyFileH", img.Height);
-			en.SetValByKey("MyFileW", img.Width);
-			img.Dispose();
-		}
-		en.Update();
-	}
-
-	public static System.Web.HttpRequest getRequest()
-	{
-		return System.Web.HttpContext.Current.Request;
+		return ContextHolderUtils.getRequest();
 	}
 
 
@@ -474,8 +359,7 @@ public class Glo
 		return alertInfo;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 加密解密文件.
+	///#region 加密解密文件.
 	public static void File_JiaMi(String fileFullPath)
 	{
 		//南京宝旺达.
@@ -508,7 +392,6 @@ public class Glo
 
 		return str;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 加密解密文件.
+	///#endregion 加密解密文件.
 
 }

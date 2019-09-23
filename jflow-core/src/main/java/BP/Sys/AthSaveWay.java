@@ -10,9 +10,9 @@ import java.util.*;
 public enum AthSaveWay
 {
 	/** 
-	 IIS服务器
+	 Web服务器
 	*/
-	IISServer,
+	WebServer,
 	/** 
 	 保存到数据库
 	*/

@@ -583,10 +583,8 @@ public class Map
 		}
 		return _HisFKEnumAttrs;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 他的实体配置信息
 	private Attrs _HisCfgAttrs = null;
 	public final Attrs getHisCfgAttrs()
@@ -594,7 +592,7 @@ public class Map
 		if (this._HisCfgAttrs == null)
 		{
 			this._HisCfgAttrs = new Attrs();
-			if (WebUser.getNo().equals("admin"))
+			if (BP.Web.WebUser.getNo().equals("admin"))
 			{
 
 				this._HisCfgAttrs.AddDDLSysEnum("UIRowStyleGlo", 2, "表格数据行风格(应用全局)", true, false, "UIRowStyleGlo", "@0=无风格@1=交替风格@2=鼠标移动@3=交替并鼠标移动");
@@ -770,10 +768,8 @@ public class Map
 		}
 		return _DtlsAll;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造涵数
 	/** 
 	 构造涵数 
@@ -2040,8 +2036,6 @@ public class Map
 		AddMyFile(null, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public void AddMyFile(string fileDesc = null, string ext = null, string savePath = null)
 	public final void AddMyFile(String fileDesc, String ext, String savePath)
 	{
 		if (fileDesc == null)
@@ -2085,8 +2079,7 @@ public class Map
 		AddMyFile(fileDesc, fExt, null);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 增加大块文本输入
+	///#region 增加大块文本输入
 	public final void AddTBStringDoc()
 	{
 		AddTBStringDoc("Doc", "Doc", null, "内容", true, false, 0, 4000, 300, 300, true);

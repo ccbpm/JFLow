@@ -1,7 +1,7 @@
 package BP.WF;
 
 import BP.Sys.*;
-import BP.Tools.FtpUtil;
+import BP.Tools.StringHelper;
 import BP.DA.*;
 import BP.En.*;
 import BP.Web.*;
@@ -11,6 +11,7 @@ import BP.WF.Template.*;
 import java.util.*;
 import java.io.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.math.*;
 
 /** 
@@ -21,6 +22,7 @@ public class Glo
 
 	public static String GenerGanttDataOfSubFlows(long workID)
 	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");;
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
 		//增加子流程数据.
@@ -47,7 +49,7 @@ public class Glo
 		}
 		else
 		{
-			json += " end:' " + LocalDateTime.now().toString("yyyy-MM-dd") + "',";
+			json += " end:' " + LocalDateTime.now().format(formatter) + "',";
 		}
 
 		json += " TodoSta: " + gwf.getTodoSta() + ",";
@@ -65,8 +67,8 @@ public class Glo
 		}
 		else //未完成
 		{
-			String sendDt = BP.DA.DataType.ParseSysDate2DateTime(gwf.getSendDT()).toString("yyyy-MM-dd");
-			String wadingDtOfF = DataType.AddDays(sendDt, 3, TWay.Holiday).toString("yyyy-MM-dd");
+			String sendDt = BP.DA.DataType.ParseSysDate2DateTime(gwf.getSendDT()).format("yyyy-MM-dd");
+			String wadingDtOfF = DataType.AddDays(sendDt, 3, TWay.Holiday).format("yyyy-MM-dd");
 			if (sendDt.compareTo(ToData(gwf.getSDTOfFlow())) > 0) //逾期
 			{
 				json += " color: 'red' ";
@@ -136,7 +138,7 @@ public class Glo
 
 
 		int idxNode = 0;
-		for (Node nd : nodes)
+		for (Node nd : nodes.ToJavaList())
 		{
 			idxNode++;
 
@@ -169,13 +171,8 @@ public class Glo
 				String start = "";
 				String end = "";
 				boolean isPass = false;
-				//if(DataType.IsNullOrEmpty(dtArray[0]) == true)
-				//    json += " start:'',";
-				//else
-				//{
-					json += " start:  " + ToData(dtArray[0]) + ",";
-				 //   start = ToData(dtArray[0]);
-				//}
+				json += " start:  " + ToData(dtArray[0]) + ",";
+				
 
 				if (DataType.IsNullOrEmpty(dtArray[1]) == true && DataType.IsNullOrEmpty(dtArray[0]) == true)
 				{
@@ -206,7 +203,7 @@ public class Glo
 				{
 					if (DataType.IsNullOrEmpty(end) == true)
 					{
-						end = LocalDateTime.now().toString("yyyy-MM-dd");
+						end = LocalDateTime.now().format(formatter);
 					}
 					if (end.compareTo(plantCHDt) > 0)
 					{
@@ -232,16 +229,10 @@ public class Glo
 			//获取子流程
 			subs = new SubFlows(nd.getNodeID());
 			if (subs.size() == 0)
-			{
-
-			  // json += "},";
 				continue;
-			}
 
-		   // json += "},";
-			//json += " { id:'" + nd.NodeID + "', name:'" + nd.Name + "', ";
 			String series = "";
-			for (SubFlow sub : subs)
+			for (SubFlow sub : subs.ToJavaList())
 			{
 				if (sub.getFK_Node() != nd.getNodeID())
 				{
@@ -291,8 +282,8 @@ public class Glo
 				{
 					json += "{ ";
 					json += " name: '" + sub.getSubFlowNo() + " - " + sub.getSubFlowName() + "', ";
-					json += " start:  " + ToData(DataType.CurrentData) + ", ";
-					json += " end:  " + ToData(DataType.CurrentData) + ", ";
+					json += " start:  " + ToData(DataType.getCurrentDate()) + ", ";
+					json += " end:  " + ToData(DataType.getCurrentDate()) + ", ";
 					json += " TodoSta: -1, ";
 					json += " color: 'brue' ";
 					json += "}";
@@ -317,7 +308,7 @@ public class Glo
 					}
 					else
 					{
-						json += " end: '" + LocalDateTime.now().toString("yyyy-MM-dd") + "',";
+						json += " end: '" + LocalDateTime.now().format(formatter) + "',";
 					}
 
 					json += " TodoSta: " + firstStartGwf.getTodoSta() + ", ";
@@ -377,7 +368,7 @@ public class Glo
 					}
 					else
 					{
-						json += " end: '" + LocalDateTime.now().toString("yyyy-MM-dd") + "',";
+						json += " end: '" + LocalDateTime.now().format(formatter) + "',";
 					}
 
 					json += " TodoSta: " + endStartGwf.getTodoSta() + ", ";
@@ -418,56 +409,10 @@ public class Glo
 
 					json += "}";
 				}
-
-				//foreach (GenerWorkFlow subGWF in gwfs)
-				//{
-				//    if (subGWF.FK_Flow != sub.SubFlowNo)
-				//        continue;
-
-				//    dtlsSubFlow += "{ ";
-				//    dtlsSubFlow += " name: '计划',";
-				//    dtlsSubFlow += " start:  " + ToData(gwf.RDT) + ",";
-				//    dtlsSubFlow += " end: " + ToData(gwf.SDTOfFlow) + ",";
-				//    dtlsSubFlow += " TodoSta: -2, ";
-				//    dtlsSubFlow += " color: 'brue' ";
-				//    dtlsSubFlow += "},";
-
-				//    dtlsSubFlow += "{ ";
-				//    dtlsSubFlow += " name: '实际',";
-				//    dtlsSubFlow += " start:  " + ToData(gwf.RDT) + ",";
-				//    dtlsSubFlow += " end: " + ToData(gwf.SendDT) + ",";
-				//    dtlsSubFlow += " TodoSta: " + gwf.TodoSta + ", ";
-				//    dtlsSubFlow += " color: '#f0f0f0' ";
-				//    dtlsSubFlow += "},";
-
-				//}
-
-				//if (DataType.IsNullOrEmpty(dtlsSubFlow) == false)
-				//    dtlsSubFlow = dtlsSubFlow.Substring(0, dtlsSubFlow.Length - 1);
-
-				////如果没有启动子流程，就需要显示空白的。
-				//if (DataType.IsNullOrEmpty(dtlsSubFlow) == true)
-				//{
-				//    dtlsSubFlow += "{ ";
-				//    dtlsSubFlow += " name: '" + sub.SubFlowNo + " - " + sub.SubFlowName + "', ";
-				//    dtlsSubFlow += " start:  " + ToData(DataType.CurrentData) + ", ";
-				//    dtlsSubFlow += " end:  " + ToData(DataType.CurrentData) + ", ";
-				//    dtlsSubFlow += " TodoSta: -1, ";
-				//    dtlsSubFlow += " color: '#f0f0f0' ";
-				//    dtlsSubFlow += "}";
-				//}
-
-				////从表.
-				//series += dtlsSubFlow +"," ;
-
 				json += "]},";
 
 			}
 
-			//if (idxNode == nds.size())
-			//    json += "}";
-			//else
-			//    json += "},";
 		}
 		json = json.substring(0, json.length() - 1);
 		json += "]";
@@ -578,7 +523,7 @@ public class Glo
 	public static String ToData(String dtStr)
 	{
 
-		LocalDateTime dt = BP.DA.DataType.ParseSysDate2DateTime(dtStr);
+		LocalDateTime dt = DataType.ParseSysDate2DateTime(dtStr);
 
 		return "'" + dt.toString("yyyy-MM-dd") + "'";
 
@@ -654,23 +599,7 @@ public class Glo
 
 		return ToJsonOfGantt(ds);
 	}
-	public static String ToJsonOfGantt(DataSet ds)
-	{
-		String json = "[";
 
-		DataTable dtFlows = ds.Tables[0];
-		DataTable dtSeries = ds.Tables[1];
-
-
-
-
-		json += "]";
-
-		return "";
-
-	}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 多语言处理.
 	private static Hashtable _Multilingual_Cache = null;
 	public static DataTable getMultilingual_DT(String className)
@@ -682,8 +611,8 @@ public class Glo
 
 		if (_Multilingual_Cache.containsKey(className) == false)
 		{
-			DataSet ds = BP.DA.DataType.CXmlFileToDataSet(BP.Sys.SystemConfig.PathOfData + "\\lang\\xml\\" + className + ".xml");
-			DataTable dt = ds.Tables[0];
+			DataSet ds = DataType.CXmlFileToDataSet(BP.Sys.SystemConfig.getPathOfData() + "/lang/xml/" + className + ".xml");
+			DataTable dt = ds.Tables.get(0);
 
 			_Multilingual_Cache.put(className, dt);
 		}
@@ -714,8 +643,6 @@ public class Glo
 		return multilingual(defaultMsg, className, key, null, null, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string multilingual(string defaultMsg, string className, string key, string p0 = null, string p1 = null, string p2 = null, string p3 = null)
 	public static String multilingual(String defaultMsg, String className, String key, String p0, String p1, String p2, String p3)
 	{
 		int num = 0;
@@ -769,7 +696,7 @@ public class Glo
 	*/
 	public static String multilingual(String defaultMsg, String className, String key, String[] paramList)
 	{
-		if (WebUser.SysLang.equals("zh-cn") || WebUser.SysLang.equals("CH"))
+		if (WebUser.getSysLang().equals("zh-cn") || WebUser.getSysLang().equals("CH"))
 		{
 			return String.format(defaultMsg, paramList);
 		}
@@ -813,32 +740,12 @@ public class Glo
 	}
 
 
-	//public static void Multilingual_Demo()
-	//{
-	//    //普通的多语言处理.
-	//    string msg = "您确定要删除吗？";
-	//    msg = BP.WF.Glo.Multilingual_Public(msg, "confirm");
-
-
-	//    //带有参数的语言处理..
-	//    msg = "您确定要删除吗？删除{0}后，就不能恢复。";
-	//    msg = BP.WF.Glo.Multilingual_Public(msg, "confirmDel", "zhangsan");
-
-	//    //   BP.WF.Glo.Multilingual_Public("confirm",
-	//}
-
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 多语言处理.
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 公共属性.
 	/** 
 	 打印文件
 	*/
 	public static String getPrintBackgroundWord()
 	{
-		String s = BP.Sys.SystemConfig.AppSettings["PrintBackgroundWord"];
+		String s = (String) SystemConfig.getAppSettings().get("PrintBackgroundWord");
 		if (DataType.IsNullOrEmpty(s))
 		{
 			s = "驰骋工作流引擎@开源驰骋 - ccflow@openc";
@@ -852,43 +759,7 @@ public class Glo
 	{
 		return Platform.CCFlow;
 	}
-	/** 
-	 得到WebService对象 
-	 
-	 @return 
-	*/
-	public static BP.WF.CCInterface.PortalInterfaceSoapClient GetPortalInterfaceSoapClient()
-	{
-		TimeSpan ts = new TimeSpan(0, 5, 0);
-		BasicHttpBinding basicBinding = new BasicHttpBinding();
-		basicBinding.setReceiveTimeout(ts);
-		basicBinding.setSendTimeout(ts);
-		basicBinding.setMaxBufferSize(2147483647);
-		basicBinding.setMaxReceivedMessageSize(2147483647);
-		basicBinding.setName("PortalInterfaceSoap");
-		basicBinding.Security.Mode = BasicHttpSecurityMode.None;
 
-		String url = "";
-		if (Glo.getPlatform() == Platform.CCFlow)
-		{
-			url = "/DataUser/PortalInterface.asmx";
-			url = Glo.getHostURL() + url;
-		}
-		else
-		{
-			//  url = string.Format("/{0}webservices/webservice.*", AppName != string.Empty ? AppName + "/" : string.Empty);
-			//    url = new Uri(App.Current.Host.Source, "../").ToString() + "service/Service?wsdl";
-		}
-
-		url = url.replace("//", "/");
-		url = url.replace(":/", "://");
-
-		//  MessageBox.Show(url);
-
-		EndpointAddress endPoint = new EndpointAddress(url);
-		java.lang.reflect.Constructor ctor = CCInterface.PortalInterfaceSoapClient.class.GetConstructor(new java.lang.Class[] {Binding.class, EndpointAddress.class});
-		return (BP.WF.CCInterface.PortalInterfaceSoapClient)ctor.newInstance(new Object[] {basicBinding, endPoint});
-	}
 	/** 
 	 短消息写入类型
 	*/
@@ -915,12 +786,9 @@ public class Glo
 	/** 
 	 运行平台(用于处理不同的平台，调用不同的URL)
 	*/
-	public static Plant Plant = WF.Plant.CCFlow;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 公共属性.
+	public static Plant Plant = BP.WF.Plant.CCFlow;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 执行安装/升级.
+	
 	/** 
 	 当前版本号-为了升级使用.
 	*/
@@ -932,8 +800,7 @@ public class Glo
 	*/
 	public static String UpdataCCFlowVer()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 检查是否需要升级，并更新升级的业务逻辑.
+		///#region 检查是否需要升级，并更新升级的业务逻辑.
 		String updataNote = "";
 
 		/*
@@ -994,28 +861,23 @@ public class Glo
 		//判断数据库的版本.
 		String sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey='Ver'";
 		int currDBVer = DBAccess.RunSQLReturnValInt(sql, 0);
-		if (currDBVer != null && currDBVer != 0 && currDBVer >= Ver)
+		if (currDBVer != 0 && currDBVer >= Ver)
 		{
 			return null; //不需要升级.
 		}
 
-		// 升级fromjson .//NOTE:此处有何用？而且md变量在下方已经声明，编译都通不过，2017-05-20，liuxc
-		//MapData md = new MapData();
-		//md.FormJson = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 检查是否需要升级，并更新升级的业务逻辑.
+		///#endregion 检查是否需要升级，并更新升级的业务逻辑.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 枚举值
 		SysEnumMains enumMains = new SysEnumMains();
 		enumMains.RetrieveAll();
-		for (SysEnumMain enumMain : enumMains)
+		for (SysEnumMain enumMain : enumMains.ToJavaList())
 		{
 			SysEnums ens = new SysEnums();
-			ens.Delete(SysEnumAttr.EnumKey, enumMain.No);
+			ens.Delete(SysEnumAttr.EnumKey, enumMain.getNo());
 
 			//保存数据
-			String cfgVal = enumMain.CfgVal;
+			String cfgVal = enumMain.getCfgVal();
 			String[] strs = cfgVal.split("[@]", -1);
 			for (String s : strs)
 			{
@@ -1026,23 +888,20 @@ public class Glo
 
 				String[] vk = s.split("[=]", -1);
 				SysEnum se = new SysEnum();
-				se.IntKey = Integer.parseInt(vk[0]);
+				se.setIntKey(Integer.parseInt(vk[0]));
 				String[] kvsValues = new String[vk.length - 1];
 				for (int i = 0; i < kvsValues.length; i++)
 				{
 					kvsValues[i] = vk[i + 1];
 				}
-				se.Lab = tangible.StringHelper.join("=", kvsValues);
-				se.EnumKey = enumMain.No;
-				se.Lang = WebUser.SysLang;
+				se.setLab(StringHelper.join("=", kvsValues));
+				se.setEnumKey(enumMain.getNo());
+				se.setLang(WebUser.getSysLang());
 				se.Insert();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 升级视图. 解决厦门信息港的 - 流程监控与授权.
+		///#region 升级视图. 解决厦门信息港的 - 流程监控与授权.
 		if (DBAccess.IsExitsObject("V_MyFlowData") == false)
 		{
 			BP.WF.Template.PowerModel pm11 = new PowerModel();
@@ -1073,8 +932,7 @@ public class Glo
 			sql += " WHERE  A.FK_Flow=B.FlowNo AND B.EmpNo=C.No AND B.PowerCtrlType=0 AND C.No=D.FK_Emp AND B.StaNo=D.FK_Station";
 			DBAccess.RunSQL(sql);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 升级视图.
+		///#endregion 升级视图.
 
 		//升级从表的 fk_node .
 		//获取需要修改的从表
@@ -1086,53 +944,49 @@ public class Glo
 			DBAccess.RunSQL("UPDATE SYS_MAPDTL SET FK_NODE=0 WHERE NO IN " + dtlNos);
 		}
 
-
-
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 升级填充数据.
+		///#region 升级填充数据.
 		//pop自动填充
 		MapExts exts = new MapExts();
 		QueryObject qo = new QueryObject(exts);
 		qo.AddWhere(MapExtAttr.ExtType, " LIKE ", "Pop%");
 		qo.DoQuery();
-		for (MapExt ext : exts)
+		for (MapExt ext : exts.ToJavaList())
 		{
-			String mypk = ext.FK_MapData + "_" + ext.AttrOfOper;
+			String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
 			MapAttr ma = new MapAttr();
-			ma.setMyPK( mypk;
+			ma.setMyPK(mypk);
 			if (ma.RetrieveFromDBSources() == 0)
 			{
 				ext.Delete();
 				continue;
 			}
 
-			if (ma.GetParaString("PopModel") == ext.ExtType)
+			if (ma.GetParaString("PopModel").equals(ext.getExtType()))
 			{
 				continue; //已经修复了，或者配置了.
 			}
 
-			ma.SetPara("PopModel", ext.ExtType);
+			ma.SetPara("PopModel", ext.getExtType());
 			ma.Update();
 
-			if (DataType.IsNullOrEmpty(ext.Tag4) == true)
+			if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
 			{
 				continue;
 			}
 
 			MapExt extP = new MapExt();
-			extP.setMyPK( ext.MyPK + "_FullData";
+			extP.setMyPK(ext.getMyPK() + "_FullData");
 			int i = extP.RetrieveFromDBSources();
 			if (i == 1)
 			{
 				continue;
 			}
 
-			extP.ExtType = "FullData";
-			extP.FK_MapData = ext.FK_MapData;
-			extP.AttrOfOper = ext.AttrOfOper;
-			extP.DBType = ext.DBType;
-			extP.Doc = ext.Tag4;
+			extP.setExtType("FullData");
+			extP.setFK_MapData(ext.getFK_MapData());
+			extP.setAttrOfOper(ext.getAttrOfOper());
+			extP.setDBType(ext.getDBType());
+			extP.setDoc(ext.getTag4());
 			extP.Insert(); //执行插入.
 		}
 
@@ -1140,11 +994,11 @@ public class Glo
 		//文本自动填充
 		exts = new MapExts();
 		exts.Retrieve(MapExtAttr.ExtType, MapExtXmlList.TBFullCtrl);
-		for (MapExt ext : exts)
+		for (MapExt ext : exts.ToJavaList())
 		{
-			String mypk = ext.FK_MapData + "_" + ext.AttrOfOper;
+			String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
 			MapAttr ma = new MapAttr();
-			ma.setMyPK( mypk;
+			ma.setMyPK(mypk);
 			if (ma.RetrieveFromDBSources() == 0)
 			{
 				ext.Delete();
@@ -1156,7 +1010,7 @@ public class Glo
 				continue; //已经修复了，或者配置了.
 			}
 
-			if (DataType.IsNullOrEmpty(ext.Tag3) == false)
+			if (DataType.IsNullOrEmpty(ext.getTag3()) == false)
 			{
 				ma.SetPara("TBFullCtrl", "Simple");
 			}
@@ -1167,30 +1021,29 @@ public class Glo
 
 			ma.Update();
 
-			if (DataType.IsNullOrEmpty(ext.Tag4) == true)
+			if (DataType.IsNullOrEmpty(ext.getTag4()) == true)
 			{
 				continue;
 			}
 
 			MapExt extP = new MapExt();
-			extP.setMyPK( ext.MyPK + "_FullData";
+			extP.setMyPK( ext.getMyPK() + "_FullData");
 			int i = extP.RetrieveFromDBSources();
 			if (i == 1)
 			{
 				continue;
 			}
 
-			extP.ExtType = "FullData";
-			extP.FK_MapData = ext.FK_MapData;
-			extP.AttrOfOper = ext.AttrOfOper;
-			extP.DBType = ext.DBType;
-			extP.Doc = ext.Tag4;
+			extP.setExtType("FullData");
+			extP.setFK_MapData(ext.getFK_MapData());
+			extP.setAttrOfOper(ext.getAttrOfOper());
+			extP.setDBType(ext.getDBType());
+			extP.setDoc(ext.getTag4());
 
 			//填充从表
-			extP.Tag1 = ext.Tag1;
+			extP.setTag1(ext.getTag1());
 			//填充下拉框
-			extP.Tag = ext.Tag;
-
+			extP.setTag(ext.getTag());
 			extP.Insert(); //执行插入.
 		}
 
@@ -1198,11 +1051,11 @@ public class Glo
 		//文本自动填充
 		exts = new MapExts();
 		exts.Retrieve(MapExtAttr.ExtType, MapExtXmlList.DDLFullCtrl);
-		for (MapExt ext : exts)
+		for (MapExt ext : exts.ToJavaList())
 		{
-			String mypk = ext.FK_MapData + "_" + ext.AttrOfOper;
+			String mypk = ext.getFK_MapData() + "_" + ext.getAttrOfOper();
 			MapAttr ma = new MapAttr();
-			ma.setMyPK( mypk;
+			ma.setMyPK(mypk);
 			if (ma.RetrieveFromDBSources() == 0)
 			{
 				ext.Delete();
@@ -1220,56 +1073,40 @@ public class Glo
 
 
 			MapExt extP = new MapExt();
-			extP.setMyPK( ext.MyPK + "_FullData";
+			extP.setMyPK( ext.getMyPK() + "_FullData");
 			int i = extP.RetrieveFromDBSources();
 			if (i == 1)
 			{
 				continue;
 			}
 
-			extP.ExtType = "FullData";
-			extP.FK_MapData = ext.FK_MapData;
-			extP.AttrOfOper = ext.AttrOfOper;
-			extP.DBType = ext.DBType;
-			extP.Doc = ext.Doc;
+			extP.setExtType("FullData");
+			extP.setFK_MapData(ext.getFK_MapData());
+			extP.setAttrOfOper(ext.getAttrOfOper());
+			extP.setDBType(ext.getDBType());
+			extP.setDoc(ext.getDoc());
 
 
 			//填充从表
-			extP.Tag1 = ext.Tag1;
+			extP.setTag1(ext.getTag1());
 			//填充下拉框
-			extP.Tag = ext.Tag;
+			extP.setTag(ext.getTag());
 
 			extP.Insert(); //执行插入.
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 升级 填充数据.
+		///#endregion 升级 填充数据.
 
 		String msg = "";
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-				///#region 升级菜单.
-			//if (DBAccess.IsExitsTableCol("GPM_Menu","UrlExt")==false)
-			//{
-			//}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-				///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-				///#region 创建缺少的视图 Port_Inc.  @fanleiwei 需要翻译.
+	
+			//#region 创建缺少的视图 Port_Inc.  @fanleiwei 需要翻译.
 			if (DBAccess.IsExitsObject("Port_Inc") == false)
 			{
 				sql = "CREATE VIEW Port_Inc AS SELECT * FROM Port_Dept WHERE (No='100' OR No='1060' OR No='1070') ";
 				DBAccess.RunSQL(sql);
 			}
-
-
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-				///#endregion 创建缺少的视图 Port_Inc.
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 升级事件.
 			if (DBAccess.IsExitsTableCol("Sys_FrmEvent", "DoType") == true)
 			{
@@ -6955,22 +6792,4 @@ public class Glo
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 其他方法。
-
-	/**
-	 * 获得ftp连接对象
-	 * 
-	 * @throws Exception
-	 */
-	public static FtpUtil getFtpUtil() throws Exception {
-		// 获取
-		String ip = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPServerIP());
-
-		String userNo = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserNo());
-		String pass = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserPassword());
-
-		FtpUtil ftp = new FtpUtil(ip, 21, userNo, pass);
-		return ftp;
-
-		// return Platform.JFlow;
-	}
 }

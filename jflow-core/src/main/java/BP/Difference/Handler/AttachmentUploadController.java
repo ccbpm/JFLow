@@ -42,7 +42,6 @@ import BP.Tools.SftpUtil;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmSln;
 import BP.WF.Template.WhoIsPK;
-import WebUser;
 
 
 @Controller
@@ -160,10 +159,7 @@ public class AttachmentUploadController extends BaseController {
                      
                      AesEncodeUtil.decryptFile(downDB.getFileFullName(), filepath);
                     
-                 }
-				 
-				
-				   
+                 } 
 				 
 				PubClass.DownloadFile(filepath, downDB.getFileName());
 

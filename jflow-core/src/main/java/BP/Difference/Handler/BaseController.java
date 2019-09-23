@@ -311,9 +311,6 @@ public class BaseController {
 		return Integer.parseInt(str);
 	}
 
-//	public void setFK_Node(String fK_Node) {
-//		FK_Node = fK_Node;
-//	}
 
 	public long getFID() {
 		String str = ContextHolderUtils.getRequest().getParameter("FID");

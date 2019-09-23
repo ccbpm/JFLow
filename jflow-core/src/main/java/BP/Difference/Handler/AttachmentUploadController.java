@@ -42,6 +42,7 @@ import BP.Tools.SftpUtil;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmSln;
 import BP.WF.Template.WhoIsPK;
+import BP.Web.WebUser;
 
 
 @Controller
@@ -460,7 +461,7 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setFK_FrmAttachment(attachPk);
 			dbUpload.setFileExts(exts);
 			dbUpload.setFID(this.getFID());
-			dbUpload.setNodeID( this.getFK_Node());
+			dbUpload.setNodeID( String.valueOf(this.getFK_Node()));
 			 if (fileEncrypt == true)
                  dbUpload.SetPara("IsEncrypt", 1);
 			 
@@ -561,7 +562,7 @@ public class AttachmentUploadController extends BaseController {
 			File info = new File(temp);
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 			dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
-			dbUpload.setNodeID( getFK_Node());
+			dbUpload.setNodeID( String.valueOf(getFK_Node()));
 			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
 			dbUpload.setSort(this.getSort());
 			dbUpload.setFID(this.getFID()); // 流程id.

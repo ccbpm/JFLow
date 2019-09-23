@@ -19,7 +19,7 @@ public class AddEmpLeng extends DataIOEn
 	}
 	
 	@Override
-	public void Do()
+	public void Do() throws Exception
 	{
 		String sql = "";
 		String sql2 = "";

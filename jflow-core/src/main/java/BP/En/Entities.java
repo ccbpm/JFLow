@@ -49,7 +49,7 @@ public abstract class Entities extends ArrayList<Entity>
 	// 查询方法.
 	
 	// 过滤
-	public final Entity Filter(String key, String val)
+	public final Entity Filter(String key, String val) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -62,7 +62,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final Entity Filter(String key1, String val1, String key2,
-			String val2)
+			String val2) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -76,7 +76,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final Entity Filter(String key1, String val1, String key2,
-			String val2, String key3, String val3)
+			String val2, String key3, String val3) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -199,8 +199,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param dt
 	 *            转换为Table
+	 * @throws Exception 
 	 */
-	public final void InitCollectionByTable(DataTable dt)
+	public final void InitCollectionByTable(DataTable dt) throws Exception
 	{
 		try
 		{
@@ -245,8 +246,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param ens
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean equals(Entities ens)
+	public final boolean equals(Entities ens) throws Exception
 	{
 		if (ens.size() != this.size())
 		{
@@ -300,8 +302,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param key
 	 * @param val
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean IsExits(String key, Object val)
+	public final boolean IsExits(String key, Object val) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -405,8 +408,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean Contains(Entity en)
+	public final boolean Contains(Entity en) throws Exception
 	{
 		return this.Contains(en.getPKVal());
 	}
@@ -416,13 +420,14 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param ens
 	 * @return true / false
+	 * @throws Exception 
 	 */
-	public final boolean Contains(Entities ens)
+	public final boolean Contains(Entities ens) throws Exception
 	{
 		return this.Contains(ens, ens.getNewEntity().getPK());
 	}
 	
-	public final boolean Contains(Entities ens, String key)
+	public final boolean Contains(Entities ens, String key) throws Exception
 	{
 		if (ens.size() == 0)
 		{
@@ -438,7 +443,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return true;
 	}
 	
-	public final boolean Contains(Entities ens, String key1, String key2)
+	public final boolean Contains(Entities ens, String key1, String key2) throws Exception
 	{
 		if (ens.size() == 0)
 		{
@@ -460,8 +465,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param pkVal
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean Contains(Object pkVal)
+	public final boolean Contains(Object pkVal) throws Exception
 	{
 		String pk = this.getNewEntity().getPK();
 		return this.Contains(pk, pkVal);
@@ -475,8 +481,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param pkVal
 	 *            指定的值
 	 * @return 返回是否等于
+	 * @throws Exception 
 	 */
-	public final boolean Contains(String attr, Object pkVal)
+	public final boolean Contains(String attr, Object pkVal) throws Exception
 	{
 		for (Entity myen : convertEntities(this))
 		{
@@ -489,7 +496,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final boolean Contains(String attr1, Object pkVal1, String attr2,
-			Object pkVal2)
+			Object pkVal2) throws Exception
 	{
 		for (Entity myen : convertEntities(this))
 		{
@@ -504,7 +511,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final boolean Contains(String attr1, Object pkVal1, String attr2,
-			Object pkVal2, String attr3, Object pkVal3)
+			Object pkVal2, String attr3, Object pkVal3) throws Exception
 	{
 		for (Entity myen : convertEntities(this))
 		{
@@ -526,8 +533,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param ens
 	 *            一个实体集合
 	 * @return 比较后的集合
+	 * @throws Exception 
 	 */
-	public final Entities GainIntersection(Entities ens)
+	public final Entities GainIntersection(Entities ens) throws Exception
 	{
 		Entities myens = this.CreateInstance();
 		String pk = this.getNewEntity().getPK();
@@ -561,8 +569,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param val
 	 *            值
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Entity GetEntityByKey(Object val)
+	public final Entity GetEntityByKey(Object val) throws Exception
 	{
 		String pk = this.getNewEntity().getPK();
 		for (Entity en : convertEntities(this))
@@ -583,8 +592,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param val
 	 *            值
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Entity GetEntityByKey(String attr, Object val)
+	public final Entity GetEntityByKey(String attr, Object val) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -597,7 +607,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return null;
 	}
 	
-	public final Entity GetEntityByKey(String attr, int val)
+	public final Entity GetEntityByKey(String attr, int val) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -610,7 +620,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final Entity GetEntityByKey(String attr1, Object val1, String attr2,
-			Object val2)
+			Object val2) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -625,7 +635,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final Entity GetEntityByKey(String attr1, Object val1, String attr2,
-			Object val2, String attr3, Object val3)
+			Object val2, String attr3, Object val3) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -645,8 +655,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final java.math.BigDecimal GetSumDecimalByKey(String key)
+	public final java.math.BigDecimal GetSumDecimalByKey(String key) throws Exception
 	{
 		java.math.BigDecimal sum = new java.math.BigDecimal(0);
 		for (Entity en : convertEntities(this))
@@ -660,7 +671,7 @@ public abstract class Entities extends ArrayList<Entity>
 	}
 	
 	public final java.math.BigDecimal GetSumDecimalByKey(String key,
-			String attrOfGroup, Object valOfGroup)
+			String attrOfGroup, Object valOfGroup) throws Exception
 	{
 		java.math.BigDecimal sum = new java.math.BigDecimal(0);
 		for (Entity en : convertEntities(this))
@@ -676,7 +687,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return sum;
 	}
 	
-	public final java.math.BigDecimal GetAvgDecimalByKey(String key)
+	public final java.math.BigDecimal GetAvgDecimalByKey(String key) throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -690,7 +701,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return sum.divide(new BigDecimal(this.size()));
 	}
 	
-	public final java.math.BigDecimal GetAvgIntByKey(String key)
+	public final java.math.BigDecimal GetAvgIntByKey(String key) throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -709,8 +720,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int GetSumIntByKey(String key)
+	public final int GetSumIntByKey(String key) throws Exception
 	{
 		int sum = 0;
 		for (Entity en : convertEntities(this))
@@ -725,8 +737,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final float GetSumFloatByKey(String key)
+	public final float GetSumFloatByKey(String key) throws Exception
 	{
 		float sum = 0;
 		for (Entity en : convertEntities(this))
@@ -736,7 +749,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return sum;
 	}
 	
-	public final double GetSumDoubleByKey(String key)
+	public final double GetSumDoubleByKey(String key) throws Exception
 	{
 		double sum = 0d;
 		for (Entity en : convertEntities(this))
@@ -752,8 +765,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int GetCountByKey(String key, String val)
+	public final int GetCountByKey(String key, String val) throws Exception
 	{
 		int sum = 0;
 		for (Entity en : convertEntities(this))
@@ -766,7 +780,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return sum;
 	}
 	
-	public final int GetCountByKey(String key, int val)
+	public final int GetCountByKey(String key, int val) throws Exception
 	{
 		int sum = 0;
 		for (Entity en : convertEntities(this))
@@ -817,14 +831,15 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 移除
 	 * 
 	 * @param pk
+	 * @throws Exception 
 	 */
-	public void RemoveEn(String pk)
+	public void RemoveEn(String pk) throws Exception
 	{
 		String key = this.getNewEntity().getPK();
 		RemoveEn(key, pk);
 	}
 	
-	public void RemoveEn(String key, String val)
+	public void RemoveEn(String key, String val) throws Exception
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -836,7 +851,7 @@ public abstract class Entities extends ArrayList<Entity>
 		}
 	}
 	
-	public void remove(String pks)
+	public void remove(String pks) throws Exception
 	{
 		String[] mypks = pks.split("[@]", -1);
 		String pkAttr = this.getNewEntity().getPK();
@@ -886,7 +901,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return this.getNewEntity().RunSQL(sql);
 	}
 	
-	public int Delete(String key, Object val)
+	public int Delete(String key, Object val) throws Exception
 	{
 		Entity en = this.getNewEntity();
 		Paras ps = new Paras();
@@ -911,7 +926,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return en.RunSQL(ps);
 	}
 	
-	public final int Delete(String key1, Object val1, String key2, Object val2)
+	public final int Delete(String key1, Object val1, String key2, Object val2) throws Exception
 	{
 		Entity en = this.getNewEntity();
 		Paras ps = new Paras();
@@ -1533,17 +1548,17 @@ public abstract class Entities extends ArrayList<Entity>
 	 
 	 
 	
-	public final DataTable ToDataTableField()
+	public final DataTable ToDataTableField() throws Exception
 	{
 		return ToDataTableField("dt");
 	}
 	
-	public final DataTable ToDataTableStringField()
+	public final DataTable ToDataTableStringField() throws Exception
 	{
 		return ToDataTableStringField("dt");
 	}
 	
-	public final DataTable ToDataTableStringField(String tableName)
+	public final DataTable ToDataTableStringField(String tableName) throws Exception
 	{
 		DataTable dt = this.ToEmptyTableStringField();
 		Entity en = this.getNewEntity();
@@ -1604,8 +1619,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 把当前实体集合的数据库转换成Table。 区分大小写
 	 * 
 	 * @return DataTable
+	 * @throws Exception 
 	 */
-	public final DataTable ToDataTableField(String tableName)
+	public final DataTable ToDataTableField(String tableName) throws Exception
 	{
 		DataTable dt = this.ToEmptyTableField();
 		
@@ -1664,7 +1680,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return dt;
 	}
 	
-	public final DataTable ToDataTableDesc()
+	public final DataTable ToDataTableDesc() throws Exception
 	{
 		DataTable dt = this.ToEmptyTableDesc();
 		Entity en = this.getNewEntity();
@@ -1706,7 +1722,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return dt;
 	}
 	
-	public final DataTable ToEmptyTableDescField()
+	public final DataTable ToEmptyTableDescField() throws Exception
 	{
 		DataTable dt = new DataTable();
 		Entity en = this.getNewEntity();
@@ -1770,7 +1786,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return dt;
 	}
 	
-	public final DataTable ToDataTableDescField()
+	public final DataTable ToDataTableDescField() throws Exception
 	{
 		DataTable dt = this.ToEmptyTableDescField();
 		Entity en = this.getNewEntity();
@@ -1828,8 +1844,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param flag
 	 *            分割符号, 一般来说用 ' ; '
 	 * @return 转化后的string / 实体集合为空就 return null
+	 * @throws Exception 
 	 */
-	public final String ToStringOfPK(String flag, boolean isCutEndFlag)
+	public final String ToStringOfPK(String flag, boolean isCutEndFlag) throws Exception
 	{
 		String pk = null;
 		for (Entity en : convertEntities(this))
@@ -1848,8 +1865,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 把系统的实体的PK转换为 string 比如: "001,002,003,"。
 	 * 
 	 * @return 转化后的string / 实体集合为空就 return null
+	 * @throws Exception 
 	 */
-	public final String ToStringOfSQLModelByPK()
+	public final String ToStringOfSQLModelByPK() throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -1862,8 +1880,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 把系统的实体的PK转换为 string 比如: "001,002,003,"。
 	 * 
 	 * @return 转化后的string / 实体集合为空就 return "''"
+	 * @throws Exception 
 	 */
-	public final String ToStringOfSQLModelByKey(String key)
+	public final String ToStringOfSQLModelByKey(String key) throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -1885,8 +1904,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 空的Table 取到一个空表结构。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final DataTable ToEmptyTableField_old()
+	public final DataTable ToEmptyTableField_old() throws Exception
 	{
 		DataTable dt = new DataTable();
 		Entity en = this.getNewEntity();
@@ -1933,8 +1953,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * 空的Table 取到一个空表结构。
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final DataTable ToEmptyTableField()
+	public final DataTable ToEmptyTableField() throws Exception
 	{
 		DataTable dt = new DataTable();
 		Entity en = this.getNewEntity();
@@ -1976,7 +1997,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return dt;
 	}
 	
-	public final DataTable ToEmptyTableStringField()
+	public final DataTable ToEmptyTableStringField() throws Exception
 	{
 		DataTable dt = new DataTable();
 		Entity en = this.getNewEntity();
@@ -1989,7 +2010,7 @@ public abstract class Entities extends ArrayList<Entity>
 		return dt;
 	}
 	
-	public final DataTable ToEmptyTableDesc()
+	public final DataTable ToEmptyTableDesc() throws Exception
 	{
 		DataTable dt = new DataTable();
 		Entity en = this.getNewEntity();
@@ -2179,8 +2200,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param keys
 	 *            多个主键用,符合分开
 	 * @return true包含任意一个，fale 一个都不包含.
+	 * @throws Exception 
 	 */
-	public final boolean ContainsAnyOnePK(String keys)
+	public final boolean ContainsAnyOnePK(String keys) throws Exception
 	{
 		keys = "," + keys + ",";
 		for (Entity en : convertEntities(this))
@@ -2199,8 +2221,9 @@ public abstract class Entities extends ArrayList<Entity>
 	 * @param keys
 	 *            多个主键用,符合分开
 	 * @return true全部包含.
+	 * @throws Exception 
 	 */
-	public final boolean ContainsAllPK(String keys)
+	public final boolean ContainsAllPK(String keys) throws Exception
 	{
 		keys = "," + keys + ",";
 		for (Entity en : convertEntities(this))
@@ -2232,12 +2255,13 @@ public abstract class Entities extends ArrayList<Entity>
 	/** 
 	 * ToJson.
 	 * @return 
+	 * @throws Exception 
 	 */
-	public final String ToJson()
+	public final String ToJson() throws Exception
 	{
 		return ToJson("dt");
 	}
-	public final String ToJson(String dtName)
+	public final String ToJson(String dtName) throws Exception
 	{
 		return BP.Tools.Json.ToJson(this.ToDataTableField(dtName));
 	}

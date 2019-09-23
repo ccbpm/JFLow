@@ -76,7 +76,7 @@ public class StationExt extends EntityNoName
 		map.AddSearchAttr(StationAttr.FK_StationType);
 
 			//岗位绑定菜单
-		map.AttrsOfOneVSM.AddBranches(new StationMenus(), new BP.GPM.Menus(), BP.GPM.StationMenuAttr.FK_Station, BP.GPM.StationMenuAttr.FK_Menu, "绑定菜单", EmpAttr.Name, EmpAttr.No, "0");
+		map.getAttrsOfOneVSM().AddBranches(new StationMenus(), new BP.GPM.Menus(), BP.GPM.StationMenuAttr.FK_Station, BP.GPM.StationMenuAttr.FK_Menu, "绑定菜单", EmpAttr.Name, EmpAttr.No, "0");
 
 
 		this.set_enMap(map);

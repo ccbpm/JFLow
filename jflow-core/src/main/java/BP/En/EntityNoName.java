@@ -11,12 +11,13 @@ public abstract class EntityNoName extends EntityNo
 		///#region 属性
 	/** 
 	 名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(EntityNoNameAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(EntityNoNameAttr.Name, value);
 	}

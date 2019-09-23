@@ -29,13 +29,14 @@ public abstract class EntitiesNoName extends EntitiesNo
 	 * @param entity
 	 *            要添加的对象
 	 * @return 返回添加到的地方
+	 * @throws Exception 
 	 */
 	/*
 	 * warning public int AddEntity(EntityNoName entity) { for (EntityNoName en
 	 * : convertEntityNoName(this)) { if (en.getNo().equals(entity.getNo())) {
 	 * return 0; } } return this.add(entity); }
 	 */
-	public void AddEntity(EntityNoName entity)
+	public void AddEntity(EntityNoName entity) throws Exception
 	{
 		for (EntityNoName en : convertEntityNoName(this))
 		{
@@ -53,8 +54,9 @@ public abstract class EntitiesNoName extends EntitiesNo
 	 * @param entity
 	 *            要添加的对象
 	 * @return 返回添加到的地方
+	 * @throws Exception 
 	 */
-	public void Insert(int index, EntityNoName entity)
+	public void Insert(int index, EntityNoName entity) throws Exception
 	{
 		for (EntityNoName en : convertEntityNoName(this))
 		{

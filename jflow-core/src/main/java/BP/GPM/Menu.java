@@ -271,27 +271,27 @@ public class Menu extends EntityTree
 			//    "@0=游客@1=所有人员@2=按岗位@3=按部门@4=按人员@5=按SQL");
 			// map.AddTBString(MenuAttr.CtrlObjs, null, "控制内容", false, false, 0, 4000, 20);
 			//// 一对多的关系.
-			//map.AttrsOfOneVSM.Add(new ByStations(), new Stations(), ByStationAttr.RefObj, ByStationAttr.FK_Station,
+			//map.getAttrsOfOneVSM().Add(new ByStations(), new Stations(), ByStationAttr.RefObj, ByStationAttr.FK_Station,
 			//    StationAttr.Name, StationAttr.No, "可访问的岗位");
-			//map.AttrsOfOneVSM.Add(new ByDepts(), new Depts(), ByStationAttr.RefObj, ByDeptAttr.FK_Dept,
+			//map.getAttrsOfOneVSM().Add(new ByDepts(), new Depts(), ByStationAttr.RefObj, ByDeptAttr.FK_Dept,
 			//    DeptAttr.Name, DeptAttr.No, "可访问的部门");
-			//map.AttrsOfOneVSM.Add(new ByEmps(), new Emps(), ByStationAttr.RefObj, ByEmpAttr.FK_Emp,
+			//map.getAttrsOfOneVSM().Add(new ByEmps(), new Emps(), ByStationAttr.RefObj, ByEmpAttr.FK_Emp,
 			//    EmpAttr.Name, EmpAttr.No, "可访问的人员");
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 基本功能.
 			//可以访问的权限组.
-		map.AttrsOfOneVSM.Add(new GroupMenus(), new Groups(), GroupMenuAttr.FK_Menu, GroupMenuAttr.FK_Group, EmpAttr.Name, EmpAttr.No, "绑定到权限组");
+		map.getAttrsOfOneVSM().Add(new GroupMenus(), new Groups(), GroupMenuAttr.FK_Menu, GroupMenuAttr.FK_Group, EmpAttr.Name, EmpAttr.No, "绑定到权限组");
 
 
 			//可以访问的权限组.
-		map.AttrsOfOneVSM.Add(new StationMenus(), new BP.GPM.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, EmpAttr.Name, EmpAttr.No, "绑定到岗位-列表模式");
+		map.getAttrsOfOneVSM().Add(new StationMenus(), new BP.GPM.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, EmpAttr.Name, EmpAttr.No, "绑定到岗位-列表模式");
 
 			//可以访问的权限组.
-		map.AttrsOfOneVSM.AddGroupListModel(new StationMenus(), new BP.GPM.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, "绑定到岗位-分组模式", StationAttr.FK_StationType, "Name", EmpAttr.No);
+		map.getAttrsOfOneVSM().AddGroupListModel(new StationMenus(), new BP.GPM.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, "绑定到岗位-分组模式", StationAttr.FK_StationType, "Name", EmpAttr.No);
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.AttrsOfOneVSM.AddBranchesAndLeaf(new EmpMenus(), new BP.Port.Emps(), EmpMenuAttr.FK_Menu, EmpMenuAttr.FK_Emp, "绑定人员-树结构", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new EmpMenus(), new BP.Port.Emps(), EmpMenuAttr.FK_Menu, EmpMenuAttr.FK_Emp, "绑定人员-树结构", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 			//不带有参数的方法.
 		RefMethod rm = new RefMethod();

@@ -48,21 +48,21 @@ public class Group extends EntityNoName {
 		// 100, 20);
 		map.AddTBInt(GroupAttr.Idx, 0, "显示顺序", true, false);
 
-		map.AttrsOfOneVSM.Add(new GroupEmps(), new Emps(), GroupEmpAttr.FK_Group, GroupEmpAttr.FK_Emp, EmpAttr.Name,
+		map.getAttrsOfOneVSM().Add(new GroupEmps(), new Emps(), GroupEmpAttr.FK_Group, GroupEmpAttr.FK_Emp, EmpAttr.Name,
 				EmpAttr.No, "人员(简单)");
 
 		// 节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.AttrsOfOneVSM.AddBranchesAndLeaf(new GroupEmps(), new BP.Port.Emps(), GroupEmpAttr.FK_Group,
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new GroupEmps(), new BP.Port.Emps(), GroupEmpAttr.FK_Group,
 				GroupEmpAttr.FK_Emp, "人员(树)", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
-		// map.AttrsOfOneVSM.Add(new GroupEmps(), new Emps(),
+		// map.getAttrsOfOneVSM().Add(new GroupEmps(), new Emps(),
 		// GroupEmpAttr.FK_Group, GroupEmpAttr.FK_Emp, EmpAttr.Name, EmpAttr.No,
 		// "人员(简单)");
 
-		map.AttrsOfOneVSM.Add(new GroupStations(), new Stations(), GroupEmpAttr.FK_Group, GroupStationAttr.FK_Station,
+		map.getAttrsOfOneVSM().Add(new GroupStations(), new Stations(), GroupEmpAttr.FK_Group, GroupStationAttr.FK_Station,
 				EmpAttr.Name, EmpAttr.No, "岗位(简单)");
 
-		map.AttrsOfOneVSM.AddGroupListModel(new GroupStations(), new BP.GPM.Stations(), GroupStationAttr.FK_Group,
+		map.getAttrsOfOneVSM().AddGroupListModel(new GroupStations(), new BP.GPM.Stations(), GroupStationAttr.FK_Group,
 				GroupStationAttr.FK_Station, "岗位(平铺)", StationAttr.FK_StationType);
 
 		this.set_enMap(map);

@@ -9,7 +9,7 @@ public abstract class EntityTree extends Entity
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final boolean getIsRoot()
+	public final boolean getIsRoot() throws Exception
 	{
 		if (this.getParentNo().equals("-1") || this.getParentNo().equals("0"))
 		{
@@ -25,56 +25,61 @@ public abstract class EntityTree extends Entity
 	}
 	/** 
 	 唯一标示
+	 * @throws Exception 
 	*/
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return this.GetValStringByKey(EntityTreeAttr.No);
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws Exception
 	{
 		this.SetValByKey(EntityTreeAttr.No, value);
 	}
 	/** 
 	 名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(EntityTreeAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(EntityTreeAttr.Name, value);
 	}
 	/** 
 	 父节点编号
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStringByKey(EntityTreeAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(EntityTreeAttr.ParentNo, value);
 	}
 	/** 
 	 图标
+	 * @throws Exception 
 	*/
-	public final String getICON()
+	public final String getICON() throws Exception
 	{
 		return this.GetValStringByKey(EntityTreeAttr.ICON);
 	}
-	public final void setICON(String value)
+	public final void setICON(String value) throws Exception
 	{
 		this.SetValByKey(EntityTreeAttr.ICON, value);
 	}
 	/** 
 	 顺序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(EntityTreeAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(EntityTreeAttr.Idx, value);
 	}
@@ -226,8 +231,9 @@ public abstract class EntityTree extends Entity
 	 上移
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public String DoUp()
+	public String DoUp() throws Exception
 	{
 		this.DoOrderUp(EntityTreeAttr.ParentNo, this.getParentNo(), EntityTreeAttr.Idx);
 		return "执行成功.";
@@ -236,8 +242,9 @@ public abstract class EntityTree extends Entity
 	 下移
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public String DoDown()
+	public String DoDown() throws Exception
 	{
 		this.DoOrderDown(EntityTreeAttr.ParentNo, this.getParentNo(), EntityTreeAttr.Idx);
 		return "执行成功.";

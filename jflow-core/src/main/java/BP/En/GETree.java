@@ -17,7 +17,7 @@ public class GETree extends EntityNoName
 		return this.PhysicsTable;
 	}
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();

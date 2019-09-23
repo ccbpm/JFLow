@@ -16,12 +16,13 @@ public abstract class EntityMyPK extends Entity
 	}
 	/** 
 	 集合类名称
+	 * @throws Exception 
 	*/
-	public final String getMyPK()
+	public final String getMyPK() throws Exception
 	{
 		return this.GetValStringByKey(EntityMyPKAttr.MyPK);
 	}
-	public final void setMyPK(String value)
+	public final void setMyPK(String value) throws Exception
 	{
 		this.SetValByKey(EntityMyPKAttr.MyPK, value);
 	}
@@ -29,8 +30,9 @@ public abstract class EntityMyPK extends Entity
 	 
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public String InitMyPKVals()
+	public String InitMyPKVals() throws Exception
 	{
 	   return this.getMyPK();
 	}

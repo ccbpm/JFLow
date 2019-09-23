@@ -17,12 +17,13 @@ public abstract class EntityNo extends Entity
 	}
 	/** 
 	 编号
+	 * @throws Exception 
 	*/
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return this.GetValStringByKey(EntityNoNameAttr.No);
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws Exception
 	{
 		this.SetValByKey(EntityNoNameAttr.No, value);
 	}

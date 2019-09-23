@@ -29,7 +29,7 @@ public abstract class EntitiesTree extends Entities
       /// 转化为json树
       /// </summary>
       /// <returns></returns>
-      public String ToJsonOfTree(String rootNo)
+      public String ToJsonOfTree(String rootNo) throws Exception
       {
     	  if(rootNo==null || rootNo==""){
     		  rootNo="0";
@@ -54,7 +54,7 @@ public abstract class EntitiesTree extends Entities
 
           return ReplaceIllgalChart(appendMenus.toString());
       }
-      public void AddChildren(EntityTree parentEn, EntitiesTree ens)
+      public void AddChildren(EntityTree parentEn, EntitiesTree ens) throws Exception
       {
           appendMenus.append(appendMenuSb);
           appendMenuSb.delete( 0, appendMenuSb.length());
@@ -142,8 +142,9 @@ public abstract class EntitiesTree extends Entities
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public final EntitiesTree GenerHisChinren(EntityTree en)
+	public final EntitiesTree GenerHisChinren(EntityTree en) throws Exception
 	{
 		Entities tempVar = this.CreateInstance();
 		EntitiesTree ens = (EntitiesTree) ((tempVar instanceof EntitiesTree) ? tempVar

@@ -125,7 +125,7 @@ public class EntityDBAccess
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public static int RetrieveV2(Entity en, String sql, Paras paras)
+	public static int RetrieveV2(Entity en, String sql, Paras paras) throws Exception
 	{
 		try
 		{
@@ -166,7 +166,7 @@ public class EntityDBAccess
 			throw ex;
 		}
 	}
-	public static int Retrieve(Entity en, String sql, Paras paras)
+	public static int Retrieve(Entity en, String sql, Paras paras) throws Exception
 	{
 		DataTable dt;
 		switch (en.getEnMap().getEnDBUrl().getDBUrlType())
@@ -206,8 +206,9 @@ public class EntityDBAccess
 	 @param en 实体
 	 @param sql 组织的查询语句
 	 @return 
+	 * @throws Exception 
 	*/
-	public static int Retrieve(Entity en, String sql)
+	public static int Retrieve(Entity en, String sql) throws Exception
 	{
 		try
 		{
@@ -248,14 +249,14 @@ public class EntityDBAccess
 			throw ex;
 		}
 	}
-	private static void fullDate(DataTable dt, Entity en, Attrs attrs)
+	private static void fullDate(DataTable dt, Entity en, Attrs attrs) throws Exception
 	{
 		for (Attr attr : attrs)
 		{
 			en.getRow().SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey()));
 		}
 	}
-	public static int Retrieve(Entities ens, String sql)
+	public static int Retrieve(Entities ens, String sql) throws Exception
 	{
 		try
 		{
@@ -299,7 +300,7 @@ public class EntityDBAccess
 			throw new RuntimeException("@在[" + ens.getNewEntity().getEnDesc() + "]查询时出现错误:" + ex.getMessage());
 		}
 	}
-	public static int Retrieve(Entities ens, String sql, Paras paras, String[] fullAttrs)
+	public static int Retrieve(Entities ens, String sql, Paras paras, String[] fullAttrs) throws Exception
 	{
 		DataTable dt = null;
 		switch (ens.getNewEntity().getEnMap().getEnDBUrl().getDBUrlType())

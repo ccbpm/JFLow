@@ -18,8 +18,9 @@ public class UAC
 		///#region 常用方法
 	/** 
 	 从权限管理系统里装载数据.
+	 * @throws Exception 
 	*/
-	public final void LoadRightFromCCGPM(Entity en)
+	public final void LoadRightFromCCGPM(Entity en) throws Exception
 	{
 		String sql = "SELECT Tag1  FROM V_GPM_EmpMenu WHERE  FK_Emp='" + WebUser.getNo() + "'  AND Url LIKE '%" + en.toString() + "%'  ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -65,8 +66,9 @@ public class UAC
 	 为一个岗位设置全部的权限
 	 
 	 @param fk_station
+	 * @throws Exception 
 	*/
-	public final void OpenAllForStation(String fk_station)
+	public final void OpenAllForStation(String fk_station) throws Exception
 	{
 		Paras ps = new Paras();
 		ps.Add("user", WebUser.getNo());
@@ -87,8 +89,9 @@ public class UAC
 	}
 	/** 
 	 仅仅对管理员
+	 * @throws Exception 
 	*/
-	public final UAC OpenForSysAdmin()
+	public final UAC OpenForSysAdmin() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -97,7 +100,7 @@ public class UAC
 
 		return this;
 	}
-	public final UAC OpenForAppAdmin()
+	public final UAC OpenForAppAdmin() throws Exception
 	{
 		if (WebUser.getNo() != null && WebUser.getNo().contains("admin") == true)
 		{

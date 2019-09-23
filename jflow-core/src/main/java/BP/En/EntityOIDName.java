@@ -45,12 +45,13 @@ public abstract class EntityOIDName extends EntityOID
 		///#region 属性方法
 	/** 
 	 名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(EntityOIDNameAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(EntityOIDNameAttr.Name, value);
 	}

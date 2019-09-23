@@ -38,8 +38,9 @@ public class SQLCash
 	 
 	 @param keys
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetUpdateSQL(Entity en, String[] keys)
+	public final String GetUpdateSQL(Entity en, String[] keys) throws Exception
 	{
 		if (keys == null)
 		{

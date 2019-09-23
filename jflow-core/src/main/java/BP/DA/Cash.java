@@ -498,7 +498,7 @@ public class Cash {
 		return val.substring(0);
 	}
 
-	public static String[] GetBillParas(String cfile, String ensStrs, Entities ens) {
+	public static String[] GetBillParas(String cfile, String ensStrs, Entities ens) throws Exception {
 		String[] paras = (String[]) ((getBill_Cash().get(cfile + "Para") instanceof String[])
 				? getBill_Cash().get(cfile + "Para") : null);
 		if (paras != null) {
@@ -533,7 +533,7 @@ public class Cash {
 		return paras;
 	}
 
-	public static String[] GetBillParas(String cfile, String ensStrs, Entity en) {
+	public static String[] GetBillParas(String cfile, String ensStrs, Entity en) throws Exception {
 		String[] paras = (String[]) ((getBill_Cash().get(cfile + "Para") instanceof String[])
 				? getBill_Cash().get(cfile + "Para") : null);
 		if (paras != null) {

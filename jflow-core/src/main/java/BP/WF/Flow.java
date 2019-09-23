@@ -4848,7 +4848,7 @@ public class Flow extends BP.En.EntityNoName
 			//rm.ToolTip = "清除历史流程数据。";
 			//rm.ClassMethodName = this.ToString() + ".DoExp";
 			//map.AddRefMethod(rm);
-			//map.AttrsOfOneVSM.Add(new FlowStations(), new Stations(), FlowStationAttr.FK_Flow,
+			//map.getAttrsOfOneVSM().Add(new FlowStations(), new Stations(), FlowStationAttr.FK_Flow,
 			//    FlowStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "抄送岗位");
 
 		this.set_enMap(map);

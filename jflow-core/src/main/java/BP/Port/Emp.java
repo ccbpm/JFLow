@@ -15,8 +15,9 @@ public class Emp extends EntityNoName
 		///#region 扩展属性
 	/** 
 	 主要的部门。
+	 * @throws Exception 
 	*/
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 		try
 		{

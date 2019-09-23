@@ -36,7 +36,7 @@ public class Depts extends BP.En.EntitiesNoName
 	{
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 		{
-			this.Clear(); //清除缓存数据.
+			this.clear(); //清除缓存数据.
 			//获得数据.
 			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = v.GetDeptsByParentNo(parentNo);
@@ -63,7 +63,7 @@ public class Depts extends BP.En.EntitiesNoName
 	{
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 		{
-			this.Clear(); //清除缓存数据.
+			this.clear(); //清除缓存数据.
 			//获得数据.
 			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = v.GetDepts();
@@ -91,7 +91,7 @@ public class Depts extends BP.En.EntitiesNoName
 	{
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 		{
-			this.Clear(); //清除缓存数据.
+			this.clear(); //清除缓存数据.
 			//获得数据.
 			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = v.GetDepts();

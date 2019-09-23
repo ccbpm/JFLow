@@ -18,8 +18,9 @@ public abstract class EntitiesMM extends Entities
 	 @param val 植
 	 @param refEns 关联的集合
 	 @return 关联的集合
+	 * @throws Exception 
 	*/
-	protected final Entities throwOneKeyValGetRefEntities(String attr, int val, Entities refEns)
+	protected final Entities throwOneKeyValGetRefEntities(String attr, int val, Entities refEns) throws Exception
 	{
 		QueryObject qo = new QueryObject(refEns);
 		qo.AddWhere(attr, val);
@@ -32,8 +33,9 @@ public abstract class EntitiesMM extends Entities
 	 @param val 植
 	 @param refEns 关联的集合
 	 @return 关联的集合
+	 * @throws Exception 
 	*/
-	protected final Entities throwOneKeyValGetRefEntities(String attr, String val, Entities refEns)
+	protected final Entities throwOneKeyValGetRefEntities(String attr, String val, Entities refEns) throws Exception
 	{
 		QueryObject qo = new QueryObject(refEns);
 		qo.AddWhere(attr, val);

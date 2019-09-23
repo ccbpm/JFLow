@@ -147,7 +147,7 @@ public class Emp extends EntityNoName
 		map.AddSearchAttr(EmpAttr.FK_Dept); //查询条件.
 
 			////增加点对多属性 一个操作员的部门查询权限与岗位权限.
-			//map.AttrsOfOneVSM.Add(new EmpStations(), new Stations(), 
+			//map.getAttrsOfOneVSM().Add(new EmpStations(), new Stations(), 
 			//    EmpStationAttr.FK_Emp, EmpStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "岗位权限");
 
 		RefMethod rm = new RefMethod();

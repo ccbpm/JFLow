@@ -74,7 +74,7 @@ public class Station extends EntityNoName
 			//if (BP.Sys.SystemConfig.OSModel == OSModel.OneOne)
 			//{
 			//    //岗位人员.
-			//    map.AttrsOfOneVSM.Add(new EmpStations(), new Emps(), EmpStationAttr.FK_Station, EmpStationAttr.FK_Emp,
+			//    map.getAttrsOfOneVSM().Add(new EmpStations(), new Emps(), EmpStationAttr.FK_Station, EmpStationAttr.FK_Emp,
 			//      DeptAttr.Name, DeptAttr.No, "人员");
 			//}
 

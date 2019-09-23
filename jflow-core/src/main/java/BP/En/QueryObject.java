@@ -137,15 +137,16 @@ public class QueryObject {
 
 	/**
 	 * DictBase
+	 * @throws Exception 
 	 */
-	public QueryObject(Entity en) {
+	public QueryObject(Entity en) throws Exception {
 		this.getMyParas().clear();
 		this._en = en;
 		this.HisDBType = this._en.getEnMap().getEnDBUrl().getDBType();
 		this.HisDBUrlType = this._en.getEnMap().getEnDBUrl().getDBUrlType();
 	}
 
-	public QueryObject(Entities ens) {
+	public QueryObject(Entities ens) throws Exception {
 		this.getMyParas().clear();
 		ens.clear();
 		this._ens = ens;
@@ -180,8 +181,9 @@ public class QueryObject {
 	 *            表达格式 大于，等于，小于
 	 * @param len
 	 *            长度
+	 * @throws Exception 
 	 */
-	public final void AddWhereLen(String attr, String exp, int len, BP.DA.DBType dbtype) {
+	public final void AddWhereLen(String attr, String exp, int len, BP.DA.DBType dbtype) throws Exception {
 		this.setSQL("( " + BP.Sys.SystemConfig.getAppCenterDBLengthStr() + "( " + attr2Field(attr) + " ) " + exp + " '"
 				+ (new Integer(len)).toString() + "')");
 	}
@@ -193,8 +195,9 @@ public class QueryObject {
 	 *            属性
 	 * @param sql
 	 *            此sql,必须是有一个列的集合．
+	 * @throws Exception 
 	 */
-	public final void AddWhereInSQL(String attr, String sql) {
+	public final void AddWhereInSQL(String attr, String sql) throws Exception {
 		this.AddWhere(attr, " IN ", "( " + sql + " )");
 	}
 
@@ -205,8 +208,9 @@ public class QueryObject {
 	 *            属性
 	 * @param sql
 	 *            此sql,必须是有一个列的集合．
+	 * @throws Exception 
 	 */
-	public final void AddWhereExistsSQL(String attr, String sql) {
+	public final void AddWhereExistsSQL(String attr, String sql) throws Exception {
 		this.AddWhere(attr, " EXISTS ", "( " + sql + " )");
 	}
 
@@ -217,8 +221,9 @@ public class QueryObject {
 	 *            属性
 	 * @param sql
 	 *            此sql,必须是有一个列的集合．
+	 * @throws Exception 
 	 */
-	public final void AddWhereInSQL(String attr, String sql, String orderBy) {
+	public final void AddWhereInSQL(String attr, String sql, String orderBy) throws Exception {
 		this.AddWhere(attr, " IN ", "( " + sql + " )");
 		this.addOrderBy(orderBy);
 	}
@@ -230,12 +235,13 @@ public class QueryObject {
 	 *            属性
 	 * @param sql
 	 *            此sql,必须是有一个列的集合．
+	 * @throws Exception 
 	 */
-	public final void AddWhereNotInSQL(String attr, String sql) {
+	public final void AddWhereNotInSQL(String attr, String sql) throws Exception {
 		this.AddWhere(attr, " NOT IN ", " ( " + sql + " ) ");
 	}
 
-	public final void AddWhereNotIn(String attr, String val) {
+	public final void AddWhereNotIn(String attr, String val) throws Exception {
 		this.AddWhere(attr, " NOT IN ", " ( " + val + " ) ");
 	}
 
@@ -246,8 +252,9 @@ public class QueryObject {
 	 *            属性
 	 * @param dt
 	 *            第一列是要组合的values
+	 * @throws Exception 
 	 */
-	public final void AddWhereIn(String attr, DataTable dt) {
+	public final void AddWhereIn(String attr, DataTable dt) throws Exception {
 		String strs = "";
 		for (DataRow dr : dt.Rows) {
 			strs += dr.getValue(0).toString() + ",";
@@ -266,8 +273,9 @@ public class QueryObject {
 	 *            属性
 	 * @param vals
 	 *            用 , 分开的．
+	 * @throws Exception 
 	 */
-	public final void AddWhereIn(String attr, String vals) {
+	public final void AddWhereIn(String attr, String vals) throws Exception {
 		this.AddWhere(attr, " IN ", vals);
 	}
 
@@ -275,8 +283,9 @@ public class QueryObject {
 	 * @param attr
 	 * @param exp
 	 * @param val
+	 * @throws Exception 
 	 */
-	public final void AddWhere(String attr, String exp, String val) {
+	public final void AddWhere(String attr, String exp, String val) throws Exception {
 		AddWhere(attr, exp, val, null);
 	}
 
@@ -291,8 +300,9 @@ public class QueryObject {
 	 *            、 * 值
 	 * @param paraName
 	 *            参数名称，可以为null, 如果查询中有多个参数中有相同属性名的需要，分别给他们起一个参数名。
+	 * @throws Exception 
 	 */
-	public final void AddWhere(String attr, String exp, String val, String paraName) {
+	public final void AddWhere(String attr, String exp, String val, String paraName) throws Exception {
 
 		if (val == null)
 			val = "";
@@ -375,7 +385,7 @@ public class QueryObject {
 		}
 	}
 
-	public final void AddWhereDept(String val) {
+	public final void AddWhereDept(String val) throws Exception {
 		String attr = "FK_Dept";
 		String exp = "=";
 
@@ -388,8 +398,9 @@ public class QueryObject {
 
 	/**
 	 * 是空的 @ param attr
+	 * @throws Exception 
 	 */
-	public final void AddWhereIsNull(String attr) {
+	public final void AddWhereIsNull(String attr) throws Exception {
 		this.setSQL("( " + attr2Field(attr) + "  IS NULL OR  " + attr2Field(attr) + "='' )");
 	}
 
@@ -442,8 +453,9 @@ public class QueryObject {
 	 *            操作符号（根据不同的数据库）
 	 * @param val
 	 *            值
+	 * @throws Exception 
 	 */
-	public final void AddWhere(String attr, String exp, int val) {
+	public final void AddWhere(String attr, String exp, int val) throws Exception {
 		if (attr.equals("RowNum")) {
 			this.setSQL("( " + attr2Field(attr) + " " + exp + " " + val + ")");
 		} else {
@@ -477,8 +489,9 @@ public class QueryObject {
 	 *            操作符号（根据不同的数据库）
 	 * @param val
 	 *            值
+	 * @throws Exception 
 	 */
-	public final void AddWhere(String attr, String exp, float val) {
+	public final void AddWhere(String attr, String exp, float val) throws Exception {
 		this.getMyParas().Add(attr, val);
 		if (this.getHisVarStr().equals("?")) {
 			this.setSQL("( " + attr2Field(attr) + " " + exp + "?)");
@@ -494,12 +507,13 @@ public class QueryObject {
 	 *            属性
 	 * @param val
 	 *            值
+	 * @throws Exception 
 	 */
-	public final void AddWhere(String attr, String val) {
+	public final void AddWhere(String attr, String val) throws Exception {
 		this.AddWhere(attr, "=", val);
 	}
 
-	public final void AddWhere(String attr, int val) {
+	public final void AddWhere(String attr, int val) throws Exception {
 		this.AddWhere(attr, "=", val);
 	}
 
@@ -510,8 +524,9 @@ public class QueryObject {
 	 *            属性
 	 * @param val
 	 *            值 true/false
+	 * @throws Exception 
 	 */
-	public final void AddWhere(String attr, boolean val) {
+	public final void AddWhere(String attr, boolean val) throws Exception {
 		if (val) {
 			this.AddWhere(attr, "=", 1);
 		} else {
@@ -519,16 +534,16 @@ public class QueryObject {
 		}
 	}
 
-	public final void AddWhere(String attr, long val) {
+	public final void AddWhere(String attr, long val) throws Exception {
 		this.AddWhere(attr, (new Long(val)).toString());
 	}
 
-	public final void AddWhere(String attr, float val) {
+	public final void AddWhere(String attr, float val) throws Exception {
 		this.AddWhere(attr, "=", val);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public final void AddWhere(String attr, Object val) {
+	public final void AddWhere(String attr, Object val) throws Exception {
 
 		if (val instanceof Enum) {
 			this.AddWhere(attr, ((Enum) val).ordinal());
@@ -565,17 +580,17 @@ public class QueryObject {
 	}
 
 	// 关于endsql
-	public final void addGroupBy(String attr) {
+	public final void addGroupBy(String attr) throws Exception {
 		this._groupBy = " GROUP BY  " + attr2Field(attr);
 	}
 
-	public final void addGroupBy(String attr1, String attr2) {
+	public final void addGroupBy(String attr1, String attr2) throws Exception {
 		this._groupBy = " GROUP BY  " + attr2Field(attr1) + " , " + attr2Field(attr2);
 	}
 
 	private String _orderBy = "";
 
-	public final void addOrderBy(String attr) {
+	public final void addOrderBy(String attr) throws Exception {
 		if (this._orderBy.indexOf("ORDER BY") != -1) {
 			this._orderBy = " , " + attr2Field(attr);
 		} else {
@@ -599,16 +614,17 @@ public class QueryObject {
 	 * 
 	 * @param attr
 	 * @param desc
+	 * @throws Exception 
 	 */
-	public final void addOrderByDesc(String attr) {
+	public final void addOrderByDesc(String attr) throws Exception {
 		this._orderBy = " ORDER BY " + attr2Field(attr) + " DESC ";
 	}
 
-	public final void addOrderByDesc(String attr1, String attr2) {
+	public final void addOrderByDesc(String attr1, String attr2) throws Exception {
 		this._orderBy = " ORDER BY  " + attr2Field(attr1) + " DESC ," + attr2Field(attr2) + " DESC";
 	}
 
-	public final void addOrderBy(String attr1, String attr2) {
+	public final void addOrderBy(String attr1, String attr2) throws Exception {
 		this._orderBy = " ORDER BY  " + attr2Field(attr1) + "," + attr2Field(attr2);
 	}
 
@@ -627,7 +643,7 @@ public class QueryObject {
 
 	private Map _HisMap;
 
-	public final Map getHisMap() {
+	public final Map getHisMap() throws Exception {
 		if (_HisMap == null) {
 			_HisMap = this.getEn().getEnMap();
 		}
@@ -638,7 +654,7 @@ public class QueryObject {
 		_HisMap = value;
 	}
 
-	private String attr2Field(String attrKey) {
+	private String attr2Field(String attrKey) throws Exception {
 		// @yln翻译
 		Attr attr = this.getHisMap().GetAttrByKey(attrKey);
 		if (attr.getIsRefAttr() == true) {
@@ -736,7 +752,7 @@ public class QueryObject {
 	}
 
 	public final DataTable DoGroupReturnTableSqlServer(Entity en, Attrs attrsOfGroupKey, Attr attrGroup, GroupWay gw,
-			OrderWay ow) {
+			OrderWay ow) throws Exception {
 
 		// 生成要查询的语句
 		String fields = "";
@@ -1372,8 +1388,9 @@ public class QueryObject {
 	 * @param fullAttrs
 	 *            要填充的树形
 	 * @return 初始化后的ens
+	 * @throws Exception 
 	 */
-	public static Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) {
+	public static Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) throws Exception {
 		Boolean isUpper = false;
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 			isUpper = true;

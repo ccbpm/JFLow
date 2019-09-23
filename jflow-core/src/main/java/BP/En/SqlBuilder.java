@@ -19,8 +19,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GetKeyConditionOfMS(Entity en) {
+	public static String GetKeyConditionOfMS(Entity en) throws Exception {
 
 		String pk = en.getPK();
 		if (pk.equals("OID"))
@@ -72,8 +73,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GetKeyConditionOfOLE(Entity en) {
+	public static String GetKeyConditionOfOLE(Entity en) throws Exception {
 		// 判断特殊情况。
 		Map enMap = en.getEnMap();
 		Attrs attrs = enMap.getAttrs();
@@ -123,8 +125,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GenerWhereByPK(Entity en, String dbStr) {
+	public static String GenerWhereByPK(Entity en, String dbStr) throws Exception {
 
 		if (en.getPKCount() == 1) {
 			if (dbStr.equals("?")) {
@@ -152,8 +155,9 @@ public class SqlBuilder {
 	/**
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static Paras GenerParasPK(Entity en) {
+	public static Paras GenerParasPK(Entity en) throws Exception {
 
 		Paras paras = new Paras();
 		String pk = en.getPK();
@@ -200,7 +204,7 @@ public class SqlBuilder {
 		return paras;
 	}
 
-	public static String GetKeyConditionOfOraForPara(Entity en) {
+	public static String GetKeyConditionOfOraForPara(Entity en) throws Exception {
 
 		String pk = en.getPK();
 		if (pk.equals("OID"))
@@ -241,7 +245,7 @@ public class SqlBuilder {
 		return sql.substring((new String(" (1=1)  AND ")).length());
 	}
 
-	public static String GetKeyConditionOfInformixForPara(Entity en) {
+	public static String GetKeyConditionOfInformixForPara(Entity en) throws Exception {
 		// 不能删除物理表名称，会引起未定义列。
 		String pk = en.getPK();
 		if (pk.equals("OID"))
@@ -279,7 +283,7 @@ public class SqlBuilder {
 		return sql.substring((new String(" (1=1)  AND ")).length());
 	}
 
-	public static String GetKeyConditionOfMySQL(Entity en) {
+	public static String GetKeyConditionOfMySQL(Entity en) throws Exception {
 		// 不能删除物理表名称，会引起未定义列。
 		String pk = en.getPK();
 
@@ -390,7 +394,7 @@ public class SqlBuilder {
 		return sql;
 	}
 
-	public static String GenerFormWhereOfOra(Entity en) {
+	public static String GenerFormWhereOfOra(Entity en) throws Exception {
 		Map enMap = en.getEnMap();
 		String from = " FROM " + enMap.getPhysicsTable();
 
@@ -453,7 +457,7 @@ public class SqlBuilder {
 		return from + where;
 	}
 
-	public static String GenerFormWhereOfInformix(Entity en) {
+	public static String GenerFormWhereOfInformix(Entity en) throws Exception {
 		Map enMap = en.getEnMap();
 		String from = " FROM " + enMap.getPhysicsTable();
 		String mytable = enMap.getPhysicsTable();
@@ -496,8 +500,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GenerCreateTableSQLOfMS(Entity en) {
+	public static String GenerCreateTableSQLOfMS(Entity en) throws Exception {
 		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null) {
 			return "DELETE FROM Sys_enum where enumkey='sdsf44a23'";
 		}
@@ -560,7 +565,7 @@ public class SqlBuilder {
 
 	
 
-	public static String GenerCreateTableSQL(Entity en) {
+	public static String GenerCreateTableSQL(Entity en) throws Exception {
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
 			return GenerCreateTableSQLOfOra_OK(en);
@@ -597,7 +602,7 @@ public class SqlBuilder {
 	 * @param en
 	 * @return
 	 */
-	public static String GenerCreateTableSQLOfOra_OK(Entity en) {
+	public static String GenerCreateTableSQLOfOra_OK(Entity en) throws Exception {
 		if (en.getEnMap().getPhysicsTable() == null) {
 			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
@@ -654,7 +659,7 @@ public class SqlBuilder {
 		return sql;
 	}
 
-	public static String GenerCreateTableSQLOfInfoMix(Entity en) {
+	public static String GenerCreateTableSQLOfInfoMix(Entity en) throws Exception {
 		if (en.getEnMap().getPhysicsTable() == null) {
 			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
@@ -725,8 +730,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GenerCreateTableSQLOfMySQL(Entity en) {
+	public static String GenerCreateTableSQLOfMySQL(Entity en) throws Exception {
 		if (en.getEnMap().getPhysicsTable() == null) {
 			throw new RuntimeException("您没有为[" + en.getEnDesc() + "],设置物理表。");
 		}
@@ -794,7 +800,7 @@ public class SqlBuilder {
 		return sql;
 	}
 
-	public static String GenerFormWhereOfOra(Entity en, Map map) {
+	public static String GenerFormWhereOfOra(Entity en, Map map) throws Exception {
 		String from = " FROM " + map.getPhysicsTable();
 		// string where=" ";
 		String table = "";
@@ -828,7 +834,7 @@ public class SqlBuilder {
 		return from + "  WHERE (1=1) ";
 	}
 
-	public static String GenerFormWhereOfMS(Entity en) {
+	public static String GenerFormWhereOfMS(Entity en) throws Exception {
 		Map enMap = en.getEnMap();
 		String from = " FROM " + enMap.getPhysicsTable();
 
@@ -870,8 +876,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GenerFormWhereOfMS(Entity en, Map map) {
+	public static String GenerFormWhereOfMS(Entity en, Map map) throws Exception {
 		String from = " FROM " + map.getPhysicsTable();
 		String table = "";
 		String tableAttr = "";
@@ -913,8 +920,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	protected static String GenerFormWhereOfMSOLE(Entity en) {
+	protected static String GenerFormWhereOfMSOLE(Entity en) throws Exception {
 		Map enMap = en.getEnMap();
 		String fromTop = enMap.getPhysicsTable();
 
@@ -1174,8 +1182,9 @@ public class SqlBuilder {
 	 * @param topNum
 	 *            最高查询个数
 	 * @return 返回查询sql
+	 * @throws Exception 
 	 */
-	public static String SelectSQLOfOLE(Entity en, int topNum) {
+	public static String SelectSQLOfOLE(Entity en, int topNum) throws Exception {
 		String val = "";
 		Map enMap = en.getEnMap();
 		String mainTable = enMap.getPhysicsTable() + ".";
@@ -1423,8 +1432,9 @@ public class SqlBuilder {
 	 * @param en
 	 *            要执行的en
 	 * @return 返回查询sql
+	 * @throws Exception 
 	 */
-	public static String SelectCountSQLOfMS(Entity en) {
+	public static String SelectCountSQLOfMS(Entity en) throws Exception {
 		// 判断内存里面是否有 此sql.
 		String sql = "SELECT COUNT(*) ";
 		return sql + SqlBuilder.GenerFormWhereOfMS(en, en.getEnMap());
@@ -1491,8 +1501,9 @@ public class SqlBuilder {
 	 * 产生sql
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String SelectSQLOfMS(Map map) {
+	public static String SelectSQLOfMS(Map map) throws Exception {
 		String val = ""; // key = null;
 		String mainTable = map.getPhysicsTable() + ".";
 		for (Attr attr : map.getAttrs()) {
@@ -1553,7 +1564,7 @@ public class SqlBuilder {
 		return "SELECT TOP @TopNum " + val.substring(1);
 	}
 
-	public static String UpdateOfMSAccess(Entity en, String[] keys) {
+	public static String UpdateOfMSAccess(Entity en, String[] keys) throws Exception {
 		String val = "";
 		Attrs attrs = en.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
@@ -1682,8 +1693,9 @@ public class SqlBuilder {
 	 * @param keys
 	 *            要更新的keys
 	 * @return sql
+	 * @throws Exception 
 	 */
-	public static String Update(Entity en, String[] keys) {
+	public static String Update(Entity en, String[] keys) throws Exception {
 		Map map = en.getEnMap();
 		if (map.getAttrs().size() == 0) {
 			throw new RuntimeException("@实体：" + en.toString() + " ,Attrs属性集合信息丢失，导致无法生成SQL。");
@@ -1857,7 +1869,7 @@ public class SqlBuilder {
 		return sql.replace(",=''", "");
 	}
 
-	public static Paras GenerParas_Update_Informix(Entity en, String[] keys) {
+	public static Paras GenerParas_Update_Informix(Entity en, String[] keys) throws Exception {
 		if (keys == null) {
 			return GenerParas_Update_Informix(en);
 		}
@@ -1935,7 +1947,7 @@ public class SqlBuilder {
 		return ps;
 	}
 
-	public static Paras GenerParas_Update_Informix(Entity en) {
+	public static Paras GenerParas_Update_Informix(Entity en) throws Exception {
 		Map map = en.getEnMap();
 		Paras ps = new Paras();
 		for (Attr attr : map.getAttrs()) {
@@ -2018,7 +2030,7 @@ public class SqlBuilder {
 		return ps;
 	}
 
-	public static Paras GenerParas(Entity en, String[] keys) {
+	public static Paras GenerParas(Entity en, String[] keys) throws Exception {
 		boolean IsEnableNull = BP.Sys.SystemConfig.getIsEnableNull();
 		String mykeys = "@";
 		if (keys != null) {
@@ -2109,7 +2121,7 @@ public class SqlBuilder {
 		return ps;
 	}
 
-	public static String UpdateForPara(Entity en, String[] keys) {
+	public static String UpdateForPara(Entity en, String[] keys) throws Exception {
 		String mykey = "";
 		if (keys != null) {
 			for (String s : keys) {
@@ -2163,15 +2175,16 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String DeleteForPara(Entity en) {
+	public static String DeleteForPara(Entity en) throws Exception {
 		String dbstr = en.getHisDBVarStr();
 		String sql = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE "
 				+ SqlBuilder.GenerWhereByPK(en, dbstr);
 		return sql;
 	}
 
-	public static String InsertForPara(Entity en) {
+	public static String InsertForPara(Entity en) throws Exception {
 
 		String dbstr = en.getHisDBVarStr();
 
@@ -2198,7 +2211,7 @@ public class SqlBuilder {
 		return sql;
 	}
 
-	public static String InsertForPara_Informix(Entity en) {
+	public static String InsertForPara_Informix(Entity en) throws Exception {
 		boolean isInnkey = false;
 		if (en.getIsOIDEntity()) {
 			isInnkey = false;
@@ -2230,8 +2243,9 @@ public class SqlBuilder {
 	 * 
 	 * @param en
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String Insert(Entity en) {
+	public static String Insert(Entity en) throws Exception {
 		String key = "", field = "", val = "";
 		Attrs attrs = en.getEnMap().getAttrs();
 		if (attrs.size() == 0) 
@@ -2303,7 +2317,7 @@ public class SqlBuilder {
 		return sql;
 	}
 
-	public static String InsertOFOLE(Entity en) {
+	public static String InsertOFOLE(Entity en) throws Exception {
 		String key = "", field = "", val = "";
 		for (Attr attr : en.getEnMap().getAttrs()) {
 			if (attr.getMyFieldType() == FieldType.RefText) {

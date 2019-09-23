@@ -1935,7 +1935,7 @@ public class Map
 		}
 
 		//把关系实体类的属性放入文件实体类中去。
-		for (BP.Sys.MapAttr attr : attrs)
+		for (BP.Sys.MapAttr attr : attrs.ToJavaList())
 		{
 			if (this.getAttrs().Contains(attr.getKeyOfEn()) == true)			
 				continue;

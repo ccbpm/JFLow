@@ -67,8 +67,9 @@ public class EnDtl
 	private String _Desc = null;
 	/** 
 	 描述
+	 * @throws Exception 
 	*/
-	public final String getDesc()
+	public final String getDesc() throws Exception
 	{
 		if (this._Desc == null)
 		{

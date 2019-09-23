@@ -885,8 +885,9 @@ public class Attrs extends ArrayList<Attr>
 	/**
 	 *  转换为mapattrs
 	 * @return
+	 * @throws Exception 
 	 */
-	public final BP.Sys.MapAttrs ToMapAttrs() 
+	public final BP.Sys.MapAttrs ToMapAttrs() throws Exception 
 	{		
 
 		BP.Sys.MapAttrs mapAttrs = new BP.Sys.MapAttrs();

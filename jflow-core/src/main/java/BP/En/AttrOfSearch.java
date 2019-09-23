@@ -3,7 +3,7 @@ package BP.En;
 import java.util.Enumeration;
 
 import BP.Difference.ContextHolderUtils;
-import WebUser;
+import BP.Web.WebUser;
 
 /**
  * SearchKey 的摘要说明。 用来处理一条记录的存放，问题。

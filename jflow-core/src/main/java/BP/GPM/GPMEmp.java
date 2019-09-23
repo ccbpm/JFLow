@@ -222,7 +222,7 @@ public class GPMEmp extends EntityNoName
 		map.AddSearchAttr(EmpAttr.SignType);
 
 			//节点绑定部门. 节点绑定部门.
-		map.AttrsOfOneVSM.AddBranches(new EmpMenus(), new BP.GPM.Menus(), BP.GPM.EmpMenuAttr.FK_Emp, BP.GPM.EmpMenuAttr.FK_Menu, "人员菜单", EmpAttr.Name, EmpAttr.No, "0");
+		map.getAttrsOfOneVSM().AddBranches(new EmpMenus(), new BP.GPM.Menus(), BP.GPM.EmpMenuAttr.FK_Emp, BP.GPM.EmpMenuAttr.FK_Menu, "人员菜单", EmpAttr.Name, EmpAttr.No, "0");
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "设置图片签名";
@@ -237,7 +237,7 @@ public class GPMEmp extends EntityNoName
 		map.AddRefMethod(rm);
 
 			//节点绑定部门. 节点绑定部门.
-		map.AttrsOfOneVSM.AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
+		map.getAttrsOfOneVSM().AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 
 		this.set_enMap(map);

@@ -39,7 +39,7 @@ import BP.Tools.StringHelper;
 import BP.Tools.StringUtils;
 import BP.WF.Template.FrmField;
 import BP.WF.Template.FrmFieldAttr;
-import WebUser;
+import BP.Web.WebUser;
 import BP.Sys.*;;
 
 /**
@@ -82,7 +82,7 @@ public abstract class Entity implements Serializable {
 		return _GetNewEntities;
 	}
 	
-	public String getPKField()
+	public String getPKField() throws Exception
 	{
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
@@ -268,8 +268,9 @@ public abstract class Entity implements Serializable {
 	 * 转化成
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String ToStringAtParas() {
+	public final String ToStringAtParas() throws Exception {
 		String str = "";
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			str += "@" + attr.getKey() + "=" + this.GetValByKey(attr.getKey());
@@ -277,11 +278,11 @@ public abstract class Entity implements Serializable {
 		return str;
 	}
 
-	public final DataTable ToEmptyTableField() {
+	public final DataTable ToEmptyTableField() throws Exception {
 		return ToEmptyTableField(null);
 	}
 
-	public final DataTable ToEmptyTableField(Entity en) {
+	public final DataTable ToEmptyTableField(Entity en) throws Exception {
 		DataTable dt = new DataTable();
 
 		if (en == null)
@@ -327,8 +328,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param tableName
 	 * @return
+	 * @throws Exception 
 	 */
-	public final DataTable ToDataTableField(String tableName) {
+	public final DataTable ToDataTableField(String tableName) throws Exception {
 
 		DataTable dt = this.ToEmptyTableField();
 		dt.TableName = tableName;
@@ -586,7 +588,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	// 排序操作
-	protected final void DoOrderUp(String groupKeyAttr, String groupKeyVal, String idxAttr) {
+	protected final void DoOrderUp(String groupKeyAttr, String groupKeyVal, String idxAttr) throws Exception {
 		// string pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
@@ -624,7 +626,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	protected final void DoOrderUp(String groupKeyAttr, String groupKeyVal, String gKey2, String gVal2,
-			String idxAttr) {
+			String idxAttr) throws Exception {
 		// string pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
@@ -661,7 +663,7 @@ public abstract class Entity implements Serializable {
 				+ "'  AND   (" + groupKeyAttr + "='" + groupKeyVal + "' AND " + gKey2 + "='" + gVal2 + "')");
 	}
 
-	protected final void DoOrderDown(String groupKeyAttr, String groupKeyVal, String idxAttr) {
+	protected final void DoOrderDown(String groupKeyAttr, String groupKeyVal, String idxAttr) throws Exception {
 
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
@@ -697,7 +699,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	protected final void DoOrderDown(String groupKeyAttr, String groupKeyVal, String gKeyAttr2, String gKeyVal2,
-			String idxAttr) {
+			String idxAttr) throws Exception {
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1283,7 +1285,7 @@ public abstract class Entity implements Serializable {
 	 * @param val
 	 * @throws Exception
 	 */
-	public final int Delete(String attr, Object val) {
+	public final int Delete(String attr, Object val) throws Exception {
 		Paras ps = new Paras();
 		ps.Add(attr, val);
 
@@ -1292,7 +1294,7 @@ public abstract class Entity implements Serializable {
 
 	}
 
-	public final int Delete(String attr1, Object val1, String attr2, Object val2) {
+	public final int Delete(String attr1, Object val1, String attr2, Object val2) throws Exception {
 		Paras ps = new Paras();
 		ps.Add(attr1, val1);
 		ps.Add(attr2, val2);
@@ -1302,7 +1304,7 @@ public abstract class Entity implements Serializable {
 
 	}
 
-	public final int Delete(String attr1, Object val1, String attr2, Object val2, String attr3, Object val3) {
+	public final int Delete(String attr1, Object val1, String attr2, Object val2, String attr3, Object val3) throws Exception {
 		Paras ps = new Paras();
 		ps.Add(attr1, val1);
 		ps.Add(attr2, val2);
@@ -1315,7 +1317,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	public final int Delete(String attr1, Object val1, String attr2, Object val2, String attr3, Object val3,
-			String attr4, Object val4) {
+			String attr4, Object val4) throws Exception {
 		Paras ps = new Paras();
 		ps.Add(attr1, val1);
 		ps.Add(attr2, val2);
@@ -1335,7 +1337,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	// 参数字段
-	private AtPara getAtPara() {
+	private AtPara getAtPara() throws Exception {
 
 		Object tempVar = this.getRow().GetValByKey("_ATObj_");
 		AtPara at = (AtPara) ((tempVar instanceof AtPara) ? tempVar : null);
@@ -1380,8 +1382,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetParaString(String key) {
+	public final String GetParaString(String key) throws Exception {
 		return getAtPara().GetValStrByKey(key);
 	}
 
@@ -1391,8 +1394,9 @@ public abstract class Entity implements Serializable {
 	 * @param key
 	 * @param isNullAsVal
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetParaString(String key, String isNullAsVal) {
+	public final String GetParaString(String key, String isNullAsVal) throws Exception {
 		String str = getAtPara().GetValStrByKey(key);
 		if (StringHelper.isNullOrEmpty(str)) {
 			return isNullAsVal;
@@ -1405,16 +1409,17 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final int GetParaInt(String key) {
+	public final int GetParaInt(String key) throws Exception {
 		return getAtPara().GetValIntByKey(key);
 	}
 
-	public final int GetParaInt(String key, int isNullAsVal) {
+	public final int GetParaInt(String key, int isNullAsVal) throws Exception {
 		return getAtPara().GetValIntByKey(key, isNullAsVal);
 	}
 
-	public final float GetParaFloat(String key) {
+	public final float GetParaFloat(String key) throws Exception {
 		return getAtPara().GetValFloatByKey(key);
 	}
 
@@ -1423,8 +1428,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean GetParaBoolen(String key) {
+	public final boolean GetParaBoolen(String key) throws Exception {
 		return getAtPara().GetValBoolenByKey(key);
 	}
 
@@ -1434,8 +1440,9 @@ public abstract class Entity implements Serializable {
 	 * @param key
 	 * @param IsNullAsVal
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean GetParaBoolen(String key, boolean IsNullAsVal) {
+	public final boolean GetParaBoolen(String key, boolean IsNullAsVal) throws Exception {
 		return getAtPara().GetValBoolenByKey(key, IsNullAsVal);
 	}
 
@@ -1444,8 +1451,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @param obj
+	 * @throws Exception 
 	 */
-	public final void SetPara(String key, String obj) {
+	public final void SetPara(String key, String obj) throws Exception {
 		if (getAtPara() != null) {
 			this.getRow().remove("_ATObj_");
 		}
@@ -1463,15 +1471,15 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
-	public final void SetPara(String key, int obj) {
+	public final void SetPara(String key, int obj) throws Exception {
 		SetPara(key, (new Integer(obj)).toString());
 	}
 
-	public final void SetPara(String key, float obj) {
+	public final void SetPara(String key, float obj) throws Exception {
 		SetPara(key, (new Float(obj)).toString());
 	}
 
-	public final void SetPara(String key, boolean obj) {
+	public final void SetPara(String key, boolean obj) throws Exception {
 		if (!obj) {
 			SetPara(key, "0");
 		} else {
@@ -1484,8 +1492,9 @@ public abstract class Entity implements Serializable {
 	 * 获取实体
 	 * 
 	 * @param key
+	 * @throws Exception 
 	 */
-	public final Object GetRefObject(String key) {
+	public final Object GetRefObject(String key) throws Exception {
 		return this.getRow().GetValByKey("_" + key);
 
 	}
@@ -1495,8 +1504,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @param obj
+	 * @throws Exception 
 	 */
-	public final void SetRefObject(String key, Object obj) {
+	public final void SetRefObject(String key, Object obj) throws Exception {
 		if (obj == null) {
 			return;
 		}
@@ -1615,8 +1625,9 @@ public abstract class Entity implements Serializable {
 	 * 从一个副本上copy. 用于两个数性基本相近的 实体 copy.
 	 * 
 	 * @param fromEn
+	 * @throws Exception 
 	 */
-	public void Copy(Entity fromEn) {
+	public void Copy(Entity fromEn) throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			// if (attr.IsPK)
 			// continue;
@@ -1634,8 +1645,9 @@ public abstract class Entity implements Serializable {
 	 * 从一个副本上
 	 * 
 	 * @param fromRow
+	 * @throws Exception 
 	 */
-	public void Copy(Row fromRow) {
+	public void Copy(Row fromRow) throws Exception {
 		Attrs attrs = this.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
 			try {
@@ -1645,7 +1657,7 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
-	public void Copy(BP.Sys.XML.XmlEn xmlen) {
+	public void Copy(BP.Sys.XML.XmlEn xmlen) throws Exception {
 		Attrs attrs = this.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
 			Object obj = null;
@@ -1666,9 +1678,10 @@ public abstract class Entity implements Serializable {
 	 * 复制 Hashtable
 	 * 
 	 * @param ht
+	 * @throws Exception 
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void Copy(Hashtable ht) {
+	public void Copy(Hashtable ht) throws Exception {
 		/*
 		 * warning for (String k : ht.keySet())
 		 */
@@ -1688,7 +1701,7 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
-	public void Copy(DataRow dr) {
+	public void Copy(DataRow dr) throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			try {
 				this.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
@@ -1700,14 +1713,14 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
-	public final String Copy(String refDoc) {
+	public final String Copy(String refDoc) throws Exception {
 		for (Attr attr : this.get_enMap().getAttrs()) {
 			refDoc = refDoc.replace("@" + attr.getKey(), this.GetValStrByKey(attr.getKey()));
 		}
 		return refDoc;
 	}
 
-	public final void Copy() {
+	public final void Copy() throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			if (!attr.getIsPK()) {
 				continue;
@@ -1974,9 +1987,9 @@ public abstract class Entity implements Serializable {
 	 * @param filefullName
 	 *            文件路径,如果为空怎不保存直接返回文件流，如果不为空则创建文件。
 	 * @return 返回文件流
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public final byte[] GetFileFromDB(String saveToField, String filefullName) throws IOException {
+	public final byte[] GetFileFromDB(String saveToField, String filefullName) throws Exception {
 		BP.DA.DBAccess.GetFileFromDB(filefullName, this.getEnMap().getPhysicsTable(), this.getPK(),
 				this.getPKVal().toString(), saveToField);
 		return null;
@@ -1988,9 +2001,9 @@ public abstract class Entity implements Serializable {
 	 * @param imgFieldName
 	 *            字段名
 	 * @return 大文本数据
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public final String GetBigTextFromDB(String imgFieldName) throws IOException {
+	public final String GetBigTextFromDB(String imgFieldName) throws Exception {
 		String tempFile = BP.Sys.SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable()
 				+ this.getPKVals() + ".tmp";
 
@@ -2020,9 +2033,9 @@ public abstract class Entity implements Serializable {
 	 * @param imgFieldName
 	 *            字段名
 	 * @return 大文本数据
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public final String GetBigTextFromDB(String imgFieldName, String codeType) throws IOException {
+	public final String GetBigTextFromDB(String imgFieldName, String codeType) throws Exception {
 		String tempFile = BP.Sys.SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable()
 				+ this.getPKVals() + ".tmp";
 
@@ -2087,8 +2100,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 建立物理表
+	 * @throws Exception 
 	 */
-	protected final void CreatePhysicsTable() {
+	protected final void CreatePhysicsTable() throws Exception {
 
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
@@ -2106,7 +2120,7 @@ public abstract class Entity implements Serializable {
 		this.CreateIndexAndPK();
 	}
 
-	private void CreateIndexAndPK() {
+	private void CreateIndexAndPK() throws Exception {
 
 		// 建立主键.
 		int pkconut = this.getPKCount();
@@ -2833,7 +2847,7 @@ public abstract class Entity implements Serializable {
 
 	 
 
-	public final String ToJson() {
+	public final String ToJson() throws Exception {
 		return ToJson(true);
 	}
 
@@ -2841,8 +2855,9 @@ public abstract class Entity implements Serializable {
 	 * 把一个实体转化成Json.
 	 * 
 	 * @return 返回一个string json串.
+	 * @throws Exception 
 	 */
-	public final String ToJson(Boolean isInParaFields) {
+	public final String ToJson(Boolean isInParaFields) throws Exception {
 		Hashtable<String, Object> ht = getRow();
 
 		// 如果不包含参数字段.
@@ -2864,7 +2879,7 @@ public abstract class Entity implements Serializable {
 		return BP.Tools.Json.ToJson(ht, false);
 	}
 
-	public final AtPara getatPara() {
+	public final AtPara getatPara() throws Exception {
 		Object tempVar = this.getRow().GetValByKey("_ATObj_");
 		AtPara at = (AtPara) ((tempVar instanceof AtPara) ? tempVar : null);
 		if (at != null) {
@@ -2901,8 +2916,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param fk_mapdata
 	 * @return
+	 * @throws Exception 
 	 */
-	public MapData DTSMapToSys_MapData(String fk_mapdata) {
+	public MapData DTSMapToSys_MapData(String fk_mapdata) throws Exception {
 
 		if (DataType.IsNullOrEmpty(fk_mapdata)) {
 			fk_mapdata = this.getClassIDOfShort();
@@ -3573,8 +3589,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 动态的获取map
+	 * @throws Exception 
 	 */
-	public Map getEnMapInTime() {
+	public Map getEnMapInTime() throws Exception {
 		_tmpEnMap = null;
 		Cash.SetMap(this.getClass().getName(), null);
 		return this.getEnMap();
@@ -3587,7 +3604,7 @@ public abstract class Entity implements Serializable {
 	 */
 	private Row _row = null;
 
-	public final Row getRow()
+	public final Row getRow() throws Exception
 	{
 		if (this._row == null)
 		{
@@ -3633,8 +3650,9 @@ public abstract class Entity implements Serializable {
 	 *            attrKey
 	 * @param val
 	 *            val
+	 * @throws Exception 
 	 */
-	public final void SetValByKey(String attrKey, String val) {
+	public final void SetValByKey(String attrKey, String val) throws Exception {
 		if (val == null) {
 			val = "";
 		}
@@ -3642,27 +3660,27 @@ public abstract class Entity implements Serializable {
 		this.getRow().SetValByKey(attrKey, val);
 	}
 
-	public final void SetValByKey(String attrKey, int val) {
+	public final void SetValByKey(String attrKey, int val) throws Exception {
 		this.getRow().SetValByKey(attrKey, val);
 	}
 
-	public final void SetValByKey(String attrKey, long val) {
+	public final void SetValByKey(String attrKey, long val) throws Exception {
 		this.getRow().SetValByKey(attrKey, val);
 	}
 
-	public final void SetValByKey(String attrKey, float val) {
+	public final void SetValByKey(String attrKey, float val) throws Exception {
 		this.getRow().SetValByKey(attrKey, val);
 	}
 
-	public final void SetValByKey(String attrKey, java.math.BigDecimal val) {
+	public final void SetValByKey(String attrKey, java.math.BigDecimal val) throws Exception {
 		this.getRow().SetValByKey(attrKey, val);
 	}
 
-	public final void SetValByKey(String attrKey, Object val) {
+	public final void SetValByKey(String attrKey, Object val) throws Exception {
 		this.getRow().SetValByKey(attrKey, val);
 	}
 
-	public final void SetValByDesc(String attrDesc, Object val) {
+	public final void SetValByDesc(String attrDesc, Object val) throws Exception {
 		if (val == null) {
 			throw new RuntimeException("@不能设置属性[" + attrDesc + "]null 值。");
 		}
@@ -3676,8 +3694,9 @@ public abstract class Entity implements Serializable {
 	 *            attrKey
 	 * @param val
 	 *            val
+	 * @throws Exception 
 	 */
-	public final void SetValRefTextByKey(String attrKey, Object val) {
+	public final void SetValRefTextByKey(String attrKey, Object val) throws Exception {
 		this.SetValByKey(attrKey + "Text", val);
 	}
 
@@ -3688,8 +3707,9 @@ public abstract class Entity implements Serializable {
 	 *            attrKey
 	 * @param val
 	 *            val
+	 * @throws Exception 
 	 */
-	public final void SetValByKey(String attrKey, boolean val) {
+	public final void SetValByKey(String attrKey, boolean val) throws Exception {
 		if (val) {
 			this.SetValByKey(attrKey, 1);
 		} else {
@@ -3699,8 +3719,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 设置默认值
+	 * @throws Exception 
 	 */
-	public final void SetDefaultVals() {
+	public final void SetDefaultVals() throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs()) {
 			this.SetValByKey(attr.getKey(), attr.getDefaultVal());
 		}
@@ -3713,8 +3734,9 @@ public abstract class Entity implements Serializable {
 	 *            attrKey
 	 * @param val
 	 *            val
+	 * @throws Exception 
 	 */
-	public final void SetDateValByKey(String attrKey, String val) {
+	public final void SetDateValByKey(String attrKey, String val) throws Exception {
 		try {
 			this.SetValByKey(attrKey, DataType.StringToDateStr(val));
 		} catch (RuntimeException ex) {
@@ -3728,8 +3750,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param attrKey
 	 * @return
+	 * @throws Exception 
 	 */
-	public final Object GetValByKey(String attrKey) {
+	public final Object GetValByKey(String attrKey) throws Exception {
 		return this.getRow().GetValByKey(attrKey);
 
 	}
@@ -3739,8 +3762,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param attrKey
 	 * @return
+	 * @throws Exception 
 	 */
-	public final java.util.Date GetValDateTime(String attrKey) {
+	public final java.util.Date GetValDateTime(String attrKey) throws Exception {
 		return DataType.ParseSysDateTime2DateTime(this.GetValStringByKey(attrKey));
 	}
 
@@ -3749,8 +3773,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetValStrByKey(String key) {
+	public final String GetValStrByKey(String key) throws Exception {
 		Object value = this.getRow().GetValByKey(key);
 		if (null == value) {
 			return "";
@@ -3759,7 +3784,7 @@ public abstract class Entity implements Serializable {
 		return value.toString();
 	}
 
-	public final String GetValStrByKey(String key, String isNullAs) {
+	public final String GetValStrByKey(String key, String isNullAs) throws Exception {
 
 		Object obj = this.getRow().get(key);
 		if (obj == null)
@@ -3773,8 +3798,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param attrKey
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetValStringByKey(String attrKey) {
+	public final String GetValStringByKey(String attrKey) throws Exception {
 
 		String val = GetValStrByKey(attrKey, null);
 		if (val == null)
@@ -3783,7 +3809,7 @@ public abstract class Entity implements Serializable {
 		return val;
 	}
 
-	public final String GetValStringByKey(String attrKey, String isNullAsVal) {
+	public final String GetValStringByKey(String attrKey, String isNullAsVal) throws Exception {
 
 		String val = GetValStrByKey(attrKey, null);
 		if (val == null)
@@ -3795,8 +3821,9 @@ public abstract class Entity implements Serializable {
 	 * 取出大块文本
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetValDocText() {
+	public final String GetValDocText() throws Exception {
 		String s = this.GetValStrByKey("Doc");
 		if (s.trim().length() != 0) {
 			return s;
@@ -3808,7 +3835,7 @@ public abstract class Entity implements Serializable {
 		return s;
 	}
 
-	public final String GetValDocHtml() {
+	public final String GetValDocHtml() throws Exception {
 		String s = this.GetValHtmlStringByKey("Doc");
 		if (s.trim().length() != 0) {
 			return s;
@@ -3825,12 +3852,13 @@ public abstract class Entity implements Serializable {
 	 * @param attrKey
 	 *            attr
 	 * @return html.
+	 * @throws Exception 
 	 */
-	public final String GetValHtmlStringByKey(String attrKey) {
+	public final String GetValHtmlStringByKey(String attrKey) throws Exception {
 		return DataType.ParseText2Html(this.GetValStringByKey(attrKey));
 	}
 
-	public final String GetValHtmlStringByKey(String attrKey, String defval) {
+	public final String GetValHtmlStringByKey(String attrKey, String defval) throws Exception {
 		return DataType.ParseText2Html(this.GetValStringByKey(attrKey, defval));
 	}
 
@@ -3839,21 +3867,22 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param attrKey
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetValRefTextByKey(String attrKey) {
+	public final String GetValRefTextByKey(String attrKey) throws Exception {
 
 		return GetValStringByKey(attrKey + "Text");
 
 	}
 
-	public long GetValInt64ByKey(String key) {
+	public long GetValInt64ByKey(String key) throws Exception {
 		String val = this.GetValStringByKey(key, "0");
 		if(DataType.IsNullOrEmpty(val))
 			val = "0";	
 		return Long.parseLong(val);
 	}
 
-	public final int GetValIntByKey(String key, int IsZeroAs) {
+	public final int GetValIntByKey(String key, int IsZeroAs) throws Exception {
 		int i = this.GetValIntByKey(key);
 		if (i == 0) {
 			i = IsZeroAs;
@@ -3866,8 +3895,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public int GetValIntByKey(String key) {
+	public int GetValIntByKey(String key) throws Exception {
 		String val = this.GetValStringByKey(key);
 		if (DataType.IsNullOrEmpty(val))
 			return 0;
@@ -3883,8 +3913,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final boolean GetValBooleanByKey(String key) {
+	public final boolean GetValBooleanByKey(String key) throws Exception {
 			
 		 String s = this.GetValStrByKey(key);
          if (DataType.IsNullOrEmpty(s))
@@ -3911,7 +3942,7 @@ public abstract class Entity implements Serializable {
          
 	}
 
-	public final String GetValBoolStrByKey(String key) {
+	public final String GetValBoolStrByKey(String key) throws Exception {
 		if (GetValBooleanByKey(key) == false) {
 			return "否";
 		} else {
@@ -3919,7 +3950,7 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
-	 public float GetValFloatByKey(String key, int blNum)
+	 public float GetValFloatByKey(String key, int blNum) throws Exception
      {
          String val = this.GetValStringByKey(key);
          if (DataType.IsNullOrEmpty(val))                
@@ -3932,8 +3963,9 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final float GetValFloatByKey(String key) {
+	public final float GetValFloatByKey(String key) throws Exception {
 
 		String val = this.GetValStringByKey(key);
 		if (val == null)
@@ -3946,15 +3978,16 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final BigDecimal GetValDecimalByKey(String key) {
+	public final BigDecimal GetValDecimalByKey(String key) throws Exception {
 
 		BigDecimal bd = new BigDecimal(this.GetValStrByKey(key));
 		return bd.setScale(4, BigDecimal.ROUND_HALF_UP);
 
 	}
 	
-	public final BigDecimal GetValDecimalByKey(String key,int scale) {
+	public final BigDecimal GetValDecimalByKey(String key,int scale) throws Exception {
 
 		BigDecimal bd = new BigDecimal(this.GetValStrByKey(key));
 		return bd.setScale(scale, BigDecimal.ROUND_HALF_UP);
@@ -3962,7 +3995,7 @@ public abstract class Entity implements Serializable {
 	}
 	
 
-	public final double GetValDoubleByKey(String key) {
+	public final double GetValDoubleByKey(String key) throws Exception {
 
 		String val = this.GetValStrByKey(key);
 		if (val == null)
@@ -3970,7 +4003,7 @@ public abstract class Entity implements Serializable {
 		return Double.parseDouble(val);
 	}
 
-	public final boolean getIsBlank() {
+	public final boolean getIsBlank() throws Exception {
 
 		if (this._row == null) {
 			return true;
@@ -4043,8 +4076,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 获取或者设置 是不是空的实体.
+	 * @throws Exception 
 	 */
-	public final boolean getIsEmpty() {
+	public final boolean getIsEmpty() throws Exception {
 		if (this._row == null)
 			return true;
 
@@ -4062,26 +4096,29 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 对这个实体的描述
+	 * @throws Exception 
 	 */
-	public final String getEnDesc() {
+	public final String getEnDesc() throws Exception {
 		return this.getEnMap().getEnDesc();
 	}
 
 	/**
 	 * 取到主健值。如果它的主健不唯一，就返回第一个值。 获取或设置
+	 * @throws Exception 
 	 */
-	public final Object getPKVal() {
+	public final Object getPKVal() throws Exception {
 		return this.GetValByKey(this.getPK());
 	}
 
-	public final void setPKVal(Object value) {
+	public final void setPKVal(Object value) throws Exception {
 		this.SetValByKey(this.getPK(), value);
 	}
 
 	/**
 	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 * @throws Exception 
 	 */
-	public final int getPKCount() {
+	public final int getPKCount() throws Exception {
 		if (this.getPK().equals("OID") || this.getPK().equals("No") || this.getPK().equals("MyPK")
 				|| this.getPK().equals("NodeID") || this.getPK().equals("WorkID")) {
 			return 1;
@@ -4103,8 +4140,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 是不是OIDEntity
+	 * @throws Exception 
 	 */
-	public final boolean getIsOIDEntity() {
+	public final boolean getIsOIDEntity() throws Exception {
 		if (this.getPK().equals("OID")) {
 			return true;
 		}
@@ -4113,8 +4151,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 是不是OIDEntity
+	 * @throws Exception 
 	 */
-	public final boolean getIsNoEntity() {
+	public final boolean getIsNoEntity() throws Exception {
 		if (this.getPK().equals("No")) {
 			return true;
 		}
@@ -4123,16 +4162,18 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 是否是TreeEntity
+	 * @throws Exception 
 	 */
-	public final boolean getIsTreeEntity() {
+	public final boolean getIsTreeEntity() throws Exception {
 		return this.getEnMap().getAttrs().Contains("ParentNo");
 
 	}
 
 	/**
 	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 * @throws Exception 
 	 */
-	public String getPK() {
+	public String getPK() throws Exception {
 
 		String pks = "";
 		for (Attr attr : this.getEnMap().getAttrs()) {
@@ -4155,8 +4196,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
+	 * @throws Exception 
 	 */
-	public final String[] getPKs() {
+	public final String[] getPKs() throws Exception {
 		String[] strs1 = new String[this.getPKCount()];
 		int i = 0;
 		for (Attr attr : this.getEnMap().getAttrs()) {
@@ -4171,8 +4213,9 @@ public abstract class Entity implements Serializable {
 
 	/**
 	 * 取到主健值。
+	 * @throws Exception 
 	 */
-	public final java.util.Hashtable getPKVals() {
+	public final java.util.Hashtable getPKVals() throws Exception {
 		java.util.Hashtable ht = new java.util.Hashtable();
 		String[] strs = this.getPKs();
 		for (String str : strs) {

@@ -14,55 +14,55 @@ public abstract class EntityMyPKMyFile extends EntityMyPK
 	{
 		return "MyPK";
 	}
-	public final String getMyFilePath()
+	public final String getMyFilePath() throws Exception
 	{
 		return this.GetValStringByKey("MyFilePath");
 	}
-	public final void setMyFilePath(String value)
+	public final void setMyFilePath(String value) throws Exception
 	{
 		this.SetValByKey("MyFilePath", value);
 	}
-	public final String getMyFileExt()
+	public final String getMyFileExt() throws Exception
 	{
 		return this.GetValStringByKey("MyFileExt");
 	}
-	public final void setMyFileExt(String value)
+	public final void setMyFileExt(String value) throws Exception
 	{
 		this.SetValByKey("MyFileExt", value.replace(".",""));
 	}
-	public final String getMyFileName()
+	public final String getMyFileName() throws Exception
 	{
 		return this.GetValStringByKey("MyFileName");
 	}
-	public final void setMyFileName(String value)
+	public final void setMyFileName(String value) throws Exception
 	{
 		this.SetValByKey("MyFileName", value);
 	}
-	public final long getMyFileSize()
+	public final long getMyFileSize() throws Exception
 	{
 		return this.GetValInt64ByKey("MyFileSize");
 	}
-	public final void setMyFileSize(long value)
+	public final void setMyFileSize(long value) throws Exception
 	{
 		this.SetValByKey("MyFileSize", value);
 	}
-	public final int getMyFileH()
+	public final int getMyFileH() throws Exception
 	{
 		return this.GetValIntByKey("MyFileH");
 	}
-	public final void setMyFileH(int value)
+	public final void setMyFileH(int value) throws Exception
 	{
 		this.SetValByKey("MyFileH", value);
 	}
-	public final int getMyFileW()
+	public final int getMyFileW() throws Exception
 	{
 		return this.GetValIntByKey("MyFileW");
 	}
-	public final void setMyFileW(int value)
+	public final void setMyFileW(int value) throws Exception
 	{
 		this.SetValByKey("MyFileW", value);
 	}
-	public final boolean getIsImg()
+	public final boolean getIsImg() throws Exception
 	{
 		return DataType.IsImgExt(this.getMyFileExt());
 	}

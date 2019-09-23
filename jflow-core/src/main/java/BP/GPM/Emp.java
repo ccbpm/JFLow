@@ -253,7 +253,7 @@ public class Emp extends EntityNoName
 		 map.getAttrsOfOneVSM().AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
 			 ////他的部门权限
-			 //map.AttrsOfOneVSM.Add(new DeptEmps(), new Depts(), DeptEmpAttr.FK_Emp, DeptEmpAttr.FK_Dept,
+			 //map.getAttrsOfOneVSM().Add(new DeptEmps(), new Depts(), DeptEmpAttr.FK_Emp, DeptEmpAttr.FK_Dept,
 			 //    DeptAttr.Name, DeptAttr.No, "部门权限", Dot2DotModel.TreeDept);
 
 		rm = new RefMethod();

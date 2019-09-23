@@ -56,8 +56,9 @@ public class Dept extends EntityNoName
 	 部门
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Dept(String no)
+	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
@@ -103,13 +104,13 @@ public class Dept extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "历史变更";
 		rm.ClassMethodName = this.toString() + ".History";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 增加点对多属性
 			//他的部门权限
-		   // map.AttrsOfOneVSM.Add(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "岗位权限");
+		   // map.getAttrsOfOneVSM().Add(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "岗位权限");
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 
@@ -130,9 +131,10 @@ public class Dept extends EntityNoName
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	public int Retrieve()
+	public int Retrieve() throws Exception
 	{
 		 
 			return super.Retrieve();
@@ -142,9 +144,10 @@ public class Dept extends EntityNoName
 	 查询.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	public int RetrieveFromDBSources()
+	public int RetrieveFromDBSources() throws Exception
 	{
 		 
 			return super.RetrieveFromDBSources();

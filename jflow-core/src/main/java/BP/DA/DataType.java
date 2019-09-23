@@ -1387,9 +1387,9 @@ public class DataType {
 	 *            yyyy-MM-dd
 	 * @return DateTime
 	 */
-	public static LocalDateTime ParseSysDate2DateTime(String sysDateformat) {
+	public static Date ParseSysDate2DateTime(String sysDateformat) {
 		if (sysDateformat == null || sysDateformat.trim().length() == 0) {
-			return new java.util.Date();
+			return new Date();
 		}
 
 		try {
@@ -1398,7 +1398,6 @@ public class DataType {
 			}
 
 			sysDateformat = sysDateformat.trim();
-			// DateTime.Parse(sysDateformat,
 			String[] strs = null;
 			if (sysDateformat.indexOf("-") != -1) {
 				strs = sysDateformat.split("[-]", -1);
@@ -1412,8 +1411,7 @@ public class DataType {
 			int month = Integer.parseInt(strs[1]);
 			int day = Integer.parseInt(strs[2]);
 
-			// DateTime dt= DateTime.Now;
-			return new java.util.Date(year, month, day, 0, 0, 0);
+			return new Date(year, month, day, 0, 0, 0);
 		} catch (RuntimeException ex) {
 			throw new RuntimeException("日期[" + sysDateformat + "]转换出现错误:" + ex.getMessage() + "无效的日期是格式。");
 		}
@@ -1426,23 +1424,8 @@ public class DataType {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static java.util.Date ParseSysDateTime2DateTime(String sysDateformat) {
-		// try
-		// {
-		// DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		// Date date = fmt.parse(sysDateformat);
-		// return date;
-		// } catch (Exception ex)
-		// {
-		// try {
-		// DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-		// Date date = fmt.parse(sysDateformat);
-		// return date;
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// return null;
-		// }
-		// }
+	public static Date ParseSysDateTime2DateTime(String sysDateformat) {
+
 		try {
 			return org.apache.commons.lang.time.DateUtils.parseDate(sysDateformat,
 					new String[] { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM", "yyyy/MM/dd",
@@ -1782,13 +1765,83 @@ public class DataType {
 	 *            日期
 	 * @return
 	 */
-	public static String ParseSysDate2DateTimeFriendly_del(String sysDateformat) {
+	public static String ParseSysDate2DateTimeFriendly(String sysDateformat) {
 		
-		return "方法未实现-ParseSysDate2DateTimeFriendly";
-		//BP.DA.DTTemp dt = new DTTemp();
-		//return dt.DateStringFromNow(sysDateformat);
+		
+		return DateStringFromNow(DataType.ParseSysDateTime2DateTime(sysDateformat));
 	}
 
+	public final String DateStringFromNow(String dt)
+	{
+		return DateStringFromNow(DataType.ParseSysDateTime2DateTime(dt));
+	}
+	
+	public static String DateStringFromNow(Date dt)
+	{
+		Date date = new Date();
+		long spanTotal = date.getTime() - dt.getTime();
+		long spanSeconds = spanTotal/1000;
+		long spanMinutes = spanTotal/1000/60; 
+		long spanHours = spanTotal/1000/60/60; 
+		long spanDays = spanTotal/1000/60/60/24; 
+		if (spanDays > 60)
+		{
+			return dt.toString();
+		}
+		else
+		{
+			if (spanDays > 30)
+			{
+				return "1个月前";
+			}
+			else
+			{
+				if (spanDays > 14)
+				{
+					return "2周前";
+				}
+				else
+				{
+					if (spanDays > 7)
+					{
+						return "1周前";
+					}
+					else
+					{
+						if (spanDays > 1)
+						{
+							return String.format("%1$s天前", (int)Math.floor(spanDays));
+						}
+						else
+						{
+							if (spanHours > 1)
+							{
+								return String.format("%1$s小时前", (int)Math.floor(spanHours));
+							}
+							else
+							{
+								if (spanMinutes > 1)
+								{
+									return String.format("%1$s分钟前", (int)Math.floor(spanMinutes));
+								}
+								else
+								{
+									if (spanSeconds >= 1)
+									{
+										return String.format("%1$s秒前", (int)Math.floor(spanSeconds));
+									}
+									else
+									{
+										return "1秒前";
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	/**
 	 * 得到WebService对象
 	 * 

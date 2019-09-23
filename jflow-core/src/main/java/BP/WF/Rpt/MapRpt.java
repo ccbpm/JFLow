@@ -505,7 +505,7 @@ public class MapRpt extends EntityNoName
 			{
 				continue;
 			}
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.Insert();
 		}
 	}

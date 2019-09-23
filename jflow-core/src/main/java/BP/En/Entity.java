@@ -50,7 +50,7 @@ public abstract class Entity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final EnVer WebUser = null;
+	//private static final EnVer WebUser = null;
 	// 与缓存有关的操作
 	private Entities _GetNewEntities = null;
 

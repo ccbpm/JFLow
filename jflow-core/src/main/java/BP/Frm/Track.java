@@ -2,8 +2,10 @@ package BP.Frm;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.WF.Template.*;
+import BP.Web.WebUser;
 import BP.WF.*;
 import java.util.*;
 import java.time.*;
@@ -365,13 +367,13 @@ public class Track extends BP.En.EntityMyPK
 	{
 		if (WebUser.getNo().equals("Guest"))
 		{
-			this.setExer(BP.Web.GuestUser.No + "," + BP.Web.GuestUser.Name);
+			this.setExer(BP.Web.GuestUser.getNo() + "," + BP.Web.GuestUser.getName());
 		}
 		else
 		{
 			if (WebUser.getIsAuthorize())
 			{
-				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.Auth, WebUser.AuthName));
+				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.getAuth(), WebUser.getAuthName()));
 			}
 			else
 			{

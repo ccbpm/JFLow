@@ -2162,7 +2162,7 @@ public class MapData extends EntityNoName
 			String sqls = "";
 			sqls += "@UPDATE Sys_MapDtl SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
 			sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
-			//sqls += "@UPDATE Sys_MapFrame SET GroupID=" + gf.OID + " WHERE FK_MapData='" " + this.getNo()+ " "'";
+			//sqls += "@UPDATE Sys_MapFrame SET GroupID=" + gf.OID + " WHERE FK_MapData=' " + this.getNo()+ " '";
 			sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getNo() + "'";
 			DBAccess.RunSQLs(sqls);
 		}
@@ -2173,7 +2173,7 @@ public class MapData extends EntityNoName
 				GroupField gfFirst = gfs.get(0) instanceof GroupField ? (GroupField)gfs.get(0) : null;
 
 				String sqls = "";
-				//   sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gfFirst.OID + "       WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapAttr       WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" " + this.getNo()+ " "') or GroupID is null) AS X) AND FK_MapData='" " + this.getNo()+ " "' ";
+				//   sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gfFirst.OID + "       WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapAttr       WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID=' " + this.getNo()+ " ') or GroupID is null) AS X) AND FK_MapData=' " + this.getNo()+ " ' ";
 				sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gfFirst.getOID() + " WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_FrmAttachment WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "')) AS X) AND FK_MapData='" + this.getNo() + "' ";
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2491,10 +2491,10 @@ public class MapData extends EntityNoName
 			//就增加隐藏字段.
 			//MapAttr attr = new BP.Sys.MapAttr();
 			// attr.setMyPK( this.No + "_SealData";
-			// attr.FK_MapData = this.No;
+			// attr.setFK_MapData(this.getNo());
 			// attr.HisEditType = BP.En.EditType.UnDel;
 			//attr.KeyOfEn = "SealData";
-			// attr.Name = "SealData";
+			// attr.setName("SealData";
 			// attr.MyDataType = BP.DA.DataType.AppString;
 			// attr.UIContralType = UIContralType.TB;
 			//  attr.LGType = FieldTypeS.Normal;

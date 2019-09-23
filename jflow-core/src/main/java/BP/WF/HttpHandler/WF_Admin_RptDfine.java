@@ -281,14 +281,14 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		myattr.setMyPK( rptNo + "_OID";
 		myattr.RetrieveFromDBSources();
 		myattr.Idx = 200;
-		myattr.Name = "工作ID";
+		myattr.setName("工作ID";
 		myattr.Update();
 
 		myattr = new MapAttr();
 		myattr.setMyPK( rptNo + "_Title";
 		myattr.RetrieveFromDBSources();
 		myattr.Idx = -100;
-		myattr.Name = "标题";
+		myattr.setName("标题";
 		myattr.Update();
 
 		return "保存成功..";

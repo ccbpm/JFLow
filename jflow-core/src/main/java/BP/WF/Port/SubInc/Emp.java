@@ -244,7 +244,7 @@ public class Emp extends EntityNoName
 	public final String DoSetPassword(String password)
 	{
 		String str = BP.Tools.Cryptography.EncryptString(password);
-		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No='" " + this.getNo()+ " "'");
+		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No=' " + this.getNo()+ " '");
 		return "设置成功..";
 	}
 	/** 

@@ -3,6 +3,8 @@ package BP.GPM;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -39,15 +41,7 @@ public class GroupEmp extends EntityMM
 	public GroupEmp()
 	{
 	}
-	/** 
-	 权限组人员
 	 
-	 @param mypk
-	*/
-	public GroupEmp(String no)
-	{
-		this.Retrieve();
-	}
 	/** 
 	 权限组人员
 	*/
@@ -58,12 +52,8 @@ public class GroupEmp extends EntityMM
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("GPM_GroupEmp");
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "权限组人员";
-		map.EnType = EnType.App;
-
+		Map map = new Map("GPM_GroupEmp","权限组人员");
+	  
 		map.AddTBStringPK(GroupEmpAttr.FK_Group, null, "权限组", true, false, 0, 50, 20);
 		map.AddDDLEntitiesPK(GroupEmpAttr.FK_Emp, null, "人员", new Emps(), true);
 

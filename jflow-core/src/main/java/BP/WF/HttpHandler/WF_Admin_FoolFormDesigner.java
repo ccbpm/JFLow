@@ -335,7 +335,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 		else
 		{
-			attr.Name = "枚举" + attr.UIBindKey;
+			attr.setName("枚举" + attr.UIBindKey;
 		}
 
 		//paras参数

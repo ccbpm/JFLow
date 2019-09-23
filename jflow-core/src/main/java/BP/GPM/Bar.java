@@ -195,7 +195,7 @@ public class Bar extends EntityNoName
 								html += "\t\n<li><a href=\"" + url + "\" target='_self' >" + name + "</a></li>";
 								break;
 							case 2: //覆盖新窗口
-								html += "\t\n<li><a href=\"" + url + "\" target='" " + this.getNo()+ " "' >" + name + "</a></li>";
+								html += "\t\n<li><a href=\"" + url + "\" target=' " + this.getNo()+ " ' >" + name + "</a></li>";
 								break;
 							default:
 								break;
@@ -325,7 +325,7 @@ public class Bar extends EntityNoName
 	@Override
 	protected void afterDelete()
 	{
-		String sql = "DELETE FROM GPM_BarEmp WHERE FK_Bar='" " + this.getNo()+ " "'";
+		String sql = "DELETE FROM GPM_BarEmp WHERE FK_Bar=' " + this.getNo()+ " '";
 		DBAccess.RunSQL(sql);
 		super.afterDelete();
 	}

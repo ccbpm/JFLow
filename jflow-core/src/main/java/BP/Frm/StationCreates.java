@@ -22,8 +22,9 @@ public class StationCreates extends EntitiesMM
 	 单据可创建的工作岗位
 	 
 	 @param nodeID 单据ID
+	 * @throws Exception 
 	*/
-	public StationCreates(int nodeID)
+	public StationCreates(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(StationCreateAttr.FrmID, nodeID);
@@ -33,8 +34,9 @@ public class StationCreates extends EntitiesMM
 	 单据可创建的工作岗位
 	 
 	 @param StationNo StationNo 
+	 * @throws Exception 
 	*/
-	public StationCreates(String StationNo)
+	public StationCreates(String StationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(StationCreateAttr.FK_Station, StationNo);

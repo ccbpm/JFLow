@@ -2692,7 +2692,7 @@ public class Node extends Entity
 		//attr.FK_MapData = md.No;
 		//attr.HisEditType = BP.En.EditType.UnDel;
 		//attr.KeyOfEn = "Title";
-		//attr.Name = "标题";
+		//attr.setName("标题";
 		//attr.MyDataType = BP.DA.DataType.AppString;
 		//attr.UIContralType = UIContralType.TB;
 		//attr.LGType = FieldTypeS.Normal;
@@ -2708,7 +2708,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "KeyWord";
-		attr.Name = "主题词";
+		attr.setName("主题词";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2725,7 +2725,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "FZ";
-		attr.Name = "附注";
+		attr.setName("附注";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2744,7 +2744,7 @@ public class Node extends Entity
 		attr.FK_MapData = md.No;
 		attr.HisEditType = BP.En.EditType.UnDel;
 		attr.KeyOfEn = "DW_SW";
-		attr.Name = "收文单位";
+		attr.setName("收文单位";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2759,7 +2759,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "DW_FW";
-		attr.Name = "发文单位";
+		attr.setName("发文单位";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2775,7 +2775,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "DW_BS";
-		attr.Name = "主报(送)单位";
+		attr.setName("主报(送)单位";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2792,7 +2792,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "DW_CS";
-		attr.Name = "抄报(送)单位";
+		attr.setName("抄报(送)单位";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2808,7 +2808,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "NumPrint";
-		attr.Name = "印制份数";
+		attr.setName("印制份数";
 		attr.MyDataType = BP.DA.DataType.AppInt;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2824,7 +2824,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "JMCD";
-		attr.Name = "机密程度";
+		attr.setName("机密程度";
 		attr.MyDataType = BP.DA.DataType.AppInt;
 		attr.UIContralType = UIContralType.DDL;
 		attr.LGType = FieldTypeS.Enum;
@@ -2842,7 +2842,7 @@ public class Node extends Entity
 		attr.FK_MapData = md.No;
 		attr.HisEditType = BP.En.EditType.UnDel;
 		attr.KeyOfEn = "PRI";
-		attr.Name = "紧急程度";
+		attr.setName("紧急程度";
 		attr.MyDataType = BP.DA.DataType.AppInt;
 		attr.UIContralType = UIContralType.DDL;
 		attr.LGType = FieldTypeS.Enum;
@@ -2858,7 +2858,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "GWWH";
-		attr.Name = "公文文号";
+		attr.setName("公文文号";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -2894,7 +2894,7 @@ public class Node extends Entity
 		{
 			attr.FK_MapData = md.No;
 			attr.KeyOfEn = "OID";
-			attr.Name = "WorkID";
+			attr.setName("WorkID";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -2910,7 +2910,7 @@ public class Node extends Entity
 			attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
 			attr.KeyOfEn = "FID";
-			attr.Name = "FID";
+			attr.setName("FID";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -2927,7 +2927,7 @@ public class Node extends Entity
 			attr.FK_MapData = md.No;
 			attr.HisEditType = BP.En.EditType.UnDel;
 			attr.KeyOfEn = WorkAttr.RDT;
-			attr.Name = "接受时间"; //"接受时间";
+			attr.setName("接受时间"; //"接受时间";
 			attr.MyDataType = BP.DA.DataType.AppDateTime;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -2945,11 +2945,11 @@ public class Node extends Entity
 			attr.KeyOfEn = WorkAttr.CDT;
 			if (this.getIsStartNode())
 			{
-				attr.Name = "发起时间"; //"发起时间";
+				attr.setName("发起时间"; //"发起时间";
 			}
 			else
 			{
-				attr.Name = "完成时间"; //"完成时间";
+				attr.setName("完成时间"; //"完成时间";
 			}
 
 			attr.MyDataType = BP.DA.DataType.AppDateTime;
@@ -2970,11 +2970,11 @@ public class Node extends Entity
 			attr.KeyOfEn = WorkAttr.Rec;
 			if (this.getIsStartNode() == false)
 			{
-				attr.Name = "记录人"; // "记录人";
+				attr.setName("记录人"; // "记录人";
 			}
 			else
 			{
-				attr.Name = "发起人"; //"发起人";
+				attr.setName("发起人"; //"发起人";
 			}
 
 			attr.MyDataType = BP.DA.DataType.AppString;
@@ -3011,7 +3011,7 @@ public class Node extends Entity
 			attr.FK_MapData = md.No;
 			attr.HisEditType = BP.En.EditType.UnDel;
 			attr.KeyOfEn = StartWorkAttr.FK_Dept;
-			attr.Name = "操作员部门"; //"操作员部门";
+			attr.setName("操作员部门"; //"操作员部门";
 			attr.MyDataType = BP.DA.DataType.AppString;
 			attr.UIContralType = UIContralType.DDL;
 			attr.LGType = FieldTypeS.FK;
@@ -3032,7 +3032,7 @@ public class Node extends Entity
 			attr.HisEditType = BP.En.EditType.UnDel;
 			attr.KeyOfEn = StartWorkAttr.MD5;
 			attr.UIBindKey = attr.KeyOfEn;
-			attr.Name = "MD5";
+			attr.setName("MD5";
 			attr.MyDataType = BP.DA.DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3054,7 +3054,7 @@ public class Node extends Entity
 				attr.FK_MapData = md.No;
 				attr.HisEditType = BP.En.EditType.UnDel;
 				attr.KeyOfEn = StartWorkAttr.Title;
-				attr.Name = "标题"; // "流程标题";
+				attr.setName("标题"; // "流程标题";
 				attr.MyDataType = BP.DA.DataType.AppString;
 				attr.UIContralType = UIContralType.TB;
 				attr.LGType = FieldTypeS.Normal;
@@ -3077,7 +3077,7 @@ public class Node extends Entity
 				attr.FK_MapData = md.No;
 				attr.HisEditType = BP.En.EditType.UnDel;
 				attr.KeyOfEn = "FK_NY";
-				attr.Name = "年月"; //"年月";
+				attr.setName("年月"; //"年月";
 				attr.MyDataType = BP.DA.DataType.AppString;
 				attr.UIContralType = UIContralType.TB;
 				attr.UIVisible = false;
@@ -3097,7 +3097,7 @@ public class Node extends Entity
 				attr.FK_MapData = md.No;
 				attr.HisEditType = BP.En.EditType.UnDel;
 				attr.KeyOfEn = "MyNum";
-				attr.Name = "个数"; // "个数";
+				attr.setName("个数"; // "个数";
 				attr.DefVal = "1";
 				attr.MyDataType = BP.DA.DataType.AppInt;
 				attr.UIContralType = UIContralType.TB;
@@ -3156,7 +3156,7 @@ public class Node extends Entity
 		BP.Sys.MapAttr attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "OID";
-		attr.Name = "WorkID";
+		attr.setName("WorkID";
 		attr.MyDataType = BP.DA.DataType.AppInt;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -3174,7 +3174,7 @@ public class Node extends Entity
 		attr = new BP.Sys.MapAttr();
 		attr.FK_MapData = md.No;
 		attr.KeyOfEn = "FID";
-		attr.Name = "FID";
+		attr.setName("FID";
 		attr.MyDataType = BP.DA.DataType.AppInt;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -3188,7 +3188,7 @@ public class Node extends Entity
 		attr.FK_MapData = md.No;
 		attr.HisEditType = BP.En.EditType.UnDel;
 		attr.KeyOfEn = WorkAttr.RDT;
-		attr.Name = "接受时间"; //"接受时间";
+		attr.setName("接受时间"; //"接受时间";
 		attr.MyDataType = BP.DA.DataType.AppDateTime;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -3203,11 +3203,11 @@ public class Node extends Entity
 		attr.KeyOfEn = WorkAttr.CDT;
 		if (this.getIsStartNode())
 		{
-			attr.Name = "发起时间"; //"发起时间";
+			attr.setName("发起时间"; //"发起时间";
 		}
 		else
 		{
-			attr.Name = "完成时间"; //"完成时间";
+			attr.setName("完成时间"; //"完成时间";
 		}
 
 		attr.MyDataType = BP.DA.DataType.AppDateTime;
@@ -3225,11 +3225,11 @@ public class Node extends Entity
 		attr.KeyOfEn = WorkAttr.Rec;
 		if (this.getIsStartNode() == false)
 		{
-			attr.Name = "记录人"; // "记录人";
+			attr.setName("记录人"; // "记录人";
 		}
 		else
 		{
-			attr.Name = "发起人"; //"发起人";
+			attr.setName("发起人"; //"发起人";
 		}
 
 		attr.MyDataType = BP.DA.DataType.AppString;
@@ -3246,7 +3246,7 @@ public class Node extends Entity
 		attr.FK_MapData = md.No;
 		attr.HisEditType = BP.En.EditType.UnDel;
 		attr.KeyOfEn = WorkAttr.Emps;
-		attr.Name = "Emps";
+		attr.setName("Emps";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -3261,7 +3261,7 @@ public class Node extends Entity
 		attr.FK_MapData = md.No;
 		attr.HisEditType = BP.En.EditType.UnDel;
 		attr.KeyOfEn = StartWorkAttr.FK_Dept;
-		attr.Name = "操作员部门"; //"操作员部门";
+		attr.setName("操作员部门"; //"操作员部门";
 		attr.MyDataType = BP.DA.DataType.AppString;
 		attr.UIContralType = UIContralType.TB;
 		attr.LGType = FieldTypeS.Normal;
@@ -3279,7 +3279,7 @@ public class Node extends Entity
 			attr.HisEditType = BP.En.EditType.Edit;
 			//   attr.edit
 			attr.KeyOfEn = "Title";
-			attr.Name = "标题"; // "流程标题";
+			attr.setName("标题"; // "流程标题";
 			attr.MyDataType = BP.DA.DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3299,7 +3299,7 @@ public class Node extends Entity
 			attr.FK_MapData = md.No;
 			attr.HisEditType = BP.En.EditType.UnDel;
 			attr.KeyOfEn = "FK_NY";
-			attr.Name = "年月"; //"年月";
+			attr.setName("年月"; //"年月";
 			attr.MyDataType = BP.DA.DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.UIVisible = false;
@@ -3315,7 +3315,7 @@ public class Node extends Entity
 			attr.FK_MapData = md.No;
 			attr.HisEditType = BP.En.EditType.UnDel;
 			attr.KeyOfEn = "MyNum";
-			attr.Name = "个数"; // "个数";
+			attr.setName("个数"; // "个数";
 			attr.DefVal = "1";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;

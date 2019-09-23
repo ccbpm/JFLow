@@ -82,7 +82,7 @@ public class RepariDB extends Method
 			{
 				attr.FK_MapData = md.No;
 				attr.KeyOfEn = "OID";
-				attr.Name = "OID";
+				attr.setName("OID";
 				attr.MyDataType = BP.DA.DataType.AppInt;
 				attr.UIContralType = UIContralType.TB;
 				attr.LGType = FieldTypeS.Normal;

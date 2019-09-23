@@ -842,7 +842,7 @@ public class SFTable extends EntityNoName
 			if (DBAccess.IsExitsObject(this.getNo()) == true)
 			{
 				return super.beforeInsert();
-				//throw new Exception("err@表名[" " + this.getNo()+ " "]已经存在，请使用其他的表名.");
+				//throw new Exception("err@表名[ " + this.getNo()+ " ]已经存在，请使用其他的表名.");
 			}
 
 			String sql = "";
@@ -902,7 +902,7 @@ public class SFTable extends EntityNoName
 			//if (this.SrcType == Sys.SrcType.SQL)
 			//{
 			//    //暂时这样处理
-			//    string sql = "CREATE VIEW " " + this.getNo()+ " " (";
+			//    string sql = "CREATE VIEW  " + this.getNo()+ "  (";
 			//    sql += "[No],";
 			//    sql += "[Name]";
 			//    sql += (this.CodeStruct == Sys.CodeStruct.Tree ? ",[ParentNo])" : ")");

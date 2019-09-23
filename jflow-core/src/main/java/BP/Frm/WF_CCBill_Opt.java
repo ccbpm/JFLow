@@ -89,23 +89,23 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 		//设置标题、单据号位于开始位置
 
 
-		for (MapAttr attr : mapattrs)
+		for (MapAttr attr : mapattrs.ToJavaList())
 		{
-			String searchVisable = attr.atPara.GetValStrByKey("SearchVisable");
+			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
 			if (searchVisable.equals("0"))
 			{
 				continue;
 			}
-			if (attr.UIVisible == false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
 			row = dt.NewRow();
-			row.set("KeyOfEn", attr.KeyOfEn);
-			row.set("Name", attr.Name);
-			row.set("Width", attr.UIWidthInt);
-			row.set("UIContralType", attr.UIContralType);
-			row.set("LGType", attr.LGType);
+			row.set("KeyOfEn", attr.getKeyOfEn());
+			row.set("Name", attr.getName());
+			row.set("Width", attr.getUIWidthInt());
+			row.set("UIContralType", attr.getUIContralType());
+			row.set("LGType", attr.getLGType());
 			dt.Rows.add(row);
 		}
 		ds.Tables.add(dt);
@@ -119,7 +119,7 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
-		Attrs attrs = rpts.GetNewEntity.getEnMap().getAttrs();
+		Attrs attrs = rpts.getNewEntity().getEnMap().getAttrs();
 
 		QueryObject qo = new QueryObject(rpts);
 

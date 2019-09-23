@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -32,10 +34,11 @@ public class Group extends EntityNoName
 	 权限组
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public Group(String no)
+	public Group(String no) throws Exception
 	{
-		this.No = no;
+		this.setNo( no);
 		this.Retrieve();
 	}
 	/** 
@@ -49,11 +52,9 @@ public class Group extends EntityNoName
 			return this.get_enMap();
 		}
 
-		Map map = new Map("GPM_Group");
-		map.DepositaryOfEntity = Depositary.None;
-		map.EnDesc = "权限组";
-		map.EnType = EnType.Sys;
-		map.IsAutoGenerNo = true;
+		Map map = new Map("GPM_Group","权限组");
+		 
+		map.setIsAutoGenerNo (true);
 
 		map.AddTBStringPK(GroupAttr.No, null, "编号", true, true, 3, 3, 3);
 		map.AddTBString(GroupAttr.Name, null, "名称", true, false, 0, 300, 20);

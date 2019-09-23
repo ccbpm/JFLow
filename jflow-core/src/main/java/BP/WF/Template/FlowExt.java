@@ -967,17 +967,17 @@ public class FlowExt extends EntityNoName
 
 	public final String DoDataManger_Search()
 	{
-		return "../../Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" " + this.getNo()+ " "&WFSta=all";
+		return "../../Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow= " + this.getNo()+ " &WFSta=all";
 	}
 	public final String DoDataManger_Group()
 	{
-		return "../../Comm/Group.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" " + this.getNo()+ " "&WFSta=all";
+		return "../../Comm/Group.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow= " + this.getNo()+ " &WFSta=all";
 	}
 
 
 	public final String DoDataManger_DeleteLog()
 	{
-		return "../../Comm/Search.htm?EnsName=BP.WF.WorkFlowDeleteLogs&FK_Flow=" " + this.getNo()+ " "&WFSta=all";
+		return "../../Comm/Search.htm?EnsName=BP.WF.WorkFlowDeleteLogs&FK_Flow= " + this.getNo()+ " &WFSta=all";
 	}
 
 	/** 
@@ -1012,7 +1012,7 @@ public class FlowExt extends EntityNoName
 		String sql = "";
 		if (isDelCurrFlow.equals("1"))
 		{
-			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "'  AND FK_Flow='" " + this.getNo()+ " "' ";
+			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "'  AND FK_Flow=' " + this.getNo()+ " ' ";
 		}
 		else
 		{
@@ -1166,7 +1166,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoAction()
 	{
-		return "../../Admin/AttrFlow/Action.htm?FK_Flow=" " + this.getNo()+ " "&tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/Action.htm?FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	/** 
 	 流程事件
@@ -1175,7 +1175,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoMessage()
 	{
-		return "../../Admin/AttrFlow/PushMessage.htm?FK_Node=0&FK_Flow=" " + this.getNo()+ " "&tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/PushMessage.htm?FK_Node=0&FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	/** 
 	 计划玩成
@@ -1184,7 +1184,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoSDTOfFlow()
 	{
-		return "../../Admin/AttrFlow/SDTOfFlow.htm?FK_Flow=" " + this.getNo()+ " "&tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/SDTOfFlow.htm?FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	/** 
 	 节点标签
@@ -1193,7 +1193,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoNodesICON()
 	{
-		return "../../Admin/AttrFlow/NodesIcon.htm?FK_Flow=" " + this.getNo()+ " "&tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/NodesIcon.htm?FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	public final String DoDBSrc()
 	{
@@ -1201,7 +1201,7 @@ public class FlowExt extends EntityNoName
 	}
 	public final String DoBTable()
 	{
-		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.No) + "01&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.No) + "01&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 
 	/** 
@@ -1211,11 +1211,11 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoNodeAttrs()
 	{
-		return "../../Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow=" " + this.getNo()+ " "&tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	public final String DoBindFlowExt()
 	{
-		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow";
+		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow";
 	}
 	/** 
 	 轨迹查看权限
@@ -1233,7 +1233,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoBatchStartFields()
 	{
-		return "../../Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow";
+		return "../../Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow";
 	}
 	/** 
 	 执行流程数据表与业务表数据手工同步
@@ -1583,7 +1583,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoFlowFormTree()
 	{
-		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 定义报表
@@ -1711,7 +1711,7 @@ public class FlowExt extends EntityNoName
 			throw new RuntimeException("传入的流程编号为空，请检查流程");
 		}
 		String flowID = Integer.parseInt(this.No).toString() + "01";
-		return "../../Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=";
+		return "../../Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=";
 	}
 	public final String DoCCNode()
 	{
@@ -1724,7 +1724,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoRunIt()
 	{
-		return "../../Admin/TestFlow.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/TestFlow.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 执行检查
@@ -1733,12 +1733,12 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoCheck()
 	{
-		return "../../Admin/AttrFlow/CheckFlow.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/AttrFlow/CheckFlow.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 
 	public final String DoCheck2018Url()
 	{
-		return "../../Admin/Testing/FlowCheckError.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/Testing/FlowCheckError.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 启动限制规则
@@ -1747,7 +1747,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoLimit()
 	{
-		return "../../Admin/AttrFlow/Limit.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/AttrFlow/Limit.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 设置发起前置导航
@@ -1756,7 +1756,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoStartGuide()
 	{
-		return "../../Admin/AttrFlow/StartGuide.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/AttrFlow/StartGuide.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 设置发起前置导航
@@ -1765,7 +1765,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoStartGuideV2019()
 	{
-		return "../../Admin/AttrFlow/StartGuide/Default.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/AttrFlow/StartGuide/Default.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 执行数据同步
@@ -1774,7 +1774,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoDTS()
 	{
-		return "../../Admin/AttrFlow/DTSBTable.aspx?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/AttrFlow/DTSBTable.aspx?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 导入
@@ -1783,7 +1783,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoImp()
 	{
-		return "../../Admin/AttrFlow/Imp.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/AttrFlow/Imp.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 
 	/** 
@@ -1793,7 +1793,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoExps()
 	{
-		return "../../Admin/AttrFlow/Exp.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/AttrFlow/Exp.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 执行重新装载数据
@@ -1830,7 +1830,7 @@ public class FlowExt extends EntityNoName
 		{
 			throw new RuntimeException("传入的流程编号为空，请检查流程");
 		}
-		return "../../Admin/RptDfine/Default.htm?FK_Flow=" " + this.getNo()+ " "&DoType=Edit&FK_MapData=ND" + Integer.parseInt(this.No) + "Rpt";
+		return "../../Admin/RptDfine/Default.htm?FK_Flow= " + this.getNo()+ " &DoType=Edit&FK_MapData=ND" + Integer.parseInt(this.No) + "Rpt";
 	}
 	/** 
 	 更新之后的事情，也要更新缓存。
@@ -1845,7 +1845,7 @@ public class FlowExt extends EntityNoName
 
 		if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
 		{
-			// DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.Name + "' WHERE Flag='Flow" " + this.getNo()+ " "' AND FK_App='" + SystemConfig.SysNo + "'");
+			// DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.Name + "' WHERE Flag='Flow " + this.getNo()+ " ' AND FK_App='" + SystemConfig.SysNo + "'");
 		}
 	}
 	@Override

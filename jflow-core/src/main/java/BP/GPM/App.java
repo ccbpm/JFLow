@@ -411,7 +411,7 @@ public class App extends EntityNoName
 	{
 		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.No;
 
-	   // PubClass.WinOpen("/GPM/WhoCanUseApp.aspx?FK_App=" " + this.getNo()+ " "&IsRef=1", 500, 700);
+	   // PubClass.WinOpen("/GPM/WhoCanUseApp.aspx?FK_App= " + this.getNo()+ " &IsRef=1", 500, 700);
 		//return null;
 	}
 	/** 

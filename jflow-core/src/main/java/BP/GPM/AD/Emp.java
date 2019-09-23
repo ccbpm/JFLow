@@ -22,13 +22,13 @@ public class Emp extends EntityNoName
 			return true;
 		}
 
-		String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp='" " + this.getNo()+ " "'";
+		String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp=' " + this.getNo()+ " '";
 		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 		{
 			return false;
 		}
 
-		sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp='" " + this.getNo()+ " "'";
+		sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp=' " + this.getNo()+ " '";
 		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 		{
 			return false;
@@ -59,7 +59,7 @@ public class Emp extends EntityNoName
 		}
 		catch (RuntimeException ex)
 		{
-			throw new RuntimeException("@获取操作员" " + this.getNo()+ " "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
+			throw new RuntimeException("@获取操作员 " + this.getNo()+ " 部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
 		}
 	}
 	/** 

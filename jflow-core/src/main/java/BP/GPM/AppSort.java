@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -64,11 +66,9 @@ public class AppSort extends EntityNoName
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("GPM_AppSort");
-		map.DepositaryOfEntity = Depositary.None;
-		map.EnDesc = "系统类别";
-		map.EnType = EnType.App;
-		map.IsAutoGenerNo = true;
+		Map map = new Map("GPM_AppSort", "系统类别");
+		 
+		map.setIsAutoGenerNo( true);
 
 
 		map.AddTBStringPK(AppSortAttr.No, null, "编号", true, true, 2, 2, 20);

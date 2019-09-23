@@ -626,7 +626,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoAction()
 	{
-		return "../../Admin/AttrNode/Action.htm?NodeID=0&FK_Flow=" " + this.getNo()+ " "&tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrNode/Action.htm?NodeID=0&FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	public final String DoDBSrc()
 	{
@@ -634,12 +634,12 @@ public class FlowSheet extends EntityNoName
 	}
 	public final String DoBTable()
 	{
-		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.No) + "01&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.No) + "01&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 
 	public final String DoBindFlowSheet()
 	{
-		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 批量发起字段
@@ -648,7 +648,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoBatchStartFields()
 	{
-		return "../../Admin/AttrFlow/BatchStartFields.htm?s=d34&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/AttrFlow/BatchStartFields.htm?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 执行流程数据表与业务表数据手工同步
@@ -1007,8 +1007,8 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoDataManger()
 	{
-		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.htm?FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=", 700, 500);
-		return "../../Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=";
+		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.htm?FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=", 700, 500);
+		return "../../Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=";
 	}
 	/** 
 	 绑定独立表单
@@ -1017,7 +1017,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoFlowFormTree()
 	{
-		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow=" " + this.getNo()+ " "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 定义报表
@@ -1071,7 +1071,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoRunIt()
 	{
-		return "../../Admin/TestFlow.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		return "../../Admin/TestFlow.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 执行检查

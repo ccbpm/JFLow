@@ -486,7 +486,7 @@ public class FlowCheckError
 					mattr.FK_MapData = nd.getNodeFrmID();
 					mattr.MyDataType = DataType.AppInt;
 					mattr.UIVisible = false;
-					mattr.Name = "FID(自动增加)";
+					mattr.setName("FID(自动增加)";
 					mattr.Insert();
 
 					GEEntity en = new GEEntity(nd.getNodeFrmID());
@@ -927,7 +927,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.Title; // "FlowEmps";
-			attr.Name = "标题";
+			attr.setName("标题";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -946,7 +946,7 @@ public class FlowCheckError
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
 			attr.KeyOfEn = "OID";
-			attr.Name = "WorkID";
+			attr.setName("WorkID";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -964,7 +964,7 @@ public class FlowCheckError
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
 			attr.KeyOfEn = "FID";
-			attr.Name = "FID";
+			attr.setName("FID";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -982,7 +982,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.WFState;
-			attr.Name = "流程状态";
+			attr.setName("流程状态";
 			attr.MyDataType = DataType.AppInt;
 			attr.UIBindKey = GERptAttr.WFState;
 			attr.UIContralType = UIContralType.DDL;
@@ -1002,7 +1002,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.WFSta;
-			attr.Name = "状态";
+			attr.setName("状态";
 			attr.MyDataType = DataType.AppInt;
 			attr.UIBindKey = GERptAttr.WFSta;
 			attr.UIContralType = UIContralType.DDL;
@@ -1022,7 +1022,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEmps; // "FlowEmps";
-			attr.Name = "参与人";
+			attr.setName("参与人";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1042,7 +1042,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowStarter;
-			attr.Name = "发起人";
+			attr.setName("发起人";
 			attr.MyDataType = DataType.AppString;
 
 			//attr.UIBindKey = "BP.Port.Emps";
@@ -1064,7 +1064,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowStartRDT; // "FlowStartRDT";
-			attr.Name = "发起时间";
+			attr.setName("发起时间";
 			attr.MyDataType = DataType.AppDateTime;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1082,7 +1082,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEnder;
-			attr.Name = "结束人";
+			attr.setName("结束人";
 			attr.MyDataType = DataType.AppString;
 			// attr.UIBindKey = "BP.Port.Emps";
 			attr.UIContralType = UIContralType.TB;
@@ -1102,7 +1102,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEnderRDT; // "FlowStartRDT";
-			attr.Name = "结束时间";
+			attr.setName("结束时间";
 			attr.MyDataType = DataType.AppDateTime;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1120,7 +1120,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEndNode;
-			attr.Name = "结束节点";
+			attr.setName("结束节点";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "0";
 			attr.UIContralType = UIContralType.TB;
@@ -1140,7 +1140,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowDaySpan; // "FlowStartRDT";
-			attr.Name = "跨度(天)";
+			attr.setName("跨度(天)";
 			attr.MyDataType = DataType.AppFloat;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1159,7 +1159,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PFlowNo;
-			attr.Name = "父流程编号"; //  父流程流程编号
+			attr.setName("父流程编号"; //  父流程流程编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1179,7 +1179,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PNodeID;
-			attr.Name = "父流程启动的节点";
+			attr.setName("父流程启动的节点";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "0";
 			attr.UIContralType = UIContralType.TB;
@@ -1199,7 +1199,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PWorkID;
-			attr.Name = "父流程WorkID";
+			attr.setName("父流程WorkID";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "0";
 			attr.UIContralType = UIContralType.TB;
@@ -1219,7 +1219,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PEmp;
-			attr.Name = "调起子流程的人员";
+			attr.setName("调起子流程的人员";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1239,7 +1239,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.BillNo;
-			attr.Name = "单据编号"; //  单据编号
+			attr.setName("单据编号"; //  单据编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1260,7 +1260,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = "MyNum";
-			attr.Name = "条";
+			attr.setName("条";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "1";
 			attr.UIContralType = UIContralType.TB;
@@ -1280,7 +1280,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.AtPara;
-			attr.Name = "参数"; // 单据编号
+			attr.setName("参数"; // 单据编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1300,7 +1300,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.GUID;
-			attr.Name = "GUID"; // 单据编号
+			attr.setName("GUID"; // 单据编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1320,7 +1320,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PrjNo;
-			attr.Name = "项目编号"; //  项目编号
+			attr.setName("项目编号"; //  项目编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1339,7 +1339,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PrjName;
-			attr.Name = "项目名称"; //  项目名称
+			attr.setName("项目名称"; //  项目名称
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -1359,7 +1359,7 @@ public class FlowCheckError
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowNote;
-			attr.Name = "流程信息"; //  父流程流程编号
+			attr.setName("流程信息"; //  父流程流程编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;

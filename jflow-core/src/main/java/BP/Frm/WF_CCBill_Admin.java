@@ -1,5 +1,7 @@
 package BP.Frm;
 
+import java.io.IOException;
+
 import BP.DA.*;
 import BP.Sys.*;
 import BP.Web.*;
@@ -25,8 +27,9 @@ public class WF_CCBill_Admin extends DirectoryPageBase
 	 获得js,sql内容.
 	 
 	 @return 
+	 * @throws IOException 
 	*/
-	public final String MethodDoc_GetScript()
+	public final String MethodDoc_GetScript() throws IOException
 	{
 		BP.Frm.MethodFunc en = new BP.Frm.MethodFunc(this.getMyPK());
 		int type = this.GetRequestValInt("TypeOfFunc");
@@ -51,8 +54,9 @@ public class WF_CCBill_Admin extends DirectoryPageBase
 	 保存脚本
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MethodDoc_SaveScript()
+	public final String MethodDoc_SaveScript() throws Exception
 	{
 		BP.Frm.MethodFunc en = new BP.Frm.MethodFunc(this.getMyPK());
 

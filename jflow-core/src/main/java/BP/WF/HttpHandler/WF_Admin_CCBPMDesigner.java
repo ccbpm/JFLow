@@ -1722,7 +1722,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		Paras ps = new Paras();
 		ps.SQL = "SELECT COUNT(*) FROM Sys_FormTree WHERE ParentNo=" + SystemConfig.getAppCenterDBVarStr() + "ParentNo";
 		ps.Add("ParentNo", this.getNo());
-		//string sql = "SELECT COUNT(*) FROM Sys_FormTree WHERE ParentNo='" " + this.getNo()+ " "'";
+		//string sql = "SELECT COUNT(*) FROM Sys_FormTree WHERE ParentNo=' " + this.getNo()+ " '";
 		if (DBAccess.RunSQLReturnValInt(ps) != 0)
 		{
 			return "err@该目录下有子类别，您不能删除。";
@@ -1732,7 +1732,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		ps = new Paras();
 		ps.SQL = "SELECT COUNT(*) FROM Sys_MapData WHERE FK_FormTree=" + SystemConfig.getAppCenterDBVarStr() + "FK_FormTree";
 		ps.Add("FK_FormTree", this.getNo());
-		//sql = "SELECT COUNT(*) FROM Sys_MapData WHERE FK_FormTree='" " + this.getNo()+ " "'";
+		//sql = "SELECT COUNT(*) FROM Sys_MapData WHERE FK_FormTree=' " + this.getNo()+ " '";
 		if (DBAccess.RunSQLReturnValInt(ps) != 0)
 		{
 			return "err@该目录下有表单，您不能删除。";

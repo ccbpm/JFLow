@@ -65,9 +65,9 @@ public class Flow extends BP.En.EntityNoName
 	}
 	private void GenerMaxXY()
 	{
-		//int x1 = DBAccess.RunSQLReturnValInt("SELECT MAX(X) FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "'", 0);
-		//int x2 = DBAccess.RunSQLReturnValInt("SELECT MAX(X) FROM WF_NodeLabelNode WHERE FK_Flow='" " + this.getNo()+ " "'", 0);
-		//this.MaxY = DBAccess.RunSQLReturnValInt("SELECT MAX(Y) FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "'", 0);
+		//int x1 = DBAccess.RunSQLReturnValInt("SELECT MAX(X) FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " '", 0);
+		//int x2 = DBAccess.RunSQLReturnValInt("SELECT MAX(X) FROM WF_NodeLabelNode WHERE FK_Flow=' " + this.getNo()+ " '", 0);
+		//this.MaxY = DBAccess.RunSQLReturnValInt("SELECT MAX(Y) FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " '", 0);
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 参数属性.
@@ -1935,7 +1935,7 @@ public class Flow extends BP.En.EntityNoName
 		check.DoCheck();
 
 		return BP.Tools.Json.ToJson(check.dt);
-		//return "../../Admin/Testing/FlowCheckError.htm?FK_Flow=" " + this.getNo()+ " "&Lang=CH";
+		//return "../../Admin/Testing/FlowCheckError.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
 	}
 	/** 
 	 校验流程
@@ -2013,7 +2013,7 @@ public class Flow extends BP.En.EntityNoName
 			DBAccess.RunSQLs(sqls);
 
 			//更新计算数据.
-			this.setNumOfBill(DBAccess.RunSQLReturnValInt("SELECT count(*) FROM WF_BillTemplate WHERE NodeID IN (SELECT NodeID FROM WF_Flow WHERE No='" " + this.getNo()+ " "')"));
+			this.setNumOfBill(DBAccess.RunSQLReturnValInt("SELECT count(*) FROM WF_BillTemplate WHERE NodeID IN (SELECT NodeID FROM WF_Flow WHERE No=' " + this.getNo()+ " ')"));
 			this.setNumOfDtl(DBAccess.RunSQLReturnValInt("SELECT count(*) FROM Sys_MapDtl WHERE FK_MapData='ND" + Integer.parseInt(this.No) + "Rpt'"));
 			this.DirectUpdate();
 
@@ -2303,7 +2303,7 @@ public class Flow extends BP.En.EntityNoName
 						mattr.FK_MapData = nd.getNodeFrmID();
 						mattr.MyDataType = DataType.AppInt;
 						mattr.UIVisible = false;
-						mattr.Name = "FID(自动增加)";
+						mattr.setName("FID(自动增加)";
 						mattr.Insert();
 
 						GEEntity en = new GEEntity(nd.getNodeFrmID());
@@ -2371,7 +2371,7 @@ public class Flow extends BP.En.EntityNoName
 
 
 			msg += "@流程的基础信息: ------ ";
-			msg += "@编号:  " " + this.getNo()+ " " 名称:" + this.Name + " , 存储表:" + this.getPTable();
+			msg += "@编号:   " + this.getNo()+ "  名称:" + this.Name + " , 存储表:" + this.getPTable();
 
 			msg += "@信息:开始检查节点流程报表.";
 			this.DoCheck_CheckRpt(this.getHisNodes());
@@ -2761,7 +2761,7 @@ public class Flow extends BP.En.EntityNoName
 		DataSet ds = new DataSet();
 
 		// 流程信息。
-		String sql = "SELECT * FROM WF_Flow WHERE No='" " + this.getNo()+ " "'";
+		String sql = "SELECT * FROM WF_Flow WHERE No=' " + this.getNo()+ " '";
 
 		Flow fl = new Flow(this.No);
 		DataTable dtFlow = fl.ToDataTableField("WF_Flow");
@@ -2805,7 +2805,7 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(tmps.ToDataTableField("WF_BillTemplate"));
 
 
-		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow='" " + this.getNo()+ " "'";
+		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow=' " + this.getNo()+ " '";
 
 		// 条件信息
 		Conds cds = new BP.WF.Template.Conds(this.No);
@@ -3000,13 +3000,13 @@ public class Flow extends BP.En.EntityNoName
 		DataSet ds = new DataSet();
 
 		// 流程信息。
-		String sql = "SELECT * FROM WF_Flow WHERE No='" " + this.getNo()+ " "'";
+		String sql = "SELECT * FROM WF_Flow WHERE No=' " + this.getNo()+ " '";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Flow";
 		ds.Tables.add(dt);
 
 		// 节点信息
-		sql = "SELECT * FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql = "SELECT * FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " '";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Node";
 		ds.Tables.add(dt);
@@ -3032,23 +3032,23 @@ public class Flow extends BP.En.EntityNoName
 		tmps.Remove(pks);
 		ds.Tables.add(tmps.ToDataTableField("WF_BillTemplate"));
 
-		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow='" " + this.getNo()+ " "'";
+		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow=' " + this.getNo()+ " '";
 
 
 		// 条件信息
-		sql = "SELECT * FROM WF_Cond WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql = "SELECT * FROM WF_Cond WHERE FK_Flow=' " + this.getNo()+ " '";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Cond";
 		ds.Tables.add(dt);
 
 		// 转向规则.
-		//sql = "SELECT * FROM WF_TurnTo WHERE FK_Flow='" " + this.getNo()+ " "'";
+		//sql = "SELECT * FROM WF_TurnTo WHERE FK_Flow=' " + this.getNo()+ " '";
 		//dt = DBAccess.RunSQLReturnTable(sql);
 		//dt.TableName = "WF_TurnTo";
 		//ds.Tables.add(dt);
 
 		// 节点与表单绑定.
-		sql = "SELECT * FROM WF_FrmNode WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql = "SELECT * FROM WF_FrmNode WHERE FK_Flow=' " + this.getNo()+ " '";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_FrmNode";
 		ds.Tables.add(dt);
@@ -3625,7 +3625,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.Title; // "FlowEmps";
-			attr.Name = "标题";
+			attr.setName("标题";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3644,7 +3644,7 @@ public class Flow extends BP.En.EntityNoName
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
 			attr.KeyOfEn = "OID";
-			attr.Name = "WorkID";
+			attr.setName("WorkID";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3662,7 +3662,7 @@ public class Flow extends BP.En.EntityNoName
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
 			attr.KeyOfEn = "FID";
-			attr.Name = "FID";
+			attr.setName("FID";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3680,7 +3680,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.WFState;
-			attr.Name = "流程状态";
+			attr.setName("流程状态";
 			attr.MyDataType = DataType.AppInt;
 			attr.UIBindKey = GERptAttr.WFState;
 			attr.UIContralType = UIContralType.DDL;
@@ -3700,7 +3700,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.WFSta;
-			attr.Name = "状态";
+			attr.setName("状态";
 			attr.MyDataType = DataType.AppInt;
 			attr.UIBindKey = GERptAttr.WFSta;
 			attr.UIContralType = UIContralType.DDL;
@@ -3720,7 +3720,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEmps; // "FlowEmps";
-			attr.Name = "参与人";
+			attr.setName("参与人";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3740,7 +3740,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowStarter;
-			attr.Name = "发起人";
+			attr.setName("发起人";
 			attr.MyDataType = DataType.AppString;
 
 			//attr.UIBindKey = "BP.Port.Emps";
@@ -3762,7 +3762,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowStartRDT; // "FlowStartRDT";
-			attr.Name = "发起时间";
+			attr.setName("发起时间";
 			attr.MyDataType = DataType.AppDateTime;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3780,7 +3780,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEnder;
-			attr.Name = "结束人";
+			attr.setName("结束人";
 			attr.MyDataType = DataType.AppString;
 			// attr.UIBindKey = "BP.Port.Emps";
 			attr.UIContralType = UIContralType.TB;
@@ -3800,7 +3800,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEnderRDT; // "FlowStartRDT";
-			attr.Name = "结束时间";
+			attr.setName("结束时间";
 			attr.MyDataType = DataType.AppDateTime;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3818,7 +3818,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowEndNode;
-			attr.Name = "结束节点";
+			attr.setName("结束节点";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "0";
 			attr.UIContralType = UIContralType.TB;
@@ -3838,7 +3838,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowDaySpan; // "FlowStartRDT";
-			attr.Name = "跨度(天)";
+			attr.setName("跨度(天)";
 			attr.MyDataType = DataType.AppFloat;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3857,7 +3857,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PFlowNo;
-			attr.Name = "父流程编号"; //  父流程流程编号
+			attr.setName("父流程编号"; //  父流程流程编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3877,7 +3877,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PNodeID;
-			attr.Name = "父流程启动的节点";
+			attr.setName("父流程启动的节点";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "0";
 			attr.UIContralType = UIContralType.TB;
@@ -3897,7 +3897,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PWorkID;
-			attr.Name = "父流程WorkID";
+			attr.setName("父流程WorkID";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "0";
 			attr.UIContralType = UIContralType.TB;
@@ -3917,7 +3917,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PEmp;
-			attr.Name = "调起子流程的人员";
+			attr.setName("调起子流程的人员";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3937,7 +3937,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.BillNo;
-			attr.Name = "单据编号"; //  单据编号
+			attr.setName("单据编号"; //  单据编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3958,7 +3958,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = "MyNum";
-			attr.Name = "条";
+			attr.setName("条";
 			attr.MyDataType = DataType.AppInt;
 			attr.DefVal = "1";
 			attr.UIContralType = UIContralType.TB;
@@ -3978,7 +3978,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.AtPara;
-			attr.Name = "参数"; // 单据编号
+			attr.setName("参数"; // 单据编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -3998,7 +3998,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.GUID;
-			attr.Name = "GUID"; // 单据编号
+			attr.setName("GUID"; // 单据编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -4018,7 +4018,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PrjNo;
-			attr.Name = "项目编号"; //  项目编号
+			attr.setName("项目编号"; //  项目编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -4037,7 +4037,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.PrjName;
-			attr.Name = "项目名称"; //  项目名称
+			attr.setName("项目名称"; //  项目名称
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -4057,7 +4057,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.FK_MapData = md.No;
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.FlowNote;
-			attr.Name = "流程信息"; //  父流程流程编号
+			attr.setName("流程信息"; //  父流程流程编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -4683,7 +4683,7 @@ public class Flow extends BP.En.EntityNoName
 			this.setFlowEventEntity(BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.getFlowMark()));
 		}
 
-		DBAccess.RunSQL("UPDATE WF_Node SET FlowName='" + this.Name + "' WHERE FK_Flow='" " + this.getNo()+ " "'");
+		DBAccess.RunSQL("UPDATE WF_Node SET FlowName='" + this.Name + "' WHERE FK_Flow=' " + this.getNo()+ " '");
 		DBAccess.RunSQL("UPDATE Sys_MapData SET  Name='" + this.Name + "' WHERE No='" + this.getPTable() + "'");
 		return super.beforeUpdateInsertAction();
 	}
@@ -4871,7 +4871,7 @@ public class Flow extends BP.En.EntityNoName
 
 		// DBAccess.CreatIndex(DBUrlType.AppCenterDSN, ptable, "my");
 
-		return "流程[" " + this.getNo()+ " "." + this.Name + "]索引创建成功.";
+		return "流程[ " + this.getNo()+ " ." + this.Name + "]索引创建成功.";
 	}
 	/** 
 	 删除数据.
@@ -4906,18 +4906,18 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 删除独立表单的数据.
 
-		String sql = "  WHERE FK_Node in (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		String sql1 = " WHERE NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		String sql = "  WHERE FK_Node in (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		String sql1 = " WHERE NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
-		// DBAccess.RunSQL("DELETE FROM WF_CHOfFlow WHERE FK_Flow='" " + this.getNo()+ " "'");
+		// DBAccess.RunSQL("DELETE FROM WF_CHOfFlow WHERE FK_Flow=' " + this.getNo()+ " '");
 
-		DBAccess.RunSQL("DELETE FROM WF_Bill WHERE FK_Flow='" " + this.getNo()+ " "'");
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE FK_Flow='" " + this.getNo()+ " "'");
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow='" " + this.getNo()+ " "'");
+		DBAccess.RunSQL("DELETE FROM WF_Bill WHERE FK_Flow=' " + this.getNo()+ " '");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE FK_Flow=' " + this.getNo()+ " '");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow=' " + this.getNo()+ " '");
 
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow='" " + this.getNo()+ " "'");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow=' " + this.getNo()+ " '");
 
-		String sqlIn = " WHERE ReturnNode IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		String sqlIn = " WHERE ReturnNode IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 		DBAccess.RunSQL("DELETE FROM WF_ReturnWork " + sqlIn);
 		DBAccess.RunSQL("DELETE FROM WF_SelectAccper " + sql);
 		DBAccess.RunSQL("DELETE FROM WF_TransferCustom " + sql);
@@ -4934,7 +4934,7 @@ public class Flow extends BP.En.EntityNoName
 			DBAccess.RunSQL("DELETE FROM " + this.getPTable());
 		}
 
-		DBAccess.RunSQL("DELETE FROM WF_CH WHERE FK_Flow='" " + this.getNo()+ " "'");
+		DBAccess.RunSQL("DELETE FROM WF_CH WHERE FK_Flow=' " + this.getNo()+ " '");
 		//DBAccess.RunSQL("DELETE FROM Sys_MapExt WHERE FK_MapData LIKE 'ND"+int.Parse(this.No)+"%'" );
 
 		//删除节点数据。
@@ -6746,59 +6746,59 @@ public class Flow extends BP.En.EntityNoName
 		this.DoDelData();
 
 		String sql = "";
-		//sql = " DELETE FROM WF_chofflow WHERE FK_Flow='" " + this.getNo()+ " "'";
-		sql += "@ DELETE FROM WF_GenerWorkerlist WHERE FK_Flow='" " + this.getNo()+ " "'";
-		sql += "@ DELETE FROM  WF_GenerWorkFlow WHERE FK_Flow='" " + this.getNo()+ " "'";
-		sql += "@ DELETE FROM  WF_Cond WHERE FK_Flow='" " + this.getNo()+ " "'";
+		//sql = " DELETE FROM WF_chofflow WHERE FK_Flow=' " + this.getNo()+ " '";
+		sql += "@ DELETE FROM WF_GenerWorkerlist WHERE FK_Flow=' " + this.getNo()+ " '";
+		sql += "@ DELETE FROM  WF_GenerWorkFlow WHERE FK_Flow=' " + this.getNo()+ " '";
+		sql += "@ DELETE FROM  WF_Cond WHERE FK_Flow=' " + this.getNo()+ " '";
 
 
 		//删除消息配置.
-		sql += "@ DELETE FROM WF_PushMsg WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql += "@ DELETE FROM WF_PushMsg WHERE FK_Flow=' " + this.getNo()+ " '";
 
 		// 删除岗位节点。
-		sql += "@ DELETE FROM WF_NodeStation WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		sql += "@ DELETE FROM WF_NodeStation WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
 		// 删除方向。
-		sql += "@ DELETE FROM WF_Direction WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql += "@ DELETE FROM WF_Direction WHERE FK_Flow=' " + this.getNo()+ " '";
 
 		//删除节点绑定信息.
-		sql += "@ DELETE FROM WF_FrmNode WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		sql += "@ DELETE FROM WF_FrmNode WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
-		sql += "@ DELETE FROM WF_NodeEmp  WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		sql += "@ DELETE FROM WF_CCEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		sql += "@ DELETE FROM WF_CCDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		sql += "@ DELETE FROM WF_CCStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		sql += "@ DELETE FROM WF_NodeEmp  WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		sql += "@ DELETE FROM WF_CCEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		sql += "@ DELETE FROM WF_CCDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		sql += "@ DELETE FROM WF_CCStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
-		sql += "@ DELETE FROM WF_NodeReturn WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		sql += "@ DELETE FROM WF_NodeReturn WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
-		sql += "@ DELETE FROM WF_NodeDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		sql += "@ DELETE FROM WF_NodeStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		sql += "@ DELETE FROM WF_NodeEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		sql += "@ DELETE FROM WF_NodeDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		sql += "@ DELETE FROM WF_NodeStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		sql += "@ DELETE FROM WF_NodeEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
-		sql += "@ DELETE FROM WF_NodeToolbar WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		sql += "@ DELETE FROM WF_SelectAccper WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
-		//sql += "@ DELETE FROM WF_TurnTo WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		sql += "@ DELETE FROM WF_NodeToolbar WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		sql += "@ DELETE FROM WF_SelectAccper WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		//sql += "@ DELETE FROM WF_TurnTo WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
 		//删除侦听.
-		// sql += "@ DELETE FROM WF_Listen WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		// sql += "@ DELETE FROM WF_Listen WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
 		// 删除d2d数据.
-		//  sql += "@GO DELETE WF_M2M WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		//  sql += "@GO DELETE WF_M2M WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 		//// 删除配置.
-		//sql += "@ DELETE FROM WF_FAppSet WHERE NodeID IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		//sql += "@ DELETE FROM WF_FAppSet WHERE NodeID IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
 
 		//// 外部程序设置
-		//sql += "@ DELETE FROM WF_FAppSet WHERE  NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		//sql += "@ DELETE FROM WF_FAppSet WHERE  NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 
 		//删除单据.
-		sql += "@ DELETE FROM WF_BillTemplate WHERE  NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "')";
+		sql += "@ DELETE FROM WF_BillTemplate WHERE  NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
 		//删除权限控制.
-		sql += "@ DELETE FROM Sys_FrmSln WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql += "@ DELETE FROM Sys_FrmSln WHERE FK_Flow=' " + this.getNo()+ " '";
 		//考核表
-		sql += "@ DELETE FROM WF_CH WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql += "@ DELETE FROM WF_CH WHERE FK_Flow=' " + this.getNo()+ " '";
 		//删除抄送
-		sql += "@ DELETE FROM WF_CCList WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql += "@ DELETE FROM WF_CCList WHERE FK_Flow=' " + this.getNo()+ " '";
 		Nodes nds = new Nodes(this.No);
 		for (Node nd : nds.ToJavaList())
 		{
@@ -6806,8 +6806,8 @@ public class Flow extends BP.En.EntityNoName
 			nd.Delete();
 		}
 
-		sql += "@ DELETE  FROM WF_Node WHERE FK_Flow='" " + this.getNo()+ " "'";
-		sql += "@ DELETE  FROM WF_LabNote WHERE FK_Flow='" " + this.getNo()+ " "'";
+		sql += "@ DELETE  FROM WF_Node WHERE FK_Flow=' " + this.getNo()+ " '";
+		sql += "@ DELETE  FROM WF_LabNote WHERE FK_Flow=' " + this.getNo()+ " '";
 
 		//删除分组信息
 		sql += "@ DELETE FROM Sys_GroupField WHERE FrmID NOT IN(SELECT NO FROM Sys_MapData)";
@@ -6911,7 +6911,7 @@ public class Flow extends BP.En.EntityNoName
 		sql = "UPDATE WF_Flow SET FK_FlowSort='',IsCanStart=0 WHERE PTable='" + this.getPTable() + "' ";
 		DBAccess.RunSQL(sql);
 
-		sql = "UPDATE WF_Flow SET FK_FlowSort='" + flowSort + "', IsCanStart=1 WHERE No='" " + this.getNo()+ " "' ";
+		sql = "UPDATE WF_Flow SET FK_FlowSort='" + flowSort + "', IsCanStart=1 WHERE No=' " + this.getNo()+ " ' ";
 		DBAccess.RunSQL(sql);
 
 		//清缓存

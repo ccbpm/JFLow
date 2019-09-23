@@ -6,6 +6,7 @@ import BP.En.Map;
 import BP.WF.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
+import BP.Web.WebUser;
 import BP.Sys.*;
 import java.util.*;
 import java.time.*;
@@ -18,7 +19,7 @@ public class FrmBill extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -43,7 +44,7 @@ public class FrmBill extends EntityNoName
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
 		if (s.equals("") || s == null)
 		{
-			return this.No;
+			return this.getNo();
 		}
 		return s;
 	}
@@ -282,7 +283,7 @@ public class FrmBill extends EntityNoName
 		rm.Title = "设计表单"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoDesigner";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 			//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
@@ -291,7 +292,7 @@ public class FrmBill extends EntityNoName
 		rm.Title = "单据url的API"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoAPI";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 			//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
@@ -300,7 +301,7 @@ public class FrmBill extends EntityNoName
 		rm.Title = "打开单据数据"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoOpenBill";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 			//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
@@ -308,11 +309,11 @@ public class FrmBill extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "绑定到菜单目录"; // "设计表单";
-		rm.getHisAttrs().AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3");
+		rm.getHisAttrs().AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3",true);
 		rm.getHisAttrs().AddTBString("Name", "@Name", "菜单名称", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoBindMenu";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		rm.Target = "_blank";
 			//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
@@ -323,7 +324,7 @@ public class FrmBill extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoPageLoadFull";
 		rm.Icon = "../../WF/Img/FullData.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
@@ -332,7 +333,7 @@ public class FrmBill extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoEvent";
 		rm.Icon = "../../WF/Img/Event.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
@@ -341,7 +342,7 @@ public class FrmBill extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoMethod";
 		rm.Icon = "../../WF/Img/Event.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -353,7 +354,7 @@ public class FrmBill extends EntityNoName
 		rm.Title = "创建规则"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoCreateRole";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
@@ -361,7 +362,7 @@ public class FrmBill extends EntityNoName
 		rm.Title = "删除规则"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoDeleteRole";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
@@ -369,7 +370,7 @@ public class FrmBill extends EntityNoName
 		rm.Title = "查询权限"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoSearchRole";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -382,7 +383,7 @@ public class FrmBill extends EntityNoName
 		rm.GroupName = "报表定义";
 		rm.Title = "设置显示的列"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsChose";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
@@ -390,7 +391,7 @@ public class FrmBill extends EntityNoName
 		rm.GroupName = "报表定义";
 		rm.Title = "列的顺序"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsIdxAndLabel";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 			//   map.AddRefMethod(rm);
 
@@ -398,7 +399,7 @@ public class FrmBill extends EntityNoName
 		rm.GroupName = "报表定义";
 		rm.Title = "查询条件"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_SearchCond";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -419,7 +420,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoCreateRole()
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 查询权限
@@ -428,7 +429,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoSearchRole()
 	{
-		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 删除规则.
@@ -437,7 +438,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoDeleteRole()
 	{
-		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 权限控制.
@@ -477,11 +478,11 @@ public class FrmBill extends EntityNoName
 
 	public final String DoMethod()
 	{
-		return "../../CCBill/Admin/Method.htm?s=34&FrmID=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/Method.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoPageLoadFull()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" " + this.getNo()+ " "&ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -490,7 +491,7 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoEvent()
 	{
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" " + this.getNo()+ " "&T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData= " + this.getNo()+ " &T=sd&FK_Node=0";
 	}
 	/** 
 	 设计表单
@@ -515,14 +516,14 @@ public class FrmBill extends EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 补充上流程字段到 NDxxxRpt.
-		if (attrs.Contains(this.No + "_" + GERptAttr.Title) == false)
+		if (attrs.Contains(this.getNo() + "_" + GERptAttr.Title) == false)
 		{
 			/* 标题 */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.Title; // "FlowEmps";
-			attr.Name = "标题"; //   单据模式， ccform的模式.
+			attr.setName("标题"; //   单据模式， ccform的模式.
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -535,13 +536,13 @@ public class FrmBill extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(this.No + "_" + GERptAttr.OID) == false)
+		if (attrs.Contains(this.getNo() + "_" + GERptAttr.OID) == false)
 		{
 			/* WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.KeyOfEn = "OID";
-			attr.Name = "主键ID";
+			attr.setName("主键ID";
 			attr.MyDataType = BP.DA.DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -551,16 +552,16 @@ public class FrmBill extends EntityNoName
 			attr.HisEditType = BP.En.EditType.Readonly;
 			attr.Insert();
 		}
-		if (attrs.Contains(this.No + "_" + GERptAttr.BillNo) == false)
+		if (attrs.Contains(this.getNo() + "_" + GERptAttr.BillNo) == false)
 		{
 			/* 单据编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
-			attr.HisEditType = EditType.UnDel;
+			attr.setFK_MapData(this.getNo());
+			attr.setHisEditType( EditType.UnDel);
 			attr.KeyOfEn = GERptAttr.BillNo;
 
-			attr.Name = "单据编号"; //  单据编号
-			attr.MyDataType = DataType.AppString;
+			attr.setName("单据编号"); //  单据编号
+			attr.setMyDataType( DataType.AppString);
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
 			attr.UIVisible = true;
@@ -572,14 +573,14 @@ public class FrmBill extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(this.No + "_" + GERptAttr.AtPara) == false)
+		if (attrs.Contains(this.getNo() + "_" + GERptAttr.AtPara) == false)
 		{
 			/* 参数 */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = GERptAttr.AtPara;
-			attr.Name = "参数"; // 单据编号
+			attr.setName("参数"; // 单据编号
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -596,10 +597,10 @@ public class FrmBill extends EntityNoName
 		{
 			/* 单据状态 */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = "BillState"; // "FlowEmps";
-			attr.Name = "单据状态";
+			attr.setName("单据状态";
 			attr.MyDataType = DataType.AppInt;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -616,10 +617,10 @@ public class FrmBill extends EntityNoName
 		{
 			/* 发起人 */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = "Starter";
-			attr.Name = "创建人";
+			attr.setName("创建人";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -635,10 +636,10 @@ public class FrmBill extends EntityNoName
 		{
 			/* 创建人名称 */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = "StarterName";
-			attr.Name = "创建人名称";
+			attr.setName("创建人名称";
 			attr.MyDataType = DataType.AppString;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -655,10 +656,10 @@ public class FrmBill extends EntityNoName
 		{
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
-			attr.FK_MapData = this.No;
+			attr.setFK_MapData(this.getNo());
 			attr.HisEditType = EditType.UnDel;
 			attr.KeyOfEn = "RDT"; // "FlowStartRDT";
-			attr.Name = "创建时间";
+			attr.setName("创建时间";
 			attr.MyDataType = DataType.AppDateTime;
 			attr.UIContralType = UIContralType.TB;
 			attr.LGType = FieldTypeS.Normal;
@@ -708,11 +709,11 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoOpenBill()
 	{
-		return "../../CCBill/Search.htm?FrmID=" " + this.getNo()+ " "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
+		return "../../CCBill/Search.htm?FrmID= " + this.getNo()+ " &t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
 	}
 	public final String DoAPI()
 	{
-		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" " + this.getNo()+ " "&t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
+		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID= " + this.getNo()+ " &t=" + LocalDateTime.now().toString("yyyyMMddHHmmssffffff");
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 方法操作.

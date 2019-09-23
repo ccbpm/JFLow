@@ -14,7 +14,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -39,7 +38,7 @@ public class DataType {
 			return true;
 		return false;
 	}
-	
+
 	public static String ParseStringForNo() {
 		return null;
 
@@ -274,7 +273,6 @@ public class DataType {
 		jsonString += "{\"" + jsonName + "\":" + Json.ToJson(dt) + "}";
 		return jsonString;
 
-
 	}
 
 	/**
@@ -362,13 +360,13 @@ public class DataType {
 	 * @return
 	 */
 	public static String PraseAtToInSql(String strs, boolean isNumber) {
-		if(IsNullOrEmpty(strs)==true)
+		if (IsNullOrEmpty(strs) == true)
 			return "''";
-		
+
 		strs = strs.replace("@", "','");
 		strs = strs + "'";
-		if(strs.length()>2)
-		strs = strs.substring(2);
+		if (strs.length() > 2)
+			strs = strs.substring(2);
 		if (isNumber) {
 			strs = strs.replace("'", "");
 		}
@@ -889,33 +887,32 @@ public class DataType {
 	 */
 	public static String ParseStringToPinyin(String exp) {
 		// exp = exp.trim();
-		switch (exp)
-		{
-			case "电话":
-				return "Tel";
-			case "地址":
-				return "Addr";
-			case "年龄":
-				return "Age";
-			case "邮件":
-				return "Email";
-			case "单价":
-				return "DanJia";
-			case "金额":
-				return "JinE";
-			case "单据编号":
-				return "BillNo";
-			default:
-				break;
+		switch (exp) {
+		case "电话":
+			return "Tel";
+		case "地址":
+			return "Addr";
+		case "年龄":
+			return "Age";
+		case "邮件":
+			return "Email";
+		case "单价":
+			return "DanJia";
+		case "金额":
+			return "JinE";
+		case "单据编号":
+			return "BillNo";
+		default:
+			break;
 		}
 
-		//特殊处理.
+		// 特殊处理.
 		exp = exp.replace("单价", "DanJia");
 		exp = exp.replace("单件", "DanJian");
 		exp = exp.replace("单个", "DanGe");
 
 		exp = exp.trim();
-//		exp = exp.replaceAll(" ", "");
+		// exp = exp.replaceAll(" ", "");
 		String pinYin = "", str = null;
 		char[] chars = exp.toCharArray();
 		for (char c : chars) {
@@ -1030,7 +1027,6 @@ public class DataType {
 				}
 			}
 
-
 		} catch (RuntimeException ex) {
 			return bigDecimal;
 		}
@@ -1111,9 +1107,10 @@ public class DataType {
 		String date = matter.format(dt);
 		return date;
 	}
-	
+
 	/**
 	 * 获取当前时间
+	 * 
 	 * @return
 	 */
 	public static String getCurrentDateTime() {
@@ -1122,7 +1119,6 @@ public class DataType {
 		String date = matter.format(dt);
 		return date;
 	}
-
 
 	public static Date getDate() {
 		return new Date();
@@ -1289,7 +1285,6 @@ public class DataType {
 		String date2 = GetJDByMM(date1);
 		return date + "-" + date2;
 	}
-
 
 	/**
 	 * 取出当前月份的上一个月份
@@ -1488,7 +1483,7 @@ public class DataType {
 	public static String getSysDataTimeFormat() {
 		return "yyyy-MM-dd HH:mm";
 	}
-	
+
 	/**
 	 * 系统定义日期时间格式 yyyy-MM-dd hh:mm
 	 */
@@ -1766,72 +1761,45 @@ public class DataType {
 	 * @return
 	 */
 	public static String ParseSysDate2DateTimeFriendly(String sysDateformat) {
-		
-		
+
 		return DateStringFromNow(DataType.ParseSysDateTime2DateTime(sysDateformat));
 	}
 
-	public final String DateStringFromNow(String dt)
-	{
+	public final String DateStringFromNow(String dt) {
 		return DateStringFromNow(DataType.ParseSysDateTime2DateTime(dt));
 	}
-	
-	public static String DateStringFromNow(Date dt)
-	{
+
+	public static String DateStringFromNow(Date dt) {
 		Date date = new Date();
 		long spanTotal = date.getTime() - dt.getTime();
-		long spanSeconds = spanTotal/1000;
-		long spanMinutes = spanTotal/1000/60; 
-		long spanHours = spanTotal/1000/60/60; 
-		long spanDays = spanTotal/1000/60/60/24; 
-		if (spanDays > 60)
-		{
+		long spanSeconds = spanTotal / 1000;
+		long spanMinutes = spanTotal / 1000 / 60;
+		long spanHours = spanTotal / 1000 / 60 / 60;
+		long spanDays = spanTotal / 1000 / 60 / 60 / 24;
+		if (spanDays > 60) {
 			return dt.toString();
-		}
-		else
-		{
-			if (spanDays > 30)
-			{
+		} else {
+			if (spanDays > 30) {
 				return "1个月前";
-			}
-			else
-			{
-				if (spanDays > 14)
-				{
+			} else {
+				if (spanDays > 14) {
 					return "2周前";
-				}
-				else
-				{
-					if (spanDays > 7)
-					{
+				} else {
+					if (spanDays > 7) {
 						return "1周前";
-					}
-					else
-					{
-						if (spanDays > 1)
-						{
-							return String.format("%1$s天前", (int)Math.floor(spanDays));
-						}
-						else
-						{
-							if (spanHours > 1)
-							{
-								return String.format("%1$s小时前", (int)Math.floor(spanHours));
-							}
-							else
-							{
-								if (spanMinutes > 1)
-								{
-									return String.format("%1$s分钟前", (int)Math.floor(spanMinutes));
-								}
-								else
-								{
-									if (spanSeconds >= 1)
-									{
-										return String.format("%1$s秒前", (int)Math.floor(spanSeconds));
-									}
-									else
-									{
+					} else {
+						if (spanDays > 1) {
+							return String.format("%1$s天前", (int) Math.floor(spanDays));
+						} else {
+							if (spanHours > 1) {
+								return String.format("%1$s小时前", (int) Math.floor(spanHours));
+							} else {
+								if (spanMinutes > 1) {
+									return String.format("%1$s分钟前", (int) Math.floor(spanMinutes));
+								} else {
+									if (spanSeconds >= 1) {
+										return String.format("%1$s秒前", (int) Math.floor(spanSeconds));
+									} else {
 										return "1秒前";
 									}
 								}
@@ -1842,6 +1810,7 @@ public class DataType {
 			}
 		}
 	}
+
 	/**
 	 * 得到WebService对象
 	 * 
@@ -1915,5 +1884,19 @@ public class DataType {
 
 		return nStr;
 	}
-	
+
+	public static DataSet CXmlFileToDataSet(String xmlFilePath) {
+		if (!IsNullOrEmpty(xmlFilePath)) {
+			try {
+				DataSet ds = new DataSet();
+				ds.readXml(xmlFilePath);
+				return ds;
+			} catch (Exception e) {
+				throw e;
+			}
+
+		}
+		return null;
+	}
+
 }

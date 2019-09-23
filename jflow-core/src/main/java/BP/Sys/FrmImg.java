@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import java.util.*;
 
@@ -54,7 +55,7 @@ public class FrmImg extends EntityMyPK
 	}
 	public final void setIsEdit(int value)
 	{
-		this.SetValByKey(FrmImgAttr.IsEdit, value.getValue());
+		this.SetValByKey(FrmImgAttr.IsEdit, (int)value);
 	}
 	/** 
 	 应用类型
@@ -205,8 +206,9 @@ public class FrmImg extends EntityMyPK
 	 图片
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmImg(String mypk)
+	public FrmImg(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -268,7 +270,7 @@ public class FrmImg extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getKeyOfEn()) == false)
 		{

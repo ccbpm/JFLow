@@ -6,6 +6,7 @@ import BP.Web.Controls.*;
 import BP.Web.*;
 import BP.Sys.*;
 import java.time.*;
+import java.util.Date;
 import java.math.*;
 
 /** 
@@ -87,7 +88,7 @@ public abstract class FrmEventBase
 	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final LocalDateTime GetValDateTime(String key)
+	public final Date GetValDateTime(String key)
 	{
 		try
 		{
@@ -158,7 +159,7 @@ public abstract class FrmEventBase
 	*/
 	public final BigDecimal GetValDecimal(String key)
 	{
-		return BigDecimal.Parse(this.GetValStr(key));
+		return new java.math.BigDecimal(this.GetValStr(key));
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 获取参数方法
@@ -291,12 +292,10 @@ public abstract class FrmEventBase
 				return this.SaveBefore();
 			default:
 				throw new RuntimeException("@没有判断的事件类型:" + eventType);
-				break;
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 执行事件.
 
-		return null;
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 基类方法.

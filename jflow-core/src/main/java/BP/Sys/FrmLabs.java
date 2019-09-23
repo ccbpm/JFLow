@@ -21,8 +21,9 @@ public class FrmLabs extends EntitiesMyPK
 	 标签s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmLabs(String fk_mapdata)
+	public FrmLabs(String fk_mapdata) throws Exception
 	{
 	   this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
 	}

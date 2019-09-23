@@ -180,7 +180,7 @@ public abstract class EntityTree extends Entity
 	 @return 
 	 * @throws Exception 
 	*/
-	public final EntityTree DoCreateSameLevelNode() throws Exception
+	public EntityTree DoCreateSameLevelNode() throws Exception
 	{
 		BP.En.Entity tempVar = this.CreateInstance();
 		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
@@ -199,7 +199,7 @@ public abstract class EntityTree extends Entity
 	 @return 
 	 * @throws Exception 
 	*/
-	public final EntityTree DoCreateSubNode() throws Exception
+	public EntityTree DoCreateSubNode() throws Exception
 	{
 		BP.En.Entity tempVar = this.CreateInstance();
 		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
@@ -227,7 +227,7 @@ public abstract class EntityTree extends Entity
 	 
 	 @return 
 	*/
-	public final String DoUp()
+	public String DoUp()
 	{
 		this.DoOrderUp(EntityTreeAttr.ParentNo, this.getParentNo(), EntityTreeAttr.Idx);
 		return "执行成功.";
@@ -237,7 +237,7 @@ public abstract class EntityTree extends Entity
 	 
 	 @return 
 	*/
-	public final String DoDown()
+	public String DoDown()
 	{
 		this.DoOrderDown(EntityTreeAttr.ParentNo, this.getParentNo(), EntityTreeAttr.Idx);
 		return "执行成功.";

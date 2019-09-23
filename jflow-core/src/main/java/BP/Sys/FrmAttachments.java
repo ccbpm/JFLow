@@ -21,8 +21,9 @@ public class FrmAttachments extends EntitiesMyPK
 	 附件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmAttachments(String fk_mapdata)
+	public FrmAttachments(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(FrmAttachmentAttr.FK_MapData, fk_mapdata, FrmAttachmentAttr.FK_Node, 0);
 	}

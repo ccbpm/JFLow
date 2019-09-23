@@ -21,8 +21,9 @@ public class FrmImgAths extends EntitiesMyPK
 	 图片附件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmImgAths(String fk_mapdata)
+	public FrmImgAths(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
 	}

@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -125,8 +127,9 @@ public class FrmEleDB extends EntityMyPK
 	 表单元素扩展DB
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmEleDB(String mypk)
+	public FrmEleDB(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -165,7 +168,7 @@ public class FrmEleDB extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//this.setMyPK( this.FK_MapData + "_" + this.EleID + "_" + this.RefPKVal;
 	   // this.GenerPKVal();

@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -22,7 +24,7 @@ public class FrmLab extends EntityMyPK
 	{
 		this.SetValByKey(FrmLabAttr.FontStyle, value);
 	}
-	public final String getFontColorHtml()
+	public final String getFontColorHtml() throws Exception
 	{
 		return PubClass.ToHtmlColor(this.getFontColor());
 	}
@@ -161,8 +163,9 @@ public class FrmLab extends EntityMyPK
 	 标签
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmLab(String mypk)
+	public FrmLab(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();

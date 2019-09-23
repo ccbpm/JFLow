@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -165,8 +167,9 @@ public class FrmImgAthDB extends EntityMyPK
 	 剪切图片附件数据存储
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmImgAthDB(String mypk)
+	public FrmImgAthDB(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -216,9 +219,10 @@ public class FrmImgAthDB extends EntityMyPK
 	 重写
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setMyPK(this.getFK_FrmImgAth() + "_" + this.getRefPKVal());
 		return super.beforeInsert();
@@ -227,9 +231,10 @@ public class FrmImgAthDB extends EntityMyPK
 	 重写
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		this.setMyPK(this.getFK_FrmImgAth() + "_" + this.getRefPKVal());
 		return super.beforeUpdate();

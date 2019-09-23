@@ -2,6 +2,9 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -543,11 +546,11 @@ public class FrmEle extends EntityMyPK
 
 	public final int getHOfInt()
 	{
-		return Integer.parseInt((new Float(this.getH())).toString("0"));
+		return Integer.parseInt((new Float(this.getH())).toString());
 	}
 	public final int getWOfInt()
 	{
-		return Integer.parseInt((new Float(this.getW())).toString("0"));
+		return Integer.parseInt((new Float(this.getW())).toString());
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -556,9 +559,10 @@ public class FrmEle extends EntityMyPK
 		///#region 权限问题
 	/** 
 	 实体的权限控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 
 		UAC uac = new UAC();
@@ -591,8 +595,9 @@ public class FrmEle extends EntityMyPK
 	 表单元素扩展
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmEle(String mypk)
+	public FrmEle(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -660,7 +665,7 @@ public class FrmEle extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (!this.getEleID().equals(""))
 		{

@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -22,7 +24,7 @@ public class FrmLink extends EntityMyPK
 	{
 		this.SetValByKey(FrmLinkAttr.FontStyle, value);
 	}
-	public final String getFontColorHtml()
+	public final String getFontColorHtml() throws Exception
 	{
 		return PubClass.ToHtmlColor(this.getFontColor());
 	}
@@ -150,8 +152,9 @@ public class FrmLink extends EntityMyPK
 	 超连接
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmLink(String mypk)
+	public FrmLink(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();

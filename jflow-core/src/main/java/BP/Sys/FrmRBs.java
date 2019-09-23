@@ -21,8 +21,9 @@ public class FrmRBs extends EntitiesMyPK
 	 单选框s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmRBs(String fk_mapdata)
+	public FrmRBs(String fk_mapdata) throws Exception
 	{
 	   this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
 
@@ -32,8 +33,9 @@ public class FrmRBs extends EntitiesMyPK
 	 
 	 @param fk_mapdata 表单ID
 	 @param keyOfEn 字段
+	 * @throws Exception 
 	*/
-	public FrmRBs(String fk_mapdata, String keyOfEn)
+	public FrmRBs(String fk_mapdata, String keyOfEn) throws Exception
 	{
 		this.Retrieve(FrmRBAttr.FK_MapData, fk_mapdata, FrmRBAttr.KeyOfEn, keyOfEn);
 	}

@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -57,8 +59,9 @@ public class FrmRpt extends EntityNoName
 
 	/** 
 	 从表
+	 * @throws Exception 
 	*/
-	public final FrmRpts getFrmRpts()
+	public final FrmRpts getFrmRpts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRpts");
 		FrmRpts obj = tempVar instanceof FrmRpts ? (FrmRpts)tempVar : null;
@@ -71,8 +74,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 超连接
+	 * @throws Exception 
 	*/
-	public final FrmLinks getFrmLinks()
+	public final FrmLinks getFrmLinks() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks)tempVar : null;
@@ -85,8 +89,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 按钮
+	 * @throws Exception 
 	*/
-	public final FrmBtns getFrmBtns()
+	public final FrmBtns getFrmBtns() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns)tempVar : null;
@@ -99,8 +104,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 元素
+	 * @throws Exception 
 	*/
-	public final FrmEles getFrmEles()
+	public final FrmEles getFrmEles() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
 		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles)tempVar : null;
@@ -113,8 +119,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 线
+	 * @throws Exception 
 	*/
-	public final FrmLines getFrmLines()
+	public final FrmLines getFrmLines() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
 		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines)tempVar : null;
@@ -127,8 +134,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	*/
-	public final FrmLabs getFrmLabs()
+	public final FrmLabs getFrmLabs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
@@ -141,8 +149,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 图片
+	 * @throws Exception 
 	*/
-	public final FrmImgs getFrmImgs()
+	public final FrmImgs getFrmImgs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs)tempVar : null;
@@ -155,8 +164,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 附件
+	 * @throws Exception 
 	*/
-	public final FrmAttachments getFrmAttachments()
+	public final FrmAttachments getFrmAttachments() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
 		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments)tempVar : null;
@@ -169,8 +179,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 图片附件
+	 * @throws Exception 
 	*/
-	public final FrmImgAths getFrmImgAths()
+	public final FrmImgAths getFrmImgAths() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
 		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths)tempVar : null;
@@ -183,8 +194,9 @@ public class FrmRpt extends EntityNoName
 	}
 	/** 
 	 单选按钮
+	 * @throws Exception 
 	*/
-	public final FrmRBs getFrmRBs()
+	public final FrmRBs getFrmRBs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
 		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs)tempVar : null;
@@ -561,7 +573,7 @@ public class FrmRpt extends EntityNoName
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
 		Attrs attrs = new Attrs();
-		for (MapAttr mapAttr : mapAttrs)
+		for (MapAttr mapAttr : mapAttrs.ToJavaList())
 		{
 			map.AddAttr(mapAttr.getHisAttr());
 		}
@@ -585,7 +597,7 @@ public class FrmRpt extends EntityNoName
 	public FrmRpt()
 	{
 	}
-	public FrmRpt(String mypk)
+	public FrmRpt(String mypk) throws Exception
 	{
 		this.setNo(mypk);
 		this._IsReadonly = 2;
@@ -714,7 +726,7 @@ public class FrmRpt extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final void IntMapAttrs()
+	public final void IntMapAttrs() throws Exception
 	{
 		BP.Sys.MapData md = new BP.Sys.MapData();
 		md.setNo(this.getNo());
@@ -815,7 +827,7 @@ public class FrmRpt extends EntityNoName
 			attr.Insert();
 		}
 	}
-	private void InitExtMembers()
+	private void InitExtMembers() throws Exception
 	{
 		/* 如果启用了多附件*/
 		if (this.getIsEnableAthM())
@@ -832,13 +844,13 @@ public class FrmRpt extends EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.InitExtMembers();
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getIsEnablePass())
 		{
@@ -852,11 +864,11 @@ public class FrmRpt extends EntityNoName
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws NumberFormatException, Exception
 	{
 		MapAttrs attrs = new MapAttrs(this.getNo());
 		boolean isHaveEnable = false;
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
 			if (attr.getUIIsEnable() && attr.getUIContralType() == UIContralType.TB)
 			{
@@ -867,7 +879,7 @@ public class FrmRpt extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		String sql = "";
 		sql += "@DELETE FROM Sys_FrmLine WHERE FK_MapData='" + this.getNo() + "'";

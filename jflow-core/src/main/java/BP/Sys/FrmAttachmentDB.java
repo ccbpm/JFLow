@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 import java.io.*;
 
@@ -262,8 +264,9 @@ public class FrmAttachmentDB extends EntityMyPK
 	 附件数据存储
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmAttachmentDB(String mypk)
+	public FrmAttachmentDB(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -334,8 +337,7 @@ public class FrmAttachmentDB extends EntityMyPK
 			(new File(pathOfTemp)).mkdirs();
 		}
 
-		String tempFile = pathOfTemp + UUID.NewGuid() + "." + this.getFileExts();
-
+		String tempFile = SystemConfig.getPathOfTemp() + this.getFileName();
 
 	  //  string tempFile = SystemConfig.PathOfTemp + + this.FileName;
 		try
@@ -360,9 +362,10 @@ public class FrmAttachmentDB extends EntityMyPK
 	 重写
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		return super.beforeInsert();
 	}

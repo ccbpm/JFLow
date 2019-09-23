@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Web.*;
 import java.util.*;
@@ -73,9 +74,9 @@ public class FrmEvent extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
 	@Override
-	public En.UAC getHisUAC()
+	public UAC getHisUAC()
 	{
-		UAC uac = new En.UAC();
+		UAC uac = new UAC();
 		uac.IsAdjunct = false;
 		uac.IsDelete = false;
 		uac.IsInsert = false;
@@ -267,9 +268,7 @@ public class FrmEvent extends EntityMyPK
 				return "流程结束@Title,发送人@WebUser.getNo(),@WebUser.getName()";
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
-				break;
 		}
-		return str;
 	}
 	/** 
 	 邮件标题
@@ -357,7 +356,6 @@ public class FrmEvent extends EntityMyPK
 				break;
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
-				break;
 		}
 		return str;
 	}
@@ -414,7 +412,6 @@ public class FrmEvent extends EntityMyPK
 				break;
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
-				break;
 		}
 		return str;
 	}
@@ -433,12 +430,12 @@ public class FrmEvent extends EntityMyPK
 	public FrmEvent()
 	{
 	}
-	public FrmEvent(String mypk)
+	public FrmEvent(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.RetrieveFromDBSources();
 	}
-	public FrmEvent(String fk_mapdata, String fk_Event)
+	public FrmEvent(String fk_mapdata, String fk_Event) throws Exception
 	{
 		this.setFK_Event(fk_Event);
 		this.setFK_MapData(fk_mapdata);
@@ -505,7 +502,7 @@ public class FrmEvent extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//this.setMyPK( this.FK_MapData + "_" + this.FK_Event;
 		return super.beforeUpdateInsertAction();

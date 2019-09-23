@@ -21,8 +21,9 @@ public class FrmBtns extends EntitiesMyPK
 	 按钮s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmBtns(String fk_mapdata)
+	public FrmBtns(String fk_mapdata) throws Exception
 	{
 		this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
 

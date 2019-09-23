@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import java.util.*;
@@ -40,8 +41,9 @@ public class FrmTree extends EntityTree
 	 独立表单树
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public FrmTree(String _No)
+	public FrmTree(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -68,7 +70,7 @@ public class FrmTree extends EntityTree
 		map.Java_SetDepositaryOfEntity(Depositary.Application);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
-		map.IndexField = FrmTreeAttr.getParentNo();
+		map.IndexField = FrmTreeAttr.ParentNo;
 
 
 		map.AddTBStringPK(FrmTreeAttr.No, null, "编号", true, true, 1, 10, 20);
@@ -84,7 +86,7 @@ public class FrmTree extends EntityTree
 		///#endregion 系统方法.
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (!DataType.IsNullOrEmpty(this.getNo()))
 		{
@@ -96,12 +98,13 @@ public class FrmTree extends EntityTree
 	 删除子项
 	 
 	 @param parentNo
+	 * @throws Exception 
 	*/
-	private void DeleteChild(String parentNo)
+	private void DeleteChild(String parentNo) throws Exception
 	{
 		FrmTrees formTrees = new FrmTrees();
 		formTrees.Retrieve(FrmTreeAttr.ParentNo, parentNo);
-		for (FrmTree item : formTrees)
+		for (FrmTree item : formTrees.ToJavaList())
 		{
 			MapData md = new MapData();
 			md.setFK_FormTree(item.getNo());
@@ -109,7 +112,7 @@ public class FrmTree extends EntityTree
 			DeleteChild(item.getNo());
 		}
 	}
-	public final FrmTree DoCreateSameLevelNode()
+	public  FrmTree DoCreateSameLevelNode() throws Exception
 	{
 		FrmTree en = new FrmTree();
 		en.Copy(this);
@@ -118,7 +121,7 @@ public class FrmTree extends EntityTree
 		en.Insert();
 		return en;
 	}
-	public final FrmTree DoCreateSubNode()
+	public  FrmTree DoCreateSubNode() throws Exception
 	{
 		FrmTree en = new FrmTree();
 		en.Copy(this);
@@ -127,13 +130,5 @@ public class FrmTree extends EntityTree
 		en.setName("新建节点");
 		en.Insert();
 		return en;
-	}
-	public final void DoUp()
-	{
-		this.DoOrderUp(FrmTreeAttr.ParentNo, this.getParentNo(), FrmTreeAttr.Idx);
-	}
-	public final void DoDown()
-	{
-		this.DoOrderDown(FrmTreeAttr.ParentNo, this.getParentNo(), FrmTreeAttr.Idx);
 	}
 }

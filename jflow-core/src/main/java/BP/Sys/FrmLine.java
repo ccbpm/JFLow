@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -11,7 +13,7 @@ public class FrmLine extends EntityMyPK
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getBorderColorHtml()
+	public final String getBorderColorHtml() throws Exception
 	{
 		return PubClass.ToHtmlColor(this.getBorderColor());
 	}

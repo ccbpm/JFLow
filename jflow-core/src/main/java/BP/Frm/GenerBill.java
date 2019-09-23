@@ -2,8 +2,10 @@ package BP.Frm;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.Template.*;
+import BP.Web.WebUser;
 import BP.Sys.*;
 import java.util.*;
 
@@ -24,321 +26,350 @@ public class GenerBill extends Entity
 	}
 	/** 
 	 备注
+	 * @throws Exception 
 	*/
-	public final String getFlowNote()
+	public final String getFlowNote() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.FlowNote);
 	}
-	public final void setFlowNote(String value)
+	public final void setFlowNote(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.FlowNote, value);
 	}
 
 	/** 
 	 BillNo
+	 * @throws Exception 
 	*/
-	public final String getBillNo()
+	public final String getBillNo() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.BillNo);
 	}
-	public final void setBillNo(String value)
+	public final void setBillNo(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.BillNo, value);
 	}
 	/** 
 	 单据ID
+	 * @throws Exception 
 	*/
-	public final String getFrmID()
+	public final String getFrmID() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.FrmID);
 	}
-	public final void setFrmID(String value)
+	public final void setFrmID(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.FrmID, value);
 	}
 	/** 
 	 单据单据
+	 * @throws Exception 
 	*/
-	public final String getFrmName()
+	public final String getFrmName() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.FrmName);
 	}
-	public final void setFrmName(String value)
+	public final void setFrmName(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.FrmName, value);
 	}
 	/** 
 	 优先级
+	 * @throws Exception 
 	*/
-	public final int getPRI()
+	public final int getPRI() throws Exception
 	{
 		return this.GetValIntByKey(GenerBillAttr.PRI);
 	}
-	public final void setPRI(int value)
+	public final void setPRI(int value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.PRI, value);
 	}
 	/** 
 	 待办人员数量
+	 * @throws Exception 
 	*/
-	public final int getTodoEmpsNum()
+	public final int getTodoEmpsNum() throws Exception
 	{
 		return this.GetValIntByKey(GenerBillAttr.TodoEmpsNum);
 	}
-	public final void setTodoEmpsNum(int value)
+	public final void setTodoEmpsNum(int value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.TodoEmpsNum, value);
 	}
 	/** 
 	 待办人员列表
+	 * @throws Exception 
 	*/
-	public final String getTodoEmps()
+	public final String getTodoEmps() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.TodoEmps);
 	}
-	public final void setTodoEmps(String value)
+	public final void setTodoEmps(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.TodoEmps, value);
 	}
 	/** 
 	 参与人
+	 * @throws Exception 
 	*/
-	public final String getEmps()
+	public final String getEmps() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.Emps);
 	}
-	public final void setEmps(String value)
+	public final void setEmps(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.Emps, value);
 	}
 	/** 
 	 状态
+	 * @throws Exception 
 	*/
-	public final TaskSta getTaskSta()
+	public final TaskSta getTaskSta() throws Exception
 	{
 		return TaskSta.forValue(this.GetValIntByKey(GenerBillAttr.TaskSta));
 	}
-	public final void setTaskSta(TaskSta value)
+	public final void setTaskSta(TaskSta value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.TaskSta, value.getValue());
 	}
 	/** 
 	 类别编号
+	 * @throws Exception 
 	*/
-	public final String getFK_FrmTree()
+	public final String getFK_FrmTree() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.FK_FrmTree);
 	}
-	public final void setFK_FrmTree(String value)
+	public final void setFK_FrmTree(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.FK_FrmTree, value);
 	}
 	/** 
 	 部门编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.FK_Dept, value);
 	}
 	/** 
 	 标题
+	 * @throws Exception 
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.Title, value);
 	}
 	/** 
 	 客户编号
+	 * @throws Exception 
 	*/
-	public final String getGuestNo()
+	public final String getGuestNo() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.GuestNo);
 	}
-	public final void setGuestNo(String value)
+	public final void setGuestNo(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.GuestNo, value);
 	}
 	/** 
 	 客户名称
+	 * @throws Exception 
 	*/
-	public final String getGuestName()
+	public final String getGuestName() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.GuestName);
 	}
-	public final void setGuestName(String value)
+	public final void setGuestName(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.GuestName, value);
 	}
 	/** 
 	 产生时间
+	 * @throws Exception 
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.RDT, value);
 	}
 	/** 
 	 节点应完成时间
+	 * @throws Exception 
 	*/
-	public final String getSDTOfNode()
+	public final String getSDTOfNode() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.SDTOfNode);
 	}
-	public final void setSDTOfNode(String value)
+	public final void setSDTOfNode(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.SDTOfNode, value);
 	}
 	/** 
 	 单据应完成时间
+	 * @throws Exception 
 	*/
-	public final String getSDTOfFlow()
+	public final String getSDTOfFlow() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.SDTOfFlow);
 	}
-	public final void setSDTOfFlow(String value)
+	public final void setSDTOfFlow(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.SDTOfFlow, value);
 	}
 	/** 
 	 单据ID
+	 * @throws Exception 
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(GenerBillAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.WorkID, value);
 	}
 	/** 
 	 主线程ID
+	 * @throws Exception 
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(GenerBillAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.FID, value);
 	}
 	/** 
 	 父节点单据编号.
+	 * @throws Exception 
 	*/
-	public final long getPWorkID()
+	public final long getPWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(GenerBillAttr.PWorkID);
 	}
-	public final void setPWorkID(long value)
+	public final void setPWorkID(long value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.PWorkID, value);
 	}
 	/** 
 	 父单据调用的节点
+	 * @throws Exception 
 	*/
-	public final int getPNodeID()
+	public final int getPNodeID() throws Exception
 	{
 		return this.GetValIntByKey(GenerBillAttr.PNodeID);
 	}
-	public final void setPNodeID(int value)
+	public final void setPNodeID(int value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.PNodeID, value);
 	}
 	/** 
 	 PFrmID
+	 * @throws Exception 
 	*/
-	public final String getPFrmID()
+	public final String getPFrmID() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.PFrmID);
 	}
-	public final void setPFrmID(String value)
+	public final void setPFrmID(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.PFrmID, value);
 	}
 	/** 
 	 吊起子单据的人员
+	 * @throws Exception 
 	*/
-	public final String getPEmp()
+	public final String getPEmp() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.PEmp);
 	}
-	public final void setPEmp(String value)
+	public final void setPEmp(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.PEmp, value);
 	}
 	/** 
 	 发起人
+	 * @throws Exception 
 	*/
-	public final String getStarter()
+	public final String getStarter() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.Starter);
 	}
-	public final void setStarter(String value)
+	public final void setStarter(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.Starter, value);
 	}
 	/** 
 	 发起人名称
+	 * @throws Exception 
 	*/
-	public final String getStarterName()
+	public final String getStarterName() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.StarterName);
 	}
-	public final void setStarterName(String value)
+	public final void setStarterName(String value) throws Exception
 	{
 		this.SetValByKey(GenerBillAttr.StarterName, value);
 	}
 	/** 
 	 发起人部门名称
+	 * @throws Exception 
 	*/
-	public final String getDeptName()
+	public final String getDeptName() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.DeptName);
 	}
-	public final void setDeptName(String value)
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(GenerBillAttr.DeptName, value);
 	}
 	/** 
 	 当前节点名称
+	 * @throws Exception 
 	*/
-	public final String getNDStepName()
+	public final String getNDStepName() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.NDStepName);
 	}
-	public final void setNDStepName(String value)
+	public final void setNDStepName(String value) throws Exception
 	{
 		this.SetValByKey(GenerBillAttr.NDStepName, value);
 	}
 	/** 
 	 当前工作到的节点
+	 * @throws Exception 
 	*/
-	public final int getNDStep()
+	public final int getNDStep() throws Exception
 	{
 		return this.GetValIntByKey(GenerBillAttr.NDStep);
 	}
-	public final void setNDStep(int value)
+	public final void setNDStep(int value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.NDStep, value);
 	}
 	/** 
 	 工作单据状态
+	 * @throws Exception 
 	*/
-	public final BillState getBillState()
+	public final BillState getBillState() throws Exception
 	{
 		return BillState.forValue(this.GetValIntByKey(GenerBillAttr.BillState));
 	}
-	public final void setBillState(BillState value)
+	public final void setBillState(BillState value) throws Exception
 	{
 			//if (value == BillState.)
 			//    SetValByKey(GenerBillAttr.BillSta, (int)BillSta.Complete);
@@ -351,19 +382,21 @@ public class GenerBill extends Entity
 	}
 	/** 
 	 单据状态
+	 * @throws Exception 
 	*/
-	public final String getBillStateText()
+	public final String getBillStateText() throws Exception
 	{
 		return this.GetValRefTextByKey(GenerBillAttr.BillState);
 	}
 	/** 
 	 GUID
+	 * @throws Exception 
 	*/
-	public final String getGUID()
+	public final String getGUID() throws Exception
 	{
 		return this.GetValStrByKey(GenerBillAttr.GUID);
 	}
-	public final void setGUID(String value)
+	public final void setGUID(String value) throws Exception
 	{
 		SetValByKey(GenerBillAttr.GUID, value);
 	}
@@ -373,7 +406,7 @@ public class GenerBill extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -400,8 +433,9 @@ public class GenerBill extends Entity
 	 单据控制表
 	 
 	 @param workID workID
+	 * @throws Exception 
 	*/
-	public GenerBill(long workid)
+	public GenerBill(long workid) throws Exception
 	{
 		this.setWorkID(workid);
 		this.Retrieve();

@@ -23,8 +23,9 @@ public class TestVer extends EntityNoName
 	 测试版本
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public TestVer(String _No)
+	public TestVer(String _No) throws Exception
 	{
 		super(_No);
 	}

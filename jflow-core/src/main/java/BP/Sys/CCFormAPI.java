@@ -288,7 +288,7 @@ public class CCFormAPI
 
 		attr.setUIContralType(BP.En.UIContralType.DDL);
 		attr.setUIBindKey(fk_SFTable); //绑定信息.
-		//   attr.LGType = FieldTypeS.FK;
+		//   attr.setLGType(FieldTypeS.FK;
 		attr.setX(x);
 		attr.setY(y);
 

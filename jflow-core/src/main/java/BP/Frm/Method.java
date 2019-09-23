@@ -3,6 +3,7 @@ package BP.Frm;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import java.util.*;
@@ -16,46 +17,50 @@ public class Method extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFrmID()
+	public final String getFrmID() throws Exception
 	{
 		return this.GetValStringByKey(MethodAttr.FrmID);
 	}
-	public final void setFrmID(String value)
+	public final void setFrmID(String value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.FrmID, value);
 	}
 	/** 
 	 方法ID
+	 * @throws Exception 
 	*/
-	public final String getMethodID()
+	public final String getMethodID() throws Exception
 	{
 		return this.GetValStringByKey(MethodAttr.MethodID);
 	}
-	public final void setMethodID(String value)
+	public final void setMethodID(String value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.MethodID, value);
 	}
 	/** 
 	 方法名
+	 * @throws Exception 
 	*/
-	public final String getMethodName()
+	public final String getMethodName() throws Exception
 	{
 		return this.GetValStringByKey(MethodAttr.MethodName);
 	}
-	public final void setMethodName(String value)
+	public final void setMethodName(String value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.MethodName, value);
 	}
 
 	/** 
 	 方法类型
+	 * @throws Exception 
 	*/
-	public final RefMethodType getRefMethodType()
+	public final RefMethodType getRefMethodType() throws Exception
 	{
-		return (RefMethodType)this.GetValIntByKey(MethodAttr.RefMethodType);
+		return RefMethodType.forValue(this.GetValIntByKey(MethodAttr.RefMethodType));
 	}
-	public final void setRefMethodType(RefMethodType value)
+	public final void setRefMethodType(RefMethodType value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}
@@ -120,18 +125,18 @@ public class Method extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(MethodAttr.FrmID, this.getFrmID(), MethodAttr.Idx);
 	}
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown(MethodAttr.FrmID, this.getFrmID(), MethodAttr.Idx);
 	}
 
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		return super.beforeUpdateInsertAction();
 	}

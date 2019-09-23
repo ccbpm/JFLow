@@ -1798,7 +1798,7 @@ public class WF_CCForm extends DirectoryPageBase
 							dr.set(MapAttrAttr.DefVal, ff.getDefVal()); //默认值.
 
 							Attr attr = new Attr();
-							attr.MyDataType = DataType.AppString;
+							attr.setMyDataType (DataType.AppString;
 							attr.DefaultValOfReal = ff.getDefVal();
 							attr.Key = ff.getKeyOfEn();
 
@@ -1819,7 +1819,7 @@ public class WF_CCForm extends DirectoryPageBase
 							}
 
 							//数据类型.
-							attr.MyDataType = Integer.parseInt(dr.get(MapAttrAttr.MyDataType).toString());
+							attr.setMyDataType (Integer.parseInt(dr.get(MapAttrAttr.MyDataType).toString());
 							String v = ff.getDefVal();
 
 							//设置默认值.

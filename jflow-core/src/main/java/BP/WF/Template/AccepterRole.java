@@ -26,12 +26,13 @@ public class AccepterRole extends EntityOID
 	}
 	/** 
 	 节点编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Node()
+	public final String getFK_Node() throws Exception
 	{
 		return this.GetValStringByKey(AccepterRoleAttr.FK_Node);
 	}
-	public final void setFK_Node(String value)
+	public final void setFK_Node(String value) throws Exception
 	{
 		SetValByKey(AccepterRoleAttr.FK_Node, value);
 	}

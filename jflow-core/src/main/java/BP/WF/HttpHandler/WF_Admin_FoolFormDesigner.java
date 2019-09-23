@@ -318,14 +318,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 		attr.FK_MapData = this.getFK_MapData();
-		attr.KeyOfEn = this.getKeyOfEn();
+		attr.setKeyOfEn (this.getKeyOfEn();
 		attr.UIBindKey = this.GetRequestVal("EnumKey");
 
 		attr.GroupID = this.GetRequestValInt("GroupFeid");
 
-		attr.UIContralType = En.UIContralType.DDL;
-		attr.MyDataType = DataType.AppInt;
-		attr.LGType = En.FieldTypeS.Enum;
+		attr.setUIContralType (En.UIContralType.DDL;
+		attr.setMyDataType (DataType.AppInt;
+		attr.setLGType(En.FieldTypeS.Enum;
 
 		SysEnumMain sem = new Sys.SysEnumMain();
 		sem.No = attr.UIBindKey;
@@ -937,7 +937,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String EditTableField_Init()
 	{
 		MapAttr attr = new MapAttr();
-		attr.KeyOfEn = this.getKeyOfEn();
+		attr.setKeyOfEn (this.getKeyOfEn();
 		attr.FK_MapData = this.getFK_MapData();
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
@@ -949,11 +949,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			SFTable sf = new SFTable(this.getFK_SFTable());
 			attr.Name = sf.Name;
-			attr.KeyOfEn = sf.No;
+			attr.setKeyOfEn (sf.No;
 		}
 
 		//第1次加载.
-		attr.UIContralType = UIContralType.DDL;
+		attr.setUIContralType (UIContralType.DDL;
 
 		attr.FK_MapData = this.getFK_MapData();
 
@@ -1039,7 +1039,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		MapAttr attr = new MapAttr();
 		attr.FK_MapData = frmID;
-		attr.KeyOfEn = keyOfEn;
+		attr.setKeyOfEn (keyOfEn;
 		attr.setMyPK( attr.FK_MapData + "_" + keyOfEn;
 		if (attr.IsExits)
 		{
@@ -1047,15 +1047,15 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 		attr.Name = name;
-		attr.MyDataType = dataType;
+		attr.setMyDataType (dataType;
 
 		if (BP.DA.DataType.AppBoolean == dataType)
 		{
-			attr.UIContralType = UIContralType.CheckBok;
+			attr.setUIContralType (UIContralType.CheckBok;
 		}
 		else
 		{
-			attr.UIContralType = UIContralType.TB;
+			attr.setUIContralType (UIContralType.TB;
 		}
 
 		Paras ps = new Paras();
@@ -1131,12 +1131,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		//求出选择的字段类型.
 		MapAttr attr = new MapAttr();
 		attr.Name = newName;
-		attr.KeyOfEn = newNo;
+		attr.setKeyOfEn (newNo;
 		attr.FK_MapData = this.getFK_MapData();
-		attr.LGType = FieldTypeS.Normal;
+		attr.setLGType(FieldTypeS.Normal;
 		attr.setMyPK( this.getFK_MapData() + "_" + newNo;
 		attr.GroupID = iGroupID;
-		attr.MyDataType = fType;
+		attr.setMyDataType (fType;
 
 		int colspan = attr.ColSpan;
 		attr.Para_FontSize = 12;
@@ -1146,13 +1146,13 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
 			attr.Insert();
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&MyPK=" + attr.MyPK;
 		}
@@ -1161,14 +1161,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.MyDataType = DataType.AppInt;
-			attr.UIContralType = UIContralType.TB;
-			attr.DefVal = "0";
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setMyDataType (DataType.AppInt;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setDefVal("0";
 			attr.Insert();
 
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
@@ -1178,14 +1178,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.MyDataType = DataType.AppMoney;
-			attr.UIContralType = UIContralType.TB;
-			attr.DefVal = "0.00";
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setMyDataType (DataType.AppMoney;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setDefVal("0.00";
 			attr.Insert();
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
@@ -1194,15 +1194,15 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.MyDataType = DataType.AppFloat;
-			attr.UIContralType = UIContralType.TB;
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setMyDataType (DataType.AppFloat;
+			attr.setUIContralType (UIContralType.TB;
 
-			attr.DefVal = "0";
+			attr.setDefVal("0";
 			attr.Insert();
 
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
@@ -1212,14 +1212,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.MyDataType = DataType.AppDouble;
-			attr.UIContralType = UIContralType.TB;
-			attr.DefVal = "0";
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setMyDataType (DataType.AppDouble;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setDefVal("0";
 			attr.Insert();
 
 
@@ -1232,13 +1232,13 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.UIContralType = UIContralType.TB;
-			attr.MyDataType = DataType.AppDate;
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setMyDataType (DataType.AppDate;
 			attr.Insert();
 
 			BP.Sys.FrmUI.MapAttrDT dt = new Sys.FrmUI.MapAttrDT();
@@ -1255,13 +1255,13 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.UIContralType = UIContralType.TB;
-			attr.MyDataType = DataType.AppDateTime;
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setMyDataType (DataType.AppDateTime;
 			attr.Insert();
 
 			BP.Sys.FrmUI.MapAttrDT dt = new Sys.FrmUI.MapAttrDT();
@@ -1277,14 +1277,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			attr.UIWidth = 100;
 			attr.UIHeight = 23;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
 			attr.ColSpan = 1;
-			attr.MinLen = 0;
-			attr.MaxLen = 50;
-			attr.UIContralType = UIContralType.CheckBok;
-			attr.MyDataType = DataType.AppBoolean;
-			attr.DefVal = "0";
+			attr.setMinLen(0;
+			attr.setMaxLen(50;
+			attr.setUIContralType (UIContralType.CheckBok;
+			attr.setMyDataType (DataType.AppBoolean;
+			attr.setDefVal("0";
 			attr.Insert();
 
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrBoolen&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
@@ -1300,7 +1300,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String EditF_FieldInit()
 	{
 		MapAttr attr = new MapAttr();
-		attr.KeyOfEn = this.getKeyOfEn();
+		attr.setKeyOfEn (this.getKeyOfEn();
 		attr.FK_MapData = this.getFK_MapData();
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
@@ -1338,7 +1338,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String FieldInitEnum()
 	{
 		MapAttr attr = new MapAttr();
-		attr.KeyOfEn = this.getKeyOfEn();
+		attr.setKeyOfEn (this.getKeyOfEn();
 		attr.FK_MapData = this.getFK_MapData();
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
@@ -1350,14 +1350,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 			SysEnumMain sem = new SysEnumMain(this.getEnumKey());
 			attr.Name = sem.Name;
-			attr.KeyOfEn = sem.No;
-			attr.DefVal = "0";
+			attr.setKeyOfEn (sem.No;
+			attr.setDefVal("0";
 		}
 
 		//第1次加载.
 		if (attr.UIContralType == UIContralType.TB)
 		{
-			attr.UIContralType = UIContralType.DDL;
+			attr.setUIContralType (UIContralType.DDL;
 		}
 
 		attr.FK_MapData = this.getFK_MapData();
@@ -1467,7 +1467,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			//赋值.
 			MapAttr attr = new MapAttr();
-			attr.KeyOfEn = this.getKeyOfEn();
+			attr.setKeyOfEn (this.getKeyOfEn();
 			attr.FK_MapData = this.getFK_MapData();
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
@@ -1483,17 +1483,17 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				}
 			}
 
-			attr.KeyOfEn = this.getKeyOfEn();
+			attr.setKeyOfEn (this.getKeyOfEn();
 			attr.FK_MapData = this.getFK_MapData();
-			attr.LGType = FieldTypeS.Enum;
+			attr.setLGType(FieldTypeS.Enum;
 			attr.UIBindKey = this.getEnumKey();
-			attr.MyDataType = DataType.AppInt;
+			attr.setMyDataType (DataType.AppInt;
 
 			//控件类型.
-			attr.UIContralType = UIContralType.DDL;
+			attr.setUIContralType (UIContralType.DDL;
 
 			attr.Name = this.GetValFromFrmByKey("TB_Name");
-			attr.KeyOfEn = this.GetValFromFrmByKey("TB_KeyOfEn");
+			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn");
 			attr.ColSpan = this.GetValIntFromFrmByKey("DDL_ColSpan");
 			if (attr.ColSpan == 0)
 			{
@@ -1504,7 +1504,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.RBShowModel = this.GetValIntFromFrmByKey("DDL_RBShowModel");
 
 			//控件类型.
-			attr.UIContralType = (UIContralType)this.GetValIntFromFrmByKey("RB_CtrlType");
+			attr.setUIContralType ((UIContralType)this.GetValIntFromFrmByKey("RB_CtrlType");
 
 			attr.UIIsInput = this.GetValBoolenFromFrmByKey("CB_IsInput"); //是否是必填项.
 
@@ -1513,7 +1513,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.Para_FontSize = this.GetValIntFromFrmByKey("TB_FontSize"); //字体大小.
 
 			//默认值.
-			attr.DefVal = this.GetValFromFrmByKey("TB_DefVal");
+			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal");
 
 			try
 			{
@@ -1532,22 +1532,22 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			int isEnable = this.GetValIntFromFrmByKey("RB_UIIsEnable");
 			if (isEnable == 0)
 			{
-				attr.UIIsEnable = false;
+				attr.setUIIsEnable(false;
 			}
 			else
 			{
-				attr.UIIsEnable = true;
+				attr.setUIIsEnable(true;
 			}
 
 			//是否可见?
 			int visable = this.GetValIntFromFrmByKey("RB_UIVisible");
 			if (visable == 0)
 			{
-				attr.UIVisible = false;
+				attr.setUIVisible(false;
 			}
 			else
 			{
-				attr.UIVisible = true;
+				attr.setUIVisible(true;
 			}
 
 			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
@@ -1578,7 +1578,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			//赋值.
 			MapAttr attr = new MapAttr();
-			attr.KeyOfEn = this.getKeyOfEn();
+			attr.setKeyOfEn (this.getKeyOfEn();
 			attr.FK_MapData = this.getFK_MapData();
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
@@ -1594,17 +1594,17 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				}
 			}
 
-			attr.KeyOfEn = this.getKeyOfEn();
+			attr.setKeyOfEn (this.getKeyOfEn();
 			attr.FK_MapData = this.getFK_MapData();
-			attr.LGType = FieldTypeS.FK;
+			attr.setLGType(FieldTypeS.FK;
 			attr.UIBindKey = this.getFK_SFTable();
-			attr.MyDataType = DataType.AppString;
+			attr.setMyDataType (DataType.AppString;
 
 			//控件类型.
-			attr.UIContralType = UIContralType.DDL;
+			attr.setUIContralType (UIContralType.DDL;
 
 			attr.Name = this.GetValFromFrmByKey("TB_Name");
-			attr.KeyOfEn = this.GetValFromFrmByKey("TB_KeyOfEn");
+			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn");
 			attr.ColSpan = this.GetValIntFromFrmByKey("DDL_ColSpan");
 			if (attr.ColSpan == 0)
 			{
@@ -1616,7 +1616,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.Para_FontSize = this.GetValIntFromFrmByKey("TB_FontSize"); //字体大小.
 
 			//默认值.
-			attr.DefVal = this.GetValFromFrmByKey("TB_DefVal");
+			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal");
 
 			try
 			{
@@ -1635,22 +1635,22 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			int isEnable = this.GetValIntFromFrmByKey("RB_UIIsEnable");
 			if (isEnable == 0)
 			{
-				attr.UIIsEnable = false;
+				attr.setUIIsEnable(false;
 			}
 			else
 			{
-				attr.UIIsEnable = true;
+				attr.setUIIsEnable(true;
 			}
 
 			//是否可见?
 			int visable = this.GetValIntFromFrmByKey("RB_UIVisible");
 			if (visable == 0)
 			{
-				attr.UIVisible = false;
+				attr.setUIVisible(false;
 			}
 			else
 			{
-				attr.UIVisible = true;
+				attr.setUIVisible(true;
 			}
 
 			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
@@ -1679,11 +1679,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			//赋值.
 			MapAttr attr = new MapAttr();
-			attr.KeyOfEn = this.getKeyOfEn();
+			attr.setKeyOfEn (this.getKeyOfEn();
 			attr.FK_MapData = this.getFK_MapData();
-			attr.LGType = lgType; //逻辑类型.
+			attr.setLGType(lgType; //逻辑类型.
 			attr.UIBindKey = uiBindKey; //绑定的枚举或者外键.
-			attr.MyDataType = fType; //物理类型.
+			attr.setMyDataType (fType; //物理类型.
 
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
@@ -1692,10 +1692,10 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			}
 
 			attr.FK_MapData = this.getFK_MapData();
-			attr.MyDataType = fType; //数据类型.
+			attr.setMyDataType (fType; //数据类型.
 			attr.Name = this.GetValFromFrmByKey("TB_Name");
 
-			attr.KeyOfEn = this.GetValFromFrmByKey("TB_KeyOfEn");
+			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn");
 			attr.ColSpan = this.GetValIntFromFrmByKey("DDL_ColSpan");
 
 			if (attr.ColSpan == 0)
@@ -1707,7 +1707,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			attr.Para_Tip = this.GetValFromFrmByKey("TB_Tip"); //操作提示.
 
 			//默认值.
-			attr.DefVal = this.GetValFromFrmByKey("TB_DefVal");
+			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal");
 
 
 			//对于明细表就可能没有值.
@@ -1737,8 +1737,8 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				attr.UIHeightInt = this.GetValIntFromFrmByKey("DDL_Rows") * 23;
 
 				//最大最小长度.
-				attr.MaxLen = this.GetValIntFromFrmByKey("TB_MaxLen");
-				attr.MinLen = this.GetValIntFromFrmByKey("TB_MinLen");
+				attr.setMaxLen(this.GetValIntFromFrmByKey("TB_MaxLen");
+				attr.setMinLen(this.GetValIntFromFrmByKey("TB_MinLen");
 
 				attr.UIWidth = this.GetValIntFromFrmByKey("TB_UIWidth"); //宽度.
 			}
@@ -1767,11 +1767,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			int isEnable = this.GetValIntFromFrmByKey("RB_UIIsEnable");
 			if (isEnable == 0)
 			{
-				attr.UIIsEnable = false;
+				attr.setUIIsEnable(false;
 			}
 			else
 			{
-				attr.UIIsEnable = true;
+				attr.setUIIsEnable(true;
 			}
 
 			//仅仅对普通类型的字段需要.
@@ -1781,11 +1781,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				int visable = this.GetValIntFromFrmByKey("RB_UIVisible");
 				if (visable == 0)
 				{
-					attr.UIVisible = false;
+					attr.setUIVisible(false;
 				}
 				else
 				{
-					attr.UIVisible = true;
+					attr.setUIVisible(true;
 				}
 			}
 

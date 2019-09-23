@@ -29,111 +29,121 @@ public class Track extends BP.En.EntityMyPK
 		///#region 字段属性.
 	/** 
 	 节点从
+	 * @throws Exception 
 	*/
-	public final int getNDFrom()
+	public final int getNDFrom() throws Exception
 	{
 		return this.GetValIntByKey(TrackAttr.NDFrom);
 	}
-	public final void setNDFrom(int value)
+	public final void setNDFrom(int value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDFrom, value);
 	}
 	/** 
 	 节点到
+	 * @throws Exception 
 	*/
-	public final int getNDTo()
+	public final int getNDTo() throws Exception
 	{
 		return this.GetValIntByKey(TrackAttr.NDTo);
 	}
-	public final void setNDTo(int value)
+	public final void setNDTo(int value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDTo, value);
 	}
 	/** 
 	 从人员
+	 * @throws Exception 
 	*/
-	public final String getEmpFrom()
+	public final String getEmpFrom() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpFrom);
 	}
-	public final void setEmpFrom(String value)
+	public final void setEmpFrom(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpFrom, value);
 	}
 	/** 
 	 到人员
+	 * @throws Exception 
 	*/
-	public final String getEmpTo()
+	public final String getEmpTo() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpTo);
 	}
-	public final void setEmpTo(String value)
+	public final void setEmpTo(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpTo, value);
 	}
 	/** 
 	 参数数据.
+	 * @throws Exception 
 	*/
-	public final String getTag()
+	public final String getTag() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Tag);
 	}
-	public final void setTag(String value)
+	public final void setTag(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.Tag, value);
 	}
 	/** 
 	 记录日期
+	 * @throws Exception 
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.RDT, value);
 	}
 	/** 
 	 fid
+	 * @throws Exception 
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(TrackAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.FID, value);
 	}
 	/** 
 	 工作ID
+	 * @throws Exception 
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(TrackAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.WorkID, value);
 	}
 	/** 
 	 CWorkID
+	 * @throws Exception 
 	*/
-	public final long getCWorkID()
+	public final long getCWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(TrackAttr.CWorkID);
 	}
-	public final void setCWorkID(long value)
+	public final void setCWorkID(long value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.CWorkID, value);
 	}
 	/** 
 	 活动类型
+	 * @throws Exception 
 	*/
-	public final ActionType getHisActionType()
+	public final ActionType getHisActionType() throws Exception
 	{
 		return ActionType.forValue(this.GetValIntByKey(TrackAttr.ActionType));
 	}
-	public final void setHisActionType(ActionType value)
+	public final void setHisActionType(ActionType value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.ActionType, value.getValue());
 	}
@@ -209,96 +219,105 @@ public class Track extends BP.En.EntityMyPK
 	}
 	/** 
 	 活动名称
+	 * @throws Exception 
 	*/
-	public final String getActionTypeText()
+	public final String getActionTypeText() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.ActionTypeText);
 	}
-	public final void setActionTypeText(String value)
+	public final void setActionTypeText(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.ActionTypeText, value);
 	}
 	/** 
 	 节点数据
+	 * @throws Exception 
 	*/
-	public final String getNodeData()
+	public final String getNodeData() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NodeData);
 	}
-	public final void setNodeData(String value)
+	public final void setNodeData(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NodeData, value);
 	}
 	/** 
 	 实际执行人
+	 * @throws Exception 
 	*/
-	public final String getExer()
+	public final String getExer() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Exer);
 	}
-	public final void setExer(String value)
+	public final void setExer(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.Exer, value);
 	}
 	/** 
 	 审核意见
+	 * @throws Exception 
 	*/
-	public final String getMsg()
+	public final String getMsg() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Msg);
 	}
-	public final void setMsg(String value)
+	public final void setMsg(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.Msg, value);
 	}
 	/** 
 	 消息
+	 * @throws Exception 
 	*/
-	public final String getMsgHtml()
+	public final String getMsgHtml() throws Exception
 	{
 		return this.GetValHtmlStringByKey(TrackAttr.Msg);
 	}
 	/** 
 	 人员到
+	 * @throws Exception 
 	*/
-	public final String getEmpToT()
+	public final String getEmpToT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpToT);
 	}
-	public final void setEmpToT(String value)
+	public final void setEmpToT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpToT, value);
 	}
 	/** 
 	 人员从
+	 * @throws Exception 
 	*/
-	public final String getEmpFromT()
+	public final String getEmpFromT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpFromT);
 	}
-	public final void setEmpFromT(String value)
+	public final void setEmpFromT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpFromT, value);
 	}
 	/** 
 	 节点从
+	 * @throws Exception 
 	*/
-	public final String getNDFromT()
+	public final String getNDFromT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NDFromT);
 	}
-	public final void setNDFromT(String value)
+	public final void setNDFromT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDFromT, value);
 	}
 	/** 
 	 节点到
+	 * @throws Exception 
 	*/
-	public final String getNDToT()
+	public final String getNDToT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NDToT);
 	}
-	public final void setNDToT(String value)
+	public final void setNDToT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDToT, value);
 	}

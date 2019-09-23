@@ -22,8 +22,9 @@ public class Methods extends EntitiesMyPK
 	 表单方法
 	 
 	 @param nodeid 方法IDID
+	 * @throws Exception 
 	*/
-	public Methods(int nodeid)
+	public Methods(int nodeid) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MethodAttr.MethodID, nodeid);

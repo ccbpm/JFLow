@@ -2,6 +2,7 @@ package BP.WF.UnitTesting;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -22,8 +23,9 @@ public class TestAPI extends EntityNoName
 	 测试过程
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public TestAPI(String _No)
+	public TestAPI(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -42,7 +44,7 @@ public class TestAPI extends EntityNoName
 		}
 
 		Map map = new Map("WF_TestAPI");
-		map.EnDesc = "测试过程";
+		map.setEnDesc("测试过程");
 
 		map.AddTBStringPK(TestAPIAttr.No, null, "编号", true, false, 1, 92, 2);
 		map.AddTBString(TestAPIAttr.Name, null, "名称", true, false, 1, 50, 20);

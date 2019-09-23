@@ -17,9 +17,10 @@ public class BillTemplate2019 extends EntityNoName
 		///#region  属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -28,50 +29,54 @@ public class BillTemplate2019 extends EntityNoName
 	 
 	/** 
 	 生成的单据类型
+	 * @throws Exception 
 	*/
-	public final BillFileType getHisBillFileType()
+	public final BillFileType getHisBillFileType() throws Exception
 	{
 		return BillFileType.forValue(this.GetValIntByKey(BillTemplate2019Attr.BillFileType));
 	}
-	public final void setHisBillFileType(BillFileType value)
+	public final void setHisBillFileType(BillFileType value) throws Exception
 	{
 		this.SetValByKey(BillTemplate2019Attr.BillFileType, value.getValue());
 	}
 	/** 
 	 二维码生成方式
+	 * @throws Exception 
 	*/
-	public final QRModel getQRModel()
+	public final QRModel getQRModel() throws Exception
 	{
 		return QRModel.forValue(this.GetValIntByKey(BillTemplate2019Attr.QRModel));
 	}
-	public final void setQRModel(QRModel value)
+	public final void setQRModel(QRModel value) throws Exception
 	{
 		this.SetValByKey(BillTemplate2019Attr.QRModel, value.getValue());
 	}
-	public final TemplateFileModel getTemplateFileModel()
+	public final TemplateFileModel getTemplateFileModel() throws Exception
 	{
 		return TemplateFileModel.forValue(this.GetValIntByKey(BillTemplate2019Attr.TemplateFileModel));
 	}
-	public final void setTemplateFileModel(TemplateFileModel value)
+	public final void setTemplateFileModel(TemplateFileModel value) throws Exception
 	{
 		this.SetValByKey(BillTemplate2019Attr.TemplateFileModel, value.getValue());
 	}
 
 	/** 
 	 生成的单据打开方式
+	 * @throws Exception 
 	*/
-	public final BillOpenModel getBillOpenModel()
+	public final BillOpenModel getBillOpenModel() throws Exception
 	{
 		return BillOpenModel.forValue(this.GetValIntByKey(BillTemplate2019Attr.BillOpenModel));
 	}
-	public final void setBillOpenModel(BillOpenModel value)
+	public final void setBillOpenModel(BillOpenModel value) throws Exception
 	{
 		this.SetValByKey(BillTemplate2019Attr.BillOpenModel, value.getValue());
 	}
 	/** 
 	 打开的连接
+	 * @throws Exception 
 	*/
-	public final String getTempFilePath()
+	public final String getTempFilePath() throws Exception
 	{
 		String s = this.GetValStrByKey(BillTemplate2019Attr.TempFilePath);
 		if (s.equals("") || s == null)
@@ -80,35 +85,37 @@ public class BillTemplate2019 extends EntityNoName
 		}
 		return s;
 	}
-	public final void setTempFilePath(String value)
+	public final void setTempFilePath(String value) throws Exception
 	{
 		this.SetValByKey(BillTemplate2019Attr.TempFilePath, value);
 	}
 	/** 
 	 节点名称
+	 * @throws Exception 
 	*/
-	public final String getNodeName()
+	public final String getNodeName() throws Exception
 	{
 		Node nd = new Node(this.getNodeID());
 		return nd.getName();
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(BillTemplate2019Attr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(BillTemplate2019Attr.NodeID, value);
 	}
 
-	public final String getMyFrmID()
+	public final String getMyFrmID() throws Exception
 	{
 		return this.GetValStringByKey(BillTemplate2019Attr.MyFrmID);
 	}
-	public final void setMyFrmID(String value)
+	public final void setMyFrmID(String value) throws Exception
 	{
 		this.SetValByKey(BillTemplate2019Attr.MyFrmID, value);
 	}
@@ -133,10 +140,11 @@ public class BillTemplate2019 extends EntityNoName
 	 
 	 @param oid
 	 @return 
+	 * @throws Exception 
 	*/
 //C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
 //ORIGINAL LINE: public byte[] GenerTemplateFile()
-	public final byte[] GenerTemplateFile()
+	public final byte[] GenerTemplateFile() throws Exception
 	{
 //C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
 //ORIGINAL LINE: byte[] bytes = BP.DA.DBAccess.GetByteFromDB(this.EnMap.PhysicsTable, "No", this.No, "DBFile");

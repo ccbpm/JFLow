@@ -2,10 +2,12 @@ package BP.Frm;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.GPM.*;
 import BP.WF.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
+import BP.Web.WebUser;
 import BP.Sys.*;
 import java.util.*;
 
@@ -17,7 +19,7 @@ public class FrmTemplate extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -36,69 +38,75 @@ public class FrmTemplate extends EntityNoName
 		///#region 属性
 	/** 
 	 物理表
+	 * @throws Exception 
 	*/
-	public final String getPTable()
+	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
 		if (s.equals("") || s == null)
 		{
-			return this.No;
+			return this.getNo();
 		}
 		return s;
 	}
-	public final void setPTable(String value)
+	public final void setPTable(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 实体类型：@0=单据@1=编号名称实体@2=树结构实体
+	 * @throws Exception 
 	*/
-	public final EntityType getEntityType()
+	public final EntityType getEntityType() throws Exception
 	{
 		return EntityType.forValue(this.GetValIntByKey(FrmTemplateAttr.EntityType));
 	}
-	public final void setEntityType(EntityType value)
+	public final void setEntityType(EntityType value) throws Exception
 	{
 		this.SetValByKey(FrmTemplateAttr.EntityType, value.getValue());
 	}
 	/** 
 	 表单类型 (0=傻瓜，2=自由 ...)
+	 * @throws Exception 
 	*/
-	public final FrmType getFrmType()
+	public final FrmType getFrmType() throws Exception
 	{
-		return (FrmType)this.GetValIntByKey(MapDataAttr.FrmType);
+		return FrmType.forValue(this.GetValIntByKey(MapDataAttr.FrmType));
 	}
-	public final void setFrmType(FrmType value)
+	public final void setFrmType(FrmType value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单树
+	 * @throws Exception 
 	*/
-	public final String getFK_FormTree()
+	public final String getFK_FormTree() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.FK_FormTree);
 	}
-	public final void setFK_FormTree(String value)
+	public final void setFK_FormTree(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FK_FormTree, value);
 	}
 	/** 
 	 新建模式 @0=表格模式@1=卡片模式@2=不可用
+	 * @throws Exception 
 	*/
-	public final int getBtnNewModel()
+	public final int getBtnNewModel() throws Exception
 	{
 		return this.GetValIntByKey(FrmTemplateAttr.BtnNewModel);
 	}
-	public final void setBtnNewModel(int value)
+	public final void setBtnNewModel(int value) throws Exception
 	{
 		this.SetValByKey(FrmTemplateAttr.BtnNewModel, value);
 	}
 
 	/** 
 	 单据格式
+	 * @throws Exception 
 	*/
-	public final String getBillNoFormat()
+	public final String getBillNoFormat() throws Exception
 	{
 		String str = this.GetValStrByKey(FrmTemplateAttr.BillNoFormat);
 		if (DataType.IsNullOrEmpty(str) == true)
@@ -107,14 +115,15 @@ public class FrmTemplate extends EntityNoName
 		}
 		return str;
 	}
-	public final void setBillNoFormat(String value)
+	public final void setBillNoFormat(String value) throws Exception
 	{
 		this.SetValByKey(FrmTemplateAttr.BillNoFormat, value);
 	}
 	/** 
 	 单据编号生成规则
+	 * @throws Exception 
 	*/
-	public final String getTitleRole()
+	public final String getTitleRole() throws Exception
 	{
 		String str = this.GetValStrByKey(FrmTemplateAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
@@ -123,7 +132,7 @@ public class FrmTemplate extends EntityNoName
 		}
 		return str;
 	}
-	public final void setTitleRole(String value)
+	public final void setTitleRole(String value) throws Exception
 	{
 		this.SetValByKey(FrmTemplateAttr.BillNoFormat, value);
 	}
@@ -142,8 +151,9 @@ public class FrmTemplate extends EntityNoName
 	 单据模版
 	 
 	 @param no 映射编号
+	 * @throws Exception 
 	*/
-	public FrmTemplate(String no)
+	public FrmTemplate(String no) throws Exception
 	{
 		super(no);
 	}

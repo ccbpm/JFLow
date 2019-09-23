@@ -774,7 +774,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			//执行更新
 			for (MapAttr mapAttr : attrs)
 			{
-				mapAttr.Idx = rowIdx;
+				mapattr.setIdx(rowIdx;
 				mapAttr.DirectUpdate();
 				rowIdx++;
 			}
@@ -1014,7 +1014,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						}
 					}
 
-					tattr.Idx = attr.Idx;
+					tattr.setIdx(attr.Idx;
 					tattr.DirectUpdate();
 					maxAttrIdx = Math.max(attr.Idx, maxAttrIdx);
 					idxAttrs.add(attr.KeyOfEn);
@@ -1032,7 +1032,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						continue;
 					}
 
-					attr.Idx = maxAttrIdx = maxAttrIdx + 1;
+					attr.setIdx(maxAttrIdx = maxAttrIdx + 1;
 					attr.DirectUpdate();
 				}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1218,7 +1218,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 							}
 						}
 
-						tattr.Idx = attr.Idx;
+						tattr.setIdx(attr.Idx;
 						tattr.DirectUpdate();
 						maxAttrIdx = Math.max(attr.Idx, maxAttrIdx);
 						idxAttrs.add(attr.KeyOfEn);
@@ -1231,7 +1231,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 							continue;
 						}
 
-						attr.Idx = maxAttrIdx = maxAttrIdx + 1;
+						attr.setIdx(maxAttrIdx = maxAttrIdx + 1;
 						attr.DirectUpdate();
 					}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

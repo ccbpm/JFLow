@@ -480,11 +480,11 @@ public class CCFlowAPI
 						{
 							if (frmField.getIsSigan())
 							{
-								attr.UIIsEnable = false;
+								attr.setUIIsEnable(false;
 							}
 
-							attr.UIIsEnable = frmField.getUIIsEnable();
-							attr.UIVisible = frmField.getUIVisible();
+							attr.setUIIsEnable(frmField.getUIIsEnable();
+							attr.setUIVisible(frmField.getUIVisible();
 							attr.IsSigan = frmField.getIsSigan();
 							attr.DefValReal = frmField.getDefVal();
 						}

@@ -17,38 +17,41 @@ public class MethodLink extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFrmID()
+	public final String getFrmID() throws Exception
 	{
 		return this.GetValStringByKey(MethodAttr.FrmID);
 	}
-	public final void setFrmID(String value)
+	public final void setFrmID(String value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.FrmID, value);
 	}
 	/** 
 	 方法ID
+	 * @throws Exception 
 	*/
-	public final String getMethodID()
+	public final String getMethodID() throws Exception
 	{
 		return this.GetValStringByKey(MethodAttr.MethodID);
 	}
-	public final void setMethodID(String value)
+	public final void setMethodID(String value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.MethodID, value);
 	}
 	/** 
 	 方法名
+	 * @throws Exception 
 	*/
-	public final String getMethodName()
+	public final String getMethodName() throws Exception
 	{
 		return this.GetValStringByKey(MethodAttr.MethodName);
 	}
-	public final void setMethodName(String value)
+	public final void setMethodName(String value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.MethodName, value);
 	}
-	public final String getMethodDoc_Url()
+	public final String getMethodDoc_Url() throws Exception
 	{
 		String s = this.GetValStringByKey(MethodAttr.MethodDoc_Url);
 		if (DataType.IsNullOrEmpty(s) == true)
@@ -57,18 +60,19 @@ public class MethodLink extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setMethodDoc_Url(String value)
+	public final void setMethodDoc_Url(String value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.MethodDoc_Url, value);
 	}
 	/** 
 	 方法类型
+	 * @throws Exception 
 	*/
-	public final RefMethodType getRefMethodType()
+	public final RefMethodType getRefMethodType() throws Exception
 	{
 		return RefMethodType.forValue( this.GetValIntByKey(MethodAttr.RefMethodType));
 	}
-	public final void setRefMethodType(RefMethodType value)
+	public final void setRefMethodType(RefMethodType value) throws Exception
 	{
 		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}

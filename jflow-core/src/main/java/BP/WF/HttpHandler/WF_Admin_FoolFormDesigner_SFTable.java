@@ -156,11 +156,11 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 			return "err@标记:" + sf.No + "已经存在.";
 		}
 
-		sf.Name = this.GetValFromFrmByKey("Name");
+		attr.setName(this.GetValFromFrmByKey("Name");
 		sf.FK_SFDBSrc = this.GetValFromFrmByKey("FK_DBSrc");
-		sf.SrcTable = this.GetValFromFrmByKey("SrcTable");
+		sf.setSrcTable(this.GetValFromFrmByKey("SrcTable");
 		sf.CodeStruct = (CodeStruct) this.GetValIntFromFrmByKey("CodeStruct");
-		sf.ColumnValue = this.GetValFromFrmByKey("ColumnValue");
+		sf.setColumnValue(this.GetValFromFrmByKey("ColumnValue");
 		sf.ColumnText = this.GetValFromFrmByKey("ColumnText");
 		if (sf.CodeStruct == CodeStruct.Tree)
 		{
@@ -168,7 +168,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 			sf.DefVal = this.GetValFromFrmByKey("RootValue");
 		}
 		sf.SelectStatement = this.GetValFromFrmByKey("Selectstatement");
-		sf.SrcType = SrcType.TableOrView;
+		attr.setSrcType(SrcType.TableOrView;
 		sf.FK_Val = "FK_" + sf.No;
 		sf.Save();
 

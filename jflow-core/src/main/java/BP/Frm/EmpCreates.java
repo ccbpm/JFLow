@@ -22,8 +22,9 @@ public class EmpCreates extends EntitiesMM
 	 单据可创建的人员
 	 
 	 @param NodeID 表单IDID
+	 * @throws Exception 
 	*/
-	public EmpCreates(int NodeID)
+	public EmpCreates(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(EmpCreateAttr.FrmID, NodeID);
@@ -33,8 +34,9 @@ public class EmpCreates extends EntitiesMM
 	 单据可创建的人员
 	 
 	 @param EmpNo EmpNo 
+	 * @throws Exception 
 	*/
-	public EmpCreates(String EmpNo)
+	public EmpCreates(String EmpNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(EmpCreateAttr.FK_Emp, EmpNo);

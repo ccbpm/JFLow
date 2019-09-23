@@ -63,7 +63,7 @@ public class ResetSortMapAttr extends Method
 					int rowIdx = 0;
 					for (MapAttr mapAttr : attrs)
 					{
-						mapAttr.Idx = rowIdx;
+						mapattr.setIdx(rowIdx;
 						mapAttr.DirectUpdate();
 						rowIdx++;
 					}

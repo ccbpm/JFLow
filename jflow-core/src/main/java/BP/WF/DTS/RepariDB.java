@@ -81,15 +81,15 @@ public class RepariDB extends Method
 			if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, md.No) == false)
 			{
 				attr.FK_MapData = md.No;
-				attr.KeyOfEn = "OID";
+				attr.setKeyOfEn ("OID";
 				attr.setName("OID";
-				attr.MyDataType = BP.DA.DataType.AppInt;
-				attr.UIContralType = UIContralType.TB;
-				attr.LGType = FieldTypeS.Normal;
-				attr.UIVisible = false;
-				attr.UIIsEnable = false;
-				attr.DefVal = "0";
-				attr.HisEditType = BP.En.EditType.Readonly;
+				attr.setMyDataType (BP.DA.DataType.AppInt;
+				attr.setUIContralType (UIContralType.TB;
+				attr.setLGType(FieldTypeS.Normal;
+				attr.setUIVisible(false;
+				attr.setUIIsEnable(false;
+				attr.setDefVal("0";
+				attr.setHisEditType(BP.En.EditType.Readonly;
 				attr.Insert();
 			}
 		}

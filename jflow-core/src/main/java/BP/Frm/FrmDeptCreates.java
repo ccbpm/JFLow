@@ -22,8 +22,9 @@ public class FrmDeptCreates extends EntitiesMM
 	 单据可创建的部门
 	 
 	 @param nodeID 单据ID
+	 * @throws Exception 
 	*/
-	public FrmDeptCreates(int nodeID)
+	public FrmDeptCreates(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmDeptCreateAttr.FrmID, nodeID);
@@ -33,8 +34,9 @@ public class FrmDeptCreates extends EntitiesMM
 	 单据可创建的部门
 	 
 	 @param StationNo StationNo 
+	 * @throws Exception 
 	*/
-	public FrmDeptCreates(String StationNo)
+	public FrmDeptCreates(String StationNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmDeptCreateAttr.FK_Dept, StationNo);

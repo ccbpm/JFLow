@@ -457,7 +457,7 @@ public class RptDfine extends EntityNoName
 			}
 
 			attr.FK_MapData = md.No;
-			attr.UIIsEnable = false;
+			attr.setUIIsEnable(false;
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 判断特殊的字段.
@@ -465,19 +465,19 @@ public class RptDfine extends EntityNoName
 			{
 				case GERptAttr.FK_Dept:
 					attr.UIBindKey = "BP.Port.Depts";
-					attr.UIContralType = UIContralType.DDL;
-					attr.LGType = FieldTypeS.FK;
-					attr.UIVisible = true;
-					attr.DefVal = "";
-					attr.MaxLen = 100;
+					attr.setUIContralType (UIContralType.DDL;
+					attr.setLGType(FieldTypeS.FK;
+					attr.setUIVisible(true;
+					attr.setDefVal("";
+					attr.setMaxLen(100;
 					attr.Update();
 					break;
 				case GERptAttr.FK_NY:
 					attr.UIBindKey = "BP.Pub.NYs";
-					attr.UIContralType = UIContralType.DDL;
-					attr.LGType = FieldTypeS.FK;
-					attr.UIVisible = true;
-					attr.UIIsEnable = false;
+					attr.setUIContralType (UIContralType.DDL;
+					attr.setLGType(FieldTypeS.FK;
+					attr.setUIVisible(true;
+					attr.setUIIsEnable(false;
 					//attr.GroupID = groupID;
 					attr.Update();
 					break;
@@ -485,16 +485,16 @@ public class RptDfine extends EntityNoName
 					attr.UIWidth = 120;
 					break;
 				case GERptAttr.FlowStarter:
-					attr.UIIsEnable = false;
-					//attr.LGType = FieldTypeS.FK;
+					attr.setUIIsEnable(false;
+					//attr.setLGType(FieldTypeS.FK;
 					//attr.UIBindKey = "BP.Port.Emps";
-					//attr.UIContralType = UIContralType.DDL;
+					//attr.setUIContralType (UIContralType.DDL;
 					//attr.UIWidth = 120;
 					break;
 				case GERptAttr.FlowEndNode:
-					//attr.LGType = FieldTypeS.FK;
+					//attr.setLGType(FieldTypeS.FK;
 					//attr.UIBindKey = "BP.WF.Template.NodeExts";
-					//attr.UIContralType = UIContralType.DDL;
+					//attr.setUIContralType (UIContralType.DDL;
 					break;
 				case "FK_Emp":
 					break;

@@ -5,6 +5,7 @@ import BP.En.*;
 import BP.Sys.XML.*;
 import BP.Sys.*;
 import BP.WF.*;
+import BP.Web.WebUser;
 
 /** 
  事件

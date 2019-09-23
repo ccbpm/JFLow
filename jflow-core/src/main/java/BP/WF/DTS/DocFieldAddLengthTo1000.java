@@ -62,7 +62,7 @@ public class DocFieldAddLengthTo1000 extends Method
 			if (attr.UIHeightInt > 50 && attr.MaxLen < 1000)
 			{
 				strs += " @ 类:" + attr.FK_MapData + " 字段:" + attr.KeyOfEn + " , " + attr.Name + " ";
-				attr.MaxLen = 1000;
+				attr.setMaxLen(1000;
 				attr.Update();
 			}
 		}

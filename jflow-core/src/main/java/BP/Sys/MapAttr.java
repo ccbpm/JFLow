@@ -224,7 +224,7 @@ public class MapAttr extends EntityMyPK
 		attr.setMaxLength(this.getMaxLen());
 		attr.setMinLength(this.getMinLen());
 		attr.setUIBindKey(this.getUIBindKey());
-		attr.UIIsLine = this.getUIIsLine();
+		attr.setUIIsLine(this.getUIIsLine();
 		attr.setUIHeight(0);
 		if (this.getUIHeight() > 30)
 		{
@@ -1237,7 +1237,7 @@ public class MapAttr extends EntityMyPK
 		attr.setMyPK(this.getFK_MapData() + "_Title");
 		if (attr.RetrieveFromDBSources() == 1)
 		{
-		  //  attr.Idx = -1;
+		  //  attr.setIdx(-1;
 			attr.Update("Idx", -1);
 		}
 		return "执行成功";
@@ -1285,7 +1285,7 @@ public class MapAttr extends EntityMyPK
 		attr.setMyPK(this.getFK_MapData() + "_Title");
 		if (attr.RetrieveFromDBSources() == 1)
 		{
-			//  attr.Idx = -1;
+			//  attr.setIdx(-1;
 			attr.Update("Idx", -1);
 		}
 		return "执行成功";

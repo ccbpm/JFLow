@@ -1482,7 +1482,7 @@ public class Map
 		attr.setUIIsReadonly(isUIEnable);
 
 		attr.setUIVisible(isUIVisable);
-		attr.UIIsLine = isLine;
+		attr.setUIIsLine(isLine;
 		this.getAttrs().Add(attr);
 	}
 	/** 
@@ -1566,7 +1566,7 @@ public class Map
 		attr.UITag = cfgVal;
 		attr.setUIVisible(isUIVisable);
 		attr.setUIIsReadonly(isUIEnable);
-		attr.UIIsLine = isLine;
+		attr.setUIIsLine(isLine;
 		this.getAttrs().Add(attr);
 	}
 	/** 
@@ -1878,7 +1878,7 @@ public class Map
 		attr.setMaxLength(maxLength);
 		attr.setMinLength(minLength);
 		attr.setMyFieldType(_FieldType);
-		attr.UIIsLine = isUILine;
+		attr.setUIIsLine(isUILine;
 		this.getAttrs().Add(attr);
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2117,7 +2117,7 @@ public class Map
 		attr.setMinLength(minLength);
 		attr.setMyFieldType(FieldType.Normal);
 		attr.setUIHeight(rows);
-		attr.UIIsLine = isUILine;
+		attr.setUIIsLine(isUILine;
 		this.getAttrs().Add(attr);
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -2681,11 +2681,11 @@ public class Map
 		//attr.Key = "MyPK";
 		//attr.Field = "MyPK";
 		//attr.DefaultVal = null;
-		//attr.MyDataType = DataType.AppString;
+		//attr.setMyDataType (DataType.AppString;
 		//attr.MyFieldType = FieldType.PK;
 		//attr.Desc = "MyPK";
 		//attr.UITBShowType = TBType.TB;
-		//attr.UIVisible = false;
+		//attr.setUIVisible(false;
 		//attr.UIIsReadonly = true;
 		//attr.MinLength = 1;
 		//attr.MaxLength = 100;

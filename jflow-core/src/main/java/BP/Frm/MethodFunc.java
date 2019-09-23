@@ -18,54 +18,57 @@ public class MethodFunc extends EntityMyPK {
 	/// #region 基本属性
 	/**
 	 * 表单ID
+	 * @throws Exception 
 	 */
-	public final String getFrmID() {
+	public final String getFrmID() throws Exception {
 		return this.GetValStringByKey(MethodAttr.FrmID);
 	}
 
-	public final void setFrmID(String value) {
+	public final void setFrmID(String value) throws Exception {
 		this.SetValByKey(MethodAttr.FrmID, value);
 	}
 
 	/**
 	 * 方法ID
+	 * @throws Exception 
 	 */
-	public final String getMethodID() {
+	public final String getMethodID() throws Exception {
 		return this.GetValStringByKey(MethodAttr.MethodID);
 	}
 
-	public final void setMethodID(String value) {
+	public final void setMethodID(String value) throws Exception {
 		this.SetValByKey(MethodAttr.MethodID, value);
 	}
 
 	/**
 	 * 方法名
+	 * @throws Exception 
 	 */
-	public final String getMethodName() {
+	public final String getMethodName() throws Exception {
 		return this.GetValStringByKey(MethodAttr.MethodName);
 	}
 
-	public final void setMethodName(String value) {
+	public final void setMethodName(String value) throws Exception {
 		this.SetValByKey(MethodAttr.MethodName, value);
 	}
 
-	public final String getMsgErr() {
+	public final String getMsgErr() throws Exception {
 		return this.GetValStringByKey(MethodAttr.MsgErr);
 	}
 
-	public final void setMsgErr(String value) {
+	public final void setMsgErr(String value) throws Exception {
 		this.SetValByKey(MethodAttr.MsgErr, value);
 	}
 
-	public final String getMsgSuccess() {
+	public final String getMsgSuccess() throws Exception {
 		return this.GetValStringByKey(MethodAttr.MsgSuccess);
 	}
 
-	public final void setMsgSuccess(String value) {
+	public final void setMsgSuccess(String value) throws Exception {
 		this.SetValByKey(MethodAttr.MsgSuccess, value);
 	}
 
-	public final String getMethodDoc_Url() {
+	public final String getMethodDoc_Url() throws Exception {
 		String s = this.GetValStringByKey(MethodAttr.MethodDoc_Url);
 		if (DataType.IsNullOrEmpty(s) == true) {
 			s = "http://192.168.0.100/MyPath/xxx.xx";
@@ -73,15 +76,15 @@ public class MethodFunc extends EntityMyPK {
 		return s;
 	}
 
-	public final void setMethodDoc_Url(String value) {
+	public final void setMethodDoc_Url(String value) throws Exception {
 		this.SetValByKey(MethodAttr.MethodDoc_Url, value);
 	}
 
 	/**
 	 * 获得或者设置sql脚本.
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public final String getMethodDoc_SQL() throws IOException {
+	public final String getMethodDoc_SQL() throws Exception {
 		String strs = this.GetBigTextFromDB("SQLScript");
 		if (strs == null || strs.equals("") == true) {
 			return this.getMethodDoc_SQL_Demo(); // 返回默认信息.
@@ -95,9 +98,10 @@ public class MethodFunc extends EntityMyPK {
 
 	/**
 	 * 获得该实体的demo.
+	 * @throws Exception 
 	 */
-	public final String getMethodDoc_JavaScript_Demo() {
-		String file = SystemConfig.CCFlowAppPath + "WF\\CCBill\\Admin\\MethodDocDemoJS.txt";
+	public final String getMethodDoc_JavaScript_Demo() throws Exception {
+		String file = SystemConfig.getCCFlowAppPath() + "WF/CCBill/Admin/MethodDocDemoJS.txt";
 		String doc = DataType.ReadTextFile(file); // 读取文件.
 		doc = doc.replace("/#", "+"); // 为什么？
 		doc = doc.replace("/$", "-"); // 为什么？
@@ -107,8 +111,8 @@ public class MethodFunc extends EntityMyPK {
 		return doc;
 	}
 
-	public final String getMethodDoc_SQL_Demo() {
-		String file = SystemConfig.CCFlowAppPath + "WF\\CCBill\\Admin\\MethodDocDemoSQL.txt";
+	public final String getMethodDoc_SQL_Demo() throws Exception {
+		String file = SystemConfig.getCCFlowAppPath() + "WF/CCBill/Admin/MethodDocDemoSQL.txt";
 		String doc = DataType.ReadTextFile(file); // 读取文件.
 		doc = doc.replace("@FrmID", this.getFrmID());
 		return doc;
@@ -118,13 +122,13 @@ public class MethodFunc extends EntityMyPK {
 	 * 获得JS脚本.
 	 * 
 	 * @return
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public final String Gener_MethodDoc_JavaScript() throws IOException {
+	public final String Gener_MethodDoc_JavaScript() throws Exception {
 		return this.getMethodDoc_JavaScript();
 	}
 
-	public final String Gener_MethodDoc_JavaScript_function() throws IOException {
+	public final String Gener_MethodDoc_JavaScript_function() throws Exception {
 		String paras = "";
 		MapAttrs attrs = new MapAttrs(this.getMyPK());
 		for (MapAttr item : attrs.ToJavaList()) {
@@ -144,18 +148,17 @@ public class MethodFunc extends EntityMyPK {
 	 * 获得SQL脚本
 	 * 
 	 * @return
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public final String Gener_MethodDoc_SQL() throws IOException {
+	public final String Gener_MethodDoc_SQL() throws Exception {
 		return this.getMethodDoc_SQL();
 	}
 
 	/**
 	 * 获得或者设置js脚本.
-	 * 
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public final String getMethodDoc_JavaScript() throws IOException {
+	public final String getMethodDoc_JavaScript() throws Exception {
 		String strs = this.GetBigTextFromDB("JSScript");
 		if (strs == null || strs.equals("") == true) {
 			return this.getMethodDoc_JavaScript_Demo();
@@ -174,23 +177,25 @@ public class MethodFunc extends EntityMyPK {
 
 	/**
 	 * 方法类型：@0=SQL@1=URL@2=JavaScript@3=业务单元
+	 * @throws Exception 
 	 */
-	public final int getMethodDocTypeOfFunc() {
+	public final int getMethodDocTypeOfFunc() throws Exception {
 		return this.GetValIntByKey(MethodAttr.MethodDocTypeOfFunc);
 	}
 
-	public final void setMethodDocTypeOfFunc(int value) {
+	public final void setMethodDocTypeOfFunc(int value) throws Exception {
 		this.SetValByKey(MethodAttr.MethodDocTypeOfFunc, value);
 	}
 
 	/**
 	 * 方法类型
+	 * @throws Exception 
 	 */
-	public final RefMethodType getRefMethodType() {
+	public final RefMethodType getRefMethodType() throws Exception {
 		return RefMethodType.forValue(this.GetValIntByKey(MethodAttr.RefMethodType));
 	}
 
-	public final void setRefMethodType(RefMethodType value) {
+	public final void setRefMethodType(RefMethodType value) throws Exception {
 		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}
 	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -225,9 +230,10 @@ public class MethodFunc extends EntityMyPK {
 
 	/**
 	 * 重写基类方法
+	 * @throws Exception 
 	 */
 	@Override
-	public Map getEnMap() {
+	public Map getEnMap() throws Exception {
 		if (this.get_enMap() != null) {
 			return this.get_enMap();
 		}
@@ -295,8 +301,9 @@ public class MethodFunc extends EntityMyPK {
 	 * 方法参数
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoParas() {
+	public final String DoParas() throws Exception {
 		return "../../CCBill/Admin/MethodParas.htm?MyPK=" + this.getMyPK();
 	}
 
@@ -304,8 +311,9 @@ public class MethodFunc extends EntityMyPK {
 	 * 方法内容
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoDocs() {
+	public final String DoDocs() throws Exception {
 		return "../../CCBill/Admin/MethodDoc.htm?MyPK=" + this.getMyPK();
 	}
 }

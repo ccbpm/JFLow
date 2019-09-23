@@ -150,21 +150,21 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 
 		for (MapAttr attr : allAttrs)
 		{
-			attr.UIVisible = true;
+			attr.setUIVisible(true;
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 处理特殊字段.
 			if (attr.KeyOfEn.equals("FK_NY"))
 			{
-				attr.LGType = BP.En.FieldTypeS.FK;
+				attr.setLGType(BP.En.FieldTypeS.FK;
 				attr.UIBindKey = "BP.Pub.NYs";
-				attr.UIContralType = BP.En.UIContralType.DDL;
+				attr.setUIContralType (BP.En.UIContralType.DDL;
 			}
 
 			if (attr.KeyOfEn.equals("FK_Dept"))
 			{
-				attr.LGType = BP.En.FieldTypeS.FK;
+				attr.setLGType(BP.En.FieldTypeS.FK;
 				attr.UIBindKey = "BP.Port.Depts";
-				attr.UIContralType = BP.En.UIContralType.DDL;
+				attr.setUIContralType (BP.En.UIContralType.DDL;
 			}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 处理特殊字段.
@@ -272,7 +272,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 			attr.Retrieve();
 
 			attr.Name = vals[1];
-			attr.Idx = Integer.parseInt(vals[2]);
+			attr.setIdx(Integer.parseInt(vals[2]);
 
 			attr.Update(); //执行更新.
 		}
@@ -280,14 +280,14 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		MapAttr myattr = new MapAttr();
 		myattr.setMyPK( rptNo + "_OID";
 		myattr.RetrieveFromDBSources();
-		myattr.Idx = 200;
+		myattr.setIdx(200;
 		myattr.setName("工作ID";
 		myattr.Update();
 
 		myattr = new MapAttr();
 		myattr.setMyPK( rptNo + "_Title";
 		myattr.RetrieveFromDBSources();
-		myattr.Idx = -100;
+		myattr.setIdx(-100;
 		myattr.setName("标题";
 		myattr.Update();
 

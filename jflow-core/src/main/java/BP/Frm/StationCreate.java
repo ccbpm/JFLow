@@ -28,27 +28,29 @@ public class StationCreate extends EntityMM
 	}
 	/** 
 	单据
+	 * @throws Exception 
 	*/
-	public final int getFrmID()
+	public final int getFrmID() throws Exception
 	{
 		return this.GetValIntByKey(StationCreateAttr.FrmID);
 	}
-	public final void setFrmID(int value)
+	public final void setFrmID(int value) throws Exception
 	{
 		this.SetValByKey(StationCreateAttr.FrmID, value);
 	}
-	public final String getFK_StationT()
+	public final String getFK_StationT() throws Exception
 	{
 		return this.GetValRefTextByKey(StationCreateAttr.FK_Station);
 	}
 	/** 
 	 工作岗位
+	 * @throws Exception 
 	*/
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(StationCreateAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		this.SetValByKey(StationCreateAttr.FK_Station, value);
 	}

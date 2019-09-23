@@ -2,6 +2,7 @@ package BP.WF.UnitTesting;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -13,59 +14,59 @@ public class TestSample extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
-	public final String getFK_API()
+	public final String getFK_API() throws Exception
 	{
 		return this.GetValStrByKey(TestSampleAttr.FK_API);
 	}
-	public final void setFK_API(String value)
+	public final void setFK_API(String value) throws Exception
 	{
 		this.SetValByKey(TestSampleAttr.FK_API,value);
 	}
-	public final String getFK_Ver()
+	public final String getFK_Ver() throws Exception
 	{
 		return this.GetValStrByKey(TestSampleAttr.FK_Ver);
 	}
-	public final void setFK_Ver(String value)
+	public final void setFK_Ver(String value) throws Exception
 	{
 		this.SetValByKey(TestSampleAttr.FK_Ver, value);
 	}
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStrByKey(TestSampleAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(TestSampleAttr.Name, value);
 	}
-	public final String getDTFrom()
+	public final String getDTFrom() throws Exception
 	{
 		return this.GetValStrByKey(TestSampleAttr.DTFrom);
 	}
-	public final void setDTFrom(String value)
+	public final void setDTFrom(String value) throws Exception
 	{
 		this.SetValByKey(TestSampleAttr.DTFrom, value);
 	}
-	public final String getDTTo()
+	public final String getDTTo() throws Exception
 	{
 		return this.GetValStrByKey(TestSampleAttr.DTTo);
 	}
-	public final void setDTTo(String value)
+	public final void setDTTo(String value) throws Exception
 	{
 		this.SetValByKey(TestSampleAttr.DTTo, value);
 	}
-	public final double getTimeUse()
+	public final double getTimeUse() throws Exception
 	{
 		return this.GetValDoubleByKey(TestSampleAttr.TimeUse);
 	}
-	public final void setTimeUse(double value)
+	public final void setTimeUse(double value) throws Exception
 	{
 		this.SetValByKey(TestSampleAttr.TimeUse, value);
 	}
-	public final double getTimesPerSecond()
+	public final double getTimesPerSecond() throws Exception
 	{
 		return this.GetValDoubleByKey(TestSampleAttr.TimesPerSecond);
 	}
-	public final void setTimesPerSecond(double value)
+	public final void setTimesPerSecond(double value) throws Exception
 	{
 		this.SetValByKey(TestSampleAttr.TimesPerSecond, value);
 	}
@@ -84,8 +85,9 @@ public class TestSample extends EntityMyPK
 	 测试明细
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public TestSample(String _No)
+	public TestSample(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -103,7 +105,7 @@ public class TestSample extends EntityMyPK
 			return this.get_enMap();
 		}
 		Map map = new Map("WF_TestSample");
-		map.EnDesc = "测试明细";
+		map.setEnDesc("测试明细");
 		map.Java_SetCodeStruct("2");
 
 		map.Java_SetDepositaryOfEntity(Depositary.None);

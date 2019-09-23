@@ -38,8 +38,9 @@ public class FrmBill extends EntityNoName
 		///#region 属性
 	/** 
 	 物理表
+	 * @throws Exception 
 	*/
-	public final String getPTable()
+	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
 		if (s.equals("") || s == null)
@@ -48,47 +49,51 @@ public class FrmBill extends EntityNoName
 		}
 		return s;
 	}
-	public final void setPTable(String value)
+	public final void setPTable(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 实体类型：@0=单据@1=编号名称实体@2=树结构实体
+	 * @throws Exception 
 	*/
-	public final EntityType getEntityType()
+	public final EntityType getEntityType() throws Exception
 	{
 		return EntityType.forValue(this.GetValIntByKey(FrmBillAttr.EntityType));
 	}
-	public final void setEntityType(EntityType value)
+	public final void setEntityType(EntityType value) throws Exception
 	{
 		this.SetValByKey(FrmBillAttr.EntityType, value.getValue());
 	}
 	/** 
 	 表单类型 (0=傻瓜，2=自由 ...)
+	 * @throws Exception 
 	*/
-	public final FrmType getFrmType()
+	public final FrmType getFrmType() throws Exception
 	{
 		return FrmType.forValue( this.GetValIntByKey(MapDataAttr.FrmType));
 	}
-	public final void setFrmType(FrmType value)
+	public final void setFrmType(FrmType value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单树
+	 * @throws Exception 
 	*/
-	public final String getFK_FormTree()
+	public final String getFK_FormTree() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.FK_FormTree);
 	}
-	public final void setFK_FormTree(String value)
+	public final void setFK_FormTree(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FK_FormTree, value);
 	}
 	/** 
 	 单据格式
+	 * @throws Exception 
 	*/
-	public final String getBillNoFormat()
+	public final String getBillNoFormat() throws Exception
 	{
 		String str = this.GetValStrByKey(FrmBillAttr.BillNoFormat);
 		if (DataType.IsNullOrEmpty(str) == true)
@@ -97,14 +102,15 @@ public class FrmBill extends EntityNoName
 		}
 		return str;
 	}
-	public final void setBillNoFormat(String value)
+	public final void setBillNoFormat(String value) throws Exception
 	{
 		this.SetValByKey(FrmBillAttr.BillNoFormat, value);
 	}
 	/** 
 	 单据编号生成规则
+	 * @throws Exception 
 	*/
-	public final String getTitleRole()
+	public final String getTitleRole() throws Exception
 	{
 		String str = this.GetValStrByKey(FrmBillAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
@@ -113,16 +119,16 @@ public class FrmBill extends EntityNoName
 		}
 		return str;
 	}
-	public final void setTitleRole(String value)
+	public final void setTitleRole(String value) throws Exception
 	{
 		this.SetValByKey(FrmBillAttr.BillNoFormat, value);
 	}
 
-	 public final String getSortColumns()
+	 public final String getSortColumns() throws Exception
 	 {
 		 return this.GetValStrByKey(FrmBillAttr.SortColumns);
 	 }
-	 public final void setSortColumns(String value)
+	 public final void setSortColumns(String value) throws Exception
 	 {
 		 this.SetValByKey(FrmBillAttr.SortColumns, value);
 	 }
@@ -141,8 +147,9 @@ public class FrmBill extends EntityNoName
 	 单据属性
 	 
 	 @param no 映射编号
+	 * @throws Exception 
 	*/
-	public FrmBill(String no)
+	public FrmBill(String no) throws Exception
 	{
 		super(no);
 	}
@@ -417,8 +424,9 @@ public class FrmBill extends EntityNoName
 	 创建权限
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoCreateRole()
+	public final String DoCreateRole() throws Exception
 	{
 		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
@@ -426,8 +434,9 @@ public class FrmBill extends EntityNoName
 	 查询权限
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSearchRole()
+	public final String DoSearchRole() throws Exception
 	{
 		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
@@ -435,8 +444,9 @@ public class FrmBill extends EntityNoName
 	 删除规则.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDeleteRole()
+	public final String DoDeleteRole() throws Exception
 	{
 		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
@@ -450,37 +460,40 @@ public class FrmBill extends EntityNoName
 	 选择显示的列
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoRpt_ColsChose()
+	public final String DoRpt_ColsChose() throws Exception
 	{
-		return "../../CCBill/Admin/ColsChose.htm?FrmID=" + this.No;
+		return "../../CCBill/Admin/ColsChose.htm?FrmID=" + this.getNo();
 	}
 	/** 
 	 列的顺序
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoRpt_ColsIdxAndLabel()
+	public final String DoRpt_ColsIdxAndLabel() throws Exception
 	{
-		return "../../CCBill/Admin/ColsIdxAndLabel.htm?FrmID=" + this.No;
+		return "../../CCBill/Admin/ColsIdxAndLabel.htm?FrmID=" + this.getNo();
 	}
 	/** 
 	 查询条件
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoRpt_SearchCond()
+	public final String DoRpt_SearchCond() throws Exception
 	{
-		return "../../CCBill/Admin/SearchCond.htm?FrmID=" + this.No;
+		return "../../CCBill/Admin/SearchCond.htm?FrmID=" + this.getNo();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 报表定义.
 
-	public final String DoMethod()
+	public final String DoMethod() throws Exception
 	{
 		return "../../CCBill/Admin/Method.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
-	public final String DoPageLoadFull()
+	public final String DoPageLoadFull() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
@@ -488,8 +501,9 @@ public class FrmBill extends EntityNoName
 	 表单事件
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoEvent()
+	public final String DoEvent() throws Exception
 	{
 		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData= " + this.getNo()+ " &T=sd&FK_Node=0";
 	}
@@ -508,31 +522,32 @@ public class FrmBill extends EntityNoName
 	}
 	/** 
 	 检查检查实体类型
+	 * @throws Exception 
 	*/
-	public final void CheckEnityTypeAttrsFor_Bill()
+	public final void CheckEnityTypeAttrsFor_Bill() throws Exception
 	{
 		//取出来全部的属性.
-		MapAttrs attrs = new MapAttrs(this.No);
+		MapAttrs attrs = new MapAttrs(this.getNo());
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 补充上流程字段到 NDxxxRpt.
-		if (attrs.Contains(this.getNo() + "_" + GERptAttr.Title) == false)
+		if (attrs.contains(this.getNo() + "_" + GERptAttr.Title) == false)
 		{
 			/* 标题 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.Title; // "FlowEmps";
-			attr.setName("标题"; //   单据模式， ccform的模式.
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = true;
-			attr.MinLen = 0;
-			attr.MaxLen = 400;
-			attr.Idx = -100;
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn(GERptAttr.Title); // "FlowEmps";
+			attr.setName("标题"); //   单据模式， ccform的模式.
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(false);
+			attr.setUIIsLine(true);
+			attr.setMinLen(0);
+			attr.setMaxLen(400);
+			attr.setIdx (-100);
 			attr.Insert();
 		}
 
@@ -541,15 +556,15 @@ public class FrmBill extends EntityNoName
 			/* WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.KeyOfEn = "OID";
-			attr.setName("主键ID";
-			attr.MyDataType = BP.DA.DataType.AppInt;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.DefVal = "0";
-			attr.HisEditType = BP.En.EditType.Readonly;
+			attr.setKeyOfEn ("OID");
+			attr.setName("主键ID");
+			attr.setMyDataType(BP.DA.DataType.AppInt);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setDefVal("0");
+			attr.setHisEditType(BP.En.EditType.Readonly);
 			attr.Insert();
 		}
 		if (attrs.Contains(this.getNo() + "_" + GERptAttr.BillNo) == false)
@@ -558,18 +573,18 @@ public class FrmBill extends EntityNoName
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
 			attr.setHisEditType( EditType.UnDel);
-			attr.KeyOfEn = GERptAttr.BillNo;
+			attr.setKeyOfEn (GERptAttr.BillNo);
 
 			attr.setName("单据编号"); //  单据编号
 			attr.setMyDataType( DataType.AppString);
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 100;
-			attr.Idx = -100;
+			attr.setUIContralType (UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(false);
+			attr.setUIIsLine(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(100);
+			attr.setIdx(-100);
 			attr.Insert();
 		}
 
@@ -578,95 +593,95 @@ public class FrmBill extends EntityNoName
 			/* 参数 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.AtPara;
-			attr.setName("参数"; // 单据编号
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 4000;
-			attr.Idx = -99;
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn (GERptAttr.AtPara);
+			attr.setName("参数"); // 单据编号
+			attr.setMyDataType (DataType.AppString);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setUIIsLine(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(4000);
+			attr.setIdx(-99);
 			attr.Insert();
 		}
 
-		if (attrs.Contains(this.No + "_BillState") == false)
+		if (attrs.Contains(this.getNo() + "_BillState") == false)
 		{
 			/* 单据状态 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = "BillState"; // "FlowEmps";
-			attr.setName("单据状态";
-			attr.MyDataType = DataType.AppInt;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = true;
-			attr.MinLen = 0;
-			attr.MaxLen = 10;
-			attr.Idx = -98;
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn ("BillState"); // "FlowEmps";
+			attr.setName("单据状态");
+			attr.setMyDataType (DataType.AppInt);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setUIIsLine(true);
+			attr.setMinLen(0);
+			attr.setMaxLen(10);
+			attr.setIdx(-98);
 			attr.Insert();
 		}
 
-		if (attrs.Contains(this.No + "_Starter") == false)
+		if (attrs.Contains(this.getNo() + "_Starter") == false)
 		{
 			/* 发起人 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = "Starter";
-			attr.setName("创建人";
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn ("Starter");
+			attr.setName("创建人");
+			attr.setMyDataType (DataType.AppString);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
 
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 32;
-			attr.Idx = -1;
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(32);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
-		if (attrs.Contains(this.No + "_StarterName") == false)
+		if (attrs.Contains(this.getNo() + "_StarterName") == false)
 		{
 			/* 创建人名称 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = "StarterName";
-			attr.setName("创建人名称";
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn ("StarterName");
+			attr.setName("创建人名称");
+			attr.setMyDataType (DataType.AppString);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
 
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 32;
-			attr.Idx = -1;
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(32);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 
-		if (attrs.Contains(this.No + "_RDT") == false)
+		if (attrs.Contains(this.getNo() + "_RDT") == false)
 		{
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = "RDT"; // "FlowStartRDT";
-			attr.setName("创建时间";
-			attr.MyDataType = DataType.AppDateTime;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.Idx = -97;
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn ("RDT"); // "FlowStartRDT";
+			attr.setName("创建时间");
+			attr.setMyDataType (DataType.AppDateTime);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setUIIsLine(false);
+			attr.setIdx(-97);
 			attr.Insert();
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -677,15 +692,16 @@ public class FrmBill extends EntityNoName
 	 绑定菜单树
 	 
 	 @return 返回执行结果.
+	 * @throws Exception 
 	*/
-	public final String DoBindMenu(String menumDirNo, String menuName)
+	public final String DoBindMenu(String menumDirNo, String menuName) throws Exception
 	{
 		String sql = "SELECT FK_App FROM GPM_Menu WHERE No='" + menumDirNo + "'";
 		String app = DBAccess.RunSQLReturnString(sql);
 
 		String guid = DBAccess.GenerGUID();
 
-		String url = "../WF/CCBill/Search.htm?FrmID=" + this.No;
+		String url = "../WF/CCBill/Search.htm?FrmID=" + this.getNo();
 		sql = "INSERT INTO GPM_Menu (No, Name, ParentNo, Idx, MenuType, FK_App, Url, OpenWay,Icon,MenuCtrlWay) VALUES ('" + guid + "', '" + menuName + "', '" + menumDirNo + "', 1, 4, '" + app + "', '" + url + "',  0,'',1)";
 		DBAccess.RunSQL(sql);
 		return "加入成功,如何<a href='En.htm?EnName=BP.GPM.Menu&No=" + guid + "'>控制权限请转GPM.</a>";
@@ -693,9 +709,9 @@ public class FrmBill extends EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 业务逻辑.
-	public final String CreateBlankWorkID()
+	public final String CreateBlankWorkID() throws Exception
 	{
-		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankBillID(this.No, WebUser.getNo(), null));
+		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankBillID(this.getNo(), WebUser.getNo(), null));
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 业务逻辑.

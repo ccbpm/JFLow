@@ -41,7 +41,7 @@ public class Attr
 		attr.setUIVisible(this.getUIVisible());
 
 			//if (this.IsPK)
-			//    attr.MyDataType =  = FieldType.PK;
+			//    attr.setMyDataType ( = FieldType.PK;
 			//    attr.MyFieldType = FieldType.PK;
 
 		switch (this.getMyFieldType())
@@ -56,7 +56,7 @@ public class Attr
 			case PKFK:
 				attr.setUIContralType(this.getUIContralType());
 				attr.setLGType(FieldTypeS.FK);
-					//attr.MyDataType = (int)FieldType.FK;
+					//attr.setMyDataType ((int)FieldType.FK;
 				attr.setUIRefKey("No");
 				attr.setUIRefKeyText("Name");
 				attr.setUIIsEnable(this.getUIIsReadonly());

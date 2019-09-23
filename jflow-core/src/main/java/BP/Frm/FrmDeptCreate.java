@@ -2,6 +2,7 @@ package BP.Frm;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import java.util.*;
 
@@ -27,23 +28,25 @@ public class FrmDeptCreate extends EntityMM
 	}
 	/** 
 	单据
+	 * @throws Exception 
 	*/
-	public final String getFrmID()
+	public final String getFrmID() throws Exception
 	{
 		return this.GetValStringByKey(FrmDeptCreateAttr.FrmID);
 	}
-	public final void setFrmID(String value)
+	public final void setFrmID(String value) throws Exception
 	{
 		this.SetValByKey(FrmDeptCreateAttr.FrmID, value);
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(FrmDeptCreateAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(FrmDeptCreateAttr.FK_Dept, value);
 	}

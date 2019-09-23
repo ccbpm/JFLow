@@ -3016,7 +3016,7 @@ public abstract class Entity implements Serializable {
 			case PKFK:
 				mattr.setUIContralType(attr.getUIContralType());
 				mattr.setLGType(FieldTypeS.FK);
-				// attr.MyDataType = (int)FieldType.FK;
+				// attr.setMyDataType ((int)FieldType.FK;
 				mattr.setUIRefKey("No");
 				mattr.setUIRefKeyText("Name");
 				mattr.setUIIsEnable(attr.getUIIsReadonly());

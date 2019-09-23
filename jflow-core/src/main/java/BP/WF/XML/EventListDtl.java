@@ -5,6 +5,7 @@ import BP.En.*;
 import BP.Sys.*;
 import BP.Sys.XML.*;
 import BP.WF.*;
+import BP.Web.WebUser;
 
 /** 
  从表事件

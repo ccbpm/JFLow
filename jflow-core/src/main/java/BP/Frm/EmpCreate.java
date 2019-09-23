@@ -2,6 +2,7 @@ package BP.Frm;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import java.util.*;
 
@@ -17,27 +18,29 @@ public class EmpCreate extends EntityMM
 		///#region 基本属性
 	/** 
 	表单ID
+	 * @throws Exception 
 	*/
-	public final int getFrmID()
+	public final int getFrmID() throws Exception
 	{
 		return this.GetValIntByKey(EmpCreateAttr.FrmID);
 	}
-	public final void setFrmID(int value)
+	public final void setFrmID(int value) throws Exception
 	{
 		this.SetValByKey(EmpCreateAttr.FrmID,value);
 	}
 	/** 
 	 到人员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(EmpCreateAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(EmpCreateAttr.FK_Emp,value);
 	}
-	public final String getFK_EmpT()
+	public final String getFK_EmpT() throws Exception
 	{
 		return this.GetValRefTextByKey(EmpCreateAttr.FK_Emp);
 	}

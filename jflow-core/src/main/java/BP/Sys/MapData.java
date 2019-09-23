@@ -2494,16 +2494,16 @@ public class MapData extends EntityNoName
 			//MapAttr attr = new BP.Sys.MapAttr();
 			// attr.setMyPK( this.No + "_SealData";
 			// attr.setFK_MapData(this.getNo());
-			// attr.HisEditType = BP.En.EditType.UnDel;
-			//attr.KeyOfEn = "SealData";
+			// attr.setHisEditType(BP.En.EditType.UnDel;
+			//attr.setKeyOfEn ("SealData";
 			// attr.setName("SealData";
-			// attr.MyDataType = BP.DA.DataType.AppString;
-			// attr.UIContralType = UIContralType.TB;
-			//  attr.LGType = FieldTypeS.Normal;
-			// attr.UIVisible = false;
-			// attr.UIIsEnable = false;
-			// attr.MaxLen = 4000;
-			// attr.MinLen = 0;
+			// attr.setMyDataType (BP.DA.DataType.AppString;
+			// attr.setUIContralType (UIContralType.TB;
+			//  attr.setLGType(FieldTypeS.Normal;
+			// attr.setUIVisible(false;
+			// attr.setUIIsEnable(false;
+			// attr.setMaxLen(4000;
+			// attr.setMinLen(0;
 			// attr.Save();
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

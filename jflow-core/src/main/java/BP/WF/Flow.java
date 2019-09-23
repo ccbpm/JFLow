@@ -2299,10 +2299,10 @@ public class Flow extends BP.En.EntityNoName
 					mattr.setMyPK( nd.getNodeFrmID() + "_FID";
 					if (mattr.RetrieveFromDBSources() == 0)
 					{
-						mattr.KeyOfEn = "FID";
+						mattr.setKeyOfEn ("FID";
 						mattr.FK_MapData = nd.getNodeFrmID();
-						mattr.MyDataType = DataType.AppInt;
-						mattr.UIVisible = false;
+						mattr.setMyDataType (DataType.AppInt;
+						mattr.setUIVisible(false;
 						mattr.setName("FID(自动增加)";
 						mattr.Insert();
 
@@ -2596,11 +2596,11 @@ public class Flow extends BP.En.EntityNoName
 					}
 
 					ndMapAttr.Name = baseMapAttr.Name;
-					ndMapAttr.MyDataType = baseMapAttr.MyDataType;
+					ndMapattr.setMyDataType (baseMapAttr.MyDataType;
 					ndMapAttr.UIWidth = baseMapAttr.UIWidth;
 					ndMapAttr.UIHeight = baseMapAttr.UIHeight;
-					ndMapAttr.MinLen = baseMapAttr.MinLen;
-					ndMapAttr.MaxLen = baseMapAttr.MaxLen;
+					ndMapattr.setMinLen(baseMapAttr.MinLen;
+					ndMapattr.setMaxLen(baseMapAttr.MaxLen;
 					if (ndMapAttr.Update() > 0)
 					{
 						errorAppend.append("@修改了" + "ND" + nd.getNodeID() + " 表，字段" + keyOfEn + "修改为：" + baseMapAttr.MyDataTypeStr);
@@ -2612,11 +2612,11 @@ public class Flow extends BP.En.EntityNoName
 				}
 				//修改NDxxRpt
 				rptMapAttr.Name = baseMapAttr.Name;
-				rptMapAttr.MyDataType = baseMapAttr.MyDataType;
+				rptMapattr.setMyDataType (baseMapAttr.MyDataType;
 				rptMapAttr.UIWidth = baseMapAttr.UIWidth;
 				rptMapAttr.UIHeight = baseMapAttr.UIHeight;
-				rptMapAttr.MinLen = baseMapAttr.MinLen;
-				rptMapAttr.MaxLen = baseMapAttr.MaxLen;
+				rptMapattr.setMinLen(baseMapAttr.MinLen;
+				rptMapattr.setMaxLen(baseMapAttr.MaxLen;
 				if (rptMapAttr.Update() > 0)
 				{
 					errorAppend.append("@修改了" + "ND" + Integer.parseInt(this.No) + "Rpt 表，字段" + keyOfEn + "修改为：" + baseMapAttr.MyDataTypeStr);
@@ -3593,21 +3593,21 @@ public class Flow extends BP.En.EntityNoName
 			switch (attr.KeyOfEn)
 			{
 				case StartWorkAttr.FK_Dept:
-					attr.UIContralType = UIContralType.TB;
-					attr.LGType = FieldTypeS.Normal;
-					attr.UIVisible = true;
+					attr.setUIContralType (UIContralType.TB;
+					attr.setLGType(FieldTypeS.Normal;
+					attr.setUIVisible(true;
 					attr.GroupID = groupID; // gfs[0].GetValIntByKey("OID");
-					attr.UIIsEnable = false;
-					attr.DefVal = "";
-					attr.MaxLen = 100;
+					attr.setUIIsEnable(false;
+					attr.setDefVal("";
+					attr.setMaxLen(100;
 					attr.Update();
 					break;
 				case "FK_NY":
 					//  attr.UIBindKey = "BP.Pub.NYs";
-					attr.UIContralType = UIContralType.TB;
-					attr.LGType = FieldTypeS.Normal;
-					attr.UIVisible = true;
-					attr.UIIsEnable = false;
+					attr.setUIContralType (UIContralType.TB;
+					attr.setLGType(FieldTypeS.Normal;
+					attr.setUIVisible(true;
+					attr.setUIIsEnable(false;
 					attr.GroupID = groupID;
 					attr.Update();
 					break;
@@ -3623,18 +3623,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 标题 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.Title; // "FlowEmps";
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.Title; // "FlowEmps";
 			attr.setName("标题";
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = true;
-			attr.MinLen = 0;
-			attr.MaxLen = 400;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(true;
+			attr.setMinLen(0;
+			attr.setMaxLen(400;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -3643,15 +3643,15 @@ public class Flow extends BP.En.EntityNoName
 			/* WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.KeyOfEn = "OID";
+			attr.setKeyOfEn ("OID";
 			attr.setName("WorkID";
-			attr.MyDataType = BP.DA.DataType.AppInt;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.DefVal = "0";
-			attr.HisEditType = BP.En.EditType.Readonly;
+			attr.setMyDataType (BP.DA.DataType.AppInt;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(false;
+			attr.setUIIsEnable(false;
+			attr.setDefVal("0";
+			attr.setHisEditType(BP.En.EditType.Readonly;
 			attr.Insert();
 		}
 
@@ -3661,15 +3661,15 @@ public class Flow extends BP.En.EntityNoName
 			/* WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.KeyOfEn = "FID";
+			attr.setKeyOfEn ("FID";
 			attr.setName("FID";
-			attr.MyDataType = BP.DA.DataType.AppInt;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.DefVal = "0";
-			attr.HisEditType = BP.En.EditType.Readonly;
+			attr.setMyDataType (BP.DA.DataType.AppInt;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(false;
+			attr.setUIIsEnable(false;
+			attr.setDefVal("0";
+			attr.setHisEditType(BP.En.EditType.Readonly;
 			attr.Insert();
 		}
 
@@ -3678,18 +3678,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 流程状态 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.WFState;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.WFState;
 			attr.setName("流程状态";
-			attr.MyDataType = DataType.AppInt;
+			attr.setMyDataType (DataType.AppInt;
 			attr.UIBindKey = GERptAttr.WFState;
-			attr.UIContralType = UIContralType.DDL;
-			attr.LGType = FieldTypeS.Enum;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 1000;
-			attr.Idx = -1;
+			attr.setUIContralType (UIContralType.DDL;
+			attr.setLGType(FieldTypeS.Enum;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(1000;
+			attr.setIdx(-1;
 			attr.Insert();
 		}
 
@@ -3698,18 +3698,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 流程状态Ext */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.WFSta;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.WFSta;
 			attr.setName("状态";
-			attr.MyDataType = DataType.AppInt;
+			attr.setMyDataType (DataType.AppInt;
 			attr.UIBindKey = GERptAttr.WFSta;
-			attr.UIContralType = UIContralType.DDL;
-			attr.LGType = FieldTypeS.Enum;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 1000;
-			attr.Idx = -1;
+			attr.setUIContralType (UIContralType.DDL;
+			attr.setLGType(FieldTypeS.Enum;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(1000;
+			attr.setIdx(-1;
 			attr.Insert();
 		}
 
@@ -3718,18 +3718,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 参与人 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowEmps; // "FlowEmps";
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowEmps; // "FlowEmps";
 			attr.setName("参与人";
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = true;
-			attr.MinLen = 0;
-			attr.MaxLen = 1000;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(true;
+			attr.setMinLen(0;
+			attr.setMaxLen(1000;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -3738,20 +3738,20 @@ public class Flow extends BP.En.EntityNoName
 			/* 发起人 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowStarter;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowStarter;
 			attr.setName("发起人";
-			attr.MyDataType = DataType.AppString;
+			attr.setMyDataType (DataType.AppString;
 
 			//attr.UIBindKey = "BP.Port.Emps";
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
 
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 32;
-			attr.Idx = -1;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(32;
+			attr.setIdx(-1;
 			attr.Insert();
 		}
 
@@ -3760,16 +3760,16 @@ public class Flow extends BP.En.EntityNoName
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowStartRDT; // "FlowStartRDT";
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowStartRDT; // "FlowStartRDT";
 			attr.setName("发起时间";
-			attr.MyDataType = DataType.AppDateTime;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.Idx = -101;
+			attr.setMyDataType (DataType.AppDateTime;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setIdx(-101;
 			attr.Insert();
 		}
 
@@ -3778,18 +3778,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 发起人 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowEnder;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowEnder;
 			attr.setName("结束人";
-			attr.MyDataType = DataType.AppString;
+			attr.setMyDataType (DataType.AppString;
 			// attr.UIBindKey = "BP.Port.Emps";
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 32;
-			attr.Idx = -1;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(32;
+			attr.setIdx(-1;
 			attr.Insert();
 		}
 
@@ -3798,16 +3798,16 @@ public class Flow extends BP.En.EntityNoName
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowEnderRDT; // "FlowStartRDT";
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowEnderRDT; // "FlowStartRDT";
 			attr.setName("结束时间";
-			attr.MyDataType = DataType.AppDateTime;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.Idx = -101;
+			attr.setMyDataType (DataType.AppDateTime;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setIdx(-101;
 			attr.Insert();
 		}
 
@@ -3816,18 +3816,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 结束节点 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowEndNode;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowEndNode;
 			attr.setName("结束节点";
-			attr.MyDataType = DataType.AppInt;
-			attr.DefVal = "0";
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.HisEditType = EditType.UnDel;
-			attr.Idx = -101;
+			attr.setMyDataType (DataType.AppInt;
+			attr.setDefVal("0";
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setIdx(-101;
 			attr.Insert();
 		}
 
@@ -3836,17 +3836,17 @@ public class Flow extends BP.En.EntityNoName
 			/* FlowDaySpan */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowDaySpan; // "FlowStartRDT";
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowDaySpan; // "FlowStartRDT";
 			attr.setName("跨度(天)";
-			attr.MyDataType = DataType.AppFloat;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = true;
-			attr.UIIsLine = false;
-			attr.Idx = -101;
-			attr.DefVal = "0";
+			attr.setMyDataType (DataType.AppFloat;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(true;
+			attr.setUIIsLine(false;
+			attr.setIdx(-101;
+			attr.setDefVal("0";
 			attr.Insert();
 		}
 
@@ -3855,18 +3855,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.PFlowNo;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.PFlowNo;
 			attr.setName("父流程编号"; //  父流程流程编号
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = true;
-			attr.MinLen = 0;
-			attr.MaxLen = 3;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(true;
+			attr.setMinLen(0;
+			attr.setMaxLen(3;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -3875,18 +3875,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 父流程WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.PNodeID;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.PNodeID;
 			attr.setName("父流程启动的节点";
-			attr.MyDataType = DataType.AppInt;
-			attr.DefVal = "0";
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.HisEditType = EditType.UnDel;
-			attr.Idx = -101;
+			attr.setMyDataType (DataType.AppInt;
+			attr.setDefVal("0";
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setIdx(-101;
 			attr.Insert();
 		}
 
@@ -3895,18 +3895,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 父流程WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.PWorkID;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.PWorkID;
 			attr.setName("父流程WorkID";
-			attr.MyDataType = DataType.AppInt;
-			attr.DefVal = "0";
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.HisEditType = EditType.UnDel;
-			attr.Idx = -101;
+			attr.setMyDataType (DataType.AppInt;
+			attr.setDefVal("0";
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setIdx(-101;
 			attr.Insert();
 		}
 
@@ -3915,18 +3915,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 调起子流程的人员 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.PEmp;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.PEmp;
 			attr.setName("调起子流程的人员";
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = true;
-			attr.MinLen = 0;
-			attr.MaxLen = 32;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(true;
+			attr.setMinLen(0;
+			attr.setMaxLen(32;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -3935,18 +3935,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.BillNo;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.BillNo;
 			attr.setName("单据编号"; //  单据编号
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 100;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(100;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -3956,18 +3956,18 @@ public class Flow extends BP.En.EntityNoName
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = "MyNum";
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn ("MyNum";
 			attr.setName("条";
-			attr.MyDataType = DataType.AppInt;
-			attr.DefVal = "1";
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.HisEditType = EditType.UnDel;
-			attr.Idx = -101;
+			attr.setMyDataType (DataType.AppInt;
+			attr.setDefVal("1";
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setIdx(-101;
 			attr.Insert();
 		}
 
@@ -3976,18 +3976,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.AtPara;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.AtPara;
 			attr.setName("参数"; // 单据编号
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 4000;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(false;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(4000;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -3996,18 +3996,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.GUID;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.GUID;
 			attr.setName("GUID"; // 单据编号
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = false;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 32;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(false;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(32;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -4016,18 +4016,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 项目编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.PrjNo;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.PrjNo;
 			attr.setName("项目编号"; //  项目编号
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 100;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(100;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 		if (attrs.Contains(md.No + "_" + GERptAttr.PrjName) == false)
@@ -4035,18 +4035,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 项目名称 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.PrjName;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.PrjName;
 			attr.setName("项目名称"; //  项目名称
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = false;
-			attr.MinLen = 0;
-			attr.MaxLen = 100;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(false;
+			attr.setMinLen(0;
+			attr.setMaxLen(100;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 
@@ -4055,18 +4055,18 @@ public class Flow extends BP.En.EntityNoName
 			/* 流程信息 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.FK_MapData = md.No;
-			attr.HisEditType = EditType.UnDel;
-			attr.KeyOfEn = GERptAttr.FlowNote;
+			attr.setHisEditType(EditType.UnDel;
+			attr.setKeyOfEn (GERptAttr.FlowNote;
 			attr.setName("流程信息"; //  父流程流程编号
-			attr.MyDataType = DataType.AppString;
-			attr.UIContralType = UIContralType.TB;
-			attr.LGType = FieldTypeS.Normal;
-			attr.UIVisible = true;
-			attr.UIIsEnable = false;
-			attr.UIIsLine = true;
-			attr.MinLen = 0;
-			attr.MaxLen = 500;
-			attr.Idx = -100;
+			attr.setMyDataType (DataType.AppString;
+			attr.setUIContralType (UIContralType.TB;
+			attr.setLGType(FieldTypeS.Normal;
+			attr.setUIVisible(true;
+			attr.setUIIsEnable(false;
+			attr.setUIIsLine(true;
+			attr.setMinLen(0;
+			attr.setMaxLen(500;
+			attr.setIdx(-100;
 			attr.Insert();
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

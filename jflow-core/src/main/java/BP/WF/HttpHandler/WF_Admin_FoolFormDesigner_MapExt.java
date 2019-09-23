@@ -419,7 +419,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 				}
 
 				String[] ss = s.split("[:]", -1);
-				attr.DefVal = ss[1]; //使用这个字段作为对应设置的sql.
+				attr.setDefVal(ss[1]; //使用这个字段作为对应设置的sql.
 			}
 		}
 
@@ -1240,7 +1240,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 				}
 
 				String[] ss = s.split("[:]", -1);
-				attr.DefVal = ss[1]; //使用这个字段作为对应设置的sql.
+				attr.setDefVal(ss[1]; //使用这个字段作为对应设置的sql.
 			}
 		}
 

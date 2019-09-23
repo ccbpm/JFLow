@@ -1385,13 +1385,13 @@ public class MapDtlExt extends EntityNoName
 			if (count == 0)
 			{
 				attr.setFK_MapData(this.getNo());
-				attr.KeyOfEn = "AthNum";
+				attr.setKeyOfEn ("AthNum";
 				attr.setName("附件数量";
-				attr.DefVal = "0";
-				attr.UIContralType = UIContralType.TB;
-				attr.MyDataType = DataType.AppInt;
-				attr.UIVisible = false;
-				attr.UIIsEnable = false;
+				attr.setDefVal("0";
+				attr.setUIContralType (UIContralType.TB;
+				attr.setMyDataType (DataType.AppInt;
+				attr.setUIVisible(false;
+				attr.setUIIsEnable(false;
 				attr.DirectInsert();
 			}
 
@@ -1442,13 +1442,13 @@ public class MapDtlExt extends EntityNoName
 			if (count == 0)
 			{
 				attr.setFK_MapData(this.getNo());
-				attr.KeyOfEn = "AthNum";
+				attr.setKeyOfEn ("AthNum";
 				attr.setName("附件数量";
-				attr.DefVal = "0";
-				attr.UIContralType = UIContralType.TB;
-				attr.MyDataType = DataType.AppInt;
-				attr.UIVisible = false;
-				attr.UIIsEnable = false;
+				attr.setDefVal("0";
+				attr.setUIContralType (UIContralType.TB;
+				attr.setMyDataType (DataType.AppInt;
+				attr.setUIVisible(false;
+				attr.setUIIsEnable(false;
 				attr.DirectInsert();
 
 			}

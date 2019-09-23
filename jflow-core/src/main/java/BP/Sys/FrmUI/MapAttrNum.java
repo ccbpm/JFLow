@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -154,33 +155,33 @@ public class MapAttrNum extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "自动计算";
 		rm.ClassMethodName = this.toString() + ".DoAutoFull()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "对从表列自动计算";
 		rm.ClassMethodName = this.toString() + ".DoAutoFullDtlField()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
 		rm.Title = "正则表达式";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpression()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
 		rm.Title = "脚本验证";
 		rm.ClassMethodName = this.toString() + ".DoInputCheck()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 执行的方法.
@@ -200,7 +201,7 @@ public class MapAttrNum extends EntityMyPK
 		this.SetValByKey(MapAttrAttr.DefVal, value);
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//如果没默认值.
 		if (this.getDefVal().equals(""))
@@ -224,7 +225,7 @@ public class MapAttrNum extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
@@ -239,9 +240,10 @@ public class MapAttrNum extends EntityMyPK
 
 	/** 
 	 删除后清缓存
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//删除相对应的rpt表中的字段
 		if (this.getFK_MapData().contains("ND") == true)
@@ -276,7 +278,7 @@ public class MapAttrNum extends EntityMyPK
 		///#region 方法执行.
 	public final String DoAutoFullDtlField()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDtlField.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn());
+		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDtlField.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
 	 自动计算
@@ -285,7 +287,7 @@ public class MapAttrNum extends EntityMyPK
 	*/
 	public final String DoAutoFull()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn());
+		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
 	 设置开窗返回值
@@ -294,7 +296,7 @@ public class MapAttrNum extends EntityMyPK
 	*/
 	public final String DoPopVal()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 
 	/** 
@@ -304,7 +306,7 @@ public class MapAttrNum extends EntityMyPK
 	*/
 	public final String DoRegularExpression()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionNum.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionNum.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 	/** 
 	 文本框自动完成
@@ -313,7 +315,7 @@ public class MapAttrNum extends EntityMyPK
 	*/
 	public final String DoTBFullCtrl()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 	/** 
 	 设置级联
@@ -322,7 +324,7 @@ public class MapAttrNum extends EntityMyPK
 	*/
 	public final String DoInputCheck()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData=" + this.getFK_MapData() + "&OperAttrKey=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK()) + "&DoType=New&ExtType=InputCheck";
+		return "../../Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData=" + this.getFK_MapData() + "&OperAttrKey=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK() + "&DoType=New&ExtType=InputCheck";
 	}
 	/** 
 	 扩展控件
@@ -331,7 +333,7 @@ public class MapAttrNum extends EntityMyPK
 	*/
 	public final String DoEditFExtContral()
 	{
-		return "../../Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 方法执行.

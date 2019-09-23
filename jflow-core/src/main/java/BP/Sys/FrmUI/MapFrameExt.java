@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -59,8 +60,9 @@ public class MapFrameExt extends EntityMyPK
 	 框架
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public MapFrameExt(String mypk)
+	public MapFrameExt(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -114,7 +116,7 @@ public class MapFrameExt extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "预制";
 		rm.ClassMethodName = this.toString() + ".DoFrameExt()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 执行的方法.
@@ -141,7 +143,7 @@ public class MapFrameExt extends EntityMyPK
 
 
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//删除分组信息.
 		GroupField gf = new GroupField();
@@ -153,7 +155,7 @@ public class MapFrameExt extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		int val = this.GetValIntByKey(MapFrameAttr.UrlSrcType, 0);
 		if (val == 1)
@@ -181,7 +183,7 @@ public class MapFrameExt extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		MapFrame mapframe = new MapFrame();
 		mapframe.setMyPK(this.getMyPK());

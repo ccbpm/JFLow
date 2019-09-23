@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -145,32 +146,32 @@ public class MapAttrEnum extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "设置联动";
 		rm.ClassMethodName = this.toString() + ".DoActiveDDL()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "填充其他控件";
 		rm.ClassMethodName = this.toString() + ".DoDDLFullCtrl2019()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "编辑枚举值";
 		rm.ClassMethodName = this.toString() + ".DoSysEnum()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "高级JS设置";
 		rm.ClassMethodName = this.toString() + ".DoRadioBtns()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
@@ -182,7 +183,7 @@ public class MapAttrEnum extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());
@@ -201,7 +202,7 @@ public class MapAttrEnum extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
@@ -217,7 +218,7 @@ public class MapAttrEnum extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//删除可能存在的数据.
 		BP.DA.DBAccess.RunSQL("DELETE FROM Sys_FrmRB WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'");
@@ -261,7 +262,7 @@ public class MapAttrEnum extends EntityMyPK
 
 	public final String DoDDLFullCtrl2019()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 	/** 
 	 设置自动填充
@@ -270,7 +271,7 @@ public class MapAttrEnum extends EntityMyPK
 	*/
 	public final String DoAutoFull()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDLL.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDLL.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 	/** 
 	 高级设置
@@ -279,7 +280,7 @@ public class MapAttrEnum extends EntityMyPK
 	*/
 	public final String DoRadioBtns()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RadioBtns.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/RadioBtns.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 	/** 
 	 设置级联
@@ -288,7 +289,7 @@ public class MapAttrEnum extends EntityMyPK
 	*/
 	public final String DoActiveDDL()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -70,7 +71,7 @@ public class SFTable extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "查看数据";
 		rm.ClassMethodName = this.toString() + ".DoEdit";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);
 
@@ -84,9 +85,10 @@ public class SFTable extends EntityNoName
 	 更新的操作
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		BP.Sys.SFTable sf = new BP.Sys.SFTable(this.getNo());
 		sf.Copy(this);
@@ -96,7 +98,7 @@ public class SFTable extends EntityNoName
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		BP.Sys.SFTable sftable = new BP.Sys.SFTable();
 		sftable.setNo(this.getNo());
@@ -120,16 +122,17 @@ public class SFTable extends EntityNoName
 	 执行删除.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
-		BP.Sys.SFTable sf = new Sys.SFTable(this.getNo());
+		BP.Sys.SFTable sf = new BP.Sys.SFTable(this.getNo());
 		sf.Delete();
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		//利用这个时间串进行排序.
 		this.SetValByKey("RDT", DataType.getCurrentDataTime());

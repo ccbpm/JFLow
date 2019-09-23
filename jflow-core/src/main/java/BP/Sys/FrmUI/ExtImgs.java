@@ -11,8 +11,6 @@ import java.util.*;
 */
 public class ExtImgs extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造
 	/** 
 	 装饰图片s
 	*/
@@ -23,8 +21,9 @@ public class ExtImgs extends EntitiesMyPK
 	 装饰图片s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public ExtImgs(String fk_mapdata)
+	public ExtImgs(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{
@@ -43,11 +42,7 @@ public class ExtImgs extends EntitiesMyPK
 	{
 		return new FrmImg();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	// 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -71,6 +66,4 @@ public class ExtImgs extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -2,7 +2,10 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -10,8 +13,7 @@ import java.util.*;
 */
 public class ExtHandWriting extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
+	// 属性
 	/** 
 	 目标
 	*/
@@ -67,13 +69,9 @@ public class ExtHandWriting extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
+	// 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.Readonly();
@@ -95,8 +93,9 @@ public class ExtHandWriting extends EntityMyPK
 	 手写签名版
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public ExtHandWriting(String mypk)
+	public ExtHandWriting(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -116,8 +115,7 @@ public class ExtHandWriting extends EntityMyPK
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 通用的属性.
+		// 通用的属性.
 		map.AddMyPK();
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
 		map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段", true, true, 1, 100, 20);
@@ -129,24 +127,16 @@ public class ExtHandWriting extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.UIWidth, 1, "宽度", true, false);
 
 		map.AddTBString(MapAttrAttr.Name, null, "名称", true, false, 0, 500, 20, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 通用的属性.
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 个性化属性.
-		   // map.AddTBString(MapAttrAttr.Tag1, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
-		   // map.AddTBString(MapAttrAttr.Tag2, null, "URL", true, false, 0, 500, 20, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 个性化属性.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 	/** 
 	 删除后清缓存
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//删除相对应的rpt表中的字段
 		if (this.getFK_MapData().contains("ND") == true)
@@ -159,6 +149,5 @@ public class ExtHandWriting extends EntityMyPK
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterDelete();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+
 }

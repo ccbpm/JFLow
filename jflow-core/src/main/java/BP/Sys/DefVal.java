@@ -155,7 +155,7 @@ public class DefVal extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		//设置主键.
 		this.setMyPK(BP.DA.DBAccess.GenerGUID());

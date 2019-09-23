@@ -1,8 +1,11 @@
 package BP.Sys;
 
 import BP.En.*;
+import BP.Tools.StringHelper;
 import BP.DA.*;
-import LitJson.*;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import java.util.*;
 import java.io.*;
 import java.nio.file.*;
@@ -36,8 +39,9 @@ public class CCFormAPI
 	 @param name 名称
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y)
+	public static void CreatePublicNoNameCtrl(String fk_mapdata, String ctrlType, String no, String name, float x, float y) throws Exception
 	{
 		FrmEle fe = null;
 		switch (ctrlType)
@@ -121,8 +125,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y)
+	public static void CreateOrSaveAthImg(String fk_mapdata, String no, String name, float x, float y) throws Exception
 	{
 		FrmImgAth ath = new FrmImgAth();
 		ath.setFK_MapData(fk_mapdata);
@@ -141,8 +146,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y)
+	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y) throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
@@ -164,8 +170,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x
 	 @param y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y)
+	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y) throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
@@ -200,8 +207,9 @@ public class CCFormAPI
 	 @param dtlName 名称
 	 @param x
 	 @param y
+	 * @throws Exception 
 	*/
-	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y)
+	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y) throws Exception
 	{
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(dtlNo);
@@ -240,16 +248,17 @@ public class CCFormAPI
 	 @param x 位置
 	 @param y 位置
 	 @param colSpan 跨的列数
+	 * @throws Exception 
 	*/
 
-	public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y)
+	public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y) throws Exception
 	{
 		SaveFieldSFTable(fk_mapdata, fieldName, fieldDesc, fk_SFTable, x, y, 1);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static void SaveFieldSFTable(string fk_mapdata, string fieldName, string fieldDesc, string fk_SFTable, float x, float y, int colSpan = 1)
-	public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y, int colSpan)
+	public static void SaveFieldSFTable(String fk_mapdata, String fieldName, String fieldDesc, String fk_SFTable, float x, float y, int colSpan) throws Exception
 	{
 		//检查是否可以创建字段? 
 		MapData md = new MapData();
@@ -331,16 +340,17 @@ public class CCFormAPI
 	 @param x 位置x
 	 @param y 位置y
 	 @param colSpan 横跨的行数
+	 * @throws Exception 
 	*/
 
-	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y)
+	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y) throws Exception
 	{
 		SaveFieldEnum(fk_mapdata, fieldName, fieldDesc, enumKey, ctrlType, x, y, 1);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static void SaveFieldEnum(string fk_mapdata, string fieldName, string fieldDesc, string enumKey, UIContralType ctrlType, float x, float y, int colSpan = 1)
-	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan)
+	public static void SaveFieldEnum(String fk_mapdata, String fieldName, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan) throws Exception
 	{
 		MapAttr ma = new MapAttr();
 		ma.setFK_MapData(fk_mapdata);
@@ -366,7 +376,7 @@ public class CCFormAPI
 		{
 			SysEnums ses = new SysEnums(ma.getUIBindKey());
 			int idx = 0;
-			for (SysEnum item : ses)
+			for (SysEnum item : ses.ToJavaList())
 			{
 				idx++;
 				FrmRB rb = new FrmRB();
@@ -393,7 +403,7 @@ public class CCFormAPI
 		ma.Save();
 	}
 
-	public static void NewImage(String frmID, String keyOfEn, String name, float x, float y)
+	public static void NewImage(String frmID, String keyOfEn, String name, float x, float y) throws Exception
 	{
 		//BP.Sys.CCFormParse.SaveImage(frmID, control, properties, imgPKs, ctrlID);
 		//imgPKs = imgPKs.Replace(ctrlID + "@", "@");
@@ -412,14 +422,14 @@ public class CCFormAPI
 	}
 
 
-	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y)
+	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y) throws Exception
 	{
 		NewField(frmID, field, fieldDesc, mydataType, x, y, 1);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static void NewField(string frmID, string field, string fieldDesc, int mydataType, float x, float y, int colSpan = 1)
-	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y, int colSpan)
+	public static void NewField(String frmID, String field, String fieldDesc, int mydataType, float x, float y, int colSpan) throws Exception
 	{
 		//检查是否可以创建字段? 
 		MapData md = new MapData(frmID);
@@ -441,14 +451,14 @@ public class CCFormAPI
 		ma.Insert();
 	}
 
-	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y)
+	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y) throws Exception
 	{
 		NewEnumField(fk_mapdata, field, fieldDesc, enumKey, ctrlType, x, y, 1);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static void NewEnumField(string fk_mapdata, string field, string fieldDesc, string enumKey, UIContralType ctrlType, float x, float y, int colSpan = 1)
-	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan)
+	public static void NewEnumField(String fk_mapdata, String field, String fieldDesc, String enumKey, UIContralType ctrlType, float x, float y, int colSpan) throws Exception
 	{
 		//检查是否可以创建字段? 
 		MapData md = new MapData(fk_mapdata);
@@ -483,7 +493,7 @@ public class CCFormAPI
 
 		SysEnums ses = new SysEnums(ma.getUIBindKey());
 		int idx = 0;
-		for (SysEnum item : ses)
+		for (SysEnum item : ses.ToJavaList())
 		{
 			idx++;
 			FrmRB rb = new FrmRB();
@@ -507,8 +517,9 @@ public class CCFormAPI
 	 @param gKey
 	 @param gName
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String NewCheckGroup(String frmID, String gKey, String gName)
+	public static String NewCheckGroup(String frmID, String gKey, String gName) throws Exception
 	{
 		//string gKey = v1;
 		//string gName = v2;
@@ -610,8 +621,9 @@ public class CCFormAPI
 	 @param frmID 表单ID
 	 @param groupName 分组名称
 	 @param prx 前缀
+	 * @throws Exception 
 	*/
-	public static void CreateCheckGroup(String frmID, String groupName, String prx)
+	public static void CreateCheckGroup(String frmID, String groupName, String prx) throws Exception
 	{
 		GroupField gf = new GroupField();
 		gf.setLab(groupName);
@@ -680,16 +692,17 @@ public class CCFormAPI
 	 @param frmName 表单名称
 	 @param frmTreeID 表单类别编号（表单树ID）
 	 @param frmType 表单类型
+	 * @throws Exception 
 	*/
 
-	public static void CreateFrm(String frmID, String frmName, String frmTreeID)
+	public static void CreateFrm(String frmID, String frmName, String frmTreeID) throws Exception
 	{
 		CreateFrm(frmID, frmName, frmTreeID, FrmType.FreeFrm);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static void CreateFrm(string frmID, string frmName, string frmTreeID, FrmType frmType = FrmType.FreeFrm)
-	public static void CreateFrm(String frmID, String frmName, String frmTreeID, FrmType frmType)
+	public static void CreateFrm(String frmID, String frmName, String frmTreeID, FrmType frmType) throws Exception
 	{
 		MapData md = new MapData();
 		md.setNo(frmID);
@@ -706,8 +719,9 @@ public class CCFormAPI
 	 修复表单.
 	 
 	 @param frmID
+	 * @throws Exception 
 	*/
-	public static void RepareCCForm(String frmID)
+	public static void RepareCCForm(String frmID) throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, frmID) == false)
@@ -728,42 +742,42 @@ public class CCFormAPI
 	}
 	/** 
 	 执行保存
-	 
 	 @param fk_mapdata
 	 @param jsonStrOfH5Frm
+	 * @throws Exception 
 	*/
-	public static void SaveFrm(String fk_mapdata, String jsonStrOfH5Frm)
+	public static void SaveFrm(String fk_mapdata, String jsonStrOfH5Frm) throws Exception
 	{
-		// BP.DA.DataType.WriteFile("D:\\AAAAAA.JSON", jsonStrOfH5Frm);
-		//return;
-		JsonData jd = JsonMapper.ToObject(jsonStrOfH5Frm);
-		if (jd.getIsObject() == false)
+		JSONObject  jd = JSONObject.fromObject(jsonStrOfH5Frm);
+		if (jd.isNullObject())
 		{
-			throw new RuntimeException("err@表单格式不正确，保存失败。");
+			throw new RuntimeException("error:表单格式不正确，保存失败。");
 		}
 
-		JsonData form_MapData = jd.get("c");
+		JSONObject form_MapData = jd.getJSONObject("c");
 
 		//直接保存表单图信息.
 		MapData mapData = new MapData(fk_mapdata);
-		mapData.setFrmW(Float.parseFloat(form_MapData.get("width").ToJson()));
-		mapData.setFrmH(Float.parseFloat(form_MapData.get("height").ToJson()));
-		//   mapData.DesignerTool = "Html5";
+		mapData.setFrmW(Float.parseFloat(form_MapData.optString("width")));
+		mapData.setFrmH(Float.parseFloat(form_MapData.optString("height")));
+		mapData.setDesignerTool("Html5");
 		mapData.Update();
 
 		//执行保存.
 		SaveFrm(fk_mapdata, jd);
-
-		//一直没有找到设置3列，自动回到四列的情况.
-		DBAccess.RunSQL("UPDATE Sys_MapAttr SET ColSpan=3 WHERE  UIHeight<=23 AND ColSpan=4");
+		
+		//清空缓存.
+		BP.DA.CashEntity.getDCash().clear();
 	}
+	
 	/** 
 	 将表单设计串格式化为Json.
 	 
 	 @param formData
 	 @return 
+	 * @throws Exception 
 	*/
-	private static void SaveFrm(String fk_mapdata, LitJson.JsonData formData)
+	private static void SaveFrm(String fk_mapdata, JSONObject formData) throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 求 PKs.
@@ -880,12 +894,13 @@ public class CCFormAPI
 
 
 		// 保存线.
-		JsonData form_Lines = formData.get("m")["connectors"];
+		JSONArray form_Lines = formData.getJSONObject("m").getJSONArray("connectors");
 		BP.Sys.CCFormParse.SaveLine(fk_mapdata, form_Lines);
 
 		//其他控件，Label,Img,TextBox
-		JsonData form_Controls = formData.get("s")["figures"];
-		if (form_Controls.getIsArray() == false || form_Controls.size() == 0)
+		JSONArray form_Controls = formData.getJSONObject("s").getJSONArray("figures");
+		
+		if (form_Controls.isArray() == false || form_Controls.size() == 0)
 		{
 			/*画布里没有任何东西, 清楚所有的元素.*/
 			String delSqls = "";
@@ -922,7 +937,7 @@ public class CCFormAPI
 		//循环元素.
 		for (int idx = 0, jControl = form_Controls.size(); idx < jControl; idx++)
 		{
-			JsonData control = form_Controls.get(idx); //不存在控件类型不进行处理，继续循环.
+			JSONObject control = (JSONObject) form_Controls.getJSONObject(idx); //不存在控件类型不进行处理，继续循环.
 			if (control == null || control.get("CCForm_Shape") == null)
 			{
 				continue;
@@ -930,10 +945,11 @@ public class CCFormAPI
 
 			String shape = control.get("CCForm_Shape").toString();
 
-			if (control.getKeys().contains("CCForm_MyPK") == false)
+			if (control.optString("CCForm_MyPK") == null)
 			{
 				continue;
 			}
+			
 
 			if (control.get("CCForm_MyPK") == null)
 			{
@@ -941,8 +957,7 @@ public class CCFormAPI
 			}
 
 			String ctrlID = control.get("CCForm_MyPK").toString();
-
-			JsonData properties = control.get("properties"); //属性集合.
+			JSONArray properties = control.getJSONArray("properties"); //属性集合.
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 装饰类控件.
@@ -988,12 +1003,12 @@ public class CCFormAPI
 			}
 
 			//求出公共的属性-坐标.
-			JsonData style = control.get("style");
-			JsonData vector = style.get("gradientBounds");
-			float x = Float.parseFloat(vector.get(0).ToJson());
-			float y = Float.parseFloat(vector.get(1).ToJson());
-			float maxX = Float.parseFloat(vector.get(2).ToJson());
-			float maxY = Float.parseFloat(vector.get(3).ToJson());
+			JSONObject style = control.getJSONObject("style");
+			JSONArray vector = style.getJSONArray("gradientBounds");
+			float x = Float.parseFloat(String.valueOf(vector.get(0)));
+			float y = Float.parseFloat(String.valueOf(vector.get(1)));
+			float maxX = Float.parseFloat(String.valueOf(vector.get(2)));
+			float maxY = Float.parseFloat(String.valueOf(vector.get(3)));
 			float width = maxX - x;
 			float height = maxY - y;
 
@@ -1336,8 +1351,9 @@ public class CCFormAPI
 	 @param srcFrmID 源表单ID
 	 @param copyFrmID copy到表单ID
 	 @param copyFrmName 表单名称
+	 * @throws Exception 
 	*/
-	public static String CopyFrm(String srcFrmID, String copyFrmID, String copyFrmName, String fk_frmTree)
+	public static String CopyFrm(String srcFrmID, String copyFrmID, String copyFrmName, String fk_frmTree) throws Exception
 	{
 		MapData mymd = new MapData();
 		mymd.setNo(copyFrmID);
@@ -1418,14 +1434,14 @@ public class CCFormAPI
 	 @return 
 	*/
 
-	public static System.Data.DataSet GenerHisDataSet(String frmID)
+	public static DataSet GenerHisDataSet(String frmID)
 	{
 		return GenerHisDataSet(frmID, null);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static System.Data.DataSet GenerHisDataSet(string frmID, string frmName = null)
-	public static System.Data.DataSet GenerHisDataSet(String frmID, String frmName)
+	public static DataSet GenerHisDataSet(String frmID, String frmName)
 	{
 		DataSet dsFrm = BP.DA.CashFrmTemplate.GetFrmDataSetModel(frmID);
 		if (dsFrm != null)
@@ -1516,7 +1532,7 @@ public class CCFormAPI
 
 		return ds;
 	}
-	public static System.Data.DataSet GenerHisDataSet_AllEleInfo(String fk_mapdata)
+	public static DataSet GenerHisDataSet_AllEleInfo(String fk_mapdata) throws Exception
 	{
 
 		MapData md = new MapData(fk_mapdata);
@@ -1524,7 +1540,7 @@ public class CCFormAPI
 		//求出 frmIDs 
 		String frmIDs = "'" + fk_mapdata + "'";
 		MapDtls mdtls = new MapDtls(md.getNo());
-		for (MapDtl item : mdtls)
+		for (MapDtl item : mdtls.ToJavaList())
 		{
 			frmIDs += ",'" + item.getNo() + "'";
 		}
@@ -1618,14 +1634,14 @@ public class CCFormAPI
 	 @return DataSet
 	*/
 
-	public static System.Data.DataSet GenerHisDataSet_AllEleInfo2017(String fk_mapdata)
+	public static DataSet GenerHisDataSet_AllEleInfo2017(String fk_mapdata)
 	{
 		return GenerHisDataSet_AllEleInfo2017(fk_mapdata, false);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static System.Data.DataSet GenerHisDataSet_AllEleInfo2017(string fk_mapdata, bool isCheckFrmType = false)
-	public static System.Data.DataSet GenerHisDataSet_AllEleInfo2017(String fk_mapdata, boolean isCheckFrmType)
+	public static DataSet GenerHisDataSet_AllEleInfo2017(String fk_mapdata, boolean isCheckFrmType)
 	{
 		MapData md = new MapData(fk_mapdata);
 
@@ -1792,16 +1808,17 @@ public class CCFormAPI
 	 @param cfg 配置 @0=xxx@1=yyyy@n=xxxxxc
 	 @param lang 语言
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew)
+	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew) throws Exception
 	{
 		return SaveEnum(enumKey, enumLab, cfg, isNew, "CH");
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public static string SaveEnum(string enumKey, string enumLab, string cfg, bool isNew, string lang = "CH")
-	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew, String lang)
+	public static String SaveEnum(String enumKey, String enumLab, String cfg, boolean isNew, String lang) throws Exception
 	{
 		SysEnumMain sem = new SysEnumMain();
 		sem.setNo(enumKey);
@@ -1845,7 +1862,7 @@ public class CCFormAPI
 			{
 				kvsValues[i] = kvs[i + 1];
 			}
-			se.setLab(tangible.StringHelper.join("=", kvsValues));
+			se.setLab(StringHelper.join("=", kvsValues));
 			se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getIntKey());
 			se.Save();
 		}
@@ -1978,7 +1995,7 @@ public class CCFormAPI
 		{
 			ChMulToneXmls mulChs = new ChMulToneXmls();
 			mulChs.RetrieveAll();
-			for (ChMulToneXml en : mulChs)
+			for (ChMulToneXml en : mulChs.ToJavaList())
 			{
 				if (en.getNo().equals(charT))
 				{
@@ -1999,8 +2016,9 @@ public class CCFormAPI
 	 @param pageNumber 第几页
 	 @param pageSize 每页大小
 	 @return json
+	 * @throws Exception 
 	*/
-	public static String DB_SFTableList(int pageNumber, int pageSize)
+	public static String DB_SFTableList(int pageNumber, int pageSize) throws Exception
 	{
 		//获得查询.
 		SFTables sftables = new SFTables();
@@ -2019,8 +2037,9 @@ public class CCFormAPI
 	 
 	 @param fk_mapdata
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String DB_Hiddenfielddata(String fk_mapdata)
+	public static String DB_Hiddenfielddata(String fk_mapdata) throws Exception
 	{
 		MapAttrs mapAttrs = new MapAttrs();
 		QueryObject obj = new QueryObject(mapAttrs);

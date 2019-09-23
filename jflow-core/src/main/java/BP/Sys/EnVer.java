@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import java.util.*;
 
@@ -142,7 +143,7 @@ public class EnVer extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.SetValByKey("MyPK", this.getNo() + "_" + this.getPKValue());
 		return super.beforeInsert();

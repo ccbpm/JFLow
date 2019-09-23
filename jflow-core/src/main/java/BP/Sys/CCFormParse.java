@@ -1,7 +1,12 @@
 package BP.Sys;
 
 import BP.DA.*;
-import LitJson.*;
+import BP.En.FieldTypeS;
+import BP.En.UIContralType;
+import BP.Tools.Json;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import java.math.*;
 
 /** 
@@ -19,8 +24,9 @@ public class CCFormParse
 	 @param y 位置
 	 @param h 高度
 	 @param w 宽度
+	 * @throws Exception 
 	*/
-	public static void SaveFrmEle(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w)
+	public static void SaveFrmEle(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		FrmEle en = new FrmEle();
 
@@ -54,8 +60,9 @@ public class CCFormParse
 	 @param y 位置
 	 @param h 高度
 	 @param w 宽度
+	 * @throws Exception 
 	*/
-	public static void SaveMapFrame(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w)
+	public static void SaveMapFrame(String fk_mapdata, String eleType, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		MapFrame en = new MapFrame();
 		en.setMyPK(ctrlID);
@@ -86,8 +93,9 @@ public class CCFormParse
 	 @param ctrlID 控件ID
 	 @param x 位置x
 	 @param y 位置y
+	 * @throws Exception 
 	*/
-	public static String SaveFrmRadioButton(String fk_mapdata, String ctrlID, float x, float y)
+	public static String SaveFrmRadioButton(String fk_mapdata, String ctrlID, float x, float y) throws Exception
 	{
 		FrmRB en = new FrmRB();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
@@ -112,8 +120,9 @@ public class CCFormParse
 	 @param y 位置y
 	 @param h 高度h
 	 @param w 宽度w
+	 * @throws Exception 
 	*/
-	public static void SaveAthImg(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	public static void SaveAthImg(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		FrmImgAth en = new FrmImgAth();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
@@ -136,8 +145,9 @@ public class CCFormParse
 	 @param y 位置y
 	 @param h 高度
 	 @param w 宽度
+	 * @throws Exception 
 	*/
-	public static void SaveAthMulti(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	public static void SaveAthMulti(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		FrmAttachment en = new FrmAttachment();
 		en.setMyPK(fk_mapdata + "_" + ctrlID);
@@ -151,7 +161,7 @@ public class CCFormParse
 		en.setH(h);
 		en.Update();
 	}
-	public static void SaveDtl(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	public static void SaveDtl(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(ctrlID);
@@ -164,7 +174,7 @@ public class CCFormParse
 		dtl.setH(h);
 		dtl.Update();
 	}
-	public static void SaveiFrame(String fk_mapdata, String ctrlID, float x, float y, float h, float w)
+	public static void SaveiFrame(String fk_mapdata, String ctrlID, float x, float y, float h, float w) throws Exception
 	{
 		FrmEle en = new FrmEle();
 		en.setFK_MapData(fk_mapdata);
@@ -181,7 +191,7 @@ public class CCFormParse
 		en.setH(h);
 		en.Update();
 	}
-	public static void SaveMapAttr(String fk_mapdata, String fieldID, String shape, JsonData control, JsonData properties, String pks)
+	public static void SaveMapAttr(String fk_mapdata, String fieldID, String shape, JSONObject control, JSONArray properties, String pks) throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		attr.setFK_MapData(fk_mapdata);
@@ -202,50 +212,50 @@ public class CCFormParse
 		{
 			case "TextBoxStr": //文本类型.
 			case "TextBoxSFTable":
-				attr.setLGType(En.FieldTypeS.Normal);
-				attr.setUIContralType(En.UIContralType.TB);
+				attr.setLGType(FieldTypeS.Normal);
+				attr.setUIContralType(UIContralType.TB);
 				break;
 			case "TextBoxInt": //数值
-				attr.setLGType(En.FieldTypeS.Normal);
+				attr.setLGType(FieldTypeS.Normal);
 				attr.setMyDataType(DataType.AppInt);
-				attr.setUIContralType(En.UIContralType.TB);
+				attr.setUIContralType(UIContralType.TB);
 				break;
 			case "TextBoxBoolean":
 				attr.setMyDataType(DataType.AppBoolean);
-				attr.setUIContralType(En.UIContralType.CheckBok);
-				attr.setLGType(En.FieldTypeS.Normal);
+				attr.setUIContralType(UIContralType.CheckBok);
+				attr.setLGType(FieldTypeS.Normal);
 				break;
 			case "TextBoxFloat":
-				attr.setLGType(En.FieldTypeS.Normal);
-				attr.setUIContralType(En.UIContralType.TB);
+				attr.setLGType(FieldTypeS.Normal);
+				attr.setUIContralType(UIContralType.TB);
 				break;
 			case "TextBoxMoney":
 				attr.setMyDataType(DataType.AppMoney);
-				attr.setLGType(En.FieldTypeS.Normal);
-				attr.setUIContralType(En.UIContralType.TB);
+				attr.setLGType(FieldTypeS.Normal);
+				attr.setUIContralType(UIContralType.TB);
 				break;
 			case "TextBoxDate":
 				attr.setMyDataType(DataType.AppDate);
-				attr.setLGType(En.FieldTypeS.Normal);
-				attr.setUIContralType(En.UIContralType.TB);
+				attr.setLGType(FieldTypeS.Normal);
+				attr.setUIContralType(UIContralType.TB);
 				break;
 			case "TextBoxDateTime":
 				attr.setMyDataType(DataType.AppDateTime);
-				attr.setLGType(En.FieldTypeS.Normal);
-				attr.setUIContralType(En.UIContralType.TB);
+				attr.setLGType(FieldTypeS.Normal);
+				attr.setUIContralType(UIContralType.TB);
 				break;
 			case "DropDownListEnum": //枚举类型.
 				attr.setMyDataType(BP.DA.DataType.AppInt);
-				attr.setLGType(En.FieldTypeS.Enum);
-				attr.setUIContralType(En.UIContralType.DDL);
+				attr.setLGType(FieldTypeS.Enum);
+				attr.setUIContralType(UIContralType.DDL);
 				break;
 			case "DropDownListTable": //外键类型.
 				attr.setMyDataType(BP.DA.DataType.AppString);
 				if (pks.contains("@" + attr.getKeyOfEn() + "@") == false)
 				{
-					attr.setLGType(En.FieldTypeS.FK);
+					attr.setLGType(FieldTypeS.FK);
 				}
-				attr.setUIContralType(En.UIContralType.DDL);
+				attr.setUIContralType(UIContralType.DDL);
 				attr.setMaxLen(100);
 				attr.setMinLen(0);
 				break;
@@ -254,15 +264,15 @@ public class CCFormParse
 		}
 
 		//坐标
-		JsonData style = control.get("style");
-		JsonData vector = style.get("gradientBounds");
-		attr.setX(Float.parseFloat(vector.get(0).ToJson()));
-		attr.setY(Float.parseFloat(vector.get(1).ToJson()));
+		JSONObject style = control.getJSONObject("style");
+		JSONArray vector = style.getJSONArray("gradientBounds");
+		attr.setX(Float.parseFloat(vector.get(0).toString()));
+		attr.setY(Float.parseFloat(vector.get(1).toString()));
 
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JsonData property = properties.get(iProperty); //获得一个属性.
-			if (property == null || !property.getKeys().contains("property") || property.get("property") == null || property.get("property").toString().equals("group"))
+			JSONObject property = (JSONObject) properties.getJSONObject(iProperty); //获得一个属性.
+			if (property == null || !property.containsKey("property") || property.get("property") == null || property.get("property").toString().equals("group"))
 			{
 				continue;
 			}
@@ -316,15 +326,14 @@ public class CCFormParse
 
 
 		//Textbox 高、宽.
-		BigDecimal minX = BigDecimal.Parse(vector.get(0).ToJson());
-		BigDecimal minY = BigDecimal.Parse(vector.get(1).ToJson());
-		BigDecimal maxX = BigDecimal.Parse(vector.get(2).ToJson());
-		BigDecimal maxY = BigDecimal.Parse(vector.get(3).ToJson());
-		BigDecimal imgWidth = maxX.subtract(minX);
-		BigDecimal imgHeight = maxY.subtract(minY);
-
-		attr.setUIWidth(Float.parseFloat(imgWidth.toString("0.00")));
-		attr.setUIHeight(Float.parseFloat(imgHeight.toString("0.00")));
+		BigDecimal minX = new BigDecimal(vector.get(0).toString());
+		BigDecimal minY = new BigDecimal(vector.get(1).toString());
+		BigDecimal maxX = new BigDecimal(vector.get(2).toString());
+		BigDecimal maxY = new BigDecimal(vector.get(3).toString());
+		BigDecimal imgWidth = new BigDecimal(maxX.intValue() - minX.intValue());
+		BigDecimal imgHeight =new BigDecimal(maxY.intValue() - minY.intValue());
+		attr.setUIWidth(Float.parseFloat(String.format("%.2f",imgWidth)));
+		attr.setUIHeight(Float.parseFloat(String.format("%.2f",imgHeight)));
 
 	  //  attr.ColSpan
 
@@ -345,24 +354,25 @@ public class CCFormParse
 	 
 	 @param fk_mapdata
 	 @param form_Lines
+	 * @throws Exception 
 	*/
-	public static void SaveLine(String fk_mapdata, JsonData form_Lines)
+	public static void SaveLine(String fk_mapdata, JSONArray form_Lines) throws Exception
 	{
 		//标签.
 		String linePKs = "@";
 		FrmLines lines = new FrmLines();
 		lines.Retrieve(FrmLabAttr.FK_MapData, fk_mapdata);
-		for (FrmLine item : lines)
+		for (FrmLine item : lines.ToJavaList())
 		{
 			linePKs += item.getMyPK() + "@";
 		}
 
-		if (form_Lines.getIsArray() == true && form_Lines.size() > 0)
+		if (form_Lines.isArray() == true && form_Lines.size() > 0)
 		{
 			for (int idx = 0, jLine = form_Lines.size(); idx < jLine; idx++)
 			{
-				JsonData line = form_Lines.get(idx);
-				if (line.getIsObject() == false)
+				JSONObject line = (JSONObject) form_Lines.getJSONObject(idx);
+				if (line.isNullObject())
 				{
 					continue;
 				}
@@ -372,15 +382,15 @@ public class CCFormParse
 				lineEn.setMyPK(line.get("CCForm_MyPK").toString());
 				lineEn.setFK_MapData(fk_mapdata);
 
-				JsonData turningPoints = line.get("turningPoints");
-				lineEn.setX1(Float.parseFloat(turningPoints.get(0)["x"].toString()));
-				lineEn.setX2(Float.parseFloat(turningPoints.get(1)["x"].toString()));
-				lineEn.setY1(Float.parseFloat(turningPoints.get(0)["y"].toString()));
-				lineEn.setY2(Float.parseFloat(turningPoints.get(1)["y"].toString()));
+				JSONArray turningPoints = line.getJSONArray("turningPoints");
+				lineEn.setX1(Float.parseFloat(turningPoints.getJSONObject(0).getString("x")));
+				lineEn.setX2(Float.parseFloat(turningPoints.getJSONObject(1).getString("x")));
+				lineEn.setY1(Float.parseFloat(turningPoints.getJSONObject(0).getString("y")));
+				lineEn.setY2(Float.parseFloat(turningPoints.getJSONObject(1).getString("y")));
 
-				JsonData properties = line.get("properties");
-				JsonData borderWidth = properties.GetObjectFromArrary_ByKeyValue("type", "LineWidth");
-				JsonData borderColor = properties.GetObjectFromArrary_ByKeyValue("type", "Color");
+				JSONArray properties = line.getJSONArray("properties");
+				JSONObject borderWidth = Json.GetObjectFromArrary_ByKeyValue(properties,"type", "LineWidth");
+				JSONObject borderColor = Json.GetObjectFromArrary_ByKeyValue(properties,"type", "Color");
 				String strborderWidth = "2";
 				if (borderWidth != null && borderWidth.get("PropertyValue") != null && !DataType.IsNullOrEmpty(borderWidth.get("PropertyValue").toString()))
 				{
@@ -421,7 +431,7 @@ public class CCFormParse
 			BP.DA.DBAccess.RunSQLs(sqls);
 		}
 	}
-	public static void SaveLabel(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
+	public static void SaveLabel(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		// New lab 对象.
 		FrmLab lab = new FrmLab();
@@ -429,16 +439,16 @@ public class CCFormParse
 		lab.setFK_MapData(fk_mapdata);
 
 		//坐标.
-		JsonData style = control.get("style");
-		JsonData vector = style.get("gradientBounds");
-		lab.setX(Float.parseFloat(vector.get(0).ToJson()));
-		lab.setY(Float.parseFloat(vector.get(1).ToJson()));
+		JSONObject style = control.getJSONObject("style");
+		JSONArray vector = style.getJSONArray("gradientBounds");
+		lab.setX(Float.parseFloat(vector.get(0).toString()));
+		lab.setY(Float.parseFloat(vector.get(1).toString()));
 
 		StringBuilder fontStyle = new StringBuilder();
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JsonData property = properties.get(iProperty);
-			if (property == null || !property.getKeys().contains("type") || property.get("type") == null)
+			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
+			if (property == null || !property.containsKey("type") || property.optString("type") == null)
 			{
 				continue;
 			}
@@ -464,7 +474,7 @@ public class CCFormParse
 					lab.setFontName(val == null ? "Portable User Interface" : val.toString());
 					if (val != null)
 					{
-						fontStyle.append(String.format("font-family:%1$s;", property.get("PropertyValue").ToJson()));
+						fontStyle.append(String.format("font-family:%1$s;", property.optString("PropertyValue")));
 					}
 					break;
 				case "TextFontSize":
@@ -491,7 +501,7 @@ public class CCFormParse
 		if (lab.getText() == null || lab.getText().equals(""))
 		{
 			/*如果没有取到标签， 从这里获取，系统有一个. */
-			JsonData primitives = control.get("primitives")[0];
+			JSONObject primitives = (JSONObject) control.getJSONArray("primitives").get(0);
 			lab.setText(primitives.get("str").toString().trim());
 			lab.setFontName(primitives.get("font").toString().trim());
 			lab.setFontSize(Integer.parseInt(primitives.get("size").toString().trim()));
@@ -507,17 +517,17 @@ public class CCFormParse
 			lab.DirectInsert();
 		}
 	}
-	public static void SaveButton(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
+	public static void SaveButton(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		FrmBtn btn = new FrmBtn(ctrlID);
 		btn.setMyPK(ctrlID);
 		btn.setFK_MapData(fk_mapdata);
 
 		//坐标
-		JsonData style = control.get("style");
-		JsonData vector = style.get("gradientBounds");
-		btn.setX(Float.parseFloat(vector.get(0).ToJson()));
-		btn.setY(Float.parseFloat(vector.get(1).ToJson()));
+		JSONObject style = control.getJSONObject("style");
+		JSONArray vector = style.getJSONArray("gradientBounds");
+		btn.setX(Float.parseFloat(vector.get(0).toString()));
+		btn.setY(Float.parseFloat(vector.get(1).toString()));
 		btn.setIsEnable(true);
 		/*for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
@@ -555,28 +565,29 @@ public class CCFormParse
 		}
 	}
 
-	public static void SaveHyperLink(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
+	public static void SaveHyperLink(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		FrmLink link = new FrmLink(ctrlID);
 		link.setMyPK(ctrlID);
 		link.setFK_MapData(fk_mapdata);
 		//坐标
-		JsonData vector = control.get("style")["gradientBounds"];
-		link.setX(Float.parseFloat(vector.get(0).ToJson()));
-		link.setY(Float.parseFloat(vector.get(1).ToJson()));
+		JSONArray vector = control.getJSONObject("style").getJSONArray("gradientBounds");
+		link.setX(Float.parseFloat(vector.get(0).toString()));
+		link.setY(Float.parseFloat(vector.get(1).toString()));
+
 
 		//属性集合
 		StringBuilder fontStyle = new StringBuilder();
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JsonData property = properties.get(iProperty);
-			if (property == null || !property.getKeys().contains("property") || property.get("property") == null)
+			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
+			if (property == null || !property.containsKey("property") || property.optString("property") == null)
 			{
 				continue;
 			}
 
 			String propertyLink = property.get("property").toString();
-			LitJson.JsonData valLink = property.get("PropertyValue");
+			String valLink = property.optString("PropertyValue");
 
 			switch (propertyLink)
 			{
@@ -592,7 +603,7 @@ public class CCFormParse
 					link.setFontName(valLink == null ? "Portable User Interface" : valLink.toString());
 					if (valLink != null)
 					{
-						fontStyle.append(String.format("font-family:%1$s;", valLink.ToJson()));
+						fontStyle.append(String.format("font-family:%1$s;", Json.ToJson(valLink)));
 					}
 					continue;
 				case "FontSize":
@@ -630,7 +641,7 @@ public class CCFormParse
 		if (link.getText() == null || link.getText().equals(""))
 		{
 			/*如果没有取到标签， 从这里获取，系统有一个. */
-			JsonData primitives = control.get("primitives")[0];
+			JSONObject primitives = (JSONObject) control.getJSONArray("primitives").get(0);
 			link.setText(primitives.get("str").toString().trim());
 			link.setFontName(primitives.get("font").toString().trim());
 			link.setFontSize(Integer.parseInt(primitives.get("size").toString().trim()));
@@ -646,34 +657,35 @@ public class CCFormParse
 			link.DirectInsert();
 		}
 	}
-	public static void SaveImage(String fk_mapdata, JsonData control, JsonData properties, String pks, String ctrlID)
+	public static void SaveImage(String fk_mapdata, JSONObject control, JSONArray properties, String pks, String ctrlID) throws Exception
 	{
 		FrmImg img = new FrmImg();
 		img.setMyPK(ctrlID);
+		int count = img.RetrieveFromDBSources();
 		img.setFK_MapData(fk_mapdata);
 		img.setIsEdit(1);
 		img.setHisImgAppType(ImgAppType.Img);
 
 		//坐标
-		JsonData vector = control.get("style")["gradientBounds"];
-		img.setX(Float.parseFloat(vector.get(0).ToJson()));
-		img.setY(Float.parseFloat(vector.get(1).ToJson()));
+		JSONArray vector = control.getJSONObject("style").getJSONArray("gradientBounds");
+		img.setX(Float.parseFloat(vector.get(0).toString()));
+		img.setY(Float.parseFloat(vector.get(1).toString()));
 		//图片高、宽
-		BigDecimal minX = BigDecimal.Parse(vector.get(0).ToJson());
-		BigDecimal minY = BigDecimal.Parse(vector.get(1).ToJson());
-		BigDecimal maxX = BigDecimal.Parse(vector.get(2).ToJson());
-		BigDecimal maxY = BigDecimal.Parse(vector.get(3).ToJson());
-		BigDecimal imgWidth = maxX.subtract(minX);
-		BigDecimal imgHeight = maxY.subtract(minY);
-
-		img.setW(Float.parseFloat(imgWidth.toString("0.00")));
-		img.setH(Float.parseFloat(imgHeight.toString("0.00")));
+		java.math.BigDecimal minX = new java.math.BigDecimal(vector.get(0).toString());
+		java.math.BigDecimal minY = new java.math.BigDecimal(vector.get(1).toString());
+		java.math.BigDecimal maxX = new java.math.BigDecimal(vector.get(2).toString());
+		java.math.BigDecimal maxY = new java.math.BigDecimal(vector.get(3).toString());
+		
+		java.math.BigDecimal imgWidth = new java.math.BigDecimal(maxX.intValue() - minX.intValue());
+		java.math.BigDecimal imgHeight =new java.math.BigDecimal(maxY.intValue() - minY.intValue());
+		img.setW(Float.parseFloat(String.format("%.2f",imgWidth)));
+		img.setH(Float.parseFloat(String.format("%.2f",imgHeight)));
 
 		StringBuilder fontStyle = new StringBuilder();
 		for (int iProperty = 0; iProperty < properties.size(); iProperty++)
 		{
-			JsonData property = properties.get(iProperty);
-			if (property == null || !property.getKeys().contains("property") || property.get("property") == null)
+			JSONObject property = (JSONObject) properties.getJSONObject(iProperty);
+			if (property == null || !property.containsKey("property") || property.get("property") == null)
 			{
 				continue;
 			}
@@ -699,18 +711,19 @@ public class CCFormParse
 				img.setImgURL(property.get("PropertyValue") == null ? "" : property.get("PropertyValue").toString());
 			}
 		}
-
 		//ImageFrame 本地图片路径
-		JsonData primitives = control.get("primitives");
-		for (JsonData primitive : primitives)
+		JSONArray primitives = control.getJSONArray("primitives");
+		JSONObject primitive = null;
+		for (int i=0; i<primitives.size(); i++)
 		{
-			if (primitive.get("oType") == null)
+			primitive = primitives.getJSONObject(i);
+			if(null == primitive.optString("oType"))
 			{
 				continue;
 			}
-			if (primitive.get("oType").ToJson().equals("ImageFrame"))
+			if (primitive.optString("oType").equals("ImageFrame")  && count ==0)
 			{
-				img.setImgPath(primitive == null ? "" : primitive.get("url").toString());
+				img.setImgPath(primitive == null ? "" : primitive.optString("url"));
 			}
 		}
 

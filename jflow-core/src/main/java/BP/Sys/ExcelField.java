@@ -1,6 +1,8 @@
 package BP.Sys;
 
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -309,9 +311,10 @@ public class ExcelField extends EntityNoName
 		///#region 重写事件
 	/** 
 	 记录添加前事件
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		//检测单元格是否已经使用过
 		if (this.IsExit(ExcelFieldAttr.CellName, this.getCellName(), ExcelFieldAttr.FK_ExcelSheet, this.getFK_ExcelSheet(), ExcelFieldAttr.FK_ExcelTable, this.getFK_ExcelTable()))
@@ -319,7 +322,7 @@ public class ExcelField extends EntityNoName
 			throw new RuntimeException("单元格 " + this.getCellName() + " 已经使用，不能重复使用！");
 		}
 
-		this.setNo(String.format("%d", UUID.NewGuid()));
+		this.setNo(UUID.randomUUID().toString());
 		return super.beforeInsert();
 	}
 

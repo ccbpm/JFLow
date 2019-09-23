@@ -113,9 +113,10 @@ public class ExcelTable extends EntityNoName
 		///#region 重写事件
 	/** 
 	 记录添加前事件
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		return super.beforeInsert();
 	}

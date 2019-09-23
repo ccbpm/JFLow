@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -137,33 +138,33 @@ public class MapAttrSFTable extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "设置联动";
 		rm.ClassMethodName = this.toString() + ".DoActiveDDL()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "设置显示过滤";
 		rm.ClassMethodName = this.toString() + ".DoAutoFullDLL()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
 		rm.Title = "填充其他控件";
 		rm.ClassMethodName = this.toString() + ".DoDDLFullCtrl2019()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "外键表属性";
 		rm.ClassMethodName = this.toString() + ".DoSFTable()";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.GroupName = "高级";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -176,7 +177,7 @@ public class MapAttrSFTable extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
@@ -191,9 +192,10 @@ public class MapAttrSFTable extends EntityMyPK
 
 	/** 
 	 删除后清缓存
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
@@ -228,7 +230,7 @@ public class MapAttrSFTable extends EntityMyPK
 
 	public final String DoDDLFullCtrl2019()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 
 	/** 

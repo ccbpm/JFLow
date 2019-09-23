@@ -2,7 +2,10 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -10,7 +13,6 @@ import java.util.*;
 */
 public class ExtLink extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	/** 
 	 目标
@@ -57,13 +59,9 @@ public class ExtLink extends EntityMyPK
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.Readonly();
@@ -86,8 +84,9 @@ public class ExtLink extends EntityMyPK
 	 超连接
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public ExtLink(String mypk)
+	public ExtLink(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -109,30 +108,24 @@ public class ExtLink extends EntityMyPK
 		map.IndexField = MapAttrAttr.FK_MapData;
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 通用的属性.
+		///#region 通用的属性.
 		map.AddMyPK();
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
 		map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段", true, true, 1, 100, 20);
 		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 通用的属性.
+		///#endregion 通用的属性.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 个性化属性.
+		///#region 个性化属性.
 		map.AddTBString(MapAttrAttr.Name, "New Link", "标签", true, false, 0, 500, 20, true);
 		map.AddTBString(MapAttrAttr.Tag1, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
 		map.AddTBString(MapAttrAttr.Tag2, null, "URL", true, false, 0, 500, 20, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 个性化属性.
+		///#endregion 个性化属性.
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 }

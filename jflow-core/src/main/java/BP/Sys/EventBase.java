@@ -141,7 +141,7 @@ public abstract class EventBase
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 获取参数方法
-	public final LocalDateTime GetValDateTime(String key)
+	public final java.util.Date GetValDateTime(String key)
 	{
 		String str = this.getSysPara().GetValByKey(key).toString();
 		return DataType.ParseSysDateTime2DateTime(str);

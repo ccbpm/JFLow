@@ -27,7 +27,7 @@ public class ExcelSheets extends EntitiesNoName
 	{
 	}
 
-	public ExcelSheets(String fk_excelfile)
+	public ExcelSheets(String fk_excelfile) throws Exception
 	{
 		this.Retrieve(ExcelSheetAttr.FK_ExcelFile, fk_excelfile);
 	}

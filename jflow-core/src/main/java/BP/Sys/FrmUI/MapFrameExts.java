@@ -23,8 +23,9 @@ public class MapFrameExts extends EntitiesMyPK
 	 框架s
 	 
 	 @param frmID 表单ID
+	 * @throws Exception 
 	*/
-	public MapFrameExts(String frmID)
+	public MapFrameExts(String frmID) throws Exception
 	{
 		this.Retrieve(MapFrameAttr.FK_MapData, frmID);
 	}

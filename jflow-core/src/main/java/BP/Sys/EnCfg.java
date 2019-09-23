@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.*;
 import BP.Web.*;
 
@@ -74,6 +75,7 @@ public class EnCfg extends EntityNo
 		String str = this.GetValStringByKey(EnCfgAttr.FJWebPath);
 		if (str.equals("") || str == null)
 		{
+			
 			str = Path.combine(HttpContextHelper.getRequestApplicationPath(), "DataUser/", this.getNo());
 		}
 		str = str.replace("\\", "/");
@@ -130,8 +132,9 @@ public class EnCfg extends EntityNo
 	 系统实体
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public EnCfg(String enName)
+	public EnCfg(String enName) throws Exception
 	{
 		this.setNo(enName);
 		try

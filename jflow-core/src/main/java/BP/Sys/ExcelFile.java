@@ -1,6 +1,9 @@
 package BP.Sys;
 
+import BP.DA.DataType;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -55,7 +58,7 @@ public class ExcelFile extends EntityNoName
 	{
 	}
 
-	public ExcelFile(String no)
+	public ExcelFile(String no) throws Exception
 	{
 		this.Retrieve(ExcelFileAttr.No, no);
 	}
@@ -103,7 +106,7 @@ public class ExcelFile extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "模板配置";
 		rm.ClassMethodName = this + ".ExcelConfig";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -121,16 +124,17 @@ public class ExcelFile extends EntityNoName
 		///#region 重写事件
 	/** 
 	 记录添加前事件
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setNo(String.format("%d", UUID.NewGuid()));
+		this.setNo(UUID.randomUUID().toString());
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getMark()))
 		{

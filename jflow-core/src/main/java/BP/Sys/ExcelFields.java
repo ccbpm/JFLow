@@ -27,7 +27,7 @@ public class ExcelFields extends EntitiesNoName
 	{
 	}
 
-	public ExcelFields(String fk_excelfile)
+	public ExcelFields(String fk_excelfile) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(ExcelFieldAttr.FK_ExcelFile, fk_excelfile);

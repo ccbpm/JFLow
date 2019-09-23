@@ -2714,5 +2714,9 @@ public class MapData extends EntityNoName
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与Excel相关的操作 .
+	public final void setDesignerTool(String value)
+	{
+		this.SetValByKey(MapDataAttr.DesignerTool, value);
+	}
 
 }

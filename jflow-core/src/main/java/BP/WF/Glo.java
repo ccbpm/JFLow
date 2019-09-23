@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.Sys.*;
+import BP.Tools.FtpUtil;
 import BP.DA.*;
 import BP.En.*;
 import BP.Web.*;
@@ -6954,4 +6955,22 @@ public class Glo
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 其他方法。
+
+	/**
+	 * 获得ftp连接对象
+	 * 
+	 * @throws Exception
+	 */
+	public static FtpUtil getFtpUtil() throws Exception {
+		// 获取
+		String ip = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPServerIP());
+
+		String userNo = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserNo());
+		String pass = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserPassword());
+
+		FtpUtil ftp = new FtpUtil(ip, 21, userNo, pass);
+		return ftp;
+
+		// return Platform.JFlow;
+	}
 }

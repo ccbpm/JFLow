@@ -276,7 +276,7 @@ public class MapAttrDT extends EntityMyPK
 	*/
 	public final String DoAutoFull()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn());
+		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
 	 正则表达式
@@ -285,7 +285,7 @@ public class MapAttrDT extends EntityMyPK
 	*/
 	public final String DoRegularExpression()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + HttpUtility.UrlEncode(this.getKeyOfEn()) + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 方法执行.

@@ -16,12 +16,12 @@ public class EnVerDtls extends EntitiesMyPK
 	{
 	}
 
-	public EnVerDtls(String enVerPK)
+	public EnVerDtls(String enVerPK) throws Exception
 	{
 		this.Retrieve(EnVerDtlAttr.EnVerPK, enVerPK);
 	}
 
-	public EnVerDtls(String enVerPK, int ver)
+	public EnVerDtls(String enVerPK, int ver) throws Exception
 	{
 		this.Retrieve(EnVerDtlAttr.EnVerPK, enVerPK, EnVerDtlAttr.EnVer, ver);
 	}

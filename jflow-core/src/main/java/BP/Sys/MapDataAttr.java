@@ -58,7 +58,7 @@ public class MapDataAttr extends EntityNoNameAttr
 	/** 
 	 设计器
 	*/
-	public static final String DesignerTool11 = "DesignerTool";
+	public static final String DesignerTool = "DesignerTool";
 	/** 
 	 表单类别
 	*/

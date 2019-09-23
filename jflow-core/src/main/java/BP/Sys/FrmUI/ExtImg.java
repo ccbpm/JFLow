@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -11,8 +12,7 @@ import java.util.*;
 */
 public class ExtImg extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
+	//region 构造方法
 	/** 
 	 控制权限
 	*/
@@ -35,8 +35,9 @@ public class ExtImg extends EntityMyPK
 	 装饰图片
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public ExtImg(String mypk)
+	public ExtImg(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -114,7 +115,7 @@ public class ExtImg extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		BP.Sys.FrmImg imgAth = new BP.Sys.FrmImg();
 		imgAth.setMyPK(this.getMyPK());
@@ -139,7 +140,7 @@ public class ExtImg extends EntityMyPK
 		super.afterInsertUpdateAction();
 	}
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//把相关的字段也要删除.
 		MapAttrString attr = new MapAttrString();
@@ -149,6 +150,4 @@ public class ExtImg extends EntityMyPK
 		super.afterDelete();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 }

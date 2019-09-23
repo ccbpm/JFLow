@@ -1,6 +1,8 @@
 package BP.Sys;
 
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -88,11 +90,12 @@ public class ExcelSheet extends EntityNoName
 		///#region 重写事件
 	/** 
 	 记录添加前事件
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setNo(String.format("%d", UUID.NewGuid()));
+		this.setNo(UUID.randomUUID().toString());
 		return super.beforeInsert();
 	}
 

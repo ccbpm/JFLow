@@ -2,6 +2,7 @@ package BP.Sys.FrmUI;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
 import java.util.*;
@@ -76,8 +77,9 @@ public class MapAttrString extends EntityMyPK
 	}
 	/** 
 	 实体属性
+	 * @throws Exception 
 	*/
-	public MapAttrString(String myPK)
+	public MapAttrString(String myPK) throws Exception
 	{
 		this.setMyPK(myPK);
 		this.Retrieve();
@@ -159,51 +161,51 @@ public class MapAttrString extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "正则表达式";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpression()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "文本框自动完成";
 		rm.ClassMethodName = this.toString() + ".DoTBFullCtrl2019()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
 		rm.Title = "脚本验证";
 		rm.ClassMethodName = this.toString() + ".DoInputCheck()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "超链接";
 		rm.ClassMethodName = this.toString() + ".DoLink()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "快速录入";
 		rm.ClassMethodName = this.toString() + ".DoFastEnter()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "全局默认值";
 		rm.ClassMethodName = this.toString() + ".DoDefVal()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "字段重命名";
 		rm.ClassMethodName = this.toString() + ".DoRenameField()";
 		rm.getHisAttrs().AddTBString("key1", "@KeyOfEn", "字段重命名为?", true, false, 0, 100, 100);
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		rm.Warning = "如果是节点表单，系统就会把该流程上的所有同名的字段都会重命名，包括NDxxxRpt表单。";
 		map.AddRefMethod(rm);
 
@@ -211,7 +213,7 @@ public class MapAttrString extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "Pop返回值";
 		rm.ClassMethodName = this.toString() + ".DoPop2019()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -223,14 +225,14 @@ public class MapAttrString extends EntityMyPK
 		rm.GroupName = "输入内容多选";
 		rm.Title = "小范围多选(combox)";
 		rm.ClassMethodName = this.toString() + ".DoMultipleChoiceSmall()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.GroupName = "输入内容多选";
 		rm.Title = "搜索多选";
 		rm.ClassMethodName = this.toString() + ".DoMultipleChoiceSearch()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 输入多选
@@ -258,21 +260,21 @@ public class MapAttrString extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "扩展控件";
 		rm.ClassMethodName = this.toString() + ".DoEditFExtContral()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "扩展控件2019";
 		rm.ClassMethodName = this.toString() + ".DoEditFExtContral2019()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批处理";
 		rm.ClassMethodName = this.toString() + ".DoEleBatch()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
@@ -293,9 +295,10 @@ public class MapAttrString extends EntityMyPK
 	}
 	/** 
 	 删除
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//删除可能存在的关联属性.
 		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "' AND KeyOfEn='" + this.getKeyOfEn() + "T'";
@@ -324,7 +327,7 @@ public class MapAttrString extends EntityMyPK
 
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
@@ -343,7 +346,7 @@ public class MapAttrString extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本功能.
 
-	public final String DoRenameField(String newField)
+	public final String DoRenameField(String newField) throws Exception
 	{
 		String sql = "";
 		if (this.getFK_MapData().indexOf("ND") == 0)
@@ -355,7 +358,7 @@ public class MapAttrString extends EntityMyPK
 			MapDatas mds = new MapDatas();
 			mds.Retrieve(MapDataAttr.PTable, rptTable);
 
-			for (MapData item : mds)
+			for (MapData item : mds.ToJavaList())
 			{
 				sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "',  MyPK='" + newField + "_" + item.getNo() + " WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + item.getNo() + "'";
 				DBAccess.RunSQL(sql);
@@ -417,7 +420,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoPopFullCtrl()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PopFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/PopFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
 	}
 	/** 
 	 多条件查询列表模式
@@ -426,7 +429,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoPopFullCtrlAdv()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PopFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/PopFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 方法执行 Pop填充自动完成.
@@ -469,7 +472,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoLink()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/Link.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK()) + "&FK_MapExt=Link_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
+		return "../../Admin/FoolFormDesigner/MapExt/Link.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK() + "&FK_MapExt=Link_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
 	}
 	/** 
 	 设置开窗返回值
@@ -478,7 +481,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoPopVal()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK()) + "&FK_MapExt=PopVal_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
+		return "../../Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK() + "&FK_MapExt=PopVal_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
 	}
 	/** 
 	 正则表达式
@@ -487,7 +490,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoRegularExpression()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 
 	/** 
@@ -497,7 +500,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoTBFullCtrl2019()
 	{
-		return "../../Admin/FoolFormDesigner/TBFullCtrl/Default.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/TBFullCtrl/Default.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
 	}
 
 	/** 
@@ -507,7 +510,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoInputCheck()
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData=" + this.getFK_MapData() + "&OperAttrKey=" + this.getKeyOfEn() + "&RefNo=" + HttpUtility.UrlEncode(this.getMyPK()) + "&DoType=New&ExtType=InputCheck";
+		return "../../Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData=" + this.getFK_MapData() + "&OperAttrKey=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK() + "&DoType=New&ExtType=InputCheck";
 	}
 	/** 
 	 扩展控件
@@ -516,7 +519,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoEditFExtContral()
 	{
-		return "../../Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 	/** 
 	 扩展控件2019
@@ -525,7 +528,7 @@ public class MapAttrString extends EntityMyPK
 	*/
 	public final String DoEditFExtContral2019()
 	{
-		return "../../Admin/FoolFormDesigner/EditFExtContral/Default.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + HttpUtility.UrlEncode(this.getMyPK());
+		return "../../Admin/FoolFormDesigner/EditFExtContral/Default.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 方法执行.
@@ -533,7 +536,7 @@ public class MapAttrString extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重载.
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());

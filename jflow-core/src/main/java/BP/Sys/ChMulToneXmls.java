@@ -1,5 +1,7 @@
 package BP.Sys;
 
+import java.util.List;
+
 import BP.DA.*;
 import BP.En.*;
 import BP.Sys.XML.*;
@@ -16,6 +18,15 @@ public class ChMulToneXmls extends XmlEns
 	*/
 	public ChMulToneXmls()
 	{
+	}
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<ChMulToneXml> ToJavaList()
+	{
+		return (List<ChMulToneXml>)(Object)this;
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

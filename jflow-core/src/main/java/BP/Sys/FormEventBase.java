@@ -87,7 +87,7 @@ public abstract class FormEventBase
 	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final LocalDateTime GetValDateTime(String key)
+	public final java.util.Date GetValDateTime(String key)
 	{
 		try
 		{
@@ -158,7 +158,7 @@ public abstract class FormEventBase
 	*/
 	public final BigDecimal GetValDecimal(String key)
 	{
-		return BigDecimal.Parse(this.GetValStr(key));
+		return new java.math.BigDecimal(this.GetValStr(key));
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 获取参数方法
@@ -282,7 +282,6 @@ public abstract class FormEventBase
 	{
 		this.HisEn = en;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理参数.
 		Row r = en.getRow();
 		try
@@ -328,10 +327,8 @@ public abstract class FormEventBase
 			}
 		}
 		this.setSysPara(r);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 处理参数.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 执行事件.
 		switch (eventType)
 		{
@@ -357,12 +354,8 @@ public abstract class FormEventBase
 				return this.DtlRowSaveAfter();
 			default:
 				throw new RuntimeException("@没有判断的表单事件类型:" + eventType);
-				break;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 执行事件.
-		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 基类方法.
 }

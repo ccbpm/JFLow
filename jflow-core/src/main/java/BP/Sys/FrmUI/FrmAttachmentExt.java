@@ -4,6 +4,8 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
+import BP.Tools.FtpUtil;
+import BP.Web.WebUser;
 import BP.Sys.*;
 import java.util.*;
 
@@ -14,9 +16,10 @@ public class FrmAttachmentExt extends EntityMyPK
 {
 	/** 
 	 访问权限.
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsView = true;
@@ -30,7 +33,6 @@ public class FrmAttachmentExt extends EntityMyPK
 		return uac;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 参数属性.
 	/** 
 	 是否可见？
@@ -82,10 +84,8 @@ public class FrmAttachmentExt extends EntityMyPK
 		this.SetPara(FrmAttachmentAttr.UploadFileNumCheck, value.getValue());
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	/** 
 	 节点编号
@@ -397,10 +397,6 @@ public class FrmAttachmentExt extends EntityMyPK
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsTurn2Html);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region weboffice文档属性(参数属性)
 	/** 
 	 是否启用锁定行
@@ -575,11 +571,6 @@ public class FrmAttachmentExt extends EntityMyPK
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableDown, value);
 	}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion weboffice文档属性
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 快捷键
 	/** 
 	 是否启用快捷键
@@ -603,10 +594,8 @@ public class FrmAttachmentExt extends EntityMyPK
 	{
 		this.SetPara(FrmAttachmentAttr.FastKeyGenerRole, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 快捷键
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	/** 
 	 附件
@@ -645,7 +634,6 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddMyPK();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 基本属性。
 		map.AddTBString(FrmAttachmentAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
 		map.AddTBString(FrmAttachmentAttr.NoOfObj, null, "附件标识", true, true, 0, 50, 20);
@@ -688,10 +676,8 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddDDLSysEnum(FrmAttachmentAttr.FileType, 0, "附件类型", true, true, FrmAttachmentAttr.FileType, "@0=普通附件@1=图片文件");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 基本属性。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 权限控制。
 			//hzm新增列
 			// map.AddTBInt(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的", false, false);
@@ -716,10 +702,8 @@ public class FrmAttachmentExt extends EntityMyPK
 
 			//map.AddDDLSysEnum(FrmAttachmentAttr.DataRef, 0, "数据引用", true, true, FrmAttachmentAttr.DataRef,
 			//    "@0=当前组件ID@1=指定的组件ID");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 权限控制。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region WebOffice控制方式。
 		map.AddBoolean(FrmAttachmentAttr.IsRowLock, true, "是否启用锁定行", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsWoEnableWF, true, "是否启用weboffice", true, true);
@@ -736,10 +720,8 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddBoolean(FrmAttachmentAttr.IsWoEnableInsertFengXian, true, "是否插入风险点", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsWoEnableMarks, true, "是否启用留痕模式", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsWoEnableDown, true, "是否启用下载", true, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion WebOffice控制方式。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 节点相关
 			//map.AddDDLSysEnum(FrmAttachmentAttr.DtlOpenType, 0, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, 
 			//    "@0=不能删除@1=删除所有@2=只能删除自己上传的");
@@ -749,14 +731,11 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.SetHelperAlert("DataRefNoOfObj", "对WorkID权限模式有效,用于查询贯穿整个流程的附件标识,与从表的标识一样.");
 
 		map.AddDDLSysEnum(FrmAttachmentAttr.ReadRole, 0, "阅读规则", true, true, FrmAttachmentAttr.ReadRole, "@0=不控制@1=未阅读阻止发送@2=未阅读做记录");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 节点相关
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 其他属性。
 			//参数属性.
 		map.AddTBAtParas(3000);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 其他属性。
 
 		RefMethod rm = new RefMethod();
@@ -787,7 +766,6 @@ public class FrmAttachmentExt extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	public final String DtlOfAth()
@@ -801,18 +779,17 @@ public class FrmAttachmentExt extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoTestFTPHost()
-	{
-		try
-		{
-			FtpSupport.FtpConnection conn = new FtpSupport.FtpConnection();
-			conn.Connect(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
-			return "连接成功.";
+	public String DoTestFTPHost() {
+		FtpUtil ftpUtil;
+		try {
+			ftpUtil = BP.WF.Glo.getFtpUtil();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return "err@" + e.getMessage();
 		}
-		catch (RuntimeException ex)
-		{
-			return "err@连接失败:" + ex.getMessage();
-		}
+		return ftpUtil.openConnection();
+
 	}
 	/** 
 	 固定模式类别设置
@@ -861,7 +838,6 @@ public class FrmAttachmentExt extends EntityMyPK
 		}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理分组.
 		//更新相关的分组信息.
 		if (this.getIsVisable() == true)
@@ -891,14 +867,13 @@ public class FrmAttachmentExt extends EntityMyPK
 			GroupField gf = new GroupField();
 			gf.Delete(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 处理分组.
 
 
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setIsWoEnableWF(true);
 

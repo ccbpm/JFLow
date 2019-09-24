@@ -283,8 +283,9 @@ public class PubClass {
 
 	/**
 	 * 重新建立索引
+	 * @throws Exception 
 	 */
-	public static void ReCreateIndex() {
+	public static void ReCreateIndex() throws Exception {
 		ArrayList<Entity> als = ClassFactory.GetObjects("BP.En.Entity");
 		String sql = "";
 		for (Entity en : als) {
@@ -424,7 +425,7 @@ public class PubClass {
 	}
 
 	// 系统调度
-	public static String GenerDBOfOreacle() {
+	public static String GenerDBOfOreacle() throws Exception {
 		ArrayList<Entity> als = ClassFactory.GetObjects("BP.En.Entity");
 		String sql = "";
 		for (Entity en : als) {
@@ -1281,8 +1282,9 @@ public class PubClass {
 	 * @param en
 	 * @param reqest
 	 * @return
+	 * @throws Exception 
 	 */
-	public static BP.En.Entity copyFromRequest(BP.En.Entity en, HttpServletRequest reqest) {
+	public static BP.En.Entity copyFromRequest(BP.En.Entity en, HttpServletRequest reqest) throws Exception {
 		ArrayList<String> requestKeys = new ArrayList<String>();
 		Enumeration enu = reqest.getParameterNames();
 		while (enu.hasMoreElements()) {
@@ -1456,11 +1458,11 @@ public class PubClass {
 
 	
 
-	public static BP.En.Entity CopyFromRequest(BP.En.Entity en) {
+	public static BP.En.Entity CopyFromRequest(BP.En.Entity en) throws Exception {
 		return CopyFromRequest(en, Glo.getRequest());
 	}
 
-	public static BP.En.Entity CopyFromRequest(BP.En.Entity en, HttpServletRequest reqest) {
+	public static BP.En.Entity CopyFromRequest(BP.En.Entity en, HttpServletRequest reqest) throws Exception {
 		String allKeys = ";";
 
 		// 获取传递来的所有的checkbox ids 用于设置该属性为falsse.
@@ -1501,7 +1503,7 @@ public class PubClass {
 		return en;
 	}
 	
-	public static Entity CopyFromRequestByPost(BP.En.Entity en, HttpServletRequest reqest) {
+	public static Entity CopyFromRequestByPost(BP.En.Entity en, HttpServletRequest reqest) throws Exception {
 
 		String allKeys = ";";
 		// 获取传递来的所有的checkbox ids 用于设置该属性为false.

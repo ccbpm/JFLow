@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -13,23 +15,25 @@ public class Serial extends Entity
 		///#region 基本属性
 	/** 
 	 序列号
+	 * @throws Exception 
 	*/
-	public final String getIntVal()
+	public final String getIntVal() throws Exception
 	{
 		return this.GetValStringByKey(SerialAttr.IntVal);
 	}
-	public final void setIntVal(String value)
+	public final void setIntVal(String value) throws Exception
 	{
 		this.SetValByKey(SerialAttr.IntVal, value);
 	}
 	/** 
 	 操作员ID
+	 * @throws Exception 
 	*/
-	public final String getCfgKey()
+	public final String getCfgKey() throws Exception
 	{
 		return this.GetValStringByKey(SerialAttr.CfgKey);
 	}
-	public final void setCfgKey(String value)
+	public final void setCfgKey(String value) throws Exception
 	{
 		this.SetValByKey(SerialAttr.CfgKey, value);
 	}
@@ -66,7 +70,7 @@ public class Serial extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final int Gener(String CfgKey)
+	public final int Gener(String CfgKey) throws Exception
 	{
 		Paras ps = new Paras();
 		ps.Add("p", CfgKey);

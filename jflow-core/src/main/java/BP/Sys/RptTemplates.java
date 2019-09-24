@@ -20,8 +20,9 @@ public class RptTemplates extends Entities
 	 查询
 	 
 	 @param EnsName
+	 * @throws Exception 
 	*/
-	public RptTemplates(String EnsName)
+	public RptTemplates(String EnsName) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(RptTemplateAttr.EnsName, EnsName);

@@ -61,7 +61,7 @@ public class SysFileManagers extends EntitiesOID
 	{
 		return new SysFileManager();
 	}
-	public final SysFileManager GetSysFileByAttrFileNo(String key)
+	public final SysFileManager GetSysFileByAttrFileNo(String key) throws Exception
 	{
 		for (SysFileManager en : this.ToJavaList())
 		{

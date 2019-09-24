@@ -126,9 +126,10 @@ public class GEDtl extends EntityOID
 
 	/** 
 	 重写基类方法
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{

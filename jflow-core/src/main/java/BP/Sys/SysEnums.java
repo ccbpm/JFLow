@@ -2,7 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
-import WebUser;
+import BP.Web.WebUser;
 
 import java.util.*;
 
@@ -15,7 +15,7 @@ public class SysEnums extends Entities
 	 此枚举类型的个数
 	*/
 	public int Num = -1;
-	public final String ToDesc()
+	public final String ToDesc() throws Exception
 	{
 		String strs = "";
 		for (SysEnum se : this.ToJavaList())
@@ -24,7 +24,7 @@ public class SysEnums extends Entities
 		}
 		return strs;
 	}
-	public final String GenerCaseWhenForOracle(String enName, String mTable, String key, String field, String enumKey, int def)
+	public final String GenerCaseWhenForOracle(String enName, String mTable, String key, String field, String enumKey, int def) throws Exception
 	{
 		String sql = (String)Cash.GetObjFormApplication("ESQL" + enName + mTable + key + "_" + enumKey, null);
 		// string sql = "";
@@ -58,7 +58,7 @@ public class SysEnums extends Entities
 		return sql;
 	}
 
-	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def)
+	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def) throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -86,7 +86,7 @@ public class SysEnums extends Entities
 		// Cash.AddObj("ESQL" + enName + key + "_" + enumKey, Depositary.Application, sql);
 		return sql;
 	}
-	public final void LoadIt(String enumKey)
+	public final void LoadIt(String enumKey) throws Exception
 	{
 		if (this.Full(enumKey) == false)
 		{
@@ -131,8 +131,9 @@ public class SysEnums extends Entities
 	}
 	/** 
 	 把所有的枚举注册一遍.
+	 * @throws Exception 
 	*/
-	public static void RegAll()
+	public static void RegAll() throws Exception
 	{
 		BP.Sys.XML.EnumInfoXmls xmls = new BP.Sys.XML.EnumInfoXmls();
 		xmls.RetrieveAll();
@@ -146,12 +147,13 @@ public class SysEnums extends Entities
 	 SysEnums
 	 
 	 @param EnumKey
+	 * @throws Exception 
 	*/
-	public SysEnums(String enumKey)
+	public SysEnums(String enumKey) throws Exception
 	{
 		this.LoadIt(enumKey);
 	}
-	public SysEnums(String enumKey, String vals)
+	public SysEnums(String enumKey, String vals) throws Exception
 	{
 		if (vals == null || vals.equals(""))
 		{
@@ -164,7 +166,7 @@ public class SysEnums extends Entities
 			this.RegIt(enumKey, vals);
 		}
 	}
-	public final void RegIt(String EnumKey, String vals)
+	public final void RegIt(String EnumKey, String vals) throws Exception
 	{
 		try
 		{
@@ -203,7 +205,7 @@ public class SysEnums extends Entities
 		}
 		//  this.Full(EnumKey);
 	}
-	public final boolean Full(String enumKey)
+	public final boolean Full(String enumKey) throws Exception
 	{
 		Entities ens = (Entities)Cash.GetObjFormApplication("EnumOf" + enumKey + WebUser.getSysLang(), null);
 		if (ens != null)
@@ -288,8 +290,9 @@ public class SysEnums extends Entities
 	 
 	 @param val val
 	 @return string val
+	 * @throws Exception 
 	*/
-	public final String GetLabByVal(int val)
+	public final String GetLabByVal(int val) throws Exception
 	{
 		for (SysEnum en : this.ToJavaList())
 		{

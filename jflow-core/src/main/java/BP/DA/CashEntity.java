@@ -9,7 +9,6 @@ import java.io.*;
 
 public class CashEntity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region Hashtable 属性
 	private static Hashtable _Cash;
 	public static Hashtable getDCash()
@@ -20,7 +19,6 @@ public class CashEntity
 		}
 		return _Cash;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
 	/** 
@@ -29,8 +27,9 @@ public class CashEntity
 	 @param enName
 	 @param ens
 	 @param enPK
+	 * @throws Exception 
 	*/
-	public static void PubEns(String enName, Entities ens, String enPK)
+	public static void PubEns(String enName, Entities ens, String enPK) throws Exception
 	{
 		Object tempVar = CashEntity.getDCash().get(enName);
 		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;

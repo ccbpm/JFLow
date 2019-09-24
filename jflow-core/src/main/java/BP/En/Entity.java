@@ -3908,6 +3908,29 @@ public abstract class Entity implements Serializable {
 		return Integer.parseInt(val);
 	}
 
+	public final boolean GetValBooleanByKey(String key,boolean IsNullBoolean) throws Exception{
+		String s = this.GetValStrByKey(key);
+        if (DataType.IsNullOrEmpty(s))
+            s = this.getEnMap().GetAttrByKey(key).getDefaultVal().toString();
+
+        if (s == "0")
+            return false;
+        if (s == "1")
+            return true;
+
+        if (s.toUpperCase().equals("FALSE"))
+            return false;
+        if (s.toUpperCase().equals("TRUE") )
+            return true;
+
+        if (DataType.IsNullOrEmpty(s))
+            return false;
+
+        if (Integer.parseInt(s) == 0)
+            return false;
+        
+        return IsNullBoolean;
+	}
 	/**
 	 * 根据key 得到 bool val
 	 * 
@@ -3916,30 +3939,7 @@ public abstract class Entity implements Serializable {
 	 * @throws Exception 
 	 */
 	public final boolean GetValBooleanByKey(String key) throws Exception {
-			
-		 String s = this.GetValStrByKey(key);
-         if (DataType.IsNullOrEmpty(s))
-             s = this.getEnMap().GetAttrByKey(key).getDefaultVal().toString();
-
-         if (s == "0")
-             return false;
-         if (s == "1")
-             return true;
-
-         if (s.toUpperCase().equals("FALSE"))
-             return false;
-         if (s.toUpperCase().equals("TRUE") )
-             return true;
-
-         if (DataType.IsNullOrEmpty(s))
-             return false;
-
-         if (Integer.parseInt(s) == 0)
-             return false;
-
-         return true;
-         
-         
+		return GetValBooleanByKey( key, true);
 	}
 
 	public final String GetValBoolStrByKey(String key) throws Exception {

@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -11,45 +13,48 @@ public class GEEntityWordFrm extends Entity
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 ///#region 属性。
-	public final int getOID()
+	public final int getOID() throws Exception
 	{
 	   return this.GetValIntByKey(GEEntityWordFrmAttr.OID);
 	}
-	public final void setOID(int value)
+	public final void setOID(int value) throws Exception
 	{
 		this.SetValByKey(GEEntityWordFrmAttr.OID, value);
 	}
 	/** 
 	 最后修改人
+	 * @throws Exception 
 	*/
-	  public final String getLastEditer()
+	  public final String getLastEditer() throws Exception
 	  {
 		 return this.GetValStringByKey(GEEntityWordFrmAttr.LastEditer);
 	  }
-	  public final void setLastEditer(String value)
+	  public final void setLastEditer(String value) throws Exception
 	  {
 		  this.SetValByKey(GEEntityWordFrmAttr.LastEditer, value);
 	  }
 	/** 
 	 记录时间
+	 * @throws Exception 
 	*/
-	   public final String getRDT()
+	   public final String getRDT() throws Exception
 	   {
 		  return this.GetValStringByKey(GEEntityWordFrmAttr.RDT);
 	   }
-	   public final void setRDT(String value)
+	   public final void setRDT(String value) throws Exception
 	   {
 		   this.SetValByKey(GEEntityWordFrmAttr.RDT, value);
 	   }
 
 	/** 
 	 文件路径
+	 * @throws Exception 
 	*/
-	   public final String getFilePath()
+	   public final String getFilePath() throws Exception
 	   {
 		   return this.GetValStringByKey(GEEntityWordFrmAttr.FilePath);
 	   }
-	   public final void setFilePath(String value)
+	   public final void setFilePath(String value) throws Exception
 	   {
 		   this.SetValByKey(GEEntityWordFrmAttr.FilePath, value);
 	   }
@@ -103,8 +108,9 @@ public class GEEntityWordFrm extends Entity
 	 
 	 @param nodeid 节点ID
 	 @param _oid OID
+	 * @throws Exception 
 	*/
-	public GEEntityWordFrm(String fk_mapdata, Object pk)
+	public GEEntityWordFrm(String fk_mapdata, Object pk) throws Exception
 	{
 		this.FK_MapData = fk_mapdata;
 		this.setPKVal(pk);

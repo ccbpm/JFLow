@@ -2,6 +2,9 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+import BP.Web.WebUser;
+
 import java.util.*;
 import java.io.*;
 import java.time.*;
@@ -16,34 +19,37 @@ public class MapAttr extends EntityMyPK
 		///#region 文本字段参数属性.
 	/** 
 	 是否是超大文本？
+	 * @throws Exception 
 	*/
-	public final boolean getIsSupperText()
+	public final boolean getIsSupperText() throws Exception
 	{
 		return this.GetParaBoolen(MapAttrAttr.IsSupperText, false);
 	}
-	public final void setIsSupperText(boolean value)
+	public final void setIsSupperText(boolean value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.IsSupperText, value);
 	}
 	/** 
 	 是否是富文本？
+	 * @throws Exception 
 	*/
-	public final boolean getIsRichText()
+	public final boolean getIsRichText() throws Exception
 	{
 		return this.GetParaBoolen(MapAttrAttr.IsRichText, false);
 	}
-	public final void setIsRichText(boolean value)
+	public final void setIsRichText(boolean value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.IsRichText, value);
 	}
 	/** 
 	 是否启用二维码？
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableQrCode()
+	public final boolean getIsEnableQrCode() throws Exception
 	{
 		return this.GetParaBoolen("IsEnableQrCode", false);
 	}
-	public final void setIsEnableQrCode(boolean value)
+	public final void setIsEnableQrCode(boolean value) throws Exception
 	{
 		this.SetPara("IsEnableQrCode", value);
 	}
@@ -54,20 +60,21 @@ public class MapAttr extends EntityMyPK
 		///#region 数值字段参数属性,2017-1-9,liuxc
 	/** 
 	 数值字段是否合计(默认true)
+	 * @throws Exception 
 	*/
-	public final boolean getIsSum()
+	public final boolean getIsSum() throws Exception
 	{
 		return this.GetParaBoolen(MapAttrAttr.IsSum, true);
 	}
-	public final void setIsSum(boolean value)
+	public final void setIsSum(boolean value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.IsSum, value);
 	}
-	public final boolean getExtIsSum()
+	public final boolean getExtIsSum() throws Exception
 	{
 		return this.GetParaBoolen(MapAttrAttr.ExtIsSum, true);
 	}
-	public final void setExtIsSum(boolean value)
+	public final void setExtIsSum(boolean value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.ExtIsSum, value);
 	}
@@ -84,7 +91,7 @@ public class MapAttr extends EntityMyPK
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.UIIsInput, false);
 	}
-	public final void setUIIsInput(boolean value)
+	public final void setUIIsInput(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIIsInput, value);
 	}
@@ -95,18 +102,19 @@ public class MapAttr extends EntityMyPK
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.IsEnableInAPP, true);
 	}
-	public final void setIsEnableInAPP(boolean value)
+	public final void setIsEnableInAPP(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.IsEnableInAPP, value);
 	}
 	/** 
 	 是否启用高级JS设置
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableJS()
+	public final boolean getIsEnableJS() throws Exception
 	{
 		return this.GetParaBoolen("IsEnableJS", false);
 	}
-	public final void setIsEnableJS(boolean value)
+	public final void setIsEnableJS(boolean value) throws Exception
 	{
 		this.SetPara("IsEnableJS", value);
 	}
@@ -118,8 +126,9 @@ public class MapAttr extends EntityMyPK
 	public EntitiesNoName _ens = null;
 	/** 
 	 实体类
+	 * @throws Exception 
 	*/
-	public final EntitiesNoName getHisEntitiesNoName()
+	public final EntitiesNoName getHisEntitiesNoName() throws Exception
 	{
 		if (this.getUIBindKey().contains("."))
 		{
@@ -176,8 +185,9 @@ public class MapAttr extends EntityMyPK
 	private DataTable _dt = null;
 	/** 
 	 外部数据表
+	 * @throws Exception 
 	*/
-	public final DataTable getHisDT()
+	public final DataTable getHisDT() throws Exception
 	{
 		if (_dt == null)
 		{
@@ -224,7 +234,7 @@ public class MapAttr extends EntityMyPK
 		attr.setMaxLength(this.getMaxLen());
 		attr.setMinLength(this.getMinLen());
 		attr.setUIBindKey(this.getUIBindKey());
-		attr.setUIIsLine(this.getUIIsLine();
+		attr.UIIsLine = this.getUIIsLine();
 		attr.setUIHeight(0);
 		if (this.getUIHeight() > 30)
 		{
@@ -312,53 +322,57 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 编辑类型
+	 * @throws Exception 
 	*/
-	public final EditType getHisEditType()
+	public final EditType getHisEditType() throws Exception
 	{
 		return EditType.forValue(this.GetValIntByKey(MapAttrAttr.EditType));
 	}
-	public final void setHisEditType(EditType value)
+	public final void setHisEditType(EditType value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.EditType, value.getValue());
 	}
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段名
+	 * @throws Exception 
 	*/
-	public final String getKeyOfEn()
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
+	public final void setKeyOfEn(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
-	public final FieldTypeS getLGType()
+	public final FieldTypeS getLGType() throws Exception
 	{
 		return FieldTypeS.forValue(this.GetValIntByKey(MapAttrAttr.LGType));
 	}
-	public final void setLGType(FieldTypeS value)
+	public final void setLGType(FieldTypeS value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.LGType, value.getValue());
 	}
-	public final String getLGTypeT()
+	public final String getLGTypeT() throws Exception
 	{
 		return this.GetValRefTextByKey(MapAttrAttr.LGType);
 	}
 	/** 
 	 描述
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		String s = this.GetValStrByKey(MapAttrAttr.Name);
 		if (s.equals("") || s == null)
@@ -367,7 +381,7 @@ public class MapAttr extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}
@@ -386,20 +400,21 @@ public class MapAttr extends EntityMyPK
 	}
 	public final BigDecimal getDefValDecimal()
 	{
-		return BigDecimal.Parse(this.getDefVal());
+		return new java.math.BigDecimal(this.getDefVal());
 	}
-	public final String getDefValReal()
+	public final String getDefValReal() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.DefVal);
 	}
-	public final void setDefValReal(String value)
+	public final void setDefValReal(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.DefVal, value);
 	}
 	/** 
 	 合并单元格数
+	 * @throws Exception 
 	*/
-	public final int getColSpan()
+	public final int getColSpan() throws Exception
 	{
 		int i = this.GetValIntByKey(MapAttrAttr.ColSpan);
 		if (this.getUIIsLine() && i == 1)
@@ -412,7 +427,7 @@ public class MapAttr extends EntityMyPK
 		}
 		return i;
 	}
-	public final void setColSpan(int value)
+	public final void setColSpan(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.ColSpan, value);
 	}
@@ -512,28 +527,28 @@ public class MapAttr extends EntityMyPK
 		}
 		return this.GetValStrByKey(MapAttrAttr.DefVal);
 	}
-	public final void setDefVal(String value)
+	public final void setDefVal(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.DefVal, value);
 	}
-	public final boolean getDefValOfBool()
+	public final boolean getDefValOfBool() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.DefVal, false);
 	}
-	public final void setDefValOfBool(boolean value)
+	public final void setDefValOfBool(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.DefVal, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getField()
+	public final String getField() throws Exception
 	{
 		return this.getKeyOfEn();
 	}
-	public final BP.Web.Controls.TBType getHisTBType()
+	public final BP.Web.Controls.TBType getHisTBType() throws Exception
 	{
-		switch (this.getMyDataType())
+		switch (this.getMyDataType()) 
 		{
 			case BP.DA.DataType.AppMoney:
 				return BP.Web.Controls.TBType.Moneny;
@@ -545,15 +560,15 @@ public class MapAttr extends EntityMyPK
 				return BP.Web.Controls.TBType.TB;
 		}
 	}
-	public final int getMyDataType()
+	public final int getMyDataType() throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.MyDataType);
 	}
-	public final void setMyDataType(int value)
+	public final void setMyDataType(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
-	public final String getMyDataTypeS()
+	public final String getMyDataTypeS() 
 	{
 		switch (this.getMyDataType())
 		{
@@ -575,7 +590,7 @@ public class MapAttr extends EntityMyPK
 				throw new RuntimeException("没有判断。");
 		}
 	}
-	public final void setMyDataTypeS(String value)
+	public final void setMyDataTypeS(String value) throws Exception
 	{
 
 		switch (value)
@@ -613,7 +628,7 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 最大长度
 	*/
-	public final int getMaxLen()
+	public final int getMaxLen() throws Exception
 	{
 		switch (this.getMyDataType())
 		{
@@ -636,18 +651,18 @@ public class MapAttr extends EntityMyPK
 		}
 		return i;
 	}
-	public final void setMaxLen(int value)
+	public final void setMaxLen(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.MaxLen, value);
 	}
 	/** 
 	 最小长度
 	*/
-	public final int getMinLen()
+	public final int getMinLen() throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.MinLen);
 	}
-	public final void setMinLen(int value)
+	public final void setMinLen(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.MinLen, value);
 	}
@@ -668,7 +683,7 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 所在的分组
 	*/
-	public final int getGroupID()
+	public final int getGroupID() throws Exception
 	{
 		String str = this.GetValStringByKey(MapAttrAttr.GroupID);
 		if (str.equals("无") || str.equals(""))
@@ -677,14 +692,15 @@ public class MapAttr extends EntityMyPK
 		}
 		return Integer.parseInt(str);
 	}
-	public final void setGroupID(int value)
+	public final void setGroupID(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.GroupID, value);
 	}
 	/** 
 	 是否是大块文本？
+	 * @throws Exception 
 	*/
-	public final boolean getIsBigDoc()
+	public final boolean getIsBigDoc() throws Exception
 	{
 		if (this.getUIRows() > 1 && this.getMyDataType() == DataType.AppString)
 		{
@@ -697,7 +713,7 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 textbox控件的行数.
 	*/
-	public final int getUIRows()
+	public final int getUIRows() throws Exception
 	{
 		if (this.getUIHeight() < 40)
 		{
@@ -710,40 +726,40 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 高度
 	*/
-	public final int getUIHeightInt()
+	public final int getUIHeightInt() throws Exception
 	{
 		return (int)this.getUIHeight();
 	}
-	public final void setUIHeightInt(int value)
+	public final void setUIHeightInt(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIHeight, value);
 	}
 	/** 
 	 高度
 	*/
-	public final float getUIHeight()
+	public final float getUIHeight() throws Exception
 	{
 		return this.GetValFloatByKey(MapAttrAttr.UIHeight);
 	}
-	public final void setUIHeight(float value)
+	public final void setUIHeight(float value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIHeight, value);
 	}
 	/** 
 	 宽度
 	*/
-	public final int getUIWidthInt()
+	public final int getUIWidthInt() throws Exception
 	{
 		return (int)this.getUIWidth();
 	}
-	public final void setUIWidthInt(int value)
+	public final void setUIWidthInt(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIWidth, value);
 	}
 	/** 
 	 宽度
 	*/
-	public final float getUIWidth()
+	public final float getUIWidth() throws Exception
 	{
 			//switch (this.MyDataType)
 			//{
@@ -763,7 +779,7 @@ public class MapAttr extends EntityMyPK
 			//        return 70;
 		return this.GetValFloatByKey(MapAttrAttr.UIWidth);
 	}
-	public final void setUIWidth(float value)
+	public final void setUIWidth(float value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIWidth, value);
 	}
@@ -774,40 +790,40 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 是否是否可见？
 	*/
-	public final boolean getUIVisible()
+	public final boolean getUIVisible() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.UIVisible);
 	}
-	public final void setUIVisible(boolean value)
+	public final void setUIVisible(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIVisible, value);
 	}
 	/** 
 	 是否可用
 	*/
-	public final boolean getUIIsEnable()
+	public final boolean getUIIsEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.UIIsEnable);
 	}
-	public final void setUIIsEnable(boolean value)
+	public final void setUIIsEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIIsEnable, value);
 	}
 	/** 
 	 是否单独行显示
 	*/
-	public final boolean getUIIsLine()
+	public final boolean getUIIsLine() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.UIIsLine);
 	}
-	public final void setUIIsLine(boolean value)
+	public final void setUIIsLine(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIIsLine, value);
 	}
 	/** 
 	 是否数字签名
 	*/
-	public final boolean getIsSigan()
+	public final boolean getIsSigan() throws Exception
 	{
 		if (this.getUIIsEnable())
 		{
@@ -815,57 +831,57 @@ public class MapAttr extends EntityMyPK
 		}
 		return this.GetValBooleanByKey(MapAttrAttr.IsSigan);
 	}
-	public final void setIsSigan(boolean value)
+	public final void setIsSigan(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.IsSigan, value);
 	}
  /** 
 	 签名类型
  */
-	public final SignType getSignType()
+	public final SignType getSignType() throws Exception
 	{
 			//if (this.UIIsEnable)
 			//    return SignType.None;
 		return SignType.forValue(this.GetValIntByKey(MapAttrAttr.IsSigan));
 	}
-	public final void setSignType(SignType value)
+	public final void setSignType(SignType value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.IsSigan, value.getValue());
 	}
-	public final int getPara_FontSize()
+	public final int getPara_FontSize() throws Exception
 	{
 		return this.GetParaInt(MapAttrAttr.FontSize);
 	}
-	public final void setPara_FontSize(int value)
+	public final void setPara_FontSize(int value)throws Exception
 	{
 		this.SetPara(MapAttrAttr.FontSize, value);
 	}
 	/** 
 	 radiobutton的展现方式
 	*/
-	public final int getRBShowModel()
+	public final int getRBShowModel() throws Exception
 	{
 		return this.GetParaInt("RBShowModel");
 	}
-	public final void setRBShowModel(int value)
+	public final void setRBShowModel(int value) throws Exception
 	{
 		this.SetPara("RBShowModel", value);
 	}
 	/** 
 	 操作提示
 	*/
-	public final String getPara_Tip()
+	public final String getPara_Tip() throws Exception
 	{
 		return this.GetParaString(MapAttrAttr.Tip);
 	}
-	public final void setPara_Tip(String value)
+	public final void setPara_Tip(String value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.Tip, value);
 	}
 	/** 
 	 是否数字签名
 	*/
-	public final String getPara_SiganField()
+	public final String getPara_SiganField() throws Exception
 	{
 		if (this.getUIIsEnable())
 		{
@@ -873,14 +889,15 @@ public class MapAttr extends EntityMyPK
 		}
 		return this.GetParaString(MapAttrAttr.SiganField);
 	}
-	public final void setPara_SiganField(String value)
+	public final void setPara_SiganField(String value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.SiganField, value);
 	}
 	/** 
 	 签名类型
+	 * @throws Exception 
 	*/
-	public final PicType getPicType()
+	public final PicType getPicType() throws Exception
 	{
 		if (this.getUIIsEnable())
 		{
@@ -888,36 +905,39 @@ public class MapAttr extends EntityMyPK
 		}
 		return PicType.forValue(this.GetParaInt(MapAttrAttr.PicType));
 	}
-	public final void setPicType(PicType value)
+	public final void setPicType(PicType value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.PicType, value.getValue());
 	}
 	/** 
 	 TextBox类型
+	 * @throws Exception 
 	*/
-	public final TBModel getTBModel()
+	public final TBModel getTBModel() throws Exception
 	{
 		return TBModel.forValue(this.GetParaInt(MapAttrAttr.TBModel));
 	}
-	public final void setTBModel(TBModel value)
+	public final void setTBModel(TBModel value) throws Exception
 	{
 		this.SetPara(MapAttrAttr.TBModel, value.getValue());
 	}
 	/** 
 	 绑定的值
+	 * @throws Exception 
 	*/
-	public final String getUIBindKey()
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value)
+	public final void setUIBindKey(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
 	/** 
 	 关联的表的Key
+	 * @throws Exception 
 	*/
-	public final String getUIRefKey()
+	public final String getUIRefKey() throws Exception
 	{
 		String s = this.GetValStrByKey(MapAttrAttr.UIRefKey);
 		if (s.equals("") || s == null)
@@ -926,14 +946,15 @@ public class MapAttr extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setUIRefKey(String value)
+	public final void setUIRefKey(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIRefKey, value);
 	}
 	/** 
 	 关联的表的Lab
+	 * @throws Exception 
 	*/
-	public final String getUIRefKeyText()
+	public final String getUIRefKeyText() throws Exception
 	{
 		String s = this.GetValStrByKey(MapAttrAttr.UIRefKeyText);
 		if (s.equals("") || s == null)
@@ -942,29 +963,31 @@ public class MapAttr extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setUIRefKeyText(String value)
+	public final void setUIRefKeyText(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIRefKeyText, value);
 	}
 	/** 
 	 标识
+	 * @throws Exception 
 	*/
-	public final String getTag()
+	public final String getTag() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.Tag);
 	}
-	public final void setTag(String value)
+	public final void setTag(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.Tag, value);
 	}
 	/** 
 	 控件类型
+	 * @throws Exception 
 	*/
-	public final UIContralType getUIContralType()
+	public final UIContralType getUIContralType() throws Exception
 	{
 		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
 	}
-	public final void setUIContralType(UIContralType value)
+	public final void setUIContralType(UIContralType value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
 	}
@@ -1000,40 +1023,42 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 TabIdx
+	 * @throws Exception 
 	*/
-	public final int getTabIdx()
+	public final int getTabIdx() throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.TabIdx);
 	}
-	public final void setTabIdx(int value)
+	public final void setTabIdx(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.TabIdx, value);
 	}
 	/** 
 	 序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.Idx, value);
 	}
 
-	public final float getX()
+	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(MapAttrAttr.X);
 	}
-	public final void setX(float value)
+	public final void setX(float value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.X, value);
 	}
-	public final float getY()
+	public final float getY() throws Exception
 	{
 		return this.GetValFloatByKey(MapAttrAttr.Y);
 	}
-	public final void setY(float value)
+	public final void setY(float value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.Y, value);
 	}
@@ -1048,12 +1073,12 @@ public class MapAttr extends EntityMyPK
 	public MapAttr()
 	{
 	}
-	public MapAttr(String mypk)
+	public MapAttr(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
-	public MapAttr(String fk_mapdata, String key)
+	public MapAttr(String fk_mapdata, String key) throws Exception
 	{
 		this.setFK_MapData(fk_mapdata);
 		this.setKeyOfEn(key);
@@ -1156,7 +1181,7 @@ public class MapAttr extends EntityMyPK
 
 
 	@Override
-	protected void afterInsert()
+	protected void afterInsert() throws Exception
 	{
 		//switch (map.EnDBUrl.DBUrlType)
 		//{
@@ -1186,10 +1211,11 @@ public class MapAttr extends EntityMyPK
 	 保存大块html文本
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SaveBigNoteHtmlText(String text)
+	public final String SaveBigNoteHtmlText(String text) throws Exception
 	{
-		String file = SystemConfig.getPathOfDataUser() + "\\CCForm\\BigNoteHtmlText\\" + this.getFK_MapData() + ".htm";
+		String file = SystemConfig.getPathOfDataUser() + "/CCForm/BigNoteHtmlText/" + this.getFK_MapData() + ".htm";
 		//若文件夹不存在，则创建
 		String folder = (new File(file)).getParent();
 		if ((new File(folder)).isDirectory() == false)
@@ -1204,11 +1230,12 @@ public class MapAttr extends EntityMyPK
 	 读取大块html文本
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ReadBigNoteHtmlText()
+	public final String ReadBigNoteHtmlText() throws Exception
 	{
 		String doc = "";
-		String file = SystemConfig.getPathOfDataUser() + "\\CCForm\\BigNoteHtmlText\\" + this.getFK_MapData() + ".htm";
+		String file = SystemConfig.getPathOfDataUser() + "/CCForm/BigNoteHtmlText/" + this.getFK_MapData() + ".htm";
 		String folder = (new File(file)).getParent();
 		if ((new File(folder)).isDirectory() != false)
 		{
@@ -1221,15 +1248,15 @@ public class MapAttr extends EntityMyPK
 
 		return doc;
 	}
-	public final void DoDownTabIdx()
+	public final void DoDownTabIdx() throws Exception
 	{
 		this.DoOrderDown(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.Idx);
 	}
-	public final void DoUpTabIdx()
+	public final void DoUpTabIdx() throws Exception
 	{
 		this.DoOrderUp(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.Idx);
 	}
-	public final String DoUp()
+	public final String DoUp() throws Exception
 	{
 		this.DoOrderUp(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
 
@@ -1256,8 +1283,9 @@ public class MapAttr extends EntityMyPK
 
 	/** 
 	 下移
+	 * @throws Exception 
 	*/
-	public final String DoDown()
+	public final String DoDown() throws Exception
 	{
 		this.DoOrderDown(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
 
@@ -1271,8 +1299,9 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 上移for 明细表.
+	 * @throws Exception 
 	*/
-	public final String DoUpForMapDtl()
+	public final String DoUpForMapDtl() throws Exception
 	{
 		//规整groupID.
 		GroupField gf = new GroupField();
@@ -1292,8 +1321,9 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 下移 for 明细表.
+	 * @throws Exception 
 	*/
-	public final String DoDownForMapDtl()
+	public final String DoDownForMapDtl() throws Exception
 	{
 		//规整groupID.
 		GroupField gf = new GroupField();
@@ -1311,7 +1341,7 @@ public class MapAttr extends EntityMyPK
 
 		return "执行成功";
 	}
-	public final void DoJump(MapAttr attrTo)
+	public final void DoJump(MapAttr attrTo) throws Exception
 	{
 		if (attrTo.getIdx() <= this.getIdx())
 		{
@@ -1322,7 +1352,7 @@ public class MapAttr extends EntityMyPK
 			this.DoJumpDown(attrTo);
 		}
 	}
-	private String DoJumpUp(MapAttr attrTo)
+	private String DoJumpUp(MapAttr attrTo) throws Exception
 	{
 		String sql = "UPDATE Sys_MapAttr SET Idx=Idx+1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='" + this.getFK_MapData() + "' AND GroupID=" + this.getGroupID();
 		DBAccess.RunSQL(sql);
@@ -1331,7 +1361,7 @@ public class MapAttr extends EntityMyPK
 		this.Update();
 		return null;
 	}
-	private String DoJumpDown(MapAttr attrTo)
+	private String DoJumpDown(MapAttr attrTo) throws Exception
 	{
 		String sql = "UPDATE Sys_MapAttr SET Idx=Idx-1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='" + this.getFK_MapData() + "' AND GroupID=" + this.getGroupID();
 		DBAccess.RunSQL(sql);
@@ -1388,7 +1418,7 @@ public class MapAttr extends EntityMyPK
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		switch (this.getMyDataType())
 		{
@@ -1452,7 +1482,7 @@ public class MapAttr extends EntityMyPK
 			this.setKeyOfEn(PubClass.DealToFieldOrTableNames(this.getKeyOfEn()));
 		}
 
-		Object tempVar = this.getKeyOfEn().Clone();
+		Object tempVar = this.getKeyOfEn();
 		String keyofenC = tempVar instanceof String ? (String)tempVar : null;
 		keyofenC = keyofenC.toLowerCase();
 

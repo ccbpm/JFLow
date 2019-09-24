@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 import java.math.*;
 
@@ -12,19 +14,19 @@ public class GloVarExt extends EntityNoName
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final Object getValOfObject()
+	public final Object getValOfObject() throws Exception
 	{
 		return this.GetValByKey(GloVarAttr.Val);
 	}
-	public final void setValOfObject(Object value)
+	public final void setValOfObject(Object value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final String getVal()
+	public final String getVal() throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.Val);
 	}
-	public final void setVal(String value)
+	public final void setVal(String value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
@@ -37,14 +39,13 @@ public class GloVarExt extends EntityNoName
 		catch (java.lang.Exception e)
 		{
 			return 0;
-			throw new RuntimeException("@" + this.getName() + ", 没有设置默认值." + this.getVal());
 		}
 	}
-	public final void setValOfFloat(float value)
+	public final void setValOfFloat(float value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final int getValOfInt()
+	public final int getValOfInt() throws Exception
 	{
 		try
 		{
@@ -53,14 +54,13 @@ public class GloVarExt extends EntityNoName
 		catch (RuntimeException ex)
 		{
 			return 0;
-			throw new RuntimeException("@" + this.getName() + ", 没有设置默认值." + this.getVal());
 		}
 	}
-	public final void setValOfInt(int value)
+	public final void setValOfInt(int value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final BigDecimal getValOfDecimal()
+	public final BigDecimal getValOfDecimal() throws Exception
 	{
 		try
 		{
@@ -68,41 +68,42 @@ public class GloVarExt extends EntityNoName
 		}
 		catch (java.lang.Exception e)
 		{
-			return 0;
 			throw new RuntimeException("@" + this.getName() + ", 没有设置默认值." + this.getVal());
 		}
 	}
-	public final void setValOfDecimal(BigDecimal value)
+	public final void setValOfDecimal(BigDecimal value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final boolean getValOfBoolen()
+	public final boolean getValOfBoolen() throws Exception
 	{
 		return this.GetValBooleanByKey(GloVarAttr.Val);
 	}
-	public final void setValOfBoolen(boolean value)
+	public final void setValOfBoolen(boolean value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
 	/** 
 	 note
+	 * @throws Exception 
 	*/
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.Note, value);
 	}
 	/** 
 	 分组值
+	 * @throws Exception 
 	*/
-	public final String getGroupKey()
+	public final String getGroupKey() throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.GroupKey);
 	}
-	public final void setGroupKey(String value)
+	public final void setGroupKey(String value) throws Exception
 	{
 		this.SetValByKey(GloVarAttr.GroupKey, value);
 	}
@@ -121,8 +122,9 @@ public class GloVarExt extends EntityNoName
 	 全局变量
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public GloVarExt(String no)
+	public GloVarExt(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();

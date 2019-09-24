@@ -22,15 +22,16 @@ public class MapAttrs extends EntitiesMyPK
 	}
 	/** 
 	 实体属性s
+	 * @throws Exception 
 	*/
-	public MapAttrs(String fk_map)
+	public MapAttrs(String fk_map) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MapAttrAttr.FK_MapData, fk_map);
 		qo.addOrderBy(MapAttrAttr.GroupID, MapAttrAttr.Idx);
 		qo.DoQuery();
 	}
-	public final int SearchMapAttrsYesVisable(String fk_map)
+	public final int SearchMapAttrsYesVisable(String fk_map) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MapAttrAttr.FK_MapData, fk_map);
@@ -48,7 +49,7 @@ public class MapAttrs extends EntitiesMyPK
 	{
 		return new MapAttr();
 	}
-	public final int getWithOfCtl()
+	public final int getWithOfCtl() throws Exception
 	{
 		int i = 0;
 		for (MapAttr item : this.ToJavaList())

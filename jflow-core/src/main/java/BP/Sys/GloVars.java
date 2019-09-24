@@ -17,8 +17,9 @@ public class GloVars extends EntitiesNoName
 	 
 	 @param key key
 	 @param val val
+	 * @throws Exception 
 	*/
-	public static int SetValByKey(String key, Object val)
+	public static int SetValByKey(String key, Object val) throws Exception
 	{
 		GloVar en = new GloVar(key, val);
 		en.setValOfObject(val);
@@ -130,7 +131,7 @@ public class GloVars extends EntitiesNoName
 		return en.getValOfFloat();
 	}
 	private static GloVars _MyGloVars = null;
-	public static GloVars getMyGloVars()
+	public static GloVars getMyGloVars() throws Exception
 	{
 		if (_MyGloVars == null)
 		{
@@ -158,8 +159,9 @@ public class GloVars extends EntitiesNoName
 	 全局变量s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public GloVars(String fk_mapdata)
+	public GloVars(String fk_mapdata) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{

@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -13,64 +15,69 @@ public class Langue extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 模块：比如 ccform.
+	 * @throws Exception 
 	*/
-	public final String getModel()
+	public final String getModel() throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Model);
 	}
-	public final void setModel(String value)
+	public final void setModel(String value) throws Exception
 	{
 		this.SetValByKey(LangueAttr.Model, value);
 	}
 	/** 
 	 类别：比如Label,Field
+	 * @throws Exception 
 	*/
-	public final String getSort()
+	public final String getSort() throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Sort);
 	}
-	public final void setSort(String value)
+	public final void setSort(String value) throws Exception
 	{
 		this.SetValByKey(LangueAttr.Sort, value);
 	}
 	/** 
 	 关联的主键: 比如:LabelID, KeyOfEn
+	 * @throws Exception 
 	*/
-	public final String getSortKey()
+	public final String getSortKey() throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.SortKey);
 	}
-	public final void setSortKey(String value)
+	public final void setSortKey(String value) throws Exception
 	{
 		this.SetValByKey(LangueAttr.SortKey, value);
 	}
 	/** 
 	 语言
+	 * @throws Exception 
 	*/
-	public final String getLang()
+	public final String getLang() throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Langue);
 	}
-	public final void setLang(String value)
+	public final void setLang(String value) throws Exception
 	{
 		this.SetValByKey(LangueAttr.Langue, value);
 	}
 	/** 
 	 值
+	 * @throws Exception 
 	*/
-	public final String getVal()
+	public final String getVal() throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Val);
 	}
-	public final void setVal(String value)
+	public final void setVal(String value) throws Exception
 	{
 		this.SetValByKey(LangueAttr.Val, value);
 	}
-	public final String getModelKey()
+	public final String getModelKey() throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.ModelKey);
 	}
-	public final void setModelKey(String value)
+	public final void setModelKey(String value) throws Exception
 	{
 		this.SetValByKey(LangueAttr.ModelKey, value);
 	}
@@ -83,7 +90,7 @@ public class Langue extends EntityMyPK
 	public Langue()
 	{
 	}
-	public Langue(String pk)
+	public Langue(String pk) throws Exception
 	{
 		super(pk);
 	}
@@ -116,7 +123,7 @@ public class Langue extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getLang() + "_" + this.getModel() + "_" + this.getModelKey() + "_" + this.getSort() + "_" + this.getSortKey());
 		return super.beforeUpdateInsertAction();

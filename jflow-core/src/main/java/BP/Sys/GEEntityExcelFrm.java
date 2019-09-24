@@ -1,6 +1,8 @@
 package BP.Sys;
 
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -12,34 +14,37 @@ public class GEEntityExcelFrm extends EntityOID
 		///#region 属性。
 	/** 
 	 最后修改人
+	 * @throws Exception 
 	*/
-	public final String getLastEditer()
+	public final String getLastEditer() throws Exception
 	{
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.LastEditer);
 	}
-	public final void setLastEditer(String value)
+	public final void setLastEditer(String value) throws Exception
 	{
 		this.SetValByKey(GEEntityExcelFrmAttr.LastEditer, value);
 	}
 	/** 
 	 记录时间
+	 * @throws Exception 
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(GEEntityExcelFrmAttr.RDT, value);
 	}
 	/** 
 	 文件路径
+	 * @throws Exception 
 	*/
-	public final String getFilePath()
+	public final String getFilePath() throws Exception
 	{
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.FilePath);
 	}
-	public final void setFilePath(String value)
+	public final void setFilePath(String value) throws Exception
 	{
 		this.SetValByKey(GEEntityExcelFrmAttr.FilePath, value);
 	}
@@ -92,8 +97,9 @@ public class GEEntityExcelFrm extends EntityOID
 	 
 	 @param nodeid 节点ID
 	 @param _oid OID
+	 * @throws Exception 
 	*/
-	public GEEntityExcelFrm(String fk_mapdata, int oid)
+	public GEEntityExcelFrm(String fk_mapdata, int oid) throws Exception
 	{
 		this.FK_MapData = fk_mapdata;
 		this.setOID(oid);

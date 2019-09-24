@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.*;
 import java.util.*;
 
@@ -14,61 +15,65 @@ public class GroupEnsTemplate extends EntityOID
 		///#region 基本属性
 	/** 
 	 集合类名称
+	 * @throws Exception 
 	*/
-	public final String getEnsName()
+	public final String getEnsName() throws Exception
 	{
 		return this.GetValStringByKey(GroupEnsTemplateAttr.EnsName);
 	}
-	public final void setEnsName(String value)
+	public final void setEnsName(String value) throws Exception
 	{
 		this.SetValByKey(GroupEnsTemplateAttr.EnsName, value);
 	}
 	/** 
 	 实体名称
+	 * @throws Exception 
 	*/
-	public final String getOperateCol()
+	public final String getOperateCol() throws Exception
 	{
 		return this.GetValStringByKey(GroupEnsTemplateAttr.OperateCol);
 	}
-	public final void setOperateCol(String value)
+	public final void setOperateCol(String value) throws Exception
 	{
 		this.SetValByKey(GroupEnsTemplateAttr.OperateCol, value);
 	}
 	/** 
 	 数据源
+	 * @throws Exception 
 	*/
-	public final String getAttrs()
+	public final String getAttrs() throws Exception
 	{
 		return this.GetValStringByKey(GroupEnsTemplateAttr.Attrs);
 	}
-	public final void setAttrs(String value)
+	public final void setAttrs(String value) throws Exception
 	{
 		this.SetValByKey(GroupEnsTemplateAttr.Attrs, value);
 	}
 	/** 
 	 名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(GroupEnsTemplateAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(GroupEnsTemplateAttr.Name, value);
 	}
-	public final String getEnName()
+	public final String getEnName() throws Exception
 	{
 		return this.GetValStringByKey(GroupEnsTemplateAttr.EnName);
 	}
-	public final void setEnName(String value)
+	public final void setEnName(String value) throws Exception
 	{
 		this.SetValByKey(GroupEnsTemplateAttr.EnName, value);
 	}
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(GroupEnsTemplateAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(GroupEnsTemplateAttr.Rec, value);
 	}
@@ -80,7 +85,7 @@ public class GroupEnsTemplate extends EntityOID
 		///#region 构造方法
 
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
@@ -131,8 +136,9 @@ public class GroupEnsTemplate extends EntityOID
 	 @param className className
 	 @param attrs attrs
 	 @return 查询返回个数
+	 * @throws Exception 
 	*/
-	public final int Search(String fk_emp, String className, String attrs)
+	public final int Search(String fk_emp, String className, String attrs) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GroupEnsTemplateAttr.Rec, fk_emp);

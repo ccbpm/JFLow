@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -13,12 +15,13 @@ public class GEEntity extends Entity
 		///#region 构造函数
 	/** 
 	 设置或者获取主键值.
+	 * @throws Exception 
 	*/
-	public final long getOID()
+	public final long getOID() throws Exception
 	{
 		return this.GetValInt64ByKey("OID");
 	}
-	public final void setOID(long value)
+	public final void setOID(long value) throws Exception
 	{
 		this.SetValByKey("OID", value);
 	}
@@ -77,8 +80,9 @@ public class GEEntity extends Entity
 	 
 	 @param nodeid 节点ID
 	 @param _oid OID
+	 * @throws Exception 
 	*/
-	public GEEntity(String fk_mapdata, Object pk)
+	public GEEntity(String fk_mapdata, Object pk) throws Exception
 	{
 		this.FK_MapData = fk_mapdata;
 		this.setPKVal(pk);
@@ -127,8 +131,9 @@ public class GEEntity extends Entity
 	 从另外的一个实体来copy数据.
 	 
 	 @param en
+	 * @throws Exception 
 	*/
-	public final void CopyFromFrm(GEEntity en)
+	public final void CopyFromFrm(GEEntity en) throws Exception
 	{
 		//先求出来旧的OID.
 		long oldOID = this.getOID();
@@ -165,7 +170,7 @@ public class GEEntity extends Entity
 			GEDtl dtlEnBlank = new GEDtl(dtl.getNo());
 
 			// 遍历数据,执行copy.
-			for (GEDtl enDtlFrom : ensDtlFrom)
+			for (GEDtl enDtlFrom : ensDtlFrom.ToJavaList())
 			{
 				dtlEnBlank.Copy(enDtlFrom);
 				dtlEnBlank.setRefPK(String.valueOf(this.getOID()));
@@ -177,12 +182,12 @@ public class GEEntity extends Entity
 		//复制附件数据.
 		FrmAttachments aths = new FrmAttachments(this.FK_MapData);
 		FrmAttachments athsFrom = new FrmAttachments(en.FK_MapData);
-		for (FrmAttachment ath : aths)
+		for (FrmAttachment ath : aths.ToJavaList())
 		{
 			//删除数据,防止copy重复
 			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='" + this.FK_MapData + "' AND RefPKVal='" + this.getOID() + "'");
 
-			for (FrmAttachment athFrom : athsFrom)
+			for (FrmAttachment athFrom : athsFrom.ToJavaList())
 			{
 				if (!athFrom.getNoOfObj().equals(ath.getNoOfObj()))
 				{
@@ -191,7 +196,7 @@ public class GEEntity extends Entity
 
 				FrmAttachmentDBs athDBsFrom = new FrmAttachmentDBs();
 				athDBsFrom.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athFrom.getMyPK(), FrmAttachmentDBAttr.RefPKVal, String.valueOf(en.getOID()));
-				for (FrmAttachmentDB athDBFrom : athDBsFrom)
+				for (FrmAttachmentDB athDBFrom : athDBsFrom.ToJavaList())
 				{
 					athDBFrom.setMyPK(BP.DA.DBAccess.GenerGUID());
 					athDBFrom.setFK_FrmAttachment(ath.getMyPK());
@@ -206,8 +211,9 @@ public class GEEntity extends Entity
 	 把当前实体的数据copy到指定的主键数据表里.
 	 
 	 @param oid 指定的主键
+	 * @throws Exception 
 	*/
-	public final void CopyToOID(long oid)
+	public final void CopyToOID(long oid) throws Exception
 	{
 		//实例化历史数据表单entity.
 		long oidOID = this.getOID();
@@ -227,7 +233,7 @@ public class GEEntity extends Entity
 
 			ensDtl.Retrieve(GEDtlAttr.RefPK, String.valueOf(this.getOID()));
 
-			for (GEDtl enDtl : ensDtl)
+			for (GEDtl enDtl : ensDtl.ToJavaList())
 			{
 				enDtl.setRefPK(String.valueOf(this.getOID()));
 				enDtl.InsertAsNew();
@@ -236,14 +242,14 @@ public class GEEntity extends Entity
 
 		//复制附件数据.
 		FrmAttachments aths = new FrmAttachments(this.FK_MapData);
-		for (FrmAttachment ath : aths)
+		for (FrmAttachment ath : aths.ToJavaList())
 		{
 			//删除可能存在的新oid数据。
 			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='" + this.FK_MapData + "' AND RefPKVal='" + this.getOID() + "'");
 
 			//找出旧数据.
 			FrmAttachmentDBs athDBs = new FrmAttachmentDBs(this.FK_MapData, String.valueOf(oidOID));
-			for (FrmAttachmentDB athDB : athDBs)
+			for (FrmAttachmentDB athDB : athDBs.ToJavaList())
 			{
 				FrmAttachmentDB athDB_N = new FrmAttachmentDB();
 				athDB_N.Copy(athDB);

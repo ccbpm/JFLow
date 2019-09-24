@@ -17,106 +17,113 @@ public class AthUnReadLog extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 工作ID
+	 * @throws Exception 
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(AthUnReadLogAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.WorkID, value);
 	}
 	/** 
 	 操作人
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.FK_Emp, value);
 	}
 	/** 
 	 删除人员
+	 * @throws Exception 
 	*/
-	public final String getFK_EmpDept()
+	public final String getFK_EmpDept() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.FK_EmpDept);
 	}
-	public final void setFK_EmpDept(String value)
+	public final void setFK_EmpDept(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.FK_EmpDept, value);
 	}
-	public final String getFK_EmpDeptName()
+	public final String getFK_EmpDeptName() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.FK_EmpDeptName);
 	}
-	public final void setFK_EmpDeptName(String value)
+	public final void setFK_EmpDeptName(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.FK_EmpDeptName, value);
 	}
-	public final String getBeiZhu()
+	public final String getBeiZhu() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.BeiZhu);
 	}
-	public final void setBeiZhu(String value)
+	public final void setBeiZhu(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.BeiZhu, value);
 	}
-	public final String getBeiZhuHtml()
+	public final String getBeiZhuHtml() throws Exception
 	{
 		return this.GetValHtmlStringByKey(AthUnReadLogAttr.BeiZhu);
 	}
 	/** 
 	 记录日期
+	 * @throws Exception 
 	*/
-	public final String getSendDT()
+	public final String getSendDT() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.SendDT);
 	}
-	public final void setSendDT(String value)
+	public final void setSendDT(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.SendDT, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.FK_Flow, value);
 	}
 	/** 
 	 流程类别
+	 * @throws Exception 
 	*/
-	public final String getFlowName()
+	public final String getFlowName() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.FlowName);
 	}
-	public final void setFlowName(String value)
+	public final void setFlowName(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.FlowName, value);
 	}
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(AthUnReadLogAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
+	 * @throws Exception 
 	*/
-	public final String getNodeName()
+	public final String getNodeName() throws Exception
 	{
 		return this.GetValStringByKey(AthUnReadLogAttr.NodeName);
 	}
-	public final void setNodeName(String value)
+	public final void setNodeName(String value) throws Exception
 	{
 		SetValByKey(AthUnReadLogAttr.NodeName, value);
 	}

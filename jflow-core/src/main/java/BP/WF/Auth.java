@@ -17,23 +17,25 @@ public class Auth extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFlowNo()
+	public final String getFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(AuthAttr.FlowNo);
 	}
-	public final void setFlowNo(String value)
+	public final void setFlowNo(String value) throws Exception
 	{
 		this.SetValByKey(AuthAttr.FlowNo, value);
 	}
 	/** 
 	 取回日期
+	 * @throws Exception 
 	*/
-	public final String getTakeBackDT()
+	public final String getTakeBackDT() throws Exception
 	{
 		return this.GetValStringByKey(AuthAttr.TakeBackDT);
 	}
-	public final void setTakeBackDT(String value)
+	public final void setTakeBackDT(String value) throws Exception
 	{
 		this.SetValByKey(AuthAttr.TakeBackDT, value);
 	}

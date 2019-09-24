@@ -17,186 +17,190 @@ public class Bill extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 路径
+	 * @throws Exception 
 	*/
-	public final String getFullPath()
+	public final String getFullPath() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.FullPath);
 	}
-	public final void setFullPath(String value)
+	public final void setFullPath(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FullPath, value);
 	}
 	/** 
 	 参与人员
+	 * @throws Exception 
 	*/
-	public final String getEmps()
+	public final String getEmps() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.Emps);
 	}
-	public final void setEmps(String value)
+	public final void setEmps(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.Emps, value);
 	}
 	/** 
 	 发起日期
+	 * @throws Exception 
 	*/
-	public final String getStartDT()
+	public final String getStartDT() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.StartDT);
 	}
-	public final void setStartDT(String value)
+	public final void setStartDT(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.StartDT, value);
 	}
 	/** 
 	 单据类型
+	 * @throws Exception 
 	*/
-	public final String getFK_BillType()
+	public final String getFK_BillType() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.FK_BillType);
 	}
-	public final void setFK_BillType(String value)
+	public final void setFK_BillType(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_BillType, value);
 	}
 	/** 
 	 单据类型名称
 	*/
-	public final String getFK_BillTypeT()
+	public final String getFK_BillTypeT() throws Exception
 	{
 		return this.GetValStrByKey(BillAttr.FK_BillType);
 	}
 	/** 
 	 流程标题
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.Title, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_Flow, value);
 	}
 	/** 
 	 流程名称
 	*/
-	public final String getFK_FlowT()
+	public final String getFK_FlowT() throws Exception
 	{
 		return this.GetValRefTextByKey(BillAttr.FK_Flow);
 	}
 	/** 
 	 发起人名称
 	*/
-	public final String getFK_StarterT()
+	public final String getFK_StarterT() throws Exception
 	{
 		return this.GetValRefTextByKey(BillAttr.FK_Starter);
 	}
 	/** 
 	 发起人
 	*/
-	public final String getFK_Starter()
+	public final String getFK_Starter() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.FK_Starter);
 	}
-	public final void setFK_Starter(String value)
+	public final void setFK_Starter(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_Starter, value);
 	}
 	/** 
 	 操作人员
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_Emp, value);
 	}
 	/** 
 	 操作人员名称
 	*/
-	public final String getFK_EmpT()
+	public final String getFK_EmpT() throws Exception
 	{
 		return this.GetValRefTextByKey(BillAttr.FK_Emp);
 	}
 	/** 
 	 单据名称
 	*/
-	public final String getFK_BillText()
+	public final String getFK_BillText() throws Exception
 	{
 		return this.GetValRefTextByKey(BillAttr.FK_Bill);
 	}
 	/** 
 	 单据编号
 	*/
-	public final String getFK_Bill()
+	public final String getFK_Bill() throws Exception
 	{
 		return this.GetValStrByKey(BillAttr.FK_Bill);
 	}
-	public final void setFK_Bill(String value)
+	public final void setFK_Bill(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_Bill, value);
 	}
 	/** 
 	 年月
 	*/
-	public final String getFK_NY()
+	public final String getFK_NY() throws Exception
 	{
 		return this.GetValStrByKey(BillAttr.FK_NY);
 	}
-	public final void setFK_NY(String value)
+	public final void setFK_NY(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_NY, value);
 	}
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(BillAttr.WorkID);
 	}
-	public final void setWorkID(long value)
-	{
+	public final void setWorkID(long value) throws Exception
+	{ 
 		this.SetValByKey(BillAttr.WorkID, value);
 	}
 	/** 
 	 流程ID
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(BillAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FID, value);
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(BillAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
 	*/
-	public final String getFK_NodeT()
+	public final String getFK_NodeT() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		return nd.getName();
@@ -205,40 +209,40 @@ public class Bill extends EntityMyPK
 	/** 
 	 单据打印时间
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.RDT, value);
 	}
 	/** 
 	 部门
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.FK_Dept, value);
 	}
 	/** 
 	 部门名称
 	*/
-	public final String getFK_DeptT()
+	public final String getFK_DeptT() throws Exception
 	{
 		return this.GetValRefTextByKey(BillAttr.FK_Dept);
 	}
 	/** 
 	 超连接
 	*/
-	public final String getUrl()
+	public final String getUrl() throws Exception
 	{
 		return this.GetValStringByKey(BillAttr.Url);
 	}
-	public final void setUrl(String value)
+	public final void setUrl(String value) throws Exception
 	{
 		this.SetValByKey(BillAttr.Url, value);
 	}
@@ -346,7 +350,7 @@ public class Bill extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoOpen()
+	public final String DoOpen() throws Exception
 	{
 		String path = SystemConfig.getPathOfWebApp() + (this.getUrl());
 		return path;
@@ -356,7 +360,7 @@ public class Bill extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoOpenPDF()
+	public final String DoOpenPDF() throws Exception
 	{
 		String path = SystemConfig.getPathOfWebApp() + (this.getUrl());
 		return path;

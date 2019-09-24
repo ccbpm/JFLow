@@ -30,8 +30,9 @@ public class Entitis2Json
 	 * @param ens
 	 *            实体集合类
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String ConvertEntities2ListJson(Entities ens)
+	public static String ConvertEntities2ListJson(Entities ens) throws Exception
 	{
 		return getInstance().TranslateEntitiesToListJson(ens, null);
 	}
@@ -44,8 +45,9 @@ public class Entitis2Json
 	 * @param hidenKeys
 	 *            需要隐藏的列，如：@No@Name
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String ConvertEntities2ListJson(Entities ens, String hidenKeys)
+	public static String ConvertEntities2ListJson(Entities ens, String hidenKeys) throws Exception
 	{
 		return getInstance().TranslateEntitiesToListJson(ens, hidenKeys);
 	}
@@ -58,8 +60,9 @@ public class Entitis2Json
 	 * @param rootNo
 	 *            根节点编号
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String ConvertEntitis2GenerTree(Entities ens, String rootNo)
+	public static String ConvertEntitis2GenerTree(Entities ens, String rootNo) throws Exception
 	{
 		return getInstance().TansEntitiesToGenerTree(ens, rootNo);
 	}
@@ -70,8 +73,9 @@ public class Entitis2Json
 	 * @param ens
 	 *            实体集合类
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String ConvertEntitis2GridJsonOnlyData(Entities ens)
+	public static String ConvertEntitis2GridJsonOnlyData(Entities ens) throws Exception
 	{
 		return getInstance().TranslateEntitiesToGridJsonOnlyData(ens, 0, null);
 	}
@@ -84,9 +88,10 @@ public class Entitis2Json
 	 * @param totalRows
 	 *            总行数
 	 * @return
+	 * @throws Exception 
 	 */
 	public static String ConvertEntitis2GridJsonOnlyData(Entities ens,
-			int totalRows)
+			int totalRows) throws Exception
 	{
 		return getInstance().TranslateEntitiesToGridJsonOnlyData(ens,
 				totalRows, null);
@@ -100,9 +105,10 @@ public class Entitis2Json
 	 * @param hidenKeys
 	 *            需要隐藏的列，如：@No@Name
 	 * @return
+	 * @throws Exception 
 	 */
 	public static String ConvertEntitis2GridJsonOnlyData(Entities ens,
-			String hidenKeys)
+			String hidenKeys) throws Exception
 	{
 		return getInstance().TranslateEntitiesToGridJsonOnlyData(ens, 0,
 				hidenKeys);
@@ -118,9 +124,10 @@ public class Entitis2Json
 	 * @param hidenKeys
 	 *            需要隐藏的列，如：@No@Name
 	 * @return
+	 * @throws Exception 
 	 */
 	public static String ConvertEntitis2GridJsonOnlyData(Entities ens,
-			int totalRows, String hidenKeys)
+			int totalRows, String hidenKeys) throws Exception
 	{
 		return getInstance().TranslateEntitiesToGridJsonOnlyData(ens,
 				totalRows, hidenKeys);
@@ -132,8 +139,9 @@ public class Entitis2Json
 	 * @param ens
 	 *            实体集合类
 	 * @return Json格式数据
+	 * @throws Exception 
 	 */
-	public static String ConvertEntitis2GridJsonAndData(Entities ens)
+	public static String ConvertEntitis2GridJsonAndData(Entities ens) throws Exception
 	{
 		return getInstance()
 				.TranslateEntitiesToGridJsonColAndData(ens, 0, null);
@@ -147,9 +155,10 @@ public class Entitis2Json
 	 * @param totalRows
 	 *            总行数
 	 * @return Json格式数据
+	 * @throws Exception 
 	 */
 	public static String ConvertEntitis2GridJsonAndData(Entities ens,
-			int totalRows)
+			int totalRows) throws Exception
 	{
 		return getInstance().TranslateEntitiesToGridJsonColAndData(ens,
 				totalRows, null);
@@ -163,9 +172,10 @@ public class Entitis2Json
 	 * @param hidenKeys
 	 *            需要隐藏的列，如：@No@Name
 	 * @return
+	 * @throws Exception 
 	 */
 	public static String ConvertEntitis2GridJsonAndData(Entities ens,
-			String hidenKeys)
+			String hidenKeys) throws Exception
 	{
 		return getInstance().TranslateEntitiesToGridJsonColAndData(ens, 0,
 				hidenKeys);
@@ -181,9 +191,10 @@ public class Entitis2Json
 	 * @param hidenKeys
 	 *            需要隐藏的列，如：@No@Name
 	 * @return
+	 * @throws Exception 
 	 */
 	public static String ConvertEntitis2GridJsonAndData(Entities ens,
-			int totalRows, String hidenKeys)
+			int totalRows, String hidenKeys) throws Exception
 	{
 		return getInstance().TranslateEntitiesToGridJsonColAndData(ens,
 				totalRows, hidenKeys);
@@ -196,9 +207,10 @@ public class Entitis2Json
 	 * @param hidenKeys
 	 *            隐藏字段
 	 * @return
+	 * @throws Exception 
 	 */
 	public final String TranslateEntitiesToListJson(BP.En.Entities ens,
-			String hidenKeys)
+			String hidenKeys) throws Exception
 	{
 		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
@@ -241,9 +253,10 @@ public class Entitis2Json
 	 * @param ens
 	 * @param hidenKeys
 	 * @return
+	 * @throws Exception 
 	 */
 	public final String TranslateEntitiesToGridJsonOnlyData(BP.En.Entities ens,
-			int totalRows, String hidenKeys)
+			int totalRows, String hidenKeys) throws Exception
 	{
 		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
@@ -296,9 +309,10 @@ public class Entitis2Json
 	 * @param ens
 	 * @param hidenKeys
 	 * @return
+	 * @throws Exception 
 	 */
 	public final String TranslateEntitiesToGridJsonColAndData(Entities ens,
-			int totalRows, String hidenKeys)
+			int totalRows, String hidenKeys) throws Exception
 	{
 		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
@@ -380,7 +394,7 @@ public class Entitis2Json
 	private StringBuilder appendMenus = new StringBuilder();
 	private StringBuilder appendMenuSb = new StringBuilder();
 	
-	public final String TansEntitiesToGenerTree(Entities ens, String rootNo)
+	public final String TansEntitiesToGenerTree(Entities ens, String rootNo) throws Exception
 	{
 		appendMenus = new StringBuilder();
 		appendMenuSb = new StringBuilder();
@@ -405,7 +419,7 @@ public class Entitis2Json
 		return ReplaceIllgalChart(appendMenus.toString());
 	}
 	
-	public final void AddChildren(EntityTree parentEn, Entities ens)
+	public final void AddChildren(EntityTree parentEn, Entities ens) throws Exception
 	{
 		appendMenus.append(appendMenuSb);
 		appendMenuSb.setLength(0);

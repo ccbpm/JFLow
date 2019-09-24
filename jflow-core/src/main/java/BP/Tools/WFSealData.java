@@ -15,55 +15,56 @@ public class WFSealData extends EntityMyPK
 	// 用户日志信息键值列表
 	
 	// 基本属性
-	public final String getSealData()
+	public final String getSealData() throws Exception
 	{
 		return this.GetValStringByKey(WFSealDataAttr.SealData);
 	}
 	
-	public final void setSealData(String value)
+	public final void setSealData(String value) throws Exception
 	{
 		this.SetValByKey(WFSealDataAttr.SealData, value);
 	}
 	
 	/**
 	 * FK_Emp
+	 * @throws Exception 
 	 */
-	public final String getFK_Node()
+	public final String getFK_Node() throws Exception
 	{
 		return this.GetValStringByKey(WFSealDataAttr.FK_Node);
 	}
 	
-	public final void setFK_Node(String value)
+	public final void setFK_Node(String value) throws Exception
 	{
 		this.SetValByKey(WFSealDataAttr.FK_Node, value);
 	}
 	
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(WFSealDataAttr.RDT);
 	}
 	
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(WFSealDataAttr.RDT, value);
 	}
 	
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(WFSealDataAttr.FK_MapData);
 	}
 	
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(WFSealDataAttr.FK_MapData, value);
 	}
 	
-	public final String getOID()
+	public final String getOID() throws Exception
 	{
 		return this.GetValStringByKey(WFSealDataAttr.OID);
 	}
 	
-	public final void setOID(String value)
+	public final void setOID(String value) throws Exception
 	{
 		this.SetValByKey(WFSealDataAttr.OID, value);
 	}

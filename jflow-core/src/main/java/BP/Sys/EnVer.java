@@ -16,71 +16,77 @@ public class EnVer extends EntityMyPK
 
 	/** 
 	 实体类
+	 * @throws Exception 
 	*/
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return this.GetValStrByKey(EnVerAttr.No);
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws Exception
 	{
 		this.SetValByKey(EnVerAttr.No, value);
 	}
 
 	/** 
 	 实体类名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStrByKey(EnVerAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(EnVerAttr.Name, value);
 	}
 
 	/** 
 	 版本号
+	 * @throws Exception 
 	*/
-	public final int getEVer()
+	public final int getEVer() throws Exception
 	{
 		return this.GetValIntByKey(EnVerAttr.EVer);
 	}
-	public final void setEVer(int value)
+	public final void setEVer(int value) throws Exception
 	{
 		this.SetValByKey(EnVerAttr.EVer, value);
 	}
 	/** 
 	 修改人
+	 * @throws Exception 
 	*/
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStrByKey(EnVerAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(EnVerAttr.Rec, value);
 	}
 
 	/** 
 	 修改日期
+	 * @throws Exception 
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStrByKey(EnVerAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(EnVerAttr.RDT, value);
 	}
 
 	/** 
 	 主键值
+	 * @throws Exception 
 	*/
-	public final String getPKValue()
+	public final String getPKValue() throws Exception
 	{
 		return this.GetValStrByKey(EnVerAttr.PKValue);
 	}
-	public final void setPKValue(String value)
+	public final void setPKValue(String value) throws Exception
 	{
 		this.SetValByKey(EnVerAttr.PKValue, value);
 	}
@@ -101,7 +107,7 @@ public class EnVer extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();

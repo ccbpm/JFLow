@@ -14,204 +14,221 @@ public class ExcelField extends EntityNoName
 		///#region 属性
 	/** 
 	 获取或设置单元格名称
+	 * @throws Exception 
 	*/
-	public final String getCellName()
+	public final String getCellName() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.CellName);
 	}
-	public final void setCellName(String value)
+	public final void setCellName(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.CellName, value);
 	}
 
 	/** 
 	 获取或设置行号
+	 * @throws Exception 
 	*/
-	public final int getCellRow()
+	public final int getCellRow() throws Exception
 	{
 		return this.GetValIntByKey(ExcelFieldAttr.CellRow);
 	}
-	public final void setCellRow(int value)
+	public final void setCellRow(int value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.CellRow, value);
 	}
 
 	/** 
 	 获取或设置列号
+	 * @throws Exception 
 	*/
-	public final int getCellColumn()
+	public final int getCellColumn() throws Exception
 	{
 		return this.GetValIntByKey(ExcelFieldAttr.CellColumn);
 	}
-	public final void setCellColumn(int value)
+	public final void setCellColumn(int value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.CellColumn, value);
 	}
 
 	/** 
 	 获取或设置ExcelSheet
+	 * @throws Exception 
 	*/
-	public final String getFK_ExcelSheet()
+	public final String getFK_ExcelSheet() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.FK_ExcelSheet);
 	}
-	public final void setFK_ExcelSheet(String value)
+	public final void setFK_ExcelSheet(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.FK_ExcelSheet, value);
 	}
 
 	/** 
 	 获取或设置存储字段名
+	 * @throws Exception 
 	*/
-	public final String getField()
+	public final String getField() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.Field);
 	}
-	public final void setField(String value)
+	public final void setField(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.Field, value);
 	}
 
 	/** 
 	 获取或设置存储数据表
+	 * @throws Exception 
 	*/
-	public final String getFK_ExcelTable()
+	public final String getFK_ExcelTable() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.FK_ExcelTable);
 	}
-	public final void setFK_ExcelTable(String value)
+	public final void setFK_ExcelTable(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.FK_ExcelTable, value);
 	}
 
 	/** 
 	 获取或设置值类型
+	 * @throws Exception 
 	*/
-	public final ExcelFieldDataType getDataType()
+	public final ExcelFieldDataType getDataType() throws Exception
 	{
 		return ExcelFieldDataType.forValue(this.GetValIntByKey(ExcelFieldAttr.DataType, 0));
 	}
-	public final void setDataType(ExcelFieldDataType value)
+	public final void setDataType(ExcelFieldDataType value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.DataType, value.getValue());
 	}
 
 	/** 
 	 获取或设置数据源表/枚举
+	 * @throws Exception 
 	*/
-	public final String getUIBindKey()
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value)
+	public final void setUIBindKey(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.UIBindKey, value);
 	}
 
 	/** 
 	 获取或设置数据源表No
+	 * @throws Exception 
 	*/
-	public final String getUIRefKey()
+	public final String getUIRefKey() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.UIRefKey);
 	}
-	public final void setUIRefKey(String value)
+	public final void setUIRefKey(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.UIRefKey, value);
 	}
 
 	/** 
 	 获取或设置数据源表Name
+	 * @throws Exception 
 	*/
-	public final String getUIRefKeyText()
+	public final String getUIRefKeyText() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.UIRefKeyText);
 	}
-	public final void setUIRefKeyText(String value)
+	public final void setUIRefKeyText(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.UIRefKeyText, value);
 	}
 
 	/** 
 	 获取或设置校验器
+	 * @throws Exception 
 	*/
-	public final String getValidators()
+	public final String getValidators() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.Validators);
 	}
-	public final void setValidators(String value)
+	public final void setValidators(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.Validators, value);
 	}
 
 	/** 
 	 获取或设置Excel模板
+	 * @throws Exception 
 	*/
-	public final String getFK_ExcelFile()
+	public final String getFK_ExcelFile() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.FK_ExcelFile);
 	}
-	public final void setFK_ExcelFile(String value)
+	public final void setFK_ExcelFile(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.FK_ExcelFile, value);
 	}
 
 	/** 
 	 获取或设置
+	 * @throws Exception 
 	*/
-	public final String getAtPara()
+	public final String getAtPara() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.AtPara);
 	}
-	public final void setAtPara(String value)
+	public final void setAtPara(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.AtPara, value);
 	}
 
 	/** 
 	 获取或设置单元格确认方式
+	 * @throws Exception 
 	*/
-	public final ConfirmKind getConfirmKind()
+	public final ConfirmKind getConfirmKind() throws Exception
 	{
 		return ConfirmKind.forValue(this.GetValIntByKey(ExcelFieldAttr.ConfirmKind, 0));
 	}
-	public final void setConfirmKind(ConfirmKind value)
+	public final void setConfirmKind(ConfirmKind value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.ConfirmKind, value.getValue());
 	}
 
 	/** 
 	 获取或设置单元格确认方向移动量
+	 * @throws Exception 
 	*/
-	public final int getConfirmCellCount()
+	public final int getConfirmCellCount() throws Exception
 	{
 		return this.GetValIntByKey(ExcelFieldAttr.ConfirmCellCount, 1);
 	}
-	public final void setConfirmCellCount(int value)
+	public final void setConfirmCellCount(int value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.ConfirmCellCount, value);
 	}
 
 	/** 
 	 获取或设置对应单元格值
+	 * @throws Exception 
 	*/
-	public final String getConfirmCellValue()
+	public final String getConfirmCellValue() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.ConfirmCellValue);
 	}
-	public final void setConfirmCellValue(String value)
+	public final void setConfirmCellValue(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.ConfirmCellValue, value);
 	}
 
 	/** 
 	 获取或设置对应单元格值重复选定次序
+	 * @throws Exception 
 	*/
-	public final int getConfirmRepeatIndex()
+	public final int getConfirmRepeatIndex() throws Exception
 	{
 		return this.GetValIntByKey(ExcelFieldAttr.ConfirmRepeatIndex);
 	}
-	public final void setConfirmRepeatIndex(int value)
+	public final void setConfirmRepeatIndex(int value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.ConfirmRepeatIndex, value);
 	}
@@ -223,19 +240,20 @@ public class ExcelField extends EntityNoName
 	{
 		return this.GetValBooleanByKey(ExcelFieldAttr.SkipIsNull, false);
 	}
-	public final void setSkipIsNull(boolean value)
+	public final void setSkipIsNull(boolean value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.SkipIsNull, value);
 	}
 
 	/** 
 	 获取或设置同步到字段
+	 * @throws Exception 
 	*/
-	public final String getSyncToField()
+	public final String getSyncToField() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFieldAttr.SyncToField);
 	}
-	public final void setSyncToField(String value)
+	public final void setSyncToField(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFieldAttr.SyncToField, value);
 	}

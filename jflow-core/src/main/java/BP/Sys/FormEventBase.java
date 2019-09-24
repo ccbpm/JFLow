@@ -277,8 +277,9 @@ public abstract class FormEventBase
 	 @param atPara
 	 @param jumpToEmps
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoIt(String eventType, Entity en, String atPara)
+	public final String DoIt(String eventType, Entity en, String atPara) throws Exception
 	{
 		this.HisEn = en;
 

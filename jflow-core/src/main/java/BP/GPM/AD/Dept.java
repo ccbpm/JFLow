@@ -2,6 +2,7 @@ package BP.GPM.AD;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import BP.GPM.*;
 import java.util.*;
@@ -15,35 +16,38 @@ public class Dept extends EntityTree
 		///#region 属性
 	/** 
 	 全名
+	 * @throws Exception 
 	*/
-	public final String getNameOfPath()
+	public final String getNameOfPath() throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.NameOfPath);
 	}
-	public final void setNameOfPath(String value)
+	public final void setNameOfPath(String value) throws Exception
 	{
 		this.SetValByKey(DeptAttr.NameOfPath, value);
 	}
 	/** 
 	 父节点的ID
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
 	private Depts _HisSubDepts = null;
 	/** 
 	 它的子节点
+	 * @throws Exception 
 	*/
-	public final Depts getHisSubDepts()
+	public final Depts getHisSubDepts() throws Exception
 	{
 		if (_HisSubDepts == null)
 		{
-			_HisSubDepts = new Depts(this.No);
+			_HisSubDepts = new Depts(this.getNo());
 		}
 		return _HisSubDepts;
 	}
@@ -62,8 +66,9 @@ public class Dept extends EntityTree
 	 部门
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Dept(String no)
+	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
@@ -73,7 +78,7 @@ public class Dept extends EntityTree
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -91,11 +96,11 @@ public class Dept extends EntityTree
 		}
 
 		Map map = new Map();
-		map.EnDBUrl = new DBUrl(DBUrlType.AppCenterDSN); //连接到的那个数据库上. (默认的是: AppCenterDSN )
-		map.PhysicsTable = "Port_Dept";
+		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); //连接到的那个数据库上. (默认的是: AppCenterDSN )
+		map.setPhysicsTable("Port_Dept");
 		map.Java_SetEnType(EnType.Admin);
 
-		map.setEnDesc( "部门"; //  实体的描述.
+		map.setEnDesc("部门"); //  实体的描述.
 		map.Java_SetDepositaryOfEntity(Depositary.None); //实体map的存放位置.
 		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
 

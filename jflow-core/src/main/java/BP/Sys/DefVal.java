@@ -12,89 +12,97 @@ public class DefVal extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 父节点编号
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.ParentNo, value);
 	}
 	/** 
 	 是否父节点
+	 * @throws Exception 
 	*/
-	public final String getIsParent()
+	public final String getIsParent() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.IsParent);
 	}
-	public final void setIsParent(String value)
+	public final void setIsParent(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.IsParent, value);
 	}
 	/** 
 	 词汇类别
+	 * @throws Exception 
 	*/
-	public final String getWordsSort()
+	public final String getWordsSort() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.WordsSort);
 	}
-	public final void setWordsSort(String value)
+	public final void setWordsSort(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.WordsSort, value);
 	}
 	/** 
 	 节点编号
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.FK_MapData, value);
 	}
 	/** 
 	 节点对应字段
+	 * @throws Exception 
 	*/
-	public final String getAttrKey()
+	public final String getAttrKey() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.AttrKey);
 	}
-	public final void setAttrKey(String value)
+	public final void setAttrKey(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.AttrKey, value);
 	}
 	/** 
 	 是否历史词汇
+	 * @throws Exception 
 	*/
-	public final String getLB()
+	public final String getLB() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.LB);
 	}
-	public final void setLB(String value)
+	public final void setLB(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.LB, value);
 	}
 	/** 
 	 人员编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.FK_Emp, value);
 	}
 	/** 
 	 节点文本
+	 * @throws Exception 
 	*/
-	public final String getCurValue()
+	public final String getCurValue() throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.CurValue);
 	}
-	public final void setCurValue(String value)
+	public final void setCurValue(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.CurValue, value);
 	}

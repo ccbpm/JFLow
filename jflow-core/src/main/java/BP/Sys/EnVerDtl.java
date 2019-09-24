@@ -15,9 +15,10 @@ public class EnVerDtl extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -26,47 +27,51 @@ public class EnVerDtl extends EntityMyPK
 	}
 	/** 
 	 实体名称
+	 * @throws Exception 
 	*/
-	public final String getEnName()
+	public final String getEnName() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.EnName);
 	}
-	public final void setEnName(String value)
+	public final void setEnName(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.EnName, value);
 	}
 	/** 
 	 字段
+	 * @throws Exception 
 	*/
-	public final String getAttrKey()
+	public final String getAttrKey() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.AttrKey);
 	}
 
-	public final void setAttrKey(String value)
+	public final void setAttrKey(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.AttrKey, value);
 	}
 	/** 
 	 版本主表PK
+	 * @throws Exception 
 	*/
-	public final String getEnVerPK()
+	public final String getEnVerPK() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.EnVerPK);
 	}
 
-	public final void setEnVerPK(String value)
+	public final void setEnVerPK(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.EnVerPK, value);
 	}
 	/** 
 	字段名
+	 * @throws Exception 
 	*/
-	public final String getAttrName()
+	public final String getAttrName() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.AttrName);
 	}
-	public final void setAttrName(String value)
+	public final void setAttrName(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.AttrName, value);
 	}
@@ -75,54 +80,57 @@ public class EnVerDtl extends EntityMyPK
 
 	/** 
 	 旧值
+	 * @throws Exception 
 	*/
-	public final String getOldVal()
+	public final String getOldVal() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.OldVal);
 	}
-	public final void setOldVal(String value)
+	public final void setOldVal(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.OldVal, value);
 	}
 
 	/** 
 	 新值
+	 * @throws Exception 
 	*/
-	public final String getNewVal()
+	public final String getNewVal() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.NewVal);
 	}
-	public final void setNewVal(String value)
+	public final void setNewVal(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.NewVal, value);
 	}
 
 	/** 
 	 版本号
+	 * @throws Exception 
 	*/
-	public final int getEnVer()
+	public final int getEnVer() throws Exception
 	{
 		return this.GetValIntByKey(EnVerDtlAttr.EnVer);
 	}
-	public final void setEnVer(int value)
+	public final void setEnVer(int value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.EnVer, value);
 	}
 
 
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.RDT, value);
 	}
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		SetValByKey(EnVerDtlAttr.Rec, value);
 	}

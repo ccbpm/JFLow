@@ -15,36 +15,39 @@ public class ExcelFile extends EntityNoName
 		///#region 属性
 	/** 
 	 获取或设置标识
+	 * @throws Exception 
 	*/
-	public final String getMark()
+	public final String getMark() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFileAttr.Mark);
 	}
-	public final void setMark(String value)
+	public final void setMark(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFileAttr.Mark, value);
 	}
 
 	/** 
 	 获取或设置类型
+	 * @throws Exception 
 	*/
-	public final ExcelType getExcelType()
+	public final ExcelType getExcelType() throws Exception
 	{
 		return ExcelType.forValue(this.GetValIntByKey(ExcelFileAttr.ExcelType));
 	}
-	public final void setExcelType(ExcelType value)
+	public final void setExcelType(ExcelType value) throws Exception
 	{
 		this.SetValByKey(ExcelFileAttr.ExcelType, value);
 	}
 
 	/** 
 	 获取或设置上传说明
+	 * @throws Exception 
 	*/
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		return this.GetValStrByKey(ExcelFileAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(ExcelFileAttr.Note, value);
 	}
@@ -115,7 +118,7 @@ public class ExcelFile extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion EnMap
 
-	public final String ExcelConfig()
+	public final String ExcelConfig() throws Exception
 	{
 		return SystemConfig.getCCFlowWebPath() + "WF/Admin/ExcelUploadConfig.htm?No=" + this.getNo();
 	}

@@ -14,24 +14,26 @@ public class ExcelSheet extends EntityNoName
 		///#region 属性
 	/** 
 	 获取或设置Excel模板
+	 * @throws Exception 
 	*/
-	public final String getFK_ExcelFile()
+	public final String getFK_ExcelFile() throws Exception
 	{
 		return this.GetValStrByKey(ExcelSheetAttr.FK_ExcelFile);
 	}
-	public final void setFK_ExcelFile(String value)
+	public final void setFK_ExcelFile(String value) throws Exception
 	{
 		this.SetValByKey(ExcelSheetAttr.FK_ExcelFile, value);
 	}
 
 	/** 
 	 获取或设置Sheet索引
+	 * @throws Exception 
 	*/
-	public final int getSheetIndex()
+	public final int getSheetIndex() throws Exception
 	{
 		return this.GetValIntByKey(ExcelSheetAttr.SheetIndex);
 	}
-	public final void setSheetIndex(int value)
+	public final void setSheetIndex(int value) throws Exception
 	{
 		this.SetValByKey(ExcelSheetAttr.SheetIndex, value);
 	}

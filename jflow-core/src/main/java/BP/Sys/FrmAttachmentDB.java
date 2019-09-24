@@ -16,35 +16,38 @@ public class FrmAttachmentDB extends EntityMyPK
 		///#region 属性
 	/** 
 	 类别
+	 * @throws Exception 
 	*/
-	public final String getSort()
+	public final String getSort() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.Sort);
 	}
-	public final void setSort(String value)
+	public final void setSort(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.Sort, value);
 	}
 	/** 
 	 记录日期
+	 * @throws Exception 
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		String str = this.GetValStringByKey(FrmAttachmentDBAttr.RDT);
 		return str.substring(5, 16);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.RDT, value);
 	}
 	/** 
 	 文件
+	 * @throws Exception 
 	*/
-	public final String getFileFullName()
+	public final String getFileFullName() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FileFullName);
 	}
-	public final void setFileFullName(String value)
+	public final void setFileFullName(String value) throws Exception
 	{
 		String str = value;
 		str = str.replace("~", "-");
@@ -60,31 +63,34 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 上传GUID
+	 * @throws Exception 
 	*/
-	public final String getUploadGUID()
+	public final String getUploadGUID() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.UploadGUID);
 	}
-	public final void setUploadGUID(String value)
+	public final void setUploadGUID(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.UploadGUID, value);
 	}
 	/** 
 	 附件路径
+	 * @throws Exception 
 	*/
-	public final String getFilePathName()
+	public final String getFilePathName() throws Exception
 	{
 
 		return this.getFileFullName().substring(this.getFileFullName().lastIndexOf('\\') + 1);
 	}
 	/** 
 	 附件名称
+	 * @throws Exception 
 	*/
-	public final String getFileName()
+	public final String getFileName() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FileName);
 	}
-	public final void setFileName(String value)
+	public final void setFileName(String value) throws Exception
 	{
 		String str = value;
 		str = str.replace("~", "-");
@@ -100,23 +106,25 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 附件扩展名
+	 * @throws Exception 
 	*/
-	public final String getFileExts()
+	public final String getFileExts() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FileExts);
 	}
-	public final void setFileExts(String value)
+	public final void setFileExts(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FileExts, value.replace(".", ""));
 	}
 	/** 
 	 相关附件
+	 * @throws Exception 
 	*/
-	public final String getFK_FrmAttachment()
+	public final String getFK_FrmAttachment() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FK_FrmAttachment);
 	}
-	public final void setFK_FrmAttachment(String value)
+	public final void setFK_FrmAttachment(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FK_FrmAttachment, value);
 
@@ -127,111 +135,121 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 主键值
+	 * @throws Exception 
 	*/
-	public final String getRefPKVal()
+	public final String getRefPKVal() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.RefPKVal);
 	}
-	public final void setRefPKVal(String v)
+	public final void setRefPKVal(String v) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.RefPKVal, v);
 	}
 	/** 
 	 工作ID.
+	 * @throws Exception 
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(FrmAttachmentDBAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FID, value);
 	}
 	/** 
 	 MyNote
+	 * @throws Exception 
 	*/
-	public final String getMyNote()
+	public final String getMyNote() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.MyNote);
 	}
-	public final void setMyNote(String value)
+	public final void setMyNote(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.MyNote, value);
 	}
 	/** 
 	 记录人
+	 * @throws Exception 
 	*/
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.Rec, value);
 	}
 	/** 
 	 记录人名称
+	 * @throws Exception 
 	*/
-	public final String getRecName()
+	public final String getRecName() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.RecName);
 	}
-	public final void setRecName(String value)
+	public final void setRecName(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.RecName, value);
 	}
 	/** 
 	 附件编号
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FK_MapData, value);
 	}
 	/** 
 	 文件大小
+	 * @throws Exception 
 	*/
-	public final float getFileSize()
+	public final float getFileSize() throws Exception
 	{
 		return this.GetValFloatByKey(FrmAttachmentDBAttr.FileSize);
 	}
-	public final void setFileSize(float value)
+	public final void setFileSize(float value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FileSize, value / 1024);
 	}
 	/** 
 	 是否锁定行?
+	 * @throws Exception 
 	*/
-	public final boolean getIsRowLock()
+	public final boolean getIsRowLock() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentDBAttr.IsRowLock);
 	}
-	public final void setIsRowLock(boolean value)
+	public final void setIsRowLock(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.IsRowLock, value);
 	}
 	/** 
 	 显示顺序
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(FrmAttachmentDBAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.Idx, value);
 	}
 	/** 
 	 附件扩展名
+	 * @throws Exception 
 	*/
-	public final String getNodeID()
+	public final String getNodeID() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.NodeID);
 	}
-	public final void setNodeID(String value)
+	public final void setNodeID(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.NodeID, value);
 	}

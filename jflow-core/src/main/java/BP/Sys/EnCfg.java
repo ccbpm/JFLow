@@ -16,11 +16,11 @@ public class EnCfg extends EntityNo
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region UI设置.
-	public final String getUI()
+	public final String getUI() throws Exception
 	{
 		return this.GetValStringByKey(EnCfgAttr.UI);
 	}
-	public final void setUI(String value)
+	public final void setUI(String value) throws Exception
 	{
 		this.SetValByKey(EnCfgAttr.UI, value);
 	}
@@ -31,30 +31,33 @@ public class EnCfg extends EntityNo
 		///#region 基本属性
 	/** 
 	 数据分析方式
+	 * @throws Exception 
 	*/
-	public final String getDatan()
+	public final String getDatan() throws Exception
 	{
 		return this.GetValStringByKey(EnCfgAttr.Datan);
 	}
-	public final void setDatan(String value)
+	public final void setDatan(String value) throws Exception
 	{
 		this.SetValByKey(EnCfgAttr.Datan, value);
 	}
 	/** 
 	 数据源
+	 * @throws Exception 
 	*/
-	public final String getGroupTitle()
+	public final String getGroupTitle() throws Exception
 	{
 		return this.GetValStringByKey(EnCfgAttr.GroupTitle);
 	}
-	public final void setGroupTitle(String value)
+	public final void setGroupTitle(String value) throws Exception
 	{
 		this.SetValByKey(EnCfgAttr.GroupTitle, value);
 	}
 	/** 
 	 附件路径
+	 * @throws Exception 
 	*/
-	public final String getFJSavePath()
+	public final String getFJSavePath() throws Exception
 	{
 		String str = this.GetValStringByKey(EnCfgAttr.FJSavePath);
 		if (str.equals("") || str == null || str.equals(""))
@@ -63,7 +66,7 @@ public class EnCfg extends EntityNo
 		}
 		return str;
 	}
-	public final void setFJSavePath(String value)
+	public final void setFJSavePath(String value) throws Exception
 	{
 		this.SetValByKey(EnCfgAttr.FJSavePath, value);
 	}
@@ -85,7 +88,7 @@ public class EnCfg extends EntityNo
 		}
 		return str;
 	}
-	public final void setFJWebPath(String value)
+	public final void setFJWebPath(String value) throws Exception
 	{
 		this.SetValByKey(EnCfgAttr.FJWebPath, value);
 	}
@@ -96,23 +99,25 @@ public class EnCfg extends EntityNo
 		///#region 参数属性.
 	/** 
 	 批处理-设置页面大小
+	 * @throws Exception 
 	*/
-	public final int getPageSizeOfBatch()
+	public final int getPageSizeOfBatch() throws Exception
 	{
 		return this.GetParaInt("PageSizeOfBatch", 600);
 	}
-	public final void setPageSizeOfBatch(int value)
+	public final void setPageSizeOfBatch(int value) throws Exception
 	{
 		this.SetPara("PageSizeOfBatch", value);
 	}
 	/** 
 	 批处理-设置页面大小
+	 * @throws Exception 
 	*/
-	public final int getPageSizeOfSearch()
+	public final int getPageSizeOfSearch() throws Exception
 	{
 		return this.GetParaInt("PageSizeOfSearch", 15);
 	}
-	public final void setPageSizeOfSearch(int value)
+	public final void setPageSizeOfSearch(int value) throws Exception
 	{
 		this.SetPara("PageSizeOfSearch", value);
 	}

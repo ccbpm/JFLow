@@ -29,16 +29,17 @@ public class Depts extends EntitiesTree
 	 部门集合
 	 
 	 @param parentNo 父部门No
+	 * @throws Exception 
 	*/
-	public Depts(String parentNo)
+	public Depts(String parentNo) throws Exception
 	{
 		this.Retrieve(DeptAttr.ParentNo, parentNo);
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.addOrderBy(GPM.DeptAttr.Idx);
+		qo.addOrderBy(DeptAttr.Idx);
 		return qo.DoQuery();
 	}
 

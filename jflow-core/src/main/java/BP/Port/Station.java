@@ -2,6 +2,7 @@ package BP.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import java.util.*;
 
@@ -13,13 +14,13 @@ public class Station extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 实现基本的方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStrByKey("Name");
 	}
@@ -38,8 +39,9 @@ public class Station extends EntityNoName
 	 岗位
 	 
 	 @param no 岗位编号
+	 * @throws Exception 
 	*/
-	public Station(String no)
+	public Station(String no) throws Exception
 	{
 		this.setNo(no.trim());
 		if (this.getNo().length() == 0)
@@ -103,7 +105,7 @@ public class Station extends EntityNoName
 			{
 				throw new RuntimeException("@编号为(" + this.getNo() + ")的岗位不存在。");
 			}
-			this.getRow().LoadDataTable(dt, dt.Rows[0]);
+			this.getRow().LoadDataTable(dt, dt.Rows.get(0));
 			return 1;
 		}
 		else
@@ -127,7 +129,7 @@ public class Station extends EntityNoName
 			{
 				return 0;
 			}
-			this.getRow().LoadDataTable(dt, dt.Rows[0]);
+			this.getRow().LoadDataTable(dt, dt.Rows.get(0));
 			return 1;
 		}
 		else

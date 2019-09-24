@@ -15,34 +15,37 @@ public class ExtContral extends EntityMyPK
 		///#region 基本-属性
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段名
+	 * @throws Exception 
 	*/
-	public final String getKeyOfEn()
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
+	public final void setKeyOfEn(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 控件类型
+	 * @throws Exception 
 	*/
-	public final UIContralType getUIContralType()
+	public final UIContralType getUIContralType() throws Exception
 	{
 		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
 	}
-	public final void setUIContralType(UIContralType value)
+	public final void setUIContralType(UIContralType value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
 	}
@@ -53,23 +56,25 @@ public class ExtContral extends EntityMyPK
 		///#region 附件属性
 	/** 
 	 关联的字段.
+	 * @throws Exception 
 	*/
-	public final String getAthRefObj()
+	public final String getAthRefObj() throws Exception
 	{
 		return this.GetParaString("AthRefObj");
 	}
-	public final void setAthRefObj(String value)
+	public final void setAthRefObj(String value) throws Exception
 	{
 		this.SetPara("AthRefObj", value);
 	}
 	/** 
 	 显示方式
+	 * @throws Exception 
 	*/
-	public final AthShowModel getAthShowModel()
+	public final AthShowModel getAthShowModel() throws Exception
 	{
 		return AthShowModel.forValue(this.GetParaInt("AthShowModel"));
 	}
-	public final void setAthShowModel(AthShowModel value)
+	public final void setAthShowModel(AthShowModel value) throws Exception
 	{
 		this.SetPara("AthShowModel", value.getValue());
 	}

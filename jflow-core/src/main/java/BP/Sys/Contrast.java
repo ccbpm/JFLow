@@ -16,8 +16,9 @@ public class Contrast extends EntityMyPK
 
 	/** 
 	 属性
+	 * @throws Exception 
 	*/
-	public final String getContrastKey()
+	public final String getContrastKey() throws Exception
 	{
 		String s = this.GetValStringByKey(ContrastAttr.ContrastKey);
 		if (s == null || s.equals(""))
@@ -27,59 +28,59 @@ public class Contrast extends EntityMyPK
 
 		return s;
 	}
-	public final void setContrastKey(String value)
+	public final void setContrastKey(String value) throws Exception
 	{
 		this.SetValByKey(ContrastAttr.ContrastKey, value);
 	}
 
-	public final String getKeyVal1()
+	public final String getKeyVal1() throws Exception
 	{
 		return this.GetValStringByKey(ContrastAttr.KeyVal1);
 	}
-	public final void setKeyVal1(String value)
+	public final void setKeyVal1(String value) throws Exception
 	{
 		this.SetValByKey(ContrastAttr.KeyVal1, value);
 	}
-	public final String getKeyVal2()
+	public final String getKeyVal2() throws Exception
 	{
 		return this.GetValStringByKey(ContrastAttr.KeyVal2);
 	}
-	public final void setKeyVal2(String value)
+	public final void setKeyVal2(String value) throws Exception
 	{
 		this.SetValByKey(ContrastAttr.KeyVal2, value);
 	}
 
-	public final String getSortBy()
+	public final String getSortBy() throws Exception
 	{
 		return this.GetValStringByKey(ContrastAttr.SortBy);
 	}
-	public final void setSortBy(String value)
+	public final void setSortBy(String value) throws Exception
 	{
 		this.SetValByKey(ContrastAttr.SortBy, value);
 	}
 
-	public final String getKeyOfNum()
+	public final String getKeyOfNum() throws Exception
 	{
 		return this.GetValStringByKey(ContrastAttr.KeyOfNum);
 	}
-	public final void setKeyOfNum(String value)
+	public final void setKeyOfNum(String value) throws Exception
 	{
 		this.SetValByKey(ContrastAttr.KeyOfNum, value);
 	}
 
-	public final int getGroupWay()
+	public final int getGroupWay() throws Exception
 	{
 		return this.GetValIntByKey(ContrastAttr.GroupWay);
 	}
-	public final void setGroupWay(int value)
+	public final void setGroupWay(int value) throws Exception
 	{
 		this.SetValByKey(ContrastAttr.GroupWay, value);
 	}
-	public final String getOrderWay()
+	public final String getOrderWay() throws Exception
 	{
 		return this.GetValStringByKey(ContrastAttr.OrderWay);
 	}
-	public final void setOrderWay(String value)
+	public final void setOrderWay(String value) throws Exception
 	{
 		this.SetValByKey(ContrastAttr.OrderWay, value);
 	}

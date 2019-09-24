@@ -16,12 +16,13 @@ public class Dept extends EntityNoName
 		///#region 属性
 	/** 
 	 父节点的ID
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
@@ -32,8 +33,9 @@ public class Dept extends EntityNoName
 	private Depts _HisSubDepts = null;
 	/** 
 	 它的子节点
+	 * @throws Exception 
 	*/
-	public final Depts getHisSubDepts()
+	public final Depts getHisSubDepts() throws Exception
 	{
 		if (_HisSubDepts == null)
 		{
@@ -68,7 +70,7 @@ public class Dept extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -120,7 +122,7 @@ public class Dept extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final String History()
+	public final String History() throws Exception
 	{
 		return "EnVerDtl.htm?EnName=" + this.toString() + "&PK=" + this.getNo();
 	}

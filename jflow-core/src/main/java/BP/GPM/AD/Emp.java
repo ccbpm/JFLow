@@ -2,6 +2,7 @@ package BP.GPM.AD;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.GPM.*;
 import java.util.*;
 
@@ -14,10 +15,11 @@ public class Emp extends EntityNoName
 		///#region 扩展属性
 	/** 
 	 该人员是否被禁用.
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnable()
+	public final boolean getIsEnable() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -39,19 +41,21 @@ public class Emp extends EntityNoName
 
 	/** 
 	 拼音
+	 * @throws Exception 
 	*/
-	public final String getPinYin()
+	public final String getPinYin() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.PinYin);
 	}
-	public final void setPinYin(String value)
+	public final void setPinYin(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.PinYin, value);
 	}
 	/** 
 	 主要的部门。
+	 * @throws Exception 
 	*/
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 		try
 		{
@@ -64,65 +68,69 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
-	public final String getFK_DeptText()
+	public final String getFK_DeptText() throws Exception
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
 	}
-	public final String getTel()
+	public final String getTel() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Tel);
 	}
-	public final void setTel(String value)
+	public final void setTel(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Tel, value);
 	}
-	public final String getEmail()
+	public final String getEmail() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Email);
 	}
-	public final void setEmail(String value)
+	public final void setEmail(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Email, value);
 	}
 	/** 
 	 密码
+	 * @throws Exception 
 	*/
-	public final String getPass()
+	public final String getPass() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Pass);
 	}
-	public final void setPass(String value)
+	public final void setPass(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Pass, value);
 	}
 	/** 
 	 顺序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Idx, value);
 	}
 	/** 
 	 签字类型
+	 * @throws Exception 
 	*/
-	public final int getSignType()
+	public final int getSignType() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.SignType);
 	}
-	public final void setSignType(int value)
+	public final void setSignType(int value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.SignType, value);
 	}
@@ -136,8 +144,9 @@ public class Emp extends EntityNoName
 	 
 	 @param pass 密码
 	 @return 是否匹配成功
+	 * @throws Exception 
 	*/
-	public final boolean CheckPass(String pass)
+	public final boolean CheckPass(String pass) throws Exception
 	{
 		if (this.getPass().equals(pass))
 		{
@@ -160,14 +169,15 @@ public class Emp extends EntityNoName
 	 操作员
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
-		this.No = no.trim();
+		this.setNo(no.trim());
 		this.Retrieve();
 	}
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -188,13 +198,13 @@ public class Emp extends EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 基本属性
-		map.EnDBUrl = new DBUrl(DBUrlType.AppCenterDSN); //要连接的数据源（表示要连接到的那个系统数据库）。
-		map.PhysicsTable = "Port_Emp"; // 要物理表。
+		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); //要连接的数据源（表示要连接到的那个系统数据库）。
+		map.setPhysicsTable("Port_Emp"); // 要物理表。
 		map.Java_SetDepositaryOfMap(Depositary.Application); //实体map的存放位置.
 		map.Java_SetDepositaryOfEntity(Depositary.None); //实体存放位置
-		map.setEnDesc( "用户"; // "用户"; // 实体的描述.
+		map.setEnDesc("用户"); // "用户"; // 实体的描述.
 		map.Java_SetEnType(EnType.App); //实体类型。
-		map.setEnType( EnType.App;
+		map.setEnType(EnType.App);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
 

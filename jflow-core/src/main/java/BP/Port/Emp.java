@@ -2,7 +2,10 @@ package BP.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 import java.io.*;
 
@@ -31,38 +34,41 @@ public class Emp extends EntityNoName
 
 	/** 
 	 部门编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
 	/** 
 	 部门编号
+	 * @throws Exception 
 	*/
-	public final String getFK_DeptText()
+	public final String getFK_DeptText() throws Exception
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
 	}
 	/** 
 	 密码
+	 * @throws Exception 
 	*/
-	public final String getPass()
+	public final String getPass() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Pass);
 	}
-	public final void setPass(String value)
+	public final void setPass(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Pass, value);
 	}
-	public final String getSID()
+	public final String getSID() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.SID);
 	}
-	public final void setSID(String value)
+	public final void setSID(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.SID, value);
 	}
@@ -73,9 +79,10 @@ public class Emp extends EntityNoName
 		///#region 公共方法
 	/** 
 	 权限管理.
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -184,8 +191,9 @@ public class Emp extends EntityNoName
 	 操作员
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
 		if (no == null || no.length() == 0)
 		{
@@ -253,7 +261,7 @@ public class Emp extends EntityNoName
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 1, 20, 30);
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 200, 30);
 		map.AddTBString(EmpAttr.Pass, "123", "密码", false, false, 0, 20, 10);
-		map.AddDDLEntities(EmpAttr.FK_Dept, null, "部门", new Port.Depts(), true);
+		map.AddDDLEntities(EmpAttr.FK_Dept, null, "部门", new BP.Port.Depts(), true);
 		map.AddTBString(EmpAttr.SID, null, "安全校验码", false, false, 0, 36, 36);
 
 			// map.AddTBString("docs", null, "安全校33验码", false, false, 0, 4000, 36);
@@ -283,7 +291,7 @@ public class Emp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写方法
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 
 		return super.beforeDelete();
@@ -309,7 +317,7 @@ public class Emp extends EntityNoName
 			{
 				throw new RuntimeException("@编号为(" + this.getNo() + ")的人员不存在。");
 			}
-			this.getRow().LoadDataTable(dt, dt.Rows[0]);
+			this.getRow().LoadDataTable(dt, dt.Rows.get(0));
 			return 1;
 		}
 		else
@@ -333,7 +341,7 @@ public class Emp extends EntityNoName
 			{
 				return 0;
 			}
-			this.getRow().LoadDataTable(dt, dt.Rows[0]);
+			this.getRow().LoadDataTable(dt, dt.Rows.get(0));
 			return 1;
 		}
 		else
@@ -357,7 +365,7 @@ public class Emp extends EntityNoName
 		return "执行成功.";
 	}
 
-	public final String ChangePass(String oldpass, String pass1, String pass2)
+	public final String ChangePass(String oldpass, String pass1, String pass2) throws Exception
 	{
 		if (!this.getNo().equals(WebUser.getNo()))
 		{

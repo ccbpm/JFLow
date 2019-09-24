@@ -16,55 +16,58 @@ public class FrmBtn extends EntityMyPK
 		///#region 属性
 	/** 
 	 所在的分组
+	 * @throws Exception 
 	*/
-	public final int getGroupID()
+	public final int getGroupID() throws Exception
 	{
 		return this.GetValIntByKey(FrmBtnAttr.GroupID);
 	}
-	public final void setGroupID(int value)
+	public final void setGroupID(int value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.GroupID, value);
 	}
-	public final String getMsgOK()
+	public final String getMsgOK() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.MsgOK);
 	}
-	public final void setMsgOK(String value)
+	public final void setMsgOK(String value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.MsgOK, value);
 	}
-	public final String getMsgErr()
+	public final String getMsgErr() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.MsgErr);
 	}
-	public final void setMsgErr(String value)
+	public final void setMsgErr(String value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.MsgErr, value);
 	}
 	/** 
 	 EventContext
+	 * @throws Exception 
 	*/
-	public final String getEventContext()
+	public final String getEventContext() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.EventContext).replace("#", "@");
 			//return this.GetValStringByKey(FrmBtnAttr.EventContext);
 	}
-	public final void setEventContext(String value)
+	public final void setEventContext(String value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.EventContext, value);
 	}
-	public final String getIsViewHtml()
+	public final String getIsViewHtml() throws Exception
 	{
 		return PubClass.ToHtmlColor(this.getIsView());
 	}
 	/** 
 	 IsView
+	 * @throws Exception 
 	*/
-	public final String getIsView()
+	public final String getIsView() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.IsView);
 	}
-	public final void setIsView(String value)
+	public final void setIsView(String value) throws Exception
 	{
 		switch (value)
 		{
@@ -76,93 +79,99 @@ public class FrmBtn extends EntityMyPK
 		}
 		this.SetValByKey(FrmBtnAttr.IsView, value);
 	}
-	public final String getUACContext()
+	public final String getUACContext() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.UACContext);
 	}
-	public final void setUACContext(String value)
+	public final void setUACContext(String value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.UACContext, value);
 	}
-	public final boolean getUAC()
+	public final boolean getUAC() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmBtnAttr.UAC);
 	}
-	public final void setUAC(boolean value)
+	public final void setUAC(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.UAC, value);
 	}
 	/** 
 	 IsEnable
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnable()
+	public final boolean getIsEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmBtnAttr.IsEnable);
 	}
-	public final void setIsEnable(boolean value)
+	public final void setIsEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.IsEnable, value);
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getY()
+	public final float getY() throws Exception
 	{
 		return this.GetValFloatByKey(FrmBtnAttr.Y);
 	}
-	public final void setY(float value)
+	public final void setY(float value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getX()
+	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(FrmBtnAttr.X);
 	}
-	public final void setX(float value)
+	public final void setX(float value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.X, value);
 	}
-	public final BtnEventType getHisBtnEventType()
+	public final BtnEventType getHisBtnEventType() throws Exception
 	{
 		return BtnEventType.forValue(this.GetValIntByKey(FrmBtnAttr.EventType));
 	}
 	/** 
 	 BtnType
+	 * @throws Exception 
 	*/
-	public final int getEventType()
+	public final int getEventType() throws Exception
 	{
 		return this.GetValIntByKey(FrmBtnAttr.EventType);
 	}
-	public final void setEventType(int value)
+	public final void setEventType(int value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.EventType, value);
 	}
 	/** 
 	 FK_MapData
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(FrmBtnAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.FK_MapData, value);
 	}
 	/** 
 	 Text
+	 * @throws Exception 
 	*/
-	public final String getText()
+	public final String getText() throws Exception
 	{
 		return this.GetValStrByKey(FrmBtnAttr.Text);
 	}
-	public final void setText(String value)
+	public final void setText(String value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.Text, value);
 	}
-	public final String getTextHtml()
+	public final String getTextHtml() throws Exception
 	{
 			//if (this.EventType)
 			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).replace("@","<br>") + "</b>";

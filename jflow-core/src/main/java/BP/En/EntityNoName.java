@@ -13,7 +13,7 @@ public abstract class EntityNoName extends EntityNo
 	 名称
 	 * @throws Exception 
 	*/
-	public final String getName() throws Exception
+	public String getName() throws Exception
 	{
 		return this.GetValStringByKey(EntityNoNameAttr.Name);
 	}

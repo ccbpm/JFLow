@@ -11,48 +11,52 @@ public class ExcelTable extends EntityNoName
 		///#region 属性
 	/** 
 	 获取或设置Excel模板
+	 * @throws Exception 
 	*/
-	public final String getFK_ExcelFile()
+	public final String getFK_ExcelFile() throws Exception
 	{
 		return this.GetValStrByKey(ExcelTableAttr.FK_ExcelFile);
 	}
-	public final void setFK_ExcelFile(String value)
+	public final void setFK_ExcelFile(String value) throws Exception
 	{
 		this.SetValByKey(ExcelTableAttr.FK_ExcelFile, value);
 	}
 
 	/** 
 	 获取或设置是否明细表
+	 * @throws Exception 
 	*/
-	public final boolean getIsDtl()
+	public final boolean getIsDtl() throws Exception
 	{
 		return this.GetValBooleanByKey(ExcelTableAttr.IsDtl);
 	}
-	public final void setIsDtl(boolean value)
+	public final void setIsDtl(boolean value) throws Exception
 	{
 		this.SetValByKey(ExcelTableAttr.IsDtl, value);
 	}
 
 	/** 
 	 获取或设置数据表说明
+	 * @throws Exception 
 	*/
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		return this.GetValStrByKey(ExcelTableAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(ExcelTableAttr.Note, value);
 	}
 
 	/** 
 	 获取或设置同步到表
+	 * @throws Exception 
 	*/
-	public final String getSyncToTable()
+	public final String getSyncToTable() throws Exception
 	{
 		return this.GetValStrByKey(ExcelTableAttr.SyncToTable);
 	}
-	public final void setSyncToTable(String value)
+	public final void setSyncToTable(String value) throws Exception
 	{
 		this.SetValByKey(ExcelTableAttr.SyncToTable, value);
 	}

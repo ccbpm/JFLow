@@ -3,7 +3,6 @@ package BP.Difference.Handler;
 import java.util.Hashtable;
 
 import BP.Port.Emp;
-import BP.Sys.SystemConfig;
 import BP.Tools.HttpClientUtil;
 import BP.WF.GenerWorkFlow;
 import net.sf.json.JSONObject;

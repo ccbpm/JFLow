@@ -8,6 +8,7 @@ import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.Handler.CommonUtils;
 import BP.En.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -594,17 +595,6 @@ public class Glo {
 		return ShortMessageWriteTo.forValue(BP.Sys.SystemConfig.GetValByKeyInt("ShortMessageWriteTo", 0));
 	}
 
-	/**
-	 * 当前选择的流程.
-	 */
-	public static String getCurrFlow() {
-		Object tempVar = HttpContextHelper.SessionGet("CurrFlow");
-		return tempVar instanceof String ? (String) tempVar : null;
-	}
-
-	public static void setCurrFlow(String value) {
-		HttpContextHelper.SessionSet("CurrFlow", value);
-	}
 
 	/**
 	 * 用户编号.
@@ -2424,8 +2414,9 @@ public class Glo {
 	 * @param empNo
 	 *            要执行的人员.
 	 * @return 执行信息.
+	 * @throws Exception 
 	 */
-	public static String Simulation_RunOne(String flowNo, String empNo, String paras) {
+	public static String Simulation_RunOne(String flowNo, String empNo, String paras) throws Exception {
 		backHtml = ""; // 需要重新赋空值
 		Hashtable ht = null;
 		if (DataType.IsNullOrEmpty(paras) == false) {
@@ -2459,7 +2450,7 @@ public class Glo {
 
 	private static boolean isAdd = true;
 
-	private static void Simulation_Run_S1(String flowNo, long workid, String empNo, Hashtable ht, String beginEmp) {
+	private static void Simulation_Run_S1(String flowNo, long workid, String empNo, Hashtable ht, String beginEmp) throws Exception {
 		// htmlArr.Add(html);
 		Emp emp = new Emp(empNo);
 		// html = "";
@@ -2498,21 +2489,7 @@ public class Glo {
 		}
 	}
 
-	/**
-	 * 是否手机访问?
-	 * 
-	 * @return
-	 */
-	public static boolean IsMobile() {
-		if (SystemConfig.getIsBSsystem() == false) {
-			return false;
-		}
-		String agent = (HttpContextHelper.getRequestUserAgent() + "").toLowerCase().trim();
-		if (agent.equals("") || agent.indexOf("mozilla") != -1 || agent.indexOf("opera") != -1) {
-			return false;
-		}
-		return true;
-	}
+
 
 	/**
 	 * 加入track
@@ -2959,8 +2936,9 @@ public class Glo {
 	 * @param en
 	 *            变量
 	 * @return 是否成立
+	 * @throws Exception 
 	 */
-	public static boolean CondExpPara(String exp, Hashtable ht, long myWorkID) {
+	public static boolean CondExpPara(String exp, Hashtable ht, long myWorkID) throws Exception {
 		try {
 			String[] strs = exp.trim().split("[ ]", -1);
 
@@ -2979,7 +2957,7 @@ public class Glo {
 				if (myWorkID != 0) {
 					// 把外部传来的参数传入到 rptGE 让其做方向条件的判断.
 					GenerWorkFlow gwf = new GenerWorkFlow(myWorkID);
-					AtPara at = gwf.getAtPara();
+					AtPara at = gwf.getatPara();
 					for (String str : at.getHisHT().keySet()) {
 						if (key.equals(str) == false) {
 							continue;
@@ -3261,8 +3239,9 @@ public class Glo {
 	 * 
 	 * @param s
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GenerMD5(BP.WF.Work wk) {
+	public static String GenerMD5(BP.WF.Work wk) throws Exception {
 		String s = null;
 		for (Attr attr : wk.getEnMap().getAttrs()) {
 			switch (attr.getKey()) {
@@ -5109,8 +5088,8 @@ public class Glo {
 
 			if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
 
-				String pflowNo = HttpContextHelper.RequestParams("PFlowNo");
-				String pworkid = HttpContextHelper.RequestParams("PWorkID");
+				String pflowNo = CommonUtils.getRequest().getParameter("PFlowNo");
+				String pworkid = CommonUtils.getRequest().getParameter("PWorkID");
 
 				if (pworkid == null) {
 					return true;

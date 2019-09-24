@@ -4,53 +4,47 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 
-import java.util.*;
-
 /** 
  列选择
 */
 public class CField extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 基本属性
+
 	/** 
 	 列选择
+	 * @throws Exception 
 	*/
-	public final String getAttrs()
+	public final String getAttrs() throws Exception
 	{
 		return this.GetValStringByKey(CFieldAttr.Attrs);
 	}
-	public final void setAttrs(String value)
+	public final void setAttrs(String value)throws Exception
 	{
 		this.SetValByKey(CFieldAttr.Attrs, value);
 	}
 	/** 
 	 操作员ID
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp()throws Exception
 	{
 		return this.GetValStringByKey(CFieldAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value)throws Exception
 	{
 		this.SetValByKey(CFieldAttr.FK_Emp, value);
 	}
 	/** 
 	 属性
 	*/
-	public final String getEnsName()
+	public final String getEnsName()throws Exception
 	{
 		return this.GetValStringByKey(CFieldAttr.EnsName);
 	}
-	public final void setEnsName(String value)
+	public final void setEnsName(String value)throws Exception
 	{
 		this.SetValByKey(CFieldAttr.EnsName, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
 	/** 
 	 列选择
 	*/
@@ -98,8 +92,7 @@ public class CField extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception

@@ -45,10 +45,9 @@ public class UIConfig
 			return new String[0];
 		}
 
-		return colstr.split(",".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+		return colstr.split("[,]+");
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 移动.
 	/** 
 	 移动到方式.

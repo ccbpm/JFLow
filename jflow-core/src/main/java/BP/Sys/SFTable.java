@@ -1,185 +1,40 @@
 package BP.Sys;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonUtils;
 import BP.En.*;
+import BP.Tools.Json;
+import BP.Tools.StringHelper;
 import BP.Web.*;
-import java.util.*;
 
 /** 
  用户自定义表
 */
 public class SFTable extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 数据源属性.
+
 	/** 
 	 获得外部数据表
+	 * @throws Exception 
 	*/
-	public final DataTable GenerHisDataTable()
+	public final DataTable GenerHisDataTable() throws Exception
 	{
 		//创建数据源.
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region BP类
 		if (this.getSrcType() == SrcType.BPClass)
 		{
 			Entities ens = ClassFactory.GetEns(this.getNo());
 			return ens.RetrieveAllToTable();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region  WebServices
-		// this.SrcType == Sys.SrcType.WebServices，by liuxc 
-		//暂只考虑No,Name结构的数据源，2015.10.04，added by liuxc
-		if (this.getSrcType() == SrcType.WebServices)
-		{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-			var td = this.getTableDesc().split("[,]", -1); //接口名称,返回类型
-			String tempVar = this.getSelectStatement();
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-			var ps = (tempVar != null ? tempVar : "").split("[&]", -1);
-			ArrayList args = new ArrayList();
-			String[] pa = null;
-
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-			for (var p : ps)
-			{
-				if (DataType.IsNullOrEmpty(p))
-				{
-					continue;
-				}
-
-				pa = p.Split("[=]", -1);
-				if (pa.length != 2)
-				{
-					continue;
-				}
-
-				//此处要SL中显示表单时，会有问题
-				try
-				{
-					if (pa[1].contains("@WebUser.getNo()"))
-					{
-						pa[1] = pa[1].replace("@WebUser.getNo()", WebUser.getNo());
-					}
-					if (pa[1].contains("@WebUser.getName()"))
-					{
-						pa[1] = pa[1].replace("@WebUser.getName()", WebUser.getName());
-					}
-					if (pa[1].contains("@WebUser.getFK_Dept()"))
-					{
-						pa[1] = pa[1].replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
-					}
-					if (pa[1].contains("@WebUser.getFK_DeptName"))
-					{
-						pa[1] = pa[1].replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-					}
-				}
-				catch (java.lang.Exception e)
-				{
-				}
-
-				if (pa[1].contains("@WorkID"))
-				{
-					String tempVar2 = HttpContextHelper.RequestParams("WorkID");
-					pa[1] = pa[1].replace("@WorkID", tempVar2 != null ? tempVar2 : "");
-				}
-				if (pa[1].contains("@NodeID"))
-				{
-					String tempVar3 = HttpContextHelper.RequestParams("NodeID");
-					pa[1] = pa[1].replace("@NodeID", tempVar3 != null ? tempVar3 : "");
-				}
-				if (pa[1].contains("@FK_Node"))
-				{
-					String tempVar4 = HttpContextHelper.RequestParams("FK_Node");
-					pa[1] = pa[1].replace("@FK_Node", tempVar4 != null ? tempVar4 : "");
-				}
-				if (pa[1].contains("@FK_Flow"))
-				{
-					String tempVar5 = HttpContextHelper.RequestParams("FK_Flow");
-					pa[1] = pa[1].replace("@FK_Flow", tempVar5 != null ? tempVar5 : "");
-				}
-				if (pa[1].contains("@FID"))
-				{
-					String tempVar6 = HttpContextHelper.RequestParams("FID");
-					pa[1] = pa[1].replace("@FID", tempVar6 != null ? tempVar6 : "");
-				}
-
-				args.add(pa[1]);
-			}
-
-			Object result = InvokeWebService(src.getIP(), td[0], args.toArray(new Object[0]));
-
-			switch (td[1])
-			{
-				case "DataSet":
-					return result == null ? new DataTable() : (result instanceof DataSet ? (DataSet)result : null).Tables[0];
-				case "DataTable":
-					return result instanceof DataTable ? (DataTable)result : null;
-				case "Json":
-					LitJson.JsonData jdata = LitJson.JsonMapper.ToObject(result instanceof String ? (String)result : null);
-
-					if (!jdata.getIsArray())
-					{
-						throw new RuntimeException("@返回的JSON格式字符串“" + (result != null ? result : "") + "”不正确");
-					}
-
-					DataTable dt = new DataTable();
-					dt.Columns.Add("No", String.class);
-					dt.Columns.Add("Name", String.class);
-
-					for (int i = 0; i < jdata.size(); i++)
-					{
-						dt.Rows.add(jdata.get(i)["No"].toString(), jdata.get(i)["Name"].toString());
-					}
-
-					return dt;
-				case "Xml":
-					if (result == null || DataType.IsNullOrEmpty(result.toString()))
-					{
-						throw new RuntimeException("@返回的XML格式字符串不正确。");
-					}
-
-					XmlDocument xml = new XmlDocument();
-					xml.LoadXml(result instanceof String ? (String)result : null);
-
-					XmlNode root = null;
-
-					if (xml.ChildNodes.size() < 2)
-					{
-						root = xml.ChildNodes[0];
-					}
-					else
-					{
-						root = xml.ChildNodes[1];
-					}
-
-					dt = new DataTable();
-					dt.Columns.Add("No", String.class);
-					dt.Columns.Add("Name", String.class);
-
-					for (XmlNode node : root.ChildNodes)
-					{
-						dt.Rows.add(node.SelectSingleNode("No").InnerText, node.SelectSingleNode("Name").InnerText);
-					}
-
-					return dt;
-				default:
-					throw new RuntimeException("@不支持的返回类型" + td[1]);
-			}
-		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		
 			///#region SQL查询.外键表/视图，edited by liuxc,2016-12-29
-		if (this.getSrcType() == Sys.SrcType.TableOrView)
+		if (this.getSrcType() == SrcType.TableOrView)
 		{
 			String sql = "SELECT " + this.getColumnValue() + " No, " + this.getColumnText() + " Name";
-			if (this.getCodeStruct() == Sys.CodeStruct.Tree)
+			if (this.getCodeStruct() == CodeStruct.Tree)
 			{
 				sql += ", " + this.getParentValue() + " ParentNo";
 			}
@@ -187,12 +42,8 @@ public class SFTable extends EntityNoName
 			sql += " FROM " + this.getSrcTable();
 			return src.RunSQLReturnTable(sql);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion SQL查询.外键表/视图，edited by liuxc,2016-12-29
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 动态SQL，edited by liuxc,2016-12-29
-		if (this.getSrcType() == Sys.SrcType.SQL)
+		if (this.getSrcType() == SrcType.SQL)
 		{
 			String runObj = this.getSelectStatement();
 
@@ -225,23 +76,19 @@ public class SFTable extends EntityNoName
 			DataTable dt = src.RunSQLReturnTable(runObj);
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 自定义表.
-		if (this.getSrcType() == Sys.SrcType.CreateTable)
+		if (this.getSrcType() == SrcType.CreateTable)
 		{
 			String sql = "SELECT No, Name FROM " + this.getNo();
 			return src.RunSQLReturnTable(sql);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
+
 
 		return null;
 
 	}
-	public final String GenerHisJson()
+	public final String GenerHisJson() throws Exception
 	{
 		return BP.Tools.Json.ToJson(this.GenerHisDataTable());
 	}
@@ -249,8 +96,9 @@ public class SFTable extends EntityNoName
 	 自动生成编号
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerSFTableNewNo()
+	public final String GenerSFTableNewNo() throws Exception
 	{
 		String table = this.getSrcTable();
 		try
@@ -285,7 +133,7 @@ public class SFTable extends EntityNoName
 			{
 				str = "1";
 			}
-			return tangible.StringHelper.padLeft(str, 3, '0');
+			return StringHelper.padLeft(str, 3, '0');
 		}
 		catch (RuntimeException e)
 		{
@@ -302,107 +150,44 @@ public class SFTable extends EntityNoName
 	public final Object InvokeWebService(String url, String methodname, Object[] args)
 	{
 		return null;
-/* TODO 2019-07-25 为了合并core，注释掉
-            //这里的namespace是需引用的webservices的命名空间，在这里是写死的，大家可以加一个参数从外面传进来。
-            string @namespace = "BP.RefServices";
-            try
-            {
-                if (url.EndsWith(".asmx"))
-                    url += "?wsdl";
-                else if (url.EndsWith(".svc"))
-                    url += "?singleWsdl";
 
-                //获取WSDL
-                WebClient wc = new WebClient();
-                Stream stream = wc.OpenRead(url);
-                ServiceDescription sd = ServiceDescription.Read(stream);
-                string classname = sd.Services[0].Name;
-                ServiceDescriptionImporter sdi = new ServiceDescriptionImporter();
-                sdi.AddServiceDescription(sd, "", "");
-                CodeNamespace cn = new CodeNamespace(@namespace);
-
-                //生成客户端代理类代码
-                CodeCompileUnit ccu = new CodeCompileUnit();
-                ccu.Namespaces.Add(cn);
-                sdi.Import(cn, ccu);
-                CSharpCodeProvider csc = new CSharpCodeProvider();
-                ICodeCompiler icc = csc.CreateCompiler();
-
-                //设定编译参数
-                CompilerParameters cplist = new CompilerParameters();
-                cplist.GenerateExecutable = false;
-                cplist.GenerateInMemory = true;
-                cplist.ReferencedAssemblies.Add("System.dll");
-                cplist.ReferencedAssemblies.Add("System.XML.dll");
-                cplist.ReferencedAssemblies.Add("System.Web.Services.dll");
-                cplist.ReferencedAssemblies.Add("System.Data.dll");
-
-                //编译代理类
-                CompilerResults cr = icc.CompileAssemblyFromDom(cplist, ccu);
-                if (true == cr.Errors.HasErrors)
-                {
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    foreach (System.CodeDom.Compiler.CompilerError ce in cr.Errors)
-                    {
-                        sb.Append(ce.ToString());
-                        sb.Append(System.Environment.NewLine);
-                    }
-                    throw new Exception(sb.ToString());
-                }
-
-                //生成代理实例，并调用方法
-                System.Reflection.Assembly assembly = cr.CompiledAssembly;
-                Type t = assembly.GetType(@namespace + "." + classname, true, true);
-                object obj = Activator.CreateInstance(t);
-                System.Reflection.MethodInfo mi = t.GetMethod(methodname);
-
-                return mi.Invoke(obj, args);
-            }
-            catch
-            {
-                return null;
-            }
-*/
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 链接到其他系统获取数据的属性
 	/** 
 	 数据源
 	*/
-	public final String getFK_SFDBSrc()
+	public final String getFK_SFDBSrc()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.FK_SFDBSrc);
 	}
-	public final void setFK_SFDBSrc(String value)
+	public final void setFK_SFDBSrc(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.FK_SFDBSrc, value);
 	}
-	public final String getFK_SFDBSrcT()
+	public final String getFK_SFDBSrcT()throws Exception
 	{
 		return this.GetValRefTextByKey(SFTableAttr.FK_SFDBSrc);
 	}
 	/** 
 	 数据缓存时间
 	*/
-	public final String getRootVal()
+	public final String getRootVal()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.RootVal);
 	}
-	public final void setRootVal(String value)
+	public final void setRootVal(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.RootVal, value);
 	}
 	/** 
 	 同步间隔
 	*/
-	public final int getCashMinute()
+	public final int getCashMinute()throws Exception
 	{
 		return this.GetValIntByKey(SFTableAttr.CashMinute);
 	}
-	public final void setCashMinute(int value)
+	public final void setCashMinute(int value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.CashMinute, value);
 	}
@@ -410,7 +195,7 @@ public class SFTable extends EntityNoName
 	/** 
 	 物理表名称
 	*/
-	public final String getSrcTable()
+	public final String getSrcTable()throws Exception
 	{
 		String str = this.GetValStringByKey(SFTableAttr.SrcTable);
 		if (str.equals("") || str == null)
@@ -419,74 +204,70 @@ public class SFTable extends EntityNoName
 		}
 		return str;
 	}
-	public final void setSrcTable(String value)
+	public final void setSrcTable(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.SrcTable, value);
 	}
 	/** 
 	 值/主键字段名
 	*/
-	public final String getColumnValue()
+	public final String getColumnValue()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.ColumnValue);
 	}
-	public final void setColumnValue(String value)
+	public final void setColumnValue(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.ColumnValue, value);
 	}
 	/** 
 	 显示字段/显示字段名
 	*/
-	public final String getColumnText()
+	public final String getColumnText()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.ColumnText);
 	}
-	public final void setColumnText(String value)
+	public final void setColumnText(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.ColumnText, value);
 	}
 	/** 
 	 父结点字段名
 	*/
-	public final String getParentValue()
+	public final String getParentValue()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.ParentValue);
 	}
-	public final void setParentValue(String value)
+	public final void setParentValue(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.ParentValue, value);
 	}
 	/** 
 	 查询语句
 	*/
-	public final String getSelectStatement()
+	public final String getSelectStatement()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.SelectStatement);
 	}
-	public final void setSelectStatement(String value)
+	public final void setSelectStatement(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.SelectStatement, value);
 	}
 	/** 
 	 加入日期
 	*/
-	public final String getRDT()
+	public final String getRDT()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.RDT, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
 	/** 
 	 是否是类
 	*/
-	public final boolean getIsClass()
+	public final boolean getIsClass()throws Exception
 	{
 		if (this.getNo().contains("."))
 		{
@@ -500,9 +281,9 @@ public class SFTable extends EntityNoName
 	/** 
 	 是否是树形实体?
 	*/
-	public final boolean getIsTree()
+	public final boolean getIsTree()throws Exception
 	{
-		if (this.getCodeStruct() == Sys.CodeStruct.NoName)
+		if (this.getCodeStruct() == CodeStruct.NoName)
 		{
 			return false;
 		}
@@ -511,7 +292,7 @@ public class SFTable extends EntityNoName
 	/** 
 	 数据源类型
 	*/
-	public final SrcType getSrcType()
+	public final SrcType getSrcType()throws Exception
 	{
 		if (this.getNo().contains("BP.") == true)
 		{
@@ -520,21 +301,22 @@ public class SFTable extends EntityNoName
 		else
 		{
 			SrcType src = SrcType.forValue(this.GetValIntByKey(SFTableAttr.SrcType));
-			if (src == Sys.SrcType.BPClass)
+			if (src == SrcType.BPClass)
 			{
-				return Sys.SrcType.CreateTable;
+				return SrcType.CreateTable;
 			}
 			return src;
 		}
 	}
-	public final void setSrcType(SrcType value)
+	public final void setSrcType(SrcType value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.SrcType, value.getValue());
 	}
 	/** 
 	 数据源类型名称
+	 * @throws Exception 
 	*/
-	public final String getSrcTypeText()
+	public final String getSrcTypeText() throws Exception
 	{
 		switch (this.getSrcType())
 		{
@@ -561,55 +343,55 @@ public class SFTable extends EntityNoName
 	 <p>1：NoNameTree类型</p>
 	 <p>2：NoName行政区划类型</p>
 	*/
-	public final CodeStruct getCodeStruct()
+	public final CodeStruct getCodeStruct()throws Exception
 	{
 		return CodeStruct.forValue(this.GetValIntByKey(SFTableAttr.CodeStruct));
 	}
-	public final void setCodeStruct(CodeStruct value)
+	public final void setCodeStruct(CodeStruct value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.CodeStruct, value.getValue());
 	}
 	/** 
 	 编码类型
 	*/
-	public final String getCodeStructT()
+	public final String getCodeStructT()throws Exception
 	{
 		return this.GetValRefTextByKey(SFTableAttr.CodeStruct);
 	}
 	/** 
 	 值
 	*/
-	public final String getFK_Val()
+	public final String getFK_Val()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.FK_Val);
 	}
-	public final void setFK_Val(String value)
+	public final void setFK_Val(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.FK_Val, value);
 	}
 	/** 
 	 描述
 	*/
-	public final String getTableDesc()
+	public final String getTableDesc()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.TableDesc);
 	}
-	public final void setTableDesc(String value)
+	public final void setTableDesc(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.TableDesc, value);
 	}
 	/** 
 	 默认值
 	*/
-	public final String getDefVal()
+	public final String getDefVal()throws Exception
 	{
 		return this.GetValStringByKey(SFTableAttr.DefVal);
 	}
-	public final void setDefVal(String value)
+	public final void setDefVal(String value)throws Exception
 	{
 		this.SetValByKey(SFTableAttr.DefVal, value);
 	}
-	public final EntitiesNoName getHisEns()
+	public final EntitiesNoName getHisEns() throws Exception
 	{
 		if (this.getIsClass())
 		{
@@ -622,13 +404,9 @@ public class SFTable extends EntityNoName
 		ges.RetrieveAll();
 		return ges;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -641,7 +419,7 @@ public class SFTable extends EntityNoName
 	public SFTable()
 	{
 	}
-	public SFTable(String mypk)
+	public SFTable(String mypk) throws Exception
 	{
 		this.setNo(mypk);
 		try
@@ -723,29 +501,14 @@ public class SFTable extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "查看数据";
 		rm.ClassMethodName = this.toString() + ".DoEdit";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "创建Table向导";
-			//rm.ClassMethodName = this.ToString() + ".DoGuide";
-			//rm.RefMethodType = RefMethodType.RightFrameOpen;
-			//rm.IsForEns = false;
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = "数据源管理";
-			//rm.ClassMethodName = this.ToString() + ".DoMangDBSrc";
-			//rm.RefMethodType = RefMethodType.RightFrameOpen;
-			//rm.IsForEns = false;
-			//map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
 	/** 
 	 数据源管理
@@ -769,8 +532,9 @@ public class SFTable extends EntityNoName
 	 编辑数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoEdit()
+	public final String DoEdit() throws Exception
 	{
 		if (this.getIsClass())
 		{
@@ -781,14 +545,14 @@ public class SFTable extends EntityNoName
 			return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo();
 		}
 	}
-	public final String IsCanDelete()
+	public final String IsCanDelete() throws Exception
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
 		if (attrs.size() != 0)
 		{
 			String err = "";
-			for (MapAttr item : attrs)
+			for (MapAttr item : attrs.ToJavaList())
 			{
 				err += " @ " + item.getMyPK() + " " + item.getName();
 			}
@@ -797,7 +561,7 @@ public class SFTable extends EntityNoName
 		return null;
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		String delMsg = this.IsCanDelete();
 		if (delMsg != null)
@@ -808,15 +572,14 @@ public class SFTable extends EntityNoName
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		//利用这个时间串进行排序.
 		this.setRDT(DataType.getCurrentDataTime());
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 如果是本地类. @于庆海.
-		if (this.getSrcType() == Sys.SrcType.BPClass)
+		if (this.getSrcType() == SrcType.BPClass)
 		{
 			Entities ens = ClassFactory.GetEns(this.getNo());
 			Entity en = ens.getNewEntity();
@@ -825,28 +588,24 @@ public class SFTable extends EntityNoName
 			//检查是否是树结构.
 			if (en.getIsTreeEntity() == true)
 			{
-				this.setCodeStruct(Sys.CodeStruct.Tree);
+				this.setCodeStruct(CodeStruct.Tree);
 			}
 			else
 			{
-				this.setCodeStruct(Sys.CodeStruct.NoName);
+				this.setCodeStruct(CodeStruct.NoName);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 如果是本地类.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 本地类，物理表..
-		if (this.getSrcType() == Sys.SrcType.CreateTable)
+		if (this.getSrcType() == SrcType.CreateTable)
 		{
 			if (DBAccess.IsExitsObject(this.getNo()) == true)
 			{
 				return super.beforeInsert();
-				//throw new Exception("err@表名[ " + this.getNo()+ " ]已经存在，请使用其他的表名.");
 			}
 
 			String sql = "";
-			if (this.getCodeStruct() == Sys.CodeStruct.NoName || this.getCodeStruct() == Sys.CodeStruct.GradeNoName)
+			if (this.getCodeStruct() == CodeStruct.NoName || this.getCodeStruct() == CodeStruct.GradeNoName)
 			{
 				sql = "CREATE TABLE " + this.getNo() + " (";
 				sql += "No varchar(30) NOT NULL,";
@@ -854,7 +613,7 @@ public class SFTable extends EntityNoName
 				sql += ")";
 			}
 
-			if (this.getCodeStruct() == Sys.CodeStruct.Tree)
+			if (this.getCodeStruct() == CodeStruct.Tree)
 			{
 				sql = "CREATE TABLE " + this.getNo() + " (";
 				sql += "No varchar(30) NOT NULL,";
@@ -867,28 +626,27 @@ public class SFTable extends EntityNoName
 			//初始化数据.
 			this.InitDataTable();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 如果是本地类.
+
 
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected void afterInsert()
+	protected void afterInsert() throws Exception
 	{
 		try
 		{
-			if (this.getSrcType() == Sys.SrcType.TableOrView)
+			if (this.getSrcType() == SrcType.TableOrView)
 			{
 				//暂时这样处理
 				String sql = "CREATE VIEW " + this.getNo() + " (";
 				sql += "[No],";
 				sql += "[Name]";
-				sql += (this.getCodeStruct() == Sys.CodeStruct.Tree ? ",[ParentNo])" : ")");
+				sql += (this.getCodeStruct() == CodeStruct.Tree ? ",[ParentNo])" : ")");
 				sql += " AS ";
-				sql += "SELECT " + this.getColumnValue() + " No," + this.getColumnText() + " Name" + (this.getCodeStruct() == Sys.CodeStruct.Tree ? ("," + this.getParentValue() + " ParentNo") : "") + " FROM " + this.getSrcTable() + (DataType.IsNullOrEmpty(this.getSelectStatement()) ? "" : (" WHERE " + this.getSelectStatement()));
+				sql += "SELECT " + this.getColumnValue() + " No," + this.getColumnText() + " Name" + (this.getCodeStruct() == CodeStruct.Tree ? ("," + this.getParentValue() + " ParentNo") : "") + " FROM " + this.getSrcTable() + (DataType.IsNullOrEmpty(this.getSelectStatement()) ? "" : (" WHERE " + this.getSelectStatement()));
 
-				if (Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
 					sql = sql.replace("[", "`").replace("]", "`");
 				}
@@ -899,26 +657,6 @@ public class SFTable extends EntityNoName
 				this.RunSQL(sql);
 			}
 
-			//if (this.SrcType == Sys.SrcType.SQL)
-			//{
-			//    //暂时这样处理
-			//    string sql = "CREATE VIEW  " + this.getNo()+ "  (";
-			//    sql += "[No],";
-			//    sql += "[Name]";
-			//    sql += (this.CodeStruct == Sys.CodeStruct.Tree ? ",[ParentNo])" : ")");
-			//    sql += " AS ";
-			//    sql += this.SelectStatement;
-
-			//    if (Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
-			//    {
-			//        sql = sql.Replace("[", "`").replace("]", "`");
-			//    }
-			//    else
-			//    {
-			//        sql = sql.Replace("[", "").replace("]", "");
-			//    }
-			//    this.RunSQL(sql);
-			//}
 		}
 		catch (RuntimeException ex)
 		{
@@ -934,18 +672,19 @@ public class SFTable extends EntityNoName
 	 获得该数据源的数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable GenerData_bak()
+	public final DataTable GenerData_bak() throws Exception
 	{
 		String sql = "";
 		DataTable dt = null;
-		if (this.getSrcType() == Sys.SrcType.CreateTable)
+		if (this.getSrcType() == SrcType.CreateTable)
 		{
 			sql = "SELECT No,Name FROM " + this.getSrcTable();
 			dt = this.RunSQLReturnTable(sql);
 		}
 
-		if (this.getSrcType() == Sys.SrcType.TableOrView)
+		if (this.getSrcType() == SrcType.TableOrView)
 		{
 			sql = "SELECT No,Name FROM " + this.getSrcTable();
 			dt = this.RunSQLReturnTable(sql);
@@ -956,8 +695,8 @@ public class SFTable extends EntityNoName
 			throw new RuntimeException("@没有判断的数据.");
 		}
 
-		dt.Columns[0].ColumnName = "No";
-		dt.Columns[1].ColumnName = "Name";
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
 
 		return dt;
 	}
@@ -965,15 +704,17 @@ public class SFTable extends EntityNoName
 	 返回json.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerDataOfJson()
+	public final String GenerDataOfJson() throws Exception
 	{
 		return BP.Tools.Json.ToJson(this.GenerHisDataTable());
 	}
 	/** 
 	 初始化数据.
+	 * @throws Exception 
 	*/
-	public final void InitDataTable()
+	public final void InitDataTable() throws Exception
 	{
 		DataTable dt = this.GenerHisDataTable();
 
@@ -981,7 +722,7 @@ public class SFTable extends EntityNoName
 		if (dt.Rows.size() == 0)
 		{
 			/*初始化数据.*/
-			if (this.getCodeStruct() == Sys.CodeStruct.Tree)
+			if (this.getCodeStruct() == CodeStruct.Tree)
 			{
 				sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,ParentNo) VALUES('1','" + this.getName() + "','0') ";
 				this.RunSQL(sql);
@@ -989,19 +730,19 @@ public class SFTable extends EntityNoName
 				for (int i = 1; i < 4; i++)
 				{
 					String no = String.valueOf(i);
-					no = tangible.StringHelper.padLeft(no, 3, '0');
+					no = StringHelper.padLeft(no, 3, '0');
 
 					sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,ParentNo) VALUES('" + no + "','Item" + no + "','1') ";
 					this.RunSQL(sql);
 				}
 			}
 
-			if (this.getCodeStruct() == Sys.CodeStruct.NoName)
+			if (this.getCodeStruct() == CodeStruct.NoName)
 			{
 				for (int i = 1; i < 4; i++)
 				{
 					String no = String.valueOf(i);
-					no = tangible.StringHelper.padLeft(no, 3, '0');
+					no = StringHelper.padLeft(no, 3, '0');
 					sql = "INSERT INTO " + this.getSrcTable() + " (No,Name) VALUES('" + no + "','Item" + no + "') ";
 					this.RunSQL(sql);
 				}

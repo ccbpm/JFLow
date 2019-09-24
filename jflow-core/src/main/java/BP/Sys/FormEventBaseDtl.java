@@ -5,6 +5,7 @@ import BP.En.*;
 import BP.Web.*;
 import java.math.*;
 import java.util.Date;
+import java.util.Enumeration;
 
 /**
  * 表单从表事件基类 0,集成该基类的子类,可以重写事件的方法与基类交互. 1,一个子类必须与一个表单模版绑定.
@@ -280,13 +281,12 @@ public abstract class FormEventBaseDtl {
 
 		if (SystemConfig.getIsBSsystem() == true) {
 			/* 如果是bs系统, 就加入外部url的变量. */
-			for (String key : HttpContextHelper.getRequestParamKeys()) {
-				String val = HttpContextHelper.RequestParams(key);
-				try {
-					r.put(key, val);
-				} catch (java.lang.Exception e3) {
-					r.put(key, val);
-				}
+			Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				// 判断是否有内容，hasNext()
+				String key = (String) enu.nextElement();
+				r.put(key, BP.Sys.Glo.getRequest().getParameter(key));
 			}
 		}
 		this.setSysPara(r);

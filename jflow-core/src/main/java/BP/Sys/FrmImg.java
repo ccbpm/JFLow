@@ -106,8 +106,7 @@ public class FrmImg extends EntityMyPK {
 	public final String getImgPath() throws Exception {
 		String src = this.GetValStringByKey(FrmImgAttr.ImgPath);
 		if (DataType.IsNullOrEmpty(src)) {
-			String appPath = HttpContextHelper.getRequestApplicationPath();
-			src = appPath + "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
+			src =  "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
 		}
 		return src;
 	}
@@ -119,8 +118,7 @@ public class FrmImg extends EntityMyPK {
 	public final String getImgURL() throws Exception {
 		String src = this.GetValStringByKey(FrmImgAttr.ImgURL);
 		if (DataType.IsNullOrEmpty(src) || src.contains("component/Img")) {
-			String appPath = HttpContextHelper.getRequestApplicationPath();
-			src = appPath + "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
+			src =  "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png";
 		}
 		return src;
 	}

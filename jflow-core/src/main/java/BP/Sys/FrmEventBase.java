@@ -7,6 +7,7 @@ import BP.Web.*;
 import BP.Sys.*;
 import java.time.*;
 import java.util.Date;
+import java.util.Enumeration;
 import java.math.*;
 
 /** 
@@ -260,25 +261,16 @@ public abstract class FrmEventBase
 
 		if (SystemConfig.getIsBSsystem() == true)
 		{
-			/*如果是bs系统, 就加入外部url的变量.*/
-			for (String key : HttpContextHelper.getRequestParamKeys())
+			Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();
+			while (enu.hasMoreElements())
 			{
-				String val = HttpContextHelper.RequestParams(key);
-				try
-				{
-					this.getRow().put(key, val);
-				}
-				catch (java.lang.Exception e3)
-				{
-					this.getRow().put(key, val);
-				}
+				// 判断是否有内容，hasNext()
+				String key = (String) enu.nextElement();
+				this.getRow().put(key, BP.Sys.Glo.getRequest().getParameter(key));
 			}
 		}
 
-			///#endregion 处理参数.
 
-
-			///#region 执行事件.
 		switch (eventType)
 		{
 			case EventListOfNode.CreateWorkID: // 节点表单事件。

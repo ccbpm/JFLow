@@ -3,6 +3,7 @@ package BP.Sys;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
+import BP.Tools.FtpUtil;
 
 import java.util.*;
 import java.io.*;
@@ -345,33 +346,22 @@ public class FrmAttachmentDB extends EntityMyPK
 	 生成文件.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private String MakeFullFileFromFtp()
+	private String MakeFullFileFromFtp() throws Exception
 	{
 		String pathOfTemp = SystemConfig.getPathOfTemp();
 		if ((new File(pathOfTemp)).isDirectory() == false)
 		{
 			(new File(pathOfTemp)).mkdirs();
 		}
-
 		String tempFile = SystemConfig.getPathOfTemp() + this.getFileName();
 
-	  //  string tempFile = SystemConfig.PathOfTemp + + this.FileName;
-		try
+		if ((new File(tempFile)).isFile() == true)
 		{
-			if ((new File(tempFile)).isFile() == true)
-			{
-				(new File(tempFile)).delete();
-			}
-		}
-		catch (java.lang.Exception e)
-		{
-			//  tempFile = SystemConfig.PathOfTemp + System.Guid.NewGuid() + this.FileName;
+			(new File(tempFile)).delete();
 		}
 
-		FtpSupport.FtpConnection conn = new FtpSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
-
-		conn.GetFile(this.getFileFullName(), tempFile, false, System.IO.FileAttributes.Archive);
 
 		return tempFile;
 	}
@@ -388,7 +378,7 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//判断删除excel数据提取的数据
 		if (DataType.IsNullOrEmpty(this.getFK_FrmAttachment()))
@@ -396,29 +386,21 @@ public class FrmAttachmentDB extends EntityMyPK
 			return;
 		}
 
-		//是一个流程先判断流程是否结束，如果结束了，就不让删除.
-	 //   string nodeID = this.FK_MapData.Replace("ND", "");
-	  //  if (DataType.IsNumStr(nodeID) = true)
-	   // {
-		//}
-
-
-
 		FrmAttachment ath = new FrmAttachment(this.getFK_FrmAttachment());
 		try
 		{
 			// @于庆海需要翻译.
-			if (ath.getAthSaveWay() == Sys.AthSaveWay.IISServer)
+			if (ath.getAthSaveWay() == AthSaveWay.WebServer)
 			{
 				(new File(this.getFileFullName())).delete();
 			}
 
-			if (ath.getAthSaveWay() == Sys.AthSaveWay.FTPServer)
+			if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
 			{
-				FtpSupport.FtpConnection ftpconn = new FtpSupport.FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+				FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
 
 				String fullName = this.getFileFullName();
-				ftpconn.DeleteFile(fullName);
+				ftpUtil.deleteFile(fullName);
 			}
 		}
 		catch (RuntimeException ex)
@@ -432,7 +414,7 @@ public class FrmAttachmentDB extends EntityMyPK
 		String fkefs = ath.GetParaString("FK_ExcelFile", null);
 		if (DataType.IsNullOrEmpty(fkefs) == false)
 		{
-			String[] efarr = fkefs.split(",".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+			String[] efarr = fkefs.split(",");
 			ExcelFile ef = null;
 			ExcelTables ets = null;
 			for (String fk_ef : efarr)

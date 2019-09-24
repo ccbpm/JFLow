@@ -15,6 +15,7 @@ import BP.DA.DataRow;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
+import BP.Difference.Handler.CommonUtils;
 import BP.Tools.StringHelper;
 
 /**
@@ -1092,7 +1093,7 @@ public class SystemConfig {
     public static String getHostURLOfBS()
     {
         
-        String url = "http://" +Con ;
+        String url = "http://" +CommonUtils.getRequest().getServerName()+":"+CommonUtils.getRequest().getServerPort()+"/"+CommonUtils.getRequest().getContextPath() ;
         return url;
        
     }

@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.Tools.DateUtils;
+import BP.WF.RefObject;
 import BP.Web.WebUser;
 
 import java.util.*;
@@ -15,7 +16,7 @@ import java.time.*;
 */
 public class MapData extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region entity 相关属性(参数属性)
 	/** 
 	 属性ens
@@ -29,11 +30,11 @@ public class MapData extends EntityNoName
 	{
 		this.SetPara(MapDataAttr.EnsName, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion entity 相关操作.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region weboffice文档属性(参数属性)
 	/** 
 	 是否启用锁定行
@@ -223,10 +224,10 @@ public class MapData extends EntityNoName
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableDown, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion weboffice文档属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 自动计算属性.
 	public final float getMaxLeft() throws Exception
 	{
@@ -260,10 +261,10 @@ public class MapData extends EntityNoName
 	{
 		this.SetPara(MapDataAttr.MaxEnd, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 自动计算属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 报表属性(参数方式存储).
 	/** 
 	 是否关键字查询
@@ -313,10 +314,10 @@ public class MapData extends EntityNoName
 	{
 		this.SetPara(MapDataAttr.RptSearchKeys, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 报表属性(参数方式存储).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 外键属性
 	/** 
 	版本号.
@@ -664,7 +665,7 @@ public class MapData extends EntityNoName
 		}
 		return obj;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final void CleanObject() throws Exception
@@ -701,7 +702,7 @@ public class MapData extends EntityNoName
 		CleanObject();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性.
 	/** 
 	 事件实体
@@ -731,10 +732,10 @@ public class MapData extends EntityNoName
 	{
 		WebUser.SetSessionByKey("IsEditDtlModel", "1");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基本属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单结构数据json
 	/** 
 	 表单图数据
@@ -800,10 +801,10 @@ public class MapData extends EntityNoName
 		}
 		return body;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 物理表
@@ -1048,10 +1049,10 @@ public class MapData extends EntityNoName
 		this.SetValByKey(MapDataAttr.TableCol, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public final Map GenerHisMap() throws Exception
 	{
@@ -1082,7 +1083,7 @@ public class MapData extends EntityNoName
 			map.AddDtl(dtls1, "RefPK");
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 查询条件.
 		map.IsShowSearchKey = this.getRptIsSearchKey(); //是否启用关键字查询.
 		// 按日期查询.
@@ -1100,7 +1101,7 @@ public class MapData extends EntityNoName
 
 			map.AddSearchAttr(key);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 查询条件.
 
 		return map;
@@ -1119,14 +1120,15 @@ public class MapData extends EntityNoName
 	 
 	 @param ds
 	 @return 
+	 * @throws Exception 
 	*/
-	public final GEEntity GenerGEEntityByDataSet(DataSet ds)
+	public final GEEntity GenerGEEntityByDataSet(DataSet ds) throws Exception
 	{
 		// New 它的实例.
 		GEEntity en = this.getHisGEEn();
 
 		// 它的table.
-		DataTable dt = ds.Tables[this.getNo()];
+		DataTable dt = ds.GetTableByName(this.getNo());
 
 		//装载数据.
 		en.getRow().LoadDataTable(dt, dt.Rows.get(0));
@@ -1135,7 +1137,7 @@ public class MapData extends EntityNoName
 		MapDtls dtls = this.getMapDtls();
 		for (MapDtl item : dtls.ToJavaList())
 		{
-			DataTable dtDtls = ds.Tables[item.getNo()];
+			DataTable dtDtls = ds.GetTableByName(item.getNo());
 			GEDtls dtlsEn = new GEDtls(item.getNo());
 			for (DataRow dr : dtDtls.Rows)
 			{
@@ -1215,7 +1217,7 @@ public class MapData extends EntityNoName
 		map.Java_SetEnType(EnType.Sys);
 		map.Java_SetCodeStruct("4");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基础信息.
 		map.AddTBStringPK(MapDataAttr.No, null, "编号", true, false, 1, 200, 100);
 		map.AddTBString(MapDataAttr.Name, null, "描述", true, false, 0, 500, 20);
@@ -1256,10 +1258,10 @@ public class MapData extends EntityNoName
 		map.AddTBInt(MapDataAttr.AppType, 0, "应用类型", true, false);
 		map.AddTBString(MapDataAttr.DBSrc, "local", "数据源", true, false, 0, 100, 20);
 		map.AddTBString(MapDataAttr.BodyAttr, null, "表单Body属性", true, false, 0, 100, 20);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基础信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设计者信息.
 		map.AddTBString(MapDataAttr.Note, null, "备注", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
@@ -1275,7 +1277,7 @@ public class MapData extends EntityNoName
 
 			//增加参数字段.
 		map.AddTBAtParas(4000);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		this.set_enMap(map);
@@ -1317,8 +1319,9 @@ public class MapData extends EntityNoName
 	 
 	 @param frmID
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable GetFieldsOfPTableMode2(String frmID)
+	public static DataTable GetFieldsOfPTableMode2(String frmID) throws Exception
 	{
 		String pTable = "";
 
@@ -1337,11 +1340,11 @@ public class MapData extends EntityNoName
 		}
 
 		//获得原始数据.
-		DataTable dt = BP.DA.DBAccess.GetTableSchema(pTable, false);
+		DataTable dt = BP.DA.DBAccess.GetTableSchema(pTable);
 
 		//创建样本表结构.
-		DataTable mydt = BP.DA.DBAccess.GetTableSchema(pTable, false);
-		mydt.Rows.Clear();
+		DataTable mydt = BP.DA.DBAccess.GetTableSchema(pTable);
+		mydt.Rows.clear();
 
 		//获得现有的列..
 		MapAttrs attrs = new MapAttrs(frmID);
@@ -1373,10 +1376,10 @@ public class MapData extends EntityNoName
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 常用方法.
 	private FormEventBase _HisFEB = null;
 	public final FormEventBase getHisFEB() throws Exception
@@ -1408,12 +1411,8 @@ public class MapData extends EntityNoName
 		return DoEvent(eventType, en, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public string DoEvent(string eventType, Entity en, string atParas = null)
 	public final String DoEvent(String eventType, Entity en, String atParas) throws Exception
 	{
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 首先执行通用的事件重载方法.
 		if (FrmEventList.FrmLoadBefore.equals(eventType) == true)
 		{
@@ -1438,7 +1437,7 @@ public class MapData extends EntityNoName
 		{
 			BP.En.OverrideFile.FrmEvent_SaveAfter(this.getNo(), en);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 首先执行通用的事件重载方法.
 
 		String str = this.getFrmEvents().DoEventNode(eventType, en);
@@ -1468,7 +1467,7 @@ public class MapData extends EntityNoName
 	public final void Upgrade() throws Exception
 	{
 		String sql = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 升级ccform控件.
 		if (BP.DA.DBAccess.IsExitsObject("Sys_FrmLine") == true)
 		{
@@ -1484,8 +1483,6 @@ public class MapData extends EntityNoName
 				BP.Sys.FrmEle ele = new FrmEle();
 				ele.Copy(dr);
 				ele.setEleType(BP.Sys.FrmEle.Line);
-				//ele.BorderColor = dr["BorderColor"].ToString();
-				//ele.BorderWidth = int.Parse(dr["BorderWidth"].ToString());
 				if (ele.getIsExits() == true)
 				{
 					ele.setMyPK(BP.DA.DBAccess.GenerGUID());
@@ -1510,11 +1507,6 @@ public class MapData extends EntityNoName
 
 				ele.setEleName(dr.get(FrmLabAttr.Text).toString());
 
-				//ele.FontColor = dr[FrmLabAttr.FontColor].ToString();
-				//ele.FontName = dr[FrmLabAttr.FontName].ToString();
-				//ele.FontSize = int.Parse(dr[FrmLabAttr.FontSize].ToString());
-				//ele.BorderWidth = int.Parse(dr["BorderWidth"].ToString());
-
 				if (ele.getIsExits() == true)
 				{
 					ele.setMyPK(BP.DA.DBAccess.GenerGUID());
@@ -1536,8 +1528,6 @@ public class MapData extends EntityNoName
 				BP.Sys.FrmEle ele = new FrmEle();
 				ele.Copy(dr);
 				ele.setEleType(BP.Sys.FrmEle.Line);
-				//ele.BorderColor = dr["BorderColor"].ToString();
-				//ele.BorderWidth = int.Parse(dr["BorderWidth"].ToString());
 				if (ele.getIsExits() == true)
 				{
 					ele.setMyPK(BP.DA.DBAccess.GenerGUID());
@@ -1545,8 +1535,7 @@ public class MapData extends EntityNoName
 				ele.Insert();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 升级ccform控件.
+
 	}
 	/** 
 	 导入数据
@@ -1554,8 +1543,9 @@ public class MapData extends EntityNoName
 	 @param ds
 	 @param isSetReadony
 	 @return 
+	 * @throws Exception 
 	*/
-	public static MapData ImpMapData(DataSet ds)
+	public static MapData ImpMapData(DataSet ds) throws Exception
 	{
 		String errMsg = "";
 		if (ds.Tables.contains("WF_Flow") == true)
@@ -1578,8 +1568,8 @@ public class MapData extends EntityNoName
 			throw new RuntimeException(errMsg);
 		}
 
-		DataTable dt = ds.Tables["Sys_MapData"];
-		String fk_mapData = dt.Rows[0]["No"].toString();
+		DataTable dt = ds.GetTableByName("Sys_MapData");
+		String fk_mapData = dt.Rows.get(0).getValue("No").toString();
 		MapData md = new MapData();
 		md.setNo(fk_mapData);
 		if (md.getIsExits())
@@ -1673,11 +1663,12 @@ public class MapData extends EntityNoName
 	 @param ds 表单数据
 	 @param isSetReadonly 是否设置只读？
 	 @return 
+	 * @throws Exception 
 	*/
-	public static MapData ImpMapData(String fk_mapdata, DataSet ds)
+	public static MapData ImpMapData(String fk_mapdata, DataSet ds) throws Exception
 	{
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查导入的数据是否完整.
 		String errMsg = "";
 		//if (ds.Tables[0].TableName != "Sys_MapData")
@@ -1698,7 +1689,7 @@ public class MapData extends EntityNoName
 			errMsg += "@缺少表:Sys_MapData";
 		}
 
-		DataTable dtCheck = ds.Tables["Sys_MapAttr"];
+		DataTable dtCheck = ds.GetTableByName("Sys_MapAttr");
 		boolean isHave = false;
 		for (DataRow dr : dtCheck.Rows)
 		{
@@ -1718,7 +1709,7 @@ public class MapData extends EntityNoName
 		{
 			throw new RuntimeException("@以下错误不可导入，可能的原因是非表单模板文件:" + errMsg);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		// 定义在最后执行的sql.
@@ -1732,10 +1723,10 @@ public class MapData extends EntityNoName
 
 		// 求出dataset的map.
 		String oldMapID = "";
-		DataTable dtMap = ds.Tables["Sys_MapData"];
+		DataTable dtMap = ds.GetTableByName("Sys_MapData");
 		if (dtMap.Rows.size() == 1)
 		{
-			oldMapID = dtMap.Rows[0]["No"].toString();
+			oldMapID = dtMap.Rows.get(0).getValue("No").toString();
 		}
 		else
 		{
@@ -1754,7 +1745,7 @@ public class MapData extends EntityNoName
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 表单元素
 		for (DataTable dt : ds.Tables)
 		{
@@ -2178,14 +2169,14 @@ public class MapData extends EntityNoName
 					if (dt.Rows.size() > 0)
 					{
 						endDoSQL += "@UPDATE WF_Node SET FWCSta=2"
-							+ ",FWC_X=" + dt.Rows[0]["FWC_X"] + ",FWC_Y=" + dt.Rows[0]["FWC_Y"] + ",FWC_H=" + dt.Rows[0]["FWC_H"] + ",FWC_W=" + dt.Rows[0]["FWC_W"] + ",FWCType=" + dt.Rows[0]["FWCType"] + " WHERE NodeID=" + fk_mapdata.replace("ND", "");
+							+ ",FWC_X=" + dt.Rows.get(0).getValue("FWC_X") + ",FWC_Y=" + dt.Rows.get(0).getValue("FWC_Y") + ",FWC_H=" + dt.Rows.get(0).getValue("FWC_H") + ",FWC_W=" + dt.Rows.get(0).getValue("FWC_W") + ",FWCType=" + dt.Rows.get(0).getValue("FWCType") + " WHERE NodeID=" + fk_mapdata.replace("ND", "");
 					}
 					break;
 				default:
 					break;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//执行最后结束的sql.
@@ -2234,7 +2225,7 @@ public class MapData extends EntityNoName
 				//   sqls += "@UPDATE Sys_MapAttr SET GroupID=" + gfFirst.OID + "       WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_MapAttr       WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID=' " + this.getNo()+ " ') or GroupID is null) AS X) AND FK_MapData=' " + this.getNo()+ " ' ";
 				sqls += "@UPDATE Sys_FrmAttachment SET GroupID=" + gfFirst.getOID() + " WHERE  MyPK IN (SELECT X.MyPK FROM (SELECT MyPK FROM Sys_FrmAttachment WHERE GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "')) AS X) AND FK_MapData='" + this.getNo() + "' ";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 这些sql 对于Oracle 有问题，但是不影响使用.
 				try
 				{
@@ -2341,7 +2332,7 @@ public class MapData extends EntityNoName
 			return;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 计算最左边,与最右边的值。
 		// 求最左边.
 		float i1 = DBAccess.RunSQLReturnValFloat("SELECT MIN(X1) FROM Sys_FrmLine WHERE FK_MapData='" + this.getNo() + "'", 0);
@@ -2420,7 +2411,7 @@ public class MapData extends EntityNoName
 		this.setMaxEnd(this.getMaxEnd() > endFrmEle ? this.getMaxEnd() : endFrmEle);
 		this.setMaxEnd(this.getMaxEnd() > endFrmAtt ? this.getMaxEnd() : endFrmAttr);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		this.DirectUpdate();
@@ -2536,7 +2527,7 @@ public class MapData extends EntityNoName
 		//更新版本号.
 		this.setVer(DataType.getCurrentDataTimess());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  检查是否有ca认证设置.
 		boolean isHaveCA = false;
 		for (MapAttr item : this.getMapAttrs().ToJavaList())
@@ -2566,15 +2557,16 @@ public class MapData extends EntityNoName
 			// attr.setMinLen(0;
 			// attr.Save();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  检查是否有ca认证设置.
 
 		return super.beforeUpdateInsertAction();
 	}
 	/** 
 	 更新版本
+	 * @throws Exception 
 	*/
-	public final void UpdateVer()
+	public final void UpdateVer() throws Exception
 	{
 		String sql = "UPDATE Sys_MapData SET VER='" + BP.DA.DataType.getCurrentDataTimess() + "' WHERE No='" + this.getNo() + "'";
 		BP.DA.DBAccess.RunSQL(sql);
@@ -2600,7 +2592,7 @@ public class MapData extends EntityNoName
 
 		//	string where = " FK_MapData IN (" + ids + ")";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除相关的数据。
 		sql = "DELETE FROM Sys_MapDtl WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_FrmLine WHERE " + whereFK_MapData;
@@ -2627,10 +2619,10 @@ public class MapData extends EntityNoName
 		sql += "@DELETE FROM WF_FrmNode WHERE FK_Frm='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_FrmSln WHERE " + whereFK_MapData;
 		DBAccess.RunSQLs(sql);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除相关的数据。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除物理表。
 		//如果存在物理表.
 		if (DBAccess.IsExitsObject(this.getPTable()) && this.getPTable().indexOf("ND") == 0)
@@ -2657,11 +2649,11 @@ public class MapData extends EntityNoName
 			dtl.Delete();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除注册到的外检表.
 		SFTables sfs = new SFTables();
 		sfs.Retrieve(SFTableAttr.SrcTable, this.getPTable());
@@ -2672,40 +2664,38 @@ public class MapData extends EntityNoName
 				item.Delete();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除注册到的外检表.
 
 		return super.beforeDelete();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 常用方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与Excel相关的操作 .
 	/** 
 	 获得Excel文件流
 	 
 	 @param oid
 	 @return 
+	 * @throws Exception 
 	*/
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: public bool ExcelGenerFile(string pkValue, ref byte[] bytes, string saveTo)
-	public final boolean ExcelGenerFile(String pkValue, tangible.RefObject<byte[]> bytes, String saveTo)
+	public final boolean ExcelGenerFile(int pkValue, RefObject<byte[]> bytes) throws Exception
 	{
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: byte[] by = BP.DA.DBAccess.GetByteFromDB(this.PTable, this.EnPK, pkValue, saveTo);
-		byte[] by = BP.DA.DBAccess.GetByteFromDB(this.getPTable(), this.getEnPK(), pkValue, saveTo);
+		byte[] by = BP.DA.DBAccess.GetByteFromDB(this.getPTable(), this.getEnPK(), (new Integer(pkValue)).toString(), "DBFile");
 		if (by != null)
 		{
-			bytes.argValue = by;
+			bytes.argvalue = by;
 			return true;
 		}
 		else //说明当前excel文件没有生成.
 		{
-			String tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "\\FrmOfficeTemplate\\" + this.getNo() + ".xlsx";
-			if ((new File(tempExcel)).isFile() == true)
+			String tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + this.getNo() + ".xlsx";
+			File file = new File(tempExcel);
+			if (file.exists() == true)
 			{
-				bytes.argValue = BP.DA.DataType.ConvertFileToByte(tempExcel);
+				bytes.argvalue = BP.DA.DataType.ConvertFileToByte(tempExcel);
 				return false;
 			}
 			else //模板文件也不存在时
@@ -2719,34 +2709,31 @@ public class MapData extends EntityNoName
 	 
 	 @param oid
 	 @param bty
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: public void ExcelSaveFile(string pkValue, byte[] bty, string saveTo)
-	public final void ExcelSaveFile(String pkValue, byte[] bty, String saveTo)
+	public final void ExcelSaveFile(String pkValue, byte[] bty, String saveTo) throws NumberFormatException, Exception
 	{
-		BP.DA.DBAccess.SaveBytesToDB(bty, this.getPTable(), this.getEnPK(), pkValue, saveTo);
+		BP.DA.DBAccess.SaveFileToDB(bty.toString(), this.getPTable(), this.getEnPK(), (new Integer(pkValue)).toString(), "DBFile");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 与Excel相关的操作 .
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与Word相关的操作 .
 	/** 
 	 获得Excel文件流
 	 
 	 @param oid
 	 @return 
+	 * @throws Exception 
 	*/
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: public void WordGenerFile(string pkValue, ref byte[] bytes, string saveTo)
-	public final void WordGenerFile(String pkValue, tangible.RefObject<byte[]> bytes, String saveTo)
+	public final void WordGenerFile(String pkValue, RefObject<byte[]> bytes, String saveTo) throws Exception
 	{
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: byte[] by = BP.DA.DBAccess.GetByteFromDB(this.PTable, this.EnPK, pkValue, saveTo);
 		byte[] by = BP.DA.DBAccess.GetByteFromDB(this.getPTable(), this.getEnPK(), pkValue, saveTo);
 		if (by != null)
 		{
-			bytes.argValue = by;
+			bytes.argvalue = by;
 			return;
 		}
 		else //说明当前excel文件没有生成.
@@ -2758,7 +2745,7 @@ public class MapData extends EntityNoName
 				tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate\\NDxxxRpt.docx";
 			}
 
-			bytes.argValue = BP.DA.DataType.ConvertFileToByte(tempExcel);
+			bytes.argvalue = BP.DA.DataType.ConvertFileToByte(tempExcel);
 			return;
 		}
 	}
@@ -2767,15 +2754,13 @@ public class MapData extends EntityNoName
 	 
 	 @param oid
 	 @param bty
+	 * @throws Exception 
 	*/
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: public void WordSaveFile(string pkValue, byte[] bty, string saveTo)
-	public final void WordSaveFile(String pkValue, byte[] bty, String saveTo)
+	public final void WordSaveFile(String pkValue, byte[] bty, String saveTo) throws Exception
 	{
-		BP.DA.DBAccess.SaveBytesToDB(bty, this.getPTable(), this.getEnPK(), pkValue, saveTo);
+		BP.DA.DBAccess.SaveBytesToDB(bty,null, this.getPTable(), this.getEnPK(), pkValue, saveTo);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 与Excel相关的操作 .
+
 	public final void setDesignerTool(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.DesignerTool, value);

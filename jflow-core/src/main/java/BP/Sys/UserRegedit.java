@@ -7,6 +7,7 @@ import BP.Tools.DateUtils;
 import BP.*;
 import BP.Web.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
 import java.time.*;
 
 /** 
@@ -118,15 +119,18 @@ public class UserRegedit extends EntityMyPK
 	}
 	/** 
 	 查询时间从
+	 * @throws Exception 
 	*/
-	public final String getDTFrom_Data()
+	public final String getDTFrom_Data() throws Exception
 	{
 		String s = this.GetValStringByKey(UserRegeditAttr.DTFrom);
-		if (DataType.IsNullOrEmpty(s) || 1 == 1)
+		if (DataType.IsNullOrEmpty(s))
 		{
 			
-			LocalDateTime dt = LocalDateTime.now().plusDays(-14);
-			return dt.toString(DataType.getSysDataFormat());
+			Calendar ca = Calendar.getInstance();
+			ca.add(Calendar.DATE, -14);// 30为增加的天数，可以改变的
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			return format.format(ca.getTime());
 		}
 		return s.substring(0, 10);
 	}
@@ -190,13 +194,15 @@ public class UserRegedit extends EntityMyPK
 	{
 		this.SetValByKey(UserRegeditAttr.DTTo, value);
 	}
-	public final String getDTFrom_Datatime()
+	public final String getDTFrom_Datatime() throws Exception
 	{
 		String s = this.GetValStringByKey(UserRegeditAttr.DTFrom);
 		if (DataType.IsNullOrEmpty(s))
 		{
-			LocalDateTime dt = LocalDateTime.now().plusDays(-14);
-			return dt.toString(DataType.getSysDataTimeFormat());
+			Calendar ca = Calendar.getInstance();
+			ca.add(Calendar.DATE, -14);// 30为增加的天数，可以改变的
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			return format.format(ca.getTime());
 		}
 		return s;
 	}
@@ -351,8 +357,9 @@ public class UserRegedit extends EntityMyPK
 	 获取键/值对集合
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final HashMap<String, String> GetVals()
+	public final HashMap<String, String> GetVals() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getVals()))
 		{
@@ -360,7 +367,7 @@ public class UserRegedit extends EntityMyPK
 		}
 
 		String[] arr = null;
-		String[] strs = this.getVals().split("@".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+		String[] strs = this.getVals().split("@");
 		int idx = -1;
 		HashMap<String, String> kvs = new HashMap<String, String>();
 

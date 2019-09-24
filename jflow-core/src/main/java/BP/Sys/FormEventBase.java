@@ -1,6 +1,7 @@
 package BP.Sys;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonUtils;
 import BP.En.*;
 import BP.Web.Controls.*;
 import BP.Web.*;
@@ -17,17 +18,17 @@ import java.math.*;
 */
 public abstract class FormEventBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 要求子类强制重写的属性.
 	/** 
 	 表单编号/表单标记.
 	 该参数用于说明要把此事件注册到那一个表单模版上.
 	*/
 	public abstract String getFormMark();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 要求子类重写的属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性/内部变量(表单在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 	/** 
 	 实体，一般是工作实体
@@ -52,10 +53,10 @@ public abstract class FormEventBase
 	{
 		_SysPara = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性/内部变量(表单在运行的时候触发各类事件，子类可以访问这些属性来获取引擎内部的信息).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统参数
 	/** 
 	 表单ID
@@ -64,10 +65,10 @@ public abstract class FormEventBase
 	{
 		return this.GetValStr("FK_MapData");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 常用属性.
 	/** 
 	 工作ID
@@ -76,10 +77,10 @@ public abstract class FormEventBase
 	{
 		return this.GetValInt("OID");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 常用属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取参数方法
 	/** 
 	 事件参数
@@ -160,10 +161,10 @@ public abstract class FormEventBase
 	{
 		return new java.math.BigDecimal(this.GetValStr(key));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取参数方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 表单事件基类
@@ -171,10 +172,10 @@ public abstract class FormEventBase
 	public FormEventBase()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点表单事件
 	public String FrmLoadAfter()
 	{
@@ -184,10 +185,10 @@ public abstract class FormEventBase
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 要求子类重写的方法(表单事件).
 	/** 
 	 表单删除前
@@ -207,10 +208,10 @@ public abstract class FormEventBase
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 要求子类重写的方法(表单事件).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 要求子类重写的方法(节点事件).
 	/** 
 	 保存后
@@ -263,11 +264,8 @@ public abstract class FormEventBase
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 要求子类重写的方法(节点事件).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 基类方法.
+
 
 	/** 
 	 执行事件
@@ -314,9 +312,12 @@ public abstract class FormEventBase
 		if (SystemConfig.getIsBSsystem() == true)
 		{
 			/*如果是bs系统, 就加入外部url的变量.*/
-			for (String key : HttpContextHelper.getRequestParamKeys())
+			for (Object keyObject : CommonUtils.getRequest().getParameterMap().keySet())
 			{
-				String val = HttpContextHelper.RequestParams(key);
+				if(keyObject == null)
+					continue;
+				String  key = keyObject.toString();
+				String val = CommonUtils.getRequest().getParameter(key);
 				try
 				{
 					r.put(key, val);

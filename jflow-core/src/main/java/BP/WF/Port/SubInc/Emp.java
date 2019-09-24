@@ -137,7 +137,7 @@ public class Emp extends EntityNoName
 	*/
 	public Emp(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		try
 		{
 			if (this.RetrieveFromDBSources() == 0)

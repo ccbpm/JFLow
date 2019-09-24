@@ -2223,7 +2223,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		//add root
 		BP.WF.Template.FlowFormTree root = new BP.WF.Template.FlowFormTree();
 		root.No = "00";
-		root.ParentNo = "0";
+		root.setParentNo("0");
 		root.Name = "目录";
 		root.setNodeType("root");
 		appFlowFormTree.Clear();

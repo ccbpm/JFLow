@@ -134,7 +134,7 @@ public class LoadTemplete extends Method
 		FlowSort fsRoot = new FlowSort();
 		fsRoot.No = "99";
 		fsRoot.Name = "流程树";
-		fsRoot.ParentNo = "0";
+		fsRoot.setParentNo("0");
 		fsRoot.DirectInsert();
 
 		for (File dir : dirs)

@@ -136,7 +136,7 @@ public class AdminEmp extends EntityNoName
 	*/
 	public AdminEmp(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		try
 		{
 			if (this.RetrieveFromDBSources() == 0)

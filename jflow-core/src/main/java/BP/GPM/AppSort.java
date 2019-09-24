@@ -15,12 +15,13 @@ public class AppSort extends EntityNoName
 		///#region 属性
 	/** 
 	 RefMenuNo
+	 * @throws Exception 
 	*/
-	public final String getRefMenuNo()
+	public final String getRefMenuNo() throws Exception
 	{
 		return this.GetValStrByKey(AppSortAttr.RefMenuNo);
 	}
-	public final void setRefMenuNo(String value)
+	public final void setRefMenuNo(String value) throws Exception
 	{
 		this.SetValByKey(AppSortAttr.RefMenuNo, value);
 	}
@@ -30,7 +31,7 @@ public class AppSort extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 按钮权限控制
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -50,10 +51,11 @@ public class AppSort extends EntityNoName
 	 系统类别
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public AppSort(String no)
+	public AppSort(String no) throws Exception
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 
@@ -83,17 +85,17 @@ public class AppSort extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		Apps pps = new Apps();
-		pps.Retrieve(AppAttr.FK_AppSort, this.No);
+		pps.Retrieve(AppAttr.FK_AppSort, this.getNo());
 		if (pps.size() != 0)
 		{
 			throw new RuntimeException("err@该类别下有系统，您不能删除，请把该系统类别下的系统移除或者删除，您才能删除该类别。");
 		}
 
 		Menu root = new Menu();
-		root.No = this.getRefMenuNo();
+		root.setNo(this.getRefMenuNo());
 		if (root.RetrieveFromDBSources() > 0)
 		{
 			root.Delete();
@@ -102,46 +104,46 @@ public class AppSort extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		Menu root = new Menu();
-		root.No = this.getRefMenuNo();
+		root.setNo( this.getRefMenuNo());
 		if (root.RetrieveFromDBSources() > 0)
 		{
-			root.Name = this.Name;
+			root.setName(this.getName());
 			root.Update();
 		}
 		return super.beforeUpdate();
 	}
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		super.beforeInsert();
 
 		// 求root.
 		Menu root = new Menu();
-		root.No = "1000";
+		root.setNo("1000");
 		if (root.RetrieveFromDBSources() == 0)
 		{
 			/*如果没有root.*/
-			root.ParentNo = "0";
-			root.Name = BP.Sys.SystemConfig.SysName;
-			root.setFK_App(BP.Sys.SystemConfig.SysNo);
+			root.setParentNo("0");
+			root.setName( BP.Sys.SystemConfig.getSysName());
+			root.setFK_App(BP.Sys.SystemConfig.getSysNo());
 			root.setHisMenuType(MenuType.Root);
-			root.Idx = 0;
+			root.setIdx(0);
 			root.Insert();
 		}
 
 		// 创建系统类别做为二级菜单.
 		Object tempVar = root.DoCreateSubNode();
 		Menu sort1 = tempVar instanceof Menu ? (Menu)tempVar : null;
-		sort1.Name = this.Name;
+		sort1.setName( this.getName());
 		sort1.setHisMenuType(MenuType.AppSort);
 		sort1.setFK_App("AppSort");
 		sort1.Update();
 
-		this.setRefMenuNo(sort1.No);
+		this.setRefMenuNo(sort1.getNo());
 		return true;
 	}
 }

@@ -240,7 +240,7 @@ public class WFEmp extends EntityNoName
 	*/
 	public WFEmp(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		try
 		{
 			if (this.RetrieveFromDBSources() == 0)
@@ -325,7 +325,7 @@ public class WFEmp extends EntityNoName
 		//}
 
 		//EmpStations ess = new EmpStations();
-		//ess.Retrieve(EmpStationAttr.FK_Emp, this.No);
+		//ess.Retrieve(EmpStationAttr.FK_Emp, this.getNo());
 		//string sts = "";
 		//foreach (EmpStation es in ess)
 		//{

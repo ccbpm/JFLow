@@ -30,7 +30,7 @@ public class FlowFormTrees extends EntitiesTree
 		   tree.setFK_Flow(flowNo);
 		   tree.Name = "根目录";
 		  // tree.IsDir = false;
-		   tree.ParentNo = "0";
+		   tree.setParentNo("0");
 		   tree.Insert();
 
 		   //创建一个节点.

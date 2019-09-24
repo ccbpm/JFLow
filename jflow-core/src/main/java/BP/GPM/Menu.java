@@ -184,7 +184,7 @@ public class Menu extends EntityTree
 	*/
 	public Menu(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 
@@ -203,7 +203,7 @@ public class Menu extends EntityTree
 	{
 		//删除他的子项目.
 		Menus ens = new Menus();
-		ens.Retrieve(MenuAttr.ParentNo, this.No);
+		ens.Retrieve(MenuAttr.ParentNo, this.getNo());
 		for (Menu item : ens)
 		{
 			item.Delete();

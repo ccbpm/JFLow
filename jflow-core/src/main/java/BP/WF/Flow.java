@@ -591,7 +591,7 @@ public class Flow extends BP.En.EntityNoName
 
 				ps.SQL = "SELECT WorkID,FK_Node FROM WF_GenerWorkFlow WHERE WFState=0 AND Starter=" + dbstr + "FlowStarter AND FK_Flow=" + dbstr + "FK_Flow ";
 				ps.Add(GERptAttr.FlowStarter, emp.No);
-				ps.Add(GenerWorkFlowAttr.FK_Flow, this.No);
+				ps.Add(GenerWorkFlowAttr.FK_Flow, this.getNo());
 				DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
 				//如果没有启用草稿，并且存在草稿就取第一条 by dgq 5.28
@@ -1516,7 +1516,7 @@ public class Flow extends BP.En.EntityNoName
 
 		String info = "";
 		GenerWorkFlows gwfs = new GenerWorkFlows();
-		gwfs.Retrieve(GenerWorkFlowAttr.FK_Flow, this.No);
+		gwfs.Retrieve(GenerWorkFlowAttr.FK_Flow, this.getNo());
 		for (GenerWorkFlow gwf : gwfs.ToJavaList())
 		{
 			GERpt rpt = this.getHisGERpt();
@@ -1952,7 +1952,7 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 检查独立表单
 		FrmNodes fns = new FrmNodes();
-		fns.Retrieve(FrmNodeAttr.FK_Flow, this.No);
+		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
 		String frms = "";
 		String err = "";
 		for (FrmNode item : fns)
@@ -1980,7 +1980,7 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 检查消息推送。
 		PushMsgs pus = new PushMsgs();
-		pus.Retrieve(PushMsgAttr.FK_Flow, this.No);
+		pus.Retrieve(PushMsgAttr.FK_Flow, this.getNo());
 		for (Node nd : nds.ToJavaList())
 		{
 			//创建默认信息.
@@ -2330,7 +2330,7 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 执行一次保存.
 			NodeExts nes = new NodeExts();
-			nes.Retrieve(NodeAttr.FK_Flow, this.No);
+			nes.Retrieve(NodeAttr.FK_Flow, this.getNo());
 			for (NodeExt item : nes)
 			{
 				item.Update(); // 调用里面的业务逻辑执行检查.
@@ -2813,18 +2813,18 @@ public class Flow extends BP.En.EntityNoName
 
 		// 节点与表单绑定.
 		FrmNodes fns = new BP.WF.Template.FrmNodes();
-		fns.Retrieve(FrmNodeAttr.FK_Flow, this.No);
+		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
 		ds.Tables.add(fns.ToDataTableField("WF_FrmNode"));
 
 
 		// 表单方案.
 		FrmFields ffs = new BP.WF.Template.FrmFields();
-		ffs.Retrieve(FrmFieldAttr.FK_Flow, this.No);
+		ffs.Retrieve(FrmFieldAttr.FK_Flow, this.getNo());
 		ds.Tables.add(ffs.ToDataTableField("Sys_FrmSln"));
 
 		// 方向
 		Directions dirs = new Directions();
-		dirs.Retrieve(DirectionAttr.FK_Flow, this.No);
+		dirs.Retrieve(DirectionAttr.FK_Flow, this.getNo());
 		ds.Tables.add(dirs.ToDataTableField("WF_Direction"));
 
 		// 流程标签.
@@ -4186,7 +4186,7 @@ public class Flow extends BP.En.EntityNoName
 				if (fes.GetEntityByKey(FrmEventAttr.FK_Event, doType) == null)
 				{
 					FrmEvents flowEvents = new FrmEvents();
-					flowEvents.Retrieve(FrmEventAttr.FK_MapData, this.No);
+					flowEvents.Retrieve(FrmEventAttr.FK_MapData, this.getNo());
 					fes.AddEntities(flowEvents);
 				}
 				break;
@@ -4884,7 +4884,7 @@ public class Flow extends BP.En.EntityNoName
 			///#region 删除独立表单的数据.
 		String mysql = "SELECT OID FROM " + this.getPTable();
 		FrmNodes fns = new FrmNodes();
-		fns.Retrieve(FrmNodeAttr.FK_Flow, this.No);
+		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
 		String strs = "";
 		for (FrmNode nd : fns)
 		{
@@ -6916,7 +6916,7 @@ public class Flow extends BP.En.EntityNoName
 
 		//清缓存
 		BP.DA.Cash2019.DeleteRow("BP.WF.Flow", oldFlowNo);
-		BP.DA.Cash2019.DeleteRow("BP.WF.Flow", this.No);
+		BP.DA.Cash2019.DeleteRow("BP.WF.Flow", this.getNo());
 		Flow flow = new Flow(oldFlowNo);
 		flow = new Flow(this.No);
 

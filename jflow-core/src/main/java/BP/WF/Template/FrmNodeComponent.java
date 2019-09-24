@@ -241,7 +241,7 @@ public class FrmNodeComponent extends Entity
 				gf.CtrlID = "FrmThread" + this.getNo();
 				gf.CtrlType = GroupCtrlType.Thread;
 				gf.Lab = "子线程";
-				gf.Idx = 0;
+				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
 		}
@@ -266,7 +266,7 @@ public class FrmNodeComponent extends Entity
 				gf.CtrlID = "FrmFTC" + this.getNo();
 				gf.CtrlType = GroupCtrlType.FTC;
 				gf.Lab = "流转自定义";
-				gf.Idx = 0;
+				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
 		}

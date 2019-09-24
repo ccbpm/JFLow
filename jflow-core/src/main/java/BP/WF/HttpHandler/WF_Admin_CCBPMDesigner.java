@@ -70,7 +70,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		{
 			FlowSort fs = new FlowSort();
 			fs.No = "99";
-			fs.ParentNo = "0";
+			fs.setParentNo("0");
 			fs.Name = "流程树";
 			fs.Insert();
 
@@ -1097,7 +1097,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		{
 			FlowSort fs = new FlowSort();
 			fs.No = "99";
-			fs.ParentNo = "0";
+			fs.setParentNo("0");
 			fs.Name = "流程树";
 			fs.Insert();
 
@@ -1197,12 +1197,12 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		if (ft.RetrieveFromDBSources() == 0)
 		{
 			ft.Name = "表单库";
-			ft.ParentNo = "0";
+			ft.setParentNo("0");
 			ft.Insert();
 		}
 		if (ft.ParentNo.equals("0") == false)
 		{
-			ft.ParentNo = "0";
+			ft.setParentNo("0");
 			ft.Update();
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

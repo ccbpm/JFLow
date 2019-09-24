@@ -509,7 +509,7 @@ public class MapFrmFool extends EntityNoName
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			GroupField gf = new GroupField();
-			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.No, GroupFieldAttr.FrmID, this.No);
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.No, GroupFieldAttr.FrmID, this.getNo());
 			if (i == 1)
 			{
 				continue;
@@ -532,7 +532,7 @@ public class MapFrmFool extends EntityNoName
 		for (MapFrame fram : frams)
 		{
 			GroupField gf = new GroupField();
-			int i = gf.Retrieve(GroupFieldAttr.CtrlID, fram.MyPK, GroupFieldAttr.FrmID, this.No);
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, fram.MyPK, GroupFieldAttr.FrmID, this.getNo());
 			if (i == 1)
 			{
 				continue;
@@ -557,7 +557,7 @@ public class MapFrmFool extends EntityNoName
 			}
 
 			GroupField gf = new GroupField();
-			int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.MyPK, GroupFieldAttr.FrmID, this.No);
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.MyPK, GroupFieldAttr.FrmID, this.getNo());
 			if (i == 1)
 			{
 				continue;

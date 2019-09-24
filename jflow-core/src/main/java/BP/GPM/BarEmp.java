@@ -71,7 +71,7 @@ public class BarEmp extends EntityMyPK
 	*/
 	public BarEmp(String no)
 	{
-	  //  this.No = no;
+	  //  this.setNo(no);
 		this.Retrieve();
 	}
 	/** 

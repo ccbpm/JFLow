@@ -250,7 +250,7 @@ public class Bar extends EntityNoName
 	*/
 	public Bar(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 

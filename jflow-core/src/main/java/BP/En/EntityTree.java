@@ -213,7 +213,7 @@ public abstract class EntityTree extends Entity
 		en.setParentNo(this.getNo());
 	  //  en.MenuType = this.MenuType + 1;
 		//en.IsDir = false;
-		//en.TreeNo = this.GenerNewNoByKey(EntityTreeAttr.TreeNo, EntityTreeAttr.ParentNo, this.No);
+		//en.TreeNo = this.GenerNewNoByKey(EntityTreeAttr.TreeNo, EntityTreeAttr.ParentNo, this.getNo());
 		//if (en.TreeNo.Substring(en.TreeNo.Length - 2) == "01")
 		//    en.TreeNo = this.TreeNo + "10";
 		en.Insert();

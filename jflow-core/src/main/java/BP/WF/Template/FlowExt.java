@@ -1457,7 +1457,7 @@ public class FlowExt extends EntityNoName
 		Flow fl = new Flow(this.No);
 
 		GenerWorkFlows gwfs = new GenerWorkFlows();
-		gwfs.Retrieve(GenerWorkFlowAttr.FK_Flow, this.No);
+		gwfs.Retrieve(GenerWorkFlowAttr.FK_Flow, this.getNo());
 
 		for (GenerWorkFlow gwf : gwfs.ToJavaList())
 		{

@@ -407,7 +407,7 @@ public class MapRpt extends EntityNoName
 	*/
 	public MapRpt(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 
@@ -498,7 +498,7 @@ public class MapRpt extends EntityNoName
 		String keys = "'OID','FK_Dept','FlowStarter','WFState','Title','FlowStartRDT','FlowEmps','FlowDaySpan','FlowEnder','FlowEnderRDT','FK_NY','FlowEndNode','WFSta'";
 		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt");
 
-		attrs.Delete(MapAttrAttr.FK_MapData, this.No); // 删除已经有的字段。
+		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo()); // 删除已经有的字段。
 		for (MapAttr attr : attrs)
 		{
 			if (keys.contains("'" + attr.KeyOfEn + "'") == false)
@@ -518,7 +518,7 @@ public class MapRpt extends EntityNoName
 	protected boolean beforeDelete()
 	{
 		MapAttrs attrs = new MapAttrs();
-		attrs.Delete(MapAttrAttr.FK_MapData, this.No);
+		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo());
 		return super.beforeDelete();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

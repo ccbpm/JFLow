@@ -142,7 +142,7 @@ public class Sync extends Method
 		//    BP.GPM.AD.Dept dept = new Dept();
 		//    dept.Name = rootDE.Name.Replace("OU=", "");
 		//    dept.No = rootDE.Guid.ToString();
-		//    dept.ParentNo = "0";
+		//    dept.setParentNo("0");
 		//    dept.Idx = idxDept++;
 		//    dept.Insert();
 		//    this.rootPath = rootDE.Path;

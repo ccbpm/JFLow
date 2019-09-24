@@ -1,6 +1,7 @@
 package BP.GPM;
 
 import BP.Sys.*;
+import BP.Web.WebUser;
 import BP.DA.*;
 import BP.En.*;
 import java.util.*;
@@ -14,8 +15,9 @@ public class App extends EntityNoName
 		///#region 属性
 	/** 
 	 打开方式
+	 * @throws Exception 
 	*/
-	public final String getOpenWay()
+	public final String getOpenWay() throws Exception
 	{
 		int openWay = 0;
 
@@ -24,33 +26,36 @@ public class App extends EntityNoName
 			case 0:
 				return "_blank";
 			case 1:
-				return this.No;
+				return this.getNo();
 			default:
 				return "";
 		}
 	}
 	/** 
 	 路径
+	 * @throws Exception 
 	*/
-	public final String getWebPath()
+	public final String getWebPath() throws Exception
 	{
 		return this.GetValStringByKey("WebPath");
 	}
 	/** 
 	 ICON
+	 * @throws Exception 
 	*/
-	public final String getICON()
+	public final String getICON() throws Exception
 	{
 		return this.getWebPath();
 	}
-	public final void setICON(String value)
+	public final void setICON(String value) throws Exception
 	{
 		this.SetValByKey("ICON", value);
 	}
 	/** 
 	 连接
+	 * @throws Exception 
 	*/
-	public final String getUrl()
+	public final String getUrl() throws Exception
 	{
 		String url = this.GetValStrByKey(AppAttr.Url);
 		if (DataType.IsNullOrEmpty(url))
@@ -60,14 +65,14 @@ public class App extends EntityNoName
 
 		if (this.getSSOType().equals("0")) //SID验证
 		{
-			String SID = DBAccess.RunSQLReturnStringIsNull("SELECT SID FROM Port_Emp WHERE No='" + Web.WebUser.getNo() + "'", null);
+			String SID = DBAccess.RunSQLReturnStringIsNull("SELECT SID FROM Port_Emp WHERE No='" + WebUser.getNo() + "'", null);
 			if (url.contains("?"))
 			{
-				url += "&UserNo=" + Web.WebUser.getNo() + "&SID=" + SID;
+				url += "&UserNo=" + WebUser.getNo() + "&SID=" + SID;
 			}
 			else
 			{
-				url += "?UserNo=" + Web.WebUser.getNo() + "&SID=" + SID;
+				url += "?UserNo=" + WebUser.getNo() + "&SID=" + SID;
 			}
 		}
 		return url;
@@ -197,7 +202,7 @@ public class App extends EntityNoName
 	*/
 	public App(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 
@@ -264,7 +269,7 @@ public class App extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		Menu appMenu = new Menu(this.getRefMenuNo());
 		if (appMenu != null && appMenu.getFlag().contains("Flow"))
@@ -274,14 +279,14 @@ public class App extends EntityNoName
 
 		// 删除该系统.
 		Menu menu = new Menu();
-		menu.Delete(MenuAttr.FK_App, this.No);
+		menu.Delete(MenuAttr.FK_App, this.getNo());
 
 		// 删除用户数据.
 		EmpMenu em = new EmpMenu();
-		em.Delete(MenuAttr.FK_App, this.No);
+		em.Delete(MenuAttr.FK_App, this.getNo());
 
 		EmpApp ea = new EmpApp();
-		ea.Delete(MenuAttr.FK_App, this.No);
+		ea.Delete(MenuAttr.FK_App, this.getNo());
 
 		return super.beforeDelete();
 	}
@@ -439,15 +444,15 @@ public class App extends EntityNoName
 	{
 		//删除数据.
 		EmpMenus mymes = new EmpMenus();
-		mymes.Delete(EmpMenuAttr.FK_App, this.No);
+		mymes.Delete(EmpMenuAttr.FK_App, this.getNo());
 
 		//删除系统.
 		EmpApps empApps = new EmpApps();
-		empApps.Delete(EmpMenuAttr.FK_App, this.No);
+		empApps.Delete(EmpMenuAttr.FK_App, this.getNo());
 
 		//查询出来菜单.
 		Menus menus = new Menus();
-		menus.Retrieve(EmpMenuAttr.FK_App, this.No);
+		menus.Retrieve(EmpMenuAttr.FK_App, this.getNo());
 
 		//查询出来人员.
 		Emps emps = new Emps();

@@ -63,7 +63,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public RptDfine(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 

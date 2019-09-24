@@ -1052,7 +1052,7 @@ public class MapDtlExt extends EntityNoName
 
 		//删除当前从表Attrs.
 		MapAttrs attrs = new MapAttrs();
-		attrs.Delete(MapAttrAttr.FK_MapData, this.No);
+		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo());
 
 		//查询出来要导入的.
 		attrs.Retrieve(MapAttrAttr.FK_MapData, dtlId);
@@ -1068,7 +1068,7 @@ public class MapDtlExt extends EntityNoName
 
 		//删除当前从表 exts .
 		MapExts exts = new MapExts();
-		exts.Delete(MapAttrAttr.FK_MapData, this.No);
+		exts.Delete(MapAttrAttr.FK_MapData, this.getNo());
 
 		//查询出来要导入的.
 		exts.Retrieve(MapAttrAttr.FK_MapData, dtlId);
@@ -1322,7 +1322,7 @@ public class MapDtlExt extends EntityNoName
 
 		//处理属性问题.
 		MapAttrs attrs = new MapAttrs();
-		attrs.Delete(MapAttrAttr.FK_MapData, this.No);
+		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo());
 		attrs.Retrieve(MapAttrAttr.FK_MapData, refDtl);
 		for (MapAttr attr : attrs)
 		{
@@ -1333,7 +1333,7 @@ public class MapDtlExt extends EntityNoName
 
 		//处理mapExt 的问题.
 		MapExts exts = new MapExts();
-		exts.Delete(MapAttrAttr.FK_MapData, this.No); //先删除，后查询.
+		exts.Delete(MapAttrAttr.FK_MapData, this.getNo()); //先删除，后查询.
 		exts.Retrieve(MapAttrAttr.FK_MapData, refDtl);
 		MapExt mapExt = null;
 		for (MapExt ext : exts)
@@ -1475,7 +1475,7 @@ public class MapDtlExt extends EntityNoName
 
 		//更新分组标签.  @fanleiwei. 代码有变化.
 		BP.Sys.GroupField gf = new GroupField();
-		int i = gf.Retrieve(GroupFieldAttr.CtrlType, "Dtl", GroupFieldAttr.CtrlID, this.No);
+		int i = gf.Retrieve(GroupFieldAttr.CtrlType, "Dtl", GroupFieldAttr.CtrlID, this.getNo());
 		if (i == 0)
 		{
 			gf.CtrlID = this.No;
@@ -1487,7 +1487,7 @@ public class MapDtlExt extends EntityNoName
 		if (i > 1)
 		{
 			gf.Delete();
-			i = gf.Retrieve(GroupFieldAttr.CtrlType, "Dtl", GroupFieldAttr.CtrlID, this.No);
+			i = gf.Retrieve(GroupFieldAttr.CtrlType, "Dtl", GroupFieldAttr.CtrlID, this.getNo());
 		}
 
 		if (i == 1 && gf.Lab.equals(this.Name) == false)

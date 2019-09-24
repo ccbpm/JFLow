@@ -204,7 +204,7 @@ public class TruckViewPower extends EntityNoName
 
 	public TruckViewPower(String no)
 	{
-		this.No = no;
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 

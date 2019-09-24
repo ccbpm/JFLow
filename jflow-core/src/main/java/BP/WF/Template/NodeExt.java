@@ -1467,7 +1467,7 @@ public class NodeExt extends Entity
 				gf.EnName = "ND" + this.getNodeID();
 				gf.CtrlType = GroupCtrlType.FWC;
 				gf.Lab = "审核信息";
-				gf.Idx = 0;
+				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
 		}
